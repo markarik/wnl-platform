@@ -1,2 +1,2 @@
-# wnl-platform
-The main app for delivering medical e-learning courses. Based on Laravel.
+# Więcej niż LEK - Platforma
+Platforma obsługująca kurs przygotowujący do Lekarskiego Egzaminu Końcowego.

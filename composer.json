@@ -1,8 +1,7 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "name": "wnl-platform",
+    "description": "The main app for delivering medical e-learning courses. Based on Laravel.",
+    "license": "GPL-3.0",
     "type": "project",
     "require": {
         "php": ">=5.6.4",

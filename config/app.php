@@ -168,6 +168,7 @@ return [
          */
 
 		Barryvdh\Debugbar\ServiceProvider::class,
+		Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
 
         /*
          * Application Service Providers...

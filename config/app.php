@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'pl',
 
     /*
     |--------------------------------------------------------------------------
@@ -168,6 +168,7 @@ return [
          */
 
 		Barryvdh\Debugbar\ServiceProvider::class,
+		Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
 
         /*
          * Application Service Providers...

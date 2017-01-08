@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapWebHookRoutes();
     }
 
     /**
@@ -76,4 +76,13 @@ class RouteServiceProvider extends ServiceProvider
             require base_path('routes/api.php');
         });
     }
+
+	private function mapWebHookRoutes() {
+		Route::group([
+			'middleware' => 'hooks',
+			'namespace' => $this->namespace,
+		], function ($router) {
+			require base_path('routes/hooks.php');
+		});
+	}
 }

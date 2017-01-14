@@ -3,26 +3,63 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Forms\SignUpForm;
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Kris\LaravelFormBuilder\FormBuilder;
+use Kris\LaravelFormBuilder\FormBuilderTrait;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class StepTwoContoller extends Controller
 {
-	public function index(FormBuilder $formBuilder) {
+    use FormBuilderTrait;
 
-		$form = $formBuilder->create(SignUpForm::class, [
-			'method' => 'POST',
-			'url'    => url('/payment/step2'),
-		]);
+    public function index(FormBuilder $formBuilder)
+    {
+        $form = $this->form(SignUpForm::class, [
+            'method' => 'POST',
+            'url'    => url('/payment/step2'),
+            'model'  => Auth::user(),
+        ]);
 
-		return view('payment.step2', [
-			'form' => $form,
-		]);
+        return view('payment.step2', [
+            'form' => $form,
+        ]);
 
-	}
+    }
 
-	public function handle() {
+    public function handle(Request $request)
+    {
+        $form = $this->form(SignUpForm::class);
 
-	}
+        if (Auth::check()){
+            $form->validate(['email' => 'required|email']);
+        }
+
+        if (!$form->isValid()) {
+            return redirect()->back()->withErrors($form->getErrors())->withInput();
+        }
+
+        $user = User::updateOrCreate(
+            ['email' => $request->get('email')],
+            [
+                'first_name' => $request->get('first_name'),
+                'last_name'  => $request->get('last_name'),
+                'address'    => $request->get('address'),
+                'zip'        => $request->get('zip'),
+                'city'       => $request->get('city'),
+                'email'      => $request->get('email'),
+                'password'   => $request->get('password'),
+            ]
+        );
+        $user->orders()->create([
+            'product_id' => 1,
+            'session_id' => str_random(32),
+        ]);
+
+        Auth::login($user);
+
+        return redirect(url('/payment/step3'));
+    }
 }

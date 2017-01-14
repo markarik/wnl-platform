@@ -7,6 +7,7 @@
     {{$order['address']}} <br>
     {{$order['zip']}} {{$order['city']}} <br><br>
     {{$order['email']}} <br><br>
+    <a href="{{ url('/payment/step2') }}" class="button">@lang('payment.edit-account')</a>
 
     <button>@lang('payment.bank-transfer-button')</button>
 

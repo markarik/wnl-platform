@@ -14,9 +14,11 @@
 Auth::routes();
 
 Route::get('/payment/step1', 'Payment\StepOneController@index');
+
 Route::get('/payment/step2', 'Payment\StepTwoContoller@index');
 Route::post('/payment/step2', 'Payment\StepTwoContoller@handle');
-Route::get('/payment/step3', 'Payment\PaymentController@step3');
+
+Route::get('/payment/step3', 'Payment\StepThreeController@index');
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -29,5 +31,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
 
 	Route::get('/dashboard', 'User\DashboardController@index');
+	Route::get('/profile/orders', 'User\OrderController@index');
 
 });

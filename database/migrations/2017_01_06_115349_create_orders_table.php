@@ -17,6 +17,8 @@ class CreateOrdersTable extends Migration
 			$table->increments('id');
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('product_id');
+			$table->string('method')->nullable();
+			$table->tinyInteger('paid')->default(0);
             $table->string('session_id')->unique()->nullable();
 			$table->timestamps();
 

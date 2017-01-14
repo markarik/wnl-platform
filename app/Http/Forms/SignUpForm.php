@@ -27,8 +27,10 @@ class SignUpForm extends Form
 				'rules' => 'required|email',
 			])
 			->add('privacy_policy', 'checkbox', [
-				'rules' => 'required|email',
+				'rules' => 'required',
 			])
-			->add('newsletter', 'checkbox');
+			->add('newsletter', 'checkbox', [
+				'rules' => 'required'
+			]);
 	}
 }

@@ -1,9 +1,18 @@
+// Bootstrap
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+@import url(https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&subset=latin-ext);
 
 // Variables
 @import "variables";
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+// Navigation
+
+.navbar-default {
+	background-color: $background-body;
+}
+
+.navbar-brand-image {
+	max-height: 25px;
+}

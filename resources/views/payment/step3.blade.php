@@ -9,9 +9,13 @@
     {{$order['email']}} <br><br>
     <a href="{{ url('/payment/step2') }}" class="button">@lang('payment.edit-account')</a>
 
-    <button>@lang('payment.bank-transfer-button')</button>
+    <form action="{{url('/payment/step3')}}" method="post">
+        <input type="hidden" name="method" value="transfer" />
+        <button>@lang('payment.bank-transfer-button')</button>
+    </form>
 
-    <form action="{{ config('przelewy24.transaction_url') }}" method="post" class="form">
+
+    <form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form">
 
         <input type="hidden" name="p24_session_id" value="{{$order['session_id']}}"/>
         <input type="hidden" name="p24_merchant_id" value="{{$order['merchant_id']}}"/>
@@ -31,7 +35,8 @@
         <input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
         <input type="hidden" name="p24_sign" value="{{$order['sign']}}"/>
 
-        <input name="submit_send" value="@lang('payment.online-payment-button')" type="submit"/>
     </form>
+
+    <button class="p24_submit">@lang('payment.online-payment-button')</button>
 
 @endsection

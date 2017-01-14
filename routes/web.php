@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Input;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,15 +23,28 @@ Route::get('/payment/step3', 'Payment\StepThreeController@index');
 
 Route::group(['middleware' => 'auth'], function () {
 
-	Route::get('/', function() { return redirect('/course/1'); });
+    Route::get('/', function () {
+        return redirect('/course/1');
+    });
 
-	Route::get('/course/1', 'Course\CourseController@index');
+    Route::get('/course/1', 'Course\CourseController@index');
 
-	//Route::get( '/course/1/module/{moduleId}/chapter/{chapterId}', 'ModuleController@index' );
+    //Route::get( '/course/1/module/{moduleId}/chapter/{chapterId}', 'ModuleController@index' );
 
-	Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
+    Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
 
-	Route::get('/dashboard', 'User\DashboardController@index');
-	Route::get('/profile/orders', 'User\OrderController@index');
+    Route::get('/dashboard', 'User\DashboardController@index');
+    Route::get('/profile/orders', 'User\OrderController@index');
+
+    /*
+    * Ajax common route
+    */
+    Route::match(['get', 'post'], '/ax', function () {
+        abort_unless(Input::has('controller') && Input::has('method'), 404);
+        $controller = Input::get('controller');
+        $method = Input::get('method');
+
+        return App::make('App\\Http\\Controllers\\Ajax\\' . $controller)->{$method}();
+    });
 
 });

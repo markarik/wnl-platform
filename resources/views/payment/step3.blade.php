@@ -1,14 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.payment')
 
 @section('content')
 
-    {{trans('payment.your_personal_info')}}<br>
+    @lang('payment.your-personal-info')<br>
     {{$order['client']}} <br>
     {{$order['address']}} <br>
     {{$order['zip']}} {{$order['city']}} <br><br>
     {{$order['email']}} <br><br>
+    <a href="{{ url('/payment/step2') }}" class="button">@lang('payment.edit-account')</a>
 
-    <button>{{ trans('payment.bank_transfer_button') }}</button>
+    <button>@lang('payment.bank-transfer-button')</button>
 
     <form action="{{ config('przelewy24.transaction_url') }}" method="post" class="form">
 
@@ -30,7 +31,7 @@
         <input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
         <input type="hidden" name="p24_sign" value="{{$order['sign']}}"/>
 
-        <input name="submit_send" value="{{ trans('payment.online_payment_button') }}" type="submit"/>
+        <input name="submit_send" value="@lang('payment.online-payment-button')" type="submit"/>
     </form>
 
 @endsection

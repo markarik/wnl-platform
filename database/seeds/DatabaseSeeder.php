@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
 		$this->call( ModulesTableSeeder::class );
 		$this->call( ChaptersTableSeeder::class );
 		$this->call( SectionsTableSeeder::class );
+		$this->call( ProductsTableSeeder::class );
 	}
 }

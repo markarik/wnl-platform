@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Payment;
+namespace Lib\Przelewy24;
 
 use App\Exceptions\ApiCallException;
 
-class Przelewy24
+class Client
 {
 
 	private $url;

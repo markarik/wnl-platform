@@ -20,6 +20,7 @@ Route::get('/payment/step2', 'Payment\StepTwoContoller@index');
 Route::post('/payment/step2', 'Payment\StepTwoContoller@handle');
 
 Route::get('/payment/step3', 'Payment\StepThreeController@index');
+Route::post('/payment/step3', 'Payment\StepThreeController@handle');
 
 Route::group(['middleware' => 'auth'], function () {
 

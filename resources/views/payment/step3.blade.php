@@ -10,6 +10,7 @@
     <a href="{{ url('/payment/step2') }}" class="button">@lang('payment.edit-account')</a>
 
     <form action="{{url('/payment/step3')}}" method="post">
+        {!! csrf_field() !!}
         <input type="hidden" name="method" value="transfer" />
         <button>@lang('payment.bank-transfer-button')</button>
     </form>

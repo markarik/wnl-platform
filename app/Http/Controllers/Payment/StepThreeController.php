@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Payment;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -42,7 +43,14 @@ class StepThreeController extends Controller
         return view('payment.step3', [ 'order' => $order ]);
     }
 
-    public function handle() {}
+    public function handle(Request $request) {
+        $user = Auth::user();
+        $order = $user->orders()->recent();
+        $order->method = $request->input('method');
+        $order->save();
+
+        return redirect(url('/profile/orders'));
+    }
 
     public function status(Request $request, Payment $payment){
         //TODO: IP filtering
@@ -56,7 +64,11 @@ class StepThreeController extends Controller
         );
 
         if ($transactionValid){
-            // update order model
+            $order = Order::where(['session_id' => $request->get('p24_session_id')])->first();
+            $order->paid = true;
+            $order->external_id = $request->get('p24_order_id');
+            $order->transfer_title = $request->get('p24_statement');
+            $order->save();
         }
 
     }

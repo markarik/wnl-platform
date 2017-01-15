@@ -11,7 +11,7 @@ class Order extends Model
     ];
 
     protected $fillable = [
-        'user_id', 'session_id', 'product_id', 'method',
+        'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id'
     ];
 
     protected $guarded = [

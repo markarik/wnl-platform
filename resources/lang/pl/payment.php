@@ -19,6 +19,10 @@ return [
     'zip' => 'Kod pocztowy',
     'city' => 'Miasto',
     'email' => 'Adres e-mail',
-    'edit-account' => 'Popraw dane',
+	'password' => 'Hasło',
+	'password-confirm' => 'Potwierdź hasło',
+	'privacy-policy' => '',
+
+    'edit-account' => 'Popraw swoje dane',
 
 ];

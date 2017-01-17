@@ -57,6 +57,12 @@
 			@yield('content')
 		</div>
 
+		<footer>
+			<div class="container">
+				<div class="text-center text-small">&copy; by bethink</div>
+			</div>
+		</footer>
+
 		<!-- Scripts -->
 		<script src="/js/app.js"></script>
 	</body>

@@ -21,7 +21,13 @@ return [
     'email' => 'Adres e-mail',
 	'password' => 'Hasło',
 	'password-confirm' => 'Potwierdź hasło',
-	'privacy-policy' => '',
+	'terms-of-use-content' => 'Znam i akceptuję ',
+	'terms-of-use-link' => 'http://wiecejnizlek.pl',
+	'terms-of-use-link-content' => 'Regulamin Serwisu',
+	'personal-data-consent-order' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, w celu realizacji zamówienia na kurs internetowy, czyli wystawienie rachunku, wysyłkę materiałów oraz wydruk identyfikatora.',
+	'personal-data-consent-account' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, w celu obsługi konta na platformie internetowej, z uwzględnieniem wysyłania powiadomień drogą e-mailową oraz kontaktu z administratorami.',
+	'personal-data-consent-newsletter-heading' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
+	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, w celu dostarczania informacji handlowych, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
 
     'edit-account' => 'Popraw swoje dane',
 

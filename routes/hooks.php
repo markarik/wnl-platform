@@ -8,4 +8,4 @@
 */
 
 
-Route::match(['get', 'post'], '/payment/status', 'Payment\PaymentController@status');
+Route::match(['get', 'post'], '/payment/status', 'Payment\StepThreeController@status');

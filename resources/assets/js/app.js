@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * include Vue and Vue Resource. This gives a great starting point for
@@ -18,3 +17,29 @@ require('./bootstrap');
 //const app = new Vue({
 //    el: '#app'
 //});
+
+$.ajaxSetup({
+    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+    url: $('body').data('base') + '/ax',
+    data: {},
+    method: 'POST',
+    error: function (error) {
+        console.log(error);
+    }
+});
+
+$('button.p24_submit').click(function () {
+    $.ajax({
+        data: {
+            controller: 'PaymentAjaxController',
+            method: 'setPaymentMethod',
+            payment: 'online',
+            sess_id: $('[name="p24_session_id"]').val()
+        },
+        success: function (response) {
+            if (response.status == 'success') {
+                $('.p24_form').submit();
+            }
+        }
+    });
+});

@@ -30,11 +30,14 @@ class SignUpForm extends Form
 					'placeholder' => trans('payment.password-confirm'),
 				],
 			])
+
+			// Personal data
+
             ->add('first_name', 'text', [
 				'label' => trans('payment.first-name'),
                 'rules' => 'required',
                 'attr' => [
-                    'placeholder' => trans('payment.first-name'),
+                    'placeholder' => trans('payment.invoice_name'),
                 ],
             ])
             ->add('last_name', 'text', [
@@ -65,6 +68,55 @@ class SignUpForm extends Form
                     'placeholder' => trans('payment.city'),
                 ],
             ])
+
+			// Invoice
+
+			->add('invoice', 'checkbox', [
+				'label' => trans('payment.invoice')
+			])
+			->add('invoice_name', 'text', [
+				'label' => trans('payment.invoice_name'),
+				'attr' => [
+					'placeholder' => trans('payment.invoice_name'),
+				],
+			])
+			->add('invoice_nip', 'text', [
+				'label' => trans('payment.invoice_nip'),
+				'attr' => [
+					'placeholder' => trans('payment.invoice_nip'),
+				],
+			])
+			->add('invoice_address', 'text', [
+				'label' => trans('payment.invoice_address'),
+				'rules' => 'required',
+				'attr' => [
+					'placeholder' => trans('payment.invoice_address'),
+				],
+			])
+			->add('invoice_zip', 'text', [
+				'label' => trans('payment.invoice_zip'),
+				'rules' => 'required',
+				'attr' => [
+					'placeholder' => trans('payment.invoice_zip'),
+				],
+			])
+			->add('invoice_city', 'text', [
+				'label' => trans('payment.invoice_city'),
+				'rules' => 'required',
+				'attr' => [
+					'placeholder' => trans('payment.invoice_city'),
+				],
+			])
+			->add('invoice_country', 'text', [
+				'label' => trans('payment.invoice_country'),
+				'rules' => 'required',
+				'attr' => [
+					'placeholder' => trans('payment.invoice_country'),
+				],
+			])
+
+			// Consents
+
 			->add('consent_order', 'checkbox', [
 				'label' => trans('payment.personal-data-consent-order'),
 				'rules' => 'required',

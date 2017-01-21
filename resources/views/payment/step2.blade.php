@@ -58,6 +58,38 @@
 							{!! form_row($form->city) !!}
 						</div>
 					</div>
+
+					<div class="col-xs-12">
+						<ul class="list-group">
+							<li class="list-group-item">
+								<div class="checkbox text-small">
+									{!! form_widget($form->invoice, [ 'attr' => [ 'v-model' => 'invoice' ] ]) !!}
+									{!! form_label($form->invoice) !!}
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="form-group" v-show="invoice">
+						<div class="col-xs-12">
+							{!! form_row($form->invoice_name) !!}
+						</div>
+						<div class="col-xs-12">
+							{!! form_row($form->invoice_nip) !!}
+						</div>
+						<div class="col-xs-12">
+							{!! form_row($form->invoice_address) !!}
+						</div>
+						<div class="col-xs-12 col-sm-3">
+							{!! form_row($form->invoice_zip) !!}
+						</div>
+						<div class="col-xs-12 col-sm-9">
+							{!! form_row($form->invoice_city) !!}
+						</div>
+						<div class="col-xs-12">
+							{!! form_row($form->invoice_country) !!}
+						</div>
+					</div>
 				</div>
 
 				<hr>

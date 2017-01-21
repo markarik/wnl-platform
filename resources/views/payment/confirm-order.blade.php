@@ -3,18 +3,18 @@
 @section('content')
 	<div class="row">
 		<div class="col-xs-12">
-			<h2 class="text-center">Czy wszystko się zgadza?</h2>
+			<h2 class="text-center">@lang('payment.confirm-heading')</h2>
 
 			<div class="panel panel-default">
-				<div class="panel-heading">@lang('payment.personal-data-order-heading')</div>
+				<div class="panel-heading">@lang('payment.confirm-order-heading')</div>
 				<div class="panel-body">
 					<p class="lead">{{ $order->product->name }}</p>
-					<p>{{ $order->product->price }}zł netto</p>
+					<p>@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])</p>
 				</div>
 			</div>
 
 			<div class="panel panel-default">
-				<div class="panel-heading">@lang('payment.personal-data-basic-heading')</div>
+				<div class="panel-heading">@lang('payment.confirm-personal-data-heading')</div>
 				<div class="panel-body">
 					<p class="lead">{{ $user->email }}</p>
 					<ul class="list-unstyled">
@@ -41,7 +41,7 @@
 
 			<div>
 				<p class="text-center">
-					<a href="{{ route('payment-personal-data') }}">@lang('payment.edit-account')</a>
+					<a href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
 				</p>
 			</div>
 		</div>
@@ -51,14 +51,14 @@
 
 	<div class="row text-center">
 		<div class="col-xs-12">
-			<h2>Jeżeli tak, to wszystko gotowe!</h2>
-			<p class="lead">Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności&nbsp;i&nbsp;złożyć&nbsp;zamówienie.</p>
+			<h2>@lang('payment.confirm-method-heading')</h2>
+			<p class="lead">@lang('payment.confirm-method-lead')</p>
 		</div>
 		<div class="col-xs-12 col-sm-6">
 			<form action="{{route('payment-confirm-order-post')}}" method="post">
 				{!! csrf_field() !!}
 				<input type="hidden" name="method" value="transfer"/>
-				<button class="btn btn-default">@lang('payment.bank-transfer-button')</button>
+				<button class="btn btn-default">@lang('payment.confirm-method-bank-transfer-button')</button>
 			</form>
 		</div>
 		<div class="col-xs-12 col-sm-6">
@@ -84,7 +84,7 @@
 
 			</form>
 
-			<button class="btn btn-primary p24_submit">@lang('payment.online-payment-button')</button>
+			<button class="btn btn-primary p24_submit">@lang('payment.confirm-method-online-payment-button')</button>
 		</div>
 	</div>
 

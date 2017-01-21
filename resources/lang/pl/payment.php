@@ -2,10 +2,8 @@
 
 return [
 
-    'back-button-content' => 'Powrót',
     'back-to-website' => 'Powrót do strony kursu',
-    'bank-transfer-button' => 'Płacę przelewem bankowym',
-    'online-payment-button' => 'Płacę szybkim przelewem',
+
     'personal-info-title' => 'Świetnie, teraz pora się poznać!',
     'personal-info-account-data' => 'Do zalogowania będziesz używać swojego maila oraz hasła.',
     'personal-info-adress' => 'Na jakie dane i adres mamy wysłać materiały?',
@@ -42,10 +40,19 @@ return [
 	/**
 	 * Personal data verification step
 	 */
-	'personal-data-order-heading' => 'Twoje zamówienie',
-	'personal-data-basic-heading' => 'Twoje dane',
-	'personal-data-invoice-heading' => 'Dane do faktury',
+	'confirm-heading' => 'Czy wszystko się zgadza?',
+	'confirm-order-heading' => 'Twoje zamówienie',
+	'confirm-order-price' => ':pricezł netto',
 
-    'edit-account' => 'Chcę poprawić dane',
+	'confirm-personal-data-heading' => 'Twoje dane',
+
+	'confirm-invoice-heading' => 'Dane do faktury',
+
+	'confirm-method-heading' => 'Jeżeli tak, to wszystko gotowe!',
+	'confirm-method-lead' => 'Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności i&nbsp;złożyć&nbsp;zamówienie.',
+	'confirm-method-bank-transfer-button' => 'Płacę przelewem bankowym',
+	'confirm-method-online-payment-button' => 'Płacę szybkim przelewem',
+
+    'confirm-change-order' => 'Chcę poprawić dane',
 
 ];

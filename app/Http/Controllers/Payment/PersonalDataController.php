@@ -22,7 +22,7 @@ class PersonalDataController extends Controller
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
-			'model'  => Auth::user(),
+			'model'  => Auth::user()->without('password'),
 		]);
 
 		return view('payment.personal-data', [

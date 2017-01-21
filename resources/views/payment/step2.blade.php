@@ -41,6 +41,12 @@
 						<p class="lead">Na podany adres otrzymasz paczkę z albumem map myśli, przyborów i&nbsp;innych gadżetów. :)</p>
 					</div>
 
+					<div class="col-xs-12">
+						<div class="form-group">
+							{!! form_row($form->phone) !!}
+						</div>
+					</div>
+
 					<div class="form-group">
 						<div class="col-xs-12 col-sm-6">
 							{!! form_row($form->first_name) !!}
@@ -63,7 +69,10 @@
 						<ul class="list-group">
 							<li class="list-group-item">
 								<div class="checkbox text-small">
-									{!! form_widget($form->invoice, [ 'attr' => [ 'v-model' => 'invoice' ] ]) !!}
+									{!! form_widget($form->invoice, [
+										'attr' => [ 'v-model' => 'invoice' ],
+
+									]) !!}
 									{!! form_label($form->invoice) !!}
 								</div>
 							</li>
@@ -106,13 +115,13 @@
 								<li class="list-group-item">
 									<div class="checkbox">
 										{!! form_widget($form->consent_account) !!}
-										{!! form_label($form->consent_account) !!}
+										{!! html_entity_decode(form_label($form->consent_account)) !!}
 									</div>
 								</li>
 								<li class="list-group-item">
 									<div class="checkbox">
 										{!! form_widget($form->consent_order) !!}
-										{!! form_label($form->consent_order) !!}
+										{!! html_entity_decode(form_label($form->consent_order)) !!}
 									</div>
 								</li>
 							</ul>
@@ -123,7 +132,18 @@
 								<li class="list-group-item">
 									<div class="checkbox">
 										{!! form_widget($form->consent_newsletter) !!}
-										{!! form_label($form->consent_newsletter) !!}
+										{!! html_entity_decode(form_label($form->consent_newsletter)) !!}
+									</div>
+								</li>
+							</ul>
+						</div>
+						<p>@lang('payment.terms-of-use-link-content')</p>
+						<div class="form-group small">
+							<ul class="list-group">
+								<li class="list-group-item">
+									<div class="checkbox">
+										{!! form_widget($form->consent_terms) !!}
+										{!! html_entity_decode(form_label($form->consent_terms)) !!}
 									</div>
 								</li>
 							</ul>

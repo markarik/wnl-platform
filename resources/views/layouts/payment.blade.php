@@ -70,6 +70,6 @@
 		</footer>
 
 		<!-- Scripts -->
-		<script src="/js/app.js"></script>
+		<script src="/js/payment.js"></script>
 	</body>
 </html>

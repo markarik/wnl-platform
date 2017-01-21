@@ -74,12 +74,11 @@ class SignUpForm extends Form
 					'placeholder' => trans('payment.city'),
 				],
 			])
+
 			// Invoice
 
-
 			->add('invoice', 'checkbox', [
-				'label' => trans('payment.invoice'),
-				'checked' => true
+				'label' => trans('payment.invoice')
 			])
 			->add('invoice_name', 'text', [
 				'label' => trans('payment.invoice-name'),

@@ -34,7 +34,7 @@
 	<hr>
 
 
-	<div class="row">
+	<div id="personal-data" class="row">
 		<div class="col-xs-12 text-center">
 			<h2>Adres do wysyłki materiałów</h2>
 			<p class="lead">Na podany adres otrzymasz paczkę z albumem map myśli, przyborów i&nbsp;innych gadżetów.
@@ -68,15 +68,15 @@
 		<div class="col-xs-12">
 			<ul class="list-group">
 				<li class="list-group-item">
-					<div class="checkbox text-small">
-						{!! form_widget($form->invoice, [ 'attr' => [ 'v-model' => 'invoice' ] ]) !!}
+					<div id="personal-data-invoice-toggle" class="checkbox text-small">
+						{!! form_widget($form->invoice) !!}
 						{!! form_label($form->invoice) !!}
 					</div>
 				</li>
 			</ul>
 		</div>
 
-		<div class="form-group" v-show="invoice">
+		<div id="personal-data-invoice-form" class="form-group @if ($form->invoice->getOption('checked')) show @else hidden @endif">
 			<div class="col-xs-12">
 				{!! form_row($form->invoice_name) !!}
 			</div>

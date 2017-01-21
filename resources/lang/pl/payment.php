@@ -12,7 +12,7 @@ return [
     'personal-info-consents-title' => 'Aby zgodnie z prawem zrealizować zamówienie, potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
     'personal-info-consent-optional' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi informacjami.',
     'personal-info-confirm-button-content' => 'Przejdź dalej',
-    'your-personal-info' => 'Twoje dane:',
+
     'first-name' => 'Imię',
     'last-name' => 'Nazwisko',
     'address' => 'Ulica i numer domu / mieszkania',
@@ -39,6 +39,13 @@ return [
 	'personal-data-consent-newsletter-heading' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
 
-    'edit-account' => 'Popraw swoje dane',
+	/**
+	 * Personal data verification step
+	 */
+	'personal-data-order-heading' => 'Twoje zamówienie',
+	'personal-data-basic-heading' => 'Twoje dane',
+	'personal-data-invoice-heading' => 'Dane do faktury',
+
+    'edit-account' => 'Chcę poprawić dane',
 
 ];

@@ -12,38 +12,6 @@ require('./bootstrap');
  * the application, or feel free to tweak this setup for your needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
-
-const app = new Vue({
-    el: '#app',
-
-	data: {
-		invoice: false
-	}
-});
-
-$.ajaxSetup({
-    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-    url: $('body').data('base') + '/ax',
-    data: {},
-    method: 'POST',
-    error: function (error) {
-        console.log(error);
-    }
-});
-
-$('button.p24_submit').click(function () {
-    $.ajax({
-        data: {
-            controller: 'PaymentAjaxController',
-            method: 'setPaymentMethod',
-            payment: 'online',
-            sess_id: $('[name="p24_session_id"]').val()
-        },
-        success: function (response) {
-            if (response.status == 'success') {
-                $('.p24_form').submit();
-            }
-        }
-    });
-});
+//const app = new Vue({
+//	el: '#app'
+//});

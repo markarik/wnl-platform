@@ -8,7 +8,7 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 col-sm-6">
 		<h3>Kurs internetowy<br>+ stacjonarny</h3>
 		<ul class="list-group">
 			<li class="list-group-item">Uczestnictwo w 12-tygodniowym kursie</li>
@@ -18,7 +18,7 @@
 			<li class="list-group-item">Indywidualne spotkania z prowadzącymi kurs</li>
 		</ul>
 	</div>
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 col-sm-6">
 		<h3>Kurs internetowy<br>&nbsp;</h3>
 		<ul class="list-group">
 			<li class="list-group-item">Uczestnictwo w 12-tygodniowym kursie</li>
@@ -28,10 +28,10 @@
 	</div>
 </div>
 <div class="row text-center">
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 col-sm-6">
 		<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}">Stacjonarny</a>
 	</div>
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 col-sm-6">
 		<a href="{{route('payment-personal-data', 'wnl-online')}}">Online</a>
 	</div>
 </div>

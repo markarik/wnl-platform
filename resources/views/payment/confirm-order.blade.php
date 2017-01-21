@@ -54,14 +54,14 @@
 			<h2>Jeżeli tak, to wszystko gotowe!</h2>
 			<p class="lead">Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności&nbsp;i&nbsp;złożyć&nbsp;zamówienie.</p>
 		</div>
-		<div class="col-xs-12 col-md-6">
+		<div class="col-xs-12 col-sm-6">
 			<form action="{{route('payment-confirm-order-post')}}" method="post">
 				{!! csrf_field() !!}
 				<input type="hidden" name="method" value="transfer"/>
 				<button class="btn btn-default">@lang('payment.bank-transfer-button')</button>
 			</form>
 		</div>
-		<div class="col-xs-12 col-md-6">
+		<div class="col-xs-12 col-sm-6">
 			<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form">
 
 				<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>

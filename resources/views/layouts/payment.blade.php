@@ -28,7 +28,7 @@
 
 						<!-- Collapsed Hamburger -->
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-							<span class="sr-only">Toggle Navigation</span>
+							<span class="sr-only">@lang('mobile-nav-toggle')</span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
@@ -65,7 +65,7 @@
 
 		<footer>
 			<div class="container">
-				<div class="text-center text-small">&copy; by bethink</div>
+				<div class="text-center text-small">@lang('footer-copy')</div>
 			</div>
 		</footer>
 

@@ -14,13 +14,15 @@ use Illuminate\Support\Facades\Input;
 
 Auth::routes();
 
-Route::get('/payment/step1', 'Payment\StepOneController@index');
+Route::group(['namespace' => 'Payment', 'prefix' => 'payment'], function () {
+	Route::get('step1', 'StepOneController@index');
 
-Route::get('/payment/step2', 'Payment\StepTwoContoller@index');
-Route::post('/payment/step2', 'Payment\StepTwoContoller@handle');
+	Route::get('step2/{product?}', 'StepTwoContoller@index')->name('payment-provide-personal-data');
+	Route::post('step2', 'StepTwoContoller@handle');
 
-Route::get('/payment/step3', 'Payment\StepThreeController@index');
-Route::post('/payment/step3', 'Payment\StepThreeController@handle');
+	Route::get('step3', 'StepThreeController@index');
+	Route::post('step3', 'StepThreeController@handle');
+});
 
 Route::group(['middleware' => 'auth'], function () {
 

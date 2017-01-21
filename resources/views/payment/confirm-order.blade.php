@@ -41,7 +41,7 @@
 
 			<div>
 				<p class="text-center">
-					<a href="{{ url('/payment/step2') }}">@lang('payment.edit-account')</a>
+					<a href="{{ route('payment-personal-data') }}">@lang('payment.edit-account')</a>
 				</p>
 			</div>
 		</div>
@@ -55,7 +55,7 @@
 			<p class="lead">Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności&nbsp;i&nbsp;złożyć&nbsp;zamówienie.</p>
 		</div>
 		<div class="col-xs-12 col-md-6">
-			<form action="{{url('/payment/step3')}}" method="post">
+			<form action="{{route('payment-confirm-order-post')}}" method="post">
 				{!! csrf_field() !!}
 				<input type="hidden" name="method" value="transfer"/>
 				<button class="btn btn-default">@lang('payment.bank-transfer-button')</button>
@@ -77,8 +77,8 @@
 				<input type="hidden" name="p24_country" value="PL"/>
 				<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
 				<input type="hidden" name="p24_language" value="pl"/>
-				<input type="hidden" name="p24_url_return" value="{{ url('/profile/orders') }}"/>
-				<input type="hidden" name="p24_url_status" value="{{ url('/payment/status')  }} "/>
+				<input type="hidden" name="p24_url_return" value="{{ route('profile-orders') }}"/>
+				<input type="hidden" name="p24_url_status" value="{{ route('payment-status-hook')  }} "/>
 				<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
 				<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
 

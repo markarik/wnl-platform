@@ -13,7 +13,7 @@ use Kris\LaravelFormBuilder\FormBuilderTrait;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
-class StepTwoContoller extends Controller
+class PersonalDataController extends Controller
 {
 	use FormBuilderTrait;
 
@@ -21,11 +21,11 @@ class StepTwoContoller extends Controller
 	{
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
-			'url'    => url('/payment/step2'),
+			'url'    => route('payment-personal-data-post'),
 			'model'  => Auth::user(),
 		]);
 
-		return view('payment.step2', [
+		return view('payment.personal-data', [
 			'form' => $form,
 		]);
 
@@ -73,6 +73,6 @@ class StepTwoContoller extends Controller
 
 		Mail::to(Auth::user())->send(new UserSignedUp);
 
-		return redirect(url('/payment/step3'));
+		return redirect(route('payment-confirm-order'));
 	}
 }

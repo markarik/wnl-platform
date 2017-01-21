@@ -28,7 +28,7 @@ class UserSignedUp extends Mailable
     public function build()
     {
         return $this
-			->view('mail.user_signed_up')
+			->view('mail.user-signed-up')
 			->subject('Potwierdzenie rejestracji');
     }
 }

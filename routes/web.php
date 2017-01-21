@@ -15,20 +15,20 @@ use Illuminate\Support\Facades\Input;
 Auth::routes();
 
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment'], function () {
-	Route::get('step1', 'StepOneController@index');
+	Route::get('/select-product', 'SelectProductController@index')->name('payment-select-product');
 
-	Route::get('step2/{product?}', 'StepTwoContoller@index')->name('payment-provide-personal-data');
-	Route::post('step2', 'StepTwoContoller@handle');
+	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
+	Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
 
-	Route::get('step3', 'StepThreeController@index');
-	Route::post('step3', 'StepThreeController@handle');
+	Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
+	Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
 });
 
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/', function () {
         return redirect('/course/1');
-    });
+    })->name('home');
 
     Route::get('/course/1', 'Course\CourseController@index');
 
@@ -37,7 +37,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
 
     Route::get('/dashboard', 'User\DashboardController@index');
-    Route::get('/profile/orders', 'User\OrderController@index');
+    Route::get('/profile/orders', 'User\OrderController@index')->name('profile-orders');
 
     /*
     * Ajax common route

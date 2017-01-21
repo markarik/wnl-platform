@@ -29,10 +29,10 @@
 </div>
 <div class="row text-center">
 	<div class="col-xs-12 col-md-6">
-		<a href="{{route('payment-provide-personal-data', 'wnl-online-onsite')}}">Stacjonarny</a>
+		<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}">Stacjonarny</a>
 	</div>
 	<div class="col-xs-12 col-md-6">
-		<a href="{{route('payment-provide-personal-data', 'wnl-online')}}">Online</a>
+		<a href="{{route('payment-personal-data', 'wnl-online')}}">Online</a>
 	</div>
 </div>
 @endsection

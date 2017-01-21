@@ -23,7 +23,7 @@
                             @endif
                         @endforeach
 
-                        <a href="{{url('payment/step3')}}" class="button" >Zmień metodę płatności</a>
+                        <a href="{{route('payment-confirm-order')}}" class="button" >Zmień metodę płatności</a>
                     </div>
                 </div>
             </div>

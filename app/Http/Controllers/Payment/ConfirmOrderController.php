@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Lib\Przelewy24\Client as Payment;
 use Illuminate\Support\Facades\Auth;
 
-class StepThreeController extends Controller
+class ConfirmOrderController extends Controller
 {
 	public function index(Payment $payment)
 	{
@@ -17,14 +17,14 @@ class StepThreeController extends Controller
 		$user = Auth::user();
 
 		if (!$user) {
-			return redirect(url('/payment/step1'));
+			return redirect(route('payment-select-product'));
 		}
 
 		$order = $user->orders()->recent();
 
 		$checksum = $payment::generateChecksum($order->session_id, (int)$order->product->price * 100);
 
-		return view('payment.step3', [
+		return view('payment.confirm-order', [
 			'order'    => $order,
 			'user'     => $user,
 			'checksum' => $checksum,
@@ -38,7 +38,7 @@ class StepThreeController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
-		return redirect(url('/profile/orders'));
+		return redirect(route('profile-orders'));
 	}
 
 	public function status(Request $request, Payment $payment)

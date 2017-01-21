@@ -8,4 +8,4 @@
 */
 
 
-Route::match(['get', 'post'], '/payment/status', 'Payment\StepThreeController@status')->name('payment-status-hook');
+Route::match(['get', 'post'], '/payment/status', 'Payment\ConfirmOrderController@status')->name('payment-status-hook');

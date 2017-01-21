@@ -17,12 +17,22 @@ class PersonalDataController extends Controller
 {
 	use FormBuilderTrait;
 
-	public function index(FormBuilder $formBuilder)
+	public function index(FormBuilder $formBuilder, $product = null)
 	{
+		if (!$product) {
+			return redirect()->route('payment-select-product');
+		}
+
+		if (Auth::user()) {
+			$user = Auth::user()->without('password');
+		} else {
+			$user = null;
+		}
+
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
-			'model'  => Auth::user()->without('password'),
+			'model'  => $user,
 		]);
 
 		return view('payment.personal-data', [

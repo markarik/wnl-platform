@@ -21,15 +21,7 @@ class CreateOrdersTable extends Migration
 			$table->tinyInteger('paid')->default(0);
             $table->string('session_id')->unique()->nullable();
             $table->string('external_id')->unique()->nullable();
-            $table->string('transfer_title')->unique()->nullable();
-            $table->tinyInteger('invoice')->default(0);
-            $table->string('invoice_name')->nullable();
-            $table->string('invoice_nip')->nullable();
-            $table->string('invoice_address')->nullable();
-            $table->string('invoice_zip')->nullable();
-            $table->string('invoice_city')->nullable();
-            $table->string('invoice_country')->nullable();
-            $table->tinyInteger('consent_newsletter')->nullable();
+			$table->string('transfer_title')->unique()->nullable();
 			$table->timestamps();
 
 			$table->foreign('user_id')

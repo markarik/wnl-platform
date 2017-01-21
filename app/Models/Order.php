@@ -13,9 +13,7 @@ class Order extends Model
 	];
 
 	protected $fillable = [
-		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id', 'invoice',
-		'invoice_name', 'invoice_nip', 'invoice_address', 'invoice_zip', 'invoice_city', 'invoice_country',
-		'consent_newsletter',
+		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id',
 
 	];
 

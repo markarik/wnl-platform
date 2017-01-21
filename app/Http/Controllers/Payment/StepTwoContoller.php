@@ -46,33 +46,33 @@ class StepTwoContoller extends Controller
 		$user = User::updateOrCreate(
 			['email' => $request->get('email')],
 			[
-				'first_name' => $request->get('first_name'),
-				'last_name'  => $request->get('last_name'),
-				'address'    => $request->get('address'),
-				'zip'        => $request->get('zip'),
-				'city'       => $request->get('city'),
-				'email'      => $request->get('email'),
-				'phone'      => $request->get('phone'),
-				'password'   => $request->get('password'),
+				'first_name'         => $request->get('first_name'),
+				'last_name'          => $request->get('last_name'),
+				'address'            => $request->get('address'),
+				'zip'                => $request->get('zip'),
+				'city'               => $request->get('city'),
+				'email'              => $request->get('email'),
+				'phone'              => $request->get('phone'),
+				'password'           => $request->get('password'),
+				'invoice'            => $request->get('invoice') ?? 0,
+				'invoice_name'       => $request->get('invoice_name'),
+				'invoice_nip'        => $request->get('invoice_nip'),
+				'invoice_address'    => $request->get('invoice_address'),
+				'invoice_zip'        => $request->get('invoice_zip'),
+				'invoice_city'       => $request->get('invoice_city'),
+				'invoice_country'    => $request->get('invoice_country'),
+				'consent_newsletter' => $request->get('consent_newsletter') ?? 0,
 			]
 		);
 		$user->orders()->create([
 			'product_id' => 1,
 			'session_id' => str_random(32),
-			'invoice' => $request->get('invoice') ?? 0,
-			'invoice_name' => $request->get('invoice_name'),
-			'invoice_nip' => $request->get('invoice_nip'),
-			'invoice_address' => $request->get('invoice_address'),
-			'invoice_zip' => $request->get('invoice_zip'),
-			'invoice_city' => $request->get('invoice_city'),
-			'invoice_country' => $request->get('invoice_country'),
-			'consent_newsletter' => $request->get('consent_newsletter') ?? 0,
 		]);
 
 		Auth::login($user);
 
 		Mail::to(Auth::user())->send(new UserSignedUp);
 
-        return redirect(url('/payment/step3'));
-    }
+		return redirect(url('/payment/step3'));
+	}
 }

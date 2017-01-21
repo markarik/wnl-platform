@@ -23,6 +23,14 @@ class CreateUsersTable extends Migration
             $table->longText('zip')->nullable();
             $table->longText('city')->nullable();
 			$table->longText('phone')->nullable();
+			$table->tinyInteger('invoice')->default(0);
+			$table->string('invoice_name')->nullable();
+			$table->string('invoice_nip')->nullable();
+			$table->string('invoice_address')->nullable();
+			$table->string('invoice_zip')->nullable();
+			$table->string('invoice_city')->nullable();
+			$table->string('invoice_country')->nullable();
+			$table->tinyInteger('consent_newsletter')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

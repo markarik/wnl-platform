@@ -6,7 +6,7 @@
 		<div class="col-xs-12 text-center">
 			<h2>Świetny wybór!</h2>
 			<div class="alert alert-success">
-				Zapisujesz się na kurs stacjonarny w&nbsp;cenie <strong>2000zł</strong> brutto.
+				Zapisujesz się na kurs {{ $product->name }} w&nbsp;cenie <strong>{{ $product->price }}zł</strong> brutto.
 			</div>
 		</div>
 	</div>

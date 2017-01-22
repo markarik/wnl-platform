@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Forms\SignUpForm;
 use App\Mail\UserSignedUp;
+use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class PersonalDataController extends Controller
 {
@@ -19,24 +21,27 @@ class PersonalDataController extends Controller
 
 	public function index(FormBuilder $formBuilder, $product = null)
 	{
-		if (!$product) {
+		$product = Session::get('product', function () use ($product) {
+			return Product::slug($product);
+		});
+
+		if (!$product instanceof Product) {
 			return redirect()->route('payment-select-product');
 		}
 
-		if (Auth::user()) {
-			$user = Auth::user()->without('password');
-		} else {
-			$user = null;
-		}
+		Session::put('product', $product);
 
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
-			'model'  => $user,
+			'model'  => Auth::user(),
+		])->modify('password', 'password', [
+			'value' => '',
 		]);
 
 		return view('payment.personal-data', [
-			'form' => $form,
+			'form'    => $form,
+			'product' => $product,
 		]);
 
 	}
@@ -75,7 +80,7 @@ class PersonalDataController extends Controller
 			]
 		);
 		$user->orders()->create([
-			'product_id' => 1,
+			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
 		]);
 

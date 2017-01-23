@@ -102,9 +102,8 @@
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
-			<h2>Wszystko zgodnie z prawem</h2>
-			<p class="lead">Do legalnej realizacji zamówienia potrzebujemy Twojej zgody na przetwarzanie danych
-				osobowych.</p>
+			<h2>@lang('payment.personal-data-consents-heading')</h2>
+			<p class="lead">@lang('payment.personal-data-consents-lead')</p>
 		</div>
 
 
@@ -152,7 +151,7 @@
 	</div>
 
 	<div class="text-center">
-		<button class="btn btn-primary btn-lg">Dalej</button>
+		<button class="btn btn-primary btn-lg">@lang('payment.personal-data-submit')</button>
 	</div>
 
 	{!! form_end($form, false)  !!}

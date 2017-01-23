@@ -32,10 +32,15 @@ return [
 	'invoice-city' => 'Miasto',
 	'invoice-country' => 'Kraj',
 
+	'personal-data-consents-heading' => 'Wszystko zgodnie z prawem',
+	'personal-data-consents-lead' => 'Do legalnej realizacji zamówienia potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
+
 	'personal-data-consent-order' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu realizacji zamówienia na kurs internetowy</strong>, czyli wystawienie rachunku, wysyłkę materiałów oraz wydruk identyfikatora.',
 	'personal-data-consent-account' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu obsługi konta na platformie internetowej</strong>, z uwzględnieniem wysyłania powiadomień drogą e-mailową oraz kontaktu z administratorami.',
 	'personal-data-consent-newsletter-heading' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
+
+	'personal-data-submit' => 'Gotowe, idę dalej',
 
 	/**
 	 * Personal data verification step

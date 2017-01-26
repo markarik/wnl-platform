@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
 	protected $casts = [
-		'paid'               => 'boolean',
-		'invoice'            => 'boolean',
-		'consent_newsletter' => 'boolean',
+		'paid' => 'boolean',
 	];
 
 	protected $fillable = [

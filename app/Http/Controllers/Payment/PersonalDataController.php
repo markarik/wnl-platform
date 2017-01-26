@@ -77,6 +77,9 @@ class PersonalDataController extends Controller
 				'invoice_city'       => $request->get('invoice_city'),
 				'invoice_country'    => $request->get('invoice_country'),
 				'consent_newsletter' => $request->get('consent_newsletter') ?? 0,
+				'consent_account'    => $request->get('consent_account') ?? 0,
+				'consent_order'      => $request->get('consent_order') ?? 0,
+				'consent_terms'      => $request->get('consent_terms') ?? 0,
 			]
 		);
 		$user->orders()->create([

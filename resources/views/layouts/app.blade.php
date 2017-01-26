@@ -20,7 +20,7 @@
         ]); ?>
     </script>
 </head>
-<body>
+<body data-base="{{env('APP_URL')}}">
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">

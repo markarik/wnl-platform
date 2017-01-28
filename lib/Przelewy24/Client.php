@@ -57,7 +57,7 @@ class Client
 
 	public function verifyTransaction($sessionId, $amount, $orderId) {
 		$this->url = config('przelewy24.verify_url');
-
+		// TODO: Check amount with database entry
 		$this->data = [
 			'p24_merchant_id' => $this->merchantId,
 			'p24_pos_id'      => $this->posId,

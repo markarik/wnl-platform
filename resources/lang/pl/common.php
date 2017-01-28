@@ -16,4 +16,6 @@ return [
 	'main-page-link-title' => 'Do tablicy!',
 	'nav-user-dropdown-title' => 'Gdzie Cię zabrać?',
 	'your-profile-link-content' => 'Twój profil',
+	'mobile-nav-toggle' => 'Przełącz mobilną nawigację',
+	'footer-copy' => '&copy; by bethink',
 ];

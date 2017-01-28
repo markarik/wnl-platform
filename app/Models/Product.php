@@ -13,4 +13,11 @@ class Product extends Model
     protected $guarded = [
         'price'
     ];
+
+	public function scopeSlug($query, $slug)
+	{
+		return $query
+			->where('slug', $slug)
+			->first();
+	}
 }

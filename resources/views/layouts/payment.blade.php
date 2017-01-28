@@ -21,22 +21,22 @@
 		</script>
 	</head>
 	<body data-base="{{env('APP_URL')}}">
-		<div id="checkout">
+		<div id="app">
 			<nav class="navbar navbar-default navbar-static-top">
-				<div class="container">
+				<div class="container payment-container">
 					<div class="navbar-header">
 
 						<!-- Collapsed Hamburger -->
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-							<span class="sr-only">Toggle Navigation</span>
+							<span class="sr-only">@lang('common.mobile-nav-toggle')</span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
 
 						<!-- Branding Image -->
-						<a class="navbar-brand" href="{{ url('/') }}">
-							<img src="{{ URL::asset('/images/wnl-logo@2x.png') }}" class="navbar-brand-image">
+						<a class="navbar-brand" href="{{ route('home') }}">
+							<img src="{{ asset('/images/wnl-logo@2x.png') }}" class="navbar-brand-image">
 						</a>
 					</div>
 
@@ -54,10 +54,22 @@
 				</div>
 			</nav>
 
-			@yield('content')
+			<div class="container payment-container">
+				<div class="row">
+					<div class="col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+						@yield('content')
+					</div>
+				</div>
+			</div>
 		</div>
 
+		<footer>
+			<div class="container">
+				<p class="text-center text-small">@lang('common.footer-copy')</p>
+			</div>
+		</footer>
+
 		<!-- Scripts -->
-		<script src="/js/app.js"></script>
+		<script src="/js/payment.js"></script>
 	</body>
 </html>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Input;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,38 +15,43 @@ use Illuminate\Support\Facades\Input;
 
 Auth::routes();
 
-Route::get('/payment/step1', 'Payment\StepOneController@index');
 
-Route::get('/payment/step2', 'Payment\StepTwoContoller@index');
-Route::post('/payment/step2', 'Payment\StepTwoContoller@handle');
+Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function ()
+{
+	Route::get('/select-product', 'SelectProductController@index')->name('payment-select-product');
 
-Route::get('/payment/step3', 'Payment\StepThreeController@index');
-Route::post('/payment/step3', 'Payment\StepThreeController@handle');
+	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
+	Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
+
+	Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
+	Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
+});
+
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/', function () {
-        return redirect('/course/1');
-    });
+	Route::get('/', function () {
+		return redirect('/course/1');
+	})->name('home');
 
-    Route::get('/course/1', 'Course\CourseController@index');
+	Route::get('/course/1', 'Course\CourseController@index');
 
-    //Route::get( '/course/1/module/{moduleId}/chapter/{chapterId}', 'ModuleController@index' );
+	//Route::get( '/course/1/module/{moduleId}/chapter/{chapterId}', 'ModuleController@index' );
 
-    Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
+	Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
 
-    Route::get('/dashboard', 'User\DashboardController@index');
-    Route::get('/profile/orders', 'User\OrderController@index');
+	Route::get('/dashboard', 'User\DashboardController@index');
+	Route::get('/profile/orders', 'User\OrderController@index')->name('profile-orders');
 
-    /*
-    * Ajax common route
-    */
-    Route::match(['get', 'post'], '/ax', function () {
-        abort_unless(Input::has('controller') && Input::has('method'), 404);
-        $controller = Input::get('controller');
-        $method = Input::get('method');
+	/*
+	* Ajax common route
+	*/
+	Route::match(['get', 'post'], '/ax', function () {
+		abort_unless(Input::has('controller') && Input::has('method'), 404);
+		$controller = Input::get('controller');
+		$method = Input::get('method');
 
-        return App::make('App\\Http\\Controllers\\Ajax\\' . $controller)->{$method}();
-    });
+		return App::make('App\\Http\\Controllers\\Ajax\\' . $controller)->{$method}();
+	});
 
 });

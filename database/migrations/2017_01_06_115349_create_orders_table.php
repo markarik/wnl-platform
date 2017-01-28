@@ -21,7 +21,7 @@ class CreateOrdersTable extends Migration
 			$table->tinyInteger('paid')->default(0);
             $table->string('session_id')->unique()->nullable();
             $table->string('external_id')->unique()->nullable();
-            $table->string('transfer_title')->unique()->nullable();
+			$table->string('transfer_title')->unique()->nullable();
 			$table->timestamps();
 
 			$table->foreign('user_id')

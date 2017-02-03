@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Snippet extends Model
 {
-    protected $fillable = ['content'];
+    protected $fillable = ['content', 'type'];
 
 	public function slides() {
 		return $this->morphToMany('\App\Models\Slide', 'presentable');

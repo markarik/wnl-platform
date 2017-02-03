@@ -12,9 +12,9 @@ class SectionsTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('sections')->insert([
-			'name'       => 'Example Section',
-			'subject_id' => 1,
-			'slide_id'   => 1,
+			'name'      => 'Example Section',
+			'lesson_id' => 1,
+			'slide_id'  => 1,
 		]);
 	}
 }

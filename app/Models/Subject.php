@@ -13,7 +13,7 @@ class Subject extends Model
 	}
 
 	public function sections() {
-		return $this->hasMany('\App\Models\Section');
+		return $this->hasManyThrough('\App\Models\Section', '\App\Models\Lesson');
 	}
 
 	public function lessons() {

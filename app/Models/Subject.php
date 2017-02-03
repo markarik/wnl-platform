@@ -9,7 +9,7 @@ class Subject extends Model
 	protected $fillable = ['name'];
 
 	public function slides() {
-		return $this->morphToMany('\App\Models\Slide', 'presentables');
+		return $this->morphToMany('\App\Models\Slide', 'presentable');
 	}
 
 	public function sections() {

@@ -55,3 +55,9 @@ Route::group(['middleware' => 'auth'], function () {
 	});
 
 });
+
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function ()
+{
+	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
+	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
+});

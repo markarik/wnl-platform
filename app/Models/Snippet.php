@@ -9,6 +9,6 @@ class Snippet extends Model
     protected $fillable = ['content'];
 
 	public function slides() {
-		return $this->morphToMany('\App\Models\Slide', 'presentables');
+		return $this->morphToMany('\App\Models\Slide', 'presentable');
 	}
 }

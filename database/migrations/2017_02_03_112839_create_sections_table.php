@@ -18,6 +18,7 @@ class CreateSectionsTable extends Migration
 			$table->unsignedInteger('subject_id');
 			$table->string('name');
 			$table->unsignedInteger('slide_id');
+			$table->timestamps();
 
 			$table
 				->foreign('subject_id')

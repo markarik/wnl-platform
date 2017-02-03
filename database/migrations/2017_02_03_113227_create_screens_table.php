@@ -17,6 +17,7 @@ class CreateScreensTable extends Migration
 			$table->increments('id');
 			$table->unsignedInteger('lesson_id');
 			$table->unsignedInteger('snippet_id');
+			$table->timestamps();
 
 			$table
 				->foreign('lesson_id')

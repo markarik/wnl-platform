@@ -17,6 +17,7 @@ class CreateSnippetsTable extends Migration
 			$table->increments('id');
 			$table->text('content')->nullable();
 			$table->string('type');
+			$table->timestamps();
 		});
     }
 

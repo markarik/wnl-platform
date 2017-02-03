@@ -18,6 +18,7 @@ class CreatePresentablesTable extends Migration
 			$table->unsignedInteger('slide_id');
 			$table->unsignedInteger('presentable_id');
 			$table->string('presentable_type');
+			$table->timestamps();
 
 			$table
 				->foreign('slide_id')

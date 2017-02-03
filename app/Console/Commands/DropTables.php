@@ -41,25 +41,25 @@ class DropTables extends Command
             exit('This command works only in dev environment!' . PHP_EOL);
         }
 
-        if (!$this->confirm('CONFIRM DROP AL TABLES IN THE CURRENT DATABASE? [y|N]')) {
+        if (!$this->confirm('CONFIRM DROPPING ALL TABLES IN THE CURRENT DATABASE? [y|N]')) {
             exit('Drop Tables command aborted' . PHP_EOL);
         }
 
-        $colname = 'Tables_in_' . env('DB_DATABASE');
-
+        $colName = 'Tables_in_' . env('DB_DATABASE');
+		$dropList = [];
         $tables = DB::select('SHOW TABLES');
 
         foreach ($tables as $table) {
 
-            $droplist[] = $table->$colname;
+            $dropList[] = $table->$colName;
 
         }
-        $droplist = implode(',', $droplist);
+        $dropList = implode(',', $dropList);
 
         DB::beginTransaction();
         //turn off referential integrity
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        DB::statement("DROP TABLE $droplist");
+        DB::statement("DROP TABLE $dropList");
         //turn referential integrity back on
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
         DB::commit();

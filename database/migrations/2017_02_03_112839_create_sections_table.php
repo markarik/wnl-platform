@@ -14,10 +14,20 @@ class CreateSectionsTable extends Migration
     public function up()
     {
 		Schema::create('sections', function (Blueprint $table) {
-			$table->unsignedInteger('id');
+			$table->increments('id');
 			$table->unsignedInteger('subject_id');
 			$table->string('name');
 			$table->unsignedInteger('slide_id');
+
+			$table
+				->foreign('subject_id')
+				->references('id')
+				->on('subjects');
+
+			$table
+				->foreign('slide_id')
+				->references('id')
+				->on('slides');
 		});
     }
 

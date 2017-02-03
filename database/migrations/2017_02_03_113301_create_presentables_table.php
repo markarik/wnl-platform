@@ -14,9 +14,15 @@ class CreatePresentablesTable extends Migration
     public function up()
     {
 		Schema::create('presentables', function (Blueprint $table) {
-			$table->unsignedInteger('id');
-			$table->unsignedInteger('lesson_id');
-			$table->unsignedInteger('snippet_id');
+			$table->increments('id');
+			$table->unsignedInteger('slide_id');
+			$table->unsignedInteger('presentable_id');
+			$table->string('presentable_type');
+
+			$table
+				->foreign('slide_id')
+				->references('id')
+				->on('slides');
 		});
     }
 

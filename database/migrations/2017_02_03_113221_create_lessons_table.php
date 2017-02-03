@@ -14,9 +14,14 @@ class CreateLessonsTable extends Migration
     public function up()
     {
 		Schema::create('lessons', function (Blueprint $table) {
-			$table->unsignedInteger('id');
+			$table->increments('id');
 			$table->string('name');
 			$table->unsignedInteger('subject_id');
+
+			$table
+				->foreign('subject_id')
+				->references('id')
+				->on('subjects');
 		});
     }
 

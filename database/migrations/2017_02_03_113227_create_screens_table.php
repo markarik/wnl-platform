@@ -14,9 +14,19 @@ class CreateScreensTable extends Migration
     public function up()
     {
 		Schema::create('screens', function (Blueprint $table) {
-			$table->unsignedInteger('id');
+			$table->increments('id');
 			$table->unsignedInteger('lesson_id');
 			$table->unsignedInteger('snippet_id');
+
+			$table
+				->foreign('lesson_id')
+				->references('id')
+				->on('lessons');
+
+			$table
+				->foreign('snippet_id')
+				->references('id')
+				->on('snippets');
 		});
     }
 	/**

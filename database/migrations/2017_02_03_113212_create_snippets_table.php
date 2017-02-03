@@ -15,7 +15,7 @@ class CreateSnippetsTable extends Migration
     {
 		Schema::create('snippets', function (Blueprint $table) {
 			$table->unsignedInteger('id');
-			$table->text('content');
+			$table->text('content')->nullable();
 			$table->string('type');
 		});
     }

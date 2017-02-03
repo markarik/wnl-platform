@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ModulesTableSeeder extends Seeder
+class SubjectsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,8 +11,8 @@ class ModulesTableSeeder extends Seeder
      */
     public function run()
     {
-		DB::table('modules')->insert([
-			'name' => 'Chirurgia',
+		DB::table('subjects')->insert([
+			'name' => 'Example Subject',
 		]);
     }
 }

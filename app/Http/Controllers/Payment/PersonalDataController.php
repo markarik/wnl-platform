@@ -19,17 +19,13 @@ class PersonalDataController extends Controller
 {
 	use FormBuilderTrait;
 
-	public function index(FormBuilder $formBuilder, $product = null)
+	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
-		$product = Session::get('product', function () use ($product) {
-			return Product::slug($product);
-		});
+		$product = $this->getProduct($productSlug);
 
 		if (!$product instanceof Product) {
 			return redirect()->route('payment-select-product');
 		}
-
-		Session::put('product', $product);
 
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
@@ -92,5 +88,22 @@ class PersonalDataController extends Controller
 		Mail::to(Auth::user())->send(new UserSignedUp);
 
 		return redirect(route('payment-confirm-order'));
+	}
+
+	/**
+	 * @param $productSlug
+	 * @return null|Product
+	 */
+	private function getProduct($productSlug)
+	{
+		$product = Session::get('product', function () use ($productSlug) {
+			return Product::slug($productSlug);
+		});
+
+		if ($product instanceof Product && $product->slug !== $productSlug) {
+			$product = Product::slug($productSlug);
+		}
+
+		return $product;
 	}
 }

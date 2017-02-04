@@ -53,6 +53,7 @@ return [
 	'invoice-zip' => 'Kod pocztowy',
 	'invoice-city' => 'Miasto',
 	'invoice-country' => 'Kraj',
+	'invoice-required' => 'To pole jest wymagane, jeżeli chcesz otrzymać fakturę dla innych danych.',
 
 	'personal-data-consents-heading' => 'Wszystko zgodnie z prawem',
 	'personal-data-consents-lead' => 'Do legalnej realizacji zamówienia potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',

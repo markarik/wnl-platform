@@ -56,18 +56,12 @@
 
 			<div class="container payment-container">
 				<div class="row">
-					<div class="col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+					<div class="payment-content col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
 						@yield('content')
 					</div>
 				</div>
 			</div>
 		</div>
-
-		<footer>
-			<div class="container">
-				<p class="text-center text-small">@lang('common.footer-copy')</p>
-			</div>
-		</footer>
 
 		<!-- Scripts -->
 		<script src="/js/payment.js"></script>

@@ -34,12 +34,6 @@ Route::group(['middleware' => 'auth'], function () {
 		return redirect('/course/1');
 	})->name('home');
 
-	Route::get('/course/1', 'Course\CourseController@index');
-
-	//Route::get( '/course/1/module/{moduleId}/chapter/{chapterId}', 'ModuleController@index' );
-
-	Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
-
 	Route::get('/dashboard', 'User\DashboardController@index');
 	Route::get('/profile/orders', 'User\OrderController@index')->name('profile-orders');
 
@@ -54,6 +48,12 @@ Route::group(['middleware' => 'auth'], function () {
 		return App::make('App\\Http\\Controllers\\Ajax\\' . $controller)->{$method}();
 	});
 
+});
+
+Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
+	Route::get('/course/1', 'CourseController@index');
+	Route::get('/course/1/module/{moduleId}/chapter/{chapterId}/section/{sectionId}', 'ChapterController@index');
+	Route::get('/slideshow-builder/{snippetId}', 'SlideShowController@build')->name('slideshow-builder');
 });
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function ()

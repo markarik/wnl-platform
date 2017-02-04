@@ -15,4 +15,8 @@ class Screen extends Model
 	public function lesson() {
 		return $this->belongsTo('\App\Models\Lesson');
 	}
+
+	public function slides() {
+		return $this->hasManyThrough('\App\Models\Slide', '\App\Models\Snippet');
+	}
 }

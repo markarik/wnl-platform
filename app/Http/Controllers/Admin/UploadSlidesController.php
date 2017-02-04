@@ -14,5 +14,6 @@ class UploadSlidesController extends Controller
 
 	public function handle(Parser $parser, Request $request) {
 		$parser->parse($request->get('slides'));
+		return view('admin.upload-slides');
 	}
 }

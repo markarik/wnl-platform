@@ -12,11 +12,11 @@ class Slide extends Model
 		'is_functional'	=> 'bool',
 	];
 
-	public function subjects() {
-		return $this->morphedByMany('\App\Models\Subject', 'presentable');
+	public function categories() {
+		return $this->morphedByMany('\App\Models\Category', 'presentable');
 	}
 
-	public function slideShows() {
+	public function slideshows() {
 		return $this->morphedByMany('\App\Models\Snippet', 'presentable');
 	}
 }

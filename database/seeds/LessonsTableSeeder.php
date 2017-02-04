@@ -13,7 +13,6 @@ class LessonsTableSeeder extends Seeder
 	{
 		DB::table('lessons')->insert([
 			'name'       => 'Dzień 1',
-			'subject_id' => 1,
 		]);
 	}
 }

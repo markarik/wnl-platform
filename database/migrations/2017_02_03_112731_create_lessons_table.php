@@ -16,13 +16,8 @@ class CreateLessonsTable extends Migration
 		Schema::create('lessons', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('name');
-			$table->unsignedInteger('subject_id');
+			$table->unsignedInteger('course_id')->default(1);
 			$table->timestamps();
-
-			$table
-				->foreign('subject_id')
-				->references('id')
-				->on('subjects');
 		});
     }
 

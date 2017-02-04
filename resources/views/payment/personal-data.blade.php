@@ -74,7 +74,7 @@
 			</ul>
 		</div>
 
-		<div id="personal-data-invoice-form" class="form-group @if ($form->invoice->getOption('checked')) show @else hidden @endif">
+		<div id="personal-data-invoice-form" class="form-group @if (Session::get('_old_input.invoice')) show @else hidden @endif">
 			<div class="col-xs-12">
 				{!! form_row($form->invoice_name) !!}
 			</div>

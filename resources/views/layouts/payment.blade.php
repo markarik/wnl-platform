@@ -36,7 +36,7 @@
 
 						<!-- Branding Image -->
 						<a class="navbar-brand" href="{{ route('home') }}">
-							<img src="{{ asset('/images/wnl-logo@2x.png') }}" class="navbar-brand-image">
+							<img src="{{ asset('/images/wnl-logo.svg') }}" class="navbar-brand-image">
 						</a>
 					</div>
 

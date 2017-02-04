@@ -21,8 +21,15 @@ class PersonalDataController extends Controller
 
 	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
-		$product = $this->getProduct($productSlug);
+		if ($productSlug !== null) {
+			$product = Product::slug($productSlug);
 
+			if ($product instanceof Product) {
+				Session::put('product', $product);
+			}
+		}
+
+		$product = Session::get('product');
 		if (!$product instanceof Product) {
 			return redirect()->route('payment-select-product');
 		}
@@ -94,16 +101,16 @@ class PersonalDataController extends Controller
 	 * @param $productSlug
 	 * @return null|Product
 	 */
-	private function getProduct($productSlug)
+	private function getProduct($productSlug = null)
 	{
 		$product = Session::get('product', function () use ($productSlug) {
 			return Product::slug($productSlug);
 		});
 
-		if ($product instanceof Product && $product->slug !== $productSlug) {
-			$product = Product::slug($productSlug);
+		if ($product instanceof Product && $product !== null && $product->slug !== $productSlug) {
+			return $product;
 		}
 
-		return $product;
+		return Product::slug($productSlug);
 	}
 }

@@ -74,7 +74,7 @@ return [
 	 */
 	'confirm-heading' => 'Czy wszystko się zgadza?',
 	'confirm-order-heading' => 'Twoje zamówienie',
-	'confirm-order-price' => ':pricezł netto',
+	'confirm-order-price' => ':pricezł brutto',
 
 	'confirm-personal-data-heading' => 'Twoje dane',
 

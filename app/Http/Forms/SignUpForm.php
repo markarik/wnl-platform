@@ -136,7 +136,10 @@ class SignUpForm extends Form
 				'label' => trans('payment.personal-data-consent-newsletter'),
 			])
 			->add('consent_terms', 'checkbox', [
-				'label' => trans('payment.terms-of-use-content'),
+				'label' => trans('payment.personal-data-tou-content', [
+					'tou-link' => trans('payment.personal-data-tou-link'),
+					'tou-link-content' => trans('payment.personal-data-tou-link-content'),
+				]),
 				'rules' => 'required',
 			]);
 	}

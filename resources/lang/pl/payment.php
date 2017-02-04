@@ -30,11 +30,11 @@ return [
 	'personal-data-title' => 'Świetny wybór!',
 	'personal-data-product' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
 
-	'personal-data-account-heading' => 'To co, zakładamy konto?',
+	'personal-data-account-heading' => 'Twoje konto',
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
 
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
-	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborów i&nbsp;innych gadżetów. :)',
+	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami. :)',
 
     'first-name' => 'Imię',
     'last-name' => 'Nazwisko',
@@ -42,12 +42,9 @@ return [
     'zip' => 'Kod pocztowy',
     'city' => 'Miasto',
     'email' => 'Adres e-mail',
-    'phone' => 'Telefon',
+    'phone' => 'Telefon (dla kuriera)',
 	'password' => 'Hasło',
 	'password-confirm' => 'Potwierdź hasło',
-	'terms-of-use-content' => 'Znam i akceptuję ',
-	'terms-of-use-link' => 'http://wiecejnizlek.pl',
-	'terms-of-use-link-content' => 'Regulamin Serwisu',
 
 	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury VAT',
 	'invoice-name' => 'Nazwa firmy',
@@ -64,6 +61,11 @@ return [
 	'personal-data-consent-account' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu obsługi konta na platformie internetowej</strong>, z uwzględnieniem wysyłania powiadomień drogą e-mailową oraz kontaktu z administratorami.',
 	'personal-data-consent-newsletter-heading' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
+
+	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
+	'personal-data-tou-content' => 'Znam i akceptuję <a href=":tou-link">:tou-link-content</a>',
+	'personal-data-tou-link' => 'http://wiecejnizlek.pl',
+	'personal-data-tou-link-content' => 'Regulamin Serwisu',
 
 	'personal-data-submit' => 'Gotowe, idę dalej',
 

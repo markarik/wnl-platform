@@ -4,9 +4,9 @@
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
-			<h2>Świetny wybór!</h2>
+			<h2>@lang('payment.personal-data-title')</h2>
 			<div class="alert alert-success">
-				Zapisujesz się na kurs {{ $product->name }} w&nbsp;cenie <strong>{{ $product->price }}zł</strong> brutto.
+				@lang('payment.personal-data-product', [ 'name' => $product->name, 'price' => $product->price ])
 			</div>
 		</div>
 	</div>
@@ -15,9 +15,8 @@
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
-			<h2>To co, zakładamy konto?</h2>
-			<p class="lead">Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do
-				logowania.</p>
+			<h2>@lang('payment.personal-data-account-heading')</h2>
+			<p class="lead">@lang('payment.personal-data-account-lead')</p>
 		</div>
 
 		<div class="col-xs-12">
@@ -36,9 +35,8 @@
 
 	<div id="personal-data" class="row">
 		<div class="col-xs-12 text-center">
-			<h2>Adres do wysyłki materiałów</h2>
-			<p class="lead">Na podany adres otrzymasz paczkę z albumem map myśli, przyborów i&nbsp;innych gadżetów.
-				:)</p>
+			<h2>@lang('payment.personal-data-heading')</h2>
+			<p class="lead">@lang('payment.personal-data-lead')</p>
 		</div>
 
 		<div class="col-xs-12">

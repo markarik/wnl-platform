@@ -2,14 +2,39 @@
 
 return [
 
-    'back-to-website' => 'Powrót do strony kursu',
+	/**
+	 * 1. Select Product step
+	 */
+
+	'select-product-title' => 'Witaj!',
+	'select-product-lead' => 'Wybierz kurs, na który chcesz się zapisać.',
+
+	'select-product-onsite-heading' => 'Kurs internetowy<br>+ warsztaty',
+	'select-product-onsite-button-label' => 'Wybieram kurs internetowy + warsztaty',
+	'select-product-online-heading' => 'Kurs internetowy<br>&nbsp;',
+	'select-product-online-button-label' => 'Wybieram kurs internetowy',
+	'select-product-features-length' => 'Uczestnictwo w 12-tygodniowym kursie',
+	'select-product-features-elearning' => 'Dostęp do platformy e-learningowej',
+	'select-product-features-materials' => 'Autorskie materiały',
+	'select-product-features-workshops' => 'Uczestnictwo w 6 warsztatach weekendowych w Poznaniu',
+	'select-product-features-individual' => 'Indywidualne spotkania z prowadzącymi kurs',
+
+	'back-to-website' => 'Powrót do strony kursu',
 
     'personal-info-title' => 'Świetnie, teraz pora się poznać!',
     'personal-info-account-data' => 'Do zalogowania będziesz używać swojego maila oraz hasła.',
     'personal-info-adress' => 'Na jakie dane i adres mamy wysłać materiały?',
     'personal-info-consents-title' => 'Aby zgodnie z prawem zrealizować zamówienie, potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
-    'personal-info-consent-optional' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi informacjami.',
     'personal-info-confirm-button-content' => 'Przejdź dalej',
+
+	'personal-data-title' => 'Świetny wybór!',
+	'personal-data-product' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
+
+	'personal-data-account-heading' => 'To co, zakładamy konto?',
+	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
+
+	'personal-data-heading' => 'Adres do wysyłki materiałów',
+	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborów i&nbsp;innych gadżetów. :)',
 
     'first-name' => 'Imię',
     'last-name' => 'Nazwisko',

@@ -34,7 +34,7 @@ return [
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
 
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
-	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami. :)',
+	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
 
     'first-name' => 'Imię',
     'last-name' => 'Nazwisko',
@@ -42,7 +42,7 @@ return [
     'zip' => 'Kod pocztowy',
     'city' => 'Miasto',
     'email' => 'Adres e-mail',
-    'phone' => 'Telefon (dla kuriera)',
+    'phone' => 'Numer telefonu',
 	'password' => 'Hasło',
 	'password-confirm' => 'Potwierdź hasło',
 
@@ -64,11 +64,11 @@ return [
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
 
 	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
-	'personal-data-tou-content' => 'Znam i akceptuję <a href=":tou-link">:tou-link-content</a>',
+	'personal-data-tou-content' => 'Znam i akceptuję <a id="tou-open-modal-link" href=":tou-link">:tou-link-content</a>',
 	'personal-data-tou-link' => 'http://wiecejnizlek.pl',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
 
-	'personal-data-submit' => 'Gotowe, idę dalej',
+	'personal-data-submit' => 'Zakładam konto i przechodzę do płatności',
 
 	/**
 	 * Personal data verification step

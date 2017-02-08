@@ -10,6 +10,18 @@
 // Internal imports
 @import "styleguide";
 
+// Helper classes
+
+.show {
+	display: block;
+	visibility: visible;
+}
+
+.hidden {
+	display: none;
+	visibility: hidden;
+}
+
 // Navigation
 
 .navbar-default {
@@ -31,6 +43,8 @@
   padding-bottom: 120px;
 }
 
-footer {
-	margin: 20px 0;
+.footer {
+	background-color: $background-color-default;
+	border-top: $border-light-gray;
+	margin: 5em 0 0;
 }

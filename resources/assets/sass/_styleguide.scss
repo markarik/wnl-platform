@@ -5,6 +5,8 @@ html, body {
 	line-height: $line-height-base;
 }
 
+// Typography
+
 h1 {
 	font-size: $font-size-plus-5;
 	line-height: $line-height-plus;
@@ -30,6 +32,16 @@ h5 {
 	line-height: $line-height-base;
 }
 
+.small {
+	font-size: $font-size-minus-1;
+	line-height: $line-height-base;
+}
+
+.very-small {
+	font-size: $font-size-minus-2;
+	line-height: $line-height-base;
+}
+
 // Buttons
 
 .button {
@@ -37,6 +49,20 @@ h5 {
 	height: 2.825em;
 	padding-left: 1.25em;
 	padding-right: 1.25em;
+}
+
+// Forms
+
+.form-header {
+	margin-bottom: 1em;
+}
+
+.form-group {
+	margin: 2em 0;
+}
+
+.form-end {
+	margin-bottom: 3em;
 }
 
 // Lists

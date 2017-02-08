@@ -7,9 +7,9 @@
 			<h1 class="title">
 				@lang('payment.select-product-title')
 			</h1>
-			<h2 class="subtitle">
+			<p class="subtitle">
 				@lang('payment.select-product-lead')
-			</h2>
+			</p>
 		</div>
 	</div>
 </section>

@@ -74,6 +74,7 @@ return [
 	 * Personal data verification step
 	 */
 	'confirm-heading' => 'Czy wszystko się zgadza?',
+	'confirm-heading-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
 	'confirm-order-heading' => 'Twoje zamówienie',
 	'confirm-order-price' => ':pricezł brutto',
 
@@ -81,7 +82,7 @@ return [
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading' => 'Jeżeli tak, to wszystko gotowe!',
+	'confirm-method-heading' => 'Wszystko gotowe!',
 	'confirm-method-lead' => 'Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności i&nbsp;złożyć&nbsp;zamówienie.',
 	'confirm-method-bank-transfer-button' => 'Płacę przelewem bankowym',
 	'confirm-method-online-payment-button' => 'Płacę szybkim przelewem',

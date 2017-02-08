@@ -22,6 +22,10 @@
 	visibility: hidden;
 }
 
+.subsection {
+	margin: 2em 0;
+}
+
 // Navigation
 
 .navbar-default {
@@ -30,17 +34,6 @@
 
 .navbar-brand-image {
 	max-height: 25px;
-}
-
-.payment-container {
-
-	.checkbox input {
-		margin: 2px 0 0;
-	}
-}
-
-.payment-content {
-  padding-bottom: 120px;
 }
 
 .footer {

@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-xs-12 text-center">
 			<h2>@lang('payment.personal-data-title')</h2>
-			<div class="alert alert-success">
+			<div class="alert alert-info">
 				@lang('payment.personal-data-product', [ 'name' => $product->name, 'price' => $product->price ])
 			</div>
 		</div>
@@ -74,7 +74,7 @@
 			</ul>
 		</div>
 
-		<div id="personal-data-invoice-form" class="form-group @if ($form->invoice->getOption('checked')) show @else hidden @endif">
+		<div id="personal-data-invoice-form" class="form-group @if (Session::get('_old_input.invoice')) show @else hidden @endif">
 			<div class="col-xs-12">
 				{!! form_row($form->invoice_name) !!}
 			</div>
@@ -133,7 +133,7 @@
 					</li>
 				</ul>
 			</div>
-			<p>@lang('payment.terms-of-use-link-content')</p>
+			<p>@lang('payment.personal-data-tou-heading')</p>
 			<div class="form-group small">
 				<ul class="list-group">
 					<li class="list-group-item">

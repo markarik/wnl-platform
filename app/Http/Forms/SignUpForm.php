@@ -81,43 +81,61 @@ class SignUpForm extends Form
 				'label' => trans('payment.invoice')
 			])
 			->add('invoice_name', 'text', [
+				'error_messages' => [
+					'required_with' => trans('payment.invoice-required')
+				],
 				'label' => trans('payment.invoice-name'),
-				'rules' => 'required_if:invoice,1',
+				'rules' => 'required_with:invoice',
 				'attr'  => [
 					'placeholder' => trans('payment.invoice-name'),
 				],
 			])
 			->add('invoice_nip', 'text', [
+				'error_messages' => [
+					'required_with' => trans('payment.invoice-required')
+				],
 				'label' => trans('payment.invoice-nip'),
-				'rules' => 'required_if:invoice,1',
+				'rules' => 'required_with:invoice',
 				'attr'  => [
 					'placeholder' => trans('payment.invoice-nip'),
 				],
 			])
 			->add('invoice_address', 'text', [
+				'error_messages' => [
+					'required_with' => trans('payment.invoice-required')
+				],
 				'label' => trans('payment.invoice-address'),
-				'rules' => 'required_if:invoice,1',
+				'rules' => 'required_with:invoice',
 				'attr'  => [
 					'placeholder' => trans('payment.invoice-address'),
 				],
 			])
 			->add('invoice_zip', 'text', [
+				'error_messages' => [
+					'required_with' => trans('payment.invoice-required')
+				],
 				'label' => trans('payment.invoice-zip'),
-				'rules' => 'required_if:invoice,1',
+				'rules' => 'required_with:invoice',
 				'attr'  => [
 					'placeholder' => trans('payment.invoice-zip'),
 				],
 			])
 			->add('invoice_city', 'text', [
+				'error_messages' => [
+					'required_with' => trans('payment.invoice-required')
+				],
 				'label' => trans('payment.invoice-city'),
-				'rules' => 'required_if:invoice,1',
+				'rules' => 'required_with:invoice',
 				'attr'  => [
 					'placeholder' => trans('payment.invoice-city'),
 				],
 			])
 			->add('invoice_country', 'text', [
+				'error_messages' => [
+					'required_with' => trans('payment.invoice-required')
+				],
 				'label' => trans('payment.invoice-country'),
-				'rules' => 'required_if:invoice,1',
+				'rules' => 'required_with:invoice',
 				'attr'  => [
 					'placeholder' => trans('payment.invoice-country'),
 				],
@@ -136,7 +154,10 @@ class SignUpForm extends Form
 				'label' => trans('payment.personal-data-consent-newsletter'),
 			])
 			->add('consent_terms', 'checkbox', [
-				'label' => trans('payment.terms-of-use-content'),
+				'label' => trans('payment.personal-data-tou-content', [
+					'tou-link' => trans('payment.personal-data-tou-link'),
+					'tou-link-content' => trans('payment.personal-data-tou-link-content'),
+				]),
 				'rules' => 'required',
 			]);
 	}

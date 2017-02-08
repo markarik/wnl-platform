@@ -1,38 +1,68 @@
 @extends('layouts.payment')
 
 @section('content')
-<div class="row">
-	<div class="col-xs-12 text-center">
-		<h2>@lang('payment.select-product-title')</h2>
-		<p class="lead">@lang('payment.select-product-lead')</p>
+<section class="hero is-primary is-bold">
+	<div class="hero-body has-text-centered">
+		<div class="container">
+			<h1 class="title">
+				@lang('payment.select-product-title')
+			</h1>
+			<h2 class="subtitle">
+				@lang('payment.select-product-lead')
+			</h2>
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6">
-		<h3>@lang('payment.select-product-onsite-heading')</h3>
-		<ul class="list-group">
-			<li class="list-group-item">@lang('payment.select-product-features-length')</li>
-			<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
-			<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
-			<li class="list-group-item">@lang('payment.select-product-features-workshops')</li>
-			<li class="list-group-item">@lang('payment.select-product-features-individual')</li>
-		</ul>
+</section>
+
+<section class="section">
+	<div class="container">
+		<div class="columns">
+			<div class="column">
+				<div class="box">
+					<p class="title">@lang('payment.select-product-onsite-heading')</p>
+					<ul class="list-group">
+						<li class="list-group-item">@lang('payment.select-product-features-length')</li>
+						<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
+						<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
+						<li class="list-group-item">@lang('payment.select-product-features-workshops')</li>
+						<li class="list-group-item">@lang('payment.select-product-features-individual')</li>
+					</ul>
+				</div>
+				<div class="block has-text-centered is-hidden-tablet">
+					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}">
+						@lang('payment.select-product-onsite-button-label')
+					</a>
+				</div>
+			</div>
+			<div class="column">
+				<div class="box">
+					<p class="title">@lang('payment.select-product-online-heading')</p>
+					<ul class="list-group">
+						<li class="list-group-item">@lang('payment.select-product-features-length')</li>
+						<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
+						<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
+					</ul>
+				</div>
+				<div class="block has-text-centered is-hidden-tablet">
+					<a href="{{route('payment-personal-data', 'wnl-online')}}">
+						@lang('payment.select-product-online-button-label')
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="columns is-hidden-mobile has-text-centered">
+			<div class="column">
+				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
+					@lang('payment.select-product-onsite-button-label')
+				</a>
+			</div>
+			<div class="column">
+				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
+					@lang('payment.select-product-online-button-label')
+				</a>
+			</div>
+		</div>
 	</div>
-	<div class="col-xs-12 col-sm-6">
-		<h3>@lang('payment.select-product-online-heading')</h3>
-		<ul class="list-group">
-			<li class="list-group-item">@lang('payment.select-product-features-length')</li>
-			<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
-			<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
-		</ul>
-	</div>
-</div>
-<div class="row text-center">
-	<div class="col-xs-12 col-sm-6">
-		<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}">@lang('payment.select-product-onsite-button-label')</a>
-	</div>
-	<div class="col-xs-12 col-sm-6">
-		<a href="{{route('payment-personal-data', 'wnl-online')}}">@lang('payment.select-product-online-button-label')</a>
-	</div>
-</div>
+</section>
+
 @endsection

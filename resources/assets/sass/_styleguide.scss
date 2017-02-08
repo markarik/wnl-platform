@@ -34,4 +34,17 @@ h5 {
 
 .button {
 	border-radius: $button-border-radius;
+	height: 2.825em;
+	padding-left: 1.25em;
+	padding-right: 1.25em;
+}
+
+// Lists
+
+.list-group {
+	margin: 1rem 0;
+}
+
+.list-group-item {
+	padding: 0.5em 0;
 }

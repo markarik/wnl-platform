@@ -9,9 +9,9 @@ return [
 	'select-product-title' => 'Witaj!',
 	'select-product-lead' => 'Wybierz kurs, na który chcesz się zapisać.',
 
-	'select-product-onsite-heading' => 'Kurs internetowy<br>+ warsztaty',
+	'select-product-onsite-heading' => 'Kurs internetowy + warsztaty',
 	'select-product-onsite-button-label' => 'Wybieram kurs internetowy + warsztaty',
-	'select-product-online-heading' => 'Kurs internetowy<br>&nbsp;',
+	'select-product-online-heading' => 'Kurs internetowy',
 	'select-product-online-button-label' => 'Wybieram kurs internetowy',
 	'select-product-features-length' => 'Uczestnictwo w 12-tygodniowym kursie',
 	'select-product-features-elearning' => 'Dostęp do platformy e-learningowej',

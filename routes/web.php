@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Input;
 
 Auth::routes();
 
+Route::get('/styleguide', function() {
+	return Response::view('styleguide');
+});
 
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function ()
 {

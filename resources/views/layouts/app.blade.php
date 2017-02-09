@@ -22,57 +22,37 @@
 </head>
 <body data-base="{{env('APP_URL')}}">
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="nav has-shadow">
             <div class="container">
-                <div class="navbar-header">
-
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                <div class="nav-left">
+                    <a class="nav-item" href="{{ route('home') }}">
+                        <img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
                     </a>
                 </div>
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+                <span class="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @if (Auth::guest())
-                            <li><a href="{{ url('/login') }}">@lang('nav.login-link-content')</a></li>
-                        @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="@lang('nav.user-dropdown-title')">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                <div class="nav-right nav-menu">
+                    <!-- Authentication Links -->
+                    @if (Auth::guest())
+                        <a href="{{ url('/login') }}" class="nav-item">
+                            @lang('nav.login-link-content')
+                        </a>
+                    @else
+                        <a href="{{ url('/logout') }}" class="nav-item"
+                           onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
+                            @lang('nav.logout-link-content')
+                        </a>
 
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ url('/logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            @lang('nav.logout-link-content')
-                                        </a>
-
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-                    </ul>
+                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    @endif
                 </div>
             </div>
         </nav>

@@ -1,33 +1,53 @@
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-
 // Fonts
 @import url(https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&subset=latin-ext);
 
-// Variables
 @import "variables";
+
+// External frameworks
+//@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/bulma/bulma";
+
+// Internal imports
+@import "styleguide";
+
+// Helper classes
+
+.show {
+	display: block;
+	visibility: visible;
+}
+
+.hidden {
+	display: none;
+	visibility: hidden;
+}
+
+.subsection {
+	margin: 2em 0;
+}
 
 // Navigation
 
 .navbar-default {
-	background-color: $background-body;
+	background-color: $background-color-default;
 }
 
 .navbar-brand-image {
 	max-height: 25px;
 }
 
-.payment-container {
-
-	.checkbox input {
-		margin: 2px 0 0;
-	}
+.footer {
+	background-color: $background-color-default;
+	border-top: $border-light-gray;
+	margin: 5em 0 0;
 }
+
+// Payment
 
 .payment-content {
-  padding-bottom: 120px;
-}
 
-footer {
-	margin: 20px 0;
+	.text-danger {
+		font-size: $font-size-minus-1;
+		font-weight: $font-weight-bold;
+	}
 }

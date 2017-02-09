@@ -2,10 +2,24 @@ window.$ = window.jQuery = require('jquery');
 
 var $personalData = $('#personal-data'),
 	$toggleCheckbox = $personalData.find('#personal-data-invoice-toggle'),
-	$invoiceForm = $personalData.find('#personal-data-invoice-form');
+	$invoiceForm = $personalData.find('#personal-data-invoice-form'),
+	$touContainer = $('.tou'),
+	$touModal = $touContainer.find('.modal'),
+	$touOpenModalLink = $touContainer.find('#tou-open-modal-link'),
+	$touCloseModalButton = $touModal.find('.delete');
 
 $toggleCheckbox.on('change', function () {
 	$invoiceForm.toggleClass('show').toggleClass('hidden');
+});
+
+$touOpenModalLink.on('click', function (event) {
+	event.preventDefault();
+	$touModal.addClass('is-active');
+});
+
+$touCloseModalButton.on('click', function (event) {
+	event.preventDefault();
+	$touModal.removeClass('is-active');
 });
 
 $('button.p24_submit').click(function () {

@@ -169,6 +169,7 @@ return [
 
 		Barryvdh\Debugbar\ServiceProvider::class,
 		Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
+		Laravel\Tinker\TinkerServiceProvider::class,
 
         /*
          * Application Service Providers...

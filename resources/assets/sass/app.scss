@@ -41,3 +41,13 @@
 	border-top: $border-light-gray;
 	margin: 5em 0 0;
 }
+
+// Payment
+
+.payment-content {
+
+	.text-danger {
+		font-size: $font-size-minus-1;
+		font-weight: $font-weight-bold;
+	}
+}

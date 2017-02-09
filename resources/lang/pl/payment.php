@@ -55,6 +55,8 @@ return [
 	'invoice-country' => 'Kraj',
 	'invoice-required' => 'To pole jest wymagane, jeżeli chcesz otrzymać fakturę dla innych danych.',
 
+	'personal-data-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
+
 	'personal-data-consents-heading' => 'Wszystko zgodnie z prawem',
 	'personal-data-consents-lead' => 'Do legalnej realizacji zamówienia potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
 

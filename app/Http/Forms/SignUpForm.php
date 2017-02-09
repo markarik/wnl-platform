@@ -13,6 +13,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.email'),
 				'rules' => 'required|email|unique:users,email',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.email'),
 				],
 			])
@@ -20,6 +21,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.phone'),
 				'rules' => 'required',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.phone'),
 				],
 			])
@@ -27,6 +29,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.password'),
 				'rules' => 'required|confirmed|min:6',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.password'),
 				],
 			])
@@ -34,6 +37,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.password-confirm'),
 				'rules' => 'required',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.password-confirm'),
 				],
 			])
@@ -43,6 +47,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.first-name'),
 				'rules' => 'required',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.invoice-name'),
 				],
 			])
@@ -50,6 +55,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.last-name'),
 				'rules' => 'required',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.last-name'),
 				],
 			])
@@ -57,6 +63,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.address'),
 				'rules' => 'required',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.address'),
 				],
 			])
@@ -64,6 +71,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.zip'),
 				'rules' => 'required',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.zip'),
 				],
 			])
@@ -71,6 +79,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.city'),
 				'rules' => 'required',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.city'),
 				],
 			])
@@ -78,7 +87,10 @@ class SignUpForm extends Form
 			// Invoice
 
 			->add('invoice', 'checkbox', [
-				'label' => trans('payment.invoice')
+				'label' => trans('payment.invoice'),
+				'attr' => [
+					'class' => 'checkbox',
+				]
 			])
 			->add('invoice_name', 'text', [
 				'error_messages' => [
@@ -87,6 +99,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.invoice-name'),
 				'rules' => 'required_with:invoice',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.invoice-name'),
 				],
 			])
@@ -97,6 +110,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.invoice-nip'),
 				'rules' => 'required_with:invoice',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.invoice-nip'),
 				],
 			])
@@ -107,6 +121,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.invoice-address'),
 				'rules' => 'required_with:invoice',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.invoice-address'),
 				],
 			])
@@ -117,6 +132,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.invoice-zip'),
 				'rules' => 'required_with:invoice',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.invoice-zip'),
 				],
 			])
@@ -127,6 +143,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.invoice-city'),
 				'rules' => 'required_with:invoice',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.invoice-city'),
 				],
 			])
@@ -137,6 +154,7 @@ class SignUpForm extends Form
 				'label' => trans('payment.invoice-country'),
 				'rules' => 'required_with:invoice',
 				'attr'  => [
+					'class' => 'input',
 					'placeholder' => trans('payment.invoice-country'),
 				],
 			])
@@ -145,13 +163,22 @@ class SignUpForm extends Form
 			->add('consent_order', 'checkbox', [
 				'label' => trans('payment.personal-data-consent-order'),
 				'rules' => 'required',
+				'attr' => [
+					'class' => 'checkbox',
+				]
 			])
 			->add('consent_account', 'checkbox', [
 				'label' => trans('payment.personal-data-consent-account'),
 				'rules' => 'required',
+				'attr' => [
+					'class' => 'checkbox',
+				]
 			])
 			->add('consent_newsletter', 'checkbox', [
 				'label' => trans('payment.personal-data-consent-newsletter'),
+				'attr' => [
+					'class' => 'checkbox',
+				]
 			])
 			->add('consent_terms', 'checkbox', [
 				'label' => trans('payment.personal-data-tou-content', [
@@ -159,6 +186,9 @@ class SignUpForm extends Form
 					'tou-link-content' => trans('payment.personal-data-tou-link-content'),
 				]),
 				'rules' => 'required',
+				'attr' => [
+					'class' => 'checkbox',
+				]
 			]);
 	}
 }

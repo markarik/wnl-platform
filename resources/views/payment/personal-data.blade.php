@@ -2,156 +2,201 @@
 
 @section('content')
 
-	<div class="row">
-		<div class="col-xs-12 text-center">
-			<h2>@lang('payment.personal-data-title')</h2>
-			<div class="alert alert-info">
-				@lang('payment.personal-data-product', [ 'name' => $product->name, 'price' => $product->price ])
+	<section class="hero is-primary is-bold">
+		<div class="hero-body has-text-centered">
+			<div class="container">
+				<h1 class="title">
+					@lang('payment.personal-data-title')
+				</h1>
+				<p class="subtitle">
+					@lang('payment.personal-data-product', [ 'name' => $product->name, 'price' => $product->price ])
+				</p>
 			</div>
 		</div>
-	</div>
+	</section>
 
-	{!! form_start($form)  !!}
+	<div class="container payment-content">
+		@if (!$errors->isEmpty())
+			<section class="subsection">
+				<div class="notification is-warning has-text-centered">@lang('payment.personal-data-errors')</div>
+			</section>
+		@endif
 
-	<div class="row">
-		<div class="col-xs-12 text-center">
-			<h2>@lang('payment.personal-data-account-heading')</h2>
-			<p class="lead">@lang('payment.personal-data-account-lead')</p>
-		</div>
+		{!! form_start($form)  !!}
 
-		<div class="col-xs-12">
+		<section class="section">
+			<div class="form-header has-text-centered">
+				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
+				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
+			</div>
 			<div class="form-group">
-				{!! form_row($form->email) !!}
-
-				{!! form_row($form->password) !!}
-
-				{!! form_row($form->password_confirmation) !!}
+				<div class="control">
+					{!! form_label($form->email) !!}
+					{!! form_widget($form->email) !!}
+					{!! form_errors($form->email) !!}
+				</div>
+				<div class="control">
+					{!! form_label($form->password) !!}
+					{!! form_widget($form->password) !!}
+					{!! form_errors($form->password) !!}
+				</div>
+				<div class="control">
+					{!! form_label($form->password_confirmation) !!}
+					{!! form_widget($form->password_confirmation) !!}
+					{!! form_errors($form->password_confirmation) !!}
+				</div>
 			</div>
-		</div>
-	</div>
+		</section>
+		<section id="personal-data" class="section">
+			<div class="form-header has-text-centered">
+				<h2 class="title">@lang('payment.personal-data-heading')</h2>
+				<p class="subtitle">@lang('payment.personal-data-lead')</p>
+			</div>
 
-	<hr>
-
-
-	<div id="personal-data" class="row">
-		<div class="col-xs-12 text-center">
-			<h2>@lang('payment.personal-data-heading')</h2>
-			<p class="lead">@lang('payment.personal-data-lead')</p>
-		</div>
-
-		<div class="col-xs-12">
 			<div class="form-group">
-				{!! form_row($form->phone) !!}
-			</div>
-		</div>
+				<div class="control">
+					{!! form_label($form->phone) !!}
+					{!! form_widget($form->phone) !!}
+					{!! form_errors($form->phone) !!}
+				</div>
 
-		<div class="form-group">
-			<div class="col-xs-12 col-sm-6">
-				{!! form_row($form->first_name) !!}
-			</div>
-			<div class="col-xs-12 col-sm-6">
-				{!! form_row($form->last_name) !!}
-			</div>
-			<div class="col-xs-12">
-				{!! form_row($form->address) !!}
-			</div>
-			<div class="col-xs-12 col-sm-3">
-				{!! form_row($form->zip) !!}
-			</div>
-			<div class="col-xs-12 col-sm-9">
-				{!! form_row($form->city) !!}
-			</div>
-		</div>
+				<div class="control">
+					{!! form_label($form->first_name) !!}
+					{!! form_widget($form->first_name) !!}
+					{!! form_errors($form->first_name) !!}
+				</div>
 
-		<div class="col-xs-12">
-			<ul class="list-group">
-				<li class="list-group-item">
-					<div id="personal-data-invoice-toggle" class="checkbox text-small">
-						{!! form_widget($form->invoice) !!}
-						{!! form_label($form->invoice) !!}
+				<div class="control">
+					{!! form_label($form->last_name) !!}
+					{!! form_widget($form->last_name) !!}
+					{!! form_errors($form->last_name) !!}
+				</div>
+
+				<div class="control">
+					{!! form_label($form->address) !!}
+					{!! form_widget($form->address) !!}
+					{!! form_errors($form->address) !!}
+				</div>
+
+				<div class="control">
+					{!! form_label($form->zip) !!}
+					{!! form_widget($form->zip) !!}
+					{!! form_errors($form->zip) !!}
+				</div>
+
+				<div class="control">
+					{!! form_label($form->city) !!}
+					{!! form_widget($form->city) !!}
+					{!! form_errors($form->city) !!}
+				</div>
+			</div>
+
+			<div class="box">
+				<div id="personal-data-invoice-toggle">
+					{!! form_widget($form->invoice) !!}
+					{!! form_label($form->invoice) !!}
+					{!! form_errors($form->invoice) !!}
+				</div>
+
+				<div id="personal-data-invoice-form" class="form-group @if (Session::get('_old_input.invoice')) show @else hidden @endif">
+					<div class="control">
+						{!! form_label($form->invoice_name) !!}
+						{!! form_widget($form->invoice_name) !!}
+						{!! form_errors($form->invoice_name) !!}
 					</div>
-				</li>
-			</ul>
-		</div>
+					<div class="control">
+						{!! form_label($form->invoice_nip) !!}
+						{!! form_widget($form->invoice_nip) !!}
+						{!! form_errors($form->invoice_nip) !!}
+					</div>
+					<div class="control">
+						{!! form_label($form->invoice_address) !!}
+						{!! form_widget($form->invoice_address) !!}
+						{!! form_errors($form->invoice_address) !!}
+					</div>
+					<div class="control">
+						{!! form_label($form->invoice_zip) !!}
+						{!! form_widget($form->invoice_zip) !!}
+						{!! form_errors($form->invoice_zip) !!}
+					</div>
+					<div class="control">
+						{!! form_label($form->invoice_city) !!}
+						{!! form_widget($form->invoice_city) !!}
+						{!! form_errors($form->invoice_city) !!}
+					</div>
+					<div class="control">
+						{!! form_label($form->invoice_country) !!}
+						{!! form_widget($form->invoice_country) !!}
+						{!! form_errors($form->invoice_country) !!}
+					</div>
+				</div>
+			</div>
+		</section>
 
-		<div id="personal-data-invoice-form" class="form-group @if (Session::get('_old_input.invoice')) show @else hidden @endif">
-			<div class="col-xs-12">
-				{!! form_row($form->invoice_name) !!}
+		<section class="section">
+			<div class="form-header has-text-centered">
+				<h2 class="title">@lang('payment.personal-data-consents-heading')</h2>
+				<p class="subtitle">@lang('payment.personal-data-consents-lead')</p>
 			</div>
-			<div class="col-xs-12">
-				{!! form_row($form->invoice_nip) !!}
-			</div>
-			<div class="col-xs-12">
-				{!! form_row($form->invoice_address) !!}
-			</div>
-			<div class="col-xs-12 col-sm-3">
-				{!! form_row($form->invoice_zip) !!}
-			</div>
-			<div class="col-xs-12 col-sm-9">
-				{!! form_row($form->invoice_city) !!}
-			</div>
-			<div class="col-xs-12">
-				{!! form_row($form->invoice_country) !!}
-			</div>
-		</div>
-	</div>
 
-	<hr>
-
-	<div class="row">
-		<div class="col-xs-12 text-center">
-			<h2>@lang('payment.personal-data-consents-heading')</h2>
-			<p class="lead">@lang('payment.personal-data-consents-lead')</p>
-		</div>
-
-
-		<div class="col-xs-12">
 			<div class="form-group small">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div class="checkbox">
-							{!! form_widget($form->consent_account) !!}
-							{!! html_entity_decode(form_label($form->consent_account)) !!}
-						</div>
-					</li>
-					<li class="list-group-item">
-						<div class="checkbox">
-							{!! form_widget($form->consent_order) !!}
-							{!! html_entity_decode(form_label($form->consent_order)) !!}
-						</div>
-					</li>
-				</ul>
+				<div class="box">
+					<div class="control">
+						{!! form_widget($form->consent_account) !!}
+						{!! html_entity_decode(form_label($form->consent_account)) !!}
+						{!! form_errors($form->consent_account) !!}
+					</div>
+					<div class="control">
+						{!! form_widget($form->consent_order) !!}
+						{!! html_entity_decode(form_label($form->consent_order)) !!}
+						{!! form_errors($form->consent_order) !!}
+					</div>
+				</div>
 			</div>
-			<p>@lang('payment.personal-data-consent-newsletter-heading')</p>
-			<div class="form-group small">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div class="checkbox">
-							{!! form_widget($form->consent_newsletter) !!}
-							{!! html_entity_decode(form_label($form->consent_newsletter)) !!}
-						</div>
-					</li>
-				</ul>
-			</div>
-			<p>@lang('payment.personal-data-tou-heading')</p>
-			<div class="form-group small">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div class="checkbox">
-							{!! form_widget($form->consent_terms) !!}
-							{!! html_entity_decode(form_label($form->consent_terms)) !!}
-						</div>
-					</li>
-				</ul>
-			</div>
-			
-		</div>
-	</div>
 
-	<div class="text-center">
-		<button class="btn btn-primary btn-lg">@lang('payment.personal-data-submit')</button>
-	</div>
+			<div class="form-group small">
+				<p class="form-header">@lang('payment.personal-data-consent-newsletter-heading')</p>
+				<div class="box">
+					<div class="control">
+						{!! form_widget($form->consent_newsletter) !!}
+						{!! html_entity_decode(form_label($form->consent_newsletter)) !!}
+						{!! form_errors($form->consent_newsletter) !!}
+					</div>
+				</div>
+			</div>
 
-	{!! form_end($form, false)  !!}
+			<div class="tou form-group small">
+				<p class="form-header">@lang('payment.personal-data-tou-heading')</p>
+				<div class="box">
+					<div class="control">
+						{!! form_widget($form->consent_terms) !!}
+						{!! html_entity_decode(form_label($form->consent_terms)) !!}
+						{!! form_errors($form->consent_terms) !!}
+					</div>
+				</div>
+				<div id="tou-modal" class="modal">
+					<div class="modal-background"></div>
+					<div class="modal-card">
+						<header class="modal-card-head">
+							<p class="modal-card-title">Regulamin Serwisu</p>
+							<button class="delete"></button>
+						</header>
+						<section class="modal-card-body">
+							@include('payment.tou')
+						</section>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="form-end">
+			<div class="block has-text-centered">
+				<button class="button is-primary is-hidden-mobile">@lang('payment.personal-data-submit')</button>
+			</div>
+		</section>
+
+		{!! form_end($form, false)  !!}
+
+	</div>
 
 @endsection

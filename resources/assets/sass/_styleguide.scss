@@ -1,0 +1,80 @@
+html, body {
+	color: $color-body;
+	font-family: $font-family-sans-serif;
+	font-size: $font-size-base;
+	line-height: $line-height-base;
+}
+
+// Typography
+
+h1 {
+	font-size: $font-size-plus-5;
+	line-height: $line-height-plus;
+}
+
+h2 {
+	font-size: $font-size-plus-4;
+	line-height: $line-height-plus;
+}
+
+h3 {
+	font-size: $font-size-plus-3;
+	line-height: $line-height-base;
+}
+
+h4 {
+	font-size: $font-size-plus-2;
+	line-height: $line-height-base;
+}
+
+h5 {
+	font-size: $font-size-plus-1;
+	line-height: $line-height-base;
+}
+
+.small {
+	font-size: $font-size-minus-1;
+	line-height: $line-height-base;
+}
+
+.very-small {
+	font-size: $font-size-minus-2;
+	line-height: $line-height-base;
+}
+
+.text-danger {
+	color: $danger;
+}
+
+// Buttons
+
+.button {
+	border-radius: $button-border-radius;
+	height: 2.825em;
+	padding-left: 1.25em;
+	padding-right: 1.25em;
+}
+
+// Forms
+
+.form-header {
+	margin-bottom: 1em;
+}
+
+.form-group {
+	margin: 2em 0;
+}
+
+.form-end {
+	margin-bottom: 3em;
+}
+
+// Lists
+
+.list-group {
+	margin: 1rem 0;
+}
+
+.list-group-item {
+	padding: 0.5em 0;
+}

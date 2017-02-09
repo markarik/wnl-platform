@@ -9,9 +9,9 @@ return [
 	'select-product-title' => 'Witaj!',
 	'select-product-lead' => 'Wybierz kurs, na który chcesz się zapisać.',
 
-	'select-product-onsite-heading' => 'Kurs internetowy<br>+ warsztaty',
+	'select-product-onsite-heading' => 'Kurs internetowy + warsztaty',
 	'select-product-onsite-button-label' => 'Wybieram kurs internetowy + warsztaty',
-	'select-product-online-heading' => 'Kurs internetowy<br>&nbsp;',
+	'select-product-online-heading' => 'Kurs internetowy',
 	'select-product-online-button-label' => 'Wybieram kurs internetowy',
 	'select-product-features-length' => 'Uczestnictwo w 12-tygodniowym kursie',
 	'select-product-features-elearning' => 'Dostęp do platformy e-learningowej',
@@ -34,7 +34,7 @@ return [
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
 
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
-	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami. :)',
+	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
 
     'first-name' => 'Imię',
     'last-name' => 'Nazwisko',
@@ -42,7 +42,7 @@ return [
     'zip' => 'Kod pocztowy',
     'city' => 'Miasto',
     'email' => 'Adres e-mail',
-    'phone' => 'Telefon (dla kuriera)',
+    'phone' => 'Numer telefonu',
 	'password' => 'Hasło',
 	'password-confirm' => 'Potwierdź hasło',
 
@@ -55,6 +55,8 @@ return [
 	'invoice-country' => 'Kraj',
 	'invoice-required' => 'To pole jest wymagane, jeżeli chcesz otrzymać fakturę dla innych danych.',
 
+	'personal-data-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
+
 	'personal-data-consents-heading' => 'Wszystko zgodnie z prawem',
 	'personal-data-consents-lead' => 'Do legalnej realizacji zamówienia potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
 
@@ -64,16 +66,17 @@ return [
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
 
 	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
-	'personal-data-tou-content' => 'Znam i akceptuję <a href=":tou-link">:tou-link-content</a>',
+	'personal-data-tou-content' => 'Znam i akceptuję <a id="tou-open-modal-link" href=":tou-link">:tou-link-content</a>',
 	'personal-data-tou-link' => 'http://wiecejnizlek.pl',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
 
-	'personal-data-submit' => 'Gotowe, idę dalej',
+	'personal-data-submit' => 'Zakładam konto i przechodzę do płatności',
 
 	/**
 	 * Personal data verification step
 	 */
 	'confirm-heading' => 'Czy wszystko się zgadza?',
+	'confirm-heading-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
 	'confirm-order-heading' => 'Twoje zamówienie',
 	'confirm-order-price' => ':pricezł brutto',
 
@@ -81,7 +84,7 @@ return [
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading' => 'Jeżeli tak, to wszystko gotowe!',
+	'confirm-method-heading' => 'Wszystko gotowe!',
 	'confirm-method-lead' => 'Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności i&nbsp;złożyć&nbsp;zamówienie.',
 	'confirm-method-bank-transfer-button' => 'Płacę przelewem bankowym',
 	'confirm-method-online-payment-button' => 'Płacę szybkim przelewem',

@@ -22,47 +22,33 @@
 	</head>
 	<body data-base="{{env('APP_URL')}}">
 		<div id="app">
-			<nav class="navbar navbar-default navbar-static-top">
-				<div class="container payment-container">
-					<div class="navbar-header">
-
-						<!-- Collapsed Hamburger -->
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-							<span class="sr-only">@lang('common.mobile-nav-toggle')</span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-
-						<!-- Branding Image -->
-						<a class="navbar-brand" href="{{ route('home') }}">
-							<img src="{{ asset('/images/wnl-logo.svg') }}" class="navbar-brand-image">
+			<nav class="nav has-shadow">
+				<div class="container">
+					<div class="nav-left">
+						<a class="nav-item" href="{{ route('home') }}">
+							<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
 						</a>
 					</div>
 
-					<div class="collapse navbar-collapse" id="app-navbar-collapse">
-						<!-- Left Side Of Navbar -->
-						<ul class="nav navbar-nav">
-							&nbsp;
-						</ul>
+					<span class="nav-toggle">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
 
-						<!-- Right Side Of Navbar -->
-						<ul class="nav navbar-nav navbar-right">
-							<li><a href="@lang('common.course-website-link')">@lang('payment.back-to-website')</a></li>
-						</ul>
+					<div class="nav-right nav-menu">
+						<a href="@lang('common.course-website-link')" class="nav-item">
+							@lang('payment.back-to-website')
+						</a>
 					</div>
 				</div>
 			</nav>
 
-			<div class="container payment-container">
-				<div class="row">
-					<div class="payment-content col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-						@yield('content')
-					</div>
-				</div>
-			</div>
+			@yield('content')
 		</div>
-
+		<footer class="footer has-text-centered">
+			<small>@lang('common.footer-copy')</small>
+		</footer>
 		<!-- Scripts -->
 		<script src="/js/payment.js"></script>
 	</body>

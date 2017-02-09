@@ -11,10 +11,13 @@ require('./bootstrap');
  * the body of the page. From here, you may begin adding components to
  * the application, or feel free to tweak this setup for your needs.
  */
+import Vue from 'vue';
+import { store } from './store';
 
-//const app = new Vue({
-//	el: '#app'
-//});
+const app = new Vue({
+	el: '#app',
+	store
+});
 
 $.ajaxSetup({
 	headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},

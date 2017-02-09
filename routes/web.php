@@ -18,7 +18,7 @@ Auth::routes();
 
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function ()
 {
-	Route::get('/select-product', 'SelectProductController@index')->name('payment-select-product');
+	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
 
 	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
 	Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');

@@ -3,36 +3,36 @@
 @section('content')
 <div class="row">
 	<div class="col-xs-12 text-center">
-		<h2>Witaj!</h2>
-		<p class="lead">Wybierz kurs, na który chcesz się zapisać.</p>
+		<h2>@lang('payment.select-product-title')</h2>
+		<p class="lead">@lang('payment.select-product-lead')</p>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6">
-		<h3>Kurs internetowy<br>+ stacjonarny</h3>
+		<h3>@lang('payment.select-product-onsite-heading')</h3>
 		<ul class="list-group">
-			<li class="list-group-item">Uczestnictwo w 12-tygodniowym kursie</li>
-			<li class="list-group-item">Dostęp do platformy e-learningowej</li>
-			<li class="list-group-item">Autorskie materiały</li>
-			<li class="list-group-item">Uczestnictwo w 6 warsztatach weekendowych w Poznaniu</li>
-			<li class="list-group-item">Indywidualne spotkania z prowadzącymi kurs</li>
+			<li class="list-group-item">@lang('payment.select-product-features-length')</li>
+			<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
+			<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
+			<li class="list-group-item">@lang('payment.select-product-features-workshops')</li>
+			<li class="list-group-item">@lang('payment.select-product-features-individual')</li>
 		</ul>
 	</div>
 	<div class="col-xs-12 col-sm-6">
-		<h3>Kurs internetowy<br>&nbsp;</h3>
+		<h3>@lang('payment.select-product-online-heading')</h3>
 		<ul class="list-group">
-			<li class="list-group-item">Uczestnictwo w 12-tygodniowym kursie</li>
-			<li class="list-group-item">Dostęp do platformy e-learningowej</li>
-			<li class="list-group-item">Autorskie materiały</li>
+			<li class="list-group-item">@lang('payment.select-product-features-length')</li>
+			<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
+			<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
 		</ul>
 	</div>
 </div>
 <div class="row text-center">
 	<div class="col-xs-12 col-sm-6">
-		<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}">Stacjonarny</a>
+		<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}">@lang('payment.select-product-onsite-button-label')</a>
 	</div>
 	<div class="col-xs-12 col-sm-6">
-		<a href="{{route('payment-personal-data', 'wnl-online')}}">Online</a>
+		<a href="{{route('payment-personal-data', 'wnl-online')}}">@lang('payment.select-product-online-button-label')</a>
 	</div>
 </div>
 @endsection

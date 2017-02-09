@@ -9,7 +9,6 @@
   "devDependencies": {
     "bootstrap-sass": "^3.3.7",
     "bulma": "^0.3.1",
-    "gulp": "^3.9.1",
     "jquery": "^3.1.1",
     "vue": "^2.1.10",
     "vue-resource": "^1.2.0",

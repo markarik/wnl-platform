@@ -2,12 +2,24 @@
 
 return [
 
+	'back-to-website' => 'Powrót do strony kursu',
+
+	/**
+	 * Payment Steps Menu
+	 */
+	'payment-steps-select-product' => 'Wybór kursu',
+	'payment-steps-select-product-count' => '1',
+	'payment-steps-personal-data' => 'Twoje dane i konto',
+	'payment-steps-personal-data-count' => '2',
+	'payment-steps-confirm-order' => 'Potwierdzenie zamówienia',
+	'payment-steps-confirm-order-count' => '3',
+
 	/**
 	 * 1. Select Product step
 	 */
 
 	'select-product-title' => 'Witaj!',
-	'select-product-lead' => 'Wybierz kurs, na który chcesz się zapisać.',
+	'select-product-subtitle' => 'Wybierz kurs, na który chcesz się zapisać.',
 
 	'select-product-onsite-heading' => 'Kurs internetowy + warsztaty',
 	'select-product-onsite-button-label' => 'Wybieram kurs internetowy + warsztaty',
@@ -19,16 +31,8 @@ return [
 	'select-product-features-workshops' => 'Uczestnictwo w 6 warsztatach weekendowych w Poznaniu',
 	'select-product-features-individual' => 'Indywidualne spotkania z prowadzącymi kurs',
 
-	'back-to-website' => 'Powrót do strony kursu',
-
-    'personal-info-title' => 'Świetnie, teraz pora się poznać!',
-    'personal-info-account-data' => 'Do zalogowania będziesz używać swojego maila oraz hasła.',
-    'personal-info-adress' => 'Na jakie dane i adres mamy wysłać materiały?',
-    'personal-info-consents-title' => 'Aby zgodnie z prawem zrealizować zamówienie, potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
-    'personal-info-confirm-button-content' => 'Przejdź dalej',
-
 	'personal-data-title' => 'Świetny wybór!',
-	'personal-data-product' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
+	'personal-data-subtitle' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
 
 	'personal-data-account-heading' => 'Twoje konto',
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
@@ -75,8 +79,8 @@ return [
 	/**
 	 * Personal data verification step
 	 */
-	'confirm-heading' => 'Czy wszystko się zgadza?',
-	'confirm-heading-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
+	'confirm-order-title' => 'Czy wszystko się zgadza?',
+	'confirm-order-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
 	'confirm-order-heading' => 'Twoje zamówienie',
 	'confirm-order-price' => ':pricezł brutto',
 

@@ -1,18 +1,12 @@
 @extends('layouts.payment')
 
 @section('content')
-<section class="hero is-primary is-bold">
-	<div class="hero-body has-text-centered">
-		<div class="container">
-			<h1 class="title">
-				@lang('payment.select-product-title')
-			</h1>
-			<p class="subtitle">
-				@lang('payment.select-product-lead')
-			</p>
-		</div>
-	</div>
-</section>
+
+@include('payment.payment-hero', [
+	'step' => 1,
+	'title' => trans('payment.select-product-title'),
+	'subtitle' => trans('payment.select-product-subtitle'),
+])
 
 <section class="section">
 	<div class="container">

@@ -1,18 +1,11 @@
 @extends('layouts.payment')
 
 @section('content')
-	<section class="hero is-primary is-bold">
-		<div class="hero-body has-text-centered">
-			<div class="container">
-				<h1 class="title">
-					@lang('payment.confirm-heading')
-				</h1>
-				<p class="subtitle">
-					@lang('payment.confirm-heading-subtitle')
-				</p>
-			</div>
-		</div>
-	</section>
+	@include('payment.payment-hero', [
+		'step' => 3,
+		'title' => trans('payment.confirm-order-title'),
+		'subtitle' => trans('payment.confirm-order-subtitle'),
+	])
 
 	<div class="container">
 		<section class="subsection">

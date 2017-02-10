@@ -13,7 +13,7 @@ class Screen extends Model
 	}
 
 	public function lesson() {
-		return $this->belongsTo('\App\Models\Lesson');
+		return $this->belongsTo('\App\Models\Structure');
 	}
 
 	public function slides() {

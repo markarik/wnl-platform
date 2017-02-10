@@ -4,68 +4,29 @@ namespace Lib\SlideParser;
 
 use App\Exceptions\ParseErrorException;
 use App\Models\Category;
-use App\Models\Lesson;
 use App\Models\Slide;
 use App\Models\Snippet;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use App\Models\Structure;
 
 class Parser
 {
+	// TODO: Search&replace rules:
+	// - Remove width/height form iframes
 
 	/**
 	 * Regexp patterns used to process html slide shows
 	 */
 	const SLIDE_PATTERN = '/<section>([\s\S]*?)<\/section>/i';
 
-	const LESSON_PATTERN = '/#!\(lesson:(.*)\)/';
-
-	const SUBJECT_GROUP_PATTERN = '/#!\(subject_group:(.*)\)/';
-
-	const SUBJECT_PATTERN = '/#!\(subject:(.*)\)/';
-
-	const SECTION_GROUP_PATTERN = '/#!\(section_group:(.*)\)/';
-
-	const SECTION_PATTERN = '/#!\(section:(.*)\)/';
-
 	const FUNCTIONAL_SLIDE_PATTERN = '/#!\(functional\)/';
 
-	const TAG_PATTERN = '/#!\((.*)\)/';
+	const TAG_PATTERN = '/#!\(([\w]*):([^\)]*)\)/';
 
-	/**
-	 * @var Lesson
-	 */
-	protected $lesson;
-
-	/**
-	 * @var Snippet
-	 */
-	protected $snippet;
-
-	/**
-	 * @var Category
-	 */
-	protected $subjectGroup;
-
-	/**
-	 * @var Model
-	 */
-	protected $parent;
-
-	/**
-	 * @var Category
-	 */
-	protected $subject;
-
-	/**
-	 * @var Category
-	 */
-	protected $sectionGroup;
-
-	/**
-	 * @var Category
-	 */
-	protected $section;
+	protected $categoryTags;
+	protected $courseTags;
+	protected $categoryModels = [];
+	protected $courseModels = [];
 
 	/**
 	 * Parser constructor.
@@ -73,45 +34,119 @@ class Parser
 	public function __construct()
 	{
 		Log::debug(__CLASS__ . ' called');
+
+		$this->categoryTags = collect([
+			0 => 'subject_group',
+			1 => 'subject',
+			2 => 'section_group',
+			3 => 'section',
+		]);
+
+		$this->courseTags = collect([
+			0 => 'lesson',
+		]);
 	}
 
 	/**
 	 * @param $data - string/html
+	 * @throws ParseErrorException
 	 */
 	public function parse($data)
 	{
+		// TODO: Unspaghettize this code
+		$iteration = 0;
 		$slides = $this->matchSlides($data);
+		Log::debug('Parsing...');
+		$names = [];
+		foreach ($slides as $currentSlide => $slideHtml) {
+			$iteration++;
 
-		foreach ($slides as $key => $content) {
+			foreach ($this->categoryModels as $index => $model) {
+				if (!in_array($model->name, $names)){
+					Log::debug("($iteration)".str_repeat(' ',5-strlen($iteration)).str_repeat('-', $index).$model->name);
+					$names[$model->name] = $model->name;
+				}
+			}
+
 			$slide = Slide::create([
-				'content'       => preg_replace(self::TAG_PATTERN, '', $content),
-				'is_functional' => $this->isFunctional($content),
+				'content'       => preg_replace(self::TAG_PATTERN, '', $slideHtml),
+				'is_functional' => $this->isFunctional($slideHtml),
 			]);
 
-			if ($key === 0) $this->matchSubjectGroup($content);
+			$tags = $this->getTags($slideHtml);
 
-			$this->matchLesson($content);
-			if ($this->snippet) {
-				$this->snippet->slides()->attach($slide);
+			$foundCourseTags = [];
+			foreach ($tags as $tagName => $tagValue) {
+				$searchResult = $this->courseTags->search($tagName);
+				if ($searchResult !== false) {
+					$foundCourseTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
+				}
+			}
+			ksort($foundCourseTags);
+			foreach ($foundCourseTags as $index => $courseTag) {
+				$this->courseModels = array_filter($this->courseModels, function ($key) use ($index) {
+					return $key >= $index;
+				}, ARRAY_FILTER_USE_KEY);
+
+				if ($index === 0) {
+					$parentId = null;
+				} else {
+					$parentId = $this->courseModels[$index - 1]->id;
+				}
+				$structure = Structure::firstOrCreate([
+					'name'      => $courseTag['value'],
+					'parent_id' => $parentId,
+					'course_id' => 1,
+				]);
+				$snippet = Snippet::create(['type' => 'slideshow']);
+				$structure->screens()->create(['snippet_id' => $snippet->id]);
+				$this->courseModels[] = $snippet;
+			}
+			foreach ($this->courseModels as $model) {
+				$model->slides()->attach($slide);
 			}
 
 			if ($slide->is_functional) continue; /* jump to next iteration */
 
-			$this->matchSubject($content);
-			if ($this->subject) {
-				$this->subject->slides()->attach($slide);
+			$foundCategoryTags = [];
+			foreach ($tags as $tagName => $tagValue) {
+				$searchResult = $this->categoryTags->search($tagName);
+				if ($searchResult !== false) {
+					$foundCategoryTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
+				}
+			}
+			if ($currentSlide === 0 && !array_key_exists(0, $foundCategoryTags)) {
+				throw new ParseErrorException('Highest level category tag not found!');
+			}
+			ksort($foundCategoryTags);
+			foreach ($foundCategoryTags as $index => $categoryTag) {
+				if ($index === 0) {
+					$parentId = null;
+				} else {
+					$parentId = $this->categoryModels[$index - 1]->id;
+				}
+
+				$this->categoryModels = array_filter($this->categoryModels, function ($key) use ($index) {
+					return $key < $index;
+				}, ARRAY_FILTER_USE_KEY);
+
+				$this->categoryModels[] = Category::firstOrCreate([
+					'name'      => $categoryTag['value'],
+					'parent_id' => $parentId,
+				]);
+
+				if ($index === 0) {
+					$this->categoryModels[0]->slides()->detach();
+					Category::where('parent_id', $this->categoryModels[0]->id)->delete();
+				}
 			}
 
-			$this->matchSectionGroup($content);
-			if ($this->sectionGroup) {
-				$this->sectionGroup->slides()->attach($slide);
+			foreach ($this->categoryModels as $model) {
+				$model->slides()->attach($slide);
 			}
 
-			$this->matchSection($content);
-			if ($this->section) {
-				$this->section->slides()->attach($slide);
-			}
 		}
+		die('kuniec');
 	}
 
 	/**
@@ -137,116 +172,44 @@ class Parser
 	}
 
 	/**
-	 * @param $data - string/html
-	 * @throws ParseErrorException
-	 */
-	public function matchSubjectGroup($data)
-	{
-		$match = [];
-		$matchingResult = preg_match(self::SUBJECT_GROUP_PATTERN, $data, $match);
-
-		if (!$matchingResult) {
-			throw new ParseErrorException('Subject group tag not found!');
-		}
-
-		$subjectGroup = Category::firstOrCreate(['name' => $match[1]]);
-
-		$this->subjectGroup = $subjectGroup;
-		$this->parent = $subjectGroup;
-	}
-
-	/**
+	 * @param $pattern
 	 * @param $data
-	 * @return bool
+	 * @param \Closure $errback
+	 * @return mixed
+	 * @internal param \Closure $callback
 	 */
-	public function matchSubject($data)
+	public function match($pattern, $data, \Closure $errback = null)
 	{
 		$match = [];
-		$matchingResult = preg_match(self::SUBJECT_GROUP_PATTERN, $data, $match);
+		$matchingResult = preg_match_all($pattern, $data, $match, PREG_SET_ORDER);
 
 		if (!$matchingResult) {
+			if (is_callable($errback)) {
+				$errback();
+			}
+
 			return false;
 		}
 
-		$subject = Category::updateOrCreate(
-			['name' => $match[1]],
-			['name' => $match[1], 'parent_id' => $this->parent->id]
-		);
-
-		$this->subject = $subject;
-		$this->parent = $subject;
-
-		return true;
+		return $match;
 	}
 
 	/**
-	 * @param $data
-	 * @return bool
+	 * @param $slideHtml
+	 * @return array
 	 */
-	public function matchSectionGroup($data)
+	public function getTags($slideHtml)
 	{
-		$match = [];
-		$matchingResult = preg_match(self::SECTION_GROUP_PATTERN, $data, $match);
+		$tags = [];
+		$matches = $this->match(self::TAG_PATTERN, $slideHtml);
 
-		if (!$matchingResult) {
-			return false;
+		if (!$matches) return [];
+
+		foreach ($matches as $match) {
+			$tags[$match[1]] = $match[2];
 		}
 
-		$sectionGroup = Category::updateOrCreate(
-			['name' => $match[1]],
-			['name' => $match[1], 'parent_id' => $this->parent->id]
-		);
-
-		$this->sectionGroup = $sectionGroup;
-		$this->parent = $sectionGroup;
-
-		return true;
+		return $tags;
 	}
 
-	/**
-	 * @param $data
-	 * @return bool
-	 */
-	public function matchSection($data)
-	{
-		$match = [];
-		$matchingResult = preg_match(self::SECTION_PATTERN, $data, $match);
-
-		if (!$matchingResult) {
-			return false;
-		}
-
-		$section = Category::updateOrCreate(
-			['name' => $match[1]],
-			['name' => $match[1], 'parent_id' => $this->parent->id]
-		);
-
-		$this->section = $section;
-
-		return true;
-	}
-
-	/**
-	 * @param $data
-	 * @return Lesson|bool
-	 * @internal param $slide
-	 */
-	public function matchLesson($data)
-	{
-		$match = [];
-		$matchingResult = preg_match(self::LESSON_PATTERN, $data, $match);
-
-		if (!$matchingResult) {
-			return false;
-		}
-
-		$this->lesson = $lesson = Lesson::create([
-			'name' => $match[1],
-		]);
-
-		$this->snippet = Snippet::create(['type' => 'slideshow']);
-		$lesson->screens()->create(['snippet_id' => $this->snippet->id]);
-
-		return true;
-	}
 }

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class LessonsTableSeeder extends Seeder
+class StructuresTableSeeder extends Seeder
 {
 	/**
 	 * Run the database seeds.
@@ -11,8 +11,8 @@ class LessonsTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('lessons')->insert([
-			'name'       => 'Dzień 1',
+		DB::table('structures')->insert([
+			'name' => 'Dzień 1',
 		]);
 	}
 }

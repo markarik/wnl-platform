@@ -12,7 +12,7 @@ class ScreensTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('screens')->insert([
-			'lesson_id'  => 1,
+			'structure_id'  => 1,
 			'snippet_id' => 1,
 		]);
 	}

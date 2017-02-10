@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePresentablesTable extends Migration
+class CreateCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,18 @@ class CreatePresentablesTable extends Migration
      */
     public function up()
     {
-		Schema::create('presentables', function (Blueprint $table) {
+		Schema::create('categories', function (Blueprint $table) {
 			$table->increments('id');
-			$table->unsignedInteger('slide_id');
-			$table->unsignedInteger('presentable_id');
-			$table->string('presentable_type');
+			$table->string('name');
+			$table->unsignedInteger('parent_id')->nullable();
 			$table->timestamps();
 
 			$table
-				->foreign('slide_id')
-				->references('id')
-				->on('slides')
-				->onDelete('cascade');
-
-			$table
-				->foreign('presentable_id')
+				->foreign('parent_id')
 				->references('id')
 				->on('categories')
-				->onDelete('cascade');
+				->onDelete('cascade')
+				->onUpdate('cascade');
 		});
     }
 
@@ -41,6 +35,6 @@ class CreatePresentablesTable extends Migration
      */
     public function down()
     {
-		Schema::drop('presentables');
+		Schema::drop('categories');
     }
 }

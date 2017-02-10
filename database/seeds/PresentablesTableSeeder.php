@@ -14,7 +14,7 @@ class PresentablesTableSeeder extends Seeder
 		DB::table('presentables')->insert([
 			'slide_id'          => 1,
 			'presentable_id'    => 1,
-			'presentable_type' => '\App\Models\Subject',
+			'presentable_type' => '\App\Models\Category',
 		]);
 
 		DB::table('presentables')->insert([

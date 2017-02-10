@@ -15,19 +15,21 @@ class CreateScreensTable extends Migration
     {
 		Schema::create('screens', function (Blueprint $table) {
 			$table->increments('id');
-			$table->unsignedInteger('lesson_id');
+			$table->unsignedInteger('structure_id');
 			$table->unsignedInteger('snippet_id')->nullable();
 			$table->timestamps();
 
 			$table
-				->foreign('lesson_id')
+				->foreign('structure_id')
 				->references('id')
-				->on('lessons');
+				->on('structures')
+				->onDelete('cascade');
 
 			$table
 				->foreign('snippet_id')
 				->references('id')
-				->on('snippets');
+				->on('snippets')
+				->onDelete('cascade');
 		});
     }
 	/**

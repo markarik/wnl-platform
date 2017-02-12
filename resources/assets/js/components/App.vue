@@ -1,27 +1,27 @@
 <template>
-    <div>
-        <header-component/>
-        <div>this is template body</div>
-        <other-component/>
+    <div id="app">
+        <wnl-navbar></wnl-navbar>
+        <component :is="currentView"></component>
     </div>
 </template>
-<style>
-    body{
-        background-color:#ff0000;
-    }
-</style>
+
 <script>
-    import HeaderComponent from './components/header.vue'
-    import OtherComponent from './components/other.vue'
-    export default{
-        data(){
-            return{
-                msg:'hello vue'
-            }
+    // Import global components
+    import Navbar from './global/Navbar.vue'
+
+    // Import main views components
+    import Course from './course/Course.vue'
+
+    export default {
+        name: 'App',
+        components: {
+            'wnl-navbar': Navbar,
+            'wnl-course': Course
         },
-        components:{
-            'other-component':OtherComponent,
-            HeaderComponent,
+        computed: {
+            currentView () {
+                return this.$store.getters.currentView
+            }
         }
     }
 </script>

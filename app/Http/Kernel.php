@@ -37,7 +37,13 @@ class Kernel extends HttpKernel
             'bindings',
         ],
 
-		'hooks' => []
+		'hooks' => [],
+
+		'papi' => [
+			\App\Http\Middleware\EncryptCookies::class,
+			\Illuminate\Session\Middleware\StartSession::class,
+			\App\Http\Middleware\VerifyCsrfToken::class,
+		],
     ];
 
     /**

@@ -1,4 +1,4 @@
-@extends('layouts.payment')
+@extends('layouts.guest')
 
 @section('content')
 	@include('payment.payment-hero', [

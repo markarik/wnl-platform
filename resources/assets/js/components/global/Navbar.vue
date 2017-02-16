@@ -30,7 +30,9 @@
                     <!--{{ csrf_field() }}-->
                 <!--</form>-->
                 <!--@endif-->
-                {{ currentUserName }}
+                <div class="nav-item">
+                  {{ currentUserName }}
+                </div>
             </div>
         </div>
     </nav>

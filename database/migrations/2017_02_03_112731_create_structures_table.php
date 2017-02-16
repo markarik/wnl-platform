@@ -17,7 +17,7 @@ class CreateStructuresTable extends Migration
 			$table->increments('id');
 			$table->string('name');
 			$table->unsignedInteger('course_id')->default(1);
-			$table->unsignedInteger('parent_id')->default(0);
+			$table->unsignedInteger('parent_id')->nullable();
 			$table->timestamps();
 		});
     }

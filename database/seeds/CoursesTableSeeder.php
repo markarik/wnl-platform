@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ScreensTableSeeder extends Seeder
+class CoursesTableSeeder extends Seeder
 {
 	/**
 	 * Run the database seeds.
@@ -11,9 +11,9 @@ class ScreensTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('screens')->insert([
-			'lesson_id'  => 1,
-			'snippet_id' => 1,
+		DB::table('courses')->insert([
+			'name' => 'Więcej niż LEK',
+			'slug' => 'wiecej-niz-lek',
 		]);
 	}
 }

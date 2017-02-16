@@ -12,12 +12,8 @@ class Structure extends Model
 		return $this->belongsTo('\App\Models\Subject');
 	}
 
-	public function screens() {
-		return $this->hasMany('\App\Models\Screen');
-	}
-
 	public function snippets() {
-		return $this->hasManyThrough('\App\Models\Snippet', '\App\Models\Screen');
+		return $this->belongsToMany('\App\Models\Snippet', 'screens');
 	}
 
 	public function sections() {

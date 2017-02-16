@@ -62,8 +62,8 @@ class Parser
 			$iteration++;
 
 			foreach ($this->categoryModels as $index => $model) {
-				if (!in_array($model->name, $names)){
-					Log::debug("($iteration)".str_repeat(' ',5-strlen($iteration)).str_repeat('-', $index).$model->name);
+				if (!in_array($model->name, $names)) {
+					Log::debug("($iteration)" . str_repeat(' ', 5 - strlen($iteration)) . str_repeat('-', $index) . $model->name);
 					$names[$model->name] = $model->name;
 				}
 			}
@@ -98,9 +98,7 @@ class Parser
 					'parent_id' => $parentId,
 					'course_id' => 1,
 				]);
-				$snippet = Snippet::create(['type' => 'slideshow']);
-				$structure->screens()->create(['snippet_id' => $snippet->id]);
-				$this->courseModels[] = $snippet;
+				$this->courseModels[] = $structure->snippets()->create(['type' => 'slideshow']);
 			}
 			foreach ($this->courseModels as $model) {
 				$model->slides()->attach($slide);

@@ -16,7 +16,7 @@ class CreateScreensTable extends Migration
 		Schema::create('screens', function (Blueprint $table) {
 			$table->increments('id');
 			$table->unsignedInteger('structure_id');
-			$table->unsignedInteger('snippet_id')->nullable();
+			$table->unsignedInteger('snippet_id');
 			$table->timestamps();
 
 			$table

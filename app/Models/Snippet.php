@@ -11,4 +11,8 @@ class Snippet extends Model
 	public function slides() {
 		return $this->morphToMany('\App\Models\Slide', 'presentable');
 	}
+
+	public function structures(){
+		return $this->belongsToMany('\App\Models\Structure', 'screens');
+	}
 }

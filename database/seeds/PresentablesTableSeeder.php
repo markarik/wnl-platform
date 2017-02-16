@@ -14,13 +14,13 @@ class PresentablesTableSeeder extends Seeder
 		DB::table('presentables')->insert([
 			'slide_id'          => 1,
 			'presentable_id'    => 1,
-			'presentable_type' => '\App\Models\Category',
+			'presentable_type' => 'App\Models\Category',
 		]);
 
 		DB::table('presentables')->insert([
 			'slide_id'          => 1,
 			'presentable_id'    => 1,
-			'presentable_type' => '\App\Models\Snippet',
+			'presentable_type' => 'App\Models\Snippet',
 		]);
 	}
 }

@@ -20,7 +20,7 @@
 			]); ?>
 		</script>
 	</head>
-	<body data-base="{{env('APP_URL')}}">
+	<body data-base="{{ env('APP_URL') }}">
 		<div id="app">
 			<nav class="nav has-shadow">
 				<div class="container">

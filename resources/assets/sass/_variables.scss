@@ -7,6 +7,7 @@ $color-gray: #242d47;
 $color-light-gray: #efefef;
 $color-background-gray: #43495a;
 $color-white: #fff;
+$color-white-transparent: rgba(255,255,255,0.5);
 
 $color-green: #2ab27b;
 $color-yellow: #ffc371;
@@ -44,7 +45,7 @@ $font-weight-black: 700;
 $border-light-gray: 1px solid $color-light-gray;
 
 // Buttons
-$button-border-radius: 100px;
+$border-radius-full: 100px;
 
 // Overwrite Bulma variables
 $primary: $color-ocean-blue;

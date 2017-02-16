@@ -40,6 +40,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapWebHookRoutes();
+
+        $this->mapPapiRoutes();
     }
 
     /**
@@ -83,6 +85,16 @@ class RouteServiceProvider extends ServiceProvider
 			'namespace' => $this->namespace,
 		], function ($router) {
 			require base_path('routes/hooks.php');
+		});
+	}
+
+	private function mapPapiRoutes() {
+    	Route::group([
+    		'middleware' => 'papi',
+    		'namespace' => $this->namespace,
+			'prefix' => 'papi/v1',
+		], function ($router) {
+    		require base_path('routes/papi.php');
 		});
 	}
 }

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class SectionsTableSeeder extends Seeder
+class GroupsTableSeeder extends Seeder
 {
 	/**
 	 * Run the database seeds.
@@ -11,9 +11,9 @@ class SectionsTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('sections')->insert([
-			'name'      => 'Example section',
-			'snippet_id' => 1,
+		DB::table('groups')->insert([
+			'name'      => 'Example group',
+			'course_id' => 1,
 		]);
 	}
 }

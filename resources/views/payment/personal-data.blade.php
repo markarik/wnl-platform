@@ -1,19 +1,14 @@
-@extends('layouts.payment')
+@extends('layouts.guest')
 
 @section('content')
 
-	<section class="hero is-primary is-bold">
-		<div class="hero-body has-text-centered">
-			<div class="container">
-				<h1 class="title">
-					@lang('payment.personal-data-title')
-				</h1>
-				<p class="subtitle">
-					@lang('payment.personal-data-product', [ 'name' => $product->name, 'price' => $product->price ])
-				</p>
-			</div>
-		</div>
-	</section>
+	@include('payment.payment-hero', [
+		'step' => 2,
+		'title' => trans('payment.personal-data-title'),
+		'subtitle' => trans('payment.personal-data-subtitle', [
+				'name' => $product->name, 'price' => $product->price
+			]),
+	])
 
 	<div class="container payment-content">
 		@if (!$errors->isEmpty())

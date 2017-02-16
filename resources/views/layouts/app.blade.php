@@ -21,44 +21,7 @@
     </script>
 </head>
 <body data-base="{{env('APP_URL')}}">
-    <div id="app">
-        <nav class="nav has-shadow">
-            <div class="container">
-                <div class="nav-left">
-                    <a class="nav-item" href="{{ route('home') }}">
-                        <img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
-                    </a>
-                </div>
-
-                <span class="nav-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
-
-                <div class="nav-right nav-menu">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <a href="{{ url('/login') }}" class="nav-item">
-                            @lang('nav.login-link-content')
-                        </a>
-                    @else
-                        <a href="{{ url('/logout') }}" class="nav-item"
-                           onclick="event.preventDefault();
-                                         document.getElementById('logout-form').submit();">
-                            @lang('nav.logout-link-content')
-                        </a>
-
-                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    @endif
-                </div>
-            </div>
-        </nav>
-
-        @yield('content')
-    </div>
+    <div id="root" data-view="@yield('current-view')"></div>
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>

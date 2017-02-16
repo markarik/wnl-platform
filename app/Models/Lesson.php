@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
-	protected $fillable = ['name'];
+	protected $fillable = ['name', 'group_id'];
+
+	public function snippets() {
+		return $this->belongsToMany('\App\Models\Snippet', 'screens');
+	}
 }

@@ -12,7 +12,7 @@ class Snippet extends Model
 		return $this->morphToMany('\App\Models\Slide', 'presentable');
 	}
 
-	public function structures(){
-		return $this->belongsToMany('\App\Models\Structure', 'screens');
+	public function lessons(){
+		return $this->belongsToMany('\App\Models\Lesson', 'screens');
 	}
 }

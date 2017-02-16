@@ -15,5 +15,8 @@ const { mix } = require('laravel-mix');
 //    .sass('resources/assets/sass/app.scss', 'public/css');
 
 mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
+	.copy('resources/assets/css/reveal.css', 'public/css/reveal.css')
+	.copy('resources/assets/css/reveal-theme.css', 'public/css/reveal-theme.css')
 	.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
+	.copy('resources/assets/js/reveal.js', 'public/js/reveal.js')

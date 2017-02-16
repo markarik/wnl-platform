@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChaptersTable extends Migration
+class CreateCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,18 @@ class CreateChaptersTable extends Migration
      */
     public function up()
     {
-		Schema::create('chapters', function (Blueprint $table) {
+		Schema::create('categories', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('name');
-			$table->unsignedInteger('module_id');
+			$table->unsignedInteger('parent_id')->nullable();
 			$table->timestamps();
 
-			$table->foreign('module_id')
+			$table
+				->foreign('parent_id')
 				->references('id')
-				->on('modules');
+				->on('categories')
+				->onDelete('cascade')
+				->onUpdate('cascade');
 		});
     }
 
@@ -32,6 +35,6 @@ class CreateChaptersTable extends Migration
      */
     public function down()
     {
-		Schema::drop('chapters');
+		Schema::drop('categories');
     }
 }

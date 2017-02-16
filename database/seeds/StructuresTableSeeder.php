@@ -12,7 +12,19 @@ class StructuresTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('structures')->insert([
-			'name' => 'Dzień 1',
+			['name' => 'Example'],
+			['name' => 'Interna'],
+			['name' => 'Pediatria'],
+			['name' => 'Chirurgia'],
+			['name' => 'Ginekologia'],
+			['name' => 'Psychiatria'],
+			['name' => 'Medycyna ratunkowa i anestezjologia'],
+			['name' => 'Medycyna rodzinna'],
+			['name' => 'Zdrowie publiczne, Bioetyka, Prawo medyczne'],
+		]);
+
+		DB::table('structures')->insert([
+			['name' => 'Example lesson', 'parent_id' => 1],
 		]);
 	}
 }

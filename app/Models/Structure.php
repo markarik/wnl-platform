@@ -19,4 +19,9 @@ class Structure extends Model
 	public function sections() {
 		return $this->hasMany('\App\Models\Section');
 	}
+
+	public function course()
+	{
+		return $this->hasOne('\App\Models\Course');
+	}
 }

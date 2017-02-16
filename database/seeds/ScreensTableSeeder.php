@@ -12,8 +12,18 @@ class ScreensTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('screens')->insert([
-			'lesson_id'  => 1,
-			'snippet_id' => 1,
+			[
+				'lesson_id'  => 1,
+				'snippet_id' => 1,
+			],
+			[
+				'lesson_id'  => 1,
+				'snippet_id' => 2,
+			],
+			[
+				'lesson_id'  => 1,
+				'snippet_id' => 3,
+			],
 		]);
 	}
 }

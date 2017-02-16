@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateModulesTable extends Migration
+class CreateGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateModulesTable extends Migration
      */
     public function up()
     {
-		Schema::create('modules', function (Blueprint $table) {
-			$table->increments('id');
-			$table->string('name');
-			$table->timestamps();
-		});
+        Schema::create('groups', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->unsignedInteger('course_id');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -27,6 +28,6 @@ class CreateModulesTable extends Migration
      */
     public function down()
     {
-		Schema::drop('modules');
+        Schema::dropIfExists('groups');
     }
 }

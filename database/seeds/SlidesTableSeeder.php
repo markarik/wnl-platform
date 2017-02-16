@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class SectionsTableSeeder extends Seeder
+class SlidesTableSeeder extends Seeder
 {
 	/**
 	 * Run the database seeds.
@@ -11,9 +11,8 @@ class SectionsTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('sections')->insert([
-			'name'      => 'Example section',
-			'snippet_id' => 1,
+		DB::table('slides')->insert([
+			'content' => '<strong>Example Slide</strong>',
 		]);
 	}
 }

@@ -19,4 +19,8 @@ class Slide extends Model
 	public function snippets() {
 		return $this->morphedByMany('\App\Models\Snippet', 'presentable');
 	}
+
+	public function sections() {
+		return $this->morphedByMany('\App\Models\Section', 'presentable');
+	}
 }

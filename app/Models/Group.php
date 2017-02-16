@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'course_id'];
 
 	public function lessons()
 	{
 		return	$this->hasMany('\App\Models\Lesson');
+	}
+
+	public function course(){
+		return $this->belongsTo('\App\Models\Course');
 	}
 }

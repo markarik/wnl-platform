@@ -4,6 +4,9 @@ namespace Lib\SlideParser;
 
 use App\Exceptions\ParseErrorException;
 use App\Models\Category;
+use App\Models\Group;
+use App\Models\Lesson;
+use App\Models\Section;
 use App\Models\Slide;
 use App\Models\Snippet;
 use Illuminate\Support\Facades\Log;
@@ -36,14 +39,17 @@ class Parser
 		Log::debug(__CLASS__ . ' called');
 
 		$this->categoryTags = collect([
-			0 => 'subject_group',
-			1 => 'subject',
-			2 => 'section_group',
+			0 => 'discipline',
+			1 => 'group',
+			2 => 'subject',
 			3 => 'section',
+			4 => 'subsection',
 		]);
 
 		$this->courseTags = collect([
-			0 => 'lesson',
+			0 => 'group',
+			1 => 'lesson',
+			2 => 'section',
 		]);
 	}
 
@@ -84,24 +90,39 @@ class Parser
 			}
 			ksort($foundCourseTags);
 			foreach ($foundCourseTags as $index => $courseTag) {
-				$this->courseModels = array_filter($this->courseModels, function ($key) use ($index) {
-					return $key >= $index;
-				}, ARRAY_FILTER_USE_KEY);
 
-				if ($index === 0) {
-					$parentId = null;
-				} else {
-					$parentId = $this->courseModels[$index - 1]->id;
+				if ($courseTag['name'] == 'group') {
+					$group = Group::firstOrCreate([
+						'name'      => $courseTag['value'],
+						'course_id' => 1,
+					]);
+					$this->courseModels['group'] = $group;
 				}
-				$structure = Structure::firstOrCreate([
-					'name'      => $courseTag['value'],
-					'parent_id' => $parentId,
-					'course_id' => 1,
-				]);
-				$this->courseModels[] = $structure->snippets()->create(['type' => 'slideshow']);
+
+				if ($courseTag['name'] == 'lesson') {
+					$lesson = Lesson::firstOrCreate([
+						'name'     => $courseTag['value'],
+						'group_id' => $this->courseModels['group']->id,
+					]);
+					$this->courseModels['snippet'] = $lesson->snippets()->create([
+						'type' => 'slideshow',
+						'name' => 'Prezentacja']
+					);
+				}
+
+				if ($courseTag['name'] == 'section') {
+					$section = Section::firstOrCreate([
+						'name'      => $courseTag['value'],
+						'snippet_id' => $this->courseModels['snippet']->id,
+					]);
+					$this->courseModels['section'] = $section;
+				}
 			}
-			foreach ($this->courseModels as $model) {
-				$model->slides()->attach($slide);
+			if (array_key_exists('snippet', $this->courseModels)){
+				$this->courseModels['snippet']->slides()->attach($slide);
+			}
+			if (array_key_exists('section', $this->courseModels)){
+				$this->courseModels['section']->slides()->attach($slide);
 			}
 
 			if ($slide->is_functional) continue; /* jump to next iteration */

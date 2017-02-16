@@ -15,6 +15,7 @@ class CreateSnippetsTable extends Migration
     {
 		Schema::create('snippets', function (Blueprint $table) {
 			$table->increments('id');
+			$table->string('name');
 			$table->text('content')->nullable();
 			$table->string('type');
 			$table->timestamps();

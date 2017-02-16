@@ -12,16 +12,19 @@ class SnippetsTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('snippets')->insert([
-			'type'    => 'slideshow',
-		]);
-
-		DB::table('snippets')->insert([
 			'type'    => 'html',
 			'content' => '<strong>siema!</strong>',
+			'name'    => 'Wstęp',
 		]);
 
 		DB::table('snippets')->insert([
-			'type'    => 'app',
+			'type' => 'slideshow',
+			'name' => 'Prezentacja',
+		]);
+
+		DB::table('snippets')->insert([
+			'type' => 'app',
+			'name' => 'Pytanie kontrolne',
 		]);
 	}
 }

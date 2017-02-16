@@ -15,4 +15,5 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function() {
 	Route::get('users/current', 'UsersApiController@getCurrentUser');
 
 	Route::get('courses/{id}/nav', 'CoursesApiController@getNavigation');
+	Route::get('lessons/{id}/nav', 'LessonsApiController@getNavigation');
 });

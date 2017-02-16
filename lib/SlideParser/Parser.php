@@ -104,7 +104,10 @@ class Parser
 						'name'     => $courseTag['value'],
 						'group_id' => $this->courseModels['group']->id,
 					]);
-					$this->courseModels['snippet'] = $lesson->snippets()->create(['type' => 'slideshow']);
+					$this->courseModels['snippet'] = $lesson->snippets()->create([
+						'type' => 'slideshow',
+						'name' => 'Prezentacja']
+					);
 				}
 
 				if ($courseTag['name'] == 'section') {
@@ -117,6 +120,9 @@ class Parser
 			}
 			if (array_key_exists('snippet', $this->courseModels)){
 				$this->courseModels['snippet']->slides()->attach($slide);
+			}
+			if (array_key_exists('section', $this->courseModels)){
+				$this->courseModels['section']->slides()->attach($slide);
 			}
 
 			if ($slide->is_functional) continue; /* jump to next iteration */

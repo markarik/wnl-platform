@@ -11,4 +11,9 @@ class Lesson extends Model
 	public function snippets() {
 		return $this->belongsToMany('\App\Models\Snippet', 'screens');
 	}
+
+	public function group()
+	{
+		return $this->belongsTo('\App\Models\Group');
+	}
 }

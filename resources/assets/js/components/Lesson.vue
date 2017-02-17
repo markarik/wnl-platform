@@ -16,7 +16,7 @@
 	import Sidenav from './Sidenav.vue'
 
 	export default {
-		name: 'Course',
+		name: 'Lesson',
 		props: {
 			id: {
 				type: Number,
@@ -25,7 +25,7 @@
 		},
 		computed: {
 			navigationApiUrl() {
-				return $fn.getApiUrl('courses/' + this.id + '/nav')
+				return $fn.getApiUrl('lessons/' + this.id + '/nav')
 			}
 		},
 		components: {

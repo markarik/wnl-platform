@@ -39,7 +39,7 @@ class LessonsApiController extends Controller
 				'text' => $lesson->name,
 			],
 		];
-		$navigation = [];
+		$items = [];
 
 		$snippets = $lesson->snippets()->with('slides')->get();
 
@@ -47,7 +47,7 @@ class LessonsApiController extends Controller
 			if ($snippet->type === 'slideshow') {
 				$snippetFirstSlide = $snippet->slides->first();
 			}
-			$navigation[] = [
+			$items[] = [
 				'type'       => 'snippet',
 				'snipetType' => $snippet->type,
 				'icon'       => 'snippet',
@@ -66,7 +66,7 @@ class LessonsApiController extends Controller
 					$url = '#';
 				}
 
-				$navigation[] = [
+				$items[] = [
 					'type'  => 'section',
 					'icon'  => 'section',
 					'url'   => $url,
@@ -76,8 +76,6 @@ class LessonsApiController extends Controller
 			}
 		}
 
-//		return view('layouts.guest');
-
-		return response()->json(['breadcrumbs' => $breadcrumbs, 'navigation' => $navigation]);
+		return response()->json(['breadcrumbs' => $breadcrumbs, 'items' => $items]);
 	}
 }

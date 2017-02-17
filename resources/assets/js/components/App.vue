@@ -11,12 +11,14 @@
 
 	// Import main views components
 	import Course from './Course.vue'
+	import Lesson from './Lesson.vue'
 
 	export default {
 		name: 'App',
 		components: {
 			'wnl-navbar': Navbar,
-			'wnl-course': Course
+			'wnl-course': Course,
+			'wnl-lesson': Lesson
 		},
 		computed: {
 			currentView () {

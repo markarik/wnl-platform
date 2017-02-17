@@ -26,7 +26,6 @@ const mutations = {
 // Actions
 const actions = {
 	setNavigation({ commit }, url) {
-		console.log('url')
 		sidenav.getNavigation(url).then((response) => {
 			commit(types.SET_NAVIGATION, response.data)
 		})

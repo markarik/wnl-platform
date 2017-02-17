@@ -44,56 +44,30 @@
 
 	export default {
 		name: 'Sidenav',
+		props: {
+			apiUrl: {
+				type: String,
+				default: '/papi/v1/courses/1/nav'
+			}
+		},
+		computed: {
+			breadcrumbs() {
+				return this.$store.getters.breadcrumbs
+			},
+			items() {
+				return this.$store.getters.items
+			}
+		},
 		components: {
 		'wnl-sidenav-item': SidenavItem
 		},
-		data: () => {
-			return {
-				breadcrumbs: [
-					{
-						type: 'course',
-						icon: 'course',
-						url: 'http://wnl-platform.app/course/1',
-						text: 'Więcej niż LEK'
-					}
-				],
-				items: [
-					{
-						type: 'group',
-						icon: 'group',
-						url: '#',
-						text: 'Interna'
-					},
-					{
-						type: 'lesson',
-						icon: 'lesson',
-						url: 'http://wnl-platform.app/course/1/lesson/1',
-						text: 'Pulmonologia I',
-						status: 'done'
-					},
-					{
-						type: 'lesson',
-						icon: 'lesson',
-						url: 'http://wnl-platform.app/course/1/lesson/2',
-						text: 'Pulmonologia II',
-						status: 'started'
-					},
-					{
-						type: 'lesson',
-						icon: 'lesson',
-						url: 'http://wnl-platform.app/course/1/lesson/2',
-						text: 'Kardiologia I',
-						status: 'enabled'
-					},
-					{
-						type: 'lesson',
-						icon: 'lesson',
-						url: 'http://wnl-platform.app/course/1/lesson/1',
-						text: 'Kardiologia II',
-						status: 'disabled'
-					}
-				]
+		methods: {
+			setNavigation: function (url) {
+				this.$store.dispatch('setNavigation', url)
 			}
+		},
+		created: function () {
+			this.setNavigation(this.apiUrl)
 		}
 	}
 </script>

@@ -1,12 +1,12 @@
 <template>
 	<div class="columns is-gapless">
-		<div class="column" style="background: #fcfcfc;">
-			<wnl-sidenav></wnl-sidenav>
+		<div class="column">
+			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
 		<div class="column is-half">
 
 		</div>
-		<div class="column" style="background: #fcfcfc;">
+		<div class="column">
 
 		</div>
 	</div>
@@ -17,6 +17,17 @@
 
 	export default {
 		name: 'Course',
+		props: {
+			id: {
+				type: Number,
+				default: 1
+			}
+		},
+		computed: {
+			navigationApiUrl() {
+				return $fn.getApiUrl('courses/' + this.id + '/nav')
+			}
+		},
 		components: {
 			'wnl-sidenav': Sidenav
 		}

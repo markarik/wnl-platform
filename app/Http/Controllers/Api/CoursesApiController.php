@@ -49,6 +49,6 @@ class CoursesApiController extends Controller
 			}
 		}
 
-		return response()->json(['breadcrumbs' => $breadcrumbs, 'navigation' => $items]);
+		return response()->json(['breadcrumbs' => $breadcrumbs, 'items' => $items]);
 	}
 }

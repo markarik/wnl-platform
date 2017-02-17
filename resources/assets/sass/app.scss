@@ -31,6 +31,18 @@
 	min-height: 100%;
 }
 
+// Layout
+
+.wnl-background-gray {
+	background: $color-background-light-gray;
+}
+
+.wnl-left-content {
+	float: right;
+	width: 250px;
+	padding: 0 20px;
+}
+
 // Navigation
 
 .navbar-default {

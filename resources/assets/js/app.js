@@ -5,6 +5,12 @@ import store from './store/store'
 
 const currentView = $('#root').data('view')
 
+global.$fn = {
+	getApiUrl: function (path) {
+		return '/papi/v1/' + path
+	}
+}
+
 new Vue({
 	store,
 	el: '#root',

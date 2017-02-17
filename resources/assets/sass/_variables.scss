@@ -6,6 +6,7 @@ $color-purple: #53446c;
 $color-gray: #242d47;
 $color-light-gray: #efefef;
 $color-background-gray: #43495a;
+$color-background-light-gray: #fcfcfc;
 $color-white: #fff;
 $color-white-transparent: rgba(255,255,255,0.5);
 
@@ -18,7 +19,7 @@ $background-color-default: $color-white;
 $background-color-gray: $color-light-gray;
 
 // Typography
-$font-family-sans-serif: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
 $font-size-minus-3: 0.625rem;
 $font-size-minus-2: 0.75rem;
@@ -38,8 +39,9 @@ $line-height-plus: 1.75em;
 
 $color-body: $color-gray;
 
-$font-weight-bold: 500;
-$font-weight-black: 700;
+$font-weight-light: 300;
+$font-weight-bold: 700;
+$font-weight-black: 900;
 
 // Borders
 $border-light-gray: 1px solid $color-light-gray;

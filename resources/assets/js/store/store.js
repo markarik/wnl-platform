@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import * as actions from './actions'
 import * as getters from './getters'
 import mutations from './mutations'
+import sidenav from './modules/sidenav'
 import users from './modules/users'
 
 Vue.use(Vuex)
@@ -17,6 +18,7 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 	modules: {
+		sidenav,
 		users
 	},
 	strict: debug

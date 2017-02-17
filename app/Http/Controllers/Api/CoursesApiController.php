@@ -27,34 +27,28 @@ class CoursesApiController extends Controller
 				'text' => $course->name,
 			],
 		];
-		$navigation = [];
+		$items = [];
 
 		$groups = $course->groups()->with('lessons')->get();
 
 		foreach ($groups as $group) {
-			$navigation[] = [
+			$items[] = [
 				'type'     => 'group',
 				'icon'     => 'group',
 				'url'      => '#',
 				'text'     => $group->name,
-				'isActive' => 'bool dupy',
-				'state'    => 'California',
 			];
 
 			foreach ($group->lessons as $lesson){
-				$navigation[] = [
+				$items[] = [
 					'type'     => 'lesson',
 					'icon'     => 'lesson',
 					'url'      => route('lesson', [$course->id, $lesson->id]),
 					'text'     => $lesson->name,
-					'isActive' => 'bool dupy',
-					'state'    => 'California',
 				];
 			}
 		}
 
-//		return view('layouts.guest');
-
-		return response()->json(['breadcrumbs' => $breadcrumbs, 'navigation' => $navigation]);
+		return response()->json(['breadcrumbs' => $breadcrumbs, 'items' => $items]);
 	}
 }

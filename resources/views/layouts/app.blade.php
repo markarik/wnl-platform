@@ -14,6 +14,7 @@
     <link href="/css/app.css" rel="stylesheet">
 
     <!-- Scripts -->
+	<script src="https://use.fontawesome.com/e3024fa4e4.js"></script>
     <script>
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
@@ -21,7 +22,7 @@
     </script>
 </head>
 <body data-base="{{env('APP_URL')}}">
-    <div id="root" data-view="@yield('current-view')"></div>
+    <div id="root" data-view="@yield('current-view')" class="full-height"></div>
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>

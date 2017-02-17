@@ -1,29 +1,29 @@
 <template>
-	<div>
-		<aside class="wnl-sidenav">
-			<!-- Navigation Breadcrumbs -->
-			<ul class="wnl-sidenav-breadcrumbs">
-				<wnl-sidenav-item v-for="breadcrumb in breadcrumbs" :url="breadcrumb.url" :type="breadcrumb.type">
-					{{ breadcrumb.text }}
-				</wnl-sidenav-item>
-			</ul>
-			<!-- Navigation Structure -->
-			<ul class="wnl-sidenav-items">
-				<wnl-sidenav-item v-for="item in items" :url="item.url" :type="item.type" :status="item.status">
-					{{ item.text }}
-				</wnl-sidenav-item>
-			</ul>
-		</aside>
-	</div>
+	<aside class="wnl-sidenav wnl-left-content">
+		<!-- Navigation Breadcrumbs -->
+		<ul class="wnl-sidenav-breadcrumbs">
+			<wnl-sidenav-item v-for="breadcrumb in breadcrumbs" :url="breadcrumb.url" :type="breadcrumb.type">
+				{{ breadcrumb.text }}
+			</wnl-sidenav-item>
+		</ul>
+		<!-- Navigation Structure -->
+		<ul class="wnl-sidenav-items">
+			<wnl-sidenav-item v-for="item in items" :url="item.url" :type="item.type" :status="item.status">
+				{{ item.text }}
+			</wnl-sidenav-item>
+		</ul>
+	</aside>
 </template>
 
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav
+		max-width: 250px
 		padding: 20px
 
 	.wnl-sidenav-breadcrumbs
+		border-bottom: $border-light-gray
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
 		margin-bottom: 10px
@@ -33,9 +33,9 @@
 
 		.wnl-sidenav-item-lesson
 			font-size: $font-size-minus-1
-			padding-left: 5px
 
 		.wnl-sidenav-item-section
+			font-size: $font-size-minus-2
 			padding-left: 10px
 </style>
 

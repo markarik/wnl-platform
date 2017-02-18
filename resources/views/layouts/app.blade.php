@@ -22,9 +22,9 @@
     </script>
 </head>
 <body data-base="{{env('APP_URL')}}">
-    <div id="root" data-view="@yield('current-view')" class="full-height"></div>
+    <div id="app" data-view="@yield('current-view')" class="full-height"></div>
 
     <!-- Scripts -->
-    <script src="/js/app.js"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

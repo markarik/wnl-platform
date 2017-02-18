@@ -23,7 +23,7 @@ class CoursesApiController extends Controller
 			[
 				'type' => 'course',
 				'icon' => 'course',
-				'url'  => route('course', $course->id),
+				'id'  => $course->id,
 				'text' => $course->name,
 			],
 		];
@@ -41,9 +41,10 @@ class CoursesApiController extends Controller
 
 			foreach ($group->lessons as $lesson){
 				$items[] = [
+					'courseId' => $course->id,
 					'type'     => 'lesson',
 					'icon'     => 'lesson',
-					'url'      => route('lesson', [$course->id, $lesson->id]),
+					'id'       => $lesson->id,
 					'text'     => $lesson->name,
 				];
 			}

@@ -34,11 +34,16 @@ Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => '
 Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('/', function () {
-		return redirect('/course/1');
+		return redirect('/app');
 	})->name('home');
-
-	Route::get('/dashboard', 'User\DashboardController@index');
+	//
+	// Route::get('/dashboard', 'User\DashboardController@index');
 	Route::get('/profile/orders', 'User\OrderController@index')->name('profile-orders');
+
+	// Using front-end routing for the main application
+	Route::get('/app/{path?}', function () {
+		return view('layouts.app');
+	})->name('app')->where('path', '(.*)');
 
 	/*
 	* Ajax common route
@@ -53,14 +58,14 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
-Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
-	Route::get('/course/{courseId}', 'CourseController@index')->name('course');
-	Route::get('/course/{courseId}/lesson/{lessonId}', 'LessonController@index')->name('lesson');
-	Route::get('/course/{courseId}/lesson/{lessonId}/snippet/{snippetId}/slide#/{slideNumber}', 'LessonController@index')
-		->name('section');
-
-	Route::get('/slideshow-builder/{snippetId}', 'SlideShowController@build')->name('slideshow-builder');
-});
+// Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
+// 	Route::get('/course/{courseId}', 'CourseController@index')->name('course');
+// 	Route::get('/course/{courseId}/lesson/{lessonId}', 'LessonController@index')->name('lesson');
+// 	Route::get('/course/{courseId}/lesson/{lessonId}/snippet/{snippetId}/slide#/{slideNumber}', 'LessonController@index')
+// 		->name('section');
+//
+// 	Route::get('/slideshow-builder/{snippetId}', 'SlideShowController@build')->name('slideshow-builder');
+// });
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function ()
 {

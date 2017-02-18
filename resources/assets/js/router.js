@@ -9,10 +9,23 @@ export default new Router({
 	scrollBehavior: () => ({ y: 0 }),
 	routes: [
 		{
-			name: 'Dashboard',
-			path: '/app/',
+			name: 'courses',
+			path: '/app/courses/:cid',
 			component: require('./components/Course.vue'),
-			props: { id: 1 }
+			props: true,
+			children: [
+				{
+					name: 'lessons',
+					path: 'lessons/:lid',
+					component: require('./components/Lesson.vue'),
+					props: true
+				}
+			]
+		},
+		{
+			name: 'Dashboard',
+			path: '/app',
+			component: require('./components/Dashboard.vue'),
 		},
 		{
 			path: '*',

@@ -1,8 +1,8 @@
 <template>
 	<li :class="itemClass">
-		<a :href="url" v-if="isLink" :class="linkClass">
+		<router-link :to="to" v-if="isLink">
 			<slot></slot>
-		</a>
+		</router-link>
 		<span v-else>
 			<slot></slot>
 		</span>
@@ -17,16 +17,31 @@
 <script>
 	export default {
 		name: 'SidenavItem',
-		props: ['type', 'url', 'status'],
+		props: ['type', 'id', 'ancestors'],
 		computed: {
+			to() {
+				if (this.type === 'lessons') {
+					return {
+						name: this.type,
+						params: {
+							cid: this.ancestors.courses,
+							lid: this.id
+						}
+					}
+				} else if (this.type === 'courses') {
+					return {
+						name: this.type,
+						params: {
+							cid: this.id
+						}
+					}
+				}
+			},
 			itemClass() {
 				return 'wnl-sidenav-item wnl-sidenav-item-' + this.type
 			},
 			isLink() {
-				return this.url != '#'
-			},
-			linkClass() {
-				return 'wnl-lesson-' + this.status
+				return this.type !== 'groups'
 			}
 		}
 	}

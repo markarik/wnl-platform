@@ -1,9 +1,16 @@
 <template>
 	<div id="app">
 		<wnl-navbar :show="true"></wnl-navbar>
-		<router-view></router-view>
+		<div class="wnl-main">
+			<router-view></router-view>
+		</div>
 	</div>
 </template>
+
+<style lang="sass">
+	.wnl-main
+		padding: 20px 0
+</style>
 
 <script>
 	// Import global components

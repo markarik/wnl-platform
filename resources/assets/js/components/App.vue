@@ -1,29 +1,23 @@
 <template>
 	<div id="app">
-		<wnl-navbar></wnl-navbar>
-		<component :is="currentView"></component>
+		<wnl-navbar :show="true"></wnl-navbar>
+		<router-view></router-view>
 	</div>
 </template>
 
 <script>
 	// Import global components
 	import Navbar from './global/Navbar.vue'
-
-	// Import main views components
-	import Course from './Course.vue'
-	import Lesson from './Lesson.vue'
+	import { mapActions } from 'vuex'
 
 	export default {
 		name: 'App',
-		components: {
-			'wnl-navbar': Navbar,
-			'wnl-course': Course,
-			'wnl-lesson': Lesson
+		components: { 'wnl-navbar': Navbar },
+		methods: {
+			...mapActions(['setCurrentUser'])
 		},
-		computed: {
-			currentView () {
-				return this.$store.getters.currentView
-			}
+		created: function () {
+			this.setCurrentUser()
 		}
 	}
 </script>

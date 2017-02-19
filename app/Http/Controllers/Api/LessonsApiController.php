@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Config;
 
 class LessonsApiController extends Controller
 {
@@ -19,60 +20,70 @@ class LessonsApiController extends Controller
 			return response('Lesson not found', 404);
 		}
 
+		$resources = Config::get('papi.resources');
+
 		$breadcrumbs = [
 			[
-				'type' => 'course',
-				'icon' => 'course',
-				'url'  => route('course', $lesson->id),
-				'text' => $lesson->group->course->name,
+				'type'      => $resources['courses'],
+				'id'        => $lesson->group->course->id,
+				'name'      => $lesson->group->course->name,
+				'ancestors' => [],
 			],
 			[
-				'type' => 'group',
-				'icon' => 'group',
-				'url'  => '#',
-				'text' => $lesson->group->name,
+				'type'      => $resources['groups'],
+				'id'        => $lesson->group->id,
+				'name'      => $lesson->group->name,
+				'ancestors' => [
+					$resources['courses'] => $lesson->group->course->id,
+				],
 			],
 			[
-				'type' => 'lesson',
-				'icon' => 'lesson',
-				'url'  => route('lesson', [$lesson->group->course->id, $lesson->id]),
-				'text' => $lesson->name,
+				'type'      => $resources['lessons'],
+				'id'        => $lesson->id,
+				'name'      => $lesson->name,
+				'ancestors' => [
+					$resources['courses'] => $lesson->group->course->id,
+					$resources['groups']  => $lesson->group->id,
+				],
 			],
 		];
+
 		$items = [];
 
-		$snippets = $lesson->snippets()->with('slides')->get();
+		$screens = $lesson->snippets()->with('slides')->get();
 
-		foreach ($snippets as $snippet) {
-			if ($snippet->type === 'slideshow') {
-				$snippetFirstSlide = $snippet->slides->first();
-			}
+		foreach ($screens as $screen) {
 			$items[] = [
-				'type'       => 'snippet',
-				'snipetType' => $snippet->type,
-				'icon'       => 'snippet',
-				'url'        => '#',
-				'text'       => $snippet->name,
-				'state'      => 'California',
+				'type'       => $resources['screens'],
+				'id'         => $screen->id,
+				'name'       => $screen->name,
+				'screenType' => $screen->type,
+				'ancestors'  => [
+					$resources['courses'] => $lesson->group->course->id,
+					$resources['groups']   => $lesson->group->id,
+					$resources['lessons']  => $lesson->id,
+				],
 			];
 
-			$sections = $snippet->sections()->with('slides')->get();
-			foreach ($sections as $section) {
-				if ($snippet->type === 'slideshow') {
+			if ($screen->type === 'slideshow') {
+				$screenFirstSlide = $screen->slides->first();
+				$sections = $screen->sections()->with('slides')->get();
+				foreach ($sections as $section) {
 					$sectionFirstSlide = $section->slides->first();
-					$slideNumber = $sectionFirstSlide->id - $snippetFirstSlide->id;
-					$url = route('section', [$lesson->group->course->id, $lesson->id, $snippet->id, $slideNumber]);
-				} else {
-					$url = '#';
+					$slideNumber = $sectionFirstSlide->id - $screenFirstSlide->id;
+					$items[] = [
+						'type'  => $resouces['sections'],
+						'id'    => $section->id,
+						'name'  => $section->name,
+						'ancestors' => [
+							$resources['courses'] => $lesson->group->course->id,
+							$resources['groups']   => $lesson->group->id,
+							$resources['lessons']  => $lesson->id,
+							$resources['screens'] => $screen->id,
+						],
+						'slide' => $slideNumber,
+					];
 				}
-
-				$items[] = [
-					'type'  => 'section',
-					'icon'  => 'section',
-					'url'   => $url,
-					'text'  => $section->name,
-					'state' => 'California',
-				];
 			}
 		}
 

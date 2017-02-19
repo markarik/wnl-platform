@@ -1,5 +1,4 @@
 import { set } from 'vue'
-import * as sidenav from '../../api/sidenav'
 import * as types from '../mutations-types'
 
 // Initial state
@@ -25,10 +24,8 @@ const mutations = {
 
 // Actions
 const actions = {
-	setNavigation({ commit }, url) {
-		sidenav.getNavigation(url).then((response) => {
-			commit(types.SET_NAVIGATION, response.data)
-		})
+	setNavigation({ commit }, data) {
+		commit(types.SET_NAVIGATION, data)
 	}
 }
 

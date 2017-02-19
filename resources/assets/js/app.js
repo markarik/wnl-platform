@@ -1,29 +1,33 @@
 require('./bootstrap');
 import Vue from 'vue'
 import App from './components/App.vue'
+import { sync } from 'vuex-router-sync'
 import store from './store/store'
 import * as io from 'socket.io-client'
+import router from './router'
 
-const currentView = $('#root').data('view')
-
+// TODO: Move it to a config/utils file
 global.$fn = {
 	getApiUrl: function (path) {
 		return '/papi/v1/' + path
+	},
+	getBaseUrl: function (path) {
+		// TODO: Pass it from backend
+		return 'http://wnl-platform.app/' + path
 	}
 }
 
 Vue.prototype.$socket = io('46.101.174.6:9663');
 
-new Vue({
-	store,
-	el: '#root',
-	render: h => h(App),
-	created: () => {
-		store.dispatch('setCurrentView', currentView)
-		store.dispatch('setCurrentUser')
-	}
-});
+sync(store, router)
 
+const app = new Vue({
+	router,
+	store,
+	...App
+}).$mount('#app')
+
+// TODO: Move it to a separate component
 $.ajaxSetup({
 	headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 	url: $('body').data('base') + '/ax',

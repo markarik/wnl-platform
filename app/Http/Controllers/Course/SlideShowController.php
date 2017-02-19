@@ -43,9 +43,7 @@ class SlideShowController extends Controller
 	 */
 	public function fetchSlides($snippet)
 	{
-
 		$slides = $snippet->slides;
-
 		return $slides;
 	}
 }

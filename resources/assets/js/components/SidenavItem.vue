@@ -1,8 +1,8 @@
 <template>
 	<li :class="itemClass">
-		<a :href="url" v-if="isLink" :class="linkClass">
+		<router-link :to="to" v-if="isLink">
 			<slot></slot>
-		</a>
+		</router-link>
 		<span v-else>
 			<slot></slot>
 		</span>
@@ -10,23 +10,71 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
+
 	.wnl-sidenav-item
 		padding: 5px 0
+
+	.wnl-sidenav-item-groups
+		font-size: $font-size-minus-2
+		font-weight: $font-weight-bold
+
+	.wnl-sidenav-item-lessons,
+	.wnl-sidenav-item-screens
+		font-size: $font-size-minus-1
+
+	.wnl-sidenav-item-sections
+		font-size: $font-size-minus-2
+		padding-left: 10px
 </style>
 
 <script>
 	export default {
 		name: 'SidenavItem',
-		props: ['type', 'url', 'status'],
+		props: ['type', 'id', 'ancestors'],
 		computed: {
+			to() {
+				if (this.type === 'courses') {
+					return {
+						name: this.type,
+						params: {
+							courseId: this.id
+						}
+					}
+				} else if (this.type === 'lessons') {
+					return {
+						name: this.type,
+						params: {
+							courseId: this.ancestors.courses,
+							lessonId: this.id
+						}
+					}
+				} else if (this.type === 'screens') {
+					return {
+						name: this.type,
+						params: {
+							courseId: this.ancestors.courses,
+							lessonId: this.ancestors.lessons,
+							screenId: this.id,
+						}
+					}
+				} else if (this.type === 'sections') {
+					return {
+						name: 'screens',
+						params: {
+							courseId: this.ancestors.courses,
+							lessonId: this.ancestors.lessons,
+							screenId: this.ancestors.screens,
+							slide:    this.slide
+						}
+					}
+				}
+			},
 			itemClass() {
 				return 'wnl-sidenav-item wnl-sidenav-item-' + this.type
 			},
 			isLink() {
-				return this.url != '#'
-			},
-			linkClass() {
-				return 'wnl-lesson-' + this.status
+				return this.type !== 'groups'
 			}
 		}
 	}

@@ -2,6 +2,7 @@ require('./bootstrap');
 import Vue from 'vue'
 import App from './components/App.vue'
 import store from './store/store'
+import * as io from 'socket.io-client'
 
 const currentView = $('#root').data('view')
 
@@ -10,6 +11,8 @@ global.$fn = {
 		return '/papi/v1/' + path
 	}
 }
+
+Vue.prototype.$socket = io('46.101.174.6:9663');
 
 new Vue({
 	store,

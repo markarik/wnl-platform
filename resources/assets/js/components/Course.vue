@@ -7,13 +7,14 @@
 
 		</div>
 		<div class="column">
-
+			<wnl-chat :room="1"></wnl-chat>
 		</div>
 	</div>
 </template>
 
 <script>
 	import Sidenav from './Sidenav.vue'
+	import Chat from './chat/Chat.vue'
 
 	export default {
 		name: 'Course',
@@ -29,7 +30,8 @@
 			}
 		},
 		components: {
-			'wnl-sidenav': Sidenav
+			'wnl-sidenav': Sidenav,
+			'wnl-chat': Chat
 		}
 	}
 </script>

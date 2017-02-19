@@ -5,6 +5,7 @@ import * as getters from './getters'
 import mutations from './mutations'
 import sidenav from './modules/sidenav'
 import users from './modules/users'
+import chat from './modules/chat'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default new Vuex.Store({
 	actions,
 	modules: {
 		sidenav,
-		users
+		users,
+		chat
 	},
 	strict: debug
 })

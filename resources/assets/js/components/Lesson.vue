@@ -4,7 +4,7 @@
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
 		<div class="column is-half">
-
+			<router-view></router-view>
 		</div>
 		<div class="column">
 
@@ -17,15 +17,10 @@
 
 	export default {
 		name: 'Lesson',
-		props: {
-			id: {
-				type: Number,
-				default: 1
-			}
-		},
+		props: ['courseId', 'lessonId'],
 		computed: {
 			navigationApiUrl() {
-				return $fn.getApiUrl('lessons/' + this.id + '/nav')
+				return $fn.getApiUrl('lessons/' + this.lessonId + '/nav')
 			}
 		},
 		components: {

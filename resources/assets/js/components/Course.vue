@@ -1,5 +1,5 @@
 <template>
-	<div class="columns is-gapless">
+	<div class="columns">
 		<div class="column">
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>

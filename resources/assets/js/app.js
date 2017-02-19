@@ -9,6 +9,10 @@ import router from './router'
 global.$fn = {
 	getApiUrl: function (path) {
 		return '/papi/v1/' + path
+	},
+	getBaseUrl: function (path) {
+		// TODO: Pass it from backend
+		return 'http://wnl-platform.app/' + path
 	}
 }
 

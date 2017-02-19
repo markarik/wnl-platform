@@ -17,15 +17,10 @@
 
 	export default {
 		name: 'Course',
-		props: {
-			id: {
-				type: Number,
-				default: 1
-			}
-		},
+		props: ['courseId'],
 		computed: {
 			navigationApiUrl() {
-				return $fn.getApiUrl('courses/' + this.id + '/nav')
+				return $fn.getApiUrl('courses/' + this.courseId + '/nav')
 			}
 		},
 		components: {

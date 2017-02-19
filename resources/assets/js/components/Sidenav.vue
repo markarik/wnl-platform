@@ -26,7 +26,6 @@
 
 	.wnl-sidenav
 		max-width: 250px
-		padding: 20px
 
 	.wnl-sidenav-breadcrumbs
 		border-bottom: $border-light-gray

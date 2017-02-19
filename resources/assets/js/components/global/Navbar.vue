@@ -1,6 +1,6 @@
 <template>
 	<nav class="nav has-shadow">
-		<div class="columns is-gapless wnl-nav-container">
+		<div class="columns wnl-nav-container">
 			<div class="column wnl-nav-column">
 				<div class="wnl-left-content wnl-nav-item">
 					<!-- TODO: Load data dynamically -->

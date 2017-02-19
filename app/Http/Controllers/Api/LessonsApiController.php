@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Lesson;
+use App\Models\Snippet;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Config;
 
 class LessonsApiController extends Controller
 {
+	// TODO: Feb 19, 2017 - It's ugly how we compose the navigation... Should be easier.
 	/**
 	 * @return string/json
 	 */
@@ -72,7 +74,7 @@ class LessonsApiController extends Controller
 					$sectionFirstSlide = $section->slides->first();
 					$slideNumber = $sectionFirstSlide->id - $screenFirstSlide->id;
 					$items[] = [
-						'type'  => $resouces['sections'],
+						'type'  => $resources['sections'],
 						'id'    => $section->id,
 						'name'  => $section->name,
 						'ancestors' => [
@@ -88,5 +90,11 @@ class LessonsApiController extends Controller
 		}
 
 		return response()->json(['breadcrumbs' => $breadcrumbs, 'items' => $items]);
+	}
+
+	public function getScreen($snippetId) {
+		$screen = Snippet::find($snippetId);
+
+		return response()->json(['screen' => $screen['attributes']]);
 	}
 }

@@ -58,14 +58,14 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
-// Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
+Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
 // 	Route::get('/course/{courseId}', 'CourseController@index')->name('course');
 // 	Route::get('/course/{courseId}/lesson/{lessonId}', 'LessonController@index')->name('lesson');
 // 	Route::get('/course/{courseId}/lesson/{lessonId}/snippet/{snippetId}/slide#/{slideNumber}', 'LessonController@index')
 // 		->name('section');
 //
-// 	Route::get('/slideshow-builder/{snippetId}', 'SlideShowController@build')->name('slideshow-builder');
-// });
+	Route::get('/slideshow-builder/{snippetId}', 'SlideShowController@build')->name('slideshow-builder');
+});
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function ()
 {

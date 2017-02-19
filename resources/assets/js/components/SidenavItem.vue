@@ -16,6 +16,8 @@
 		padding: 5px 0
 
 	.wnl-sidenav-item-groups
+		font-size: $font-size-minus-2
+		font-weight: $font-weight-bold
 
 	.wnl-sidenav-item-lessons,
 	.wnl-sidenav-item-screens

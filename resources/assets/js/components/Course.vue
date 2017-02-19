@@ -1,6 +1,6 @@
 <template>
 	<div class="columns is-gapless">
-		<div class="column wnl-background-gray">
+		<div class="column">
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
 		<div class="column is-half">

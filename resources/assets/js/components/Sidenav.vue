@@ -33,16 +33,6 @@
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
 		margin-bottom: 10px
-
-	.wnl-sidenav-items
-		.wnl-sidenav-item-groups
-
-		.wnl-sidenav-item-lessons
-			font-size: $font-size-minus-1
-
-		.wnl-sidenav-item-sections
-			font-size: $font-size-minus-2
-			padding-left: 10px
 </style>
 
 <script>
@@ -50,6 +40,7 @@
 
 	export default {
 		name: 'Sidenav',
+		props: ['apiUrl'],
 		computed: {
 			breadcrumbs() {
 				return this.$store.getters.breadcrumbs
@@ -60,6 +51,16 @@
 		},
 		components: {
 			'wnl-sidenav-item': SidenavItem
+		},
+		methods: {
+			setNavigation: function (data) {
+				this.$store.dispatch('setNavigation', data)
+			}
+		},
+		created: function () {
+			axios.get(this.apiUrl).then((response) => {
+				this.setNavigation(response.data)
+			})
 		}
 	}
 </script>

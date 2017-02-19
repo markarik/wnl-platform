@@ -17,36 +17,14 @@
 
 	export default {
 		name: 'Course',
-		props: {
-			id: {
-				type: Number,
-				default: 1
-			}
-		},
+		props: ['courseId'],
 		computed: {
 			navigationApiUrl() {
-				return $fn.getApiUrl('courses/' + this.id + '/nav')
+				return $fn.getApiUrl('courses/' + this.courseId + '/nav')
 			}
 		},
 		components: {
 			'wnl-sidenav': Sidenav
-		},
-		methods: {
-			setNavigation: function (data) {
-				this.$store.dispatch('setNavigation', data)
-			},
-			getRoutePath: function (navItem) {
-				let path = ''
-				if (navItem.ancestors.length > 0) {
-					// for (var ancestor of an)
-				}
-			}
-		},
-		created: function () {
-			axios.get(this.navigationApiUrl).then((response) => {
-				let data = response.data
-				this.setNavigation(data)
-			})
 		}
 	}
 </script>

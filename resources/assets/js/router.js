@@ -10,15 +10,21 @@ export default new Router({
 	routes: [
 		{
 			name: 'courses',
-			path: '/app/courses/:cid',
+			path: '/app/courses/:courseId',
 			component: require('./components/Course.vue'),
+			props: true
+		},
+		{
+			name: 'lessons',
+			path: '/app/courses/:courseId/lessons/:lessonId',
+			component: require('./components/Lesson.vue'),
 			props: true,
 			children: [
 				{
-					name: 'lessons',
-					path: 'lessons/:lid',
-					component: require('./components/Lesson.vue'),
-					props: true
+					name: 'screens',
+					path: 'screens/:screenId/(slides#/:slide)?',
+					component: require('./components/Screen.vue'),
+					props: true,
 				}
 			]
 		},

@@ -7,8 +7,15 @@
 		</figure>
 		<div class="media-content">
 			<p class="control">
-				<textarea v-model="message" class="textarea" @keyup.enter="sendMessage"></textarea>
+				<textarea :id="inputId" v-model="message" class="textarea"
+					:disabled="disabled"
+					@keydown.enter="suppressEnter"
+					@keyup.enter="sendMessage">
+				</textarea>
 			</p>
+			<div class="message is-warning" v-if="error.length > 0">
+				<div class="message-body">{{ error }}</div>
+			</div>
 			<nav class="level">
 				<div class="level-left">
 					<div class="level-item">
@@ -20,22 +27,48 @@
 	</article>
 </template>
 <script>
+	import { mapGetters } from 'vuex'
+
 	export default{
-		props: ['socket'],
+		props: ['socket', 'room', 'inputId'],
 		data(){
 			return {
+				disabled: false,
+				error: '',
 				message: ''
 			}
 		},
+		computed: {
+			...mapGetters([
+				'current'
+			])
+		},
 		methods: {
-			sendMessage() {
+			sendMessage(event) {
+				this.disabled = true
+				this.error = ''
 				this.socket.emit('send-message', {
-					room: '1',
-					message: this.message
+					room: this.room,
+					message: {
+						username: this.current.full_name,
+						content: this.message,
+						timeago: 'niedawno'
+					}
 				})
-				// this.$store.dispatch('sendMessage', this.message)
-				this.message = ''
+			},
+			suppressEnter(event) {
+				event.preventDefault()
 			}
+		},
+		mounted () {
+			this.socket.on('message-processed', (data) => {
+				this.disabled = false
+				if (data.sent) {
+					this.message = ''
+				} else {
+					this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+				}
+			})
 		}
 	}
 

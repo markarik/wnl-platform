@@ -1,19 +1,20 @@
 import {set} from 'vue'
 // import * as users from '../../api/users'
 import * as types from '../mutations-types'
-import * as io from 'socket.io-client'
+import * as socket from '../../socket'
 
 // Initial state
 const state = {
 	currentRoom: '',
-	thread: [],
-	socket: {}
+	loaded: false,
+	messages: []
 }
 
 // Getters
 const getters = {
 	currentRoom: state => state.currentRoom,
-	socket: state => state.socket
+	loaded: state => state.loaded,
+	messages: state => state.messages
 }
 
 // Mutations
@@ -26,28 +27,28 @@ const mutations = {
 		set(state, 'messages', messages)
 	},
 
-	[types.CHAT_ADD_MESSAGE] (state, message) {
+	[types.CHAT_ADD_NEW_MESSAGE] (state, message) {
 		state.thread.push(message)
 	},
 
-	[types.CHAT_SET_SOCKET] (state, socket) {
-		set(state, 'socket', socket)
+	[types.CHAT_TOGGLE_LOADED] (state) {
+		set(state, 'loaded', !state.loaded)
 	}
 }
 
 // Actions
 const actions = {
 	sendMessage ({commit, state}, content) {
-		this.$socket.emit('send-message', 'dupa')
+		this.$socket.emit('send-message', content)
 	},
 
 	chatJoinRoom ({commit}) {
-		// var socket = io('46.101.174.6:9663')
-		// socket.on('connected', function (data) {
-		// 	commit(types.CHAT_SET_SOCKET, socket)
-		// 	console.log(data);
-		// 	socket.emit('join-room', 1);
-		// })
+		const socket = socket.getSocket()
+		socket.on('connected', function (data) {
+			commit(types.CHAT_SET_SOCKET, socket)
+			console.log(data);
+			socket.emit('join-room', 1);
+		})
 	}
 }
 

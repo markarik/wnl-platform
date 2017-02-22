@@ -4,7 +4,7 @@
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
 		<div class="column is-half">
-			<wnl-chat :room="1"></wnl-chat>
+			<wnl-chat :roomId="chatRoomId"></wnl-chat>
 		</div>
 		<div class="column">
 
@@ -20,6 +20,9 @@
 		name: 'Course',
 		props: ['courseId'],
 		computed: {
+			chatRoomId() {
+				return 'courses-' + this.courseId
+			},
 			navigationApiUrl() {
 				return $fn.getApiUrl('courses/' + this.courseId + '/nav')
 			}

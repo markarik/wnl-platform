@@ -3,7 +3,6 @@ import Vue from 'vue'
 import App from './components/App.vue'
 import { sync } from 'vuex-router-sync'
 import store from './store/store'
-import * as io from 'socket.io-client'
 import router from './router'
 
 // TODO: Move it to a config/utils file
@@ -16,8 +15,6 @@ global.$fn = {
 		return 'http://wnl-platform.app/' + path
 	}
 }
-
-Vue.prototype.$socket = io('46.101.174.6:9663');
 
 sync(store, router)
 

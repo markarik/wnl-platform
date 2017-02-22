@@ -21,15 +21,15 @@
 </template>
 <script>
 	export default{
+		props: ['socket'],
 		data(){
 			return {
 				message: ''
 			}
 		},
-
 		methods: {
-			sendMessage(){
-				this.$socket.emit('send-message', {
+			sendMessage() {
+				this.socket.emit('send-message', {
 					room: '1',
 					message: this.message
 				})

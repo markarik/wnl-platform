@@ -7,7 +7,7 @@
 		</figure>
 		<div class="media-content">
 			<p class="control">
-				<textarea :text="message" class="textarea" @keyup.enter="sendMessage"></textarea>
+				<textarea v-model="message" class="textarea" @keyup.enter="sendMessage"></textarea>
 			</p>
 			<nav class="level">
 				<div class="level-left">
@@ -29,10 +29,12 @@
 
 		methods: {
 			sendMessage(){
-				console.log('asdf')
-//				this.$socket.emit('send-message', 'dupa')
-				this.$store.dispatch('sendMessage', this.message)
-//				this.message = ''
+				this.$socket.emit('send-message', {
+					room: '1',
+					message: this.message
+				})
+				// this.$store.dispatch('sendMessage', this.message)
+				this.message = ''
 			}
 		}
 	}

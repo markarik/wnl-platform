@@ -4,10 +4,10 @@
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
 		<div class="column is-half">
-
+			<wnl-chat :room="1"></wnl-chat>
 		</div>
 		<div class="column">
-			<wnl-chat :room="1"></wnl-chat>
+
 		</div>
 	</div>
 </template>

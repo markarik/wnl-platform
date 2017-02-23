@@ -14,7 +14,7 @@
 
 <script>
 	import Sidenav from './Sidenav.vue'
-	import Chat from './Chat/Chat.vue'
+	import Chat from './chat/Chat.vue'
 
 	export default {
 		name: 'Lesson',

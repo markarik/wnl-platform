@@ -12,7 +12,7 @@ global.$fn = {
 	},
 	getBaseUrl: function (path) {
 		// TODO: Pass it from backend
-		return 'http://wnl-platform.app/' + path
+		return 'http://platforma.wnl/' + path
 	}
 }
 

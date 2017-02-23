@@ -10,9 +10,8 @@ global.$fn = {
 	getApiUrl: function (path) {
 		return '/papi/v1/' + path
 	},
-	getBaseUrl: function (path) {
-		// TODO: Pass it from backend
-		return 'http://wnl-platform.app/' + path
+	getUrl: function (path) {
+		return $wnl.baseURL+ '/' + path
 	}
 }
 

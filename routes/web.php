@@ -41,9 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/profile/orders', 'User\OrderController@index')->name('profile-orders');
 
 	// Using front-end routing for the main application
-	Route::get('/app/{path?}', function () {
-		return view('layouts.app');
-	})->name('app')->where('path', '(.*)');
+	Route::get('/app/{path?}', 'AppController@index')->name('app')->where('path', '(.*)');
 
 	/*
 	* Ajax common route

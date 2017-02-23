@@ -97,6 +97,10 @@
 						this.addMessage(data.message)
 					}
 				})
+
+				this.socket.on('error', (data) => {
+					console.log(`Socket error: ${data}`)
+				})
 			},
 			addMessage(message) {
 				this.messages.push(message)

@@ -15,7 +15,7 @@
 				return this.screenData.id
 			},
 			slideshowUrl() {
-				return $fn.getBaseUrl('slideshow-builder/' + this.snippetId)
+				return $fn.getUrl('slideshow-builder/' + this.snippetId)
 			}
 		}
 	}

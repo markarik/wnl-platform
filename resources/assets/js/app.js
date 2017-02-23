@@ -1,7 +1,7 @@
 require('./bootstrap');
 import Vue from 'vue'
 import App from './components/App.vue'
-import { sync } from 'vuex-router-sync'
+import {sync} from 'vuex-router-sync'
 import store from './store/store'
 import router from './router'
 
@@ -10,9 +10,8 @@ global.$fn = {
 	getApiUrl: function (path) {
 		return '/papi/v1/' + path
 	},
-	getBaseUrl: function (path) {
-		// TODO: Pass it from backend
-		return 'http://platforma.wnl/' + path
+	getUrl: function (path) {
+		return $wnl.baseURL + '/' + path
 	}
 }
 
@@ -35,7 +34,7 @@ $.ajaxSetup({
 	}
 });
 
-function checkOrderPaymentStatus(orderId){
+function checkOrderPaymentStatus(orderId) {
 	(function sendRequest() {
 		$.ajax({
 			data: {
@@ -43,10 +42,10 @@ function checkOrderPaymentStatus(orderId){
 				method: 'checkOrderPaymentStatus',
 				orderId: orderId
 			},
-			success: function (response){
-				if (response.orderPaid){
-					$('#loader-'+orderId).parent().html('Zapłacono');
-					$('#change-method-button-'+orderId).hide();
+			success: function (response) {
+				if (response.orderPaid) {
+					$('#loader-' + orderId).parent().html('Zapłacono');
+					$('#change-method-button-' + orderId).hide();
 				} else {
 					setTimeout(sendRequest, 10000);
 				}
@@ -56,7 +55,7 @@ function checkOrderPaymentStatus(orderId){
 }
 
 $(document).ready(function () {
-	$('.order-pending-notification').each(function(element){
+	$('.order-pending-notification').each(function (element) {
 		checkOrderPaymentStatus($(this).data('id'));
 	});
 });

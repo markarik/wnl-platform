@@ -15,6 +15,7 @@ const getters = {
 // Mutations
 const mutations = {
 	[types.SET_CURRENT_USER] (state, userData) {
+		userData['full_name'] = userData['first_name']  + ' ' + userData['last_name']
 		set(state, 'current', userData)
 	}
 }

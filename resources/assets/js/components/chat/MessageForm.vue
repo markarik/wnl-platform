@@ -30,7 +30,7 @@
 	import { mapGetters } from 'vuex'
 
 	export default{
-		props: ['socket', 'room', 'inputId'],
+		props: ['loaded', 'socket', 'room', 'inputId'],
 		data(){
 			return {
 				disabled: false,
@@ -58,17 +58,24 @@
 			},
 			suppressEnter(event) {
 				event.preventDefault()
+			},
+			setListeners() {
+				this.socket.on('message-processed', (data) => {
+					this.disabled = false
+					if (data.sent) {
+						this.message = ''
+					} else {
+						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+					}
+				})
 			}
 		},
-		mounted () {
-			this.socket.on('message-processed', (data) => {
-				this.disabled = false
-				if (data.sent) {
-					this.message = ''
-				} else {
-					this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+		watch: {
+			'loaded' () {
+				if (this.loaded) {
+					this.setListeners()
 				}
-			})
+			}
 		}
 	}
 

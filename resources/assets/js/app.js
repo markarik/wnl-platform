@@ -7,13 +7,19 @@ import router from './router'
 
 // TODO: Move it to a config/utils file
 global.$fn = {
-	getApiUrl: function (path) {
+	getEnv() {
+		return $wnl.env
+	},
+	isDevEnv() {
+		return $wnl.env === 'dev'
+	},
+	getApiUrl(path) {
 		return '/papi/v1/' + path
 	},
-	getUrl: function (path) {
+	getUrl(path) {
 		return $wnl.baseURL + '/' + path
 	},
-	getImageUrl: function (filename) {
+	getImageUrl(filename) {
 		return $wnl.baseURL + '/images/' + filename
 	}
 }

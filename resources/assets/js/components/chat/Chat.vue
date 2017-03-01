@@ -37,7 +37,7 @@
 
 	export default {
 		props: ['room'],
-		data(){
+		data() {
 			return {
 				loaded: false,
 				messages: [],

@@ -27,6 +27,7 @@ class CoursesApiController extends Controller
 				'id' => $course->id,
 				'name' => $course->name,
 				'ancestors' => [],
+				'meta' => [],
 			],
 		];
 		$items = [];
@@ -41,6 +42,7 @@ class CoursesApiController extends Controller
 				'ancestors' => [
 					$resources['courses'] => $course->id,
 				],
+				'meta' => [],
 			];
 
 			foreach ($group->lessons as $lesson){
@@ -52,6 +54,7 @@ class CoursesApiController extends Controller
 						$resources['courses'] => $course->id,
 						$resources['groups'] => $group->id,
 					],
+					'meta' => [],
 				];
 			}
 		}

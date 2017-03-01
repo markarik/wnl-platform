@@ -22,7 +22,7 @@ export default new Router({
 			children: [
 				{
 					name: 'screens',
-					path: 'screens/:screenId/(slides#/:slide)?',
+					path: 'screens/:screenId/:slide?',
 					component: require('./components/Screen.vue'),
 					props: true,
 				}

@@ -30,6 +30,7 @@ class LessonsApiController extends Controller
 				'id'        => $lesson->group->course->id,
 				'name'      => $lesson->group->course->name,
 				'ancestors' => [],
+				'meta' => [],
 			],
 			[
 				'type'      => $resources['groups'],
@@ -38,6 +39,7 @@ class LessonsApiController extends Controller
 				'ancestors' => [
 					$resources['courses'] => $lesson->group->course->id,
 				],
+				'meta' => [],
 			],
 			[
 				'type'      => $resources['lessons'],
@@ -47,6 +49,7 @@ class LessonsApiController extends Controller
 					$resources['courses'] => $lesson->group->course->id,
 					$resources['groups']  => $lesson->group->id,
 				],
+				'meta' => [],
 			],
 		];
 
@@ -59,11 +62,13 @@ class LessonsApiController extends Controller
 				'type'       => $resources['screens'],
 				'id'         => $screen->id,
 				'name'       => $screen->name,
-				'screenType' => $screen->type,
 				'ancestors'  => [
 					$resources['courses'] => $lesson->group->course->id,
 					$resources['groups']   => $lesson->group->id,
 					$resources['lessons']  => $lesson->id,
+				],
+				'meta' => [
+					'screenType' => $screen->type,
 				],
 			];
 
@@ -83,7 +88,9 @@ class LessonsApiController extends Controller
 							$resources['lessons']  => $lesson->id,
 							$resources['screens'] => $screen->id,
 						],
-						'slide' => $slideNumber,
+						'meta' => [
+							'slide' => $slideNumber,
+						],
 					];
 				}
 			}

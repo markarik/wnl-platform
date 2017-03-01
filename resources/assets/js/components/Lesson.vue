@@ -18,7 +18,7 @@
 
 	export default {
 		name: 'Lesson',
-		props: ['courseId', 'lessonId'],
+		props: ['courseId', 'lessonId', 'slide'],
 		computed: {
 			chatRoom() {
 				return 'courses-' + this.courseId + '-lessons-' + this.lessonId

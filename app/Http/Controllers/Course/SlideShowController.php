@@ -31,7 +31,7 @@ class SlideShowController extends Controller
 			Cache::tags(self::CACHE_TAGS)->forever($cacheKey, $slides);
 		}
 
-		$view = view('course.slide-show', ['slides' => $slides]);
+		$view = view('course.slideshow', ['slides' => $slides]);
 		$view->render();
 
 		return response($view);

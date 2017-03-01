@@ -12,6 +12,9 @@ global.$fn = {
 	},
 	getUrl: function (path) {
 		return $wnl.baseURL + '/' + path
+	},
+	getImageUrl: function (filename) {
+		return $wnl.baseURL + '/images/' + filename
 	}
 }
 

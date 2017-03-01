@@ -3,10 +3,9 @@
 		<div class="columns wnl-nav-container">
 			<div class="column wnl-nav-column">
 				<div class="wnl-left-content wnl-nav-item">
-					<!-- TODO: Load data dynamically -->
-					<a class="wnl-logo-link" href="wnl-platform.app/course/1">
-						<img src="http://wnl-platform.app/images/wnl-logo.svg" alt="Logo Więcej niż LEK">
-					</a>
+					<router-link :to="{ name: 'courses', params: { courseId: 1 } }" class="wnl-logo-link">
+						<img :src="logoSrc" :alt="logoAlt">
+					</router-link>
 				</div>
 			</div>
 			<div class="column is-half wnl-nav-column">
@@ -50,8 +49,14 @@
 			...mapGetters([
 				'current'
 			]),
-			currentUserName () {
+			currentUserName() {
 				return this.current.full_name
+			},
+			logoSrc() {
+				return global.$fn.getImageUrl('wnl-logo.svg')
+			},
+			logoAlt() {
+				return 'Logo Więcej niż LEK'
 			}
 		}
 	}

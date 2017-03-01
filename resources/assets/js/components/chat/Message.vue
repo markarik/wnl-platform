@@ -9,7 +9,7 @@
 			<div class="content">
 				<p>
 					<strong>{{ username }}</strong>
-					<small>{{ timeago }}</small>
+					<small>{{ formattedTime }}</small>
 					<br>
 					<slot></slot>
 				</p>
@@ -20,7 +20,13 @@
 
 <script>
 	export default{
-		props: ['username', 'timeago']
+		props: ['username', 'time'],
+		computed: {
+			formattedTime () {
+				let date = new Date(this.time);
+				return date.toLocaleTimeString();
+			}
+		}
 	}
 
 </script>

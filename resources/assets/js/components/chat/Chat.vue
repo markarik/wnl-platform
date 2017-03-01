@@ -3,7 +3,8 @@
 		<div :id="containerId" class="wnl-chat-messages">
 			<div :id="contentId">
 				<div v-if="loaded">
-					<wnl-message v-for="message in messages" :username="message.username" :timeago="message.timeago">
+					<wnl-message v-for="message in messages" :username="message.username"
+								 :time="message.time">
 						{{ message.content }}
 					</wnl-message>
 				</div>

@@ -52,7 +52,6 @@
 					message: {
 						username: this.current.full_name,
 						content: this.message,
-						timeago: 'niedawno'
 					}
 				})
 			},

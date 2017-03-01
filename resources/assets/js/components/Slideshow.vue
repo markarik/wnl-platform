@@ -32,8 +32,11 @@
 				loaded: false
 			}
 		},
-		props: ['screenData'],
+		props: ['screenData', 'slide'],
 		computed: {
+			slideNumber() {
+				return Math.max(this.slide - 1, 0) || 0
+			},
 			container() {
 				return document.getElementById('wnl-slideshow')
 			},
@@ -43,6 +46,11 @@
 			slideshowUrl() {
 				return $fn.getUrl('slideshow-builder/' + this.snippetId)
 			},
+		},
+		methods: {
+			goToSlide(slideNumber) {
+				this.child.call('goToSlide', slideNumber)
+			}
 		},
 		mounted() {
 			Postmate.debug = global.$fn.isDevEnv()
@@ -54,9 +62,15 @@
 				child.on('loaded', (status) => {
 					if (status) {
 						this.child = child
+						this.goToSlide(this.slideNumber)
 					}
 				});
 			});
+		},
+		watch: {
+			'$route' (to, from) {
+				this.goToSlide(this.slideNumber)
+			}
 		}
 	}
 </script>

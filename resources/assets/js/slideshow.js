@@ -9,7 +9,10 @@ Reveal.initialize({
 })
 
 const handshake = new Postmate.Model({
-	height: () => document.height || document.body.offsetHeight
+	goToSlide: (slideNumber) => {
+		console.log('slideNumber ' + slideNumber)
+		Reveal.slide(slideNumber)
+	}
 });
 
 handshake.then(parent => {

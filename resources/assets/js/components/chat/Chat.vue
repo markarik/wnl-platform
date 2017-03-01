@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		<div class="wnl-chat-form">
-			<wnl-message-form :socket="socket" :room="room" :inputId="inputId"></wnl-message-form>
+			<wnl-message-form :loaded="loaded" :socket="socket" :room="room" :inputId="inputId"></wnl-message-form>
 		</div>
 	</div>
 </template>
@@ -69,36 +69,34 @@
 			}
 		},
 		methods: {
-			chatJoinRoom() {
-				this.socket = socket.getSocket()
-				this.socket.on('connected', (data) => {
-					this.socket.emit('join-room', {
-						room: this.room
-					})
-					this.socket.on('join-room-success', (data) => {
-						if (!this.loaded) {
-							this.setListeners()
-							this.messages = data.messages
-							this.loaded = true
-							nextTick(() => {
-								this.scrollToBottom()
-							})
-						}
-					})
+			joinRoom() {
+				this.socket.emit('join-room', {
+					room: this.room
 				})
+				this.socket.on('join-room-success', (data) => {
+					if (!this.loaded) {
+						this.setListeners(this.socket)
+						this.messages = data.messages
+						this.loaded = true
+						nextTick(() => {
+							this.scrollToBottom()
+						})
+					}
+				})
+				return true
 			},
-			setListeners() {
-				this.socket.on('user-sent-message', (data) => {
+			setListeners(socket) {
+				socket.on('user-sent-message', (data) => {
 					this.addMessage(data.message)
 				})
 
-				this.socket.on('message-processed', (data) => {
+				socket.on('message-processed', (data) => {
 					if (data.sent) {
 						this.addMessage(data.message)
 					}
 				})
 
-				this.socket.on('error', (data) => {
+				socket.on('error', (data) => {
 					console.log(`Socket error: ${data}`)
 				})
 			},
@@ -111,10 +109,18 @@
 			},
 			scrollToBottom() {
 				this.container.scrollTop = this.content.offsetHeight
-			}
+			},
 		},
-		created () {
-			this.chatJoinRoom()
+		mounted() {
+			socket.connect().then((socket) => {
+				this.socket = socket
+				this.joinRoom()
+			}).catch(console.log.bind(console))
+		},
+		beforeDestroy() {
+			socket.disconnect().then(() => {
+				return true
+			}).catch(console.log.bind(console))
 		}
 	}
 

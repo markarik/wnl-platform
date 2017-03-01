@@ -2,7 +2,7 @@ import * as io from 'socket.io-client'
 
 export function getSocket() {
 	if (!global.$socket) {
-		global.$socket = io('chat.platforma.wnl:9663')
+		global.$socket = io($wnl.chatHost + ':' + $wnl.chatPort)
 	}
 	return global.$socket
 }

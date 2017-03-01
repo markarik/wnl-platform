@@ -5,16 +5,18 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
-class UsersApiController extends Controller {
+class UsersApiController extends Controller
+{
 
 	public function getCurrentUser()
 	{
 		$user = Auth::user();
 
 		return response()->json([
-			'id' => $user->id,
+			'id'         => $user->id,
 			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
+			'last_name'  => $user->last_name,
+			'full_name'  => $user->full_name,
 		]);
 	}
 }

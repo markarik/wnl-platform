@@ -70,28 +70,22 @@
 		},
 		methods: {
 			joinRoom() {
-				socket.connect().then((socket) => {
-					console.log('Connected to socket')
-					console.log(socket)
-					this.socket = socket
-					this.socket.emit('join-room', {
-						room: this.room
-					})
-					this.socket.on('join-room-success', (data) => {
-						if (!this.loaded) {
-							this.setListeners(this.socket)
-							this.messages = data.messages
-							this.loaded = true
-							nextTick(() => {
-								this.scrollToBottom()
-							})
-						}
-					})
-					return true
-				}).catch(console.log.bind(console))
+				this.socket.emit('join-room', {
+					room: this.room
+				})
+				this.socket.on('join-room-success', (data) => {
+					if (!this.loaded) {
+						this.setListeners(this.socket)
+						this.messages = data.messages
+						this.loaded = true
+						nextTick(() => {
+							this.scrollToBottom()
+						})
+					}
+				})
+				return true
 			},
 			setListeners(socket) {
-				console.log('Setting listeners')
 				socket.on('user-sent-message', (data) => {
 					this.addMessage(data.message)
 				})
@@ -115,20 +109,18 @@
 			},
 			scrollToBottom() {
 				this.container.scrollTop = this.content.offsetHeight
-			}
+			},
 		},
-		watch: {
-			'$route' () {
+		mounted() {
+			socket.connect().then((socket) => {
+				this.socket = socket
 				this.joinRoom()
-			}
+			}).catch(console.log.bind(console))
 		},
-		created() {
-			this.joinRoom()
-		},
-		beforeRouteLeave(to, from, next) {
-			this.socket.disconnect().then(() => {
-				next()
-			})
+		beforeDestroy() {
+			socket.disconnect().then(() => {
+				return true
+			}).catch(console.log.bind(console))
 		}
 	}
 

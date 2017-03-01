@@ -4,7 +4,7 @@
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
 		<div class="column is-half">
-
+			<wnl-chat :room="chatRoom"></wnl-chat>
 		</div>
 		<div class="column">
 
@@ -14,17 +14,22 @@
 
 <script>
 	import Sidenav from './Sidenav.vue'
+	import Chat from './chat/Chat.vue'
 
 	export default {
 		name: 'Course',
 		props: ['courseId'],
 		computed: {
+			chatRoom() {
+				return 'courses-' + this.courseId
+			},
 			navigationApiUrl() {
 				return $fn.getApiUrl('courses/' + this.courseId + '/nav')
 			}
 		},
 		components: {
-			'wnl-sidenav': Sidenav
+			'wnl-sidenav': Sidenav,
+			'wnl-chat': Chat
 		}
 	}
 </script>

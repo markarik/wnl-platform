@@ -42,12 +42,16 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	export default {
 		name: 'Navbar',
 		computed: {
+			...mapGetters([
+				'current'
+			]),
 			currentUserName () {
-				const currentUser = this.$store.state.users.current
-				return currentUser.first_name + ' ' + currentUser.last_name
+				return this.current.full_name
 			}
 		}
 	}

@@ -37,18 +37,17 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
 	import SidenavItem from './SidenavItem.vue'
 
 	export default {
 		name: 'Sidenav',
 		props: ['apiUrl'],
 		computed: {
-			breadcrumbs() {
-				return this.$store.getters.breadcrumbs
-			},
-			items() {
-				return this.$store.getters.items
-			}
+			...mapGetters([
+				'breadcrumbs',
+				'items',
+			])
 		},
 		components: {
 			'wnl-sidenav-item': SidenavItem

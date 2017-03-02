@@ -12,7 +12,8 @@ const state = {
 // Getters
 const getters = {
 	breadcrumbs: state => state.navigation.breadcrumbs,
-	items: state => state.navigation.items
+	items: state => state.navigation.items,
+	firstItem: state => state.navigation.items[0]
 }
 
 // Mutations

@@ -77,7 +77,7 @@ class LessonsApiController extends Controller
 				$sections = $screen->sections()->with('slides')->get();
 				foreach ($sections as $section) {
 					$sectionFirstSlide = $section->slides->first();
-					$slideNumber = $sectionFirstSlide->id - $screenFirstSlide->id;
+					$slideNumber = $sectionFirstSlide->id - $screenFirstSlide->id + 1;
 					$items[] = [
 						'type'  => $resources['sections'],
 						'id'    => $section->id,

@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\Concerns\ComposeSidenavItems;
 use Illuminate\Support\Facades\Config;
 
 class CoursesApiController extends Controller
 {
+	use ComposeSidenavItems;
+
 	/**
 	 * @return string/json
 	 */
@@ -22,40 +25,26 @@ class CoursesApiController extends Controller
 		$resources = Config::get('papi.resources');
 
 		$breadcrumbs = [
-			[
-				'type' => $resources['courses'],
-				'id' => $course->id,
-				'name' => $course->name,
-				'ancestors' => [],
-				'meta' => [],
-			],
+			$this->composeItem($resources['courses'], $course->id, $course->name),
 		];
 		$items = [];
 
 		$groups = $course->groups()->with('lessons')->get();
 
 		foreach ($groups as $group) {
-			$items[] = [
-				'type'      => $resources['groups'],
-				'id'        => $group->id,
-				'name'      => $group->name,
-				'ancestors' => [
-					$resources['courses'] => $course->id,
-				],
-				'meta' => [],
-			];
+			$items[] = $this->composeItem($resources['groups'], $group->id,
+				$group->name, [$resources['courses'] => $course->id]);
 
 			foreach ($group->lessons as $lesson){
-				$items[] = [
-					'type' => $resources['lessons'],
-					'id' => $lesson->id,
-					'name' => $lesson->name,
-					'ancestors' => [
+				$items[] = $this->composeItem(
+					$resources['lessons'],
+					$lesson->id,
+					$lesson->name,
+					[
 						$resources['courses'] => $course->id,
 						$resources['groups'] => $group->id,
-					],
-					'meta' => [],
-				];
+					]
+				);
 			}
 		}
 

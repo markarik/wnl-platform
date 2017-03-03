@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<h3>{{name}}</h3>
-		<component :is="component" :screenData="screenData"></component>
+		<component :is="component" :screenData="screenData" :slide="slide"></component>
 	</div>
 </template>
 

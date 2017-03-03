@@ -14,7 +14,8 @@
 	<link href="/css/app.css" rel="stylesheet">
 
 	<!-- Scripts -->
-	<script src="https://use.fontawesome.com/e3024fa4e4.js"></script>
+	<script src="https://use.typekit.net/hal1etr.js"></script>
+	<script>try{Typekit.load({ async: true });}catch(e){}</script>
 	<script>
 		window.Laravel = <?php echo json_encode([
 			'csrfToken' => csrf_token(),

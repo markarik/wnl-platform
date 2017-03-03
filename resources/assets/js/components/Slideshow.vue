@@ -48,28 +48,47 @@
 			},
 		},
 		methods: {
+			setCurrentSlideFromIndex(slideIndex) {
+				this.currentSlide = slideIndex + 1
+			},
 			goToSlide(slideNumber) {
+				this.currentSlide = slideNumber
 				this.child.call('goToSlide', slideNumber)
+			},
+			setEventListeners() {
+				window.addEventListener('message', event => {
+					if (typeof event.data === 'string') {
+						let data = JSON.parse(event.data)
+						if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
+							this.setCurrentSlideFromIndex(data.state.indexh)
+							this.$router.replace({ name: 'screens', params: { slide: this.currentSlide } })
+						}
+					}
+				})
 			}
 		},
 		mounted() {
 			Postmate.debug = global.$fn.isDevEnv()
+
 			const handshake = new Postmate({
 				container: this.container,
 				url: this.slideshowUrl
-			});
+			})
 			handshake.then(child => {
 				child.on('loaded', (status) => {
 					if (status) {
 						this.child = child
 						this.goToSlide(this.slideNumber)
+						this.setEventListeners()
 					}
-				});
-			});
+				})
+			})
 		},
 		watch: {
 			'$route' (to, from) {
-				this.goToSlide(this.slideNumber)
+				if (this.slideNumber !== this.currentSlide) {
+					this.goToSlide(this.slideNumber)
+				}
 			}
 		}
 	}

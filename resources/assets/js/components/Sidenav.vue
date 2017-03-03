@@ -31,9 +31,12 @@
 
 	.wnl-sidenav-breadcrumbs
 		border-bottom: $border-light-gray
-		font-size: $font-size-minus-2
+		font-size: $font-size-minus-1
 		font-weight: $font-weight-bold
 		margin-bottom: 10px
+
+		.wnl-sidenav-item-groups
+			font-size: $font-size-minus-2
 </style>
 
 <script>

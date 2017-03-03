@@ -5,7 +5,8 @@
 			<wnl-sidenav-item v-for="breadcrumb in breadcrumbs"
 				:ancestors="breadcrumb.ancestors"
 				:type="breadcrumb.type"
-				:id="breadcrumb.id">
+				:id="breadcrumb.id"
+				:meta="breadcrumb.meta">
 				{{ breadcrumb.name }}
 			</wnl-sidenav-item>
 		</ul>
@@ -14,7 +15,8 @@
 			<wnl-sidenav-item v-for="item in items"
 				:ancestors="item.ancestors"
 				:type="item.type"
-				:id="item.id">
+				:id="item.id"
+				:meta="item.meta">
 				{{ item.name }}
 			</wnl-sidenav-item>
 		</ul>
@@ -35,18 +37,17 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
 	import SidenavItem from './SidenavItem.vue'
 
 	export default {
 		name: 'Sidenav',
 		props: ['apiUrl'],
 		computed: {
-			breadcrumbs() {
-				return this.$store.getters.breadcrumbs
-			},
-			items() {
-				return this.$store.getters.items
-			}
+			...mapGetters([
+				'breadcrumbs',
+				'items',
+			])
 		},
 		components: {
 			'wnl-sidenav-item': SidenavItem

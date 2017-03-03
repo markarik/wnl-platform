@@ -31,7 +31,7 @@
 <script>
 	export default {
 		name: 'SidenavItem',
-		props: ['type', 'id', 'ancestors'],
+		props: ['type', 'id', 'ancestors', 'meta'],
 		computed: {
 			to() {
 				if (this.type === 'courses') {
@@ -65,7 +65,7 @@
 							courseId: this.ancestors.courses,
 							lessonId: this.ancestors.lessons,
 							screenId: this.ancestors.screens,
-							slide:    this.slide
+							slide:    this.meta.slide
 						}
 					}
 				}

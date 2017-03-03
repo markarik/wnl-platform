@@ -11,12 +11,12 @@ const { mix } = require('laravel-mix');
  |
  */
 
-// mix.js('resources/assets/js/app.js', 'public/js')
-//    .sass('resources/assets/sass/app.scss', 'public/css');
-
-mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
-	.copy('resources/assets/css/reveal.css', 'public/css/reveal.css')
-	.copy('resources/assets/css/reveal-theme.css', 'public/css/reveal-theme.css')
+mix
+	.sass('resources/assets/sass/app.scss', 'public/css/app.css')
 	.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
-	.copy('resources/assets/js/reveal.js', 'public/js/reveal.js')
+	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
+	.combine([
+		'resources/vendor/reveal/reveal.css',
+		'resources/vendor/reveal/reveal-theme.css',
+	], 'public/css/slideshow.css')

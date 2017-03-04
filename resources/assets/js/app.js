@@ -1,10 +1,3 @@
-require('./bootstrap');
-import Vue from 'vue'
-import App from './components/App.vue'
-import {sync} from 'vuex-router-sync'
-import store from './store/store'
-import router from './router'
-
 // TODO: Move it to a config/utils file
 global.$fn = {
 	getEnv() {
@@ -21,11 +14,38 @@ global.$fn = {
 	},
 	getImageUrl(filename) {
 		return $wnl.baseURL + '/images/' + filename
+	},
+	getInitial(text) {
+		return text.charAt(0).toUpperCase()
+	},
+	getInitials(username) {
+		let hasSpaceRegex = /\s/
+		if (username.length === 1) {
+			return username.toUpperCase()
+		} else if (hasSpaceRegex.test(username)) {
+			let split = username.split(' ')
+			return global.$fn.getInitial(split[0]) + global.$fn.getInitial(split[1])
+		} else {
+			return username.slice(0, 2).toUpperCase()
+		}
 	}
 }
 
+require('./bootstrap');
+import Vue from 'vue'
+
+// Sync vue-router and vuex
+import {sync} from 'vuex-router-sync'
+import store from './store/store'
+import router from './router'
 sync(store, router)
 
+// Import and register global components
+import Avatar from './components/global/Avatar.vue'
+Vue.component('wnl-avatar', Avatar)
+
+// Set up App
+import App from './components/App.vue'
 const app = new Vue({
 	router,
 	store,

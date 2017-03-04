@@ -13,7 +13,7 @@
 			</div>
 			<div class="column wnl-nav-column">
 				<div class="nav-menu wnl-nav-item">
-					{{ currentUserName }}
+					{{ currentUserFullName }}
 				</div>
 			</div>
 		</div>
@@ -47,11 +47,8 @@
 		name: 'Navbar',
 		computed: {
 			...mapGetters([
-				'current'
+				'currentUserFullName'
 			]),
-			currentUserName() {
-				return this.current.full_name
-			},
 			logoSrc() {
 				return global.$fn.getImageUrl('wnl-logo.svg')
 			},

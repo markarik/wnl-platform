@@ -1,9 +1,7 @@
 <template>
 	<article class="media">
 		<figure class="media-left">
-			<p class="image is-64x64">
-				<img src="http://bulma.io/images/placeholders/128x128.png">
-			</p>
+			<wnl-avatar :username="currentUserFullName"></wnl-avatar>
 		</figure>
 		<div class="media-content">
 			<p class="control">
@@ -40,7 +38,7 @@
 		},
 		computed: {
 			...mapGetters([
-				'current'
+				'currentUserFullName'
 			])
 		},
 		methods: {
@@ -50,7 +48,7 @@
 				this.socket.emit('send-message', {
 					room: this.room,
 					message: {
-						username: this.current.full_name,
+						username: this.currentUserFullName,
 						content: this.message,
 					}
 				})

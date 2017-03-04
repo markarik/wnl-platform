@@ -19,7 +19,9 @@
 
 	export default {
 		name: 'App',
-		components: { 'wnl-navbar': Navbar },
+		components: {
+			'wnl-navbar': Navbar
+		},
 		methods: {
 			...mapActions(['setCurrentUser'])
 		},

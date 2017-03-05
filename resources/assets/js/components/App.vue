@@ -7,11 +7,6 @@
 	</div>
 </template>
 
-<style lang="sass">
-	.wnl-main
-		padding: 20px 0
-</style>
-
 <script>
 	// Import global components
 	import Navbar from './global/Navbar.vue'

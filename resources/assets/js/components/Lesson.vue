@@ -1,16 +1,20 @@
 <template>
-	<div class="columns">
-		<div class="column">
+	<div class="wnl-app-layout">
+		<div class="wnl-app-layout-left">
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
-		<div class="column is-half">
+		<div class="wnl-app-layout-main">
 			<router-view></router-view>
 		</div>
-		<div class="column">
+		<div class="wnl-app-layout-right">
 			<wnl-chat :room="chatRoom"></wnl-chat>
 		</div>
 	</div>
 </template>
+
+<style>
+
+</style>
 
 <script>
 	import Sidenav from './Sidenav.vue'

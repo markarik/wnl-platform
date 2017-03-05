@@ -24,15 +24,18 @@
 	@import '../../../sass/variables'
 
 	.wnl-chat
+		display: flex
+		flex: 1
+		flex-direction: column
+		justify-content: flex-end
 		padding-right: 20px
 
 	.wnl-chat-messages
-		height: 400px
 		overflow-y: auto
 
 	.wnl-chat-form
 		border-top: $border-light-gray
-		margin-top: 20px
+		margin: 20px 0
 		padding-top: 20px
 </style>
 <script>

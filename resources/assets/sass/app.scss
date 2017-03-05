@@ -30,6 +30,56 @@
 }
 
 // Layout
+$navbar-height: 3.5rem;
+$layout-left-max-width: 600px;
+$layout-left-inside-width: 200px;
+$layout-main-width: 660px;
+$layout-right-width: 400px;
+
+html, body {
+	height: 100%;
+	min-height: 100%;
+}
+
+#app {
+	height: 100%;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.wnl-main {
+	display: flex;
+	flex: 1;
+	overflow: auto;
+}
+
+.wnl-app-layout {
+	align-items: stretch;
+	display: flex;
+	flex: 1;
+}
+
+.wnl-app-layout-left {
+	background-color: $color-background-light-gray;
+	display: flex;
+	flex: 4;
+	justify-content: flex-end;
+	padding: 20px 0;
+}
+
+.wnl-app-layout-main {
+	flex: 7;
+	padding: 20px;
+}
+
+.wnl-app-layout-right {
+	border-left: $border-light-gray;
+	display: flex;
+	flex: 5;
+	overflow-y: auto;
+	padding-left: 20px;
+}
 
 .wnl-background-gray {
 	background: $color-background-light-gray;

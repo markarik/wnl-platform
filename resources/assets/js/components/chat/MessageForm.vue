@@ -14,19 +14,14 @@
 			<div class="message is-warning" v-if="error.length > 0">
 				<div class="message-body">{{ error }}</div>
 			</div>
-			<nav class="level">
-				<div class="level-left">
-					<div class="level-item">
-						<a class="button is-info" @click="sendMessage">Post comment</a>
-					</div>
-				</div>
-			</nav>
 		</div>
 		<div class="media-right">
 			<wnl-image-button
 				name="wnl-chat-form-submit"
 				icon="send-message"
-				alt="Wyślij wiadomość">
+				alt="Wyślij wiadomość"
+				:disabled="sendingDisabled"
+				@click.native="sendMessage">
 			</wnl-image-button>
 		</div>
 	</article>
@@ -56,10 +51,16 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName'
-			])
+			]),
+			sendingDisabled() {
+				return !this.loaded || this.message.length === 0
+			}
 		},
 		methods: {
 			sendMessage(event) {
+				if (this.sendingDisabled) {
+					return false
+				}
 				this.disabled = true
 				this.error = ''
 				this.socket.emit('send-message', {

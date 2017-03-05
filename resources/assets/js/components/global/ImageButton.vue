@@ -1,5 +1,5 @@
 <template lang="html">
-	<button class="wnl-image-button" :class="[iconClass, iconSizeClass]" :name="name">
+	<button class="button wnl-image-button" :class="[iconClass, iconSizeClass]" :name="name">
 		<wnl-icon :name="icon"></wnl-icon>
 	</button>
 </template>
@@ -12,9 +12,8 @@
 		border: 0
 		padding: 0
 
-	.wnl-image-button-primary
-		background-color: $color-ocean-blue
-		fill: $color-white
+		&.is-primary
+			fill: $color-white
 
 	+rounded-square-standard-sizes('image-button')
 </style>
@@ -28,7 +27,7 @@
 			},
 			iconClass () {
 				let modifier = this.modifier || 'primary'
-				return 'wnl-image-button-' + modifier
+				return 'is-' + modifier
 			},
 			iconSizeClass () {
 				let size = this.size || 'medium'

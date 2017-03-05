@@ -84,6 +84,7 @@
 				return true
 			},
 			calculateTextareaHeight(message) {
+				// TODO: Mar 5, 2017 - Use the same padding declaration for styling
 				const padding = 6
 				let lines = Math.max(
 					Math.ceil(

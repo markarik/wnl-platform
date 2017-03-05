@@ -42,7 +42,11 @@ sync(store, router)
 
 // Import and register global components
 import Avatar from './components/global/Avatar.vue'
+import ImageButton from './components/global/ImageButton.vue'
+import Icon from './components/global/Icon.vue'
 Vue.component('wnl-avatar', Avatar)
+Vue.component('wnl-image-button', ImageButton)
+Vue.component('wnl-icon', Icon)
 
 // Set up App
 import App from './components/App.vue'

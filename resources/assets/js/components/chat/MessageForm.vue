@@ -5,7 +5,7 @@
 		</figure>
 		<div class="media-content">
 			<p class="control">
-				<textarea :id="inputId" v-model="message" class="textarea"
+				<textarea :id="inputId" v-model="message" class="wnl-form-textarea"
 					:disabled="disabled"
 					@keydown.enter="suppressEnter"
 					@keyup.enter="sendMessage">
@@ -22,8 +22,25 @@
 				</div>
 			</nav>
 		</div>
+		<div class="media-right">
+			<wnl-image-button
+				name="wnl-chat-form-submit"
+				icon="send-message"
+				alt="Wyślij wiadomość">
+			</wnl-image-button>
+		</div>
 	</article>
 </template>
+
+<style lang="sass">
+	@import 'resources/assets/sass/variables'
+
+	.wnl-form-textarea
+		min-height: map-get($rounded-square-sizes, 'medium')
+		resize: none
+		width: 100%
+</style>
+
 <script>
 	import { mapGetters } from 'vuex'
 

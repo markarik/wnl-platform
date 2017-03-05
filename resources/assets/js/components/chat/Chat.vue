@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="wnl-chat">
 		<div :id="containerId" class="wnl-chat-messages">
 			<div :id="contentId">
 				<div v-if="loaded">
@@ -20,6 +20,9 @@
 </template>
 <style lang="sass">
 	@import '../../../sass/variables'
+
+	.wnl-chat
+		padding-right: 20px
 
 	.wnl-chat-messages
 		height: 400px

@@ -5,8 +5,10 @@
 		</figure>
 		<div class="media-content">
 			<p class="control">
-				<textarea :id="inputId" v-model="message" class="wnl-form-textarea"
+				<textarea :id="inputId" v-model="message" class="textarea wnl-form-textarea"
+					:style="{ height: textareaHeight }"
 					:disabled="disabled"
+					@input="setTextareaHeight"
 					@keydown.enter="suppressEnter"
 					@keyup.enter="sendMessage">
 				</textarea>
@@ -32,8 +34,8 @@
 
 	.wnl-form-textarea
 		min-height: map-get($rounded-square-sizes, 'medium')
-		resize: none
-		width: 100%
+		padding: 6px 10px
+		resize: vertical
 </style>
 
 <script>
@@ -45,7 +47,11 @@
 			return {
 				disabled: false,
 				error: '',
-				message: ''
+				message: '',
+				canvasContext: null,
+				textarea: {},
+				computedStyles: {},
+				textareaHeight: 0
 			}
 		},
 		computed: {
@@ -57,6 +63,31 @@
 			}
 		},
 		methods: {
+			setTextareaStyles() {
+				this.textarea = document.getElementById(this.inputId)
+				this.computedStyles = window.getComputedStyle(this.textarea)
+			},
+			setTextMeasureCanvas() {
+				let canvas, context
+
+				canvas = this.measureCanvas || document.createElement('canvas')
+				context = canvas.getContext('2d')
+				context.font = this.computedStyles.fontSize + ' ' + this.computedStyles.fontFamily
+				this.canvasContext = context
+
+				return true
+			},
+			setTextareaHeight() {
+				const padding = 6
+
+				let lines = Math.max(
+					Math.ceil(
+						this.canvasContext.measureText(this.message).width * 1.2 / parseInt(this.computedStyles.width)
+					),
+				1)
+
+				this.textareaHeight = padding * 2 + lines * parseInt(this.computedStyles.lineHeight) + 'px'
+			},
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
@@ -85,10 +116,16 @@
 				})
 			}
 		},
+		updated() {
+			this.setTextareaStyles()
+		},
 		watch: {
 			'loaded' () {
 				if (this.loaded) {
 					this.setListeners()
+					this.setTextareaStyles()
+					this.setTextMeasureCanvas()
+					this.setTextareaHeight()
 				}
 			}
 		}

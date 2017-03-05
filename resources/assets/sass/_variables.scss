@@ -49,6 +49,13 @@ $border-light-gray: 1px solid $color-light-gray;
 // Buttons
 $border-radius-full: 100px;
 
+// Square buttons
+$rounded-square-sizes: (
+	small: 20px,
+	medium: 30px,
+	large: 50px
+);
+
 // Overwrite Bulma variables
 $primary: $color-ocean-blue;
 $success: $color-green;

@@ -1,0 +1,23 @@
+@import 'variables'
+
+=rounded-square($baseSize)
+	align-items: center
+	border-radius: $baseSize * 0.1
+	display: flex
+	font-size: $baseSize * 0.5
+	height: $baseSize
+	justify-content: center
+	line-height: $baseSize * 0.5
+	width: $baseSize
+
+	img, object, svg
+		height: $baseSize * 0.6
+		margin: $baseSize * 0.2
+		width: $baseSize * 0.6
+
+=rounded-square-standard-sizes($element)
+	$sizes: ('small', 'medium', 'large')
+
+	@each $size in $sizes
+		.wnl-#{$element}-#{$size}
+			+rounded-square(map-get($rounded-square-sizes, $size))

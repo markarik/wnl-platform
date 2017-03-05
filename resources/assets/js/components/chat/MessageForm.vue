@@ -35,7 +35,7 @@
 	.wnl-form-textarea
 		min-height: map-get($rounded-square-sizes, 'medium')
 		padding: 6px 10px
-		resize: vertical
+		resize: none
 </style>
 
 <script>

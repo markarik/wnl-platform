@@ -3,9 +3,11 @@
 		<div :id="containerId" class="wnl-chat-messages">
 			<div :id="contentId">
 				<div v-if="loaded">
-					<wnl-message v-for="message in messages" :username="message.username"
-								 :time="message.time">
-						{{ message.content }}
+					<wnl-message v-for="(message, index) in messages"
+						:showAuthor="isAuthorUnique[index]"
+						:username="message.username"
+						:time="message.time">
+							{{ message.content }}
 					</wnl-message>
 				</div>
 				<div v-else>
@@ -53,6 +55,14 @@
 			'wnl-message-form': MessageForm
 		},
 		computed: {
+			isAuthorUnique() {
+				return this.messages.map((message, index) => {
+					if (index === 0) return true
+
+					let previous = index - 1
+					return message.username !== this.messages[previous].username
+				})
+			},
 			containerId() {
 				return 'wnl-chat-room-' + this.room
 			},
@@ -113,7 +123,7 @@
 			},
 			scrollToBottom() {
 				this.container.scrollTop = this.content.offsetHeight
-			},
+			}
 		},
 		mounted() {
 			socket.connect().then((socket) => {

@@ -8,7 +8,6 @@
 				<textarea :id="inputId" v-model="message" class="textarea wnl-form-textarea"
 					:style="{ height: textareaHeight }"
 					:disabled="disabled"
-					@input="setTextareaHeight"
 					@keydown.enter="suppressEnter"
 					@keyup.enter="sendMessage">
 				</textarea>
@@ -34,6 +33,7 @@
 
 	.wnl-form-textarea
 		min-height: map-get($rounded-square-sizes, 'medium')
+		overflow: hidden
 		padding: 6px 10px
 		resize: none
 </style>
@@ -50,8 +50,7 @@
 				message: '',
 				canvasContext: null,
 				textarea: {},
-				computedStyles: {},
-				textareaHeight: 0
+				computedStyles: {}
 			}
 		},
 		computed: {
@@ -60,6 +59,13 @@
 			]),
 			sendingDisabled() {
 				return !this.loaded || this.message.length === 0
+			},
+			textareaHeight() {
+				if (this.canvasContext !== null && this.message.length > 0) {
+					return this.calculateTextareaHeight(this.message)
+				} else {
+					return null
+				}
 			}
 		},
 		methods: {
@@ -77,16 +83,17 @@
 
 				return true
 			},
-			setTextareaHeight() {
+			calculateTextareaHeight(message) {
 				const padding = 6
-
 				let lines = Math.max(
 					Math.ceil(
-						this.canvasContext.measureText(this.message).width * 1.2 / parseInt(this.computedStyles.width)
+						this.canvasContext.measureText(message).width * 1.2 / parseInt(this.computedStyles.width)
 					),
 				1)
-
-				this.textareaHeight = padding * 2 + lines * parseInt(this.computedStyles.lineHeight) + 'px'
+				if (lines > 1) {
+					return padding * 2 + lines * parseInt(this.computedStyles.lineHeight) + 'px'
+				}
+				return null
 			},
 			sendMessage(event) {
 				if (this.sendingDisabled) {
@@ -116,6 +123,10 @@
 				})
 			}
 		},
+		mounted() {
+			this.setTextareaStyles()
+			this.setTextMeasureCanvas()
+		},
 		updated() {
 			this.setTextareaStyles()
 		},
@@ -123,9 +134,6 @@
 			'loaded' () {
 				if (this.loaded) {
 					this.setListeners()
-					this.setTextareaStyles()
-					this.setTextMeasureCanvas()
-					this.setTextareaHeight()
 				}
 			}
 		}

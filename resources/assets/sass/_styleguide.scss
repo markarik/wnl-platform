@@ -46,6 +46,12 @@ h5 {
 	color: $danger;
 }
 
+// Links
+
+a.is-active {
+	font-weight: $font-weight-bold;
+}
+
 // Buttons
 
 .button {

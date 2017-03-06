@@ -22,7 +22,7 @@
 				icon="send-message"
 				alt="Wyślij wiadomość"
 				:disabled="sendingDisabled"
-				@click.native="sendMessage">
+				@buttonclicked="sendMessage">
 			</wnl-image-button>
 		</div>
 	</article>

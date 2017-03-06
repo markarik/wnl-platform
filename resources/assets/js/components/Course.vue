@@ -1,13 +1,13 @@
 <template>
-	<div class="columns">
-		<div class="column">
+	<div class="wnl-app-layout">
+		<div class="wnl-app-layout-left">
 			<wnl-sidenav :api-url="navigationApiUrl"></wnl-sidenav>
 		</div>
-		<div class="column is-half">
-			<wnl-chat :room="chatRoom"></wnl-chat>
-		</div>
-		<div class="column">
+		<div class="wnl-app-layout-main">
 
+		</div>
+		<div class="wnl-app-layout-right">
+			<wnl-chat :room="chatRoom"></wnl-chat>
 		</div>
 	</div>
 </template>

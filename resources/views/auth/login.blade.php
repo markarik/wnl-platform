@@ -4,13 +4,13 @@
 
 <div class="wnl-login-view">
 	<div class="wnl-login-container">
-		<h2 class="wnl-login-title">Cześć, dobrze Cię widzieć!</h2>
-		<p class="wnl-login-subtitle">Aby rozpocząć, zaloguj się podając swój e-mail i hasło.</p>
+		<h2 class="wnl-login-title">@lang('auth.title')</h2>
+		<p class="wnl-login-subtitle">@lang('auth.subtitle')</p>
 		<form class="wnl-login-form" action="{{ url('/login') }}" method="post">
 			{{ csrf_field() }}
 
 			{{-- E-Mail --}}
-			<label for="email" class="label">Twój e-mail</label>
+			<label for="email" class="label">@lang('auth.label-email')</label>
 			<p class="control">
 				<input id="email" name="email" type="email"
 					class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
@@ -21,7 +21,7 @@
 			</p>
 
 			{{-- Password --}}
-			<label for="password" class="label">Twoje hasło</label>
+			<label for="password" class="label">@lang('auth.label-password')</label>
 			<p class="control">
 				<input id="password" name="password" type="password"
 					class="input {{ $errors->has('password') ? 'is-danger' : '' }}"
@@ -35,21 +35,21 @@
 			<p class="control">
 				<label class="checkbox">
 					<input type="checkbox" name="remember">
-					Zapamiętaj mnie
+					@lang('auth.label-remember')
 				</label>
 			</p>
 
 			{{-- Submit --}}
 			<p class="control">
 				<button type="submit" class="button is-primary is-wide">
-					Zaloguj mnie
+					@lang('auth.submit')
 				</button>
 			</p>
 
 			{{-- Forgot password --}}
 			<p class="control wnl-login-remind">
 				<a href="{{ url('/password/reset') }}">
-					Nie pamiętasz hasła?
+					@lang('auth.remind-link')
 				</a>
 			</p>
 		</form>

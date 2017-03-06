@@ -13,7 +13,13 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
+	'failed' => 'Niestety, nie rozpoznajemy tych danych... Sprawdź e-mail i hasło.',
+	'throttle' => 'Hola hola, powoli! Odpocznij i spróbuj ponownie za :seconds sekund.',
+	'title' => 'Cześć, dobrze Cię widzieć!',
+	'subtitle' => 'Aby rozpocząć, zaloguj się podając swój e-mail i hasło.',
+	'label-email' => 'Twój e-mail',
+	'label-password' => 'Twoje hasło',
+	'label-remember' => 'Zapamiętaj mnie',
+	'submit' => 'Zaloguj mnie',
+	'remind-link' => 'Nie pamiętasz hasła?',
 ];

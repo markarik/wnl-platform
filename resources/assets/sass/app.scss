@@ -1,14 +1,12 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,900&subset=latin-ext');
-
 @import "variables";
 
 // External frameworks
-//@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "node_modules/bulma/bulma";
 
 // Internal imports
 @import "styleguide";
+@import "mixins";
+@import "./views/login";
 
 // Helper classes
 
@@ -32,6 +30,59 @@
 }
 
 // Layout
+$navbar-height: 3.5rem;
+$layout-left-max-width: 600px;
+$layout-left-inside-width: 200px;
+$layout-main-width: 660px;
+$layout-right-width: 400px;
+
+$three-column-left-flex: 4;
+$three-column-main-flex: 7;
+$three-column-right-flex: 5;
+
+html, body {
+	height: 100%;
+	min-height: 100%;
+}
+
+#app {
+	height: 100%;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.wnl-main {
+	display: flex;
+	flex: 1;
+}
+
+.wnl-app-layout {
+	align-items: stretch;
+	display: flex;
+	flex: 1;
+}
+
+.wnl-app-layout-left {
+	background-color: $color-background-light-gray;
+	display: flex;
+	flex: $three-column-left-flex;
+	justify-content: flex-end;
+	padding: 20px 0;
+}
+
+.wnl-app-layout-main {
+	flex: $three-column-main-flex;
+	padding: 20px;
+}
+
+.wnl-app-layout-right {
+	border-left: $border-light-gray;
+	display: flex;
+	flex: $three-column-right-flex;
+	overflow-y: auto;
+	padding-left: 20px;
+}
 
 .wnl-background-gray {
 	background: $color-background-light-gray;
@@ -40,6 +91,10 @@
 .wnl-left-content {
 	float: right;
 	width: 250px;
+	padding: 0 20px;
+}
+
+.wnl-right-content {
 	padding: 0 20px;
 }
 

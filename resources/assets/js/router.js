@@ -31,7 +31,7 @@ export default new Router({
 		{
 			name: 'Dashboard',
 			path: '/app',
-			component: require('./components/Dashboard.vue'),
+			redirect: { name: 'courses', params: { courseId: 1 } }
 		},
 		{
 			path: '*',

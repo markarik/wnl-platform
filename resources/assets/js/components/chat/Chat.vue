@@ -1,11 +1,13 @@
 <template>
-	<div>
+	<div class="wnl-chat">
 		<div :id="containerId" class="wnl-chat-messages">
 			<div :id="contentId">
 				<div v-if="loaded">
-					<wnl-message v-for="message in messages" :username="message.username"
-								 :time="message.time">
-						{{ message.content }}
+					<wnl-message v-for="(message, index) in messages"
+						:showAuthor="isAuthorUnique[index]"
+						:username="message.username"
+						:time="message.time">
+							{{ message.content }}
 					</wnl-message>
 				</div>
 				<div v-else>
@@ -21,13 +23,19 @@
 <style lang="sass">
 	@import '../../../sass/variables'
 
+	.wnl-chat
+		display: flex
+		flex: 1
+		flex-direction: column
+		justify-content: flex-end
+		padding-right: 20px
+
 	.wnl-chat-messages
-		height: 400px
 		overflow-y: auto
 
 	.wnl-chat-form
 		border-top: $border-light-gray
-		margin-top: 20px
+		margin: 20px 0
 		padding-top: 20px
 </style>
 <script>
@@ -50,6 +58,14 @@
 			'wnl-message-form': MessageForm
 		},
 		computed: {
+			isAuthorUnique() {
+				return this.messages.map((message, index) => {
+					if (index === 0) return true
+
+					let previous = index - 1
+					return message.username !== this.messages[previous].username
+				})
+			},
 			containerId() {
 				return 'wnl-chat-room-' + this.room
 			},
@@ -110,7 +126,7 @@
 			},
 			scrollToBottom() {
 				this.container.scrollTop = this.content.offsetHeight
-			},
+			}
 		},
 		mounted() {
 			socket.connect().then((socket) => {

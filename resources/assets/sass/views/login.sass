@@ -1,0 +1,36 @@
+@import '../variables'
+@import '../mixins'
+
+.wnl-login-view
+	align-items: center
+	display: flex
+	flex: 1
+	justify-content: center
+
+.wnl-login-container
+	+shadow()
+	max-width: 600px
+	margin-top: -50px
+	padding: 40px
+
+	.control
+		margin-bottom: 15px
+
+	label
+		font-weight: $font-weight-light
+		font-size: $font-size-minus-1
+
+	.button
+		margin: 15px 0
+
+.wnl-login-title
+	font-size: $font-size-plus-2
+	text-align: center
+
+.wnl-login-subtitle
+	font-size: $font-size-base
+	margin-bottom: 20px
+
+.wnl-login-remind
+	font-size: $font-size-minus-1
+	text-align: center

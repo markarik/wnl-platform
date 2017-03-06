@@ -30,13 +30,7 @@
 						</a>
 					</div>
 
-					<span class="nav-toggle">
-						<span></span>
-						<span></span>
-						<span></span>
-					</span>
-
-					<div class="nav-right nav-menu">
+					<div class="nav-right">
 						<a href="@lang('common.course-website-link')" class="nav-item">
 							@lang('payment.back-to-website')
 						</a>

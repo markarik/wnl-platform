@@ -10,7 +10,9 @@
 				<wnl-image-button name="wnl-slideshow-control-fullscreen"
 					icon="fullscreen-arrows"
 					alt="Włącz pełen ekran"
-					@click.native="toggleFullscreen"
+					align="right"
+					label="Pełen ekran"
+					@buttonclicked="toggleFullscreen"
 				></wnl-image-button>
 			</div>
 		</div>

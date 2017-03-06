@@ -1,68 +1,59 @@
 @extends('layouts.guest')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-                        {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+<div class="wnl-login-view">
+	<div class="wnl-login-container">
+		<h2 class="wnl-login-title">@lang('auth.title')</h2>
+		<p class="wnl-login-subtitle">@lang('auth.subtitle')</p>
+		<form class="wnl-login-form" action="{{ url('/login') }}" method="post">
+			{{ csrf_field() }}
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+			{{-- E-Mail --}}
+			<label for="email" class="label">@lang('auth.label-email')</label>
+			<p class="control">
+				<input id="email" name="email" type="email"
+					class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
+					value="{{ old('email') }}" required autofocus="">
+				@if ($errors->has('email'))
+					<span class="help is-danger">{{ $errors->first('email') }}</span>
+				@endif
+			</p>
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+			{{-- Password --}}
+			<label for="password" class="label">@lang('auth.label-password')</label>
+			<p class="control">
+				<input id="password" name="password" type="password"
+					class="input {{ $errors->has('password') ? 'is-danger' : '' }}"
+					value="{{ old('password') }}" required autofocus="">
+				@if ($errors->has('password'))
+					<span class="help is-danger">{{ $errors->first('password') }}</span>
+				@endif
+			</p>
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
+			{{-- Remember --}}
+			<p class="control">
+				<label class="checkbox">
+					<input type="checkbox" name="remember">
+					@lang('auth.label-remember')
+				</label>
+			</p>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
+			{{-- Submit --}}
+			<p class="control">
+				<button type="submit" class="button is-primary is-wide">
+					@lang('auth.submit')
+				</button>
+			</p>
 
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember"> Remember Me
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Login
-                                </button>
-
-                                <a class="btn btn-link" href="{{ url('/password/reset') }}">
-                                    Forgot Your Password?
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+			{{-- Forgot password --}}
+			<p class="control wnl-login-remind">
+				<a href="{{ url('/password/reset') }}">
+					@lang('auth.remind-link')
+				</a>
+			</p>
+		</form>
+	</div>
 </div>
+
 @endsection

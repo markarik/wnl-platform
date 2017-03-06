@@ -16,15 +16,14 @@ $color-red: #bf5329;
 
 // Layout
 $background-color-default: $color-white;
-$background-color-gray: $color-light-gray;
 
 // Typography
-$font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$font-family-sans-serif: "Lato", sans-serif;
 
 $font-size-minus-3: 0.625rem;
 $font-size-minus-2: 0.75rem;
 $font-size-minus-1: 0.875rem;
-$font-size-base: 16px;
+$font-size-base: 14px;
 $font-size-plus-1: 1.125rem;
 $font-size-plus-2: 1.5rem;
 $font-size-plus-3: 1.75rem;
@@ -48,6 +47,13 @@ $border-light-gray: 1px solid $color-light-gray;
 
 // Buttons
 $border-radius-full: 100px;
+
+// Square buttons
+$rounded-square-sizes: (
+	small: 20px,
+	medium: 30px,
+	large: 50px
+);
 
 // Overwrite Bulma variables
 $primary: $color-ocean-blue;

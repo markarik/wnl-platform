@@ -4,12 +4,18 @@ import * as types from '../mutations-types'
 
 // Initial state
 const state = {
-	current: {}
+	current: {
+		id: 0,
+		first_name: '',
+		last_name: '',
+		full_name: ''
+	}
 }
 
 // Getters
 const getters = {
-	current: state => state.current
+	current: state => state.current,
+	currentUserFullName: state => state.current.full_name
 }
 
 // Mutations

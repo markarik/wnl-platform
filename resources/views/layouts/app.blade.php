@@ -14,7 +14,9 @@
 	<link href="/css/app.css" rel="stylesheet">
 
 	<!-- Scripts -->
-	<script src="https://use.fontawesome.com/e3024fa4e4.js"></script>
+	<script src="https://use.fontawesome.com/c95376cac6.js"></script>
+	<script src="https://use.typekit.net/hal1etr.js"></script>
+	<script>try{Typekit.load({ async: true });}catch(e){}</script>
 	<script>
 		window.Laravel = <?php echo json_encode([
 			'csrfToken' => csrf_token(),
@@ -22,7 +24,7 @@
 	</script>
 </head>
 <body data-base="{{env('APP_URL')}}">
-    <div id="app" data-view="@yield('current-view')" class="full-height"></div>
+	<div id="app" data-view="@yield('current-view')" class="full-height"></div>
 
 	@include ('footer')
 </body>

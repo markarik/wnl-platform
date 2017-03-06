@@ -32,6 +32,7 @@
 			fill: $color-white
 
 	.wnl-image-button-label
+		font-size: $font-size-minus-1
 		margin: 0 10px
 
 	+rounded-square-standard-sizes('image-button')

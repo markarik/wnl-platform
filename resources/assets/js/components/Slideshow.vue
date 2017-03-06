@@ -5,6 +5,7 @@
 		</div>
 		<div class="wnl-slideshow-controls">
 			<div class="wnl-slideshow-controls-left">
+				<wnl-slideshow-navigation></wnl-slideshow-navigation>
 			</div>
 			<div class="wnl-slideshow-controls-right">
 				<wnl-image-button name="wnl-slideshow-control-fullscreen"
@@ -43,9 +44,13 @@
 <script>
 	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
+	import SlideshowNavigation from './SlideshowNavigation.vue'
 
 	export default {
 		name: 'Slideshow',
+		components: {
+			'wnl-slideshow-navigation': SlideshowNavigation
+		},
 		data() {
 			return {
 				child: {},

@@ -1,6 +1,22 @@
 <template>
-	<div class="wnl-snippet wnl-ratio-16-9">
-		<div class="wnl-slideshow-container" id="wnl-slideshow"></div>
+	<div class="wnl-slideshow-container">
+		<div class="wnl-snippet wnl-ratio-16-9">
+			<div class="wnl-slideshow-content" id="wnl-slideshow"></div>
+		</div>
+		<div class="wnl-slideshow-controls">
+			<div class="wnl-slideshow-controls-left">
+				<wnl-slideshow-navigation></wnl-slideshow-navigation>
+			</div>
+			<div class="wnl-slideshow-controls-right">
+				<wnl-image-button name="wnl-slideshow-control-fullscreen"
+					icon="fullscreen-arrows"
+					alt="Włącz pełen ekran"
+					align="right"
+					label="Pełen ekran"
+					@buttonclicked="toggleFullscreen"
+				></wnl-image-button>
+			</div>
+		</div>
 	</div>
 </template>
 <style lang="sass">
@@ -9,7 +25,7 @@
 		position: relative
 		width: 100%
 
-	.wnl-slideshow-container
+	.wnl-slideshow-content
 		bottom: 0
 		left: 0
 		position: absolute
@@ -19,12 +35,22 @@
 		iframe
 			height: 100%
 			width: 100%
+
+	.wnl-slideshow-controls
+		display: flex
+		justify-content: space-between
+		margin-top: 10px
 </style>
 <script>
+	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
+	import SlideshowNavigation from './SlideshowNavigation.vue'
 
 	export default {
 		name: 'Slideshow',
+		components: {
+			'wnl-slideshow-navigation': SlideshowNavigation
+		},
 		data() {
 			return {
 				child: {},
@@ -46,6 +72,9 @@
 			slideshowUrl() {
 				return $fn.getUrl('slideshow-builder/' + this.snippetId)
 			},
+			slideshowElement() {
+				return document.getElementById('wnl-slideshow')
+			}
 		},
 		methods: {
 			setCurrentSlideFromIndex(slideIndex) {
@@ -65,6 +94,11 @@
 						}
 					}
 				})
+			},
+			toggleFullscreen() {
+				if (screenfull.enabled) {
+					screenfull.toggle(this.slideshowElement)
+				}
 			}
 		},
 		mounted() {

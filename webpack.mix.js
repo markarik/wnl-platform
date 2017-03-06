@@ -16,7 +16,4 @@ mix
 	.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
-	.combine([
-		'resources/vendor/reveal/reveal.css',
-		'resources/vendor/reveal/reveal-theme.css',
-	], 'public/css/slideshow.css')
+	.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')

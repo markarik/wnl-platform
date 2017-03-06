@@ -68,11 +68,13 @@ html, body {
 	display: flex;
 	flex: $three-column-left-flex;
 	justify-content: flex-end;
+	max-width: 500px;
 	padding: 20px 0;
 }
 
 .wnl-app-layout-main {
 	flex: $three-column-main-flex;
+	max-width: 800px;
 	padding: 20px;
 }
 

@@ -167,7 +167,6 @@ return [
          * Package Service Providers...
          */
 
-		Barryvdh\Debugbar\ServiceProvider::class,
 		Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
 		Laravel\Tinker\TinkerServiceProvider::class,
 		Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,

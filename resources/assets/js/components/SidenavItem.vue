@@ -67,7 +67,7 @@
 				}
 			},
 			itemClass() {
-				return 'wnl-sidenav-item wnl-sidenav-item-' + this.type
+				return `wnl-sidenav-item wnl-sidenav-item-${this.type}`
 			},
 			isLink() {
 				return this.type !== 'groups'

@@ -47,11 +47,11 @@
 			},
 			iconClass () {
 				let modifier = this.modifier || 'primary'
-				return 'is-' + modifier
+				return `is-${modifier}`
 			},
 			iconSizeClass () {
 				let size = this.size || 'medium'
-				return 'wnl-image-button-' + size
+				return `wnl-image-button-${size}`
 			},
 			isReverse () {
 				return this.align === 'right'

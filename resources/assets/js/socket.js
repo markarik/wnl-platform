@@ -1,8 +1,9 @@
 import * as io from 'socket.io-client'
+import { envValue } from './utils/env'
 
 function getSocket() {
 	if (!global.$socket) {
-		global.$socket = io($wnl.chatHost + ':' + $wnl.chatPort)
+		global.$socket = io(`${envValue('chatHost')}:${envValue('chatPort')}`)
 	}
 	return global.$socket
 }

@@ -23,6 +23,7 @@
 </style>
 <script>
 	import { mapGetters } from 'vuex'
+	import { getInitials } from '../../utils/strings'
 
 	export default {
 		name: 'Avatar',
@@ -40,15 +41,15 @@
 			sizeClass() {
 				// large = 50x50px, medium = 30x30px, small = 20x20px
 				let size = this.size || 'medium'
-				return 'wnl-avatar-' + size
+				return `wnl-avatar-${size}`
 			},
 			initials() {
-				return global.$fn.getInitials(this.username)
+				return getInitials(this.username)
 			},
 			colorClass() {
 				if (!this.isCustom) {
 					let colorPosition = (this.initials.charCodeAt(0) - 65) % 19 + 1
-					return 'wnl-avatar-color-' + colorPosition
+					return `wnl-avatar-color-${colorPosition}`
 				}
 				return ''
 			}

@@ -21,4 +21,7 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function() {
 	// Lessons
 	Route::get(sprintf('%s/{id}/nav', $resources['lessons']), 'LessonsApiController@getNavigation');
 	Route::get(sprintf('%s/{id}', $resources['screens']), 'LessonsApiController@getScreen');
+
+	// Forms
+	Route::get(sprintf('%s/personal-info/{userId?}', $resources['forms']), 'Forms\PersonalInfoFormController@getForm');
 });

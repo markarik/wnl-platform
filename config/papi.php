@@ -8,5 +8,6 @@ return [
 		'screens' => 'screens',
 		'sections' => 'sections',
 		'users' => 'users',
+		'forms' => 'forms',
 	]
 ];

@@ -16,11 +16,13 @@
 	import Sidenav from './Sidenav.vue'
 	import Chat from './chat/Chat.vue'
 	import { getApiUrl } from '../utils/env'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		name: 'Course',
 		props: ['courseId'],
 		computed: {
+			...mapGetters(['wasProgressChecked', 'editionProgress']),
 			chatRoom() {
 				return `courses-${this.courseId}`
 			},
@@ -31,6 +33,14 @@
 		components: {
 			'wnl-sidenav': Sidenav,
 			'wnl-chat': Chat
+		},
+		methods: {
+			...mapActions(['progressSetupEdition'])
+		},
+		created() {
+			if (!this.wasProgressChecked) {
+				this.progressSetupEdition(this.courseId)
+			}
 		}
 	}
 </script>

@@ -18,10 +18,10 @@
 			'wnl-navbar': Navbar
 		},
 		methods: {
-			...mapActions(['setCurrentUser'])
+			...mapActions(['setupCurrentUser'])
 		},
 		created: function () {
-			this.setCurrentUser()
+			this.setupCurrentUser()
 		}
 	}
 </script>

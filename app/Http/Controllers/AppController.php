@@ -14,6 +14,10 @@ class AppController extends Controller
 			'baseURL'  => env('APP_URL'),
 			'chatHost' => env('CHAT_HOST'),
 			'chatPort' => env('CHAT_PORT'),
+			'config'   => [
+				'papi'    => config('papi'),
+				'lessons' => config('lessons'),
+			],
 		]);
 
 		return view('layouts.app');

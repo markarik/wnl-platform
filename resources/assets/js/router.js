@@ -29,6 +29,19 @@ export default new Router({
 			]
 		},
 		{
+			name: 'myself',
+			path: '/app/myself',
+			component: require('./components/user/Myself.vue'),
+			props: true,
+			children: [
+				{
+					name: 'my-orders',
+					path: 'orders',
+					component: require('./components/user/MyOrders.vue')
+				}
+			]
+		},
+		{
 			name: 'Dashboard',
 			path: '/app',
 			redirect: { name: 'courses', params: { courseId: 1 } }

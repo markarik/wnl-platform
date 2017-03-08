@@ -7,6 +7,7 @@ return [
 		'lessons'  => 'lessons',
 		'screens'  => 'screens',
 		'sections' => 'sections',
-		'users'    => 'users',
-	],
+		'users' => 'users',
+		'forms' => 'forms',
+	]
 ];

@@ -11,14 +11,26 @@
 |
 */
 
-Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function() {
+Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function () {
 	$resources = Config::get('papi.resources');
 
+	// Users
 	Route::get(sprintf('%s/current', $resources['users']), 'UsersApiController@getCurrentUser');
 
+	// Courses
 	Route::get(sprintf('%s/{id}/nav', $resources['courses']), 'CoursesApiController@getNavigation');
 
 	// Lessons
 	Route::get(sprintf('%s/{id}/nav', $resources['lessons']), 'LessonsApiController@getNavigation');
 	Route::get(sprintf('%s/{id}', $resources['screens']), 'LessonsApiController@getScreen');
+
+	// Editions
+	Route::get(
+		sprintf('%s/{editionId}/%s/{lessonId}', $resources['editions'], $resources['lesson-availability']),
+		'EditionsApiController@getWithLessonAvailability'
+	);
+	Route::get(
+		sprintf('%s/{editionId}/%s/{userId}', $resources['editions'], $resources['user-progress']),
+		'EditionsApiController@getWithUserProgress'
+	);
 });

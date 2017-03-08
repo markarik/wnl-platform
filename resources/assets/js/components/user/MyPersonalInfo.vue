@@ -16,11 +16,8 @@
 		data() {
 			return {
 				form: new Form({
-					
-				}),
-				config: {
-					apiUrl: global.$fn.getApiUrl('myself/')
-				}
+
+				})
 			}
 		}
 	}

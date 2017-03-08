@@ -45,6 +45,7 @@
 	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
 	import SlideshowNavigation from './SlideshowNavigation.vue'
+	import { envValue, getUrl } from '../utils/env'
 
 	export default {
 		name: 'Slideshow',
@@ -70,7 +71,7 @@
 				return this.screenData.id
 			},
 			slideshowUrl() {
-				return $fn.getUrl('slideshow-builder/' + this.snippetId)
+				return getUrl(`slideshow-builder/${this.snippetId}`)
 			},
 			slideshowElement() {
 				return document.getElementById('wnl-slideshow')
@@ -102,7 +103,7 @@
 			}
 		},
 		mounted() {
-			Postmate.debug = global.$fn.isDevEnv()
+			Postmate.debug = envValue('appDebug')
 
 			const handshake = new Postmate({
 				container: this.container,

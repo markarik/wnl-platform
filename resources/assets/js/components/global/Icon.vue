@@ -3,11 +3,12 @@
 </template>
 
 <script>
+	import { getImageUrl } from '../../utils/env'
 	export default {
 		props: ['name'],
 		computed: {
 			href() {
-				return global.$fn.getUrl('images/icons/sprite.svg#' + this.name)
+				return getImageUrl(`icons/sprite.svg#${this.name}`)
 			}
 		}
 	}

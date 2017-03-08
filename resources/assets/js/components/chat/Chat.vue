@@ -67,19 +67,19 @@
 				})
 			},
 			containerId() {
-				return 'wnl-chat-room-' + this.room
+				return `wnl-chat-room-${this.room}`
 			},
 			container() {
 				return document.getElementById(this.containerId)
 			},
 			contentId() {
-				return 'wnl-chat-content-' + this.room
+				return `wnl-chat-content-${this.room}`
 			},
 			content() {
 				return document.getElementById(this.contentId)
 			},
 			inputId() {
-				return 'wnl-chat-form-' + this.room
+				return `wnl-chat-form-${this.room}`
 			},
 			input() {
 				return document.getElementById(this.inputId)

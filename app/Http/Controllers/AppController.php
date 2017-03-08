@@ -10,10 +10,12 @@ class AppController extends Controller
 	public function index()
 	{
 		JavaScript::put([
-			'env'      => env('APP_ENV'),
-			'baseURL'  => env('APP_URL'),
-			'chatHost' => env('CHAT_HOST'),
-			'chatPort' => env('CHAT_PORT'),
+			'env'      => [
+				'appDebug' => env('APP_DEBUG'),
+				'appUrl'  => env('APP_URL'),
+				'chatHost' => env('CHAT_HOST'),
+				'chatPort' => env('CHAT_PORT'),
+			],
 			'config'   => [
 				'papi'    => config('papi'),
 				'lessons' => config('lessons'),

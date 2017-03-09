@@ -22,7 +22,7 @@
 		name: 'Course',
 		props: ['courseId'],
 		computed: {
-			...mapGetters(['wasProgressChecked', 'editionProgress']),
+			...mapGetters(['progressEdition', 'progressWasChecked']),
 			chatRoom() {
 				return `courses-${this.courseId}`
 			},

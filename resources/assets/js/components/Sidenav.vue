@@ -40,7 +40,8 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import * as mutations from 'js/store/mutations-types'
+	import { mapGetters, mapMutations } from 'vuex'
 	import SidenavItem from './SidenavItem.vue'
 
 	export default {
@@ -56,13 +57,12 @@
 			'wnl-sidenav-item': SidenavItem
 		},
 		methods: {
-			setNavigation: function (data) {
-				this.$store.dispatch('setNavigation', data)
-			}
+			// Move it to an action
+			...mapMutations([mutations.SET_NAVIGATION])
 		},
-		created: function () {
+		created() {
 			axios.get(this.apiUrl).then((response) => {
-				this.setNavigation(response.data)
+				this[mutations.SET_NAVIGATION](response.data)
 			})
 		}
 	}

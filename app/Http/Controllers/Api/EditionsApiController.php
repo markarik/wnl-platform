@@ -66,9 +66,9 @@ class EditionsApiController extends Controller
 //		return response('OK', 200)->json($data);
 	}
 
-	public function getStruncture()
+	public function getStructure()
 	{
-
+		return response()->json([]);
 	}
 
 	protected function edition($id)

@@ -33,6 +33,10 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function () {
 		sprintf('%s/{editionId}/%s/{userId}', $resources['editions'], $resources['user-progress']),
 		'EditionsApiController@getWithUserProgress'
 	);
+	Route::put(
+		sprintf('%s/{editionId}/%s/{userId}', $resources['editions'], $resources['user-progress']),
+		'EditionsApiController@putUserProgress'
+	);
 
 	// Forms
 	Route::get(sprintf('%s/personal-info/{userId?}', $resources['forms']), 'Forms\PersonalInfoFormController@getForm');

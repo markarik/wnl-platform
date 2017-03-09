@@ -58,4 +58,24 @@ class EditionsApiController extends Controller
 
 		return response()->json($data);
 	}
+
+	public function putUserProgress($editionId, $userId)
+	{
+		$data = [];
+		return response('Created', 201)->json($data);
+//		return response('OK', 200)->json($data);
+	}
+
+	public function getStruncture()
+	{
+
+	}
+
+	protected function edition($id)
+	{
+
+
+	}
+
+
 }

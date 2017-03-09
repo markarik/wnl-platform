@@ -15,16 +15,17 @@
 <script>
 	import Sidenav from './Sidenav.vue'
 	import Chat from './chat/Chat.vue'
+	import { getApiUrl } from '../utils/env'
 
 	export default {
 		name: 'Course',
 		props: ['courseId'],
 		computed: {
 			chatRoom() {
-				return 'courses-' + this.courseId
+				return `courses-${this.courseId}`
 			},
 			navigationApiUrl() {
-				return $fn.getApiUrl('courses/' + this.courseId + '/nav')
+				return getApiUrl(`courses/${this.courseId}/nav`)
 			}
 		},
 		components: {

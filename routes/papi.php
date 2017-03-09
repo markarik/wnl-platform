@@ -33,4 +33,7 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function () {
 		sprintf('%s/{editionId}/%s/{userId}', $resources['editions'], $resources['user-progress']),
 		'EditionsApiController@getWithUserProgress'
 	);
+
+	// Forms
+	Route::get(sprintf('%s/personal-info/{userId?}', $resources['forms']), 'Forms\PersonalInfoFormController@getForm');
 });

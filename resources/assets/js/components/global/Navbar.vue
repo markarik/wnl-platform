@@ -42,6 +42,7 @@
 
 <script>
 	import { mapGetters } from 'vuex'
+	import { getImageUrl } from '../../utils/env'
 
 	export default {
 		name: 'Navbar',
@@ -50,7 +51,7 @@
 				'currentUserFullName'
 			]),
 			logoSrc() {
-				return global.$fn.getImageUrl('wnl-logo.svg')
+				return getImageUrl('wnl-logo.svg')
 			},
 			logoAlt() {
 				return 'Logo Więcej niż LEK'

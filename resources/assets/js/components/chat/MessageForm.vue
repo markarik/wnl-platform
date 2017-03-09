@@ -78,7 +78,7 @@
 
 				canvas = this.measureCanvas || document.createElement('canvas')
 				context = canvas.getContext('2d')
-				context.font = this.computedStyles.fontSize + ' ' + this.computedStyles.fontFamily
+				context.font = `${this.computedStyles.fontSize} ${this.computedStyles.fontFamily}`
 				this.canvasContext = context
 
 				return true
@@ -92,7 +92,7 @@
 					),
 				1)
 				if (lines > 1) {
-					return padding * 2 + lines * parseInt(this.computedStyles.lineHeight) + 'px'
+					return `${padding * 2 + lines * parseInt(this.computedStyles.lineHeight)}px`
 				}
 				return null
 			},

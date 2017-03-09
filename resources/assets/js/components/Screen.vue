@@ -12,6 +12,7 @@
 	import axios from 'axios'
 	import Html from './Html.vue'
 	import Slideshow from './Slideshow.vue'
+	import { getApiUrl } from '../utils/env'
 
 	export default {
 		name: 'Screen',
@@ -43,16 +44,21 @@
 				return this.typesToComponents[this.type]
 			}
 		},
-		mounted: function () {
-			axios.get($fn.getApiUrl('screens/' + this.screenId)).then((response) => {
-				this.screenData = response.data.screen
-			})
+		methods: {
+			getScreenData(screenId) {
+				axios.get(getApiUrl(`screens/${screenId}`))
+					.then((response) => {
+						this.screenData = response.data.screen
+					})
+					.catch(error => console.log(error))
+			}
+		},
+		mounted() {
+			this.getScreenData(this.screenId)
 		},
 		watch: {
 			'$route' (to, from) {
-				axios.get($fn.getApiUrl('screens/' + to.params.screenId)).then((response) => {
-					this.screenData = response.data.screen
-				})
+				this.getScreenData(to.params.screenId)
 			}
 		}
 	}

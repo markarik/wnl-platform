@@ -11,5 +11,6 @@ return [
 		'editions'            => 'editions',
 		'lesson-availability' => 'lesson_availability',
 		'user-progress'       => 'user_progress',
+		'forms'               => 'forms',
 	],
 ];

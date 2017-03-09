@@ -20,16 +20,17 @@
 	import Sidenav from './Sidenav.vue'
 	import Chat from './chat/Chat.vue'
 	import { mapGetters } from 'vuex'
+	import { getApiUrl } from '../utils/env'
 
 	export default {
 		name: 'Lesson',
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
 			chatRoom() {
-				return 'courses-' + this.courseId + '-lessons-' + this.lessonId
+				return `courses-${this.courseId}-lessons-${this.lessonId}`
 			},
 			navigationApiUrl() {
-				return $fn.getApiUrl('lessons/' + this.lessonId + '/nav')
+				return getApiUrl(`lessons/${this.lessonId}/nav`)
 			},
 			...mapGetters([
 				'firstItem'

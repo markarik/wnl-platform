@@ -25,5 +25,7 @@ class DatabaseSeeder extends Seeder
 		$this->call(SnippetsTableSeeder::class);
 		$this->call(ScreensTableSeeder::class);
 		$this->call(PresentablesTableSeeder::class);
+
+		$this->call(EditionsTableSeeder::class);
 	}
 }

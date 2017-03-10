@@ -15,7 +15,15 @@ function getCourseStoreKey(courseId) {
 }
 
 function getLessonStoreKey(courseId, lessonId) {
-	return `progress-courses-${courseId}-lesssons-${lessonId}`
+	return `progress-courses-${courseId}-lessons-${lessonId}`
+}
+
+function saveLessonProgress(payload) {
+	let route = {
+		name: payload.route.name,
+		params: payload.route.params,
+	}
+	store.set(getLessonStoreKey(payload.courseId, payload.lessonId), route)
 }
 
 // API functions
@@ -60,6 +68,9 @@ const getters = {
 			return state.courses[courseId]
 		}
 	},
+	progressGetSavedLesson: (state) => (courseId, lessonId) => {
+		return store.get(getLessonStoreKey(courseId, lessonId))
+	},
 	progressWasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
 			state.courses[courseId].hasOwnProperty(lessonId)
@@ -82,15 +93,18 @@ const mutations = {
 		set(state.courses, payload.courseId, payload.progressData)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
-		set(state.courses[payload.courseId], payload.lessonId, {
-			status: STATUS_IN_PROGRESS
+		set(state.courses[payload.courseId].lessons, payload.lessonId, {
+			status: STATUS_IN_PROGRESS,
+			route: payload.route,
 		})
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		set(state.courses[payload.courseId][payload.lessonId], 'route', payload.route)
+		saveLessonProgress(payload)
+		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, courseId, lessonId) {
-		set(state.courses[courseId][lessonId], 'status', STATUS_COMPLETE)
+		saveLessonProgress(payload)
+		set(state.courses[courseId].lessons[lessonId], 'status', STATUS_COMPLETE)
 	}
 }
 

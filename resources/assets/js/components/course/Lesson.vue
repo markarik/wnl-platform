@@ -7,53 +7,69 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex'
-	// import * as mutations from 'js/store/mutations-types'
+	import { mapGetters, mapActions } from 'vuex'
 	import { resource } from 'js/utils/config'
 
 	export default {
 		name: 'Lesson',
-		props: ['lessonId', 'screenId'],
+		props: ['courseId', 'lessonId', 'screenId'],
 		computed: {
 			...mapGetters([
-				'getFirstScreen'
-			])
+				'getScreens',
+				'progressGetSavedLesson',
+			]),
+			lessonProgressContext() {
+				return {
+					courseId: this.courseId,
+					lessonId: this.lessonId,
+					route: this.$route,
+				}
+			},
 		},
 		methods: {
-			// ...mapMutations([
-			// 	mutations.PROGRESS_START_LESSON,
-			// 	mutations.PROGRESS_UPDATE_LESSON,
-			// 	mutations.PROGRESS_COMPLETE_LESSON
-			// ]),
-			// ...mapActions([
-			// 	'progressSetupEdition',
-			// 	'progressStartLesson'
-			// ]),
-			// startLesson() {
-			// 	this.progressStartLesson({
-			// 		editionId: this.courseId,
-			// 		lessonId: this.lessonId
-			// 	})
-			// 	this.goToFirstScreenByDefault()
-			// },
-			goToFirstScreenByDefault() {
+			...mapActions([
+				'progressStartLesson',
+				'progressUpdateLesson',
+				'progressCompleteLesson',
+			]),
+			startLesson() {
+				console.log(`Starting lesson ${this.lessonId}`)
+				this.progressStartLesson(this.lessonProgressContext)
+				this.goToDefaultScreenIfNone()
+			},
+			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
-					let firstScreen = this.getFirstScreen(this.lessonId)
-					this.$router.replace({ name: resource('screens'), params: { screenId: firstScreen.id } })
+					let savedRoute = this.progressGetSavedLesson(this.courseId, this.lessonId)
+
+					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
+						console.log(savedRoute)
+						this.$router.replace(savedRoute)
+					} else {
+						let firstScreen = this.getScreens(this.lessonId)[0]
+
+						this.$router.replace({ name: resource('screens'), params: { screenId: firstScreen.id } })
+					}
 				}
-			}
-		},
-		created() {
-			// if (!this.wasProgressChecked) {
-			// 	this.progressSetupEdition(this.courseId).then()
-			// }
+			},
+			updateLessonProgress() {
+				if (typeof this.screenId !== 'undefined') {
+					let lastScreen = this.getScreens(this.lessonId).slice(-1)[0]
+
+					if (this.screenId === lastScreen.id) {
+						this.progressCompleteLesson(this.lessonProgressContext)
+					}
+					this.progressUpdateLesson(this.lessonProgressContext)
+				}
+			},
 		},
 		mounted () {
-			// this.startLesson()
-			this.goToFirstScreenByDefault()
+			this.startLesson()
 		},
 		watch: {
-			'$route' (to, from) { this.goToFirstScreenByDefault() }
+			'$route' (to, from) {
+				this.goToDefaultScreenIfNone()
+				this.updateLessonProgress()
+			}
 		}
 	}
 </script>

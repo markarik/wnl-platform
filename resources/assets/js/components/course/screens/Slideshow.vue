@@ -91,7 +91,11 @@
 						let data = JSON.parse(event.data)
 						if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
 							this.setCurrentSlideFromIndex(data.state.indexh)
-							this.$router.replace({ name: 'screens', params: { slide: this.currentSlide } })
+							this.$router.replace({
+								name: 'screens',
+								params: { slide: this.currentSlide },
+								query: { sc: '1' }
+							})
 						}
 					}
 				})
@@ -121,7 +125,7 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				if (this.slideNumber !== this.currentSlide) {
+				if (!to.query.hasOwnProperty('sc') && this.slideNumber !== this.currentSlide) {
 					this.goToSlide(this.slideNumber)
 				}
 			}

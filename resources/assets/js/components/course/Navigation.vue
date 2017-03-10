@@ -99,7 +99,7 @@
 					'',
 					routes.courses,
 					{
-						courseId: this.context.courseId
+						courseId: this.context.courseId,
 					}
 				)
 			},
@@ -116,7 +116,7 @@
 					routes.lessons,
 					{
 						courseId: lesson.course,
-						lessonId: lesson.id
+						lessonId: lesson.id,
 					},
 					!lesson.isAvailable
 				)
@@ -130,6 +130,7 @@
 					{
 						courseId: screen.course,
 						lessonId: screen.lesson,
+						screenId: screen.id,
 					}
 				)
 			},
@@ -142,8 +143,9 @@
 						courseId: section.course,
 						lessonId: section.lesson,
 						screenId: section.screen,
-						slide: section.slide
+						slide: section.slide,
 					},
+					false,
 					'replace'
 				)
 			}

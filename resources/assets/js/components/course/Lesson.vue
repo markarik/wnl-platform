@@ -11,10 +11,10 @@
 
 	export default {
 		name: 'Lesson',
-		props: ['screenId'],
+		props: ['lessonId', 'screenId'],
 		computed: {
 			...mapGetters([
-				'firstItem'
+				'getFirstScreen'
 			])
 		},
 		methods: {
@@ -36,7 +36,8 @@
 			// },
 			goToFirstScreenByDefault() {
 				if (!this.screenId) {
-					this.$router.replace({ name: routes.screens, params: { screenId: this.firstItem.id } })
+					let firstScreen = this.getFirstScreen(this.lessonId)
+					this.$router.replace({ name: routes.screens, params: { screenId: firstScreen.id } })
 				}
 			}
 		},

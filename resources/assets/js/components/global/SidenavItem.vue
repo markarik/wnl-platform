@@ -1,9 +1,9 @@
 <template>
-	<li :class="itemClass">
+	<li :class="[itemClass, { disabled: isDisabled }]">
 		<router-link v-if="isLink" :to="to" :replace="replace">
 			<slot></slot>
 		</router-link>
-		<span v-else :class="{ isDisabled: isDisabled }">
+		<span v-else>
 			<slot></slot>
 		</span>
 	</li>

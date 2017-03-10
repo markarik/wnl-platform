@@ -8,7 +8,7 @@
 			</wnl-course-navigation>
 		</div>
 		<div class="wnl-app-layout-main">
-			<router-view></router-view>
+			<router-view v-if="structureLoaded"></router-view>
 		</div>
 		<div class="wnl-app-layout-right">
 			<wnl-chat :room="chatRoom"></wnl-chat>

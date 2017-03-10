@@ -24,6 +24,9 @@ const getters = {
 	courseId: state => state.id,
 	courseName: state => state.name,
 	courseStructure: state => state.structure,
+	getFirstScreen: state => (lessonId) => {
+		return state.structure.lessons[lessonId].screens[0]
+	}
 }
 
 // Mutations

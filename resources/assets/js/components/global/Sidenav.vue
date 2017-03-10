@@ -58,6 +58,9 @@
 
 		.subitem
 			padding: 5px 0 5px 10px
+
+		.disabled
+			color: $color-inactive-gray
 </style>
 
 <script>

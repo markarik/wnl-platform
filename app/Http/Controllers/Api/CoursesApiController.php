@@ -24,30 +24,86 @@ class CoursesApiController extends Controller
 
 		$resources = Config::get('papi.resources');
 
-		$breadcrumbs = [
-			$this->composeItem($resources['courses'], $course->id, $course->name),
+		$editionStructure = [
+			'id' => $course->id,
+			'name' => $course->name,
+			'structure' => [
+				$resources['groups'] => [],
+				$resources['lessons'] => []
+			],
 		];
-		$items = [];
 
 		$groups = $course->groups()->with('lessons')->get();
 
 		foreach ($groups as $group) {
-			$items[] = $this->composeItem($resources['groups'], $group->id,
-				$group->name, [$resources['courses'] => $course->id]);
+			$groupStructure = [
+				'id' => $group->id,
+				'name' => $group->name,
+				'course' => $course->id,
+				$resources['lessons'] => []
+			];
 
-			foreach ($group->lessons as $lesson){
-				$items[] = $this->composeItem(
-					$resources['lessons'],
-					$lesson->id,
-					$lesson->name,
-					[
-						$resources['courses'] => $course->id,
-						$resources['groups'] => $group->id,
-					]
-				);
+			foreach ($group->lessons as $lesson) {
+				array_push($groupStructure[$resources['lessons']], $lesson->id);
+
+				$lessonStructure = [
+					'id' => $lesson->id,
+					'name' => $lesson->name,
+					'course' => $course->id,
+					'group' => $group->id,
+					'isAvailable' => $lesson->id < 4,
+					$resources['screens'] => [],
+				];
+
+				$screens = $lesson->snippets()->with('slides')->get();
+				foreach ($screens as $screen) {
+					$screenStructure = [
+						'id' => $screen->id,
+						'name' => $screen->name,
+						'type' => $screen->type,
+						'course' => $course->id,
+						'groups' => $group->id,
+						'lesson' => $lesson->id,
+					];
+
+					$sectionBasis = [
+						'course' => $course->id,
+						'group' => $group->id,
+						'lesson' => $lesson->id,
+						'screen' => $screen->id,
+					];
+
+					$screenStructure[$resources['sections']] = $this->getSectionsForScreen($sectionBasis, $screen);
+					$lessonStructure[$resources['screens']][] = $screenStructure;
+				}
+
+				$editionStructure['structure'][$resources['lessons']][$lesson->id] = $lessonStructure;
+			}
+
+			$editionStructure['structure'][$resources['groups']][] = $groupStructure;
+		}
+
+		return response()->json($editionStructure);
+	}
+
+	private function getSectionsForScreen($basis, $screen) {
+		$sectionsStructure = [];
+
+		if ($screen->type === 'slideshow') {
+			$screenFirstSlide = $screen->slides->first();
+			$sections = $screen->sections()->with('slides')->get();
+			foreach ($sections as $section) {
+				$sectionFirstSlide = $section->slides->first();
+				$slideNumber = $sectionFirstSlide->id - $screenFirstSlide->id + 1;
+
+				$sectionsStructure[] = array_merge($basis, [
+					'id' => $section->id,
+					'name' => $section->name,
+					'slide' => $slideNumber,
+				]);
 			}
 		}
 
-		return response()->json(['breadcrumbs' => $breadcrumbs, 'items' => $items]);
+		return $sectionsStructure;
 	}
 }

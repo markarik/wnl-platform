@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as actions from './actions'
-import * as getters from './getters'
-import mutations from './mutations'
-import sidenav from './modules/sidenav'
-import users from './modules/users'
-import progress from './modules/progress'
+
+// Global mutations, actions and getters
+import mutations from 'js/store/mutations'
+import * as actions from 'js/store/actions'
+import * as getters from 'js/store/getters'
+
+// Modules
+import users from 'js/store/modules/users'
+import progress from 'js/store/modules/progress'
+import course from 'js/store/modules/course'
 
 Vue.use(Vuex)
 
@@ -17,9 +21,9 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 	modules: {
-		sidenav,
 		users,
-		progress
+		progress,
+		course,
 	},
 	strict: debug
 })

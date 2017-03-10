@@ -42,7 +42,7 @@
 
 <script>
 	import { mapGetters } from 'vuex'
-	import { getImageUrl } from '../../utils/env'
+	import { getImageUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Navbar',

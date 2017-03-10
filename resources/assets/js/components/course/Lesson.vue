@@ -1,0 +1,56 @@
+<template>
+	<div class="wnl-lesson">
+		<router-view></router-view>
+	</div>
+</template>
+
+<script>
+	import { mapGetters } from 'vuex'
+	// import * as mutations from 'js/store/mutations-types'
+	import { routes } from 'js/utils/constants'
+
+	export default {
+		name: 'Lesson',
+		props: ['screenId'],
+		computed: {
+			...mapGetters([
+				'firstItem'
+			])
+		},
+		methods: {
+			// ...mapMutations([
+			// 	mutations.PROGRESS_START_LESSON,
+			// 	mutations.PROGRESS_UPDATE_LESSON,
+			// 	mutations.PROGRESS_COMPLETE_LESSON
+			// ]),
+			// ...mapActions([
+			// 	'progressSetupEdition',
+			// 	'progressStartLesson'
+			// ]),
+			// startLesson() {
+			// 	this.progressStartLesson({
+			// 		editionId: this.courseId,
+			// 		lessonId: this.lessonId
+			// 	})
+			// 	this.goToFirstScreenByDefault()
+			// },
+			goToFirstScreenByDefault() {
+				if (!this.screenId) {
+					this.$router.replace({ name: routes.screens, params: { screenId: this.firstItem.id } })
+				}
+			}
+		},
+		created() {
+			// if (!this.wasProgressChecked) {
+			// 	this.progressSetupEdition(this.courseId).then()
+			// }
+		},
+		mounted () {
+			// this.startLesson()
+			this.goToFirstScreenByDefault()
+		},
+		watch: {
+			'$route' (to, from) { this.goToFirstScreenByDefault() }
+		}
+	}
+</script>

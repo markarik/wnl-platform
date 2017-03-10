@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from 'store' // LocalStorage
 import * as types from '../mutations-types'
-import { getApiUrl } from '../../utils/env'
+import { getApiUrl } from 'js/utils/env'
 import { set } from 'vue'
 
 // Statuses

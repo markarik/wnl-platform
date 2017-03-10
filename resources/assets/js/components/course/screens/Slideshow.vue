@@ -45,7 +45,7 @@
 	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
 	import SlideshowNavigation from './SlideshowNavigation.vue'
-	import { envValue, getUrl } from '../utils/env'
+	import { isDebug, getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Slideshow',
@@ -103,7 +103,7 @@
 			}
 		},
 		mounted() {
-			Postmate.debug = envValue('appDebug')
+			Postmate.debug = isDebug()
 
 			const handshake = new Postmate({
 				container: this.container,

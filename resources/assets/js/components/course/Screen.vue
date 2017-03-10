@@ -10,9 +10,9 @@
 
 <script>
 	import axios from 'axios'
-	import Html from './Html.vue'
-	import Slideshow from './Slideshow.vue'
-	import { getApiUrl } from '../utils/env'
+	import Html from 'js/components/course/screens/Html.vue'
+	import Slideshow from 'js/components/course/screens/Slideshow.vue'
+	import { getApiUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Screen',

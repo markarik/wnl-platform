@@ -1,6 +1,9 @@
 // Users
 export const USERS_SETUP_CURRENT = 'USERS_SETUP_CURRENT'
 
+// Course
+export const SET_STRUCTURE = 'SET_STRUCTURE'
+
 // Sidenav
 export const SET_NAVIGATION = 'SET_NAVIGATION'
 

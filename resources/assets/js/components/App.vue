@@ -22,6 +22,11 @@
 		},
 		created: function () {
 			this.setCurrentUser()
+			axios.put('papi/v1/editions/1/user_progress/1', {
+				lesson_id: 1,
+				status: 'done',
+				route: {courses: 1,lessons: 1,screens: 1}
+			})
 		}
 	}
 </script>

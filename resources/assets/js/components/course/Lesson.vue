@@ -1,6 +1,8 @@
 <template>
 	<div class="wnl-lesson">
-		<router-view></router-view>
+		<keep-alive>
+			<router-view></router-view>
+		</keep-alive>
 	</div>
 </template>
 

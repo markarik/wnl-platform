@@ -51,7 +51,6 @@
 
 		.small
 			font-size: $font-size-minus-1
-			font-weight: $font-weight-bold
 
 		.big
 			font-size: $font-size-plus-1
@@ -61,6 +60,9 @@
 
 		.disabled
 			color: $color-inactive-gray
+
+	.is-active
+		font-weight: $font-weight-bold
 </style>
 
 <script>

@@ -117,6 +117,7 @@
 				child.on('loaded', (status) => {
 					if (status) {
 						this.child = child
+						this.loaded = true
 						this.goToSlide(this.slideNumber)
 						this.setEventListeners()
 					}
@@ -125,7 +126,10 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				if (!to.query.hasOwnProperty('sc') && this.slideNumber !== this.currentSlide) {
+				if (this.loaded &&
+					!to.query.hasOwnProperty('sc') &&
+					this.slideNumber !== this.currentSlide)
+				{
 					this.goToSlide(this.slideNumber)
 				}
 			}

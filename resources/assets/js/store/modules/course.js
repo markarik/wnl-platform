@@ -5,16 +5,13 @@ import { resource } from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
 // Helper functions
-function getStoreKey(editionId) {
-	return `edition-structure-${editionId}`
-}
-
-function getEditionApiUrl(editionId) {
-	return getApiUrl(`${resource('courses')}/${editionId}/nav`)
+function getCourseApiUrl(courseId) {
+	return getApiUrl(`${resource('courses')}/${courseId}/nav`)
 }
 
 // Initial state
 const state = {
+	ready: false,
 	id: 0,
 	name: '',
 	groups: [],
@@ -23,6 +20,7 @@ const state = {
 
 // Getters
 const getters = {
+	courseReady: state => state.ready,
 	courseId: state => state.id,
 	courseName: state => state.name,
 	courseGroups: state => state[resource('groups')],
@@ -35,6 +33,9 @@ const getters = {
 
 // Mutations
 const mutations = {
+	[types.COURSE_READY] (state) {
+		set(state, 'ready', true)
+	},
 	[types.SET_STRUCTURE] (state, data) {
 		set(state, 'id', data.id)
 		set(state, 'name', data.name)
@@ -45,18 +46,28 @@ const mutations = {
 
 // Actions
 const actions = {
-	setStructure({ commit }, editionId) {
-		let storeKey = getStoreKey(editionId),
-			storedData = store.get(storeKey)
-
-		if (typeof storedData !== 'object') {
-			axios.get(getEditionApiUrl(editionId)).then((response) => {
-				// store.
+	courseSetup({ commit, dispatch }, courseId) {
+		Promise.all([
+			dispatch('courseSetStructure', courseId),
+			dispatch('progressSetupCourse', courseId),
+		]).then(resolutions => {
+			console.log('Course ready, yay!')
+			commit(types.COURSE_READY)
+		}, reason => {
+			console.log(reason)
+		})
+	},
+	courseSetStructure({ commit }, courseId) {
+		return new Promise((resolve, reject) => {
+			axios.get(getCourseApiUrl(courseId)).then((response) => {
 				commit(types.SET_STRUCTURE, response.data)
-			}).catch(console.log.bind(console))
-		} else {
-			commit(types.SET_STRUCTURE, storedData)
-		}
+				resolve()
+			}).catch(error => {
+					console.log.bind(console)
+					reject()
+				}
+			)
+		})
 	}
 }
 

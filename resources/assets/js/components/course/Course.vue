@@ -4,11 +4,11 @@
 			<wnl-course-navigation
 				:context="context"
 				:isLesson="isLesson"
-				v-if="structureLoaded">
+				v-if="courseReady">
 			</wnl-course-navigation>
 		</div>
 		<div class="wnl-app-layout-main">
-			<router-view v-if="structureLoaded"></router-view>
+			<router-view v-if="courseReady"></router-view>
 		</div>
 		<div class="wnl-app-layout-right">
 			<wnl-chat :room="chatRoom"></wnl-chat>
@@ -22,19 +22,14 @@
 	import Navigation from 'js/components/course/Navigation.vue'
 	import Chat from 'js/components/chat/Chat.vue'
 	import { getApiUrl } from 'js/utils/env'
-	import { mapGetters, mapMutations } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import * as mutations from 'js/store/mutations-types'
 
 	export default {
 		name: 'Course',
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
-		data() {
-			return {
-				structureLoaded: false,
-			}
-		},
 		computed: {
-			...mapGetters(['courseName', 'courseStructure']),
+			...mapGetters(['courseReady', 'courseName', 'courseStructure']),
 			context() {
 				return {
 					courseId: this.courseId,
@@ -65,27 +60,10 @@
 			'wnl-chat': Chat
 		},
 		methods: {
-			// ...mapActions(['progressSetupEdition'])
-			...mapMutations([
-				mutations.SET_STRUCTURE,
-			])
+			...mapActions(['courseSetup'])
 		},
 		created() {
-			// if (!this.wasProgressChecked) {
-			// 	this.progressSetupEdition(this.courseId)
-			// }
-			let storedData = store.get(this.localStorageKey)
-
-			if (typeof storedData !== 'object') {
-				axios.get(this.structureApiUrl).then((response) => {
-					// store.
-					this[mutations.SET_STRUCTURE](response.data)
-					this.structureLoaded = true
-				}).catch(console.log.bind(console))
-			} else {
-				this[mutations.SET_STRUCTURE](storedData)
-				this.structureLoaded = true
-			}
+			this.courseSetup(this.courseId)
 		}
 	}
 </script>

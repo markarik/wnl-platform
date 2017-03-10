@@ -10,13 +10,17 @@ const STATUS_IN_PROGRESS = 'in_progress'
 const STATUS_COMPLETE = 'complete'
 
 // Helper functions
-function getEditionStoreKey(editionId) {
-	return `progress-edition-${editionId}`
+function getCourseStoreKey(courseId) {
+	return `progress-courses-${courseId}`
+}
+
+function getLessonStoreKey(courseId, lessonId) {
+	return `progress-courses-${courseId}-lesssons-${lessonId}`
 }
 
 // API functions
-function getUserProgressForEdition(editionId) {
-	// return axios.get(getApiUrl('editions/${editionId}/user-progress/${userId}'));
+function getUserProgressForCourse(courseId) {
+	// return axios.get(getApiUrl('courses/${courseId}/user-progress/${userId}'));
 	return new Promise((resolve, reject) => {
 		let data = {
 				lessons: {
@@ -24,16 +28,16 @@ function getUserProgressForEdition(editionId) {
 						status: STATUS_COMPLETE,
 						route: {
 							screenId: 4,
-							slide: 46
+							slide: 46,
 						}
 					},
-					2: {
-						status: STATUS_IN_PROGRESS,
-						route: {
-							screenId: 5,
-							slide: 30
-						}
-					}
+					// 2: {
+					// 	status: STATUS_IN_PROGRESS,
+					// 	route: {
+					// 		screenId: 5,
+					// 		slide: 30
+					// 	}
+					// },
 				}
 			}
 		resolve(data)
@@ -42,78 +46,75 @@ function getUserProgressForEdition(editionId) {
 
 // Initial state
 const state = {
-	editions: {}
+	courses: {},
+	lessons: {},
 }
 
 // Getters
 const getters = {
-	progressWasChecked: (state, editionId) => {
-		return state.editions.hasOwnProperty(editionId)
+	progressWasChecked: (state, courseId) => {
+		return state.courses.hasOwnProperty(courseId)
 	},
-	progressEdition: (state, editionId) => {
-		if (state.editions.hasOwnProperty(editionId)) {
-			return state.editions[editionId]
+	progressCourse: (state, courseId) => {
+		if (state.courses.hasOwnProperty(courseId)) {
+			return state.courses[courseId]
 		}
-
-		console.log(`Not recognized edition: ${editionId}`)
-		return {}
 	},
-	progressWasLessonStarted: (state) => (editionId, lessonId) => {
-		return state.editions.hasOwnProperty(editionId) &&
-			state.editions[editionId].hasOwnProperty(lessonId)
+	progressWasLessonStarted: (state) => (courseId, lessonId) => {
+		return state.courses.hasOwnProperty(courseId) &&
+			state.courses[courseId].hasOwnProperty(lessonId)
 	},
-	progressIsLessonInProgress: (state) => (editionId, lessonId) => {
-		return editions.hasOwnProperty(editionId) &&
-			state.editions[editionId].hasOwnProperty(lessonId) &&
-			state.editions[editionId][lessonId].status === STATUS_IN_PROGRESS
+	progressIsLessonInProgress: (state) => (courseId, lessonId) => {
+		return courses.hasOwnProperty(courseId) &&
+			state.courses[courseId].hasOwnProperty(lessonId) &&
+			state.courses[courseId][lessonId].status === STATUS_IN_PROGRESS
 	},
-	progressIsLessonComplete: (state) => (editionId, lessonId) => {
-		return editions.hasOwnProperty(editionId) &&
-			state.editions[editionId].hasOwnProperty(lessonId) &&
-			state.editions[editionId][lessonId].status === STATUS_COMPLETE
+	progressIsLessonComplete: (state) => (courseId, lessonId) => {
+		return courses.hasOwnProperty(courseId) &&
+			state.courses[courseId].hasOwnProperty(lessonId) &&
+			state.courses[courseId][lessonId].status === STATUS_COMPLETE
 	}
 }
 
 // Mutations
 const mutations = {
-	[types.PROGRESS_SETUP_EDITION] (state, payload) {
-		set(state.editions, payload.editionId, payload.progressData)
+	[types.PROGRESS_SETUP_COURSE] (state, payload) {
+		set(state.courses, payload.courseId, payload.progressData)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
-		console.log(payload)
-		set(state.editions[payload.editionId], payload.lessonId, {
+		set(state.courses[payload.courseId], payload.lessonId, {
 			status: STATUS_IN_PROGRESS
 		})
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		set(state.editions[payload.editionId][payload.lessonId], 'route', payload.route)
+		set(state.courses[payload.courseId][payload.lessonId], 'route', payload.route)
 	},
-	[types.PROGRESS_COMPLETE_LESSON] (state, editionId, lessonId) {
-		set(state.editions[editionId][lessonId], 'status', STATUS_COMPLETE)
+	[types.PROGRESS_COMPLETE_LESSON] (state, courseId, lessonId) {
+		set(state.courses[courseId][lessonId], 'status', STATUS_COMPLETE)
 	}
 }
 
 // Actions
 const actions = {
-	progressSetupEdition({commit}, editionId) {
+	progressSetupCourse({commit}, courseId) {
 		return new Promise((resolve, reject) => {
-			let storeKey = getEditionStoreKey(editionId),
+			let storeKey = getCourseStoreKey(courseId),
 				storedProgress = store.get(storeKey)
 
 			if (typeof storedProgress !== 'object') {
-				getUserProgressForEdition(editionId)
+				getUserProgressForCourse(courseId)
 					.then(data => {
 						store.set(storeKey, data)
-						commit(types.PROGRESS_SETUP_EDITION, {
-							editionId: editionId,
+						commit(types.PROGRESS_SETUP_COURSE, {
+							courseId: courseId,
 							progressData: data
 						})
 						resolve()
 					})
 					.catch(error => console.log(error))
 			} else {
-				commit(types.PROGRESS_SETUP_EDITION, {
-					editionId: editionId,
+				commit(types.PROGRESS_SETUP_COURSE, {
+					courseId: courseId,
 					progressData: storedProgress
 				})
 				resolve()
@@ -121,7 +122,7 @@ const actions = {
 		})
 	},
 	progressStartLesson({commit, getters}, payload) {
-		if (!getters.progressWasLessonStarted(payload.editionId, payload.lessonId)) {
+		if (!getters.progressWasLessonStarted(payload.courseId, payload.lessonId)) {
 			commit(types.PROGRESS_START_LESSON, payload)
 		}
 	},

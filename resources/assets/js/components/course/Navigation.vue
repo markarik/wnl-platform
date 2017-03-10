@@ -8,20 +8,20 @@
 	import Sidenav from 'js/components/global/Sidenav.vue'
 	import * as mutations from 'js/store/mutations-types'
 	import { mapGetters, mapMutations } from 'vuex'
-	import { routes } from 'js/utils/constants'
+	import { resource } from 'js/utils/config'
 
 	export default {
 		name: 'Navigation',
 		props: ['context', 'isLesson'],
 		computed: {
-			...mapGetters(['courseName','courseStructure']),
+			...mapGetters(['courseName', 'courseGroups', 'courseStructure']),
 			breadcrumbs() {
 				let breadcrumbs = []
 
 				breadcrumbs.push(this.getCourseItem())
 
 				if (this.isLesson) {
-					let lesson = this.courseStructure.lessons[this.context.lessonId]
+					let lesson = this.courseStructure[resource('lessons')][this.context.lessonId]
 
 					breadcrumbs.push(this.getLessonItem(lesson))
 				}
@@ -46,14 +46,15 @@
 
 				let navigation = []
 
-				for (let i = 0, groupsLen = this.courseStructure.groups.length; i < groupsLen; i++) {
-					let group = this.courseStructure.groups[i]
+				for (let i = 0, groupsLen = this.courseGroups.length; i < groupsLen; i++) {
+					let groupId = this.courseGroups[i],
+						group = this.courseStructure[resource('groups')][groupId]
 
 					navigation.push(this.getGroupItem(group))
 
-					for (let j = 0, lessonsLen = group.lessons.length; j < lessonsLen; j++) {
-						let lessonId = group.lessons[j],
-							lesson = this.courseStructure.lessons[lessonId]
+					for (let j = 0, lessonsLen = group[resource('lessons')].length; j < lessonsLen; j++) {
+						let lessonId = group[resource('lessons')][j],
+							lesson = this.courseStructure[resource('lessons')][lessonId]
 
 						navigation.push(this.getLessonItem(lesson))
 					}
@@ -69,14 +70,19 @@
 				}
 
 				let navigation = [],
-					lesson = this.courseStructure.lessons[this.context.lessonId]
+					lesson = this.courseStructure[resource('lessons')][this.context.lessonId]
 
-				for (let i = 0, screensLen = lesson.screens.length; i < screensLen; i++) {
-					let screen = lesson.screens[i]
+				for (let i = 0, screensLen = lesson[resource('screens')].length; i < screensLen; i++) {
+					let screenId = lesson[resource('screens')][i]
+						screen = this.courseStructure[resource('screens')][screenId]
+
 					navigation.push(this.getScreenItem(screen))
 
-					for (let j = 0, sectionsLen = screen.sections.length; j < sectionsLen; j++) {
-						navigation.push(this.getSectionItem(screen.sections[j]))
+					for (let j = 0, sectionsLen = screen[resource('sections')].length; j < sectionsLen; j++) {
+						let sectionId = screen[resource('sections')][j],
+							section = this.courseStructure[resource('sections')][sectionId]
+
+						navigation.push(this.getSectionItem(section))
 					}
 				}
 
@@ -97,7 +103,7 @@
 				return this.composeItem(
 					this.courseName,
 					'',
-					routes.courses,
+					resource('courses'),
 					{
 						courseId: this.context.courseId,
 					}
@@ -113,7 +119,7 @@
 				return this.composeItem(
 					lesson.name,
 					'todo',
-					routes.lessons,
+					resource('lessons'),
 					{
 						courseId: lesson.course,
 						lessonId: lesson.id,
@@ -126,7 +132,7 @@
 				return this.composeItem(
 					screen.name,
 					'',
-					routes.screens,
+					resource('screens'),
 					{
 						courseId: screen.course,
 						lessonId: screen.lesson,
@@ -138,7 +144,7 @@
 				return this.composeItem(
 					section.name,
 					'small subitem',
-					routes.screens,
+					resource('screens'),
 					{
 						courseId: section.course,
 						lessonId: section.lesson,

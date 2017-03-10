@@ -9,7 +9,7 @@
 <script>
 	import { mapGetters } from 'vuex'
 	// import * as mutations from 'js/store/mutations-types'
-	import { routes } from 'js/utils/constants'
+	import { resource } from 'js/utils/config'
 
 	export default {
 		name: 'Lesson',
@@ -39,7 +39,7 @@
 			goToFirstScreenByDefault() {
 				if (!this.screenId) {
 					let firstScreen = this.getFirstScreen(this.lessonId)
-					this.$router.replace({ name: routes.screens, params: { screenId: firstScreen.id } })
+					this.$router.replace({ name: resource('screens'), params: { screenId: firstScreen.id } })
 				}
 			}
 		},

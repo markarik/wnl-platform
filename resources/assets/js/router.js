@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { routes } from 'js/utils/constants'
+import { resource } from 'js/utils/config'
 
 Vue.use(Router)
 
@@ -15,19 +15,19 @@ export default new Router({
 			props: true,
 			children: [
 				{
-					name: routes.courses,
+					name: resource('courses'),
 					path: '',
 					component: require('js/components/course/Overview.vue'),
 					props: true,
 				},
 				{
-					name: routes.lessons,
+					name: resource('lessons'),
 					path: '/app/courses/:courseId/lessons/:lessonId',
 					component: require('js/components/course/Lesson.vue'),
 					props: true,
 					children: [
 						{
-							name: routes.screens,
+							name: resource('screens'),
 							path: 'screens/:screenId/:slide?',
 							component: require('js/components/course/Screen.vue'),
 							props: true,

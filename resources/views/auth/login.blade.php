@@ -12,7 +12,7 @@
 			{{-- E-Mail --}}
 			<label for="email" class="label">Twoje Imię</label>
 			<p class="control">
-				<input id="email" name="email" type="text"
+				<input id="email" name="first_name" type="text"
 					class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
 					value="{{ old('email') }}" required autofocus="">
 				@if ($errors->has('email'))
@@ -23,7 +23,7 @@
 			{{-- Password --}}
 			<label for="password" class="label">Twoje Nazwisko (może być zmyślone)</label>
 			<p class="control">
-				<input name="password" type="text"
+				<input name="last_name" type="text"
 					class="input {{ $errors->has('password') ? 'is-danger' : '' }}"
 					value="{{ old('password') }}" required autofocus="">
 				@if ($errors->has('password'))

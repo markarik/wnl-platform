@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Transformers\EditionTransformer;
+use App\Models\Edition;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Serializer\DataArraySerializer;
 
-class EditionsApiController extends Controller
+class EditionsApiController extends ApiController
 {
 	/**
 	 * @param $editionId
@@ -66,9 +72,16 @@ class EditionsApiController extends Controller
 //		return response('OK', 200)->json($data);
 	}
 
-	public function getStructure()
+	public function getStructure($editionId)
 	{
-		return response()->json([]);
+		$this->fractal->parseIncludes('groups.lessons');
+		$edition = Edition::find($editionId);
+		$resource = new Item($edition, new EditionTransformer, 'edition');
+
+		$data = $this->fractal->createData($resource)->toArray();
+
+//		return response(($data))->header('Content-Type', 'html; charset=utf-8');
+		return response()->json($data);
 	}
 
 	protected function edition($id)
@@ -76,6 +89,5 @@ class EditionsApiController extends Controller
 
 
 	}
-
 
 }

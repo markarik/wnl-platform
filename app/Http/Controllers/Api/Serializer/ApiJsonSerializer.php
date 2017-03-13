@@ -70,7 +70,6 @@ class ApiJsonSerializer extends SerializerAbstract
 	public function includedData(ResourceInterface $resource, array $data)
 	{
 		$resourceKey = $resource->getResourceKey();
-//		$included = [];
 //		var_dump(__METHOD__, $resourceKey);
 //		echo '<pre>';
 //		print_r($data);
@@ -84,15 +83,19 @@ class ApiJsonSerializer extends SerializerAbstract
 			foreach ($includedResources as $includedResourceName => $items) {
 				foreach ($items as $item) {
 					if (!array_key_exists($resourceKey, $item)) continue;
-					$resourceId = $item[$resourceKey];
-					$this->relationships[$resourceKey][$resourceId][$includedResourceName][] = $item['id'];
-					$this->includes[$includedResourceName][$item['id']] = $item;
+					try {
+						$resourceId = $item[$resourceKey];
+						$this->relationships[$resourceKey][$resourceId][$includedResourceName][] = $item['id'];
+						$this->includes[$includedResourceName][$item['id']] = $item;
+					} catch (\ErrorException $ex) {
+						dd($resource->getData());
+					}
+
 				}
 			}
 		}
 
-//		return [$resource->getResourceKey() => 'pomidor'];
-		return empty($included) ? [] : ['included' => $included];
+		return $data;
 	}
 
 	/**
@@ -108,13 +111,20 @@ class ApiJsonSerializer extends SerializerAbstract
 //		print_r($this->relationships);
 //		echo '</pre>';
 
-		if (array_key_exists('id', $data)) {
+		if (!array_key_exists($this->currentlyProcessedResource, $this->relationships)) {
+			return $data;
+		}
+
+				if (array_key_exists('id', $data)) {
 			$relationships = $this->relationships[$this->currentlyProcessedResource][$data['id']];
 			$data = array_merge($data, $relationships);
 		} else {
 			$data = array_map(function ($item) {
+				$relationships = [];
 				if (array_key_exists($this->currentlyProcessedResource, $this->relationships)) {
-					$relationships = $this->relationships[$this->currentlyProcessedResource][$item['id']];
+					if (array_key_exists($item['id'], $this->relationships[$this->currentlyProcessedResource])) {
+						$relationships = $this->relationships[$this->currentlyProcessedResource][$item['id']];
+					}
 
 					return array_merge($item, $relationships);
 				} else {
@@ -137,21 +147,8 @@ class ApiJsonSerializer extends SerializerAbstract
 	 */
 	public function filterIncludes($includedData, $data)
 	{
-//		var_dump(__METHOD__, $data);
-//		if (!isset($includedData['included'])) {
-//			return $includedData;
-//		}
-//
-//		// Create the RootObjects
-//		$this->createRootObjects($data);
-//
-//		// Filter out the root objects
-//		$filteredIncludes = array_filter($includedData['included'], [$this, 'filterRootObject']);
-//
-//		// Reset array indizes
-//		$includedData['included'] = array_merge([], $filteredIncludes);
 
-		return ['included' => $this->includes];
+		return empty($this->includes) ? [] : ['included' => $this->includes];
 	}
 
 	/**

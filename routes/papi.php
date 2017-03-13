@@ -12,33 +12,27 @@
 */
 
 Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function () {
-	$resources = Config::get('papi.resources');
-
-	// Users
-	Route::get(sprintf('%s/current', $resources['users']), 'UsersApiController@getCurrentUser');
+	$r = config('papi.resources');
 
 	// Courses
-	Route::get(sprintf('%s/{id}/nav', $resources['courses']), 'CoursesApiController@getNavigation');
+	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 
 	// Lessons
-	Route::get(sprintf('%s/{id}/nav', $resources['lessons']), 'LessonsApiController@getNavigation');
-	Route::get(sprintf('%s/{id}', $resources['screens']), 'LessonsApiController@getScreen');
+	Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
+
+	// Snippets
+	Route::get("{$r['snippets']}/{id}", 'SnippetApiController@get');
+
+	// Users
+	Route::get("{$r['users']}/current", 'UsersApiController@getCurrentUser');
+	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 
 	// Editions
-	Route::get(
-		sprintf('%s/{editionId}/%s/{lessonId}', $resources['editions'], $resources['lesson-availability']),
-		'EditionsApiController@getWithLessonAvailability'
-	);
-	Route::get(
-		sprintf('%s/{editionId}/%s/{userId}', $resources['editions'], $resources['user-progress']),
-		'EditionsApiController@getWithUserProgress'
-	);
-	Route::get(sprintf('%s/{editionId}/structure', $resources['editions']), 'EditionsApiController@getStructure');
-	Route::put(
-		sprintf('%s/{editionId}/%s/{userId}', $resources['editions'], $resources['user-progress']),
-		'EditionsApiController@putUserProgress'
-	);
+	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 
-	// Forms
-	Route::get(sprintf('%s/personal-info/{userId?}', $resources['forms']), 'Forms\PersonalInfoFormController@getForm');
+	// User Progress
+//	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
+//	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');
+
+
 });

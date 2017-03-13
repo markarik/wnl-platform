@@ -22,18 +22,14 @@ class EditionsTest extends TestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('GET', 'papi/v1/editions/1/structure');
+			->json('GET', 'papi/v1/editions/1?include=groups');
 
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'edition' => [
-					'id'     => $edition->id,
-					'groups' => [
-						[
+				'id'     => $edition->id,
+				'groups' => [
 
-						],
-					],
 				],
 			]);
 	}

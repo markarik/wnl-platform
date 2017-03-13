@@ -2,80 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Transformers\EditionTransformer;
+use App\Models\Edition;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use League\Fractal\Resource\Item;
 
-class EditionsApiController extends Controller
+class EditionsApiController extends ApiController
 {
-	/**
-	 * @param $editionId
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function get($editionId)
+	public function __construct(Request $request)
 	{
-		$data = [];
-
-		return response()->json($data);
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.editions');
 	}
-
-	/**
-	 * @param $editionId
-	 * @param $lessonId
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function getWithLessonAvailability($editionId, $lessonId)
-	{
-		$data = [
-			'gorup' => [
-				'lessons' => [
-					[
-						'id'          => 1,
-						'name'        => '123',
-						'isAvailable' => true,
-					],
-				],
-			],
-		];
-
-		return response()->json();
-	}
-
-	/**
-	 * @param $editionId
-	 * @param $userId
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function getWithUserProgress($editionId, $userId)
-	{
-		$data = [
-			'lessons' => [
-				1 => [
-					'status' => 'done',
-					'route'  => [],
-				],
-			],
-		];
-
-		return response()->json($data);
-	}
-
-	public function putUserProgress($editionId, $userId)
-	{
-		$data = [];
-		return response('Created', 201)->json($data);
-//		return response('OK', 200)->json($data);
-	}
-
-	public function getStructure()
-	{
-		return response()->json([]);
-	}
-
-	protected function edition($id)
-	{
-
-
-	}
-
 
 }

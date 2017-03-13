@@ -16,7 +16,7 @@ class CreateSectionsTable extends Migration
         Schema::create('sections', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('snippet_id');
+            $table->unsignedInteger('screen_id');
             $table->timestamps();
         });
     }

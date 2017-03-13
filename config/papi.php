@@ -5,12 +5,11 @@ return [
 		'courses'             => 'courses',
 		'groups'              => 'groups',
 		'lessons'             => 'lessons',
-		'screens'             => 'screens',
+		'snippets'            => 'snippets',
 		'sections'            => 'sections',
 		'users'               => 'users',
 		'editions'            => 'editions',
 		'lesson-availability' => 'lesson_availability',
 		'user-progress'       => 'user_progress',
-		'forms'               => 'forms',
 	],
 ];

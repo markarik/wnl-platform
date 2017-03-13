@@ -10,6 +10,6 @@ class Edition extends Model
 
 	public function course()
 	{
-		return $this->belongsTo('\App\Models\Course');
+		return $this->belongsTo('App\Models\Course');
 	}
 }

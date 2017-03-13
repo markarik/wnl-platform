@@ -22,7 +22,12 @@
 				return {
 					courseId: this.courseId,
 					lessonId: this.lessonId,
-					route: this.$route,
+					route: {
+						name: this.$route.name,
+						params: this.$route.params,
+						query: this.$route.query,
+						meta: this.$route.meta,
+					},
 				}
 			},
 		},

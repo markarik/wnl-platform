@@ -14,7 +14,10 @@
 		name: 'Navigation',
 		props: ['context', 'isLesson'],
 		computed: {
-			...mapGetters(['courseName', 'courseGroups', 'courseStructure']),
+			...mapGetters(['courseName', 'courseGroups', 'courseStructure', 'progressCourse']),
+			courseProgress() {
+				return this.progressCourse(this.context.courseId)
+			},
 			breadcrumbs() {
 				let breadcrumbs = []
 
@@ -116,9 +119,15 @@
 				)
 			},
 			getLessonItem(lesson) {
+				let statusClass = ''
+
+				if (this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
+					statusClass = ` lesson-${this.courseProgress.lessons[lesson.id].status}`
+				}
+
 				return this.composeItem(
 					lesson.name,
-					'todo',
+					`todo${statusClass}`,
 					resource('lessons'),
 					{
 						courseId: lesson.course,

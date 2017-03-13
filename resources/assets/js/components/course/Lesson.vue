@@ -18,6 +18,12 @@
 				'getScreens',
 				'progressGetSavedLesson',
 			]),
+			firstScreenId() {
+				return parseInt(this.getScreens(this.lessonId)[0])
+			},
+			lastScreenId() {
+				return parseInt(this.getScreens(this.lessonId).slice(-1)[0])
+			},
 			lessonProgressContext() {
 				return {
 					courseId: this.courseId,
@@ -49,17 +55,14 @@
 					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
 						this.$router.replace(savedRoute)
 					} else {
-						let firstScreenId = this.getScreens(this.lessonId)[0]
-
-						this.$router.replace({ name: resource('screens'), params: { screenId: firstScreenId } })
+						this.$router.replace({ name: resource('screens'), params: { screenId: this.firstScreenId } })
 					}
 				}
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					let lastScreen = this.getScreens(this.lessonId).slice(-1)[0]
-
-					if (this.screenId === lastScreen.id) {
+					if (parseInt(this.screenId) === this.lastScreenId) {
+						console.log(`Marking lesson ${this.lessonId} as complete`)
 						this.progressCompleteLesson(this.lessonProgressContext)
 					}
 					this.progressUpdateLesson(this.lessonProgressContext)

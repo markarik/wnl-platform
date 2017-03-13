@@ -6,7 +6,7 @@ import { set } from 'vue'
 
 // Statuses
 // TODO: Mar 9, 2017 - Use config when it's ready
-const STATUS_IN_PROGRESS = 'in_progress'
+const STATUS_IN_PROGRESS = 'in-progress'
 const STATUS_COMPLETE = 'complete'
 
 // Helper functions
@@ -67,10 +67,7 @@ const state = {
 
 // Getters
 const getters = {
-	progressWasChecked: (state, courseId) => {
-		return state.courses.hasOwnProperty(courseId)
-	},
-	progressCourse: (state, courseId) => {
+	progressCourse: (state) => (courseId) => {
 		if (state.courses.hasOwnProperty(courseId)) {
 			return state.courses[courseId]
 		}
@@ -111,9 +108,9 @@ const mutations = {
 		saveLessonProgress(payload)
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
 	},
-	[types.PROGRESS_COMPLETE_LESSON] (state, courseId, lessonId) {
+	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
 		saveCourseProgress(payload, STATUS_COMPLETE)
-		set(state.courses[courseId].lessons[lessonId], 'status', STATUS_COMPLETE)
+		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
 	}
 }
 

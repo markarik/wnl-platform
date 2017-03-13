@@ -41,6 +41,13 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->configureMonologUsing(function ($monolog) {
+	$token = env('ERROR_REPORTER_SLACK_TOKEN');
+	$slackHandler = new \Monolog\Handler\SlackHandler($token, '#wnl-platforma-tech', 'Error Reporter', true, null, \Monolog\Logger::CRITICAL);
+	$monolog->pushHandler($slackHandler);
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

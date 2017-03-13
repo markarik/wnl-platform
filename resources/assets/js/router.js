@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { resource } from 'js/utils/config'
 
 Vue.use(Router)
 
@@ -9,35 +10,42 @@ export default new Router({
 	scrollBehavior: () => ({ y: 0 }),
 	routes: [
 		{
-			name: 'courses',
 			path: '/app/courses/:courseId',
-			component: require('./components/Course.vue'),
-			props: true
-		},
-		{
-			name: 'lessons',
-			path: '/app/courses/:courseId/lessons/:lessonId',
-			component: require('./components/Lesson.vue'),
+			component: require('js/components/course/Course.vue'),
 			props: true,
 			children: [
 				{
-					name: 'screens',
-					path: 'screens/:screenId/:slide?',
-					component: require('./components/Screen.vue'),
+					name: resource('courses'),
+					path: '',
+					component: require('js/components/course/Overview.vue'),
 					props: true,
+				},
+				{
+					name: resource('lessons'),
+					path: '/app/courses/:courseId/lessons/:lessonId',
+					component: require('js/components/course/Lesson.vue'),
+					props: true,
+					children: [
+						{
+							name: resource('screens'),
+							path: 'screens/:screenId/:slide?',
+							component: require('js/components/course/Screen.vue'),
+							props: true,
+						}
+					]
 				}
 			]
 		},
 		{
 			name: 'myself',
 			path: '/app/myself',
-			component: require('./components/user/Myself.vue'),
+			component: require('js/components/user/Myself.vue'),
 			props: true,
 			children: [
 				{
 					name: 'my-orders',
 					path: 'orders',
-					component: require('./components/user/MyOrders.vue')
+					component: require('js/components/user/MyOrders.vue')
 				}
 			]
 		},

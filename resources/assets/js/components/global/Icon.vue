@@ -3,7 +3,7 @@
 </template>
 
 <script>
-	import { getImageUrl } from '../../utils/env'
+	import { getImageUrl } from 'js/utils/env'
 	export default {
 		props: ['name'],
 		computed: {

@@ -9,7 +9,7 @@
 
 <script>
 	// Import global components
-	import Navbar from './global/Navbar.vue'
+	import Navbar from 'js/components/global/Navbar.vue'
 	import { mapActions } from 'vuex'
 
 	export default {
@@ -18,15 +18,10 @@
 			'wnl-navbar': Navbar
 		},
 		methods: {
-			...mapActions(['setCurrentUser'])
+			...mapActions(['setupCurrentUser'])
 		},
 		created: function () {
-			this.setCurrentUser()
-			axios.put('papi/v1/editions/1/user_progress/1', {
-				lesson_id: 1,
-				status: 'done',
-				route: {courses: 1,lessons: 1,screens: 1}
-			})
+			this.setupCurrentUser()
 		}
 	}
 </script>

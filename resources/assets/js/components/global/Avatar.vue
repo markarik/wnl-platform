@@ -23,7 +23,7 @@
 </style>
 <script>
 	import { mapGetters } from 'vuex'
-	import { getInitials } from '../../utils/strings'
+	import { getInitials } from 'js/utils/strings'
 
 	export default {
 		name: 'Avatar',

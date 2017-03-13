@@ -11,4 +11,9 @@ class Section extends Model
 	public function slides() {
 		return $this->morphToMany('\App\Models\Slide', 'presentable');
 	}
+
+	public function screen()
+	{
+		return $this->belongsTo('App\Models\Screen');
+	}
 }

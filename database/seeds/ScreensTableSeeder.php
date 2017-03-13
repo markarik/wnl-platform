@@ -12,18 +12,22 @@ class ScreensTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('screens')->insert([
-			[
-				'lesson_id'  => 1,
-				'snippet_id' => 1,
-			],
-			[
-				'lesson_id'  => 1,
-				'snippet_id' => 2,
-			],
-			[
-				'lesson_id'  => 1,
-				'snippet_id' => 3,
-			],
+			'type'      => 'html',
+			'content'   => '<strong>siema!</strong>',
+			'name'      => 'Wstęp',
+			'lesson_id' => 1,
+		]);
+
+		DB::table('screens')->insert([
+			'type'      => 'slideshow',
+			'name'      => 'Prezentacja',
+			'lesson_id' => 1,
+		]);
+
+		DB::table('screens')->insert([
+			'type'      => 'app',
+			'name'      => 'Pytanie kontrolne',
+			'lesson_id' => 1,
 		]);
 	}
 }

@@ -8,7 +8,7 @@ use App\Models\Group;
 use App\Models\Lesson;
 use App\Models\Section;
 use App\Models\Slide;
-use App\Models\Snippet;
+use App\Models\Screen;
 use Illuminate\Support\Facades\Log;
 use App\Models\Structure;
 

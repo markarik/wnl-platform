@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Snippet extends Model
+class Screen extends Model
 {
 	protected $fillable = ['content', 'type', 'name'];
 
@@ -12,8 +12,8 @@ class Snippet extends Model
 		return $this->morphToMany('\App\Models\Slide', 'presentable');
 	}
 
-	public function lessons(){
-		return $this->belongsToMany('\App\Models\Lesson', 'screens');
+	public function lesson(){
+		return $this->belongsTo('\App\Models\Lesson');
 	}
 
 	public function sections()

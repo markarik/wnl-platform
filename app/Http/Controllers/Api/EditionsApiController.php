@@ -4,23 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Transformers\EditionTransformer;
 use App\Models\Edition;
+use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 
 class EditionsApiController extends ApiController
 {
-	/**
-	 * @param $editionId
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function get($editionId)
+	public function __construct(Request $request)
 	{
-		$this->fractal->parseIncludes('groups.lessons');
-		$edition = Edition::find($editionId);
-		$resource = new Item($edition, new EditionTransformer, 'edition');
-
-		$data = $this->fractal->createData($resource)->toArray();
-
-		return response()->json($data);
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.editions');
 	}
 
 }

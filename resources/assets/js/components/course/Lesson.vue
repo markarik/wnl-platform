@@ -42,12 +42,11 @@
 					let savedRoute = this.progressGetSavedLesson(this.courseId, this.lessonId)
 
 					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
-						console.log(savedRoute)
 						this.$router.replace(savedRoute)
 					} else {
-						let firstScreen = this.getScreens(this.lessonId)[0]
+						let firstScreenId = this.getScreens(this.lessonId)[0]
 
-						this.$router.replace({ name: resource('screens'), params: { screenId: firstScreen.id } })
+						this.$router.replace({ name: resource('screens'), params: { screenId: firstScreenId } })
 					}
 				}
 			},

@@ -17,6 +17,8 @@ class ScreenTransformer extends TransformerAbstract
 			'id'     => $screen->id,
 			'name'   => $screen->name,
 			'lesson' => $screen->lesson_id,
+			'group'  => $screen->lesson->group->id,
+			'course' => $screen->lesson->group->course->id,
 		];
 	}
 

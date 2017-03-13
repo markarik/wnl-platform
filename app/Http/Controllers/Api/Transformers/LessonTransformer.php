@@ -9,7 +9,7 @@ use League\Fractal\TransformerAbstract;
 
 class LessonTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = [];
+	protected $availableIncludes = ['screens'];
 
 	public function transform(Lesson $lesson)
 	{
@@ -18,5 +18,12 @@ class LessonTransformer extends TransformerAbstract
 			'name'  => $lesson->name,
 			'group' => $lesson->group_id,
 		];
+	}
+
+	public function includeScreens(Lesson $lesson)
+	{
+		$screens = $lesson->screens;
+
+		return $this->collection($screens, new ScreenTransformer, 'screen');
 	}
 }

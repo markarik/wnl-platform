@@ -6,7 +6,7 @@ import { set } from 'vue'
 
 // Statuses
 // TODO: Mar 9, 2017 - Use config when it's ready
-const STATUS_IN_PROGRESS = 'in_progress'
+const STATUS_IN_PROGRESS = 'in-progress'
 const STATUS_COMPLETE = 'complete'
 
 // Helper functions
@@ -18,12 +18,20 @@ function getLessonStoreKey(courseId, lessonId) {
 	return `progress-courses-${courseId}-lessons-${lessonId}`
 }
 
-function saveLessonProgress(payload) {
-	let route = {
-		name: payload.route.name,
-		params: payload.route.params,
+function saveCourseProgress(payload, status) {
+	let storeKey = getCourseStoreKey(payload.courseId),
+		courseProgress = store.get(storeKey)
+
+	courseProgress.lessons[payload.lessonId] = {
+		status,
+		route: payload.route,
 	}
-	store.set(getLessonStoreKey(payload.courseId, payload.lessonId), route)
+
+	store.set(storeKey, courseProgress)
+}
+
+function saveLessonProgress(payload) {
+	store.set(getLessonStoreKey(payload.courseId, payload.lessonId), payload.route)
 }
 
 // API functions
@@ -33,19 +41,19 @@ function getUserProgressForCourse(courseId) {
 		let data = {
 				lessons: {
 					1: {
-						status: STATUS_COMPLETE,
+						status: STATUS_IN_PROGRESS,
 						route: {
-							screenId: 4,
-							slide: 46,
+							name: 'screens',
+							params: {
+								courseId: 1,
+								lessonId: 1,
+								screenId: 4,
+								slide: 13,
+							},
+							query: {},
+							meta: {},
 						}
 					},
-					// 2: {
-					// 	status: STATUS_IN_PROGRESS,
-					// 	route: {
-					// 		screenId: 5,
-					// 		slide: 30
-					// 	}
-					// },
 				}
 			}
 		resolve(data)
@@ -55,20 +63,17 @@ function getUserProgressForCourse(courseId) {
 // Initial state
 const state = {
 	courses: {},
-	lessons: {},
 }
 
 // Getters
 const getters = {
-	progressWasChecked: (state, courseId) => {
-		return state.courses.hasOwnProperty(courseId)
-	},
-	progressCourse: (state, courseId) => {
+	progressCourse: (state) => (courseId) => {
 		if (state.courses.hasOwnProperty(courseId)) {
 			return state.courses[courseId]
 		}
 	},
 	progressGetSavedLesson: (state) => (courseId, lessonId) => {
+		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
 		return store.get(getLessonStoreKey(courseId, lessonId))
 	},
 	progressWasLessonStarted: (state) => (courseId, lessonId) => {
@@ -93,6 +98,7 @@ const mutations = {
 		set(state.courses, payload.courseId, payload.progressData)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
+		saveCourseProgress(payload, STATUS_IN_PROGRESS)
 		set(state.courses[payload.courseId].lessons, payload.lessonId, {
 			status: STATUS_IN_PROGRESS,
 			route: payload.route,
@@ -102,9 +108,9 @@ const mutations = {
 		saveLessonProgress(payload)
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
 	},
-	[types.PROGRESS_COMPLETE_LESSON] (state, courseId, lessonId) {
-		saveLessonProgress(payload)
-		set(state.courses[courseId].lessons[lessonId], 'status', STATUS_COMPLETE)
+	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
+		saveCourseProgress(payload, STATUS_COMPLETE)
+		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
 	}
 }
 
@@ -144,7 +150,9 @@ const actions = {
 		commit(types.PROGRESS_UPDATE_LESSON, payload)
 	},
 	progressCompleteLesson({commit}, payload) {
-		commit(types.PROGRESS_COMPLETE_LESSON, payload)
+		if (getters.progressIsLessonInProgress(payload.courseId, payload.lessonId)) {
+			commit(types.PROGRESS_COMPLETE_LESSON, payload)
+		}
 	}
 }
 

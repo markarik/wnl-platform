@@ -75,7 +75,7 @@ class Parser
 			}
 
 			$slide = Slide::create([
-				'content'       => preg_replace(self::TAG_PATTERN, '', $slideHtml),
+				'content'       => preg_replace([self::TAG_PATTERN, self::FUNCTIONAL_SLIDE_PATTERN], '', $slideHtml),
 				'is_functional' => $this->isFunctional($slideHtml),
 			]);
 

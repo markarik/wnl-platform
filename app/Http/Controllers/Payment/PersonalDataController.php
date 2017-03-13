@@ -22,7 +22,7 @@ class PersonalDataController extends Controller
 	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
 		if ($productSlug !== null) {
-			$product = Product::slug($productSlug);
+			$product = Product::slugs($productSlug);
 
 			if ($product instanceof Product) {
 				Session::put('product', $product);

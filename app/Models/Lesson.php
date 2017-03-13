@@ -16,4 +16,20 @@ class Lesson extends Model
 	{
 		return $this->belongsTo('\App\Models\Group');
 	}
+
+	public function availability()
+	{
+		return $this->hasMany('App\Models\LessonAvailability');
+	}
+
+	public function isAvailable($editionId)
+	{
+		$availability = $this->availability->where('edition_id', $editionId)->first();
+
+		if (!is_null($availability)){
+			return $availability->start_date->isPast();
+		}
+
+		return true;
+	}
 }

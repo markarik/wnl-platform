@@ -11,19 +11,26 @@ class GroupTransformer extends TransformerAbstract
 {
 	protected $availableIncludes = ['lessons'];
 
+	protected $editionId;
+
+	public function __construct($editionId = null)
+	{
+		$this->editionId = $editionId;
+	}
+
 	public function transform(Group $group)
 	{
 		return [
-			'id'     => $group->id,
-			'name'   => $group->name,
+			'id'      => $group->id,
+			'name'    => $group->name,
 			'edition' => $group->course_id,
 		];
 	}
 
 	public function includeLessons(Group $group)
 	{
-		$lessons = $group->lessons;
+		$lessons = $group->lessons()->with(['availability'])->get();
 
-		return $this->collection($lessons, new LessonTransformer, 'lesson');
+		return $this->collection($lessons, new LessonTransformer($this->editionId), 'lesson');
 	}
 }

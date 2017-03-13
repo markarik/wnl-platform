@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
 		$this->call(PresentablesTableSeeder::class);
 
 		$this->call(EditionsTableSeeder::class);
+		$this->call(LessonAvailabilitySeeder::class);
 	}
 }

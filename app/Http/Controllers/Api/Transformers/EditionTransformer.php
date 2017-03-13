@@ -26,6 +26,6 @@ class EditionTransformer extends TransformerAbstract
 	{
 		$groups = Group::where('course_id', $edition->course_id)->get();
 
-		return $this->collection($groups, new GroupTransformer, 'group');
+		return $this->collection($groups, new GroupTransformer($edition->id), 'group');
 	}
 }

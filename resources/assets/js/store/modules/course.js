@@ -6,7 +6,7 @@ import * as types from 'js/store/mutations-types'
 
 // Helper functions
 function getCourseApiUrl(courseId) {
-	return getApiUrl(`${resource('courses')}/${courseId}/nav`)
+	return getApiUrl(`${resource('editions')}/${courseId}?include=groups.lessons.screens`)
 }
 
 // Initial state
@@ -37,7 +37,7 @@ const mutations = {
 		set(state, 'id', data.id)
 		set(state, 'name', data.name)
 		set(state, resource('groups'), data[resource('groups')])
-		set(state, 'structure', data.structure)
+		set(state, 'structure', data.included)
 	}
 }
 

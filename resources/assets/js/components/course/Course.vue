@@ -52,7 +52,7 @@
 				return `course-structure-${this.courseId}`
 			},
 			structureApiUrl() {
-				return getApiUrl(`courses/${this.courseId}/nav`)
+				return getApiUrl(`editions/${this.courseId}?include=groups.lessons`)
 			}
 		},
 		components: {

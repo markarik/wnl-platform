@@ -45,7 +45,7 @@
 	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
 	import SlideshowNavigation from './SlideshowNavigation.vue'
-	import { envValue, getUrl } from '../utils/env'
+	import { isDebug, getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Slideshow',
@@ -91,7 +91,11 @@
 						let data = JSON.parse(event.data)
 						if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
 							this.setCurrentSlideFromIndex(data.state.indexh)
-							this.$router.replace({ name: 'screens', params: { slide: this.currentSlide } })
+							this.$router.replace({
+								name: 'screens',
+								params: { slide: this.currentSlide },
+								query: { sc: '1' }
+							})
 						}
 					}
 				})
@@ -103,7 +107,7 @@
 			}
 		},
 		mounted() {
-			Postmate.debug = envValue('appDebug')
+			Postmate.debug = isDebug()
 
 			const handshake = new Postmate({
 				container: this.container,
@@ -113,6 +117,7 @@
 				child.on('loaded', (status) => {
 					if (status) {
 						this.child = child
+						this.loaded = true
 						this.goToSlide(this.slideNumber)
 						this.setEventListeners()
 					}
@@ -121,7 +126,10 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				if (this.slideNumber !== this.currentSlide) {
+				if (this.loaded &&
+					!to.query.hasOwnProperty('sc') &&
+					this.slideNumber !== this.currentSlide)
+				{
 					this.goToSlide(this.slideNumber)
 				}
 			}

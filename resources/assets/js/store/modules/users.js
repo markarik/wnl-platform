@@ -1,36 +1,44 @@
-import { set } from 'vue'
-import * as users from '../../api/users'
+import axios from 'axios'
 import * as types from '../mutations-types'
+import { getApiUrl } from 'js/utils/env'
+import { set } from 'vue'
+
+// API functions
+export function getCurrent() {
+	return axios.get(getApiUrl('users/current'));
+}
 
 // Initial state
 const state = {
-	current: {
-		id: 0,
-		first_name: '',
-		last_name: '',
-		full_name: ''
+	currentUser: {
+		data: {
+			id: 0,
+			first_name: '',
+			last_name: '',
+			full_name: ''
+		}
 	}
 }
 
 // Getters
 const getters = {
-	current: state => state.current,
-	currentUserFullName: state => state.current.full_name
+	currentUser: state => state.currentUser,
+	currentUserFullName: state => state.currentUser.data.full_name,
 }
 
 // Mutations
 const mutations = {
-	[types.SET_CURRENT_USER] (state, userData) {
-		userData['full_name'] = userData['first_name']  + ' ' + userData['last_name']
-		set(state, 'current', userData)
+	[types.USERS_SETUP_CURRENT] (state, userData) {
+		userData['full_name'] = `${userData['first_name']} ${userData['last_name']}`
+		set(state.currentUser, 'data', userData)
 	}
 }
 
 // Actions
 const actions = {
-	setCurrentUser({ commit }) {
-		users.getCurrent().then((response) => {
-			commit(types.SET_CURRENT_USER, response.data)
+	setupCurrentUser({ commit }) {
+		getCurrent().then((response) => {
+			commit(types.USERS_SETUP_CURRENT, response.data)
 		})
 	}
 }

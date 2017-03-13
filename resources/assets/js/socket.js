@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client'
-import { envValue } from './utils/env'
+import { envValue } from 'js/utils/env'
 
 function getSocket() {
 	if (!global.$socket) {

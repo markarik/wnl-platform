@@ -2,6 +2,12 @@ export function envValue(key) {
 	return $wnl.env[key]
 }
 
+// Debug
+
+export function isDebug() {
+	return envValue('appDebug')
+}
+
 // URLs
 
 export function getUrl(path) {

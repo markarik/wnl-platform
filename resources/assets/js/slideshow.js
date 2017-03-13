@@ -18,5 +18,5 @@ Reveal.initialize({
 	overview: false,
 	transition: 'none',
 	postMessage: true,
-	postMessageEvents: true
+	postMessageEvents: true,
 })

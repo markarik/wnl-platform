@@ -1,11 +1,14 @@
 <?php
 
+namespace Tests\Browser;
+
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Faker\Factory;
+use Tests\DuskTestCase;
 
-class PaymentStepTwoTest extends TestCase
+class PaymentStepTwoTest extends DuskTestCase
 {
 	/**
 	 * @var Factory

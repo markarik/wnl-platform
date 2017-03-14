@@ -15,6 +15,11 @@ trait GeneratesApiResponses
 		return response('Created', 201);
 	}
 
+	protected function respondUnauthorized()
+	{
+		return response('Unauthorized', 401);
+	}
+
 	protected function respondNotFound()
 	{
 		return response('Not Found', 404);

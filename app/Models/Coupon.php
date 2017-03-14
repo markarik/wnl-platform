@@ -12,4 +12,11 @@ class Coupon extends Model
 	{
 		return $this->type === 'percentage';
 	}
+
+	public function scopeSlug($query, $slug)
+	{
+		return $query
+			->where('slug', $slug)
+			->first();
+	}
 }

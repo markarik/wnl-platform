@@ -23,7 +23,7 @@ class GroupTransformer extends TransformerAbstract
 		return [
 			'id'      => $group->id,
 			'name'    => $group->name,
-			'courses' => $group->course_id,
+			'editions' => $group->course_id,
 		];
 	}
 

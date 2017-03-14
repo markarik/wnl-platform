@@ -75,7 +75,7 @@ class Parser
 			}
 
 			$slide = Slide::create([
-				'content'       => preg_replace(self::TAG_PATTERN, '', $slideHtml),
+				'content'       => preg_replace([self::TAG_PATTERN, self::FUNCTIONAL_SLIDE_PATTERN], '', $slideHtml),
 				'is_functional' => $this->isFunctional($slideHtml),
 			]);
 
@@ -104,7 +104,7 @@ class Parser
 						'name'     => $courseTag['value'],
 						'group_id' => $this->courseModels['group']->id,
 					]);
-					$this->courseModels['snippet'] = $lesson->snippets()->create([
+					$this->courseModels['screen'] = $lesson->screens()->create([
 						'type' => 'slideshow',
 						'name' => 'Prezentacja']
 					);
@@ -113,13 +113,13 @@ class Parser
 				if ($courseTag['name'] == 'section') {
 					$section = Section::firstOrCreate([
 						'name'      => $courseTag['value'],
-						'snippet_id' => $this->courseModels['snippet']->id,
+						'screen_id' => $this->courseModels['screen']->id,
 					]);
 					$this->courseModels['section'] = $section;
 				}
 			}
-			if (array_key_exists('snippet', $this->courseModels)){
-				$this->courseModels['snippet']->slides()->attach($slide);
+			if (array_key_exists('screen', $this->courseModels)){
+				$this->courseModels['screen']->slides()->attach($slide);
 			}
 			if (array_key_exists('section', $this->courseModels)){
 				$this->courseModels['section']->slides()->attach($slide);

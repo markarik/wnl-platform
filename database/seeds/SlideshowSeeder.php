@@ -10,9 +10,9 @@ class SlideshowSeeder extends Seeder
 	 *
 	 * @param Parser $parser
 	 */
-    public function run(Parser $parser)
-    {
-        $html = Storage::get('example_slideshow.html');
+	public function run(Parser $parser)
+	{
+		$html = Storage::get('example_slideshow.html');
 		$parser->parse($html);
-    }
+	}
 }

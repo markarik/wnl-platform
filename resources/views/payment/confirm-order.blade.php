@@ -13,6 +13,11 @@
 				<p class="title">@lang('payment.confirm-order-heading')</p>
 				<p><strong>{{ $order->product->name }}</strong></p>
 				<p>@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])</p>
+				@if($order->coupon)
+					<p>Po zniżce {{ $order->total_with_coupon }}</p>
+					<p>Nazwa kuponu: {{ $order->coupon->name }}</p>
+					<p>Wartość kuponu: {{ $order->coupon->value }} {{ $order->coupon->is_percentage ? '%' : 'zł' }}</p>
+				@endif
 			</div>
 		</section>
 
@@ -65,7 +70,7 @@
 						<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
 						<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
 						<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
-						<input type="hidden" name="p24_amount" value="{{ (int)$order->product->price * 100 }}"/>
+						<input type="hidden" name="p24_amount" value="{{ (int)$order->total_with_coupon * 100 }}"/>
 						<input type="hidden" name="p24_currency" value="PLN"/>
 						<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
 						<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>

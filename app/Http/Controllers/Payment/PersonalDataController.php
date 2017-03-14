@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Forms\SignUpForm;
 use App\Mail\UserSignedUp;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -22,7 +23,7 @@ class PersonalDataController extends Controller
 	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
 		if ($productSlug !== null) {
-			$product = Product::slugs($productSlug);
+			$product = Product::slug($productSlug);
 
 			if ($product instanceof Product) {
 				Session::put('product', $product);
@@ -54,7 +55,9 @@ class PersonalDataController extends Controller
 		$form = $this->form(SignUpForm::class);
 
 		if (Auth::check()) {
-			$form->validate(['email' => 'required|email']);
+			$user = Auth::user();
+			// Authenticated users should be able to edit only their own account.
+			$form->validate(['email' => 'required|email|in:' . $user->email]);
 		}
 
 		if (!$form->isValid()) {
@@ -85,10 +88,14 @@ class PersonalDataController extends Controller
 				'consent_terms'      => $request->get('consent_terms') ?? 0,
 			]
 		);
-		$user->orders()->create([
+		$order = $user->orders()->create([
 			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
 		]);
+
+		if ($user->is_subscriber){
+			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
+		}
 
 		Auth::login($user);
 

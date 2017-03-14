@@ -86,4 +86,9 @@ class User extends Authenticatable
 	{
 		$this->attributes['phone'] = encrypt($value);
 	}
+
+	public function getIsSubscriberAttribute()
+	{
+		return !is_null(Subscriber::where('email', $this->email)->first());
+	}
 }

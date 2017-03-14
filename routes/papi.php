@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function () {
+Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	$r = config('papi.resources');
 
 	// Courses

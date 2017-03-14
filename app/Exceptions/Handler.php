@@ -5,6 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App;
 
 class Handler extends ExceptionHandler
 {
@@ -44,6 +47,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+    	if ($request->route()->getPrefix() === '/payment' && App::environment('production')){
+    		Log::critical('Exception on payment path: ' . $exception->getMessage() . ' in ' . $exception->getFile());
+		}
+
         return parent::render($request, $exception);
     }
 

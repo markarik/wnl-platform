@@ -22,7 +22,7 @@ class ConfirmOrderController extends Controller
 
 		$order = $user->orders()->recent();
 
-		$checksum = $payment::generateChecksum($order->session_id, (int)$order->product->price * 100);
+		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
 
 		return view('payment.confirm-order', [
 			'order'    => $order,

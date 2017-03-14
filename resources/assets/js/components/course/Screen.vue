@@ -48,7 +48,7 @@
 			getScreenData(screenId) {
 				axios.get(getApiUrl(`screens/${screenId}`))
 					.then((response) => {
-						this.screenData = response.data.screen
+						this.screenData = response.data
 					})
 					.catch(error => console.log(error))
 			}

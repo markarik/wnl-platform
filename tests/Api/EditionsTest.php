@@ -17,8 +17,6 @@ class EditionsTest extends TestCase
 		$user = User::find(1);
 		$edition = Edition::find(1);
 		$course = $edition->course;
-//		$groups = $course->groups()->with('lessons')->get();
-//		$screens = $lesson->snippets()->with('slides')->get();
 
 		$response = $this
 			->actingAs($user)

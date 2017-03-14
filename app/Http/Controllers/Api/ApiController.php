@@ -37,7 +37,7 @@ abstract class ApiController extends Controller
 		$modelName = 'App\Models\\' . $resourceStudly;
 		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
 		$models = $modelName::find($id);
-		$resource = new Item($models, new $transformerName, $resourceSingular);
+		$resource = new Item($models, new $transformerName, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return response()->json($data);

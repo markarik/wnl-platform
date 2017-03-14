@@ -20,8 +20,8 @@ Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	// Lessons
 	Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 
-	// Snippets
-	Route::get("{$r['snippets']}/{id}", 'SnippetApiController@get');
+	// Screens
+	Route::get("{$r['screens']}/{id}", 'ScreensApiController@get');
 
 	// Users
 	Route::get("{$r['users']}/current", 'UsersApiController@getCurrentUser');

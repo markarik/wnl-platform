@@ -16,9 +16,12 @@ class SectionsTransformer extends TransformerAbstract
 	public function transform(Section $section)
 	{
 		return [
-			'id'     => $section->id,
-			'name'   => $section->name,
-			'screen' => $section->screen_id,
+			'id'      => $section->id,
+			'name'    => $section->name,
+			'lessons' => $section->screen->lesson_id,
+			'groups'  => $section->screen->lesson->group->id,
+			'editions' => $section->screen->lesson->group->course->id,
+			'screens' => $section->screen_id,
 		];
 	}
 

@@ -51,9 +51,6 @@
 			localStorageKey() {
 				return `course-structure-${this.courseId}`
 			},
-			structureApiUrl() {
-				return getApiUrl(`editions/${this.courseId}?include=groups.lessons`)
-			}
 		},
 		components: {
 			'wnl-course-navigation': Navigation,

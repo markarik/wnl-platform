@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-snippet-html">
+	<div class="wnl-screen-html">
 		{{content}}
 	</div>
 </template>

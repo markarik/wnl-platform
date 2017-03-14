@@ -16,9 +16,10 @@ class ScreenTransformer extends TransformerAbstract
 		return [
 			'id'     => $screen->id,
 			'name'   => $screen->name,
-			'lesson' => $screen->lesson_id,
-			'group'  => $screen->lesson->group->id,
-			'course' => $screen->lesson->group->course->id,
+			'type'   => $screen->type,
+			'lessons' => $screen->lesson_id,
+			'groups'  => $screen->lesson->group->id,
+			'editions' => $screen->lesson->group->course->id,
 		];
 	}
 
@@ -26,6 +27,6 @@ class ScreenTransformer extends TransformerAbstract
 	{
 		$sections = $screen->sections;
 
-		return $this->collection($sections, new SectionsTransformer, 'section');
+		return $this->collection($sections, new SectionsTransformer, 'sections');
 	}
 }

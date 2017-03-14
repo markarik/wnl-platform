@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-chat">
-		<div :id="containerId" class="wnl-chat-messages">
-			<div :id="contentId">
+		<div class="wnl-chat-messages">
+			<div class="wnl-chat-content">
 				<div v-if="loaded">
 					<wnl-message v-for="(message, index) in messages"
 						:showAuthor="isAuthorUnique[index]"
@@ -66,17 +66,11 @@
 					return message.username !== this.messages[previous].username
 				})
 			},
-			containerId() {
-				return `wnl-chat-room-${this.room}`
-			},
 			container() {
-				return document.getElementById(this.containerId)
-			},
-			contentId() {
-				return `wnl-chat-content-${this.room}`
+				return this.$el.getElementsByClassName('wnl-chat-messages')[0]
 			},
 			content() {
-				return document.getElementById(this.contentId)
+				return this.$el.getElementsByClassName('wnl-chat-content')[0]
 			},
 			inputId() {
 				return `wnl-chat-form-${this.room}`
@@ -101,6 +95,13 @@
 					}
 				})
 				return true
+			},
+			changeRoom(oldRoom) {
+				this.loaded = false
+				this.socket.emit('leave-room', {
+					room: oldRoom
+				})
+				this.joinRoom()
 			},
 			setListeners(socket) {
 				socket.on('user-sent-message', (data) => {
@@ -138,6 +139,13 @@
 			socket.disconnect().then(() => {
 				return true
 			}).catch(console.log.bind(console))
+		},
+		watch: {
+			'room' (newRoom, oldRoom) {
+				if (newRoom !== oldRoom) {
+					this.changeRoom(oldRoom)
+				}
+			}
 		}
 	}
 

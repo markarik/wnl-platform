@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-slideshow-container">
-		<div class="wnl-snippet wnl-ratio-16-9">
+		<div class="wnl-screen wnl-ratio-16-9">
 			<div class="wnl-slideshow-content" id="wnl-slideshow"></div>
 		</div>
 		<div class="wnl-slideshow-controls">
@@ -67,11 +67,11 @@
 			container() {
 				return document.getElementById('wnl-slideshow')
 			},
-			snippetId() {
+			screenId() {
 				return this.screenData.id
 			},
 			slideshowUrl() {
-				return getUrl(`slideshow-builder/${this.snippetId}`)
+				return getUrl(`slideshow-builder/${this.screenId}`)
 			},
 			slideshowElement() {
 				return document.getElementById('wnl-slideshow')

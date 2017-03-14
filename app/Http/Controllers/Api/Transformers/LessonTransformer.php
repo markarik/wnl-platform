@@ -24,8 +24,8 @@ class LessonTransformer extends TransformerAbstract
 		$data = [
 			'id'     => $lesson->id,
 			'name'   => $lesson->name,
-			'group'  => $lesson->group_id,
-			'course' => $lesson->group->course->id,
+			'groups'  => $lesson->group_id,
+			'editions' => $lesson->group->course->id,
 		];
 
 		if ($this->editionId !== null) {
@@ -39,6 +39,6 @@ class LessonTransformer extends TransformerAbstract
 	{
 		$screens = $lesson->screens;
 
-		return $this->collection($screens, new ScreenTransformer, 'screen');
+		return $this->collection($screens, new ScreenTransformer, 'screens');
 	}
 }

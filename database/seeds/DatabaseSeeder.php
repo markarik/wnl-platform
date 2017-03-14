@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
 
 		$this->call(EditionsTableSeeder::class);
 		$this->call(LessonAvailabilitySeeder::class);
+		$this->call(SlideshowSeeder::class);
 	}
 }

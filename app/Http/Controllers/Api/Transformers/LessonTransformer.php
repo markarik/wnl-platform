@@ -25,7 +25,7 @@ class LessonTransformer extends TransformerAbstract
 			'id'     => $lesson->id,
 			'name'   => $lesson->name,
 			'groups'  => $lesson->group_id,
-			'courses' => $lesson->group->course->id,
+			'editions' => $lesson->group->course->id,
 		];
 
 		if ($this->editionId !== null) {

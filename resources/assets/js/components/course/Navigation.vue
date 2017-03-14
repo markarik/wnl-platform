@@ -15,6 +15,9 @@
 		props: ['context', 'isLesson'],
 		computed: {
 			...mapGetters(['courseName', 'courseGroups', 'courseStructure', 'progressCourse']),
+			isStructureEmpty() {
+				return typeof this.courseStructure !== 'object' || this.courseStructure.length === 0
+			},
 			courseProgress() {
 				return this.progressCourse(this.context.courseId)
 			},
@@ -41,7 +44,7 @@
 		},
 		methods: {
 			getCourseNavigation() {
-				if (typeof this.courseStructure !== 'object' || this.courseStructure.length === 0) {
+				if (this.isStructureEmpty) {
 					$wnl.debug('Empty structure, WTF?')
 					$wnl.debug(this.courseStructure)
 					return
@@ -49,19 +52,18 @@
 
 				let navigation = []
 
-				debugger
-				// if (!this..hasOwnProperty(resource('groups'))) {
-				// 	return navigation
-				// }
+				if (this.courseGroups.length === 0) {
+					return navigation
+				}
 				for (let i = 0, groupsLen = this.courseGroups.length; i < groupsLen; i++) {
 					let groupId = this.courseGroups[i],
 						group = this.courseStructure[resource('groups')][groupId]
 
 					navigation.push(this.getGroupItem(group))
 
-					// if (!lesson.hasOwnProperty(resource('lessons'))) {
-					// 	continue
-					// }
+					if (!group.hasOwnProperty(resource('lessons'))) {
+						continue
+					}
 					for (let j = 0, lessonsLen = group[resource('lessons')].length; j < lessonsLen; j++) {
 						let lessonId = group[resource('lessons')][j],
 							lesson = this.courseStructure[resource('lessons')][lessonId]
@@ -73,7 +75,7 @@
 				return navigation
 			},
 			getLessonNavigation() {
-				if (typeof this.courseStructure !== 'object' || this.courseStructure.length === 0) {
+				if (this.isStructureEmpty) {
 					$wnl.debug('Empty structure, WTF?')
 					$wnl.debug(this.courseStructure)
 					return
@@ -143,7 +145,7 @@
 					`todo${statusClass}`,
 					resource('lessons'),
 					{
-						courseId: lesson[resource('courses')],
+						courseId: lesson[resource('editions')],
 						lessonId: lesson.id,
 					},
 					!lesson.isAvailable
@@ -156,7 +158,7 @@
 					'',
 					resource('screens'),
 					{
-						courseId: screen[resource('courses')],
+						courseId: screen[resource('editions')],
 						lessonId: screen[resource('lessons')],
 						screenId: screen.id,
 					}
@@ -168,7 +170,7 @@
 					'small subitem',
 					resource('screens'),
 					{
-						courseId: section[resource('courses')],
+						courseId: section[resource('editions')],
 						lessonId: section[resource('lessons')],
 						screenId: section[resource('screens')],
 						slide: section.slide,

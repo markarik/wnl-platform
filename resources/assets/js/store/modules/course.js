@@ -36,7 +36,6 @@ const mutations = {
 		set(state, 'ready', true)
 	},
 	[types.SET_STRUCTURE] (state, data) {
-		debugger
 		set(state, 'id', data.id)
 		set(state, 'name', data.name)
 		set(state, resource('groups'), data[resource('groups')])

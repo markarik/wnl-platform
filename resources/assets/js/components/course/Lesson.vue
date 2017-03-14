@@ -19,10 +19,14 @@
 				'progressGetSavedLesson',
 			]),
 			firstScreenId() {
-				return parseInt(this.getScreens(this.lessonId)[0])
+				if (typeof this.getScreens(this.lessonId) !== 'undefined') {
+					return parseInt(this.getScreens(this.lessonId)[0])
+				}
 			},
 			lastScreenId() {
-				return parseInt(this.getScreens(this.lessonId).slice(-1)[0])
+				if (typeof this.getScreens(this.lessonId) !== 'undefined') {
+					return parseInt(this.getScreens(this.lessonId).slice(-1)[0])
+				}
 			},
 			lessonProgressContext() {
 				return {
@@ -53,7 +57,7 @@
 					let savedRoute = this.progressGetSavedLesson(this.courseId, this.lessonId)
 					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
 						this.$router.replace(savedRoute)
-					} else {
+					} else if (typeof this.firstScreenId !== 'undefined') {
 						this.$router.replace({ name: resource('screens'), params: {
 							courseId: this.courseId,
 							lessonId: this.lessonId,

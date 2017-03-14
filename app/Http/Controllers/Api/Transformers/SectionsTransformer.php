@@ -20,7 +20,7 @@ class SectionsTransformer extends TransformerAbstract
 			'name'    => $section->name,
 			'lessons' => $section->screen->lesson_id,
 			'groups'  => $section->screen->lesson->group->id,
-			'courses' => $section->screen->lesson->group->course->id,
+			'editions' => $section->screen->lesson->group->course->id,
 			'screens' => $section->screen_id,
 		];
 	}

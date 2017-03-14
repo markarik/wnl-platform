@@ -13,9 +13,11 @@
 				<p class="title">@lang('payment.confirm-order-heading')</p>
 				<p><strong>{{ $order->product->name }}</strong></p>
 				<p>@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])</p>
-				<p>Po zniżce {{ $order->total_with_coupon }}</p>
-				<p>Nazwa kuponu: {{ $order->coupon->name }}</p>
-				<p>Wartość kuponu: {{ $order->coupon->value }} {{ $order->coupon->is_percentage ? '%' : 'zł' }}</p>
+				@if($order->coupon)
+					<p>Po zniżce {{ $order->total_with_coupon }}</p>
+					<p>Nazwa kuponu: {{ $order->coupon->name }}</p>
+					<p>Wartość kuponu: {{ $order->coupon->value }} {{ $order->coupon->is_percentage ? '%' : 'zł' }}</p>
+				@endif
 			</div>
 		</section>
 

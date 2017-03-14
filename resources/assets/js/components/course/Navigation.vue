@@ -29,7 +29,7 @@
 				if (this.isLesson) {
 					let lesson = this.courseStructure[resource('lessons')][this.context.lessonId]
 
-					breadcrumbs.push(this.getLessonItem(lesson))
+					breadcrumbs.push(this.getLessonItem(lesson, false))
 				}
 
 				return breadcrumbs
@@ -130,19 +130,23 @@
 			getGroupItem(group) {
 				return this.composeItem(
 					group.name,
-					'small'
+					'heading small'
 				)
 			},
-			getLessonItem(lesson) {
-				let statusClass = ''
+			getLessonItem(lesson, asTodo = true) {
+				let cssClass = ''
 
-				if (this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
-					statusClass = ` lesson-${this.courseProgress.lessons[lesson.id].status}`
+				if (asTodo) {
+					cssClass += 'todo'
+
+					if (this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
+						cssClass = `${cssClass} ${this.courseProgress.lessons[lesson.id].status}`
+					}
 				}
 
 				return this.composeItem(
 					lesson.name,
-					`todo${statusClass}`,
+					cssClass,
 					resource('lessons'),
 					{
 						courseId: lesson[resource('editions')],

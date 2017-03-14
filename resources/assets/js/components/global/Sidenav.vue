@@ -27,7 +27,7 @@
 
 </template>
 
-<style lang="sass" scoped>
+<style lang="sass">
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav
@@ -47,7 +47,10 @@
 	.items
 
 		.item
-			padding: 5px 0
+			padding: 2px 0
+
+		.heading
+			padding-top: 10px
 
 		.small
 			font-size: $font-size-minus-1
@@ -60,6 +63,12 @@
 
 		.disabled
 			color: $color-inactive-gray
+
+	.todo
+		color: $primary
+
+		.icon
+			vertical-align: baseline
 
 	.is-active
 		font-weight: $font-weight-bold

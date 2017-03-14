@@ -49,12 +49,19 @@
 
 				let navigation = []
 
+				debugger
+				// if (!this..hasOwnProperty(resource('groups'))) {
+				// 	return navigation
+				// }
 				for (let i = 0, groupsLen = this.courseGroups.length; i < groupsLen; i++) {
 					let groupId = this.courseGroups[i],
 						group = this.courseStructure[resource('groups')][groupId]
 
 					navigation.push(this.getGroupItem(group))
 
+					// if (!lesson.hasOwnProperty(resource('lessons'))) {
+					// 	continue
+					// }
 					for (let j = 0, lessonsLen = group[resource('lessons')].length; j < lessonsLen; j++) {
 						let lessonId = group[resource('lessons')][j],
 							lesson = this.courseStructure[resource('lessons')][lessonId]
@@ -75,12 +82,18 @@
 				let navigation = [],
 					lesson = this.courseStructure[resource('lessons')][this.context.lessonId]
 
+				if (!lesson.hasOwnProperty(resource('screens'))) {
+					return navigation
+				}
 				for (let i = 0, screensLen = lesson[resource('screens')].length; i < screensLen; i++) {
 					let screenId = lesson[resource('screens')][i]
 						screen = this.courseStructure[resource('screens')][screenId]
 
 					navigation.push(this.getScreenItem(screen))
 
+					if (!screen.hasOwnProperty(resource('sections'))) {
+						continue
+					}
 					for (let j = 0, sectionsLen = screen[resource('sections')].length; j < sectionsLen; j++) {
 						let sectionId = screen[resource('sections')][j],
 							section = this.courseStructure[resource('sections')][sectionId]
@@ -130,7 +143,7 @@
 					`todo${statusClass}`,
 					resource('lessons'),
 					{
-						courseId: lesson.course,
+						courseId: lesson[resource('courses')],
 						lessonId: lesson.id,
 					},
 					!lesson.isAvailable
@@ -143,8 +156,8 @@
 					'',
 					resource('screens'),
 					{
-						courseId: screen.course,
-						lessonId: screen.lesson,
+						courseId: screen[resource('courses')],
+						lessonId: screen[resource('lessons')],
 						screenId: screen.id,
 					}
 				)
@@ -155,9 +168,9 @@
 					'small subitem',
 					resource('screens'),
 					{
-						courseId: section.course,
-						lessonId: section.lesson,
-						screenId: section.screen,
+						courseId: section[resource('courses')],
+						lessonId: section[resource('lessons')],
+						screenId: section[resource('screens')],
 						slide: section.slide,
 					},
 					false,

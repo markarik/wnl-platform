@@ -51,11 +51,14 @@
 			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
 					let savedRoute = this.progressGetSavedLesson(this.courseId, this.lessonId)
-
 					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
 						this.$router.replace(savedRoute)
 					} else {
-						this.$router.replace({ name: resource('screens'), params: { screenId: this.firstScreenId } })
+						this.$router.replace({ name: resource('screens'), params: {
+							courseId: this.courseId,
+							lessonId: this.lessonId,
+							screenId: this.firstScreenId,
+						} })
 					}
 				}
 			},

@@ -6,7 +6,9 @@ import * as types from 'js/store/mutations-types'
 
 // Helper functions
 function getCourseApiUrl(courseId) {
-	return getApiUrl(`${resource('editions')}/${courseId}?include=groups.lessons.screens`)
+	return getApiUrl(
+		`${resource('editions')}/${courseId}?include=${resource('groups')}.${resource('lessons')}.${resource('screens')}.${resource('sections')}`
+	)
 }
 
 // Initial state
@@ -34,6 +36,7 @@ const mutations = {
 		set(state, 'ready', true)
 	},
 	[types.SET_STRUCTURE] (state, data) {
+		debugger
 		set(state, 'id', data.id)
 		set(state, 'name', data.name)
 		set(state, resource('groups'), data[resource('groups')])
@@ -56,14 +59,16 @@ const actions = {
 	},
 	courseSetStructure({ commit }, courseId) {
 		return new Promise((resolve, reject) => {
-			axios.get(getCourseApiUrl(courseId)).then((response) => {
-				commit(types.SET_STRUCTURE, response.data)
-				resolve()
-			}).catch(error => {
-					console.log.bind(console)
-					reject()
-				}
-			)
+			axios.get(getCourseApiUrl(courseId))
+				.then((response) => {
+					commit(types.SET_STRUCTURE, response.data)
+					resolve()
+				})
+				.catch(error => {
+						console.log.bind(console)
+						reject()
+					}
+				)
 		})
 	}
 }

@@ -23,7 +23,7 @@ class GroupTransformer extends TransformerAbstract
 		return [
 			'id'      => $group->id,
 			'name'    => $group->name,
-			'edition' => $group->course_id,
+			'courses' => $group->course_id,
 		];
 	}
 
@@ -31,6 +31,6 @@ class GroupTransformer extends TransformerAbstract
 	{
 		$lessons = $group->lessons()->with(['availability'])->get();
 
-		return $this->collection($lessons, new LessonTransformer($this->editionId), 'lesson');
+		return $this->collection($lessons, new LessonTransformer($this->editionId), 'lessons');
 	}
 }

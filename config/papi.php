@@ -5,7 +5,7 @@ return [
 		'courses'             => 'courses',
 		'groups'              => 'groups',
 		'lessons'             => 'lessons',
-		'snippets'            => 'snippets',
+		'screens'             => 'screens',
 		'sections'            => 'sections',
 		'users'               => 'users',
 		'editions'            => 'editions',

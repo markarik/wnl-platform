@@ -13,7 +13,7 @@ class SectionsTableSeeder extends Seeder
 	{
 		DB::table('sections')->insert([
 			'name'      => 'Example section',
-			'screen_id' => 1,
+			'screen_id' => 2,
 		]);
 	}
 }

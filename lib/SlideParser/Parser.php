@@ -104,7 +104,7 @@ class Parser
 						'name'     => $courseTag['value'],
 						'group_id' => $this->courseModels['group']->id,
 					]);
-					$this->courseModels['snippet'] = $lesson->snippets()->create([
+					$this->courseModels['screen'] = $lesson->screens()->create([
 						'type' => 'slideshow',
 						'name' => 'Prezentacja']
 					);

@@ -12,7 +12,7 @@ class SlidesTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('slides')->insert([
-			'content' => '<strong>Example Slide</strong>',
+			'content' => '<section><strong>Example Slide</strong></section>',
 		]);
 	}
 }

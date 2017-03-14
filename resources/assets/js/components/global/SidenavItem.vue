@@ -1,9 +1,9 @@
 <template>
 	<li class="item" :class="[itemClass, { disabled: isDisabled }]">
 		<span class="icon is-small" v-if="isTodo">
-			<i class="fa fa-dot-circle-o" v-if="isInProgress"></i>
-			<i class="fa fa-check-circle-o" v-else-if="isComplete"></i>
-			<i class="fa fa-circle-o" v-else></i>
+			<i title="W trakcie..." class="fa fa-dot-circle-o" v-if="isInProgress"></i>
+			<i title="Zrobione!" class="fa fa-check-circle-o" v-else-if="isComplete"></i>
+			<i title="Jeszcze przed Tobą" class="fa fa-circle-o" v-else></i>
 		</span>
 		<router-link v-if="isLink" :to="to" :replace="replace">
 			<slot></slot>

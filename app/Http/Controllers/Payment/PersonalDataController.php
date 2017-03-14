@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Forms\SignUpForm;
 use App\Mail\UserSignedUp;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -85,10 +86,14 @@ class PersonalDataController extends Controller
 				'consent_terms'      => $request->get('consent_terms') ?? 0,
 			]
 		);
-		$user->orders()->create([
+		$order = $user->orders()->create([
 			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
 		]);
+
+		if ($user->is_subscriber){
+			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
+		}
 
 		Auth::login($user);
 

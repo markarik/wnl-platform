@@ -23,7 +23,7 @@ class PersonalDataController extends Controller
 	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
 		if ($productSlug !== null) {
-			$product = Product::slugs($productSlug);
+			$product = Product::slug($productSlug);
 
 			if ($product instanceof Product) {
 				Session::put('product', $product);
@@ -55,7 +55,9 @@ class PersonalDataController extends Controller
 		$form = $this->form(SignUpForm::class);
 
 		if (Auth::check()) {
-			$form->validate(['email' => 'required|email']);
+			$user = Auth::user();
+			// Authenticated users should be able to edit only their own account.
+			$form->validate(['email' => 'required|email|in:' . $user->email]);
 		}
 
 		if (!$form->isValid()) {

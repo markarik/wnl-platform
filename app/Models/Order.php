@@ -34,7 +34,7 @@ class Order extends Model
 
 	public function coupon()
 	{
-		return $this->hasOne('App\Models\Coupon');
+		return $this->belongsTo('App\Models\Coupon');
 	}
 
 	public function attachCoupon($coupon)
@@ -47,7 +47,7 @@ class Order extends Model
 	{
 		$coupon = $this->coupon;
 		$subtotal = $this->product->price;
-		dd($coupon);
+
 		if (is_null($coupon)) return $subtotal;
 
 		if ($coupon->is_percentage) {

@@ -43,7 +43,9 @@ $app->singleton(
 
 $app->configureMonologUsing(function ($monolog) {
 	$token = env('ERROR_REPORTER_SLACK_TOKEN');
-	$slackHandler = new \Monolog\Handler\SlackHandler($token, '#wnl-platforma-tech', 'Error Reporter', true, null, \Monolog\Logger::CRITICAL);
+	$chanel = env('ERROR_REPORTER_SLACK_CHANNEL');
+	$level = \Monolog\Logger::CRITICAL;
+	$slackHandler = new \Monolog\Handler\SlackHandler($token, $chanel, 'Error Reporter', true, null, $level);
 	$monolog->pushHandler($slackHandler);
 });
 

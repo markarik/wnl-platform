@@ -37,6 +37,16 @@ class Order extends Model
 		return $this->belongsTo('App\Models\Coupon');
 	}
 
+	public function invoices()
+	{
+		return $this->hasMany('App\Models\Invoice');
+	}
+
+	public function user()
+	{
+		return $this->belongsTo('App\Models\User');
+	}
+
 	public function attachCoupon($coupon)
 	{
 		$this->coupon_id = $coupon->id;

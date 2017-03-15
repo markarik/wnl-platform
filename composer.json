@@ -8,7 +8,8 @@
         "laravel/framework": "5.4.*",
         "kris/laravel-form-builder": "^1.10",
         "laracasts/utilities": "~2.0",
-        "league/fractal": "^0.15.0"
+        "league/fractal": "^0.15.0",
+        "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
         "laravel/dusk": "^1.0",

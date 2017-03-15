@@ -36,9 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/', function () {
 		return redirect('/app');
 	})->name('home');
-	//
-	// Route::get('/dashboard', 'User\DashboardController@index');
-	Route::get('/profile/orders', 'User\OrderController@index')->name('profile-orders');
 
 	// Using front-end routing for the main application
 	Route::get('/app/{path?}', 'AppController@index')->name('app')->where('path', '(.*)');

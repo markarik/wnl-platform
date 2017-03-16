@@ -28,19 +28,4 @@ class PaymentAjaxController extends Controller
 
 		return response()->json(['status' => 'success']);
 	}
-
-	public function checkOrderPaymentStatus()
-	{
-		$orderId = $this->request->get('orderId');
-		$order = Order::find($orderId);
-
-		if (!$order) {
-			return response()->json(['status' => 'not_found'], 404);
-		}
-
-		return response()->json([
-			'status'     => 'success',
-			'orderPaid' => $order->paid,
-		]);
-	}
 }

@@ -42,29 +42,3 @@ $.ajaxSetup({
 		console.log(error);
 	}
 });
-
-function checkOrderPaymentStatus(orderId) {
-	(function sendRequest() {
-		$.ajax({
-			data: {
-				controller: 'PaymentAjaxController',
-				method: 'checkOrderPaymentStatus',
-				orderId: orderId
-			},
-			success: function (response) {
-				if (response.orderPaid) {
-					$('#loader-' + orderId).parent().html('Zapłacono');
-					$('#change-method-button-' + orderId).hide();
-				} else {
-					setTimeout(sendRequest, 10000);
-				}
-			}
-		});
-	})();
-}
-
-$(document).ready(function () {
-	$('.order-pending-notification').each(function (element) {
-		checkOrderPaymentStatus($(this).data('id'));
-	});
-});

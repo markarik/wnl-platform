@@ -30,6 +30,9 @@ Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	// Editions
 	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 
+	// Orders
+	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
+
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');

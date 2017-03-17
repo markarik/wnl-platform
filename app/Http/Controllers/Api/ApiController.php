@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
 abstract class ApiController extends Controller
@@ -36,8 +37,13 @@ abstract class ApiController extends Controller
 		$resourceStudly = studly_case($resourceSingular);
 		$modelName = 'App\Models\\' . $resourceStudly;
 		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
-		$models = $modelName::find($id);
-		$resource = new Item($models, new $transformerName, $this->resourceName);
+		if ($id === 'all') {
+			$models = $modelName::all();
+			$resource = new Collection($models, new $transformerName, $this->resourceName);
+		} else {
+			$models = $modelName::find($id);
+			$resource = new Item($models, new $transformerName, $this->resourceName);
+		}
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return response()->json($data);

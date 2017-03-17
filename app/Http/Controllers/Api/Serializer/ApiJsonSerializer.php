@@ -88,7 +88,7 @@ class ApiJsonSerializer extends SerializerAbstract
 						$this->relationships[$resourceKey][$resourceId][$includedResourceName][] = $item['id'];
 						$this->includes[$includedResourceName][$item['id']] = $item;
 					} catch (\ErrorException $ex) {
-						dd($resource->getData());
+//						dd($resource->getData());
 					}
 
 				}

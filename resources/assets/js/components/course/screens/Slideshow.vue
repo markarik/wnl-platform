@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-slideshow-container">
 		<div class="wnl-screen wnl-ratio-16-9">
-			<div class="wnl-slideshow-content" id="wnl-slideshow"></div>
+			<div class="wnl-slideshow-content"></div>
 		</div>
 		<div class="wnl-slideshow-controls">
 			<div class="wnl-slideshow-controls-left">
@@ -65,7 +65,7 @@
 				return Math.max(this.slide - 1, 0) || 0
 			},
 			container() {
-				return document.getElementById('wnl-slideshow')
+				return this.$el.getElementsByClassName('wnl-slideshow-content')[0]
 			},
 			screenId() {
 				return this.screenData.id
@@ -104,27 +104,39 @@
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
 				}
+			},
+			setupSlideshow() {
+				let handshake = new Postmate({
+					container: this.container,
+					url: this.slideshowUrl
+				})
+				handshake.then(child => {
+					child.on('loaded', (status) => {
+						if (status) {
+							this.child = child
+							this.loaded = true
+							this.goToSlide(this.slideNumber)
+							this.setEventListeners()
+						}
+					})
+				})
+			},
+			destroySlideshow() {
+				this.child = {}
+				this.container.innerHTML = ''
 			}
 		},
 		mounted() {
 			Postmate.debug = isDebug()
 
-			const handshake = new Postmate({
-				container: this.container,
-				url: this.slideshowUrl
-			})
-			handshake.then(child => {
-				child.on('loaded', (status) => {
-					if (status) {
-						this.child = child
-						this.loaded = true
-						this.goToSlide(this.slideNumber)
-						this.setEventListeners()
-					}
-				})
-			})
+			this.setupSlideshow()
 		},
 		watch: {
+			'screenId' () {
+				this.loaded = false
+				this.destroySlideshow()
+				this.setupSlideshow()
+			},
 			'$route' (to, from) {
 				if (this.loaded &&
 					!to.query.hasOwnProperty('sc') &&

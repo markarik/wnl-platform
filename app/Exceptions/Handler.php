@@ -8,6 +8,8 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -47,14 +49,25 @@ class Handler extends ExceptionHandler
 	 */
 	public function render($request, Exception $exception)
 	{
-		if (!is_null($request->route()) &&
-			$request->route()->getPrefix() === '/payment' &&
-			App::environment('production')
-		) {
+		$production = App::environment('production');
+
+		if (!$production) {
+			return parent::render($request, $exception);
+		}
+
+		if (!is_null($request->route()) && $request->route()->getPrefix() === '/payment') {
 			Log::critical('Exception on payment path: ' . $exception->getMessage() . ' in ' . $exception->getFile());
 		}
 
-		return parent::render($request, $exception);
+		if ($exception instanceof NotFoundHttpException) {
+			return response()->view('errors.404', [], 404);
+		}
+
+		if ($exception instanceof ServiceUnavailableHttpException) {
+			return response()->view('errors.503', [], 503);
+		}
+
+		return response()->view('errors.500', [], 500);
 	}
 
 	/**

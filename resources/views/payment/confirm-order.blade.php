@@ -11,12 +11,22 @@
 		<section class="subsection">
 			<div class="box">
 				<p class="title">@lang('payment.confirm-order-heading')</p>
-				<p><strong>{{ $order->product->name }}</strong></p>
-				<p>@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])</p>
+				<p class="subtitle">{{ $order->product->name }}</p>
 				@if($order->coupon)
-					<p>Po zniżce {{ $order->total_with_coupon }}</p>
-					<p>Nazwa kuponu: {{ $order->coupon->name }}</p>
-					<p>Wartość kuponu: {{ $order->coupon->value }} {{ $order->coupon->is_percentage ? '%' : 'zł' }}</p>
+					<p class="strikethrough">
+						@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])
+					</p>
+					<p class="big strong">
+						@lang('payment.confirm-order-price', [ 'price' => $order->total_with_coupon ])
+					</p>
+					<div class="notification margins top">
+						@lang('payment.confirm-order-coupon', [
+							'name' => $order->coupon->name,
+							'value' => $order->coupon->value_with_unit,
+						])
+					</div>
+				@else
+					<p class="big strong">@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])</p>
 				@endif
 			</div>
 		</section>
@@ -53,10 +63,10 @@
 			</p>
 		</section>
 
-		<section class="subsection has-text-centered">
+		<section class="subsection has-text-centered margins top">
 			<h2 class="title">@lang('payment.confirm-method-heading')</h2>
 			<p class="subtitle">@lang('payment.confirm-method-lead')</p>
-			<div class="columns">
+			<div class="columns margins top">
 				<div class="column">
 					<form action="{{route('payment-confirm-order-post')}}" method="post">
 						{!! csrf_field() !!}

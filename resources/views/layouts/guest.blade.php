@@ -39,10 +39,10 @@
 			</nav>
 
 			@yield('content')
+			<footer class="footer has-text-centered">
+				<small>@lang('common.footer-copy')</small>
+			</footer>
 		</div>
-		<footer class="footer has-text-centered">
-			<small>@lang('common.footer-copy')</small>
-		</footer>
 		<!-- Scripts -->
 		<script src="/js/payment.js"></script>
 	</body>

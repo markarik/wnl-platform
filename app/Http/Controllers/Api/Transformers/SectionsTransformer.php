@@ -15,14 +15,23 @@ class SectionsTransformer extends TransformerAbstract
 
 	public function transform(Section $section)
 	{
-		return [
-			'id'      => $section->id,
-			'name'    => $section->name,
-			'lessons' => $section->screen->lesson_id,
-			'groups'  => $section->screen->lesson->group->id,
+		$screenFirstSlide = $section->screen->slides->first();
+		$sectionFirstSlide = $section->slides->first();
+
+		$data = [
+			'id'       => $section->id,
+			'name'     => $section->name,
+			'lessons'  => $section->screen->lesson_id,
+			'groups'   => $section->screen->lesson->group->id,
 			'editions' => $section->screen->lesson->group->course->id,
-			'screens' => $section->screen_id,
+			'screens'  => $section->screen_id,
 		];
+
+		if ($sectionFirstSlide && $screenFirstSlide) {
+			$data['slide'] = $sectionFirstSlide->id - $screenFirstSlide->id + 1;
+		}
+
+		return $data;
 	}
 
 }

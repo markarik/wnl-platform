@@ -18,4 +18,6 @@ return [
 	'your-profile-link-content' => 'Twój profil',
 	'mobile-nav-toggle' => 'Przełącz mobilną nawigację',
 	'footer-copy' => '&copy; by bethink',
+	'percent' => ':value%',
+	'currency' => ':valuezł',
 ];

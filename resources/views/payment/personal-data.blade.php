@@ -23,6 +23,9 @@
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
+				<div class="notification">
+					@lang('payment.personal-data-email-info')
+				</div>
 			</div>
 			<div class="form-group">
 				<div class="control">
@@ -186,7 +189,7 @@
 
 		<section class="form-end">
 			<div class="block has-text-centered">
-				<button class="button is-primary is-hidden-mobile">@lang('payment.personal-data-submit')</button>
+				<button class="button is-primary">@lang('payment.personal-data-submit')</button>
 			</div>
 		</section>
 

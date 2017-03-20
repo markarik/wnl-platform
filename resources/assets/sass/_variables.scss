@@ -57,6 +57,9 @@ $rounded-square-sizes: (
 	large: 50px
 );
 
+// Animations
+$transition-length-base: 0.15s;
+
 // Overwrite Bulma variables
 $primary: $color-ocean-blue;
 $success: $color-green;

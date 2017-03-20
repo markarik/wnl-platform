@@ -5,28 +5,45 @@ namespace App\Http\Controllers\Api\Concerns;
 
 trait GeneratesApiResponses
 {
-	protected function respondOk()
+	protected function respondOk($message = null)
 	{
-		return response('OK', 200);
+		$responseMessage = $message ?? 'OK';
+
+		return response($responseMessage, 200);
 	}
 
-	protected function respondCreated()
+	protected function respondCreated($message = null)
 	{
-		return response('Created', 201);
+		$responseMessage = $message ?? 'Created';
+
+		return response($responseMessage, 201);
 	}
 
-	protected function respondUnauthorized()
+	protected function respondInvalidInput($message = null)
 	{
-		return response('Unauthorized', 401);
+		$responseMessage = $message ?? 'Invalid input';
+
+		return response($responseMessage, 400);
 	}
 
-	protected function respondNotFound()
+	protected function respondUnauthorized($message = null)
 	{
-		return response('Not Found', 404);
+		$responseMessage = $message ?? 'Unauthorized';
+
+		return response($responseMessage, 401);
 	}
 
-	protected function respondInternalError()
+	protected function respondNotFound($message = null)
 	{
-		return response('Internal Error', 500);
+		$responseMessage = $message ?? 'Not Found';
+
+		return response($responseMessage, 404);
+	}
+
+	protected function respondInternalError($message = null)
+	{
+		$responseMessage = $message ?? 'Internal Error';
+
+		return response($responseMessage, 500);
 	}
 }

@@ -31,8 +31,13 @@ return [
 	'select-product-features-workshops' => 'Uczestnictwo w 6 warsztatach weekendowych w Poznaniu',
 	'select-product-features-individual' => 'Indywidualne spotkania z prowadzącymi kurs',
 
+	/**
+	 * 2. Personal Data step
+	 */
+
 	'personal-data-title' => 'Świetny wybór!',
 	'personal-data-subtitle' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
+	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, aby skorzystać ze specjalnej oferty, podaj go teraz przy rejestracji, aby skorzystać z 10% zniżki!',
 
 	'personal-data-account-heading' => 'Twoje konto',
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
@@ -74,7 +79,7 @@ return [
 	'personal-data-tou-link' => 'http://wiecejnizlek.pl',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
 
-	'personal-data-submit' => 'Zakładam konto i przechodzę do płatności',
+	'personal-data-submit' => 'Zakładam konto i płacę',
 
 	/**
 	 * Personal data verification step
@@ -83,6 +88,7 @@ return [
 	'confirm-order-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
 	'confirm-order-heading' => 'Twoje zamówienie',
 	'confirm-order-price' => ':pricezł brutto',
+	'confirm-order-coupon' => 'Korzystasz z kuponu <strong>:name</strong> o wartości <strong>:value</strong>.',
 
 	'confirm-personal-data-heading' => 'Twoje dane',
 

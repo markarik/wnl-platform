@@ -19,4 +19,11 @@ class Coupon extends Model
 			->where('slug', $slug)
 			->first();
 	}
+
+	public function getValueWithUnitAttribute()
+	{
+		return trans($this->is_percentage ? 'common.percent' : 'common.currency', [
+			'value' => $this->value
+		]);
+	}
 }

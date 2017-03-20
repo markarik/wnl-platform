@@ -4,7 +4,6 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\Lesson;
 use App\Models\Tag;
 use League\Fractal\TransformerAbstract;
 

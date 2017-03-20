@@ -3,12 +3,14 @@
 		<keep-alive>
 			<router-view></router-view>
 		</keep-alive>
+		<wnl-qna :lessonId="lessonId"></wnl-qna>
 	</div>
 </template>
 
 <script>
 	import { mapGetters, mapActions } from 'vuex'
 	import { resource } from 'js/utils/config'
+	import  Qna from './../qna/Qna.vue'
 
 	export default {
 		name: 'Lesson',
@@ -84,6 +86,9 @@
 				this.goToDefaultScreenIfNone()
 				this.updateLessonProgress()
 			}
-		}
+		},
+		components: {
+			'wnl-qna': Qna,
+		},
 	}
 </script>

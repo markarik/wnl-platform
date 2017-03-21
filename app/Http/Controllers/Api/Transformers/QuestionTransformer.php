@@ -11,7 +11,7 @@ use League\Fractal\TransformerAbstract;
 
 class QuestionTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['answers', 'tags'];
+	protected $availableIncludes = ['answers', 'tags', 'users'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -24,6 +24,7 @@ class QuestionTransformer extends TransformerAbstract
 		$data = [
 			'id'   => $question->id,
 			'text' => $question->text,
+			'time' => $question->created_at->formatLocalized('%A %d %B %Y'),
 		];
 
 		if ($this->parent) {
@@ -45,5 +46,12 @@ class QuestionTransformer extends TransformerAbstract
 		$tags = $question->tags;
 
 		return $this->collection($tags, new TagTransformer, 'tags');
+	}
+
+	public function includeUsers(Question $question)
+	{
+		$user = $question->user;
+
+		return $this->collection([$user], new UserTransformer(['questions' => $question->id]), 'users');
 	}
 }

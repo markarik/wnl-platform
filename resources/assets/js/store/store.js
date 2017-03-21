@@ -10,6 +10,7 @@ import * as getters from 'js/store/getters'
 import users from 'js/store/modules/users'
 import progress from 'js/store/modules/progress'
 import course from 'js/store/modules/course'
+import qna from 'js/store/modules/qna'
 
 Vue.use(Vuex)
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
 		users,
 		progress,
 		course,
+		qna,
 	},
 	strict: debug
 })

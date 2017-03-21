@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
-class UsersApiController extends Controller
+class UsersApiController extends ApiController
 {
+	public function __construct(Request $request)
+	{
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.users');
+	}
 
 	public function getCurrentUser()
 	{

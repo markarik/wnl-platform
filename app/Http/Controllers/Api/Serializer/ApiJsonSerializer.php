@@ -81,16 +81,12 @@ class ApiJsonSerializer extends SerializerAbstract
 			if (empty ($includedResources)) continue;
 
 			foreach ($includedResources as $includedResourceName => $items) {
+				if (array_key_exists('id', $items)) $items = [$items];
 				foreach ($items as $item) {
 					if (!array_key_exists($resourceKey, $item)) continue;
-					try {
-						$resourceId = $item[$resourceKey];
-						$this->relationships[$resourceKey][$resourceId][$includedResourceName][] = $item['id'];
-						$this->includes[$includedResourceName][$item['id']] = $item;
-					} catch (\ErrorException $ex) {
-//						dd($resource->getData());
-					}
-
+					$resourceId = $item[$resourceKey];
+					$this->relationships[$resourceKey][$resourceId][$includedResourceName][] = $item['id'];
+					$this->includes[$includedResourceName][$item['id']] = $item;
 				}
 			}
 		}
@@ -115,7 +111,7 @@ class ApiJsonSerializer extends SerializerAbstract
 			return $data;
 		}
 
-				if (array_key_exists('id', $data)) {
+		if (array_key_exists('id', $data)) {
 			$relationships = $this->relationships[$this->currentlyProcessedResource][$data['id']];
 			$data = array_merge($data, $relationships);
 		} else {

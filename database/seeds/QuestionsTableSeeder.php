@@ -11,18 +11,22 @@ class QuestionsTableSeeder extends Seeder
 	 */
 	public function run()
 	{
+		$now = \Carbon\Carbon::now();
 		DB::table('questions')->insert([
 			[
-				'text'    => 'Halo Halo?',
-				'user_id' => 1,
+				'text'       => 'Halo Halo?',
+				'user_id'    => 1,
+				'created_at' => $now,
 			],
 			[
-				'text'    => 'Co to k*** jest azotan?',
-				'user_id' => 2,
+				'text'       => 'Co to k*** jest azotan?',
+				'user_id'    => 2,
+				'created_at' => $now,
 			],
 			[
-				'text'    => 'Jak zap***** praca?',
-				'user_id' => 1,
+				'text'       => 'Jak zap***** praca?',
+				'user_id'    => 1,
+				'created_at' => $now,
 			],
 		]);
 	}

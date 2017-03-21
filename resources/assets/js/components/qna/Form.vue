@@ -40,9 +40,10 @@
 
 <script>
 	import {mapGetters} from 'vuex'
+	import {getApiUrl} from 'js/utils/env'
 
 	export default{
-		props: [],
+		props: ['lessonId'],
 		data(){
 			return {
 				disabled: false,
@@ -58,7 +59,7 @@
 				'currentUserFullName'
 			]),
 			sendingDisabled() {
-				return !this.loaded || this.message.length === 0
+				return this.message.length === 0
 			},
 			textareaHeight() {
 				if (this.canvasContext !== null && this.message.length > 0) {
@@ -106,27 +107,19 @@
 					lessonId: this.lessonId,
 					text: this.message
 				}).then((response) => {
+					this.disabled = false
+					if (response.status === 201) {
 
-				})
-				this.socket.emit('send-message', {
-					room: this.room,
-					message: {
-						username: this.currentUserFullName,
-						content: this.message,
+						this.message = ''
+					} else {
+						this.error = 'Coś poszło nie tak... Proszę, spróbuj jeszcze raz. :)'
 					}
-				})
+				}).catch(console.log.bind(console))
 			},
 			suppressEnter(event) {
 				event.preventDefault()
 			},
 		},
-//		mounted() {
-//			this.setTextareaStyles()
-//			this.setTextMeasureCanvas()
-//		},
-//		updated() {
-//			this.setTextareaStyles()
-//		}
 	}
 
 </script>

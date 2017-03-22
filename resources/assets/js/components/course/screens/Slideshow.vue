@@ -74,7 +74,7 @@
 				return getUrl(`slideshow-builder/${this.screenId}`)
 			},
 			slideshowElement() {
-				return document.getElementById('wnl-slideshow')
+				return this.container.getElementsByTagName('iframe')[0]
 			}
 		},
 		methods: {

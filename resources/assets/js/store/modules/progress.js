@@ -39,22 +39,7 @@ function getUserProgressForCourse(courseId) {
 	// return axios.get(getApiUrl('courses/${courseId}/user-progress/${userId}'));
 	return new Promise((resolve, reject) => {
 		let data = {
-				lessons: {
-					1: {
-						status: STATUS_IN_PROGRESS,
-						route: {
-							name: 'screens',
-							params: {
-								courseId: 1,
-								lessonId: 1,
-								screenId: 4,
-								slide: 13,
-							},
-							query: {},
-							meta: {},
-						}
-					},
-				}
+				lessons: {}
 			}
 		resolve(data)
 	})

@@ -45,13 +45,13 @@
 	const statusParams = {
 		[STATUS_NONE]: {
 			heading: 'Gratulacje!',
-			callToAction: 'Jesteś na bieżąco, kolejny moduł będzie dostępny jutro.',
+			callToAction: 'Jesteś na bieżąco, kolejny moduł będzie dostępny jutro. :)',
 			buttonClass: '',
 		},
 		[STATUS_IN_PROGRESS]: {
 			heading: 'Lekcja w trakcie',
 			callToAction: 'Wróć do lekcji',
-			buttonClass: 'is-warning',
+			buttonClass: 'is-info',
 		},
 		[STATUS_AVAILABLE]: {
 			heading: 'Następna lekcja',

@@ -30,12 +30,14 @@ const getters = {
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId],
 	getLessons: state => state.structure[resource('lessons')],
 	getAvailableLessons: (state, getters) => {
-		let lessons = []
-		for (const lessonId in getters.getLessons()) {
-			if (getters.getLessons()[lessonId].isAvailable) {
-				lessons.push(lessonId)
+		let lesson, lessons = []
+		for (const lessonId in getters.getLessons) {
+			lesson = getters.getLessons[lessonId]
+			if (lesson.isAvailable) {
+				lessons.push(lesson)
 			}
 		}
+		return lessons
 	},
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,

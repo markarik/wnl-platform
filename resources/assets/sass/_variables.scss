@@ -11,9 +11,9 @@ $color-background-light-gray: #fcfcfc;
 $color-white: #fff;
 $color-white-transparent: rgba(255,255,255,0.5);
 
-$color-green: #2ab27b;
-$color-yellow: #ffc371;
-$color-red: #bf5329;
+$color-green: #a7d766;
+$color-yellow: #f0aa43;
+$color-red: #ea4e60;
 
 // Layout
 $background-color-default: $color-white;
@@ -56,6 +56,12 @@ $rounded-square-sizes: (
 	medium: 30px,
 	large: 50px
 );
+
+// Spacing
+$margin-small: 0.5em;
+$margin-base: 1em;
+$margin-big: 2em;
+$margin-huge: 3em;
 
 // Animations
 $transition-length-base: 0.15s;

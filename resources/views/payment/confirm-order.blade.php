@@ -63,10 +63,10 @@
 			</p>
 		</section>
 
-		<section class="subsection has-text-centered margins top">
+		<section class="subsection has-text-centered margin top">
 			<h2 class="title">@lang('payment.confirm-method-heading')</h2>
 			<p class="subtitle">@lang('payment.confirm-method-lead')</p>
-			<div class="columns margins top">
+			<div class="columns margin top">
 				<div class="column">
 					<form action="{{route('payment-confirm-order-post')}}" method="post">
 						{!! csrf_field() !!}

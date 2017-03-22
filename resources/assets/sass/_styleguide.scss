@@ -91,26 +91,42 @@ a.is-active {
 	max-width: 90%;
 	padding: 0.5em 1.25em;
 	text-transform: uppercase;
-	transition: background $transition-length-base;
+	transition: background $transition-length-base, border $transition-length-base;
+
+	&:hover {
+		transition: background $transition-length-base, border $transition-length-base;
+	}
+
+	&.is-outlined {
+		transition: border $transition-length-base, color $transition-length-base;
+
+		&:hover {
+			background-color: transparent;
+			transition: border $transition-length-base, color $transition-length-base;
+		}
+	}
 
 	&.is-primary {
-		transition: background $transition-length-base, border $transition-length-base;
 
 		&:hover {
 			border-color: $color-sky-blue;
 			background-color: $color-sky-blue;
-			transition: background $transition-length-base, border $transition-length-base;
 		}
 
 		&.is-outlined {
-			transition: border $transition-length-base, color $transition-length-base;
 
 			&:hover {
-				background-color: transparent;
 				border-color: $color-sky-blue;
 				color: $color-sky-blue;
-				transition: border $transition-length-base, color $transition-length-base;
 			}
+		}
+	}
+
+	&.is-warning {
+		color: $color-white;
+
+		&:hover {
+			color: $color-white;
 		}
 	}
 }
@@ -149,7 +165,7 @@ a.is-active {
 	text-align: center;
 }
 
-.margins {
+.margin {
 	margin: 1em;
 
 	&.vertical {

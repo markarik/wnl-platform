@@ -84,10 +84,6 @@ const getters = {
 		return getters.progressWasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId][lessonId].status === STATUS_IN_PROGRESS
 	},
-	progressIsLessonComplete: (state) => (courseId, lessonId) => {
-		return getters.progressWasLessonStarted(courseId, lessonId) &&
-			state.courses[courseId][lessonId].status === STATUS_COMPLETE
-	},
 	progressGetFirstLessonIdInProgress: (state) => (courseId) => {
 		let lessons = state.courses[courseId].lessons
 		for (const lessonId in lessons) {
@@ -97,6 +93,20 @@ const getters = {
 		}
 		return 0
 	},
+	progressIsLessonComplete: (state) => (courseId, lessonId) => {
+		return getters.progressWasLessonStarted(courseId, lessonId) &&
+		state.courses[courseId][lessonId].status === STATUS_COMPLETE
+	},
+	progressGetCompleteLessons: (state, getters) => (courseId) => {
+		let lesson, lessons = []
+		for (const lessonId in state.courses[courseId].lessons) {
+			lesson = getters.getLesson(lessonId)
+			if (state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE) {
+				lessons.push(lesson)
+			}
+		}
+		return lessons
+	}
 }
 
 // Mutations

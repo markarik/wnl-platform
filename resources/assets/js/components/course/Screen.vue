@@ -58,7 +58,9 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				this.getScreenData(to.params.screenId)
+				if (to.params.screenId !== from.params.screenId) {
+					this.getScreenData(to.params.screenId)
+				}
 			}
 		}
 	}

@@ -33,6 +33,17 @@ Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 
+	// Tags
+	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
+
+	// Questions
+	Route::get("{$r['questions']}/{id}", 'QuestionsApiController@get');
+	Route::post($r['questions'], 'QuestionsApiController@post');
+
+	// Answers
+	Route::get("{$r['answers']}/{id}", 'AnswersApiController@get');
+	Route::post($r['answers'], 'AnswersApiController@post');
+
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');

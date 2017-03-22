@@ -30,6 +30,11 @@ class DatabaseSeeder extends Seeder
 		$this->call(SubscribersTableSeeder::class);
 		$this->call(CouponsTableSeeder::class);
 
+		$this->call(TagsTableSeeder::class);
+		$this->call(QuestionsTableSeeder::class);
+		$this->call(AnswersTableSeeder::class);
+		$this->call(TaggablesTableSeeder::class);
+
 		$this->call(SlideshowSeeder::class);
 	}
 }

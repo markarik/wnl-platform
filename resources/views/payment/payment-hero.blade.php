@@ -14,7 +14,7 @@
 
 					<div class="column is-one-third">
 						@if ($step > 2) <a href="{{ route('payment-personal-data') }}"> @endif
-							<div class="payment-step @if ($step > 1) is-active @endif" @if ($step === 2) is-current @endif>
+							<div class="payment-step @if ($step > 1) is-active @endif @if ($step === 2) is-current @endif">
 								<span class="payment-step-count">@lang('payment.payment-steps-personal-data-count')</span>
 								<span class="payment-step-text is-hidden-mobile">@lang('payment.payment-steps-personal-data')</span>
 							</div>

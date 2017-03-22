@@ -39,22 +39,7 @@ function getUserProgressForCourse(courseId) {
 	// return axios.get(getApiUrl('courses/${courseId}/user-progress/${userId}'));
 	return new Promise((resolve, reject) => {
 		let data = {
-				lessons: {
-					1: {
-						status: STATUS_IN_PROGRESS,
-						route: {
-							name: 'screens',
-							params: {
-								courseId: 1,
-								lessonId: 1,
-								screenId: 4,
-								slide: 13,
-							},
-							query: {},
-							meta: {},
-						}
-					},
-				}
+				lessons: {}
 			}
 		resolve(data)
 	})
@@ -78,17 +63,34 @@ const getters = {
 	},
 	progressWasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].hasOwnProperty(lessonId)
+			state.courses[courseId].lessons.hasOwnProperty(lessonId)
 	},
 	progressIsLessonInProgress: (state) => (courseId, lessonId) => {
-		return courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].hasOwnProperty(lessonId) &&
+		return getters.progressWasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId][lessonId].status === STATUS_IN_PROGRESS
 	},
+	progressGetFirstLessonIdInProgress: (state) => (courseId) => {
+		let lessons = state.courses[courseId].lessons
+		for (const lessonId in lessons) {
+			if (lessons[lessonId].status === STATUS_IN_PROGRESS) {
+				return lessonId
+			}
+		}
+		return 0
+	},
 	progressIsLessonComplete: (state) => (courseId, lessonId) => {
-		return courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].hasOwnProperty(lessonId) &&
-			state.courses[courseId][lessonId].status === STATUS_COMPLETE
+		return getters.progressWasLessonStarted(courseId, lessonId) &&
+		state.courses[courseId][lessonId].status === STATUS_COMPLETE
+	},
+	progressGetCompleteLessons: (state, getters) => (courseId) => {
+		let lesson, lessons = []
+		for (const lessonId in state.courses[courseId].lessons) {
+			lesson = getters.getLesson(lessonId)
+			if (state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE) {
+				lessons.push(lesson)
+			}
+		}
+		return lessons
 	}
 }
 

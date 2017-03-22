@@ -27,6 +27,18 @@ const getters = {
 	courseName: state => state.name,
 	courseGroups: state => state[resource('groups')],
 	courseStructure: state => state.structure,
+	getGroup: state => (groupId) => state.structure[resource('groups')][groupId],
+	getLessons: state => state.structure[resource('lessons')],
+	getAvailableLessons: (state, getters) => {
+		let lessons = []
+		for (const lessonId in getters.getLessons()) {
+			if (getters.getLessons()[lessonId].isAvailable) {
+				lessons.push(lessonId)
+			}
+		}
+	},
+	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
+	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
 	getScreens: state => (lessonId) => state.structure[resource('lessons')][lessonId][resource('screens')],
 }
 

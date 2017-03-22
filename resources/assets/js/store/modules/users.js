@@ -23,6 +23,7 @@ const state = {
 // Getters
 const getters = {
 	currentUser: state => state.currentUser,
+	currentUserName: state => state.currentUser.data.first_name,
 	currentUserFullName: state => state.currentUser.data.full_name,
 }
 

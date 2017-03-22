@@ -78,18 +78,25 @@ const getters = {
 	},
 	progressWasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].hasOwnProperty(lessonId)
+			state.courses[courseId].lessons.hasOwnProperty(lessonId)
 	},
 	progressIsLessonInProgress: (state) => (courseId, lessonId) => {
-		return courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].hasOwnProperty(lessonId) &&
+		return getters.progressWasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId][lessonId].status === STATUS_IN_PROGRESS
 	},
 	progressIsLessonComplete: (state) => (courseId, lessonId) => {
-		return courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].hasOwnProperty(lessonId) &&
+		return getters.progressWasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId][lessonId].status === STATUS_COMPLETE
-	}
+	},
+	progressGetFirstLessonIdInProgress: (state) => (courseId) => {
+		let lessons = state.courses[courseId].lessons
+		for (const lessonId in lessons) {
+			if (lessons[lessonId].status === STATUS_IN_PROGRESS) {
+				return lessonId
+			}
+		}
+		return 0
+	},
 }
 
 // Mutations

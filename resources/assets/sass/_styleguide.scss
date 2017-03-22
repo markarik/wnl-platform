@@ -32,6 +32,12 @@ h5 {
 	line-height: $line-height-base;
 }
 
+.caption {
+	font-size: $font-size-minus-1;
+	font-weight: $font-weight-black;
+	text-transform: uppercase;
+}
+
 .big {
 	font-size: $font-size-plus-1;
 	line-height: $line-height-plus;
@@ -52,7 +58,7 @@ h5 {
 }
 
 .strong {
-	font-weight: 700;
+	font-weight: $font-weight-bold;
 }
 
 .strikethrough {
@@ -78,11 +84,13 @@ a.is-active {
 
 .button {
 	border-radius: $border-radius-full;
+	font-size: $font-size-minus-1;
 	font-weight: $font-weight-black;
 	height: auto;
-	line-height: 2em;
+	line-height: 1.5em;
 	max-width: 90%;
 	padding: 0.5em 1.25em;
+	text-transform: uppercase;
 	transition: background $transition-length-base;
 
 	&.is-primary {
@@ -136,6 +144,10 @@ a.is-active {
 }
 
 // Helpers
+
+.aligncenter {
+	text-align: center;
+}
 
 .margins {
 	margin: 1em;

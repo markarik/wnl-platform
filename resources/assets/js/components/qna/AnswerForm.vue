@@ -39,11 +39,12 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
+	import {mapGetters, mapActions} from 'vuex'
 	import {getApiUrl} from 'js/utils/env'
 
 	export default{
-		props: ['lessonId'],
+		name: 'AnswerForm',
+		props: ['lessonId', 'questionId'],
 		data(){
 			return {
 				disabled: false,
@@ -74,6 +75,7 @@
 //				this.textarea = document.getElementById(this.inputId)
 //				this.computedStyles = window.getComputedStyle(this.textarea)
 //			},
+			...mapActions(['qnaAddAnswer']),
 			setTextMeasureCanvas() {
 				let canvas, context
 
@@ -101,20 +103,20 @@
 				if (this.sendingDisabled) {
 					return false
 				}
-				this.disabled = true
-				this.error    = ''
-				axios.post(getApiUrl(`questions`), {
+//				this.disabled = true
+				this.error = ''
+				console.log(this.lessonId)
+				this.qnaAddAnswer({
 					lessonId: this.lessonId,
+					questionId: this.questionId,
 					text: this.message
-				}).then((response) => {
+				}).then(() => {
+					this.message  = ''
 					this.disabled = false
-					if (response.status === 201) {
-
-						this.message = ''
-					} else {
-						this.error = 'Coś poszło nie tak... Proszę, spróbuj jeszcze raz. :)'
-					}
-				}).catch(console.log.bind(console))
+				}).catch(() => {
+					this.error    = 'Coś poszło nie tak... Proszę, spróbuj jeszcze raz. :)'
+					this.disabled = false
+				})
 			},
 			suppressEnter(event) {
 				event.preventDefault()

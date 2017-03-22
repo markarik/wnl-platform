@@ -32,7 +32,7 @@
 
 </style>
 <script>
-	import Form from './Form.vue'
+	import QuestionForm from './QuestionForm.vue'
 	import Question from './Question.vue'
 	import {mapActions, mapGetters} from 'vuex'
 
@@ -52,7 +52,7 @@
 			this.qnaSetQuestions(this.lessonId)
 		},
 		components: {
-			'wnl-qna-form': Form,
+			'wnl-qna-form': QuestionForm,
 			'wnl-question': Question
 		}
 	}

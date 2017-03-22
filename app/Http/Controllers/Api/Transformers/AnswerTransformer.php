@@ -20,6 +20,7 @@ class AnswerTransformer extends TransformerAbstract
 			'id'        => $answer->id,
 			'text'      => $answer->text,
 			'questions' => $answer->question->id,
+			'time'      => $answer->created_at->formatLocalized('%A %d %B %Y'),
 		];
 
 		return $data;

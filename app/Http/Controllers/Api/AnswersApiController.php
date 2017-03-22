@@ -33,11 +33,11 @@ class AnswersApiController extends ApiController
 			return $this->respondInvalidInput('Question with given id does\'n exist.');
 		}
 
-		$question->answers()->create([
+		$answer = $question->answers()->create([
 			'text'    => $text,
 			'user_id' => Auth::user()->id,
 		]);
 
-		return $this->respondCreated();
+		return response()->json(['id' => $answer->id], 201);
 	}
 }

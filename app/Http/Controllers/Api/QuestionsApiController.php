@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\Transformers\QuestionTransformer;
 use App\Models\Lesson;
 use App\Models\Question;
 use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
-use Log;
 use Auth;
 
 class QuestionsApiController extends ApiController
@@ -44,9 +41,8 @@ class QuestionsApiController extends ApiController
 
 		$question->tags()->attach($lesson->tags);
 
-		$resource = new Item($question, new QuestionTransformer, $this->resourceName);
-		$data = $this->fractal->createData($resource)->toArray();
+		$data = ['id' => $question->id];
 
-		return $this->respondCreated();
+		return response()->json($data, 201);
 	}
 }

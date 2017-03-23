@@ -10,9 +10,10 @@ export const SET_NAVIGATION = 'SET_NAVIGATION'
 
 // Chat
 export const CHAT_ADD_NEW_MESSAGE = 'CHAT_ADD_NEW_MESSAGE'
-export const CHAT_SET_ROOM = 'CHAT_SET_ROOM'
-export const CHAT_SET_MESSAGES = 'CHAT_SET_MESSAGES'
-export const CHAT_IS_LOADED = 'CHAT_IS_LOADED'
+export const CHAT_SET_ROOM        = 'CHAT_SET_ROOM'
+export const CHAT_SET_MESSAGES    = 'CHAT_SET_MESSAGES'
+export const CHAT_IS_LOADED       = 'CHAT_IS_LOADED'
+export const CHAT_SET_USERS       = 'CHAT_IS_LOADED'
 
 // Progress
 export const PROGRESS_SETUP_COURSE = 'PROGRESS_SETUP_COURSE'

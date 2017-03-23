@@ -1,5 +1,6 @@
 <template>
 	<div class="wnl-chat">
+		<wnl-users-widget :users="users"></wnl-users-widget>
 		<div class="wnl-chat-messages">
 			<div class="wnl-chat-content">
 				<div v-if="loaded">
@@ -41,6 +42,7 @@
 <script>
 	import Message from './Message.vue'
 	import MessageForm from './MessageForm.vue'
+	import UsersWidget from '../global/UsersWidget.vue'
 	import * as socket from '../../socket'
 	import { nextTick } from 'vue'
 
@@ -50,12 +52,14 @@
 			return {
 				loaded: false,
 				messages: [],
+				users: [],
 				socket: {}
 			}
 		},
 		components: {
 			'wnl-message': Message,
-			'wnl-message-form': MessageForm
+			'wnl-message-form': MessageForm,
+			'wnl-users-widget': UsersWidget,
 		},
 		computed: {
 			isAuthorUnique() {
@@ -88,7 +92,8 @@
 					if (!this.loaded) {
 						this.setListeners(this.socket)
 						this.messages = data.messages
-						this.loaded = true
+						this.users    = data.users
+						this.loaded   = true
 						nextTick(() => {
 							this.scrollToBottom()
 						})

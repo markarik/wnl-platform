@@ -7,7 +7,8 @@ import * as socket from '../../socket'
 const state = {
 	currentRoom: '',
 	loaded: false,
-	messages: []
+	messages: [],
+	users: []
 }
 
 // Getters
@@ -33,7 +34,11 @@ const mutations = {
 
 	[types.CHAT_TOGGLE_LOADED] (state) {
 		set(state, 'loaded', !state.loaded)
-	}
+	},
+
+	[types.CHAT_SET_MESSAGES] (state, users) {
+		set(state, 'users', users)
+	},
 }
 
 // Actions

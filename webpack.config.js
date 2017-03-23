@@ -297,7 +297,7 @@ if (Mix.browserSync) {
 	module.exports.plugins.push(
 		new plugins.BrowserSyncPlugin(
 			Object.assign({
-				host: 'localhost',
+				host: 'hot.platforma.wnl',
 				port: 3000,
 				proxy: 'app.dev',
 				files: [

@@ -1,18 +1,62 @@
-DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>@yield('title')</title>
+
+	<!-- Styles -->
+	<style>
+		body {
+			color: #242d47;
+			font-family: 'DejaVu Sans', sans-serif;
+		}
+
+		.columns {
+			padding: 20px;
+		}
+
+		.columns:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+
+		.column {
+			box-sizing: border-box;
+			float: left;
+			padding: 0 15px;
+			width: 50%;
+		}
+
+		table {
+			border-spacing: 0;
+			border-collapse: collapse;
+			margin: 10px 0;
+			width: 100%;
+		}
+
+		th, td {
+			border: 1px solid #efefef;
+			padding: 5px;
+		}
+
+		th {
+			background: #efefef;
+		}
+
+		td.hidden {
+			border: 0;
+		}
+	</style>
 </head>
 <body>
 	<div class="columns">
 		{{-- Logo --}}
 		<div class="column">
 			<div style="width: 300px;">
-				<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
+				<img src="{{ asset('/images/wnl-logo.png') }}" alt="Logo Więcej niż LEK">
 			</div>
 		</div>
 
@@ -25,16 +69,22 @@ DOCTYPE html>
 	<div class="columns">
 		{{-- Seller --}}
 		<div class="column">
-			<strong>bethink sp. z o.o.</strong><br>
-			ul. Henryka Sienkiewicza 8/1<br>
-			60-817 Poznań<br>
-			NIP: 7811943756<br>
-			KRS: 0000668811
+			<strong>Sprzedawca</strong>
+			<address>
+				bethink sp. z o.o.<br>
+				ul. Henryka Sienkiewicza 8/1<br>
+				60-817 Poznań<br>
+				NIP: 7811943756<br>
+				KRS: 0000668811
+			</address>
 		</div>
 
 		{{-- Buyer --}}
 		<div class="column">
-			@yield('buyer')
+			<strong>Nabywca</strong>
+			<address>
+				@yield('buyer')
+			</address>
 		</div>
 	</div>
 

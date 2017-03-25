@@ -30,7 +30,7 @@ class Invoice
 
 		$pdf = PDF::loadHtml($html);
 
-		Storage::put("invoices/example.pdf", $pdf->stream());
+		Storage::put('invoices/' . str_random() . '-example.pdf', $pdf->stream());
 	}
 
 	public function advance()

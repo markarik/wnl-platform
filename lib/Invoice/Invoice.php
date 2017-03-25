@@ -17,7 +17,7 @@ class Invoice
 
 	const FINAL_SERIES_NAME = 'FK';
 
-	const VAT_THRESHOLD = 160000;
+	const VAT_THRESHOLD = 160000.00;
 
 	public function issueFromOrder(Order $order, $proforma = false)
 	{
@@ -88,8 +88,15 @@ class Invoice
 		}
 
 		return $dbResult;
-
 	}
 
+	private function advanceInvoiceSum()
+	{
+		$orders = Order::whereHas('invoices', function ($query) {
+			$query->where('series', self::ADVANCE_SERIES_NAME);
+		})->get();
+
+		return $orders->sum('total_with_coupon');
+	}
 
 }

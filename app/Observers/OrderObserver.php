@@ -22,8 +22,6 @@ class OrderObserver
 
 	public function created(Order $order)
 	{
-		if ($order->user->invoice) {
-			$this->dispatch(new IssueInvoice($order, $proforma = true));
-		}
+		$this->dispatch(new IssueInvoice($order, $proforma = true));
 	}
 }

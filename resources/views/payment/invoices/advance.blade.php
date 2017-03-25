@@ -131,5 +131,5 @@
 
 @section('summary')
 	Wpłacono:
-	Pozostało z zamówienia: 
+	Pozostało z zamówienia:
 @endsection

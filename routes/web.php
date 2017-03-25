@@ -19,6 +19,12 @@ Route::get('/styleguide', function() {
 	return Response::view('styleguide');
 });
 
+Route::group(['namespace' => 'Invoice', 'prefix' => 'invoice'], function () {
+	Route::get('advance', function () { return Response::view('payment/invoices/advance'); });
+	Route::get('final', function () { return Response::view('payment/invoices/final'); });
+	Route::get('pro-forma', function () { return Response::view('payment/invoices/pro-forma'); });
+});
+
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function ()
 {
 	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');

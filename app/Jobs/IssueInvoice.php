@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Facades\Lib\Wfirma\Invoice;
+use Facades\Lib\Invoice\Invoice;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvoiceIssued;
 

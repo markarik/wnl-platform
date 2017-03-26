@@ -10,20 +10,32 @@
 
 <section class="section">
 	<div class="container">
+		<div class="columns is-hidden-mobile has-text-centered">
+			<div class="column">
+				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
+					@lang('payment.select-product-onsite-button-label')
+				</a>
+			</div>
+			<div class="column">
+				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
+					@lang('payment.select-product-online-button-label')
+				</a>
+			</div>
+		</div>
 		<div class="columns">
 			<div class="column">
 				<div class="box">
 					<p class="title">@lang('payment.select-product-onsite-heading')</p>
 					<ul class="list-group">
-						<li class="list-group-item">@lang('payment.select-product-features-length')</li>
-						<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
-						<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
-						<li class="list-group-item">@lang('payment.select-product-features-workshops')</li>
-						<li class="list-group-item">@lang('payment.select-product-features-individual')</li>
+						@lang('payment.select-product-online-description')
+					</ul>
+					<span class="onsite-plus">+</span>
+					<ul class="list-group">
+						@lang('payment.select-product-onsite-description')
 					</ul>
 				</div>
 				<div class="block has-text-centered is-hidden-tablet">
-					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}">
+					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
 						@lang('payment.select-product-onsite-button-label')
 					</a>
 				</div>
@@ -32,13 +44,11 @@
 				<div class="box">
 					<p class="title">@lang('payment.select-product-online-heading')</p>
 					<ul class="list-group">
-						<li class="list-group-item">@lang('payment.select-product-features-length')</li>
-						<li class="list-group-item">@lang('payment.select-product-features-elearning')</li>
-						<li class="list-group-item">@lang('payment.select-product-features-materials')</li>
+						@lang('payment.select-product-online-description')
 					</ul>
 				</div>
 				<div class="block has-text-centered is-hidden-tablet">
-					<a href="{{route('payment-personal-data', 'wnl-online')}}">
+					<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 						@lang('payment.select-product-online-button-label')
 					</a>
 				</div>
@@ -54,6 +64,30 @@
 				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 					@lang('payment.select-product-online-button-label')
 				</a>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="section">
+	<div class="container">
+		<div class="columns">
+			<div class="column">
+				<div class="box">
+					<h3 class="title">@lang('payment.select-product-workshops-heading')</h3>
+					<p>@lang('payment.select-product-workshops-description')</p>
+					<p class="margin vertical has-text-centered">
+						<a href="https://wiecejnizlek.pl/o-warsztatach">@lang('payment.select-product-read-more')</a>
+					</p>
+				</div>
+			</div>
+			<div class="column">
+				<div class="box">
+					<h3 class="title">@lang('payment.select-product-q-and-a-heading')</h3>
+					<p>@lang('payment.select-product-q-and-a-description')</p>
+					<p class="margin vertical has-text-centered">
+						<a href="https://wiecejnizlek.pl/o-kursie">@lang('payment.select-product-read-more')</a>
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>

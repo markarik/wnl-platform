@@ -108,14 +108,17 @@ a.is-active {
 
 	&.is-primary {
 
-		&:hover {
+		&:hover,
+		&:active {
 			border-color: $color-sky-blue;
 			background-color: $color-sky-blue;
 		}
 
 		&.is-outlined {
 
-			&:hover {
+			&:hover,
+			&:active {
+				background: transparent;
 				border-color: $color-sky-blue;
 				color: $color-sky-blue;
 			}

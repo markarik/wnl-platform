@@ -4,51 +4,54 @@
 	Pro forma
 @endsection
 
-@section('identifier')
+@section('invoice-data')
 	<table>
 		<tr>
 			<th>Pro forma</th>
-			<th></th>
+			<th>{{ $invoiceData['full_number'] }}</th>
 		</tr>
 		<tr>
 			<td>Data wystawienia:</td>
-			<td></td>
+			<td>{{ $invoiceData['date'] }}</td>
 		</tr>
 		<tr>
 			<td>Termin płatności:</td>
-			<td></td>
+			<td>{{ $invoiceData['payment_date'] }}</td>
 		</tr>
 		<tr>
 			<td>Metoda płatności</td>
-			<td></td>
+			<td>{{ $invoiceData['payment_method'] }}</td>
 		</tr>
 	</table>
 @endsection
 
 @section('buyer')
-	Adam Karmiński<br>
-	ul. Łowiecka 69<br>
-	64-100, Leszno<br>
+	{{ $buyer['name'] }}<br>
+	{{ $buyer['address'] }}<br>
+	{{ $buyer['zip'] }}, {{ $buyer['city'] }}<br>
+	{{ $buyer['country'] }}<br>
+	{{ $buyer['nip'] }}
 @endsection
 
 @section('orders-list')
-	<tr>
-		<td>1</td>
-		<td>2</td>
-		<td>3</td>
-		<td>4</td>
-		<td>5</td>
-		<td>6</td>
-		<td>7</td>
-		<td>8</td>
-	</tr>
+	@foreach ($ordersList as $index => $order)
+		<tr>
+			<td>{{ $index + 1 }}</td>
+			<td>{{ $order['product_name'] }}</td>
+			<td>{{ $order['unit'] }}</td>
+			<td>{{ $order['amount'] }}</td>
+			<td>{{ $order['price'] }}</td>
+			<td>23%</td>
+			<td>{{ number_format(($order['price'] / 1.23), 2) }}</td>
+			<td>{{ $order['price'] }}</td>
+		</tr>
+	@endforeach
 @endsection
 
 @section('notes')
-	Zamówienie #1
+	Zamówienie #{{ $notes['order_number'] }}
 @endsection
 
 @section('summary')
-	Razem: 2000,00 PLN<br>
-	Słownie:
+	Razem: {{ $summary['total'] }} PLN<br>
 @endsection

@@ -5,6 +5,7 @@ namespace Lib\Invoice;
 
 
 use App\Models\Order;
+use App\Models\User;
 use Facades\Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -36,9 +37,41 @@ class Invoice
 		]);
 
 		$data = [
-			'full_number' => $invoice->full_number,
-			'invoice_id'  => $invoice->id,
-			'name'        => $order->user->full_name,
+			'invoiceData' => [
+				'id' => $invoice->id,
+				'full_number' => $invoice->full_number,
+				'date' => $invoice->created_at->formatLocalized('%d %B %Y'),
+				'payment_date' => $invoice->created_at->addDays(7)->formatLocalized('%d %B %Y'),
+				'payment_method' => 'przelew',
+			],
+		];
+
+		$data['buyer'] = $this->getBuyerData($order->user);
+
+		$data['ordersList'] = [
+			[
+				'product_name' => $order->product->name,
+				'unit' => 'szt.',
+				'amount' => 1,
+				'price' => $order->product->price,
+			],
+		];
+		$totalPrice = $order->product->price;
+
+		if ($order->coupon) {
+			$data['coupon'] = [
+				'value' => $order->coupon_amount,
+				'total_with_coupon' => $order->total_with_coupon,
+			];
+			$totalPrice = $order->total_with_coupon;
+		}
+
+		$data['notes'] = [
+			'order_number' => $order->id,
+		];
+
+		$data['summary'] = [
+			'total' => $totalPrice,
 		];
 
 		$this->renderAndSave('payment.invoices.pro-forma', $data);
@@ -65,15 +98,38 @@ class Invoice
 
 	}
 
+	protected function getBuyerData(User $user)
+	{
+		if ($user->invoice) {
+			return [
+				'name' => $user->invoice_name,
+				'address' => $user->invoice_address,
+				'zip' => $user->invoice_zip,
+				'city' => $user->invoice_city,
+				'country' => $user->invoice_country,
+				'nip' => 'NIP: ' . $user->invoice_nip,
+			];
+		} else {
+			return [
+				'name' => $user->full_name,
+				'address' => $user->address,
+				'zip' => $user->zip,
+				'city' => $user->city,
+				'country' => '',
+				'nip' => '',
+			];
+		}
+	}
+
 	protected function renderAndSave($viewName, $data)
 	{
-		$view = view($viewName, ['data' => $data]);
+		$view = view($viewName, $data);
 
 		$html = $view->render();
 
-		$pdf = PDF::loadHtml($html);
+		$pdf = PDF::loadHtml($html)->setPaper('a4');
 
-		Storage::put("invoices/{$data['invoice_id']}.pdf", $pdf->stream());
+		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->stream());
 	}
 
 	protected function nextNumberInSeries($series)
@@ -88,8 +144,5 @@ class Invoice
 		}
 
 		return $dbResult;
-
 	}
-
-
 }

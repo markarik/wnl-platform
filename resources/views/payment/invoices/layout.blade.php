@@ -55,14 +55,14 @@
 	<div class="columns">
 		{{-- Logo --}}
 		<div class="column">
-			<div style="width: 300px;">
-				<img src="{{ asset('/images/wnl-logo.png') }}" alt="Logo Więcej niż LEK">
+			<div style="width: 200px;">
+				<img src="{{ asset('/images/wnl-logo@2x.png') }}" alt="Logo Więcej niż LEK">
 			</div>
 		</div>
 
 		{{-- Identifier --}}
 		<div class="column">
-			@yield('identifier')
+			@yield('invoice-data')
 		</div>
 	</div>
 

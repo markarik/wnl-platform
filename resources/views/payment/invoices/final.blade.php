@@ -4,7 +4,7 @@
 	Faktura końcowa
 @endsection
 
-@section('identifier')
+@section('invoice-data')
 	<table>
 		<tr>
 			<th>Faktura końcowa</th>

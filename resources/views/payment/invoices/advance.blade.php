@@ -4,7 +4,7 @@
 	Faktura zaliczkowa
 @endsection
 
-@section('identifier')
+@section('invoice-data')
 	<table>
 		<tr>
 			<th>Faktura zaliczkowa</th>

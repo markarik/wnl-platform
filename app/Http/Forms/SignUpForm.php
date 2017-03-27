@@ -48,7 +48,7 @@ class SignUpForm extends Form
 				'rules' => 'required',
 				'attr'  => [
 					'class' => 'input',
-					'placeholder' => trans('payment.invoice-name'),
+					'placeholder' => trans('payment.first-name'),
 				],
 			])
 			->add('last_name', 'text', [

@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Storage;
 class Invoice
 {
 	const PROFORMA_SERIES_NAME = 'PROFORMA';
-
 	const ADVANCE_SERIES_NAME = 'F-ZAL';
-
 	const FINAL_SERIES_NAME = 'FK';
-
-	const VAT_THRESHOLD = 160000.00;
+	const VAT_THRESHOLD = -159452.00;
+	const VAT_ZERO = 0;
+	const VAT_NORMAL = 0.23;
+	const DAYS_FOR_PAYMENT = 7;
 
 	public function issueFromOrder(Order $order, $proforma = false)
 	{
@@ -37,11 +37,12 @@ class Invoice
 		]);
 
 		$data = [
+			'notes' => [],
 			'invoiceData' => [
 				'id' => $invoice->id,
 				'full_number' => $invoice->full_number,
-				'date' => $invoice->created_at->formatLocalized('%d %B %Y'),
-				'payment_date' => $invoice->created_at->addDays(7)->formatLocalized('%d %B %Y'),
+				'date' => $invoice->created_at->format('d.m.Y'),
+				'payment_date' => $invoice->created_at->addDays(self::DAYS_FOR_PAYMENT)->format('d.m.Y'),
 				'payment_method' => 'przelew',
 			],
 		];
@@ -53,7 +54,6 @@ class Invoice
 				'product_name' => $order->product->name,
 				'unit' => 'szt.',
 				'amount' => 1,
-				'price' => $order->product->price,
 			],
 		];
 		$totalPrice = $order->product->price;
@@ -64,15 +64,23 @@ class Invoice
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
+			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
 		}
 
-		$data['notes'] = [
-			'order_number' => $order->id,
-		];
+		// Calculate netto, brutto, VAT
+		$vatValue = $this->getVatValue();
+		$data['ordersList'][0]['priceGross'] = number_format($totalPrice, 2);
+		$data['ordersList'][0]['priceNet'] = number_format($totalPrice / (1 + $vatValue), 2);
+		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
 
 		$data['summary'] = [
-			'total' => $totalPrice,
+			'total' => number_format($totalPrice, 2),
 		];
+
+		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
+		if ($vatValue === self::VAT_ZERO) {
+			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+		}
 
 		$this->renderAndSave('payment.invoices.pro-forma', $data);
 	}
@@ -144,6 +152,20 @@ class Invoice
 		}
 
 		return $dbResult;
+	}
+
+	private function getVatValue() {
+		if ($this->advanceInvoiceSum() < self::VAT_THRESHOLD) {
+			return self::VAT_ZERO;
+		}
+		return self::VAT_NORMAL;
+	}
+
+	private function getVatString($value) {
+		if ($value === self::VAT_ZERO) {
+			return 'zw.';
+		}
+		return sprintf('%d%%', $value * 100);
 	}
 
 	private function advanceInvoiceSum()

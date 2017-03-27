@@ -15,8 +15,8 @@ class CouponsTableSeeder extends Seeder
 		DB::table('coupons')->insert([
 			'name'       => 'Zniżka dla subskrybentów newslettera',
 			'slug'       => 'subscriber-coupon',
-			'value'      => '20',
-			'type'       => 'percentage',
+			'value'      => '200',
+			'type'       => 'amount',
 			'expires_at' => Carbon::parse('first day of June 2017'),
 		]);
 	}

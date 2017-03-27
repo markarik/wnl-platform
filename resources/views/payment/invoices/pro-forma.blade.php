@@ -36,22 +36,34 @@
 @section('orders-list')
 	@foreach ($ordersList as $index => $order)
 		<tr>
+			{{-- L.p. --}}
 			<td>{{ $index + 1 }}</td>
+			{{-- Nazwa produktu --}}
 			<td>{{ $order['product_name'] }}</td>
+			{{-- Jednostka --}}
 			<td>{{ $order['unit'] }}</td>
+			{{-- Ilość --}}
 			<td>{{ $order['amount'] }}</td>
-			<td>{{ $order['price'] }}</td>
-			<td>23%</td>
-			<td>{{ number_format(($order['price'] / 1.23), 2) }}</td>
-			<td>{{ $order['price'] }}</td>
+			{{-- Cena brutto --}}
+			<td>{{ $order['priceGross'] }}zł</td>
+			{{-- VAT --}}
+			<td>{{ $order['vat'] }}</td>
+			{{-- Wartość netto --}}
+			<td>{{ $order['priceNet'] }}zł</td>
+			{{-- Wartość brutto --}}
+			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 	@endforeach
 @endsection
 
 @section('notes')
-	Zamówienie nr {{ $notes['order_number'] }}
+	<ul>
+	@foreach ($notes as $note)
+		<li>{{ $note }}</li>
+	@endforeach
+	</ul>
 @endsection
 
 @section('summary')
-	<strong>Razem: {{ $summary['total'] }} PLN</strong>
+	<strong>Razem: {{ $summary['total'] }}zł</strong>
 @endsection

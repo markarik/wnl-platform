@@ -26,7 +26,7 @@ class OrderTransformer extends TransformerAbstract
 			],
 		];
 
-		if ($order->coupon()) {
+		if ($order->coupon) {
 			$data['coupon'] = [
 				'id'    => $order->coupon->id,
 				'name'  => $order->coupon->name,

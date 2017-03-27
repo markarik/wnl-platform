@@ -109,24 +109,20 @@
 		</table>
 	</div>
 
+	{{-- Advances --}}
+	<div class="columns">
+		<div class="column">
+			@yield('advances', '')
+		</div>
+	</div>
+
 	{{-- Orders summary --}}
 	<div class="columns">
-		<div class="column pull-right">
+		<div class="column">
 			@yield('orders-summary', '')
 		</div>
 	</div>
 
-	<div class="columns">
-		{{-- Advances --}}
-		<div class="column">
-			@yield('advances', '')
-		</div>
-
-		{{-- Settlement --}}
-		<div class="column">
-			@yield('settlement', '')
-		</div>
-	</div>
 
 	<div class="columns">
 		{{-- Payment details --}}

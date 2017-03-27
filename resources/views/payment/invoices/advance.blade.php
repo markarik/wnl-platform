@@ -8,31 +8,29 @@
 	<table>
 		<tr>
 			<th>Faktura zaliczkowa</th>
-			<th></th>
-		</tr>
-		<tr>
-			<td>Zamówienie:</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Metoda płatności:</td>
-			<td></td>
+			<th>{{ $invoiceData['full_number'] }}</th>
 		</tr>
 		<tr>
 			<td>Data wystawienia:</td>
-			<td></td>
+			<td>{{ $invoiceData['date'] }}</td>
 		</tr>
 		<tr>
 			<td>Data wpłaty:</td>
-			<td></td>
+			<td>{{ $invoiceData['payment_date'] }}</td>
+		</tr>
+		<tr>
+			<td>Metoda płatności</td>
+			<td>{{ $invoiceData['payment_method'] }}</td>
 		</tr>
 	</table>
 @endsection
 
 @section('buyer')
-	Adam Karmiński<br>
-	ul. Łowiecka 69<br>
-	64-100, Leszno<br>
+	{{ $buyer['name'] }}<br>
+	{{ $buyer['address'] }}<br>
+	{{ $buyer['zip'] }}, {{ $buyer['city'] }}<br>
+	{{ $buyer['country'] }}<br>
+	{{ $buyer['nip'] }}
 @endsection
 
 @section('orders-title')
@@ -40,20 +38,30 @@
 @endsection
 
 @section('orders-list')
-	<tr>
-		<td>1</td>
-		<td>2</td>
-		<td>3</td>
-		<td>4</td>
-		<td>5</td>
-		<td>6</td>
-		<td>7</td>
-		<td>8</td>
-	</tr>
+	@foreach ($ordersList as $index => $order)
+		<tr>
+			{{-- L.p. --}}
+			<td>{{ $index + 1 }}</td>
+			{{-- Nazwa produktu --}}
+			<td>{{ $order['product_name'] }}</td>
+			{{-- Jednostka --}}
+			<td>{{ $order['unit'] }}</td>
+			{{-- Ilość --}}
+			<td>{{ $order['amount'] }}</td>
+			{{-- Cena brutto --}}
+			<td>{{ $order['priceGross'] }}zł</td>
+			{{-- VAT --}}
+			<td>{{ $order['vat'] }}</td>
+			{{-- Wartość netto --}}
+			<td>{{ $order['priceNet'] }}zł</td>
+			{{-- Wartość brutto --}}
+			<td>{{ $order['priceGross'] }}zł</td>
+		</tr>
+	@endforeach
 @endsection
 
 @section('orders-summary')
-	<strong>Podsumowanie zamówienia</strong>
+	<h4>Podsumowanie zamówienia</h4>
 	<table>
 		<tr>
 			<th>Stawka VAT</th>
@@ -62,22 +70,46 @@
 			<th>Wartość brutto</th>
 		</tr>
 		<tr>
-			<td>23%</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
+			<td>{{ $order['vat'] }}</td>
+			<td>{{ $order['priceNet'] }}zł</td>
+			<td>{{ $order['vatValue'] }}zł</td>
+			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 		<tr>
-			<td>Razem:</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
+			<td><strong>Razem:</strong></td>
+			<td>{{ $order['priceNet'] }}zł</td>
+			<td>{{ $order['vatValue'] }}zł</td>
+			<td>{{ $order['priceGross'] }}zł</td>
+		</tr>
+	</table>
+@endsection
+
+@section('settlement')
+	<h4>Rozliczenie wg stawek</h4>
+	<table>
+		<tr>
+			<th>Stawka VAT</th>
+			<th>Wartość netto</th>
+			<th>Kwota VAT</th>
+			<th>Wartość brutto</th>
+		</tr>
+		<tr>
+			<td>{{ $order['vat'] }}</td>
+			<td>{{ $order['priceNet'] }}zł</td>
+			<td>{{ $order['vatValue'] }}zł</td>
+			<td>{{ $order['priceGross'] }}zł</td>
+		</tr>
+		<tr>
+			<td><strong>Razem:</strong></td>
+			<td>{{ $order['priceNet'] }}zł</td>
+			<td>{{ $order['vatValue'] }}zł</td>
+			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 	</table>
 @endsection
 
 @section('advances')
-	<strong>Poprzednie zaliczki</strong>
+	<h4>Poprzednie zaliczki</h4>
 	<table>
 		<tr>
 			<th>Lp</th>
@@ -89,47 +121,23 @@
 		<tr>
 			<td class="hidden"></td>
 			<td class="hidden"></td>
-			<td>Razem</td>
-			<td>0,00</td>
-			<td>0,00</td>
-		</tr>
-	</table>
-@endsection
-
-@section('settlement')
-	<strong>Rozliczenie według stawek</strong>
-	<table>
-		<tr>
-			<th>Stawka VAT</th>
-			<th>Wartość netto</th>
-			<th>Kwota VAT</th>
-			<th>Wartość brutto</th>
-		</tr>
-		<tr>
-			<td>23%</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
-		</tr>
-		<tr>
 			<td>Razem:</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
+			<td>0,00</td>
+			<td>0,00</td>
 		</tr>
 	</table>
-@endsection
-
-@section('payment-details')
-	Wpłacono słownie: <br>
-	Metoda płatnośći:
 @endsection
 
 @section('notes')
-	Zamówienie #
+	<ul>
+	@foreach ($notes as $note)
+		<li>{{ $note }}</li>
+	@endforeach
+	</ul>
 @endsection
 
 @section('summary')
-	Wpłacono:
-	Pozostało z zamówienia:
+	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
+	<p>Wpłacono: <strong>{{ $order['priceGross'] }}zł</strong></p>
+	<p>Pozostało z zamówienia: 0.00zł</strong></p>
 @endsection

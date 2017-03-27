@@ -15,7 +15,7 @@ class Invoice
 	const PROFORMA_SERIES_NAME = 'PROFORMA';
 	const ADVANCE_SERIES_NAME = 'F-ZAL';
 	const FINAL_SERIES_NAME = 'FK';
-	const VAT_THRESHOLD = -159452.00;
+	const VAT_THRESHOLD = 159452.00;
 	const VAT_ZERO = 0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
@@ -95,10 +95,51 @@ class Invoice
 		]);
 
 		$data = [
-			'full_number' => $invoice->full_number,
-			'invoice_id'  => $invoice->id,
-			'name'        => $order->user->full_name,
+			'notes' => [],
+			'invoiceData' => [
+				'id' => $invoice->id,
+				'full_number' => $invoice->full_number,
+				'date' => $invoice->created_at->format('d.m.Y'),
+				'payment_date' => $invoice->created_at->format('d.m.Y'),
+				'payment_method' => 'przelew',
+			],
 		];
+
+		$data['buyer'] = $this->getBuyerData($order->user);
+
+		$data['ordersList'] = [
+			[
+				'product_name' => $order->product->name,
+				'unit' => 'szt.',
+				'amount' => 1,
+			],
+		];
+		$totalPrice = $order->product->price;
+
+		if ($order->coupon) {
+			$data['coupon'] = [
+				'value' => $order->coupon_amount,
+				'total_with_coupon' => $order->total_with_coupon,
+			];
+			$totalPrice = $order->total_with_coupon;
+			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+		}
+
+		// Calculate netto, brutto, VAT
+		$vatValue = $this->getVatValue();
+		$data['ordersList'][0]['priceGross'] = number_format($totalPrice, 2);
+		$data['ordersList'][0]['priceNet'] = number_format($totalPrice / (1 + $vatValue), 2);
+		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
+		$data['ordersList'][0]['vatValue'] = number_format($vatValue * $totalPrice / (1 + $vatValue));
+
+		$data['summary'] = [
+			'total' => number_format($totalPrice, 2),
+		];
+
+		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
+		if ($vatValue === self::VAT_ZERO) {
+			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+		}
 
 		$this->renderAndSave('payment.invoices.advance', $data);
 

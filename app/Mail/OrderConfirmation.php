@@ -35,8 +35,8 @@ class OrderConfirmation extends Mailable
 	public function build()
 	{
 		return $this
-			->view('mail.order-confirmation')
-			->subject("Potwierdzenie zamówienia #{$this->order->id}")
+			->view('mail.order-confirmation', [$order, $this->order])
+			->subject("Dziękujemy za zamówienie! (numer zamówienia {$this->order->id})")
 			->attach($this->invoice->file_path, [
 				'as'   => $this->invoice->number_slugged . '.pdf',
 				'mime' => 'application/pdf',

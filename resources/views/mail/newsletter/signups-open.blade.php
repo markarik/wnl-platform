@@ -1,4 +1,4 @@
-@extends('mail.layout')
+@extends('mail.newsletter.layout')
 
 @section('content')
 
@@ -61,7 +61,4 @@
 	<p>Od dziś poddajemy nasze starania ostatecznej weryfikacji. Wierzymy, że jesteśmy na dobrej drodze do tego, aby dzięki atmosferze, którą chcemy razem z Tobą budować wokół "Więcej niż LEK", powrót mentoringu i współpracy w środowisku medycznym stanie się rzeczywistością.</p>
 
 	<p>Dziękujemy i… mamy nadzieję, że do zobaczenia na kursie!</p>
-
-	<p><em>Ekipa Więcej niż LEK</em></p>
-
 @endsection

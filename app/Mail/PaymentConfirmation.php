@@ -35,8 +35,8 @@ class PaymentConfirmation extends Mailable
 	public function build()
 	{
 		return $this
-			->view('mail.payment-confirmation')
-			->subject("Otrzymaliśmy wpłatę do zamówienia #{$this->order->id}")
+			->view('mail.payment-confirmation', [ 'order' => $this->order ])
+			->subject("Otrzymaliśmy wpłatę za kurs! (zamówienie numer {$this->order->id})")
 			->attach($this->invoice->file_path, [
 				'as'   => $this->invoice->number_slugged . '.pdf',
 				'mime' => 'application/pdf',

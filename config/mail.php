@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => 'hello@example.com',
-        'name' => 'bethink',
+		'address' => 'info@wiecejnizlek.pl',
+		'name'    => 'Więcej niż LEK',
     ],
 
     /*

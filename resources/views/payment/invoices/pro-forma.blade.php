@@ -49,9 +49,9 @@
 @endsection
 
 @section('notes')
-	Zamówienie #{{ $notes['order_number'] }}
+	Zamówienie nr {{ $notes['order_number'] }}
 @endsection
 
 @section('summary')
-	Razem: {{ $summary['total'] }} PLN<br>
+	<strong>Razem: {{ $summary['total'] }} PLN</strong>
 @endsection

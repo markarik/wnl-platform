@@ -27,7 +27,7 @@ class RedirectIfPaid
 		}
 
 		if ($user->orders()->recent()->paid){
-			return redirect()->route('profile-orders');
+			return redirect(url('app/myself/orders'));
 		}
 
 		return $next($request);

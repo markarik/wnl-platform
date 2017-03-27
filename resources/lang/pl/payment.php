@@ -91,13 +91,13 @@ return [
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
 
-    'first-name' => 'Imię',
-    'last-name' => 'Nazwisko',
-    'address' => 'Ulica i numer domu / mieszkania',
-    'zip' => 'Kod pocztowy',
-    'city' => 'Miasto',
-    'email' => 'Adres e-mail',
-    'phone' => 'Numer telefonu',
+	'first-name' => 'Imię',
+	'last-name' => 'Nazwisko',
+	'address' => 'Ulica i numer domu / mieszkania',
+	'zip' => 'Kod pocztowy',
+	'city' => 'Miasto',
+	'email' => 'Adres e-mail',
+	'phone' => 'Numer telefonu',
 	'password' => 'Hasło',
 	'password-confirm' => 'Potwierdź hasło',
 
@@ -145,6 +145,7 @@ return [
 	'confirm-method-bank-transfer-button' => 'Płacę przelewem bankowym',
 	'confirm-method-online-payment-button' => 'Płacę szybkim przelewem',
 
-    'confirm-change-order' => 'Chcę poprawić dane',
+	'confirm-change-order'          => 'Chcę poprawić dane',
+	'personal-data-invoice-heading' => 'Dane do faktury',
 
 ];

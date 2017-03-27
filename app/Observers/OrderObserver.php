@@ -23,7 +23,7 @@ class OrderObserver
 			$this->dispatch(new OrderPaid($order));
 		}
 
-		if ($order->getOriginal('method') === null) {
+		if ($order->getOriginal('method') === null && $order->method !== null) {
 			$this->dispatch(new OrderConfirmed($order));
 		}
 	}

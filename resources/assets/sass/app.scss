@@ -175,3 +175,15 @@ html, body {
 .payment-step-text {
 	font-size: $font-size-minus-1;
 }
+
+.onsite-plus {
+	display: block;
+	font-size: $font-size-plus-7;
+	text-align: center;
+	width: 100%;
+}
+
+.sublist-group {
+	list-style-type: disc;
+	margin: 5px 30px 15px 30px;
+}

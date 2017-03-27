@@ -12,7 +12,6 @@ class Order extends Model
 
 	protected $fillable = [
 		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id',
-
 	];
 
 	protected $guarded = [
@@ -56,14 +55,22 @@ class Order extends Model
 	public function getTotalWithCouponAttribute()
 	{
 		$coupon = $this->coupon;
-		$subtotal = $this->product->price;
 
-		if (is_null($coupon)) return $subtotal;
+		if (is_null($coupon)) return $this->product->price;
+
+		return $this->product->price - $this->coupon_amount;
+	}
+
+	public function getCouponAmountAttribute()
+	{
+		$coupon = $this->coupon;
+
+		if (is_null($coupon)) return 0;
 
 		if ($coupon->is_percentage) {
-			return $subtotal - ($coupon->value * $subtotal / 100);
+			return number_format($coupon->value * $this->product->price / 100, 2);
 		}
 
-		return $subtotal - $coupon->value;
+		return $coupon->value;
 	}
 }

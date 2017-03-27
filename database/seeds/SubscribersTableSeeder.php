@@ -13,7 +13,7 @@ class SubscribersTableSeeder extends Seeder
 	{
 		DB::table('subscribers')->insert([
 			['email' => 'kuba@wiecejnizlek.pl'],
-			['email' => 'adamkarminski@gmail.com'],
+			['email' => 'adam.karminski@wiecejnizlek.pl'],
 		]);
 	}
 }

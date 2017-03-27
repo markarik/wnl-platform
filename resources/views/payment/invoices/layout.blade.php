@@ -11,6 +11,7 @@
 		body {
 			color: #242d47;
 			font-family: 'DejaVu Sans', sans-serif;
+			font-size: 8pt;
 		}
 
 		.columns {
@@ -26,20 +27,24 @@
 		.column {
 			box-sizing: border-box;
 			float: left;
-			padding: 0 15px;
+			padding: 0 15px 50px;
 			width: 50%;
+		}
+
+		.has-text-right {
+			text-align: right;
 		}
 
 		table {
 			border-spacing: 0;
 			border-collapse: collapse;
-			margin: 10px 0;
+			margin: 0 0 30px;
 			width: 100%;
 		}
 
 		th, td {
 			border: 1px solid #efefef;
-			padding: 5px;
+			padding: 15px;
 		}
 
 		th {
@@ -53,16 +58,14 @@
 </head>
 <body>
 	<div class="columns">
-		{{-- Logo --}}
+		{{-- Invoice data --}}
 		<div class="column">
-			<div style="width: 300px;">
-				<img src="{{ asset('/images/wnl-logo.png') }}" alt="Logo Więcej niż LEK">
-			</div>
+			@yield('invoice-data')
 		</div>
 
-		{{-- Identifier --}}
-		<div class="column">
-			@yield('identifier')
+		{{-- Logo --}}
+		<div class="column has-text-right">
+			<img src="{{ asset('/images/wnl-logo@2x.png') }}" alt="Logo Więcej niż LEK" style="width: 400px;">
 		</div>
 	</div>
 
@@ -80,7 +83,7 @@
 		</div>
 
 		{{-- Buyer --}}
-		<div class="column">
+		<div class="column has-text-right">
 			<strong>Nabywca</strong>
 			<address>
 				@yield('buyer')
@@ -135,7 +138,7 @@
 		</div>
 
 		{{-- Summary --}}
-		<div class="column">
+		<div class="column has-text-right">
 			@yield('summary')
 		</div>
 	</div>

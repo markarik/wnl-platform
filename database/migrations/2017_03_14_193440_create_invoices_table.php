@@ -18,7 +18,7 @@ class CreateInvoicesTable extends Migration
 			$table->unsignedInteger('order_id');
 			$table->string('number');
 			$table->string('series');
-			$table->enum('vat', [0, 23]);
+			$table->enum('vat', ['zw', '23']);
             $table->timestamps();
         });
     }

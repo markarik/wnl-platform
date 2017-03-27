@@ -23,7 +23,7 @@ class OrderObserver
 			$this->dispatch(new OrderPaid($order));
 		}
 
-		if ($order->getOriginal('method') === null) {
+		if ($order->getOriginal('method') === null && $order->method !== null) {
 			$this->dispatch(new OrderConfirmed($order));
 		}
 	}
@@ -35,6 +35,6 @@ class OrderObserver
 
 	public function routeNotificationForSlack()
 	{
-		return 'https://hooks.slack.com/services/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';
+		return env('SLACK_ORDERS_URL');
 	}
 }

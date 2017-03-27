@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Facades\Lib\Invoice\Invoice;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\InvoiceIssued;
+use App\Mail\OrderConfirmation;
 
 
 /**
@@ -28,7 +28,8 @@ class IssueInvoice implements ShouldQueue
 	 *
 	 * @param Order $order
 	 * @param bool $proforma
-	 * @param bool $mail
+	 * @param bool $send
+	 * @internal param bool $mail
 	 */
 	public function __construct(Order $order, $proforma = false, $send = true)
 	{
@@ -46,7 +47,7 @@ class IssueInvoice implements ShouldQueue
 	{
 		Invoice::issueFromOrder($this->order, $this->proforma);
 		if ($this->send) {
-			Mail::to($this->order->user)->send(new InvoiceIssued($this->order));
+			Mail::to($this->order->user)->send(new OrderConfirmation($this->order));
 		}
 	}
 }

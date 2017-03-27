@@ -2,13 +2,14 @@
 
 namespace App\Mail;
 
+use App\Models\Invoice;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class InvoiceIssued extends Mailable
+class PaymentConfirmation extends Mailable
 {
 	use Queueable, SerializesModels;
 	protected $invoice;
@@ -18,11 +19,12 @@ class InvoiceIssued extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param Order $order
+	 * @param Invoice $invoice
 	 */
-	public function __construct(Order $order)
+	public function __construct(Order $order, Invoice $invoice)
 	{
 		$this->order = $order;
-		$this->invoice = $order->invoices()->recent();
+		$this->invoice = $invoice;
 	}
 
 	/**
@@ -33,11 +35,12 @@ class InvoiceIssued extends Mailable
 	public function build()
 	{
 		return $this
-			->view('mail.invoice-issued')
-			->subject("Wystawiliśmy dokument {$this->invoice->full_number} do zamówienia #{$this->order->id}")
+			->view('mail.payment-confirmation')
+			->subject("Otrzymaliśmy wpłatę do zamówienia #{$this->order->id}")
 			->attach($this->invoice->file_path, [
 				'as'   => $this->invoice->number_slugged . '.pdf',
 				'mime' => 'application/pdf',
-			]);
+			])
+			->bcc('zamowienia@wiecejnizlek.pl');
 	}
 }

@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UserSignedUp extends Mailable
+class SignUpConfirmation extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +28,7 @@ class UserSignedUp extends Mailable
     public function build()
     {
         return $this
-			->view('mail.user-signed-up')
+			->view('mail.sign-up-confirmation')
 			->subject('Potwierdzenie rejestracji');
     }
 }

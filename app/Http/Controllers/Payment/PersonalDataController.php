@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Forms\SignUpForm;
-use App\Mail\UserSignedUp;
+use App\Mail\SignUpConfirmation;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
@@ -99,7 +99,7 @@ class PersonalDataController extends Controller
 
 		Auth::login($user);
 
-		Mail::to(Auth::user())->send(new UserSignedUp);
+		Mail::to(Auth::user())->send(new SignUpConfirmation);
 
 		return redirect(route('payment-confirm-order'));
 	}

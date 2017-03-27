@@ -22,9 +22,9 @@ class Invoice
 	public function issueFromOrder(Order $order, $proforma = false)
 	{
 		if ($proforma) {
-			$this->proforma($order);
+			return $this->proforma($order);
 		} else {
-			$this->advance($order);
+			return $this->advance($order);
 		}
 	}
 
@@ -42,6 +42,8 @@ class Invoice
 		];
 
 		$this->renderAndSave('payment.invoices.pro-forma', $data);
+
+		return $invoice;
 	}
 
 	public function advance(Order $order)
@@ -58,6 +60,8 @@ class Invoice
 		];
 
 		$this->renderAndSave('payment.invoices.advance', $data);
+
+		return $invoice;
 	}
 
 	public function finalInvoice(Order $order)

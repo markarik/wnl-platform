@@ -2,6 +2,12 @@ export function envValue(key) {
 	return $wnl.env[key]
 }
 
+// Env
+
+export function isProduction() {
+	return envValue('appEnv') === 'prod'
+}
+
 // Debug
 
 export function isDebug() {

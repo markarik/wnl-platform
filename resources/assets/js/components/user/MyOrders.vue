@@ -1,9 +1,16 @@
 <template lang="html">
 	<div class="container">
-		<h1>Twoje zamówienia</h1>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Twoje zamówienia
+				</div>
+			</div>
+			<div class="level-right">
 
-		<wnl-order v-for="order in orders" :order="order">
-		</wnl-order>
+			</div>
+		</div>
+		<wnl-order :order="order" v-for="order in orders"></wnl-order>
 	</div>
 
 </template>

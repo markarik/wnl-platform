@@ -39,6 +39,11 @@ class Handler extends ExceptionHandler
 	 */
 	public function report(Exception $exception)
 	{
+		// Send any production exceptions to Sentry
+		if ($this->shouldReport($exception) && App::environment('production')) {
+			app('sentry')->captureException($exception);
+		}
+
 		parent::report($exception);
 	}
 
@@ -80,7 +85,7 @@ class Handler extends ExceptionHandler
 		if (!is_null($request->route()) && $request->route()->getPrefix() === '/payment') {
 			Log::critical('Exception on payment path: ' . $exception->getMessage() . ' in ' . $exception->getFile());
 		}
-		
+
 		return response()->view('errors.500', [], 500);
 	}
 

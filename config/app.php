@@ -170,6 +170,7 @@ return [
 		Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
 		Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
 		Barryvdh\DomPDF\ServiceProvider::class,
+		Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -228,6 +229,7 @@ return [
 		'Validator' => Illuminate\Support\Facades\Validator::class,
 		'View'      => Illuminate\Support\Facades\View::class,
 		'PDF'       => Barryvdh\DomPDF\Facade::class,
+		'Sentry'    => Sentry\SentryLaravel\SentryFacade::class,
 
     ],
 

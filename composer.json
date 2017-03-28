@@ -10,7 +10,8 @@
         "laracasts/utilities": "~2.0",
         "league/fractal": "^0.15.0",
         "guzzlehttp/guzzle": "^6.2",
-        "barryvdh/laravel-dompdf": "^0.8.0"
+	  "barryvdh/laravel-dompdf": "^0.8.0",
+	  "sentry/sentry-laravel": "^0.6.1"
     },
     "require-dev": {
         "laravel/dusk": "^1.0",

@@ -4,13 +4,14 @@
 namespace App\Observers;
 
 
+use App\Models\Order;
+use App\Jobs\OrderPaid;
 use App\Jobs\IssueInvoice;
 use App\Jobs\OrderConfirmed;
-use App\Jobs\OrderPaid;
-use App\Models\Order;
+use Illuminate\Support\Facades\App;
 use App\Notifications\OrderCreated;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 
 class OrderObserver
@@ -32,7 +33,9 @@ class OrderObserver
 
 	public function created(Order $order)
 	{
-		$this->notify(new OrderCreated($order));
+		if (App::environment('production')) {
+			$this->notify(new OrderCreated($order));
+		}
 	}
 
 	public function routeNotificationForSlack()

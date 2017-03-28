@@ -12,6 +12,8 @@ class SignUpConfirmation extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 
+	public $user;
+
 	/**
 	 * Create a new message instance.
 	 *
@@ -29,7 +31,7 @@ class SignUpConfirmation extends Mailable implements ShouldQueue
 	public function build()
 	{
 		return $this
-			->view('mail.sign-up-confirmation', ['user' => $this->user])
+			->view('mail.sign-up-confirmation')
 			->subject('Potwierdzenie rejestracji');
 	}
 }

@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Dziękujemy za wpłatę {{ $order->user->first_name or '{Adam}' }}!</h3>
+	<h3>Dziękujemy za wpłatę {{ $order->user->first_name or '{first_name}' }}!</h3>
 
 	<p class="text-align: center;">
 		<img src="https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif" alt="Tak się cieszymy!" style="display: block; margin: 0 auto;">

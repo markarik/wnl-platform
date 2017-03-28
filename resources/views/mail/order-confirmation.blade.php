@@ -1,9 +1,9 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $order->user->first_name or '{Adam}' }}, witaj ponownie!</h3>
+	<h3>Cześć {{ $order->user->first_name or '{first_name}' }}, witaj ponownie!</h3>
 
-	<p>Piszemy do Ciebie, żeby potwierdzić zamówienie numer {{ $order->id or '{12345}' }} złożone na kurs <strong>{{$order->product->name or '{Kurs internetowy}'}}</strong>.</p>
+	<p>Piszemy do Ciebie, żeby potwierdzić zamówienie numer {{ $order->id or '{order_no}' }} złożone na kurs <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
 
 	<p>W załączniku znajdziesz dokument pro forma, który zawiera szczegóły zamówienia. Stanowi on jednocześnie podstawę do płatności.</p>
 
@@ -13,7 +13,7 @@
 	<table style="font-size: 0.9em; line-height: 2em;">
 		<tr>
 			<td style="text-align: right; padding-right: 15px;">Tytuł przelewu:</td>
-			<td><strong>Zamówienie numer {{ $order->id or '{12345}' }}</strong></td>
+			<td><strong>Zamówienie numer {{ $order->id or '{order_no}' }}</strong></td>
 		</tr>
 		<tr>
 			<td style="text-align: right; padding-right: 15px;">Nazwa odbiorcy:</td>
@@ -25,7 +25,7 @@
 		</tr>
 		<tr>
 			<td style="text-align: right; padding-right: 15px;">Kwota:</td>
-			<td>{{ $order->total_with_coupon or '{12,000.00}' }}zł</td>
+			<td>{{ $order->total_with_coupon or '{price}' }}zł</td>
 		</tr>
 	</table>
 

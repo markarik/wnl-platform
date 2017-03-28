@@ -99,7 +99,7 @@ class PersonalDataController extends Controller
 
 		Auth::login($user);
 
-		Mail::to(Auth::user())->send(new SignUpConfirmation);
+		Mail::to(Auth::user())->send(new SignUpConfirmation($user));
 
 		return redirect(route('payment-confirm-order'));
 	}

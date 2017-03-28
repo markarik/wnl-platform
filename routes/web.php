@@ -67,4 +67,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth
 {
 	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
 	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
+	Route::get('/email/{template}', function($template) {
+		return Response::view('mail/' . $template);
+	});
+	Route::get('/newsletter/{template}', function($template) {
+		return Response::view('mail/newsletter/' . $template);
+	});
 });

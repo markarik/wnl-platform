@@ -12,8 +12,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class PaymentConfirmation extends Mailable
 {
 	use Queueable, SerializesModels;
+	public $order;
 	protected $invoice;
-	protected $order;
 
 	/**
 	 * Create a new message instance.
@@ -36,7 +36,7 @@ class PaymentConfirmation extends Mailable
 	{
 		return $this
 			->view('mail.payment-confirmation')
-			->subject("Otrzymaliśmy wpłatę do zamówienia #{$this->order->id}")
+			->subject("Otrzymaliśmy wpłatę za kurs! (zamówienie numer {$this->order->id})")
 			->attach($this->invoice->file_path, [
 				'as'   => $this->invoice->number_slugged . '.pdf',
 				'mime' => 'application/pdf',

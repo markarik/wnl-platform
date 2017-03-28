@@ -2,13 +2,15 @@
 
 namespace App\Exceptions;
 
+use App;
 use Exception;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class Handler extends ExceptionHandler
@@ -55,8 +57,16 @@ class Handler extends ExceptionHandler
 			return parent::render($request, $exception);
 		}
 
-		if (!is_null($request->route()) && $request->route()->getPrefix() === '/payment') {
-			Log::critical('Exception on payment path: ' . $exception->getMessage() . ' in ' . $exception->getFile());
+		if ($exception instanceof HttpResponseException) {
+			return $exception->getResponse();
+		}
+
+		if ($exception instanceof AuthenticationException) {
+			return $this->unauthenticated($request, $exception);
+		}
+
+		if ($exception instanceof ValidationException) {
+			return $this->convertValidationExceptionToResponse($exception, $request);
 		}
 
 		if ($exception instanceof NotFoundHttpException) {
@@ -67,6 +77,10 @@ class Handler extends ExceptionHandler
 			return response()->view('errors.503', [], 503);
 		}
 
+		if (!is_null($request->route()) && $request->route()->getPrefix() === '/payment') {
+			Log::critical('Exception on payment path: ' . $exception->getMessage() . ' in ' . $exception->getFile());
+		}
+		
 		return response()->view('errors.500', [], 500);
 	}
 

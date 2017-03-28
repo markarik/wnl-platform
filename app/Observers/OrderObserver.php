@@ -25,6 +25,8 @@ class OrderObserver
 
 		if ($order->getOriginal('method') === null && $order->method !== null) {
 			$this->dispatch(new OrderConfirmed($order));
+			$order->product->quantity--;
+			$order->product->save();
 		}
 	}
 

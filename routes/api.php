@@ -12,3 +12,10 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::group(['namespace' => 'Api\PublicApi'], function () {
+
+	// Products
+	Route::get('products/availability', 'ProductsApiController@getAvailability');
+
+});

@@ -3,7 +3,7 @@
 		<div class="columns wnl-nav-container">
 			<div class="column wnl-nav-column">
 				<div class="wnl-left-content wnl-nav-item">
-					<router-link :to="{ name: 'courses', params: { courseId: 1 } }" class="wnl-logo-link">
+					<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
 						<img :src="logoSrc" :alt="logoAlt">
 					</router-link>
 				</div>

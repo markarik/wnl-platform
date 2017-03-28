@@ -6,6 +6,9 @@
 					<li class="wnl-sidenav-item">
 						<router-link :to="{name: 'my-orders'}">Twoje zamówienia</router-link>
 					</li>
+					<li class="wnl-sidenav-item" v-if="isProduction">
+						<router-link :to="{name: 'countdown'}">Kiedy kurs?</router-link>
+					</li>
 				</ul>
 			</aside>
 		</div>
@@ -17,8 +20,15 @@
 </template>
 
 <script>
+	import { isProduction } from 'js/utils/env'
+
 	export default {
 		props: ['view'],
+		computed: {
+			isProduction() {
+				return isProduction()
+			},
+		},
 		methods: {
 			goToDefaultRoute() {
 				if (!this.view) {
@@ -26,6 +36,6 @@
 				}
 			}
 		},
-		mounted() { this.goToDefaultRoute() }
+		// mounted() { this.goToDefaultRoute() }
 	}
 </script>

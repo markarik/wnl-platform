@@ -53,12 +53,13 @@ class PaymentTest extends DuskTestCase
 				->on(new OrdersPage)
 				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']]);
 
-//			$this->closeAll();
 		});
+
+		$this->closeAll();
 	}
 
 	/** @test */
-	public function user_can_successfully_place_order_using_online_payment()
+	public function user_can_place_order_and_successfully_pay_online()
 	{
 		if (env('APP_ENV') === 'production') {
 			print PHP_EOL . 'Omitting test ' . __METHOD__ . ' (not applicable on production)';
@@ -88,11 +89,45 @@ class PaymentTest extends DuskTestCase
 				->press('@confirm-payment');
 
 			$browser
-				->on(new OrdersPage)
-				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']]);
-
-			dd();
+				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']])
+				->waitForText('Zapłacono!', 60);
 		});
 
+		$this->closeAll();
+	}
+
+	/** @test */
+	public function user_cant_place_order_and_request_an_invoice()
+	{
+		$this->browse(function ($browser) {
+			$browser
+				->visit(new SelectProductPage)
+				->clickLink('Wybieram kurs internetowy');
+
+			$user = $this->generateFormData($this->faker);
+			$browser->on(new PersonalDataPage);
+			$this->fillInForm($user, $browser, $invoice = true);
+			$browser->xpath('.//button[@class="button is-primary"]')->click();
+
+			$browser
+				->on(new ConfirmOrderPage)
+				->assertSeeAll([
+					$user['email'],
+					$user['firstName'],
+					$user['lastName'],
+					$user['address'],
+					$user['invoice_company'],
+					$user['invoice_address'],
+					$user['invoice_postcode'],
+					$user['invoice_country'],
+				])
+				->xpath('.//button[1]')->click();
+
+			$browser
+				->on(new OrdersPage)
+				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']]);
+		});
+
+		$this->closeAll();
 	}
 }

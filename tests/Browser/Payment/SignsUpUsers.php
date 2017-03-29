@@ -26,14 +26,20 @@ trait SignsUpUsers
 	protected function generateFormData($faker)
 	{
 		$data = [
-			'password'    => $faker->password,
-			'email'       => $faker->email,
-			'firstName'   => $faker->firstName,
-			'lastName'    => $faker->lastName,
-			'address'     => $faker->streetAddress,
-			'phoneNumber' => $faker->phoneNumber,
-			'postcode'    => $faker->postcode,
-			'city'        => $faker->city,
+			'password'         => $faker->password,
+			'email'            => $faker->email,
+			'firstName'        => $faker->firstName,
+			'lastName'         => $faker->lastName,
+			'address'          => $faker->streetAddress,
+			'phoneNumber'      => $faker->phoneNumber,
+			'postcode'         => $faker->postcode,
+			'city'             => $faker->city,
+			'invoice_company'  => $faker->company,
+			'invoice_nip'      => $faker->randomNumber(9),
+			'invoice_address'  => $faker->streetAddress,
+			'invoice_postcode' => $faker->postcode,
+			'invoice_city'     => $faker->city,
+			'invoice_country'  => $faker->country,
 		];
 
 		return $data;
@@ -58,8 +64,20 @@ trait SignsUpUsers
 			->type('last_name', $user['lastName'])
 			->type('address', $user['address'])
 			->type('zip', $user['postcode'])
-			->type('city', $user['city'])
-			->check('consent_account')
+			->type('city', $user['city']);
+
+		if ($invoice) {
+			$browser
+				->check('invoice')
+				->type('invoice_name', $user['invoice_company'])
+				->type('invoice_nip', $user['invoice_nip'])
+				->type('invoice_address', $user['invoice_address'])
+				->type('invoice_zip', $user['invoice_postcode'])
+				->type('invoice_city', $user['invoice_city'])
+				->type('invoice_country', $user['invoice_country']);
+		}
+
+		$browser->check('consent_account')
 			->check('consent_order')
 			->check('consent_newsletter')
 			->check('consent_terms')

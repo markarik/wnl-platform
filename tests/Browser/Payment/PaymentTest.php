@@ -13,6 +13,8 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class PaymentTest extends DuskTestCase
 {
+	use SignsUpUsers;
+
 	/**
 	 * @var (Faker) Factory
 	 */
@@ -36,24 +38,20 @@ class PaymentTest extends DuskTestCase
 				->visit(new SelectProductPage)
 				->clickLink('Wybieram kurs stacjonarny');
 
-			$password = $this->faker->password;
-			$email = $this->faker->email;
-			$firstName = $this->faker->firstName;
-			$lastName = $this->faker->lastName;
-			$address = $this->faker->streetAddress;
+			$user = $this->generateFormData($this->faker);
 
 			$browser
 				->on(new PersonalDataPage)
-				->type('email', $email)
-				->type('password', $password)
-				->type('password_confirmation', $password)
-				->type('phone', $this->faker->phoneNumber)
+				->type('email', $user['email'])
+				->type('password', $user['password'])
+				->type('password_confirmation', $user['password'])
+				->type('phone', $user['phoneNumber'])
 				->pageDown()
-				->type('first_name', $firstName)
-				->type('last_name', $lastName)
-				->type('address', $address)
-				->type('zip', $this->faker->postcode)
-				->type('city', $this->faker->city)
+				->type('first_name', $user['firstName'])
+				->type('last_name', $user['lastName'])
+				->type('address', $user['address'])
+				->type('zip', $user['postcode'])
+				->type('city', $user['city'])
 				->check('consent_account')
 				->check('consent_order')
 				->check('consent_newsletter')
@@ -63,12 +61,30 @@ class PaymentTest extends DuskTestCase
 
 			$browser
 				->on(new ConfirmOrderPage)
-				->assertSeeAll([$email, $firstName, $lastName, $address])
+				->assertSeeAll([$user['email'], $user['firstName'], $user['lastName'], $user['address']])
 				->xpath('.//button[1]')->click();
 
 			$browser
 				->on(new OrdersPage)
-				->waitForAll(['Twoje zamówienia', $firstName, $lastName]);
+				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']]);
+		});
+	}
+
+	/** @test */
+	public function user_can_successfully_place_order_using_online_payment()
+	{
+		if (env('APP_ENV') !== 'sandbox') {
+			print PHP_EOL . 'Omitting test ' . __METHOD__ . ' (applicable only on sandbox)';
+
+			return true;
+		}
+
+		$this->browse(function ($browser) {
+			$browser
+				->visit(new SelectProductPage)
+				->clickLink('Wybieram kurs internetowy');
+
+
 		});
 	}
 }

@@ -20,6 +20,7 @@ return [
 
 	'select-product-title' => 'Witaj!',
 	'select-product-subtitle' => 'Wybierz wariant kursu, na który chcesz się zapisać.',
+	'select-product-coupon' => ':valuezł dla zapisanych na listę mailingową przed 1 kwietnia',
 	'select-product-onsite-heading' => 'Kurs stacjonarny',
 	'select-product-online-description' => '
 		<li class="list-group-item">
@@ -83,7 +84,7 @@ return [
 
 	'personal-data-title' => 'Świetny wybór!',
 	'personal-data-subtitle' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
-	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, aby skorzystać ze specjalnej oferty, podaj go teraz przy rejestracji, aby skorzystać z 10% zniżki!',
+	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, aby skorzystać ze specjalnej oferty, podaj go teraz przy rejestracji, aby skorzystać z 200zł zniżki!',
 
 	'personal-data-account-heading' => 'Twoje konto',
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',

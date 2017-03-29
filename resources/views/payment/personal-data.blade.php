@@ -23,8 +23,8 @@
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
-				<div class="notification">
-					@lang('payment.personal-data-email-info')
+				<div class="notification is-info">
+					<p class="strong">@lang('payment.personal-data-email-info')</p>
 				</div>
 			</div>
 			<div class="form-group">

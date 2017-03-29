@@ -12,7 +12,8 @@ class AppController extends Controller
 		JavaScript::put([
 			'env'      => [
 				'appDebug' => env('APP_DEBUG'),
-				'appUrl'  => env('APP_URL'),
+				'appEnv'   => env('APP_ENV'),
+				'appUrl'   => env('APP_URL'),
 				'chatHost' => env('CHAT_HOST'),
 				'chatPort' => env('CHAT_PORT'),
 			],

@@ -5,16 +5,19 @@ $(function() {
 		$personalData = $('#personal-data'),
 		$toggleCheckbox = $personalData.find('#personal-data-invoice-toggle'),
 		$invoiceForm = $personalData.find('#personal-data-invoice-form'),
-		$touContainer = $('.tou'),
-		$touModal = $touContainer.find('.modal'),
-		$touOpenModalLink = $touContainer.find('#tou-open-modal-link'),
-		$touCloseModalButton = $touModal.find('.delete');
+		$modalsContainer = $('.modals'),
+		$touModal = $modalsContainer.find('#tou-modal'),
+		$touOpenModalLinks = $('.tou-open-modal-link'),
+		$touCloseModalButton = $touModal.find('.delete'),
+		$privacyModal = $modalsContainer.find('#privacy-policy-modal'),
+		$privacyOpenModalLinks = $('.privacy-policy-open-modal-link'),
+		$privacyCloseModalButton = $privacyModal.find('.delete');
 
 	$toggleCheckbox.on('change', function () {
 		$invoiceForm.toggleClass('show').toggleClass('hidden');
 	});
 
-	$touOpenModalLink.on('click', function (event) {
+	$touOpenModalLinks.on('click', function (event) {
 		event.preventDefault();
 		$touModal.addClass('is-active');
 	});
@@ -22,6 +25,16 @@ $(function() {
 	$touCloseModalButton.on('click', function (event) {
 		event.preventDefault();
 		$touModal.removeClass('is-active');
+	});
+
+	$privacyOpenModalLinks.on('click', function (event) {
+		event.preventDefault();
+		$privacyModal.addClass('is-active');
+	});
+
+	$privacyCloseModalButton.on('click', function (event) {
+		event.preventDefault();
+		$privacyModal.removeClass('is-active');
 	});
 
 	$inputs.on('focus', function (event) {

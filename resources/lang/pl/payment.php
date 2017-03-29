@@ -121,9 +121,11 @@ return [
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
 
 	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
-	'personal-data-tou-content' => 'Znam i akceptuję <a id="tou-open-modal-link" href=":tou-link">:tou-link-content</a>',
-	'personal-data-tou-link' => 'http://wiecejnizlek.pl',
+	'personal-data-tou-content' => 'Znam i akceptuję treść dokumentów <a class="tou-open-modal-link" href="#">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href="#">:privacy-link-content</a>.',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
+	'personal-data-privacy-link-content' => 'Polityka Prywatności',
+	'personal-data-tou-title' => 'Regulamin Serwisu portalu wiecejnizlek.pl',
+	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',
 
 	'personal-data-submit' => 'Zakładam konto i płacę',
 

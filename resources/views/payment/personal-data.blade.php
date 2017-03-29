@@ -172,18 +172,6 @@
 						{!! form_errors($form->consent_terms) !!}
 					</div>
 				</div>
-				<div id="tou-modal" class="modal">
-					<div class="modal-background"></div>
-					<div class="modal-card">
-						<header class="modal-card-head">
-							<p class="modal-card-title">Regulamin Serwisu</p>
-							<button class="delete"></button>
-						</header>
-						<section class="modal-card-body">
-							@include('payment.tou')
-						</section>
-					</div>
-				</div>
 			</div>
 		</section>
 

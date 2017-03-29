@@ -51,7 +51,7 @@
 		[STATUS_IN_PROGRESS]: {
 			heading: 'Lekcja w trakcie',
 			callToAction: 'Wróć do lekcji',
-			buttonClass: 'is-info',
+			buttonClass: 'is-primary is-outlined',
 		},
 		[STATUS_AVAILABLE]: {
 			heading: 'Następna lekcja',

@@ -6,7 +6,7 @@ use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
 use PHPUnit_Framework_Assert as PHPUnit;
 
-class PersonalDataPage extends BasePage
+class P24ChooseBank extends BasePage
 {
 	/**
 	 * Get the URL for the page.
@@ -15,7 +15,7 @@ class PersonalDataPage extends BasePage
 	 */
 	public function url()
 	{
-		return '/payment/personal-data';
+		return 'https://sandbox.przelewy24.pl/trnDirect';
 	}
 
 	/**
@@ -25,9 +25,7 @@ class PersonalDataPage extends BasePage
 	 */
 	public function assert(Browser $browser)
 	{
-		PHPUnit::assertStringStartsWith($this->url(), parse_url(
-			$browser->driver->getCurrentURL()
-		)['path']);
+		PHPUnit::assertEquals($this->url(), $browser->driver->getCurrentURL());
 	}
 
 	/**
@@ -38,7 +36,9 @@ class PersonalDataPage extends BasePage
 	public function elements()
 	{
 		return [
-			'@element' => '#selector',
+			'@ing-logo'        => '#pf112',
+			'@accept-tou'      => 'input[name="submit_przedplata"]',
+			'@confirm-payment' => 'input[name="submit_poprawna"]',
 		];
 	}
 }

@@ -35,7 +35,7 @@ class ConfirmOrderPage extends BasePage
 	public function elements()
 	{
 		return [
-			'@element' => '#selector',
+			'@online-payment-button' => 'button.p24-submit',
 		];
 	}
 }

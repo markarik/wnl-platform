@@ -41,7 +41,7 @@ $(function() {
 		$(event.target).siblings('.text-danger').remove();
 	});
 
-	$('button.p24_submit').click(function () {
+	$('button.p24-submit').click(function () {
 		$.ajax({
 			data: {
 				controller: 'PaymentAjaxController',

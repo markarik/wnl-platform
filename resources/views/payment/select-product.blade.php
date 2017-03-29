@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('payment.layout')
 
 @section('content')
 
@@ -26,6 +26,8 @@
 			<div class="column">
 				<div class="box">
 					<p class="title">@lang('payment.select-product-onsite-heading')</p>
+					<p class="subtitle">@lang('common.currency', ['value' => 2200])</p>
+					<p class="caption">@lang('payment.select-product-coupon', ['value' => 2000])</p>
 					<ul class="list-group">
 						@lang('payment.select-product-online-description')
 					</ul>
@@ -43,6 +45,8 @@
 			<div class="column">
 				<div class="box">
 					<p class="title">@lang('payment.select-product-online-heading')</p>
+					<p class="subtitle">@lang('common.currency', ['value' => '1500'])</p>
+					<p class="caption">@lang('payment.select-product-coupon', ['value' => 1300])</p>
 					<ul class="list-group">
 						@lang('payment.select-product-online-description')
 					</ul>

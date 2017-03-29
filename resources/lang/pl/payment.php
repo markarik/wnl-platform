@@ -20,6 +20,7 @@ return [
 
 	'select-product-title' => 'Witaj!',
 	'select-product-subtitle' => 'Wybierz wariant kursu, na który chcesz się zapisać.',
+	'select-product-coupon' => ':valuezł dla zapisanych na listę mailingową przed 1 kwietnia',
 	'select-product-onsite-heading' => 'Kurs stacjonarny',
 	'select-product-online-description' => '
 		<li class="list-group-item">
@@ -83,7 +84,7 @@ return [
 
 	'personal-data-title' => 'Świetny wybór!',
 	'personal-data-subtitle' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
-	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, aby skorzystać ze specjalnej oferty, podaj go teraz przy rejestracji, aby skorzystać z 10% zniżki!',
+	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, użyj go teraz do rejestracji, aby skorzystać z 200zł zniżki!',
 
 	'personal-data-account-heading' => 'Twoje konto',
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
@@ -101,7 +102,7 @@ return [
 	'password' => 'Hasło',
 	'password-confirm' => 'Potwierdź hasło',
 
-	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury VAT',
+	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury',
 	'invoice-name' => 'Nazwa firmy',
 	'invoice-nip' => 'NIP',
 	'invoice-address' => 'Ulica i numer domu / mieszkania',
@@ -115,17 +116,19 @@ return [
 	'personal-data-consents-heading' => 'Wszystko zgodnie z prawem',
 	'personal-data-consents-lead' => 'Do legalnej realizacji zamówienia potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
 
-	'personal-data-consent-order' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu realizacji zamówienia na kurs internetowy</strong>, czyli wystawienie rachunku, wysyłkę materiałów oraz wydruk identyfikatora.',
-	'personal-data-consent-account' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu obsługi konta na platformie internetowej</strong>, z uwzględnieniem wysyłania powiadomień drogą e-mailową oraz kontaktu z administratorami.',
+	'personal-data-consent-order' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink sp. z o.o. z siedzibą w Poznaniu, <strong>w celu realizacji zamówienia na kurs internetowy</strong>, czyli wystawienie rachunku, wysyłkę materiałów oraz wydruk identyfikatora.',
+	'personal-data-consent-account' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink sp. z o.o. z siedzibą w Poznaniu, <strong>w celu obsługi konta na platformie internetowej</strong>, z uwzględnieniem wysyłania powiadomień drogą e-mailową oraz kontaktu z administratorami.',
 	'personal-data-consent-newsletter-heading' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
-	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink s.c. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
+	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink sp. z o.o. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
 
 	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
-	'personal-data-tou-content' => 'Znam i akceptuję <a id="tou-open-modal-link" href=":tou-link">:tou-link-content</a>',
-	'personal-data-tou-link' => 'http://wiecejnizlek.pl',
+	'personal-data-tou-content' => 'Znam i akceptuję treść dokumentów <a class="tou-open-modal-link" href="#">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href="#">:privacy-link-content</a>.',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
+	'personal-data-privacy-link-content' => 'Polityka Prywatności',
+	'personal-data-tou-title' => 'Regulamin Serwisu portalu wiecejnizlek.pl',
+	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',
 
-	'personal-data-submit' => 'Zakładam konto i płacę',
+	'personal-data-submit' => 'Załóż konto i przejdź dalej',
 
 	/**
 	 * Personal data verification step

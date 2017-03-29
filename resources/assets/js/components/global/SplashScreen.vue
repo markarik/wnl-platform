@@ -21,7 +21,7 @@
 		width: 100%
 
 	.splash-screen-image
-		max-width: 500px
+		max-width: 400px
 		padding: 0 20px
 
 	.splash-screen-countdown

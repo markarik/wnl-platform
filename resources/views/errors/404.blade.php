@@ -12,7 +12,7 @@
 				</p>
 				<img src="https://media.giphy.com/media/3o7aTskHEUdgCQAXde/giphy.gif" alt="Vincent Vega szuka">
 				<p class="margin top">Jeżeli sami skierowaliśmy Cię tutaj - prosimy, daj nam znać, żebyśmy mogli to naprawić. Dzięki!</p>
-				<p><small>nerdy@wiecejnizlek.pl</small></p>
+				<p><small>info@wiecejnizlek.pl</small></p>
 			</div>
 		</div>
 	</section>

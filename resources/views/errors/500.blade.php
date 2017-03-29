@@ -20,7 +20,7 @@
 <body>
 	<section class="hero is-fullheight">
 		<div class="hero-body">
-			<p class="title is-1">O kurczę, sorry!</p>
+			<p class="title is-1">O kurczę, przepraszamy!</p>
 			<p class="subtitle is-3">Wygląda na to, że coś u nas nie działa.</p>
 			<p>Ale na pewno już nad tym pracujemy!</p>
 			<p>Jeśli chcesz się z nami skontaktować, napisz na info@wiecejnizlek.pl albo na <a href="https://facebook.com/wiecejnizlek">facebooku</a>.</p>

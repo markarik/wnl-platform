@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('payment.layout')
 
 @section('content')
 

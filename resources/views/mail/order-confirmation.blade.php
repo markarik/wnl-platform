@@ -16,6 +16,10 @@
 			<td><strong>Zamówienie numer {{ $order->id or '{order_no}' }}</strong></td>
 		</tr>
 		<tr>
+			<td style="text-align: right; padding-right: 15px;">Numer konta:</td>
+			<td>82 1020 4027 0000 1102 1400 9197 (PKO BP)</td>
+		</tr>
+		<tr>
 			<td style="text-align: right; padding-right: 15px;">Nazwa odbiorcy:</td>
 			<td>bethink sp. z o.o.</td>
 		</tr>

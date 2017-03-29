@@ -11,7 +11,7 @@ return [
 	|
 	*/
 	'app-title' => 'Więcej niż LEK - Platforma e-learningowa',
-	'course-website-link' => 'http://wiecejnizlek.pl',
+	'course-website-link' => 'https://wiecejnizlek.pl',
 	'logout-link-content' => 'Wyloguj się',
 	'main-page-link-title' => 'Do tablicy!',
 	'nav-user-dropdown-title' => 'Gdzie Cię zabrać?',

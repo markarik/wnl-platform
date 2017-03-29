@@ -14,7 +14,7 @@
 <ol>
 	<li>Każdorazowo cel, zakres oraz odbiorcy danych przetwarzanych przez Usługodawcy wynika z działań podejmowanych przez Usługobiorcę w Serwisie Internetowym. Przykładowo jeżeli Usługobiorca zamierza korzystać z Konta, to jego dane osobowe będą przetwarzane w celu zawarcia i realizacji umowy o korzystanie z Konta.</li>
 	<li>Możliwe cele zbierania danych osobowych Usługobiorców przez Usługodawcy:
-		<ol>
+		<ol class="lower-alpha">
 			<li>zawarcie i realizacja umowy o korzystanie z Usługi Elektronicznej,</li>
 			<li>marketing bezpośredni własnych produktów lub usług Usługodawcy.</li>
 		</ol>
@@ -27,7 +27,7 @@
 <ol>
 	<li>Pliki Cookies (ciasteczka) są to niewielkie informacje tekstowe w postaci plików tekstowych, wysyłane przez serwer i zapisywane po stronie osoby odwiedzającej stronę Serwisu Internetowego (np. na dysku twardym komputera, laptopa, czy też na karcie pamięci smartfona – w zależności z jakiego urządzenia korzysta odwiedzający nasz Serwis Internetowy). Szczegółowe informacje dot. plików Cookies, a także historię ich powstania można znaleźć m.in. tutaj: http://pl.wikipedia.org/wiki/Ciasteczko.</li>
 	<li>Usługodawca może przetwarzać dane zawarte w plikach Cookies podczas korzystania przez odwiedzających ze strony Serwisu Internetowego w następujących celach:
-		<ol>
+		<ol class="lower-alpha">
 			<li>realizacja podstawowych funkcjonalności Serwisu Internetowego takich jak identyfikacja Usługobiorców jako zalogowanych i utrzymywania sesji logowania, przechowywanie dynamicznych danych, np. statystyk, podsumowań;</li>
 			<li>dostosowywania zawartości strony Serwisu Internetowego do indywidualnych preferencji Usługobiorcy (np. dotyczących języka strony);</li>
 			<li>zapamiętywanie lokalizacji IP, strefy czasowej;</li>
@@ -37,7 +37,7 @@
 	<li>Standardowo większość przeglądarek internetowych dostępnych na rynku domyślnie akceptuje zapisywanie plików Cookies. Każdy ma możliwość określenia warunków korzystania z plików Cookies za pomocą ustawień własnej przeglądarki internetowej. Oznacza to, że można np. częściowo ograniczyć (np. czasowo) lub całkowicie wyłączyć możliwość zapisywania plików Cookies – w tym ostatnim wypadku jednak może to mieć wpływ na niektóre funkcjonalności Serwisu.</li>
 	<li>Ustawienia przeglądarki internetowej w zakresie plików Cookies są istotne z punktu widzenia zgody na korzystanie z plików Cookies przez nasz Serwis Internetowy – zgodnie z przepisami taka zgoda może być również wyrażona poprzez ustawienia przeglądarki internetowej. W braku wyrażenia takiej zgody należy odpowiednio zmienić ustawienia przeglądarki internetowej w zakresie plików Cookies.</li>
 	<li>Szczegółowe informacje na temat zmiany ustawień dotyczących plików Cookies oraz ich samodzielnego usuwania w najpopularniejszych przeglądarkach internetowych dostępne są w dziale pomocy przeglądarki internetowej oraz na poniższych stronach (wystarczy kliknąć w dany link):
-		<ol>
+		<ol class="lower-alpha">
 			<li>w przeglądarce Chrome</li>
 			<li>w przeglądarce Firefox</li>
 			<li>w przęglądarce Internet Explorer</li>

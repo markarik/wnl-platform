@@ -6,7 +6,7 @@
 
 <h2>1) O NAS</h2>
 <ol>
-	<li>1. Właścicielem Serwisu jest spółka BETHINK SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ z siedzibą w Poznaniu (adres siedziby i adres do doręczeń: ul. Henryka Sienkiewicza 8/1, 60-817 Poznań); wpisana do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS 0000668811; sąd rejestrowy, w którym przechowywana jest dokumentacja spółki: Sąd Rejonowy Poznań – Nowe Miasto i Wilda w Poznaniu, VIII Wydział Gospodarczy Krajowego Rejestru Sądowego; kapitał zakładowy w wysokości: 30.000,00 zł.; NIP: 7811943756; REGON: 366802351; adres poczty elektronicznej: info@wiecejnizlek.pl (dalej jako: „Usługodawca”).</li>
+	<li>Właścicielem Serwisu jest spółka BETHINK SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ z siedzibą w Poznaniu (adres siedziby i adres do doręczeń: ul. Henryka Sienkiewicza 8/1, 60-817 Poznań); wpisana do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS 0000668811; sąd rejestrowy, w którym przechowywana jest dokumentacja spółki: Sąd Rejonowy Poznań – Nowe Miasto i Wilda w Poznaniu, VIII Wydział Gospodarczy Krajowego Rejestru Sądowego; kapitał zakładowy w wysokości: 30.000,00 zł.; NIP: 7811943756; REGON: 366802351; adres poczty elektronicznej: info@wiecejnizlek.pl (dalej jako: „Usługodawca”).</li>
 	<li>Usługodawca prowadzi Serwis Internetowy oraz jest odpowiedzialny za prawidłowe świadczenie Usług Elektronicznych Serwisu.</li>
 </ol>
 <h2>2) DEFINICJE</h2>
@@ -64,7 +64,7 @@
 	<li>W celu dokonania zakupu dostępu do Kursu Internetowego należy wybrać rodzaj Kursu Internetowego dostępny w formularzu zamówienia oraz wypełnić kolejne pola formularza zamówienia dostępne na stronie Serwisu dla danego rodzaju Kursu Internetowego. Złożenie zamówienia na dostęp do Kursu Internetowego oraz zawarcie umowy następuje z chwilą kliknięcia pola „Potwierdzam zakup” – z tą chwilą zostaje zawarta umowa o dostęp do Kursu Internetowego.</li>
 	<li>Ceny Kursu Internetowego uwidocznione na stronach Serwisu są cenami brutto i podane są w złotych polskich.</li>
 	<li>Usługodawca udostępnia w Serwisie następujące sposoby płatności:
-		<ol>
+		<ol class="lower-alpha">
 			<li>Płatności elektroniczne i płatności kartą płatniczą za pośrednictwem serwisu Przelewy24.pl – spółka PayPro S.A. Agent Rozliczeniowy z siedzibą w Poznaniu (adres siedziby: ul. Kanclerska 15, 60-327 Poznań), wpisany do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego prowadzonego przez Sąd Rejonowy Poznań – Nowe Miasto i Wilda w Poznaniu, VIII Wydział Gospodarczy Krajowego Rejestru Sądowego pod numerem KRS 0000347935, NIP 7792369887, Regon 301345068.</li>
 			<li>Przelew tradycyjny na rachunek bankowy Usługodawcy.</li>
 		</ol>

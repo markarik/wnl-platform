@@ -8,7 +8,7 @@
 		<!-- CSRF Token -->
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 
-		<title>{{ config('app.name', 'Laravel') }}</title>
+		<title>@lang('common.app-title')</title>
 
 		<!-- Styles -->
 		<link href="/css/app.css" rel="stylesheet">
@@ -44,6 +44,6 @@
 			</footer>
 		</div>
 		<!-- Scripts -->
-		<script src="/js/payment.js"></script>
+		@yield('scripts')
 	</body>
 </html>

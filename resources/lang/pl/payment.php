@@ -84,7 +84,7 @@ return [
 
 	'personal-data-title' => 'Świetny wybór!',
 	'personal-data-subtitle' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
-	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, aby skorzystać ze specjalnej oferty, podaj go teraz przy rejestracji, aby skorzystać z 200zł zniżki!',
+	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, użyj go teraz do rejestracji, aby skorzystać z 200zł zniżki!',
 
 	'personal-data-account-heading' => 'Twoje konto',
 	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
@@ -102,7 +102,7 @@ return [
 	'password' => 'Hasło',
 	'password-confirm' => 'Potwierdź hasło',
 
-	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury VAT',
+	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury',
 	'invoice-name' => 'Nazwa firmy',
 	'invoice-nip' => 'NIP',
 	'invoice-address' => 'Ulica i numer domu / mieszkania',
@@ -128,7 +128,7 @@ return [
 	'personal-data-tou-title' => 'Regulamin Serwisu portalu wiecejnizlek.pl',
 	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',
 
-	'personal-data-submit' => 'Zakładam konto i płacę',
+	'personal-data-submit' => 'Załóż konto i przejdź dalej',
 
 	/**
 	 * Personal data verification step

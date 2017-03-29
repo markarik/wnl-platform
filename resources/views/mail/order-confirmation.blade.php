@@ -1,11 +1,11 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $order->user->first_name or '{first_name}' }}, witaj ponownie!</h3>
+	<h3>Witaj ponownie {{ $order->user->first_name or '{first_name}' }}!</h3>
 
 	<p>Piszemy do Ciebie, żeby potwierdzić zamówienie numer {{ $order->id or '{order_no}' }} złożone na kurs <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
 
-	<p>W załączniku znajdziesz dokument pro forma, który zawiera szczegóły zamówienia. Stanowi on jednocześnie podstawę do płatności.</p>
+	<p><strong>Status swojego zamówienia możesz śledzić na stronie <a href="https://platforma.wiecejnizlek.pl/app/myself/my-orders">Twoje zamówienia</a>.</strong></p>
 
 	<p>Jeżeli wybierasz płatność przelewem bankowym, wykonaj go przy użyciu poniższych danych. :)</p>
 
@@ -34,6 +34,8 @@
 	</table>
 
 	<p>Zarezerwowaliśmy dla Ciebie miejsce na kursie i przez najbliższe 7 dni czekamy na wpłatę. :) </p>
+
+	<p>W załączniku znajdziesz dokument pro forma, który zawiera szczegóły zamówienia. Stanowi on jednocześnie podstawę do płatności.</p>
 
 	<p>W razie pytań pisz śmiało na info@wiecejnizlek.pl!</p>
 

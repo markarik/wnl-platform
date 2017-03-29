@@ -14,4 +14,12 @@ return [
 		'height' => env('DUSK_WINDOW_HEIGHT', 1080),
 	],
 
+	// Basic auth settings
+	// (set up only if target app requires authentication)
+	'auth'             => [
+		'enabled'  => env('DUSK_AUTH', false),
+		'login'    => env('DUSK_LOGIN'),
+		'password' => env('DUSK_PASSWORD'),
+	],
+
 ];

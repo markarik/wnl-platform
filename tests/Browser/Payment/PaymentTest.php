@@ -31,10 +31,10 @@ class PaymentTest extends DuskTestCase
 	public function user_can_sign_up_and_place_order()
 	{
 		$this->browse(function ($browser) {
-			$browser->visit(new SelectProductPage);
 
-			$browser->clickLink('Wybieram kurs stacjonarny');
-			$browser->on(new PersonalDataPage);
+			$browser
+				->visit(new SelectProductPage)
+				->clickLink('Wybieram kurs stacjonarny');
 
 			$password = $this->faker->password;
 			$email = $this->faker->email;
@@ -42,30 +42,33 @@ class PaymentTest extends DuskTestCase
 			$lastName = $this->faker->lastName;
 			$address = $this->faker->streetAddress;
 
-			$browser->type('email', $email);
-			$browser->type('password', $password);
-			$browser->type('password_confirmation', $password);
-			$browser->type('phone', $this->faker->phoneNumber);
-			$browser->pageDown();
-			$browser->type('first_name', $firstName);
-			$browser->type('last_name', $lastName);
-			$browser->type('address', $address);
-			$browser->type('zip', $this->faker->postcode);
-			$browser->type('city', $this->faker->city);
-			$browser->check('consent_account');
-			$browser->check('consent_order');
-			$browser->check('consent_newsletter');
-			$browser->check('consent_terms');
-			$browser->pageDown();
+			$browser
+				->on(new PersonalDataPage)
+				->type('email', $email)
+				->type('password', $password)
+				->type('password_confirmation', $password)
+				->type('phone', $this->faker->phoneNumber)
+				->pageDown()
+				->type('first_name', $firstName)
+				->type('last_name', $lastName)
+				->type('address', $address)
+				->type('zip', $this->faker->postcode)
+				->type('city', $this->faker->city)
+				->check('consent_account')
+				->check('consent_order')
+				->check('consent_newsletter')
+				->check('consent_terms')
+				->pageDown()
+				->xpath('.//button[@class="button is-primary"]')->click();
 
-			$browser->xpath('.//button[@class="button is-primary"]')->click();
-			$browser->on(new ConfirmOrderPage);
-			$browser->assertSeeAll([$email, $firstName, $lastName, $address]);
+			$browser
+				->on(new ConfirmOrderPage)
+				->assertSeeAll([$email, $firstName, $lastName, $address])
+				->xpath('.//button[1]')->click();
 
-			$browser->xpath('.//button[1]')->click();
-
-			$browser->on(new OrdersPage);
-			$browser->assertSeeAll([$firstName, $lastName]);
+			$browser
+				->on(new OrdersPage)
+				->waitForAll(['Twoje zamówienia', $firstName, $lastName]);
 		});
 	}
 }

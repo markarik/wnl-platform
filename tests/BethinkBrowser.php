@@ -51,6 +51,8 @@ class BethinkBrowser extends Browser
 	public function pageDown()
 	{
 		$this->driver->executeScript('window.scrollBy(0, window.innerHeight)');
+
+		return $this;
 	}
 
 	/**
@@ -74,6 +76,23 @@ class BethinkBrowser extends Browser
 	{
 		foreach ($items as $item) {
 			$this->assertSee($item);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Wait for all the given texts to be visible.
+	 *
+	 * @param array $items
+	 * @param  int $seconds
+	 * @return $this
+	 * @internal param string $text
+	 */
+	public function waitForAll(array $items, $seconds = 5)
+	{
+		foreach ($items as $item) {
+			$this->waitForText($item, $seconds);
 		}
 
 		return $this;

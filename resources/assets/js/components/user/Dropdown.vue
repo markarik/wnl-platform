@@ -2,18 +2,20 @@
 	<div class="wnl-dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
 			<wnl-avatar></wnl-avatar>
-			<!-- <small>{{ currentUserFullName }}</small> -->
 			<span class="icon">
 				<i class="fa fa-angle-down"></i>
 			</span>
 		</div>
-		<div class="box drawer" v-if="isActive">
-			<ul>
-				<li v-for="item in items" class="drawer-item">
-					<router-link class="drawer-link" :to="{ name: item.route }">{{item.text}}</router-link>
-				</li>
-			</ul>
-		</div>
+		<transition name="fade">
+			<div class="box drawer" v-if="isActive">
+				<p class="metadata">{{ currentUserFullName }}</p>
+				<ul>
+					<li v-for="item in items" class="drawer-item">
+						<router-link class="drawer-link" :to="{ name: item.route }">{{item.text}}</router-link>
+					</li>
+				</ul>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -42,22 +44,26 @@
 			transition: background $transition-length-base
 
 		&.is-active
+			background-color: $color-background-light-gray
 			color: $color-gray
 
 		.icon
 			margin: 0 $margin-tiny
 
 	.drawer
-		left: -50%
+		right: -20%
 		position: absolute
 		top: 95%
 		z-index: 1000
 
+	.metadata,
 	.drawer-item
-		border-bottom: $border-light-gray
-		font-size: $font-size-minus-1
 		padding: $margin-small $margin-base
+		text-align: right
 		white-space: nowrap
+
+	.drawer-item
+		font-size: $font-size-minus-1
 
 		&:last-child
 			border: 0

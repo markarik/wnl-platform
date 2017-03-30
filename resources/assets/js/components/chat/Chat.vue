@@ -3,7 +3,7 @@
 		<wnl-users-widget :users="users"></wnl-users-widget>
 		<div class="wnl-chat-messages">
 			<div class="wnl-chat-content">
-				<div v-if="loaded">
+				<div class="wnl-chat-content-inside" v-if="loaded">
 					<wnl-message v-for="(message, index) in messages"
 						:showAuthor="isAuthorUnique[index]"
 						:username="message.username"
@@ -84,6 +84,10 @@
 			content() {
 				return this.$el.getElementsByClassName('wnl-chat-content')[0]
 			},
+			contentInside() {
+				// In case you wonder - thank Firefox :/
+				return this.$el.getElementsByClassName('wnl-chat-content-inside')[0]
+			},
 			inputId() {
 				return `wnl-chat-form-${this.room}`
 			},
@@ -138,7 +142,7 @@
 				})
 			},
 			scrollToBottom() {
-				this.container.scrollTop = this.content.offsetHeight
+				this.container.scrollTop = this.contentInside.offsetHeight
 			}
 		},
 		created() {

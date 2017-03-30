@@ -14,12 +14,14 @@
 	</nav>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
+	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
 	.wnl-navbar
 		+small-shadow()
 		display: flex
+		height: $navbar-height
 
 	.wnl-nav-item
 		align-items: center
@@ -34,6 +36,9 @@
 
 		img
 			display: block
+
+	.wnl-right
+		height: 100%
 </style>
 
 <script>

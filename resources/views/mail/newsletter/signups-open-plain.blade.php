@@ -37,7 +37,7 @@ Bardzo zależało nam na tym, aby z momentem otwarcia zapisów dać Ci możliwo�
 
 Na dziś mamy dla Was wersję demonstracyjną zawierającą 3 pokazowe lekcje. W ramach nich możecie też swobodnie korzystać z czata oraz pytań i odpowiedzi. Do skorzystania z wersji demonstracyjnej platformy nie jest wymagana żadna rejestracja, ani podawanie prawdziwych danych osobowych. :)
 
-Zobacz demo platformy - http://demo.wiecejnizlek.pl
+Zobacz demo platformy - https://demo.platforma.wiecejnizlek.pl/
 
 Na koniec chcieliśmy podziękować Ci za zaufanie. Każdy adres e-mail, który pojawiał się na naszej liście, dodawał nam motywacji i sił do dalszej pracy.
 

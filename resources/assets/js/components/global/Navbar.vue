@@ -14,7 +14,7 @@
 	</nav>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
@@ -36,6 +36,9 @@
 
 		img
 			display: block
+
+	.wnl-right
+		height: 100%
 </style>
 
 <script>

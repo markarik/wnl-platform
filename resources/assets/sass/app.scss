@@ -63,12 +63,27 @@ html, body {
 	flex: 1;
 }
 
-.wnl-app-layout-left {
-	border-right: $border-light-gray;
+.wnl-left {
 	display: flex;
 	flex: $three-column-left-flex;
 	justify-content: flex-end;
 	max-width: 500px;
+}
+
+.wnl-middle {
+	flex: $three-column-main-flex;
+	max-width: 800px;
+	padding: 0 20px;
+}
+
+.wnl-right {
+	display: flex;
+	flex: $three-column-right-flex;
+	padding: 0 20px;
+}
+
+.wnl-app-layout-left {
+	border-right: $border-light-gray;
 	padding: 20px 0;
 }
 
@@ -80,8 +95,6 @@ html, body {
 
 .wnl-app-layout-right {
 	border-left: $border-light-gray;
-	display: flex;
-	flex: $three-column-right-flex;
 	overflow-y: auto;
 	padding-left: 20px;
 }

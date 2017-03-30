@@ -1,40 +1,36 @@
 <template>
-	<nav class="nav has-shadow">
-		<div class="columns wnl-nav-container">
-			<div class="column wnl-nav-column">
-				<div class="wnl-left-content wnl-nav-item">
-					<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
-						<img :src="logoSrc" :alt="logoAlt">
-					</router-link>
-				</div>
+	<nav class="wnl-navbar has-shadow">
+		<div class="wnl-left">
+			<div class="wnl-left-content">
+				<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
+					<img :src="logoSrc" :alt="logoAlt">
+				</router-link>
 			</div>
-			<div class="column is-half wnl-nav-column">
-
-			</div>
-			<div class="column wnl-nav-column">
-				<div class="nav-menu wnl-nav-item">
-					<wnl-user-dropdown></wnl-user-dropdown>
-				</div>
-			</div>
+		</div>
+		<div class="wnl-middle"></div>
+		<div class="wnl-right">
+			<wnl-user-dropdown></wnl-user-dropdown>
 		</div>
 	</nav>
 </template>
 
 <style lang="sass">
-	.wnl-nav-column
-		height: 100%
+	@import 'resources/assets/sass/mixins'
+
+	.wnl-navbar
+		+small-shadow()
+		display: flex
 
 	.wnl-nav-item
 		align-items: center
 		display: flex
 		height: 100%
 
-	.wnl-nav-container
-		width: 100%
-
 	.wnl-logo-link
+		box-sizing: content-box
 		display: block
-		max-width: 175px
+		max-width: 150px
+		padding: $margin-base 0
 
 		img
 			display: block

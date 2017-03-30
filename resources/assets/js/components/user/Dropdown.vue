@@ -33,7 +33,6 @@
 		height: 100%
 		justify-content: center
 		min-height: 100%
-		padding: 0 $margin-small
 		transition: background $transition-length-base
 
 		&:hover
@@ -73,7 +72,7 @@
 		name: 'Dropdown',
 		data() {
 			return {
-				isActive: true,
+				isActive: false,
 			}
 		},
 		computed: {

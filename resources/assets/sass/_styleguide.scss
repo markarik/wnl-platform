@@ -32,6 +32,17 @@ h5 {
 	line-height: $line-height-base;
 }
 
+.caption {
+	font-size: $font-size-minus-1;
+	font-weight: $font-weight-black;
+	text-transform: uppercase;
+}
+
+.big {
+	font-size: $font-size-plus-1;
+	line-height: $line-height-plus;
+}
+
 .small {
 	font-size: $font-size-minus-1;
 	line-height: $line-height-base;
@@ -46,7 +57,24 @@ h5 {
 	color: $danger;
 }
 
+.strong {
+	font-weight: $font-weight-bold;
+}
+
+.strikethrough {
+	text-decoration: line-through;
+}
+
 // Links
+a,
+a:hover {
+	transition: color $transition-length-base;
+}
+
+a:hover,
+a:active {
+	color: $color-sky-blue;
+}
 
 a.is-active {
 	font-weight: $font-weight-bold;
@@ -56,11 +84,54 @@ a.is-active {
 
 .button {
 	border-radius: $border-radius-full;
+	font-size: $font-size-minus-1;
 	font-weight: $font-weight-black;
 	height: auto;
-	line-height: 1.75em;
-	padding-left: 1.25em;
-	padding-right: 1.25em;
+	line-height: 1.5em;
+	max-width: 90%;
+	padding: 0.5em 1.25em;
+	text-transform: uppercase;
+	transition: background $transition-length-base, border $transition-length-base;
+
+	&:hover {
+		transition: background $transition-length-base, border $transition-length-base;
+	}
+
+	&.is-outlined {
+		transition: border $transition-length-base, color $transition-length-base;
+
+		&:hover {
+			background-color: transparent;
+			transition: border $transition-length-base, color $transition-length-base;
+		}
+	}
+
+	&.is-primary {
+
+		&:hover,
+		&:active {
+			border-color: $color-sky-blue;
+			background-color: $color-sky-blue;
+		}
+
+		&.is-outlined {
+
+			&:hover,
+			&:active {
+				background: transparent;
+				border-color: $color-sky-blue;
+				color: $color-sky-blue;
+			}
+		}
+	}
+
+	&.is-warning {
+		color: $color-white;
+
+		&:hover {
+			color: $color-white;
+		}
+	}
 }
 
 .is-wide {
@@ -89,4 +160,43 @@ a.is-active {
 
 .list-group-item {
 	padding: 0.5em 0;
+}
+
+.content .lower-alpha {
+	list-style-type: lower-alpha;
+}
+
+// Helpers
+
+.aligncenter {
+	text-align: center;
+}
+
+.margin {
+	margin: 1em;
+
+	&.vertical {
+		margin: 1em 0;
+	}
+
+	&.horizontal {
+		margin: 0 1em;
+	}
+
+	&.top {
+		margin: 1em 0 0 0;
+	}
+
+	&.right {
+		margin: 0 1em 0 0;
+	}
+
+	&.bottom {
+		margin: 0 0 1em 0;
+	}
+
+	&.left {
+		margin: 0 0 0 1em;
+	}
+
 }

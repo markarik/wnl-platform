@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('payment.layout')
 
 @section('content')
 
@@ -23,6 +23,9 @@
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
+				<div class="notification is-info">
+					<p class="strong">@lang('payment.personal-data-email-info')</p>
+				</div>
 			</div>
 			<div class="form-group">
 				<div class="control">
@@ -169,24 +172,12 @@
 						{!! form_errors($form->consent_terms) !!}
 					</div>
 				</div>
-				<div id="tou-modal" class="modal">
-					<div class="modal-background"></div>
-					<div class="modal-card">
-						<header class="modal-card-head">
-							<p class="modal-card-title">Regulamin Serwisu</p>
-							<button class="delete"></button>
-						</header>
-						<section class="modal-card-body">
-							@include('payment.tou')
-						</section>
-					</div>
-				</div>
 			</div>
 		</section>
 
 		<section class="form-end">
 			<div class="block has-text-centered">
-				<button class="button is-primary is-hidden-mobile">@lang('payment.personal-data-submit')</button>
+				<button class="button is-primary">@lang('payment.personal-data-submit')</button>
 			</div>
 		</section>
 

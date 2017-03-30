@@ -1,7 +1,8 @@
 <template>
 	<div class="wnl-chat">
-		<div :id="containerId" class="wnl-chat-messages">
-			<div :id="contentId">
+		<wnl-users-widget :users="users"></wnl-users-widget>
+		<div class="wnl-chat-messages">
+			<div class="wnl-chat-content">
 				<div v-if="loaded">
 					<wnl-message v-for="(message, index) in messages"
 						:showAuthor="isAuthorUnique[index]"
@@ -41,6 +42,7 @@
 <script>
 	import Message from './Message.vue'
 	import MessageForm from './MessageForm.vue'
+	import UsersWidget from '../global/UsersWidget.vue'
 	import * as socket from '../../socket'
 	import { nextTick } from 'vue'
 
@@ -50,12 +52,14 @@
 			return {
 				loaded: false,
 				messages: [],
+				users: [],
 				socket: {}
 			}
 		},
 		components: {
 			'wnl-message': Message,
-			'wnl-message-form': MessageForm
+			'wnl-message-form': MessageForm,
+			'wnl-users-widget': UsersWidget,
 		},
 		computed: {
 			isAuthorUnique() {
@@ -66,17 +70,11 @@
 					return message.username !== this.messages[previous].username
 				})
 			},
-			containerId() {
-				return `wnl-chat-room-${this.room}`
-			},
 			container() {
-				return document.getElementById(this.containerId)
-			},
-			contentId() {
-				return `wnl-chat-content-${this.room}`
+				return this.$el.getElementsByClassName('wnl-chat-messages')[0]
 			},
 			content() {
-				return document.getElementById(this.contentId)
+				return this.$el.getElementsByClassName('wnl-chat-content')[0]
 			},
 			inputId() {
 				return `wnl-chat-form-${this.room}`
@@ -94,13 +92,21 @@
 					if (!this.loaded) {
 						this.setListeners(this.socket)
 						this.messages = data.messages
-						this.loaded = true
+						this.users    = data.users
+						this.loaded   = true
 						nextTick(() => {
 							this.scrollToBottom()
 						})
 					}
 				})
 				return true
+			},
+			changeRoom(oldRoom) {
+				this.loaded = false
+				this.socket.emit('leave-room', {
+					room: oldRoom
+				})
+				this.joinRoom()
 			},
 			setListeners(socket) {
 				socket.on('user-sent-message', (data) => {
@@ -138,6 +144,13 @@
 			socket.disconnect().then(() => {
 				return true
 			}).catch(console.log.bind(console))
+		},
+		watch: {
+			'room' (newRoom, oldRoom) {
+				if (newRoom !== oldRoom) {
+					this.changeRoom(oldRoom)
+				}
+			}
 		}
 	}
 

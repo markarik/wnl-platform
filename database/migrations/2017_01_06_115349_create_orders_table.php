@@ -22,6 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('session_id')->unique()->nullable();
             $table->string('external_id')->unique()->nullable();
 			$table->string('transfer_title')->unique()->nullable();
+			$table->unsignedInteger('coupon_id')->nullable();
 			$table->timestamps();
 
 			$table->foreign('user_id')

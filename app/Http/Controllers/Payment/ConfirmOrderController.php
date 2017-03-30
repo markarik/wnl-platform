@@ -22,7 +22,7 @@ class ConfirmOrderController extends Controller
 
 		$order = $user->orders()->recent();
 
-		$checksum = $payment::generateChecksum($order->session_id, (int)$order->product->price * 100);
+		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
 
 		return view('payment.confirm-order', [
 			'order'    => $order,
@@ -38,7 +38,7 @@ class ConfirmOrderController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
-		return redirect(route('profile-orders'));
+		return redirect(url('/app/myself/orders'));
 	}
 
 	public function status(Request $request, Payment $payment)

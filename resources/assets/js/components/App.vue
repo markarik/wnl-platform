@@ -9,7 +9,7 @@
 
 <script>
 	// Import global components
-	import Navbar from './global/Navbar.vue'
+	import Navbar from 'js/components/global/Navbar.vue'
 	import { mapActions } from 'vuex'
 
 	export default {
@@ -18,10 +18,10 @@
 			'wnl-navbar': Navbar
 		},
 		methods: {
-			...mapActions(['setCurrentUser'])
+			...mapActions(['setupCurrentUser'])
 		},
 		created: function () {
-			this.setCurrentUser()
+			this.setupCurrentUser()
 		}
 	}
 </script>

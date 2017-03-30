@@ -22,8 +22,19 @@ class DatabaseSeeder extends Seeder
 		$this->call(CategoriesTableSeeder::class);
 
 		$this->call(SlidesTableSeeder::class);
-		$this->call(SnippetsTableSeeder::class);
 		$this->call(ScreensTableSeeder::class);
 		$this->call(PresentablesTableSeeder::class);
+
+		$this->call(EditionsTableSeeder::class);
+		$this->call(LessonAvailabilitySeeder::class);
+		$this->call(SubscribersTableSeeder::class);
+		$this->call(CouponsTableSeeder::class);
+
+		$this->call(TagsTableSeeder::class);
+		$this->call(QuestionsTableSeeder::class);
+		$this->call(AnswersTableSeeder::class);
+		$this->call(TaggablesTableSeeder::class);
+
+		$this->call(SlideshowSeeder::class);
 	}
 }

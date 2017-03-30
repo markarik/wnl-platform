@@ -19,6 +19,12 @@ Route::get('/styleguide', function() {
 	return Response::view('styleguide');
 });
 
+Route::group(['namespace' => 'Invoice', 'prefix' => 'invoice'], function () {
+	Route::get('advance', function () { return Response::view('payment/invoices/advance'); });
+	Route::get('final', function () { return Response::view('payment/invoices/final'); });
+	Route::get('pro-forma', function () { return Response::view('payment/invoices/pro-forma'); });
+});
+
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function ()
 {
 	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
@@ -36,9 +42,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/', function () {
 		return redirect('/app');
 	})->name('home');
-	//
-	// Route::get('/dashboard', 'User\DashboardController@index');
-	Route::get('/profile/orders', 'User\OrderController@index')->name('profile-orders');
 
 	// Using front-end routing for the main application
 	Route::get('/app/{path?}', 'AppController@index')->name('app')->where('path', '(.*)');
@@ -57,16 +60,17 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
-// 	Route::get('/course/{courseId}', 'CourseController@index')->name('course');
-// 	Route::get('/course/{courseId}/lesson/{lessonId}', 'LessonController@index')->name('lesson');
-// 	Route::get('/course/{courseId}/lesson/{lessonId}/snippet/{snippetId}/slide#/{slideNumber}', 'LessonController@index')
-// 		->name('section');
-//
-	Route::get('/slideshow-builder/{snippetId}', 'SlideShowController@build')->name('slideshow-builder');
+	Route::get('/slideshow-builder/{screenId}', 'SlideShowController@build')->name('slideshow-builder');
 });
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function ()
 {
 	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
 	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
+	Route::get('/email/{template}', function($template) {
+		return Response::view('mail/' . $template);
+	});
+	Route::get('/newsletter/{template}', function($template) {
+		return Response::view('mail/newsletter/' . $template);
+	});
 });

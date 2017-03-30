@@ -11,6 +11,7 @@ public/mix-manifest.json
 storage/debugbar
 _ide_helper.php
 .DS_Store
-yarn.lock
 yarn-error.log
 npm-debug.log
+public/hot
+.env.dusk.*

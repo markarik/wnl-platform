@@ -28,5 +28,14 @@ class UsersTableSeeder extends Seeder
 			'address'    => encrypt(''),
 			'password'   => bcrypt('secret'),
 		]);
+
+		DB::table('users')->insert([
+			'first_name' => encrypt('Prezes'),
+			'last_name'  => encrypt('Chrupek'),
+			'email'      => 'prezeschrupek@bethink.pl',
+			'phone'      => encrypt('000000000'),
+			'address'    => encrypt(''),
+			'password'   => bcrypt('secret'),
+		]);
 	}
 }

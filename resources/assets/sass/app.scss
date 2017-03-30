@@ -116,6 +116,11 @@ html, body {
 	margin: 5em 0 0;
 }
 
+// Screens
+.wnl-screen-title {
+	border-bottom: $border-light-gray;
+}
+
 // Payment
 
 .payment-content {
@@ -142,6 +147,17 @@ html, body {
 		border-color: $color-white;
 		color: $color-white;
 	}
+
+	&.is-current {
+
+		.payment-step-count {
+			@include glow;
+		}
+
+		.payment-step-text {
+			font-weight: $font-weight-black;
+		}
+	}
 }
 
 .payment-step-count {
@@ -157,6 +173,17 @@ html, body {
 }
 
 .payment-step-text {
-	font-weight: $font-weight-bold;
 	font-size: $font-size-minus-1;
+}
+
+.onsite-plus {
+	display: block;
+	font-size: $font-size-plus-7;
+	text-align: center;
+	width: 100%;
+}
+
+.sublist-group {
+	list-style-type: disc;
+	margin: 5px 30px 15px 30px;
 }

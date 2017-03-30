@@ -12,15 +12,17 @@ class ProductsTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('products')->insert([
-			'name'  => 'Więcej niż LEK (Kurs internetowy + warsztaty)',
-			'price' => 2000.00,
-			'slug'  => 'wnl-online-onsite',
+			'name'     => 'Kurs internetowy + warsztaty',
+			'price'    => 2200.00,
+			'slug'     => 'wnl-online-onsite',
+			'quantity' => 198,
 		]);
 
 		DB::table('products')->insert([
-			'name'  => 'Więcej niż LEK (Kurs internetowy)',
-			'price' => 1.00,
-			'slug'  => 'wnl-online',
+			'name'     => 'Kurs internetowy',
+			'price'    => 1500.00,
+			'slug'     => 'wnl-online',
+			'quantity' => 97,
 		]);
 	}
 }

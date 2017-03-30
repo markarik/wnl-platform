@@ -2,6 +2,18 @@ export function envValue(key) {
 	return $wnl.env[key]
 }
 
+// Env
+
+export function isProduction() {
+	return envValue('appEnv') === 'production'
+}
+
+// Debug
+
+export function isDebug() {
+	return envValue('appDebug')
+}
+
 // URLs
 
 export function getUrl(path) {

@@ -4,15 +4,16 @@ $color-sky-blue: #81d8e0;
 $color-orange: #ffc371;
 $color-purple: #53446c;
 $color-gray: #242d47;
+$color-inactive-gray: #cdd0da;
 $color-light-gray: #efefef;
 $color-background-gray: #43495a;
 $color-background-light-gray: #fcfcfc;
 $color-white: #fff;
 $color-white-transparent: rgba(255,255,255,0.5);
 
-$color-green: #2ab27b;
-$color-yellow: #ffc371;
-$color-red: #bf5329;
+$color-green: #a7d766;
+$color-yellow: #f0aa43;
+$color-red: #ea4e60;
 
 // Layout
 $background-color-default: $color-white;
@@ -56,8 +57,18 @@ $rounded-square-sizes: (
 	large: 50px
 );
 
+// Spacing
+$margin-small: 0.5em;
+$margin-base: 1em;
+$margin-big: 2em;
+$margin-huge: 3em;
+
+// Animations
+$transition-length-base: 0.15s;
+
 // Overwrite Bulma variables
 $primary: $color-ocean-blue;
 $success: $color-green;
 $warning: $color-orange;
 $danger: $color-red;
+$info: $color-purple;

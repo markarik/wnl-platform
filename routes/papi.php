@@ -11,17 +11,42 @@
 |
 */
 
-Route::group(['namespace' => 'Api', 'middleware' => 'auth'], function() {
-	$resources = Config::get('papi.resources');
+Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
+	$r = config('papi.resources');
 
-	Route::get(sprintf('%s/current', $resources['users']), 'UsersApiController@getCurrentUser');
-
-	Route::get(sprintf('%s/{id}/nav', $resources['courses']), 'CoursesApiController@getNavigation');
+	// Courses
+	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 
 	// Lessons
-	Route::get(sprintf('%s/{id}/nav', $resources['lessons']), 'LessonsApiController@getNavigation');
-	Route::get(sprintf('%s/{id}', $resources['screens']), 'LessonsApiController@getScreen');
+	Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 
-	// Forms
-	Route::get(sprintf('%s/personal-info/{userId?}', $resources['forms']), 'Forms\PersonalInfoFormController@getForm');
+	// Screens
+	Route::get("{$r['screens']}/{id}", 'ScreensApiController@get');
+
+	// Users
+	Route::get("{$r['users']}/current", 'UsersApiController@getCurrentUser');
+	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
+
+	// Editions
+	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
+
+	// Orders
+	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
+
+	// Tags
+	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
+
+	// Questions
+	Route::get("{$r['questions']}/{id}", 'QuestionsApiController@get');
+	Route::post($r['questions'], 'QuestionsApiController@post');
+
+	// Answers
+	Route::get("{$r['answers']}/{id}", 'AnswersApiController@get');
+	Route::post($r['answers'], 'AnswersApiController@post');
+
+	// User Progress
+//	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
+//	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');
+
+
 });

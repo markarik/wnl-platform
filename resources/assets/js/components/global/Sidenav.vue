@@ -1,28 +1,35 @@
 <template>
 	<!-- Breadcrumbs -->
 	<div class="wnl-sidenav">
+
 		<ul class="breadcrumbs" v-if="breadcrumbs">
 			<wnl-sidenav-item v-for="breadcrumb in breadcrumbs"
 				:itemClass="breadcrumb.itemClass"
 				:to="breadcrumb.to"
 				:isDisabled="breadcrumb.isDisabled"
 				:method="breadcrumb.method"
+				:iconClass="breadcrumb.iconClass"
+				:iconTitle="breadcrumb.iconTitle"
 			>
 				{{breadcrumb.text}}
 			</wnl-sidenav-item>
 		</ul>
 
 		<!-- Items -->
-		<ul class="items" v-if="items">
-			<wnl-sidenav-item v-for="item in items"
-				:itemClass="item.itemClass"
-				:to="item.to"
-				:isDisabled="item.isDisabled"
-				:method="item.method"
-			>
-				{{item.text}}
-			</wnl-sidenav-item>
-		</ul>
+		<div class="box">
+			<ul class="items" v-if="items">
+				<wnl-sidenav-item v-for="item in items"
+					:itemClass="item.itemClass"
+					:to="item.to"
+					:isDisabled="item.isDisabled"
+					:method="item.method"
+					:iconClass="item.iconClass"
+					:iconTitle="item.iconTitle"
+				>
+					{{item.text}}
+				</wnl-sidenav-item>
+			</ul>
+		</div>
 	</div>
 
 </template>
@@ -34,9 +41,8 @@
 		max-width: 250px
 
 	.breadcrumbs
-		border-bottom: $border-light-gray
 		font-size: $font-size-minus-1
-		margin-bottom: 10px
+		margin-bottom: $margin-base
 
 		.small
 			font-size: $font-size-minus-2
@@ -44,13 +50,25 @@
 		.big
 			font-size: $font-size-base
 
+		.is-active
+			font-weight: $font-weight-regular
+
 	.items
 
 		.item
-			padding: 2px 0
+			padding: $margin-tiny 0
+
+			&.with-border
+				padding: $margin-base 0 $margin-tiny
+
+				&:first-child
+					padding: $margin-tiny 0
 
 		.heading
 			padding-top: 10px
+
+			&:first-child
+				padding: 0
 
 		.small
 			font-size: $font-size-minus-1
@@ -59,7 +77,7 @@
 			font-size: $font-size-plus-1
 
 		.subitem
-			padding: 5px 0 5px 10px
+			padding: 5px 0 5px 7px
 
 		.disabled
 			color: $color-inactive-gray

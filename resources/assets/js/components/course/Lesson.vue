@@ -3,7 +3,7 @@
 		<keep-alive>
 			<router-view></router-view>
 		</keep-alive>
-		<wnl-qna :lessonId="lessonId"></wnl-qna>
+		<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
 	</div>
 </template>
 

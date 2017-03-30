@@ -11,7 +11,7 @@
 	<title>@lang('common.app-title')</title>
 
 	<!-- Styles -->
-	<link href="/css/app.css" rel="stylesheet">
+	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
 	<!-- Scripts -->
 	<script src="https://use.fontawesome.com/c95376cac6.js" async></script>

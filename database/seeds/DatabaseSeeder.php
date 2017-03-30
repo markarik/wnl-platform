@@ -15,18 +15,18 @@ class DatabaseSeeder extends Seeder
 		$this->call(ProductsTableSeeder::class);
 
 		$this->call(CoursesTableSeeder::class);
-		$this->call(GroupsTableSeeder::class);
-		$this->call(LessonsTableSeeder::class);
-		$this->call(SectionsTableSeeder::class);
+//		$this->call(GroupsTableSeeder::class);
+//		$this->call(LessonsTableSeeder::class);
+//		$this->call(SectionsTableSeeder::class);
 
 		$this->call(CategoriesTableSeeder::class);
 
-		$this->call(SlidesTableSeeder::class);
-		$this->call(ScreensTableSeeder::class);
-		$this->call(PresentablesTableSeeder::class);
+//		$this->call(SlidesTableSeeder::class);
+//		$this->call(ScreensTableSeeder::class);
+//		$this->call(PresentablesTableSeeder::class);
 
 		$this->call(EditionsTableSeeder::class);
-		$this->call(LessonAvailabilitySeeder::class);
+//		$this->call(LessonAvailabilitySeeder::class);
 		$this->call(SubscribersTableSeeder::class);
 		$this->call(CouponsTableSeeder::class);
 

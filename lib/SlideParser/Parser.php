@@ -20,7 +20,7 @@ class Parser
 	/**
 	 * Regexp patterns used to process html slide shows
 	 */
-	const SLIDE_PATTERN = '/<section>([\s\S]*?)<\/section>/i';
+	const SLIDE_PATTERN = '/<section([\s\S]*?)>([\s\S]*?)<\/section>/';
 
 	const FUNCTIONAL_SLIDE_PATTERN = '/#!\(functional\)/';
 
@@ -127,42 +127,43 @@ class Parser
 
 			if ($slide->is_functional) continue; /* jump to next iteration */
 
-			$foundCategoryTags = [];
-			foreach ($tags as $tagName => $tagValue) {
-				$searchResult = $this->categoryTags->search($tagName);
-				if ($searchResult !== false) {
-					$foundCategoryTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
-				}
-			}
-			if ($currentSlide === 0 && !array_key_exists(0, $foundCategoryTags)) {
-				throw new ParseErrorException('Highest level category tag not found!');
-			}
-			ksort($foundCategoryTags);
-			foreach ($foundCategoryTags as $index => $categoryTag) {
-				if ($index === 0) {
-					$parentId = null;
-				} else {
-					$parentId = $this->categoryModels[$index - 1]->id;
-				}
-
-				$this->categoryModels = array_filter($this->categoryModels, function ($key) use ($index) {
-					return $key < $index;
-				}, ARRAY_FILTER_USE_KEY);
-
-				$this->categoryModels[] = Category::firstOrCreate([
-					'name'      => $categoryTag['value'],
-					'parent_id' => $parentId,
-				]);
-
-				if ($index === 0) {
-					$this->categoryModels[0]->slides()->detach();
-					Category::where('parent_id', $this->categoryModels[0]->id)->delete();
-				}
-			}
-
-			foreach ($this->categoryModels as $model) {
-				$model->slides()->attach($slide);
-			}
+//			$foundCategoryTags = [];
+//			foreach ($tags as $tagName => $tagValue) {
+//				$searchResult = $this->categoryTags->search($tagName);
+//				if ($searchResult !== false) {
+//					$foundCategoryTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
+//				}
+//			}
+//			if ($currentSlide === 0 && !array_key_exists(0, $foundCategoryTags)) {
+//				Log::warning('Highest level category tag not found!');
+//				continue;
+//			}
+//			ksort($foundCategoryTags);
+//			foreach ($foundCategoryTags as $index => $categoryTag) {
+//				if ($index === 0) {
+//					$parentId = null;
+//				} else {
+//					$parentId = $this->categoryModels[$index - 1]->id;
+//				}
+//
+//				$this->categoryModels = array_filter($this->categoryModels, function ($key) use ($index) {
+//					return $key < $index;
+//				}, ARRAY_FILTER_USE_KEY);
+//
+//				$this->categoryModels[] = Category::firstOrCreate([
+//					'name'      => $categoryTag['value'],
+//					'parent_id' => $parentId,
+//				]);
+//
+//				if ($index === 0) {
+//					$this->categoryModels[0]->slides()->detach();
+//					Category::where('parent_id', $this->categoryModels[0]->id)->delete();
+//				}
+//			}
+//
+//			foreach ($this->categoryModels as $model) {
+//				$model->slides()->attach($slide);
+//			}
 
 		}
 		die('kuniec');

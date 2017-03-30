@@ -66,8 +66,10 @@
 				return this.messages.map((message, index) => {
 					if (index === 0) return true
 
-					let previous = index - 1
-					return message.username !== this.messages[previous].username
+					let previous = index - 1,
+						halfHourInMs = 1000 * 60 * 30
+					return message.username !== this.messages[previous].username ||
+						message.time - this.messages[previous].time > halfHourInMs
 				})
 			},
 			container() {

@@ -15,11 +15,13 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
 	.wnl-navbar
 		+small-shadow()
 		display: flex
+		height: $navbar-height
 
 	.wnl-nav-item
 		align-items: center

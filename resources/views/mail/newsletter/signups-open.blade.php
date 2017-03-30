@@ -11,7 +11,7 @@
 	<p>Zapisując się, podaj zostawiony wcześniej na stronie wiecejnizlek.pl adres e-mail, aby skorzystać z <strong>200zł zniżki na dowolny wariant kursu</strong> - stacjonarny lub internetowy!</p>
 
 	<div style="text-align: center; margin: 10px auto 20px;">
-		<a class="button" href="https://platforma.wiecejnizlek.pl/">
+		<a class="button" href="https://platforma.wiecejnizlek.pl/payment/select-product">
 			Zapisz się na kurs
 		</a>
 	</div>
@@ -42,7 +42,7 @@
 	<p>dr n. praw. Radosław Tymiński, wykładowca Prawa Medycznego na WUM, autor bloga http://prawalekarzy.pl/</p>
 
 	<div style="text-align: center; margin: 10px auto 20px;">
-		<a href="https://wiecejnizlek.pl/o-kursie" class="button">Przeczytaj więcej o warsztatach</a>
+		<a href="https://wiecejnizlek.pl/o-warsztatach" class="button">Przeczytaj więcej o warsztatach</a>
 	</div>
 	<hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
 
@@ -52,7 +52,7 @@
 	<p>Na dziś mamy dla Was wersję demonstracyjną zawierającą 3 pokazowe lekcje. W ramach nich możecie też swobodnie korzystać z czata oraz pytań i odpowiedzi. Do skorzystania z wersji demonstracyjnej platformy nie jest wymagana żadna rejestracja, ani podawanie prawdziwych danych osobowych. :)</p>
 
 	<div style="text-align: center; margin: 10px auto 20px;">
-		<a href="https://wiecejnizlek.pl/o-kursie" class="button">Zobacz demo platformy</a>
+		<a href="https://demo.platforma.wiecejnizlek.pl/" class="button">Zobacz demo platformy</a>
 	</div>
 	<hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
 

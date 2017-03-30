@@ -1,16 +1,16 @@
 <template>
 	<div class="wnl-app-layout">
-		<div class="wnl-app-layout-left">
+		<div class="wnl-left wnl-app-layout-left">
 			<wnl-course-navigation
 				:context="context"
 				:isLesson="isLesson"
 				v-if="courseReady">
 			</wnl-course-navigation>
 		</div>
-		<div class="wnl-app-layout-main">
+		<div class="wnl-middle wnl-app-layout-main">
 			<router-view v-if="courseReady"></router-view>
 		</div>
-		<div class="wnl-app-layout-right">
+		<div class="wnl-right wnl-app-layout-right">
 			<wnl-chat :room="chatRoom"></wnl-chat>
 		</div>
 	</div>

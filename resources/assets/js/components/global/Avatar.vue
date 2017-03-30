@@ -44,7 +44,7 @@
 				return `wnl-avatar-${size}`
 			},
 			initials() {
-				return getInitials(this.username)
+				return getInitials(this.usernameToUse)
 			},
 			colorClass() {
 				if (!this.isCustom) {

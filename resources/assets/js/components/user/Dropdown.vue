@@ -51,6 +51,7 @@
 		left: -50%
 		position: absolute
 		top: 95%
+		z-index: 1000
 
 	.drawer-item
 		border-bottom: $border-light-gray

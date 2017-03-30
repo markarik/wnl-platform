@@ -67,11 +67,6 @@
 				socket: {}
 			}
 		},
-		components: {
-			'wnl-message': Message,
-			'wnl-message-form': MessageForm,
-			'wnl-users-widget': UsersWidget,
-		},
 		computed: {
 			isAuthorUnique() {
 				return this.messages.map((message, index) => {
@@ -103,7 +98,6 @@
 				})
 				this.socket.on('join-room-success', (data) => {
 					if (!this.loaded) {
-						this.setListeners(this.socket)
 						this.messages = data.messages
 						this.users    = data.users
 						this.loaded   = true
@@ -147,16 +141,22 @@
 				this.container.scrollTop = this.content.offsetHeight
 			}
 		},
-		mounted() {
+		created() {
 			socket.connect().then((socket) => {
 				this.socket = socket
 				this.joinRoom()
+				this.setListeners(this.socket)
 			}).catch(console.log.bind(console))
 		},
 		beforeDestroy() {
 			socket.disconnect().then(() => {
 				return true
 			}).catch(console.log.bind(console))
+		},
+		components: {
+			'wnl-message': Message,
+			'wnl-message-form': MessageForm,
+			'wnl-users-widget': UsersWidget,
 		},
 		watch: {
 			'room' (newRoom, oldRoom) {

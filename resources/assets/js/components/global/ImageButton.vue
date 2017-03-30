@@ -25,6 +25,8 @@
 		align-items: center
 
 	.wnl-image-button
+		+small-shadow()
+
 		border: 0
 		padding: 0
 

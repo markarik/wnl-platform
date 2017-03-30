@@ -37,8 +37,8 @@ $layout-main-width: 660px;
 $layout-right-width: 400px;
 
 $three-column-left-flex: 4;
-$three-column-main-flex: 7;
-$three-column-right-flex: 5;
+$three-column-main-flex: 8;
+$three-column-right-flex: 4;
 
 html, body {
 	height: 100%;
@@ -64,7 +64,8 @@ html, body {
 }
 
 .wnl-app-layout-left {
-	background-color: $color-background-light-gray;
+	// background-color: $color-background-light-gray;
+	border-right: $border-light-gray;
 	display: flex;
 	flex: $three-column-left-flex;
 	justify-content: flex-end;

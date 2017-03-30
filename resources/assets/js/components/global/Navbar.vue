@@ -13,7 +13,7 @@
 			</div>
 			<div class="column wnl-nav-column">
 				<div class="nav-menu wnl-nav-item">
-					{{ currentUserFullName }}
+					<wnl-user-dropdown></wnl-user-dropdown>
 				</div>
 			</div>
 		</div>
@@ -41,6 +41,7 @@
 </style>
 
 <script>
+	import Dropdown from 'js/components/user/Dropdown.vue'
 	import { mapGetters } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -56,6 +57,9 @@
 			logoAlt() {
 				return 'Logo Więcej niż LEK'
 			}
-		}
+		},
+		components: {
+			'wnl-user-dropdown': Dropdown,
+		},
 	}
 </script>

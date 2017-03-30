@@ -5,6 +5,9 @@
 			<i title="Zrobione!" class="fa fa-check-circle-o" v-else-if="isComplete"></i>
 			<i title="Jeszcze przed Tobą" class="fa fa-circle-o" v-else></i>
 		</span>
+		<span class="icon is-small" v-if="hasIcon">
+			<i :title="iconTitle" class="fa" :class="iconClass"></i>
+		</span>
 		<router-link v-if="isLink" :to="to" :replace="replace">
 			<slot></slot>
 		</router-link>
@@ -14,10 +17,25 @@
 	</li>
 </template>
 
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
+	.has-icon
+
+		.icon
+			color: $color-ocean-blue
+
+	.icon.is-small
+		font-size: $font-size-minus-1
+		margin-top: -1px
+		margin-right: $margin-small
+		vertical-align: middle
+</style>
+
 <script>
 	export default {
 		name: 'SidenavItem',
-		props: ['itemClass', 'to', 'isDisabled', 'method'],
+		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
@@ -33,6 +51,9 @@
 			},
 			replace() {
 				return this.method === 'replace'
+			},
+			hasIcon() {
+				return this.hasClass('has-icon')
 			},
 		},
 		methods: {

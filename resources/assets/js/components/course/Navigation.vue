@@ -106,7 +106,16 @@
 
 				return navigation
 			},
-			composeItem(text, itemClass, routeName = '', routeParams = {}, isDisabled = false, method = 'push') {
+			composeItem(
+				text,
+				itemClass,
+				routeName = '',
+				routeParams = {},
+				isDisabled = false,
+				method = 'push',
+				iconClass = '',
+				iconTitle = ''
+			) {
 				let to = {}
 				if (!isDisabled && routeName.length > 0) {
 					to = {
@@ -115,16 +124,20 @@
 					}
 				}
 
-				return { text, itemClass, to, isDisabled, method }
+				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle }
 			},
 			getCourseItem() {
 				return this.composeItem(
 					this.courseName,
-					'',
+					'has-icon',
 					resource('courses'),
 					{
 						courseId: this.context.courseId,
-					}
+					},
+					false,
+					'push',
+					'fa-home',
+					'Strona główna kursu'
 				)
 			},
 			getGroupItem(group) {
@@ -134,7 +147,7 @@
 				)
 			},
 			getLessonItem(lesson, asTodo = true) {
-				let cssClass = ''
+				let cssClass = '', iconClass = '', iconTitle = ''
 
 				if (asTodo) {
 					cssClass += 'todo'
@@ -142,6 +155,10 @@
 					if (this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
 						cssClass = `${cssClass} ${this.courseProgress.lessons[lesson.id].status}`
 					}
+				} else {
+					cssClass += 'has-icon'
+					iconClass = 'fa-graduation-cap'
+					iconTitle = 'Obecna lekcja'
 				}
 
 				return this.composeItem(
@@ -152,7 +169,10 @@
 						courseId: lesson[resource('editions')],
 						lessonId: lesson.id,
 					},
-					!lesson.isAvailable
+					!lesson.isAvailable,
+					'push',
+					iconClass,
+					iconTitle
 				)
 
 			},

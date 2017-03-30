@@ -31,7 +31,7 @@ class PersonalDataController extends Controller
 		}
 
 		$product = Session::get('product');
-		if (!$product instanceof Product) {
+		if (!$product instanceof Product || !$product->available) {
 			return redirect()->route('payment-select-product');
 		}
 

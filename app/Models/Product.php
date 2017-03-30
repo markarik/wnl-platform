@@ -21,4 +21,9 @@ class Product extends Model
 			->where('slug', $slug)
 			->first();
 	}
+
+	public function getAvailableAttribute()
+	{
+		return $this->quantity > 0;
+	}
 }

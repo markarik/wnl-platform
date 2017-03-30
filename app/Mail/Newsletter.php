@@ -34,6 +34,7 @@ class Newsletter extends Mailable
 		return $this
 			->to('newsletter@mail.wiecejnizlek.pl')
 			->view('mail.newsletter.' . $this->template)
+			->text('mail.newsletter.' . $this->template . '-plain')
 			->subject($this->subject);
 	}
 }

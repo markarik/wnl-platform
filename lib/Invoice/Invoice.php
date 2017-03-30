@@ -51,7 +51,7 @@ class Invoice
 
 		$data['ordersList'] = [
 			[
-				'product_name' => $order->product->name,
+				'product_name' => $order->product->invoice_name,
 				'unit' => 'szt.',
 				'amount' => 1,
 			],
@@ -109,7 +109,7 @@ class Invoice
 
 		$data['ordersList'] = [
 			[
-				'product_name' => $order->product->name,
+				'product_name' => $order->product->invoice_name,
 				'unit' => 'szt.',
 				'amount' => 1,
 			],
@@ -201,7 +201,7 @@ class Invoice
 			return 1;
 		}
 
-		return $dbResult++;
+		return $dbResult + 1;
 	}
 
 	private function getVatValue() {

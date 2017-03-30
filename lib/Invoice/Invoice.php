@@ -51,7 +51,7 @@ class Invoice
 
 		$data['ordersList'] = [
 			[
-				'product_name' => $order->product->name,
+				'product_name' => $order->product->invoice_name,
 				'unit' => 'szt.',
 				'amount' => 1,
 			],
@@ -69,12 +69,12 @@ class Invoice
 
 		// Calculate netto, brutto, VAT
 		$vatValue = $this->getVatValue();
-		$data['ordersList'][0]['priceGross'] = number_format($totalPrice, 2);
-		$data['ordersList'][0]['priceNet'] = number_format($totalPrice / (1 + $vatValue), 2);
+		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
+		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
 
 		$data['summary'] = [
-			'total' => number_format($totalPrice, 2),
+			'total' => $this->price($totalPrice),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -109,7 +109,7 @@ class Invoice
 
 		$data['ordersList'] = [
 			[
-				'product_name' => $order->product->name,
+				'product_name' => $order->product->invoice_name,
 				'unit' => 'szt.',
 				'amount' => 1,
 			],
@@ -127,13 +127,18 @@ class Invoice
 
 		// Calculate netto, brutto, VAT
 		$vatValue = $this->getVatValue();
-		$data['ordersList'][0]['priceGross'] = number_format($totalPrice, 2);
-		$data['ordersList'][0]['priceNet'] = number_format($totalPrice / (1 + $vatValue), 2);
+		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
+		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
-		$data['ordersList'][0]['vatValue'] = number_format($vatValue * $totalPrice / (1 + $vatValue));
+
+		if ($vatValue === self::VAT_ZERO) {
+			$data['ordersList'][0]['vatValue'] = '-';
+		} else {
+			$data['ordersList'][0]['vatValue'] = $this->price($vatValue * $totalPrice / (1 + $vatValue)) . 'zł';
+		}
 
 		$data['summary'] = [
-			'total' => number_format($totalPrice, 2),
+			'total' => $this->price($totalPrice),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -196,7 +201,7 @@ class Invoice
 			return 1;
 		}
 
-		return $dbResult;
+		return $dbResult + 1;
 	}
 
 	private function getVatValue() {
@@ -220,5 +225,9 @@ class Invoice
 		})->get();
 
 		return $orders->sum('total_with_coupon');
+	}
+
+	private function price($number) {
+		return number_format($number, 2, ',', ' ');
 	}
 }

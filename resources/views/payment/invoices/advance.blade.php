@@ -72,13 +72,13 @@
 		<tr>
 			<td>{{ $order['vat'] }}</td>
 			<td>{{ $order['priceNet'] }}zł</td>
-			<td>{{ $order['vatValue'] }}zł</td>
+			<td>{{ $order['vatValue'] }}</td>
 			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 		<tr>
 			<td><strong>Razem:</strong></td>
 			<td>{{ $order['priceNet'] }}zł</td>
-			<td>{{ $order['vatValue'] }}zł</td>
+			<td>{{ $order['vatValue'] }}</td>
 			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 	</table>

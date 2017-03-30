@@ -17,6 +17,7 @@
 				<div class="transfer-details notification" v-if="transferDetails">
 					<p>Dane do przelewu</p>
 					<small>
+						<strong>Zamówienie numer {{ order.id }}</strong><br>
 						bethink sp. z o.o.<br>
 						ul. Henryka Sienkiewicza 8/1<br>
 						60-817, Poznań<br>

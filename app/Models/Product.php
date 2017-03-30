@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = [
-        'name',
-    ];
+	protected $fillable = [
+		'name',
+		'invoice_name',
+	];
 
-    protected $guarded = [
-        'price'
-    ];
+	protected $guarded = [
+		'price'
+	];
 
 	public function scopeSlug($query, $slug)
 	{

@@ -77,8 +77,8 @@
 				bethink sp. z o.o.<br>
 				ul. Henryka Sienkiewicza 8/1<br>
 				60-817 Poznań<br>
-				NIP: 7811943756<br>
-				KRS: 0000668811
+				NIP: 781-194-37-56<br>
+				REGON: 366-802-351
 			</address>
 		</div>
 

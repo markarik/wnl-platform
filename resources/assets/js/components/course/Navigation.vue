@@ -177,21 +177,39 @@
 
 			},
 			getScreenItem(screen) {
+				let itemClass = '', iconClass = '', iconTitle = ''
+
+				const icons = {
+					'html': 'fa-file-text-o',
+					'slideshow': 'fa-television',
+					'app': 'fa-question',
+				}
+
+				if (icons.hasOwnProperty(screen.type)) {
+					itemClass = 'has-icon with-border'
+					iconClass = icons[screen.type]
+					iconTitle = screen.name
+				}
+
 				return this.composeItem(
 					screen.name,
-					'',
+					itemClass,
 					resource('screens'),
 					{
 						courseId: screen[resource('editions')],
 						lessonId: screen[resource('lessons')],
 						screenId: screen.id,
-					}
+					},
+					false,
+					'push',
+					iconClass,
+					iconTitle,
 				)
 			},
 			getSectionItem(section) {
 				return this.composeItem(
 					section.name,
-					'small subitem',
+					'small subitem has-icon',
 					resource('screens'),
 					{
 						courseId: section[resource('editions')],
@@ -200,7 +218,9 @@
 						slide: section.slide,
 					},
 					false,
-					'replace'
+					'replace',
+					'fa-angle-right',
+					section.name
 				)
 			}
 		},

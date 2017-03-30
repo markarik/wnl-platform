@@ -56,7 +56,13 @@
 	.items
 
 		.item
-			padding: 2px 0
+			padding: $margin-tiny 0
+
+			&.with-border
+				padding: $margin-base 0 $margin-tiny
+
+				&:first-child
+					padding: $margin-tiny 0
 
 		.heading
 			padding-top: 10px
@@ -71,7 +77,7 @@
 			font-size: $font-size-plus-1
 
 		.subitem
-			padding: 5px 0 5px 10px
+			padding: 5px 0 5px 7px
 
 		.disabled
 			color: $color-inactive-gray

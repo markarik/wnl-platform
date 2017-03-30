@@ -23,13 +23,16 @@
 	.has-icon
 
 		.icon
-			color: $color-ocean-blue
+			color: $color-inactive-gray
 
 	.icon.is-small
 		font-size: $font-size-minus-1
 		margin-top: -1px
-		margin-right: $margin-small
+		margin-right: $margin-tiny
 		vertical-align: middle
+
+	.subitem .icon.is-small
+		margin-right: 0
 </style>
 
 <script>

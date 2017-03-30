@@ -88,15 +88,17 @@
 			setEventListeners() {
 				window.addEventListener('message', event => {
 					if (typeof event.data === 'string') {
-						let data = JSON.parse(event.data)
-						if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
-							this.setCurrentSlideFromIndex(data.state.indexh)
-							this.$router.replace({
-								name: 'screens',
-								params: { slide: this.currentSlide },
-								query: { sc: '1' }
-							})
-						}
+						try {
+							let data = JSON.parse(event.data)
+							if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
+								this.setCurrentSlideFromIndex(data.state.indexh)
+								this.$router.replace({
+									name: 'screens',
+									params: { slide: this.currentSlide },
+									query: { sc: '1' }
+								})
+							}
+						} catch (err) {}
 					}
 				})
 			},

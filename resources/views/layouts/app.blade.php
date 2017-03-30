@@ -10,6 +10,8 @@
 
 	<title>@lang('common.app-title')</title>
 
+	<link rel="icon" href="{{ url('favicon.png') }}">
+
 	<!-- Styles -->
 	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
 

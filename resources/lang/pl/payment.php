@@ -145,8 +145,8 @@ return [
 
 	'confirm-method-heading' => 'Wszystko gotowe!',
 	'confirm-method-lead' => 'Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności i&nbsp;złożyć&nbsp;zamówienie.',
-	'confirm-method-bank-transfer-button' => 'Płacę przelewem bankowym',
-	'confirm-method-online-payment-button' => 'Płacę szybkim przelewem',
+	'confirm-method-bank-transfer-button' => 'Kupuję i płacę przelewem bankowym',
+	'confirm-method-online-payment-button' => 'Kupuję i płacę szybkim przelewem',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',

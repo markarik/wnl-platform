@@ -64,7 +64,6 @@ html, body {
 }
 
 .wnl-app-layout-left {
-	// background-color: $color-background-light-gray;
 	border-right: $border-light-gray;
 	display: flex;
 	flex: $three-column-left-flex;
@@ -85,10 +84,6 @@ html, body {
 	flex: $three-column-right-flex;
 	overflow-y: auto;
 	padding-left: 20px;
-}
-
-.wnl-background-gray {
-	background: $color-background-light-gray;
 }
 
 .wnl-left-content {

@@ -2,22 +2,17 @@
 	<div class="wnl-dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
 			<wnl-avatar></wnl-avatar>
-			<span class="icon is-small">
-				<i class="fa fa-chevron-down"></i>
+			<!-- <small>{{ currentUserFullName }}</small> -->
+			<span class="icon">
+				<i class="fa fa-angle-down"></i>
 			</span>
-			<div class="box drawer" v-if="isActive">
-				<ul>
-					<!-- <li @click="isActive = !isActive">
-						<router-link :to="{name: 'my-orders'}">Twoje zamówienia</router-link>
-					</li>
-					<li @click="isActive = !isActive">
-						<router-link :to="{name: 'my-orders'}">Wyloguj się</router-link>
-					</li> -->
-					<li v-for="item in items" class="drawer-item">
-						<router-link class="drawer-link" :to="{ name: item.route }">{{item.text}}</router-link>
-					</li>
-				</ul>
-			</div>
+		</div>
+		<div class="box drawer" v-if="isActive">
+			<ul>
+				<li v-for="item in items" class="drawer-item">
+					<router-link class="drawer-link" :to="{ name: item.route }">{{item.text}}</router-link>
+				</li>
+			</ul>
 		</div>
 	</div>
 </template>
@@ -25,27 +20,41 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.wnl-dropdown
+		height: 100%
+		min-height: 100%
+		position: relative
+
 	.activator
 		align-items: center
 		color: $color-inactive-gray
+		cursor: pointer
 		display: flex
+		height: 100%
 		justify-content: center
-		position: relative
+		min-height: 100%
+		padding: 0 $margin-small
+		transition: background $transition-length-base
+
+		&:hover
+			background-color: $color-background-light-gray
+			transition: background $transition-length-base
 
 		&.is-active
 			color: $color-gray
 
 		.icon
-			margin: 0 $margin-small
+			margin: 0 $margin-tiny
 
 	.drawer
+		left: -50%
 		position: absolute
-		top: 120%
+		top: 95%
 
 	.drawer-item
 		border-bottom: $border-light-gray
 		font-size: $font-size-minus-1
-		padding: $margin-small 0
+		padding: $margin-small $margin-base
 		white-space: nowrap
 
 		&:last-child
@@ -58,23 +67,25 @@
 
 <script>
 	import { set } from 'vue'
+	import { mapGetters } from 'vuex'
 
 	export default {
 		name: 'Dropdown',
 		data() {
 			return {
-				isActive: false,
+				isActive: true,
 			}
 		},
 		computed: {
+			...mapGetters(['currentUserFullName']),
 			items() {
 				return [
 					{
-						'text': 'Kurs',
+						'text': 'Strona główna',
 						'route': 'dashboard',
 					},
 					{
-						'text': 'Twoje zamówienia',
+						'text': 'Twoje konto',
 						'route': 'my-orders',
 					},
 					{
@@ -84,5 +95,10 @@
 				]
 			}
 		},
+		watch: {
+			'$route' (to, from) {
+				this.isActive = false
+			}
+		}
 	}
 </script>

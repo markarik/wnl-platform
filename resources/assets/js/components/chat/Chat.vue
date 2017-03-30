@@ -11,8 +11,10 @@
 							{{ message.content }}
 					</wnl-message>
 				</div>
-				<div v-else>
-					Ładuję wiadomości...
+				<div class="wnl-chat-loading" v-else>
+					<span class="icon">
+						<i class="fa fa-spin fa-circle-o-notch"></i>
+					</span> Ładuję wiadomości...
 				</div>
 			</div>
 		</div>
@@ -28,16 +30,25 @@
 		display: flex
 		flex: 1
 		flex-direction: column
-		justify-content: flex-end
+		justify-content: space-between
 		padding-right: 20px
 
 	.wnl-chat-messages
+		display: flex
+		flex: 1 1 auto
+		flex-direction: column-reverse
 		overflow-y: auto
 
 	.wnl-chat-form
 		border-top: $border-light-gray
 		margin: 20px 0
 		padding-top: 20px
+
+	.wnl-chat-loading
+		text-align: center
+
+		.icon
+			margin-right: $margin-tiny
 </style>
 <script>
 	import Message from './Message.vue'

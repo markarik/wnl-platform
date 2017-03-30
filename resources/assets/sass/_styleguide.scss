@@ -38,6 +38,12 @@ h5 {
 	text-transform: uppercase;
 }
 
+.metadata {
+	text-transform: uppercase;
+	font-size: $font-size-minus-2;
+	font-weight: $font-weight-black;
+}
+
 .big {
 	font-size: $font-size-plus-1;
 	line-height: $line-height-plus;

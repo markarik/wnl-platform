@@ -1,5 +1,10 @@
 <template>
 	<div class="wnl-users-widget">
+		<p class="metadata">
+			<span class="icon is-small">
+				<i class="fa fa-users"></i>
+			</span> Uczą się razem z Tobą
+		</p>
 		<wnl-avatar v-for="user in users" :username="user.full_name"></wnl-avatar>
 	</div>
 </template>
@@ -8,9 +13,15 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-users-widget
-		height: 50px
 		border-bottom: $border-light-gray
-		padding: 10px 0
+		padding: 20px 0 10px
+
+		.metadata
+			color: $color-background-gray
+			margin-bottom: $margin-small
+
+			& .icon
+				color: $color-inactive-gray
 
 		.wnl-avatar
 			display: inline-flex

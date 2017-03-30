@@ -32,7 +32,9 @@
 		display: flex
 		height: 100%
 		justify-content: center
+		margin-left: -$margin-small
 		min-height: 100%
+		padding: 0 $margin-small
 		transition: background $transition-length-base
 
 		&:hover
@@ -80,7 +82,7 @@
 			items() {
 				return [
 					{
-						'text': 'Strona główna',
+						'text': 'Strona główna kursu',
 						'route': 'dashboard',
 					},
 					{

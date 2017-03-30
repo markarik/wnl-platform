@@ -188,7 +188,7 @@ class Invoice
 
 		$pdf = PDF::loadHtml($html)->setPaper('a4');
 
-		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->stream());
+		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->output());
 	}
 
 	protected function nextNumberInSeries($series)

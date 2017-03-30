@@ -11,8 +11,10 @@
 							{{ message.content }}
 					</wnl-message>
 				</div>
-				<div v-else>
-					Ładuję wiadomości...
+				<div class="wnl-chat-loading" v-else>
+					<span class="icon">
+						<i class="fa fa-spin fa-circle-o-notch"></i>
+					</span> Ładuję wiadomości...
 				</div>
 			</div>
 		</div>
@@ -28,16 +30,25 @@
 		display: flex
 		flex: 1
 		flex-direction: column
-		justify-content: flex-end
+		justify-content: space-between
 		padding-right: 20px
 
 	.wnl-chat-messages
+		display: flex
+		flex: 1 1 auto
+		flex-direction: column-reverse
 		overflow-y: auto
 
 	.wnl-chat-form
 		border-top: $border-light-gray
 		margin: 20px 0
 		padding-top: 20px
+
+	.wnl-chat-loading
+		text-align: center
+
+		.icon
+			margin-right: $margin-tiny
 </style>
 <script>
 	import Message from './Message.vue'
@@ -56,18 +67,15 @@
 				socket: {}
 			}
 		},
-		components: {
-			'wnl-message': Message,
-			'wnl-message-form': MessageForm,
-			'wnl-users-widget': UsersWidget,
-		},
 		computed: {
 			isAuthorUnique() {
 				return this.messages.map((message, index) => {
 					if (index === 0) return true
 
-					let previous = index - 1
-					return message.username !== this.messages[previous].username
+					let previous = index - 1,
+						halfHourInMs = 1000 * 60 * 30
+					return message.username !== this.messages[previous].username ||
+						message.time - this.messages[previous].time > halfHourInMs
 				})
 			},
 			container() {
@@ -90,7 +98,6 @@
 				})
 				this.socket.on('join-room-success', (data) => {
 					if (!this.loaded) {
-						this.setListeners(this.socket)
 						this.messages = data.messages
 						this.users    = data.users
 						this.loaded   = true
@@ -134,16 +141,22 @@
 				this.container.scrollTop = this.content.offsetHeight
 			}
 		},
-		mounted() {
+		created() {
 			socket.connect().then((socket) => {
 				this.socket = socket
 				this.joinRoom()
+				this.setListeners(this.socket)
 			}).catch(console.log.bind(console))
 		},
 		beforeDestroy() {
 			socket.disconnect().then(() => {
 				return true
 			}).catch(console.log.bind(console))
+		},
+		components: {
+			'wnl-message': Message,
+			'wnl-message-form': MessageForm,
+			'wnl-users-widget': UsersWidget,
 		},
 		watch: {
 			'room' (newRoom, oldRoom) {

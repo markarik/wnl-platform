@@ -32,7 +32,9 @@
 		display: flex
 		height: 100%
 		justify-content: center
+		margin-left: -$margin-small
 		min-height: 100%
+		padding: 0 $margin-small
 		transition: background $transition-length-base
 
 		&:hover
@@ -49,6 +51,7 @@
 		left: -50%
 		position: absolute
 		top: 95%
+		z-index: 1000
 
 	.drawer-item
 		border-bottom: $border-light-gray
@@ -80,7 +83,7 @@
 			items() {
 				return [
 					{
-						'text': 'Strona główna',
+						'text': 'Strona główna kursu',
 						'route': 'dashboard',
 					},
 					{

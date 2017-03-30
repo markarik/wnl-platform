@@ -50,7 +50,6 @@
 				'progressCompleteLesson',
 			]),
 			startLesson() {
-				console.log(`Starting lesson ${this.lessonId}`)
 				this.progressStartLesson(this.lessonProgressContext)
 				this.goToDefaultScreenIfNone()
 			},
@@ -71,7 +70,6 @@
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
 					if (parseInt(this.screenId) === this.lastScreenId) {
-						console.log(`Marking lesson ${this.lessonId} as complete`)
 						this.progressCompleteLesson(this.lessonProgressContext)
 					}
 					this.progressUpdateLesson(this.lessonProgressContext)

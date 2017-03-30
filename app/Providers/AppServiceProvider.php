@@ -30,17 +30,19 @@ class AppServiceProvider extends ServiceProvider
 		$monolog->pushHandler($slackHandler);
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
+	/**
+	 * Register any application services.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
 		if (env('APP_TESTING') === true) {
-			$this->app->register(DuskServiceProvider::class);
 			$this->app->register(DebugBarServiceProvider::class);
-			$this->app->register(TinkerServiceProvider::class);
 		}
-    }
+		if ($this->app->environment('testing', 'dev', 'local')) {
+			$this->app->register(TinkerServiceProvider::class);
+			$this->app->register(DuskServiceProvider::class);
+		}
+	}
 }

@@ -178,7 +178,8 @@ class Invoice
 	{
 		$view = view($viewName, $data);
 
-		$html = $view->render();
+		// Best hack ever! xD
+		$html = iconv('UTF-8', 'UTF-8', $view->render());
 
 		$pdf = PDF::loadHtml($html)->setPaper('a4');
 

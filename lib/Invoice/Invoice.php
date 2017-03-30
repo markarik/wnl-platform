@@ -201,7 +201,7 @@ class Invoice
 			return 1;
 		}
 
-		return $dbResult;
+		return $dbResult++;
 	}
 
 	private function getVatValue() {

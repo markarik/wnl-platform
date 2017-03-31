@@ -166,7 +166,7 @@ class Parser
 //			}
 
 		}
-		die('kuniec');
+		// die('kuniec');
 	}
 
 	/**

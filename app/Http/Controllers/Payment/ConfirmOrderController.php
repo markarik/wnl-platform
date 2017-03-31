@@ -38,7 +38,7 @@ class ConfirmOrderController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
-		return redirect(url('/app/myself/orders'));
+		return redirect(url('/app/myself/orders?payment'));
 	}
 
 	public function status(Request $request, Payment $payment)

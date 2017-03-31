@@ -68,6 +68,7 @@
 <script>
 	import axios from 'axios'
 	import {getApiUrl, getImageUrl} from 'js/utils/env'
+	import {gaEvent} from 'js/utils/tracking'
 
 	export default {
 		name: 'Order',
@@ -139,6 +140,9 @@
 		},
 		mounted() {
 			if (this.isPending) this.checkStatus()
+			if (this.$route.query.hasOwnProperty('payment')) {
+				gaEvent('Payment', this.order.method)
+			}
 		}
 	}
 </script>

@@ -28,6 +28,9 @@
 <body data-base="{{env('APP_URL')}}">
 	<div id="app" data-view="@yield('current-view')" class="full-height"></div>
 
+	<form method="post" action="/logout" id="logout-form">
+		{{ csrf_field() }}
+	</form>
 	@include ('footer')
 </body>
 </html>

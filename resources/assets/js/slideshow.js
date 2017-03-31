@@ -9,7 +9,12 @@ const handshake = new Postmate.Model({
 
 handshake.then(parent => {
 	parent.emit('loaded', true)
-});
+
+	// window.addEventListener('click', () => {
+	// 	console.log('click!')
+	// 	parent.emit('childClick')
+	// })
+})
 
 Reveal.initialize({
 	embedded: true,

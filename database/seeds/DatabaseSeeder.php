@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
 		$this->call(CategoriesTableSeeder::class);
 
 //		$this->call(SlidesTableSeeder::class);
-//		$this->call(ScreensTableSeeder::class);
 //		$this->call(PresentablesTableSeeder::class);
 
 		$this->call(EditionsTableSeeder::class);
@@ -36,5 +35,6 @@ class DatabaseSeeder extends Seeder
 		$this->call(TaggablesTableSeeder::class);
 
 		$this->call(SlideshowSeeder::class);
+		$this->call(ScreensTableSeeder::class);
 	}
 }

@@ -39,11 +39,11 @@
 			<p>Mamy też szczerą nadzieję, że wizyta tutaj zrodzi w Tobie pytania, na które będziemy mogli odpowiedzieć.</p>
 			<h4>Co przygotowaliśmy?</h4>
 			<p>Dla potrzeb demonstracji, przygotowaliśmy dla Ciebie 3 lekcje, mówiące przede wszystkim o samym kursie. W ostatniej jednak, znajdziesz próbkę prezentacji medycznej. Czekają na Ciebie kolejno lekcje:</p>
-			<h5><wnl-emoji name="books" emojiClass="margin right"></wnl-emoji> <router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 1 }}">O kursie</router-link></h5>
+			<h5><router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 1 }}">1. O kursie</router-link></h5>
 			<p>Co właściwie chcemy osiągnąć? Jak będzie przebiegał kurs?</p>
-			<h5><wnl-emoji name="bulb" emojiClass="margin right"></wnl-emoji> <router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 2 }}">O założeniach</router-link></h5>
+			<h5><router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 2 }}">2. O założeniach</router-link></h5>
 			<p>Konstrukcja materiałów, plan pracy, systematyzacja wiedzy, wspólna nauka i wzajemna motywacja, czyli 5 filarów "Więcej niż LEK".</p>
-			<h5><wnl-emoji name="gift" emojiClass="margin right"></wnl-emoji> <router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 3 }}">Przykładowa lekcja</router-link></h5>
+			<h5><router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 3 }}">3. Przykładowa lekcja</router-link></h5>
 			<p>Slajdy dające przedsmak kursu, prezentujące sposób formatowania treści na slajdach, oraz graficzną stronę prezentacji.</p>
 			<h4>Czego nie ma na demo?</h4>
 			<p>Do samego kursu (a właściwie to nieustannie) będziemy pracowali nad tym, aby nasza platforma stała się dla Was ulubionym środowiskiem nauki! Na razie skupiliśmy się na tym, aby zaprezentować Wam podstawowe funkcje - prezentacje, diagramy, filmy, czat.</p>

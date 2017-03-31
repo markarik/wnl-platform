@@ -34,7 +34,7 @@ class ScreensTableSeeder extends Seeder
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'end',
-			'content'   => Storage::get('demo/end.html'),
+			'content'   => Storage::get('demo/end2.html'),
 			'name'      => 'Koniec lekcji',
 			'lesson_id' => 2,
 		]);
@@ -54,7 +54,7 @@ class ScreensTableSeeder extends Seeder
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'end',
-			'content'   => Storage::get('demo/end.html'),
+			'content'   => Storage::get('demo/end3.html'),
 			'name'      => 'Koniec lekcji',
 			'lesson_id' => 3,
 		]);

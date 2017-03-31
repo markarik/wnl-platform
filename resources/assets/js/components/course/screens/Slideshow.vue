@@ -116,6 +116,7 @@
 				this.focusSlideshow()
 			},
 			focusSlideshow() {
+				this.iframe.click()
 				this.iframe.focus()
 				this.isFocused = true
 			},
@@ -143,6 +144,7 @@
 							data.eventName === 'slidechanged' &&
 							this.slideChanged === false)
 						{
+							this.focusSlideshow()
 							this.setCurrentSlideFromIndex(data.state.indexh)
 							this.$router.replace({
 								name: 'screens',
@@ -155,7 +157,7 @@
 				}
 			},
 			setEventListeners() {
-				addEventListener('message', this.messageEventListener, event)
+				addEventListener('message', this.messageEventListener)
 				addEventListener('blur', this.checkFocus)
 				addEventListener('focus', this.checkFocus)
 				addEventListener('focusout', this.checkFocus)
@@ -177,8 +179,8 @@
 		},
 		watch: {
 			'$route' (to, from) {
+				this.focusSlideshow()
 				if (this.loaded && this.slide !== this.currentSlide) {
-					console.log('routeChanged')
 					this.goToSlide(this.slideNumber)
 				}
 			}

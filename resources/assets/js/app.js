@@ -11,9 +11,11 @@ sync(store, router)
 import Avatar from 'js/components/global/Avatar.vue'
 import ImageButton from 'js/components/global/ImageButton.vue'
 import Icon from 'js/components/global/Icon.vue'
+import Emoji from 'js/components/global/Emoji.vue'
 Vue.component('wnl-avatar', Avatar)
 Vue.component('wnl-image-button', ImageButton)
 Vue.component('wnl-icon', Icon)
+Vue.component('wnl-emoji', Emoji)
 
 // Setup a debug function
 import { isDebug } from 'js/utils/env'

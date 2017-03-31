@@ -1,6 +1,6 @@
 <template>
 	<aside class="wnl-sidenav wnl-left-content">
-		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items"></wnl-sidenav>
+		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading"></wnl-sidenav>
 	</aside>
 </template>
 
@@ -14,7 +14,7 @@
 		name: 'Navigation',
 		props: ['context', 'isLesson'],
 		computed: {
-			...mapGetters(['courseName', 'courseGroups', 'courseStructure', 'progressCourse']),
+			...mapGetters(['courseName', 'courseGroups', 'courseStructure', 'progressCourse', 'getLesson']),
 			isStructureEmpty() {
 				return typeof this.courseStructure !== 'object' || this.courseStructure.length === 0
 			},
@@ -26,13 +26,12 @@
 
 				breadcrumbs.push(this.getCourseItem())
 
-				if (this.isLesson) {
-					let lesson = this.courseStructure[resource('lessons')][this.context.lessonId]
-
-					breadcrumbs.push(this.getLessonItem(lesson, false))
-				}
-
 				return breadcrumbs
+			},
+			itemsHeading() {
+				if (this.isLesson) {
+					return this.getLesson(this.context.lessonId).name
+				}
 			},
 			items() {
 				if (this.isLesson) {

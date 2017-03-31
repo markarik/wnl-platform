@@ -180,9 +180,10 @@
 				let itemClass = '', iconClass = '', iconTitle = ''
 
 				const icons = {
+					'end': 'fa-star',
 					'html': 'fa-file-text-o',
 					'slideshow': 'fa-television',
-					'app': 'fa-question',
+					'widget': 'fa-question',
 				}
 
 				if (icons.hasOwnProperty(screen.type)) {

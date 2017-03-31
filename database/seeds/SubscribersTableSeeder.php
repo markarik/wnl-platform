@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class SubscribersTableSeeder extends Seeder
 {
@@ -11,9 +12,12 @@ class SubscribersTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('subscribers')->insert([
-			['email' => 'kuba@wiecejnizlek.pl'],
-			['email' => 'adam.karminski@wiecejnizlek.pl'],
-		]);
+		$bulk = [];
+		$emails = Storage::get('subscribers.txt');
+		foreach (explode("\n", $emails) as $email) {
+			$bulk[] = ['email' => $email];
+		}
+
+		DB::table('subscribers')->insert($bulk);
 	}
 }

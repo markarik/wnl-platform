@@ -4,6 +4,9 @@
 
 <div class="wnl-login-view">
 	<div class="wnl-login-container">
+		@if(session('logout'))
+			<div class="notification has-text-centered">Wylogowano, do zobaczenia!</div>
+		@endif
 		<h2 class="wnl-login-title">@lang('auth.title')</h2>
 		<p class="wnl-login-subtitle">@lang('auth.subtitle')</p>
 		<form class="wnl-login-form" action="{{ url('/login') }}" method="post">

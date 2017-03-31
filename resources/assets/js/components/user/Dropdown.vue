@@ -98,7 +98,7 @@
 					},
 					{
 						'text': 'Wyloguj się',
-						'route': '',
+						'route': 'logout',
 					},
 				]
 			}

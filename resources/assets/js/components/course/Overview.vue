@@ -49,7 +49,9 @@
 			<p>Do samego kursu (a właściwie to nieustannie) będziemy pracowali nad tym, aby nasza platforma stała się dla Was ulubionym środowiskiem nauki! Na razie skupiliśmy się na tym, aby zaprezentować Wam podstawowe funkcje - prezentacje, diagramy, filmy, czat.</p>
 			<p>Tymczasem, za kulisami, szykujemy jeszcze system pytań i odpowiedzi, więcej opcji personalizacji, powiadomienia, prywatne wiadomości, pytania kontrolne i wiele, wiele innych fantastycznych pomysłów. Wszystkie będą pojawiać się na demo, jak tylko będą gotowe do pokazania światu.</p>
 			<h4>Zaczynamy?</h4>
-			<p>Na początek, chcielibyśmy podzielić się z Tobą tym, co dla nas najważniejsze - naszą&nbsp;misją!&nbsp;<wnl-emoji class="emoji" name="rocket"></wnl-emoji></p>
+			<p>Na początek, chcielibyśmy podzielić się z Tobą tym, co dla nas najważniejsze - naszą&nbsp;misją!&nbsp;
+				<wnl-emoji name="rocket"></wnl-emoji>
+			</p>
 			<p class="has-text-centered">
 				<router-link class="button is-primary is-outlined" :to="{name: 'lessons', params: { courseId: 1, lessonId: 1 }}">
 					Zacznij pierwszą lekcję - O kursie

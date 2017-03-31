@@ -14,6 +14,7 @@
 
 	<!-- Styles -->
 	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/emoji.css') }}" rel="stylesheet">
 
 	<!-- Scripts -->
 	<script src="https://use.fontawesome.com/c95376cac6.js" async></script>

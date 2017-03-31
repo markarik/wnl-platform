@@ -1,5 +1,5 @@
 <template>
-	<span class="wnl-emoji" :class="emojiClass">{{emoji}}</span>
+	<span class="wnl-emoji" :class="emojiClass" v-html="emoji"></span>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">
@@ -11,13 +11,14 @@
 
 <script>
 	import emoji from 'node-emoji'
+	import jEmoji from 'emoji'
 
 	export default {
 		name: 'Emoji',
 		props: ['emojiClass', 'name'],
 		computed: {
 			emoji() {
-				return emoji.get(this.name)
+				return jEmoji.unifiedToHTML(emoji.get(this.name))
 			}
 		}
 	}

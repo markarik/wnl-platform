@@ -17,6 +17,7 @@ mix
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
 	.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
+	.copy('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
 
 if (process.env.SYNC === 'on') {
 	mix.browserSync('platforma.wnl');

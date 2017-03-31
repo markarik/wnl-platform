@@ -15,9 +15,9 @@
 		<div v-else>
 			<!-- TODO: Mar 22, 2017 - Obviously, we have to fix it to dynamically calculate availability (a nie "będzie dostępny jutro") -->
 			<p class="strong margin vertical has-text-centered">
-				<span class="margin horizontal">{{emoji('tada')}}</span>
+				<span class="margin horizontal"><wnl-emoji name="tada"></wnl-emoji></span>
 					{{ callToAction }}
-				<span class="margin horizontal">{{emoji('tada')}}</span>
+				<span class="margin horizontal"><wnl-emoji name="tada"></wnl-emoji></span>
 			</p>
 		</div>
 	</div>
@@ -39,7 +39,7 @@
 </style>
 
 <script>
-	import emoji from 'node-emoji'
+	import Emoji from '../global/Emoji.vue'
 	import { mapGetters } from 'vuex'
 	import { resource } from 'js/utils/config'
 
@@ -129,10 +129,10 @@
 		methods: {
 			getParam(name) {
 				return statusParams[this.nextLesson.status][name]
-			},
-			emoji(name) {
-				return emoji.get(name)
 			}
+		},
+		components: {
+			'wnl-emoji': Emoji
 		}
 	}
 </script>

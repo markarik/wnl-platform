@@ -125,6 +125,7 @@
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
+					this.focusSlideshow()
 				}
 			},
 			focusSlideshow() {

@@ -13,8 +13,12 @@
 			<router-link :to="to" class="button" :class="buttonClass">{{ callToAction }}</router-link>
 		</div>
 		<div v-else>
-			<!-- TODO: Mar 22, 2017 - Obviously, we have to fix it to dynamically calculate availability -->
-			<p class="zero-state">{{ callToAction }}</p>
+			<!-- TODO: Mar 22, 2017 - Obviously, we have to fix it to dynamically calculate availability (a nie "będzie dostępny jutro") -->
+			<p class="strong margin vertical has-text-centered">
+				<span class="margin horizontal">{{emoji('tada')}}</span>
+					{{ callToAction }}
+				<span class="margin horizontal">{{emoji('tada')}}</span>
+			</p>
 		</div>
 	</div>
 </template>
@@ -35,6 +39,7 @@
 </style>
 
 <script>
+	import emoji from 'node-emoji'
 	import { mapGetters } from 'vuex'
 	import { resource } from 'js/utils/config'
 
@@ -45,7 +50,7 @@
 	const statusParams = {
 		[STATUS_NONE]: {
 			heading: 'Gratulacje!',
-			callToAction: 'Jesteś na bieżąco, kolejny moduł będzie dostępny jutro. :)',
+			callToAction: `Jesteś na bieżąco, kolejny moduł będzie dostępny jutro!`,
 			buttonClass: '',
 		},
 		[STATUS_IN_PROGRESS]: {
@@ -124,6 +129,9 @@
 		methods: {
 			getParam(name) {
 				return statusParams[this.nextLesson.status][name]
+			},
+			emoji(name) {
+				return emoji.get(name)
 			}
 		}
 	}

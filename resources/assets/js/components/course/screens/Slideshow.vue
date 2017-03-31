@@ -67,7 +67,8 @@
 				child: {},
 				currentSlide: 1,
 				loaded: false,
-				isFocused: false
+				isFocused: false,
+				slideChanged: false
 			}
 		},
 		props: ['screenData', 'slide'],
@@ -94,25 +95,62 @@
 			},
 		},
 		methods: {
+			toggleFullscreen() {
+				if (screenfull.enabled) {
+					screenfull.toggle(this.slideshowElement)
+					this.focusSlideshow()
+				}
+			},
+			slideNumberFromIndex(index) {
+				return index + 1
+			},
 			setCurrentSlideFromIndex(slideIndex) {
-				this.currentSlide = slideIndex + 1
+				this.currentSlide = this.slideNumberFromIndex(slideIndex)
 			},
 			goToSlide(slideNumber) {
-				this.currentSlide = slideNumber
+				this.slideChanged = true
+
+				this.currentSlide = this.slideNumberFromIndex(slideNumber)
 				this.child.call('goToSlide', slideNumber)
+
+				this.focusSlideshow()
+			},
+			focusSlideshow() {
+				this.iframe.focus()
+				this.isFocused = true
+			},
+			checkFocus() {
+				this.isFocused = this.iframe === document.activeElement
+			},
+			initSlideshow() {
+				new Postmate({
+						container: this.container,
+						url: this.slideshowUrl
+					}).then(child => {
+						this.child = child
+						this.loaded = true
+						this.setEventListeners()
+
+						this.goToSlide(this.slideNumber)
+						this.focusSlideshow()
+					})
 			},
 			messageEventListener(event) {
 				if (typeof event.data === 'string') {
 					try {
 						let data = JSON.parse(event.data)
-						if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
+						if (data.namespace === 'reveal' &&
+							data.eventName === 'slidechanged' &&
+							this.slideChanged === false)
+						{
 							this.setCurrentSlideFromIndex(data.state.indexh)
 							this.$router.replace({
 								name: 'screens',
-								params: { slide: this.currentSlide },
-								query: { sc: '1' }
+								params: { slide: this.currentSlide }
 							})
 						}
+
+						this.slideChanged = false
 					} catch (err) {}
 				}
 			},
@@ -122,41 +160,13 @@
 				addEventListener('focus', this.checkFocus)
 				addEventListener('focusout', this.checkFocus)
 			},
-			toggleFullscreen() {
-				if (screenfull.enabled) {
-					screenfull.toggle(this.slideshowElement)
-					this.focusSlideshow()
-				}
-			},
-			focusSlideshow() {
-				this.iframe.focus()
-				this.isFocused = true
-			},
-			checkFocus() {
-				this.isFocused = this.iframe === document.activeElement
-			},
-			getHandshake() {
-				return new Postmate({
-					container: this.container,
-					url: this.slideshowUrl
-				})
-			},
-			initSlideshow() {
-				this.getHandshake().then(child => {
-					this.child = child
-					this.loaded = true
-					this.focusSlideshow()
-					this.goToSlide(this.slideNumber)
-					this.setEventListeners()
-				})
-			},
 			destroySlideshow() {
 				this.child.destroy()
 				removeEventListener('blur', this.checkFocus)
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
 				removeEventListener('message', this.messageEventListener)
-			}
+			},
 		},
 		beforeDestroy() {
 			this.destroySlideshow()
@@ -167,10 +177,8 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				if (this.loaded &&
-					!to.query.hasOwnProperty('sc') &&
-					this.slideNumber !== this.currentSlide)
-				{
+				if (this.loaded && this.slide !== this.currentSlide) {
+					console.log('routeChanged')
 					this.goToSlide(this.slideNumber)
 				}
 			}

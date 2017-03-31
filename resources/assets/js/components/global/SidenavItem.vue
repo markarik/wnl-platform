@@ -31,8 +31,13 @@
 		margin-right: $margin-tiny
 		vertical-align: middle
 
-	.subitem .icon.is-small
-		margin-right: 0
+	.subitem
+
+		.icon.is-small
+			margin-right: 0
+
+		a.is-active
+			font-weight: $font-weight-regular
 </style>
 
 <script>

@@ -8,7 +8,7 @@
 		<span class="icon is-small" v-if="hasIcon">
 			<i :title="iconTitle" class="fa" :class="iconClass"></i>
 		</span>
-		<router-link v-if="isLink" :to="to" :replace="replace">
+		<router-link v-if="isLink" :to="to" :replace="replace" :class="{'is-active': isActive}">
 			<slot></slot>
 		</router-link>
 		<span v-else>
@@ -32,12 +32,18 @@
 		vertical-align: middle
 
 	.subitem
+		margin-left: $margin-small
+
+		&::after
 
 		.icon.is-small
 			margin-right: 0
 
 		a.is-active
-			font-weight: $font-weight-regular
+			font-weight: $font-weight-black
+
+			&::after
+				content: '✓'
 </style>
 
 <script>
@@ -63,6 +69,11 @@
 			hasIcon() {
 				return this.hasClass('has-icon')
 			},
+			isActive() {
+				if (this.hasClass('subitem')) {
+					return this.$route.params.slide > this.to.params.slide
+				}
+			}
 		},
 		methods: {
 			hasClass(className) {

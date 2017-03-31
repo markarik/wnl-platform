@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-slideshow-container">
 		<div class="wnl-screen wnl-ratio-16-9">
-			<div class="wnl-slideshow-content"></div>
+			<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused }"></div>
 		</div>
 		<div class="wnl-slideshow-controls">
 			<div class="wnl-slideshow-controls-left">
@@ -20,6 +20,8 @@
 	</div>
 </template>
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
+
 	.wnl-ratio-16-9
 		padding-bottom: 56.25%
 		position: relative
@@ -34,7 +36,15 @@
 
 		iframe
 			height: 100%
+			opacity: 0.25
+			transition: opacity $transition-length-base
 			width: 100%
+
+		&.is-focused
+
+			iframe
+				opacity: 1
+				transition: opacity $transition-length-base
 
 	.wnl-slideshow-controls
 		display: flex
@@ -56,7 +66,8 @@
 			return {
 				child: {},
 				currentSlide: 1,
-				loaded: false
+				loaded: false,
+				isFocused: false
 			}
 		},
 		props: ['screenData', 'slide'],
@@ -75,7 +86,12 @@
 			},
 			slideshowElement() {
 				return this.container.getElementsByTagName('iframe')[0]
-			}
+			},
+			iframe() {
+				if (this.loaded) {
+					return this.$el.getElementsByTagName('iframe')[0]
+				}
+			},
 		},
 		methods: {
 			setCurrentSlideFromIndex(slideIndex) {
@@ -85,60 +101,70 @@
 				this.currentSlide = slideNumber
 				this.child.call('goToSlide', slideNumber)
 			},
+			messageEventListener(event) {
+				if (typeof event.data === 'string') {
+					try {
+						let data = JSON.parse(event.data)
+						if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
+							this.setCurrentSlideFromIndex(data.state.indexh)
+							this.$router.replace({
+								name: 'screens',
+								params: { slide: this.currentSlide },
+								query: { sc: '1' }
+							})
+						}
+					} catch (err) {}
+				}
+			},
 			setEventListeners() {
-				window.addEventListener('message', event => {
-					if (typeof event.data === 'string') {
-						try {
-							let data = JSON.parse(event.data)
-							if (data.namespace === 'reveal' && data.eventName === 'slidechanged') {
-								this.setCurrentSlideFromIndex(data.state.indexh)
-								this.$router.replace({
-									name: 'screens',
-									params: { slide: this.currentSlide },
-									query: { sc: '1' }
-								})
-							}
-						} catch (err) {}
-					}
-				})
+				addEventListener('message', this.messageEventListener, event)
+				addEventListener('blur', this.checkFocus)
+				addEventListener('focus', this.checkFocus)
+				addEventListener('focusout', this.checkFocus)
 			},
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
 				}
 			},
-			setupSlideshow() {
-				let handshake = new Postmate({
+			focusSlideshow() {
+				this.iframe.focus()
+				this.isFocused = true
+			},
+			checkFocus() {
+				this.isFocused = this.iframe === document.activeElement
+			},
+			getHandshake() {
+				return new Postmate({
 					container: this.container,
 					url: this.slideshowUrl
 				})
-				handshake.then(child => {
-					child.on('loaded', (status) => {
-						if (status) {
-							this.child = child
-							this.loaded = true
-							this.goToSlide(this.slideNumber)
-							this.setEventListeners()
-						}
-					})
+			},
+			initSlideshow() {
+				this.getHandshake().then(child => {
+					this.child = child
+					this.loaded = true
+					this.focusSlideshow()
+					this.goToSlide(this.slideNumber)
+					this.setEventListeners()
 				})
 			},
 			destroySlideshow() {
-				this.child = {}
-				this.container.innerHTML = ''
+				this.child.destroy()
+				removeEventListener('blur', this.checkFocus)
+				removeEventListener('focus', this.checkFocus)
+				removeEventListener('focusout', this.checkFocus)
+				removeEventListener('message', this.messageEventListener)
 			}
+		},
+		beforeDestroy() {
+			this.destroySlideshow()
 		},
 		mounted() {
 			Postmate.debug = isDebug()
-
-			this.setupSlideshow()
+			this.initSlideshow()
 		},
 		watch: {
-			'screenId' () {
-				this.loaded = false
-				this.destroySlideshow()
-				this.setupSlideshow()
-			},
 			'$route' (to, from) {
 				if (this.loaded &&
 					!to.query.hasOwnProperty('sc') &&

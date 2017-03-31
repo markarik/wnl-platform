@@ -47,7 +47,7 @@ class ScreensTableSeeder extends Seeder
 			'lesson_id' => 3,
 		]);
 		DB::table('screens')->insert([
-			'type'      => 'app',
+			'type'      => 'widget',
 			'content'   => Storage::get('demo/questions.html'),
 			'name'      => 'Pytania kontrolne',
 			'lesson_id' => 3,

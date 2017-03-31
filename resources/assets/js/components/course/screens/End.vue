@@ -11,7 +11,7 @@
 
 <script>
 	export default {
-		name: 'Html',
+		name: 'End',
 		props: ['screenData'],
 		computed: {
 			content() {

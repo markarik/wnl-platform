@@ -38,11 +38,11 @@ class AppServiceProvider extends ServiceProvider
 	public function register()
 	{
 		if (env('APP_TESTING') === true) {
-			$this->app->register(DebugBarServiceProvider::class);
+			$this->app->register(DuskServiceProvider::class);
 		}
 		if ($this->app->environment('testing', 'dev', 'local')) {
+			$this->app->register(DebugBarServiceProvider::class);
 			$this->app->register(TinkerServiceProvider::class);
-			$this->app->register(DuskServiceProvider::class);
 		}
 	}
 }

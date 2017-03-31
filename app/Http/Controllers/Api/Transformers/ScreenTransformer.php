@@ -13,14 +13,13 @@ class ScreenTransformer extends TransformerAbstract
 
 	public function transform(Screen $screen)
 	{
-
-
 		return [
-			'id'     => $screen->id,
-			'name'   => $screen->name,
-			'type'   => $screen->type,
-			'lessons' => $screen->lesson_id,
-			'groups'  => $screen->lesson->group->id,
+			'id'       => $screen->id,
+			'name'     => $screen->name,
+			'content'  => $screen->content,
+			'type'     => $screen->type,
+			'lessons'  => $screen->lesson_id,
+			'groups'   => $screen->lesson->group->id,
 			'editions' => $screen->lesson->group->course->id,
 
 		];

@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<h3>{{name}}</h3>
+		<h4>{{name}}</h4>
 		<component :is="component" :screenData="screenData" :slide="slide"></component>
 	</div>
 </template>
@@ -10,35 +10,41 @@
 
 <script>
 	import axios from 'axios'
+	import End from 'js/components/course/screens/End.vue'
 	import Html from 'js/components/course/screens/Html.vue'
 	import Slideshow from 'js/components/course/screens/Slideshow.vue'
+	import Widget from 'js/components/course/screens/Widget.vue'
 	import { getApiUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Screen',
 		components: {
+			'wnl-end': End,
 			'wnl-html': Html,
-			'wnl-slideshow': Slideshow
+			'wnl-slideshow': Slideshow,
+			'wnl-widget': Widget,
 		},
 		props: ['screenId', 'slide'],
 		data: () => {
 			return {
 				screenData: {},
 				typesToComponents: {
+					end: 'wnl-end',
 					html: 'wnl-html',
-					slideshow: 'wnl-slideshow'
+					slideshow: 'wnl-slideshow',
+					widget: 'wnl-widget',
 				}
 			}
 		},
 		computed: {
+			id() {
+				return this.screenData.id
+			},
 			name() {
 				return this.screenData.name
 			},
 			type() {
 				return this.screenData.type
-			},
-			id() {
-				return this.screenData.id
 			},
 			component() {
 				return this.typesToComponents[this.type]

@@ -11,7 +11,7 @@
 
 <script>
 	export default {
-		name: 'Html',
+		name: 'Widget',
 		props: ['screenData'],
 		computed: {
 			content() {

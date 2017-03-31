@@ -171,7 +171,9 @@
 			},
 		},
 		beforeDestroy() {
-			this.destroySlideshow()
+			if (this.loaded) {
+				this.destroySlideshow()
+			}
 		},
 		mounted() {
 			Postmate.debug = isDebug()
@@ -179,7 +181,6 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				this.focusSlideshow()
 				if (this.loaded && this.slide !== this.currentSlide) {
 					this.goToSlide(this.slideNumber)
 				}

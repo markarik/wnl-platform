@@ -1,9 +1,13 @@
 <template>
 	<div class="wnl-screen-html content">
-		<p class="title has-text-centered">To już wszystko!</p>
 		<div class="margin vertical" v-if="content" v-html="content"></div>
 		<p class="end-button has-text-centered">
-			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">Zakończ lekcję</router-link>
+			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined" v-if="isLast">
+				Zakończ kurs!
+			</router-link>
+			<router-link :to="to" class="button is-primary is-outlined" v-else>
+				Następna lekcja
+			</router-link>
 		</p>
 	</div>
 </template>
@@ -29,6 +33,21 @@
 				}
 
 				return false
+			},
+			isLast() {
+				// TODO: Apr 1, 2017 - Just for demo purposes, remove it mate!
+				return this.screenData.lessons === 3
+			},
+			to() {
+				if (!this.isLast) {
+					return {
+						name: 'lessons',
+						params: {
+							courseId: this.screenData.editions,
+							lessonId: this.screenData.lessons + 1,
+						}
+					}
+				}
 			}
 		}
 	}

@@ -25,6 +25,7 @@
 			'csrfToken' => csrf_token(),
 		]); ?>
 	</script>
+	@include('tracking')
 </head>
 <body data-base="{{env('APP_URL')}}">
 	<div id="app" data-view="@yield('current-view')" class="full-height"></div>

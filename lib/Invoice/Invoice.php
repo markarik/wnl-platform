@@ -6,6 +6,7 @@ namespace Lib\Invoice;
 
 use App\Models\Order;
 use App\Models\User;
+use Dompdf\Dompdf;
 use Facades\Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -186,7 +187,9 @@ class Invoice
 		// Best hack ever! xD
 		$html = iconv('UTF-8', 'UTF-8', $view->render());
 
-		$pdf = PDF::loadHtml($html)->setPaper('a4');
+		$pdf = new Dompdf();
+		$pdf->loadHtml($html);
+		$pdf->setPaper('a4');
 
 		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->output());
 	}

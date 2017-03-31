@@ -4,9 +4,9 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
+use DB;
 use App\Models\Lesson;
 use League\Fractal\TransformerAbstract;
-
 
 class LessonTransformer extends TransformerAbstract
 {
@@ -37,7 +37,8 @@ class LessonTransformer extends TransformerAbstract
 
 	public function includeScreens(Lesson $lesson)
 	{
-		$screens = $lesson->screens;
+		// $screens = $lesson->screens;
+		$screens = $lesson->screens()->orderBy(DB::raw('type = "html" DESC, id'))->get();
 
 		return $this->collection($screens, new ScreenTransformer, 'screens');
 	}

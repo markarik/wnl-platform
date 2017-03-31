@@ -14,7 +14,11 @@
 		</div>
 		<div v-else>
 			<!-- TODO: Mar 22, 2017 - Obviously, we have to fix it to dynamically calculate availability (a nie "będzie dostępny jutro") -->
-			<p class="title is-4 margin vertical has-text-centered">{{ callToAction }}</p>
+			<p class="strong margin vertical has-text-centered">
+				<span class="margin horizontal">{{emoji('tada')}}</span>
+					{{ callToAction }}
+				<span class="margin horizontal">{{emoji('tada')}}</span>
+			</p>
 		</div>
 	</div>
 </template>
@@ -46,7 +50,7 @@
 	const statusParams = {
 		[STATUS_NONE]: {
 			heading: 'Gratulacje!',
-			callToAction: `${emoji.get('tada')} Jesteś na bieżąco, kolejny moduł będzie dostępny jutro! ${emoji.get('tada')}`,
+			callToAction: `Jesteś na bieżąco, kolejny moduł będzie dostępny jutro!`,
 			buttonClass: '',
 		},
 		[STATUS_IN_PROGRESS]: {
@@ -125,6 +129,9 @@
 		methods: {
 			getParam(name) {
 				return statusParams[this.nextLesson.status][name]
+			},
+			emoji(name) {
+				return emoji.get(name)
 			}
 		}
 	}

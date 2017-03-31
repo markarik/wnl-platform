@@ -20,17 +20,17 @@ class CreatePresentablesTable extends Migration
 			$table->string('presentable_type');
 			$table->timestamps();
 
-			$table
-				->foreign('slide_id')
-				->references('id')
-				->on('slides')
-				->onDelete('cascade');
-
-			$table
-				->foreign('presentable_id')
-				->references('id')
-				->on('categories')
-				->onDelete('cascade');
+//			$table
+//				->foreign('slide_id')
+//				->references('id')
+//				->on('slides')
+//				->onDelete('cascade');
+//
+//			$table
+//				->foreign('presentable_id')
+//				->references('id')
+//				->on('categories')
+//				->onDelete('cascade');
 		});
     }
 

@@ -16,12 +16,7 @@ mix
 	.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
-//
-// This line was crashing HMR server, so I temporarily commented it out.
-// Possibly there will be a fix for that in the next few days.
-// https://github.com/JeffreyWay/laravel-mix/issues/150
-//
-// .copy('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
+	.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
 
 if (process.env.SYNC === 'on') {
 	mix.browserSync('platforma.wnl');

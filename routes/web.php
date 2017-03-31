@@ -25,17 +25,17 @@ Route::group(['namespace' => 'Invoice', 'prefix' => 'invoice'], function () {
 	Route::get('pro-forma', function () { return Response::view('payment/invoices/pro-forma'); });
 });
 
-Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function ()
-{
-	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
+if (app()->environment('production', 'dev', 'sandbox')) {
+	Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function () {
+		Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
 
-	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
-	Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
+		Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
+		Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
 
-	Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
-	Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
-});
-
+		Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
+		Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
+	});
+}
 
 Route::group(['middleware' => 'auth'], function () {
 

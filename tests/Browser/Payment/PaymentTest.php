@@ -51,7 +51,7 @@ class PaymentTest extends DuskTestCase
 
 			$browser
 				->on(new OrdersPage)
-				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']]);
+				->waitForAll(['Twoje zamówienia', 'Zamówienie złożono']);
 
 		});
 
@@ -62,7 +62,7 @@ class PaymentTest extends DuskTestCase
 	public function user_can_place_order_and_successfully_pay_online()
 	{
 		if (env('APP_ENV') === 'production') {
-			print PHP_EOL . 'Omitting test ' . __METHOD__ . ' (not applicable on production)';
+			print PHP_EOL . 'Omitting test ' . __METHOD__ . ' (not applicable on production)' . PHP_EOL;
 
 			return true;
 		}
@@ -89,7 +89,7 @@ class PaymentTest extends DuskTestCase
 				->press('@confirm-payment');
 
 			$browser
-				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']])
+				->waitForAll(['Twoje zamówienia', 'Zamówienie złożono'])
 				->waitForText('Zapłacono!', 60);
 		});
 
@@ -125,7 +125,7 @@ class PaymentTest extends DuskTestCase
 
 			$browser
 				->on(new OrdersPage)
-				->waitForAll(['Twoje zamówienia', $user['firstName'], $user['lastName']]);
+				->waitForAll(['Twoje zamówienia', 'Zamówienie złożono']);
 		});
 
 		$this->closeAll();

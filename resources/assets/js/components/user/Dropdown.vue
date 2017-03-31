@@ -10,7 +10,7 @@
 			<div class="box drawer" v-if="isActive">
 				<p class="metadata">{{ currentUserFullName }}</p>
 				<ul>
-					<li v-for="item in items" class="drawer-item">
+					<li v-for="item in items" class="drawer-item" v-if="!isDemo || item.route !== 'my-orders'">
 						<router-link class="drawer-link" :to="{ name: item.route }">{{item.text}}</router-link>
 					</li>
 				</ul>
@@ -74,6 +74,7 @@
 </style>
 
 <script>
+	import { isDemo } from 'js/utils/env'
 	import { set } from 'vue'
 	import { mapGetters } from 'vuex'
 
@@ -86,6 +87,9 @@
 		},
 		computed: {
 			...mapGetters(['currentUserFullName']),
+			isDemo() {
+				return isDemo()
+			},
 			items() {
 				return [
 					{
@@ -93,7 +97,7 @@
 						'route': 'dashboard',
 					},
 					{
-						'text': 'Twoje konto',
+						'text': 'Twoje zamówienia',
 						'route': 'my-orders',
 					},
 					{

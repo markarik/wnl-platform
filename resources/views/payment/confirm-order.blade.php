@@ -95,8 +95,8 @@
 						<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
 						<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
 
-						<button class="button is-primary p24-submit">@lang('payment.confirm-method-online-payment-button')</button>
 					</form>
+					<button class="button is-primary p24-submit">@lang('payment.confirm-method-online-payment-button')</button>
 				</div>
 			</div>
 		</section>

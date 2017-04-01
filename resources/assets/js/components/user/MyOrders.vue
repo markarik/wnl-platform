@@ -7,7 +7,9 @@
 				</div>
 			</div>
 			<div class="level-right">
-
+				<div class="level-item metadata">
+					<a :href="paymentUrl">Zapisz się na kurs</a>
+				</div>
 			</div>
 		</div>
 		<wnl-order :order="order" v-for="order in orders"></wnl-order>
@@ -17,7 +19,7 @@
 
 <script>
 	import axios from 'axios'
-	import {getApiUrl, getImageUrl} from 'js/utils/env'
+	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import Order from './Order'
 
 	export default {
@@ -26,6 +28,11 @@
 			return {
 				orders: {}
 			}
+		},
+		computed: {
+			paymentUrl() {
+				return getUrl('payment/select-product')
+			},
 		},
 		methods: {
 			getOrders() {

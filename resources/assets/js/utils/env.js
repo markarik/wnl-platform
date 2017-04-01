@@ -6,7 +6,7 @@ export function envValue(key) {
 
 export function isProduction() {
 	return envValue('appEnv') === 'production' ||
-			envValu('appEnv') === 'sandbox'
+		envValue('appEnv') === 'sandbox'
 }
 
 // Debug

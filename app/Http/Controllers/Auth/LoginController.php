@@ -65,8 +65,6 @@ class LoginController extends Controller
 	public function showLoginForm()
 	{
 		if (app()->environment('demo')) {
-			\Cookie::forget('XSRF-TOKEN');
-			\Cookie::forget('laravel_session');
 			return view('auth.demo-login');
 		}
 

@@ -61,9 +61,11 @@ class PersonalDataController extends Controller
 		}
 
 		if (!$form->isValid()) {
+			Log::notice('Sing up form invalid, redirecting...');
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
+		Log::notice('Creating user account');
 		$user = User::updateOrCreate(
 			['email' => $request->get('email')],
 			[
@@ -88,6 +90,7 @@ class PersonalDataController extends Controller
 				'consent_terms'      => $request->get('consent_terms') ?? 0,
 			]
 		);
+		Log::notice('Creating order');
 		$order = $user->orders()->create([
 			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
@@ -98,6 +101,7 @@ class PersonalDataController extends Controller
 		}
 
 		Auth::login($user);
+		Log::notice('User automatically logged in after registration.');
 
 		Mail::to(Auth::user())->send(new SignUpConfirmation($user));
 

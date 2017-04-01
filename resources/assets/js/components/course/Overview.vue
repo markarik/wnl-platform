@@ -131,6 +131,7 @@
 			...mapGetters([
 				'currentUserName',
 				'getLessons',
+				'progressIsLessonComplete',
 				'progressWasCourseStarted',
 				'progressGetCompleteLessons',
 			]),
@@ -139,7 +140,7 @@
 			},
 			isEnd() {
 				// TODO: Apr 1, 2017 - Use API to get this infromation
-				return Object.keys(this.getLessons).length === this.progressGetCompleteLessons(this.courseId).length
+				return this.progressIsLessonComplete(this.courseId, 3)
 			},
 			welcomeMessage() {
 				return `Cześć ${this.currentUserName}!`

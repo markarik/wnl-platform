@@ -85,10 +85,15 @@
 				'isLessonAvailable',
 				'progressWasLessonStarted',
 				'progressGetFirstLessonIdInProgress',
+				'progressIsLessonComplete',
 			]),
 			nextLesson() {
 				let lesson = { status: STATUS_NONE },
 					inProgressId = this.progressGetFirstLessonIdInProgress(this.courseId)
+
+				if (this.progressIsLessonComplete(this.courseId, 3)) {
+					return lesson
+				}
 
 				if (inProgressId > 0) {
 					lesson = this.getLesson(inProgressId)
@@ -108,7 +113,8 @@
 				return lesson
 			},
 			hasNextLesson() {
-				return this.nextLesson.status !== STATUS_NONE
+				return !this.progressIsLessonComplete(this.courseId, 3) &&
+					this.nextLesson.status !== STATUS_NONE
 			},
 			heading() {
 				return this.getParam('heading')

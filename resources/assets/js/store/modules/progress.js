@@ -86,9 +86,9 @@ const getters = {
 		}
 		return 0
 	},
-	progressIsLessonComplete: (state) => (courseId, lessonId) => {
+	progressIsLessonComplete: (state, getters) => (courseId, lessonId) => {
 		return getters.progressWasLessonStarted(courseId, lessonId) &&
-		state.courses[courseId][lessonId].status === STATUS_COMPLETE
+			state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE
 	},
 	progressGetCompleteLessons: (state, getters) => (courseId) => {
 		let lesson, lessons = []

@@ -21,10 +21,12 @@ class OrderObserver
 	public function updated(Order $order)
 	{
 		if ($order->isDirty(['paid']) && $order->paid) {
+			\Log::notice('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));
 		}
 
 		if ($order->getOriginal('method') === null && $order->method !== null) {
+			\Log::notice('Order payment method set, decrementing product quantity.');
 			$this->dispatch(new OrderConfirmed($order));
 			$order->product->quantity--;
 			$order->product->save();

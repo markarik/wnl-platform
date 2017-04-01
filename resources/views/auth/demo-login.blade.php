@@ -8,12 +8,12 @@
 			<div class="notification has-text-centered">Wylogowano, do zobaczenia!</div>
 		@endif
 		<h2 class="wnl-login-title">@lang('auth.title')</h2>
-		<p class="wnl-login-subtitle">@lang('auth.subtitle')</p>
+		<p class="wnl-login-subtitle">Aby rozpocząć, podaj Imię i Nazwisko (mogą być zmyślone) :)</p>
 		<form class="wnl-login-form" action="{{ url('/login') }}" method="post">
 			{{ csrf_field() }}
 
 			{{-- E-Mail --}}
-			<label for="email" class="label">Twoje Imię</label>
+			<label for="email" class="label">Imię</label>
 			<p class="control">
 				<input id="email" name="first_name" type="text"
 					class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
@@ -24,7 +24,7 @@
 			</p>
 
 			{{-- Password --}}
-			<label for="password" class="label">Twoje Nazwisko (może być zmyślone)</label>
+			<label for="password" class="label">Nazwisko</label>
 			<p class="control">
 				<input name="last_name" type="text"
 					class="input {{ $errors->has('password') ? 'is-danger' : '' }}"

@@ -74,7 +74,7 @@ class PersonalDataController extends Controller
 				'city'               => $request->get('city'),
 				'email'              => $request->get('email'),
 				'phone'              => $request->get('phone'),
-				'password'           => $request->get('password'),
+				'password'           => bcrypt($request->get('password')),
 				'invoice'            => $request->get('invoice') ?? 0,
 				'invoice_name'       => $request->get('invoice_name'),
 				'invoice_nip'        => $request->get('invoice_nip'),

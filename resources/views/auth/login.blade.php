@@ -50,11 +50,11 @@
 				</p>
 
 				{{-- Forgot password --}}
-				<p class="control wnl-login-remind">
+				{{-- <p class="control wnl-login-remind">
 					<a href="{{ url('/password/reset') }}">
 						@lang('auth.remind-link')
 					</a>
-				</p>
+				</p> --}}
 			</form>
 		</div>
 	</div>

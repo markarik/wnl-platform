@@ -1,12 +1,5 @@
 <template>
 	<div class="wnl-overview">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item metadata">
-					Dashboard kursu
-				</div>
-			</div>
-		</div>
 		<!-- Next lesson -->
 		<div v-if="!isBeginning">
 			<div class="wnl-overview-section">
@@ -30,7 +23,7 @@
 
 		<!-- Course overview placeholder -->
 		<div v-if="isBeginning">
-			<h4 class="margin vertical">Witaj {{currentUserName}}! <wnl-emoji name="wave"></wnl-emoji></h4>
+			<h4 class="margin bottom">Witaj {{currentUserName}}! <wnl-emoji name="wave"></wnl-emoji></h4>
 			<div class="content margin bottom">
 				<p>Jest nam niezwykle miło gościć Cię na demostracyjnej wersji naszej platformy! To na niej spędzimy ze sobą najwięcej czasu i na niej kurs "Więcej niż LEK" będzie żył na co dzień.</p>
 				<p>Demo będzie aktywne przez cały czas trwania zapisów - <strong>od 1 kwietnia, do 15 maja, lub do wyczerpania miejsc</strong>. W tym czasie możesz nie tylko przejść przykładowe lekcje, ale też dowiedzieć się stąd wszystkiego o założeniach projektu "Więcej niż LEK".</p>

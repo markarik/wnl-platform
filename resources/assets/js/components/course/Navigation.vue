@@ -127,7 +127,7 @@
 			},
 			getCourseItem() {
 				return this.composeItem(
-					'Dashboard kursu',
+					'Plan lekcji',
 					'has-icon',
 					resource('courses'),
 					{

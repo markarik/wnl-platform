@@ -30,16 +30,32 @@
 	<p>Na kurs stacjonarny, w ramach którego odbędzie się w Poznaniu 6 spotkań, udało nam się zaprosić doskonałych dydaktyków! Zajęcia, w ramach swoich specjalizacji, poprowadzą:</p>
 
 	<p><strong>Choroby dziecięce</strong></p>
-	<p>dr hab. n. med. Anna Mania, aktualna prodziekan Wydziału Lekarskiego UM w Poznaniu</p>
+	<p>dr hab. n. med. Anna Mania,<br>
+		Specjalista pediatrii, chorób zakaźnych, hepatolog (certyfikat PTH).<br>
+		Prodziekan Wydziału Lekarskiego UM w Poznaniu ds. programów studiów i kształcenia oraz studentów I - II roku.
+	</p>
 
 	<p><strong>Choroby wewnętrzne</strong></p>
-	<p>dr hab. n. med. Mariusz Puszczewicz, były Prorektor ds. Studenckich UM w Poznaniu</p>
+	<p>dr hab. n. med. Mariusz Puszczewicz, <br>
+		Specjalista Chorób Wewnętrznych II stopnia i Reumatologii<br>
+		Kierownik Katedry i Kliniki Reumatologii i Chorób Wewnętrznych
+		UM im. Karola Marcinkowskiego w Poznaniu.
+		Prorektor do spraw studenckich UM im. Karola Marcinkowskiego w Poznaniu w kadencji 2008-2012. Wyróżniony tytułem
+		honorowym “Amicus studentorum” przez studentów Akademii Medycznej im. Karola Marcinkowskiego w Poznaniu.</p>
 
 	<p><strong>Stany nagłe</strong></p>
-	<p>lek. Michał Szemień, Koordynator ds. Wydziału Lekarskiego I, Zakładu Medycyny Ratunkowej UM w Poznaniu</p>
+	<p>lek. Michał Szemień,<br>Rezydent medycyny ratunkowej w Szpitalnym Oddziale Ratunkowym Centrum urazowego
+		Wielospecjalistycznym Szpitalu Miejskim im. J. Strusia w Poznaniu.,<br>
+		Koordynator ds. Wydziału Lekarskiego I, Zakładu Medycyny Ratunkowej UM w Poznaniu.
+		<br>
+		Instruktor europejskiej rady resuscytacji z zakresu BLS, EPALS, ALS i ETC.
+		Emergency Point-of-Care Ultrasonography Provider.</p>
 
 	<p><strong>Prawo medyczne</strong></p>
-	<p>dr n. praw. Radosław Tymiński, wykładowca Prawa Medycznego na WUM, autor bloga http://prawalekarzy.pl/</p>
+	<p>dr n. praw. Radosław Tymiński,<br>Wykładowca na Akademii Leona Koźmińskiego,
+		Wykładowca Prawa Medycznego na Warszawskim Uniwersytecie Medycznym,<br>
+		Autor bloga <a href="http://prawalekarzy.pl/">prawalekarzy.pl</a>
+	</p>
 
 	<div style="text-align: center; margin: 10px auto 20px;">
 		<a href="https://wiecejnizlek.pl/o-warsztatach" class="button">Przeczytaj więcej o warsztatach</a>

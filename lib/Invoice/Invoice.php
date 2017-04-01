@@ -6,10 +6,16 @@ namespace Lib\Invoice;
 
 use App\Models\Order;
 use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Dompdf\Dompdf;
-use Facades\Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Exception;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Http\Response;
+
 
 class Invoice
 {
@@ -187,7 +193,14 @@ class Invoice
 		// Best hack ever! xD
 		$html = iconv('UTF-8', 'UTF-8', $view->render());
 
-		$pdf = new Dompdf();
+		$config = app(ConfigRepository::class);
+		$files = app(Filesystem::class);
+		$view = app(ViewFactory::class);
+		$options = app()->make('dompdf.options');
+		$domPdf = new Dompdf($options);
+		$domPdf->setBasePath(realpath(base_path('public')));
+
+		$pdf = new PDF($domPdf, $config, $files, $view);
 		$pdf->loadHtml($html);
 		$pdf->setPaper('a4');
 

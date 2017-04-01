@@ -19,7 +19,7 @@
 					{{ callToAction }}
 				<span class="margin horizontal"><wnl-emoji name="tada"></wnl-emoji></span>
 				<p class="has-text-centered margin vertical">
-					To co, wszystko już wiesz! Pozostało się tylko zapisać. <wnl-emoji name="rocket"></wnl-emoji>
+					Teraz pozostało się już tylko zapisać <wnl-emoji name="rocket"></wnl-emoji>
 				</p>
 				<p class="has-text-centered margin vertical">
 					<a :href="paymentUrl" class="button is-primary">
@@ -141,7 +141,8 @@
 				}
 			},
 			paymentUrl() {
-				return getUrl('payment/select-product')
+				// return getUrl('payment/select-product')
+				return 'https://platforma.wiecejnizlek.pl/payment/select-product'
 			},
 		},
 		methods: {

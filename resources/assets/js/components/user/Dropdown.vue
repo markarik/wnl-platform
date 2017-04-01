@@ -93,7 +93,7 @@
 			items() {
 				return [
 					{
-						'text': 'Strona główna kursu',
+						'text': 'Plan lekcji',
 						'route': 'dashboard',
 					},
 					{

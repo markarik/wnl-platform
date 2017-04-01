@@ -51,7 +51,7 @@
 			<div class="level wnl-screen-title margin vertical">
 				<div class="level-left">
 					<div class="level-item big strong">
-						Manifest
+						Misja "Więcej niż LEK"
 					</div>
 				</div>
 			</div>

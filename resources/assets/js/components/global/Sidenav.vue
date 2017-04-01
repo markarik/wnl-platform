@@ -43,16 +43,15 @@
 
 	.breadcrumbs
 		font-size: $font-size-minus-1
+		font-weight: $font-weight-bold
 		margin-bottom: $margin-base
+		text-transform: uppercase
 
 		.small
 			font-size: $font-size-minus-2
 
 		.big
 			font-size: $font-size-base
-
-		.is-active
-			font-weight: $font-weight-regular
 
 	.items
 

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from 'store' // LocalStorage
+import _ from 'lodash'
 import * as types from '../mutations-types'
 import { getApiUrl } from 'js/utils/env'
 import { set } from 'vue'
@@ -60,6 +61,9 @@ const getters = {
 		if (state.courses.hasOwnProperty(courseId)) {
 			return state.courses[courseId]
 		}
+	},
+	progressWasCourseStarted: (state, getters) => (courseId) => {
+		return !_.isEmpty(getters.progressCourse(courseId).lessons)
 	},
 	progressGetSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
@@ -153,8 +157,12 @@ const actions = {
 			commit(types.PROGRESS_START_LESSON, payload)
 		}
 	},
-	progressUpdateLesson({commit}, payload) {
-		commit(types.PROGRESS_UPDATE_LESSON, payload)
+	progressUpdateLesson({commit, getters}, payload) {
+		if (getters.progressWasLessonStarted(payload.courseId, payload.lessonId)) {
+			commit(types.PROGRESS_UPDATE_LESSON, payload)
+		} else {
+			commit(types.PROGRESS_START_LESSON, payload)
+		}
 	},
 	progressCompleteLesson({commit}, payload) {
 		if (getters.progressIsLessonInProgress(payload.courseId, payload.lessonId)) {

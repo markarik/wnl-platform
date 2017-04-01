@@ -22,7 +22,7 @@
 				return this.progressCourse(this.context.courseId)
 			},
 			breadcrumbs() {
-				let breadcrumbs = []
+				let breadcrumbs = [], courseItem
 
 				breadcrumbs.push(this.getCourseItem())
 
@@ -127,7 +127,7 @@
 			},
 			getCourseItem() {
 				return this.composeItem(
-					this.courseName,
+					'Dashboard kursu',
 					'has-icon',
 					resource('courses'),
 					{

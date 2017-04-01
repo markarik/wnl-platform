@@ -18,6 +18,14 @@
 				<span class="margin horizontal"><wnl-emoji name="tada"></wnl-emoji></span>
 					{{ callToAction }}
 				<span class="margin horizontal"><wnl-emoji name="tada"></wnl-emoji></span>
+				<p class="has-text-centered margin vertical">
+					To co, wszystko już wiesz! Pozostało się tylko zapisać. <wnl-emoji name="rocket"></wnl-emoji>
+				</p>
+				<p class="has-text-centered margin vertical">
+					<a :href="paymentUrl" class="button is-primary">
+						Zapisz się
+					</a>
+				</p>
 			</p>
 		</div>
 	</div>
@@ -40,6 +48,7 @@
 
 <script>
 	import Emoji from '../global/Emoji.vue'
+	import { getUrl } from 'js/utils/env'
 	import { mapGetters } from 'vuex'
 	import { resource } from 'js/utils/config'
 
@@ -50,7 +59,7 @@
 	const statusParams = {
 		[STATUS_NONE]: {
 			heading: 'Gratulacje!',
-			callToAction: `Jesteś na bieżąco, kolejny moduł będzie dostępny jutro!`,
+			callToAction: `To już koniec naszego kursu!`,
 			buttonClass: '',
 		},
 		[STATUS_IN_PROGRESS]: {
@@ -124,6 +133,9 @@
 						lessonId: this.nextLesson.id,
 					}
 				}
+			},
+			paymentUrl() {
+				return getUrl('payment/select-product')
 			},
 		},
 		methods: {

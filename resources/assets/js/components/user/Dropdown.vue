@@ -89,11 +89,11 @@
 			items() {
 				return [
 					{
-						'text': 'Strona główna kursu',
+						'text': 'Plan lekcji',
 						'route': 'dashboard',
 					},
 					{
-						'text': 'Twoje konto',
+						'text': 'Twoje zamówienia',
 						'route': 'my-orders',
 					},
 					{

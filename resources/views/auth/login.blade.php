@@ -7,7 +7,8 @@
 			@if(session('logout'))
 				<div class="notification has-text-centered">Wylogowano, do zobaczenia!</div>
 			@endif
-			<h2 class="wnl-login-title">@lang('auth.title')</h2>
+			<p class="title is-3 is-hidden-touch">@lang('auth.title')</p>
+			<p class="title is-5 is-hidden-desktop">@lang('auth.title')</p>
 			<p class="wnl-login-subtitle">@lang('auth.subtitle')</p>
 			<form class="wnl-login-form" action="{{ url('/login') }}" method="post">
 				{{ csrf_field() }}
@@ -44,7 +45,7 @@
 
 				{{-- Submit --}}
 				<p class="control">
-					<button type="submit" class="button is-primary is-wide">
+					<button type="submit" class="button is-primary is-full-width">
 						@lang('auth.submit')
 					</button>
 				</p>

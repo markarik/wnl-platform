@@ -2,7 +2,7 @@
 
 return [
 
-	'back-to-website' => 'Powrót do strony kursu',
+	'back-to-website' => 'Strona o kursie',
 
 	/**
 	 * Payment Steps Menu
@@ -99,7 +99,7 @@ return [
 	'city' => 'Miasto',
 	'email' => 'Adres e-mail',
 	'phone' => 'Numer telefonu',
-	'password' => 'Hasło',
+	'password' => 'Twoje nowe hasło',
 	'password-confirm' => 'Potwierdź hasło',
 
 	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury',

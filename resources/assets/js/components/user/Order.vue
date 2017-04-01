@@ -34,6 +34,13 @@
 				</span>
 				{{ paymentStatus }}
 			</div>
+			<div class="card-footer-item payment-status" :class="paymentStatusClass">
+				<a :href="paymentMethodChangeUrl" title="Zmień metodę płatności">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-pencil-square-o"></i>
+					</span> Zmień metodę płatności
+				</a>
+			</div>
 		</div>
 	</div>
 </template>
@@ -62,12 +69,12 @@
 			color: $color-yellow
 
 		&.text-info
-			color: $color-ocean-blue
+			color: $color-gray-lighter
 </style>
 
 <script>
 	import axios from 'axios'
-	import {getApiUrl, getImageUrl} from 'js/utils/env'
+	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 
 	export default {
@@ -88,6 +95,9 @@
 			logoUrl() {
 				// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
 				return getImageUrl('wnl-logo-square@2x.png')
+			},
+			isPaid() {
+				return this.order.paid
 			},
 			isPending() {
 				// show loader only if there is an online payment waiting for confirmation
@@ -119,7 +129,10 @@
 				return 'text-info'
 			},
 			paymentMethod() {
-				return this.paymentMethods[this.order.method];
+				return this.paymentMethods[this.order.method]
+			},
+			paymentMethodChangeUrl() {
+				return getUrl('payment/confirm-order')
 			},
 			orderNumber() {
 				return `Zamówienie numer ${this.order.id}`

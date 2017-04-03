@@ -52,6 +52,11 @@ class CancelOrder extends Command
 			exit;
 		}
 
+		if ($order->paid) {
+			$this->error("Sorry dude, this order has been paid. I can't cancel it. ¯\\_(ツ)_/¯");
+			exit;
+		}
+
 		$this->info("You're about to cancel following order:");
 		$this->table(
 			['id', 'email', 'name', 'product',],

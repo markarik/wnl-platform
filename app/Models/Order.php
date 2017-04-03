@@ -84,6 +84,7 @@ class Order extends Model
 
 		if (!is_null($this->method)) {
 			$this->product->quantity++;
+			$this->product->save();
 		}
 
 		$this->save();

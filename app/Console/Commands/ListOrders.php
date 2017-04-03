@@ -53,8 +53,8 @@ class ListOrders extends Command
 		$orders = $orders->map(function ($order) {
 			return [
 				$order->id,
-				$order->user->email,
 				$order->user_id,
+				$order->user->email,
 				$order->user->full_name,
 				$order->product->name,
 				$order->paid,
@@ -66,7 +66,7 @@ class ListOrders extends Command
 		})->toArray();
 
 		$this->table(
-			['id', 'use ID', 'use email', 'user name', 'product', 'paid', 'method', 'p24 ID', 'canceled', 'created_at'],
+			['order id', 'user ID', 'user email', 'user name', 'product', 'paid', 'method', 'p24 ID', 'canceled', 'created_at'],
 			$orders
 		);
 

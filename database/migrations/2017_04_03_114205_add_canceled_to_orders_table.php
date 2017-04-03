@@ -14,8 +14,8 @@ class AddCanceledToOrdersTable extends Migration
 	public function up()
 	{
 		Schema::table('orders', function (Blueprint $table) {
-			$table->tinyInteger('canceled')->after('coupon_id');
-			$table->timestamp('canceled_at')->after('canceled');
+			$table->tinyInteger('canceled')->nullable()->after('coupon_id');
+			$table->timestamp('canceled_at')->nullable()->after('canceled');
 		});
 	}
 

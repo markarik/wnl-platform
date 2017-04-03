@@ -81,6 +81,12 @@ class Order extends Model
 	{
 		$this->canceled = true;
 		$this->canceled_at = Carbon::now();
+
+		if (!is_null($this->method)) {
+			$this->product->quantity++;
+			$this->product->save();
+		}
+
 		$this->save();
 	}
 }

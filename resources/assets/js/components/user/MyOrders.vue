@@ -12,7 +12,20 @@
 				</div>
 			</div>
 		</div>
-		<wnl-order :order="order" v-for="order in orders"></wnl-order>
+		<div v-if="loaded">
+			<div v-if="hasOrders">
+				<wnl-order :order="order" v-for="order in orders"></wnl-order>
+			</div>
+			<div v-else>
+				<div class="box has-text-centered">
+					<p class="title is-5">Brak potwierdzonych zamówień <wnl-emoji name="package"></wnl-emoji></p>
+					<p class="has-text-centered">
+						<a :href="paymentUrl" class="button is-primary">Zapisz się na kurs</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<wnl-text-loader v-else>Wczytuję zamówienia...</wnl-text-loader>
 	</div>
 
 </template>
@@ -27,6 +40,7 @@
 		name: 'MyOrders',
 		data () {
 			return {
+				loaded: false,
 				orders: {}
 			}
 		},
@@ -34,12 +48,20 @@
 			paymentUrl() {
 				return getUrl('payment/select-product')
 			},
+			hasOrders() {
+				return !_.isEmpty(this.orders)
+			},
 		},
 		methods: {
 			getOrders() {
 				axios.get(getApiUrl(`orders/all`))
 						.then((response) => {
+							if (_.isEmpty(response.data)) {
+								this.orders = []
+							}
+
 							this.orders = response.data.filter(this.isConfirmed)
+							this.loaded = true
 						})
 						.catch(console.log.bind(console))
 			},

@@ -17,12 +17,13 @@ class OrderTransformer extends TransformerAbstract
 			'paid'       => $order->paid,
 			'method'     => $order->method,
 			'total'      => $order->total_with_coupon,
+			'canceled'   => $order->canceled,
 			'created_at' => $order->created_at->format('d-m-Y'),
 			'product'    => [
-				'id'    => $order->product->id,
-				'name'  => $order->product->name,
-				'slug'  => $order->product->slug,
-				'price' => $order->product->price,
+				'id'     => $order->product->id,
+				'name'   => $order->product->name,
+				'slug'   => $order->product->slug,
+				'price'  => $order->product->price,
 			],
 		];
 

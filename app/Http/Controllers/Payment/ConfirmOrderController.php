@@ -17,7 +17,7 @@ class ConfirmOrderController extends Controller
 		$user = Auth::user();
 
 		if (!$user) {
-			Log::notice('Auth failed, redirecting...', __METHOD__);
+			Log::notice('Auth failed, redirecting...');
 			return redirect(route('payment-select-product'));
 		}
 

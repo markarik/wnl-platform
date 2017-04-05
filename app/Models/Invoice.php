@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
-	protected $fillable = ['order_id', 'number', 'series', 'external_id'];
+	protected $casts = [
+		'amount' => 'float',
+	];
+
+	protected $fillable = ['order_id', 'number', 'series', 'external_id', 'amount'];
 
 	public function getFileNameAttribute()
 	{

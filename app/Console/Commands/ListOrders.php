@@ -58,6 +58,7 @@ class ListOrders extends Command
 				$order->user->full_name,
 				$order->product->name,
 				$order->paid,
+				$order->paid_amount,
 				$order->method,
 				$order->external_id,
 				$order->canceled,
@@ -66,7 +67,19 @@ class ListOrders extends Command
 		})->toArray();
 
 		$this->table(
-			['order id', 'user ID', 'user email', 'user name', 'product', 'paid', 'method', 'p24 ID', 'canceled', 'created_at'],
+			[
+				'order id',
+				'user ID',
+				'user email',
+				'user name',
+				'product',
+				'paid',
+				'paid_amount',
+				'method',
+				'p24 ID',
+				'canceled',
+				'created_at',
+			],
 			$orders
 		);
 

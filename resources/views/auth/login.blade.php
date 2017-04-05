@@ -17,8 +17,8 @@
 				<label for="email" class="label">@lang('auth.label-email')</label>
 				<p class="control">
 					<input id="email" name="email" type="email"
-						   class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
-						   value="{{ old('email') }}" required autofocus="">
+						class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
+						value="{{ old('email') }}" required autofocus="">
 					@if ($errors->has('email'))
 						<span class="help is-danger">{{ $errors->first('email') }}</span>
 					@endif
@@ -45,17 +45,17 @@
 
 				{{-- Submit --}}
 				<p class="control">
-					<button type="submit" class="button is-primary is-full-width">
+					<button type="submit" class="button is-primary is-wide">
 						@lang('auth.submit')
 					</button>
 				</p>
 
 				{{-- Forgot password --}}
-				{{-- <p class="control wnl-login-remind">
+				<p class="control wnl-login-remind">
 					<a href="{{ url('/password/reset') }}">
 						@lang('auth.remind-link')
 					</a>
-				</p> --}}
+				</p>
 			</form>
 		</div>
 	</div>

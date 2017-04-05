@@ -86,6 +86,7 @@
 				paymentMethods: {
 					'transfer': 'Przelew bankowy',
 					'online': 'Szybki przelew',
+					'instalments': 'Raty',
 				},
 			}
 		},

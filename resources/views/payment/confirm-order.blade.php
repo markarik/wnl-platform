@@ -76,6 +76,14 @@
 					</form>
 				</div>
 				<div class="column">
+					<form action="{{route('payment-confirm-order-post')}}" method="post">
+						{!! csrf_field() !!}
+						<input type="hidden" name="method" value="instalments"/>
+
+						<button class="button is-primary is-outlined">@lang('payment.confirm-method-instalments-button')</button>
+					</form>
+				</div>
+				<div class="column">
 					<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form">
 						<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
 						<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>

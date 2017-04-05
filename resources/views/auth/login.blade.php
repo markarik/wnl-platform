@@ -45,7 +45,7 @@
 
 				{{-- Submit --}}
 				<p class="control">
-					<button type="submit" class="button is-primary is-full-width">
+					<button type="submit" class="button is-primary is-wide">
 						@lang('auth.submit')
 					</button>
 				</p>

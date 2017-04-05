@@ -138,10 +138,13 @@ a.is-active {
 			color: $color-white;
 		}
 	}
-}
 
-.is-wide {
-	width: 100%;
+	&.is-wide {
+		display: inline-block;
+		max-width: 100%;
+		text-align: center;
+		width: 100%;
+	}
 }
 
 .is-full-width {

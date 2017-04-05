@@ -95,15 +95,15 @@
 		</tr>
 		<tr>
 			<td>{{ $order['vat'] }}</td>
-			<td>{{ $order['priceNet'] }}zł</td>
-			<td>{{ $order['vatValue'] }}zł</td>
-			<td>{{ $order['priceGross'] }}zł</td>
+			<td>{{ $settlement['priceNet'] }}zł</td>
+			<td>{{ $settlement['vatValue'] }}zł</td>
+			<td>{{ $settlement['priceGross'] }}zł</td>
 		</tr>
 		<tr>
 			<td><strong>Razem:</strong></td>
-			<td>{{ $order['priceNet'] }}zł</td>
-			<td>{{ $order['vatValue'] }}zł</td>
-			<td>{{ $order['priceGross'] }}zł</td>
+			<td>{{ $settlement['priceNet'] }}zł</td>
+			<td>{{ $settlement['vatValue'] }}zł</td>
+			<td>{{ $settlement['priceGross'] }}zł</td>
 		</tr>
 	</table>
 @endsection
@@ -115,15 +115,21 @@
 			<th>Lp</th>
 			<th>Numer faktury</th>
 			<th>Data</th>
-			<th>Netto</th>
 			<th>Brutto</th>
 		</tr>
+		@foreach($previousAdvances as $index => $invoice)
+			<tr>
+				<td>{{ $index + 1 }}</td>
+				<td>{{ $invoice->full_number }}</td>
+				<td>{{ $invoice->created_at->format('d-m-Y') }}</td>
+				<td>{{ $invoice->amount }}zł</td>
+			</tr>
+		@endforeach
 		<tr>
 			<td class="hidden"></td>
 			<td class="hidden"></td>
 			<td>Razem:</td>
-			<td>0,00</td>
-			<td>0,00</td>
+			<td>{{ $previousAdvances->sum('amount') }}zł</td>
 		</tr>
 	</table>
 @endsection
@@ -138,6 +144,6 @@
 
 @section('summary')
 	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
-	<p>Wpłacono: <strong>{{ $order['priceGross'] }}zł</strong></p>
-	<p>Pozostało z zamówienia: 0.00zł</strong></p>
+	<p>Wpłacono: <strong>{{ $recentSettlement }}zł</strong></p>
+	<p>Pozostało z zamówienia: <strong>{{ $remainingAmount }}zł</strong></p>
 @endsection

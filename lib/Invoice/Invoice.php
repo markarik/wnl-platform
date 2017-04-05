@@ -22,7 +22,7 @@ class Invoice
 	const PROFORMA_SERIES_NAME = 'PROFORMA';
 	const ADVANCE_SERIES_NAME = 'F-ZAL';
 	const FINAL_SERIES_NAME = 'FK';
-	const VAT_THRESHOLD = 159452.00;
+	const VAT_THRESHOLD = -159452.00;
 	const VAT_ZERO = 0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
@@ -80,6 +80,10 @@ class Invoice
 		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
 
+		$data['settlement'][0]['priceGross'] = $this->price($totalPrice);
+		$data['settlement'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
+		$data['settlement'][0]['vat'] = $this->getVatString($vatValue);
+
 		$data['summary'] = [
 			'total' => $this->price($totalPrice),
 		];
@@ -96,9 +100,13 @@ class Invoice
 
 	public function advance(Order $order)
 	{
+		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
+		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
 		$invoice = $order->invoices()->create([
 			'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
 			'series' => self::ADVANCE_SERIES_NAME,
+			'amount' => $recentSettlement,
 		]);
 
 		$data = [
@@ -137,6 +145,17 @@ class Invoice
 		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
 		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
+
+		$data['settlement'] = [
+			'priceNet'   => $this->price($recentSettlement / (1 + $vatValue)),
+			'vatValue'   => $this->price($recentSettlement - $recentSettlement / (1 + $vatValue)),
+			'priceGross' => $this->price($recentSettlement),
+		];
+
+		$data['remainingAmount'] = $this->price($totalPrice - $totalPaid);
+
+		$data['previousAdvances'] = $previousAdvances;
+		$data['recentSettlement'] = $recentSettlement;
 
 		if ($vatValue === self::VAT_ZERO) {
 			$data['ordersList'][0]['vatValue'] = '-';

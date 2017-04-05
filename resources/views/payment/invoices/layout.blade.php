@@ -109,6 +109,13 @@
 		</table>
 	</div>
 
+	{{-- Settlement --}}
+	<div class="columns">
+		<div class="column">
+			@yield('settlement', '')
+		</div>
+	</div>
+
 	{{-- Advances --}}
 	<div class="columns">
 		<div class="column">

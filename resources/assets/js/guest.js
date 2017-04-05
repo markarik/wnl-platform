@@ -4,12 +4,17 @@ $(function() {
 	var $navToggle = $('.nav-toggle'),
 		$navMenu = $('.nav-menu'),
 		$logoutLink = $navMenu.find('.logout-link'),
-		$logoutForm = $navMenu.find('#logout-form')
+		$logoutForm = $navMenu.find('#logout-form'),
+		$form = $('form'),
+		$submit = $form.find('.button:submit')
 
 	$navToggle.click((event) => {
-		console.log('dupa')
 		$navToggle.toggleClass('is-active')
 		$navMenu.toggleClass('is-active')
+	})
+
+	$form.on('submit', (event) => {
+		$submit.addClass('is-loading')
 	})
 
 	if ($logoutLink.length) {

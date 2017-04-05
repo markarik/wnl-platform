@@ -14,6 +14,11 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\DropTables::class,
+		Commands\EncryptPasswords::class,
+		Commands\ListOrders::class,
+		Commands\MarkOrderAsPaid::class,
+		Commands\CancelOrder::class,
+		Commands\ChangeOrderPaymentMethod::class,
     ];
 
     /**

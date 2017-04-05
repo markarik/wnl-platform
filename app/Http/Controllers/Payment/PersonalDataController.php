@@ -61,9 +61,11 @@ class PersonalDataController extends Controller
 		}
 
 		if (!$form->isValid()) {
+			Log::notice('Sing up form invalid, redirecting...');
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
+		Log::notice('Creating user account');
 		$user = User::updateOrCreate(
 			['email' => $request->get('email')],
 			[
@@ -74,7 +76,7 @@ class PersonalDataController extends Controller
 				'city'               => $request->get('city'),
 				'email'              => $request->get('email'),
 				'phone'              => $request->get('phone'),
-				'password'           => $request->get('password'),
+				'password'           => bcrypt($request->get('password')),
 				'invoice'            => $request->get('invoice') ?? 0,
 				'invoice_name'       => $request->get('invoice_name'),
 				'invoice_nip'        => $request->get('invoice_nip'),
@@ -88,6 +90,7 @@ class PersonalDataController extends Controller
 				'consent_terms'      => $request->get('consent_terms') ?? 0,
 			]
 		);
+		Log::notice('Creating order');
 		$order = $user->orders()->create([
 			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
@@ -98,8 +101,7 @@ class PersonalDataController extends Controller
 		}
 
 		Auth::login($user);
-
-		Mail::to(Auth::user())->send(new SignUpConfirmation($user));
+		Log::notice('User automatically logged in after registration.');
 
 		return redirect(route('payment-confirm-order'));
 	}

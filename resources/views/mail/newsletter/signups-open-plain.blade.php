@@ -19,16 +19,32 @@ Kadra
 Na kurs stacjonarny, w ramach którego odbędzie się w Poznaniu 6 spotkań, udało nam się zaprosić doskonałych dydaktyków! Zajęcia, w ramach swoich specjalizacji, poprowadzą:
 
 Choroby dziecięce
-dr hab. n. med. Anna Mania, aktualna prodziekan Wydziału Lekarskiego UM w Poznaniu
+dr hab. n. med. Anna Mania,
+Specjalista pediatrii, chorób zakaźnych, hepatolog (certyfikat PTH).
+Prodziekan Wydziału Lekarskiego UM w Poznaniu ds. programów studiów i kształcenia oraz studentów I - II roku.
 
 Choroby wewnętrzne
-dr hab. n. med. Mariusz Puszczewicz, były Prorektor ds. Studenckich UM w Poznaniu
+dr hab. n. med. Mariusz Puszczewicz,
+Specjalista Chorób Wewnętrznych II stopnia  i Reumatologii
+
+Kierownik Katedry i Kliniki Reumatologii i Chorób Wewnętrznych
+UM im. Karola Marcinkowskiego w Poznaniu.
+Prorektor do spraw studenckich UM im. Karola Marcinkowskiego w Poznaniu  w kadencji 2008-2012. Wyróżniony tytułem honorowym “Amicus studentorum” przez studentów Akademii Medycznej im. Karola Marcinkowskiego w Poznaniu.
 
 Stany nagłe
-lek. Michał Szemień, Koordynator ds. Wydziału Lekarskiego I, Zakładu Medycyny Ratunkowej UM w Poznaniu
+lek. Michał Szemień,Rezydent medycyny ratunkowej w Szpitalnym Oddziale Ratunkowym Centrum urazowego  Wielospecjalistycznym Szpitalu Miejskim im. J. Strusia w Poznaniu.
+
+Koordynator ds. Wydziału Lekarskiego I, Zakładu Medycyny Ratunkowej UM w Poznaniu.
+
+Instruktor europejskiej rady resuscytacji z zakresu BLS, EPALS, ALS i ETC.
+Emergency Point-of-Care Ultrasonography Provider.
 
 Prawo medyczne
-dr n. praw. Radosław Tymiński, wykładowca Prawa Medycznego na WUM, autor bloga http://prawalekarzy.pl/
+dr n. praw. Radosław Tymiński,
+
+Wykładowca na Akademii Leona Koźmińskiego,
+Wykładowca Prawa Medycznego na Warszawskim Uniwersytecie Medycznym,
+Autor bloga http://prawalekarzy.pl/
 
 Przeczytaj więcej o warsztatach - https://wiecejnizlek.pl/o-warsztatach
 

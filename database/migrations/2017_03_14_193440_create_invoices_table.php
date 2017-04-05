@@ -16,7 +16,7 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
 			$table->unsignedInteger('order_id');
-			$table->string('number');
+			$table->unsignedInteger('number');
 			$table->string('series');
 			$table->enum('vat', ['zw', '23']);
             $table->timestamps();

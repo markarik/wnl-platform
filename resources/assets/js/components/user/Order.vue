@@ -12,7 +12,7 @@
 					<p class="subtitle is-6">{{ orderNumber }}</p>
 				</div>
 			</div>
-			<div class="content">
+			<div class="content" v-if="!order.canceled">
 				<p>Metoda płatności: {{ paymentMethod }}</p>
 				<div class="transfer-details notification" v-if="transferDetails">
 					<p>Dane do przelewu</p>
@@ -21,7 +21,8 @@
 						bethink sp. z o.o.<br>
 						ul. Henryka Sienkiewicza 8/1<br>
 						60-817, Poznań<br>
-						82 1020 4027 0000 1102 1400 9197 (PKO BP)
+						82 1020 4027 0000 1102 1400 9197 (PKO BP)<br>
+						<strong>Kwota: {{ order.total }}zł</strong><br>
 					</small>
 				</div>
 				<small>Zamówienie złożono {{ order.created_at }}</small>
@@ -33,6 +34,13 @@
 					<i class="fa" :class="iconClass"></i>
 				</span>
 				{{ paymentStatus }}
+			</div>
+			<div class="card-footer-item payment-status" :class="paymentStatusClass" v-if="canChangePaymentMethod">
+				<a :href="paymentMethodChangeUrl" title="Zmień metodę płatności">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-pencil-square-o"></i>
+					</span> Zmień metodę płatności
+				</a>
 			</div>
 		</div>
 	</div>
@@ -62,12 +70,12 @@
 			color: $color-yellow
 
 		&.text-info
-			color: $color-ocean-blue
+			color: $color-gray-lighter
 </style>
 
 <script>
 	import axios from 'axios'
-	import {getApiUrl, getImageUrl} from 'js/utils/env'
+	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 
 	export default {
@@ -89,6 +97,9 @@
 				// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
 				return getImageUrl('wnl-logo-square@2x.png')
 			},
+			isPaid() {
+				return this.order.paid
+			},
 			isPending() {
 				// show loader only if there is an online payment waiting for confirmation
 				return !this.order.paid && this.order.method === 'online';
@@ -107,7 +118,13 @@
 				return !this.order.paid && this.order.method === 'transfer';
 			},
 			paymentStatus() {
-				return this.order.paid ? 'Zapłacono!' : 'Oczekuje na zaksięgowanie'
+				if (this.order.paid) {
+					return 'Zapłacono'
+				} else if (this.order.canceled) {
+					return 'Anulowano'
+				} else {
+					return 'Oczekuje na zaksięgowanie'
+				}
 			},
 			paymentStatusClass() {
 				if (this.order.cancelled) {
@@ -119,7 +136,13 @@
 				return 'text-info'
 			},
 			paymentMethod() {
-				return this.paymentMethods[this.order.method];
+				return this.paymentMethods[this.order.method]
+			},
+			canChangePaymentMethod() {
+				return !this.order.paid && !this.order.canceled
+			},
+			paymentMethodChangeUrl() {
+				return getUrl('payment/confirm-order')
 			},
 			orderNumber() {
 				return `Zamówienie numer ${this.order.id}`

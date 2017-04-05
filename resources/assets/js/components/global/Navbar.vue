@@ -2,9 +2,12 @@
 	<nav class="wnl-navbar has-shadow">
 		<div class="wnl-left">
 			<div class="wnl-left-content">
-				<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
+				<!-- <router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
 					<img :src="logoSrc" :alt="logoAlt">
-				</router-link>
+				</router-link> -->
+				<a :href="paymentUrl" class="wnl-logo-link">
+					<img :src="logoSrc" :alt="logoAlt">
+				</a>
 			</div>
 		</div>
 		<div class="wnl-middle"></div>
@@ -52,6 +55,9 @@
 			...mapGetters([
 				'currentUserFullName'
 			]),
+			paymentUrl() {
+				return 'https://wiecejnizlek.pl'
+			},
 			logoSrc() {
 				return getImageUrl('wnl-logo.svg')
 			},

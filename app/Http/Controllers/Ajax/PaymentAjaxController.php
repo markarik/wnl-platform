@@ -20,11 +20,14 @@ class PaymentAjaxController extends Controller
 		$sessionId = $this->request->get('sess_id');
 		$method = $this->request->get('payment');
 
-		$order = Order::where(['session_id' => $sessionId])->update(['method' => $method]);
+		$order = Order::where(['session_id' => $sessionId])->first();
 
 		if (!$order) {
 			return response()->json(['status' => 'not_found'], 404);
 		}
+
+		$order->method = $method;
+		$order->save();
 
 		return response()->json(['status' => 'success']);
 	}

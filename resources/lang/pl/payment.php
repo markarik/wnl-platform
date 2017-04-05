@@ -2,7 +2,7 @@
 
 return [
 
-	'back-to-website' => 'Powrót do strony kursu',
+	'back-to-website' => 'Strona o kursie',
 
 	/**
 	 * Payment Steps Menu
@@ -99,7 +99,7 @@ return [
 	'city' => 'Miasto',
 	'email' => 'Adres e-mail',
 	'phone' => 'Numer telefonu',
-	'password' => 'Hasło',
+	'password' => 'Twoje nowe hasło',
 	'password-confirm' => 'Potwierdź hasło',
 
 	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury',
@@ -143,10 +143,10 @@ return [
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading' => 'Wszystko gotowe!',
-	'confirm-method-lead' => 'Kliknij&nbsp;na&nbsp;jeden&nbsp;z&nbsp;przycisków, aby&nbsp;wybrać&nbsp;metodę&nbsp;płatności i&nbsp;złożyć&nbsp;zamówienie.',
+	'confirm-method-heading' => 'Aby ostatecznie potwierdzić zamówienie, wybierz metodę płatności',
+	'confirm-method-lead' => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
 	'confirm-method-bank-transfer-button' => 'Kupuję i płacę przelewem bankowym',
-	'confirm-method-online-payment-button' => 'Kupuję i płacę szybkim przelewem',
+	'confirm-method-online-payment-button' => 'Kupuję i płacę przez Przelewy24',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',

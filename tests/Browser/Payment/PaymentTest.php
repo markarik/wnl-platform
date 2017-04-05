@@ -80,7 +80,8 @@ class PaymentTest extends DuskTestCase
 			$browser
 				->on(new ConfirmOrderPage)
 				->assertSeeAll([$user['email'], $user['firstName'], $user['lastName'], $user['address']])
-				->press('@online-payment-button');
+				->press('@online-payment-button')
+				->waitForText('Wybierz formę płatności');
 
 			$browser
 				->on(new P24ChooseBank)
@@ -90,7 +91,7 @@ class PaymentTest extends DuskTestCase
 
 			$browser
 				->waitForAll(['Twoje zamówienia', 'Zamówienie złożono'])
-				->waitForText('Zapłacono!', 60);
+				->waitForText('Zapłacono', 60);
 		});
 
 		$this->closeAll();

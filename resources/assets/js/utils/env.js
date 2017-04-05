@@ -9,7 +9,8 @@ export function isDemo() {
 }
 
 export function isProduction() {
-	return envValue('appEnv') === 'production'
+	return envValue('appEnv') === 'production' ||
+		envValue('appEnv') === 'sandbox'
 }
 
 // Debug

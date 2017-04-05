@@ -17,13 +17,14 @@ class ConfirmOrderController extends Controller
 		$user = Auth::user();
 
 		if (!$user) {
+			Log::notice('Auth failed, redirecting...');
 			return redirect(route('payment-select-product'));
 		}
 
 		$order = $user->orders()->recent();
 
 		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
-
+		Log::notice('Order confirmation');
 		return view('payment.confirm-order', [
 			'order'    => $order,
 			'user'     => $user,
@@ -34,6 +35,7 @@ class ConfirmOrderController extends Controller
 	public function handle(Request $request)
 	{
 		$user = Auth::user();
+		Log::notice('Saving payment method and redirecting to dashboard.');
 		$order = $user->orders()->recent();
 		$order->method = $request->input('method');
 		$order->save();
@@ -59,6 +61,8 @@ class ConfirmOrderController extends Controller
 			$order->external_id = $request->get('p24_order_id');
 			$order->transfer_title = $request->get('p24_statement');
 			$order->save();
+		} else {
+			Log::warning('P24 transaction validation failed');
 		}
 
 	}

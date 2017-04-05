@@ -15,8 +15,10 @@
 	.splash-screen
 		align-items: center
 		display: flex
+		flex: 1 0 auto
 		flex-direction: column
 		height: 100%
+		min-height: 100%
 		justify-content: center
 		width: 100%
 
@@ -30,6 +32,9 @@
 		line-height: 2em
 		text-align: center
 		// text-transform: uppercase
+
+	.button
+		display: block
 </style>
 
 <script>

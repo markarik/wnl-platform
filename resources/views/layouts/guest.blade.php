@@ -54,9 +54,15 @@
 								Wyloguj się
 							</a>
 						@else
-							<a href="{{url('payment/select-product')}}" class="nav-item">
-								Zapisz się na kurs
-							</a>
+							@if (env('APP_ENV') !== 'demo')
+								<a href="{{url('payment/select-product')}}" class="nav-item">
+									Zapisz się na kurs
+								</a>
+							@else
+								<a href="https://platforma.wiecejnizlek.pl/payment/select-product" class="nav-item">
+									Zapisz się na kurs
+								</a>
+							@endif
 							<a href="{{url('login')}}" class="nav-item">
 								Zaloguj się
 							</a>

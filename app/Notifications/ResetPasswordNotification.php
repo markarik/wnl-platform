@@ -49,7 +49,7 @@ class ResetPasswordNotification extends Notification
 	public function toMail($notifiable)
 	{
 		return (new MailMessage)
-			->view('mail.password-reset', ['token' => $this->token])
+			->view('mail.password-reset', ['token' => $this->token, 'user' => $notifiable])
 			->subject('Resetuj hasło');
 	}
 }

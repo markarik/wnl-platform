@@ -12,6 +12,11 @@ class Invoice extends Model
 
 	protected $fillable = ['order_id', 'number', 'series', 'external_id', 'amount'];
 
+	public function order()
+	{
+		return $this->belongsTo('App\Models\Order');
+	}
+
 	public function getFileNameAttribute()
 	{
 		return str_slug($this->id) . '.pdf';

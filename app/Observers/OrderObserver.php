@@ -20,7 +20,7 @@ class OrderObserver
 
 	public function updated(Order $order)
 	{
-		if ($order->isDirty(['paid']) && $order->paid) {
+		if ($order->isDirty(['paid_amount']) && $order->paid_amount > $order->getOriginal('paid_amount')) {
 			\Log::notice('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));
 		}

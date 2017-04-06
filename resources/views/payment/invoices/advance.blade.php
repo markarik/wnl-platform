@@ -126,9 +126,9 @@
 			</tr>
 		@endforeach
 		<tr>
-			<td class="hidden"></td>
-			<td class="hidden"></td>
-			<td>Razem:</td>
+			<td class="no-border">&nbsp;</td>
+			<td class="no-border">&nbsp;</td>
+			<td><strong>Razem:</strong></td>
 			<td>{{ $previousAdvances->sum('amount') }}zł</td>
 		</tr>
 	</table>

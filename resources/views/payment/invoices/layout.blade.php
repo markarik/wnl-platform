@@ -51,8 +51,8 @@
 			background: #efefef;
 		}
 
-		td.hidden {
-			border: 0;
+		.no-border {
+			border: none;
 		}
 	</style>
 </head>
@@ -109,27 +109,27 @@
 		</table>
 	</div>
 
-	{{-- Settlement --}}
-	<div class="columns">
-		<div class="column">
-			@yield('settlement', '')
-		</div>
-	</div>
-
-	{{-- Advances --}}
-	<div class="columns">
-		<div class="column">
-			@yield('advances', '')
-		</div>
-	</div>
-
-	{{-- Orders summary --}}
-	<div class="columns">
-		<div class="column">
-			@yield('orders-summary', '')
-		</div>
-	</div>
-
+	<table>
+		<tr class="no-border">
+			<td style="width: 50%;" class="no-border">
+				&nbsp;
+			</td>
+			<td style="width: 50%;" class="no-border">
+				{{-- Orders summary --}}
+				@yield('orders-summary', '')
+			</td>
+		</tr>
+		<tr class="no-border">
+			<td style="width: 50%; vertical-align: top;" class="no-border">
+				{{-- Advances --}}
+				@yield('advances', '')
+			</td>
+			<td style="width: 50%; vertical-align: top;" class="no-border">
+				{{-- Settlement --}}
+				@yield('settlement', '')
+			</td>
+		</tr>
+	</table>
 
 	<div class="columns">
 		{{-- Payment details --}}

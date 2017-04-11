@@ -21,9 +21,40 @@
 						bethink sp. z o.o.<br>
 						ul. Henryka Sienkiewicza 8/1<br>
 						60-817, Poznań<br>
-						82 1020 4027 0000 1102 1400 9197 (PKO BP)<br>
-						<strong>Kwota: {{ order.total }}zł</strong><br>
+						82 1020 4027 0000 1102 1400 9197 (PKO BP)
 					</small>
+				</div>
+				<div class="payment-details">
+					<p class="big strong" v-if="order.method === 'transfer'">
+						Kwota: {{ order.total }}zł
+					</p>
+					<table class="table is-striped" v-if="order.method === 'instalments'">
+						<tr>
+							<th>Rata</th>
+							<th>Termin płatności</th>
+							<th>Kwota</th>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>do 7 dni od zamówienia</td>
+							<td>{{ instalments['1'] }}zł</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>15 czerwca 2017r.</td>
+							<td>{{ instalments['2'] }}zł</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>15 lipca 2017r.</td>
+							<td>{{ instalments['3'] }}zł</td>
+						</tr>
+						<tr>
+							<td>Razem</td>
+							<td></td>
+							<td>{{ order.total }}zł</td>
+						</tr>
+					</table>
 				</div>
 				<small>Zamówienie złożono {{ order.created_at }}</small>
 			</div>
@@ -75,6 +106,7 @@
 
 <script>
 	import axios from 'axios'
+	import {configValue} from 'js/utils/config'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 
@@ -116,11 +148,17 @@
 				return 'fa-info-circle'
 			},
 			transferDetails() {
-				return !this.order.paid && this.order.method === 'transfer';
+				return !this.order.paid &&
+					(this.order.method === 'transfer' ||
+						this.order.method === 'instalments')
 			},
 			paymentStatus() {
 				if (this.order.paid) {
-					return 'Zapłacono'
+					if (this.order.total <= this.order.paid_amount) {
+						return 'Zapłacono'
+					} else {
+						return `Wpłacono ${this.order.paid_amount}zł`
+					}
 				} else if (this.order.canceled) {
 					return 'Anulowano'
 				} else {
@@ -130,7 +168,7 @@
 			paymentStatusClass() {
 				if (this.order.cancelled) {
 					return 'text-warning'
-				} else if (this.order.paid) {
+				} else if (this.order.paid && this.order.total <= this.order.paid_amount) {
 					return 'text-success'
 				}
 
@@ -147,6 +185,9 @@
 			},
 			orderNumber() {
 				return `Zamówienie numer ${this.order.id}`
+			},
+			instalments() {
+				return configValue('payment').instalments[this.order.total]
 			}
 		},
 		methods: {

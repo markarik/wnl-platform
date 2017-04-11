@@ -28,7 +28,7 @@
 	<p>Dokładne kwoty znajdziecie na stronie <a href="https://wiecejnizlek.pl/cennik">Cennik</a>.</p>
 	<p>Mamy też odpowiedzi na dodatkowe pytania, które padły w kontekście nowej formy płatności:</p>
 	<h4>Jak można skorzystać z nowego sposobu płatności?</h4>
-	<p>Opcja ta dostępna jest w ostatnim kroku - "Potwierdzenie zamówienia" - podczas wyboru metody płatności. Dokładną instrukcję również znajdziecie w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a>.</p>
+	<p>Opcja ta dostępna jest w ostatnim kroku procesu rejestracji - "Potwierdzenie zamówienia" - podczas wyboru metody płatności. Dokładną instrukcję również znajdziecie w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a>.</p>
 
 	<h4>Czy można zmienić metodę płatności?</h4>
 	<p>Jak najbardziej! Jeżeli Twoje zamówienie nie zostało jeszcze opłacone, możesz zmienić metodę płatności poprzez stronę <a href="https://platforma.wiecejnizlek.pl/app/myself/orders">Twoje zamówienia</a>.</p>

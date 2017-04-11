@@ -38,9 +38,13 @@ class Invoice
 
 	public function proforma(Order $order)
 	{
+		$vatValue = $this->getVatValue();
+		$vatString = $this->getVatString($vatValue);
 		$invoice = $order->invoices()->create([
 			'number' => $this->nextNumberInSeries(self::PROFORMA_SERIES_NAME),
 			'series' => self::PROFORMA_SERIES_NAME,
+			'amount' => $order->total_with_coupon,
+			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
 		]);
 
 		$data = [
@@ -75,14 +79,13 @@ class Invoice
 		}
 
 		// Calculate netto, brutto, VAT
-		$vatValue = $this->getVatValue();
 		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
 		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
 
 		$data['settlement'][0]['priceGross'] = $this->price($totalPrice);
 		$data['settlement'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
-		$data['settlement'][0]['vat'] = $this->getVatString($vatValue);
+		$data['settlement'][0]['vat'] = $vatString;
 
 		$data['summary'] = [
 			'total' => $this->price($totalPrice),
@@ -102,11 +105,14 @@ class Invoice
 	{
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
+		$vatValue = $this->getVatValue($recentSettlement);
+		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
 		$invoice = $order->invoices()->create([
 			'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
 			'series' => self::ADVANCE_SERIES_NAME,
 			'amount' => $recentSettlement,
+			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
 		]);
 
 		$data = [
@@ -141,10 +147,9 @@ class Invoice
 		}
 
 		// Calculate netto, brutto, VAT
-		$vatValue = $this->getVatValue($recentSettlement);
 		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
 		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
-		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
+		$data['ordersList'][0]['vat'] = $vatString;
 
 		$data['settlement'] = [
 			'priceNet'   => $this->price($recentSettlement / (1 + $vatValue)),

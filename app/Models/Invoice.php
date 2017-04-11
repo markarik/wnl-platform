@@ -10,7 +10,7 @@ class Invoice extends Model
 		'amount' => 'float',
 	];
 
-	protected $fillable = ['order_id', 'number', 'series', 'external_id', 'amount'];
+	protected $fillable = ['order_id', 'number', 'series', 'external_id', 'amount', 'vat'];
 
 	public function order()
 	{

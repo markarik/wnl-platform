@@ -141,7 +141,7 @@ class Invoice
 		}
 
 		// Calculate netto, brutto, VAT
-		$vatValue = $this->getVatValue();
+		$vatValue = $this->getVatValue($recentSettlement);
 		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
 		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
@@ -240,8 +240,11 @@ class Invoice
 		return $dbResult + 1;
 	}
 
-	private function getVatValue() {
-		if ($this->advanceInvoiceSum() < self::VAT_THRESHOLD) {
+	private function getVatValue($currentSettlement = 0) {
+		$sumAfterOrder = $this->advanceInvoiceSum() + $currentSettlement;
+		\Log::notice("Advances invoices sum: {$sumAfterOrder}")
+
+		if ($sumAfterOrder < self::VAT_THRESHOLD) {
 			return self::VAT_ZERO;
 		}
 		return self::VAT_NORMAL;
@@ -260,7 +263,7 @@ class Invoice
 			$query->where('series', self::ADVANCE_SERIES_NAME);
 		})->get();
 
-		return $orders->sum('total_with_coupon');
+		return $orders->sum('paid_amount');
 	}
 
 	private function price($number) {

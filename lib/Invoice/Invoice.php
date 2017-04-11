@@ -242,7 +242,7 @@ class Invoice
 
 	private function getVatValue($currentSettlement = 0) {
 		$sumAfterOrder = $this->advanceInvoiceSum() + $currentSettlement;
-		\Log::notice("Advances invoices sum: {$sumAfterOrder}")
+		\Log::notice("Advances invoices sum: {$sumAfterOrder}");
 
 		if ($sumAfterOrder < self::VAT_THRESHOLD) {
 			return self::VAT_ZERO;

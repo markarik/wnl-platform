@@ -6,7 +6,7 @@ $(function() {
 		$logoutLink = $navMenu.find('.logout-link'),
 		$logoutForm = $navMenu.find('#logout-form'),
 		$form = $('form'),
-		$submit = $form.find('.button:submit'),
+		$buttons = $('.button'),
 		$modalsContainer = $('.modals'),
 		$touModal = $modalsContainer.find('#tou-modal'),
 		$touOpenModalLinks = $('.tou-open-modal-link'),
@@ -42,7 +42,8 @@ $(function() {
 	})
 
 	$form.on('submit', (event) => {
-		$submit.addClass('is-loading')
+		$buttons.addClass('is-disabled')
+		$(event.target).find('.button:submit').removeClass('is-disabled').addClass('is-loading')
 	})
 
 	if ($expandable.length > 0) {

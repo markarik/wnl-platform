@@ -18,6 +18,7 @@
 </style>
 
 <script>
+	import emoji from 'node-emoji'
 	import Progress from 'js/components/global/Progress.vue'
 	import { mapGetters } from 'vuex'
 
@@ -27,7 +28,7 @@
 		STATE_DANGER = 'danger',
 		stateData = {
 			[STATE_FULL]: {
-				message: 'Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone. Należy Ci się zasłużony odpoczynek. :)',
+				message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone. Należy Ci się zasłużony odpoczynek. ${emoji.get('slightly_smiling_face')}`,
 				modifyingClass: 'is-success'
 			},
 			[STATE_GOOD]: {

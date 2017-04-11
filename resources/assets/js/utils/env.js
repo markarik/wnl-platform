@@ -4,8 +4,13 @@ export function envValue(key) {
 
 // Env
 
+export function isDemo() {
+	return envValue('appEnv') === 'demo'
+}
+
 export function isProduction() {
-	return envValue('appEnv') === 'production'
+	return envValue('appEnv') === 'production' ||
+		envValue('appEnv') === 'sandbox'
 }
 
 // Debug

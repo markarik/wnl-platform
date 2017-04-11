@@ -12,14 +12,29 @@
 	<div class="container">
 		<div class="columns is-hidden-mobile has-text-centered">
 			<div class="column">
-				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
-					@lang('payment.select-product-onsite-button-label')
-				</a>
+
+				@if(!$onsite->available)
+					<div class="notification has-text-centered strong">Brak miejsc</div>
+				@else
+					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}"
+						class="button is-primary {{ !$onsite->available ? 'is-disabled' : '' }}"
+					>
+						@lang('payment.select-product-onsite-button-label')
+					</a>
+					<p class="metadata has-text-centered">Pozostało {{ $onsite->quantity }} miejsc</p>
+				@endif
 			</div>
 			<div class="column">
-				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
+				@if(!$online->available)
+					<div class="notification has-text-centered strong">Brak miejsc</div>
+				@else
+				<a href="{{route('payment-personal-data', 'wnl-online')}}"
+				   class="button is-primary is-outlined {{ !$online->available ? 'is-disabled' : '' }}"
+				>
 					@lang('payment.select-product-online-button-label')
 				</a>
+				<p class="metadata has-text-centered">Pozostało {{ $online->quantity }} miejsc</p>
+				@endif
 			</div>
 		</div>
 		<div class="columns">
@@ -60,14 +75,20 @@
 		</div>
 		<div class="columns is-hidden-mobile has-text-centered">
 			<div class="column">
-				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
+				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}"
+				   class="button is-primary {{ !$onsite->available ? 'is-disabled' : '' }}"
+				>
 					@lang('payment.select-product-onsite-button-label')
 				</a>
+				<p class="metadata has-text-centered">Pozostało {{ $onsite->quantity }} miejsc</p>
 			</div>
 			<div class="column">
-				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
+				<a href="{{route('payment-personal-data', 'wnl-online')}}"
+				   class="button is-primary is-outlined {{ !$online->available ? 'is-disabled' : '' }}"
+				>
 					@lang('payment.select-product-online-button-label')
 				</a>
+				<p class="metadata has-text-centered">Pozostało {{ $online->quantity }} miejsc</p>
 			</div>
 		</div>
 	</div>

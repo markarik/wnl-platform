@@ -9,10 +9,9 @@ const handshake = new Postmate.Model({
 
 handshake.then(parent => {
 	parent.emit('loaded', true)
-});
+})
 
 Reveal.initialize({
-	controls: false,
 	embedded: true,
 	slideNumber: true,
 	overview: false,

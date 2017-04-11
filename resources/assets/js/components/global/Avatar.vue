@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass]">
-		<img class="wnl-avatar-custom" v-if="isCustom">
-		<div class="wnl-avatar-automatic" v-else>{{ initials }}</div>
+		<img :title="usernameToUse" class="wnl-avatar-custom" v-if="isCustom">
+		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 	</div>
 </template>
 <style lang="sass">
@@ -11,9 +11,9 @@
 	+rounded-square-standard-sizes('avatar')
 
 	// Variables
-	$avatars-colors-list: #1abc9c, #2ecc71, #3498db, #9b59b6, #34495e, #16a085, #27ae60, #2980b9, #8e44ad, #2c3e50, #f1c40f, #e67e22, #e74c3c, #95a5a6, #f39c12, #d35400, #c0392b, #bdc3c7, #7f8c8d
+	$avatars-colors-list: #1abc9c, #2ecc71, #3498db, #9b59b6, #34495e, #16a085, #27ae60, #2980b9, #8e44ad, #2c3e50, #f1c40f, #e67e22, #e74c3c, #f39c12, #d35400, #c0392b
 
-	@for $i from 1 to 19
+	@for $i from 1 to 16
 		.wnl-avatar-color-#{$i}
 			background-color: nth($avatars-colors-list, $i)
 
@@ -44,11 +44,11 @@
 				return `wnl-avatar-${size}`
 			},
 			initials() {
-				return getInitials(this.username)
+				return getInitials(this.usernameToUse)
 			},
 			colorClass() {
 				if (!this.isCustom) {
-					let colorPosition = (this.initials.charCodeAt(0) - 65) % 19 + 1
+					let colorPosition = (this.initials.charCodeAt(0) - 65) % 16 + 1
 					return `wnl-avatar-color-${colorPosition}`
 				}
 				return ''

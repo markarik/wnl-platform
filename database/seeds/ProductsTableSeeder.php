@@ -12,17 +12,19 @@ class ProductsTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('products')->insert([
-			'name'     => 'Kurs internetowy + warsztaty',
-			'price'    => 2200.00,
-			'slug'     => 'wnl-online-onsite',
-			'quantity' => 198,
+			'name'         => 'Kurs stacjonarny',
+			'invoice_name' => 'Dostęp do platformy e-learningowej od 17 czerwca 2017r. do 31 października 2017r., oraz udział w 6 spotkaniach warsztatowych w ramach 1 edycji kursu "Więcej niż LEK", przygotowującego do Lekarskiego Egzaminu Końcowego',
+			'price'        => 2200.00,
+			'slug'         => 'wnl-online-onsite',
+			'quantity'     => 198,
 		]);
 
 		DB::table('products')->insert([
-			'name'     => 'Kurs internetowy',
-			'price'    => 1500.00,
-			'slug'     => 'wnl-online',
-			'quantity' => 97,
+			'name'         => 'Kurs internetowy',
+			'invoice_name' => 'Dostęp do platformy e-learningowej od 17 czerwca 2017r. do 31 października 2017r. w ramach 1 edycji kursu "Więcej niż LEK", przygotowującego do Lekarskiego Egzaminu Końcowego',
+			'price'        => 1500.00,
+			'slug'         => 'wnl-online',
+			'quantity'     => 97,
 		]);
 	}
 }

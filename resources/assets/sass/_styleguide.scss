@@ -38,6 +38,12 @@ h5 {
 	text-transform: uppercase;
 }
 
+.metadata {
+	text-transform: uppercase;
+	font-size: $font-size-minus-2;
+	font-weight: $font-weight-black;
+}
+
 .big {
 	font-size: $font-size-plus-1;
 	line-height: $line-height-plus;
@@ -90,6 +96,7 @@ a.is-active {
 	line-height: 1.5em;
 	max-width: 90%;
 	padding: 0.5em 1.25em;
+	text-align: center;
 	text-transform: uppercase;
 	transition: background $transition-length-base, border $transition-length-base;
 
@@ -132,9 +139,17 @@ a.is-active {
 			color: $color-white;
 		}
 	}
+
+	&.is-wide {
+		display: inline-block;
+		max-width: 100%;
+		text-align: center;
+		width: 100%;
+	}
 }
 
-.is-wide {
+.is-full-width {
+	max-width: 100%;
 	width: 100%;
 }
 

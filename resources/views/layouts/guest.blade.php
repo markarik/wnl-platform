@@ -10,6 +10,8 @@
 
 		<title>@lang('common.app-title')</title>
 
+		<link rel="icon" href="{{ url('favicon.png') }}">
+
 		<!-- Styles -->
 		<link href="/css/app.css" rel="stylesheet">
 
@@ -19,21 +21,52 @@
 					'csrfToken' => csrf_token(),
 			]); ?>
 		</script>
+		@include('tracking')
 	</head>
 	<body data-base="{{ env('APP_URL') }}">
 		<div id="app">
 			<nav class="nav has-shadow">
 				<div class="container">
 					<div class="nav-left">
-						<a class="nav-item" href="{{ route('home') }}">
+						<a class="nav-item" href="https://wiecejnizlek.pl">
 							<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
 						</a>
 					</div>
 
-					<div class="nav-right">
+					<span class="nav-toggle">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+
+					<div class="nav-right nav-menu">
+						<form method="post" action="/logout" id="logout-form">
+							{{ csrf_field() }}
+						</form>
 						<a href="@lang('common.course-website-link')" class="nav-item">
 							@lang('payment.back-to-website')
 						</a>
+						@if (Auth::check())
+							<a href="{{url('app/myself/orders')}}" class="nav-item">
+								Twoje zamówienia
+							</a>
+							<a href="#" class="nav-item logout-link">
+								Wyloguj się
+							</a>
+						@else
+							@if (env('APP_ENV') !== 'demo')
+								<a href="{{url('payment/select-product')}}" class="nav-item">
+									Zapisz się na kurs
+								</a>
+							@else
+								<a href="https://platforma.wiecejnizlek.pl/payment/select-product" class="nav-item">
+									Zapisz się na kurs
+								</a>
+							@endif
+							<a href="{{url('login')}}" class="nav-item">
+								Zaloguj się
+							</a>
+						@endif
 					</div>
 				</div>
 			</nav>
@@ -81,6 +114,7 @@
 			</div>
 		</div>
 		<!-- Scripts -->
+		<script src="/js/guest.js"></script>
 		@yield('scripts')
 	</body>
 </html>

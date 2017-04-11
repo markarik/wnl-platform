@@ -1,28 +1,36 @@
 <template>
 	<!-- Breadcrumbs -->
 	<div class="wnl-sidenav">
+
 		<ul class="breadcrumbs" v-if="breadcrumbs">
 			<wnl-sidenav-item v-for="breadcrumb in breadcrumbs"
 				:itemClass="breadcrumb.itemClass"
 				:to="breadcrumb.to"
 				:isDisabled="breadcrumb.isDisabled"
 				:method="breadcrumb.method"
+				:iconClass="breadcrumb.iconClass"
+				:iconTitle="breadcrumb.iconTitle"
 			>
 				{{breadcrumb.text}}
 			</wnl-sidenav-item>
 		</ul>
 
 		<!-- Items -->
-		<ul class="items" v-if="items">
-			<wnl-sidenav-item v-for="item in items"
-				:itemClass="item.itemClass"
-				:to="item.to"
-				:isDisabled="item.isDisabled"
-				:method="item.method"
-			>
-				{{item.text}}
-			</wnl-sidenav-item>
-		</ul>
+		<div class="box">
+			<ul class="items" v-if="items">
+				<li class="item heading small" v-if="itemsHeading">{{itemsHeading}}</li>
+				<wnl-sidenav-item v-for="item in items"
+					:itemClass="item.itemClass"
+					:to="item.to"
+					:isDisabled="item.isDisabled"
+					:method="item.method"
+					:iconClass="item.iconClass"
+					:iconTitle="item.iconTitle"
+				>
+					{{item.text}}
+				</wnl-sidenav-item>
+			</ul>
+		</div>
 	</div>
 
 </template>
@@ -31,12 +39,13 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav
-		max-width: 250px
+		max-width: 280px
 
 	.breadcrumbs
-		border-bottom: $border-light-gray
 		font-size: $font-size-minus-1
-		margin-bottom: 10px
+		font-weight: $font-weight-bold
+		margin-bottom: $margin-base
+		text-transform: uppercase
 
 		.small
 			font-size: $font-size-minus-2
@@ -47,10 +56,19 @@
 	.items
 
 		.item
-			padding: 2px 0
+			padding: $margin-tiny 0
+
+			&.with-border
+				padding: $margin-base 0 $margin-tiny
+
+				&:first-child
+					padding: $margin-tiny 0
 
 		.heading
 			padding-top: 10px
+
+			&:first-child
+				padding: 0
 
 		.small
 			font-size: $font-size-minus-1
@@ -59,7 +77,7 @@
 			font-size: $font-size-plus-1
 
 		.subitem
-			padding: 5px 0 5px 10px
+			padding: 5px 0 5px 15px
 
 		.disabled
 			color: $color-inactive-gray
@@ -78,7 +96,7 @@
 	import SidenavItem from 'js/components/global/SidenavItem'
 
 	export default {
-		props: ['breadcrumbs', 'items'],
+		props: ['breadcrumbs', 'items', 'itemsHeading'],
 		components: {
 			'wnl-sidenav-item': SidenavItem,
 		}

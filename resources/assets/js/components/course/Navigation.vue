@@ -1,6 +1,6 @@
 <template>
 	<aside class="wnl-sidenav wnl-left-content">
-		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items"></wnl-sidenav>
+		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading"></wnl-sidenav>
 	</aside>
 </template>
 
@@ -14,7 +14,7 @@
 		name: 'Navigation',
 		props: ['context', 'isLesson'],
 		computed: {
-			...mapGetters(['courseName', 'courseGroups', 'courseStructure', 'progressCourse']),
+			...mapGetters(['courseName', 'courseGroups', 'courseStructure', 'progressCourse', 'getLesson']),
 			isStructureEmpty() {
 				return typeof this.courseStructure !== 'object' || this.courseStructure.length === 0
 			},
@@ -22,17 +22,16 @@
 				return this.progressCourse(this.context.courseId)
 			},
 			breadcrumbs() {
-				let breadcrumbs = []
+				let breadcrumbs = [], courseItem
 
 				breadcrumbs.push(this.getCourseItem())
 
-				if (this.isLesson) {
-					let lesson = this.courseStructure[resource('lessons')][this.context.lessonId]
-
-					breadcrumbs.push(this.getLessonItem(lesson, false))
-				}
-
 				return breadcrumbs
+			},
+			itemsHeading() {
+				if (this.isLesson) {
+					return this.getLesson(this.context.lessonId).name
+				}
 			},
 			items() {
 				if (this.isLesson) {
@@ -106,7 +105,16 @@
 
 				return navigation
 			},
-			composeItem(text, itemClass, routeName = '', routeParams = {}, isDisabled = false, method = 'push') {
+			composeItem(
+				text,
+				itemClass,
+				routeName = '',
+				routeParams = {},
+				isDisabled = false,
+				method = 'push',
+				iconClass = '',
+				iconTitle = ''
+			) {
 				let to = {}
 				if (!isDisabled && routeName.length > 0) {
 					to = {
@@ -115,16 +123,20 @@
 					}
 				}
 
-				return { text, itemClass, to, isDisabled, method }
+				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle }
 			},
 			getCourseItem() {
 				return this.composeItem(
-					this.courseName,
-					'',
+					'Plan lekcji',
+					'has-icon',
 					resource('courses'),
 					{
 						courseId: this.context.courseId,
-					}
+					},
+					false,
+					'push',
+					'fa-home',
+					'Strona główna kursu'
 				)
 			},
 			getGroupItem(group) {
@@ -134,7 +146,7 @@
 				)
 			},
 			getLessonItem(lesson, asTodo = true) {
-				let cssClass = ''
+				let cssClass = '', iconClass = '', iconTitle = ''
 
 				if (asTodo) {
 					cssClass += 'todo'
@@ -142,6 +154,10 @@
 					if (this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
 						cssClass = `${cssClass} ${this.courseProgress.lessons[lesson.id].status}`
 					}
+				} else {
+					cssClass += 'has-icon'
+					iconClass = 'fa-graduation-cap'
+					iconTitle = 'Obecna lekcja'
 				}
 
 				return this.composeItem(
@@ -152,26 +168,48 @@
 						courseId: lesson[resource('editions')],
 						lessonId: lesson.id,
 					},
-					!lesson.isAvailable
+					!lesson.isAvailable,
+					'push',
+					iconClass,
+					iconTitle
 				)
 
 			},
 			getScreenItem(screen) {
+				let itemClass = '', iconClass = '', iconTitle = ''
+
+				const icons = {
+					'end': 'fa-star',
+					'html': 'fa-file-text-o',
+					'slideshow': 'fa-television',
+					'widget': 'fa-question',
+				}
+
+				if (icons.hasOwnProperty(screen.type)) {
+					itemClass = 'has-icon with-border'
+					iconClass = icons[screen.type]
+					iconTitle = screen.name
+				}
+
 				return this.composeItem(
 					screen.name,
-					'',
+					itemClass,
 					resource('screens'),
 					{
 						courseId: screen[resource('editions')],
 						lessonId: screen[resource('lessons')],
 						screenId: screen.id,
-					}
+					},
+					false,
+					'push',
+					iconClass,
+					iconTitle,
 				)
 			},
 			getSectionItem(section) {
 				return this.composeItem(
 					section.name,
-					'small subitem',
+					'small subitem has-icon',
 					resource('screens'),
 					{
 						courseId: section[resource('editions')],
@@ -180,7 +218,9 @@
 						slide: section.slide,
 					},
 					false,
-					'replace'
+					'replace',
+					'fa-angle-right',
+					section.name
 				)
 			}
 		},

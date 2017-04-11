@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
 	protected $casts = [
-		'paid' => 'boolean',
+		'paid'        => 'boolean',
+		'canceled'    => 'boolean',
+		'canceled_at' => 'date',
 	];
 
 	protected $fillable = [
-		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id',
+		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id', 'canceled', 'canceled_at',
 	];
 
 	protected $guarded = [
@@ -72,5 +75,18 @@ class Order extends Model
 		}
 
 		return $coupon->value;
+	}
+
+	public function cancel()
+	{
+		$this->canceled = true;
+		$this->canceled_at = Carbon::now();
+
+		if (!is_null($this->method)) {
+			$this->product->quantity++;
+			$this->product->save();
+		}
+
+		$this->save();
 	}
 }

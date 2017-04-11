@@ -15,7 +15,7 @@ class EditionsTableSeeder extends Seeder
 		DB::table('editions')->insert([
 			[
 				'course_id'  => 1,
-				'name'       => 'Więcej niż LEK (E1)',
+				'name'       => 'O kursie "Więcej niż LEK"',
 				'start_date' => Carbon::parse('first day of June 2017'),
 			],
 		]);

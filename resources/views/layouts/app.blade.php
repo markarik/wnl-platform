@@ -10,8 +10,11 @@
 
 	<title>@lang('common.app-title')</title>
 
+	<link rel="icon" href="{{ url('favicon.png') }}">
+
 	<!-- Styles -->
-	<link href="/css/app.css" rel="stylesheet">
+	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/emoji.css') }}" rel="stylesheet">
 
 	<!-- Scripts -->
 	<script src="https://use.fontawesome.com/c95376cac6.js" async></script>
@@ -22,10 +25,14 @@
 			'csrfToken' => csrf_token(),
 		]); ?>
 	</script>
+	@include('tracking')
 </head>
 <body data-base="{{env('APP_URL')}}">
 	<div id="app" data-view="@yield('current-view')" class="full-height"></div>
 
+	<form method="post" action="/logout" id="logout-form">
+		{{ csrf_field() }}
+	</form>
 	@include ('footer')
 </body>
 </html>

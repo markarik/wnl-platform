@@ -1,25 +1,19 @@
 <template>
 	<div class="wnl-app-layout">
-		<div class="wnl-app-layout-left">
+		<div class="wnl-left wnl-app-layout-left">
 			<aside class="wnl-sidenav wnl-left-content">
-				<ul class="wnl-sidenav-items">
-					<li class="wnl-sidenav-item">
-						<router-link :to="{name: 'my-orders'}">Twoje zamówienia</router-link>
-					</li>
-					<li class="wnl-sidenav-item" v-if="isProduction">
-						<router-link :to="{name: 'countdown'}">Kiedy kurs?</router-link>
-					</li>
-				</ul>
+				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>
 		</div>
-		<div class="wnl-app-layout-main">
+		<div class="wnl-middle wnl-app-layout-main">
 			<router-view></router-view>
 		</div>
-		<div class="wnl-app-layout-right"></div>
+		<div class="wnl-right wnl-app-layout-right"></div>
 	</div>
 </template>
 
 <script>
+	import Sidenav from 'js/components/global/Sidenav.vue'
 	import { isProduction } from 'js/utils/env'
 
 	export default {
@@ -28,6 +22,39 @@
 			isProduction() {
 				return isProduction()
 			},
+			items() {
+				let items = [
+					{
+						text: 'Twoje zamówienia',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-orders',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-shopping-cart',
+						iconTitle: 'Twoje zamówienia',
+					},
+				]
+
+				if (this.isProduction) {
+					items.push({
+						text: 'Kiedy kurs?',
+						itemClass: 'has-icon',
+						to: {
+							name: 'countdown',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-question',
+						iconTitle: 'Kiedy kurs?',
+					})
+				}
+
+				return items
+			},
 		},
 		methods: {
 			goToDefaultRoute() {
@@ -35,6 +62,9 @@
 					this.$router.replace({ name: 'my-orders' })
 				}
 			}
+		},
+		components: {
+			'wnl-sidenav': Sidenav,
 		},
 		// mounted() { this.goToDefaultRoute() }
 	}

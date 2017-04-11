@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from 'store' // LocalStorage
+import _ from 'lodash'
 import * as types from '../mutations-types'
 import { getApiUrl } from 'js/utils/env'
 import { set } from 'vue'
@@ -34,6 +35,10 @@ function saveLessonProgress(payload) {
 	store.set(getLessonStoreKey(payload.courseId, payload.lessonId), payload.route)
 }
 
+function resetLessonProgress(payload) {
+	store.remove(getLessonStoreKey(payload.courseId, payload.lessonId))
+}
+
 // API functions
 function getUserProgressForCourse(courseId) {
 	// return axios.get(getApiUrl('courses/${courseId}/user-progress/${userId}'));
@@ -57,6 +62,9 @@ const getters = {
 			return state.courses[courseId]
 		}
 	},
+	progressWasCourseStarted: (state, getters) => (courseId) => {
+		return !_.isEmpty(getters.progressCourse(courseId).lessons)
+	},
 	progressGetSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
 		return store.get(getLessonStoreKey(courseId, lessonId))
@@ -78,9 +86,9 @@ const getters = {
 		}
 		return 0
 	},
-	progressIsLessonComplete: (state) => (courseId, lessonId) => {
+	progressIsLessonComplete: (state, getters) => (courseId, lessonId) => {
 		return getters.progressWasLessonStarted(courseId, lessonId) &&
-		state.courses[courseId][lessonId].status === STATUS_COMPLETE
+			state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE
 	},
 	progressGetCompleteLessons: (state, getters) => (courseId) => {
 		let lesson, lessons = []
@@ -113,6 +121,7 @@ const mutations = {
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
 		saveCourseProgress(payload, STATUS_COMPLETE)
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
+		resetLessonProgress(payload)
 	}
 }
 
@@ -148,8 +157,12 @@ const actions = {
 			commit(types.PROGRESS_START_LESSON, payload)
 		}
 	},
-	progressUpdateLesson({commit}, payload) {
-		commit(types.PROGRESS_UPDATE_LESSON, payload)
+	progressUpdateLesson({commit, getters}, payload) {
+		if (getters.progressWasLessonStarted(payload.courseId, payload.lessonId)) {
+			commit(types.PROGRESS_UPDATE_LESSON, payload)
+		} else {
+			commit(types.PROGRESS_START_LESSON, payload)
+		}
 	},
 	progressCompleteLesson({commit}, payload) {
 		if (getters.progressIsLessonInProgress(payload.courseId, payload.lessonId)) {

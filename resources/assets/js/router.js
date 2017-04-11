@@ -33,6 +33,13 @@ if (isProduction()) {
 			redirect: '/app/myself/countdown',
 		},
 		{
+			name: 'logout',
+			path: '/logout',
+			beforeEnter: () => {
+				document.getElementById('logout-form').submit()
+			}
+		},
+		{
 			path: '*',
 			redirect: '/app/myself/countdown',
 		},
@@ -83,6 +90,13 @@ if (isProduction()) {
 			name: 'dashboard',
 			path: '/app',
 			redirect: { name: 'courses', params: { courseId: 1 } }
+		},
+		{
+			name: 'logout',
+			path: '/logout',
+			beforeEnter: () => {
+				document.getElementById('logout-form').submit()
+			}
 		},
 		{
 			path: '*',

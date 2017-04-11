@@ -1,11 +1,30 @@
 <template>
 	<div class="wnl-lesson">
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item metadata">
+					{{lessonName}}
+				</div>
+			</div>
+			<div class="level-right">
+				<div class="level-item small">
+					Lekcja {{lessonId}}
+				</div>
+			</div>
+		</div>
 		<keep-alive>
 			<router-view></router-view>
 		</keep-alive>
-		<wnl-qna :lessonId="lessonId"></wnl-qna>
+		<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
 	</div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.wnl-screen-title
+		padding-bottom: $margin-base
+</style>
 
 <script>
 	import { mapGetters, mapActions } from 'vuex'
@@ -19,7 +38,11 @@
 			...mapGetters([
 				'getScreens',
 				'progressGetSavedLesson',
+				'getLesson',
 			]),
+			lessonName() {
+				return this.getLesson(this.lessonId).name
+			},
 			firstScreenId() {
 				if (typeof this.getScreens(this.lessonId) !== 'undefined') {
 					return parseInt(this.getScreens(this.lessonId)[0])
@@ -50,7 +73,6 @@
 				'progressCompleteLesson',
 			]),
 			startLesson() {
-				console.log(`Starting lesson ${this.lessonId}`)
 				this.progressStartLesson(this.lessonProgressContext)
 				this.goToDefaultScreenIfNone()
 			},
@@ -71,10 +93,10 @@
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
 					if (parseInt(this.screenId) === this.lastScreenId) {
-						console.log(`Marking lesson ${this.lessonId} as complete`)
 						this.progressCompleteLesson(this.lessonProgressContext)
+					} else {
+						this.progressUpdateLesson(this.lessonProgressContext)
 					}
-					this.progressUpdateLesson(this.lessonProgressContext)
 				}
 			},
 		},

@@ -6,9 +6,16 @@ namespace Lib\Invoice;
 
 use App\Models\Order;
 use App\Models\User;
-use Facades\Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\PDF;
+use Dompdf\Dompdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Exception;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Http\Response;
+
 
 class Invoice
 {
@@ -51,7 +58,7 @@ class Invoice
 
 		$data['ordersList'] = [
 			[
-				'product_name' => $order->product->name,
+				'product_name' => $order->product->invoice_name,
 				'unit' => 'szt.',
 				'amount' => 1,
 			],
@@ -69,12 +76,12 @@ class Invoice
 
 		// Calculate netto, brutto, VAT
 		$vatValue = $this->getVatValue();
-		$data['ordersList'][0]['priceGross'] = number_format($totalPrice, 2);
-		$data['ordersList'][0]['priceNet'] = number_format($totalPrice / (1 + $vatValue), 2);
+		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
+		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
 
 		$data['summary'] = [
-			'total' => number_format($totalPrice, 2),
+			'total' => $this->price($totalPrice),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -109,7 +116,7 @@ class Invoice
 
 		$data['ordersList'] = [
 			[
-				'product_name' => $order->product->name,
+				'product_name' => $order->product->invoice_name,
 				'unit' => 'szt.',
 				'amount' => 1,
 			],
@@ -127,13 +134,18 @@ class Invoice
 
 		// Calculate netto, brutto, VAT
 		$vatValue = $this->getVatValue();
-		$data['ordersList'][0]['priceGross'] = number_format($totalPrice, 2);
-		$data['ordersList'][0]['priceNet'] = number_format($totalPrice / (1 + $vatValue), 2);
+		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
+		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
 		$data['ordersList'][0]['vat'] = $this->getVatString($vatValue);
-		$data['ordersList'][0]['vatValue'] = number_format($vatValue * $totalPrice / (1 + $vatValue));
+
+		if ($vatValue === self::VAT_ZERO) {
+			$data['ordersList'][0]['vatValue'] = '-';
+		} else {
+			$data['ordersList'][0]['vatValue'] = $this->price($vatValue * $totalPrice / (1 + $vatValue)) . 'zł';
+		}
 
 		$data['summary'] = [
-			'total' => number_format($totalPrice, 2),
+			'total' => $this->price($totalPrice),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -178,11 +190,21 @@ class Invoice
 	{
 		$view = view($viewName, $data);
 
-		$html = $view->render();
+		// Best hack ever! xD
+		$html = iconv('UTF-8', 'UTF-8', $view->render());
 
-		$pdf = PDF::loadHtml($html)->setPaper('a4');
+		$config = app(ConfigRepository::class);
+		$files = app(Filesystem::class);
+		$view = app(ViewFactory::class);
+		$options = app()->make('dompdf.options');
+		$domPdf = new Dompdf($options);
+		$domPdf->setBasePath(realpath(base_path('public')));
 
-		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->stream());
+		$pdf = new PDF($domPdf, $config, $files, $view);
+		$pdf->loadHtml($html);
+		$pdf->setPaper('a4');
+
+		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->output());
 	}
 
 	protected function nextNumberInSeries($series)
@@ -196,7 +218,7 @@ class Invoice
 			return 1;
 		}
 
-		return $dbResult;
+		return $dbResult + 1;
 	}
 
 	private function getVatValue() {
@@ -220,5 +242,9 @@ class Invoice
 		})->get();
 
 		return $orders->sum('total_with_coupon');
+	}
+
+	private function price($number) {
+		return number_format($number, 2, ',', ' ');
 	}
 }

@@ -3,7 +3,7 @@
 		<wnl-users-widget :users="users"></wnl-users-widget>
 		<div class="wnl-chat-messages">
 			<div class="wnl-chat-content">
-				<div v-if="loaded">
+				<div class="wnl-chat-content-inside" v-if="loaded">
 					<wnl-message v-for="(message, index) in messages"
 						:showAuthor="isAuthorUnique[index]"
 						:username="message.username"
@@ -11,9 +11,7 @@
 							{{ message.content }}
 					</wnl-message>
 				</div>
-				<div v-else>
-					Ładuję wiadomości...
-				</div>
+				<wnl-text-loader v-else>Ładuję wiadomości...</wnl-text-loader>
 			</div>
 		</div>
 		<div class="wnl-chat-form">
@@ -28,10 +26,13 @@
 		display: flex
 		flex: 1
 		flex-direction: column
-		justify-content: flex-end
+		justify-content: space-between
 		padding-right: 20px
 
 	.wnl-chat-messages
+		display: flex
+		flex: 1 1 auto
+		flex-direction: column-reverse
 		overflow-y: auto
 
 	.wnl-chat-form
@@ -56,18 +57,15 @@
 				socket: {}
 			}
 		},
-		components: {
-			'wnl-message': Message,
-			'wnl-message-form': MessageForm,
-			'wnl-users-widget': UsersWidget,
-		},
 		computed: {
 			isAuthorUnique() {
 				return this.messages.map((message, index) => {
 					if (index === 0) return true
 
-					let previous = index - 1
-					return message.username !== this.messages[previous].username
+					let previous = index - 1,
+						halfHourInMs = 1000 * 60 * 30
+					return message.username !== this.messages[previous].username ||
+						message.time - this.messages[previous].time > halfHourInMs
 				})
 			},
 			container() {
@@ -75,6 +73,10 @@
 			},
 			content() {
 				return this.$el.getElementsByClassName('wnl-chat-content')[0]
+			},
+			contentInside() {
+				// In case you wonder - thank Firefox :/
+				return this.$el.getElementsByClassName('wnl-chat-content-inside')[0]
 			},
 			inputId() {
 				return `wnl-chat-form-${this.room}`
@@ -90,7 +92,6 @@
 				})
 				this.socket.on('join-room-success', (data) => {
 					if (!this.loaded) {
-						this.setListeners(this.socket)
 						this.messages = data.messages
 						this.users    = data.users
 						this.loaded   = true
@@ -131,19 +132,25 @@
 				})
 			},
 			scrollToBottom() {
-				this.container.scrollTop = this.content.offsetHeight
+				this.container.scrollTop = this.contentInside.offsetHeight
 			}
 		},
-		mounted() {
+		created() {
 			socket.connect().then((socket) => {
 				this.socket = socket
 				this.joinRoom()
+				this.setListeners(this.socket)
 			}).catch(console.log.bind(console))
 		},
 		beforeDestroy() {
 			socket.disconnect().then(() => {
 				return true
 			}).catch(console.log.bind(console))
+		},
+		components: {
+			'wnl-message': Message,
+			'wnl-message-form': MessageForm,
+			'wnl-users-widget': UsersWidget,
 		},
 		watch: {
 			'room' (newRoom, oldRoom) {

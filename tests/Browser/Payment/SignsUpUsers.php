@@ -27,7 +27,7 @@ trait SignsUpUsers
 	{
 		$data = [
 			'password'         => $faker->password,
-			'email'            => $faker->email,
+			'email'            => str_random() . '@bethink.pl',
 			'firstName'        => $faker->firstName,
 			'lastName'         => $faker->lastName,
 			'address'          => $faker->streetAddress,

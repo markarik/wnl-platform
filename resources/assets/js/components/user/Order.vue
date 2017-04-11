@@ -195,7 +195,8 @@
 				axios.get(getApiUrl(`orders/${this.order.id}`))
 						.then((response) => {
 							if (response.data.paid) {
-								this.order.paid = true
+								this.order.paid        = true
+								this.order.paid_amount = response.data.paid_amount
 							} else {
 								setTimeout(this.checkStatus, 5000)
 							}

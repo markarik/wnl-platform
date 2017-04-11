@@ -21,6 +21,6 @@
 				</div>
 			</div>
 		</div>
-		<script src="{{asset('/js/slideshow.js')}}"></script>
+		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>
 </html>

@@ -1,5 +1,7 @@
 window.$ = window.jQuery = require('jquery');
 
+$(window).on('unload', function(){});
+
 $(function() {
 	var $navToggle = $('.nav-toggle'),
 		$navMenu = $('.nav-menu'),

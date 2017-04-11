@@ -13,7 +13,7 @@
 		<link rel="icon" href="{{ url('favicon.png') }}">
 
 		<!-- Styles -->
-		<link href="/css/app.css" rel="stylesheet">
+		<link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
 		<!-- Scripts -->
 		<script>
@@ -108,7 +108,7 @@
 			</div>
 		</div>
 		<!-- Scripts -->
-		<script src="/js/guest.js"></script>
+		<script src="{{ mix('js/guest.js') }}"></script>
 		@yield('scripts')
 	</body>
 </html>

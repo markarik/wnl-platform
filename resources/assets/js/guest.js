@@ -13,7 +13,8 @@ $(function() {
 		$touCloseModalButton = $touModal.find('.delete'),
 		$privacyModal = $modalsContainer.find('#privacy-policy-modal'),
 		$privacyOpenModalLinks = $('.privacy-policy-open-modal-link'),
-		$privacyCloseModalButton = $privacyModal.find('.delete')
+		$privacyCloseModalButton = $privacyModal.find('.delete'),
+		$expandable = $('.expandable')
 
 	$navToggle.click((event) => {
 		$navToggle.toggleClass('is-active')
@@ -43,6 +44,12 @@ $(function() {
 	$form.on('submit', (event) => {
 		$submit.addClass('is-loading')
 	})
+
+	if ($expandable.length > 0) {
+		$expandable.find('.expand').on('mousedown touchstart', function (event) {
+			$expandable.find('.expandable-content').slideDown()
+		})
+	}
 
 	if ($logoutLink.length) {
 		$logoutLink.click((event) => {

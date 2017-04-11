@@ -76,14 +76,6 @@
 					</form>
 				</div>
 				<div class="column">
-					<form action="{{route('payment-confirm-order-post')}}" method="post">
-						{!! csrf_field() !!}
-						<input type="hidden" name="method" value="instalments"/>
-
-						<button class="button is-primary is-outlined">@lang('payment.confirm-method-instalments-button')</button>
-					</form>
-				</div>
-				<div class="column">
 					<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form">
 						<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
 						<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
@@ -102,9 +94,50 @@
 						<input type="hidden" name="p24_url_status" value="{{ route('payment-status-hook')  }} "/>
 						<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
 						<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
-
 					</form>
 					<button class="button is-primary p24-submit">@lang('payment.confirm-method-online-payment-button')</button>
+				</div>
+			</div>
+		</section>
+		<section class="has-text-centered">
+			<div class="expandable">
+				<div class="margin vertical">
+					<a class="link expand">Płatność na raty</a>
+				</div>
+				<div class="expandable-content box">
+					<h4>Płatność w 3 ratach</h4>
+					<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
+					<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do 7 dni od zamówienia</strong> i kolejnych do <strong>15 czerwca</strong> i <strong>15 lipca</strong>.</p>
+
+					@php $instalment = $instalments[intval($order->total_with_coupon)] @endphp
+					<table class="table is-bordered margin vertical">
+						<tr>
+							<th>Twój wariant kursu</th>
+							<th>1. rata<br>(do 7 dni od zamówienia)</th>
+							<th>2. rata<br>(do 15 czerwca 2017r.)</th>
+							<th>3. rata<br>(do 15 lipca 2017r.)</th>
+							<th>Razem</th>
+						</tr>
+						<tr>
+							<td>{{ $order->product->name }}</td>
+							<td>{{ $instalment['1'] }}zł</td>
+							<td>{{ $instalment['2'] }}zł</td>
+							<td>{{ $instalment['3'] }}zł</td>
+							<td>{{ $order->total_with_coupon }}zł</td>
+						</tr>
+					</table>
+
+					<p class="margin vertical has-text-centered">
+						Więcej informacji na temat rat znajdziesz w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a> oraz w <a class="tou-open-modal-link">Regulaminie</a>.
+					</p>
+
+					<form action="{{route('payment-confirm-order-post')}}" method="post">
+						{!! csrf_field() !!}
+						<input type="hidden" name="method" value="instalments"/>
+						<button type="submit" class="button margin top">
+							@lang('payment.confirm-method-instalments-button')
+						</button>
+					</form>
 				</div>
 			</div>
 		</section>

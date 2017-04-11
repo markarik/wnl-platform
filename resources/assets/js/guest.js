@@ -16,6 +16,8 @@ $(function() {
 		$privacyCloseModalButton = $privacyModal.find('.delete'),
 		$expandable = $('.expandable')
 
+	$buttons.removeClass('is-disabled').removeClass('is-loading')
+
 	$navToggle.click((event) => {
 		$navToggle.toggleClass('is-active')
 		$navMenu.toggleClass('is-active')

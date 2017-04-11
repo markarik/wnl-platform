@@ -18,26 +18,21 @@
 		</a>
 	</div>
 <hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
-	<h3>Uruchomiliśmy płatność na raty</h3>
-	<p>Jedno z Waszych najczęstszych pytań dotyczyło rozłożenia płatności w czasie. Od dziś jest już taka możliwość!</p> <p>Niezależnie od wybranego wariantu i całościowej kwoty, płatność rozkładana jest na 3 raty:</p>
+	<h3>Uruchomiliśmy płatność rozłożoną w czasie</h3>
+	<p>Jedno z Waszych najczęstszych pytań dotyczyło rozłożenia płatności w czasie. Od dziś jest już taka możliwość!</p> <p>Niezależnie od wybranego wariantu i całościowej kwoty, płatność rozkładana jest na 3 części:</p>
 	<ol>
 		<li>Pierwsza płatna do 7 dni od złożenia zamówienia</li>
 		<li>Druga płatna do 15 czerwca 2017r.</li>
 		<li>Trzecia płatna do 15 lipca 2017r.</li>
 	</ol>
 	<p>Dokładne kwoty znajdziecie na stronie <a href="https://wiecejnizlek.pl/cennik">Cennik</a>.</p>
-	<p>Mamy też odpowiedzi na dodatkowe pytania, które padły w kontekście rat:</p>
+	<p>Mamy też odpowiedzi na dodatkowe pytania, które padły w kontekście nowej formy płatności:</p>
 	<h4>Jak można skorzystać z nowego sposobu płatności?</h4>
-	<p>Przy składaniu zamówienia, w ostatnim kroku Potwierdzenie płatności, należy kliknąć na "Płatność na raty". Po upewnieniu się, że kwoty i terminy odpowiadają zamówieniu, możecie potwierdzić zakup klikając na "Kupuję i płacę na raty".</p>
+	<p>Opcja ta dostępna jest w ostatnim kroku - "Potwierdzenie zamówienia". Dokładną instrukcję również znajdziecie w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a>.</p>
 
-	<h4>Czy można zmienić metodę płatności z przelewu bankowego na raty?</h4>
+	<h4>Czy można zmienić metodę płatności?</h4>
 	<p>Jak najbardziej! Jeżeli Twoje zamówienie nie zostało jeszcze opłacone, możesz zmienić metodę płatności poprzez stronę <a href="https://platforma.wiecejnizlek.pl/app/myself/orders">Twoje zamówienia</a>.</p>
 
-	<div style="text-align: center; margin: 10px auto 20px;">
-		<a class="button" href="https://platforma.wiecejnizlek.pl/payment/select-product">
-			Zapisz się i zapłać na raty
-		</a>
-	</div>
 <hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
 	<p>Dziękujemy Wam raz jeszcze za wsparcie! Jeśli chcecie podzielić się wątpliwościami, uwagami, czy po prostu pogadać - piszcie śmiało na <a href="https://facebook.com/wiecejnizlek">facebooku</a> lub na info@wiecejnizlek.pl</p>
 

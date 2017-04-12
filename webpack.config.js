@@ -347,17 +347,17 @@ if (Mix.extract) {
 }
 
 
-if (Mix.inProduction) {
-	module.exports.plugins.push(
-		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: '"production"'
-			}
-		}),
-
-		new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
-	);
-}
+// if (Mix.inProduction) {
+// 	module.exports.plugins.push(
+// 		new webpack.DefinePlugin({
+// 			'process.env': {
+// 				NODE_ENV: '"production"'
+// 			}
+// 		}),
+//
+// 		new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
+// 	);
+// }
 
 
 module.exports.plugins.push(

@@ -34,6 +34,10 @@ function saveLessonProgress(payload) {
 	store.set(getLessonStoreKey(payload.courseId, payload.lessonId), payload.route)
 }
 
+function resetLessonProgress(payload) {
+	store.remove(getLessonStoreKey(payload.courseId, payload.lessonId))
+}
+
 // API functions
 function getUserProgressForCourse(courseId) {
 	// return axios.get(getApiUrl('courses/${courseId}/user-progress/${userId}'));
@@ -113,6 +117,7 @@ const mutations = {
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
 		saveCourseProgress(payload, STATUS_COMPLETE)
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
+		resetLessonProgress(payload)
 	}
 }
 

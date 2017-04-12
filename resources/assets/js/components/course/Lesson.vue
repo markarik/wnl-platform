@@ -94,8 +94,9 @@
 				if (typeof this.screenId !== 'undefined') {
 					if (parseInt(this.screenId) === this.lastScreenId) {
 						this.progressCompleteLesson(this.lessonProgressContext)
+					} else {
+						this.progressUpdateLesson(this.lessonProgressContext)
 					}
-					this.progressUpdateLesson(this.lessonProgressContext)
 				}
 			},
 		},

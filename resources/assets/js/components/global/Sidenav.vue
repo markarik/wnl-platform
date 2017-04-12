@@ -18,6 +18,7 @@
 		<!-- Items -->
 		<div class="box">
 			<ul class="items" v-if="items">
+				<li class="item heading small" v-if="itemsHeading">{{itemsHeading}}</li>
 				<wnl-sidenav-item v-for="item in items"
 					:itemClass="item.itemClass"
 					:to="item.to"
@@ -38,7 +39,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav
-		max-width: 250px
+		max-width: 280px
 
 	.breadcrumbs
 		font-size: $font-size-minus-1
@@ -77,7 +78,7 @@
 			font-size: $font-size-plus-1
 
 		.subitem
-			padding: 5px 0 5px 7px
+			padding: 5px 0 5px 15px
 
 		.disabled
 			color: $color-inactive-gray
@@ -96,7 +97,7 @@
 	import SidenavItem from 'js/components/global/SidenavItem'
 
 	export default {
-		props: ['breadcrumbs', 'items'],
+		props: ['breadcrumbs', 'items', 'itemsHeading'],
 		components: {
 			'wnl-sidenav-item': SidenavItem,
 		}

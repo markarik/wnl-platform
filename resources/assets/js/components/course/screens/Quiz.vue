@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-quiz-question v-for="(question, index) in questions"
+		<wnl-quiz-question v-for="(question, index) in unresolvedQuestions"
 			:answers="question.answers"
 			:index="index"
 			:text="question.text"
@@ -9,7 +9,7 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 
 </style>
 
@@ -92,7 +92,10 @@
 		computed: {
 			total() {
 				return _.size(this.questions)
-			}
+			},
+			unresolvedQuestions() {
+				return this.questions.filter((question) => !question.isResolved)
+			},
 		},
 		components: {
 			'wnl-quiz-question': QuizQuestion,

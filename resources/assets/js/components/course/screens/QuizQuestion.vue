@@ -23,6 +23,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.quiz-answer
+		border-bottom: $border-light-gray
 		cursor: pointer
 		padding: 0.5em
 		margin: 0
@@ -41,6 +42,9 @@
 
 	.is-correct
 		background: $color-green
+
+		&:active, &:hover
+			background: $color-green
 
 	.is-selected
 		background: $color-inactive-gray

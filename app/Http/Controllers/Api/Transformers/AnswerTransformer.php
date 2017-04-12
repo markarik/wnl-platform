@@ -4,9 +4,9 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\Answer;
+use App\Models\QnaAnswer;
 use App\Models\Lesson;
-use App\Models\Question;
+use App\Models\QnaQuestion;
 use League\Fractal\TransformerAbstract;
 
 
@@ -14,7 +14,7 @@ class AnswerTransformer extends TransformerAbstract
 {
 	protected $availableIncludes = ['users'];
 
-	public function transform(Answer $answer)
+	public function transform(QnaAnswer $answer)
 	{
 		$data = [
 			'id'        => $answer->id,
@@ -26,7 +26,7 @@ class AnswerTransformer extends TransformerAbstract
 		return $data;
 	}
 
-	public function includeUsers(Answer $answer)
+	public function includeUsers(QnaAnswer $answer)
 	{
 		$user = $answer->user;
 

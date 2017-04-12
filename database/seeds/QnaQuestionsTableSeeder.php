@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class QuestionsTableSeeder extends Seeder
+class QnaQuestionsTableSeeder extends Seeder
 {
 	/**
 	 * Run the database seeds.
@@ -12,7 +12,7 @@ class QuestionsTableSeeder extends Seeder
 	public function run()
 	{
 		$now = \Carbon\Carbon::now();
-		DB::table('questions')->insert([
+		DB::table('qna_questions')->insert([
 			[
 				'text'       => 'Halo Halo?',
 				'user_id'    => 1,

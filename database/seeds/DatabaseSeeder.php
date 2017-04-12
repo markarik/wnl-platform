@@ -30,11 +30,13 @@ class DatabaseSeeder extends Seeder
 		$this->call(CouponsTableSeeder::class);
 
 		$this->call(TagsTableSeeder::class);
-		$this->call(QuestionsTableSeeder::class);
-		$this->call(AnswersTableSeeder::class);
+		$this->call(QnaQuestionsTableSeeder::class);
+		$this->call(QnaAnswersTableSeeder::class);
 		$this->call(TaggablesTableSeeder::class);
 
 		$this->call(SlideshowSeeder::class);
 //		$this->call(ScreensTableSeeder::class);
+		$this->call(QuizSeeder::class);
+
 	}
 }

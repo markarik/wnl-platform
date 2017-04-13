@@ -30,7 +30,7 @@ class Lesson extends Model
 
 	public function getQuestionsAttribute()
 	{
-		return Question::whereHas('tags', function ($query) {
+		return QnaQuestion::whereHas('tags', function ($query) {
 			$query->whereIn('tags.id', $this->tags->keyBy('id')->keys());
 		})->get();
 	}

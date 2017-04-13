@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Answer extends Model
+class QnaAnswer extends Model
 {
 	protected $fillable = ['text', 'user_id', 'question_id'];
 
 	public function question()
 	{
-		return $this->belongsTo('App\Models\Question');
+		return $this->belongsTo('App\Models\QnaQuestion');
 	}
 
 	public function user()

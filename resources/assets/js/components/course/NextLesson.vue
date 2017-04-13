@@ -69,11 +69,13 @@
 		name: 'NextLesson',
 		props: ['courseId'],
 		computed: {
-			...mapGetters([
+			...mapGetters('course', [
 				'getGroup',
 				'getLessons',
 				'getLesson',
 				'isLessonAvailable',
+			]),
+			...mapGetters([
 				'progressWasLessonStarted',
 				'progressGetFirstLessonIdInProgress',
 			]),

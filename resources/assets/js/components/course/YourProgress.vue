@@ -48,10 +48,10 @@
 	export default {
 		props: ['courseId'],
 		computed: {
-			...mapGetters([
+			...mapGetters('course', [
 				'getAvailableLessons',
-				'progressGetCompleteLessons',
 			]),
+			...mapGetters(['progressGetCompleteLessons']),
 			progressValue() {
 				return this.progressGetCompleteLessons(this.courseId).length
 			},

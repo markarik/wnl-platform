@@ -86,10 +86,10 @@ const getters = {
 		return getters.progressWasLessonStarted(courseId, lessonId) &&
 		state.courses[courseId][lessonId].status === STATUS_COMPLETE
 	},
-	progressGetCompleteLessons: (state, getters) => (courseId) => {
+	progressGetCompleteLessons: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lesson, lessons = []
 		for (const lessonId in state.courses[courseId].lessons) {
-			lesson = getters.getLesson(lessonId)
+			lesson = rootGetters['course/getLesson'](lessonId)
 			if (state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE) {
 				lessons.push(lesson)
 			}

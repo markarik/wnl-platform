@@ -35,11 +35,11 @@
 		name: 'Lesson',
 		props: ['courseId', 'lessonId', 'screenId'],
 		computed: {
-			...mapGetters([
+			...mapGetters('course', [
 				'getScreens',
-				'progressGetSavedLesson',
 				'getLesson',
 			]),
+			...mapGetters(['progressGetSavedLesson']),
 			lessonName() {
 				return this.getLesson(this.lessonId).name
 			},

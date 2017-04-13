@@ -7,7 +7,7 @@ import * as actions from 'js/store/actions'
 import * as getters from 'js/store/getters'
 
 // Modules
-import users from 'js/store/modules/users'
+import currentUser from 'js/store/modules/currentUser'
 import progress from 'js/store/modules/progress'
 import course from 'js/store/modules/course'
 import qna from 'js/store/modules/qna'
@@ -22,7 +22,7 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 	modules: {
-		users,
+		currentUser,
 		progress,
 		course,
 		qna,

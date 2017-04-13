@@ -19,7 +19,7 @@ class ScreensTableSeeder extends Seeder
 			'lesson_id' => 1,
 		]);
 		DB::table('screens')->insert([
-			'type'      => 'html',
+			'type'      => 'quiz',
 			'name'      => 'Pytania kontrolne',
 			'lesson_id' => 1,
 			'meta'      => json_encode([

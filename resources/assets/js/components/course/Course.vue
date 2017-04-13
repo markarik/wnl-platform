@@ -4,11 +4,11 @@
 			<wnl-course-navigation
 				:context="context"
 				:isLesson="isLesson"
-				v-if="courseReady">
+				v-if="ready">
 			</wnl-course-navigation>
 		</div>
 		<div class="wnl-middle wnl-app-layout-main">
-			<router-view v-if="courseReady"></router-view>
+			<router-view v-if="ready"></router-view>
 		</div>
 		<div class="wnl-right wnl-app-layout-right">
 			<wnl-chat :room="chatRoom"></wnl-chat>
@@ -29,7 +29,7 @@
 		name: 'Course',
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
-			...mapGetters(['courseReady', 'courseName', 'courseStructure']),
+			...mapGetters('course', ['ready']),
 			context() {
 				return {
 					courseId: this.courseId,
@@ -57,10 +57,12 @@
 			'wnl-chat': Chat
 		},
 		methods: {
-			...mapActions(['courseSetup'])
+			...mapActions('course', [
+				'setup'
+			])
 		},
 		created() {
-			this.courseSetup(this.courseId)
+			this.setup(this.courseId)
 		}
 	}
 </script>

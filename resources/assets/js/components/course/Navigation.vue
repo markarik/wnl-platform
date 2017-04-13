@@ -20,12 +20,14 @@
 				'structure',
 				'getLesson'
 			]),
-			...mapGetters(['progressCourse']),
+			...mapGetters('progress', {
+				getCourseProgress: 'getCourse'
+			}),
 			isStructureEmpty() {
 				return typeof this.structure !== 'object' || this.structure.length === 0
 			},
 			courseProgress() {
-				return this.progressCourse(this.context.courseId)
+				return this.getCourseProgress(this.context.courseId)
 			},
 			breadcrumbs() {
 				let breadcrumbs = []

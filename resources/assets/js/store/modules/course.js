@@ -65,7 +65,7 @@ const actions = {
 	setup({ commit, dispatch }, courseId) {
 		Promise.all([
 			dispatch('setStructure', courseId),
-			dispatch('progressSetupCourse', courseId, {root: true}),
+			dispatch('progress/setupCourse', courseId, {root: true}),
 		]).then(resolutions => {
 			console.log('Course ready, yay!')
 			commit(types.COURSE_READY)

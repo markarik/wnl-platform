@@ -75,13 +75,13 @@
 				'getLesson',
 				'isLessonAvailable',
 			]),
-			...mapGetters([
-				'progressWasLessonStarted',
-				'progressGetFirstLessonIdInProgress',
+			...mapGetters('progress', [
+				'wasLessonStarted',
+				'getFirstLessonIdInProgress',
 			]),
 			nextLesson() {
 				let lesson = { status: STATUS_NONE },
-					inProgressId = this.progressGetFirstLessonIdInProgress(this.courseId)
+					inProgressId = this.getFirstLessonIdInProgress(this.courseId)
 
 				if (inProgressId > 0) {
 					lesson = this.getLesson(inProgressId)
@@ -89,7 +89,7 @@
 				} else {
 					for (const lessonId in this.getLessons) {
 						if (this.isLessonAvailable(lessonId) &&
-							!this.progressWasLessonStarted(this.courseId, lessonId)
+							!this.wasLessonStarted(this.courseId, lessonId)
 						) {
 							lesson = this.getLesson(lessonId)
 							lesson.status = STATUS_AVAILABLE

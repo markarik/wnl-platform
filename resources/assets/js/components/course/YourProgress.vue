@@ -51,9 +51,11 @@
 			...mapGetters('course', [
 				'getAvailableLessons',
 			]),
-			...mapGetters(['progressGetCompleteLessons']),
+			...mapGetters('progress', [
+				'getCompleteLessons'
+			]),
 			progressValue() {
-				return this.progressGetCompleteLessons(this.courseId).length
+				return this.getCompleteLessons(this.courseId).length
 			},
 			progressMax() {
 				return this.getAvailableLessons.length

@@ -39,7 +39,9 @@
 				'getScreens',
 				'getLesson',
 			]),
-			...mapGetters(['progressGetSavedLesson']),
+			...mapGetters('progress', [
+				'getSavedLesson'
+			]),
 			lessonName() {
 				return this.getLesson(this.lessonId).name
 			},
@@ -67,18 +69,18 @@
 			},
 		},
 		methods: {
-			...mapActions([
-				'progressStartLesson',
-				'progressUpdateLesson',
-				'progressCompleteLesson',
+			...mapActions('progress', [
+				'startLesson',
+				'updateLesson',
+				'completeLesson',
 			]),
-			startLesson() {
-				this.progressStartLesson(this.lessonProgressContext)
+			launchLesson() {
+				this.startLesson(this.lessonProgressContext)
 				this.goToDefaultScreenIfNone()
 			},
 			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
-					let savedRoute = this.progressGetSavedLesson(this.courseId, this.lessonId)
+					let savedRoute = this.getSavedLesson(this.courseId, this.lessonId)
 					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
 						this.$router.replace(savedRoute)
 					} else if (typeof this.firstScreenId !== 'undefined') {
@@ -93,15 +95,17 @@
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
 					if (parseInt(this.screenId) === this.lastScreenId) {
-						this.progressCompleteLesson(this.lessonProgressContext)
+						console.log('completeLesson')
+						this.completeLesson(this.lessonProgressContext)
 					} else {
-						this.progressUpdateLesson(this.lessonProgressContext)
+						console.log('updateLesson')
+						this.updateLesson(this.lessonProgressContext)
 					}
 				}
 			},
 		},
 		mounted () {
-			this.startLesson()
+			this.launchLesson()
 		},
 		watch: {
 			'$route' (to, from) {

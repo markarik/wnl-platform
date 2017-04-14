@@ -15,7 +15,7 @@
 
 <script>
 	import _ from 'lodash'
-	import QuizQuestion from 'js/components/course/screens/QuizQuestion.vue'
+	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
 
 	export default {
 		name: 'Quiz',

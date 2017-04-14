@@ -1,4 +1,5 @@
 import store from 'store'
+import _ from 'lodash'
 import { set } from 'vue'
 import { getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
@@ -15,9 +16,20 @@ const state = {
 	questions: {}
 }
 
+/*
+question: {
+	text: string,
+	answers: array,
+	isResolved: bool,
+	selectedAnswer: int (original index of answer),
+	attempts: int,
+}
+*/
+
 const getters = {
 	getQuestions: (state) => state.questions,
-	getUnresolved: (state) => state.questions.filter((question) => !!question.isResolved),
+	getUnresolved: (state) => state.questions.filter((question) => !question.isResolved),
+	getUnanswered: (state) => state.questions.filter((question) => _.isEmpty(question.selectedAnswer)),
 }
 
 const mutations = {

@@ -4,9 +4,6 @@
 			<p class="card-header-title">
 				{{text}}
 			</p>
-			<p class="card-header-icon">
-				{{number}}/{{total}}
-			</p>
 		</header>
 		<div class="card-content">
 			<p class="quiz-answer" v-for="(answer, index) in answers"

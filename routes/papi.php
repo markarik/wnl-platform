@@ -44,6 +44,9 @@ Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	Route::get("{$r['answers']}/{id}", 'AnswersApiController@get');
 	Route::post($r['answers'], 'AnswersApiController@post');
 
+	// Quiz Sets
+	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
+
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');

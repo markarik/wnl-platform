@@ -9,6 +9,7 @@ use App\Models\Lesson;
 use App\Models\Section;
 use App\Models\Slide;
 use App\Models\Screen;
+use App\Models\Slideshow;
 use Illuminate\Support\Facades\Log;
 use App\Models\Structure;
 
@@ -104,10 +105,20 @@ class Parser
 						'name'     => $courseTag['value'],
 						'group_id' => $this->courseModels['group']->id,
 					]);
+					$slideshow = Slideshow::create();
+					$this->courseModels['slideshow'] = $slideshow;
 					$this->courseModels['screen'] = $lesson->screens()->create([
 						'type' => 'slideshow',
-						'name' => 'Prezentacja']
-					);
+						'name' => 'Prezentacja',
+						'meta' => [
+							'resources' => [
+								[
+									'name' => config('papi.resources.slideshows'),
+									'id'   => $slideshow->id,
+								],
+							],
+						],
+					]);
 				}
 
 				if ($courseTag['name'] == 'section') {
@@ -118,10 +129,10 @@ class Parser
 					$this->courseModels['section'] = $section;
 				}
 			}
-			if (array_key_exists('screen', $this->courseModels)){
-				$this->courseModels['screen']->slides()->attach($slide);
+			if (array_key_exists('slideshow', $this->courseModels)) {
+				$this->courseModels['slideshow']->slides()->attach($slide);
 			}
-			if (array_key_exists('section', $this->courseModels)){
+			if (array_key_exists('section', $this->courseModels)) {
 				$this->courseModels['section']->slides()->attach($slide);
 			}
 

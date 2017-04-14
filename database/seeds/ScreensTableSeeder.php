@@ -19,6 +19,19 @@ class ScreensTableSeeder extends Seeder
 			'lesson_id' => 1,
 		]);
 		DB::table('screens')->insert([
+			'type'      => 'quiz',
+			'name'      => 'Pytania kontrolne',
+			'lesson_id' => 1,
+			'meta'      => json_encode([
+				'resources' => [
+					[
+						'name' => config('papi.resources.quiz-sets'),
+						'id'   => 1,
+					],
+				],
+			]),
+		]);
+		DB::table('screens')->insert([
 			'type'      => 'end',
 			'content'   => Storage::get('demo/end.html'),
 			'name'      => 'Następna lekcja',

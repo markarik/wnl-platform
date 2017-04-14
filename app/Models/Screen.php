@@ -21,4 +21,12 @@ class Screen extends Model
 	{
 		return $this->hasMany('\App\Models\Section');
 	}
+
+	public function getSlideshowAttribute()
+	{
+		$metaResources = collect($this->meta['resources'])->keyBy('name');
+		$slideshowResource = $metaResources->get('slideshows');
+
+		return Slideshow::find($slideshowResource['id']);
+	}
 }

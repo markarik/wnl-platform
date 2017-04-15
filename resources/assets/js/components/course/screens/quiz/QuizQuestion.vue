@@ -44,10 +44,12 @@
 			background: $color-green
 
 	.is-selected
-		background: $color-inactive-gray
+		background: $color-ocean-blue
+		color: $color-white
 
 		&:active, &:hover
-			background: $color-inactive-gray
+			background: $color-ocean-blue
+			color: $color-white
 </style>
 
 <script>

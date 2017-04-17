@@ -36,6 +36,18 @@
 						iconClass: 'fa-shopping-cart',
 						iconTitle: 'Twoje zamówienia',
 					},
+					{
+						text: 'Twoje dane',
+						itemClass: 'has-icon',
+						to: {
+							name: 'personal-info',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-user',
+						iconTitle: 'Twoje dane',
+					},
 				]
 
 				if (this.isProduction) {

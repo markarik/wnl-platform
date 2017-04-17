@@ -16,9 +16,9 @@ mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
 	.js('resources/assets/js/guest.js', 'public/js/guest.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
-	.version()
 
 if (mix.config.inProduction) {
+	mix.version()
 	mix.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
 		.copy('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
 }

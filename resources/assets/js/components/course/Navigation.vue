@@ -7,19 +7,27 @@
 <script>
 	import Sidenav from 'js/components/global/Sidenav.vue'
 	import * as mutations from 'js/store/mutations-types'
-	import { mapGetters, mapMutations } from 'vuex'
+	import { mapGetters } from 'vuex'
 	import { resource } from 'js/utils/config'
 
 	export default {
 		name: 'Navigation',
 		props: ['context', 'isLesson'],
 		computed: {
-			...mapGetters(['courseName', 'courseGroups', 'courseStructure', 'progressCourse', 'getLesson']),
+			...mapGetters('course', [
+				'name',
+				'groups',
+				'structure',
+				'getLesson'
+			]),
+			...mapGetters('progress', {
+				getCourseProgress: 'getCourse'
+			}),
 			isStructureEmpty() {
-				return typeof this.courseStructure !== 'object' || this.courseStructure.length === 0
+				return typeof this.structure !== 'object' || this.structure.length === 0
 			},
 			courseProgress() {
-				return this.progressCourse(this.context.courseId)
+				return this.getCourseProgress(this.context.courseId)
 			},
 			breadcrumbs() {
 				let breadcrumbs = [], courseItem
@@ -45,18 +53,18 @@
 			getCourseNavigation() {
 				if (this.isStructureEmpty) {
 					$wnl.debug('Empty structure, WTF?')
-					$wnl.debug(this.courseStructure)
+					$wnl.debug(this.structure)
 					return
 				}
 
 				let navigation = []
 
-				if (this.courseGroups.length === 0) {
+				if (this.groups.length === 0) {
 					return navigation
 				}
-				for (let i = 0, groupsLen = this.courseGroups.length; i < groupsLen; i++) {
-					let groupId = this.courseGroups[i],
-						group = this.courseStructure[resource('groups')][groupId]
+				for (let i = 0, groupsLen = this.groups.length; i < groupsLen; i++) {
+					let groupId = this.groups[i],
+						group = this.structure[resource('groups')][groupId]
 
 					navigation.push(this.getGroupItem(group))
 
@@ -65,7 +73,7 @@
 					}
 					for (let j = 0, lessonsLen = group[resource('lessons')].length; j < lessonsLen; j++) {
 						let lessonId = group[resource('lessons')][j],
-							lesson = this.courseStructure[resource('lessons')][lessonId]
+							lesson = this.structure[resource('lessons')][lessonId]
 
 						navigation.push(this.getLessonItem(lesson))
 					}
@@ -76,19 +84,19 @@
 			getLessonNavigation() {
 				if (this.isStructureEmpty) {
 					$wnl.debug('Empty structure, WTF?')
-					$wnl.debug(this.courseStructure)
+					$wnl.debug(this.structure)
 					return
 				}
 
 				let navigation = [],
-					lesson = this.courseStructure[resource('lessons')][this.context.lessonId]
+					lesson = this.structure[resource('lessons')][this.context.lessonId]
 
 				if (!lesson.hasOwnProperty(resource('screens'))) {
 					return navigation
 				}
 				for (let i = 0, screensLen = lesson[resource('screens')].length; i < screensLen; i++) {
 					let screenId = lesson[resource('screens')][i]
-						screen = this.courseStructure[resource('screens')][screenId]
+						screen = this.structure[resource('screens')][screenId]
 
 					navigation.push(this.getScreenItem(screen))
 
@@ -97,7 +105,7 @@
 					}
 					for (let j = 0, sectionsLen = screen[resource('sections')].length; j < sectionsLen; j++) {
 						let sectionId = screen[resource('sections')][j],
-							section = this.courseStructure[resource('sections')][sectionId]
+							section = this.structure[resource('sections')][sectionId]
 
 						navigation.push(this.getSectionItem(section))
 					}
@@ -127,7 +135,7 @@
 			},
 			getCourseItem() {
 				return this.composeItem(
-					'Plan lekcji',
+					this.name,
 					'has-icon',
 					resource('courses'),
 					{

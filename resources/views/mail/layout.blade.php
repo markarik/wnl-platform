@@ -38,8 +38,8 @@
 		}
 
 		a.button:hover {
-			border-color: #81d8e0;
-			color: #81d8e0;
+			border-color: #366063;
+			color: #366063;
 		}
 
 		a,
@@ -50,7 +50,7 @@
 		}
 
 		a:hover {
-			color: #81d8e0;
+			color: #366063;
 			text-decoration: none;
 		}
 
@@ -71,7 +71,7 @@
 	</style>
 </head>
 <body>
-	<div style="padding: 0 20px; max-width: 700px; margin: 0 auto;">
+	<div style="padding: 0 20px; max-width: 650px; margin: 0 auto;">
 		<div style="padding: 20px 0 5px;">
 			<div style="text-align: center;">
 				<img src="https://wiecejnizlek.pl/wp-content/themes/wiecejnizlek/assets/logo/main/normal.svg" alt="Logo Więcej niż LEK" style="height: 50px; max-width: 150px;">

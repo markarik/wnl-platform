@@ -11,6 +11,9 @@ function getCourseApiUrl(courseId) {
 	)
 }
 
+// Namespace
+const namespaced = true
+
 // Initial state
 const state = {
 	ready: false,
@@ -22,11 +25,11 @@ const state = {
 
 // Getters
 const getters = {
-	courseReady: state => state.ready,
+	ready: state => state.ready,
 	courseId: state => state.id,
-	courseName: state => state.name,
-	courseGroups: state => state[resource('groups')],
-	courseStructure: state => state.structure,
+	name: state => state.name,
+	groups: state => state[resource('groups')],
+	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId],
 	getLessons: state => state.structure[resource('lessons')],
 	getAvailableLessons: (state, getters) => {
@@ -59,10 +62,10 @@ const mutations = {
 
 // Actions
 const actions = {
-	courseSetup({ commit, dispatch }, courseId) {
+	setup({ commit, dispatch }, courseId) {
 		Promise.all([
-			dispatch('courseSetStructure', courseId),
-			dispatch('progressSetupCourse', courseId),
+			dispatch('setStructure', courseId),
+			dispatch('progress/setupCourse', courseId, {root: true}),
 		]).then(resolutions => {
 			console.log('Course ready, yay!')
 			commit(types.COURSE_READY)
@@ -70,7 +73,7 @@ const actions = {
 			console.log(reason)
 		})
 	},
-	courseSetStructure({ commit }, courseId) {
+	setStructure({ commit }, courseId) {
 		return new Promise((resolve, reject) => {
 			axios.get(getCourseApiUrl(courseId))
 				.then((response) => {
@@ -87,6 +90,7 @@ const actions = {
 }
 
 export default {
+	namespaced,
 	state,
 	getters,
 	mutations,

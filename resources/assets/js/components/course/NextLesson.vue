@@ -78,18 +78,19 @@
 		name: 'NextLesson',
 		props: ['courseId'],
 		computed: {
-			...mapGetters([
+			...mapGetters('course', [
 				'getGroup',
 				'getLessons',
 				'getLesson',
 				'isLessonAvailable',
-				'progressWasLessonStarted',
-				'progressGetFirstLessonIdInProgress',
-				'progressIsLessonComplete',
+			]),
+			...mapGetters('progress', [
+				'wasLessonStarted',
+				'getFirstLessonIdInProgress',
 			]),
 			nextLesson() {
 				let lesson = { status: STATUS_NONE },
-					inProgressId = this.progressGetFirstLessonIdInProgress(this.courseId)
+					inProgressId = this.getFirstLessonIdInProgress(this.courseId)
 
 				if (this.progressIsLessonComplete(this.courseId, 3)) {
 					return lesson
@@ -101,7 +102,7 @@
 				} else {
 					for (const lessonId in this.getLessons) {
 						if (this.isLessonAvailable(lessonId) &&
-							!this.progressWasLessonStarted(this.courseId, lessonId)
+							!this.wasLessonStarted(this.courseId, lessonId)
 						) {
 							lesson = this.getLesson(lessonId)
 							lesson.status = STATUS_AVAILABLE

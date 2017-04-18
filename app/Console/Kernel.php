@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
 		Commands\MarkOrderAsPaid::class,
 		Commands\CancelOrder::class,
 		Commands\ChangeOrderPaymentMethod::class,
+		Commands\PopulateAmountColumns::class,
     ];
 
     /**

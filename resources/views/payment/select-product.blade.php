@@ -12,28 +12,23 @@
 	<div class="container">
 		<div class="columns is-hidden-mobile has-text-centered">
 			<div class="column">
-
 				@if(!$onsite->available)
-					<div class="notification has-text-centered strong">Brak miejsc</div>
+					<div class="notification has-text-centered strong">Brak miejsc :(</div>
 				@else
-					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}"
-						class="button is-primary {{ !$onsite->available ? 'is-disabled' : '' }}"
-					>
+					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
 						@lang('payment.select-product-onsite-button-label')
 					</a>
-					<p class="metadata has-text-centered">Pozostało {{ $onsite->quantity }} miejsc</p>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/100</p>
 				@endif
 			</div>
 			<div class="column">
 				@if(!$online->available)
-					<div class="notification has-text-centered strong">Brak miejsc</div>
+					<div class="notification has-text-centered strong">Brak miejsc :(</div>
 				@else
-				<a href="{{route('payment-personal-data', 'wnl-online')}}"
-				   class="button is-primary is-outlined {{ !$online->available ? 'is-disabled' : '' }}"
-				>
-					@lang('payment.select-product-online-button-label')
-				</a>
-				<p class="metadata has-text-centered">Pozostało {{ $online->quantity }} miejsc</p>
+					<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
+						@lang('payment.select-product-online-button-label')
+					</a>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/200</p>
 				@endif
 			</div>
 		</div>
@@ -52,9 +47,14 @@
 					</ul>
 				</div>
 				<div class="block has-text-centered is-hidden-tablet">
-					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
-						@lang('payment.select-product-onsite-button-label')
-					</a>
+					@if(!$onsite->available)
+						<div class="notification has-text-centered strong">Brak miejsc :(</div>
+					@else
+						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
+							@lang('payment.select-product-onsite-button-label')
+						</a>
+						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/100</p>
+					@endif
 				</div>
 			</div>
 			<div class="column">
@@ -67,28 +67,33 @@
 					</ul>
 				</div>
 				<div class="block has-text-centered is-hidden-tablet">
+					@if(!$online->available)
+						<div class="notification has-text-centered strong">Brak miejsc :(</div>
+					@else
 					<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 						@lang('payment.select-product-online-button-label')
 					</a>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/200</p>
+					@endif
 				</div>
 			</div>
 		</div>
 		<div class="columns is-hidden-mobile has-text-centered">
 			<div class="column">
-				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}"
-				   class="button is-primary {{ !$onsite->available ? 'is-disabled' : '' }}"
-				>
+				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
 					@lang('payment.select-product-onsite-button-label')
 				</a>
-				<p class="metadata has-text-centered">Pozostało {{ $onsite->quantity }} miejsc</p>
+				<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/100</p>
 			</div>
 			<div class="column">
-				<a href="{{route('payment-personal-data', 'wnl-online')}}"
-				   class="button is-primary is-outlined {{ !$online->available ? 'is-disabled' : '' }}"
-				>
+				@if(!$online->available)
+					<div class="notification has-text-centered strong">Brak miejsc :(</div>
+				@else
+				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 					@lang('payment.select-product-online-button-label')
 				</a>
-				<p class="metadata has-text-centered">Pozostało {{ $online->quantity }} miejsc</p>
+				<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/200</p>
+				@endif
 			</div>
 		</div>
 	</div>

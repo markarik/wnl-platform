@@ -8,9 +8,12 @@
 			</div>
 			<div class="level-right">
 				<div class="level-item metadata">
-					<a :href="paymentUrl">Zapisz się na kurs</a>
+					<a :href="paymentUrl">Złóż nowe zamówienie</a>
 				</div>
 			</div>
+		</div>
+		<div class="notification is-success strong has-text-centered" v-if="orderSuccess">
+			Dziękujemy za złożenie zamówienia!<br>Potwierdzenie znajdziesz na podanym przez siebie adresie e-mail.
 		</div>
 		<div v-if="loaded">
 			<div v-if="hasOrders">
@@ -50,6 +53,9 @@
 			},
 			hasOrders() {
 				return !_.isEmpty(this.orders)
+			},
+			orderSuccess() {
+				return this.$route.query.hasOwnProperty('payment')
 			},
 		},
 		methods: {

@@ -11,10 +11,12 @@ class Order extends Model
 		'paid'        => 'boolean',
 		'canceled'    => 'boolean',
 		'canceled_at' => 'date',
+		'paid_amount' => 'float',
 	];
 
 	protected $fillable = [
 		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id', 'canceled', 'canceled_at',
+		'paid_amount',
 	];
 
 	protected $guarded = [

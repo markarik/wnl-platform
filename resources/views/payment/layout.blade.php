@@ -1,5 +1,5 @@
 @extends('layouts.guest')
 
 @section('scripts')
-	<script src="/js/payment.js"></script>
+	<script src="{{ mix('js/payment.js') }}"></script>
 @endsection

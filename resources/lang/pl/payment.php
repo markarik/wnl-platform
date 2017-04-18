@@ -36,6 +36,9 @@ return [
 			Autorskie materiały ułatwiające notowanie, powtórki i systematyzację wiedzy (przesyłka kurierska w cenie)
 		</li>
 		<li class="list-group-item">
+			Baza 2000 pytań do LEK-u w cenie! System ułatwiający powtarzanie najtrudniejszych pytań i łatwe przerobienie wszystkich!
+		</li>
+		<li class="list-group-item">
 			Codzienna porcja wiedzy o efektywnym procesie nauki, która przyda się nie tylko podczas przygotowań do egzaminu!
 		</li>
 		<li class="list-group-item">
@@ -143,9 +146,10 @@ return [
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading' => 'Aby ostatecznie potwierdzić zamówienie, wybierz metodę płatności',
-	'confirm-method-lead' => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
-	'confirm-method-bank-transfer-button' => 'Kupuję i płacę przelewem bankowym',
+	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie, wybierz metodę płatności',
+	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
+	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
+	'confirm-method-instalments-button'    => 'Kupuję i płacę na raty',
 	'confirm-method-online-payment-button' => 'Kupuję i płacę przez Przelewy24',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',

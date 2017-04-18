@@ -1,47 +1,41 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
 <!-- Main Content -->
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
-                <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/email') }}">
-                        {{ csrf_field() }}
+	<div class="wnl-login-view">
+		<div class="wnl-login-container">
+			@if (session('status'))
+				<div class="notification is-info has-text-centered">
+					<p class="strong">{{ session('status') }}</p>
+				</div>
+			@endif
+			<p class="title is-3 is-hidden-touch">Zmień swoje hasło</p>
+			<p class="title is-5 is-hidden-desktop">Zmień swoje hasło</p>
+			<p class="wnl-login-subtitle">Nie pamiętasz hasła? Żaden problem! Zaraz to naprawimy. :)</p>
+			<form role="form" method="POST" action="{{ url('/password/email') }}">
+				{{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+				<p class="control">
+					<label for="email" class="label">Podaj swój adres e-mail</label>
+					<input id="email" type="email" class="input {{ $errors->has('email') ? ' is-danger' : '' }}" name="email" value="{{ old('email') }}" autofocus="" required>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+					@if ($errors->has('email'))
+						<span class="help is-danger">
+							<strong>{{ $errors->first('email') }}</strong>
+						</span>
+					@endif
+				</p>
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Send Password Reset Link
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+				<p class="control">
+					<button type="submit" class="button is-primary is-wide">
+						Resetuję hasło
+					</button>
+				</p>
+			</form>
+			<p class="has-text-centered">
+				<small>W razie problemów pisz śmiało na info@wiecejnizlek.pl</small>
+			</p>
+		</div>
+	</div>
 @endsection

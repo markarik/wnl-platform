@@ -20,6 +20,7 @@ class AppController extends Controller
 			'config'   => [
 				'papi'    => config('papi'),
 				'lessons' => config('lessons'),
+				'payment' => config('payment'),
 			],
 		]);
 

@@ -50,6 +50,9 @@ function getUserProgressForCourse(courseId) {
 	})
 }
 
+// Namespace
+const namespaced = true
+
 // Initial state
 const state = {
 	courses: {},
@@ -57,27 +60,24 @@ const state = {
 
 // Getters
 const getters = {
-	progressCourse: (state) => (courseId) => {
+	getCourse: (state) => (courseId) => {
 		if (state.courses.hasOwnProperty(courseId)) {
 			return state.courses[courseId]
 		}
 	},
-	progressWasCourseStarted: (state, getters) => (courseId) => {
-		return !_.isEmpty(getters.progressCourse(courseId).lessons)
-	},
-	progressGetSavedLesson: (state) => (courseId, lessonId) => {
+	getSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
 		return store.get(getLessonStoreKey(courseId, lessonId))
 	},
-	progressWasLessonStarted: (state) => (courseId, lessonId) => {
+	wasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
 			state.courses[courseId].lessons.hasOwnProperty(lessonId)
 	},
-	progressIsLessonInProgress: (state) => (courseId, lessonId) => {
-		return getters.progressWasLessonStarted(courseId, lessonId) &&
-			state.courses[courseId][lessonId].status === STATUS_IN_PROGRESS
+	isLessonInProgress: (state) => (courseId, lessonId) => {
+		return getters.wasLessonStarted(courseId, lessonId) &&
+			state.courses[courseId].lessons[lessonId].status === STATUS_IN_PROGRESS
 	},
-	progressGetFirstLessonIdInProgress: (state) => (courseId) => {
+	getFirstLessonIdInProgress: (state) => (courseId) => {
 		let lessons = state.courses[courseId].lessons
 		for (const lessonId in lessons) {
 			if (lessons[lessonId].status === STATUS_IN_PROGRESS) {
@@ -86,14 +86,14 @@ const getters = {
 		}
 		return 0
 	},
-	progressIsLessonComplete: (state, getters) => (courseId, lessonId) => {
-		return getters.progressWasLessonStarted(courseId, lessonId) &&
+	isLessonComplete: (state) => (courseId, lessonId) => {
+		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE
 	},
-	progressGetCompleteLessons: (state, getters) => (courseId) => {
+	getCompleteLessons: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lesson, lessons = []
 		for (const lessonId in state.courses[courseId].lessons) {
-			lesson = getters.getLesson(lessonId)
+			lesson = rootGetters['course/getLesson'](lessonId)
 			if (state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE) {
 				lessons.push(lesson)
 			}
@@ -127,7 +127,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	progressSetupCourse({commit}, courseId) {
+	setupCourse({commit}, courseId) {
 		return new Promise((resolve, reject) => {
 			let storeKey = getCourseStoreKey(courseId),
 				storedProgress = store.get(storeKey)
@@ -152,26 +152,23 @@ const actions = {
 			}
 		})
 	},
-	progressStartLesson({commit, getters}, payload) {
-		if (!getters.progressWasLessonStarted(payload.courseId, payload.lessonId)) {
+	startLesson({commit, getters}, payload) {
+		if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
 			commit(types.PROGRESS_START_LESSON, payload)
 		}
 	},
-	progressUpdateLesson({commit, getters}, payload) {
-		if (getters.progressWasLessonStarted(payload.courseId, payload.lessonId)) {
-			commit(types.PROGRESS_UPDATE_LESSON, payload)
-		} else {
-			commit(types.PROGRESS_START_LESSON, payload)
-		}
+	updateLesson({commit}, payload) {
+		commit(types.PROGRESS_UPDATE_LESSON, payload)
 	},
-	progressCompleteLesson({commit}, payload) {
-		if (getters.progressIsLessonInProgress(payload.courseId, payload.lessonId)) {
+	completeLesson({commit, getters}, payload) {
+		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {
 			commit(types.PROGRESS_COMPLETE_LESSON, payload)
 		}
 	}
 }
 
 export default {
+	namespaced,
 	state,
 	getters,
 	mutations,

@@ -124,6 +124,9 @@
 				this.isFocused = this.iframe === document.activeElement
 			},
 			initSlideshow() {
+				console.log('initSlideshow')
+				console.log(this.container)
+				console.log(this.slideshowUrl)
 				new Postmate({
 						container: this.container,
 						url: this.slideshowUrl
@@ -134,7 +137,7 @@
 
 						this.goToSlide(this.slideNumber)
 						this.focusSlideshow()
-					})
+					}).catch(console.log.bind(console))
 			},
 			messageEventListener(event) {
 				if (typeof event.data === 'string') {

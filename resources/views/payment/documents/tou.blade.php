@@ -49,32 +49,51 @@
 </ol>
 <h2>5) WARUNKI KORZYSTANIA Z KONTA</h2>
 <ol>
-	<li>Rozpoczęcie korzystania z Konta możliwe jest po wykonaniu łącznie trzech kolejnych kroków przez Usługobiorcę – (1) wypełnieniu formularza rejestracji, (2) kliknięciu pola akcji oraz (3) potwierdzeniu chęci utworzenia Konta poprzez kliknięcie w link potwierdzający przesłany na podany adres poczty elektronicznej. W formularzu rejestracji niezbędne jest podanie przez Usługobiorcę następujących danych: imię, adres poczty elektronicznej oraz hasło.</li>
-	<li>Korzystanie z Konta oraz jego poszczególnych funkcjonalności, w tym zakup Kursu Internetowego może wymagać podania dodatkowych danych przez Usługobiorcę – każdorazowo informacja o zakresie wymaganych danych podana jest na stronie Serwisu Internetowego.</li>
+	<li>Utworzenie Konta w Serwisie Internetowym następuje razem z zakupem dostępu do Kursu Internetowego. W formularzu rejestracji Konta Usługobiorca obowiązany jest wskazać wybrany przez siebie wariant Kursu Internetowego – zgodnie z Cennikiem dostępnym na stronie Serwisu Internetowego i następnie przejść do jego wypełniania.</li>
+	<li>Rozpoczęcie korzystania z Konta możliwe jest po wykonaniu łącznie trzech kolejnych kroków przez Usługobiorcę – (1) wypełnieniu formularza rejestracji, (2) kliknięciu pola akcji oraz (3) dokonania zakupu Kursu Internetowego. W formularzu rejestracji niezbędne jest podanie przez Usługobiorcę następujących danych: imię i nazwisko, adres poczty elektronicznej, numer telefonu komórkowego, adres oraz hasło.</li>
+	<li>Korzystanie z Konta oraz jego poszczególnych funkcjonalności, w tym zakup Kursu Internetowego może wymagać lub umożliwiać podanie dodatkowych danych przez Usługobiorcę – każdorazowo informacja o zakresie wymaganych danych podana jest na stronie Serwisu Internetowego.</li>
 	<li>Szczegółowy opis funkcjonalności i usług dostępnych w ramach Konta wskazany jest w Dokumentacji.</li>
-	<li>Usługobiorca nie może posiadać więcej niż jednego Konto w Serwisie Internetowym w tym samym czasie. Usługobiorca obowiązany jest do bieżącej aktualizacji swoich danych podanych w ramach Konta w razie ich zmiany.</li>
 	<li>Usługobiorca ma możliwość, w każdej i bez podania przyczyny, rezygnacji z Konta poprzez wysłanie stosownego żądania do Usługodawcy, w szczególności za pośrednictwem formularza kontaktowego, poczty elektronicznej na adres: info@wiecejnizlek.pl lub też pisemnie na adres: ul. Henryka Sienkiewicza 8/1, 60-817 Poznań.</li>
 	<li>Usługodawca zastrzega sobie prawo zawieszenia Konta Usługobiorcy w przypadku gdy Usługobiorca mimo wezwania ze strony Usługodawcy z podaniem przyczyny nadal narusza niniejszy Regulamin. Zawieszenie Konta może nastąpić na czas określony wskazany przez Usługodawcę lub nieokreślony. W czasie zawieszenia Konta nie jest możliwe korzystanie z funkcjonalności Konta. W czasie zawieszenia Konta Usługobiorca obowiązany jest podjąć w miarę możliwości działania mające na celu usunięcie przyczyn jego zawieszenia, a po ich usunięciu obowiązany jest poinformować o tym niezwłocznie Usługodawcę. Usługodawca odwiesza Konto niezwłocznie po ustaniu przyczyny jego zawieszenia, nie później niż w terminie 3 Dni Roboczych.</li>
 	<li>Usługodawca w przypadku zawieszenia Konta trwającego ponad 30 dni kalendarzowych i braku ustania przyczyn jego zawieszenia lub powtórnego zawieszenia Konta tego samego Usługobiorcy ma prawo wypowiedzieć Usługobiorcy umowę o korzystanie z Usługi Elektronicznej z 7 dniowym terminem wypowiedzenia.</li>
 </ol>
 <h2>6) DOSTĘP DO KURSU INTERNETOWEGO</h2>
 <ol>
-	<li>Dostęp do Kursu Internetowego możliwy jest po założeniu Konta, wybraniu wariantu Kursu Internetowego zgodnie z Cennikiem i jego opłaceniu na warunkach określonych w Regulaminie oraz w Cenniku – zakupiony Kurs Internetowy jest aktywowany przez Usługodawcę niezwłocznie po otrzymaniu płatności. Usługobiorca jest obowiązany dokonać płatności niezwłocznie, nie później niż w terminie 7 dni.</li>
-	<li>Zakup dostępu do Kursu Internetowego możliwy jest z poziomu odpowiedniej zakładki dostępnej w ramach Konta Usługobiorcy. Opłata tytułem Kursu Internetowego ma charakter jednorazowy i naliczana jest z góry za wybrany przez Usługobiorcę wariant Kursu Internetowego podczas składania zamówienia na stronie Serwisu Internetowego.</li>
-	<li>W celu dokonania zakupu dostępu do Kursu Internetowego należy wybrać rodzaj Kursu Internetowego dostępny w formularzu zamówienia oraz wypełnić kolejne pola formularza zamówienia dostępne na stronie Serwisu dla danego rodzaju Kursu Internetowego. Złożenie zamówienia na dostęp do Kursu Internetowego oraz zawarcie umowy następuje z chwilą kliknięcia pola „Potwierdzam zakup” – z tą chwilą zostaje zawarta umowa o dostęp do Kursu Internetowego.</li>
+	<li>Kurs Internetowy jest przeprowadzany w terminach podanych na stronie Serwisu Internetowego. Podobnie możliwe terminy zakupu dostępu do Kursu Internetowego są podawane na stronie Serwisu Internetowego.</li>
+	<li>Zakup dostępu do Kursu Internetowego możliwy jest jedynie w terminach podanych każdorazowo na stronie Serwisu Internetowego. W przypadku możliwości jego zakupu procedura zakupu ma przebieg zgodnie z postanowieniami niniejszego punktu Regulaminu.</li>
+	<li>Dostęp do Kursu Internetowego możliwy jest w trakcie procedury zakładania Konta - po wybraniu wariantu Kursu Internetowego zgodnie z Cennikiem oraz wypełnieniu formularza rejestracyjnego Usługobiorca ma możliwość dokonania zakupu Kursu Internetowego.</li>
+	<li>Złożenie zamówienia na dostęp do Kursu Internetowego oraz zawarcie umowy następuje z chwilą kliknięcia pola „Kupuję i płacę z przelewem bankowym” albo „Kupuję i płacę szybkim przelewem” w zależności od wybranej przez Usługobiorcę formy płatności – z tą chwilą zostaje zawarta umowa o dostęp do Kursu Internetowego.</li>
+	<li>Dostęp do Kursu Internetowego aktywowany jest po jego opłaceniu na warunkach określonych w Regulaminie oraz w Cenniku – zakupiony Kurs Internetowy jest aktywowany przez Usługodawcę niezwłocznie po otrzymaniu płatności zgodnie z Cennikiem.</li>
+	<li>Opłata tytułem Kursu Internetowego może zostać dokonana przez Usługobiorcę – w zależności od wybranej przez niego opcji w trakcie składania zamówienia – jednorazowo albo w trzech częściach.
+		<ol class="lower-alpha">
+			<li>Opłata jednorazowa jest naliczana i pobierana z góry za wybrany przez Usługobiorcę wariant Kursu Internetowego podczas składania zamówienia na stronie Serwisu Internetowego. Usługobiorca jest obowiązany dokonać płatności niezwłocznie, nie później niż w terminie 7 dni.</li>
+			<li>Opłata w częściach jest naliczana i pobierana w ilości, wysokości i terminach podanych w Cenniku za wybrany przez Usługobiorcę wariant Kursu Internetowego podczas składania zamówienia. W tym przypadku warunek uiszczenia przez Usługobiorcę płatności, o którym mowa w Regulaminie dotyczy płatności pierwszej części (np. aktywowanie Kursu Internetowego następuje po uiszczeniu pierwszej części płatności), z zastrzeżeniem, że nieuiszczenie przez Usługobiorcę kolejnych części płatności może skutkować ograniczeniem dostępu do Kursu Internetowego.</li>
+		</ol>
+	</li>
 	<li>Ceny Kursu Internetowego uwidocznione na stronach Serwisu są cenami brutto i podane są w złotych polskich.</li>
-	<li>Usługodawca udostępnia w Serwisie następujące sposoby płatności:
+	<li>Usługodawca udostępnia w Serwisie następujące sposoby płatności:
 		<ol class="lower-alpha">
 			<li>Płatności elektroniczne i płatności kartą płatniczą za pośrednictwem serwisu Przelewy24.pl – spółka PayPro S.A. Agent Rozliczeniowy z siedzibą w Poznaniu (adres siedziby: ul. Kanclerska 15, 60-327 Poznań), wpisany do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego prowadzonego przez Sąd Rejonowy Poznań – Nowe Miasto i Wilda w Poznaniu, VIII Wydział Gospodarczy Krajowego Rejestru Sądowego pod numerem KRS 0000347935, NIP 7792369887, Regon 301345068.</li>
 			<li>Przelew tradycyjny na rachunek bankowy Usługodawcy.</li>
 		</ol>
 	</li>
-	<li>Usługodawca wystawi Usługobiorcy na jego życzenie fakturę w formie elektronicznej i prześle na podany przez niego adres poczty elektronicznej. Wystawienie faktury wymaga zgłoszenia chęci jej otrzymania Usługodawcy zgodnie z pkt. 9 Regulaminu.</li>
+	<li>Usługodawca wystawi Usługobiorcy na jego życzenie fakturę w formie elektronicznej i prześle na podany przez niego adres poczty elektronicznej.</li>
 </ol>
-<h2>7) WARUNKI KORZYSTANIA Z KURSU INTERNETOWEGO</h2>
+<h2>7) GWARANCJA SATYSFAKCJI</h2>
 <ol>
-	<li>Usługobiorca zobowiązuje się korzystać z Kursu Internetowego w sposób nie naruszający powszechnie obowiązujących przepisów prawa oraz praw osób trzecich, w tym praw autorskich i patentów lub praw do znaku towarowego. Usługobiorcę obowiązuje zakaz dostarczania treści bezprawnych.</li>
-	<li>Panel Usługobiorcy umożliwia Usługobiorcy zarządzanie Kursem Internetowym – szczegółowy opis dostępnych funkcjonalności wskazany jest na stronie Serwisu Internetowego, w tym w Dokumentacji.</li>
+	<li>Usługodawca udziela Usługobiorcy, który zakupił Kurs Internetowy dwóch gwarancji satysfakcji, z których może skorzystać Usługobiorca:
+		<ol class="lower-alpha">
+			<li>Usługobiorca ma prawo zrezygnować z Kursu Internetowego bez podania przyczyny w terminie 7 dni od dnia jego rozpoczęcia za zwrotem 50 % zapłaconej ceny za Kurs Internetowy.</li>
+			<li>Usługobiorca w przypadku nie zdania Lekarskiego Egzaminu Końcowego ma prawo, w terminie 14 dni od dnia ogłoszenia wyników, domagać się zwrotu 100 % zapłaconej ceny za Kurs Internetowy pod warunkiem spełnienia łącznie następujących wymogów:
+				<ol>
+					<li>ukończenia 100 % lekcji dostępnych w ramach Kursu Internetowego oraz</li>
+					<li>spędzenia w ramach Kursu Internetowego minimum 200 godzin.</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>Do zachowania terminu na skorzystanie z gwarancji wystarczy wysłanie pisemnego oświadczenia przed jego upływem. Oświadczenie może zostać złożone pisemnie na adres: ul. Henryka Sienkiewicza 8/1, 60-817 Poznań. W przypadku gwarancji satysfakcji dotyczącej nie zdania Lekarskiego Egzaminu Końcowego Usługobiorca obowiązany jest razem z oświadczeniem przesłać także kserokopię wyników swojego Lekarskiego Egzaminu Końcowego.</li>
+	<li>Niniejszy punkt Regulaminu nie narusza ustawowych uprawnień Usługobiorcy do złożenia reklamacji oraz do odstąpienia od umowy bez podania przyczyny. Gwarancja satysfakcji, o której mowa w niniejszym punkcie Regulaminu, ma charakter dodatkowy, dobrowolny.</li>
 </ol>
 <h2>8) NEWSLETTER</h2>
 <ol>

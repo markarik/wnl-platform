@@ -64,7 +64,10 @@ class MarkOrderAsPaid extends Command
 			exit;
 		}
 
+		$amount = $this->ask("Paid amount ({$order->total_with_coupon})", $order->total_with_coupon);
+
 		$order->paid = 1;
+		$order->paid_amount += $amount;
 		$order->save();
 		$this->info('Done.');
 

@@ -26,9 +26,10 @@ class ConfirmOrderController extends Controller
 		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
 		Log::notice('Order confirmation');
 		return view('payment.confirm-order', [
-			'order'    => $order,
-			'user'     => $user,
-			'checksum' => $checksum,
+			'order'       => $order,
+			'user'        => $user,
+			'checksum'    => $checksum,
+			'instalments' => config('payment.instalments'),
 		]);
 	}
 
@@ -58,6 +59,7 @@ class ConfirmOrderController extends Controller
 		if ($transactionValid) {
 			$order = Order::where(['session_id' => $request->get('p24_session_id')])->first();
 			$order->paid = true;
+			$order->paid_amount = $request->get('p24_amount') / 100;
 			$order->external_id = $request->get('p24_order_id');
 			$order->transfer_title = $request->get('p24_statement');
 			$order->save();

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-
-use App\Notifications\ResetPasswordNotification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -38,6 +38,15 @@ class User extends Authenticatable
 	protected $hidden = [
 		'password', 'remember_token',
 	];
+
+	public function fetch($id, $columns = ['*'])
+	{
+		if ($id === 'current') {
+			return Auth::user();
+		}
+
+		return User::find($id, $columns);
+	}
 
 	public function orders()
 	{

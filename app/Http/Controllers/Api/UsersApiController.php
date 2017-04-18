@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\StoreUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,5 +24,10 @@ class UsersApiController extends ApiController
 			'last_name'  => $user->last_name,
 			'full_name'  => $user->full_name,
 		]);
+	}
+
+	public function put(StoreUser $request)
+	{
+
 	}
 }

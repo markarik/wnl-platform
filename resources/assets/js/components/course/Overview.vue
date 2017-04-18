@@ -121,19 +121,19 @@
 	export default {
 		props: ['courseId'],
 		computed: {
+			...mapGetters('progress', [
+				'isLessonComplete',
+				'wasCourseStarted',
+			]),
 			...mapGetters([
 				'currentUserName',
-				'getLessons',
-				'progressIsLessonComplete',
-				'progressWasCourseStarted',
-				'progressGetCompleteLessons',
 			]),
 			isBeginning() {
-				return !this.progressWasCourseStarted(this.courseId)
+				return !this.wasCourseStarted(this.courseId)
 			},
 			isEnd() {
 				// TODO: Apr 1, 2017 - Use API to get this infromation
-				return this.progressIsLessonComplete(this.courseId, 3)
+				return this.isLessonComplete(this.courseId, 3)
 			},
 			welcomeMessage() {
 				return `Cześć ${this.currentUserName}!`

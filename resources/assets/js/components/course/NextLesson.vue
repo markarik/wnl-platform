@@ -87,12 +87,13 @@
 			...mapGetters('progress', [
 				'wasLessonStarted',
 				'getFirstLessonIdInProgress',
+				'isLessonComplete',
 			]),
 			nextLesson() {
 				let lesson = { status: STATUS_NONE },
 					inProgressId = this.getFirstLessonIdInProgress(this.courseId)
 
-				if (this.progressIsLessonComplete(this.courseId, 3)) {
+				if (this.isLessonComplete(this.courseId, 3)) {
 					return lesson
 				}
 
@@ -114,7 +115,7 @@
 				return lesson
 			},
 			hasNextLesson() {
-				return !this.progressIsLessonComplete(this.courseId, 3) &&
+				return !this.isLessonComplete(this.courseId, 3) &&
 					this.nextLesson.status !== STATUS_NONE
 			},
 			heading() {

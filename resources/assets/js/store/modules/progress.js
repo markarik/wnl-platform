@@ -65,6 +65,9 @@ const getters = {
 			return state.courses[courseId]
 		}
 	},
+	wasCourseStarted: (state, getters) => (courseId) => {
+		return !_.isEmpty(getters.gCourse(courseId).lessons)
+	},
 	getSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
 		return store.get(getLessonStoreKey(courseId, lessonId))

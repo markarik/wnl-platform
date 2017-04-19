@@ -18,7 +18,7 @@ class UserPolicy
 	 */
 	public function view(User $user, User $targetUser)
 	{
-		return true;
+		return $user->id === $targetUser->id;
 	}
 
 	/**
@@ -29,7 +29,7 @@ class UserPolicy
 	 */
 	public function create(User $user)
 	{
-		return true;
+		return false;
 	}
 
 	/**
@@ -41,7 +41,7 @@ class UserPolicy
 	 */
 	public function update(User $user, User $targetUser)
 	{
-		return true;
+		return $user->id === $targetUser->id;
 	}
 
 	/**
@@ -53,6 +53,6 @@ class UserPolicy
 	 */
 	public function delete(User $user, User $targetUser)
 	{
-		return true;
+		return $user->id === $targetUser->id;
 	}
 }

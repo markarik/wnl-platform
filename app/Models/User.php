@@ -39,7 +39,7 @@ class User extends Authenticatable
 		'password', 'remember_token',
 	];
 
-	public function fetch($id, $columns = ['*'])
+	public static function fetch($id, $columns = ['*'])
 	{
 		if ($id === 'current') {
 			return Auth::user();

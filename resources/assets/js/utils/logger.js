@@ -33,7 +33,7 @@ export default class Logger {
 				.config(envValue('SENTRY_DSN_VUE_PUB'))
 				.setExtraContext({
 					logger: 'platform',
-					env: envValue('appEnv')
+					env: envValue('appEnv'),
 				})
 				.addPlugin(RavenVue, Vue)
 				.install()

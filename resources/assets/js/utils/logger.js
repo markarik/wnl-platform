@@ -31,15 +31,16 @@ export default class Logger {
 		if (this.useExternal()) {
 			Raven
 				.config(envValue('SENTRY_DSN_VUE_PUB'))
+				.setExtraContext({
+					logger: 'platform',
+					env: envValue('appEnv'),
+				})
 				.addPlugin(RavenVue, Vue)
 				.install()
 		}
 
 		this.level     = envValue('APP_LOG_LEVEL')
 		this.levelCode = Logger.LEVELS[this.level]
-		this.context   = {
-			logger: 'front-end',
-		}
 	}
 
 	useExternal() {
@@ -50,10 +51,16 @@ export default class Logger {
 		if (Logger.LEVELS[level] <= this.levelCode) {
 			if (this.useExternal()) {
 				Raven.captureMessage(message, { level })
-			} else {
-				console.log(`${level}: ${message}`)
+			}
+
+			if (isDebug()) {
+				this.consolePrint(level, message)
 			}
 		}
+	}
+
+	consolePrint(level, message) {
+		console.log(`wnlog-${level}: ${message}`)
 	}
 
 	emergency(message) {

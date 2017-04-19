@@ -19,16 +19,20 @@ Vue.component('wnl-icon', Icon)
 Vue.component('wnl-image-button', ImageButton)
 Vue.component('wnl-text-loader', TextLoader)
 
-// Setup a debug function
-import { isDebug } from 'js/utils/env'
-$wnl.debug = (data) => {
-	if (isDebug()) console.log(data)
-}
-if (isDebug()) {
-	Vue.config.performance = true
-}
+// Setup a logger
+import Logger from 'js/utils/logger'
+const wnlog = new Logger()
 
 // Set up App
+wnlog.emergency('EM: Starting application...')
+wnlog.alert('AL: Starting application...')
+wnlog.critical('CR: Starting application...')
+wnlog.error('ER: Starting application...')
+wnlog.warning('WAR: Starting application...')
+wnlog.notice('NOT: Starting application...')
+wnlog.info('INFO: Starting application...')
+wnlog.debug('DEB: Starting application...')
+
 import App from 'js/components/App.vue'
 const app = new Vue({
 	router,

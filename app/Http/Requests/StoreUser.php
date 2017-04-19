@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUser extends FormRequest
@@ -13,7 +14,9 @@ class StoreUser extends FormRequest
 	 */
 	public function authorize()
 	{
-		return false;
+		$user = User::fetch($this->route('id'));
+
+		return $this->user()->can('update', $user);
 	}
 
 	/**

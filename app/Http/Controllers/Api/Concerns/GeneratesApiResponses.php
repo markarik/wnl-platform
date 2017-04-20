@@ -5,45 +5,89 @@ namespace App\Http\Controllers\Api\Concerns;
 
 trait GeneratesApiResponses
 {
-	protected function respondOk($message = null)
-	{
-		$responseMessage = $message ?? 'OK';
+	protected $statusCode = 200;
+	protected $headers = [];
+	protected $message = 'OK';
 
-		return response($responseMessage, 200);
+	protected function setStatusCode($code)
+	{
+		$this->statusCode = $code;
+
+		return $this;
 	}
 
-	protected function respondCreated($message = null)
+	protected function setMessage($message)
 	{
-		$responseMessage = $message ?? 'Created';
+		$this->message = $message;
 
-		return response($responseMessage, 201);
+		return $this;
 	}
 
-	protected function respondInvalidInput($message = null)
+	protected function json($data = [])
 	{
-		$responseMessage = $message ?? 'Invalid input';
+		if (empty($data)) {
+			$data = [
+				'message'     => $this->message,
+				'status_code' => $this->statusCode,
+			];
+		}
 
-		return response($responseMessage, 400);
+		return response()->json($data, $this->statusCode, $this->headers);
 	}
 
-	protected function respondUnauthorized($message = null)
+	protected function respondOk($data = [])
 	{
-		$responseMessage = $message ?? 'Unauthorized';
-
-		return response($responseMessage, 401);
+		return $this
+			->setMessage($message ?? 'OK')
+			->setStatusCode(200)
+			->json($data);
 	}
 
-	protected function respondNotFound($message = null)
+	protected function respondCreated()
 	{
-		$responseMessage = $message ?? 'Not Found';
-
-		return response($responseMessage, 404);
+		return $this
+			->setMessage($message ?? 'Created')
+			->setStatusCode(201)
+			->json();
 	}
 
-	protected function respondInternalError($message = null)
+	protected function respondInvalidInput($data = [])
 	{
-		$responseMessage = $message ?? 'Internal Error';
+		return $this
+			->setMessage($message ?? 'Invalid input')
+			->setStatusCode(400)
+			->json($data);
+	}
 
-		return response($responseMessage, 500);
+	protected function respondUnauthorized()
+	{
+		return $this
+			->setMessage($message ?? 'Unauthorized')
+			->setStatusCode(401)
+			->json();
+	}
+
+	protected function respondForbidden()
+	{
+		return $this
+			->setMessage($message ?? 'Forbidden')
+			->setStatusCode(403)
+			->json();
+	}
+
+	protected function respondNotFound()
+	{
+		return $this
+			->setMessage($message ?? 'Not Found')
+			->setStatusCode(404)
+			->json();
+	}
+
+	protected function respondInternalError()
+	{
+		return $this
+			->setMessage($message ?? 'Internal Error')
+			->setStatusCode(500)
+			->json();
 	}
 }

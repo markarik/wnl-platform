@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
@@ -58,39 +59,86 @@ export default class Logger {
 		}
 	}
 
-	consolePrint(level, message) {
-		console.log(`wnlog-${level}: ${message}`)
+	capture(exception) {
+		if (this.useExternal()) {
+			Raven.captureException(exception)
+		}
+
+		if (isDebug()) {
+			this.error(exception.message, exception.stack)
+		}
 	}
 
-	emergency(message) {
-		this.log(Logger.EMERGENCY, message)
+	/**
+	 * Requires at least 2 arguments - level and header.
+	 * If 2 arguments are passed, it treats the 1st one as a log level,
+	 * and the 2nd one as a message.
+	 * If more arguments are passed, the 2nd one is treated
+	 * as a header of a group.
+	 * @return {void}
+	 */
+	consolePrint(level, messages = []) {
+		const len = messages.length
+
+		if (len < 1) {
+			return undefined
+		}
+
+		if (!Logger.LEVELS.hasOwnProperty(level)) {
+			level = 'debug'
+		}
+
+		let levelCode = Logger.LEVELS[level],
+			header = `${_.upperCase(level)}: ${messages[0]}`
+
+		if (levelCode <= Logger.LEVELS.error) {
+			console.error(header)
+		} else if (levelCode <= Logger.LEVELS.warning) {
+			console.warn(header)
+		} else if (levelCode <= Logger.LEVELS.info) {
+			console.info(header)
+		} else {
+			console.debug(header)
+		}
+
+		if (len > 1) {
+			console.groupCollapsed(`Context for ${header}`)
+			for (let i = 1; i < len; i++) {
+				console.log(messages[i])
+			}
+			console.groupEnd()
+		}
 	}
 
-	alert(message) {
-		this.log(Logger.ALERT, message)
+	emergency(...args) {
+		this.log(Logger.EMERGENCY, args)
 	}
 
-	critical(message) {
-		this.log(Logger.CRITICAL, message)
+	alert(...args) {
+		this.log(Logger.ALERT, args)
 	}
 
-	error(message) {
-		this.log(Logger.ERROR, message)
+	critical(...args) {
+		this.log(Logger.CRITICAL, args)
 	}
 
-	warning(message) {
-		this.log(Logger.WARNING, message)
+	error(...args) {
+		this.log(Logger.ERROR, args)
 	}
 
-	notice(message) {
-		this.log(Logger.NOTICE, message)
+	warning(...args) {
+		this.log(Logger.WARNING, args)
 	}
 
-	info(message) {
-		this.log(Logger.INFO, message)
+	notice(...args) {
+		this.log(Logger.NOTICE, args)
 	}
 
-	debug(message) {
-		this.log(Logger.DEBUG, message)
+	info(...args) {
+		this.log(Logger.INFO, args)
+	}
+
+	debug(...args) {
+		this.log(Logger.DEBUG, args)
 	}
 }

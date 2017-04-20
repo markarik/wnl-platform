@@ -95,10 +95,8 @@
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
 					if (parseInt(this.screenId) === this.lastScreenId) {
-						console.log('completeLesson')
 						this.completeLesson(this.lessonProgressContext)
 					} else {
-						console.log('updateLesson')
 						this.updateLesson(this.lessonProgressContext)
 					}
 				}

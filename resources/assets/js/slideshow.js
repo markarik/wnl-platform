@@ -9,7 +9,7 @@ const handshake = new Postmate.Model({
 
 handshake.then(parent => {
 	parent.emit('loaded', true)
-})
+}).catch(exception => console.log(exception))
 
 Reveal.initialize({
 	embedded: true,

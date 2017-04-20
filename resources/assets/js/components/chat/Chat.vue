@@ -121,7 +121,7 @@
 				})
 
 				socket.on('error', (data) => {
-					console.log(`Socket error: ${data}`)
+					$wnl.logger.error(`Socket error: ${data}`)
 				})
 			},
 			addMessage(message) {
@@ -140,12 +140,12 @@
 				this.socket = socket
 				this.joinRoom()
 				this.setListeners(this.socket)
-			}).catch(console.log.bind(console))
+			}).catch(exception => $wnl.logger.capture(exception))
 		},
 		beforeDestroy() {
 			socket.disconnect().then(() => {
 				return true
-			}).catch(console.log.bind(console))
+			}).catch(exception => $wnl.logger.capture(exception))
 		},
 		components: {
 			'wnl-message': Message,

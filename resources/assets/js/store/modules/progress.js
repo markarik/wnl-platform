@@ -146,7 +146,7 @@ const actions = {
 						})
 						resolve()
 					})
-					.catch(error => console.log(error))
+					.catch(exception => $wnl.logger.capture(exception))
 			} else {
 				commit(types.PROGRESS_SETUP_COURSE, {
 					courseId: courseId,
@@ -158,14 +158,17 @@ const actions = {
 	},
 	startLesson({commit, getters}, payload) {
 		if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
+			$wnl.logger.info(`Starting lesson ${payload.lessonId}`, payload)
 			commit(types.PROGRESS_START_LESSON, payload)
 		}
 	},
 	updateLesson({commit}, payload) {
+		$wnl.logger.debug(`Updating lesson ${payload.lessonId}`)
 		commit(types.PROGRESS_UPDATE_LESSON, payload)
 	},
 	completeLesson({commit, getters}, payload) {
 		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {
+			$wnl.logger.info(`Completing lesson ${payload.lessonId}`, payload)
 			commit(types.PROGRESS_COMPLETE_LESSON, payload)
 		}
 	}

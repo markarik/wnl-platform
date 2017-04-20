@@ -69,7 +69,7 @@
 							this.orders = response.data.filter(this.isConfirmed)
 							this.loaded = true
 						})
-						.catch(console.log.bind(console))
+						.catch(exception => $wnl.logger.capture(exception))
 			},
 			isConfirmed(order) {
 				return !_.isEmpty(order.method)

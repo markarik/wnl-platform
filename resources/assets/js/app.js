@@ -21,10 +21,10 @@ Vue.component('wnl-text-loader', TextLoader)
 
 // Setup a logger
 import Logger from 'js/utils/logger'
-const wnlog = new Logger()
+$wnl.logger = new Logger()
 
 // Set up App
-wnlog.debug('Starting application...')
+$wnl.logger.debug('Starting application...')
 
 import App from 'js/components/App.vue'
 const app = new Vue({
@@ -40,6 +40,6 @@ $.ajaxSetup({
 	data: {},
 	method: 'POST',
 	error: function (error) {
-		console.log(error);
+		$wnl.logger.error(error)
 	}
 });

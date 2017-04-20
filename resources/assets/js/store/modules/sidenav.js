@@ -19,7 +19,6 @@ const getters = {
 // Mutations
 const mutations = {
 	[types.SET_NAVIGATION] (state, navigationData) {
-		console.log('setNavigation')
 		set(state, 'navigation', navigationData)
 	}
 }

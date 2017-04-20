@@ -201,7 +201,7 @@
 								setTimeout(this.checkStatus, 5000)
 							}
 						})
-						.catch(console.log.bind(console))
+						.catch(exception => $wnl.logger.capture(exception))
 			}
 		},
 		mounted() {

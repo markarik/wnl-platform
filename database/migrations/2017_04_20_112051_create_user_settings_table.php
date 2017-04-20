@@ -15,7 +15,7 @@ class CreateUserSettingsTable extends Migration
 	{
 		Schema::create('user_settings', function (Blueprint $table) {
 			$table->increments('id');
-			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('user_id')->unique();
 			$table->tinyInteger('consent_newsletter')->nullable();
 			$table->tinyInteger('consent_account')->nullable();
 			$table->tinyInteger('consent_order')->nullable();

@@ -30,6 +30,6 @@ class AnswerTransformer extends TransformerAbstract
 	{
 		$user = $answer->user;
 
-		return $this->item($user, new UserTransformer(['answers' => $answer->id]), 'users');
+		return $this->item($user, new UserProfileTransformer(['answers' => $answer->id]), 'users');
 	}
 }

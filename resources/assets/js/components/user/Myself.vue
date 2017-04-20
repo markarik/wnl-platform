@@ -37,16 +37,16 @@
 						iconTitle: 'Twoje zamówienia',
 					},
 					{
-						text: 'Twoje dane',
+						text: 'Profil publiczny',
 						itemClass: 'has-icon',
 						to: {
-							name: 'personal-info',
+							name: 'my-profile',
 							params: {},
 						},
 						isDisabled: false,
 						method: 'push',
 						iconClass: 'fa-user',
-						iconTitle: 'Twoje dane',
+						iconTitle: 'Profil publiczny',
 					},
 				]
 

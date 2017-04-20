@@ -24,9 +24,11 @@ Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	Route::get("{$r['screens']}/{id}", 'ScreensApiController@get');
 
 	// Users
-	Route::get("{$r['users']}/current", 'UsersApiController@getCurrentUser');
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 	Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+
+	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UsersApiController@getUserProfile');
+	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UsersApiController@putUserProfile');
 
 	// Editions
 	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');

@@ -15,7 +15,7 @@ class CreateUserBillingDataTable extends Migration
 	{
 		Schema::create('user_billing_data', function (Blueprint $table) {
 			$table->increments('id');
-			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('user_id')->unique();
 			$table->string('name')->nullable();
 			$table->string('vat_id')->nullable();
 			$table->string('address')->nullable();

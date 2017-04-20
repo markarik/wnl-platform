@@ -53,6 +53,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Order');
 	}
 
+	public function profile()
+	{
+		return $this->hasOne('App\Models\UserProfile');
+	}
+
 	public function getFullNameAttribute()
 	{
 		return $this->first_name . ' ' . $this->last_name;

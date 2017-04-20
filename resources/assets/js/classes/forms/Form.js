@@ -99,11 +99,27 @@ class Form {
 					resolve(response.data);
 				})
 				.catch(error => {
-					this.onFail(error.response.data);
-
-					reject(error.response.data);
+					if (error.response.status === 422) {
+						this.errors.record(error.response.data);
+					} else {
+						reject(error);
+					}
 				});
 		});
+	}
+
+	/**
+	 * Pre-fill the form with existing data.
+	 *
+	 * @param url
+	 */
+	populate(url) {
+		return axios.get(url)
+			.then(response => {
+				Object.keys(response.data).forEach((field) => {
+					this[field] = response.data[field]
+				})
+			})
 	}
 
 
@@ -113,21 +129,9 @@ class Form {
 	 * @param {object} data
 	 */
 	onSuccess(data) {
-		alert(data.message); // temporary
-
-		this.reset();
-	}
-
-
-	/**
-	 * Handle a failed form submission.
-	 *
-	 * @param {object} errors
-	 */
-	onFail(errors) {
-		this.errors.record(errors);
+		this.errors.clear();
 	}
 }
 
 
-export { Form as default }
+export {Form as default}

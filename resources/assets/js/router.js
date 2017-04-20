@@ -85,9 +85,9 @@ if (isProduction()) {
 					component: require('js/components/user/MyOrders.vue')
 				},
 				{
-					name: 'personal-info',
-					path: 'my-personal-info',
-					component: require('js/components/user/MyPersonalInfo.vue')
+					name: 'my-profile',
+					path: 'profile',
+					component: require('js/components/user/MyProfile.vue')
 				}
 			]
 		},

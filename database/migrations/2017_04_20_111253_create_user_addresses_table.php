@@ -15,7 +15,7 @@ class CreateUserAddressesTable extends Migration
 	{
 		Schema::create('user_addresses', function (Blueprint $table) {
 			$table->increments('id');
-			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('user_id')->unique();
 			$table->longText('address')->nullable();
 			$table->longText('zip')->nullable();
 			$table->longText('city')->nullable();

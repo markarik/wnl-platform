@@ -1,6 +1,10 @@
 <template lang="html">
 	<div class="container">
 		<h1>Twój profil publiczny</h1>
+		<wnl-avatar size="large"></wnl-avatar>
+		<wnl-upload @success="onUploadSuccess">
+			<a>Zmień</a>
+		</wnl-upload>
 		<div class="notification is-success has-text-centered" v-if="saved">
 			Zapisano
 		</div>
@@ -31,6 +35,8 @@
 <script>
 	import Form from '../../classes/forms/Form'
 	import Input from '../global/form/Input'
+	import Upload from '../global/Upload'
+	import {mapActions} from 'vuex'
 
 	export default {
 		data() {
@@ -48,6 +54,7 @@
 			}
 		},
 		methods: {
+			...mapActions(['setupCurrentUser']),
 			onSubmit() {
 				this.form.put(this.resourceUrl)
 						.then(response => this.saved = true)
@@ -55,6 +62,9 @@
 							this.submissionFailed = true
 							// TODO: Push to sentry
 						})
+			},
+			onUploadSuccess() {
+				this.setupCurrentUser()
 			}
 		},
 		mounted() {
@@ -62,6 +72,7 @@
 		},
 		components: {
 			'wnl-form-input': Input,
+			'wnl-upload': Upload,
 		},
 	}
 </script>

@@ -30,6 +30,8 @@ Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UsersApiController@getUserProfile');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UsersApiController@putUserProfile');
 
+	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UsersApiController@putUserAvatar');
+
 	// Editions
 	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 

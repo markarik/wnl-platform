@@ -51,7 +51,7 @@ trait GeneratesApiResponses
 			->json();
 	}
 
-	protected function respondInvalidInput($data = [])
+	protected function respondInvalidInput($data = [], $message = '')
 	{
 		return $this
 			->setMessage($message ?? 'Invalid input')

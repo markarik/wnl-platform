@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass]">
-		<img :title="usernameToUse" class="wnl-avatar-custom" v-if="isCustom">
+		<img :title="usernameToUse" class="wnl-avatar-custom" v-if="isCustom" :src="currentUserAvatar">
 		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 	</div>
 </template>
@@ -31,12 +31,13 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
+				'currentUserAvatar',
 			]),
 			usernameToUse() {
 				return this.username || this.currentUserFullName
 			},
 			isCustom() {
-				return false // TODO: Fix when images are available
+				return this.currentUserAvatar !== null
 			},
 			sizeClass() {
 				// large = 50x50px, medium = 30x30px, small = 20x20px

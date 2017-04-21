@@ -27,6 +27,7 @@ class UserProfileTransformer extends TransformerAbstract
 			'public_phone' => $profile->public_phone,
 			'username'     => $profile->username,
 			'full_name'    => $profile->full_name,
+			'avatar'       => $profile->avatar_url,
 		];
 
 		if ($this->parent) {

@@ -13,4 +13,9 @@ class UserProfile extends Model
 		'public_phone',
 		'username',
 	];
+
+	public function getAvatarUrlAttribute()
+	{
+		return $this->avatar ? asset('storage/' . $this->avatar) : null;
+	}
 }

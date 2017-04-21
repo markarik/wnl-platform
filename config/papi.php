@@ -12,6 +12,8 @@ return [
 		'user-address'        => 'address',
 		'user-billing-data'   => 'billing',
 		'user-settings'       => 'settings',
+		'user-avatar'         => 'avatar',
+		'user-password'       => 'password',
 		'editions'            => 'editions',
 		'orders'              => 'orders',
 		'tags'                => 'tags',

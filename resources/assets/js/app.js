@@ -19,16 +19,13 @@ Vue.component('wnl-icon', Icon)
 Vue.component('wnl-image-button', ImageButton)
 Vue.component('wnl-text-loader', TextLoader)
 
-// Setup a debug function
-import { isDebug } from 'js/utils/env'
-$wnl.debug = (data) => {
-	if (isDebug()) console.log(data)
-}
-if (isDebug()) {
-	Vue.config.performance = true
-}
+// Setup a logger
+import Logger from 'js/utils/logger'
+$wnl.logger = new Logger()
 
 // Set up App
+$wnl.logger.debug('Starting application...')
+
 import App from 'js/components/App.vue'
 const app = new Vue({
 	router,
@@ -43,6 +40,6 @@ $.ajaxSetup({
 	data: {},
 	method: 'POST',
 	error: function (error) {
-		console.log(error);
+		$wnl.logger.error(error)
 	}
 });

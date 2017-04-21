@@ -36,6 +36,9 @@ return [
 			Autorskie materiały ułatwiające notowanie, powtórki i systematyzację wiedzy (przesyłka kurierska w cenie)
 		</li>
 		<li class="list-group-item">
+			Baza 2000 pytań do LEK-u w cenie! System ułatwiający powtarzanie najtrudniejszych pytań i łatwe przerobienie wszystkich!
+		</li>
+		<li class="list-group-item">
 			Codzienna porcja wiedzy o efektywnym procesie nauki, która przyda się nie tylko podczas przygotowań do egzaminu!
 		</li>
 		<li class="list-group-item">

@@ -6,12 +6,17 @@
 		<p class="big">
 			Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
 		</p>
-		<div class="wnl-quiz">
-			<wnl-quiz-question v-for="question in getUnresolved" v-if="isLoaded"
+		<div class="wnl-quiz" v-if="isLoaded">
+			<wnl-quiz-question v-for="question in getUnresolved"
 				:index="question.index"
 				:answers="question.answers"
 				:text="question.text"
 			></wnl-quiz-question>
+			<p class="has-text-centered">
+				<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
+					Sprawdź pytania
+				</a>
+			</p>
 		</div>
 	</div>
 </template>
@@ -42,13 +47,18 @@
 			},
 			...mapGetters('quiz', [
 				'isLoaded',
+				'isProcessing',
 				'getUnresolved',
 			])
 		},
 		methods: {
 			...mapActions('quiz', [
-				'setupQuestions'
-			])
+				'setupQuestions',
+				'checkQuiz',
+			]),
+			verify() {
+				this.checkQuiz()
+			},
 		},
 		mounted() {
 			this.setupQuestions(this.screenData.meta.resources[0])

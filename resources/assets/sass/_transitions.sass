@@ -6,5 +6,11 @@
 .fade-enter, .fade-leave-to
 	opacity: 0
 
+.slide-enter-active, .slide-leave-active
+	transition: all $transition-length-base
+
+.slide-enter, .slide-leave-to
+	max-height: 0
+
 .flip-list-move
 	transition: transform 3s

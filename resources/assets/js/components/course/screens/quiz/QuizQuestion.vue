@@ -1,9 +1,7 @@
 <template>
 	<div class="card margin vertical">
 		<header class="card-header">
-			<p class="card-header-title">
-				{{number}}) {{text}}
-			</p>
+			<p class="card-header-title">{{text}}</p>
 		</header>
 		<div class="card-content">
 			<transition-group name="flip-list" tag="ul">
@@ -58,7 +56,8 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import * as types from 'js/store/mutations-types'
+	import { mapGetters, mapMutations } from 'vuex'
 
 	export default {
 		props: ['answers', 'index', 'text', 'total', 'isResolved'],
@@ -71,20 +70,44 @@
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
+				'getSelectedAnswer',
 			]),
 			number() {
 				return this.index + 1
 			},
 		},
 		methods: {
+			...mapMutations('quiz', [
+				types.QUIZ_SELECT_ANSWER,
+			]),
+
+			/**
+			 * @param  {int} answerIndex
+			 * @return {Boolean}
+			 */
 			isSelected(answerIndex) {
-				return this.selected === answerIndex
+				return this.getSelectedAnswer(this.index) === answerIndex
 			},
+
+			/**
+			 * @param  {int} answerIndex
+			 * @return {Boolean}
+			 */
 			isCorrect(answerIndex) {
 				return this.isComplete && this.answers[answerIndex].is_correct
 			},
+
+			/**
+			 * Commits a Vuex mutatation that sets a selectedAnswer for the
+			 * current question.
+			 * @param  {int} answerIndex Index of a selected answer
+			 * @return {void}
+			 */
 			selectAnswer(answerIndex) {
-				this.selected = answerIndex
+				this[types.QUIZ_SELECT_ANSWER]({
+					index: this.index,
+					answer: answerIndex
+				})
 			}
 		}
 	}

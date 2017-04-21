@@ -12,7 +12,7 @@ const namespaced = true
 // Initial state
 const state = {
 	loaded: false,
-	isDone: false,
+	isComplete: false,
 	attempts: 0,
 	questions: []
 }
@@ -29,9 +29,11 @@ question: {
 
 const getters = {
 	isLoaded: (state) => state.loaded,
+	isComplete: (state) => state.isComplete,
 	getQuestions: (state) => state.questions,
 	getUnresolved: (state) => state.questions.filter((question) => !question.isResolved),
 	getUnanswered: (state) => state.questions.filter((question) => _.isNull(question.selectedAnswer)),
+	isResolved: (state) => (index) => state.questions[index].isResolved,
 }
 
 const mutations = {
@@ -42,7 +44,10 @@ const mutations = {
 		set(state, 'questions', payload)
 	},
 	[types.QUIZ_SELECT_ANSWER] (state, payload) {
-		set(state, questions[payload.index].selectedAnswer, payload.answer)
+		set(state.questions[payload.index], 'selectedAnswer', payload.answer)
+	},
+	[types.QUIZ_SHUFFLE_ANSWERS] (state, payload) {
+		set(state.questions[payload.index], 'answers', _.shuffle(state.questions[payload.index].answers))
 	},
 }
 
@@ -67,6 +72,7 @@ const actions = {
 						question.answers[j] = answer
 					}
 
+					question.index = i
 					question.selectedAnswer = null
 					question.isResolved = false
 					question.attemps = 0

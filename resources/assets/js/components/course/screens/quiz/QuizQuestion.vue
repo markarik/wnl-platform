@@ -2,16 +2,19 @@
 	<div class="card margin vertical">
 		<header class="card-header">
 			<p class="card-header-title">
-				{{text}}
+				{{number}}) {{text}}
 			</p>
 		</header>
 		<div class="card-content">
-			<p class="quiz-answer" v-for="(answer, index) in answers"
-				:class="{'is-selected': isSelected(index), 'is-correct': isCorrect(index)}"
-				@click="selectAnswer(index)"
-			>
-				{{answer.text}}
-			</p>
+			<transition-group name="flip-list" tag="ul">
+				<li class="quiz-answer" v-for="(answer, answerIndex) in answers"
+					:class="{'is-selected': isSelected(answerIndex), 'is-correct': isCorrect(answerIndex)}"
+					:key="answer"
+					@click="selectAnswer(answerIndex)"
+				>
+					{{answer.text}}
+				</li>
+			</transition-group>
 		</div>
 	</div>
 </template>
@@ -22,11 +25,13 @@
 	.quiz-answer
 		border-bottom: $border-light-gray
 		cursor: pointer
-		padding: 0.5em
+		list-style-position: inside
+		list-style-type: upper-alpha
+		padding: $margin-base
 		margin: 0
 
 		&:last-child
-			margin: 0
+			border: 0
 
 		&:hover
 			background: $color-light-gray
@@ -53,6 +58,8 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	export default {
 		props: ['answers', 'index', 'text', 'total', 'isResolved'],
 		name: 'QuizQuestion',
@@ -62,22 +69,22 @@
 			}
 		},
 		computed: {
+			...mapGetters('quiz', [
+				'isComplete',
+			]),
 			number() {
 				return this.index + 1
 			},
-			isResolved() {
-				return true
-			}
 		},
 		methods: {
-			isSelected(index) {
-				return this.selected === index
+			isSelected(answerIndex) {
+				return this.selected === answerIndex
 			},
-			isCorrect(index) {
-				return this.isResolved && this.answers[index].is_correct
+			isCorrect(answerIndex) {
+				return this.isComplete && this.answers[answerIndex].is_correct
 			},
-			selectAnswer(index) {
-				this.selected = index
+			selectAnswer(answerIndex) {
+				this.selected = answerIndex
 			}
 		}
 	}

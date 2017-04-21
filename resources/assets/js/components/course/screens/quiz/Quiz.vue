@@ -8,6 +8,7 @@
 		</p>
 		<div class="wnl-quiz">
 			<wnl-quiz-question v-for="question in getUnresolved" v-if="isLoaded"
+				:index="question.index"
 				:answers="question.answers"
 				:text="question.text"
 			></wnl-quiz-question>

@@ -40,25 +40,30 @@
 				'isLoaded',
 				'isProcessing',
 				'getUnresolved',
+				'getUnanswered',
 				'getQuestions',
 			]),
 			total() {
 				return _.size(this.questions)
 			},
+			unansweredAlert() {
+				return {
+					title: 'Brakuje odpowiedzi',
+					timer: 3000,
+					text: 'Aby zakończyć test, musisz rozwiązać poprawnie na wszystkie pytania, więc spróbuj odpowiedzieć na każde.',
+					type: 'warning',
+				}
+			},
 			tryAgainAlert() {
 				return {
-					showConfirmButton: false,
 					text: `Pozostałe pytania do rozwiązania: ${this.getUnresolved.length}`,
-					timer: 2000,
 					title: 'Spróbuj jeszcze raz!',
 					type: 'info',
 				}
 			},
 			successAlert() {
 				return {
-					showConfirmButton: false,
 					text: 'Wszystkie pytania rozwiązane poprawnie!',
-					timer: 2000,
 					title: 'Gratulacje!',
 					type: 'success',
 				}
@@ -76,13 +81,28 @@
 				'checkQuiz',
 			]),
 			verify() {
+				if (this.getUnanswered.length > 0) {
+					this.$swal(this.getAlertConfig(this.unansweredAlert))
+					return false
+				}
+
+				this.dispatchCheckQuiz()
+			},
+			dispatchCheckQuiz() {
 				this.checkQuiz().then(() => {
-					const alert = this.isComplete ? this.successAlert : this.tryAgainAlert
-					$wnl.logger.debug(alert)
-					this.$swal(swalConfig(alert))
+					const alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert
+					this.$swal(this.getAlertConfig(alertOptions))
 					scrollToTop()
 				})
 			},
+			getAlertConfig(options = {}) {
+				const defaults = {
+					showConfirmButton: false,
+					timer: 2000,
+				}
+
+				return swalConfig(_.merge(defaults, options))
+			}
 		},
 	}
 </script>

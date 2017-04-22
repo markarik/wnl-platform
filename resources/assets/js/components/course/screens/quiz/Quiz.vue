@@ -13,7 +13,7 @@
 			<p class="title is-5 has-text-centered">
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
-			<p class="big">Pytania kontrolne na dziś masz już zaliczone!</p>
+			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić swoje statystyki oraz poprawne odpowiedzi.</p>
 			<wnl-quiz-summary></wnl-quiz-summary>
 		</div>
 	</div>

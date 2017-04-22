@@ -27,6 +27,7 @@
 	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { scrollToTop } from 'js/utils/animations'
+	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'QuizList',
@@ -34,8 +35,33 @@
 			'wnl-quiz-question': QuizQuestion,
 		},
 		computed: {
+			...mapGetters('quiz', [
+				'isComplete',
+				'isLoaded',
+				'isProcessing',
+				'getUnresolved',
+				'getQuestions',
+			]),
 			total() {
 				return _.size(this.questions)
+			},
+			tryAgainAlert() {
+				return {
+					showConfirmButton: false,
+					text: `Pozostałe pytania do rozwiązania: ${this.getUnresolved.length}`,
+					timer: 2000,
+					title: 'Spróbuj jeszcze raz!',
+					type: 'info',
+				}
+			},
+			successAlert() {
+				return {
+					showConfirmButton: false,
+					text: 'Wszystkie pytania rozwiązane poprawnie!',
+					timer: 2000,
+					title: 'Gratulacje!',
+					type: 'success',
+				}
 			},
 			questions() {
 				if (this.isComplete) {
@@ -44,20 +70,18 @@
 
 				return this.getUnresolved
 			},
-			...mapGetters('quiz', [
-				'isComplete',
-				'isLoaded',
-				'isProcessing',
-				'getUnresolved',
-				'getQuestions',
-			])
 		},
 		methods: {
 			...mapActions('quiz', [
 				'checkQuiz',
 			]),
 			verify() {
-				this.checkQuiz().then(() => scrollToTop())
+				this.checkQuiz().then(() => {
+					const alert = this.isComplete ? this.successAlert : this.tryAgainAlert
+					$wnl.logger.debug(alert)
+					this.$swal(swalConfig(alert))
+					scrollToTop()
+				})
 			},
 		},
 	}

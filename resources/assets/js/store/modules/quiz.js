@@ -30,19 +30,19 @@ question: {
 */
 
 const getters = {
-	isLoaded: (state) => state.loaded,
-	isProcessing: (state) => state.processing,
-	isComplete: (state) => state.isComplete,
-	getQuestions: (state) => state.questions,
-	getResolved: (state) => state.questions.filter((question) => question.isResolved),
-	getUnresolved: (state) => state.questions.filter((question) => !question.isResolved),
-	getUnanswered: (state) => state.questions.filter((question) => _.isNull(question.selectedAnswer)),
-	isResolved: (state) => (index) => state.questions[index].isResolved,
-	getSelectedAnswer: (state) => (index) => state.questions[index].selectedAnswer,
 	getAttempts: (state) => state.attempts,
 	getCurrentScore: (state, getters) => {
 		return _.round(getters.getResolved.length * 100 / state.questionsLength, 0)
-	}
+	},
+	getQuestions: (state) => state.questions,
+	getResolved: (state) => state.questions.filter((question) => question.isResolved),
+	getSelectedAnswer: (state) => (index) => state.questions[index].selectedAnswer,
+	getUnresolved: (state) => state.questions.filter((question) => !question.isResolved),
+	getUnanswered: (state) => state.questions.filter((question) => _.isNull(question.selectedAnswer)),
+	isComplete: (state) => state.isComplete,
+	isLoaded: (state) => state.loaded,
+	isProcessing: (state) => state.processing,
+	isResolved: (state) => (index) => state.questions[index].isResolved,
 }
 
 const mutations = {
@@ -80,7 +80,11 @@ const mutations = {
 }
 
 const actions = {
-	setupQuestions({commit}, resource) {
+	setupQuestions({commit, state}, resource) {
+		if (state.questionsLength > 0) {
+			return false
+		}
+
 		axios.get(getApiUrl(`${resource.name}/${resource.id}?include=questions.answers`))
 			.then((response) => {
 				const included = response.data.included

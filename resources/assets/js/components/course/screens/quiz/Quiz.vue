@@ -10,9 +10,10 @@
 			<wnl-quiz-list></wnl-quiz-list>
 		</div>
 		<div v-else>
-			<p class="title is-5">
-				Gratulacje! Pytania kontrolne na dziś masz już zaliczone! <wnl-emoji name="tada"></wnl-emoji>
+			<p class="title is-5 has-text-centered">
+				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
+			<p class="big">Pytania kontrolne na dziś masz już zaliczone!</p>
 			<wnl-quiz-summary></wnl-quiz-summary>
 		</div>
 	</div>

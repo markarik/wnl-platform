@@ -7,7 +7,11 @@
 		<div class="card-content">
 			<transition-group name="flip-list" tag="ul">
 				<li class="quiz-answer" v-for="(answer, answerIndex) in answers"
-					:class="{'is-selected': isSelected(answerIndex), 'is-correct': isCorrect(answerIndex)}"
+					:class="{
+						'is-selected': isSelected(answerIndex),
+						'is-correct': isCorrect(answerIndex),
+						'is-hinted': hintCorrect(answerIndex),
+					}"
 					:key="answer"
 					@click="selectAnswer(answerIndex)"
 				>
@@ -40,6 +44,12 @@
 		&:last-child
 			border: 0
 
+		&.is-hinted
+			&::after
+				content: '☑'
+				position: absolute
+				right: $margin-base
+
 	.wnl-quiz-question.is-unresolved
 		.quiz-answer
 			cursor: pointer
@@ -71,9 +81,10 @@
 <script>
 	import * as types from 'js/store/mutations-types'
 	import { mapGetters, mapMutations } from 'vuex'
+	import { isDebug } from 'js/utils/env'
 
 	export default {
-		props: ['answers', 'index', 'text', 'total', 'isResolved'],
+		props: ['answers', 'index', 'text', 'total'],
 		name: 'QuizQuestion',
 		computed: {
 			...mapGetters('quiz', [
@@ -104,6 +115,15 @@
 			 */
 			isCorrect(answerIndex) {
 				return this.isComplete && this.answers[answerIndex].is_correct
+			},
+
+			/**
+			 * Helper property for debug purposes
+			 * @param  {int} answerIndex
+			 * @return {Boolean}
+			 */
+			hintCorrect(answerIndex) {
+				return isDebug() && this.answers[answerIndex].is_correct
 			},
 
 			/**

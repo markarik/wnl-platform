@@ -1,5 +1,6 @@
 <template>
-	<div class="card margin vertical">
+	<div class="wnl-quiz-question card margin vertical"
+		:class="{'is-unresolved': !isResolved(this.index)}">
 		<header class="card-header">
 			<p class="card-header-title">{{text}}</p>
 		</header>
@@ -20,39 +21,51 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.card-content ul
+		counter-reset: list
+
 	.quiz-answer
 		border-bottom: $border-light-gray
-		cursor: pointer
-		list-style-position: inside
-		list-style-type: upper-alpha
-		padding: $margin-base
+		list-style-type: none
+		padding: $margin-base $margin-huge
+		position: relative
 		margin: 0
+
+		&::before
+			content: counter(list, upper-alpha) ")"
+			counter-increment: list
+			left: $margin-base
+			position: absolute
 
 		&:last-child
 			border: 0
 
-		&:hover
-			background: $color-light-gray
+	.wnl-quiz-question.is-unresolved
+		.quiz-answer
+			cursor: pointer
 
-		&:active
-			background: $color-inactive-gray
+			&:hover
+				background: $color-light-gray
 
-		&, &:hover, &:active
-			transition: all $transition-length-base
+			&:active
+				background: $color-inactive-gray
 
-	.is-correct
+			&, &:hover, &:active
+				transition: all $transition-length-base
+
+			&.is-selected
+				background: $color-ocean-blue
+				color: $color-white
+
+				&:active, &:hover
+					background: $color-ocean-blue
+					color: $color-white
+
+	.quiz-answer.is-correct
 		background: $color-green
 
 		&:active, &:hover
 			background: $color-green
-
-	.is-selected
-		background: $color-ocean-blue
-		color: $color-white
-
-		&:active, &:hover
-			background: $color-ocean-blue
-			color: $color-white
 </style>
 
 <script>
@@ -62,14 +75,10 @@
 	export default {
 		props: ['answers', 'index', 'text', 'total', 'isResolved'],
 		name: 'QuizQuestion',
-		data() {
-			return {
-				selected: null,
-			}
-		},
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
+				'isResolved',
 				'getSelectedAnswer',
 			]),
 			number() {
@@ -104,10 +113,12 @@
 			 * @return {void}
 			 */
 			selectAnswer(answerIndex) {
-				this[types.QUIZ_SELECT_ANSWER]({
-					index: this.index,
-					answer: answerIndex
-				})
+				if (!this.isComplete) {
+					this[types.QUIZ_SELECT_ANSWER]({
+						index: this.index,
+						answer: answerIndex
+					})
+				}
 			}
 		}
 	}

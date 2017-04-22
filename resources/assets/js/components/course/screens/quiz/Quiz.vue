@@ -1,64 +1,47 @@
 <template>
-	<div>
-		<p class="title is-5">
-			Zanim zakończysz tę lekcję, sprawdź swoją wiedzę z wczorajszej! <wnl-emoji name="thinking_face"></wnl-emoji>
-		</p>
-		<p class="big">
-			Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
-		</p>
-		<div class="wnl-quiz" v-if="isLoaded">
-			<wnl-quiz-question v-for="question in getUnresolved"
-				:index="question.index"
-				:answers="question.answers"
-				:text="question.text"
-			></wnl-quiz-question>
-			<p class="has-text-centered">
-				<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
-					Sprawdź pytania
-				</a>
+	<div class="wnl-quiz">
+		<div v-if="!isComplete">
+			<p class="title is-5">
+				Zanim zakończysz tę lekcję, sprawdź swoją wiedzę z wczorajszej! <wnl-emoji name="thinking_face"></wnl-emoji>
 			</p>
+			<p class="big">
+				Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
+			</p>
+			<wnl-quiz-list></wnl-quiz-list>
+		</div>
+		<div v-else>
+			<p class="title is-5">
+				Gratulacje! Pytania kontrolne na dziś masz już zaliczone! <wnl-emoji name="tada"></wnl-emoji>
+			</p>
+			<wnl-quiz-summary></wnl-quiz-summary>
 		</div>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
+<style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
 	.wnl-quiz
-		border-top: $border-light-gray
 		margin: $margin-big 0
-		padding-top: $margin-big
 </style>
 
 <script>
-	import _ from 'lodash'
-	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
-	import { mapGetters, mapActions } from 'vuex'
+	import QuizList from 'js/components/course/screens/quiz/QuizList'
+	import QuizSummary from 'js/components/course/screens/quiz/QuizSummary'
+	import { mapActions, mapGetters } from 'vuex'
 
 	export default {
 		name: 'Quiz',
 		components: {
-			'wnl-quiz-question': QuizQuestion,
+			'wnl-quiz-list': QuizList,
+			'wnl-quiz-summary': QuizSummary,
 		},
 		props: ['screenData'],
 		computed: {
-			total() {
-				return _.size(this.questions)
-			},
-			...mapGetters('quiz', [
-				'isLoaded',
-				'isProcessing',
-				'getUnresolved',
-			])
+			...mapGetters('quiz', ['isComplete'])
 		},
 		methods: {
-			...mapActions('quiz', [
-				'setupQuestions',
-				'checkQuiz',
-			]),
-			verify() {
-				this.checkQuiz()
-			},
+			...mapActions('quiz', ['setupQuestions'])
 		},
 		mounted() {
 			this.setupQuestions(this.screenData.meta.resources[0])

@@ -14,7 +14,7 @@ const state = {
 	loaded: false,
 	processing: false,
 	isComplete: false,
-	attempts: 0,
+	attempts: [],
 	questionsLength: 0,
 	questions: [],
 }
@@ -34,13 +34,25 @@ const getters = {
 	isProcessing: (state) => state.processing,
 	isComplete: (state) => state.isComplete,
 	getQuestions: (state) => state.questions,
+	getResolved: (state) => state.questions.filter((question) => question.isResolved),
 	getUnresolved: (state) => state.questions.filter((question) => !question.isResolved),
 	getUnanswered: (state) => state.questions.filter((question) => _.isNull(question.selectedAnswer)),
 	isResolved: (state) => (index) => state.questions[index].isResolved,
 	getSelectedAnswer: (state) => (index) => state.questions[index].selectedAnswer,
+	getAttempts: (state) => state.attempts,
+	getCurrentScore: (state, getters) => {
+		return _.round(getters.getResolved.length * 100 / state.questionsLength, 0)
+	}
 }
 
 const mutations = {
+	[types.QUIZ_ATTEMPT] (state, payload) {
+		// set(state, 'attempts', state.attempts + 1)
+		state.attempts.push(payload)
+	},
+	[types.QUIZ_COMPLETE] (state) {
+		set(state, 'isComplete', true)
+	},
 	[types.QUIZ_IS_LOADED] (state) {
 		set(state, 'loaded', true)
 	},
@@ -104,23 +116,31 @@ const actions = {
 	},
 
 	checkQuiz({state, commit, getters}) {
-		commit(types.QUIZ_TOGGLE_PROCESSING)
+		return new Promise((resolve, reject) => {
+			commit(types.QUIZ_TOGGLE_PROCESSING)
 
-		_.each(getters.getUnresolved, question => {
-			let selected = question.selectedAnswer,
-				index = question.index
+			_.each(getters.getUnresolved, question => {
+				let selected = question.selectedAnswer,
+					index = question.index
 
-			if (!_.isNull(selected) && question.answers[selected].is_correct) {
-				$wnl.logger.debug(`Answer correct! Question: ${index}, Answer: ${selected}`)
-				commit(types.QUIZ_RESOLVE_QUESTION, {index})
-			} else {
-				$wnl.logger.debug(`Wrong answer! Question: ${index}`)
-				commit(types.QUIZ_RESET_ANSWER, {index})
-				commit(types.QUIZ_SHUFFLE_ANSWERS, {index})
+				if (!_.isNull(selected) && question.answers[selected].is_correct) {
+					commit(types.QUIZ_RESOLVE_QUESTION, {index})
+				} else {
+					commit(types.QUIZ_RESET_ANSWER, {index})
+					commit(types.QUIZ_SHUFFLE_ANSWERS, {index})
+				}
+			})
+
+			commit(types.QUIZ_ATTEMPT, { score: getters.getCurrentScore })
+
+			if (getters.getUnresolved.length === 0) {
+				commit(types.QUIZ_COMPLETE)
 			}
-		})
 
-		commit(types.QUIZ_TOGGLE_PROCESSING)
+			commit(types.QUIZ_TOGGLE_PROCESSING)
+
+			resolve()
+		})
 	},
 }
 

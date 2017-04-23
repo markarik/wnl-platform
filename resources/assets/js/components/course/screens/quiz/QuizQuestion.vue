@@ -81,7 +81,7 @@
 <script>
 	import * as types from 'js/store/mutations-types'
 	import { mapGetters, mapMutations } from 'vuex'
-	import { isDebug } from 'js/utils/env'
+	import { isDev } from 'js/utils/env'
 
 	export default {
 		props: ['answers', 'index', 'text', 'total'],
@@ -123,7 +123,7 @@
 			 * @return {Boolean}
 			 */
 			hintCorrect(answerIndex) {
-				return isDebug() && this.answers[answerIndex].is_correct
+				return isDev() && this.answers[answerIndex].is_correct
 			},
 
 			/**

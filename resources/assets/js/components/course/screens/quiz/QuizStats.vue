@@ -3,12 +3,6 @@
 		<div class="level">
 			<div class="level-item has-text-centered">
 				<div>
-					<p class="heading">Podejścia</p>
-					<p class="title">{{ attempts }}</p>
-				</div>
-			</div>
-			<div class="level-item has-text-centered">
-				<div>
 					<p class="heading">Pierwszy wynik</p>
 					<p class="title">{{ firstAttemptScore }}</p>
 				</div>

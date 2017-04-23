@@ -3,6 +3,13 @@
 		:class="{'is-unresolved': !isResolved(this.index)}">
 		<header class="card-header">
 			<p class="card-header-title">{{text}}</p>
+			<div class="card-header-icons">
+				<a @click="mockSaving">
+					<span class="icon is-small">
+						<i class="fa fa-star-o"></i>
+					</span>
+				</a>
+			</div>
 		</header>
 		<div class="card-content">
 			<transition-group name="flip-list" tag="ul">
@@ -82,6 +89,7 @@
 	import * as types from 'js/store/mutations-types'
 	import { mapGetters, mapMutations } from 'vuex'
 	import { isDev } from 'js/utils/env'
+	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		props: ['answers', 'index', 'text', 'total'],
@@ -139,6 +147,15 @@
 						answer: answerIndex
 					})
 				}
+			},
+
+			mockSaving() {
+				this.$swal(swalConfig({
+					html: `<p class="normal">Pracujemy nad zapisywaniem pytań do własnej Kolekcji!</p>
+						<p class="normal margin top">Dzięki tej funkcji, będziecie mogli zachowywać wybrane pytania i wracać do nich w dowolnym momencie!</p>`,
+					title: 'Już wkrótce!',
+					type: 'info',
+				}))
 			}
 		}
 	}

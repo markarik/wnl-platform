@@ -149,10 +149,14 @@
 				}
 			},
 
+			/**
+			 * A temporary method, to be removed when Collections are done.
+			 * The method displays a modal informing about the upcoming feature.
+			 */
 			mockSaving() {
 				this.$swal(swalConfig({
 					html: `<p class="normal">Pracujemy nad zapisywaniem pytań do własnej Kolekcji!</p>
-						<p class="normal margin top">Dzięki tej funkcji, będziecie mogli zachowywać wybrane pytania i wracać do nich w dowolnym momencie!</p>`,
+						<p class="normal" style="margin-top: 0.6em">Dzięki tej funkcji, będziecie mogli zachowywać wybrane pytania i wracać do nich w dowolnym momencie!</p>`,
 					title: 'Już wkrótce!',
 					type: 'info',
 				}))

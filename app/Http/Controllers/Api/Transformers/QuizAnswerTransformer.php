@@ -20,9 +20,10 @@ class QuizAnswerTransformer extends TransformerAbstract
 	public function transform(QuizAnswer $quizAnswer)
 	{
 		$data = [
-			'id'         => $quizAnswer->id,
-			'text'       => $quizAnswer->text,
-			'is_correct' => $quizAnswer->is_correct,
+			'id'             => $quizAnswer->id,
+			'text'           => $quizAnswer->text,
+			'is_correct'     => $quizAnswer->is_correct,
+			'preserve_order' => $quizAnswer->preserve_order,
 		];
 
 		if ($this->parent) {

@@ -18,6 +18,7 @@ class CreateQuizAnswersTable extends Migration
 			$table->unsignedInteger('quiz_question_id');
 			$table->text('text');
 			$table->tinyInteger('is_correct')->default(0);
+			$table->tinyInteger('preserve_order')->default(0);
 			$table->timestamps();
 		});
 	}

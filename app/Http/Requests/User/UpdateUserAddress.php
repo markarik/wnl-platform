@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserProfile extends FormRequest
+class UpdateUserAddress extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -16,7 +16,7 @@ class UpdateUserProfile extends FormRequest
 	{
 		$user = User::fetch($this->route('id'));
 
-		return $this->user()->can('update', $user->profile);
+		return $this->user()->can('update', $user->address);
 	}
 
 	/**
@@ -27,11 +27,10 @@ class UpdateUserProfile extends FormRequest
 	public function rules()
 	{
 		return [
-			'first_name'   => 'required|alpha',
-			'last_name'    => 'required|alpha',
-			'public_email' => 'email',
-			'public_phone' => 'nullable',
-			'username'     => 'max:12|alpha_num',
+			'address' => 'required',
+			'zip'     => 'required',
+			'city'    => 'required',
+			'phone'   => 'required',
 		];
 	}
 }

@@ -1,10 +1,11 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass]">
-		<img :title="usernameToUse" class="wnl-avatar-custom" v-if="isCustom" :src="currentUserAvatar">
+		<img :title="usernameToUse" class="wnl-avatar-custom" :class="sizeClass" v-if="isCustom"
+			 :src="currentUserAvatar">
 		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 	</div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
@@ -20,6 +21,7 @@
 	.wnl-avatar-automatic
 		color: $color-white
 		font-weight: $font-weight-black
+
 </style>
 <script>
 	import { mapGetters } from 'vuex'

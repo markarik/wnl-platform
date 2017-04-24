@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUser extends FormRequest
+class UpdateUserBilling extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -14,9 +13,7 @@ class UpdateUser extends FormRequest
 	 */
 	public function authorize()
 	{
-		$user = User::fetch($this->route('id'));
-
-		return $this->user()->can('update', $user);
+		return false;
 	}
 
 	/**

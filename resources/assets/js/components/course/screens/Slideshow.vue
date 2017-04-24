@@ -124,9 +124,7 @@
 				this.isFocused = this.iframe === document.activeElement
 			},
 			initSlideshow() {
-				console.log('initSlideshow')
-				console.log(this.container)
-				console.log(this.slideshowUrl)
+				$wnl.logger.debug('Initiating slideshow')
 				new Postmate({
 						container: this.container,
 						url: this.slideshowUrl
@@ -137,7 +135,7 @@
 
 						this.goToSlide(this.slideNumber)
 						this.focusSlideshow()
-					}).catch(console.log.bind(console))
+					}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {
 				if (typeof event.data === 'string') {
@@ -179,7 +177,7 @@
 			}
 		},
 		mounted() {
-			Postmate.debug = isDebug()
+			Postmate.debug = false
 			this.initSlideshow()
 		},
 		watch: {

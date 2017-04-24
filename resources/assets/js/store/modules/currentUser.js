@@ -26,6 +26,7 @@ const getters = {
 	currentUserId: state => state.currentUser.data.id,
 	currentUserName: state => state.currentUser.data.first_name,
 	currentUserFullName: state => state.currentUser.data.full_name,
+	currentUserSlug: state => state.currentUser.data.full_name.toLowerCase().replace(/\W/g, '')
 }
 
 // Mutations

@@ -59,7 +59,7 @@
 					.then((response) => {
 						this.screenData = response.data
 					})
-					.catch(error => console.log(error))
+					.catch(exception => $wnl.logger.capture(exception))
 			}
 		},
 		mounted() {

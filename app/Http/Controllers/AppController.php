@@ -11,11 +11,13 @@ class AppController extends Controller
 	{
 		JavaScript::put([
 			'env'      => [
-				'appDebug' => env('APP_DEBUG'),
-				'appEnv'   => env('APP_ENV'),
-				'appUrl'   => env('APP_URL'),
-				'chatHost' => env('CHAT_HOST'),
-				'chatPort' => env('CHAT_PORT'),
+				'appDebug'           => env('APP_DEBUG'),
+				'APP_LOG_LEVEL'      => env('APP_LOG_LEVEL'),
+				'appEnv'             => env('APP_ENV'),
+				'appUrl'             => env('APP_URL'),
+				'chatHost'           => env('CHAT_HOST'),
+				'chatPort'           => env('CHAT_PORT'),
+				'SENTRY_DSN_VUE_PUB' => env('SENTRY_DSN_VUE_PUB'),
 			],
 			'config'   => [
 				'papi'    => config('papi'),

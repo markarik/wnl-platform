@@ -1,17 +1,30 @@
 <template>
-	<div class="card margin vertical">
+	<div class="wnl-quiz-question card margin vertical"
+		:class="{'is-unresolved': !isResolved(this.index)}">
 		<header class="card-header">
-			<p class="card-header-title">
-				{{text}}
-			</p>
+			<p class="card-header-title">{{text}}</p>
+			<div class="card-header-icons">
+				<a @click="mockSaving">
+					<span class="icon is-small">
+						<i class="fa fa-star-o"></i>
+					</span>
+				</a>
+			</div>
 		</header>
 		<div class="card-content">
-			<p class="quiz-answer" v-for="(answer, index) in answers"
-				:class="{'is-selected': isSelected(index), 'is-correct': isCorrect(index)}"
-				@click="selectAnswer(index)"
-			>
-				{{answer.text}}
-			</p>
+			<transition-group name="flip-list" tag="ul">
+				<li class="quiz-answer" v-for="(answer, answerIndex) in answers"
+					:class="{
+						'is-selected': isSelected(answerIndex),
+						'is-correct': isCorrect(answerIndex),
+						'is-hinted': hintCorrect(answerIndex),
+					}"
+					:key="answer"
+					@click="selectAnswer(answerIndex)"
+				>
+					{{answer.text}}
+				</li>
+			</transition-group>
 		</div>
 	</div>
 </template>
@@ -19,63 +32,134 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.card-content ul
+		counter-reset: list
+
 	.quiz-answer
 		border-bottom: $border-light-gray
-		cursor: pointer
-		padding: 0.5em
+		list-style-type: none
+		padding: $margin-base $margin-huge
+		position: relative
 		margin: 0
 
+		&::before
+			content: counter(list, upper-alpha) ")"
+			counter-increment: list
+			left: $margin-base
+			position: absolute
+
 		&:last-child
-			margin: 0
+			border: 0
 
-		&:hover
-			background: $color-light-gray
+		&.is-hinted
+			&::after
+				content: '☑'
+				position: absolute
+				right: $margin-base
 
-		&:active
-			background: $color-inactive-gray
+	.wnl-quiz-question.is-unresolved
+		.quiz-answer
+			cursor: pointer
 
-		&, &:hover, &:active
-			transition: all $transition-length-base
+			&:hover
+				background: $color-light-gray
 
-	.is-correct
+			&:active
+				background: $color-inactive-gray
+
+			&, &:hover, &:active
+				transition: all $transition-length-base
+
+			&.is-selected
+				background: $color-ocean-blue
+				color: $color-white
+
+				&:active, &:hover
+					background: $color-ocean-blue
+					color: $color-white
+
+	.quiz-answer.is-correct
 		background: $color-green
 
 		&:active, &:hover
 			background: $color-green
-
-	.is-selected
-		background: $color-inactive-gray
-
-		&:active, &:hover
-			background: $color-inactive-gray
 </style>
 
 <script>
+	import * as types from 'js/store/mutations-types'
+	import { mapGetters, mapMutations } from 'vuex'
+	import { isDev } from 'js/utils/env'
+	import { swalConfig } from 'js/utils/swal'
+
 	export default {
-		props: ['answers', 'index', 'text', 'total', 'isResolved'],
+		props: ['answers', 'index', 'text', 'total'],
 		name: 'QuizQuestion',
-		data() {
-			return {
-				selected: null,
-			}
-		},
 		computed: {
+			...mapGetters('quiz', [
+				'isComplete',
+				'isResolved',
+				'getSelectedAnswer',
+			]),
 			number() {
 				return this.index + 1
 			},
-			isResolved() {
-				return true
-			}
 		},
 		methods: {
-			isSelected(index) {
-				return this.selected === index
+			...mapMutations('quiz', [
+				types.QUIZ_SELECT_ANSWER,
+			]),
+
+			/**
+			 * @param  {int} answerIndex
+			 * @return {Boolean}
+			 */
+			isSelected(answerIndex) {
+				return this.getSelectedAnswer(this.index) === answerIndex
 			},
-			isCorrect(index) {
-				return this.isResolved && this.answers[index].is_correct
+
+			/**
+			 * @param  {int} answerIndex
+			 * @return {Boolean}
+			 */
+			isCorrect(answerIndex) {
+				return this.isComplete && this.answers[answerIndex].is_correct
 			},
-			selectAnswer(index) {
-				this.selected = index
+
+			/**
+			 * Helper property for debug purposes
+			 * @param  {int} answerIndex
+			 * @return {Boolean}
+			 */
+			hintCorrect(answerIndex) {
+				return isDev() && this.answers[answerIndex].is_correct
+			},
+
+			/**
+			 * Commits a Vuex mutatation that sets a selectedAnswer for the
+			 * current question.
+			 * @param  {int} answerIndex Index of a selected answer
+			 * @return {void}
+			 */
+			selectAnswer(answerIndex) {
+				if (!this.isComplete) {
+					this[types.QUIZ_SELECT_ANSWER]({
+						index: this.index,
+						answer: answerIndex
+					})
+				}
+			},
+
+			/**
+			 * A temporary method, to be removed when Collections are done.
+			 * The method displays a modal informing about the upcoming feature.
+			 */
+			mockSaving() {
+				this.$swal(swalConfig({
+					html: `<p class="normal">Pracujemy nad zapisywaniem pytań do własnej Kolekcji!</p>
+						<p class="normal" style="margin-top: 0.6em">Dzięki tej funkcji, będziecie mogli zachowywać wybrane pytania i wracać do nich w dowolnym momencie!</p>`,
+					title: 'Już wkrótce!',
+					type: 'info',
+				}))
 			}
 		}
 	}

@@ -136,6 +136,11 @@ html, body {
 	border-bottom: $border-light-gray;
 }
 
+// Notifications
+.swal2-spacer {
+	background: transparent;
+}
+
 // Payment
 
 .payment-content {

@@ -6,17 +6,23 @@ import { getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
+function getLocalStorageKey(setId, userSlug) {
+	return `wnl-quiz-${setId}-u-${userSlug}`
+}
+
 // Should the module be namespaced?
 const namespaced = true
 
 // Initial state
 const state = {
-	loaded: false,
-	processing: false,
-	isComplete: false,
 	attempts: [],
+	isComplete: false,
+	loaded: false,
 	questionsLength: 0,
 	questions: [],
+	processing: false,
+	setId: null,
+	setName: '',
 }
 
 /*
@@ -62,7 +68,15 @@ const mutations = {
 	[types.QUIZ_RESOLVE_QUESTION] (state, payload) {
 		set(state.questions[payload.index], 'isResolved', true)
 	},
+	[types.QUIZ_RESTORE_STATE] (state, payload) {
+		_.forEach(payload, (value, key) => {
+			$wnl.logger.debug(`Setting ${key}: ${value}`)
+			set(state, key, value)
+		})
+	},
 	[types.QUIZ_SET_QUESTIONS] (state, payload) {
+		set(state, 'setId', payload.setId)
+		set(state, 'setName', payload.setName)
 		set(state, 'questions', payload.questions)
 		if (payload.hasOwnProperty('len')) {
 			set(state, 'questionsLength', payload.len)
@@ -80,9 +94,18 @@ const mutations = {
 }
 
 const actions = {
-	setupQuestions({commit, state}, resource) {
+	setupQuestions({commit, dispatch, getters, state, rootGetters}, resource) {
 		if (state.questionsLength > 0) {
 			return false
+		}
+
+		let storeKey = getLocalStorageKey(resource.id, rootGetters.currentUserSlug),
+			storedState = store.get(storeKey)
+		$wnl.logger.debug('Checking localStorage for saved state...', storeKey, storedState)
+		if (!_.isUndefined(storedState)) {
+			commit(types.QUIZ_RESTORE_STATE, storedState)
+			commit(types.QUIZ_IS_LOADED)
+			return true
 		}
 
 		axios.get(getApiUrl(`${resource.name}/${resource.id}?include=questions.answers`))
@@ -114,12 +137,18 @@ const actions = {
 					questions.push(question)
 				}
 
-				commit(types.QUIZ_SET_QUESTIONS, {questions, len})
+				commit(types.QUIZ_SET_QUESTIONS, {
+					setId: response.data.id,
+					len,
+					setName: response.data.name,
+					questions,
+				})
 				commit(types.QUIZ_IS_LOADED)
+				dispatch('saveQuiz')
 			})
 	},
 
-	checkQuiz({state, commit, getters}) {
+	checkQuiz({commit, getters, dispatch}) {
 		return new Promise((resolve, reject) => {
 			commit(types.QUIZ_TOGGLE_PROCESSING)
 
@@ -143,8 +172,15 @@ const actions = {
 
 			commit(types.QUIZ_TOGGLE_PROCESSING)
 
+			dispatch('saveQuiz')
 			resolve()
 		})
+	},
+
+	saveQuiz({state, rootGetters}) {
+		// TODO: Apr 24, 2017 - We must solve it better.
+		let storeKey = getLocalStorageKey(state.setId, rootGetters.currentUserSlug)
+		store.set(storeKey, state, new Date().getTime() + 3 * 60 * 60 * 1000)
 	},
 }
 

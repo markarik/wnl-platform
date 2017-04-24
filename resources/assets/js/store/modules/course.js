@@ -34,7 +34,7 @@ const getters = {
 	getLessons: state => state.structure[resource('lessons')],
 	getAvailableLessons: (state, getters) => {
 		let lesson, lessons = []
-		for (const lessonId in getters.getLessons) {
+		for (var lessonId in getters.getLessons) {
 			lesson = getters.getLessons[lessonId]
 			if (lesson.isAvailable) {
 				lessons.push(lesson)
@@ -67,10 +67,10 @@ const actions = {
 			dispatch('setStructure', courseId),
 			dispatch('progress/setupCourse', courseId, {root: true}),
 		]).then(resolutions => {
-			console.log('Course ready, yay!')
+			$wnl.logger.debug('Course ready, yay!')
 			commit(types.COURSE_READY)
 		}, reason => {
-			console.log(reason)
+			$wnl.logger.error(reason)
 		})
 	},
 	setStructure({ commit }, courseId) {
@@ -80,8 +80,8 @@ const actions = {
 					commit(types.SET_STRUCTURE, response.data)
 					resolve()
 				})
-				.catch(error => {
-						console.log.bind(console)
+				.catch((exception) => {
+						$wnl.logger.capture(exception)
 						reject()
 					}
 				)

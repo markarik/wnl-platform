@@ -1,5 +1,4 @@
 import {set} from 'vue'
-// import * as users from '../../api/users'
 import * as types from '../mutations-types'
 import * as socket from '../../socket'
 
@@ -51,7 +50,7 @@ const actions = {
 		const socket = socket.getSocket()
 		socket.on('connected', function (data) {
 			commit(types.CHAT_SET_SOCKET, socket)
-			console.log(data);
+			$wnl.logger.debug('Joined chat room', data)
 			socket.emit('join-room', 1);
 		})
 	}

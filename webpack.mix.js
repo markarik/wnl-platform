@@ -21,6 +21,7 @@ if (mix.config.inProduction) {
 	mix.version()
 	mix.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
 		.copy('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
+		.version()
 }
 
 if (process.env.SYNC === 'on') {

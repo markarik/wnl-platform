@@ -10,6 +10,24 @@ function getLocalStorageKey(setId, userSlug) {
 	return `wnl-quiz-${setId}-u-${userSlug}`
 }
 
+/**
+ * Returns a 5-element Array of random "hit" numbers for given answers
+ * @return {Array} An array of 5 random numbers
+ */
+function getMockedStats() {
+	return [...new Array(5)].map(() => _.random(0, 100))
+}
+
+/**
+ * Calculates a percentage share of a value under stats[index] in the array sum
+ * @param  {Array} stats An array of numeric values
+ * @param  {Integer} index An index of a value you want a percentage share for
+ * @return {Integer} Returns an integer being a percentage value
+ */
+function getPercentageShare(stats, index) {
+	return _.toInteger(stats[index]*100/_.sum(stats))
+}
+
 // Should the module be namespaced?
 const namespaced = true
 
@@ -70,7 +88,6 @@ const mutations = {
 	},
 	[types.QUIZ_RESTORE_STATE] (state, payload) {
 		_.forEach(payload, (value, key) => {
-			$wnl.logger.debug(`Setting ${key}: ${value}`)
 			set(state, key, value)
 		})
 	},
@@ -101,7 +118,6 @@ const actions = {
 
 		let storeKey = getLocalStorageKey(resource.id, rootGetters.currentUserSlug),
 			storedState = store.get(storeKey)
-		$wnl.logger.debug('Checking localStorage for saved state...', storeKey, storedState)
 		if (!_.isUndefined(storedState)) {
 			commit(types.QUIZ_RESTORE_STATE, storedState)
 			commit(types.QUIZ_IS_LOADED)
@@ -119,11 +135,14 @@ const actions = {
 				for (let i = 0; i < len; i++) {
 					let id = questionsIds[i],
 						question = included.questions[id],
-						answersIds = question.answers
+						answersIds = question.answers,
+						mockedStats = getMockedStats()
 
 					for (let j = 0; j < answersIds.length; j++) {
 						let answerId = answersIds[j],
 							answer = included.answers[answerId]
+
+						answer.stats = getPercentageShare(mockedStats, j)
 
 						question.answers[j] = answer
 					}

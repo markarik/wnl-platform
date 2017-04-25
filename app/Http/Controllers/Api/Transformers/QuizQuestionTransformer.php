@@ -24,6 +24,7 @@ class QuizQuestionTransformer extends TransformerAbstract
 			'text'           => $quizQuestion->text,
 			'explanation'    => $quizQuestion->explanation,
 			'preserve_order' => $quizQuestion->preserve_order,
+			'total_hits'     => $quizQuestion->answers->sum('hits'),
 		];
 
 		if ($this->parent) {

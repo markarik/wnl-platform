@@ -23,6 +23,7 @@ class QuizAnswerTransformer extends TransformerAbstract
 			'id'         => $quizAnswer->id,
 			'text'       => $quizAnswer->text,
 			'is_correct' => $quizAnswer->is_correct,
+			'hits'       => $quizAnswer->hits,
 		];
 
 		if ($this->parent) {

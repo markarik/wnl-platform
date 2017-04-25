@@ -23,7 +23,17 @@ class QuizSeeder extends Seeder
 			'name' => 'Example test set',
 		]);
 
-		$quiz = yaml_parse_file(storage_path('app/quiz.yaml'));
+		$quiz = yaml_parse_file(storage_path('app/quiz_hits.yaml'));
+//		foreach ($quiz['questions'] as $index => $question) {
+//			foreach ($question['answers'] as $answerIndex => $answer) {
+//				if (array_key_exists('is_correct', $answer)) {
+//					$quiz['questions'][$index]['answers'][$answerIndex]['hits'] = rand(0, 200);
+//				} else {
+//					$quiz['questions'][$index]['answers'][$answerIndex]['hits'] = rand(0, 50);
+//				}
+//			}
+//		}
+//		yaml_emit_file(storage_path('app/quiz_hits.yaml'), $quiz);
 
 		foreach ($quiz['questions'] as $question) {
 			$preserveOrder = 0;
@@ -41,6 +51,7 @@ class QuizSeeder extends Seeder
 				}
 				$newQuestion->answers()->create([
 					'text'       => $answer['text'],
+					'hits'       => $answer['hits'],
 					'is_correct' => $isCorrect,
 				]);
 			}

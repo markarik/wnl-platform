@@ -21,7 +21,7 @@ class QuizSetTransformer extends TransformerAbstract
 
 	public function includeQuestions(QuizSet $quizSet)
 	{
-		$questions = $quizSet->questions;
+		$questions = $quizSet->questions()->with(['answers'])->get();
 
 		return $this->collection(
 			$questions,

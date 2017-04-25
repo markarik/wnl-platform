@@ -39,14 +39,9 @@ class User extends Authenticatable
 		'password', 'remember_token',
 	];
 
-	public static function fetch($id, $columns = ['*'])
-	{
-		if ($id === 'current') {
-			return Auth::user();
-		}
-
-		return User::find($id, $columns);
-	}
+	/**
+	 * Relationships
+	 */
 
 	public function orders()
 	{
@@ -57,6 +52,25 @@ class User extends Authenticatable
 	{
 		return $this->hasOne('App\Models\UserProfile');
 	}
+
+	public function billing()
+	{
+		return $this->hasOne('App\Models\UserBilling');
+	}
+
+	public function settings()
+	{
+		return $this->hasOne('App\Models\UserSettings');
+	}
+
+	public function address()
+	{
+		return $this->hasOne('App\Models\UserAddress');
+	}
+
+	/**
+	 * Dynamic attributes
+	 */
 
 	public function getFullNameAttribute()
 	{
@@ -117,5 +131,21 @@ class User extends Authenticatable
 	public function sendPasswordResetNotification($token)
 	{
 		$this->notify(new ResetPasswordNotification($token));
+	}
+
+	/**
+	 * Get the current user or find by id.
+	 *
+	 * @param $id
+	 * @param array $columns
+	 * @return User|\Illuminate\Contracts\Auth\Authenticatable
+	 */
+	public static function fetch($id, $columns = ['*'])
+	{
+		if ($id === 'current') {
+			return Auth::user();
+		}
+
+		return User::find($id, $columns);
 	}
 }

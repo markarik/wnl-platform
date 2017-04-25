@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserBilling extends FormRequest
@@ -13,7 +14,9 @@ class UpdateUserBilling extends FormRequest
 	 */
 	public function authorize()
 	{
-		return false;
+		$user = User::fetch($this->route('id'));
+
+		return $this->user()->can('update', $user->billing);
 	}
 
 	/**
@@ -24,7 +27,12 @@ class UpdateUserBilling extends FormRequest
 	public function rules()
 	{
 		return [
-			//
+			'name'    => '',
+			'vat_id'  => '',
+			'address' => '',
+			'zip'     => '',
+			'city'    => '',
+			'country' => '',
 		];
 	}
 }

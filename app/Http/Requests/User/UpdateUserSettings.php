@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserSettings extends FormRequest
@@ -13,7 +14,9 @@ class UpdateUserSettings extends FormRequest
 	 */
 	public function authorize()
 	{
-		return false;
+		$user = User::fetch($this->route('id'));
+
+		return $this->user()->can('update', $user->settings);
 	}
 
 	/**
@@ -24,7 +27,12 @@ class UpdateUserSettings extends FormRequest
 	public function rules()
 	{
 		return [
-			//
+			'consent_newsletter'  => '',
+			'consent_account'     => '',
+			'consent_order'       => '',
+			'consent_terms'       => '',
+			'notifications_email' => '',
+			'notifications_sms'   => '',
 		];
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Http\Controllers\Api\Transformers;
+namespace App\Http\Controllers\Api\Transformers;
 
 
 class UserAddressTransformer

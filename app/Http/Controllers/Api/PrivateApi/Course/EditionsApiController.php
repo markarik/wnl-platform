@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PrivateApi\Course;
 
-use App\Http\Controllers\Api\Transformers\EditionTransformer;
-use App\Models\Edition;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
 
 class EditionsApiController extends ApiController
 {

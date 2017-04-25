@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PrivateApi\Qna;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Auth;

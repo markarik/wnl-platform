@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PrivateApi\Course;
 
-use App\Models\Course;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Api\Concerns\ComposeSidenavItems;
-use Illuminate\Support\Facades\Config;
 
 class CoursesApiController extends ApiController
 {

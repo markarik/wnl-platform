@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PrivateApi\Course;
 
 
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 
 class ScreensApiController extends ApiController

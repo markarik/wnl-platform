@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PrivateApi\User;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
 use App\Http\Controllers\Api\Transformers\UserTransformer;
 use App\Http\Requests\User\UpdateUser;

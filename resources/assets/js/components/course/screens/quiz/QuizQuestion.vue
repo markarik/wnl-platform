@@ -22,7 +22,12 @@
 					:key="answer"
 					@click="selectAnswer(answerIndex)"
 				>
-					{{answer.text}}
+					<div class="quiz-answer-content">
+						{{answer.text}}
+					</div>
+					<div class="quiz-answer-stats metadata" v-if="isComplete">
+						{{answer.stats}}%
+					</div>
 				</li>
 			</transition-group>
 		</div>
@@ -36,9 +41,11 @@
 		counter-reset: list
 
 	.quiz-answer
+		display: flex
 		border-bottom: $border-light-gray
+		justify-content: space-between
 		list-style-type: none
-		padding: $margin-base $margin-huge
+		padding: $margin-base $margin-base $margin-base $margin-huge
 		position: relative
 		margin: 0
 
@@ -83,6 +90,23 @@
 
 		&:active, &:hover
 			background: $color-green
+
+			.quiz-answer-content
+				flex: 1 1 auto
+
+	.quiz-answer-content
+		flex: 1 1 auto
+
+	.quiz-answer-stats
+		align-self: center
+		background: $color-background-light-gray
+		border-radius: $border-radius-full
+		color: $color-gray
+		flex: 0 0 auto
+		margin-left: $margin-base
+		padding: $margin-tiny $margin-base
+		text-align: center
+		width: 40px
 </style>
 
 <script>
@@ -131,7 +155,9 @@
 			 * @return {Boolean}
 			 */
 			hintCorrect(answerIndex) {
-				return isDev() && this.answers[answerIndex].is_correct
+				return isDev() &&
+					!this.isComplete &&
+					this.answers[answerIndex].is_correct
 			},
 
 			/**

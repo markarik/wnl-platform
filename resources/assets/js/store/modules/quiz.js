@@ -11,21 +11,13 @@ function getLocalStorageKey(setId, userSlug) {
 }
 
 /**
- * Returns a 5-element Array of random "hit" numbers for given answers
- * @return {Array} An array of 5 random numbers
- */
-function getMockedStats() {
-	return [...new Array(5)].map(() => _.random(0, 100))
-}
-
-/**
- * Calculates a percentage share of a value under stats[index] in the array sum
- * @param  {Array} stats An array of numeric values
- * @param  {Integer} index An index of a value you want a percentage share for
+ * Calculates a percentage share of a value in total
+ * @param  {Integer} value
+ * @param  {Integer} total
  * @return {Integer} Returns an integer being a percentage value
  */
-function getPercentageShare(stats, index) {
-	return _.toInteger(stats[index]*100/_.sum(stats))
+function getPercentageShare(value, total) {
+	return _.toInteger(value*100/total)
 }
 
 // Should the module be namespaced?
@@ -135,14 +127,13 @@ const actions = {
 				for (let i = 0; i < len; i++) {
 					let id = questionsIds[i],
 						question = included.questions[id],
-						answersIds = question.answers,
-						mockedStats = getMockedStats()
+						answersIds = question.answers
 
 					for (let j = 0; j < answersIds.length; j++) {
 						let answerId = answersIds[j],
 							answer = included.answers[answerId]
 
-						answer.stats = getPercentageShare(mockedStats, j)
+						answer.stats = getPercentageShare(answer.hits, question.total_hits)
 
 						question.answers[j] = answer
 					}

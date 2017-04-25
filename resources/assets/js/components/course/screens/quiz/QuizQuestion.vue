@@ -89,9 +89,11 @@
 
 	.quiz-answer.is-correct
 		background: $color-green
+		color: $color-white
 
 		&:active, &:hover
 			background: $color-green
+			color: $color-white
 
 			.quiz-answer-content
 				flex: 1 1 auto

@@ -48,6 +48,54 @@
 						iconClass: 'fa-user',
 						iconTitle: 'Profil publiczny',
 					},
+					{
+						text: 'Adres',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-address',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-address-card-o',
+						iconTitle: 'Profil publiczny',
+					},
+					{
+						text: 'Dane do faktury',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-billing-data',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-file-o',
+						iconTitle: 'Profil publiczny',
+					},
+					{
+						text: 'Ustawienia',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-settings',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-sliders',
+						iconTitle: 'Profil publiczny',
+					},
+					{
+						text: 'Zmiana hasła',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-password',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-key',
+						iconTitle: 'Profil publiczny',
+					},
 				]
 
 				if (this.isProduction) {

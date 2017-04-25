@@ -111,7 +111,7 @@
 <script>
 	import * as types from 'js/store/mutations-types'
 	import { mapGetters, mapMutations } from 'vuex'
-	import { isDev } from 'js/utils/env'
+	import { isDebug } from 'js/utils/env'
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
@@ -154,7 +154,7 @@
 			 * @return {Boolean}
 			 */
 			hintCorrect(answerIndex) {
-				return isDev() &&
+				return isDebug() &&
 					!this.isComplete &&
 					this.answers[answerIndex].is_correct
 			},

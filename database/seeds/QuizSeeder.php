@@ -32,17 +32,12 @@ class QuizSeeder extends Seeder
 
 			foreach ($question['answers'] as $answer) {
 				$isCorrect = 0;
-				$preserveOrder = 0;
 				if (array_key_exists('is_correct', $answer)) {
 					$isCorrect = $answer['is_correct'];
 				}
-				if (array_key_exists('preserve_order', $answer)) {
-					$preserveOrder = $answer['preserve_order'];
-				}
 				$newQuestion->answers()->create([
-					'text'           => $answer['text'],
-					'is_correct'     => $isCorrect,
-					'preserve_order' => $preserveOrder,
+					'text'       => $answer['text'],
+					'is_correct' => $isCorrect,
 				]);
 			}
 		}

@@ -25,7 +25,7 @@
 		+small-shadow()
 		display: flex
 		height: $navbar-height
-		z-index: 5
+		z-index: 50
 
 	.wnl-nav-item
 		align-items: center

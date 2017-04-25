@@ -21,7 +21,7 @@
 
 		border-bottom: $border-light-gray
 		padding: 20px 0 10px
-		z-index: 900
+		z-index: 10
 
 		.metadata
 			color: $color-background-gray

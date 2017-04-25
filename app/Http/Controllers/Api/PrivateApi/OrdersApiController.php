@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\OrderTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

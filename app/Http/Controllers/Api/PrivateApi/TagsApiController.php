@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 
 class TagsApiController extends ApiController

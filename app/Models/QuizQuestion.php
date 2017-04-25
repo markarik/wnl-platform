@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuizQuestion extends Model
 {
-	protected $fillable = ['text', 'explanation'];
+	protected $fillable = ['text', 'explanation', 'preserve_order'];
+
+	protected $casts = [
+		'preserve_order' => 'boolean',
+	];
 
 	public function answers()
 	{

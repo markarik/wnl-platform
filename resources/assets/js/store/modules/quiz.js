@@ -147,7 +147,9 @@ const actions = {
 						question.answers[j] = answer
 					}
 
-					question.answers = _.shuffle(question.answers)
+					if (!question.preserve_order) {
+						question.answers = _.shuffle(question.answers)
+					}
 					question.index = i
 					question.selectedAnswer = null
 					question.isResolved = false
@@ -178,8 +180,10 @@ const actions = {
 				if (!_.isNull(selected) && question.answers[selected].is_correct) {
 					commit(types.QUIZ_RESOLVE_QUESTION, {index})
 				} else {
-					commit(types.QUIZ_RESET_ANSWER, {index})
 					commit(types.QUIZ_SHUFFLE_ANSWERS, {index})
+					if (!question.preserve_order) {
+						commit(types.QUIZ_RESET_ANSWER, {index})
+					}
 				}
 			})
 

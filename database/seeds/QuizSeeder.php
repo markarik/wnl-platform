@@ -26,10 +26,14 @@ class QuizSeeder extends Seeder
 		$quiz = yaml_parse_file(storage_path('app/quiz.yaml'));
 
 		foreach ($quiz['questions'] as $question) {
+			$preserveOrder = 0;
+			if (array_key_exists('preserve_order', $question)) {
+				$preserveOrder = $question['preserve_order'];
+			}
 			$newQuestion = $set->questions()->create([
-				'text' => $question['text'],
+				'text'           => $question['text'],
+				'preserve_order' => $preserveOrder,
 			]);
-
 			foreach ($question['answers'] as $answer) {
 				$isCorrect = 0;
 				if (array_key_exists('is_correct', $answer)) {

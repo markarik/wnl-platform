@@ -17,6 +17,7 @@ class CreateQuizQuestionsTable extends Migration
 			$table->increments('id');
 			$table->text('text');
 			$table->text('explanation')->nullable();
+			$table->tinyInteger('preserve_order')->default(0);
 			$table->timestamps();
 		});
 	}

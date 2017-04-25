@@ -30,10 +30,13 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{id}", 'User\UsersApiController@get');
 	Route::put("{$r['users']}/{id}", 'User\UsersApiController@put');
 
-	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'User\UsersApiController@getUserProfile');
-	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'User\UsersApiController@putUserProfile');
+	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'User\UserProfileApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'User\UserProfileApiController@put');
 
-	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'User\UsersApiController@putUserAvatar');
+	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'User\UserAvatarApiController@post');
+
+	Route::get("{$r['users']}/{id}/{$r['user-address']}", 'User\UserAddressApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-address']}", 'User\UserAddressApiController@put');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');

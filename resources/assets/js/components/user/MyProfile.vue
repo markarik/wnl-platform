@@ -58,9 +58,9 @@
 			onSubmit() {
 				this.form.put(this.resourceUrl)
 						.then(response => this.saved = true)
-						.catch(error => {
+						.catch(exception => {
 							this.submissionFailed = true
-							// TODO: Push to sentry
+							$wnl.logger.capture(exception)
 						})
 			},
 			onUploadSuccess() {

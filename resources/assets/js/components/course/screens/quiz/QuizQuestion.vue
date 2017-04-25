@@ -5,7 +5,7 @@
 			<p class="card-header-title">{{text}}</p>
 			<div class="card-header-icons">
 				<a @click="mockSaving">
-					<span class="icon is-small">
+					<span class="icon is-small" title="Zapisz to pytanie">
 						<i class="fa fa-star-o"></i>
 					</span>
 				</a>
@@ -25,8 +25,10 @@
 					<div class="quiz-answer-content">
 						{{answer.text}}
 					</div>
-					<div class="quiz-answer-stats metadata" v-if="isComplete">
-						{{answer.stats}}%
+					<div class="quiz-answer-stats" v-if="isComplete">
+						<span class="tag" :title="`${answer.stats}% osób wybrało tę odpowiedź`">
+							{{answer.stats}}%
+						</span>
 					</div>
 				</li>
 			</transition-group>
@@ -99,14 +101,9 @@
 
 	.quiz-answer-stats
 		align-self: center
-		background: $color-background-light-gray
-		border-radius: $border-radius-full
-		color: $color-gray
+		cursor: help
 		flex: 0 0 auto
 		margin-left: $margin-base
-		padding: $margin-tiny $margin-base
-		text-align: center
-		width: 40px
 </style>
 
 <script>

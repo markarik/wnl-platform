@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\UserAddress;
+use League\Fractal\TransformerAbstract;
 
-class UserAddressTransformer
+class UserAddressTransformer extends TransformerAbstract
 {
 	protected $parent;
 
@@ -18,10 +19,10 @@ class UserAddressTransformer
 	public function transform(UserAddress $address)
 	{
 		$data = [
-			'address' => $address->address,
-			'zip'     => $address->zip,
-			'city'    => $address->city,
-			'phpne'   => $address->phone,
+			'street' => $address->street,
+			'zip'    => $address->zip,
+			'city'   => $address->city,
+			'phone'  => $address->phone,
 		];
 
 		if ($this->parent) {

@@ -11,7 +11,7 @@ use App\Policies\User\UserAddressPolicy;
 use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserUserBillingPolicy;
 use App\Policies\User\UserUserSettingsPolicy;
-use App\Policies\UserPolicy;
+use App\Policies\User\UserPolicy;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 

@@ -15,7 +15,7 @@ class UserAddressApiController extends ApiController
 	public function get($id)
 	{
 		$user = User::fetch($id);
-		$address = $user->address;
+		$address = $user->address()->first();
 
 		if (!$user || !$address) {
 			return $this->respondNotFound();
@@ -23,7 +23,6 @@ class UserAddressApiController extends ApiController
 
 		$resource = new Item($address, new UserAddressTransformer, 'user_address');
 		$data = $this->fractal->createData($resource)->toArray();
-
 		return $this->respondOk($data);
 	}
 

@@ -27,10 +27,10 @@ class UpdateUserAddress extends FormRequest
 	public function rules()
 	{
 		return [
-			'address' => 'required',
-			'zip'     => 'required',
-			'city'    => 'required',
-			'phone'   => 'required',
+			'street' => 'required',
+			'zip'    => 'required',
+			'city'   => 'required',
+			'phone'  => 'required',
 		];
 	}
 }

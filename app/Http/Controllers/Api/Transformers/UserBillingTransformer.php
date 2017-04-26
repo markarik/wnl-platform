@@ -4,7 +4,9 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-class UserBillingTransformer
+use League\Fractal\TransformerAbstract;
+
+class UserBillingTransformer extends TransformerAbstract
 {
 
 }

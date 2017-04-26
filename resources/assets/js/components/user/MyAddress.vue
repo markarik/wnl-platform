@@ -10,7 +10,7 @@
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
 			  @keydown="form.errors.clear($event.target.name)">
 
-			<wnl-form-input type="text" name="address" :form="form" v-model="form.address"></wnl-form-input>
+			<wnl-form-input type="text" name="street" :form="form" v-model="form.street"></wnl-form-input>
 			<wnl-form-input type="text" name="zip" :form="form" v-model="form.zip"></wnl-form-input>
 			<wnl-form-input type="text" name="city" :form="form" v-model="form.city"></wnl-form-input>
 			<wnl-form-input type="text" name="phone" :form="form" v-model="form.phone"></wnl-form-input>
@@ -34,7 +34,7 @@
 		data() {
 			return {
 				form: new Form({
-					address: null,
+					street: null,
 					zip: null,
 					city: null,
 					phone: null,

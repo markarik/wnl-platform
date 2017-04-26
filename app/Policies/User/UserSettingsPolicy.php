@@ -6,7 +6,7 @@ use App\User;
 use App\UserSettings;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserUserSettingsPolicy
+class UserSettingsPolicy
 {
 	use HandlesAuthorization;
 

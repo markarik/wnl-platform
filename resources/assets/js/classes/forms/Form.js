@@ -131,6 +131,10 @@ class Form {
 	onSuccess(data) {
 		this.errors.clear();
 	}
+
+	onSubmit() {
+
+	}
 }
 
 

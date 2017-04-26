@@ -55,7 +55,7 @@ class User extends Authenticatable
 
 	public function billing()
 	{
-		return $this->hasOne('App\Models\UserBilling');
+		return $this->hasOne('App\Models\UserBillingData');
 	}
 
 	public function settings()

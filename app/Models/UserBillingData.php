@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserBilling extends Model
+class UserBillingData extends Model
 {
+	protected $table = 'user_billing_data';
+
 	protected $fillable = [
-		'name',
+		'company_name',
 		'vat_id',
 		'address',
 		'zip',

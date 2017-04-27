@@ -4,7 +4,13 @@
 namespace App\Http\Controllers\Api\PrivateApi\User;
 
 
-class UserPasswordApiController
-{
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\User\UpdateUserPassword;
 
+class UserPasswordApiController extends ApiController 
+{
+	public function put(UpdateUserPassword $request)
+	{
+
+	}
 }

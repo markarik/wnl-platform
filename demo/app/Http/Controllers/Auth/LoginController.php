@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Demo\App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -23,6 +23,10 @@ class LoginController extends Controller
 
 	use AuthenticatesUsers;
 
+	use AuthenticatesUsers {
+		login as protected originalLogin;
+	}
+
 	/**
 	 * Where to redirect users after login.
 	 *
@@ -36,6 +40,36 @@ class LoginController extends Controller
 	public function __construct()
 	{
 		$this->middleware('guest', ['except' => 'logout']);
+	}
+
+	/**
+	 * Handle a login request to the application.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+	 */
+	public function login(Request $request)
+	{
+		$user = User::create([
+			'first_name' => $request->get('first_name'),
+			'last_name'  => ' ',
+			'email'      => str_random() . '@wiecejnizlek.pl',
+			'password'   => 'secret',
+		]);
+
+		Auth::login($user);
+
+		return redirect(self::redirectPath());
+	}
+
+	/**
+	 * Show the application's login form.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function showLoginForm()
+	{
+		return view('auth.demo-login');
 	}
 
 	/**

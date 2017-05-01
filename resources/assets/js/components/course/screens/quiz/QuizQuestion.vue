@@ -89,6 +89,9 @@
 				position: absolute
 				right: $margin-base
 
+	.wnl-quiz-question
+		margin-bottom: $margin-huge
+
 	.wnl-quiz-question.is-unresolved
 		.quiz-answer
 			cursor: pointer

@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="wnl-image-button-container" :class="{ 'is-reverse': isReverse }">
-		<button class="button wnl-image-button"
+		<button class="button wnl-image-button without-image"
 			:class="[iconClass, iconSizeClass]"
 			:name="name"
 			:disabled="disabled"

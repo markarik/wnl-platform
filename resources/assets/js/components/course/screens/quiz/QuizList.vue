@@ -51,7 +51,7 @@
 			unansweredAlert() {
 				return {
 					title: 'Brakuje odpowiedzi',
-					timer: 3000,
+					timer: 5000,
 					text: 'Aby zakończyć test, musisz rozwiązać poprawnie na wszystkie pytania, więc spróbuj odpowiedzieć na każde.',
 					type: 'warning',
 				}
@@ -85,6 +85,11 @@
 			verify() {
 				if (this.getUnanswered.length > 0) {
 					this.$swal(this.getAlertConfig(this.unansweredAlert))
+						.catch(e => {
+							// It's a bug in the library. It throws an exception
+							// if a person closes a timed modal with a click.
+							$wnl.logger.info('SweetAlert2 exception', e)
+						})
 					return false
 				}
 
@@ -94,13 +99,18 @@
 				this.checkQuiz().then(() => {
 					const alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert
 					this.$swal(this.getAlertConfig(alertOptions))
+						.catch(e => {
+							// It's a bug in the library. It throws an exception
+							// if a person closes a timed modal with a click.
+							$wnl.logger.info('SweetAlert2 exception', e)
+						})
 					scrollToTop()
 				})
 			},
 			getAlertConfig(options = {}) {
 				const defaults = {
 					showConfirmButton: false,
-					timer: 2000,
+					timer: 3500,
 				}
 
 				return swalConfig(_.merge(defaults, options))

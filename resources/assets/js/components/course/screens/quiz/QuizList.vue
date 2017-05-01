@@ -2,8 +2,9 @@
 	<div class="wnl-quiz-list" v-if="isLoaded">
 		<p class="title is-5" v-if="!isComplete">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="question in questions"
-			:index="question.index"
 			:answers="question.answers"
+			:comments="question.comments"
+			:index="question.index"
 			:text="question.text"
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!isComplete">

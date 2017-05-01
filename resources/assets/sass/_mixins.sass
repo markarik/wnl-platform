@@ -32,10 +32,18 @@
 	min-width: $baseSize
 	width: $baseSize
 
-	img, object, svg
-		height: $baseSize * 0.6
-		margin: $baseSize * 0.2
-		width: $baseSize * 0.6
+	&.without-image
+		img, object, svg
+			height: $baseSize * 0.6
+			margin: $baseSize * 0.2
+			width: $baseSize * 0.6
+
+	&.with-image
+		img, object, svg
+			border-radius: $baseSize * 0.1
+			height: $baseSize
+			margin: 0
+			width: $baseSize
 
 =rounded-square-standard-sizes($element)
 	$sizes: ('small', 'medium', 'large')

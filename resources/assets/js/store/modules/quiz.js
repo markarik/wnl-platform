@@ -2,12 +2,48 @@ import axios from 'axios'
 import store from 'store'
 import _ from 'lodash'
 import { set } from 'vue'
-import { getApiUrl } from 'js/utils/env'
+import { useLocalStorage, getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
 function getLocalStorageKey(setId, userSlug) {
 	return `wnl-quiz-${setId}-u-${userSlug}`
+}
+
+/**
+ * It's a mocked object of comments for the example quiz set.
+ * Eventually, comments will be retrieved from the database via API.
+ * The object uses a question ID as a key and stores an array of comment objects
+ * with their IDs, text, username, avatarUrl and timestamp.
+ * @type {Object}
+ */
+const commentsMock = {
+	1: [
+		{
+			avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/6.jpg',
+			id: 1,
+			text: 'Cześć! Jak widzicie, każde pytanie będzie można skomentować!',
+			timestamp: '3 dni temu',
+			username: 'Robert Kardiowski',
+			votes: 3,
+		},
+		{
+			avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/6.jpg',
+			id: 2,
+			text: 'Świetnie! Czy to znaczy, że będziemy mogli łatwo dyskutować o odpowiedziach i błędach w pytaniach?',
+			timestamp: 'godzinę temu',
+			username: 'Asia Nereczka',
+			votes: 16,
+		},
+		{
+			avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/6.jpg',
+			id: 3,
+			text: 'Dokładnie tak! :D',
+			timestamp: '15 minut temu',
+			username: 'Robert Kardiowski',
+			votes: 0,
+		},
+	],
 }
 
 /**
@@ -37,11 +73,12 @@ const state = {
 
 /*
 question: {
-	text: string,
 	answers: array,
+	attempts: int,
+	comments: array,
 	isResolved: bool,
 	selectedAnswer: int (original index of answer),
-	attempts: int,
+	text: string,
 }
 */
 
@@ -110,7 +147,8 @@ const actions = {
 
 		let storeKey = getLocalStorageKey(resource.id, rootGetters.currentUserSlug),
 			storedState = store.get(storeKey)
-		if (!_.isUndefined(storedState)) {
+
+		if (useLocalStorage() && !_.isUndefined(storedState)) {
 			commit(types.QUIZ_RESTORE_STATE, storedState)
 			commit(types.QUIZ_IS_LOADED)
 			return true
@@ -145,6 +183,14 @@ const actions = {
 					question.selectedAnswer = null
 					question.isResolved = false
 					question.attemps = 0
+
+					// Check for mock of comments for the question
+					$wnl.logger.debug(commentsMock)
+					if (commentsMock.hasOwnProperty(id)) {
+						question.comments = commentsMock[id]
+					} else {
+						question.comments = []
+					}
 
 					questions.push(question)
 				}

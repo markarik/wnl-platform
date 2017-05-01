@@ -1,37 +1,45 @@
 <template>
-	<div class="wnl-quiz-question card margin vertical"
-		:class="{'is-unresolved': !isResolved(this.index)}">
-		<header class="card-header">
-			<p class="card-header-title">{{text}}</p>
-			<div class="card-header-icons">
-				<a @click="mockSaving">
-					<span class="icon is-small" title="Zapisz to pytanie">
-						<i class="fa fa-star-o"></i>
-					</span>
-				</a>
-			</div>
-		</header>
-		<div class="card-content">
-			<transition-group name="flip-list" tag="ul">
-				<li class="quiz-answer" v-for="(answer, answerIndex) in answers"
-					:class="{
-						'is-selected': isSelected(answerIndex),
-						'is-correct': isCorrect(answerIndex),
-						'is-hinted': hintCorrect(answerIndex),
-					}"
-					:key="answer"
-					@click="selectAnswer(answerIndex)"
-				>
-					<div class="quiz-answer-content">
-						{{answer.text}}
-					</div>
-					<div class="quiz-answer-stats" v-if="isComplete">
-						<span class="tag" :title="`${answer.stats}% osób wybrało tę odpowiedź`">
-							{{answer.stats}}%
+	<div>
+		<div class="wnl-quiz-question card margin vertical"
+			:class="{'is-unresolved': !isResolved(this.index)}">
+			<header class="quiz-header card-header">
+				<p class="card-header-title">{{text}}</p>
+				<div class="card-header-icons">
+					<a class="quiz-question-icon" @click="mockSaving" title="Zapisz to pytanie">
+						<span class="icon is-small">
+							<i class="fa fa-bookmark-o"></i>
 						</span>
-					</div>
-				</li>
-			</transition-group>
+						Zapisz
+					</a>
+				</div>
+			</header>
+			<div class="quiz-answers card-content">
+				<transition-group name="flip-list" tag="ul">
+					<li class="quiz-answer" v-for="(answer, answerIndex) in answers"
+						:class="{
+							'is-selected': isSelected(answerIndex),
+							'is-correct': isCorrect(answerIndex),
+							'is-hinted': hintCorrect(answerIndex),
+						}"
+						:key="answer"
+						@click="selectAnswer(answerIndex)"
+					>
+						<div class="quiz-answer-content">
+							{{answer.text}}
+						</div>
+						<div class="quiz-answer-stats" v-if="isComplete">
+							<span class="tag" :title="`${answer.stats}% osób wybrało tę odpowiedź`">
+								{{answer.stats}}%
+							</span>
+						</div>
+					</li>
+				</transition-group>
+			</div>
+			<div class="card-footer" v-if="showComments">
+				<div class="quiz-question-comments" v-if="hasComments">
+					<wnl-comments-list :comments="comments"></wnl-comments-list>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -41,6 +49,21 @@
 
 	.card-content ul
 		counter-reset: list
+
+	.quiz-question-icon
+		display: block
+		font-size: $font-size-minus-3
+		padding: $margin-tiny 0
+		text-align: center
+		text-transform: uppercase
+
+		.icon
+			display: block
+			margin: 0 auto -0.2em
+
+	.quiz-header,
+	.quiz-answers
+		padding: $margin-base
 
 	.quiz-answer
 		display: flex
@@ -106,17 +129,24 @@
 		cursor: help
 		flex: 0 0 auto
 		margin-left: $margin-base
+
+	.quiz-question-comments
+		padding: $margin-big
 </style>
 
 <script>
 	import * as types from 'js/store/mutations-types'
+	import CommentsList from 'js/components/comments/CommentsList.vue'
 	import { mapGetters, mapMutations } from 'vuex'
 	import { isDebug } from 'js/utils/env'
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
-		props: ['answers', 'index', 'text', 'total'],
 		name: 'QuizQuestion',
+		components: {
+			'wnl-comments-list': CommentsList,
+		},
+		props: ['answers', 'comments', 'index', 'text', 'total'],
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
@@ -126,19 +156,23 @@
 			number() {
 				return this.index + 1
 			},
+			/**
+			 * @return {Boolean}
+			 */
+			hasComments() {
+				return this.comments.length > 0
+			},
+			/**
+			 * @return {Boolean}
+			 */
+			showComments() {
+				return this.isComplete && this.hasComments
+			},
 		},
 		methods: {
 			...mapMutations('quiz', [
 				types.QUIZ_SELECT_ANSWER,
 			]),
-
-			/**
-			 * @param  {int} answerIndex
-			 * @return {Boolean}
-			 */
-			isSelected(answerIndex) {
-				return this.getSelectedAnswer(this.index) === answerIndex
-			},
 
 			/**
 			 * @param  {int} answerIndex
@@ -172,6 +206,14 @@
 						answer: answerIndex
 					})
 				}
+			},
+
+			/**
+			 * @param  {int} answerIndex
+			 * @return {Boolean}
+			 */
+			isSelected(answerIndex) {
+				return this.getSelectedAnswer(this.index) === answerIndex
 			},
 
 			/**

@@ -10,7 +10,7 @@
 			<wnl-quiz-list></wnl-quiz-list>
 		</div>
 		<div v-else>
-			<p class="title is-5 has-text-centered">
+			<p class="title is-4 has-text-centered">
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>

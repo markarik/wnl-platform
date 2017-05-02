@@ -13,16 +13,12 @@ use Illuminate\Support\Facades\Input;
 |
 */
 
-Auth::routes();
+Route::get('/login', '\Demo\App\Http\Controllers\Auth\LoginController@showLoginForm');
+Route::post('/login', '\Demo\App\Http\Controllers\Auth\LoginController@login');
+Route::post('/logout', '\Demo\App\Http\Controllers\Auth\LoginController@logout');
 
-Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function () {
-	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
-
-	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
-	Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
-
-	Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
-	Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
+Route::get('/styleguide', function () {
+	return Response::view('styleguide');
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -34,7 +30,9 @@ Route::group(['middleware' => 'auth'], function () {
 	// Using front-end routing for the main application
 	Route::get('/app/{path?}', 'AppController@index')->name('app')->where('path', '(.*)');
 
-	//Ajax common route
+	/*
+	* Ajax common route
+	*/
 	Route::match(['get', 'post'], '/ax', function () {
 		abort_unless(Input::has('controller') && Input::has('method'), 404);
 		$controller = Input::get('controller');
@@ -49,27 +47,13 @@ Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
 	Route::get('/slideshow-builder/{screenId}', 'SlideShowController@build')->name('slideshow-builder');
 });
 
-if (App::environment('dev')) {
-	Route::group(['namespace' => 'Invoice', 'prefix' => 'invoice'], function () {
-		Route::get('advance', function () {
-			return Response::view('payment/invoices/advance');
-		});
-		Route::get('final', function () {
-			return Response::view('payment/invoices/final');
-		});
-		Route::get('pro-forma', function () {
-			return Response::view('payment/invoices/pro-forma');
-		});
-	});
-	Route::get('/styleguide', function () {
-		return Response::view('styleguide');
-	});
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function () {
+	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
+	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
 	Route::get('/email/{template}', function ($template) {
 		return Response::view('mail/' . $template);
 	});
 	Route::get('/newsletter/{template}', function ($template) {
 		return Response::view('mail/newsletter/' . $template);
 	});
-	Route::get('/upload-slides', 'Admin\UploadSlidesController@index')->name('admin-upload-slides');
-	Route::post('/upload-slides', 'Admin\UploadSlidesController@handle')->name('admin-upload-slides-post');
-}
+});

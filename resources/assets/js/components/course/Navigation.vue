@@ -188,6 +188,7 @@
 
 				const icons = {
 					'end': 'fa-star',
+					'quiz': 'fa-check-square-o',
 					'html': 'fa-file-text-o',
 					'slideshow': 'fa-television',
 					'widget': 'fa-question',

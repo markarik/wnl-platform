@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Lesson;
-use App\Models\Question;
+use App\Models\QnaQuestion;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -34,7 +34,7 @@ class QuestionsApiController extends ApiController
 			return $this->respondInvalidInput('Lesson with given id does\'n exist.');
 		}
 
-		$question = Question::create([
+		$question = QnaQuestion::create([
 			'text'    => $text,
 			'user_id' => Auth::user()->id,
 		]);

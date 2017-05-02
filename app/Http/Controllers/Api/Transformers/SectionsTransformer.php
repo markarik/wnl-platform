@@ -15,9 +15,6 @@ class SectionsTransformer extends TransformerAbstract
 
 	public function transform(Section $section)
 	{
-		$screenFirstSlide = $section->screen->slides->first();
-		$sectionFirstSlide = $section->slides->first();
-
 		$data = [
 			'id'       => $section->id,
 			'name'     => $section->name,
@@ -26,6 +23,15 @@ class SectionsTransformer extends TransformerAbstract
 			'editions' => $section->screen->lesson->group->course->id,
 			'screens'  => $section->screen_id,
 		];
+
+		$parentScreen = $section->screen;
+
+		if (!$parentScreen->type === 'slideshow') {
+			return $data;
+		}
+
+		$screenFirstSlide = $parentScreen->slideshow->slides->first();
+		$sectionFirstSlide = $section->slides->first();
 
 		if ($sectionFirstSlide && $screenFirstSlide) {
 			$data['slide'] = $sectionFirstSlide->id - $screenFirstSlide->id + 1;

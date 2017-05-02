@@ -17,7 +17,7 @@
 	</li>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.has-icon
@@ -29,7 +29,7 @@
 		font-size: $font-size-minus-1
 		margin-top: -1px
 		margin-right: $margin-tiny
-		vertical-align: middle
+		vertical-align: text-bottom
 
 	.subitem
 		margin-left: $margin-small

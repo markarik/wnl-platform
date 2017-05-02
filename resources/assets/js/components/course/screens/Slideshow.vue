@@ -1,5 +1,15 @@
 <template>
 	<div class="wnl-slideshow-container">
+		<div class="wnl-slideshow-background-control level">
+			<div class="level-left">
+			</div>
+			<div class="level-right">
+				<div class="level-item">Tło prezentacji:</div>
+				<div class="level-item"><a class="white" @click="changeBackground('white')"></a></div>
+				<div class="level-item"><a class="dark" @click="changeBackground('dark')"></a></div>
+				<div class="level-item"><a class="image" @click="changeBackground('image')"></a></div>
+			</div>
+		</div>
 		<div class="wnl-screen wnl-ratio-16-9">
 			<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused }"></div>
 		</div>
@@ -21,6 +31,7 @@
 </template>
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
 	.wnl-ratio-16-9
 		padding-bottom: 56.25%
@@ -50,7 +61,34 @@
 		display: flex
 		justify-content: space-between
 		margin-top: 10px
+
+	.wnl-slideshow-background-control
+		border-top: $border-light-gray
+		font-size: $font-size-minus-1
+		line-height: $line-height-plus
+		margin: $margin-base 0 $margin-small 0
+		padding-top: $margin-base
+		text-align: right
+		text-transform: uppercase
+		vertical-align: middle
+
+		a
+			border-radius: $border-radius-full
+			display: inline-block
+			height: 2em
+			margin-left: $margin-small
+			width: 2em
+
+			&.white
+				border: $border-light-gray
+
+			&.dark
+				background: $color-gray
+
+			&.image
+				+gradient-horizontal($gradient-bg-image-left, $gradient-bg-image-right)
 </style>
+
 <script>
 	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
@@ -113,6 +151,10 @@
 				this.currentSlide = this.slideNumberFromIndex(slideNumber)
 				this.child.call('goToSlide', slideNumber)
 
+				this.focusSlideshow()
+			},
+			changeBackground(background = 'image') {
+				this.child.call('changeBackground', background)
 				this.focusSlideshow()
 			},
 			focusSlideshow() {

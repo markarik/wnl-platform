@@ -20,6 +20,11 @@
 	-moz-box-shadow:    0px 20px 40px 10px rgba(255, 255, 255, 0.75)
 	box-shadow:         0px 20px 40px 10px rgba(255, 255, 255, 0.75)
 
+=gradient-horizontal($left, $right)
+	background: $left /* Fallback */
+	background: -webkit-linear-gradient(to right, $left, $right)
+	background: linear-gradient(to right, $left, $right)
+
 =rounded-square($baseSize)
 	align-items: center
 	border-radius: $baseSize * 0.1
@@ -32,10 +37,18 @@
 	min-width: $baseSize
 	width: $baseSize
 
-	img, object, svg
-		height: $baseSize * 0.6
-		margin: $baseSize * 0.2
-		width: $baseSize * 0.6
+	&.without-image
+		img, object, svg
+			height: $baseSize * 0.6
+			margin: $baseSize * 0.2
+			width: $baseSize * 0.6
+
+	&.with-image
+		img, object, svg
+			border-radius: $baseSize * 0.1
+			height: $baseSize
+			margin: 0
+			width: $baseSize
 
 =rounded-square-standard-sizes($element)
 	$sizes: ('small', 'medium', 'large')

@@ -1,5 +1,10 @@
 <template>
 	<div class="wnl-slideshow-container">
+		<div>
+			<a @click="changeBackground('white')">white</a>
+			<a @click="changeBackground('dark')">dark</a>
+			<a @click="changeBackground('image')">image</a>
+		</div>
 		<div class="wnl-screen wnl-ratio-16-9">
 			<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused }"></div>
 		</div>
@@ -113,6 +118,10 @@
 				this.currentSlide = this.slideNumberFromIndex(slideNumber)
 				this.child.call('goToSlide', slideNumber)
 
+				this.focusSlideshow()
+			},
+			changeBackground(background = 'image') {
+				this.child.call('changeBackground', background)
 				this.focusSlideshow()
 			},
 			focusSlideshow() {

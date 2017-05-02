@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import store from 'store'
 import { set } from 'vue'
 import { getApiUrl } from 'js/utils/env'
@@ -45,6 +46,28 @@ const getters = {
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
 	getScreens: state => (lessonId) => state.structure[resource('lessons')][lessonId][resource('screens')],
+	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {
+		let screens = getters.getScreens(lessonId)
+
+		if (_.isEmpty(screens)) return undefined
+
+		let currentScreenIndex = screens.indexOf(parseInt(currentScreenId)),
+			adjScreenIndex
+
+		if (direction === 'next') {
+			adjScreenIndex = currentScreenIndex + 1
+			if (currentScreenIndex >= 0 && adjScreenIndex < screens.length) {
+				return screens[adjScreenIndex]
+			}
+		} else if (direction === 'previous') {
+			adjScreenIndex = currentScreenIndex - 1
+			if (currentScreenIndex > 0) {
+				return screens[adjScreenIndex]
+			}
+		}
+
+		return undefined
+	},
 }
 
 // Mutations

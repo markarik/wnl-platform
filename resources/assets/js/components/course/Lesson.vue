@@ -16,6 +16,18 @@
 			<router-view></router-view>
 		</keep-alive>
 		<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
+		<div class="level">
+			<div class="level-left">
+				<div class="level-item" v-if="previousScreenRoute !== undefined">
+					<router-link :to="previousScreenRoute">Poprzedni</router-link>
+				</div>
+			</div>
+			<div class="level-right">
+				<div class="level-item" v-if="nextScreenRoute !== undefined">
+					<router-link :to="nextScreenRoute">Następny</router-link>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -27,9 +39,10 @@
 </style>
 
 <script>
+	import _ from 'lodash'
+	import  Qna from './../qna/Qna.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { resource } from 'js/utils/config'
-	import  Qna from './../qna/Qna.vue'
 
 	export default {
 		name: 'Lesson',
@@ -38,6 +51,7 @@
 			...mapGetters('course', [
 				'getScreens',
 				'getLesson',
+				'getAdjacentScreenId',
 			]),
 			...mapGetters('progress', [
 				'getSavedLesson'
@@ -49,6 +63,12 @@
 				if (typeof this.getScreens(this.lessonId) !== 'undefined') {
 					return parseInt(this.getScreens(this.lessonId)[0])
 				}
+			},
+			previousScreenRoute() {
+				return this.getAdjacentScreenRoute('previous')
+			},
+			nextScreenRoute() {
+				return this.getAdjacentScreenRoute('next')
 			},
 			lastScreenId() {
 				if (typeof this.getScreens(this.lessonId) !== 'undefined') {
@@ -98,6 +118,22 @@
 						this.completeLesson(this.lessonProgressContext)
 					} else {
 						this.updateLesson(this.lessonProgressContext)
+					}
+				}
+			},
+			getAdjacentScreenRoute(direction) {
+				let id = this.getAdjacentScreenId(this.lessonId, this.screenId, direction)
+
+				if (id === undefined) {
+					return undefined
+				} else {
+					return {
+						name: resource('screens'),
+						params: {
+							courseId: this.courseId,
+							lessonId: this.lessonId,
+							screenId: id,
+						}
 					}
 				}
 			},

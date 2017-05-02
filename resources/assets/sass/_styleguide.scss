@@ -49,6 +49,11 @@ h5 {
 	line-height: $line-height-plus;
 }
 
+.huge {
+	font-size: $font-size-plus-2;
+	line-height: $line-height-plus;
+}
+
 .small {
 	font-size: $font-size-minus-1;
 	line-height: $line-height-base;
@@ -63,12 +68,20 @@ h5 {
 	color: $danger;
 }
 
+.normal {
+	font-weight: $font-weight-regular;
+}
+
 .strong {
 	font-weight: $font-weight-bold;
 }
 
 .strikethrough {
 	text-decoration: line-through;
+}
+
+.content {
+	color: $color-gray-lighter;
 }
 
 // Links
@@ -185,6 +198,14 @@ a.is-active {
 
 .content .lower-alpha {
 	list-style-type: lower-alpha;
+}
+
+/**
+ * COMPONENTS
+ */
+
+.card-header-icons {
+	padding: 0.75rem;
 }
 
 // Helpers

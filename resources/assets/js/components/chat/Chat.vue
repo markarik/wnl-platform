@@ -132,7 +132,7 @@
 				})
 			},
 			scrollToBottom() {
-				this.container.scrollTop = this.contentInside.offsetHeight
+				this.container.scrollTop = '1000000000'
 			}
 		},
 		created() {

@@ -54,7 +54,7 @@
 		right: -20%
 		position: absolute
 		top: 95%
-		z-index: 1000
+		z-index: 100
 
 	.metadata,
 	.drawer-item

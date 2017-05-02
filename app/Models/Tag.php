@@ -10,7 +10,7 @@ class Tag extends Model
 
 	public function questions()
 	{
-		return $this->morphedByMany('App\Models\Question', 'taggable');
+		return $this->morphedByMany('App\Models\QnaQuestion', 'taggable');
 	}
 
 	public function lessons()

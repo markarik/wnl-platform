@@ -17,10 +17,14 @@ export function isProduction() {
 		envValue('appEnv') === 'sandbox'
 }
 
-// Debug
+// Debug control
 
 export function isDebug() {
 	return envValue('appDebug')
+}
+
+export function useLocalStorage() {
+	return envValue('APP_USE_LOCAL_STORAGE')
 }
 
 // URLs

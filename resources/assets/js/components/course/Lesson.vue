@@ -1,23 +1,25 @@
 <template>
-	<div class="wnl-lesson scrollable-main-container">
-		<div class="wnl-lesson-view">
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item metadata">
-						{{lessonName}}
+	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
+		<div class="wnl-lesson">
+			<div class="wnl-lesson-view">
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item metadata">
+							{{lessonName}}
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item small">
+							Lekcja {{lessonId}}
+						</div>
 					</div>
 				</div>
-				<div class="level-right">
-					<div class="level-item small">
-						Lekcja {{lessonId}}
-					</div>
-				</div>
+				<keep-alive>
+					<router-view></router-view>
+				</keep-alive>
 			</div>
-			<keep-alive>
-				<router-view></router-view>
-			</keep-alive>
+			<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
 		</div>
-		<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
 		<div class="wnl-lesson-previous-next-nav">
 			<wnl-previous-next></wnl-previous-next>
 		</div>
@@ -30,7 +32,7 @@
 	$previous-next-height: 45px
 
 	.wnl-lesson-view
-		padding-bottom: $previous-next-height
+		padding-bottom: calc(2*#{$previous-next-height})
 
 	.wnl-lesson-previous-next-nav
 		background: $color-white
@@ -57,6 +59,18 @@
 			'wnl-previous-next': PreviousNext,
 		},
 		props: ['courseId', 'lessonId', 'screenId'],
+		data() {
+			return {
+				/**
+				 * elementHeight is used to prevent Safari from expanding
+				 * a container with an overflow-y: auto and height: 100%.
+				 * Using a specific height, the height of the parent element
+				 * (which btw is defined as 100% of its parent element),
+				 * all browsers are able to beautifully scroll the content.
+				 */
+				elementHeight: this.$parent.$el.offsetHeight
+			}
+		},
 		computed: {
 			...mapGetters('course', [
 				'getScreens',
@@ -124,9 +138,16 @@
 					}
 				}
 			},
+			updateElementHeight() {
+				this.elementHeight = this.$parent.$el.offsetHeight
+			},
 		},
 		mounted () {
 			this.launchLesson()
+			window.addEventListener('resize', this.updateElementHeight)
+		},
+		beforeDestroy () {
+			window.removeEventListener('resize', this.updateElementHeight)
 		},
 		watch: {
 			'$route' (to, from) {

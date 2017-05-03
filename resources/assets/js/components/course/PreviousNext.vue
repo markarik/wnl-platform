@@ -61,13 +61,15 @@
 			color: $color-inactive-gray
 			margin-right: $margin-small
 
-	.next .nxt-prvs-link
+	.next
 		border-left: $border-light-gray
-		justify-content: flex-end
 
-		.icon
-			margin-left: $margin-small
-			margin-right: 0
+		.nxt-prvs-link
+			justify-content: flex-end
+
+			.icon
+				margin-left: $margin-small
+				margin-right: 0
 </style>
 
 <script>

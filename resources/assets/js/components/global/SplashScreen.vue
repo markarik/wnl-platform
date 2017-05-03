@@ -1,5 +1,5 @@
 <template>
-	<div class="splash-screen">
+	<div class="splash-screen scrollable-main-container">
 		<p class="title is-4">Do kursu "Więcej niż LEK" pozostało jeszcze</p>
 		<p class="splash-screen-countdown">
 			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
@@ -18,8 +18,8 @@
 		flex: 1 0 auto
 		flex-direction: column
 		height: 100%
-		min-height: 100%
 		justify-content: center
+		min-height: 100%
 		width: 100%
 
 	.splash-screen-image

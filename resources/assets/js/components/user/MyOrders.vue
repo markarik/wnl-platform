@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="container">
+	<div class="container scrollable-main-container">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">

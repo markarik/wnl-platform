@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="scrollable-main-container">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -61,7 +61,7 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.content

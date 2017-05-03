@@ -11,13 +11,6 @@ class ScreensTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		// Lesson 1
-		DB::table('screens')->insert([
-			'type'      => 'html',
-			'content'   => Storage::get('demo/mission.html'),
-			'name'      => 'Wstęp',
-			'lesson_id' => 1,
-		]);
 		DB::table('screens')->insert([
 			'type'      => 'quiz',
 			'name'      => 'Pytania kontrolne',
@@ -46,6 +39,12 @@ class ScreensTableSeeder extends Seeder
 			'lesson_id' => 2,
 		]);
 		DB::table('screens')->insert([
+			'type'      => 'widget',
+			'content'   => Storage::get('demo/questions.html'),
+			'name'      => 'Pytania kontrolne',
+			'lesson_id' => 2,
+		]);
+		DB::table('screens')->insert([
 			'type'      => 'end',
 			'content'   => Storage::get('demo/end2.html'),
 			'name'      => 'Następna lekcja',
@@ -61,8 +60,8 @@ class ScreensTableSeeder extends Seeder
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'widget',
-			'content'   => Storage::get('demo/questions.html'),
-			'name'      => 'Pytania kontrolne',
+			'content'   => Storage::get('demo/mission.html'),
+			'name'      => 'Wykorzystanie wyobraźni',
 			'lesson_id' => 3,
 		]);
 		DB::table('screens')->insert([

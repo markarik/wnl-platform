@@ -7,6 +7,18 @@
 
 	.wnl-screen-html
 		margin: $margin-big 0
+
+	.columns
+		margin-bottom: 20px
+		padding-bottom: 20px
+
+	.image-container
+
+		img
+			display: block
+			margin: 0 auto
+			max-width: 200px
+			max-height: 200px
 </style>
 
 <script>

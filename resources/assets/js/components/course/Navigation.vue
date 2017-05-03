@@ -30,7 +30,7 @@
 				return this.getCourseProgress(this.context.courseId)
 			},
 			breadcrumbs() {
-				let breadcrumbs = []
+				let breadcrumbs = [], courseItem
 
 				breadcrumbs.push(this.getCourseItem())
 

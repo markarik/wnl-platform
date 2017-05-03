@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from 'store' // LocalStorage
+import _ from 'lodash'
 import * as types from '../mutations-types'
 import { getApiUrl } from 'js/utils/env'
 import { set } from 'vue'
@@ -65,7 +66,7 @@ const getters = {
 		}
 	},
 	wasCourseStarted: (state, getters) => (courseId) => {
-		return !_.isEmpty(getters.gCourse(courseId).lessons)
+		return !_.isEmpty(getters.getCourse(courseId).lessons)
 	},
 	getSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
@@ -73,9 +74,10 @@ const getters = {
 	},
 	wasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].lessons.hasOwnProperty(lessonId)
+			state.courses[courseId].lessons.hasOwnProperty(lessonId) &&
+			state.courses[courseId].lessons[lessonId].hasOwnProperty('status')
 	},
-	isLessonInProgress: (state) => (courseId, lessonId) => {
+	isLessonInProgress: (state, getters) => (courseId, lessonId) => {
 		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_IN_PROGRESS
 	},
@@ -88,7 +90,7 @@ const getters = {
 		}
 		return 0
 	},
-	isLessonComplete: (state) => (courseId, lessonId) => {
+	isLessonComplete: (state, getters) => (courseId, lessonId) => {
 		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE
 	},

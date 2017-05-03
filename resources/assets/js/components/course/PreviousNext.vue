@@ -1,11 +1,21 @@
 <template>
 	<div class="wnl-previous-next">
-		<router-link class="nxt-prvs-link previous" :to="previousScreenRoute" v-if="previousScreenRoute !== undefined">
-			Poprzedni
-		</router-link>
-		<router-link class="nxt-prvs-link next" :to="nextScreenRoute" v-if="nextScreenRoute !== undefined">
-			Następny
-		</router-link>
+		<div class="previous">
+			<router-link class="nxt-prvs-link" :to="previousScreenRoute" v-if="previousScreenId">
+				<span class="icon is-small">
+					<i class="fa fa-arrow-circle-left"></i>
+				</span>
+				<span>{{previousScreenName}}</span>
+			</router-link>
+		</div>
+		<div class="next">
+			<router-link class="nxt-prvs-link" :to="nextScreenRoute" v-if="nextScreenId">
+				<span>{{nextScreenName}}</span>
+				<span class="icon is-small">
+					<i class="fa fa-arrow-circle-right"></i>
+				</span>
+			</router-link>
+		</div>
 	</div>
 </template>
 
@@ -16,7 +26,6 @@
 	.wnl-previous-next
 		+white-shadow-top()
 
-		align-items: stretch
 		border-top: $border-light-gray
 		display: flex
 		justify-content: space-between
@@ -24,21 +33,41 @@
 
 	.previous,
 	.next
+		align-items: stretch
+		box-sizing: border-box
+		display: flex
+		flex: 1 auto
+		max-width: 50%
+		min-height: 100%
+
+	.nxt-prvs-link
 		align-items: center
 		display: flex
-		flex: 1 0 auto
+		flex: 1 auto
+		font-size: $font-size-minus-2
+		font-weight: $font-weight-bold
+		height: 100%
+		min-height: 100%
 		padding: 0 20px
+		text-transform: uppercase
 		transition: all $transition-length-base
+		width: 100%
 
 		&:hover
 			background: $color-background-light-gray
 			transition: all $transition-length-base
 
-	.next
+		.icon
+			color: $color-inactive-gray
+			margin-right: $margin-small
+
+	.next .nxt-prvs-link
+		border-left: $border-light-gray
 		justify-content: flex-end
 
-	.previous
-		border-right: $border-light-gray
+		.icon
+			margin-left: $margin-small
+			margin-right: 0
 </style>
 
 <script>
@@ -49,22 +78,36 @@
 	export default {
 		name: 'PreviousNext',
 		computed: {
-			...mapGetters('course', ['getAdjacentScreenId']),
+			...mapGetters('course', [
+				'getScreen',
+				'getAdjacentScreenId',
+			]),
+			lessonId() {
+				return this.$route.params.lessonId
+			},
+			previousScreenId() {
+				return this.getAdjacentScreenId(this.lessonId,
+					this.$route.params.screenId, 'previous')
+			},
+			nextScreenId() {
+				return this.getAdjacentScreenId(this.lessonId,
+					this.$route.params.screenId, 'next')
+			},
+			previousScreenName() {
+				return this.getScreen(this.previousScreenId).name
+			},
+			nextScreenName() {
+				return this.getScreen(this.nextScreenId).name
+			},
 			previousScreenRoute() {
-				return this.getAdjacentScreenRoute('previous')
+				return this.getAdjacentScreenRoute(this.previousScreenId)
 			},
 			nextScreenRoute() {
-				return this.getAdjacentScreenRoute('next')
+				return this.getAdjacentScreenRoute(this.nextScreenId)
 			},
 		},
 		methods: {
-			getAdjacentScreenRoute(direction) {
-				let lessonId = this.$route.params.lessonId,
-					id = this.getAdjacentScreenId(
-						lessonId,
-						this.$route.params.screenId,
-						direction)
-
+			getAdjacentScreenRoute(id) {
 				if (id === undefined) {
 					return undefined
 				} else {
@@ -72,7 +115,7 @@
 						name: resource('screens'),
 						params: {
 							courseId: this.$route.params.courseId,
-							lessonId: lessonId,
+							lessonId: this.lessonId,
 							screenId: id,
 						}
 					}

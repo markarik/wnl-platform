@@ -45,6 +45,7 @@ const getters = {
 	},
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
+	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getScreens: state => (lessonId) => state.structure[resource('lessons')][lessonId][resource('screens')],
 	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {
 		let screens = getters.getScreens(lessonId)

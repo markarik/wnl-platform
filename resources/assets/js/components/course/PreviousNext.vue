@@ -46,7 +46,6 @@
 		flex: 1 auto
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
-		height: 100%
 		min-height: 100%
 		padding: 0 20px
 		text-transform: uppercase

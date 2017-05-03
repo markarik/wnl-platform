@@ -2153,7 +2153,7 @@ body {
 
 .reveal.white-custom-background {
 	background: white !important;
-	color: black !important;
+	color: #0c1726 !important;
 }
 
 .reveal.white-custom-background .backgrounds,
@@ -2162,6 +2162,6 @@ body {
 }
 
 .reveal.dark-custom-background {
-	background: black !important;
+	background: #0c1726 !important;
 	color: white !important;
 }

@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-overview">
+	<div class="scrollable-main-container">
 		<!-- Next lesson -->
 		<div v-if="!isBeginning">
 			<div class="wnl-overview-section">
@@ -99,7 +99,7 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.content

@@ -24,7 +24,7 @@ const commentsMock = {
 			id: 1,
 			text: 'Cześć! Jak widzicie, każde pytanie będzie można skomentować!',
 			timestamp: '3 dni temu',
-			username: 'Robert Kardiowski',
+			username: 'Robert Kardiowaskularny',
 			votes: 3,
 		},
 		{
@@ -40,7 +40,7 @@ const commentsMock = {
 			id: 3,
 			text: 'Dokładnie tak! :D',
 			timestamp: '15 minut temu',
-			username: 'Robert Kardiowski',
+			username: 'Robert Kardiowaskularny',
 			votes: 0,
 		},
 	],

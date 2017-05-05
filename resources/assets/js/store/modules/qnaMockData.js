@@ -2,29 +2,40 @@ export const mockData = {
 	1: {
 		questions: [
 			{
-				text: 'Q1',
+				text: 'Czy są już ustalone daty spotkań warsztatowych?',
 				votes: 102,
-				timestamp: 1491389080000,
+				timestamp: '2 dni temu',
 				author: {
 					username: 'Zyta Stetoskopowicz',
 					avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/9.jpg',
 				},
 				answers: [
 					{
-						text: 'A1',
+						text: 'Tak, pełną lista dat wraz z opisem samych spotkań można znaleźć pod adresem: <a href="https://wiecejnizlek.pl/o-warsztatach/">https://wiecejnizlek.pl/o-warsztatach/</a>',
 						author: {
-							username: 'Marysia Kitelek',
+							username: 'Dariusz Chrapek',
 							avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/82.jpg',
 						},
 						votes: 5,
-						timestamp: 1491383080000,
+						timestamp: '2 dni temu',
 						comments: [
 							{
 								author: {
-									username: 'Kamila Tętniak'
+									username: 'Kamila Tętniak',
+									avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/99.jpg',
 								},
-								text: 'C1',
+								text: 'Dlaczego akurat takie daty? Wydają się być ustalone przypadkowo.',
+								timestamp: 'wczoraj',
 								votes: 3,
+							},
+							{
+								author: {
+									username: 'Dariusz Chrapek',
+									avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/82.jpg',
+								},
+								text: 'Daty spotkań zostały tak wybrane gdyż plan nauki na platformie jest zsynchronizowany z warsztatami. Oznacza to np, że po 3 tygodniach nauki interny w piątek kończymy ostatnią lekcje a kolejnego dnia w sobotę jest spotkanie z lekarzem specjalistą z interny. Dzięki temu uczestnicy warsztatów przychodzą dobrze przygotowani. Dodatkowo na platformie będziemy zbierać pytania tak aby na samych warsztatach poruszyć głównie te kwestie, które zostały zgłoszone przez uczestników jako wymagające dodatkowego wyjaśnienia.',
+								votes: 2,
+								timestamp: 'dzisiaj',
 							}
 						],
 					},
@@ -35,31 +46,23 @@ export const mockData = {
 	2: {
 		questions: [
 			{
-				text: 'Q2',
+				text: 'Czy w tym podręczniku/albumie map myśli będą gotowe mapy myśli? Skąd wiecie kto czego będzie potrzebował? Przecież każdy z uczestników ma różny poziom przygotowania do tego egzaminu.',
 				votes: 14,
-				timestamp: 1491389080000,
+				timestamp: 'wczoraj',
 				author: {
 					username: 'Filip Goździkowski',
 					avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
 				},
 				answers: [
 					{
-						text: 'A2',
+						text: 'Album jest narzędziem do prowadzenia własnych notatek, jego celem jest pomóc Wam w stworzeniu i dostosowaniu notatek do egzaminu wedle własnych potrzeb. W albumie jest 130 stron z szkieletami map myśli, które poprzez wykorzystanie absurdalnych obrazów i skojarzeń mają pomóc uczestnikom w posegregowaniu wiedzy do egzaminu i ułatwić wykonywanie codziennych powtórek. :) Dodatkowo w albumie znajduje się leksykon, który zbiera dużo informacji, które są często trudne do zapamiętania, a które pojawiły się wcześniej na egzaminie. Znajdziecie tam różne skale, klasyfikacje, objawy, zespoły, triady i inne niesamo tłumaczące się zagadnienia. :)',
 						author: {
-							username: 'Joanna Nereczka',
-							avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/6.jpg',
+							username: 'Adam Karmiński',
+							avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/4.jpg',
 						},
 						votes: 55,
-						timestamp: 1491383080000,
-						comments: [
-							{
-								author: {
-									username: 'Robert Resustytowicz'
-								},
-								text: 'C1',
-								votes: 9,
-							}
-						],
+						timestamp: '3 godziny temu',
+						comments: [],
 					},
 				],
 			},
@@ -68,31 +71,72 @@ export const mockData = {
 	3: {
 		questions: [
 			{
-				text: 'Q3',
+				text: 'Hejo! Czy ktoś z tutaj zgromadzonych mógłby wytłumaczyć na czym polega objaw Schobera?',
 				votes: 2,
-				timestamp: 1491389080000,
+				timestamp: '5 dni temu',
 				author: {
 					username: 'Michalina Żyłowska',
 					avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/19.jpg',
 				},
 				answers: [
 					{
-						text: 'A3',
+						text: `Jest to test służący do  oceny zakresu zgięcia w odcinku lędźwiowym kręgosłupa. Musisz zmierzyć odległości pomiędzy dwoma punktami, wyrostek kolczysty L5 i punktu położonego 10 cm w góry (dogłowowo). \n Dalej prosisz pacjentka o skłon i mierzysz odległość. Prawidłowy test jest jak ruchomość wynosi przynajmniej 4,5 cm. :)`,
 						author: {
 							username: 'Elżbieta Anna Lupuska',
 							avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/32.jpg',
 						},
 						votes: 5,
-						timestamp: 1491383080000,
+						timestamp: 'dzisiaj',
 						comments: [
 							{
 								author: {
-									username: 'Michalina Żyłowska'
+									username: 'Filip Goździkowski',
+									avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
 								},
-								text: 'C1',
-								votes: 3,
-							}
+								text: 'A przy diagnozowaniu jakich jednostek chorobowych się go wykorzystuje? Ujemny jest jak prawidłowość jest ruchoma a dodatni jak zmniejszona, dobrze rozumiem?',
+								votes: 1,
+								timestamp: 'dzisiaj',
+							},
+							{
+								author: {
+									username: 'Elżbieta Anna Lupuska',
+									avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/65.jpg',
+								},
+								text: 'Objaw Schobera świadczy tylko o zapaleniu lub zwyrodnieniu stawów, nie jest patognomoniczny dla żadnej konkretnej jednostki chorobowej.',
+								votes: 8,
+								timestamp: '4 godziny temu',
+							},
+							{
+								author: {
+									username: 'Filip Goździkowski',
+									avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
+								},
+								text: 'Dzięki! ;)',
+								votes: 0,
+								timestamp: '53 minuty temu',
+							},
 						],
+					},
+				],
+			},
+			{
+				text: 'Co powoduje sztywność stawów w chorobie zwyrodnieniowej? Z góry dziękuje za odpowiedź!',
+				votes: 4,
+				timestamp: 'wczoraj',
+				author: {
+					username: 'Alan Tumor',
+					avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/17.jpg',
+				},
+				answers: [
+					{
+						text: 'Z wiekiem zmniejsza się ilość chondroityny, glukozaminy i kwasu hialorunowego co upośledza funkcjonowanie stawu. Jak mówią pacjenci - “nie ma poślizgu”. :D',
+						author: {
+							username: 'Klemens Dwunasty',
+							avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/40.jpg',
+						},
+						votes: 3,
+						timestamp: 1491383080000,
+						comments: [],
 					},
 				],
 			},

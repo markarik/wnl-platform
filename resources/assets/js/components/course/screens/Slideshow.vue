@@ -1,32 +1,35 @@
 <template>
-	<div class="wnl-slideshow-container">
-		<div class="wnl-slideshow-background-control level">
-			<div class="level-left">
+	<div>
+		<div class="wnl-slideshow-container">
+			<div class="wnl-slideshow-background-control level">
+				<div class="level-left">
+				</div>
+				<div class="level-right">
+					<div class="level-item">Tło prezentacji:</div>
+					<div class="level-item"><a class="white" @click="changeBackground('white')"></a></div>
+					<div class="level-item"><a class="dark" @click="changeBackground('dark')"></a></div>
+					<div class="level-item"><a class="image" @click="changeBackground('image')"></a></div>
+				</div>
 			</div>
-			<div class="level-right">
-				<div class="level-item">Tło prezentacji:</div>
-				<div class="level-item"><a class="white" @click="changeBackground('white')"></a></div>
-				<div class="level-item"><a class="dark" @click="changeBackground('dark')"></a></div>
-				<div class="level-item"><a class="image" @click="changeBackground('image')"></a></div>
+			<div class="wnl-screen wnl-ratio-16-9">
+				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused }"></div>
+			</div>
+			<div class="wnl-slideshow-controls">
+				<div class="wnl-slideshow-controls-left">
+					<wnl-slideshow-navigation></wnl-slideshow-navigation>
+				</div>
+				<div class="wnl-slideshow-controls-right">
+					<wnl-image-button name="wnl-slideshow-control-fullscreen"
+						icon="fullscreen-arrows"
+						alt="Włącz pełen ekran"
+						align="right"
+						label="Pełen ekran"
+						@buttonclicked="toggleFullscreen"
+					></wnl-image-button>
+				</div>
 			</div>
 		</div>
-		<div class="wnl-screen wnl-ratio-16-9">
-			<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused }"></div>
-		</div>
-		<div class="wnl-slideshow-controls">
-			<div class="wnl-slideshow-controls-left">
-				<wnl-slideshow-navigation></wnl-slideshow-navigation>
-			</div>
-			<div class="wnl-slideshow-controls-right">
-				<wnl-image-button name="wnl-slideshow-control-fullscreen"
-					icon="fullscreen-arrows"
-					alt="Włącz pełen ekran"
-					align="right"
-					label="Pełen ekran"
-					@buttonclicked="toggleFullscreen"
-				></wnl-image-button>
-			</div>
-		</div>
+		<wnl-qna-mock></wnl-qna-mock>
 	</div>
 </template>
 <style lang="sass">
@@ -93,12 +96,14 @@
 	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
 	import SlideshowNavigation from './SlideshowNavigation.vue'
+	import QnaMock from 'js/components/qna/Mock.vue'
 	import { isDebug, getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Slideshow',
 		components: {
-			'wnl-slideshow-navigation': SlideshowNavigation
+			'wnl-slideshow-navigation': SlideshowNavigation,
+			'wnl-qna-mock': QnaMock,
 		},
 		data() {
 			return {

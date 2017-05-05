@@ -31,6 +31,12 @@
 				</wnl-sidenav-item>
 			</ul>
 		</div>
+
+		<div class="box">
+			<a href="https://platforma.wiecejnizlek.pl/payment/select-product">
+				ZAPISZ SIĘ NA KURS
+			</a>
+		</div>
 	</div>
 
 </template>

@@ -24,6 +24,7 @@ handshake.then(parent => {
 }).catch(exception => console.log(exception))
 
 Reveal.initialize({
+	backgroundTransition: 'none',
 	embedded: true,
 	slideNumber: true,
 	overview: false,

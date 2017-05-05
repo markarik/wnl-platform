@@ -19,7 +19,6 @@ class QuizSeeder extends Seeder
 		QuizAnswer::flushEventListeners();
 		QuizSet::flushEventListeners();
 
-		$this->seedQuiz('Example test set', 'app/quiz_hits.yaml');
 		$this->seedQuiz('Pytania z reumatologii', 'app/quiz_reumatologia_hits.yaml');
 	}
 

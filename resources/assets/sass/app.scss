@@ -143,6 +143,21 @@ html, body {
 	border-bottom: $border-light-gray;
 }
 
+// Videos
+.wnl-ratio-16-9 {
+	padding-bottom: 56.25%;
+	position: relative;
+	width: 100%;
+}
+
+.wnl-ratio-16-9-content {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
 // Notifications
 .swal2-spacer {
 	background: transparent;

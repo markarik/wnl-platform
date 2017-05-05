@@ -62,7 +62,7 @@ class ScreensTableSeeder extends Seeder
 				'resources' => [
 					[
 						'name' => config('papi.resources.quiz-sets'),
-						'id'   => 2,
+						'id'   => 1,
 					],
 				],
 			]),

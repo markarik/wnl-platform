@@ -23,7 +23,7 @@ class QuizSeeder extends Seeder
 			'name' => 'Example test set',
 		]);
 
-		$quiz = yaml_parse_file(storage_path('app/quiz_hits.yaml'));
+		$quiz = yaml_parse_file(storage_path('app/quiz_reumatologia_hits.yaml'));
 //		foreach ($quiz['questions'] as $index => $question) {
 //			foreach ($question['answers'] as $answerIndex => $answer) {
 //				if (array_key_exists('is_correct', $answer)) {

@@ -201,6 +201,12 @@ a.is-active {
 	list-style-type: lower-alpha;
 }
 
+.spacious {
+	li {
+		padding: 0.5em 0;
+	}
+}
+
 /**
  * COMPONENTS
  */
@@ -210,6 +216,12 @@ a.is-active {
 }
 
 // Helpers
+
+.central {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
 
 .aligncenter {
 	text-align: center;

@@ -70,7 +70,7 @@ class ScreensTableSeeder extends Seeder
 		DB::table('screens')->insert([
 			'type'      => 'quiz',
 			'name'      => 'Pytania kontrolne',
-			'lesson_id' => 4,
+			'lesson_id' => 3,
 			'meta'      => json_encode([
 				'resources' => [
 					[
@@ -84,13 +84,13 @@ class ScreensTableSeeder extends Seeder
 			'type'      => 'widget',
 			'content'   => Storage::get('demo/reumatologia2.html'),
 			'name'      => 'Powtórki',
-			'lesson_id' => 4,
+			'lesson_id' => 3,
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'end',
 			'content'   => Storage::get('demo/reumatologia.html'),
 			'name'      => 'Następna lekcja',
-			'lesson_id' => 4,
+			'lesson_id' => 3,
 		]);
 	}
 }

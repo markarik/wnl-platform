@@ -4,7 +4,7 @@ export const mockData = {
 			{
 				text: 'Czy są już ustalone daty spotkań warsztatowych?',
 				votes: 102,
-				timestamp: '2 dni temu',
+				timestamp: '4 dni temu',
 				author: {
 					username: 'Zyta Stetoskopowicz',
 					avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/9.jpg',
@@ -14,7 +14,7 @@ export const mockData = {
 						text: 'Tak, pełną lista dat wraz z opisem samych spotkań można znaleźć pod adresem: <a href="https://wiecejnizlek.pl/o-warsztatach/">https://wiecejnizlek.pl/o-warsztatach/</a>',
 						author: {
 							username: 'Dariusz Chrapek',
-							avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/82.jpg',
+							avatarUrl: 'https://wiecejnizlek.pl/wp-content/uploads/2017/04/12524378_10154016132373555_8454049314635508052_n.jpg',
 						},
 						votes: 5,
 						timestamp: '2 dni temu',
@@ -31,13 +31,23 @@ export const mockData = {
 							{
 								author: {
 									username: 'Dariusz Chrapek',
-									avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/82.jpg',
+									avatarUrl: 'https://wiecejnizlek.pl/wp-content/uploads/2017/04/12524378_10154016132373555_8454049314635508052_n.jpg',
 								},
 								text: 'Daty spotkań zostały tak wybrane gdyż plan nauki na platformie jest zsynchronizowany z warsztatami. Oznacza to np, że po 3 tygodniach nauki interny w piątek kończymy ostatnią lekcje a kolejnego dnia w sobotę jest spotkanie z lekarzem specjalistą z interny. Dzięki temu uczestnicy warsztatów przychodzą dobrze przygotowani. Dodatkowo na platformie będziemy zbierać pytania tak aby na samych warsztatach poruszyć głównie te kwestie, które zostały zgłoszone przez uczestników jako wymagające dodatkowego wyjaśnienia.',
 								votes: 2,
 								timestamp: 'dzisiaj',
 							}
 						],
+					},
+					{
+						text: 'Tak, odbędą się 17 czerwca, 8 i 22 lipca, 26 sierpnia oraz 2 i 9 września.',
+						author: {
+							username: 'Adam Karmiński',
+							avatarUrl: 'https://s-media-cache-ak0.pinimg.com/avatars/troophel_1335721921_140.jpg',
+						},
+						votes: 1,
+						timestamp: '3 dni temu',
+						comments: [],
 					},
 				],
 			},
@@ -58,7 +68,7 @@ export const mockData = {
 						text: 'Album jest narzędziem do prowadzenia własnych notatek, jego celem jest pomóc Wam w stworzeniu i dostosowaniu notatek do egzaminu wedle własnych potrzeb. W albumie jest 130 stron z szkieletami map myśli, które poprzez wykorzystanie absurdalnych obrazów i skojarzeń mają pomóc uczestnikom w posegregowaniu wiedzy do egzaminu i ułatwić wykonywanie codziennych powtórek. :) Dodatkowo w albumie znajduje się leksykon, który zbiera dużo informacji, które są często trudne do zapamiętania, a które pojawiły się wcześniej na egzaminie. Znajdziecie tam różne skale, klasyfikacje, objawy, zespoły, triady i inne niesamo tłumaczące się zagadnienia. :)',
 						author: {
 							username: 'Adam Karmiński',
-							avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/4.jpg',
+							avatarUrl: 'https://s-media-cache-ak0.pinimg.com/avatars/troophel_1335721921_140.jpg',
 						},
 						votes: 55,
 						timestamp: '3 godziny temu',
@@ -72,7 +82,7 @@ export const mockData = {
 		questions: [
 			{
 				text: 'Hejo! Czy ktoś z tutaj zgromadzonych mógłby wytłumaczyć na czym polega objaw Schobera?',
-				votes: 2,
+				votes: 12,
 				timestamp: '5 dni temu',
 				author: {
 					username: 'Michalina Żyłowska',
@@ -135,7 +145,7 @@ export const mockData = {
 							avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/40.jpg',
 						},
 						votes: 3,
-						timestamp: 1491383080000,
+						timestamp: '32 minuty temu',
 						comments: [],
 					},
 				],

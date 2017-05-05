@@ -1,5 +1,5 @@
 <template>
-	<div class="vote" :class="iconClass">
+	<div class="vote" :class="iconClass" @click="mockUpvote">
 		<span class="icon is-small">
 			<i class="fa fa-thumbs-o-up"></i>
 		</span>
@@ -12,6 +12,7 @@
 
 	.vote
 		align-items: center
+		cursor: pointer
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
 		display: flex
@@ -26,6 +27,8 @@
 </style>
 
 <script>
+	import {swalConfig} from 'js/utils/swal'
+
 	export default {
 		name: 'Vote',
 		props: ['type', 'count'],
@@ -33,6 +36,15 @@
 			iconClass() {
 				return `vote-${this.type}`
 			},
-		}
+		},
+		methods: {
+			mockUpvote() {
+				this.$swal(swalConfig({
+					html: `<p class="normal">Pracujemy już nad rankingiem pytań i odpowiedzi!</p>`,
+					title: 'Już wkrótce!',
+					type: 'info',
+				}))
+			}
+		},
 	}
 </script>

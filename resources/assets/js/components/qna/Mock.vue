@@ -24,15 +24,14 @@
 						</span>
 					</div>
 					<div class="qna-answers">
+						<p class="qna-title">Odpowiedzi ({{question.answers.length}})</p>
 						<div v-for="answer in question.answers">
 							<div class="qna-answer">
 								<div class="votes">
 									<wnl-vote type="up" :count="answer.votes"></wnl-vote>
 								</div>
 								<div class="container">
-									<div class="qna-answer-content">
-										{{answer.text}}
-									</div>
+									<div class="qna-answer-content" v-html="answer.text"></div>
 									<div class="qna-meta">
 										<wnl-avatar
 											:username="answer.author.username"
@@ -49,6 +48,7 @@
 								</div>
 							</div>
 							<div class="qna-answer-comments">
+								<p class="qna-title">Komentarze ({{answer.comments.length}})</p>
 								<div class="qna-comment" v-for="comment in answer.comments">
 									<div class="container">
 										<div class="qna-meta qna-comment-meta">
@@ -108,14 +108,22 @@
 	.qna-comment
 		display: flex
 
+	.qna-title
+		color: $color-gray-dimmed
+		margin-bottom: $margin-tiny
+		margin-top: $margin-base
+
 	.qna-question
 		border-top: $border-light-gray
-		margin: $margin-big 0
+		margin: $margin-base 0
 		padding: $margin-big 0
 
 	.qna-question-content
 		font-weight: $font-weight-bold
 		font-size: $font-size-plus-1
+
+	.qna-answers
+		margin-top: $margin-big
 
 	.qna-answer
 		background: $color-background-lighter-gray
@@ -125,10 +133,13 @@
 	.qna-answer-comments
 		margin-left: 4em
 
+		.qna-title
+			font-size: $font-size-minus-1
+
 	.qna-comment
 		border-top: $border-light-gray
 		font-size: $font-size-minus-1
-		margin-top: $margin-base
+		margin-bottom: $margin-base
 		padding-top: $margin-base
 
 		&:first-child

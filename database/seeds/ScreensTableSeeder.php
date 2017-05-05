@@ -1,7 +1,5 @@
 <?php
-
 use Illuminate\Database\Seeder;
-
 class ScreensTableSeeder extends Seeder
 {
 	/**
@@ -11,14 +9,12 @@ class ScreensTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-
 		DB::table('screens')->insert([
 			'type'      => 'end',
 			'content'   => Storage::get('demo/end.html'),
 			'name'      => 'Następna lekcja',
 			'lesson_id' => 1,
 		]);
-
 		// Lesson 2
 		DB::table('screens')->insert([
 			'type'      => 'html',
@@ -32,28 +28,19 @@ class ScreensTableSeeder extends Seeder
 			'name'      => 'Następna lekcja',
 			'lesson_id' => 2,
 		]);
-
 		// Lesson 3
-//		DB::table('screens')->insert([
-//			'type'      => 'html',
-//			'content'   => Storage::get('demo/example.html'),
-//			'name'      => 'Wstęp',
-//			'lesson_id' => 3,
-//		]);
-//		DB::table('screens')->insert([
-//			'type'      => 'widget',
-//			'content'   => Storage::get('demo/mission.html'),
-//			'name'      => 'Wykorzystanie wyobraźni',
-//			'lesson_id' => 3,
-//		]);
-//		DB::table('screens')->insert([
-//			'type'      => 'end',
-//			'content'   => Storage::get('demo/end3.html'),
-//			'name'      => 'Koniec kursu',
-//			'lesson_id' => 3,
-//		]);
-
-		// Lesson 4
+		DB::table('screens')->insert([
+			'type'      => 'html',
+			'content'   => Storage::get('demo/example.html'),
+			'name'      => 'Wstęp',
+			'lesson_id' => 3,
+		]);
+		DB::table('screens')->insert([
+			'type'      => 'html',
+			'content'   => Storage::get('demo/repetitions.html'),
+			'name'      => 'Powtórki',
+			'lesson_id' => 3,
+		]);
 		DB::table('screens')->insert([
 			'type'      => 'quiz',
 			'name'      => 'Pytania kontrolne',
@@ -68,15 +55,9 @@ class ScreensTableSeeder extends Seeder
 			]),
 		]);
 		DB::table('screens')->insert([
-			'type'      => 'widget',
-			'content'   => Storage::get('demo/reumatologia2.html'),
-			'name'      => 'Powtórki',
-			'lesson_id' => 3,
-		]);
-		DB::table('screens')->insert([
 			'type'      => 'end',
-			'content'   => Storage::get('demo/reumatologia.html'),
-			'name'      => 'Następna lekcja',
+			'content'   => Storage::get('demo/end3.html'),
+			'name'      => 'Zakończenie lekcji',
 			'lesson_id' => 3,
 		]);
 	}

@@ -65,5 +65,32 @@ class ScreensTableSeeder extends Seeder
 			'name'      => 'Zakończenie lekcji',
 			'lesson_id' => 3,
 		]);
+
+		// Lesson 4
+		DB::table('screens')->insert([
+			'type'      => 'quiz',
+			'name'      => 'Pytania kontrolne',
+			'lesson_id' => 4,
+			'meta'      => json_encode([
+				'resources' => [
+					[
+						'name' => config('papi.resources.quiz-sets'),
+						'id'   => 2,
+					],
+				],
+			]),
+		]);
+		DB::table('screens')->insert([
+			'type'      => 'widget',
+			'content'   => Storage::get('demo/reumatologia2.html'),
+			'name'      => 'Powtórki',
+			'lesson_id' => 4,
+		]);
+		DB::table('screens')->insert([
+			'type'      => 'end',
+			'content'   => Storage::get('demo/reumatologia.html'),
+			'name'      => 'Następna lekcja',
+			'lesson_id' => 4,
+		]);
 	}
 }

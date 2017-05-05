@@ -34,37 +34,24 @@ class ScreensTableSeeder extends Seeder
 		]);
 
 		// Lesson 3
-		DB::table('screens')->insert([
-			'type'      => 'html',
-			'content'   => Storage::get('demo/example.html'),
-			'name'      => 'Wstęp',
-			'lesson_id' => 3,
-		]);
-		DB::table('screens')->insert([
-			'type'      => 'html',
-			'content'   => Storage::get('demo/repetitions.html'),
-			'name'      => 'Powtórki',
-			'lesson_id' => 3,
-		]);
-		DB::table('screens')->insert([
-			'type'      => 'quiz',
-			'name'      => 'Pytania kontrolne',
-			'lesson_id' => 3,
-			'meta'      => json_encode([
-				'resources' => [
-					[
-						'name' => config('papi.resources.quiz-sets'),
-						'id'   => 1,
-					],
-				],
-			]),
-		]);
-		DB::table('screens')->insert([
-			'type'      => 'end',
-			'content'   => Storage::get('demo/end3.html'),
-			'name'      => 'Zakończenie lekcji',
-			'lesson_id' => 3,
-		]);
+//		DB::table('screens')->insert([
+//			'type'      => 'html',
+//			'content'   => Storage::get('demo/example.html'),
+//			'name'      => 'Wstęp',
+//			'lesson_id' => 3,
+//		]);
+//		DB::table('screens')->insert([
+//			'type'      => 'widget',
+//			'content'   => Storage::get('demo/mission.html'),
+//			'name'      => 'Wykorzystanie wyobraźni',
+//			'lesson_id' => 3,
+//		]);
+//		DB::table('screens')->insert([
+//			'type'      => 'end',
+//			'content'   => Storage::get('demo/end3.html'),
+//			'name'      => 'Koniec kursu',
+//			'lesson_id' => 3,
+//		]);
 
 		// Lesson 4
 		DB::table('screens')->insert([

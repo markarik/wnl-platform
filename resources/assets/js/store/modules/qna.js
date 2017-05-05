@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {mockData} from 'js/store/modules/qnaMockData'
 import {set} from 'vue'
 
 // API
@@ -58,6 +59,9 @@ const state = {
 
 // Getters
 const getters = {
+	qnaGetMockData: state => (lessonId) => {
+		return mockData[lessonId]
+	},
 	qnaGetQuestions: state => (lessonId) => {
 		try {
 			return state.questions[lessonId].included.questions

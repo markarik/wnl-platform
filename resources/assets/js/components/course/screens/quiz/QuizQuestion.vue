@@ -3,7 +3,7 @@
 		<div class="wnl-quiz-question card margin vertical"
 			:class="{'is-unresolved': !isResolved(this.index)}">
 			<header class="quiz-header card-header">
-				<p class="card-header-title">{{text}}</p>
+				<p class="card-header-title" v-html="text"></p>
 				<div class="card-header-icons">
 					<a class="quiz-question-icon" @click="mockSaving" title="Zapisz to pytanie">
 						<span class="icon is-small">

@@ -1,3 +1,3 @@
 export function scrollToTop() {
-	document.getElementsByClassName('wnl-app-layout-main')[0].scrollTop = 0
+	document.getElementsByClassName('scrollable-main-container')[0].scrollTop = 0
 }

@@ -25,14 +25,14 @@ class SlideShowController extends Controller
 
 		$cacheKey = $this->getCacheKey($slideshowId);
 
-		if (Cache::tags(self::CACHE_TAGS)->has($cacheKey)) {
-			$slides = Cache::tags(self::CACHE_TAGS)->get($cacheKey);
-		} else {
+		// if (Cache::tags(self::CACHE_TAGS)->has($cacheKey)) {
+		// 	$slides = Cache::tags(self::CACHE_TAGS)->get($cacheKey);
+		// } else {
 			$slides = $this->fetchSlides($slideshow);
 			if (!empty($slides)) {
 				Cache::tags(self::CACHE_TAGS)->forever($cacheKey, $slides);
 			}
-		}
+		// }
 
 		$view = view('course.slideshow', ['slides' => $slides]);
 		$view->render();

@@ -9,14 +9,15 @@ import { set } from 'vue'
 // TODO: Mar 9, 2017 - Use config when it's ready
 const STATUS_IN_PROGRESS = 'in-progress'
 const STATUS_COMPLETE = 'complete'
+const CACHE_VERSION = 1
 
 // Helper functions
 function getCourseStoreKey(courseId) {
-	return `progress-courses-${courseId}`
+	return `progress-courses-${courseId}-${CACHE_VERSION}`
 }
 
 function getLessonStoreKey(courseId, lessonId) {
-	return `progress-courses-${courseId}-lessons-${lessonId}`
+	return `progress-courses-${courseId}-lessons-${lessonId}-${CACHE_VERSION}`
 }
 
 function saveCourseProgress(payload, status) {

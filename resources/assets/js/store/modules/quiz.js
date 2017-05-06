@@ -6,7 +6,7 @@ import { useLocalStorage, getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
-const CACHE_VERSION = 1
+const CACHE_VERSION = 2
 
 function getLocalStorageKey(setId, userSlug) {
 	return `wnl-quiz-${setId}-u-${userSlug}-${CACHE_VERSION}`

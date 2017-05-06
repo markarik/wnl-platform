@@ -32,10 +32,13 @@
 			</ul>
 		</div>
 
-		<div class="box">
-			<a href="https://platforma.wiecejnizlek.pl/payment/select-product">
-				ZAPISZ SIĘ NA KURS
-			</a>
+		<div class="box aligncenter">
+			<p>
+				<a href="https://platforma.wiecejnizlek.pl/payment/select-product">
+					ZAPISZ SIĘ NA KURS
+				</a>
+			</p>
+			<p class="metadata text-dimmed">Zapisy do 15 maja</p>
 		</div>
 	</div>
 

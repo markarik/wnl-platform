@@ -26,7 +26,7 @@
 			<h4 class="margin bottom">Witaj {{currentUserName}}! <wnl-emoji name="wave"></wnl-emoji></h4>
 			<div class="content margin bottom">
 				<p>Jest nam niezwykle miło gościć Cię na demostracyjnej wersji naszej platformy! To na niej spędzimy ze sobą najwięcej czasu i na niej kurs "Więcej niż LEK" będzie żył na co dzień.</p>
-				<p>Demo będzie aktywne przez cały czas trwania zapisów - <strong>od 1 kwietnia, do 15 maja, lub do wyczerpania miejsc</strong>. W tym czasie możesz nie tylko przejść przykładowe lekcje, ale też dowiedzieć się stąd wszystkiego o założeniach projektu "Więcej niż LEK".</p>
+				<p>Demo będzie aktywne nie tylko przez cały czas trwania zapisów - <strong>od 1 kwietnia, do 15 maja, lub do wyczerpania miejsc</strong>, ale też do rozpoczęcia kursu. W tym czasie możesz przejść przykładowe lekcje, oraz dowiedzieć się stąd wszystkiego o założeniach projektu "Więcej niż LEK". Tu na bieżąco będziemy też publikować nowe funkcje, które nieustająco dodajemy.</p>
 				<p>Mamy też szczerą nadzieję, że wizyta tutaj zrodzi w Tobie pytania, na które będziemy mogli odpowiedzieć.</p>
 				<h4>Co przygotowaliśmy?</h4>
 				<p>Dla potrzeb demonstracji, przygotowaliśmy dla Ciebie 3 lekcje, mówiące przede wszystkim o samym kursie. W ostatniej jednak, znajdziesz próbkę prezentacji medycznej. Czekają na Ciebie kolejno lekcje:</p>
@@ -36,9 +36,9 @@
 				<p>Konstrukcja materiałów, plan pracy, systematyzacja wiedzy, wspólna nauka i wzajemna motywacja, czyli 5 filarów "Więcej niż LEK".</p>
 				<h5><router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 3 }}">3. Przykładowa lekcja</router-link></h5>
 				<p>Slajdy dające przedsmak kursu, prezentujące sposób formatowania treści na slajdach, oraz graficzną stronę prezentacji.</p>
-				<h4>Czego nie ma na demo?</h4>
-				<p>Do samego kursu (a właściwie to nieustannie) będziemy pracowali nad tym, aby nasza platforma stała się dla Was ulubionym środowiskiem nauki! Na razie skupiliśmy się na tym, aby zaprezentować Wam podstawowe funkcje - prezentacje, diagramy, filmy, czat.</p>
-				<p>Tymczasem, za kulisami, szykujemy jeszcze system pytań i odpowiedzi, więcej opcji personalizacji, powiadomienia, prywatne wiadomości, pytania kontrolne i wiele, wiele innych fantastycznych pomysłów. Wszystkie będą pojawiać się na demo, jak tylko będą gotowe do pokazania światu.</p>
+				<h4>Co znajdziecie na demo?</h4>
+				<p>Do samego kursu (a właściwie to nieustannie) będziemy pracowali nad tym, aby nasza platforma stała się dla Was ulubionym środowiskiem nauki! Oprócz podstawowych funkcji - prezentacji, diagramów, filmów, czatu - staramy się pokazać jak najwięcej wyróżniających naszą platformę aspektów. Stąd prezentacja systemu pytań i odpowiedzi, czy możliwość rozwiązania przykładowego zestawu pytań po <router-link :to="{name: 'lessons', params: { courseId: 1, lessonId: 3 }}">przykładowej lekcji z Reumatologii</router-link>.</p>
+				<p>Tymczasem, za kulisami, szykujemy jeszcze wiele rzeczy, które uprzyjemnią Wam korzystanie z platformy - między innymi zapisywanie ważnych pytań i slajdów do własnych Kolekcji, notyfikacje o aktywności innych użytkowników oraz obszerną i szyką wyszukiwarkę wiedzy.</p>
 				<h4>Zaczynamy?</h4>
 				<p class="has-text-centered">
 					<router-link class="button is-primary is-outlined" :to="{name: 'lessons', params: { courseId: 1, lessonId: 1 }}">
@@ -78,7 +78,7 @@
 
 				<p>Wszystkie te kwestie powodują, że jako grupa, nie wykorzystujemy w pełni swojego potencjału. Nie przekazujemy wiedzy młodszym adeptom sztuki lekarskiej, a jako specjaliści odcinamy się od środowiska zawodowego, myśląc często tylko o indywidualnej praktyce.</p>
 
-				<p>Każdy z naszych projektów, niezależnie od tego, czy będzie związany z edukacją medyczną, czy edukacją w ogóle, będzie miał na celu przede wszystkim szerzenie idei wspólnego i zorganizowanego wysiłku. Wspólnej nauki, dzielenia się wiedzą i tworzenia cennych relacji między ludźmi. Poganie innym w staniu się samodzielnymi, kreatywnymi i pewnymi siebie ludźmi. Wierzymy, że w medycynie i pracy lekarza, jest to podstawa dobrze funkcjonującego zespołu i zdrowych relacji między lekarzami a pacjentami.</p>
+				<p>Każdy z naszych projektów, niezależnie od tego, czy będzie związany z edukacją medyczną, czy edukacją w ogóle, będzie miał na celu przede wszystkim szerzenie idei wspólnego i zorganizowanego wysiłku. Wspólnej nauki, dzielenia się wiedzą i tworzenia cennych relacji między ludźmi. Pomaganie innym w staniu się samodzielnymi, kreatywnymi i pewnymi siebie ludźmi. Wierzymy, że w medycynie i pracy lekarza, jest to podstawa dobrze funkcjonującego zespołu i zdrowych relacji między lekarzami a pacjentami.</p>
 
 				<p>Życie szybko uświadamia nam, że każdy z nas jest w pełni odpowiedzialny za swój rozwój. Zarówno w samej pracy, jak i poza nią, niczego nie przyniesie nam obarczanie winą za kiepską edukację systemu, współpracowników, czy atmosfery na oddziale. Może wręcz spowodować, że całkowicie zamkniemy się na możliwości, które posiadamy. Musimy więc wziąć sprawy w swoje ręce.</p>
 

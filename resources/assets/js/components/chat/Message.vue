@@ -48,14 +48,15 @@
 				margin-left: $margin-small
 </style>
 <script>
+	import moment from 'moment'
+	import 'moment/locale/pl'
+
 	export default{
 		props: ['username', 'time', 'showAuthor'],
 		computed: {
 			formattedTime () {
-				let date = new Date(this.time);
-				return date.toLocaleTimeString();
+				return moment(this.time).format('LLL')
 			}
 		}
 	}
-
 </script>

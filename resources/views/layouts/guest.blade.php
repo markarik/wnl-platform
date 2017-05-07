@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<meta property="og:url" content="{{env('APP_URL')}}">
+		<meta property="og:url" content="{{env('APP_URL')}}/login">
 		<meta property="og:type" content="website">
 		<meta property="og:title" content="@lang('common.app-title')">
 		<meta property="og:description" content="Wypróbuj naszą platformę demo! Wejdź na demo.wiecejnizlek.pl i sprawdź, co czeka Cię na kursie!">

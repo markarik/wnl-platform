@@ -83,7 +83,7 @@
 				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
 					@lang('payment.select-product-onsite-button-label')
 				</a>
-				<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/100</p>
+				<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/50</p>
 			</div>
 			<div class="column">
 				@if(!$online->available)
@@ -92,7 +92,7 @@
 				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 					@lang('payment.select-product-online-button-label')
 				</a>
-				<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/200</p>
+				<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/250</p>
 				@endif
 			</div>
 		</div>

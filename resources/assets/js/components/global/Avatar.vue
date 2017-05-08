@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
-		<img :title="usernameToUse" :src="url" class="wnl-avatar-custom" v-if="isCustom">
+		<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
 		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 	</div>
 </template>
@@ -24,8 +24,8 @@
 </style>
 <script>
 	import _ from 'lodash'
-	import { mapGetters } from 'vuex'
-	import { getInitials } from 'js/utils/strings'
+	import {mapGetters} from 'vuex'
+	import {getInitials} from 'js/utils/strings'
 
 	export default {
 		name: 'Avatar',
@@ -39,7 +39,7 @@
 				return this.username || this.currentUserFullName
 			},
 			isCustom() {
-				return !_.isEmpty(this.url)
+				return this.currentUserAvatar !== null || !_.isEmpty(this.url)
 			},
 			sizeClass() {
 				// large = 50x50px, medium = 30x30px, small = 20x20px
@@ -59,6 +59,9 @@
 			imageClass() {
 				return this.isCustom ? 'with-image' : 'without-image'
 			},
+			urlToUse() {
+				return this.url || this.currentUserAvatar
+			}
 		}
 	}
 </script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Course;
 
 use App\Models\Screen;
+use App\Models\Slideshow;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -14,21 +15,23 @@ class SlideShowController extends Controller
 	const CACHE_VERSION = 2;
 	const CACHE_TAGS = ['slideshows', 'screens-slideshows'];
 
-	public function build($screenId)
+	public function build($slideshowId)
 	{
-		$screen = Screen::find($screenId);
+		$slideshow = Slideshow::find($slideshowId);
 
-		if (!$screen) {
+		if (!$slideshow) {
 			return response('Not found', 404);
 		}
 
-		$cacheKey = $this->getCacheKey($screenId);
+		$cacheKey = $this->getCacheKey($slideshowId);
 
 		if (Cache::tags(self::CACHE_TAGS)->has($cacheKey)) {
 			$slides = Cache::tags(self::CACHE_TAGS)->get($cacheKey);
 		} else {
-			$slides = $this->fetchSlides($screen);
-			Cache::tags(self::CACHE_TAGS)->forever($cacheKey, $slides);
+			$slides = $this->fetchSlides($slideshow);
+			if (!empty($slides)) {
+				Cache::tags(self::CACHE_TAGS)->forever($cacheKey, $slides);
+			}
 		}
 
 		$view = view('course.slideshow', ['slides' => $slides]);
@@ -38,16 +41,17 @@ class SlideShowController extends Controller
 	}
 
 	/**
-	 * @param $screen
+	 * @param $slideshow
 	 * @return string
 	 */
-	public function fetchSlides($screen)
+	public function fetchSlides($slideshow)
 	{
-		$slides = $screen->slides;
+		$slides = $slideshow->slides;
 		return $slides;
 	}
 
-	private function getCacheKey($screenId) {
-		return sprintf('%s-%d-%d', self::CACHE_KEY_PREFIX, $screenId, self::CACHE_VERSION);
+	private function getCacheKey($slideshowId)
+	{
+		return sprintf('%s-%d-%d', self::CACHE_KEY_PREFIX, $slideshowId, self::CACHE_VERSION);
 	}
 }

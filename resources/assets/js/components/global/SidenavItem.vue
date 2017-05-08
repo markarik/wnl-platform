@@ -1,7 +1,7 @@
 <template>
 	<li class="item" :class="[itemClass, { disabled: isDisabled }]">
 		<span class="icon is-small" v-if="isTodo">
-			<i title="W trakcie..." class="fa fa-caret-square-o-right" v-if="isInProgress"></i>
+			<i title="W trakcie..." class="fa fa-square-o" v-if="isInProgress"></i>
 			<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
 			<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
 		</span>
@@ -17,7 +17,7 @@
 	</li>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.has-icon
@@ -29,7 +29,7 @@
 		font-size: $font-size-minus-1
 		margin-top: -1px
 		margin-right: $margin-tiny
-		vertical-align: middle
+		vertical-align: text-bottom
 
 	.subitem
 		margin-left: $margin-small

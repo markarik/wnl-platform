@@ -12,6 +12,8 @@ const {mix} = require('laravel-mix');
  */
 
 mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
+	.sass('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
+	.sass('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
 	.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
 	.js('resources/assets/js/guest.js', 'public/js/guest.js')
@@ -19,9 +21,6 @@ mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
 
 if (mix.config.inProduction) {
 	mix.version()
-	mix.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
-		.copy('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
-		.version()
 }
 
 if (process.env.SYNC === 'on') {

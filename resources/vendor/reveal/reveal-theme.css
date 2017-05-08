@@ -2150,3 +2150,18 @@ body {
 	color: #111;
 	background-color: rgba(255, 255, 255, 0.3)
 }
+
+.reveal.white-custom-background {
+	background: white !important;
+	color: #0c1726 !important;
+}
+
+.reveal.white-custom-background .backgrounds,
+.reveal.dark-custom-background .backgrounds {
+	display: none !important
+}
+
+.reveal.dark-custom-background {
+	background: #0c1726 !important;
+	color: white !important;
+}

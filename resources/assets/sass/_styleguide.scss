@@ -49,6 +49,11 @@ h5 {
 	line-height: $line-height-plus;
 }
 
+.huge {
+	font-size: $font-size-plus-2;
+	line-height: $line-height-plus;
+}
+
 .small {
 	font-size: $font-size-minus-1;
 	line-height: $line-height-base;
@@ -63,12 +68,24 @@ h5 {
 	color: $danger;
 }
 
+.text-dimmed {
+	color: $color-gray-dimmed;
+}
+
+.normal {
+	font-weight: $font-weight-regular;
+}
+
 .strong {
 	font-weight: $font-weight-bold;
 }
 
 .strikethrough {
 	text-decoration: line-through;
+}
+
+.content {
+	color: $color-gray-lighter;
 }
 
 // Links
@@ -96,6 +113,7 @@ a.is-active {
 	line-height: 1.5em;
 	max-width: 90%;
 	padding: 0.5em 1.25em;
+	text-align: center;
 	text-transform: uppercase;
 	transition: background $transition-length-base, border $transition-length-base;
 
@@ -187,7 +205,27 @@ a.is-active {
 	list-style-type: lower-alpha;
 }
 
+.spacious {
+	li {
+		padding: 0.5em 0;
+	}
+}
+
+/**
+ * COMPONENTS
+ */
+
+.card-header-icons {
+	padding: 0.75rem;
+}
+
 // Helpers
+
+.central {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
 
 .aligncenter {
 	text-align: center;

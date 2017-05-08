@@ -28,34 +28,35 @@
 		&.is-full
 			margin-top: 1.25rem
 
-	.media-left
-		margin: 0 $margin-small 0 0
+		.media-left
+			margin: 0 $margin-small 0 0
 
-	.media-left-placeholder
-		height: 1px
-		width: map-get($rounded-square-sizes, 'medium')
+		.media-left-placeholder
+			height: 1px
+			width: map-get($rounded-square-sizes, 'medium')
 
-	.media-content
-		.content
-			color: $color-background-gray
+		.media-content
+			.content
+				color: $color-gray-lighter
 
-			.wnl-message-meta
-				color: $color-inactive-gray
-				line-height: 1em
-				margin-bottom: $margin-tiny
+				.wnl-message-meta
+					color: $color-inactive-gray
+					line-height: 1em
+					margin-bottom: $margin-tiny
 
-			.wnl-message-time
-			margin-left: $margin-small
+				.wnl-message-time
+				margin-left: $margin-small
 </style>
 <script>
+	import moment from 'moment'
+	import 'moment/locale/pl'
+
 	export default{
 		props: ['username', 'time', 'showAuthor'],
 		computed: {
 			formattedTime () {
-				let date = new Date(this.time);
-				return date.toLocaleTimeString();
+				return moment(this.time).format('LLL')
 			}
 		}
 	}
-
 </script>

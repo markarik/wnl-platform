@@ -21,5 +21,9 @@ return [
 		'answers'             => 'answers',
 		'lesson-availability' => 'lesson_availability',
 		'user-progress'       => 'user_progress',
+		'slideshows'          => 'slideshows',
+		'quiz-questions'      => 'quiz_questions',
+		'quiz-answers'        => 'quiz_answers',
+		'quiz-sets'           => 'quiz_sets',
 	],
 ];

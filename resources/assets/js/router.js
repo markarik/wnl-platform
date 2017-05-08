@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { scrollToTop } from 'js/utils/animations'
 import { resource } from 'js/utils/config'
 import { isProduction } from 'js/utils/env'
 
@@ -133,6 +134,9 @@ if (isProduction()) {
 export default new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
-	scrollBehavior: () => ({ y: 0 }),
+	scrollBehavior: () => {
+		scrollToTop()
+		return {x: 0, y:0}
+	},
 	routes
 })

@@ -1,39 +1,76 @@
 <template>
-	<div class="wnl-lesson">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item metadata">
-					{{lessonName}}
+	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
+		<div class="wnl-lesson">
+			<div class="wnl-lesson-view">
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item metadata">
+							{{lessonName}}
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item small">
+							Lekcja {{lessonId}}
+						</div>
+					</div>
 				</div>
+				<keep-alive>
+					<router-view></router-view>
+				</keep-alive>
 			</div>
-			<div class="level-right">
-				<div class="level-item small">
-					Lekcja {{lessonId}}
-				</div>
-			</div>
+			<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
 		</div>
-		<keep-alive>
-			<router-view></router-view>
-		</keep-alive>
-		<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
+		<div class="wnl-lesson-previous-next-nav">
+			<wnl-previous-next></wnl-previous-next>
+		</div>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	$previous-next-height: 45px
+
+	.wnl-lesson-view
+		padding-bottom: calc(2*#{$previous-next-height})
+
+	.wnl-lesson-previous-next-nav
+		background: $color-white
+		bottom: 0
+		height: $previous-next-height
+		left: 0
+		right: 0
+		position: absolute
+
 	.wnl-screen-title
 		padding-bottom: $margin-base
 </style>
 
 <script>
+	import _ from 'lodash'
+	import Qna from 'js/components/qna/Qna.vue'
+	import PreviousNext from 'js/components/course/PreviousNext.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { resource } from 'js/utils/config'
-	import  Qna from './../qna/Qna.vue'
 
 	export default {
 		name: 'Lesson',
+		components: {
+			'wnl-previous-next': PreviousNext,
+		},
 		props: ['courseId', 'lessonId', 'screenId'],
+		data() {
+			return {
+				/**
+				 * elementHeight is used to prevent Safari from expanding
+				 * a container with an overflow-y: auto and height: 100%.
+				 * Using a specific height, the height of the parent element
+				 * (which btw is defined as 100% of its parent element),
+				 * all browsers are able to beautifully scroll the content.
+				 */
+				elementHeight: this.$parent.$el.offsetHeight
+			}
+		},
 		computed: {
 			...mapGetters('course', [
 				'getScreens',
@@ -101,18 +138,22 @@
 					}
 				}
 			},
+			updateElementHeight() {
+				this.elementHeight = this.$parent.$el.offsetHeight
+			},
 		},
 		mounted () {
 			this.launchLesson()
+			window.addEventListener('resize', this.updateElementHeight)
+		},
+		beforeDestroy () {
+			window.removeEventListener('resize', this.updateElementHeight)
 		},
 		watch: {
 			'$route' (to, from) {
 				this.goToDefaultScreenIfNone()
 				this.updateLessonProgress()
 			}
-		},
-		components: {
-			'wnl-qna': Qna,
 		},
 	}
 </script>

@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api\PrivateApi\Qna;
 
-use App\Http\Controllers\Api\ApiController;
-use App\Models\Question;
+use App\Models\QnaQuestion;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -28,7 +27,7 @@ class AnswersApiController extends ApiController
 			return $this->respondInvalidInput('text can\'t be empty.');
 		}
 
-		$question = Question::find($questionId);
+		$question = QnaQuestion::find($questionId);
 
 		if (!$question) {
 			return $this->respondInvalidInput('Question with given id does\'n exist.');

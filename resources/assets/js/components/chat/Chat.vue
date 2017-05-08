@@ -4,12 +4,25 @@
 		<div class="wnl-chat-messages">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
-					<wnl-message v-for="(message, index) in messages"
-						:showAuthor="isAuthorUnique[index]"
-						:username="message.username"
-						:time="message.time">
-							{{ message.content }}
-					</wnl-message>
+					<div class="notification aligncenter">
+						To początek dyskusji na tym kanale!
+					</div>
+					<div v-if="messages.length > 0">
+						<wnl-message v-for="(message, index) in messages"
+							:showAuthor="isAuthorUnique[index]"
+							:username="message.username"
+							:time="message.time">
+								{{ message.content }}
+						</wnl-message>
+					</div>
+					<div class="metadata aligncenter margin vertical" v-else>
+						Napisz pierwszą wiadomość i zacznij rozmowę!
+						<p class="margin vertical">
+							<span class="icon is-big text-dimmed">
+								<i class="fa fa-comments-o"></i>
+							</span>
+						</p>
+					</div>
 				</div>
 				<wnl-text-loader v-else>Ładuję wiadomości...</wnl-text-loader>
 			</div>
@@ -132,7 +145,7 @@
 				})
 			},
 			scrollToBottom() {
-				this.container.scrollTop = this.contentInside.offsetHeight
+				this.container.scrollTop = '1000000000'
 			}
 		},
 		created() {

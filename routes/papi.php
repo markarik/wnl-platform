@@ -60,6 +60,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['answers']}/{id}", 'Qna\AnswersApiController@get');
 	Route::post($r['answers'], 'Qna\AnswersApiController@post');
 
+	// Quiz Sets
+	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
+
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');

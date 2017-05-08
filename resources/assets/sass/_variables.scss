@@ -1,21 +1,27 @@
 // Colors
-$color-ocean-blue: #3f9fa7;
-$color-sky-blue: #366063;
-$color-orange: #ffc371;
-$color-purple: #53446c;
-$color-gray: #242d47;
-$color-gray-lighter: #5d6682;
+$color-ocean-blue: #0f9698;
+$color-sky-blue: #11afb2;
+$color-orange: #fbb915;
+$color-purple: #62378d;
+$color-gray: #0c1726;
+$color-gray-lighter: #262B37;
+$color-gray-dimmed: #696969;
 $color-inactive-gray: #cdd0da;
 $color-light-gray: #efefef;
 $color-background-gray: #7a7f91;
 $color-background-light-gray: #efefef;
-$color-background-lighter-gray: #fcfcfc;
+$color-background-lighter-gray: #f7f7f7;
 $color-white: #fff;
 $color-white-transparent: rgba(255,255,255,0.5);
 
-$color-green: #a7d766;
-$color-yellow: #f0aa43;
-$color-red: #ea4e60;
+$color-green: #44b490;
+$color-yellow: #fbb915;
+$color-red: #e53d2c;
+$color-blue: #2f4999;
+
+// Gradients
+$gradient-bg-image-left: #30E8BF;
+$gradient-bg-image-right: #FF8235;
 
 // Layout
 $background-color-default: $color-white;
@@ -23,7 +29,7 @@ $background-color-default: $color-white;
 // Typography
 $font-family-sans-serif: "Lato", sans-serif;
 
-$font-size-minus-3: 0.625rem;
+$font-size-minus-3: 0.675rem;
 $font-size-minus-2: 0.75rem;
 $font-size-minus-1: 0.875rem;
 $font-size-base: 14px;

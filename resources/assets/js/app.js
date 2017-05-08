@@ -7,6 +7,10 @@ import store from 'js/store/store'
 import router from 'js/router'
 sync(store, router)
 
+// Import plugins
+import VueSweetAlert from 'vue-sweetalert'
+Vue.use(VueSweetAlert)
+
 // Import and register global components
 import Avatar from 'js/components/global/Avatar.vue'
 import Emoji from 'js/components/global/Emoji.vue'

@@ -53,11 +53,16 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
+		if (\App::environment('demo')) {
+			$path = 'demo/routes/web.php';
+		} else {
+			$path = 'routes/web.php';
+		}
         Route::group([
             'middleware' => 'web',
             'namespace' => $this->namespace,
-        ], function ($router) {
-            require base_path('routes/web.php');
+		], function ($router) use ($path) {
+			require base_path($path);
         });
     }
 

@@ -1,7 +1,5 @@
 <?php
-
 use Illuminate\Database\Seeder;
-
 class ScreensTableSeeder extends Seeder
 {
 	/**
@@ -11,20 +9,12 @@ class ScreensTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		// Lesson 1
-		DB::table('screens')->insert([
-			'type'      => 'html',
-			'content'   => Storage::get('demo/mission.html'),
-			'name'      => 'Wstęp',
-			'lesson_id' => 1,
-		]);
 		DB::table('screens')->insert([
 			'type'      => 'end',
 			'content'   => Storage::get('demo/end.html'),
 			'name'      => 'Następna lekcja',
 			'lesson_id' => 1,
 		]);
-
 		// Lesson 2
 		DB::table('screens')->insert([
 			'type'      => 'html',
@@ -38,7 +28,6 @@ class ScreensTableSeeder extends Seeder
 			'name'      => 'Następna lekcja',
 			'lesson_id' => 2,
 		]);
-
 		// Lesson 3
 		DB::table('screens')->insert([
 			'type'      => 'html',
@@ -47,15 +36,28 @@ class ScreensTableSeeder extends Seeder
 			'lesson_id' => 3,
 		]);
 		DB::table('screens')->insert([
-			'type'      => 'widget',
-			'content'   => Storage::get('demo/questions.html'),
+			'type'      => 'html',
+			'content'   => Storage::get('demo/repetitions.html'),
+			'name'      => 'Powtórki',
+			'lesson_id' => 3,
+		]);
+		DB::table('screens')->insert([
+			'type'      => 'quiz',
 			'name'      => 'Pytania kontrolne',
 			'lesson_id' => 3,
+			'meta'      => json_encode([
+				'resources' => [
+					[
+						'name' => config('papi.resources.quiz-sets'),
+						'id'   => 1,
+					],
+				],
+			]),
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'end',
 			'content'   => Storage::get('demo/end3.html'),
-			'name'      => 'Koniec kursu',
+			'name'      => 'Zakończenie lekcji',
 			'lesson_id' => 3,
 		]);
 	}

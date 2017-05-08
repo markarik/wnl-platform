@@ -31,6 +31,15 @@
 				</wnl-sidenav-item>
 			</ul>
 		</div>
+
+		<div class="box aligncenter">
+			<p>
+				<a href="https://platforma.wiecejnizlek.pl/payment/select-product">
+					ZAPISZ SIĘ NA KURS
+				</a>
+			</p>
+			<p class="metadata text-dimmed">Zapisy do 15 maja</p>
+		</div>
 	</div>
 
 </template>
@@ -43,16 +52,15 @@
 
 	.breadcrumbs
 		font-size: $font-size-minus-1
+		font-weight: $font-weight-bold
 		margin-bottom: $margin-base
+		text-transform: uppercase
 
 		.small
 			font-size: $font-size-minus-2
 
 		.big
 			font-size: $font-size-base
-
-		.is-active
-			font-weight: $font-weight-regular
 
 	.items
 

@@ -13,6 +13,7 @@
 	import End from 'js/components/course/screens/End.vue'
 	import Html from 'js/components/course/screens/Html.vue'
 	import Slideshow from 'js/components/course/screens/Slideshow.vue'
+	import Quiz from 'js/components/course/screens/quiz/Quiz.vue'
 	import Widget from 'js/components/course/screens/Widget.vue'
 	import { getApiUrl } from 'js/utils/env'
 
@@ -22,6 +23,7 @@
 			'wnl-end': End,
 			'wnl-html': Html,
 			'wnl-slideshow': Slideshow,
+			'wnl-quiz': Quiz,
 			'wnl-widget': Widget,
 		},
 		props: ['screenId', 'slide'],
@@ -32,6 +34,7 @@
 					end: 'wnl-end',
 					html: 'wnl-html',
 					slideshow: 'wnl-slideshow',
+					quiz: 'wnl-quiz',
 					widget: 'wnl-widget',
 				}
 			}

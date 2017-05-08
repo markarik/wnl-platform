@@ -30,6 +30,7 @@
         ],
         "psr-4": {
             "App\\": "app/",
+            "Demo\\App\\": "demo/app/",
             "Lib\\": "lib/"
         }
     },

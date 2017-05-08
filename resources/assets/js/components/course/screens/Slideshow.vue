@@ -12,7 +12,11 @@
 				</div>
 			</div>
 			<div class="wnl-screen wnl-ratio-16-9">
-				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused }"></div>
+				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }">
+					<div class="faux-fullscreen-close" v-if="isFauxFullscreen" @click="closeFauxFullscreen">
+						<span class="icon is-medium"><i class="fa fa-times"></i></span>
+					</div>
+				</div>
 			</div>
 			<div class="wnl-slideshow-controls">
 				<div class="wnl-slideshow-controls-left">
@@ -110,6 +114,7 @@
 				child: {},
 				currentSlide: 1,
 				loaded: false,
+				isFauxFullscreen: false,
 				isFocused: false,
 				slideChanged: false
 			}
@@ -131,6 +136,9 @@
 			slideshowElement() {
 				return this.container.getElementsByTagName('iframe')[0]
 			},
+			slideshowSizeClass() {
+				return this.isFauxFullscreen ? 'is-faux-fullscreen' : 'wnl-ratio-16-9'
+			},
 			iframe() {
 				if (this.loaded) {
 					return this.$el.getElementsByTagName('iframe')[0]
@@ -138,11 +146,17 @@
 			},
 		},
 		methods: {
+			closeFauxFullscreen() {
+				this.isFauxFullscreen = false
+				this.focusSlideshow()
+			},
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
-					this.focusSlideshow()
+				} else {
+					this.isFauxFullscreen = true
 				}
+				this.focusSlideshow()
 			},
 			slideNumberFromIndex(index) {
 				return index + 1

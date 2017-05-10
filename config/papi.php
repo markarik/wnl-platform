@@ -25,5 +25,6 @@ return [
 		'quiz-questions'      => 'quiz_questions',
 		'quiz-answers'        => 'quiz_answers',
 		'quiz-sets'           => 'quiz_sets',
+		'slides'              => 'slides',
 	],
 ];

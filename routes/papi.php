@@ -26,6 +26,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Editions
 	Route::get("{$r['editions']}/{id}", 'Course\EditionsApiController@get');
 
+	// Slides
+	Route::get("{$r['slides']}/{id}", 'Course\SlidesApiController@get');
+	Route::put("{$r['slides']}/{id}", 'Course\SlidesApiController@put');
+
 	// Users
 	Route::get("{$r['users']}/{id}", 'User\UsersApiController@get');
 	Route::put("{$r['users']}/{id}", 'User\UsersApiController@put');

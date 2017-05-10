@@ -3,13 +3,9 @@ import Vue from 'vue'
 
 // Sync vue-router and vuex
 import {sync} from 'vuex-router-sync'
-import store from 'js/store/store'
+import store from 'js/admin/store/store'
 import router from 'js/admin/router'
 sync(store, router)
-
-// Import plugins
-import VueSweetAlert from 'vue-sweetalert'
-Vue.use(VueSweetAlert)
 
 // Import and register global components
 import Avatar from 'js/components/global/Avatar.vue'
@@ -28,7 +24,7 @@ import Logger from 'js/utils/logger'
 $wnl.logger = new Logger()
 
 // Set up App
-$wnl.logger.debug('Starting application...')
+$wnl.logger.debug('Starting admin application...')
 
 import Admin from 'js/admin/components/Admin.vue'
 const admin = new Vue({

@@ -1,0 +1,2 @@
+// Users
+export const USERS_SETUP_CURRENT = 'USERS_SETUP_CURRENT'

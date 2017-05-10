@@ -24,7 +24,7 @@ class UpdateSlide extends FormRequest
 	public function rules()
 	{
 		return [
-			'content'       => 'string',
+			'content'       => 'required|string',
 			'is_functional' => ':bool|:number',
 		];
 	}

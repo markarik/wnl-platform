@@ -68,6 +68,11 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\UserAddress');
 	}
 
+	public function roles()
+	{
+		return $this->belongsToMany('App\Models\Role');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -147,5 +152,32 @@ class User extends Authenticatable
 		}
 
 		return User::find($id, $columns);
+	}
+
+	/**
+	 * Determine whether the user has the given role.
+	 *
+	 * @param $roleName
+	 * @return bool
+	 */
+	public function hasRole($roleName)
+	{
+		foreach ($this->roles as $role) {
+			if ($role->name === $roleName) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Determine whether the user is an admin.
+	 *
+	 * @return bool
+	 */
+	public function isAdmin()
+	{
+		return $this->hasRole('admin');
 	}
 }

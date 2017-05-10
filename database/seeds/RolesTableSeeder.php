@@ -11,7 +11,7 @@ class RolesTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('qna_questions')->insert([
+		DB::table('roles')->insert([
 			'name' => 'admin',
 		]);
 	}

@@ -9,27 +9,21 @@ Vue.use(Router)
 let routes = [
 	{
 		// Temporarily duplicated from main app routes,
-		// dropdown items should be moved to vuex.
-		name: 'myself',
-		path: '/app/myself',
-		component: require('js/components/user/Myself.vue'),
+		name: 'lessons',
+		path: '/admin/app/lessons/:lessonId?',
+		component: require('js/admin/components/lessons/Lessons.vue'),
 		props: true,
 		children: [
 			{
-				name: 'my-orders',
-				path: 'orders',
-				component: require('js/components/user/MyOrders.vue')
+				name: 'screen-edit',
+				path: 'screens/:screenId',
+				component: require('js/admin/components/lessons/edit/ScreenEditor.vue')
 			},
-			{
-				name: 'countdown',
-				path: 'countdown',
-				component: require('js/components/global/SplashScreen.vue'),
-			}
 		]
 	},
 	{
 		name: 'dashboard',
-		path: '/app',
+		path: '/admin/app',
 	},
 	{
 		name: 'logout',
@@ -44,7 +38,6 @@ export default new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
 	scrollBehavior: () => {
-		scrollToTop()
 		return {x: 0, y: 0}
 	},
 	routes

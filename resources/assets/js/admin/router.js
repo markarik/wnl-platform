@@ -17,7 +17,7 @@ let routes = [
 			{
 				name: 'screen-edit',
 				path: 'screens/:screenId',
-				component: require('js/admin/components/lessons/edit/ScreenEditor.vue')
+				component: require('js/admin/components/lessons/edit/ScreensEditor.vue')
 			},
 		]
 	},

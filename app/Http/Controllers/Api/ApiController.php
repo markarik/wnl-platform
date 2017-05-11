@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -65,7 +66,17 @@ abstract class ApiController extends Controller
 			return [$param, '=', $value];
 		}, $conditions);
 
-		$results = $modelName::where($conditions)->get();
+		try {
+			$results = $modelName::where($conditions)->get();
+		} catch (QueryException $e) {
+			\Log::warning($e);
+
+			return $this->respondInvalidInput($e->getMessage());
+		}
+
+		if (!$results) {
+			return $this->respondNotFound();
+		}
 
 		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
 		$resource = new Collection($results, new $transformerName, $this->resourceName);

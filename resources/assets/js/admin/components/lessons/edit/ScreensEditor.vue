@@ -1,13 +1,14 @@
 <template>
 	<div class="screens-editor">
 		<div class="screens-list">
+			<p class="title is-5">Ekrany</p>
 			<wnl-screens-list-item v-for="screen in screens"
 				:name="screen.name"
 				:id="screen.id">
 			</wnl-screens-list-item>
 		</div>
 		<div class="screen-editor" v-if="screenId">
-			Cokolwiek ?
+			<p class="title is-5">{{currentScreen.name}}</p>
 		</div>
 	</div>
 </template>
@@ -21,13 +22,17 @@
 		margin-top: $margin-big
 		padding-top: $margin-big
 
-	.admin-left
-		border-right: $border-light-gray
-		flex: 0 auto
-		width: 300px
-		padding: $margin-base
+		.title.is-5
+			border-bottom: $border-light-gray
+			padding-bottom: $margin-base
 
-	.admin-right
+	.screens-list
+		border-right: $border-light-gray
+		padding: $margin-base
+		width: 200px
+
+
+	.screen-editor
 		flex: 8 auto
 		padding: $margin-base
 </style>
@@ -57,6 +62,12 @@
 		computed: {
 			screenId() {
 				return this.$route.params.screenId
+			},
+			currentScreen() {
+				return this.screens.filter((screen) => screen.id === this.screenId)[0]
+			},
+			currentScreenName() {
+				return this.currentScreen.name
 			}
 		}
 	}

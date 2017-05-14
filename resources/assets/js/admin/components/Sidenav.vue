@@ -13,6 +13,13 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'slides' }">Edycja slajdu</router-link></li>
 		</ul>
+
+		<p class="menu-label">
+			Pytania
+		</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'quizes' }">Edytuj zestaw pytań</router-link></li>
+		</ul>
 	</aside>
 </template>
 

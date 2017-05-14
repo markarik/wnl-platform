@@ -13,21 +13,29 @@
 			<!-- Screen meta -->
 			<div class="field is-grouped">
 				<div class="control">
-					<span class="select">
-						<select>
-							<option v-for="type in types" :value="type">
-								{{type}}
-							</option>
-						</select>
-					</span>
-				</div>
-				<div class="control">
 					<input type="text" class="input" placeholder="Tytuł ekranu" v-model="currentScreen.name">
 				</div>
 				<div class="control">
 					<a class="button is-success">
 						Zapisz
 					</a>
+				</div>
+			</div>
+
+			<!-- Screen type -->
+			<div class="field is-grouped">
+				<div class="control">
+					<label class="label">Typ ekranu</label>
+					<span class="select">
+						<select v-model="selectedType">
+							<option v-for="(meta, type) in types" :value="type">
+								{{type}}
+							</option>
+						</select>
+					</span>
+				</div>
+				<div class="control" v-if="selectedTypeData.hasMeta">
+					<label class="label">{{selectedTypeData.metaTitle}}</label>
 				</div>
 			</div>
 
@@ -94,12 +102,25 @@
 			return {
 				code: '',
 				currentScreen: {},
-				types: [
-					'html',
-					'quiz',
-					'slideshow',
-					'end',
-				],
+				selectedType: 'quiz',
+				types: {
+					html: {
+						hasMeta: false,
+					},
+					quiz: {
+						hasMeta: true,
+						metaTitle: 'Zestaw pytań',
+						metaResource: 'quizes',
+					},
+					slideshow: {
+						hasMeta: true,
+						metaTitle: 'Prezentacja',
+						metaResource: 'slideshow',
+					},
+					end: {
+						hasMeta: false,
+					},
+				},
 				screens: [
 					{
 						id: 1,
@@ -115,7 +136,10 @@
 		computed: {
 			loaded() {
 				return !_.isEmpty(this.currentScreen)
-			}
+			},
+			selectedTypeData() {
+				return this.types[this.selectedType]
+			},
 		},
 		methods: {
 			setCurrentScreen() {

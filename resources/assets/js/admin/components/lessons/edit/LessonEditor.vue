@@ -11,7 +11,7 @@
 				</span>
 			</div>
 			<div class="control">
-				<input type="text" class="input" placeholder="Tytuł lekcji">
+				<input type="text" class="input" placeholder="Tytuł lekcji" :value="name">
 			</div>
 			<div class="control">
 				<a class="button is-success">

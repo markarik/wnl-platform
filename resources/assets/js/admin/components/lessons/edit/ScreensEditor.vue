@@ -7,8 +7,41 @@
 				:id="screen.id">
 			</wnl-screens-list-item>
 		</div>
-		<div class="screen-editor" v-if="screenId">
+		<div class="screen-editor" v-if="loaded">
 			<p class="title is-5">{{currentScreen.name}}</p>
+
+			<!-- Screen meta -->
+			<div class="field is-grouped">
+				<div class="control">
+					<span class="select">
+						<select>
+							<option v-for="type in types" :value="type">
+								{{type}}
+							</option>
+						</select>
+					</span>
+				</div>
+				<div class="control">
+					<input type="text" class="input" placeholder="Tytuł ekranu" v-model="currentScreen.name">
+				</div>
+				<div class="control">
+					<a class="button is-success">
+						Zapisz
+					</a>
+				</div>
+			</div>
+
+			<!-- Screen content -->
+			<div class="columns content-editor">
+				<div class="column">
+					<quill :options="{ theme: 'snow' }">
+					</quill>
+				</div>
+				<div class="column is-narrow">
+					<!-- <div class="content-editor-preview" v-html="code">
+					</div> -->
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -31,22 +64,42 @@
 		padding: $margin-base
 		width: 200px
 
-
 	.screen-editor
 		flex: 8 auto
 		padding: $margin-base
+
+	.content-editor
+		margin-top: $margin-big
+
+	.content-editor-code
+		height: 100%
+		width: 100%
 </style>
 
 <script>
 	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
+	import Quill from 'js/components/global/Quill.vue'
+	import _ from 'lodash'
+	import Brace from 'vue-bulma-brace'
+	import { set } from 'vue'
 
 	export default {
 		name: 'ScreensEditor',
 		components: {
+			'brace': Brace,
+			'quill': Quill,
 			'wnl-screens-list-item': ScreensListItem,
 		},
 		data() {
 			return {
+				code: '',
+				currentScreen: {},
+				types: [
+					'html',
+					'quiz',
+					'slideshow',
+					'end',
+				],
 				screens: [
 					{
 						id: 1,
@@ -60,15 +113,22 @@
 			}
 		},
 		computed: {
-			screenId() {
-				return this.$route.params.screenId
-			},
-			currentScreen() {
-				return this.screens.filter((screen) => screen.id === this.screenId)[0]
-			},
-			currentScreenName() {
-				return this.currentScreen.name
+			loaded() {
+				return !_.isEmpty(this.currentScreen)
 			}
+		},
+		methods: {
+			setCurrentScreen() {
+				set(this, 'currentScreen', this.screens.filter((screen) => {
+					return screen.id === this.$route.params.screenId
+				})[0])
+			},
+		},
+		mounted() {
+			this.setCurrentScreen()
+		},
+		watch: {
+			'$route': 'setCurrentScreen'
 		}
 	}
 </script>

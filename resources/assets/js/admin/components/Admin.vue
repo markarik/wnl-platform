@@ -22,13 +22,13 @@
 
 	.admin-left
 		border-right: $border-light-gray
-		flex: 1 auto
-		max-width: 300px
-		padding: $margin-base
+		flex: 0 auto
+		width: 200px
+		padding: $margin-big
 
 	.admin-right
 		flex: 8 auto
-		padding: $margin-base
+		padding: $margin-big
 </style>
 
 <script>

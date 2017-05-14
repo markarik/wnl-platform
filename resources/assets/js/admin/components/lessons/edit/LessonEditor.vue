@@ -1,50 +1,65 @@
 <template>
 	<div class="lesson-editor">
-		<p class="title is-4">Edytor lekcji</p>
-		<div class="screens-list">
-			<wnl-screens-list-item v-for="screen in screens"
-				:name="screen.name"
-				:id="screen.id">
-			</wnl-screens-list-item>
+		<div class="field is-grouped">
+			<div class="control">
+				<span class="select">
+					<select>
+						<option v-for="group in groups" :value="group.id">
+							{{group.name}}
+						</option>
+					</select>
+				</span>
+			</div>
+			<div class="control">
+				<input type="text" class="input" placeholder="Tytuł lekcji" :value="name">
+			</div>
+			<div class="control">
+				<a class="button is-success">
+					Zapisz
+				</a>
+			</div>
 		</div>
-		<div class="screen-editor" v-if="screenId">
-			<router-view></router-view>
-		</div>
+		<wnl-screens-editor></wnl-screens-editor>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
 
+	// .field-label
+	// 	flex: 0 1 auto
 </style>
 
 <script>
-	import ScreenEditor from 'js/admin/components/lessons/edit/ScreenEditor.vue'
-	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
+	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue'
 
 	export default {
 		name: 'LessonEditor',
 		components: {
-			'wnl-screen-editor': ScreenEditor,
-			'wnl-screens-list-item': ScreensListItem,
+			'wnl-screens-editor': ScreensEditor,
 		},
 		data() {
 			return {
-				screens: [
+				name: 'Reumatologia',
+				group: {
+					id: 1,
+					name: 'Interna',
+				},
+				groups: [
 					{
 						id: 1,
-						name: 'Screen 1',
+						name: 'Interna',
 					},
 					{
 						id: 2,
-						name: 'Screen 2',
+						name: 'Pediatria',
+					},
+					{
+						id: 3,
+						name: 'Chirurgia',
 					},
 				],
 			}
 		},
-		computed: {
-			screenId() {
-				return this.$route.params.screenId
-			}
-		}
 	}
 </script>

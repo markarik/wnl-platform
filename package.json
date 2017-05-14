@@ -25,6 +25,7 @@
     "screenfull": "^3.0.2",
     "socket.io-client": "^1.7.3",
     "vue": "^2.2.6",
+    "vue-bulma-brace": "^0.1.0",
     "vue-i18n": "^5.0.1",
     "vue-resource": "^1.2.0",
     "vue-router": "^2.2.1",

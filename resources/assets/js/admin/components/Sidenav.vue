@@ -6,6 +6,13 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'lessons' }">Edycja lekcji</router-link></li>
 		</ul>
+
+		<p class="menu-label">
+			Prezentacje
+		</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'slides' }">Edycja slajdu</router-link></li>
+		</ul>
 	</aside>
 </template>
 

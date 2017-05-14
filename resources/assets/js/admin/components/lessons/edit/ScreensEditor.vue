@@ -6,6 +6,9 @@
 				:name="screen.name"
 				:id="screen.id">
 			</wnl-screens-list-item>
+			<div class="has-text-centered margin top">
+				<a>Dodaj ekran</a>
+			</div>
 		</div>
 		<div class="screen-editor" v-if="loaded">
 			<p class="title is-5">{{currentScreen.name}}</p>

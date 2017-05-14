@@ -8,7 +8,6 @@ Vue.use(Router)
 
 let routes = [
 	{
-		// Temporarily duplicated from main app routes,
 		name: 'lessons',
 		path: '/admin/app/lessons/:lessonId?',
 		component: require('js/admin/components/lessons/Lessons.vue'),
@@ -20,6 +19,11 @@ let routes = [
 				component: require('js/admin/components/lessons/edit/ScreensEditor.vue')
 			},
 		]
+	},
+	{
+		name: 'slides',
+		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
+		component: require('js/admin/components/slides/SlideEditor.vue'),
 	},
 	{
 		name: 'dashboard',

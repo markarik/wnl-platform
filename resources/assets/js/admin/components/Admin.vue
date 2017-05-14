@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<wnl-navbar :show="true"></wnl-navbar>
+		<!-- <wnl-navbar :show="true"></wnl-navbar> -->
 		<div class="admin-main">
 			<div class="admin-left">
 				<wnl-sidenav></wnl-sidenav>
@@ -23,7 +23,7 @@
 	.admin-left
 		border-right: $border-light-gray
 		flex: 0 auto
-		width: 200px
+		width: 250px
 		padding: $margin-big
 
 	.admin-right

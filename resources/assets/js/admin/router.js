@@ -23,7 +23,19 @@ let routes = [
 	{
 		name: 'slides',
 		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
-		component: require('js/admin/components/slides/SlideEditor.vue'),
+		component: require('js/admin/components/slides/SlidesEditor.vue'),
+	},
+	{
+		name: 'quizes',
+		path: '/admin/app/quizes',
+		component: require('js/admin/components/quizes/Quizes.vue'),
+		children: [
+			{
+				name: 'quiz-editor',
+				path: 'edit/:quizId',
+				component: require('js/admin/components/quizes/QuizEditor.vue')
+			}
+		],
 	},
 	{
 		name: 'dashboard',

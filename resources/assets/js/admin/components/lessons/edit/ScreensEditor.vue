@@ -13,46 +13,43 @@
 		<div class="screen-editor" v-if="loaded">
 			<p class="title is-5">{{currentScreen.name}}</p>
 
-			<!-- Screen meta -->
-			<div class="field is-grouped">
-				<div class="control">
-					<input type="text" class="input" placeholder="Tytuł ekranu" v-model="currentScreen.name">
+			<form @submit.prevent="onScreenFormSubmit">
+				<!-- Screen meta -->
+				<div class="field is-grouped">
+					<div class="control">
+						<input type="text" class="input" placeholder="Tytuł ekranu" v-model="currentScreen.name">
+					</div>
+					<div class="control">
+						<a class="button is-success">
+							Zapisz
+						</a>
+					</div>
 				</div>
-				<div class="control">
-					<a class="button is-success">
-						Zapisz
-					</a>
-				</div>
-			</div>
 
-			<!-- Screen type -->
-			<div class="field is-grouped">
-				<div class="control">
-					<label class="label">Typ ekranu</label>
-					<span class="select">
-						<select v-model="selectedType">
-							<option v-for="(meta, type) in types" :value="type">
-								{{type}}
-							</option>
-						</select>
-					</span>
+				<!-- Screen type -->
+				<div class="field is-grouped">
+					<div class="control">
+						<label class="label">Typ ekranu</label>
+						<span class="select">
+							<select v-model="selectedType">
+								<option v-for="(meta, type) in types" :value="type">
+									{{type}}
+								</option>
+							</select>
+						</span>
+					</div>
+					<div class="control" v-if="selectedTypeData.hasMeta">
+						<label class="label">{{selectedTypeData.metaTitle}}</label>
+					</div>
 				</div>
-				<div class="control" v-if="selectedTypeData.hasMeta">
-					<label class="label">{{selectedTypeData.metaTitle}}</label>
-				</div>
-			</div>
+
 
 			<!-- Screen content -->
-			<div class="columns content-editor">
-				<div class="column">
-					<quill :options="{ theme: 'snow' }">
+				<div class="screen-content-editor">
+					<quill :options="{ theme: 'snow' }" :form="screenForm" name="content" v-model="screenForm.content">
 					</quill>
 				</div>
-				<div class="column is-narrow">
-					<!-- <div class="content-editor-preview" v-html="code">
-					</div> -->
-				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </template>
@@ -88,21 +85,29 @@
 </style>
 
 <script>
-	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
-	import Quill from 'js/components/global/Quill.vue'
 	import _ from 'lodash'
-	import Brace from 'vue-bulma-brace'
 	import { set } from 'vue'
+
+	import Form from 'js/classes/forms/Form'
+	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
+	import Input from 'js/components/global/form/Input.vue'
+	import Quill from 'js/components/global/form/Quill.vue'
 
 	export default {
 		name: 'ScreensEditor',
 		components: {
-			'brace': Brace,
 			'quill': Quill,
 			'wnl-screens-list-item': ScreensListItem,
 		},
 		data() {
 			return {
+				screenForm: new Form({
+					name: null,
+					type: null,
+					meta: null,
+					content: null,
+				}),
+				screenFormResourceUrl: '',
 				code: '',
 				currentScreen: {},
 				selectedType: 'quiz',

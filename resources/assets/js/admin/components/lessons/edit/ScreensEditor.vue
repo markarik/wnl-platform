@@ -17,12 +17,10 @@
 				<!-- Screen meta -->
 				<div class="field is-grouped">
 					<div class="control">
-						<input type="text" class="input" placeholder="Tytuł ekranu" v-model="currentScreen.name">
+						<wnl-form-input :form="screenForm" name="name" v-model="screenForm.name"></wnl-form-input>
 					</div>
 					<div class="control">
-						<a class="button is-success">
-							Zapisz
-						</a>
+						<a class="button is-success" @click="onSubmit">Zapisz</a>
 					</div>
 				</div>
 
@@ -97,18 +95,16 @@
 		name: 'ScreensEditor',
 		components: {
 			'quill': Quill,
+			'wnl-form-input': Input,
 			'wnl-screens-list-item': ScreensListItem,
 		},
 		data() {
 			return {
 				screenForm: new Form({
-					name: null,
-					type: null,
-					meta: null,
 					content: null,
+					name: null,
+					type: 'html',
 				}),
-				screenFormResourceUrl: '',
-				code: '',
 				currentScreen: {},
 				selectedType: 'quiz',
 				types: {
@@ -131,11 +127,11 @@
 				},
 				screens: [
 					{
-						id: 1,
+						id: 5,
 						name: 'Screen 1',
 					},
 					{
-						id: 2,
+						id: 6,
 						name: 'Screen 2',
 					},
 				],
@@ -143,18 +139,31 @@
 		},
 		computed: {
 			loaded() {
-				return !_.isEmpty(this.currentScreen)
+				// return !_.isEmpty(this.currentScreen)
+				return true
 			},
 			selectedTypeData() {
 				return this.types[this.selectedType]
 			},
+			screenFormResourceUrl() {
+				return `/papi/v1/screens/${this.$route.params.screenId}`
+			},
 		},
 		methods: {
 			setCurrentScreen() {
-				set(this, 'currentScreen', this.screens.filter((screen) => {
-					return screen.id === this.$route.params.screenId
-				})[0])
+				// set(this, 'currentScreen', this.screens.filter((screen) => {
+				// 	return screen.id === this.$route.params.screenId
+				// })[0])
+				this.screenForm.populate(this.screenFormResourceUrl)
 			},
+			onSubmit() {
+				this.screenForm.put(this.screenFormResourceUrl)
+					.then(response => console.log('Yoopi!'))
+					.catch(exception => {
+						this.submissionFailed = true
+						$wnl.logger.capture(exception)
+					})
+			}
 		},
 		mounted() {
 			this.setCurrentScreen()

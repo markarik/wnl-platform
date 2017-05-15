@@ -25,9 +25,6 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-
-	// .field-label
-	// 	flex: 0 1 auto
 </style>
 
 <script>

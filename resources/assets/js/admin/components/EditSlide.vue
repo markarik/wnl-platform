@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="container">
+	<div>
 		<div class="notification is-success has-text-centered" v-if="saved">
 			Zapisano
 		</div>

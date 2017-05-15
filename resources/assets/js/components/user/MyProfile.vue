@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="container">
+	<div>
 		<h1>Twój profil publiczny</h1>
 		<wnl-avatar size="large"></wnl-avatar>
 		<wnl-upload @success="onUploadSuccess">

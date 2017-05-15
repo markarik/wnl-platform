@@ -54,7 +54,7 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.slides-editor

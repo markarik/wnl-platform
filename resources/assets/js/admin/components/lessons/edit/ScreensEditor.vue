@@ -91,13 +91,11 @@
 	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
 	import Quill from 'js/components/global/Quill.vue'
 	import _ from 'lodash'
-	import Brace from 'vue-bulma-brace'
 	import { set } from 'vue'
 
 	export default {
 		name: 'ScreensEditor',
 		components: {
-			'brace': Brace,
 			'quill': Quill,
 			'wnl-screens-list-item': ScreensListItem,
 		},

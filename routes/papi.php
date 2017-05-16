@@ -17,6 +17,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'Course\CoursesApiController@get');
 
+	// Groups
+	Route::get("{$r['groups']}/{id}", 'Course\GroupsApiController@get');
+
 	// Lessons
 	Route::get("{$r['lessons']}/{id}", 'Course\LessonsApiController@get');
 

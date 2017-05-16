@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="lessons">
 		<p class="title is-3">Edycja lekcji</p>
 		<div class="lessons-container" v-if="isReady">
 			<wnl-lesson-editor v-if="lessonId"></wnl-lesson-editor>
@@ -9,7 +9,19 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
 
+	.lessons
+		bottom: $margin-big
+		display: flex
+		flex-direction: column
+		left: $margin-big
+		position: absolute
+		right: $margin-big
+		top: $margin-big
+
+	.lessons-container
+		flex: 1 auto
 </style>
 
 <script>

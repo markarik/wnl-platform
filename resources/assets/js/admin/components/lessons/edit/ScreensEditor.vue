@@ -11,7 +11,6 @@
 			</div>
 		</div>
 		<div class="screen-editor" v-if="loaded">
-			<p class="title is-5">{{currentScreen.name}}</p>
 
 			<form @submit.prevent="onScreenFormSubmit">
 				<!-- Screen meta -->
@@ -41,10 +40,12 @@
 					</div>
 				</div>
 
-
-			<!-- Screen content -->
+				<!-- Screen content -->
 				<div class="screen-content-editor">
-					<quill :options="{ theme: 'snow' }" :form="screenForm" name="content" v-model="screenForm.content">
+					<quill :options="{ theme: 'snow' }"
+						:form="screenForm"
+						name="content"
+						v-model="screenForm.content">
 					</quill>
 				</div>
 			</form>
@@ -77,14 +78,13 @@
 
 	.screen-editor
 		flex: 8 auto
-		padding: $margin-base
+		padding: 0 $margin-base $margin-base
 
-	.content-editor
+	.screen-content-editor
 		margin-top: $margin-big
 
-	.content-editor-code
-		height: 100%
-		width: 100%
+		.ql-container
+			max-height: 50vh
 </style>
 
 <script>
@@ -96,6 +96,8 @@
 	import Input from 'js/components/global/form/Input.vue'
 	import Quill from 'js/components/global/form/Quill.vue'
 
+	import { getApiUrl } from 'js/utils/env'
+
 	export default {
 		name: 'ScreensEditor',
 		components: {
@@ -105,12 +107,12 @@
 		},
 		data() {
 			return {
+				ready: false,
 				screenForm: new Form({
 					content: null,
 					name: null,
 					type: 'html',
 				}),
-				currentScreen: {},
 				selectedType: 'quiz',
 				types: {
 					html: {
@@ -130,19 +132,13 @@
 						hasMeta: false,
 					},
 				},
-				screens: [
-					{
-						id: 5,
-						name: 'Screen 1',
-					},
-					{
-						id: 6,
-						name: 'Screen 2',
-					},
-				],
+				screens: [],
 			}
 		},
 		computed: {
+			screenId() {
+				return this.$route.params.screenId
+			},
 			loaded() {
 				return !!this.$route.params.screenId
 			},
@@ -150,14 +146,20 @@
 				return this.types[this.selectedType]
 			},
 			screenFormResourceUrl() {
-				return `/papi/v1/screens/${this.$route.params.screenId}`
+				return getApiUrl(`screens/${this.$route.params.screenId}`)
 			},
+			screensListApiUrl() {
+				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}`)
+			}
 		},
 		methods: {
-			setCurrentScreen() {
-				// set(this, 'currentScreen', this.screens.filter((screen) => {
-				// 	return screen.id === this.$route.params.screenId
-				// })[0])
+			fetchScreens() {
+				return axios.get(this.screensListApiUrl)
+					.then((response) => {
+						this.screens = response.data
+					})
+			},
+			populateScreenForm() {
 				this.screenForm.populate(this.screenFormResourceUrl)
 			},
 			onSubmit() {
@@ -170,10 +172,14 @@
 			}
 		},
 		mounted() {
-			this.setCurrentScreen()
+			this.fetchScreens()
+
+			if (this.screenId) {
+				this.populateScreenForm()
+			}
 		},
 		watch: {
-			'$route': 'setCurrentScreen'
+			'$route': 'populateScreenForm'
 		}
 	}
 </script>

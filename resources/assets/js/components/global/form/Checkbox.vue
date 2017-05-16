@@ -3,7 +3,7 @@
 
 		<input type="checkbox"
 			   :name="name"
-			   :value="form[name]"
+			   :checked="form[name]"
 			   @change="$emit('input', $event.target.checked)"
 			   :id="name">
 

@@ -1,22 +1,20 @@
 <?php
 
-namespace Tests\Api;
+namespace Tests\Api\Course;
 
 use App\Models\Edition;
 use App\Models\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\ApiTestCase;
 
-class EditionsTest extends TestCase
+
+class EditionsTest extends ApiTestCase
 {
 
 	/** @test */
-	public function api_returns_edition_structure()
+	public function get_edition_include_groups()
 	{
 		$user = User::find(1);
 		$edition = Edition::find(1);
-		$course = $edition->course;
 
 		$response = $this
 			->actingAs($user)

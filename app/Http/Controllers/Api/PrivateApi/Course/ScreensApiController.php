@@ -31,6 +31,19 @@ class ScreensApiController extends ApiController
 		return $this->respondOk();
 	}
 
+	public function patch(UpdateScreen $request)
+	{
+		$screen = Screen::find($request->route('id'));
+
+		if (!$screen) {
+			return $this->respondNotFound();
+		}
+
+		$screen->update($request->all());
+
+		return $this->respondOk();
+	}
+
 	public function post(UpdateScreen $request)
 	{
 		$screen = Screen::create($request->all());

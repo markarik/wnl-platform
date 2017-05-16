@@ -25,8 +25,8 @@ class UpdateScreen extends FormRequest
 	{
 		return [
 			'content'      => 'string',
-			'type'         => 'required|string',
-			'name'         => 'required|string',
+			'type'         => 'string',
+			'name'         => 'string',
 			'meta'         => 'json',
 			'order_number' => 'numeric',
 		];

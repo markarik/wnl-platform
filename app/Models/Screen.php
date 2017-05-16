@@ -10,7 +10,7 @@ class Screen extends Model
 		'meta' => 'json',
 	];
 
-	protected $fillable = ['content', 'type', 'name', 'meta', 'lesson_id'];
+	protected $fillable = ['content', 'type', 'name', 'meta', 'lesson_id', 'order_number'];
 
 	public function lesson()
 	{

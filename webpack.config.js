@@ -289,7 +289,9 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 			context: __dirname,
 			output: {path: './'}
 		}
-	})
+	}),
+
+	new webpack.IgnorePlugin(/brace\/mode/)
 ]);
 
 

@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Http\Controllers\Api\PrivateApi\Quiz;
+
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\QuizSetTransformer;
+use App\Http\Requests\Quiz\UpdateQuizSet;
+use App\Models\QuizSet;
+use Illuminate\Http\Request;
+use League\Fractal\Resource\Item;
+
+class QuizSetsApiController extends ApiController
+{
+	public function __construct(Request $request)
+	{
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.quiz-sets');
+	}
+
+	public function post(UpdateQuizSet $request)
+	{
+		$screen = QuizSet::create($request->all());
+
+		$resource = new Item($screen, new QuizSetTransformer, $this->resourceName);
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
+	}
+}

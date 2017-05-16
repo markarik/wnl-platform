@@ -24,10 +24,11 @@ class UpdateScreen extends FormRequest
 	public function rules()
 	{
 		return [
-			'content' => 'string',
-			'type'    => 'required|string',
-			'name'    => 'required|string',
-			'meta'    => 'string',
+			'content'      => 'string',
+			'type'         => 'required|string',
+			'name'         => 'required|string',
+			'meta'         => 'string',
+			'order_number' => 'numeric',
 		];
 	}
 

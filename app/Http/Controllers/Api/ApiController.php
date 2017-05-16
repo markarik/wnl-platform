@@ -59,7 +59,6 @@ abstract class ApiController extends Controller
 		$modelName = 'App\Models\\' . $resourceStudly;
 
 		$conditions = explode(',', $query);
-
 		$conditions = array_map(function ($item) {
 			list ($param, $value) = explode(':', $item);
 

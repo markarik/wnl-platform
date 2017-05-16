@@ -17,6 +17,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'Course\CoursesApiController@get');
 
+	// Groups
+	Route::get("{$r['groups']}/{id}", 'Course\GroupsApiController@get');
+
 	// Lessons
 	Route::get("{$r['lessons']}/{id}", 'Course\LessonsApiController@get');
 
@@ -72,11 +75,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post($r['answers'], 'Qna\AnswersApiController@post');
 
 	// Quiz Sets
-	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
+	Route::get("{$r['quiz-sets']}/{id}", 'Quiz\QuizSetsApiController@get');
+	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
 
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');
-
 
 });

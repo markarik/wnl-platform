@@ -99,14 +99,15 @@
 		},
 		methods: {
 			onSubmit() {
+				this.reset()
 				this.form.put(this.resourceUrl)
 						.then(response => this.saved = true)
 						.catch(exception => {
 							this.submissionFailed = true
-							$wnl.logger.capture(exception)
 						})
 			},
 			getSlide() {
+				this.reset()
 				this.getSlideshowId()
 						.then(slideshowId => {
 							return this.getSlideId(slideshowId)
@@ -115,31 +116,37 @@
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
 							this.form.populate(this.resourceUrl)
 						})
+						.catch(exception => {
+							this.submissionFailed = true
+							console.log(exception)
+						})
 			},
 			getSlideshowId() {
-				return new Promise(resolve => {
-					axios.get(`/papi/v1/screens/${this.screenId}`)
-							.then(response => {
-								let resources    = response.data.meta.resources
-								let resourceName = resource('slideshows')
-								Object.keys(resources).forEach((key) => {
-									if (resources[key].name === resourceName) {
-										resolve(resources[key].id)
-									}
-								})
+				return axios.get(`/papi/v1/screens/${this.screenId}`)
+						.then(response => {
+							let resources    = response.data.meta.resources
+							let resourceName = resource('slideshows')
+							let slideshowId
+							Object.keys(resources).forEach((key) => {
+								if (resources[key].name === resourceName) {
+									slideshowId = resources[key].id
+								}
 							})
-				})
+							return slideshowId
+						})
 			},
 			getSlideId (slideshowId) {
-				return new Promise(resolve => {
-					axios.get(`/papi/v1/presentables/search?q=
+				return axios.get(`/papi/v1/presentables/search?q=
 					order_number:${this.slideOrderNo},
 					presentable_type:App%5CModels%5CSlideshow,
 					presentable_id:${slideshowId}`)
-							.then(response => {
-								resolve(response.data[0].slide_id)
-							})
-				})
+						.then(response => {
+							return response.data[0].slide_id
+						})
+			},
+			reset() {
+				this.saved            = false
+				this.submissionFailed = false
 			}
 		}
 	}

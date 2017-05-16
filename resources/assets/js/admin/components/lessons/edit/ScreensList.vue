@@ -1,16 +1,20 @@
 <template>
 	<div>
 		<div class="screens-list-save">
-			<a @onClick="" class="button is-small" :disabled="!hasChanged">
+			<a @click="saveOrder" class="button is-small" :class="{'is-loading': loading}">
 				<span class="margin right">Zapisz kolejność</span>
 				<span class="icon is-small">
 					<i class="fa fa-save"></i>
 				</span>
 			</a>
 		</div>
-		<wnl-screens-list-item v-for="screen in screens"
-			:name="screen.name"
-			:id="screen.id">
+		<wnl-screens-list-item v-for="(screen, index) in screens"
+			:key="screen.id"
+			:index="index"
+			:screen="screen"
+			:isFirst="index === 0"
+			:isLast="index === screens.length - 1"
+			@moveScreen="moveScreen">
 		</wnl-screens-list-item>
 		<div class="screens-list-add">
 			<a class="button is-small">
@@ -49,25 +53,40 @@
 		},
 		data() {
 			return {
-				originalScreens: [],
+				loading: false,
 				screens: [],
 			}
 		},
 		computed: {
-			hasChanged() {
-				return !_.isEqual(this.originalScreens, this.screens)
-			},
 			screensListApiUrl() {
-				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}`)
-			},
+				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}&order=order_number`)
+			}
 		},
 		methods: {
 			fetchScreens() {
 				return axios.get(this.screensListApiUrl)
 					.then((response) => {
 						this.screens = response.data
-						this.originalScreens = response.data
 					})
+			},
+			moveScreen(payload) {
+				this.screens.splice(payload.to, 0, this.screens.splice(payload.from, 1)[0]);
+			},
+			saveOrder() {
+				this.loading = true
+
+				let promises = []
+				_.forEach(this.screens, (screen, index) => {
+					promises.push(
+						axios.patch(getApiUrl(`screens/${screen.id}`), {
+							order_number: index
+						})
+					)
+				})
+
+				Promise.all(promises).then(() => {
+					this.loading = false
+				})
 			},
 		},
 		mounted() {

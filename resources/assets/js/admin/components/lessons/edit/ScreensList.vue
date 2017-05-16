@@ -1,0 +1,96 @@
+<template>
+	<div>
+		<div class="screens-list-save">
+			<a @click="saveOrder" class="button is-small" :class="{'is-loading': loading}">
+				<span class="margin right">Zapisz kolejność</span>
+				<span class="icon is-small">
+					<i class="fa fa-save"></i>
+				</span>
+			</a>
+		</div>
+		<wnl-screens-list-item v-for="(screen, index) in screens"
+			:key="screen.id"
+			:index="index"
+			:screen="screen"
+			:isFirst="index === 0"
+			:isLast="index === screens.length - 1"
+			@moveScreen="moveScreen">
+		</wnl-screens-list-item>
+		<div class="screens-list-add">
+			<a class="button is-small">
+				<span class="margin right">Dodaj ekran</span>
+				<span class="icon is-small">
+					<i class="fa fa-plus"></i>
+				</span>
+			</a>
+		</div>
+	</div>
+</template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.screens-list-add
+		margin-top: $margin-big
+		text-align: center
+
+	.screens-list-save
+		margin-bottom: $margin-big
+		text-align: center
+</style>
+
+<script>
+	import _ from 'lodash'
+
+	import { getApiUrl } from 'js/utils/env'
+
+	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
+
+	export default {
+		name: 'ScreensList',
+		components: {
+			'wnl-screens-list-item': ScreensListItem
+		},
+		data() {
+			return {
+				loading: false,
+				screens: [],
+			}
+		},
+		computed: {
+			screensListApiUrl() {
+				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}&order=order_number`)
+			}
+		},
+		methods: {
+			fetchScreens() {
+				return axios.get(this.screensListApiUrl)
+					.then((response) => {
+						this.screens = response.data
+					})
+			},
+			moveScreen(payload) {
+				this.screens.splice(payload.to, 0, this.screens.splice(payload.from, 1)[0]);
+			},
+			saveOrder() {
+				this.loading = true
+
+				let promises = []
+				_.forEach(this.screens, (screen, index) => {
+					promises.push(
+						axios.patch(getApiUrl(`screens/${screen.id}`), {
+							order_number: index
+						})
+					)
+				})
+
+				Promise.all(promises).then(() => {
+					this.loading = false
+				})
+			},
+		},
+		mounted() {
+			this.fetchScreens()
+		}
+	}
+</script>

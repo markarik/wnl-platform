@@ -2,24 +2,22 @@
 	<div class="screens-editor">
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
-			<wnl-screens-list-item v-for="screen in screens"
-				:name="screen.name"
-				:id="screen.id">
-			</wnl-screens-list-item>
-			<div class="screens-list-add">
-				<a><span class="icon is-small"><i class="fa fa-plus"></i></span> Dodaj ekran</a>
-			</div>
+			<wnl-screens-list :screens="screens" ref="ScreensList"></wnl-screens-list>
 		</div>
 		<div class="screen-editor" v-if="loaded">
-
-			<form @submit.prevent="onScreenFormSubmit">
+			<form>
 				<!-- Screen meta -->
 				<div class="field is-grouped">
 					<div class="control">
 						<wnl-form-input :form="screenForm" name="name" v-model="screenForm.name"></wnl-form-input>
 					</div>
 					<div class="control">
-						<a class="button is-success" @click="onSubmit">Zapisz</a>
+						<a class="button is-success is-small" @click="onSubmit" :disabled="!hasChanged">
+							<span class="margin right">Zapisz</span>
+							<span class="icon is-small">
+								<i class="fa fa-save"></i>
+							</span>
+						</a>
 					</div>
 				</div>
 
@@ -42,7 +40,7 @@
 						<span class="select">
 							<wnl-select
 								:form="screenForm"
-								:options="getScreenMeta(screenForm.type)"
+								:options="getMetaResourcesList(screenForm.type)"
 								name="meta"
 								v-model="screenForm.meta"
 							></wnl-select>
@@ -85,10 +83,6 @@
 		padding: $margin-base
 		min-width: 250px
 
-	.screens-list-add
-		margin-top: $margin-big
-		text-align: center
-
 	.screen-editor
 		flex: 8 auto
 		padding: 0 $margin-base $margin-base
@@ -104,8 +98,8 @@
 	import _ from 'lodash'
 	import { set } from 'vue'
 
+	import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue'
 	import Form from 'js/classes/forms/Form'
-	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
 	import Input from 'js/components/global/form/Input.vue'
 	import Quill from 'js/components/global/form/Quill.vue'
 	import Select from 'js/components/global/form/Select.vue'
@@ -137,7 +131,7 @@
 		components: {
 			'quill': Quill,
 			'wnl-form-input': Input,
-			'wnl-screens-list-item': ScreensListItem,
+			'wnl-screens-list': ScreensList,
 			'wnl-select': Select,
 		},
 		data() {
@@ -166,9 +160,6 @@
 			screenFormResourceUrl() {
 				return getApiUrl(`screens/${this.$route.params.screenId}`)
 			},
-			screensListApiUrl() {
-				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}`)
-			},
 			typesOptions() {
 				return Object.keys(types).map((key, index) => types[key])
 			},
@@ -178,9 +169,12 @@
 					return types[type]
 				}
  			},
+			hasChanged() {
+				return !_.isEqual(this.screenForm.data(), this.screenForm.originalData)
+			},
 		},
 		methods: {
-			getScreenMeta(type) {
+			getMetaResourcesList(type) {
 				return this.quiz_sets
 			},
 			formScreenMeta(resource, id) {
@@ -195,32 +189,41 @@
 
 				return JSON.stringify(meta)
 			},
-			fetchScreens() {
-				return axios.get(this.screensListApiUrl)
-					.then((response) => {
-						this.screens = response.data
-					})
-			},
 			fetchQuizSets() {
-				if (_.isEmpty(this.quiz_sets)) {
-					axios.get(getApiUrl('quiz_sets/all'))
-						.then((response) => {
-							_.forEach(response.data, (quiz) => {
-								this.quiz_sets.push({
-									text: quiz.name,
-									value: this.formScreenMeta('quiz_sets', quiz.id),
-								})
+				return axios.get(getApiUrl('quiz_sets/all'))
+					.then((response) => {
+						_.forEach(response.data, (quiz) => {
+							this.quiz_sets.push({
+								text: quiz.name,
+								value: this.formScreenMeta('quiz_sets', quiz.id),
 							})
 						})
-				}
+					})
 			},
 			populateScreenForm() {
-				this.screenForm.populate(this.screenFormResourceUrl)
+				axios.get(this.screenFormResourceUrl)
+					.then(response => {
+						Object.keys(response.data).forEach((field) => {
+							let value = response.data[field]
+							if (_.isObject(value)) {
+								value = JSON.stringify(value)
+							}
+							this.screenForm[field] = value
+							this.screenForm.originalData[field] = value
+						})
+					})
 			},
 			onSubmit() {
-				this.screenForm.meta = unescape(this.screenForm.meta)
+				if (this.currentType.hasMeta) {
+					this.screenForm.meta = unescape(this.screenForm.meta)
+				} else {
+					this.screenForm.meta = '{}'
+				}
+
 				this.screenForm.put(this.screenFormResourceUrl)
-					.then(response => console.log('Yoopi!'))
+					.then(response => {
+						this.$refs.ScreensList.fetchScreens()
+					})
 					.catch(exception => {
 						this.submissionFailed = true
 						$wnl.logger.capture(exception)
@@ -228,11 +231,9 @@
 			}
 		},
 		mounted() {
-			this.fetchScreens()
-
 			if (this.screenId) {
-				this.populateScreenForm()
 				this.fetchQuizSets()
+				this.populateScreenForm()
 			}
 		},
 		watch: {

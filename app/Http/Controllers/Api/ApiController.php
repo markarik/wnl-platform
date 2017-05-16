@@ -65,8 +65,10 @@ abstract class ApiController extends Controller
 			return [$param, '=', $value];
 		}, $conditions);
 
+		$order = $request->get('order') ?? 'id';
+
 		try {
-			$results = $modelName::where($conditions)->get();
+			$results = $modelName::where($conditions)->orderBy($order)->get();
 		} catch (QueryException $e) {
 			\Log::warning($e);
 

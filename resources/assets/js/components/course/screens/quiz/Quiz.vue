@@ -27,6 +27,8 @@
 </style>
 
 <script>
+	import _ from 'lodash'
+
 	import QuizList from 'js/components/course/screens/quiz/QuizList'
 	import QuizSummary from 'js/components/course/screens/quiz/QuizSummary'
 	import { mapActions, mapGetters } from 'vuex'
@@ -45,7 +47,12 @@
 			...mapActions('quiz', ['setupQuestions'])
 		},
 		mounted() {
-			this.setupQuestions(JSON.parse(this.screenData.meta).resources[0])
+			let meta = this.screenData.meta
+			if (!_.isObject(meta)) {
+				meta = JSON.parse(meta)
+			}
+
+			this.setupQuestions(meta.resources[0])
 		}
 	}
 </script>

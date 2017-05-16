@@ -27,6 +27,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['screens']}/search", 'Course\ScreensApiController@search');
 	Route::get("{$r['screens']}/{id}", 'Course\ScreensApiController@get');
 	Route::put("{$r['screens']}/{id}", 'Course\ScreensApiController@put');
+	Route::patch("{$r['screens']}/{id}", 'Course\ScreensApiController@patch');
 	Route::post("{$r['screens']}", 'Course\ScreensApiController@post');
 
 	// Editions

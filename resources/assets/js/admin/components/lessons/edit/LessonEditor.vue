@@ -4,11 +4,6 @@
 			<div class="field is-grouped">
 				<div class="control">
 					<span class="select">
-						<!-- <select>
-							<option v-for="group in groups" :value="group.id">
-								{{group.name}}
-							</option>
-						</select> -->
 						<wnl-select :form="form"
 							:options="groups"
 							name="groups"
@@ -21,8 +16,11 @@
 					v-model="form.name"
 				></wnl-input>
 				<div class="control">
-					<a class="button is-success" :disabled="!hasChanged" @click="lessonFormSubmit">
-						Zapisz
+					<a class="button is-small is-success" :disabled="!hasChanged" @click="lessonFormSubmit">
+						<span class="margin right">Zapisz</span>
+						<span class="icon is-small">
+							<i class="fa fa-save"></i>
+						</span>
 					</a>
 				</div>
 			</div>

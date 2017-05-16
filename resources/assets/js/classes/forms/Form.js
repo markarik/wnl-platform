@@ -1,5 +1,7 @@
-import Errors from './Errors'
+import _ from 'lodash'
 import axios from 'axios'
+
+import Errors from './Errors'
 
 class Form {
 	/**
@@ -122,7 +124,6 @@ class Form {
 				})
 			})
 	}
-
 
 	/**
 	 * Handle a successful form submission.

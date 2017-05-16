@@ -12,7 +12,7 @@
 		</div>
 		<div class="screen-editor" v-if="loaded">
 
-			<form @submit.prevent="onScreenFormSubmit">
+			<form>
 				<!-- Screen meta -->
 				<div class="field is-grouped">
 					<div class="control">

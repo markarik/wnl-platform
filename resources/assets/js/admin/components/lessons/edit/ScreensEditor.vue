@@ -28,16 +28,24 @@
 					<div class="control">
 						<label class="label">Typ ekranu</label>
 						<span class="select">
-							<select v-model="selectedType">
+							<!-- <select v-model="selectedType">
 								<option v-for="(meta, type) in types" :value="type">
 									{{type}}
 								</option>
-							</select>
+							</select> -->
+							<wnl-select
+								:form="screenForm"
+								:options="types"
+								name="type"
+								v-model="screenForm.type"
+							>
+
+							</wnl-select>
 						</span>
 					</div>
-					<div class="control" v-if="selectedTypeData.hasMeta">
+					<!-- <div class="control" v-if="selectedTypeData.hasMeta">
 						<label class="label">{{selectedTypeData.metaTitle}}</label>
-					</div>
+					</div> -->
 				</div>
 
 				<!-- Screen content -->
@@ -55,6 +63,9 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.field.is-grouped
+		align-items: center
 
 	.screens-editor
 		border-top: $border-light-gray
@@ -95,8 +106,32 @@
 	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
 	import Input from 'js/components/global/form/Input.vue'
 	import Quill from 'js/components/global/form/Quill.vue'
+	import Select from 'js/components/global/form/Select.vue'
 
 	import { getApiUrl } from 'js/utils/env'
+
+	let types = {
+		html: {
+			name: 'Tekst',
+			hasMeta: false,
+		},
+		quiz: {
+			name: 'Zestaw pytań',
+			hasMeta: true,
+			metaTitle: 'Zestaw pytań',
+			metaResource: 'quizes',
+		},
+		slideshow: {
+			name: 'Prezentacja',
+			hasMeta: true,
+			metaTitle: 'Wybierz prezentację',
+			metaResource: 'slideshow',
+		},
+		end: {
+			name: 'Zakończenie',
+			hasMeta: false,
+		},
+	}
 
 	export default {
 		name: 'ScreensEditor',
@@ -104,6 +139,7 @@
 			'quill': Quill,
 			'wnl-form-input': Input,
 			'wnl-screens-list-item': ScreensListItem,
+			'wnl-select': Select,
 		},
 		data() {
 			return {
@@ -111,27 +147,8 @@
 				screenForm: new Form({
 					content: null,
 					name: null,
-					type: 'html',
+					type: null,
 				}),
-				selectedType: 'quiz',
-				types: {
-					html: {
-						hasMeta: false,
-					},
-					quiz: {
-						hasMeta: true,
-						metaTitle: 'Zestaw pytań',
-						metaResource: 'quizes',
-					},
-					slideshow: {
-						hasMeta: true,
-						metaTitle: 'Prezentacja',
-						metaResource: 'slideshow',
-					},
-					end: {
-						hasMeta: false,
-					},
-				},
 				screens: [],
 			}
 		},
@@ -150,7 +167,10 @@
 			},
 			screensListApiUrl() {
 				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}`)
-			}
+			},
+			types() {
+				return types
+			},
 		},
 		methods: {
 			fetchScreens() {

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import axios from 'axios'
 import store from 'store'
 import { set } from 'vue'
 import { getApiUrl } from 'js/utils/env'
@@ -6,11 +7,6 @@ import { resource } from 'js/utils/config'
 import * as types from 'js/admin/store/mutations-types'
 
 // Helper functions
-function getCourseApiUrl(courseId) {
-	return getApiUrl(
-		`${resource('editions')}/${courseId}?include=${resource('groups')}.${resource('lessons')}.${resource('screens')}.${resource('sections')}`
-	)
-}
 
 // Namespace
 const namespaced = true
@@ -18,36 +14,44 @@ const namespaced = true
 // Initial state
 const state = {
 	ready: false,
-	lessons: {},
+	lessons: [],
+	// TODO: Fetch groups
+	// TODO: Fetch slideshows
+	// TODO: Fetch quizes
 }
 
 // Getters
 const getters = {
+	isReady: state => state.ready,
 	allLessons: state => state.lessons,
 }
 
 // Mutations
 const mutations = {
-	// [types.COURSE_READY] (state) {
-	// 	set(state, 'ready', true)
-	// },
-	// [types.SET_STRUCTURE] (state, data) {
-	// 	set(state, 'id', data.id)
-	// 	set(state, 'name', data.name)
-	// 	set(state, resource('groups'), data[resource('groups')])
-	// 	set(state, 'structure', data.included)
-	// }
+	[types.LESSONS_READY] (state) {
+		set(state, 'ready', true)
+	},
+	[types.SETUP_LESSONS] (state, payload) {
+		set(state, 'lessons', payload)
+	}
 }
 
 // Actions
 const actions = {
-	setup({ commit, dispatch }, courseId) {
+	fetchAllLessons({ commit, getters }) {
+		if (_.isEmpty(getters.allLessons)) {
+			axios.get(getApiUrl('lessons/all'))
+				.then((response) => {
+					commit(types.SETUP_LESSONS, response.data)
+				})
+		}
+	},
+	setup({ commit, dispatch }) {
 		Promise.all([
-			dispatch('setStructure', courseId),
-			dispatch('progress/setupCourse', courseId, {root: true}),
+			dispatch('fetchAllLessons'),
 		]).then(resolutions => {
-			$wnl.logger.debug('Course ready, yay!')
-			commit(types.COURSE_READY)
+			$wnl.logger.debug('Lessons editor ready')
+			commit(types.LESSONS_READY)
 		}, reason => {
 			$wnl.logger.error(reason)
 		})

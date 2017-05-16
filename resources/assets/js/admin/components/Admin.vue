@@ -23,7 +23,7 @@
 	.admin-left
 		border-right: $border-light-gray
 		flex: 0 auto
-		width: 250px
+		min-width: 250px
 		padding: $margin-big
 
 	.admin-right

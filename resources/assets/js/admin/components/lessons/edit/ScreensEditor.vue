@@ -6,8 +6,8 @@
 				:name="screen.name"
 				:id="screen.id">
 			</wnl-screens-list-item>
-			<div class="has-text-centered margin top">
-				<a>Dodaj ekran</a>
+			<div class="screens-list-add">
+				<a><span class="icon is-small"><i class="fa fa-plus"></i></span> Dodaj ekran</a>
 			</div>
 		</div>
 		<div class="screen-editor" v-if="loaded">
@@ -67,8 +67,13 @@
 
 	.screens-list
 		border-right: $border-light-gray
+		flex: 0 0 auto
 		padding: $margin-base
-		width: 200px
+		min-width: 250px
+
+	.screens-list-add
+		margin-top: $margin-big
+		text-align: center
 
 	.screen-editor
 		flex: 8 auto
@@ -139,8 +144,7 @@
 		},
 		computed: {
 			loaded() {
-				// return !_.isEmpty(this.currentScreen)
-				return true
+				return !!this.$route.params.screenId
 			},
 			selectedTypeData() {
 				return this.types[this.selectedType]

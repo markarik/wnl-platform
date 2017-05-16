@@ -26,7 +26,12 @@ class ScreensApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$screen->update($request->all());
+		$screen->update([
+			'content' => $request->input('content'),
+			'meta' => json_decode($request->input('meta')),
+			'type' => $request->input('type'),
+			'name' => $request->input('name'),
+		]);
 
 		return $this->respondOk();
 	}

@@ -19,7 +19,9 @@
 						<wnl-form-input :form="screenForm" name="name" v-model="screenForm.name"></wnl-form-input>
 					</div>
 					<div class="control">
-						<a class="button is-success" @click="onSubmit">Zapisz</a>
+						<a class="button is-success" @click="onSubmit" :disabled="!hasChanged">
+							Zapisz
+						</a>
 					</div>
 				</div>
 
@@ -42,7 +44,7 @@
 						<span class="select">
 							<wnl-select
 								:form="screenForm"
-								:options="getScreenMeta(screenForm.type)"
+								:options="getMetaResourcesList(screenForm.type)"
 								name="meta"
 								v-model="screenForm.meta"
 							></wnl-select>
@@ -178,9 +180,12 @@
 					return types[type]
 				}
  			},
+			hasChanged() {
+				return !_.isEqual(this.screenForm.data(), this.screenForm.originalData)
+			},
 		},
 		methods: {
-			getScreenMeta(type) {
+			getMetaResourcesList(type) {
 				return this.quiz_sets
 			},
 			formScreenMeta(resource, id) {
@@ -202,23 +207,36 @@
 					})
 			},
 			fetchQuizSets() {
-				if (_.isEmpty(this.quiz_sets)) {
-					axios.get(getApiUrl('quiz_sets/all'))
-						.then((response) => {
-							_.forEach(response.data, (quiz) => {
-								this.quiz_sets.push({
-									text: quiz.name,
-									value: this.formScreenMeta('quiz_sets', quiz.id),
-								})
+				return axios.get(getApiUrl('quiz_sets/all'))
+					.then((response) => {
+						_.forEach(response.data, (quiz) => {
+							this.quiz_sets.push({
+								text: quiz.name,
+								value: this.formScreenMeta('quiz_sets', quiz.id),
 							})
 						})
-				}
+					})
 			},
 			populateScreenForm() {
-				this.screenForm.populate(this.screenFormResourceUrl)
+				axios.get(this.screenFormResourceUrl)
+					.then(response => {
+						Object.keys(response.data).forEach((field) => {
+							let value = response.data[field]
+							if (_.isObject(value)) {
+								value = JSON.stringify(value)
+							}
+							this.screenForm[field] = value
+							this.screenForm.originalData[field] = value
+						})
+					})
 			},
 			onSubmit() {
-				this.screenForm.meta = unescape(this.screenForm.meta)
+				if (this.currentType.hasMeta) {
+					this.screenForm.meta = unescape(this.screenForm.meta)
+				} else {
+					this.screenForm.meta = '{}'
+				}
+
 				this.screenForm.put(this.screenFormResourceUrl)
 					.then(response => console.log('Yoopi!'))
 					.catch(exception => {
@@ -231,8 +249,8 @@
 			this.fetchScreens()
 
 			if (this.screenId) {
-				this.populateScreenForm()
 				this.fetchQuizSets()
+				this.populateScreenForm()
 			}
 		},
 		watch: {

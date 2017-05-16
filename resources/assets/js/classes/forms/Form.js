@@ -118,6 +118,7 @@ class Form {
 			.then(response => {
 				Object.keys(response.data).forEach((field) => {
 					this[field] = response.data[field]
+					this.originalData[field] = response.data[field]
 				})
 			})
 	}

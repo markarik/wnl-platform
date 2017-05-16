@@ -245,6 +245,9 @@ module.exports.devtool = Mix.sourcemaps;
  |
  */
 module.exports.devServer = {
+	headers: {
+		"Access-Control-Allow-Origin": "*"
+	},
 	historyApiFallback: true,
 	noInfo: true,
 	compress: true,
@@ -286,7 +289,9 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 			context: __dirname,
 			output: {path: './'}
 		}
-	})
+	}),
+
+	new webpack.IgnorePlugin(/brace\/mode/)
 ]);
 
 

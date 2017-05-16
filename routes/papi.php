@@ -17,14 +17,32 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'Course\CoursesApiController@get');
 
+	// Groups
+	Route::get("{$r['groups']}/{id}", 'Course\GroupsApiController@get');
+
 	// Lessons
 	Route::get("{$r['lessons']}/{id}", 'Course\LessonsApiController@get');
 
 	// Screens
+	Route::get("{$r['screens']}/search", 'Course\ScreensApiController@search');
 	Route::get("{$r['screens']}/{id}", 'Course\ScreensApiController@get');
+	Route::put("{$r['screens']}/{id}", 'Course\ScreensApiController@put');
+	Route::patch("{$r['screens']}/{id}", 'Course\ScreensApiController@patch');
+	Route::post("{$r['screens']}", 'Course\ScreensApiController@post');
 
 	// Editions
 	Route::get("{$r['editions']}/{id}", 'Course\EditionsApiController@get');
+
+	// Slides
+	Route::get("{$r['slides']}/{id}", 'Course\SlidesApiController@get');
+	Route::put("{$r['slides']}/{id}", 'Course\SlidesApiController@put');
+
+	// Presentables
+	Route::get("{$r['presentables']}/search", 'Course\PresentablesApiController@search');
+	Route::get("{$r['presentables']}/{id}", 'Course\PresentablesApiController@get');
+
+	// Slideshows
+	Route::get("{$r['slideshows']}/{id}", 'Course\SlideshowsApiController@get');
 
 	// Users
 	Route::get("{$r['users']}/{id}", 'User\UsersApiController@get');
@@ -61,11 +79,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post($r['answers'], 'Qna\AnswersApiController@post');
 
 	// Quiz Sets
-	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
+	Route::get("{$r['quiz-sets']}/{id}", 'Quiz\QuizSetsApiController@get');
+	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
 
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');
-
 
 });

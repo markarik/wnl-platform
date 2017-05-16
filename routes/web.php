@@ -49,7 +49,7 @@ Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
 	Route::get('/slideshow-builder/{screenId}', 'SlideShowController@build')->name('slideshow-builder');
 });
 
-if (App::environment('dev')) {
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admin'], function () {
 	Route::group(['namespace' => 'Invoice', 'prefix' => 'invoice'], function () {
 		Route::get('advance', function () {
 			return Response::view('payment/invoices/advance');
@@ -70,6 +70,9 @@ if (App::environment('dev')) {
 	Route::get('/newsletter/{template}', function ($template) {
 		return Response::view('mail/newsletter/' . $template);
 	});
-	Route::get('/upload-slides', 'Admin\UploadSlidesController@index')->name('admin-upload-slides');
-	Route::post('/upload-slides', 'Admin\UploadSlidesController@handle')->name('admin-upload-slides-post');
-}
+	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
+	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
+
+	// Using front-end routing for the admin panel application
+	Route::get('/app/{path?}', 'AppController@index')->where('path', '(.*)');
+});

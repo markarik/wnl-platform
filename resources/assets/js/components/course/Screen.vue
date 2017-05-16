@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div>
 		<h4>{{name}}</h4>
 		<component :is="component" :screenData="screenData" :slide="slide"></component>
 	</div>

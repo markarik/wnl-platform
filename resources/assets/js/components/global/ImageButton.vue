@@ -33,6 +33,9 @@
 		&.is-primary
 			fill: $color-white
 
+		&.without-image
+			padding: 0
+
 	.wnl-image-button-label
 		font-size: $font-size-minus-1
 		margin: 0 10px

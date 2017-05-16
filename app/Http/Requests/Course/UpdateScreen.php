@@ -27,7 +27,7 @@ class UpdateScreen extends FormRequest
 			'content'      => 'string',
 			'type'         => 'required|string',
 			'name'         => 'required|string',
-			'meta'         => 'string',
+			'meta'         => 'json',
 			'order_number' => 'numeric',
 		];
 	}

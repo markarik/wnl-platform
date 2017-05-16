@@ -1,10 +1,10 @@
 <template>
 	<div class="field">
 		<select v-model="selected">
-			<option v-for="(option, itemKey) in options" key="itemKey"
-				:value="itemKey"
-				v-text="option.name"
-				:selected="itemKey === value">
+			<option v-for="(option, key) in options" key="key"
+				:value="option.value"
+				v-text="option.text"
+				:selected="option.value === value">
 			</option>
 		</select>
 	</div>
@@ -13,10 +13,7 @@
 <script>
 	export default {
 		name: 'Select',
-		props: {
-			options: Object,
-			value: String,
-		},
+		props: ['options', 'value'],
 		data() {
 			return {
 				selected: '',

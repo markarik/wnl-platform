@@ -28,24 +28,26 @@
 					<div class="control">
 						<label class="label">Typ ekranu</label>
 						<span class="select">
-							<!-- <select v-model="selectedType">
-								<option v-for="(meta, type) in types" :value="type">
-									{{type}}
-								</option>
-							</select> -->
 							<wnl-select
 								:form="screenForm"
-								:options="types"
+								:options="typesOptions"
 								name="type"
 								v-model="screenForm.type"
 							>
-
 							</wnl-select>
 						</span>
 					</div>
-					<!-- <div class="control" v-if="selectedTypeData.hasMeta">
-						<label class="label">{{selectedTypeData.metaTitle}}</label>
-					</div> -->
+					<div class="control" v-if="currentType && currentType.hasMeta">
+						<label class="label">{{currentType.metaTitle}}</label>
+						<span class="select">
+							<wnl-select
+								:form="screenForm"
+								:options="getScreenMeta(screenForm.type)"
+								name="meta"
+								v-model="screenForm.meta"
+							></wnl-select>
+						</span>
+					</div>
 				</div>
 
 				<!-- Screen content -->
@@ -112,23 +114,20 @@
 
 	let types = {
 		html: {
-			name: 'Tekst',
+			text: 'Tekst',
+			value: 'html',
 			hasMeta: false,
 		},
 		quiz: {
-			name: 'Zestaw pytań',
+			text: 'Zestaw pytań',
+			value: 'quiz',
 			hasMeta: true,
-			metaTitle: 'Zestaw pytań',
+			metaTitle: 'Wybierz zestaw pytań',
 			metaResource: 'quizes',
 		},
-		slideshow: {
-			name: 'Prezentacja',
-			hasMeta: true,
-			metaTitle: 'Wybierz prezentację',
-			metaResource: 'slideshow',
-		},
 		end: {
-			name: 'Zakończenie',
+			text: 'Zakończenie',
+			value: 'end',
 			hasMeta: false,
 		},
 	}
@@ -146,10 +145,12 @@
 				ready: false,
 				screenForm: new Form({
 					content: null,
+					meta: null,
 					name: null,
 					type: null,
 				}),
 				screens: [],
+				quiz_sets: [],
 			}
 		},
 		computed: {
@@ -168,21 +169,56 @@
 			screensListApiUrl() {
 				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}`)
 			},
-			types() {
-				return types
+			typesOptions() {
+				return Object.keys(types).map((key, index) => types[key])
 			},
+			currentType() {
+				let type = this.screenForm.type
+				if (type !== null && types.hasOwnProperty(type)) {
+					return types[type]
+				}
+ 			},
 		},
 		methods: {
+			getScreenMeta(type) {
+				return this.quiz_sets
+			},
+			formScreenMeta(resource, id) {
+				let meta = {
+					resources: [
+						{
+							id: id,
+							name: resource
+						}
+					]
+				}
+
+				return JSON.stringify(meta)
+			},
 			fetchScreens() {
 				return axios.get(this.screensListApiUrl)
 					.then((response) => {
 						this.screens = response.data
 					})
 			},
+			fetchQuizSets() {
+				if (_.isEmpty(this.quiz_sets)) {
+					axios.get(getApiUrl('quiz_sets/all'))
+						.then((response) => {
+							_.forEach(response.data, (quiz) => {
+								this.quiz_sets.push({
+									text: quiz.name,
+									value: this.formScreenMeta('quiz_sets', quiz.id),
+								})
+							})
+						})
+				}
+			},
 			populateScreenForm() {
 				this.screenForm.populate(this.screenFormResourceUrl)
 			},
 			onSubmit() {
+				this.screenForm.meta = unescape(this.screenForm.meta)
 				this.screenForm.put(this.screenFormResourceUrl)
 					.then(response => console.log('Yoopi!'))
 					.catch(exception => {
@@ -196,6 +232,7 @@
 
 			if (this.screenId) {
 				this.populateScreenForm()
+				this.fetchQuizSets()
 			}
 		},
 		watch: {

@@ -8,6 +8,7 @@ import * as getters from 'js/admin/store/getters'
 
 // Modules
 import currentUser from 'js/store/modules/currentUser'
+import lessons from 'js/admin/store/modules/lessons'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
 	actions,
 	modules: {
 		currentUser,
+		lessons,
 	},
 	strict: debug
 })

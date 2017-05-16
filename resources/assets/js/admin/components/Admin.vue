@@ -23,12 +23,16 @@
 	.admin-left
 		border-right: $border-light-gray
 		flex: 0 auto
-		width: 250px
+		min-width: 250px
 		padding: $margin-big
 
 	.admin-right
 		flex: 8 auto
+		height: 100%
+		max-height: 100%
+		overflow: auto
 		padding: $margin-big
+		position: relative
 </style>
 
 <script>

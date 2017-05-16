@@ -45,7 +45,7 @@
 			...mapActions('quiz', ['setupQuestions'])
 		},
 		mounted() {
-			this.setupQuestions(this.screenData.meta.resources[0])
+			this.setupQuestions(JSON.parse(this.screenData.meta).resources[0])
 		}
 	}
 </script>

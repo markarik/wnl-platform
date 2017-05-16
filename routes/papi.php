@@ -11,24 +11,58 @@
 |
 */
 
-Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
+Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
 	$r = config('papi.resources');
 
 	// Courses
-	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
+	Route::get("{$r['courses']}/{id}", 'Course\CoursesApiController@get');
+
+	// Groups
+	Route::get("{$r['groups']}/{id}", 'Course\GroupsApiController@get');
 
 	// Lessons
-	Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
+	Route::get("{$r['lessons']}/{id}", 'Course\LessonsApiController@get');
 
 	// Screens
-	Route::get("{$r['screens']}/{id}", 'ScreensApiController@get');
-
-	// Users
-	Route::get("{$r['users']}/current", 'UsersApiController@getCurrentUser');
-	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
+	Route::get("{$r['screens']}/search", 'Course\ScreensApiController@search');
+	Route::get("{$r['screens']}/{id}", 'Course\ScreensApiController@get');
+	Route::put("{$r['screens']}/{id}", 'Course\ScreensApiController@put');
+	Route::patch("{$r['screens']}/{id}", 'Course\ScreensApiController@patch');
+	Route::post("{$r['screens']}", 'Course\ScreensApiController@post');
 
 	// Editions
-	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
+	Route::get("{$r['editions']}/{id}", 'Course\EditionsApiController@get');
+
+	// Slides
+	Route::get("{$r['slides']}/{id}", 'Course\SlidesApiController@get');
+	Route::put("{$r['slides']}/{id}", 'Course\SlidesApiController@put');
+
+	// Presentables
+	Route::get("{$r['presentables']}/search", 'Course\PresentablesApiController@search');
+	Route::get("{$r['presentables']}/{id}", 'Course\PresentablesApiController@get');
+
+	// Slideshows
+	Route::get("{$r['slideshows']}/{id}", 'Course\SlideshowsApiController@get');
+
+	// Users
+	Route::get("{$r['users']}/{id}", 'User\UsersApiController@get');
+	Route::put("{$r['users']}/{id}", 'User\UsersApiController@put');
+
+	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'User\UserProfileApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'User\UserProfileApiController@put');
+
+	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'User\UserAvatarApiController@post');
+
+	Route::get("{$r['users']}/{id}/{$r['user-address']}", 'User\UserAddressApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-address']}", 'User\UserAddressApiController@put');
+
+	Route::get("{$r['users']}/{id}/{$r['user-billing-data']}", 'User\UserBillingApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-billing-data']}", 'User\UserBillingApiController@put');
+
+	Route::get("{$r['users']}/{id}/{$r['user-settings']}", 'User\UserSettingsApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'User\UserSettingsApiController@put');
+
+	Route::put("{$r['users']}/{id}/{$r['user-password']}", 'User\UserPasswordApiController@put');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
@@ -37,19 +71,19 @@ Route::group(['namespace' => 'Api', 'middleware' => 'api-auth'], function () {
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
 
 	// Questions
-	Route::get("{$r['questions']}/{id}", 'QuestionsApiController@get');
-	Route::post($r['questions'], 'QuestionsApiController@post');
+	Route::get("{$r['questions']}/{id}", 'Qna\QuestionsApiController@get');
+	Route::post($r['questions'], 'Qna\QuestionsApiController@post');
 
 	// Answers
-	Route::get("{$r['answers']}/{id}", 'AnswersApiController@get');
-	Route::post($r['answers'], 'AnswersApiController@post');
+	Route::get("{$r['answers']}/{id}", 'Qna\AnswersApiController@get');
+	Route::post($r['answers'], 'Qna\AnswersApiController@post');
 
 	// Quiz Sets
-	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
+	Route::get("{$r['quiz-sets']}/{id}", 'Quiz\QuizSetsApiController@get');
+	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
 
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');
-
 
 });

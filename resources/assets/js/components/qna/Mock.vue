@@ -6,7 +6,7 @@
 				<div class="votes">
 					<wnl-vote type="up" :count="question.votes"></wnl-vote>
 				</div>
-				<div class="container">
+				<div class="qna-container">
 					<div class="qna-question-content">
 						{{question.text}}
 					</div>
@@ -30,7 +30,7 @@
 								<div class="votes">
 									<wnl-vote type="up" :count="answer.votes"></wnl-vote>
 								</div>
-								<div class="container">
+								<div class="qna-container">
 									<div class="qna-answer-content" v-html="answer.text"></div>
 									<div class="qna-meta">
 										<wnl-avatar
@@ -50,7 +50,7 @@
 							<div class="qna-answer-comments">
 								<p class="qna-title">Komentarze ({{answer.comments.length}})</p>
 								<div class="qna-comment" v-for="comment in answer.comments">
-									<div class="container">
+									<div class="qna-container">
 										<div class="qna-meta qna-comment-meta">
 											<wnl-avatar
 											:username="comment.author.username"
@@ -88,7 +88,7 @@
 		flex: 0 auto
 		padding: 0 $margin-base
 
-	.container
+	.qna-container
 		flex: 1 auto
 
 	.qna-meta

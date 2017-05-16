@@ -84,7 +84,32 @@ if (isProduction()) {
 					name: 'my-orders',
 					path: 'orders',
 					component: require('js/components/user/MyOrders.vue')
-				}
+				},
+				{
+					name: 'my-profile',
+					path: 'profile',
+					component: require('js/components/user/MyProfile.vue')
+				},
+				{
+					name: 'my-address',
+					path: 'address',
+					component: require('js/components/user/MyAddress.vue')
+				},
+				{
+					name: 'my-billing-data',
+					path: 'billing',
+					component: require('js/components/user/MyBillingData.vue')
+				},
+				{
+					name: 'my-settings',
+					path: 'settings',
+					component: require('js/components/user/MySettings.vue')
+				},
+				{
+					name: 'my-password',
+					path: 'password',
+					component: require('js/components/user/MyPassword.vue')
+				},
 			]
 		},
 		{

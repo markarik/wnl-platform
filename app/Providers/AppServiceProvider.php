@@ -64,8 +64,10 @@ class AppServiceProvider extends ServiceProvider
 			$this->app->register(DuskServiceProvider::class);
 		}
 		if ($this->app->environment('testing', 'dev', 'local')) {
-			$this->app->register(DebugBarServiceProvider::class);
 			$this->app->register(TinkerServiceProvider::class);
+		}
+		if (env('DEBUG_BAR') === true) {
+			$this->app->register(DebugBarServiceProvider::class);
 		}
 	}
 }

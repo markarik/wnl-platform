@@ -52,6 +52,6 @@ class QuestionTransformer extends TransformerAbstract
 	{
 		$user = $question->user;
 
-		return $this->collection([$user], new UserTransformer(['questions' => $question->id]), 'users');
+		return $this->collection([$user], new UserProfileTransformer(['questions' => $question->id]), 'users');
 	}
 }

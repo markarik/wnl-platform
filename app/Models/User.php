@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-
-use App\Notifications\ResetPasswordNotification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -39,10 +39,43 @@ class User extends Authenticatable
 		'password', 'remember_token',
 	];
 
+	/**
+	 * Relationships
+	 */
+
 	public function orders()
 	{
 		return $this->hasMany('App\Models\Order');
 	}
+
+	public function profile()
+	{
+		return $this->hasOne('App\Models\UserProfile');
+	}
+
+	public function billing()
+	{
+		return $this->hasOne('App\Models\UserBillingData');
+	}
+
+	public function settings()
+	{
+		return $this->hasOne('App\Models\UserSettings');
+	}
+
+	public function address()
+	{
+		return $this->hasOne('App\Models\UserAddress');
+	}
+
+	public function roles()
+	{
+		return $this->belongsToMany('App\Models\Role');
+	}
+
+	/**
+	 * Dynamic attributes
+	 */
 
 	public function getFullNameAttribute()
 	{
@@ -103,5 +136,48 @@ class User extends Authenticatable
 	public function sendPasswordResetNotification($token)
 	{
 		$this->notify(new ResetPasswordNotification($token));
+	}
+
+	/**
+	 * Get the current user or find by id.
+	 *
+	 * @param $id
+	 * @param array $columns
+	 * @return User|\Illuminate\Contracts\Auth\Authenticatable
+	 */
+	public static function fetch($id, $columns = ['*'])
+	{
+		if ($id === 'current') {
+			return Auth::user();
+		}
+
+		return User::find($id, $columns);
+	}
+
+	/**
+	 * Determine whether the user has the given role.
+	 *
+	 * @param $roleName
+	 * @return bool
+	 */
+	public function hasRole($roleName)
+	{
+		foreach ($this->roles as $role) {
+			if ($role->name === $roleName) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Determine whether the user is an admin.
+	 *
+	 * @return bool
+	 */
+	public function isAdmin()
+	{
+		return $this->hasRole('admin');
 	}
 }

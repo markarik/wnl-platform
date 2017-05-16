@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -44,6 +45,41 @@ abstract class ApiController extends Controller
 			$models = $modelName::find($id);
 			$resource = new Item($models, new $transformerName, $this->resourceName);
 		}
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return response()->json($data);
+	}
+
+	public function search(Request $request)
+	{
+		$query = $request->get('q');
+
+		$resourceSingular = str_singular($this->resourceName);
+		$resourceStudly = studly_case($resourceSingular);
+		$modelName = 'App\Models\\' . $resourceStudly;
+
+		$conditions = explode(',', $query);
+		$conditions = array_map(function ($item) {
+			list ($param, $value) = explode(':', $item);
+
+			return [$param, '=', $value];
+		}, $conditions);
+
+		try {
+			$results = $modelName::where($conditions)->get();
+		} catch (QueryException $e) {
+			\Log::warning($e);
+
+			return $this->respondInvalidInput($e->getMessage());
+		}
+
+		if (!$results) {
+			return $this->respondNotFound();
+		}
+
+		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
+		$resource = new Collection($results, new $transformerName, $this->resourceName);
+
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return response()->json($data);

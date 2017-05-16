@@ -2,45 +2,140 @@ import Errors from './Errors'
 import axios from 'axios'
 
 class Form {
+	/**
+	 * Create a new Form instance.
+	 *
+	 * @param {object} data
+	 */
 	constructor(data) {
-		this.originalData = data
+		this.originalData = data;
 
 		for (let field in data) {
-			this[field] = data[field]
+			this[field] = data[field];
 		}
 
-		this.errors = new Errors()
+		this.errors = new Errors();
 	}
 
+
+	/**
+	 * Fetch all relevant data for the form.
+	 */
 	data() {
-		let data = Object.assign({}, this)
+		let data = {};
 
-		delete(data.originalData)
-		delete(data.errors)
+		for (let property in this.originalData) {
+			data[property] = this[property];
+		}
 
-		return data
+		return data;
 	}
 
+
+	/**
+	 * Reset the form fields.
+	 */
 	reset() {
 		for (let field in this.originalData) {
-			this[field] = null
+			this[field] = '';
 		}
+
+		this.errors.clear();
 	}
 
-	submit(requestType, apiUrl) {
-		axios[requestType](apiUrl, this.data())
-			.then(this.onSuccess.bind(this))
-			.catch(this.onFail.bind(this))
+
+	/**
+	 * Send a POST request to the given URL.
+	 * .
+	 * @param {string} url
+	 */
+	post(url) {
+		return this.submit('post', url);
 	}
 
-	onSuccess(response) {
-		console.log('Success!')
-		console.log(response)
+
+	/**
+	 * Send a PUT request to the given URL.
+	 * .
+	 * @param {string} url
+	 */
+	put(url) {
+		return this.submit('put', url);
 	}
 
-	onFail(error) {
-		this.errors.record(error.response.data)
+
+	/**
+	 * Send a PATCH request to the given URL.
+	 * .
+	 * @param {string} url
+	 */
+	patch(url) {
+		return this.submit('patch', url);
+	}
+
+
+	/**
+	 * Send a DELETE request to the given URL.
+	 * .
+	 * @param {string} url
+	 */
+	delete(url) {
+		return this.submit('delete', url);
+	}
+
+
+	/**
+	 * Submit the form.
+	 *
+	 * @param {string} requestType
+	 * @param {string} url
+	 */
+	submit(requestType, url) {
+		return new Promise((resolve, reject) => {
+			axios[requestType](url, this.data())
+				.then(response => {
+					this.onSuccess(response.data);
+
+					resolve(response.data);
+				})
+				.catch(error => {
+					if (error.response.status === 422) {
+						this.errors.record(error.response.data);
+					} else {
+						reject(error);
+					}
+				});
+		});
+	}
+
+	/**
+	 * Pre-fill the form with existing data.
+	 *
+	 * @param url
+	 */
+	populate(url) {
+		return axios.get(url)
+			.then(response => {
+				Object.keys(response.data).forEach((field) => {
+					this[field] = response.data[field]
+				})
+			})
+	}
+
+
+	/**
+	 * Handle a successful form submission.
+	 *
+	 * @param {object} data
+	 */
+	onSuccess(data) {
+		this.errors.clear();
+	}
+
+	onSubmit() {
+
 	}
 }
 
-export { Form as default }
+
+export {Form as default}

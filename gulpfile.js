@@ -39,5 +39,5 @@ gulp.task('test', () => {
 });
 
 gulp.task('watchtest', () => {
-	gulp.watch(['tests/Unit/*.php', 'tests/Api/*.php', 'app/**/*.php'], ['test']);
+	gulp.watch(['tests/Unit/*.php', 'tests/Api/**/*.php', 'app/**/*.php'], ['test']);
 });

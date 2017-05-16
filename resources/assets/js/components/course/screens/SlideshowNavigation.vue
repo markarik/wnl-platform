@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="container">
+	<div class="nav-container">
 		<label class="label" for="wnl-slideshow-navigation-">
 			Przejdź do slajdu
 		</label>
@@ -12,7 +12,7 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.container
+	.nav-container
 		align-items: center
 		display: flex
 

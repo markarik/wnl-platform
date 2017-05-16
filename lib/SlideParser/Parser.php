@@ -62,6 +62,7 @@ class Parser
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
+		$orderNumber = 0;
 		$slides = $this->matchSlides($data);
 		Log::debug('Parsing...');
 		$names = [];
@@ -106,6 +107,7 @@ class Parser
 						'group_id' => $this->courseModels['group']->id,
 					]);
 					$slideshow = Slideshow::create();
+					$orderNumber = 0;
 					$this->courseModels['slideshow'] = $slideshow;
 					$this->courseModels['screen'] = $lesson->screens()->create([
 						'type' => 'slideshow',
@@ -130,7 +132,7 @@ class Parser
 				}
 			}
 			if (array_key_exists('slideshow', $this->courseModels)) {
-				$this->courseModels['slideshow']->slides()->attach($slide);
+				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber++]);
 			}
 			if (array_key_exists('section', $this->courseModels)) {
 				$this->courseModels['section']->slides()->attach($slide);

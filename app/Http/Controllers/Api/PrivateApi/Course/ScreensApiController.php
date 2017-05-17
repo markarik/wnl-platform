@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\PrivateApi\Course;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\ScreenTransformer;
 use App\Http\Requests\Course\UpdateScreen;
+use App\Http\Requests\Course\DeleteScreen;
 use App\Models\Screen;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
@@ -16,6 +17,20 @@ class ScreensApiController extends ApiController
 	{
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.screens');
+	}
+
+	public function delete(DeleteScreen $request)
+	{
+		$id = $request->route('id');
+
+		$screen = Screen::find($id);
+		if (!$screen) {
+			return $this->respondNotFound();
+		}
+
+		Screen::destroy($id);
+
+		return $this->respondOk();
 	}
 
 	public function put(UpdateScreen $request)

@@ -14,7 +14,8 @@
 			:screen="screen"
 			:isFirst="index === 0"
 			:isLast="index === screens.length - 1"
-			@moveScreen="moveScreen">
+			@moveScreen="moveScreen"
+			@deleteScreen="deleteScreen">
 		</wnl-screens-list-item>
 		<div class="screens-list-add">
 			<a class="button is-small" :class="{'is-loading': loading}" @click="addScreen">
@@ -129,6 +130,23 @@
 						this.alertSuccessFading('Ekran dodany!', 2000)
 					})
 					.catch((error) => {
+						$wnl.logger.error(error)
+						this.alertErrorFading('Nie wyszło, sorry. :()', 2000)
+					})
+			},
+			deleteScreen(id) {
+				this.loading = true
+
+				axios.delete(getApiUrl(`screens/${id}`))
+					.then(() => {
+						return this.fetchScreens()
+					})
+					.then(() => {
+						this.loading = false
+						this.alertSuccessFading('Ekran usunięty!', 2000)
+					})
+					.catch((error) => {
+						this.loading = false
 						$wnl.logger.error(error)
 						this.alertErrorFading('Nie wyszło, sorry. :()', 2000)
 					})

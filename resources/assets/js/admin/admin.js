@@ -7,6 +7,10 @@ import store from 'js/admin/store/store'
 import router from 'js/admin/router'
 sync(store, router)
 
+// Import plugins
+import VueSweetAlert from 'vue-sweetalert'
+Vue.use(VueSweetAlert)
+
 // Import and register global components
 import Alert from 'js/components/global/Alert.vue'
 import Avatar from 'js/components/global/Avatar.vue'

@@ -24,6 +24,15 @@
 				</span>
 			</a>
 		</div>
+		<div class="margin top">
+			<wnl-alert v-for="(alert, key) in alerts"
+				:cssClass="alert.cssClass"
+				:timestamp="key"
+				:key="key"
+				@delete="onDelete">
+				{{alert.message}}
+			</wnl-alert>
+		</div>
 	</div>
 </template>
 
@@ -43,6 +52,7 @@
 	import _ from 'lodash'
 
 	import { getApiUrl } from 'js/utils/env'
+	import { alerts } from 'js/mixins/alerts'
 
 	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
 
@@ -51,6 +61,7 @@
 		components: {
 			'wnl-screens-list-item': ScreensListItem
 		},
+		mixins: [ alerts ],
 		data() {
 			return {
 				loading: false,
@@ -87,9 +98,15 @@
 					)
 				})
 
-				Promise.all(promises).then(() => {
-					this.loading = false
-				})
+				Promise.all(promises)
+					.then(() => {
+						this.loading = false
+						this.alertSuccessFading('Kolejność zachowana!', 2000)
+					})
+					.catch(() => {
+						$wnl.logger.error(error)
+						this.alertErrorFading('Nie wyszło, sorry :())', 2000)
+					})
 			},
 			addScreen() {
 				let defaultData = {
@@ -109,6 +126,11 @@
 					})
 					.then(() => {
 						this.loading = false
+						this.alertSuccessFading('Ekran dodany!', 2000)
+					})
+					.catch((error) => {
+						$wnl.logger.error(error)
+						this.alertErrorFading('Nie wyszło, sorry. :()', 2000)
 					})
 			},
 		},

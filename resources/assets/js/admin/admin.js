@@ -8,11 +8,13 @@ import router from 'js/admin/router'
 sync(store, router)
 
 // Import and register global components
+import Alert from 'js/components/global/Alert.vue'
 import Avatar from 'js/components/global/Avatar.vue'
 import Emoji from 'js/components/global/Emoji.vue'
 import Icon from 'js/components/global/Icon.vue'
 import ImageButton from 'js/components/global/ImageButton.vue'
 import TextLoader from 'js/components/global/TextLoader.vue'
+Vue.component('wnl-alert', Alert)
 Vue.component('wnl-avatar', Avatar)
 Vue.component('wnl-emoji', Emoji)
 Vue.component('wnl-icon', Icon)

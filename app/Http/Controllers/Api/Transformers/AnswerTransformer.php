@@ -17,10 +17,11 @@ class AnswerTransformer extends TransformerAbstract
 	public function transform(QnaAnswer $answer)
 	{
 		$data = [
-			'id'        => $answer->id,
-			'text'      => $answer->text,
-			'questions' => $answer->question->id,
-			'time'      => $answer->created_at->formatLocalized('%A %d %B %Y'),
+			'id'         => $answer->id,
+			'text'       => $answer->text,
+			'questions'  => $answer->question->id,
+			'created_at' => $answer->created_at->timestamp,
+			'updated_at' => $answer->updated_at->timestamp,
 		];
 
 		return $data;

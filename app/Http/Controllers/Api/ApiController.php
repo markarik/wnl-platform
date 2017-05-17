@@ -34,10 +34,8 @@ abstract class ApiController extends Controller
 
 	public function get($id)
 	{
-		$resourceSingular = str_singular($this->resourceName);
-		$resourceStudly = studly_case($resourceSingular);
-		$modelName = 'App\Models\\' . $resourceStudly;
-		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
+		$modelName = self::getResourceModel($this->resourceName);
+		$transformerName = self::getResourceTransformer($this->resourceName);
 		if ($id === 'all') {
 			$models = $modelName::all();
 			$resource = new Collection($models, new $transformerName, $this->resourceName);
@@ -54,9 +52,7 @@ abstract class ApiController extends Controller
 	{
 		$query = $request->get('q');
 
-		$resourceSingular = str_singular($this->resourceName);
-		$resourceStudly = studly_case($resourceSingular);
-		$modelName = 'App\Models\\' . $resourceStudly;
+		$modelName = self::getResourceModel($this->resourceName);
 
 		$conditions = explode(',', $query);
 		$conditions = array_map(function ($item) {
@@ -77,11 +73,44 @@ abstract class ApiController extends Controller
 			return $this->respondNotFound();
 		}
 
-		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
+		$transformerName = self::getResourceTransformer($this->resourceName);
 		$resource = new Collection($results, new $transformerName, $this->resourceName);
 
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return response()->json($data);
+	}
+
+	/**
+	 * Get resource model class name.
+	 *
+	 * @param $resource
+	 * @return string
+	 */
+	protected static function getResourceModel($resource)
+	{
+		return 'App\Models\\' . self::getResourcesStudly($resource);
+	}
+
+	/**
+	 * Get resource transformer name.
+	 *
+	 * @param $resource
+	 * @return string
+	 */
+	protected static function getResourceTransformer($resource)
+	{
+		return 'App\Http\Controllers\Api\Transformers\\' . self::getResourcesStudly($resource) . 'Transformer';
+	}
+
+	/**
+	 * Convert resource name to a class name.
+	 *
+	 * @param $resource
+	 * @return string
+	 */
+	protected static function getResourcesStudly($resource)
+	{
+		return studly_case(str_singular($resource));
 	}
 }

@@ -22,9 +22,10 @@ class QuestionTransformer extends TransformerAbstract
 	public function transform(QnaQuestion $question)
 	{
 		$data = [
-			'id'   => $question->id,
-			'text' => $question->text,
-			'time' => $question->created_at->formatLocalized('%A %d %B %Y'),
+			'id'         => $question->id,
+			'text'       => $question->text,
+			'created_at' => $question->created_at->timestamp,
+			'updated_at' => $question->updated_at->timestamp,
 		];
 
 		if ($this->parent) {

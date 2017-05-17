@@ -82,6 +82,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['quiz-sets']}/{id}", 'Quiz\QuizSetsApiController@get');
 	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
 
+	// Comments
+	Route::post("{$r['comments']}", 'CommentsApiController@post');
+
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');

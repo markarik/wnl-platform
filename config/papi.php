@@ -17,8 +17,8 @@ return [
 		'editions'            => 'editions',
 		'orders'              => 'orders',
 		'tags'                => 'tags',
-		'questions'           => 'questions',
-		'answers'             => 'answers',
+		'questions'           => 'qna_questions',
+		'answers'             => 'qna_answers',
 		'lesson-availability' => 'lesson_availability',
 		'user-progress'       => 'user_progress',
 		'slideshows'          => 'slideshows',
@@ -27,5 +27,6 @@ return [
 		'quiz-sets'           => 'quiz_sets',
 		'slides'              => 'slides',
 		'presentables'        => 'presentables',
+		'comments'            => 'comments',
 	],
 ];

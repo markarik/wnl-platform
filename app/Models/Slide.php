@@ -23,4 +23,9 @@ class Slide extends Model
 	public function sections() {
 		return $this->morphedByMany('\App\Models\Section', 'presentable');
 	}
+
+	public function comments()
+	{
+		return $this->morphToMany('\App\Models\Comment', 'commentable');
+	}
 }

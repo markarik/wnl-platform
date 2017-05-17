@@ -47,6 +47,24 @@ class UsersTableSeeder extends Seeder
 			'password'   => bcrypt('secret'),
 		]);
 
+		DB::table('users')->insert([
+			'first_name' => encrypt('Robert'),
+			'last_name'  => encrypt('Kardiowaskularny'),
+			'email'      => 'Kardiowaskularny@bethink.pl',
+			'phone'      => encrypt('000000000'),
+			'address'    => encrypt(''),
+			'password'   => bcrypt('secret'),
+		]);
+
+		DB::table('users')->insert([
+			'first_name' => encrypt('Asia'),
+			'last_name'  => encrypt('Nereczka'),
+			'email'      => 'Nereczka@bethink.pl',
+			'phone'      => encrypt('000000000'),
+			'address'    => encrypt(''),
+			'password'   => bcrypt('secret'),
+		]);
+
 		DB::table('role_user')->insert([
 			['user_id' => 1, 'role_id' => 1],
 			['user_id' => 2, 'role_id' => 1],

@@ -39,5 +39,6 @@ class DatabaseSeeder extends Seeder
 		$this->call(SlideshowSeeder::class);
 		$this->call(ScreensTableSeeder::class);
 		$this->call(QuizSeeder::class);
+		$this->call(CommentsSeeder::class);
 	}
 }

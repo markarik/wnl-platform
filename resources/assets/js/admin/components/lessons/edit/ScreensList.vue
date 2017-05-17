@@ -17,7 +17,7 @@
 			@moveScreen="moveScreen">
 		</wnl-screens-list-item>
 		<div class="screens-list-add">
-			<a class="button is-small">
+			<a class="button is-small" :class="{'is-loading': loading}" @click="addScreen">
 				<span class="margin right">Dodaj ekran</span>
 				<span class="icon is-small">
 					<i class="fa fa-plus"></i>
@@ -58,6 +58,9 @@
 			}
 		},
 		computed: {
+			lessonId() {
+				return this.$route.params.lessonId
+			},
 			screensListApiUrl() {
 				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}&order=order_number`)
 			}
@@ -87,6 +90,26 @@
 				Promise.all(promises).then(() => {
 					this.loading = false
 				})
+			},
+			addScreen() {
+				let defaultData = {
+					lesson_id: this.lessonId,
+					name: 'Nowy ekran',
+					content: '',
+					order_number: 100,
+					type: 'html',
+					meta: '{}',
+				}
+
+				this.loading = true
+
+				axios.post(getApiUrl('screens'), defaultData)
+					.then(() => {
+						return this.fetchScreens()
+					})
+					.then(() => {
+						this.loading = false
+					})
 			},
 		},
 		mounted() {

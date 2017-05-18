@@ -1,5 +1,12 @@
 <template>
 	<div class="screens-editor">
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+			:alert="alert"
+			cssClass="fixed"
+			:key="timestamp"
+			:timestamp="timestamp"
+			@delete="onDelete"
+		></wnl-alert>
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
 			<wnl-screens-list :screens="screens" ref="ScreensList"></wnl-screens-list>
@@ -12,7 +19,10 @@
 						<wnl-form-input :form="screenForm" name="name" v-model="screenForm.name"></wnl-form-input>
 					</div>
 					<div class="control">
-						<a class="button is-success is-small" @click="onSubmit" :disabled="!hasChanged">
+						<a class="button is-success is-small"
+							:class="{'is-loading': loading}"
+							:disabled="!hasChanged"
+							@click="onSubmit">
 							<span class="margin right">Zapisz</span>
 							<span class="icon is-small">
 								<i class="fa fa-save"></i>
@@ -105,6 +115,7 @@
 	import Select from 'js/components/global/form/Select.vue'
 
 	import { getApiUrl } from 'js/utils/env'
+	import { alerts } from 'js/mixins/alerts'
 
 	let types = {
 		html: {
@@ -134,9 +145,11 @@
 			'wnl-screens-list': ScreensList,
 			'wnl-select': Select,
 		},
+		mixins: [ alerts ],
 		data() {
 			return {
 				ready: false,
+				loading: false,
 				screenForm: new Form({
 					content: null,
 					meta: null,
@@ -170,6 +183,7 @@
 				}
  			},
 			hasChanged() {
+				$wnl.logger.debug('hasChanged', this.screenForm.data(), this.screenForm.originalData)
 				return !_.isEqual(this.screenForm.data(), this.screenForm.originalData)
 			},
 		},
@@ -214,6 +228,12 @@
 					})
 			},
 			onSubmit() {
+				if (!this.hasChanged) {
+					return false
+				}
+
+				this.loading = true
+
 				if (this.currentType.hasMeta) {
 					this.screenForm.meta = unescape(this.screenForm.meta)
 				} else {
@@ -222,10 +242,14 @@
 
 				this.screenForm.put(this.screenFormResourceUrl)
 					.then(response => {
-						this.$refs.ScreensList.fetchScreens()
+						this.loading = false
+						this.screenForm.originalData = this.screenForm.data()
+						this.successFading('Zapisano!', 2000)
+						return this.$refs.ScreensList.fetchScreens()
 					})
 					.catch(exception => {
-						this.submissionFailed = true
+						this.loading = false
+						this.errorFading('Nie wyszło :(', 2000)
 						$wnl.logger.capture(exception)
 					})
 			}

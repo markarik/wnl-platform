@@ -1,7 +1,9 @@
 <template>
 	<div>
 		<div class="screens-list-save">
-			<a @click="saveOrder" class="button is-small" :class="{'is-loading': loading}">
+			<a class="button is-small" :class="{'is-loading': loading}"
+				:disabled="!changed"
+				@click="saveOrder">
 				<span class="margin right">Zapisz kolejność</span>
 				<span class="icon is-small">
 					<i class="fa fa-save"></i>
@@ -26,12 +28,11 @@
 			</a>
 		</div>
 		<div class="margin top">
-			<wnl-alert v-for="(alert, key) in alerts"
-				:cssClass="alert.cssClass"
-				:timestamp="key"
-				:key="key"
+			<wnl-alert v-for="(alert, timestamp) in alerts"
+				:alert="alert"
+				:timestamp="timestamp"
+				:key="timestamp"
 				@delete="onDelete">
-				{{alert.message}}
 			</wnl-alert>
 		</div>
 	</div>
@@ -65,6 +66,7 @@
 		mixins: [ alerts ],
 		data() {
 			return {
+				changed: false,
 				loading: false,
 				screens: [],
 			}
@@ -85,9 +87,14 @@
 					})
 			},
 			moveScreen(payload) {
+				this.changed = true
 				this.screens.splice(payload.to, 0, this.screens.splice(payload.from, 1)[0]);
 			},
 			saveOrder() {
+				if (!this.changed) {
+					return false
+				}
+
 				this.loading = true
 
 				let promises = []
@@ -102,11 +109,12 @@
 				Promise.all(promises)
 					.then(() => {
 						this.loading = false
-						this.alertSuccessFading('Kolejność zachowana!', 2000)
+						this.changed = false
+						this.successFading('Kolejność zachowana!', 2000)
 					})
-					.catch(() => {
+					.catch((error) => {
 						$wnl.logger.error(error)
-						this.alertErrorFading('Nie wyszło, sorry :())', 2000)
+						this.errorFading('Nie wyszło, sorry :())', 2000)
 					})
 			},
 			addScreen() {
@@ -127,11 +135,11 @@
 					})
 					.then(() => {
 						this.loading = false
-						this.alertSuccessFading('Ekran dodany!', 2000)
+						this.successFading('Ekran dodany!', 2000)
 					})
 					.catch((error) => {
 						$wnl.logger.error(error)
-						this.alertErrorFading('Nie wyszło, sorry. :()', 2000)
+						this.errorFading('Nie wyszło, sorry. :()', 2000)
 					})
 			},
 			deleteScreen(id) {
@@ -143,12 +151,12 @@
 					})
 					.then(() => {
 						this.loading = false
-						this.alertSuccessFading('Ekran usunięty!', 2000)
+						this.successFading('Ekran usunięty!', 2000)
 					})
 					.catch((error) => {
 						this.loading = false
 						$wnl.logger.error(error)
-						this.alertErrorFading('Nie wyszło, sorry. :()', 2000)
+						this.errorFading('Nie wyszło, sorry. :()', 2000)
 					})
 			},
 		},

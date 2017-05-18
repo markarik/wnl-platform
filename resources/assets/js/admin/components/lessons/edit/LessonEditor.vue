@@ -1,5 +1,12 @@
 <template>
 	<div class="lesson-editor">
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+			:alert="alert"
+			cssClass="fixed"
+			:key="timestamp"
+			:timestamp="timestamp"
+			@delete="onDelete"
+		></wnl-alert>
 		<form>
 			<div class="field is-grouped">
 				<div class="control">
@@ -16,7 +23,10 @@
 					v-model="form.name"
 				></wnl-input>
 				<div class="control">
-					<a class="button is-small is-success" :disabled="!hasChanged" @click="lessonFormSubmit">
+					<a class="button is-small is-success"
+						:class="{'is-loading': loading}"
+						:disabled="!hasChanged"
+						@click="lessonFormSubmit">
 						<span class="margin right">Zapisz</span>
 						<span class="icon is-small">
 							<i class="fa fa-save"></i>
@@ -38,6 +48,7 @@
 
 	import Form from 'js/classes/forms/Form'
 	import { getApiUrl } from 'js/utils/env'
+	import { alerts } from 'js/mixins/alerts'
 
 	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue'
 	import Input from 'js/components/global/form/Input.vue'
@@ -50,6 +61,7 @@
 			'wnl-input': Input,
 			'wnl-select': Select,
 		},
+		mixins: [ alerts ],
 		data() {
 			return {
 				form: new Form({
@@ -58,6 +70,7 @@
 					name: null,
 				}),
 				groups: [],
+				loading: false,
 			}
 		},
 		computed: {
@@ -81,11 +94,17 @@
 					})
 			},
 			lessonFormSubmit() {
+				this.loading = true
 				this.form.group_id = this.form.groups
 				this.form.put(this.lessonResourceUrl)
-					.then(response => console.log('Yoopi!'))
+					.then(response => {
+						this.loading = false
+						this.successFading('Lekcja zapisana!', 2000)
+						this.form.originalData = this.form.data()
+					})
 					.catch(exception => {
-						this.submissionFailed = true
+						this.loading = false
+						this.errorFading('Nie udało się :(', 2000)
 						$wnl.logger.capture(exception)
 					})
 			}

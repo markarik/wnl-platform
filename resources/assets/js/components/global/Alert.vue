@@ -1,16 +1,49 @@
 <template>
 	<transition name="fade">
-		<div class="notification" :class="cssClass">
+		<div class="notification" :class="fullCssClass">
 			<button class="delete" @click="onDelete"></button>
-			<slot></slot>
+			{{alert.message}}
 		</div>
 	</transition>
 </template>
 
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.notification
+		text-align: center
+
+		&.absolute,
+		&.fixed
+			border-radius: 0
+			bottom: auto
+			font-size: $font-size-plus-1
+			font-weight: $font-weight-bold
+			left: 0
+			right: 0
+			top: 0
+
+		&.absolute
+			position: absolute
+
+		&.fixed
+			position: fixed
+
+		&.bottom
+			bottom: 0
+			top: auto
+</style>
+
 <script>
 	export default {
 		name: 'Alert',
-		props: ['cssClass', 'timestamp'],
+		props: ['timestamp', 'alert', 'cssClass'],
+		computed: {
+			fullCssClass() {
+				$wnl.logger.debug(`${this.alert.cssClass} ${this.cssClass}`)
+				return `${this.alert.cssClass} ${this.cssClass}`
+			},
+		},
 		methods: {
 			onDelete() {
 				this.$emit('delete', this.timestamp)

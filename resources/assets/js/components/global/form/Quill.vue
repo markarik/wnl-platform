@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="quill-container">
 		<div ref="quill">
 			<slot></slot>
 		</div>
@@ -8,6 +8,9 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import "node_modules/quill/dist/quill.snow"
+
+	.quill-container
+		height: 50vh
 </style>
 
 <script>

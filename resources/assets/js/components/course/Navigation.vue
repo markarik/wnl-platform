@@ -98,7 +98,9 @@
 					let screenId = lesson[resource('screens')][i]
 						screen = this.structure[resource('screens')][screenId]
 
-					navigation.push(this.getScreenItem(screen))
+					// navigation.push(this.getScreenItem(screen))
+
+					navigation.splice(screen.order_number, 0, this.getScreenItem(screen))
 
 					if (!screen.hasOwnProperty(resource('sections'))) {
 						continue

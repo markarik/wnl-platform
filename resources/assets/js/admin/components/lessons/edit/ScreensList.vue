@@ -76,7 +76,7 @@
 				return this.$route.params.lessonId
 			},
 			screensListApiUrl() {
-				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}&order=order_number`)
+				return getApiUrl(`screens/.search?q=lesson_id:${this.$route.params.lessonId}&order=order_number`)
 			}
 		},
 		methods: {

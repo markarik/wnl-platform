@@ -25,8 +25,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['lessons']}/{id}", 'Course\LessonsApiController@put');
 
 	// Screens
-	Route::delete("{$r['screens']}/{id}", 'Course\ScreensApiController@delete');
-	Route::get("{$r['screens']}/search", 'Course\ScreensApiController@search');
+	Route::get("{$r['screens']}/.search", 'Course\ScreensApiController@search');
 	Route::get("{$r['screens']}/{id}", 'Course\ScreensApiController@get');
 	Route::put("{$r['screens']}/{id}", 'Course\ScreensApiController@put');
 	Route::patch("{$r['screens']}/{id}", 'Course\ScreensApiController@patch');
@@ -40,7 +39,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['slides']}/{id}", 'Course\SlidesApiController@put');
 
 	// Presentables
-	Route::get("{$r['presentables']}/search", 'Course\PresentablesApiController@search');
+	Route::get("{$r['presentables']}/.search", 'Course\PresentablesApiController@search');
 	Route::get("{$r['presentables']}/{id}", 'Course\PresentablesApiController@get');
 
 	// Slideshows
@@ -83,6 +82,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Quiz Sets
 	Route::get("{$r['quiz-sets']}/{id}", 'Quiz\QuizSetsApiController@get');
 	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
+
+	// Comments
+	Route::post("{$r['comments']}", 'CommentsApiController@post');
+	Route::post("{$r['comments']}/.search", 'CommentsApiController@search');
 
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');

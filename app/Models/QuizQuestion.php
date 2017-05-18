@@ -21,4 +21,9 @@ class QuizQuestion extends Model
 	{
 		return $this->belongsToMany('App\Models\QuizSet');
 	}
+
+	public function comments()
+	{
+		return $this->morphToMany('App\Models\Comment', 'commentable');
+	}
 }

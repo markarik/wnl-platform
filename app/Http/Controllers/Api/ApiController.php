@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
+use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
@@ -16,6 +16,7 @@ use League\Fractal\Resource\Item;
 abstract class ApiController extends Controller
 {
 	use GeneratesApiResponses;
+	use PerformsApiSearches;
 
 	protected $fractal;
 	protected $request;
@@ -34,10 +35,8 @@ abstract class ApiController extends Controller
 
 	public function get($id)
 	{
-		$resourceSingular = str_singular($this->resourceName);
-		$resourceStudly = studly_case($resourceSingular);
-		$modelName = 'App\Models\\' . $resourceStudly;
-		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
+		$modelName = self::getResourceModel($this->resourceName);
+		$transformerName = self::getResourceTransformer($this->resourceName);
 		if ($id === 'all') {
 			$models = $modelName::all();
 			$resource = new Collection($models, new $transformerName, $this->resourceName);
@@ -50,40 +49,36 @@ abstract class ApiController extends Controller
 		return response()->json($data);
 	}
 
-	public function search(Request $request)
+	/**
+	 * Get resource model class name.
+	 *
+	 * @param $resource
+	 * @return string
+	 */
+	protected static function getResourceModel($resource)
 	{
-		$query = $request->get('q');
+		return 'App\Models\\' . self::getResourcesStudly($resource);
+	}
 
-		$resourceSingular = str_singular($this->resourceName);
-		$resourceStudly = studly_case($resourceSingular);
-		$modelName = 'App\Models\\' . $resourceStudly;
+	/**
+	 * Get resource transformer name.
+	 *
+	 * @param $resource
+	 * @return string
+	 */
+	protected static function getResourceTransformer($resource)
+	{
+		return 'App\Http\Controllers\Api\Transformers\\' . self::getResourcesStudly($resource) . 'Transformer';
+	}
 
-		$conditions = explode(',', $query);
-		$conditions = array_map(function ($item) {
-			list ($param, $value) = explode(':', $item);
-
-			return [$param, '=', $value];
-		}, $conditions);
-
-		$order = $request->get('order') ?? 'id';
-
-		try {
-			$results = $modelName::where($conditions)->orderBy($order)->get();
-		} catch (QueryException $e) {
-			\Log::warning($e);
-
-			return $this->respondInvalidInput($e->getMessage());
-		}
-
-		if (!$results) {
-			return $this->respondNotFound();
-		}
-
-		$transformerName = 'App\Http\Controllers\Api\Transformers\\' . $resourceStudly . 'Transformer';
-		$resource = new Collection($results, new $transformerName, $this->resourceName);
-
-		$data = $this->fractal->createData($resource)->toArray();
-
-		return response()->json($data);
+	/**
+	 * Convert resource name to a class name.
+	 *
+	 * @param $resource
+	 * @return string
+	 */
+	protected static function getResourcesStudly($resource)
+	{
+		return studly_case(str_singular($resource));
 	}
 }

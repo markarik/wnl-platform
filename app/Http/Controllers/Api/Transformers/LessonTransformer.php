@@ -24,7 +24,7 @@ class LessonTransformer extends TransformerAbstract
 		$data = [
 			'id'       => $lesson->id,
 			'name'     => $lesson->name,
-			'groups'   => $lesson->group_id,
+			'group_id' => $lesson->group_id,
 			'editions' => $lesson->group->course->id,
 		];
 

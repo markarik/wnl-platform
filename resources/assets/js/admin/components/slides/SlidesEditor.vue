@@ -136,7 +136,7 @@
 						})
 			},
 			getSlideId (slideshowId) {
-				return axios.get(`/papi/v1/presentables/search?q=
+				return axios.get(`/papi/v1/presentables/.search?q=
 					order_number:${this.slideOrderNo},
 					presentable_type:App%5CModels%5CSlideshow,
 					presentable_id:${slideshowId}`)

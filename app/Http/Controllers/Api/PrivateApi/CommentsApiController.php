@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Api\PrivateApi;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\CommentTransformer;
 use App\Http\Requests\PostComment;
-use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Resource\Item;

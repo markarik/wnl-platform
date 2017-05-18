@@ -167,7 +167,7 @@
 				return getApiUrl(`screens/${this.$route.params.screenId}`)
 			},
 			screensListApiUrl() {
-				return getApiUrl(`screens/search?q=lesson_id:${this.$route.params.lessonId}`)
+				return getApiUrl(`screens/.search?q=lesson_id:${this.$route.params.lessonId}`)
 			},
 			typesOptions() {
 				return Object.keys(types).map((key, index) => types[key])

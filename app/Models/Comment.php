@@ -13,7 +13,7 @@ class Comment extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
-	public function quizQuestions()
+	public function quiz_questions()
 	{
 		return $this->morphedByMany('App\Models\QuizQuestion', 'commentable');
 	}

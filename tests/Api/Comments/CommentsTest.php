@@ -30,4 +30,37 @@ class CommentsTest extends ApiTestCase
 
 	}
 
+	/** @test */
+	public function search_comments()
+	{
+		$user = User::find(1);
+
+		$data = [
+			'query' => [
+				'whereHas' => [
+					'quiz_questions' => [
+						'where' => [
+							['id', 'in', [1, 2, 3, 6, 10]],
+						],
+					],
+				],
+				'where'    => [
+					['updated_at', '>', '1495033700'],
+				],
+			],
+			'order' => [
+				'created_at' => 'desc',
+				'id'         => 'asc',
+			],
+			'limit' => [10, 0],
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/comments/.search'), $data);
+
+		$response
+			->assertStatus(200);
+	}
+
 }

@@ -11,18 +11,26 @@ class CommentsSeeder extends Seeder
 	 */
 	public function run()
 	{
+		$now = \Carbon\Carbon::now();
+
 		DB::table('comments')->insert([
 			[
-				'text'    => 'Cześć! Jak widzicie, każde pytanie będzie można skomentować!',
-				'user_id' => 4,
+				'text'       => 'Cześć! Jak widzicie, każde pytanie będzie można skomentować!',
+				'user_id'    => 4,
+				'created_at' => $now,
+				'updated_at' => $now,
 			],
 			[
-				'text'    => 'Świetnie! Czy to znaczy, że będziemy mogli łatwo dyskutować o odpowiedziach i błędach w pytaniach?',
-				'user_id' => 5,
+				'text'       => 'Świetnie! Czy to znaczy, że będziemy mogli łatwo dyskutować o odpowiedziach i błędach w pytaniach?',
+				'user_id'    => 5,
+				'created_at' => $now,
+				'updated_at' => $now,
 			],
 			[
-				'text'    => 'Dokładnie tak! :D',
-				'user_id' => 4,
+				'text'       => 'Dokładnie tak! :D',
+				'user_id'    => 4,
+				'created_at' => $now,
+				'updated_at' => $now,
 			],
 		]);
 

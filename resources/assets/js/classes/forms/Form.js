@@ -1,5 +1,7 @@
-import Errors from './Errors'
+import _ from 'lodash'
 import axios from 'axios'
+
+import Errors from './Errors'
 
 class Form {
 	/**
@@ -118,10 +120,10 @@ class Form {
 			.then(response => {
 				Object.keys(response.data).forEach((field) => {
 					this[field] = response.data[field]
+					this.originalData[field] = response.data[field]
 				})
 			})
 	}
-
 
 	/**
 	 * Handle a successful form submission.

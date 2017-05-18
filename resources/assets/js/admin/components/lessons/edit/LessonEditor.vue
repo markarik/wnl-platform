@@ -1,24 +1,40 @@
 <template>
 	<div class="lesson-editor">
-		<div class="field is-grouped">
-			<div class="control">
-				<span class="select">
-					<select>
-						<option v-for="group in groups" :value="group.id">
-							{{group.name}}
-						</option>
-					</select>
-				</span>
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+			:alert="alert"
+			cssClass="fixed"
+			:key="timestamp"
+			:timestamp="timestamp"
+			@delete="onDelete"
+		></wnl-alert>
+		<form>
+			<div class="field is-grouped">
+				<div class="control">
+					<span class="select">
+						<wnl-select :form="form"
+							:options="groups"
+							name="groups"
+							v-model="form.groups"
+						></wnl-select>
+					</span>
+				</div>
+				<wnl-input :form="form"
+					name="name"
+					v-model="form.name"
+				></wnl-input>
+				<div class="control">
+					<a class="button is-small is-success"
+						:class="{'is-loading': loading}"
+						:disabled="!hasChanged"
+						@click="lessonFormSubmit">
+						<span class="margin right">Zapisz</span>
+						<span class="icon is-small">
+							<i class="fa fa-save"></i>
+						</span>
+					</a>
+				</div>
 			</div>
-			<div class="control">
-				<input type="text" class="input" placeholder="Tytuł lekcji" :value="name">
-			</div>
-			<div class="control">
-				<a class="button is-success">
-					Zapisz
-				</a>
-			</div>
-		</div>
+		</form>
 		<wnl-screens-editor></wnl-screens-editor>
 	</div>
 </template>
@@ -28,35 +44,76 @@
 </style>
 
 <script>
+	import _ from 'lodash'
+
+	import Form from 'js/classes/forms/Form'
+	import { getApiUrl } from 'js/utils/env'
+	import { alerts } from 'js/mixins/alerts'
+
 	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue'
+	import Input from 'js/components/global/form/Input.vue'
+	import Select from 'js/components/global/form/Select.vue'
 
 	export default {
 		name: 'LessonEditor',
 		components: {
 			'wnl-screens-editor': ScreensEditor,
+			'wnl-input': Input,
+			'wnl-select': Select,
 		},
+		mixins: [ alerts ],
 		data() {
 			return {
-				name: 'Reumatologia',
-				group: {
-					id: 1,
-					name: 'Interna',
-				},
-				groups: [
-					{
-						id: 1,
-						name: 'Interna',
-					},
-					{
-						id: 2,
-						name: 'Pediatria',
-					},
-					{
-						id: 3,
-						name: 'Chirurgia',
-					},
-				],
+				form: new Form({
+					group_id: null,
+					groups: null,
+					name: null,
+				}),
+				groups: [],
+				loading: false,
 			}
 		},
+		computed: {
+			lessonResourceUrl() {
+				return getApiUrl(`lessons/${this.$route.params.lessonId}`)
+			},
+			hasChanged() {
+				return !_.isEqual(this.form.originalData, this.form.data())
+			}
+		},
+		methods: {
+			fetchGroups() {
+				return axios.get(getApiUrl('groups/all'))
+					.then((response) => {
+						_.forEach(response.data, (group) => {
+							this.groups.push({
+								text: group.name,
+								value: group.id,
+							})
+						})
+					})
+			},
+			lessonFormSubmit() {
+				this.loading = true
+				this.form.group_id = this.form.groups
+				this.form.put(this.lessonResourceUrl)
+					.then(response => {
+						this.loading = false
+						this.successFading('Lekcja zapisana!', 2000)
+						this.form.originalData = this.form.data()
+					})
+					.catch(exception => {
+						this.loading = false
+						this.errorFading('Nie udało się :(', 2000)
+						$wnl.logger.capture(exception)
+					})
+			}
+		},
+		mounted() {
+			this.fetchGroups()
+				.then(() => {
+					this.form.populate(this.lessonResourceUrl)
+				})
+		}
 	}
 </script>

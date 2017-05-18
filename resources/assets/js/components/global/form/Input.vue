@@ -1,12 +1,11 @@
 <template lang="html">
-	<div class="field">
-
-		<label :for="name" class="label">
+	<div class="control">
+		<label :for="name" class="label" v-if="this.$slots.default">
 			<slot></slot>
 		</label>
 
 		<input :type="type"
-			   class="input is-medium"
+			   class="input"
 			   :name="name"
 			   :value="form[name]"
 			   @input="$emit('input', $event.target.value)"

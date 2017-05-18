@@ -3,8 +3,7 @@
 		<select v-model="selected">
 			<option v-for="(option, key) in options" key="key"
 				:value="option.value"
-				v-text="option.text"
-				:selected="option.value === value">
+				v-text="option.text">
 			</option>
 		</select>
 	</div>
@@ -16,11 +15,8 @@
 		props: ['options', 'value'],
 		data() {
 			return {
-				selected: '',
+				selected: this.value,
 			}
-		},
-		mounted() {
-			this.selected = this.value
 		},
 		watch: {
 			selected(newValue) {

@@ -5,9 +5,12 @@
 </template>
 
 <script>
-	import Sidenav from 'js/components/global/Sidenav.vue'
-	import * as mutations from 'js/store/mutations-types'
+	import _ from 'lodash'
 	import { mapGetters } from 'vuex'
+
+	import Sidenav from 'js/components/global/Sidenav.vue'
+
+	import * as mutations from 'js/store/mutations-types'
 	import { resource } from 'js/utils/config'
 
 	export default {
@@ -52,8 +55,8 @@
 		methods: {
 			getCourseNavigation() {
 				if (this.isStructureEmpty) {
-					$wnl.debug('Empty structure, WTF?')
-					$wnl.debug(this.structure)
+					$wnl.logger.debug('Empty structure, WTF?')
+					$wnl.logger.debug(this.structure)
 					return
 				}
 
@@ -83,24 +86,28 @@
 			},
 			getLessonNavigation() {
 				if (this.isStructureEmpty) {
-					$wnl.debug('Empty structure, WTF?')
-					$wnl.debug(this.structure)
+					$wnl.logger.debug('Empty structure, WTF?')
+					$wnl.logger.debug(this.structure)
 					return
 				}
 
 				let navigation = [],
-					lesson = this.structure[resource('lessons')][this.context.lessonId]
+					lesson = this.structure[resource('lessons')][this.context.lessonId],
+					screens = _.sortBy(
+						lesson[resource('screens')].map(
+							(id) => this.structure[resource('screens')][id]
+						),
+						(screen) => screen.order_number
+					)
 
 				if (!lesson.hasOwnProperty(resource('screens'))) {
 					return navigation
 				}
-				for (let i = 0, screensLen = lesson[resource('screens')].length; i < screensLen; i++) {
-					let screenId = lesson[resource('screens')][i]
-						screen = this.structure[resource('screens')][screenId]
 
-					// navigation.push(this.getScreenItem(screen))
+				for (let i = 0, screensLen = screens.length; i < screensLen; i++) {
+					let screen = screens[i]
 
-					navigation.splice(screen.order_number, 0, this.getScreenItem(screen))
+					navigation.push(this.getScreenItem(screens[i]))
 
 					if (!screen.hasOwnProperty(resource('sections'))) {
 						continue

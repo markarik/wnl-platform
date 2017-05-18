@@ -136,10 +136,16 @@
 						})
 			},
 			getSlideId (slideshowId) {
-				return axios.get(`/papi/v1/presentables/.search?q=
-					order_number:${this.slideOrderNo},
-					presentable_type:App%5CModels%5CSlideshow,
-					presentable_id:${slideshowId}`)
+				const conditions = {
+					query: {
+						where: [
+							['presentable_type', '=', 'App\\Model\\Slideshow'],
+							['presentable_id', '=', slideshowId],
+							['order_number', '=', this.slideOrderNo],
+						]
+					}
+				}
+				return axios.post('/papi/v1/presentables/.search', conditions)
 						.then(response => {
 							return response.data[0].slide_id
 						})

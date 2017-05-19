@@ -165,7 +165,7 @@ html, body {
 	right: 0 !important;
 	top: 0 !important;
 	transition: all 0.2s;
-	z-index: 16777270; // Almost the highest possible value in Safari
+	z-index: $z-index-fullscren;
 }
 
 .faux-fullscreen-close {
@@ -181,7 +181,7 @@ html, body {
 	right: 1vw;
 	top: 1vh;
 	width: 28px;
-	z-index: 16777271; // The highest possible value in Safari
+	z-index: $z-index-fullscren-close;
 }
 
 // Notifications

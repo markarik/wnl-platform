@@ -5,6 +5,7 @@
 			cssClass="fixed"
 			:key="timestamp"
 			:timestamp="timestamp"
+			@delete="onDelete"
 		></wnl-alert>
 
 		<wnl-submit v-if="$slots['submit-before']" @submitForm="onSubmitForm">

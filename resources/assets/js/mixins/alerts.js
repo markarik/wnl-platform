@@ -45,6 +45,7 @@ export var alerts = {
 			this.addAlert(message, 'is-success', true, timeout)
 		},
 		onDelete(timestamp) {
+			console.log('On delete')
 			Vue.delete(this.timeouts, timestamp)
 			this.removeAlert(timestamp)
 		}

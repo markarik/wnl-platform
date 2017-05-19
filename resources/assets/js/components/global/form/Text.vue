@@ -3,7 +3,7 @@
 		<label :for="name" class="label" v-if="$slots.default">
 			<slot></slot>
 		</label>
-		<div class="control">
+		<div class="control" :class="{'is-loading': isLoading}">
 			<input
 				type="text"
 				class="input"
@@ -23,7 +23,6 @@
 </style>
 
 <script>
-	import { mapMutations } from 'vuex'
 	import * as types from 'js/store/mutations-types'
 
 	export default {
@@ -40,14 +39,17 @@
 				return this.$parent.name
 			},
 			hasErrors() {
-				return this.getter('hasErrors', this.name)
+				return this.getterFunction('hasErrors', this.name)
 			},
 			getErrors() {
-				return this.getter('getErrors', this.name)
+				return this.getterFunction('getErrors', this.name)
+			},
+			isLoading() {
+				return this.getter('isLoading')
 			},
 			inputValue: {
 				get () {
-					return this.$store.getters[`${this.parentName}/getField`](this.name)
+					return this.getterFunction('getField', this.name)
 				},
 				set(value) {
 					this.mutation(types.FORM_INPUT, { name: this.name, value })
@@ -55,14 +57,19 @@
 			},
 		},
 		methods: {
-			getter(getter, payload = {}) {
+			getter(getter) {
+				return this.$store.getters[`${this.parentName}/${getter}`]
+			},
+			getterFunction(getter, payload = {}) {
 				return this.$store.getters[`${this.parentName}/${getter}`](payload)
 			},
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.parentName}/${mutation}`, payload)
 			},
 			onInput(value) {
-				this.mutation(types.ERRORS_CLEAR_SINGLE, { name: this.name })
+				if (this.hasErrors) {
+					this.mutation(types.ERRORS_CLEAR_SINGLE, { name: this.name })
+				}
 			},
 		}
 	}

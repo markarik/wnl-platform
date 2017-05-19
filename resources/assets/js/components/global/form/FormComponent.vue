@@ -7,10 +7,14 @@
 			:timestamp="timestamp"
 		></wnl-alert>
 
+		<wnl-submit v-if="$slots['submit-before']" @submitForm="onSubmitForm">
+			<slot name="submit-before"></slot>
+		</wnl-submit>
+
 		<slot></slot>
 
-		<wnl-submit @submitForm="onSubmitForm">
-			<slot name="submit"></slot>
+		<wnl-submit v-if="$slots['submit-after']" @submitForm="onSubmitForm">
+			<slot name="submit-after"></slot>
 		</wnl-submit>
 	</form>
 </template>
@@ -37,8 +41,11 @@
 		mixins: [ alerts ],
 		props: ['name', 'resourceUrl', 'populate', 'method'],
 		computed: {
-			isReady() {
-				return this.getter('isReady')
+			anyErrors() {
+				return this.getter('anyErrors')
+			},
+			isDisabled() {
+				return this.anyErrors
 			},
 			submitEvent() {
 				return `submitForm-${this.name}`
@@ -51,10 +58,17 @@
 			getter(getter) {
 				return this.$store.getters[`${this.name}/${getter}`]
 			},
+			getterFunction(getter, payload = {}) {
+				return this.$store.getters[`${this.name}/${getter}`](payload)
+			},
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
 			},
 			onSubmitForm() {
+				if (this.isDisabled) {
+					return false
+				}
+
 				this.action('submitForm', { method: this.method })
 					.then(
 						data => {
@@ -90,17 +104,17 @@
 			})
 
 			this.mutation(types.FORM_SETUP, {
-				dataModel,
+				data: dataModel,
 				defaults,
 				resourceUrl: this.resourceUrl,
 			})
 
 			if (this.populate) {
-				this.action('populateForm', {
-					resourceUrl: this.resourceUrl
+				this.action('populateForm').then(() => {
+					this.mutation(types.FORM_IS_LOADED)
 				})
 			} else {
-				this.mutation(types.FORM_IS_READY)
+				this.mutation(types.FORM_IS_LOADED)
 			}
 		},
 	}

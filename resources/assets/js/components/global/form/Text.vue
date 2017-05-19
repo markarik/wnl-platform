@@ -1,14 +1,20 @@
 <template>
-	<div class="control">
+	<div class="field">
 		<label :for="name" class="label" v-if="$slots.default">
 			<slot></slot>
 		</label>
-		<input
-			type="text"
-			class="input"
-			:name="name"
-			:placeholder="placeholder || $slots.default[0].text || ''"
-			v-model="inputValue">
+		<div class="control">
+			<input
+				type="text"
+				class="input"
+				:class="{'is-danger': hasErrors}"
+				:name="name"
+				:placeholder="placeholder || $slots.default[0].text || ''"
+				@input="onInput"
+				v-model="inputValue">
+		</div>
+
+		<span class="help is-danger" v-if="hasErrors" v-for="error in getErrors" v-text="error"></span>
 	</div>
 </template>
 
@@ -33,6 +39,12 @@
 			parentName() {
 				return this.$parent.name
 			},
+			hasErrors() {
+				return this.getter('hasErrors', this.name)
+			},
+			getErrors() {
+				return this.getter('getErrors', this.name)
+			},
 			inputValue: {
 				get () {
 					return this.$store.getters[`${this.parentName}/getField`](this.name)
@@ -43,11 +55,14 @@
 			},
 		},
 		methods: {
-			getter(getter) {
-				return this.$store.getters[`${this.parentName}/${getter}`]
+			getter(getter, payload = {}) {
+				return this.$store.getters[`${this.parentName}/${getter}`](payload)
 			},
-			mutation(mutation, payload) {
+			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.parentName}/${mutation}`, payload)
+			},
+			onInput(value) {
+				this.mutation(types.ERRORS_CLEAR_SINGLE, { name: this.name })
 			},
 		}
 	}

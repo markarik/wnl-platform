@@ -17,6 +17,7 @@ export const FORM_INPUT             = 'FORM_INPUT'
 export const FORM_RESET             = 'FORM_RESET'
 export const ERRORS_RECORD          = 'ERRORS_RECORD'
 export const ERRORS_CLEAR           = 'ERRORS_CLEAR'
+export const ERRORS_CLEAR_SINGLE    = 'ERRORS_CLEAR_SINGLE'
 
 // Chat
 export const CHAT_ADD_NEW_MESSAGE = 'CHAT_ADD_NEW_MESSAGE'

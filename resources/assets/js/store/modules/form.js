@@ -12,7 +12,7 @@ const form = {
 		return {
 			data: {},
 			defaults: {},
-			errors: [],
+			errors: {},
 			method: '',
 			originalData: {},
 			ready: false,
@@ -23,6 +23,9 @@ const form = {
 		isReady: (state) => state.ready,
 		getData: (state) => state.data,
 		getField: (state) => (name) => state.data[name],
+		anyErrors: (state) => !_.isEmpty(state.errors),
+		hasErrors: (state) => (name) => !_.isEmpty(state.errors[name]),
+		getErrors: (state) => (name) => state.errors[name],
 	},
 	mutations: {
 		[types.FORM_SETUP] (state, payload) {
@@ -47,6 +50,15 @@ const form = {
 				set(state.data, field.name, state.defaults[field.name])
 			})
 		},
+		[types.ERRORS_RECORD] (state, payload) {
+			set(state, 'errors', payload)
+		},
+		[types.ERRORS_CLEAR_SINGLE] (state, payload) {
+			set(state.errors, payload.name, '')
+		},
+		[types.ERRORS_CLEAR] (state, payload) {
+			set(state, 'errors', {})
+		},
 	},
 	actions: {
 		setupForm({commit}, payload) {
@@ -70,11 +82,12 @@ const form = {
 						resolve(response.data)
 					})
 					.catch(error => {
-						// if (error.response.status === 422) {
-						// 	this.errors.record(error.response.data)
-						// } else {
+						if (error.response.status === 422) {
+							commit(types.ERRORS_RECORD, error.response.data)
 							reject(error)
-						// }
+						} else {
+							reject(error)
+						}
 					})
 			})
 		},

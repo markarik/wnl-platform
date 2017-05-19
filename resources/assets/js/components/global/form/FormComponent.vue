@@ -26,7 +26,7 @@
 
 	import Submit from 'js/components/global/form/Submit'
 	import { alerts } from 'js/mixins/alerts'
-	import { createForm } from 'js/store/modules/forms'
+	import { createForm } from 'js/store/modules/form'
 	import * as types from 'js/store/mutations-types'
 
 	export default {

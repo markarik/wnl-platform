@@ -27,11 +27,10 @@
 		</form>
 
 		<wnl-form name="MyProfile" method="put" :resourceUrl="resourceApiUrl">
-			<!-- <wnl-form-input type="text" name="first_name" :form="form" v-model="form.first_name"></wnl-form-input>
-			<wnl-form-input type="text" name="last_name" :form="form" v-model="form.last_name"></wnl-form-input> -->
-			<wnl-form-new-input name="first_name">Twoje imię</wnl-form-new-input>
+			<wnl-text name="first_name">Imię</wnl-text>
+			<wnl-text name="last_name">Nazwisko</wnl-text>
 
-			<a class="button is-primary" slot="submit">Zapisz</a>
+			<a class="button is-primary is-wide" slot="submit">Zapisz</a>
 		</wnl-form>
 	</div>
 </template>
@@ -45,7 +44,7 @@
 
 	import Form from '../../classes/forms/Form'
 	import Input from '../global/form/Input'
-	import NewInput from '../global/form/NewInput'
+	import Text from '../global/form/Text'
 	import Upload from '../global/Upload'
 	import FormComponent from 'js/components/global/form/FormComponent.vue'
 	import Submit from 'js/components/global/form/Submit.vue'
@@ -56,7 +55,7 @@
 		name: 'FormComponent',
 		components: {
 			'wnl-form-input': Input,
-			'wnl-form-new-input': NewInput,
+			'wnl-text': Text,
 			'wnl-upload': Upload,
 			'wnl-form': FormComponent,
 			'wnl-submit': Submit,

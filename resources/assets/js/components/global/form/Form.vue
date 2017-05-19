@@ -35,7 +35,7 @@
 	import * as types from 'js/store/mutations-types'
 
 	export default {
-		name: 'FormComponent',
+		name: 'Form',
 		components: {
 			'wnl-submit': Submit,
 		},
@@ -76,7 +76,7 @@
 							this.successFading('Zapisano!')
 						},
 						reason => {
-							this.errorFading('Nie udało się.')
+							this.error('Nie udało się.')
 						},
 					)
 					.catch((error) => {

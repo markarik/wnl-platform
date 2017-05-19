@@ -1,17 +1,17 @@
 <template lang="html">
 	<div>
-		<h1>Twój profil publiczny</h1>
+		<h1>Profil publiczny</h1>
 		<wnl-avatar size="large"></wnl-avatar>
 		<wnl-upload @success="onUploadSuccess">
 			<a>Zmień</a>
 		</wnl-upload>
 
 		<wnl-form name="MyProfile" method="put" :resourceUrl="resourceApiUrl" populate="true">
-			<wnl-text name="first_name">Imię</wnl-text>
-			<wnl-text name="last_name">Nazwisko</wnl-text>
-			<wnl-text name="username">Nazwa użytkownika</wnl-text>
-			<wnl-text name="public_email">Adres e-mail</wnl-text>
-			<wnl-text name="public_phone">Numer telefonu</wnl-text>
+			<wnl-form-text name="first_name">Imię</wnl-form-text>
+			<wnl-form-text name="last_name">Nazwisko</wnl-form-text>
+			<wnl-form-text name="username">Nazwa użytkownika</wnl-form-text>
+			<wnl-form-text name="public_email">Adres e-mail</wnl-form-text>
+			<wnl-form-text name="public_phone">Numer telefonu</wnl-form-text>
 
 			<span slot="submit-after">Zapisz</span>
 		</wnl-form>
@@ -25,17 +25,16 @@
 <script>
 	import { mapActions } from 'vuex'
 
-	import Text from '../global/form/Text'
-	import Upload from '../global/Upload'
-	import FormComponent from 'js/components/global/form/FormComponent.vue'
+	import { Form, Text } from 'js/components/global/form'
+	import Upload from 'js/components/global/Upload'
 
 	import { getApiUrl } from 'js/utils/env'
 
 	export default {
 		name: 'MyProfile',
 		components: {
-			'wnl-form': FormComponent,
-			'wnl-text': Text,
+			'wnl-form': Form,
+			'wnl-form-text': Text,
 			'wnl-upload': Upload,
 		},
 		computed: {

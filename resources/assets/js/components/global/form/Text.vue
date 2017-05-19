@@ -23,53 +23,15 @@
 </style>
 
 <script>
-	import * as types from 'js/store/mutations-types'
+	import { formInput } from 'js/mixins/form-input'
 
 	export default {
-		name: 'NewInput',
+		name: 'Text',
+		mixins: [formInput],
 		props: ['name', 'placeholder'],
 		computed: {
 			default() {
 				return ''
-			},
-			fillable() {
-				return true
-			},
-			parentName() {
-				return this.$parent.name
-			},
-			hasErrors() {
-				return this.getterFunction('hasErrors', this.name)
-			},
-			getErrors() {
-				return this.getterFunction('getErrors', this.name)
-			},
-			isLoading() {
-				return this.getter('isLoading')
-			},
-			inputValue: {
-				get () {
-					return this.getterFunction('getField', this.name)
-				},
-				set(value) {
-					this.mutation(types.FORM_INPUT, { name: this.name, value })
-				},
-			},
-		},
-		methods: {
-			getter(getter) {
-				return this.$store.getters[`${this.parentName}/${getter}`]
-			},
-			getterFunction(getter, payload = {}) {
-				return this.$store.getters[`${this.parentName}/${getter}`](payload)
-			},
-			mutation(mutation, payload = {}) {
-				return this.$store.commit(`${this.parentName}/${mutation}`, payload)
-			},
-			onInput(value) {
-				if (this.hasErrors) {
-					this.mutation(types.ERRORS_CLEAR_SINGLE, { name: this.name })
-				}
 			},
 		}
 	}

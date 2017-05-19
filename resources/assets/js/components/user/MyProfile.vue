@@ -25,6 +25,14 @@
 				<button class="button is-primary" :disabled="form.errors.any()">Zapisz</button>
 			</p>
 		</form>
+
+		<wnl-form name="MyProfile" method="put" :resourceUrl="resourceApiUrl">
+			<!-- <wnl-form-input type="text" name="first_name" :form="form" v-model="form.first_name"></wnl-form-input>
+			<wnl-form-input type="text" name="last_name" :form="form" v-model="form.last_name"></wnl-form-input> -->
+			<wnl-form-new-input name="first_name">Twoje imię</wnl-form-new-input>
+
+			<a class="button is-primary" slot="submit">Zapisz</a>
+		</wnl-form>
 	</div>
 </template>
 
@@ -33,12 +41,26 @@
 </style>
 
 <script>
+	import { mapActions } from 'vuex'
+
 	import Form from '../../classes/forms/Form'
 	import Input from '../global/form/Input'
+	import NewInput from '../global/form/NewInput'
 	import Upload from '../global/Upload'
-	import {mapActions} from 'vuex'
+	import FormComponent from 'js/components/global/form/FormComponent.vue'
+	import Submit from 'js/components/global/form/Submit.vue'
+
+	import { getApiUrl } from 'js/utils/env'
 
 	export default {
+		name: 'FormComponent',
+		components: {
+			'wnl-form-input': Input,
+			'wnl-form-new-input': NewInput,
+			'wnl-upload': Upload,
+			'wnl-form': FormComponent,
+			'wnl-submit': Submit,
+		},
 		data() {
 			return {
 				form: new Form({
@@ -51,6 +73,11 @@
 				resourceUrl: '/papi/v1/users/current/profile',
 				saved: false,
 				submissionFailed: false
+			}
+		},
+		computed: {
+			resourceApiUrl() {
+				return getApiUrl('users/current/profile')
 			}
 		},
 		methods: {
@@ -69,10 +96,6 @@
 		},
 		mounted() {
 			this.form.populate(this.resourceUrl)
-		},
-		components: {
-			'wnl-form-input': Input,
-			'wnl-upload': Upload,
 		},
 	}
 </script>

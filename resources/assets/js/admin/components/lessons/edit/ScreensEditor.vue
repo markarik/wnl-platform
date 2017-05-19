@@ -5,7 +5,6 @@
 			cssClass="fixed"
 			:key="timestamp"
 			:timestamp="timestamp"
-			@delete="onDelete"
 		></wnl-alert>
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>

@@ -17,16 +17,19 @@ class QnaQuestionsTableSeeder extends Seeder
 				'text'       => 'Halo Halo?',
 				'user_id'    => 1,
 				'created_at' => $now,
+				'updated_at' => $now,
 			],
 			[
 				'text'       => 'Co to k*** jest azotan?',
 				'user_id'    => 2,
 				'created_at' => $now,
+				'updated_at' => $now,
 			],
 			[
 				'text'       => 'Jak zap***** praca?',
 				'user_id'    => 1,
 				'created_at' => $now,
+				'updated_at' => $now,
 			],
 		]);
 	}

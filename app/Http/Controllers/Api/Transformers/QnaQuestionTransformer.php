@@ -9,7 +9,7 @@ use App\Models\QnaQuestion;
 use League\Fractal\TransformerAbstract;
 
 
-class QuestionTransformer extends TransformerAbstract
+class QnaQuestionTransformer extends TransformerAbstract
 {
 	protected $availableIncludes = ['answers', 'tags', 'users'];
 	protected $parent;
@@ -39,7 +39,7 @@ class QuestionTransformer extends TransformerAbstract
 	{
 		$answers = $question->answers;
 
-		return $this->collection($answers, new AnswerTransformer, 'answers');
+		return $this->collection($answers, new QnaAnswerTransformer, 'answers');
 	}
 
 	public function includeTags(QnaQuestion $question)
@@ -51,8 +51,8 @@ class QuestionTransformer extends TransformerAbstract
 
 	public function includeUsers(QnaQuestion $question)
 	{
-		$user = $question->user;
+		$user = $question->user->profile;
 
-		return $this->collection([$user], new UserProfileTransformer(['questions' => $question->id]), 'users');
+		return $this->collection([$user], new UserProfileTransformer(['qna_questions' => $question->id]), 'users');
 	}
 }

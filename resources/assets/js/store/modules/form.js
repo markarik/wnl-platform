@@ -41,6 +41,7 @@ const form = {
 			_.each(state.data, (value, key) => {
 				state.original[key] = value
 			})
+			set(state, 'hasChanges', false)
 		},
 		[types.FORM_POPULATE] (state, payload) {
 			_.each(payload, (value, name) => {
@@ -55,7 +56,7 @@ const form = {
 		},
 		[types.FORM_INPUT] (state, payload) {
 			set(state.data, payload.name, payload.value)
-			set(state, 'hasChanges', !_.isEqual(state.data, state.original))
+			set(state, 'hasChanges', true)
 		},
 		[types.FORM_RESET] (state) {
 			_.each(state.data, (field) => {

@@ -25,6 +25,7 @@ handshake.then(parent => {
 
 Reveal.initialize({
 	backgroundTransition: 'none',
+	center: false,
 	embedded: true,
 	slideNumber: true,
 	overview: false,

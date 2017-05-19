@@ -1,24 +1,12 @@
 <template lang="html">
-	<div>
-		<div class="notification is-success has-text-centered" v-if="saved">
-			Zapisano
-		</div>
-		<div class="notification is-danger has-text-centered" v-if="submissionFailed">
-			Coś poszło nie tak...
-		</div>
-
-		<form class="" action="" method="POST" @submit.prevent="onSubmit"
-			  @keydown="form.errors.clear($event.target.name)">
-
-			<wnl-form-input type="text" name="street" :form="form" v-model="form.street"></wnl-form-input>
-			<wnl-form-input type="text" name="zip" :form="form" v-model="form.zip"></wnl-form-input>
-			<wnl-form-input type="text" name="city" :form="form" v-model="form.city"></wnl-form-input>
-			<wnl-form-input type="text" name="phone" :form="form" v-model="form.phone"></wnl-form-input>
-
-			<p class="has-text-centered">
-				<button class="button is-primary" :disabled="form.errors.any()">Zapisz</button>
-			</p>
-		</form>
+	<div class="scrollable-main-container">
+		<h1>Adres</h1>
+		<wnl-form name="MyAddress" resourceRoute="users/current/address">
+			<wnl-form-text name="street">Ulica</wnl-form-text>
+			<wnl-form-text name="zip">Kod pocztowy</wnl-form-text>
+			<wnl-form-text name="city">Miasto</wnl-form-text>
+			<wnl-form-text name="phone">Telefon</wnl-form-text>
+		</wnl-form>
 	</div>
 </template>
 
@@ -27,38 +15,12 @@
 </style>
 
 <script>
-	import Form from '../../classes/forms/Form'
-	import Input from '../global/form/Input'
+	import { Form, Text } from 'js/components/global/form'
 
 	export default {
-		data() {
-			return {
-				form: new Form({
-					street: null,
-					zip: null,
-					city: null,
-					phone: null,
-				}),
-				resourceUrl: '/papi/v1/users/current/address',
-				saved: false,
-				submissionFailed: false
-			}
-		},
-		methods: {
-			onSubmit() {
-				this.form.put(this.resourceUrl)
-						.then(response => this.saved = true)
-						.catch(exception => {
-							this.submissionFailed = true
-							$wnl.logger.capture(exception)
-						})
-			}
-		},
-		mounted() {
-			this.form.populate(this.resourceUrl)
-		},
 		components: {
-			'wnl-form-input': Input,
+			'wnl-form': Form,
+			'wnl-form-text': Text,
 		},
 	}
 </script>

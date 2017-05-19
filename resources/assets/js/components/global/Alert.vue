@@ -2,7 +2,7 @@
 	<transition name="fade">
 		<div class="notification" :class="fullCssClass">
 			<button class="delete" @click.prevent="onDelete"></button>
-			{{alert.message}}
+			<span v-html="alert.message"></span>
 		</div>
 	</transition>
 </template>

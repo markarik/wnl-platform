@@ -14,8 +14,8 @@
 
 		<slot></slot>
 
-		<wnl-submit v-if="$slots['submit-after']" @submitForm="onSubmitForm">
-			<slot name="submit-after"></slot>
+		<wnl-submit v-if="!$slots['submit-before']" @submitForm="onSubmitForm">
+			<slot name="submit-after">Zapisz</slot>
 		</wnl-submit>
 	</form>
 </template>
@@ -32,6 +32,7 @@
 	import Submit from 'js/components/global/form/Submit'
 	import { alerts } from 'js/mixins/alerts'
 	import { createForm } from 'js/store/modules/form'
+	import { getApiUrl } from 'js/utils/env'
 	import * as types from 'js/store/mutations-types'
 
 	export default {
@@ -40,7 +41,7 @@
 			'wnl-submit': Submit,
 		},
 		mixins: [ alerts ],
-		props: ['name', 'resourceUrl', 'populate', 'method'],
+		props: ['name', 'resourceRoute', 'populate', 'method'],
 		computed: {
 			anyErrors() {
 				return this.getter('anyErrors')
@@ -73,10 +74,13 @@
 				this.action('submitForm', { method: this.method })
 					.then(
 						data => {
-							this.successFading('Zapisano!')
+							this.successFading(`
+								<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+								<span>Zapisano!</span>
+							`)
 						},
 						reason => {
-							this.error('Nie udało się.')
+							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 						},
 					)
 					.catch((error) => {
@@ -107,7 +111,7 @@
 			this.mutation(types.FORM_SETUP, {
 				data: dataModel,
 				defaults,
-				resourceUrl: this.resourceUrl,
+				resourceUrl: getApiUrl(this.resourceRoute),
 			})
 
 			if (this.populate) {

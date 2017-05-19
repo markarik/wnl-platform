@@ -44,8 +44,8 @@
 			anyErrors() {
 				return this.getter('anyErrors')
 			},
-			isDisabled() {
-				return this.anyErrors
+			hasChanges() {
+				return this.getter('hasChanges')
 			},
 			submitEvent() {
 				return `submitForm-${this.name}`
@@ -65,7 +65,7 @@
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
 			},
 			onSubmitForm() {
-				if (this.isDisabled) {
+				if (this.anyErrors || !this.hasChanges) {
 					return false
 				}
 

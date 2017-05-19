@@ -6,6 +6,8 @@ import { useLocalStorage, getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
+let originalData = {}
+
 const form = {
 	namespaced: true,
 	state() {
@@ -13,19 +15,21 @@ const form = {
 			data: {},
 			defaults: {},
 			errors: {},
+			hasChanges: false,
 			loading: true,
 			method: '',
-			originalData: {},
+			original: {},
 			resourceUrl: '',
 		}
 	},
 	getters: {
-		anyErrors: (state) => !_.isEmpty(state.errors),
-		getData:   (state) => state.data,
-		getErrors: (state) => (name) => state.errors[name],
-		getField:  (state) => (name) => state.data[name],
-		hasErrors: (state) => (name) => !_.isEmpty(state.errors[name]),
-		isLoading: (state) => state.loading,
+		anyErrors:  (state) => !_.isEmpty(state.errors),
+		getData:    (state) => state.data,
+		getErrors:  (state) => (name) => state.errors[name],
+		getField:   (state) => (name) => state.data[name],
+		hasChanges: (state) => state.hasChanges,
+		hasErrors:  (state) => (name) => !_.isEmpty(state.errors[name]),
+		isLoading:  (state) => state.loading,
 	},
 	mutations: {
 		[types.FORM_SETUP] (state, payload) {
@@ -34,7 +38,9 @@ const form = {
 			})
 		},
 		[types.FORM_UPDATE_ORIGINAL_DATA] (state) {
-			set(state, 'originalData', state.data)
+			_.each(state.data, (value, key) => {
+				state.original[key] = value
+			})
 		},
 		[types.FORM_POPULATE] (state, payload) {
 			_.each(payload, (value, name) => {
@@ -49,6 +55,7 @@ const form = {
 		},
 		[types.FORM_INPUT] (state, payload) {
 			set(state.data, payload.name, payload.value)
+			set(state, 'hasChanges', !_.isEqual(state.data, state.original))
 		},
 		[types.FORM_RESET] (state) {
 			_.each(state.data, (field) => {
@@ -68,7 +75,6 @@ const form = {
 	actions: {
 		setupForm({commit}, payload) {
 			commit(types.FORM_SETUP, payload)
-			commit(types.FORM_UPDATE_ORIGINAL_DATA)
 		},
 		populateForm({state, commit}) {
 			return axios.get(state.resourceUrl)

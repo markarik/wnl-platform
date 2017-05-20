@@ -5,25 +5,25 @@
 				<wnl-vote type="up" count="0"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna-answer-content" v-html="answer.text"></div>
+				<div class="qna-answer-content" v-html="content"></div>
 				<div class="qna-meta">
 					<wnl-avatar
-						:username="answer.author.username"
-						:url="answer.author.avatarUrl"
+						:username="author.username"
+						:url="author.avatarUrl"
 						size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
-						{{answer.author.username}} ·
+						{{author.username}} ·
 					</span>
 					<span class="qna-meta-info">
-						{{answer.timestamp}}
+						{{timestamp}}
 					</span>
 				</div>
 			</div>
 		</div>
 		<div class="qna-answer-comments">
-			<p class="qna-title">Komentarze ({{answer.comments.length}})</p>
-			<wnl-qna-comment v-for="comment in answer.comments" :comment="comment"></wnl-qna-comment>
+			<p class="qna-title">Komentarze ({{comments.length}})</p>
+			<!-- <wnl-qna-comment v-for="comment in answer.comments" :comment="comment"></wnl-qna-comment> -->
 		</div>
 	</div>
 </template>
@@ -44,15 +44,39 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	import Vote from 'js/components/qna/Vote'
 	import QnaComment from 'js/components/qna/QnaComment'
 
 	export default {
 		name: 'QnaAnswer',
-		props: ['answer'],
 		components: {
 			'wnl-vote': Vote,
 			'wnl-qna-comment': QnaComment,
 		},
+		props: ['answer'],
+		computed: {
+			...mapGetters('qna', [
+				'profile'
+			]),
+			content() {
+				return this.answer.text
+			},
+			timestamp() {
+				return this.answer.created_at
+			},
+			author() {
+				return this.profile(this.answer.profiles[0])
+			},
+			comments() {
+				return this.answer.comments || []
+			},
+		},
+		data() {
+			return {
+				loading: true,
+			}
+		}
 	}
 </script>

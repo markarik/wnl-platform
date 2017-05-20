@@ -25,6 +25,8 @@
 				<div class="qna-answers">
 					<p class="qna-title">Odpowiedzi ({{answersFromLatest.length}})</p>
 					<!-- <wnl-qna-answer v-for="answer in answers" :answer="answer"></wnl-qna-answer> -->
+					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer"></wnl-qna-answer>
+					<wnl-qna-answer v-if="allAnswers && otherAnswers"></wnl-qna-answer>
 				</div>
 			</div>
 		</div>
@@ -48,6 +50,7 @@
 </style>
 
 <script>
+	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
@@ -63,32 +66,40 @@
 		data() {
 			return {
 				loading: true,
+				allAnswers: false,
 			}
 		},
 		computed: {
 			...mapGetters('qna', [
-				'questionContent',
-				'questionAuthor',
-				'questionTimestamp',
+				'profile',
 				'questionAnswersFromLatest',
 			]),
 			id() {
 				return this.question.id
 			},
 			content() {
-				return this.questionContent(this.id)
+				return this.question.text
 			},
 			author() {
-				return this.questionAuthor(this.id)
+				return this.profile(this.question.profiles[0])
 			},
 			authorFullName() {
 				return `${this.author.first_name} ${this.author.last_name}`
 			},
 			timestamp() {
-				return this.questionTimestamp(this.id)
+				return this.question.created_at
 			},
 			answersFromLatest() {
 				return this.questionAnswersFromLatest(this.id)
+			},
+			hasAnswers() {
+				return this.answersFromLatest.length > 0
+			},
+			latestAnswer() {
+				return _.head(this.answersFromLatest)
+			},
+			otherAnswers() {
+				return _.tail(this.answersFromLatest)
 			},
 		},
 		methods: {

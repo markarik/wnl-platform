@@ -80,11 +80,13 @@ const getters = {
 		return state.questionsIds.map((id) => state.qna_questions[id])
 	},
 
+	// Resources
+	profile: state => (id) => state.profiles[id],
+
 	// Question
 	questionContent: state => (id) => state.qna_questions[id].text,
-	questionAuthor: state => (id) => {
-		let profileId = state.qna_questions[id].profiles[0]
-		return state.profiles[profileId]
+	questionAuthor: (state, getters) => (id) => {
+		return getters.profile(state.qna_questions[id].profiles[0])
 	},
 	questionTimestamp: state => (id) => state.qna_questions[id].created_at,
 	questionAnswers: state => (id) => {

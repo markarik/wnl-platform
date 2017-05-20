@@ -25,13 +25,16 @@
 			<p class="qna-title">
 				<span class="icon is-small comment-icon"><i class="fa fa-comment-o"></i></span>
 				Komentarze ({{comments.length}})
-				<span v-if="comments.length > 0"> · <a class="comments-show-link" @click="toggleComments">
-					Pokaż wszystkie
-				</a></span>
+				<span v-if="comments.length > 0"> ·
+					<a class="comments-show-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				</span>
 			</p>
 			<wnl-qna-comment v-if="showComments"
 				v-for="comment in comments" :comment="comment">
 			</wnl-qna-comment>
+			<div class="comments-loader" v-if="loading">
+				<wnl-text-loader></wnl-text-loader>
+			</div>
 		</div>
 	</div>
 </template>
@@ -56,6 +59,13 @@
 	.comment-icon
 		margin-right: $margin-small
 		margin-top: -$margin-small
+
+	.comments-loader
+		margin: $margin-base 0
+
+	.comments-show-link,
+	.comments-show-link:hover
+		color: $color-gray-dimmed
 </style>
 
 <script>
@@ -73,7 +83,8 @@
 		props: ['answer'],
 		data() {
 			return {
-				loading: true,
+				commentsFetched: false,
+				loading: false,
 				showComments: false,
 			}
 		},
@@ -97,14 +108,24 @@
 			comments() {
 				return this.answerComments(this.id)
 			},
+			toggleCommentsText() {
+				return this.showComments ? 'Schowaj' : 'Pokaż'
+			}
 		},
 		methods: {
 			...mapActions('qna', ['fetchComments']),
 			toggleComments() {
-				this.fetchComments(this.id)
+				if (!this.commentsFetched) {
+					this.loading = true
+					this.fetchComments(this.id)
 					.then(() => {
+						this.commentsFetched = true
 						this.showComments = true
+						this.loading = false
 					})
+				} else {
+					this.showComments = !this.showComments
+				}
 			},
 		},
 	}

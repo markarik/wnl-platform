@@ -73,8 +73,8 @@
 
 <script>
 	import Form from 'js/classes/forms/Form'
-	import Code from 'js/components/global/form/Code'
-	import Checkbox from 'js/components/global/form/Checkbox'
+	import Code from 'js/admin/components/forms/Code'
+	import Checkbox from 'js/admin/components/forms/Checkbox'
 	import _ from 'lodash'
 	import {resource} from 'js/utils/config'
 

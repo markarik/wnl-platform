@@ -110,9 +110,9 @@
 
 	import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue'
 	import Form from 'js/classes/forms/Form'
-	import Input from 'js/components/global/form/Input.vue'
-	import Quill from 'js/components/global/form/Quill.vue'
-	import Select from 'js/components/global/form/Select.vue'
+	import Input from 'js/admin/components/forms/Input.vue'
+	import Quill from 'js/admin/components/forms/Quill.vue'
+	import Select from 'js/admin/components/forms/Select.vue'
 
 	import { getApiUrl } from 'js/utils/env'
 	import { alerts } from 'js/mixins/alerts'
@@ -183,7 +183,6 @@
 				}
  			},
 			hasChanged() {
-				$wnl.logger.debug('hasChanged', this.screenForm.data(), this.screenForm.originalData)
 				return !_.isEqual(this.screenForm.data(), this.screenForm.originalData)
 			},
 		},

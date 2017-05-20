@@ -74,10 +74,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Questions
 	Route::get("{$r['questions']}/{id}", 'Qna\QuestionsApiController@get');
 	Route::post($r['questions'], 'Qna\QuestionsApiController@post');
+	Route::post("{$r['questions']}/.search", 'Qna\QuestionsApiController@search');
 
 	// Answers
 	Route::get("{$r['answers']}/{id}", 'Qna\AnswersApiController@get');
 	Route::post($r['answers'], 'Qna\AnswersApiController@post');
+	Route::post("{$r['answers']}/.search", 'Qna\AnswersApiController@search');
 
 	// Quiz Sets
 	Route::get("{$r['quiz-sets']}/{id}", 'Quiz\QuizSetsApiController@get');
@@ -85,7 +87,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Comments
 	Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
-	Route::post("{$r['comments']}", 'CommentsApiController@post');
+	Route::post($r['comments'], 'CommentsApiController@post');
 	Route::post("{$r['comments']}/.search", 'CommentsApiController@search');
 
 	// User Progress

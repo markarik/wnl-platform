@@ -12,6 +12,7 @@ use Laravel\Dusk\DuskServiceProvider;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Laravel\Tinker\TinkerServiceProvider;
 use Log;
+use Validator;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
 
@@ -50,6 +51,14 @@ class AppServiceProvider extends ServiceProvider
 			}
 
 			return $record;
+		});
+
+		/**
+		 * Custom validation rules
+		 */
+		Validator::extend('alpha_spaces', function ($attribute, $value) {
+			// Useful for names and surnames - accept letters, spaces and hyphens
+			return preg_match('/^[\pL\s-]+$/u', $value);
 		});
 	}
 

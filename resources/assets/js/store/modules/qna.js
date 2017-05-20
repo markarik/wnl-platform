@@ -89,7 +89,7 @@ const getters = {
 	questionTimestamp: state => (id) => state.qna_questions[id].created_at,
 	questionAnswers: state => (id) => {
 		let answersIds = state.qna_questions[id].qna_answers
-		return state.questionsIds.map((id) => state.qna_questions[id])
+		return answersIds.map((id) => state.qna_answers[id])
 	},
 	questionAnswersFromLatest: (state, getters) => (id) => {
 		return _.sortBy(getters.questionAnswers(id), (answer) => answer.created_at)

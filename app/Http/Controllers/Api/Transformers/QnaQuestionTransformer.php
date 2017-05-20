@@ -11,7 +11,7 @@ use League\Fractal\TransformerAbstract;
 
 class QnaQuestionTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['answers', 'tags', 'users'];
+	protected $availableIncludes = ['answers', 'tags', 'profiles'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -49,10 +49,10 @@ class QnaQuestionTransformer extends TransformerAbstract
 		return $this->collection($tags, new TagTransformer, 'tags');
 	}
 
-	public function includeUsers(QnaQuestion $question)
+	public function includeProfiles(QnaQuestion $question)
 	{
-		$user = $question->user->profile;
+		$profile = $question->user->profile;
 
-		return $this->collection([$user], new UserProfileTransformer(['qna_questions' => $question->id]), 'users');
+		return $this->item($profile, new UserProfileTransformer(['questions' => $question->id]), 'profiles');
 	}
 }

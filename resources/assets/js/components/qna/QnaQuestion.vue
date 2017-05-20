@@ -1,32 +1,30 @@
 <template>
-	<div class="qna-question">
+	<div>
 		<div v-if="loading">
 			Ładuję pytanie
 		</div>
-		<div v-else>
+		<div class="qna-question" v-else>
 			<div class="votes">
 				<wnl-vote type="up" count="0"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna-question-content">
-					{{question.text}}
-				</div>
+				<div class="qna-question-content" v-text="content"></div>
 				<div class="qna-question-meta qna-meta">
 					<wnl-avatar
-						:username="question.author.username"
-						:url="question.author.avatarUrl"
+						:username="authorFullName"
+						:url="author.avatar"
 						size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
-						{{question.author.username}} ·
+						{{authorFullName}} ·
 					</span>
 					<span class="qna-meta-info">
-						{{question.timestamp}}
+						{{timestamp}}
 					</span>
 				</div>
 				<div class="qna-answers">
-					<p class="qna-title">Odpowiedzi ({{answers.length}})</p>
-					<wnl-qna-answer v-for="answer in answers" :answer="answer"></wnl-qna-answer>
+					<p class="qna-title">Odpowiedzi ({{answersFromLatest.length}})</p>
+					<!-- <wnl-qna-answer v-for="answer in answers" :answer="answer"></wnl-qna-answer> -->
 				</div>
 			</div>
 		</div>
@@ -69,20 +67,37 @@
 		},
 		computed: {
 			...mapGetters('qna', [
-				// 'questionContent',
-				// 'question'
+				'questionContent',
+				'questionAuthor',
+				'questionTimestamp',
+				'questionAnswersFromLatest',
 			]),
-			answers() {
-				return this.question.answers
-			}
+			id() {
+				return this.question.id
+			},
+			content() {
+				return this.questionContent(this.id)
+			},
+			author() {
+				return this.questionAuthor(this.id)
+			},
+			authorFullName() {
+				return `${this.author.first_name} ${this.author.last_name}`
+			},
+			timestamp() {
+				return this.questionTimestamp(this.id)
+			},
+			answersFromLatest() {
+				return this.questionAnswersFromLatest(this.id)
+			},
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion'])
 		},
 		mounted() {
-			this.fetchQuestion(this.question.id)
+			this.fetchQuestion(this.id)
 				.then(() => {
-					// this.loading = false
+					this.loading = false
 				})
 				.catch((error) => {
 					$wnl.logger.error(error)

@@ -80,29 +80,20 @@ const getters = {
 		return state.questionsIds.map((id) => state.qna_questions[id])
 	},
 
-
-
-	qnaGetMockData: state => (lessonId) => {
-		return mockData[lessonId]
+	// Question
+	questionContent: state => (id) => state.qna_questions[id].text,
+	questionAuthor: state => (id) => {
+		let profileId = state.qna_questions[id].profiles[0]
+		return state.profiles[profileId]
 	},
-	qnaGetQuestions: state => (lessonId) => {
-		try {
-			return state.questions[lessonId].included.questions
-		}
-		catch (e) {
-			return false
-		}
+	questionTimestamp: state => (id) => state.qna_questions[id].created_at,
+	questionAnswers: state => (id) => {
+		let answersIds = state.qna_questions[id].qna_answers
+		return state.questionsIds.map((id) => state.qna_questions[id])
 	},
-	qnaGetUser: state => (lessonId, userId) => {
-		return state.questions[lessonId].included.users[userId]
+	questionAnswersFromLatest: (state, getters) => (id) => {
+		return _.sortBy(getters.questionAnswers(id), (answer) => answer.created_at)
 	},
-	qnaGetAnswers: state => (lessonId, ids) => {
-		let answers = {}
-		ids.forEach((id) => {
-			answers[id] = state.questions[lessonId].included.answers[id]
-		})
-		return answers
-	}
 }
 
 // Mutations
@@ -136,9 +127,6 @@ const mutations = {
 
 // Actions
 const actions = {
-	qnaGetMockData(lessonId) {
-		return mockData[lessonId]
-	},
 	fetchQuestions({commit, rootState}) {
 		let lessonId = rootState.route.params.lessonId
 
@@ -161,36 +149,26 @@ const actions = {
 		})
 	},
 	fetchQuestion({commit}, questionId) {
-		_getQuestion(questionId)
-			.then((response) => {
-				let data = response.data,
-					included = data.included
+		return new Promise((resolve, reject) => {
+			_getQuestion(questionId)
+				.then((response) => {
+					let data = response.data,
+						included = data.included
 
-				delete(data.included)
-				commit(types.QNA_UPDATE_QUESTION, {questionId, data})
-
-				if (data.qna_answers.length > 0) {
-					commit(types.UPDATE_INCLUDED, included)
-				}
-			})
-			.catch((error) => {
-				$wnl.logger.error(error)
-			})
-	},
-
-	/**
-	 * @param commit
-	 * @param lessonId
-	 * @returns {Promise}
-	 */
-	qnaSetQuestions({commit}, lessonId) {
-		return new Promise((resolve) => {
-			_getQuestions(lessonId).then((response) => {
-				commit(types.QNA_SET_QUESTIONS_IDS, {lessonId, data: response.data})
-				resolve()
-			})
+					if (data.qna_answers.length > 0) {
+						commit(types.UPDATE_INCLUDED, included)
+					}
+					delete(data.included)
+					commit(types.QNA_UPDATE_QUESTION, {questionId, data})
+					resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					reject()
+				})
 		})
 	},
+
 	qnaAddQuestion({commit}, {lessonId, text}){
 		return new Promise((resolve, reject) => {
 			_postQuestion(lessonId, text).then((response) => {

@@ -12,16 +12,16 @@ use League\Fractal\TransformerAbstract;
 
 class QnaAnswerTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['profile'];
+	protected $availableIncludes = ['profile', 'comments'];
 
 	public function transform(QnaAnswer $answer)
 	{
 		$data = [
-			'id'            => $answer->id,
-			'text'          => $answer->text,
-			'qna_questions' => $answer->question->id,
-			'created_at'    => $answer->created_at->timestamp,
-			'updated_at'    => $answer->updated_at->timestamp,
+			'id'         => $answer->id,
+			'text'       => $answer->text,
+			'questions'  => $answer->question->id,
+			'created_at' => $answer->created_at->timestamp,
+			'updated_at' => $answer->updated_at->timestamp,
 		];
 
 		return $data;
@@ -32,5 +32,12 @@ class QnaAnswerTransformer extends TransformerAbstract
 		$profile = $answer->user->profile;
 
 		return $this->item($profile, new UserProfileTransformer(['answers' => $answer->id]), 'answers');
+	}
+
+	public function includeComments(QnaAnswer $answer)
+	{
+		$comments = $answer->comments;
+
+		return $this->collection($comments, new CommentTransformer(['answers' => $answer->id]), 'answers');
 	}
 }

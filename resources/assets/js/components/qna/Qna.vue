@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-qna">
-		<div class="content">
+		<!-- <div class="content">
 			Pytania i odpowiedzi <a>#pulmonologia</a> <a>#interna</a>
 		</div>
 		<div class="wnl-chat-form">
@@ -15,20 +15,28 @@
 		</div>
 		<div v-else>
 			Nie ma jeszcze pytań do tego tematu. Zadaj pytanie...
-		</div>
+		</div> -->
+
+
 
 	</div>
 </template>
-<style lang="sass" rel="stylesheet/sass">
+
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import '../../../sass/variables'
 
+	// .wnl-qna
+	// 	display: flex
+	// 	flex: 1
+	// 	flex-direction: column
+	// 	justify-content: flex-end
+	// 	padding-right: 20px
+	// 	padding-top: 20px
+
 	.wnl-qna
-		display: flex
-		flex: 1
-		flex-direction: column
-		justify-content: flex-end
-		padding-right: 20px
-		padding-top: 20px
+		margin: $margin-huge 0
+
+
 
 </style>
 <script>

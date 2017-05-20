@@ -84,6 +84,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
 
 	// Comments
+	Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
 	Route::post("{$r['comments']}", 'CommentsApiController@post');
 	Route::post("{$r['comments']}/.search", 'CommentsApiController@search');
 

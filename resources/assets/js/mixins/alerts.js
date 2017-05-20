@@ -17,7 +17,7 @@ export var alerts = {
 		removeAlert(timestamp) {
 			Vue.delete(this.alerts, timestamp)
 		},
-		addAlert(message, cssClass = '', fading = false, timeout = 5000) {
+		addAlert(message, cssClass = '', fading = false, timeout = 3000) {
 			let timestamp = Date.now()
 
 			Vue.set(this.alerts, timestamp, { message, cssClass })
@@ -29,19 +29,19 @@ export var alerts = {
 		info(message) {
 			this.addAlert(message, 'is-info')
 		},
-		infoFading(message, timeout = 5000) {
+		infoFading(message, timeout = 3000) {
 			this.addAlert(message, 'is-info', true, timeout)
 		},
 		error(message) {
-			this.addAlert(message, 'is-error')
+			this.addAlert(message, 'is-danger')
 		},
-		errorFading(message, timeout = 5000) {
-			this.addAlert(message, 'is-error', true, timeout)
+		errorFading(message, timeout = 3000) {
+			this.addAlert(message, 'is-danger', true, timeout)
 		},
 		success(message) {
 			this.addAlert(message, 'is-success')
 		},
-		successFading(message, timeout = 5000) {
+		successFading(message, timeout = 3000) {
 			this.addAlert(message, 'is-success', true, timeout)
 		},
 		onDelete(timestamp) {

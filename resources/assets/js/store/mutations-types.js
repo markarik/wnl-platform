@@ -8,6 +8,19 @@ export const COURSE_READY  = 'COURSE_READY'
 // Sidenav
 export const SET_NAVIGATION = 'SET_NAVIGATION'
 
+// Forms
+export const FORM_SETUP                = 'FORM_SETUP'
+export const FORM_UPDATE_ORIGINAL_DATA = 'FORM_UPDATE_ORIGINAL_DATA'
+export const FORM_POPULATE             = 'FORM_POPULATE'
+export const FORM_HAS_CHANGES          = 'FORM_HAS_CHANGES'
+export const FORM_IS_LOADING           = 'FORM_IS_LOADING'
+export const FORM_IS_LOADED            = 'FORM_IS_LOADED'
+export const FORM_INPUT                = 'FORM_INPUT'
+export const FORM_RESET                = 'FORM_RESET'
+export const ERRORS_RECORD             = 'ERRORS_RECORD'
+export const ERRORS_CLEAR              = 'ERRORS_CLEAR'
+export const ERRORS_CLEAR_SINGLE       = 'ERRORS_CLEAR_SINGLE'
+
 // Chat
 export const CHAT_ADD_NEW_MESSAGE = 'CHAT_ADD_NEW_MESSAGE'
 export const CHAT_SET_ROOM        = 'CHAT_SET_ROOM'

@@ -1,67 +1,74 @@
 <template>
 	<div class="wnl-qna">
-		<!-- <div class="content">
-			Pytania i odpowiedzi <a>#pulmonologia</a> <a>#interna</a>
-		</div>
-		<div class="wnl-chat-form">
-			<wnl-qna-form :lessonId="lessonId"></wnl-qna-form>
-		</div>
-
-		<div v-if="questions">
-			<wnl-question v-for="question in questions"
-						  :question="question"
-						  :lessonId="lessonId">
-			</wnl-question>
-		</div>
-		<div v-else>
-			Nie ma jeszcze pytań do tego tematu. Zadaj pytanie...
-		</div> -->
-
-
-
+		<p class="title is-4">Pytania i odpowiedzi</p>
+		<wnl-qna-question v-if="questions" v-for="question in questions" :question="question"></wnl-qna-question>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
+<style lang="sass" rel="stylesheet/sass">
 	@import '../../../sass/variables'
-
-	// .wnl-qna
-	// 	display: flex
-	// 	flex: 1
-	// 	flex-direction: column
-	// 	justify-content: flex-end
-	// 	padding-right: 20px
-	// 	padding-top: 20px
 
 	.wnl-qna
 		margin: $margin-huge 0
 
+	.votes
+		flex: 0 auto
+		padding: 0 $margin-base
 
+	.qna-container
+		flex: 1 auto
 
+	.qna-meta
+		align-items: center
+		color: $color-gray-dimmed
+		display: flex
+		font-size: $font-size-minus-1
+		margin-top: $margin-base
+
+	.qna-meta-info
+		display: inline-block
+		margin-left: $margin-small
+		white-space: nowrap
+
+	.qna-question,
+	.qna-answer,
+	.qna-comment
+		display: flex
+
+	.qna-title
+		color: $color-gray-dimmed
+		margin-bottom: $margin-tiny
+		margin-top: $margin-base
 </style>
+
 <script>
 	import QuestionForm from './QuestionForm.vue'
-	import Question from './Question.vue'
+	import Question from 'js/components/qna/Question.vue'
+	import QnaQuestion from 'js/components/qna/QnaQuestion.vue'
 	import {mapActions, mapGetters} from 'vuex'
 
 	export default {
 		name: 'Qna',
-		props: ['lessonId'],
+		components: {
+			'wnl-qna-form': QuestionForm,
+			'wnl-question': Question,
+			'wnl-qna-question': QnaQuestion,
+		},
 		computed: {
-			...mapGetters(['qnaGetQuestions']),
-			questions(){
-				return this.qnaGetQuestions(this.lessonId)
+			...mapGetters(['qnaGetMockData']),
+			lessonId () {
+				return this.$route.params.lessonId
+			},
+			questions () {
+				// return this.qnaGetQuestions(this.lessonId)
+				return this.qnaGetMockData(this.lessonId).questions
 			},
 		},
 		methods: {
-			...mapActions(['qnaSetQuestions'])
+			// ...mapActions(['qnaSetQuestions'])
 		},
 		created() {
-			this.qnaSetQuestions(this.lessonId)
+			// this.qnaSetQuestions(this.lessonId)
 		},
-		components: {
-			'wnl-qna-form': QuestionForm,
-			'wnl-question': Question
-		}
 	}
 </script>

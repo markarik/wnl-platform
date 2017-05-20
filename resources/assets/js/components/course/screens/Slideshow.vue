@@ -33,6 +33,7 @@
 				</div>
 			</div>
 		</div>
+		<wnl-qna></wnl-qna>
 		<wnl-qna-mock></wnl-qna-mock>
 	</div>
 </template>
@@ -101,6 +102,7 @@
 	import Postmate from 'postmate'
 	import SlideshowNavigation from './SlideshowNavigation.vue'
 	import QnaMock from 'js/components/qna/Mock.vue'
+	import Qna from 'js/components/qna/Qna.vue'
 	import { isDebug, getUrl } from 'js/utils/env'
 
 	export default {
@@ -108,6 +110,7 @@
 		components: {
 			'wnl-slideshow-navigation': SlideshowNavigation,
 			'wnl-qna-mock': QnaMock,
+			'wnl-qna': Qna,
 		},
 		data() {
 			return {

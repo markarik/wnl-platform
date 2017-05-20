@@ -11,6 +11,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.text-loader
+		color: $color-gray-dimmed
 		text-align: center
 
 		.icon

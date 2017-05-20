@@ -10,7 +10,7 @@ use League\Fractal\TransformerAbstract;
 
 class LessonTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['screens', 'tags', 'questions'];
+	protected $availableIncludes = ['screens', 'tags', 'qna_questions'];
 
 	protected $editionId;
 
@@ -50,10 +50,10 @@ class LessonTransformer extends TransformerAbstract
 		return $this->collection($tags, new TagTransformer(['lessons' => $lesson->id]), 'tags');
 	}
 
-	public function includeQuestions(Lesson $lesson)
+	public function includeQnaQuestions(Lesson $lesson)
 	{
 		$questions = $lesson->questions;
 
-		return $this->collection($questions, new QnaQuestionTransformer($lesson->id), 'questions');
+		return $this->collection($questions, new QnaQuestionTransformer($lesson->id), 'qna_questions');
 	}
 }

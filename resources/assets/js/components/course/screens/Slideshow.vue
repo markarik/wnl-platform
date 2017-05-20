@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="wnl-slideshow-container">
+		<div class="wnl-slideshow-container" v-if="foo">
 			<div class="wnl-slideshow-background-control level">
 				<div class="level-left">
 				</div>
@@ -33,7 +33,8 @@
 				</div>
 			</div>
 		</div>
-		<wnl-qna-mock></wnl-qna-mock>
+		<wnl-qna></wnl-qna>
+		<!-- <wnl-qna-mock></wnl-qna-mock> -->
 	</div>
 </template>
 <style lang="sass">
@@ -101,6 +102,7 @@
 	import Postmate from 'postmate'
 	import SlideshowNavigation from './SlideshowNavigation.vue'
 	import QnaMock from 'js/components/qna/Mock.vue'
+	import Qna from 'js/components/qna/Qna.vue'
 	import { isDebug, getUrl } from 'js/utils/env'
 
 	export default {
@@ -108,6 +110,7 @@
 		components: {
 			'wnl-slideshow-navigation': SlideshowNavigation,
 			'wnl-qna-mock': QnaMock,
+			'wnl-qna': Qna,
 		},
 		data() {
 			return {
@@ -121,6 +124,9 @@
 		},
 		props: ['screenData', 'slide'],
 		computed: {
+			foo() {
+				return false
+			},
 			slideNumber() {
 				return Math.max(this.slide - 1, 0) || 0
 			},
@@ -239,7 +245,7 @@
 		},
 		mounted() {
 			Postmate.debug = false
-			this.initSlideshow()
+			// this.initSlideshow()
 		},
 		watch: {
 			'$route' (to, from) {

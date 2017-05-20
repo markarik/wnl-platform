@@ -40,5 +40,35 @@ class UserProfilesTableSeeder extends Seeder
 			'username'     => 'chrupek',
 			'avatar'       => null,
 		]);
+
+		DB::table('user_profiles')->insert([
+			'user_id'      => 4,
+			'first_name'   => 'Roman',
+			'last_name'    => 'Zwyczajny',
+			'public_email' => 'prezeschrupek@bethink.pl',
+			'public_phone' => null,
+			'username'     => 'chrupek',
+			'avatar'       => null,
+		]);
+
+		DB::table('user_profiles')->insert([
+			'user_id'      => 5,
+			'first_name'   => 'Robert',
+			'last_name'    => 'Kardiowaskularny',
+			'public_email' => 'prezeschrupek@bethink.pl',
+			'public_phone' => null,
+			'username'     => 'chrupek',
+			'avatar'       => null,
+		]);
+
+		DB::table('user_profiles')->insert([
+			'user_id'      => 6,
+			'first_name'   => 'Asia',
+			'last_name'    => 'Nereczka',
+			'public_email' => 'prezeschrupek@bethink.pl',
+			'public_phone' => null,
+			'username'     => 'chrupek',
+			'avatar'       => null,
+		]);
 	}
 }

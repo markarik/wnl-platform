@@ -26,7 +26,7 @@ abstract class ApiController extends Controller
 	{
 		$this->request = $request;
 		$this->fractal = new Manager();
-		$this->fractal->setRecursionLimit(5);
+		$this->fractal->setRecursionLimit(10);
 		$this->fractal->setSerializer(new ApiJsonSerializer());
 		if ($this->request->has('include')) {
 			$this->fractal->parseIncludes($this->request->get('include'));

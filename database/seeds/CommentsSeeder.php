@@ -38,7 +38,21 @@ class CommentsSeeder extends Seeder
 			[
 				'comment_id'       => 1,
 				'commentable_id'   => 1,
-				'commentable_type' => 'App\Models\QnaQuestions',
+				'commentable_type' => 'App\Models\QnaAnswer',
+			],
+		]);
+		DB::table('commentables')->insert([
+			[
+				'comment_id'       => 2,
+				'commentable_id'   => 1,
+				'commentable_type' => 'App\Models\QnaAnswer',
+			],
+		]);
+		DB::table('commentables')->insert([
+			[
+				'comment_id'       => 3,
+				'commentable_id'   => 2,
+				'commentable_type' => 'App\Models\QnaAnswer',
 			],
 		]);
 	}

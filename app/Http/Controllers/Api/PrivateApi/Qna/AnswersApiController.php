@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Api\PrivateApi\Qna;
 
-use App\Models\QnaQuestion;
+use App\Http\Controllers\Api\Transformers\QnaAnswerTransformer;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Qna\PostAnswer;
+use League\Fractal\Resource\Item;
 use Illuminate\Http\Request;
+use App\Models\QnaQuestion;
 use Auth;
 
 class AnswersApiController extends ApiController
@@ -14,30 +18,26 @@ class AnswersApiController extends ApiController
 		$this->resourceName = config('papi.resources.answers');
 	}
 
-	public function post(Request $request)
+	public function post(PostAnswer $request)
 	{
-		if (!$request->has('questionId') || !$request->has('text')) {
-			return $this->respondInvalidInput('questionId and text must be present in the request.');
-		}
-
-		$questionId = $request->get('questionId');
+		$questionId = $request->get('question_id');
 		$text = $request->get('text');
-
-		if (empty($text)) {
-			return $this->respondInvalidInput('text can\'t be empty.');
-		}
+		$user = Auth::user();
 
 		$question = QnaQuestion::find($questionId);
 
 		if (!$question) {
-			return $this->respondInvalidInput('Question with given id does\'n exist.');
+			return $this->respondInvalidInput('Question does not exist.');
 		}
 
 		$answer = $question->answers()->create([
 			'text'    => $text,
-			'user_id' => Auth::user()->id,
+			'user_id' => $user->id,
 		]);
 
-		return response()->json(['id' => $answer->id], 201);
+		$resource = new Item($answer, new QnaAnswerTransformer, $this->resourceName);
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
 	}
 }

@@ -25,6 +25,7 @@ class LessonTransformer extends TransformerAbstract
 			'id'       => $lesson->id,
 			'name'     => $lesson->name,
 			'group_id' => $lesson->group_id,
+			'groups'   => $lesson->group_id,
 			'editions' => $lesson->group->course->id,
 		];
 
@@ -37,8 +38,7 @@ class LessonTransformer extends TransformerAbstract
 
 	public function includeScreens(Lesson $lesson)
 	{
-		// $screens = $lesson->screens;
-		$screens = $lesson->screens()->orderBy(DB::raw('type = "html" DESC, id'))->get();
+		$screens = $lesson->screens;
 
 		return $this->collection($screens, new ScreenTransformer, 'screens');
 	}
@@ -54,6 +54,6 @@ class LessonTransformer extends TransformerAbstract
 	{
 		$questions = $lesson->questions;
 
-		return $this->collection($questions, new QuestionTransformer($lesson->id), 'questions');
+		return $this->collection($questions, new QnaQuestionTransformer($lesson->id), 'questions');
 	}
 }

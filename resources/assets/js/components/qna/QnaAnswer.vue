@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="qna-answer-container">
 		<div class="qna-answer">
 			<div class="votes">
 				<wnl-vote type="up" count="0"></wnl-vote>
@@ -9,7 +9,7 @@
 				<div class="qna-meta">
 					<wnl-avatar
 						:username="author.username"
-						:url="author.avatarUrl"
+						:url="author.avatar"
 						size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
@@ -22,14 +22,25 @@
 			</div>
 		</div>
 		<div class="qna-answer-comments">
-			<p class="qna-title">Komentarze ({{comments.length}})</p>
-			<!-- <wnl-qna-comment v-for="comment in answer.comments" :comment="comment"></wnl-qna-comment> -->
+			<p class="qna-title">
+				<span class="icon is-small comment-icon"><i class="fa fa-comment-o"></i></span>
+				Komentarze ({{comments.length}})
+				<span v-if="comments.length > 0"> · <a class="comments-show-link" @click="toggleComments">
+					Pokaż wszystkie
+				</a></span>
+			</p>
+			<wnl-qna-comment v-if="showComments"
+				v-for="comment in comments" :comment="comment">
+			</wnl-qna-comment>
 		</div>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.qna-answer-container
+		margin-bottom: $margin-huge
 
 	.qna-answer
 		background: $color-background-lighter-gray
@@ -41,10 +52,14 @@
 
 	.qna-title
 		font-size: $font-size-minus-1
+
+	.comment-icon
+		margin-right: $margin-small
+		margin-top: -$margin-small
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	import Vote from 'js/components/qna/Vote'
 	import QnaComment from 'js/components/qna/QnaComment'
@@ -56,10 +71,20 @@
 			'wnl-qna-comment': QnaComment,
 		},
 		props: ['answer'],
+		data() {
+			return {
+				loading: true,
+				showComments: false,
+			}
+		},
 		computed: {
 			...mapGetters('qna', [
-				'profile'
+				'profile',
+				'answerComments',
 			]),
+			id() {
+				return this.answer.id
+			},
 			content() {
 				return this.answer.text
 			},
@@ -70,13 +95,17 @@
 				return this.profile(this.answer.profiles[0])
 			},
 			comments() {
-				return this.answer.comments || []
+				return this.answerComments(this.id)
 			},
 		},
-		data() {
-			return {
-				loading: true,
-			}
-		}
+		methods: {
+			...mapActions('qna', ['fetchComments']),
+			toggleComments() {
+				this.fetchComments(this.id)
+					.then(() => {
+						this.showComments = true
+					})
+			},
+		},
 	}
 </script>

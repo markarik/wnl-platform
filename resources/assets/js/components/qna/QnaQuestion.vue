@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div v-if="loading">
-			Ładuję pytanie
+		<div class="question-loader" v-if="loading">
+			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div class="qna-question" v-else>
 			<div class="votes">
@@ -24,9 +24,16 @@
 				</div>
 				<div class="qna-answers">
 					<p class="qna-title">Odpowiedzi ({{answersFromLatest.length}})</p>
-					<!-- <wnl-qna-answer v-for="answer in answers" :answer="answer"></wnl-qna-answer> -->
 					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer"></wnl-qna-answer>
-					<wnl-qna-answer v-if="allAnswers && otherAnswers"></wnl-qna-answer>
+					<wnl-qna-answer v-if="allAnswers"
+						v-for="answer in otherAnswers"
+						:answer="answer">
+					</wnl-qna-answer>
+					<a class="button is-small is-wide qna-answers-show-all"
+						v-if="!allAnswers && otherAnswers.length > 0"
+						@click="allAnswers = true">
+						Pokaż pozostałe odpowiedzi
+					</a>
 				</div>
 			</div>
 		</div>
@@ -35,6 +42,11 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.question-loader
+		border-top: $border-light-gray
+		margin: $margin-big
+		padding: $margin-big
 
 	.qna-question
 		border-top: $border-light-gray
@@ -47,6 +59,9 @@
 
 	.qna-answers
 		margin-top: $margin-big
+
+	.qna-answers-show-all
+		margin-top: $margin-huge
 </style>
 
 <script>
@@ -96,10 +111,10 @@
 				return this.answersFromLatest.length > 0
 			},
 			latestAnswer() {
-				return _.head(this.answersFromLatest)
+				return _.head(this.answersFromLatest) || {}
 			},
 			otherAnswers() {
-				return _.tail(this.answersFromLatest)
+				return _.tail(this.answersFromLatest) || []
 			},
 		},
 		methods: {

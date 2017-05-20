@@ -3,15 +3,15 @@
 		<div class="qna-container">
 			<div class="qna-meta qna-comment-meta">
 				<wnl-avatar
-				:username="comment.author.username"
-				:url="comment.author.avatarUrl"
+				:username="author.username"
+				:url="author.avatarUrl"
 				size="small">
 				</wnl-avatar>
 				<span class="qna-meta-info">
-					{{comment.author.username}} ·
+					{{author.username}} ·
 				</span>
 				<span class="qna-meta-info">
-					{{comment.timestamp}}
+					{{comment.created_at}}
 				</span>
 			</div>
 			<div class="qna-comment-content">
@@ -40,8 +40,21 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	export default {
 		name: 'QnaComment',
 		props: ['comment'],
+		computed: {
+			...mapGetters('qna', [
+				'profile'
+			]),
+			id() {
+				return this.comment.id
+			},
+			author() {
+				return this.profile(this.comment.profiles[0])
+			},
+		},
 	}
 </script>

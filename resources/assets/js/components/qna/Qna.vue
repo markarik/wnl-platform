@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-qna">
-		<p class="title is-4">Pytania i odpowiedzi</p>
+		<p class="title is-4">Pytania i odpowiedzi ({{howManyQuestions}})</p>
 		<div v-if="!loading">
 			<wnl-qna-question v-for="question in sortedQuestions"
 				:question="question">
@@ -65,6 +65,9 @@
 		},
 		computed: {
 			...mapGetters('qna', ['sortedQuestions']),
+			howManyQuestions() {
+				return this.sortedQuestions.length || 0
+			},
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestions', 'qnaGetMockData'])

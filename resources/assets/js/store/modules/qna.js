@@ -20,7 +20,7 @@ function _getQuestions(lessonId) {
  * @returns {Promise}
  * @private
  */
-function _getQuestion(questionId) {
+function _getAnswers(questionId) {
 	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments`))
 }
 
@@ -82,6 +82,7 @@ const getters = {
 
 	// Resources
 	profile: state => (id) => state.profiles[id],
+	comment: state => (id) => state.comments[id],
 
 	// Question
 	questionContent: state => (id) => state.qna_questions[id].text,
@@ -91,10 +92,24 @@ const getters = {
 	questionTimestamp: state => (id) => state.qna_questions[id].created_at,
 	questionAnswers: state => (id) => {
 		let answersIds = state.qna_questions[id].qna_answers
+		if (_.isUndefined(answersIds)) {
+			return []
+		}
+
 		return answersIds.map((id) => state.qna_answers[id])
 	},
 	questionAnswersFromLatest: (state, getters) => (id) => {
 		return _.sortBy(getters.questionAnswers(id), (answer) => answer.created_at)
+	},
+
+	// Answer
+	answerComments: state => (id) => {
+		let commentsIds = state.qna_answers[id].comments
+		if (_.isUndefined(commentsIds)) {
+			return []
+		}
+
+		return commentsIds.map((id) => state.comments[id])
 	},
 }
 
@@ -110,6 +125,11 @@ const mutations = {
 		let id = payload.questionId, data = payload.data
 
 		set(state.qna_questions, id, _.merge(state.qna_questions[id], data))
+	},
+	[types.QNA_UPDATE_ANSWER] (state, payload) {
+		let id = payload.answerId, data = payload.data
+
+		set(state.qna_answers, id, _.merge(state.qna_answers[id], data))
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
@@ -138,7 +158,7 @@ const actions = {
 			_getQuestions(lessonId)
 				.then((response) => {
 					let data = response.data
-					if (data.qna_questions.length > 0) {
+					if (!_.isUndefined(data.qna_questions)) {
 						commit(types.UPDATE_INCLUDED, data.included)
 						commit(types.QNA_SET_QUESTIONS_IDS, data.qna_questions)
 					}
@@ -152,7 +172,7 @@ const actions = {
 	},
 	fetchQuestion({commit}, questionId) {
 		return new Promise((resolve, reject) => {
-			_getQuestion(questionId)
+			_getAnswers(questionId)
 				.then((response) => {
 					let data = response.data,
 						included = data.included
@@ -170,12 +190,32 @@ const actions = {
 				})
 		})
 	},
+	fetchComments({commit}, answerId) {
+		return new Promise((resolve, reject) => {
+			_getComments(answerId)
+				.then((response) => {
+					let data = response.data,
+						included = data.included
+
+					if (data.comments.length > 0) {
+						commit(types.UPDATE_INCLUDED, included)
+					}
+					delete(data.included)
+					commit(types.QNA_UPDATE_ANSWER, {answerId, data})
+					resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					reject()
+				})
+		})
+	},
 
 	qnaAddQuestion({commit}, {lessonId, text}){
 		return new Promise((resolve, reject) => {
 			_postQuestion(lessonId, text).then((response) => {
 				if (response.status === 201) {
-					_getQuestion(response.data.id).then((response) => {
+					_getAnswers(response.data.id).then((response) => {
 						commit(types.QNA_ADD_QUESTION, {lessonId, data: response.data})
 						resolve()
 					})

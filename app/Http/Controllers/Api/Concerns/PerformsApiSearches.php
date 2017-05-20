@@ -50,7 +50,7 @@ trait PerformsApiSearches
 	protected function parseWhereHas($model, $relationConditions)
 	{
 		foreach ($relationConditions as $field => $conditions) {
-			$model::whereHas($field,
+			$model = $model->whereHas($field,
 				function ($query) use ($conditions) {
 					$query->where($conditions);
 				}
@@ -70,7 +70,7 @@ trait PerformsApiSearches
 	protected function parseOrder($model, $rules)
 	{
 		foreach ($rules as $field => $order) {
-			$model::orderBy($field, $order);
+			$model = $model->orderBy($field, $order);
 		}
 
 		return $model;
@@ -90,7 +90,7 @@ trait PerformsApiSearches
 		$limit = $request->get('limit');
 
 		if (!empty ($query['where'])) {
-			$model::where($query['where']);
+			$model = $model->where($query['where']);
 		}
 
 		if (!empty ($query['whereHas'])) {
@@ -103,7 +103,7 @@ trait PerformsApiSearches
 
 		if (!empty ($limit)) {
 			list ($limit, $offset) = $limit;
-			$model
+			$model = $model
 				->offset($offset)
 				->limit($limit);
 		}

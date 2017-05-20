@@ -31,7 +31,6 @@ trait PerformsApiSearches
 		if (!$results) {
 			return $this->respondNotFound();
 		}
-
 		$transformerName = self::getResourceTransformer($this->resourceName);
 		$resource = new Collection($results, new $transformerName, $this->resourceName);
 

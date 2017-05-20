@@ -31,13 +31,13 @@ class QnaAnswerTransformer extends TransformerAbstract
 	{
 		$profile = $answer->user->profile;
 
-		return $this->item($profile, new UserProfileTransformer(['answers' => $answer->id]), 'profiles');
+		return $this->item($profile, new UserProfileTransformer(['qna_answers' => $answer->id]), 'profiles');
 	}
 
 	public function includeComments(QnaAnswer $answer)
 	{
 		$comments = $answer->comments;
 
-		return $this->collection($comments, new CommentTransformer(['answers' => $answer->id]), 'comments');
+		return $this->collection($comments, new CommentTransformer(['qna_answers' => $answer->id]), 'comments');
 	}
 }

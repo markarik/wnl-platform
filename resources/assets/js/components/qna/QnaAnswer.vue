@@ -2,7 +2,7 @@
 	<div>
 		<div class="qna-answer">
 			<div class="votes">
-				<wnl-vote type="up" :count="answer.votes"></wnl-vote>
+				<wnl-vote type="up" count="0"></wnl-vote>
 			</div>
 			<div class="qna-container">
 				<div class="qna-answer-content" v-html="answer.text"></div>

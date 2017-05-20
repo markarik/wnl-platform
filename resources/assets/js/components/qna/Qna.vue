@@ -1,7 +1,11 @@
 <template>
 	<div class="wnl-qna">
 		<p class="title is-4">Pytania i odpowiedzi</p>
-		<wnl-qna-question v-if="questions" v-for="question in questions" :question="question"></wnl-qna-question>
+		<div v-if="!loading">
+			<wnl-qna-question v-for="question in sortedQuestions"
+				:question="question">
+			</wnl-qna-question>
+		</div>
 	</div>
 </template>
 
@@ -45,7 +49,7 @@
 	import QuestionForm from './QuestionForm.vue'
 	import Question from 'js/components/qna/Question.vue'
 	import QnaQuestion from 'js/components/qna/QnaQuestion.vue'
-	import {mapActions, mapGetters} from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	export default {
 		name: 'Qna',
@@ -54,21 +58,22 @@
 			'wnl-question': Question,
 			'wnl-qna-question': QnaQuestion,
 		},
+		data() {
+			return {
+				loading: true,
+			}
+		},
 		computed: {
-			...mapGetters(['qnaGetMockData']),
-			lessonId () {
-				return this.$route.params.lessonId
-			},
-			questions () {
-				// return this.qnaGetQuestions(this.lessonId)
-				return this.qnaGetMockData(this.lessonId).questions
-			},
+			...mapGetters('qna', ['sortedQuestions']),
 		},
 		methods: {
-			// ...mapActions(['qnaSetQuestions'])
+			...mapActions('qna', ['fetchQuestions', 'qnaGetMockData'])
 		},
-		created() {
-			// this.qnaSetQuestions(this.lessonId)
+		mounted() {
+			this.fetchQuestions()
+				.then(() => {
+					this.loading = false
+				})
 		},
 	}
 </script>

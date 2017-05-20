@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\PrivateApi\Qna;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\QnaQuestionTransformer;
+use App\Http\Requests\Qna\PostQuestion;
 use App\Models\Lesson;
 use App\Models\QnaQuestion;
 use Illuminate\Http\Request;
 use Auth;
+use League\Fractal\Resource\Item;
 
 class QuestionsApiController extends ApiController
 {
@@ -16,34 +19,28 @@ class QuestionsApiController extends ApiController
 		$this->resourceName = config('papi.resources.questions');
 	}
 
-	public function post(Request $request)
+	public function post(PostQuestion $request)
 	{
-		if (!$request->has('lessonId') || !$request->has('text')) {
-			return $this->respondInvalidInput('lessonId and text must be present in the request.');
-		}
-
-		$lessonId = $request->get('lessonId');
+		$lessonId = $request->get('lesson_id');
 		$text = $request->get('text');
-
-		if (empty($text)) {
-			return $this->respondInvalidInput('text can\'t be empty.');
-		}
+		$user = Auth::user();
 
 		$lesson = Lesson::find($lessonId);
 
 		if (!$lesson) {
-			return $this->respondInvalidInput('Lesson with given id does\'n exist.');
+			return $this->respondInvalidInput('Lesson not found.');
 		}
 
 		$question = QnaQuestion::create([
 			'text'    => $text,
-			'user_id' => Auth::user()->id,
+			'user_id' => $user->id,
 		]);
 
 		$question->tags()->attach($lesson->tags);
 
-		$data = ['id' => $question->id];
+		$resource = new Item($question, new QnaQuestionTransformer, $this->resourceName);
+		$data = $this->fractal->createData($resource)->toArray();
 
-		return response()->json($data, 201);
+		return $this->respondOk($data);
 	}
 }

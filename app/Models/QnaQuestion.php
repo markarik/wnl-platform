@@ -10,7 +10,7 @@ class QnaQuestion extends Model
 
 	public function answers()
 	{
-		return $this->hasMany('App\Models\QnaAnswer');
+		return $this->hasMany('App\Models\QnaAnswer', 'question_id');
 	}
 
 	public function user()

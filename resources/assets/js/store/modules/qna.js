@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {mockData} from 'js/store/modules/qnaMockData'
-import {set} from 'vue'
+import { set, delete as destroy } from 'vue'
 
 // API
 /**
@@ -87,8 +87,10 @@ const getters = {
 	},
 
 	// Resources
-	profile: state => (id) => state.profiles[id],
-	comment: state => (id) => state.comments[id],
+	question: state => (id) => state.qna_questions[id],
+	answer:   state => (id) => state.qna_answers[id],
+	profile:  state => (id) => state.profiles[id],
+	comment:  state => (id) => state.comments[id],
 
 	// Question
 	questionContent: state => (id) => state.qna_questions[id].text,
@@ -129,10 +131,15 @@ const mutations = {
 		set(state, 'loading', isLoading)
 	},
 	[types.QNA_SET_QUESTIONS_IDS] (state, questionsIds) {
+		destroy(state, 'questionsIds')
 		set(state, 'questionsIds', questionsIds)
 	},
 	[types.QNA_UPDATE_QUESTION] (state, payload) {
 		let id = payload.questionId, data = payload.data
+
+		if (state.qna_questions.hasOwnProperty(id)) {
+			destroy(state.qna_questions, id)
+		}
 
 		set(state.qna_questions, id, _.merge(state.qna_questions[id], data))
 	},
@@ -214,35 +221,6 @@ const actions = {
 					$wnl.logger.error(error)
 					reject()
 				})
-		})
-	},
-
-	qnaAddQuestion({commit}, {lessonId, text}){
-		return new Promise((resolve, reject) => {
-			_postQuestion(lessonId, text).then((response) => {
-				if (response.status === 201) {
-					_getAnswers(response.data.id).then((response) => {
-						commit(types.QNA_ADD_QUESTION, {lessonId, data: response.data})
-						resolve()
-					})
-				} else {
-					reject()
-				}
-			})
-		})
-	},
-	qnaAddAnswer({commit}, {lessonId, questionId, text}){
-		return new Promise((resolve, reject) => {
-			_postAnswer(questionId, text).then((response) => {
-				if (response.status === 201) {
-					_getAnswer(response.data.id).then((response) => {
-						commit(types.QNA_ADD_ANSWER, {lessonId, questionId, data: response.data})
-						resolve()
-					})
-				} else {
-					reject()
-				}
-			})
 		})
 	},
 }

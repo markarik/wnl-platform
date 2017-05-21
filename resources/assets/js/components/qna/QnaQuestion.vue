@@ -28,12 +28,21 @@
 							<p class="text-dimmed">Odpowiedzi ({{answersFromLatest.length}})</p>
 						</div>
 						<div class="level-right">
-							<a class="button is-small">
+							<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
 								<span>Odpowiedz</span>
 								<span class="icon is-small answer-icon"><i class="fa fa-comment-o"></i></span>
 							</a>
+							<a class="button is-small" v-if="showAnswerForm" @click="showAnswerForm = false">
+								<span>Ukryj</span>
+							</a>
 						</div>
 					</div>
+					<transition name="fade">
+						<wnl-qna-new-answer-form v-if="showAnswerForm"
+							:questionId="this.id"
+							@submitSuccess="onSubmitSuccess">
+						</wnl-qna-new-answer-form>
+					</transition>
 					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer"></wnl-qna-answer>
 					<wnl-qna-answer v-if="allAnswers"
 						v-for="answer in otherAnswers"
@@ -55,6 +64,7 @@
 
 	.button .icon.answer-icon
 		margin-left: $margin-small
+		margin-right: $margin-tiny
 
 	.question-loader
 		border-top: $border-light-gray
@@ -82,8 +92,10 @@
 
 <script>
 	import _ from 'lodash'
+	import { nextTick } from 'vue'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/qna/Vote'
 
@@ -94,12 +106,14 @@
 		components: {
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
+			'wnl-qna-new-answer-form': NewAnswerForm,
 		},
 		props: ['question'],
 		data() {
 			return {
-				loading: true,
 				allAnswers: false,
+				loading: true,
+				showAnswerForm: false,
 			}
 		},
 		computed: {
@@ -133,16 +147,29 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestion'])
+			...mapActions('qna', ['fetchQuestion']),
+			dispatchFetchQuestion() {
+				this.loading = true
+				return this.fetchQuestion(this.id)
+					.then(() => {
+						nextTick(() => {
+							this.loading = false
+						})
+					})
+					.catch((error) => {
+						$wnl.logger.error(error)
+						nextTick(() => {
+							this.loading = false
+						})
+					})
+			},
+			onSubmitSuccess() {
+				this.showAnswerForm = false
+				this.dispatchFetchQuestion()
+			},
 		},
 		mounted() {
-			this.fetchQuestion(this.id)
-				.then(() => {
-					this.loading = false
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-				})
+			this.dispatchFetchQuestion()
 		}
 	}
 </script>

@@ -2,17 +2,17 @@
 	<wnl-form
 		class="qna-new-answer-form"
 		hideDefaultSubmit="true"
-		name="QnaNewAnswer"
 		method="post"
 		suppressEnter="true"
 		resetAfterSubmit="true"
-		resourceRoute="qna_questions"
+		resourceRoute="qna_answers"
 		:attach="attachedData"
+		:name="name"
 		@submitSuccess="onSubmitSuccess">
 		<wnl-quill
 			class="margin bottom"
 			name="text"
-			:options="{ placeholder: 'O co chcesz zapytać?' }"
+			:options="{ placeholder: 'Zacznij swoją odpowiedź...' }"
 			:toolbar="toolbar">
 		</wnl-quill>
 
@@ -32,41 +32,38 @@
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
-	.qna-new-question-form
+	.qna-new-answer-form
 		.ql-container
 			height: auto
 
 		.ql-editor
 			font-family: $font-family-sans-serif
-			font-weight: $font-weight-bold
-			font-size: $font-size-plus-1
-
-			strong
-				font-weight: $font-weight-black
+			font-size: $font-size-base
+			line-height: $line-height-base
 
 			&::before
-				font-weight: $font-weight-regular
 				font-size: $font-size-minus-1
-				line-height: $line-height-plus
 </style>
 
 <script>
-	import { mapActions } from 'vuex'
-
 	import { Form, Quill, Submit } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 
 	export default {
-		name: 'NewQuestionForm',
+		name: 'NewAnswerForm',
 		components: {
 			'wnl-form': Form,
 			'wnl-quill': Quill,
 			'wnl-submit': Submit,
 		},
+		props: ['questionId'],
 		computed: {
+			name() {
+				return `QnaNewAnswer-${this.questionId}`
+			},
 			attachedData() {
 				return {
-					lesson_id: this.$route.params.lessonId
+					question_id: this.questionId
 				}
 			},
 			toolbar() {
@@ -74,14 +71,13 @@
 					['bold', 'italic', 'underline', 'link'],
 					[{ color: fontColors }],
 					['clean'],
+					[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
 				]
 			}
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions']),
 			onSubmitSuccess() {
 				this.$emit('submitSuccess')
-				this.fetchQuestions()
 			},
 		},
 	}

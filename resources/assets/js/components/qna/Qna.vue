@@ -44,8 +44,7 @@
 		margin: $margin-huge 0
 
 		#question-icon
-			margin-left: $margin-small
-			margin-top: $margin-tiny
+			margin: $margin-tiny $margin-tiny 0 $margin-small
 
 	.votes
 		flex: 0 auto

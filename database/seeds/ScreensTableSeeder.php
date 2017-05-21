@@ -11,33 +11,33 @@ class ScreensTableSeeder extends Seeder
 	{
 		DB::table('screens')->insert([
 			'type'      => 'end',
-			'content'   => Storage::get('demo/end.html'),
+			'content'   => DatabaseSeeder::file('demo/end.html'),
 			'name'      => 'Następna lekcja',
 			'lesson_id' => 1,
 		]);
 		// Lesson 2
 		DB::table('screens')->insert([
 			'type'      => 'html',
-			'content'   => Storage::get('demo/foundations.html'),
+			'content'   => DatabaseSeeder::file('demo/foundations.html'),
 			'name'      => 'Wstęp',
 			'lesson_id' => 2,
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'end',
-			'content'   => Storage::get('demo/end2.html'),
+			'content'   => DatabaseSeeder::file('demo/end2.html'),
 			'name'      => 'Następna lekcja',
 			'lesson_id' => 2,
 		]);
 		// Lesson 3
 		DB::table('screens')->insert([
 			'type'      => 'html',
-			'content'   => Storage::get('demo/example.html'),
+			'content'   => DatabaseSeeder::file('demo/example.html'),
 			'name'      => 'Wstęp',
 			'lesson_id' => 3,
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'html',
-			'content'   => Storage::get('demo/repetitions.html'),
+			'content'   => DatabaseSeeder::file('demo/repetitions.html'),
 			'name'      => 'Powtórki',
 			'lesson_id' => 3,
 		]);
@@ -56,7 +56,7 @@ class ScreensTableSeeder extends Seeder
 		]);
 		DB::table('screens')->insert([
 			'type'      => 'end',
-			'content'   => Storage::get('demo/end3.html'),
+			'content'   => DatabaseSeeder::file('demo/end3.html'),
 			'name'      => 'Zakończenie lekcji',
 			'lesson_id' => 3,
 		]);

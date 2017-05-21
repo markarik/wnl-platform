@@ -41,4 +41,22 @@ class DatabaseSeeder extends Seeder
 		$this->call(QuizSeeder::class);
 		$this->call(CommentsSeeder::class);
 	}
+
+	/**
+	 * Get contents of a seeder source file.
+	 *
+	 * @param $path
+	 * @return string
+	 */
+	public static function file($path)
+	{
+		if (Storage::exists($path)) {
+			return Storage::get($path);
+		}
+
+		$fileContents = Storage::disk('s3')->get($path);
+		Storage::put($path, $fileContents);
+
+		return $fileContents;
+	}
 }

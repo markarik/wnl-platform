@@ -59,9 +59,11 @@ const form = {
 			set(state, 'hasChanges', true)
 		},
 		[types.FORM_RESET] (state) {
-			_.each(state.data, (field) => {
-				set(state.data, field.name, state.defaults[field.name])
+			destroy(state.data)
+			_.each(state.defaults, (value, field) => {
+				set(state.data, field, state.defaults[field])
 			})
+			set(state, 'hasChanges', false)
 		},
 		[types.ERRORS_RECORD] (state, payload) {
 			set(state, 'errors', payload)

@@ -5,6 +5,7 @@
 		name="QnaNewQuestion"
 		method="post"
 		suppressEnter="true"
+		resetAfterSubmit="true"
 		resourceRoute="qna_questions"
 		:attach="attachedData">
 		<wnl-quill

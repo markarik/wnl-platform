@@ -6,10 +6,6 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
-
-</style>
-
 <script>
 	import _ from 'lodash'
 	import Quill from 'quill'
@@ -25,7 +21,7 @@
 	}
 
 	export default {
-		name: 'Bubble',
+		name: 'Quill',
 		mixins: [formInput],
 		props: {
 			options: {
@@ -49,7 +45,6 @@
 				default: true,
 			},
 			name: String,
-			value: String,
 			theme: String,
 		},
 		data () {
@@ -60,12 +55,15 @@
 			}
 		},
 		computed: {
+			default() {
+				return ''
+			},
 			quillOptions() {
 				let options = _.merge(defaults, this.options)
 				options.modules.toolbar = this.toolbar
 
 				return options
-			}
+			},
 		},
 		methods: {
 			onTextChange() {
@@ -81,7 +79,7 @@
 			focused (val) {
 				this.editor[val ? 'focus' : 'blur']()
 			},
-			value (newValue) {
+			inputValue (newValue) {
 				if (newValue !== this.editor.innerHTML) {
 					this.editor.innerHTML = newValue
 				}

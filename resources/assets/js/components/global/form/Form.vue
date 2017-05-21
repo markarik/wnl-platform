@@ -38,6 +38,7 @@
 			'populate',
 			'hideDefaultSubmit',
 			'suppressEnter',
+			'resetAfterSubmit',
 		],
 		computed: {
 			anyErrors() {
@@ -79,16 +80,25 @@
 				})
 					.then(
 						data => {
+							this.$emit('submitSuccess')
+
 							this.successFading(`
 								<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
 								<span>Zapisano!</span>
 							`)
+
+							if (this.resetAfterSubmit) {
+								this.mutation(types.FORM_RESET)
+								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
+							}
 						},
 						reason => {
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 						},
 					)
 					.catch((error) => {
+						this.$emit('submitError')
+
 						this.errorFading('Nie udało się.')
 					})
 			}
@@ -104,7 +114,7 @@
 			_.each(this.$children, (child) => {
 				let options = child.$options
 
-				if (_.has(options, 'computed.fillable')) {
+				if (!_.isUndefined(options.computed.fillable)) {
 					let name = options.propsData.name,
 						defaultValue = options.computed.default() || ''
 

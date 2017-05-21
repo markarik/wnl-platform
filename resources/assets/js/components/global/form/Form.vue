@@ -7,22 +7,10 @@
 			:timestamp="timestamp"
 			@delete="onDelete"
 		></wnl-alert>
-
-		<wnl-submit v-if="!hideSubmit && $slots['submit-before']" @submitForm="onSubmitForm">
-			<slot name="submit-before"></slot>
-		</wnl-submit>
-
 		<slot></slot>
-
-		<wnl-submit v-if="!hideSubmit && !$slots['submit-before']" @submitForm="onSubmitForm">
-			<slot name="submit-after">Zapisz</slot>
-		</wnl-submit>
+		<wnl-submit v-if="!hideDefaultSubmit"></wnl-submit>
 	</form>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
 
 <script>
 	import _ from 'lodash'
@@ -41,13 +29,14 @@
 			'wnl-submit': Submit,
 		},
 		mixins: [ alerts ],
+		// TODO: Introduce an options prop for better readability
 		props: [
 			'name',
 			'method',
 			'resourceRoute',
 			'attach',
 			'populate',
-			'hideSubmit',
+			'hideDefaultSubmit',
 			'suppressEnter',
 		],
 		computed: {
@@ -137,6 +126,8 @@
 			} else {
 				this.mutation(types.FORM_IS_LOADED)
 			}
+
+			this.$on('submitForm', this.onSubmitForm)
 		},
 	}
 </script>

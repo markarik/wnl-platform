@@ -1,17 +1,29 @@
 <template>
 	<wnl-form
 		class="qna-new-question-form"
+		hideDefaultSubmit="true"
 		name="QnaNewQuestion"
 		method="post"
+		suppressEnter="true"
 		resourceRoute="qna_questions"
-		:attach="attachedData"
-		suppressEnter="true">
+		:attach="attachedData">
 		<wnl-quill
 			class="margin bottom"
 			name="text"
 			:options="{ placeholder: 'O co chcesz zapytać?' }"
 			:toolbar="toolbar">
 		</wnl-quill>
+
+		<div class="level">
+			<div class="level-left"></div>
+			<div class="level-right">
+				<div class="level-item">
+					<wnl-submit cssClass="button is-small is-primary">
+						Zapisz
+					</wnl-submit>
+				</div>
+			</div>
+		</div>
 	</wnl-form>
 </template>
 
@@ -29,11 +41,15 @@
 
 			strong
 				font-weight: $font-weight-black
+
+			&::before
+				font-weight: $font-weight-regular
+				font-size: $font-size-minus-1
+				line-height: $line-height-plus
 </style>
 
 <script>
-	import Form from 'js/components/global/form/Form'
-	import Quill from 'js/components/global/form/Quill'
+	import { Form, Quill, Submit } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 
 	export default {
@@ -41,6 +57,7 @@
 		components: {
 			'wnl-form': Form,
 			'wnl-quill': Quill,
+			'wnl-submit': Submit,
 		},
 		computed: {
 			attachedData() {

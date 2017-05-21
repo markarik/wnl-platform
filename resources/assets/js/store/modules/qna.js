@@ -76,6 +76,7 @@ const state = {
 
 // Getters
 const getters = {
+	loading: state => state.loading,
 	sortedQuestions: state => {
 		return _.reverse(
 			_.sortBy(
@@ -145,8 +146,6 @@ const mutations = {
 			set(state, resource, _.merge(state[resource], items))
 		})
 	},
-
-
 	[types.QNA_ADD_QUESTION] (state, payload) {
 		set(state.questions[payload.lessonId].included.questions, payload.data.id, payload.data)
 	},
@@ -161,6 +160,7 @@ const actions = {
 	fetchQuestions({commit, rootState}) {
 		let lessonId = rootState.route.params.lessonId
 
+		commit(types.IS_LOADING, true)
 		// TODO: Error when lessonId is not defined
 
 		return new Promise((resolve, reject) => {
@@ -171,6 +171,7 @@ const actions = {
 						commit(types.UPDATE_INCLUDED, data.included)
 						commit(types.QNA_SET_QUESTIONS_IDS, data.qna_questions)
 					}
+					commit(types.IS_LOADING, false)
 					resolve()
 				})
 				.catch((error) => {

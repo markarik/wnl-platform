@@ -1,27 +1,33 @@
 <template>
-	<div class="wnl-qna">
-		<div class="level">
-			<div class="level-left">
-				<p class="title is-4">
-					Pytania i odpowiedzi ({{howManyQuestions}})
-				</p>
-			</div>
-			<div class="level-right">
-				<a class="button is-small" @click="showForm = true">
-					<span>Zadaj pytanie</span>
-					<span id="question-icon" class="icon is-small">
-						<i class="fa fa-question-circle-o"></i>
-					</span>
-				</a>
-			</div>
+	<div>
+		<div class="qna-loader" v-if="loading">
+			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<transition name="slide">
-			<div class="qna-new-question" v-if="showForm">
-				<wnl-new-question></wnl-new-question>
+		<div class="wnl-qna">
+			<div class="level">
+				<div class="level-left">
+					<p class="title is-4">
+						Pytania i odpowiedzi ({{howManyQuestions}})
+					</p>
+				</div>
+				<div class="level-right">
+					<a class="button is-small" @click="showForm = false" v-if="showForm">
+						<span>Ukryj</span>
+					</a>
+					<a class="button is-small" @click="showForm = true" v-if="!showForm">
+						<span>Zadaj pytanie</span>
+						<span id="question-icon" class="icon is-small">
+							<i class="fa fa-question-circle-o"></i>
+						</span>
+					</a>
+				</div>
 			</div>
-		</transition>
-		<div v-if="!loading">
-			<wnl-qna-question v-for="question in sortedQuestions"
+			<transition name="fade">
+				<div class="qna-new-question" v-if="showForm">
+					<wnl-new-question @submitSuccess="showForm = false"></wnl-new-question>
+				</div>
+			</transition>
+			<wnl-qna-question  v-if="!loading" v-for="question in sortedQuestions"
 				:question="question">
 			</wnl-qna-question>
 		</div>
@@ -30,6 +36,9 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import '../../../sass/variables'
+
+	.qna-loader
+		margin-top: $margin-huge
 
 	.wnl-qna
 		margin: $margin-huge 0
@@ -72,7 +81,7 @@
 </style>
 
 <script>
-	import { mapActions, mapGetters } from 'vuex'
+	import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 	import QnaQuestion from 'js/components/qna/QnaQuestion'
 	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
@@ -85,24 +94,24 @@
 		},
 		data() {
 			return {
-				loading: true,
 				showForm: false,
 			}
 		},
 		computed: {
-			...mapGetters('qna', ['sortedQuestions']),
+			...mapGetters('qna', ['sortedQuestions', 'loading']),
 			howManyQuestions() {
-				return this.sortedQuestions.length || '...'
+				return this.sortedQuestions.length || 0
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions', 'qnaGetMockData'])
+			...mapActions('qna', ['fetchQuestions']),
+			...mapMutations('qna', ['isLoading']),
 		},
 		mounted() {
 			this.fetchQuestions()
-				.then(() => {
-					this.loading = false
-				})
+		},
+		beforeDestroy() {
+			this.isLoading(true)
 		},
 	}
 </script>

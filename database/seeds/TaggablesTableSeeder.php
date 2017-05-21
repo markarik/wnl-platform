@@ -19,7 +19,12 @@ class TaggablesTableSeeder extends Seeder
 			],
 			[
 				'tag_id'        => 2,
-				'taggable_id'   => 1,
+				'taggable_id'   => 2,
+				'taggable_type' => 'App\Models\Lesson',
+			],
+			[
+				'tag_id'        => 3,
+				'taggable_id'   => 3,
 				'taggable_type' => 'App\Models\Lesson',
 			],
 			[
@@ -28,27 +33,17 @@ class TaggablesTableSeeder extends Seeder
 				'taggable_type' => 'App\Models\QnaQuestion',
 			],
 			[
-				'tag_id'        => 2,
+				'tag_id'        => 1,
 				'taggable_id'   => 1,
 				'taggable_type' => 'App\Models\QnaQuestion',
 			],
 			[
-				'tag_id'        => 1,
-				'taggable_id'   => 2,
-				'taggable_type' => 'App\Models\QnaQuestion',
-			],
-			[
 				'tag_id'        => 2,
 				'taggable_id'   => 2,
 				'taggable_type' => 'App\Models\QnaQuestion',
 			],
 			[
-				'tag_id'        => 1,
-				'taggable_id'   => 3,
-				'taggable_type' => 'App\Models\QnaQuestion',
-			],
-			[
-				'tag_id'        => 2,
+				'tag_id'        => 3,
 				'taggable_id'   => 3,
 				'taggable_type' => 'App\Models\QnaQuestion',
 			],

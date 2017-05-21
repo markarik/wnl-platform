@@ -7,7 +7,8 @@
 		suppressEnter="true"
 		resetAfterSubmit="true"
 		resourceRoute="qna_questions"
-		:attach="attachedData">
+		:attach="attachedData"
+		@submitSuccess="onSubmitSuccess">
 		<wnl-quill
 			class="margin bottom"
 			name="text"
@@ -50,6 +51,8 @@
 </style>
 
 <script>
+	import { mapActions } from 'vuex'
+
 	import { Form, Quill, Submit } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 
@@ -73,6 +76,13 @@
 					['clean'],
 				]
 			}
-		}
+		},
+		methods: {
+			...mapActions('qna', ['fetchQuestions']),
+			onSubmitSuccess() {
+				this.$emit('submitSuccess')
+				this.fetchQuestions()
+			},
+		},
 	}
 </script>

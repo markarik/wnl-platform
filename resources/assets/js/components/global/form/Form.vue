@@ -1,5 +1,5 @@
 <template>
-	<form :name="name" @keydown.enter="onSubmitForm">
+	<form :name="name" @keydown.enter="onEnter">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 			:alert="alert"
 			cssClass="fixed"
@@ -41,7 +41,15 @@
 			'wnl-submit': Submit,
 		},
 		mixins: [ alerts ],
-		props: ['name', 'method', 'resourceRoute', 'populate', 'hideSubmit', 'attach'],
+		props: [
+			'name',
+			'method',
+			'resourceRoute',
+			'attach',
+			'populate',
+			'hideSubmit',
+			'suppressEnter',
+		],
 		computed: {
 			anyErrors() {
 				return this.getter('anyErrors')
@@ -65,6 +73,11 @@
 			},
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
+			},
+			onEnter() {
+				if (!this.suppressEnter) {
+					this.onSubmitForm()
+				}
 			},
 			onSubmitForm() {
 				if (this.anyErrors || !this.hasChanges) {

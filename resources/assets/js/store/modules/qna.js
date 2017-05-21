@@ -77,7 +77,12 @@ const state = {
 // Getters
 const getters = {
 	sortedQuestions: state => {
-		return state.questionsIds.map((id) => state.qna_questions[id])
+		return _.reverse(
+			_.sortBy(
+				state.questionsIds.map((id) => state.qna_questions[id]),
+				(question) => question.created_at,
+			)
+		)
 	},
 
 	// Resources

@@ -57,6 +57,9 @@
 		font-weight: $font-weight-bold
 		font-size: $font-size-plus-1
 
+		strong
+			font-weight: $font-weight-black
+
 	.qna-answers
 		margin-top: $margin-big
 

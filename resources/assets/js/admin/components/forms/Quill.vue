@@ -21,7 +21,9 @@
 		props: {
 			options: {
 				type: Object,
-				default: () => ({})
+				default: {
+					theme: 'snow'
+				}
 			},
 			autofocus: Boolean,
 			form: Object,

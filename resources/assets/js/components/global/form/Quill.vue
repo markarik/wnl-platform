@@ -1,23 +1,28 @@
 <template>
 	<div class="quill-container">
-		<div ref="quill" v-model="inputValue">
+		<div ref="quill">
 			<slot></slot>
 		</div>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import "node_modules/quill/dist/quill.bubble"
+<style lang="sass" rel="stylesheet/sass">
 
-	.quill-container
-		height: 200px
 </style>
 
 <script>
+	import _ from 'lodash'
 	import Quill from 'quill'
 	import { set } from 'vue'
 
 	import { formInput } from 'js/mixins/form-input'
+	import { fontColors } from 'js/utils/colors'
+
+	const defaults = {
+		theme: 'snow',
+		modules: {},
+		placeholder: 'Pisz tutaj...',
+	}
 
 	export default {
 		name: 'Bubble',
@@ -25,9 +30,19 @@
 		props: {
 			options: {
 				type: Object,
-				default: () => {
-					theme: 'bubble'
-				},
+				default: () => ({}),
+			},
+			toolbar: {
+				type: Array,
+				default() {
+					return [
+						[{ 'header': [false, 1, 2, 3] }],
+						['bold', 'italic', 'underline', 'link'],
+						[{ color: fontColors }],
+						['clean'],
+						[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+					]
+				}
 			},
 			autofocus: {
 				type: Boolean,
@@ -35,6 +50,7 @@
 			},
 			name: String,
 			value: String,
+			theme: String,
 		},
 		data () {
 			return {
@@ -43,15 +59,21 @@
 				editor: null,
 			}
 		},
+		computed: {
+			quillOptions() {
+				let options = _.merge(defaults, this.options)
+				options.modules.toolbar = this.toolbar
+
+				return options
+			}
+		},
 		methods: {
 			onTextChange() {
-				// this.mutation(types.FORM_INPUT, { name: this.name, value: this.editor.innerHTML })
 				this.setValue(this.editor.innerHTML)
 			}
 		},
 		mounted () {
-			console.log(this.options)
-			this.quill = new Quill(this.$refs.quill, this.options)
+			this.quill = new Quill(this.$refs.quill, this.quillOptions)
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
 		},

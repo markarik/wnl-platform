@@ -1,127 +1,88 @@
 <template>
-	<article class="media">
-		<figure class="media-left">
-			<wnl-avatar :username="currentUserFullName"></wnl-avatar>
-		</figure>
-		<div class="media-content">
-			<p class="control">
-				<textarea v-model="message" class="textarea wnl-qna-textarea"
-						  :style="{ height: textareaHeight }"
-						  :disabled="disabled"
-						  @keydown.enter="suppressEnter"
-						  @keyup.enter="postEntry">
-				</textarea>
-			</p>
-			<div class="message is-warning" v-if="error.length > 0">
-				<div class="message-body">{{ error }}</div>
+	<wnl-form
+		class="qna-new-answer-form"
+		hideDefaultSubmit="true"
+		name="QnaNewAnswer"
+		method="post"
+		suppressEnter="true"
+		resetAfterSubmit="true"
+		resourceRoute="qna_questions"
+		:attach="attachedData"
+		@submitSuccess="onSubmitSuccess">
+		<wnl-quill
+			class="margin bottom"
+			name="text"
+			:options="{ placeholder: 'O co chcesz zapytać?' }"
+			:toolbar="toolbar">
+		</wnl-quill>
+
+		<div class="level">
+			<div class="level-left"></div>
+			<div class="level-right">
+				<div class="level-item">
+					<wnl-submit cssClass="button is-small is-primary">
+						Zapisz
+					</wnl-submit>
+				</div>
 			</div>
 		</div>
-		<div class="media-right">
-			<wnl-image-button
-					name="wnl-chat-form-submit"
-					icon="send-message"
-					alt="Wyślij wiadomość"
-					:disabled="sendingDisabled"
-					@buttonclicked="postEntry">
-			</wnl-image-button>
-		</div>
-	</article>
+	</wnl-form>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
-	.wnl-form-textarea
-		min-height: map-get($rounded-square-sizes, 'medium')
-		overflow: hidden
-		padding: 6px 10px
-		resize: none
+	.qna-new-question-form
+		.ql-container
+			height: auto
+
+		.ql-editor
+			font-family: $font-family-sans-serif
+			font-weight: $font-weight-bold
+			font-size: $font-size-plus-1
+
+			strong
+				font-weight: $font-weight-black
+
+			&::before
+				font-weight: $font-weight-regular
+				font-size: $font-size-minus-1
+				line-height: $line-height-plus
 </style>
 
 <script>
-	import {mapGetters, mapActions} from 'vuex'
-	import {getApiUrl} from 'js/utils/env'
+	import { mapActions } from 'vuex'
 
-	export default{
-		name: 'AnswerForm',
-		props: ['lessonId', 'questionId'],
-		data(){
-			return {
-				disabled: false,
-				error: '',
-				message: '',
-				canvasContext: null,
-				textarea: {},
-				computedStyles: {}
-			}
+	import { Form, Quill, Submit } from 'js/components/global/form'
+	import { fontColors } from 'js/utils/colors'
+
+	export default {
+		name: 'NewQuestionForm',
+		components: {
+			'wnl-form': Form,
+			'wnl-quill': Quill,
+			'wnl-submit': Submit,
 		},
 		computed: {
-			...mapGetters([
-				'currentUserFullName'
-			]),
-			sendingDisabled() {
-				return this.message.length === 0
-			},
-			textareaHeight() {
-				if (this.canvasContext !== null && this.message.length > 0) {
-					return this.calculateTextareaHeight(this.message)
-				} else {
-					return null
+			attachedData() {
+				return {
+					lesson_id: this.$route.params.lessonId
 				}
+			},
+			toolbar() {
+				return [
+					['bold', 'italic', 'underline', 'link'],
+					[{ color: fontColors }],
+					['clean'],
+				]
 			}
 		},
 		methods: {
-//			setTextareaStyles() {
-//				this.textarea = document.getElementById(this.inputId)
-//				this.computedStyles = window.getComputedStyle(this.textarea)
-//			},
-			...mapActions(['qnaAddAnswer']),
-			setTextMeasureCanvas() {
-				let canvas, context
-
-				canvas             = this.measureCanvas || document.createElement('canvas')
-				context            = canvas.getContext('2d')
-				context.font       = `${this.computedStyles.fontSize} ${this.computedStyles.fontFamily}`
-				this.canvasContext = context
-
-				return true
-			},
-			calculateTextareaHeight(message) {
-				// TODO: Mar 5, 2017 - Use the same padding declaration for styling
-				const padding = 6
-				let lines     = Math.max(
-						Math.ceil(
-								this.canvasContext.measureText(message).width * 1.2 / parseInt(this.computedStyles.width)
-						),
-						1)
-				if (lines > 1) {
-					return `${padding * 2 + lines * parseInt(this.computedStyles.lineHeight)}px`
-				}
-				return null
-			},
-			postEntry(event) {
-				if (this.sendingDisabled) {
-					return false
-				}
-//				this.disabled = true
-				this.error = ''
-				console.log(this.lessonId)
-				this.qnaAddAnswer({
-					lessonId: this.lessonId,
-					questionId: this.questionId,
-					text: this.message
-				}).then(() => {
-					this.message  = ''
-					this.disabled = false
-				}).catch(() => {
-					this.error    = 'Coś poszło nie tak... Proszę, spróbuj jeszcze raz. :)'
-					this.disabled = false
-				})
-			},
-			suppressEnter(event) {
-				event.preventDefault()
+			...mapActions('qna', ['fetchQuestions']),
+			onSubmitSuccess() {
+				this.$emit('submitSuccess')
+				this.fetchQuestions()
 			},
 		},
 	}
-
 </script>

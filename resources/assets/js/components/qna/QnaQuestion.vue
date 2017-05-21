@@ -23,7 +23,17 @@
 					</span>
 				</div>
 				<div class="qna-answers">
-					<p class="qna-title">Odpowiedzi ({{answersFromLatest.length}})</p>
+					<div class="level">
+						<div class="level-left">
+							<p class="text-dimmed">Odpowiedzi ({{answersFromLatest.length}})</p>
+						</div>
+						<div class="level-right">
+							<a class="button is-small">
+								<span>Odpowiedz</span>
+								<span class="icon is-small answer-icon"><i class="fa fa-comment-o"></i></span>
+							</a>
+						</div>
+					</div>
 					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer"></wnl-qna-answer>
 					<wnl-qna-answer v-if="allAnswers"
 						v-for="answer in otherAnswers"
@@ -42,6 +52,9 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.button .icon.answer-icon
+		margin-left: $margin-small
 
 	.question-loader
 		border-top: $border-light-gray

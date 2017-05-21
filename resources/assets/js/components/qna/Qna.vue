@@ -1,9 +1,25 @@
 <template>
 	<div class="wnl-qna">
-		<p class="title is-4">Pytania i odpowiedzi ({{howManyQuestions}})</p>
-		<div class="qna-new-question">
-			<wnl-new-question></wnl-new-question>
+		<div class="level">
+			<div class="level-left">
+				<p class="title is-4">
+					Pytania i odpowiedzi ({{howManyQuestions}})
+				</p>
+			</div>
+			<div class="level-right">
+				<a class="button is-small" @click="showForm = true">
+					<span>Zadaj pytanie</span>
+					<span id="question-icon" class="icon is-small">
+						<i class="fa fa-question-circle-o"></i>
+					</span>
+				</a>
+			</div>
 		</div>
+		<transition name="slide">
+			<div class="qna-new-question" v-if="showForm">
+				<wnl-new-question></wnl-new-question>
+			</div>
+		</transition>
 		<div v-if="!loading">
 			<wnl-qna-question v-for="question in sortedQuestions"
 				:question="question">
@@ -17,6 +33,10 @@
 
 	.wnl-qna
 		margin: $margin-huge 0
+
+		#question-icon
+			margin-left: $margin-small
+			margin-top: $margin-tiny
 
 	.votes
 		flex: 0 auto
@@ -66,12 +86,13 @@
 		data() {
 			return {
 				loading: true,
+				showForm: false,
 			}
 		},
 		computed: {
 			...mapGetters('qna', ['sortedQuestions']),
 			howManyQuestions() {
-				return this.sortedQuestions.length || 0
+				return this.sortedQuestions.length || '...'
 			},
 		},
 		methods: {

@@ -18,4 +18,9 @@ class UserProfile extends Model
 	{
 		return $this->avatar ? asset('storage/' . $this->avatar) : null;
 	}
+
+	public function getFullNameAttribute()
+	{
+		return "$this->first_name $this->last_name";
+	}
 }

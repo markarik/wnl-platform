@@ -8,7 +8,7 @@
 				<wnl-vote type="up" count="0"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna-question-content" v-text="content"></div>
+				<div class="qna-question-content" v-html="content"></div>
 				<div class="qna-question-meta qna-meta">
 					<wnl-avatar
 						:username="author.full_name"
@@ -19,7 +19,7 @@
 						{{author.full_name}} ·
 					</span>
 					<span class="qna-meta-info">
-						{{timestamp}}
+						{{time}}
 					</span>
 				</div>
 				<div class="qna-answers">
@@ -57,6 +57,9 @@
 		font-weight: $font-weight-bold
 		font-size: $font-size-plus-1
 
+		strong
+			font-weight: $font-weight-black
+
 	.qna-answers
 		margin-top: $margin-big
 
@@ -70,6 +73,8 @@
 
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/qna/Vote'
+
+	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaQuestion',
@@ -98,8 +103,8 @@
 			author() {
 				return this.profile(this.question.profiles[0])
 			},
-			timestamp() {
-				return this.question.created_at
+			time() {
+				return timeFromS(this.question.created_at)
 			},
 			answersFromLatest() {
 				return this.questionAnswersFromLatest(this.id)

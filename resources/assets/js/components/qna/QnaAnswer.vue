@@ -16,7 +16,7 @@
 						{{author.full_name}} ·
 					</span>
 					<span class="qna-meta-info">
-						{{timestamp}}
+						{{time}}
 					</span>
 				</div>
 			</div>
@@ -74,6 +74,8 @@
 	import Vote from 'js/components/qna/Vote'
 	import QnaComment from 'js/components/qna/QnaComment'
 
+	import { timeFromS } from 'js/utils/time'
+
 	export default {
 		name: 'QnaAnswer',
 		components: {
@@ -99,8 +101,8 @@
 			content() {
 				return this.answer.text
 			},
-			timestamp() {
-				return this.answer.created_at
+			time() {
+				return timeFromS(this.answer.created_at)
 			},
 			author() {
 				return this.profile(this.answer.profiles[0])

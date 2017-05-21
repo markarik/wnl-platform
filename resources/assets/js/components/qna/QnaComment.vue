@@ -11,7 +11,7 @@
 					{{author.username}} ·
 				</span>
 				<span class="qna-meta-info">
-					{{comment.created_at}}
+					{{time}}
 				</span>
 			</div>
 			<div class="qna-comment-content">
@@ -42,6 +42,8 @@
 <script>
 	import { mapGetters } from 'vuex'
 
+	import { timeFromS } from 'js/utils/time'
+
 	export default {
 		name: 'QnaComment',
 		props: ['comment'],
@@ -54,6 +56,9 @@
 			},
 			author() {
 				return this.profile(this.comment.profiles[0])
+			},
+			time() {
+				return timeFromS(this.comment.created_at)
 			},
 		},
 	}

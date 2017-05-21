@@ -1,17 +1,15 @@
 <template>
-	<div>
-		<a class="button is-primary is-wide"
-			:class="{'is-loading': isLoading}"
-			:disabled="!hasChanges || anyErrors"
-			@click="submitParent">
-			<slot></slot>
-		</a>
-	</div>
+	<a :class="[{'is-loading': isLoading}, cssClass ? cssClass : 'button is-primary is-wide']"
+		:disabled="!hasChanges || anyErrors"
+		@click="submitParent">
+		<slot></slot>
+	</a>
 </template>
 
 <script>
 	export default {
 		name: 'Submit',
+		props: ['cssClass'],
 		computed: {
 			parentName() {
 				return this.$parent.name
@@ -31,13 +29,16 @@
 			anyErrors() {
 				return this.getter('anyErrors')
 			},
+			cssClasses() {
+				return this.css
+			}
 		},
 		methods: {
 			getter(getter) {
 				return this.$store.getters[`${this.parentName}/${getter}`]
 			},
 			submitParent() {
-				this.$emit('submitForm')
+				this.$parent.$emit('submitForm')
 			}
 		}
 	}

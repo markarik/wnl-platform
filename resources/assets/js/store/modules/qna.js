@@ -76,8 +76,14 @@ const state = {
 
 // Getters
 const getters = {
+	loading: state => state.loading,
 	sortedQuestions: state => {
-		return state.questionsIds.map((id) => state.qna_questions[id])
+		return _.reverse(
+			_.sortBy(
+				state.questionsIds.map((id) => state.qna_questions[id]),
+				(question) => question.created_at,
+			)
+		)
 	},
 
 	// Resources
@@ -99,7 +105,11 @@ const getters = {
 		return answersIds.map((id) => state.qna_answers[id])
 	},
 	questionAnswersFromLatest: (state, getters) => (id) => {
-		return _.sortBy(getters.questionAnswers(id), (answer) => answer.created_at)
+		return _.reverse(
+			_.sortBy(
+				getters.questionAnswers(id), (answer) => answer.created_at
+			)
+		)
 	},
 
 	// Answer
@@ -136,8 +146,6 @@ const mutations = {
 			set(state, resource, _.merge(state[resource], items))
 		})
 	},
-
-
 	[types.QNA_ADD_QUESTION] (state, payload) {
 		set(state.questions[payload.lessonId].included.questions, payload.data.id, payload.data)
 	},
@@ -152,6 +160,7 @@ const actions = {
 	fetchQuestions({commit, rootState}) {
 		let lessonId = rootState.route.params.lessonId
 
+		commit(types.IS_LOADING, true)
 		// TODO: Error when lessonId is not defined
 
 		return new Promise((resolve, reject) => {
@@ -162,6 +171,7 @@ const actions = {
 						commit(types.UPDATE_INCLUDED, data.included)
 						commit(types.QNA_SET_QUESTIONS_IDS, data.qna_questions)
 					}
+					commit(types.IS_LOADING, false)
 					resolve()
 				})
 				.catch((error) => {
@@ -177,9 +187,7 @@ const actions = {
 					let data = response.data,
 						included = data.included
 
-					if (data.qna_answers.length > 0) {
-						commit(types.UPDATE_INCLUDED, included)
-					}
+					commit(types.UPDATE_INCLUDED, included)
 					delete(data.included)
 					commit(types.QNA_UPDATE_QUESTION, {questionId, data})
 					resolve()
@@ -197,9 +205,7 @@ const actions = {
 					let data = response.data,
 						included = data.included
 
-					if (data.comments.length > 0) {
-						commit(types.UPDATE_INCLUDED, included)
-					}
+					commit(types.UPDATE_INCLUDED, included)
 					delete(data.included)
 					commit(types.QNA_UPDATE_ANSWER, {answerId, data})
 					resolve()

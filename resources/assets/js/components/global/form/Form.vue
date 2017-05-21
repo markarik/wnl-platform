@@ -1,5 +1,5 @@
 <template>
-	<form :name="name" @keydown.enter="onSubmitForm">
+	<form :name="name" @keydown.enter="onEnter">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 			:alert="alert"
 			cssClass="fixed"
@@ -7,22 +7,10 @@
 			:timestamp="timestamp"
 			@delete="onDelete"
 		></wnl-alert>
-
-		<wnl-submit v-if="$slots['submit-before']" @submitForm="onSubmitForm">
-			<slot name="submit-before"></slot>
-		</wnl-submit>
-
 		<slot></slot>
-
-		<wnl-submit v-if="!$slots['submit-before']" @submitForm="onSubmitForm">
-			<slot name="submit-after">Zapisz</slot>
-		</wnl-submit>
+		<wnl-submit v-if="!hideDefaultSubmit"></wnl-submit>
 	</form>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
 
 <script>
 	import _ from 'lodash'
@@ -41,7 +29,17 @@
 			'wnl-submit': Submit,
 		},
 		mixins: [ alerts ],
-		props: ['name', 'resourceRoute', 'populate', 'method'],
+		// TODO: Introduce an options prop for better readability
+		props: [
+			'name',
+			'method',
+			'resourceRoute',
+			'attach',
+			'populate',
+			'hideDefaultSubmit',
+			'suppressEnter',
+			'resetAfterSubmit',
+		],
 		computed: {
 			anyErrors() {
 				return this.getter('anyErrors')
@@ -66,24 +64,41 @@
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
 			},
+			onEnter() {
+				if (!this.suppressEnter) {
+					this.onSubmitForm()
+				}
+			},
 			onSubmitForm() {
 				if (this.anyErrors || !this.hasChanges) {
 					return false
 				}
 
-				this.action('submitForm', { method: this.method })
+				this.action('submitForm', {
+					method: this.method,
+					attach: this.attach,
+				})
 					.then(
 						data => {
+							this.$emit('submitSuccess')
+
 							this.successFading(`
 								<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
 								<span>Zapisano!</span>
 							`)
+
+							if (this.resetAfterSubmit) {
+								this.mutation(types.FORM_RESET)
+								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
+							}
 						},
 						reason => {
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 						},
 					)
 					.catch((error) => {
+						this.$emit('submitError')
+
 						this.errorFading('Nie udało się.')
 					})
 			}
@@ -99,7 +114,7 @@
 			_.each(this.$children, (child) => {
 				let options = child.$options
 
-				if (_.has(options, 'computed.fillable')) {
+				if (!_.isUndefined(options.computed.fillable)) {
 					let name = options.propsData.name,
 						defaultValue = options.computed.default() || ''
 
@@ -121,6 +136,8 @@
 			} else {
 				this.mutation(types.FORM_IS_LOADED)
 			}
+
+			this.$on('submitForm', this.onSubmitForm)
 		},
 	}
 </script>

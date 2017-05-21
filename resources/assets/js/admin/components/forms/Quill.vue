@@ -21,7 +21,9 @@
 		props: {
 			options: {
 				type: Object,
-				default: () => ({})
+				default: {
+					theme: 'snow'
+				}
 			},
 			autofocus: Boolean,
 			form: Object,
@@ -43,7 +45,7 @@
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.options)
 			this.editor = this.$refs.quill.firstElementChild
-			this.quill.on('text-change', this.onTextChange)
+			this.quill.on('text-change', this.onInput)
 		},
 		watch: {
 			focused (val) {

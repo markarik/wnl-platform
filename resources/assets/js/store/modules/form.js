@@ -59,9 +59,11 @@ const form = {
 			set(state, 'hasChanges', true)
 		},
 		[types.FORM_RESET] (state) {
-			_.each(state.data, (field) => {
-				set(state.data, field.name, state.defaults[field.name])
+			destroy(state.data)
+			_.each(state.defaults, (value, field) => {
+				set(state.data, field, state.defaults[field])
 			})
+			set(state, 'hasChanges', false)
 		},
 		[types.ERRORS_RECORD] (state, payload) {
 			set(state, 'errors', payload)
@@ -96,8 +98,14 @@ const form = {
 
 			commit(types.FORM_IS_LOADING)
 
+			let data = state.data
+
+			if (!_.isEmpty(payload.attach)) {
+				data = _.merge(state.data, payload.attach)
+			}
+
 			return new Promise((resolve, reject) => {
-				axios[method](state.resourceUrl, state.data)
+				axios[method](state.resourceUrl, data)
 					.then(response => {
 						commit(types.FORM_UPDATE_ORIGINAL_DATA)
 						commit(types.FORM_IS_LOADED)

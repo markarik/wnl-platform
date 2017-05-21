@@ -8,7 +8,7 @@
 				<wnl-vote type="up" count="0"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna-question-content" v-text="content"></div>
+				<div class="qna-question-content" v-html="content"></div>
 				<div class="qna-question-meta qna-meta">
 					<wnl-avatar
 						:username="author.full_name"

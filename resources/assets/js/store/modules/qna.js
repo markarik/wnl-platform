@@ -181,9 +181,7 @@ const actions = {
 					let data = response.data,
 						included = data.included
 
-					if (data.qna_answers.length > 0) {
-						commit(types.UPDATE_INCLUDED, included)
-					}
+					commit(types.UPDATE_INCLUDED, included)
 					delete(data.included)
 					commit(types.QNA_UPDATE_QUESTION, {questionId, data})
 					resolve()
@@ -201,9 +199,7 @@ const actions = {
 					let data = response.data,
 						included = data.included
 
-					if (data.comments.length > 0) {
-						commit(types.UPDATE_INCLUDED, included)
-					}
+					commit(types.UPDATE_INCLUDED, included)
 					delete(data.included)
 					commit(types.QNA_UPDATE_ANSWER, {answerId, data})
 					resolve()

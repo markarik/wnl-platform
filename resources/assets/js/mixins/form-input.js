@@ -22,7 +22,7 @@ export var formInput = {
 				return this.getterFunction('getField', this.name)
 			},
 			set(value) {
-				this.mutation(types.FORM_INPUT, { name: this.name, value })
+				return this.setValue(value)
 			},
 		},
 	},
@@ -40,6 +40,9 @@ export var formInput = {
 			if (this.hasErrors) {
 				this.mutation(types.ERRORS_CLEAR_SINGLE, { name: this.name })
 			}
+		},
+		setValue(value) {
+			this.mutation(types.FORM_INPUT, { name: this.name, value })
 		},
 	}
 }

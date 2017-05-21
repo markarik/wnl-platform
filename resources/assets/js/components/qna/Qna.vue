@@ -1,6 +1,9 @@
 <template>
 	<div class="wnl-qna">
 		<p class="title is-4">Pytania i odpowiedzi ({{howManyQuestions}})</p>
+		<div class="qna-new-question">
+			<wnl-new-question></wnl-new-question>
+		</div>
 		<div v-if="!loading">
 			<wnl-qna-question v-for="question in sortedQuestions"
 				:question="question">
@@ -43,20 +46,22 @@
 		color: $color-gray-dimmed
 		margin-bottom: $margin-tiny
 		margin-top: $margin-base
+
+	.qna-new-question
+		margin: $margin-big 0
 </style>
 
 <script>
-	import QuestionForm from './QuestionForm.vue'
-	import Question from 'js/components/qna/Question.vue'
-	import QnaQuestion from 'js/components/qna/QnaQuestion.vue'
 	import { mapActions, mapGetters } from 'vuex'
+
+	import QnaQuestion from 'js/components/qna/QnaQuestion'
+	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
 
 	export default {
 		name: 'Qna',
 		components: {
-			'wnl-qna-form': QuestionForm,
-			'wnl-question': Question,
 			'wnl-qna-question': QnaQuestion,
+			'wnl-new-question': NewQuestionForm,
 		},
 		data() {
 			return {

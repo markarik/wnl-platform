@@ -8,13 +8,13 @@
 			@delete="onDelete"
 		></wnl-alert>
 
-		<wnl-submit v-if="$slots['submit-before']" @submitForm="onSubmitForm">
+		<wnl-submit v-if="!hideSubmit && $slots['submit-before']" @submitForm="onSubmitForm">
 			<slot name="submit-before"></slot>
 		</wnl-submit>
 
 		<slot></slot>
 
-		<wnl-submit v-if="!$slots['submit-before']" @submitForm="onSubmitForm">
+		<wnl-submit v-if="!hideSubmit && !$slots['submit-before']" @submitForm="onSubmitForm">
 			<slot name="submit-after">Zapisz</slot>
 		</wnl-submit>
 	</form>
@@ -41,7 +41,7 @@
 			'wnl-submit': Submit,
 		},
 		mixins: [ alerts ],
-		props: ['name', 'resourceRoute', 'populate', 'method'],
+		props: ['name', 'method', 'resourceRoute', 'populate', 'hideSubmit', 'attach'],
 		computed: {
 			anyErrors() {
 				return this.getter('anyErrors')
@@ -71,7 +71,10 @@
 					return false
 				}
 
-				this.action('submitForm', { method: this.method })
+				this.action('submitForm', {
+					method: this.method,
+					attach: this.attach,
+				})
 					.then(
 						data => {
 							this.successFading(`

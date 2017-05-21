@@ -96,8 +96,14 @@ const form = {
 
 			commit(types.FORM_IS_LOADING)
 
+			let data = state.data
+
+			if (!_.isEmpty(payload.attach)) {
+				data = _.merge(state.data, payload.attach)
+			}
+
 			return new Promise((resolve, reject) => {
-				axios[method](state.resourceUrl, state.data)
+				axios[method](state.resourceUrl, data)
 					.then(response => {
 						commit(types.FORM_UPDATE_ORIGINAL_DATA)
 						commit(types.FORM_IS_LOADED)

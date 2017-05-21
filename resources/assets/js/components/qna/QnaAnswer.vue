@@ -13,7 +13,7 @@
 						size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
-						{{author.username}} ·
+						{{author.full_name}} ·
 					</span>
 					<span class="qna-meta-info">
 						{{timestamp}}

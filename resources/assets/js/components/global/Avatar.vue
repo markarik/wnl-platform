@@ -35,11 +35,17 @@
 				'currentUserFullName',
 				'currentUserAvatar',
 			]),
-			usernameToUse() {
-				return this.username || this.currentUserFullName
+			isCurrentUser() {
+				return _.isEmpty(this.username)
 			},
 			isCustom() {
-				return this.currentUserAvatar !== null || !_.isEmpty(this.url)
+				return this.isCurrentUser ? this.currentUserAvatar !== null : !_.isEmpty(this.url)
+			},
+			usernameToUse() {
+				return this.isCurrentUser ? this.currentUserFullName : this.username
+			},
+			urlToUse() {
+				return this.isCurrentUser ? this.currentUserAvatar : this.url
 			},
 			sizeClass() {
 				// large = 50x50px, medium = 30x30px, small = 20x20px
@@ -59,9 +65,6 @@
 			imageClass() {
 				return this.isCustom ? 'with-image' : 'without-image'
 			},
-			urlToUse() {
-				return this.url || this.currentUserAvatar
-			}
 		}
 	}
 </script>

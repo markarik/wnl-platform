@@ -11,12 +11,12 @@
 				<div class="qna-question-content" v-text="content"></div>
 				<div class="qna-question-meta qna-meta">
 					<wnl-avatar
-						:username="authorFullName"
+						:username="author.full_name"
 						:url="author.avatar"
 						size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
-						{{authorFullName}} ·
+						{{author.full_name}} ·
 					</span>
 					<span class="qna-meta-info">
 						{{timestamp}}
@@ -97,9 +97,6 @@
 			},
 			author() {
 				return this.profile(this.question.profiles[0])
-			},
-			authorFullName() {
-				return `${this.author.first_name} ${this.author.last_name}`
 			},
 			timestamp() {
 				return this.question.created_at

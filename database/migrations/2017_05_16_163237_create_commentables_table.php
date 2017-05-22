@@ -19,6 +19,12 @@ class CreateCommentablesTable extends Migration
 			$table->unsignedInteger('commentable_id');
 			$table->string('commentable_type');
 			$table->timestamps();
+
+			$table
+				->foreign('comment_id')
+				->references('id')
+				->on('comments')
+				->onDelete('cascade');
 		});
 	}
 

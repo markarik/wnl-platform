@@ -71,14 +71,18 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
 
-	// Questions
-	Route::get("{$r['questions']}/{id}", 'Qna\QuestionsApiController@get');
+	// Q&A Questions
 	Route::post($r['questions'], 'Qna\QuestionsApiController@post');
+	Route::get("{$r['questions']}/{id}", 'Qna\QuestionsApiController@get');
+	Route::put("{$r['questions']}/{id}", 'Qna\QuestionsApiController@put');
+	Route::delete("{$r['questions']}/{id}", 'Qna\QuestionsApiController@delete');
 	Route::post("{$r['questions']}/.search", 'Qna\QuestionsApiController@search');
 
-	// Answers
-	Route::get("{$r['answers']}/{id}", 'Qna\AnswersApiController@get');
+	// Q&A Answers
 	Route::post($r['answers'], 'Qna\AnswersApiController@post');
+	Route::get("{$r['answers']}/{id}", 'Qna\AnswersApiController@get');
+	Route::put("{$r['answers']}/{id}", 'Qna\AnswersApiController@put');
+	Route::delete("{$r['answers']}/{id}", 'Qna\AnswersApiController@delete');
 	Route::post("{$r['answers']}/.search", 'Qna\AnswersApiController@search');
 
 	// Quiz Sets
@@ -86,8 +90,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
 
 	// Comments
-	Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
 	Route::post($r['comments'], 'CommentsApiController@post');
+	Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
+	Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
+	Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
 	Route::post("{$r['comments']}/.search", 'CommentsApiController@search');
 
 	// User Progress

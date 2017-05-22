@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Api\PrivateApi;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\CommentTransformer;
 use App\Http\Requests\PostComment;
+use App\Http\Requests\UpdateComment;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Resource\Item;
@@ -38,5 +40,20 @@ class CommentsApiController extends ApiController
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
+	}
+
+	public function put(UpdateComment $request)
+	{
+		$comment = Comment::find($request->route('id'));
+
+		if (!$comment) {
+			return $this->respondNotFound();
+		}
+
+		$comment->update([
+			'text' => $request->input('text'),
+		]);
+
+		return $this->respondOk();
 	}
 }

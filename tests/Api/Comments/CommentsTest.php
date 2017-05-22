@@ -63,4 +63,17 @@ class CommentsTest extends ApiTestCase
 			->assertStatus(200);
 	}
 
+	/** @test */
+	public function delete_comment()
+	{
+		$user = User::find(4);
+
+		$response = $this
+			->actingAs($user)
+			->json('DELETE', $this->url('/comments/2'));
+
+		$response
+			->assertStatus(200);
+	}
+
 }

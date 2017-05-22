@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\PrivateApi\Qna;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\QnaQuestionTransformer;
 use App\Http\Requests\Qna\PostQuestion;
+use App\Http\Requests\Qna\UpdateQuestion;
 use App\Models\Lesson;
 use App\Models\QnaQuestion;
 use Illuminate\Http\Request;
@@ -42,5 +43,20 @@ class QuestionsApiController extends ApiController
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
+	}
+
+	public function put(UpdateQuestion $request)
+	{
+		$qnaQuestion = QnaQuestion::find($request->route('id'));
+
+		if (!$qnaQuestion) {
+			return $this->respondNotFound();
+		}
+
+		$qnaQuestion->update([
+			'text' => $request->input('text'),
+		]);
+
+		return $this->respondOk();
 	}
 }

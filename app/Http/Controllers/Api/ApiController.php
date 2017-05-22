@@ -3,15 +3,15 @@
 
 namespace App\Http\Controllers\Api;
 
-
-use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
-use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
-use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Auth;
 use League\Fractal\Manager;
-use League\Fractal\Resource\Collection;
+use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use App\Http\Controllers\Controller;
+use League\Fractal\Resource\Collection;
+use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
+use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
+use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
 abstract class ApiController extends Controller
 {
@@ -33,6 +33,12 @@ abstract class ApiController extends Controller
 		}
 	}
 
+	/**
+	 * Get a resource.
+	 *
+	 * @param $id
+	 * @return \Illuminate\Http\JsonResponse
+	 */
 	public function get($id)
 	{
 		$modelName = self::getResourceModel($this->resourceName);
@@ -47,6 +53,31 @@ abstract class ApiController extends Controller
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return response()->json($data);
+	}
+
+	/**
+	 * Delete a resource.
+	 *
+	 * @param $id
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function delete($id)
+	{
+		$modelName = self::getResourceModel($this->resourceName);
+
+		$model = $modelName::find($id);
+
+		if (!$model) {
+			return $this->respondNotFound();
+		}
+
+		if (Auth::user()->can('delete', $model)) {
+			$model::destroy($id);
+
+			return $this->respondOk();
+		}
+
+		return $this->respondUnauthorized();
 	}
 
 	/**

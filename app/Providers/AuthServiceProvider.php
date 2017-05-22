@@ -2,11 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\Comment;
+use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\UserBillingData;
 use App\Models\UserProfile;
 use App\Models\UserSettings;
+use App\Policies\CommentPolicy;
+use App\Policies\Qna\QnaAnswerPolicy;
+use App\Policies\Qna\QnaQuestionPolicy;
 use App\Policies\User\UserAddressPolicy;
 use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
@@ -28,6 +34,11 @@ class AuthServiceProvider extends ServiceProvider
 		UserAddress::class     => UserAddressPolicy::class,
 		UserBillingData::class => UserBillingPolicy::class,
 		UserSettings::class    => UserSettingsPolicy::class,
+
+		QnaAnswer::class   => QnaAnswerPolicy::class,
+		QnaQuestion::class => QnaQuestionPolicy::class,
+
+		Comment::class => CommentPolicy::class,
 	];
 
 	/**

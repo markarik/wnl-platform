@@ -48,7 +48,24 @@ class AnswerTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/qna_answers/.search'), $data);
-		dd($response->dump());
+
+		$response
+			->assertStatus(200);
+	}
+
+	/** @test */
+	public function update_answer()
+	{
+		$user = User::find(1);
+
+		$data = [
+			'text' => 'joł!',
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url('/qna_answers/1'), $data);
+
 		$response
 			->assertStatus(200);
 	}

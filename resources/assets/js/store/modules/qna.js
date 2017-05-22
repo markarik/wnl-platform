@@ -2,7 +2,6 @@ import _ from 'lodash'
 import axios from 'axios'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
-import {mockData} from 'js/store/modules/qnaMockData'
 import { set, delete as destroy } from 'vue'
 
 // API
@@ -12,7 +11,7 @@ import { set, delete as destroy } from 'vue'
  * @private
  */
 function _getQuestions(lessonId) {
-	return axios.get(getApiUrl(`lessons/${lessonId}?include=qna_questions`))
+	return axios.get(getApiUrl(`lessons/${lessonId}?include=qna_questions.profiles`))
 }
 
 /**
@@ -87,10 +86,10 @@ const getters = {
 	},
 
 	// Resources
-	question: state => (id) => state.qna_questions[id],
-	answer:   state => (id) => state.qna_answers[id],
-	profile:  state => (id) => state.profiles[id],
-	comment:  state => (id) => state.comments[id],
+	getQuestion: state => (id) => state.qna_questions[id],
+	answer:      state => (id) => state.qna_answers[id],
+	profile:     state => (id) => state.profiles[id],
+	comment:     state => (id) => state.comments[id],
 
 	// Question
 	questionContent: state => (id) => state.qna_questions[id].text,
@@ -131,34 +130,53 @@ const mutations = {
 		set(state, 'loading', isLoading)
 	},
 	[types.QNA_SET_QUESTIONS_IDS] (state, questionsIds) {
+		/**
+		 * In case you wonder why I destroy it first - please visit.
+		 * https://vuejs.org/v2/guide/list.html#Caveats
+		 * In short, due to limitations of JS, Vue cannot recognize if an
+		 * array updates. The best way to be sure everything is updated
+		 * is to destroy the target first using Vue's reactive method
+		 * destroy.
+		 */
 		destroy(state, 'questionsIds')
 		set(state, 'questionsIds', questionsIds)
 	},
 	[types.QNA_UPDATE_QUESTION] (state, payload) {
-		let id = payload.questionId, data = payload.data
+		let id = payload.questionId,
+			data = _.merge(state.qna_questions[id], payload.data)
 
-		if (state.qna_questions.hasOwnProperty(id)) {
-			destroy(state.qna_questions, id)
-		}
-
-		set(state.qna_questions, id, _.merge(state.qna_questions[id], data))
+		/**
+		 * In case you wonder why I destroy it first - please visit.
+		 * https://vuejs.org/v2/guide/list.html#Caveats
+		 * In short, due to limitations of JS, Vue cannot recognize if an
+		 * array updates. The best way to be sure everything is updated
+		 * is to destroy the target first using Vue's reactive method
+		 * destroy.
+		 */
+		destroy(state.qna_questions, id)
+		set(state.qna_questions, id, data)
 	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
-		let id = payload.answerId, data = payload.data
+		let id = payload.answerId,
+			data = _.merge(state.qna_answers[id], data)
 
+		/**
+		 * In case you wonder why I destroy it first - please visit.
+		 * https://vuejs.org/v2/guide/list.html#Caveats
+		 * In short, due to limitations of JS, Vue cannot recognize if an
+		 * array updates. The best way to be sure everything is updated
+		 * is to destroy the target first using Vue's reactive method
+		 * destroy.
+		 */
+		destroy(state.qna_answers, id)
 		set(state.qna_answers, id, _.merge(state.qna_answers[id], data))
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			set(state, resource, _.merge(state[resource], items))
+			let merged = _.merge(state[resource], items)
+			destroy(state, resource)
+			set(state, resource, merged)
 		})
-	},
-	[types.QNA_ADD_QUESTION] (state, payload) {
-		set(state.questions[payload.lessonId].included.questions, payload.data.id, payload.data)
-	},
-	[types.QNA_ADD_ANSWER] (state, payload) {
-		set(state.questions[payload.lessonId].included.answers, payload.data.id, payload.data)
-		state.questions[payload.lessonId].included.questions[payload.questionId].answers.push(payload.data.id)
 	},
 }
 

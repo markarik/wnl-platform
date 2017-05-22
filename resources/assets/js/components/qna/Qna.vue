@@ -27,8 +27,8 @@
 					<wnl-new-question @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
-			<wnl-qna-question  v-if="!loading" v-for="question in sortedQuestions"
-				:question="question">
+			<wnl-qna-question v-for="question in sortedQuestions"
+				:questionId="question.id">
 			</wnl-qna-question>
 		</div>
 	</div>
@@ -109,10 +109,9 @@
 			...mapMutations('qna', [types.IS_LOADING]),
 		},
 		mounted() {
-			this.fetchQuestions()
-				.then(() => {
-					this.ready = true
-				})
+			this.fetchQuestions().then(() => {
+				this.ready = true
+			})
 		},
 		beforeDestroy() {
 			this[types.IS_LOADING](true)

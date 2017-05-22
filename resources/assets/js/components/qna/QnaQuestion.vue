@@ -30,7 +30,9 @@
 						<div class="level-right">
 							<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
 								<span>Odpowiedz</span>
-								<span class="icon is-small answer-icon"><i class="fa fa-comment-o"></i></span>
+								<span class="icon is-small answer-icon">
+									<i class="fa fa-comment-o"></i>
+								</span>
 							</a>
 							<a class="button is-small" v-if="showAnswerForm" @click="showAnswerForm = false">
 								<span>Ukryj</span>
@@ -108,7 +110,7 @@
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
 		},
-		props: ['question'],
+		props: ['questionId'],
 		data() {
 			return {
 				allAnswers: false,
@@ -119,16 +121,28 @@
 		computed: {
 			...mapGetters('qna', [
 				'profile',
+				'getQuestion',
 				'questionAnswersFromLatest',
 			]),
+			question() {
+				return this.getQuestion(this.questionId)
+			},
 			id() {
-				return this.question.id
+				return this.questionId
 			},
 			content() {
 				return this.question.text
 			},
 			author() {
-				return this.profile(this.question.profiles[0])
+				if (this.question.hasOwnProperty('profiles')) {
+					return this.profile(this.question.profiles[0])
+				} else {
+					this.loading = true
+					this.dispatchFetchQuestion()
+						.then(() => {
+							return this.profile(this.question.profiles[0])
+						})
+				}
 			},
 			time() {
 				return timeFromS(this.question.created_at)
@@ -149,7 +163,6 @@
 		methods: {
 			...mapActions('qna', ['fetchQuestion']),
 			dispatchFetchQuestion() {
-				this.loading = true
 				return this.fetchQuestion(this.id)
 					.then(() => {
 						nextTick(() => {
@@ -158,9 +171,7 @@
 					})
 					.catch((error) => {
 						$wnl.logger.error(error)
-						nextTick(() => {
-							this.loading = false
-						})
+						this.loading = false
 					})
 			},
 			onSubmitSuccess() {

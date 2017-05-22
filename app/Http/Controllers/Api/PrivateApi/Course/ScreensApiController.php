@@ -19,19 +19,19 @@ class ScreensApiController extends ApiController
 		$this->resourceName = config('papi.resources.screens');
 	}
 
-	public function delete(DeleteScreen $request)
-	{
-		$id = $request->route('id');
-
-		$screen = Screen::find($id);
-		if (!$screen) {
-			return $this->respondNotFound();
-		}
-
-		Screen::destroy($id);
-
-		return $this->respondOk();
-	}
+	// public function delete(DeleteScreen $request)
+	// {
+	// 	$id = $request->route('id');
+	//
+	// 	$screen = Screen::find($id);
+	// 	if (!$screen) {
+	// 		return $this->respondNotFound();
+	// 	}
+	//
+	// 	Screen::destroy($id);
+	//
+	// 	return $this->respondOk();
+	// }
 
 	public function put(UpdateScreen $request)
 	{

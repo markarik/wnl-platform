@@ -5617,12 +5617,6 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-bulma-brace@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/vue-bulma-brace/-/vue-bulma-brace-0.1.0.tgz#c56483b93dc2545eee041ec0c5940af49e718c5f"
-  dependencies:
-    brace "^0.10.0"
-
 vue-hot-reload-api@^2.0.1:
   version "2.0.11"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.0.11.tgz#bf26374fb73366ce03f799e65ef5dfd0e28a1568"

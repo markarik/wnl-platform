@@ -80,8 +80,6 @@
 				})
 					.then(
 						data => {
-							this.$emit('submitSuccess')
-
 							this.successFading(`
 								<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
 								<span>Zapisano!</span>
@@ -91,15 +89,17 @@
 								this.mutation(types.FORM_RESET)
 								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
 							}
+
+							this.$emit('submitSuccess')
 						},
 						reason => {
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+							this.$emit('submitError')
 						},
 					)
 					.catch((error) => {
-						this.$emit('submitError')
-
 						this.errorFading('Nie udało się.')
+						this.$emit('submitError')
 					})
 			}
 		},

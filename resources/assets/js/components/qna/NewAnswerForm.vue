@@ -1,0 +1,84 @@
+<template>
+	<wnl-form
+		class="qna-new-answer-form"
+		hideDefaultSubmit="true"
+		method="post"
+		suppressEnter="true"
+		resetAfterSubmit="true"
+		resourceRoute="qna_answers"
+		:attach="attachedData"
+		:name="name"
+		@submitSuccess="onSubmitSuccess">
+		<wnl-quill
+			class="margin bottom"
+			name="text"
+			:options="{ placeholder: 'Zacznij swoją odpowiedź...' }"
+			:toolbar="toolbar">
+		</wnl-quill>
+
+		<div class="level">
+			<div class="level-left"></div>
+			<div class="level-right">
+				<div class="level-item">
+					<wnl-submit cssClass="button is-small is-primary">
+						Zapisz
+					</wnl-submit>
+				</div>
+			</div>
+		</div>
+	</wnl-form>
+</template>
+
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
+	.qna-new-answer-form
+		.ql-container
+			height: auto
+
+		.ql-editor
+			font-family: $font-family-sans-serif
+			font-size: $font-size-base
+			line-height: $line-height-base
+
+			&::before
+				font-size: $font-size-minus-1
+</style>
+
+<script>
+	import { Form, Quill, Submit } from 'js/components/global/form'
+	import { fontColors } from 'js/utils/colors'
+
+	export default {
+		name: 'NewAnswerForm',
+		components: {
+			'wnl-form': Form,
+			'wnl-quill': Quill,
+			'wnl-submit': Submit,
+		},
+		props: ['questionId'],
+		computed: {
+			name() {
+				return `QnaNewAnswer-${this.questionId}`
+			},
+			attachedData() {
+				return {
+					question_id: this.questionId
+				}
+			},
+			toolbar() {
+				return [
+					['bold', 'italic', 'underline', 'link'],
+					[{ color: fontColors }],
+					['clean'],
+					[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+				]
+			}
+		},
+		methods: {
+			onSubmitSuccess() {
+				this.$emit('submitSuccess')
+			},
+		},
+	}
+</script>

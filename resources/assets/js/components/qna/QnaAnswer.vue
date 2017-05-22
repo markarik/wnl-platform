@@ -23,7 +23,7 @@
 		</div>
 		<div class="qna-answer-comments">
 			<p class="qna-title">
-				<span class="icon is-small comment-icon"><i class="fa fa-comment-o"></i></span>
+				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 				Komentarze ({{comments.length}})
 				<span v-if="comments.length > 0"> ·
 					<a class="comments-show-link" @click="toggleComments" v-text="toggleCommentsText"></a>

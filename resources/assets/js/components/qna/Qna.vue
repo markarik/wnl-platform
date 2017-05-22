@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<div class="qna-loader" v-if="loading">
+		<div class="qna-loader" v-if="!ready">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="wnl-qna">
+		<div class="wnl-qna" v-if="ready">
 			<div class="level">
 				<div class="level-left">
 					<p class="title is-4">
@@ -14,7 +14,7 @@
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
-					<a class="button is-small" @click="showForm = true" v-if="!showForm">
+					<a class="button is-small is-primary is-outlined" @click="showForm = true" v-if="!showForm">
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
 							<i class="fa fa-question-circle-o"></i>
@@ -27,8 +27,8 @@
 					<wnl-new-question @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
-			<wnl-qna-question  v-if="!loading" v-for="question in sortedQuestions"
-				:question="question">
+			<wnl-qna-question v-for="question in sortedQuestions"
+				:questionId="question.id">
 			</wnl-qna-question>
 		</div>
 	</div>
@@ -44,8 +44,7 @@
 		margin: $margin-huge 0
 
 		#question-icon
-			margin-left: $margin-small
-			margin-top: $margin-tiny
+			margin: $margin-tiny $margin-tiny 0 $margin-small
 
 	.votes
 		flex: 0 auto
@@ -82,6 +81,7 @@
 
 <script>
 	import { mapActions, mapGetters, mapMutations } from 'vuex'
+	import * as types from 'js/store/mutations-types'
 
 	import QnaQuestion from 'js/components/qna/QnaQuestion'
 	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
@@ -94,6 +94,7 @@
 		},
 		data() {
 			return {
+				ready: false,
 				showForm: false,
 			}
 		},
@@ -105,13 +106,15 @@
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestions']),
-			...mapMutations('qna', ['isLoading']),
+			...mapMutations('qna', [types.IS_LOADING]),
 		},
 		mounted() {
-			this.fetchQuestions()
+			this.fetchQuestions().then(() => {
+				this.ready = true
+			})
 		},
 		beforeDestroy() {
-			this.isLoading(true)
+			this[types.IS_LOADING](true)
 		},
 	}
 </script>

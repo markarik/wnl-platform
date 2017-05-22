@@ -23,7 +23,28 @@
 					</span>
 				</div>
 				<div class="qna-answers">
-					<p class="qna-title">Odpowiedzi ({{answersFromLatest.length}})</p>
+					<div class="level">
+						<div class="level-left">
+							<p class="text-dimmed">Odpowiedzi ({{answersFromLatest.length}})</p>
+						</div>
+						<div class="level-right">
+							<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
+								<span>Odpowiedz</span>
+								<span class="icon is-small answer-icon">
+									<i class="fa fa-comment-o"></i>
+								</span>
+							</a>
+							<a class="button is-small" v-if="showAnswerForm" @click="showAnswerForm = false">
+								<span>Ukryj</span>
+							</a>
+						</div>
+					</div>
+					<transition name="fade">
+						<wnl-qna-new-answer-form v-if="showAnswerForm"
+							:questionId="this.id"
+							@submitSuccess="onSubmitSuccess">
+						</wnl-qna-new-answer-form>
+					</transition>
 					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer"></wnl-qna-answer>
 					<wnl-qna-answer v-if="allAnswers"
 						v-for="answer in otherAnswers"
@@ -42,6 +63,10 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.button .icon.answer-icon
+		margin-left: $margin-small
+		margin-right: $margin-tiny
 
 	.question-loader
 		border-top: $border-light-gray
@@ -69,8 +94,10 @@
 
 <script>
 	import _ from 'lodash'
+	import { nextTick } from 'vue'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/qna/Vote'
 
@@ -81,27 +108,41 @@
 		components: {
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
+			'wnl-qna-new-answer-form': NewAnswerForm,
 		},
-		props: ['question'],
+		props: ['questionId'],
 		data() {
 			return {
-				loading: true,
 				allAnswers: false,
+				loading: true,
+				showAnswerForm: false,
 			}
 		},
 		computed: {
 			...mapGetters('qna', [
 				'profile',
+				'getQuestion',
 				'questionAnswersFromLatest',
 			]),
+			question() {
+				return this.getQuestion(this.questionId)
+			},
 			id() {
-				return this.question.id
+				return this.questionId
 			},
 			content() {
 				return this.question.text
 			},
 			author() {
-				return this.profile(this.question.profiles[0])
+				if (this.question.hasOwnProperty('profiles')) {
+					return this.profile(this.question.profiles[0])
+				} else {
+					this.loading = true
+					this.dispatchFetchQuestion()
+						.then(() => {
+							return this.profile(this.question.profiles[0])
+						})
+				}
 			},
 			time() {
 				return timeFromS(this.question.created_at)
@@ -120,16 +161,26 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestion'])
+			...mapActions('qna', ['fetchQuestion']),
+			dispatchFetchQuestion() {
+				return this.fetchQuestion(this.id)
+					.then(() => {
+						nextTick(() => {
+							this.loading = false
+						})
+					})
+					.catch((error) => {
+						$wnl.logger.error(error)
+						this.loading = false
+					})
+			},
+			onSubmitSuccess() {
+				this.showAnswerForm = false
+				this.dispatchFetchQuestion()
+			},
 		},
 		mounted() {
-			this.fetchQuestion(this.id)
-				.then(() => {
-					this.loading = false
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-				})
+			this.dispatchFetchQuestion()
 		}
 	}
 </script>

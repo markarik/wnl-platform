@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\User;
+use App\Observers\LessonObserver;
 use App\Observers\OrderObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
 	{
 		Order::observe(OrderObserver::class);
 		User::observe(UserObserver::class);
+		Lesson::observe(LessonObserver::class);
 
 		// Send slack notifications when a critical or higher level error occurs
 //		$monolog = Log::getMonolog();

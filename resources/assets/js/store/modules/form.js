@@ -38,9 +38,7 @@ const form = {
 			})
 		},
 		[types.FORM_UPDATE_ORIGINAL_DATA] (state) {
-			_.each(state.data, (value, key) => {
-				state.original[key] = value
-			})
+			set(state, 'original', _.cloneDeep(state.data))
 			set(state, 'hasChanges', false)
 		},
 		[types.FORM_POPULATE] (state, payload) {

@@ -3,13 +3,14 @@
 	<div class="wnl-sidenav">
 
 		<ul class="breadcrumbs" v-if="breadcrumbs">
-			<wnl-sidenav-item v-for="breadcrumb in breadcrumbs"
+			<wnl-sidenav-item v-for="(breadcrumb, index) in breadcrumbs"
 				:itemClass="breadcrumb.itemClass"
 				:to="breadcrumb.to"
 				:isDisabled="breadcrumb.isDisabled"
 				:method="breadcrumb.method"
 				:iconClass="breadcrumb.iconClass"
 				:iconTitle="breadcrumb.iconTitle"
+				:key="index"
 			>
 				{{breadcrumb.text}}
 			</wnl-sidenav-item>
@@ -19,13 +20,14 @@
 		<div class="box">
 			<ul class="items" v-if="items">
 				<li class="item heading small" v-if="itemsHeading">{{itemsHeading}}</li>
-				<wnl-sidenav-item v-for="item in items"
+				<wnl-sidenav-item v-for="(item, index) in items"
 					:itemClass="item.itemClass"
 					:to="item.to"
 					:isDisabled="item.isDisabled"
 					:method="item.method"
 					:iconClass="item.iconClass"
 					:iconTitle="item.iconTitle"
+					:key="index"
 				>
 					{{item.text}}
 				</wnl-sidenav-item>

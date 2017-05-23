@@ -30,7 +30,9 @@
 				</span>
 			</p>
 			<wnl-qna-comment v-if="showComments"
-				v-for="comment in comments" :comment="comment">
+				v-for="comment in comments"
+				:comment="comment"
+				:key="comment.id">
 			</wnl-qna-comment>
 			<div class="comments-loader" v-if="loading">
 				<wnl-text-loader></wnl-text-loader>

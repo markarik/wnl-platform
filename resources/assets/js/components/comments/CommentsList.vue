@@ -1,6 +1,7 @@
 <template>
 	<div class="wnl-comments">
 		<wnl-comment v-for="comment in comments"
+			:key="comment.id"
 			:avatarUrl="comment.avatarUrl"
 			:timestamp="comment.timestamp"
 			:username="comment.username"

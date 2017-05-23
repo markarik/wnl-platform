@@ -10,7 +10,10 @@
 			<div class="box drawer" v-if="isActive">
 				<p class="metadata">{{ currentUserFullName }}</p>
 				<ul>
-					<li v-for="item in items" class="drawer-item" v-if="!isDemo || item.route !== 'my-orders'">
+					<li v-if="!isDemo || item.route !== 'my-orders'"
+						v-for="(item, index) in items"
+						class="drawer-item"
+						:key="index">
 						<router-link class="drawer-link" :to="{ name: item.route }">{{item.text}}</router-link>
 					</li>
 				</ul>

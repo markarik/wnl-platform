@@ -2,6 +2,7 @@
 	<div class="lessons-list">
 		<p class="title is-4">Lista lekcji</p>
 		<wnl-lesson-list-item v-for="lesson in allLessons"
+			:key="lesson.id"
 			:name="lesson.name"
 			:id="lesson.id">
 		</wnl-lesson-list-item>

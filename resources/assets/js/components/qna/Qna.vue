@@ -28,6 +28,7 @@
 				</div>
 			</transition>
 			<wnl-qna-question v-for="question in sortedQuestions"
+				:key="question.id"
 				:questionId="question.id">
 			</wnl-qna-question>
 		</div>

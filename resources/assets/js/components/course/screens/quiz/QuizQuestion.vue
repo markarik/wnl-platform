@@ -21,7 +21,7 @@
 							'is-correct': isCorrect(answerIndex),
 							'is-hinted': hintCorrect(answerIndex),
 						}"
-						:key="answer"
+						:key="answerIndex"
 						@click="selectAnswer(answerIndex)"
 					>
 						<div class="quiz-answer-content">

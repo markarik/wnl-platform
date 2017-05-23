@@ -48,7 +48,8 @@
 					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer"></wnl-qna-answer>
 					<wnl-qna-answer v-if="allAnswers"
 						v-for="answer in otherAnswers"
-						:answer="answer">
+						:answer="answer"
+						:key="answer.id">
 					</wnl-qna-answer>
 					<a class="button is-small is-wide qna-answers-show-all"
 						v-if="!allAnswers && otherAnswers.length > 0"

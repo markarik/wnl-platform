@@ -6,6 +6,7 @@
 			:comments="question.comments"
 			:index="question.index"
 			:text="question.text"
+			:key="question.id"			
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!isComplete">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">

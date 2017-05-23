@@ -9,6 +9,7 @@
 					</div>
 					<div v-if="messages.length > 0">
 						<wnl-message v-for="(message, index) in messages"
+							:key="index"
 							:showAuthor="isAuthorUnique[index]"
 							:username="message.username"
 							:time="message.time">

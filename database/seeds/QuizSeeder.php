@@ -19,7 +19,7 @@ class QuizSeeder extends Seeder
 		QuizAnswer::flushEventListeners();
 		QuizSet::flushEventListeners();
 
-		$this->seedQuiz('Pytania z reumatologii', 'app/quiz_reumatologia_hits.yaml');
+		$this->seedQuiz('Pytania z reumatologii', 'quiz_reumatologia_hits.yaml');
 	}
 
 	protected function seedQuiz($name, $file)
@@ -28,7 +28,7 @@ class QuizSeeder extends Seeder
 			'name' => $name,
 		]);
 
-		$quiz = yaml_parse_file(storage_path($file));
+		$quiz = yaml_parse(DatabaseSeeder::file($file));
 //		foreach ($quiz['questions'] as $index => $question) {
 //			foreach ($question['answers'] as $answerIndex => $answer) {
 //				if (array_key_exists('is_correct', $answer)) {

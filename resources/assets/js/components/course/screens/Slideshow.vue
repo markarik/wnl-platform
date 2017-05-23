@@ -33,7 +33,7 @@
 				</div>
 			</div>
 		</div>
-		<wnl-qna-mock></wnl-qna-mock>
+		<wnl-qna></wnl-qna>
 	</div>
 </template>
 <style lang="sass">
@@ -100,14 +100,14 @@
 	import screenfull from 'screenfull'
 	import Postmate from 'postmate'
 	import SlideshowNavigation from './SlideshowNavigation.vue'
-	import QnaMock from 'js/components/qna/Mock.vue'
+	import Qna from 'js/components/qna/Qna.vue'
 	import { isDebug, getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Slideshow',
 		components: {
 			'wnl-slideshow-navigation': SlideshowNavigation,
-			'wnl-qna-mock': QnaMock,
+			'wnl-qna': Qna,
 		},
 		data() {
 			return {

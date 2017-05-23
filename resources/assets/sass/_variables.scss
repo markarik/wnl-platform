@@ -84,3 +84,8 @@ $success: $color-green;
 $warning: $color-orange;
 $danger: $color-red;
 $info: $color-blue;
+
+// z-index positioning
+$z-index-alerts: 16777271; // The highest possible value in Safari
+$z-index-fullscren-close: 16777270; // Almost the highest possible value in Safari
+$z-index-fullscren: 16777269;

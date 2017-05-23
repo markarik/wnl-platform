@@ -13,7 +13,7 @@ class SubscribersTableSeeder extends Seeder
 	public function run()
 	{
 		$bulk = [];
-		$emails = Storage::get('subscribers.txt');
+		$emails = DatabaseSeeder::file('subscribers.txt');
 		foreach (explode("\n", $emails) as $email) {
 			$bulk[] = ['email' => $email];
 		}

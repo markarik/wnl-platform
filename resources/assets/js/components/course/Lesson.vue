@@ -14,11 +14,8 @@
 						</div>
 					</div>
 				</div>
-				<keep-alive>
-					<router-view></router-view>
-				</keep-alive>
+				<router-view></router-view>
 			</div>
-			<!-- <wnl-qna :lessonId="lessonId"></wnl-qna> -->
 		</div>
 		<div class="wnl-lesson-previous-next-nav">
 			<wnl-previous-next></wnl-previous-next>

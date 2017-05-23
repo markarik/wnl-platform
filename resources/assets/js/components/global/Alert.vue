@@ -1,8 +1,8 @@
 <template>
 	<transition name="fade">
 		<div class="notification" :class="fullCssClass">
-			<button class="delete" @click="onDelete"></button>
-			{{alert.message}}
+			<button class="delete" @click.prevent="onDelete"></button>
+			<span v-html="alert.message"></span>
 		</div>
 	</transition>
 </template>
@@ -22,6 +22,7 @@
 			left: 0
 			right: 0
 			top: 0
+			z-index: $z-index-alerts
 
 		&.absolute
 			position: absolute
@@ -40,7 +41,6 @@
 		props: ['timestamp', 'alert', 'cssClass'],
 		computed: {
 			fullCssClass() {
-				$wnl.logger.debug(`${this.alert.cssClass} ${this.cssClass}`)
 				return `${this.alert.cssClass} ${this.cssClass}`
 			},
 		},

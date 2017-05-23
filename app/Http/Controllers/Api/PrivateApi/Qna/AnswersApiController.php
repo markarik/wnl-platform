@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\PrivateApi\Qna;
 use App\Http\Controllers\Api\Transformers\QnaAnswerTransformer;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Qna\PostAnswer;
+use App\Http\Requests\Qna\UpdateAnswer;
+use App\Models\QnaAnswer;
 use League\Fractal\Resource\Item;
 use Illuminate\Http\Request;
 use App\Models\QnaQuestion;
@@ -39,5 +41,20 @@ class AnswersApiController extends ApiController
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
+	}
+
+	public function put(UpdateAnswer $request)
+	{
+		$qnaAnswer = QnaAnswer::find($request->route('id'));
+
+		if (!$qnaAnswer) {
+			return $this->respondNotFound();
+		}
+
+		$qnaAnswer->update([
+			'text' => $request->input('text'),
+		]);
+
+		return $this->respondOk();
 	}
 }

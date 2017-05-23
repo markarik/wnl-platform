@@ -2,7 +2,7 @@
 	<div class="wnl-app-layout">
 		<div class="wnl-left wnl-app-layout-left">
 			<aside class="wnl-sidenav wnl-left-content">
-				<wnl-sidenav :items="items"></wnl-sidenav>
+				<wnl-sidenav :items="items" :breadcrumbs="breadcrumbs"></wnl-sidenav>
 			</aside>
 		</div>
 		<div class="wnl-middle wnl-app-layout-main">
@@ -115,6 +115,24 @@
 
 				return items
 			},
+			breadcrumbs() {
+				let breadcrumbs = [
+					{
+						text: 'Plan lekcji',
+						itemClass: 'has-icon',
+						to: {
+							name: 'dashboard',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-home',
+						iconTitle: 'Plan lekcji',
+					},
+				]
+
+				return breadcrumbs
+			}
 		},
 		methods: {
 			goToDefaultRoute() {

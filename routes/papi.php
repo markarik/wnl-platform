@@ -25,11 +25,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['lessons']}/{id}", 'Course\LessonsApiController@put');
 
 	// Screens
-	Route::get("{$r['screens']}/.search", 'Course\ScreensApiController@search');
+	Route::post("{$r['screens']}", 'Course\ScreensApiController@post');
 	Route::get("{$r['screens']}/{id}", 'Course\ScreensApiController@get');
 	Route::put("{$r['screens']}/{id}", 'Course\ScreensApiController@put');
 	Route::patch("{$r['screens']}/{id}", 'Course\ScreensApiController@patch');
-	Route::post("{$r['screens']}", 'Course\ScreensApiController@post');
+	Route::delete("{$r['screens']}/{id}", 'Course\ScreensApiController@delete');
+	Route::get("{$r['screens']}/.search", 'Course\ScreensApiController@search');
 
 	// Editions
 	Route::get("{$r['editions']}/{id}", 'Course\EditionsApiController@get');
@@ -71,20 +72,29 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
 
-	// Questions
-	Route::get("{$r['questions']}/{id}", 'Qna\QuestionsApiController@get');
+	// Q&A Questions
 	Route::post($r['questions'], 'Qna\QuestionsApiController@post');
+	Route::get("{$r['questions']}/{id}", 'Qna\QuestionsApiController@get');
+	Route::put("{$r['questions']}/{id}", 'Qna\QuestionsApiController@put');
+	Route::delete("{$r['questions']}/{id}", 'Qna\QuestionsApiController@delete');
+	Route::post("{$r['questions']}/.search", 'Qna\QuestionsApiController@search');
 
-	// Answers
-	Route::get("{$r['answers']}/{id}", 'Qna\AnswersApiController@get');
+	// Q&A Answers
 	Route::post($r['answers'], 'Qna\AnswersApiController@post');
+	Route::get("{$r['answers']}/{id}", 'Qna\AnswersApiController@get');
+	Route::put("{$r['answers']}/{id}", 'Qna\AnswersApiController@put');
+	Route::delete("{$r['answers']}/{id}", 'Qna\AnswersApiController@delete');
+	Route::post("{$r['answers']}/.search", 'Qna\AnswersApiController@search');
 
 	// Quiz Sets
 	Route::get("{$r['quiz-sets']}/{id}", 'Quiz\QuizSetsApiController@get');
 	Route::post("{$r['quiz-sets']}", 'Quiz\QuizSetsApiController@post');
 
 	// Comments
-	Route::post("{$r['comments']}", 'CommentsApiController@post');
+	Route::post($r['comments'], 'CommentsApiController@post');
+	Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
+	Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
+	Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
 	Route::post("{$r['comments']}/.search", 'CommentsApiController@search');
 
 	// User Progress

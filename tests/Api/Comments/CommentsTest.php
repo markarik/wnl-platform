@@ -3,11 +3,13 @@
 namespace Tests\Api\Comments;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 
 
 class CommentsTest extends ApiTestCase
 {
+	use DatabaseTransactions;
 
 	/** @test */
 	public function post_comment()
@@ -58,6 +60,19 @@ class CommentsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/comments/.search'), $data);
+
+		$response
+			->assertStatus(200);
+	}
+
+	/** @test */
+	public function delete_comment()
+	{
+		$user = User::find(1);
+
+		$response = $this
+			->actingAs($user)
+			->json('DELETE', $this->url('/comments/2'));
 
 		$response
 			->assertStatus(200);

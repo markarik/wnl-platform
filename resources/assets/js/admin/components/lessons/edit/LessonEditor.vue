@@ -51,8 +51,8 @@
 	import { alerts } from 'js/mixins/alerts'
 
 	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue'
-	import Input from 'js/components/global/form/Input.vue'
-	import Select from 'js/components/global/form/Select.vue'
+	import Input from 'js/admin/components/forms/Input.vue'
+	import Select from 'js/admin/components/forms/Select.vue'
 
 	export default {
 		name: 'LessonEditor',

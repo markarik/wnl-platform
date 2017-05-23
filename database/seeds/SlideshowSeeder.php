@@ -12,7 +12,7 @@ class SlideshowSeeder extends Seeder
 	 */
 	public function run(Parser $parser)
 	{
-		$html = Storage::get('example_slideshow.html');
+		$html = DatabaseSeeder::file('example_slideshow.html');
 		$parser->parse($html);
 	}
 }

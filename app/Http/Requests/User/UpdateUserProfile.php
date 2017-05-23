@@ -27,8 +27,8 @@ class UpdateUserProfile extends FormRequest
 	public function rules()
 	{
 		return [
-			'first_name'   => 'required|alpha',
-			'last_name'    => 'required|alpha',
+			'first_name'   => 'required|alpha_spaces',
+			'last_name'    => 'required|alpha_spaces',
 			'public_email' => 'email',
 			'public_phone' => 'nullable',
 			'username'     => 'max:12|alpha_num',

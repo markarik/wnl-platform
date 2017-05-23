@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\User;
+use App\Observers\LessonObserver;
 use App\Observers\OrderObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +14,7 @@ use Laravel\Dusk\DuskServiceProvider;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Laravel\Tinker\TinkerServiceProvider;
 use Log;
+use Validator;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
 
@@ -26,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
 	{
 		Order::observe(OrderObserver::class);
 		User::observe(UserObserver::class);
+		Lesson::observe(LessonObserver::class);
 
 		// Send slack notifications when a critical or higher level error occurs
 //		$monolog = Log::getMonolog();
@@ -50,6 +54,14 @@ class AppServiceProvider extends ServiceProvider
 			}
 
 			return $record;
+		});
+
+		/**
+		 * Custom validation rules
+		 */
+		Validator::extend('alpha_spaces', function ($attribute, $value) {
+			// Useful for names and surnames - accept letters, spaces and hyphens
+			return preg_match('/^[\pL\s-]+$/u', $value);
 		});
 	}
 

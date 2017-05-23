@@ -11,7 +11,7 @@ class CommentTransformer extends TransformerAbstract
 {
 	protected $parent;
 
-	protected $availableIncludes = ['profile'];
+	protected $availableIncludes = ['profiles'];
 
 	public function __construct($parent = null)
 	{
@@ -35,10 +35,10 @@ class CommentTransformer extends TransformerAbstract
 		return $data;
 	}
 
-	public function includeProfile(Comment $comment)
+	public function includeProfiles(Comment $comment)
 	{
 		$profile = $comment->user->profile;
 
-		return $this->item($profile, new UserProfileTransformer(['comments' => $comment->id]), 'comments');
+		return $this->item($profile, new UserProfileTransformer(['comments' => $comment->id]), 'profiles');
 	}
 }

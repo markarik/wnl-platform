@@ -73,6 +73,11 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\Models\Role');
 	}
 
+	public function chatMessages()
+	{
+		return $this->hasMany('App\Models\ChatMessage');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */

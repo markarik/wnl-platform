@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatRoom extends Model
 {
-	//
+	protected $fillable = ['name'];
+
+	public function messages()
+	{
+		return $this->hasMany('App\Models\ChatMessage');
+	}
 }

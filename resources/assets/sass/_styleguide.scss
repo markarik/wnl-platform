@@ -103,6 +103,15 @@ a.is-active {
 	font-weight: $font-weight-bold;
 }
 
+a.secondary-link {
+	color: $color-gray-dimmed;
+
+	&:hover,
+	&:active {
+		color: $color-gray;
+	}
+}
+
 // Buttons
 
 .button {
@@ -217,6 +226,15 @@ a.is-active {
 
 .card-header-icons {
 	padding: 0.75rem;
+}
+
+// Quill editor
+
+.ql-container.ql-bubble {
+
+	.ql-editor {
+		border: $border-light-gray;
+	}
 }
 
 // Helpers

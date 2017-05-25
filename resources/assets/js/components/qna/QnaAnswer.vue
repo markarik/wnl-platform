@@ -26,9 +26,18 @@
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 				Komentarze ({{comments.length}})
 				<span v-if="comments.length > 0"> ·
-					<a class="comments-show-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				</span> ·
+				<span>
+					<a class="secondary-link" @click="showCommentForm = true">Skomentuj</a>
 				</span>
 			</p>
+			<transition name="fade">
+				<wnl-qna-new-comment-form v-if="showCommentForm"
+					:answerId="this.id"
+					@submitSuccess="onSubmitSuccess">
+				</wnl-qna-new-comment-form>
+			</transition>
 			<wnl-qna-comment v-if="showComments"
 				v-for="comment in comments"
 				:comment="comment"
@@ -64,10 +73,6 @@
 
 	.comments-loader
 		margin: $margin-base 0
-
-	.comments-show-link,
-	.comments-show-link:hover
-		color: $color-gray-dimmed
 </style>
 
 <script>
@@ -75,6 +80,7 @@
 
 	import Vote from 'js/components/qna/Vote'
 	import QnaComment from 'js/components/qna/QnaComment'
+	import NewCommentForm from 'js/components/qna/NewCommentForm'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -83,6 +89,7 @@
 		components: {
 			'wnl-vote': Vote,
 			'wnl-qna-comment': QnaComment,
+			'wnl-qna-new-comment-form': NewCommentForm,
 		},
 		props: ['answer'],
 		data() {
@@ -90,6 +97,7 @@
 				commentsFetched: false,
 				loading: false,
 				showComments: false,
+				showCommentForm: false,
 			}
 		},
 		computed: {
@@ -120,16 +128,24 @@
 			...mapActions('qna', ['fetchComments']),
 			toggleComments() {
 				if (!this.commentsFetched) {
-					this.loading = true
-					this.fetchComments(this.id)
+					this.dispatchFetchComments()
+				} else {
+					this.showComments = !this.showComments
+				}
+			},
+			dispatchFetchComments() {
+				this.loading = true
+				this.fetchComments(this.id)
 					.then(() => {
 						this.commentsFetched = true
 						this.showComments = true
 						this.loading = false
 					})
-				} else {
-					this.showComments = !this.showComments
-				}
+			},
+			onSubmitSuccess() {
+				this.showComments = true
+				this.showCommentForm = false
+				this.dispatchFetchComments()
 			},
 		},
 	}

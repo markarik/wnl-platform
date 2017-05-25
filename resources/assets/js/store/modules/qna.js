@@ -158,7 +158,7 @@ const mutations = {
 	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
-			data = _.merge(state.qna_answers[id], data)
+			data = _.merge(state.qna_answers[id], payload.data)
 
 		/**
 		 * In case you wonder why I destroy it first - please visit.

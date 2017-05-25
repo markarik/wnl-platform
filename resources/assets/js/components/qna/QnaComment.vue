@@ -14,9 +14,7 @@
 					{{time}}
 				</span>
 			</div>
-			<div class="qna-comment-content">
-				{{comment.text}}
-			</div>
+			<div class="qna-comment-content" v-html="comment.text"></div>
 		</div>
 	</div>
 </template>

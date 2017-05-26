@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Api\Concerns;
 
+use Illuminate\Http\Request;
 use League\Fractal\Resource\Collection;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 
 trait PerformsApiSearches
 {
@@ -22,15 +22,13 @@ trait PerformsApiSearches
 
 		try {
 			$results = $model->get();
-		} catch (QueryException $e) {
+		}
+		catch (QueryException $e) {
 			\Log::warning($e);
 
 			return $this->respondInvalidInput($e->getMessage());
 		}
 
-		if (!$results) {
-			return $this->respondNotFound();
-		}
 		$transformerName = self::getResourceTransformer($this->resourceName);
 		$resource = new Collection($results, new $transformerName, $this->resourceName);
 
@@ -40,7 +38,7 @@ trait PerformsApiSearches
 	}
 
 	/**
-	 * Process 'where' conditions and apply to query builder.
+	 * Process 'whereHas' conditions and apply to query builder.
 	 *
 	 * @param $model
 	 * @param $relationConditions
@@ -49,9 +47,9 @@ trait PerformsApiSearches
 	protected function parseWhereHas($model, $relationConditions)
 	{
 		foreach ($relationConditions as $field => $conditions) {
-			$model = $model->whereHas($field,
+			$model = $model->whereHas(camel_case($field),
 				function ($query) use ($conditions) {
-					$query->where($conditions);
+					$query->where($conditions['where']);
 				}
 			);
 		}

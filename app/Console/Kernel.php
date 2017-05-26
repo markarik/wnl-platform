@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
 		Commands\PopulateAmountColumns::class,
 		Commands\OptimaExport::class,
 		Commands\ArchiveChatMessages::class,
+		Commands\AddressesExport::class,
     ];
 
     /**

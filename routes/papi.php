@@ -97,6 +97,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
 	Route::post("{$r['comments']}/.search", 'CommentsApiController@search');
 
+	// Chat Messages
+	Route::post(
+		"{$r['chat-rooms']}/{roomName}/{$r['chat-messages']}/.search",
+		'Chat\ChatMessagesApiController@searchByRoom'
+	);
+
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');

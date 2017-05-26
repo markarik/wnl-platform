@@ -8,8 +8,27 @@ class ChatRoom extends Model
 {
 	protected $fillable = ['name'];
 
+	protected $appends = ['is_private', 'is_public'];
+
 	public function messages()
 	{
 		return $this->hasMany('App\Models\ChatMessage');
+	}
+
+	public function getIsPrivateAttribute()
+	{
+		return str_is('private-*', $this->name);
+	}
+
+	public function getIsPublicAttribute()
+	{
+		return !$this->is_private;
+	}
+
+	public function scopeName($query, $name)
+	{
+		return $query
+			->where('name', $name)
+			->first();
 	}
 }

@@ -14,10 +14,10 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
 		'App\Events\Qna\QuestionPosted' => [
-			'App\Listeners\PushToUserNotificationChannel',
+			'App\Listeners\NotifyUser',
         ],
 		'App\Events\Qna\AnswerPosted'   => [
-			'App\Listeners\PushToUserNotificationChannel',
+			'App\Listeners\NotifyUser',
 		],
     ];
 

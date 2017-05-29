@@ -2,6 +2,7 @@
 
 namespace App\Events\Qna;
 
+use App\Models\QnaAnswer;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -14,14 +15,16 @@ class AnswerPosted
 {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
+	public $qnaAnswer;
+
 	/**
 	 * Create a new event instance.
 	 *
-	 * @return void
+	 * @param QnaAnswer $qnaAnswer
 	 */
-	public function __construct()
+	public function __construct(QnaAnswer $qnaAnswer)
 	{
-		//
+		$this->qnaAnswer = $qnaAnswer;
 	}
 
 	/**

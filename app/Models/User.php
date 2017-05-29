@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -141,6 +142,16 @@ class User extends Authenticatable
 	public function sendPasswordResetNotification($token)
 	{
 		$this->notify(new ResetPasswordNotification($token));
+	}
+
+	/**
+	 * The channels the user receives notification broadcasts on.
+	 *
+	 * @return array
+	 */
+	public function receivesBroadcastNotificationsOn()
+	{
+		return 'user.' . $this->id;
 	}
 
 	/**

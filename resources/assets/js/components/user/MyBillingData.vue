@@ -2,7 +2,7 @@
 	<div class="scrollable-main-container">
 		<h1>Dane do faktury</h1>
 
-		<wnl-form name="MyBillingData" method="put" resourceRoute="users/current/billing" populate="true">
+		<wnl-form class="margin vertical" name="MyBillingData" method="put" resourceRoute="users/current/billing" populate="true">
 			<wnl-form-text name="company_name">Nazwa firmy</wnl-form-text>
 			<wnl-form-text name="vat_id">NIP</wnl-form-text>
 			<wnl-form-text name="address">Adres</wnl-form-text>

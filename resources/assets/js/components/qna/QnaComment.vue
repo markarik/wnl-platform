@@ -3,7 +3,7 @@
 		<div class="qna-container">
 			<div class="qna-meta qna-comment-meta">
 				<wnl-avatar
-				:username="author.username"
+				:username="author.full_name"
 				:url="author.avatarUrl"
 				size="small">
 				</wnl-avatar>
@@ -49,6 +49,7 @@
 			...mapGetters('qna', [
 				'profile'
 			]),
+			...mapGetters(['currentUserId']),
 			id() {
 				return this.comment.id
 			},
@@ -57,6 +58,9 @@
 			},
 			time() {
 				return timeFromS(this.comment.created_at)
+			},
+			isCurrentUserAuthor() {
+				return this.id === this.currentUserId
 			},
 		},
 	}

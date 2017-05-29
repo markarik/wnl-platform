@@ -2,7 +2,7 @@
 	<a :class="[{'is-loading': isLoading}, cssClass ? cssClass : 'button is-primary is-wide']"
 		:disabled="!hasChanges || anyErrors"
 		@click="submitParent">
-		<slot></slot>
+		<slot>Zapisz</slot>
 	</a>
 </template>
 

@@ -1,7 +1,13 @@
 <template lang="html">
 	<div class="scrollable-main-container">
 		<h1>Adres</h1>
-		<wnl-form name="MyAddress" resourceRoute="users/current/address">
+		<wnl-form
+			class="margin vertical"
+			method="put"
+			name="MyAddress"
+			resourceRoute="users/current/address"
+			populate="true"
+		>
 			<wnl-form-text name="street">Ulica</wnl-form-text>
 			<wnl-form-text name="zip">Kod pocztowy</wnl-form-text>
 			<wnl-form-text name="city">Miasto</wnl-form-text>

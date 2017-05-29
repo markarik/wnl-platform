@@ -1,12 +1,14 @@
 <template lang="html">
 	<div class="scrollable-main-container">
 		<h1>Profil publiczny</h1>
-		<wnl-avatar size="large"></wnl-avatar>
-		<wnl-upload @success="onUploadSuccess">
-			<a>Zmień</a>
-		</wnl-upload>
+		<div v-if="!isProduction">
+			<wnl-avatar size="large"></wnl-avatar>
+			<wnl-upload @success="onUploadSuccess">
+				<a>Zmień</a>
+			</wnl-upload>
+		</div>
 
-		<wnl-form name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true">
+		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true">
 			<wnl-form-text name="first_name">Imię</wnl-form-text>
 			<wnl-form-text name="last_name">Nazwisko</wnl-form-text>
 			<wnl-form-text name="username">Nazwa użytkownika</wnl-form-text>
@@ -23,8 +25,9 @@
 <script>
 	import { mapActions } from 'vuex'
 
-	import { Form, Text } from 'js/components/global/form'
 	import Upload from 'js/components/global/Upload'
+	import { Form, Text } from 'js/components/global/form'
+	import { isProduction } from 'js/utils/env'
 
 	export default {
 		name: 'MyProfile',
@@ -32,6 +35,11 @@
 			'wnl-form': Form,
 			'wnl-form-text': Text,
 			'wnl-upload': Upload,
+		},
+		computed: {
+			isProduction() {
+				return isProduction()
+			}
 		},
 		methods: {
 			...mapActions(['setupCurrentUser']),

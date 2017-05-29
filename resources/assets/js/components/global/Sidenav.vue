@@ -57,7 +57,7 @@
 	.items
 
 		.item
-			padding: $margin-tiny 0
+			padding: $margin-small 0
 
 			&.with-border
 				padding: $margin-base 0 $margin-tiny

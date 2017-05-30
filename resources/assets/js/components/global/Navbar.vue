@@ -1,17 +1,28 @@
 <template>
 	<nav class="wnl-navbar has-shadow">
-		<div class="wnl-left">
-			<div class="wnl-left-content">
+		<!-- <div class="wnl-left">
+			<div class="wnl-left-content"> -->
 				<!-- <router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
 					<img :src="logoSrc" :alt="logoAlt">
 				</router-link> -->
-				<a :href="paymentUrl" class="wnl-logo-link">
+				<!-- <a :href="paymentUrl" class="wnl-logo-link">
 					<img :src="logoSrc" :alt="logoAlt">
 				</a>
 			</div>
 		</div>
 		<div class="wnl-middle"></div>
 		<div class="wnl-right">
+			<wnl-user-dropdown></wnl-user-dropdown>
+		</div> -->
+		<div class="wnl-navbar-item wnl-navbar-branding">
+			<a :href="paymentUrl" class="wnl-logo-link">
+				<img :src="logoSrc" :alt="logoAlt">
+			</a>
+		</div>
+		<div class="wnl-navbar-item wnl-navbar-controls">
+			<span class="icon is-big"><i class="fa fa-search"></i></span>
+			<span class="icon is-big"><i class="fa fa-comments-o"></i></span>
+			<span class="icon is-big"><i class="fa fa-bell"></i></span>
 			<wnl-user-dropdown></wnl-user-dropdown>
 		</div>
 	</nav>
@@ -25,7 +36,28 @@
 		+small-shadow()
 		display: flex
 		height: $navbar-height
-		z-index: 50
+		justify-content: space-between
+		z-index: $z-index-navbar
+
+	.wnl-navbar-item
+		align-items: center
+		height: 100%
+		min-height: 100%
+		padding: 0 $margin-base
+
+	.wnl-navbar-controls
+		display: flex
+		align-items: center
+
+		.icon
+			color: $color-gray-dimmed
+			margin-right: $margin-big
+
+			&.is-active
+				color: $color-gray
+
+			&.has-notifications
+				color: $color-ocean-blue
 
 	.wnl-nav-item
 		align-items: center

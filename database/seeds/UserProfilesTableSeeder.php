@@ -47,7 +47,7 @@ class UserProfilesTableSeeder extends Seeder
 			'last_name'    => 'Zwyczajny',
 			'public_email' => 'prezeschrupek@bethink.pl',
 			'public_phone' => null,
-			'username'     => 'chrupek',
+			'username'     => 'bolek',
 			'avatar'       => null,
 		]);
 
@@ -57,7 +57,7 @@ class UserProfilesTableSeeder extends Seeder
 			'last_name'    => 'Kardiowaskularny',
 			'public_email' => 'prezeschrupek@bethink.pl',
 			'public_phone' => null,
-			'username'     => 'chrupek',
+			'username'     => 'kardiobert',
 			'avatar'       => null,
 		]);
 
@@ -67,7 +67,7 @@ class UserProfilesTableSeeder extends Seeder
 			'last_name'    => 'Nereczka',
 			'public_email' => 'prezeschrupek@bethink.pl',
 			'public_phone' => null,
-			'username'     => 'chrupek',
+			'username'     => 'nerasia',
 			'avatar'       => null,
 		]);
 	}

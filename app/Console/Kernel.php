@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
 		Commands\OptimaExport::class,
 		Commands\ArchiveChatMessages::class,
 		Commands\AddressesExport::class,
+		Commands\MigrateUserData::class,
     ];
 
     /**

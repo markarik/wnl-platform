@@ -84,18 +84,18 @@
 					// 	iconClass: 'fa-sliders',
 					// 	iconTitle: 'Profil publiczny',
 					// },
-					{
-						text: 'Zmiana hasła',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-password',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-key',
-						iconTitle: 'Profil publiczny',
-					},
+					// {
+					// 	text: 'Zmiana hasła',
+					// 	itemClass: 'has-icon',
+					// 	to: {
+					// 		name: 'my-password',
+					// 		params: {},
+					// 	},
+					// 	isDisabled: false,
+					// 	method: 'push',
+					// 	iconClass: 'fa-key',
+					// 	iconTitle: 'Profil publiczny',
+					// },
 				]
 
 				if (this.isProduction) {

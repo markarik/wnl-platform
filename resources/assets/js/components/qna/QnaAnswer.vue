@@ -8,7 +8,7 @@
 				<div class="qna-answer-content" v-html="content"></div>
 				<div class="qna-meta">
 					<wnl-avatar
-						:username="author.username"
+						:username="author.full_name"
 						:url="author.avatar"
 						size="medium">
 					</wnl-avatar>
@@ -17,6 +17,13 @@
 					</span>
 					<span class="qna-meta-info">
 						{{time}}
+					</span>
+					<span v-if="isCurrentUserAuthor">
+						&nbsp;·&nbsp;<wnl-delete
+							:target="deleteTarget"
+							:requestRoute="resourceRoute"
+							@deleteSuccess="onDeleteSuccess"
+						></wnl-delete>
 					</span>
 				</div>
 			</div>
@@ -40,6 +47,7 @@
 			</transition>
 			<wnl-qna-comment v-if="showComments"
 				v-for="comment in comments"
+				:answerId="id"
 				:comment="comment"
 				:key="comment.id">
 			</wnl-qna-comment>
@@ -76,22 +84,25 @@
 </style>
 
 <script>
+	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
-	import Vote from 'js/components/qna/Vote'
-	import QnaComment from 'js/components/qna/QnaComment'
+	import Delete from 'js/components/global/form/Delete'
 	import NewCommentForm from 'js/components/qna/NewCommentForm'
+	import QnaComment from 'js/components/qna/QnaComment'
+	import Vote from 'js/components/qna/Vote'
 
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaAnswer',
 		components: {
-			'wnl-vote': Vote,
-			'wnl-qna-comment': QnaComment,
+			'wnl-delete': Delete,
 			'wnl-qna-new-comment-form': NewCommentForm,
+			'wnl-qna-comment': QnaComment,
+			'wnl-vote': Vote,
 		},
-		props: ['answer'],
+		props: ['answer', 'questionId'],
 		data() {
 			return {
 				commentsFetched: false,
@@ -105,8 +116,12 @@
 				'profile',
 				'answerComments',
 			]),
+			...mapGetters(['currentUserId']),
 			id() {
 				return this.answer.id
+			},
+			resourceRoute() {
+				return `qna_answers/${this.id}`
 			},
 			content() {
 				return this.answer.text
@@ -122,10 +137,16 @@
 			},
 			toggleCommentsText() {
 				return this.showComments ? 'Schowaj' : 'Pokaż'
-			}
+			},
+			isCurrentUserAuthor() {
+				return this.currentUserId === this.author.id
+			},
+			deleteTarget() {
+				return 'tę odpowiedź'
+			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchComments']),
+			...mapActions('qna', ['fetchComments', 'removeAnswer']),
 			toggleComments() {
 				if (!this.commentsFetched) {
 					this.dispatchFetchComments()
@@ -146,6 +167,12 @@
 				this.showComments = true
 				this.showCommentForm = false
 				this.dispatchFetchComments()
+			},
+			onDeleteSuccess() {
+				this.removeAnswer({
+					questionId: this.questionId,
+					answerId: this.id,
+				})
 			},
 		},
 	}

@@ -7,29 +7,42 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 
 class EventServiceProvider extends ServiceProvider
 {
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array
-     */
-    protected $listen = [
+	/**
+	 * The event listener mappings for the application.
+	 *
+	 * @var array
+	 */
+	protected $listen = [
 		'App\Events\Qna\QuestionPosted' => [
 			'App\Listeners\NotifyUser',
-        ],
-		'App\Events\Qna\AnswerPosted'   => [
+		],
+
+		'App\Events\Qna\AnswerPosted' => [
 			'App\Listeners\NotifyUser',
 		],
-    ];
 
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        parent::boot();
+		'App\Events\CommentPosted' => [
+			'App\Listeners\NotifyUser',
+		],
 
-        //
-    }
+		'App\Events\ReactionAdded' => [
+			'App\Listeners\NotifyUser',
+		],
+
+		'App\Events\Chat\PrivateMessageSent' => [
+			'App\Listeners\NotifyUser',
+		],
+	];
+
+	/**
+	 * Register any events for your application.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		parent::boot();
+
+		//
+	}
 }

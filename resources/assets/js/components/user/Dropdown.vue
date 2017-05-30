@@ -111,11 +111,5 @@
 				this.isActive = false
 			}
 		},
-		mounted() {
-			Echo.private('user.1')
-					.notification((notification) => {
-						console.log(notification);
-					});
-		}
 	}
 </script>

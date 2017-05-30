@@ -195,4 +195,19 @@ class User extends Authenticatable
 	{
 		return $this->hasRole('admin');
 	}
+
+	/**
+	 * Query users of certain role.
+	 *
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string $role
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	public function scopeOfRole($query, $role)
+	{
+		return $query
+			->whereHas('roles', function ($query) use ($role) {
+				return $query->where('name', $role);
+			})->get();
+	}
 }

@@ -13,18 +13,11 @@ class Comment extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
-	public function quiz_questions()
+	/**
+	 * Get all of the owning commentable models.
+	 */
+	public function commentable()
 	{
-		return $this->morphedByMany('App\Models\QuizQuestion', 'commentable');
-	}
-
-	public function slides()
-	{
-		return $this->morphedByMany('App\Models\Slide', 'commentable');
-	}
-
-	public function qnaAnswers()
-	{
-		return $this->morphedByMany('App\Models\QnaAnswers', 'commentable');
+		return $this->morphTo();
 	}
 }

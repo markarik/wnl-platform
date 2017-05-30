@@ -43,6 +43,10 @@ const actions = {
 	setupCurrentUser({ commit }) {
 		getCurrent().then((response) => {
 			commit(types.USERS_SETUP_CURRENT, response.data)
+			Echo.private(`user.${response.data.id}`)
+				.notification((notification) => {
+					$wnl.logger.debug('Notification', notification);
+				});
 		})
 	}
 }

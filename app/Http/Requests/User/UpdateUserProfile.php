@@ -29,9 +29,9 @@ class UpdateUserProfile extends FormRequest
 		return [
 			'first_name'   => 'required|alpha_spaces',
 			'last_name'    => 'required|alpha_spaces',
-			'public_email' => 'email',
+			'public_email' => 'email|nullable',
 			'public_phone' => 'nullable',
-			'username'     => 'max:12|alpha_num',
+			'username'     => 'max:12|alpha_num|unique:user_profiles,username',
 		];
 	}
 }

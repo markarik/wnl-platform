@@ -20,7 +20,7 @@ class CreateUserProfilesTable extends Migration
 			$table->string('last_name');
 			$table->string('public_email')->nullable();
 			$table->string('public_phone')->nullable();
-			$table->string('username')->nullable();
+			$table->string('username')->nullable()->unique();
 			$table->string('avatar')->nullable();
 			$table->timestamps();
 		});

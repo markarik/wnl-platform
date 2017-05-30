@@ -56,10 +56,6 @@ html, body {
 	flex-direction: column;
 }
 
-.nav {
-	min-height: 3.25rem;
-}
-
 .wnl-main {
 	display: flex;
 	flex: 1;
@@ -283,4 +279,9 @@ html, body {
 	.wnl-chat-content {
 		min-height: 0;
 	}
+}
+
+/* Chrome display: flex bug */
+.nav {
+	min-height: $navbar-height;
 }

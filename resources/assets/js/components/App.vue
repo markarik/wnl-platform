@@ -2,6 +2,7 @@
 	<div id="app">
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
+			<wnl-main-nav></wnl-main-nav>
 			<router-view></router-view>
 		</div>
 	</div>
@@ -9,7 +10,8 @@
 
 <script>
 	// Import global components
-	import Navbar from 'js/components/global/Navbar.vue'
+	import MainNav from 'js/components/MainNav'
+	import Navbar from 'js/components/global/Navbar'
 	import store from 'store'
 	import { mapActions } from 'vuex'
 	import { swalConfig } from 'js/utils/swal'
@@ -19,7 +21,8 @@
 	export default {
 		name: 'App',
 		components: {
-			'wnl-navbar': Navbar
+			'wnl-navbar': Navbar,
+			'wnl-main-nav': MainNav,
 		},
 		methods: {
 			...mapActions(['setupCurrentUser']),

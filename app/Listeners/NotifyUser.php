@@ -81,6 +81,8 @@ class NotifyUser implements ShouldQueue
 			];
 		}
 
+//		$event->comment->commentable->comentators;
+		$comment->commentable->user->notify(new EventNotification($event));
 		$this->notifyModerators($event);
 	}
 
@@ -112,8 +114,6 @@ class NotifyUser implements ShouldQueue
 	{
 		$moderators = User::ofRole('moderator');
 
-		foreach ($moderators as $moderator) {
-			$moderator->notify(new EventNotification($event));
-		}
+		Notification::send($moderators, new EventNotification($event));
 	}
 }

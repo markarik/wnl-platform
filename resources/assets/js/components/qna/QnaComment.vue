@@ -13,6 +13,13 @@
 				<span class="qna-meta-info">
 					{{time}}
 				</span>
+				<span v-if="isCurrentUserAuthor">
+					&nbsp;·&nbsp;<wnl-delete
+						:target="deleteTarget"
+						:requestRoute="resourceRoute"
+						@deleteSuccess="onDeleteSuccess"
+					></wnl-delete>
+				</span>
 			</div>
 			<div class="qna-comment-content" v-html="comment.text"></div>
 		</div>
@@ -38,13 +45,17 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
+	import Delete from 'js/components/global/form/Delete'
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaComment',
-		props: ['comment'],
+		components: {
+			'wnl-delete': Delete,
+		},
+		props: ['comment', 'answerId'],
 		computed: {
 			...mapGetters('qna', [
 				'profile'
@@ -60,7 +71,22 @@
 				return timeFromS(this.comment.created_at)
 			},
 			isCurrentUserAuthor() {
-				return this.id === this.currentUserId
+				return this.author.id === this.currentUserId
+			},
+			deleteTarget() {
+				return 'ten komentarz'
+			},
+			resourceRoute() {
+				return `comments/${this.id}`
+			}
+		},
+		methods: {
+			...mapActions('qna', ['removeComment']),
+			onDeleteSuccess() {
+				this.removeComment({
+					answerId: this.answerId,
+					commentId: this.id,
+				})
 			},
 		},
 	}

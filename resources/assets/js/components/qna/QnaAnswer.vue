@@ -22,6 +22,7 @@
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
+							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
 				</div>
@@ -46,6 +47,7 @@
 			</transition>
 			<wnl-qna-comment v-if="showComments"
 				v-for="comment in comments"
+				:answerId="id"
 				:comment="comment"
 				:key="comment.id">
 			</wnl-qna-comment>
@@ -100,7 +102,7 @@
 			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
 		},
-		props: ['answer'],
+		props: ['answer', 'questionId'],
 		data() {
 			return {
 				commentsFetched: false,
@@ -144,7 +146,7 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchComments']),
+			...mapActions('qna', ['fetchComments', 'removeAnswer']),
 			toggleComments() {
 				if (!this.commentsFetched) {
 					this.dispatchFetchComments()
@@ -165,6 +167,12 @@
 				this.showComments = true
 				this.showCommentForm = false
 				this.dispatchFetchComments()
+			},
+			onDeleteSuccess() {
+				this.removeAnswer({
+					questionId: this.questionId,
+					answerId: this.id,
+				})
 			},
 		},
 	}

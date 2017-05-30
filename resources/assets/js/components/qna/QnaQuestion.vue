@@ -21,6 +21,13 @@
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
+					<span v-if="isCurrentUserAuthor">
+						&nbsp;·&nbsp;<wnl-delete
+							:target="deleteTarget"
+							:requestRoute="resourceRoute"
+							@deleteSuccess="onDeleteSuccess"
+						></wnl-delete>
+					</span>
 				</div>
 				<div class="qna-answers">
 					<div class="level">
@@ -45,10 +52,11 @@
 							@submitSuccess="onSubmitSuccess">
 						</wnl-qna-new-answer-form>
 					</transition>
-					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer"></wnl-qna-answer>
+					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId"></wnl-qna-answer>
 					<wnl-qna-answer v-if="allAnswers"
 						v-for="answer in otherAnswers"
 						:answer="answer"
+						:questionId="questionId"
 						:key="answer.id">
 					</wnl-qna-answer>
 					<a class="button is-small is-wide qna-answers-show-all"
@@ -98,6 +106,7 @@
 	import { nextTick } from 'vue'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import Delete from 'js/components/global/form/Delete'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/qna/Vote'
@@ -107,6 +116,7 @@
 	export default {
 		name: 'QnaQuestion',
 		components: {
+			'wnl-delete': Delete,
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
@@ -125,6 +135,7 @@
 				'getQuestion',
 				'questionAnswersFromLatest',
 			]),
+			...mapGetters(['currentUserId']),
 			question() {
 				return this.getQuestion(this.questionId)
 			},
@@ -145,6 +156,15 @@
 						})
 				}
 			},
+			isCurrentUserAuthor() {
+				return this.currentUserId === this.author.id
+			},
+			resourceRoute() {
+				return `qna_questions/${this.id}`
+			},
+			deleteTarget() {
+				return 'to pytanie'
+			},
 			time() {
 				return timeFromS(this.question.created_at)
 			},
@@ -162,13 +182,11 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestion']),
+			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {
-						nextTick(() => {
-							this.loading = false
-						})
+						this.loading = false
 					})
 					.catch((error) => {
 						$wnl.logger.error(error)
@@ -178,6 +196,9 @@
 			onSubmitSuccess() {
 				this.showAnswerForm = false
 				this.dispatchFetchQuestion()
+			},
+			onDeleteSuccess() {
+				this.removeQuestion(this.id)
 			},
 		},
 		mounted() {

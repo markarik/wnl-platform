@@ -156,6 +156,13 @@ const mutations = {
 		destroy(state.qna_questions, id)
 		set(state.qna_questions, id, data)
 	},
+	[types.QNA_REMOVE_QUESTION] (state, payload) {
+		let id = payload.questionId,
+			questionsIds = _.pull(state.questionsIds, id)
+
+		destroy(state.qna_questions, id)
+		set(state, 'questionsIds', questionsIds)
+	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
 			data = _.merge(state.qna_answers[id], payload.data)
@@ -170,6 +177,22 @@ const mutations = {
 		 */
 		destroy(state.qna_answers, id)
 		set(state.qna_answers, id, _.merge(state.qna_answers[id], data))
+	},
+	[types.QNA_REMOVE_ANSWER] (state, payload) {
+		let id = payload.answerId,
+			questionId = payload.questionId,
+			answers = _.pull(state.qna_questions[questionId].qna_answers, id)
+
+		destroy(state.qna_answers, id)
+		set(state.qna_questions, 'qna_answers', answers)
+	},
+	[types.QNA_REMOVE_COMMENT] (state, payload) {
+		let id = payload.commentId,
+			answerId = payload.answerId,
+			comments = _.pull(state.qna_answers[answerId].comments, id)
+
+		destroy(state.comments, id)
+		set(state.qna_answers, 'comments', comments)
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
@@ -223,6 +246,21 @@ const actions = {
 				})
 		})
 	},
+	removeQuestion({commit}, questionId) {
+		return new Promise((resolve, reject) => {
+			commit(types.QNA_REMOVE_QUESTION, {questionId})
+			resolve()
+		})
+	},
+	removeAnswer({commit}, payload) {
+		return new Promise((resolve, reject) => {
+			commit(types.QNA_REMOVE_ANSWER, {
+				questionId: payload.questionId,
+				answerId: payload.answerId,
+			})
+			resolve()
+		})
+	},
 	fetchComments({commit}, answerId) {
 		return new Promise((resolve, reject) => {
 			_getComments(answerId)
@@ -239,6 +277,14 @@ const actions = {
 					$wnl.logger.error(error)
 					reject()
 				})
+		})
+	},
+	removeComment({commit}, payload) {
+		return new Promise((resolve, reject) => {
+			commit(types.QNA_REMOVE_COMMENT, {
+				answerId: payload.answerId,
+				commentId: payload.commentId,
+			})
 		})
 	},
 }

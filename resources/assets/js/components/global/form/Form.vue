@@ -1,8 +1,8 @@
 <template>
 	<form :name="name" @keydown.enter="onEnter">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
-			:alert="alert"
 			cssClass="fixed"
+			:alert="alert"
 			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"

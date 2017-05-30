@@ -146,8 +146,7 @@ class User extends Authenticatable
 
 	/**
 	 * The channels the user receives notification broadcasts on.
-	 *
-	 * @return array
+	 * @return mixed
 	 */
 	public function receivesBroadcastNotificationsOn()
 	{

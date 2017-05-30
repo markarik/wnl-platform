@@ -77,9 +77,9 @@
 </style>
 
 <script>
-	import { isDemo } from 'js/utils/env'
-	import { set } from 'vue'
-	import { mapGetters } from 'vuex'
+	import {isDemo} from 'js/utils/env'
+	import {set} from 'vue'
+	import {mapGetters} from 'vuex'
 
 	export default {
 		name: 'Dropdown',
@@ -110,6 +110,12 @@
 			'$route' (to, from) {
 				this.isActive = false
 			}
+		},
+		mounted() {
+			Echo.private('user.1')
+					.notification((notification) => {
+						console.log(notification);
+					});
 		}
 	}
 </script>

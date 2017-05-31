@@ -2,6 +2,10 @@
 export const IS_LOADING = 'IS_LOADING'
 export const UPDATE_INCLUDED = 'UPDATE_INCLUDED'
 
+// Navigation
+export const ADD_BREADCRUMB    = 'ADD_BREADCRUMB'
+export const REMOVE_BREADCRUMB = 'REMOVE_BREADCRUMB'
+
 // Users
 export const USERS_SETUP_CURRENT = 'USERS_SETUP_CURRENT'
 

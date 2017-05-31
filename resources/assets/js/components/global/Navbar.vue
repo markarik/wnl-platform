@@ -18,6 +18,9 @@
 			<a :href="paymentUrl" class="wnl-logo-link">
 				<img :src="logoSrc" :alt="logoAlt">
 			</a>
+			<div class="breadcrumbs">
+				<wnl-breadcrumbs></wnl-breadcrumbs>
+			</div>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-controls">
 			<span class="icon is-big"><i class="fa fa-search"></i></span>
@@ -35,19 +38,22 @@
 	.wnl-navbar
 		+small-shadow()
 		display: flex
-		height: $navbar-height
+		flex: 0 $navbar-height
 		justify-content: space-between
 		z-index: $z-index-navbar
 
 	.wnl-navbar-item
 		align-items: center
-		height: 100%
-		min-height: 100%
+		display: flex
+		height: $navbar-height
+		min-height: $navbar-height
 		padding: 0 $margin-base
 
+	.breadcrumbs
+		flex-direction: row
+		margin-left: $margin-base
+
 	.wnl-navbar-controls
-		display: flex
-		align-items: center
 
 		.icon
 			color: $color-gray-dimmed
@@ -78,12 +84,17 @@
 </style>
 
 <script>
+	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Dropdown from 'js/components/user/Dropdown.vue'
 	import { mapGetters } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Navbar',
+		components: {
+			'wnl-breadcrumbs': Breadcrumbs,
+			'wnl-user-dropdown': Dropdown,
+		},
 		computed: {
 			...mapGetters([
 				'currentUserFullName'
@@ -97,9 +108,6 @@
 			logoAlt() {
 				return 'Logo Więcej niż LEK'
 			}
-		},
-		components: {
-			'wnl-user-dropdown': Dropdown,
 		},
 	}
 </script>

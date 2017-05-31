@@ -1,8 +1,19 @@
 <template>
-	<aside class="wnl-sidenav wnl-left-content">
+	<aside class="course-sidenav">
 		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading"></wnl-sidenav>
 	</aside>
 </template>
+
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
+	.course-sidenav
+		// border-right: $border-light-gray;
+		max-width: $sidenav-max-width
+		min-width: $sidenav-min-width
+		padding: $column-padding
+		width: $sidenav-width
+</style>
 
 <script>
 	import _ from 'lodash'

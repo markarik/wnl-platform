@@ -1,3 +1,7 @@
 export function scrollToTop() {
-	document.getElementsByClassName('scrollable-main-container')[0].scrollTop = 0
+	let scrollable = document.getElementsByClassName('scrollable-main-container')[0]
+
+	if (typeof scrollable !== 'undefined') {
+		scrollable.scrollTop = 0
+	}
 }

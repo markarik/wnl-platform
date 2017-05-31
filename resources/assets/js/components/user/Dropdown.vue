@@ -2,9 +2,9 @@
 	<div class="wnl-dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
 			<wnl-avatar></wnl-avatar>
-			<span class="username">
+			<!-- <span class="username">
 				{{ currentUserName }}
-			</span>
+			</span> -->
 			<span class="icon">
 				<i class="fa fa-angle-down"></i>
 			</span>
@@ -107,8 +107,8 @@
 			items() {
 				return [
 					{
-						'text': 'Twoje zamówienia',
-						'route': 'my-orders',
+						'text': 'Twoje konto',
+						'route': 'myself',
 					},
 					{
 						'text': 'Wyloguj się',

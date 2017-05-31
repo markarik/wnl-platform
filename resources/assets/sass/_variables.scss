@@ -76,7 +76,26 @@ $margin-huge: 3em;
 $transition-length-base: 0.15s;
 
 // Layout
+$full-height: 100vh;
 $navbar-height: 55px;
+$main-height: calc(#{$full-height} - #{$navbar-height});
+
+$column-padding: $margin-base;
+
+$main-nav-size: 7vw;
+$main-nav-max-size: 80px;
+$main-nav-min-size: 60px;
+
+$sidenav-min-width: 150px;
+$sidenav-max-width: 250px;
+$sidenav-width: 20vw;
+
+$course-content-min-width: 800px;
+$course-content-max-width: 1200px;
+$course-content-flex: 3;
+
+$course-chat-max-width: 600px;
+$course-chat-flex: 2;
 
 // Overwrite Bulma variables
 $primary: $color-ocean-blue;

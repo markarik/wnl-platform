@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-main-nav">
+	<div class="wnl-main-nav wnl-column">
 		<router-link class="wnl-main-nav-item" :to="{ name: 'courses', params: { courseId: 1 } }">
 			<span class="icon is-medium">
 				<i class="fa fa-home"></i>
@@ -8,7 +8,7 @@
 		</router-link>
 		<a class="wnl-main-nav-item">
 			<span class="icon is-medium">
-				<i class="fa fa-star"></i>
+				<i class="fa fa-star-o"></i>
 			</span>
 			<span class="text">Kolekcje</span>
 		</a>
@@ -20,7 +20,7 @@
 		</a>
 		<router-link class="wnl-main-nav-item" :to="{ name: 'myself' }">
 			<span class="icon is-medium">
-				<i class="fa fa-user"></i>
+				<i class="fa fa-user-o"></i>
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
@@ -34,10 +34,11 @@
 		border-right: $border-light-gray
 		display: flex
 		flex-direction: column
-		height: 100%
-		min-height: 100%
-		min-width: 100px
-		width: 100px
+		// height: $main-height
+		max-width: $main-nav-max-size
+		// min-height: $main-height
+		min-width: $main-nav-min-size
+		width: $main-nav-size
 
 		.wnl-main-nav-item
 			align-items: center
@@ -45,9 +46,13 @@
 			display: flex
 			flex-direction: column
 			justify-content: center
-			height: 100px
+			height: $main-nav-size
+			min-height: $main-nav-min-size
+			min-width: $main-nav-min-size
+			max-height: $main-nav-max-size
+			max-width: $main-nav-max-size
 			transition: all $transition-length-base
-			width: 100px
+			width: $main-nav-size
 
 			&:hover,
 			&.is-active
@@ -56,7 +61,7 @@
 				transition: all $transition-length-base
 
 			.text
-				font-size: $font-size-minus-2
+				font-size: $font-size-minus-3
 				text-transform: uppercase
 </style>
 

@@ -14,6 +14,7 @@ return [
 		'user-settings'       => 'settings',
 		'user-avatar'         => 'avatar',
 		'user-password'       => 'password',
+		'user-notifications'  => 'notifications',
 		'editions'            => 'editions',
 		'orders'              => 'orders',
 		'tags'                => 'tags',

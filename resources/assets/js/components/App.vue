@@ -11,7 +11,7 @@
 	// Import global components
 	import Navbar from 'js/components/global/Navbar.vue'
 	import store from 'store'
-	import { mapActions } from 'vuex'
+	import {mapActions, mapGetters} from 'vuex'
 	import { swalConfig } from 'js/utils/swal'
 
 	const CACHE_VERSION = 1
@@ -50,6 +50,6 @@
 		created: function () {
 			this.setupCurrentUser()
 			this.displayScreenResolutionInfo()
-		}
+		},
 	}
 </script>

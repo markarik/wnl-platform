@@ -9,7 +9,7 @@ use League\Fractal\TransformerAbstract;
 
 class QuizQuestionTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['answers'];
+	protected $availableIncludes = ['answers', 'comments'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -44,6 +44,19 @@ class QuizQuestionTransformer extends TransformerAbstract
 				'quiz_questions' => $quizQuestion->id,
 			]),
 			'quiz_answers'
+		);
+	}
+
+	public function includeComments(QuizQuestion $quizQuestion)
+	{
+		$comments = $quizQuestion->comments;
+
+		return $this->collection(
+			$comments,
+			new CommentTransformer([
+				'quiz_questions' => $quizQuestion->id,
+			]),
+			'comments'
 		);
 	}
 }

@@ -12,6 +12,10 @@ function getLocalStorageKey(setId, userSlug) {
 	return `wnl-quiz-${setId}-u-${userSlug}-${CACHE_VERSION}`
 }
 
+function getQuizSet(setId) {
+
+}
+
 /**
  * It's a mocked object of comments for the example quiz set.
  * Eventually, comments will be retrieved from the database via API.
@@ -64,7 +68,7 @@ const namespaced = true
 // Initial state
 const state = {
 	attempts: [],
-	isComplete: false,
+	isComplete: true,
 	loaded: false,
 	questionsLength: 0,
 	questions: [],
@@ -156,7 +160,7 @@ const actions = {
 			return true
 		}
 
-		axios.get(getApiUrl(`${resource.name}/${resource.id}?include=questions.answers`))
+		axios.get(getApiUrl(`${resource.name}/${resource.id}?include=questions.answers,questions.comments`))
 			.then((response) => {
 				const included = response.data.included
 				const questionsIds = response.data.questions
@@ -187,9 +191,11 @@ const actions = {
 					question.attemps = 0
 
 					// Check for mock of comments for the question
-					$wnl.logger.debug(commentsMock)
-					if (commentsMock.hasOwnProperty(id)) {
-						question.comments = commentsMock[id]
+					// $wnl.logger.debug(commentsMock)
+					$wnl.logger.info(`Question ${question.id}`, question)
+					if (question.hasOwnProperty('comments')) {
+						// let comments =
+						question.comments = question.comments.map((commentId) => included.comments[commentId])
 					} else {
 						question.comments = []
 					}

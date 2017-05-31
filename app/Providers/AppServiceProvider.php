@@ -6,11 +6,13 @@ use App\Models\Comment;
 use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
 use App\Models\User;
 use App\Observers\CommentObserver;
 use App\Observers\LessonObserver;
 use App\Observers\OrderObserver;
 use App\Observers\QnaAnswerObserver;
+use App\Observers\QnaQuestionObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +37,9 @@ class AppServiceProvider extends ServiceProvider
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
 		QnaAnswer::observe(QnaAnswerObserver::class);
+		QnaQuestion::observe(QnaQuestionObserver::class);
 		Comment::observe(CommentObserver::class);
+
 
 		// Send slack notifications when a critical or higher level error occurs
 //		$monolog = Log::getMonolog();

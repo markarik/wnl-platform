@@ -22,6 +22,7 @@ class EventNotification extends Notification
 	 */
 	public function __construct($event)
 	{
+		$event->data['timestamp'] = time();
 		$this->event = $event;
 	}
 

@@ -1,12 +1,14 @@
 <?php namespace App\Listeners;
 
-use Notification;
 use App\Models\User;
 use App\Notifications\EventNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Notification;
 
 class NotifyUser implements ShouldQueue
 {
+	const TEXT_LIMIT = 160;
+
 	/**
 	 * Handle the event.
 	 *
@@ -34,12 +36,18 @@ class NotifyUser implements ShouldQueue
 			'objects' => [
 				'type' => 'qna_question',
 				'id'   => $event->qnaAnswer->question->id,
-				'text' => $event->qnaAnswer->question->text,
+				'text' => str_limit($event->qnaAnswer->question->text, self::TEXT_LIMIT),
+			],
+			'subject' => [
+				'type' => 'qna_answer',
+				'id'   => $event->qnaAnswer->id,
+				'text' => str_limit($event->qnaAnswer->text, self::TEXT_LIMIT),
 			],
 			'actors'  => [
 				'id'         => $event->qnaAnswer->user->id,
 				'first_name' => $event->qnaAnswer->user->first_name,
 				'last_name'  => $event->qnaAnswer->user->last_name,
+				'avatar'     => $event->qnaAnswer->user->profile->avatar,
 			],
 		];
 
@@ -53,6 +61,21 @@ class NotifyUser implements ShouldQueue
 	 */
 	public function handleQuestionPosted($event)
 	{
+		$event->data = [
+			'event'   => 'qna-question-posted',
+			'subject' => [
+				'type' => 'qna_question',
+				'id'   => $event->qnaQuestion->id,
+				'text' => str_limit($event->qnaQuestion->text, self::TEXT_LIMIT),
+			],
+			'actors'  => [
+				'id'         => $event->qnaQuestion->user->id,
+				'first_name' => $event->qnaQuestion->user->first_name,
+				'last_name'  => $event->qnaQuestion->user->last_name,
+				'avatar'     => $event->qnaQuestion->user->profile->avatar,
+			],
+		];
+
 		$this->notifyModerators($event);
 	}
 
@@ -81,7 +104,6 @@ class NotifyUser implements ShouldQueue
 			];
 		}
 
-//		$event->comment->commentable->comentators;
 		$comment->commentable->user->notify(new EventNotification($event));
 		$this->notifyModerators($event);
 	}

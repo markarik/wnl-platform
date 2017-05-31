@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Channels\LiveChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
@@ -32,9 +33,14 @@ class EventNotification extends Notification
 	 */
 	public function via($notifiable)
 	{
-		return ['broadcast', 'database'];
+		return [LiveChannel::class, 'database'];
 	}
 
+	public function toLive()
+	{
+		return new BroadcastMessage($this->event->data);
+	}
+	
 	public function toBroadcast($notifiable)
 	{
 		return new BroadcastMessage($this->event->data);

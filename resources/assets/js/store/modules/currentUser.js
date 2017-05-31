@@ -44,7 +44,7 @@ const actions = {
 		getCurrent().then((response) => {
 			commit(types.USERS_SETUP_CURRENT, response.data)
 			Echo.private(`user.${response.data.id}`)
-				.notification((notification) => {
+				.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
 					$wnl.logger.debug('Notification', notification);
 				});
 		})

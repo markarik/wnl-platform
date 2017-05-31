@@ -79,6 +79,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\ChatMessage');
 	}
 
+	public function notifications()
+	{
+		return $this->morphMany('App\Models\Notification', 'notifiable');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */

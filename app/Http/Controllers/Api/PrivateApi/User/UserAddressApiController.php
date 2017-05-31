@@ -1,19 +1,17 @@
-<?php
+<?php namespace App\Http\Controllers\Api\PrivateApi\User;
 
-
-namespace App\Http\Controllers\Api\PrivateApi\User;
-
-
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserAddressTransformer;
-use App\Http\Requests\User\UpdateUser;
+use Auth;
 use App\Models\User;
 use League\Fractal\Resource\Item;
+use App\Http\Requests\User\UpdateUser;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\UserAddressTransformer;
 
 class UserAddressApiController extends ApiController
 {
 	public function get($id)
 	{
+
 		$user = User::fetch($id);
 		$address = $user->address()->first();
 
@@ -21,8 +19,13 @@ class UserAddressApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
+		if (!Auth::user()->can('view', $address)) {
+			return $this->respondUnauthorized();
+		}
+
 		$resource = new Item($address, new UserAddressTransformer, 'user_address');
 		$data = $this->fractal->createData($resource)->toArray();
+
 		return $this->respondOk($data);
 	}
 

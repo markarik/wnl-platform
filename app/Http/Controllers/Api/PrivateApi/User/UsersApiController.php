@@ -1,13 +1,12 @@
-<?php
+<?php namespace App\Http\Controllers\Api\PrivateApi\User;
 
-namespace App\Http\Controllers\Api\PrivateApi\User;
-
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserTransformer;
-use App\Http\Requests\User\UpdateUser;
+use Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use App\Http\Requests\User\UpdateUser;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\UserTransformer;
 
 class UsersApiController extends ApiController
 {
@@ -20,6 +19,11 @@ class UsersApiController extends ApiController
 	public function get($id)
 	{
 		$user = User::fetch($id);
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondUnauthorized();
+		}
+
 		$resource = new Item($user, new UserTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
 

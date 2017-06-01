@@ -23,6 +23,11 @@ class QnaQuestion extends Model
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
 
+	public function reactions()
+	{
+		return $this->morphToMany('App\Models\Reaction', 'reactable');
+	}
+
 	public function getLessonsAttribute()
 	{
 		return Lesson::whereHas('tags', function ($query) {

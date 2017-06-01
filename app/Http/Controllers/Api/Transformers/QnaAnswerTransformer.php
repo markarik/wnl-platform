@@ -7,12 +7,13 @@ namespace App\Http\Controllers\Api\Transformers;
 use App\Models\QnaAnswer;
 use App\Models\Lesson;
 use App\Models\QnaQuestion;
+use App\Models\Reaction;
 use League\Fractal\TransformerAbstract;
 
 
 class QnaAnswerTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['profiles', 'comments'];
+	protected $availableIncludes = ['profiles', 'comments', 'reactions'];
 
 	public function transform(QnaAnswer $answer)
 	{
@@ -39,5 +40,12 @@ class QnaAnswerTransformer extends TransformerAbstract
 		$comments = $answer->comments;
 
 		return $this->collection($comments, new CommentTransformer(['qna_answers' => $answer->id]), 'comments');
+	}
+
+	public function includeReactions(QnaAnswer $answer)
+	{
+		$reactions = Reaction::count($answer);
+
+		return $this->item($reactions, new ReactionCountTransformer('qna_answers', $answer), 'reactions');
 	}
 }

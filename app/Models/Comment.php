@@ -13,6 +13,11 @@ class Comment extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
+	public function reactions()
+	{
+		return $this->morphToMany('App\Models\Reaction', 'reactable');
+	}
+
 	/**
 	 * Get all of the owning commentable models.
 	 */

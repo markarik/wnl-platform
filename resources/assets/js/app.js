@@ -18,6 +18,15 @@ import Emoji from 'js/components/global/Emoji.vue'
 import Icon from 'js/components/global/Icon.vue'
 import ImageButton from 'js/components/global/ImageButton.vue'
 import TextLoader from 'js/components/global/TextLoader.vue'
+import VueSimpleBreakpoints from 'vue-simple-breakpoints'
+
+Vue.use(VueSimpleBreakpoints, {
+	mobile: 759, //mobile needs a top boundary, not a bottom one
+	tablet: 760,
+	small_desktop: 980,
+	large_desktop: 1280
+})
+
 Vue.component('wnl-alert', Alert)
 Vue.component('wnl-avatar', Avatar)
 Vue.component('wnl-emoji', Emoji)

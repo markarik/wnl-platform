@@ -61,13 +61,9 @@ class PaymentTest extends DuskTestCase
 	/** @test */
 	public function user_can_place_order_and_successfully_pay_online()
 	{
-		if (env('APP_ENV') === 'production') {
-			$this->markTestSkipped(PHP_EOL . 'Omitting test ' . __METHOD__ . ' (not applicable on production)' . PHP_EOL);
-		}
-
 		//TODO fix Platnosci24 webhook so it works on dev environment
-		if (env('APP_ENV') === 'dev') {
-			$this->markTestSkipped(PHP_EOL . 'Omitting test ' . __METHOD__ . ' (not applicable on dev)' . PHP_EOL);
+		if (env('APP_ENV') !== 'sandbox') {
+			$this->markTestSkipped(PHP_EOL . 'Omitting test ' . __METHOD__ . ' (applicable only on sandbox env)' . PHP_EOL);
 		}
 
 		$this->browse(function ($browser) {

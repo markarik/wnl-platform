@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
+use App\Http\Controllers\Api\ApiController;
 use App\Models\QnaAnswer;
 use App\Models\Lesson;
 use App\Models\QnaQuestion;
@@ -13,7 +14,7 @@ use League\Fractal\TransformerAbstract;
 
 class QnaAnswerTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['profiles', 'comments', 'reactions'];
+	protected $availableIncludes = ['profiles', 'comments'];
 
 	public function transform(QnaAnswer $answer)
 	{
@@ -24,6 +25,10 @@ class QnaAnswerTransformer extends TransformerAbstract
 			'created_at'    => $answer->created_at->timestamp,
 			'updated_at'    => $answer->updated_at->timestamp,
 		];
+
+		if (ApiController::shouldInclude('reactions')) {
+			$data = array_merge($data, Reaction::count($answer));
+		}
 
 		return $data;
 	}
@@ -40,12 +45,5 @@ class QnaAnswerTransformer extends TransformerAbstract
 		$comments = $answer->comments;
 
 		return $this->collection($comments, new CommentTransformer(['qna_answers' => $answer->id]), 'comments');
-	}
-
-	public function includeReactions(QnaAnswer $answer)
-	{
-		$reactions = Reaction::count($answer);
-
-		return $this->item($reactions, new ReactionCountTransformer('qna_answers', $answer), 'reactions');
 	}
 }

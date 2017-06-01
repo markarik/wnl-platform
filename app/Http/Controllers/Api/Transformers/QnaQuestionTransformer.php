@@ -1,12 +1,10 @@
-<?php
+<?php namespace App\Http\Controllers\Api\Transformers;
 
 
-namespace App\Http\Controllers\Api\Transformers;
-
-
-use App\Models\Lesson;
+use App\Models\Reaction;
 use App\Models\QnaQuestion;
 use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiController;
 
 
 class QnaQuestionTransformer extends TransformerAbstract
@@ -30,6 +28,10 @@ class QnaQuestionTransformer extends TransformerAbstract
 
 		if ($this->parent) {
 			$data['lessons'] = $this->parent;
+		}
+
+		if (ApiController::shouldInclude('reactions')) {
+			$data = array_merge($data, Reaction::count($question));
 		}
 
 		return $data;

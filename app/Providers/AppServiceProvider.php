@@ -82,10 +82,11 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		if ($this->app->environment('local', 'testing')) {
+		if ($this->app->environment('dev', 'testing')) {
 			$this->app->register(DuskServiceProvider::class);
 		}
-		if ($this->app->environment('testing', 'dev', 'local')) {
+
+		if ($this->app->environment('dev', 'local')) {
 			$this->app->register(TinkerServiceProvider::class);
 		}
 		if (env('DEBUG_BAR') === true) {

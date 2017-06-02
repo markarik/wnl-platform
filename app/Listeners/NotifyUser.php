@@ -1,8 +1,12 @@
 <?php namespace App\Listeners;
 
+use App\Events\Qna\AnswerPosted;
+use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
 use App\Models\User;
 use App\Notifications\EventNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class NotifyUser implements ShouldQueue
@@ -25,11 +29,8 @@ class NotifyUser implements ShouldQueue
 	 *
 	 * @param $event
 	 */
-	private function handleAnswerPosted($event)
+	private function handleAnswerPosted( AnswerPosted $event)
 	{
-		$this->notifyModerators($event);
-
-		$user = $event->qnaAnswer->question->user;
 
 		$event->data = [
 			'event'   => 'qna-answer-posted',
@@ -51,6 +52,12 @@ class NotifyUser implements ShouldQueue
 			],
 		];
 
+		$this->notifyModerators($event);
+
+		// For some reason event is not deserialized here by default
+		// calling __wakeup() forces an event to deserialize, hence we can access question and user property
+		$event->__wakeup();
+		$user = $event->qnaAnswer->question->user;
 		$user->notify(new EventNotification($event));
 	}
 

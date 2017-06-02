@@ -31,7 +31,9 @@ class QnaQuestionTransformer extends TransformerAbstract
 		}
 
 		if (ApiController::shouldInclude('reactions')) {
-			$data = array_merge($data, Reaction::count($question));
+			if (is_array($reactions = Reaction::count($question))) {
+				$data = array_merge($data, $reactions);
+			}
 		}
 
 		return $data;

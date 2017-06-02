@@ -11,7 +11,7 @@
 	// Import global components
 	import Navbar from 'js/components/global/Navbar.vue'
 	import store from 'store'
-	import {mapActions, mapGetters} from 'vuex'
+	import { mapActions } from 'vuex'
 	import { swalConfig } from 'js/utils/swal'
 
 	const CACHE_VERSION = 1
@@ -22,7 +22,7 @@
 			'wnl-navbar': Navbar
 		},
 		methods: {
-			...mapActions(['setupCurrentUser']),
+			...mapActions(['setupCurrentUser', 'setLayout']),
 			displayScreenResolutionInfo() {
 				const resolutionInfoKey = `has-seen-resolution-info-${CACHE_VERSION}`
 				const resolutionInfoValue = 1
@@ -51,5 +51,11 @@
 			this.setupCurrentUser()
 			this.displayScreenResolutionInfo()
 		},
+		mounted() {
+			this.setLayout(this.$breakpoints.currentBreakpoint())
+			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
+				this.setLayout(currentLayout)
+			});
+		}
 	}
 </script>

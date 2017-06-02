@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\Reaction;
 use App\Models\QnaQuestion;
 use League\Fractal\TransformerAbstract;
 use App\Http\Controllers\Api\ApiController;
@@ -31,9 +30,7 @@ class QnaQuestionTransformer extends TransformerAbstract
 		}
 
 		if (ApiController::shouldInclude('reactions')) {
-			if (is_array($reactions = Reaction::count($question))) {
-				$data = array_merge($data, $reactions);
-			}
+			$data = array_merge($data, ReactionsCountTransformer::transform($question));
 		}
 
 		return $data;

@@ -44,10 +44,10 @@
 			'wnl-quill': Quill,
 			'wnl-submit': Submit,
 		},
-		props: ['commentable_resource', 'commentable_id'],
+		props: ['commentableResource', 'commentableId'],
 		computed: {
 			name() {
-				return `NewComment-${this.commentable_resource}-${this.commentable_id}`
+				return `NewComment-${this.commentableResource}-${this.commentableId}`
 			},
 			attachedData() {
 				return {

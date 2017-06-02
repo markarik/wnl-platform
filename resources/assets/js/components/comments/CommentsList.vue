@@ -8,7 +8,7 @@
 		<wnl-comment v-for="comment in comments"
 			:key="comment.id"
 			:comment="comment"
-			:profile="commentProfile"
+			:profile="commentProfile(comment.profiles[0])"
 			@removeComment="onRemoveComment"
 			>
 			{{comment.text}}
@@ -19,16 +19,9 @@
 	</div>
 </template>
 
-<style lang="sass" scoped>
-
-	.wnl-comments
-		width: 100%
-
-</style>
-
 <script>
 	import _ from 'lodash'
-	import {mapGetters, mapActions} from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
@@ -52,18 +45,14 @@
 					id: this.commentableId,
 				})
 			},
-			commentProfile(id) {
-				// return this.getterFunction('commentProfile', id)
-				return {
-					full_name: "Prezes Prezesowicz",
-					avatar: null,
-				}
-			},
 			hasComments() {
 				return !_.isEmpty(this.comments)
 			},
 		},
 		methods: {
+			commentProfile(id) {
+				return this.getterFunction('commentProfile', id)
+			},
 			action(action, payload = {}) {
 				return this.$store.dispatch(`${this.module}/${action}`, payload)
 			},

@@ -15,7 +15,7 @@ function getLocalStorageKey(setId, userSlug) {
 
 function getQuizSet(id) {
 	return axios.get(
-		getApiUrl(`quiz_sets/${id}?include=questions.answers,questions.comments`)
+		getApiUrl(`quiz_sets/${id}?include=questions.answers,questions.comments.profiles`)
 	)
 }
 

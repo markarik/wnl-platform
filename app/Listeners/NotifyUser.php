@@ -1,12 +1,9 @@
 <?php namespace App\Listeners;
 
 use App\Events\Qna\AnswerPosted;
-use App\Models\QnaAnswer;
-use App\Models\QnaQuestion;
 use App\Models\User;
 use App\Notifications\EventNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class NotifyUser implements ShouldQueue

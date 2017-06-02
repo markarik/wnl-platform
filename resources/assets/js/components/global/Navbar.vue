@@ -1,31 +1,26 @@
 <template>
 	<nav class="wnl-navbar has-shadow">
-		<!-- <div class="wnl-left">
-			<div class="wnl-left-content"> -->
-				<!-- <router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
-					<img :src="logoSrc" :alt="logoAlt">
-				</router-link> -->
-				<!-- <a :href="paymentUrl" class="wnl-logo-link">
-					<img :src="logoSrc" :alt="logoAlt">
-				</a>
-			</div>
+		<div class="wnl-navbar-item" v-if="canShowSidenavTrigger">
+			<a class="wnl-navbar-sidenav-trigger">
+				<span class="icon">
+					<i class="fa fa-bars"></i>
+				</span>
+			</a>
 		</div>
-		<div class="wnl-middle"></div>
-		<div class="wnl-right">
-			<wnl-user-dropdown></wnl-user-dropdown>
-		</div> -->
 		<div class="wnl-navbar-item wnl-navbar-branding">
 			<a :href="paymentUrl" class="wnl-logo-link">
 				<img :src="logoSrc" :alt="logoAlt">
 			</a>
-			<div class="breadcrumbs">
+			<div class="breadcrumbs" v-if="canShowBreadcrumbsInNavbar">
 				<wnl-breadcrumbs></wnl-breadcrumbs>
 			</div>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-controls">
+		<div class="wnl-navbar-item wnl-navbar-controls" v-if="canShowControlsInNavbar">
 			<span class="icon is-big"><i class="fa fa-search"></i></span>
 			<span class="icon is-big"><i class="fa fa-comments-o"></i></span>
 			<span class="icon is-big"><i class="fa fa-bell"></i></span>
+		</div>
+		<div class="wnl-navbar-item">
 			<wnl-user-dropdown></wnl-user-dropdown>
 		</div>
 	</nav>
@@ -39,7 +34,6 @@
 		+small-shadow()
 		display: flex
 		flex: 0 $navbar-height
-		justify-content: space-between
 		z-index: $z-index-navbar
 
 	.wnl-navbar-item
@@ -49,15 +43,18 @@
 		min-height: $navbar-height
 		padding: 0 $margin-base
 
+	.wnl-navbar-branding
+		flex-grow: 1
+
 	.breadcrumbs
 		flex-direction: row
 		margin-left: $margin-base
+		margin-top: 15px
 
 	.wnl-navbar-controls
-
 		.icon
 			color: $color-gray-dimmed
-			margin-right: $margin-big
+			margin-left: $margin-big
 
 			&.is-active
 				color: $color-gray
@@ -97,7 +94,10 @@
 		},
 		computed: {
 			...mapGetters([
-				'currentUserFullName'
+				'currentUserFullName',
+				'canShowSidenavTrigger',
+				'canShowBreadcrumbsInNavbar',
+				'canShowControlsInNavbar'
 			]),
 			paymentUrl() {
 				return 'https://wiecejnizlek.pl'

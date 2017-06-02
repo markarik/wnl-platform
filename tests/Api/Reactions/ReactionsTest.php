@@ -3,11 +3,14 @@
 namespace Tests\Api\Qna;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 
 
 class ReactionsTest extends ApiTestCase
 {
+
+	use DatabaseTransactions;
 
 	/** @test */
 	public function post_reaction()

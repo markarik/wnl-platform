@@ -19,7 +19,7 @@ class UserBillingPolicy
 	 */
 	public function view(User $user, UserBillingData $userBilling)
 	{
-		return $user->id === $userBilling->id;
+		return $user->id === $userBilling->user_id;
 	}
 
 	/**
@@ -42,7 +42,7 @@ class UserBillingPolicy
 	 */
 	public function update(User $user, UserBillingData $userBilling)
 	{
-		return $user->id === $userBilling->id;
+		return $user->id === $userBilling->user_id;
 	}
 
 	/**

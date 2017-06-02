@@ -26,6 +26,6 @@ class Slide extends Model
 
 	public function comments()
 	{
-		return $this->morphToMany('\App\Models\Comment', 'commentable');
+		return $this->morphMany('\App\Models\Comment', 'commentable');
 	}
 }

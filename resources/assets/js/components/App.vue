@@ -25,7 +25,7 @@
 			'wnl-main-nav': MainNav,
 		},
 		methods: {
-			...mapActions(['setupCurrentUser']),
+			...mapActions(['setupCurrentUser', 'setLayout']),
 			displayScreenResolutionInfo() {
 				const resolutionInfoKey = `has-seen-resolution-info-${CACHE_VERSION}`
 				const resolutionInfoValue = 1
@@ -53,6 +53,12 @@
 		created: function () {
 			this.setupCurrentUser()
 			this.displayScreenResolutionInfo()
+		},
+		mounted() {
+			this.setLayout(this.$breakpoints.currentBreakpoint())
+			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
+				this.setLayout(currentLayout)
+			});
 		}
 	}
 </script>

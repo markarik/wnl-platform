@@ -14,6 +14,7 @@ return [
 		'user-settings'       => 'settings',
 		'user-avatar'         => 'avatar',
 		'user-password'       => 'password',
+		'user-notifications'  => 'notifications',
 		'editions'            => 'editions',
 		'orders'              => 'orders',
 		'tags'                => 'tags',
@@ -30,5 +31,6 @@ return [
 		'comments'            => 'comments',
 		'chat-rooms'          => 'chat_rooms',
 		'chat-messages'       => 'chat_messages',
+		'reactions'           => 'reactions',
 	],
 ];

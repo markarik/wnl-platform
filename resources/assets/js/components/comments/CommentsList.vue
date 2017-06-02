@@ -19,6 +19,13 @@
 	</div>
 </template>
 
+<style lang="sass" scoped>
+
+	.wnl-comments
+		width: 100%
+
+</style>
+
 <script>
 	import _ from 'lodash'
 	import {mapGetters, mapActions} from 'vuex'

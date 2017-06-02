@@ -96,6 +96,7 @@
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
 
+
 	.wnl-quiz-question.is-unresolved
 		.quiz-answer
 			cursor: pointer
@@ -139,6 +140,7 @@
 
 	.quiz-question-comments
 		padding: $margin-big
+		width: 100%
 </style>
 
 <script>

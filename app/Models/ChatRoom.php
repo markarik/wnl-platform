@@ -25,10 +25,9 @@ class ChatRoom extends Model
 		return !$this->is_private;
 	}
 
-	public function scopeName($query, $name)
+	public function scopeOfName($query, $name)
 	{
 		return $query
-			->where('name', $name)
-			->first();
+			->where('name', $name);
 	}
 }

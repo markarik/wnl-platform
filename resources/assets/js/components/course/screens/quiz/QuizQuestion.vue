@@ -35,9 +35,13 @@
 					</li>
 				</transition-group>
 			</div>
-			<div class="card-footer" v-if="showComments">
-				<div class="quiz-question-comments" v-if="hasComments">
-					<wnl-comments-list :comments="comments"></wnl-comments-list>
+			<div class="card-footer">
+				<div class="quiz-question-comments">
+					<wnl-comments-list
+						module="quiz"
+						commentableResource="questions"
+						:commentableId="index">
+					</wnl-comments-list>
 				</div>
 			</div>
 		</div>
@@ -149,7 +153,7 @@
 		components: {
 			'wnl-comments-list': CommentsList,
 		},
-		props: ['answers', 'comments', 'index', 'text', 'total'],
+		props: ['id', 'answers', 'index', 'text', 'total'],
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
@@ -159,18 +163,18 @@
 			number() {
 				return this.index + 1
 			},
-			/**
-			 * @return {Boolean}
-			 */
-			hasComments() {
-				return this.comments.length > 0
-			},
-			/**
-			 * @return {Boolean}
-			 */
-			showComments() {
-				return this.isComplete && this.hasComments
-			},
+			// /**
+			//  * @return {Boolean}
+			//  */
+			// hasComments() {
+			// 	return this.comments.length > 0
+			// },
+			// /**
+			//  * @return {Boolean}
+			//  */
+			// showComments() {
+			// 	return this.isComplete && this.hasComments
+			// },
 		},
 		methods: {
 			...mapMutations('quiz', [

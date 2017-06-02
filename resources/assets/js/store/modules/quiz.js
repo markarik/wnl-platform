@@ -1,9 +1,10 @@
 import axios from 'axios'
 import store from 'store'
 import _ from 'lodash'
-import { set } from 'vue'
+import { set, delete as destroy } from 'vue'
 import { useLocalStorage, getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
+import { commentsGetters, commentsMutations, commentsActions } from 'js/store/modules/comments'
 import * as types from 'js/store/mutations-types'
 
 const CACHE_VERSION = 2
@@ -12,8 +13,10 @@ function getLocalStorageKey(setId, userSlug) {
 	return `wnl-quiz-${setId}-u-${userSlug}-${CACHE_VERSION}`
 }
 
-function getQuizSet(setId) {
-
+function getQuizSet(id) {
+	return axios.get(
+		getApiUrl(`quiz_sets/${id}?include=questions.answers,questions.comments`)
+	)
 }
 
 /**
@@ -68,11 +71,13 @@ const namespaced = true
 // Initial state
 const state = {
 	attempts: [],
+	comments: {},
 	isComplete: true,
 	loaded: false,
 	questionsLength: 0,
 	questions: [],
 	processing: false,
+	profiles: {},
 	setId: null,
 	setName: '',
 }
@@ -89,7 +94,11 @@ question: {
 */
 
 const getters = {
+	...commentsGetters,
 	getAttempts: (state) => state.attempts,
+	getComments: (state) => (index) => {
+		return state.questions[index].comments.map((commentId) => state.comments[commentId])
+	},
 	getCurrentScore: (state, getters) => {
 		return _.round(getters.getResolved.length * 100 / state.questionsLength, 0)
 	},
@@ -105,6 +114,7 @@ const getters = {
 }
 
 const mutations = {
+	...commentsMutations,
 	[types.QUIZ_ATTEMPT] (state, payload) {
 		// set(state, 'attempts', state.attempts + 1)
 		state.attempts.push(payload)
@@ -143,9 +153,17 @@ const mutations = {
 	[types.QUIZ_TOGGLE_PROCESSING] (state) {
 		set(state, 'processing', !state.processing)
 	},
+	[types.UPDATE_INCLUDED] (state, included) {
+		_.each(included, (items, resource) => {
+			let merged = _.merge(state[resource], items)
+			destroy(state, resource)
+			set(state, resource, merged)
+		})
+	},
 }
 
 const actions = {
+	...commentsActions,
 	setupQuestions({commit, dispatch, getters, state, rootGetters}, resource) {
 		if (state.questionsLength > 0) {
 			return false
@@ -160,7 +178,7 @@ const actions = {
 			return true
 		}
 
-		axios.get(getApiUrl(`${resource.name}/${resource.id}?include=questions.answers,questions.comments`))
+		getQuizSet(resource.id)
 			.then((response) => {
 				const included = response.data.included
 				const questionsIds = response.data.questions
@@ -190,18 +208,19 @@ const actions = {
 					question.isResolved = false
 					question.attemps = 0
 
-					// Check for mock of comments for the question
-					// $wnl.logger.debug(commentsMock)
-					$wnl.logger.info(`Question ${question.id}`, question)
-					if (question.hasOwnProperty('comments')) {
-						// let comments =
-						question.comments = question.comments.map((commentId) => included.comments[commentId])
-					} else {
-						question.comments = []
-					}
+					// if (question.hasOwnProperty('comments')) {
+					// 	// let comments =
+					// 	question.comments = question.comments.map((commentId) => included.comments[commentId])
+					// } else {
+						// question.comments =
+					// }
 
 					questions.push(question)
 				}
+
+				destroy(included, 'questions')
+				destroy(included, 'answers')
+				commit(types.UPDATE_INCLUDED, included)
 
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: response.data.id,

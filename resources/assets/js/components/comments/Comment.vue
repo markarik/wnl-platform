@@ -2,22 +2,16 @@
 	<article class="wnl-comment media">
 		<figure class="media-left">
 			<p class="image is-32x32">
-				<wnl-avatar size="medium" :username="username"
-					:url="avatarUrl">
+				<wnl-avatar size="medium" :username="profile.full_name"
+					:url="profile.avatar">
 				</wnl-avatar>
 			</p>
 		</figure>
 		<div class="media-content">
 			<div class="content">
-				<strong>{{username}}</strong>
-				<p class="comment-text">
-					<slot></slot>
-				</p>
-				<small>
-					<a class="comment-icon-link" @click="mockSaving">
-						<span class="icon is-small"><i class="fa fa-star-o"></i></span> {{votes}}
-					</a> · {{timestamp}}
-				</small>
+				<strong>{{profile.full_name}}</strong>
+				<div class="comment-text" v-html="comment.text"></div>
+				<small>{{time}}</small>
 			</div>
 		</div>
 	</article>
@@ -40,22 +34,21 @@
 </style>
 
 <script>
-	import { swalConfig } from 'js/utils/swal'
+	import { mapActions } from 'vuex'
+
+	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'Comment',
-		props: ['avatarUrl', 'timestamp', 'username', 'votes'],
+		props: ['comment', 'profile'],
+		computed: {
+			time() {
+				return timeFromS(this.comment.created_at)
+			},
+		},
 		methods: {
-			/**
-			 * A temporary method, to be removed when Collections are done.
-			 * The method displays a modal informing about the upcoming feature.
-			 */
-			mockSaving() {
-				this.$swal(swalConfig({
-					html: `<p class="normal">Nad ocenianiem komentarzy też już pracujemy!</p>`,
-					title: 'Już wkrótce!',
-					type: 'info',
-				}))
+			onClickDelete() {
+				this.$emit('removeComment', this.id)
 			}
 		}
 	}

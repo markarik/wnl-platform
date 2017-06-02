@@ -1,25 +1,78 @@
 <template>
 	<div class="wnl-comments">
+		<wnl-new-comment-form v-if="showCommentForm"
+			:commentableResource="commentableResource"
+			:commentableId="commentableId"
+			@submitSuccess="onSubmitSuccess">
+		</wnl-new-comment-form>
 		<wnl-comment v-for="comment in comments"
 			:key="comment.id"
-			:avatarUrl="comment.avatarUrl"
-			:timestamp="comment.timestamp"
-			:username="comment.username"
-			:votes="comment.votes"
+			:comment="comment"
+			:profile="commentProfile"
+			@removeComment="onRemoveComment"
 			>
 			{{comment.text}}
 		</wnl-comment>
+		<!-- <div v-else>
+			Ni mo komentorzy
+		</div> -->
 	</div>
 </template>
 
 <script>
-	import Comment from 'js/components/comments/Comment.vue'
+	import _ from 'lodash'
+	import {mapGetters, mapActions} from 'vuex'
+
+	import NewCommentForm from 'js/components/comments/NewCommentForm'
+	import Comment from 'js/components/comments/Comment'
 
 	export default {
 		name: 'CommentsList',
 		components: {
+			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
 		},
-		props: ['comments']
+		props: ['module', 'commentableResource', 'commentableId'],
+		data() {
+			return {
+				showCommentForm: true,
+			}
+		},
+		computed: {
+			comments() {
+				return this.getterFunction('comments', {
+					resource: this.commentableResource,
+					id: this.commentableId,
+				})
+			},
+			commentProfile(id) {
+				// return this.getterFunction('commentProfile', id)
+				return {
+					full_name: "Prezes Prezesowicz",
+					avatar: null,
+				}
+			},
+			hasComments() {
+				return !_.isEmpty(this.comments)
+			},
+		},
+		methods: {
+			action(action, payload = {}) {
+				return this.$store.dispatch(`${this.module}/${action}`, payload)
+			},
+			getter(getter) {
+				return this.$store.getters[`${this.module}/${getter}`]
+			},
+			getterFunction(getter, payload) {
+				return this.$store.getters[`${this.module}/${getter}`](payload)
+			},
+			// ...mapActions(this.module, ['addComment', 'removeComment']),
+			onSubmitSuccess(data) {
+				this.action('addComment', {})
+			},
+			onRemoveComment(id) {
+				this.action('removeComment', {})
+			},
+		}
 	}
 </script>

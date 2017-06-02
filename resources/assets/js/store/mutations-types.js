@@ -12,6 +12,11 @@ export const COURSE_READY  = 'COURSE_READY'
 // Sidenav
 export const SET_NAVIGATION = 'SET_NAVIGATION'
 
+// Comments
+export const SET_COMMENTS   = 'SET_COMMENTS'
+export const ADD_COMMENT    = 'ADD_COMMENT'
+export const REMOVE_COMMENT = 'REMOVE_COMMENT'
+
 // Forms
 export const FORM_SETUP                = 'FORM_SETUP'
 export const FORM_UPDATE_ORIGINAL_DATA = 'FORM_UPDATE_ORIGINAL_DATA'

@@ -29,7 +29,6 @@ class CommentsTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJsonStructure(['id', 'text', 'created_at', 'updated_at']);
-
 	}
 
 	/** @test */

@@ -31,5 +31,6 @@ return [
 		'comments'            => 'comments',
 		'chat-rooms'          => 'chat_rooms',
 		'chat-messages'       => 'chat_messages',
+		'reactions'           => 'reactions',
 	],
 ];

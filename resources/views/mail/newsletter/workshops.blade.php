@@ -2,7 +2,7 @@
 
 @section('content')
 
-	<h3>Cześć %recipient.name%!</h3>
+	<h3>Cześć %recipient_name%!</h3>
 
 	<p><strong>Na wstępie chcielibyśmy jeszcze raz gorąco podziękować Ci za chęć uczestnictwa w warsztatach “Więcej niż LEK”! Mamy nadzieję, że pozwolą Ci nie tylko do jeszcze lepszego przygotowania do egzaminu, ale staną się również źródłem inspiracji do działania w swoim otoczeniu.</strong></p>
 

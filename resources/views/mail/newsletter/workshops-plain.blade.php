@@ -1,4 +1,4 @@
-Cześć %recipient.name%!
+Cześć %recipient_name%!
 Na wstępie chcielibyśmy jeszcze raz gorąco podziękować Ci za chęć uczestnictwa w warsztatach “Więcej niż LEK”! Mamy nadzieję, że pozwolą Ci nie tylko do jeszcze lepszego przygotowania do egzaminu, ale staną się również źródłem inspiracji do działania w swoim otoczeniu.
 Spotykamy się już dokładnie za dwa tygodnie! W związku z tym chcielibyśmy przekazać Ci wszystkie przydatne informacje organizacyjne.
 Gdzie i kiedy?

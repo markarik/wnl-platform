@@ -45,7 +45,7 @@
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.options)
 			this.editor = this.$refs.quill.firstElementChild
-			this.quill.on('text-change', this.onInput)
+			this.quill.on('text-change', this.onTextChange)
 		},
 		watch: {
 			focused (val) {

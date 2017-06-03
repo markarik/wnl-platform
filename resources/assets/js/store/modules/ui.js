@@ -3,14 +3,14 @@ import { set } from 'vue'
 
 // Initial state
 const state = {
-	currentLayout: ""
+	currentLayout: ''
 }
 
 const layouts = {
-	mobile: "mobile",
-	tablet: "tablet",
-	smallDesktop: "small_screen",
-	largeDesktop: "large_desktop"
+	mobile: 'mobile',
+	tablet: 'tablet',
+	smallDesktop: 'small_screen',
+	largeDesktop: 'large_desktop'
 }
 
 // Getters

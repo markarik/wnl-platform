@@ -40,7 +40,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['slides']}/{id}", 'Course\SlidesApiController@put');
 
 	// Presentables
-	Route::get("{$r['presentables']}/.search", 'Course\PresentablesApiController@search');
+	Route::post("{$r['presentables']}/.search", 'Course\PresentablesApiController@search');
 	Route::get("{$r['presentables']}/{id}", 'Course\PresentablesApiController@get');
 
 	// Slideshows

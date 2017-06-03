@@ -50,9 +50,6 @@
 			},
 		},
 		methods: {
-			commentProfile(id) {
-				return this.getterFunction('commentProfile', id)
-			},
 			action(action, payload = {}) {
 				return this.$store.dispatch(`${this.module}/${action}`, payload)
 			},
@@ -62,13 +59,19 @@
 			getterFunction(getter, payload) {
 				return this.$store.getters[`${this.module}/${getter}`](payload)
 			},
-			// ...mapActions(this.module, ['addComment', 'removeComment']),
+			commentProfile(id) {
+				return this.getterFunction('commentProfile', id)
+			},
 			onSubmitSuccess(data) {
 				this.action('addComment', {})
 			},
 			onRemoveComment(id) {
-				this.action('removeComment', {})
+				this.action('removeComment', {
+					commentable_resource: this.commentableResource,
+					commentable_id: this.commentableId,
+					id,
+				})
 			},
-		}
+		},
 	}
 </script>

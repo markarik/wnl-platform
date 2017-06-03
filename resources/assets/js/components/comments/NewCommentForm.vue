@@ -51,8 +51,8 @@
 			},
 			attachedData() {
 				return {
-					commentable_resource: 'qna_answers',
-					commentable_id: this.answerId,
+					commentable_resource: this.commentableResource,
+					commentable_id: this.commentableId,
 				}
 			},
 			toolbar() {

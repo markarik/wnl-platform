@@ -11,7 +11,12 @@
 			<div class="content">
 				<strong>{{profile.full_name}}</strong>
 				<div class="comment-text" v-html="comment.text"></div>
-				<small>{{time}}</small>
+				<small>{{time}}</small>&nbsp;·
+				<wnl-delete
+					:requestRoute="requestRoute"
+					:target="target"
+					@deleteSuccess="onDeleteSuccess"
+				></wnl-delete>
 			</div>
 		</div>
 	</article>
@@ -34,20 +39,31 @@
 </style>
 
 <script>
-	import { mapActions } from 'vuex'
-
+	import Delete from 'js/components/global/form/Delete'
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'Comment',
+		components: {
+			'wnl-delete': Delete,
+		},
 		props: ['comment', 'profile'],
 		computed: {
+			id() {
+				return this.comment.id
+			},
 			time() {
 				return timeFromS(this.comment.created_at)
 			},
+			requestRoute() {
+				return `comments/${this.id}`
+			},
+			target() {
+				return 'ten komentarz'
+			},
 		},
 		methods: {
-			onClickDelete() {
+			onDeleteSuccess() {
 				this.$emit('removeComment', this.id)
 			}
 		}

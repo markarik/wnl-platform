@@ -20,6 +20,11 @@ class QnaAnswer extends Model
 
 	public function comments()
 	{
-		return $this->morphToMany('App\Models\Comment', 'commentable');
+		return $this->morphMany('App\Models\Comment', 'commentable');
+	}
+
+	public function reactions()
+	{
+		return $this->morphToMany('App\Models\Reaction', 'reactable');
 	}
 }

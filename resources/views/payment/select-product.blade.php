@@ -80,10 +80,14 @@
 		</div>
 		<div class="columns is-hidden-mobile has-text-centered">
 			<div class="column">
-				<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
-					@lang('payment.select-product-onsite-button-label')
-				</a>
-				<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/50</p>
+				@if(!$onsite->available)
+					<div class="notification has-text-centered strong">Brak miejsc :(</div>
+				@else
+					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
+						@lang('payment.select-product-onsite-button-label')
+					</a>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/50</p>
+				@endif
 			</div>
 			<div class="column">
 				@if(!$online->available)

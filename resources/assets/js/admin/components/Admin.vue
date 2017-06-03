@@ -1,6 +1,5 @@
 <template>
 	<div id="app">
-		<!-- <wnl-navbar :show="true"></wnl-navbar> -->
 		<div class="admin-main">
 			<div class="admin-left">
 				<wnl-sidenav></wnl-sidenav>

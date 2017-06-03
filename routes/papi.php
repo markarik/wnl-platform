@@ -30,7 +30,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['screens']}/{id}", 'Course\ScreensApiController@put');
 	Route::patch("{$r['screens']}/{id}", 'Course\ScreensApiController@patch');
 	Route::delete("{$r['screens']}/{id}", 'Course\ScreensApiController@delete');
-	Route::get("{$r['screens']}/.search", 'Course\ScreensApiController@search');
+	Route::post("{$r['screens']}/.search", 'Course\ScreensApiController@search');
 
 	// Editions
 	Route::get("{$r['editions']}/{id}", 'Course\EditionsApiController@get');
@@ -40,7 +40,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['slides']}/{id}", 'Course\SlidesApiController@put');
 
 	// Presentables
-	Route::get("{$r['presentables']}/.search", 'Course\PresentablesApiController@search');
+	Route::post("{$r['presentables']}/.search", 'Course\PresentablesApiController@search');
 	Route::get("{$r['presentables']}/{id}", 'Course\PresentablesApiController@get');
 
 	// Slideshows
@@ -65,6 +65,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'User\UserSettingsApiController@put');
 
 	Route::put("{$r['users']}/{id}/{$r['user-password']}", 'User\UserPasswordApiController@put');
+
+	Route::get("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@get');
+	Route::patch("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@patch');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
@@ -102,6 +105,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 		"{$r['chat-rooms']}/{roomName}/{$r['chat-messages']}/.search",
 		'Chat\ChatMessagesApiController@searchByRoom'
 	);
+
+	// Reactions
+	Route::post($r['reactions'], 'ReactionsApiController@post');
+	Route::delete("{$r['reactions']}", 'ReactionsApiController@destroy');
 
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');

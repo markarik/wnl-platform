@@ -12,6 +12,7 @@ import currentUser from 'js/store/modules/currentUser'
 import qna from 'js/store/modules/qna'
 import quiz from 'js/store/modules/quiz'
 import progress from 'js/store/modules/progress'
+import ui from 'js/store/modules/ui'
 
 Vue.use(Vuex)
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
 		qna,
 		quiz,
 		progress,
+		ui
 	},
 	strict: debug
 })

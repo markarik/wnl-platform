@@ -73,6 +73,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admi
 	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
 	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
 
+	Route::get('/piggyback/{userId}', 'PiggybackController@index');
+
 	// Using front-end routing for the admin panel application
 	Route::get('/app/{path?}', 'AppController@index')->where('path', '(.*)');
 });

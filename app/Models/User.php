@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -78,6 +79,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\ChatMessage');
 	}
 
+	public function notifications()
+	{
+		return $this->morphMany('App\Models\Notification', 'notifiable');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -144,6 +150,15 @@ class User extends Authenticatable
 	}
 
 	/**
+	 * The channels the user receives notification broadcasts on.
+	 * @return mixed
+	 */
+	public function receivesBroadcastNotificationsOn()
+	{
+		return 'user.' . $this->id;
+	}
+
+	/**
 	 * Get the current user or find by id.
 	 *
 	 * @param $id
@@ -184,5 +199,20 @@ class User extends Authenticatable
 	public function isAdmin()
 	{
 		return $this->hasRole('admin');
+	}
+
+	/**
+	 * Query users of certain role.
+	 *
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string $role
+	 * @return \Illuminate\Database\Query\Builder
+	 */
+	public function scopeOfRole($query, $role)
+	{
+		return $query
+			->whereHas('roles', function ($query) use ($role) {
+				return $query->where('name', $role);
+			})->get();
 	}
 }

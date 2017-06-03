@@ -36,7 +36,7 @@
 		<wnl-qna></wnl-qna>
 	</div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
@@ -243,6 +243,10 @@
 		},
 		watch: {
 			'$route' (to, from) {
+				if (to.params.screenId !== from.params.screenId) {
+					this.destroySlideshow()
+					this.initSlideshow()
+				}
 				if (this.loaded && this.slide !== this.currentSlide) {
 					this.goToSlide(this.slideNumber)
 				}

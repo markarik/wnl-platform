@@ -8,18 +8,20 @@
 						<div class="field is-grouped">
 							<div class="control">
 								<label class="label">Numer screena</label>
-								<input type="text" class="input" v-model="screenId">
+								<input @keyup.enter="getSlide" type="text" class="input" v-model="screenId">
 							</div>
 							<div class="control">
 								<label class="label">Numer slajdu</label>
-								<input type="text" class="input" v-model="slideOrderNo">
+								<input @keyup.enter="getSlide" type="text" class="input" v-model="slideOrderNo">
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="level-right">
 					<div class="level-item">
-						<a class="button is-outlined" @click="getSlide">Zaciung slajd</a>
+						<a class="button is-outlined" @click="getSlide" :class="{'is-loading': loadingSlide}">
+							Zaciung slajd
+						</a>
 					</div>
 				</div>
 			</div>
@@ -51,7 +53,7 @@
 				</div>
 				<div class="level-right">
 					<div class="level-item">
-						<a class="button is-primary" :disabled="form.errors.any()" @click="onSubmit">Zapisz slajd</a>
+						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any()" @click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
 			</div>
@@ -63,7 +65,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.slides-editor
-		max-width: 800px
+		width: 100%
 
 	.slide-content-editor
 		border: $border-light-gray
@@ -95,18 +97,31 @@
 				submissionFailed: false,
 				slideOrderNo: '',
 				screenId: '',
+				loadingSlide: false,
+				loading: false,
+			}
+		},
+		computed: {
+			slideNumber() {
+				return this.slideOrderNo - 1
 			}
 		},
 		methods: {
 			onSubmit() {
+				this.loading = true
 				this.reset()
 				this.form.put(this.resourceUrl)
-						.then(response => this.saved = true)
+						.then(response => {
+							this.saved = true
+							this.loading = false
+						})
 						.catch(exception => {
 							this.submissionFailed = true
+							this.loading = false
 						})
 			},
 			getSlide() {
+				this.loadingSlide = true
 				this.reset()
 				this.getSlideshowId()
 						.then(slideshowId => {
@@ -115,9 +130,11 @@
 						.then(slideId => {
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
 							this.form.populate(this.resourceUrl)
+							this.loadingSlide = false
 						})
 						.catch(exception => {
 							this.submissionFailed = true
+							this.loadingSlide = false
 							console.log(exception)
 						})
 			},
@@ -141,7 +158,7 @@
 						where: [
 							['presentable_type', '=', 'App\\Models\\Slideshow'],
 							['presentable_id', '=', slideshowId],
-							['order_number', '=', this.slideOrderNo],
+							['order_number', '=', this.slideNumber],
 						]
 					}
 				}

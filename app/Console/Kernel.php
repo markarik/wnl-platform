@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
 		Commands\ArchiveChatMessages::class,
 		Commands\AddressesExport::class,
 		Commands\MigrateUserData::class,
+		Commands\QuizImport::class,
     ];
 
     /**

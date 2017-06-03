@@ -37,8 +37,8 @@ class DropTables extends Command
      */
     public function handle()
     {
-        if (env('APP_ENV') !== 'dev'){
-            exit('This command works only in dev environment!' . PHP_EOL);
+		if (env('APP_ENV') === 'production') {
+			exit('Sorry, this command is not available on production.' . PHP_EOL);
         }
 
         if (!$this->confirm('CONFIRM DROPPING ALL TABLES IN THE CURRENT DATABASE? [y|N]')) {

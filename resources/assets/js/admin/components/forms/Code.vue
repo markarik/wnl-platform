@@ -55,7 +55,9 @@
 			this.setMode()
 			this.setTheme()
 			editor.$blockScrolling = Infinity
+			editor.setShowPrintMargin(false)
 			editor.getSession().on('change', this.emitCode)
+			editor.getSession().setUseWrapMode(true)
 		},
 		watch: {
 			value (newValue) {

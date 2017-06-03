@@ -70,7 +70,8 @@
 			},
 			isActive() {
 				if (this.hasClass('subitem')) {
-					return this.$route.params.slide > this.to.params.slide
+					return this.$route.params.screenId === this.to.params.screenId &&
+						this.$route.params.slide > this.to.params.slide
 				}
 			},
 		},

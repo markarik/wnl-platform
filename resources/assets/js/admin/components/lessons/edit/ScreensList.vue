@@ -88,7 +88,7 @@
 						]
 					},
 					order: {
-						'order_number': 'desc'
+						'order_number': 'asc'
 					}
 				}
 				return axios.post(this.screensListApiUrl, conditions)

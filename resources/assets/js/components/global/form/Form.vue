@@ -1,5 +1,5 @@
 <template>
-	<form :name="name" @keydown.enter="onEnter">
+	<form :name="name" @keydown.enter="onEnter" @submit.prevent="onSubmitForm">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 			cssClass="fixed"
 			:alert="alert"

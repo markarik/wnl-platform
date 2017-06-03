@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="margin bottom">
 		<router-link :to="to">{{name}}</router-link>
 	</div>
 </template>

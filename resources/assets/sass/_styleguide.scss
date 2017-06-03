@@ -237,6 +237,23 @@ a.secondary-link {
 	}
 }
 
+// Embedded
+.ratio-16-9-wrapper {
+	padding-bottom: 56.25%;
+	position: relative;
+	width: 100%;
+
+	iframe {
+		bottom: 0;
+		height: 100%;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100%;
+	}
+}
+
 // Helpers
 
 .central {

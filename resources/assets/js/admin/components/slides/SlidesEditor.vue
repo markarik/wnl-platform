@@ -101,6 +101,11 @@
 				loading: false,
 			}
 		},
+		computed: {
+			slideNumber() {
+				return this.slideOrderNo - 1
+			}
+		},
 		methods: {
 			onSubmit() {
 				this.loading = true
@@ -153,7 +158,7 @@
 						where: [
 							['presentable_type', '=', 'App\\Models\\Slideshow'],
 							['presentable_id', '=', slideshowId],
-							['order_number', '=', this.slideOrderNo],
+							['order_number', '=', this.slideNumber],
 						]
 					}
 				}

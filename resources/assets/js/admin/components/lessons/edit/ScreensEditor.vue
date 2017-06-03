@@ -254,8 +254,8 @@
 			}
 		},
 		mounted() {
+			this.fetchQuizSets()
 			if (this.screenId) {
-				this.fetchQuizSets()
 				this.populateScreenForm()
 			}
 		},

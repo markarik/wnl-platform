@@ -139,7 +139,7 @@
 				const conditions = {
 					query: {
 						where: [
-							['presentable_type', '=', 'App\\Model\\Slideshow'],
+							['presentable_type', '=', 'App\\Models\\Slideshow'],
 							['presentable_id', '=', slideshowId],
 							['order_number', '=', this.slideOrderNo],
 						]

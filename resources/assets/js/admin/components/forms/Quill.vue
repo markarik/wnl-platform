@@ -8,21 +8,41 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import "node_modules/quill/dist/quill.snow"
+	@import 'resources/assets/sass/variables'
 
 	.quill-container
 		height: 50vh
+
+	.ql-editor
+
+		p
+			margin: $margin-base 0
 </style>
 
 <script>
 	import Quill from 'quill'
+	import { fontColors } from 'js/utils/colors'
 
 	export default {
 		name: 'Quill',
 		props: {
 			options: {
 				type: Object,
-				default: {
-					theme: 'snow'
+				default() {
+					return {
+						theme: 'snow',
+						modules: {
+							toolbar: [
+								[{ 'header': [false, 1, 2, 3] }],
+								['bold', 'italic', 'underline', 'link'],
+								[{ color: fontColors }],
+								['clean'],
+								[{'align': []}],
+								[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+								['blockquote', 'image', 'video'],
+							]
+						},
+					}
 				}
 			},
 			autofocus: Boolean,

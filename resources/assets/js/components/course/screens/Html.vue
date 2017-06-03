@@ -10,6 +10,8 @@
 </style>
 
 <script>
+	import _ from 'lodash'
+
 	export default {
 		name: 'Html',
 		props: ['screenData'],
@@ -17,6 +19,26 @@
 			content() {
 				return this.screenData.content
 			}
+		},
+		methods: {
+			wrapEmbedded() {
+				let iframes = this.$el.getElementsByClassName('ql-video'),
+					wrapperClass = 'ratio-16-9-wrapper'
+
+				if (iframes.length > 0) {
+					_.each(iframes, (iframe) => {
+						let wrapper = document.createElement('div'),
+							parent = iframe.parentNode
+
+						wrapper.className = wrapperClass
+						parent.replaceChild(wrapper, iframe)
+						wrapper.appendChild(iframe)
+					})
+				}
+			}
+		},
+		mounted() {
+			this.wrapEmbedded()
 		}
 	}
 </script>

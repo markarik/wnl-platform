@@ -23,7 +23,7 @@ class Parser
 	 */
 	const SLIDE_PATTERN = '/<section([\s\S]*?)>([\s\S]*?)<\/section>/';
 
-	const FUNCTIONAL_SLIDE_PATTERN = '/#!\(functional\)/';
+	const FUNCTIONAL_SLIDE_PATTERN = '/[#!]+\(functional\)/';
 
 	const TAG_PATTERN = '/#!\(([\w]*):([^\)]*)\)/';
 

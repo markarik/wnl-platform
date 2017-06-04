@@ -259,9 +259,11 @@ class Parser
 
 		$url = $match[0][1];
 
-		$image = Image::make($url)
-			->resize(1920, 1080)
-			->stream('jpg', 80);
+		$canvas = Image::canvas(1920, 1080, '#fff');
+
+		$background = Image::make($url)->resize(1920, 1080);
+
+		$image = $canvas->insert($background)->stream('jpg', 80);
 
 		$path = 'public/backgrounds/' . Str::random(40) . '.jpg';
 

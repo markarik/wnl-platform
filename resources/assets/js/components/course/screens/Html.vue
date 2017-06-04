@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-screen-html content" v-html="content"></div>
+	<div class="wnl-screen-html content" :class="{'wnl-repetitions': isRepetitions}" v-html="content"></div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">
@@ -7,6 +7,10 @@
 
 	.wnl-screen-html
 		margin: $margin-big 0
+
+	.wnl-repetitions
+		ol li:nth-child(5n)
+			margin-bottom: $margin-base
 </style>
 
 <script>
@@ -18,6 +22,9 @@
 		computed: {
 			content() {
 				return this.screenData.content
+			},
+			isRepetitions() {
+				return this.screenData.name === 'Powtórki'
 			}
 		},
 		methods: {

@@ -97,8 +97,10 @@
 </style>
 
 <script>
-	import screenfull from 'screenfull'
+	import _ from 'lodash'
 	import Postmate from 'postmate'
+	import screenfull from 'screenfull'
+
 	import SlideshowNavigation from './SlideshowNavigation.vue'
 	import Qna from 'js/components/qna/Qna.vue'
 	import { isDebug, getUrl } from 'js/utils/env'
@@ -222,7 +224,13 @@
 				}
 			},
 			setEventListeners() {
-				addEventListener('message', this.messageEventListener)
+				addEventListener('message', _.debounce(
+					this.messageEventListener.bind(this),
+					100, {
+						leading: true,
+						trailing: true,
+					})
+				),
 				addEventListener('blur', this.checkFocus)
 				addEventListener('focus', this.checkFocus)
 				addEventListener('focusout', this.checkFocus)

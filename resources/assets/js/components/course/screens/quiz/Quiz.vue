@@ -44,7 +44,7 @@
 			...mapGetters('quiz', ['isComplete'])
 		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions'])
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz'])
 		},
 		mounted() {
 			let meta = this.screenData.meta
@@ -53,6 +53,9 @@
 			}
 
 			this.setupQuestions(meta.resources[0])
-		}
+		},
+		beforeDestroy() {
+			this.destroyQuiz()
+		},
 	}
 </script>

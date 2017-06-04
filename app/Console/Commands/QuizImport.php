@@ -98,5 +98,6 @@ class QuizImport extends Command
 		}
 
 		$question->preserve_order = (bool)$values[10];
+		$question->save();
 	}
 }

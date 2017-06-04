@@ -2,7 +2,7 @@
 	<div
 		class="wnl-sidenav-slot"
 		v-if="isVisible"
-		v-bind:class="{ 'wnl-sidenav-detached': isDetached}"
+		v-bind:class="{ 'wnl-sidenav-detached': isDetached }"
 	>
 		<slot></slot>
 	</div>

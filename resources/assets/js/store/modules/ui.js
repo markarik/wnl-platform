@@ -35,6 +35,9 @@ const mutations = {
 	},
 	[types.UI_TOGGLE_SIDENAV] (state) {
 		set(state, 'isSidenavOpen', !state.isSidenavOpen)
+	},
+	[types.UI_RESET_LAYOUT] (state) {
+		set(state, 'isSidenavOpen', false)
 	}
 }
 
@@ -45,6 +48,9 @@ const actions = {
 	},
 	toggleSidenav({ commit }) {
 		commit(types.UI_TOGGLE_SIDENAV)
+	},
+	resetLayout({ commit }) {
+		commit(types.UI_RESET_LAYOUT)
 	}
 }
 

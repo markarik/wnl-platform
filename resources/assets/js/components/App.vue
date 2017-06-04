@@ -22,7 +22,7 @@
 			'wnl-navbar': Navbar
 		},
 		methods: {
-			...mapActions(['setupCurrentUser', 'setLayout']),
+			...mapActions(['setupCurrentUser', 'setLayout', 'resetLayout']),
 			displayScreenResolutionInfo() {
 				const resolutionInfoKey = `has-seen-resolution-info-${CACHE_VERSION}`
 				const resolutionInfoValue = 1
@@ -52,6 +52,9 @@
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {
+			this.$router.afterEach(() => {
+				this.resetLayout()
+			})
 			this.setLayout(this.$breakpoints.currentBreakpoint())
 			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 				this.setLayout(currentLayout)

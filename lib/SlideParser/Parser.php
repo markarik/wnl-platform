@@ -263,9 +263,9 @@ class Parser
 			->resize(1920, 1080)
 			->stream('jpg', 80);
 
-		$path = 'backgrounds/' . Str::random(40) . '.jpg';
+		$path = 'public/backgrounds/' . Str::random(40) . '.jpg';
 
-		Storage::put($path, $image);
+		Storage::put($path, $image, 'public');
 
 		return $path;
 	}

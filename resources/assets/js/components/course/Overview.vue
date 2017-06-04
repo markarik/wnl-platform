@@ -133,7 +133,7 @@
 			},
 			isEnd() {
 				// TODO: Apr 1, 2017 - Use API to get this infromation
-				return this.isLessonComplete(this.courseId, 3)
+				return this.isLessonComplete(this.courseId, 15)
 			},
 			welcomeMessage() {
 				return `Cześć ${this.currentUserName}!`

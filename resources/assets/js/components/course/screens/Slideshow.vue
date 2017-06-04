@@ -128,10 +128,13 @@
 				return this.$el.getElementsByClassName('wnl-slideshow-content')[0]
 			},
 			screenId() {
-				return this.screenData.id
+				return this.$route.params.screenId
+			},
+			slideshowId() {
+				return this.screenData.meta.resources[0].id
 			},
 			slideshowUrl() {
-				return getUrl(`slideshow-builder/${this.screenId}`)
+				return getUrl(`slideshow-builder/${this.slideshowId}`)
 			},
 			slideshowElement() {
 				return this.container.getElementsByTagName('iframe')[0]
@@ -225,17 +228,15 @@
 				addEventListener('focusout', this.checkFocus)
 			},
 			destroySlideshow() {
-				this.child.destroy()
+				if (typeof this.child.destroy === 'function') {
+					this.child.destroy()
+				}
 				removeEventListener('blur', this.checkFocus)
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
 				removeEventListener('message', this.messageEventListener)
+				this.loaded = false
 			},
-		},
-		beforeDestroy() {
-			if (this.loaded) {
-				this.destroySlideshow()
-			}
 		},
 		mounted() {
 			Postmate.debug = false
@@ -245,12 +246,16 @@
 			'$route' (to, from) {
 				if (to.params.screenId !== from.params.screenId) {
 					this.destroySlideshow()
-					this.initSlideshow()
 				}
 				if (this.loaded && this.slide !== this.currentSlide) {
 					this.goToSlide(this.slideNumber)
 				}
-			}
+			},
+			'screenData' (newValue, oldValue) {
+				if (newValue.type === 'slideshow') {
+					this.initSlideshow()
+				}
+			},
 		}
 	}
 </script>

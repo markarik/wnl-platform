@@ -47,7 +47,7 @@
 				return this.screenData.content
 			},
 			isRepetitions() {
-				return this.screenData.name === 'Powtórki'
+				return this.screenData.name.indexOf('Powtórki') > -1
 			}
 		},
 		methods: {

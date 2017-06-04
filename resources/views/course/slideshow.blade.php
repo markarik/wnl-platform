@@ -8,12 +8,34 @@
 		<style type="text/css">
 			.reveal .controls button {
 				outline: 0
-			};
+			}
+
+			.reveal.image-custom-background {
+				background-image: url('{{$background_url}}');
+				background-position: bottom;
+				background-size: contain;
+				background-repeat: no-repeat;
+			}
+
+			.reveal.white-custom-background {
+				background: white !important;
+				color: #0c1726 !important;
+			}
+
+			.reveal.dark-custom-background {
+				background: #0c1726 !important;
+				color: white !important;
+			}
+
+			.reveal.white-custom-background .backgrounds,
+			.reveal.dark-custom-background .backgrounds {
+				display: none !important
+			}
 		</style>
 	</head>
 	<body>
 		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
-			<div class="reveal">
+			<div class="reveal image-custom-background">
 				<div class="slides">
 					@foreach($slides as $slide)
 						{!! $slide->content !!}

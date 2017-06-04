@@ -15,6 +15,7 @@ class CreateSlideshowsTable extends Migration
 	{
 		Schema::create('slideshows', function (Blueprint $table) {
 			$table->increments('id');
+			$table->string('background')->nullable();
 			$table->timestamps();
 		});
 	}

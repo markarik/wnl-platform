@@ -12,7 +12,8 @@ class SlideshowTransformer extends TransformerAbstract
 	public function transform(Slideshow $slideshow)
 	{
 		$data = [
-			'id' => $slideshow->id,
+			'id'             => $slideshow->id,
+			'background_url' => $slideshow->background_url,
 		];
 
 		return $data;

@@ -34,7 +34,10 @@ class SlideShowController extends Controller
 			}
 		}
 
-		$view = view('course.slideshow', ['slides' => $slides]);
+		$view = view('course.slideshow', [
+			'slides' => $slides,
+			'background_url' => $slideshow->background_url,
+		]);
 		$view->render();
 
 		return response($view);

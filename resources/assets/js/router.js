@@ -104,6 +104,7 @@ if (isProduction()) {
 			path: '/app/myself',
 			component: require('js/components/user/Myself.vue'),
 			props: true,
+			redirect: { name: "my-profile" },
 			children: [
 				{
 					name: 'my-orders',

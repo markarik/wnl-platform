@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 class QuizImport extends Command
 {
 	const VALUE_DELIMITER = "\t";
-	const LINE_DELIMITER = "\r\n";
+	const ROW_DELIMITER = "\r\n";
 	const DIRECTORY = 'quiz';
 
 	/**
@@ -58,7 +58,7 @@ class QuizImport extends Command
 	public function importFile($file)
 	{
 		$contents = Storage::disk('s3')->get($file);
-		$lines = explode(self::LINE_DELIMITER, $contents);
+		$lines = explode(self::ROW_DELIMITER, $contents);
 		// Get rid of the headers
 		array_shift($lines);
 
@@ -76,7 +76,7 @@ class QuizImport extends Command
 		$values = explode(self::VALUE_DELIMITER, $line);
 
 		$question = $quizSet->questions()->firstOrCreate([
-			'text' => $values[0],
+			'text' => nl2br($values[0]),
 		]);
 
 		for ($i = 1; $i <= 5; $i++) {

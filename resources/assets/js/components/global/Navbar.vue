@@ -1,7 +1,7 @@
 <template>
 	<nav class="wnl-navbar has-shadow">
 		<div class="wnl-navbar-item" v-if="canShowSidenavTrigger">
-			<a class="wnl-navbar-sidenav-trigger">
+			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
 					<i class="fa fa-bars"></i>
 				</span>
@@ -83,7 +83,7 @@
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Dropdown from 'js/components/user/Dropdown.vue'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
 	export default {
@@ -109,5 +109,8 @@
 				return 'Logo Więcej niż LEK'
 			}
 		},
+		methods: {
+			...mapActions(['toggleSidenav'])
+		}
 	}
 </script>

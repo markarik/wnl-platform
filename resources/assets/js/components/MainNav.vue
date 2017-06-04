@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-main-nav wnl-column">
+	<div class="wnl-main-nav wnl-column" v-bind:class="{ 'horizontal': isHorizontal }">
 		<router-link class="wnl-main-nav-item" :to="{ name: 'courses', params: { courseId: 1 } }">
 			<span class="icon is-medium">
 				<i class="fa fa-home"></i>
@@ -40,6 +40,15 @@
 		min-width: $main-nav-min-size
 		width: $main-nav-size
 
+		&.horizontal
+			flex-direction: row
+			max-width: 100%
+			min-width: initial
+			width: 100%
+			max-height: $main-nav-max-size
+			min-height: $main-nav-min-size
+			height: $main-nav-size
+
 		.wnl-main-nav-item
 			align-items: center
 			color: $color-gray-dimmed
@@ -67,6 +76,7 @@
 
 <script>
 	export default {
-		name: 'MainNav'
+		name: 'MainNav',
+		props: ['isHorizontal']
 	}
 </script>

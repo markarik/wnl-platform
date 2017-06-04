@@ -87,7 +87,7 @@
 			width: 2em
 
 			&.white
-				border: $border-light-gray
+				border: 1px solid $color-inactive-gray
 
 			&.dark
 				background: $color-gray

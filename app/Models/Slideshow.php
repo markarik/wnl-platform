@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Storage;
 use Illuminate\Database\Eloquent\Model;
 
 class Slideshow extends Model
@@ -18,6 +17,6 @@ class Slideshow extends Model
 
 	public function getBackgroundUrlAttribute()
 	{
-		return Storage::url($this->background);
+		return asset("storage/{$this->background}");
 	}
 }

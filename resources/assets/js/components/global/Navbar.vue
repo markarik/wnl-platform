@@ -3,7 +3,7 @@
 		<div class="wnl-navbar-item" v-if="canShowSidenavTrigger">
 			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
-					<i class="fa fa-bars"></i>
+					<i class="fa" v-bind:class="sidenavIconClass"></i>
 				</span>
 			</a>
 		</div>
@@ -96,6 +96,7 @@
 			...mapGetters([
 				'currentUserFullName',
 				'canShowSidenavTrigger',
+				'isSidenavOpen',
 				'canShowBreadcrumbsInNavbar',
 				'canShowControlsInNavbar'
 			]),
@@ -107,6 +108,9 @@
 			},
 			logoAlt() {
 				return 'Logo Więcej niż LEK'
+			},
+			sidenavIconClass() {
+				return this.isSidenavOpen ? 'fa-close' : 'fa-bars'
 			}
 		},
 		methods: {

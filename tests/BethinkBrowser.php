@@ -98,7 +98,19 @@ class BethinkBrowser extends Browser
 		return $this;
 	}
 
-	public function executeScript($script) {
+	public function executeScript($script)
+	{
 		return $this->driver->executeAsyncScript($script);
+	}
+
+	public function switchToIframeBySrc($src) {
+		$selector = sprintf('iframe[src="%s"]', $src);
+		$this->waitFor($selector);
+		$iframeElement = $this->driver->findElement(WebDriverBy::cssSelector($selector));
+		$this->driver->switchTo()->frame($iframeElement);
+	}
+
+	public function switchToMainWindow() {
+		$this->driver->switchTo()->defaultContent();
 	}
 }

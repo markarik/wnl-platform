@@ -70,7 +70,7 @@
 			},
 			isActive() {
 				if (this.hasClass('subitem')) {
-					return this.$route.params.screenId === this.to.params.screenId &&
+					return parseInt(this.$route.params.screenId) === this.to.params.screenId &&
 						this.$route.params.slide > this.to.params.slide
 				}
 			},

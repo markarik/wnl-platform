@@ -9,7 +9,7 @@ use League\Fractal\TransformerAbstract;
 
 class QuizQuestionTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = ['answers', 'comments'];
+	protected $availableIncludes = ['quiz_answers', 'comments'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -34,7 +34,7 @@ class QuizQuestionTransformer extends TransformerAbstract
 		return $data;
 	}
 
-	public function includeAnswers(QuizQuestion $quizQuestion)
+	public function includeQuizAnswers(QuizQuestion $quizQuestion)
 	{
 		$answers = $quizQuestion->answers;
 

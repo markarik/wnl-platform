@@ -34,13 +34,12 @@
 		border-right: $border-light-gray
 		display: flex
 		flex-direction: column
-		// height: $main-height
 		max-width: $main-nav-max-size
-		// min-height: $main-height
 		min-width: $main-nav-min-size
 		width: $main-nav-size
 
 		&.horizontal
+			border-bottom: 1px solid $color-light-gray
 			flex-direction: row
 			max-width: 100%
 			min-width: initial

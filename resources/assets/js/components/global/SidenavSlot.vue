@@ -27,6 +27,10 @@
 		.course-sidenav
 			max-width: none
 			width: auto
+
+		.wnl-sidenav,
+		.course-sidenav
+			padding: 0
 </style>
 
 <script>

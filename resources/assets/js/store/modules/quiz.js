@@ -160,15 +160,26 @@ const mutations = {
 			set(state, resource, merged)
 		})
 	},
+	[types.QUIZ_DESTROY] (state) {
+		let initialState = {
+			attempts: [],
+			isComplete: false,
+			loaded: false,
+			questionsLength: 0,
+			questions: [],
+			processing: false,
+			setId: null,
+			setName: '',
+		}
+		for (let field in state) {
+			set(state, field, initialState[field])
+		}
+	},
 }
 
 const actions = {
 	...commentsActions,
 	setupQuestions({commit, dispatch, getters, state, rootGetters}, resource) {
-		if (state.questionsLength > 0) {
-			return false
-		}
-
 		let storeKey = getLocalStorageKey(resource.id, rootGetters.currentUserSlug),
 			storedState = store.get(storeKey)
 
@@ -268,6 +279,10 @@ const actions = {
 		// TODO: Apr 24, 2017 - We must solve it better.
 		let storeKey = getLocalStorageKey(state.setId, rootGetters.currentUserSlug)
 		store.set(storeKey, state, new Date().getTime() + 3 * 60 * 60 * 1000)
+	},
+
+	destroyQuiz({commit}) {
+		commit(types.QUIZ_DESTROY)
 	},
 }
 

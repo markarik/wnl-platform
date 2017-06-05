@@ -76,15 +76,25 @@
 				return this.$route.params.lessonId
 			},
 			screensListApiUrl() {
-				return getApiUrl(`screens/.search?q=lesson_id:${this.$route.params.lessonId}&order=order_number`)
+				return getApiUrl('screens/.search')
 			}
 		},
 		methods: {
 			fetchScreens() {
-				return axios.get(this.screensListApiUrl)
-					.then((response) => {
-						this.screens = response.data
-					})
+				const conditions = {
+					query: {
+						where: [
+							['lesson_id', '=', this.$route.params.lessonId],
+						]
+					},
+					order: {
+						'order_number': 'asc'
+					}
+				}
+				return axios.post(this.screensListApiUrl, conditions)
+						.then((response) => {
+							this.screens = response.data
+						})
 			},
 			moveScreen(payload) {
 				this.changed = true

@@ -9,9 +9,11 @@
 
 <script>
 	// Import global components
-	import Navbar from 'js/components/global/Navbar.vue'
+	import Echo from 'laravel-echo'
 	import store from 'store'
-	import {mapActions, mapGetters} from 'vuex'
+
+	import Navbar from 'js/components/global/Navbar.vue'
+	import { mapGetters, mapActions } from 'vuex'
 	import { swalConfig } from 'js/utils/swal'
 
 	const CACHE_VERSION = 1
@@ -21,8 +23,11 @@
 		components: {
 			'wnl-navbar': Navbar
 		},
+		computed: {
+			...mapGetters(['currentUserId'])
+		},
 		methods: {
-			...mapActions(['setupCurrentUser']),
+			...mapActions(['setupCurrentUser', 'setLayout']),
 			displayScreenResolutionInfo() {
 				const resolutionInfoKey = `has-seen-resolution-info-${CACHE_VERSION}`
 				const resolutionInfoValue = 1
@@ -45,11 +50,25 @@
 					}))
 					store.set(resolutionInfoKey, resolutionInfoValue)
 				}
-			}
+			},
+			setupNotifications() {
+				Echo.private(`user.${this.currentUserId}`)
+					.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
+						$wnl.logger.debug('Notification', notification);
+					});
+			},
 		},
 		created: function () {
 			this.setupCurrentUser()
 			this.displayScreenResolutionInfo()
 		},
+		mounted() {
+			// this.setupNotifications()
+
+			this.setLayout(this.$breakpoints.currentBreakpoint())
+			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
+				this.setLayout(currentLayout)
+			});
+		}
 	}
 </script>

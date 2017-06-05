@@ -60,7 +60,7 @@
 
 				<!-- Screen content -->
 				<div class="screen-content-editor">
-					<quill :options="{ theme: 'snow' }"
+					<quill
 						:form="screenForm"
 						name="content"
 						v-model="screenForm.content">
@@ -114,8 +114,8 @@
 	import Quill from 'js/admin/components/forms/Quill.vue'
 	import Select from 'js/admin/components/forms/Select.vue'
 
-	import { getApiUrl } from 'js/utils/env'
 	import { alerts } from 'js/mixins/alerts'
+	import { getApiUrl } from 'js/utils/env'
 
 	let types = {
 		html: {
@@ -254,8 +254,8 @@
 			}
 		},
 		mounted() {
+			this.fetchQuizSets()
 			if (this.screenId) {
-				this.fetchQuizSets()
 				this.populateScreenForm()
 			}
 		},

@@ -79,15 +79,22 @@
 			lessonName() {
 				return this.getLesson(this.lessonId).name
 			},
+			screens() {
+				return this.getScreens(this.lessonId)
+			},
 			firstScreenId() {
-				if (typeof this.getScreens(this.lessonId) !== 'undefined') {
-					return parseInt(this.getScreens(this.lessonId)[0])
+				if (_.isEmpty(this.screens)) {
+					return null
 				}
+
+				return _.head(this.screens).id
 			},
 			lastScreenId() {
-				if (typeof this.getScreens(this.lessonId) !== 'undefined') {
-					return parseInt(this.getScreens(this.lessonId).slice(-1)[0])
+				if (_.isEmpty(this.screens)) {
+					return null
 				}
+
+				return _.last(this.screens).id
 			},
 			lessonProgressContext() {
 				return {

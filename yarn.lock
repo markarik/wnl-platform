@@ -5010,6 +5010,10 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
+simple-breakpoints@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/simple-breakpoints/-/simple-breakpoints-1.1.0.tgz#2630ffa2a4d6a8cb8cf7c461b65ed68d79456c30"
+
 slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
@@ -5753,6 +5757,12 @@ vue-resource@^1.2.0:
 vue-router@^2.2.1:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.5.3.tgz#073783f564b6aece6c8a59c63e298dc2aabfb51b"
+
+vue-simple-breakpoints@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vue-simple-breakpoints/-/vue-simple-breakpoints-1.0.1.tgz#b55948d0dbb8dc7a50778d1dd176f712aa5f1ea2"
+  dependencies:
+    simple-breakpoints "^1.1.0"
 
 vue-style-loader@^2.0.0:
   version "2.0.5"

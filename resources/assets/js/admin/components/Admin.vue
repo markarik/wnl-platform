@@ -1,12 +1,10 @@
 <template>
 	<div id="app">
-		<!-- <wnl-navbar :show="true"></wnl-navbar> -->
 		<div class="admin-main">
 			<div class="admin-left">
 				<wnl-sidenav></wnl-sidenav>
 			</div>
 			<div class="admin-right">
-				<img src="http://stowarzyszeniemotyl.org/Administracja/Gfx/design/main_logo.png"/>
 				<router-view></router-view>
 			</div>
 		</div>

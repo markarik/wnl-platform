@@ -4,7 +4,7 @@ import { getApiUrl } from 'js/utils/env'
 import { set } from 'vue'
 
 // API functions
-export function getCurrent() {
+export function _getCurrentUser() {
 	return axios.get(getApiUrl('users/current'));
 }
 
@@ -41,12 +41,11 @@ const mutations = {
 // Actions
 const actions = {
 	setupCurrentUser({ commit }) {
-		getCurrent().then((response) => {
+		_getCurrentUser().then((response) => {
 			commit(types.USERS_SETUP_CURRENT, response.data)
-			Echo.private(`user.${response.data.id}`)
-				.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
-					$wnl.logger.debug('Notification', notification);
-				});
+		})
+		.catch((error) => {
+			$wnl.logger.error(error)
 		})
 	}
 }

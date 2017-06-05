@@ -46,24 +46,35 @@ const getters = {
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
-	getScreens: state => (lessonId) => state.structure[resource('lessons')][lessonId][resource('screens')],
+	getScreens: state => (lessonId) => {
+		let screensIds = state.structure[resource('lessons')][lessonId][resource('screens')]
+
+		if (_.isEmpty(screensIds)) {
+			return []
+		}
+
+		return _.sortBy(
+			screensIds.map((screenId) => state.structure[resource('screens')][screenId]),
+			'order_number'
+		)
+	},
 	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {
 		let screens = getters.getScreens(lessonId)
 
 		if (_.isEmpty(screens)) return undefined
 
-		let currentScreenIndex = screens.indexOf(parseInt(currentScreenId)),
+		let currentScreenIndex = _.findIndex(screens, {'id': parseInt(currentScreenId)}),
 			adjScreenIndex
 
 		if (direction === 'next') {
 			adjScreenIndex = currentScreenIndex + 1
 			if (currentScreenIndex >= 0 && adjScreenIndex < screens.length) {
-				return screens[adjScreenIndex]
+				return screens[adjScreenIndex].id
 			}
 		} else if (direction === 'previous') {
 			adjScreenIndex = currentScreenIndex - 1
 			if (currentScreenIndex > 0) {
-				return screens[adjScreenIndex]
+				return screens[adjScreenIndex].id
 			}
 		}
 

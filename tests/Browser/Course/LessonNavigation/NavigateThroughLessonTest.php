@@ -18,6 +18,7 @@ class NavigateThroughLessonTest extends DuskTestCase
 				->loginAsUser('jlkarminski@gmail.com', 'secret')
 				->visit('/app/courses/1/lessons/1/screens/1')
 				->on(new Lesson())
+				->waitFor('@side_nav', 15)
 				->switchToLessonFrame()
 				->goThroughSlides()
 				->assertLastSlide();

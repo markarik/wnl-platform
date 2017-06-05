@@ -14,6 +14,7 @@ class ExpectedConditions
 			try {
 				return strpos($element->getAttribute($attribute), $value) !== false;
 			} catch (StaleElementReferenceException $ex) {
+				//@TODO figure out how to avoid this exception
 				return true;
 			}
 		};

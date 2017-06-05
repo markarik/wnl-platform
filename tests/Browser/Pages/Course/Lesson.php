@@ -5,7 +5,7 @@ namespace Tests\Browser\Pages\Course;
 use Facebook\WebDriver\WebDriverBy;
 use Laravel\Dusk\Page as BasePage;
 use PHPUnit\Framework\Assert as PHPUnit;
-use Tests\Browser\Library\ExpectedConditions;
+use Tests\Browser\Library\Wait;
 
 class Lesson extends BasePage
 {
@@ -46,7 +46,6 @@ class Lesson extends BasePage
 	public function switchToLessonFrame($browser)
 	{
 		$browser->switchToIframeBySrc('http://platforma.wnl/slideshow-builder/1');
-		$this->slideContent = $this->getSlideContent($browser);
 	}
 
 	public function nextSlide($browser)
@@ -59,6 +58,7 @@ class Lesson extends BasePage
 		$browser->waitFor('@navigate_left');
 		$nextSlideContent = $this->getSlideContent($browser);
 		$this->assertSlideContentChanged($nextSlideContent);
+		$this->slideContent = $nextSlideContent;
 	}
 
 	public function goThroughSlides($browser)
@@ -80,30 +80,29 @@ class Lesson extends BasePage
 	{
 		$sections = $browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS));
 
-		$this->slideContent = null;
-		$this->slide = null;
+		$this->switchToLessonFrame($browser);
+		$this->slide = $this->getPresentSlide($browser);
+		$this->slideContent = $this->getSlideContent($browser);
+		$browser->switchToMainWindow();
 
 		for ($i = 0; $i < count($sections); $i++) {
 			$section = $sections[$i];
 			$section->click();
 			$this->assertSectionActive($section);
 			$this->switchToLessonFrame($browser);
+			Wait::waitForAttributeInElement($browser, $section, 'class', 'present');
 
-			if (empty($this->slide)) {
-
+			if ($i === 0) {
+				$currentSlideContent = $this->getSlideContent($browser);
+				$this->assertSlideContentExpected($currentSlideContent);
 			} else {
-				$browser->driver
-					->wait(5, 200)
-					->until(
-						ExpectedConditions::elementContainsAttribute($this->slide, 'class', 'past')
-					);
-				$nextSlideContent = $this->getSlideContent($browser);
-				$this->assertSlideContentChanged($nextSlideContent);
+				$currentSlideContent = $this->getSlideContent($browser);
+				$this->assertSlideContentChanged($currentSlideContent);
 				$this->slide = $this->getPresentSlide($browser);
-				$this->slideContent = $nextSlideContent;
-				$browser->switchToMainWindow();
+				$this->slideContent = $currentSlideContent;
 			}
-			$sections = $browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS));
+
+			$browser->switchToMainWindow();
 		}
 	}
 
@@ -134,5 +133,10 @@ class Lesson extends BasePage
 	private function assertSlideContentChanged($nextSlideContent)
 	{
 		PHPUnit::assertNotEquals($this->slideContent, $nextSlideContent);
+	}
+
+	private function assertSlideContentExpected($nextSlideContent)
+	{
+		PHPUnit::assertEquals($this->slideContent, $nextSlideContent);
 	}
 }

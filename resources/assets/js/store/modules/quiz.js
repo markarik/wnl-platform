@@ -15,7 +15,7 @@ function getLocalStorageKey(setId, userSlug) {
 
 function getQuizSet(id) {
 	return axios.get(
-		getApiUrl(`quiz_sets/${id}?include=questions.answers,questions.comments.profiles`)
+		getApiUrl(`quiz_sets/${id}?include=quiz_questions.quiz_answers,quiz_questions.comments.profiles`)
 	)
 }
 
@@ -191,28 +191,28 @@ const actions = {
 
 		getQuizSet(resource.id)
 			.then((response) => {
-				const included = response.data.included
-				const questionsIds = response.data.questions
-				const len = questionsIds.length
+				let included = response.data.included,
+					questionsIds = response.data.quiz_questions,
+					len = questionsIds.length
 
 				let questions = []
 
 				for (let i = 0; i < len; i++) {
 					let id = questionsIds[i],
-						question = included.questions[id],
-						answersIds = question.answers
+						question = included.quiz_questions[id],
+						answersIds = question.quiz_answers
 
 					for (let j = 0; j < answersIds.length; j++) {
 						let answerId = answersIds[j],
-							answer = included.answers[answerId]
+							answer = included.quiz_answers[answerId]
 
 						answer.stats = getPercentageShare(answer.hits, question.total_hits)
 
-						question.answers[j] = answer
+						question.quiz_answers[j] = answer
 					}
 
 					if (!question.preserve_order) {
-						question.answers = _.shuffle(question.answers)
+						question.quiz_answers = _.shuffle(question.quiz_answers)
 					}
 					question.index = i
 					question.selectedAnswer = null
@@ -229,8 +229,8 @@ const actions = {
 					questions.push(question)
 				}
 
-				destroy(included, 'questions')
-				destroy(included, 'answers')
+				destroy(included, 'quiz_questions')
+				destroy(included, 'quiz_answers')
 				commit(types.UPDATE_INCLUDED, included)
 
 				commit(types.QUIZ_SET_QUESTIONS, {

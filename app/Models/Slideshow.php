@@ -17,6 +17,6 @@ class Slideshow extends Model
 
 	public function getBackgroundUrlAttribute()
 	{
-		return asset("storage/{$this->background}");
+		return asset("storage/backgrounds/{$this->background}");
 	}
 }

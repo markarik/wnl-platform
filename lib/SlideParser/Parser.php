@@ -255,15 +255,19 @@ class Parser
 
 		$url = $match[0][1];
 
-		$image = Image::make($url)
-			->resize(1920, 1080)
-			->stream('jpg', 80);
+		$canvas = Image::canvas(1920, 1080, '#fff');
 
-		$path = 'public/backgrounds/' . Str::random(40) . '.jpg';
+		$background = Image::make($url)->resize(1920, 1080);
+
+		$image = $canvas->insert($background)->stream('jpg', 80);
+
+		$fileName = Str::random(40) . '.jpg';
+
+		$path = 'public/backgrounds/' . $fileName;
 
 		Storage::put($path, $image, 'public');
 
-		return $path;
+		return $fileName;
 	}
 
 	public function cleanSlide($html)

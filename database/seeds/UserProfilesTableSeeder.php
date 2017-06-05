@@ -70,5 +70,15 @@ class UserProfilesTableSeeder extends Seeder
 			'username'     => 'nerasia',
 			'avatar'       => null,
 		]);
+
+		DB::table('user_profiles')->insert([
+			'user_id'      => 7,
+			'first_name'   => 'Jakub',
+			'last_name'    => 'Mochol',
+			'public_email' => 'jakub.mochol@wiecejnizlek.pl',
+			'public_phone' => null,
+			'username'     => 'jamochol',
+			'avatar'       => null,
+		]);
 	}
 }

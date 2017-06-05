@@ -97,4 +97,8 @@ class BethinkBrowser extends Browser
 
 		return $this;
 	}
+
+	public function executeScript($script) {
+		return $this->driver->executeAsyncScript($script);
+	}
 }

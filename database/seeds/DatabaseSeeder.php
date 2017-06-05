@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 		$this->call(QuizSeeder::class);
 		$this->call(CommentsSeeder::class);
 		$this->call(ReactionsSeeder::class);
+    $this->call(ChatRoomsSeeder::class);
 		Cache::flush();
 	}
 

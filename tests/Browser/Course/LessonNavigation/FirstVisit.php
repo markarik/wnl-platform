@@ -8,7 +8,7 @@ use Tests\Browser\Pages\Login;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 
-class SlidesNavigation extends DuskTestCase
+class FirstVisit extends DuskTestCase
 {
 
 	public function testFirstVisit()

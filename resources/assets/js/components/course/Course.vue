@@ -1,10 +1,16 @@
 <template>
 	<div class="wnl-app-layout">
-		<wnl-course-navigation
-			:context="context"
-			:isLesson="isLesson"
-			v-if="ready">
-		</wnl-course-navigation>
+		<wnl-sidenav-slot
+			:isVisible="canRenderSidenav"
+			:isDetached="!isSidenavMounted"
+		>
+			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-course-navigation
+				:context="context"
+				:isLesson="isLesson"
+			>
+			</wnl-course-navigation>
+		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<router-view v-if="ready"></router-view>
 		</div>
@@ -39,6 +45,8 @@
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Chat from 'js/components/chat/Chat'
 	import Navigation from 'js/components/course/Navigation'
+	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import MainNav from 'js/components/MainNav'
 	import { breadcrumb } from 'js/mixins/breadcrumb'
 	import { getApiUrl } from 'js/utils/env'
 
@@ -47,12 +55,15 @@
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-course-navigation': Navigation,
-			'wnl-chat': Chat
+			'wnl-chat': Chat,
+			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-main-nav': MainNav
 		},
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
 			...mapGetters('course', ['ready']),
+			...mapGetters(['isSidenavVisible', 'isSidenavMounted']),
 			breadcrumb() {
 				return {
 					text: 'Kurs',
@@ -83,6 +94,9 @@
 			localStorageKey() {
 				return `course-structure-${this.courseId}`
 			},
+			canRenderSidenav() {
+				return this.isSidenavVisible && this.ready
+			}
 		},
 		methods: {
 			...mapActions('course', [

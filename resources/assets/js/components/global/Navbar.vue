@@ -1,9 +1,9 @@
 <template>
 	<nav class="wnl-navbar has-shadow">
 		<div class="wnl-navbar-item" v-if="canShowSidenavTrigger">
-			<a class="wnl-navbar-sidenav-trigger">
+			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
-					<i class="fa fa-bars"></i>
+					<i class="fa" v-bind:class="sidenavIconClass"></i>
 				</span>
 			</a>
 		</div>
@@ -83,7 +83,7 @@
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Dropdown from 'js/components/user/Dropdown.vue'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
 	export default {
@@ -96,6 +96,7 @@
 			...mapGetters([
 				'currentUserFullName',
 				'canShowSidenavTrigger',
+				'isSidenavOpen',
 				'canShowBreadcrumbsInNavbar',
 				'canShowControlsInNavbar'
 			]),
@@ -107,7 +108,13 @@
 			},
 			logoAlt() {
 				return 'Logo Więcej niż LEK'
+			},
+			sidenavIconClass() {
+				return this.isSidenavOpen ? 'fa-close' : 'fa-bars'
 			}
 		},
+		methods: {
+			...mapActions(['toggleSidenav'])
+		}
 	}
 </script>

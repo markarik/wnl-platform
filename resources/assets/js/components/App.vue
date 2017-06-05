@@ -2,7 +2,6 @@
 	<div id="app">
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
-			<wnl-main-nav></wnl-main-nav>
 			<router-view></router-view>
 		</div>
 	</div>
@@ -10,7 +9,6 @@
 
 <script>
 	// Import global components
-	import MainNav from 'js/components/MainNav'
 	import Navbar from 'js/components/global/Navbar'
 	import store from 'store'
 	import { mapActions } from 'vuex'
@@ -21,11 +19,10 @@
 	export default {
 		name: 'App',
 		components: {
-			'wnl-navbar': Navbar,
-			'wnl-main-nav': MainNav,
+			'wnl-navbar': Navbar
 		},
 		methods: {
-			...mapActions(['setupCurrentUser', 'setLayout']),
+			...mapActions(['setupCurrentUser', 'setLayout', 'resetLayout']),
 			displayScreenResolutionInfo() {
 				const resolutionInfoKey = `has-seen-resolution-info-${CACHE_VERSION}`
 				const resolutionInfoValue = 1
@@ -55,6 +52,9 @@
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {
+			this.$router.afterEach(() => {
+				this.resetLayout()
+			})
 			this.setLayout(this.$breakpoints.currentBreakpoint())
 			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 				this.setLayout(currentLayout)

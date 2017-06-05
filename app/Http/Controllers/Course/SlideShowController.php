@@ -13,7 +13,7 @@ class SlideShowController extends Controller
 
 	const CACHE_KEY_PREFIX = 'screens-slideshows';
 	const CACHE_VERSION = 2;
-	const CACHE_TAGS = ['slideshows', 'screens-slideshows'];
+	const CACHE_TAGS = ['slideshows', 'screens-slideshows', 'slides'];
 
 	public function build($slideshowId)
 	{

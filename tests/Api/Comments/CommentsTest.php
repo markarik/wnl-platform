@@ -18,8 +18,8 @@ class CommentsTest extends ApiTestCase
 
 		$data = [
 			'commentable_resource' => config('papi.resources.answers'),
-			'commentable_id'       => 1,
-			'text'                 => 'Kolekcjonuję antarktyczne drewniane kaczki, gdyby ktoś coś miał, proszę o info na priv. Pozdrawiam.',
+			'commentable_id' => 1,
+			'text' => 'Kolekcjonuję antarktyczne drewniane kaczki, gdyby ktoś coś miał, proszę o info na priv. Pozdrawiam.',
 		];
 
 		$response = $this
@@ -35,25 +35,20 @@ class CommentsTest extends ApiTestCase
 	public function search_comments()
 	{
 		$user = User::find(1);
-
 		$data = [
 			'query' => [
-				'whereHas' => [
-					'quiz_questions' => [
-						'where' => [
-							['id', 'in', [1, 2, 3, 6, 10]],
-						],
-					],
+				'where' => [
+					['commentable_type', 'quiz_question'],
+					['id', 'in', [1, 2, 3, 6, 10]],
+					['updated_at', '>', '1495033700']
 				],
-				'where'    => [
-					['updated_at', '>', '1495033700'],
+
+				'order' => [
+					'created_at' => 'desc',
+					'id' => 'asc',
 				],
-			],
-			'order' => [
-				'created_at' => 'desc',
-				'id'         => 'asc',
-			],
-			'limit' => [10, 0],
+				'limit' => [10, 0],
+			]
 		];
 
 		$response = $this

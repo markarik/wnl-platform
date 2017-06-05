@@ -3,6 +3,7 @@
 
 namespace Tests;
 
+use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverPoint;
 use \Laravel\Dusk\Browser;
@@ -112,5 +113,15 @@ class BethinkBrowser extends Browser
 
 	public function switchToMainWindow() {
 		$this->driver->switchTo()->defaultContent();
+	}
+
+	public function elementPresent($selector) {
+		try {
+			$this->driver->findElement(WebDriverBy::cssSelector($selector));
+		} catch (NoSuchElementException $e) {
+			return false;
+		}
+
+		return true;
 	}
 }

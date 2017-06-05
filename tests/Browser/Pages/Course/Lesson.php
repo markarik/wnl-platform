@@ -10,6 +10,9 @@ class Lesson extends BasePage
 {
 	private $slideContent;
 
+	const CSS_NAVIGATE_RIGHT = '.navigate-right.enabled';
+	const CSS_NAVIGATE_LEFT = '.navigate-left.enabled';
+
 	/**
 	 * Get the URL for the page.
 	 *
@@ -29,8 +32,8 @@ class Lesson extends BasePage
 	public function elements()
 	{
 		return [
-			'@navigate_right' => '.navigate-right',
-			'@navigate_left' => '.navigate-left'
+			'@navigate_right' => self::CSS_NAVIGATE_RIGHT,
+			'@navigate_left' => self::CSS_NAVIGATE_LEFT
 		];
 	}
 
@@ -49,6 +52,19 @@ class Lesson extends BasePage
 		$browser->waitFor('@navigate_left');
 		$nextSlideContent = $this->getSlideContent($browser);
 		PHPUnit::assertNotEquals($this->slideContent, $nextSlideContent);
+	}
+
+	public function goThroughSlides($browser) {
+		$hasNextSlide = $browser->elementPresent(self::CSS_NAVIGATE_RIGHT);;
+		while ($hasNextSlide) {
+			$this->nextSlide($browser);
+			$hasNextSlide = $browser->elementPresent(self::CSS_NAVIGATE_RIGHT);
+		}
+	}
+
+	public function assertLastSlide($browser) {
+		PHPUnit::assertFalse($browser->elementPresent(self::CSS_NAVIGATE_RIGHT));
+		PHPUnit::assertTrue($browser->elementPresent(self::CSS_NAVIGATE_LEFT));
 	}
 
 	private function getSlideContent($browser)

@@ -77,11 +77,7 @@ class Parser
 			}
 
 			$slide = Slide::create([
-				'content'       => preg_replace([
-					self::TAG_PATTERN,
-					self::FUNCTIONAL_SLIDE_PATTERN,
-					self::BACKGROUND_PATTERN,
-				], '', $slideHtml),
+				'content'       => $this->cleanSlide($slideHtml),
 				'is_functional' => $this->isFunctional($slideHtml),
 			]);
 
@@ -268,6 +264,19 @@ class Parser
 		Storage::put($path, $image, 'public');
 
 		return $path;
+	}
+
+	public function cleanSlide($html)
+	{
+		$regexSearch = [
+			self::TAG_PATTERN,
+			self::FUNCTIONAL_SLIDE_PATTERN,
+			self::BACKGROUND_PATTERN,
+		];
+
+		$html = preg_replace($regexSearch, '', $html);
+
+		return $html;
 	}
 
 }

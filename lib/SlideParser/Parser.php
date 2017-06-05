@@ -127,7 +127,7 @@ class Parser
 
 				if ($courseTag['name'] == 'section') {
 					$section = Section::firstOrCreate([
-						'name'      => $courseTag['value'],
+						'name'      => $this->cleanName($courseTag['value']),
 						'screen_id' => $this->courseModels['screen']->id,
 					]);
 					$this->courseModels['section'] = $section;
@@ -277,6 +277,11 @@ class Parser
 		$html = preg_replace($regexSearch, '', $html);
 
 		return $html;
+	}
+
+	public function cleanName($name)
+	{
+		return strip_tags($name);
 	}
 
 }

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class Slideshow extends Model
 {
+	use Cached;
+
 	protected $fillable = ['background'];
 
 	protected $appends = ['background_url'];

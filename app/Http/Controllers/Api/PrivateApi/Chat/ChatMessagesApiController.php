@@ -21,10 +21,10 @@ class ChatMessagesApiController extends ApiController
 		// in which we're wanting to query messages, but we're actually granting access to chat room.
 		// Standard implementation would require us to query and authorize the same resource.
 		$roomName = $request->route('roomName');
-		$room = ChatRoom::name($roomName);
+		$room = ChatRoom::ofName($roomName)->first();
 		$user = Auth::user();
 
-		if (!$room) {
+		if (empty($room)) {
 			return $this->respondNotFound();
 		}
 

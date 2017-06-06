@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Browser\Payment;
+namespace Tests\Browser\Tests\Payment;
 
-use Facebook\WebDriver\WebDriverPoint;
 use Faker\Factory;
 use Tests\Browser\Pages\Payment\ConfirmOrderPage;
 use Tests\Browser\Pages\Payment\P24AcceptTou;
@@ -11,7 +10,6 @@ use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Pages\Payment\SelectProductPage;
 use Tests\Browser\Pages\User\OrdersPage;
 use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class PaymentTest extends DuskTestCase
 {

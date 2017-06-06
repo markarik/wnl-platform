@@ -23,7 +23,7 @@ class QnaAnswerTransformer extends ApiTransformer
 			'updated_at'    => $answer->updated_at->timestamp,
 		];
 
-		if (ApiController::shouldInclude('reactions')) {
+		if (self::shouldInclude('reactions')) {
 			$data = array_merge($data, ReactionsCountTransformer::transform($answer));
 		}
 

@@ -11,25 +11,27 @@ class LessonTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['screens', 'tags', 'qna_questions'];
 
-	protected $editionId;
+	protected $parent;
 
-	public function __construct($editionId = null)
+	public function __construct($parentData = [])
 	{
-		$this->editionId = $editionId;
+		$this->parent = collect($parentData);
 	}
 
 	public function transform(Lesson $lesson)
 	{
+		$editionId = $this->parent->get('editionId');
+
 		$data = [
 			'id'       => $lesson->id,
 			'name'     => $lesson->name,
 			'group_id' => $lesson->group_id,
 			'groups'   => $lesson->group_id,
-			'editions' => $lesson->group->course->id,
+			'editions' => $editionId,
 		];
 
-		if ($this->editionId !== null) {
-			$data['isAvailable'] = $lesson->isAvailable($this->editionId);
+		if ($editionId !== null) {
+			$data['isAvailable'] = $lesson->isAvailable($editionId);
 		}
 
 		return $data;
@@ -39,7 +41,12 @@ class LessonTransformer extends ApiTransformer
 	{
 		$screens = $lesson->screens;
 
-		return $this->collection($screens, new ScreenTransformer, 'screens');
+		$meta = collect([
+			'lessonId' => $lesson->id,
+		]);
+		$meta = $meta->merge($this->parent);
+
+		return $this->collection($screens, new ScreenTransformer($meta), 'screens');
 	}
 
 	public function includeTags(Lesson $lesson)

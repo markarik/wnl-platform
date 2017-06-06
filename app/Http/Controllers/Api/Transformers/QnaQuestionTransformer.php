@@ -29,7 +29,7 @@ class QnaQuestionTransformer extends ApiTransformer
 			$data['lessons'] = $this->parent;
 		}
 
-		if (ApiController::shouldInclude('reactions')) {
+		if (self::shouldInclude('reactions')) {
 			$data = array_merge($data, ReactionsCountTransformer::transform($question));
 		}
 

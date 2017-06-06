@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
+	use Cached;
+
 	protected $fillable = ['name', 'group_id'];
 
 	public function screens()

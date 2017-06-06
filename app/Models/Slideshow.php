@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class Slideshow extends Model
 {
+	use Cached;
+
 	protected $fillable = ['background'];
 
 	protected $appends = ['background_url'];
@@ -17,6 +20,6 @@ class Slideshow extends Model
 
 	public function getBackgroundUrlAttribute()
 	{
-		return asset("storage/{$this->background}");
+		return asset("storage/backgrounds/{$this->background}");
 	}
 }

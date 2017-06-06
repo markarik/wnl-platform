@@ -77,11 +77,7 @@ class Parser
 			}
 
 			$slide = Slide::create([
-				'content'       => preg_replace([
-					self::TAG_PATTERN,
-					self::FUNCTIONAL_SLIDE_PATTERN,
-					self::BACKGROUND_PATTERN,
-				], '', $slideHtml),
+				'content'       => $this->cleanSlide($slideHtml),
 				'is_functional' => $this->isFunctional($slideHtml),
 			]);
 
@@ -131,7 +127,7 @@ class Parser
 
 				if ($courseTag['name'] == 'section') {
 					$section = Section::firstOrCreate([
-						'name'      => $courseTag['value'],
+						'name'      => $this->cleanName($courseTag['value']),
 						'screen_id' => $this->courseModels['screen']->id,
 					]);
 					$this->courseModels['section'] = $section;
@@ -259,15 +255,37 @@ class Parser
 
 		$url = $match[0][1];
 
-		$image = Image::make($url)
-			->resize(1920, 1080)
-			->stream('jpg', 80);
+		$canvas = Image::canvas(1920, 1080, '#fff');
 
-		$path = 'public/backgrounds/' . Str::random(40) . '.jpg';
+		$background = Image::make($url)->resize(1920, 1080);
+
+		$image = $canvas->insert($background)->stream('jpg', 80);
+
+		$fileName = Str::random(40) . '.jpg';
+
+		$path = 'public/backgrounds/' . $fileName;
 
 		Storage::put($path, $image, 'public');
 
-		return $path;
+		return $fileName;
+	}
+
+	public function cleanSlide($html)
+	{
+		$regexSearch = [
+			self::TAG_PATTERN,
+			self::FUNCTIONAL_SLIDE_PATTERN,
+			self::BACKGROUND_PATTERN,
+		];
+
+		$html = preg_replace($regexSearch, '', $html);
+
+		return $html;
+	}
+
+	public function cleanName($name)
+	{
+		return strip_tags($name);
 	}
 
 }

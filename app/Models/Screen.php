@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class Screen extends Model
 {
+	use Cached;
+
 	protected $casts = [
 		'meta' => 'json',
 	];

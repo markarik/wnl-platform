@@ -20,7 +20,7 @@ abstract class ApiController extends Controller
 
 	protected $fractal;
 	protected $request;
-	protected $resourceName;
+	public $resourceName;
 
 	public function __construct(Request $request)
 	{

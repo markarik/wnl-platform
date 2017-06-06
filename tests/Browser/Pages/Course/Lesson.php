@@ -10,8 +10,8 @@ use Tests\Browser\Library\Wait;
 class Lesson extends BasePage
 {
 	const CSS_NAVIGATE_RIGHT = '.navigate-right.enabled';
-	const CSS_SECTIONS = '.items .subitem a';
 	const CSS_NAVIGATE_LEFT = '.navigate-left.enabled';
+	const CSS_SECTIONS = '.items .subitem a';
 	const CSS_SECTIONS_VISITED = '.items .subitem a.is-active';
 
 	private $slideContent;
@@ -45,7 +45,7 @@ class Lesson extends BasePage
 
 	public function switchToLessonFrame($browser)
 	{
-		$browser->switchToIframeBySrc('http://platforma.wnl/slideshow-builder/1');
+		$browser->switchToIframeBySrc('/slideshow-builder/1');
 	}
 
 	public function nextSlide($browser)
@@ -58,7 +58,6 @@ class Lesson extends BasePage
 		$browser->waitFor('@navigate_left');
 		$nextSlideContent = $this->getSlideContent($browser);
 		$this->assertSlideContentChanged($nextSlideContent);
-		$this->slideContent = $nextSlideContent;
 	}
 
 	public function goThroughSlides($browser)
@@ -90,7 +89,6 @@ class Lesson extends BasePage
 			$section->click();
 			$this->assertSectionActive($section);
 			$this->switchToLessonFrame($browser);
-			Wait::waitForAttributeInElement($browser, $section, 'class', 'present');
 
 			if ($i === 0) {
 				$currentSlideContent = $this->getSlideContent($browser);

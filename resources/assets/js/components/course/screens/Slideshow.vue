@@ -193,14 +193,14 @@
 				$wnl.logger.debug('Initiating slideshow')
 				new Postmate({
 						container: this.container,
-						url: this.slideshowUrl,
+						url: this.slideshowUrl
 					}).then(child => {
-						this.child = child;
-						this.loaded = true;
-						this.setEventListeners();
+						this.child = child
+						this.loaded = true
+						this.setEventListeners()
 
-						this.goToSlide(this.slideNumber);
-						this.focusSlideshow();
+						this.goToSlide(this.slideNumber)
+						this.focusSlideshow()
 					}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {

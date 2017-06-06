@@ -1,7 +1,10 @@
 <template>
 	<div>
 		<div class="wnl-quiz-question card margin vertical"
-			:class="{'is-unresolved': !isResolved(this.index)}">
+			:class="{
+				'is-unresolved': !isResolved(this.id),
+				'is-unanswered': isUnanswered,
+			}">
 			<header class="quiz-header card-header">
 				<p class="card-header-title" v-html="text"></p>
 				<div class="card-header-icons">
@@ -15,32 +18,22 @@
 			</header>
 			<div class="quiz-answers card-content">
 				<transition-group name="flip-list" tag="ul">
-					<li class="quiz-answer" v-for="(answer, answerIndex) in answers"
-						:class="{
-							'is-selected': isSelected(answerIndex),
-							'is-correct': isCorrect(answerIndex),
-							'is-hinted': hintCorrect(answerIndex),
-						}"
+					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
+						:answer="answer"
+						:index="answerIndex"
+						:questionId="id"
+						:questionIndex="index"
 						:key="answerIndex"
-						@click="selectAnswer(answerIndex)"
-					>
-						<div class="quiz-answer-content">
-							{{answer.text}}
-						</div>
-						<div class="quiz-answer-stats" v-if="isComplete">
-							<span class="tag" :title="`${answer.stats}% osób wybrało tę odpowiedź`">
-								{{answer.stats}}%
-							</span>
-						</div>
-					</li>
+						@answerSelected="selectAnswer(answerIndex)"
+					></wnl-quiz-answer>
 				</transition-group>
 			</div>
-			<div class="card-footer">
+			<div class="card-footer" v-if="isComplete">
 				<div class="quiz-question-comments">
 					<wnl-comments-list
 						module="quiz"
-						commentableResource="questions"
-						:commentableId="index">
+						commentableResource="quiz_questions"
+						:commentableId="id">
 					</wnl-comments-list>
 				</div>
 			</div>
@@ -141,66 +134,58 @@
 	.quiz-question-comments
 		padding: $margin-big
 		width: 100%
+
+
+	.has-errors .is-unanswered
+		color: $color-orange
 </style>
 
 <script>
-	import * as types from 'js/store/mutations-types'
+	import { mapGetters, mapActions } from 'vuex'
+
+	import QuizAnswer from 'js/components/course/screens/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList.vue'
-	import { mapGetters, mapMutations } from 'vuex'
-	import { isDebug } from 'js/utils/env'
+
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'QuizQuestion',
 		components: {
+			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 		},
-		props: ['id', 'answers', 'index', 'text', 'total'],
+		props: ['id', 'index', 'text', 'total'],
 		computed: {
 			...mapGetters('quiz', [
+				'getAnswers',
 				'isComplete',
 				'isResolved',
 				'getSelectedAnswer',
 			]),
-			number() {
-				return this.index + 1
+			answers() {
+				return this.getAnswers(this.id)
 			},
-			// /**
-			//  * @return {Boolean}
-			//  */
-			// hasComments() {
-			// 	return this.comments.length > 0
-			// },
-			// /**
-			//  * @return {Boolean}
-			//  */
-			// showComments() {
-			// 	return this.isComplete && this.hasComments
-			// },
+			selectedAnswer() {
+				return this.getSelectedAnswer(this.id)
+			},
+			isUnanswered() {
+				return this.selectedAnswer === null
+			},
+			/**
+			 * @return {Boolean}
+			 */
+			hasComments() {
+				// return this.comments.length > 0
+			},
+			/**
+			 * @return {Boolean}
+			 */
+			showComments() {
+				// return this.isComplete && this.hasComments
+			},
 		},
 		methods: {
-			...mapMutations('quiz', [
-				types.QUIZ_SELECT_ANSWER,
-			]),
-
-			/**
-			 * @param  {int} answerIndex
-			 * @return {Boolean}
-			 */
-			isCorrect(answerIndex) {
-				return this.isComplete && this.answers[answerIndex].is_correct
-			},
-
-			/**
-			 * Helper property for debug purposes
-			 * @param  {int} answerIndex
-			 * @return {Boolean}
-			 */
-			hintCorrect(answerIndex) {
-				return isDebug() &&
-					!this.isComplete &&
-					this.answers[answerIndex].is_correct
-			},
+			...mapActions('quiz', ['commitSelectAnswer']),
 
 			/**
 			 * Commits a Vuex mutatation that sets a selectedAnswer for the
@@ -210,19 +195,11 @@
 			 */
 			selectAnswer(answerIndex) {
 				if (!this.isComplete) {
-					this[types.QUIZ_SELECT_ANSWER]({
-						index: this.index,
+					this.commitSelectAnswer({
+						id: this.id,
 						answer: answerIndex
 					})
 				}
-			},
-
-			/**
-			 * @param  {int} answerIndex
-			 * @return {Boolean}
-			 */
-			isSelected(answerIndex) {
-				return this.getSelectedAnswer(this.index) === answerIndex
 			},
 
 			/**

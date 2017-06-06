@@ -4,15 +4,12 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Http\Controllers\Api\ApiController;
 use App\Models\QnaAnswer;
-use App\Models\Lesson;
-use App\Models\QnaQuestion;
-use App\Models\Reaction;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\ApiTransformer;
 
 
-class QnaAnswerTransformer extends TransformerAbstract
+class QnaAnswerTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['profiles', 'comments'];
 

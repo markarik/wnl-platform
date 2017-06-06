@@ -2,11 +2,11 @@
 
 
 use App\Models\QnaQuestion;
-use League\Fractal\TransformerAbstract;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\ApiTransformer;
 
 
-class QnaQuestionTransformer extends TransformerAbstract
+class QnaQuestionTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['qna_answers', 'tags', 'profiles'];
 	protected $parent;

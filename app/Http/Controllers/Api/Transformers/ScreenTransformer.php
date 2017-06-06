@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Screen;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class ScreenTransformer extends TransformerAbstract
+class ScreenTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['sections'];
 

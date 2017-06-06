@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Product;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class ProductsTransformer extends TransformerAbstract
+class ProductsTransformer extends ApiTransformer
 {
 	protected $availableIncludes = [];
 

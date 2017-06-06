@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Tag;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
 
-class TagTransformer extends TransformerAbstract
+class TagTransformer extends ApiTransformer
 {
 	protected $editionId;
 	protected $parent;

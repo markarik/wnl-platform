@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Group;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class GroupTransformer extends TransformerAbstract
+class GroupTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['lessons'];
 

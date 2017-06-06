@@ -4,11 +4,10 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use DB;
 use App\Models\Lesson;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class LessonTransformer extends TransformerAbstract
+class LessonTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['screens', 'tags', 'qna_questions'];
 

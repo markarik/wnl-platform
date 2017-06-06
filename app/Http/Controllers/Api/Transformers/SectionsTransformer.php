@@ -4,12 +4,10 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\Lesson;
 use App\Models\Section;
-use App\Models\Screen;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class SectionsTransformer extends TransformerAbstract
+class SectionsTransformer extends ApiTransformer
 {
 	protected $availableIncludes = [];
 

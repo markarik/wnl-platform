@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\User;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
 
-class UserTransformer extends TransformerAbstract
+class UserTransformer extends ApiTransformer
 {
 	protected $parent;
 

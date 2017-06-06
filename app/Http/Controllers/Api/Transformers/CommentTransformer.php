@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Comment;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class CommentTransformer extends TransformerAbstract
+class CommentTransformer extends ApiTransformer
 {
 	protected $parent;
 

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Coupon;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class CouponsTransformer extends TransformerAbstract
+class CouponsTransformer extends ApiTransformer
 {
 	protected $availableIncludes = [];
 

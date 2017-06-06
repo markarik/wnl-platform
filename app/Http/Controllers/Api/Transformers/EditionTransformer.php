@@ -4,11 +4,11 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\Edition;
 use App\Models\Group;
-use League\Fractal\TransformerAbstract;
+use App\Models\Edition;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class EditionTransformer extends TransformerAbstract
+class EditionTransformer extends ApiTransformer
 {
 	protected $availableIncludes = [
 		'groups',

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\QuizAnswer;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class QuizAnswerTransformer extends TransformerAbstract
+class QuizAnswerTransformer extends ApiTransformer
 {
 	protected $parent;
 

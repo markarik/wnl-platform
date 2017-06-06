@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Presentable;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
 
-class PresentableTransformer extends TransformerAbstract
+class PresentableTransformer extends ApiTransformer
 {
 	public function transform(Presentable $presentable)
 	{

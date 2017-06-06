@@ -134,12 +134,13 @@ class Parser
 				}
 			}
 			if (array_key_exists('slideshow', $this->courseModels)) {
-				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber++]);
+				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 			if (array_key_exists('section', $this->courseModels)) {
-				$this->courseModels['section']->slides()->attach($slide);
+				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 
+			$orderNumber++;
 			if ($slide->is_functional) continue; /* jump to next iteration */
 
 //			$foundCategoryTags = [];

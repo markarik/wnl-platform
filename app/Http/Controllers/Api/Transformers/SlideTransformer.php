@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Slide;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class SlideTransformer extends TransformerAbstract
+class SlideTransformer extends ApiTransformer
 {
 	public function transform(Slide $slide)
 	{

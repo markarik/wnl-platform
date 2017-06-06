@@ -99,9 +99,9 @@ class BethinkBrowser extends Browser
 		return $this;
 	}
 
-	public function executeScript($script)
+	public function executeScript($script, $arguments)
 	{
-		return $this->driver->executeAsyncScript($script);
+		return $this->driver->executeScript($script, $arguments);
 	}
 
 	public function switchToIframeBySrc($src)
@@ -126,5 +126,11 @@ class BethinkBrowser extends Browser
 		}
 
 		return true;
+	}
+
+	public function scrollTo($selector)
+	{
+		$this->executeScript('return document.querySelector(arguments[0]).scrollIntoView(true)', [$selector]);
+		return $this;
 	}
 }

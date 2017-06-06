@@ -4,7 +4,7 @@ namespace Tests\Browser;
 
 use Tests\Browser\Pages\Course\Course;
 use Tests\Browser\Pages\Course\Lesson;
-use Tests\Browser\Pages\Course\Navigation;
+use Tests\Browser\Pages\Course\Components\Navigation;
 use Tests\Browser\Pages\Login;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;

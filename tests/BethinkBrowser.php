@@ -3,6 +3,7 @@
 
 namespace Tests;
 
+use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverPoint;
 use \Laravel\Dusk\Browser;
@@ -98,7 +99,38 @@ class BethinkBrowser extends Browser
 		return $this;
 	}
 
-	public function executeScript($script) {
-		return $this->driver->executeAsyncScript($script);
+	public function executeScript($script, $arguments)
+	{
+		return $this->driver->executeScript($script, $arguments);
+	}
+
+	public function switchToIframeBySrc($src)
+	{
+		$selector = sprintf('iframe[src*="%s"]', $src);
+		$this->waitFor($selector);
+		$iframeElement = $this->driver->findElement(WebDriverBy::cssSelector($selector));
+		$this->driver->switchTo()->frame($iframeElement);
+	}
+
+	public function switchToMainWindow()
+	{
+		$this->driver->switchTo()->defaultContent();
+	}
+
+	public function elementPresent($selector)
+	{
+		try {
+			$this->driver->findElement(WebDriverBy::cssSelector($selector));
+		} catch (NoSuchElementException $e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public function scrollTo($selector)
+	{
+		$this->executeScript('return document.querySelector(arguments[0]).scrollIntoView(true)', [$selector]);
+		return $this;
 	}
 }

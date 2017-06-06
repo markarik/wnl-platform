@@ -5,7 +5,6 @@ namespace Tests\Browser\Pages\Course;
 use Facebook\WebDriver\WebDriverBy;
 use Laravel\Dusk\Page as BasePage;
 use PHPUnit\Framework\Assert as PHPUnit;
-use Tests\Browser\Library\Wait;
 
 class Lesson extends BasePage
 {
@@ -13,6 +12,10 @@ class Lesson extends BasePage
 	const CSS_NAVIGATE_LEFT = '.navigate-left.enabled';
 	const CSS_SECTIONS = '.items .subitem a';
 	const CSS_SECTIONS_VISITED = '.items .subitem a.is-active';
+
+	const TEMPLATE_NTH_SECTION_SELECTOR = '.items .subitem:nth-of-type(%d) a';
+	const SECTIONS_OFFSET = 2;
+	const TEMPLATE_SLIDE_URL = '/app/courses/1/lessons/1/screens/1/%d';
 
 	private $slideContent;
 	private $slide;
@@ -112,6 +115,18 @@ class Lesson extends BasePage
 		PHPUnit::assertTrue($numberOfSections === $numberOfActiveSections);
 	}
 
+	public function goToSection($browser, $sectionIndex)
+	{
+		$section = $this->findSectionByIndex($browser, $sectionIndex);
+		$section->click();
+	}
+
+	public function assertExpectedSectionActive($browser, $sectionIndex)
+	{
+		$section = $this->findSectionByIndex($browser, $sectionIndex);
+		$this->assertSectionActiveByRoute($section);
+	}
+
 	private function getSlideContent($browser)
 	{
 		return $this->getPresentSlide($browser)->getAttribute('innerHTML');
@@ -127,6 +142,11 @@ class Lesson extends BasePage
 		PHPUnit::assertTrue(strpos($section->getAttribute('class'), 'is-active') !== false);
 	}
 
+	private function assertSectionActiveByRoute($section)
+	{
+		PHPUnit::assertTrue(strpos($section->getAttribute('class'), 'router-link-exact-active') !== false);
+	}
+
 
 	private function assertSlideContentChanged($nextSlideContent)
 	{
@@ -136,5 +156,11 @@ class Lesson extends BasePage
 	private function assertSlideContentExpected($nextSlideContent)
 	{
 		PHPUnit::assertEquals($this->slideContent, $nextSlideContent);
+	}
+
+	private function findSectionByIndex($browser, $index)
+	{
+		$sectionSelector = sprintf(self::TEMPLATE_NTH_SECTION_SELECTOR, $index + self::SECTIONS_OFFSET);
+		return $browser->driver->findElement(WebDriverBy::cssSelector($sectionSelector));
 	}
 }

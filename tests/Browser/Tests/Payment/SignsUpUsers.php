@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browser\Payment;
+namespace Tests\Browser\Tests\Payment;
 
 
 use Faker\Factory;

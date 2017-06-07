@@ -7,7 +7,7 @@
 				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 			</span> ·
 			<span>
-				<a class="secondary-link" @click="showCommentForm = !showCommentForm" v-text="toggleFormText"></a>
+				<a class="secondary-link" @click="toggleCommentsForm" v-text="toggleFormText"></a>
 			</span>
 		</div>
 		<transition name="fade">
@@ -47,6 +47,8 @@
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
 
+	import { scrollToElement } from 'js/utils/animations'
+
 	export default {
 		name: 'CommentsList',
 		components: {
@@ -57,7 +59,7 @@
 		data() {
 			return {
 				showCommentForm: false,
-				showComments: true,
+				showComments: false,
 			}
 		},
 		computed: {
@@ -94,6 +96,12 @@
 			toggleComments() {
 				this.showComments = !this.showComments
 			},
+			toggleCommentsForm() {
+				if (!this.showComments && !this.showCommentForm) {
+					this.showComments = true
+				}
+				this.showCommentForm = !this.showCommentForm
+			},
 			onSubmitSuccess(data) {
 				this.action('addComment', {
 					commentableResource: this.commentableResource,
@@ -101,6 +109,9 @@
 					comment: _.merge(data, { 'profiles': [ this.currentUser.id ] }),
 					profile: this.currentUser,
 				})
+
+				let lastComment = _.last(this.$el.getElementsByClassName('wnl-comment'))
+				scrollToElement(lastComment, 0)
 			},
 			onRemoveComment(id) {
 				this.action('removeComment', {

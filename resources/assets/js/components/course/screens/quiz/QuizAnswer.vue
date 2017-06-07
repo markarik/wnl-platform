@@ -11,8 +11,8 @@
 			{{answer.text}}
 		</div>
 		<div class="quiz-answer-stats" v-if="isComplete">
-			<span class="tag" :title="`${answer.stats}% osób wybrało tę odpowiedź`">
-				{{answer.stats}}%
+			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
+				{{stats}}%
 			</span>
 		</div>
 	</li>
@@ -29,7 +29,7 @@
 
 	export default {
 		name: 'QuizAnswer',
-		props: ['answer', 'index', 'questionId', 'questionIndex'],
+		props: ['answer', 'index', 'questionId', 'totalHits'],
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
@@ -50,6 +50,11 @@
 
 			showCorrect() {
 				return this.isComplete && this.isCorrect
+			},
+
+			stats() {
+				console.log('stats', this.answer.hits, this.totalHits)
+				return _.round(this.answer.hits * 100 / this.totalHits)
 			},
 
 			/**

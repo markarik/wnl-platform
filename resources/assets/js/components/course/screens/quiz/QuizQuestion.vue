@@ -2,18 +2,22 @@
 	<div>
 		<div class="wnl-quiz-question card margin vertical"
 			:class="{
-				'is-unresolved': !isResolved(this.id),
+				'is-unresolved': !isResolved(id),
 				'is-unanswered': isUnanswered,
 			}">
 			<header class="quiz-header card-header">
-				<p class="card-header-title" v-html="text"></p>
-				<div class="card-header-icons">
-					<a class="quiz-question-icon" @click="mockSaving" title="Zapisz to pytanie">
-						<span class="icon is-small">
-							<i class="fa fa-bookmark-o"></i>
-						</span>
-						Zapisz
-					</a>
+				<div class="quiz-header-top">
+					<div class="card-header-title">
+						<div v-html="text"></div>
+					</div>
+					<div class="card-header-icons">
+						<a class="quiz-question-icon" @click="mockSaving" title="Zapisz to pytanie">
+							<span class="icon is-small">
+								<i class="fa fa-bookmark-o"></i>
+							</span>
+							Zapisz
+						</a>
+					</div>
 				</div>
 			</header>
 			<div class="quiz-answers card-content">
@@ -22,11 +26,12 @@
 						:answer="answer"
 						:index="answerIndex"
 						:questionId="id"
-						:questionIndex="index"
+						:totalHits="total"
 						:key="answerIndex"
 						@answerSelected="selectAnswer(answerIndex)"
 					></wnl-quiz-answer>
 				</transition-group>
+				<div class="quiz-question-meta">#{{id}}</div>
 			</div>
 			<div class="card-footer" v-if="isComplete">
 				<div class="quiz-question-comments">
@@ -61,6 +66,21 @@
 	.quiz-header,
 	.quiz-answers
 		padding: $margin-base
+
+	.quiz-header
+		align-items: flex-start
+		flex-direction: column
+
+	.quiz-header-top
+		display: flex
+		width: 100%
+
+	.quiz-question-meta
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-2
+		padding: $margin-small $margin-base 0
+		text-align: right
+		width: 100%
 
 	.quiz-answer
 		display: flex

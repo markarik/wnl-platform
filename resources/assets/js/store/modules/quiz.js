@@ -218,9 +218,9 @@ const actions = {
 				commit(types.QUIZ_COMPLETE)
 			}
 
-			commit(types.QUIZ_TOGGLE_PROCESSING, false)
-
 			dispatch('saveQuiz')
+
+			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			resolve()
 		})
 	},

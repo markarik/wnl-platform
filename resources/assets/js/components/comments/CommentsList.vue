@@ -35,7 +35,7 @@
 		props: ['module', 'commentableResource', 'commentableId'],
 		data() {
 			return {
-				showCommentForm: true,
+				showCommentForm: false,
 			}
 		},
 		computed: {

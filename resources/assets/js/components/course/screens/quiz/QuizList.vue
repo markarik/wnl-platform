@@ -7,6 +7,7 @@
 			:index="index"
 			:answers="question.quiz_answers"
 			:text="question.text"
+			:total="question.total_hits"
 			:key="question.id"
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!isComplete">

@@ -83,7 +83,7 @@ class QuizImport extends Command
 			$hits = 0;
 			$isCorrect = $values[6] === chr(64 + $i);
 			if (env('APP_ENV') === 'dev') {
-				$hits = rand(1, 100 * (1 + intval($isCorrect)));
+				$hits = rand(1, 100 * (1 + 2 * intval($isCorrect)));
 			}
 
 			$question->answers()->firstOrCreate([

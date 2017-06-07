@@ -22,7 +22,7 @@
 		</wnl-comment>
 		<div class="form-container">
 			<transition name="fade">
-				<wnl-new-comment-form v-if="showCommentsForm"
+				<wnl-new-comment-form v-if="showComments"
 					:commentableResource="commentableResource"
 					:commentableId="commentableId"
 					@submitSuccess="onSubmitSuccess">
@@ -61,7 +61,6 @@
 		props: ['module', 'commentableResource', 'commentableId'],
 		data() {
 			return {
-				showCommentsForm: false,
 				showComments: false,
 				listElement: {},
 				formElement: {},
@@ -103,10 +102,7 @@
 				}
 			},
 			toggleCommentsForm() {
-				if (!this.showComments && !this.showCommentsForm) {
-					this.showComments = true
-				}
-				this.showCommentsForm = true
+				this.showComments = true
 
 				nextTick(() => {
 					this.commentsScroll(this.formElement)

@@ -29,35 +29,28 @@ function getPercentageShare(value, total) {
 	return _.toInteger(value*100/total)
 }
 
+function getInitialState() {
+	return {
+		attempts: [],
+		comments: {},
+		isComplete: false,
+		loaded: false,
+		questionsIds: [],
+		questionsLength: 0,
+		quiz_answers: {},
+		quiz_questions: {},
+		processing: false,
+		profiles: {},
+		setId: null,
+		setName: '',
+	}
+}
+
 // Should the module be namespaced?
 const namespaced = true
 
 // Initial state
-const state = {
-	attempts: [],
-	comments: {},
-	isComplete: true,
-	loaded: false,
-	questionsIds: [],
-	questionsLength: 0,
-	quiz_answers: {},
-	quiz_questions: {},
-	processing: false,
-	profiles: {},
-	setId: null,
-	setName: '',
-}
-
-/*
-question: {
-	answers: array,
-	attempts: int,
-	comments: array,
-	isResolved: bool,
-	selectedAnswer: int (original index of answer),
-	text: string,
-}
-*/
+const state = getInitialState()
 
 const getters = {
 	...commentsGetters,
@@ -75,9 +68,7 @@ const getters = {
 	},
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
-	getSelectedAnswer: (state, getters) => (id) => {
-		return state.quiz_questions[id].selectedAnswer
-	},
+	getSelectedAnswer: (state, getters) => (id) => state.quiz_questions[id].selectedAnswer,
 	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(
 		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
@@ -96,8 +87,8 @@ const mutations = {
 	[types.QUIZ_COMPLETE] (state) {
 		set(state, 'isComplete', true)
 	},
-	[types.QUIZ_IS_LOADED] (state) {
-		set(state, 'loaded', true)
+	[types.QUIZ_IS_LOADED] (state, loaded) {
+		set(state, 'loaded', loaded)
 	},
 	[types.QUIZ_RESET_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', null)
@@ -143,22 +134,10 @@ const mutations = {
 		})
 	},
 	[types.QUIZ_DESTROY] (state) {
-		let initialState = {
-			attempts: [],
-			comments: {},
-			isComplete: false,
-			loaded: false,
-			questionsLength: 0,
-			quiz_questions: {},
-			quiz_answers: {},
-			processing: false,
-			profiles: {},
-			setId: null,
-			setName: '',
-		}
-		for (let field in state) {
+		let initialState = getInitialState()
+		Object.keys(initialState).forEach((field) => {
 			set(state, field, initialState[field])
-		}
+		})
 	},
 }
 
@@ -168,9 +147,11 @@ const actions = {
 		let storeKey = getLocalStorageKey(resource.id, rootGetters.currentUserSlug),
 			storedState = store.get(storeKey)
 
+		commit(types.QUIZ_IS_LOADED, false)
+
 		if (useLocalStorage() && !_.isUndefined(storedState)) {
 			commit(types.QUIZ_RESTORE_STATE, storedState)
-			commit(types.QUIZ_IS_LOADED)
+			commit(types.QUIZ_IS_LOADED, true)
 			return true
 		}
 
@@ -188,7 +169,7 @@ const actions = {
 					len: questionsIds.length,
 					questionsIds,
 				})
-				commit(types.QUIZ_IS_LOADED)
+				commit(types.QUIZ_IS_LOADED, true)
 				dispatch('saveQuiz')
 			})
 	},
@@ -232,7 +213,11 @@ const actions = {
 	},
 
 	destroyQuiz({commit}) {
-		commit(types.QUIZ_DESTROY)
+		return new Promise((resolve, reject) => {
+			commit(types.QUIZ_IS_LOADED, false)
+			commit(types.QUIZ_DESTROY)
+			resolve()
+		})
 	},
 
 	commitSelectAnswer({commit}, payload) {

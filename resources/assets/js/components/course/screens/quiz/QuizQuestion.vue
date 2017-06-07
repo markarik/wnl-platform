@@ -82,74 +82,8 @@
 		text-align: right
 		width: 100%
 
-	.quiz-answer
-		display: flex
-		border-bottom: $border-light-gray
-		justify-content: space-between
-		list-style-type: none
-		padding: $margin-base $margin-base $margin-base $margin-huge
-		position: relative
-		margin: 0
-
-		&::before
-			content: counter(list, upper-alpha) ")"
-			counter-increment: list
-			left: $margin-base
-			position: absolute
-
-		&:last-child
-			border: 0
-
-		&.is-hinted
-			&::after
-				content: '☑'
-				position: absolute
-				right: $margin-base
-
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
-
-
-	.wnl-quiz-question.is-unresolved
-		.quiz-answer
-			cursor: pointer
-
-			&:hover
-				background: $color-light-gray
-
-			&:active
-				background: $color-inactive-gray
-
-			&, &:hover, &:active
-				transition: all $transition-length-base
-
-			&.is-selected
-				background: $color-ocean-blue
-				color: $color-white
-
-				&:active, &:hover
-					background: $color-ocean-blue
-					color: $color-white
-
-	.quiz-answer.is-correct
-		background: $color-green
-		color: $color-white
-
-		&:active, &:hover
-			background: $color-green
-			color: $color-white
-
-			.quiz-answer-content
-				flex: 1 1 auto
-
-	.quiz-answer-content
-		flex: 1 1 auto
-
-	.quiz-answer-stats
-		align-self: center
-		cursor: help
-		flex: 0 0 auto
-		margin-left: $margin-base
 
 	.quiz-question-comments
 		padding: $margin-small $margin-big $margin-big

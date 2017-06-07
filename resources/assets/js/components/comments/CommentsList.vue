@@ -57,7 +57,7 @@
 		data() {
 			return {
 				showCommentForm: false,
-				showComments: false,
+				showComments: true,
 			}
 		},
 		computed: {

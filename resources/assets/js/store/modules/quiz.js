@@ -1,9 +1,10 @@
 import axios from 'axios'
 import store from 'store'
 import _ from 'lodash'
-import { set } from 'vue'
+import { set, delete as destroy } from 'vue'
 import { useLocalStorage, getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
+import { commentsGetters, commentsMutations, commentsActions } from 'js/store/modules/comments'
 import * as types from 'js/store/mutations-types'
 
 const CACHE_VERSION = 2
@@ -12,40 +13,10 @@ function getLocalStorageKey(setId, userSlug) {
 	return `wnl-quiz-${setId}-u-${userSlug}-${CACHE_VERSION}`
 }
 
-/**
- * It's a mocked object of comments for the example quiz set.
- * Eventually, comments will be retrieved from the database via API.
- * The object uses a question ID as a key and stores an array of comment objects
- * with their IDs, text, username, avatarUrl and timestamp.
- * @type {Object}
- */
-const commentsMock = {
-	1: [
-		{
-			avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/6.jpg',
-			id: 1,
-			text: 'Cześć! Jak widzicie, każde pytanie będzie można skomentować!',
-			timestamp: '3 dni temu',
-			username: 'Robert Kardiowaskularny',
-			votes: 3,
-		},
-		{
-			avatarUrl: 'https://randomuser.me/api/portraits/thumb/women/6.jpg',
-			id: 2,
-			text: 'Świetnie! Czy to znaczy, że będziemy mogli łatwo dyskutować o odpowiedziach i błędach w pytaniach?',
-			timestamp: 'godzinę temu',
-			username: 'Asia Nereczka',
-			votes: 16,
-		},
-		{
-			avatarUrl: 'https://randomuser.me/api/portraits/thumb/men/6.jpg',
-			id: 3,
-			text: 'Dokładnie tak! :D',
-			timestamp: '15 minut temu',
-			username: 'Robert Kardiowaskularny',
-			votes: 0,
-		},
-	],
+function fetchQuizSet(id) {
+	return axios.get(
+		getApiUrl(`quiz_sets/${id}?include=quiz_questions.quiz_answers,quiz_questions.comments.profiles`)
+	)
 }
 
 /**
@@ -64,11 +35,15 @@ const namespaced = true
 // Initial state
 const state = {
 	attempts: [],
-	isComplete: false,
+	comments: {},
+	isComplete: true,
 	loaded: false,
+	questionsIds: [],
 	questionsLength: 0,
-	questions: [],
+	quiz_answers: {},
+	quiz_questions: {},
 	processing: false,
+	profiles: {},
 	setId: null,
 	setName: '',
 }
@@ -85,24 +60,37 @@ question: {
 */
 
 const getters = {
+	...commentsGetters,
+	getAnswers: (state) => (questionId) => {
+		return state.quiz_questions[questionId].quiz_answers.map(
+			(answerId) => state.quiz_answers[answerId]
+		)
+	},
 	getAttempts: (state) => state.attempts,
+	getComments: (state) => (id) => {
+		return state.quiz_questions[id].comments.map((commentId) => state.comments[commentId])
+	},
 	getCurrentScore: (state, getters) => {
 		return _.round(getters.getResolved.length * 100 / state.questionsLength, 0)
 	},
-	getQuestions: (state) => state.questions,
-	getResolved: (state) => state.questions.filter((question) => question.isResolved),
-	getSelectedAnswer: (state) => (index) => state.questions[index].selectedAnswer,
-	getUnresolved: (state) => state.questions.filter((question) => !question.isResolved),
-	getUnanswered: (state) => state.questions.filter((question) => _.isNull(question.selectedAnswer)),
+	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
+	getSelectedAnswer: (state, getters) => (id) => {
+		return state.quiz_questions[id].selectedAnswer
+	},
+	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
+	getUnanswered: (state, getters) => _.filter(
+		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
+	),
 	isComplete: (state) => state.isComplete,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
-	isResolved: (state) => (index) => state.questions[index].isResolved,
+	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
 }
 
 const mutations = {
+	...commentsMutations,
 	[types.QUIZ_ATTEMPT] (state, payload) {
-		// set(state, 'attempts', state.attempts + 1)
 		state.attempts.push(payload)
 	},
 	[types.QUIZ_COMPLETE] (state) {
@@ -112,10 +100,10 @@ const mutations = {
 		set(state, 'loaded', true)
 	},
 	[types.QUIZ_RESET_ANSWER] (state, payload) {
-		set(state.questions[payload.index], 'selectedAnswer', null)
+		set(state.quiz_questions[payload.id], 'selectedAnswer', null)
 	},
 	[types.QUIZ_RESOLVE_QUESTION] (state, payload) {
-		set(state.questions[payload.index], 'isResolved', true)
+		set(state.quiz_questions[payload.id], 'isResolved', true)
 	},
 	[types.QUIZ_RESTORE_STATE] (state, payload) {
 		_.forEach(payload, (value, key) => {
@@ -123,30 +111,48 @@ const mutations = {
 		})
 	},
 	[types.QUIZ_SET_QUESTIONS] (state, payload) {
+		set(state, 'questionsIds', payload.questionsIds)
 		set(state, 'setId', payload.setId)
 		set(state, 'setName', payload.setName)
-		set(state, 'questions', payload.questions)
 		if (payload.hasOwnProperty('len')) {
 			set(state, 'questionsLength', payload.len)
 		}
+
+		for (let i = 0; i < payload.len; i++) {
+			let id = payload.questionsIds[i]
+
+			set(state.quiz_questions[id], 'selectedAnswer', null)
+			set(state.quiz_questions[id], 'isResolved', false)
+			set(state.quiz_questions[id], 'attemps', 0)
+		}
 	},
 	[types.QUIZ_SELECT_ANSWER] (state, payload) {
-		set(state.questions[payload.index], 'selectedAnswer', payload.answer)
+		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
 	},
 	[types.QUIZ_SHUFFLE_ANSWERS] (state, payload) {
-		set(state.questions[payload.index], 'answers', _.shuffle(state.questions[payload.index].answers))
+		set(state.quiz_questions[payload.id], 'answers', _.shuffle(state.quiz_questions[payload.id].quiz_answers))
 	},
-	[types.QUIZ_TOGGLE_PROCESSING] (state) {
-		set(state, 'processing', !state.processing)
+	[types.QUIZ_TOGGLE_PROCESSING] (state, isProcessing) {
+		set(state, 'processing', isProcessing)
+	},
+	[types.UPDATE_INCLUDED] (state, included) {
+		_.each(included, (items, resource) => {
+			_.each(items, (item, id) => {
+				set(state[resource], id, item)
+			})
+		})
 	},
 	[types.QUIZ_DESTROY] (state) {
 		let initialState = {
 			attempts: [],
+			comments: {},
 			isComplete: false,
 			loaded: false,
 			questionsLength: 0,
-			questions: [],
+			quiz_questions: {},
+			quiz_answers: {},
 			processing: false,
+			profiles: {},
 			setId: null,
 			setName: '',
 		}
@@ -157,6 +163,7 @@ const mutations = {
 }
 
 const actions = {
+	...commentsActions,
 	setupQuestions({commit, dispatch, getters, state, rootGetters}, resource) {
 		let storeKey = getLocalStorageKey(resource.id, rootGetters.currentUserSlug),
 			storedState = store.get(storeKey)
@@ -167,72 +174,40 @@ const actions = {
 			return true
 		}
 
-		axios.get(getApiUrl(`${resource.name}/${resource.id}?include=questions.answers`))
+		fetchQuizSet(resource.id)
 			.then((response) => {
-				const included = response.data.included
-				const questionsIds = response.data.questions
-				const len = questionsIds.length
+				let included = response.data.included,
+					questionsIds = response.data.quiz_questions,
+					len = questionsIds.length
 
-				let questions = []
-
-				for (let i = 0; i < len; i++) {
-					let id = questionsIds[i],
-						question = included.questions[id],
-						answersIds = question.answers
-
-					for (let j = 0; j < answersIds.length; j++) {
-						let answerId = answersIds[j],
-							answer = included.answers[answerId]
-
-						answer.stats = getPercentageShare(answer.hits, question.total_hits)
-
-						question.answers[j] = answer
-					}
-
-					if (!question.preserve_order) {
-						question.answers = _.shuffle(question.answers)
-					}
-					question.index = i
-					question.selectedAnswer = null
-					question.isResolved = false
-					question.attemps = 0
-
-					// Check for mock of comments for the question
-					$wnl.logger.debug(commentsMock)
-					if (commentsMock.hasOwnProperty(id)) {
-						question.comments = commentsMock[id]
-					} else {
-						question.comments = []
-					}
-
-					questions.push(question)
-				}
+				commit(types.UPDATE_INCLUDED, included)
 
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: response.data.id,
-					len,
 					setName: response.data.name,
-					questions,
+					len: questionsIds.length,
+					questionsIds,
 				})
 				commit(types.QUIZ_IS_LOADED)
 				dispatch('saveQuiz')
 			})
 	},
 
-	checkQuiz({commit, getters, dispatch}) {
+	checkQuiz({state, commit, getters, dispatch}) {
 		return new Promise((resolve, reject) => {
-			commit(types.QUIZ_TOGGLE_PROCESSING)
+			commit(types.QUIZ_TOGGLE_PROCESSING, true)
 
 			_.each(getters.getUnresolved, question => {
-				let selected = question.selectedAnswer,
-					index = question.index
+				let selectedId = question.quiz_answers[question.selectedAnswer],
+					selected = state.quiz_answers[selectedId],
+					id = question.id
 
-				if (!_.isNull(selected) && question.answers[selected].is_correct) {
-					commit(types.QUIZ_RESOLVE_QUESTION, {index})
+				if (!_.isNull(selected) && selected.is_correct) {
+					commit(types.QUIZ_RESOLVE_QUESTION, {id})
 				} else {
-					commit(types.QUIZ_RESET_ANSWER, {index})
+					commit(types.QUIZ_RESET_ANSWER, {id})
 					if (!question.preserve_order) {
-						commit(types.QUIZ_SHUFFLE_ANSWERS, {index})
+						commit(types.QUIZ_SHUFFLE_ANSWERS, {id})
 					}
 				}
 			})
@@ -243,9 +218,9 @@ const actions = {
 				commit(types.QUIZ_COMPLETE)
 			}
 
-			commit(types.QUIZ_TOGGLE_PROCESSING)
-
 			dispatch('saveQuiz')
+
+			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			resolve()
 		})
 	},
@@ -258,6 +233,10 @@ const actions = {
 
 	destroyQuiz({commit}) {
 		commit(types.QUIZ_DESTROY)
+	},
+
+	commitSelectAnswer({commit}, payload) {
+		commit(types.QUIZ_SELECT_ANSWER, payload)
 	},
 }
 

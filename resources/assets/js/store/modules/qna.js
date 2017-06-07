@@ -285,6 +285,7 @@ const actions = {
 				answerId: payload.answerId,
 				commentId: payload.commentId,
 			})
+			resolve()
 		})
 	},
 }

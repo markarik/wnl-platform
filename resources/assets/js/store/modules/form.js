@@ -6,8 +6,6 @@ import { useLocalStorage, getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
-let originalData = {}
-
 const form = {
 	namespaced: true,
 	state() {

@@ -90,7 +90,7 @@
 								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
 							}
 
-							this.$emit('submitSuccess')
+							this.$emit('submitSuccess', data)
 						},
 						reason => {
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')

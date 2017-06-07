@@ -15,7 +15,7 @@ class QnaAnswerObserver
 
 	public function created(QnaAnswer $qnaAnswer)
 	{
-		event(new Events\Qna\AnswerPosted($qnaAnswer));
+		//
 	}
 
 }

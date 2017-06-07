@@ -93,7 +93,7 @@
 				let lesson = { status: STATUS_NONE },
 					inProgressId = this.getFirstLessonIdInProgress(this.courseId)
 
-				if (this.isLessonComplete(this.courseId, 3)) {
+				if (this.isLessonComplete(this.courseId, 15)) {
 					return lesson
 				}
 
@@ -115,7 +115,7 @@
 				return lesson
 			},
 			hasNextLesson() {
-				return !this.isLessonComplete(this.courseId, 3) &&
+				return !this.isLessonComplete(this.courseId, 15) &&
 					this.nextLesson.status !== STATUS_NONE
 			},
 			heading() {

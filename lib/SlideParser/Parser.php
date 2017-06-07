@@ -1,17 +1,15 @@
-<?php
+<?php namespace Lib\SlideParser;
 
-namespace Lib\SlideParser;
-
-use App\Exceptions\ParseErrorException;
-use App\Models\Category;
+use Storage;
 use App\Models\Group;
+use App\Models\Slide;
 use App\Models\Lesson;
 use App\Models\Section;
-use App\Models\Slide;
-use App\Models\Screen;
 use App\Models\Slideshow;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use App\Models\Structure;
+use Intervention\Image\Facades\Image;
+use App\Exceptions\ParseErrorException;
 
 class Parser
 {
@@ -23,9 +21,11 @@ class Parser
 	 */
 	const SLIDE_PATTERN = '/<section([\s\S]*?)>([\s\S]*?)<\/section>/';
 
-	const FUNCTIONAL_SLIDE_PATTERN = '/#!\(functional\)/';
+	const FUNCTIONAL_SLIDE_PATTERN = '/[#!]+\(functional\)/';
 
 	const TAG_PATTERN = '/#!\(([\w]*):([^\)]*)\)/';
+
+	const BACKGROUND_PATTERN = '/data-background-image="([^"]*)"/';
 
 	protected $categoryTags;
 	protected $courseTags;
@@ -55,15 +55,15 @@ class Parser
 	}
 
 	/**
-	 * @param $data - string/html
+	 * @param $fileContents - string/html
 	 * @throws ParseErrorException
 	 */
-	public function parse($data)
+	public function parse($fileContents)
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
 		$orderNumber = 0;
-		$slides = $this->matchSlides($data);
+		$slides = $this->matchSlides($fileContents);
 		Log::debug('Parsing...');
 		$names = [];
 		foreach ($slides as $currentSlide => $slideHtml) {
@@ -77,7 +77,7 @@ class Parser
 			}
 
 			$slide = Slide::create([
-				'content'       => preg_replace([self::TAG_PATTERN, self::FUNCTIONAL_SLIDE_PATTERN], '', $slideHtml),
+				'content'       => $this->cleanSlide($slideHtml),
 				'is_functional' => $this->isFunctional($slideHtml),
 			]);
 
@@ -106,7 +106,9 @@ class Parser
 						'name'     => $courseTag['value'],
 						'group_id' => $this->courseModels['group']->id,
 					]);
-					$slideshow = Slideshow::create();
+					$slideshow = Slideshow::create([
+						'background' => $this->getBackground($fileContents),
+					]);
 					$orderNumber = 0;
 					$this->courseModels['slideshow'] = $slideshow;
 					$this->courseModels['screen'] = $lesson->screens()->create([
@@ -125,19 +127,20 @@ class Parser
 
 				if ($courseTag['name'] == 'section') {
 					$section = Section::firstOrCreate([
-						'name'      => $courseTag['value'],
+						'name'      => $this->cleanName($courseTag['value']),
 						'screen_id' => $this->courseModels['screen']->id,
 					]);
 					$this->courseModels['section'] = $section;
 				}
 			}
 			if (array_key_exists('slideshow', $this->courseModels)) {
-				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber++]);
+				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 			if (array_key_exists('section', $this->courseModels)) {
-				$this->courseModels['section']->slides()->attach($slide);
+				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 
+			$orderNumber++;
 			if ($slide->is_functional) continue; /* jump to next iteration */
 
 //			$foundCategoryTags = [];
@@ -243,6 +246,47 @@ class Parser
 		}
 
 		return $tags;
+	}
+
+	public function getBackground($html)
+	{
+		$match = $this->match(self::BACKGROUND_PATTERN, $html, function () {
+			throw new ParseErrorException('No background attribute found.');
+		});
+
+		$url = $match[0][1];
+
+		$canvas = Image::canvas(1920, 1080, '#fff');
+
+		$background = Image::make($url)->resize(1920, 1080);
+
+		$image = $canvas->insert($background)->stream('jpg', 80);
+
+		$fileName = Str::random(40) . '.jpg';
+
+		$path = 'public/backgrounds/' . $fileName;
+
+		Storage::put($path, $image, 'public');
+
+		return $fileName;
+	}
+
+	public function cleanSlide($html)
+	{
+		$regexSearch = [
+			self::TAG_PATTERN,
+			self::FUNCTIONAL_SLIDE_PATTERN,
+			self::BACKGROUND_PATTERN,
+		];
+
+		$html = preg_replace($regexSearch, '', $html);
+
+		return $html;
+	}
+
+	public function cleanName($name)
+	{
+		return strip_tags($name);
 	}
 
 }

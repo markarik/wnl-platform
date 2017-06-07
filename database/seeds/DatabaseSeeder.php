@@ -25,10 +25,12 @@ class DatabaseSeeder extends Seeder
 		$this->call(QnaAnswersTableSeeder::class);
 		$this->call(TaggablesTableSeeder::class);
 		$this->call(SlideshowSeeder::class);
-		$this->call(ScreensTableSeeder::class);
+//		$this->call(ScreensTableSeeder::class);
 		$this->call(QuizSeeder::class);
 		$this->call(CommentsSeeder::class);
 		$this->call(ReactionsSeeder::class);
+    $this->call(ChatRoomsSeeder::class);
+		Cache::flush();
 	}
 
 	/**

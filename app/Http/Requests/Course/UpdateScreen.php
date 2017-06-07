@@ -24,7 +24,7 @@ class UpdateScreen extends FormRequest
 	public function rules()
 	{
 		return [
-			'content'      => 'string',
+			'content'      => 'string|nullable',
 			'type'         => 'string',
 			'name'         => 'string',
 			'meta'         => 'json',

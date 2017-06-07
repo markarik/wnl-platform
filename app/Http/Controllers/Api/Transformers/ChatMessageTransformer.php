@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\ChatMessage;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class ChatMessageTransformer extends TransformerAbstract
+
+class ChatMessageTransformer extends ApiTransformer
 {
 	protected $parent;
 

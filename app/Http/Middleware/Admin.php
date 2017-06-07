@@ -20,7 +20,7 @@ class Admin extends Authenticate
 	{
 		$this->authenticate($guards);
 
-		abort_unless(Auth::user()->isAdmin(), 403);
+		abort_unless(Auth::user()->isAdmin(), 403, 'Unauthorized');
 
 		return $next($request);
 	}

@@ -1,6 +1,8 @@
 <?php namespace App\Models;
 
 use DB;
+use Auth;
+use App\Events\ReactionAdded;
 use Illuminate\Database\Eloquent\Model;
 
 class Reaction extends Model
@@ -20,15 +22,25 @@ class Reaction extends Model
 //			print $query->sql . $query->time . PHP_EOL;
 //		});
 		return DB::table('reactables')
+			->select(DB::raw('reactions.type, count(*) count'))
 			->join('reactions', 'reactions.id', '=', 'reactables.reaction_id')
-			->select(DB::raw('reactions.type, count(*) count '))
 			->groupBy('reactions.type')
 			->where('reactable_id', $reactable->id)
 			->where('reactable_type', 'App\Models\\' . class_basename($reactable))
-			->get()
-			->keyBy('type')
-			->map(function ($el) {
-				return $el->count;
-			})->toArray();
+			->get();
+	}
+
+	public function scopeFlags($query, $reactable)
+	{
+		$userId = Auth::user()->id;
+
+		return DB::table('reactables')
+			->select(DB::raw('reactions.type, count(*) count'))
+			->join('reactions', 'reactions.id', '=', 'reactables.reaction_id')
+			->groupBy('reactions.type')
+			->where('reactable_id', $reactable->id)
+			->where('reactable_type', 'App\Models\\' . class_basename($reactable))
+			->where('reactables.user_id', $userId)
+			->get();
 	}
 }

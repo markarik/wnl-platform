@@ -8,9 +8,9 @@
 			</a>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-branding">
-			<a :href="paymentUrl" class="wnl-logo-link">
+			<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
 				<img :src="logoSrc" :alt="logoAlt">
-			</a>
+			</router-link>
 			<div class="breadcrumbs" v-if="canShowBreadcrumbsInNavbar">
 				<wnl-breadcrumbs></wnl-breadcrumbs>
 			</div>

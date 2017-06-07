@@ -24,9 +24,9 @@ trait PerformsApiSearches
 			$results = $model->get();
 		}
 		catch (QueryException $e) {
-			\Log::warning($e);
+			\Log::error($e);
 
-			return $this->respondInvalidInput($e->getMessage());
+			return $this->respondInvalidInput();
 		}
 
 		$transformerName = self::getResourceTransformer($this->resourceName);

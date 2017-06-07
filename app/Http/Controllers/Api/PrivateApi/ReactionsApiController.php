@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Events\ReactionAdded;
 use DB;
 use Auth;
 use App\Models\Reaction;
@@ -31,6 +32,10 @@ class ReactionsApiController extends ApiController
 		$reactable->reactions()->attach($reaction, [
 			'user_id' => $user->id,
 		]);
+
+		// Since there's no action performed on reaction model,
+		// we have to trigger the event manually.
+		event(new ReactionAdded($reaction, $reactable));
 
 		return $this->respondCreated();
 	}

@@ -44,15 +44,29 @@
 			...mapGetters('quiz', ['isComplete'])
 		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions'])
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz']),
+			setup() {
+				let meta = this.screenData.meta
+				if (!_.isObject(meta)) {
+					meta = JSON.parse(meta)
+				}
+
+				this.setupQuestions(meta.resources[0])
+			},
 		},
 		mounted() {
-			let meta = this.screenData.meta
-			if (!_.isObject(meta)) {
-				meta = JSON.parse(meta)
+			this.setup()
+		},
+		beforeDestroy() {
+			this.destroyQuiz()
+		},
+		watch: {
+			'screenData' (newValue, oldValue) {
+				if (newValue.type === 'quiz') {
+					this.destroyQuiz()
+					this.setup()
+				}
 			}
-
-			this.setupQuestions(meta.resources[0])
 		}
 	}
 </script>

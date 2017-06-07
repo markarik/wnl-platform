@@ -1,5 +1,3 @@
-import Echo from "laravel-echo"
-
 /**
  * We'll register a HTTP interceptor to attach the "CSRF" header to each of
  * the outgoing requests issued by this application. The CSRF middleware
@@ -14,9 +12,8 @@ window.axios.defaults.headers.common = {
 	'Accept': 'application/json'
 };
 
-window.io = require('socket.io-client');
-
-window.Echo = new Echo({
-	broadcaster: 'socket.io',
-	host: window.location.hostname + ':1107'
+window.axios.interceptors.response.use(null, (error) => {
+	if (error.response.status === 401) {
+		window.location.replace('/login');
+	}
 });

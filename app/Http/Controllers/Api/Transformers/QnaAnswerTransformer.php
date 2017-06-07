@@ -4,15 +4,12 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Http\Controllers\Api\ApiController;
 use App\Models\QnaAnswer;
-use App\Models\Lesson;
-use App\Models\QnaQuestion;
-use App\Models\Reaction;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\ApiTransformer;
 
 
-class QnaAnswerTransformer extends TransformerAbstract
+class QnaAnswerTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['profiles', 'comments'];
 
@@ -26,8 +23,8 @@ class QnaAnswerTransformer extends TransformerAbstract
 			'updated_at'    => $answer->updated_at->timestamp,
 		];
 
-		if (ApiController::shouldInclude('reactions')) {
-			$data = array_merge($data, Reaction::count($answer));
+		if (self::shouldInclude('reactions')) {
+			$data = array_merge($data, ReactionsCountTransformer::transform($answer));
 		}
 
 		return $data;

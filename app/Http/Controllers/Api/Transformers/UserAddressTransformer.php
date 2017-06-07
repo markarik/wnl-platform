@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\UserAddress;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class UserAddressTransformer extends TransformerAbstract
+class UserAddressTransformer extends ApiTransformer
 {
 	protected $parent;
 

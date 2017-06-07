@@ -4,9 +4,9 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class UserSettingsTransformer extends TransformerAbstract
+class UserSettingsTransformer extends ApiTransformer
 {
 
 }

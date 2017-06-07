@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class Slide extends Model
 {
+	use Cached;
+
     protected $fillable = ['content', 'is_functional'];
 
 	protected $casts = [

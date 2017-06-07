@@ -13,7 +13,7 @@ class SlideShowController extends Controller
 
 	const CACHE_KEY_PREFIX = 'screens-slideshows';
 	const CACHE_VERSION = 2;
-	const CACHE_TAGS = ['slideshows', 'screens-slideshows'];
+	const CACHE_TAGS = ['slideshows', 'screens-slideshows', 'slides'];
 
 	public function build($slideshowId)
 	{
@@ -34,7 +34,10 @@ class SlideShowController extends Controller
 			}
 		}
 
-		$view = view('course.slideshow', ['slides' => $slides]);
+		$view = view('course.slideshow', [
+			'slides' => $slides,
+			'background_url' => $slideshow->background_url,
+		]);
 		$view->render();
 
 		return response($view);

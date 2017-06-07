@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Group;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class GroupTransformer extends TransformerAbstract
+class GroupTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['lessons'];
 
@@ -21,8 +21,8 @@ class GroupTransformer extends TransformerAbstract
 	public function transform(Group $group)
 	{
 		return [
-			'id'      => $group->id,
-			'name'    => $group->name,
+			'id'       => $group->id,
+			'name'     => $group->name,
 			'editions' => $group->course_id,
 		];
 	}
@@ -31,6 +31,11 @@ class GroupTransformer extends TransformerAbstract
 	{
 		$lessons = $group->lessons()->with(['availability'])->get();
 
-		return $this->collection($lessons, new LessonTransformer($this->editionId), 'lessons');
+		$meta = collect([
+			'editionId' => $this->editionId,
+			'groupId'   => $group->id,
+		]);
+
+		return $this->collection($lessons, new LessonTransformer($meta), 'lessons');
 	}
 }

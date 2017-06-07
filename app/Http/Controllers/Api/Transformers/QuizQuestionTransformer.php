@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\QuizQuestion;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class QuizQuestionTransformer extends TransformerAbstract
+class QuizQuestionTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['answers'];
 	protected $parent;

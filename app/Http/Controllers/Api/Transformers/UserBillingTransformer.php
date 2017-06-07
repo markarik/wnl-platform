@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\UserBillingData;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class UserBillingTransformer extends TransformerAbstract
+class UserBillingTransformer extends ApiTransformer
 {
 	protected $parent;
 

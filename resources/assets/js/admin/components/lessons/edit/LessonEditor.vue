@@ -7,7 +7,7 @@
 			:timestamp="timestamp"
 			@delete="onDelete"
 		></wnl-alert>
-		<form>
+		<form @submit.prevent="lessonFormSubmit">
 			<div class="field is-grouped">
 				<div class="control">
 					<span class="select">
@@ -94,6 +94,10 @@
 					})
 			},
 			lessonFormSubmit() {
+				if (!this.hasChanged) {
+					return false
+				}
+
 				this.loading = true
 				this.form.group_id = this.form.groups
 				this.form.put(this.lessonResourceUrl)

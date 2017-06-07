@@ -1,15 +1,27 @@
-import store from 'store' // localStorage wrapper/polyfill
+import store from 'store'
+import axios from 'axios';
+import {getApiUrl} from 'js/utils/env';
+import {getCurrentUser} from './user';
 
 const set = (key, value) => {
 	store.set(key, value);
 
-	//TODO save progress to DB
+
+	getCurrentUser().then(({id}) => {
+		axios.patch(getApiUrl(`users/${id}/state`), {
+			value
+		});
+	});
 };
 
-const get = (key) => {
-	return store.get(key);
+const get = (key, userId) => {
+	const localStorageValue = store.get(key);
 
-	//TODO retrieve progress from DB
+	getCurrentUser().then(({id}) => {
+		axios.get(getApiUrl(`users/${id}/state`));
+	});
+
+	return localStorageValue;
 };
 
 const remove = (key) => {

@@ -1,7 +1,7 @@
 <template lang="html">
-	<div class="scrollable-main-container">
+	<div class="scrollable-main-container wnl-user-profile" v-bind:class="{mobile: isMobileProfile}">
 		<h1>Profil publiczny</h1>
-		<div v-if="!isProduction">
+		<div v-if="!isProduction" class="wnl-user-profile-avatar">
 			<wnl-avatar size="large"></wnl-avatar>
 			<wnl-upload @success="onUploadSuccess">
 				<a>Zmień</a>
@@ -19,11 +19,30 @@
 </template>
 
 <style lang="sass">
+	.wnl-user-profile
+		&.mobile
+			h1
+				text-align: center
+
+			.wnl-upload,
+			.wnl-user-profile-avatar
+				margin-top: 12px
+
+			.wnl-user-profile-avatar
+				align-items: center
+				display: flex
+				flex-direction: column
+
+			.button
+				margin-top: 20px
+
+			form
+				padding: 0 5%
 
 </style>
 
 <script>
-	import { mapActions } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	import Upload from 'js/components/global/Upload'
 	import { Form, Text } from 'js/components/global/form'
@@ -37,6 +56,7 @@
 			'wnl-upload': Upload,
 		},
 		computed: {
+			...mapGetters(['isMobileProfile']),
 			isProduction() {
 				return isProduction()
 			}

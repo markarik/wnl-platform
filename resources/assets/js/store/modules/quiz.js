@@ -36,7 +36,7 @@ const namespaced = true
 const state = {
 	attempts: [],
 	comments: {},
-	isComplete: false,
+	isComplete: true,
 	loaded: false,
 	questionsIds: [],
 	questionsLength: 0,

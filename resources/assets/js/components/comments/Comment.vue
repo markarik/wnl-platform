@@ -11,12 +11,15 @@
 			<div class="content">
 				<strong>{{profile.full_name}}</strong>
 				<div class="comment-text" v-html="comment.text"></div>
-				<small>{{time}}</small>&nbsp;·
-				<wnl-delete
-					:requestRoute="requestRoute"
-					:target="target"
-					@deleteSuccess="onDeleteSuccess"
-				></wnl-delete>
+				<small>{{time}}</small>
+				<span v-if="isCurrentUserAuthor">
+					&nbsp;·
+					<wnl-delete
+						:requestRoute="requestRoute"
+						:target="target"
+						@deleteSuccess="onDeleteSuccess"
+					></wnl-delete>
+				</span>
 			</div>
 		</div>
 	</article>
@@ -39,6 +42,8 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	import Delete from 'js/components/global/form/Delete'
 	import { timeFromS } from 'js/utils/time'
 
@@ -49,6 +54,7 @@
 		},
 		props: ['comment', 'profile'],
 		computed: {
+			...mapGetters(['currentUserId']),
 			id() {
 				return this.comment.id
 			},
@@ -60,6 +66,9 @@
 			},
 			target() {
 				return 'ten komentarz'
+			},
+			isCurrentUserAuthor() {
+				return this.profile.id === this.currentUserId
 			},
 		},
 		methods: {

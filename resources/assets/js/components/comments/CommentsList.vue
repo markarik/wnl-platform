@@ -61,6 +61,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['currentUser']),
 			comments() {
 				return this.getterFunction('comments', {
 					resource: this.commentableResource,
@@ -94,12 +95,17 @@
 				this.showComments = !this.showComments
 			},
 			onSubmitSuccess(data) {
-				this.action('addComment', {})
+				this.action('addComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					comment: _.merge(data, { 'profiles': [ this.currentUser.id ] }),
+					profile: this.currentUser,
+				})
 			},
 			onRemoveComment(id) {
 				this.action('removeComment', {
-					commentable_resource: this.commentableResource,
-					commentable_id: this.commentableId,
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
 					id,
 				})
 			},

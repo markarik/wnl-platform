@@ -63,8 +63,8 @@
 			}
 		},
 		methods: {
-			onSubmitSuccess() {
-				this.$emit('submitSuccess')
+			onSubmitSuccess(data) {
+				this.$emit('submitSuccess', data)
 			}
 		},
 	}

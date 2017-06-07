@@ -20,13 +20,23 @@ export const commentsGetters = {
 }
 
 export const commentsMutations = {
-	[types.ADD_COMMENT] () {
-		console.log('Mutation ADD_COMMENT!')
+	[types.ADD_COMMENT] (state, payload) {
+		let resource = payload.commentableResource,
+			resourceId = payload.commentableId,
+			comment = payload.comment,
+			profile = payload.profile
+
+		if (!state.profiles.hasOwnProperty(profile.id)) {
+			set(state.profiles, profile.id, profile)
+		}
+
+		set(state.comments, comment.id, comment)
+		state[resource][resourceId].comments.push(comment.id)
 	},
 	[types.REMOVE_COMMENT] (state, payload) {
 		let id = payload.id,
-			resource = payload.commentable_resource,
-			resourceId = payload.commentable_id,
+			resource = payload.commentableResource,
+			resourceId = payload.commentableId,
 			comments = _.pull(state[resource][resourceId].comments, id)
 
 		destroy(state.comments, payload.id)
@@ -36,15 +46,10 @@ export const commentsMutations = {
 
 export const commentsActions = {
 	addComment({commit}, payload) {
-		console.log('Action addComment!')
+		console.log('Add comment action')
+		commit(types.ADD_COMMENT, payload)
 	},
 	removeComment({commit}, payload) {
 		commit(types.REMOVE_COMMENT, payload)
 	},
 }
-//
-// export default {
-// 	commentsGetters,
-// 	commentsMutations,
-// 	commentsActions,
-// }

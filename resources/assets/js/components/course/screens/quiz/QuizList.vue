@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}" v-if="isLoaded">
+	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
 		<p class="title is-5" v-if="!isComplete">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="(question, index) in questions"
 			:class="`quiz-question-${question.id}`"
@@ -47,7 +47,6 @@
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
-				'isLoaded',
 				'isProcessing',
 				'getUnresolved',
 				'getUnanswered',

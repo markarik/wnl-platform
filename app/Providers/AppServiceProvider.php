@@ -36,9 +36,9 @@ class AppServiceProvider extends ServiceProvider
 		Order::observe(OrderObserver::class);
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
-		QnaAnswer::observe(QnaAnswerObserver::class);
-		QnaQuestion::observe(QnaQuestionObserver::class);
-		Comment::observe(CommentObserver::class);
+//		QnaAnswer::observe(QnaAnswerObserver::class);
+//		QnaQuestion::observe(QnaQuestionObserver::class);
+//		Comment::observe(CommentObserver::class);
 
 
 		// Send slack notifications when a critical or higher level error occurs

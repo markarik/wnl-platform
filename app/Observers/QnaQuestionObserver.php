@@ -11,7 +11,7 @@ class QnaQuestionObserver
 
 	public function created(QnaQuestion $qnaQuestion)
 	{
-		event(new Events\Qna\QuestionPosted($qnaQuestion));
+		//
 	}
 
 }

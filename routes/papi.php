@@ -69,6 +69,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@get');
 	Route::patch("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@patch');
 
+	Route::get("{$r['users']}/{id}/{$r['user-state']}", 'User\UserStateApiController@get');
+	Route::patch("{$r['users']}/{id}/{$r['user-state']}", 'User\UserStateApiController@patch');
+
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 

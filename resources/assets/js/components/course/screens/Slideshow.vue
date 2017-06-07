@@ -46,6 +46,9 @@
 		width: 100%
 
 	.wnl-slideshow-content
+		border-left: $border-light-gray
+		border-top: $border-light-gray
+		border-right: $border-light-gray
 		bottom: 0
 		left: 0
 		position: absolute

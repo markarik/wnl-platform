@@ -11,6 +11,7 @@
 		// border-right: $border-light-gray;
 		max-width: $sidenav-max-width
 		min-width: $sidenav-min-width
+		overflow: auto
 		padding: $column-padding
 		width: $sidenav-width
 </style>

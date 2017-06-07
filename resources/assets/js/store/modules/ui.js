@@ -25,7 +25,8 @@ const getters = {
 	canShowControlsInNavbar: (state, getters) => !getters.isMobile,
 	isSidenavMounted: (state, getters) => !getters.canShowSidenavTrigger,
 	isSidenavOpen: state => state.isSidenavOpen,
-	isSidenavVisible: (state, getters) => getters.isSidenavMounted || getters.isSidenavOpen
+	isSidenavVisible: (state, getters) => getters.isSidenavMounted || getters.isSidenavOpen,
+	isMobileNavigation: (state, getters) => getters.isTouchScreen
 }
 
 // Mutations

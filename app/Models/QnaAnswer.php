@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Events\Qna\AnswerPosted;
 use Illuminate\Database\Eloquent\Model;
 
 class QnaAnswer extends Model
 {
 	protected $fillable = ['text', 'user_id', 'question_id'];
+
+	protected $events = [
+		'created' => AnswerPosted::class,
+	];
 
 	public function question()
 	{

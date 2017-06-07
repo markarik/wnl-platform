@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Events\CommentPosted;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
 	protected $fillable = ['text', 'user_id'];
+
+	protected $events = [
+		'created' => CommentPosted::class,
+	];
 
 	public function user()
 	{

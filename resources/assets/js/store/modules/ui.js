@@ -26,7 +26,8 @@ const getters = {
 	isSidenavMounted: (state, getters) => !getters.canShowSidenavTrigger,
 	isSidenavOpen: state => state.isSidenavOpen,
 	isSidenavVisible: (state, getters) => getters.isSidenavMounted || getters.isSidenavOpen,
-	isMobileNavigation: (state, getters) => getters.isTouchScreen
+	isMobileNavigation: (state, getters) => getters.isTouchScreen,
+	isMobileProfile: (state, getters) => getters.isTouchScreen
 }
 
 // Mutations

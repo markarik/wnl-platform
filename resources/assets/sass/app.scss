@@ -296,3 +296,8 @@ html, body {
 .nav {
 	min-height: $navbar-height;
 }
+
+.full-width {
+	max-width: none;
+	width: 100%;
+}

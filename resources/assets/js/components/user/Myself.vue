@@ -9,10 +9,9 @@
 				<wnl-sidenav :items="items" :breadcrumbs="breadcrumbs"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main">
+		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}">
 			<router-view></router-view>
 		</div>
-		<div class="wnl-right wnl-app-layout-right"></div>
 	</div>
 </template>
 
@@ -26,7 +25,7 @@
 	export default {
 		props: ['view'],
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
 			isProduction() {
 				return isProduction()
 			},

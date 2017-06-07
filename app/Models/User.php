@@ -84,6 +84,11 @@ class User extends Authenticatable
 		return $this->morphMany('App\Models\Notification', 'notifiable');
 	}
 
+	public function sessions()
+	{
+		return $this->hasMany('App\Models\Session');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */

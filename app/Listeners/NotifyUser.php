@@ -108,7 +108,9 @@ class NotifyUser implements ShouldQueue
 			];
 		}
 
-		$comment->commentable->user->notify(new EventNotification($event));
+		if ($commentableAuthor = $comment->commentable->user) {
+			$commentableAuthor->notify(new EventNotification($event));
+		}
 		$this->notifyModerators($event);
 	}
 

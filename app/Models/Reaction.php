@@ -2,6 +2,7 @@
 
 use DB;
 use Auth;
+use App\Events\ReactionAdded;
 use Illuminate\Database\Eloquent\Model;
 
 class Reaction extends Model

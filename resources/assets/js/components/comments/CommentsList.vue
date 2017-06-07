@@ -1,11 +1,25 @@
 <template>
 	<div class="wnl-comments">
-		<wnl-new-comment-form v-if="showCommentForm"
-			:commentableResource="commentableResource"
-			:commentableId="commentableId"
-			@submitSuccess="onSubmitSuccess">
-		</wnl-new-comment-form>
-		<wnl-comment v-for="comment in comments"
+		<div class="comments-controls">
+			<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
+			Komentarze ({{comments.length}})
+			<span v-if="comments.length > 0"> ·
+				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+			</span> ·
+			<span>
+				<a class="secondary-link" @click="showCommentForm = !showCommentForm" v-text="toggleFormText"></a>
+			</span>
+		</div>
+		<transition name="fade">
+			<wnl-new-comment-form v-if="showCommentForm"
+				:commentableResource="commentableResource"
+				:commentableId="commentableId"
+				@submitSuccess="onSubmitSuccess">
+			</wnl-new-comment-form>
+		</transition>
+		<wnl-comment
+			v-if="showComments"
+			v-for="comment in comments"
 			:key="comment.id"
 			:comment="comment"
 			:profile="commentProfile(comment.profiles[0])"
@@ -13,11 +27,18 @@
 			>
 			{{comment.text}}
 		</wnl-comment>
-		<!-- <div v-else>
-			Ni mo komentorzy
-		</div> -->
 	</div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.comments-controls
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-1
+		margin-bottom: $margin-base
+		margin-top: $margin-base
+</style>
 
 <script>
 	import _ from 'lodash'
@@ -36,6 +57,7 @@
 		data() {
 			return {
 				showCommentForm: false,
+				showComments: false,
 			}
 		},
 		computed: {
@@ -47,6 +69,12 @@
 			},
 			hasComments() {
 				return !_.isEmpty(this.comments)
+			},
+			toggleCommentsText() {
+				return this.showComments ? 'Schowaj' : 'Pokaż'
+			},
+			toggleFormText() {
+				return this.showCommentForm ? 'Ukryj' : 'Skomentuj'
 			},
 		},
 		methods: {
@@ -61,6 +89,9 @@
 			},
 			commentProfile(id) {
 				return this.getterFunction('commentProfile', id)
+			},
+			toggleComments() {
+				this.showComments = !this.showComments
 			},
 			onSubmitSuccess(data) {
 				this.action('addComment', {})

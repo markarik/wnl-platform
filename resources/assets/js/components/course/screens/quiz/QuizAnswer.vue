@@ -53,7 +53,6 @@
 			},
 
 			stats() {
-				console.log('stats', this.answer.hits, this.totalHits)
 				return _.round(this.answer.hits * 100 / this.totalHits)
 			},
 

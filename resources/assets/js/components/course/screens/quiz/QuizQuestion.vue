@@ -21,7 +21,7 @@
 				</div>
 			</header>
 			<div class="quiz-answers card-content">
-				<transition-group name="flip-list" tag="ul">
+				<ul>
 					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
 						:answer="answer"
 						:index="answerIndex"
@@ -30,7 +30,7 @@
 						:key="answerIndex"
 						@answerSelected="selectAnswer(answerIndex)"
 					></wnl-quiz-answer>
-				</transition-group>
+				</ul>
 				<div class="quiz-question-meta">#{{id}}</div>
 			</div>
 			<div class="card-footer" v-if="isComplete">
@@ -152,9 +152,8 @@
 		margin-left: $margin-base
 
 	.quiz-question-comments
-		padding: $margin-big
+		padding: $margin-small $margin-big $margin-big
 		width: 100%
-
 
 	.has-errors .is-unanswered
 		color: $color-orange

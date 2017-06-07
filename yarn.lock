@@ -5370,6 +5370,10 @@ svgo@0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
+sweet-scroll@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/sweet-scroll/-/sweet-scroll-2.2.1.tgz#d844100c45926c2db0598ffd124c1064fea0023a"
+
 sweetalert2@^6.4.2:
   version "6.6.4"
   resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-6.6.4.tgz#7799100c4dba878de2a9581b3f42d29f3dd1d9e0"
@@ -5513,9 +5517,9 @@ ua-parser-js@0.7.12:
   version "0.7.12"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
 
-uglify-js@3.0.x:
+uglify-js@3.0.x, "uglify-js@github:mishoo/UglifyJS2#harmony":
   version "3.0.11"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.11.tgz#81f594b9a24dad76e39da92f8f06e5b3bc8c2e11"
+  resolved "https://codeload.github.com/mishoo/UglifyJS2/tar.gz/075b648bb1d50d5f2b4341ffb88c4da20a4b4e77"
   dependencies:
     commander "~2.9.0"
     source-map "~0.5.1"
@@ -5528,13 +5532,6 @@ uglify-js@^2.7.5, uglify-js@^2.8.27:
     yargs "~3.10.0"
   optionalDependencies:
     uglify-to-browserify "~1.0.0"
-
-"uglify-js@github:mishoo/UglifyJS2#harmony":
-  version "3.0.11"
-  resolved "https://codeload.github.com/mishoo/UglifyJS2/tar.gz/075b648bb1d50d5f2b4341ffb88c4da20a4b4e77"
-  dependencies:
-    commander "~2.9.0"
-    source-map "~0.5.1"
 
 uglify-to-browserify@~1.0.0:
   version "1.0.2"

@@ -7,16 +7,9 @@
 				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 			</span> ·
 			<span>
-				<a class="secondary-link" @click="toggleCommentsForm" v-text="toggleFormText"></a>
+				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 			</span>
 		</div>
-		<transition name="fade">
-			<wnl-new-comment-form v-if="showCommentForm"
-				:commentableResource="commentableResource"
-				:commentableId="commentableId"
-				@submitSuccess="onSubmitSuccess">
-			</wnl-new-comment-form>
-		</transition>
 		<wnl-comment
 			v-if="showComments"
 			v-for="comment in comments"
@@ -27,6 +20,15 @@
 			>
 			{{comment.text}}
 		</wnl-comment>
+		<div class="form-container">
+			<transition name="fade">
+				<wnl-new-comment-form v-if="showCommentsForm"
+					:commentableResource="commentableResource"
+					:commentableId="commentableId"
+					@submitSuccess="onSubmitSuccess">
+				</wnl-new-comment-form>
+			</transition>
+		</div>
 	</div>
 </template>
 
@@ -43,11 +45,12 @@
 <script>
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
+	import { nextTick } from 'vue'
 
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
 
-	import { scrollToElement } from 'js/utils/animations'
+	import { scrollWithMargin } from 'js/utils/animations'
 
 	export default {
 		name: 'CommentsList',
@@ -58,8 +61,10 @@
 		props: ['module', 'commentableResource', 'commentableId'],
 		data() {
 			return {
-				showCommentForm: false,
+				showCommentsForm: false,
 				showComments: false,
+				listElement: {},
+				formElement: {},
 			}
 		},
 		computed: {
@@ -75,9 +80,6 @@
 			},
 			toggleCommentsText() {
 				return this.showComments ? 'Schowaj' : 'Pokaż'
-			},
-			toggleFormText() {
-				return this.showCommentForm ? 'Ukryj' : 'Skomentuj'
 			},
 		},
 		methods: {
@@ -95,12 +97,23 @@
 			},
 			toggleComments() {
 				this.showComments = !this.showComments
+
+				if (this.showComments) {
+					this.commentsScroll(this.$el)
+				}
 			},
 			toggleCommentsForm() {
-				if (!this.showComments && !this.showCommentForm) {
+				if (!this.showComments && !this.showCommentsForm) {
 					this.showComments = true
 				}
-				this.showCommentForm = !this.showCommentForm
+				this.showCommentsForm = true
+
+				nextTick(() => {
+					this.commentsScroll(this.formElement)
+				})
+			},
+			commentsScroll(element) {
+				scrollWithMargin(element.offsetTop + element.offsetParent.offsetTop)
 			},
 			onSubmitSuccess(data) {
 				this.action('addComment', {
@@ -111,7 +124,7 @@
 				})
 
 				let lastComment = _.last(this.$el.getElementsByClassName('wnl-comment'))
-				scrollToElement(lastComment, 0)
+				this.commentsScroll(lastComment)
 			},
 			onRemoveComment(id) {
 				this.action('removeComment', {
@@ -121,5 +134,8 @@
 				})
 			},
 		},
+		mounted() {
+			this.formElement = this.$el.getElementsByClassName('form-container')[0]
+		}
 	}
 </script>

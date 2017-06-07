@@ -1,9 +1,8 @@
-import axios from 'axios'
-import store from 'store' // LocalStorage
+import progressStore from '../../services/progressStore'
 import _ from 'lodash'
 import * as types from '../mutations-types'
-import { getApiUrl } from 'js/utils/env'
-import { set } from 'vue'
+import {getApiUrl} from 'js/utils/env'
+import {set} from 'vue'
 
 // Statuses
 // TODO: Mar 9, 2017 - Use config when it's ready
@@ -22,22 +21,22 @@ function getLessonStoreKey(courseId, lessonId) {
 
 function saveCourseProgress(payload, status) {
 	let storeKey = getCourseStoreKey(payload.courseId),
-		courseProgress = store.get(storeKey)
+		courseProgress = progressStore.get(storeKey)
 
 	courseProgress.lessons[payload.lessonId] = {
 		status,
 		route: payload.route,
 	}
 
-	store.set(storeKey, courseProgress)
+	progressStore.set(storeKey, courseProgress)
 }
 
 function saveLessonProgress(payload) {
-	store.set(getLessonStoreKey(payload.courseId, payload.lessonId), payload.route)
+	progressStore.set(getLessonStoreKey(payload.courseId, payload.lessonId), payload.route)
 }
 
 function resetLessonProgress(payload) {
-	store.remove(getLessonStoreKey(payload.courseId, payload.lessonId))
+	progressStore.remove(getLessonStoreKey(payload.courseId, payload.lessonId))
 }
 
 // API functions
@@ -45,8 +44,8 @@ function getUserProgressForCourse(courseId) {
 	// return axios.get(getApiUrl('courses/${courseId}/user-progress/${userId}'));
 	return new Promise((resolve, reject) => {
 		let data = {
-				lessons: {}
-			}
+			lessons: {}
+		}
 		resolve(data)
 	})
 }
@@ -71,7 +70,7 @@ const getters = {
 	},
 	getSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
-		return store.get(getLessonStoreKey(courseId, lessonId))
+		return progressStore.get(getLessonStoreKey(courseId, lessonId))
 	},
 	wasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
@@ -135,12 +134,12 @@ const actions = {
 	setupCourse({commit}, courseId) {
 		return new Promise((resolve, reject) => {
 			let storeKey = getCourseStoreKey(courseId),
-				storedProgress = store.get(storeKey)
+				storedProgress = progressStore.get(storeKey)
 
 			if (typeof storedProgress !== 'object') {
 				getUserProgressForCourse(courseId)
 					.then(data => {
-						store.set(storeKey, data)
+						progressStore.set(storeKey, data)
 						commit(types.PROGRESS_SETUP_COURSE, {
 							courseId: courseId,
 							progressData: data

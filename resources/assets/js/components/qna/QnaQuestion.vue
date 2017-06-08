@@ -5,7 +5,7 @@
 		</div>
 		<div class="qna-question" v-else>
 			<div class="votes">
-				<wnl-vote type="up" count="0"></wnl-vote>
+				<wnl-vote type="up" count="0" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-vote>
 			</div>
 			<div class="qna-container">
 				<div class="qna-question-content" v-html="content"></div>

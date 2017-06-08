@@ -1,9 +1,9 @@
 <template>
-	<div class="vote" :class="iconClass" @click="mockUpvote">
+	<div class="vote" :class="iconClass">
 		<span class="icon is-small">
 			<i class="fa fa-thumbs-o-up"></i>
 		</span>
-		<span class="count">{{count}}</span>
+		<span class="count">{{ count }}</span>
 	</div>
 </template>
 
@@ -27,24 +27,23 @@
 </style>
 
 <script>
-	import {swalConfig} from 'js/utils/swal'
+	import { mapGetters } from 'vuex'
 
 	export default {
 		name: 'Vote',
-		props: ['type', 'count'],
+		props: ['type', 'module', 'reactableResource', 'reactableId'],
 		computed: {
 			iconClass() {
 				return `vote-${this.type}`
 			},
+			...mapGetters('qna', ['getReaction']),
+			count() {
+				return this.getReaction(this.reactableResource, this.reactableId, 'upvote').count
+			},
 		},
 		methods: {
-			mockUpvote() {
-				this.$swal(swalConfig({
-					html: `<p class="normal">Pracujemy już nad rankingiem pytań i odpowiedzi!</p>`,
-					title: 'Już wkrótce!',
-					type: 'info',
-				}))
-			}
+
 		},
 	}
+
 </script>

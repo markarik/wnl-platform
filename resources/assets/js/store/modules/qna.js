@@ -11,7 +11,7 @@ import { set, delete as destroy } from 'vue'
  * @private
  */
 function _getQuestions(lessonId) {
-	return axios.get(getApiUrl(`lessons/${lessonId}?include=qna_questions.profiles`))
+	return axios.get(getApiUrl(`lessons/${lessonId}?include=qna_questions.profile,reactions`))
 }
 
 /**
@@ -20,7 +20,7 @@ function _getQuestions(lessonId) {
  * @private
  */
 function _getAnswers(questionId) {
-	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments`))
+	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,reactions`))
 }
 
 /**
@@ -112,6 +112,7 @@ const getters = {
 			)
 		)
 	},
+	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction],
 
 	// Answer
 	answerComments: state => (id) => {
@@ -123,6 +124,7 @@ const getters = {
 		return commentsIds.map((id) => state.comments[id])
 	},
 }
+
 
 // Mutations
 const mutations = {

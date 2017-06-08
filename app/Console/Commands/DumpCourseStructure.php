@@ -105,6 +105,7 @@ class DumpCourseStructure extends Command
 						'order_number' => $screen->order_number,
 						'type'         => $screen->type,
 						'meta'         => $screen->meta,
+						'content'      => $screen->content,
 						'created_at'   => $screen->created_at,
 						'updated_at'   => $screen->updated_at,
 					]);

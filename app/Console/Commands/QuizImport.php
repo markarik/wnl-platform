@@ -43,10 +43,13 @@ class QuizImport extends Command
 	{
 		$files = Storage::disk('s3')->files(self::DIRECTORY);
 
+		$this->info('Importing quiz files...');
+		$bar = $this->output->createProgressBar(count($files));
 		foreach ($files as $file) {
 			$this->importFile($file);
+			$bar->advance();
 		}
-
+		print PHP_EOL;
 		return;
 	}
 

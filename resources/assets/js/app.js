@@ -1,6 +1,5 @@
 require('./bootstrap');
 import Vue from 'vue'
-// import Echo from 'laravel-echo'
 
 // Sync vue-router and vuex
 import {sync} from 'vuex-router-sync'
@@ -58,12 +57,4 @@ $.ajaxSetup({
 	error: function (error) {
 		$wnl.logger.error(error)
 	}
-});
-
-import Echo from 'laravel-echo'
-window.io = require('socket.io-client');
-
-window.Echo = new Echo({
-	broadcaster: 'socket.io',
-	host: window.location.hostname + ':8755'
 });

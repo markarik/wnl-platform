@@ -52,14 +52,14 @@
 			},
 			setupNotifications() {
 				Echo.private(`user.${this.currentUserId}`)
-					.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
-						$wnl.logger.debug('Notification', notification);
-					});
+						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
+							$wnl.logger.debug('Notification', notification);
+						});
 			},
 		},
 		created: function () {
 			this.setupCurrentUser()
-			this.setupNotifications()
+					.then(()=>this.setupNotifications())
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {

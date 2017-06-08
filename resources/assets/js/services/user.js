@@ -9,11 +9,11 @@ export function getCurrentUser() {
 	} else {
 		const promisedUser = axios.get(getApiUrl('users/current'));
 
-		promisedUser.then((result) => {
+		return promisedUser.then((result) => {
 			currentUser = result;
-		});
 
-		return promisedUser;
+			return result;
+		});
 	}
 }
 

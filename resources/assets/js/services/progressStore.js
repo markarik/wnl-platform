@@ -1,5 +1,7 @@
 import store from 'store'
 import {getApiUrl} from 'js/utils/env';
+import axios from 'axios';
+import {getCurrentUser} from './user';
 
 const CACHE_VERSION = 1;
 
@@ -28,7 +30,16 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 
 	$wnl.logger.debug(`Setting ${key} in localStorage: ${JSON.stringify(updatedCourseProgress)}`);
 	store.set(key, updatedCourseProgress);
-	//TODO API call and save progress in DB
+
+	getCurrentUser().then(({data: {id}}) => {
+		//TODO API call and save progress in DB
+		axios.patch(getApiUrl(`users/${id}/state`), {
+			lessonId,
+			status,
+			route,
+			courseId
+		});
+	})
 };
 
 const getCourseProgress = ({courseId}) => {
@@ -38,15 +49,17 @@ const getCourseProgress = ({courseId}) => {
 	if (typeof localStorageValue !== 'object') {
 		//TODO API call should occur here to make sure there is no progress for user
 		//API call result should be saved in local storage in case its present
-		const promisedResult = Promise.resolve({
-			lessons: {}
+		return new Promise((resolve) => {
+			getCurrentUser()
+				.then(({data: {id}}) => {
+					return axios.get(getApiUrl(`users/${id}/state`));
+				}).then((results) => {
+				return resolve({
+					lessons: {}
+				});
+			});
 		});
 
-		promisedResult.then(() => {
-			// TODO set course progress only when there is something to be set setCourseProgress({courseId})
-		});
-
-		return promisedResult;
 	} else {
 		return Promise.resolve(localStorageValue);
 	}
@@ -64,7 +77,6 @@ const getLessonStoreKey = (courseId, lessonId) => {
 const getCourseStoreKey = (courseId) => {
 	return `progress-courses-${courseId}-${CACHE_VERSION}`
 };
-
 
 
 export default {

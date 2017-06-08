@@ -12,30 +12,16 @@ class UserStateApiController extends ApiController
 
 	public function get($id)
 	{
-		$keys = ['lessonId', 'status', 'route', 'courseId'];
-		$values = Redis::hmget($this->getRedisKey($id), ['lessonId', 'status', 'route', 'courseId']);
-		$returnValue = [];
+		$values = Redis::get($this->getRedisKey($id));
 
-		for($i = 0; $i < count($keys); $i++) {
-			$returnValue[$keys[$i]] = $values[$i];
-		};
-
-		return $this->json($returnValue);
+		return $this->json(json_decode($values));
 	}
 
 	public function patch(Request $request, $id)
 	{
-		$lessonId = $request->lessonId;
-		$route = $request->route;
-		$status = $request->status;
-		$courseId = $request->courseId;
+		$lessons = $request->lessons;
 
-		Redis::hmset($this->getRedisKey($id), [
-			'lessonId' => $lessonId,
-			'status' => $status,
-			'route' => json_encode($route),
-			'courseId' => $courseId
-		]);
+		Redis::set($this->getRedisKey($id), json_encode($lessons));
 
 		return $this->respondOk();
 	}

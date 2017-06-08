@@ -33,12 +33,7 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 
 	getCurrentUser().then(({data: {id}}) => {
 		//TODO API call and save progress in DB
-		axios.patch(getApiUrl(`users/${id}/state`), {
-			lessonId,
-			status,
-			route,
-			courseId
-		});
+		axios.patch(getApiUrl(`users/${id}/state`), updatedCourseProgress);
 	})
 };
 
@@ -47,17 +42,16 @@ const getCourseProgress = ({courseId}) => {
 	const localStorageValue = get(key);
 
 	if (typeof localStorageValue !== 'object') {
-		//TODO API call should occur here to make sure there is no progress for user
-		//API call result should be saved in local storage in case its present
 		return new Promise((resolve) => {
 			getCurrentUser()
 				.then(({data: {id}}) => {
 					return axios.get(getApiUrl(`users/${id}/state`));
-				}).then((results) => {
-				return resolve({
-					lessons: {}
+				})
+				.then(({data}) => {
+					return resolve({
+						lessons: data
+					})
 				});
-			});
 		});
 
 	} else {

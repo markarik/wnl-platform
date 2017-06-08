@@ -13,12 +13,12 @@ class UserStateTest extends ApiTestCase
 	{
 		$user = User::find(1);
 
-		$mockedRedis = Redis::shouldReceive('hmget')
+		$mockedRedis = Redis::shouldReceive('get')
 			->once()
-			->with('user-state-1-1', ['lessonId', 'status', 'route', 'courseId'])
-			->andReturn([
-				'foo', 'bar', 'fizz', 'buzz'
-			]);
+			->with('user-state-1-1')
+			->andReturn(json_encode([
+				'foo' => 'bar', 'fizz' => 'buzz'
+			]));
 
 		$response = $this
 			->actingAs($user)
@@ -27,10 +27,7 @@ class UserStateTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'lessonId' => 'foo',
-				'status' => 'bar',
-				'route' => 'fizz',
-				'courseId' => 'buzz'
+				'foo' => 'bar', 'fizz' => 'buzz'
 			]);
 
 		$mockedRedis->verify();
@@ -41,20 +38,14 @@ class UserStateTest extends ApiTestCase
 	{
 		$user = User::find(1);
 
-		$mockedRedis = Redis::shouldReceive('hmset')->once()->with('user-state-1-1', [
-			'lessonId' => 1,
-			'courseId' => 1,
-			'route' => json_encode([]),
-			'status' => "in-progress"
-		]);
+		$encodedLessons = json_encode(['foo bar']);
+
+		$mockedRedis = Redis::shouldReceive('set')->once()->with('user-state-1-1', $encodedLessons);
 
 		$response = $this
 			->actingAs($user)
-			->json('PATCH', $this->url("/users/{$user->id}/state"), [
-				'lessonId' => 1,
-				'courseId' => 1,
-				'route' => [],
-				'status' => "in-progress"
+			->call('PATCH', $this->url("/users/{$user->id}/state"), [
+				'lessons' => 'foo bar'
 			]);
 
 		$response

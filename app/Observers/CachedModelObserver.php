@@ -1,8 +1,6 @@
 <?php namespace App\Observers;
 
 use Cache;
-use App\Models\Comment;
-use App\Events\CommentPosted;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 

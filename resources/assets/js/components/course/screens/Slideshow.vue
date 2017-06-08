@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="wnl-slideshow-container">
-			<div class="wnl-slideshow-background-control wnl-slideshow-controls">
+			<div class="wnl-slideshow-background-control">
 				<div class="controls-left">
 					<wnl-slideshow-navigation></wnl-slideshow-navigation>
 				</div>
@@ -21,10 +21,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="wnl-slideshow-controls">
-				<div class="wnl-slideshow-controls-left">
-				</div>
-				<div class="wnl-slideshow-controls-right">
+			<div class="margin top">
+				<div class="right">
 					<wnl-image-button name="wnl-slideshow-control-fullscreen"
 						icon="fullscreen-arrows"
 						alt="Włącz pełen ekran"

@@ -63,8 +63,6 @@
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {
-			// this.setupNotifications()
-
 			this.setLayout(this.$breakpoints.currentBreakpoint())
 			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 				this.setLayout(currentLayout)

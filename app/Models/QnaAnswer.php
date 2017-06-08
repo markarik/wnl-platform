@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Events\Qna\AnswerPosted;
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class QnaAnswer extends Model
 {
+	use Cached;
+
 	protected $fillable = ['text', 'user_id', 'question_id'];
 
 	protected $events = [

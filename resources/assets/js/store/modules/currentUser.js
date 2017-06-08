@@ -42,7 +42,7 @@ const mutations = {
 // Actions
 const actions = {
 	setupCurrentUser({ commit }) {
-		_getCurrentUser().then((response) => {
+		return _getCurrentUser().then((response) => {
 			commit(types.USERS_SETUP_CURRENT, response.data)
 		})
 		.catch((error) => {

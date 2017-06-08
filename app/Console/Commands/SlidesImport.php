@@ -45,10 +45,14 @@ class SlidesImport extends Command
 	public function handle()
 	{
 		$files = Storage::disk('s3')->files(self::DIRECTORY);
-
+		$this->info('Importing slideshows...');
+		$bar = $this->output->createProgressBar(count($files));
 		foreach ($files as $file) {
 			$this->importFile($file);
+			$bar->advance();
+			\Log::debug($file . ' processed');
 		}
+		print PHP_EOL;
 
 		return;
 	}

@@ -203,6 +203,9 @@ const mutations = {
 			set(state, resource, merged)
 		})
 	},
+	// [types.SET_REACTION] (state, payload) {
+	//
+	// },
 }
 
 // Actions

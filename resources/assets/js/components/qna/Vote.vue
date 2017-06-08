@@ -1,7 +1,7 @@
 <template>
 	<div class="vote" :class="iconClass">
 		<span class="icon is-small">
-			<i class="fa fa-thumbs-o-up"></i>
+			<i class="fa" :class="hasReactedClass" @click="toggleReaction"></i>
 		</span>
 		<span class="count">{{ count }}</span>
 	</div>
@@ -33,16 +33,24 @@
 		name: 'Vote',
 		props: ['type', 'module', 'reactableResource', 'reactableId'],
 		computed: {
+			...mapGetters('qna', ['getReaction']),
+			reaction() {
+				return this.getReaction(this.reactableResource, this.reactableId, 'upvote')
+			},
 			iconClass() {
 				return `vote-${this.type}`
 			},
-			...mapGetters('qna', ['getReaction']),
 			count() {
-				return this.getReaction(this.reactableResource, this.reactableId, 'upvote').count
+				return this.reaction.count
+			},
+			hasReactedClass() {
+				return this.reaction.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
 			},
 		},
 		methods: {
+			toggleReaction() {
 
+			}
 		},
 	}
 

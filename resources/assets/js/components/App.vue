@@ -9,7 +9,6 @@
 
 <script>
 	// Import global components
-	import Echo from 'laravel-echo'
 	import store from 'store'
 
 	import Navbar from 'js/components/global/Navbar.vue'
@@ -60,6 +59,7 @@
 		},
 		created: function () {
 			this.setupCurrentUser()
+			this.setupNotifications()
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {

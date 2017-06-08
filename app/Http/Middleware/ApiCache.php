@@ -57,10 +57,12 @@ class ApiCache
 
 		$methodExcluded = $request->method() !== 'GET';
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));
+		$urlExcluded = str_is('*current*', $request->getRequestUri());
 
 		return
 			$methodExcluded ||
-			$queryExcluded;
+			$queryExcluded ||
+			$urlExcluded;
 	}
 
 	protected function getTags($request)

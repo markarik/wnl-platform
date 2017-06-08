@@ -18,6 +18,7 @@ class PresentableTransformer extends ApiTransformer
 			'presentable_id'   => $presentable->presentable_id,
 			'presentable_type' => $presentable->presentable_type,
 			'order_number'     => $presentable->order_number,
+			'is_functional'    => $presentable->is_functional,
 		];
 
 		return $data;

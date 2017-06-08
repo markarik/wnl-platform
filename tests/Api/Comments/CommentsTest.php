@@ -42,13 +42,12 @@ class CommentsTest extends ApiTestCase
 					['id', 'in', [1, 2, 3, 6, 10]],
 					['updated_at', '>', '1495033700']
 				],
-
-				'order' => [
-					'created_at' => 'desc',
-					'id' => 'asc',
-				],
-				'limit' => [10, 0],
-			]
+			],
+			'order' => [
+				'created_at' => 'desc',
+				'id'         => 'asc',
+			],
+			'limit' => [10, 0],
 		];
 
 		$response = $this

@@ -203,9 +203,13 @@ const mutations = {
 			set(state, resource, merged)
 		})
 	},
-	// [types.SET_REACTION] (state, payload) {
-	//
-	// },
+	[types.INCREMENT_REACTION] (state, payload) {
+		let resource = payload.reactableResource,
+				resourceId = payload.reactableId,
+				reaction = payload.reaction
+
+		state[resource][resourceId][reaction].count++
+	},
 }
 
 // Actions
@@ -292,6 +296,10 @@ const actions = {
 			})
 			resolve()
 		})
+	},
+	incrementReaction({commit}, payload) {
+		console.log('increment reaction')
+		commit(types.INCREMENT_REACTION, payload)
 	},
 }
 

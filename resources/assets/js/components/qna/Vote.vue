@@ -27,7 +27,7 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		name: 'Vote',
@@ -48,9 +48,14 @@
 			},
 		},
 		methods: {
+			...mapActions('qna', ['incrementReaction']),
 			toggleReaction() {
-
-			}
+				this.incrementReaction({
+					reactableResource: this.reactableResource,
+					reactableId: this.reactableId,
+					reaction: 'upvote',
+				})
+			},
 		},
 	}
 

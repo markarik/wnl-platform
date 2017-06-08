@@ -2,7 +2,7 @@
 	<div class="qna-answer-container">
 		<div class="qna-answer">
 			<div class="votes">
-				<wnl-vote type="up" count="0" :reactableId="id" reactableResource="qna_answers" module="qna"></wnl-vote>
+				<wnl-vote type="up" :reactableId="id" reactableResource="qna_answers" module="qna"></wnl-vote>
 			</div>
 			<div class="qna-container">
 				<div class="qna-answer-content" v-html="content"></div>

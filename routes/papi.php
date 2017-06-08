@@ -69,8 +69,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@get');
 	Route::patch("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@patch');
 
-	Route::get("{$r['users']}/{id}/{$r['user-state']}", 'User\UserStateApiController@get');
-	Route::patch("{$r['users']}/{id}/{$r['user-state']}", 'User\UserStateApiController@patch');
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'User\UserStateApiController@getCourse');
+	Route::patch("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'User\UserStateApiController@patchCourse');
+
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'User\UserStateApiController@getLesson');
+	Route::patch("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'User\UserStateApiController@patchLesson');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');

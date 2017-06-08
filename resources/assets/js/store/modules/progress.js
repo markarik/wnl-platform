@@ -1,6 +1,6 @@
-import progressStore from '../../services/progressStore'
 import _ from 'lodash'
 import * as types from '../mutations-types'
+import progressStore from '../../services/progressStore'
 import {getApiUrl} from 'js/utils/env'
 import {set} from 'vue'
 
@@ -8,11 +8,6 @@ import {set} from 'vue'
 // TODO: Mar 9, 2017 - Use config when it's ready
 const STATUS_IN_PROGRESS = 'in-progress'
 const STATUS_COMPLETE = 'complete'
-
-// Helper functions
-function saveLessonProgress(payload) {
-	progressStore.set(progressStore.getLessonStoreKey(payload.courseId, payload.lessonId), payload.route)
-}
 
 function resetLessonProgress(payload) {
 	progressStore.remove(progressStore.getLessonStoreKey(payload.courseId, payload.lessonId))
@@ -38,7 +33,7 @@ const getters = {
 	},
 	getSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
-		return progressStore.get(progressStore.getLessonStoreKey(courseId, lessonId))
+		return progressStore.getLessonProgress({courseId, lessonId});
 	},
 	wasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
@@ -88,10 +83,12 @@ const mutations = {
 		})
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		saveLessonProgress(payload)
+		console.log("PROGRESS_UPDATE_LESSON", payload);
+		progressStore.setLessonProgress(payload);
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
+		console.log("PROGRESS_COMPLETE_LESSON", payload);
 		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
 		resetLessonProgress(payload)

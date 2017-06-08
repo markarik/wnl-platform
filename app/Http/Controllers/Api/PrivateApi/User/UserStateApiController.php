@@ -7,28 +7,52 @@ use Illuminate\Support\Facades\Redis;
 
 class UserStateApiController extends ApiController
 {
-	const KEY_TEMPLATE = 'user-state-%s-%s';
+	// courseId - userId - cacheVersion
+	const KEY_COURSE_TEMPLATE = 'user-state-%s-%s-%s';
+	// courseId - lessonId - userId - cacheVersion
+	const KEY_LESSON_TEMPLATE = 'user-state-%s-%s-%s-%s';
 	const CACHE_VERSION = 1;
 
-	public function get($id)
+	public function getCourse($id, $courseId)
 	{
-		$values = Redis::get($this->getRedisKey($id));
+		$values = Redis::get(self::getCourseRedisKey($id, $courseId));
 
 		return $this->json(json_decode($values));
 	}
 
-	public function patch(Request $request, $id)
+	public function patchCourse(Request $request, $id, $courseId)
 	{
 		$lessons = $request->lessons;
 
-		Redis::set($this->getRedisKey($id), json_encode($lessons));
+		Redis::set(self::getCourseRedisKey($id, $courseId), json_encode($lessons));
 
 		return $this->respondOk();
 	}
 
-	private function getRedisKey($userId)
+	public function getLesson($id, $courseId, $lessonId)
 	{
-		return sprintf(self::KEY_TEMPLATE, $userId, self::CACHE_VERSION);
+		$values = Redis::get(self::getLessonRedisKey($id, $courseId, $lessonId));
+
+		return $this->json(json_decode($values));
+	}
+
+	public function patchLesson(Request $request, $id, $courseId, $lessonId)
+	{
+		$data = $request->data;
+
+		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($data));
+
+		return $this->respondOk();
+	}
+
+	static function getCourseRedisKey($userId, $courseId)
+	{
+		return sprintf(self::KEY_COURSE_TEMPLATE, $courseId, $userId, self::CACHE_VERSION);
+	}
+
+	static function getLessonRedisKey($userId, $courseId, $lessonId)
+	{
+		return sprintf(self::KEY_COURSE_TEMPLATE, $courseId, $lessonId, $userId, self::CACHE_VERSION);
 	}
 }
 

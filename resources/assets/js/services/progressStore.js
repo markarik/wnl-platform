@@ -28,32 +28,59 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 		}
 	};
 
-	$wnl.logger.debug(`Setting ${key} in localStorage: ${JSON.stringify(updatedCourseProgress)}`);
 	store.set(key, updatedCourseProgress);
 
 	getCurrentUser().then(({data: {id}}) => {
-		//TODO API call and save progress in DB
-		axios.patch(getApiUrl(`users/${id}/state`), updatedCourseProgress);
+		axios.patch(getApiUrl(`users/${id}/state/course/${courseId}`), updatedCourseProgress);
 	})
+};
+
+const setLessonProgress = ({courseId, lessonId, route}) => {
+	const key = getLessonStoreKey(courseId, lessonId);
+	set(key, route)
 };
 
 const getCourseProgress = ({courseId}) => {
 	const key = getCourseStoreKey(courseId);
-	const localStorageValue = get(key);
+	const localStorageValue = store.get(key);
 
 	if (typeof localStorageValue !== 'object') {
 		return new Promise((resolve) => {
 			getCurrentUser()
 				.then(({data: {id}}) => {
-					return axios.get(getApiUrl(`users/${id}/state`));
+					return axios.get(getApiUrl(`users/${id}/state/course/${courseId}`));
 				})
-				.then(({data}) => {
+				.then(({data = {}}) => {
+					store.set(getCourseStoreKey(courseId), {
+						lessons: data
+					});
+
 					return resolve({
 						lessons: data
 					})
 				});
 		});
+	} else {
+		return Promise.resolve(localStorageValue);
+	}
+};
 
+const getLessonProgress = ({courseId, lessonId}) => {
+	const lessonStoreKey = getLessonStoreKey(courseId, lessonId);
+	const localStorageValue = get(lessonStoreKey);
+
+	if (typeof localStorageValue !== 'object') {
+		return new Promise((resolve) => {
+			getCurrentUser()
+				.then(({data: {id}}) => {
+					return axios.get(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
+				})
+				.then(({data = {}}) => {
+					store.set(lessonStoreKey, data);
+
+					return resolve(data)
+				});
+		});
 	} else {
 		return Promise.resolve(localStorageValue);
 	}
@@ -79,6 +106,8 @@ export default {
 	set,
 	getCourseProgress,
 	setCourseProgress,
+	getLessonProgress,
+	setLessonProgress,
 	//TODO this should not be exposed
 	getLessonStoreKey,
 	// TODO this should not be exposed

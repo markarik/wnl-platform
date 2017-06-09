@@ -24,6 +24,8 @@ class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
 
 			$browser->maximize()
 				->visit(new Login())
+				//TODO this is needed until we implement progress state in localStorage better
+				->clearUserData()
 				->loginAsUser($email, $password)
 				->on(new Course())
 				->waitFor('@side_nav', 15)
@@ -31,6 +33,7 @@ class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
 				->on(new Lesson())
 				->waitFor('@side_nav', 15)
 				->goToSection($LAST_SECTION)
+				->assertExpectedSectionActive($LAST_SECTION)
 				->quit();
 
 			$secondBrowser->maximize()

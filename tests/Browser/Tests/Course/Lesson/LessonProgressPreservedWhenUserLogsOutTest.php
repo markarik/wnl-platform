@@ -23,10 +23,13 @@ class LessonProgressPreservedWhenUserLogsOutTest extends DuskTestCase
 		$this->browse(function (Browser $browser) use ($email, $password, $name) {
 			$browser->maximize()
 				->visit(new Login())
+				//TODO this is needed until we implement progress state in localStorage better
+				->clearUserData()
 				->loginAsUser($email, $password)
 				->visit(new Lesson())
 				->waitFor('@side_nav', 15)
 				->goToSection(2)
+				->assertExpectedSectionActive(2)
 				->on(new Navigation())
 				->logoutUser()
 				->on(new Login())

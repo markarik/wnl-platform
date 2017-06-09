@@ -1,12 +1,7 @@
-import axios from 'axios'
 import * as types from '../mutations-types'
-import { getApiUrl } from 'js/utils/env'
-import { set } from 'vue'
-
-// API functions
-export function _getCurrentUser() {
-	return axios.get(getApiUrl('users/current/profile'));
-}
+import {getApiUrl} from 'js/utils/env'
+import {getCurrentUser} from 'js/services/user';
+import {set} from 'vue'
 
 // Initial state
 const state = {
@@ -42,7 +37,7 @@ const mutations = {
 // Actions
 const actions = {
 	setupCurrentUser({ commit }) {
-		return _getCurrentUser().then((response) => {
+		return getCurrentUser().then((response) => {
 			commit(types.USERS_SETUP_CURRENT, response.data)
 		})
 		.catch((error) => {

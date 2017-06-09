@@ -160,9 +160,14 @@ if (isProduction()) {
 export default new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
-	scrollBehavior: () => {
-		scrollToTop()
-		return {x: 0, y:0}
+	scrollBehavior: (to, from, savedPosition) => {
+		if (!from.params.hasOwnProperty('slide') ||
+			!to.params.hasOwnProperty('slide') ||
+			parseInt(from.params.screenId) !== parseInt(to.params.screenId))
+		{
+			scrollToTop()
+			return {x: 0, y:0}
+		}
 	},
 	routes
 })

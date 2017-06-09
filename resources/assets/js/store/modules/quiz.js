@@ -152,6 +152,7 @@ const actions = {
 		if (useLocalStorage() && !_.isUndefined(storedState)) {
 			commit(types.QUIZ_RESTORE_STATE, storedState)
 			commit(types.QUIZ_IS_LOADED, true)
+			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			return true
 		}
 
@@ -185,7 +186,7 @@ const actions = {
 
 				if (!_.isNull(selected) && selected.is_correct) {
 					commit(types.QUIZ_RESOLVE_QUESTION, {id})
-				} else {
+				} else if (getters.getAttempts.length < 2) {
 					commit(types.QUIZ_RESET_ANSWER, {id})
 					if (!question.preserve_order) {
 						commit(types.QUIZ_SHUFFLE_ANSWERS, {id})

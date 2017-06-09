@@ -59,13 +59,13 @@ const getCourseProgress = ({courseId}) => {
 				.then(({data: {id}}) => {
 					return axios.get(getApiUrl(`users/${id}/state/course/${courseId}`));
 				})
-				.then(({data = {}}) => {
+				.then(({data: {lessons} = {}}) => {
 					store.set(key, {
-						lessons: data
+						lessons
 					});
 
 					return resolve({
-						lessons: data
+						lessons
 					})
 				});
 		});
@@ -84,10 +84,10 @@ const getLessonProgress = ({courseId, lessonId}) => {
 				.then(({data: {id}}) => {
 					return axios.get(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
 				})
-				.then(({data = {}}) => {
-					store.set(lessonStoreKey, data);
+				.then(({data: {lesson}} = {}) => {
+					store.set(lessonStoreKey, lesson);
 
-					return resolve(data)
+					return resolve(lesson)
 				});
 		});
 	} else {

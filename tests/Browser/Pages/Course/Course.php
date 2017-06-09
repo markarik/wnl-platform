@@ -4,11 +4,13 @@ namespace Tests\Browser\Pages\Course;
 
 use Facebook\WebDriver\WebDriverBy;
 use Laravel\Dusk\Page as BasePage;
+use PHPUnit\Framework\Assert as PHPUnit;
 
 class Course extends BasePage
 {
 
-	const TEMPLATE_NTH_LESSON_SELECTOR = '.box .item:nth-of-type(%d) a';
+	const TEMPLATE_NTH_LESSON_ANCHOR = '.box .item:nth-of-type(%d) a';
+	const TEMPLATE_NTH_LESSON_SELECTOR = '.box .item:nth-of-type(%d)';
 	const LESSON_OFFSET = 1;
 
 	public function url()
@@ -44,8 +46,17 @@ class Course extends BasePage
 	public function goToLesson($browser, $lessonIndex)
 	{
 		$driver = $browser->driver;
-		$lessonSelector = sprintf(self::TEMPLATE_NTH_LESSON_SELECTOR, $lessonIndex + self::LESSON_OFFSET);
+		$lessonSelector = sprintf(self::TEMPLATE_NTH_LESSON_ANCHOR, $lessonIndex + self::LESSON_OFFSET);
 		$lesson = $driver->findElement(WebDriverBy::cssSelector($lessonSelector));
 		$lesson->click();
+	}
+
+	public function assertExpectedLessonMarked($browser, $lessonIndex)
+	{
+		$driver = $browser->driver;
+		$lessonSelector = sprintf(self::TEMPLATE_NTH_LESSON_SELECTOR, $lessonIndex + self::LESSON_OFFSET);
+		$lesson = $driver->findElement(WebDriverBy::cssSelector($lessonSelector));
+
+		PHPUnit::assertTrue(strpos($lesson->getAttribute('class'), 'complete') !== false);
 	}
 }

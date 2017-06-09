@@ -8,7 +8,7 @@ use Tests\Browser\Pages\Course\Lesson;
 use Tests\Browser\Pages\Login;
 use Tests\DuskTestCase;
 
-class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
+class CourseProgressPreservedTest extends DuskTestCase
 {
 	/**
 	 * @dataProvider Tests\Browser\DataProviders\User::userProvider
@@ -16,11 +16,10 @@ class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
 	 * @param String $password
 	 * @param String $name
 	 */
-	public function testLessonProgressPreservedWhenBrowserClosed($email, $password, $name)
+	public function testCourseProgressPreserved($email, $password, $name)
 	{
 		$this->browse(function (Browser $browser, Browser $secondBrowser) use ($email, $password, $name) {
-			$LESSON_COMPLETED = 1;
-			$LAST_SECTION = 2;
+			$LESSON_COMPLETED = 2;
 
 			$browser->maximize()
 				->visit(new Login())
@@ -30,7 +29,6 @@ class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
 				->goToLesson($LESSON_COMPLETED)
 				->on(new Lesson())
 				->waitFor('@side_nav', 15)
-				->goToSection($LAST_SECTION)
 				->quit();
 
 			$secondBrowser->maximize()
@@ -41,10 +39,7 @@ class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
 				->loginAsUser($email, $password)
 				->on(new Course())
 				->waitFor('@side_nav', 15)
-				->goToLesson($LESSON_COMPLETED)
-				->on(new Lesson())
-				->waitFor('@side_nav', 15)
-				->assertExpectedSectionActive($LAST_SECTION);
+				->assertExpectedLessonMarked($LESSON_COMPLETED);
 		});
 	}
 }

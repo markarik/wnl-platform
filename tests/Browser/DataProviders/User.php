@@ -21,4 +21,11 @@ class User
 			[self::USER_EMAIL_1, self::USER_PASSWORD_1, self::USER_NAME_1]
 		];
 	}
+
+	public static function freshUserProvider()
+	{
+		return [
+			[self::USER_EMAIL_2, self::USER_PASSWORD_2, self::USER_NAME_2]
+		];
+	}
 }

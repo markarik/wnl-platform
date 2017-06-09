@@ -17,7 +17,15 @@ class UserStateApiController extends ApiController
 	{
 		$values = Redis::get(self::getCourseRedisKey($id, $courseId));
 
-		return $this->json(json_decode($values));
+		if (!empty($values)) {
+			$lessons = json_decode($values);
+		} else {
+			$lessons = [];
+		}
+
+		return $this->json([
+			'lessons' => $lessons
+		]);
 	}
 
 	public function putCourse(Request $request, $id, $courseId)
@@ -33,7 +41,14 @@ class UserStateApiController extends ApiController
 	{
 		$values = Redis::get(self::getLessonRedisKey($id, $courseId, $lessonId));
 
-		return $this->json(json_decode($values));
+		if (!empty($values)) {
+			$lesson = json_decode($values);
+		} else {
+			$lesson = [];
+		}
+		return $this->json([
+			'lesson' => $lesson
+		]);
 	}
 
 	public function putLesson(Request $request, $id, $courseId, $lessonId)

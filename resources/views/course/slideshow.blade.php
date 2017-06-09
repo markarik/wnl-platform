@@ -6,8 +6,30 @@
 		<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
 
 		<style type="text/css">
+			.reveal .controls button {
+				outline: 0
+			}
+
 			.reveal.image-custom-background {
 				background-image: url('{{$background_url}}');
+				background-position: bottom;
+				background-size: contain;
+				background-repeat: no-repeat;
+			}
+
+			.reveal.white-custom-background {
+				background: white !important;
+				color: #0c1726 !important;
+			}
+
+			.reveal.dark-custom-background {
+				background: #0c1726 !important;
+				color: white !important;
+			}
+
+			.reveal.white-custom-background .backgrounds,
+			.reveal.dark-custom-background .backgrounds {
+				display: none !important
 			}
 		</style>
 	</head>
@@ -19,10 +41,6 @@
 						{!! $slide->content !!}
 					@endforeach
 				</div>
-			</div>
-			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-right enabled" aria-label="next slide">
-			</div>
-			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>

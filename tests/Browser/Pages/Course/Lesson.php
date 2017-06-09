@@ -5,6 +5,7 @@ namespace Tests\Browser\Pages\Course;
 use Facebook\WebDriver\WebDriverBy;
 use Laravel\Dusk\Page as BasePage;
 use PHPUnit\Framework\Assert as PHPUnit;
+use Tests\Browser\Lib\Wait;
 
 class Lesson extends BasePage
 {
@@ -124,7 +125,7 @@ class Lesson extends BasePage
 	public function assertExpectedSectionActive($browser, $sectionIndex)
 	{
 		$section = $this->findSectionByIndex($browser, $sectionIndex);
-		$this->assertSectionActiveByRoute($section);
+		$this->assertSectionActiveByRoute($browser, $section);
 	}
 
 	private function getSlideContent($browser)
@@ -142,9 +143,10 @@ class Lesson extends BasePage
 		PHPUnit::assertTrue(strpos($section->getAttribute('class'), 'is-active') !== false);
 	}
 
-	private function assertSectionActiveByRoute($section)
+	private function assertSectionActiveByRoute($browser, $section)
 	{
-		PHPUnit::assertTrue(strpos($section->getAttribute('class'), 'router-link-exact-active') !== false);
+		$elementPresent = Wait::waitForElementHasClass($browser->driver, $section, 'router-link-exact-active');
+		PHPUnit::assertTrue($elementPresent, 'Expected class not present in element');
 	}
 
 

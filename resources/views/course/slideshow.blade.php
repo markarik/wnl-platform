@@ -5,6 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
 	<link href="{{asset('css/imageviewer.css')}}" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="{{ asset('/js/imageviewer.js') }}"></script>
 
 	<style type="text/css">
 		.reveal .controls button {
@@ -42,20 +44,26 @@
 				{!! $slide->content !!}
 			@endforeach
 		</div>
+		{{--<img src="http://www.cyfronika.com.pl/art58/trafo3faz_2.jpg"
+			 data-high-res-src="https://www.lucidchart.com/publicSegments/view/23e3f21f-c803-4d3d-9a64-e9cacb371710/image.jpeg"
+			 class="chart">--}}
 	</div>
 </div>
-<script src="{{ mix('/js/slideshow.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="{{ asset('/js/imageviewer.js') }}"></script>
-<script>
 
+<script src="{{ mix('/js/slideshow.js') }}"></script>
+
+<script type="text/javascript">
 	$(function () {
-		debugger;
-		var viewer = ImageViewer('.chart');
+		var viewer = ImageViewer();
 		$('.chart').click(function () {
-			viewer.show(this.src, this.src);
-		})
+			var imgSrc              = this.src,
+				highResolutionImage = $(this).data('high-res-src');
+
+			viewer.show(imgSrc, highResolutionImage);
+		});
 	});
 </script>
+
+
 </body>
 </html>

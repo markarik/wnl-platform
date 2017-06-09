@@ -8,7 +8,8 @@
 		<span class="icon is-small" v-if="hasIcon">
 			<i :title="iconTitle" class="fa" :class="iconClass"></i>
 		</span>
-		<router-link v-if="isLink" :to="to" :replace="replace" :class="{'is-active': isActive, 'is-disabled': isDisabled}">
+		<router-link v-if="isLink" :to="to" :replace="replace"
+		             :class="{'is-active': isActive, 'is-disabled': isDisabled}">
 			<slot></slot>
 		</router-link>
 		<span v-else>
@@ -46,6 +47,8 @@
 </style>
 
 <script>
+	import progressStore from '../../services/progressStore';
+
 	export default {
 		name: 'SidenavItem',
 		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle'],
@@ -70,6 +73,9 @@
 			},
 			isActive() {
 				if (this.hasClass('subitem')) {
+					progressStore.getLessonProgress(this.$route.params).then((data) => {
+						// TODO fetch lesson progress and set progress accordingly
+					});
 					return parseInt(this.$route.params.screenId) === this.to.params.screenId &&
 						this.$route.params.slide > this.to.params.slide
 				}

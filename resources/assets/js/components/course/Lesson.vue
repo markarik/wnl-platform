@@ -49,6 +49,7 @@
 	import PreviousNext from 'js/components/course/PreviousNext.vue'
 	import {mapGetters, mapActions} from 'vuex'
 	import {resource} from 'js/utils/config'
+	import {STATUS_COMPLETE} from '../../store/modules/progress';
 
 	export default {
 		name: 'Lesson',
@@ -122,10 +123,8 @@
 			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
 					this.getSavedLesson(this.courseId, this.lessonId)
-						.then((savedRoute) => {
-							if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
-								this.$router.replace(savedRoute)
-							} else if (typeof this.firstScreenId !== 'undefined') {
+						.then(({route, status}) => {
+							if (typeof this.firstScreenId !== 'undefined' && status === STATUS_COMPLETE) {
 								this.$router.replace({
 									name: resource('screens'), params: {
 										courseId: this.courseId,
@@ -133,6 +132,8 @@
 										screenId: this.firstScreenId,
 									}
 								})
+							} else if (typeof route !== 'undefined' && route.hasOwnProperty('name')) {
+								this.$router.replace(route)
 							}
 						});
 				}

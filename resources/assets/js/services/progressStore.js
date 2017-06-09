@@ -27,14 +27,18 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 	})
 };
 
-const setLessonProgress = ({courseId, lessonId, route}) => {
+const setLessonProgress = ({courseId, lessonId, route, status}) => {
 	const key = getLessonStoreKey(courseId, lessonId);
+	const value = {
+		route,
+		status
+	};
 
-	store.set(key, route);
+	store.set(key, value);
 
 	getCurrentUser().then(({data: {id}}) => {
 		axios.put(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
-			lesson: route
+			lesson: value
 		});
 	})
 };

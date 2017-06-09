@@ -5,8 +5,9 @@ import {set} from 'vue'
 
 // Statuses
 // TODO: Mar 9, 2017 - Use config when it's ready
-const STATUS_IN_PROGRESS = 'in-progress'
-const STATUS_COMPLETE = 'complete'
+// TODO move to progressStore service
+export const STATUS_IN_PROGRESS = 'in-progress'
+export const STATUS_COMPLETE = 'complete'
 
 // Namespace
 const namespaced = true
@@ -70,6 +71,8 @@ const mutations = {
 		set(state.courses, payload.courseId, payload.progressData)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
+		//TODO consider issuing one request instead of two when starting lesson
+		progressStore.setLessonProgress({...payload, status: STATUS_IN_PROGRESS});
 		progressStore.setCourseProgress({...payload, status: STATUS_IN_PROGRESS});
 
 		set(state.courses[payload.courseId].lessons, payload.lessonId, {
@@ -82,8 +85,9 @@ const mutations = {
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
+		// TODO conside issuing one request instead of two when finishing lesson
 		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
-		progressStore.resetLessonProgress(payload)
+		progressStore.setLessonProgress({...payload, status: STATUS_COMPLETE});
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
 	}
 }

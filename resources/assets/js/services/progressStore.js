@@ -1,21 +1,13 @@
 import store from 'store'
-import {getApiUrl} from 'js/utils/env';
 import axios from 'axios';
+import {getApiUrl} from 'js/utils/env';
 import {getCurrentUser} from './user';
 
 const CACHE_VERSION = 1;
 
-const set = (key, value) => {
-	store.set(key, value);
-};
-
-const get = (key) => {
-	return store.get(key);
-};
-
 const setCourseProgress = ({courseId, lessonId, route, status}) => {
 	const key = getCourseStoreKey(courseId);
-	const courseProgress = get(key) || {};
+	const courseProgress = store.get(key) || {};
 
 	const updatedCourseProgress = {
 		...courseProgress,
@@ -31,19 +23,30 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 	store.set(key, updatedCourseProgress);
 
 	getCurrentUser().then(({data: {id}}) => {
-		axios.patch(getApiUrl(`users/${id}/state/course/${courseId}`), updatedCourseProgress);
+		axios.put(getApiUrl(`users/${id}/state/course/${courseId}`), updatedCourseProgress);
 	})
 };
 
 const setLessonProgress = ({courseId, lessonId, route}) => {
 	const key = getLessonStoreKey(courseId, lessonId);
-	set(key, route);
+
+	store.set(key, route);
 
 	getCurrentUser().then(({data: {id}}) => {
-		axios.patch(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
+		axios.put(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
 			lesson: route
 		});
 	})
+};
+
+const resetLessonProgress = ({courseId, lessonId}) => {
+	const key = getLessonStoreKey(courseId, lessonId);
+
+	store.remove(key);
+
+	getCurrentUser().then(({data: {id}}) => {
+		axios.delete(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
+	});
 };
 
 const getCourseProgress = ({courseId}) => {
@@ -73,7 +76,7 @@ const getCourseProgress = ({courseId}) => {
 
 const getLessonProgress = ({courseId, lessonId}) => {
 	const lessonStoreKey = getLessonStoreKey(courseId, lessonId);
-	const localStorageValue = get(lessonStoreKey);
+	const localStorageValue = store.get(lessonStoreKey);
 
 	if (typeof localStorageValue !== 'object') {
 		return new Promise((resolve) => {
@@ -92,11 +95,6 @@ const getLessonProgress = ({courseId, lessonId}) => {
 	}
 };
 
-const remove = (key) => {
-	store.remove(key);
-	//TODO clear progress table
-};
-
 const getLessonStoreKey = (courseId, lessonId) => {
 	return `progress-courses-${courseId}-lessons-${lessonId}-${CACHE_VERSION}`
 };
@@ -107,15 +105,9 @@ const getCourseStoreKey = (courseId) => {
 
 
 export default {
-	// TODO this two should not be exposed
-	get,
-	set,
 	getCourseProgress,
 	setCourseProgress,
 	getLessonProgress,
 	setLessonProgress,
-	//TODO this should not be exposed
-	getLessonStoreKey,
-	// TODO this should not be exposed
-	remove
+	resetLessonProgress
 };

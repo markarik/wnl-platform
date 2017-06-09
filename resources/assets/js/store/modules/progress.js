@@ -1,17 +1,12 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
 import progressStore from '../../services/progressStore'
-import {getApiUrl} from 'js/utils/env'
 import {set} from 'vue'
 
 // Statuses
 // TODO: Mar 9, 2017 - Use config when it's ready
 const STATUS_IN_PROGRESS = 'in-progress'
 const STATUS_COMPLETE = 'complete'
-
-function resetLessonProgress(payload) {
-	progressStore.remove(progressStore.getLessonStoreKey(payload.courseId, payload.lessonId))
-}
 
 // Namespace
 const namespaced = true
@@ -83,15 +78,13 @@ const mutations = {
 		})
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		console.log("PROGRESS_UPDATE_LESSON", payload);
 		progressStore.setLessonProgress(payload);
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
-		console.log("PROGRESS_COMPLETE_LESSON", payload);
 		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
+		progressStore.resetLessonProgress(payload)
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
-		resetLessonProgress(payload)
 	}
 }
 

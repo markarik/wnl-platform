@@ -47,7 +47,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('PATCH', $this->url("/users/{$user->id}/state/course/1"), [
+			->call('PUT', $this->url("/users/{$user->id}/state/course/1"), [
 				'lessons' => 'foo bar'
 			]);
 
@@ -96,7 +96,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('PATCH', $this->url("/users/{$user->id}/state/course/1/lesson/1"), [
+			->call('PUT', $this->url("/users/{$user->id}/state/course/1/lesson/1"), [
 				'lesson' => 'something'
 			]);
 

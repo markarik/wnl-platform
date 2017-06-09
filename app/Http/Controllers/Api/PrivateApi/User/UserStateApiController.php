@@ -20,7 +20,7 @@ class UserStateApiController extends ApiController
 		return $this->json(json_decode($values));
 	}
 
-	public function patchCourse(Request $request, $id, $courseId)
+	public function putCourse(Request $request, $id, $courseId)
 	{
 		$lessons = $request->lessons;
 
@@ -36,11 +36,18 @@ class UserStateApiController extends ApiController
 		return $this->json(json_decode($values));
 	}
 
-	public function patchLesson(Request $request, $id, $courseId, $lessonId)
+	public function putLesson(Request $request, $id, $courseId, $lessonId)
 	{
 		$lesson = $request->lesson;
 
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
+
+		return $this->respondOk();
+	}
+
+	public function deleteLesson(Request $request, $id, $courseId, $lessonId)
+	{
+		Redis::del(self::getLessonRedisKey($id, $courseId, $lessonId));
 
 		return $this->respondOk();
 	}
@@ -52,7 +59,7 @@ class UserStateApiController extends ApiController
 
 	static function getLessonRedisKey($userId, $courseId, $lessonId)
 	{
-		return sprintf(self::KEY_COURSE_TEMPLATE, $courseId, $lessonId, $userId, self::CACHE_VERSION);
+		return sprintf(self::KEY_LESSON_TEMPLATE, $courseId, $lessonId, $userId, self::CACHE_VERSION);
 	}
 }
 

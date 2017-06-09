@@ -22,8 +22,10 @@
 }
 
 .iv-close {
-	width: 32px;
-	height: 32px;
+	background: rgba(230, 230, 230, 0.5);
+	border-radius: 50px;
+	width: 50px;
+	height: 50px;
 	position: absolute;
 	right: 20px;
 	top: 20px;
@@ -44,7 +46,7 @@
 	width: 32px;
 	background: #FFF;
 	position: absolute;
-	left: 0;
+	left: 9px;
 	top: 50%;
 	margin-top: -2px;
 }
@@ -90,7 +92,7 @@
 	-moz-transition: all ease 400ms;
 	-o-transition: all ease 400ms;
 	transition: all ease 400ms;
-	opacity: 0;
+	opacity: 1;
 }
 
 .iv-snap-image-wrap {

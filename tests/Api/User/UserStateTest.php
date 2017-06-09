@@ -97,7 +97,7 @@ class UserStateTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->call('PATCH', $this->url("/users/{$user->id}/state/course/1/lesson/1"), [
-				'data' => 'something'
+				'lesson' => 'something'
 			]);
 
 		$response

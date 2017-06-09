@@ -38,9 +38,9 @@ class UserStateApiController extends ApiController
 
 	public function patchLesson(Request $request, $id, $courseId, $lessonId)
 	{
-		$data = $request->data;
+		$lesson = $request->lesson;
 
-		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($data));
+		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
 
 		return $this->respondOk();
 	}

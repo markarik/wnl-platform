@@ -37,7 +37,13 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 
 const setLessonProgress = ({courseId, lessonId, route}) => {
 	const key = getLessonStoreKey(courseId, lessonId);
-	set(key, route)
+	set(key, route);
+
+	getCurrentUser().then(({data: {id}}) => {
+		axios.patch(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
+			lesson: route
+		});
+	})
 };
 
 const getCourseProgress = ({courseId}) => {
@@ -51,7 +57,7 @@ const getCourseProgress = ({courseId}) => {
 					return axios.get(getApiUrl(`users/${id}/state/course/${courseId}`));
 				})
 				.then(({data = {}}) => {
-					store.set(getCourseStoreKey(courseId), {
+					store.set(key, {
 						lessons: data
 					});
 

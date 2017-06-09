@@ -121,16 +121,20 @@
 			},
 			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
-					let savedRoute = this.getSavedLesson(this.courseId, this.lessonId)
-					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
-						this.$router.replace(savedRoute)
-					} else if (typeof this.firstScreenId !== 'undefined') {
-						this.$router.replace({ name: resource('screens'), params: {
-							courseId: this.courseId,
-							lessonId: this.lessonId,
-							screenId: this.firstScreenId,
-						} })
-					}
+					this.getSavedLesson(this.courseId, this.lessonId)
+						.then((savedRoute) => {
+							if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
+								this.$router.replace(savedRoute)
+							} else if (typeof this.firstScreenId !== 'undefined') {
+								this.$router.replace({
+									name: resource('screens'), params: {
+										courseId: this.courseId,
+										lessonId: this.lessonId,
+										screenId: this.firstScreenId,
+									}
+								})
+							}
+						});
 				}
 			},
 			updateLessonProgress() {

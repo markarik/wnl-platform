@@ -29,7 +29,33 @@ class UserStateTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'foo' => 'bar', 'fizz' => 'buzz'
+				'lessons' => [
+					'foo' => 'bar', 'fizz' => 'buzz'
+				]
+			]);
+
+		$mockedRedis->verify();
+	}
+
+	/** @test */
+	public function get_empty_course_state()
+	{
+		$user = User::find(1);
+		$redisKey = UserStateApiController::getCourseRedisKey(1, 1);
+
+		$mockedRedis = Redis::shouldReceive('get')
+			->once()
+			->with($redisKey)
+			->andReturn(null);
+
+		$response = $this
+			->actingAs($user)
+			->call('GET', $this->url("/users/{$user->id}/state/course/1"));
+
+		$response
+			->assertStatus(200)
+			->assertJson([
+				'lessons' => []
 			]);
 
 		$mockedRedis->verify();
@@ -67,19 +93,39 @@ class UserStateTest extends ApiTestCase
 		$user = User::find(1);
 		$redisKey = UserStateApiController::getLessonRedisKey($user->id, 1, 1);
 
-		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey);
+		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey)->andReturn(json_encode(['foo' => 'bar']));
 
 		$response = $this
 			->actingAs($user)
-			->call('GET', $this->url("/users/{$user->id}/state/course/1/lesson/1"), [
-				'lessons' => 'foo bar'
-			]);
+			->call('GET', $this->url("/users/{$user->id}/state/course/1/lesson/1"));
 
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'message' => 'OK',
-				'status_code' => 200
+				'lesson' => [
+					'foo' => 'bar'
+				]
+			]);
+
+		$mockedRedis->verify();
+	}
+
+	/** @test */
+	public function get_empty_lesson_state()
+	{
+		$user = User::find(1);
+		$redisKey = UserStateApiController::getLessonRedisKey($user->id, 1, 1);
+
+		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey)->andReturn(null);
+
+		$response = $this
+			->actingAs($user)
+			->call('GET', $this->url("/users/{$user->id}/state/course/1/lesson/1"));
+
+		$response
+			->assertStatus(200)
+			->assertJson([
+				'lesson' => []
 			]);
 
 		$mockedRedis->verify();

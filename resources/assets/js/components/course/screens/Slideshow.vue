@@ -1,28 +1,28 @@
 <template>
 	<div>
 		<div class="wnl-slideshow-container">
-			<div class="wnl-slideshow-background-control level">
-				<div class="level-left">
+			<div class="wnl-slideshow-background-control">
+				<div class="controls-left">
+					<wnl-slideshow-navigation></wnl-slideshow-navigation>
 				</div>
-				<div class="level-right">
-					<div class="level-item">Tło prezentacji:</div>
-					<div class="level-item"><a class="white" @click="changeBackground('white')"></a></div>
-					<div class="level-item"><a class="dark" @click="changeBackground('dark')"></a></div>
-					<div class="level-item"><a class="image" @click="changeBackground('image')"></a></div>
+				<div class="controls-right">
+					<div class="controls-item">
+						Tło
+						<a class="white" @click="changeBackground('white')"></a>
+						<a class="dark" @click="changeBackground('dark')"></a>
+						<a class="image" @click="changeBackground('image')"></a>
+					</div>
 				</div>
 			</div>
 			<div class="wnl-screen wnl-ratio-16-9">
 				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }">
-					<div class="faux-fullscreen-close" v-if="isFauxFullscreen" @click="closeFauxFullscreen">
+					<div class="faux-fullscreen-close" v-if="isFauxFullscreen" @click="toggleFullscreen">
 						<span class="icon is-medium"><i class="fa fa-times"></i></span>
 					</div>
 				</div>
 			</div>
-			<div class="wnl-slideshow-controls">
-				<div class="wnl-slideshow-controls-left">
-					<wnl-slideshow-navigation></wnl-slideshow-navigation>
-				</div>
-				<div class="wnl-slideshow-controls-right">
+			<div class="margin top">
+				<div class="right">
 					<wnl-image-button name="wnl-slideshow-control-fullscreen"
 						icon="fullscreen-arrows"
 						alt="Włącz pełen ekran"
@@ -40,12 +40,49 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	.wnl-slideshow-background-control
+		align-items: center
+		border-top: $border-light-gray
+		color: $color-gray-dimmed
+		display: flex
+		font-size: $font-size-minus-2
+		justify-content: space-between
+		line-height: $line-height-plus
+		margin: $margin-base 0
+		padding-top: $margin-base
+		text-align: right
+		text-transform: uppercase
+		vertical-align: middle
+
+		.controls-item
+			align-items: center
+			display: flex
+
+		a
+			border-radius: $border-radius-full
+			display: inline-block
+			height: 2em
+			margin-left: $margin-small
+			width: 2em
+
+			&.white
+				border: 1px solid $color-inactive-gray
+
+			&.dark
+				background: $color-gray
+
+			&.image
+				+gradient-horizontal($gradient-bg-image-left, $gradient-bg-image-right)
+
 	.wnl-ratio-16-9
 		padding-bottom: 56.25%
 		position: relative
 		width: 100%
 
 	.wnl-slideshow-content
+		border-left: $border-light-gray
+		border-top: $border-light-gray
+		border-right: $border-light-gray
 		bottom: 0
 		left: 0
 		position: absolute
@@ -63,37 +100,6 @@
 			iframe
 				opacity: 1
 				transition: opacity $transition-length-base
-
-	.wnl-slideshow-controls
-		display: flex
-		justify-content: space-between
-		margin-top: 10px
-
-	.wnl-slideshow-background-control
-		border-top: $border-light-gray
-		font-size: $font-size-minus-1
-		line-height: $line-height-plus
-		margin: $margin-base 0 $margin-small 0
-		padding-top: $margin-base
-		text-align: right
-		text-transform: uppercase
-		vertical-align: middle
-
-		a
-			border-radius: $border-radius-full
-			display: inline-block
-			height: 2em
-			margin-left: $margin-small
-			width: 2em
-
-			&.white
-				border: 1px solid $color-inactive-gray
-
-			&.dark
-				background: $color-gray
-
-			&.image
-				+gradient-horizontal($gradient-bg-image-left, $gradient-bg-image-right)
 </style>
 
 <script>
@@ -116,6 +122,7 @@
 				child: {},
 				currentSlide: 1,
 				loaded: false,
+				isFullscreen: false,
 				isFauxFullscreen: false,
 				isFocused: false,
 				slideChanged: false
@@ -151,15 +158,11 @@
 			},
 		},
 		methods: {
-			closeFauxFullscreen() {
-				this.isFauxFullscreen = false
-				this.focusSlideshow()
-			},
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
 				} else {
-					this.isFauxFullscreen = true
+					this.isFauxFullscreen = !this.isFauxFullscreen
 				}
 				this.focusSlideshow()
 			},

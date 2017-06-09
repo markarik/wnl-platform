@@ -1,48 +1,61 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
+	<link href="{{asset('css/imageviewer.css')}}" rel="stylesheet">
 
-		<style type="text/css">
-			.reveal .controls button {
-				outline: 0
-			}
+	<style type="text/css">
+		.reveal .controls button {
+			outline: 0
+		}
 
-			.reveal.image-custom-background {
-				background-image: url('{{$background_url}}');
-				background-position: bottom;
-				background-size: contain;
-				background-repeat: no-repeat;
-			}
+		.reveal.image-custom-background {
+			background-image: url('{{$background_url}}');
+			background-position: bottom;
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
 
-			.reveal.white-custom-background {
-				background: white !important;
-				color: #0c1726 !important;
-			}
+		.reveal.white-custom-background {
+			background: white !important;
+			color: #0c1726 !important;
+		}
 
-			.reveal.dark-custom-background {
-				background: #0c1726 !important;
-				color: white !important;
-			}
+		.reveal.dark-custom-background {
+			background: #0c1726 !important;
+			color: white !important;
+		}
 
-			.reveal.white-custom-background .backgrounds,
-			.reveal.dark-custom-background .backgrounds {
-				display: none !important
-			}
-		</style>
-	</head>
-	<body>
-		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
-			<div class="reveal image-custom-background">
-				<div class="slides">
-					@foreach($slides as $slide)
-						{!! $slide->content !!}
-					@endforeach
-				</div>
-			</div>
+		.reveal.white-custom-background .backgrounds,
+		.reveal.dark-custom-background .backgrounds {
+			display: none !important
+		}
+	</style>
+</head>
+<body>
+<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
+	<div class="reveal image-custom-background">
+		<div class="slides">
+			@foreach($slides as $slide)
+				{!! $slide->content !!}
+			@endforeach
 		</div>
-		<script src="{{ mix('/js/slideshow.js') }}"></script>
-	</body>
+	</div>
+</div>
+<script src="{{ mix('/js/slideshow.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{{ asset('/js/imageviewer.js') }}"></script>
+<script>
+
+	$(function () {
+		debugger;
+		var viewer = ImageViewer('.chart');
+		$('.chart').click(function () {
+			viewer.show(this.src, this.src);
+		})
+	});
+</script>
+</body>
 </html>

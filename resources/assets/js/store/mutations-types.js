@@ -18,7 +18,7 @@ export const ADD_COMMENT    = 'ADD_COMMENT'
 export const REMOVE_COMMENT = 'REMOVE_COMMENT'
 
 // Reactions
-export const INCREMENT_REACTION  = 'INCREMENT_REACTION'
+export const SET_REACTION  = 'SET_REACTION'
 
 // Forms
 export const FORM_SETUP                = 'FORM_SETUP'

@@ -48,12 +48,13 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['incrementReaction']),
+			...mapActions('qna', ['setReaction']),
 			toggleReaction() {
-				this.incrementReaction({
+				this.setReaction({
 					reactableResource: this.reactableResource,
 					reactableId: this.reactableId,
 					reaction: 'upvote',
+					hasReacted: this.reaction.hasReacted,
 				})
 			},
 		},

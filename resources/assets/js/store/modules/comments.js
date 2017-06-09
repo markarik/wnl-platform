@@ -46,7 +46,6 @@ export const commentsMutations = {
 
 export const commentsActions = {
 	addComment({commit}, payload) {
-		console.log('Add comment action')
 		commit(types.ADD_COMMENT, payload)
 	},
 	removeComment({commit}, payload) {

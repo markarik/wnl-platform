@@ -203,12 +203,15 @@ const mutations = {
 			set(state, resource, merged)
 		})
 	},
-	[types.INCREMENT_REACTION] (state, payload) {
+	[types.SET_REACTION] (state, payload) {
 		let resource = payload.reactableResource,
 				resourceId = payload.reactableId,
-				reaction = payload.reaction
+				reaction = payload.reaction,
+				designatedObject = state[resource][resourceId][reaction]
 
-		state[resource][resourceId][reaction].count++
+		designatedObject.hasReacted ? designatedObject.count-- : designatedObject.count++,
+
+		designatedObject.hasReacted = !designatedObject.hasReacted
 	},
 }
 
@@ -297,10 +300,21 @@ const actions = {
 			resolve()
 		})
 	},
-	incrementReaction({commit}, payload) {
-		console.log('increment reaction')
-		commit(types.INCREMENT_REACTION, payload)
-	},
+	setReaction({commit}, payload) {
+		let data = {
+				'reactable_resource' : payload.reactableResource,
+				'reactable_id'       : payload.reactableId,
+				'reaction_type'      : payload.reaction,
+			},	
+ 			method = payload.hasReacted ? 'delete' : 'post',
+			params = payload.hasReacted ? { params: data } : data
+
+		return axios[method](getApiUrl(`reactions`), params)
+			.then(() => {
+				commit(types.SET_REACTION, payload)
+			})
+			.catch(error => $wnl.logger.error(error))
+	}
 }
 
 export default {

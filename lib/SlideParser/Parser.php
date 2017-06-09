@@ -27,6 +27,8 @@ class Parser
 
 	const BACKGROUND_PATTERN = '/data-background-image="([^"]*)"/';
 
+	const LUCID_EMBED_PATTERN = '/<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>/';
+
 	protected $categoryTags;
 	protected $courseTags;
 	protected $categoryModels = [];
@@ -56,6 +58,7 @@ class Parser
 
 	/**
 	 * @param $fileContents - string/html
+	 *
 	 * @throws ParseErrorException
 	 */
 	public function parse($fileContents)
@@ -187,6 +190,7 @@ class Parser
 
 	/**
 	 * @param $data - string/html
+	 *
 	 * @return array
 	 */
 	protected function matchSlides($data):array
@@ -200,6 +204,7 @@ class Parser
 
 	/**
 	 * @param $data - string/html
+	 *
 	 * @return bool
 	 */
 	protected function isFunctional($data):bool
@@ -211,6 +216,7 @@ class Parser
 	 * @param $pattern
 	 * @param $data
 	 * @param \Closure $errback
+	 *
 	 * @return mixed
 	 * @internal param \Closure $callback
 	 */
@@ -232,6 +238,7 @@ class Parser
 
 	/**
 	 * @param $slideHtml
+	 *
 	 * @return array
 	 */
 	public function getTags($slideHtml)
@@ -279,7 +286,13 @@ class Parser
 			self::BACKGROUND_PATTERN,
 		];
 
+		$textSearch = [
+			'border-style: solid; border-width: 4px;',
+		];
+
 		$html = preg_replace($regexSearch, '', $html);
+		$html = str_replace($textSearch, '', $html);
+		$html = $this->handleCharts($html);
 
 		return $html;
 	}
@@ -289,4 +302,31 @@ class Parser
 		return strip_tags($name);
 	}
 
+	public function handleCharts($html)
+	{
+		$match = $this->match(self::LUCID_EMBED_PATTERN, $html);
+
+		if ($match === false) {
+			return $html;
+		}
+
+		$iframe = $match[0][0];
+		$chartId = $match[0][1];
+
+		$html = preg_replace(self::LUCID_EMBED_PATTERN, $this->chartViewer($chartId), $html);
+
+		return $html;
+	}
+
+	public function chartViewer($chartId)
+	{
+		$lucidUrl = 'https://www.lucidchart.com/documents/thumb/%s/0/0/NULL/%d';
+		$viewerHtml = '<img src="%s" data-high-res-src="%s" class="chart">';
+		$lowResSizePx = 800;
+		$highResSizePx = 2000;
+		$lowResImage = sprintf($lucidUrl, $chartId, $lowResSizePx);
+		$highResImage = sprintf($lucidUrl, $chartId, $highResSizePx);
+
+		return sprintf($viewerHtml, $lowResImage, $highResImage);
+	}
 }

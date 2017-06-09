@@ -12,7 +12,7 @@ class FirstVisitTest extends DuskTestCase
 {
 
 	/**
-	 * @dataProvider Tests\Browser\DataProviders\User::userProvider
+	 * @dataProvider Tests\Browser\DataProviders\User::freshUserProvider
 	 * @param String $email
 	 * @param String $password
 	 * @param String $name
@@ -22,6 +22,8 @@ class FirstVisitTest extends DuskTestCase
 		$this->browse(function (Browser $browser) use ($email, $password, $name) {
 			$browser->maximize()
 				->visit(new Login())
+				//TODO this is needed until we implement progress state in localStorage better
+				->clearUserData()
 				->loginAsUser($email, $password)
 				->on(new Course())
 				->waitTillLoaded()

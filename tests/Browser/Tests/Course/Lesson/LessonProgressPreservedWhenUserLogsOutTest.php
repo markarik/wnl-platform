@@ -9,7 +9,7 @@ use Tests\Browser\Pages\Login;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 
-class LessonProgressPreservedTest extends DuskTestCase
+class LessonProgressPreservedWhenUserLogsOutTest extends DuskTestCase
 {
 
 	/**
@@ -18,7 +18,7 @@ class LessonProgressPreservedTest extends DuskTestCase
 	 * @param String $password
 	 * @param String $name
 	 */
-	public function testLessonProgressPreserved($email, $password, $name)
+	public function testLessonProgressPreservedWhenUserLogsOut($email, $password, $name)
 	{
 		$this->browse(function (Browser $browser) use ($email, $password, $name) {
 			$browser->maximize()

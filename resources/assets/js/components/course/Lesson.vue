@@ -29,7 +29,7 @@
 	$previous-next-height: 45px
 
 	.wnl-lesson-view
-		padding-bottom: calc(2*#{$previous-next-height})
+		padding-bottom: calc(2 * #{$previous-next-height})
 
 	.wnl-lesson-previous-next-nav
 		background: $color-white
@@ -47,8 +47,8 @@
 	import _ from 'lodash'
 	import Qna from 'js/components/qna/Qna.vue'
 	import PreviousNext from 'js/components/course/PreviousNext.vue'
-	import { mapGetters, mapActions } from 'vuex'
-	import { resource } from 'js/utils/config'
+	import {mapGetters, mapActions} from 'vuex'
+	import {resource} from 'js/utils/config'
 
 	export default {
 		name: 'Lesson',
@@ -121,16 +121,20 @@
 			},
 			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
-					let savedRoute = this.getSavedLesson(this.courseId, this.lessonId)
-					if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
-						this.$router.replace(savedRoute)
-					} else if (typeof this.firstScreenId !== 'undefined') {
-						this.$router.replace({ name: resource('screens'), params: {
-							courseId: this.courseId,
-							lessonId: this.lessonId,
-							screenId: this.firstScreenId,
-						} })
-					}
+					this.getSavedLesson(this.courseId, this.lessonId)
+						.then((savedRoute) => {
+							if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
+								this.$router.replace(savedRoute)
+							} else if (typeof this.firstScreenId !== 'undefined') {
+								this.$router.replace({
+									name: resource('screens'), params: {
+										courseId: this.courseId,
+										lessonId: this.lessonId,
+										screenId: this.firstScreenId,
+									}
+								})
+							}
+						});
 				}
 			},
 			updateLessonProgress() {

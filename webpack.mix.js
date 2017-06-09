@@ -14,6 +14,10 @@ const {mix} = require('laravel-mix');
 mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
 	.sass('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
 	.sass('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
+	// see https://github.com/JeffreyWay/laravel-mix/issues/228#issuecomment-284076792
+	.options({
+		processCssUrls: false
+	})
 	.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/admin/admin.js', 'public/js/admin.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')

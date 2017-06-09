@@ -9,7 +9,6 @@
 
 <script>
 	// Import global components
-	import Echo from 'laravel-echo'
 	import store from 'store'
 
 	import Navbar from 'js/components/global/Navbar.vue'
@@ -53,18 +52,17 @@
 			},
 			setupNotifications() {
 				Echo.private(`user.${this.currentUserId}`)
-					.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
-						$wnl.logger.debug('Notification', notification);
-					});
+						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
+							$wnl.logger.debug('Notification', notification);
+						});
 			},
 		},
 		created: function () {
 			this.setupCurrentUser()
+					.then(()=>this.setupNotifications())
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {
-			// this.setupNotifications()
-
 			this.setLayout(this.$breakpoints.currentBreakpoint())
 			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 				this.setLayout(currentLayout)

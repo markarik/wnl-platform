@@ -3,7 +3,7 @@
 		<span class="icon">
 			<i class="fa fa-spin fa-circle-o-notch"></i>
 		</span>
-		<slot>Momencik, ładuję się...</slot>
+		<slot>Momencik, ładuję dane...</slot>
 	</div>
 </template>
 

@@ -1,43 +1,45 @@
 <template>
 	<div>
 		<div class="wnl-quiz-question card margin vertical"
-			:class="{'is-unresolved': !isResolved(this.index)}">
+			:class="{
+				'is-unresolved': !isResolved(id),
+				'is-unanswered': isUnanswered,
+			}">
 			<header class="quiz-header card-header">
-				<p class="card-header-title" v-html="text"></p>
-				<div class="card-header-icons">
-					<a class="quiz-question-icon" @click="mockSaving" title="Zapisz to pytanie">
-						<span class="icon is-small">
-							<i class="fa fa-bookmark-o"></i>
-						</span>
-						Zapisz
-					</a>
+				<div class="quiz-header-top">
+					<div class="card-header-title">
+						<div v-html="text"></div>
+					</div>
+					<div class="card-header-icons">
+						<a class="quiz-question-icon" @click="mockSaving" title="Zapisz to pytanie">
+							<span class="icon is-small">
+								<i class="fa fa-bookmark-o"></i>
+							</span>
+							Zapisz
+						</a>
+					</div>
 				</div>
 			</header>
 			<div class="quiz-answers card-content">
-				<transition-group name="flip-list" tag="ul">
-					<li class="quiz-answer" v-for="(answer, answerIndex) in answers"
-						:class="{
-							'is-selected': isSelected(answerIndex),
-							'is-correct': isCorrect(answerIndex),
-							'is-hinted': hintCorrect(answerIndex),
-						}"
+				<ul>
+					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
+						:answer="answer"
+						:index="answerIndex"
+						:questionId="id"
+						:totalHits="total"
 						:key="answerIndex"
-						@click="selectAnswer(answerIndex)"
-					>
-						<div class="quiz-answer-content">
-							{{answer.text}}
-						</div>
-						<div class="quiz-answer-stats" v-if="isComplete">
-							<span class="tag" :title="`${answer.stats}% osób wybrało tę odpowiedź`">
-								{{answer.stats}}%
-							</span>
-						</div>
-					</li>
-				</transition-group>
+						@answerSelected="selectAnswer(answerIndex)"
+					></wnl-quiz-answer>
+				</ul>
+				<div class="quiz-question-meta">#{{id}}</div>
 			</div>
-			<div class="card-footer" v-if="showComments">
-				<div class="quiz-question-comments" v-if="hasComments">
-					<wnl-comments-list :comments="comments"></wnl-comments-list>
+			<div class="card-footer" v-if="isComplete">
+				<div class="quiz-question-comments">
+					<wnl-comments-list
+						module="quiz"
+						commentableResource="quiz_questions"
+						:commentableId="id">
+					</wnl-comments-list>
 				</div>
 			</div>
 		</div>
@@ -65,136 +67,78 @@
 	.quiz-answers
 		padding: $margin-base
 
-	.quiz-answer
+	.quiz-header
+		align-items: flex-start
+		flex-direction: column
+
+	.quiz-header-top
 		display: flex
-		border-bottom: $border-light-gray
-		justify-content: space-between
-		list-style-type: none
-		padding: $margin-base $margin-base $margin-base $margin-huge
-		position: relative
-		margin: 0
+		width: 100%
 
-		&::before
-			content: counter(list, upper-alpha) ")"
-			counter-increment: list
-			left: $margin-base
-			position: absolute
-
-		&:last-child
-			border: 0
-
-		&.is-hinted
-			&::after
-				content: '☑'
-				position: absolute
-				right: $margin-base
+	.quiz-question-meta
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-2
+		padding: $margin-small $margin-base 0
+		text-align: right
+		width: 100%
 
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
 
-	.wnl-quiz-question.is-unresolved
-		.quiz-answer
-			cursor: pointer
-
-			&:hover
-				background: $color-light-gray
-
-			&:active
-				background: $color-inactive-gray
-
-			&, &:hover, &:active
-				transition: all $transition-length-base
-
-			&.is-selected
-				background: $color-ocean-blue
-				color: $color-white
-
-				&:active, &:hover
-					background: $color-ocean-blue
-					color: $color-white
-
-	.quiz-answer.is-correct
-		background: $color-green
-		color: $color-white
-
-		&:active, &:hover
-			background: $color-green
-			color: $color-white
-
-			.quiz-answer-content
-				flex: 1 1 auto
-
-	.quiz-answer-content
-		flex: 1 1 auto
-
-	.quiz-answer-stats
-		align-self: center
-		cursor: help
-		flex: 0 0 auto
-		margin-left: $margin-base
-
 	.quiz-question-comments
-		padding: $margin-big
+		padding: $margin-small $margin-big $margin-big
+		width: 100%
+
+	.has-errors .is-unanswered
+		color: $color-orange
 </style>
 
 <script>
-	import * as types from 'js/store/mutations-types'
+	import { mapGetters, mapActions } from 'vuex'
+
+	import QuizAnswer from 'js/components/course/screens/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList.vue'
-	import { mapGetters, mapMutations } from 'vuex'
-	import { isDebug } from 'js/utils/env'
+
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'QuizQuestion',
 		components: {
+			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 		},
-		props: ['answers', 'comments', 'index', 'text', 'total'],
+		props: ['id', 'index', 'text', 'total'],
 		computed: {
 			...mapGetters('quiz', [
+				'getAnswers',
 				'isComplete',
 				'isResolved',
 				'getSelectedAnswer',
 			]),
-			number() {
-				return this.index + 1
+			answers() {
+				return this.getAnswers(this.id)
+			},
+			selectedAnswer() {
+				return this.getSelectedAnswer(this.id)
+			},
+			isUnanswered() {
+				return this.selectedAnswer === null
 			},
 			/**
 			 * @return {Boolean}
 			 */
 			hasComments() {
-				return this.comments.length > 0
+				// return this.comments.length > 0
 			},
 			/**
 			 * @return {Boolean}
 			 */
 			showComments() {
-				return this.isComplete && this.hasComments
+				// return this.isComplete && this.hasComments
 			},
 		},
 		methods: {
-			...mapMutations('quiz', [
-				types.QUIZ_SELECT_ANSWER,
-			]),
-
-			/**
-			 * @param  {int} answerIndex
-			 * @return {Boolean}
-			 */
-			isCorrect(answerIndex) {
-				return this.isComplete && this.answers[answerIndex].is_correct
-			},
-
-			/**
-			 * Helper property for debug purposes
-			 * @param  {int} answerIndex
-			 * @return {Boolean}
-			 */
-			hintCorrect(answerIndex) {
-				return isDebug() &&
-					!this.isComplete &&
-					this.answers[answerIndex].is_correct
-			},
+			...mapActions('quiz', ['commitSelectAnswer']),
 
 			/**
 			 * Commits a Vuex mutatation that sets a selectedAnswer for the
@@ -204,19 +148,11 @@
 			 */
 			selectAnswer(answerIndex) {
 				if (!this.isComplete) {
-					this[types.QUIZ_SELECT_ANSWER]({
-						index: this.index,
+					this.commitSelectAnswer({
+						id: this.id,
 						answer: answerIndex
 					})
 				}
-			},
-
-			/**
-			 * @param  {int} answerIndex
-			 * @return {Boolean}
-			 */
-			isSelected(answerIndex) {
-				return this.getSelectedAnswer(this.index) === answerIndex
 			},
 
 			/**

@@ -9,8 +9,8 @@ use Tests\Browser\Lib\Wait;
 
 class Lesson extends BasePage
 {
-	const CSS_NAVIGATE_RIGHT = '.navigate-right.enabled';
-	const CSS_NAVIGATE_LEFT = '.navigate-left.enabled';
+	const CSS_NAVIGATE_RIGHT = '.wnl-slideshow-control.navigate-right.enabled';
+	const CSS_NAVIGATE_LEFT = '.wnl-slideshow-control.navigate-left.enabled';
 	const CSS_SECTIONS = '.items .subitem a';
 	const CSS_SECTIONS_VISITED = '.items .subitem a.is-active';
 

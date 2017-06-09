@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\QuizQuestion;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class QuizQuestionTransformer extends TransformerAbstract
+class QuizQuestionTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['answers'];
+	protected $availableIncludes = ['quiz_answers', 'comments'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -34,7 +34,7 @@ class QuizQuestionTransformer extends TransformerAbstract
 		return $data;
 	}
 
-	public function includeAnswers(QuizQuestion $quizQuestion)
+	public function includeQuizAnswers(QuizQuestion $quizQuestion)
 	{
 		$answers = $quizQuestion->answers;
 
@@ -44,6 +44,19 @@ class QuizQuestionTransformer extends TransformerAbstract
 				'quiz_questions' => $quizQuestion->id,
 			]),
 			'quiz_answers'
+		);
+	}
+
+	public function includeComments(QuizQuestion $quizQuestion)
+	{
+		$comments = $quizQuestion->comments;
+
+		return $this->collection(
+			$comments,
+			new CommentTransformer([
+				'quiz_questions' => $quizQuestion->id,
+			]),
+			'comments'
 		);
 	}
 }

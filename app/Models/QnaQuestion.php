@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
+use App\Events\Qna\QuestionPosted;
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class QnaQuestion extends Model
 {
+	use Cached;
+
 	protected $fillable = ['text', 'user_id'];
+
+	protected $events = [
+		'created' => QuestionPosted::class,
+	];
 
 	public function answers()
 	{

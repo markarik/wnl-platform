@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Notification;
-use App\Models\UserAddress;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class NotificationTransformer extends TransformerAbstract
+class NotificationTransformer extends ApiTransformer
 {
 	protected $parent;
 

@@ -14,6 +14,7 @@ class NotifyUser implements ShouldQueue
 	 * Handle the event.
 	 *
 	 * @param $event
+	 *
 	 * @return void
 	 */
 	public function handle($event)
@@ -26,7 +27,7 @@ class NotifyUser implements ShouldQueue
 	 *
 	 * @param $event
 	 */
-	private function handleAnswerPosted( AnswerPosted $event)
+	private function handleAnswerPosted(AnswerPosted $event)
 	{
 
 		$event->data = [
@@ -108,17 +109,38 @@ class NotifyUser implements ShouldQueue
 			];
 		}
 
-		$comment->commentable->user->notify(new EventNotification($event));
+		if ($commentableAuthor = $comment->commentable->user) {
+			$commentableAuthor->notify(new EventNotification($event));
+		}
 		$this->notifyModerators($event);
 	}
 
 	/**
 	 * Handle notifications for ReactionAdded event.
+	 *
 	 * @param $event
 	 */
 	public function handleReactionAdded($event)
 	{
+		$reaction = $event->reaction;
+		$reactable = $event->reactable;
 
+		$event->data = [
+			'event'   => 'reaction-added',
+			'objects' => [
+				'type' => snake_case(class_basename($reactable)),
+				'id'   => $reactable->id,
+			],
+			'subject' => [
+				'type'          => 'reaction',
+				'reaction_type' => $reaction->type,
+				'reaction_id'   => $reaction->id,
+			],
+		];
+
+		if ($reactableAuthor = $reactable->user) {
+			$reactableAuthor->notify(new EventNotification($event));
+		}
 	}
 
 	/**

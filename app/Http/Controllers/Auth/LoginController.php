@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Session;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use \Illuminate\Http\Request;
 
@@ -55,5 +57,24 @@ class LoginController extends Controller
 		$request->session()->flash('logout', true);
 
 		return redirect('/login');
+	}
+
+	/**
+	 * The user has been authenticated.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  mixed $user
+	 *
+	 * @return mixed
+	 */
+	protected function authenticated(Request $request, $user)
+	{
+		foreach ($user->sessions as $session) {
+			Redis::del('laravel:' . $session->session_id);
+		}
+
+		$user->sessions()->create([
+			'session_id' => Session::getId(),
+		]);
 	}
 }

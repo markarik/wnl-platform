@@ -5,43 +5,44 @@ import {set} from 'vue'
 
 // Initial state
 const state = {
-	currentUser: {
-		data: {
-			id: 0,
-			first_name: '',
-			last_name: '',
-			full_name: ''
-		}
+	profile: {
+		id: 0,
+		first_name: '',
+		last_name: '',
+		full_name: '',
+		public_email: '',
+		public_phone: '',
+		username: '',
+		avatar: '',
 	}
 }
 
 // Getters
 const getters = {
-	currentUser: state => state.currentUser,
-	currentUserId: state => state.currentUser.data.id,
-	currentUserAvatar: state => state.currentUser.data.avatar,
-	currentUserName: state => state.currentUser.data.first_name,
-	currentUserFullName: state => state.currentUser.data.full_name,
-	currentUserSlug: state => state.currentUser.data.full_name.toLowerCase().replace(/\W/g, '')
+	currentUser: state => state.profile,
+	currentUserId: state => state.profile.id,
+	currentUserAvatar: state => state.profile.avatar,
+	currentUserName: state => state.profile.first_name,
+	currentUserFullName: state => state.profile.full_name,
+	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, '')
 }
 
 // Mutations
 const mutations = {
 	[types.USERS_SETUP_CURRENT] (state, userData) {
-		userData['full_name'] = `${userData['first_name']} ${userData['last_name']}`
-		set(state.currentUser, 'data', userData)
+		set(state, 'profile', userData)
 	}
 }
 
 // Actions
 const actions = {
-	setupCurrentUser({commit}) {
-		getCurrentUser().then((response) => {
+	setupCurrentUser({ commit }) {
+		return getCurrentUser().then((response) => {
 			commit(types.USERS_SETUP_CURRENT, response.data)
 		})
-			.catch((error) => {
-				$wnl.logger.error(error)
-			})
+		.catch((error) => {
+			$wnl.logger.error(error)
+		})
 	}
 }
 

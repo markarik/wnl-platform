@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\QuizSet;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class QuizSetTransformer extends TransformerAbstract
+class QuizSetTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['questions'];
+	protected $availableIncludes = ['quiz_questions'];
 
 	public function transform(QuizSet $quizSet)
 	{
@@ -19,7 +19,7 @@ class QuizSetTransformer extends TransformerAbstract
 		];
 	}
 
-	public function includeQuestions(QuizSet $quizSet)
+	public function includeQuizQuestions(QuizSet $quizSet)
 	{
 		$questions = $quizSet->questions()->with(['answers'])->get();
 

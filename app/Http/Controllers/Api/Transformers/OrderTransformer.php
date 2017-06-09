@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Models\Order;
-use League\Fractal\TransformerAbstract;
+use App\Http\Controllers\Api\ApiTransformer;
 
-class OrderTransformer extends TransformerAbstract
+class OrderTransformer extends ApiTransformer
 {
 
 	public function transform(Order $order)

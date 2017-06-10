@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 /*
     ImageViewer v 1.1.3
     Author: Sudhanshu Yadav
@@ -6,7 +8,7 @@
 */
 
 /*** picture view plugin ****/
-(function ($, window, document, undefined) {
+let imageviewer = function ($, window, document, undefined) {
     "use strict";
 
     //an empty function
@@ -18,7 +20,7 @@
 
 
     //constants
-    var ZOOM_CONSTANT = 7; //increase or decrease value for zoom on mouse wheel
+    var ZOOM_CONSTANT = 9; //increase or decrease value for zoom on mouse wheel
     var MOUSE_WHEEL_COUNT = 20; //A mouse delta after which it should stop preventing default behaviour of mouse wheel
 
     //ease out method
@@ -72,7 +74,7 @@
         return img.complete && (typeof img.naturalWidth === 'undefined' || img.naturalWidth !== 0);
     }
 
-    var imageViewHtml = '<div class="iv-loader"></div> <div class="iv-snap-view">' + '<div class="iv-snap-image-wrap">' + '<div class="iv-snap-handle"></div>' + '</div>' + '<div class="iv-zoom-slider"><div class="iv-zoom-handle"></div></div></div>' + '<div class="iv-image-view" ><div class="iv-image-wrap" ></div></div>';
+    var imageViewHtml = '<div class="iv-loader"></div> <div class="iv-snap-view">' + '<div class="iv-snap-image-wrap">' + '<div class="iv-snap-handle"></div>' + '</div>' + '<div class="iv-zoom-slider"><div class="iv-zoom-handle" data-prevent-swipe="true"></div></div></div>' + '<div class="iv-image-view" data-prevent-swipe="true"><div class="iv-image-wrap" data-prevent-swipe="true"></div></div>';
 
     //add a full screen view
     $(function () {
@@ -739,7 +741,7 @@
         zoomValue: 100,
         snapView: true,
 		snapViewPersist: true,
-        maxZoom: 500,
+        maxZoom: 400,
         refreshOnResize: true,
         zoomOnMouseWheel : true
     }
@@ -786,4 +788,6 @@
         });
     }
 
-}((window.jQuery), window, document));
+}
+
+export { imageviewer }

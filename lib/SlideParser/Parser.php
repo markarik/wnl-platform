@@ -27,7 +27,7 @@ class Parser
 
 	const BACKGROUND_PATTERN = '/data-background-image="([^"]*)"/';
 
-	const LUCID_EMBED_PATTERN = '/<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>/';
+	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
 
 	protected $categoryTags;
 	protected $courseTags;
@@ -321,8 +321,18 @@ class Parser
 	public function chartViewer($chartId)
 	{
 		$lucidUrl = 'https://www.lucidchart.com/documents/thumb/%s/0/0/NULL/%d';
-		$viewerHtml = '<img src="%s" data-high-res-src="%s" class="chart">';
-		$lowResSizePx = 800;
+		$viewerHtml = '
+			<div class="iv-image-container">
+				<img src="%s" data-high-res-src="%s" class="chart">
+				<a class="iv-image-fullscreen" title="Pełen ekran">
+					<span class="fullscreen-icon">
+						<span class="inner"></span>
+						<span class="horizontal"></span>
+						<span class="vertical"></span>
+					</span>
+				</a>
+			</div>';
+		$lowResSizePx = 2000;
 		$highResSizePx = 2000;
 		$lowResImage = sprintf($lucidUrl, $chartId, $lowResSizePx);
 		$highResImage = sprintf($lucidUrl, $chartId, $highResSizePx);

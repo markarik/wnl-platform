@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+
+namespace App\Http\Requests\User;
+
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -16,6 +18,10 @@ class UpdateUserSettings extends FormRequest
 	{
 		$user = User::fetch($this->route('id'));
 
+		if (!$user->settings) {
+			return $user->id === $this->user()->id;
+		}
+
 		return $this->user()->can('update', $user->settings);
 	}
 
@@ -27,12 +33,7 @@ class UpdateUserSettings extends FormRequest
 	public function rules()
 	{
 		return [
-			'consent_newsletter'  => '',
-			'consent_account'     => '',
-			'consent_order'       => '',
-			'consent_terms'       => '',
-			'notifications_email' => '',
-			'notifications_sms'   => '',
+
 		];
 	}
 }

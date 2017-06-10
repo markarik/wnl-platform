@@ -126,11 +126,11 @@ if (isProduction()) {
 					path: 'billing',
 					component: require('js/components/user/MyBillingData.vue')
 				},
-				// {
-				// 	name: 'my-settings',
-				// 	path: 'settings',
-				// 	component: require('js/components/user/MySettings.vue')
-				// },
+				{
+					name: 'my-settings',
+					path: 'settings',
+					component: require('js/components/user/MySettings.vue')
+				},
 				{
 					name: 'my-password',
 					path: 'password',

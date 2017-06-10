@@ -3,7 +3,7 @@
 use Auth;
 use App\Models\User;
 use League\Fractal\Resource\Item;
-use App\Http\Requests\User\UpdateUser;
+use App\Http\Requests\UpdateUserAddress;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\UserAddressTransformer;
 
@@ -29,7 +29,7 @@ class UserAddressApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	public function put(UpdateUser $request)
+	public function put(UpdateUserAddress $request)
 	{
 		$user = User::fetch($request->route('id'));
 		$user->address()->updateOrCreate(['user_id' => $user->id], $request->all());

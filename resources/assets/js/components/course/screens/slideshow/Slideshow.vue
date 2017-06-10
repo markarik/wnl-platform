@@ -22,6 +22,9 @@
 				</div>
 			</div>
 			<div class="margin top">
+				<div class="left">
+					<wnl-annotations :slideshowId="slideshowId"></wnl-annotations>
+				</div>
 				<div class="right">
 					<wnl-image-button name="wnl-slideshow-control-fullscreen"
 						icon="fullscreen-arrows"
@@ -107,13 +110,15 @@
 	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
 
-	import SlideshowNavigation from './SlideshowNavigation.vue'
-	import Qna from 'js/components/qna/Qna.vue'
+	import Annotations from './Annotations'
+	import Qna from 'js/components/qna/Qna'
+	import SlideshowNavigation from './SlideshowNavigation'
 	import { isDebug, getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Slideshow',
 		components: {
+			'wnl-annotations': Annotations,
 			'wnl-slideshow-navigation': SlideshowNavigation,
 			'wnl-qna': Qna,
 		},

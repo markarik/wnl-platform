@@ -7,7 +7,7 @@ export function getCurrentUser() {
 	if (currentUser) {
 		return Promise.resolve(currentUser);
 	} else {
-		const promisedUser = axios.get(getApiUrl('users/current'));
+		const promisedUser = axios.get(getApiUrl('users/current/profile'));
 
 		return promisedUser.then((result) => {
 			currentUser = result;

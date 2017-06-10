@@ -12,6 +12,11 @@ class UserProfile extends Model
 		'public_email',
 		'public_phone',
 		'username',
+		'personal_settings',
+	];
+
+	protected $casts = [
+		'personal_settings' => 'array',
 	];
 
 	public function getAvatarUrlAttribute()
@@ -22,5 +27,10 @@ class UserProfile extends Model
 	public function getFullNameAttribute()
 	{
 		return "$this->first_name $this->last_name";
+	}
+
+	public function getSettingsAttribute()
+	{
+		return array_merge((array)$this->personal_settings, config('user-default-settings'));
 	}
 }

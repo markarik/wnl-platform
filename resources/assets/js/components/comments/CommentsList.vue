@@ -3,7 +3,7 @@
 		<div class="comments-controls">
 			<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 			Komentarze ({{comments.length}})
-			<span v-if="comments.length > 0"> ·
+			<span v-if="comments.length > 0 || this.showComments"> ·
 				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 			</span> ·
 			<span>
@@ -20,11 +20,12 @@
 			>
 			{{comment.text}}
 		</wnl-comment>
-		<div class="form-container">
+		<div class="form-container" v-if="showComments">
 			<transition name="fade">
-				<wnl-new-comment-form v-if="showComments"
+				<wnl-new-comment-form
 					:commentableResource="commentableResource"
 					:commentableId="commentableId"
+					:isUnique="isUnique"
 					@submitSuccess="onSubmitSuccess">
 				</wnl-new-comment-form>
 			</transition>
@@ -58,12 +59,12 @@
 			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
 		},
-		props: ['module', 'commentableResource', 'commentableId'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique'],
 		data() {
 			return {
-				showComments: false,
-				listElement: {},
 				formElement: {},
+				listElement: {},
+				showComments: false,
 			}
 		},
 		computed: {
@@ -98,17 +99,23 @@
 				this.showComments = !this.showComments
 
 				if (this.showComments) {
-					this.commentsScroll(this.$el)
+					nextTick(() => {
+						this.commentsScroll(this.$el)
+					})
 				}
 			},
 			toggleCommentsForm() {
 				this.showComments = true
 
 				nextTick(() => {
+					if (_.isUndefined(this.formElement)) {
+						this.formElement = this.$el.getElementsByClassName('form-container')[0]
+					}
 					this.commentsScroll(this.formElement)
 				})
 			},
 			commentsScroll(element) {
+				if (_.isUndefined(element)) return false;
 				scrollWithMargin(element.offsetTop + element.offsetParent.offsetTop)
 			},
 			onSubmitSuccess(data) {
@@ -119,8 +126,10 @@
 					profile: this.currentUser,
 				})
 
-				let lastComment = _.last(this.$el.getElementsByClassName('wnl-comment'))
-				this.commentsScroll(lastComment)
+				nextTick(() => {
+					let lastComment = _.last(this.$el.getElementsByClassName('wnl-comment')) || this.formElement
+					this.commentsScroll(lastComment)
+				})
 			},
 			onRemoveComment(id) {
 				this.action('removeComment', {
@@ -132,6 +141,6 @@
 		},
 		mounted() {
 			this.formElement = this.$el.getElementsByClassName('form-container')[0]
-		}
+		},
 	}
 </script>

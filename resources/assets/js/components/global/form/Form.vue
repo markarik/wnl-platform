@@ -93,11 +93,13 @@
 							this.$emit('submitSuccess', data)
 						},
 						reason => {
+							$wnl.logger.error(reason)
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 							this.$emit('submitError')
 						},
 					)
 					.catch((error) => {
+						$wnl.logger.error(error, error.stack)
 						this.errorFading('Nie udało się.')
 						this.$emit('submitError')
 					})

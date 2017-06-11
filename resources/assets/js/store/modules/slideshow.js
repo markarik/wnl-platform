@@ -1,8 +1,9 @@
 import _ from 'lodash'
+import {set, delete as destroy} from 'vue'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
-import {set, delete as destroy} from 'vue'
+import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 
 function _fetchPresentables(slideshowId) {
 	let data = {
@@ -74,13 +75,17 @@ const namespaced = true
 const state = getInitialState()
 
 const getters = {
+	...commentsGetters,
 	isFunctional: (state) => (slideNumber) => state.presentables[slideNumber].functional,
-	isLoading:    (state) => state.isLoading,
-	getId:        (state) => (slideNumber) => state.presentables[slideNumber].id,
+	isLoading:    (state) => state.loading,
+	getSlideId:   (state) => (slideOrderNumber) => {
+		return state.presentables.length === 0 ? 0 : state.presentables[slideOrderNumber].id
+	},
 	slidesIds:    (state) => Object.keys(state.slides),
 }
 
 const mutations = {
+	...commentsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},
@@ -113,6 +118,7 @@ const mutations = {
 }
 
 const actions = {
+	...commentsActions,
 	setup({commit, dispatch, getters}, slideshowId) {
 		dispatch('setupPresentables', slideshowId)
 			.then(() => dispatch('setupComments', getters.slidesIds))
@@ -135,7 +141,14 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			_fetchComments(slidesIds)
 				.then((response) => {
+					if (!response.data.hasOwnProperty('included')) {
+						commit(types.IS_LOADING, false)
+						resolve()
+						return false
+					}
+
 					commit(types.SLIDESHOW_SET_COMMENTS, response.data)
+					commit(types.IS_LOADING, false)
 					resolve()
 				})
 				.catch((error) => {

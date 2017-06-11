@@ -44,10 +44,14 @@
 			'wnl-quill': Quill,
 			'wnl-submit': Submit,
 		},
-		props: ['commentableResource', 'commentableId'],
+		props: ['commentableResource', 'commentableId', 'isUnique'],
 		computed: {
 			name() {
-				return `NewComment-${this.commentableResource}-${this.commentableId}`
+				let name = `NewComment-${this.commentableResource}`
+				if (!this.isUnique) {
+					name = `${name}-${this.commentableId}`
+				}
+				return name
 			},
 			attachedData() {
 				return {

@@ -1,26 +1,35 @@
 <template>
 	<div>
 		<p class="metadata">Komentarze do slajdu</p>
+		<wnl-comments-list
+			v-if="currentSlideId > 0"
+			module="slideshow"
+			commentableResource="slides"
+			isUnique="true"
+			:commentableId="currentSlideId"
+		></wnl-comments-list>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
-
 <script>
-	import {mapActions} from 'vuex'
+	import {mapGetters} from 'vuex'
+
+	import CommentsList from 'js/components/comments/CommentsList'
 
 	export default {
 		name: 'Annotations',
+		components: {
+			'wnl-comments-list': CommentsList,
+		},
 		props: {
 			slideshowId: Number,
+			currentSlide: Number,
 		},
-		methods: {
-			...mapActions('slideshow', ['setup'])
+		computed: {
+			...mapGetters('slideshow', ['getSlideId']),
+			currentSlideId() {
+				return this.getSlideId(this.currentSlide - 1)
+			},
 		},
-		mounted() {
-			this.setup(this.slideshowId)
-		}
 	}
 </script>

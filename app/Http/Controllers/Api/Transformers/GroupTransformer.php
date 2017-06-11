@@ -21,9 +21,10 @@ class GroupTransformer extends ApiTransformer
 	public function transform(Group $group)
 	{
 		return [
-			'id'       => $group->id,
-			'name'     => $group->name,
-			'editions' => $group->course_id,
+			'id'            => $group->id,
+			'name'          => $group->name,
+			'editions'      => $group->course_id,
+			'required_role' => $group->required_role,
 		];
 	}
 

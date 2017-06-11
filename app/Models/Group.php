@@ -9,7 +9,7 @@ class Group extends Model
 {
 	use Cached;
 
-    protected $fillable = ['name', 'course_id'];
+	protected $fillable = ['name', 'course_id', 'required_role'];
 
 	public function lessons()
 	{

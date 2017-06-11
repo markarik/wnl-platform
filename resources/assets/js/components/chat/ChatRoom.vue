@@ -8,10 +8,11 @@
 					</div>
 					<div v-if="messages.length > 0">
 						<wnl-message v-for="(message, index) in messages"
-							:key="index"
-							:showAuthor="isAuthorUnique[index]"
-							:username="message.username"
-							:time="message.time">
+									 :key="index"
+									 :showAuthor="isAuthorUnique[index]"
+									 :username="message.username"
+									 :avatar="message.avatar"
+									 :time="message.time">
 								{{ message.content }}
 						</wnl-message>
 					</div>

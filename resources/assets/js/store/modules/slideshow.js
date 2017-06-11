@@ -76,12 +76,34 @@ const state = getInitialState()
 
 const getters = {
 	...commentsGetters,
-	isFunctional: (state) => (slideNumber) => state.presentables[slideNumber].functional,
+	isFunctional: (state) => (slideNumber) => {
+		let slideIndex = slideNumber - 1
+
+		if (!state.presentables.hasOwnProperty(slideIndex)) return 0;
+
+		return state.presentables[slideNumber - 1].is_functional
+	},
 	isLoading:    (state) => state.loading,
 	getSlideId:   (state) => (slideOrderNumber) => {
 		return state.presentables.length === 0 ? 0 : state.presentables[slideOrderNumber].id
 	},
 	slidesIds:    (state) => Object.keys(state.slides),
+	findRegularSlide: (state, getters) => (slideNumber, direction) => {
+		let step = direction === 'previous' ? -1 : 1,
+			length = state.presentables.length
+
+		for (;;slideNumber = slideNumber + step) {
+			if (!getters.isFunctional(slideNumber)) {
+				return slideNumber
+			}
+			if (slideNumber <= 0 ) {
+				return 1
+			}
+			if (slideNumber >= length) {
+				return length
+			}
+		}
+	}
 }
 
 const mutations = {

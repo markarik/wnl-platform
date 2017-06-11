@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" v-if="!isCurrentUserLoading">
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
 			<router-view></router-view>
@@ -23,7 +23,7 @@
 			'wnl-navbar': Navbar
 		},
 		computed: {
-			...mapGetters(['currentUserId'])
+			...mapGetters(['currentUserId', 'isCurrentUserLoading'])
 		},
 		methods: {
 			...mapActions(['setupCurrentUser', 'setLayout']),

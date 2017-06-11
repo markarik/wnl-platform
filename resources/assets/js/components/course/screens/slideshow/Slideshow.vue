@@ -21,13 +21,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="margin top">
-				<div class="right">
+			<div class="margin top slideshow-menu">
+				<div class="slideshow-annotations" v-if="!isLoading">
+					<wnl-annotations :currentSlide="currentSlide" :slideshowId="slideshowId"></wnl-annotations>
+				</div>
+				<div class="slideshow-fullscreen">
 					<wnl-image-button name="wnl-slideshow-control-fullscreen"
 						icon="fullscreen-arrows"
 						alt="Włącz pełen ekran"
 						align="right"
-						label="Pełen ekran"
+						title="Pełen ekran"
 						@buttonclicked="toggleFullscreen"
 					></wnl-image-button>
 				</div>
@@ -100,20 +103,33 @@
 			iframe
 				opacity: 1
 				transition: opacity $transition-length-base
+
+	.slideshow-menu
+		display: flex
+
+		.slideshow-annotations
+			flex: 1 auto
+
+		.slideshow-fullscreen
+			flex: 0
+			padding-left: $margin-base
 </style>
 
 <script>
 	import _ from 'lodash'
 	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
+	import {mapGetters, mapActions} from 'vuex'
 
-	import SlideshowNavigation from './SlideshowNavigation.vue'
-	import Qna from 'js/components/qna/Qna.vue'
-	import { isDebug, getUrl } from 'js/utils/env'
+	import Annotations from './Annotations'
+	import Qna from 'js/components/qna/Qna'
+	import SlideshowNavigation from './SlideshowNavigation'
+	import {isDebug, getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'Slideshow',
 		components: {
+			'wnl-annotations': Annotations,
 			'wnl-slideshow-navigation': SlideshowNavigation,
 			'wnl-qna': Qna,
 		},
@@ -130,6 +146,7 @@
 		},
 		props: ['screenData', 'slide'],
 		computed: {
+			...mapGetters('slideshow', ['isLoading']),
 			slideNumber() {
 				return Math.max(this.slide - 1, 0) || 0
 			},
@@ -158,6 +175,7 @@
 			},
 		},
 		methods: {
+			...mapActions('slideshow', ['setup']),
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
@@ -252,6 +270,7 @@
 		mounted() {
 			Postmate.debug = false
 			this.initSlideshow()
+			this.setup(this.slideshowId)
 		},
 		watch: {
 			'$route' (to, from) {

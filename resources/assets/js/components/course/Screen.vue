@@ -12,7 +12,7 @@
 	import axios from 'axios'
 	import End from 'js/components/course/screens/End.vue'
 	import Html from 'js/components/course/screens/Html.vue'
-	import Slideshow from 'js/components/course/screens/Slideshow.vue'
+	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
 	import Quiz from 'js/components/course/screens/quiz/Quiz.vue'
 	import Widget from 'js/components/course/screens/Widget.vue'
 	import { getApiUrl } from 'js/utils/env'

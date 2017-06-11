@@ -17,7 +17,7 @@ class PresentablesTest extends ApiTestCase
 			'query' => [
 				'where' => [
 					['presentable_type', 'App\Models\Slideshow'],
-					['presentable_id', '=', 7],
+					['presentable_id', '=', 1],
 				],
 			],
 			'join'  => [
@@ -32,8 +32,11 @@ class PresentablesTest extends ApiTestCase
 			->actingAs($user)
 			->json('POST', $this->url('/presentables/.search'), $data);
 
+		dd($response->dump());
+
 		$response
 			->assertStatus(200);
+
 	}
 
 }

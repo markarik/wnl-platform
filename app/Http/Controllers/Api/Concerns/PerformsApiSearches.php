@@ -108,6 +108,10 @@ trait PerformsApiSearches
 		$limit = $request->get('limit');
 		$join = $request->get('join');
 
+		if (!empty($query['whereIn'])) {
+			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
+		}
+
 		if (!empty ($query['where'])) {
 			$model = $model->where($query['where']);
 		}

@@ -1,7 +1,7 @@
 <template>
 	<article class="media">
 		<figure class="media-left">
-			<wnl-avatar :username="currentUserFullName"></wnl-avatar>
+			<wnl-avatar :username="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
 		</figure>
 		<div class="media-content">
 			<p class="control">
@@ -56,7 +56,8 @@
 		},
 		computed: {
 			...mapGetters([
-				'currentUserFullName'
+				'currentUserFullName',
+				'currentUserAvatar'
 			]),
 			sendingDisabled() {
 				return !this.loaded || this.message.length === 0

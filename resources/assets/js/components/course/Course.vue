@@ -11,7 +11,7 @@
 			<router-view v-if="ready"></router-view>
 		</div>
 		<div class="wnl-right wnl-app-layout-right">
-			<wnl-chat :room="chatRoom"></wnl-chat>
+			<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
 		</div>
 	</div>
 </template>
@@ -20,7 +20,7 @@
 	import axios from 'axios'
 	import store from 'store'
 	import Navigation from 'js/components/course/Navigation.vue'
-	import Chat from 'js/components/chat/Chat.vue'
+	import PublicChat from 'js/components/chat/PublicChat.vue'
 	import { getApiUrl } from 'js/utils/env'
 	import { mapGetters, mapActions } from 'vuex'
 	import * as mutations from 'js/store/mutations-types'
@@ -41,12 +41,15 @@
 			isLesson() {
 				return typeof this.lessonId !== 'undefined'
 			},
-			chatRoom() {
+			chatRooms() {
 				let chatRoom = `courses-${this.courseId}`
 				if (this.isLesson) {
 					chatRoom += `-lessons-${this.lessonId}`
 				}
-				return chatRoom
+				return [
+					{name: '#powaga', channel: chatRoom},
+					{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+				]
 			},
 			localStorageKey() {
 				return `course-structure-${this.courseId}`
@@ -54,7 +57,7 @@
 		},
 		components: {
 			'wnl-course-navigation': Navigation,
-			'wnl-chat': Chat
+			'wnl-public-chat': PublicChat
 		},
 		methods: {
 			...mapActions('course', [

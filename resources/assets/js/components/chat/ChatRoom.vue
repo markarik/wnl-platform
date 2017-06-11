@@ -1,6 +1,5 @@
 <template>
 	<div class="wnl-chat">
-		<wnl-users-widget :users="users"></wnl-users-widget>
 		<div class="wnl-chat-messages">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">

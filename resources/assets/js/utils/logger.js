@@ -123,9 +123,6 @@ export default class Logger {
 	}
 
 	error(...args) {
-		if (args[0].hasOwnProperty('stack')) {
-			args.push(args[0].stack)
-		}
 		this.log(Logger.ERROR, args)
 	}
 

@@ -25,6 +25,11 @@ class Screen extends Model
 		return $this->hasMany('\App\Models\Section');
 	}
 
+	public function tags()
+	{
+		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
+
 	public function getSlideshowAttribute()
 	{
 		$metaResources = collect($this->meta['resources'])->keyBy('name');

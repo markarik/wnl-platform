@@ -7,6 +7,7 @@
 			commentableResource="slides"
 			isUnique="true"
 			:commentableId="currentSlideId"
+			@commentsHidden="$emit('commentsHidden')"
 		></wnl-comments-list>
 	</div>
 </template>

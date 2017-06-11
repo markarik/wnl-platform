@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h4>{{name}}</h4>
-		<component :is="component" :screenData="screenData" :slide="slide"></component>
+		<component :is="component" :screenData="screenData"></component>
 	</div>
 </template>
 
@@ -26,7 +26,7 @@
 			'wnl-quiz': Quiz,
 			'wnl-widget': Widget,
 		},
-		props: ['screenId', 'slide'],
+		props: ['screenId'],
 		data: () => {
 			return {
 				screenData: {},

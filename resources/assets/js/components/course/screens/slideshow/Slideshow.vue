@@ -23,7 +23,11 @@
 			</div>
 			<div class="margin top slideshow-menu">
 				<div class="slideshow-annotations" v-if="!isLoading">
-					<wnl-annotations :currentSlide="currentSlide" :slideshowId="slideshowId"></wnl-annotations>
+					<wnl-annotations
+						:currentSlide="currentSlideNumber"
+						:slideshowId="slideshowId"
+						@commentsHidden="onCommentsHidden"
+					></wnl-annotations>
 				</div>
 				<div class="slideshow-fullscreen">
 					<wnl-image-button name="wnl-slideshow-control-fullscreen"
@@ -120,11 +124,14 @@
 	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions} from 'vuex'
+	import {scrollToTop} from 'js/utils/animations'
 
 	import Annotations from './Annotations'
 	import Qna from 'js/components/qna/Qna'
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getUrl} from 'js/utils/env'
+
+	let debounced;
 
 	export default {
 		name: 'Slideshow',
@@ -136,7 +143,7 @@
 		data() {
 			return {
 				child: {},
-				currentSlide: 1,
+				currentSlideNumber: Math.max(this.$route.params.slide, 1) || 1,
 				loaded: false,
 				isFullscreen: false,
 				isFauxFullscreen: false,
@@ -146,9 +153,14 @@
 		},
 		props: ['screenData', 'slide'],
 		computed: {
-			...mapGetters('slideshow', ['isLoading']),
-			slideNumber() {
-				return Math.max(this.slide - 1, 0) || 0
+			...mapGetters(['getSetting']),
+			...mapGetters('slideshow', [
+				'isLoading',
+				'isFunctional',
+				'findRegularSlide',
+			]),
+			currentSlideIndex() {
+				return this.currentSlideNumber - 1
 			},
 			container() {
 				return this.$el.getElementsByClassName('wnl-slideshow-content')[0]
@@ -184,18 +196,16 @@
 				}
 				this.focusSlideshow()
 			},
+			setCurrentSlideFromIndex(index) {
+				this.currentSlideNumber = this.slideNumberFromIndex(index)
+			},
 			slideNumberFromIndex(index) {
 				return index + 1
 			},
-			setCurrentSlideFromIndex(slideIndex) {
-				this.currentSlide = this.slideNumberFromIndex(slideIndex)
-			},
-			goToSlide(slideNumber) {
+			goToSlide(slideIndex) {
 				this.slideChanged = true
-
-				this.currentSlide = this.slideNumberFromIndex(slideNumber)
-				this.child.call('goToSlide', slideNumber)
-
+				this.child.call('goToSlide', slideIndex)
+				this.setCurrentSlideFromIndex(slideIndex)
 				this.focusSlideshow()
 			},
 			changeBackground(background = 'image') {
@@ -220,38 +230,42 @@
 						this.loaded = true
 						this.setEventListeners()
 
-						this.goToSlide(this.slideNumber)
+						this.goToSlide(this.currentSlideIndex)
 						this.focusSlideshow()
 					}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {
-				if (typeof event.data === 'string') {
+				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
 					try {
 						let data = JSON.parse(event.data)
 						if (data.namespace === 'reveal' &&
 							data.eventName === 'slidechanged' &&
-							this.slideChanged === false)
-						{
-							this.focusSlideshow()
-							this.setCurrentSlideFromIndex(data.state.indexh)
+							this.slideChanged === false
+						) {
+							let currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
+							this.currentSlideNumber = currentSlideNumber
 							this.$router.replace({
 								name: 'screens',
-								params: { slide: this.currentSlide }
+								params: { slide: currentSlideNumber }
 							})
+							this.focusSlideshow()
 						}
 
 						this.slideChanged = false
-					} catch (err) {}
+					} catch (error) { $wnl.logger.error(error) }
 				}
 			},
 			setEventListeners() {
-				addEventListener('message', _.debounce(
+				debounced = _.debounce(
 					this.messageEventListener.bind(this),
-					100, {
+					100,
+					{
 						leading: true,
 						trailing: true,
-					})
-				),
+					}
+				)
+
+				addEventListener('message', debounced)
 				addEventListener('blur', this.checkFocus)
 				addEventListener('focus', this.checkFocus)
 				addEventListener('focusout', this.checkFocus)
@@ -260,11 +274,16 @@
 				if (typeof this.child.destroy === 'function') {
 					this.child.destroy()
 				}
+
 				removeEventListener('blur', this.checkFocus)
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
-				removeEventListener('message', this.messageEventListener)
+				removeEventListener('message', debounced)
 				this.loaded = false
+			},
+			onCommentsHidden() {
+				this.focusSlideshow()
+				scrollToTop()
 			},
 		},
 		mounted() {
@@ -272,13 +291,26 @@
 			this.initSlideshow()
 			this.setup(this.slideshowId)
 		},
+		beforeDestroy() {
+			this.destroySlideshow()
+		},
 		watch: {
 			'$route' (to, from) {
 				if (to.params.screenId !== from.params.screenId) {
 					this.destroySlideshow()
 				}
-				if (this.loaded && this.slide !== this.currentSlide) {
-					this.goToSlide(this.slideNumber)
+
+				let fromSlide = from.params.slide || 0,
+					toSlide = to.params.slide
+
+				if (this.loaded && !_.isUndefined(toSlide)) {
+					if (this.getSetting('skip_functional_slides') && !!this.isFunctional(toSlide)) {
+						let direction = toSlide > fromSlide ? 'next' : 'previous',
+							skipTo = this.findRegularSlide(toSlide, direction)
+						this.goToSlide(skipTo - 1)
+					} else if (toSlide !== this.currentSlideNumber) {
+						this.goToSlide(toSlide - 1)
+					}
 				}
 			},
 			'screenData' (newValue, oldValue) {

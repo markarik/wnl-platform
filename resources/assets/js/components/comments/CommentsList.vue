@@ -115,8 +115,10 @@
 				})
 			},
 			commentsScroll(element) {
-				if (_.isUndefined(element)) return false;
-				scrollWithMargin(element.offsetTop + element.offsetParent.offsetTop)
+				if (_.isUndefined(element) || _.isNull(element)) return false;
+
+				let parentOffset = element.offsetParent === null ? 0 : element.offsetParent.offsetTop
+				scrollWithMargin(element.offsetTop + parentOffset)
 			},
 			onSubmitSuccess(data) {
 				this.action('addComment', {
@@ -141,6 +143,12 @@
 		},
 		mounted() {
 			this.formElement = this.$el.getElementsByClassName('form-container')[0]
+		},
+		watch: {
+			'showComments' (newValue, oldValue) {
+				let eventName = newValue ? 'commentsShown' : 'commentsHidden'
+				this.$emit(eventName)
+			}
 		},
 	}
 </script>

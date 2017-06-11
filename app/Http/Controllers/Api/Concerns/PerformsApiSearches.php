@@ -51,7 +51,12 @@ trait PerformsApiSearches
 		foreach ($relationConditions as $field => $conditions) {
 			$model = $model->whereHas(camel_case($field),
 				function ($query) use ($conditions) {
-					$query->where($conditions['where']);
+					if (!empty($conditions['where'])) {
+						$query->where($conditions['where']);
+					}
+					if (!empty($conditions['whereIn'])) {
+						$query->whereIn($conditions['whereIn'][0], $conditions['whereIn'][1]);
+					}
 				}
 			);
 		}

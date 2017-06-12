@@ -1,7 +1,35 @@
-export function scrollToTop() {
-	let scrollable = document.getElementsByClassName('scrollable-main-container')[0]
+import SweetScroll from 'sweet-scroll'
+import {isDebug} from 'js/utils/env'
 
-	if (typeof scrollable !== 'undefined') {
-		scrollable.scrollTop = 0
+export function scrollToTop() {
+	scrollToY(0)
+}
+
+export function scrollToElement(element, distance = 150) {
+	if (typeof element !== undefined) {
+		scrollToY(element.offsetTop - distance)
 	}
+}
+
+export function scrollWithMargin(scrollTop, duration = 500) {
+	scrollToY(scrollTop - 0.4 * window.innerHeight, duration)
+}
+
+export function scrollToY(scrollTop, duration = 500) {
+	let container = document.getElementsByClassName('scrollable-main-container')[0]
+
+	if (typeof container === 'undefined') return false;
+
+	if (isDebug() && container.scrollTop === 0) {
+		// I set scrollTop to 1 to allow SweetScroll to recognize the container
+		// as scrollable when the dev tools are open.
+		// An issue has been filed - https://github.com/tsuyoshiwada/sweet-scroll/issues/38
+		container.scrollTop = 1
+	}
+
+	scroll = new SweetScroll({
+		duration,
+	}, '.scrollable-main-container')
+
+	scroll.to(scrollTop)
 }

@@ -22,10 +22,12 @@ class CommentTransformer extends ApiTransformer
 	public function transform(Comment $comment)
 	{
 		$data = [
-			'id'         => $comment->id,
-			'text'       => $comment->text,
-			'created_at' => $comment->created_at->timestamp,
-			'updated_at' => $comment->updated_at->timestamp,
+			'id'               => $comment->id,
+			'text'             => $comment->text,
+			'commentable_id'   => $comment->commentable_id,
+			'commentable_type' => $comment->commentable_type,
+			'created_at'       => $comment->created_at->timestamp,
+			'updated_at'       => $comment->updated_at->timestamp,
 		];
 
 		if ($this->parent) {

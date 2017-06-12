@@ -8,6 +8,7 @@ use App\Http\Requests\Qna\PostQuestion;
 use App\Http\Requests\Qna\UpdateQuestion;
 use App\Models\Lesson;
 use App\Models\QnaQuestion;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Auth;
 use League\Fractal\Resource\Item;
@@ -22,22 +23,20 @@ class QuestionsApiController extends ApiController
 
 	public function post(PostQuestion $request)
 	{
-		$lessonId = $request->get('lesson_id');
+		$tags = $request->get('tags');
 		$text = $request->get('text');
 		$user = Auth::user();
-
-		$lesson = Lesson::find($lessonId);
-
-		if (!$lesson) {
-			return $this->respondInvalidInput('Lesson not found.');
-		}
 
 		$question = QnaQuestion::create([
 			'text'    => $text,
 			'user_id' => $user->id,
 		]);
 
-		$question->tags()->attach($lesson->tags);
+		foreach ($tags as $tag) {
+			$question->tags()->attach(
+				Tag::firstOrCreate(['name' => $tag])
+			);
+		}
 
 		$resource = new Item($question, new QnaQuestionTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();

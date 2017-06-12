@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ApiTransformer;
 
 class QuizQuestionTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['answers'];
+	protected $availableIncludes = ['quiz_answers', 'comments'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -34,7 +34,7 @@ class QuizQuestionTransformer extends ApiTransformer
 		return $data;
 	}
 
-	public function includeAnswers(QuizQuestion $quizQuestion)
+	public function includeQuizAnswers(QuizQuestion $quizQuestion)
 	{
 		$answers = $quizQuestion->answers;
 
@@ -44,6 +44,19 @@ class QuizQuestionTransformer extends ApiTransformer
 				'quiz_questions' => $quizQuestion->id,
 			]),
 			'quiz_answers'
+		);
+	}
+
+	public function includeComments(QuizQuestion $quizQuestion)
+	{
+		$comments = $quizQuestion->comments;
+
+		return $this->collection(
+			$comments,
+			new CommentTransformer([
+				'quiz_questions' => $quizQuestion->id,
+			]),
+			'comments'
 		);
 	}
 }

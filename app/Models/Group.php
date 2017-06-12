@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-    protected $fillable = ['name', 'course_id'];
+	use Cached;
+
+	protected $fillable = ['name', 'course_id', 'required_role'];
 
 	public function lessons()
 	{

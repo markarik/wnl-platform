@@ -14,6 +14,11 @@ class UserProfile extends Model
 		'username',
 	];
 
+	public function user()
+	{
+		return $this->belongsTo('App\Models\User');
+	}
+
 	public function getAvatarUrlAttribute()
 	{
 		return $this->avatar ? asset('storage/' . $this->avatar) : null;

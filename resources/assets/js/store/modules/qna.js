@@ -61,17 +61,21 @@ function _getAnswer(answerId) {
 	return axios.get(getApiUrl(`answers/${answerId}?include=users`))
 }
 
+function getInitialState() {
+	return {
+		loading: true,
+		questionsIds: [],
+		qna_questions: {},
+		qna_answers: {},
+		comments: {},
+		profiles: {},
+	}
+}
+
 const namespaced = true
 
 // Initial state
-const state = {
-	loading: true,
-	questionsIds: [],
-	qna_questions: {},
-	qna_answers: {},
-	comments: {},
-	profiles: {},
-}
+const state = getInitialState()
 
 // Getters
 const getters = {
@@ -201,6 +205,12 @@ const mutations = {
 			set(state, resource, merged)
 		})
 	},
+	[types.QNA_DESTROY] (state) {
+		let initialState = getInitialState()
+		Object.keys(initialState).forEach((field) => {
+			set(state, field, initialState[field])
+		})
+	},
 }
 
 // Actions
@@ -285,7 +295,11 @@ const actions = {
 				answerId: payload.answerId,
 				commentId: payload.commentId,
 			})
+			resolve()
 		})
+	},
+	destroyQna({commit}) {
+		commit(types.QNA_DESTROY)
 	},
 }
 

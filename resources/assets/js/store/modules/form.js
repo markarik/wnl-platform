@@ -6,8 +6,6 @@ import { useLocalStorage, getApiUrl } from 'js/utils/env'
 import { resource } from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
-let originalData = {}
-
 const form = {
 	namespaced: true,
 	state() {
@@ -23,13 +21,14 @@ const form = {
 		}
 	},
 	getters: {
-		anyErrors:  (state) => !_.isEmpty(state.errors),
-		getData:    (state) => state.data,
-		getErrors:  (state) => (name) => state.errors[name],
-		getField:   (state) => (name) => state.data[name],
-		hasChanges: (state) => state.hasChanges,
-		hasErrors:  (state) => (name) => !_.isEmpty(state.errors[name]),
-		isLoading:  (state) => state.loading,
+		anyErrors:   (state) => !_.isEmpty(state.errors),
+		getData:     (state) => state.data,
+		getOriginal: (state) => state.original,
+		getErrors:   (state) => (name) => state.errors[name],
+		getField:    (state) => (name) => state.data[name],
+		hasChanges:  (state) => state.hasChanges,
+		hasErrors:   (state) => (name) => !_.isEmpty(state.errors[name]),
+		isLoading:   (state) => state.loading,
 	},
 	mutations: {
 		[types.FORM_SETUP] (state, payload) {

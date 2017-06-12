@@ -28,6 +28,7 @@ class UserProfileTransformer extends ApiTransformer
 			'username'     => $profile->username,
 			'full_name'    => $profile->full_name,
 			'avatar'       => $profile->avatar_url,
+			'roles'        => $profile->user->roles->pluck('name')->toArray(),
 		];
 
 		if ($this->parent) {

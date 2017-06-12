@@ -31,8 +31,8 @@
 
 	export default {
 		name: 'Text',
-		mixins: [formInput],
 		props: ['name', 'placeholder'],
+		mixins: [formInput],
 		computed: {
 			default() {
 				return ''

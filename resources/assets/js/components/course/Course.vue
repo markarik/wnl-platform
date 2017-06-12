@@ -19,7 +19,7 @@
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-			<wnl-chat :room="chatRoom"></wnl-chat>
+			<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
@@ -62,10 +62,10 @@
 
 <script>
 	import axios from 'axios'
+	import store from 'store'
 	import { mapGetters, mapActions } from 'vuex'
-
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
-	import Chat from 'js/components/chat/Chat'
+	import PublicChat from 'js/components/chat/PublicChat.vue'
 	import Navigation from 'js/components/course/Navigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
@@ -74,13 +74,6 @@
 
 	export default {
 		name: 'Course',
-		components: {
-			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-course-navigation': Navigation,
-			'wnl-chat': Chat,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav
-		},
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
@@ -112,19 +105,30 @@
 			isLesson() {
 				return typeof this.lessonId !== 'undefined'
 			},
-			chatRoom() {
+			chatRooms() {
 				let chatRoom = `courses-${this.courseId}`
 				if (this.isLesson) {
 					chatRoom += `-lessons-${this.lessonId}`
 				}
-				return chatRoom
+				return [
+					{name: '#powaga', channel: chatRoom},
+					{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+				]
 			},
 			localStorageKey() {
 				return `course-structure-${this.courseId}`
 			},
+
 			canRenderSidenav() {
 				return this.isSidenavVisible && this.ready
 			}
+		},
+		components: {
+			'wnl-course-navigation': Navigation,
+			'wnl-public-chat': PublicChat,
+			'wnl-breadcrumbs': Breadcrumbs,
+			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-main-nav': MainNav
 		},
 		methods: {
 			...mapActions('course', [

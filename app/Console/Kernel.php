@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
 		Commands\MigrateUserData::class,
 		Commands\QuizImport::class,
 		Commands\SlidesImport::class,
+		Commands\DumpCourseStructure::class,
     ];
 
     /**

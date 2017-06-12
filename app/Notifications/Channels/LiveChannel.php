@@ -25,12 +25,13 @@ class LiveChannel
 		$event = new LiveNotificationCreated(
 			$notifiable, $notification, is_array($message) ? $message : $message->data
 		);
+		$event->dontBroadcastToCurrentUser();
 
 		if ($message instanceof BroadcastMessage) {
 			$event->onConnection($message->connection)
 				->onQueue($message->queue);
 		}
 
-		broadcast($event)->toOthers();
+		broadcast($event);
 	}
 }

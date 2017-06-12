@@ -1,6 +1,5 @@
 <template>
 	<div class="wnl-chat">
-		<wnl-users-widget :users="users"></wnl-users-widget>
 		<div class="wnl-chat-messages">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
@@ -9,10 +8,11 @@
 					</div>
 					<div v-if="messages.length > 0">
 						<wnl-message v-for="(message, index) in messages"
-							:key="index"
-							:showAuthor="isAuthorUnique[index]"
-							:username="message.username"
-							:time="message.time">
+									 :key="index"
+									 :showAuthor="isAuthorUnique[index]"
+									 :username="message.username"
+									 :avatar="message.avatar"
+									 :time="message.time">
 								{{ message.content }}
 						</wnl-message>
 					</div>

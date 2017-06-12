@@ -100,6 +100,7 @@ a:active {
 }
 
 a.is-active {
+	cursor: default;
 	font-weight: $font-weight-bold;
 }
 

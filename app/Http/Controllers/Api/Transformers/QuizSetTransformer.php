@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ApiTransformer;
 
 class QuizSetTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['questions'];
+	protected $availableIncludes = ['quiz_questions'];
 
 	public function transform(QuizSet $quizSet)
 	{
@@ -19,7 +19,7 @@ class QuizSetTransformer extends ApiTransformer
 		];
 	}
 
-	public function includeQuestions(QuizSet $quizSet)
+	public function includeQuizQuestions(QuizSet $quizSet)
 	{
 		$questions = $quizSet->questions()->with(['answers'])->get();
 

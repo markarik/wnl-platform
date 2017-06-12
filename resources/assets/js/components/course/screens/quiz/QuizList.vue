@@ -1,12 +1,14 @@
 <template>
-	<div class="wnl-quiz-list" v-if="isLoaded">
+	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
 		<p class="title is-5" v-if="!isComplete">Pozostało pytań: {{howManyLeft}}</p>
-		<wnl-quiz-question v-for="question in questions"
-			:answers="question.answers"
-			:comments="question.comments"
-			:index="question.index"
+		<wnl-quiz-question v-for="(question, index) in questions"
+			:class="`quiz-question-${question.id}`"
+			:id="question.id"
+			:index="index"
+			:answers="question.quiz_answers"
 			:text="question.text"
-			:key="question.id"			
+			:total="question.total_hits"
+			:key="question.id"
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!isComplete">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
@@ -29,7 +31,7 @@
 	import _ from 'lodash'
 	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
 	import { mapGetters, mapActions } from 'vuex'
-	import { scrollToTop } from 'js/utils/animations'
+	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
@@ -37,10 +39,14 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
+		data() {
+			return {
+				hasErrors: false,
+			}
+		},
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
-				'isLoaded',
 				'isProcessing',
 				'getUnresolved',
 				'getUnanswered',
@@ -85,27 +91,34 @@
 			]),
 			verify() {
 				if (this.getUnanswered.length > 0) {
+					this.hasErrors = true
 					this.$swal(this.getAlertConfig(this.unansweredAlert))
 						.catch(e => {
 							// It's a bug in the library. It throws an exception
 							// if a person closes a timed modal with a click.
-							$wnl.logger.info('SweetAlert2 exception', e)
+							$wnl.logger.debug('SweetAlert2 exception', e)
 						})
+
+					scrollToElement(this.getQuestionElement(_.head(this.getUnanswered)))
 					return false
 				}
 
+				this.hasErrors = false
 				this.dispatchCheckQuiz()
 			},
 			dispatchCheckQuiz() {
 				this.checkQuiz().then(() => {
-					const alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert
+					let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
+						firstElement = this.isComplete ? _.head(this.getQuestions) : _.head(this.getUnresolved)
+
 					this.$swal(this.getAlertConfig(alertOptions))
 						.catch(e => {
 							// It's a bug in the library. It throws an exception
 							// if a person closes a timed modal with a click.
-							$wnl.logger.info('SweetAlert2 exception', e)
+							$wnl.logger.debug('SweetAlert2 exception', e)
 						})
-					scrollToTop()
+
+					scrollToElement(this.getQuestionElement(firstElement))
 				})
 			},
 			getAlertConfig(options = {}) {
@@ -115,6 +128,9 @@
 				}
 
 				return swalConfig(_.merge(defaults, options))
+			},
+			getQuestionElement(resource) {
+				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
 			}
 		},
 	}

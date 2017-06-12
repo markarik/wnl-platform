@@ -1,52 +1,96 @@
-import axios from 'axios'
 import * as types from '../mutations-types'
-import { getApiUrl } from 'js/utils/env'
-import { set } from 'vue'
-
-// API functions
-export function _getCurrentUser() {
-	return axios.get(getApiUrl('users/current'));
-}
+import {getApiUrl} from 'js/utils/env'
+import {getCurrentUser, getUserSettings, getDefaultSettings} from 'js/services/user';
+import {set} from 'vue'
 
 // Initial state
 const state = {
-	currentUser: {
-		data: {
-			id: 0,
-			first_name: '',
-			last_name: '',
-			full_name: ''
-		}
-	}
+	loading: true,
+	profile: {
+		id: 0,
+		first_name: '',
+		last_name: '',
+		full_name: '',
+		public_email: '',
+		public_phone: '',
+		username: '',
+		avatar: '',
+	},
+	settings: getDefaultSettings(),
 }
 
 // Getters
 const getters = {
-	currentUser: state => state.currentUser,
-	currentUserId: state => state.currentUser.data.id,
-	currentUserAvatar: state => state.currentUser.data.avatar,
-	currentUserName: state => state.currentUser.data.first_name,
-	currentUserFullName: state => state.currentUser.data.full_name,
-	currentUserSlug: state => state.currentUser.data.full_name.toLowerCase().replace(/\W/g, '')
+	currentUser: state => state.profile,
+	currentUserId: state => state.profile.id,
+	currentUserAvatar: state => state.profile.avatar,
+	currentUserName: state => state.profile.first_name,
+	currentUserFullName: state => state.profile.full_name,
+	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
+	getSetting: state => setting => state.settings[setting],
+	getAllSettings: state => state.settings,
+	isCurrentUserLoading: state => state.loading,
 }
 
 // Mutations
 const mutations = {
+	[types.IS_LOADING] (state, isLoading) {
+		set(state, 'loading', isLoading)
+	},
 	[types.USERS_SETUP_CURRENT] (state, userData) {
-		userData['full_name'] = `${userData['first_name']} ${userData['last_name']}`
-		set(state.currentUser, 'data', userData)
-	}
+		set(state, 'profile', userData)
+	},
+	[types.USERS_SETUP_SETTINGS] (state, settings) {
+		set(state, 'settings', settings)
+	},
+	[types.USERS_CHANGE_SETTING] (state, payload) {
+		set(state.settings, payload.setting, payload.value)
+	},
 }
 
 // Actions
 const actions = {
-	setupCurrentUser({ commit }) {
-		_getCurrentUser().then((response) => {
-			commit(types.USERS_SETUP_CURRENT, response.data)
+	setupCurrentUser({commit, dispatch}) {
+		Promise
+			.all([
+				dispatch('fetchCurrentUserProfile'),
+				dispatch('fetchUserSettings'),
+			])
+			.then(() => commit(types.IS_LOADING, false))
+			.catch((error) => {
+				$wnl.logger.error(error)
+				commit(types.IS_LOADING, false)
+			})
+	},
+
+	fetchCurrentUserProfile({commit}) {
+		return new Promise((resolve, reject) => {
+			getCurrentUser().then((response) => {
+				commit(types.USERS_SETUP_CURRENT, response.data)
+				resolve()
+			})
+			.catch((error) => {
+				$wnl.logger.error(error)
+				reject()
+			})
 		})
-		.catch((error) => {
-			$wnl.logger.error(error)
+	},
+
+	fetchUserSettings({commit}) {
+		return new Promise((resolve, reject) => {
+			getUserSettings().then((response) => {
+				commit(types.USERS_SETUP_SETTINGS, response.data)
+				resolve()
+			})
+			.catch((error) => {
+				$wnl.logger.error(error)
+				reject()
+			})
 		})
+	},
+
+	changeUserSetting({commit}, payload) {
+		commit(types.USERS_CHANGE_SETTING, payload)
 	}
 }
 

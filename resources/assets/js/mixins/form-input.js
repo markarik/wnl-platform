@@ -2,6 +2,9 @@ import * as types from 'js/store/mutations-types'
 
 export var formInput = {
 	computed: {
+		default() {
+			return null
+		},
 		fillable() {
 			return true
 		},

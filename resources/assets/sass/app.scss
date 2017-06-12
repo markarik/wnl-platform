@@ -164,7 +164,7 @@ html, body {
 
 .faux-fullscreen-close {
 	border: 0;
-	background: $color-inactive-gray;
+	background: rgba(210,210,210,0.5);
 	border-radius: $border-radius-full;
 	box-sizing: content-box;
 	color: $color-white;
@@ -173,7 +173,7 @@ html, body {
 	padding: 10px;
 	position: fixed;
 	right: 1vw;
-	top: 1vh;
+	top: 1vw;
 	width: 28px;
 	z-index: $z-index-fullscren-close;
 }

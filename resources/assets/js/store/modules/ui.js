@@ -56,8 +56,7 @@ const mutations = {
 	},
 	[types.UI_RESET_LAYOUT] (state, isChatOpen) {
 		set(state, 'isSidenavOpen', false)
-		set(state, 'isChatOpen', false)
-		set(state, 'canShowChat', false)
+		set(state, 'isChatOpen', isChatOpen)
 	},
 	[types.UI_TOGGLE_CHAT] (state) {
 		const isChatOpen = state.isChatOpen
@@ -77,6 +76,9 @@ const mutations = {
 	},
 	[types.UI_INIT_CHAT] (state) {
 		set(state, 'canShowChat', true)
+	},
+	[types.UI_KILL_CHAT] (state) {
+		set(state, 'canShowChat', false)
 	}
 }
 
@@ -100,6 +102,9 @@ const actions = {
 	},
 	initChat({ commit }) {
 		commit(types.UI_INIT_CHAT)
+	},
+	killChat({ commit }) {
+		commit(types.UI_KILL_CHAT)
 	}
 }
 

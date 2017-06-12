@@ -71,6 +71,7 @@
 	import MainNav from 'js/components/MainNav'
 	import { breadcrumb } from 'js/mixins/breadcrumb'
 	import { getApiUrl } from 'js/utils/env'
+	import withChat from 'js/mixins/with-chat'
 
 	export default {
 		name: 'Course',
@@ -130,6 +131,7 @@
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-main-nav': MainNav
 		},
+		mixins: [withChat],
 		methods: {
 			...mapActions('course', [
 				'setup'
@@ -139,9 +141,6 @@
 		},
 		created() {
 			this.setup(this.courseId)
-		},
-		mounted() {
-			this.initChat()
 		}
 		// mounted() {
 		// 	this.addBreadcrumb({

@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
-
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link href="{{ mix('/css/reveal.css') }}" rel="stylesheet">
 	<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
 	<link href="{{ mix('css/imageviewer.css') }}" rel="stylesheet">
 
@@ -36,7 +36,21 @@
 			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
-
+		<div class="slideshow-fullscreen-menu">
+			<div class="menu-item annotations">
+				<a class="rounded-button without-image">
+					<img src="{{ asset('images/comments.svg') }}" alt="Komentarze do slajdu">
+					{{-- <svg><use :xlink:href="{{ asset('images/icons/sprite.svg#comments') }}"/></svg> --}}
+				</a>
+			</div>
+			<div class="menu-item go-to-slide"></div>
+			<div class="menu-item close-fullscreen">
+				<a class="rounded-button without-image">
+					<img src="{{ asset('images/close-fullscreen.svg') }}" alt="Pełen ekran">
+					{{-- <svg><use :xlink:href="{{ asset('images/icons/sprite.svg#close-fullscreen') }}"/></svg> --}}
+				</a>
+			</div>
+		</div>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>
 </html>

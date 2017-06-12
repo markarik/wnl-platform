@@ -39,7 +39,6 @@
 		margin: 0 $margin-base
 		max-width: $course-content-max-width
 		flex: $course-content-flex auto
-		padding: $column-padding
 		position: relative
 
 	.wnl-course-chat

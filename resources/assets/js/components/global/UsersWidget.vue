@@ -2,9 +2,6 @@
 	<div class="wnl-users-widget">
 		<p class="metadata">
 			{{chatTitle}}
-			<span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
-				<i class="fa fa-close"></i>
-			</span>
 		</p>
 		<!-- <p class="metadata">
 			<span class="icon is-small">
@@ -37,10 +34,6 @@
 			& .icon
 				color: $color-inactive-gray
 
-			.wnl-chat-close
-				color: $color-ocean-blue
-				cursor: pointer
-
 		.wnl-avatar
 			display: inline-flex
 			margin-right: 10px
@@ -60,7 +53,6 @@
 		props: ['users'],
 		computed: {
 			...mapGetters(['currentUserId']),
-			...mapGetters(['canShowCloseIconInChat']),
 			otherUsers() {
 				return this.users.filter((user) => user.id !== this.currentUserId)
 			},
@@ -74,9 +66,6 @@
 		},
 		components: {
 			'wnl-avatar': Avatar,
-		},
-		methods: {
-			...mapActions(['toggleChat'])
 		}
 	}
 </script>

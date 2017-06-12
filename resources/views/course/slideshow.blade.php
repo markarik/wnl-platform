@@ -38,7 +38,6 @@
 			</div>
 		</div>
 		<div class="slideshow-annotations">
-
 		</div>
 		<div class="slideshow-fullscreen-menu">
 			<div class="menu-item annotations">

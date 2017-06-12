@@ -21,15 +21,19 @@ class GroupTransformer extends ApiTransformer
 	public function transform(Group $group)
 	{
 		return [
-			'id'       => $group->id,
-			'name'     => $group->name,
-			'editions' => $group->course_id,
+			'id'            => $group->id,
+			'name'          => $group->name,
+			'editions'      => $group->course_id,
+			'required_role' => $group->required_role,
 		];
 	}
 
 	public function includeLessons(Group $group)
 	{
-		$lessons = $group->lessons()->with(['availability'])->get();
+		$lessons = $group->lessons()
+			->with(['availability'])
+			->orderBy('order_number', 'asc')
+			->get();
 
 		$meta = collect([
 			'editionId' => $this->editionId,

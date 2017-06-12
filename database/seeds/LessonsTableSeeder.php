@@ -13,32 +13,8 @@ class LessonsTableSeeder extends Seeder
 	{
 		DB::table('lessons')->insert([
 			[
-				'name'     => 'Pulmonologia I',
+				'name'     => 'zvooj yeebany',
 				'group_id' => 1,
-			],
-			[
-				'name'     => 'Pulmonologia II',
-				'group_id' => 1,
-			],
-			[
-				'name'     => 'Kardiologia',
-				'group_id' => 1,
-			],
-			[
-				'name'     => 'Gastroenterologia',
-				'group_id' => 1,
-			],
-			[
-				'name'     => 'Chirurgia układu pokarmowego',
-				'group_id' => 2,
-			],
-			[
-				'name'     => 'Chirurgia mózgu',
-				'group_id' => 2,
-			],
-			[
-				'name'     => 'Chirurgia ekstremalna',
-				'group_id' => 2,
 			],
 		]);
 	}

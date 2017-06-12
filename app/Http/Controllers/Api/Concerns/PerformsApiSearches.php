@@ -51,7 +51,12 @@ trait PerformsApiSearches
 		foreach ($relationConditions as $field => $conditions) {
 			$model = $model->whereHas(camel_case($field),
 				function ($query) use ($conditions) {
-					$query->where($conditions['where']);
+					if (!empty($conditions['where'])) {
+						$query->where($conditions['where']);
+					}
+					if (!empty($conditions['whereIn'])) {
+						$query->whereIn($conditions['whereIn'][0], $conditions['whereIn'][1]);
+					}
 				}
 			);
 		}
@@ -107,6 +112,10 @@ trait PerformsApiSearches
 		$order = $request->get('order');
 		$limit = $request->get('limit');
 		$join = $request->get('join');
+
+		if (!empty($query['whereIn'])) {
+			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
+		}
 
 		if (!empty ($query['where'])) {
 			$model = $model->where($query['where']);

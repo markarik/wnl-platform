@@ -1,6 +1,6 @@
 <template>
 	<nav class="wnl-navbar has-shadow">
-		<div class="wnl-navbar-item" v-if="canShowSidenavTrigger">
+		<div class="wnl-navbar-item wnl-navbar-sidenav-toggle" v-if="canShowSidenavTrigger">
 			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
 					<i class="fa" v-bind:class="sidenavIconClass"></i>
@@ -17,11 +17,13 @@
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-controls" v-if="canShowControlsInNavbar">
 			<span class="icon is-big"><i class="fa fa-search"></i></span>
-			<span class="icon is-big"><i class="fa fa-comments-o"></i></span>
 			<span class="icon is-big"><i class="fa fa-bell"></i></span>
-		</div>
-		<div class="wnl-navbar-item">
+	</div>
+		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown></wnl-user-dropdown>
+		</div>
+		<div class="wnl-navbar-item wnl-navbar-chat-toggle" v-if="canShowChatToggleInNavbar">
+			<span class="icon is-big"><i class="fa" v-bind:class="chatIconClass" @click="toggleChat"></i></span>
 		</div>
 	</nav>
 </template>
@@ -34,6 +36,7 @@
 		+small-shadow()
 		display: flex
 		flex: 0 $navbar-height
+		padding: 0 1em
 		z-index: $z-index-navbar
 
 	.wnl-navbar-item
@@ -41,10 +44,19 @@
 		display: flex
 		height: $navbar-height
 		min-height: $navbar-height
-		padding: 0 $margin-base
+		padding: 0 0.75em
+
+		.icon
+			color: $color-gray-dimmed
+			cursor: pointer
 
 	.wnl-navbar-branding
+		padding-left: 5px
+		padding-right: 5px
 		flex-grow: 1
+
+	.wnl-navbar-profile
+		padding-right: 0
 
 	.breadcrumbs
 		flex-direction: row
@@ -54,6 +66,7 @@
 	.wnl-navbar-controls
 		.icon
 			color: $color-gray-dimmed
+			cursor: pointer
 			margin-left: $margin-big
 
 			&.is-active
@@ -62,10 +75,11 @@
 			&.has-notifications
 				color: $color-ocean-blue
 
-	.wnl-nav-item
-		align-items: center
-		display: flex
-		height: 100%
+	.wnl-navbar-sidenav-toggle
+		padding-left: 0
+
+	.wnl-navbar-chat-toggle
+		padding-right: 0
 
 	.wnl-logo-link
 		box-sizing: content-box
@@ -97,8 +111,10 @@
 				'currentUserFullName',
 				'canShowSidenavTrigger',
 				'isSidenavOpen',
+				'isChatVisible',
 				'canShowBreadcrumbsInNavbar',
-				'canShowControlsInNavbar'
+				'canShowControlsInNavbar',
+				'canShowChatToggleInNavbar'
 			]),
 			paymentUrl() {
 				return 'https://wiecejnizlek.pl'
@@ -111,10 +127,13 @@
 			},
 			sidenavIconClass() {
 				return this.isSidenavOpen ? 'fa-close' : 'fa-bars'
+			},
+			chatIconClass() {
+				return this.isChatVisible ? 'fa-close' : 'fa-comments-o'
 			}
 		},
 		methods: {
-			...mapActions(['toggleSidenav'])
+			...mapActions(['toggleSidenav', 'toggleChat'])
 		}
 	}
 </script>

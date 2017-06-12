@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout">
+	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
 			:isVisible="canRenderSidenav"
 			:isDetached="!isSidenavMounted"
@@ -14,8 +14,17 @@
 		<div class="wnl-course-content wnl-column">
 			<router-view v-if="ready"></router-view>
 		</div>
-		<div class="wnl-course-chat wnl-column">
+		<wnl-sidenav-slot
+			:isVisible="isChatVisible"
+			:isDetached="!isChatMounted"
+			:hasChat="true"
+		>
 			<wnl-chat :room="chatRoom"></wnl-chat>
+		</wnl-sidenav-slot>
+		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
+			<span class="icon is-big" @click="toggleChat">
+				<i class="fa fa-comments-o"></i>
+			</span>
 		</div>
 	</div>
 </template>
@@ -23,12 +32,12 @@
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
+	.wnl-course-layout
+		justify-content: space-between
+
 	.wnl-course-content
-		border-left: $border-light-gray
-		border-right: $border-light-gray
 		margin: 0 $margin-base
 		max-width: $course-content-max-width
-		min-width: $course-content-min-width
 		flex: $course-content-flex auto
 		padding: $column-padding
 		position: relative
@@ -36,6 +45,19 @@
 	.wnl-course-chat
 		flex: $course-chat-flex auto
 		max-width: $course-chat-max-width
+		min-width: $course-chat-min-width
+
+	.wnl-chat-toggle
+		align-items: flex-start
+		border-left: $border-light-gray
+		display: flex
+		flex-grow: 0
+		justify-content: center
+		padding: 20px
+
+		.icon
+			color: $color-gray-dimmed
+			cursor: pointer
 </style>
 
 <script>
@@ -63,7 +85,13 @@
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
 			...mapGetters('course', ['ready']),
-			...mapGetters(['isSidenavVisible', 'isSidenavMounted']),
+			...mapGetters([
+				'isSidenavVisible',
+				'isSidenavMounted',
+				'isChatMounted',
+				'isChatVisible',
+				'isChatToggleVisible'
+			]),
 			breadcrumb() {
 				return {
 					text: 'Kurs',
@@ -102,11 +130,15 @@
 			...mapActions('course', [
 				'setup'
 			]),
+			...mapActions(['toggleChat', 'initChat'])
 			// ...mapActions(['addBreadcrumb', 'removeBreadcrumb']),
 		},
 		created() {
 			this.setup(this.courseId)
 		},
+		mounted() {
+			this.initChat()
+		}
 		// mounted() {
 		// 	this.addBreadcrumb({
 		// 		text: 'Kurs',

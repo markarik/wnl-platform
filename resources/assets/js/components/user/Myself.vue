@@ -15,6 +15,13 @@
 	</div>
 </template>
 
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.wnl-sidenav
+		padding: $margin-small
+</style>
+
 <script>
 	import Sidenav from 'js/components/global/Sidenav.vue'
 	import { isProduction } from 'js/utils/env'
@@ -31,6 +38,10 @@
 			},
 			items() {
 				let items = [
+					{
+						text: 'Konto',
+						itemClass: 'heading small',
+					},
 					{
 						text: 'Twoje zamówienia',
 						itemClass: 'has-icon',

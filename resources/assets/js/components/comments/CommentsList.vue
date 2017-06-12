@@ -148,7 +148,12 @@
 			'showComments' (newValue, oldValue) {
 				let eventName = newValue ? 'commentsShown' : 'commentsHidden'
 				this.$emit(eventName)
-			}
+			},
+			'comments' (newValue, oldValue) {
+				if (newValue !== oldValue) {
+					this.$emit('commentsUpdated', newValue)
+				}
+			},
 		},
 	}
 </script>

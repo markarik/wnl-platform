@@ -27,6 +27,7 @@
 						:currentSlide="currentSlideNumber"
 						:slideshowId="slideshowId"
 						@commentsHidden="onCommentsHidden"
+						@annotationsUpdated="onAnnotationsUpdated"
 					></wnl-annotations>
 				</div>
 				<div class="slideshow-fullscreen">
@@ -155,6 +156,8 @@
 		computed: {
 			...mapGetters(['getSetting']),
 			...mapGetters('slideshow', [
+				'comments',
+				'commentProfile',
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
@@ -280,6 +283,21 @@
 				removeEventListener('focusout', this.checkFocus)
 				removeEventListener('message', debounced)
 				this.loaded = false
+			},
+			onAnnotationsUpdated(comments) {
+				if (typeof this.child.call === 'function') {
+					let annotations = _.cloneDeep(comments)
+
+					if (annotations.length > 0) {
+						annotations.forEach((annotation) => {
+							annotation.profiles = annotation.profiles.map((id) => {
+								return this.commentProfile(id)
+							})
+						})
+					}
+
+					this.child.call('updateAnnotations', annotations)
+				}
 			},
 			onCommentsHidden() {
 				this.focusSlideshow()

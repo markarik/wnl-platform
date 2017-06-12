@@ -7,6 +7,8 @@ imageviewer($, window, document)
 $(function () {
 	const Reveal    = require('../../vendor/reveal/reveal.js')
 	const container = document.getElementsByClassName('reveal')[0]
+	const $controls = $('.wnl-slideshow-control')
+	const $chartsContainers = $('.slides').find('.iv-image-container')
 	const viewer    = ImageViewer()
 	const handshake = new Postmate.Model({
 		changeBackground: (background) => {
@@ -21,12 +23,13 @@ $(function () {
 		},
 		goToSlide: (slideNumber) => {
 			Reveal.slide(slideNumber)
-		}
+		},
+		updateAnnotations: (annotationsData) => {
+			console.log('annotations', annotationsData)
+		},
 	})
 
-	let $controls = $('.wnl-slideshow-control'),
-		$chartsContainers = $('.slides').find('.iv-image-container'),
-		viewers = [],
+	let viewers = [],
 		fullScreenViewer = ImageViewer()
 
 	function animateControl(event) {
@@ -42,6 +45,22 @@ $(function () {
 	function handleControlClick(event) {
 		animateControl(event)
 		$.each(viewers, (index, viewer) => viewer.refresh())
+	}
+
+	function toggleAnnotations() {
+
+	}
+
+	function setMenuListeners(parent) {
+		let $container = $('.slideshow-fullscreen-menu'),
+			$annotations = $container.find('.toggle-annotations'),
+			$fullscreen = $container.find('.toggle-fullscreen')
+
+		$fullscreen.on('click', () => {
+			parent.emit('toggle-fullscreen', true)
+		})
+
+		$annotations.on('click', toggleAnnotations)
 	}
 
 	Reveal.initialize({
@@ -68,16 +87,15 @@ $(function () {
 	})
 
 	handshake.then(parent => {
+		setMenuListeners(parent)
 		parent.emit('loaded', true)
 	}).catch(exception => console.log(exception))
-
 
 	if ($controls.length > 0) {
 		$.each($controls, (index, element) => {
 			$(element).on('click touchstart', handleControlClick)
 		})
 	}
-
 
 	$.each($chartsContainers, (index, container) => {
 		let $container = $(container),

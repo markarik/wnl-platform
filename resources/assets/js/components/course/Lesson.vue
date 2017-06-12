@@ -99,6 +99,9 @@
 				const sections = this.getSections(sectionsIds);
 				return sections.map((section) => section).reverse();
 			},
+			hasSections() {
+				return !!this.sectionsReversed;
+			},
 			currentSection() {
 				return this.sectionsReversed.find((section) => this.slide >= section.slide);
 			},
@@ -133,9 +136,6 @@
 						meta: this.$route.meta,
 					},
 				}
-			},
-			lastSectionSlideId() {
-				return _.last(this.getScreenSectionsCheckpoints(this.screenId));
 			}
 		},
 		methods: {
@@ -168,16 +168,18 @@
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
-						// mark section as completed
-					}
+					if (this.hasSections) {
+						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
+							// mark section as completed
+						}
 
-					// TODO handle screens without sections
-					if (this.currentSection.id === this.lastSection.id) {
-						// mark screen as completed
+						// TODO handle screens without sections
+						if (this.currentSection.id === this.lastSection.id) {
+							// mark screen as completed
 
-						if (this.screenId === this.lastScreenId) {
-							// mark lesson as completed
+							if (this.screenId === this.lastScreenId) {
+								// mark lesson as completed
+							}
 						}
 					}
 

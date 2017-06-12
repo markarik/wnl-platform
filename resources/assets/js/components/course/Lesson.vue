@@ -74,6 +74,7 @@
 				'getScreens',
 				'getLesson',
 				'getSections',
+				'getScreen',
 				'getScreenSectionsCheckpoints'
 			]),
 			...mapGetters('progress', [
@@ -84,6 +85,22 @@
 			},
 			screens() {
 				return this.getScreens(this.lessonId)
+			},
+			currentScreen() {
+				return this.getScreen(this.screenId);
+			},
+			currentSection() {
+				const sectionsIds = this.currentScreen.sections;
+
+				if (!sectionsIds) {
+					return;
+				}
+
+				const sections = this.getSections(sectionsIds);
+				const sectionsReversed = sections.map((section) => section).reverse();
+
+				return sectionsReversed.find((section) => this.slide >= section.slide);
+
 			},
 			firstScreenId() {
 				if (_.isEmpty(this.screens)) {
@@ -104,6 +121,7 @@
 					courseId: this.courseId,
 					lessonId: this.lessonId,
 					screenId: this.screenId,
+					section: this.section,
 					slide: this.slide,
 					route: {
 						name: this.$route.name,
@@ -147,6 +165,15 @@
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
+					// TODO
+					// check if section changed -> if yes change section
+					// check if last section -> mark screen as completed
+					// check if last screen -> mark lesson as completed
+
+					// TODO get section for slide
+					console.log('************', this.currentSection);
+
+					// TODO below works only for screens with slides - fix for rest
 					if (parseInt(this.slide) >= this.lastSectionSlideId) {
 						this.completeLesson(this.lessonProgressContext)
 					} else {

@@ -75,32 +75,53 @@ const mutations = {
 		progressStore.setLessonProgress({...payload, status: STATUS_IN_PROGRESS});
 		progressStore.setCourseProgress({...payload, status: STATUS_IN_PROGRESS});
 
+		console.log("START LESSON");
 		set(state.courses[payload.courseId].lessons, payload.lessonId, {
 			status: STATUS_IN_PROGRESS,
 			route: payload.route,
-			screens: []
+			screens: {
+				[payload.screenId]: {
+					status: STATUS_IN_PROGRESS,
+					sections: {}
+				}
+			}
 		})
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		progressStore.setLessonProgress(payload);
 
-		const updatedState = {
-			...lessonState,
-			route: payload.route,
-			screens: {
-				...lessonState.screens,
-				[payload.screenId]: payload.slide
-			}
-		};
-
-		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState);
+		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route);
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
 		// TODO consider issuing one request instead of two when finishing lesson
 		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
 		progressStore.setLessonProgress({...payload, status: STATUS_COMPLETE});
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
+	},
+	[types.PROGRESS_COMPLETE_SECTION] (state, payload) {
+		const screensState = state.courses[payload.courseId].lessons[payload.lessonId];
+		const init = !screensState[payload.screenId];
+
+		//TODO progressStore update
+		const updatedScreen = {
+			...screensState,
+			[payload.screenId]: {
+				...(init ? [] : screensState[payload.screenId]),
+				sections: {
+					...(init ? [] : screensState[payload.screenId].sections),
+					[payload.sectionId]: STATUS_COMPLETE
+				}
+			}
+		};
+
+		set(screensState, 'screens', updatedScreen);
+	},
+	[types.PROGRESS_COMPLETE_SCREEN] (state, payload) {
+		const screensState = state.courses[payload.courseId].lessons[payload.lessonId].screens;
+
+		//TODO progressStore update
+
+		set(screensState[payload.screenId], 'status', STATUS_COMPLETE);
 	}
 }
 
@@ -134,6 +155,13 @@ const actions = {
 			$wnl.logger.info(`Completing lesson ${payload.lessonId}`, payload)
 			commit(types.PROGRESS_COMPLETE_LESSON, payload)
 		}
+	},
+	completeScreen({commit}, payload) {
+		console.log('updateScreen**************', payload);
+	},
+	completeSection({commit}, payload) {
+		console.log('updateSection**************', payload);
+		commit(types.PROGRESS_COMPLETE_SECTION, payload)
 	}
 }
 

@@ -127,8 +127,6 @@
 					courseId: this.courseId,
 					lessonId: this.lessonId,
 					screenId: this.screenId,
-					section: this.section,
-					slide: this.slide,
 					route: {
 						name: this.$route.name,
 						params: this.$route.params,
@@ -143,6 +141,8 @@
 				'startLesson',
 				'updateLesson',
 				'completeLesson',
+				'completeScreen',
+				'completeSection'
 			]),
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext)
@@ -170,23 +170,26 @@
 				if (typeof this.screenId !== 'undefined') {
 					if (this.hasSections) {
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
-							// mark section as completed
+							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
 						}
 
-						// TODO handle screens without sections
+						// TODO this should be smarter - mark screen as completed when all sections finished
 						if (this.currentSection.id === this.lastSection.id) {
-							// mark screen as completed
+							this.completeScreen(this.lessonProgressContext);
 
+							// TODO this should be smarter - mark lesson as completed when all screens finished
 							if (this.screenId === this.lastScreenId) {
-								// mark lesson as completed
+								this.completeLesson(this.lessonProgressContext)
 							}
 						}
-					}
 
-					if (parseInt(this.screenId) === this.lastScreenId) {
-						this.completeLesson(this.lessonProgressContext)
-					} else {
 						this.updateLesson(this.lessonProgressContext)
+					} else {
+						if (parseInt(this.screenId) === this.lastScreenId) {
+							this.completeLesson(this.lessonProgressContext)
+						} else {
+							this.updateLesson(this.lessonProgressContext)
+						}
 					}
 				}
 			},

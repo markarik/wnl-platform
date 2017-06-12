@@ -24,10 +24,10 @@
 
 	.wnl-sidenav
 		height: $main-height
-		width: 100%
 
 		&.mobile
 			height: auto
+			width: 100%
 
 			.item
 				border-bottom: 1px solid $color-light-gray

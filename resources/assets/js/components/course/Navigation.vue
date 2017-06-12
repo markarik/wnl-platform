@@ -21,7 +21,8 @@
 				'name',
 				'groups',
 				'structure',
-				'getLesson'
+				'getLesson',
+				'getScreens'
 			]),
 			...mapGetters('progress', {
 				getCourseProgress: 'getCourse'
@@ -93,32 +94,22 @@
 
 				let navigation = [],
 					lesson = this.structure[resource('lessons')][this.context.lessonId],
-					screens = _.sortBy(
-						lesson[resource('screens')].map(
-							(id) => this.structure[resource('screens')][id]
-						),
-						(screen) => screen.order_number
-					)
+					screens = this.getScreens(lesson.id)
 
 				if (!lesson.hasOwnProperty(resource('screens'))) {
 					return navigation
 				}
 
-				for (let i = 0, screensLen = screens.length; i < screensLen; i++) {
-					let screen = screens[i]
+				screens.forEach((screen) => {
+					navigation.push(this.getScreenItem(screen))
 
-					navigation.push(this.getScreenItem(screens[i]))
-
-					if (!screen.hasOwnProperty(resource('sections'))) {
-						continue
+					if (screen.hasOwnProperty(resource('sections'))) {
+						screen.sections.forEach((sectionId) => {
+							let section = this.structure[resource('sections')][sectionId]
+							navigation.push(this.getSectionItem(section))
+						});
 					}
-					for (let j = 0, sectionsLen = screen[resource('sections')].length; j < sectionsLen; j++) {
-						let sectionId = screen[resource('sections')][j],
-							section = this.structure[resource('sections')][sectionId]
-
-						navigation.push(this.getSectionItem(section))
-					}
-				}
+				});
 
 				return navigation
 			},

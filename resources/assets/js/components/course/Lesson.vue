@@ -89,7 +89,7 @@
 			currentScreen() {
 				return this.getScreen(this.screenId);
 			},
-			currentSection() {
+			sectionsReversed() {
 				const sectionsIds = this.currentScreen.sections;
 
 				if (!sectionsIds) {
@@ -97,10 +97,13 @@
 				}
 
 				const sections = this.getSections(sectionsIds);
-				const sectionsReversed = sections.map((section) => section).reverse();
-
-				return sectionsReversed.find((section) => this.slide >= section.slide);
-
+				return sections.map((section) => section).reverse();
+			},
+			currentSection() {
+				return this.sectionsReversed.find((section) => this.slide >= section.slide);
+			},
+			lastSection() {
+				return _.head(this.sectionsReversed);
 			},
 			firstScreenId() {
 				if (_.isEmpty(this.screens)) {
@@ -165,16 +168,20 @@
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					// TODO
-					// check if section changed -> if yes change section
-					// check if last section -> mark screen as completed
-					// check if last screen -> mark lesson as completed
+					if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
+						// mark section as completed
+					}
 
-					// TODO get section for slide
-					console.log('************', this.currentSection);
+					// TODO handle screens without sections
+					if (this.currentSection.id === this.lastSection.id) {
+						// mark screen as completed
 
-					// TODO below works only for screens with slides - fix for rest
-					if (parseInt(this.slide) >= this.lastSectionSlideId) {
+						if (this.screenId === this.lastScreenId) {
+							// mark lesson as completed
+						}
+					}
+
+					if (parseInt(this.screenId) === this.lastScreenId) {
 						this.completeLesson(this.lessonProgressContext)
 					} else {
 						this.updateLesson(this.lessonProgressContext)
@@ -193,7 +200,7 @@
 			window.removeEventListener('resize', this.updateElementHeight)
 		},
 		watch: {
-			'$route' (to, from) {
+			'$route' () {
 				this.goToDefaultScreenIfNone()
 				this.updateLessonProgress()
 			}

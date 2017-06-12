@@ -3,6 +3,7 @@ import axios from 'axios'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import { set, delete as destroy } from 'vue'
+import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions'
 
 // API
 /**
@@ -79,6 +80,7 @@ const state = getInitialState()
 
 // Getters
 const getters = {
+	...reactionsGetters,
 	loading: state => state.loading,
 	sortedQuestions: state => {
 		return _.reverse(
@@ -116,7 +118,6 @@ const getters = {
 			)
 		)
 	},
-	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction],
 
 	// Answer
 	answerComments: state => (id) => {
@@ -132,6 +133,7 @@ const getters = {
 
 // Mutations
 const mutations = {
+	...reactionsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},
@@ -207,16 +209,6 @@ const mutations = {
 			set(state, resource, merged)
 		})
 	},
-	[types.SET_REACTION] (state, payload) {
-		let resource = payload.reactableResource,
-				resourceId = payload.reactableId,
-				reaction = payload.reaction,
-				designatedObject = state[resource][resourceId][reaction]
-
-		designatedObject.hasReacted ? designatedObject.count-- : designatedObject.count++,
-
-		designatedObject.hasReacted = !designatedObject.hasReacted
-	},
 	[types.QNA_DESTROY] (state) {
 		let initialState = getInitialState()
 		Object.keys(initialState).forEach((field) => {
@@ -227,6 +219,7 @@ const mutations = {
 
 // Actions
 const actions = {
+	...reactionsActions,
 	fetchQuestions({commit, rootState}) {
 		let lessonId = rootState.route.params.lessonId
 
@@ -308,25 +301,6 @@ const actions = {
 				commentId: payload.commentId,
 			})
 			resolve()
-		})
-	},
-	setReaction({commit}, payload) {
-		return new Promise((resolve, reject) => {
-			let data = {
-					'reactable_resource' : payload.reactableResource,
-					'reactable_id'       : payload.reactableId,
-					'reaction_type'      : payload.reaction,
-				},
-	 			method = payload.hasReacted ? 'delete' : 'post',
-				params = payload.hasReacted ? { params: data } : data
-
-			return axios[method](getApiUrl(`reactions`), params)
-				.then(() => {
-					commit(types.SET_REACTION, payload)
-					resolve()
-				})
-				.catch(error => $wnl.logger.error(error))
-					reject()
 		})
 	},
 	destroyQna({commit}) {

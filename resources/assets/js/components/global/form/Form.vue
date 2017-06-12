@@ -79,7 +79,7 @@
 					attach: this.attach,
 				})
 					.then(
-						data => {
+						response => {
 							this.successFading(`
 								<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
 								<span>Zapisano!</span>
@@ -90,14 +90,16 @@
 								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
 							}
 
-							this.$emit('submitSuccess', data)
+							this.$emit('submitSuccess', response, this.getter('getData'))
 						},
 						reason => {
+							$wnl.logger.error(reason)
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 							this.$emit('submitError')
 						},
 					)
 					.catch((error) => {
+						$wnl.logger.error(error, error.stack)
 						this.errorFading('Nie udało się.')
 						this.$emit('submitError')
 					})

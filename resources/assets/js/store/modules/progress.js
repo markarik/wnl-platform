@@ -1,55 +1,12 @@
-import axios from 'axios'
-import store from 'store' // LocalStorage
 import _ from 'lodash'
 import * as types from '../mutations-types'
-import { getApiUrl } from 'js/utils/env'
-import { set } from 'vue'
+import progressStore from '../../services/progressStore'
+import {set} from 'vue'
 
 // Statuses
 // TODO: Mar 9, 2017 - Use config when it's ready
 const STATUS_IN_PROGRESS = 'in-progress'
 const STATUS_COMPLETE = 'complete'
-const CACHE_VERSION = 1
-
-// Helper functions
-function getCourseStoreKey(courseId) {
-	return `progress-courses-${courseId}-${CACHE_VERSION}`
-}
-
-function getLessonStoreKey(courseId, lessonId) {
-	return `progress-courses-${courseId}-lessons-${lessonId}-${CACHE_VERSION}`
-}
-
-function saveCourseProgress(payload, status) {
-	let storeKey = getCourseStoreKey(payload.courseId),
-		courseProgress = store.get(storeKey)
-
-	courseProgress.lessons[payload.lessonId] = {
-		status,
-		route: payload.route,
-	}
-
-	store.set(storeKey, courseProgress)
-}
-
-function saveLessonProgress(payload) {
-	store.set(getLessonStoreKey(payload.courseId, payload.lessonId), payload.route)
-}
-
-function resetLessonProgress(payload) {
-	store.remove(getLessonStoreKey(payload.courseId, payload.lessonId))
-}
-
-// API functions
-function getUserProgressForCourse(courseId) {
-	// return axios.get(getApiUrl('courses/${courseId}/user-progress/${userId}'));
-	return new Promise((resolve, reject) => {
-		let data = {
-				lessons: {}
-			}
-		resolve(data)
-	})
-}
 
 // Namespace
 const namespaced = true
@@ -71,7 +28,7 @@ const getters = {
 	},
 	getSavedLesson: (state) => (courseId, lessonId) => {
 		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
-		return store.get(getLessonStoreKey(courseId, lessonId))
+		return progressStore.getLessonProgress({courseId, lessonId});
 	},
 	wasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
@@ -113,48 +70,37 @@ const mutations = {
 		set(state.courses, payload.courseId, payload.progressData)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
-		saveCourseProgress(payload, STATUS_IN_PROGRESS)
+		progressStore.setCourseProgress({...payload, status: STATUS_IN_PROGRESS});
+
 		set(state.courses[payload.courseId].lessons, payload.lessonId, {
 			status: STATUS_IN_PROGRESS,
 			route: payload.route,
 		})
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		saveLessonProgress(payload)
+		progressStore.setLessonProgress(payload);
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
-		saveCourseProgress(payload, STATUS_COMPLETE)
+		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
+		progressStore.resetLessonProgress(payload)
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
-		resetLessonProgress(payload)
 	}
 }
 
 // Actions
 const actions = {
 	setupCourse({commit}, courseId) {
-		return new Promise((resolve, reject) => {
-			let storeKey = getCourseStoreKey(courseId),
-				storedProgress = store.get(storeKey)
-
-			if (typeof storedProgress !== 'object') {
-				getUserProgressForCourse(courseId)
-					.then(data => {
-						store.set(storeKey, data)
-						commit(types.PROGRESS_SETUP_COURSE, {
-							courseId: courseId,
-							progressData: data
-						})
-						resolve()
+		return new Promise((resolve) => {
+			progressStore.getCourseProgress({courseId})
+				.then(data => {
+					commit(types.PROGRESS_SETUP_COURSE, {
+						courseId: courseId,
+						progressData: data
 					})
-					.catch(exception => $wnl.logger.capture(exception))
-			} else {
-				commit(types.PROGRESS_SETUP_COURSE, {
-					courseId: courseId,
-					progressData: storedProgress
+					resolve()
 				})
-				resolve()
-			}
+				.catch(exception => $wnl.logger.capture(exception))
 		})
 	},
 	startLesson({commit, getters}, payload) {

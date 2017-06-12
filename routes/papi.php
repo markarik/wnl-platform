@@ -38,6 +38,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Slides
 	Route::get("{$r['slides']}/{id}", 'Course\SlidesApiController@get');
 	Route::put("{$r['slides']}/{id}", 'Course\SlidesApiController@put');
+	Route::post("{$r['slides']}/.search", 'Course\SlidesApiController@search');
 
 	// Presentables
 	Route::post("{$r['presentables']}/.search", 'Course\PresentablesApiController@search');
@@ -68,6 +69,13 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	Route::get("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@get');
 	Route::patch("{$r['users']}/{id}/{$r['user-notifications']}", 'User\UserNotificationApiController@patch');
+
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'User\UserStateApiController@getCourse');
+	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'User\UserStateApiController@putCourse');
+
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'User\UserStateApiController@getLesson');
+	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'User\UserStateApiController@putLesson');
+	Route::delete("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'User\UserStateApiController@deleteLesson');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');

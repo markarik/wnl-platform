@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class QuizQuestion extends Model
 {
+	use Cached;
+
 	protected $fillable = ['text', 'explanation', 'preserve_order'];
 
 	protected $casts = [

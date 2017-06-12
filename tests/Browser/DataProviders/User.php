@@ -15,10 +15,22 @@ class User
 	const USER_NAME_2 = 'Adam';
 	const USER_LAST_NAME_2 = 'Karmiński';
 
+	const USER_EMAIL_3 = 'prezeschrupek@bethink.pl';
+	const USER_PASSWORD_3 = 'secret';
+	const USER_NAME_3 = 'Prezes';
+	const USER_LAST_NAME_3 = 'Chrupek';
+
 	public static function userProvider()
 	{
 		return [
 			[self::USER_EMAIL_1, self::USER_PASSWORD_1, self::USER_NAME_1]
+		];
+	}
+
+	public static function freshUserProvider()
+	{
+		return [
+			[self::USER_EMAIL_3, self::USER_PASSWORD_3, self::USER_NAME_3]
 		];
 	}
 }

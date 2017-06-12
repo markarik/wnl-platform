@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" v-if="!isCurrentUserLoading">
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
 			<router-view></router-view>
@@ -9,7 +9,6 @@
 
 <script>
 	// Import global components
-	import Echo from 'laravel-echo'
 	import store from 'store'
 
 	import Navbar from 'js/components/global/Navbar.vue'
@@ -24,7 +23,7 @@
 			'wnl-navbar': Navbar
 		},
 		computed: {
-			...mapGetters(['currentUserId'])
+			...mapGetters(['currentUserId', 'isCurrentUserLoading'])
 		},
 		methods: {
 			...mapActions(['setupCurrentUser', 'setLayout']),
@@ -53,18 +52,17 @@
 			},
 			setupNotifications() {
 				Echo.private(`user.${this.currentUserId}`)
-					.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
-						$wnl.logger.debug('Notification', notification);
-					});
+						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
+							$wnl.logger.debug('Notification', notification);
+						});
 			},
 		},
 		created: function () {
 			this.setupCurrentUser()
+					.then(()=>this.setupNotifications())
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {
-			// this.setupNotifications()
-
 			this.setLayout(this.$breakpoints.currentBreakpoint())
 			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 				this.setLayout(currentLayout)

@@ -25,6 +25,7 @@ class AppController extends Controller
 				'lessons' => config('lessons'),
 				'payment' => config('payment'),
 			],
+			'defaultSettings' => config('user-default-settings'),
 		]);
 
 		return view('layouts.app');

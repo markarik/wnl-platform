@@ -126,11 +126,11 @@ if (isProduction()) {
 					path: 'billing',
 					component: require('js/components/user/MyBillingData.vue')
 				},
-				// {
-				// 	name: 'my-settings',
-				// 	path: 'settings',
-				// 	component: require('js/components/user/MySettings.vue')
-				// },
+				{
+					name: 'my-settings',
+					path: 'settings',
+					component: require('js/components/user/MySettings.vue')
+				},
 				{
 					name: 'my-password',
 					path: 'password',
@@ -160,9 +160,14 @@ if (isProduction()) {
 export default new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
-	scrollBehavior: () => {
-		scrollToTop()
-		return {x: 0, y:0}
+	scrollBehavior: (to, from, savedPosition) => {
+		if (!from.params.hasOwnProperty('slide') ||
+			!to.params.hasOwnProperty('slide') ||
+			parseInt(from.params.screenId) !== parseInt(to.params.screenId))
+		{
+			scrollToTop()
+			return {x: 0, y:0}
+		}
 	},
 	routes
 })

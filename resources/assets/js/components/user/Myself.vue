@@ -72,18 +72,18 @@
 						iconClass: 'fa-file-o',
 						iconTitle: 'Profil publiczny',
 					},
-					// {
-					// 	text: 'Ustawienia',
-					// 	itemClass: 'has-icon',
-					// 	to: {
-					// 		name: 'my-settings',
-					// 		params: {},
-					// 	},
-					// 	isDisabled: false,
-					// 	method: 'push',
-					// 	iconClass: 'fa-sliders',
-					// 	iconTitle: 'Profil publiczny',
-					// },
+					{
+						text: 'Ustawienia',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-settings',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-sliders',
+						iconTitle: 'Profil publiczny',
+					},
 					// {
 					// 	text: 'Zmiana hasła',
 					// 	itemClass: 'has-icon',

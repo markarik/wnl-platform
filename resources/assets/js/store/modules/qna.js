@@ -61,17 +61,21 @@ function _getAnswer(answerId) {
 	return axios.get(getApiUrl(`answers/${answerId}?include=users`))
 }
 
+function getInitialState() {
+	return {
+		loading: true,
+		questionsIds: [],
+		qna_questions: {},
+		qna_answers: {},
+		comments: {},
+		profiles: {},
+	}
+}
+
 const namespaced = true
 
 // Initial state
-const state = {
-	loading: true,
-	questionsIds: [],
-	qna_questions: {},
-	qna_answers: {},
-	comments: {},
-	profiles: {},
-}
+const state = getInitialState()
 
 // Getters
 const getters = {
@@ -213,6 +217,12 @@ const mutations = {
 
 		designatedObject.hasReacted = !designatedObject.hasReacted
 	},
+	[types.QNA_DESTROY] (state) {
+		let initialState = getInitialState()
+		Object.keys(initialState).forEach((field) => {
+			set(state, field, initialState[field])
+		})
+	},
 }
 
 // Actions
@@ -305,7 +315,7 @@ const actions = {
 				'reactable_resource' : payload.reactableResource,
 				'reactable_id'       : payload.reactableId,
 				'reaction_type'      : payload.reaction,
-			},	
+			},
  			method = payload.hasReacted ? 'delete' : 'post',
 			params = payload.hasReacted ? { params: data } : data
 
@@ -314,7 +324,11 @@ const actions = {
 				commit(types.SET_REACTION, payload)
 			})
 			.catch(error => $wnl.logger.error(error))
-	}
+	},
+	destroyQna({commit}) {
+		commit(types.QNA_DESTROY)
+	},
+>>>>>>> origin/master
 }
 
 export default {

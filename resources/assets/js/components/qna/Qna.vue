@@ -106,8 +106,7 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions']),
-			...mapMutations('qna', [types.IS_LOADING]),
+			...mapActions('qna', ['fetchQuestions', 'destroyQna']),
 		},
 		mounted() {
 			this.fetchQuestions().then(() => {
@@ -115,7 +114,7 @@
 			})
 		},
 		beforeDestroy() {
-			this[types.IS_LOADING](true)
+			this.destroyQna()
 		},
 	}
 </script>

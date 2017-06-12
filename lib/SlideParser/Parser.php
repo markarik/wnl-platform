@@ -1,6 +1,5 @@
 <?php namespace Lib\SlideParser;
 
-use App\Models\Tag;
 use Storage;
 use App\Models\Group;
 use App\Models\Slide;
@@ -14,6 +13,12 @@ use App\Exceptions\ParseErrorException;
 
 class Parser
 {
+	// TODO: Search&replace rules:
+	// - Remove width/height form iframes
+
+	/**
+	 * Regexp patterns used to process html slide shows
+	 */
 	const SLIDE_PATTERN = '/<section([\s\S]*?)>([\s\S]*?)<\/section>/';
 
 	const FUNCTIONAL_SLIDE_PATTERN = '/[#!]+\(functional\)/';
@@ -51,7 +56,6 @@ class Parser
 
 	/**
 	 * @param $fileContents - string/html
-	 *
 	 * @throws ParseErrorException
 	 */
 	public function parse($fileContents)
@@ -119,12 +123,6 @@ class Parser
 							],
 						],
 					]);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => $lesson->name])
-					);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => $group->name])
-					);
 				}
 
 				if ($courseTag['name'] == 'section') {
@@ -189,7 +187,6 @@ class Parser
 
 	/**
 	 * @param $data - string/html
-	 *
 	 * @return array
 	 */
 	protected function matchSlides($data):array
@@ -203,7 +200,6 @@ class Parser
 
 	/**
 	 * @param $data - string/html
-	 *
 	 * @return bool
 	 */
 	protected function isFunctional($data):bool
@@ -215,7 +211,6 @@ class Parser
 	 * @param $pattern
 	 * @param $data
 	 * @param \Closure $errback
-	 *
 	 * @return mixed
 	 * @internal param \Closure $callback
 	 */
@@ -237,7 +232,6 @@ class Parser
 
 	/**
 	 * @param $slideHtml
-	 *
 	 * @return array
 	 */
 	public function getTags($slideHtml)

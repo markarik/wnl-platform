@@ -9,6 +9,7 @@ import * as getters from 'js/store/getters'
 // Modules
 import course from 'js/store/modules/course'
 import currentUser from 'js/store/modules/currentUser'
+import navigation from 'js/store/modules/navigation'
 import qna from 'js/store/modules/qna'
 import quiz from 'js/store/modules/quiz'
 import progress from 'js/store/modules/progress'
@@ -27,6 +28,7 @@ export default new Vuex.Store({
 	modules: {
 		course,
 		currentUser,
+		navigation,
 		qna,
 		quiz,
 		progress,

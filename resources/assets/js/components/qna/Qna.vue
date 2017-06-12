@@ -58,6 +58,7 @@
 		align-items: center
 		color: $color-gray-dimmed
 		display: flex
+		flex-wrap: wrap
 		font-size: $font-size-minus-1
 		margin-top: $margin-base
 

@@ -311,19 +311,23 @@ const actions = {
 		})
 	},
 	setReaction({commit}, payload) {
-		let data = {
-				'reactable_resource' : payload.reactableResource,
-				'reactable_id'       : payload.reactableId,
-				'reaction_type'      : payload.reaction,
-			},
- 			method = payload.hasReacted ? 'delete' : 'post',
-			params = payload.hasReacted ? { params: data } : data
+		return new Promise((resolve, reject) => {
+			let data = {
+					'reactable_resource' : payload.reactableResource,
+					'reactable_id'       : payload.reactableId,
+					'reaction_type'      : payload.reaction,
+				},
+	 			method = payload.hasReacted ? 'delete' : 'post',
+				params = payload.hasReacted ? { params: data } : data
 
-		return axios[method](getApiUrl(`reactions`), params)
-			.then(() => {
-				commit(types.SET_REACTION, payload)
-			})
-			.catch(error => $wnl.logger.error(error))
+			return axios[method](getApiUrl(`reactions`), params)
+				.then(() => {
+					commit(types.SET_REACTION, payload)
+					resolve()
+				})
+				.catch(error => $wnl.logger.error(error))
+					reject()
+		})
 	},
 	destroyQna({commit}) {
 		commit(types.QNA_DESTROY)

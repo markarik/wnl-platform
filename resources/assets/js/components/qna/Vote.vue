@@ -32,6 +32,11 @@
 	export default {
 		name: 'Vote',
 		props: ['type', 'module', 'reactableResource', 'reactableId'],
+		data() {
+			return {
+				isLoading: false
+			}
+		},
 		computed: {
 			...mapGetters('qna', ['getReaction']),
 			reaction() {
@@ -50,11 +55,21 @@
 		methods: {
 			...mapActions('qna', ['setReaction']),
 			toggleReaction() {
+				if (this.isLoading) {
+					return false
+				}
+				this.isLoading = true
 				this.setReaction({
 					reactableResource: this.reactableResource,
 					reactableId: this.reactableId,
 					reaction: 'upvote',
 					hasReacted: this.reaction.hasReacted,
+				}).then((response) => {
+					this.isLoading = false
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					this.isLoading = false
 				})
 			},
 		},

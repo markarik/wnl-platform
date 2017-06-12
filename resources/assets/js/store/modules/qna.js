@@ -328,7 +328,6 @@ const actions = {
 	destroyQna({commit}) {
 		commit(types.QNA_DESTROY)
 	},
->>>>>>> origin/master
 }
 
 export default {

@@ -1,5 +1,6 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
+	<!-- <div> -->
 		<div class="wnl-lesson">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
@@ -16,9 +17,9 @@
 				</div>
 				<router-view></router-view>
 			</div>
-		</div>
-		<div class="wnl-lesson-previous-next-nav">
-			<wnl-previous-next></wnl-previous-next>
+			<div class="wnl-lesson-previous-next-nav">
+				<wnl-previous-next></wnl-previous-next>
+			</div>
 		</div>
 	</div>
 </template>
@@ -27,6 +28,9 @@
 	@import 'resources/assets/sass/variables'
 
 	$previous-next-height: 45px
+
+	.wnl-lesson
+		width: 100%
 
 	.wnl-lesson-view
 		padding-bottom: calc(2 * #{$previous-next-height})
@@ -45,16 +49,20 @@
 
 <script>
 	import _ from 'lodash'
+	import Breadcrumbs from 'js/components/global/Breadcrumbs'
+	import PreviousNext from 'js/components/course/PreviousNext'
+	import { mapGetters, mapActions } from 'vuex'
+	import { resource } from 'js/utils/config'
+	import { breadcrumb } from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
-	import PreviousNext from 'js/components/course/PreviousNext.vue'
-	import {mapGetters, mapActions} from 'vuex'
-	import {resource} from 'js/utils/config'
 
 	export default {
 		name: 'Lesson',
 		components: {
 			'wnl-previous-next': PreviousNext,
+			'wnl-breadcrumbs': Breadcrumbs,
 		},
+		mixins: [ breadcrumb ],
 		props: ['courseId', 'lessonId', 'screenId'],
 		data() {
 			return {
@@ -65,7 +73,7 @@
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-				elementHeight: this.$parent.$el.offsetHeight
+				 elementHeight: this.$parent.$el.offsetHeight
 			}
 		},
 		computed: {
@@ -76,6 +84,18 @@
 			...mapGetters('progress', [
 				'getSavedLesson'
 			]),
+			breadcrumb() {
+				return {
+					text: this.lessonName,
+					to: {
+						name: 'lessons',
+						params: {
+							courseId: this.courseId,
+							lessonId: this.lessonId,
+						}
+					}
+				}
+			},
 			lessonName() {
 				return this.getLesson(this.lessonId).name
 			},

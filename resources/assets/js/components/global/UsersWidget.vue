@@ -1,6 +1,8 @@
 <template>
 	<div class="wnl-users-widget">
-		<p class="metadata">{{chatTitle}}</p>
+		<p class="metadata">
+			{{chatTitle}}
+		</p>
 		<!-- <p class="metadata">
 			<span class="icon is-small">
 				<i class="fa fa-users"></i>
@@ -25,6 +27,8 @@
 
 		.metadata
 			color: $color-background-gray
+			display: flex
+			justify-content: space-between
 			margin-bottom: $margin-small
 
 			& .icon
@@ -42,7 +46,7 @@
 
 <script>
 	import Avatar from './Avatar.vue'
-	import { mapGetters } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	export default {
 		name: 'UsersWidget',
@@ -62,6 +66,6 @@
 		},
 		components: {
 			'wnl-avatar': Avatar,
-		},
+		}
 	}
 </script>

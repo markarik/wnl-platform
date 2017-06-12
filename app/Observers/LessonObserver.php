@@ -16,11 +16,7 @@ class LessonObserver
 
 	public function created(Lesson $lesson)
 	{
-		$tag = Tag::firstOrCreate([
-			'name' => $lesson->name,
-		]);
 
-		$lesson->tags()->attach($tag);
 	}
 
 }

@@ -41,7 +41,7 @@
 		flex: 1
 		flex-direction: column
 		justify-content: space-between
-		padding-right: 20px
+		padding: 0 20px
 
 	.wnl-chat-messages
 		display: flex

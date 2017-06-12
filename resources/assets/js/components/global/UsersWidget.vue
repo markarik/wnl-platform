@@ -1,6 +1,11 @@
 <template>
 	<div class="wnl-users-widget">
-		<p class="metadata">{{chatTitle}}</p>
+		<p class="metadata">
+			{{chatTitle}}
+			<span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
+				<i class="fa fa-close"></i>
+			</span>
+		</p>
 		<!-- <p class="metadata">
 			<span class="icon is-small">
 				<i class="fa fa-users"></i>
@@ -25,10 +30,16 @@
 
 		.metadata
 			color: $color-background-gray
+			display: flex
+			justify-content: space-between
 			margin-bottom: $margin-small
 
 			& .icon
 				color: $color-inactive-gray
+
+			.wnl-chat-close
+				color: $color-ocean-blue
+				cursor: pointer
 
 		.wnl-avatar
 			display: inline-flex
@@ -42,13 +53,14 @@
 
 <script>
 	import Avatar from './Avatar.vue'
-	import { mapGetters } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	export default {
 		name: 'UsersWidget',
 		props: ['users'],
 		computed: {
 			...mapGetters(['currentUserId']),
+			...mapGetters(['canShowCloseIconInChat']),
 			otherUsers() {
 				return this.users.filter((user) => user.id !== this.currentUserId)
 			},
@@ -63,5 +75,8 @@
 		components: {
 			'wnl-avatar': Avatar,
 		},
+		methods: {
+			...mapActions(['toggleChat'])
+		}
 	}
 </script>

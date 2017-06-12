@@ -46,7 +46,13 @@ const getters = {
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
-	getSections: state => ({sections}) => sections.map((sectionId) => structure[resource('sections')][sectionId]),
+	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),
+	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
+		const sectionsIds = getters.getScreen(screenId).sections;
+		const sections = getters.getSections(sectionsIds);
+
+		return sections.map((section) => section.slide);
+	},
 	getScreens: state => (lessonId) => {
 		let screensIds = state.structure[resource('lessons')][lessonId][resource('screens')]
 

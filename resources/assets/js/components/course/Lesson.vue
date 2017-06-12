@@ -56,7 +56,7 @@
 		components: {
 			'wnl-previous-next': PreviousNext,
 		},
-		props: ['courseId', 'lessonId', 'screenId'],
+		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		data() {
 			return {
 				/**
@@ -73,6 +73,8 @@
 			...mapGetters('course', [
 				'getScreens',
 				'getLesson',
+				'getSections',
+				'getScreenSectionsCheckpoints'
 			]),
 			...mapGetters('progress', [
 				'getSavedLesson'
@@ -101,6 +103,8 @@
 				return {
 					courseId: this.courseId,
 					lessonId: this.lessonId,
+					screenId: this.screenId,
+					slide: this.slide,
 					route: {
 						name: this.$route.name,
 						params: this.$route.params,
@@ -109,6 +113,9 @@
 					},
 				}
 			},
+			lastSectionSlideId() {
+				return _.last(this.getScreenSectionsCheckpoints(this.screenId));
+			}
 		},
 		methods: {
 			...mapActions('progress', [
@@ -140,7 +147,7 @@
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					if (parseInt(this.screenId) === this.lastScreenId) {
+					if (parseInt(this.slide) >= this.lastSectionSlideId) {
 						this.completeLesson(this.lessonProgressContext)
 					} else {
 						this.updateLesson(this.lessonProgressContext)

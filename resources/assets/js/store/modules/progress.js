@@ -78,14 +78,26 @@ const mutations = {
 		set(state.courses[payload.courseId].lessons, payload.lessonId, {
 			status: STATUS_IN_PROGRESS,
 			route: payload.route,
+			screens: []
 		})
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		progressStore.setLessonProgress(payload);
-		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route)
+
+		const updatedState = {
+			...lessonState,
+			route: payload.route,
+			screens: {
+				...lessonState.screens,
+				[payload.screenId]: payload.slide
+			}
+		};
+
+		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState);
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
-		// TODO conside issuing one request instead of two when finishing lesson
+		// TODO consider issuing one request instead of two when finishing lesson
 		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
 		progressStore.setLessonProgress({...payload, status: STATUS_COMPLETE});
 		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)

@@ -216,8 +216,10 @@
 				this.focusSlideshow()
 			},
 			focusSlideshow() {
-				this.iframe.click()
-				this.iframe.focus()
+				if (this.child.hasOwnProperty('frame') && typeof this.child.frame !== undefined) {
+					this.child.frame.click()
+					this.child.frame.focus()
+				}
 				this.isFocused = true
 			},
 			checkFocus() {

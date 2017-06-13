@@ -12,7 +12,7 @@ const container             = document.getElementsByClassName('reveal')[0]
 const $controls             = $('.wnl-slideshow-control')
 const $chartsContainers     = $('.slides').find('.iv-image-container')
 const $slideshowAnnotations = $('.annotations-to-slide')
-const $annotationsCounters  = $slideshowAnnotations.find('.annotations-count')
+const $annotationsCounters  = $('.annotations-count')
 
 const viewer    = ImageViewer()
 const handshake = new Postmate.Model({
@@ -40,6 +40,8 @@ const handshake = new Postmate.Model({
 				elementId = `slide-annotations-${slideId}`,
 				$annotationsContainer = $slideshowAnnotations.find(`#${elementId}`)
 
+			$annotationsCounters.addClass('has-some')
+
 			if (!$annotationsContainer.length) {
 				$slideshowAnnotations.append(`
 					<div id="${ elementId }" class="slide-annotations-container" style="display: none;">
@@ -51,6 +53,8 @@ const handshake = new Postmate.Model({
 			}
 
 			$annotationsContainer.show()
+		} else {
+			$annotationsCounters.removeClass('has-some')
 		}
 	},
 })

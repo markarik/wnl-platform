@@ -74,7 +74,7 @@ class ApiCache
 		$this->tags = ['api', $resource];
 
 		if ($request->has('include')) {
-			$this->tags = array_merge($this->tags, explode('.', $request->get('include')));
+			$this->tags = array_merge($this->tags, preg_split('/[.,]+/', $request->get('include')));
 		}
 
 		return $this->tags;

@@ -37,17 +37,18 @@
 			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
-		<a class="toggle-annotations rounded-button without-image">
+		<a class="toggle-annotations rounded-button without-image" style="display: none">
 			<img src="{{ asset('images/comments.svg') }}" alt="Komentarze do slajdu">
 			<span class="annotations-count">0</span>
 		</a>
-		<div class="slideshow-annotations">
+		<div class="slideshow-annotations" style="display: none;">
 			<div class="annotations-title">Komentarze do slajdu (<span class="annotations-count">0</span>)</div>
 			<div class="annotations-to-slide"></div>
 			<a class="annotations-new-comment">Skomentuj</a>
 		</div>
 		<a class="toggle-fullscreen rounded-button without-image">
-			<img src="{{ asset('images/close-fullscreen.svg') }}" alt="Pełen ekran">
+			<img class="fs-close" src="{{ asset('images/close-fullscreen.svg') }}" alt="Zamknij pełen ekran">
+			<img class="fs-open" src="{{ asset('images/fullscreen-arrows.svg') }}" alt="Pełen ekran">
 		</a>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>

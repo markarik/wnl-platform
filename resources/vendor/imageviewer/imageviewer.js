@@ -457,13 +457,13 @@ let imageviewer = function ($, window, document, undefined) {
                     snapViewTimeout = setTimeout(function () {
                         viewer.snapView.css('opacity', 0);
                         snapViewVisible = false;
-                    }, 4000);
+                    }, 2000);
                 }
             }
 
-            imageWrap.on('touchmove' + eventSuffix + ' mousemove' + eventSuffix, function () {
-                showSnapView();
-            });
+            // imageWrap.on('touchmove' + eventSuffix + ' mousemove' + eventSuffix, function () {
+            //     showSnapView();
+            // });
 
             var snapEventsCallback = {};
             snapEventsCallback['mouseenter' + eventSuffix + ' touchstart' + eventSuffix] = function () {

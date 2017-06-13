@@ -31,6 +31,12 @@ $border-color: $color-inactive-gray
 	position: fixed
 	z-index: $menu-z-index
 
+	img
+		-moz-user-select: none
+		-webkit-user-select: none
+		user-select: none
+
+
 .toggle-fullscreen
 	right: $fixed-elements-padding
 
@@ -63,6 +69,7 @@ $border-color: $color-inactive-gray
 	overflow-y: auto
 	padding: $margin-base
 	position: fixed
+	transition: all 0.25s
 	width: 60vw
 	z-index: $menu-z-index
 
@@ -106,6 +113,20 @@ $border-color: $color-inactive-gray
 	.annotation-content
 		p
 			margin: 0
+
+.toggle-fullscreen
+	.fs-close
+		display: none
+
+	.fs-open
+		display: block
+
+	&.is-fullscreen
+		.fs-close
+			display: block
+
+		.fs-open
+			display: none
 
 .wnl-slideshow-control
 	background: $controls-background

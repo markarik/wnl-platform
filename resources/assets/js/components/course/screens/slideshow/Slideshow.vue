@@ -16,9 +16,6 @@
 			</div>
 			<div class="wnl-screen wnl-ratio-16-9">
 				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }">
-					<div class="faux-fullscreen-close" v-if="isFauxFullscreen" @click="toggleFullscreen">
-						<span class="icon is-medium"><i class="fa fa-times"></i></span>
-					</div>
 				</div>
 			</div>
 			<div class="margin top slideshow-menu">
@@ -29,15 +26,6 @@
 						@commentsHidden="onCommentsHidden"
 						@annotationsUpdated="onAnnotationsUpdated"
 					></wnl-annotations>
-				</div>
-				<div class="slideshow-fullscreen">
-					<wnl-image-button name="wnl-slideshow-control-fullscreen"
-						icon="fullscreen-arrows"
-						alt="Włącz pełen ekran"
-						align="right"
-						title="Pełen ekran"
-						@buttonclicked="toggleFullscreen"
-					></wnl-image-button>
 				</div>
 			</div>
 		</div>
@@ -122,7 +110,7 @@
 
 <script>
 	import _ from 'lodash'
-	import Postmate from 'postmate'
+	import Postmate from 'postmate-fork'
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
@@ -132,7 +120,7 @@
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getUrl} from 'js/utils/env'
 
-	let debounced;
+	let debounced, handshake
 
 	export default {
 		name: 'Slideshow',
@@ -197,6 +185,8 @@
 				} else {
 					this.isFauxFullscreen = !this.isFauxFullscreen
 				}
+				this.isFullscreen = !this.isFullscreen
+				this.child.call('toggleFullscreen', this.isFullscreen)
 				this.focusSlideshow()
 			},
 			setCurrentSlideFromIndex(index) {
@@ -227,17 +217,19 @@
 			},
 			initSlideshow() {
 				$wnl.logger.debug('Initiating slideshow')
-				new Postmate({
-						container: this.container,
-						url: this.slideshowUrl
-					}).then(child => {
-						this.child = child
-						this.loaded = true
-						this.setEventListeners()
+				handshake = new Postmate({
+					container: this.container,
+					url: this.slideshowUrl
+				})
 
-						this.goToSlide(this.currentSlideIndex)
-						this.focusSlideshow()
-					}).catch(exception => $wnl.logger.capture(exception))
+				handshake.then(child => {
+					this.child = child
+					this.loaded = true
+					this.setEventListeners()
+
+					this.goToSlide(this.currentSlideIndex)
+					this.focusSlideshow()
+				}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {
 				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
@@ -258,6 +250,11 @@
 
 						this.slideChanged = false
 					} catch (error) { $wnl.logger.error(error) }
+				} else if (typeof event.data === 'object' &&
+					event.data.hasOwnProperty('value') &&
+					event.data.value.name === 'toggle-fullscreen'
+				) {
+					this.toggleFullscreen()
 				}
 			},
 			setEventListeners() {

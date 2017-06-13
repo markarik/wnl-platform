@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import {template} from 'lodash'
-import Postmate from 'postmate'
+import Postmate from 'postmate-fork'
 import Reveal from '../../vendor/reveal/reveal'
 import {imageviewer} from '../../vendor/imageviewer/imageviewer'
 
@@ -14,8 +14,10 @@ const $chartsContainers     = $('.slides').find('.iv-image-container')
 const $slideshowAnnotations = $('.slideshow-annotations')
 const $slideAnnotations     = $slideshowAnnotations.find('.annotations-to-slide')
 const $annotationsCounters  = $('.annotations-count')
+const $toggleAnnotations    = $('.toggle-annotations')
+const $toggleFullscreen     = $('.toggle-fullscreen')
 
-const viewer    = ImageViewer()
+// const viewer    = ImageViewer()
 const handshake = new Postmate.Model({
 	changeBackground: (background) => {
 		let containerClass = container.className,
@@ -29,6 +31,16 @@ const handshake = new Postmate.Model({
 	},
 	goToSlide: (slideNumber) => {
 		Reveal.slide(slideNumber)
+	},
+	toggleFullscreen: (isFullscreen) => {
+		if (isFullscreen) {
+			$toggleAnnotations.show()
+			$toggleFullscreen.addClass('is-fullscreen')
+		} else {
+			$toggleAnnotations.hide()
+			$slideshowAnnotations.hide()
+			$toggleFullscreen.removeClass('is-fullscreen')
+		}
 	},
 	updateAnnotations: (annotationsData) => {
 		let annotationsLength = annotationsData.length
@@ -60,8 +72,72 @@ const handshake = new Postmate.Model({
 	},
 })
 
-let viewers = [],
-	fullScreenViewer = ImageViewer()
+let parent = {},
+	viewers = [],
+	fullScreenViewer = {}
+
+handshake.then(parentWindow => {
+	parent = parentWindow
+	parent.emit('loaded', true)
+	setMenuListeners(parent)
+}).catch(exception => {
+	console.error(exception)
+
+	// TODO: Bart, help me do it better... :/
+
+	handshake.then(parentWindow => {
+		parent = parentWindow
+		parent.emit('loaded', true)
+		setMenuListeners(parent)
+	}).catch(exception => {
+		console.error(exception)
+	})
+})
+
+Reveal.initialize({
+	backgroundTransition: 'none',
+	center: false,
+	controls: false,
+	embedded: true,
+	slideNumber: true,
+	overview: false,
+	transition: 'none',
+	postMessage: true,
+	postMessageEvents: true,
+	progress: true,
+})
+
+Reveal.addEventListener('slidechanged', (event) => {
+	let $chartContainer = $(event.currentSlide).find('.iv-image-container')
+	if ($chartContainer.length > 0) {
+		let index = $.inArray($chartContainer[0], $chartsContainers)
+		if (index > -1) {
+			viewers[index].refresh()
+		}
+	}
+})
+
+if ($controls.length > 0) {
+	$.each($controls, (index, element) => {
+		$(element).on('click', handleControlClick)
+	})
+}
+
+$(() => {
+	fullScreenViewer = ImageViewer($('#iv-container'), {snapViewPersist: false})
+
+	$.each($chartsContainers, (index, container) => {
+		let $container = $(container),
+			$element = $container.find('.chart'),
+			lofi = $element.attr('src'),
+			hifi = $element.attr('data-high-res-src')
+
+		viewers[index] = ImageViewer($element)
+		$container.find('.iv-image-fullscreen').click({lofi, hifi}, (e) => {
+			fullScreenViewer.show(e.data.lofi, e.data.hifi)
+		})
+	})
+})
 
 function animateControl(event) {
 	let target = event.target
@@ -100,58 +176,11 @@ function toggleAnnotations() {
 }
 
 function setMenuListeners(parent) {
-	let $annotations = $('.toggle-annotations'),
-		$fullscreen = $('.toggle-fullscreen')
-
-	$fullscreen.on('click', () => {
-		parent.emit('toggle-fullscreen', true)
-	})
-
-	$annotations.on('click', toggleAnnotations)
+	$toggleFullscreen.on('click', emitToggleFullscreen)
+	$slideshowAnnotations.find('.annotations-new-comment').on('click', emitToggleFullscreen)
+	$toggleAnnotations.on('click', toggleAnnotations)
 }
 
-Reveal.initialize({
-	backgroundTransition: 'none',
-	center: false,
-	controls: false,
-	embedded: true,
-	slideNumber: true,
-	overview: false,
-	transition: 'none',
-	postMessage: true,
-	postMessageEvents: true,
-	progress: true,
-})
-
-Reveal.addEventListener('slidechanged', (event) => {
-	let $chartContainer = $(event.currentSlide).find('.iv-image-container')
-	if ($chartContainer.length > 0) {
-		let index = $.inArray($chartContainer[0], $chartsContainers)
-		if (index > -1) {
-			viewers[index].refresh()
-		}
-	}
-})
-
-handshake.then(parent => {
-	parent.emit('loaded', true)
-	setMenuListeners(parent)
-}).catch(exception => console.log(exception))
-
-if ($controls.length > 0) {
-	$.each($controls, (index, element) => {
-		$(element).on('click touchstart', handleControlClick)
-	})
+function emitToggleFullscreen() {
+	parent.emit('toggle-fullscreen', true)
 }
-
-$.each($chartsContainers, (index, container) => {
-	let $container = $(container),
-		$element = $container.find('.chart'),
-		lofi = $element.attr('src'),
-		hifi = $element.attr('data-high-res-src')
-
-	viewers[index] = ImageViewer($element)
-	$container.find('.iv-image-fullscreen').click({lofi, hifi}, (e) => {
-		fullScreenViewer.show(e.data.lofi, e.data.hifi)
-	})
-})

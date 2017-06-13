@@ -154,7 +154,7 @@
 				if (!this.screenId) {
 					this.getSavedLesson(this.courseId, this.lessonId)
 						.then(({route, status}) => {
-							if (typeof this.firstScreenId !== 'undefined' && status === STATUS_COMPLETE) {
+							if (this.firstScreenId && status === STATUS_COMPLETE || (route && route.name !== resource('screens'))) {
 								this.$router.replace({
 									name: resource('screens'), params: {
 										courseId: this.courseId,
@@ -174,24 +174,17 @@
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
 						}
+					}
 
-						if (this.shouldCompleteScreen(this.courseId, this.lessonId, this.screenId)) {
-							this.completeScreen(this.lessonProgressContext);
+					if (this.shouldCompleteScreen(this.courseId, this.lessonId, this.screenId)) {
+						this.completeScreen(this.lessonProgressContext);
 
-							if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {
-								this.completeLesson(this.lessonProgressContext)
-							}
-						}
-
-						this.updateLesson(this.lessonProgressContext)
-					} else {
-						// TODO this should be smarter
-						if (parseInt(this.screenId) === this.lastScreenId) {
+						if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {
 							this.completeLesson(this.lessonProgressContext)
-						} else {
-							this.updateLesson(this.lessonProgressContext)
 						}
 					}
+
+					this.updateLesson(this.lessonProgressContext)
 				}
 			},
 			updateElementHeight() {

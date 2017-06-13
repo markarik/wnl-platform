@@ -75,10 +75,15 @@ const getters = {
 	},
 	shouldCompleteScreen: (state, getters, rootState, rootGetters) => (courseId, lessonId, screenId) => {
 		const screen = rootGetters['course/getScreen'](screenId);
+
+		if (!screen.sections) {
+			return true;
+		}
+
 		const allSections = rootGetters['course/getSections'](screen.sections);
 		const lesson = state.courses[courseId].lessons[lessonId];
 
-		if (!lesson && !lesson.screens && !lesson.screens[screenId] && !lesson.screens[screenId].sections) {
+		if (!lesson || !lesson.screens || !lesson.screens[screenId] || !lesson.screens[screenId].sections) {
 			return false;
 		}
 
@@ -153,11 +158,16 @@ const mutations = {
 		set(lessonState, 'screens', updatedState.screens);
 	},
 	[types.PROGRESS_COMPLETE_SCREEN] (state, payload) {
-		const screensState = state.courses[payload.courseId].lessons[payload.lessonId].screens;
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+		const updatedState = {...lessonState};
+
+		updatedState.screens = lessonState.screens || {};
+		updatedState.screens[payload.screenId] = updatedState.screens[payload.screenId] || {};
+		updatedState.screens[payload.screenId].status = STATUS_COMPLETE;
 
 		//TODO progressStore update
 
-		set(screensState[payload.screenId], 'status', STATUS_COMPLETE);
+		set(lessonState, 'screens', updatedState.screens);
 	}
 }
 

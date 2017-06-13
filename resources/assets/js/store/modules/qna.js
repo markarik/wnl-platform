@@ -86,7 +86,7 @@ const getters = {
 		return _.reverse(
 			_.sortBy(
 				state.questionsIds.map((id) => state.qna_questions[id]),
-				(question) => question.created_at,
+				(question) => question.upvote.count,
 			)
 		)
 	},
@@ -114,7 +114,7 @@ const getters = {
 	questionAnswersFromLatest: (state, getters) => (id) => {
 		return _.reverse(
 			_.sortBy(
-				getters.questionAnswers(id), (answer) => answer.created_at
+				getters.questionAnswers(id), (answer) => answer.upvote.count
 			)
 		)
 	},

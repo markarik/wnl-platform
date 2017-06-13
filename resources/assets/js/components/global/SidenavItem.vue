@@ -51,7 +51,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle'],
+		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
@@ -73,12 +73,7 @@
 			},
 			isActive() {
 				if (this.hasClass('subitem')) {
-					progressStore.getLessonProgress(this.$route.params).then((data) => {
-						// TODO fetch lesson progress and set progress accordingly
-					});
-					// TODO mark section as completed base on the 'status' property
-					return parseInt(this.$route.params.screenId) === this.to.params.screenId &&
-						this.$route.params.slide > this.to.params.slide
+					return this.completed
 				}
 			},
 		},

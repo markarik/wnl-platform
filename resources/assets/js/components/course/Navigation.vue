@@ -25,7 +25,8 @@
 				'getScreens'
 			]),
 			...mapGetters('progress', {
-				getCourseProgress: 'getCourse'
+				getCourseProgress: 'getCourse',
+				getScreenProgress: 'getScreen',
 			}),
 			isStructureEmpty() {
 				return typeof this.structure !== 'object' || this.structure.length === 0
@@ -121,7 +122,8 @@
 				isDisabled = false,
 				method = 'push',
 				iconClass = '',
-				iconTitle = ''
+				iconTitle = '',
+			    completed = false
 			) {
 				let to = {}
 				if (!isDisabled && routeName.length > 0) {
@@ -131,7 +133,7 @@
 					}
 				}
 
-				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle }
+				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed }
 			},
 			getCourseItem() {
 				return this.composeItem(
@@ -216,20 +218,25 @@
 				)
 			},
 			getSectionItem(section) {
+				const params = {
+					courseId: section[resource('editions')],
+					lessonId: section[resource('lessons')],
+					screenId: section[resource('screens')],
+					slide: section.slide,
+				};
+				const screen = this.getScreenProgress(params.courseId, params.lessonId, params.screenId);
+				const sections = screen && screen.sections || {};
+
 				return this.composeItem(
 					section.name,
 					'small subitem has-icon',
 					resource('screens'),
-					{
-						courseId: section[resource('editions')],
-						lessonId: section[resource('lessons')],
-						screenId: section[resource('screens')],
-						slide: section.slide,
-					},
+					params,
 					false,
 					'replace',
 					'fa-angle-right',
-					section.name
+					section.name,
+					!!sections[section.id]
 				)
 			}
 		},

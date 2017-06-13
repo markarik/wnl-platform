@@ -18,6 +18,16 @@ const getters = {
 			return state.courses[courseId]
 		}
 	},
+	getLesson: (state) => (courseId, lessonId) => {
+		return state.courses[courseId] && state.courses[courseId].lessons[lessonId];
+	},
+	getScreen: (state) => (courseId, lessonId, screenId) => {
+		console.log(state.courses[courseId].lessons);
+		return state.courses[courseId]
+			&& state.courses[courseId].lessons[lessonId]
+			&& state.courses[courseId].lessons[lessonId].screens
+			&& state.courses[courseId].lessons[lessonId].screens[screenId];
+	},
 	wasCourseStarted: (state, getters) => (courseId) => {
 		return !_.isEmpty(getters.getCourse(courseId).lessons)
 	},
@@ -104,6 +114,9 @@ const mutations = {
 	[types.PROGRESS_SETUP_COURSE] (state, payload) {
 		set(state.courses, payload.courseId, payload.progressData)
 	},
+	[types.PROGRESS_SETUP_LESSON] (state, payload) {
+		set(state.courses[payload.courseId].lessons, payload.lessonId, payload.progressData)
+	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		//TODO consider issuing one request instead of two when starting lesson
@@ -156,10 +169,19 @@ const actions = {
 		})
 	},
 	startLesson({commit, getters}, payload) {
-		if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
-			$wnl.logger.info(`Starting lesson ${payload.lessonId}`, payload)
-			commit(types.PROGRESS_START_LESSON, payload)
-		}
+		progressStore.getLessonProgress(payload)
+			.then(data => {
+				commit(types.PROGRESS_SETUP_LESSON, {
+					courseId: payload.courseId,
+					lessonId: payload.lessonId,
+					progressData: data
+				});
+
+				if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
+					$wnl.logger.info(`Starting lesson ${payload.lessonId}`, payload)
+					commit(types.PROGRESS_START_LESSON, payload)
+				}
+			});
 	},
 	updateLesson({commit}, payload) {
 		$wnl.logger.debug(`Updating lesson ${payload.lessonId}`)

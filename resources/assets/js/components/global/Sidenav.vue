@@ -28,6 +28,7 @@
 					:iconClass="item.iconClass"
 					:iconTitle="item.iconTitle"
 					:key="index"
+					:completed="item.completed"
 				>
 					{{item.text}}
 				</wnl-sidenav-item>

@@ -25,36 +25,34 @@ $border-color: $color-inactive-gray
 		height: 60%
 		width: 60%
 
-.menu-item
+.toggle-annotations,
+.toggle-fullscreen
 	bottom: $fixed-elements-padding
 	position: fixed
 	z-index: $menu-z-index
 
-	&.annotations
-		left: $fixed-elements-padding
+.toggle-fullscreen
+	right: $fixed-elements-padding
 
-	&.fullscreen
-		right: $fixed-elements-padding
+.toggle-annotations
+	left: $fixed-elements-padding
 
-	.toggle-annotations
-		position: relative
+	.annotations-count
+		background-color: $color-background-gray
+		border-radius: 50px
+		color: $color-white
+		font-size: $font-size-minus-3
+		font-weight: $font-weight-black
+		height: 1.5em
+		line-height: 1.5em
+		position: absolute
+		right: -0.5em
+		text-align: center
+		top: -0.5em
+		width: 1.5em
 
-		.annotations-count
-			background-color: $color-background-gray
-			border-radius: 50px
-			color: $color-white
-			font-size: $font-size-minus-3
-			font-weight: $font-weight-black
-			height: 1.5em
-			line-height: 1.5em
-			position: absolute
-			right: -0.5em
-			text-align: center
-			top: -0.5em
-			width: 1.5em
-
-			&.has-some
-				background-color: $color-ocean-blue
+		&.has-some
+			background-color: $color-ocean-blue
 
 .slideshow-annotations
 	background: $annotations-background

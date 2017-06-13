@@ -11,7 +11,8 @@ imageviewer($, window, document)
 const container             = document.getElementsByClassName('reveal')[0]
 const $controls             = $('.wnl-slideshow-control')
 const $chartsContainers     = $('.slides').find('.iv-image-container')
-const $slideshowAnnotations = $('.annotations-to-slide')
+const $slideshowAnnotations = $('.slideshow-annotations')
+const $slideAnnotations     = $slideshowAnnotations.find('.annotations-to-slide')
 const $annotationsCounters  = $('.annotations-count')
 
 const viewer    = ImageViewer()
@@ -32,22 +33,22 @@ const handshake = new Postmate.Model({
 	updateAnnotations: (annotationsData) => {
 		let annotationsLength = annotationsData.length
 
-		$slideshowAnnotations.find('.slide-annotations-container').hide()
+		$slideAnnotations.find('.slide-annotations-container').hide()
 		$annotationsCounters.text(annotationsLength)
 
 		if (annotationsLength > 0) {
 			let slideId = annotationsData[0].commentable_id,
 				elementId = `slide-annotations-${slideId}`,
-				$annotationsContainer = $slideshowAnnotations.find(`#${elementId}`)
+				$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
 
 			$annotationsCounters.addClass('has-some')
 
 			if (!$annotationsContainer.length) {
-				$slideshowAnnotations.append(`
+				$slideAnnotations.append(`
 					<div id="${ elementId }" class="slide-annotations-container" style="display: none;">
 					</div>`
 				)
-				$annotationsContainer = $slideshowAnnotations.find(`#${elementId}`)
+				$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
 
 				$annotationsContainer.append(createAnnotations(annotationsData))
 			}
@@ -95,13 +96,12 @@ function createAnnotations(annotations) {
 }
 
 function toggleAnnotations() {
-
+	$slideshowAnnotations.toggle()
 }
 
 function setMenuListeners(parent) {
-	let $container = $('.slideshow-fullscreen-menu'),
-		$annotations = $container.find('.toggle-annotations'),
-		$fullscreen = $container.find('.toggle-fullscreen')
+	let $annotations = $('.toggle-annotations'),
+		$fullscreen = $('.toggle-fullscreen')
 
 	$fullscreen.on('click', () => {
 		parent.emit('toggle-fullscreen', true)
@@ -134,8 +134,8 @@ Reveal.addEventListener('slidechanged', (event) => {
 })
 
 handshake.then(parent => {
-	setMenuListeners(parent)
 	parent.emit('loaded', true)
+	setMenuListeners(parent)
 }).catch(exception => console.log(exception))
 
 if ($controls.length > 0) {

@@ -49,7 +49,7 @@
 	import PreviousNext from 'js/components/course/PreviousNext.vue'
 	import {mapGetters, mapActions} from 'vuex'
 	import {resource} from 'js/utils/config'
-	import {STATUS_COMPLETE} from '../../store/modules/progress';
+	import {STATUS_COMPLETE} from '../../services/progressStore';
 
 	export default {
 		name: 'Lesson',
@@ -162,7 +162,7 @@
 										screenId: this.firstScreenId,
 									}
 								})
-							} else if (typeof route !== 'undefined' && route.hasOwnProperty('name')) {
+							} else if (route && route.hasOwnProperty('name')) {
 								this.$router.replace(route)
 							}
 						});

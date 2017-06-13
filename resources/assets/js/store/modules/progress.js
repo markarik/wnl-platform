@@ -1,13 +1,7 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
-import progressStore from '../../services/progressStore'
+import progressStore, {STATUS_COMPLETE, STATUS_IN_PROGRESS} from '../../services/progressStore'
 import {set} from 'vue'
-
-// Statuses
-// TODO: Mar 9, 2017 - Use config when it's ready
-// TODO move to progressStore service
-export const STATUS_IN_PROGRESS = 'in-progress'
-export const STATUS_COMPLETE = 'complete'
 
 // Namespace
 const namespaced = true
@@ -111,61 +105,36 @@ const mutations = {
 		set(state.courses, payload.courseId, payload.progressData)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		//TODO consider issuing one request instead of two when starting lesson
-		progressStore.setLessonProgress({...payload, status: STATUS_IN_PROGRESS});
+		const updatedState = progressStore.startLesson(lessonState, payload);
 		progressStore.setCourseProgress({...payload, status: STATUS_IN_PROGRESS});
 
-		set(state.courses[payload.courseId].lessons, payload.lessonId, {
-			status: STATUS_IN_PROGRESS,
-			route: payload.route
-		})
+		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState)
 	},
 	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		progressStore.setLessonProgress(payload);
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+		const updatedState = progressStore.updateLesson(lessonState, payload);
 
-		set(state.courses[payload.courseId].lessons[payload.lessonId], 'route', payload.route);
+		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState);
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		// TODO consider issuing one request instead of two when finishing lesson
+		const updatedState = progressStore.completeLesson(lessonState, payload);
 		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
-		progressStore.setLessonProgress({...payload, status: STATUS_COMPLETE});
-		set(state.courses[payload.courseId].lessons[payload.lessonId], 'status', STATUS_COMPLETE)
+
+		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState)
 	},
 	[types.PROGRESS_COMPLETE_SECTION] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		const updatedState = {...lessonState};
-
-		updatedState.screens = lessonState.screens || {};
-		if (!updatedState.screens[payload.screenId]) {
-			updatedState.screens[payload.screenId] = {
-				status: STATUS_IN_PROGRESS
-			}
-		}
-
-		if (!updatedState.screens[payload.screenId].sections) {
-			updatedState.screens[payload.screenId].sections = {
-				[payload.sectionId]: STATUS_COMPLETE
-			}
-		} else {
-			updatedState.screens[payload.screenId].sections = {
-				...updatedState.screens[payload.screenId].sections,
-				[payload.sectionId]: STATUS_COMPLETE
-			}
-		}
-
-		//TODO progressStore update
+		const updatedState = progressStore.completeSection(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
 	},
 	[types.PROGRESS_COMPLETE_SCREEN] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		const updatedState = {...lessonState};
-
-		updatedState.screens = lessonState.screens || {};
-		updatedState.screens[payload.screenId] = updatedState.screens[payload.screenId] || {};
-		updatedState.screens[payload.screenId].status = STATUS_COMPLETE;
-
-		//TODO progressStore update
+		const updatedState = progressStore.completeScreen(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
 	}

@@ -22,17 +22,18 @@ const getters = {
 		return state.courses[courseId] && state.courses[courseId].lessons[lessonId];
 	},
 	getScreen: (state) => (courseId, lessonId, screenId) => {
-		console.log(state.courses[courseId].lessons);
-		return state.courses[courseId]
-			&& state.courses[courseId].lessons[lessonId]
-			&& state.courses[courseId].lessons[lessonId].screens
-			&& state.courses[courseId].lessons[lessonId].screens[screenId];
+		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}]`);
 	},
 	wasCourseStarted: (state, getters) => (courseId) => {
 		return !_.isEmpty(getters.getCourse(courseId).lessons)
 	},
-	getSavedLesson: (state) => (courseId, lessonId) => {
-		// TODO: Mar 13, 2017 - Check Vuex before asking localStorage
+	getSavedLesson: (state, getters) => (courseId, lessonId) => {
+		const storeValue = _.get(state.courses[courseId], `lessons[${lessonId}]`);
+
+		if (storeValue) {
+			return Promise.resolve(state.courses[courseId].lessons[lessonId]);
+		}
+
 		return progressStore.getLessonProgress({courseId, lessonId});
 	},
 	wasLessonStarted: (state) => (courseId, lessonId) => {
@@ -59,13 +60,11 @@ const getters = {
 	},
 	shouldCompleteLesson: (state, getters, rootState, rootGetters) => (courseId, lessonId) => {
 		const allScreens = rootGetters['course/getScreens'](lessonId);
-		const lesson = state.courses[courseId].lessons[lessonId];
+		const startedScreens = _.get(state.courses[courseId].lessons[lessonId], 'screens');
 
-		if (!lesson && !lesson.screens) {
+		if (!startedScreens) {
 			return false;
 		}
-
-		const startedScreens = lesson.screens;
 
 		return !allScreens.find(({id}) => {
 			if (!startedScreens[id]) {
@@ -87,7 +86,7 @@ const getters = {
 		const allSections = rootGetters['course/getSections'](screen.sections);
 		const lesson = state.courses[courseId].lessons[lessonId];
 
-		if (!lesson || !lesson.screens || !lesson.screens[screenId] || !lesson.screens[screenId].sections) {
+		if (!_.get(lesson, `screens[${screenId}].sections`)) {
 			return false;
 		}
 

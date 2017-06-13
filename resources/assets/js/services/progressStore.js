@@ -181,7 +181,6 @@ export default {
 	getCourseProgress,
 	setCourseProgress,
 	getLessonProgress,
-	setLessonProgress,
 	resetLessonProgress,
 	completeSection,
 	completeScreen,

@@ -64,13 +64,13 @@ const handshake = new Postmate.Model({
 				<div id="${ elementId }" class="slide-annotations-container" style="display: none;">
 				</div>`
 			)
+			$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
 		} else if ($annotationsContainer.find('annotation').length !== annotationsLength) {
-			$slideAnnotations.empty()
+			$annotationsContainer.empty()
 		} else {
 			return false
 		}
 
-		$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
 		$annotationsContainer.append(createAnnotations(annotationsData))
 		$annotationsContainer.show()
 	},

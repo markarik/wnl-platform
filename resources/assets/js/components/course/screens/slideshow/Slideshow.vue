@@ -134,7 +134,6 @@
 				child: {},
 				currentSlideNumber: Math.max(this.$route.params.slide, 1) || 1,
 				loaded: false,
-				isFullscreen: false,
 				isFauxFullscreen: false,
 				isFocused: false,
 				slideChanged: false
@@ -186,8 +185,6 @@
 				} else {
 					this.isFauxFullscreen = !this.isFauxFullscreen
 				}
-				this.isFullscreen = !this.isFullscreen
-				this.child.call('toggleFullscreen', this.isFullscreen)
 				this.focusSlideshow()
 			},
 			setCurrentSlideFromIndex(index) {
@@ -263,6 +260,9 @@
 					this.toggleFullscreen()
 				}
 			},
+			fullscreenChangeHandler(event) {
+				this.child.call('toggleFullscreen', screenfull.isFullscreen)
+			},
 			setEventListeners() {
 				debounced = _.debounce(
 					this.messageEventListener.bind(this),
@@ -273,6 +273,10 @@
 					}
 				)
 
+				addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+				addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+				addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+
 				addEventListener('message', debounced)
 				addEventListener('blur', this.checkFocus)
 				addEventListener('focus', this.checkFocus)
@@ -282,6 +286,10 @@
 				if (typeof this.child.destroy === 'function') {
 					this.child.destroy()
 				}
+
+				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
 
 				removeEventListener('blur', this.checkFocus)
 				removeEventListener('focus', this.checkFocus)

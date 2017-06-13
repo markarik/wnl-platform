@@ -168,7 +168,7 @@
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					if (this.hasSections) {
+					if (this.hasSections && this.currentSection) {
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
 						}
@@ -185,6 +185,7 @@
 
 						this.updateLesson(this.lessonProgressContext)
 					} else {
+						// TODO this should be smarter
 						if (parseInt(this.screenId) === this.lastScreenId) {
 							this.completeLesson(this.lessonProgressContext)
 						} else {

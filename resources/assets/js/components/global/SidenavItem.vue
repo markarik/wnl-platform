@@ -76,6 +76,7 @@
 					progressStore.getLessonProgress(this.$route.params).then((data) => {
 						// TODO fetch lesson progress and set progress accordingly
 					});
+					// TODO mark section as completed base on the 'status' property
 					return parseInt(this.$route.params.screenId) === this.to.params.screenId &&
 						this.$route.params.slide > this.to.params.slide
 				}

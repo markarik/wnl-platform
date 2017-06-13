@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import store from 'store'
-import { set } from 'vue'
-import { getApiUrl } from 'js/utils/env'
-import { resource } from 'js/utils/config'
+import {set} from 'vue'
+import {getApiUrl} from 'js/utils/env'
+import {resource} from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
 // Helper functions
@@ -46,6 +46,13 @@ const getters = {
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
+	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),
+	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
+		const sectionsIds = getters.getScreen(screenId).sections;
+		const sections = getters.getSections(sectionsIds);
+
+		return sections.map((section) => section.slide);
+	},
 	getScreens: state => (lessonId) => {
 		let screensIds = state.structure[resource('lessons')][lessonId][resource('screens')]
 
@@ -97,7 +104,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	setup({ commit, dispatch }, courseId) {
+	setup({commit, dispatch}, courseId) {
 		Promise.all([
 			dispatch('setStructure', courseId),
 			dispatch('progress/setupCourse', courseId, {root: true}),
@@ -108,7 +115,7 @@ const actions = {
 			$wnl.logger.error(reason)
 		})
 	},
-	setStructure({ commit }, courseId) {
+	setStructure({commit}, courseId) {
 		return new Promise((resolve, reject) => {
 			axios.get(getCourseApiUrl(courseId))
 				.then((response) => {

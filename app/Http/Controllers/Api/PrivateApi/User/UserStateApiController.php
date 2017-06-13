@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Redis;
 class UserStateApiController extends ApiController
 {
 	// courseId - userId - cacheVersion
-	const KEY_COURSE_TEMPLATE = 'user-state-%s-%s-%s';
+	const KEY_COURSE_TEMPLATE = 'UserState:%s:%s:%s';
 	// courseId - lessonId - userId - cacheVersion
-	const KEY_LESSON_TEMPLATE = 'user-state-%s-%s-%s-%s';
+	const KEY_LESSON_TEMPLATE = 'UserState:%s:%s:%s:%s';
 	const CACHE_VERSION = 1;
 
 	public function getCourse($id, $courseId)

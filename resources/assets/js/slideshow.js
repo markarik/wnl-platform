@@ -48,27 +48,31 @@ const handshake = new Postmate.Model({
 		$slideAnnotations.find('.slide-annotations-container').hide()
 		$annotationsCounters.text(annotationsLength)
 
-		if (annotationsLength > 0) {
-			let slideId = annotationsData[0].commentable_id,
-				elementId = `slide-annotations-${slideId}`,
-				$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
-
-			$annotationsCounters.addClass('has-some')
-
-			if (!$annotationsContainer.length) {
-				$slideAnnotations.append(`
-					<div id="${ elementId }" class="slide-annotations-container" style="display: none;">
-					</div>`
-				)
-				$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
-
-				$annotationsContainer.append(createAnnotations(annotationsData))
-			}
-
-			$annotationsContainer.show()
-		} else {
+		if (annotationsLength === 0) {
 			$annotationsCounters.removeClass('has-some')
+			return false
 		}
+
+		let slideId = annotationsData[0].commentable_id,
+			elementId = `slide-annotations-${slideId}`,
+			$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
+
+		$annotationsCounters.addClass('has-some')
+
+		if (!$annotationsContainer.length) {
+			$slideAnnotations.append(`
+				<div id="${ elementId }" class="slide-annotations-container" style="display: none;">
+				</div>`
+			)
+		} else if ($annotationsContainer.find('annotation').length !== annotationsLength) {
+			$slideAnnotations.empty()
+		} else {
+			return false
+		}
+
+		$annotationsContainer = $slideAnnotations.find(`#${elementId}`)
+		$annotationsContainer.append(createAnnotations(annotationsData))
+		$annotationsContainer.show()
 	},
 })
 

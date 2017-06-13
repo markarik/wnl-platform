@@ -146,6 +146,7 @@
 			...mapGetters('slideshow', [
 				'comments',
 				'commentProfile',
+				'getSlideId',
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
@@ -229,6 +230,11 @@
 
 					this.goToSlide(this.currentSlideIndex)
 					this.focusSlideshow()
+
+					this.onAnnotationsUpdated(this.comments({
+						resource: 'slides',
+						id: this.getSlideId(this.currentSlideIndex),
+					}))
 				}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {
@@ -304,7 +310,7 @@
 			},
 		},
 		mounted() {
-			Postmate.debug = false
+			Postmate.debug = isDebug()
 			this.initSlideshow()
 			this.setup(this.slideshowId)
 		},

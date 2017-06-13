@@ -3,6 +3,11 @@ import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 import {getCurrentUser} from './user';
 
+
+// TODO: Mar 9, 2017 - Use config when it's ready
+export const STATUS_IN_PROGRESS = 'in-progress';
+export const STATUS_COMPLETE = 'complete';
+
 const CACHE_VERSION = 1;
 
 const setCourseProgress = ({courseId, lessonId, route, status}) => {
@@ -27,16 +32,85 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 	})
 };
 
-const setLessonProgress = ({courseId, lessonId, route}) => {
+const setLessonProgress = ({courseId, lessonId}, value) => {
 	const key = getLessonStoreKey(courseId, lessonId);
 
-	store.set(key, route);
+	store.set(key, value);
 
 	getCurrentUser().then(({data: {id}}) => {
 		axios.put(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
-			lesson: route
+			lesson: value
 		});
 	})
+};
+
+const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
+	const updatedState = lessonState ? {...lessonState} : {};
+
+	updatedState.screens = updatedState.screens || {};
+	if (!updatedState.screens[screenId]) {
+		updatedState.screens[screenId] = {
+			status: STATUS_IN_PROGRESS
+		}
+	}
+
+	if (!updatedState.screens[screenId].sections) {
+		updatedState.screens[screenId].sections = {
+			[sectionId]: STATUS_COMPLETE
+		}
+	} else {
+		updatedState.screens[screenId].sections = {
+			...updatedState.screens[screenId].sections,
+			[sectionId]: STATUS_COMPLETE
+		}
+	}
+
+	setLessonProgress(rest, updatedState);
+
+	return updatedState;
+};
+
+const completeScreen = (lessonState, {screenId, ...rest}) => {
+	const updatedState = {...lessonState};
+
+	updatedState.screens = lessonState.screens || {};
+	updatedState.screens[screenId] = updatedState.screens[screenId] || {};
+	updatedState.screens[screenId].status = STATUS_COMPLETE;
+
+	setLessonProgress(rest, updatedState);
+
+	return updatedState;
+};
+
+const updateLesson = (lessonState, {route, ...rest}) => {
+	const updatedState = {
+		...lessonState,
+		route
+	};
+
+	setLessonProgress(rest, updatedState);
+	return updatedState;
+};
+
+const completeLesson = (lessonState, payload) => {
+	const updatedState = {
+		...lessonState,
+		status: STATUS_COMPLETE
+	};
+
+	setLessonProgress(payload, updatedState);
+	return updatedState;
+};
+
+const startLesson = (lessonState, {route, ...payload}) => {
+	const updatedState = {
+		...lessonState,
+		status: STATUS_IN_PROGRESS,
+		route
+	};
+
+	setLessonProgress(payload, updatedState);
+	return updatedState;
 };
 
 const resetLessonProgress = ({courseId, lessonId}) => {
@@ -108,6 +182,10 @@ export default {
 	getCourseProgress,
 	setCourseProgress,
 	getLessonProgress,
-	setLessonProgress,
-	resetLessonProgress
+	resetLessonProgress,
+	completeSection,
+	completeScreen,
+	completeLesson,
+	updateLesson,
+	startLesson
 };

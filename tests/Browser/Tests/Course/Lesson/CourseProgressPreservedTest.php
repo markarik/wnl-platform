@@ -28,6 +28,7 @@ class CourseProgressPreservedTest extends DuskTestCase
 				->waitFor('@side_nav', 15)
 				->goToLesson($LESSON_COMPLETED)
 				->on(new Lesson())
+				->completeLesson()
 				->waitFor('@side_nav', 15)
 				->quit();
 

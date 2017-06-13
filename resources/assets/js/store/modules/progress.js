@@ -53,6 +53,26 @@ const getters = {
 		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE
 	},
+	shouldCompleteLesson: (state, getters, rootState, rootGetters) => (courseId, lessonId) => {
+		const allScreens = rootGetters['course/getScreens'](lessonId);
+		const lesson = state.courses[courseId].lessons[lessonId];
+
+		if (!lesson && !lesson.screens) {
+			return false;
+		}
+
+		const startedScreens = lesson.screens;
+
+		return !allScreens.find(({id}) => {
+			if (!startedScreens[id]) {
+				return true;
+			} else if (startedScreens[id].status === STATUS_IN_PROGRESS) {
+				return true;
+			}
+
+			return false;
+		});
+	},
 	getCompleteLessons: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lesson, lessons = []
 		for (var lessonId in state.courses[courseId].lessons) {
@@ -113,6 +133,8 @@ const mutations = {
 			}
 		}
 
+		//TODO progressStore update
+
 		set(lessonState, 'screens', updatedState.screens);
 	},
 	[types.PROGRESS_COMPLETE_SCREEN] (state, payload) {
@@ -156,7 +178,7 @@ const actions = {
 		}
 	},
 	completeScreen({commit}, payload) {
-		// TODO
+		commit(types.PROGRESS_COMPLETE_SCREEN, payload);
 	},
 	completeSection({commit}, payload) {
 		commit(types.PROGRESS_COMPLETE_SECTION, payload)

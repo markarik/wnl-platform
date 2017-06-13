@@ -4,12 +4,15 @@ import Postmate from 'postmate'
 import Reveal from '../../vendor/reveal/reveal'
 import {imageviewer} from '../../vendor/imageviewer/imageviewer'
 
+import {timeFromS} from 'js/utils/time'
+
 imageviewer($, window, document)
 
 const container             = document.getElementsByClassName('reveal')[0]
 const $controls             = $('.wnl-slideshow-control')
 const $chartsContainers     = $('.slides').find('.iv-image-container')
-const $slideshowAnnotations = $('.slideshow-annotations')
+const $slideshowAnnotations = $('.annotations-to-slide')
+const $annotationsCounters  = $slideshowAnnotations.find('.annotations-count')
 
 const viewer    = ImageViewer()
 const handshake = new Postmate.Model({
@@ -27,9 +30,12 @@ const handshake = new Postmate.Model({
 		Reveal.slide(slideNumber)
 	},
 	updateAnnotations: (annotationsData) => {
-		$slideshowAnnotations.find('.slide-annotations-container').hide()
+		let annotationsLength = annotationsData.length
 
-		if (annotationsData.length > 0) {
+		$slideshowAnnotations.find('.slide-annotations-container').hide()
+		$annotationsCounters.text(annotationsLength)
+
+		if (annotationsLength > 0) {
 			let slideId = annotationsData[0].commentable_id,
 				elementId = `slide-annotations-${slideId}`,
 				$annotationsContainer = $slideshowAnnotations.find(`#${elementId}`)
@@ -71,7 +77,14 @@ function createAnnotations(annotations) {
 	let annotationsHtml = ''
 
 	annotations.forEach(annotation => {
-		annotationsHtml += `<div class="annotation">${ annotation.text }</div>`
+		annotationsHtml += `
+			<div class="annotation">
+				<div class="annotation-meta">
+					<span class="author">${ annotation.profiles[0].full_name }</span> ·
+					<span class="time">${ timeFromS(annotation.created_at) }</span>
+				</div>
+				<div class="annotation-content">${ annotation.text }</div>
+			</div>`
 	})
 
 	return annotationsHtml

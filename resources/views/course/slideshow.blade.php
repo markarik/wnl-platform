@@ -37,20 +37,21 @@
 			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
-		<div class="slideshow-annotations">
+		<div class="menu-item annotations">
+			<a class="toggle-annotations rounded-button without-image">
+				<img src="{{ asset('images/comments.svg') }}" alt="Komentarze do slajdu">
+				<span class="annotations-count">0</span>
+			</a>
 		</div>
-		<div class="slideshow-fullscreen-menu">
-			<div class="menu-item annotations">
-				<a class="toggle-annotations rounded-button without-image">
-					<img src="{{ asset('images/comments.svg') }}" alt="Komentarze do slajdu">
-				</a>
-			</div>
-			<div class="menu-item go-to-slide"></div>
-			<div class="menu-item close-fullscreen">
-				<a class="toggle-fullscreen rounded-button without-image">
-					<img src="{{ asset('images/close-fullscreen.svg') }}" alt="Pełen ekran">
-				</a>
-			</div>
+		<div class="slideshow-annotations">
+			<div class="annotations-title">Komentarze do slajdu (<span class="annotations-count">0</span>)</div>
+			<div class="annotations-to-slide"></div>
+			<a class="annotations-new-comment">Skomentuj</a>
+		</div>
+		<div class="menu-item fullscreen">
+			<a class="toggle-fullscreen rounded-button without-image">
+				<img src="{{ asset('images/close-fullscreen.svg') }}" alt="Pełen ekran">
+			</a>
 		</div>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>

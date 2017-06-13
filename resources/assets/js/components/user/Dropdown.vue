@@ -2,6 +2,9 @@
 	<div class="wnl-dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
 			<wnl-avatar></wnl-avatar>
+			<!-- <span class="username">
+				{{ currentUserName }}
+			</span> -->
 			<span class="icon">
 				<i class="fa fa-angle-down"></i>
 			</span>
@@ -32,7 +35,7 @@
 
 	.activator
 		align-items: center
-		color: $color-inactive-gray
+		color: $color-gray-dimmed
 		cursor: pointer
 		display: flex
 		height: 100%
@@ -50,11 +53,19 @@
 			background-color: $color-background-light-gray
 			color: $color-gray
 
+			.username
+				color: $color-gray
+				font-weight: $font-weight-regular
+
 		.icon
 			margin: 0 $margin-tiny
 
+		.username
+			color: $color-gray-dimmed
+			margin: 0 $margin-tiny 0 $margin-small
+
 	.drawer
-		right: -20%
+		right: 0
 		position: absolute
 		top: 95%
 		z-index: 100
@@ -89,15 +100,15 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserFullName']),
+			...mapGetters(['currentUserName', 'currentUserFullName']),
 			isDemo() {
 				return isDemo()
 			},
 			items() {
 				return [
 					{
-						'text': 'Twoje zamówienia',
-						'route': 'my-orders',
+						'text': 'Twoje konto',
+						'route': 'myself',
 					},
 					{
 						'text': 'Wyloguj się',

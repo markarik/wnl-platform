@@ -1,29 +1,47 @@
 <template>
 	<div class="wnl-app-layout">
-		<div class="wnl-left wnl-app-layout-left">
+		<wnl-sidenav-slot
+			:isVisible="isSidenavVisible"
+			:isDetached="!isSidenavMounted"
+		>
+			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="wnl-sidenav wnl-left-content">
 				<wnl-sidenav :items="items" :breadcrumbs="breadcrumbs"></wnl-sidenav>
 			</aside>
-		</div>
-		<div class="wnl-middle wnl-app-layout-main">
+		</wnl-sidenav-slot>
+		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}">
 			<router-view></router-view>
 		</div>
-		<div class="wnl-right wnl-app-layout-right"></div>
 	</div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.wnl-sidenav
+		padding: $margin-small
+</style>
 
 <script>
 	import Sidenav from 'js/components/global/Sidenav.vue'
 	import { isProduction } from 'js/utils/env'
+	import { mapGetters } from 'vuex'
+	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import MainNav from 'js/components/MainNav'
 
 	export default {
 		props: ['view'],
 		computed: {
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
 			isProduction() {
 				return isProduction()
 			},
 			items() {
 				let items = [
+					{
+						text: 'Konto',
+						itemClass: 'heading small',
+					},
 					{
 						text: 'Twoje zamówienia',
 						itemClass: 'has-icon',
@@ -72,18 +90,18 @@
 						iconClass: 'fa-file-o',
 						iconTitle: 'Profil publiczny',
 					},
-					// {
-					// 	text: 'Ustawienia',
-					// 	itemClass: 'has-icon',
-					// 	to: {
-					// 		name: 'my-settings',
-					// 		params: {},
-					// 	},
-					// 	isDisabled: false,
-					// 	method: 'push',
-					// 	iconClass: 'fa-sliders',
-					// 	iconTitle: 'Profil publiczny',
-					// },
+					{
+						text: 'Ustawienia',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-settings',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-sliders',
+						iconTitle: 'Profil publiczny',
+					},
 					// {
 					// 	text: 'Zmiana hasła',
 					// 	itemClass: 'has-icon',
@@ -143,6 +161,8 @@
 		},
 		components: {
 			'wnl-sidenav': Sidenav,
+			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-main-nav': MainNav
 		},
 		// mounted() { this.goToDefaultRoute() }
 	}

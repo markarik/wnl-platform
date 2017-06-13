@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" v-if="!isCurrentUserLoading">
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
 			<router-view></router-view>
@@ -10,7 +10,6 @@
 <script>
 	// Import global components
 	import store from 'store'
-
 	import Navbar from 'js/components/global/Navbar.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { swalConfig } from 'js/utils/swal'
@@ -23,10 +22,10 @@
 			'wnl-navbar': Navbar
 		},
 		computed: {
-			...mapGetters(['currentUserId'])
+			...mapGetters(['currentUserId', 'isCurrentUserLoading'])
 		},
 		methods: {
-			...mapActions(['setupCurrentUser', 'setLayout']),
+			...mapActions(['setupCurrentUser', 'setLayout', 'resetLayout']),
 			displayScreenResolutionInfo() {
 				const resolutionInfoKey = `has-seen-resolution-info-${CACHE_VERSION}`
 				const resolutionInfoValue = 1
@@ -63,10 +62,14 @@
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {
+			this.$router.afterEach(() => {
+				this.resetLayout()
+			})
+
 			this.setLayout(this.$breakpoints.currentBreakpoint())
 			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 				this.setLayout(currentLayout)
-			});
+			})
 		}
 	}
 </script>

@@ -4,6 +4,7 @@
 			:class="[iconClass, iconSizeClass]"
 			:name="name"
 			:disabled="disabled"
+			:title="title"
 			@click="emitClick">
 			<wnl-icon :name="icon"></wnl-icon>
 		</button>
@@ -45,7 +46,7 @@
 
 <script>
 	export default {
-		props: ['name', 'icon', 'alt', 'modifier', 'size', 'align', 'label', 'disabled'],
+		props: ['name', 'icon', 'alt', 'modifier', 'size', 'align', 'label', 'disabled', 'title'],
 		computed: {
 			iconAlt () {
 				return this.alt || this.icon

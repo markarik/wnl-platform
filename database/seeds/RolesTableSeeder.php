@@ -18,6 +18,9 @@ class RolesTableSeeder extends Seeder
 			[
 				'name' => 'moderator',
 			],
+			[
+				'name' => 'workshop-participant',
+			],
 		]);
 	}
 }

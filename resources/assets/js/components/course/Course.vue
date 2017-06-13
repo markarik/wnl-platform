@@ -1,35 +1,99 @@
 <template>
-	<div class="wnl-app-layout">
-		<div class="wnl-left wnl-app-layout-left">
+	<div class="wnl-app-layout wnl-course-layout">
+		<wnl-sidenav-slot
+			:isVisible="canRenderSidenav"
+			:isDetached="!isSidenavMounted"
+		>
+			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
 				:context="context"
 				:isLesson="isLesson"
-				v-if="ready">
+			>
 			</wnl-course-navigation>
-		</div>
-		<div class="wnl-middle wnl-app-layout-main">
+		</wnl-sidenav-slot>
+		<div class="wnl-course-content wnl-column">
 			<router-view v-if="ready"></router-view>
 		</div>
-		<div class="wnl-right wnl-app-layout-right">
-			<wnl-chat :room="chatRoom"></wnl-chat>
+		<wnl-sidenav-slot
+			:isVisible="isChatVisible"
+			:isDetached="!isChatMounted"
+			:hasChat="true"
+		>
+			<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
+		</wnl-sidenav-slot>
+		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
+			<span class="icon is-big" @click="toggleChat">
+				<i class="fa fa-comments-o"></i>
+			</span>
 		</div>
 	</div>
 </template>
 
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
+	.wnl-course-layout
+		justify-content: space-between
+
+	.wnl-course-content
+		margin: 0 $margin-base
+		max-width: $course-content-max-width
+		flex: $course-content-flex auto
+		position: relative
+
+	.wnl-course-chat
+		flex: $course-chat-flex auto
+		max-width: $course-chat-max-width
+		min-width: $course-chat-min-width
+
+	.wnl-chat-toggle
+		align-items: flex-start
+		border-left: $border-light-gray
+		display: flex
+		flex-grow: 0
+		justify-content: center
+		padding: 20px
+
+		.icon
+			color: $color-gray-dimmed
+			cursor: pointer
+</style>
+
 <script>
 	import axios from 'axios'
 	import store from 'store'
-	import Navigation from 'js/components/course/Navigation.vue'
-	import Chat from 'js/components/chat/Chat.vue'
-	import { getApiUrl } from 'js/utils/env'
 	import { mapGetters, mapActions } from 'vuex'
-	import * as mutations from 'js/store/mutations-types'
+	import Breadcrumbs from 'js/components/global/Breadcrumbs'
+	import PublicChat from 'js/components/chat/PublicChat.vue'
+	import Navigation from 'js/components/course/Navigation'
+	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import MainNav from 'js/components/MainNav'
+	import { breadcrumb } from 'js/mixins/breadcrumb'
+	import { getApiUrl } from 'js/utils/env'
+	import withChat from 'js/mixins/with-chat'
 
 	export default {
 		name: 'Course',
+		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
 			...mapGetters('course', ['ready']),
+			...mapGetters([
+				'isSidenavVisible',
+				'isSidenavMounted',
+				'isChatMounted',
+				'isChatVisible',
+				'isChatToggleVisible'
+			]),
+			breadcrumb() {
+				return {
+					text: 'Kurs',
+					to: {
+						name: 'courses',
+						courseId: this.courseId,
+					},
+				}
+			},
 			context() {
 				return {
 					courseId: this.courseId,
@@ -41,28 +105,53 @@
 			isLesson() {
 				return typeof this.lessonId !== 'undefined'
 			},
-			chatRoom() {
+			chatRooms() {
 				let chatRoom = `courses-${this.courseId}`
 				if (this.isLesson) {
 					chatRoom += `-lessons-${this.lessonId}`
 				}
-				return chatRoom
+				return [
+					{name: '#powaga', channel: chatRoom},
+					{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+				]
 			},
 			localStorageKey() {
 				return `course-structure-${this.courseId}`
 			},
+
+			canRenderSidenav() {
+				return this.isSidenavVisible && this.ready
+			}
 		},
 		components: {
 			'wnl-course-navigation': Navigation,
-			'wnl-chat': Chat
+			'wnl-public-chat': PublicChat,
+			'wnl-breadcrumbs': Breadcrumbs,
+			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-main-nav': MainNav
 		},
+		mixins: [withChat],
 		methods: {
 			...mapActions('course', [
 				'setup'
-			])
+			]),
+			...mapActions(['toggleChat', 'initChat'])
+			// ...mapActions(['addBreadcrumb', 'removeBreadcrumb']),
 		},
 		created() {
 			this.setup(this.courseId)
 		}
+		// mounted() {
+		// 	this.addBreadcrumb({
+		// 		text: 'Kurs',
+		// 		to: {
+		// 			name: 'courses',
+		// 			courseId: this.courseId,
+		// 		},
+		// 	})
+		// },
+		// beforeDestroy() {
+		// 	this.removeBreadcrumb('Kurs')
+		// },
 	}
 </script>

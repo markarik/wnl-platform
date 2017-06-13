@@ -69,6 +69,9 @@
 		},
 		mounted() {
 			this.wrapEmbedded()
-		}
+		},
+		updated() {
+			this.wrapEmbedded()
+		},
 	}
 </script>

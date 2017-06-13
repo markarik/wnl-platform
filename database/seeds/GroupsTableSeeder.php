@@ -13,12 +13,9 @@ class GroupsTableSeeder extends Seeder
 	{
 		DB::table('groups')->insert([
 			[
-				'name'      => 'Interna',
-				'course_id' => 1,
-			],
-			[
-				'name'      => 'Chirurgia',
-				'course_id' => 1,
+				'name'          => 'Patch yak froova',
+				'course_id'     => 1,
+				'required_role' => 'workshop-participant',
 			],
 		]);
 	}

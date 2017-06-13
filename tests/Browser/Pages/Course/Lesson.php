@@ -79,6 +79,16 @@ class Lesson extends BasePage
 		PHPUnit::assertTrue($browser->elementPresent(self::CSS_NAVIGATE_LEFT));
 	}
 
+	public function completeLesson($browser) {
+		$sections = $browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS));
+
+		for ($i = 0; $i < count($sections); $i++) {
+			$section = $sections[$i];
+			$section->click();
+			$this->assertSectionActive($section);
+		}
+	}
+
 	public function goThroughSections($browser)
 	{
 		$sections = $browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS));

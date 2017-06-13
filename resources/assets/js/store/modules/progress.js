@@ -73,6 +73,21 @@ const getters = {
 			return false;
 		});
 	},
+	shouldCompleteScreen: (state, getters, rootState, rootGetters) => (courseId, lessonId, screenId) => {
+		const screen = rootGetters['course/getScreen'](screenId);
+		const allSections = rootGetters['course/getSections'](screen.sections);
+		const lesson = state.courses[courseId].lessons[lessonId];
+
+		if (!lesson && !lesson.screens && !lesson.screens[screenId] && !lesson.screens[screenId].sections) {
+			return false;
+		}
+
+		const startedSections = lesson.screens[screenId].sections;
+
+		return !allSections.find(({id}) => {
+			return !startedSections[id];
+		});
+	},
 	getCompleteLessons: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lesson, lessons = []
 		for (var lessonId in state.courses[courseId].lessons) {

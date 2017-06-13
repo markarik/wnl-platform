@@ -79,7 +79,8 @@
 			]),
 			...mapGetters('progress', [
 				'getSavedLesson',
-				'shouldCompleteLesson'
+				'shouldCompleteLesson',
+				'shouldCompleteScreen'
 			]),
 			lessonName() {
 				return this.getLesson(this.lessonId).name
@@ -174,8 +175,7 @@
 							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
 						}
 
-						// TODO this should be smarter - mark screen as completed when all sections finished
-						if (this.currentSection.id === this.lastSection.id) {
+						if (this.shouldCompleteScreen(this.courseId, this.lessonId, this.screenId)) {
 							this.completeScreen(this.lessonProgressContext);
 
 							if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {

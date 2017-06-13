@@ -107,22 +107,12 @@
 			currentSection() {
 				return this.sectionsReversed.find((section) => this.slide >= section.slide);
 			},
-			lastSection() {
-				return _.head(this.sectionsReversed);
-			},
 			firstScreenId() {
 				if (_.isEmpty(this.screens)) {
 					return null
 				}
 
 				return _.head(this.screens).id
-			},
-			lastScreenId() {
-				if (_.isEmpty(this.screens)) {
-					return null
-				}
-
-				return _.last(this.screens).id
 			},
 			lessonProgressContext() {
 				return {
@@ -147,25 +137,39 @@
 				'completeSection'
 			]),
 			launchLesson() {
-				this.startLesson(this.lessonProgressContext)
-				this.goToDefaultScreenIfNone()
+				this.startLesson(this.lessonProgressContext).then(() => {
+					this.goToDefaultScreenIfNone()
+				});
 			},
 			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
 					this.getSavedLesson(this.courseId, this.lessonId)
 						.then(({route, status}) => {
-							if (this.firstScreenId && status === STATUS_COMPLETE || (route && route.name !== resource('screens'))) {
-								this.$router.replace({
-									name: resource('screens'), params: {
-										courseId: this.courseId,
-										lessonId: this.lessonId,
-										screenId: this.firstScreenId,
-									}
-								})
+							if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
+								const params = {
+									courseId: this.courseId,
+									lessonId: this.lessonId,
+									screenId: this.firstScreenId,
+								};
+								if (this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
+									params.slide = 1;
+								}
+								this.$router.replace({name: resource('screens'), params})
 							} else if (route && route.hasOwnProperty('name')) {
 								this.$router.replace(route)
 							}
 						});
+				} else if (this.screenId && !this.slide) {
+					const params = {
+						courseId: this.courseId,
+						lessonId: this.lessonId,
+						screenId: this.screenId,
+					};
+
+					if (this.currentScreen.type === 'slideshow') {
+						params.slide = 1;
+					}
+					this.$router.replace({name: resource('screens'), params})
 				}
 			},
 			updateLessonProgress() {

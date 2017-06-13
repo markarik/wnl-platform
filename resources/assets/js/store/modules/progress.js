@@ -168,7 +168,7 @@ const actions = {
 		})
 	},
 	startLesson({commit, getters}, payload) {
-		progressStore.getLessonProgress(payload)
+		return progressStore.getLessonProgress(payload)
 			.then(data => {
 				commit(types.PROGRESS_SETUP_LESSON, {
 					courseId: payload.courseId,
@@ -179,7 +179,11 @@ const actions = {
 				if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
 					$wnl.logger.info(`Starting lesson ${payload.lessonId}`, payload)
 					commit(types.PROGRESS_START_LESSON, payload)
+
+					return true;
 				}
+
+				return false;
 			});
 	},
 	updateLesson({commit}, payload) {

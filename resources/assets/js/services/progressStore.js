@@ -3,6 +3,7 @@ import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 import {getCurrentUser} from './user';
 
+
 // TODO: Mar 9, 2017 - Use config when it's ready
 export const STATUS_IN_PROGRESS = 'in-progress';
 export const STATUS_COMPLETE = 'complete';
@@ -44,9 +45,9 @@ const setLessonProgress = ({courseId, lessonId}, value) => {
 };
 
 const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
-	const updatedState = {...lessonState};
+	const updatedState = lessonState ? {...lessonState} : {};
 
-	updatedState.screens = lessonState.screens || {};
+	updatedState.screens = updatedState.screens || {};
 	if (!updatedState.screens[screenId]) {
 		updatedState.screens[screenId] = {
 			status: STATUS_IN_PROGRESS

@@ -32,9 +32,11 @@ export const reactionsActions = {
 				params = payload.hasReacted ? { params: data } : data
 
 			return axios[method](getApiUrl(`reactions`), params)
-				.then(() => {
+				.then((response) => {
 					commit(types.SET_REACTION, payload)
-					resolve()
+					resolve(response)
+          console.log('response z akcji :');
+          console.log(response);
 				})
 				.catch(error => $wnl.logger.error(error))
 					reject()

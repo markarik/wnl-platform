@@ -1,11 +1,12 @@
 <!doctype html>
 <html>
-
 <head>
+	<title>Slideshow</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link href="{{ mix('/css/reveal.css') }}" rel="stylesheet">
 	<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
-	<link href="{{ mix('css/imageviewer.css') }}" rel="stylesheet">
+	<link href="{{ mix('/css/imageviewer.css') }}" rel="stylesheet">
 
 	<style type="text/css">
 		.reveal.image-custom-background {
@@ -36,7 +37,19 @@
 			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
-
+		<a class="toggle-annotations rounded-button without-image" style="display: none">
+			<img src="{{ asset('images/comments.svg') }}" alt="Komentarze do slajdu">
+			<span class="annotations-count">0</span>
+		</a>
+		<div class="slideshow-annotations" style="display: none;">
+			<div class="annotations-title">Komentarze do slajdu (<span class="annotations-count">0</span>)</div>
+			<div class="annotations-to-slide"></div>
+			<a class="annotations-new-comment">Skomentuj</a>
+		</div>
+		<a class="toggle-fullscreen rounded-button without-image">
+			<img class="fs-close" src="{{ asset('images/close-fullscreen.svg') }}" alt="Zamknij pełen ekran">
+			<img class="fs-open" src="{{ asset('images/fullscreen-arrows.svg') }}" alt="Pełen ekran">
+		</a>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>
 </html>

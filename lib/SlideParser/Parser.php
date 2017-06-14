@@ -53,7 +53,6 @@ class Parser
 
 	/**
 	 * @param $fileContents - string/html
-	 *
 	 * @throws ParseErrorException
 	 */
 	public function parse($fileContents)
@@ -194,7 +193,6 @@ class Parser
 
 	/**
 	 * @param $data - string/html
-	 *
 	 * @return array
 	 */
 	protected function matchSlides($data):array
@@ -208,7 +206,6 @@ class Parser
 
 	/**
 	 * @param $data - string/html
-	 *
 	 * @return bool
 	 */
 	protected function isFunctional($data):bool
@@ -220,7 +217,6 @@ class Parser
 	 * @param $pattern
 	 * @param $data
 	 * @param \Closure $errback
-	 *
 	 * @return mixed
 	 * @internal param \Closure $callback
 	 */
@@ -242,7 +238,6 @@ class Parser
 
 	/**
 	 * @param $slideHtml
-	 *
 	 * @return array
 	 */
 	public function getTags($slideHtml)

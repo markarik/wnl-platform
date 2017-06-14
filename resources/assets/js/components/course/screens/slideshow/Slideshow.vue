@@ -16,9 +16,6 @@
 			</div>
 			<div class="wnl-screen wnl-ratio-16-9">
 				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }">
-					<div class="faux-fullscreen-close" v-if="isFauxFullscreen" @click="toggleFullscreen">
-						<span class="icon is-medium"><i class="fa fa-times"></i></span>
-					</div>
 				</div>
 			</div>
 			<div class="margin top slideshow-menu">
@@ -27,16 +24,8 @@
 						:currentSlide="currentSlideNumber"
 						:slideshowId="slideshowId"
 						@commentsHidden="onCommentsHidden"
+						@annotationsUpdated="onAnnotationsUpdated"
 					></wnl-annotations>
-				</div>
-				<div class="slideshow-fullscreen">
-					<wnl-image-button name="wnl-slideshow-control-fullscreen"
-						icon="fullscreen-arrows"
-						alt="Włącz pełen ekran"
-						align="right"
-						title="Pełen ekran"
-						@buttonclicked="toggleFullscreen"
-					></wnl-image-button>
 				</div>
 			</div>
 		</div>
@@ -120,7 +109,7 @@
 
 <script>
 	import _ from 'lodash'
-	import Postmate from 'postmate'
+	import Postmate from 'postmate-fork'
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
@@ -129,7 +118,7 @@
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getUrl} from 'js/utils/env'
 
-	let debounced;
+	let debounced, handshake
 
 	export default {
 		name: 'Slideshow',
@@ -142,7 +131,6 @@
 				child: {},
 				currentSlideNumber: Math.max(this.$route.params.slide, 1) || 1,
 				loaded: false,
-				isFullscreen: false,
 				isFauxFullscreen: false,
 				isFocused: false,
 				slideChanged: false
@@ -152,6 +140,9 @@
 		computed: {
 			...mapGetters(['getSetting']),
 			...mapGetters('slideshow', [
+				'comments',
+				'commentProfile',
+				'getSlideId',
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
@@ -210,8 +201,10 @@
 				this.focusSlideshow()
 			},
 			focusSlideshow() {
-				this.iframe.click()
-				this.iframe.focus()
+				if (this.child.hasOwnProperty('frame') && typeof this.child.frame !== undefined) {
+					this.child.frame.click()
+					this.child.frame.focus()
+				}
 				this.isFocused = true
 			},
 			checkFocus() {
@@ -219,17 +212,24 @@
 			},
 			initSlideshow() {
 				$wnl.logger.debug('Initiating slideshow')
-				new Postmate({
-						container: this.container,
-						url: this.slideshowUrl
-					}).then(child => {
-						this.child = child
-						this.loaded = true
-						this.setEventListeners()
+				handshake = new Postmate({
+					container: this.container,
+					url: this.slideshowUrl
+				})
 
-						this.goToSlide(this.currentSlideIndex)
-						this.focusSlideshow()
-					}).catch(exception => $wnl.logger.capture(exception))
+				handshake.then(child => {
+					this.child = child
+					this.loaded = true
+					this.setEventListeners()
+
+					this.goToSlide(this.currentSlideIndex)
+					this.focusSlideshow()
+
+					this.onAnnotationsUpdated(this.comments({
+						resource: 'slides',
+						id: this.getSlideId(this.currentSlideIndex),
+					}))
+				}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {
 				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
@@ -250,7 +250,15 @@
 
 						this.slideChanged = false
 					} catch (error) { $wnl.logger.error(error) }
+				} else if (typeof event.data === 'object' &&
+					event.data.hasOwnProperty('value') &&
+					event.data.value.name === 'toggle-fullscreen'
+				) {
+					this.toggleFullscreen()
 				}
+			},
+			fullscreenChangeHandler(event) {
+				this.child.call('toggleFullscreen', screenfull.isFullscreen)
 			},
 			setEventListeners() {
 				debounced = _.debounce(
@@ -262,6 +270,10 @@
 					}
 				)
 
+				addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+				addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+				addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+
 				addEventListener('message', debounced)
 				addEventListener('blur', this.checkFocus)
 				addEventListener('focus', this.checkFocus)
@@ -272,11 +284,30 @@
 					this.child.destroy()
 				}
 
+				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+
 				removeEventListener('blur', this.checkFocus)
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
 				removeEventListener('message', debounced)
 				this.loaded = false
+			},
+			onAnnotationsUpdated(comments) {
+				if (typeof this.child.call === 'function') {
+					let annotations = _.cloneDeep(comments)
+
+					if (annotations.length > 0) {
+						annotations.forEach((annotation) => {
+							annotation.profiles = annotation.profiles.map((id) => {
+								return this.commentProfile(id)
+							})
+						})
+					}
+
+					this.child.call('updateAnnotations', annotations)
+				}
 			},
 			onCommentsHidden() {
 				this.focusSlideshow()
@@ -284,7 +315,7 @@
 			},
 		},
 		mounted() {
-			Postmate.debug = false
+			Postmate.debug = isDebug()
 			this.initSlideshow()
 			this.setup(this.slideshowId)
 		},

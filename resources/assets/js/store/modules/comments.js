@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import axios from 'axios'
 import { set, delete as destroy } from 'vue'
 
@@ -16,7 +17,7 @@ export const commentsGetters = {
 
 		return state[payload.resource][payload.id].comments.map((commentId) => state.comments[commentId])
 	},
-	commentProfile: (state) => (id) => state.profiles[id]
+	commentProfile: (state) => (id) => state.profiles[id],
 }
 
 export const commentsMutations = {

@@ -146,7 +146,7 @@ const actions = {
 			fetchQuizSet(resource.id)
 		]).then(([storedState, response]) => {
 
-			if (useLocalStorage() && !_.isUndefined(storedState)) {
+			if (useLocalStorage() && !_.isEmpty(storedState)) {
 				commit(types.QUIZ_RESTORE_STATE, storedState)
 				commit(types.QUIZ_IS_LOADED, true)
 				commit(types.QUIZ_TOGGLE_PROCESSING, false)

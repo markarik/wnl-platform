@@ -125,7 +125,7 @@
 			},
 			setListeners(socket) {
 				socket.on('user-sent-message', (data) => {
-					this.addMessage(data.message)
+					this.messages.push(data.message)
 				})
 
 				socket.on('message-processed', (data) => {

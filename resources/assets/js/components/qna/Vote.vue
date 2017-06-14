@@ -1,9 +1,9 @@
 <template>
-	<div class="vote" :class="iconClass" @click="mockUpvote">
+	<div class="vote" :class="iconClass">
 		<span class="icon is-small">
-			<i class="fa fa-thumbs-o-up"></i>
+			<i class="fa" :class="hasReactedClass" @click="toggleReaction"></i>
 		</span>
-		<span class="count">{{count}}</span>
+		<span class="count">{{ count }}</span>
 	</div>
 </template>
 
@@ -27,24 +27,51 @@
 </style>
 
 <script>
-	import {swalConfig} from 'js/utils/swal'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		name: 'Vote',
-		props: ['type', 'count'],
+		props: ['type', 'module', 'reactableResource', 'reactableId'],
+		data() {
+			return {
+				isLoading: false
+			}
+		},
 		computed: {
+			...mapGetters('qna', ['getReaction']),
+			reaction() {
+				return this.getReaction(this.reactableResource, this.reactableId, 'upvote')
+			},
 			iconClass() {
 				return `vote-${this.type}`
 			},
+			count() {
+				return this.reaction.count
+			},
+			hasReactedClass() {
+				return this.reaction.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
+			},
 		},
 		methods: {
-			mockUpvote() {
-				this.$swal(swalConfig({
-					html: `<p class="normal">Pracujemy już nad rankingiem pytań i odpowiedzi!</p>`,
-					title: 'Już wkrótce!',
-					type: 'info',
-				}))
-			}
+			...mapActions('qna', ['setReaction']),
+			toggleReaction() {
+				if (this.isLoading) {
+					return false
+				}
+				this.isLoading = true
+				this.setReaction({
+					reactableResource: this.reactableResource,
+					reactableId: this.reactableId,
+					reaction: 'upvote',
+					hasReacted: this.reaction.hasReacted,
+				}).then((response) => {
+					this.isLoading = false
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					this.isLoading = false
+				})
+			},
 		},
 	}
 </script>

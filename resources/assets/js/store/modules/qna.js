@@ -3,6 +3,7 @@ import axios from 'axios'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import { set, delete as destroy } from 'vue'
+import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions'
 
 // API
 /**
@@ -11,7 +12,7 @@ import { set, delete as destroy } from 'vue'
  * @private
  */
 function _getQuestions(lessonId) {
-	return axios.get(getApiUrl(`lessons/${lessonId}?include=qna_questions.profiles`))
+	return axios.get(getApiUrl(`lessons/${lessonId}?include=qna_questions.profile,reactions`))
 }
 
 /**
@@ -20,7 +21,7 @@ function _getQuestions(lessonId) {
  * @private
  */
 function _getAnswers(questionId) {
-	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments`))
+	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,reactions`))
 }
 
 /**
@@ -79,12 +80,13 @@ const state = getInitialState()
 
 // Getters
 const getters = {
+	...reactionsGetters,
 	loading: state => state.loading,
 	sortedQuestions: state => {
 		return _.reverse(
 			_.sortBy(
 				state.questionsIds.map((id) => state.qna_questions[id]),
-				(question) => question.created_at,
+				(question) => question.upvote.count,
 			)
 		)
 	},
@@ -109,10 +111,10 @@ const getters = {
 
 		return answersIds.map((id) => state.qna_answers[id])
 	},
-	questionAnswersFromLatest: (state, getters) => (id) => {
+	questionAnswersFromHighestUpvoteCount: (state, getters) => (id) => {
 		return _.reverse(
 			_.sortBy(
-				getters.questionAnswers(id), (answer) => answer.created_at
+				getters.questionAnswers(id), (answer) => answer.upvote.count
 			)
 		)
 	},
@@ -128,8 +130,10 @@ const getters = {
 	},
 }
 
+
 // Mutations
 const mutations = {
+	...reactionsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},
@@ -200,9 +204,11 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let merged = _.merge(state[resource], items)
-			destroy(state, resource)
-			set(state, resource, merged)
+			let resourceObject = state[resource]
+
+			_.each(items, (item, index) => {
+				set(resourceObject, index, item)
+			})
 		})
 	},
 	[types.QNA_DESTROY] (state) {
@@ -215,6 +221,7 @@ const mutations = {
 
 // Actions
 const actions = {
+	...reactionsActions,
 	fetchQuestions({commit, rootState}) {
 		let lessonId = rootState.route.params.lessonId
 

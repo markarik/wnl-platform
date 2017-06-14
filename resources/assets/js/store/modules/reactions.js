@@ -35,8 +35,6 @@ export const reactionsActions = {
 				.then((response) => {
 					commit(types.SET_REACTION, payload)
 					resolve(response)
-          console.log('response z akcji :');
-          console.log(response);
 				})
 				.catch(error => $wnl.logger.error(error))
 					reject()

@@ -204,9 +204,11 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let merged = _.merge(state[resource], items)
-			destroy(state, resource)
-			set(state, resource, merged)
+			let resourceObject = state[resource]
+
+			_.each(items, (item, index) => {
+				set(resourceObject, index, item)
+			})
 		})
 	},
 	[types.QNA_DESTROY] (state) {

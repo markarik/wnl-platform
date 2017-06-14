@@ -11,9 +11,8 @@ export const getLocalStorageKey = (setId, userSlug) => {
 
 
 const saveQuizProgress = (setId, currentUserSlug, state) => {
-	// TODO: Apr 24, 2017 - We must solve it better.
 	const storeKey = getLocalStorageKey(setId, currentUserSlug);
-	store.set(storeKey, state, new Date().getTime() + 3 * 60 * 60 * 1000);
+	store.set(storeKey, state);
 
 	getCurrentUser().then(({data: {id}}) => {
 		axios.put(getApiUrl(`users/${id}/state/quiz/${setId}`), {

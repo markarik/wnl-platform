@@ -138,37 +138,37 @@ const mutations = {
 
 const actions = {
 	...commentsActions,
-	setupQuestions({commit, dispatch, getters, state, rootGetters}, resource) {
-		quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug)
-			.then((storedState) => {
-				console.log(storedState, '******* STORED STATE');
-				commit(types.QUIZ_IS_LOADED, false)
+	setupQuestions({commit, dispatch, rootGetters}, resource) {
+		commit(types.QUIZ_IS_LOADED, false)
 
-				if (useLocalStorage() && !_.isUndefined(storedState)) {
-					debugger;
-					commit(types.QUIZ_RESTORE_STATE, storedState)
-					commit(types.QUIZ_IS_LOADED, true)
-					commit(types.QUIZ_TOGGLE_PROCESSING, false)
-					return true
-				}
-			})
-			.then(() => fetchQuizSet(resource.id))
-			.then((response) => {
-				let included = response.data.included,
-					questionsIds = response.data.quiz_questions,
-					len = questionsIds.length
+		Promise.all([
+			quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug),
+			fetchQuizSet(resource.id)
+		]).then(([storedState, response]) => {
 
-				commit(types.UPDATE_INCLUDED, included)
-
-				commit(types.QUIZ_SET_QUESTIONS, {
-					setId: response.data.id,
-					setName: response.data.name,
-					len,
-					questionsIds,
-				})
+			if (useLocalStorage() && !_.isUndefined(storedState)) {
+				commit(types.QUIZ_RESTORE_STATE, storedState)
 				commit(types.QUIZ_IS_LOADED, true)
-				dispatch('saveQuiz')
+				commit(types.QUIZ_TOGGLE_PROCESSING, false)
+				return true
+			}
+
+			let included = response.data.included,
+				questionsIds = response.data.quiz_questions,
+				len = questionsIds.length
+
+			commit(types.UPDATE_INCLUDED, included)
+
+			commit(types.QUIZ_SET_QUESTIONS, {
+				setId: response.data.id,
+				setName: response.data.name,
+				len,
+				questionsIds,
 			})
+
+			commit(types.QUIZ_IS_LOADED, true)
+			dispatch('saveQuiz')
+		});
 	},
 
 	checkQuiz({state, commit, getters, dispatch}) {

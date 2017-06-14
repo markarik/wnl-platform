@@ -20,6 +20,12 @@ class Lesson extends BasePage
 
 	private $slideContent;
 	private $slide;
+	private $lessonId;
+
+	public function __construct($lessonId = 1)
+	{
+		$this->lessonId = $lessonId;
+	}
 
 	/**
 	 * Get the URL for the page.
@@ -28,7 +34,7 @@ class Lesson extends BasePage
 	 */
 	public function url()
 	{
-		return '/app/courses/1/lessons/1/screens/1';
+		return '/app/courses/1/lessons/' . $this->lessonId;
 	}
 
 

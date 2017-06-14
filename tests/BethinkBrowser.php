@@ -27,9 +27,10 @@ class BethinkBrowser extends Browser
 			$config['default_position']['x'],
 			$config['default_position']['y']
 		);
+
 		$this->resize(
-			$config['default_size']['width'],
-			$config['default_size']['height']
+			$config['desktop_size']['width'],
+			$config['desktop_size']['height']
 		);
 	}
 

@@ -9,9 +9,9 @@ use PHPUnit\Framework\Assert as PHPUnit;
 class Course extends BasePage
 {
 
-	const TEMPLATE_NTH_LESSON_ANCHOR = '.box .item:nth-of-type(%d) a';
-	const TEMPLATE_NTH_LESSON_SELECTOR = '.box .item:nth-of-type(%d)';
-	const LESSON_OFFSET = 1;
+	const TEMPLATE_NTH_LESSON_ANCHOR = '.items .item:nth-of-type(%d) a';
+	const TEMPLATE_NTH_LESSON_SELECTOR = '.items .item:nth-of-type(%d)';
+	const LESSON_OFFSET = 3;
 
 	public function url()
 	{

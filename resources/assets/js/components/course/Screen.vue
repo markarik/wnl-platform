@@ -2,7 +2,7 @@
 	<div>
 		<h4>{{name}}</h4>
 		<component :is="component" :screenData="screenData"></component>
-		<wnl-qna v-if="tags.length > 0"></wnl-qna>
+		<wnl-qna v-if="tags.length > 0" :tags="tags"></wnl-qna>
 	</div>
 </template>
 

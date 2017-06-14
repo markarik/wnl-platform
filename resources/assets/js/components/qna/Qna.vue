@@ -4,11 +4,16 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div class="wnl-qna" v-if="ready">
-			<div class="level">
+			<div class="wnl-qna-header level">
 				<div class="level-left">
-					<p class="title is-4">
-						Pytania i odpowiedzi ({{howManyQuestions}})
-					</p>
+					<div>
+						<p class="title is-4">
+							Pytania i odpowiedzi ({{howManyQuestions}})
+						</p>
+						<div class="tags">
+							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
+						</div>
+					</div>
 				</div>
 				<div class="level-right">
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
@@ -47,6 +52,13 @@
 		#question-icon
 			margin: $margin-tiny $margin-tiny 0 $margin-small
 
+	.wnl-qna-header
+		.title
+			margin-bottom: $margin-small
+
+		.tag
+			margin-right: $margin-small
+
 	.votes
 		flex: 0 auto
 		padding: 0 $margin-base
@@ -82,11 +94,14 @@
 </style>
 
 <script>
+	import {join} from 'lodash'
 	import { mapActions, mapGetters, mapMutations } from 'vuex'
-	import * as types from 'js/store/mutations-types'
 
 	import QnaQuestion from 'js/components/qna/QnaQuestion'
 	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
+
+	import * as types from 'js/store/mutations-types'
+	import {invisibleTags} from 'js/utils/config'
 
 	export default {
 		name: 'Qna',
@@ -94,6 +109,7 @@
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
 		},
+		props: ['tags'],
 		data() {
 			return {
 				ready: false,
@@ -104,6 +120,9 @@
 			...mapGetters('qna', ['sortedQuestions', 'loading']),
 			howManyQuestions() {
 				return this.sortedQuestions.length || 0
+			},
+			tagsFiltered() {
+				return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1)
 			},
 		},
 		methods: {

@@ -6,6 +6,7 @@
 		<div class="qna-question" v-else>
 			<div class="votes">
 				<wnl-vote type="up" count="0" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-vote>
+				<wnl-bookmark :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-bookmark>
 			</div>
 			<div class="qna-container">
 				<div class="qna-question-content" v-html="content"></div>
@@ -110,6 +111,7 @@
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/qna/Vote'
+	import Bookmark from 'js/components/qna/Bookmark'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -120,6 +122,7 @@
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
+			'wnl-bookmark': Bookmark,
 		},
 		props: ['questionId'],
 		data() {

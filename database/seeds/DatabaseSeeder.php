@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
 		$this->call(SlideshowSeeder::class);
 		$this->call(ChatRoomsSeeder::class);
 		$this->call(QuizSeeder::class);
-		$this->call(ScreensTableSeeder::class);
+//		$this->call(ScreensTableSeeder::class);
 		Cache::flush();
 	}
 

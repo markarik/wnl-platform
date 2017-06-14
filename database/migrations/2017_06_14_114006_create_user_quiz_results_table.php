@@ -21,7 +21,6 @@ class CreateUserQuizResultsTable extends Migration
 			$table->unique(
 				[
 					'user_id',
-					'quiz_answer_id',
 					'quiz_question_id',
 				],
 				'unique_quiz_result'

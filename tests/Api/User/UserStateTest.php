@@ -235,7 +235,7 @@ class UserStateTest extends ApiTestCase
 		$user = User::find($USER_ID);
 		$quizData = [
 			'quiz_questions' => [
-				1 => [
+				7 => [
 					'id' => 7,
 					'selectedAnswer' => 8
 				],
@@ -243,6 +243,18 @@ class UserStateTest extends ApiTestCase
 					'id' => 8,
 					'selectedAnswer' => 12
 				]
+			]
+		];
+		$recordedAnswers = [
+			[
+				'quiz_question_id' => 7,
+				'quiz_answer_id' => 10,
+				'user_id' => $USER_ID
+			],
+			[
+				'quiz_question_id' => 9,
+				'quiz_answer_id' => 12,
+				'user_id' => $USER_ID
 			]
 		];
 		$redisKey = UserStateApiController::getQuizRedisKey($USER_ID, 1);
@@ -254,7 +266,7 @@ class UserStateTest extends ApiTestCase
 			->actingAs($user)
 			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
 				'quiz' => $quizData,
-				'isFirstAttempt' => true
+				'recordedAnswers' => $recordedAnswers
 			]);
 
 		$response
@@ -264,7 +276,8 @@ class UserStateTest extends ApiTestCase
 				'status_code' => 200
 			]);
 
-		$this->assertDatabaseHas('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 7, 'quiz_answer_id' => 8]);
+		$this->assertDatabaseHas('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 7, 'quiz_answer_id' => 10]);
+		$this->assertDatabaseHas('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 9, 'quiz_answer_id' => 12]);
 
 		$mockedRedis->verify();
 	}

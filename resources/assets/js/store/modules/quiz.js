@@ -137,7 +137,7 @@ const mutations = {
 
 const actions = {
 	...commentsActions,
-	setupQuestions({commit, dispatch, rootGetters}, resource) {
+	setupQuestions({commit, rootGetters}, resource) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		Promise.all([
@@ -166,22 +166,31 @@ const actions = {
 			})
 
 			commit(types.QUIZ_IS_LOADED, true)
-			dispatch('saveQuiz')
 		});
 	},
 
-	checkQuiz({state, commit, getters, dispatch}) {
-		return new Promise((resolve, reject) => {
+	checkQuiz({state, commit, getters, dispatch, rootGetters}) {
+		return new Promise((resolve) => {
 			commit(types.QUIZ_TOGGLE_PROCESSING, true)
+			const data = [];
+			const attempts = getters.getAttempts.length;
 
 			_.each(getters.getUnresolved, question => {
 				let selectedId = question.quiz_answers[question.selectedAnswer],
 					selected = state.quiz_answers[selectedId],
 					id = question.id
 
+				if (attempts === 0) {
+					data.push({
+						'quiz_question_id': id,
+						'quiz_answer_id': selectedId,
+						'user_id': rootGetters.currentUserId
+					});
+				}
+
 				if (!_.isNull(selected) && selected.is_correct) {
 					commit(types.QUIZ_RESOLVE_QUESTION, {id})
-				} else if (getters.getAttempts.length < 2) {
+				} else if (attempts < 2) {
 					commit(types.QUIZ_RESET_ANSWER, {id})
 					if (!question.preserve_order) {
 						commit(types.QUIZ_SHUFFLE_ANSWERS, {id})
@@ -191,19 +200,19 @@ const actions = {
 
 			commit(types.QUIZ_ATTEMPT, {score: getters.getCurrentScore})
 
+			dispatch('saveQuiz', data);
+
 			if (getters.getUnresolved.length === 0) {
 				commit(types.QUIZ_COMPLETE)
 			}
-
-			dispatch('saveQuiz')
 
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			resolve()
 		})
 	},
 
-	saveQuiz({state, rootGetters}){
-		quizStore.saveQuizProgress(state.setId, rootGetters.currentUserSlug, state);
+	saveQuiz({state, rootGetters}, recordedAnswers){
+		quizStore.saveQuizProgress(state.setId, rootGetters.currentUserSlug, state, recordedAnswers);
 	},
 
 	destroyQuiz({commit}){

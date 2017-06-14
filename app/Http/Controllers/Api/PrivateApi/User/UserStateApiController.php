@@ -80,18 +80,10 @@ class UserStateApiController extends ApiController
 	public function putQuiz(Request $request, $id, $quizId)
 	{
 		$quiz = $request->quiz;
-		$isFirstAttempt = $request->isFirstAttempt;
+		$recordedAnswers = $request->recordedAnswers;
 
-		if (!empty($isFirstAttempt)) {
-			$data = [];
-			foreach ($quiz['quiz_questions'] as $quizQuestion) {
-				$questionId = $quizQuestion['id'];
-				$answerId = $quizQuestion['selectedAnswer'];
-
-				$data[] = ['quiz_question_id' => $questionId, 'quiz_answer_id' => $answerId, 'user_id' => $id];
-			}
-
-			UserQuizResults::insert($data);
+		if (!empty($recordedAnswers)) {
+			UserQuizResults::insert($recordedAnswers);
 		}
 
 		Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));

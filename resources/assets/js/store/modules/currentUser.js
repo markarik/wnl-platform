@@ -15,6 +15,7 @@ const state = {
 		public_phone: '',
 		username: '',
 		avatar: '',
+		roles: [],
 	},
 	settings: getDefaultSettings(),
 }
@@ -26,6 +27,7 @@ const getters = {
 	currentUserAvatar: state => state.profile.avatar,
 	currentUserName: state => state.profile.first_name,
 	currentUserFullName: state => state.profile.full_name,
+	currentUserRoles: state => state.profile.roles,
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
 	getSetting: state => setting => state.settings[setting],
 	getAllSettings: state => state.settings,

@@ -14,9 +14,12 @@ const saveQuizProgress = (setId, currentUserSlug, state) => {
 	const storeKey = getLocalStorageKey(setId, currentUserSlug);
 	store.set(storeKey, state);
 
+	const isFirstAttempt = state.attempts && state.attempts.length === 1;
+
 	getCurrentUser().then(({data: {id}}) => {
 		axios.put(getApiUrl(`users/${id}/state/quiz/${setId}`), {
-			quiz: state
+			quiz: state,
+			isFirstAttempt
 		});
 	});
 };

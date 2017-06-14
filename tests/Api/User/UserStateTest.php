@@ -4,11 +4,14 @@ namespace Tests\Api\User;
 
 use App\Http\Controllers\Api\PrivateApi\User\UserStateApiController;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Redis;
 use Tests\Api\ApiTestCase;
 
 class UserStateTest extends ApiTestCase
 {
+	use DatabaseTransactions;
+
 	/** @test */
 	public function get_course_state()
 	{
@@ -221,6 +224,47 @@ class UserStateTest extends ApiTestCase
 				'message' => 'OK',
 				'status_code' => 200
 			]);
+
+		$mockedRedis->verify();
+	}
+
+	/** @test */
+	public function update_first_attempt_quiz_state()
+	{
+		$USER_ID = 1;
+		$user = User::find($USER_ID);
+		$quizData = [
+			'quiz_questions' => [
+				1 => [
+					'id' => 7,
+					'selectedAnswer' => 8
+				],
+				8 => [
+					'id' => 8,
+					'selectedAnswer' => 12
+				]
+			]
+		];
+		$redisKey = UserStateApiController::getQuizRedisKey($USER_ID, 1);
+		$encodedData = json_encode($quizData);
+
+		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, $encodedData);
+
+		$response = $this
+			->actingAs($user)
+			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
+				'quiz' => $quizData,
+				'isFirstAttempt' => true
+			]);
+
+		$response
+			->assertStatus(200)
+			->assertJson([
+				'message' => 'OK',
+				'status_code' => 200
+			]);
+
+		$this->assertDatabaseHas('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 7, 'quiz_answer_id' => 8]);
 
 		$mockedRedis->verify();
 	}

@@ -109,7 +109,6 @@ const mutations = {
 
 			set(state.quiz_questions[id], 'selectedAnswer', null)
 			set(state.quiz_questions[id], 'isResolved', false)
-			set(state.quiz_questions[id], 'attemps', 0)
 		}
 	},
 	[types.QUIZ_SELECT_ANSWER] (state, payload) {

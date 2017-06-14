@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi\User;
 
+use App\Models\UserQuizResults;
 use Auth;
 use App\Http\Controllers\Api\ApiController;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,6 +80,19 @@ class UserStateApiController extends ApiController
 	public function putQuiz(Request $request, $id, $quizId)
 	{
 		$quiz = $request->quiz;
+		$isFirstAttempt = $request->isFirstAttempt;
+
+		if (!empty($isFirstAttempt)) {
+			$data = [];
+			foreach ($quiz['quiz_questions'] as $quizQuestion) {
+				$questionId = $quizQuestion['id'];
+				$answerId = $quizQuestion['selectedAnswer'];
+
+				$data[] = ['quiz_question_id' => $questionId, 'quiz_answer_id' => $answerId, 'user_id' => $id];
+			}
+
+			UserQuizResults::insert($data);
+		}
 
 		Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
 

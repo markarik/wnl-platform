@@ -12,7 +12,6 @@
 	import store from 'store'
 	import Navbar from 'js/components/global/Navbar.vue'
 	import { mapGetters, mapActions } from 'vuex'
-	import { swalConfig } from 'js/utils/swal'
 
 	const CACHE_VERSION = 1
 
@@ -26,29 +25,6 @@
 		},
 		methods: {
 			...mapActions(['setupCurrentUser', 'setLayout', 'resetLayout']),
-			displayScreenResolutionInfo() {
-				const resolutionInfoKey = `has-seen-resolution-info-${CACHE_VERSION}`
-				const resolutionInfoValue = 1
-				const resolutionLimit = 960
-
-				if (store.get(resolutionInfoKey) !== resolutionInfoValue &&
-					window.innerWidth < resolutionLimit) {
-					this.$swal(swalConfig({
-						html: `
-							<p class="normal margin bottom">
-								Sprawdź demo na komputerze lub tablecie!
-							</p>
-							<p class="small strong margin bottom">Na razie aplikacja działa najlepiej przy szerokości ekranu większej niż 960px.</p>
-							<p class="small">
-								Pracujemy już nad wersją mobilną platformy, na razie jednak nie jest ona
-								dostosowana pod małe rozdzielczości ekranu. :(
-							</p>`,
-						title: `Wersja mobilna`,
-						type: 'info',
-					}))
-					store.set(resolutionInfoKey, resolutionInfoValue)
-				}
-			},
 			setupNotifications() {
 				Echo.private(`user.${this.currentUserId}`)
 						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
@@ -59,7 +35,6 @@
 		created: function () {
 			this.setupCurrentUser()
 			//.then(()=>this.setupNotifications())
-			this.displayScreenResolutionInfo()
 		},
 		mounted() {
 			this.$router.afterEach(() => {

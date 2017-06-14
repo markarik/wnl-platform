@@ -15,8 +15,8 @@ class QuestionsTest extends ApiTestCase
 		$user = User::find(1);
 
 		$data = [
-			'text'      => 'Meine Damen und Herren, hertzlich willkommen und nicht verstehen!',
-			'lesson_id' => 1,
+			'text' => 'Meine Damen und Herren, hertzlich willkommen und nicht verstehen!',
+			'tags' => [4, 5, 6],
 		];
 
 		$response = $this
@@ -27,29 +27,26 @@ class QuestionsTest extends ApiTestCase
 			->assertStatus(200);
 	}
 
-	/** @test **/
+	/** @test * */
 	public function search_qna_questions()
 	{
 		$user = User::find(1);
 
 		$data = [
-			'query' => [
+			'query'   => [
 				'whereHas' => [
 					'tags' => [
-						'where' => [
-							['name', 'in', ['interna', 'pulmonologia']],
-						],
+						'whereIn' => ['name', ['qna', 'mikrobeki']],
 					],
 				],
 			],
-			'order' => [
+			'order'   => [
 				'created_at' => 'desc',
 				'id'         => 'asc',
 			],
-			'limit' => [10, 0],
-			'include'=> '',
+			'limit'   => [10, 0],
+			'include' => '',
 		];
-
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/qna_questions/.search'), $data);

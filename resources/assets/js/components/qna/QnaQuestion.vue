@@ -125,7 +125,7 @@
 		data() {
 			return {
 				allAnswers: false,
-				loading: true,
+				loading: false,
 				showAnswerForm: false,
 			}
 		},
@@ -201,8 +201,5 @@
 				this.removeQuestion(this.id)
 			},
 		},
-		mounted() {
-			this.dispatchFetchQuestion()
-		}
 	}
 </script>

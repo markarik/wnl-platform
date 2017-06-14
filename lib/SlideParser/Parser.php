@@ -1,5 +1,6 @@
 <?php namespace Lib\SlideParser;
 
+use App\Models\Tag;
 use Storage;
 use App\Models\Group;
 use App\Models\Slide;
@@ -13,12 +14,6 @@ use App\Exceptions\ParseErrorException;
 
 class Parser
 {
-	// TODO: Search&replace rules:
-	// - Remove width/height form iframes
-
-	/**
-	 * Regexp patterns used to process html slide shows
-	 */
 	const SLIDE_PATTERN = '/<section([\s\S]*?)>([\s\S]*?)<\/section>/';
 
 	const FUNCTIONAL_SLIDE_PATTERN = '/[#!]+\(functional\)/';
@@ -126,6 +121,15 @@ class Parser
 							],
 						],
 					]);
+					$this->courseModels['screen']->tags()->attach(
+						Tag::firstOrCreate(['name' => $lesson->name])
+					);
+					$this->courseModels['screen']->tags()->attach(
+						Tag::firstOrCreate(['name' => $group->name])
+					);
+					$this->courseModels['screen']->tags()->attach(
+						Tag::firstOrCreate(['name' => 'Prezentacja'])
+					);
 				}
 
 				if ($courseTag['name'] == 'section') {

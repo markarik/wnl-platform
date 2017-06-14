@@ -11,8 +11,30 @@ import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store
  * @returns {Promise}
  * @private
  */
-function _getQuestions(lessonId) {
-	return axios.get(getApiUrl(`lessons/${lessonId}?include=qna_questions.profile,reactions`))
+function _getQuestions(tags) {
+	return new Promise((resolve, reject) => {
+		let data = {
+			include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments',
+			query: {
+				whereHas: {
+					tags: {
+						whereIn: ['tags.id', tags.map((tag) => tag.id)]
+					}
+				}
+			},
+			order: {
+				id: 'desc',
+			},
+		}
+
+		if (typeof tags !== 'object' || tags.length === 0) {
+			reject('No tags passed to search for Q&A questions.')
+		}
+
+		axios.post(getApiUrl('qna_questions/.search'), data)
+			.then((response) => resolve(response))
+			.catch((error) => reject(error))
+	})
 }
 
 /**
@@ -85,8 +107,8 @@ const getters = {
 	sortedQuestions: state => {
 		return _.reverse(
 			_.sortBy(
-				state.questionsIds.map((id) => state.qna_questions[id]),
-				(question) => question.upvote.count,
+				_.values(state.qna_questions),
+				(question) => question.upvote.count
 			)
 		)
 	},
@@ -137,7 +159,7 @@ const mutations = {
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},
-	[types.QNA_SET_QUESTIONS_IDS] (state, questionsIds) {
+	[types.QNA_SET_QUESTIONS] (state, data) {
 		/**
 		 * In case you wonder why I destroy it first - please visit.
 		 * https://vuejs.org/v2/guide/list.html#Caveats
@@ -146,8 +168,11 @@ const mutations = {
 		 * is to destroy the target first using Vue's reactive method
 		 * destroy.
 		 */
-		destroy(state, 'questionsIds')
-		set(state, 'questionsIds', questionsIds)
+		Object.keys(data).forEach((key) => {
+			let question = data[key]
+			set(state.qna_questions, question.id, question)
+		})
+		// set(state, 'questionsIds', questionsIds)
 	},
 	[types.QNA_UPDATE_QUESTION] (state, payload) {
 		let id = payload.questionId,
@@ -222,19 +247,19 @@ const mutations = {
 // Actions
 const actions = {
 	...reactionsActions,
-	fetchQuestions({commit, rootState}) {
-		let lessonId = rootState.route.params.lessonId
-
+	fetchQuestions({commit}, tags) {
 		commit(types.IS_LOADING, true)
 		// TODO: Error when lessonId is not defined
 
 		return new Promise((resolve, reject) => {
-			_getQuestions(lessonId)
+			_getQuestions(tags)
 				.then((response) => {
 					let data = response.data
-					if (!_.isUndefined(data.qna_questions)) {
+
+					if (!_.isUndefined(data.included)) {
 						commit(types.UPDATE_INCLUDED, data.included)
-						commit(types.QNA_SET_QUESTIONS_IDS, data.qna_questions)
+						destroy(data, 'included')
+						commit(types.QNA_SET_QUESTIONS, data)
 					}
 					commit(types.IS_LOADING, false)
 					resolve()

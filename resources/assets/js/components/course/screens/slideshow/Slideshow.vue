@@ -40,7 +40,6 @@
 				</div>
 			</div>
 		</div>
-		<wnl-qna></wnl-qna>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -127,7 +126,6 @@
 	import {scrollToTop} from 'js/utils/animations'
 
 	import Annotations from './Annotations'
-	import Qna from 'js/components/qna/Qna'
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getUrl} from 'js/utils/env'
 
@@ -138,7 +136,6 @@
 		components: {
 			'wnl-annotations': Annotations,
 			'wnl-slideshow-navigation': SlideshowNavigation,
-			'wnl-qna': Qna,
 		},
 		data() {
 			return {

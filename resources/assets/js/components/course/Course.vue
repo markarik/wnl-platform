@@ -36,7 +36,6 @@
 		justify-content: space-between
 
 	.wnl-course-content
-		margin: 0 $margin-base
 		max-width: $course-content-max-width
 		flex: $course-content-flex auto
 		position: relative

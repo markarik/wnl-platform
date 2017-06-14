@@ -58,7 +58,7 @@
 		},
 		created: function () {
 			this.setupCurrentUser()
-					.then(()=>this.setupNotifications())
+			//.then(()=>this.setupNotifications())
 			this.displayScreenResolutionInfo()
 		},
 		mounted() {

@@ -18,9 +18,6 @@ class Reaction extends Model
 
 	public function scopeCount($query, $reactable)
 	{
-//		DB::listen(function ($query) {
-//			print $query->sql . $query->time . PHP_EOL;
-//		});
 		return DB::table('reactables')
 			->select(DB::raw('reactions.type, count(*) count'))
 			->join('reactions', 'reactions.id', '=', 'reactables.reaction_id')

@@ -5,7 +5,7 @@
 		</div>
 		<div class="qna-question" v-else>
 			<div class="votes">
-				<wnl-vote type="up" count="0"></wnl-vote>
+				<wnl-vote type="up" count="0" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-vote>
 			</div>
 			<div class="qna-container">
 				<div class="qna-question-content" v-html="content"></div>
@@ -32,7 +32,7 @@
 				<div class="qna-answers">
 					<div class="level">
 						<div class="level-left">
-							<p class="text-dimmed">Odpowiedzi ({{answersFromLatest.length}})</p>
+							<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
 						</div>
 						<div class="level-right">
 							<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
@@ -133,7 +133,7 @@
 			...mapGetters('qna', [
 				'profile',
 				'getQuestion',
-				'questionAnswersFromLatest',
+				'questionAnswersFromHighestUpvoteCount',
 			]),
 			...mapGetters(['currentUserId']),
 			question() {
@@ -168,17 +168,17 @@
 			time() {
 				return timeFromS(this.question.created_at)
 			},
-			answersFromLatest() {
-				return this.questionAnswersFromLatest(this.id)
+			answersFromHighestUpvoteCount() {
+				return this.questionAnswersFromHighestUpvoteCount(this.id)
 			},
 			hasAnswers() {
-				return this.answersFromLatest.length > 0
+				return this.answersFromHighestUpvoteCount.length > 0
 			},
 			latestAnswer() {
-				return _.head(this.answersFromLatest) || {}
+				return _.head(this.answersFromHighestUpvoteCount) || {}
 			},
 			otherAnswers() {
-				return _.tail(this.answersFromLatest) || []
+				return _.tail(this.answersFromHighestUpvoteCount) || []
 			},
 		},
 		methods: {

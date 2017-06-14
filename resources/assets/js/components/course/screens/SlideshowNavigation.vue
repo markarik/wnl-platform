@@ -46,10 +46,11 @@
 		},
 		methods: {
 			onChange: debounce(function () {
-				this.goToSlide()
-			}, 250),
+				if (parseInt(this.slideNumber) > 0) {
+					this.goToSlide()
+				}
+			}, 500),
 			goToSlide() {
-				console.log('Go to slide')
 				this.$router.replace({ name: 'screens', params: { slide: this.slideNumber } })
 			}
 		}

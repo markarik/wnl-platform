@@ -16,6 +16,7 @@ class GroupsTableSeeder extends Seeder
 				'name'          => 'Patch yak froova',
 				'course_id'     => 1,
 				'required_role' => 'workshop-participant',
+				'order_number'  => 1001,
 			],
 		]);
 	}

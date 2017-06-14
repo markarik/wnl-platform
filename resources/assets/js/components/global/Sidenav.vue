@@ -1,38 +1,22 @@
 <template>
 	<!-- Breadcrumbs -->
-	<div class="wnl-sidenav">
-
-		<ul class="breadcrumbs" v-if="breadcrumbs">
-			<wnl-sidenav-item v-for="(breadcrumb, index) in breadcrumbs"
-				:itemClass="breadcrumb.itemClass"
-				:to="breadcrumb.to"
-				:isDisabled="breadcrumb.isDisabled"
-				:method="breadcrumb.method"
-				:iconClass="breadcrumb.iconClass"
-				:iconTitle="breadcrumb.iconTitle"
+	<div class="wnl-sidenav" v-bind:class="{ mobile: isMobileNavigation }">
+		<!-- Items -->
+		<ul class="items" v-if="items">
+			<li class="item heading small" v-if="itemsHeading">{{itemsHeading}}</li>
+			<wnl-sidenav-item v-for="(item, index) in items"
+				:itemClass="item.itemClass"
+				:to="item.to"
+				:isDisabled="item.isDisabled"
+				:method="item.method"
+				:iconClass="item.iconClass"
+				:iconTitle="item.iconTitle"
 				:key="index"
+				:completed="item.completed"
 			>
-				{{breadcrumb.text}}
+				{{item.text}}
 			</wnl-sidenav-item>
 		</ul>
-
-		<!-- Items -->
-		<div class="box">
-			<ul class="items" v-if="items">
-				<li class="item heading small" v-if="itemsHeading">{{itemsHeading}}</li>
-				<wnl-sidenav-item v-for="(item, index) in items"
-					:itemClass="item.itemClass"
-					:to="item.to"
-					:isDisabled="item.isDisabled"
-					:method="item.method"
-					:iconClass="item.iconClass"
-					:iconTitle="item.iconTitle"
-					:key="index"
-				>
-					{{item.text}}
-				</wnl-sidenav-item>
-			</ul>
-		</div>
 	</div>
 </template>
 
@@ -40,22 +24,34 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav
-		max-width: 280px
+		height: $main-height
+
+		&.mobile
+			height: auto
+			width: 100%
+
+			.item
+				border-bottom: 1px solid $color-light-gray
+				line-height: 26px
+				padding: 10px 15px
+
+				&.with-border
+					padding-left: 10px
+
+				a
+					line-height: 26px
+
+			.heading
+				background: $color-light-gray
+				margin-bottom: 0
+
+				&:first-child
+					padding-top: 10px
 
 	.breadcrumbs
-		font-size: $font-size-minus-1
-		font-weight: $font-weight-bold
-		margin-bottom: $margin-base
-		text-transform: uppercase
-
-		.small
-			font-size: $font-size-minus-2
-
-		.big
-			font-size: $font-size-base
+		margin: 19px 0
 
 	.items
-
 		.item
 			padding: $margin-small 0
 
@@ -69,7 +65,7 @@
 			padding-top: 10px
 
 			&:first-child
-				padding: 0
+				padding-top: 0
 
 		.small
 			font-size: $font-size-minus-1
@@ -94,12 +90,18 @@
 </style>
 
 <script>
+	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import SidenavItem from 'js/components/global/SidenavItem'
+	import { mapGetters } from 'vuex'
 
 	export default {
 		props: ['breadcrumbs', 'items', 'itemsHeading'],
 		components: {
+			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-sidenav-item': SidenavItem,
+		},
+		computed: {
+			...mapGetters(['isMobileNavigation'])
 		}
 	}
 </script>

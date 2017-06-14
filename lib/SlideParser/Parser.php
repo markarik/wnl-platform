@@ -22,6 +22,8 @@ class Parser
 
 	const BACKGROUND_PATTERN = '/data-background-image="([^"]*)"/';
 
+	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
+
 	protected $categoryTags;
 	protected $courseTags;
 	protected $categoryModels = [];
@@ -288,7 +290,13 @@ class Parser
 			self::BACKGROUND_PATTERN,
 		];
 
+		$textSearch = [
+			'border-style: solid; border-width: 4px;',
+		];
+
 		$html = preg_replace($regexSearch, '', $html);
+		$html = str_replace($textSearch, '', $html);
+		$html = $this->handleCharts($html);
 
 		return $html;
 	}
@@ -298,4 +306,41 @@ class Parser
 		return strip_tags($name);
 	}
 
+	public function handleCharts($html)
+	{
+		$match = $this->match(self::LUCID_EMBED_PATTERN, $html);
+
+		if ($match === false) {
+			return $html;
+		}
+
+		$iframe = $match[0][0];
+		$chartId = $match[0][1];
+
+		$html = preg_replace(self::LUCID_EMBED_PATTERN, $this->chartViewer($chartId), $html);
+
+		return $html;
+	}
+
+	public function chartViewer($chartId)
+	{
+		$lucidUrl = 'https://www.lucidchart.com/documents/thumb/%s/0/0/NULL/%d';
+		$viewerHtml = '
+			<div class="iv-image-container">
+				<img src="%s" data-high-res-src="%s" class="chart">
+				<a class="iv-image-fullscreen" title="Pełen ekran">
+					<span class="fullscreen-icon">
+						<span class="inner"></span>
+						<span class="horizontal"></span>
+						<span class="vertical"></span>
+					</span>
+				</a>
+			</div>';
+		$lowResSizePx = 2000;
+		$highResSizePx = 2000;
+		$lowResImage = sprintf($lucidUrl, $chartId, $lowResSizePx);
+		$highResImage = sprintf($lucidUrl, $chartId, $highResSizePx);
+
+		return sprintf($viewerHtml, $lowResImage, $highResImage);
+	}
 }

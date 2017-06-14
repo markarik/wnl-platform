@@ -1,30 +1,42 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
 
-		<style type="text/css">
-			.reveal.image-custom-background {
-				background-image: url('{{$background_url}}');
-			}
-		</style>
-	</head>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
+	<link href="{{ mix('css/imageviewer.css') }}" rel="stylesheet">
+
+	<style type="text/css">
+		.reveal.image-custom-background {
+			background-image: url('{{$background_url}}');
+		}
+
+		.chart,
+		.iv-container,
+		.iv-image-container {
+			height: 100%;
+			width: 100%;
+		}
+
+		.iv-container {
+			background-color: rgba(230,230,230,0.5);
+			border: 1px solid #7a7f91 !important;
+		}
+	</style>
+</head>
 	<body>
 		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
 			<div class="reveal image-custom-background">
 				<div class="slides">
-					@foreach($slides as $slide)
-						{!! $slide->content !!}
-					@endforeach
+					{!! $slides !!}
 				</div>
 			</div>
-			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-right enabled" aria-label="next slide">
-			</div>
+			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-right enabled" aria-label="next slide"></div>
 			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
+
 		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>
 </html>

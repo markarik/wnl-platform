@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi\User;
 
+use App\Models\UserQuizResults;
 use Auth;
 use App\Http\Controllers\Api\ApiController;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,6 +80,11 @@ class UserStateApiController extends ApiController
 	public function putQuiz(Request $request, $id, $quizId)
 	{
 		$quiz = $request->quiz;
+		$recordedAnswers = $request->recordedAnswers;
+
+		if (!empty($recordedAnswers)) {
+			UserQuizResults::insert($recordedAnswers);
+		}
 
 		Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
 

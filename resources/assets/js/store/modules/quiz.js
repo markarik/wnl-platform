@@ -1,17 +1,12 @@
 import axios from 'axios'
 import store from 'store'
 import _ from 'lodash'
-import { set, delete as destroy } from 'vue'
-import { useLocalStorage, getApiUrl } from 'js/utils/env'
-import { resource } from 'js/utils/config'
-import { commentsGetters, commentsMutations, commentsActions } from 'js/store/modules/comments'
+import {set, delete as destroy} from 'vue'
+import {useLocalStorage, getApiUrl} from 'js/utils/env'
+import {resource} from 'js/utils/config'
+import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import * as types from 'js/store/mutations-types'
-
-const CACHE_VERSION = 2
-
-function getLocalStorageKey(setId, userSlug) {
-	return `wnl-quiz-${setId}-u-${userSlug}-${CACHE_VERSION}`
-}
+import quizStore, {getLocalStorageKey} from 'js/services/quizStore'
 
 function fetchQuizSet(id) {
 	return axios.get(
@@ -26,7 +21,7 @@ function fetchQuizSet(id) {
  * @return {Integer} Returns an integer being a percentage value
  */
 function getPercentageShare(value, total) {
-	return _.toInteger(value*100/total)
+	return _.toInteger(value * 100 / total)
 }
 
 function getInitialState() {
@@ -144,19 +139,18 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	setupQuestions({commit, dispatch, getters, state, rootGetters}, resource) {
-		let storeKey = getLocalStorageKey(resource.id, rootGetters.currentUserSlug),
-			storedState = store.get(storeKey)
+		quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug)
+			.then((storedState) => {
+				commit(types.QUIZ_IS_LOADED, false)
 
-		commit(types.QUIZ_IS_LOADED, false)
-
-		if (useLocalStorage() && !_.isUndefined(storedState)) {
-			commit(types.QUIZ_RESTORE_STATE, storedState)
-			commit(types.QUIZ_IS_LOADED, true)
-			commit(types.QUIZ_TOGGLE_PROCESSING, false)
-			return true
-		}
-
-		fetchQuizSet(resource.id)
+				if (useLocalStorage() && !_.isUndefined(storedState)) {
+					commit(types.QUIZ_RESTORE_STATE, storedState)
+					commit(types.QUIZ_IS_LOADED, true)
+					commit(types.QUIZ_TOGGLE_PROCESSING, false)
+					return true
+				}
+			})
+			.then(() => fetchQuizSet(resource.id))
 			.then((response) => {
 				let included = response.data.included,
 					questionsIds = response.data.quiz_questions,
@@ -167,7 +161,7 @@ const actions = {
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: response.data.id,
 					setName: response.data.name,
-					len: questionsIds.length,
+					len,
 					questionsIds,
 				})
 				commit(types.QUIZ_IS_LOADED, true)
@@ -194,7 +188,7 @@ const actions = {
 				}
 			})
 
-			commit(types.QUIZ_ATTEMPT, { score: getters.getCurrentScore })
+			commit(types.QUIZ_ATTEMPT, {score: getters.getCurrentScore})
 
 			if (getters.getUnresolved.length === 0) {
 				commit(types.QUIZ_COMPLETE)
@@ -207,13 +201,11 @@ const actions = {
 		})
 	},
 
-	saveQuiz({state, rootGetters}) {
-		// TODO: Apr 24, 2017 - We must solve it better.
-		let storeKey = getLocalStorageKey(state.setId, rootGetters.currentUserSlug)
-		store.set(storeKey, state, new Date().getTime() + 3 * 60 * 60 * 1000)
+	saveQuiz({state, rootGetters}){
+		quizStore.saveQuizProgress(state.setId, rootGetters.currentUserSlug, state);
 	},
 
-	destroyQuiz({commit}) {
+	destroyQuiz({commit}){
 		return new Promise((resolve, reject) => {
 			commit(types.QUIZ_IS_LOADED, false)
 			commit(types.QUIZ_DESTROY)
@@ -221,7 +213,7 @@ const actions = {
 		})
 	},
 
-	commitSelectAnswer({commit}, payload) {
+	commitSelectAnswer({commit}, payload){
 		commit(types.QUIZ_SELECT_ANSWER, payload)
 	},
 }

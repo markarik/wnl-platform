@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Redis;
 class UserStateApiController extends ApiController
 {
 	// courseId - userId - cacheVersion
-	const KEY_COURSE_TEMPLATE = 'UserState:%s:%s:%s';
+	const KEY_COURSE_TEMPLATE = 'UserState:Course:%s:%s:%s';
 	// courseId - lessonId - userId - cacheVersion
-	const KEY_LESSON_TEMPLATE = 'UserState:%s:%s:%s:%s';
+	const KEY_LESSON_TEMPLATE = 'UserState:Course:%s:%s:%s:%s';
+	// courseId - quizSetId - userId - cacheVersion
+	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s:%s';
 	const CACHE_VERSION = 1;
 
 	public function getCourse($id, $courseId)
@@ -60,9 +62,25 @@ class UserStateApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function deleteLesson(Request $request, $id, $courseId, $lessonId)
+	public function getQuiz($id, $courseId, $quizId)
 	{
-		Redis::del(self::getLessonRedisKey($id, $courseId, $lessonId));
+		$values = Redis::get(self::getQuizRedisKey($id, $courseId, $quizId));
+
+		if (!empty($values)) {
+			$quiz = json_decode($values);
+		} else {
+			$quiz = [];
+		}
+		return $this->json([
+			'quiz' => $quiz
+		]);
+	}
+
+	public function putQuiz(Request $request, $id, $courseId, $quizId)
+	{
+		$quiz = $request->quiz;
+
+		Redis::set(self::getQuizRedisKey($id, $courseId, $quizId), json_encode($quiz));
 
 		return $this->respondOk();
 	}
@@ -75,6 +93,11 @@ class UserStateApiController extends ApiController
 	static function getLessonRedisKey($userId, $courseId, $lessonId)
 	{
 		return sprintf(self::KEY_LESSON_TEMPLATE, $courseId, $lessonId, $userId, self::CACHE_VERSION);
+	}
+
+	static function getQuizRedisKey($userId, $courseId, $quizId)
+	{
+		return sprintf(self::KEY_QUIZ_TEMPLATE, $courseId, $quizId, $userId, self::CACHE_VERSION);
 	}
 }
 

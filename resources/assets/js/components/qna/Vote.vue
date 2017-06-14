@@ -66,8 +66,6 @@
 					hasReacted: this.reaction.hasReacted,
 				}).then((response) => {
 					this.isLoading = false
-					console.log('response z akcji komponentu :');
-					console.log(response);
 				})
 				.catch((error) => {
 					$wnl.logger.error(error)

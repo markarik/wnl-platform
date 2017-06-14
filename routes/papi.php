@@ -76,8 +76,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'User\UserStateApiController@getLesson');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'User\UserStateApiController@putLesson');
 
-	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/quiz/{quizId}", 'User\UserStateApiController@getQuiz');
-	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/quiz/{quizId}", 'User\UserStateApiController@putQuiz');
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'User\UserStateApiController@getQuiz');
+	Route::put("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'User\UserStateApiController@putQuiz');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');

@@ -141,9 +141,11 @@ const actions = {
 	setupQuestions({commit, dispatch, getters, state, rootGetters}, resource) {
 		quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug)
 			.then((storedState) => {
+				console.log(storedState, '******* STORED STATE');
 				commit(types.QUIZ_IS_LOADED, false)
 
 				if (useLocalStorage() && !_.isUndefined(storedState)) {
+					debugger;
 					commit(types.QUIZ_RESTORE_STATE, storedState)
 					commit(types.QUIZ_IS_LOADED, true)
 					commit(types.QUIZ_TOGGLE_PROCESSING, false)

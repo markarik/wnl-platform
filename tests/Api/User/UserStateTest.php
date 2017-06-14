@@ -160,13 +160,13 @@ class UserStateTest extends ApiTestCase
 	public function get_quiz_state()
 	{
 		$user = User::find(1);
-		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1, 1);
+		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1);
 
 		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey)->andReturn(json_encode(['foo' => 'bar']));
 
 		$response = $this
 			->actingAs($user)
-			->call('GET', $this->url("/users/{$user->id}/state/course/1/quiz/1"));
+			->call('GET', $this->url("/users/{$user->id}/state/quiz/1"));
 
 		$response
 			->assertStatus(200)
@@ -183,13 +183,13 @@ class UserStateTest extends ApiTestCase
 	public function get_empty_quiz_state()
 	{
 		$user = User::find(1);
-		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1, 1);
+		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1);
 
 		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey)->andReturn(null);
 
 		$response = $this
 			->actingAs($user)
-			->call('GET', $this->url("/users/{$user->id}/state/course/1/quiz/1"));
+			->call('GET', $this->url("/users/{$user->id}/state/quiz/1"));
 
 		$response
 			->assertStatus(200)
@@ -204,14 +204,14 @@ class UserStateTest extends ApiTestCase
 	public function update_quiz_state()
 	{
 		$user = User::find(1);
-		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1, 1);
+		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1);
 		$encodedData = json_encode(['something']);
 
 		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, $encodedData);
 
 		$response = $this
 			->actingAs($user)
-			->call('PUT', $this->url("/users/{$user->id}/state/course/1/quiz/1"), [
+			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
 				'quiz' => 'something'
 			]);
 

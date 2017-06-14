@@ -11,8 +11,8 @@ class UserStateApiController extends ApiController
 	const KEY_COURSE_TEMPLATE = 'UserState:Course:%s:%s:%s';
 	// courseId - lessonId - userId - cacheVersion
 	const KEY_LESSON_TEMPLATE = 'UserState:Course:%s:%s:%s:%s';
-	// courseId - quizSetId - userId - cacheVersion
-	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s:%s';
+	// quizSetId - userId - cacheVersion
+	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s';
 	const CACHE_VERSION = 1;
 
 	public function getCourse($id, $courseId)
@@ -62,9 +62,9 @@ class UserStateApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function getQuiz($id, $courseId, $quizId)
+	public function getQuiz($id, $quizId)
 	{
-		$values = Redis::get(self::getQuizRedisKey($id, $courseId, $quizId));
+		$values = Redis::get(self::getQuizRedisKey($id, $quizId));
 
 		if (!empty($values)) {
 			$quiz = json_decode($values);
@@ -76,11 +76,11 @@ class UserStateApiController extends ApiController
 		]);
 	}
 
-	public function putQuiz(Request $request, $id, $courseId, $quizId)
+	public function putQuiz(Request $request, $id, $quizId)
 	{
 		$quiz = $request->quiz;
 
-		Redis::set(self::getQuizRedisKey($id, $courseId, $quizId), json_encode($quiz));
+		Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
 
 		return $this->respondOk();
 	}
@@ -95,9 +95,9 @@ class UserStateApiController extends ApiController
 		return sprintf(self::KEY_LESSON_TEMPLATE, $courseId, $lessonId, $userId, self::CACHE_VERSION);
 	}
 
-	static function getQuizRedisKey($userId, $courseId, $quizId)
+	static function getQuizRedisKey($userId, $quizId)
 	{
-		return sprintf(self::KEY_QUIZ_TEMPLATE, $courseId, $quizId, $userId, self::CACHE_VERSION);
+		return sprintf(self::KEY_QUIZ_TEMPLATE, $quizId, $userId, self::CACHE_VERSION);
 	}
 }
 

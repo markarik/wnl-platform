@@ -16,7 +16,7 @@ const saveQuizProgress = (setId, currentUserSlug, state) => {
 	store.set(storeKey, state, new Date().getTime() + 3 * 60 * 60 * 1000);
 
 	getCurrentUser().then(({data: {id}}) => {
-		axios.put(getApiUrl(`users/${id}/state/course/${courseId}/quiz/${setId}`), {
+		axios.put(getApiUrl(`users/${id}/state/quiz/${setId}`), {
 			quiz: state
 		});
 	});
@@ -29,7 +29,7 @@ const getQuizProgress = (setId, currentUserSlug) => {
 	return new Promise((resolve) => {
 		if (_.isEmpty(storedState)) {
 			getCurrentUser().then(({data: {id}}) => {
-				axios.get(getApiUrl(`users/${id}/state/course/${courseId}/quiz/${setId}`)).then(({quiz}) => {
+				axios.get(getApiUrl(`users/${id}/state/quiz/${setId}`)).then(({data: {quiz}}) => {
 					resolve(quiz)
 				});
 			})

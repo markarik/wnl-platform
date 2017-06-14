@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
 		$this->call(CoursesTableSeeder::class);
 		$this->call(CategoriesTableSeeder::class);
 		$this->call(EditionsTableSeeder::class);
-		$this->call(GroupsTableSeeder::class);
-		$this->call(LessonsTableSeeder::class);
+//		$this->call(GroupsTableSeeder::class);
+//		$this->call(LessonsTableSeeder::class);
 		$this->call(SubscribersTableSeeder::class);
 		$this->call(CouponsTableSeeder::class);
 		$this->call(TagsTableSeeder::class);
@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 		$this->call(SlideshowSeeder::class);
 		$this->call(ChatRoomsSeeder::class);
 		$this->call(QuizSeeder::class);
+		$this->call(ScreensTableSeeder::class);
 		Cache::flush();
 	}
 

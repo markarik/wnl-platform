@@ -35,7 +35,7 @@ class SlideShowController extends Controller
 		}
 
 		$view = view('course.slideshow', [
-			'slides' => $slides,
+			'slides'         => $slides,
 			'background_url' => $slideshow->background_url,
 		]);
 		$view->render();
@@ -45,12 +45,14 @@ class SlideShowController extends Controller
 
 	/**
 	 * @param $slideshow
+	 *
 	 * @return string
 	 */
 	public function fetchSlides($slideshow)
 	{
 		$slides = $slideshow->slides;
-		return $slides;
+
+		return $slides->implode('content', ' ');
 	}
 
 	private function getCacheKey($slideshowId)

@@ -14,6 +14,16 @@ return [
 		'height' => env('DUSK_WINDOW_HEIGHT', 1080),
 	],
 
+	'desktop_size'     => [
+		'width'  => env('DUSK_WINDOW_WIDTH', 1920),
+		'height' => env('DUSK_WINDOW_HEIGHT', 1080),
+	],
+
+	'tablet_size'     => [
+		'width'  => env('DUSK_WINDOW_WIDTH', 1024),
+		'height' => env('DUSK_WINDOW_HEIGHT', 1080),
+	],
+
 	// Basic auth settings
 	// (set up only if target app requires authentication)
 	'auth'             => [

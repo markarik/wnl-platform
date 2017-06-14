@@ -15,7 +15,8 @@
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
 	import Quiz from 'js/components/course/screens/quiz/Quiz.vue'
 	import Widget from 'js/components/course/screens/Widget.vue'
-	import { getApiUrl } from 'js/utils/env'
+	import {getApiUrl} from 'js/utils/env'
+	import {mapGetters} from 'vuex';
 
 	export default {
 		name: 'Screen',
@@ -40,6 +41,7 @@
 			}
 		},
 		computed: {
+			...mapGetters('course', ['getScreenSectionsCheckpoints']),
 			id() {
 				return this.screenData.id
 			},

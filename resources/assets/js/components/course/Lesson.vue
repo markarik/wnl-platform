@@ -55,6 +55,7 @@
 	import { resource } from 'js/utils/config'
 	import { breadcrumb } from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
+	import {STATUS_COMPLETE} from '../../services/progressStore';
 
 	export default {
 		name: 'Lesson',
@@ -63,7 +64,7 @@
 			'wnl-breadcrumbs': Breadcrumbs,
 		},
 		mixins: [ breadcrumb ],
-		props: ['courseId', 'lessonId', 'screenId'],
+		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		data() {
 			return {
 				/**
@@ -80,9 +81,14 @@
 			...mapGetters('course', [
 				'getScreens',
 				'getLesson',
+				'getSections',
+				'getScreen',
+				'getScreenSectionsCheckpoints',
 			]),
 			...mapGetters('progress', [
-				'getSavedLesson'
+				'getSavedLesson',
+				'shouldCompleteLesson',
+				'shouldCompleteScreen'
 			]),
 			breadcrumb() {
 				return {
@@ -102,6 +108,25 @@
 			screens() {
 				return this.getScreens(this.lessonId)
 			},
+			currentScreen() {
+				return this.getScreen(this.screenId);
+			},
+			sectionsReversed() {
+				const sectionsIds = this.currentScreen.sections;
+
+				if (!sectionsIds) {
+					return;
+				}
+
+				const sections = this.getSections(sectionsIds);
+				return sections.map((section) => section).reverse();
+			},
+			hasSections() {
+				return !!this.sectionsReversed;
+			},
+			currentSection() {
+				return this.sectionsReversed.find((section) => this.slide >= section.slide);
+			},
 			firstScreenId() {
 				if (_.isEmpty(this.screens)) {
 					return null
@@ -109,17 +134,11 @@
 
 				return _.head(this.screens).id
 			},
-			lastScreenId() {
-				if (_.isEmpty(this.screens)) {
-					return null
-				}
-
-				return _.last(this.screens).id
-			},
 			lessonProgressContext() {
 				return {
 					courseId: this.courseId,
 					lessonId: this.lessonId,
+					screenId: this.screenId,
 					route: {
 						name: this.$route.name,
 						params: this.$route.params,
@@ -134,36 +153,62 @@
 				'startLesson',
 				'updateLesson',
 				'completeLesson',
+				'completeScreen',
+				'completeSection'
 			]),
 			launchLesson() {
-				this.startLesson(this.lessonProgressContext)
-				this.goToDefaultScreenIfNone()
+				this.startLesson(this.lessonProgressContext).then(() => {
+					this.goToDefaultScreenIfNone()
+				});
 			},
 			goToDefaultScreenIfNone() {
 				if (!this.screenId) {
 					this.getSavedLesson(this.courseId, this.lessonId)
-						.then((savedRoute) => {
-							if (typeof savedRoute !== 'undefined' && savedRoute.hasOwnProperty('name')) {
-								this.$router.replace(savedRoute)
-							} else if (typeof this.firstScreenId !== 'undefined') {
-								this.$router.replace({
-									name: resource('screens'), params: {
-										courseId: this.courseId,
-										lessonId: this.lessonId,
-										screenId: this.firstScreenId,
-									}
-								})
+						.then(({route, status}) => {
+							if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
+								const params = {
+									courseId: this.courseId,
+									lessonId: this.lessonId,
+									screenId: this.firstScreenId,
+								};
+								if (this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
+									params.slide = 1;
+								}
+								this.$router.replace({name: resource('screens'), params})
+							} else if (route && route.hasOwnProperty('name')) {
+								this.$router.replace(route)
 							}
 						});
+				} else if (this.screenId && !this.slide) {
+					const params = {
+						courseId: this.courseId,
+						lessonId: this.lessonId,
+						screenId: this.screenId,
+					};
+
+					if (this.currentScreen.type === 'slideshow') {
+						params.slide = 1;
+					}
+					this.$router.replace({name: resource('screens'), params})
 				}
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					if (parseInt(this.screenId) === this.lastScreenId) {
-						this.completeLesson(this.lessonProgressContext)
-					} else {
-						this.updateLesson(this.lessonProgressContext)
+					if (this.hasSections && this.currentSection) {
+						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
+							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
+						}
 					}
+
+					if (this.shouldCompleteScreen(this.courseId, this.lessonId, this.screenId)) {
+						this.completeScreen(this.lessonProgressContext);
+
+						if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {
+							this.completeLesson(this.lessonProgressContext)
+						}
+					}
+
+					this.updateLesson(this.lessonProgressContext)
 				}
 			},
 			updateElementHeight() {
@@ -178,7 +223,7 @@
 			window.removeEventListener('resize', this.updateElementHeight)
 		},
 		watch: {
-			'$route' (to, from) {
+			'$route' () {
 				this.goToDefaultScreenIfNone()
 				this.updateLessonProgress()
 			}

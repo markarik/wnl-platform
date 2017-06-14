@@ -20,6 +20,12 @@ class Lesson extends BasePage
 
 	private $slideContent;
 	private $slide;
+	private $lessonId;
+
+	public function __construct($lessonId = 1)
+	{
+		$this->lessonId = $lessonId;
+	}
 
 	/**
 	 * Get the URL for the page.
@@ -28,7 +34,7 @@ class Lesson extends BasePage
 	 */
 	public function url()
 	{
-		return '/app/courses/1/lessons/1/screens/1';
+		return '/app/courses/1/lessons/' . $this->lessonId;
 	}
 
 
@@ -77,6 +83,16 @@ class Lesson extends BasePage
 	{
 		PHPUnit::assertFalse($browser->elementPresent(self::CSS_NAVIGATE_RIGHT));
 		PHPUnit::assertTrue($browser->elementPresent(self::CSS_NAVIGATE_LEFT));
+	}
+
+	public function completeLesson($browser) {
+		$sections = $browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS));
+
+		for ($i = 0; $i < count($sections); $i++) {
+			$section = $sections[$i];
+			$section->click();
+			$this->assertSectionActive($section);
+		}
 	}
 
 	public function goThroughSections($browser)

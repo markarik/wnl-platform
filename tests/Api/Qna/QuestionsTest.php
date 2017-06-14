@@ -51,7 +51,6 @@ class QuestionsTest extends ApiTestCase
 			->actingAs($user)
 			->json('POST', $this->url('/qna_questions/.search'), $data);
 
-		dd($response->dump());
 		$response
 			->assertStatus(200);
 	}

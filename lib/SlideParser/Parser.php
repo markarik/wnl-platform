@@ -125,6 +125,9 @@ class Parser
 					$this->courseModels['screen']->tags()->attach(
 						Tag::firstOrCreate(['name' => $group->name])
 					);
+					$this->courseModels['screen']->tags()->attach(
+						Tag::firstOrCreate(['name' => 'Prezentacja'])
+					);
 				}
 
 				if ($courseTag['name'] == 'section') {

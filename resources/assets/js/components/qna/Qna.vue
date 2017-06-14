@@ -29,7 +29,7 @@
 			</div>
 			<transition name="fade">
 				<div class="qna-new-question" v-if="showForm">
-					<wnl-new-question @submitSuccess="showForm = false"></wnl-new-question>
+					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
 			<wnl-qna-question v-for="question in sortedQuestions"
@@ -129,12 +129,23 @@
 			...mapActions('qna', ['fetchQuestions', 'destroyQna']),
 		},
 		mounted() {
-			this.fetchQuestions().then(() => {
+			this.fetchQuestions(this.tags).then(() => {
 				this.ready = true
 			})
 		},
 		beforeDestroy() {
 			this.destroyQna()
 		},
+		watch: {
+			'tags' (newValue, oldValue) {
+				if (newValue !== oldValue) {
+					this.ready = false
+					this.destroyQna()
+					this.fetchQuestions(newValue).then(() => {
+						this.ready = true
+					})
+				}
+			}
+		}
 	}
 </script>

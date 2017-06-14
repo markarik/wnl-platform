@@ -16,7 +16,7 @@ class QuestionsTest extends ApiTestCase
 
 		$data = [
 			'text' => 'Meine Damen und Herren, hertzlich willkommen und nicht verstehen!',
-			'tags' => ['mikrobeki', 'mikrofalówki', 'qna'],
+			'tags' => [4, 5, 6],
 		];
 
 		$response = $this

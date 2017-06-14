@@ -34,7 +34,7 @@ class QuestionsApiController extends ApiController
 
 		foreach ($tags as $tag) {
 			$question->tags()->attach(
-				Tag::firstOrCreate(['name' => $tag])
+				Tag::firstOrCreate(['id' => $tag])
 			);
 		}
 

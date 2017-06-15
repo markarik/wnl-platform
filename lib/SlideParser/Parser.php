@@ -34,8 +34,6 @@ class Parser
 	 */
 	public function __construct()
 	{
-		Log::debug(__CLASS__ . ' called');
-
 		$this->categoryTags = collect([
 			0 => 'discipline',
 			1 => 'group',

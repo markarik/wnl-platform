@@ -51,6 +51,14 @@ trait GeneratesApiResponses
 			->json();
 	}
 
+	protected function respondNoContent()
+	{
+		return $this
+			->setMessage($message ?? 'No Content')
+			->setStatusCode(204)
+			->json();
+	}
+
 	protected function respondInvalidInput($data = [], $message = '')
 	{
 		return $this

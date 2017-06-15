@@ -4,8 +4,10 @@
 namespace App\Http\Controllers\Api\PrivateApi\User;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use League\Fractal\Resource\Item;
 
 class UserAvatarApiController extends ApiController
 {
@@ -37,6 +39,9 @@ class UserAvatarApiController extends ApiController
 		$user->profile->avatar = $file->store('avatars', 'public');
 		$user->profile->save();
 
-		return $this->respondOk();
+		$resource = new Item($user->profile, new UserProfileTransformer, 'user_profile');
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
 	}
 }

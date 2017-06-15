@@ -31,6 +31,25 @@ class ReactionsTest extends ApiTestCase
 			->assertStatus(201);
 	}
 
+	/** @test */
+	public function post_reaction_to_slide()
+	{
+		$user = User::find(1);
+
+		$data = [
+			'reactable_resource' => config('papi.resources.slides'),
+			'reactable_id'       => 100,
+			'reaction_type'      => 'bookmark',
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/reactions'), $data);
+
+		$response
+			->assertStatus(201);
+	}
+
 	/** @test * */
 	public function delete_reaction()
 	{

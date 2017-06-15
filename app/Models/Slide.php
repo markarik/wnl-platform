@@ -31,4 +31,9 @@ class Slide extends Model
 	{
 		return $this->morphMany('\App\Models\Comment', 'commentable');
 	}
+
+	public function reactions()
+	{
+		return $this->morphToMany('App\Models\Reaction', 'reactable');
+	}
 }

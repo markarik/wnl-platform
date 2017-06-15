@@ -3,8 +3,27 @@
     <span class="icon is-small">
       <i class="fa" :class="hasReactedClass" @click="toggleReaction"></i>
     </span>
+    <span>Zapisz</span>
   </div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+  @import 'resources/assets/sass/variables'
+
+  .bookmark
+    align-items: center
+    color: $color-sky-blue
+    cursor: pointer
+    display: flex
+    font-size: .675rem
+    flex-direction: column
+    text-transform: uppercase
+    width: 50px
+
+  .icon
+
+
+</style>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'

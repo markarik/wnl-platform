@@ -3,10 +3,12 @@
 		<div class="qna-answer">
 			<div class="votes">
 				<wnl-vote type="up" :reactableId="id" reactableResource="qna_answers" count="0" module="qna"></wnl-vote>
-				<wnl-bookmark :reactableId="id" reactableResource="qna_answers" module="qna"></wnl-bookmark>
 			</div>
 			<div class="qna-container">
-				<div class="qna-answer-content" v-html="content"></div>
+				<div class="qna_wrapper">
+					<div class="qna-answer-content" v-html="content"></div>
+					<wnl-bookmark class="qna_bookmark" :reactableId="id" reactableResource="qna_answers" module="qna"></wnl-bookmark>
+				</div>
 				<div class="qna-meta">
 					<wnl-avatar
 						:username="author.full_name"
@@ -65,6 +67,10 @@
 	.qna-answer-container
 		margin-bottom: $margin-huge
 
+	.qna-answer-content
+		justify-content: flex-start
+		width: 100%
+
 	.qna-answer
 		background: $color-background-lighter-gray
 		padding: $margin-base
@@ -82,6 +88,14 @@
 
 	.comments-loader
 		margin: $margin-base 0
+
+	.qna_wrapper
+		display: flex
+		align-items: flex-start
+
+	.qna_bookmark
+		justify-content: flex-end
+
 </style>
 
 <script>

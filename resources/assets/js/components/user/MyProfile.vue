@@ -1,10 +1,15 @@
 <template lang="html">
 	<div class="scrollable-main-container wnl-user-profile" v-bind:class="{mobile: isMobileProfile}">
 		<h1>Profil publiczny</h1>
-		<div v-if="!isProduction" class="wnl-user-profile-avatar">
-			<wnl-avatar size="large"></wnl-avatar>
-			<wnl-upload @success="onUploadSuccess">
-				<a>Zmień</a>
+		<div class="wnl-user-profile-avatar">
+			<div class="margin vertical">
+				<label class="label">Avatar</label>
+			</div>
+			<wnl-upload @uploadStarted="onUploadStarted" @success="onUploadSuccess" @uploadError="onUploadError">
+				<wnl-avatar size="large" class="clickable-avatar"></wnl-avatar>
+				<a class="button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
+					Zmień avatar
+				</a>
 			</wnl-upload>
 		</div>
 
@@ -39,6 +44,9 @@
 			form
 				padding: 0 5%
 
+		.clickable-avatar
+			cursor: pointer
+
 </style>
 
 <script>
@@ -55,6 +63,11 @@
 			'wnl-form-text': Text,
 			'wnl-upload': Upload,
 		},
+		data() {
+			return {
+				loading: false,
+			}
+		},
 		computed: {
 			...mapGetters(['isMobileProfile']),
 			isProduction() {
@@ -62,10 +75,17 @@
 			}
 		},
 		methods: {
-			...mapActions(['setupCurrentUser']),
-			onUploadSuccess() {
-				this.setupCurrentUser()
-			}
+			...mapActions(['updateCurrentUser']),
+			onUploadError() {
+				this.loading = false
+			},
+			onUploadStarted() {
+				this.loading = true
+			},
+			onUploadSuccess(userData) {
+				this.updateCurrentUser(userData)
+				this.loading = false
+			},
 		},
 	}
 </script>

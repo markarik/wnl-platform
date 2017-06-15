@@ -17,10 +17,9 @@ function fetchQuizSet(id) {
 function _fetchQuestionsCollection(ids) {
 	return axios.post(getApiUrl('quiz_questions/.search'), {
 		query: {
-			where: [
-				['id', 'in', ids],
-			],
+			whereIn: ['id', ids],
 		},
+		include: 'quiz_answers,comments.profiles',
 	})
 }
 
@@ -78,7 +77,7 @@ const getters = {
 	getUnanswered: (state, getters) => _.filter(
 		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
 	),
-	isComplete: (state) => state.isComplete,
+	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
@@ -132,8 +131,9 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			_.each(items, (item, id) => {
-				set(state[resource], id, item)
+			let resourceObject = state[resource]
+			_.each(items, (item, index) => {
+				set(resourceObject, item.id, item)
 			})
 		})
 	},
@@ -154,34 +154,46 @@ const actions = {
 			quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug),
 			fetchQuizSet(resource.id)
 		]).then(([storedState, response]) => {
-
-			if (useLocalStorage() && !_.isEmpty(storedState)) {
-				commit(types.QUIZ_RESTORE_STATE, storedState)
-				commit(types.QUIZ_IS_LOADED, true)
-				commit(types.QUIZ_TOGGLE_PROCESSING, false)
-				return true
-			}
-
 			let included = response.data.included,
 				questionsIds = response.data.quiz_questions,
 				len = questionsIds.length
 
+			if (useLocalStorage() && !_.isEmpty(storedState)) {
+				commit(types.QUIZ_RESTORE_STATE, storedState)
+			} else {
+				commit(types.QUIZ_SET_QUESTIONS, {
+					setId: response.data.id,
+					setName: response.data.name,
+					len,
+					questionsIds,
+				})
+			}
+
 			commit(types.UPDATE_INCLUDED, included)
-
-			commit(types.QUIZ_SET_QUESTIONS, {
-				setId: response.data.id,
-				setName: response.data.name,
-				len,
-				questionsIds,
-			})
-
+			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)
 		});
 	},
 
 	fetchQuestionsCollection({commit}, ids) {
 		_fetchQuestionsCollection(ids).then(response => {
-			console.log(response)
+			let included = _.clone(response.data.included)
+
+			destroy(response.data, 'included')
+			included['quiz_questions'] = response.data
+
+			let questionsIds = _.map(response.data, (question) => question.id),
+				len = questionsIds.length
+
+			commit(types.UPDATE_INCLUDED, included)
+			commit(types.QUIZ_SET_QUESTIONS, {
+				setId: 0,
+				setName: 'Kolekcja pytań kontrolnych',
+				len,
+				questionsIds,
+			})
+			commit(types.QUIZ_TOGGLE_PROCESSING, false)
+			commit(types.QUIZ_IS_LOADED, true)
 		})
 	},
 

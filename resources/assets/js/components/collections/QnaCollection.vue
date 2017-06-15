@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h3>Twoja kolekcja pytań i odpowiedzi</h3>
-		<div class="notification margin top"><strong>Kolekcje już wkrótce będzie można łatwo przeszukiwać m.in.&nbsp;po&nbsp;przedmiotach oraz słowach kluczowych, więc będą służyć jako wartościowe narzędzie do powtórek!</strong> Dlatego zachęcamy Cię gorąco do zapisywania w&nbsp;Twoich Kolekcjach slajdów, pytań oraz pytań kontrolnych na bieżąco! <wnl-emoji :name="smiling"></wnl-emoji></div>
+		<div class="notification margin top"><strong>Kolekcje już wkrótce będzie można łatwo przeszukiwać m.in.&nbsp;po&nbsp;przedmiotach oraz słowach kluczowych, więc będą służyć jako wartościowe narzędzie do powtórek!</strong> Dlatego zachęcamy Cię gorąco do zapisywania w&nbsp;Twoich Kolekcjach slajdów, pytań oraz pytań kontrolnych na bieżąco!</div>
 		<wnl-qna readOnly="true" :ids="qnaQuestionsIds"></wnl-qna>
 	</div>
 </template>

@@ -2,7 +2,7 @@
 	<div>
 		<div class="wnl-quiz-question card margin vertical"
 			:class="{
-				'is-unresolved': !isResolved(id),
+				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
 			}">
 			<header class="quiz-header card-header">
@@ -28,6 +28,7 @@
 						:questionId="id"
 						:totalHits="total"
 						:key="answerIndex"
+						:readOnly="readOnly"
 						@answerSelected="selectAnswer(answerIndex)"
 					></wnl-quiz-answer>
 				</ul>
@@ -46,7 +47,7 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
+<style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
 	.card-content ul
@@ -107,7 +108,7 @@
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 		},
-		props: ['id', 'index', 'text', 'total'],
+		props: ['id', 'index', 'text', 'total', 'readOnly'],
 		computed: {
 			...mapGetters('quiz', [
 				'getAnswers',
@@ -115,6 +116,9 @@
 				'isResolved',
 				'getSelectedAnswer',
 			]),
+			displayResults() {
+				return this.readOnly || this.isComplete || this.isResolved(this.id)
+			},
 			answers() {
 				return this.getAnswers(this.id)
 			},

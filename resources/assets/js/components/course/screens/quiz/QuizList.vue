@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
-		<p class="title is-5" v-if="!isComplete">Pozostało pytań: {{howManyLeft}}</p>
+		<p class="title is-5" v-if="!displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="(question, index) in questions"
 			:class="`quiz-question-${question.id}`"
 			:id="question.id"
@@ -9,8 +9,9 @@
 			:text="question.text"
 			:total="question.total_hits"
 			:key="question.id"
+			:readOnly="readOnly"
 		></wnl-quiz-question>
-		<p class="has-text-centered" v-if="!isComplete">
+		<p class="has-text-centered" v-if="!displayResults">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
 				Sprawdź pytania
 			</a>
@@ -39,6 +40,7 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
+		props: ['readOnly'],
 		data() {
 			return {
 				hasErrors: false,
@@ -52,6 +54,9 @@
 				'getUnanswered',
 				'getQuestions',
 			]),
+			displayResults() {
+				return this.isComplete || this.readOnly
+			},
 			howManyLeft() {
 				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestions)}`
 			},

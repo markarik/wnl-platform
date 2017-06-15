@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-quiz">
-		<div v-if="!isComplete">
+		<div v-if="!displayResults">
 			<p class="title is-5">
 				Zanim zakończysz tę lekcję, sprawdź swoją wiedzę z wczorajszej! <wnl-emoji name="thinking_face"></wnl-emoji>
 			</p>
@@ -40,9 +40,12 @@
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-summary': QuizSummary,
 		},
-		props: ['screenData'],
+		props: ['screenData', 'readOnly'],
 		computed: {
-			...mapGetters('quiz', ['isComplete', 'isLoaded'])
+			...mapGetters('quiz', ['isComplete', 'isLoaded']),
+			displayResults() {
+				return this.readOnly || this.isComplete
+			}
 		},
 		methods: {
 			...mapActions('quiz', ['setupQuestions', 'destroyQuiz']),

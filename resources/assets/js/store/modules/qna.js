@@ -16,10 +16,8 @@ function _getQuestions(tags) {
 		let data = {
 			include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments',
 			query: {
-				whereHas: {
-					tags: {
-						whereIn: ['tags.id', tags.map((tag) => tag.id)]
-					}
+				hasIn: {
+					tags: ['tags.id', tags.map((tag) => tag.id)]
 				}
 			},
 			order: {

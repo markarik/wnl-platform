@@ -34,4 +34,9 @@ class QuizQuestion extends Model
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
+
+	public function reactions()
+	{
+		return $this->morphToMany('App\Models\Reaction', 'reactable');
+	}
 }

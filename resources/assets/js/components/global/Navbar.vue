@@ -15,10 +15,6 @@
 				<wnl-breadcrumbs></wnl-breadcrumbs>
 			</div>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-controls" v-if="canShowControlsInNavbar">
-			<span class="icon is-big"><i class="fa fa-search"></i></span>
-			<span class="icon is-big"><i class="fa fa-bell"></i></span>
-	</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown></wnl-user-dropdown>
 		</div>

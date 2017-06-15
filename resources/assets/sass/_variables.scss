@@ -29,6 +29,7 @@ $background-color-default: $color-white;
 // Typography
 $font-family-sans-serif: "Lato", sans-serif;
 
+$font-size-minus-4: 0.55rem;
 $font-size-minus-3: 0.675rem;
 $font-size-minus-2: 0.75rem;
 $font-size-minus-1: 0.875rem;
@@ -66,11 +67,11 @@ $rounded-square-sizes: (
 );
 
 // Spacing
-$margin-tiny: 0.1em;
-$margin-small: 0.5em;
-$margin-base: 1em;
-$margin-big: 2em;
-$margin-huge: 3em;
+$margin-tiny: 2px;
+$margin-small: 7px;
+$margin-base: 15px;
+$margin-big: 30px;
+$margin-huge: 45px;
 
 // Animations
 $transition-length-base: 0.15s;

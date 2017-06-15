@@ -23,7 +23,8 @@
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-comments-o"></i>
+				<i class="fa fa-chevron-left"></i>
+				<span>Pokaż czat</span>
 			</span>
 		</div>
 	</div>
@@ -46,16 +47,25 @@
 		min-width: $course-chat-min-width
 
 	.wnl-chat-toggle
-		align-items: flex-start
+		align-items: center
 		border-left: $border-light-gray
 		display: flex
+		flex-direction: column
 		flex-grow: 0
-		justify-content: center
-		padding: 20px
+		justify-content: flex-start
+		padding: $margin-base
 
 		.icon
-			color: $color-gray-dimmed
+			color: $color-ocean-blue
 			cursor: pointer
+			display: flex
+			flex-direction: column
+			margin: $margin-base $margin-small
+
+			span
+				font-size: $font-size-minus-4
+				text-transform: uppercase
+				white-space: nowrap
 </style>
 
 <script>

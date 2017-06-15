@@ -10,9 +10,12 @@
 				</li>
 			</ul>
 		</div>
-		<span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
-			<i class="fa fa-close"></i>
-		</span>
+		<a class="wnl-chat-close">
+			<span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
+				<i class="fa fa-chevron-right"></i>
+				<span>Ukryj czat</span>
+			</span>
+		</a>
 		<wnl-chat :room="currentChannel"></wnl-chat>
 	</div>
 </template>
@@ -31,9 +34,17 @@
 		.wnl-chat-close
 			color: $color-ocean-blue
 			cursor: pointer
+			display: flex
+			flex-direction: column
 			position: absolute
 			right: $margin-base
 			top: $margin-base
+
+			span
+				font-size: $font-size-minus-4
+				text-transform: uppercase
+				white-space: nowrap
+
 
 	.metadata
 		margin: $margin-base 0 0 $margin-base

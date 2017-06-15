@@ -42,6 +42,11 @@ const mutations = {
 	[types.USERS_SETUP_CURRENT] (state, userData) {
 		set(state, 'profile', userData)
 	},
+	[types.USERS_UPDATE_CURRENT] (state, userData) {
+		Object.keys(userData).forEach((key) => {
+			set(state.profile, key, userData[key])
+		})
+	},
 	[types.USERS_SETUP_SETTINGS] (state, settings) {
 		set(state, 'settings', settings)
 	},
@@ -89,6 +94,10 @@ const actions = {
 				reject()
 			})
 		})
+	},
+
+	updateCurrentUser({commit}, userData) {
+		commit(types.USERS_UPDATE_CURRENT, userData)
 	},
 
 	changeUserSetting({ commit }, payload) {

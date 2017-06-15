@@ -34,18 +34,18 @@
 				this.input.click();
 			},
 			inputChanged(){
-				let data = new FormData();
-				data.append('file', this.input.files[0]);
+				let data = new FormData()
 
-				let config = {
-					onUploadProgress: function (progressEvent) {
-						console.log(Math.round((progressEvent.loaded * 100) / progressEvent.total));
-					}
-				}
+				this.$emit('uploadStarted')
+				data.append('file', this.input.files[0])
 
-				axios.post('/papi/v1/users/current/avatar', data, config)
+				axios.post('/papi/v1/users/current/avatar', data)
 						.then(response => {
-							this.$emit('success')
+							this.$emit('success', response.data)
+						})
+						.catch(error => {
+							$wnl.logger.error(error)
+							this.$emit('uploadError', error)
 						})
 			}
 		},

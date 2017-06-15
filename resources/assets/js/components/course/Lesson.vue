@@ -151,7 +151,6 @@
 		methods: {
 			...mapActions('progress', [
 				'startLesson',
-				'updateLesson',
 				'completeLesson',
 				'completeScreen',
 				'completeSection'

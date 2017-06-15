@@ -181,6 +181,5 @@ export default {
 	completeSection,
 	completeScreen,
 	completeLesson,
-	updateLesson,
 	startLesson
 };

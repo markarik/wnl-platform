@@ -33,7 +33,9 @@ export const reactionsActions = {
 
 			return axios[method](getApiUrl(`reactions`), params)
 				.then((response) => {
-					commit(types.SET_REACTION, payload)
+					if (!payload.preventUpdate) {
+						commit(types.SET_REACTION, payload)
+					}
 					resolve(response)
 				})
 				.catch(error => $wnl.logger.error(error))

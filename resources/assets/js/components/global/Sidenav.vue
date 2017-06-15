@@ -82,8 +82,13 @@
 	.todo
 		color: $primary
 
+		&.complete,
+		&.complete a
+			color: $color-gray-dimmed
+
 		.icon
 			vertical-align: baseline
+
 
 	.is-active
 		font-weight: $font-weight-bold

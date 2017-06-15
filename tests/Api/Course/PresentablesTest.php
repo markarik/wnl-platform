@@ -32,8 +32,6 @@ class PresentablesTest extends ApiTestCase
 			->actingAs($user)
 			->json('POST', $this->url('/presentables/.search'), $data);
 
-		dd($response->dump());
-
 		$response
 			->assertStatus(200);
 

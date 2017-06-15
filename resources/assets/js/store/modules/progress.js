@@ -124,12 +124,6 @@ const mutations = {
 
 		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState)
 	},
-	[types.PROGRESS_UPDATE_LESSON] (state, payload) {
-		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		const updatedState = progressStore.updateLesson(lessonState, payload);
-
-		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState);
-	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		// TODO consider issuing one request instead of two when finishing lesson
@@ -185,10 +179,6 @@ const actions = {
 
 				return false;
 			});
-	},
-	updateLesson({commit}, payload) {
-		$wnl.logger.debug(`Updating lesson ${payload.lessonId}`)
-		commit(types.PROGRESS_UPDATE_LESSON, payload)
 	},
 	completeLesson({commit, getters}, payload) {
 		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {

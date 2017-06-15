@@ -207,8 +207,6 @@
 							this.completeLesson(this.lessonProgressContext)
 						}
 					}
-
-					this.updateLesson(this.lessonProgressContext)
 				}
 			},
 			updateElementHeight() {

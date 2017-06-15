@@ -44,8 +44,10 @@ const setLessonProgress = ({courseId, lessonId}, value) => {
 	})
 };
 
-const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
+const completeSection = (lessonState, {screenId, sectionId, route, ...rest}) => {
 	const updatedState = lessonState ? {...lessonState} : {};
+
+	updatedState.route = route;
 
 	updatedState.screens = updatedState.screens || {};
 	if (!updatedState.screens[screenId]) {
@@ -70,8 +72,10 @@ const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
 	return updatedState;
 };
 
-const completeScreen = (lessonState, {screenId, ...rest}) => {
+const completeScreen = (lessonState, {screenId, route, ...rest}) => {
 	const updatedState = {...lessonState};
+
+	updatedState.route = route;
 
 	updatedState.screens = lessonState.screens || {};
 	updatedState.screens[screenId] = updatedState.screens[screenId] || {};
@@ -82,20 +86,11 @@ const completeScreen = (lessonState, {screenId, ...rest}) => {
 	return updatedState;
 };
 
-const updateLesson = (lessonState, {route, ...rest}) => {
-	const updatedState = {
-		...lessonState,
-		route
-	};
-
-	setLessonProgress(rest, updatedState);
-	return updatedState;
-};
-
 const completeLesson = (lessonState, payload) => {
 	const updatedState = {
 		...lessonState,
-		status: STATUS_COMPLETE
+		status: STATUS_COMPLETE,
+		route: payload.route
 	};
 
 	setLessonProgress(payload, updatedState);

@@ -6,10 +6,10 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="wnl-sidenav">
-				<wnl-sidenav :items="items" :breadcrumbs="breadcrumbs"></wnl-sidenav>
+				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}">
+		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
 			<router-view></router-view>
 		</div>
 	</div>
@@ -22,11 +22,12 @@
 		padding: $margin-small
 
 	.wnl-middle
+		border-right: $border-light-gray
 		padding: $margin-small $margin-base
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -34,8 +35,14 @@
 
 	export default {
 		props: ['view'],
+		components: {
+			'wnl-sidenav': Sidenav,
+			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-main-nav': MainNav
+		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
+			...mapGetters('collections', ['isLoading']),
 			items() {
 				let items = [
 					{
@@ -80,54 +87,14 @@
 					},
 				]
 
-				if (this.isProduction) {
-					items.push({
-						text: 'Kiedy kurs?',
-						itemClass: 'has-icon',
-						to: {
-							name: 'countdown',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-question',
-						iconTitle: 'Kiedy kurs?',
-					})
-				}
-
 				return items
-			},
-			breadcrumbs() {
-				let breadcrumbs = [
-					{
-						text: 'Plan lekcji',
-						itemClass: 'has-icon',
-						to: {
-							name: 'dashboard',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-home',
-						iconTitle: 'Plan lekcji',
-					},
-				]
-
-				return breadcrumbs
 			}
 		},
 		methods: {
-			goToDefaultRoute() {
-				if (!this.view) {
-					this.$router.replace({ name: 'my-orders' })
-				}
-			}
+			...mapActions('collections', ['fetchReactions']),
 		},
-		components: {
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav
-		},
-		// mounted() { this.goToDefaultRoute() }
+		mounted() {
+			this.fetchReactions()
+		}
 	}
 </script>

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Events\ReactionAdded;
+use Carbon\Carbon;
 use DB;
 use Auth;
 use App\Models\Reaction;
@@ -24,16 +25,18 @@ class ReactionsApiController extends ApiController
 		$modelName = self::getResourceModel($request->get('reactable_resource'));
 		$reactable = $modelName::find($request->get('reactable_id'));
 		$reaction = Reaction::type($request->get('reaction_type'));
+		$context = $request->get('context');
 
 		if (!$reactable || !$reaction) {
 			return $this->respondNotFound();
 		}
 
-		$now = time();
+		$now = Carbon::now();
 		$reactable->reactions()->attach($reaction, [
 			'user_id'    => $user->id,
 			'created_at' => $now,
 			'updated_at' => $now,
+			'context'    => $context,
 		]);
 
 		// Since there's no action performed on reaction model,

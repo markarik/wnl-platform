@@ -13,7 +13,7 @@ class ReactionsTest extends ApiTestCase
 	use DatabaseTransactions;
 
 	/** @test */
-	public function post_reaction()
+	public function post_reaction_with_context()
 	{
 		$user = User::find(1);
 
@@ -21,6 +21,7 @@ class ReactionsTest extends ApiTestCase
 			'reactable_resource' => config('papi.resources.answers'),
 			'reactable_id'       => 2,
 			'reaction_type'      => 'thanks',
+			'context'            => '{"very": "cool", "json": {"data": "or", "whatever": true}}',
 		];
 
 		$response = $this

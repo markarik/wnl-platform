@@ -95,11 +95,15 @@ const actions = {
 		commit(types.USERS_CHANGE_SETTING, payload)
 	},
 
-	toggleChat({ commit, dispatch, getters }) {
-		commit(types.USERS_CHANGE_SETTING, {
+	changeUserSettingAndSync({ commit, dispatch }, payload) {
+		dispatch("changeUserSetting", payload)
+		dispatch("syncSettings")
+	},
+
+	toggleChat({ dispatch, getters }) {
+		dispatch("changeUserSettingAndSync", {
 			setting: "chat_on", value: !getters.getSetting("chat_on")
 		})
-		dispatch("syncSettings")
 	},
 
 	syncSettings({ commit, getters }) {

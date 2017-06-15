@@ -146,7 +146,7 @@ if (isProduction()) {
 			// redirect: { name: "my-profile" },
 			children: [
 				{
-					name: 'collection-slide',
+					name: 'collection-slides',
 					path: 'slides',
 					component: require('js/components/collections/SlidesCollection.vue')
 				},

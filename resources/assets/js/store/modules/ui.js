@@ -32,6 +32,7 @@ const getters = {
 	isSidenavVisible: (state, getters) => getters.isSidenavMounted || getters.isSidenavOpen,
 	isMobileNavigation: (state, getters) => getters.isTouchScreen,
 	isMobileProfile: (state, getters) => getters.isTouchScreen,
+	isMobileCollections: (state, getters) => getters.isTouchScreen,
 	isChatMounted: (state, getters) => getters.isLargeDesktop,
 	isChatVisible: (state, getters, rootState) => state.canShowChat && getters.isChatMounted ?
 		rootState.currentUser.settings["chat_on"] : state.isChatOpen,

@@ -20,6 +20,9 @@
 
 	.wnl-sidenav
 		padding: $margin-small
+
+	.wnl-middle
+		padding: $margin-small $margin-base
 </style>
 
 <script>
@@ -48,69 +51,33 @@
 						},
 						isDisabled: false,
 						method: 'push',
-						iconClass: 'fa-shopping-cart',
-						iconTitle: 'Twoje zamówienia',
+						iconClass: 'fa-television',
+						iconTitle: 'Twoja kolekcja slajdów',
 					},
 					{
-						text: 'Profil publiczny',
+						text: 'Pytania i odpowiedzi',
 						itemClass: 'has-icon',
 						to: {
-							name: 'my-profile',
+							name: 'collection-qna',
 							params: {},
 						},
 						isDisabled: false,
 						method: 'push',
-						iconClass: 'fa-user',
-						iconTitle: 'Profil publiczny',
+						iconClass: 'fa-th-list',
+						iconTitle: 'Twoja kolekcja pytań i odpowiedzi',
 					},
 					{
-						text: 'Adres',
+						text: 'Pytania kontrolne',
 						itemClass: 'has-icon',
 						to: {
-							name: 'my-address',
+							name: 'collection-quiz',
 							params: {},
 						},
 						isDisabled: false,
 						method: 'push',
-						iconClass: 'fa-address-card-o',
-						iconTitle: 'Profil publiczny',
+						iconClass: 'fa-question-circle-o',
+						iconTitle: 'Twoja kolekcja pytań i odpowiedzi',
 					},
-					{
-						text: 'Dane do faktury',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-billing-data',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-file-o',
-						iconTitle: 'Profil publiczny',
-					},
-					{
-						text: 'Ustawienia',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-settings',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-sliders',
-						iconTitle: 'Profil publiczny',
-					},
-					// {
-					// 	text: 'Zmiana hasła',
-					// 	itemClass: 'has-icon',
-					// 	to: {
-					// 		name: 'my-password',
-					// 		params: {},
-					// 	},
-					// 	isDisabled: false,
-					// 	method: 'push',
-					// 	iconClass: 'fa-key',
-					// 	iconTitle: 'Profil publiczny',
-					// },
 				]
 
 				if (this.isProduction) {

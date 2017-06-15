@@ -1,6 +1,6 @@
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
-import {getCurrentUser, getUserSettings, getDefaultSettings} from 'js/services/user';
+import {getCurrentUser, getUserSettings, getDefaultSettings, setUserSettings} from 'js/services/user';
 import {set} from 'vue'
 
 // Initial state
@@ -93,6 +93,17 @@ const actions = {
 
 	changeUserSetting({commit}, payload) {
 		commit(types.USERS_CHANGE_SETTING, payload)
+	},
+
+	toggleChat({ commit, dispatch, getters }) {
+		commit(types.USERS_CHANGE_SETTING, {
+			setting: "chat_on", value: !getters.getSetting("chat_on")
+		})
+		dispatch("syncSettings")
+	},
+
+	syncSettings({ commit, getters }) {
+		setUserSettings(getters.getAllSettings)
 	}
 }
 

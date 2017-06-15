@@ -6,7 +6,8 @@ const state = {
 	currentLayout: '',
 	isSidenavOpen: false,
 	isChatOpen: false,
-	canShowChat: false
+	canShowChat: false,
+	chatPreference: false
 }
 
 const layouts = {
@@ -33,8 +34,8 @@ const getters = {
 	isMobileNavigation: (state, getters) => getters.isTouchScreen,
 	isMobileProfile: (state, getters) => getters.isTouchScreen,
 	isChatMounted: (state, getters) => getters.isLargeDesktop,
-	isChatVisible: state => state.canShowChat && state.isChatOpen,
-	isChatVisibleByDefault: (state, getters) => getters.isLargeDesktop,
+	isChatVisible: (state, getters, rootState) => state.canShowChat && getters.isChatMounted ?
+		rootState.currentUser.settings["chat_on"] : state.isChatOpen,
 	isChatToggleVisible: (state, getters) => !getters.isMobile && !getters.isChatVisible,
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
 	canShowChat: state => state.canShowChat
@@ -54,9 +55,8 @@ const mutations = {
 
 		set(state, 'isSidenavOpen', !state.isSidenavOpen)
 	},
-	[types.UI_RESET_LAYOUT] (state, isChatOpen) {
+	[types.UI_RESET_LAYOUT] (state) {
 		set(state, 'isSidenavOpen', false)
-		set(state, 'isChatOpen', isChatOpen)
 	},
 	[types.UI_TOGGLE_CHAT] (state) {
 		const isChatOpen = state.isChatOpen
@@ -86,13 +86,12 @@ const mutations = {
 const actions = {
 	setLayout({ commit, getters }, layout) {
 		commit(types.UI_CHANGE_LAYOUT, layout)
-		commit(types.UI_SET_CHAT_OPEN, getters.isChatVisibleByDefault)
 	},
 	toggleSidenav({ commit }) {
 		commit(types.UI_TOGGLE_SIDENAV)
 	},
 	resetLayout({ commit, getters }) {
-		commit(types.UI_RESET_LAYOUT, getters.isChatVisibleByDefault)
+		commit(types.UI_RESET_LAYOUT)
 	},
 	toggleChat({ commit }) {
 		commit(types.UI_TOGGLE_CHAT)

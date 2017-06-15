@@ -31,6 +31,12 @@ export function getUserSettings() {
 	})
 }
 
+export function setUserSettings(settings) {
+	const promisedSettings = axios.put(getApiUrl('users/current/settings'), settings)
+
+	return promisedSettings
+}
+
 export function getDefaultSettings() {
 	return $wnl.defaultSettings
 }

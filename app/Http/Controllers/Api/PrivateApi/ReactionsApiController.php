@@ -29,8 +29,11 @@ class ReactionsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
+		$now = time();
 		$reactable->reactions()->attach($reaction, [
-			'user_id' => $user->id,
+			'user_id'    => $user->id,
+			'created_at' => $now,
+			'updated_at' => $now,
 		]);
 
 		// Since there's no action performed on reaction model,

@@ -10,7 +10,9 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
-			<router-view></router-view>
+			<div class="scrollable-main-container">
+				<router-view></router-view>
+			</div>
 		</div>
 	</div>
 </template>
@@ -23,7 +25,6 @@
 
 	.wnl-middle
 		border-right: $border-light-gray
-		padding: $margin-small $margin-base
 </style>
 
 <script>

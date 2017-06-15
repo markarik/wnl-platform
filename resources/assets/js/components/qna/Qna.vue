@@ -109,7 +109,7 @@
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
 		},
-		props: ['tags'],
+		props: ['tags', 'ids'],
 		data() {
 			return {
 				ready: false,
@@ -122,16 +122,23 @@
 				return this.sortedQuestions.length || 0
 			},
 			tagsFiltered() {
+				if (!this.tags) return [];
 				return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1)
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions', 'destroyQna']),
+			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'destroyQna']),
 		},
 		mounted() {
-			this.fetchQuestions(this.tags).then(() => {
-				this.ready = true
-			})
+			if (this.tags) {
+				this.fetchQuestions(this.tags).then(() => {
+					this.ready = true
+				})
+			} else {
+				this.fetchQuestionsByIds(this.ids).then(() => {
+					this.ready = true
+				})
+			}
 		},
 		beforeDestroy() {
 			this.destroyQna()

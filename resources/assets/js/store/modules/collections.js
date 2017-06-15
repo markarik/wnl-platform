@@ -30,7 +30,7 @@ const state = getInitialState()
 
 const getters = {
 	isLoading: (state) => state.loading,
-	qnaQuestionsIds: (state) => state.qna_questions,
+	qnaQuestionsIds: (state) => state.qna_questions.map(question => question.reactable_id),
 	qnaAnswersIds: (state) => state.qna_answers,
 	quizQuestionsIds: (state) => state.quiz_questions.map(question => question.reactable_id),
 	slides: (state) => state.slides,

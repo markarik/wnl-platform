@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Events\ReactionAdded;
+use Carbon\Carbon;
 use DB;
 use Auth;
 use App\Models\Reaction;
@@ -29,7 +30,7 @@ class ReactionsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$now = time();
+		$now = Carbon::now();
 		$reactable->reactions()->attach($reaction, [
 			'user_id'    => $user->id,
 			'created_at' => $now,

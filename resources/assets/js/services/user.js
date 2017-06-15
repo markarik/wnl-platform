@@ -32,9 +32,7 @@ export function getUserSettings() {
 }
 
 export function setUserSettings(settings) {
-	const promisedSettings = axios.put(getApiUrl('users/current/settings'), settings)
-
-	return promisedSettings
+	return axios.put(getApiUrl('users/current/settings'), settings)
 }
 
 export function getDefaultSettings() {

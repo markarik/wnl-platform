@@ -6,8 +6,7 @@ const state = {
 	currentLayout: '',
 	isSidenavOpen: false,
 	isChatOpen: false,
-	canShowChat: false,
-	chatPreference: false
+	canShowChat: false
 }
 
 const layouts = {

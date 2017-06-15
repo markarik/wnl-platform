@@ -21,7 +21,7 @@
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
-					<span v-if="isCurrentUserAuthor">
+					<span v-if="isCurrentUserAuthor && !readOnly">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
@@ -35,11 +35,11 @@
 			<p class="qna-title">
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 				Komentarze ({{comments.length}})
-				<span v-if="comments.length > 0"> ·
-					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
-				</span> ·
-				<span>
-					<a class="secondary-link" @click="showCommentForm = true">Skomentuj</a>
+				<span v-if="comments.length > 0">
+					 · <a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				</span>
+				<span v-if="!readOnly">
+					 · <a class="secondary-link" @click="showCommentForm = true">Skomentuj</a>
 				</span>
 			</p>
 			<transition name="fade">
@@ -52,7 +52,8 @@
 				v-for="comment in comments"
 				:answerId="id"
 				:comment="comment"
-				:key="comment.id">
+				:key="comment.id"
+				:readOnly="readOnly">
 			</wnl-qna-comment>
 			<div class="comments-loader" v-if="loading">
 				<wnl-text-loader></wnl-text-loader>
@@ -119,7 +120,7 @@
 			'wnl-vote': Vote,
 			'wnl-bookmark': Bookmark,
 		},
-		props: ['answer', 'questionId', 'reactableId', 'reactableResource', 'module'],
+		props: ['answer', 'questionId', 'reactableId', 'reactableResource', 'module', 'readOnly'],
 		data() {
 			return {
 				commentsFetched: false,

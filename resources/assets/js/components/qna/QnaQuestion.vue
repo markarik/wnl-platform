@@ -24,7 +24,7 @@
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
-					<span v-if="isCurrentUserAuthor">
+					<span v-if="isCurrentUserAuthor && !readOnly">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
@@ -37,7 +37,7 @@
 						<div class="level-left">
 							<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
 						</div>
-						<div class="level-right">
+						<div class="level-right" v-if="!readOnly">
 							<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
 								<span>Odpowiedz</span>
 								<span class="icon is-small answer-icon">
@@ -55,12 +55,13 @@
 							@submitSuccess="onSubmitSuccess">
 						</wnl-qna-new-answer-form>
 					</transition>
-					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId"></wnl-qna-answer>
+					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly"></wnl-qna-answer>
 					<wnl-qna-answer v-if="allAnswers"
 						v-for="answer in otherAnswers"
 						:answer="answer"
 						:questionId="questionId"
-						:key="answer.id">
+						:key="answer.id"
+						:readOnly="readOnly">
 					</wnl-qna-answer>
 					<a class="button is-small is-wide qna-answers-show-all"
 						v-if="!allAnswers && otherAnswers.length > 0"
@@ -136,7 +137,7 @@
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
 		},
-		props: ['questionId'],
+		props: ['questionId', 'readOnly'],
 		data() {
 			return {
 				allAnswers: false,

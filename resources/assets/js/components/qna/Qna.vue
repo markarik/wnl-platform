@@ -15,7 +15,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="level-right">
+				<div class="level-right" v-if="!readOnly">
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
@@ -34,7 +34,8 @@
 			</transition>
 			<wnl-qna-question v-for="question in sortedQuestions"
 				:key="question.id"
-				:questionId="question.id">
+				:questionId="question.id"
+				:readOnly="readOnly">
 			</wnl-qna-question>
 		</div>
 	</div>
@@ -109,7 +110,7 @@
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
 		},
-		props: ['tags', 'ids'],
+		props: ['tags', 'ids', 'readOnly'],
 		data() {
 			return {
 				ready: false,

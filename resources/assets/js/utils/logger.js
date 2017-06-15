@@ -29,7 +29,10 @@ export default class Logger {
 	}
 
 	constructor(options = {}) {
-		if (this.useExternal()) {
+		this.level     = envValue('APP_LOG_LEVEL')
+		this.levelCode = Logger.LEVELS[this.level]
+
+		if (this.useExternal(this.levelCode)) {
 			Raven
 				.config(envValue('SENTRY_DSN_VUE_PUB'))
 				.setTagsContext({
@@ -38,13 +41,10 @@ export default class Logger {
 				.addPlugin(RavenVue, Vue)
 				.install()
 		}
-
-		this.level     = envValue('APP_LOG_LEVEL')
-		this.levelCode = Logger.LEVELS[this.level]
 	}
 
-	useExternal() {
-		return !isDev()
+	useExternal(levelCode) {
+		return !isDev() && levelCode < 7
 	}
 
 	log(level, message) {

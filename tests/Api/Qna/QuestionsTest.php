@@ -33,19 +33,11 @@ class QuestionsTest extends ApiTestCase
 		$user = User::find(1);
 
 		$data = [
-			'query'   => [
-				'whereHas' => [
-					'tags' => [
-						'whereIn' => ['name', ['qna', 'mikrobeki']],
-					],
+			'query' => [
+				'hasIn' => [
+					'tags' => ['tags.id', [5, 6]],
 				],
 			],
-			'order'   => [
-				'created_at' => 'desc',
-				'id'         => 'asc',
-			],
-			'limit'   => [10, 0],
-			'include' => '',
 		];
 		$response = $this
 			->actingAs($user)

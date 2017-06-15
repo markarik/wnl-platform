@@ -65,6 +65,29 @@ trait PerformsApiSearches
 	}
 
 	/**
+	 * Process 'hasIn' conditions and apply to query builder.
+	 *
+	 * @param $model
+	 * @param $relationConditions
+	 *
+	 * @return mixed
+	 */
+	protected function parseHasIn($model, $relationConditions)
+	{
+		foreach ($relationConditions as $field => $conditions) {
+			foreach ($conditions[1] as $element) {
+				$model = $model->whereHas(camel_case($field),
+					function ($query) use ($conditions, $element) {
+						$query->where($conditions[0], $element);
+					}
+				);
+			}
+		}
+
+		return $model;
+	}
+
+	/**
 	 * Parse order rules and apply to query builder.
 	 *
 	 * @param $model
@@ -123,6 +146,10 @@ trait PerformsApiSearches
 
 		if (!empty ($query['whereHas'])) {
 			$model = $this->parseWhereHas($model, $query['whereHas']);
+		}
+
+		if (!empty ($query['hasIn'])) {
+			$model = $this->parseHasIn($model, $query['hasIn']);
 		}
 
 		if (!empty ($order)) {

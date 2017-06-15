@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
-abstract class ApiController extends Controller
+class ApiController extends Controller
 {
 	use GeneratesApiResponses;
 	use PerformsApiSearches;

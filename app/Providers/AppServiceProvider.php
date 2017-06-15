@@ -32,8 +32,8 @@ class AppServiceProvider extends ServiceProvider
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
 
-		if (!App::environment('dev')) {
-			$this->useSentryLogger();
+		if ($this->useExternalLogger()) {
+			$this->addSentryLogger();
 		}
 
 		/**
@@ -65,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
 		}
 	}
 
-	public function useSentryLogger()
+	public function addSentryLogger()
 	{
 		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')));
 		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
@@ -83,5 +83,10 @@ class AppServiceProvider extends ServiceProvider
 
 			return $record;
 		});
+	}
+
+	public function useExternalLogger()
+	{
+		return !App::environment('dev') && env('LOG_LEVEL') !== 'debug';
 	}
 }

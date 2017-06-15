@@ -63,10 +63,11 @@
 			'wnl-quill': Quill,
 			'wnl-submit': Submit,
 		},
+		props: ['tags'],
 		computed: {
 			attachedData() {
 				return {
-					lesson_id: this.$route.params.lessonId
+					tags: this.tags.map((tag) => tag.id)
 				}
 			},
 			toolbar() {
@@ -81,7 +82,7 @@
 			...mapActions('qna', ['fetchQuestions']),
 			onSubmitSuccess() {
 				this.$emit('submitSuccess')
-				this.fetchQuestions()
+				this.fetchQuestions(this.tags)
 			},
 		},
 	}

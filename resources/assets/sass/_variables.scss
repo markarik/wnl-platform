@@ -29,6 +29,7 @@ $background-color-default: $color-white;
 // Typography
 $font-family-sans-serif: "Lato", sans-serif;
 
+$font-size-minus-4: 0.55rem;
 $font-size-minus-3: 0.675rem;
 $font-size-minus-2: 0.75rem;
 $font-size-minus-1: 0.875rem;
@@ -66,11 +67,11 @@ $rounded-square-sizes: (
 );
 
 // Spacing
-$margin-tiny: 0.1em;
-$margin-small: 0.5em;
-$margin-base: 1em;
-$margin-big: 2em;
-$margin-huge: 3em;
+$margin-tiny: 2px;
+$margin-small: 7px;
+$margin-base: 15px;
+$margin-big: 30px;
+$margin-huge: 45px;
 
 // Animations
 $transition-length-base: 0.15s;
@@ -88,15 +89,14 @@ $main-nav-min-size: 60px;
 
 $sidenav-min-width: 150px;
 $sidenav-max-width: 250px;
-$sidenav-width: 20vw;
+$sidenav-width: 23%;
 
-$course-content-min-width: 800px;
 $course-content-max-width: 1200px;
-$course-content-flex: 3;
+$course-content-flex: 1;
 
 $course-chat-max-width: 600px;
 $course-chat-min-width: 250px;
-$course-chat-flex: 2;
+$course-chat-width: 29%;
 
 // Overwrite Bulma variables
 $primary: $color-ocean-blue;
@@ -104,6 +104,8 @@ $success: $color-green;
 $warning: $color-orange;
 $danger: $color-red;
 $info: $color-blue;
+
+$text: $color-gray;
 
 // z-index positioning
 $z-index-sidenav-slot: 49;

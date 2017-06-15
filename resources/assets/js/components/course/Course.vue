@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout wnl-course-layout">
+	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
 		<wnl-sidenav-slot
 			:isVisible="canRenderSidenav"
 			:isDetached="!isSidenavMounted"
@@ -12,18 +12,19 @@
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<router-view v-if="ready"></router-view>
+			<router-view></router-view>
 		</div>
 		<wnl-sidenav-slot
 			:isVisible="isChatVisible"
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
+		<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-comments-o"></i>
+				<i class="fa fa-chevron-left"></i>
+				<span>Pokaż czat</span>
 			</span>
 		</div>
 	</div>
@@ -36,27 +37,35 @@
 		justify-content: space-between
 
 	.wnl-course-content
-		margin: 0 $margin-base
 		max-width: $course-content-max-width
 		flex: $course-content-flex auto
 		position: relative
 
 	.wnl-course-chat
-		flex: $course-chat-flex auto
 		max-width: $course-chat-max-width
 		min-width: $course-chat-min-width
+		width: $course-chat-width
 
 	.wnl-chat-toggle
-		align-items: flex-start
+		align-items: center
 		border-left: $border-light-gray
 		display: flex
+		flex-direction: column
 		flex-grow: 0
-		justify-content: center
-		padding: 20px
+		justify-content: flex-start
+		padding: $margin-base
 
 		.icon
-			color: $color-gray-dimmed
+			color: $color-ocean-blue
 			cursor: pointer
+			display: flex
+			flex-direction: column
+			margin: $margin-base $margin-small
+
+			span
+				font-size: $font-size-minus-4
+				text-transform: uppercase
+				white-space: nowrap
 </style>
 
 <script>
@@ -109,10 +118,14 @@
 				let chatRoom = `courses-${this.courseId}`
 				if (this.isLesson) {
 					chatRoom += `-lessons-${this.lessonId}`
+					return [
+						{name: '#nauka', channel: chatRoom},
+						{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+					]
 				}
+
 				return [
-					{name: '#powaga', channel: chatRoom},
-					{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+					{name: '#aula', channel: chatRoom},
 				]
 			},
 			localStorageKey() {

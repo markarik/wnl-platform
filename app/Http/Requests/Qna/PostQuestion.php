@@ -24,8 +24,8 @@ class PostQuestion extends FormRequest
 	public function rules()
 	{
 		return [
-			'text'      => 'string|required',
-			'lesson_id' => 'numeric|required',
+			'text' => 'string|required',
+			'tags' => 'required',
 		];
 	}
 }

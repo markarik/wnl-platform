@@ -8,6 +8,7 @@
 			isUnique="true"
 			:commentableId="currentSlideId"
 			@commentsHidden="$emit('commentsHidden')"
+			@commentsUpdated="onCommentsUpdated"
 		></wnl-comments-list>
 	</div>
 </template>
@@ -30,6 +31,11 @@
 			...mapGetters('slideshow', ['getSlideId']),
 			currentSlideId() {
 				return this.getSlideId(this.currentSlide - 1)
+			},
+		},
+		methods: {
+			onCommentsUpdated(comments) {
+				this.$emit('annotationsUpdated', comments)
 			},
 		},
 	}

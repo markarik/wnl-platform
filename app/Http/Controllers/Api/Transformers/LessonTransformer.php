@@ -23,11 +23,12 @@ class LessonTransformer extends ApiTransformer
 		$editionId = $this->parent->get('editionId');
 
 		$data = [
-			'id'       => $lesson->id,
-			'name'     => $lesson->name,
-			'group_id' => $lesson->group_id,
-			'groups'   => $lesson->group_id,
-			'editions' => $editionId,
+			'id'           => $lesson->id,
+			'name'         => $lesson->name,
+			'group_id'     => $lesson->group_id,
+			'groups'       => $lesson->group_id,
+			'order_number' => $lesson->order_number,
+			'editions'     => $editionId,
 		];
 
 		if ($editionId !== null) {

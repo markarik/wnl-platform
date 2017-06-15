@@ -12,7 +12,8 @@ const {mix} = require('laravel-mix');
  */
 
 mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
-	.sass('resources/vendor/reveal/reveal-theme.css', 'public/css/slideshow.css')
+mix.sass('resources/assets/sass/slideshow.sass', 'public/css/slideshow.css')
+	.sass('resources/vendor/reveal/reveal-theme.css', 'public/css/reveal.css')
 	.sass('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
 	.sass('resources/vendor/imageviewer/imageviewer.css', 'public/css/imageviewer.css')
 	// see https://github.com/JeffreyWay/laravel-mix/issues/228#issuecomment-284076792

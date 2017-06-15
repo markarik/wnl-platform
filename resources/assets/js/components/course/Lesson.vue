@@ -11,7 +11,7 @@
 					</div>
 					<div class="level-right">
 						<div class="level-item small">
-							Lekcja {{lessonId}}
+							Lekcja {{lessonNumber}}
 						</div>
 					</div>
 				</div>
@@ -104,6 +104,9 @@
 			},
 			lessonName() {
 				return this.getLesson(this.lessonId).name
+			},
+			lessonNumber() {
+				return this.getLesson(this.lessonId).order_number
 			},
 			screens() {
 				return this.getScreens(this.lessonId)

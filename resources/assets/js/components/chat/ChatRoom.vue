@@ -41,7 +41,6 @@
 		flex: 1
 		flex-direction: column
 		justify-content: space-between
-		padding: 0 20px
 
 	.wnl-chat-messages
 		display: flex
@@ -51,8 +50,8 @@
 
 	.wnl-chat-form
 		border-top: $border-light-gray
-		margin: 20px 0
-		padding-top: 20px
+		margin: $margin-base 0 0
+		padding-top: $margin-base
 </style>
 <script>
 	import Message from './Message.vue'
@@ -125,7 +124,7 @@
 			},
 			setListeners(socket) {
 				socket.on('user-sent-message', (data) => {
-					this.addMessage(data.message)
+					this.messages.push(data.message)
 				})
 
 				socket.on('message-processed', (data) => {

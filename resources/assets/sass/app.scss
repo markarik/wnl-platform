@@ -27,6 +27,12 @@ html, body {
 	min-height: 100%;
 }
 
+html {
+	// Scrollbars
+	@include scrollbar(2px, $color-light-gray);
+	@include scrollbar-body($color-light-gray);
+}
+
 #app {
 	display: flex;
 	flex-direction: column;

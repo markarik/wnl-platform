@@ -1236,7 +1236,8 @@ body {
 	bottom: 0;
 	left: 0;
 	z-index: 10;
-	background-color: rgba(0, 0, 0, 0.2)
+	background-color: rgba(0, 0, 0, 0.2);
+	pointer-events: none
 }
 
 .reveal .progress:after {
@@ -2137,66 +2138,4 @@ body {
 
  .reveal .controls button {
  	outline: 0
- }
-
- .wnl-slideshow-control {
-	background: rgba(230, 230, 230, 0.5);
-	background-position: center center;
-	background-repeat: no-repeat;
-	background-size: 50%;
-	bottom: 40vh;
-	cursor: pointer;
-	font-size: 2.3rem;
-	line-height: 20vh;
-	position: fixed;
-	text-align: center;
-	top: 40vh;
-	max-width: 50px;
-	transition: all 0.25s;
-	width: 10vw;
- }
-
-.wnl-slideshow-control.clicked {
-	animation: highlight 0.25s;
-}
-
- .wnl-slideshow-control img {
-	 max-width: 30px;
-	 padding: 0 auto;
- }
-
- @keyframes highlight {
-	 0%   {opacity: 1}
-	 50%  {opacity: 0.5}
-	 100% {opacity: 1}
- }
-
- .wnl-slideshow-control.navigate-right {
-	right: 0;
- }
-
- .wnl-slideshow-control.navigate-left {
-	left: 0;
-	transform: rotate(180deg);
- }
-
- .reveal.image-custom-background {
- 	background-position: bottom;
- 	background-size: cover;
- 	background-repeat: no-repeat;
- }
-
- .reveal.white-custom-background {
- 	background: white !important;
- 	color: #0c1726 !important;
- }
-
- .reveal.dark-custom-background {
- 	background: #0c1726 !important;
- 	color: white !important;
- }
-
- .reveal.white-custom-background .backgrounds,
- .reveal.dark-custom-background .backgrounds {
- 	display: none !important
  }

@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="scrollable-main-container wnl-user-profile" v-bind:class="{mobile: isMobileProfile}">
+	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 		<h1>Profil publiczny</h1>
 		<div class="wnl-user-profile-avatar">
 			<div class="margin vertical">
@@ -46,7 +46,6 @@
 
 		.clickable-avatar
 			cursor: pointer
-
 </style>
 
 <script>

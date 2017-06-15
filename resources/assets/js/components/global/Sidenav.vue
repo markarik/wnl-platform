@@ -82,8 +82,16 @@
 	.todo
 		color: $primary
 
+		&.complete,
+		&.complete a
+			color: mix($color-green, $color-white, 70%)
+
+		&.in-progress
+			font-weight: $font-weight-black
+
 		.icon
 			vertical-align: baseline
+
 
 	.is-active
 		font-weight: $font-weight-bold

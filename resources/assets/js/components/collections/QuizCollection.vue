@@ -9,7 +9,18 @@
 </style>
 
 <script>
+	import {mapActions, mapGetters} from 'vuex'
+
 	export default {
 		name: 'QuizCollection',
+		computed: {
+			...mapGetters('collections', ['quizQuestionsIds']),
+		},
+		methods: {
+			...mapActions('quiz', ['fetchQuestionsCollection']),
+		},
+		mounted() {
+			this.fetchQuestionsCollection(this.quizQuestionsIds)
+		},
 	}
 </script>

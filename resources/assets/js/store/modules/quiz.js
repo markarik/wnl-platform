@@ -14,6 +14,16 @@ function fetchQuizSet(id) {
 	)
 }
 
+function _fetchQuestionsCollection(ids) {
+	return axios.post(getApiUrl('quiz_questions/.search'), {
+		query: {
+			where: [
+				['id', 'in', ids],
+			],
+		},
+	})
+}
+
 /**
  * Calculates a percentage share of a value in total
  * @param  {Integer} value
@@ -167,6 +177,12 @@ const actions = {
 
 			commit(types.QUIZ_IS_LOADED, true)
 		});
+	},
+
+	fetchQuestionsCollection({commit}, ids) {
+		_fetchQuestionsCollection(ids).then(response => {
+			console.log(response)
+		})
 	},
 
 	checkQuiz({state, commit, getters, dispatch, rootGetters}) {

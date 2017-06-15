@@ -32,7 +32,7 @@ const getters = {
 	isLoading: (state) => state.loading,
 	qnaQuestionsIds: (state) => state.qna_questions,
 	qnaAnswersIds: (state) => state.qna_answers,
-	quizQuestions: (state) => state.quizQuestions,
+	quizQuestionsIds: (state) => state.quiz_questions.map(question => question.reactable_id),
 	slides: (state) => state.slides,
 }
 

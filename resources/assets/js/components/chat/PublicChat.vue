@@ -1,11 +1,15 @@
 <template lang="html">
 	<div class="wnl-public-chat">
-		<a v-for="room, key in rooms"
-		   @click="changeRoom(room)"
-		   :key="key"
-		   :class="{'is-active': isActive(room)}">
-			{{ room.name }}
-		</a>
+		<div class="chat-title">
+			{{chatTitle}}
+		</div>
+		<div class="tabs">
+			<ul>
+				<li  v-for="room, key in rooms" :key="key" :class="{'is-active': isActive(room)}">
+					<a @click="changeRoom(room)">{{ room.name }}</a>
+				</li>
+			</ul>
+		</div>
 		<span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
 			<i class="fa fa-close"></i>
 		</span>
@@ -13,21 +17,32 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
 	.wnl-public-chat
 		display: flex
 		flex: 1
 		flex-direction: column
 		justify-content: space-between
+		padding: $margin-base
 		position: relative
 
 		.wnl-chat-close
 			color: $color-ocean-blue
 			cursor: pointer
 			position: absolute
-			right: 1em
-			top: 1em
+			right: $margin-base
+			top: $margin-base
+
+	.metadata
+		margin: $margin-base 0 0 $margin-base
+
+	.chat-title
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-2
+		text-transform: uppercase
+
 </style>
 
 <script>
@@ -36,16 +51,25 @@
 
 	export default {
 		name: 'wnl-public-chat',
-		props: ['rooms'],
 		components: {
 			'wnl-chat': ChatRoom
 		},
-		computed: {
-			...mapGetters(['canShowCloseIconInChat'])
-		},
+		props: ['rooms'],
 		data () {
 			return {
 				currentChannel: this.rooms[0].channel,
+			}
+		},
+		computed: {
+			...mapGetters(['canShowCloseIconInChat']),
+			...mapGetters('course', ['getLesson']),
+			chatTitle() {
+				let lessonId = this.$route.params.lessonId
+				if(typeof lessonId === 'undefined') {
+					return 'Ogólny czat kursu'
+				}
+
+				return `Czat lekcji ${this.getLesson(lessonId).name}`
 			}
 		},
 		methods: {

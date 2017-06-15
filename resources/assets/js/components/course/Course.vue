@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout wnl-course-layout">
+	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
 		<wnl-sidenav-slot
 			:isVisible="canRenderSidenav"
 			:isDetached="!isSidenavMounted"
@@ -12,14 +12,14 @@
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<router-view v-if="ready"></router-view>
+			<router-view></router-view>
 		</div>
 		<wnl-sidenav-slot
 			:isVisible="isChatVisible"
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
+		<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
@@ -108,10 +108,14 @@
 				let chatRoom = `courses-${this.courseId}`
 				if (this.isLesson) {
 					chatRoom += `-lessons-${this.lessonId}`
+					return [
+						{name: '#nauka', channel: chatRoom},
+						{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+					]
 				}
+
 				return [
-					{name: '#powaga', channel: chatRoom},
-					{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+					{name: '#aula', channel: chatRoom},
 				]
 			},
 			localStorageKey() {

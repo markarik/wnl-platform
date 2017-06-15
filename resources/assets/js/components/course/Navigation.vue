@@ -8,8 +8,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.course-sidenav
-		// border-right: $border-light-gray;
-		max-width: $sidenav-max-width
+		flex: 1
 		min-width: $sidenav-min-width
 		overflow: auto
 		padding: $column-padding

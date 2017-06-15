@@ -42,9 +42,9 @@
 		position: relative
 
 	.wnl-course-chat
-		flex: $course-chat-flex auto
 		max-width: $course-chat-max-width
 		min-width: $course-chat-min-width
+		width: $course-chat-width
 
 	.wnl-chat-toggle
 		align-items: center

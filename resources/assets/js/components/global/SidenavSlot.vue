@@ -18,10 +18,11 @@
 	.wnl-sidenav-slot
 		border-right: $border-light-gray
 		display: flex
+		width: $sidenav-width
 
 		&.has-chat
 			border-left: $border-light-gray
-			flex-grow: 2
+			width: $course-chat-width
 
 		.sidenav-content
 			display: flex
@@ -36,10 +37,12 @@
 		position: fixed
 		right: 0
 		top: $navbar-height
+		width: initial
 		z-index: $z-index-sidenav-slot
 
 		&.has-chat
 			justify-content: flex-end
+			width: initial
 
 			.sidenav-content
 				max-width: 600px

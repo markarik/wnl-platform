@@ -56,6 +56,11 @@
 			isActive(room){
 				return room.channel === this.currentChannel
 			}
+		},
+		watch: {
+			'rooms' (newValue, oldValue) {
+				this.changeRoom(newValue[0])
+			}
 		}
 	}
 </script>

@@ -139,6 +139,30 @@ if (isProduction()) {
 			]
 		},
 		{
+			name: 'collections',
+			path: '/app/collections',
+			component: require('js/components/collections/Collections.vue'),
+			props: true,
+			// redirect: { name: "my-profile" },
+			children: [
+				{
+					name: 'collection-slide',
+					path: 'slides',
+					component: require('js/components/collections/SlidesCollection.vue')
+				},
+				{
+					name: 'collection-qna',
+					path: 'qna',
+					component: require('js/components/collections/QnaCollection.vue')
+				},
+				{
+					name: 'collection-quiz',
+					path: 'quiz',
+					component: require('js/components/collections/QuizCollection.vue')
+				},
+			]
+		},
+		{
 			name: 'dashboard',
 			path: '/app',
 			redirect: { name: 'courses', params: { courseId: 1 } }

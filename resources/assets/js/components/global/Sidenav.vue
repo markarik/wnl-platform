@@ -84,7 +84,10 @@
 
 		&.complete,
 		&.complete a
-			color: $color-gray-dimmed
+			color: mix($color-green, $color-white, 70%)
+
+		&.in-progress
+			font-weight: $font-weight-black
 
 		.icon
 			vertical-align: baseline

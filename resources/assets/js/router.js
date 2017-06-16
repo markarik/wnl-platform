@@ -75,12 +75,14 @@ if (isProduction()) {
 		{
 			path: '/app/courses/:courseId',
 			component: require('js/components/course/Course.vue'),
+			meta: { keepsNavOpen: true },
 			props: true,
 			children: [
 				{
 					name: resource('courses'),
 					path: '',
 					component: require('js/components/course/Overview.vue'),
+					meta: { keepsNavOpen: true },
 					props: true,
 				},
 				{
@@ -103,8 +105,8 @@ if (isProduction()) {
 			name: 'myself',
 			path: '/app/myself',
 			component: require('js/components/user/Myself.vue'),
+			meta: { keepsNavOpen: true },
 			props: true,
-			redirect: { name: "my-profile" },
 			children: [
 				{
 					name: 'my-orders',
@@ -142,6 +144,7 @@ if (isProduction()) {
 			name: 'collections',
 			path: '/app/collections',
 			component: require('js/components/collections/Collections.vue'),
+			meta: { keepsNavOpen: true },
 			props: true,
 			// redirect: { name: "my-profile" },
 			children: [
@@ -165,7 +168,8 @@ if (isProduction()) {
 		{
 			name: 'dashboard',
 			path: '/app',
-			redirect: { name: 'courses', params: { courseId: 1 } }
+			redirect: { name: 'courses', params: { courseId: 1 } },
+			meta: { keepsNavOpen: true },
 		},
 		{
 			name: 'logout',

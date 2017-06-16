@@ -37,8 +37,12 @@
 			//.then(()=>this.setupNotifications())
 		},
 		mounted() {
-			this.$router.afterEach(() => {
-				this.resetLayout()
+			this.$router.afterEach((to) => {
+				to.matched.some((record) => {
+					if (!record.meta.keepsNavOpen) {
+						this.resetLayout()
+					}
+				})
 			})
 
 			this.setLayout(this.$breakpoints.currentBreakpoint())

@@ -31,6 +31,10 @@ class QuizQuestionTransformer extends ApiTransformer
 			$data = array_merge($data, $this->parent);
 		}
 
+		if (self::shouldInclude('reactions')) {
+			$data = array_merge($data, ReactionsCountTransformer::transform($quizQuestion));
+		}
+
 		return $data;
 	}
 

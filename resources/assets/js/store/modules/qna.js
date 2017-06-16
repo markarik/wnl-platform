@@ -35,6 +35,24 @@ function _getQuestions(tags) {
 	})
 }
 
+function _getQuestionsByIds(ids) {
+	return new Promise((resolve, reject) => {
+		let data = {
+			include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments',
+			query: {
+				whereIn: ['id', ids],
+			},
+			order: {
+				id: 'desc',
+			},
+		}
+
+		axios.post(getApiUrl('qna_questions/.search'), data)
+			.then((response) => resolve(response))
+			.catch((error) => reject(error))
+	})
+}
+
 /**
  * @param questionId
  * @returns {Promise}
@@ -268,6 +286,30 @@ const actions = {
 				})
 		})
 	},
+
+	fetchQuestionsByIds({commit}, ids) {
+		commit(types.IS_LOADING, true)
+
+		return new Promise((resolve, reject) => {
+			_getQuestionsByIds(ids)
+				.then((response) => {
+					let data = response.data
+
+					if (!_.isUndefined(data.included)) {
+						commit(types.UPDATE_INCLUDED, data.included)
+						destroy(data, 'included')
+						commit(types.QNA_SET_QUESTIONS, data)
+					}
+					commit(types.IS_LOADING, false)
+					resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					reject()
+				})
+		})
+	},
+
 	fetchQuestion({commit}, questionId) {
 		return new Promise((resolve, reject) => {
 			_getAnswers(questionId)

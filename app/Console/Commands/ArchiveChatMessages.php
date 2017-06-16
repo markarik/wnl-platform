@@ -79,6 +79,7 @@ class ArchiveChatMessages extends Command
 	 *
 	 * @param $cursor
 	 * @param int $limit
+	 *
 	 * @return mixed
 	 */
 	protected function scan($cursor, $limit = 1000)
@@ -118,9 +119,10 @@ class ArchiveChatMessages extends Command
 	 * @param $room
 	 * @param int $leave
 	 * @param int $take
+	 *
 	 * @return mixed
 	 */
-	protected function getMessages($room, $leave = 200, $take = 100)
+	protected function getMessages($room, $leave = 200, $take = 100000)
 	{
 		return Redis::lrange(self::ROOM_MESSAGES_KEY . $room, -1 * ($take + $leave), -1 * ($leave + 1));
 	}
@@ -130,6 +132,7 @@ class ArchiveChatMessages extends Command
 	 *
 	 * @param $room
 	 * @param $message
+	 *
 	 * @return mixed
 	 */
 	protected function removeMessage($room, $message)
@@ -142,6 +145,7 @@ class ArchiveChatMessages extends Command
 	 * before putting it into MySQL.
 	 *
 	 * @param $message
+	 *
 	 * @return array
 	 */
 	protected function formatMessage($message)
@@ -151,9 +155,9 @@ class ArchiveChatMessages extends Command
 		}
 
 		return [
-			'content'    => $message['content'],
-			'user_id'    => $message['user_id'],
-			'created_at' => $message['time'],
+			'content' => $message['content'],
+			'user_id' => $message['user_id'],
+			'time'    => $message['time'],
 		];
 	}
 
@@ -161,6 +165,7 @@ class ArchiveChatMessages extends Command
 	 * Transform json encoded redis entries into array.
 	 *
 	 * @param $messages
+	 *
 	 * @return array
 	 */
 	public function decodeMessages($messages)
@@ -183,6 +188,7 @@ class ArchiveChatMessages extends Command
 	 * Execute closure using double transaction (redis + MySQL).
 	 *
 	 * @param $callback
+	 *
 	 * @throws Exception
 	 */
 	public function transaction(Closure $callback)

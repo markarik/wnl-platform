@@ -1,4 +1,4 @@
-import store from 'store';
+import store from './sessionStore';
 import {getCurrentUser} from './user';
 import {getApiUrl} from 'js/utils/env';
 import _ from 'lodash';

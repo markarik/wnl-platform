@@ -2,6 +2,7 @@
 
 return [
 
+	'version' => '1.0.0',
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -12,7 +13,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-	'name' => 'Laravel',
+	'name' => 'Platforma Więcej niż LEK',
 
     /*
     |--------------------------------------------------------------------------

@@ -22,7 +22,11 @@
 
 		&.has-chat
 			border-left: $border-light-gray
+			flex-direction: column
 			width: $course-chat-width
+
+			.sidenav-content
+				flex: 1
 
 		.sidenav-content
 			display: flex
@@ -41,6 +45,7 @@
 		z-index: $z-index-sidenav-slot
 
 		&.has-chat
+			flex-direction: row
 			justify-content: flex-end
 			width: initial
 

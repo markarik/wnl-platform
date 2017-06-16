@@ -115,10 +115,10 @@
 				return this.getScreen(this.screenId);
 			},
 			sectionsReversed() {
-				const sectionsIds = this.currentScreen.sections;
+				const sectionsIds = this.currentScreen && this.currentScreen.sections;
 
 				if (!sectionsIds) {
-					return;
+					return [];
 				}
 
 				const sections = this.getSections(sectionsIds);

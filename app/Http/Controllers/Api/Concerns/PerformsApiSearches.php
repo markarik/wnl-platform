@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\Concerns;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Collection;
 use Illuminate\Database\QueryException;
@@ -131,7 +132,7 @@ trait PerformsApiSearches
 	 */
 	protected function applyFilters($model, $request)
 	{
-		$query = $request->get('query');
+		$query = $this->parseTime($request->get('query'));
 		$order = $request->get('order');
 		$limit = $request->get('limit');
 		$join = $request->get('join');
@@ -168,6 +169,18 @@ trait PerformsApiSearches
 		}
 
 		return $model;
+	}
+
+	protected function parseTime($array)
+	{
+		// Prezes, pamiętaj, to jest bardzo brzydka szpachla, nie rób tak.
+		return array_map(function ($v) {
+			if (is_array($v)) return $this->parseTime($v);
+			if (str_is('timestamp:*', $v))
+				return Carbon::createFromTimestamp(str_replace('timestamp:', '', $v));
+
+			return $v;
+		}, $array);
 	}
 
 }

@@ -1,6 +1,12 @@
 <template lang="html">
 	<div class="scrollable-main-container">
-		<h1>Ustawienia</h1>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Ustawienia
+				</div>
+			</div>
+		</div>
 
 		<wnl-form class="margin vertical"
 			name="Settings"

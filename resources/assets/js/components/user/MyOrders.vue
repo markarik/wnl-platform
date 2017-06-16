@@ -6,11 +6,6 @@
 					Twoje zamówienia
 				</div>
 			</div>
-			<div class="level-right">
-				<div class="level-item metadata">
-					<a :href="paymentUrl">Złóż nowe zamówienie</a>
-				</div>
-			</div>
 		</div>
 		<div class="notification is-success strong has-text-centered" v-if="orderSuccess">
 			Dziękujemy za złożenie zamówienia!<br>Potwierdzenie znajdziesz na podanym przez siebie adresie e-mail.

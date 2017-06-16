@@ -1,6 +1,12 @@
 <template lang="html">
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
-		<h1>Profil publiczny</h1>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Profil publiczny
+				</div>
+			</div>
+		</div>
 		<div class="wnl-user-profile-avatar">
 			<div class="margin vertical">
 				<label class="label">Avatar</label>

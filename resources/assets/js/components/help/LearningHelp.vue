@@ -1,6 +1,12 @@
 <template>
 	<div class="content">
-		<h2>Pomoc w nauce</h2>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Pomoc w nauce
+				</div>
+			</div>
+		</div>
 		<p class="strong">Cześć {{currentUserName}}!</p>
 		<p>Chętnie odpowiemy na wszystkie Twoje pytania odnośnie nauki podczas kursu "Więcej niż LEK" (i nie tylko)! Jeżeli szukasz informacji na temat efektywnej nauki, wiele przydatnej wiedzy znajdziesz we <router-link :to="introLessonRoute">Wstępie do kursu</router-link>.</p>
 		<p>Jeśli jednak macie jakiekolwiek pytania dotyczące nauki - możecie śmiało zadawać je tutaj!</p>

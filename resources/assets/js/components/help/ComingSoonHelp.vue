@@ -1,6 +1,12 @@
 <template>
 	<div class="content">
-		<h2>Nad czym pracujemy?</h2>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Nad czym pracujemy?
+				</div>
+			</div>
+		</div>
 		<p class="strong">Hej {{currentUserName}}!</p>
 		<p>Nieustająco staramy się ulepszać naszą platformę i czynić ją bogatszą w przydatne funkcje! Nad tymi nowościami pracujemy obecnie:</p>
 		<ul>

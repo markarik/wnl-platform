@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import { scrollToTop } from 'js/utils/animations'
 import { resource } from 'js/utils/config'
 import { isProduction } from 'js/utils/env'
+import sessionStore from '../js/services/sessionStore';
 
 Vue.use(Router)
 
@@ -62,6 +63,8 @@ if (isProduction()) {
 			name: 'logout',
 			path: '/logout',
 			beforeEnter: () => {
+				console.log('CLEAR STORAGE********');
+				sessionStore.clearAll();
 				document.getElementById('logout-form').submit()
 			}
 		},
@@ -171,6 +174,8 @@ if (isProduction()) {
 			name: 'logout',
 			path: '/logout',
 			beforeEnter: () => {
+				console.log('CLEAR STORAGE********');
+				sessionStore.clearAll();
 				document.getElementById('logout-form').submit()
 			}
 		},

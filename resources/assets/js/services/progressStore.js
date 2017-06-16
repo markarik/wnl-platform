@@ -1,8 +1,7 @@
-import store from 'store'
+import store from './sessionStore';
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 import {getCurrentUser} from './user';
-
 
 // TODO: Mar 9, 2017 - Use config when it's ready
 export const STATUS_IN_PROGRESS = 'in-progress';
@@ -83,13 +82,11 @@ const completeScreen = (lessonState, {screenId, route, ...rest}) => {
 };
 
 const completeLesson = (lessonState, payload) => {
-	const updatedState = {
+	return {
 		...lessonState,
 		status: STATUS_COMPLETE,
 		route: payload.route
 	};
-
-	return updatedState;
 };
 
 const startLesson = (lessonState, {route, ...payload}) => {

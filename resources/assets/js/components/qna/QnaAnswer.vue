@@ -7,7 +7,6 @@
 			<div class="qna-container">
 				<div class="qna_wrapper">
 					<div class="qna-answer-content" v-html="content"></div>
-					<wnl-bookmark class="qna_bookmark" :reactableId="id" reactableResource="qna_answers" module="qna"></wnl-bookmark>
 				</div>
 				<div class="qna-meta">
 					<wnl-avatar
@@ -106,8 +105,7 @@
 	import Delete from 'js/components/global/form/Delete'
 	import NewCommentForm from 'js/components/qna/NewCommentForm'
 	import QnaComment from 'js/components/qna/QnaComment'
-	import Vote from 'js/components/qna/Vote'
-	import Bookmark from 'js/components/qna/Bookmark'
+	import Vote from 'js/components/global/reactions/Vote'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -118,7 +116,6 @@
 			'wnl-qna-new-comment-form': NewCommentForm,
 			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
-			'wnl-bookmark': Bookmark,
 		},
 		props: ['answer', 'questionId', 'reactableId', 'reactableResource', 'module', 'readOnly'],
 		data() {

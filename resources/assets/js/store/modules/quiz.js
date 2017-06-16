@@ -5,12 +5,13 @@ import {set, delete as destroy} from 'vue'
 import {useLocalStorage, getApiUrl} from 'js/utils/env'
 import {resource} from 'js/utils/config'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
 import * as types from 'js/store/mutations-types'
 import quizStore, {getLocalStorageKey} from 'js/services/quizStore'
 
 function fetchQuizSet(id) {
 	return axios.get(
-		getApiUrl(`quiz_sets/${id}?include=quiz_questions.quiz_answers,quiz_questions.comments.profiles`)
+		getApiUrl(`quiz_sets/${id}?include=quiz_questions.quiz_answers,quiz_questions.comments.profiles,reactions`)
 	)
 }
 
@@ -19,7 +20,7 @@ function _fetchQuestionsCollection(ids) {
 		query: {
 			whereIn: ['id', ids],
 		},
-		include: 'quiz_answers,comments.profiles',
+		include: 'quiz_answers,comments.profiles,reactions',
 	})
 }
 
@@ -58,6 +59,7 @@ const state = getInitialState()
 
 const getters = {
 	...commentsGetters,
+	...reactionsGetters,
 	getAnswers: (state) => (questionId) => {
 		return state.quiz_questions[questionId].quiz_answers.map(
 			(answerId) => state.quiz_answers[answerId]
@@ -85,6 +87,7 @@ const getters = {
 
 const mutations = {
 	...commentsMutations,
+	...reactionsMutations,
 	[types.QUIZ_ATTEMPT] (state, payload) {
 		state.attempts.push(payload)
 	},
@@ -147,6 +150,7 @@ const mutations = {
 
 const actions = {
 	...commentsActions,
+	...reactionsActions,
 	setupQuestions({commit, rootGetters}, resource) {
 		commit(types.QUIZ_IS_LOADED, false)
 
@@ -158,18 +162,19 @@ const actions = {
 				questionsIds = response.data.quiz_questions,
 				len = questionsIds.length
 
-			if (useLocalStorage() && !_.isEmpty(storedState)) {
-				commit(types.QUIZ_RESTORE_STATE, storedState)
-			} else {
+			commit(types.UPDATE_INCLUDED, included)
+
+			// if (useLocalStorage() && !_.isEmpty(storedState)) {
+			// 	commit(types.QUIZ_RESTORE_STATE, storedState)
+			// } else {
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: response.data.id,
 					setName: response.data.name,
 					len,
 					questionsIds,
 				})
-			}
+			// }
 
-			commit(types.UPDATE_INCLUDED, included)
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)
 		});
@@ -192,6 +197,7 @@ const actions = {
 				len,
 				questionsIds,
 			})
+			commit(types.QUIZ_COMPLETE)
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)
 		})

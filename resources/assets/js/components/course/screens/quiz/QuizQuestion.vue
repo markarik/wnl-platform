@@ -11,12 +11,7 @@
 						<div v-html="text"></div>
 					</div>
 					<div class="card-header-icons">
-						<a class="quiz-question-icon" @click="mockSaving" title="Zapisz to pytanie">
-							<span class="icon is-small">
-								<i class="fa fa-bookmark-o"></i>
-							</span>
-							Zapisz
-						</a>
+						<wnl-bookmark :reactableId="id" reactableResource="quiz_questions" module="quiz"></wnl-bookmark>
 					</div>
 				</div>
 			</header>
@@ -98,7 +93,8 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import QuizAnswer from 'js/components/course/screens/quiz/QuizAnswer'
-	import CommentsList from 'js/components/comments/CommentsList.vue'
+	import CommentsList from 'js/components/comments/CommentsList'
+	import Bookmark from 'js/components/global/reactions/Bookmark'
 
 	import { swalConfig } from 'js/utils/swal'
 
@@ -107,6 +103,7 @@
 		components: {
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
+			'wnl-bookmark': Bookmark,
 		},
 		props: ['id', 'index', 'text', 'total', 'readOnly'],
 		computed: {

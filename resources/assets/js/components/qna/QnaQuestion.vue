@@ -123,8 +123,8 @@
 	import Delete from 'js/components/global/form/Delete'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
-	import Vote from 'js/components/qna/Vote'
-	import Bookmark from 'js/components/qna/Bookmark'
+	import Vote from 'js/components/global/reactions/Vote'
+	import Bookmark from 'js/components/global/reactions/Bookmark'
 
 	import { timeFromS } from 'js/utils/time'
 

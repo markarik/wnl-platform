@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<div class="content">
 		<h2>Pomoc w nauce</h2>
 		<p class="strong">Cześć {{currentUserName}}!</p>
-		<p>Chętnie odpowiemy na wszystkie Twoje pytania odnośnie nauki podczas kursu "Więcej niż LEK" (i nie tylko)!</p>
-		<p>Jeżeli szukasz informacji na temat efektywnej nauki, wiele przydatnej wiedzy znajdziesz we <router-link :to="introLessonRoute">Wstępie do kursu</router-link>.</p>
+		<p>Chętnie odpowiemy na wszystkie Twoje pytania odnośnie nauki podczas kursu "Więcej niż LEK" (i nie tylko)! Jeżeli szukasz informacji na temat efektywnej nauki, wiele przydatnej wiedzy znajdziesz we <router-link :to="introLessonRoute">Wstępie do kursu</router-link>.</p>
+		<p>Jeśli jednak macie jakiekolwiek pytania dotyczące nauki - możecie śmiało zadawać je tutaj!</p>
 		<wnl-qna :tags="tags" v-if="!loading"></wnl-qna>
 	</div>
 </template>

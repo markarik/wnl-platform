@@ -1,8 +1,9 @@
 <template>
-	<div>
+	<div class="content">
 		<h2>Pomoc techniczna</h2>
 		<p class="strong">Serwus {{currentUserName}}!</p>
 		<p>"Więcej niż LEK" to nie tylko przedsięwzięcie medyczne, ale też technologiczne. ;) Jako zespół, pracujemy po to, by Wasza nauka była przyjemna i bezproblemowa! Gdyby jednak powinęła nam się noga - jesteśmy tutaj, aby odpowiadać na Wasze problemy i jak najszybciej naprawiać błędy. :)</p>
+		<p>Jeśli tylko cos Was irytuje, lub nie działa - tutaj jest najlepsze miejsce, aby nam to zgłosić! :)</p>
 		<wnl-qna :tags="tags" v-if="!loading"></wnl-qna>
 	</div>
 </template>
@@ -35,7 +36,7 @@
 		},
 		mounted() {
 			axios.post(getApiUrl('tags/.search'), {
-				query: { where: [ ['name', '=', 'Pomoc techniczna'] ], }
+				query: { whereIn: [ 'name', [ 'Błędy', 'Pomoc techniczna' ] ] }
 			})
 				.then(response => {
 					this.tags = _.values(response.data)

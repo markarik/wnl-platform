@@ -184,6 +184,11 @@ if (isProduction()) {
 					path: 'tech',
 					component: require('js/components/help/TechnicalHelp.vue'),
 				},
+				{
+					name: 'help-new',
+					path: 'new',
+					component: require('js/components/help/ComingSoonHelp.vue'),
+				},
 			]
 		},
 		{

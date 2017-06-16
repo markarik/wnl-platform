@@ -110,6 +110,18 @@
 						iconClass: 'fa-magic',
 						iconTitle: 'Pomoc techniczna',
 					},
+					{
+						text: 'Nad czym pracujemy?',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-new',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-gift',
+						iconTitle: 'Nad czym pracujemy?',
+					},
 				]
 			},
 			chatRooms() {

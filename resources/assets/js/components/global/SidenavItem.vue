@@ -5,7 +5,7 @@
 			:to="to"
 			:replace="replace"
 			class="item-wrapper"
-		    :class="{'is-active': isActive, 'is-disabled': isDisabled}"
+			:class="{'is-active': active, 'is-disabled': isDisabled, 'is-completed': completed}"
 		>
 			<div class="sidenav-icon-wrapper">
 				<span class="icon is-small" v-if="isTodo">
@@ -61,17 +61,17 @@
 		.icon
 			margin-top: 0
 
+	a.is-active
+		font-weight: $font-weight-black
+
+	a.is-completed:after
+		content: '✓'
+
 	.subitem
 		&::after
 
 		.icon.is-small
 			margin-right: 0
-
-		a.is-active
-			font-weight: $font-weight-black
-
-			.sidenav-item-content:after
-				content: '✓'
 </style>
 
 <script>
@@ -79,7 +79,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed'],
+		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed', 'active'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
@@ -98,11 +98,6 @@
 			},
 			hasIcon() {
 				return this.hasClass('has-icon')
-			},
-			isActive() {
-				if (this.hasClass('subitem')) {
-					return this.completed
-				}
 			},
 		},
 		methods: {

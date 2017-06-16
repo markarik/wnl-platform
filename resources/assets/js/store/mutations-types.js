@@ -6,6 +6,7 @@ export const RESET_MODULE    = 'RESET_MODULE'
 // Navigation
 export const ADD_BREADCRUMB    = 'ADD_BREADCRUMB'
 export const REMOVE_BREADCRUMB = 'REMOVE_BREADCRUMB'
+export const UPDATE_LESSON_NAV = 'UPDATE_LESSON_NAV'
 
 // Users
 export const USERS_SETUP_CURRENT  = 'USERS_SETUP_CURRENT'

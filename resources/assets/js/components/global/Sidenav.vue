@@ -17,6 +17,7 @@
 				:iconTitle="item.iconTitle"
 				:key="index"
 				:completed="item.completed"
+				:active="item.active"
 			>
 				{{item.text}}
 			</wnl-sidenav-item>

@@ -23,12 +23,13 @@
 
 	import * as mutations from 'js/store/mutations-types'
 	import { resource } from 'js/utils/config'
+	import {STATUS_COMPLETE} from "../../services/progressStore";
 
 	export default {
 		name: 'Navigation',
 		props: ['context', 'isLesson'],
 		computed: {
-			...mapGetters(['currentUserRoles']),
+			...mapGetters(['currentUserRoles', 'lessonState']),
 			...mapGetters('course', [
 				'name',
 				'groups',
@@ -39,6 +40,7 @@
 			...mapGetters('progress', {
 				getCourseProgress: 'getCourse',
 				getScreenProgress: 'getScreen',
+				getLessonProgress: 'getLesson'
 			}),
 			isStructureEmpty() {
 				return typeof this.structure !== 'object' || this.structure.length === 0
@@ -142,7 +144,8 @@
 				method = 'push',
 				iconClass = '',
 				iconTitle = '',
-			    completed = false
+				completed = false,
+				active = false,
 			) {
 				let to = {}
 				if (!isDisabled && routeName.length > 0) {
@@ -152,7 +155,7 @@
 					}
 				}
 
-				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed }
+				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed, active }
 			},
 			getCourseItem() {
 				return this.composeItem(
@@ -221,19 +224,26 @@
 					iconTitle = screen.name
 				}
 
+				const params = {
+					courseId: screen[resource('editions')],
+					lessonId: screen[resource('lessons')],
+					screenId: screen.id,
+				};
+
+				const lesson = this.getLessonProgress(params.courseId, params.lessonId);
+				const screens = lesson && lesson.screens || [];
+				const isCompleted = screens[screen.id] && screens[screen.id].status === STATUS_COMPLETE;
+
 				return this.composeItem(
 					screen.name,
 					itemClass,
 					resource('screens'),
-					{
-						courseId: screen[resource('editions')],
-						lessonId: screen[resource('lessons')],
-						screenId: screen.id,
-					},
+					params,
 					false,
 					'push',
 					iconClass,
 					iconTitle,
+					isCompleted
 				)
 			},
 			getSectionItem(section) {
@@ -243,8 +253,10 @@
 					screenId: section[resource('screens')],
 					slide: section.slide,
 				};
+
 				const screen = this.getScreenProgress(params.courseId, params.lessonId, params.screenId);
 				const sections = screen && screen.sections || {};
+				const isSectionActive = this.lessonState.activeSection === section.id;
 
 				return this.composeItem(
 					section.name,
@@ -255,7 +267,8 @@
 					'replace',
 					'fa-angle-right',
 					section.name,
-					!!sections[section.id]
+					!!sections[section.id], //isCompleted
+					isSectionActive // isActive
 				)
 			}
 		},

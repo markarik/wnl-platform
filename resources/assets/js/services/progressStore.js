@@ -43,12 +43,13 @@ const setLessonProgress = ({courseId, lessonId}, value) => {
 	})
 };
 
-const completeSection = (lessonState, {screenId, sectionId, route, ...rest}) => {
+const completeSection = (lessonState, {screenId, sectionId, route}) => {
 	const updatedState = lessonState ? {...lessonState} : {};
 
 	updatedState.route = route;
 
 	updatedState.screens = updatedState.screens || {};
+
 	if (!updatedState.screens[screenId]) {
 		updatedState.screens[screenId] = {
 			status: STATUS_IN_PROGRESS
@@ -69,7 +70,7 @@ const completeSection = (lessonState, {screenId, sectionId, route, ...rest}) => 
 	return updatedState;
 };
 
-const completeScreen = (lessonState, {screenId, route, ...rest}) => {
+const completeScreen = (lessonState, {screenId, route}) => {
 	const updatedState = {...lessonState};
 
 	updatedState.route = route;

@@ -44,8 +44,10 @@ const setLessonProgress = ({courseId, lessonId}, value) => {
 	})
 };
 
-const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
+const completeSection = (lessonState, {screenId, sectionId, route, ...rest}) => {
 	const updatedState = lessonState ? {...lessonState} : {};
+
+	updatedState.route = route;
 
 	updatedState.screens = updatedState.screens || {};
 	if (!updatedState.screens[screenId]) {
@@ -65,40 +67,28 @@ const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
 		}
 	}
 
-	setLessonProgress(rest, updatedState);
-
 	return updatedState;
 };
 
-const completeScreen = (lessonState, {screenId, ...rest}) => {
+const completeScreen = (lessonState, {screenId, route, ...rest}) => {
 	const updatedState = {...lessonState};
+
+	updatedState.route = route;
 
 	updatedState.screens = lessonState.screens || {};
 	updatedState.screens[screenId] = updatedState.screens[screenId] || {};
 	updatedState.screens[screenId].status = STATUS_COMPLETE;
 
-	setLessonProgress(rest, updatedState);
-
-	return updatedState;
-};
-
-const updateLesson = (lessonState, {route, ...rest}) => {
-	const updatedState = {
-		...lessonState,
-		route
-	};
-
-	setLessonProgress(rest, updatedState);
 	return updatedState;
 };
 
 const completeLesson = (lessonState, payload) => {
 	const updatedState = {
 		...lessonState,
-		status: STATUS_COMPLETE
+		status: STATUS_COMPLETE,
+		route: payload.route
 	};
 
-	setLessonProgress(payload, updatedState);
 	return updatedState;
 };
 
@@ -182,10 +172,10 @@ export default {
 	getCourseProgress,
 	setCourseProgress,
 	getLessonProgress,
+	setLessonProgress,
 	resetLessonProgress,
 	completeSection,
 	completeScreen,
 	completeLesson,
-	updateLesson,
 	startLesson
 };

@@ -154,10 +154,10 @@
 		methods: {
 			...mapActions('progress', [
 				'startLesson',
-				'updateLesson',
 				'completeLesson',
 				'completeScreen',
-				'completeSection'
+				'completeSection',
+				'saveLessonProgress'
 			]),
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
@@ -197,9 +197,11 @@
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
+					let updateProgress = false;
 					if (this.hasSections && this.currentSection) {
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
+							updateProgress = true;
 						}
 					}
 
@@ -209,9 +211,11 @@
 						if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {
 							this.completeLesson(this.lessonProgressContext)
 						}
+
+						updateProgress = true;
 					}
 
-					this.updateLesson(this.lessonProgressContext)
+					updateProgress  && this.saveLessonProgress(this.lessonProgressContext);
 				}
 			},
 			updateElementHeight() {

@@ -126,7 +126,6 @@ const mutations = {
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		// TODO consider issuing one request instead of two when finishing lesson
 		const updatedState = progressStore.completeLesson(lessonState, payload);
 		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
 
@@ -143,8 +142,12 @@ const mutations = {
 		const updatedState = progressStore.completeScreen(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
+	},
+	[types.PROGRESS_SAVE] (state, {lessonId, courseId}) {
+		const lessonState = state.courses[courseId].lessons[lessonId];
+		progressStore.setLessonProgress({lessonId, courseId}, lessonState);
 	}
-}
+};
 
 // Actions
 const actions = {
@@ -191,8 +194,11 @@ const actions = {
 	},
 	completeSection({commit}, payload) {
 		commit(types.PROGRESS_COMPLETE_SECTION, payload)
+	},
+	saveLessonProgress({commit}, payload) {
+		commit(types.PROGRESS_SAVE, payload)
 	}
-}
+};
 
 export default {
 	namespaced,

@@ -5,7 +5,7 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="wnl-sidenav">
+			<aside class="myself-sidenav">
 				<wnl-sidenav :items="items" :breadcrumbs="breadcrumbs"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
@@ -18,8 +18,15 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.myself-sidenav
+		flex: 1
+
 	.wnl-sidenav
-		padding: $margin-small
+		flex: 1
+		padding: 7px 0
+
+		&.mobile
+			padding: 0
 </style>
 
 <script>

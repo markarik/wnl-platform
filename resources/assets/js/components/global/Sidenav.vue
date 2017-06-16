@@ -3,7 +3,11 @@
 	<div class="wnl-sidenav" v-bind:class="{ mobile: isMobileNavigation }">
 		<!-- Items -->
 		<ul class="items" v-if="items">
-			<li class="item heading small" v-if="itemsHeading">{{itemsHeading}}</li>
+			<li class="item heading small" v-if="itemsHeading">
+				<span class="item-wrapper">
+					{{itemsHeading}}
+				</span>
+			</li>
 			<wnl-sidenav-item v-for="(item, index) in items"
 				:itemClass="item.itemClass"
 				:to="item.to"
@@ -33,11 +37,20 @@
 
 			.item
 				border-bottom: 1px solid $color-light-gray
-				line-height: 26px
-				padding: 10px 15px
 
 				&.with-border
-					padding-left: 10px
+					padding: 0
+
+				.item-wrapper
+					line-height: 26px
+					padding: $margin-medium $margin-medium $margin-medium $column-padding
+
+			.subitem
+				.item-wrapper
+					padding: $margin-medium 0 $margin-medium $margin-medium + $column-padding
+
+				&.with-border
+					padding: 0
 
 				a
 					line-height: 26px
@@ -46,21 +59,29 @@
 				background: $color-light-gray
 				margin-bottom: 0
 
-				&:first-child
-					padding-top: 10px
-
 	.breadcrumbs
 		margin: 19px 0
 
 	.items
 		.item
-			padding: $margin-small 0
+			padding: 0
+
+			.item-wrapper
+				display: flex
+				line-height: 1.5em
+				padding: $margin-small $column-padding
+				word-break: break-word
+				word-wrap: break-word
 
 			&.with-border
 				padding: $margin-base 0 $margin-tiny
 
 				&:first-child
 					padding: $margin-tiny 0
+
+		a.item-wrapper
+			&:hover
+				background: $color-background-lighter-gray
 
 		.heading
 			padding-top: 10px
@@ -75,7 +96,8 @@
 			font-size: $font-size-plus-1
 
 		.subitem
-			padding: 5px 0 5px 15px
+			.item-wrapper
+				padding: $margin-small $column-padding $margin-small $margin-small + $column-padding
 
 		.disabled
 			color: $color-inactive-gray

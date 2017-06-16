@@ -1,19 +1,22 @@
 <template>
 	<div class="wnl-chat">
-		<div class="wnl-chat-messages">
+		<div class="wnl-chat-messages" @scroll="onScroll">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
-					<div class="notification aligncenter">
+					<div class="notification aligncenter" v-if="!thereIsMore">
 						To początek dyskusji na tym kanale!
 					</div>
+					<wnl-text-loader v-if="isPulling">
+						Ładuję wiadomości...
+					</wnl-text-loader>
 					<div v-if="messages.length > 0">
 						<wnl-message v-for="(message, index) in messages"
 									 :key="index"
 									 :showAuthor="isAuthorUnique[index]"
-									 :username="message.username"
+									 :full_name="message.full_name"
 									 :avatar="message.avatar"
 									 :time="message.time">
-								{{ message.content }}
+							{{ message.content }}
 						</wnl-message>
 					</div>
 					<div class="metadata aligncenter margin vertical" v-else>
@@ -33,7 +36,7 @@
 		</div>
 	</div>
 </template>
-<style lang="sass">
+<style lang="sass" rel="stylesheet/sass">
 	@import '../../../sass/variables'
 
 	.wnl-chat
@@ -57,8 +60,10 @@
 	import Message from './Message.vue'
 	import MessageForm from './MessageForm.vue'
 	import UsersWidget from '../global/UsersWidget.vue'
+	import {getApiUrl} from 'js/utils/env'
 	import * as socket from '../../socket'
-	import { nextTick } from 'vue'
+	import {nextTick} from 'vue'
+	import _ from 'lodash'
 
 	export default {
 		props: ['room'],
@@ -67,7 +72,9 @@
 				loaded: false,
 				messages: [],
 				users: [],
-				socket: {}
+				socket: {},
+				isPulling: false,
+				thereIsMore: true,
 			}
 		},
 		computed: {
@@ -75,10 +82,10 @@
 				return this.messages.map((message, index) => {
 					if (index === 0) return true
 
-					let previous = index - 1,
+					let previous     = index - 1,
 						halfHourInMs = 1000 * 60 * 30
-					return message.username !== this.messages[previous].username ||
-						message.time - this.messages[previous].time > halfHourInMs
+					return message.full_name !== this.messages[previous].full_name ||
+							message.time - this.messages[previous].time > halfHourInMs
 				})
 			},
 			container() {
@@ -146,6 +153,69 @@
 			},
 			scrollToBottom() {
 				this.container.scrollTop = '1000000000'
+			},
+			pullDebouncer(event) {
+				let target     = event.target,
+					height     = target.scrollHeight,
+					shouldPull =
+							// We're always getting first 200 messages from hot storage,
+							this.messages.length >= 200 &&
+							// make sure we're not pulling from cold storage at the moment,
+							!this.isPulling &&
+							// we're reaching the top of the messages container,
+							(target.scrollTop / height) < 0.1 &&
+							// cold storage has some more messages we can pull.
+							this.thereIsMore
+
+				if (shouldPull) this.pull(target, height)
+			},
+			onScroll (target) {
+				this.pullDebouncer.call(this, event)
+			},
+			pull (target, originalHeight){
+				this.isPulling = true
+				let data       = {
+					query: {
+						where: [
+							['time', '<', this.messages[0].time],
+						],
+					},
+					order: {
+						time: 'desc',
+					},
+					include: 'profiles',
+					limit: [100, 0]
+				}
+
+				axios.post(getApiUrl(`chat_rooms/${this.room}/chat_messages/.search`), data)
+						.then(response => {
+							let data = response.data
+
+							if (typeof data[0] !== 'object') {
+								this.isPulling   = false
+								this.thereIsMore = false
+								return
+							}
+
+							let profiles = data.included.profiles
+
+							_.each(data, (element, key) => {
+								if (key !== 'included') {
+									let user    = element.profiles[0],
+										message = _.assign(element, profiles[user])
+									this.messages.unshift(message);
+								}
+							})
+							setTimeout(()=> {
+//								console.log(target.scrollHeight, originalHeight)
+//								console.log(target.scrollHeight - originalHeight)
+								this.container.scrollTop = this.container.scrollHeight - originalHeight
+							}, 0)
+							this.isPulling = false
+						})
+						.catch(error => {
+							$wnl.logger.capture(error)
+						})
 			}
 		},
 		created() {
@@ -154,6 +224,8 @@
 				this.joinRoom()
 				this.setListeners(this.socket)
 			}).catch(exception => $wnl.logger.capture(exception))
+
+			this.pullDebouncer = _.debounce(this.pullDebouncer, 50)
 		},
 		beforeDestroy() {
 			socket.disconnect().then(() => {

@@ -23,10 +23,9 @@ class ChatMessageTransformer extends ApiTransformer
 	public function transform(ChatMessage $chatMessage)
 	{
 		$data = [
-			'id'         => $chatMessage->id,
-			'content'    => $chatMessage->content,
-			'created_at' => $chatMessage->created_at->timestamp,
-			'updated_at' => $chatMessage->updated_at->timestamp,
+			'id'      => $chatMessage->id,
+			'content' => $chatMessage->content,
+			'time'    => $chatMessage->time,
 		];
 
 		if ($this->parent) {

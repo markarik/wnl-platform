@@ -64,6 +64,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admi
 	Route::get('/styleguide', function () {
 		return Response::view('styleguide');
 	});
+	Route::get('/version', function () {
+		return Response::view('version', ['laravel' => app()]);
+	});
 	Route::get('/email/{template}', function ($template) {
 		return Response::view('mail/' . $template);
 	});

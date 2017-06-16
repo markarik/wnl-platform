@@ -11,7 +11,7 @@
 		flex: 1
 		min-width: $sidenav-min-width
 		overflow: auto
-		padding: $column-padding
+		padding: 7px 0
 		width: $sidenav-width
 </style>
 

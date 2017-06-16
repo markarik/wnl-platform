@@ -13,7 +13,7 @@
 	<hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
 
 	<h4>NIEDZIELA</h4>
-	<p>Rano, na platformie pod adresem https://platforma.wiecejnizlek.pl otworzy się “Lekcja 0” - Wstęp do kursu. :) W kilkunastu nagraniach wideo wprowadzimy Was w obsługę platformy oraz przedstawimy podstawy efektywnej nauki. Praca z tym materiałem na pewno nie będzie tak obciążająca, jak właściwe dni lekcyjne, ale zachęcamy do zarezerwowania sobie czasu na spokojne zapoznanie się z tymi informacjami. Na pewno pomogą Wam wyciągnąć z kursu maksimum wartości! Oprócz tego liczymy na to, że będziemy już mogli rozpocząć dyskusje w systemie pytań i odpowiedzi oraz na czacie. :)</p>
+	<p>Rano, na platformie pod adresem <a href="https://platforma.wiecejnizlek.pl">https://platforma.wiecejnizlek.pl</a> otworzy się “Lekcja 0” - Wstęp do kursu. :) W kilkunastu nagraniach wideo wprowadzimy Was w obsługę platformy oraz przedstawimy podstawy efektywnej nauki. Praca z tym materiałem na pewno nie będzie tak obciążająca, jak właściwe dni lekcyjne, ale zachęcamy do zarezerwowania sobie czasu na spokojne zapoznanie się z tymi informacjami. Na pewno pomogą Wam wyciągnąć z kursu maksimum wartości! Oprócz tego liczymy na to, że będziemy już mogli rozpocząć dyskusje w systemie pytań i odpowiedzi oraz na czacie. :)</p>
 	<p>Oczywiście wszystkie lekcje, również ta wstępna, będą dostępne przez cały czas trwania kursu. :)</p>
 
 	<hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">

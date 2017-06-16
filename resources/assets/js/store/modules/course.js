@@ -44,6 +44,7 @@ const getters = {
 		return lessons
 	},
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
+	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),

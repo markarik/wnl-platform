@@ -25,7 +25,7 @@ function _getQuestions(tags) {
 			},
 		}
 
-		if (typeof tags !== 'object' || tags.length === 0) {
+		if (tags.length === 0) {
 			reject('No tags passed to search for Q&A questions.')
 		}
 

@@ -183,6 +183,32 @@ html {
 	z-index: $z-index-fullscren-close;
 }
 
+// Chat
+
+.wnl-chat-toggle {
+	align-items: center;
+	border-left: $border-light-gray;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 0;
+	justify-content: flex-start;
+	padding: $margin-base;
+
+	.icon {
+		color: $color-ocean-blue;
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		margin: $margin-base $margin-small;
+
+		span {
+			font-size: $font-size-minus-4;
+			text-transform: uppercase;
+			white-space: nowrap;
+		}
+	}
+}
+
 // Notifications
 .swal2-spacer {
 	background: transparent;

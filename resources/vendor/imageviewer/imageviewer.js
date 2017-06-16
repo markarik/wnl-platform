@@ -21,7 +21,7 @@ let imageviewer = function ($, window, document, undefined) {
 
     //constants
     var ZOOM_CONSTANT = 9; //increase or decrease value for zoom on mouse wheel
-    var MOUSE_WHEEL_COUNT = 20; //A mouse delta after which it should stop preventing default behaviour of mouse wheel
+    var MOUSE_WHEEL_COUNT = 1; //A mouse delta after which it should stop preventing default behaviour of mouse wheel
 
     //ease out method
     /*

@@ -83,7 +83,6 @@ const mutations = {
 		set(state, 'canShowChat', false)
 	},
 	[types.UI_TOGGLE_OVERLAY] (state, isVisible) {
-		console.log("toggling overlay to", isVisible)
 		set(state, 'isOverlayVisible', isVisible)
 	}
 }

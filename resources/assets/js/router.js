@@ -168,6 +168,25 @@ if (isProduction()) {
 			]
 		},
 		{
+			name: 'help',
+			path: '/app/help',
+			component: require('js/components/help/Help.vue'),
+			props: true,
+			meta: { keepsNavOpen: true },
+			children: [
+				{
+					name: 'help-learning',
+					path: 'learning',
+					component: require('js/components/help/LearningHelp.vue'),
+				},
+				{
+					name: 'help-tech',
+					path: 'tech',
+					component: require('js/components/help/TechnicalHelp.vue'),
+				},
+			]
+		},
+		{
 			name: 'dashboard',
 			path: '/app',
 			redirect: { name: 'courses', params: { courseId: 1 } },

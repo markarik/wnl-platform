@@ -6,6 +6,7 @@ const state = {
 	currentLayout: '',
 	isSidenavOpen: false,
 	isChatOpen: false,
+	isOverlayVisible: false,
 	canShowChat: false
 }
 
@@ -38,7 +39,8 @@ const getters = {
 		rootState.currentUser.settings["chat_on"] : state.isChatOpen,
 	isChatToggleVisible: (state, getters) => !getters.isMobile && !getters.isChatVisible,
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
-	canShowChat: state => state.canShowChat
+	canShowChat: state => state.canShowChat,
+	isOverlayVisible: state => state.isOverlayVisible
 }
 
 // Mutations
@@ -79,6 +81,10 @@ const mutations = {
 	},
 	[types.UI_KILL_CHAT] (state) {
 		set(state, 'canShowChat', false)
+	},
+	[types.UI_TOGGLE_OVERLAY] (state, isVisible) {
+		console.log("toggling overlay to", isVisible)
+		set(state, 'isOverlayVisible', isVisible)
 	}
 }
 
@@ -104,6 +110,9 @@ const actions = {
 	},
 	killChat({ commit }) {
 		commit(types.UI_KILL_CHAT)
+	},
+	toggleOverlay({ commit }, isVisible) {
+		commit(types.UI_TOGGLE_OVERLAY, isVisible)
 	}
 }
 

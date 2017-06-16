@@ -176,6 +176,7 @@
 		},
 		methods: {
 			...mapActions('slideshow', ['setup']),
+			...mapActions(['toggleOverlay']),
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
@@ -212,6 +213,7 @@
 			},
 			initSlideshow() {
 				$wnl.logger.debug('Initiating slideshow')
+				this.toggleOverlay(true)
 				handshake = new Postmate({
 					container: this.container,
 					url: this.slideshowUrl
@@ -232,6 +234,7 @@
 				}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {
+
 				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
 					try {
 						let data = JSON.parse(event.data)
@@ -251,10 +254,13 @@
 						this.slideChanged = false
 					} catch (error) { $wnl.logger.error(error) }
 				} else if (typeof event.data === 'object' &&
-					event.data.hasOwnProperty('value') &&
-					event.data.value.name === 'toggle-fullscreen'
+					event.data.hasOwnProperty('value')
 				) {
-					this.toggleFullscreen()
+					if (event.data.value.name === 'toggle-fullscreen') {
+						this.toggleFullscreen()
+					} else if (event.data.value.name === 'loaded') {
+						this.toggleOverlay(false)
+					}
 				}
 			},
 			fullscreenChangeHandler(event) {

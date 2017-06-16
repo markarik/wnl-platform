@@ -104,14 +104,20 @@ const mutations = {
 		set(state.quiz_questions[payload.id], 'isResolved', true)
 	},
 	[types.QUIZ_RESTORE_STATE] (state, payload) {
-		_.forEach(payload, (value, key) => {
-			set(state, key, value)
+		set(state, 'setId', payload.setId)
+		set(state, 'setName', payload.setName)
+		set(state, 'attempts', payload.attempts)
+		set(state, 'isComplete', payload.isComplete)
+		set(state, 'questionsIds', payload.questionsIds)
+
+		_.forEach(payload.quiz_questions, (value, id) => {
+			set(state.quiz_questions, id, value)
 		})
 	},
 	[types.QUIZ_SET_QUESTIONS] (state, payload) {
-		set(state, 'questionsIds', payload.questionsIds)
 		set(state, 'setId', payload.setId)
 		set(state, 'setName', payload.setName)
+		set(state, 'questionsIds', payload.questionsIds)
 		if (payload.hasOwnProperty('len')) {
 			set(state, 'questionsLength', payload.len)
 		}
@@ -164,16 +170,16 @@ const actions = {
 
 			commit(types.UPDATE_INCLUDED, included)
 
-			// if (useLocalStorage() && !_.isEmpty(storedState)) {
-			// 	commit(types.QUIZ_RESTORE_STATE, storedState)
-			// } else {
+			if (useLocalStorage() && !_.isEmpty(storedState)) {
+				commit(types.QUIZ_RESTORE_STATE, storedState)
+			} else {
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: response.data.id,
 					setName: response.data.name,
 					len,
 					questionsIds,
 				})
-			// }
+			}
 
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)

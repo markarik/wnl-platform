@@ -1,6 +1,13 @@
 <template>
 	<div class="wnl-quiz">
-		<div v-if="!displayResults">
+		<div v-if="isLoaded && displayResults">
+			<p class="title is-4 has-text-centered">
+				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
+			</p>
+			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
+			<wnl-quiz-summary></wnl-quiz-summary>
+		</div>
+		<div v-else>
 			<p class="title is-5">
 				Zanim zakończysz tę lekcję, sprawdź swoją wiedzę z wczorajszej! <wnl-emoji name="thinking_face"></wnl-emoji>
 			</p>
@@ -9,13 +16,6 @@
 			</p>
 			<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
-		</div>
-		<div v-else>
-			<p class="title is-4 has-text-centered">
-				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
-			</p>
-			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary></wnl-quiz-summary>
 		</div>
 	</div>
 </template>
@@ -60,6 +60,9 @@
 		},
 		mounted() {
 			this.setup()
+		},
+		beforeDestroy() {
+			this.destroyQuiz()
 		},
 		watch: {
 			'screenData' (newValue, oldValue) {

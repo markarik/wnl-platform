@@ -59,12 +59,14 @@
 			max-width: 400px
 			width: 100%
 
-		.course-sidenav
+		.course-sidenav,
+		.help-sidenav
 			max-width: none
 			width: auto
 
 		.wnl-sidenav,
-		.course-sidenav
+		.course-sidenav,
+		.help-sidenav
 			padding: 0
 </style>
 

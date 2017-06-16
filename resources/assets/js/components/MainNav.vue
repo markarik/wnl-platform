@@ -18,6 +18,12 @@
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
+		<router-link class="wnl-main-nav-item" :to="{ name: 'help' }">
+			<span class="icon is-medium">
+				<i class="fa fa-heartbeat"></i>
+			</span>
+			<span class="text">Pomoc</span>
+		</router-link>
 	</div>
 </template>
 

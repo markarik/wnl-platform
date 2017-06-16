@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="wnl-public-chat">
 		<div class="chat-title">
-			{{chatTitle}}
+			{{title || chatTitle}}
 		</div>
 		<div class="tabs">
 			<ul>
@@ -65,7 +65,7 @@
 		components: {
 			'wnl-chat': ChatRoom
 		},
-		props: ['rooms'],
+		props: ['title', 'rooms'],
 		data () {
 			return {
 				currentChannel: this.rooms[0].channel,

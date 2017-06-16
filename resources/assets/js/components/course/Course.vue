@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
+	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
 			:isVisible="canRenderSidenav"
 			:isDetached="!isSidenavMounted"
@@ -12,7 +12,7 @@
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<router-view></router-view>
+			<router-view v-if="ready"></router-view>
 		</div>
 		<wnl-sidenav-slot
 			:isVisible="isChatVisible"
@@ -45,27 +45,6 @@
 		max-width: $course-chat-max-width
 		min-width: $course-chat-min-width
 		width: $course-chat-width
-
-	.wnl-chat-toggle
-		align-items: center
-		border-left: $border-light-gray
-		display: flex
-		flex-direction: column
-		flex-grow: 0
-		justify-content: flex-start
-		padding: $margin-base
-
-		.icon
-			color: $color-ocean-blue
-			cursor: pointer
-			display: flex
-			flex-direction: column
-			margin: $margin-base $margin-small
-
-			span
-				font-size: $font-size-minus-4
-				text-transform: uppercase
-				white-space: nowrap
 </style>
 
 <script>

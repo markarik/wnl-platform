@@ -18,7 +18,7 @@ class CreateChatMessagesTable extends Migration
 			$table->string('content')->nullable();
 			$table->unsignedInteger('user_id')->nullable();
 			$table->unsignedInteger('chat_room_id')->nullable();
-			$table->timestamps();
+			$table->bigInteger('time');
 		});
 	}
 

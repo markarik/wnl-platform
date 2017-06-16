@@ -40,20 +40,21 @@ class ChatMessagesTest extends ApiTestCase
 		$user = User::find(1);
 
 		$data = [
-			'query' => [
+			'query'   => [
 				'where' => [
-					['created_at', '>', '1495033700'],
+					['created_at', '<', 1497612881],
 				],
 			],
-			'order' => [
+			'order'   => [
 				'created_at' => 'asc',
 			],
-			'limit' => [100, 0],
+			'limit'   => [10, 0],
+			'include' => 'profiles',
 		];
 
 		$response = $this
 			->actingAs($user)
-			->json('POST', $this->url('/chat_rooms/courses-1/chat_messages/.search?include=profiles'), $data);
+			->json('POST', $this->url('/chat_rooms/courses-1/chat_messages/.search'), $data);
 
 		$response
 			->assertStatus(200);

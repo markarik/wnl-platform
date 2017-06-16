@@ -9,7 +9,7 @@
 			<i :title="iconTitle" class="fa" :class="iconClass"></i>
 		</span>
 		<router-link v-if="isLink" :to="to" :replace="replace"
-		             :class="{'is-active': isActive, 'is-disabled': isDisabled}">
+					:class="{'is-active': active, 'is-disabled': isDisabled, 'is-completed': completed}">
 			<slot></slot>
 		</router-link>
 		<span v-else>
@@ -39,11 +39,13 @@
 		.icon.is-small
 			margin-right: 0
 
-		a.is-active
-			font-weight: $font-weight-black
+	a.is-active
+		font-weight: $font-weight-black
 
-			&::after
-				content: '✓'
+	a.is-completed
+		&::after
+			content: '✓'
+
 </style>
 
 <script>
@@ -51,7 +53,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed'],
+		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed', 'active'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
@@ -70,11 +72,6 @@
 			},
 			hasIcon() {
 				return this.hasClass('has-icon')
-			},
-			isActive() {
-				if (this.hasClass('subitem')) {
-					return this.completed
-				}
 			},
 		},
 		methods: {

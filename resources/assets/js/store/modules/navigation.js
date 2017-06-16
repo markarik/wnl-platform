@@ -13,11 +13,16 @@ const state = {
 		 * ...
 		 */
 	],
+	lessonState: {
+		activeSection: 0,
+		activeScreen: 0
+	}
 }
 
 // Getters
 const getters = {
 	breadcrumbs: state => state.breadcrumbs,
+	lessonState: state => state.lessonState
 }
 
 // Mutations
@@ -32,6 +37,9 @@ const mutations = {
 			state.breadcrumbs.splice(index, 1)
 		}
 	},
+	[types.UPDATE_LESSON_NAV] (state, payload) {
+		set(state, 'lessonState', payload)
+	}
 }
 
 const actions = {
@@ -41,6 +49,9 @@ const actions = {
 	removeBreadcrumb({ commit }, text) {
 		commit(types.REMOVE_BREADCRUMB, text)
 	},
+	updateLessonNav({commit}, payload) {
+		commit(types.UPDATE_LESSON_NAV, payload)
+	}
 }
 
 export default {

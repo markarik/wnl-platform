@@ -29,7 +29,7 @@
 				<p class="control">
 					<input id="password" name="password" type="password"
 						   class="input {{ $errors->has('password') ? 'is-danger' : '' }}"
-						   value="{{ old('password') }}" required autofocus="">
+						   value="{{ old('password') }}" required>
 					@if ($errors->has('password'))
 						<span class="help is-danger">{{ $errors->first('password') }}</span>
 					@endif

@@ -181,7 +181,6 @@ function toggleAnnotations() {
 
 function setMenuListeners(parent) {
 	$toggleFullscreen.on('click', emitToggleFullscreen)
-	$slideshowAnnotations.find('.annotations-new-comment').on('click', emitToggleFullscreen)
 	$toggleAnnotations.on('click', toggleAnnotations)
 }
 

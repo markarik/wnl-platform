@@ -9,8 +9,8 @@
 			populate="true"
 			hideDefaultSubmit="true"
 			@submitSuccess="onSubmitSuccess">
-			<wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check>
-			<wnl-form-check name="notify_live">Otrzymuj powiadomienia w przeglądarce</wnl-form-check>
+			<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check>
+			<wnl-form-check name="notify_live">Otrzymuj powiadomienia w przeglądarce</wnl-form-check> -->
 			<wnl-form-check name="chat_on">Chat włączony</wnl-form-check>
 			<wnl-form-check name="skip_functional_slides">Pomijaj slajdy funkcjonalne</wnl-form-check>
 		</wnl-form>

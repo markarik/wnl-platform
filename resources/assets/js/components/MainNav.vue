@@ -6,12 +6,12 @@
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'collections' }">
+		<!-- <router-link class="wnl-main-nav-item" :to="{ name: 'collections' }">
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
 			</span>
 			<span class="text">Kolekcje</span>
-		</router-link>
+		</router-link> -->
 		<router-link class="wnl-main-nav-item" :to="{ name: 'myself' }">
 			<span class="icon is-medium">
 				<i class="fa fa-user-o"></i>

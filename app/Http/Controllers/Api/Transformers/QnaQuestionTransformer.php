@@ -47,7 +47,7 @@ class QnaQuestionTransformer extends ApiTransformer
 	{
 		$tags = $question->tags;
 
-		return $this->collection($tags, new TagTransformer, 'tags');
+		return $this->collection($tags, new TagTransformer(['qna_questions' => $question->id]), 'tags');
 	}
 
 	public function includeProfiles(QnaQuestion $question)

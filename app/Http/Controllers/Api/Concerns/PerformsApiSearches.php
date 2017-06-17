@@ -66,6 +66,32 @@ trait PerformsApiSearches
 	}
 
 	/**
+	 * Process 'whereDoesntHave' conditions and apply to query builder.
+	 *
+	 * @param $model
+	 * @param $relationConditions
+	 *
+	 * @return mixed
+	 */
+	protected function parseWhereDoesntHave($model, $relationConditions)
+	{
+		foreach ($relationConditions as $field => $conditions) {
+			$model = $model->whereDoesntHave(camel_case($field),
+				function ($query) use ($conditions) {
+					if (!empty($conditions['where'])) {
+						$query->where($conditions['where']);
+					}
+					if (!empty($conditions['whereIn'])) {
+						$query->whereIn($conditions['whereIn'][0], $conditions['whereIn'][1]);
+					}
+				}
+			);
+		}
+
+		return $model;
+	}
+
+	/**
 	 * Process 'hasIn' conditions and apply to query builder.
 	 *
 	 * @param $model
@@ -147,6 +173,10 @@ trait PerformsApiSearches
 
 		if (!empty ($query['whereHas'])) {
 			$model = $this->parseWhereHas($model, $query['whereHas']);
+		}
+
+		if (!empty ($query['whereDoesntHave'])) {
+			$model = $this->parseWhereDoesntHave($model, $query['whereDoesntHave']);
 		}
 
 		if (!empty ($query['hasIn'])) {

@@ -20,6 +20,9 @@
 				<wnl-your-progress :courseId="courseId"></wnl-your-progress>
 			</div>
 		</div>
+
+		<!-- Latest Q&A -->
+		<wnl-qna title="Ostatnie pytania"></wnl-qna>
 	</div>
 </template>
 
@@ -38,11 +41,13 @@
 
 <script>
 	import emoji from 'node-emoji'
-	import NextLesson from 'js/components/course/NextLesson.vue'
-	import YourProgress from 'js/components/course/YourProgress.vue'
 	import { mapGetters } from 'vuex'
-	import {resource} from 'js/utils/config'
-	import {getFirstLessonId} from 'js/utils/env'
+
+	import NextLesson from 'js/components/course/NextLesson'
+	import Qna from 'js/components/qna/Qna'
+	import YourProgress from 'js/components/course/YourProgress'
+	import { getFirstLessonId } from 'js/utils/env'
+	import { resource } from 'js/utils/config'
 
 	export default {
 		props: ['courseId'],
@@ -63,6 +68,7 @@
 		},
 		components: {
 			'wnl-next-lesson': NextLesson,
+			'wnl-qna': Qna,
 			'wnl-your-progress': YourProgress,
 		},
 		beforeMount() {

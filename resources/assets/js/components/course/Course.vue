@@ -127,11 +127,17 @@
 			...mapActions('course', [
 				'setup'
 			]),
-			...mapActions(['toggleChat'])
+			...mapActions(['toggleChat', 'toggleOverlay'])
 			// ...mapActions(['addBreadcrumb', 'removeBreadcrumb']),
 		},
 		created() {
+			this.toggleOverlay(true)
 			this.setup(this.courseId)
+				.then(() => this.toggleOverlay(false))
+				.catch((error) => {
+					$wnl.logger.error(error)
+					this.toggleOverlay(false)
+				})
 		}
 		// mounted() {
 		// 	this.addBreadcrumb({

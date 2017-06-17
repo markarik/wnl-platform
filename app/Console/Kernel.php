@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
 		Commands\QuizImport::class,
 		Commands\SlidesImport::class,
 		Commands\DumpCourseStructure::class,
+		Commands\WarmUpCache::class,
     ];
 
     /**

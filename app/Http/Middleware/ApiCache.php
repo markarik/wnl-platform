@@ -53,7 +53,7 @@ class ApiCache
 
 	protected function excluded($request)
 	{
-		$excludedTags = ['users', 'profiles', 'reactions', 'tags'];
+		$excludedTags = ['users', 'profiles', 'reactions', 'tags', 'orders'];
 
 		$methodExcluded = $request->method() !== 'GET';
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));

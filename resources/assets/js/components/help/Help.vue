@@ -49,10 +49,13 @@
 
 	.help-sidenav
 		flex: 1
-		min-width: $sidenav-min-width
-		overflow: auto
+
+	.wnl-sidenav
+		flex: 1
 		padding: 7px 0
-		width: $sidenav-width
+
+		&.mobile
+			padding: 0
 </style>
 
 <script>

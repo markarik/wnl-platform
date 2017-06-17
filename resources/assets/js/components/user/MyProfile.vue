@@ -37,12 +37,10 @@
 
 			.wnl-upload,
 			.wnl-user-profile-avatar
-				margin-top: 12px
-
-			.wnl-user-profile-avatar
 				align-items: center
 				display: flex
 				flex-direction: column
+				margin-top: 12px
 
 			.button
 				margin-top: 20px

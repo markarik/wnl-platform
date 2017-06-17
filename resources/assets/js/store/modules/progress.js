@@ -141,12 +141,14 @@ const mutations = {
 		const updatedState = progressStore.completeSection(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
+		set(lessonState, 'route', payload.route);
 	},
 	[types.PROGRESS_COMPLETE_SCREEN] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		const updatedState = progressStore.completeScreen(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
+		set(lessonState, 'route', payload.route);
 	},
 	[types.PROGRESS_SAVE] (state, {lessonId, courseId}) {
 		const lessonState = state.courses[courseId].lessons[lessonId];

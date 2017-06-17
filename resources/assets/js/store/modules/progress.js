@@ -19,7 +19,7 @@ const getters = {
 		}
 	},
 	getLesson: (state) => (courseId, lessonId) => {
-		return state.courses[courseId] && state.courses[courseId].lessons[lessonId];
+		return state.courses[courseId] && state.courses[courseId].lessons && state.courses[courseId].lessons[lessonId];
 	},
 	getScreen: (state) => (courseId, lessonId, screenId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}]`);
@@ -38,6 +38,7 @@ const getters = {
 	},
 	wasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
+			state.courses[courseId].lessons &&
 			state.courses[courseId].lessons.hasOwnProperty(lessonId) &&
 			state.courses[courseId].lessons[lessonId].hasOwnProperty('status')
 	},
@@ -114,7 +115,11 @@ const mutations = {
 		set(state.courses, payload.courseId, payload.progressData)
 	},
 	[types.PROGRESS_SETUP_LESSON] (state, payload) {
-		set(state.courses[payload.courseId].lessons, payload.lessonId, payload.progressData)
+		const updatedState = {
+			...((state.courses[payload.courseId] &&  state.courses[payload.courseId].lessons)|| []),
+			[payload.lessonId]: payload.progressData
+		};
+		set(state.courses[payload.courseId], 'lessons', updatedState)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];

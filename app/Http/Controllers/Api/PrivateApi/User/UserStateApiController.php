@@ -3,11 +3,18 @@
 use App\Models\UserQuizResults;
 use Auth;
 use App\Http\Controllers\Api\ApiController;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
 class UserStateApiController extends ApiController
 {
+
+	public function __construct(Request $request)
+	{
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.user-state');
+	}
+
 	// courseId - userId - cacheVersion
 	const KEY_COURSE_TEMPLATE = 'UserState:Course:%s:%s:%s';
 	// courseId - lessonId - userId - cacheVersion

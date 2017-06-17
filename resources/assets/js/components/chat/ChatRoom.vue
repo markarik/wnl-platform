@@ -216,7 +216,7 @@
 						})
 			}
 		},
-		created() {
+		mounted() {
 			socket.connect().then((socket) => {
 				this.socket = socket
 				this.joinRoom()

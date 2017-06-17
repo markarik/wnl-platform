@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<!-- <div> -->
-		<div class="wnl-lesson">
+		<div class="wnl-lesson" v-if="lesson.isAvailable">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
 					<div class="level-left">
@@ -20,6 +20,15 @@
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
 			</div>
+		</div>
+		<div v-else>
+			<h3 class="has-text-centered">O nie! Ta lekcja nie jest jeszcze dostępna!</h3>
+			<p class="has-text-centered margin vertical">
+				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"></img>
+			</p>
+			<p class="has-text-centered">
+				<router-link to="/" class="button is-outlined is-primary">Wróć do auli</router-link>
+			</p>
 		</div>
 	</div>
 </template>
@@ -102,11 +111,14 @@
 					}
 				}
 			},
+			lesson() {
+				return this.getLesson(this.lessonId)
+			},
 			lessonName() {
-				return this.getLesson(this.lessonId).name
+				return this.lesson.name
 			},
 			lessonNumber() {
-				return this.getLesson(this.lessonId).order_number
+				return this.lesson.order_number
 			},
 			screens() {
 				return this.getScreens(this.lessonId)

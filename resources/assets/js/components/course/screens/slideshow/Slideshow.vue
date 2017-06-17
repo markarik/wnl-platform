@@ -214,7 +214,7 @@
 			},
 			initSlideshow() {
 				$wnl.logger.debug('Initiating slideshow')
-				this.toggleOverlay(true)
+				this.toggleOverlay({source: 'slideshow', display: true})
 				handshake = new Postmate({
 					container: this.container,
 					url: this.slideshowUrl
@@ -260,7 +260,7 @@
 					if (event.data.value.name === 'toggle-fullscreen') {
 						this.toggleFullscreen()
 					} else if (event.data.value.name === 'loaded') {
-						this.toggleOverlay(false)
+						this.toggleOverlay({source: 'slideshow', display: false})
 					}
 				}
 			},
@@ -331,7 +331,7 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				if (to.params.screenId !== from.params.screenId) {
+				if (to.params.screenId != from.params.screenId) {
 					this.destroySlideshow()
 				}
 

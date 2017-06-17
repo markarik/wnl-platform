@@ -178,7 +178,7 @@
 			...mapActions('slideshow', ['setup']),
 			...mapActions(['toggleOverlay']),
 			toggleFullscreen() {
-				if (!screenfull.enabled) {
+				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
 				} else {
 					this.isFauxFullscreen = !this.isFauxFullscreen

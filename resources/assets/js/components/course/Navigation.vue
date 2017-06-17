@@ -183,7 +183,7 @@
 				if (asTodo) {
 					cssClass += 'todo'
 
-					if (this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
+					if (this.courseProgress.lessons && this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
 						cssClass = `${cssClass} ${this.courseProgress.lessons[lesson.id].status}`
 					}
 				} else {

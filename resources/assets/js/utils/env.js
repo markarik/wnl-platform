@@ -26,6 +26,9 @@ export function useLocalStorage() {
 	return envValue('APP_USE_LOCAL_STORAGE')
 }
 
+export function getFirstLessonId() {
+	return envValue('APP_FIRST_LESSON_ID') || 16;
+}
 // URLs
 
 export function getUrl(path) {

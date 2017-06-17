@@ -24,7 +24,7 @@ class ReactionsCountTransformer
 				return $element->count;
 			});
 
-		$flags = Reaction::count($reactable)
+		$flags = Reaction::flags($reactable)
 			->keyBy('type')
 			->map(function ($element) {
 				return $element->count;

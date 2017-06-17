@@ -150,9 +150,5 @@
 				}
 			}
 		},
-		beforeRouteUpdate(to, from, next) {
-			this.killChat()
-			next()
-		}
 	}
 </script>

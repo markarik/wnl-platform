@@ -27,7 +27,10 @@ const getters = {
 	canShowSidenavTrigger: (state, getters) => getters.isTouchScreen,
 	canShowBreadcrumbsInNavbar: (state, getters) => !getters.isTouchScreen,
 	canShowControlsInNavbar: (state, getters) => !getters.isMobile,
-	canShowChatToggleInNavbar: (state, getters) => state.canShowChat && getters.isMobile,
+	canShowChatToggleInNavbar: (state, getters, rootState) => {
+		// TODO: Figure out how to hide chat in a smarter way
+		return state.canShowChat && getters.isMobile && rootState.route.path.indexOf('myself') === -1
+	},
 	isSidenavMounted: (state, getters) => !getters.canShowSidenavTrigger,
 	isSidenavOpen: state => state.isSidenavOpen,
 	isSidenavVisible: (state, getters) => getters.isSidenavMounted || getters.isSidenavOpen,

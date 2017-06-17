@@ -2,7 +2,7 @@
 	<div id="app" v-if="!isCurrentUserLoading">
 		<div class="wnl-overlay" v-if="isOverlayVisible">
 			<span class="loader"></span>
-			<span class="loader-text">Ładujemy prezentację...</span>
+			<span class="loader-text">Uwaga, nadjeżdża wiedza...</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">

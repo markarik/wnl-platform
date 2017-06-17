@@ -2,6 +2,7 @@
 	<div id="app" v-if="!isCurrentUserLoading">
 		<div class="wnl-overlay" v-if="isOverlayVisible">
 			<span class="loader"></span>
+			<span class="loader-text">Ładujemy prezentację...</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
@@ -18,6 +19,7 @@
 		background: rgba(255, 255, 255, 0.9)
 		bottom: 0
 		display: flex
+		flex-direction: column
 		justify-content: center
 		left: 0
 		position: fixed
@@ -28,6 +30,10 @@
 		.loader
 			height: 40px
 			width: 40px
+
+		.loader-text
+			margin-top: $margin-small
+			color: $color-ocean-blue
 </style>
 
 <script>

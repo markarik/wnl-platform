@@ -207,8 +207,6 @@
 								}
 							})
 							setTimeout(()=> {
-//								console.log(target.scrollHeight, originalHeight)
-//								console.log(target.scrollHeight - originalHeight)
 								this.container.scrollTop = this.container.scrollHeight - originalHeight
 							}, 0)
 							this.isPulling = false

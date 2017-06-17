@@ -126,8 +126,8 @@
 			},
 			chatRooms() {
 				return [
-					{name: '#pomoc-w-nauce', channel: 'help-learning'},
-					{name: '#pomoc-techniczna', channel: 'help-tech'},
+					{name: '#nauka', channel: 'help-learning'},
+					{name: '#tech', channel: 'help-tech'},
 				]
 			},
 			isMainRoute() {
@@ -135,7 +135,7 @@
 			},
 		},
 		methods: {
-			...mapActions(['toggleChat', 'initChat']),
+			...mapActions(['toggleChat']),
 			...mapActions('course', ['setup']),
 		},
 		mounted() {

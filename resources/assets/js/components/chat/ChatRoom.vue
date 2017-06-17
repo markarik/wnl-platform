@@ -13,7 +13,7 @@
 						<wnl-message v-for="(message, index) in messages"
 									 :key="index"
 									 :showAuthor="isAuthorUnique[index]"
-									 :full_name="message.full_name"
+									 :fullName="message.full_name"
 									 :avatar="message.avatar"
 									 :time="message.time">
 							{{ message.content }}

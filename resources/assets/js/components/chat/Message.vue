@@ -1,13 +1,13 @@
 <template>
 	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }">
 		<figure class="media-left">
-			<wnl-avatar :full_name="full_name" :url="avatar" v-if="showAuthor"></wnl-avatar>
+			<wnl-avatar :fullName="fullName" :url="avatar" v-if="showAuthor"></wnl-avatar>
 			<div class="media-left-placeholder" v-else></div>
 		</figure>
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<strong>{{ full_name }}</strong>
+					<strong>{{ fullName }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content">
@@ -51,7 +51,7 @@
 	import { timeFromMs } from 'js/utils/time'
 
 	export default{
-		props: ['full_name', 'avatar', 'time', 'showAuthor'],
+		props: ['fullName', 'avatar', 'time', 'showAuthor'],
 		computed: {
 			formattedTime () {
 				return timeFromMs(this.time)

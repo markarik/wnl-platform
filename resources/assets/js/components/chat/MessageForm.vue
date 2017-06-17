@@ -1,7 +1,7 @@
 <template>
 	<article class="media">
 		<figure class="media-left">
-			<wnl-avatar :full_name="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+			<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
 		</figure>
 		<div class="media-content">
 			<p class="control">

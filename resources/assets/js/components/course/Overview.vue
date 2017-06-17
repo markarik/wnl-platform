@@ -42,6 +42,7 @@
 	import YourProgress from 'js/components/course/YourProgress.vue'
 	import { mapGetters } from 'vuex'
 	import {resource} from 'js/utils/config'
+	import {getFirstLessonId} from 'js/utils/env'
 
 	export default {
 		props: ['courseId'],
@@ -69,7 +70,7 @@
 				this.$router.replace({
 					name: resource('lessons'),
 					params: {
-						lessonId: 16,
+						lessonId: getFirstLessonId(),
 						courseId: this.courseId
 					}
 				})

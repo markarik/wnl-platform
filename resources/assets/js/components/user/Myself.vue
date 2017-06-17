@@ -31,7 +31,7 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	import MainNav from 'js/components/MainNav'
 	import MyProfile from 'js/components/user/MyProfile'
@@ -140,12 +140,16 @@
 			},
 		},
 		methods: {
+			...mapActions(['killChat']),
 			goToDefaultRoute() {
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
 				}
 			}
 		},
-		// mounted() { this.goToDefaultRoute() }
+		beforeRouteUpdate(to, from, next) {
+			this.killChat()
+			next()
+		}
 	}
 </script>

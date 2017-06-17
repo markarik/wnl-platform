@@ -14,6 +14,9 @@ class TagsTableSeeder extends Seeder
 		DB::table('tags')->insert([
 			['name' => 'Pomoc w nauce'],
 			['name' => 'Pomoc techniczna'],
+			['name' => 'Błędy'],
+			['name' => 'Nowe funkcje'],
+			['name' => 'Sugestie'],
 		]);
 	}
 }

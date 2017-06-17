@@ -9,7 +9,7 @@
 				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}">
+		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view v-if="!isMainRoute"></router-view>
 			<wnl-my-profile v-else></wnl-my-profile>
 		</div>
@@ -28,6 +28,9 @@
 
 		&.mobile
 			padding: 0
+
+	.mobile-main
+		overflow-y: auto
 </style>
 
 <script>

@@ -66,6 +66,7 @@
 
 	a.is-completed:after
 		content: '✓'
+		margin-left: $margin-tiny
 
 	.subitem
 		&::after

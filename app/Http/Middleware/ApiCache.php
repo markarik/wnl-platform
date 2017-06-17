@@ -53,9 +53,8 @@ class ApiCache
 
 	protected function excluded($request)
 	{
-		$excludedTags = ['users', 'profiles', 'reactions', 'tags', 'orders', 'state'];
-
-		$methodExcluded = $request->method() !== 'GET';
+		$excludedTags = ['users', 'profiles', 'reactions', 'orders', 'state'];
+		$methodExcluded = !in_array($request->method(), ['GET', 'POST']);
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));
 		$urlExcluded = str_is('*current*', $request->getRequestUri());
 
@@ -75,6 +74,13 @@ class ApiCache
 
 		if ($request->has('include')) {
 			$this->tags = array_merge($this->tags, preg_split('/[.,]+/', $request->get('include')));
+		}
+
+		$searchParams = ['query', 'order', 'limit', 'join'];
+		foreach ($searchParams as $searchParam) {
+			if ($request->has($searchParam)) {
+				array_push($this->tags, json_encode($request->get($searchParam)));
+			}
 		}
 
 		return $this->tags;

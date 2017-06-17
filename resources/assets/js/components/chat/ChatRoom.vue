@@ -107,10 +107,10 @@
 		},
 		methods: {
 			joinRoom() {
-				this.socket.emit('join-room', {
+				typeof this.socket.emit === 'function' && this.socket.emit('join-room', {
 					room: this.room
 				})
-				this.socket.on('join-room-success', (data) => {
+				typeof this.socket.on === 'function' && this.socket.on('join-room-success', (data) => {
 					if (!this.loaded) {
 						this.messages = data.messages
 						this.users    = data.users
@@ -124,7 +124,7 @@
 			},
 			changeRoom(oldRoom) {
 				this.loaded = false
-				this.socket.emit('leave-room', {
+				typeof this.socket.emit === 'function' && this.socket.emit('leave-room', {
 					room: oldRoom
 				})
 				this.joinRoom()

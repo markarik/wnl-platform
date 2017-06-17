@@ -41,6 +41,7 @@
 	import NextLesson from 'js/components/course/NextLesson.vue'
 	import YourProgress from 'js/components/course/YourProgress.vue'
 	import { mapGetters } from 'vuex'
+	import {resource} from 'js/utils/config'
 
 	export default {
 		props: ['courseId'],
@@ -63,5 +64,16 @@
 			'wnl-next-lesson': NextLesson,
 			'wnl-your-progress': YourProgress,
 		},
+		beforeMount() {
+			if (this.isBeginning) {
+				this.$router.replace({
+					name: resource('lessons'),
+					params: {
+						lessonId: 16,
+						courseId: this.courseId
+					}
+				})
+			}
+		}
 	}
 </script>

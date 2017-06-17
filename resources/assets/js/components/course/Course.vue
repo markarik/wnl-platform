@@ -75,6 +75,7 @@
 			]),
 			breadcrumb() {
 				return {
+					level: 0,
 					text: 'Kurs',
 					to: {
 						name: 'courses',
@@ -122,13 +123,12 @@
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-main-nav': MainNav
 		},
-		mixins: [withChat],
+		mixins: [withChat, breadcrumb],
 		methods: {
 			...mapActions('course', [
 				'setup'
 			]),
-			...mapActions(['toggleChat', 'toggleOverlay'])
-			// ...mapActions(['addBreadcrumb', 'removeBreadcrumb']),
+			...mapActions(['toggleChat', 'toggleOverlay']),
 		},
 		created() {
 			this.toggleOverlay({source: 'course', display: true})
@@ -139,17 +139,5 @@
 					this.toggleOverlay({source: 'course', display: false})
 				})
 		}
-		// mounted() {
-		// 	this.addBreadcrumb({
-		// 		text: 'Kurs',
-		// 		to: {
-		// 			name: 'courses',
-		// 			courseId: this.courseId,
-		// 		},
-		// 	})
-		// },
-		// beforeDestroy() {
-		// 	this.removeBreadcrumb('Kurs')
-		// },
 	}
 </script>

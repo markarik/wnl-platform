@@ -8,14 +8,14 @@
 				<div class="level-left">
 					<div>
 						<p class="title is-4">
-							Pytania i odpowiedzi ({{howManyQuestions}})
+							{{displayedTitle}} ({{howManyQuestions}})
 						</p>
 						<div class="tags">
 							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
 						</div>
 					</div>
 				</div>
-				<div class="level-right" v-if="!readOnly">
+				<div class="level-right" v-if="!readOnly && tags">
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
@@ -110,7 +110,7 @@
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
 		},
-		props: ['tags', 'ids', 'readOnly'],
+		props: ['tags', 'ids', 'readOnly', 'title'],
 		data() {
 			return {
 				ready: false,
@@ -126,19 +126,26 @@
 				if (!this.tags) return [];
 				return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1)
 			},
+			displayedTitle() {
+				return this.title || 'Pytania i odpowiedzi'
+			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'destroyQna']),
+			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'fetchLatestQuestions', 'destroyQna']),
 		},
 		mounted() {
 			if (this.tags) {
 				this.fetchQuestions(this.tags).then(() => {
 					this.ready = true
-				})
-			} else {
+				}).catch(error => $wnl.logger.error(error))
+			} else if (this.ids) {
 				this.fetchQuestionsByIds(this.ids).then(() => {
 					this.ready = true
-				})
+				}).catch(error => $wnl.logger.error(error))
+			} else {
+				this.fetchLatestQuestions(this.ids).then(() => {
+					this.ready = true
+				}).catch(error => $wnl.logger.error(error))
 			}
 		},
 		beforeDestroy() {

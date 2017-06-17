@@ -3,7 +3,7 @@
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="qna-question" v-else>
+		<div class="qna-question">
 			<div class="votes">
 				<wnl-vote type="up" count="0" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-vote>
 			</div>
@@ -11,6 +11,9 @@
 				<div class="qna_wrapper">
 					<div class="qna-question-content" v-html="content"></div>
 					<wnl-bookmark class="qna_bookmark" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-bookmark>
+				</div>
+				<div class="tags" v-if="tags.length > 0">
+					<span v-for="tag, key in tags" class="tag is-light" v-text="tag"></span>
 				</div>
 				<div class="qna-question-meta qna-meta">
 					<wnl-avatar
@@ -115,6 +118,9 @@
 	.qna_bookmark
 		justify-content: flex-end
 
+	.tag
+		margin-right: $margin-small
+
 </style>
 
 <script>
@@ -152,6 +158,7 @@
 				'profile',
 				'getQuestion',
 				'questionAnswersFromHighestUpvoteCount',
+				'questionTags',
 			]),
 			...mapGetters(['currentUserId']),
 			question() {
@@ -197,6 +204,9 @@
 			},
 			otherAnswers() {
 				return _.tail(this.answersFromHighestUpvoteCount) || []
+			},
+			tags() {
+				return this.questionTags(this.questionId).map((tag) => tag.name) || []
 			},
 		},
 		methods: {

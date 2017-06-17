@@ -7,6 +7,7 @@ const state = {
 	breadcrumbs: [
 		/**
 		 * {
+		 * 	level: Integer,
 		 * 	text: String,
 		 * 	to: Object,
 		 * },
@@ -21,7 +22,7 @@ const state = {
 
 // Getters
 const getters = {
-	breadcrumbs: state => state.breadcrumbs,
+	breadcrumbs: state => _.sortBy(state.breadcrumbs, (crumb) => crumb.level),
 	lessonState: state => state.lessonState
 }
 

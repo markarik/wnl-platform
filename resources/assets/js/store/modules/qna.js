@@ -53,6 +53,29 @@ function _getQuestionsByIds(ids) {
 	})
 }
 
+function _getQuestionsLatest(limit = 10) {
+	return new Promise((resolve, reject) => {
+		let data = {
+			include: 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments',
+			query: {
+				whereDoesntHave: {
+					tags: {
+						where: [ ['tags.id', '=', 69] ],
+					},
+				},
+			},
+			order: {
+				id: 'desc',
+			},
+			limit: [limit, 0]
+		}
+
+		axios.post(getApiUrl('qna_questions/.search'), data)
+			.then((response) => resolve(response))
+			.catch((error) => reject(error))
+	})
+}
+
 /**
  * @param questionId
  * @returns {Promise}
@@ -108,6 +131,7 @@ function getInitialState() {
 		qna_answers: {},
 		comments: {},
 		profiles: {},
+		tags: {},
 	}
 }
 
@@ -148,6 +172,14 @@ const getters = {
 		}
 
 		return answersIds.map((id) => state.qna_answers[id])
+	},
+	questionTags: state => (id) => {
+		let tags = state.qna_questions[id].tags
+		if (_.isUndefined(tags)) {
+			return []
+		}
+
+		return tags.map((id) => state.tags[id])
 	},
 	questionAnswersFromHighestUpvoteCount: (state, getters) => (id) => {
 		return _.reverse(
@@ -304,6 +336,31 @@ const actions = {
 				})
 				.catch((error) => {
 					$wnl.logger.error(error)
+					commit(types.IS_LOADING, false)
+					reject()
+				})
+		})
+	},
+
+	fetchLatestQuestions({commit}, limit = 10) {
+		commit(types.IS_LOADING, true)
+
+		return new Promise((resolve, reject) => {
+			_getQuestionsLatest(limit)
+				.then((response) => {
+					let data = response.data
+
+					if (!_.isUndefined(data.included)) {
+						commit(types.UPDATE_INCLUDED, data.included)
+						destroy(data, 'included')
+						commit(types.QNA_SET_QUESTIONS, data)
+					}
+					commit(types.IS_LOADING, false)
+					resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					commit(types.IS_LOADING, false)
 					reject()
 				})
 		})

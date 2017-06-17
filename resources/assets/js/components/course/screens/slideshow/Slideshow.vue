@@ -209,7 +209,6 @@
 				this.isFocused = this.iframe === document.activeElement
 			},
 			initSlideshow() {
-				$wnl.logger.debug('Initiating slideshow')
 				this.toggleOverlay({source: 'slideshow', display: true})
 				handshake = new Postmate({
 					container: this.container,

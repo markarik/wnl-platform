@@ -1,18 +1,19 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export const reaction = {
-	props: ['module', 'reactableResource', 'reactableId'],
+	props: ['module', 'reactableResource', 'reactableId', 'updateLocally'],
 	data() {
 		return {
-			isLoading: false
+			isLoading: false,
+			isReady: false,
+			count: 0,
+			hasReacted: false,
+			wasJustClicked: false,
 		}
 	},
 	computed: {
 		reaction() {
 			return this.$store.getters[`${this.module}/getReaction`](this.reactableResource, this.reactableId, this.name)
-		},
-		count() {
-			return this.reaction.count
 		},
 	},
 	methods: {
@@ -23,19 +24,29 @@ export const reaction = {
 			if (this.isLoading) {
 				return false
 			}
+			this.wasJustClicked = true
 			this.isLoading = true
 			this.setReaction({
 				reactableResource: this.reactableResource,
 				reactableId: this.reactableId,
 				reaction: this.name,
-				hasReacted: this.reaction.hasReacted,
+				hasReacted: this.hasReacted,
 			}).then((response) => {
+				this.hasReacted ? this.count-- : this.count++
+				this.hasReacted = !this.hasReacted
 				this.isLoading = false
+				this.wasJustClicked = false
 			})
 			.catch((error) => {
 				$wnl.logger.error(error)
 				this.isLoading = false
+				this.wasJustClicked = false
 			})
 		},
 	},
+	mounted() {
+		this.count = this.reaction.count
+		this.hasReacted = this.reaction.hasReacted
+		this.isReady = true
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -16,7 +16,7 @@ class UpdateUserAddress extends FormRequest
 	{
 		$user = User::fetch($this->route('id'));
 
-		return $this->user()->can('update', $user->address);
+		return $this->user()->can('update', $user->address()->first());
 	}
 
 	/**

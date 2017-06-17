@@ -3,7 +3,7 @@
 use Auth;
 use App\Models\User;
 use League\Fractal\Resource\Item;
-use App\Http\Requests\UpdateUserAddress;
+use App\Http\Requests\User\UpdateUserAddress;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\UserAddressTransformer;
 
@@ -11,7 +11,6 @@ class UserAddressApiController extends ApiController
 {
 	public function get($id)
 	{
-
 		$user = User::fetch($id);
 		$address = $user->address()->first();
 

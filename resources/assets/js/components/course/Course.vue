@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout wnl-course-layout">
+	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
 		<wnl-sidenav-slot
 			:isVisible="canRenderSidenav"
 			:isDetached="!isSidenavMounted"
@@ -12,7 +12,7 @@
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<router-view v-if="ready"></router-view>
+			<router-view></router-view>
 		</div>
 		<wnl-sidenav-slot
 			:isVisible="isChatVisible"
@@ -127,7 +127,7 @@
 			...mapActions('course', [
 				'setup'
 			]),
-			...mapActions(['toggleChat', 'initChat'])
+			...mapActions(['toggleChat'])
 			// ...mapActions(['addBreadcrumb', 'removeBreadcrumb']),
 		},
 		created() {

@@ -3,9 +3,9 @@
 		<div class="qna-container">
 			<div class="qna-meta qna-comment-meta">
 				<wnl-avatar
-				:username="author.full_name"
-				:url="author.avatarUrl"
-				size="small">
+						:fullName="author.full_name"
+						:url="author.avatarUrl"
+						size="small">
 				</wnl-avatar>
 				<span class="qna-meta-info">
 					{{author.username}} ·

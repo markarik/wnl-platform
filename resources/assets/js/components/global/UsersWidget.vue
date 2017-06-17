@@ -9,7 +9,7 @@
 			</span> Uczą się razem z Tobą
 		</p>
 		<div class="avatars-container">
-			<wnl-avatar v-for="user in otherUsers" :username="user.full_name"></wnl-avatar>
+			<wnl-avatar v-for="user in otherUsers" :fullName="user.full_name"></wnl-avatar>
 		</div> -->
 	</div>
 </template>

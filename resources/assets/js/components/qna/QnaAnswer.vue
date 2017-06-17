@@ -10,9 +10,9 @@
 				</div>
 				<div class="qna-meta">
 					<wnl-avatar
-						:username="author.full_name"
-						:url="author.avatar"
-						size="medium">
+							:fullName="author.full_name"
+							:url="author.avatar"
+							size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
 						{{author.full_name}} ·

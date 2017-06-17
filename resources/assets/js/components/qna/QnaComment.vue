@@ -4,11 +4,11 @@
 			<div class="qna-meta qna-comment-meta">
 				<wnl-avatar
 						:fullName="author.full_name"
-						:url="author.avatarUrl"
+						:url="author.avatar"
 						size="small">
 				</wnl-avatar>
 				<span class="qna-meta-info">
-					{{author.username}} ·
+					{{author.full_name}} ·
 				</span>
 				<span class="qna-meta-info">
 					{{time}}

@@ -1,6 +1,6 @@
 <template>
 	<div id="app" v-if="!isCurrentUserLoading">
-		<div class="wnl-overlay" v-if="isOverlayVisible">
+		<div class="wnl-overlay" v-if="shouldDisplayOverlay">
 			<span class="loader"></span>
 			<span class="loader-text">Uwaga, nadjeżdża wiedza...</span>
 		</div>
@@ -50,7 +50,7 @@
 			'wnl-navbar': Navbar
 		},
 		computed: {
-			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'isOverlayVisible'])
+			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay'])
 		},
 		methods: {
 			...mapActions(['setupCurrentUser', 'setLayout', 'resetLayout', 'toggleOverlay']),

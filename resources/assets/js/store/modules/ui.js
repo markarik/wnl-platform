@@ -1,5 +1,5 @@
 import * as types from '../mutations-types'
-import { set } from 'vue'
+import { set, delete as destroy } from 'vue'
 
 // Initial state
 const state = {
@@ -7,6 +7,7 @@ const state = {
 	isSidenavOpen: false,
 	isChatOpen: false,
 	isOverlayVisible: false,
+	overlays: {},
 	canShowChat: false
 }
 
@@ -43,7 +44,8 @@ const getters = {
 	isChatToggleVisible: (state, getters) => !getters.isMobile && !getters.isChatVisible,
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
 	canShowChat: state => state.canShowChat,
-	isOverlayVisible: state => state.isOverlayVisible
+	isOverlayVisible: state => state.isOverlayVisible,
+	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0
 }
 
 // Mutations
@@ -87,7 +89,14 @@ const mutations = {
 	},
 	[types.UI_TOGGLE_OVERLAY] (state, isVisible) {
 		set(state, 'isOverlayVisible', isVisible)
-	}
+	},
+	[types.UI_DISPLAY_OVERLAY] (state, payload) {
+		if (payload.display) {
+			set(state.overlays, payload.source, true)
+		} else {
+			destroy(state.overlays, payload.source)
+		}
+	},
 }
 
 // Actions
@@ -113,8 +122,8 @@ const actions = {
 	killChat({ commit }) {
 		commit(types.UI_KILL_CHAT)
 	},
-	toggleOverlay({ commit }, isVisible) {
-		commit(types.UI_TOGGLE_OVERLAY, isVisible)
+	toggleOverlay({ commit }, payload) {
+		commit(types.UI_DISPLAY_OVERLAY, payload)
 	}
 }
 

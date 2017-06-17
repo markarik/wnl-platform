@@ -131,12 +131,12 @@
 			// ...mapActions(['addBreadcrumb', 'removeBreadcrumb']),
 		},
 		created() {
-			this.toggleOverlay(true)
+			this.toggleOverlay({source: 'course', display: true})
 			this.setup(this.courseId)
-				.then(() => this.toggleOverlay(false))
+				.then(() => this.toggleOverlay({source: 'course', display: false}))
 				.catch((error) => {
 					$wnl.logger.error(error)
-					this.toggleOverlay(false)
+					this.toggleOverlay({source: 'course', display: false})
 				})
 		}
 		// mounted() {

@@ -106,14 +106,18 @@ const mutations = {
 // Actions
 const actions = {
 	setup({commit, dispatch}, courseId) {
-		Promise.all([
-			dispatch('setStructure', courseId),
-			dispatch('progress/setupCourse', courseId, {root: true}),
-		]).then(resolutions => {
-			$wnl.logger.debug('Course ready, yay!')
-			commit(types.COURSE_READY)
-		}, reason => {
-			$wnl.logger.error(reason)
+		return new Promise((resolve, reject) => {
+			Promise.all([
+				dispatch('setStructure', courseId),
+				dispatch('progress/setupCourse', courseId, {root: true}),
+			]).then(resolutions => {
+				$wnl.logger.debug('Course ready, yay!')
+				commit(types.COURSE_READY)
+				resolve()
+			}, reason => {
+				$wnl.logger.error(reason)
+				reject()
+			})
 		})
 	},
 	setStructure({commit}, courseId) {

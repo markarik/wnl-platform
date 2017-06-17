@@ -54,14 +54,17 @@ class ApiCache
 	protected function excluded($request)
 	{
 		$excludedTags = ['users', 'profiles', 'reactions', 'orders', 'state', 'tags'];
+
 		$methodExcluded = !in_array($request->method(), ['GET', 'POST']);
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));
 		$urlExcluded = str_is('*current*', $request->getRequestUri());
+		$postExcluded = $request->method() === 'POST' && !str_is('*.search*', $request->getRequestUri());
 
 		return
 			$methodExcluded ||
 			$queryExcluded ||
-			$urlExcluded;
+			$urlExcluded ||
+			$postExcluded;
 	}
 
 	protected function getTags($request)

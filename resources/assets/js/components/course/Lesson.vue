@@ -101,6 +101,7 @@
 			]),
 			breadcrumb() {
 				return {
+					level: 1,
 					text: this.lessonName,
 					to: {
 						name: 'lessons',

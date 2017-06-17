@@ -8,12 +8,15 @@
 				<wnl-vote type="up" count="0" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna-question-content" v-html="content"></div>
+				<div class="qna_wrapper">
+					<div class="qna-question-content" v-html="content"></div>
+					<wnl-bookmark class="qna_bookmark" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-bookmark>
+				</div>
 				<div class="qna-question-meta qna-meta">
 					<wnl-avatar
-						:username="author.full_name"
-						:url="author.avatar"
-						size="medium">
+							:fullName="author.full_name"
+							:url="author.avatar"
+							size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
 						{{author.full_name}} ·
@@ -21,7 +24,7 @@
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
-					<span v-if="isCurrentUserAuthor">
+					<span v-if="isCurrentUserAuthor && !readOnly">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
@@ -34,7 +37,7 @@
 						<div class="level-left">
 							<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
 						</div>
-						<div class="level-right">
+						<div class="level-right" v-if="!readOnly">
 							<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
 								<span>Odpowiedz</span>
 								<span class="icon is-small answer-icon">
@@ -52,12 +55,13 @@
 							@submitSuccess="onSubmitSuccess">
 						</wnl-qna-new-answer-form>
 					</transition>
-					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId"></wnl-qna-answer>
+					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly"></wnl-qna-answer>
 					<wnl-qna-answer v-if="allAnswers"
 						v-for="answer in otherAnswers"
 						:answer="answer"
 						:questionId="questionId"
-						:key="answer.id">
+						:key="answer.id"
+						:readOnly="readOnly">
 					</wnl-qna-answer>
 					<a class="button is-small is-wide qna-answers-show-all"
 						v-if="!allAnswers && otherAnswers.length > 0"
@@ -90,6 +94,8 @@
 	.qna-question-content
 		font-weight: $font-weight-bold
 		font-size: $font-size-plus-1
+		justify-content: flex-start
+		width: 100%
 
 		strong
 			font-weight: $font-weight-black
@@ -99,6 +105,14 @@
 
 	.qna-answers-show-all
 		margin-top: $margin-huge
+
+	.qna_wrapper
+		display: flex
+		align-items: flex-start
+
+	.qna_bookmark
+		justify-content: flex-end
+
 </style>
 
 <script>
@@ -109,7 +123,8 @@
 	import Delete from 'js/components/global/form/Delete'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
-	import Vote from 'js/components/qna/Vote'
+	import Vote from 'js/components/global/reactions/Vote'
+	import Bookmark from 'js/components/global/reactions/Bookmark'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -120,8 +135,9 @@
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
+			'wnl-bookmark': Bookmark,
 		},
-		props: ['questionId'],
+		props: ['questionId', 'readOnly'],
 		data() {
 			return {
 				allAnswers: false,

@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
 		Commands\QuizImport::class,
 		Commands\SlidesImport::class,
 		Commands\DumpCourseStructure::class,
+		Commands\WarmUpCache::class,
     ];
 
     /**
@@ -37,8 +38,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+		$schedule
+			->command('chat:archive-messages')
+			->hourly();
+
+		$schedule
+			->command('cache:warmup')
+			->dailyAt('03:30');
     }
 
     /**

@@ -44,6 +44,7 @@ const getters = {
 		return lessons
 	},
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
+	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
 	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),
@@ -105,14 +106,18 @@ const mutations = {
 // Actions
 const actions = {
 	setup({commit, dispatch}, courseId) {
-		Promise.all([
-			dispatch('setStructure', courseId),
-			dispatch('progress/setupCourse', courseId, {root: true}),
-		]).then(resolutions => {
-			$wnl.logger.debug('Course ready, yay!')
-			commit(types.COURSE_READY)
-		}, reason => {
-			$wnl.logger.error(reason)
+		return new Promise((resolve, reject) => {
+			Promise.all([
+				dispatch('setStructure', courseId),
+				dispatch('progress/setupCourse', courseId, {root: true}),
+			]).then(resolutions => {
+				$wnl.logger.debug('Course ready, yay!')
+				commit(types.COURSE_READY)
+				resolve()
+			}, reason => {
+				$wnl.logger.error(reason)
+				reject()
+			})
 		})
 	},
 	setStructure({commit}, courseId) {

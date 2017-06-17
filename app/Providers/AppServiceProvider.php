@@ -2,27 +2,22 @@
 
 namespace App\Providers;
 
-use App\Models\Comment;
-use App\Models\Lesson;
-use App\Models\Order;
-use App\Models\QnaAnswer;
-use App\Models\QnaQuestion;
-use App\Models\User;
-use App\Observers\CommentObserver;
-use App\Observers\LessonObserver;
-use App\Observers\OrderObserver;
-use App\Observers\QnaAnswerObserver;
-use App\Observers\QnaQuestionObserver;
-use App\Observers\UserObserver;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\ServiceProvider;
-use Laravel\Dusk\DuskServiceProvider;
-use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
-use Laravel\Tinker\TinkerServiceProvider;
+use App;
 use Log;
 use Validator;
-use Monolog\Formatter\LineFormatter;
+use App\Models\Lesson;
+use App\Models\Order;
+use App\Models\User;
+use App\Observers\UserObserver;
+use App\Observers\OrderObserver;
+use App\Observers\LessonObserver;
 use Monolog\Handler\RavenHandler;
+use Illuminate\Support\Facades\Auth;
+use Monolog\Formatter\LineFormatter;
+use Laravel\Dusk\DuskServiceProvider;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Tinker\TinkerServiceProvider;
+use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,38 +31,14 @@ class AppServiceProvider extends ServiceProvider
 		Order::observe(OrderObserver::class);
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
-//		QnaAnswer::observe(QnaAnswerObserver::class);
-//		QnaQuestion::observe(QnaQuestionObserver::class);
-//		Comment::observe(CommentObserver::class);
 
-
-		// Send slack notifications when a critical or higher level error occurs
-//		$monolog = Log::getMonolog();
-//		$token = env('ERROR_REPORTER_SLACK_TOKEN');
-//		$chanel = env('ERROR_REPORTER_SLACK_CHANNEL');
-//		$level = \Monolog\Logger::CRITICAL;
-//		$slackHandler = new \Monolog\Handler\SlackHandler($token, $chanel, 'Error Reporter', true, null, $level);
-//		$monolog->pushHandler($slackHandler);
-
-		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')));
-		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
-		$monolog = Log::getMonolog();
-		$monolog->pushHandler($handler);
-
-		$monolog->pushProcessor(function ($record) {
-			// record the current user
-			$user = Auth::user();
-			if ($user) {
-				$record['context']['user'] = [
-					'email' => $user->email,
-				];
-			}
-
-			return $record;
-		});
+		if ($this->useExternalLogger()) {
+			$this->addSentryLogger();
+		}
 
 		/**
 		 * Custom validation rules
+		 * TODO: Custom validators should have their own service provider (?)
 		 */
 		Validator::extend('alpha_spaces', function ($attribute, $value) {
 			// Useful for names and surnames - accept letters, spaces and hyphens
@@ -92,5 +63,30 @@ class AppServiceProvider extends ServiceProvider
 		if (env('DEBUG_BAR') === true) {
 			$this->app->register(DebugBarServiceProvider::class);
 		}
+	}
+
+	public function addSentryLogger()
+	{
+		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')));
+		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
+		$monolog = Log::getMonolog();
+		$monolog->pushHandler($handler);
+
+		$monolog->pushProcessor(function ($record) {
+			// record the current user
+			$user = Auth::user();
+			if ($user) {
+				$record['context']['user'] = [
+					'email' => $user->email,
+				];
+			}
+
+			return $record;
+		});
+	}
+
+	public function useExternalLogger()
+	{
+		return !App::environment('dev') && env('LOG_LEVEL') !== 'debug';
 	}
 }

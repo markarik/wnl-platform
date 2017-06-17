@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\Concerns;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Collection;
 use Illuminate\Database\QueryException;
@@ -65,6 +66,29 @@ trait PerformsApiSearches
 	}
 
 	/**
+	 * Process 'hasIn' conditions and apply to query builder.
+	 *
+	 * @param $model
+	 * @param $relationConditions
+	 *
+	 * @return mixed
+	 */
+	protected function parseHasIn($model, $relationConditions)
+	{
+		foreach ($relationConditions as $field => $conditions) {
+			foreach ($conditions[1] as $element) {
+				$model = $model->whereHas(camel_case($field),
+					function ($query) use ($conditions, $element) {
+						$query->where($conditions[0], $element);
+					}
+				);
+			}
+		}
+
+		return $model;
+	}
+
+	/**
 	 * Parse order rules and apply to query builder.
 	 *
 	 * @param $model
@@ -108,7 +132,7 @@ trait PerformsApiSearches
 	 */
 	protected function applyFilters($model, $request)
 	{
-		$query = $request->get('query');
+		$query = $this->parseTime($request->get('query'));
 		$order = $request->get('order');
 		$limit = $request->get('limit');
 		$join = $request->get('join');
@@ -123,6 +147,10 @@ trait PerformsApiSearches
 
 		if (!empty ($query['whereHas'])) {
 			$model = $this->parseWhereHas($model, $query['whereHas']);
+		}
+
+		if (!empty ($query['hasIn'])) {
+			$model = $this->parseHasIn($model, $query['hasIn']);
 		}
 
 		if (!empty ($order)) {
@@ -141,6 +169,18 @@ trait PerformsApiSearches
 		}
 
 		return $model;
+	}
+
+	protected function parseTime($array)
+	{
+		// Prezes, pamiętaj, to jest bardzo brzydka szpachla, nie rób tak.
+		return array_map(function ($v) {
+			if (is_array($v)) return $this->parseTime($v);
+			if (str_is('timestamp:*', $v))
+				return Carbon::createFromTimestamp(str_replace('timestamp:', '', $v));
+
+			return $v;
+		}, $array);
 	}
 
 }

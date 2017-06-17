@@ -1,6 +1,12 @@
 <template lang="html">
 	<div class="scrollable-main-container">
-		<h1>Ustawienia</h1>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Ustawienia
+				</div>
+			</div>
+		</div>
 
 		<wnl-form class="margin vertical"
 			name="Settings"
@@ -9,8 +15,8 @@
 			populate="true"
 			hideDefaultSubmit="true"
 			@submitSuccess="onSubmitSuccess">
-			<wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check>
-			<wnl-form-check name="notify_live">Otrzymuj powiadomienia w przeglądarce</wnl-form-check>
+			<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check>
+			<wnl-form-check name="notify_live">Otrzymuj powiadomienia w przeglądarce</wnl-form-check> -->
 			<wnl-form-check name="chat_on">Chat włączony</wnl-form-check>
 			<wnl-form-check name="skip_functional_slides">Pomijaj slajdy funkcjonalne</wnl-form-check>
 		</wnl-form>
@@ -18,9 +24,9 @@
 </template>
 
 <script>
-	import {mapGetters, mapActions} from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
-	import {Form, Check, Text} from 'js/components/global/form'
+	import { Form, Check, Text } from 'js/components/global/form'
 	import Toggler from 'js/components/global/Toggler'
 
 	export default {

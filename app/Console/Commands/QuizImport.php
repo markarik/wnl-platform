@@ -96,11 +96,8 @@ class QuizImport extends Command
 			]);
 		}
 
-		$tagNames = [
-			'LEK-' . $values[8],
-			$values[9],
-			$values[11],
-		];
+		$tagNames = ['LEK-' . $values[8], $values[9]];
+		$tagNames = array_merge($tagNames, explode('/', $values[11]));
 
 		foreach ($tagNames as $tagName) {
 			$tag = Tag::firstOrCreate(['name' => $tagName]);

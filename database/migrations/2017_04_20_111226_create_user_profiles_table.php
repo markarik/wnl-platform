@@ -22,7 +22,6 @@ class CreateUserProfilesTable extends Migration
 			$table->string('public_phone')->nullable();
 			$table->string('username')->nullable()->unique();
 			$table->string('avatar')->nullable();
-			$table->json('personal_settings')->nullable();
 			$table->timestamps();
 		});
 	}

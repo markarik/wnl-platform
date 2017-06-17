@@ -4,7 +4,7 @@ import * as types from 'js/store/mutations-types'
 import { getApiUrl } from 'js/utils/env'
 
 export const reactionsGetters = {
-  getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction],
+	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction],
 }
 
 export const reactionsMutations = {

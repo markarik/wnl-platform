@@ -19,14 +19,13 @@
 				</div>
 			</div>
 			<div class="margin top slideshow-menu">
-				<div class="slideshow-annotations" v-if="!isLoading">
-					<wnl-annotations
-						:currentSlide="currentSlideNumber"
-						:slideshowId="slideshowId"
-						@commentsHidden="onCommentsHidden"
-						@annotationsUpdated="onAnnotationsUpdated"
-					></wnl-annotations>
-				</div>
+				<wnl-annotations
+					v-if="!isLoading"
+					:currentSlide="currentSlideNumber"
+					:slideshowId="slideshowId"
+					@commentsHidden="onCommentsHidden"
+					@annotationsUpdated="onAnnotationsUpdated"
+				></wnl-annotations>
 			</div>
 		</div>
 	</div>
@@ -98,9 +97,6 @@
 
 	.slideshow-menu
 		display: flex
-
-		.slideshow-annotations
-			flex: 1 auto
 
 		.slideshow-fullscreen
 			flex: 0
@@ -176,11 +172,13 @@
 		},
 		methods: {
 			...mapActions('slideshow', ['setup']),
+			...mapActions(['toggleOverlay']),
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
 				} else {
 					this.isFauxFullscreen = !this.isFauxFullscreen
+					this.child.call('toggleFullscreen', this.isFauxFullscreen)
 				}
 				this.focusSlideshow()
 			},
@@ -212,6 +210,7 @@
 			},
 			initSlideshow() {
 				$wnl.logger.debug('Initiating slideshow')
+				this.toggleOverlay({source: 'slideshow', display: true})
 				handshake = new Postmate({
 					container: this.container,
 					url: this.slideshowUrl
@@ -232,6 +231,7 @@
 				}).catch(exception => $wnl.logger.capture(exception))
 			},
 			messageEventListener(event) {
+
 				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
 					try {
 						let data = JSON.parse(event.data)
@@ -251,10 +251,13 @@
 						this.slideChanged = false
 					} catch (error) { $wnl.logger.error(error) }
 				} else if (typeof event.data === 'object' &&
-					event.data.hasOwnProperty('value') &&
-					event.data.value.name === 'toggle-fullscreen'
+					event.data.hasOwnProperty('value')
 				) {
-					this.toggleFullscreen()
+					if (event.data.value.name === 'toggle-fullscreen') {
+						this.toggleFullscreen()
+					} else if (event.data.value.name === 'loaded') {
+						this.toggleOverlay({source: 'slideshow', display: false})
+					}
 				}
 			},
 			fullscreenChangeHandler(event) {
@@ -324,7 +327,7 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				if (to.params.screenId !== from.params.screenId) {
+				if (to.params.screenId != from.params.screenId) {
 					this.destroySlideshow()
 				}
 

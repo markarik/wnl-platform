@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout wnl-course-layout">
+	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
 		<wnl-sidenav-slot
 			:isVisible="canRenderSidenav"
 			:isDetached="!isSidenavMounted"
@@ -12,18 +12,19 @@
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<router-view v-if="ready"></router-view>
+			<router-view></router-view>
 		</div>
 		<wnl-sidenav-slot
 			:isVisible="isChatVisible"
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
+		<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-comments-o"></i>
+				<i class="fa fa-chevron-left"></i>
+				<span>Pokaż czat</span>
 			</span>
 		</div>
 	</div>
@@ -41,21 +42,9 @@
 		position: relative
 
 	.wnl-course-chat
-		flex: $course-chat-flex auto
 		max-width: $course-chat-max-width
 		min-width: $course-chat-min-width
-
-	.wnl-chat-toggle
-		align-items: flex-start
-		border-left: $border-light-gray
-		display: flex
-		flex-grow: 0
-		justify-content: center
-		padding: 20px
-
-		.icon
-			color: $color-gray-dimmed
-			cursor: pointer
+		width: $course-chat-width
 </style>
 
 <script>
@@ -76,7 +65,7 @@
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
-			...mapGetters('course', ['ready']),
+			...mapGetters('course', ['ready', 'getLesson']),
 			...mapGetters([
 				'isSidenavVisible',
 				'isSidenavMounted',
@@ -102,16 +91,20 @@
 				}
 			},
 			isLesson() {
-				return typeof this.lessonId !== 'undefined'
+				return typeof this.lessonId !== 'undefined' && this.getLesson(this.lessonId).isAvailable
 			},
 			chatRooms() {
 				let chatRoom = `courses-${this.courseId}`
 				if (this.isLesson) {
 					chatRoom += `-lessons-${this.lessonId}`
+					return [
+						{name: '#nauka', channel: chatRoom},
+						{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+					]
 				}
+
 				return [
-					{name: '#powaga', channel: chatRoom},
-					{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+					{name: '#aula', channel: chatRoom},
 				]
 			},
 			localStorageKey() {
@@ -134,11 +127,17 @@
 			...mapActions('course', [
 				'setup'
 			]),
-			...mapActions(['toggleChat', 'initChat'])
+			...mapActions(['toggleChat', 'toggleOverlay'])
 			// ...mapActions(['addBreadcrumb', 'removeBreadcrumb']),
 		},
 		created() {
+			this.toggleOverlay({source: 'course', display: true})
 			this.setup(this.courseId)
+				.then(() => this.toggleOverlay({source: 'course', display: false}))
+				.catch((error) => {
+					$wnl.logger.error(error)
+					this.toggleOverlay({source: 'course', display: false})
+				})
 		}
 		// mounted() {
 		// 	this.addBreadcrumb({

@@ -1,6 +1,12 @@
 <template lang="html">
 	<div class="scrollable-main-container">
-		<h1>Dane do faktury</h1>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Dane do faktury
+				</div>
+			</div>
+		</div>
 
 		<wnl-form class="margin vertical" name="MyBillingData" method="put" resourceRoute="users/current/billing" populate="true">
 			<wnl-form-text name="company_name">Nazwa firmy</wnl-form-text>

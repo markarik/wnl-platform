@@ -3,9 +3,9 @@
 		<div class="qna-container">
 			<div class="qna-meta qna-comment-meta">
 				<wnl-avatar
-				:username="author.full_name"
-				:url="author.avatarUrl"
-				size="small">
+						:fullName="author.full_name"
+						:url="author.avatarUrl"
+						size="small">
 				</wnl-avatar>
 				<span class="qna-meta-info">
 					{{author.username}} ·
@@ -13,7 +13,7 @@
 				<span class="qna-meta-info">
 					{{time}}
 				</span>
-				<span v-if="isCurrentUserAuthor">
+				<span v-if="isCurrentUserAuthor && !readOnly">
 					&nbsp;·&nbsp;<wnl-delete
 						:target="deleteTarget"
 						:requestRoute="resourceRoute"
@@ -55,7 +55,7 @@
 		components: {
 			'wnl-delete': Delete,
 		},
-		props: ['comment', 'answerId'],
+		props: ['comment', 'answerId', 'readOnly'],
 		computed: {
 			...mapGetters('qna', [
 				'profile'

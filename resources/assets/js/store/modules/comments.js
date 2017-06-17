@@ -32,6 +32,9 @@ export const commentsMutations = {
 		}
 
 		set(state.comments, comment.id, comment)
+		if (!state[resource][resourceId].hasOwnProperty('comments')) {
+			set(state[resource][resourceId], 'comments', [])
+		}
 		state[resource][resourceId].comments.push(comment.id)
 	},
 	[types.REMOVE_COMMENT] (state, payload) {

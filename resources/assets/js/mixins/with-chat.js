@@ -6,13 +6,13 @@ const withChat = {
 		...mapActions(['initChat', 'killChat'])
 	},
 
-	beforeRouteEnter(from, to, next) {
+	beforeRouteEnter(to, from, next) {
 		next(vm => {
 			vm.initChat()
 		})
 	},
 
-	beforeRouteLeave(from, to, next) {
+	beforeRouteLeave(to, from, next) {
 		this.killChat()
 		next();
 	}

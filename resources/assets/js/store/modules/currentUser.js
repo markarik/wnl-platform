@@ -1,7 +1,7 @@
 import * as types from '../mutations-types'
-import {getApiUrl} from 'js/utils/env'
-import {getCurrentUser, getUserSettings, getDefaultSettings} from 'js/services/user';
-import {set} from 'vue'
+import { getApiUrl } from 'js/utils/env'
+import { getCurrentUser, getUserSettings, getDefaultSettings, setUserSettings } from 'js/services/user';
+import { set } from 'vue'
 
 // Initial state
 const state = {
@@ -42,6 +42,11 @@ const mutations = {
 	[types.USERS_SETUP_CURRENT] (state, userData) {
 		set(state, 'profile', userData)
 	},
+	[types.USERS_UPDATE_CURRENT] (state, userData) {
+		Object.keys(userData).forEach((key) => {
+			set(state.profile, key, userData[key])
+		})
+	},
 	[types.USERS_SETUP_SETTINGS] (state, settings) {
 		set(state, 'settings', settings)
 	},
@@ -52,7 +57,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	setupCurrentUser({commit, dispatch}) {
+	setupCurrentUser({ commit, dispatch }) {
 		Promise
 			.all([
 				dispatch('fetchCurrentUserProfile'),
@@ -65,7 +70,7 @@ const actions = {
 			})
 	},
 
-	fetchCurrentUserProfile({commit}) {
+	fetchCurrentUserProfile({ commit }) {
 		return new Promise((resolve, reject) => {
 			getCurrentUser().then((response) => {
 				commit(types.USERS_SETUP_CURRENT, response.data)
@@ -78,7 +83,7 @@ const actions = {
 		})
 	},
 
-	fetchUserSettings({commit}) {
+	fetchUserSettings({ commit }) {
 		return new Promise((resolve, reject) => {
 			getUserSettings().then((response) => {
 				commit(types.USERS_SETUP_SETTINGS, response.data)
@@ -91,8 +96,27 @@ const actions = {
 		})
 	},
 
-	changeUserSetting({commit}, payload) {
+	updateCurrentUser({commit}, userData) {
+		commit(types.USERS_UPDATE_CURRENT, userData)
+	},
+
+	changeUserSetting({ commit }, payload) {
 		commit(types.USERS_CHANGE_SETTING, payload)
+	},
+
+	changeUserSettingAndSync({ commit, dispatch }, payload) {
+		dispatch("changeUserSetting", payload)
+		dispatch("syncSettings")
+	},
+
+	toggleChat({ dispatch, getters }) {
+		dispatch("changeUserSettingAndSync", {
+			setting: "chat_on", value: !getters.getSetting("chat_on")
+		})
+	},
+
+	syncSettings({ commit, getters }) {
+		setUserSettings(getters.getAllSettings)
 	}
 }
 

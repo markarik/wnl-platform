@@ -18,10 +18,15 @@
 	.wnl-sidenav-slot
 		border-right: $border-light-gray
 		display: flex
+		width: $sidenav-width
 
 		&.has-chat
 			border-left: $border-light-gray
-			flex-grow: 2
+			flex-direction: column
+			width: $course-chat-width
+
+			.sidenav-content
+				flex: 1
 
 		.sidenav-content
 			display: flex
@@ -36,10 +41,13 @@
 		position: fixed
 		right: 0
 		top: $navbar-height
+		width: initial
 		z-index: $z-index-sidenav-slot
 
 		&.has-chat
+			flex-direction: row
 			justify-content: flex-end
+			width: initial
 
 			.sidenav-content
 				max-width: 600px
@@ -51,12 +59,14 @@
 			max-width: 400px
 			width: 100%
 
-		.course-sidenav
+		.course-sidenav,
+		.help-sidenav
 			max-width: none
 			width: auto
 
 		.wnl-sidenav,
-		.course-sidenav
+		.course-sidenav,
+		.help-sidenav
 			padding: 0
 </style>
 

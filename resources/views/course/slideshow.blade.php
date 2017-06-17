@@ -3,7 +3,7 @@
 <head>
 	<title>Slideshow</title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="{{ mix('/css/reveal.css') }}" rel="stylesheet">
 	<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
 	<link href="{{ mix('/css/imageviewer.css') }}" rel="stylesheet">
@@ -44,7 +44,7 @@
 		<div class="slideshow-annotations" style="display: none;">
 			<div class="annotations-title">Komentarze do slajdu (<span class="annotations-count">0</span>)</div>
 			<div class="annotations-to-slide"></div>
-			<a class="annotations-new-comment">Skomentuj</a>
+			{{-- <a class="annotations-new-comment">Skomentuj</a> --}}
 		</div>
 		<a class="toggle-fullscreen rounded-button without-image">
 			<img class="fs-close" src="{{ asset('images/close-fullscreen.svg') }}" alt="Zamknij pełen ekran">

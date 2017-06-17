@@ -13,7 +13,7 @@ class ReactionsTest extends ApiTestCase
 	use DatabaseTransactions;
 
 	/** @test */
-	public function post_reaction()
+	public function post_reaction_with_context()
 	{
 		$user = User::find(1);
 
@@ -21,6 +21,26 @@ class ReactionsTest extends ApiTestCase
 			'reactable_resource' => config('papi.resources.answers'),
 			'reactable_id'       => 2,
 			'reaction_type'      => 'thanks',
+			'context'            => '{"very": "cool", "json": {"data": "or", "whatever": true}}',
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/reactions'), $data);
+
+		$response
+			->assertStatus(201);
+	}
+
+	/** @test */
+	public function post_reaction_to_slide()
+	{
+		$user = User::find(1);
+
+		$data = [
+			'reactable_resource' => config('papi.resources.slides'),
+			'reactable_id'       => 100,
+			'reaction_type'      => 'bookmark',
 		];
 
 		$response = $this

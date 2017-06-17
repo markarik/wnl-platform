@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-	<!-- <div> -->
-		<div class="wnl-lesson">
+		<!-- <div> -->
+		<div class="wnl-lesson" v-if="lesson.isAvailable">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
 					<div class="level-left">
@@ -11,7 +11,7 @@
 					</div>
 					<div class="level-right">
 						<div class="level-item small">
-							Lekcja {{lessonId}}
+							Lekcja {{lessonNumber}}
 						</div>
 					</div>
 				</div>
@@ -20,6 +20,15 @@
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
 			</div>
+		</div>
+		<div v-else>
+			<h3 class="has-text-centered">O nie! Ta lekcja nie jest jeszcze dostępna!</h3>
+			<p class="has-text-centered margin vertical">
+				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"></img>
+			</p>
+			<p class="has-text-centered">
+				<router-link to="/" class="button is-outlined is-primary">Wróć do auli</router-link>
+			</p>
 		</div>
 	</div>
 </template>
@@ -51,9 +60,9 @@
 	import _ from 'lodash'
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import PreviousNext from 'js/components/course/PreviousNext'
-	import { mapGetters, mapActions } from 'vuex'
-	import { resource } from 'js/utils/config'
-	import { breadcrumb } from 'js/mixins/breadcrumb'
+	import {mapGetters, mapActions} from 'vuex'
+	import {resource} from 'js/utils/config'
+	import {breadcrumb} from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
 	import {STATUS_COMPLETE} from '../../services/progressStore';
 
@@ -63,7 +72,7 @@
 			'wnl-previous-next': PreviousNext,
 			'wnl-breadcrumbs': Breadcrumbs,
 		},
-		mixins: [ breadcrumb ],
+		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		data() {
 			return {
@@ -74,7 +83,7 @@
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-				 elementHeight: this.$parent.$el.offsetHeight
+				elementHeight: this.$parent.$el.offsetHeight
 			}
 		},
 		computed: {
@@ -102,8 +111,14 @@
 					}
 				}
 			},
+			lesson() {
+				return this.getLesson(this.lessonId)
+			},
 			lessonName() {
-				return this.getLesson(this.lessonId).name
+				return this.lesson.name
+			},
+			lessonNumber() {
+				return this.lesson.order_number
 			},
 			screens() {
 				return this.getScreens(this.lessonId)
@@ -112,10 +127,10 @@
 				return this.getScreen(this.screenId);
 			},
 			sectionsReversed() {
-				const sectionsIds = this.currentScreen.sections;
+				const sectionsIds = this.currentScreen && this.currentScreen.sections;
 
 				if (!sectionsIds) {
-					return;
+					return [];
 				}
 
 				const sections = this.getSections(sectionsIds);
@@ -151,10 +166,13 @@
 		methods: {
 			...mapActions('progress', [
 				'startLesson',
-				'updateLesson',
 				'completeLesson',
 				'completeScreen',
-				'completeSection'
+				'completeSection',
+				'saveLessonProgress'
+			]),
+			...mapActions([
+				'updateLessonNav'
 			]),
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
@@ -191,12 +209,19 @@
 					}
 					this.$router.replace({name: resource('screens'), params})
 				}
+
+				this.updateLessonNav({
+					activeSection: (this.currentSection && this.currentSection.id) || 0,
+					activeScreen: parseInt(this.screenId)
+				});
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
+					let updateProgress = false;
 					if (this.hasSections && this.currentSection) {
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
+							updateProgress = true;
 						}
 					}
 
@@ -206,9 +231,16 @@
 						if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {
 							this.completeLesson(this.lessonProgressContext)
 						}
+
+						updateProgress = true;
 					}
 
-					this.updateLesson(this.lessonProgressContext)
+					updateProgress && this.saveLessonProgress(this.lessonProgressContext);
+
+					this.updateLessonNav({
+						activeSection: (this.currentSection && this.currentSection.id) || 0,
+						activeScreen: parseInt(this.screenId) || 0
+					})
 				}
 			},
 			updateElementHeight() {

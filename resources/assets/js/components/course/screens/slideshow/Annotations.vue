@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="slideshow-annotations" :class="{'is-mobile': isMobile}">
 		<p class="metadata">Komentarze do slajdu</p>
 		<wnl-comments-list
 			v-if="currentSlideId > 0"
@@ -12,6 +12,17 @@
 		></wnl-comments-list>
 	</div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
+	.slideshow-annotations
+		flex: 1 auto
+		margin: 0 $margin-huge
+
+		&.is-mobile
+			margin: 0
+</style>
 
 <script>
 	import {mapGetters} from 'vuex'
@@ -28,6 +39,7 @@
 			currentSlide: Number,
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			...mapGetters('slideshow', ['getSlideId']),
 			currentSlideId() {
 				return this.getSlideId(this.currentSlide - 1)

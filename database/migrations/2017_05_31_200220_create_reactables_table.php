@@ -18,6 +18,7 @@ class CreateReactablesTable extends Migration
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('reaction_id');
 			$table->morphs('reactable');
+			$table->json('context')->nullable();
 			$table->timestamps();
 
 			$table->unique(

@@ -5,12 +5,13 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="wnl-sidenav wnl-left-content">
-				<wnl-sidenav :items="items" :breadcrumbs="breadcrumbs"></wnl-sidenav>
+			<aside class="myself-sidenav">
+				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}">
-			<router-view></router-view>
+		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
+			<router-view v-if="!isMainRoute"></router-view>
+			<wnl-my-profile v-else></wnl-my-profile>
 		</div>
 	</div>
 </template>
@@ -18,18 +19,37 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.myself-sidenav
+		flex: 1
+
 	.wnl-sidenav
-		padding: $margin-small
+		flex: 1
+		padding: 7px 0
+
+		&.mobile
+			padding: 0
+
+	.mobile-main
+		overflow-y: auto
 </style>
 
 <script>
-	import Sidenav from 'js/components/global/Sidenav.vue'
-	import { isProduction } from 'js/utils/env'
-	import { mapGetters } from 'vuex'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import { mapActions, mapGetters } from 'vuex'
+
 	import MainNav from 'js/components/MainNav'
+	import MyProfile from 'js/components/user/MyProfile'
+	import Sidenav from 'js/components/global/Sidenav'
+	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import { isProduction } from 'js/utils/env'
 
 	export default {
+		name: 'Myself',
+		components: {
+			'wnl-main-nav': MainNav,
+			'wnl-my-profile': MyProfile,
+			'wnl-sidenav': Sidenav,
+			'wnl-sidenav-slot': SidenavSlot,
+		},
 		props: ['view'],
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
@@ -116,54 +136,19 @@
 					// },
 				]
 
-				if (this.isProduction) {
-					items.push({
-						text: 'Kiedy kurs?',
-						itemClass: 'has-icon',
-						to: {
-							name: 'countdown',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-question',
-						iconTitle: 'Kiedy kurs?',
-					})
-				}
-
 				return items
 			},
-			breadcrumbs() {
-				let breadcrumbs = [
-					{
-						text: 'Plan lekcji',
-						itemClass: 'has-icon',
-						to: {
-							name: 'dashboard',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-home',
-						iconTitle: 'Plan lekcji',
-					},
-				]
-
-				return breadcrumbs
-			}
+			isMainRoute() {
+				return this.$route.name === 'myself'
+			},
 		},
 		methods: {
+			...mapActions(['killChat']),
 			goToDefaultRoute() {
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
 				}
 			}
 		},
-		components: {
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav
-		},
-		// mounted() { this.goToDefaultRoute() }
 	}
 </script>

@@ -1,19 +1,40 @@
 <template>
 	<li class="item" :class="[itemClass, { disabled: isDisabled }]">
-		<span class="icon is-small" v-if="isTodo">
-			<i title="W trakcie..." class="fa fa-square-o" v-if="isInProgress"></i>
-			<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
-			<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
-		</span>
-		<span class="icon is-small" v-if="hasIcon">
-			<i :title="iconTitle" class="fa" :class="iconClass"></i>
-		</span>
-		<router-link v-if="isLink" :to="to" :replace="replace"
-		             :class="{'is-active': isActive, 'is-disabled': isDisabled}">
-			<slot></slot>
+		<router-link
+			v-if="isLink"
+			:to="to"
+			:replace="replace"
+			class="item-wrapper"
+			:class="{'is-active': active, 'is-disabled': isDisabled, 'is-completed': completed}"
+		>
+			<div class="sidenav-icon-wrapper">
+				<span class="icon is-small" v-if="isTodo">
+					<i title="W trakcie..." class="fa fa-ellipsis-h" v-if="isInProgress"></i>
+					<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
+					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
+				</span>
+				<span class="icon is-small" v-if="hasIcon">
+					<i :title="iconTitle" class="fa" :class="iconClass"></i>
+				</span>
+			</div>
+			<span class="sidenav-item-content">
+				<slot></slot>
+			</span>
 		</router-link>
-		<span v-else>
-			<slot></slot>
+		<span v-else class="item-wrapper">
+			<div class="sidenav-icon-wrapper">
+				<span class="icon is-small" v-if="isTodo">
+					<i title="W trakcie..." class="fa fa-ellipsis-h" v-if="isInProgress"></i>
+					<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
+					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
+				</span>
+				<span class="icon is-small" v-if="hasIcon">
+					<i :title="iconTitle" class="fa" :class="iconClass"></i>
+				</span>
+			</div>
+			<span class="sidenav-item-content">
+				<slot></slot>
+			</span>
 		</span>
 	</li>
 </template>
@@ -21,8 +42,11 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.has-icon
+	.item-wrapper
+		height: 100%
+		width: 100%
 
+	.has-icon
 		.icon
 			color: $color-inactive-gray
 
@@ -31,19 +55,24 @@
 		margin-top: -1px
 		margin-right: $margin-tiny
 
-	.subitem
-		margin-left: $margin-small
+	.sidenav-icon-wrapper
+		margin-right: 5px
 
+		.icon
+			margin-top: 0
+
+	a.is-active
+		font-weight: $font-weight-black
+
+	a.is-completed:after
+		content: '✓'
+		margin-left: $margin-tiny
+
+	.subitem
 		&::after
 
 		.icon.is-small
 			margin-right: 0
-
-		a.is-active
-			font-weight: $font-weight-black
-
-			&::after
-				content: '✓'
 </style>
 
 <script>
@@ -51,7 +80,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed'],
+		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed', 'active'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
@@ -70,11 +99,6 @@
 			},
 			hasIcon() {
 				return this.hasClass('has-icon')
-			},
-			isActive() {
-				if (this.hasClass('subitem')) {
-					return this.completed
-				}
 			},
 		},
 		methods: {

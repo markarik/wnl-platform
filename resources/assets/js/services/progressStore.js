@@ -1,8 +1,7 @@
-import store from 'store'
+import store from './sessionStore';
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 import {getCurrentUser} from './user';
-
 
 // TODO: Mar 9, 2017 - Use config when it's ready
 export const STATUS_IN_PROGRESS = 'in-progress';
@@ -44,10 +43,13 @@ const setLessonProgress = ({courseId, lessonId}, value) => {
 	})
 };
 
-const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
+const completeSection = (lessonState, {screenId, sectionId, route}) => {
 	const updatedState = lessonState ? {...lessonState} : {};
 
+	updatedState.route = route;
+
 	updatedState.screens = updatedState.screens || {};
+
 	if (!updatedState.screens[screenId]) {
 		updatedState.screens[screenId] = {
 			status: STATUS_IN_PROGRESS
@@ -65,41 +67,27 @@ const completeSection = (lessonState, {screenId, sectionId, ...rest}) => {
 		}
 	}
 
-	setLessonProgress(rest, updatedState);
-
 	return updatedState;
 };
 
-const completeScreen = (lessonState, {screenId, ...rest}) => {
+const completeScreen = (lessonState, {screenId, route}) => {
 	const updatedState = {...lessonState};
+
+	updatedState.route = route;
 
 	updatedState.screens = lessonState.screens || {};
 	updatedState.screens[screenId] = updatedState.screens[screenId] || {};
 	updatedState.screens[screenId].status = STATUS_COMPLETE;
 
-	setLessonProgress(rest, updatedState);
-
-	return updatedState;
-};
-
-const updateLesson = (lessonState, {route, ...rest}) => {
-	const updatedState = {
-		...lessonState,
-		route
-	};
-
-	setLessonProgress(rest, updatedState);
 	return updatedState;
 };
 
 const completeLesson = (lessonState, payload) => {
-	const updatedState = {
+	return {
 		...lessonState,
-		status: STATUS_COMPLETE
+		status: STATUS_COMPLETE,
+		route: payload.route
 	};
-
-	setLessonProgress(payload, updatedState);
-	return updatedState;
 };
 
 const startLesson = (lessonState, {route, ...payload}) => {
@@ -182,10 +170,10 @@ export default {
 	getCourseProgress,
 	setCourseProgress,
 	getLessonProgress,
+	setLessonProgress,
 	resetLessonProgress,
 	completeSection,
 	completeScreen,
 	completeLesson,
-	updateLesson,
 	startLesson
 };

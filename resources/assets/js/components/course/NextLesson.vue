@@ -12,22 +12,6 @@
 			<p class="name">{{ lessonName }}</p>
 			<router-link :to="to" class="button" :class="buttonClass">{{ callToAction }}</router-link>
 		</div>
-		<div v-else>
-			<!-- TODO: Mar 22, 2017 - Obviously, we have to fix it to dynamically calculate availability (a nie "będzie dostępny jutro") -->
-			<p class="strong margin vertical has-text-centered">
-				<span class="margin horizontal"><wnl-emoji name="tada"></wnl-emoji></span>
-					{{ callToAction }}
-				<span class="margin horizontal"><wnl-emoji name="tada"></wnl-emoji></span>
-				<p class="has-text-centered margin vertical">
-					Teraz pozostało się już tylko zapisać <wnl-emoji name="rocket"></wnl-emoji>
-				</p>
-				<p class="has-text-centered margin vertical">
-					<a :href="paymentUrl" class="button is-primary">
-						Zapisz się
-					</a>
-				</p>
-			</p>
-		</div>
 	</div>
 </template>
 
@@ -93,10 +77,6 @@
 				let lesson = { status: STATUS_NONE },
 					inProgressId = this.getFirstLessonIdInProgress(this.courseId)
 
-				if (this.isLessonComplete(this.courseId, 15)) {
-					return lesson
-				}
-
 				if (inProgressId > 0) {
 					lesson = this.getLesson(inProgressId)
 					lesson.status = STATUS_IN_PROGRESS
@@ -115,8 +95,7 @@
 				return lesson
 			},
 			hasNextLesson() {
-				return !this.isLessonComplete(this.courseId, 15) &&
-					this.nextLesson.status !== STATUS_NONE
+				return this.nextLesson.status !== STATUS_NONE
 			},
 			heading() {
 				return this.getParam('heading')
@@ -141,10 +120,6 @@
 						lessonId: this.nextLesson.id,
 					}
 				}
-			},
-			paymentUrl() {
-				// return getUrl('payment/select-product')
-				return 'https://platforma.wiecejnizlek.pl/payment/select-product'
 			},
 		},
 		methods: {

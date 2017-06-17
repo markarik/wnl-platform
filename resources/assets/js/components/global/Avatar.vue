@@ -29,20 +29,20 @@
 
 	export default {
 		name: 'Avatar',
-		props: ['username', 'size', 'url'],
+		props: ['fullName', 'size', 'url'],
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
 				'currentUserAvatar',
 			]),
 			isCurrentUser() {
-				return _.isEmpty(this.username)
+				return _.isEmpty(this.fullName)
 			},
 			isCustom() {
 				return this.isCurrentUser ? this.currentUserAvatar !== null : !_.isEmpty(this.url)
 			},
 			usernameToUse() {
-				return this.isCurrentUser ? this.currentUserFullName : this.username
+				return this.isCurrentUser ? this.currentUserFullName : this.fullName
 			},
 			urlToUse() {
 				return this.isCurrentUser ? this.currentUserAvatar : this.url
@@ -57,7 +57,7 @@
 			},
 			colorClass() {
 				if (!this.isCustom) {
-					let colorPosition = (this.initials.charCodeAt(0) - 65) % 16 + 1
+					let colorPosition = (this.initials.charCodeAt(0) - 65) % 15 + 1
 					return `wnl-avatar-color-${colorPosition}`
 				}
 				return ''

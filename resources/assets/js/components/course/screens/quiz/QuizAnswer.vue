@@ -18,7 +18,7 @@
 	</li>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
+<style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
 	.wnl-quiz-question.is-unresolved
@@ -91,7 +91,7 @@
 
 	export default {
 		name: 'QuizAnswer',
-		props: ['answer', 'index', 'questionId', 'totalHits'],
+		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly'],
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
@@ -111,7 +111,7 @@
 			},
 
 			showCorrect() {
-				return this.isComplete && this.isCorrect
+				return this.isCorrect && (this.isComplete || this.readOnly)
 			},
 
 			stats() {

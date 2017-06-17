@@ -6,23 +6,23 @@
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
-		<a class="wnl-main-nav-item">
+		<!-- <router-link class="wnl-main-nav-item" :to="{ name: 'collections' }">
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
 			</span>
 			<span class="text">Kolekcje</span>
-		</a>
-		<a class="wnl-main-nav-item">
-			<span class="icon is-medium">
-				<i class="fa fa-pencil-square-o"></i>
-			</span>
-			<span class="text">Baza pytań</span>
-		</a>
+		</router-link> -->
 		<router-link class="wnl-main-nav-item" :to="{ name: 'myself' }">
 			<span class="icon is-medium">
 				<i class="fa fa-user-o"></i>
 			</span>
 			<span class="text">Konto</span>
+		</router-link>
+		<router-link class="wnl-main-nav-item" :to="{ name: 'help' }">
+			<span class="icon is-medium">
+				<i class="fa fa-heartbeat"></i>
+			</span>
+			<span class="text">Pomoc</span>
 		</router-link>
 	</div>
 </template>

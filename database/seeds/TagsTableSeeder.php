@@ -12,9 +12,11 @@ class TagsTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('tags')->insert([
-			['name' => 'O kursie'],
-			['name' => 'O założeniach'],
-			['name' => 'Reumatologia'],
+			['name' => 'Pomoc w nauce'],
+			['name' => 'Pomoc techniczna'],
+			['name' => 'Błędy'],
+			['name' => 'Nowe funkcje'],
+			['name' => 'Sugestie'],
 		]);
 	}
 }

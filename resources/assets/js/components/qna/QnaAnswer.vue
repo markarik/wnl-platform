@@ -2,15 +2,17 @@
 	<div class="qna-answer-container">
 		<div class="qna-answer">
 			<div class="votes">
-				<wnl-vote type="up" :reactableId="id" reactableResource="qna_answers" module="qna"></wnl-vote>
+				<wnl-vote type="up" :reactableId="id" reactableResource="qna_answers" count="0" module="qna"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna-answer-content" v-html="content"></div>
+				<div class="qna_wrapper">
+					<div class="qna-answer-content" v-html="content"></div>
+				</div>
 				<div class="qna-meta">
 					<wnl-avatar
-						:username="author.full_name"
-						:url="author.avatar"
-						size="medium">
+							:fullName="author.full_name"
+							:url="author.avatar"
+							size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
 						{{author.full_name}} ·
@@ -18,7 +20,7 @@
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
-					<span v-if="isCurrentUserAuthor">
+					<span v-if="isCurrentUserAuthor && !readOnly">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
@@ -32,11 +34,11 @@
 			<p class="qna-title">
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 				Komentarze ({{comments.length}})
-				<span v-if="comments.length > 0"> ·
-					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
-				</span> ·
-				<span>
-					<a class="secondary-link" @click="showCommentForm = true">Skomentuj</a>
+				<span v-if="comments.length > 0">
+					 · <a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				</span>
+				<span v-if="!readOnly">
+					 · <a class="secondary-link" @click="showCommentForm = true">Skomentuj</a>
 				</span>
 			</p>
 			<transition name="fade">
@@ -49,7 +51,8 @@
 				v-for="comment in comments"
 				:answerId="id"
 				:comment="comment"
-				:key="comment.id">
+				:key="comment.id"
+				:readOnly="readOnly">
 			</wnl-qna-comment>
 			<div class="comments-loader" v-if="loading">
 				<wnl-text-loader></wnl-text-loader>
@@ -63,6 +66,10 @@
 
 	.qna-answer-container
 		margin-bottom: $margin-huge
+
+	.qna-answer-content
+		justify-content: flex-start
+		width: 100%
 
 	.qna-answer
 		background: $color-background-lighter-gray
@@ -81,6 +88,14 @@
 
 	.comments-loader
 		margin: $margin-base 0
+
+	.qna_wrapper
+		display: flex
+		align-items: flex-start
+
+	.qna_bookmark
+		justify-content: flex-end
+
 </style>
 
 <script>
@@ -90,7 +105,7 @@
 	import Delete from 'js/components/global/form/Delete'
 	import NewCommentForm from 'js/components/qna/NewCommentForm'
 	import QnaComment from 'js/components/qna/QnaComment'
-	import Vote from 'js/components/qna/Vote'
+	import Vote from 'js/components/global/reactions/Vote'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -102,7 +117,7 @@
 			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
 		},
-		props: ['answer', 'questionId', 'reactableId', 'reactableResource', 'module'],
+		props: ['answer', 'questionId', 'reactableId', 'reactableResource', 'module', 'readOnly'],
 		data() {
 			return {
 				commentsFetched: false,

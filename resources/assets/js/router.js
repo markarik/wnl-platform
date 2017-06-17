@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import { scrollToTop } from 'js/utils/animations'
 import { resource } from 'js/utils/config'
 import { isProduction } from 'js/utils/env'
+import sessionStore from '../js/services/sessionStore';
 
 Vue.use(Router)
 
@@ -62,6 +63,7 @@ if (isProduction()) {
 			name: 'logout',
 			path: '/logout',
 			beforeEnter: () => {
+				sessionStore.clearAll();
 				document.getElementById('logout-form').submit()
 			}
 		},
@@ -75,12 +77,14 @@ if (isProduction()) {
 		{
 			path: '/app/courses/:courseId',
 			component: require('js/components/course/Course.vue'),
+			meta: { keepsNavOpen: true },
 			props: true,
 			children: [
 				{
 					name: resource('courses'),
 					path: '',
 					component: require('js/components/course/Overview.vue'),
+					meta: { keepsNavOpen: true },
 					props: true,
 				},
 				{
@@ -103,8 +107,8 @@ if (isProduction()) {
 			name: 'myself',
 			path: '/app/myself',
 			component: require('js/components/user/Myself.vue'),
+			meta: { keepsNavOpen: true },
 			props: true,
-			redirect: { name: "my-profile" },
 			children: [
 				{
 					name: 'my-orders',
@@ -139,14 +143,66 @@ if (isProduction()) {
 			]
 		},
 		{
+			name: 'collections',
+			path: '/app/collections',
+			component: require('js/components/collections/Collections.vue'),
+			meta: { keepsNavOpen: true },
+			props: true,
+			// redirect: { name: "my-profile" },
+			children: [
+				{
+					name: 'collection-slides',
+					path: 'slides',
+					component: require('js/components/collections/SlidesCollection.vue')
+				},
+				{
+					name: 'collection-qna',
+					path: 'qna',
+					component: require('js/components/collections/QnaCollection.vue')
+				},
+				{
+					name: 'collection-quiz',
+					path: 'quiz',
+					component: require('js/components/collections/QuizCollection.vue')
+				},
+			]
+		},
+		{
+			name: 'help',
+			path: '/app/help',
+			component: require('js/components/help/Help.vue'),
+			props: true,
+			meta: { keepsNavOpen: true },
+			children: [
+				{
+					name: 'help-learning',
+					path: 'learning',
+					component: require('js/components/help/LearningHelp.vue'),
+				},
+				{
+					name: 'help-tech',
+					path: 'tech',
+					component: require('js/components/help/TechnicalHelp.vue'),
+				},
+				{
+					name: 'help-new',
+					path: 'new',
+					component: require('js/components/help/ComingSoonHelp.vue'),
+				},
+			]
+		},
+		{
 			name: 'dashboard',
 			path: '/app',
-			redirect: { name: 'courses', params: { courseId: 1 } }
+			redirect: { name: 'courses', params: { courseId: 1 } },
+			meta: { keepsNavOpen: true },
 		},
 		{
 			name: 'logout',
 			path: '/logout',
 			beforeEnter: () => {
+				console.log('CLEAR STORAGE********');
+				sessionStore.clearAll();
 				document.getElementById('logout-form').submit()
 			}
 		},

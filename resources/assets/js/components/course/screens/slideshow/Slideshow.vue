@@ -19,14 +19,13 @@
 				</div>
 			</div>
 			<div class="margin top slideshow-menu">
-				<div class="slideshow-annotations" v-if="!isLoading">
-					<wnl-annotations
-						:currentSlide="currentSlideNumber"
-						:slideshowId="slideshowId"
-						@commentsHidden="onCommentsHidden"
-						@annotationsUpdated="onAnnotationsUpdated"
-					></wnl-annotations>
-				</div>
+				<wnl-annotations
+					v-if="!isLoading"
+					:currentSlide="currentSlideNumber"
+					:slideshowId="slideshowId"
+					@commentsHidden="onCommentsHidden"
+					@annotationsUpdated="onAnnotationsUpdated"
+				></wnl-annotations>
 			</div>
 		</div>
 	</div>
@@ -98,9 +97,6 @@
 
 	.slideshow-menu
 		display: flex
-
-		.slideshow-annotations
-			flex: 1 auto
 
 		.slideshow-fullscreen
 			flex: 0

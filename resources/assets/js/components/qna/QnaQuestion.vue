@@ -92,6 +92,8 @@
 		padding: $margin-big 0
 
 	.qna-question-content
+		word-wrap: break-word
+		word-break: break-word
 		font-weight: $font-weight-bold
 		font-size: $font-size-plus-1
 		justify-content: flex-start

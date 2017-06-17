@@ -38,6 +38,8 @@
 		.media-content
 			.content
 				color: $color-gray-lighter
+				word-wrap: break-word
+				word-break: break-word
 
 				.wnl-message-meta
 					color: $color-inactive-gray

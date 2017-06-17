@@ -57,7 +57,7 @@
 			},
 			colorClass() {
 				if (!this.isCustom) {
-					let colorPosition = (this.initials.charCodeAt(0) - 65) % 16 + 1
+					let colorPosition = (this.initials.charCodeAt(0) - 65) % 15 + 1
 					return `wnl-avatar-color-${colorPosition}`
 				}
 				return ''

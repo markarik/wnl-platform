@@ -1,5 +1,12 @@
 <template>
-	<div class="wnl-screen-html content" :class="{'wnl-repetitions': isRepetitions}" v-html="content"></div>
+	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
+		<div class="content" v-html="content"></div>
+		<p class="end-button has-text-centered" v-if="showBacklink">
+			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
+				Wróć do auli
+			</router-link>
+		</p>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">
@@ -41,7 +48,7 @@
 
 	export default {
 		name: 'Html',
-		props: ['screenData'],
+		props: ['screenData', 'showBacklink'],
 		computed: {
 			content() {
 				return this.screenData.content

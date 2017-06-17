@@ -320,7 +320,7 @@ class Parser
 		$lucidUrl = 'https://www.lucidchart.com/documents/thumb/%s/0/0/NULL/%d';
 		$viewerHtml = '
 			<div class="iv-image-container">
-				<img src="%s" data-high-res-src="%s" class="chart">
+				<img src="%s" class="chart">
 				<a class="iv-image-fullscreen" title="Pełen ekran">
 					<span class="fullscreen-icon">
 						<span class="inner"></span>
@@ -329,11 +329,12 @@ class Parser
 					</span>
 				</a>
 			</div>';
-		$lowResSizePx = 2000;
-		$highResSizePx = 2000;
-		$lowResImage = sprintf($lucidUrl, $chartId, $lowResSizePx);
-		$highResImage = sprintf($lucidUrl, $chartId, $highResSizePx);
+		$imageSizePx = 2000;
+		$urlFormatted = sprintf($lucidUrl, $chartId, $imageSizePx);
+		$image = Image::make($urlFormatted)->stream('png');
+		$path = "charts/{$chartId}.png";
+		Storage::put('public/' . $path, $image);
 
-		return sprintf($viewerHtml, $lowResImage, $highResImage);
+		return sprintf($viewerHtml, asset('storage/' . $path));
 	}
 }

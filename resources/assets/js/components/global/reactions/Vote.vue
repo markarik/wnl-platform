@@ -4,6 +4,7 @@
 			<i class="fa" :class="hasReactedClass"></i>
 		</span>
 		<span class="count">{{ count }}</span>
+		<span class="flash-bg" :class="{'flash': wasJustClicked}"></span>
 	</div>
 </template>
 
@@ -13,9 +14,12 @@
 	.vote
 		align-items: center
 		cursor: pointer
+		display: flex
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
-		display: flex
+		position: relative
+		transition: all 0.2s
+		width: 3em
 
 	.vote-up
 		color: $color-green
@@ -24,6 +28,30 @@
 	.vote-down
 		color: $color-red
 		flex-direction: column-reverse
+
+	.flash-bg
+		border-radius: 100px
+		left: 50%
+		position: absolute
+		opacity: 0.5
+		top: 50%
+
+		&.flash
+			animation: flash 1s ease-out
+
+	@keyframes flash
+		0%
+			background: transparent
+			height: 0
+			width: 0
+		20%
+			background: $color-green
+		100%
+			background: transparent
+			height: 50px
+			left: -10px
+			top: -10px
+			width: 50px
 </style>
 
 <script>
@@ -36,7 +64,7 @@
 		data() {
 			return {
 				isLoading: false,
-				name: 'upvote'
+				name: 'upvote',
 			}
 		},
 		computed: {
@@ -44,7 +72,7 @@
 				return `vote-${this.type}`
 			},
 			hasReactedClass() {
-				return this.reaction.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
+				return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
 			},
 		},
 	}

@@ -87,7 +87,6 @@ const getters = {
 
 const mutations = {
 	...commentsMutations,
-	...reactionsMutations,
 	[types.QUIZ_ATTEMPT] (state, payload) {
 		state.attempts.push(payload)
 	},

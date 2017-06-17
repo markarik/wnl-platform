@@ -35,7 +35,7 @@
 		},
 		computed: {
 			hasReactedClass() {
-				return this.reaction.hasReacted ? 'fa-bookmark' : 'fa-bookmark-o'
+				return this.hasReacted ? 'fa-bookmark' : 'fa-bookmark-o'
 			},
 		},
 	}

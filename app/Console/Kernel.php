@@ -41,6 +41,10 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('chat:archive-messages')
 			->hourly();
+
+		$schedule
+			->command('cache:warmup')
+			->dailyAt('03:30');
     }
 
     /**

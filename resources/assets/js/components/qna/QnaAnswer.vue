@@ -68,6 +68,8 @@
 		margin-bottom: $margin-huge
 
 	.qna-answer-content
+		word-wrap: break-word
+		word-break: break-word
 		justify-content: flex-start
 		width: 100%
 

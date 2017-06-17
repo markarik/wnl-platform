@@ -38,6 +38,10 @@
 		&:first-child
 			border: 0
 
+	.qna-comment-content
+		word-wrap: break-word
+		word-break: break-word
+
 	.qna-comment-meta
 		font-size: $font-size-minus-2
 		margin-top: 0

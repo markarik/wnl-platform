@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<!-- <div> -->
-		<div class="wnl-lesson" v-if="lesson.isAvailable">
+		<div class="wnl-lesson" v-if="isLessonAvailable(lesson.id)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
 					<div class="level-left">
@@ -83,7 +83,7 @@
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-				elementHeight: this.$parent.$el.offsetHeight
+				elementHeight: this.$parent.$el.offsetHeight || '100%'
 			}
 		},
 		computed: {
@@ -93,6 +93,7 @@
 				'getSections',
 				'getScreen',
 				'getScreenSectionsCheckpoints',
+				'isLessonAvailable',
 			]),
 			...mapGetters('progress', [
 				'getSavedLesson',

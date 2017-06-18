@@ -33,7 +33,11 @@ const getters = {
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId],
 	getLessons: state => state.structure[resource('lessons')],
-	getAvailableLessons: (state, getters) => {
+	getAvailableLessons: (state, getters, rootState, rootGetters) => {
+		if (rootGetters.isAdmin) {
+			return _.values(getters.getLessons)
+		}
+
 		let lesson, lessons = []
 		for (var lessonId in getters.getLessons) {
 			lesson = getters.getLessons[lessonId]
@@ -45,7 +49,9 @@ const getters = {
 	},
 	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
 	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
-	isLessonAvailable: state => (lessonId) => state.structure[resource('lessons')][lessonId].isAvailable,
+	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
+		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable
+	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {

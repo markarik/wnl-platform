@@ -35,7 +35,8 @@
 				'groups',
 				'structure',
 				'getLesson',
-				'getScreens'
+				'getScreens',
+				'isLessonAvailable',
 			]),
 			...mapGetters('progress', {
 				getCourseProgress: 'getCourse',
@@ -200,7 +201,7 @@
 						courseId: lesson[resource('editions')],
 						lessonId: lesson.id,
 					},
-					!lesson.isAvailable,
+					!this.isLessonAvailable(lesson.id),
 					'push',
 					iconClass,
 					iconTitle

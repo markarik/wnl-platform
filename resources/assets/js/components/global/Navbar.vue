@@ -11,9 +11,6 @@
 			<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
 				<img :src="logoSrc" :alt="logoAlt">
 			</router-link>
-			<div class="breadcrumbs" v-if="canShowBreadcrumbsInNavbar">
-				<wnl-breadcrumbs></wnl-breadcrumbs>
-			</div>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown></wnl-user-dropdown>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\PrivateApi\Chat;
 
 use Auth;
 use App\Models\ChatRoom;
+use App\Models\ChatMessage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 
@@ -29,7 +30,11 @@ class ChatMessagesApiController extends ApiController
 		}
 
 		if ($user->can('view', $room)) {
-			return $this->search($request);
+			$messages = new ChatMessage;
+			$messages = $messages->where('chat_room_id', $room->id);
+			$messages = $this->applyFilters($messages, $request);
+
+			return $this->transformAndRespond($messages->get());
 		}
 
 		return $this->respondUnauthorized();

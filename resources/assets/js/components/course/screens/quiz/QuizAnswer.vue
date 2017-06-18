@@ -11,9 +11,9 @@
 			{{answer.text}}
 		</div>
 		<div class="quiz-answer-stats" v-if="isComplete">
-			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
+			<!-- <span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
 				{{stats}}%
-			</span>
+			</span> -->
 		</div>
 	</li>
 </template>

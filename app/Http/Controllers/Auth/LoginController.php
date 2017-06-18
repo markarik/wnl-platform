@@ -72,8 +72,9 @@ class LoginController extends Controller
 	{
 		if (App::environment(['testing', 'dev'])) return;
 
+		$redis = Redis::connection('session');
 		foreach ($user->sessions as $session) {
-			Redis::del('laravel:' . $session->session_id);
+			$redis->del('laravel:' . $session->session_id);
 		}
 
 		$user->sessions()->create([

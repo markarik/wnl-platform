@@ -30,12 +30,12 @@ class UpdateUserBilling extends FormRequest
 	public function rules()
 	{
 		return [
-			'company_name' => 'required',
-			'vat_id'       => 'required',
-			'address'      => 'required',
-			'zip'          => 'required',
-			'city'         => 'required',
-			'country'      => 'required',
+			'company_name' => 'required|max:250',
+			'vat_id'       => 'required|max:250',
+			'address'      => 'required|max:250',
+			'zip'          => 'required|max:250',
+			'city'         => 'required|max:250',
+			'country'      => 'required|max:250',
 		];
 	}
 }

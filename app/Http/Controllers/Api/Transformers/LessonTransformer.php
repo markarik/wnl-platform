@@ -33,6 +33,7 @@ class LessonTransformer extends ApiTransformer
 
 		if ($editionId !== null) {
 			$data['isAvailable'] = $lesson->isAvailable($editionId);
+			$data['startDate'] = $lesson->startDate($editionId);
 		}
 
 		return $data;

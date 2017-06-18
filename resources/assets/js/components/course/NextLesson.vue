@@ -7,10 +7,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="lesson" v-if="hasNextLesson">
+		<div class="lesson">
 			<p class="group">{{ groupName }}</p>
 			<p class="name">{{ lessonName }}</p>
-			<router-link :to="to" class="button" :class="buttonClass">{{ callToAction }}</router-link>
+			<router-link :to="to" class="button" :class="buttonClass" v-if="hasNextLesson">{{ callToAction }}</router-link>
+			<div v-else>Otwiera się {{ nextLessonDate }}</div>
 		</div>
 	</div>
 </template>
@@ -31,10 +32,12 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	import Emoji from '../global/Emoji.vue'
 	import { getUrl } from 'js/utils/env'
-	import { mapGetters } from 'vuex'
 	import { resource } from 'js/utils/config'
+	import { timeFromDate } from 'js/utils/time'
 
 	const STATUS_NONE = 'none'
 	const STATUS_IN_PROGRESS = 'in-progress'
@@ -42,9 +45,7 @@
 
 	const statusParams = {
 		[STATUS_NONE]: {
-			heading: 'Gratulacje!',
-			callToAction: `To już koniec naszego kursu!`,
-			buttonClass: '',
+			heading: 'Najbliższa lekcja',
 		},
 		[STATUS_IN_PROGRESS]: {
 			heading: 'Lekcja w trakcie',
@@ -82,11 +83,16 @@
 					lesson.status = STATUS_IN_PROGRESS
 				} else {
 					for (var lessonId in this.getLessons) {
-						if (this.isLessonAvailable(lessonId) &&
+						let isAvailable = this.isLessonAvailable(lessonId)
+						if (isAvailable &&
 							!this.wasLessonStarted(this.courseId, lessonId)
 						) {
 							lesson = this.getLesson(lessonId)
 							lesson.status = STATUS_AVAILABLE
+							break
+						} else if (!isAvailable) {
+							lesson = this.getLesson(lessonId)
+							lesson.status = STATUS_NONE
 							break
 						}
 					}
@@ -111,6 +117,9 @@
 			},
 			lessonName() {
 				return this.nextLesson.name
+			},
+			nextLessonDate() {
+				return timeFromDate(this.nextLesson.startDate.date)
 			},
 			to() {
 				return {

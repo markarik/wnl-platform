@@ -48,4 +48,15 @@ class Lesson extends Model
 
 		return true;
 	}
+
+	public function startDate($editionId)
+	{
+		$availability = $this->availability->where('edition_id', $editionId)->first();
+
+		if (!is_null($availability)) {
+			return $availability->start_date;
+		}
+
+		return null;
+	}
 }

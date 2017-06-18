@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import store from 'store'
-import {set} from 'vue'
+import {set, delete as destroy} from 'vue'
 import {getApiUrl} from 'js/utils/env'
 import {resource} from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
@@ -100,7 +100,14 @@ const mutations = {
 		set(state, 'name', data.name)
 		set(state, resource('groups'), data[resource('groups')])
 		set(state, 'structure', data.included)
-	}
+	},
+	[types.COURSE_REMOVE_GROUP] (state, payload) {
+		state.groups.splice(payload.index, 1)
+		destroy(state.structure.groups, payload.id)
+		payload.lessons.forEach((lesson) => {
+			destroy(state.structure.lessons, lesson)
+		})
+	},
 }
 
 // Actions
@@ -110,9 +117,10 @@ const actions = {
 			Promise.all([
 				dispatch('setStructure', courseId),
 				dispatch('progress/setupCourse', courseId, {root: true}),
-			]).then(resolutions => {
+			])
+
+			.then(resolutions => {
 				$wnl.logger.debug('Course ready, yay!')
-				commit(types.COURSE_READY)
 				resolve()
 			}, reason => {
 				$wnl.logger.error(reason)
@@ -133,7 +141,29 @@ const actions = {
 					}
 				)
 		})
-	}
+	},
+	checkUserRoles({commit, dispatch, getters}, roles) {
+		return new Promise((resolve, reject) => {
+			let toRemove = []
+
+			Object.keys(getters.groups).forEach((index) => {
+				let id = getters.groups[index],
+					group = getters.getGroup(id)
+				if (!group.required_role) {
+					return
+				}
+
+				if (roles.indexOf(group.required_role) === -1) {
+					toRemove.push({index, id, lessons: group.lessons})
+				}
+			})
+
+			toRemove.forEach((payload) => {
+				commit(types.COURSE_REMOVE_GROUP, payload)
+			})
+			commit(types.COURSE_READY)
+		})
+	},
 }
 
 export default {

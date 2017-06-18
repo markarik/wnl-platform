@@ -28,7 +28,7 @@
 		STATE_DANGER = 'danger',
 		stateData = {
 			[STATE_FULL]: {
-				message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone. Należy Ci się zasłużony odpoczynek. ${emoji.get('slightly_smiling_face')}`,
+				message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone i należy Ci się zasłużony odpoczynek! ${emoji.get('slightly_smiling_face')}`,
 				modifyingClass: 'is-success'
 			},
 			[STATE_GOOD]: {
@@ -40,7 +40,7 @@
 				modifyingClass: 'is-warning'
 			},
 			[STATE_DANGER]: {
-				message: 'O-o, trzeba się sprężać! Jeśli potrzebujesz pomocy, napisz na pomocy@wiecejnizlek.pl. :)',
+				message: 'O-o, trzeba się sprężać!',
 				modifyingClass: 'is-danger'
 			},
 		}
@@ -65,9 +65,9 @@
 
 				if (incompleteLessons === 0) {
 					return 'full'
-				} else if (incompleteLessons < 4) {
+				} else if (incompleteLessons < 7) {
 					return 'good'
-				} else if (incompleteLessons < 8) {
+				} else if (incompleteLessons < 14) {
 					return 'warning'
 				}
 				return 'danger'

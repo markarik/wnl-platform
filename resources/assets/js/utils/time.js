@@ -8,3 +8,7 @@ export function timeFromS(timestamp) {
 export function timeFromMs(timestamp) {
 	return moment(timestamp).format('LLL')
 }
+
+export function timeFromDate(date) {
+	return moment(date).format('LL')
+}

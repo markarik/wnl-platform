@@ -65,7 +65,7 @@
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
-			...mapGetters('course', ['ready', 'getLesson']),
+			...mapGetters('course', ['ready', 'isLessonAvailable']),
 			...mapGetters([
 				'currentUserRoles',
 				'isSidenavVisible',
@@ -93,7 +93,7 @@
 				}
 			},
 			isLesson() {
-				return typeof this.lessonId !== 'undefined' && this.getLesson(this.lessonId).isAvailable
+				return typeof this.lessonId !== 'undefined' && this.isLessonAvailable(this.lessonId)
 			},
 			chatRooms() {
 				let chatRoom = `courses-${this.courseId}`

@@ -31,6 +31,7 @@ const getters = {
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
 	getSetting: state => setting => state.settings[setting],
 	getAllSettings: state => state.settings,
+	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
 	isCurrentUserLoading: state => state.loading,
 }
 

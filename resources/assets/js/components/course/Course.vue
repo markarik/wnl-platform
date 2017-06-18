@@ -67,6 +67,7 @@
 		computed: {
 			...mapGetters('course', ['ready', 'getLesson']),
 			...mapGetters([
+				'currentUserRoles',
 				'isSidenavVisible',
 				'isSidenavMounted',
 				'isChatMounted',
@@ -126,14 +127,18 @@
 		mixins: [withChat, breadcrumb],
 		methods: {
 			...mapActions('course', [
-				'setup'
+				'setup',
+				'checkUserRoles',
 			]),
 			...mapActions(['toggleChat', 'toggleOverlay']),
 		},
 		created() {
 			this.toggleOverlay({source: 'course', display: true})
 			this.setup(this.courseId)
-				.then(() => this.toggleOverlay({source: 'course', display: false}))
+				.then(() => {
+					this.checkUserRoles(this.currentUserRoles)
+					this.toggleOverlay({source: 'course', display: false})
+				})
 				.catch((error) => {
 					$wnl.logger.error(error)
 					this.toggleOverlay({source: 'course', display: false})

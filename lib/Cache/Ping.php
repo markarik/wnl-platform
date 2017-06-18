@@ -4,7 +4,6 @@
 namespace Lib\Cache;
 
 use App\Models\User;
-use Tests\CreatesApplication;
 use Illuminate\Foundation\Testing\Concerns\MakesHttpRequests;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithAuthentication;
 

@@ -13,11 +13,16 @@ window.axios.defaults.headers.common = {
 	'Accept': 'application/json'
 };
 
-window.axios.interceptors.response.use(null, (error) => {
-	if (error.response.status === 401) {
-		window.location.replace('/login');
+window.axios.interceptors.response.use(
+	(response) => Promise.resolve(response),
+	(error) => {
+		if (error.response.status === 401) {
+			window.location.replace('/login');
+		}
+
+		return Promise.reject(error)
 	}
-});
+);
 
 // window.io = require('socket.io-client');
 //

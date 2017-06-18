@@ -93,7 +93,6 @@
 							this.$emit('submitSuccess', response, this.getter('getData'))
 						},
 						reason => {
-							$wnl.logger.error(reason)
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 							this.$emit('submitError')
 						},

@@ -27,6 +27,8 @@ class ArchiveChatMessages extends Command
 	 */
 	protected $description = 'Move old chat messages to MySQL DB';
 
+	protected $redis;
+
 	/**
 	 * Create a new command instance.
 	 *
@@ -34,6 +36,8 @@ class ArchiveChatMessages extends Command
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->redis = Redis::connection('chat');
 	}
 
 	/**
@@ -84,7 +88,7 @@ class ArchiveChatMessages extends Command
 	 */
 	protected function scan($cursor, $limit = 1000)
 	{
-		return Redis::scan($cursor, 'MATCH', self::ROOM_MESSAGES_KEY . '*', 'COUNT', $limit);
+		return $this->redis->scan($cursor, 'MATCH', self::ROOM_MESSAGES_KEY . '*', 'COUNT', $limit);
 	}
 
 	/**
@@ -124,7 +128,7 @@ class ArchiveChatMessages extends Command
 	 */
 	protected function getMessages($room, $leave = 200, $take = 100000)
 	{
-		return Redis::lrange(self::ROOM_MESSAGES_KEY . $room, -1 * ($take + $leave), -1 * ($leave + 1));
+		return $this->redis->lrange(self::ROOM_MESSAGES_KEY . $room, -1 * ($take + $leave), -1 * ($leave + 1));
 	}
 
 	/**
@@ -137,7 +141,7 @@ class ArchiveChatMessages extends Command
 	 */
 	protected function removeMessage($room, $message)
 	{
-		return Redis::lrem(self::ROOM_MESSAGES_KEY . $room, 0, $message);
+		return $this->redis->lrem(self::ROOM_MESSAGES_KEY . $room, 0, $message);
 	}
 
 	/**
@@ -194,18 +198,18 @@ class ArchiveChatMessages extends Command
 	public function transaction(Closure $callback)
 	{
 		DB::beginTransaction();
-		Redis::multi();
+		$this->redis->multi();
 
 		try {
 			$callback();
 		}
 		catch (Exception $e) {
 			DB::rollBack();
-			Redis::discard();
+			$this->redis->discard();
 			throw $e;
 		}
 
 		DB::commit();
-		Redis::exec();
+		$this->redis->exec();
 	}
 }

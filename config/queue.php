@@ -58,10 +58,10 @@ return [
         ],
 
         'redis' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-            'queue' => 'default',
-            'retry_after' => 90,
+			'driver'      => 'redis',
+			'connection'  => 'queue',
+			'queue'       => 'default',
+			'retry_after' => 90,
         ],
 
     ],

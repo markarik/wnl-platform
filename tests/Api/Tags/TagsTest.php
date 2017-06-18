@@ -6,7 +6,7 @@ use App\Models\User;
 use Tests\Api\ApiTestCase;
 
 
-class QuizQuestionsTest extends ApiTestCase
+class TagsTest extends ApiTestCase
 {
 
 	/** @test * */

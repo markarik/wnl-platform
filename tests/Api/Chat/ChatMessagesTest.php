@@ -10,7 +10,7 @@ use Tests\Api\ApiTestCase;
 class ChatMessagesTest extends ApiTestCase
 {
 	/** @test */
-	public function get_public_chat_room_history_for_not_existing_room()
+	public function get_public_chat_room_history_for_non_existing_room()
 	{
 		$user = User::find(1);
 
@@ -42,11 +42,11 @@ class ChatMessagesTest extends ApiTestCase
 		$data = [
 			'query'   => [
 				'where' => [
-					['created_at', '<', 1497612881],
+					['time', '<', 1497612881],
 				],
 			],
 			'order'   => [
-				'created_at' => 'asc',
+				'time' => 'asc',
 			],
 			'limit'   => [10, 0],
 			'include' => 'profiles',

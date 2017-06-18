@@ -31,12 +31,7 @@ trait PerformsApiSearches
 			return $this->respondInvalidInput();
 		}
 
-		$transformerName = self::getResourceTransformer($this->resourceName);
-		$resource = new Collection($results, new $transformerName, $this->resourceName);
-
-		$data = $this->fractal->createData($resource)->toArray();
-
-		return $this->respondOk($data);
+		return $this->transformAndRespond($results);
 	}
 
 	/**
@@ -181,6 +176,16 @@ trait PerformsApiSearches
 
 			return $v;
 		}, $array);
+	}
+
+	protected function transformAndRespond($results)
+	{
+		$transformerName = self::getResourceTransformer($this->resourceName);
+		$resource = new Collection($results, new $transformerName, $this->resourceName);
+
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
 	}
 
 }

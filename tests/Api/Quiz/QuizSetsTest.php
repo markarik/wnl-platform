@@ -61,9 +61,13 @@ class QuizSetsTest extends ApiTestCase
 			->assertStatus(200)
 			->assertJson([
 				'stats' => [
-					"11" => 2,
-					"12" => 1,
-					"13" => 1
+					"1001" => [
+						"11" => 2,
+						"12" => 1
+					],
+					"1000" => [
+						"13" => 1
+					]
 				]
 			]);
 	}

@@ -34,14 +34,15 @@ class QuizSetsApiController extends ApiController
 		$recordedAnswers = UserQuizResults::whereIn('quiz_question_id', function($query) use ($id) {
 			$query->select('quiz_question_id')->from('quiz_question_quiz_set')->where('quiz_set_id', $id);
 		})
-			->select('quiz_answer_id', DB::raw('count(*) as total'))
-			->groupBy('quiz_answer_id')
-			->get(['quiz_answer_id', 'total'])
+			->select('quiz_question_id', 'quiz_answer_id')
+			->get(['quiz_question_id'])
 			->toArray();
 
 		$stats = [];
 		foreach($recordedAnswers as $recordedAnswer) {
-			$stats[$recordedAnswer['quiz_answer_id']] = $recordedAnswer['total'];
+			$count = empty($stats[$recordedAnswer['quiz_question_id']][$recordedAnswer['quiz_answer_id']])
+				? 0 : $stats[$recordedAnswer['quiz_question_id']][$recordedAnswer['quiz_answer_id']];
+			$stats[$recordedAnswer['quiz_question_id']][$recordedAnswer['quiz_answer_id']] = $count + 1;
 		}
 
 

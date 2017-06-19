@@ -53,6 +53,9 @@
 							@lang('payment.back-to-website')
 						</a>
 						@if (Auth::check())
+							<a href="{{url('app/')}}" class="nav-item">
+								Kurs
+							</a>
 							<a href="{{url('app/myself/orders')}}" class="nav-item">
 								Twoje zamówienia
 							</a>
@@ -60,15 +63,6 @@
 								Wyloguj się
 							</a>
 						@else
-							@if (env('APP_ENV') !== 'demo')
-								<a href="{{url('payment/select-product')}}" class="nav-item">
-									Zapisz się na kurs
-								</a>
-							@else
-								<a href="https://platforma.wiecejnizlek.pl/payment/select-product" class="nav-item">
-									Zapisz się na kurs
-								</a>
-							@endif
 							<a href="{{url('login')}}" class="nav-item">
 								Zaloguj się
 							</a>

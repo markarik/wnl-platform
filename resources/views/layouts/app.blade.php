@@ -8,7 +8,7 @@
 	<meta property="og:url" content="{{env('APP_URL')}}">
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="@lang('common.app-title')">
-	<meta property="og:description" content="Wypróbuj naszą platformę demo! Wejdź na demo.wiecejnizlek.pl i sprawdź, co czeka Cię na kursie!">
+	<meta property="og:description" content="Unikalny kurs przygotowujący do Lekarskiego Egzaminu Końcowego">
 	<meta property="og:image" content="https://wiecejnizlek.pl/wp-content/themes/wiecejnizlek/assets/fb_og_mainpage.png">
 
 	<!-- CSRF Token -->

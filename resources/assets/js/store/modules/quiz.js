@@ -89,6 +89,7 @@ const getters = {
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
+	getStats: (state) => (questionId) => state.quiz_stats[questionId]
 }
 
 const mutations = {
@@ -158,7 +159,7 @@ const mutations = {
 		})
 	},
 	[types.QUIZ_SET_STATS] (state, {stats}) {
-		set(state.quiz_stats, [state.setId], stats)
+		set(state, 'quiz_stats', stats)
 	},
 }
 

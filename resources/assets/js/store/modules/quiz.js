@@ -1,5 +1,4 @@
 import axios from 'axios'
-import store from 'store'
 import _ from 'lodash'
 import {set, delete as destroy} from 'vue'
 import {useLocalStorage, getApiUrl} from 'js/utils/env'

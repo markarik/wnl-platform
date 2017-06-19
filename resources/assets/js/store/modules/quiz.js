@@ -14,6 +14,12 @@ function fetchQuizSet(id) {
 	)
 }
 
+function fetchQuizSetStats(id) {
+	return axios.get(
+		getApiUrl(`quiz_sets/${id}/getStats`)
+	)
+}
+
 function _fetchQuestionsCollection(ids) {
 	return axios.post(getApiUrl('quiz_questions/.search'), {
 		query: {
@@ -47,6 +53,7 @@ function getInitialState() {
 		profiles: {},
 		setId: null,
 		setName: '',
+		quiz_stats: {}
 	}
 }
 
@@ -150,6 +157,9 @@ const mutations = {
 			set(state, field, initialState[field])
 		})
 	},
+	[types.QUIZ_SET_STATS] (state, {stats}) {
+		set(state.quiz_stats, [state.setId], stats)
+	},
 }
 
 const actions = {
@@ -160,8 +170,9 @@ const actions = {
 
 		Promise.all([
 			quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug),
-			fetchQuizSet(resource.id)
-		]).then(([storedState, response]) => {
+			fetchQuizSet(resource.id),
+			fetchQuizSetStats(resource.id)
+		]).then(([storedState, response, quizStats]) => {
 			let included = response.data.included,
 				questionsIds = response.data.quiz_questions,
 				len = questionsIds.length
@@ -177,10 +188,11 @@ const actions = {
 					len,
 					questionsIds,
 				})
-			}
 
+			}
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)
+			commit(types.QUIZ_SET_STATS, quizStats.data)
 		});
 	},
 

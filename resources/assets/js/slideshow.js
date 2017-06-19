@@ -180,7 +180,15 @@ function toggleAnnotations() {
 }
 
 function setMenuListeners(parent) {
-	$toggleFullscreen.on('click', emitToggleFullscreen)
+	$toggleFullscreen.on('click', () => {
+		const bodyElement = document.getElementsByTagName('body')[0];
+
+		if (!document.mozFullScreen && typeof bodyElement.mozRequestFullScreen === 'function') {
+			bodyElement.mozRequestFullScreen();
+		}
+
+		emitToggleFullscreen();
+	});
 	$toggleAnnotations.on('click', toggleAnnotations)
 }
 

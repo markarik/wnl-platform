@@ -218,6 +218,8 @@
 				handshake.then(child => {
 					this.child = child
 					this.loaded = true
+					child.frame.setAttribute('mozallowfullscreen', '');
+					child.frame.setAttribute('allowfullscreen', '');
 					this.setEventListeners()
 
 					this.goToSlide(this.currentSlideIndex)

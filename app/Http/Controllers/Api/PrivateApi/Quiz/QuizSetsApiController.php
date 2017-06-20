@@ -37,7 +37,6 @@ class QuizSetsApiController extends ApiController
 			->select('quiz_question_id', 'quiz_answer_id')
 			->get(['quiz_question_id'])
 			->toArray();
-
 		$stats = [];
 		foreach($recordedAnswers as $recordedAnswer) {
 			$count = empty($stats[$recordedAnswer['quiz_question_id']][$recordedAnswer['quiz_answer_id']])

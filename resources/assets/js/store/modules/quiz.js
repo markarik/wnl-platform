@@ -1,5 +1,4 @@
 import axios from 'axios'
-import store from 'store'
 import _ from 'lodash'
 import {set, delete as destroy} from 'vue'
 import {useLocalStorage, getApiUrl} from 'js/utils/env'
@@ -12,6 +11,12 @@ import quizStore, {getLocalStorageKey} from 'js/services/quizStore'
 function fetchQuizSet(id) {
 	return axios.get(
 		getApiUrl(`quiz_sets/${id}?include=quiz_questions.quiz_answers,quiz_questions.comments.profiles,reactions`)
+	)
+}
+
+function fetchQuizSetStats(id) {
+	return axios.get(
+		getApiUrl(`quiz_sets/${id}/getStats`)
 	)
 }
 
@@ -48,6 +53,7 @@ function getInitialState() {
 		profiles: {},
 		setId: null,
 		setName: '',
+		quiz_stats: {}
 	}
 }
 
@@ -83,6 +89,7 @@ const getters = {
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
+	getStats: (state) => (questionId) => state.quiz_stats[questionId]
 }
 
 const mutations = {
@@ -151,6 +158,9 @@ const mutations = {
 			set(state, field, initialState[field])
 		})
 	},
+	[types.QUIZ_SET_STATS] (state, {stats}) {
+		set(state, 'quiz_stats', stats)
+	},
 }
 
 const actions = {
@@ -161,8 +171,9 @@ const actions = {
 
 		Promise.all([
 			quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug),
-			fetchQuizSet(resource.id)
-		]).then(([storedState, response]) => {
+			fetchQuizSet(resource.id),
+			fetchQuizSetStats(resource.id)
+		]).then(([storedState, response, quizStats]) => {
 			let included = response.data.included,
 				questionsIds = response.data.quiz_questions,
 				len = questionsIds.length
@@ -178,10 +189,11 @@ const actions = {
 					len,
 					questionsIds,
 				})
-			}
 
+			}
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)
+			commit(types.QUIZ_SET_STATS, quizStats.data)
 		});
 	},
 

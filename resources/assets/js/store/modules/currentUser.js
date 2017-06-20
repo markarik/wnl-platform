@@ -59,7 +59,7 @@ const mutations = {
 // Actions
 const actions = {
 	setupCurrentUser({ commit, dispatch }) {
-		Promise
+		return Promise
 			.all([
 				dispatch('fetchCurrentUserProfile'),
 				dispatch('fetchUserSettings'),

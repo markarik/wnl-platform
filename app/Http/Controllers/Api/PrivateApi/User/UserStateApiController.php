@@ -25,7 +25,7 @@ class UserStateApiController extends ApiController
 	// userId - cacheVersion
 	const KEY_USER_TIME_TEMPLATE = 'UserState:Time:%s:%s';
 	const CACHE_VERSION = 1;
-	const INCREMENT_BY_MINUTES = 5;
+	const INCREMENT_BY_MINUTES = 3;
 
 	public function getCourse($id, $courseId)
 	{

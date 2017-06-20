@@ -40,6 +40,7 @@
 		max-width: $course-content-max-width
 		flex: $course-content-flex auto
 		position: relative
+		overflow-y: hidden
 
 	.wnl-course-chat
 		max-width: $course-chat-max-width

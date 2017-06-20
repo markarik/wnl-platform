@@ -37,6 +37,7 @@
 		max-width: $main-nav-max-size
 		min-width: $main-nav-min-size
 		width: $main-nav-size
+		overflow-x: hidden;
 
 		&.horizontal
 			border-bottom: 1px solid $color-light-gray

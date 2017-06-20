@@ -55,9 +55,6 @@
 		border-top: $border-light-gray
 		margin: $margin-base 0 0
 		padding-top: $margin-base
-
-	.wnl-chat-content
-		min-height: 0
 </style>
 <script>
 	import Message from './Message.vue'

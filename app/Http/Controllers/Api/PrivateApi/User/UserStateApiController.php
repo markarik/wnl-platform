@@ -1,9 +1,10 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi\User;
 
+use App\Models\User;
 use App\Models\UserQuizResults;
-use Auth;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 
 class UserStateApiController extends ApiController
@@ -24,6 +25,7 @@ class UserStateApiController extends ApiController
 	// userId - cacheVersion
 	const KEY_USER_TIME_TEMPLATE = 'UserState:Time:%s:%s';
 	const CACHE_VERSION = 1;
+	const INCREMENT_BY_MINUTES = 5;
 
 	public function getCourse($id, $courseId)
 	{
@@ -100,20 +102,36 @@ class UserStateApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function getTime($id)
+	public function getTime($user)
 	{
-		$time = Redis::get(self::getUserTimeRedisKey($id));
+		$userInstance = User::find($user);
+
+		if (!Auth::user()->can('view', $userInstance)) {
+			return $this->respondForbidden();
+		}
+
+		$time = Redis::get(self::getUserTimeRedisKey($user));
 
 		return $this->json([
-			'time' => $time
+			'time' => empty($time) ? 0 : $time
 		]);
 	}
 
-	public function putTime(Request $request, $id)
+	public function incrementTime(Request $request, $user)
 	{
-		Redis::set(self::getUserTimeRedisKey($id), 10);
+		$userInstance = User::find($user);
+		if (!Auth::user()->can('view', $userInstance)) {
+			return $this->respondForbidden();
+		}
 
-		return $this->respondOk();
+
+		$time = Redis::get(self::getUserTimeRedisKey($user));
+		$incrementedTime = $time + self::INCREMENT_BY_MINUTES;
+		Redis::set(self::getUserTimeRedisKey($user), $incrementedTime);
+
+		return $this->json([
+			'time' => $incrementedTime
+		]);
 	}
 
 	static function getCourseRedisKey($userId, $courseId)

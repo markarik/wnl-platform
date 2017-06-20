@@ -325,4 +325,64 @@ class UserStateTest extends ApiTestCase
 		$mockedUserQuizResults->verify();
 		$mockedRedis->verify();
 	}
+
+	/** @test */
+	public function get_user_time()
+	{
+		$user = User::find(1);
+		$redisKey = UserStateApiController::getUserTimeRedisKey($user->id);
+
+		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey)->andReturn(null);
+
+		$response = $this
+			->actingAs($user)
+			->call('GET', $this->url("/users/{$user->id}/state/time"));
+
+		$response
+			->assertStatus(200)
+			->assertJson([
+				'time' => 10
+			]);
+
+		$mockedRedis->verify();
+	}
+
+	/** @test */
+	public function update_user_time()
+	{
+		$user = User::find(1);
+		$redisKey = UserStateApiController::getUserTimeRedisKey($user->id);
+
+		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, 5);
+
+		$response = $this
+			->actingAs($user)
+			->call('PUT', $this->url("/users/{$user->id}/state/time"));
+
+		$response
+			->assertStatus(200)
+			->assertJson([
+				'message' => 'OK',
+				'status_code' => 200
+			]);
+
+		$mockedRedis->verify();
+	}
+
+	/** @test */
+	public function forbid_different_user_time_update()
+	{
+		$user = User::find(1);
+
+		$mockedRedis = Redis::shouldReceive('set')->never();
+
+		$response = $this
+			->actingAs($user)
+			->call('GET', $this->url("/users/2/state/time"));
+
+		$response
+			->assertStatus(403);
+
+		$mockedRedis->verify();
+	}
 }

@@ -21,6 +21,8 @@ class UserStateApiController extends ApiController
 	const KEY_LESSON_TEMPLATE = 'UserState:Course:%s:%s:%s:%s';
 	// quizSetId - userId - cacheVersion
 	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s';
+	// userId - cacheVersion
+	const KEY_USER_TIME_TEMPLATE = 'UserState:Time:%s:%s';
 	const CACHE_VERSION = 1;
 
 	public function getCourse($id, $courseId)
@@ -98,6 +100,22 @@ class UserStateApiController extends ApiController
 		return $this->respondOk();
 	}
 
+	public function getTime($id)
+	{
+		$time = Redis::get(self::getUserTimeRedisKey($id));
+
+		return $this->json([
+			'time' => $time
+		]);
+	}
+
+	public function putTime(Request $request, $id)
+	{
+		Redis::set(self::getUserTimeRedisKey($id), 10);
+
+		return $this->respondOk();
+	}
+
 	static function getCourseRedisKey($userId, $courseId)
 	{
 		return sprintf(self::KEY_COURSE_TEMPLATE, $courseId, $userId, self::CACHE_VERSION);
@@ -111,6 +129,10 @@ class UserStateApiController extends ApiController
 	static function getQuizRedisKey($userId, $quizId)
 	{
 		return sprintf(self::KEY_QUIZ_TEMPLATE, $quizId, $userId, self::CACHE_VERSION);
+	}
+
+	static function getUserTimeRedisKey($userId) {
+		return sprintf(self::KEY_USER_TIME_TEMPLATE, $userId, self::CACHE_VERSION);
 	}
 }
 

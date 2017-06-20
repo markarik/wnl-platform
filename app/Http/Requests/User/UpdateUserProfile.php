@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserProfile extends FormRequest
@@ -33,5 +34,35 @@ class UpdateUserProfile extends FormRequest
 			'public_phone' => 'nullable|max:20',
 			'username'     => 'max:30|alpha_num',
 		];
+	}
+
+	/**
+	 * Configure the validator instance.
+	 *
+	 * @param  \Illuminate\Validation\Validator $validator
+	 *
+	 * @return void
+	 */
+	public function withValidator($validator)
+	{
+		$validator->after(function ($validator) {
+			if ($this->usernameIsInvalid()) {
+				$validator->errors()->add('username', trans('validation.unique'));
+			}
+		});
+	}
+
+	private function usernameIsInvalid()
+	{
+		if ($this->request->has('username') && !empty($this->request->get('username'))) {
+			$username = UserProfile::select('username')
+				->where('user_id', '!=', $this->user()->id)
+				->where('username', $this->request->get('username'))
+				->get();
+
+			return (bool)$username->count();
+		}
+
+		return false;
 	}
 }

@@ -8,9 +8,9 @@
 				<wnl-vote type="up" count="0" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna_wrapper">
+				<div class="qna-wrapper">
 					<div class="qna-question-content" v-html="content"></div>
-					<wnl-bookmark class="qna_bookmark" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-bookmark>
+					<wnl-bookmark class="qna-bookmark" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-bookmark>
 				</div>
 				<div class="tags" v-if="tags.length > 0">
 					<span v-for="tag, key in tags" class="tag is-light" v-text="tag"></span>
@@ -66,10 +66,10 @@
 						:key="answer.id"
 						:readOnly="readOnly">
 					</wnl-qna-answer>
-					<a class="button is-small is-wide qna-answers-show-all"
+					<a class="qna-answers-show-all"
 						v-if="!allAnswers && otherAnswers.length > 0"
 						@click="allAnswers = true">
-						Pokaż pozostałe odpowiedzi
+						<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 					</a>
 				</div>
 			</div>
@@ -90,17 +90,19 @@
 		padding: $margin-big
 
 	.qna-question
-		border-top: $border-light-gray
-		margin: $margin-base 0
-		padding: $margin-big 0
+		background: $color-background-lighter-gray
+		border: solid $color-light-gray
+		border-width: $border-thick 0
+		margin: $margin-big 0
+		padding: $margin-big $margin-base $margin-big $margin-small
 
 	.qna-question-content
+		font-size: $font-size-plus-half
+		justify-content: flex-start
+		padding-right: $margin-base
+		width: 100%
 		word-wrap: break-word
 		word-break: break-word
-		font-weight: $font-weight-bold
-		font-size: $font-size-plus-1
-		justify-content: flex-start
-		width: 100%
 
 		strong
 			font-weight: $font-weight-black
@@ -109,13 +111,25 @@
 		margin-top: $margin-big
 
 	.qna-answers-show-all
-		margin-top: $margin-huge
+		display: block
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-1
+		margin-top: $margin-base
+		text-align: center
+		text-transform: uppercase
 
-	.qna_wrapper
+		&:active,
+		&:visited
+			color: $color-gray-dimmed
+
+		&:hover
+			color: $color-gray
+
+	.qna-wrapper
 		display: flex
 		align-items: flex-start
 
-	.qna_bookmark
+	.qna-bookmark
 		justify-content: flex-end
 
 	.tag

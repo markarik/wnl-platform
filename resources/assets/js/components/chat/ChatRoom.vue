@@ -47,7 +47,7 @@
 
 	.wnl-chat-messages
 		display: flex
-		flex: 1 1 auto
+		flex: 1 1 0
 		flex-direction: column-reverse
 		overflow-y: auto
 
@@ -55,6 +55,9 @@
 		border-top: $border-light-gray
 		margin: $margin-base 0 0
 		padding-top: $margin-base
+
+	.wnl-chat-content
+		min-height: 0
 </style>
 <script>
 	import Message from './Message.vue'

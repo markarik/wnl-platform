@@ -28,6 +28,7 @@ return [
 		'quiz-questions'      => 'quiz_questions',
 		'quiz-answers'        => 'quiz_answers',
 		'quiz-sets'           => 'quiz_sets',
+		'quiz-stats'          => 'quiz_stats',
 		'slides'              => 'slides',
 		'presentables'        => 'presentables',
 		'comments'            => 'comments',

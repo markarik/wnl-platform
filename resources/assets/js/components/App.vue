@@ -41,6 +41,8 @@
 	import store from 'store'
 	import Navbar from 'js/components/global/Navbar.vue'
 	import { mapGetters, mapActions } from 'vuex'
+	import axios from 'axios';
+	import {getApiUrl} from 'js/utils/env';
 
 	const CACHE_VERSION = 1
 
@@ -63,6 +65,12 @@
 		},
 		created: function () {
 			this.setupCurrentUser()
+				.then(() => {
+					this.currentUserId && axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
+					window.setInterval(() => {
+						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
+					}, 1000 * 60 * 3)
+				});
 			//.then(()=>this.setupNotifications())
 		},
 		mounted() {

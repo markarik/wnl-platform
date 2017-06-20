@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Models\ChatRoom;
 use App\Models\Comment;
-use App\Models\Notification;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
 use App\Models\Screen;
@@ -23,7 +22,6 @@ use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
 use App\Policies\User\UserSettingsPolicy;
 use App\Policies\User\UserPolicy;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

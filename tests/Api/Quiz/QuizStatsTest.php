@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 
 
-class QuizSetsTest extends ApiTestCase
+class QuizStatsTest extends ApiTestCase
 {
 
 	use DatabaseTransactions;
@@ -55,7 +55,7 @@ class QuizSetsTest extends ApiTestCase
 		$user = User::find(1);
 		$response = $this
 			->actingAs($user)
-			->json('GET', $this->url('/quiz_sets/'. $QUIZ_SET_ID . '/getStats'));
+			->json('GET', $this->url('/quiz_sets/'. $QUIZ_SET_ID . '/stats'));
 
 		$response
 			->assertStatus(200)

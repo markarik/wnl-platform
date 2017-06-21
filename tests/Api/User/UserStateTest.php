@@ -4,6 +4,8 @@ namespace Tests\Api\User;
 
 use App\Http\Controllers\Api\PrivateApi\User\UserStateApiController;
 use App\Models\User;
+use App\Models\UserQuizResults;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Redis;
 use Mockery;
@@ -279,6 +281,55 @@ class UserStateTest extends ApiTestCase
 
 		$this->assertDatabaseHas('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 7, 'quiz_answer_id' => 10]);
 		$this->assertDatabaseHas('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 9, 'quiz_answer_id' => 12]);
+
+		$mockedRedis->verify();
+	}
+
+	/** @test */
+	public function update_quiz_state_fail()
+	{
+		$USER_ID = 1;
+		$user = User::find($USER_ID);
+		$quizData = [
+			'quiz_questions' => [
+				7 => [
+					'id' => 7,
+					'selectedAnswer' => 8
+				]
+			]
+		];
+		$recordedAnswers = [
+			[
+				'quiz_question_id' => 7,
+				'quiz_answer_id' => 10,
+				'user_id' => $USER_ID
+			]
+		];
+
+		factory(UserQuizResults::class)->create([
+			'user_id' => $user->id,
+			'quiz_question_id' => 7,
+			'quiz_answer_id' => 11
+		]);
+
+		$redisKey = UserStateApiController::getQuizRedisKey($USER_ID, 1);
+		$encodedData = json_encode($quizData);
+
+		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, $encodedData);
+		$this->expectException(QueryException::class);
+
+		$response = $this
+			->actingAs($user)
+			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
+				'quiz' => $quizData,
+				'recordedAnswers' => $recordedAnswers
+			]);
+
+		$response
+			->assertStatus(500);
+
+		$this->assertDatabaseHas('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 7, 'quiz_answer_id' => 11]);
+		$this->assertDatabaseMissing('user_quiz_results', ['user_id' => 1, 'quiz_question_id' => 7, 'quiz_answer_id' => 10]);
 
 		$mockedRedis->verify();
 	}

@@ -16,7 +16,7 @@ function fetchQuizSet(id) {
 
 function fetchQuizSetStats(id) {
 	return axios.get(
-		getApiUrl(`quiz_sets/${id}/getStats`)
+		getApiUrl(`quiz_sets/${id}/stats`)
 	)
 }
 

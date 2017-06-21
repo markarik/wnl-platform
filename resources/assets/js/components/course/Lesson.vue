@@ -117,7 +117,7 @@
 				return this.getLesson(this.lessonId)
 			},
 			lessonName() {
-				return this.lesson.name
+				return this.lesson && this.lesson.name
 			},
 			lessonNumber() {
 				return this.lesson.order_number

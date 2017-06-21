@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\Api\PrivateApi\User\UserStateApiController;
+use App\Models\UserCourseProgress;
 use Closure;
 use Exception;
 use Illuminate\Console\Command;
@@ -53,36 +54,45 @@ class StoreProgress extends Command
 			$keyPattern = UserStateApiController::getCourseRedisKey($userId, 1);
 		}
 
-		$allKeys = $this->redis->keys($keyPattern);
+		$this->transaction(function() use ($keyPattern) {
+			$allKeys = $this->redis->keys($keyPattern);
 
-		foreach ($allKeys as $key) {
-			if (empty($userId)) {
-				$userId = $this->extractUserIdFromKey($key);
+			foreach ($allKeys as $key) {
+				if (empty($userId)) {
+					$userId = $this->extractUserIdFromKey($key);
+				}
+				$lessonsProgressRaw = $this->redis->get($key);
+
+				if (!empty($lessonsProgressRaw)) {
+					$lessonsProgress = json_decode($lessonsProgressRaw);
+
+					foreach ($lessonsProgress as $lessonId => $lessonData) {
+						$model = UserCourseProgress::firstOrNew(
+							['lesson_id' => $lessonId, 'user_id' => $userId]
+						);
+
+						$model->status = $lessonData->status;
+						$model->save();
+					}
+				}
 			}
-			$lessonsProgressRaw = $this->redis->get($key);
-			$lessonsProgress = json_decode($lessonsProgressRaw);
 
-			var_dump($lessonsProgress);
-		}
-
+		});
 		return;
 	}
 
 	private function transaction(Closure $callback)
 	{
 		DB::beginTransaction();
-		$this->redis->multi();
 
 		try {
 			$callback();
 		} catch (Exception $e) {
 			DB::rollBack();
-			$this->redis->discard();
 			throw $e;
 		}
 
 		DB::commit();
-		$this->redis->exec();
 	}
 
 	private function extractUserIdFromKey($key)

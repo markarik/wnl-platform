@@ -13,12 +13,13 @@ class CreateUserCourseProgressTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('user_course_progress', function (Blueprint $table) {
+		Schema::create('user_course_progresses', function (Blueprint $table) {
+			$table->increments('id');
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('lesson_id');
 			$table->enum('status', [
-				config('lessons.progress.in_progress'),
-				config('lessons.progress.done'),
+				'in-progress',
+				'complete',
 			]);
 
 			$table->unique(

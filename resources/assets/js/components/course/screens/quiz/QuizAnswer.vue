@@ -119,7 +119,7 @@
 			stats() {
 				const answersWithHit = this.getStats(this.questionId)
 
-				if (typeof answersWithHit !== 'object') return false;
+				if (typeof answersWithHit !== 'object' || typeof Object.values !== 'function') return false;
 
 				const allHits = Object.values(answersWithHit).reduce((count, current) => {
 					return count + current

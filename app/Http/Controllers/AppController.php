@@ -15,7 +15,6 @@ class AppController extends Controller
 				'APP_LOG_LEVEL'         => env('APP_LOG_LEVEL'),
 				'appEnv'                => env('APP_ENV'),
 				'appUrl'                => env('APP_URL'),
-				'APP_USE_LOCAL_STORAGE' => env('APP_USE_LOCAL_STORAGE'),
 				'chatHost'              => env('CHAT_HOST'),
 				'chatPort'              => env('CHAT_PORT'),
 				'SENTRY_DSN_VUE_PUB'    => env('SENTRY_DSN_VUE_PUB'),

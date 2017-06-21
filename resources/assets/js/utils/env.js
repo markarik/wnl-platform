@@ -22,10 +22,6 @@ export function isDebug() {
 	return envValue('appDebug')
 }
 
-export function useLocalStorage() {
-	return envValue('APP_USE_LOCAL_STORAGE')
-}
-
 export function getFirstLessonId() {
 	return envValue('FIRST_LESSON_ID') || 1;
 }

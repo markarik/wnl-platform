@@ -62,7 +62,7 @@
 
 	.votes
 		flex: 0 auto
-		padding: 0 $margin-base
+		margin-right: $margin-base
 
 	.qna-container
 		flex: 1 auto

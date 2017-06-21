@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="qna-thread">
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
@@ -35,50 +35,54 @@
 						></wnl-delete>
 					</span>
 				</div>
-				<div class="qna-answers">
-					<div class="level">
-						<div class="level-left">
-							<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
-						</div>
-						<div class="level-right" v-if="!readOnly">
-							<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
-								<span>Odpowiedz</span>
-								<span class="icon is-small answer-icon">
-									<i class="fa fa-comment-o"></i>
-								</span>
-							</a>
-							<a class="button is-small" v-if="showAnswerForm" @click="showAnswerForm = false">
-								<span>Ukryj</span>
-							</a>
-						</div>
-					</div>
-					<transition name="fade">
-						<wnl-qna-new-answer-form v-if="showAnswerForm"
-							:questionId="this.id"
-							@submitSuccess="onSubmitSuccess">
-						</wnl-qna-new-answer-form>
-					</transition>
-					<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly"></wnl-qna-answer>
-					<wnl-qna-answer v-if="allAnswers"
-						v-for="answer in otherAnswers"
-						:answer="answer"
-						:questionId="questionId"
-						:key="answer.id"
-						:readOnly="readOnly">
-					</wnl-qna-answer>
-					<a class="qna-answers-show-all"
-						v-if="!allAnswers && otherAnswers.length > 0"
-						@click="allAnswers = true">
-						<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
+			</div>
+		</div>
+		<div class="qna-answers">
+			<div class="level">
+				<div class="level-left">
+					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
+				</div>
+				<div class="level-right" v-if="!readOnly">
+					<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
+						<span>Odpowiedz</span>
+						<span class="icon is-small answer-icon">
+							<i class="fa fa-comment-o"></i>
+						</span>
+					</a>
+					<a class="button is-small" v-if="showAnswerForm" @click="showAnswerForm = false">
+						<span>Ukryj</span>
 					</a>
 				</div>
 			</div>
+			<transition name="fade">
+				<wnl-qna-new-answer-form v-if="showAnswerForm"
+					:questionId="this.id"
+					@submitSuccess="onSubmitSuccess">
+				</wnl-qna-new-answer-form>
+			</transition>
+			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly"></wnl-qna-answer>
+			<wnl-qna-answer v-if="allAnswers"
+				v-for="answer in otherAnswers"
+				:answer="answer"
+				:questionId="questionId"
+				:key="answer.id"
+				:readOnly="readOnly">
+			</wnl-qna-answer>
+			<a class="qna-answers-show-all"
+				v-if="!allAnswers && otherAnswers.length > 0"
+				@click="allAnswers = true">
+				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
+			</a>
 		</div>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.qna-thread
+		border: $border-light-gray
+		margin-bottom: $margin-huge
 
 	.button .icon.answer-icon
 		margin-left: $margin-small
@@ -91,10 +95,8 @@
 
 	.qna-question
 		background: $color-background-lighter-gray
-		border: solid $color-light-gray
-		border-width: $border-thick 0
-		margin: $margin-big 0
-		padding: $margin-big $margin-base $margin-big $margin-small
+		border-bottom: $border-light-gray
+		padding: $margin-base
 
 	.qna-question-content
 		font-size: $font-size-plus-half
@@ -108,7 +110,9 @@
 			font-weight: $font-weight-black
 
 	.qna-answers
-		margin-top: $margin-big
+		margin-left: $margin-huge
+		margin-top: $margin-base
+		margin: $margin-base $margin-base $margin-huge $margin-huge
 
 	.qna-answers-show-all
 		display: block

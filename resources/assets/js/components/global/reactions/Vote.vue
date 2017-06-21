@@ -19,7 +19,6 @@
 		font-weight: $font-weight-bold
 		position: relative
 		transition: all 0.2s
-		width: 3em
 
 	.vote-up
 		color: $color-green

@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Models\UserQuizResults;
 use App\Http\Controllers\Api\ApiController;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
@@ -93,22 +94,22 @@ class UserStateApiController extends ApiController
 		$quiz = $request->quiz;
 		$recordedAnswers = $request->recordedAnswers;
 
-		if (!empty($recordedAnswers)) {
-			try {
+		try {
+			if (!empty($recordedAnswers)) {
 				UserQuizResults::insert($recordedAnswers);
-			} catch (\PDOException $ex) {
-
-			} finally {
-				Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
 			}
+		} catch
+		(QueryException $e) {
+			throw $e;
+		} finally {
+			Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
 		}
-
-		Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
 
 		return $this->respondOk();
 	}
 
-	public function getTime($user)
+	public
+	function getTime($user)
 	{
 		$userInstance = User::find($user);
 
@@ -123,7 +124,8 @@ class UserStateApiController extends ApiController
 		]);
 	}
 
-	public function incrementTime(Request $request, $user)
+	public
+	function incrementTime(Request $request, $user)
 	{
 		$userInstance = User::find($user);
 		if (!Auth::user()->can('view', $userInstance)) {
@@ -155,7 +157,8 @@ class UserStateApiController extends ApiController
 		return sprintf(self::KEY_QUIZ_TEMPLATE, $quizId, $userId, self::CACHE_VERSION);
 	}
 
-	static function getUserTimeRedisKey($userId) {
+	static function getUserTimeRedisKey($userId)
+	{
 		return sprintf(self::KEY_USER_TIME_TEMPLATE, $userId, self::CACHE_VERSION);
 	}
 }

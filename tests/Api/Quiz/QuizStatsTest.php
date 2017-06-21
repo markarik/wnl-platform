@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 
 
-class QuizSetsTest extends ApiTestCase
+class QuizStatsTest extends ApiTestCase
 {
 
 	use DatabaseTransactions;

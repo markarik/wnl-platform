@@ -1,5 +1,5 @@
 <template>
-	<div class="qna-thread">
+	<div class="qna-thread" :class="{'is-mobile': isMobile}">
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
@@ -112,7 +112,11 @@
 	.qna-answers
 		margin-left: $margin-huge
 		margin-top: $margin-base
-		margin: $margin-base $margin-base $margin-huge $margin-huge
+		margin: $margin-base $margin-huge $margin-huge $margin-huge
+
+	.qna-thread.is-mobile
+		.qna-answers
+			margin: $margin-base
 
 	.qna-answers-show-all
 		display: block
@@ -135,6 +139,9 @@
 
 	.qna-bookmark
 		justify-content: flex-end
+
+	.tags
+		margin-top: $margin-small
 
 	.tag
 		margin-right: $margin-small
@@ -178,7 +185,7 @@
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
 			]),
-			...mapGetters(['currentUserId']),
+			...mapGetters(['currentUserId', 'isMobile']),
 			question() {
 				return this.getQuestion(this.questionId)
 			},

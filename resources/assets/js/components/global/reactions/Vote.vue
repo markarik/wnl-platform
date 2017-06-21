@@ -17,6 +17,7 @@
 		display: flex
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
+		padding: 0 $margin-small
 		position: relative
 		transition: all 0.2s
 

@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
 		Commands\SlidesImport::class,
 		Commands\DumpCourseStructure::class,
 		Commands\WarmUpCache::class,
+		Commands\StoreProgress::class,
     ];
 
     /**

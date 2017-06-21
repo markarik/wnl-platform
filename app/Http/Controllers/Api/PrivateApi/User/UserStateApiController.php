@@ -94,7 +94,13 @@ class UserStateApiController extends ApiController
 		$recordedAnswers = $request->recordedAnswers;
 
 		if (!empty($recordedAnswers)) {
-			UserQuizResults::insert($recordedAnswers);
+			try {
+				UserQuizResults::insert($recordedAnswers);
+			} catch (\PDOException $ex) {
+
+			} finally {
+				Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
+			}
 		}
 
 		Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));

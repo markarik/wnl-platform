@@ -11,6 +11,7 @@
 						<a class="white" @click="changeBackground('white')"></a>
 						<a class="dark" @click="changeBackground('dark')"></a>
 						<a class="image" @click="changeBackground('image')"></a>
+						<wnl-bookmark :reactableId="slideId" reactableResource="slides" module="slideshow" v-if="!isLoading"></wnl-bookmark>
 					</div>
 				</div>
 			</div>
@@ -112,7 +113,8 @@
 
 	import Annotations from './Annotations'
 	import SlideshowNavigation from './SlideshowNavigation'
-	import {isDebug, getApiUrl} from 'js/utils/env'
+	import Bookmark from 'js/components/global/reactions/Bookmark'
+	import {isDebug, getApiUrl, getUrl} from 'js/utils/env'
 
 	let debounced, handshake
 
@@ -121,6 +123,7 @@
 		components: {
 			'wnl-annotations': Annotations,
 			'wnl-slideshow-navigation': SlideshowNavigation,
+			'wnl-bookmark': Bookmark,
 		},
 		data() {
 			return {
@@ -142,7 +145,11 @@
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
+				'presentables',
 			]),
+			slideId() {
+				return this.getSlideId(this.currentSlideIndex)
+			},
 			currentSlideIndex() {
 				return this.currentSlideNumber - 1
 			},

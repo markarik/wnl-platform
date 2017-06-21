@@ -4,6 +4,7 @@ import {set, delete as destroy} from 'vue'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+import {reactionsGetters, reactionsActions} from 'js/store/modules/reactions'
 
 function _fetchPresentables(slideshowId) {
 	let data = {
@@ -19,6 +20,7 @@ function _fetchPresentables(slideshowId) {
 		order: {
 			order_number: 'asc',
 		},
+		include: 'reactions',
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
@@ -76,6 +78,7 @@ const state = getInitialState()
 
 const getters = {
 	...commentsGetters,
+	...reactionsGetters,
 	isFunctional: (state) => (slideNumber) => {
 		let slideIndex = slideNumber - 1
 
@@ -119,6 +122,7 @@ const mutations = {
 			set(state.slides, element.slide_id, {
 				order_number: element.order_number,
 				comments: [],
+				bookmark: element.bookmark,
 			})
 		})
 	},
@@ -141,6 +145,7 @@ const mutations = {
 
 const actions = {
 	...commentsActions,
+	...reactionsActions,
 	setup({commit, dispatch, getters}, slideshowId) {
 		dispatch('setupPresentables', slideshowId)
 			.then(() => dispatch('setupComments', getters.slidesIds))

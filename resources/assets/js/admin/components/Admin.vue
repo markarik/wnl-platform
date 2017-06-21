@@ -47,9 +47,13 @@
 		},
 		methods: {
 			...mapActions(['setupCurrentUser']),
+			...mapActions('notifications', ['pullNotifications']),
 		},
 		mounted() {
-			this.setupCurrentUser()
+			Promise.all([
+				this.setupCurrentUser(),
+				this.pullNotifications()
+			])
 		},
 	}
 </script>

@@ -20,7 +20,7 @@ class NotificationTransformer extends ApiTransformer
 	{
 		$data = [
 			'data'    => $address->data,
-			'read_at' => $address->read_at,
+			'read_at' => $address->read_at->timestamp ?? null,
 		];
 
 		if ($this->parent) {

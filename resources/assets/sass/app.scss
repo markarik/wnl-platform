@@ -53,7 +53,8 @@ html {
 	display: flex;
 	flex: 1;
 	flex-direction: row;
-	height: calc(100vh - (#{$navbar-height} - 10px))
+	height: calc(100vh - (#{$navbar-height} - 10px));
+	min-height: 0;
 }
 
 .wnl-app-layout {

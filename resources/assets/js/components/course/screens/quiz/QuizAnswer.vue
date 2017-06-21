@@ -10,10 +10,10 @@
 		<div class="quiz-answer-content">
 			{{answer.text}}
 		</div>
-		<div class="quiz-answer-stats" v-if="isComplete">
-			<!-- <span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
+		<div class="quiz-answer-stats" v-if="isComplete && stats !== false">
+			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
 				{{stats}}%
-			</span> -->
+			</span>
 		</div>
 	</li>
 </template>
@@ -96,6 +96,8 @@
 			...mapGetters('quiz', [
 				'isComplete',
 				'getSelectedAnswer',
+				'getStats',
+				'getAnswers'
 			]),
 
 			isSelected() {
@@ -115,7 +117,16 @@
 			},
 
 			stats() {
-				return _.round(this.answer.hits * 100 / this.totalHits)
+				const answersWithHit = this.getStats(this.questionId)
+
+				if (typeof answersWithHit !== 'object' || typeof Object.values !== 'function') return false;
+
+				const allHits = Object.values(answersWithHit).reduce((count, current) => {
+					return count + current
+				}, 0)
+				const answerId = this.answer.id
+
+				return Math.round((answersWithHit[answerId] || 0) / allHits * 100);
 			},
 
 			/**

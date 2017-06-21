@@ -87,6 +87,6 @@ class AppServiceProvider extends ServiceProvider
 
 	public function useExternalLogger()
 	{
-		return !App::environment('dev') && env('LOG_LEVEL') !== 'debug';
+		return !App::environment(['dev', 'testing']) && env('LOG_LEVEL') !== 'debug';
 	}
 }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\PrivateApi\Quiz;
 
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\QuizSetTransformer;
-use App\Http\Requests\Quiz\UpdateQuizSet;
 use App\Models\QuizSet;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use App\Http\Requests\Quiz\UpdateQuizSet;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\QuizSetTransformer;
 
 class QuizSetsApiController extends ApiController
 {

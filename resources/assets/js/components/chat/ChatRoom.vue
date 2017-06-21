@@ -47,7 +47,7 @@
 
 	.wnl-chat-messages
 		display: flex
-		flex: 1 1 auto
+		flex: 1 1 0
 		flex-direction: column-reverse
 		overflow-y: auto
 

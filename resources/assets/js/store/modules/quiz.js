@@ -1,8 +1,7 @@
 import axios from 'axios'
-import store from 'store'
 import _ from 'lodash'
 import {set, delete as destroy} from 'vue'
-import {useLocalStorage, getApiUrl} from 'js/utils/env'
+import {getApiUrl} from 'js/utils/env'
 import {resource} from 'js/utils/config'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
@@ -15,6 +14,12 @@ function fetchQuizSet(id) {
 	)
 }
 
+function fetchQuizSetStats(id) {
+	return axios.get(
+		getApiUrl(`quiz_sets/${id}/stats`)
+	)
+}
+
 function _fetchQuestionsCollection(ids) {
 	return axios.post(getApiUrl('quiz_questions/.search'), {
 		query: {
@@ -22,16 +27,6 @@ function _fetchQuestionsCollection(ids) {
 		},
 		include: 'quiz_answers,comments.profiles,reactions',
 	})
-}
-
-/**
- * Calculates a percentage share of a value in total
- * @param  {Integer} value
- * @param  {Integer} total
- * @return {Integer} Returns an integer being a percentage value
- */
-function getPercentageShare(value, total) {
-	return _.toInteger(value * 100 / total)
 }
 
 function getInitialState() {
@@ -48,6 +43,7 @@ function getInitialState() {
 		profiles: {},
 		setId: null,
 		setName: '',
+		quiz_stats: {}
 	}
 }
 
@@ -83,6 +79,7 @@ const getters = {
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
+	getStats: (state) => (questionId) => state.quiz_stats[questionId]
 }
 
 const mutations = {
@@ -151,6 +148,9 @@ const mutations = {
 			set(state, field, initialState[field])
 		})
 	},
+	[types.QUIZ_SET_STATS] (state, {stats}) {
+		set(state, 'quiz_stats', stats)
+	},
 }
 
 const actions = {
@@ -161,15 +161,16 @@ const actions = {
 
 		Promise.all([
 			quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug),
-			fetchQuizSet(resource.id)
-		]).then(([storedState, response]) => {
+			fetchQuizSet(resource.id),
+			fetchQuizSetStats(resource.id)
+		]).then(([storedState, response, quizStats]) => {
 			let included = response.data.included,
 				questionsIds = response.data.quiz_questions,
 				len = questionsIds.length
 
 			commit(types.UPDATE_INCLUDED, included)
 
-			if (useLocalStorage() && !_.isEmpty(storedState)) {
+			if (!_.isEmpty(storedState)) {
 				commit(types.QUIZ_RESTORE_STATE, storedState)
 			} else {
 				commit(types.QUIZ_SET_QUESTIONS, {
@@ -178,10 +179,11 @@ const actions = {
 					len,
 					questionsIds,
 				})
-			}
 
+			}
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)
+			commit(types.QUIZ_SET_STATS, quizStats.data)
 		});
 	},
 

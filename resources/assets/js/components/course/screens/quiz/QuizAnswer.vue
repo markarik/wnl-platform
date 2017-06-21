@@ -126,7 +126,7 @@
 				}, 0)
 				const answerId = this.answer.id
 
-				return (answersWithHit[answerId] || 0) / allHits * 100;
+				return Math.round((answersWithHit[answerId] || 0) / allHits * 100);
 			},
 
 			/**

@@ -12,14 +12,17 @@
 */
 
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
-    static $password;
+	static $password;
 
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
-    ];
+	return [
+		'first_name' => $faker->name,
+		'last_name' => $faker->name,
+		'email' => $faker->unique()->safeEmail,
+		'password' => bcrypt('secret'),
+		'remember_token' => str_random(10),
+		'phone' => encrypt('000000000'),
+		'address' => encrypt(''),
+	];
 });
 
 $factory->define(App\Models\UserQuizResults::class, function (Faker\Generator $faker) {

@@ -76,7 +76,7 @@
 
 	.qna-answer
 		// background: $color-background-lighter-gray
-		padding: $margin-base
+		padding: 0 $margin-base
 		margin-top: $margin-base
 
 	.qna-answer-comments

@@ -99,7 +99,7 @@
 		padding: $margin-base
 
 	.qna-question-content
-		font-size: $font-size-plus-half
+		font-size: $font-size-plus-1
 		justify-content: flex-start
 		padding-right: $margin-base
 		width: 100%

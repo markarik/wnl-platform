@@ -32,6 +32,7 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
+			<wnl-qna-sorting></wnl-qna-sorting>
 			<wnl-qna-question v-for="question in sortedQuestions"
 				:key="question.id"
 				:questionId="question.id"
@@ -98,6 +99,7 @@
 	import {join} from 'lodash'
 	import { mapActions, mapGetters, mapMutations } from 'vuex'
 
+	import QnaSorting from 'js/components/qna/QnaSorting'
 	import QnaQuestion from 'js/components/qna/QnaQuestion'
 	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
 
@@ -109,6 +111,7 @@
 		components: {
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
+			'wnl-qna-sorting': QnaSorting,
 		},
 		props: ['tags', 'ids', 'readOnly', 'title'],
 		data() {
@@ -118,7 +121,10 @@
 			}
 		},
 		computed: {
-			...mapGetters('qna', ['sortedQuestions', 'loading']),
+			...mapGetters('qna', [
+				'loading',
+				'sortedQuestions',
+			]),
 			howManyQuestions() {
 				return this.sortedQuestions.length || 0
 			},

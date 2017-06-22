@@ -12,13 +12,11 @@
 */
 
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
-	static $password;
-
 	return [
-		'first_name' => encrypt($faker->name),
-		'last_name' => encrypt($faker->name),
+		'first_name' => encrypt($faker->firstName),
+		'last_name' => encrypt($faker->lastName),
 		'email' => $faker->unique()->safeEmail,
-		'password' => $password ?: bcrypt('secret'),
+		'password' => bcrypt('secret'),
 		'remember_token' => str_random(10),
 		'phone' => encrypt('000000000'),
 		'address' => encrypt(''),

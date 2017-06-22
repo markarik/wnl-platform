@@ -10,13 +10,20 @@ use Tests\DuskTestCase;
 
 class CourseProgressPreservedTest extends DuskTestCase
 {
+	private $user;
+
+	public function setUp()
+	{
+		parent::setUp();
+		$this->user = factory(User::class)->create();
+	}
+
 	public function testCourseProgressPreserved()
 	{
 		$this->browse(function (Browser $browser, Browser $secondBrowser) {
-			$LESSON_COMPLETED = 2;
+			$LESSON_COMPLETED = 1;
 
-			factory(User::class)->create();
-			$browser->loginAs(User::find(1))
+			$browser->loginAs($this->user)
 				->visit(new Course())
 				->waitFor('@side_nav', 15)
 				->goToLesson($LESSON_COMPLETED)
@@ -25,15 +32,16 @@ class CourseProgressPreservedTest extends DuskTestCase
 				->waitFor('@side_nav', 15)
 				->quit();
 
-//			$secondBrowser->maximize()
-//				->visit(new Login())
-//				//TODO this is needed until we implement progress state in localStorage better
-//				->clearUserData()
-//				->waitFor('@email_input')
-//				->loginAsUser($user->email, 'secret')
-//				->on(new Course())
-//				->waitFor('@side_nav', 15)
-//				->assertExpectedLessonMarked($LESSON_COMPLETED);
+			$secondBrowser->loginAs($this->user)
+				->visit(new Course())
+				->waitFor('@side_nav', 15)
+				->assertExpectedLessonMarked($LESSON_COMPLETED);
 		});
+	}
+
+	public function tearDown()
+	{
+		parent::tearDown();
+		$this->user->delete();
 	}
 }

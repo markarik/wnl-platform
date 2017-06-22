@@ -14,7 +14,6 @@ use Laravel\Dusk\Browser;
 class CourseChatTest extends DuskTestCase
 {
 
-	private $faker;
 	private $firstName;
 	private $lastName;
 	private $firstName2;
@@ -24,14 +23,14 @@ class CourseChatTest extends DuskTestCase
 
 	public function setUp() {
 		parent::setUp();
-		$this->faker = new Generator();
-		$this->faker->addProvider(new Person($this->faker));
+		$faker = new Generator();
+		$faker->addProvider(new Person($faker));
 
-		$this->firstName = $this->faker->firstName();
-		$this->lastName = $this->faker->lastName();
+		$this->firstName = $faker->firstName;
+		$this->lastName = $faker->lastName;
 
-		$this->firstName2 = $this->faker->firstName();
-		$this->lastName2 = $this->faker->lastName();
+		$this->firstName2 = $faker->firstName;
+		$this->lastName2 = $faker->lastName;
 
 		$this->user = factory(User::class)->create(['first_name' => $this->firstName, 'last_name' => $this->lastName]);
 		$this->user2 = factory(User::class)->create(['first_name' => $this->firstName2, 'last_name' => $this->lastName2]);
@@ -72,5 +71,7 @@ class CourseChatTest extends DuskTestCase
 	public function tearDown()
 	{
 		parent::tearDown();
+		$this->user->delete();
+		$this->user2->delete();
 	}
 }

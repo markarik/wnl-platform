@@ -22,7 +22,7 @@ class Invoice
 	public const PROFORMA_SERIES_NAME = 'PROFORMA';
 	public const ADVANCE_SERIES_NAME = 'F-ZAL';
 	public const FINAL_SERIES_NAME = 'FK';
-	const VAT_THRESHOLD = 4000.00; // TODO: revert this
+	const VAT_THRESHOLD = 159452.00;
 	const VAT_ZERO = 0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;

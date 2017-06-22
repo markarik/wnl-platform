@@ -18,7 +18,6 @@ class QuizStatsTest extends ApiTestCase
 	/** @test * */
 	public function get_quiz_set_stats()
 	{
-		factory(User::class)->create();
 		$QUIZ_SET_ID = 500;
 
 		factory(UserQuizResults::class)->create([

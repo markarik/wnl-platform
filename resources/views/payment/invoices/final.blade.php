@@ -1,38 +1,36 @@
 @extends('payment.invoices.layout')
 
 @section('title')
-	Faktura końcowa
+	Faktura zaliczkowa
 @endsection
 
 @section('invoice-data')
 	<table>
 		<tr>
 			<th>Faktura końcowa</th>
-			<th></th>
-		</tr>
-		<tr>
-			<td>Zamówienie:</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>Termin płatności:</td>
-			<td></td>
+			<th>{{ $invoiceData['full_number'] }}</th>
 		</tr>
 		<tr>
 			<td>Data wystawienia:</td>
-			<td></td>
+			<td>{{ $invoiceData['date'] }}</td>
 		</tr>
 		<tr>
-			<td>Data sprzedaży:</td>
-			<td></td>
+			<td>Data wpłaty:</td>
+			<td>{{ $invoiceData['payment_date'] }}</td>
+		</tr>
+		<tr>
+			<td>Metoda płatności</td>
+			<td>{{ $invoiceData['payment_method'] }}</td>
 		</tr>
 	</table>
 @endsection
 
 @section('buyer')
-	Adam Karmiński<br>
-	ul. Łowiecka 69<br>
-	64-100, Leszno<br>
+	{{ $buyer['name'] }}<br>
+	{{ $buyer['address'] }}<br>
+	{{ $buyer['zip'] }}, {{ $buyer['city'] }}<br>
+	{{ $buyer['country'] }}<br>
+	{{ $buyer['nip'] }}
 @endsection
 
 @section('orders-title')
@@ -40,20 +38,30 @@
 @endsection
 
 @section('orders-list')
-	<tr>
-		<td>1</td>
-		<td>2</td>
-		<td>3</td>
-		<td>4</td>
-		<td>5</td>
-		<td>6</td>
-		<td>7</td>
-		<td>8</td>
-	</tr>
+	@foreach ($ordersList as $index => $order)
+		<tr>
+			{{-- L.p. --}}
+			<td>{{ $index + 1 }}</td>
+			{{-- Nazwa produktu --}}
+			<td>{{ $order['product_name'] }}</td>
+			{{-- Jednostka --}}
+			<td>{{ $order['unit'] }}</td>
+			{{-- Ilość --}}
+			<td>{{ $order['amount'] }}</td>
+			{{-- Cena brutto --}}
+			<td>{{ $order['priceGross'] }}zł</td>
+			{{-- VAT --}}
+			<td> -</td>
+			{{-- Wartość netto --}}
+			<td> -</td>
+			{{-- Wartość brutto --}}
+			<td>{{ $order['priceGross'] }}zł</td>
+		</tr>
+	@endforeach
 @endsection
 
 @section('orders-summary')
-	<strong>Podsumowanie zamówienia</strong>
+	<h4>Podsumowanie zamówienia</h4>
 	<table>
 		<tr>
 			<th>Stawka VAT</th>
@@ -62,74 +70,89 @@
 			<th>Wartość brutto</th>
 		</tr>
 		<tr>
-			<td>23%</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
+			<td> -</td>
+			<td> -</td>
+			<td> -</td>
+			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 		<tr>
-			<td>Razem:</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
+			<td><strong>Razem:</strong></td>
+			<td> -</td>
+			<td> -</td>
+			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 	</table>
 @endsection
 
-@section('advances')
-	<strong>Poprzednie zaliczki</strong>
+{{--@section('settlement')--}}
+{{--<h4>Rozliczenie wg stawek</h4>--}}
+{{--<table>--}}
+{{--<tr>--}}
+{{--<th>Stawka VAT</th>--}}
+{{--<th>Wartość netto</th>--}}
+{{--<th>Kwota VAT</th>--}}
+{{--<th>Wartość brutto</th>--}}
+{{--</tr>--}}
+{{--<tr>--}}
+{{--<td>{{ $order['vat'] }}</td>--}}
+{{--<td>{{ $settlement['priceNet'] }}zł</td>--}}
+{{--<td>{{ $settlement['vatValue'] }}zł</td>--}}
+{{--<td>{{ $settlement['priceGross'] }}zł</td>--}}
+{{--</tr>--}}
+{{--<tr>--}}
+{{--<td><strong>Razem:</strong></td>--}}
+{{--<td>{{ $settlement['priceNet'] }}zł</td>--}}
+{{--<td>{{ $settlement['vatValue'] }}zł</td>--}}
+{{--<td>{{ $settlement['priceGross'] }}zł</td>--}}
+{{--</tr>--}}
+{{--</table>--}}
+{{--@endsection--}}
+
+@section('final')
+	<h4>Zaliczki</h4>
 	<table>
 		<tr>
 			<th>Lp</th>
 			<th>Numer faktury</th>
 			<th>Data</th>
+			<th>Stawka VAT</th>
 			<th>Netto</th>
+			<th>Kwota VAT</th>
 			<th>Brutto</th>
 		</tr>
+		@foreach($previousAdvances as $index => $invoice)
+			<tr>
+				<td>{{ $index + 1 }}</td>
+				<td>{{ $invoice->full_number }}</td>
+				<td>{{ $invoice->created_at->format('d-m-Y') }}</td>
+				<td>{{ $invoice->vat }}</td>
+				<td>{{ number_format($invoice->vat === 'zw' ? $invoice->amount : $invoice->amount / 1.23,  2, ',', ' ')}}</td>
+				<td>{{ number_format($invoice->vat === 'zw' ? 0 : $invoice->amount - $invoice->amount / 1.23,  2, ',', ' ')}}</td>
+				<td>{{ number_format($invoice->amount, 2, ',', ' ') }}zł</td>
+			</tr>
+		@endforeach
 		<tr>
-			<td class="hidden"></td>
-			<td class="hidden"></td>
-			<td>Razem</td>
-			<td>0,00</td>
-			<td>0,00</td>
+			<td class="no-border">&nbsp;</td>
+			<td class="no-border">&nbsp;</td>
+			<td class="no-border">&nbsp;</td>
+			<td class="no-border">&nbsp;</td>
+			<td class="no-border">&nbsp;</td>
+			<td><strong>Razem:</strong></td>
+			<td>{{ $previousAdvances->sum('amount') }}zł</td>
 		</tr>
 	</table>
-@endsection
-
-@section('settlement')
-	<strong>Rozliczenie według stawek</strong>
-	<table>
-		<tr>
-			<th>Stawka VAT</th>
-			<th>Wartość netto</th>
-			<th>Kwota VAT</th>
-			<th>Wartość brutto</th>
-		</tr>
-		<tr>
-			<td>23%</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
-		</tr>
-		<tr>
-			<td>Razem:</td>
-			<td>2</td>
-			<td>3</td>
-			<td>4</td>
-		</tr>
-	</table>
-@endsection
-
-@section('payment-details')
-	Wpłacono słownie: <br>
-	Metoda płatnośći:
 @endsection
 
 @section('notes')
-	Zamówienie #
+	<ul>
+		@foreach ($notes as $note)
+			<li>{{ $note }}</li>
+		@endforeach
+	</ul>
 @endsection
 
 @section('summary')
-	Wpłacono:
-	Pozostało z zamówienia:
+	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
+	<p>Wpłacono: <strong>{{ $recentSettlement }}zł</strong></p>
+	<p>Pozostało z zamówienia: <strong>{{ $remainingAmount }}zł</strong></p>
 @endsection

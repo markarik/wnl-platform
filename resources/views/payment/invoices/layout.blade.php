@@ -130,7 +130,7 @@
 			</td>
 		</tr>
 	</table>
-
+	@yield('final', '')
 	<div class="columns">
 		{{-- Payment details --}}
 		<div class="column">

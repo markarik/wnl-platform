@@ -10,6 +10,7 @@ class OptimaExport extends Command
 {
 	const DATABASE_ID = 'bethi';
 	const ADVANCE_SERIES_NAME = 'F-ZAL';
+	const FINAL_SERIES_NAME = 'FK';
 
 	/**
 	 * The name and signature of the console command.
@@ -48,6 +49,7 @@ class OptimaExport extends Command
 		$orders = Order::with(['invoices', 'user', 'product'])
 			->whereHas('invoices', function ($query) {
 				$query->where('series', self::ADVANCE_SERIES_NAME);
+				$query->orWhere('series', self::FINAL_SERIES_NAME);
 			})->get();
 
 		foreach ($orders as $order) {

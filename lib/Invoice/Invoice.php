@@ -19,10 +19,10 @@ use Illuminate\Http\Response;
 
 class Invoice
 {
-	const PROFORMA_SERIES_NAME = 'PROFORMA';
-	const ADVANCE_SERIES_NAME = 'F-ZAL';
-	const FINAL_SERIES_NAME = 'FK';
-	const VAT_THRESHOLD = 159452.00;
+	public const PROFORMA_SERIES_NAME = 'PROFORMA';
+	public const ADVANCE_SERIES_NAME = 'F-ZAL';
+	public const FINAL_SERIES_NAME = 'FK';
+	const VAT_THRESHOLD = 4000.00; // TODO: revert this
 	const VAT_ZERO = 0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
@@ -184,7 +184,83 @@ class Invoice
 
 	public function finalInvoice(Order $order)
 	{
+		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
+		$vatValue = $this->getVatValue($recentSettlement);
+		$vatString = $this->getVatString($vatValue);
+		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
+		$invoice = $order->invoices()->create([
+			'number' => $this->nextNumberInSeries(self::FINAL_SERIES_NAME),
+			'series' => self::FINAL_SERIES_NAME,
+			'amount' => $recentSettlement,
+			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+		]);
 
+		$data = [
+			'notes'       => [],
+			'invoiceData' => [
+				'id'             => $invoice->id,
+				'full_number'    => $invoice->full_number,
+				'date'           => $invoice->created_at->format('d.m.Y'),
+				'payment_date'   => $invoice->created_at->format('d.m.Y'),
+				'payment_method' => 'przelew',
+			],
+		];
+
+		$data['buyer'] = $this->getBuyerData($order->user);
+
+		$data['ordersList'] = [
+			[
+				'product_name' => $order->product->invoice_name,
+				'unit'         => 'szt.',
+				'amount'       => 1,
+			],
+		];
+		$totalPrice = $order->product->price;
+
+		if ($order->coupon) {
+			$data['coupon'] = [
+				'value'             => $order->coupon_amount,
+				'total_with_coupon' => $order->total_with_coupon,
+			];
+			$totalPrice = $order->total_with_coupon;
+			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+		}
+
+		// Calculate netto, brutto, VAT
+		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
+		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
+		$data['ordersList'][0]['vat'] = $vatString;
+
+		$data['settlement'] = [
+			'priceNet'   => $this->price($recentSettlement / (1 + $vatValue)),
+			'vatValue'   => $this->price($recentSettlement - $recentSettlement / (1 + $vatValue)),
+			'priceGross' => $this->price($recentSettlement),
+		];
+
+		$data['remainingAmount'] = $this->price($totalPrice - $totalPaid);
+
+		$data['previousAdvances'] = $previousAdvances;
+		$data['recentSettlement'] = $recentSettlement;
+
+		if ($vatValue === self::VAT_ZERO) {
+			$data['ordersList'][0]['vatValue'] = '-';
+		} else {
+			$data['ordersList'][0]['vatValue'] = $this->price($vatValue * $totalPrice / (1 + $vatValue)) . 'zł';
+		}
+
+		$data['summary'] = [
+			'total' => $this->price($totalPrice),
+		];
+
+		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
+		if ($vatValue === self::VAT_ZERO) {
+			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+		}
+
+		$this->renderAndSave('payment.invoices.final', $data);
+
+		return $invoice;
 	}
 
 	protected function getBuyerData(User $user)

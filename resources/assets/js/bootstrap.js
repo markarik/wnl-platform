@@ -4,7 +4,7 @@
  * included with Laravel will automatically verify the header's value.
  */
 
-//import Echo from 'laravel-echo'
+import Echo from 'laravel-echo'
 window.axios = require('axios');
 
 window.axios.defaults.headers.common = {
@@ -24,9 +24,9 @@ window.axios.interceptors.response.use(
 	}
 );
 
-// window.io = require('socket.io-client');
-//
-// window.Echo = new Echo({
-// 	broadcaster: 'socket.io',
-// 	host: window.location.hostname + ':8755'
-// });
+window.io = require('socket.io-client');
+
+window.Echo = new Echo({
+	broadcaster: 'socket.io',
+	host: window.location.hostname + ':8755'
+});

@@ -14,7 +14,13 @@ const actions = {
 		_getNotifications().then(response => {
 			console.log(response.data)
 		})
-	}
+	},
+	setupLiveNotifications(userId) {
+		Echo.private(`user.${userId}`)
+			.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
+				console.log('Notification', notification);
+			});
+	},
 }
 
 export default {

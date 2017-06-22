@@ -56,12 +56,6 @@
 		},
 		methods: {
 			...mapActions(['setupCurrentUser', 'setLayout', 'resetLayout', 'toggleOverlay']),
-			setupNotifications() {
-				Echo.private(`user.${this.currentUserId}`)
-						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
-							$wnl.logger.debug('Notification', notification);
-						});
-			},
 		},
 		created: function () {
 			this.setupCurrentUser()

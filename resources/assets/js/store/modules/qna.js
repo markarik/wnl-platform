@@ -126,6 +126,7 @@ function _getAnswer(answerId) {
 function getInitialState() {
 	return {
 		loading: true,
+		sorting: 'hottest',
 		questionsIds: [],
 		qna_questions: {},
 		qna_answers: {},
@@ -144,11 +145,50 @@ const state = getInitialState()
 const getters = {
 	...reactionsGetters,
 	loading: state => state.loading,
-	sortedQuestions: state => {
+	currentSorting: state => state.sorting,
+	sortedQuestions: (state, getters) => {
+		if (state.sorting === 'latest') return getters.questionsByTime;
+		if (state.sorting === 'no-answer') return getters.questionsNoAnswer;
+		if (state.sorting === 'my') return getters.questionsMy;
+		return getters.questionsByVotes;
+	},
+	questionsByVotes: state => {
 		return _.reverse(
 			_.sortBy(
 				_.values(state.qna_questions),
 				(question) => question.upvote.count
+			)
+		)
+	},
+	questionsByTime: state => {
+		return _.reverse(
+			_.sortBy(
+				_.values(state.qna_questions),
+				(question) => question.upvote.created_at
+			)
+		)
+	},
+	questionsNoAnswer: state => {
+		return _.reverse(
+			_.sortBy(
+				_.values(
+					_.filter(state.qna_questions, (question) => {
+						return typeof question.qna_answers === 'undefined'
+					})
+				),
+				(question) => question.upvote.created_at
+			)
+		)
+	},
+	questionsMy: (state, getters, rootState, rootGetters) => {
+		return _.reverse(
+			_.sortBy(
+				_.values(
+					_.filter(state.qna_questions, (question) => {
+						return question.profiles[0] == rootGetters.currentUserId
+					})
+				),
+				(question) => question.upvote.created_at
 			)
 		)
 	},
@@ -205,6 +245,9 @@ const getters = {
 const mutations = {
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
+	},
+	[types.QNA_CHANGE_SORTING] (state, sorting) {
+		set(state, 'sorting', sorting)
 	},
 	[types.QNA_SET_QUESTIONS] (state, data) {
 		/**
@@ -294,6 +337,9 @@ const mutations = {
 // Actions
 const actions = {
 	...reactionsActions,
+	changeSorting({commit}, sorting) {
+		commit(types.QNA_CHANGE_SORTING, sorting)
+	},
 	fetchQuestions({commit}, tags) {
 		commit(types.IS_LOADING, true)
 		// TODO: Error when lessonId is not defined

@@ -6,6 +6,10 @@
 	</div>
 </template>
 
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+</style>
+
 <script>
 	import _ from 'lodash'
 	import Quill from 'quill'

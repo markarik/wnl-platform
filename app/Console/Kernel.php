@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
 		Commands\AddressesExport::class,
 		Commands\MigrateUserData::class,
 		Commands\QuizImport::class,
+		Commands\SectionsUpdate::class,
 		Commands\SlidesImport::class,
 		Commands\DumpCourseStructure::class,
 		Commands\WarmUpCache::class,
@@ -46,7 +47,7 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('cache:warmup')
-			->dailyAt('03:30');
+			->dailyAt('00:30');
     }
 
     /**

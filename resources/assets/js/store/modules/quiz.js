@@ -1,7 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import {set, delete as destroy} from 'vue'
-import {useLocalStorage, getApiUrl} from 'js/utils/env'
+import {getApiUrl} from 'js/utils/env'
 import {resource} from 'js/utils/config'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
@@ -16,7 +16,7 @@ function fetchQuizSet(id) {
 
 function fetchQuizSetStats(id) {
 	return axios.get(
-		getApiUrl(`quiz_sets/${id}/getStats`)
+		getApiUrl(`quiz_sets/${id}/stats`)
 	)
 }
 
@@ -27,16 +27,6 @@ function _fetchQuestionsCollection(ids) {
 		},
 		include: 'quiz_answers,comments.profiles,reactions',
 	})
-}
-
-/**
- * Calculates a percentage share of a value in total
- * @param  {Integer} value
- * @param  {Integer} total
- * @return {Integer} Returns an integer being a percentage value
- */
-function getPercentageShare(value, total) {
-	return _.toInteger(value * 100 / total)
 }
 
 function getInitialState() {
@@ -117,7 +107,14 @@ const mutations = {
 		set(state, 'questionsIds', payload.questionsIds)
 
 		_.forEach(payload.quiz_questions, (value, id) => {
-			set(state.quiz_questions, id, value)
+			if (!_.isUndefined(state.quiz_questions[id])) {
+				if (!_.isUndefined(value.selectedAnswer)) {
+					set(state.quiz_questions[id], 'selectedAnswer', value.selectedAnswer)
+				}
+				if (!_.isUndefined(value.isResolved)) {
+					set(state.quiz_questions[id], 'isResolved', value.isResolved)
+				}
+			}
 		})
 	},
 	[types.QUIZ_SET_QUESTIONS] (state, payload) {
@@ -180,7 +177,7 @@ const actions = {
 
 			commit(types.UPDATE_INCLUDED, included)
 
-			if (useLocalStorage() && !_.isEmpty(storedState)) {
+			if (!_.isEmpty(storedState)) {
 				commit(types.QUIZ_RESTORE_STATE, storedState)
 			} else {
 				commit(types.QUIZ_SET_QUESTIONS, {
@@ -189,7 +186,6 @@ const actions = {
 					len,
 					questionsIds,
 				})
-
 			}
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)

@@ -63,6 +63,7 @@ export const PROGRESS_SAVE             = 'PROGRESS_SAVE'
 export const QNA_DESTROY           = 'QNA_DESTROY'
 export const QNA_SET_QUESTIONS_IDS = 'QNA_SET_QUESTIONS_IDS'
 export const QNA_SET_QUESTIONS     = 'QNA_SET_QUESTIONS'
+export const QNA_CHANGE_SORTING    = 'QNA_CHANGE_SORTING'
 export const QNA_UPDATE_QUESTION   = 'QNA_UPDATE_QUESTION'
 export const QNA_UPDATE_ANSWER     = 'QNA_UPDATE_ANSWER'
 

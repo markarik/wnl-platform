@@ -11,8 +11,14 @@
 		</div>
 		<div class="control" v-else>
 			<span class="select">
-				<select>
-					<option></option>
+				<select @input="changeSortingWithSelect">
+					<option v-for="(option, index) in sortingOptions"
+						:key="index"
+						:value="option.slug"
+						:selected="isTabActive(option.slug)"
+					>
+						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
+					</option>
 				</select>
 			</span>
 		</div>
@@ -65,6 +71,9 @@
 			...mapActions('qna', ['changeSorting']),
 			isTabActive(slug) {
 				return this.currentSorting === slug
+			},
+			changeSortingWithSelect(event) {
+				this.changeSorting(event.target.value)
 			},
 		}
 	}

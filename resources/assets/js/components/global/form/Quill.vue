@@ -8,10 +8,6 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
-
-	.ql-editor,
-	.ql-toolbar
-		background: $color-white
 </style>
 
 <script>

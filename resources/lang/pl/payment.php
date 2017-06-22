@@ -146,7 +146,7 @@ return [
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie, wybierz metodę płatności',
+	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie, dokonaj płatności przez system Przelewy24',
 	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
 	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
 	'confirm-method-instalments-button'    => 'Kupuję i płacę na raty',

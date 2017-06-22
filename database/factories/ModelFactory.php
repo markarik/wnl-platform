@@ -15,10 +15,10 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 	static $password;
 
 	return [
-		'first_name' => $faker->name,
-		'last_name' => $faker->name,
+		'first_name' => encrypt($faker->name),
+		'last_name' => encrypt($faker->name),
 		'email' => $faker->unique()->safeEmail,
-		'password' => bcrypt('secret'),
+		'password' => $password ?: bcrypt('secret'),
 		'remember_token' => str_random(10),
 		'phone' => encrypt('000000000'),
 		'address' => encrypt(''),

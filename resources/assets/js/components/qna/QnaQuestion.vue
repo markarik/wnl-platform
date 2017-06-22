@@ -140,11 +140,9 @@
 	.qna-bookmark
 		justify-content: flex-end
 
-	.tags
-		margin-top: $margin-small
-
 	.tag
 		margin-right: $margin-small
+		margin-top: $margin-small
 
 </style>
 

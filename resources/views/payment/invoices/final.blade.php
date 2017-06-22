@@ -1,4 +1,4 @@
-@extends('payment.invoices.layout')
+@extends('payment.invoices.final-layout')
 
 @section('title')
 	Faktura zaliczkowa
@@ -50,10 +50,6 @@
 			<td>{{ $order['amount'] }}</td>
 			{{-- Cena brutto --}}
 			<td>{{ $order['priceGross'] }}zł</td>
-			{{-- VAT --}}
-			<td> -</td>
-			{{-- Wartość netto --}}
-			<td> -</td>
 			{{-- Wartość brutto --}}
 			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
@@ -64,51 +60,47 @@
 	<h4>Podsumowanie zamówienia</h4>
 	<table>
 		<tr>
-			<th>Stawka VAT</th>
+			<th class="no-border">&nbsp;</th>
 			<th>Wartość netto</th>
 			<th>Kwota VAT</th>
 			<th>Wartość brutto</th>
 		</tr>
 		<tr>
-			<td> -</td>
-			<td> -</td>
-			<td> -</td>
-			<td>{{ $order['priceGross'] }}zł</td>
-		</tr>
-		<tr>
 			<td><strong>Razem:</strong></td>
-			<td> -</td>
-			<td> -</td>
-			<td>{{ $order['priceGross'] }}zł</td>
+			<td>{{ $n($vatSummaryTotal['net']) }}zł</td>
+			<td>{{ $n($vatSummaryTotal['vat']) }}zł</td>
+			<td>{{ $n($vatSummaryTotal['gross']) }}zł</td>
 		</tr>
 	</table>
 @endsection
 
-{{--@section('settlement')--}}
-{{--<h4>Rozliczenie wg stawek</h4>--}}
-{{--<table>--}}
-{{--<tr>--}}
-{{--<th>Stawka VAT</th>--}}
-{{--<th>Wartość netto</th>--}}
-{{--<th>Kwota VAT</th>--}}
-{{--<th>Wartość brutto</th>--}}
-{{--</tr>--}}
-{{--<tr>--}}
-{{--<td>{{ $order['vat'] }}</td>--}}
-{{--<td>{{ $settlement['priceNet'] }}zł</td>--}}
-{{--<td>{{ $settlement['vatValue'] }}zł</td>--}}
-{{--<td>{{ $settlement['priceGross'] }}zł</td>--}}
-{{--</tr>--}}
-{{--<tr>--}}
-{{--<td><strong>Razem:</strong></td>--}}
-{{--<td>{{ $settlement['priceNet'] }}zł</td>--}}
-{{--<td>{{ $settlement['vatValue'] }}zł</td>--}}
-{{--<td>{{ $settlement['priceGross'] }}zł</td>--}}
-{{--</tr>--}}
-{{--</table>--}}
-{{--@endsection--}}
+@section('settlement')
+	<h4>Rozliczenie wg stawek</h4>
+	<table>
+		<tr>
+			<th>Stawka VAT</th>
+			<th>Wartość netto</th>
+			<th>Kwota VAT</th>
+			<th>Wartość brutto</th>
+		</tr>
+		@foreach($vatSummary as $rate => $summary)
+			<tr>
+				<td>{{ $rate }}</td>
+				<td>{{ $n($summary['net']) }}zł</td>
+				<td>{{ $n($summary['vat']) }}zł</td>
+				<td>{{ $n($summary['gross']) }}zł</td>
+			</tr>
+		@endforeach
+		<tr>
+			<td><strong>Razem:</strong></td>
+			<td>{{ $n($vatSummaryTotal['net']) }}zł</td>
+			<td>{{ $n($vatSummaryTotal['vat']) }}zł</td>
+			<td>{{ $n($vatSummaryTotal['gross']) }}zł</td>
+		</tr>
+	</table>
+@endsection
 
-@section('final')
+@section('final-advances')
 	<h4>Zaliczki</h4>
 	<table>
 		<tr>
@@ -126,8 +118,12 @@
 				<td>{{ $invoice->full_number }}</td>
 				<td>{{ $invoice->created_at->format('d-m-Y') }}</td>
 				<td>{{ $invoice->vat }}</td>
-				<td>{{ number_format($invoice->vat === 'zw' ? $invoice->amount : $invoice->amount / 1.23,  2, ',', ' ')}}</td>
-				<td>{{ number_format($invoice->vat === 'zw' ? 0 : $invoice->amount - $invoice->amount / 1.23,  2, ',', ' ')}}</td>
+				<td>{{ number_format($invoice->vat === 'zw' ? $invoice->amount : $invoice->amount / 1.23,  2, ',', ' ')}}
+					zł
+				</td>
+				<td>{{ number_format($invoice->vat === 'zw' ? 0 : $invoice->amount - $invoice->amount / 1.23,  2, ',', ' ')}}
+					zł
+				</td>
 				<td>{{ number_format($invoice->amount, 2, ',', ' ') }}zł</td>
 			</tr>
 		@endforeach
@@ -153,6 +149,6 @@
 
 @section('summary')
 	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
-	<p>Wpłacono: <strong>{{ $recentSettlement }}zł</strong></p>
-	<p>Pozostało z zamówienia: <strong>{{ $remainingAmount }}zł</strong></p>
+	<p>Wpłacono: <strong>{{ $previousAdvances->sum('amount') }}zł</strong></p>
+	<p>Pozostało do zapłaty: <strong>{{ $remainingAmount }}zł</strong></p>
 @endsection

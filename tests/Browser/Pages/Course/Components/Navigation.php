@@ -13,7 +13,7 @@ class Navigation extends BasePage
 		return [
 			'@dropdown_trigger' => '.wnl-dropdown .activator',
 			'@logout' => 'a[href="/logout"]',
-			'@dropdown_container' => '.wnl-dropdown .box drawer'
+			'@dropdown_username' => '.wnl-dropdown .box.drawer .metadata'
 		];
 	}
 
@@ -32,6 +32,6 @@ class Navigation extends BasePage
 	public function assertUserLoggedIn($browser, $userName) {
 		$browser
 			->click('@dropdown_trigger')
-			->assertSeeIn('@dropdown_container', $userName);
+			->assertSeeIn('@dropdown_username', strtoupper($userName));
 	}
 }

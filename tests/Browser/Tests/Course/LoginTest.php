@@ -7,7 +7,7 @@ use Faker\Generator;
 use Faker\Provider\Internet;
 use Faker\Provider\Person;
 use Tests\Browser\Pages\Course\Components\Navigation;
-use Tests\Browser\Pages\Course\Course;
+use Tests\Browser\Pages\Login;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 
@@ -37,20 +37,21 @@ class LoginTest extends DuskTestCase
 			[
 				'password' => bcrypt($this->password),
 				'email' => $this->email,
-				'first_name' => encrypt($firstName),
-				'last_name' => encrypt($lastName)
+				'first_name' => $firstName,
+				'last_name' => $lastName
 			]
 		);
 	}
 
-	public function testLessonProgressPreservedWhenUserLogsOut()
+	public function testLogin()
 	{
 		$this->browse(function (Browser $browser) {
 
 			$browser
+				->visit(new Login())
 				->loginAsUser($this->email, $this->password)
 				->on(new Navigation())
-				->assertUserLoggedIn();
+				->assertUserLoggedIn($this->userName);
 		});
 	}
 

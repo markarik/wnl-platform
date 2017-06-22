@@ -2,30 +2,38 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Tests\Browser\Pages\Course\Lesson;
-use Tests\Browser\Pages\Login;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 
 class NavigateThroughLessonTest extends DuskTestCase
 {
 
-	/**
-	 * @dataProvider Tests\Browser\DataProviders\User::userProvider
-	 * @param String $email
-	 * @param String $password
-	 */
-	public function testNavigateThroughLesson($email, $password)
+	private $user;
+
+	public function setUp()
 	{
-		$this->browse(function (Browser $browser) use ($email, $password) {
-			$browser->maximize()
-				->visit(new Login())
-				->loginAsUser($email, $password)
+		parent::setUp();
+		$this->user = factory(User::class)->create();
+	}
+
+	public function testNavigateThroughLesson()
+	{
+		$this->browse(function (Browser $browser) {
+			$browser->loginAs($this->user)
 				->visit(new Lesson())
 				->waitFor('@side_nav', 15)
+				->waitUntilMissing('@loading_overlay', 30)
 				->switchToLessonFrame()
 				->goThroughSlides()
 				->assertLastSlide();
 		});
+	}
+
+	public function tearDown()
+	{
+		parent::tearDown();
+		$this->user->delete();
 	}
 }

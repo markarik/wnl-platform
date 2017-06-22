@@ -33,8 +33,14 @@
 	@import 'resources/assets/sass/variables'
 
 	.qna-new-answer-form
+		margin-bottom: $margin-small
+
 		.ql-container
 			height: auto
+
+		.ql-editor,
+		.ql-toolbar
+			background: $color-white
 
 		.ql-editor
 			font-family: $font-family-sans-serif

@@ -258,6 +258,29 @@ class Invoice
 			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
 		}
 
+		$data['vatSummary'] = [];
+		$data['vatSummaryTotal'] = ['net' => 0, 'vat' => 0, 'gross' => 0];
+		$data['vatSummary'] = [
+			'zw' => ['net' => 0, 'vat' => 0, 'gross' => 0],
+			'23' => ['net' => 0, 'vat' => 0, 'gross' => 0],
+		];
+		foreach ($previousAdvances as $advance) {
+			$net = $advance->vat === 'zw' ? $advance->amount : $advance->amount / 1.23;
+			$vat = $advance->vat === 'zw' ? 0 : $advance->amount - $advance->amount / 1.23;
+			$gross = $advance->amount;
+
+			$data['vatSummary'][$advance->vat]['net'] += $net;
+			$data['vatSummary'][$advance->vat]['vat'] += $vat;
+			$data['vatSummary'][$advance->vat]['gross'] += $gross;
+
+			$data['vatSummaryTotal']['net'] += $net;
+			$data['vatSummaryTotal']['vat'] += $vat;
+			$data['vatSummaryTotal']['gross'] += $gross;
+		}
+		$data['n'] = function ($price) {
+			return number_format($price, 2, ',', ' ');
+		};
+
 		$this->renderAndSave('payment.invoices.final', $data);
 
 		return $invoice;

@@ -11,7 +11,7 @@
 						<a class="white" @click="changeBackground('white')"></a>
 						<a class="dark" @click="changeBackground('dark')"></a>
 						<a class="image" @click="changeBackground('image')"></a>
-						<wnl-bookmark :reactableId="slideId" reactableResource="slides" module="slideshow" v-if="!isLoading"></wnl-bookmark>
+						<wnl-bookmark :reactableId="currentSlideId" reactableResource="slides" module="slideshow" v-if="!isLoading && currentSlideId > 0"></wnl-bookmark>
 					</div>
 				</div>
 			</div>
@@ -132,7 +132,8 @@
 				loaded: false,
 				isFauxFullscreen: false,
 				isFocused: false,
-				slideChanged: false
+				slideChanged: false,
+				currentSlideId: 0,
 			}
 		},
 		props: ['screenData', 'slide'],
@@ -147,11 +148,8 @@
 				'findRegularSlide',
 				'presentables',
 			]),
-			slideId() {
-				return this.getSlideId(this.currentSlideIndex)
-			},
 			currentSlideIndex() {
-				return this.currentSlideNumber - 1
+				 return this.currentSlideNumber - 1
 			},
 			container() {
 				return this.$el.getElementsByClassName('wnl-slideshow-content')[0]
@@ -219,7 +217,7 @@
 				this.toggleOverlay({source: 'slideshow', display: true})
 				handshake = new Postmate({
 					container: this.container,
-					url: this.slideshowUrl
+					url: this.slideshowUrl,
 				})
 
 				handshake.then(child => {
@@ -327,8 +325,11 @@
 		},
 		mounted() {
 			Postmate.debug = isDebug()
-			this.initSlideshow()
 			this.setup(this.slideshowId)
+				.then(() => {
+					this.initSlideshow()
+					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+				})
 		},
 		beforeDestroy() {
 			this.destroySlideshow()
@@ -356,6 +357,9 @@
 				if (newValue.type === 'slideshow') {
 					this.initSlideshow()
 				}
+			},
+			'currentSlideIndex' (newValue, oldValue) {
+				this.currentSlideId = this.getSlideId(newValue)
 			},
 		}
 	}

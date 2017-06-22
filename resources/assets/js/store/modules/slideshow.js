@@ -21,6 +21,7 @@ function _fetchPresentables(slideshowId) {
 			order_number: 'asc',
 		},
 		include: 'reactions',
+
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
@@ -147,8 +148,12 @@ const actions = {
 	...commentsActions,
 	...reactionsActions,
 	setup({commit, dispatch, getters}, slideshowId) {
-		dispatch('setupPresentables', slideshowId)
-			.then(() => dispatch('setupComments', getters.slidesIds))
+		return new Promise((resolve, reject) => {
+			dispatch('setupPresentables', slideshowId)
+				.then(() => dispatch('setupComments', getters.slidesIds))
+				.then(() => resolve())
+				.catch((reason) => reject(reason))
+		})
 	},
 	setupPresentables({commit}, slideshowId) {
 		return new Promise((resolve, reject) => {
@@ -170,9 +175,8 @@ const actions = {
 				.then((response) => {
 					if (!response.data.hasOwnProperty('included')) {
 						commit(types.IS_LOADING, false)
-						resolve()
-						return false
 					}
+					return resolve()
 
 					commit(types.SLIDESHOW_SET_COMMENTS, response.data)
 					commit(types.IS_LOADING, false)

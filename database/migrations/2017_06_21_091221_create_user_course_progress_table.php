@@ -13,7 +13,7 @@ class CreateUserCourseProgressTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('user_course_progresses', function (Blueprint $table) {
+		Schema::create('user_course_progress', function (Blueprint $table) {
 			$table->increments('id');
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('lesson_id');

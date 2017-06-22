@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
 		Commands\DumpCourseStructure::class,
 		Commands\WarmUpCache::class,
 		Commands\StoreProgress::class,
+		Commands\StoreTime::class,
     ];
 
     /**

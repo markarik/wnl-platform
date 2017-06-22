@@ -45,38 +45,21 @@ class StoreProgress extends Command
 	 */
 	public function handle()
 	{
-		$userId = $this->argument('user');
+		$passedUserId = $this->argument('user');
 
-		if (empty($userId)) {
-			// get all keys for all users
-			$keyPattern = UserStateApiController::getCourseRedisKey('?', 1);
-		} else {
-			$keyPattern = UserStateApiController::getCourseRedisKey($userId, 1);
-		}
+		$this->transaction(function () use ($passedUserId) {
 
-		$this->transaction(function() use ($keyPattern) {
-			$allKeys = $this->redis->keys($keyPattern);
-
-			foreach ($allKeys as $key) {
-				if (empty($userId)) {
+			if (empty($passedUserId)) {
+				$keyPattern = UserStateApiController::getCourseRedisKey('?', 1);
+				$allKeys = $this->redis->keys($keyPattern);
+				foreach ($allKeys as $key) {
 					$userId = $this->extractUserIdFromKey($key);
+					$this->storeProgress($key, $userId);
 				}
-				$lessonsProgressRaw = $this->redis->get($key);
-
-				if (!empty($lessonsProgressRaw)) {
-					$lessonsProgress = json_decode($lessonsProgressRaw);
-
-					foreach ($lessonsProgress as $lessonId => $lessonData) {
-						$model = UserCourseProgress::firstOrNew(
-							['lesson_id' => $lessonId, 'user_id' => $userId]
-						);
-
-						$model->status = $lessonData->status;
-						$model->save();
-					}
-				}
+			} else {
+				$key = UserStateApiController::getCourseRedisKey($passedUserId, 1);
+				$this->storeProgress($key, $passedUserId);
 			}
-
 		});
 		return;
 	}
@@ -98,5 +81,23 @@ class StoreProgress extends Command
 	private function extractUserIdFromKey($key)
 	{
 		return explode(':', $key)[3];
+	}
+
+	private function storeProgress($key, $userId)
+	{
+		$lessonsProgressRaw = $this->redis->get($key);
+
+		if (!empty($lessonsProgressRaw)) {
+			$lessonsProgress = json_decode($lessonsProgressRaw);
+
+			foreach ($lessonsProgress as $lessonId => $lessonData) {
+				$model = UserCourseProgress::firstOrNew(
+					['lesson_id' => $lessonId, 'user_id' => $userId]
+				);
+
+				$model->status = $lessonData->status;
+				$model->save();
+			}
+		}
 	}
 }

@@ -1,5 +1,5 @@
 <template>
-	<div class="scrollable-main-container">
+	<div class="scrollable-main-container" ref="overviewContainer">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item metadata">

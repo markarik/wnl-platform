@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<p>Uczą się razem z Tobą ({{activeUsersCount}}):</p>
-		<ul class="avatars-list">
-			<li v-for="user in usersToDisplay" class="avatar">
+		<h4 class="title is-5">Uczą się razem z Tobą ({{activeUsersCount}})</h4>
+		<ul v-if="activeUsersCount" class="avatars-list" ref="avatarsList">
+			<li v-for="user in usersToCount" class="avatar">
 				<wnl-avatar
 						:fullName="user.fullName"
 						:url="user.avatar"
@@ -10,12 +10,26 @@
 				</wnl-avatar>
 			</li>
 		</ul>
+		<p v-else>nikogo nie ma, gdzie są wszyscy? :(</p>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	.title
+		margin-bottom: $margin-small
 	.avatars-list
 		display: flex
+		overflow: hidden
+		&::after
+			content: ""
+			height: map-get($rounded-square-sizes, 'medium')
+			position: absolute
+			right: $column-padding;
+			width: map-get($rounded-square-sizes, 'medium') * 2
+			+gradient-horizontal(rgba(0,0,0,0), $color-white)
 	.avatars-list .avatar
 		margin-right: 5px
 </style>
@@ -27,11 +41,11 @@
 		name: 'ActiveUsers',
 		computed: {
 			...mapGetters(['activeUsers', 'currentUserId']),
-			activeUsersCount() {
-				return this.usersToDisplay.length || 0
+			usersToCount() {
+				return this.activeUsers.filter((user) => this.currentUserId !== user.id);
 			},
-			usersToDisplay() {
-				return this.activeUsers.filter((user) => this.currentUserId !== user.id).slice(0, 10)
+			activeUsersCount() {
+				return this.usersToCount.length || 0
 			}
 		},
 	}

@@ -12,31 +12,52 @@ describe('ActiveUsers.vue', () => {
 	let store;
 	let getters;
 
-	beforeEach(() => {
-		getters = {
-			activeUsers: () => [
-				{fullName: 'foo bar', avatar: null, id: 7},
-				{fullName: 'buzz fizz', avatar: null, id: 10}
-			],
-			currentUserId: () => 7,
-		};
-		store = new Vuex.Store({
-			getters,
+	context('when users active', () => {
+		beforeEach(() => {
+			getters = {
+				activeUsers: () => [
+					{fullName: 'foo bar', avatar: null, id: 7},
+					{fullName: 'buzz fizz', avatar: null, id: 10}
+				],
+				currentUserId: () => 7,
+			};
+			store = new Vuex.Store({
+				getters,
+			});
 		});
-	});
 
-	it('Renders avatars base on activeUsers', () => {
-		const wrapper = mount(ActiveUsers, {store});
-		expect(wrapper.find(Avatar).length).to.equal(1);
-	});
+		it('Renders avatars base on activeUsers', () => {
+			const wrapper = mount(ActiveUsers, {store});
+			expect(wrapper.find(Avatar).length).to.equal(1);
+		});
 
-	it('Renders title correctly', () => {
-		const wrapper = mount(ActiveUsers, {store});
-		expect(wrapper.first('p').text()).to.equal('Uczą się razem z Tobą (1):');
-	});
+		it('Renders title correctly', () => {
+			const wrapper = mount(ActiveUsers, {store});
+			expect(wrapper.first('.title').text()).to.equal('Uczą się razem z Tobą (1)');
+		});
 
-	it('Counts users correctly', () => {
-		const wrapper = mount(ActiveUsers, {store});
-		expect(wrapper.vm.activeUsersCount).to.equal(1);
-	});
+		it('Counts users correctly', () => {
+			const wrapper = mount(ActiveUsers, {store});
+			expect(wrapper.vm.activeUsersCount).to.equal(1);
+		});
+	})
+
+	context('when no users', () => {
+		beforeEach(() => {
+			getters = {
+				activeUsers: () => [],
+				currentUserId: () => 7,
+			};
+			store = new Vuex.Store({
+				getters,
+			});
+		});
+
+		it('Renders message', () => {
+			const wrapper = mount(ActiveUsers, {store});
+			expect(wrapper.find(Avatar).length).to.equal(0);
+			expect(wrapper.vm.activeUsersCount).to.equal(0);
+			expect(wrapper.first('p').text()).to.equal('nikogo nie ma, gdzie są wszyscy? :(');
+		});
+	})
 });

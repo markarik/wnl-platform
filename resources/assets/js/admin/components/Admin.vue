@@ -56,7 +56,7 @@
 			this.setupCurrentUser()
 					.then(()=> {
 						this.pullNotifications()
-						this.setupLiveNotifications(this.currentUserId)
+						this.setupLiveNotifications()
 					})
 		},
 	}

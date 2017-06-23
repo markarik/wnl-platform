@@ -20,9 +20,10 @@ class NotificationTransformer extends ApiTransformer
 	{
 		$data = [
 			'id'      => $notification->id,
-			'data'    => $notification->data,
 			'read_at' => $notification->read_at->timestamp ?? null,
 		];
+
+		$data = array_merge($data, $notification->data);
 
 		if ($this->parent) {
 			$data = array_merge($data, $this->parent);

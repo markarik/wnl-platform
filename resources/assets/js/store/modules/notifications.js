@@ -10,21 +10,24 @@ const state = {
 	notifications: {}
 }
 
-const getters = {}
+const getters = {
+	isLoading: (state) => state.loading,
+	notifications: (state) => state.notifications,
+}
 
 const mutations = {
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},
-	[types.SET_NOTIFICATIONS] (state, notifications) {
-		set(state, 'notifications', notifications)
-	},
+	// [types.SET_NOTIFICATIONS] (state, notifications) {
+	// 	set(state, 'notifications', notifications)
+	// },
 	[types.ADD_NOTIFICATION] (state, notification) {
 		set(state, 'notifications', {...state.notifications, [notification.id]: notification})
 	},
-	[types.MARK_NOTIFICATION_AS_READ] (state, notificationId, time) {
-		// set(state, 'notifications', {...state.notifications, [notificationId]:{...notification, read_at: 2342343}})
-	}
+	// [types.MARK_NOTIFICATION_AS_READ] (state, notification) {
+	// 	set(state, 'notifications', {...state.notifications, [notification.id]:{...notification, read_at: new Date().getTime()}})
+	// }
 	// [types.RESET_MODULE] (state) {
 	// 	let initialState = getInitialState()
 	// 	Object.keys(initialState).forEach((field) => {
@@ -36,15 +39,21 @@ const mutations = {
 const actions = {
 	pullNotifications({commit}) {
 		_getNotifications().then(response => {
-			// commit(types.SET_NOTIFICATIONS, )
-			console.log(response.data)
+			if (response.data.legth === 0) {
+				commit(types.IS_LOADING, false)
+				return false
+			}
+			_.each(response.data, (notification) => {
+				commit(types.ADD_NOTIFICATION, notification)
+			})
+
 			commit(types.IS_LOADING, false)
 		})
 	},
-	setupLiveNotifications({rootGetters}) {
+	setupLiveNotifications({rootGetters, commit}) {
 		Echo.private(`user.${rootGetters.currentUserId}`)
 			.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
-				console.log('Notification', notification);
+				commit(types.ADD_NOTIFICATION, notification)
 			});
 	},
 }

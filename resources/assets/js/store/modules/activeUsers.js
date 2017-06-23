@@ -3,7 +3,7 @@ import * as types from '../mutations-types'
 
 // Initial state
 const state = {
-	activeUsers: {},
+	activeUsers: [],
 };
 
 // Getters
@@ -21,16 +21,13 @@ const mutations = {
 // Actions
 const actions = {
 	userJoined ({commit, state}, user) {
-		$wnl.logger.debug('user joined...')
-		commit(types.ACTIVE_USERS_SET, {...state.activeUsers, [user.id]: user})
+		commit(types.ACTIVE_USERS_SET, [user, ...state.activeUsers])
 	},
 	userLeft({commit, state}, user) {
-		$wnl.logger.debug('user left...')
-		commit(types.ACTIVE_USERS_SET, _.omit(state.activeUsers, user.id))
+		commit(types.ACTIVE_USERS_SET, state.activeUsers.filter((activeUser) => activeUser.id !== user.id))
 	},
 	setActiveUsers({commit}, users) {
-		const activeUsers = Object.assign({}, ...users.map(user => ({ [user.id]: user })));
-		commit(types.ACTIVE_USERS_SET, activeUsers)
+		commit(types.ACTIVE_USERS_SET, users)
 	}
 };
 

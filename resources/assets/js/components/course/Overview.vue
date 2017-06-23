@@ -29,6 +29,7 @@
 			</div>
 		</div>
 
+		<wnl-active-users/>
 		<!-- Latest Q&A -->
 		<wnl-qna title="Ostatnie pytania"></wnl-qna>
 	</div>
@@ -54,6 +55,7 @@
 	import NextLesson from 'js/components/course/NextLesson'
 	import Qna from 'js/components/qna/Qna'
 	import YourProgress from 'js/components/course/YourProgress'
+	import ActiveUsers from 'js/components/course/ActiveUsers'
 	import { getFirstLessonId } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
 
@@ -70,14 +72,12 @@
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)
 			},
-			welcomeMessage() {
-				return `Cześć ${this.currentUserName}!`
-			},
 		},
 		components: {
 			'wnl-next-lesson': NextLesson,
 			'wnl-qna': Qna,
 			'wnl-your-progress': YourProgress,
+			'wnl-active-users': ActiveUsers
 		},
 		beforeMount() {
 			if (this.isBeginning) {

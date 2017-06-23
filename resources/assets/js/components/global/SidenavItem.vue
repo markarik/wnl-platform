@@ -1,14 +1,14 @@
 <template>
 	<li class="item" :class="[itemClass, { disabled: isDisabled }]">
 		<router-link
-			v-if="isLink"
-			:to="to"
-			:replace="replace"
 			class="item-wrapper"
+			v-if="isLink"
 			:class="{'is-active': active, 'is-disabled': isDisabled, 'is-completed': completed}"
+			:replace="replace"
+			:to="to"
 		>
 			<div class="sidenav-icon-wrapper">
-				<span class="icon is-small" v-if="isTodo">
+				<span class="icon is-small" v-if="hasProgress">
 					<i title="W trakcie..." class="fa fa-ellipsis-h" v-if="isInProgress"></i>
 					<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
 					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
@@ -19,11 +19,12 @@
 			</div>
 			<span class="sidenav-item-content">
 				<slot></slot>
+				<span class="sidenav-item-meta" v-if="hasMeta">{{meta}}</span>
 			</span>
 		</router-link>
 		<span v-else class="item-wrapper">
 			<div class="sidenav-icon-wrapper">
-				<span class="icon is-small" v-if="isTodo">
+				<span class="icon is-small" v-if="hasProgress">
 					<i title="W trakcie..." class="fa fa-ellipsis-h" v-if="isInProgress"></i>
 					<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
 					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
@@ -61,15 +62,33 @@
 		.icon
 			margin-top: 0
 
-	a.is-active
-		font-weight: $font-weight-black
+	.sidenav-item-meta
+		color: $color-background-gray
+		font-size: $font-size-minus-3
+		line-height: $line-height-plus
 
-	a.is-completed:after
-		content: '✓'
-		margin-left: $margin-tiny
+	a
+		transition: background-color $transition-length-base
+
+		&:hover
+			color: $color-ocean-blue
+
+		&.is-active
+			background: $color-background-lighter-gray
+			font-weight: $font-weight-regular
+			transition: background-color $transition-length-base
+
+	.todo
+		a:before
+			color: $color-background-gray
+			content: '○'
+			margin-left: $margin-tiny
+
+		a.is-completed:before
+			content: '✓'
 
 	.subitem
-		&::after
+		margin-left: $margin-base
 
 		.icon.is-small
 			margin-right: 0
@@ -80,10 +99,13 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed', 'active'],
+		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed', 'active', 'meta'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
+			},
+			hasProgress() {
+				return this.hasClass('with-progress')
 			},
 			isTodo() {
 				return this.hasClass('todo')
@@ -99,6 +121,9 @@
 			},
 			hasIcon() {
 				return this.hasClass('has-icon')
+			},
+			hasMeta() {
+				return typeof this.meta !== 'undefined' && this.meta.length > 0
 			},
 		},
 		methods: {

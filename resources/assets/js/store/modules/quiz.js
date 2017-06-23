@@ -107,7 +107,14 @@ const mutations = {
 		set(state, 'questionsIds', payload.questionsIds)
 
 		_.forEach(payload.quiz_questions, (value, id) => {
-			set(state.quiz_questions, id, value)
+			if (!_.isUndefined(state.quiz_questions[id])) {
+				if (!_.isUndefined(value.selectedAnswer)) {
+					set(state.quiz_questions[id], 'selectedAnswer', value.selectedAnswer)
+				}
+				if (!_.isUndefined(value.isResolved)) {
+					set(state.quiz_questions[id], 'isResolved', value.isResolved)
+				}
+			}
 		})
 	},
 	[types.QUIZ_SET_QUESTIONS] (state, payload) {
@@ -179,7 +186,6 @@ const actions = {
 					len,
 					questionsIds,
 				})
-
 			}
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)

@@ -64,17 +64,17 @@
 		</section>
 
 		<section class="subsection has-text-centered margin top">
-			<h2 class="title">@lang('payment.confirm-method-heading')</h2>
-			<p class="subtitle">@lang('payment.confirm-method-lead')</p>
+			{{-- <h2 class="title">@lang('payment.confirm-method-heading')</h2> --}}
+			<p class="subtitle">@lang('payment.confirm-method-heading')</p>
 			<div class="columns margin top">
-				<div class="column">
+				{{-- <div class="column">
 					<form action="{{route('payment-confirm-order-post')}}" method="post">
 						{!! csrf_field() !!}
 						<input type="hidden" name="method" value="transfer"/>
 
 						<button class="button is-primary is-outlined">@lang('payment.confirm-method-bank-transfer-button')</button>
 					</form>
-				</div>
+				</div> --}}
 				<div class="column">
 					<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form">
 						<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
@@ -99,7 +99,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="has-text-centered">
+		{{-- <section class="has-text-centered">
 			<div class="expandable">
 				<div class="margin vertical">
 					<a class="link expand">Płatność na raty</a>
@@ -140,6 +140,6 @@
 					</form>
 				</div>
 			</div>
-		</section>
+		</section> --}}
 	</div>
 @endsection

@@ -25,9 +25,12 @@ class Kernel extends ConsoleKernel
 		Commands\AddressesExport::class,
 		Commands\MigrateUserData::class,
 		Commands\QuizImport::class,
+		Commands\SectionsUpdate::class,
 		Commands\SlidesImport::class,
 		Commands\DumpCourseStructure::class,
 		Commands\WarmUpCache::class,
+		Commands\StoreProgress::class,
+		Commands\StoreTime::class,
     ];
 
     /**

@@ -1,6 +1,7 @@
 <template>
 	<div class="qna-comment">
 		<div class="qna-container">
+			<div class="qna-comment-content" v-html="comment.text"></div>
 			<div class="qna-meta qna-comment-meta">
 				<wnl-avatar
 						:fullName="author.full_name"
@@ -21,7 +22,6 @@
 					></wnl-delete>
 				</span>
 			</div>
-			<div class="qna-comment-content" v-html="comment.text"></div>
 		</div>
 	</div>
 </template>

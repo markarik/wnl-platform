@@ -119,14 +119,14 @@
 			stats() {
 				const answersWithHit = this.getStats(this.questionId)
 
-				if (typeof answersWithHit !== 'object') return false;
+				if (typeof answersWithHit !== 'object' || typeof Object.values !== 'function') return false;
 
 				const allHits = Object.values(answersWithHit).reduce((count, current) => {
 					return count + current
 				}, 0)
 				const answerId = this.answer.id
 
-				return (answersWithHit[answerId] || 0) / allHits * 100;
+				return Math.round((answersWithHit[answerId] || 0) / allHits * 100);
 			},
 
 			/**

@@ -12,7 +12,7 @@ class Lesson extends BasePage
 	const CSS_NAVIGATE_RIGHT = '.wnl-slideshow-control.navigate-right.enabled';
 	const CSS_NAVIGATE_LEFT = '.wnl-slideshow-control.navigate-left.enabled';
 	const CSS_SECTIONS = '.items .subitem a';
-	const CSS_SECTIONS_VISITED = '.items .subitem a.is-active';
+	const CSS_SECTIONS_VISITED = '.items .subitem a.is-completed';
 
 	const TEMPLATE_NTH_SECTION_SELECTOR = '.items .subitem:nth-of-type(%d) a';
 	const SECTIONS_OFFSET = 2;
@@ -49,7 +49,8 @@ class Lesson extends BasePage
 			'@navigate_right' => self::CSS_NAVIGATE_RIGHT,
 			'@navigate_left' => self::CSS_NAVIGATE_LEFT,
 			'@sections' => self::CSS_SECTIONS,
-			'@side_nav' => '.wnl-sidenav'
+			'@side_nav' => '.wnl-sidenav',
+			'@loading_overlay' => '.wnl-overlay'
 		];
 	}
 

@@ -5,7 +5,7 @@
 				<wnl-vote type="up" :reactableId="id" reactableResource="qna_answers" count="0" module="qna"></wnl-vote>
 			</div>
 			<div class="qna-container">
-				<div class="qna_wrapper">
+				<div class="qna-wrapper">
 					<div class="qna-answer-content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
@@ -38,7 +38,7 @@
 					 · <a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 				</span>
 				<span v-if="!readOnly">
-					 · <a class="secondary-link" @click="showCommentForm = true">Skomentuj</a>
+					 · <a class="secondary-link" @click="showCommentForm = !showCommentForm">Skomentuj</a>
 				</span>
 			</p>
 			<transition name="fade">
@@ -65,7 +65,8 @@
 	@import 'resources/assets/sass/variables'
 
 	.qna-answer-container
-		margin-bottom: $margin-huge
+		border-top: $border-light-gray
+		margin-bottom: $margin-big
 
 	.qna-answer-content
 		word-wrap: break-word
@@ -74,12 +75,12 @@
 		width: 100%
 
 	.qna-answer
-		background: $color-background-lighter-gray
-		padding: $margin-base
+		// background: $color-background-lighter-gray
+		padding: 0 $margin-base
 		margin-top: $margin-base
 
 	.qna-answer-comments
-		margin-left: 4em
+		margin-left: $margin-humongous
 
 	.qna-title
 		font-size: $font-size-minus-1
@@ -91,11 +92,11 @@
 	.comments-loader
 		margin: $margin-base 0
 
-	.qna_wrapper
+	.qna-wrapper
 		display: flex
 		align-items: flex-start
 
-	.qna_bookmark
+	.qna-bookmark
 		justify-content: flex-end
 
 </style>

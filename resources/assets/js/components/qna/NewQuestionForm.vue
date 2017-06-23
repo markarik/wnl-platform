@@ -38,7 +38,6 @@
 
 		.ql-editor
 			font-family: $font-family-sans-serif
-			font-weight: $font-weight-bold
 			font-size: $font-size-plus-1
 
 			strong

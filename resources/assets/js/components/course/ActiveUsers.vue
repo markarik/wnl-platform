@@ -28,10 +28,10 @@
 		computed: {
 			...mapGetters(['activeUsers', 'currentUserId']),
 			activeUsersCount() {
-				return Object.keys(this.activeUsers).length || 0
+				return this.usersToDisplay.length || 0
 			},
 			usersToDisplay() {
-				return this.activeUsers.slice(0, 10)
+				return this.activeUsers.filter((user) => this.currentUserId !== user.id).slice(0, 10)
 			}
 		},
 	}

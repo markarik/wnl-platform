@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import {mount} from 'avoriaz';
-import sinon from 'sinon';
 import {expect} from 'chai';
 import Vuex from 'vuex';
 import ActiveUsers from './ActiveUsers.vue';
@@ -10,14 +9,14 @@ Vue.use(Vuex);
 Vue.component('wnl-avatar', Avatar)
 
 describe('ActiveUsers.vue', () => {
-	let state;
 	let store;
 	let getters;
 
 	beforeEach(() => {
 		getters = {
 			activeUsers: () => [
-				{fullName: 'foo bar', avatar: null, id: 7}, {fullName: 'buzz fizz', avatar: null, id: 10}
+				{fullName: 'foo bar', avatar: null, id: 7},
+				{fullName: 'buzz fizz', avatar: null, id: 10}
 			],
 			currentUserId: () => 7,
 		};
@@ -28,6 +27,16 @@ describe('ActiveUsers.vue', () => {
 
 	it('Renders avatars base on activeUsers', () => {
 		const wrapper = mount(ActiveUsers, {store});
-		expect(wrapper.find(Avatar).length).to.equal(2);
+		expect(wrapper.find(Avatar).length).to.equal(1);
+	});
+
+	it('Renders title correctly', () => {
+		const wrapper = mount(ActiveUsers, {store});
+		expect(wrapper.first('p').text()).to.equal('Uczą się razem z Tobą (1):');
+	});
+
+	it('Counts users correctly', () => {
+		const wrapper = mount(ActiveUsers, {store});
+		expect(wrapper.vm.activeUsersCount).to.equal(1);
 	});
 });

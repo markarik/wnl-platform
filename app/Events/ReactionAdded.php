@@ -41,4 +41,23 @@ class ReactionAdded
 	{
 		return new PrivateChannel('channel-name');
 	}
+
+	public function transform()
+	{
+		$reaction = $this->reaction;
+		$reactable = $this->reactable;
+
+		$this->data = [
+			'event'   => 'reaction-added',
+			'objects' => [
+				'type' => snake_case(class_basename($reactable)),
+				'id'   => $reactable->id,
+			],
+			'subject' => [
+				'type'          => 'reaction',
+				'reaction_type' => $reaction->type,
+				'reaction_id'   => $reaction->id,
+			],
+		];
+	}
 }

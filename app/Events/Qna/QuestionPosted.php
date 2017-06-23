@@ -17,6 +17,8 @@ class QuestionPosted
 
 	public $qnaQuestion;
 
+	const TEXT_LIMIT = 160;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -35,5 +37,24 @@ class QuestionPosted
 	public function broadcastOn()
 	{
 		return new PrivateChannel('channel-name');
+	}
+
+	public function transform()
+	{
+		$this->data = [
+			'event'   => 'qna-question-posted',
+			'subject' => [
+				'type' => 'qna_question',
+				'id'   => $this->qnaQuestion->id,
+				'text' => str_limit($this->qnaQuestion->text, self::TEXT_LIMIT),
+			],
+			'actors'  => [
+				'id'         => $this->qnaQuestion->user->id,
+				'first_name' => $this->qnaQuestion->user->first_name,
+				'last_name'  => $this->qnaQuestion->user->last_name,
+				'full_name'  => $this->qnaQuestion->user->full_name,
+				'avatar'     => $this->qnaQuestion->user->profile->avatar,
+			],
+		];
 	}
 }

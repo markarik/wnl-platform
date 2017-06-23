@@ -36,4 +36,27 @@ class CommentPosted
 	{
 		return new PrivateChannel('channel-name');
 	}
+
+	public function transform()
+	{
+		$comment = $this->comment;
+
+		$this->data = [
+			'event'   => 'comment-posted',
+			'objects' => [
+				'type' => snake_case(class_basename($comment->commentable)),
+				'id'   => $comment->commentable->id,
+			],
+		];
+
+		if ($actor = $comment->commentable->user) {
+			$this->data['actors'] = [
+				'id'         => $actor->id,
+				'first_name' => $actor->first_name,
+				'last_name'  => $actor->last_name,
+				'full_name'  => $actor->full_name,
+			];
+		}
+
+	}
 }

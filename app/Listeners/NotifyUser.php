@@ -1,6 +1,9 @@
 <?php namespace App\Listeners;
 
+use App\Events\CommentPosted;
 use App\Events\Qna\AnswerPosted;
+use App\Events\Qna\QuestionPosted;
+use App\Events\ReactionAdded;
 use App\Models\User;
 use App\Notifications\EventNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,6 +22,9 @@ class NotifyUser implements ShouldQueue
 	 */
 	public function handle($event)
 	{
+		if (method_exists($event, 'transform')) {
+			$event->transform();
+		}
 		$this->{'handle' . class_basename($event)}($event);
 	}
 
@@ -29,32 +35,8 @@ class NotifyUser implements ShouldQueue
 	 */
 	private function handleAnswerPosted(AnswerPosted $event)
 	{
-
-		$event->data = [
-			'event'   => 'qna-answer-posted',
-			'objects' => [
-				'type' => 'qna_question',
-				'id'   => $event->qnaAnswer->question->id,
-				'text' => str_limit($event->qnaAnswer->question->text, self::TEXT_LIMIT),
-			],
-			'subject' => [
-				'type' => 'qna_answer',
-				'id'   => $event->qnaAnswer->id,
-				'text' => str_limit($event->qnaAnswer->text, self::TEXT_LIMIT),
-			],
-			'actors'  => [
-				'id'         => $event->qnaAnswer->user->id,
-				'first_name' => $event->qnaAnswer->user->first_name,
-				'last_name'  => $event->qnaAnswer->user->last_name,
-				'avatar'     => $event->qnaAnswer->user->profile->avatar,
-			],
-		];
-
 		$this->notifyModerators($event);
 
-		// For some reason event is not deserialized here by default
-		// calling __wakeup() forces an event to deserialize, hence we can access question and user property
-		$event->__wakeup();
 		$user = $event->qnaAnswer->question->user;
 		$user->notify(new EventNotification($event));
 	}
@@ -64,23 +46,8 @@ class NotifyUser implements ShouldQueue
 	 *
 	 * @param $event
 	 */
-	public function handleQuestionPosted($event)
+	public function handleQuestionPosted(QuestionPosted $event)
 	{
-		$event->data = [
-			'event'   => 'qna-question-posted',
-			'subject' => [
-				'type' => 'qna_question',
-				'id'   => $event->qnaQuestion->id,
-				'text' => str_limit($event->qnaQuestion->text, self::TEXT_LIMIT),
-			],
-			'actors'  => [
-				'id'         => $event->qnaQuestion->user->id,
-				'first_name' => $event->qnaQuestion->user->first_name,
-				'last_name'  => $event->qnaQuestion->user->last_name,
-				'avatar'     => $event->qnaQuestion->user->profile->avatar,
-			],
-		];
-
 		$this->notifyModerators($event);
 	}
 
@@ -89,30 +56,15 @@ class NotifyUser implements ShouldQueue
 	 *
 	 * @param $event
 	 */
-	public function handleCommentPosted($event)
+	public function handleCommentPosted(CommentPosted $event)
 	{
-		$comment = $event->comment;
+		$this->notifyModerators($event);
 
-		$event->data = [
-			'event'   => 'comment-posted',
-			'objects' => [
-				'type' => snake_case(class_basename($comment->commentable)),
-				'id'   => $comment->commentable->id,
-			],
-		];
+		$commentableAuthor = $event->comment->commentable->user;
 
-		if ($actor = $comment->commentable->user) {
-			$event->data['actors'] = [
-				'id'         => $actor->id,
-				'first_name' => $actor->first_name,
-				'last_name'  => $actor->last_name,
-			];
-		}
-
-		if ($commentableAuthor = $comment->commentable->user) {
+		if ($commentableAuthor) {
 			$commentableAuthor->notify(new EventNotification($event));
 		}
-		$this->notifyModerators($event);
 	}
 
 	/**
@@ -120,25 +72,9 @@ class NotifyUser implements ShouldQueue
 	 *
 	 * @param $event
 	 */
-	public function handleReactionAdded($event)
+	public function handleReactionAdded(ReactionAdded $event)
 	{
-		$reaction = $event->reaction;
-		$reactable = $event->reactable;
-
-		$event->data = [
-			'event'   => 'reaction-added',
-			'objects' => [
-				'type' => snake_case(class_basename($reactable)),
-				'id'   => $reactable->id,
-			],
-			'subject' => [
-				'type'          => 'reaction',
-				'reaction_type' => $reaction->type,
-				'reaction_id'   => $reaction->id,
-			],
-		];
-
-		if ($reactableAuthor = $reactable->user) {
+		if ($reactableAuthor = $event->reactable->user) {
 			$reactableAuthor->notify(new EventNotification($event));
 		}
 	}
@@ -150,7 +86,7 @@ class NotifyUser implements ShouldQueue
 	 */
 	public function handlePrivateMessageSent($event)
 	{
-
+		// :(
 	}
 
 	/**
@@ -163,5 +99,10 @@ class NotifyUser implements ShouldQueue
 		$moderators = User::ofRole('moderator');
 
 		Notification::send($moderators, new EventNotification($event));
+
+		// For some reason event is not deserialized here by default
+		// calling __wakeup() forces an event to deserialize, hence we can access question and user property
+		// ...looks like it's being serialized after calling 'notifyModerators', so I moved the wakeup here.
+		$event->__wakeup();
 	}
 }

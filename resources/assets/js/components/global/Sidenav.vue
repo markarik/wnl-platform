@@ -18,6 +18,7 @@
 				:key="index"
 				:completed="item.completed"
 				:active="item.active"
+				:meta="item.meta"
 			>
 				{{item.text}}
 			</wnl-sidenav-item>
@@ -102,7 +103,7 @@
 		.disabled
 			color: $color-inactive-gray
 
-	.todo
+	.progress
 		color: $primary
 
 		&.complete,

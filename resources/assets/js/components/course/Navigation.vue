@@ -127,7 +127,9 @@
 					navigation.push(this.getScreenItem(screen))
 
 					if (screen.hasOwnProperty(resource('sections'))) {
-						screen.sections.forEach((sectionId) => {
+						let sectionsIds = screen.sections
+
+						sectionsIds.forEach((sectionId, index) => {
 							let section = this.structure[resource('sections')][sectionId]
 							navigation.push(this.getSectionItem(section))
 						});
@@ -147,6 +149,7 @@
 				iconTitle = '',
 				completed = false,
 				active = false,
+				meta = '',
 			) {
 				let to = {}
 				if (!isDisabled && routeName.length > 0) {
@@ -156,7 +159,7 @@
 					}
 				}
 
-				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed, active }
+				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed, active, meta }
 			},
 			getCourseItem() {
 				return this.composeItem(
@@ -178,11 +181,11 @@
 					'heading small'
 				)
 			},
-			getLessonItem(lesson, asTodo = true) {
+			getLessonItem(lesson, withProgress = true) {
 				let cssClass = '', iconClass = '', iconTitle = ''
 
-				if (asTodo) {
-					cssClass += 'todo'
+				if (withProgress) {
+					cssClass += 'with-progress'
 
 					if (this.courseProgress.lessons && this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
 						cssClass = `${cssClass} ${this.courseProgress.lessons[lesson.id].status}`
@@ -209,22 +212,6 @@
 
 			},
 			getScreenItem(screen) {
-				let itemClass = '', iconClass = '', iconTitle = ''
-
-				const icons = {
-					'end': 'fa-star',
-					'quiz': 'fa-check-square-o',
-					'html': 'fa-file-text-o',
-					'slideshow': 'fa-television',
-					'widget': 'fa-question',
-				}
-
-				if (icons.hasOwnProperty(screen.type)) {
-					itemClass = 'has-icon with-border'
-					iconClass = icons[screen.type]
-					iconTitle = screen.name
-				}
-
 				const params = {
 					courseId: screen[resource('editions')],
 					lessonId: screen[resource('lessons')],
@@ -237,13 +224,13 @@
 
 				return this.composeItem(
 					screen.name,
-					itemClass,
+					'todo',
 					resource('screens'),
 					params,
 					false,
 					'push',
-					iconClass,
-					iconTitle,
+					'',
+					'',
 					isCompleted
 				)
 			},
@@ -255,13 +242,13 @@
 					slide: section.slide,
 				};
 
-				const screen = this.getScreenProgress(params.courseId, params.lessonId, params.screenId);
-				const sections = screen && screen.sections || {};
-				const isSectionActive = this.lessonState.activeSection === section.id;
+				const screen = this.getScreenProgress(params.courseId, params.lessonId, params.screenId)
+				const sections = screen && screen.sections || {}
+				const isSectionActive = this.lessonState.activeSection === section.id
 
 				return this.composeItem(
 					section.name,
-					'small subitem has-icon',
+					'small subitem todo',
 					resource('screens'),
 					params,
 					false,
@@ -269,7 +256,8 @@
 					'fa-angle-right',
 					section.name,
 					!!sections[section.id], //isCompleted
-					isSectionActive // isActive
+					isSectionActive, // isActive
+					`(${section.slidesCount})`
 				)
 			}
 		},

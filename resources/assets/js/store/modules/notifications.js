@@ -7,7 +7,7 @@ const namespaced = true
 
 const state = {
 	loading: true,
-	notifications: []
+	notifications: {}
 }
 
 const getters = {}
@@ -20,10 +20,10 @@ const mutations = {
 		set(state, 'notifications', notifications)
 	},
 	[types.ADD_NOTIFICATION] (state, notification) {
-
+		set(state, 'notifications', {...state.notifications, [notification.id]: notification})
 	},
-	[types.MARK_NOTIFICATION_AS_READ] (state, notification) {
-
+	[types.MARK_NOTIFICATION_AS_READ] (state, notificationId, time) {
+		// set(state, 'notifications', {...state.notifications, [notificationId]:{...notification, read_at: 2342343}})
 	}
 	// [types.RESET_MODULE] (state) {
 	// 	let initialState = getInitialState()

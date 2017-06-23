@@ -16,11 +16,12 @@ class NotificationTransformer extends ApiTransformer
 		$this->parent = $parent;
 	}
 
-	public function transform(Notification $address)
+	public function transform(Notification $notification)
 	{
 		$data = [
-			'data'    => $address->data,
-			'read_at' => $address->read_at->timestamp ?? null,
+			'id'      => $notification->id,
+			'data'    => $notification->data,
+			'read_at' => $notification->read_at->timestamp ?? null,
 		];
 
 		if ($this->parent) {

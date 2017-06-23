@@ -4,11 +4,11 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div v-else class="container">
-			<wnl-newsfeed-post
-					v-for="(notification, index) in notifications"
-					:notification="notification"
+			<wnl-newsfeed-event
+					v-for="(event, index) in notifications"
+					:event="event"
 					:key="index">
-			</wnl-newsfeed-post>
+			</wnl-newsfeed-event>
 		</div>
 	</div>
 </template>
@@ -18,7 +18,7 @@
 
 <script>
 	import {mapGetters} from 'vuex'
-	import Post from 'js/components/newsfeed/Post'
+	import Event from 'js/components/newsfeed/Event'
 
 	export default {
 		name: 'wnl-newsfeed',
@@ -26,7 +26,7 @@
 			...mapGetters('notifications', ['notifications', 'isLoading'])
 		},
 		components: {
-			'wnl-newsfeed-post': Post,
+			'wnl-newsfeed-event': Event,
 		},
 		mounted() {
 

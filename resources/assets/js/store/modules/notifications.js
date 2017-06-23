@@ -39,7 +39,7 @@ const mutations = {
 const actions = {
 	pullNotifications({commit}) {
 		_getNotifications().then(response => {
-			if (response.data.legth === 0) {
+			if (typeof response.data[0] !== 'object') {
 				commit(types.IS_LOADING, false)
 				return false
 			}

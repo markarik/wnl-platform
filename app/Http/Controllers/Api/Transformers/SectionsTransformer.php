@@ -19,23 +19,24 @@ class SectionsTransformer extends ApiTransformer
 
 	public function transform(Section $section)
 	{
-		$orderNumber = DB::table('presentables')
+		$sectionSlides = DB::table('presentables')
 			->select('order_number')
 			->where('presentable_type', 'App\Models\Section')
 			->where('presentable_id', $section->id)
-			->limit(1)
-			->get(['order_number'])
-			->first()
-			->order_number;
+			->get(['order_number']);
+
+		$firstSlideNumber = $sectionSlides->first()->order_number;
+		$slidesCount = $sectionSlides->count();
 
 		$data = [
-			'id'       => $section->id,
-			'name'     => $section->name,
-			'lessons'  => $this->parent->get('lessonId') ?? $section->screen->lesson_id,
-			'groups'   => $this->parent->get('groupId') ?? $section->screen->lesson->group->id,
-			'editions' => $this->parent->get('editionId'),
-			'screens'  => $section->screen_id,
-			'slide'    => $orderNumber + 1,
+			'id'          => $section->id,
+			'name'        => $section->name,
+			'lessons'     => $this->parent->get('lessonId') ?? $section->screen->lesson_id,
+			'groups'      => $this->parent->get('groupId') ?? $section->screen->lesson->group->id,
+			'editions'    => $this->parent->get('editionId'),
+			'screens'     => $section->screen_id,
+			'slide'       => $firstSlideNumber + 1,
+			'slidesCount' => $slidesCount,
 		];
 
 		return $data;

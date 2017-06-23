@@ -25,14 +25,9 @@ window.axios.interceptors.response.use(
 );
 
 window.io = require('socket.io-client');
-var Echo = require('laravel-echo');
+const Echo = require('laravel-echo');
 
 window.Echo = new Echo({
 	broadcaster: 'socket.io',
 	host: window.location.hostname + ':8755'
 });
-
-window.Echo.join('active-users')
-	.here(users => console.log('active users...', ...users))
-	.joining(user => console.log('user joined...', user))
-	.leaving(user => console.log('user left...', user));

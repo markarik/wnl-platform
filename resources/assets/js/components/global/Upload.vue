@@ -21,8 +21,10 @@
 
 <script>
 	import axios from 'axios'
+	import {getApiUrl} from 'js/utils/env'
 
 	export default {
+		props: ['endpoint'],
 		data() {
 			return {
 				inputId: `${this._uid}-input`,
@@ -39,7 +41,7 @@
 				this.$emit('uploadStarted')
 				data.append('file', this.input.files[0])
 
-				axios.post('/papi/v1/users/current/avatar', data)
+				axios.post(getApiUrl(this.endpoint), data)
 						.then(response => {
 							this.$emit('success', response.data)
 						})

@@ -3,6 +3,14 @@
 		<div ref="quill">
 			<slot></slot>
 		</div>
+		<wnl-upload
+				@success="onUploadSuccess"
+				endpoint="upload"
+		>
+			<a class="button is-small is-outlined is-primary margin top">
+				Wstaff obraz
+			</a>
+		</wnl-upload>
 	</div>
 </template>
 
@@ -60,6 +68,9 @@
 		methods: {
 			onTextChange() {
 				this.$emit('input', this.editor.innerHTML)
+			},
+			onUploadSuccess(data) {
+				this.editor.innerHTML = this.editor.innerHTML + `<img src="${data}"/>`
 			}
 		},
 		mounted () {

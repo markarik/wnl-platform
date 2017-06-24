@@ -2,9 +2,7 @@
 	<div class="active-users-container" v-if="activeUsersCount">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
-				<div class="level-item metadata">
-					Uczą się teraz z Tobą ({{activeUsersCount}})
-				</div>
+				<div class="active-users-title level-item metadata">Uczą się teraz z Tobą ({{activeUsersCount}})</div>
 			</div>
 		</div>
 		<div class="absolute-container">

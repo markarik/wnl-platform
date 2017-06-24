@@ -33,7 +33,7 @@ describe('ActiveUsers.vue', () => {
 
 		it('Renders title correctly', () => {
 			const wrapper = mount(ActiveUsers, {store});
-			expect(wrapper.first('.title').text()).to.equal('Uczą się razem z Tobą (1)');
+			expect(wrapper.first('.active-users-title').text()).to.equal('Uczą się teraz z Tobą (1)');
 		});
 
 		it('Counts users correctly', () => {
@@ -57,7 +57,7 @@ describe('ActiveUsers.vue', () => {
 			const wrapper = mount(ActiveUsers, {store});
 			expect(wrapper.find(Avatar).length).to.equal(0);
 			expect(wrapper.vm.activeUsersCount).to.equal(0);
-			expect(wrapper.first('p').text()).to.equal('nikogo nie ma, gdzie są wszyscy? :(');
+			expect(wrapper.find('.active-users-container').length).to.equal(0);
 		});
 	})
 });

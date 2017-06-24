@@ -134,6 +134,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post($r['reactions'], 'ReactionsApiController@post');
 	Route::delete("{$r['reactions']}", 'ReactionsApiController@destroy');
 
+	// Public image upload
+	Route::post("upload", 'UploadApiController@post');
+
 	// User Progress
 //	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
 //	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');

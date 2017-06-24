@@ -7,15 +7,17 @@
 				</div>
 			</div>
 		</div>
-		<ul class="avatars-list" ref="avatarsList">
-			<li v-for="user in usersToCount" class="avatar">
-				<wnl-avatar
-						:fullName="user.fullName"
-						:url="user.avatar"
-						size="medium">
-				</wnl-avatar>
-			</li>
-		</ul>
+		<div class="absolute-container">
+			<ul class="avatars-list" ref="avatarsList">
+				<li v-for="user in usersToCount" class="avatar">
+					<wnl-avatar
+							:fullName="user.fullName"
+							:url="user.avatar"
+							size="medium">
+					</wnl-avatar>
+				</li>
+			</ul>
+		</div>
 	</div>
 </template>
 
@@ -25,6 +27,17 @@
 
 	.wnl-screen-title
 		margin-bottom: $margin-small
+
+	.active-users-container
+		padding-bottom: $margin-big
+		position: relative
+
+	.absolute-container
+		position: absolute
+		bottom: 0
+		left: 0
+		right: 0
+		top: $margin-big
 
 	.avatars-list
 		display: flex
@@ -55,7 +68,7 @@
 			},
 			activeUsersCount() {
 				return this.usersToCount.length || 0
-			}
+			},
 		},
 	}
 </script>

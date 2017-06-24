@@ -4,11 +4,13 @@
 namespace App\Http\Controllers\Api\PrivateApi;
 
 use Auth;
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
+use Storage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use Intervention\Image\Facades\Image;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
 
 class UploadApiController extends ApiController
 {
@@ -37,7 +39,17 @@ class UploadApiController extends ApiController
 			return $this->respondInvalidInput([], 'Max. allowed file size exceeded.');
 		}
 
-		$path = $file->store('uploads', 'public');
+		if ($file->getClientMimeType() === 'image/gif') {
+			$path = $file->store('uploads', 'public');
+
+			return $this->respondOk(asset('storage/' . $path));
+		}
+
+		$image = Image::make($file)->resize(2000, 2000, function ($constraint) {
+			$constraint->aspectRatio();
+		})->stream('jpg', 80);
+		$path = 'uploads/' . str_random(32) . '.jpg';
+		Storage::put('public/' . $path, $image);
 
 		return $this->respondOk(asset('storage/' . $path));
 	}

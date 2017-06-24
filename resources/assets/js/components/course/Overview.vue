@@ -19,7 +19,7 @@
 		<div>
 			<div class="level wnl-screen-title">
 				<div class="level-left">
-					<div class="level-item big strong">
+					<div class="level-item metadata">
 						Jak Ci idzie?
 					</div>
 				</div>

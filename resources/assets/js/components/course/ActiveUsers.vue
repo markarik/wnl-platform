@@ -1,7 +1,13 @@
 <template>
-	<div>
-		<h4 class="title is-5">Uczą się razem z Tobą ({{activeUsersCount}})</h4>
-		<ul v-if="activeUsersCount" class="avatars-list" ref="avatarsList">
+	<div class="active-users-container" v-if="activeUsersCount">
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item metadata">
+					Uczą się teraz z Tobą ({{activeUsersCount}})
+				</div>
+			</div>
+		</div>
+		<ul class="avatars-list" ref="avatarsList">
 			<li v-for="user in usersToCount" class="avatar">
 				<wnl-avatar
 						:fullName="user.fullName"
@@ -10,7 +16,6 @@
 				</wnl-avatar>
 			</li>
 		</ul>
-		<p v-else>nikogo nie ma, gdzie są wszyscy? :(</p>
 	</div>
 </template>
 
@@ -18,20 +23,24 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
-	.title
+	.wnl-screen-title
 		margin-bottom: $margin-small
+
 	.avatars-list
 		display: flex
 		overflow: hidden
+		position: relative
+
 		&::after
 			content: ""
 			height: map-get($rounded-square-sizes, 'medium')
 			position: absolute
-			right: $column-padding;
+			right: 0
 			width: map-get($rounded-square-sizes, 'medium') * 2
 			+gradient-horizontal(rgba(0,0,0,0), $color-white)
+
 	.avatars-list .avatar
-		margin-right: 5px
+		margin-right: $margin-small
 </style>
 
 <script>
@@ -42,7 +51,7 @@
 		computed: {
 			...mapGetters(['activeUsers', 'currentUserId']),
 			usersToCount() {
-				return this.activeUsers.filter((user) => this.currentUserId !== user.id);
+				return this.activeUsers.filter((user) => this.currentUserId !== user.id)
 			},
 			activeUsersCount() {
 				return this.usersToCount.length || 0

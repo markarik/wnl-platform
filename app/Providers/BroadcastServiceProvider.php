@@ -7,20 +7,22 @@ use Illuminate\Support\Facades\Broadcast;
 
 class BroadcastServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Broadcast::routes();
+	/**
+	 * Bootstrap any application services.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		Broadcast::routes();
 
-        /*
-         * Authenticate the user's personal channel...
-         */
+		require base_path('routes/channels.php');
+
+		/*
+		 * Authenticate the user's personal channel...
+		 */
 		Broadcast::channel('user.{userId}', function ($user, $userId) {
-            return (int) $user->id === (int) $userId;
-        });
-    }
+			return (int)$user->id === (int)$userId;
+		});
+	}
 }

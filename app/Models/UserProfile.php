@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
 
 class UserProfile extends Model
@@ -21,7 +22,7 @@ class UserProfile extends Model
 
 	public function getAvatarUrlAttribute()
 	{
-		return $this->avatar ? asset('storage/' . $this->avatar) : null;
+		return $this->avatar ? Bethink::appUrlAsset("storage/{$this->avatar}") : null;
 	}
 
 	public function getFullNameAttribute()

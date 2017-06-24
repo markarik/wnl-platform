@@ -20,6 +20,7 @@
 	.wnl-avatar-automatic
 		color: $color-white
 		font-weight: $font-weight-black
+		cursor: default
 
 </style>
 <script>

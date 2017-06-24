@@ -49,7 +49,7 @@ class CommentPosted
 			],
 		];
 
-		if ($actor = $comment->commentable->user) {
+		if ($actor = $comment->user) {
 			$this->data['actors'] = [
 				'id'         => $actor->id,
 				'first_name' => $actor->first_name,

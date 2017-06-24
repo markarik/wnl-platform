@@ -23,7 +23,7 @@ const mutations = {
 	// 	set(state, 'notifications', notifications)
 	// },
 	[types.ADD_NOTIFICATION] (state, notification) {
-		set(state, 'notifications', {...state.notifications, [notification.id]: notification})
+		set(state, 'notifications', {[notification.id]: notification, ...state.notifications})
 	},
 	// [types.MARK_NOTIFICATION_AS_READ] (state, notification) {
 	// 	set(state, 'notifications', {...state.notifications, [notification.id]:{...notification, read_at: new Date().getTime()}})

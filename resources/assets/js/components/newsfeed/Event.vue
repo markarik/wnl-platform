@@ -1,16 +1,25 @@
 <template lang="html">
-	<div class="wnl-newsfeed-notification">
-		{{ formattedTime }}
+	<div class="wnl-newsfeed-notification box" :class="">
 		<component :is="componentName" :event="event">
 		</component>
+		<small class="time">{{ formattedTime }}</small>
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
+	.wnl-newsfeed-notification
+
+		.time
+			color: $color-inactive-gray
 </style>
 
 <script>
 	import QnaAnswerPosted from '../newsfeed/events/QnaAnswerPosted'
+	import QnaQuestionPosted from '../newsfeed/events/QnaQuestionPosted'
+	import CommentPosted from '../newsfeed/events/CommentPosted'
+	import ReactionAdded from '../newsfeed/events/ReactionAdded'
 	import {timeFromS} from 'js/utils/time'
 
 	export default {
@@ -25,7 +34,10 @@
 			}
 		},
 		components: {
-			'wnl-event-qna-answer-posted': QnaAnswerPosted
+			'wnl-event-qna-answer-posted': QnaAnswerPosted,
+			'wnl-event-qna-question-posted': QnaQuestionPosted,
+			'wnl-event-comment-posted': CommentPosted,
+			'wnl-event-reaction-added': ReactionAdded
 		}
 	}
 </script>

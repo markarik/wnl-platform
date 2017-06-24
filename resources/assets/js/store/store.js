@@ -17,6 +17,7 @@ import quiz from 'js/store/modules/quiz'
 import progress from 'js/store/modules/progress'
 import slideshow from 'js/store/modules/slideshow'
 import ui from 'js/store/modules/ui'
+import activeUsers from 'js/store/modules/activeUsers'
 
 Vue.use(Vuex)
 
@@ -38,6 +39,7 @@ export default new Vuex.Store({
 		progress,
 		slideshow,
 		ui,
+		activeUsers
 	},
 	strict: debug
 })

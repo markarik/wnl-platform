@@ -115,6 +115,9 @@ export const UI_KILL_CHAT = 'UI_KILL_CHAT'
 export const UI_TOGGLE_OVERLAY = 'UI_TOGGLE_OVERLAY'
 export const UI_DISPLAY_OVERLAY = 'UI_DISPLAY_OVERLAY'
 
+//Active Users
+export const ACTIVE_USERS_SET = 'ACTIVE_USERS_SET';
+
 // Notifications
 export const SET_NOTIFICATIONS         = 'SET_NOTIFICATIONS'
 export const ADD_NOTIFICATION          = 'ADD_NOTIFICATION'

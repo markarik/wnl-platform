@@ -3,11 +3,13 @@
 
 namespace App\Http\Controllers\Api\PrivateApi\User;
 
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
+use Storage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use Intervention\Image\Facades\Image;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
 
 class UserAvatarApiController extends ApiController
 {
@@ -36,12 +38,27 @@ class UserAvatarApiController extends ApiController
 			return $this->respondInvalidInput([], 'Max. allowed file size exceeded.');
 		}
 
-		$user->profile->avatar = $file->store('avatars', 'public');
+		if ($file->getClientMimeType() === 'image/gif') {
+			$path = $file->store('avatars', 'public');
+		} else {
+			$path = $this->storeStaticImage($file);
+		}
+
+		$user->profile->avatar = $path;
 		$user->profile->save();
 
 		$resource = new Item($user->profile, new UserProfileTransformer, 'user_profile');
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
+	}
+
+	public function storeStaticImage($file)
+	{
+		$image = Image::make($file)->fit(100)->stream('png');
+		$path = 'avatars/' . str_random(32) . '.png';
+		Storage::put('public/' . $path, $image);
+
+		return $path;
 	}
 }

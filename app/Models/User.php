@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -18,6 +17,7 @@ class User extends Authenticatable
 		'consent_account'    => 'boolean',
 		'consent_order'      => 'boolean',
 		'consent_terms'      => 'boolean',
+		'suspended'          => 'boolean',
 	];
 
 	/**
@@ -39,6 +39,8 @@ class User extends Authenticatable
 	protected $hidden = [
 		'password', 'remember_token',
 	];
+
+	protected $guarded = ['suspended'];
 
 	/**
 	 * Relationships
@@ -147,6 +149,7 @@ class User extends Authenticatable
 	 * Send the password reset notification.
 	 *
 	 * @param  string $token
+	 *
 	 * @return void
 	 */
 	public function sendPasswordResetNotification($token)
@@ -168,6 +171,7 @@ class User extends Authenticatable
 	 *
 	 * @param $id
 	 * @param array $columns
+	 *
 	 * @return User|\Illuminate\Contracts\Auth\Authenticatable
 	 */
 	public static function fetch($id, $columns = ['*'])
@@ -183,6 +187,7 @@ class User extends Authenticatable
 	 * Determine whether the user has the given role.
 	 *
 	 * @param $roleName
+	 *
 	 * @return bool
 	 */
 	public function hasRole($roleName)
@@ -211,6 +216,7 @@ class User extends Authenticatable
 	 *
 	 * @param \Illuminate\Database\Eloquent\Builder $query
 	 * @param string $role
+	 *
 	 * @return \Illuminate\Database\Query\Builder
 	 */
 	public function scopeOfRole($query, $role)

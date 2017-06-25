@@ -17,7 +17,7 @@ let routes = [
 			{
 				name: resource('courses'),
 				path: '',
-				component: require('js/components/course/Overview.vue'),
+				component: require('js/components/course/dashboard/Overview.vue'),
 				meta: {keepsNavOpen: true},
 				props: true,
 			},

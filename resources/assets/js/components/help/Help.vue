@@ -129,8 +129,7 @@
 			},
 			chatRooms() {
 				return [
-					{name: '#nauka', channel: 'help-learning'},
-					{name: '#tech', channel: 'help-tech'},
+					{name: '#pomoc', channel: 'help-tech'},
 				]
 			},
 			isMainRoute() {

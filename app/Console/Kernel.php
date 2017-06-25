@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
 		Commands\MigrateUserData::class,
 		Commands\QuizImport::class,
 		Commands\SectionsUpdate::class,
+		Commands\SlideshowsRemove::class,
 		Commands\SlidesImport::class,
 		Commands\DumpCourseStructure::class,
 		Commands\WarmUpCache::class,

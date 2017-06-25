@@ -11,7 +11,7 @@
 		<p>Nieustająco staramy się ulepszać naszą platformę i czynić ją bogatszą w przydatne funkcje! Nad tymi nowościami pracujemy obecnie:</p>
 		<ul>
 			<li><strong>Kolekcje</strong> - wyświetlanie zapisanych slajdów, pytań kontrolnych, czy wątków z pytań i odpowiedzi</li>
-			<li><strong>Notyfikacje i newsfeed</strong> - bieżące informacje o aktywności uczestników. Ktoś skomentował Twoją odpowiedź? Ktoś odpowiedział na Twoje pytanie? Dowiesz się o tym z notyfikacji. Oprócz tego na głównej stronie kursu stworzymy poszerzony widok ostatnih wydarzeń (jak newsfeed na facebooku). ;)</li>
+			<li><strong>Notyfikacje i newsfeed</strong> - bieżące informacje o aktywności uczestników. Ktoś skomentował Twoją odpowiedź? Ktoś odpowiedział na Twoje pytanie? Dowiesz się o tym z notyfikacji. Oprócz tego na głównej stronie kursu stworzymy poszerzony widok ostatnich wydarzeń (jak newsfeed na facebooku). ;)</li>
 			<li><strong>Wyszukiwarka</strong> - mamy dostęp do ogrodnej bazy wiedzy medycznej! Teraz trzeba móc łatwo ją przeszukiwać... :)</li>
 			<li><strong>Prywatne wiadomości</strong> - czasem po prostu chcemy pogadać z kimś prywatnie. Nasza platforma oczywiście będzie na to pozwalała.</li>
 		</ul>

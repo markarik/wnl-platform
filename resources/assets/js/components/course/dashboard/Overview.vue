@@ -8,6 +8,9 @@
 			</div>
 		</div>
 
+		<!-- Dashboard news -->
+		<wnl-dashboard-news></wnl-dashboard-news>
+
 		<!-- Next lesson -->
 		<div>
 			<div class="wnl-overview-section">
@@ -52,10 +55,11 @@
 	import emoji from 'node-emoji'
 	import { mapGetters } from 'vuex'
 
-	import NextLesson from 'js/components/course/NextLesson'
 	import Qna from 'js/components/qna/Qna'
-	import YourProgress from 'js/components/course/YourProgress'
-	import ActiveUsers from 'js/components/course/ActiveUsers'
+	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
+	import DashboardNews from 'js/components/course/dashboard/DashboardNews'
+	import NextLesson from 'js/components/course/dashboard/NextLesson'
+	import YourProgress from 'js/components/course/dashboard/YourProgress'
 	import { getFirstLessonId } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
 
@@ -74,10 +78,11 @@
 			},
 		},
 		components: {
-			'wnl-next-lesson': NextLesson,
 			'wnl-qna': Qna,
+			'wnl-active-users': ActiveUsers,
+			'wnl-dashboard-news': DashboardNews,
+			'wnl-next-lesson': NextLesson,
 			'wnl-your-progress': YourProgress,
-			'wnl-active-users': ActiveUsers
 		},
 		beforeMount() {
 			if (this.isBeginning) {

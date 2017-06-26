@@ -20,6 +20,10 @@ export const reactionsActions = {
 
 			return axios[method](getApiUrl(`reactions`), params)
 				.then((response) => {
+					commit(types[`${payload.module.toUpperCase()}_SET_REACTION`], {
+						...payload,
+						hasReacted: !payload.hasReacted
+					})
 					resolve(response)
 				})
 				.catch(error => {

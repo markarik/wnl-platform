@@ -3,7 +3,7 @@ import {mount} from 'avoriaz';
 import {expect} from 'chai';
 import Vuex from 'vuex';
 import ActiveUsers from './ActiveUsers.vue';
-import Avatar from '../global/Avatar.vue';
+import Avatar from 'js/components/global/Avatar.vue';
 
 Vue.use(Vuex);
 Vue.component('wnl-avatar', Avatar)

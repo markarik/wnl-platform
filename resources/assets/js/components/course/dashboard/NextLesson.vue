@@ -34,7 +34,7 @@
 <script>
 	import { mapGetters } from 'vuex'
 
-	import Emoji from '../global/Emoji.vue'
+	import Emoji from 'js/components/global/Emoji.vue'
 	import { getUrl } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
 	import { timeFromDate } from 'js/utils/time'

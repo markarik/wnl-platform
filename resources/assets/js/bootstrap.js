@@ -4,7 +4,6 @@
  * included with Laravel will automatically verify the header's value.
  */
 
-import Echo from 'laravel-echo'
 window.axios = require('axios');
 
 window.axios.defaults.headers.common = {
@@ -25,8 +24,10 @@ window.axios.interceptors.response.use(
 );
 
 window.io = require('socket.io-client');
+const Echo = require('laravel-echo');
+import {envValue as env} from 'js/utils/env'
 
 window.Echo = new Echo({
 	broadcaster: 'socket.io',
-	host: window.location.hostname + ':8755'
+	host: `${env('ECHO_HOST')}:${env('ECHO_PORT')}`
 });

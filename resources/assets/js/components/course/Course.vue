@@ -38,7 +38,7 @@
 
 	.wnl-course-content
 		max-width: $course-content-max-width
-		flex: $course-content-flex auto
+		flex: $course-content-flex 0 0
 		position: relative
 		overflow-y: hidden
 

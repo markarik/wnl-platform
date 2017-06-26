@@ -45,6 +45,7 @@ class LoginController extends Controller
 	 * Log the user out of the application.
 	 *
 	 * @param  \Illuminate\Http\Request $request
+	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function logout(Request $request)
@@ -69,6 +70,20 @@ class LoginController extends Controller
 	 * @return mixed
 	 */
 	protected function authenticated(Request $request, $user)
+	{
+		if ($user->suspended) {
+			$this->guard()->logout();
+			$request->session()->flush();
+			$request->session()->regenerate();
+			$request->session()->flash('suspended', true);
+
+			return redirect('/login');
+		}
+
+		$this->singleSessionCheck($user);
+	}
+
+	protected function singleSessionCheck($user)
 	{
 		if (App::environment(['testing', 'dev'])) return;
 

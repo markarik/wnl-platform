@@ -12,11 +12,13 @@ class AppController extends Controller
 	{
 		JavaScript::put([
 			'env'    => [
-				'appDebug'              => env('APP_DEBUG'),
-				'APP_LOG_LEVEL'         => env('APP_LOG_LEVEL'),
-				'appEnv'                => env('APP_ENV'),
-				'appUrl'                => env('APP_URL'),
-				'SENTRY_DSN_VUE_PUB'    => env('SENTRY_DSN_VUE_PUB'),
+				'appDebug'           => env('APP_DEBUG'),
+				'APP_LOG_LEVEL'      => env('APP_LOG_LEVEL'),
+				'appEnv'             => env('APP_ENV'),
+				'appUrl'             => env('APP_URL'),
+				'ECHO_HOST'          => env('ECHO_HOST', env('APP_URL')),
+				'ECHO_PORT'          => env('ECHO_PORT', 8755),
+				'SENTRY_DSN_VUE_PUB' => env('SENTRY_DSN_VUE_PUB'),
 			],
 			'config' => [
 				'papi' => config('papi'),

@@ -19,6 +19,7 @@ import Icon from 'js/components/global/Icon.vue'
 import ImageButton from 'js/components/global/ImageButton.vue'
 import TextLoader from 'js/components/global/TextLoader.vue'
 import Newsfeed from 'js/components/newsfeed/Newsfeed.vue'
+import Upload from 'js/components/global/Upload.vue'
 Vue.component('wnl-alert', Alert)
 Vue.component('wnl-avatar', Avatar)
 Vue.component('wnl-emoji', Emoji)
@@ -26,6 +27,7 @@ Vue.component('wnl-icon', Icon)
 Vue.component('wnl-image-button', ImageButton)
 Vue.component('wnl-text-loader', TextLoader)
 Vue.component('wnl-newsfeed', Newsfeed)
+Vue.component('wnl-upload', Upload)
 
 // Setup a logger
 import Logger from 'js/utils/logger'

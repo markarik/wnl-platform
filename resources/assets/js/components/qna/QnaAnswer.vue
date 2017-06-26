@@ -2,7 +2,13 @@
 	<div class="qna-answer-container">
 		<div class="qna-answer">
 			<div class="votes">
-				<wnl-vote type="up" :reactableId="id" reactableResource="qna_answers" count="0" module="qna"></wnl-vote>
+				<wnl-vote
+					type="up"
+					:reactableId="id"
+					:reactableResource="reactableResource"
+					:state="upvoteState"
+					module="qna"
+				></wnl-vote>
 			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
@@ -120,19 +126,21 @@
 			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
 		},
-		props: ['answer', 'questionId', 'reactableId', 'reactableResource', 'module', 'readOnly'],
+		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly'],
 		data() {
 			return {
 				commentsFetched: false,
 				loading: false,
 				showComments: false,
 				showCommentForm: false,
+				reactableResource: "qna_answers"
 			}
 		},
 		computed: {
 			...mapGetters('qna', [
 				'profile',
 				'answerComments',
+				'getReaction'
 			]),
 			...mapGetters(['currentUserId']),
 			id() {
@@ -162,6 +170,9 @@
 			deleteTarget() {
 				return 'tę odpowiedź'
 			},
+			upvoteState() {
+				return this.getReaction(this.reactableResource, this.answer.id, "upvote")
+			}
 		},
 		methods: {
 			...mapActions('qna', ['fetchComments', 'removeAnswer']),

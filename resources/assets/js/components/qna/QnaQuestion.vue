@@ -7,7 +7,6 @@
 			<div class="votes">
 				<wnl-vote
 					type="up"
-					count="0"
 					:reactableId="questionId"
 					:reactableResource="reactableResource"
 					:state="voteState"

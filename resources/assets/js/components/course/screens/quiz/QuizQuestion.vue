@@ -112,8 +112,7 @@
 		},
 		data() {
 			return {
-				reactableResource: "quiz_questions",
-				reaction: "bookmark"
+				reactableResource: "quiz_questions"
 			}
 		},
 		props: ['id', 'index', 'text', 'total', 'readOnly'],
@@ -150,7 +149,7 @@
 				// return this.isComplete && this.hasComments
 			},
 			reactionState() {
-				return this.getReaction(this.reactableResource, this.id, this.reaction)
+				return this.getReaction(this.reactableResource, this.id, "bookmark")
 			}
 		},
 		methods: {

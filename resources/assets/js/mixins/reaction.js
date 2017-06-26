@@ -15,7 +15,7 @@ export const reaction = {
 			return this.state.hasReacted
 		},
 		count() {
-			return this.state.count || 0
+			return this.state.count
 		}
 	},
 	methods: {

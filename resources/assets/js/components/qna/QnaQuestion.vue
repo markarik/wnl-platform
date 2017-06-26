@@ -5,7 +5,14 @@
 		</div>
 		<div class="qna-question">
 			<div class="votes">
-				<wnl-vote type="up" count="0" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-vote>
+				<wnl-vote
+					type="up"
+					count="0"
+					:reactableId="questionId"
+					:reactableResource="reactableResource"
+					:state="voteState"
+					module="qna"
+				></wnl-vote>
 			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
@@ -14,7 +21,7 @@
 						class="qna-bookmark"
 						:reactableId="questionId"
 						:reactableResource="reactableResource"
-						:state="reactionState"
+						:state="bookmarkState"
 						module="qna"
 					></wnl-bookmark>
 				</div>
@@ -180,8 +187,7 @@
 				allAnswers: false,
 				loading: false,
 				showAnswerForm: false,
-				reactableResource: "qna_questions",
-				reaction: "bookmark"
+				reactableResource: "qna_questions"
 			}
 		},
 		computed: {
@@ -240,8 +246,11 @@
 			tags() {
 				return this.questionTags(this.questionId).map((tag) => tag.name) || []
 			},
-			reactionState() {
-				return this.getReaction(this.reactableResource, this.questionId, this.reaction)
+			bookmarkState() {
+				return this.getReaction(this.reactableResource, this.questionId, "bookmark")
+			},
+			voteState() {
+				return this.getReaction(this.reactableResource, this.questionId, "upvote")
 			}
 		},
 		methods: {

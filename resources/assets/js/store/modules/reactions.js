@@ -4,12 +4,18 @@ import {set} from 'vue'
 
 import { getApiUrl } from 'js/utils/env'
 
+const defaultValue = {
+	hasReacted: false,
+	count: 0
+}
+
 export const reactionsGetters = {
-	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction],
+	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction] || defaultValue,
 }
 
 export const reactionsMutations = {
 	[types.SET_REACTION] (state, payload) {
+		console.log('...payload count...', payload.count)
 		set(
 			state[payload.reactableResource][payload.reactableId],
 			payload.reaction,

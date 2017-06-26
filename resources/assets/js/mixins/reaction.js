@@ -34,12 +34,15 @@ export const reaction = {
 				reaction: this.name,
 				hasReacted: this.hasReacted,
 			}).then((response) => {
+				const hasReacted = !this.hasReacted
+				const count = hasReacted ? this.count + 1 : this.count - 1;
+
 				this.isLoading = false
 				this.wasJustClicked = false
 
 				this.mutation(SET_REACTION, {
-					count: this.hasReacted ? this.count-- : this.count++,
-					hasReacted: !this.hasReacted,
+					count,
+					hasReacted,
 					reactableResource: this.reactableResource,
 					reactableId: this.reactableId,
 					reaction: this.name,

@@ -11,7 +11,12 @@
 						<div v-html="text"></div>
 					</div>
 					<div class="card-header-icons">
-						<wnl-bookmark :reactableId="id" reactableResource="quiz_questions" module="quiz"></wnl-bookmark>
+						<wnl-bookmark
+							:reactableId="id"
+							:reactableResource="reactableResource"
+							:state="reactionState"
+							module="quiz"
+						></wnl-bookmark>
 					</div>
 				</div>
 			</header>
@@ -105,6 +110,12 @@
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
 		},
+		data() {
+			return {
+				reactableResource: "quiz_questions",
+				reaction: "bookmark"
+			}
+		},
 		props: ['id', 'index', 'text', 'total', 'readOnly'],
 		computed: {
 			...mapGetters('quiz', [
@@ -112,6 +123,7 @@
 				'isComplete',
 				'isResolved',
 				'getSelectedAnswer',
+				'getReaction'
 			]),
 			displayResults() {
 				return this.readOnly || this.isComplete || this.isResolved(this.id)
@@ -137,6 +149,9 @@
 			showComments() {
 				// return this.isComplete && this.hasComments
 			},
+			reactionState() {
+				return this.getReaction(this.reactableResource, this.id, this.reaction)
+			}
 		},
 		methods: {
 			...mapActions('quiz', ['commitSelectAnswer']),
@@ -154,19 +169,6 @@
 						answer: answerIndex
 					})
 				}
-			},
-
-			/**
-			 * A temporary method, to be removed when Collections are done.
-			 * The method displays a modal informing about the upcoming feature.
-			 */
-			mockSaving() {
-				this.$swal(swalConfig({
-					html: `<p class="normal">Pracujemy nad zapisywaniem pytań do własnej Kolekcji!</p>
-						<p class="normal" style="margin-top: 0.6em">Dzięki tej funkcji, będziecie mogli zachowywać wybrane pytania i wracać do nich w dowolnym momencie!</p>`,
-					title: 'Już wkrótce!',
-					type: 'info',
-				}))
 			}
 		}
 	}

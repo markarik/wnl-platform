@@ -10,7 +10,6 @@ export const reactionsGetters = {
 
 export const reactionsMutations = {
 	[types.SET_REACTION] (state, payload) {
-		console.log(payload, '...payload');
 		set(
 			state[payload.reactableResource][payload.reactableId],
 			payload.reaction,

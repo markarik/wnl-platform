@@ -10,7 +10,13 @@
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-question-content" v-html="content"></div>
-					<wnl-bookmark class="qna-bookmark" :reactableId="questionId" reactableResource="qna_questions" module="qna"></wnl-bookmark>
+					<wnl-bookmark
+						class="qna-bookmark"
+						:reactableId="questionId"
+						:reactableResource="reactableResource"
+						:state="reactionState"
+						module="qna"
+					></wnl-bookmark>
 				</div>
 				<div class="tags" v-if="tags.length > 0">
 					<span v-for="tag, key in tags" class="tag is-light" v-text="tag"></span>
@@ -174,6 +180,8 @@
 				allAnswers: false,
 				loading: false,
 				showAnswerForm: false,
+				reactableResource: "qna_questions",
+				reaction: "bookmark"
 			}
 		},
 		computed: {
@@ -182,6 +190,7 @@
 				'getQuestion',
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
+				'getReaction'
 			]),
 			...mapGetters(['currentUserId', 'isMobile']),
 			question() {
@@ -231,6 +240,9 @@
 			tags() {
 				return this.questionTags(this.questionId).map((tag) => tag.name) || []
 			},
+			reactionState() {
+				return this.getReaction(this.reactableResource, this.questionId, this.reaction)
+			}
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),

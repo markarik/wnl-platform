@@ -243,6 +243,7 @@ const getters = {
 
 // Mutations
 const mutations = {
+	...reactionsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},

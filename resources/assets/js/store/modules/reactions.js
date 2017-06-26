@@ -1,10 +1,25 @@
 import axios from 'axios'
 import * as types from 'js/store/mutations-types'
+import {set} from 'vue'
 
 import { getApiUrl } from 'js/utils/env'
 
 export const reactionsGetters = {
 	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction],
+}
+
+export const reactionsMutations = {
+	[types.SET_REACTION] (state, payload) {
+		console.log(payload, '...payload');
+		set(
+			state[payload.reactableResource][payload.reactableId],
+			payload.reaction,
+			{
+				hasReacted: payload.hasReacted,
+				count: payload.count
+			}
+		)
+	}
 }
 
 export const reactionsActions = {
@@ -19,13 +34,7 @@ export const reactionsActions = {
 				params = payload.hasReacted ? { params: data } : data
 
 			return axios[method](getApiUrl(`reactions`), params)
-				.then((response) => {
-					commit(types[`${payload.module.toUpperCase()}_SET_REACTION`], {
-						...payload,
-						hasReacted: !payload.hasReacted
-					})
-					resolve(response)
-				})
+				.then((response) => resolve(response))
 				.catch(error => {
 					$wnl.logger.error(error)
 					reject()

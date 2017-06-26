@@ -84,6 +84,7 @@ const getters = {
 
 const mutations = {
 	...commentsMutations,
+	...reactionsMutations,
 	[types.QUIZ_ATTEMPT] (state, payload) {
 		state.attempts.push(payload)
 	},
@@ -157,11 +158,6 @@ const mutations = {
 	},
 	[types.QUIZ_SET_STATS] (state, {stats}) {
 		set(state, 'quiz_stats', stats)
-	},
-	[types.QUIZ_SET_REACTION] (state, payload) {
-		set(state[payload.reactableResource][payload.reactableId], payload.reaction, {
-			hasReacted: payload.hasReacted
-		})
 	},
 }
 

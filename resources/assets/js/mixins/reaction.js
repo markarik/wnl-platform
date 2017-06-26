@@ -1,4 +1,5 @@
 import { mapGetters, mapActions } from 'vuex'
+import { SET_REACTION } from 'js/store/mutations-types'
 
 export const reaction = {
 	props: ['module', 'reactableResource', 'reactableId', 'updateLocally'],
@@ -18,7 +19,7 @@ export const reaction = {
 	},
 	methods: {
 		setReaction(payload) {
-			return this.$store.dispatch(`${this.module}/setReaction`, {...payload, module: this.module})
+			return this.$store.dispatch(`${this.module}/setReaction`, payload)
 		},
 		toggleReaction() {
 			if (this.isLoading) {
@@ -36,6 +37,14 @@ export const reaction = {
 				this.hasReacted = !this.hasReacted
 				this.isLoading = false
 				this.wasJustClicked = false
+
+				this.mutation(SET_REACTION, {
+					count: this.count,
+					hasReacted: this.hasReacted,
+					reactableResource: this.reactableResource,
+					reactableId: this.reactableId,
+					reaction: this.name,
+				})
 			})
 			.catch((error) => {
 				$wnl.logger.error(error)
@@ -43,6 +52,9 @@ export const reaction = {
 				this.wasJustClicked = false
 			})
 		},
+		mutation(name, payload) {
+			this.$store.commit(`${this.module}/${name}`, payload)
+		}
 	},
 	mounted() {
 		this.count = this.reaction.count

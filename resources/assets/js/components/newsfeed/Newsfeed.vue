@@ -4,7 +4,6 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div v-else class="container">
-			<a>Oznacz wszystkie jako przeczyane</a>
 			<wnl-newsfeed-event
 					v-for="(event, index) in notifications"
 					:event="event"

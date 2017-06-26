@@ -1,14 +1,9 @@
 <template lang="html">
 	<div>
-		<strong>Nowa odpowiedź na pytanie</strong>
-		"{{ event.objects.text }}"
-		<strong>od</strong>
-		<wnl-avatar
-				:fullName="event.actors.full_name"
-				size="small"
-		></wnl-avatar>
+		<wnl-avatar :fullName="event.actors.full_name" size="small"/>
 		<a>{{ event.actors.full_name }}</a>
-		"{{ event.subject.text }}" <a :href="event.referer" target="_blank">jedziesz szwagier</a>
+		odpowiedział/-a na pytanie <br>
+		"{{ event.subject.text }}"
 	</div>
 </template>
 

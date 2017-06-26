@@ -2,15 +2,14 @@
 
 namespace App\Events;
 
+use Auth;
 use App\Models\Reaction;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class ReactionAdded
 {
@@ -46,6 +45,7 @@ class ReactionAdded
 	{
 		$reaction = $this->reaction;
 		$reactable = $this->reactable;
+		$actor = Auth::user();
 
 		$this->data = [
 			'event'   => 'reaction-added',
@@ -57,6 +57,12 @@ class ReactionAdded
 				'type'          => 'reaction',
 				'reaction_type' => $reaction->type,
 				'reaction_id'   => $reaction->id,
+			],
+			'actors'  => [
+				'id'         => $actor->id,
+				'first_name' => $actor->first_name,
+				'last_name'  => $actor->last_name,
+				'full_name'  => $actor->full_name,
 			],
 		];
 	}

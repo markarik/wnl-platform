@@ -13,7 +13,12 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class CommentPosted
 {
-	use Dispatchable, InteractsWithSockets, SerializesModels;
+	use Dispatchable,
+		InteractsWithSockets,
+		SerializesModels,
+		SanitizesUserContent;
+
+	public const TEXT_LIMIT = 160;
 
 	public $comment;
 
@@ -40,6 +45,7 @@ class CommentPosted
 	public function transform()
 	{
 		$comment = $this->comment;
+		$actor = $comment->user;
 
 		$this->data = [
 			'event'   => 'comment-posted',
@@ -47,16 +53,17 @@ class CommentPosted
 				'type' => snake_case(class_basename($comment->commentable)),
 				'id'   => $comment->commentable->id,
 			],
-		];
-
-		if ($actor = $comment->user) {
-			$this->data['actors'] = [
+			'subject' => [
+				'type' => 'comment',
+				'id'   => $comment->id,
+				'text' => $this->sanitize($comment->text),
+			],
+			'actors'  => [
 				'id'         => $actor->id,
 				'first_name' => $actor->first_name,
 				'last_name'  => $actor->last_name,
 				'full_name'  => $actor->full_name,
-			];
-		}
-
+			]
+		];
 	}
 }

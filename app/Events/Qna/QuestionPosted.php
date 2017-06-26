@@ -4,16 +4,18 @@ namespace App\Events\Qna;
 
 use App\Models\QnaQuestion;
 use Illuminate\Broadcasting\Channel;
+use App\Events\SanitizesUserContent;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class QuestionPosted
 {
-	use Dispatchable, InteractsWithSockets, SerializesModels;
+	use Dispatchable,
+		InteractsWithSockets,
+		SerializesModels,
+		SanitizesUserContent;
 
 	public $qnaQuestion;
 
@@ -46,7 +48,7 @@ class QuestionPosted
 			'subject' => [
 				'type' => 'qna_question',
 				'id'   => $this->qnaQuestion->id,
-				'text' => str_limit($this->qnaQuestion->text, self::TEXT_LIMIT),
+				'text' => $this->sanitize($this->qnaQuestion->text),
 			],
 			'actors'  => [
 				'id'         => $this->qnaQuestion->user->id,

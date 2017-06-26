@@ -19,21 +19,14 @@ const mutations = {
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},
-	// [types.SET_NOTIFICATIONS] (state, notifications) {
-	// 	set(state, 'notifications', notifications)
-	// },
 	[types.ADD_NOTIFICATION] (state, notification) {
 		set(state, 'notifications', {[notification.id]: notification, ...state.notifications})
 	},
-	// [types.MARK_NOTIFICATION_AS_READ] (state, notification) {
-	// 	set(state, 'notifications', {...state.notifications, [notification.id]:{...notification, read_at: new Date().getTime()}})
-	// }
-	// [types.RESET_MODULE] (state) {
-	// 	let initialState = getInitialState()
-	// 	Object.keys(initialState).forEach((field) => {
-	// 		set(state, field, initialState[field])
-	// 	})
-	// },
+	[types.MARK_NOTIFICATION_AS_READ] (state, notification) {
+		const now = new Date().getTime()
+		// send request
+		set(state, 'notifications', {...state.notifications, [notification.id]: {...notification, read_at: now}})
+	}
 }
 
 const actions = {

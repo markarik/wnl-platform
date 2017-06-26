@@ -1,8 +1,9 @@
 <template lang="html">
 	<div class="wnl-newsfeed-notification box" :class="">
+		<small class="time">{{ formattedTime }}</small>
 		<component :is="componentName" :event="event">
 		</component>
-		<small class="time">{{ formattedTime }}</small>
+		<a :href="event.referer" target="_blank">zabierz mnie tam</a>
 	</div>
 </template>
 
@@ -13,6 +14,9 @@
 
 		.time
 			color: $color-inactive-gray
+
+		.wnl-avatar-small
+			display: inline-flex
 </style>
 
 <script>

@@ -50,13 +50,12 @@
 		},
 		methods: {
 			...mapActions(['setupCurrentUser']),
-			...mapActions('notifications', ['pullNotifications', 'setupLiveNotifications']),
+			...mapActions('notifications', ['initNotifications']),
 		},
 		mounted() {
 			this.setupCurrentUser()
 					.then(()=> {
-						this.pullNotifications(3)
-						this.setupLiveNotifications(3)
+						this.initNotifications(3)
 					})
 		},
 	}

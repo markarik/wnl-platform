@@ -15,8 +15,5 @@
 	export default {
 		name: 'wnl-event-qna-answer-posted',
 		props: ['event'],
-		mounted() {
-			console.log(this.event)
-		}
 	}
 </script>

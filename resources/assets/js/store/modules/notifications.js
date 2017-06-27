@@ -7,12 +7,14 @@ const namespaced = true
 
 const state = {
 	loading: true,
-	notifications: {}
+	notifications: {},
+	user: 0
 }
 
 const getters = {
 	isLoading: (state) => state.loading,
 	notifications: (state) => state.notifications,
+	user: (state) => state.user,
 }
 
 const mutations = {
@@ -22,10 +24,17 @@ const mutations = {
 	[types.ADD_NOTIFICATION] (state, notification) {
 		set(state, 'notifications', {[notification.id]: notification, ...state.notifications})
 	},
-	[types.MARK_NOTIFICATION_AS_READ] (state, notification) {
-		const now = new Date().getTime()
-		// send request
-		set(state, 'notifications', {...state.notifications, [notification.id]: {...notification, read_at: now}})
+	[types.MARK_NOTIFICATION_AS_READ] (state, payload) {
+		set(state, 'notifications', {
+			...state.notifications,
+			[payload.notification.id]: {
+				...payload.notification,
+				read_at: payload.time
+			}
+		})
+	},
+	[types.SET_NOTIFICATIONS_USER] (state, user) {
+		set(state, 'user', user)
 	}
 }
 
@@ -49,10 +58,25 @@ const actions = {
 				commit(types.ADD_NOTIFICATION, notification)
 			});
 	},
+	markAsRead({commit, getters}, notification) {
+		_updateNotification(getters.user, notification.id)
+			.then((response) => {
+				commit(types.MARK_NOTIFICATION_AS_READ, {notification, time: response.data.read_at})
+			})
+	},
+	initNotifications({commit, dispatch}, userId) {
+		commit(types.SET_NOTIFICATIONS_USER, userId)
+		dispatch('pullNotifications', userId)
+		dispatch('setupLiveNotifications', userId)
+	}
 }
 
 function _getNotifications(userId) {
 	return axios.get(getApiUrl(`users/${userId}/notifications`))
+}
+
+function _updateNotification(userId, notificationId, data) {
+	return axios.patch(getApiUrl(`users/${userId}/notifications/${notificationId}`), data)
 }
 
 export default {

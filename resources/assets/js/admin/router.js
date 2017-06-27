@@ -41,6 +41,7 @@ let routes = [
 		name: 'dashboard',
 		path: '/admin/app',
 		component: require('js/components/newsfeed/Newsfeed.vue'),
+		props: {type: 'admin'}
 	},
 	{
 		name: 'logout',

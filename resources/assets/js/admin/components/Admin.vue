@@ -55,8 +55,8 @@
 		mounted() {
 			this.setupCurrentUser()
 					.then(()=> {
-						this.pullNotifications()
-						this.setupLiveNotifications()
+						this.pullNotifications(3)
+						this.setupLiveNotifications(3)
 					})
 		},
 	}

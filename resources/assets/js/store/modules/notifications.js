@@ -30,8 +30,8 @@ const mutations = {
 }
 
 const actions = {
-	pullNotifications({commit}) {
-		_getNotifications().then(response => {
+	pullNotifications({commit}, userId) {
+		_getNotifications(userId).then(response => {
 			if (typeof response.data[0] !== 'object') {
 				commit(types.IS_LOADING, false)
 				return false
@@ -43,16 +43,16 @@ const actions = {
 			commit(types.IS_LOADING, false)
 		})
 	},
-	setupLiveNotifications({rootGetters, commit}) {
-		Echo.private(`user.${rootGetters.currentUserId}`)
+	setupLiveNotifications({commit}, userId) {
+		Echo.private(`user.${userId}`)
 			.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
 				commit(types.ADD_NOTIFICATION, notification)
 			});
 	},
 }
 
-function _getNotifications() {
-	return axios.get(getApiUrl('users/current/notifications'))
+function _getNotifications(userId) {
+	return axios.get(getApiUrl(`users/${userId}/notifications`))
 }
 
 export default {

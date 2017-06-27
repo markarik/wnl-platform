@@ -32,6 +32,7 @@ class Kernel extends ConsoleKernel
 		Commands\WarmUpCache::class,
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
+		Commands\IssueFinalInvoice::class,
     ];
 
     /**

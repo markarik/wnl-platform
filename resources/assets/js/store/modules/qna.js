@@ -146,12 +146,6 @@ const getters = {
 	...reactionsGetters,
 	loading: state => state.loading,
 	currentSorting: state => state.sorting,
-	sortedQuestions: (state, getters) => {
-		if (state.sorting === 'latest') return getters.questionsByTime;
-		if (state.sorting === 'no-answer') return getters.questionsNoAnswer;
-		if (state.sorting === 'my') return getters.questionsMy;
-		return getters.questionsByVotes;
-	},
 	questionsByVotes: state => {
 		return _.reverse(
 			_.sortBy(
@@ -243,6 +237,7 @@ const getters = {
 
 // Mutations
 const mutations = {
+	...reactionsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},

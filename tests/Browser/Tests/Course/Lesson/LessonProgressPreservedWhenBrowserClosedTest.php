@@ -2,35 +2,30 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\Course\Course;
 use Tests\Browser\Pages\Course\Lesson;
-use Tests\Browser\Pages\Login;
 use Tests\DuskTestCase;
 
 class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
 {
-	/**
-	 * @dataProvider Tests\Browser\DataProviders\User::userProvider
-	 * @param String $email
-	 * @param String $password
-	 * @param String $name
-	 */
-	public function testLessonProgressPreservedWhenBrowserClosed($email, $password, $name)
+	private $user;
+
+	public function setUp()
 	{
-		$this->browse(function (Browser $browser, Browser $secondBrowser) use ($email, $password, $name) {
-			$this->markTestSkipped(
-				'Only run this test when redis is clean - TODO figure out how to clear user progress before test'
-			);
+		parent::setUp();
+		$this->user = factory(User::class)->create();
+	}
+
+	public function testLessonProgressPreservedWhenBrowserClosed()
+	{
+		$this->browse(function (Browser $browser, Browser $secondBrowser) {
 			$LESSON_COMPLETED = 1;
 			$LAST_SECTION = 2;
 
-			$browser
-				->visit(new Login())
-				->loginAsUser($email, $password)
-				//TODO this is needed until we implement progress state in localStorage better
-				->clearUserData()
-				->on(new Course())
+			$browser->loginAs($this->user)
+				->visit(new Course())
 				->waitFor('@side_nav', 15)
 				->goToLesson($LESSON_COMPLETED)
 				->on(new Lesson())
@@ -39,16 +34,19 @@ class LessonProgressPreservedWhenBrowserClosedTest extends DuskTestCase
 				->assertExpectedSectionActive($LAST_SECTION)
 				->quit();
 
-			$secondBrowser
-				->visit(new Login())
-				->waitFor('@email_input')
-				->loginAsUser($email, $password)
-				->on(new Course())
+			$secondBrowser->loginAs($this->user)
+				->visit(new Course())
 				->waitFor('@side_nav', 15)
 				->goToLesson($LESSON_COMPLETED)
 				->on(new Lesson())
 				->waitFor('@side_nav', 15)
 				->assertExpectedSectionActive($LAST_SECTION);
 		});
+	}
+
+	public function tearDown()
+	{
+		parent::tearDown();
+		$this->user->delete();
 	}
 }

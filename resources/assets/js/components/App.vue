@@ -44,8 +44,6 @@
 	import axios from 'axios';
 	import {getApiUrl} from 'js/utils/env';
 
-	const CACHE_VERSION = 1
-
 	export default {
 		name: 'App',
 		components: {
@@ -55,7 +53,15 @@
 			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay'])
 		},
 		methods: {
-			...mapActions(['setupCurrentUser', 'setLayout', 'resetLayout', 'toggleOverlay']),
+			...mapActions([
+				'setupCurrentUser',
+				'setLayout',
+				'resetLayout',
+				'toggleOverlay',
+				'setActiveUsers',
+				'userJoined',
+				'userLeft'
+			]),
 			setupNotifications() {
 				Echo.private(`user.${this.currentUserId}`)
 						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
@@ -86,6 +92,12 @@
 			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 				this.setLayout(currentLayout)
 			})
+
+
+			window.Echo.join('active-users')
+				.here(users => this.setActiveUsers(users))
+				.joining(user => this.userJoined(user))
+				.leaving(user => this.userLeft(user));
 		}
 	}
 </script>

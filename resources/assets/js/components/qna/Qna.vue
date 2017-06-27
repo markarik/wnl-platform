@@ -33,7 +33,7 @@
 				</div>
 			</transition>
 			<wnl-qna-sorting></wnl-qna-sorting>
-			<wnl-qna-question v-for="question in sortedQuestions"
+			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
 				:readOnly="readOnly">
@@ -67,6 +67,8 @@
 
 	.qna-container
 		flex: 1 auto
+		overflow-x: hidden
+		word-wrap: break-word
 
 	.qna-meta
 		align-items: center
@@ -118,15 +120,20 @@
 			return {
 				ready: false,
 				showForm: false,
+				questionsList: []
 			}
 		},
 		computed: {
 			...mapGetters('qna', [
 				'loading',
-				'sortedQuestions',
+				'currentSorting',
+				'questionsByTime',
+				'questionsNoAnswer',
+				'questionsByVotes',
+				'questionsMy'
 			]),
 			howManyQuestions() {
-				return this.sortedQuestions.length || 0
+				return this.questionsList.length || 0
 			},
 			tagsFiltered() {
 				if (!this.tags) return [];
@@ -138,21 +145,39 @@
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'fetchLatestQuestions', 'destroyQna']),
+			getSortedQuestions(sorting, list) {
+				if (sorting === 'latest') {
+					return this.questionsByTime;
+				} else if (sorting === 'no-answer') {
+					return this.questionsNoAnswer;
+				} else if (sorting === "my") {
+					return this.questionsMy;
+				} else {
+					return this.questionsByVotes;
+				}
+			}
 		},
 		mounted() {
-			if (this.tags) {
-				this.fetchQuestions(this.tags).then(() => {
-					this.ready = true
-				}).catch(error => $wnl.logger.error(error))
-			} else if (this.ids) {
-				this.fetchQuestionsByIds(this.ids).then(() => {
-					this.ready = true
-				}).catch(error => $wnl.logger.error(error))
-			} else {
-				this.fetchLatestQuestions(this.ids).then(() => {
-					this.ready = true
-				}).catch(error => $wnl.logger.error(error))
-			}
+			new Promise((resolve, rejected) => {
+				if (this.tags) {
+					this.fetchQuestions(this.tags).then(() => {
+						this.ready = true
+						resolve()
+					}).catch(error => $wnl.logger.error(error))
+				} else if (this.ids) {
+					this.fetchQuestionsByIds(this.ids).then(() => {
+						this.ready = true
+						resolve()
+					}).catch(error => $wnl.logger.error(error))
+				} else {
+					this.fetchLatestQuestions(this.ids).then(() => {
+						this.ready = true
+						resolve()
+					}).catch(error => $wnl.logger.error(error))
+				}
+			}).then(() => {
+				this.questionsList = this.getSortedQuestions(this.currentSorting);
+			})
 		},
 		beforeDestroy() {
 			this.destroyQna()
@@ -166,6 +191,9 @@
 						this.ready = true
 					})
 				}
+			},
+			'currentSorting' (newValue, oldValue) {
+				this.questionsList = this.getSortedQuestions(newValue);
 			}
 		}
 	}

@@ -11,7 +11,12 @@
 			<div class="margin vertical">
 				<label class="label">Avatar</label>
 			</div>
-			<wnl-upload @uploadStarted="onUploadStarted" @success="onUploadSuccess" @uploadError="onUploadError">
+			<wnl-upload
+					@uploadStarted="onUploadStarted"
+					@success="onUploadSuccess"
+					@uploadError="onUploadError"
+					endpoint="users/current/avatar"
+			>
 				<wnl-avatar size="large" class="clickable-avatar"></wnl-avatar>
 				<a class="button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
 					Zmień avatar

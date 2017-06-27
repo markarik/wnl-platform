@@ -114,3 +114,6 @@ export const UI_INIT_CHAT = 'UI_INIT_CHAT'
 export const UI_KILL_CHAT = 'UI_KILL_CHAT'
 export const UI_TOGGLE_OVERLAY = 'UI_TOGGLE_OVERLAY'
 export const UI_DISPLAY_OVERLAY = 'UI_DISPLAY_OVERLAY'
+
+//Active Users
+export const ACTIVE_USERS_SET = 'ACTIVE_USERS_SET';

@@ -62,9 +62,8 @@ class StoreTime extends Command
 
 			foreach ($allKeys as $key) {
 				$userId = $this->extractUserIdFromKey($key);
-				$this->storeTime($keyPattern, $userId);
+				$this->storeTime($key, $userId);
 			}
-
 		});
 		return;
 	}

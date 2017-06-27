@@ -19,6 +19,7 @@ import Icon from 'js/components/global/Icon.vue'
 import ImageButton from 'js/components/global/ImageButton.vue'
 import TextLoader from 'js/components/global/TextLoader.vue'
 import VueSimpleBreakpoints from 'vue-simple-breakpoints'
+import Upload from 'js/components/global/Upload.vue'
 
 Vue.use(VueSimpleBreakpoints, {
 	mobile: 759, //mobile needs a top boundary, not a bottom one
@@ -33,6 +34,7 @@ Vue.component('wnl-emoji', Emoji)
 Vue.component('wnl-icon', Icon)
 Vue.component('wnl-image-button', ImageButton)
 Vue.component('wnl-text-loader', TextLoader)
+Vue.component('wnl-upload', Upload)
 
 // Setup a logger
 import Logger from 'js/utils/logger'

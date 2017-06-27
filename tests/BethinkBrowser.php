@@ -134,9 +134,4 @@ class BethinkBrowser extends Browser
 		$this->executeScript('return document.querySelector(arguments[0]).scrollIntoView(true)', [$selector]);
 		return $this;
 	}
-
-	public function clearUserData() {
-		$this->executeScript('return localStorage.clear();', []);
-		return $this;
-	}
 }

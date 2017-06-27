@@ -8,7 +8,7 @@
 window.axios = require('axios');
 
 window.axios.defaults.headers.common = {
-    'X-CSRF-TOKEN': window.Laravel.csrfToken,
+	'X-CSRF-TOKEN': window.Laravel.csrfToken,
 	'X-Requested-With': 'XMLHttpRequest',
 	'Accept': 'application/json'
 };
@@ -24,9 +24,11 @@ window.axios.interceptors.response.use(
 	}
 );
 
-// window.io = require('socket.io-client');
-//
-// window.Echo = new Echo({
-// 	broadcaster: 'socket.io',
-// 	host: window.location.hostname + ':8755'
-// });
+window.io = require('socket.io-client');
+const Echo = require('laravel-echo');
+import {envValue as env} from 'js/utils/env'
+
+window.Echo = new Echo({
+	broadcaster: 'socket.io',
+	host: `${env('ECHO_HOST')}:${env('ECHO_PORT')}`
+});

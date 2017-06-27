@@ -5,9 +5,13 @@ namespace App\Console\Commands;
 use App\Models\Order;
 use Lib\Invoice\Invoice;
 use Illuminate\Console\Command;
+use App\Jobs\IssueFinalInvoice as IssueFinalAndSend;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class IssueFinalInvoice extends Command
 {
+	use DispatchesJobs;
+
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -48,8 +52,10 @@ class IssueFinalInvoice extends Command
 
 		foreach ($orders as $order) {
 			if ($order->paid_amount === $order->total_with_coupon) {
-
+				$this->dispatch(new IssueFinalAndSend($order));
 			}
 		}
+
+		return;
 	}
 }

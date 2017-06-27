@@ -14,6 +14,11 @@
 			<p class="big">
 				Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
 			</p>
+			<p class="has-text-centered" v-if="isAdmin">
+				<a class="button is-primary is-outlined" @click="autoResolve">
+					Rozwiąż wszystkie pytania
+				</a>
+			</p>
 			<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
@@ -43,12 +48,13 @@
 		props: ['screenData', 'readOnly'],
 		computed: {
 			...mapGetters('quiz', ['isComplete', 'isLoaded']),
+			...mapGetters(['isAdmin']),
 			displayResults() {
 				return this.readOnly || this.isComplete
 			}
 		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions', 'destroyQuiz']),
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve']),
 			setup() {
 				let meta = this.screenData.meta
 				if (!_.isObject(meta)) {

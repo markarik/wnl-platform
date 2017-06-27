@@ -145,6 +145,17 @@
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'fetchLatestQuestions', 'destroyQna']),
+			getSortedQuestions(sorting, list) {
+				if (sorting === 'latest') {
+					return this.questionsByTime;
+				} else if (sorting === 'no-answer') {
+					return this.questionsNoAnswer;
+				} else if (sorting === "my") {
+					return this.questionsMy;
+				} else {
+					return this.questionsByVotes;
+				}
+			}
 		},
 		mounted() {
 			new Promise((resolve, rejected) => {
@@ -165,15 +176,7 @@
 					}).catch(error => $wnl.logger.error(error))
 				}
 			}).then(() => {
-				if (this.currentSorting === 'latest') {
-					this.questionsList = this.questionsByTime;
-				} else if (this.currentSorting === 'no-answer') {
-					this.questionsList = this.questionsNoAnswer;
-				} else if (this.currentSorting === "my") {
-					this.questionsList = this.questionsMy;
-				} else {
-					this.questionsList = this.questionsByVotes;
-				}
+				this.questionsList = this.getSortedQuestions(this.currentSorting);
 			})
 		},
 		beforeDestroy() {
@@ -188,6 +191,9 @@
 						this.ready = true
 					})
 				}
+			},
+			'currentSorting' (newValue, oldValue) {
+				this.questionsList = this.getSortedQuestions(newValue);
 			}
 		}
 	}

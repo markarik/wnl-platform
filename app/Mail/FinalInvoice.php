@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PaymentConfirmation extends Mailable
+class FinalInvoice extends Mailable
 {
 	use Queueable, SerializesModels;
 	public $order;

@@ -28,7 +28,7 @@ class UserNotificationApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		if (Auth::user()->id !== $user->id) {
+		if (!$user->can('viewMultiple', Notification::class)) {
 			return $this->respondUnauthorized();
 		}
 
@@ -47,14 +47,14 @@ class UserNotificationApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		if (Auth::user()->id !== $user->id) {
-			return $this->respondUnauthorized();
-		}
-
 		$notification = Notification::where('notifiable_id', $user->id)
 			->where('notifiable_type', 'App\\Models\\User')
 			->where('id', $notificationId)
 			->first();
+
+		if (!$user->can('update', $notification)) {
+			return $this->respondUnauthorized();
+		}
 
 		$notification->update([
 			'read_at' => Carbon::now(),

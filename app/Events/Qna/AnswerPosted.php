@@ -4,16 +4,20 @@ namespace App\Events\Qna;
 
 use App\Models\QnaAnswer;
 use Illuminate\Broadcasting\Channel;
+use App\Events\SanitizesUserContent;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class AnswerPosted
 {
-	use Dispatchable, InteractsWithSockets, SerializesModels;
+	use Dispatchable,
+		InteractsWithSockets,
+		SerializesModels,
+		SanitizesUserContent;
+
+	const TEXT_LIMIT = 160;
 
 	public $qnaAnswer;
 
@@ -35,5 +39,29 @@ class AnswerPosted
 	public function broadcastOn()
 	{
 		return new PrivateChannel('channel-name');
+	}
+
+	public function transform()
+	{
+		$this->data = [
+			'event'   => 'qna-answer-posted',
+			'objects' => [
+				'type' => 'qna_question',
+				'id'   => $this->qnaAnswer->question->id,
+				'text' => $this->sanitize($this->qnaAnswer->question->text),
+			],
+			'subject' => [
+				'type' => 'qna_answer',
+				'id'   => $this->qnaAnswer->id,
+				'text' => $this->sanitize($this->qnaAnswer->text, self::TEXT_LIMIT),
+			],
+			'actors'  => [
+				'id'         => $this->qnaAnswer->user->id,
+				'first_name' => $this->qnaAnswer->user->first_name,
+				'last_name'  => $this->qnaAnswer->user->last_name,
+				'full_name'  => $this->qnaAnswer->user->full_name,
+				'avatar'     => $this->qnaAnswer->user->profile->avatar,
+			],
+		];
 	}
 }

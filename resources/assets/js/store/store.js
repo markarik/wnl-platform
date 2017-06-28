@@ -9,6 +9,7 @@ import * as getters from 'js/store/getters'
 // Modules
 import course from 'js/store/modules/course'
 import collections from 'js/store/modules/collections'
+import notifications from 'js/store/modules/notifications'
 import currentUser from 'js/store/modules/currentUser'
 import navigation from 'js/store/modules/navigation'
 import qna from 'js/store/modules/qna'
@@ -30,6 +31,7 @@ export default new Vuex.Store({
 	modules: {
 		course,
 		collections,
+		notifications,
 		currentUser,
 		navigation,
 		qna,

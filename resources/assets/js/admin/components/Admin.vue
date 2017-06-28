@@ -37,7 +37,8 @@
 <script>
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Sidenav from 'js/admin/components/Sidenav.vue'
-	import { mapActions } from 'vuex'
+	import {mapActions, mapGetters} from 'vuex'
+	import {envValue as env} from 'js/utils/env'
 
 	export default {
 		name: 'Admin',
@@ -45,11 +46,16 @@
 			'wnl-navbar': Navbar,
 			'wnl-sidenav': Sidenav,
 		},
+		computed: {
+			...mapGetters(['currentUserId',])
+		},
 		methods: {
 			...mapActions(['setupCurrentUser']),
+			...mapActions('notifications', ['initNotifications']),
 		},
 		mounted() {
 			this.setupCurrentUser()
+					.then(() => this.initNotifications(env('MODERATORS_CHANNEL')))
 		},
 	}
 </script>

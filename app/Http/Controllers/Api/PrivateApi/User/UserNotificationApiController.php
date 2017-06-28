@@ -7,10 +7,17 @@ use App\Models\Notification;
 use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\NotificationTransformer;
+use League\Fractal\Resource\Item;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserNotificationApiController extends ApiController
 {
+	public function __construct(Request $request)
+	{
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.user-notifications');
+	}
+	
 	public function get($id)
 	{
 		$user = User::fetch($id);
@@ -21,7 +28,7 @@ class UserNotificationApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		if (Auth::user()->id !== $user->id) {
+		if (!$user->can('viewMultiple', Notification::class)) {
 			return $this->respondUnauthorized();
 		}
 
@@ -34,22 +41,29 @@ class UserNotificationApiController extends ApiController
 	public function patch(Request $request)
 	{
 		$user = User::fetch($request->route('id'));
+		$notificationId = $request->route('notificationId');
 
 		if (!$user) {
 			return $this->respondNotFound();
 		}
 
-		if (Auth::user()->id !== $user->id) {
+		$notification = Notification::where('notifiable_id', $user->id)
+			->where('notifiable_type', 'App\\Models\\User')
+			->where('id', $notificationId)
+			->first();
+
+		if (!$user->can('update', $notification)) {
 			return $this->respondUnauthorized();
 		}
 
-		Notification::where('notifiable_id', $user->id)
-			->where('notifiable_type', 'App\Models\User')
-			->update([
-				'read_at' => Carbon::createFromTimestamp($request->input('read_at')),
+		$notification->update([
+			'read_at' => Carbon::now(),
 			]);
 
-		return $this->respondOk();
+		$resource = new Item($notification, new NotificationTransformer, 'user_notifications');
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
 	}
 }
 

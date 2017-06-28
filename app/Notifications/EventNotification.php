@@ -2,12 +2,11 @@
 
 namespace App\Notifications;
 
-use App\Notifications\Channels\LiveChannel;
+use URL;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use App\Notifications\Channels\LiveChannel;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class EventNotification extends Notification
 {
@@ -23,6 +22,7 @@ class EventNotification extends Notification
 	public function __construct($event)
 	{
 		$event->data['timestamp'] = time();
+		$event->data['referer'] = URL::previous();
 		$this->event = $event;
 	}
 

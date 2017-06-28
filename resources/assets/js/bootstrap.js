@@ -4,7 +4,6 @@
  * included with Laravel will automatically verify the header's value.
  */
 
-//import Echo from 'laravel-echo'
 window.axios = require('axios');
 
 window.axios.defaults.headers.common = {

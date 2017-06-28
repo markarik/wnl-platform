@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -22,7 +24,9 @@ class BroadcastServiceProvider extends ServiceProvider
 		 * Authenticate the user's personal channel...
 		 */
 		Broadcast::channel('user.{userId}', function ($user, $userId) {
-			return (int)$user->id === (int)$userId;
+			$requestedUser = User::find($userId);
+
+			return $requestedUser->can('viewMultiple', Notification::class);
 		});
 	}
 }

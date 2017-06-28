@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\ChatRoom;
 use App\Models\Comment;
+use App\Models\Notification;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
 use App\Models\Screen;
@@ -15,6 +16,7 @@ use App\Models\UserSettings;
 use App\Policies\Chat\ChatRoomPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\Course\ScreensPolicy;
+use App\Policies\NotificationPolicy;
 use App\Policies\Qna\QnaAnswerPolicy;
 use App\Policies\Qna\QnaQuestionPolicy;
 use App\Policies\User\UserAddressPolicy;
@@ -42,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
 		Comment::class         => CommentPolicy::class,
 		Screen::class          => ScreensPolicy::class,
 		ChatRoom::class        => ChatRoomPolicy::class,
+		Notification::class    => NotificationPolicy::class,
 	];
 
 	/**

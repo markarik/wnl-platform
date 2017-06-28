@@ -88,7 +88,6 @@
 		},
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)
-			console.log(this.quill, '****quill');
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
 		},

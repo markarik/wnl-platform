@@ -17,7 +17,6 @@
 					class="margin bottom"
 					name="text"
 					:options="{ theme: 'snow', placeholder: 'Twoja wiadomość...' }"
-					:toolbar="false"
 					:keyboard="keyboard"
 					@input="onInput"
 				></wnl-quill>

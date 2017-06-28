@@ -49,6 +49,10 @@
 			},
 			name: String,
 			theme: String,
+			keyboard: {
+				type: Object,
+				default: () => {}
+			}
 		},
 		data () {
 			return {
@@ -62,8 +66,16 @@
 				return ''
 			},
 			quillOptions() {
-				let options = _.merge(defaults, this.options)
-				options.modules.toolbar = this.toolbar
+				const options = {
+					...defaults,
+					...this.options,
+					...{
+						modules: {
+							keyboard: this.keyboard,
+							toolbar: this.toolbar
+						}
+					}
+				}
 
 				return options
 			},
@@ -76,6 +88,7 @@
 		},
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)
+			console.log(this.quill, '****quill');
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
 		},

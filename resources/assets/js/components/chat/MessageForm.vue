@@ -18,6 +18,7 @@
 					name="text"
 					:options="{ theme: 'snow', placeholder: 'Twoja wiadomość...' }"
 					:toolbar="false"
+					:keyboard="keyboard"
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
@@ -37,30 +38,29 @@
 	</article>
 </template>
 
-<style lang="sass">
-	@import 'resources/assets/sass/variables'
-
-	.wnl-form-textarea
-		min-height: map-get($rounded-square-sizes, 'medium')
-		overflow: hidden
-		padding: 6px 10px
-		resize: none
-</style>
-
 <script>
 	import { mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 
 	export default{
 		props: ['loaded', 'socket', 'room', 'inputId'],
-		data(){
+		data() {
 			return {
 				disabled: false,
 				error: '',
 				message: '',
-				canvasContext: null,
-				textarea: {},
-				computedStyles: {}
+				keyboard: {
+					bindings: {
+						tab: false,
+						handleEnter: {
+							key: 13,
+							handler: (event) => {
+								this.sendMessage(event);
+								return false;
+							}
+						}
+					}
+				}
 			}
 		},
 		components: {
@@ -87,7 +87,7 @@
 					room: this.room,
 					message: {
 						full_name: this.currentUserFullName,
-						content: this.message,
+						content: this.$refs.editor.quill.getText(0, this.message.length),
 					}
 				})
 			},

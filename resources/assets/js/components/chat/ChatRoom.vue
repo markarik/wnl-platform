@@ -32,7 +32,12 @@
 			</div>
 		</div>
 		<div class="wnl-chat-form">
-			<wnl-message-form :loaded="loaded" :socket="socket" :room="room" :inputId="inputId"></wnl-message-form>
+			<wnl-message-form
+				:loaded="loaded"
+				:socket="socket"
+				:room="room"
+				ref="messageForm"
+			></wnl-message-form>
 		</div>
 	</div>
 </template>
@@ -98,12 +103,6 @@
 				// In case you wonder - thank Firefox :/
 				return this.$el.getElementsByClassName('wnl-chat-content-inside')[0]
 			},
-			inputId() {
-				return `wnl-chat-form-${this.room}`
-			},
-			input() {
-				return document.getElementById(this.inputId)
-			}
 		},
 		methods: {
 			joinRoom() {
@@ -148,7 +147,7 @@
 				this.messages.push(message)
 				nextTick(() => {
 					this.scrollToBottom()
-					this.input.focus()
+					this.$refs.messageForm.$refs.editor.$refs.quill.focus()
 				})
 			},
 			scrollToBottom() {

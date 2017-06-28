@@ -67,6 +67,7 @@
 		},
 		methods: {
 			onTextChange() {
+				console.log(this.editor.innerHTML);
 				this.$emit('input', this.editor.innerHTML)
 			},
 			onUploadSuccess(data) {

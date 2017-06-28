@@ -33,7 +33,6 @@
 				default: () => ({}),
 			},
 			toolbar: {
-				type: Array,
 				default() {
 					return [
 						[{ 'header': [false, 1, 2, 3] }],
@@ -72,6 +71,7 @@
 		methods: {
 			onTextChange() {
 				this.setValue(this.editor.innerHTML)
+				this.$emit('input', this.editor.innerHTML)
 			}
 		},
 		mounted () {

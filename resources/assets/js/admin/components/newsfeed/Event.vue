@@ -14,6 +14,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-newsfeed-notification
+		position: relative
 
 		.time
 			color: $color-inactive-gray

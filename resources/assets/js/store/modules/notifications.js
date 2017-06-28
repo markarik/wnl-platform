@@ -72,7 +72,14 @@ const actions = {
 }
 
 function _getNotifications(userId) {
-	return axios.get(getApiUrl(`users/${userId}/notifications`))
+	const conditions = {
+		'query': {
+			'where': [
+				['read_at', '=', null]
+			]
+		}
+	}
+	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
 }
 
 function _updateNotification(userId, notificationId, data) {

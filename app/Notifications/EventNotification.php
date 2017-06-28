@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use URL;
+use Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use App\Notifications\Channels\LiveChannel;
@@ -22,7 +22,7 @@ class EventNotification extends Notification
 	public function __construct($event)
 	{
 		$event->data['timestamp'] = time();
-		$event->data['referer'] = URL::previous();
+		$event->data['referer'] = Request::header('X-BETHINK-LOCATION');
 		$this->event = $event;
 	}
 

@@ -52,10 +52,10 @@ class QuestionPosted
 			],
 			'actors'  => [
 				'id'         => $this->qnaQuestion->user->id,
-				'first_name' => $this->qnaQuestion->user->first_name,
-				'last_name'  => $this->qnaQuestion->user->last_name,
-				'full_name'  => $this->qnaQuestion->user->full_name,
-				'avatar'     => $this->qnaQuestion->user->profile->avatar,
+				'first_name' => $this->qnaQuestion->user->profile->first_name,
+				'last_name'  => $this->qnaQuestion->user->profile->last_name,
+				'full_name'  => $this->qnaQuestion->user->profile->full_name,
+				'avatar'     => $this->qnaQuestion->user->profile->avatar_url,
 			],
 		];
 	}

@@ -57,10 +57,10 @@ class AnswerPosted
 			],
 			'actors'  => [
 				'id'         => $this->qnaAnswer->user->id,
-				'first_name' => $this->qnaAnswer->user->first_name,
-				'last_name'  => $this->qnaAnswer->user->last_name,
-				'full_name'  => $this->qnaAnswer->user->full_name,
-				'avatar'     => $this->qnaAnswer->user->profile->avatar,
+				'first_name' => $this->qnaAnswer->user->profile->first_name,
+				'last_name'  => $this->qnaAnswer->user->profile->last_name,
+				'full_name'  => $this->qnaAnswer->user->profile->full_name,
+				'avatar'     => $this->qnaAnswer->user->profile->avatar_url,
 			],
 		];
 	}

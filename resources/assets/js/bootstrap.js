@@ -8,6 +8,7 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common = {
 	'X-CSRF-TOKEN': window.Laravel.csrfToken,
+	'X-BETHINK-LOCATION': window.location.href,
 	'X-Requested-With': 'XMLHttpRequest',
 	'Accept': 'application/json'
 };

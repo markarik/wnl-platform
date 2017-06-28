@@ -60,10 +60,11 @@ class CommentPosted
 			],
 			'actors'  => [
 				'id'         => $actor->id,
-				'first_name' => $actor->first_name,
-				'last_name'  => $actor->last_name,
-				'full_name'  => $actor->full_name,
-			]
+				'first_name' => $actor->profile->first_name,
+				'last_name'  => $actor->profile->last_name,
+				'full_name'  => $actor->profile->full_name,
+				'avatar'     => $actor->profile->avatar_url,
+			],
 		];
 	}
 }

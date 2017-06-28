@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use Request;
 use App\Models\Comment;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -22,6 +23,8 @@ class CommentPosted
 
 	public $comment;
 
+	public $referer;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -30,6 +33,7 @@ class CommentPosted
 	public function __construct(Comment $comment)
 	{
 		$this->comment = $comment;
+		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**
@@ -65,6 +69,7 @@ class CommentPosted
 				'full_name'  => $actor->profile->full_name,
 				'avatar'     => $actor->profile->avatar_url,
 			],
+			'referer' => $this->referer,
 		];
 	}
 }

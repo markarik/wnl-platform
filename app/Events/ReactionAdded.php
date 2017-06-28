@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use Request;
 use App\Models\User;
 use App\Models\Reaction;
 use Illuminate\Broadcasting\Channel;
@@ -21,6 +22,8 @@ class ReactionAdded
 
 	public $userId;
 
+	public $referer;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -32,6 +35,7 @@ class ReactionAdded
 		$this->reaction = $reaction;
 		$this->reactable = $reactable;
 		$this->userId = $userId;
+		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**
@@ -68,6 +72,7 @@ class ReactionAdded
 				'full_name'  => $actor->profile->full_name,
 				'avatar'     => $actor->profile->avatar_url,
 			],
+			'referer' => $this->referer,
 		];
 	}
 }

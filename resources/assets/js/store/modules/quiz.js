@@ -263,6 +263,11 @@ const actions = {
 		quizStore.saveQuizProgress(state.setId, rootGetters.currentUserSlug, state, recordedAnswers);
 	},
 
+	autoResolve({state, commit}) {
+		state.questionsIds.forEach(id => commit(types.QUIZ_RESOLVE_QUESTION, {id}))
+		commit(types.QUIZ_COMPLETE)
+	},
+
 	destroyQuiz({commit}){
 		return new Promise((resolve, reject) => {
 			commit(types.QUIZ_IS_LOADED, false)

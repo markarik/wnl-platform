@@ -22,7 +22,6 @@ class EventNotification extends Notification
 	public function __construct($event)
 	{
 		$event->data['timestamp'] = time();
-		$event->data['referer'] = Request::header('X-BETHINK-LOCATION');
 		$this->event = $event;
 	}
 

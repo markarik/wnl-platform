@@ -2,6 +2,7 @@
 
 namespace App\Events\Qna;
 
+use Request;
 use App\Models\QnaQuestion;
 use Illuminate\Broadcasting\Channel;
 use App\Events\SanitizesUserContent;
@@ -19,6 +20,8 @@ class QuestionPosted
 
 	public $qnaQuestion;
 
+	public $referer;
+
 	const TEXT_LIMIT = 160;
 
 	/**
@@ -29,6 +32,7 @@ class QuestionPosted
 	public function __construct(QnaQuestion $qnaQuestion)
 	{
 		$this->qnaQuestion = $qnaQuestion;
+		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**
@@ -57,6 +61,7 @@ class QuestionPosted
 				'full_name'  => $this->qnaQuestion->user->profile->full_name,
 				'avatar'     => $this->qnaQuestion->user->profile->avatar_url,
 			],
+			'referer' => $this->referer,
 		];
 	}
 }

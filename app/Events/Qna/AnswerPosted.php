@@ -2,6 +2,7 @@
 
 namespace App\Events\Qna;
 
+use Request;
 use App\Models\QnaAnswer;
 use Illuminate\Broadcasting\Channel;
 use App\Events\SanitizesUserContent;
@@ -21,6 +22,8 @@ class AnswerPosted
 
 	public $qnaAnswer;
 
+	public $referer;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -29,6 +32,7 @@ class AnswerPosted
 	public function __construct(QnaAnswer $qnaAnswer)
 	{
 		$this->qnaAnswer = $qnaAnswer;
+		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**
@@ -62,6 +66,7 @@ class AnswerPosted
 				'full_name'  => $this->qnaAnswer->user->profile->full_name,
 				'avatar'     => $this->qnaAnswer->user->profile->avatar_url,
 			],
+			'referer' => $this->referer,
 		];
 	}
 }

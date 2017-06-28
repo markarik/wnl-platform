@@ -19,16 +19,19 @@ class ReactionAdded
 
 	public $reactable;
 
+	public $userId;
+
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param Reaction $reaction
 	 * @param Model $reactable
 	 */
-	public function __construct(Reaction $reaction, Model $reactable)
+	public function __construct(Reaction $reaction, Model $reactable, $userId)
 	{
 		$this->reaction = $reaction;
 		$this->reactable = $reactable;
+		$this->userId = $userId;
 	}
 
 	/**
@@ -45,7 +48,7 @@ class ReactionAdded
 	{
 		$reaction = $this->reaction;
 		$reactable = $this->reactable;
-		$actor = User::find($reactable->user_id);
+		$actor = User::find($this->userId);
 
 		$this->data = [
 			'event'   => 'reaction-added',

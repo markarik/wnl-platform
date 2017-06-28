@@ -41,7 +41,7 @@ class ReactionsApiController extends ApiController
 
 		// Since there's no action performed on reaction model,
 		// we have to trigger the event manually.
-		event(new ReactionAdded($reaction, $reactable));
+		event(new ReactionAdded($reaction, $reactable, $user->id));
 
 		return $this->respondCreated();
 	}

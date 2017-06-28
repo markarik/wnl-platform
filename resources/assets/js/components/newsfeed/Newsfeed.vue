@@ -3,6 +3,9 @@
 		<div v-if="isLoading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
+		<div class="notification aligncenter" v-if="empty">
+			Nie ma nowych powiadomień
+		</div>
 		<div v-else class="container">
 			<component
 					v-for="(event, index) in notifications"
@@ -20,6 +23,7 @@
 </style>
 
 <script>
+	import _ from 'lodash'
 	import {mapGetters} from 'vuex'
 	import Event from 'js/components/newsfeed/Event'
 	import AdminEvent from 'js/admin/components/newsfeed/Event'
@@ -31,6 +35,9 @@
 			...mapGetters('notifications', ['notifications', 'isLoading']),
 			eventComponent() {
 				return `wnl-newsfeed-event-${this.type}`
+			},
+			empty() {
+				return !this.isLoading && _.size(this.notifications) === 0
 			}
 		},
 		components: {

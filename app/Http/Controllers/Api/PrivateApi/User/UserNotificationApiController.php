@@ -4,11 +4,11 @@ use Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Notification;
+use Illuminate\Http\Request;
+use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\NotificationTransformer;
-use League\Fractal\Resource\Item;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserNotificationApiController extends ApiController
 {
@@ -23,6 +23,27 @@ class UserNotificationApiController extends ApiController
 		$user = User::fetch($id);
 
 		$notifications = $user->notifications;
+
+		if (!$user || !$notifications) {
+			return $this->respondNotFound();
+		}
+
+		if (!$user->can('viewMultiple', Notification::class)) {
+			return $this->respondUnauthorized();
+		}
+
+		$resource = new Collection($notifications, new NotificationTransformer, 'user_notifications');
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
+	}
+
+	public function search(Request $request)
+	{
+		$user = User::fetch($request->route('id'));
+
+		$notifications = $user->notifications();
+		$notifications = $this->applyFilters($notifications, $request)->get();
 
 		if (!$user || !$notifications) {
 			return $this->respondNotFound();

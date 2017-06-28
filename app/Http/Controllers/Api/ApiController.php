@@ -15,8 +15,8 @@ use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
 class ApiController extends Controller
 {
-	use GeneratesApiResponses;
-	use PerformsApiSearches;
+	use GeneratesApiResponses,
+		PerformsApiSearches;
 
 	protected $fractal;
 	protected $request;

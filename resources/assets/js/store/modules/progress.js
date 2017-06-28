@@ -152,7 +152,9 @@ const mutations = {
 	},
 	[types.PROGRESS_SAVE] (state, {lessonId, courseId}) {
 		const lessonState = state.courses[courseId].lessons[lessonId];
+		//TODO consider issuing one request instead of two when starting lesson
 		progressStore.setLessonProgress({lessonId, courseId}, lessonState);
+		progressStore.setCourseProgress({courseId, lessonId, status: lessonState.status})
 	}
 };
 

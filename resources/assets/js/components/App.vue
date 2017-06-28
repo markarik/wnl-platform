@@ -98,6 +98,11 @@
 				.here(users => this.setActiveUsers(users))
 				.joining(user => this.userJoined(user))
 				.leaving(user => this.userLeft(user));
-		}
+		},
+		watch: {
+			'$route' (to, from) {
+				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+			}
+		},
 	}
 </script>

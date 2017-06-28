@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use Auth;
+use App\Models\User;
 use App\Models\Reaction;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +45,7 @@ class ReactionAdded
 	{
 		$reaction = $this->reaction;
 		$reactable = $this->reactable;
-		$actor = Auth::user();
+		$actor = User::find($reactable->user_id);
 
 		$this->data = [
 			'event'   => 'reaction-added',

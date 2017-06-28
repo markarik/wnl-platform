@@ -9,7 +9,7 @@ export const STATUS_COMPLETE = 'complete';
 
 const CACHE_VERSION = 1;
 
-const setCourseProgress = ({courseId, lessonId, route, status}) => {
+const setCourseProgress = ({courseId, lessonId, ...props}) => {
 	const key = getCourseStoreKey(courseId);
 	const courseProgress = store.get(key) || {};
 
@@ -18,8 +18,7 @@ const setCourseProgress = ({courseId, lessonId, route, status}) => {
 		lessons: {
 			...courseProgress.lessons,
 			[lessonId]: {
-				status,
-				route
+				...props
 			}
 		}
 	};

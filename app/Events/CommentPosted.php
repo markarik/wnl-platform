@@ -18,7 +18,7 @@ class CommentPosted
 		SerializesModels,
 		SanitizesUserContent;
 
-	public const TEXT_LIMIT = 160;
+	const TEXT_LIMIT = 160;
 
 	public $comment;
 

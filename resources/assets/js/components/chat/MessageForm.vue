@@ -18,6 +18,7 @@
 					name="text"
 					:options="{ theme: 'snow', placeholder: 'Twoja wiadomość...' }"
 					:keyboard="keyboard"
+					:toolbar="toolbar"
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
@@ -74,6 +75,12 @@
 			sendingDisabled() {
 				return !this.loaded || this.message.length === 0
 			},
+			toolbar() {
+				return [
+					['bold', 'italic', 'underline', 'link'],
+					['clean'],
+				]
+			}
 		},
 		methods: {
 			sendMessage(event) {
@@ -86,7 +93,7 @@
 					room: this.room,
 					message: {
 						full_name: this.currentUserFullName,
-						content: this.$refs.editor.quill.getText(0, this.message.length),
+						content: this.message,
 					}
 				})
 			},

@@ -11,13 +11,13 @@
 					</wnl-text-loader>
 					<div v-if="messages.length > 0">
 						<wnl-message v-for="(message, index) in messages"
-									 :key="index"
-									 :showAuthor="isAuthorUnique[index]"
-									 :fullName="message.full_name"
-									 :avatar="message.avatar"
-									 :time="message.time">
-							{{ message.content }}
-						</wnl-message>
+							 :key="index"
+							 :showAuthor="isAuthorUnique[index]"
+							 :fullName="message.full_name"
+							 :avatar="message.avatar"
+							 :time="message.time"
+							 :content="message.content"
+						 ></wnl-message>
 					</div>
 					<div class="metadata aligncenter margin vertical" v-else>
 						Napisz pierwszą wiadomość i zacznij rozmowę!

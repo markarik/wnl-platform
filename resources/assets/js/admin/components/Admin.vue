@@ -38,6 +38,7 @@
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Sidenav from 'js/admin/components/Sidenav.vue'
 	import {mapActions, mapGetters} from 'vuex'
+	import {envValue as env} from 'js/utils/env'
 
 	export default {
 		name: 'Admin',
@@ -54,9 +55,7 @@
 		},
 		mounted() {
 			this.setupCurrentUser()
-					.then(()=> {
-						this.initNotifications(3)
-					})
+					.then(() => this.initNotifications(env('MODERATORS_CHANNEL')))
 		},
 	}
 </script>

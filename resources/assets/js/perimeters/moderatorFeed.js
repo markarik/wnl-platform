@@ -4,15 +4,12 @@ export default createPerimeter({
 	purpose: 'moderatorFeed',
 
 	govern: {
-		'can route': function () {
+		'can access': function () {
 			return this.isAdmin();
-		},
-		'can viewParagraph': function () {
-			return this.isAdmin();
-		},
+		}
 	},
 
 	isAdmin() {
-		return this.child.roles.includes('admin');
+		return this.child && this.child.roles.includes('admin');
 	}
 });

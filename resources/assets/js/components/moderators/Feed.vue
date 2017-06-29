@@ -1,26 +1,23 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
+				:isVisible="isSidenavVisible"
+				:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="help-sidenav">
-				<wnl-sidenav :items="sidenavItems" itemsHeading="Pomoc"></wnl-sidenav>
-			</aside>
+
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<div class="scrollable-main-container" v-if="ready">
-				<router-view v-if="!isMainRoute"></router-view>
-				<wnl-learning-help v-else></wnl-learning-help>
-			</div>
+
+			<wnl-feed type="moderator"/>
+
 		</div>
 		<wnl-sidenav-slot
-			:isVisible="isChatVisible"
-			:isDetached="!isChatMounted"
-			:hasChat="true"
+				:isVisible="isChatVisible"
+				:isDetached="!isChatMounted"
+				:hasChat="true"
 		>
-		<wnl-public-chat :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms" title="SIEMA"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">
@@ -61,21 +58,21 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import LearningHelp from 'js/components/help/LearningHelp'
 	import MainNav from 'js/components/MainNav'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import withChat from 'js/mixins/with-chat'
+	import Feed from 'js/components/newsfeed/Feed'
 
 	export default {
 		name: 'Help',
 		components: {
-			'wnl-learning-help': LearningHelp,
 			'wnl-main-nav': MainNav,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-feed': Feed,
 		},
 		mixins: [withChat],
 		computed: {
@@ -87,49 +84,9 @@
 				'isChatToggleVisible'
 			]),
 			...mapGetters('course', ['ready']),
-			sidenavItems() {
-				return [
-					{
-						text: 'Pomoc w nauce',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-learning',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-mortar-board',
-						iconTitle: 'Pomoc w nauce',
-					},
-					{
-						text: 'Pomoc techniczna',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-tech',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-magic',
-						iconTitle: 'Pomoc techniczna',
-					},
-					{
-						text: 'Nad czym pracujemy?',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-new',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-gift',
-						iconTitle: 'Nad czym pracujemy?',
-					},
-				]
-			},
 			chatRooms() {
 				return [
-					{name: '#pomoc', channel: 'help-tech'},
+					{name: '#moderatorzy', channel: 'moderatorzy'},
 				]
 			},
 			isMainRoute() {
@@ -138,12 +95,9 @@
 		},
 		methods: {
 			...mapActions(['toggleChat']),
-			...mapActions('course', ['setup']),
 		},
 		mounted() {
-			if (!this.ready) {
-				this.setup(1)
-			}
+
 		},
 	}
 </script>

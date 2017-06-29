@@ -3,7 +3,6 @@
 		<small class="time">{{ formattedTime }}</small>
 		<component :is="componentName" :event="event">
 		</component>
-		<a :href="event.referer" target="_blank">zabierz mnie tam</a>
 		<span class="icon is-small mark-read" @click="markAsRead(event)" v-if="!isRead">
 			<i class="fa fa-check"></i>
 		</span>

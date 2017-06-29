@@ -8,9 +8,7 @@
 
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-
-			<wnl-feed type="moderator"/>
-
+			<wnl-feed type="moderator" v-if="ready"/>
 		</div>
 		<wnl-sidenav-slot
 				:isVisible="isChatVisible"
@@ -95,9 +93,12 @@
 		},
 		methods: {
 			...mapActions(['toggleChat']),
+			...mapActions('course', ['setup']),
 		},
 		mounted() {
-
+			if (!this.ready) {
+				this.setup(1)
+			}
 		},
 	}
 </script>

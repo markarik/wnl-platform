@@ -4,6 +4,7 @@
 		skomentował/-a {{ event.objects.type }}
 		<br>
 		"{{ event.subject.text }}"
+		<a :href="event.referer" target="_blank" v-if="!hasContext">jedziesz szwagier</a>
 	</div>
 </template>
 
@@ -18,6 +19,11 @@
 		props: ['event'],
 		components: {
 			'wnl-event-actor': EventActor
+		},
+		computed: {
+			hasContext() {
+				return this.event.hasOwnProperty('context')
+			}
 		}
 	}
 </script>

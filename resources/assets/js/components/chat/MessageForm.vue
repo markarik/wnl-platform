@@ -16,7 +16,7 @@
 					ref="editor"
 					class="margin bottom"
 					name="text"
-					:options="{ theme: 'snow', placeholder: 'Twoja wiadomość...' }"
+					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
 					:keyboard="keyboard"
 					:toolbar="toolbar"
 					@input="onInput"
@@ -41,14 +41,15 @@
 <script>
 	import { mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
+	import { fontColors } from 'js/utils/colors'
 
 	export default{
-		props: ['loaded', 'socket', 'room', 'inputId'],
+		props: ['loaded', 'socket', 'room'],
 		data() {
 			return {
-				disabled: false,
 				error: '',
 				message: '',
+				content: '',
 				keyboard: {
 					bindings: {
 						tab: false,
@@ -80,6 +81,9 @@
 					['bold', 'italic', 'underline', 'link'],
 					['clean'],
 				]
+			},
+			quillEditor() {
+				return this.$refs.editor;
 			}
 		},
 		methods: {
@@ -87,13 +91,12 @@
 				if (this.sendingDisabled) {
 					return false
 				}
-				this.disabled = true
 				this.error = ''
 				this.socket.emit('send-message', {
 					room: this.room,
 					message: {
 						full_name: this.currentUserFullName,
-						content: this.message,
+						content: this.content
 					}
 				})
 			},
@@ -102,16 +105,16 @@
 			},
 			setListeners() {
 				this.socket.on('message-processed', (data) => {
-					this.disabled = false
 					if (data.sent) {
-						this.$refs.editor.quill.deleteText(0, this.message.length);
+						this.quillEditor.quill.deleteText(0, this.content.length);
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
 				})
 			},
 			onInput(input) {
-				this.message = input;
+				this.message = this.quillEditor.quill.getText().trim();
+				this.content = this.quillEditor.editor.innerHTML
 			}
 		},
 		watch: {

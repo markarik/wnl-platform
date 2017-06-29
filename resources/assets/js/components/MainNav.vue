@@ -24,6 +24,12 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
+		<router-link class="wnl-main-nav-item" :to="{ name: 'moderatorsFeed' }">
+			<span class="icon is-medium">
+				<i class="fa fa-list"></i>
+			</span>
+			<span class="text">Feed</span>
+		</router-link>
 	</div>
 </template>
 

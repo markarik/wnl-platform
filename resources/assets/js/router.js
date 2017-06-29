@@ -126,6 +126,13 @@ let routes = [
 		]
 	},
 	{
+		name: 'moderatorsFeed',
+		path: '/app/moderators/feed',
+		component: require('js/components/moderators/Feed.vue'),
+		props: true,
+		meta: {keepsNavOpen: true},
+	},
+	{
 		name: 'dashboard',
 		path: '/app',
 		redirect: {name: 'courses', params: {courseId: 1}},

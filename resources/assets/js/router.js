@@ -109,6 +109,11 @@ let routes = [
 		meta: {keepsNavOpen: true},
 		children: [
 			{
+				name: 'help-news',
+				path: 'news',
+				component: require('js/components/help/News.vue'),
+			},
+			{
 				name: 'help-learning',
 				path: 'learning',
 				component: require('js/components/help/LearningHelp.vue'),

@@ -19,6 +19,7 @@ import Icon from 'js/components/global/Icon.vue'
 import ImageButton from 'js/components/global/ImageButton.vue'
 import TextLoader from 'js/components/global/TextLoader.vue'
 import VueSimpleBreakpoints from 'vue-simple-breakpoints'
+import VueKindergarten from 'vue-kindergarten'
 import Upload from 'js/components/global/Upload.vue'
 
 Vue.use(VueSimpleBreakpoints, {
@@ -26,6 +27,12 @@ Vue.use(VueSimpleBreakpoints, {
 	tablet: 760,
 	small_desktop: 980,
 	large_desktop: 1280
+})
+
+Vue.use(VueKindergarten, {
+	child(store) {
+		return store && store.getters.currentUser
+	}
 })
 
 Vue.component('wnl-alert', Alert)

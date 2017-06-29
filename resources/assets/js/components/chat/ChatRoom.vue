@@ -147,7 +147,7 @@
 				this.messages.push(message)
 				nextTick(() => {
 					this.scrollToBottom()
-					this.$refs.messageForm.$refs.editor.$refs.quill.focus()
+					this.$refs.messageForm.quillEditor.quill.focus()
 				})
 			},
 			scrollToBottom() {

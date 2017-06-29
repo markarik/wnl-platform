@@ -79,6 +79,7 @@
 			toolbar() {
 				return [
 					['bold', 'italic', 'underline', 'link'],
+					[{ color: fontColors }],
 					['clean'],
 				]
 			},

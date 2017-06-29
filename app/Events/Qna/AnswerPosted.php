@@ -67,6 +67,10 @@ class AnswerPosted
 				'avatar'     => $this->qnaAnswer->user->profile->avatar_url,
 			],
 			'referer' => $this->referer,
+			'context' => [
+				'screenId' => $this->qnaAnswer->question->screen->id,
+				'lessonId' => $this->qnaAnswer->question->screen->lesson->id
+			]
 		];
 	}
 }

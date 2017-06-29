@@ -4,15 +4,24 @@
 			<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
 		</figure>
 		<div class="media-content">
-			<p class="control">
-				<textarea :id="inputId" v-model="message" class="textarea wnl-form-textarea"
-					@keydown="calculateTextareaHeight"
-					@keydown.enter="suppressEnter"
-					@keyup.enter="sendMessage"
-					:disabled="disabled"
-					>
-				</textarea>
-			</p>
+			<wnl-form
+				class="chat-message-form"
+				hideDefaultSubmit="true"
+				name="ChatMessage"
+				method="post"
+				suppressEnter="false"
+				resourceRoute="qna_questions"
+			>
+				<wnl-quill
+					ref="editor"
+					class="margin bottom"
+					name="text"
+					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
+					:keyboard="keyboard"
+					:toolbar="toolbar"
+					@input="onInput"
+				></wnl-quill>
+			</wnl-form>
 			<div class="message is-warning" v-if="error.length > 0">
 				<div class="message-body">{{ error }}</div>
 			</div>
@@ -29,30 +38,35 @@
 	</article>
 </template>
 
-<style lang="sass">
-	@import 'resources/assets/sass/variables'
-
-	.wnl-form-textarea
-		min-height: map-get($rounded-square-sizes, 'medium')
-		overflow: hidden
-		padding: 6px 10px
-		resize: none
-</style>
-
 <script>
 	import { mapGetters } from 'vuex'
+	import { Quill, Form } from 'js/components/global/form'
+	import { fontColors } from 'js/utils/colors'
 
 	export default{
-		props: ['loaded', 'socket', 'room', 'inputId'],
-		data(){
+		props: ['loaded', 'socket', 'room'],
+		data() {
 			return {
-				disabled: false,
 				error: '',
 				message: '',
-				canvasContext: null,
-				textarea: {},
-				computedStyles: {}
+				content: '',
+				keyboard: {
+					bindings: {
+						tab: false,
+						handleEnter: {
+							key: 13,
+							handler: (event) => {
+								this.sendMessage(event);
+								return false;
+							}
+						}
+					}
+				}
 			}
+		},
+		components: {
+			'wnl-form': Form,
+			'wnl-quill': Quill
 		},
 		computed: {
 			...mapGetters([
@@ -62,62 +76,28 @@
 			sendingDisabled() {
 				return !this.loaded || this.message.length === 0
 			},
-			textareaHeight() {
-				if (this.canvasContext !== null &&
-					!this.textareaHeightChecked &&
-					this.message.length > 0
-				) {
-					this.textareaHeightChecked = true
-					return this.calculateTextareaHeight(this.message)
-				} else {
-					return null
-				}
+			toolbar() {
+				return [
+					['bold', 'italic', 'underline', 'link'],
+					[{ color: fontColors }],
+					['clean'],
+				]
+			},
+			quillEditor() {
+				return this.$refs.editor;
 			}
 		},
 		methods: {
-			setTextareaStyles() {
-				this.computedStyles = window.getComputedStyle(this.textarea)
-			},
-			setTextMeasureCanvas() {
-				if (this.canvasContext === null) {
-					let canvas, context
-
-					canvas = this.measureCanvas || document.createElement('canvas')
-					context = canvas.getContext('2d')
-					context.font = `${this.computedStyles.fontSize} ${this.computedStyles.fontFamily}`
-					this.canvasContext = context
-				}
-
-				return true
-			},
-			calculateTextareaHeight(event) {
-				// Don't bother checking the height if Enter was pressed
-				if (event.keyCode === 13) {
-					return null
-				}
-
-				let padding = 6,
-					border = 1.5,
-					lines = Math.max(
-						Math.ceil(
-							(this.canvasContext.measureText(this.message).width * 1.2 + padding * 2) / parseInt(this.computedStyles.width)
-						),
-					1),
-					height = border * 2 + padding * 2 + lines * parseInt(this.computedStyles.lineHeight)
-
-				this.textarea.style.height = `${height}px`
-			},
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
 				}
-				this.disabled = true
 				this.error = ''
 				this.socket.emit('send-message', {
 					room: this.room,
 					message: {
 						full_name: this.currentUserFullName,
-						content: this.message,
+						content: this.content
 					}
 				})
 			},
@@ -126,22 +106,17 @@
 			},
 			setListeners() {
 				this.socket.on('message-processed', (data) => {
-					this.disabled = false
 					if (data.sent) {
-						this.message = ''
+						this.quillEditor.quill.deleteText(0, this.content.length);
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
 				})
+			},
+			onInput(input) {
+				this.message = this.quillEditor.quill.getText().trim();
+				this.content = this.quillEditor.editor.innerHTML
 			}
-		},
-		mounted() {
-			this.textarea = document.getElementById(this.inputId)
-			this.setTextareaStyles()
-			this.setTextMeasureCanvas()
-		},
-		updated() {
-			this.setTextareaStyles()
 		},
 		watch: {
 			'loaded' () {

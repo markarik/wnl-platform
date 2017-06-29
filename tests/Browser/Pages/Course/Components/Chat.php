@@ -15,24 +15,16 @@ class Chat extends BasePage
 	public function elements()
 	{
 		return [
-			'@chat_message_course_input' => '#wnl-chat-form-courses-1',
-			'@chat_message_lesson_input' => '#wnl-chat-form-courses-1-lessons-1',
+			'@chat_message_input' => '.chat-message-form .ql-editor',
 			'@chat_message_submit' => 'button[name="wnl-chat-form-submit"]',
 			'@chat_container' => '.wnl-chat-content'
 		];
 	}
 
-	public function sendCourseMessage($browser, $message)
+	public function sendChatMessage($browser, $message)
 	{
 		$browser
-			->type('@chat_message_course_input', $message)
-			->click('@chat_message_submit');
-	}
-
-	public function sendLessonMessage($browser, $message)
-	{
-		$browser
-			->type('@chat_message_lesson_input', $message)
+			->type('@chat_message_input', $message)
 			->click('@chat_message_submit');
 	}
 

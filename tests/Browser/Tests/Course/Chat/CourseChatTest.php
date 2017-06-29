@@ -26,10 +26,10 @@ class CourseChatTest extends DuskTestCase
 		$faker = new Generator();
 		$faker->addProvider(new Person($faker));
 
-		$this->firstName = $faker->firstName;
+		$this->firstName = $faker->firstName(Person::GENDER_MALE);
 		$this->lastName = $faker->lastName;
 
-		$this->firstName2 = $faker->firstName;
+		$this->firstName2 = $faker->firstName(Person::GENDER_FEMALE);
 		$this->lastName2 = $faker->lastName;
 
 		$this->user = factory(User::class)->create(['first_name' => $this->firstName, 'last_name' => $this->lastName]);
@@ -58,10 +58,10 @@ class CourseChatTest extends DuskTestCase
 
 
 			$first->on(new Chat())
-				->sendCourseMessage($message1);
+				->sendChatMessage($message1);
 
 			$second->on(new Chat())
-				->sendCourseMessage($message2)
+				->sendChatMessage($message2)
 				->assertMessageFromUser($userFullName1, $message1);
 
 			$first->assertMessageFromUser($userFullName2, $message2);

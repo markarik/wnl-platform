@@ -11,13 +11,13 @@
 					</wnl-text-loader>
 					<div v-if="messages.length > 0">
 						<wnl-message v-for="(message, index) in messages"
-									 :key="index"
-									 :showAuthor="isAuthorUnique[index]"
-									 :fullName="message.full_name"
-									 :avatar="message.avatar"
-									 :time="message.time">
-							{{ message.content }}
-						</wnl-message>
+							 :key="index"
+							 :showAuthor="isAuthorUnique[index]"
+							 :fullName="message.full_name"
+							 :avatar="message.avatar"
+							 :time="message.time"
+							 :content="message.content"
+						 ></wnl-message>
 					</div>
 					<div class="metadata aligncenter margin vertical" v-else>
 						Napisz pierwszą wiadomość i zacznij rozmowę!
@@ -32,7 +32,12 @@
 			</div>
 		</div>
 		<div class="wnl-chat-form">
-			<wnl-message-form :loaded="loaded" :socket="socket" :room="room" :inputId="inputId"></wnl-message-form>
+			<wnl-message-form
+				:loaded="loaded"
+				:socket="socket"
+				:room="room"
+				ref="messageForm"
+			></wnl-message-form>
 		</div>
 	</div>
 </template>
@@ -98,12 +103,6 @@
 				// In case you wonder - thank Firefox :/
 				return this.$el.getElementsByClassName('wnl-chat-content-inside')[0]
 			},
-			inputId() {
-				return `wnl-chat-form-${this.room}`
-			},
-			input() {
-				return document.getElementById(this.inputId)
-			}
 		},
 		methods: {
 			joinRoom() {
@@ -148,7 +147,7 @@
 				this.messages.push(message)
 				nextTick(() => {
 					this.scrollToBottom()
-					this.input.focus()
+					this.$refs.messageForm.quillEditor.quill.focus()
 				})
 			},
 			scrollToBottom() {

@@ -33,7 +33,6 @@
 				default: () => ({}),
 			},
 			toolbar: {
-				type: Array,
 				default() {
 					return [
 						[{ 'header': [false, 1, 2, 3] }],
@@ -50,6 +49,10 @@
 			},
 			name: String,
 			theme: String,
+			keyboard: {
+				type: Object,
+				default: () => {}
+			}
 		},
 		data () {
 			return {
@@ -63,8 +66,16 @@
 				return ''
 			},
 			quillOptions() {
-				let options = _.merge(defaults, this.options)
-				options.modules.toolbar = this.toolbar
+				const options = {
+					...defaults,
+					...this.options,
+					...{
+						modules: {
+							keyboard: this.keyboard,
+							toolbar: this.toolbar
+						}
+					}
+				}
 
 				return options
 			},
@@ -72,6 +83,7 @@
 		methods: {
 			onTextChange() {
 				this.setValue(this.editor.innerHTML)
+				this.$emit('input', this.editor.innerHTML)
 			}
 		},
 		mounted () {

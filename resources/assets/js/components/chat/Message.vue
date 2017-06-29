@@ -10,9 +10,7 @@
 					<strong>{{ fullName }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
-				<p class="wnl-message-content">
-					<slot></slot>
-				</p>
+				<p class="wnl-message-content" v-html="content"></p>
 			</div>
 		</div>
 	</article>
@@ -53,7 +51,7 @@
 	import { timeFromMs } from 'js/utils/time'
 
 	export default{
-		props: ['fullName', 'avatar', 'time', 'showAuthor'],
+		props: ['fullName', 'avatar', 'time', 'showAuthor', 'content'],
 		computed: {
 			formattedTime () {
 				return timeFromMs(this.time)

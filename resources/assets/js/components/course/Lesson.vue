@@ -191,7 +191,7 @@
 									lessonId: this.lessonId,
 									screenId: this.firstScreenId,
 								};
-								if (this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
+								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
 									params.slide = 1;
 								}
 								this.$router.replace({name: resource('screens'), params})

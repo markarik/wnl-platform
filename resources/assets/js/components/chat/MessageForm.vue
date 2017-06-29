@@ -14,7 +14,6 @@
 			>
 				<wnl-quill
 					ref="editor"
-					class="margin bottom"
 					name="text"
 					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
 					:keyboard="keyboard"
@@ -37,7 +36,10 @@
 		</div>
 	</article>
 </template>
-
+<style lang="sass" rel="stylesheet/sass" scoped>
+	.media
+		align-items: center;
+</style>
 <script>
 	import { mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'

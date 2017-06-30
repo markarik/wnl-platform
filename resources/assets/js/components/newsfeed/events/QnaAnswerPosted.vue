@@ -3,6 +3,10 @@
 		<wnl-event-actor :event="event"/>
 		odpowiedział/-a na pytanie <br>
 		"{{ event.subject.text }}"
+		<p>
+			Treść pytania:<br>
+			{{ event.objects.text }}
+		</p>
 		<a :href="href" target="_blank">jedziesz szwagier</a>
 	</div>
 </template>

@@ -2,8 +2,15 @@
 	<div>
 		<wnl-event-actor :event="event"/>
 		skomentował/-a {{ resolveType(event.objects.type) }}
-		"{{ event.subject.text }}"
-		<a :href="href" target="_blank">jedziesz szwagier</a>
+		<p>
+			"{{ event.subject.text }}"
+		</p>
+		<p v-if="event.objects.type === 'quiz_question'">
+			Numer pytania: {{ event.objects.id }}
+		</p>
+		<p>
+			<a :href="href" target="_blank">jedziesz szwagier</a>
+		</p>
 	</div>
 </template>
 

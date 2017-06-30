@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="wnl-feed column is-half-desktop">
+	<div class="wnl-feed column is-full">
 		<div v-if="isLoading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>

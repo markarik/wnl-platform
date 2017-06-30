@@ -8,14 +8,16 @@
 
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<wnl-feed type="moderator" v-if="ready"/>
+			<div class="scrollable-main-container" v-if="ready">
+				<wnl-feed type="moderator"/>
+			</div>
 		</div>
 		<wnl-sidenav-slot
 				:isVisible="isChatVisible"
 				:isDetached="!isChatMounted"
 				:hasChat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms" title="SIEMA"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">

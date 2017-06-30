@@ -12,14 +12,17 @@ export const getLocalStorageKey = (setId, userSlug) => {
 
 const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) => {
 	const storeKey = getLocalStorageKey(setId, currentUserSlug);
-	store.set(storeKey, state);
 
-	getCurrentUser().then(({data: {id}}) => {
-		axios.put(getApiUrl(`users/${id}/state/quiz/${setId}`), {
-			quiz: state,
-			recordedAnswers
+	if (!state.retry) {
+		store.set(storeKey, state);
+
+		getCurrentUser().then(({data: {id}}) => {
+			axios.put(getApiUrl(`users/${id}/state/quiz/${setId}`), {
+				quiz: state,
+				recordedAnswers
+			});
 		});
-	});
+	}
 };
 
 const getQuizProgress = (setId, currentUserSlug) => {

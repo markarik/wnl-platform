@@ -135,7 +135,6 @@ let routes = [
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			console.log('CLEAR STORAGE********');
 			sessionStore.clearAll();
 			document.getElementById('logout-form').submit()
 		}

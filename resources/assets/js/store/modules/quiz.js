@@ -36,14 +36,14 @@ function getInitialState() {
 		isComplete: false,
 		loaded: false,
 		questionsIds: [],
-		questionsLength: 0,
 		quiz_answers: {},
 		quiz_questions: {},
 		processing: false,
 		profiles: {},
 		setId: null,
 		setName: '',
-		quiz_stats: {}
+		quiz_stats: {},
+		retry: false,
 	}
 }
 
@@ -66,7 +66,7 @@ const getters = {
 		return state.quiz_questions[id].comments.map((commentId) => state.comments[commentId])
 	},
 	getCurrentScore: (state, getters) => {
-		return _.round(getters.getResolved.length * 100 / state.questionsLength, 0)
+		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
@@ -79,7 +79,8 @@ const getters = {
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
-	getStats: (state) => (questionId) => state.quiz_stats[questionId]
+	getStats: (state) => (questionId) => state.quiz_stats[questionId],
+	questionsLength: (state) => state.questionsIds.length
 }
 
 const mutations = {
@@ -122,9 +123,6 @@ const mutations = {
 		set(state, 'setId', payload.setId)
 		set(state, 'setName', payload.setName)
 		set(state, 'questionsIds', payload.questionsIds)
-		if (payload.hasOwnProperty('len')) {
-			set(state, 'questionsLength', payload.len)
-		}
 
 		for (let i = 0; i < payload.len; i++) {
 			let id = payload.questionsIds[i]
@@ -158,6 +156,20 @@ const mutations = {
 	},
 	[types.QUIZ_SET_STATS] (state, {stats}) {
 		set(state, 'quiz_stats', stats)
+	},
+	[types.QUIZ_RESET_PROGRESS] (state) {
+		Object.keys(state.quiz_questions).forEach((questionId) => {
+			const updatedState = {
+				...state.quiz_questions[questionId],
+				isResolved: false,
+				selectedAnswer: null,
+			}
+
+			set(state.quiz_questions, questionId, updatedState);
+			set(state, 'isComplete', false);
+			set(state, 'attempts', [])
+			set(state, 'retry', true)
+		})
 	},
 }
 
@@ -266,6 +278,10 @@ const actions = {
 	autoResolve({state, commit}) {
 		state.questionsIds.forEach(id => commit(types.QUIZ_RESOLVE_QUESTION, {id}))
 		commit(types.QUIZ_COMPLETE)
+	},
+
+	resetState({state, commit}) {
+		commit(types.QUIZ_RESET_PROGRESS)
 	},
 
 	destroyQuiz({commit}){

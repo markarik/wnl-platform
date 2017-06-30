@@ -168,7 +168,7 @@
 
 				if (shouldPull) this.pull(target, height)
 			},
-			onScroll (target) {
+			onScroll (event) {
 				this.pullDebouncer.call(this, event)
 			},
 			pull (target, originalHeight){

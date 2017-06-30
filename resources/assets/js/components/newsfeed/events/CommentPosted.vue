@@ -1,8 +1,7 @@
 <template lang="html">
 	<div>
 		<wnl-event-actor :event="event"/>
-		skomentował/-a {{ event.objects.type }}
-		<br>
+		skomentował/-a {{ resolveType(event.objects.type) }}
 		"{{ event.subject.text }}"
 		<a :href="href" target="_blank">jedziesz szwagier</a>
 	</div>
@@ -21,21 +20,30 @@
 		components: {
 			'wnl-event-actor': EventActor
 		},
+		data() {
+			return {
+				'typesMap': {
+					'quiz_question': 'pytanie z quizu',
+					'qna_answer': 'odpowiedź na pytanie',
+					'slide': 'slajd',
+				}
+			}
+		},
 		computed: {
 			...mapGetters('course', ['courseId']),
 			hasContext() {
 				return this.event.hasOwnProperty('context')
 			},
 			href() {
-				return this.hasContext ? this.to : event.referer
+				return this.hasContext ? this.to : this.event.referer
 			},
 			to() {
-				return this.$router.resolve(this.objectRoute(this.event.objects.type)).href
+				return this.$router.resolve(this.getObjectRoute(this.event.objects.type)).href
 			}
 		},
 		methods: {
-			objectRoute(type) {
-				const routes = {
+			getObjectRoute(type) {
+				return {
 					'qna_answer': {
 						name: 'screens',
 						params: {
@@ -43,10 +51,11 @@
 							lessonId: this.event.context.lessonId,
 							courseId: this.courseId
 						},
-					},
-				}
-
-				return routes[type]
+					}
+				}[type]
+			},
+			resolveType(type) {
+				return this.typesMap[type] || type
 			}
 		}
 	}

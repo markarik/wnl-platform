@@ -2,6 +2,10 @@
 
 namespace Tests\Api\Comments;
 
+use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
+use App\Models\Screen;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
@@ -16,9 +20,16 @@ class CommentsTest extends ApiTestCase
 	{
 		$user = User::find(1);
 
+		$tag = factory(Tag::class)->create();
+		$screen = factory(Screen::class)->create();
+		$question = factory(QnaQuestion::class)->create();
+		$answer = factory(QnaAnswer::class)->create(['question_id' => $question->id]);
+		$question->tags()->attach($tag);
+		$screen->tags()->attach($tag);
+
 		$data = [
 			'commentable_resource' => config('papi.resources.answers'),
-			'commentable_id' => 1,
+			'commentable_id' => $answer->id,
 			'text' => 'Kolekcjonuję antarktyczne drewniane kaczki, gdyby ktoś coś miał, proszę o info na priv. Pozdrawiam.',
 		];
 

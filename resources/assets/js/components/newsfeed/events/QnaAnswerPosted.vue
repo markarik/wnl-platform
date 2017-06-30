@@ -27,7 +27,13 @@
 		computed: {
 			...mapGetters('course', ['courseId']),
 			href() {
+				return this.hasContext ? this.to : this.event.referer
+			},
+			to() {
 				return this.$router.resolve(this.routeParams).href
+			},
+			hasContext() {
+				return false
 			},
 			routeParams() {
 				return {

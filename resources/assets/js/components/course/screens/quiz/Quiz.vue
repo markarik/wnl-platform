@@ -1,6 +1,7 @@
 <template>
 	<div class="wnl-quiz">
 		<div v-if="isLoaded && displayResults">
+			<button @click="resetState">Reset</button>
 			<p class="title is-4 has-text-centered">
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
@@ -54,7 +55,7 @@
 			}
 		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve']),
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'resetState']),
 			setup() {
 				let meta = this.screenData.meta
 				if (!_.isObject(meta)) {

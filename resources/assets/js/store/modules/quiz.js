@@ -159,6 +159,18 @@ const mutations = {
 	[types.QUIZ_SET_STATS] (state, {stats}) {
 		set(state, 'quiz_stats', stats)
 	},
+	[types.QUIZ_RESET_PROGRESS] (state) {
+		Object.keys(state.quiz_questions).forEach((questionId) => {
+			const updatedState = {
+				...state.quiz_questions[questionId],
+				isResolved: false,
+				selectedAnswer: null,
+			}
+
+			set(state.quiz_questions, questionId, updatedState);
+			set(state, 'isComplete', false);
+		})
+	},
 }
 
 const actions = {
@@ -266,6 +278,10 @@ const actions = {
 	autoResolve({state, commit}) {
 		state.questionsIds.forEach(id => commit(types.QUIZ_RESOLVE_QUESTION, {id}))
 		commit(types.QUIZ_COMPLETE)
+	},
+
+	resetState({state, commit}) {
+		commit(types.QUIZ_RESET_PROGRESS)
 	},
 
 	destroyQuiz({commit}){

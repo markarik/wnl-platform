@@ -4,8 +4,7 @@
 		skomentował/-a {{ event.objects.type }}
 		<br>
 		"{{ event.subject.text }}"
-		<router-link :to="to" v-if="hasContext">jedziesz szwagier</router-link>
-		<a :href="event.referer" target="_blank" v-else="">jedziesz szwagier</a>
+		<a :href="href" target="_blank">jedziesz szwagier</a>
 	</div>
 </template>
 
@@ -27,8 +26,11 @@
 			hasContext() {
 				return this.event.hasOwnProperty('context')
 			},
+			href() {
+				return this.hasContext ? this.to : event.referer
+			},
 			to() {
-				return this.objectRoute(this.event.objects.type)
+				return this.$router.resolve(this.objectRoute(this.event.objects.type)).href
 			}
 		},
 		methods: {

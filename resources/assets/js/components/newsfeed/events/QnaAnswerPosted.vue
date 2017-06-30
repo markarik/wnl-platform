@@ -3,7 +3,7 @@
 		<wnl-event-actor :event="event"/>
 		odpowiedział/-a na pytanie <br>
 		"{{ event.subject.text }}"
-		<router-link :to="to">jedziesz szwagier</router-link>
+		<a :href="href" target="_blank">jedziesz szwagier</a>
 	</div>
 </template>
 
@@ -22,16 +22,19 @@
 		},
 		computed: {
 			...mapGetters('course', ['courseId']),
-			to() {
+			href() {
+				return this.$router.resolve(this.routeParams).href
+			},
+			routeParams() {
 				return {
 					name: 'screens',
 					params: {
 						screenId: this.event.context.screenId,
 						lessonId: this.event.context.lessonId,
 						courseId: this.courseId
-					},
+					}
 				}
-			},
+			}
 		}
 	}
 </script>

@@ -3,7 +3,6 @@
 		<small class="time">{{ formattedTime }}</small>
 		<component :is="componentName" :event="event">
 		</component>
-		<a :href="event.referer" target="_blank">zabierz mnie tam</a>
 		<span class="icon is-small mark-read" @click="markAsRead(event)" v-if="!isRead">
 			<i class="fa fa-check"></i>
 		</span>
@@ -15,13 +14,10 @@
 
 	.wnl-newsfeed-notification
 		position: relative
-
 		.time
 			color: $color-inactive-gray
-
 		.wnl-avatar-small
 			display: inline-flex
-
 		.mark-read
 			cursor: pointer
 			display: flex
@@ -29,11 +25,9 @@
 			position: absolute
 			right: $margin-medium
 			top: $margin-medium
-
 		&.is-read, &.is-read a
 			color: $color-inactive-gray
 </style>
-
 <script>
 	import QnaAnswerPosted from 'js/components/newsfeed/events/QnaAnswerPosted'
 	import QnaQuestionPosted from 'js/components/newsfeed/events/QnaQuestionPosted'
@@ -41,7 +35,6 @@
 	import ReactionAdded from 'js/components/newsfeed/events/ReactionAdded'
 	import {timeFromS} from 'js/utils/time'
 	import {mapActions} from 'vuex'
-
 	export default {
 		name: 'wnl-newsfeed-event',
 		props: ['event'],

@@ -71,6 +71,7 @@ const actions = {
 	}
 }
 
+
 function _getNotifications(userId) {
 	const conditions = {
 		'query': {
@@ -85,6 +86,7 @@ function _getNotifications(userId) {
 function _updateNotification(userId, notificationId, data) {
 	return axios.patch(getApiUrl(`users/${userId}/notifications/${notificationId}`), data)
 }
+
 
 export default {
 	namespaced,

@@ -24,6 +24,16 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{name: 'moderatorFeed'}"
+			v-show="$moderatorFeed.isAllowed('access')"
+		>
+			<span class="icon is-medium">
+				<i class="fa fa-list"></i>
+			</span>
+			<span class="text">Feed</span>
+		</router-link>
 	</div>
 </template>
 
@@ -75,8 +85,13 @@
 </style>
 
 <script>
+	import moderatorFeed from 'js/perimeters/moderatorFeed';
+
 	export default {
 		name: 'MainNav',
-		props: ['isHorizontal']
+		props: ['isHorizontal'],
+		perimeters: [
+			moderatorFeed
+		]
 	}
 </script>

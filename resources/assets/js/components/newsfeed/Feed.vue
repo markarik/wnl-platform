@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="wnl-newsfeed column is-half-desktop">
+	<div class="wnl-feed column is-half-desktop">
 		<div v-if="isLoading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
@@ -18,7 +18,7 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass">
-	.wnl-newsfeed
+	.wnl-feed
 		display: flex
 </style>
 
@@ -26,10 +26,10 @@
 	import _ from 'lodash'
 	import {mapGetters} from 'vuex'
 	import Event from 'js/components/newsfeed/Event'
-	import AdminEvent from 'js/admin/components/newsfeed/Event'
+	import ModeratorEvent from 'js/components/moderators/FeedEvent'
 
 	export default {
-		name: 'wnl-newsfeed',
+		name: 'wnl-feed',
 		props: ['type'],
 		computed: {
 			...mapGetters('notifications', ['notifications', 'isLoading']),
@@ -42,7 +42,7 @@
 		},
 		components: {
 			'wnl-newsfeed-event-user': Event,
-			'wnl-newsfeed-event-admin': AdminEvent,
+			'wnl-newsfeed-event-moderator': ModeratorEvent,
 		},
 		mounted() {
 

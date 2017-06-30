@@ -36,10 +36,16 @@ class QnaQuestion extends Model
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
 	}
 
-	public function getLessonsAttribute()
+	public function getScreenAttribute()
 	{
-		return Lesson::whereHas('tags', function ($query) {
-			$query->whereIn('tags.id', $this->tags->keyBy('id')->keys());
-		})->get();
+		$screen = Screen::select();
+
+		foreach ($this->tags as $tag) {
+			$screen->whereHas('tags', function ($query) use ($tag) {
+				$query->where('tags.id', $tag->id);
+			});
+		}
+
+		return $screen->first();
 	}
 }

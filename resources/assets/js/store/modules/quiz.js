@@ -36,7 +36,6 @@ function getInitialState() {
 		isComplete: false,
 		loaded: false,
 		questionsIds: [],
-		questionsLength: 0,
 		quiz_answers: {},
 		quiz_questions: {},
 		processing: false,
@@ -67,7 +66,7 @@ const getters = {
 		return state.quiz_questions[id].comments.map((commentId) => state.comments[commentId])
 	},
 	getCurrentScore: (state, getters) => {
-		return _.round(getters.getResolved.length * 100 / state.questionsLength, 0)
+		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
@@ -80,7 +79,8 @@ const getters = {
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
-	getStats: (state) => (questionId) => state.quiz_stats[questionId]
+	getStats: (state) => (questionId) => state.quiz_stats[questionId],
+	questionsLength: (state) => state.questionsIds.length
 }
 
 const mutations = {
@@ -123,9 +123,6 @@ const mutations = {
 		set(state, 'setId', payload.setId)
 		set(state, 'setName', payload.setName)
 		set(state, 'questionsIds', payload.questionsIds)
-		if (payload.hasOwnProperty('len')) {
-			set(state, 'questionsLength', payload.len)
-		}
 
 		for (let i = 0; i < payload.len; i++) {
 			let id = payload.questionsIds[i]
@@ -243,7 +240,7 @@ const actions = {
 					selected = state.quiz_answers[selectedId],
 					id = question.id
 
-				if (attempts === 0 && !state.retry) {
+				if (attempts === 0) {
 					data.push({
 						'quiz_question_id': id,
 						'quiz_answer_id': selectedId,

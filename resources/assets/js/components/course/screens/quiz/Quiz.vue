@@ -5,9 +5,6 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<p class="has-text-centered margin top">
-				<button class="button is-primary is-outlined" @click="resetState">Spróbuj jeszcze raz</button>
-			</p>
 			<wnl-quiz-summary></wnl-quiz-summary>
 		</div>
 		<div v-else>
@@ -57,7 +54,7 @@
 			}
 		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'resetState']),
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve']),
 			setup() {
 				let meta = this.screenData.meta
 				if (!_.isObject(meta)) {

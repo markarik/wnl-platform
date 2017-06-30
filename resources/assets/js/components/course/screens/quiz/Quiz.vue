@@ -1,11 +1,13 @@
 <template>
 	<div class="wnl-quiz">
 		<div v-if="isLoaded && displayResults">
-			<button @click="resetState">Reset</button>
 			<p class="title is-4 has-text-centered">
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
+			<p class="has-text-centered margin top">
+				<button class="button is-primary is-outlined" @click="resetState">Spróbuj jeszcze raz</button>
+			</p>
 			<wnl-quiz-summary></wnl-quiz-summary>
 		</div>
 		<div v-else>

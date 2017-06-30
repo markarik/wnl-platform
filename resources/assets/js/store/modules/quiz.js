@@ -43,7 +43,8 @@ function getInitialState() {
 		profiles: {},
 		setId: null,
 		setName: '',
-		quiz_stats: {}
+		quiz_stats: {},
+		retry: false,
 	}
 }
 
@@ -169,6 +170,8 @@ const mutations = {
 
 			set(state.quiz_questions, questionId, updatedState);
 			set(state, 'isComplete', false);
+			set(state, 'attempts', [])
+			set(state, 'retry', true)
 		})
 	},
 }
@@ -240,7 +243,7 @@ const actions = {
 					selected = state.quiz_answers[selectedId],
 					id = question.id
 
-				if (attempts === 0) {
+				if (attempts === 0 && !state.retry) {
 					data.push({
 						'quiz_question_id': id,
 						'quiz_answer_id': selectedId,

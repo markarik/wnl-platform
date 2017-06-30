@@ -6,11 +6,6 @@
 					<p class="heading">Pierwszy wynik</p>
 					<p class="title">{{ firstAttemptScore }}</p>
 				</div>
-				<div v-if="this.recentAttemptScore">
-					<p class="heading">Obecny Wynki</p>
-					<p class="title">{{ recentAttemptScore }}</p>
-				</div>
-
 			</div>
 		</div>
 	</div>
@@ -39,11 +34,6 @@
 				}
 
 				return 'Brak'
-			},
-			recentAttemptScore() {
-				if (this.attempts > 1) {
-					return this.getAttempts[this.attempts - 1].score
-				}
 			}
 		},
 	}

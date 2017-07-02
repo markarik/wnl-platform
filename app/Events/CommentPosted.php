@@ -50,11 +50,12 @@ class CommentPosted
 	{
 		$comment = $this->comment;
 		$actor = $comment->user;
+		$commentableType = snake_case(class_basename($comment->commentable));
 
 		$this->data = [
 			'event'   => 'comment-posted',
 			'objects' => [
-				'type' => snake_case(class_basename($comment->commentable)),
+				'type' => $commentableType,
 				'id'   => $comment->commentable->id,
 			],
 			'subject' => [
@@ -71,5 +72,23 @@ class CommentPosted
 			],
 			'referer' => $this->referer,
 		];
+
+		if ($commentableType === 'qna_answer') $this->addQnaAnswerContext();
+	}
+
+	public function addQnaAnswerContext()
+	{
+		$qnaAnswer = $this->comment->commentable;
+		$screen = $qnaAnswer->question->screen;
+		if (!$screen) return false;
+
+		$lesson = $qnaAnswer->question->screen->lesson;
+
+		$this->data['context'] = [
+			'screenId' => $screen->id,
+			'lessonId' => $lesson->id,
+		];
+
+		return true;
 	}
 }

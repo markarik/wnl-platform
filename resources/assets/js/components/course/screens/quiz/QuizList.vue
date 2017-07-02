@@ -1,5 +1,9 @@
 <template>
 	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
+		<p class="has-text-centered margin vertical">
+			<a class="button is-primary is-outlined" @click="resetState">Rozwiąż pytania ponownie</a>
+		</p>
+
 		<p class="title is-5" v-if="!displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="(question, index) in questions"
 			:class="`quiz-question-${question.id}`"
@@ -25,7 +29,6 @@
 	.wnl-quiz-list
 		border-top: $border-light-gray
 		margin: $margin-big 0
-		padding-top: $margin-big
 </style>
 
 <script>
@@ -93,6 +96,7 @@
 		methods: {
 			...mapActions('quiz', [
 				'checkQuiz',
+				'resetState',
 			]),
 			verify() {
 				if (this.getUnanswered.length > 0) {

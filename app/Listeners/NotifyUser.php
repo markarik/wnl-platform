@@ -93,9 +93,16 @@ class NotifyUser implements ShouldQueue
 	 * Notify all moderators about an event.
 	 *
 	 * @param $event
+	 *
+	 * @return bool
 	 */
 	private function notifyModerators($event)
 	{
+		$actor = User::find($event->data['actors']['id']);
+		if ($actor->hasRole('moderator') || $actor->hasRole('admin')) {
+			return false;
+		}
+
 		$moderators = User::ofRole('moderator');
 
 		Notification::send($moderators, new EventNotification($event));
@@ -104,5 +111,7 @@ class NotifyUser implements ShouldQueue
 		// calling __wakeup() forces an event to deserialize, hence we can access question and user property
 		// ...looks like it's being serialized after calling 'notifyModerators', so I moved the wakeup here.
 		$event->__wakeup();
+
+		return true;
 	}
 }

@@ -3,7 +3,7 @@
 		<wnl-event-actor :event="event"/>
 		zadał/-a pytanie <br>
 		"{{ event.subject.text }}"
-
+		<a :href="event.referer" target="_blank">zabierz mnie tam</a>
 	</div>
 </template>
 

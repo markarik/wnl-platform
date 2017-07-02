@@ -70,3 +70,65 @@ $factory->define(App\Models\QuizAnswer::class, function (Faker\Generator $faker)
 		'updated_at' => $faker->dateTime
 	];
 });
+
+$factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->numberBetween(500, 1000),
+		'name' => $faker->name,
+	];
+});
+
+$factory->define(App\Models\Screen::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->numberBetween(500, 1000),
+		'name' => $faker->name,
+		'type' => 'slideshow',
+		'lesson_id' => function () {
+			return factory(App\Models\Lesson::class)->create()->id;
+		}
+	];
+});
+
+$factory->define(App\Models\Lesson::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->numberBetween(500, 1000),
+		'name' => $faker->name,
+		'group_id' => function () {
+			return factory(App\Models\Group::class)->create()->id;
+		}
+	];
+});
+
+$factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->numberBetween(500, 1000),
+		'name' => $faker->name,
+		'course_id' => function () {
+			return factory(App\Models\Course::class)->create()->id;
+		}
+	];
+});
+
+$factory->define(App\Models\Course::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->numberBetween(500, 1000),
+		'name' => $faker->name,
+		'slug' => $faker->name,
+	];
+});
+
+$factory->define(App\Models\QnaQuestion::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->numberBetween(500, 1000),
+		'text' => $faker->text,
+		'user_id' => 1,
+	];
+});
+
+$factory->define(App\Models\QnaAnswer::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->numberBetween(500, 1000),
+		'text' => $faker->text,
+		'user_id' => 1,
+	];
+});

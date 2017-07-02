@@ -4,6 +4,9 @@ import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
 import sessionStore from '../js/services/sessionStore';
+import moderatorFeed from 'js/perimeters/moderatorFeed';
+import { createSandbox } from 'vue-kindergarten';
+import store from 'js/store/store'
 
 Vue.use(Router)
 
@@ -131,6 +134,22 @@ let routes = [
 		]
 	},
 	{
+		name: 'moderatorFeed',
+		path: '/app/moderators/feed',
+		component: require('js/components/moderators/Feed.vue'),
+		meta: {keepsNavOpen: true},
+		beforeEnter: (to, from, next) => {
+			const sandbox = createSandbox(store.getters.currentUser, {
+				perimeters: [moderatorFeed],
+			});
+
+			if (!sandbox.isAllowed('access')) {
+				return next('/');
+			}
+			return next();
+		}
+	},
+	{
 		name: 'dashboard',
 		path: '/app',
 		redirect: {name: 'courses', params: {courseId: 1}},
@@ -140,7 +159,6 @@ let routes = [
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			console.log('CLEAR STORAGE********');
 			sessionStore.clearAll();
 			document.getElementById('logout-form').submit()
 		}

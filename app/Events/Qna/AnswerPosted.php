@@ -68,5 +68,16 @@ class AnswerPosted
 			],
 			'referer' => $this->referer,
 		];
+
+		$screen = $this->qnaAnswer->question->screen;
+
+		if ($screen){
+			$lesson = $this->qnaAnswer->question->screen->lesson;
+
+			$this->data['context'] = [
+				'screenId' => $screen->id,
+				'lessonId' => $lesson->id
+			];
+		}
 	}
 }

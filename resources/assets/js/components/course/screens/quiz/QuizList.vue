@@ -56,7 +56,6 @@
 				'getUnresolved',
 				'getUnanswered',
 				'getQuestions',
-				'resetState'
 			]),
 			displayResults() {
 				return this.isComplete || this.readOnly
@@ -97,6 +96,7 @@
 		methods: {
 			...mapActions('quiz', [
 				'checkQuiz',
+				'resetState',
 			]),
 			verify() {
 				if (this.getUnanswered.length > 0) {

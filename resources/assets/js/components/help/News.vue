@@ -68,11 +68,38 @@
 				<p><em>Zespół Więcej niż LEK</em></p>
 			</div>
 		</article>
+		<wnl-qna :tags="tags" v-if="!loading"></wnl-qna>
 	</div>
 </template>
 
 <script>
+	import _ from 'lodash'
+	import axios from 'axios'
+	import {mapGetters} from 'vuex'
+
+	import Qna from 'js/components/qna/Qna'
+	import {getApiUrl} from 'js/utils/env'
+
 	export default {
-		name: 'News'
+		name: 'News',
+		components: {
+			'wnl-qna': Qna,
+		},
+		data() {
+			return {
+				loading: true,
+				tags: [],
+			}
+		},
+		mounted() {
+			axios.post(getApiUrl('tags/.search'), {
+				query: { where: [ ['name', '=', 'Ogłoszenia'] ], }
+			})
+				.then(response => {
+					this.tags = _.values(response.data)
+					this.loading = false
+				})
+				.catch(error => $wnl.logger.error(error))
+		},
 	}
 </script>

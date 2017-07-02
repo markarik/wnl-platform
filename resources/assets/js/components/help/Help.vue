@@ -10,7 +10,7 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<div class="scrollable-main-container" v-if="ready">
+			<div class="scrollable-main-container">
 				<router-view v-if="!isMainRoute"></router-view>
 				<wnl-help-news v-else></wnl-help-news>
 			</div>
@@ -147,15 +147,6 @@
 			isMainRoute() {
 				return this.$route.name === 'help'
 			},
-		},
-		methods: {
-			...mapActions(['toggleChat']),
-			...mapActions('course', ['setup']),
-		},
-		mounted() {
-			if (!this.ready) {
-				this.setup(1)
-			}
 		},
 	}
 </script>

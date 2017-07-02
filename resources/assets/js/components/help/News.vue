@@ -7,7 +7,7 @@
 				</div>
 			</div>
 		</div>
-		<article>
+		<article class="margin bottom">
 			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item metadata">
@@ -31,8 +31,8 @@
 				<ol>
 					<li>W ramach testów, uruchomiliśmy naszemu zespołowi notyfikacje o wszelkiej aktywności na platformie. Pozwala nam to dużo szybciej reagować na zadawane przez Was pytania, zwłaszcza w komentarzach do slajdów. Możecie już dodawać je bez obaw, że umkną naszej uwadze. :)</li>
 					<li>Na dzień dzisiejszy, wszystkie Wasze sugestie zmian w prezentacjach zostały uwzględnione, a slajdy poprawione. Dotyczy to zarówno zmian merytorycznych, jak i literówek. ;)</li>
-					<li>>W połowie kursu wzbogacimy prezentacje z Interny o dodatkowe zagadnienia, które pojawiły się w pytaniach do LEK-u, a których obecnie brakuje w prezentacjach. Pediatria, Chirurgia oraz wszystkie kolejne lekcje podlegają już poprawionemu procesowi, który uwzględnia szczegółową analizę bazy pytań i opracowanie wszystkich pojawiających się tam zagadnień.</li>
-					<li>Do każdej lekcji dodamy ekran "Zmiany i dodatkowe zagadnienia w prezentacjach". Opublikujemy tam wykaz zmian, które wprowadzamy w prezentacjach. Dzięki temu nie będziecie musieli przeglądać wszystkich slajdów, aby przekonać się czy zmiany, na które czekaliście, zostały już wprowadzone. Dotyczy to zarówno Interny, jak i wszystkich kolejnych przedmiotów.</li>
+					<li>W połowie kursu wzbogacimy prezentacje z Interny o dodatkowe zagadnienia, które pojawiły się w pytaniach do LEK-u, a których obecnie brakuje w prezentacjach. Pediatria, Chirurgia oraz wszystkie kolejne lekcje podlegają już poprawionemu procesowi, który uwzględnia szczegółową analizę bazy pytań i opracowanie wszystkich pojawiających się tam zagadnień.</li>
+					<li>Do każdej lekcji dodamy ekran "Errata do prezentacji". Opublikujemy tam wykaz zmian, które wprowadzamy w prezentacjach. Dzięki temu nie będziecie musieli przeglądać wszystkich slajdów, aby przekonać się czy zmiany, na które czekaliście, zostały już wprowadzone. Dotyczy to zarówno Interny, jak i wszystkich kolejnych przedmiotów.</li>
 					<li>Dodaliśmy więcej sekcji do prezentacji, poprawiając nawigację i ten sam poziom szczegółowości stosujemy dla kolejnych przedmiotów. Pracujemy ponadto nad uzupełnieniem lub dodaniem dodatkowych informacji, które ułatwią Wam nawigację po slajdach - slajdów tytułowych, poprawionych podtytułów. Wszystko po to, aby zmniejszyć ryzyko zgubienia kontekstu.</li>
 				</ol>
 
@@ -61,7 +61,7 @@
 
 				<p>Na koniec zachęcamy do ustawienia avatarów - teraz widać kto uczy się razem z nami! Dzięki temu lepiej się poznamy! :)</p>
 
-				<p>Uff, to już wszystko na dziś! Pracy jest sporo, zarówno przed Wami, jak i przed nami. ;) Na szczęście, możemy też stwierdzić, że motywacja jest po obu stronach wyjątkowo silna!</p>
+				<p class="margin top">Uff, to już wszystko na dziś! Pracy jest sporo, zarówno przed Wami, jak i przed nami. ;) Na szczęście, możemy też stwierdzić, że motywacja jest po obu stronach wyjątkowo silna!</p>
 
 				<p>Z pozdrowieniami,</p>
 
@@ -70,10 +70,6 @@
 		</article>
 	</div>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
 
 <script>
 	export default {

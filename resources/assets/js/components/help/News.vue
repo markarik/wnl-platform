@@ -11,54 +11,61 @@
 			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item metadata">
-						29 czerwca 2017
+						Niedziela, 2 lipca 2017
 					</div>
 				</div>
 			</div>
 			<div class="content">
-				<p>Cześć!</p>
+				<p class="strong">Cześć!</p>
 
-				Mamy dla Was sporo ważnych ogłoszeń, także zachęcamy do lektury!
+				<p>Za nami pierwsze dwa tygodnie kursu! Dla nas również były one niezwykłą lekcją. Wasze pytania, sugestie, a także krytyka, nauczyły nas bardzo wiele o tym co jest dla Was ważne. Pozwoliły też zweryfikować nasze plany na najbliższe tygodnie.</p>
 
-				Zdecydowaliśmy się zebrać tutaj większośc wniosków z pierwszych 2 tygodni kursu oraz wstępne wyniki ankiety. Uważamy, że dobrze żebyście wiedzieli nad czym pracujemy i czego i w jakiej kolejności się spodziewać w przeciągu wakacji. Dodatkowo, ogłoszenie to ma także charakter symboliczny, gdyż chcemy Wam wszystkim tym samym przekazać, że słuchamy wszystkich uwag, sugestii i rad. :)
+				<p>Rozwiązanie wszystkich problemów w ramach tej edycji jest zadaniem ponad nasze siły. Zrobimy jednak co w naszej mocy, aby odpowiedzieć działaniem na najbardziej palące z nich.</p>
 
-				Podzieliliśmy ogłoszenia tematycznie:
+				<p>Chcemy dziś podzielić się z Wami kolejnymi krokami, które podejmiemy. Przy okazji mamy też parę ogłoszeń. :) Zaczynamy!</p>
 
-				Ankieta - dzięki jej wynikom określiliśmy kolejność wprowadzania nowych funkcji na platformie oraz dodaliśmy do naszego harmonogramu pracy dodatkowe rzeczy, którymi się zajmiemy. Ostatecznymi wynikami i wnioskami z ankiety podzielimy się z Wami po jej zakończeniu, także w przyszłym tygodniu. :)
+				<h3>Ankieta</h3>
+				<p>Dziękujemy wszystkim, którzy poświęcili swój czas i dostarczyli nam niezwykle istotnych informacji o swoim zadowoleniu (i niezadowoleniu), motywacji oraz ocenie kursu. Postaramy się w przyszłym tygodniu opracować wyniki i podzielić się bardziej szczegółowo naszymi wnioskami. Jesteśmy ciekawi, czy zgodzicie się z nimi. :)</p>
 
+				<h3>Prezentacje - zmiany, poprawki, nowe zagadnienia</h3>
+				<ol>
+					<li>W ramach testów, uruchomiliśmy naszemu zespołowi notyfikacje o wszelkiej aktywności na platformie. Pozwala nam to dużo szybciej reagować na zadawane przez Was pytania, zwłaszcza w komentarzach do slajdów. Możecie już dodawać je bez obaw, że umkną naszej uwadze. :)</li>
+					<li>Na dzień dzisiejszy, wszystkie Wasze sugestie zmian w prezentacjach zostały uwzględnione, a slajdy poprawione. Dotyczy to zarówno zmian merytorycznych, jak i literówek. ;)</li>
+					<li>>W połowie kursu wzbogacimy prezentacje z Interny o dodatkowe zagadnienia, które pojawiły się w pytaniach do LEK-u, a których obecnie brakuje w prezentacjach. Pediatria, Chirurgia oraz wszystkie kolejne lekcje podlegają już poprawionemu procesowi, który uwzględnia szczegółową analizę bazy pytań i opracowanie wszystkich pojawiających się tam zagadnień.</li>
+					<li>Do każdej lekcji dodamy ekran "Zmiany i dodatkowe zagadnienia w prezentacjach". Opublikujemy tam wykaz zmian, które wprowadzamy w prezentacjach. Dzięki temu nie będziecie musieli przeglądać wszystkich slajdów, aby przekonać się czy zmiany, na które czekaliście, zostały już wprowadzone. Dotyczy to zarówno Interny, jak i wszystkich kolejnych przedmiotów.</li>
+					<li>Dodaliśmy więcej sekcji do prezentacji, poprawiając nawigację i ten sam poziom szczegółowości stosujemy dla kolejnych przedmiotów. Pracujemy ponadto nad uzupełnieniem lub dodaniem dodatkowych informacji, które ułatwią Wam nawigację po slajdach - slajdów tytułowych, poprawionych podtytułów. Wszystko po to, aby zmniejszyć ryzyko zgubienia kontekstu.</li>
+				</ol>
 
-				Nowe funkcję platformy będą implementowane w następującej kolejności:
+				<h3>Pytania otwarte</h3>
 
-				1 - Stworzenie ekranu wyświetlania kolekcji dla slajdów i pytań.
-				2 - Uruchomienie notyfikacji na platformie.
-				3-  Wyszukiwarka wiedzy.
-				4 - Ekran bazy pytań kontrolnych + poszerzenie bazy z bazowych 2000 do około 3500-4000 pytań z LEKu.
+				<p>W ankietach przewijała się również sugestia wzbogacenia pytań otwartych o linki do powiązanego materiału w prezentacjach. Najlepszą odpowiedzią na ten problem będzie wyszukiwarka, która pozwoli łatwo zlokalizować nawet bardzo szczegółowe informacje, nie tylko pośród slajdów, ale też pytań kontrolnych oraz systemu pytań i odpowiedzi. Planujemy publikację jej pierwszej wersji jeszcze w tym miesiącu.</p>
 
-				Prezentacje - zmiany, poprawki, nowe zagadnienia.
+				<p>Zachęcamy także do wydrukowania sobie zestawów pytań i opracowania tych, które sprawiają Wam trudność.</p>
 
-				1 - Na dzień 28.06.2017 wszystkie Wasze sugestie zmian w prezentacjach zostały uwzględnione a slajdy poprawione, tyczy się to zarówno literówek jak i zmian merytorycznych.
-				2 - Do każdej z lekcji dodamy ekran - "Zmiany i dodatkowe zagadnienia w prezentacjach" - opublikujemy tam dokładnie wszystkie zmiany dla prezentacji tak aby nikomu nic nie umknęło. Tyczy się to zarówno Interny jak i wszystkich kolejnych przedmiotów.
-				3 - W połowie kursu wzbogacimy prezentacje z Interny o dodatkowe zagadnienia, które pojawiły się w pytaniach do LEKu, a których obecnie brakuje w prezentacjach. Zdecydowaliśmy się najpierw wzbogacić pediatrie i chirurgie, gdyż większość z Was jest już w jej trakcie. Także wszystkie zmiany będą pojawiać się w lekcjach w osobnym ekranie, dzięki czemu nikomu nic nie umknie. :)
-				4 - Dodaliśmy więcej sekcji do prezentacji tak aby ułatwić Wam nawigację. To samo zrobiliśmy dla kolejnych przedmiotów.
-				5 - Głównym aspektem, nad którym obecnie pracujemy to uzupełnienie i dodanie dodatkowych informacji, które ułatwią Wam nawigację po slajdach. Dodatkowe slajdy tytułowe, poprawione podtytuły. Dzięki temu szansa zgubienia kontekstu znacząco się zmniejszy.
+				<h3>Nowy osoba w zespole czuwającym nad merytoryką kursu</h3>
 
-				Pytania otwarte
+				<p>W zeszłym tygodniu do zespołu moderatorów dołączył dr hab. n. med. Mariusz Puszczewicz, prof. UMP. Pan Profesor będzie odpowiadał na pytania zadane na platformie oraz tworzył na ich podstawie program warsztatów z Interny.</p>
 
-				Kilka osób zgłaszało potrzebę umieszczenia informacji o lokalizacji źródła pytania otwartego w prezentacji. Ze względów zarówno czasowych jak i ze względu mechanikę działania tych pytań zdecydowaliśmy się poniżej opisane rozwiązanie.
+				<h3>Rozwój platformy</h3>
 
-				Głównym narzędziem nawigacyjnym po prezentacjach będzie wyszukiwarka. Prosimy o cierpliwość w tym względzie, będzie miała ona funkcje przeszukiwania zarówno bazy wiedzy, którą tworzymy jak i treści ze slajdów, pytań kontrolnych oraz systemu pytań i odpowiedzi.
+				<p>Po dwóch tygodniach prac stabilizujących platformę, oraz rozwiązywania niewykrytych wcześniej problemów, wracamy do pracy nad jej nowymi funkcjami! Możecie spodziewać się ich w następującej kolejności:</p>
 
-				Zachęcamy także, do wydrukowania sobie tych zestawów pytań i opracowanie tych, które sprawiają Wam trudności.
+				<ol>
+					<li>Kolekcje zapisanych slajdów, pytań kontrolnych, oraz wątków z systemu pytań i odpowiedzi</li>
+					<li>Powiadomienia o aktywności dotyczących zadanych przez Was pytań, udzielonych odpowiedzi, czy skomentowanych slajdów</li>
+					<li>Wyszukiwarka wiedzy</li>
+					<li>Baza pytań - 4000 pytań kontrolnych z możliwością tworzenia własnych zestawów, przerabiania problematycznych pytań i szybkich testów powtórkowych</li>
+				</ol>
 
-				Dodamy wyszukiwarkę jak najszybciej. :)
+				<h3>Avatary</h3>
 
-				Nowy członek zespołu od merytoryki kursu
+				<p>Na koniec zachęcamy do ustawienia avatarów - teraz widać kto uczy się razem z nami! Dzięki temu lepiej się poznamy! :)</p>
 
-				Wczoraj do zespołu moderatorów dołączył dr hab. Med. Mariusz Puszczewicz Prof. UM. Pan Profesor będzie odpowiadał na pytania w systemie pytań i odpowiedzi oraz tworzył na ich podstawie program warsztatów z Interny.
+				<p>Uff, to już wszystko na dziś! Pracy jest sporo, zarówno przed Wami, jak i przed nami. ;) Na szczęście, możemy też stwierdzić, że motywacja jest po obu stronach wyjątkowo silna!</p>
 
-				Avatary
+				<p>Z pozdrowieniami,</p>
 
-				Zachęcamy do ustawienia avatarów! :) Zwiększa to poziom zaangażowania i szansę, że lepiej się poznamy w trakcie kursu! :)
+				<p><em>Zespół Więcej niż LEK</em></p>
 			</div>
 		</article>
 	</div>

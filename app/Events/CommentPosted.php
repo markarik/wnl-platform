@@ -79,10 +79,16 @@ class CommentPosted
 	public function addQnaAnswerContext()
 	{
 		$qnaAnswer = $this->comment->commentable;
+		$screen = $qnaAnswer->question->screen;
+		if (!$screen) return false;
+
+		$lesson = $qnaAnswer->question->screen->lesson;
 
 		$this->data['context'] = [
-			'screenId' => $qnaAnswer->question->screen->id,
-			'lessonId' => $qnaAnswer->question->screen->lesson->id,
+			'screenId' => $screen->id,
+			'lessonId' => $lesson->id,
 		];
+
+		return true;
 	}
 }

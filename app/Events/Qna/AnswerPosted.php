@@ -67,10 +67,17 @@ class AnswerPosted
 				'avatar'     => $this->qnaAnswer->user->profile->avatar_url,
 			],
 			'referer' => $this->referer,
-			'context' => [
-				'screenId' => $this->qnaAnswer->question->screen->id,
-				'lessonId' => $this->qnaAnswer->question->screen->lesson->id
-			]
 		];
+
+		$screen = $this->qnaAnswer->question->screen;
+
+		if ($screen){
+			$lesson = $this->qnaAnswer->question->screen->lesson;
+
+			$this->data['context'] = [
+				'screenId' => $screen->id,
+				'lessonId' => $lesson->id
+			];
+		}
 	}
 }

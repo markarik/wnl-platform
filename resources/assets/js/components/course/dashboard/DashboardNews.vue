@@ -15,7 +15,7 @@
 <script>
 	import store from 'js/services/messagesStore'
 
-	const CURRENT_NEWS = 'survey-one'
+	const CURRENT_NEWS = ''
 
 	export default {
 		name: 'DashboardNews',

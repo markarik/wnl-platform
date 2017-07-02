@@ -10,9 +10,9 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<div class="scrollable-main-container" v-if="ready">
+			<div class="scrollable-main-container">
 				<router-view v-if="!isMainRoute"></router-view>
-				<wnl-learning-help v-else></wnl-learning-help>
+				<wnl-help-news v-else></wnl-help-news>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -61,7 +61,7 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import LearningHelp from 'js/components/help/LearningHelp'
+	import News from 'js/components/help/News'
 	import MainNav from 'js/components/MainNav'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
@@ -71,7 +71,7 @@
 	export default {
 		name: 'Help',
 		components: {
-			'wnl-learning-help': LearningHelp,
+			'wnl-help-news': News,
 			'wnl-main-nav': MainNav,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
@@ -89,6 +89,18 @@
 			...mapGetters('course', ['ready']),
 			sidenavItems() {
 				return [
+					{
+						text: 'Ogłoszenia',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-news',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-bullhorn',
+						iconTitle: 'Ogłoszenia',
+					},
 					{
 						text: 'Pomoc w nauce',
 						itemClass: 'has-icon',
@@ -135,15 +147,6 @@
 			isMainRoute() {
 				return this.$route.name === 'help'
 			},
-		},
-		methods: {
-			...mapActions(['toggleChat']),
-			...mapActions('course', ['setup']),
-		},
-		mounted() {
-			if (!this.ready) {
-				this.setup(1)
-			}
 		},
 	}
 </script>

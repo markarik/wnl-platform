@@ -93,6 +93,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
 	Route::post("{$r['tags']}/.search", 'TagsApiController@search');
+	Route::get("{$r['tags']}", 'TagsApiController@getAll');
 
 	// Q&A Questions
 	Route::post($r['questions'], 'Qna\QuestionsApiController@post');

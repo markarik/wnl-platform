@@ -81,16 +81,16 @@ let routes = [
 	},
 	{
 		name: 'collections',
-		path: '/app/collections',
+		path: '/app/courses/:courseId/collections',
 		component: require('js/components/collections/Collections.vue'),
 		meta: {keepsNavOpen: true},
 		props: true,
-		// redirect: { name: "my-profile" },
 		children: [
 			{
-				name: 'collection-slides',
-				path: 'slides',
-				component: require('js/components/collections/SlidesCollection.vue')
+				props: true,
+				name: 'collections-lesson',
+				path: 'lessons/:lessonId',
+				component: require('js/components/collections/Collections.vue')
 			},
 		]
 	},

@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
-		<p class="has-text-centered margin vertical">
+		<p v-if="isComplete" class="has-text-centered margin vertical">
 			<a class="button is-primary is-outlined" @click="resetState">Rozwiąż pytania ponownie</a>
 		</p>
 

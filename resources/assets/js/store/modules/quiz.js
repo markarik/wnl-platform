@@ -210,7 +210,6 @@ const actions = {
 		_fetchQuestionsCollection(ids).then(response => {
 			let included = _.clone(response.data.included)
 
-			console.log({...response.data});
 			destroy(response.data, 'included')
 			included['quiz_questions'] = response.data
 
@@ -224,7 +223,7 @@ const actions = {
 				len,
 				questionsIds,
 			})
-			commit(types.QUIZ_COMPLETE)
+			commit(types.QUIZ_RESET_PROGRESS)
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			commit(types.QUIZ_IS_LOADED, true)
 		})

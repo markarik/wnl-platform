@@ -5,15 +5,23 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<!-- TODO build navigation base on tags -->
 			<aside class="wnl-sidenav">
 				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
 			<div class="scrollable-main-container">
-				<router-view></router-view>
+				<wnl-qna-collection></wnl-qna-collection>
 			</div>
 		</div>
+		<wnl-sidenav-slot
+			:isVisible="true"
+			:isDetached="false"
+		>
+			<wnl-quiz-collection></wnl-quiz-collection>
+		</wnl-sidenav-slot>
+
 	</div>
 </template>
 
@@ -33,17 +41,21 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
+	import QnaCollection from 'js/components/collections/QnaCollection'
+	import QuizCollection from 'js/components/collections/QuizCollection';
 
 	export default {
 		props: ['view'],
 		components: {
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav
+			'wnl-main-nav': MainNav,
+			'wnl-qna-collection': QnaCollection,
+			'wnl-quiz-collection': QuizCollection
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
-			...mapGetters('collections', ['isLoading']),
+			...mapGetters('collections', ['isLoading', 'quizQuestionsIds']),
 			items() {
 				let items = [
 					{
@@ -62,30 +74,6 @@
 						iconClass: 'fa-television',
 						iconTitle: 'Twoja kolekcja slajdów',
 					},
-					{
-						text: 'Pytania i odpowiedzi',
-						itemClass: 'has-icon',
-						to: {
-							name: 'collection-qna',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-th-list',
-						iconTitle: 'Twoja kolekcja pytań i odpowiedzi',
-					},
-					{
-						text: 'Pytania kontrolne',
-						itemClass: 'has-icon',
-						to: {
-							name: 'collection-quiz',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-question-circle-o',
-						iconTitle: 'Twoja kolekcja pytań i odpowiedzi',
-					},
 				]
 
 				return items
@@ -93,9 +81,14 @@
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions']),
+			...mapActions('quiz', ['fetchQuestionsCollection']),
 		},
 		mounted() {
-			this.fetchReactions()
+			// TODO fetch reactions for selected tag
+			this.fetchReactions().
+				then(() => {
+					this.fetchQuestionsCollection(this.quizQuestionsIds)
+				})
 		}
 	}
 </script>

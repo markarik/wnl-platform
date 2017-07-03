@@ -54,7 +54,7 @@ const mutations = {
 
 const actions = {
 	fetchReactions({commit}) {
-		_getReactions().then(response => {
+		return _getReactions().then(response => {
 			if (response.data.length === 0) {
 				commit(types.IS_LOADING, false)
 				return false

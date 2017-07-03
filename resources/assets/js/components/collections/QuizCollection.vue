@@ -23,12 +23,6 @@
 		computed: {
 			...mapGetters('collections', ['quizQuestionsIds']),
 			...mapGetters('quiz', ['isLoaded']),
-		},
-		methods: {
-			...mapActions('quiz', ['fetchQuestionsCollection']),
-		},
-		mounted() {
-			this.fetchQuestionsCollection(this.quizQuestionsIds)
-		},
+		}
 	}
 </script>

@@ -92,16 +92,6 @@ let routes = [
 				path: 'slides',
 				component: require('js/components/collections/SlidesCollection.vue')
 			},
-			{
-				name: 'collection-qna',
-				path: 'qna',
-				component: require('js/components/collections/QnaCollection.vue')
-			},
-			{
-				name: 'collection-quiz',
-				path: 'quiz',
-				component: require('js/components/collections/QuizCollection.vue')
-			},
 		]
 	},
 	{

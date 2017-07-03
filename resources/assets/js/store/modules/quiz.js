@@ -210,6 +210,7 @@ const actions = {
 		_fetchQuestionsCollection(ids).then(response => {
 			let included = _.clone(response.data.included)
 
+			console.log({...response.data});
 			destroy(response.data, 'included')
 			included['quiz_questions'] = response.data
 

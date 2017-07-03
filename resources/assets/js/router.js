@@ -81,7 +81,7 @@ let routes = [
 	},
 	{
 		name: 'collections',
-		path: '/app/courses/:courseId/collections',
+		path: '/app/collections',
 		component: require('js/components/collections/Collections.vue'),
 		meta: {keepsNavOpen: true},
 		props: true,

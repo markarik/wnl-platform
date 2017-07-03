@@ -24,6 +24,14 @@ class Parser
 
 	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
 
+	const HEADER_PATTERN = '/<h.*>([^"]*)<\/h.*>/';
+
+	const MEDIA_PATTERNS = [
+		'chart' => '/<img.*class="chart".*>/',
+		'movie' => '/<iframe.*youtube\.com.*>/',
+		'audio' => '/<iframe.*clyp.it.*>/',
+	];
+
 	protected $categoryTags;
 	protected $courseTags;
 	protected $categoryModels = [];
@@ -51,6 +59,7 @@ class Parser
 
 	/**
 	 * @param $fileContents - string/html
+	 *
 	 * @throws ParseErrorException
 	 */
 	public function parse($fileContents)
@@ -191,6 +200,7 @@ class Parser
 
 	/**
 	 * @param $data - string/html
+	 *
 	 * @return array
 	 */
 	protected function matchSlides($data):array
@@ -204,6 +214,7 @@ class Parser
 
 	/**
 	 * @param $data - string/html
+	 *
 	 * @return bool
 	 */
 	protected function isFunctional($data):bool
@@ -215,6 +226,7 @@ class Parser
 	 * @param $pattern
 	 * @param $data
 	 * @param \Closure $errback
+	 *
 	 * @return mixed
 	 * @internal param \Closure $callback
 	 */
@@ -236,6 +248,7 @@ class Parser
 
 	/**
 	 * @param $slideHtml
+	 *
 	 * @return array
 	 */
 	public function getTags($slideHtml)
@@ -336,5 +349,35 @@ class Parser
 		Storage::put('public/' . $path, $image);
 
 		return sprintf($viewerHtml, asset('storage/' . $path));
+	}
+
+	public function createSnippet($slideHtml)
+	{
+		$snippet = [
+			'header'  => '',
+			'content' => '',
+			'media'   => null,
+		];
+
+		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
+
+		if ($match) {
+			$snippet['header'] = $match[0][1];
+			$slideHtml = preg_replace(self::HEADER_PATTERN, '', $slideHtml);
+		}
+
+		foreach (self::MEDIA_PATTERNS as $name => $pattern) {
+			$match = $this->match($pattern, $slideHtml);
+			if ($match) {
+				$snippet['media'] = $name;
+			}
+		}
+
+		$slideHtml = str_replace(["\n", "\r"], ',', $slideHtml);
+		$slideHtml = str_replace('&nbsp;', '', $slideHtml);
+		$slideHtml = preg_replace('/(\>)[,\s]*(\<)/m', '$1$2', $slideHtml);
+		$snippet['content'] = strip_tags($slideHtml);
+
+		return $snippet;
 	}
 }

@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
 		Commands\ChangeOrderPaymentMethod::class,
 		Commands\PopulateAmountColumns::class,
 		Commands\OptimaExport::class,
+		Commands\OrdersExport::class,
 		Commands\ArchiveChatMessages::class,
 		Commands\AddressesExport::class,
 		Commands\MigrateUserData::class,

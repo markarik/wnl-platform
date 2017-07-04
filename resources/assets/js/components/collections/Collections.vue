@@ -59,14 +59,14 @@
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories']),
 		},
 		methods: {
-			...mapActions('collections', ['fetchReactions', 'fetchNavigation']),
+			...mapActions('collections', ['fetchReactions', 'fetchCategories']),
 			...mapActions('quiz', ['fetchQuestionsCollection']),
 			getNavigation() {
 				let navigation = [];
 
 				this.categories.forEach(({name, id, categories: childCategories}) => {
 					const groupItem = this.getGroupItem({name});
-					const childItems = childCategories.map(({name, id}) => this.getChildCategoryItem({name, id}));
+					const childItems = childCategories.map(({name, id}) => this.getChildCategory({name, id}));
 
 					navigation = [...navigation, groupItem, ...childItems]
 				});
@@ -79,7 +79,7 @@
 					itemClass: 'heading small'
 				})
 			},
-			getChildCategoryItem(childCategory) {
+			getChildCategory(childCategory) {
 				return navigation.composeItem({
 					text: childCategory.name,
 					itemClass: 'has-icon',
@@ -94,7 +94,7 @@
 		},
 
 		mounted() {
-			this.fetchNavigation()
+			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(() => this.fetchQuestionsCollection(this.quizQuestionsIds))
 		}

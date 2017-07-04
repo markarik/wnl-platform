@@ -51,7 +51,7 @@ const mutations = {
 	[types.COLLECTIONS_SET_REACTABLE] (state, payload) {
 		payload.items.forEach((item) => state[payload.resource].push(item))
 	},
-	[types.COLLECTIONS_SET_NAVIGATION] (state, categories) {
+	[types.COLLECTIONS_SET_CATEGORIES] (state, categories) {
 		set(state, 'categories', categories)
 	}
 }
@@ -72,9 +72,9 @@ const actions = {
 			commit(types.IS_LOADING, false)
 		})
 	},
-	fetchNavigation({commit}) {
+	fetchCategories({commit}) {
 		return axios.get(getApiUrl('categories/all'))
-			.then(({data: categories}) => commit(types.COLLECTIONS_SET_NAVIGATION, categories));
+			.then(({data: categories}) => commit(types.COLLECTIONS_SET_CATEGORIES, categories));
 	}
 }
 

@@ -75,10 +75,11 @@ const getters = {
 	getUnanswered: (state, getters) => _.filter(
 		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
 	),
-	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0,
+	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0 && getters.hasQuestions,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
+	hasQuestions: (state, getters) => getters.questionsLength !== 0,
 	getStats: (state) => (questionId) => state.quiz_stats[questionId],
 	questionsLength: (state) => state.questionsIds.length
 }
@@ -208,7 +209,8 @@ const actions = {
 
 	fetchQuestionsCollection({commit}, ids) {
 		_fetchQuestionsCollection(ids).then(response => {
-			let included = _.clone(response.data.included)
+			if (response.data.included) {
+				let included = _.clone(response.data.included)
 
 			destroy(response.data, 'included')
 			included['quiz_questions'] = response.data
@@ -225,6 +227,8 @@ const actions = {
 			})
 			commit(types.QUIZ_RESET_PROGRESS)
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
+			}
+
 			commit(types.QUIZ_IS_LOADED, true)
 		})
 	},

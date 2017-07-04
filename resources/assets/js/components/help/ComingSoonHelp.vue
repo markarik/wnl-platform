@@ -16,7 +16,7 @@
 			<li><strong>Prywatne wiadomości</strong> - czasem po prostu chcemy pogadać z kimś prywatnie. Nasza platforma oczywiście będzie na to pozwalała.</li>
 		</ul>
 		<p>Jeśli macie pomysł co jeszcze moglibyśmy wziąć na warsztat - tu jest doskonałe miejsce na Wasze sugestie!</p>
-		<wnl-qna :tags="tags" v-if="!loading"></wnl-qna>
+		<wnl-qna :tags="tags" v-if="!loading" reactionsDisabled="true"></wnl-qna>
 	</div>
 </template>
 

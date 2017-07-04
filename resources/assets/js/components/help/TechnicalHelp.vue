@@ -10,7 +10,7 @@
 		<p class="strong">Serwus {{currentUserName}}!</p>
 		<p>"Więcej niż LEK" to nie tylko przedsięwzięcie medyczne, ale też technologiczne. ;) Jako zespół, pracujemy po to, by Wasza nauka była przyjemna i bezproblemowa! Gdyby jednak powinęła nam się noga - jesteśmy tutaj, aby odpowiadać na Wasze problemy i jak najszybciej naprawiać błędy. :)</p>
 		<p>Jeśli tylko cos Was irytuje, lub nie działa - tutaj jest najlepsze miejsce, aby nam to zgłosić! :)</p>
-		<wnl-qna :tags="tags" v-if="!loading"></wnl-qna>
+		<wnl-qna :tags="tags" v-if="!loading" reactionsDisabled="true"></wnl-qna>
 	</div>
 </template>
 

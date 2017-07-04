@@ -36,8 +36,9 @@
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
-				:readOnly="readOnly">
-			</wnl-qna-question>
+				:readOnly="readOnly"
+				:reactionsDisabled="reactionsDisabled"
+			></wnl-qna-question>
 		</div>
 	</div>
 </template>
@@ -115,7 +116,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'ids', 'readOnly', 'title'],
+		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
 		data() {
 			return {
 				ready: false,

@@ -68,7 +68,7 @@
 				<p><em>Zespół Więcej niż LEK</em></p>
 			</div>
 		</article>
-		<wnl-qna :tags="tags" v-if="!loading"></wnl-qna>
+		<wnl-qna :tags="tags" v-if="!loading" reactionsDisabled="true"></wnl-qna>
 	</div>
 </template>
 

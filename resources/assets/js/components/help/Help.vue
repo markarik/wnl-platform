@@ -148,5 +148,8 @@
 				return this.$route.name === 'help'
 			},
 		},
+		methods: {
+			...mapActions(['toggleChat'])
+		}
 	}
 </script>

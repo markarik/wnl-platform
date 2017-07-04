@@ -2,7 +2,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { SET_REACTION } from 'js/store/mutations-types'
 
 export const reaction = {
-	props: ['module', 'reactableResource', 'reactableId', 'updateLocally', 'state'],
+	props: ['module', 'reactableResource', 'reactableId', 'updateLocally', 'state', 'reactionsDisabled'],
 	data() {
 		return {
 			isLoading: false,
@@ -23,7 +23,7 @@ export const reaction = {
 			return this.$store.dispatch(`${this.module}/setReaction`, payload)
 		},
 		toggleReaction() {
-			if (this.isLoading) {
+			if (this.isLoading || this.reactionsDisabled) {
 				return false
 			}
 			this.wasJustClicked = true

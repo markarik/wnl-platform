@@ -23,7 +23,7 @@ class CategoriesTableSeeder extends Seeder
 		]);
 
 		DB::table('categories')->insert([
-			['name' => 'Kariologia', 'parent_id' => App\Models\Category::where('name', 'Interna')->first()->id],
+			['name' => 'Kardiologia', 'parent_id' => App\Models\Category::where('name', 'Interna')->first()->id],
 			['name' => 'Pulmonologia', 'parent_id' => App\Models\Category::where('name', 'Interna')->first()->id],
 			['name' => 'Gastroenterologia', 'parent_id' => App\Models\Category::where('name', 'Interna')->first()->id],
 			['name' => 'Endokrynologia', 'parent_id' => App\Models\Category::where('name', 'Interna')->first()->id],

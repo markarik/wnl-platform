@@ -56,34 +56,19 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds']),
-			...mapGetters('course', ['groups','structure'])
+			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories']),
 		},
 		methods: {
-			...mapActions('collections', ['fetchReactions']),
+			...mapActions('collections', ['fetchReactions', 'fetchNavigation']),
 			...mapActions('quiz', ['fetchQuestionsCollection']),
-			...mapActions('course', ['setStructure']),
 			getNavigation() {
-				if (this.isStructureEmpty) {
-					$wnl.logger.debug('Empty structure, WTF?')
-					$wnl.logger.debug(this.structure)
-					return
-				}
-
 				let navigation = [];
 
-				this.groups.forEach((groupId) => {
-					const group = this.structure.groups[groupId]
+				this.categories.forEach(({name, id, categories: childCategories}) => {
+					const groupItem = this.getGroupItem({name});
+					const childItems = childCategories.map(({name, id}) => this.getChildCategoryItem({name, id}));
 
-					const groupNavigation = [
-						this.getGroupItem(group),
-						...group.lessons.map((lessonId) => {
-							const lesson = this.structure.lessons[lessonId]
-							return this.getLessonItem(lesson);
-						})
-					]
-
-					navigation = [...navigation, ...groupNavigation];
+					navigation = [...navigation, groupItem, ...childItems]
 				});
 
 				return navigation
@@ -94,13 +79,13 @@
 					itemClass: 'heading small'
 				})
 			},
-			getLessonItem(lesson, withProgress = true) {
+			getChildCategoryItem(childCategory) {
 				return navigation.composeItem({
-					text: lesson.name,
+					text: childCategory.name,
 					itemClass: 'has-icon',
 					routeName: 'collections-lesson',
 					routeParams: {
-						lessonId: lesson.id,
+						categoryId: childCategory.id,
 					},
 					iconClass: 'fa-graduation-cap',
 					iconTitle: 'Obecna lekcja'
@@ -109,7 +94,7 @@
 		},
 
 		mounted() {
-			this.setStructure(this.courseId)
+			this.fetchNavigation()
 				.then(this.fetchReactions)
 				.then(() => this.fetchQuestionsCollection(this.quizQuestionsIds))
 		}

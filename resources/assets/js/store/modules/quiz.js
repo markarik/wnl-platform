@@ -219,21 +219,23 @@ const actions = {
 			if (response.data.included) {
 				let included = _.clone(response.data.included)
 
-			destroy(response.data, 'included')
-			included['quiz_questions'] = response.data
+				destroy(response.data, 'included')
+				included['quiz_questions'] = response.data
 
-			let questionsIds = _.map(response.data, (question) => question.id),
-				len = questionsIds.length
+				let questionsIds = _.map(response.data, (question) => question.id),
+					len = questionsIds.length
 
-			commit(types.UPDATE_INCLUDED, included)
-			commit(types.QUIZ_SET_QUESTIONS, {
-				setId: 0,
-				setName: `Kolekcja pytań kontrolnych dla ${tagName}`,
-				len,
-				questionsIds,
-			})
-			commit(types.QUIZ_RESET_PROGRESS)
-			commit(types.QUIZ_TOGGLE_PROCESSING, false)
+				commit(types.UPDATE_INCLUDED, included)
+				commit(types.QUIZ_SET_QUESTIONS, {
+					setId: 0,
+					setName: `Kolekcja pytań kontrolnych dla ${tagName}`,
+					len,
+					questionsIds,
+				})
+				commit(types.QUIZ_RESET_PROGRESS)
+				commit(types.QUIZ_TOGGLE_PROCESSING, false)
+			} else {
+				commit(types.QUIZ_DESTROY)
 			}
 
 			commit(types.QUIZ_IS_LOADED, true)

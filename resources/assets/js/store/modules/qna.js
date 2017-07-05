@@ -11,68 +11,55 @@ import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store
  * @returns {Promise}
  * @private
  */
-function _getQuestions(tags) {
-	return new Promise((resolve, reject) => {
-		let data = {
-			include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments',
-			query: {
-				hasIn: {
-					tags: ['tags.id', tags.map((tag) => tag.id)]
-				}
-			},
-			order: {
-				id: 'desc',
-			},
-		}
+ function _getQuestions(query, limit) {
+	let data = {
+		include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments',
+		query,
+		order: {
+			id: 'desc',
+		},
+		limit
+	}
 
-		if (tags.length === 0) {
-			reject('No tags passed to search for Q&A questions.')
-		}
+	return axios.post(getApiUrl('qna_questions/.search'), data);
+}
 
-		axios.post(getApiUrl('qna_questions/.search'), data)
-			.then((response) => resolve(response))
-			.catch((error) => reject(error))
-	})
+function _getQuestionsByTags(tags) {
+	if (tags.length === 0) {
+		return Promise.reject('No tags passed to search for Q&A questions.')
+	}
+
+	return _getQuestions({
+		hasIn: {
+			tags: ['tags.id', tags.map((tag) => tag.id)]
+		}
+	});
 }
 
 function _getQuestionsByIds(ids) {
-	return new Promise((resolve, reject) => {
-		let data = {
-			include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments',
-			query: {
-				whereIn: ['id', ids],
-			},
-			order: {
-				id: 'desc',
-			},
-		}
-
-		axios.post(getApiUrl('qna_questions/.search'), data)
-			.then((response) => resolve(response))
-			.catch((error) => reject(error))
+	return _getQuestions({
+		whereIn: ['id', ids],
 	})
 }
 
 function _getQuestionsLatest(limit = 10) {
-	return new Promise((resolve, reject) => {
-		let data = {
-			include: 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments',
-			query: {
-				whereDoesntHave: {
-					tags: {
-						where: [ ['tags.id', '=', 69] ],
-					},
-				},
+	return _getQuestions({
+		whereDoesntHave: {
+			tags: {
+				where: [ ['tags.id', '=', 69] ],
 			},
-			order: {
-				id: 'desc',
-			},
-			limit: [limit, 0]
-		}
+		},
+	}, [limit, 0]);
+}
 
-		axios.post(getApiUrl('qna_questions/.search'), data)
-			.then((response) => resolve(response))
-			.catch((error) => reject(error))
+function _getQuestionsByTagName(tagName, ids) {
+	return _getQuestions({
+		whereHas: {
+			tags: {
+				where: [['tags.name', '=', tagName]]
+			}
+		},
+		whereIn: ['id', ids],
 	})
 }
 
@@ -372,6 +359,7 @@ const actions = {
 						destroy(data, 'included')
 						commit(types.QNA_SET_QUESTIONS, data)
 					}
+
 					commit(types.IS_LOADING, false)
 					resolve()
 				})

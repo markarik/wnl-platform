@@ -88,8 +88,8 @@ let routes = [
 		children: [
 			{
 				props: true,
-				name: 'collections-lesson',
-				path: 'categories/:categoryId',
+				name: 'collections-categories',
+				path: 'categories/:categoryName',
 				component: require('js/components/collections/Collections.vue')
 			},
 		]

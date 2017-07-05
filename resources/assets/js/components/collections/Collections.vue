@@ -46,7 +46,7 @@
 	import navigation from 'js/services/navigation'
 
 	export default {
-		props: ['courseId', 'lessonId'],
+		props: ['courseId', 'caegoryName'],
 		components: {
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
@@ -56,11 +56,12 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories']),
+			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds']),
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories']),
 			...mapActions('quiz', ['fetchQuestionsCollection']),
+			...mapActions('qna', ['fetchQuestionsByTagName']),
 			getNavigation() {
 				let navigation = [];
 
@@ -83,9 +84,9 @@
 				return navigation.composeItem({
 					text: childCategory.name,
 					itemClass: 'has-icon',
-					routeName: 'collections-lesson',
+					routeName: 'collections-categories',
 					routeParams: {
-						categoryId: childCategory.id,
+						categoryName: childCategory.name,
 					},
 					iconClass: 'fa-graduation-cap',
 					iconTitle: 'Obecna lekcja'
@@ -97,6 +98,7 @@
 			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(() => this.fetchQuestionsCollection(this.quizQuestionsIds))
+				.then(() => this.fetchQuestionsByTagName({tagName: categoryName, ids: this.qnaQuestionsIds}))
 		}
 	}
 </script>

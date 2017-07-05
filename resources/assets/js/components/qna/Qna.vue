@@ -116,7 +116,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
+		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled', 'qnaList'],
 		data() {
 			return {
 				ready: false,
@@ -160,6 +160,11 @@
 		},
 		mounted() {
 			new Promise((resolve, rejected) => {
+				if (qnaList) {
+					this.ready = true;
+					return resolve();
+				}
+
 				if (this.tags) {
 					this.fetchQuestions(this.tags).then(() => {
 						this.ready = true

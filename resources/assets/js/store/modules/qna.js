@@ -11,9 +11,9 @@ import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store
  * @returns {Promise}
  * @private
  */
- function _getQuestions(query, limit) {
+ function _getQuestions(query, limit, include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments') {
 	let data = {
-		include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments',
+		include,
 		query,
 		order: {
 			id: 'desc',
@@ -49,7 +49,7 @@ function _getQuestionsLatest(limit = 10) {
 				where: [ ['tags.id', '=', 69] ],
 			},
 		},
-	}, [limit, 0]);
+	}, [limit, 0], 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments');
 }
 
 function _getQuestionsByTagName(tagName, ids) {
@@ -393,6 +393,10 @@ const actions = {
 					reject()
 				})
 		})
+	},
+
+	fetchQuestionsByTagName({commit}, {tagName, ids}) {
+		return _getQuestionsByTagName(tagName, ids);
 	},
 
 	fetchQuestion({commit}, questionId) {

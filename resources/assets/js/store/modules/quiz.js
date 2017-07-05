@@ -20,9 +20,14 @@ function fetchQuizSetStats(id) {
 	)
 }
 
-function _fetchQuestionsCollection(ids) {
+function _fetchQuestionsCollectionByTagName(tagName, ids) {
 	return axios.post(getApiUrl('quiz_questions/.search'), {
 		query: {
+			whereHas: {
+				tags: {
+					where: [['tags.name', '=', tagName]]
+				}
+			},
 			whereIn: ['id', ids],
 		},
 		include: 'quiz_answers,comments.profiles,reactions',
@@ -207,8 +212,10 @@ const actions = {
 		});
 	},
 
-	fetchQuestionsCollection({commit}, ids) {
-		_fetchQuestionsCollection(ids).then(response => {
+	fetchQuestionsCollectionByTagName({commit}, {tagName, ids}) {
+		commit(types.QUIZ_IS_LOADED, false)
+
+		return _fetchQuestionsCollectionByTagName(tagName, ids).then(response => {
 			if (response.data.included) {
 				let included = _.clone(response.data.included)
 
@@ -221,7 +228,7 @@ const actions = {
 			commit(types.UPDATE_INCLUDED, included)
 			commit(types.QUIZ_SET_QUESTIONS, {
 				setId: 0,
-				setName: 'Kolekcja pytań kontrolnych',
+				setName: `Kolekcja pytań kontrolnych dla ${tagName}`,
 				len,
 				questionsIds,
 			})

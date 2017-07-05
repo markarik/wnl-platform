@@ -65,7 +65,7 @@
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories']),
-			...mapActions('quiz', ['fetchQuestionsCollection']),
+			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
 			...mapActions('qna', ['fetchQuestionsByTagName']),
 			getNavigation() {
 				let navigation = [];
@@ -98,7 +98,7 @@
 				})
 			},
 			setupContentForCategory() {
-				this.fetchQuestionsCollection(this.quizQuestionsIds)
+				this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds})
 					.then(() => this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
 			},
 			navigateToDefaultCategoryIfNone() {

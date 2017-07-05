@@ -11,6 +11,7 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
 			<div class="scrollable-main-container">
+				<wnl-slides-carousel></wnl-slides-carousel>
 				<wnl-qna-collection></wnl-qna-collection>
 			</div>
 		</div>
@@ -42,6 +43,7 @@
 	import MainNav from 'js/components/MainNav'
 	import QnaCollection from 'js/components/collections/QnaCollection'
 	import QuizCollection from 'js/components/collections/QuizCollection'
+	import SlidesCarousel from 'js/components/collections/SlidesCarousel'
 	import { resource } from 'js/utils/config'
 	import navigation from 'js/services/navigation'
 
@@ -52,7 +54,8 @@
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-main-nav': MainNav,
 			'wnl-qna-collection': QnaCollection,
-			'wnl-quiz-collection': QuizCollection
+			'wnl-quiz-collection': QuizCollection,
+			'wnl-slides-carousel': SlidesCarousel
 		},
 		data() {
 			return {

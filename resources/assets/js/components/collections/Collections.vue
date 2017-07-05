@@ -54,6 +54,11 @@
 			'wnl-qna-collection': QnaCollection,
 			'wnl-quiz-collection': QuizCollection
 		},
+		data() {
+			return {
+				routeName: 'collections-categories'
+			}
+		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds']),
@@ -84,7 +89,7 @@
 				return navigation.composeItem({
 					text: childCategory.name,
 					itemClass: 'has-icon',
-					routeName: 'collections-categories',
+					routeName: this.routeName,
 					routeParams: {
 						categoryName: childCategory.name,
 					},
@@ -95,12 +100,22 @@
 			setupContentForCategory() {
 				this.fetchQuestionsCollection(this.quizQuestionsIds)
 					.then(() => this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+			},
+			navigateToDefaultCategoryIfNone() {
+				if (!this.categoryName) {
+					const firstCategory = this.categories[0].categories[0];
+
+					this.$router.replace({name: this.routeName, params: {
+						categoryName: firstCategory.name
+					}})
+				}
 			}
 		},
 
 		mounted() {
 			this.fetchCategories()
 				.then(this.fetchReactions)
+				.then(this.navigateToDefaultCategoryIfNone)
 				.then(this.setupContentForCategory)
 		},
 		watch: {

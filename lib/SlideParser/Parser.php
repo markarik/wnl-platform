@@ -36,6 +36,8 @@ class Parser
 	protected $courseTags;
 	protected $categoryModels = [];
 	protected $courseModels = [];
+	protected $lessonTag;
+	protected $groupTag;
 
 	/**
 	 * Parser constructor.
@@ -70,6 +72,8 @@ class Parser
 		$slides = $this->matchSlides($fileContents);
 		Log::debug('Parsing...');
 		$names = [];
+		$slideshowTag = Tag::firstOrCreate(['name' => 'Prezentacja']);
+
 		foreach ($slides as $currentSlide => $slideHtml) {
 			$iteration++;
 
@@ -103,6 +107,7 @@ class Parser
 						'course_id' => 1,
 					]);
 					$this->courseModels['group'] = $group;
+					$this->groupTag = Tag::firstOrCreate(['name' => $group->name]);
 				}
 
 				if ($courseTag['name'] == 'lesson') {
@@ -110,11 +115,14 @@ class Parser
 						'name'     => $courseTag['value'],
 						'group_id' => $this->courseModels['group']->id,
 					]);
+					$this->lessonTag = Tag::firstOrCreate(['name' => $lesson->name]);
+
 					$slideshow = Slideshow::create([
 						'background' => $this->getBackground($fileContents),
 					]);
 					$orderNumber = 0;
 					$this->courseModels['slideshow'] = $slideshow;
+
 					$this->courseModels['screen'] = $lesson->screens()->create([
 						'type' => 'slideshow',
 						'name' => 'Prezentacja',
@@ -127,15 +135,9 @@ class Parser
 							],
 						],
 					]);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => $lesson->name])
-					);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => $group->name])
-					);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => 'Prezentacja'])
-					);
+					$this->courseModels['screen']->tags()->attach($slideshowTag);
+					$this->courseModels['screen']->tags()->attach($this->lessonTag);
+					$this->courseModels['screen']->tags()->attach($this->groupTag);
 				}
 
 				if ($courseTag['name'] == 'section') {
@@ -145,6 +147,13 @@ class Parser
 					]);
 					$this->courseModels['section'] = $section;
 				}
+			}
+
+			if ($this->lessonTag) {
+				$slide->tags()->attach($this->lessonTag);
+			}
+			if ($this->groupTag) {
+				$slide->tags()->attach($this->groupTag);
 			}
 			if (array_key_exists('slideshow', $this->courseModels)) {
 				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);

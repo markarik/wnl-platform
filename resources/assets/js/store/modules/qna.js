@@ -63,6 +63,8 @@ function _handleGetQuestionsSuccess(commit, {data}) {
 		commit(types.UPDATE_INCLUDED, data.included)
 		destroy(data, 'included')
 		commit(types.QNA_SET_QUESTIONS, data)
+	} else {
+		commit(types.QNA_DESTROY)
 	}
 	commit(types.IS_LOADING, false)
 }
@@ -386,6 +388,8 @@ const actions = {
 	},
 
 	fetchQuestionsByTagName({commit}, {tagName, ids}) {
+		commit(types.IS_LOADING, true)
+
 		return new Promise((resolve, reject) => {
 			_getQuestionsByTagName(tagName, ids)
 				.then((response) => {

@@ -92,13 +92,21 @@
 					iconTitle: 'Obecna lekcja'
 				})
 			},
+			setupContentForCategory() {
+				this.fetchQuestionsCollection(this.quizQuestionsIds)
+					.then(() => this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+			}
 		},
 
 		mounted() {
 			this.fetchCategories()
 				.then(this.fetchReactions)
-				.then(() => this.fetchQuestionsCollection(this.quizQuestionsIds))
-				.then(() => this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
-		}
+				.then(this.setupContentForCategory)
+		},
+		watch: {
+			'$route' () {
+				this.setupContentForCategory()
+			}
+		},
 	}
 </script>

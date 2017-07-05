@@ -7,6 +7,7 @@ use App\Models\Tag;
 use App\Models\Category;
 use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
+use App\Models\Screen;
 
 
 class CategoriesTags extends Command
@@ -56,6 +57,7 @@ class CategoriesTags extends Command
 
 				foreach($qnasWithTag as $qna) {
 					if (!$qna->tags->contains($createdTag)) {
+						echo(sprintf("Adding tag: %s to qnaQuestion with id: %s \n", $createdTag->name, $qna->id));
 						$qna->tags()->save($createdTag);
 					}
 				}
@@ -66,7 +68,19 @@ class CategoriesTags extends Command
 
 				foreach($quizQuestionsWithTag as $quizQuestion) {
 					if (!$quizQuestion->tags->contains($createdTag)) {
+						echo(sprintf("Adding tag: %s to quizQuestion with id: %s \n", $createdTag->name, $quizQuestion->id));
 						$quizQuestion->tags()->save($createdTag);
+					}
+				}
+
+				$screensWithTags = Screen::whereHas('tags', function($tag) use ($createdTag) {
+					$tag->where('name', 'like', "$createdTag->name%");
+				})->get();
+
+				foreach($screensWithTags as $screen) {
+					if (!$screen->tags->contains($createdTag)) {
+						echo(sprintf("Adding tag: %s to screen with id: %s \n", $createdTag->name, $screen->id));
+						$screen->tags()->save($createdTag);
 					}
 				}
 			}

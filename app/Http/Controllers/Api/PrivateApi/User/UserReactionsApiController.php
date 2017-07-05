@@ -14,7 +14,6 @@ class UserReactionsApiController extends ApiController
 	public function getReactions($id, $type = null)
 	{
 		$user = User::fetch($id);
-
 		if (!$user) {
 			return $this->respondNotFound();
 		}
@@ -35,7 +34,7 @@ class UserReactionsApiController extends ApiController
 		$resource = new Collection($reactables, new ReactableTransformer, 'user_notifications');
 		$data = $this->fractal->createData($resource)->toArray();
 
-		return $this->respondOk($data);
+		return $this->json(['reactions' => $data]);
 	}
 }
 

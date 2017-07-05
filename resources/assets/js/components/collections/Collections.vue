@@ -98,8 +98,10 @@
 				})
 			},
 			setupContentForCategory() {
-				this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds})
-					.then(() => this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+				return Promise.all([
+					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
+					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds})
+				])
 			},
 			navigateToDefaultCategoryIfNone() {
 				if (!this.categoryName) {

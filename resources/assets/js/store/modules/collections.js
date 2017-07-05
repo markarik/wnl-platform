@@ -58,15 +58,15 @@ const mutations = {
 
 const actions = {
 	fetchReactions({commit}) {
-		return _getReactions().then(response => {
-			if (response.data.length === 0) {
+		return _getReactions().then(({data: { reactions }}) => {
+			if (reactions === 0) {
 				commit(types.IS_LOADING, false)
 				return false
 			}
 
 			_.each(resourcesMap, (model, resource) => {commit(types.COLLECTIONS_SET_REACTABLE, {
 					resource,
-					items: response.data.filter((item) => item.reactable_type === model)
+					items: reactions.filter((item) => item.reactable_type === model)
 				})
 			})
 			commit(types.IS_LOADING, false)

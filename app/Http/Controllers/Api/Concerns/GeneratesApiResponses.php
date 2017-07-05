@@ -83,7 +83,7 @@ trait GeneratesApiResponses
 			->json();
 	}
 
-	protected function respondNotFound()
+	protected function respondNotFound($message = null)
 	{
 		return $this
 			->setMessage($message ?? 'Not Found')

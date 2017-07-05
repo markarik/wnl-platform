@@ -123,6 +123,51 @@ function getInitialState() {
 	}
 }
 
+function sortByTime(questionsList) {
+	return _.reverse(
+		_.sortBy(
+			_.values(questionsList),
+			(question) => question.upvote.created_at
+		)
+	)
+}
+
+function sortByVotes(questionsList) {
+	return _.reverse(
+		_.sortBy(
+			_.values(questionsList),
+			(question) => question.upvote.count
+		)
+	)
+}
+
+function sortByNoAnswer(questionsList) {
+	return _.reverse(
+		_.sortBy(
+			_.values(
+				_.filter(questionsList, (question) => {
+					return typeof question.qna_answers === 'undefined'
+				})
+			),
+			(question) => question.upvote.created_at
+		)
+	)
+}
+
+
+function getUsersQuestions(questionsList, userId) {
+	return _.reverse(
+		_.sortBy(
+			_.values(
+				_.filter(questionsList, (question) => {
+					return question.profiles[0] == userId
+				})
+			),
+			(question) => question.upvote.created_at
+		)
+	)
+}
+
 const namespaced = true
 
 // Initial state
@@ -133,45 +178,18 @@ const getters = {
 	...reactionsGetters,
 	loading: state => state.loading,
 	currentSorting: state => state.sorting,
-	questionsByVotes: state => {
-		return _.reverse(
-			_.sortBy(
-				_.values(state.qna_questions),
-				(question) => question.upvote.count
-			)
-		)
-	},
-	questionsByTime: state => {
-		return _.reverse(
-			_.sortBy(
-				_.values(state.qna_questions),
-				(question) => question.upvote.created_at
-			)
-		)
-	},
-	questionsNoAnswer: state => {
-		return _.reverse(
-			_.sortBy(
-				_.values(
-					_.filter(state.qna_questions, (question) => {
-						return typeof question.qna_answers === 'undefined'
-					})
-				),
-				(question) => question.upvote.created_at
-			)
-		)
-	},
-	questionsMy: (state, getters, rootState, rootGetters) => {
-		return _.reverse(
-			_.sortBy(
-				_.values(
-					_.filter(state.qna_questions, (question) => {
-						return question.profiles[0] == rootGetters.currentUserId
-					})
-				),
-				(question) => question.upvote.created_at
-			)
-		)
+	questions: state => state.qna_questions,
+	getSortedQuestions: (state, getters, rootState, rootGetters) => (sorting, list) => {
+		switch (sorting) {
+			case 'latest':
+				return sortByTime(list)
+			case 'no-answer':
+				return sortByNoAnswer(list)
+			case 'my':
+				return getUsersQuestions(list, rootGetters.currentUserId)
+			default:
+				return sortByVotes(list)
+		}
 	},
 
 	// Resources
@@ -322,10 +340,11 @@ const actions = {
 	changeSorting({commit}, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting)
 	},
-	fetchQuestions({commit}, tags) {
+	fetchQuestions({commit}, {tags, sorting}) {
 		commit(types.IS_LOADING, true)
-		// TODO: Error when lessonId is not defined
+		sorting && commit(types.QNA_CHANGE_SORTING, sorting)
 
+		// TODO: Error when lessonId is not defined
 		return new Promise((resolve, reject) => {
 			_getQuestions(tags)
 				.then((response) => {

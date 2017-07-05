@@ -128,10 +128,8 @@
 			...mapGetters('qna', [
 				'loading',
 				'currentSorting',
-				'questionsByTime',
-				'questionsNoAnswer',
-				'questionsByVotes',
-				'questionsMy'
+				'questions',
+				'getSortedQuestions'
 			]),
 			howManyQuestions() {
 				return this.questionsList.length || 0
@@ -146,17 +144,6 @@
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'fetchLatestQuestions', 'destroyQna']),
-			getSortedQuestions(sorting, list) {
-				if (sorting === 'latest') {
-					return this.questionsByTime;
-				} else if (sorting === 'no-answer') {
-					return this.questionsNoAnswer;
-				} else if (sorting === "my") {
-					return this.questionsMy;
-				} else {
-					return this.questionsByVotes;
-				}
-			}
 		},
 		mounted() {
 			new Promise((resolve, rejected) => {
@@ -166,7 +153,7 @@
 				}
 
 				if (this.tags) {
-					this.fetchQuestions(this.tags).then(() => {
+					this.fetchQuestions({tags: this.tags}).then(() => {
 						this.ready = true
 						resolve()
 					}).catch(error => $wnl.logger.error(error))
@@ -182,7 +169,7 @@
 					}).catch(error => $wnl.logger.error(error))
 				}
 			}).then(() => {
-				this.questionsList = this.getSortedQuestions(this.currentSorting);
+				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
 			})
 		},
 		beforeDestroy() {
@@ -193,13 +180,16 @@
 				if (newValue !== oldValue) {
 					this.ready = false
 					this.destroyQna()
-					this.fetchQuestions(newValue).then(() => {
+					this.fetchQuestions({tags: newValue}).then(() => {
 						this.ready = true
 					})
 				}
 			},
-			'currentSorting' (newValue, oldValue) {
-				this.questionsList = this.getSortedQuestions(newValue);
+			'currentSorting' (newValue) {
+				this.questionsList = this.getSortedQuestions(newValue, this.questions);
+			},
+			'questions' (newValue) {
+				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
 			}
 		}
 	}

@@ -81,7 +81,7 @@
 			...mapActions('qna', ['fetchQuestions']),
 			onSubmitSuccess() {
 				this.$emit('submitSuccess')
-				this.fetchQuestions(this.tags)
+				this.fetchQuestions({tags: this.tags, sorting: 'latest'})
 			},
 		},
 	}

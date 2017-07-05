@@ -53,7 +53,7 @@
 
 <script>
 	import emoji from 'node-emoji'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	import Qna from 'js/components/qna/Qna'
 	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
@@ -84,6 +84,9 @@
 			'wnl-next-lesson': NextLesson,
 			'wnl-your-progress': YourProgress,
 		},
+		methods: {
+			...mapActions('qna', ['fetchLatestQuestions'])
+		},
 		beforeMount() {
 			if (this.isBeginning) {
 				this.$router.replace({
@@ -94,6 +97,9 @@
 					}
 				})
 			}
+		},
+		mounted() {
+			this.fetchLatestQuestions()
 		}
 	}
 </script>

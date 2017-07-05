@@ -46,7 +46,7 @@
 	import navigation from 'js/services/navigation'
 
 	export default {
-		props: ['courseId', 'caegoryName'],
+		props: ['courseId', 'categoryName'],
 		components: {
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
@@ -98,7 +98,7 @@
 			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(() => this.fetchQuestionsCollection(this.quizQuestionsIds))
-				.then(() => this.fetchQuestionsByTagName({tagName: categoryName, ids: this.qnaQuestionsIds}))
+				.then(() => this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
 		}
 	}
 </script>

@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<div class="qna-loader" v-if="!ready">
+		<div class="qna-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="wnl-qna" v-if="ready">
+		<div class="wnl-qna" v-if="!loading">
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
@@ -116,7 +116,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled', 'qnaList'],
+		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
 		data() {
 			return {
 				ready: false,
@@ -143,48 +143,15 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'fetchLatestQuestions', 'destroyQna']),
+			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			new Promise((resolve, rejected) => {
-				if (qnaList) {
-					this.ready = true;
-					return resolve();
-				}
-
-				if (this.tags) {
-					this.fetchQuestions({tags: this.tags}).then(() => {
-						this.ready = true
-						resolve()
-					}).catch(error => $wnl.logger.error(error))
-				} else if (this.ids) {
-					this.fetchQuestionsByIds(this.ids).then(() => {
-						this.ready = true
-						resolve()
-					}).catch(error => $wnl.logger.error(error))
-				} else {
-					this.fetchLatestQuestions(this.ids).then(() => {
-						this.ready = true
-						resolve()
-					}).catch(error => $wnl.logger.error(error))
-				}
-			}).then(() => {
-				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
-			})
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
 		},
 		beforeDestroy() {
 			this.destroyQna()
 		},
 		watch: {
-			'tags' (newValue, oldValue) {
-				if (newValue !== oldValue) {
-					this.ready = false
-					this.destroyQna()
-					this.fetchQuestions({tags: newValue}).then(() => {
-						this.ready = true
-					})
-				}
-			},
 			'currentSorting' (newValue) {
 				this.questionsList = this.getSortedQuestions(newValue, this.questions);
 			},

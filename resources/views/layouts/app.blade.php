@@ -23,9 +23,9 @@
 	<link href="{{ mix('css/emoji.css') }}" rel="stylesheet">
 
 	<!-- Scripts -->
-	<script src="https://use.fontawesome.com/c95376cac6.js" async></script>
-	<script src="https://use.typekit.net/hal1etr.js" async></script>
-	<script>try{Typekit.load({ async: true });}catch(e){}</script>
+	{{--<script src="https://use.fontawesome.com/c95376cac6.js" async></script>--}}
+	{{--<script src="https://use.typekit.net/hal1etr.js" async></script>--}}
+	{{--<script>try{Typekit.load({ async: true });}catch(e){}</script>--}}
 	<script>
 		window.Laravel = <?php echo json_encode([
 			'csrfToken' => csrf_token(),

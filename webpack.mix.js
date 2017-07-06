@@ -26,6 +26,8 @@ mix.sass('resources/assets/sass/slideshow.sass', 'public/css/slideshow.css')
 	.js('resources/assets/js/guest.js', 'public/js/guest.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
 	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js')
+	.copy('node_modules/font-awesome/fonts', 'public/fonts/font-awesome')
+	.copy('resources/assets/fonts/lato', 'public/fonts/lato')
 
 if (mix.config.inProduction) {
 	mix.version()

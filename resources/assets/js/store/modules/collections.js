@@ -98,9 +98,8 @@ const actions = {
 			order: {
 				id: 'desc',
 			},
-		}).then((response) => {
-			console.log('response...', response)
-			commit(types.COLLECTIONS_SET_SLIDES, response.data)
+		}).then(({data}) => {
+			commit(types.COLLECTIONS_SET_SLIDES, data)
 			commit(types.SLIDES_LOADING, false);
 		}).catch((error) => {
 			commit(types.SLIDES_LOADING, false);

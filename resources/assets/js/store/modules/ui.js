@@ -8,7 +8,8 @@ const state = {
 	isChatOpen: false,
 	isOverlayVisible: false,
 	overlays: {},
-	canShowChat: false
+	canShowChat: false,
+	isRightSideNavVisible: false
 }
 
 const layouts = {
@@ -41,6 +42,7 @@ const getters = {
 	isChatMounted: (state, getters) => getters.isLargeDesktop,
 	isChatVisible: (state, getters, rootState) => state.canShowChat && getters.isChatMounted ?
 		rootState.currentUser.settings["chat_on"] : state.isChatOpen,
+	isRightSideNavVisible: (state, getters) => state.isRightSideNavVisible,
 	isChatToggleVisible: (state, getters) => !getters.isMobile && !getters.isChatVisible,
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
 	canShowChat: state => state.canShowChat,
@@ -97,6 +99,15 @@ const mutations = {
 			destroy(state.overlays, payload.source)
 		}
 	},
+	[types.UI_TOGGLE_RIGHT_SIDE_NAV] (state) {
+		set(state, 'isRightSideNavVisible', !state.isRightSideNavVisible)
+	},
+	[types.UI_OPEN_RIGHT_SIDE_NAV] (state) {
+		set(state, 'isRightSideNavVisible', true)
+	},
+	[types.UI_CLOSE_RIGHT_SIDE_NAV] (state) {
+		set(state, 'isRightSideNavVisible', false)
+	}
 }
 
 // Actions
@@ -124,6 +135,15 @@ const actions = {
 	},
 	toggleOverlay({ commit }, payload) {
 		commit(types.UI_DISPLAY_OVERLAY, payload)
+	},
+	toggleRightSideNav({commit}) {
+		commit(types.UI_TOGGLE_RIGHT_SIDE_NAV)
+	},
+	openRightSideNav({commit}) {
+		commit(types.UI_OPEN_RIGHT_SIDE_NAV)
+	},
+	closeRightSideNav({commit}) {
+		commit(types.UI_CLOSE_RIGHT_SIDE_NAV)
 	}
 }
 

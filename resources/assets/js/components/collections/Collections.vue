@@ -16,12 +16,19 @@
 			</div>
 		</div>
 		<wnl-sidenav-slot
-			:isVisible="true"
+			:isVisible="isRightSideNavVisible"
 			:isDetached="false"
 		>
 			<wnl-quiz-collection></wnl-quiz-collection>
 		</wnl-sidenav-slot>
-
+		<div>
+			<span class="icon is-big" @click="toggleRightSideNav">
+				<i v-if="!isRightSideNavVisible" class="fa fa-chevron-left"></i>
+				<i v-else class="fa fa-chevron-right"></i>
+				<span v-if="!isRightSideNavVisible" >Pokaż Quiz</span>
+				<span v-else>Ukryj Quiz</span>
+			</span>
+		</div>
 	</div>
 </template>
 
@@ -63,13 +70,14 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isRightSideNavVisible', 'isLargeDesktop', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
 			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
 			...mapActions('qna', ['fetchQuestionsByTagName']),
+			...mapActions(['toggleRightSideNav', 'openRightSideNav', 'closeRightSideNav']),
 			getNavigation() {
 				let navigation = [];
 
@@ -115,9 +123,11 @@
 						categoryName: firstCategory.name
 					}})
 				}
-			}
+			},
 		},
-
+		beforeMount() {
+			this.isLargeDesktop && this.openRightSideNav()
+		},
 		mounted() {
 			this.fetchCategories()
 				.then(this.fetchReactions)
@@ -127,6 +137,9 @@
 		watch: {
 			'$route' () {
 				this.setupContentForCategory()
+			},
+			'currentLayout'() {
+				this.isLargeDesktop ? this.openRightSideNav() : this.closeRightSideNav()
 			}
 		},
 	}

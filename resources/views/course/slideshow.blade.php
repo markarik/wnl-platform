@@ -27,6 +27,9 @@
 	</style>
 </head>
 	<body>
+		<a class="bookmark">
+			Dodaj do zakładek
+		</a>
 		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
 			<div class="reveal image-custom-background">
 				<div class="slides">

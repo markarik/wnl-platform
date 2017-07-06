@@ -92,6 +92,17 @@ const getters = {
 		return state.presentables.length === 0 ? 0 : state.presentables[slideOrderNumber].id
 	},
 	slidesIds:    (state) => Object.keys(state.slides),
+	bookmarkedSlideNumbers: (state) => {
+		const slides = state.slides;
+
+		return Object.keys(slides)
+			.filter((slideIndex) => {
+				return slides[slideIndex].bookmark.hasReacted === true
+			})
+			.map((slideIndex) => {
+				return slides[slideIndex].order_number
+			})
+	},
 	findRegularSlide: (state, getters) => (slideNumber, direction) => {
 		let step = direction === 'previous' ? -1 : 1,
 			length = state.presentables.length

@@ -11,7 +11,6 @@
 						<a class="white" @click="changeBackground('white')"></a>
 						<a class="dark" @click="changeBackground('dark')"></a>
 						<a class="image" @click="changeBackground('image')"></a>
-						<wnl-bookmark :reactableId="currentSlideId" reactableResource="slides" module="slideshow" v-if="!isLoading && currentSlideId > 0"></wnl-bookmark>
 					</div>
 				</div>
 			</div>
@@ -133,7 +132,7 @@
 				isFauxFullscreen: false,
 				isFocused: false,
 				slideChanged: false,
-				currentSlideId: 0,
+				currentSlideId: 0
 			}
 		},
 		props: ['screenData', 'slide'],
@@ -147,6 +146,7 @@
 				'isFunctional',
 				'findRegularSlide',
 				'presentables',
+				'bookmarkedSlideNumbers'
 			]),
 			currentSlideIndex() {
 				 return this.currentSlideNumber - 1
@@ -173,11 +173,23 @@
 				if (this.loaded) {
 					return this.$el.getElementsByTagName('iframe')[0]
 				}
-			},
+			}
 		},
 		methods: {
-			...mapActions('slideshow', ['setup']),
+			...mapActions('slideshow', ['setup', 'setupPresentables']),
 			...mapActions(['toggleOverlay']),
+			toggleBookmarkedState(slideIndex, hasReacted) {
+				return this.$store.dispatch(`slideshow/setReaction`, {
+					hasReacted,
+					reactableResource: 'slides',
+					reactableId: this.getSlideId(slideIndex),
+					reaction: 'bookmark'
+				}).then(() => {
+					return this.setupPresentables(this.slideshowId);
+				}).then(() => {
+					this.child.call('setupBookmarks', this.bookmarkedSlideNumbers)
+				})
+			},
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
@@ -263,6 +275,11 @@
 						this.toggleFullscreen()
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
+						this.child.call('setupBookmarks', this.bookmarkedSlideNumbers);
+					} else if (event.data.value.name === 'bookmark') {
+						const slideData = event.data.value.data;
+
+						this.toggleBookmarkedState(slideData.index, slideData.isBookmarked);
 					}
 				}
 			},

@@ -11,7 +11,7 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
 			<div class="scrollable-main-container">
-				<wnl-slides-carousel></wnl-slides-carousel>
+				<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
 				<wnl-qna-collection></wnl-qna-collection>
 			</div>
 		</div>
@@ -104,7 +104,7 @@
 				return Promise.all([
 					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
 					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
-					this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
+					// this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
 				])
 			},
 			navigateToDefaultCategoryIfNone() {

@@ -64,10 +64,10 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds']),
+			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
 		},
 		methods: {
-			...mapActions('collections', ['fetchReactions', 'fetchCategories']),
+			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
 			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
 			...mapActions('qna', ['fetchQuestionsByTagName']),
 			getNavigation() {
@@ -103,7 +103,8 @@
 			setupContentForCategory() {
 				return Promise.all([
 					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
-					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds})
+					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
+					this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
 				])
 			},
 			navigateToDefaultCategoryIfNone() {

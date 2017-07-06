@@ -1,11 +1,13 @@
 <template>
 	<div>
 		<h3>Twoja kolekcja slajdów</h3>
-		<div class="slide">{{currentSlide}}</div>
-		<carousel class="wnl-carousel" :navigationEnabled="true" :perPage="7">
+		<div class="slide" v-html="currentSlide"></div>
+		<carousel class="wnl-carousel" :navigationEnabled="true" :perPage="4">
 			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in slides">
 				<div class="slide-thumb" @click="showSlide(index)">
-					{{slide}}
+					<h4>{{slide.header}}</h4>
+					<div class="slide-snippet" v-if="!slide.media" v-html="slide.snippet"></div>
+					<div class="slide-snippet" v-else>Obrazki</div>
 				</div>
 			</slide>
 		</carousel>
@@ -27,6 +29,7 @@
 		height: 100px;
 		background-color: lime;
 		border: 1px solid grey;
+		cursor: pointer;
 </style>
 
 <script>
@@ -45,11 +48,17 @@
 			}
 		},
 		computed: {
+			...mapGetters('collections', ['slidesContent']),
 			slides() {
-				return [1,2,3,4,5,6,7,8,9,10]
+				return this.slidesContent.map((slide) => ({
+					header: slide.snippet.header,
+					snippet: slide.snippet.content,
+					media: slide.snippet.media,
+					content: slide.content
+				}))
 			},
 			currentSlide() {
-				return this.slides[this.selectedSlide]
+				return this.slides[this.selectedSlide] && this.slides[this.selectedSlide].content
 			}
 		},
 		methods: {

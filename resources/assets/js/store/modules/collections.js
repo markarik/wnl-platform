@@ -14,7 +14,8 @@ function getInitialState() {
 		qna_answers: [],
 		quiz_questions: [],
 		slides: [],
-		categories: []
+		categories: [],
+		slidesContent: []
 	}
 }
 
@@ -34,8 +35,9 @@ const getters = {
 	qnaQuestionsIds: (state) => state.qna_questions.map(question => question.reactable_id),
 	qnaAnswersIds: (state) => state.qna_answers,
 	quizQuestionsIds: (state) => state.quiz_questions.map(question => question.reactable_id),
-	slides: (state) => state.slides,
-	categories: (state) => state.categories
+	slidesIds: (state) => state.slides.map(slide => slide.reactable_id),
+	categories: (state) => state.categories,
+	slidesContent: (state) => state.slidesContent
 }
 
 const mutations = {
@@ -53,7 +55,13 @@ const mutations = {
 	},
 	[types.COLLECTIONS_SET_CATEGORIES] (state, categories) {
 		set(state, 'categories', categories)
-	}
+	},
+	[types.SLIDES_LOADING] (state, isLoading) {
+		set(state, 'slidesLoaded', !isLoading)
+	},
+	[types.COLLECTIONS_SET_SLIDES] (state, slides) {
+		set(state, 'slidesContent', slides)
+	},
 }
 
 const actions = {
@@ -75,6 +83,28 @@ const actions = {
 	fetchCategories({commit}) {
 		return axios.get(getApiUrl('categories/all'))
 			.then(({data: categories}) => commit(types.COLLECTIONS_SET_CATEGORIES, categories));
+	},
+	fetchSlidesByTagName({commit}, {tagName, ids}) {
+		commit(types.SLIDES_LOADING, true);
+		return axios.post(getApiUrl('slides/.search'), {
+			query: {
+				whereHas: {
+					tags: {
+						where: [['tags.name', '=', tagName]]
+					}
+				},
+				whereIn: ['id', ids],
+			},
+			order: {
+				id: 'desc',
+			},
+		}).then((response) => {
+			console.log('response...', response)
+			commit(types.COLLECTIONS_SET_SLIDES, response.data)
+			commit(types.SLIDES_LOADING, false);
+		}).catch((error) => {
+			commit(types.SLIDES_LOADING, false);
+		})
 	}
 }
 

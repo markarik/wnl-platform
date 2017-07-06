@@ -61,15 +61,23 @@ $border-color: $color-inactive-gray
 			background-color: $color-ocean-blue
 
 .bookmark
+	align-items: center
 	cursor: pointer
-	right: 20px
+	display: flex
+	flex-direction: column
 	position: absolute
+	right: 20px
 	top: 20px
 	z-index: 1
 
-	img
-		height: 40px
-		width: 40px
+.bookmark-image
+	height: 18px
+	width: 18px
+
+.bookmark-text
+	color: #11afb2
+	font-size: 12px
+	margin-top: 3px
 
 .slideshow-annotations
 	background: $annotations-background

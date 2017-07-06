@@ -17,6 +17,7 @@ const $annotationsCounters  = $('.annotations-count')
 const $toggleAnnotations    = $('.toggle-annotations')
 const $toggleFullscreen     = $('.toggle-fullscreen')
 const bookmarkElement       = document.querySelector('.bookmark')
+const bookmarkText          = document.querySelector('.bookmark-text')
 
 let isSavingBookmark = false
 let bookmarkedSlideNumbers = [];
@@ -223,10 +224,10 @@ function setBookmarkedState(currentSlideNumber) {
 
 	if (bookmarkedSlideNumbers.indexOf(currentSlideNumber) > -1 ) {
 		bookmarkElement.classList.add(bookmarkedClassname);
-		bookmarkElement.innerHTML = "Usuń z zakładek";
+		bookmarkText.innerHTML = "Usuń z zakładek";
 	} else {
 		bookmarkElement.classList.remove(bookmarkedClassname);
-		bookmarkElement.innerHTML = "Dodaj do zakładek";
+		bookmarkText.innerHTML = "Dodaj do zakładek";
 	}
 }
 

@@ -1,21 +1,25 @@
 <template>
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
-		<p class="strong">Cześć!</p>
-		<p>Większość z Was zakończyła już pierwszy tydzień nauki z kursem "Więcej niż LEK"! Usłyszeliśmy od Was wiele dobrych słów na temat kursu, oraz wiele fantastycznych, krytycznych uwag. Wszystkie bardzo pomagają nam każdego dnia poprawiać jakość kursu i podnosić jego wartość dla Was. Jednak im więcej będziemy mieli wskazówek, tym większa szansa, że kurs będzie ewoluował w dobrym kierunku.</p>
+		<p class="strong">Cześć {{currentUserName}}!</p>
+		<p>Już w tę sobotę odbędą się pierwsze warsztaty ze specjalistą w ramach kursu "Więcej niż LEK"! Pan <strong>dr&nbsp;hab.&nbsp;n.&nbsp;med.&nbsp;Mariusz&nbsp;Puszczewicz</strong> przygotowuje oczywiście własny program warsztatów, natomiast do dziś możesz zgłaszać też zagadnienia, na których omówieniu zależy Ci najbardziej. :)</p>
 
-		<p>Dlatego prosimy o odpowiedzenie na <strong>10 krótkich pytań</strong>, które pozwolą nam trafniej ocenić, jak możemy odpowiedzieć na Wasze potrzeby (zajmie Ci to najwyżej 5 minut). :)</p>
+		<p>Zajrzyj na lekcję Warsztaty i w systemie pytań i odpowiedzi na ekranie Interna, zgłoś wybrane przez Ciebie tematy. To wyjątkowa szansa uzyskania wyczerpującej odpowiedzi od wyjątkowego specjalisty! Do zobaczenia! :)</p>
 
 		<p class="has-text-centered">
-			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/o9HtgPTtLbpABHRo2">Wypełnij krótką ankietę</a>
+			<a class="button is-primary is-outlined" href="https://platforma.wiecejnizlek.pl/app/courses/1/lessons/17/screens/97">
+				Przejdź do warsztatów z Interny
+			</a>
 		</p>
 	</div>
 </template>
 
 <script>
 	import store from 'js/services/messagesStore'
+	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = ''
+	const CURRENT_NEWS = 'workshops-deadline'
+	const REQUIRED_ROLE = 'workshop-participant'
 
 	export default {
 		name: 'DashboardNews',
@@ -25,6 +29,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['currentUserName', 'hasRole']),
 			newsStoreKey() {
 				return `seen-dashboard-news-${CURRENT_NEWS}`
 			}
@@ -36,7 +41,10 @@
 			},
 		},
 		mounted() {
-			if (CURRENT_NEWS !== '' && !store.get(this.newsStoreKey)) {
+			if (CURRENT_NEWS !== '' &&
+				!store.get(this.newsStoreKey) &&
+				(REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE))
+			) {
 				this.showNews = true
 			}
 		},

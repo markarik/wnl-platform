@@ -76,7 +76,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isLargeDesktop', 'isSidenavOpen', 'currentLayout']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
 			isSlidesPaneVisible() {
 				return this.isLargeDesktop ? this.selectedPanes.includes(this.slides) : this.selectedPane === this.slides
@@ -128,7 +128,7 @@
 				])
 			},
 			navigateToDefaultCategoryIfNone() {
-				if (!this.isSidenavOpen && !this.categoryName) {
+				if (!this.isTouchScreen && !this.categoryName) {
 					const firstCategory = this.categories[0].categories[0];
 
 					this.$router.replace({name: this.routeName, params: {

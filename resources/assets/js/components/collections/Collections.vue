@@ -26,11 +26,11 @@
 						</div>
 					</div>
 					<div class="collections-controls">
-						<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel)}"  :key="panel" @click="togglePanel(panel)">
+						<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"  :key="panel" @click="togglePanel(panel)">
 							{{name}}
-							<span class="icon is-small">
+							<!-- <span class="icon is-small">
 								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-							</span>
+							</span> -->
 						</a>
 					</div>
 				</div>
@@ -76,7 +76,7 @@
 		align-items: center
 		display: flex
 		flex-wrap: wrap
-		margin: $margin-base 0
+		margin-bottom: $margin-base
 		user-select: none
 
 		.panel-toggle
@@ -85,7 +85,7 @@
 			color: $color-gray-dimmed
 			font-size: $font-size-minus-2
 			font-weight: $font-weight-bold
-			margin-right: $margin-small
+			margin: $margin-base $margin-small 0 0
 			padding: $margin-small
 			text-transform: uppercase
 			transition: background $transition-length-base
@@ -94,9 +94,12 @@
 				background: $color-light-gray
 				transition: background $transition-length-base
 
+			&:last-child
+				margin-right: 0
+
 			&.is-active
 				background: $color-ocean-blue
-				border: 1px solid $color-ocean-blue
+				border-color: $color-ocean-blue
 				color: $color-white
 				opacity: 1
 				transition: opacity $transition-length-base
@@ -105,8 +108,8 @@
 					opacity: 0.5
 					transition: opacity $transition-length-base
 
-			&:last-child
-				margin-right: 0
+			&.is-single
+				font-size: $font-size-minus-3
 
 			.icon
 				margin-left: $margin-tiny
@@ -119,6 +122,7 @@
 </style>
 
 <script>
+	import { pull } from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
 	import Sidenav from 'js/components/global/Sidenav'
@@ -161,7 +165,7 @@
 			},
 			panels() {
 				return {
-					slides: 'Prezentacja',
+					slides: 'Pytania i odpowiedzi',
 					quiz: 'Pytania kontrolne',
 				}
 			},
@@ -229,6 +233,11 @@
 					this.activePanels.splice(index, 1)
 				} else if (index === -1) {
 					this.activePanels.push(panel)
+				} else {
+					let other = pull(Object.keys(this.panels), panel)
+					if (other.length > 0) {
+						this.activePanels = [other[0]]
+					}
 				}
 			},
 			isPanelActive(panel) {

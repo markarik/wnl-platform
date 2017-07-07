@@ -9,7 +9,6 @@ const state = {
 	isOverlayVisible: false,
 	overlays: {},
 	canShowChat: false,
-	isRightSideNavVisible: false
 }
 
 export const layouts = {

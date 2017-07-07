@@ -10,6 +10,7 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
+			<h3>Jesteś w {{rootCategoryName}} - {{categoryName}}</h3>
 			<div>
 				<input type="checkbox" name="slides" v-model="selectedPanes" value="slides" v-if="isLargeDesktop">
 				<input type="radio" name="slides" v-model="selectedPane" value="slides" v-else>
@@ -56,7 +57,7 @@
 	import { layouts } from 'js/store/modules/ui'
 
 	export default {
-		props: ['courseId', 'categoryName'],
+		props: ['categoryName', 'rootCategoryName'],
 		components: {
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
@@ -75,7 +76,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'currentLayout', 'isLargeDesktop']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isLargeDesktop', 'isSidenavOpen', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
 			isSlidesPaneVisible() {
 				return this.isLargeDesktop ? this.selectedPanes.includes(this.slides) : this.selectedPane === this.slides
@@ -91,9 +92,9 @@
 			getNavigation() {
 				let navigation = [];
 
-				this.categories.forEach(({name, id, categories: childCategories}) => {
-					const groupItem = this.getGroupItem({name});
-					const childItems = childCategories.map(({name, id}) => this.getChildCategory({name, id}));
+				this.categories.forEach((rootCategory) => {
+					const groupItem = this.getGroupItem({name: rootCategory.name});
+					const childItems = rootCategory.categories.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
 
 					navigation = [...navigation, groupItem, ...childItems]
 				});
@@ -113,24 +114,26 @@
 					routeName: this.routeName,
 					routeParams: {
 						categoryName: childCategory.name,
+						rootCategoryName: childCategory.parent
 					},
 					iconClass: 'fa-graduation-cap',
 					iconTitle: 'Obecna lekcja'
 				})
 			},
 			setupContentForCategory() {
-				return Promise.all([
+				return this.categoryName && Promise.all([
 					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
 					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
 					// this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
 				])
 			},
 			navigateToDefaultCategoryIfNone() {
-				if (!this.categoryName) {
+				if (!this.isSidenavOpen && !this.categoryName) {
 					const firstCategory = this.categories[0].categories[0];
 
 					this.$router.replace({name: this.routeName, params: {
-						categoryName: firstCategory.name
+						categoryName: firstCategory.name,
+						rootCategoryName: this.categories[0].name
 					}})
 				}
 			},
@@ -143,15 +146,15 @@
 			}
 		},
 		mounted() {
+			this.adjustPanes()
 			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(this.navigateToDefaultCategoryIfNone)
 				.then(this.setupContentForCategory)
-			this.adjustPanes()
 		},
 		watch: {
 			'$route' () {
-				this.setupContentForCategory()
+				this.categoryName && this.setupContentForCategory()
 			},
 			'currentLayout' () {
 				this.adjustPanes()

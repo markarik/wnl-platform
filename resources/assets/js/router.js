@@ -89,7 +89,7 @@ let routes = [
 			{
 				props: true,
 				name: 'collections-categories',
-				path: 'categories/:categoryName',
+				path: 'categories/:rootCategoryName/:categoryName',
 				component: require('js/components/collections/Collections.vue')
 			},
 		]

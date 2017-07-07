@@ -11,9 +11,11 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
 			<div>
-				<input type="checkbox" name="slides" v-model="selectedPanes" value="slides">
+				<input type="checkbox" name="slides" v-model="selectedPanes" value="slides" v-if="isLargeDesktop">
+				<input type="radio" name="slides" v-model="selectedPane" value="slides" v-else>
 				<label for="slides">Slajdy / Pytania i Odpowiedzi</label>
-				<input type="checkbox" name="quiz" v-model="selectedPanes" value="quiz">
+				<input type="checkbox" name="quiz" v-model="selectedPanes" value="quiz" v-if="isLargeDesktop">
+				<input type="radio" name="slides" v-model="selectedPane" value="quiz" v-else>
 				<label for="quiz">Pytania Kontrolne</label>
 			</div>
 			<div class="scrollable-main-container">
@@ -34,11 +36,10 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-sidenav
-		padding: $margin-small
+	.wnl-app-layout-main
+		width: 100%;
+		max-width: initial;
 
-	.wnl-middle
-		border-right: $border-light-gray
 </style>
 
 <script>
@@ -52,6 +53,7 @@
 	import SlidesCarousel from 'js/components/collections/SlidesCarousel'
 	import { resource } from 'js/utils/config'
 	import navigation from 'js/services/navigation'
+	import { layouts } from 'js/store/modules/ui'
 
 	export default {
 		props: ['courseId', 'categoryName'],
@@ -66,26 +68,20 @@
 		data() {
 			return {
 				routeName: 'collections-categories',
-				selectedPanes: ['quiz', 'slides'],
+				selectedPanes: [this.slides, this.quiz],
+				selectedPane: this.slides,
 				slides: 'slides',
-				quiz: 'quiz'
+				quiz: 'quiz',
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'currentLayout', 'isLargeDesktop']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
-			centerPane() {
-				if (this.selectedPanes.includes('slides')) {
-					return 'slides'
-				} else {
-					return 'quiz'
-				}
-			},
 			isSlidesPaneVisible() {
-				return this.selectedPanes.includes('slides')
+				return this.isLargeDesktop ? this.selectedPanes.includes(this.slides) : this.selectedPane === this.slides
 			},
 			isQuizPaneVisible() {
-				return this.selectedPanes.includes('quiz')
+				return this.isLargeDesktop ? this.selectedPanes.includes(this.quiz) : this.selectedPane === this.quiz
 			}
 		},
 		methods: {
@@ -138,17 +134,28 @@
 					}})
 				}
 			},
+			adjustPanes() {
+				if (!this.isLargeDesktop) {
+					this.selectedPane = this.selectedPanes.length === 1 ? this.selectedPanes[0] : this.slides
+				} else {
+					this.selectedPanes = [this.slides, this.quiz]
+				}
+			}
 		},
 		mounted() {
 			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(this.navigateToDefaultCategoryIfNone)
 				.then(this.setupContentForCategory)
+			this.adjustPanes()
 		},
 		watch: {
 			'$route' () {
 				this.setupContentForCategory()
 			},
+			'currentLayout' () {
+				this.adjustPanes()
+			}
 		},
 	}
 </script>

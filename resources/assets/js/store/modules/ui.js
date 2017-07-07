@@ -12,7 +12,7 @@ const state = {
 	isRightSideNavVisible: false
 }
 
-const layouts = {
+export const layouts = {
 	mobile: 'mobile',
 	tablet: 'tablet',
 	smallDesktop: 'small_screen',

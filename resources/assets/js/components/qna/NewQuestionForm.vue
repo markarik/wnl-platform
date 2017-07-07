@@ -84,5 +84,10 @@
 				this.fetchQuestionsByTags({tags: this.tags, sorting: 'latest'})
 			},
 		},
+		watch: {
+			'tags' (newValue) {
+				this.fetchQuestionsByTags({tags: newValue})
+			}
+		}
 	}
 </script>

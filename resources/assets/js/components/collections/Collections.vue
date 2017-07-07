@@ -158,7 +158,7 @@
 			},
 			'currentLayout' () {
 				this.adjustPanes()
-			}
+			},
 		},
 	}
 </script>

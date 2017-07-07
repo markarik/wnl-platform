@@ -50,5 +50,10 @@
 				.then(() => this.fetchQuestionsByTags({tags: this.tags}))
 				.catch(error => $wnl.logger.error(error))
 		},
+		watch: {
+			'tags' (newValue) {
+				this.fetchQuestionsByTags({tags: newValue})
+			}
+		}
 	}
 </script>

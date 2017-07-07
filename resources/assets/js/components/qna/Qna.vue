@@ -15,7 +15,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="level-right" v-if="!readOnly && tags">
+				<div class="level-right" v-if="!readOnly && tags && tags.length">
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>

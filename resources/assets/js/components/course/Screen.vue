@@ -68,8 +68,8 @@
 			this.showQna && this.fetchQuestionsByTags({tags: this.tags})
 		},
 		watch: {
-			'tags' (newValue) {
-				this.showQna && this.fetchQuestionsByTags({tags: newValue})
+			'screenId' (newValue) {
+				this.showQna && this.fetchQuestionsByTags({tags: this.tags})
 			}
 		}
 	}

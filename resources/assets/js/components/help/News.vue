@@ -68,7 +68,7 @@
 				<p><em>Zespół Więcej niż LEK</em></p>
 			</div>
 		</article>
-		<wnl-qna :tags="tags" reactionsDisabled="true"></wnl-qna>
+		<wnl-qna :tags="tags" v-if="isLoading" reactionsDisabled="true"></wnl-qna>
 	</div>
 </template>
 
@@ -88,6 +88,7 @@
 		data() {
 			return {
 				tags: [],
+				isLoading: true
 			}
 		},
 		methods: {
@@ -99,6 +100,9 @@
 			})
 				.then(response => this.tags = _.values(response.data))
 				.then(() => this.fetchQuestionsByTags({tags: this.tags}))
+				.then(() => {
+					this.isLoading = false
+				})
 				.catch(error => $wnl.logger.error(error))
 		},
 		watch: {

@@ -11,6 +11,11 @@
 @import "transitions";
 @import "./views/login";
 
+// Fonts
+@import "node_modules/font-awesome/scss/font-awesome";
+@import "fonts";
+
+
 // Layout
 $navbar-height: 3.5rem;
 $layout-left-max-width: 600px;

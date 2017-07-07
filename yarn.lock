@@ -2293,6 +2293,10 @@ follow-redirects@1.0.0:
   dependencies:
     debug "^2.2.0"
 
+font-awesome@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
+
 for-in@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -6341,6 +6345,10 @@ void-elements@^2.0.0:
 vue-add-globals@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/vue-add-globals/-/vue-add-globals-1.0.1.tgz#151f241426e70cbc790a1f31bb0f4435d7575efc"
+
+vue-carousel@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.6.4.tgz#318eea38850134232494b4810e6ac5d09453d578"
 
 vue-hot-reload-api@^2.0.1, vue-hot-reload-api@^2.1.0:
   version "2.1.0"

@@ -36,11 +36,11 @@
 				modifyingClass: 'is-success'
 			},
 			[STATE_WARNING]: {
-				message: 'Hmmm, chyba warto odrobinę przyspieszyć, aby nie zostać w tyle!',
+				message: 'Jesteś na dobrej drodze! Tak trzymaj, ucz się spokojnie, ale postaraj się trochę nadrobić materiał. :)',
 				modifyingClass: 'is-warning'
 			},
 			[STATE_DANGER]: {
-				message: 'O-o, trzeba się sprężać!',
+				message: 'Postaraj się nadrobić zaległości lub nie dopuść do ich powiększenia. :)',
 				modifyingClass: 'is-danger'
 			},
 		}

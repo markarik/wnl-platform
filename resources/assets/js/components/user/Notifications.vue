@@ -1,0 +1,133 @@
+<template>
+	<div class="wnl-dropdown">
+		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
+			<div class="flag">{{ unseenCount }}</div>
+			<span class="icon">
+				<i class="fa fa-bell"></i>
+			</span>
+		</div>
+		<transition name="fade">
+			<div class="box drawer" v-if="isActive">
+				<div class="level wnl-screen-title">
+					<strong>Powiadomienia</strong> <a class="link">Oznacz wszystkie jako przeczytane</a>
+				</div>
+
+				<div class="notification aligncenter" v-if="empty">
+					Nic tu nie ma ¯\_(ツ)_/¯
+				</div>
+				<div v-else class="container">
+					<component
+							v-for="(event, index) in notifications"
+							:is="eventComponent"
+							:event="event"
+							:key="index">
+					</component>
+				</div>
+
+			</div>
+		</transition>
+	</div>
+</template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.wnl-dropdown
+		height: 100%
+		min-height: 100%
+		position: relative
+
+	.flag
+		position: absolute
+		border-radius: 20%
+		font-size: $font-size-minus-4
+		background: $color-red
+		color: $color-white
+		padding: 1px 3px 1px 3px
+		top: 10px
+		right: 3px
+		border: thin solid white
+		line-height: 100%
+
+	.activator
+		align-items: center
+		color: $color-gray-dimmed
+		cursor: pointer
+		display: flex
+		height: 100%
+		justify-content: center
+		margin-left: -$margin-small
+		min-height: 100%
+		padding: 0 $margin-small
+		transition: background $transition-length-base
+
+		&:hover
+			background-color: $color-background-light-gray
+			transition: background $transition-length-base
+
+		&.is-active
+			background-color: $color-background-light-gray
+			color: $color-gray
+
+			.username
+				color: $color-gray
+				font-weight: $font-weight-regular
+
+		.icon
+			margin: 0 $margin-tiny
+
+	.drawer
+		right: 0
+		position: absolute
+		top: 95%
+		z-index: 100
+		width: 440px
+
+	.metadata,
+	.drawer-item
+		padding: $margin-small $margin-base
+		text-align: right
+		white-space: nowrap
+
+	.drawer-item
+		font-size: $font-size-minus-1
+
+		&:last-child
+			border: 0
+
+	.drawer-link,
+	.drawer-link.is-active
+		font-weight: $font-weight-regular
+</style>
+
+<script>
+	import {isDemo} from 'js/utils/env'
+	import {set} from 'vue'
+	import {mapGetters} from 'vuex'
+
+	export default {
+		name: 'wnl-user-notifications',
+		data() {
+			return {
+				isActive: false,
+			}
+		},
+		computed: {
+			...mapGetters('notifications', ['notifications', 'isLoading']),
+			empty() {
+				return !this.isLoading && _.size(this.notifications) === 0
+			},
+			unseenCount() {
+				return 3;
+			},
+			hasUnseen() {
+				return unseenCount > 0;
+			}
+		},
+		watch: {
+			'$route' (to, from) {
+				this.isActive = false
+			}
+		},
+	}
+</script>

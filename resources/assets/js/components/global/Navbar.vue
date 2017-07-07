@@ -13,6 +13,9 @@
 			</router-link>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
+			<wnl-user-notifications />
+		</div>
+		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown></wnl-user-dropdown>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-chat-toggle" v-if="canShowChatToggleInNavbar">
@@ -90,6 +93,7 @@
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Dropdown from 'js/components/user/Dropdown.vue'
+	import Notifications from 'js/components/user/Notifications.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -98,6 +102,7 @@
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-user-dropdown': Dropdown,
+			'wnl-user-notifications': Notifications,
 		},
 		computed: {
 			...mapGetters([

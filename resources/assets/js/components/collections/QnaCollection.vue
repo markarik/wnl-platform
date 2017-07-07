@@ -1,6 +1,10 @@
 <template>
 	<div class="collections-qna">
-		<h3>Twoja kolekcja pytań i odpowiedzi</h3>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item metadata">Twoje zapisane pytania i odpowiedzi</div>
+			</div>
+		</div>
 		<wnl-qna readOnly="true"></wnl-qna>
 	</div>
 </template>

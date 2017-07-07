@@ -5,11 +5,11 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="course-sidenav">
+			<aside class="collections-sidenav">
 				<wnl-sidenav :items="getNavigation()"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
+		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
 			<div class="scrollable-main-container">
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">
@@ -35,11 +35,11 @@
 					</div>
 				</div>
 				<div class="columns">
-					<div class="column is-two-thirds" v-show="isSlidesPanelVisible">
+					<div class="column" v-show="isSlidesPanelVisible">
 						<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
 						<wnl-qna-collection></wnl-qna-collection>
 					</div>
-					<div class="column is-one-third" v-show="isQuizPanelVisible">
+					<div class="column" v-show="isQuizPanelVisible">
 						<wnl-quiz-collection></wnl-quiz-collection>
 					</div>
 				</div>
@@ -58,6 +58,13 @@
 	.collections-header
 		border-bottom: $border-light-gray
 		display: block
+
+	.collections-sidenav
+		flex: 1
+		min-width: $sidenav-min-width
+		overflow: auto
+		padding: 7px 0
+		width: $sidenav-width
 
 	.collections-breadcrumbs
 		align-items: center
@@ -103,6 +110,12 @@
 
 			.icon
 				margin-left: $margin-tiny
+
+	.columns
+		justify-content: space-around
+
+	.column
+		max-width: $course-content-max-width
 </style>
 
 <script>
@@ -178,13 +191,13 @@
 			getChildCategory(childCategory) {
 				return navigation.composeItem({
 					text: childCategory.name,
-					itemClass: '',
+					itemClass: 'has-icon',
 					routeName: this.routeName,
 					routeParams: {
 						categoryName: childCategory.name,
 						rootCategoryName: childCategory.parent
 					},
-					iconClass: '',
+					iconClass: 'fa-angle-right',
 					iconTitle: 'Obecna lekcja'
 				})
 			},

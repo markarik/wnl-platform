@@ -1,13 +1,15 @@
 <template>
-	<div>
+	<div class="collections-quiz">
 		<h3>Twoja kolekcja pytań kontrolnych</h3>
-		<div class="notification margin top"><strong>Kolekcje już wkrótce będzie można łatwo przeszukiwać m.in.&nbsp;po&nbsp;przedmiotach oraz słowach kluczowych, więc będą służyć jako wartościowe narzędzie do powtórek!</strong> Dlatego zachęcamy Cię gorąco do zapisywania w&nbsp;Twoich Kolekcjach slajdów, pytań oraz pytań kontrolnych na bieżąco!</div>
 		<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
 
+	.collections-quiz
+		padding: $margin-base
 </style>
 
 <script>

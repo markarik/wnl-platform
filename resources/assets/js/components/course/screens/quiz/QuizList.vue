@@ -29,6 +29,7 @@
 	.wnl-quiz-list
 		border-top: $border-light-gray
 		margin: $margin-big 0
+		padding-top: $margin-base
 </style>
 
 <script>

@@ -1,9 +1,16 @@
 <template>
-	<div>
+	<div class="collections-qna">
 		<h3>Twoja kolekcja pytań i odpowiedzi</h3>
 		<wnl-qna readOnly="true"></wnl-qna>
 	</div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.collections-qna
+		padding: $margin-base 0
+</style>
 
 <script>
 	import {mapActions, mapGetters} from 'vuex'

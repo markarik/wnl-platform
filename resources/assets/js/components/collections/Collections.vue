@@ -10,41 +10,41 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
-			<div class="collections-header">
-				<div class="collections-breadcrumbs">
-					<div class="breadcrumb">
-						<span class="icon is-small"><i class="fa fa-star-o"></i></span>
-					</div>
-					<div class="breadcrumb" v-if="rootCategoryName">
-						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-						<span>{{rootCategoryName}}</span>
-					</div>
-					<div class="breadcrumb" v-if="categoryName">
-						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-						<span>{{categoryName}}</span>
-					</div>
-				</div>
-				<div>
-					<input type="checkbox" name="slides" v-model="selectedPanes" value="slides" v-if="isLargeDesktop">
-					<input type="radio" name="slides" v-model="selectedPane" value="slides" v-else>
-					<label for="slides">Slajdy / Pytania i Odpowiedzi</label>
-					<input type="checkbox" name="quiz" v-model="selectedPanes" value="quiz" v-if="isLargeDesktop">
-					<input type="radio" name="slides" v-model="selectedPane" value="quiz" v-else>
-					<label for="quiz">Pytania Kontrolne</label>
-				</div>
-			</div>
 			<div class="scrollable-main-container">
-				<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
-				<wnl-qna-collection v-show="isSlidesPaneVisible"></wnl-qna-collection>
-				<wnl-quiz-collection v-show="!isSlidesPaneVisible && isQuizPaneVisible"></wnl-quiz-collection>
+				<div class="collections-header">
+					<div class="collections-breadcrumbs">
+						<div class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-star-o"></i></span>
+						</div>
+						<div class="breadcrumb" v-if="rootCategoryName">
+							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span>{{rootCategoryName}}</span>
+						</div>
+						<div class="breadcrumb" v-if="categoryName">
+							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span>{{categoryName}}</span>
+						</div>
+					</div>
+					<div class="collections-controls">
+						<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel)}"  :key="panel" @click="togglePanel(panel)">
+							{{name}}
+							<span class="icon is-small">
+								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+							</span>
+						</a>
+					</div>
+				</div>
+				<div class="columns">
+					<div class="column is-two-thirds" v-show="isSlidesPanelVisible">
+						<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
+						<wnl-qna-collection></wnl-qna-collection>
+					</div>
+					<div class="column is-one-third" v-show="isQuizPanelVisible">
+						<wnl-quiz-collection></wnl-quiz-collection>
+					</div>
+				</div>
 			</div>
 		</div>
-		<wnl-sidenav-slot
-			:isVisible="isSlidesPaneVisible && isQuizPaneVisible"
-			:isDetached="false"
-		>
-			<wnl-quiz-collection></wnl-quiz-collection>
-		</wnl-sidenav-slot>
 	</div>
 </template>
 
@@ -56,14 +56,53 @@
 		max-width: initial
 
 	.collections-header
-		padding: $margin-base
+		border-bottom: $border-light-gray
+		display: block
 
 	.collections-breadcrumbs
+		align-items: center
 		color: $color-gray-dimmed
 		display: flex
+		margin-right: $margin-base
+
+	.collections-controls
 		align-items: center
+		display: flex
+		flex-wrap: wrap
+		margin: $margin-base 0
+		user-select: none
 
+		.panel-toggle
+			border: $border-light-gray
+			border-radius: $border-radius-small
+			color: $color-gray-dimmed
+			font-size: $font-size-minus-2
+			font-weight: $font-weight-bold
+			margin-right: $margin-small
+			padding: $margin-small
+			text-transform: uppercase
+			transition: background $transition-length-base
 
+			&:hover
+				background: $color-light-gray
+				transition: background $transition-length-base
+
+			&.is-active
+				background: $color-ocean-blue
+				border: 1px solid $color-ocean-blue
+				color: $color-white
+				opacity: 1
+				transition: opacity $transition-length-base
+
+				&:hover
+					opacity: 0.5
+					transition: opacity $transition-length-base
+
+			&:last-child
+				margin-right: 0
+
+			.icon
+				margin-left: $margin-tiny
 </style>
 
 <script>
@@ -91,36 +130,42 @@
 		},
 		data() {
 			return {
+				activePanels: ['slides', 'quiz'],
 				routeName: 'collections-categories',
-				selectedPanes: [this.slides, this.quiz],
-				selectedPane: this.slides,
-				slides: 'slides',
-				quiz: 'quiz',
 			}
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
-			isSlidesPaneVisible() {
-				return this.isLargeDesktop ? this.selectedPanes.includes(this.slides) : this.selectedPane === this.slides
+			isQuizPanelVisible() {
+				return this.isPanelActive('quiz')
 			},
-			isQuizPaneVisible() {
-				return this.isLargeDesktop ? this.selectedPanes.includes(this.quiz) : this.selectedPane === this.quiz
-			}
+			isSlidesPanelVisible() {
+				return this.isPanelActive('slides')
+			},
+			isSinglePanelView() {
+				return !this.isLargeDesktop
+			},
+			panels() {
+				return {
+					slides: 'Prezentacja',
+					quiz: 'Pytania kontrolne',
+				}
+			},
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
 			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
 			...mapActions('qna', ['fetchQuestionsByTagName']),
 			getNavigation() {
-				let navigation = [];
+				let navigation = []
 
 				this.categories.forEach((rootCategory) => {
 					const groupItem = this.getGroupItem({name: rootCategory.name});
 					const childItems = rootCategory.categories.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
 
 					navigation = [...navigation, groupItem, ...childItems]
-				});
+				})
 
 				return navigation
 			},
@@ -133,13 +178,13 @@
 			getChildCategory(childCategory) {
 				return navigation.composeItem({
 					text: childCategory.name,
-					itemClass: 'has-icon',
+					itemClass: '',
 					routeName: this.routeName,
 					routeParams: {
 						categoryName: childCategory.name,
 						rootCategoryName: childCategory.parent
 					},
-					iconClass: 'fa-graduation-cap',
+					iconClass: '',
 					iconTitle: 'Obecna lekcja'
 				})
 			},
@@ -160,16 +205,28 @@
 					}})
 				}
 			},
-			adjustPanes() {
-				if (!this.isLargeDesktop) {
-					this.selectedPane = this.selectedPanes.length === 1 ? this.selectedPanes[0] : this.slides
-				} else {
-					this.selectedPanes = [this.slides, this.quiz]
+			togglePanel(panel) {
+				if (this.isSinglePanelView) {
+					this.activePanels = [panel]
+					return
 				}
-			}
+
+				let index = this.activePanels.indexOf(panel)
+				if (index > -1 && this.activePanels.length > 1) {
+					this.activePanels.splice(index, 1)
+				} else if (index === -1) {
+					this.activePanels.push(panel)
+				}
+			},
+			isPanelActive(panel) {
+				if (this.isSinglePanelView) {
+					return this.activePanels[0] === panel
+				}
+
+				return this.activePanels.includes(panel)
+			},
 		},
 		mounted() {
-			this.adjustPanes()
 			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(this.navigateToDefaultCategoryIfNone)
@@ -178,9 +235,6 @@
 		watch: {
 			'$route' () {
 				this.categoryName && this.setupContentForCategory()
-			},
-			'currentLayout' () {
-				this.adjustPanes()
 			},
 		},
 	}

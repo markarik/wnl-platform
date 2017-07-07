@@ -10,25 +10,24 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
+			<div>
+				<input type="checkbox" name="slides" v-model="selectedPanes" value="slides">
+				<label for="slides">Slajdy / Pytania i Odpowiedzi</label>
+				<input type="checkbox" name="quiz" v-model="selectedPanes" value="quiz">
+				<label for="quiz">Pytania Kontrolne</label>
+			</div>
 			<div class="scrollable-main-container">
 				<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
-				<wnl-qna-collection></wnl-qna-collection>
+				<wnl-qna-collection v-show="isSlidesPaneVisible"></wnl-qna-collection>
+				<wnl-quiz-collection v-show="!isSlidesPaneVisible && isQuizPaneVisible"></wnl-quiz-collection>
 			</div>
 		</div>
 		<wnl-sidenav-slot
-			:isVisible="isRightSideNavVisible"
+			:isVisible="isSlidesPaneVisible && isQuizPaneVisible"
 			:isDetached="false"
 		>
 			<wnl-quiz-collection></wnl-quiz-collection>
 		</wnl-sidenav-slot>
-		<div>
-			<span class="icon is-big" @click="toggleRightSideNav">
-				<i v-if="!isRightSideNavVisible" class="fa fa-chevron-left"></i>
-				<i v-else class="fa fa-chevron-right"></i>
-				<span v-if="!isRightSideNavVisible" >Pokaż Quiz</span>
-				<span v-else>Ukryj Quiz</span>
-			</span>
-		</div>
 	</div>
 </template>
 
@@ -66,18 +65,33 @@
 		},
 		data() {
 			return {
-				routeName: 'collections-categories'
+				routeName: 'collections-categories',
+				selectedPanes: ['quiz', 'slides'],
+				slides: 'slides',
+				quiz: 'quiz'
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isRightSideNavVisible', 'isLargeDesktop', 'currentLayout']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
+			centerPane() {
+				if (this.selectedPanes.includes('slides')) {
+					return 'slides'
+				} else {
+					return 'quiz'
+				}
+			},
+			isSlidesPaneVisible() {
+				return this.selectedPanes.includes('slides')
+			},
+			isQuizPaneVisible() {
+				return this.selectedPanes.includes('quiz')
+			}
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
 			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
 			...mapActions('qna', ['fetchQuestionsByTagName']),
-			...mapActions(['toggleRightSideNav', 'openRightSideNav', 'closeRightSideNav']),
 			getNavigation() {
 				let navigation = [];
 
@@ -125,9 +139,6 @@
 				}
 			},
 		},
-		beforeMount() {
-			this.isLargeDesktop && this.openRightSideNav()
-		},
 		mounted() {
 			this.fetchCategories()
 				.then(this.fetchReactions)
@@ -138,9 +149,6 @@
 			'$route' () {
 				this.setupContentForCategory()
 			},
-			'currentLayout'() {
-				this.isLargeDesktop ? this.openRightSideNav() : this.closeRightSideNav()
-			}
 		},
 	}
 </script>

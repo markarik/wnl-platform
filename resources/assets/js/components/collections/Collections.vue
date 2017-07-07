@@ -10,14 +10,28 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isMobileProfile}" v-if="!isLoading">
-			<h3>Jesteś w {{rootCategoryName}} - {{categoryName}}</h3>
-			<div>
-				<input type="checkbox" name="slides" v-model="selectedPanes" value="slides" v-if="isLargeDesktop">
-				<input type="radio" name="slides" v-model="selectedPane" value="slides" v-else>
-				<label for="slides">Slajdy / Pytania i Odpowiedzi</label>
-				<input type="checkbox" name="quiz" v-model="selectedPanes" value="quiz" v-if="isLargeDesktop">
-				<input type="radio" name="slides" v-model="selectedPane" value="quiz" v-else>
-				<label for="quiz">Pytania Kontrolne</label>
+			<div class="collections-header">
+				<div class="collections-breadcrumbs">
+					<div class="breadcrumb">
+						<span class="icon is-small"><i class="fa fa-star-o"></i></span>
+					</div>
+					<div class="breadcrumb" v-if="rootCategoryName">
+						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+						<span>{{rootCategoryName}}</span>
+					</div>
+					<div class="breadcrumb" v-if="categoryName">
+						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+						<span>{{categoryName}}</span>
+					</div>
+				</div>
+				<div>
+					<input type="checkbox" name="slides" v-model="selectedPanes" value="slides" v-if="isLargeDesktop">
+					<input type="radio" name="slides" v-model="selectedPane" value="slides" v-else>
+					<label for="slides">Slajdy / Pytania i Odpowiedzi</label>
+					<input type="checkbox" name="quiz" v-model="selectedPanes" value="quiz" v-if="isLargeDesktop">
+					<input type="radio" name="slides" v-model="selectedPane" value="quiz" v-else>
+					<label for="quiz">Pytania Kontrolne</label>
+				</div>
 			</div>
 			<div class="scrollable-main-container">
 				<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
@@ -38,8 +52,17 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-app-layout-main
-		width: 100%;
-		max-width: initial;
+		width: 100%
+		max-width: initial
+
+	.collections-header
+		padding: $margin-base
+
+	.collections-breadcrumbs
+		color: $color-gray-dimmed
+		display: flex
+		align-items: center
+
 
 </style>
 

@@ -28,9 +28,9 @@
 					<div class="collections-controls">
 						<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"  :key="panel" @click="togglePanel(panel)">
 							{{name}}
-							<!-- <span class="icon is-small">
+							<span class="icon is-small">
 								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-							</span> -->
+							</span>
 						</a>
 					</div>
 				</div>
@@ -110,6 +110,13 @@
 
 			&.is-single
 				font-size: $font-size-minus-3
+
+				.icon
+					height: $font-size-minus-2
+					width: $font-size-minus-2
+
+				.fa
+					font-size: $font-size-minus-2
 
 			.icon
 				margin-left: $margin-tiny

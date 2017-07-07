@@ -12,22 +12,20 @@ const {mix} = require('laravel-mix');
  */
 
 mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
-mix.sass('resources/assets/sass/slideshow.sass', 'public/css/slideshow.css')
+	.sass('resources/assets/sass/slideshow.sass', 'public/css/slideshow.css')
 	.sass('resources/vendor/reveal/reveal-theme.css', 'public/css/reveal.css')
 	.sass('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
 	.sass('resources/vendor/imageviewer/imageviewer.css', 'public/css/imageviewer.css')
 	// see https://github.com/JeffreyWay/laravel-mix/issues/228#issuecomment-284076792
-	.options({
-		processCssUrls: false
-	})
+	// .options({
+	// 	processCssUrls: false
+	// })
 	.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/admin/admin.js', 'public/js/admin.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
 	.js('resources/assets/js/guest.js', 'public/js/guest.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
 	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js')
-	.copy('node_modules/font-awesome/fonts', 'public/fonts/font-awesome')
-	.copy('resources/assets/fonts/lato', 'public/fonts/lato')
 
 if (mix.config.inProduction) {
 	mix.version()

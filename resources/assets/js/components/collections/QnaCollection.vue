@@ -1,11 +1,11 @@
 <template>
 	<div class="collections-qna">
-		<div class="level wnl-screen-title">
+		<!-- <div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item metadata">Twoje zapisane pytania i odpowiedzi</div>
 			</div>
-		</div>
-		<wnl-qna readOnly="true"></wnl-qna>
+		</div> -->
+		<wnl-qna title="Zapisane pytania i odpowiedzi" readOnly="true"></wnl-qna>
 	</div>
 </template>
 

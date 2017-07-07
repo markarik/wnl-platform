@@ -1,10 +1,6 @@
 <template>
 	<div class="collections-quiz">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item metadata">Twoje zapisane pytania kontrolne</div>
-			</div>
-		</div>
+		<p class="title is-4">Zapisane pytania kontrolne</p>
 		<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
 	</div>
 </template>

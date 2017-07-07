@@ -135,7 +135,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
@@ -144,7 +144,7 @@
 				return this.isPanelActive('slides')
 			},
 			isSinglePanelView() {
-				return !this.isLargeDesktop
+				return this.isMobile
 			},
 			panels() {
 				return {

@@ -28,8 +28,9 @@
 </head>
 	<body>
 		<a class="bookmark">
-			<img class="bookmark-image" src="{{ asset('images/bookmark-black-shape.svg') }}" alt="Dodaj do zakładek">
-			<span class="bookmark-text">Dodaj do zakładek</span>
+			<img class="bookmark-image bookmark-image-add" src="{{ asset('images/bookmark-o.svg') }}" alt="Dodaj do zakładek">
+			<img class="bookmark-image bookmark-image-remove" src="{{ asset('images/bookmark.svg') }}" alt="Usuń z zakładek">
+			<span>zapisz</span>
 		</a>
 		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
 			<div class="reveal image-custom-background">

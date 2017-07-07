@@ -63,21 +63,31 @@ $border-color: $color-inactive-gray
 .bookmark
 	align-items: center
 	cursor: pointer
-	display: flex
 	flex-direction: column
 	position: absolute
 	right: 20px
 	top: 20px
 	z-index: 1
+	display: flex
 
-.bookmark-image
-	height: 18px
-	width: 18px
+	.bookmark-image-remove
+		display: none
 
-.bookmark-text
-	color: #11afb2
-	font-size: 12px
-	margin-top: 3px
+	&.is-bookmarked
+		.bookmark-image-add
+			display: none
+		.bookmark-image-remove
+			display: initial
+
+	.bookmark-image
+		width: 18px
+		height: 18px
+
+	span
+		font-size: 12px
+		color: #11afb2
+		text-transform: uppercase
+		margin-top: 2px
 
 .slideshow-annotations
 	background: $annotations-background

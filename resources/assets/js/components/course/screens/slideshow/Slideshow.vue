@@ -132,7 +132,8 @@
 				isFauxFullscreen: false,
 				isFocused: false,
 				slideChanged: false,
-				currentSlideId: 0
+				currentSlideId: 0,
+				bookmarkLoading: false
 			}
 		},
 		props: ['screenData', 'slide'],
@@ -179,15 +180,32 @@
 			...mapActions('slideshow', ['setup', 'setupPresentables']),
 			...mapActions(['toggleOverlay']),
 			toggleBookmarkedState(slideIndex, hasReacted) {
+				this.bookmarkLoading = true
+
 				return this.$store.dispatch(`slideshow/setReaction`, {
 					hasReacted,
 					reactableResource: 'slides',
 					reactableId: this.getSlideId(slideIndex),
 					reaction: 'bookmark'
 				}).then(() => {
-					return this.setupPresentables(this.slideshowId);
+					const hasReacted = !this.bookmarkState.hasReacted
+					const count = hasReacted ? this.bookmarkState.count + 1 : this.bookmarkState.count - 1;
+
+					this.$store.commit('slideshow/SET_REACTION', {
+						count,
+						hasReacted,
+						reactableResource: 'slides',
+						reactableId: this.getSlideId(slideIndex),
+						reaction: 'bookmark',
+					})
+
+					return Promise.resolve({
+						hasReacted
+					})
+				}).then((data) => {
+					this.child.call('setBookmarkedState', data.hasReacted)
 				}).then(() => {
-					this.child.call('setupBookmarks', this.bookmarkedSlideNumbers)
+					this.bookmarkLoading = false
 				})
 			},
 			toggleFullscreen() {
@@ -279,7 +297,7 @@
 					} else if (event.data.value.name === 'bookmark') {
 						const slideData = event.data.value.data;
 
-						this.toggleBookmarkedState(slideData.index, slideData.isBookmarked);
+						!this.bookmarkLoading && this.toggleBookmarkedState(slideData.index, slideData.isBookmarked);
 					}
 				}
 			},

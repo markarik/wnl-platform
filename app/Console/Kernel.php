@@ -34,7 +34,8 @@ class Kernel extends ConsoleKernel
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
 		Commands\IssueFinalInvoice::class,
-		Commands\CategoriesTags::class
+		Commands\CategoriesTags::class,
+		Commands\SlidesFromCategory::class
 	];
 
 	/**

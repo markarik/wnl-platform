@@ -143,6 +143,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['categories']}/{id}", 'CategoriesApiController@get');
 
 	// Slideshow builder
-	Route::get("{$r['slideshow-builder']}/category/{id}", 'Course\SlideshowBuilderApiController@byCategory');
+	Route::get("{$r['slideshow-builder']}/category/{categoryName}", 'Course\SlideshowBuilderApiController@byCategory');
 	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'Course\SlideshowBuilderApiController@get');
 });

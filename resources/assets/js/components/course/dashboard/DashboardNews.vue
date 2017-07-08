@@ -23,7 +23,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'workshops-details'
+	const CURRENT_NEWS = ''
 	const REQUIRED_ROLE = 'workshop-participant'
 
 	export default {

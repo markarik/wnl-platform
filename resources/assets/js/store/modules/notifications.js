@@ -24,12 +24,12 @@ const mutations = {
 	[types.ADD_NOTIFICATION] (state, notification) {
 		set(state, 'notifications', {[notification.id]: notification, ...state.notifications})
 	},
-	[types.MARK_NOTIFICATION_AS_READ] (state, payload) {
+	[types.MODIFY_NOTIFICATION] (state, payload) {
 		set(state, 'notifications', {
 			...state.notifications,
 			[payload.notification.id]: {
 				...payload.notification,
-				read_at: payload.time
+				[payload.field]: payload.value
 			}
 		})
 	},
@@ -61,8 +61,14 @@ const actions = {
 	markAsRead({commit, getters}, notification) {
 		_updateNotification(getters.user, notification.id)
 			.then((response) => {
-				commit(types.MARK_NOTIFICATION_AS_READ, {notification, time: response.data.read_at})
+				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field:'read_at'})
 			})
+	},
+	markAsSeen({commit, getters}, notification) {
+		// _updateNotification(getters.user, notification.id)
+		// 	.then((response) => {
+		// 		commit(types.MARK_NOTIFICATION_AS_READ, {notification, time: response.data.seen_at, field:'read_at'})
+		// 	})
 	},
 	initNotifications({commit, dispatch}, userId) {
 		commit(types.SET_NOTIFICATIONS_USER, userId)

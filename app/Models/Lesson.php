@@ -46,7 +46,7 @@ class Lesson extends Model
 			return $availability->start_date->isPast();
 		}
 
-		return true;
+		return false;
 	}
 
 	public function startDate($editionId)

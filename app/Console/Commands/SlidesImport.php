@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class SlidesImport extends Command
 {
-	const DIRECTORY = 'slideshows';
+	const BASE_DIRECTORY = 'slideshows';
 
 	protected $parser;
 
@@ -16,7 +16,7 @@ class SlidesImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'slides:import';
+	protected $signature = 'slides:import {dir?}';
 
 	/**
 	 * The console command description.
@@ -44,7 +44,14 @@ class SlidesImport extends Command
 	 */
 	public function handle()
 	{
-		$files = Storage::disk('s3')->files(self::DIRECTORY);
+		$path = self::BASE_DIRECTORY;
+
+		if ($subDir = $this->argument('dir'))
+		{
+			$path .= '/' . $subDir;
+		}
+
+		$files = Storage::disk('s3')->files($path);
 		$this->info('Importing slideshows...');
 		$bar = $this->output->createProgressBar(count($files));
 		foreach ($files as $file) {

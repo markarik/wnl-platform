@@ -15,7 +15,7 @@ class DumpCourseStructure extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'course:structure {action?} {file?}';
+	protected $signature = 'course:structure {action?} {file?} {--group=}';
 
 	/**
 	 * The console command description.
@@ -79,9 +79,14 @@ class DumpCourseStructure extends Command
 			$fileName = Carbon::now()->format('i_h_d_m_Y');
 		}
 		$fileName = snake_case($fileName);
-		$lessons = Lesson::with('screens')->get()->toJson();
+		$lessons = Lesson::with('screens');
+
+		if ($group = $this->option('group')) {
+			$lessons = $lessons->where('group_id', $group);
+		}
+
 		$env = env('APP_ENV');
-		Storage::disk('s3')->put(self::DIR . "/{$env}_{$fileName}.json", $lessons);
+		Storage::disk('s3')->put(self::DIR . "/{$env}_{$fileName}.json", $lessons->get()->toJson());
 	}
 
 	protected function restore($fileName)

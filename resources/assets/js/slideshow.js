@@ -19,7 +19,6 @@ const $toggleFullscreen     = $('.toggle-fullscreen')
 const bookmarkElement       = document.querySelector('.bookmark')
 const bookmarkImageAdd      = bookmarkElement.querySelector('.bookmark-image-add')
 const bookmarkImageRemove   = bookmarkElement.querySelector('.bookmark-image-remove')
-const bookmarkText          = document.querySelector('.bookmark-text')
 
 let isSavingBookmark = false
 let bookmarkedSlideNumbers = [];
@@ -237,10 +236,8 @@ function setBookmarkedState(currentSlideNumber) {
 
 	if (bookmarkedSlideNumbers.indexOf(currentSlideNumber) > -1 ) {
 		bookmarkElement.classList.add(bookmarkedClassname);
-		bookmarkText.innerHTML = "Usuń z zakładek";
 	} else {
 		bookmarkElement.classList.remove(bookmarkedClassname);
-		bookmarkText.innerHTML = "Dodaj do zakładek";
 	}
 }
 

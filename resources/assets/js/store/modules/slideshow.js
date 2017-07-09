@@ -27,6 +27,27 @@ function _fetchPresentables(slideshowId) {
 	return axios.post(getApiUrl('presentables/.search'), data)
 }
 
+function _fetchPresentablesByPresentable({type, id}) {
+	let data = {
+		query: {
+			where: [
+				['presentable_type', type],
+				['presentable_id', '=', id],
+			],
+		},
+		join: [
+			['slides', 'presentables.slide_id', '=', 'slides.id'],
+		],
+		order: {
+			order_number: 'asc',
+		},
+		include: 'reactions',
+
+	}
+
+	return axios.post(getApiUrl('presentables/.search'), data)
+}
+
 function _fetchComments(slidesIds) {
 	let data = {
 		query: {
@@ -166,9 +187,31 @@ const actions = {
 				.catch((reason) => reject(reason))
 		})
 	},
+	setupByPresentable({commit, dispatch, getters}, presentable) {
+		return new Promise((resolve, reject) => {
+			dispatch('setupPresentablesByPresentable', presentable)
+				.then(() => dispatch('setupComments', getters.slidesIds))
+				.then(() => resolve())
+				.catch((reason) => reject(reason))
+		})
+	},
 	setupPresentables({commit}, slideshowId) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(slideshowId)
+				.then((response) => {
+					commit(types.SLIDESHOW_SET_PRESENTABLES, response.data)
+					commit(types.SLIDESHOW_SET_SLIDES)
+					resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					reject()
+				})
+		})
+	},
+	setupPresentablesByPresentable({commit}, presentable) {
+		return new Promise((resolve, reject) => {
+			_fetchPresentablesByPresentable(presentable)
 				.then((response) => {
 					commit(types.SLIDESHOW_SET_PRESENTABLES, response.data)
 					commit(types.SLIDESHOW_SET_SLIDES)

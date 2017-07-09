@@ -36,7 +36,7 @@
 				</div>
 				<div class="columns">
 					<div class="column is-two-thirds" v-show="isSlidesPanelVisible">
-						<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
+						<wnl-slides-carousel :categoryId="categoryId"></wnl-slides-carousel>
 						<wnl-qna-collection></wnl-qna-collection>
 					</div>
 					<div class="column is-one-third" v-show="isQuizPanelVisible">
@@ -136,7 +136,7 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
+			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds', 'getCategoryByName']),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
 			},
@@ -152,6 +152,15 @@
 					quiz: 'Pytania kontrolne',
 				}
 			},
+			categoryId() {
+				const rootCategoryObject = this.categories
+					.find((category) => category.name === this.rootCategoryName)
+
+				const categoryObject = rootCategoryObject
+					&& rootCategoryObject.categories.find((category) => category.name === this.categoryName)
+
+				return categoryObject && categoryObject.id
+			}
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),

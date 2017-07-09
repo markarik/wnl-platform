@@ -136,7 +136,7 @@
 				bookmarkLoading: false
 			}
 		},
-		props: ['screenData', 'slide'],
+		props: ['screenData', 'slide', 'presentableId', 'presentableType'],
 		computed: {
 			...mapGetters(['getSetting']),
 			...mapGetters('slideshow', [
@@ -159,7 +159,7 @@
 				return this.$route.params.screenId
 			},
 			slideshowId() {
-				return this.screenData.meta.resources[0].id
+				return this.screenData.meta && this.screenData.meta.resources[0].id
 			},
 			slideshowUrl() {
 				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
@@ -177,7 +177,7 @@
 			}
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'setupPresentables']),
+			...mapActions('slideshow', ['setup', 'setupPresentables', 'setupByPresentable']),
 			...mapActions(['toggleOverlay']),
 			toggleBookmarkedState(slideIndex, hasReacted) {
 				this.bookmarkLoading = true
@@ -243,11 +243,11 @@
 			checkFocus() {
 				this.isFocused = this.iframe === document.activeElement
 			},
-			initSlideshow() {
+			initSlideshow(slideshowUrl) {
 				this.toggleOverlay({source: 'slideshow', display: true})
 				handshake = new Postmate({
 					container: this.container,
-					url: this.slideshowUrl,
+					url: slideshowUrl || this.slideshowUrl,
 				})
 
 				handshake.then(child => {
@@ -360,11 +360,19 @@
 		},
 		mounted() {
 			Postmate.debug = isDebug()
-			this.setup(this.slideshowId)
+			if (this.presentableId && this.presentableType) {
+				this.setupByPresentable({type: this.presentableType, id: this.presentableId})
+				.then(() => {
+					this.presentableId && this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+				})
+			} else {
+				this.setup(this.slideshowId)
 				.then(() => {
 					this.initSlideshow()
 					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 				})
+			}
 		},
 		beforeDestroy() {
 			this.destroySlideshow()

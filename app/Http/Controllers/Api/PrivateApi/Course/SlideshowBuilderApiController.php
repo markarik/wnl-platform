@@ -23,9 +23,9 @@ class SlideshowBuilderApiController extends ApiController
 		return $this->renderView($slideshow->slides, $slideshow->background_url);
 	}
 
-	public function byCategory($categoryName)
+	public function byCategory($categoryId)
 	{
-		$category = Category::where('name', $categoryName)->first();
+		$category = Category::find($categoryId);
 
 		if (!$category) {
 			return $this->respondNotFound('Category not found');

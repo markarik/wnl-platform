@@ -1,7 +1,11 @@
 <template>
 	<div>
 		<h3>Twoja kolekcja slajdów</h3>
-		<div class="slide" v-html="currentSlide"></div>
+		<wnl-slideshow
+			:screenData="screenData"
+			:presentableId="categoryId"
+			:presentableType="presentableType"
+		></wnl-slideshow>
 		<carousel class="wnl-carousel" :navigationEnabled="true" :perPage="4">
 			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in slides">
 				<div class="slide-thumb" @click="showSlide(index)">
@@ -35,6 +39,7 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 	import { Carousel, Slide } from 'vue-carousel';
+	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
 
 	export default {
 		name: 'SlidesCarousel',
@@ -42,10 +47,19 @@
 			Carousel,
 			Slide
 		},
+		props: ['categoryId'],
 		data() {
 			return {
-				selectedSlide: 0
+				selectedSlide: 0,
+				screenData: {
+					type: 'slideshow'
+				},
+				presentableType: 'App\\Models\\Category'
 			}
+		},
+		components: {
+			'wnl-slideshow': Slideshow,
+			'carousel': Carousel
 		},
 		computed: {
 			...mapGetters('collections', ['slidesContent']),

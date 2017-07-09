@@ -37,7 +37,11 @@ const getters = {
 	quizQuestionsIds: (state) => state.quiz_questions.map(question => question.reactable_id),
 	slidesIds: (state) => state.slides.map(slide => slide.reactable_id),
 	categories: (state) => state.categories,
-	slidesContent: (state) => state.slidesContent
+	slidesContent: (state) => state.slidesContent,
+	getCategoryByName: (state, getters) => (categoryName) => getters.categories.find((category) => {
+		console.log(category, categoryName, '...categories');
+		return false
+	})
 }
 
 const mutations = {

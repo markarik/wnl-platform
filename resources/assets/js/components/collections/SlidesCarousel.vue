@@ -5,6 +5,7 @@
 			:screenData="screenData"
 			:presentableId="categoryId"
 			:presentableType="presentableType"
+			:preserveRoute="true"
 		></wnl-slideshow>
 		<carousel class="wnl-carousel" :navigationEnabled="true" :perPage="4">
 			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in slides">

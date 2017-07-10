@@ -136,7 +136,7 @@
 				bookmarkLoading: false
 			}
 		},
-		props: ['screenData', 'slide', 'presentableId', 'presentableType'],
+		props: ['screenData', 'slide', 'presentableId', 'presentableType', 'preserveRoute'],
 		computed: {
 			...mapGetters(['getSetting']),
 			...mapGetters('slideshow', [
@@ -277,7 +277,7 @@
 						) {
 							let currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
 							this.currentSlideNumber = currentSlideNumber
-							this.$router.replace({
+							!this.preserveRoute && this.$router.replace({
 								name: 'screens',
 								params: { slide: currentSlideNumber }
 							})
@@ -360,10 +360,12 @@
 		},
 		mounted() {
 			Postmate.debug = isDebug()
-			if (this.presentableId && this.presentableType) {
+			if (this.presentableId || this.presentableType) {
+				console.log('setup presentable...')
 				this.setupByPresentable({type: this.presentableType, id: this.presentableId})
 				.then(() => {
-					this.presentableId && this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					console.log('init slideshow...', this.presentableId)
+					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
 					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 				})
 			} else {
@@ -400,6 +402,9 @@
 				if (newValue.type === 'slideshow') {
 					this.initSlideshow()
 				}
+			},
+			'presentableId' (newValue, oldValue) {
+				this.initSlideshow(getApiUrl(`slideshow_builder/category/${newValue}`))
 			},
 			'currentSlideIndex' (newValue, oldValue) {
 				this.currentSlideId = this.getSlideId(newValue)

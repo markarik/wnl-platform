@@ -3,7 +3,7 @@
 		<div class="wnl-slideshow-container">
 			<div class="wnl-slideshow-background-control">
 				<div class="controls-left">
-					<wnl-slideshow-navigation></wnl-slideshow-navigation>
+					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
 				</div>
 				<div class="controls-right">
 					<div class="controls-item">
@@ -268,6 +268,15 @@
 					}))
 				}).catch(exception => $wnl.logger.capture(exception))
 			},
+			updateRoute(slideNumber) {
+				!this.preserveRoute && this.$router.replace({
+					name: 'screens',
+					params: { slide: slideNumber }
+				})
+			},
+			navigateToSlide(slideNumber) {
+				this.preserveRoute ? this.goToSlide(slideNumber - 1) : this.updateRoute(slideNumber)
+			},
 			messageEventListener(event) {
 
 				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
@@ -279,10 +288,7 @@
 						) {
 							let currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
 							this.currentSlideNumber = currentSlideNumber
-							!this.preserveRoute && this.$router.replace({
-								name: 'screens',
-								params: { slide: currentSlideNumber }
-							})
+							this.updateRoute(currentSlideNumber)
 							this.focusSlideshow()
 						}
 

@@ -47,12 +47,9 @@
 		methods: {
 			onChange: debounce(function () {
 				if (parseInt(this.slideNumber) > 0) {
-					this.goToSlide()
+					this.$emit('navigateToSlide', this.slideNumber)
 				}
 			}, 500),
-			goToSlide() {
-				this.$router.replace({ name: 'screens', params: { slide: this.slideNumber } })
-			}
 		}
 	}
 </script>

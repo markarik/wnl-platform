@@ -15,6 +15,11 @@ const getters = {
 	isLoading: (state) => state.loading,
 	notifications: (state) => state.notifications,
 	user: (state) => state.user,
+	unseenCount: (state) => {
+		return _.filter(state.notifications, (notification) => {
+			return !notification.seen_at
+		}).length
+	},
 }
 
 const mutations = {
@@ -22,7 +27,7 @@ const mutations = {
 		set(state, 'loading', isLoading)
 	},
 	[types.ADD_NOTIFICATION] (state, notification) {
-		set(state, 'notifications', {[notification.id]: notification, ...state.notifications})
+		set(state.notifications, notification.id, notification)
 	},
 	[types.MODIFY_NOTIFICATION] (state, payload) {
 		set(state, 'notifications', {
@@ -61,7 +66,7 @@ const actions = {
 	markAsRead({commit, getters}, notification) {
 		_updateNotification(getters.user, notification.id, {'read_at': 'now'})
 			.then((response) => {
-				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field:'read_at'})
+				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
 	},
 	markAsSeen({commit, getters}, notification) {
@@ -78,7 +83,7 @@ const actions = {
 
 		commit(types.SET_NOTIFICATIONS_USER, userId)
 		dispatch('pullNotifications', userId)
-		// dispatch('setupLiveNotifications', userId)
+		dispatch('setupLiveNotifications', userId)
 	}
 }
 

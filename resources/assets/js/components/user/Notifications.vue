@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
-			<div class="flag">{{ unseenCount }}</div>
+			<div class="flag" v-if="hasUnseen">{{ unseenCount }}</div>
 			<span class="icon">
 				<i class="fa fa-bell"></i>
 			</span>
@@ -115,15 +115,12 @@
 			}
 		},
 		computed: {
-			...mapGetters('notifications', ['notifications', 'isLoading']),
+			...mapGetters('notifications', ['notifications', 'isLoading', 'unseenCount']),
 			empty() {
 				return !this.isLoading && _.size(this.notifications) === 0
 			},
-			unseenCount() {
-				return 3;
-			},
 			hasUnseen() {
-				return unseenCount > 0;
+				return this.unseenCount > 0;
 			}
 		},
 		watch: {

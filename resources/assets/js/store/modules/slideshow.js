@@ -232,8 +232,8 @@ const actions = {
 				.then((response) => {
 					if (!response.data.hasOwnProperty('included')) {
 						commit(types.IS_LOADING, false)
+						return resolve()
 					}
-					return resolve()
 
 					commit(types.SLIDESHOW_SET_COMMENTS, response.data)
 					commit(types.IS_LOADING, false)

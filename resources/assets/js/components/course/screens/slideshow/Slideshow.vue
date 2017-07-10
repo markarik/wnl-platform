@@ -423,8 +423,7 @@
 				this.currentSlideId = this.getSlideId(newValue)
 			},
 			'slideOrderNumber' (newValue, oldValue) {
-				console.log('slideOrderNumber...', newValue)
-				typeof this.child.call === 'function' && this.goToSlide(newValue--)
+				typeof this.child.call === 'function' && this.goToSlide(newValue - 1)
 			}
 		}
 	}

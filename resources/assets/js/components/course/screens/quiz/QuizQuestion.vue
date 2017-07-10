@@ -5,7 +5,7 @@
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
 			}">
-			<header class="quiz-header card-header">
+			<header class="quiz-header card-header" :class="{'clickable': headerOnly}" @click="$emit('headerClicked')">
 				<div class="quiz-header-top">
 					<div class="card-header-title">
 						<div v-html="text"></div>
@@ -20,7 +20,7 @@
 					</div>
 				</div>
 			</header>
-			<div class="quiz-answers card-content">
+			<div class="quiz-answers card-content" v-if="!headerOnly">
 				<ul>
 					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
 						:answer="answer"
@@ -34,7 +34,7 @@
 				</ul>
 				<div class="quiz-question-meta">#{{id}}</div>
 			</div>
-			<div class="card-footer" v-if="displayResults">
+			<div class="card-footer" v-if="(!headerOnly && displayResults) || showComments">
 				<div class="quiz-question-comments">
 					<wnl-comments-list
 						module="quiz"
@@ -110,12 +110,12 @@
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
 		},
+		props: ['id', 'index', 'text', 'total', 'readOnly', 'headerOnly', 'showComments'],
 		data() {
 			return {
 				reactableResource: "quiz_questions"
 			}
 		},
-		props: ['id', 'index', 'text', 'total', 'readOnly'],
 		computed: {
 			...mapGetters('quiz', [
 				'getAnswers',
@@ -135,18 +135,6 @@
 			},
 			isUnanswered() {
 				return this.selectedAnswer === null
-			},
-			/**
-			 * @return {Boolean}
-			 */
-			hasComments() {
-				// return this.comments.length > 0
-			},
-			/**
-			 * @return {Boolean}
-			 */
-			showComments() {
-				// return this.isComplete && this.hasComments
 			},
 			reactionState() {
 				return this.getReaction(this.reactableResource, this.id, "bookmark")

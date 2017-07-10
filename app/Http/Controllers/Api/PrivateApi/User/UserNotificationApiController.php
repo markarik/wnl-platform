@@ -77,9 +77,7 @@ class UserNotificationApiController extends ApiController
 			return $this->respondUnauthorized();
 		}
 
-		$notification->update([
-			'read_at' => Carbon::now(),
-			]);
+		$notification->update($request->all());
 
 		$resource = new Item($notification, new NotificationTransformer, 'user_notifications');
 		$data = $this->fractal->createData($resource)->toArray();

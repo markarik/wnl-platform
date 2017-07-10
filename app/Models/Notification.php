@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
@@ -15,5 +16,16 @@ class Notification extends Model
 
 	protected $dates = [
 		'read_at',
+		'seen_at',
 	];
+
+	public function setReadAtAttribute($value)
+	{
+		$this->attributes['read_at'] = $value === 'now' ? Carbon::now() : $value;
+	}
+
+	public function setSeenAtAttribute($value)
+	{
+		$this->attributes['seen_at'] = $value === 'now' ? Carbon::now() : $value;
+	}
 }

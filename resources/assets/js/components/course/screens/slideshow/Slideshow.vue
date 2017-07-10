@@ -125,7 +125,7 @@
 		data() {
 			return {
 				child: {},
-				currentSlideNumber: Math.max(this.$route.params.slide, 1) || 1,
+				currentSlideNumber: this.slideOrderNumber || Math.max(this.$route.params.slide, 1) || 1,
 				loaded: false,
 				isFauxFullscreen: false,
 				isFocused: false,
@@ -371,7 +371,7 @@
 			if (this.presentableId || this.presentableType) {
 				this.setupByPresentable({type: this.presentableType, id: this.presentableId})
 				.then(() => {
-					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					this.presentableId && this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
 					.then(() => {
 						this.goToSlide(this.slideOrderNumber - 1)
 					})
@@ -417,12 +417,13 @@
 				}
 			},
 			'presentableId' (newValue, oldValue) {
-				this.initSlideshow(getApiUrl(`slideshow_builder/category/${newValue}`))
+				newValue && this.initSlideshow(getApiUrl(`slideshow_builder/category/${newValue}`))
 			},
 			'currentSlideIndex' (newValue, oldValue) {
 				this.currentSlideId = this.getSlideId(newValue)
 			},
 			'slideOrderNumber' (newValue, oldValue) {
+				console.log('slideOrderNumber...', newValue)
 				typeof this.child.call === 'function' && this.goToSlide(newValue--)
 			}
 		}

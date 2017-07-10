@@ -2,11 +2,15 @@
 	<div>
 		<h4>{{name}}</h4>
 		<component :is="component" :screenData="screenData"></component>
-		<wnl-qna v-if="showQna" :tags="tags"></wnl-qna>
+		<wnl-qna v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.wnl-screen-qna
+		margin: $margin-huge 0
 </style>
 
 <script>

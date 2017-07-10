@@ -1,6 +1,6 @@
 <template>
 	<div class="collections-quiz">
-		<h3>Twoja kolekcja pytań kontrolnych</h3>
+		<p class="title is-4">Zapisane pytania kontrolne</p>
 		<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
 	</div>
 </template>

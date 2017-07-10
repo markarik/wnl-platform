@@ -50,8 +50,6 @@
 		margin-top: $margin-huge
 
 	.wnl-qna
-		margin: $margin-huge 0
-
 		#question-icon
 			margin: $margin-tiny $margin-tiny 0 $margin-small
 

@@ -34,7 +34,7 @@
 
 		<wnl-active-users/>
 		<!-- Latest Q&A -->
-		<wnl-qna title="Ostatnie pytania"></wnl-qna>
+		<wnl-qna title="Ostatnie pytania" class="wnl-overview-qna"></wnl-qna>
 	</div>
 </template>
 
@@ -49,6 +49,9 @@
 
 	.wnl-overview
 		padding-bottom: 20em
+
+	.wnl-overview-qna
+		margin: $margin-huge 0
 </style>
 
 <script>

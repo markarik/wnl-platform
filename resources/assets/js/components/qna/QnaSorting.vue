@@ -30,6 +30,9 @@
 
 	.qna-sorting
 		margin-bottom: $margin-base
+
+	.is-active
+		font-weight: $font-weight-regular
 </style>
 
 <script>

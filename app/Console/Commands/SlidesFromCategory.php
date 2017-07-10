@@ -49,7 +49,7 @@ class SlidesFromCategory extends Command
 					$tag->where('name', $categoryTag->name);
 				})->get();
 
-				$order_number = 1;
+				$order_number = 0;
 				foreach($slidesWithTag as $slide) {
 					$category->slides()->attach($slide, ['order_number' => $order_number]);
 					$order_number++;

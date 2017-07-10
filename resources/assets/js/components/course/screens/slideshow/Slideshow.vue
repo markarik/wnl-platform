@@ -175,11 +175,12 @@
 				}
 			},
 			bookmarkState() {
+				console.log('bookmarkState for current slide', this.getReaction('slides', this.currentSlideId, 'bookmark'))
 				return this.getReaction('slides', this.currentSlideId, 'bookmark')
 			}
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'setupPresentables', 'setupByPresentable']),
+			...mapActions('slideshow', ['setup', 'setupPresentables', 'setupByPresentable', 'resetModule']),
 			...mapActions(['toggleOverlay']),
 			toggleBookmarkedState(slideIndex, hasReacted) {
 				this.bookmarkLoading = true
@@ -344,6 +345,8 @@
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
 				removeEventListener('message', debounced)
+
+				this.resetModule()
 				this.loaded = false
 			},
 			onAnnotationsUpdated(comments) {

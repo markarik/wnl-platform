@@ -114,7 +114,7 @@ const getters = {
 	},
 	slides: (state) => state.slides,
 	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
-	slidesIds:    (state) => Object.keys(state.slides),
+	slidesIds: (state) => Object.keys(state.slides),
 	bookmarkedSlideNumbers: (state) => {
 		const slides = state.slides;
 
@@ -245,6 +245,9 @@ const actions = {
 				})
 		})
 	},
+	resetModule({commit}) {
+		commit(types.RESET_MODULE)
+	}
 }
 
 export default {

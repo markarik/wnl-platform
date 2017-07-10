@@ -22,7 +22,6 @@
 							:key="index">
 					</wnl-newsfeed-event>
 				</div>
-
 			</div>
 		</transition>
 	</div>
@@ -103,7 +102,7 @@
 	import {isDemo} from 'js/utils/env'
 	import {set} from 'vue'
 	import {mapGetters} from 'vuex'
-	import Event from 'js/components/newsfeed/Event'
+	import Event from 'js/components/user/notifications/Event'
 
 	export default {
 		name: 'wnl-user-notifications',

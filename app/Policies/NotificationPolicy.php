@@ -63,7 +63,7 @@ class NotificationPolicy
 	public function update(User $user, Notification $notification)
 	{
 		return
-			$user->id === $notification->notifiable_type &&
+			$user->id === $notification->notifiable_id &&
 			$notification->notifiable_type === 'App\\Models\\User';
 	}
 

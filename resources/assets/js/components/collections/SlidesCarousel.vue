@@ -6,6 +6,7 @@
 			:presentableId="categoryId"
 			:presentableType="presentableType"
 			:preserveRoute="true"
+			:slideOrderNumber="currentSlide.order_number"
 		></wnl-slideshow>
 		<carousel class="wnl-carousel" :navigationEnabled="true" :perPage="4">
 			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in slides">
@@ -16,6 +17,7 @@
 				</div>
 			</slide>
 		</carousel>
+		<div>{{currentSlide}}</div>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -44,41 +46,43 @@
 
 	export default {
 		name: 'SlidesCarousel',
-		components: {
-			Carousel,
-			Slide
-		},
 		props: ['categoryId'],
 		data() {
 			return {
-				selectedSlide: 0,
+				// TODO this has to be smarter - show the first slide from collection
+				selectedSlideIndex: 0,
 				screenData: {
 					type: 'slideshow'
 				},
-				presentableType: 'App\\Models\\Category'
+				presentableType: 'App\\Models\\Category',
 			}
 		},
 		components: {
 			'wnl-slideshow': Slideshow,
-			'carousel': Carousel
+			Carousel,
+			Slide
 		},
 		computed: {
 			...mapGetters('collections', ['slidesContent']),
+			...mapGetters('slideshow', {'allSlides': 'slides'}),
 			slides() {
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,
 					snippet: slide.snippet.content,
 					media: slide.snippet.media,
-					content: slide.content
+					content: slide.content,
+					id: slide.id
 				}))
 			},
 			currentSlide() {
-				return this.slides[this.selectedSlide] && this.slides[this.selectedSlide].content
+				const selectedSlide = this.slides[this.selectedSlideIndex];
+
+				return selectedSlide && this.allSlides[selectedSlide.id] || {}
 			}
 		},
 		methods: {
 			showSlide(index) {
-				this.selectedSlide = index;
+				this.selectedSlideIndex = index;
 			}
 		}
 	}

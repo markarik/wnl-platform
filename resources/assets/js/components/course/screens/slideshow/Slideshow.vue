@@ -112,8 +112,7 @@
 
 	import Annotations from './Annotations'
 	import SlideshowNavigation from './SlideshowNavigation'
-	import Bookmark from 'js/components/global/reactions/Bookmark'
-	import {isDebug, getApiUrl, getUrl} from 'js/utils/env'
+	import {isDebug, getApiUrl} from 'js/utils/env'
 
 	let debounced, handshake
 
@@ -122,7 +121,6 @@
 		components: {
 			'wnl-annotations': Annotations,
 			'wnl-slideshow-navigation': SlideshowNavigation,
-			'wnl-bookmark': Bookmark,
 		},
 		data() {
 			return {
@@ -136,7 +134,7 @@
 				bookmarkLoading: false
 			}
 		},
-		props: ['screenData', 'slide', 'presentableId', 'presentableType', 'preserveRoute'],
+		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
 		computed: {
 			...mapGetters(['getSetting']),
 			...mapGetters('slideshow', [
@@ -250,7 +248,7 @@
 					url: slideshowUrl || this.slideshowUrl,
 				})
 
-				handshake.then(child => {
+				return handshake.then(child => {
 					this.child = child
 					this.loaded = true
 					child.frame.setAttribute('mozallowfullscreen', '');
@@ -361,11 +359,13 @@
 		mounted() {
 			Postmate.debug = isDebug()
 			if (this.presentableId || this.presentableType) {
-				console.log('setup presentable...')
 				this.setupByPresentable({type: this.presentableType, id: this.presentableId})
 				.then(() => {
-					console.log('init slideshow...', this.presentableId)
 					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					.then(() => {
+						console.log('slideOrderNumber...', this.slideOrderNumber)
+						this.goToSlide(this.slideOrderNumber - 1)
+					})
 					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 				})
 			} else {
@@ -382,6 +382,10 @@
 		watch: {
 			'$route' (to, from) {
 				if (to.params.screenId != from.params.screenId) {
+					this.destroySlideshow()
+				}
+
+				if (to.params.categoryName != from.params.categoryName) {
 					this.destroySlideshow()
 				}
 
@@ -409,6 +413,9 @@
 			'currentSlideIndex' (newValue, oldValue) {
 				this.currentSlideId = this.getSlideId(newValue)
 			},
+			'slideOrderNumber' (newValue, oldValue) {
+				typeof this.child.call === 'function' && this.goToSlide(newValue--)
+			}
 		}
 	}
 </script>

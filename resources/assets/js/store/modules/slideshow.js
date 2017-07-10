@@ -112,6 +112,8 @@ const getters = {
 	getSlideId:   (state) => (slideOrderNumber) => {
 		return state.presentables.length === 0 ? 0 : state.presentables[slideOrderNumber].id
 	},
+	slides: (state) => state.slides,
+	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
 	slidesIds:    (state) => Object.keys(state.slides),
 	bookmarkedSlideNumbers: (state) => {
 		const slides = state.slides;

@@ -177,6 +177,12 @@ const mutations = {
 			set(state, 'retry', true)
 		})
 	},
+	[types.QUIZ_NEXT_QUESTION] (state) {
+		let currentId = state.questionsIds.shift()
+		state.questionsIds.push(currentId)
+		state.quiz_questions[currentId].isResolved = false
+		state.quiz_questions[currentId].selectedAnswer = null
+	},
 }
 
 const actions = {
@@ -282,6 +288,14 @@ const actions = {
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			resolve()
 		})
+	},
+
+	resolveQuestion({state, commit}, id) {
+		commit(types.QUIZ_RESOLVE_QUESTION, {id})
+	},
+
+	nextQuestion({state, commit}) {
+		commit(types.QUIZ_NEXT_QUESTION)
 	},
 
 	saveQuiz({state, rootGetters}, recordedAnswers){

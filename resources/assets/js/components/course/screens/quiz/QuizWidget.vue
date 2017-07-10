@@ -3,24 +3,32 @@
 		<wnl-quiz-question
 			:class="`quiz-question-${currentQuestion.id}`"
 			:id="currentQuestion.id"
-			:index="index"
 			:answers="currentQuestion.quiz_answers"
 			:text="currentQuestion.text"
 			:total="currentQuestion.total_hits"
 			@answerSelected="verify"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
-		<p class="has-text-centered" v-if="!displayResults">
-			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
+		<p class="quiz-widget-controls has-text-centered">
+			<a class="button is-primary" :class="{'is-loading': isProcessing}" :disabled="isSubmitDisabled" @click="verify" >
 				Sprawdź odpowiedź
 			</a>
+			<a class="small margin top" @click="nextQuestion">Następne</a>
 		</p>
+		<div v-for="question, index in otherQuestions" :key="index">
+			{{question.text}}
+		</div>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.quiz-widget-controls
+		align-items: center
+		display: flex
+		flex-direction: column
+		justify-content: center
 </style>
 
 <script>
@@ -51,11 +59,19 @@
 				'hasQuestions'
 			]),
 			currentQuestion() {
-				console.log()
-				return {}
+				return this.getQuestions[0]
+			},
+			otherQuestions() {
+				return _.tail(this.getQuestions) || []
+			},
+			hasAnswer() {
+				return this.currentQuestion.selectedAnswer !== null
+			},
+			isSubmitDisabled() {
+				return !this.hasAnswer || this.currentQuestion.isResolved
 			},
 			displayResults() {
-				return this.isComplete || this.readOnly || !this.hasQuestions
+				return this.currentQuestion.isResolved
 			},
 			howManyLeft() {
 				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestions)}`
@@ -70,10 +86,14 @@
 		},
 		methods: {
 			...mapActions('quiz', [
-				'checkQuiz',
+				'nextQuestion',
+				'resolveQuestion',
 				'resetState',
 			]),
 			verify() {
+				if (this.hasAnswer) {
+					this.resolveQuestion(this.currentQuestion.id)
+				}
 				// if (this.getUnanswered.length > 0) {
 				// 	this.hasErrors = true
 				// 	this.$swal(this.getAlertConfig(this.unansweredAlert))

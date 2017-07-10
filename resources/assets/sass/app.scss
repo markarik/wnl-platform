@@ -328,6 +328,10 @@ html {
 	min-height: 100%;
 }
 
+.unselectable {
+	user-select: none;
+}
+
 /* Firefox hack :/ */
 @-moz-document url-prefix() {
 	.wnl-chat-content {

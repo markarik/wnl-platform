@@ -1,5 +1,17 @@
 <template>
 	<div class="wnl-quiz-widget">
+		<div class="level">
+			<div class="level-left">
+				<a class="small unselectable" @click="nextQuestion">
+					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
+				</a>
+			</div>
+			<div class="level-right">
+				<a class="small unselectable" @click="nextQuestion">
+					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+				</a>
+			</div>
+		</div>
 		<wnl-quiz-question
 			:class="`quiz-question-${currentQuestion.id}`"
 			:id="currentQuestion.id"
@@ -9,11 +21,10 @@
 			@answerSelected="verify"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
-		<p class="quiz-widget-controls has-text-centered">
+		<p class="has-text-centered">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" :disabled="isSubmitDisabled" @click="verify" >
 				Sprawdź odpowiedź
 			</a>
-			<a class="small margin top" @click="nextQuestion">Następne</a>
 		</p>
 		<div v-for="question, index in otherQuestions" :key="index">
 			{{question.text}}
@@ -24,11 +35,6 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.quiz-widget-controls
-		align-items: center
-		display: flex
-		flex-direction: column
-		justify-content: center
 </style>
 
 <script>

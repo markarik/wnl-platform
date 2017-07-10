@@ -34,7 +34,7 @@
 				</ul>
 				<div class="quiz-question-meta">#{{id}}</div>
 			</div>
-			<div class="card-footer" v-if="isComplete">
+			<div class="card-footer" v-if="displayResults">
 				<div class="quiz-question-comments">
 					<wnl-comments-list
 						module="quiz"

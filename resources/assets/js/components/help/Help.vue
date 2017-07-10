@@ -78,6 +78,9 @@
 			'wnl-sidenav-slot': SidenavSlot,
 		},
 		mixins: [withChat],
+		methods: {
+			...mapActions(['toggleChat']),
+		},
 		computed: {
 			...mapGetters([
 				'isSidenavVisible',

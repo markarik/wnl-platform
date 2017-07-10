@@ -17,7 +17,6 @@
 				</div>
 			</slide>
 		</carousel>
-		<div>{{currentSlide}}</div>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>

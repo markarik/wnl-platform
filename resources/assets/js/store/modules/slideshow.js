@@ -4,7 +4,7 @@ import {set, delete as destroy} from 'vue'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
-import {reactionsGetters, reactionsActions} from 'js/store/modules/reactions'
+import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions'
 
 function _fetchPresentables(slideshowId) {
 	let data = {
@@ -146,6 +146,7 @@ const getters = {
 
 const mutations = {
 	...commentsMutations,
+	...reactionsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},

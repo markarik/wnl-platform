@@ -145,7 +145,8 @@
 				'isFunctional',
 				'findRegularSlide',
 				'presentables',
-				'bookmarkedSlideNumbers'
+				'bookmarkedSlideNumbers',
+				'getReaction'
 			]),
 			currentSlideIndex() {
 				 return this.currentSlideNumber - 1
@@ -172,6 +173,9 @@
 				if (this.loaded) {
 					return this.$el.getElementsByTagName('iframe')[0]
 				}
+			},
+			bookmarkState() {
+				return this.getReaction('slides', this.currentSlideId, 'bookmark')
 			}
 		},
 		methods: {
@@ -363,7 +367,6 @@
 				.then(() => {
 					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
 					.then(() => {
-						console.log('slideOrderNumber...', this.slideOrderNumber)
 						this.goToSlide(this.slideOrderNumber - 1)
 					})
 					this.currentSlideId = this.getSlideId(this.currentSlideIndex)

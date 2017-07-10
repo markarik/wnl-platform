@@ -85,4 +85,3 @@ class UserNotificationApiController extends ApiController
 		return $this->respondOk($data);
 	}
 }
-

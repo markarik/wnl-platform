@@ -17,7 +17,7 @@ class NotificationPolicy
 			return true;
 		}
 
-		return false;
+		return null;
 	}
 
 	public function viewMultiple(User $user)

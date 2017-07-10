@@ -15,13 +15,12 @@
 				<div class="notification aligncenter" v-if="empty">
 					Nic tu nie ma ¯\_(ツ)_/¯
 				</div>
-				<div v-else class="container">
-					<component
+				<div v-else>
+					<wnl-newsfeed-event
 							v-for="(event, index) in notifications"
-							:is="eventComponent"
 							:event="event"
 							:key="index">
-					</component>
+					</wnl-newsfeed-event>
 				</div>
 
 			</div>
@@ -104,9 +103,13 @@
 	import {isDemo} from 'js/utils/env'
 	import {set} from 'vue'
 	import {mapGetters} from 'vuex'
+	import Event from 'js/components/newsfeed/Event'
 
 	export default {
 		name: 'wnl-user-notifications',
+		components: {
+			'wnl-newsfeed-event': Event,
+		},
 		data() {
 			return {
 				isActive: false,

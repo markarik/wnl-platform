@@ -42,7 +42,7 @@
 	import Navbar from 'js/components/global/Navbar.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import axios from 'axios';
-	import {getApiUrl, envValue as env} from 'js/utils/env';
+	import {getApiUrl} from 'js/utils/env';
 
 	export default {
 		name: 'App',
@@ -78,7 +78,7 @@
 						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
 					}, 1000 * 60 * 3)
 				})
-					.then(() => this.initNotifications(env('MODERATORS_CHANNEL')))
+					.then(() => this.initNotifications())
 		},
 		mounted() {
 			this.$router.afterEach((to) => {

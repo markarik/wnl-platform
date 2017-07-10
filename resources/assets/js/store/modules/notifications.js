@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
-import {getApiUrl} from 'js/utils/env'
+import {getApiUrl, envValue as env} from 'js/utils/env'
 import {set} from 'vue'
 
 const namespaced = true
@@ -59,7 +59,7 @@ const actions = {
 			});
 	},
 	markAsRead({commit, getters}, notification) {
-		_updateNotification(getters.user, notification.id)
+		_updateNotification(getters.user, notification.id, {'read_at': 'now'})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field:'read_at'})
 			})
@@ -70,10 +70,15 @@ const actions = {
 		// 		commit(types.MARK_NOTIFICATION_AS_READ, {notification, time: response.data.seen_at, field:'read_at'})
 		// 	})
 	},
-	initNotifications({commit, dispatch}, userId) {
+	initNotifications({commit, dispatch, rootGetters}) {
+		let userId = rootGetters.currentUserId
+		if (rootGetters.hasRole('moderator')) {
+			userId = env('MODERATORS_CHANNEL')
+		}
+
 		commit(types.SET_NOTIFICATIONS_USER, userId)
 		dispatch('pullNotifications', userId)
-		dispatch('setupLiveNotifications', userId)
+		// dispatch('setupLiveNotifications', userId)
 	}
 }
 

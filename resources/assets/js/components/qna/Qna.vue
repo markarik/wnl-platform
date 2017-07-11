@@ -146,9 +146,6 @@
 		mounted() {
 			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
 		},
-		beforeDestroy() {
-			this.destroyQna()
-		},
 		watch: {
 			'currentSorting' (newValue) {
 				this.questionsList = this.getSortedQuestions(newValue, this.questions);

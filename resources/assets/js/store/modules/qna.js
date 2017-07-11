@@ -59,13 +59,14 @@ function _getQuestionsByTagName(tagName, ids) {
 }
 
 function _handleGetQuestionsSuccess(commit, {data}) {
+	commit(types.QNA_DESTROY)
+
 	if (!_.isUndefined(data.included)) {
 		commit(types.UPDATE_INCLUDED, data.included)
 		destroy(data, 'included')
 		commit(types.QNA_SET_QUESTIONS, data)
-	} else {
-		commit(types.QNA_DESTROY)
 	}
+
 	commit(types.IS_LOADING, false)
 }
 

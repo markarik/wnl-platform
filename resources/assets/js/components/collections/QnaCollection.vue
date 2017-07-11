@@ -12,8 +12,6 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters} from 'vuex'
-
 	import Qna from 'js/components/qna/Qna'
 
 	export default {
@@ -21,11 +19,5 @@
 		components: {
 			'wnl-qna': Qna,
 		},
-		methods: {
-			...mapActions('qna', ['destroyQna'])
-		},
-		beforeDestroy() {
-			this.destroyQna()
-		}
 	}
 </script>

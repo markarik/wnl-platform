@@ -125,7 +125,8 @@
 		data() {
 			return {
 				child: {},
-				currentSlideNumber: this.slideOrderNumber || Math.max(this.$route.params.slide, 1) || 1,
+				// slides order number is index from 0
+				currentSlideNumber: this.slideOrderNumber + 1 || Math.max(this.$route.params.slide, 1) || 1,
 				loaded: false,
 				isFauxFullscreen: false,
 				isFocused: false,
@@ -236,6 +237,7 @@
 				this.focusSlideshow()
 			},
 			focusSlideshow() {
+				console.log('focusing slideshow....', this.child)
 				if (this.child.hasOwnProperty('frame') && typeof this.child.frame !== undefined) {
 					this.child.frame.click()
 					this.child.frame.focus()
@@ -370,10 +372,11 @@
 		},
 		mounted() {
 			Postmate.debug = isDebug()
+			this.toggleOverlay({source: 'slideshow', display: true})
 			if (this.presentableId || this.presentableType) {
-				this.setupByPresentable({type: this.presentableType, id: this.presentableId})
+				this.presentableId && this.setupByPresentable({type: this.presentableType, id: this.presentableId})
 				.then(() => {
-					this.presentableId && this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
 					.then(() => {
 						this.goToSlide(this.slideOrderNumber)
 					})
@@ -419,7 +422,14 @@
 				}
 			},
 			'presentableId' (newValue, oldValue) {
-				newValue && this.initSlideshow(getApiUrl(`slideshow_builder/category/${newValue}`))
+				newValue && this.setupByPresentable({type: this.presentableType, id: newValue})
+				.then(() => {
+					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					.then(() => {
+						this.goToSlide(this.slideOrderNumber)
+					})
+					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+				})
 			},
 			'currentSlideIndex' (newValue, oldValue) {
 				this.currentSlideId = this.getSlideId(newValue)

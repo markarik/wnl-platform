@@ -6,7 +6,7 @@
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'collections', params: { courseId: 1 } }">
+		<router-link class="wnl-main-nav-item" :to="{ name: 'collections' }">
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
 			</span>

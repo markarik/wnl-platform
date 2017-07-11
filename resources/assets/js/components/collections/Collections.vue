@@ -231,8 +231,7 @@
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {
-					this.activePanels = [panel]
-					return
+					return this.activePanels = [panel]
 				}
 
 				let index = this.activePanels.indexOf(panel)

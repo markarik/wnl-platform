@@ -20,6 +20,11 @@ const getters = {
 			return !notification.seen_at
 		})
 	},
+	unread: (state) => {
+		return _.pickBy(state.notifications, (notification) => {
+			return !notification.read_at
+		})
+	},
 }
 
 const mutations = {
@@ -72,6 +77,18 @@ const actions = {
 	markAllAsSeen({commit, getters}) {
 		let data = _.mapValues(getters.unseen, (notification) => {
 			return { 'seen_at' : 'now'}
+		})
+
+		_updateMany(getters.user, data)
+			.then((response) => {
+				_.each(response.data, (notification) => {
+					commit(types.ADD_NOTIFICATION, notification)
+				})
+			})
+	},
+	markAllAsRead({commit, getters}) {
+		let data = _.mapValues(getters.unread, (notification) => {
+			return { 'read_at' : 'now'}
 		})
 
 		_updateMany(getters.user, data)

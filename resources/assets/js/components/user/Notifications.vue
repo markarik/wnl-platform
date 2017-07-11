@@ -9,7 +9,8 @@
 		<transition name="fade">
 			<div class="box drawer" v-if="isActive">
 				<div class="level wnl-screen-title">
-					<strong>Powiadomienia</strong> <a class="link">Oznacz wszystkie jako przeczytane</a>
+					<strong>Powiadomienia</strong>
+					<a class="link" @click="markAllAsRead">Oznacz wszystkie jako przeczytane</a>
 				</div>
 
 				<div class="notification aligncenter" v-if="empty">
@@ -127,9 +128,9 @@
 			}
 		},
 		methods: {
-			...mapActions('notifications', ['markAllAsSeen']),
+			...mapActions('notifications', ['markAllAsSeen', 'markAllAsRead']),
 			toggle() {
-				if (!this.isActive) {
+				if (!this.isActive && this.hasUnseen) {
 					this.markAllAsSeen()
 				}
 				this.isActive = !this.isActive

@@ -37,10 +37,16 @@
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
 						<wnl-slides-carousel :categoryId="categoryId"></wnl-slides-carousel>
-						<wnl-qna-collection></wnl-qna-collection>
+						<wnl-qna-collection
+							:rootCategoryName="rootCategoryName"
+							:categoryName="categoryName"
+						></wnl-qna-collection>
 					</div>
 					<div class="column" v-show="isQuizPanelVisible">
-						<wnl-quiz-collection></wnl-quiz-collection>
+						<wnl-quiz-collection
+							:rootCategoryName="rootCategoryName"
+							:categoryName="categoryName"
+						></wnl-quiz-collection>
 					</div>
 				</div>
 			</div>
@@ -240,8 +246,7 @@
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {
-					this.activePanels = [panel]
-					return
+					return this.activePanels = [panel]
 				}
 
 				let index = this.activePanels.indexOf(panel)

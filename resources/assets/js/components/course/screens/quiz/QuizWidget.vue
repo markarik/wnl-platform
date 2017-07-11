@@ -1,13 +1,13 @@
 <template>
 	<div class="wnl-quiz-widget">
-		<div class="level">
-			<div class="level-left">
-				<a class="small unselectable" @click="changeQuestion(lastIndex)">
+		<div class="quiz-widget-controls">
+			<div class="widget-control">
+				<a class="small unselectable" @click="previousQuestion()">
 					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
 				</a>
 			</div>
-			<div class="level-right">
-				<a class="small unselectable" @click="changeQuestion(1)">
+			<div class="widget-control">
+				<a class="small unselectable" @click="nextQuestion()">
 					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 				</a>
 			</div>
@@ -25,11 +25,14 @@
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
 			</a>
-			<a v-else class="button is-primary is-outlined" @click="changeQuestion(1)">
+			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
 				Następne
 			</a>
 		</p>
 		<div class="other-questions">
+			<p class="notification small">
+				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
+			</p>
 			<wnl-quiz-question
 				v-for="question, index in otherQuestions"
 				:headerOnly="true"
@@ -52,6 +55,10 @@
 		border-top: $border-light-gray
 		margin-top: $margin-big
 		padding-top: $margin-base
+
+	.quiz-widget-controls
+		display: flex
+		justify-content: space-between
 </style>
 
 <script>
@@ -59,7 +66,7 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
-	import { scrollToTop, scrollToElement } from 'js/utils/animations'
+	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
@@ -74,6 +81,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			...mapGetters('quiz', [
 				'getQuestions',
 			]),
@@ -110,10 +118,18 @@
 			getQuestionElement(resource) {
 				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
 			},
+			nextQuestion() {
+				this.changeQuestion(1)
+				scrollToElement(this.$el, 75)
+			},
+			previousQuestion() {
+				this.changeQuestion(this.lastIndex)
+				scrollToElement(this.$el, 75)
+			},
 			selectQuestionFromList(index) {
 				let fullIndex = index + 1
 				this.changeQuestion(fullIndex)
-				scrollToTop()
+				scrollToElement(this.$el, 75)
 			},
 		},
 	}

@@ -3,7 +3,7 @@
 		<span class="icon is-small">
 			<i class="fa" :class="hasReactedClass"></i>
 		</span>
-		<span>Zapisz</span>
+		<span v-if="!isMobile">Zapisz</span>
 	</div>
 </template>
 
@@ -18,10 +18,11 @@
 		font-size: $font-size-minus-2
 		flex-direction: column
 		text-transform: uppercase
-		width: 50px
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	import { reaction } from 'js/mixins/reaction'
 
 	export default {
@@ -34,8 +35,9 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			hasReactedClass() {
-				return this.hasReacted ? 'fa-bookmark' : 'fa-bookmark-o'
+				return this.hasReacted ? 'fa-star' : 'fa-star-o'
 			},
 		},
 	}

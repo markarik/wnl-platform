@@ -1,11 +1,9 @@
 <template>
 	<div class="collections-qna">
-		<!-- <div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item metadata">Twoje zapisane pytania i odpowiedzi</div>
-			</div>
-		</div> -->
 		<wnl-qna title="Zapisane pytania i odpowiedzi" readOnly="true"></wnl-qna>
+		<div v-if="isZeroState" class="notification has-text-centered margin top">
+			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań i odpowiedzi. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym wątku!
+		</div>
 	</div>
 </template>
 
@@ -17,7 +15,7 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters} from 'vuex'
+	import { mapGetters } from 'vuex'
 
 	import Qna from 'js/components/qna/Qna'
 
@@ -26,11 +24,12 @@
 		components: {
 			'wnl-qna': Qna,
 		},
-		methods: {
-			...mapActions('qna', ['destroyQna'])
+		props: ['rootCategoryName', 'categoryName'],
+		computed: {
+			...mapGetters('qna', ['loading', 'questions']),
+			isZeroState() {
+				return !this.loading && Object.keys(this.questions).length === 0
+			},
 		},
-		beforeDestroy() {
-			this.destroyQna()
-		}
 	}
 </script>

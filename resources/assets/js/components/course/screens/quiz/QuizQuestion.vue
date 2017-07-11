@@ -4,10 +4,11 @@
 			:class="{
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
+				'is-mobile': isMobile,
 			}">
-			<header class="quiz-header card-header" :class="{'clickable': headerOnly}" @click="$emit('headerClicked')">
+			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
-					<div class="card-header-title">
+					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
 						<div v-html="text"></div>
 					</div>
 					<div class="card-header-icons">
@@ -72,6 +73,9 @@
 		align-items: flex-start
 		flex-direction: column
 
+	.card-header-title.is-short-form
+		font-size: $font-size-minus-1
+
 	.quiz-header-top
 		display: flex
 		width: 100%
@@ -86,8 +90,24 @@
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
 
+		&.is-mobile
+
+			.quiz-header,
+			.quiz-answers
+				padding: $margin-small
+
+				.card-header-title,
+				.card-header-icons
+					padding: $margin-small
+
+			.quiz-header
+				font-size: $font-size-minus-1
+
+			.quiz-answer
+				font-size: $font-size-minus-1
+
 	.quiz-question-comments
-		padding: $margin-small $margin-big $margin-big
+		padding: $margin-small $margin-big $margin-base
 		width: 100%
 
 	.has-errors .is-unanswered
@@ -117,6 +137,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			...mapGetters('quiz', [
 				'getAnswers',
 				'isComplete',

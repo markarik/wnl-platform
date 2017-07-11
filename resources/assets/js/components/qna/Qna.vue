@@ -32,7 +32,7 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
-			<wnl-qna-sorting></wnl-qna-sorting>
+			<wnl-qna-sorting v-if="questionsList.length > 0"></wnl-qna-sorting>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
@@ -45,9 +45,6 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import '../../../sass/variables'
-
-	.qna-loader
-		margin-top: $margin-huge
 
 	.wnl-qna
 		#question-icon
@@ -145,9 +142,6 @@
 		},
 		mounted() {
 			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
-		},
-		beforeDestroy() {
-			this.destroyQna()
 		},
 		watch: {
 			'currentSorting' (newValue) {

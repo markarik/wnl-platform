@@ -4,6 +4,7 @@
 			'is-selected': isSelected && !showCorrect,
 			'is-correct': showCorrect,
 			'is-hinted': hintCorrect,
+			'is-mobile': isMobile,
 		}"
 		@click="$emit('answerSelected')"
 	>
@@ -65,6 +66,9 @@
 				position: absolute
 				right: $margin-base
 
+		&.is-mobile
+			padding: $margin-small $margin-small $margin-small $margin-huge
+
 	.quiz-answer.is-correct
 		background: $color-green
 		color: $color-white
@@ -95,6 +99,8 @@
 		name: 'QuizAnswer',
 		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly'],
 		computed: {
+			...mapGetters(['isMobile']),
+
 			...mapGetters('quiz', [
 				'isComplete',
 				'getSelectedAnswer',

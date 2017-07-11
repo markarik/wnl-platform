@@ -59,13 +59,14 @@ function _getQuestionsByTagName(tagName, ids) {
 }
 
 function _handleGetQuestionsSuccess(commit, {data}) {
+	commit(types.QNA_DESTROY)
+
 	if (!_.isUndefined(data.included)) {
 		commit(types.UPDATE_INCLUDED, data.included)
 		destroy(data, 'included')
 		commit(types.QNA_SET_QUESTIONS, data)
-	} else {
-		commit(types.QNA_DESTROY)
 	}
+
 	commit(types.IS_LOADING, false)
 }
 
@@ -118,7 +119,7 @@ function _getAnswer(answerId) {
 
 function getInitialState() {
 	return {
-		loading: true,
+		loading: [],
 		sorting: 'hottest',
 		questionsIds: [],
 		qna_questions: {},
@@ -182,7 +183,7 @@ const state = getInitialState()
 // Getters
 const getters = {
 	...reactionsGetters,
-	loading: state => state.loading,
+	loading: state => state.loading.length > 0,
 	currentSorting: state => state.sorting,
 	questions: state => state.qna_questions,
 	getSortedQuestions: (state, getters, rootState, rootGetters) => (sorting, list) => {
@@ -250,7 +251,12 @@ const getters = {
 const mutations = {
 	...reactionsMutations,
 	[types.IS_LOADING] (state, isLoading) {
-		set(state, 'loading', isLoading)
+		const loadingStatus = state.loading
+		if (isLoading) {
+			set(state, 'loading', (new Array(loadingStatus.length + 1)).fill(true))
+		} else {
+			set(state, 'loading', (new Array(loadingStatus.length - 1)).fill(true))
+		}
 	},
 	[types.QNA_CHANGE_SORTING] (state, sorting) {
 		set(state, 'sorting', sorting)
@@ -326,9 +332,9 @@ const mutations = {
 	},
 	[types.QNA_DESTROY] (state) {
 		let initialState = getInitialState()
-		Object.keys(initialState).forEach((field) => {
-			set(state, field, initialState[field])
-		})
+		Object.keys(initialState)
+			.filter((field) => field !== 'loading')
+			.forEach((field) => set(state, field, initialState[field]))
 	},
 }
 

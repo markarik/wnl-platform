@@ -8,10 +8,10 @@ const state = {
 	isChatOpen: false,
 	isOverlayVisible: false,
 	overlays: {},
-	canShowChat: false,
+	canShowChat: false
 }
 
-export const layouts = {
+const layouts = {
 	mobile: 'mobile',
 	tablet: 'tablet',
 	smallDesktop: 'small_screen',
@@ -96,7 +96,7 @@ const mutations = {
 		} else {
 			destroy(state.overlays, payload.source)
 		}
-	}
+	},
 }
 
 // Actions

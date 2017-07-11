@@ -67,6 +67,17 @@ class NotificationPolicy
 			$notification->notifiable_type === 'App\\Models\\User';
 	}
 
+	public function updateMultiple(User $user, $notifications)
+	{
+		foreach ($notifications as $notification) {
+			if (!$this->update($user, $notification)){
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	/**
 	 * Determine whether the user can delete the notification.
 	 *

@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-dropdown">
-		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
+		<div class="activator" :class="{ 'is-active' : isActive }" @click="toggle">
 			<div class="flag" v-if="hasUnseen">{{ unseenCount }}</div>
 			<span class="icon">
 				<i class="fa fa-bell"></i>
@@ -101,7 +101,7 @@
 <script>
 	import {isDemo} from 'js/utils/env'
 	import {set} from 'vue'
-	import {mapGetters} from 'vuex'
+	import {mapGetters, mapActions} from 'vuex'
 	import Event from 'js/components/user/notifications/Event'
 
 	export default {
@@ -115,12 +115,24 @@
 			}
 		},
 		computed: {
-			...mapGetters('notifications', ['notifications', 'isLoading', 'unseenCount']),
+			...mapGetters('notifications', ['notifications', 'isLoading', 'unseen']),
 			empty() {
 				return !this.isLoading && _.size(this.notifications) === 0
 			},
 			hasUnseen() {
 				return this.unseenCount > 0;
+			},
+			unseenCount() {
+				return _.size(this.unseen)
+			}
+		},
+		methods: {
+			...mapActions('notifications', ['markAllAsSeen']),
+			toggle() {
+				if (!this.isActive) {
+					this.markAllAsSeen()
+				}
+				this.isActive = !this.isActive
 			}
 		},
 		watch: {

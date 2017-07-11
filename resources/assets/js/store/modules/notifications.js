@@ -15,10 +15,10 @@ const getters = {
 	isLoading: (state) => state.loading,
 	notifications: (state) => state.notifications,
 	user: (state) => state.user,
-	unseenCount: (state) => {
-		return _.filter(state.notifications, (notification) => {
+	unseen: (state) => {
+		return _.pickBy(state.notifications, (notification) => {
 			return !notification.seen_at
-		}).length
+		})
 	},
 }
 
@@ -69,11 +69,17 @@ const actions = {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
 	},
-	markAsSeen({commit, getters}, notification) {
-		// _updateNotification(getters.user, notification.id)
-		// 	.then((response) => {
-		// 		commit(types.MARK_NOTIFICATION_AS_READ, {notification, time: response.data.seen_at, field:'read_at'})
-		// 	})
+	markAllAsSeen({commit, getters}) {
+		let data = _.mapValues(getters.unseen, (notification) => {
+			return { 'seen_at' : 'now'}
+		})
+
+		_updateMany(getters.user, data)
+			.then((response) => {
+				_.each(response.data, (notification) => {
+					commit(types.ADD_NOTIFICATION, notification)
+				})
+			})
 	},
 	initNotifications({commit, dispatch, rootGetters}) {
 		let userId = rootGetters.currentUserId
@@ -101,6 +107,10 @@ function _getNotifications(userId) {
 
 function _updateNotification(userId, notificationId, data) {
 	return axios.patch(getApiUrl(`users/${userId}/notifications/${notificationId}`), data)
+}
+
+function _updateMany(userId, data) {
+	return axios.patch(getApiUrl(`users/${userId}/notifications`), data)
 }
 
 

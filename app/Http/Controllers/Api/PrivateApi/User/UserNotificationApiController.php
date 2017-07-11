@@ -84,4 +84,27 @@ class UserNotificationApiController extends ApiController
 
 		return $this->respondOk($data);
 	}
+
+	public function patchMany(Request $request)
+	{
+		$user = User::fetch($request->route('id'));
+		$requestData = collect($request->all());
+
+		$notificationsQuery = Notification::whereIn('id', $requestData->keys());
+		$notifications = $notificationsQuery->get();
+
+		if (!$user->can('updateMultiple', [ Notification::class, $notifications ])){
+			return $this->respondUnauthorized();
+		}
+
+		foreach ($notifications as $notification) {
+			$notification->update($requestData->get($notification->id));
+		}
+
+		$notifications = $notificationsQuery->get();
+		$resource = new Collection($notifications, new NotificationTransformer, 'user_notifications');
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
+	}
 }

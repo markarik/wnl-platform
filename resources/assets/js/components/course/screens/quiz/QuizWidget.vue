@@ -30,6 +30,9 @@
 			</a>
 		</p>
 		<div class="other-questions">
+			<p class="notification small">
+				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
+			</p>
 			<wnl-quiz-question
 				v-for="question, index in otherQuestions"
 				:headerOnly="true"

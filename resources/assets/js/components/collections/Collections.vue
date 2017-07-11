@@ -40,7 +40,7 @@
 						<wnl-qna-collection></wnl-qna-collection>
 					</div>
 					<div class="column" v-show="isQuizPanelVisible">
-						<wnl-quiz-collection></wnl-quiz-collection>
+						<wnl-quiz-collection :rootCategoryName="rootCategoryName" :categoryName="categoryName"></wnl-quiz-collection>
 					</div>
 				</div>
 			</div>

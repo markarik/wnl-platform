@@ -5,9 +5,9 @@
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
 			}">
-			<header class="quiz-header card-header" :class="{'clickable': headerOnly}" @click="$emit('headerClicked')">
+			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
-					<div class="card-header-title">
+					<div class="card-header-title" :class="{'clickable': headerOnly}" @click="$emit('headerClicked')">
 						<div v-html="text"></div>
 					</div>
 					<div class="card-header-icons">

@@ -62,7 +62,7 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
-	import { scrollToTop, scrollToElement } from 'js/utils/animations'
+	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
@@ -115,16 +115,16 @@
 			},
 			nextQuestion() {
 				this.changeQuestion(1)
-				scrollToTop()
+				scrollToElement(this.$el, 75)
 			},
 			previousQuestion() {
-				this.changeQuestion(lastIndex)
-				scrollToTop()
+				this.changeQuestion(this.lastIndex)
+				scrollToElement(this.$el, 75)
 			},
 			selectQuestionFromList(index) {
 				let fullIndex = index + 1
 				this.changeQuestion(fullIndex)
-				scrollToTop()
+				scrollToElement(this.$el, 75)
 			},
 		},
 	}

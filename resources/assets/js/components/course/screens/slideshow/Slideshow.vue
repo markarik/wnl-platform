@@ -175,7 +175,6 @@
 				}
 			},
 			bookmarkState() {
-				console.log('bookmarkState for current slide', this.getReaction('slides', this.currentSlideId, 'bookmark'))
 				return this.getReaction('slides', this.currentSlideId, 'bookmark')
 			}
 		},
@@ -376,7 +375,7 @@
 				.then(() => {
 					this.presentableId && this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
 					.then(() => {
-						this.goToSlide(this.slideOrderNumber - 1)
+						this.goToSlide(this.slideOrderNumber)
 					})
 					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 				})
@@ -426,7 +425,7 @@
 				this.currentSlideId = this.getSlideId(newValue)
 			},
 			'slideOrderNumber' (newValue, oldValue) {
-				typeof this.child.call === 'function' && this.goToSlide(newValue - 1)
+				typeof this.child.call === 'function' && this.goToSlide(newValue)
 			}
 		}
 	}

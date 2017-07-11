@@ -23,7 +23,6 @@ const bookmarkImageRemove   = bookmarkElement.querySelector('.bookmark-image-rem
 let isSavingBookmark = false
 let bookmarkedSlideNumbers = [];
 
-// const viewer    = ImageViewer()
 const handshake = new Postmate.Model({
 	changeBackground: (background) => {
 		let containerClass = container.className,
@@ -85,10 +84,12 @@ const handshake = new Postmate.Model({
 		setBookmarkedState(Reveal.getState().indexh)
 		isSavingBookmark = false
 	},
-	setBookmarkedState(hasReacted) {
+	setBookmarkedState(data) {
 		const bookmarkedClassname = 'is-bookmarked';
 
-		if (hasReacted) {
+		bookmarkedSlideNumbers.push(data.slideIndex)
+
+		if (data.hasReacted) {
 			bookmarkElement.classList.add(bookmarkedClassname);
 		} else {
 			bookmarkElement.classList.remove(bookmarkedClassname);
@@ -219,7 +220,6 @@ function setMenuListeners(parent) {
 }
 
 function setBookmarks(parent) {
-
 	$('.bookmark').click(function (event) {
 		if (isSavingBookmark) return
 
@@ -232,6 +232,9 @@ function setBookmarks(parent) {
 }
 
 function setBookmarkedState(currentSlideNumber) {
+	console.log('currentSlideNumber', currentSlideNumber)
+	console.log('bookmarkedSlideNumbers', bookmarkedSlideNumbers)
+
 	const bookmarkedClassname = 'is-bookmarked';
 
 	if (bookmarkedSlideNumbers.indexOf(currentSlideNumber) > -1 ) {

@@ -203,10 +203,11 @@
 					})
 
 					return Promise.resolve({
-						hasReacted
+						hasReacted,
+						slideIndex,
 					})
 				}).then((data) => {
-					this.child.call('setBookmarkedState', data.hasReacted)
+					this.child.call('setBookmarkedState', data)
 				}).then(() => {
 					this.bookmarkLoading = false
 				})
@@ -237,7 +238,6 @@
 				this.focusSlideshow()
 			},
 			focusSlideshow() {
-				console.log('focusing slideshow....', this.child)
 				if (this.child.hasOwnProperty('frame') && typeof this.child.frame !== undefined) {
 					this.child.frame.click()
 					this.child.frame.focus()

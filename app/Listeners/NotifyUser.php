@@ -74,7 +74,8 @@ class NotifyUser implements ShouldQueue
 	 */
 	public function handleReactionAdded(ReactionAdded $event)
 	{
-		if ($reactableAuthor = $event->reactable->user) {
+		$reactableAuthor = $event->reactable->user;
+		if ($reactableAuthor && $event->reaction->type !== 'bookmark') {
 			$reactableAuthor->notify(new EventNotification($event));
 		}
 	}

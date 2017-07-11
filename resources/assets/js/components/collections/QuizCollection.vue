@@ -1,6 +1,6 @@
 <template>
 	<div class="collections-quiz">
-		<p class="title is-4">Zapisane pytania kontrolne <span v-if="isLoaded">({{howManyQuestions}})</span></p>
+		<p class="title is-4" v-if="isLoaded">Zapisane pytania kontrolne ({{howManyQuestions}})</p>
 		<div v-if="isLoaded">
 			<wnl-quiz-widget v-if="howManyQuestions > 0"></wnl-quiz-widget>
 			<div v-else class="notification has-text-centered">

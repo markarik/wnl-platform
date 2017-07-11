@@ -46,9 +46,6 @@
 <style lang="sass" rel="stylesheet/sass">
 	@import '../../../sass/variables'
 
-	.qna-loader
-		margin-top: $margin-huge
-
 	.wnl-qna
 		#question-icon
 			margin: $margin-tiny $margin-tiny 0 $margin-small

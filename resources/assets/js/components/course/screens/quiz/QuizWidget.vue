@@ -2,12 +2,12 @@
 	<div class="wnl-quiz-widget">
 		<div class="level">
 			<div class="level-left">
-				<a class="small unselectable" @click="changeQuestion(lastIndex)">
+				<a class="small unselectable" @click="previousQuestion()">
 					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
 				</a>
 			</div>
 			<div class="level-right">
-				<a class="small unselectable" @click="changeQuestion(1)">
+				<a class="small unselectable" @click="nextQuestion()">
 					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 				</a>
 			</div>
@@ -25,7 +25,7 @@
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
 			</a>
-			<a v-else class="button is-primary is-outlined" @click="changeQuestion(1)">
+			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
 				Następne
 			</a>
 		</p>
@@ -112,6 +112,14 @@
 			},
 			getQuestionElement(resource) {
 				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
+			},
+			nextQuestion() {
+				this.changeQuestion(1)
+				scrollToTop()
+			},
+			previousQuestion() {
+				this.changeQuestion(lastIndex)
+				scrollToTop()
 			},
 			selectQuestionFromList(index) {
 				let fullIndex = index + 1

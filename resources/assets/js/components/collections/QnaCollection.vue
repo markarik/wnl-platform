@@ -15,6 +15,8 @@
 </style>
 
 <script>
+	import { mapGetters } from 'vuex'
+
 	import Qna from 'js/components/qna/Qna'
 
 	export default {

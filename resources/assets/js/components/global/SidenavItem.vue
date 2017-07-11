@@ -1,9 +1,9 @@
 <template>
-	<li class="item" :class="[itemClass, { disabled: isDisabled }]">
+	<li class="item" :class="[itemClass, { disabled: item.isDisabled }]">
 		<router-link
 			class="item-wrapper"
 			v-if="isLink"
-			:class="{'is-active': active, 'is-disabled': isDisabled, 'is-completed': completed}"
+			:class="{'is-active': item.active, 'is-disabled': item.isDisabled, 'is-completed': item.completed}"
 			:replace="replace"
 			:to="to"
 		>
@@ -14,7 +14,7 @@
 					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
 				</span>
 				<span class="icon is-small" v-if="hasIcon">
-					<i :title="iconTitle" class="fa" :class="iconClass"></i>
+					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
 				</span>
 			</div>
 			<span class="sidenav-item-content">
@@ -30,7 +30,10 @@
 					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
 				</span>
 				<span class="icon is-small" v-if="hasIcon">
-					<i :title="iconTitle" class="fa" :class="iconClass"></i>
+					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
+				</span>
+				<span class="icon is-small" v-if="isGroupToggle">
+					<i :title="toggle" class="fa" :class="toggleIcon"></i>
 				</span>
 			</div>
 			<span class="sidenav-item-content">
@@ -99,7 +102,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed', 'active', 'meta'],
+		props: ['item', 'onClick', 'isGroupToggle', 'toggleIcon'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
@@ -117,7 +120,7 @@
 				return this.hasClass('complete')
 			},
 			replace() {
-				return this.method === 'replace'
+				return this.item.method === 'replace'
 			},
 			hasIcon() {
 				return this.hasClass('has-icon')
@@ -125,6 +128,15 @@
 			hasMeta() {
 				return typeof this.meta !== 'undefined' && this.meta.length > 0
 			},
+			itemClass() {
+				return this.item.itemClass
+			},
+			meta() {
+				return this.item.meta
+			},
+			to() {
+				return this.item.to
+			}
 		},
 		methods: {
 			hasClass(className) {

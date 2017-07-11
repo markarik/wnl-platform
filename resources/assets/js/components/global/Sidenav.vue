@@ -8,20 +8,11 @@
 					{{itemsHeading}}
 				</span>
 			</li>
-			<wnl-sidenav-item v-for="(item, index) in items"
-				:itemClass="item.itemClass"
-				:to="item.to"
-				:isDisabled="item.isDisabled"
-				:method="item.method"
-				:iconClass="item.iconClass"
-				:iconTitle="item.iconTitle"
+			<wnl-sidenav-group v-for="(item, index) in items"
+				:item="item"
 				:key="index"
-				:completed="item.completed"
-				:active="item.active"
-				:meta="item.meta"
 			>
-				{{item.text}}
-			</wnl-sidenav-item>
+			</wnl-sidenav-group>
 		</ul>
 	</div>
 </template>
@@ -123,14 +114,14 @@
 
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
-	import SidenavItem from 'js/components/global/SidenavItem'
+	import SidenavGroup from 'js/components/global/SidenavGroup'
 	import { mapGetters } from 'vuex'
 
 	export default {
 		props: ['breadcrumbs', 'items', 'itemsHeading'],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-sidenav-item': SidenavItem,
+			'wnl-sidenav-group': SidenavGroup
 		},
 		computed: {
 			...mapGetters(['isMobileNavigation'])

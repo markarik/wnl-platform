@@ -1,12 +1,12 @@
 <template>
 	<div class="wnl-quiz-widget">
-		<div class="level">
-			<div class="level-left">
+		<div class="quiz-widget-controls">
+			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
 					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
 				</a>
 			</div>
-			<div class="level-right">
+			<div class="widget-control">
 				<a class="small unselectable" @click="nextQuestion()">
 					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 				</a>
@@ -55,6 +55,10 @@
 		border-top: $border-light-gray
 		margin-top: $margin-big
 		padding-top: $margin-base
+
+	.quiz-widget-controls
+		display: flex
+		justify-content: space-between
 </style>
 
 <script>
@@ -77,6 +81,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			...mapGetters('quiz', [
 				'getQuestions',
 			]),

@@ -4,6 +4,7 @@
 			:class="{
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
+				'is-mobile': isMobile,
 			}">
 			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
@@ -89,8 +90,24 @@
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
 
+		&.is-mobile
+
+			.quiz-header,
+			.quiz-answers
+				padding: $margin-small
+
+				.card-header-title,
+				.card-header-icons
+					padding: $margin-small
+
+			.quiz-header
+				font-size: $font-size-minus-1
+
+			.quiz-answer
+				font-size: $font-size-minus-1
+
 	.quiz-question-comments
-		padding: $margin-small $margin-big $margin-big
+		padding: $margin-small $margin-big $margin-base
 		width: 100%
 
 	.has-errors .is-unanswered
@@ -120,6 +137,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			...mapGetters('quiz', [
 				'getAnswers',
 				'isComplete',

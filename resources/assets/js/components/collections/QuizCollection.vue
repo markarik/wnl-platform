@@ -1,7 +1,7 @@
 <template>
 	<div class="collections-quiz">
 		<p class="title is-4">Zapisane pytania kontrolne</p>
-		<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
+		<wnl-quiz-widget v-if="isLoaded"></wnl-quiz-widget>
 	</div>
 </template>
 
@@ -15,12 +15,12 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import QuizList from 'js/components/course/screens/quiz/QuizList'
+	import QuizWidget from 'js/components/course/screens/quiz/QuizWidget'
 
 	export default {
 		name: 'QuizCollection',
 		components: {
-			'wnl-quiz-list': QuizList,
+			'wnl-quiz-widget': QuizWidget,
 		},
 		computed: {
 			...mapGetters('collections', ['quizQuestionsIds']),

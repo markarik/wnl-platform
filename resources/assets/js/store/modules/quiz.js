@@ -103,6 +103,7 @@ const mutations = {
 	},
 	[types.QUIZ_RESET_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', null)
+		set(state.quiz_questions[payload.id], 'isResolved', false)
 	},
 	[types.QUIZ_RESOLVE_QUESTION] (state, payload) {
 		set(state.quiz_questions[payload.id], 'isResolved', true)
@@ -172,10 +173,16 @@ const mutations = {
 			}
 
 			set(state.quiz_questions, questionId, updatedState);
-			set(state, 'isComplete', false);
-			set(state, 'attempts', [])
-			set(state, 'retry', true)
 		})
+
+		set(state, 'isComplete', false);
+		set(state, 'attempts', [])
+		set(state, 'retry', true)
+	},
+	[types.QUIZ_CHANGE_QUESTION] (state, targetIndex) {
+		let deleteCount = targetIndex,
+			spliced = state.questionsIds.splice(0, deleteCount)
+		state.questionsIds.push(...spliced)
 	},
 }
 
@@ -282,6 +289,22 @@ const actions = {
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			resolve()
 		})
+	},
+
+	resolveQuestion({state, commit}, id) {
+		commit(types.QUIZ_RESOLVE_QUESTION, {id})
+	},
+
+	/**
+	 * Changes the current question (at index 0) to a selected question
+	 * @param  {Object} state
+	 * @param  {Function} commit
+	 * @param  {Integer} targetIndex An index of a target question
+	 */
+	changeQuestion({state, commit}, targetIndex = 1) {
+		let currentId = state.questionsIds[0]
+		commit(types.QUIZ_CHANGE_QUESTION, targetIndex)
+		commit(types.QUIZ_RESET_ANSWER, {id: currentId})
 	},
 
 	saveQuiz({state, rootGetters}, recordedAnswers){

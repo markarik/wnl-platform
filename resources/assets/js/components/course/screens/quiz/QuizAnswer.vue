@@ -1,7 +1,7 @@
 <template>
 	<li class="quiz-answer"
 		:class="{
-			'is-selected': isSelected,
+			'is-selected': isSelected && !showCorrect,
 			'is-correct': showCorrect,
 			'is-hinted': hintCorrect,
 		}"
@@ -34,6 +34,8 @@
 			&, &:hover, &:active
 				transition: all $transition-length-base
 
+	.wnl-quiz-question
+		.quiz-answer
 			&.is-selected
 				background: $color-ocean-blue
 				color: $color-white
@@ -113,7 +115,7 @@
 			},
 
 			showCorrect() {
-				return this.isCorrect && (this.isComplete || this.readOnly)
+				return this.isCorrect && this.$parent.displayResults
 			},
 
 			stats() {

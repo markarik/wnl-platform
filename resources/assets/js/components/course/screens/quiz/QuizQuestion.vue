@@ -7,7 +7,7 @@
 			}">
 			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
-					<div class="card-header-title" :class="{'clickable': headerOnly}" @click="$emit('headerClicked')">
+					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
 						<div v-html="text"></div>
 					</div>
 					<div class="card-header-icons">
@@ -71,6 +71,9 @@
 	.quiz-header
 		align-items: flex-start
 		flex-direction: column
+
+	.card-header-title.is-short-form
+		font-size: $font-size-minus-1
 
 	.quiz-header-top
 		display: flex

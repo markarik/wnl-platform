@@ -37,10 +37,16 @@
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
 						<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
-						<wnl-qna-collection></wnl-qna-collection>
+						<wnl-qna-collection
+							:rootCategoryName="rootCategoryName"
+							:categoryName="categoryName"
+						></wnl-qna-collection>
 					</div>
 					<div class="column" v-show="isQuizPanelVisible">
-						<wnl-quiz-collection :rootCategoryName="rootCategoryName" :categoryName="categoryName"></wnl-quiz-collection>
+						<wnl-quiz-collection
+							:rootCategoryName="rootCategoryName"
+							:categoryName="categoryName"
+						></wnl-quiz-collection>
 					</div>
 				</div>
 			</div>

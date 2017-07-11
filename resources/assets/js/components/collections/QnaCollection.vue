@@ -1,6 +1,9 @@
 <template>
 	<div class="collections-qna">
 		<wnl-qna title="Zapisane pytania i odpowiedzi" readOnly="true"></wnl-qna>
+		<div v-if="isZeroState" class="notification has-text-centered margin top">
+			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań i odpowiedzi. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym wątku!
+		</div>
 	</div>
 </template>
 
@@ -18,6 +21,13 @@
 		name: 'QnaCollection',
 		components: {
 			'wnl-qna': Qna,
+		},
+		props: ['rootCategoryName', 'categoryName'],
+		computed: {
+			...mapGetters('qna', ['loading', 'questions']),
+			isZeroState() {
+				return !this.loading && Object.keys(this.questions).length === 0
+			},
 		},
 	}
 </script>

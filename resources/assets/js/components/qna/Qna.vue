@@ -32,7 +32,7 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
-			<wnl-qna-sorting></wnl-qna-sorting>
+			<wnl-qna-sorting v-if="questionsList.length > 0"></wnl-qna-sorting>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"

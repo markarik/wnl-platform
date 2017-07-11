@@ -232,9 +232,6 @@ function setBookmarks(parent) {
 }
 
 function setBookmarkedState(currentSlideNumber) {
-	console.log('currentSlideNumber', currentSlideNumber)
-	console.log('bookmarkedSlideNumbers', bookmarkedSlideNumbers)
-
 	const bookmarkedClassname = 'is-bookmarked';
 
 	if (bookmarkedSlideNumbers.indexOf(currentSlideNumber) > -1 ) {

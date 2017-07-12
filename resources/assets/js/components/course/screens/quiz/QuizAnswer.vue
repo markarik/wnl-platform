@@ -4,7 +4,7 @@
 			'is-selected': isSelected && !showCorrect,
 			'is-correct': showCorrect,
 			'is-hinted': hintCorrect,
-			'is-mobile': isMobile,
+			'is-large-desktop': isLargeDesktop,
 		}"
 		@click="$emit('answerSelected')"
 	>
@@ -50,7 +50,7 @@
 		border-bottom: $border-light-gray
 		justify-content: space-between
 		list-style-type: none
-		padding: $margin-base $margin-base $margin-base $margin-huge
+		padding: $margin-small $margin-small $margin-small $margin-huge
 		position: relative
 		margin: 0
 
@@ -66,8 +66,8 @@
 				position: absolute
 				right: $margin-base
 
-		&.is-mobile
-			padding: $margin-small $margin-small $margin-small $margin-huge
+		&.is-large-desktop
+			padding: $margin-base $margin-base $margin-base $margin-huge
 
 	.quiz-answer.is-correct
 		background: $color-green
@@ -99,8 +99,7 @@
 		name: 'QuizAnswer',
 		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly'],
 		computed: {
-			...mapGetters(['isMobile']),
-
+			...mapGetters(['isLargeDesktop']),
 			...mapGetters('quiz', [
 				'isComplete',
 				'getSelectedAnswer',

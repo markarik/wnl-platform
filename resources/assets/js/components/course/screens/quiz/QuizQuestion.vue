@@ -40,7 +40,8 @@
 					<wnl-comments-list
 						module="quiz"
 						commentableResource="quiz_questions"
-						:commentableId="id">
+						:commentableId="id"
+						:isUnique="showComments">
 					</wnl-comments-list>
 				</div>
 			</div>

@@ -196,6 +196,7 @@
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
 			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
 			...mapActions('qna', ['fetchQuestionsByTagName']),
+			...mapActions(['toggleOverlay']),
 			getNavigation() {
 				let navigation = []
 
@@ -235,7 +236,7 @@
 				])
 			},
 			navigateToDefaultCategoryIfNone() {
-				if (!this.isTouchScreen && !this.categoryName) {
+				if ((this.isTouchScreen && !this.isSidenavVisible && !this.categoryName) || (!this.isTouchScreen && !this.categoryName)) {
 					const firstCategory = this.categories[0].categories[0];
 
 					this.$router.replace({name: this.routeName, params: {
@@ -270,15 +271,20 @@
 			},
 		},
 		mounted() {
+			this.toggleOverlay({source: 'collections', display: true})
 			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(this.navigateToDefaultCategoryIfNone)
 				.then(this.setupContentForCategory)
+				.then(() => this.toggleOverlay({source: 'collections', display: false}))
 		},
 		watch: {
 			'$route' () {
 				this.categoryName && this.setupContentForCategory()
 			},
+			'isSidenavVisible'(isOpen, wasOpen) {
+				this.isTouchScreen && !isOpen && wasOpen && this.navigateToDefaultCategoryIfNone()
+			}
 		},
 	}
 </script>

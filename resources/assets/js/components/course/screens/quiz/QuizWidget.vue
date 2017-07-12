@@ -29,7 +29,7 @@
 				Następne
 			</a>
 		</p>
-		<div class="other-questions">
+		<div class="other-questions" v-if="hasOtherQuestions">
 			<p class="notification small">
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
@@ -103,6 +103,9 @@
 			displayResults() {
 				return this.currentQuestion.isResolved
 			},
+			hasOtherQuestions() {
+				return this.otherQuestions.length > 0
+			}
 		},
 		methods: {
 			...mapActions('quiz', [

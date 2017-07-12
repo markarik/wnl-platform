@@ -35,13 +35,15 @@ class Kernel extends ConsoleKernel
 		Commands\StoreTime::class,
 		Commands\IssueFinalInvoice::class,
 		Commands\CategoriesTags::class,
-		Commands\LessonTags::class
+		Commands\LessonTags::class,
+		Commands\MegaUltraSuperDuperChartUpdateScript::class,
 	];
 
 	/**
 	 * Define the application's command schedule.
 	 *
-	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+	 * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+	 *
 	 * @return void
 	 */
 	protected function schedule(Schedule $schedule)

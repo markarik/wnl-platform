@@ -187,6 +187,7 @@
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
 			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
 			...mapActions('qna', ['fetchQuestionsByTagName']),
+			...mapActions(['toggleOverlay']),
 			getNavigation() {
 				let navigation = []
 
@@ -261,10 +262,12 @@
 			},
 		},
 		mounted() {
+			this.toggleOverlay({source: 'collections', display: true})
 			this.fetchCategories()
 				.then(this.fetchReactions)
 				.then(this.navigateToDefaultCategoryIfNone)
 				.then(this.setupContentForCategory)
+				.then(() => this.toggleOverlay({source: 'collections', display: false}))
 		},
 		watch: {
 			'$route' () {

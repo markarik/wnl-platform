@@ -32,7 +32,7 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="questionsList.length > 0"></wnl-qna-sorting>
+			<wnl-qna-sorting v-if="howManyQuestions > 0"></wnl-qna-sorting>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
@@ -127,7 +127,7 @@
 				'getSortedQuestions'
 			]),
 			howManyQuestions() {
-				return this.questionsList.length || 0
+				return Object.keys(this.questions).length || 0
 			},
 			tagsFiltered() {
 				if (!this.tags) return [];

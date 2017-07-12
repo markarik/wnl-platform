@@ -69,7 +69,7 @@
 		flex: 1
 		min-width: $sidenav-min-width
 		overflow: auto
-		padding: 7px 0
+		padding: $margin-small 0
 		width: $sidenav-width
 
 	.collections-breadcrumbs

@@ -27,7 +27,7 @@
 
 	.wnl-carousel
 		justify-content: space-around
-		margin-bottom: 10px
+		margin: $margin-base 0
 
 	.VueCarousel-inner
 		margin: 0 auto

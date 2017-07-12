@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use App\Models\Reactable;
 use App\Models\Reaction;
 use App\Models\QuizQuestion;
 
@@ -49,12 +50,24 @@ class MarkWrongQuestionsAsBookmarked extends Command
 			->get()
 			->toArray();
 
-		$insertValues = array_map([$this, 'composeInsertValues'], $wrongResults);
+		$added = $ignored = 0;
+		echo "\n";
+		$bar = $this->output->createProgressBar(count($wrongResults));
 
-		\DB::table('reactables')->insert($insertValues);
-	}
+		foreach ($wrongResults as $result) {
+			try {
+				$insertValues = array_merge((array) $result, $this->insertValuesBase);
+				\DB::table('reactables')->insert($insertValues);
+				$added++;
+			} catch (\PDOException $e) {
+				$ignored++;
+			}
 
-	private function composeInsertValues($result) {
-		return array_merge((array) $result, $this->insertValuesBase);
+			$bar->advance();
+		}
+
+		$bar->finish();
+		$this->info("\n\nDone! " . $added . ' reactions added, ' . $ignored
+		 . " ignored. \n");
 	}
 }

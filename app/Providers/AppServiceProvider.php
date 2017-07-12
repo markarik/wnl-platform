@@ -8,9 +8,11 @@ use Validator;
 use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\User;
-use App\Observers\UserObserver;
-use App\Observers\OrderObserver;
+use App\Models\UserQuizResults;
 use App\Observers\LessonObserver;
+use App\Observers\OrderObserver;
+use App\Observers\UserObserver;
+use App\Observers\UserQuizResultsObserver;
 use Monolog\Handler\RavenHandler;
 use Illuminate\Support\Facades\Auth;
 use Monolog\Formatter\LineFormatter;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
 		Order::observe(OrderObserver::class);
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
+		UserQuizResults::observe(UserQuizResultsObserver::class);
 
 		if ($this->useExternalLogger()) {
 			$this->addSentryLogger();

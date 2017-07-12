@@ -13,7 +13,7 @@ export const getLocalStorageKey = (setId, userSlug) => {
 const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) => {
 	const storeKey = getLocalStorageKey(setId, currentUserSlug);
 
-	if (!state.retry) {
+	// if (!state.retry) {
 		store.set(storeKey, state);
 
 		getCurrentUser().then(({data: {id}}) => {
@@ -22,7 +22,7 @@ const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) =
 				recordedAnswers
 			});
 		});
-	}
+	// }
 };
 
 const getQuizProgress = (setId, currentUserSlug) => {

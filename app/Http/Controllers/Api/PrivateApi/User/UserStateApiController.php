@@ -96,7 +96,9 @@ class UserStateApiController extends ApiController
 
 		try {
 			if (!empty($recordedAnswers)) {
-				UserQuizResults::insert($recordedAnswers);
+				foreach ($recordedAnswers as $record) {
+					UserQuizResults::updateOrCreate($record, $record);
+				}
 			}
 		} catch
 		(QueryException $e) {
@@ -162,4 +164,3 @@ class UserStateApiController extends ApiController
 		return sprintf(self::KEY_USER_TIME_TEMPLATE, $userId, self::CACHE_VERSION);
 	}
 }
-

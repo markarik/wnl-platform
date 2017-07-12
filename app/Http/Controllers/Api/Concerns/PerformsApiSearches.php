@@ -215,7 +215,7 @@ trait PerformsApiSearches
 
 		$data = $this->fractal->createData($resource)->toArray();
 
-		return $this->respondOk($data);
+		return $this->json($data);
 	}
 
 }

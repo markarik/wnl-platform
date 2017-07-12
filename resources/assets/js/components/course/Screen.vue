@@ -2,23 +2,25 @@
 	<div>
 		<h4>{{name}}</h4>
 		<component :is="component" :screenData="screenData"></component>
-		<wnl-qna v-if="tags.length > 0" :tags="tags"></wnl-qna>
+		<wnl-qna v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.wnl-screen-qna
+		margin: $margin-huge 0
 </style>
 
 <script>
-	import axios from 'axios'
 	import End from 'js/components/course/screens/End.vue'
 	import Html from 'js/components/course/screens/Html.vue'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
 	import Quiz from 'js/components/course/screens/quiz/Quiz.vue'
 	import Widget from 'js/components/course/screens/Widget.vue'
 	import Qna from 'js/components/qna/Qna'
-	import {getApiUrl} from 'js/utils/env'
-	import {mapGetters} from 'vuex';
+	import {mapGetters, mapActions} from 'vuex';
 
 	const typesToComponents = {
 		end: 'wnl-end',
@@ -58,7 +60,21 @@
 			},
 			component() {
 				return typesToComponents[this.type]
+			},
+			showQna() {
+				return this.tags.length > 0
 			}
 		},
+		methods: {
+			...mapActions('qna', ['fetchQuestionsByTags'])
+		},
+		mounted() {
+			this.showQna && this.fetchQuestionsByTags({tags: this.tags})
+		},
+		watch: {
+			'screenId' (newValue) {
+				this.showQna && this.fetchQuestionsByTags({tags: this.tags})
+			}
+		}
 	}
 </script>

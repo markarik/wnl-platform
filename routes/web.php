@@ -45,10 +45,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
-Route::group(['namespace' => 'Course', 'middleware' => ['auth']], function () {
-	Route::get('/slideshow-builder/{screenId}', 'SlideShowController@build')->name('slideshow-builder');
-});
-
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admin'], function () {
 	Route::group(['namespace' => 'Invoice', 'prefix' => 'invoice'], function () {
 		Route::get('advance', function () {

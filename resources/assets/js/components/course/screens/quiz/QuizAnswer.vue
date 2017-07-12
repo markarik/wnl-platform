@@ -1,9 +1,10 @@
 <template>
 	<li class="quiz-answer"
 		:class="{
-			'is-selected': isSelected,
+			'is-selected': isSelected && !showCorrect,
 			'is-correct': showCorrect,
 			'is-hinted': hintCorrect,
+			'is-mobile': isMobile,
 		}"
 		@click="$emit('answerSelected')"
 	>
@@ -34,6 +35,8 @@
 			&, &:hover, &:active
 				transition: all $transition-length-base
 
+	.wnl-quiz-question
+		.quiz-answer
 			&.is-selected
 				background: $color-ocean-blue
 				color: $color-white
@@ -62,6 +65,9 @@
 				content: '☑'
 				position: absolute
 				right: $margin-base
+
+		&.is-mobile
+			padding: $margin-small $margin-small $margin-small $margin-huge
 
 	.quiz-answer.is-correct
 		background: $color-green
@@ -93,6 +99,8 @@
 		name: 'QuizAnswer',
 		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly'],
 		computed: {
+			...mapGetters(['isMobile']),
+
 			...mapGetters('quiz', [
 				'isComplete',
 				'getSelectedAnswer',
@@ -113,7 +121,7 @@
 			},
 
 			showCorrect() {
-				return this.isCorrect && (this.isComplete || this.readOnly)
+				return this.isCorrect && this.$parent.displayResults
 			},
 
 			stats() {

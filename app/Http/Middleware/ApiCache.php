@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Cache;
 use Closure;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
 class ApiCache
@@ -18,6 +19,7 @@ class ApiCache
 	 *
 	 * @param  \Illuminate\Http\Request $request
 	 * @param  \Closure $next
+	 *
 	 * @return mixed
 	 */
 	public function handle($request, Closure $next)
@@ -32,22 +34,41 @@ class ApiCache
 		$cached = Cache::tags($tags)->get($key);
 
 		if ($cached !== null) {
-			return $this->respondOk($cached);
+			return $this->handleResponse($request, $cached);
 		}
 
 		$response = $next($request);
 
 		if ($this->responseValid($response)) {
-			Cache::tags($tags)->put($key, $response->getData(), 60 * 24);
+			$data = $this->getData($response);
+			Cache::tags($tags)->put($key, $data, 60 * 24);
 		}
 
 		return $response;
 	}
 
+	protected function handleResponse($request, $data)
+	{
+		if ($request->expectsJson()) {
+			return $this->respondOk($data);
+		}
+
+		return response($data);
+	}
+
+	protected function getData($response)
+	{
+		if ($response instanceof JsonResponse) {
+			return $response->getData();
+		}
+
+		return $response->getContent();
+	}
+
 	protected function responseValid($response)
 	{
 		return
-			$response instanceof JsonResponse &&
+			$response instanceof Response &&
 			$response->getStatusCode() === 200;
 	}
 

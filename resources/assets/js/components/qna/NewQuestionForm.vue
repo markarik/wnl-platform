@@ -78,11 +78,16 @@
 			}
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions']),
+			...mapActions('qna', ['fetchQuestionsByTags']),
 			onSubmitSuccess() {
 				this.$emit('submitSuccess')
-				this.fetchQuestions(this.tags)
+				this.fetchQuestionsByTags({tags: this.tags, sorting: 'latest'})
 			},
 		},
+		watch: {
+			'tags' (newValue) {
+				this.fetchQuestionsByTags({tags: newValue})
+			}
+		}
 	}
 </script>

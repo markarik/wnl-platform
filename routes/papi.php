@@ -138,8 +138,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Public image upload
 	Route::post("upload", 'UploadApiController@post');
 
-	// User Progress
-//	Route::get("{$r['users']}/{id}", 'CoursesApiController@get');
-//	Route::put("{$r['users']}/{id}", 'CoursesApiController@put');
+	// Categories
+	Route::get("{$r['categories']}/{id}", 'CategoriesApiController@get');
 
+	// Slideshow builder
+	Route::get("{$r['slideshow-builder']}/category/{id}", 'Course\SlideshowBuilderApiController@byCategory');
+	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'Course\SlideshowBuilderApiController@get');
 });

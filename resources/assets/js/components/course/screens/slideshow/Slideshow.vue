@@ -112,7 +112,7 @@
 
 	import Annotations from './Annotations'
 	import SlideshowNavigation from './SlideshowNavigation'
-	import {isDebug, getUrl} from 'js/utils/env'
+	import {isDebug, getApiUrl} from 'js/utils/env'
 
 	let debounced, handshake
 
@@ -156,7 +156,7 @@
 				return this.screenData.meta.resources[0].id
 			},
 			slideshowUrl() {
-				return getUrl(`slideshow-builder/${this.slideshowId}`)
+				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
 			},
 			slideshowElement() {
 				return this.container.getElementsByTagName('iframe')[0]

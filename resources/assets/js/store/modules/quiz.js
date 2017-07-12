@@ -20,9 +20,14 @@ function fetchQuizSetStats(id) {
 	)
 }
 
-function _fetchQuestionsCollection(ids) {
+function _fetchQuestionsCollectionByTagName(tagName, ids) {
 	return axios.post(getApiUrl('quiz_questions/.search'), {
 		query: {
+			whereHas: {
+				tags: {
+					where: [['tags.name', '=', tagName]]
+				}
+			},
 			whereIn: ['id', ids],
 		},
 		include: 'quiz_answers,comments.profiles,reactions',
@@ -75,10 +80,11 @@ const getters = {
 	getUnanswered: (state, getters) => _.filter(
 		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
 	),
-	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0,
+	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0 && getters.hasQuestions,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
+	hasQuestions: (state, getters) => getters.questionsLength !== 0,
 	getStats: (state) => (questionId) => state.quiz_stats[questionId],
 	questionsLength: (state) => state.questionsIds.length
 }
@@ -97,6 +103,7 @@ const mutations = {
 	},
 	[types.QUIZ_RESET_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', null)
+		set(state.quiz_questions[payload.id], 'isResolved', false)
 	},
 	[types.QUIZ_RESOLVE_QUESTION] (state, payload) {
 		set(state.quiz_questions[payload.id], 'isResolved', true)
@@ -166,10 +173,16 @@ const mutations = {
 			}
 
 			set(state.quiz_questions, questionId, updatedState);
-			set(state, 'isComplete', false);
-			set(state, 'attempts', [])
-			set(state, 'retry', true)
 		})
+
+		set(state, 'isComplete', false);
+		set(state, 'attempts', [])
+		set(state, 'retry', true)
+	},
+	[types.QUIZ_CHANGE_QUESTION] (state, targetIndex) {
+		let deleteCount = targetIndex,
+			spliced = state.questionsIds.splice(0, deleteCount)
+		state.questionsIds.push(...spliced)
 	},
 }
 
@@ -206,25 +219,32 @@ const actions = {
 		});
 	},
 
-	fetchQuestionsCollection({commit}, ids) {
-		_fetchQuestionsCollection(ids).then(response => {
-			let included = _.clone(response.data.included)
+	fetchQuestionsCollectionByTagName({commit}, {tagName, ids}) {
+		commit(types.QUIZ_IS_LOADED, false)
 
-			destroy(response.data, 'included')
-			included['quiz_questions'] = response.data
+		return _fetchQuestionsCollectionByTagName(tagName, ids).then(response => {
+			if (response.data.included) {
+				let included = _.clone(response.data.included)
 
-			let questionsIds = _.map(response.data, (question) => question.id),
-				len = questionsIds.length
+				destroy(response.data, 'included')
+				included['quiz_questions'] = response.data
 
-			commit(types.UPDATE_INCLUDED, included)
-			commit(types.QUIZ_SET_QUESTIONS, {
-				setId: 0,
-				setName: 'Kolekcja pytań kontrolnych',
-				len,
-				questionsIds,
-			})
-			commit(types.QUIZ_COMPLETE)
-			commit(types.QUIZ_TOGGLE_PROCESSING, false)
+				let questionsIds = _.map(response.data, (question) => question.id),
+					len = questionsIds.length
+
+				commit(types.UPDATE_INCLUDED, included)
+				commit(types.QUIZ_SET_QUESTIONS, {
+					setId: 0,
+					setName: `Kolekcja pytań kontrolnych dla ${tagName}`,
+					len,
+					questionsIds,
+				})
+				commit(types.QUIZ_RESET_PROGRESS)
+				commit(types.QUIZ_TOGGLE_PROCESSING, false)
+			} else {
+				commit(types.QUIZ_DESTROY)
+			}
+
 			commit(types.QUIZ_IS_LOADED, true)
 		})
 	},
@@ -269,6 +289,22 @@ const actions = {
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			resolve()
 		})
+	},
+
+	resolveQuestion({state, commit}, id) {
+		commit(types.QUIZ_RESOLVE_QUESTION, {id})
+	},
+
+	/**
+	 * Changes the current question (at index 0) to a selected question
+	 * @param  {Object} state
+	 * @param  {Function} commit
+	 * @param  {Integer} targetIndex An index of a target question
+	 */
+	changeQuestion({state, commit}, targetIndex = 1) {
+		let currentId = state.questionsIds[0]
+		commit(types.QUIZ_CHANGE_QUESTION, targetIndex)
+		commit(types.QUIZ_RESET_ANSWER, {id: currentId})
 	},
 
 	saveQuiz({state, rootGetters}, recordedAnswers){

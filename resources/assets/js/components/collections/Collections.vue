@@ -227,7 +227,7 @@
 				])
 			},
 			navigateToDefaultCategoryIfNone() {
-				if (!this.isTouchScreen && !this.categoryName) {
+				if ((this.isTouchScreen && !this.isSidenavVisible && !this.categoryName) || (!this.isTouchScreen && !this.categoryName)) {
 					const firstCategory = this.categories[0].categories[0];
 
 					this.$router.replace({name: this.routeName, params: {
@@ -273,6 +273,9 @@
 			'$route' () {
 				this.categoryName && this.setupContentForCategory()
 			},
+			'isSidenavVisible'(isOpen, wasOpen) {
+				this.isTouchScreen && !isOpen && wasOpen && this.navigateToDefaultCategoryIfNone()
+			}
 		},
 	}
 </script>

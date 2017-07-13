@@ -80,18 +80,23 @@
 				}))
 			},
 			sortedSlides() {
-				const sortedSlides = [...this.slides]
+				if (this.presentableLoaded) {
+					const filteredSlides = this.slides.filter((slide) => this.allSlides[slide.id])
 
-				this.presentableLoaded && sortedSlides.sort(({id: id1}, {id: id2}) => {
-					const slideOne = this.allSlides[id1]
-					const slideTwo = this.allSlides[id2]
-					return slideOne.order_number - slideTwo.order_number
-				})
+					filteredSlides.sort(({id: id1}, {id: id2}) => {
+						const slideOne = this.allSlides[id1]
+						const slideTwo = this.allSlides[id2]
 
-				return sortedSlides
+						return slideOne.order_number - slideTwo.order_number
+					})
+
+					return filteredSlides
+				}
+
+				return []
 			},
 			presentableLoaded() {
-				return Object.keys(this.allSlides).length
+				return Object.keys(this.allSlides).length > 0
 			},
 			currentSlide() {
 				const selectedSlide = this.sortedSlides[this.selectedSlideIndex];

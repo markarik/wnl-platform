@@ -189,21 +189,11 @@
 					hasReacted,
 					reactableResource: 'slides',
 					reactableId: this.getSlideId(slideIndex),
-					reaction: 'bookmark'
+					reaction: 'bookmark',
+					count: this.bookmarkState.count
 				}).then(() => {
-					const hasReacted = !this.bookmarkState.hasReacted
-					const count = hasReacted ? this.bookmarkState.count + 1 : this.bookmarkState.count - 1;
-
-					this.$store.commit('slideshow/SET_REACTION', {
-						count,
-						hasReacted,
-						reactableResource: 'slides',
-						reactableId: this.getSlideId(slideIndex),
-						reaction: 'bookmark',
-					})
-
 					return Promise.resolve({
-						hasReacted,
+						hasReacted: !hasReacted,
 						slideIndex,
 					})
 				}).then((data) => {

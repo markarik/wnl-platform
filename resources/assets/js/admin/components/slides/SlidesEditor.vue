@@ -60,7 +60,7 @@
 				</div>
 				<div class="level-right">
 					<div class="level-item">
-						<a class="button is-primary" v-if="chartReady" @click="updateChart">Aktualizuj diagram</a>
+						<a class="button is-primary" :class="{'is-loading': updatingChart}" v-if="chartReady" @click="updateChart">Aktualizuj diagram</a>
 					</div>
 					<div class="level-item">
 						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any()" @click="onSubmit">Zapisz slajd</a>
@@ -113,6 +113,7 @@
 				loadingSlide: false,
 				loading: false,
 				slideId: null,
+				updatingChart: false,
 			}
 		},
 		computed: {
@@ -195,14 +196,17 @@
 				this.submissionFailed = false
 			},
 			updateChart() {
+				this.updatingChart = true
 				axios.get(getUrl(`admin/update-charts/${this.slideId}`))
 						.then(response => {
 							this.getSlide()
 							this.successFading('Diagram zaktualizowany!', 2000)
+							this.updatingChart = false
 						})
 						.catch(error => {
 							this.errorFading('Ups... Coś poszło nie tak.', 4000)
 							$wnl.logger.capture(error)
+							this.updatingChart = false
 						})
 			}
 		}

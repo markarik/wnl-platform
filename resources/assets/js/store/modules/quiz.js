@@ -273,7 +273,8 @@ const actions = {
 				} else {
 					// react
 					const reaction = getters.getReaction('quiz_questions', question.id, 'bookmark').hasReacted;
-					!reaction && dispatch('setReaction', {
+
+					attempts === 0 && !state.retry && !reaction && dispatch('setReaction', {
 						reactableResource: 'quiz_questions',
 						reactableId: question.id,
 						reaction: 'bookmark',

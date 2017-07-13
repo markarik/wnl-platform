@@ -18,30 +18,33 @@ class ReactionsApiController extends ApiController
 		$this->resourceName = config('papi.resources.reactions');
 	}
 
-	public function post(CreateReaction $request)
+	public function postMany(Request $request)
 	{
 		$user = Auth::user();
+		$reactions = $request->all();
 
-		$modelName = self::getResourceModel($request->get('reactable_resource'));
-		$reactable = $modelName::find($request->get('reactable_id'));
-		$reaction = Reaction::type($request->get('reaction_type'));
-		$context = $request->get('context');
+		foreach($reactions as $index => $reactionParam) {
+			$modelName = self::getResourceModel($reactionParam['reactable_resource']);
+			$reactable = $modelName::find($reactionParam['reactable_id']);
+			$reaction = Reaction::type($reactionParam['reaction_type']);
+			$context = $request->get('context');
 
-		if (!$reactable || !$reaction) {
-			return $this->respondNotFound();
+			if (!$reactable || !$reaction) {
+				return $this->respondNotFound();
+			}
+
+			$now = Carbon::now();
+			$reactable->reactions()->attach($reaction, [
+				'user_id'    => $user->id,
+				'created_at' => $now,
+				'updated_at' => $now,
+				'context'    => $context,
+			]);
+
+			// Since there's no action performed on reaction model,
+			// we have to trigger the event manually.
+			event(new ReactionAdded($reaction, $reactable, $user->id));
 		}
-
-		$now = Carbon::now();
-		$reactable->reactions()->attach($reaction, [
-			'user_id'    => $user->id,
-			'created_at' => $now,
-			'updated_at' => $now,
-			'context'    => $context,
-		]);
-
-		// Since there's no action performed on reaction model,
-		// we have to trigger the event manually.
-		event(new ReactionAdded($reaction, $reactable, $user->id));
 
 		return $this->respondCreated();
 	}

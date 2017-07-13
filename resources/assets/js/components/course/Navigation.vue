@@ -1,5 +1,5 @@
 <template>
-	<aside class="course-sidenav">
+	<aside class="sidenav-aside course-sidenav">
 		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading"></wnl-sidenav>
 	</aside>
 </template>

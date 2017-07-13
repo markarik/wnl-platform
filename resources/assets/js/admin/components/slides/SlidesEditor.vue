@@ -128,8 +128,9 @@
 							return this.getSlideId(slideshowId)
 						})
 						.then(slideId => {
+							let exclude = ['snippet']
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
-							this.form.populate(this.resourceUrl)
+							this.form.populate(this.resourceUrl, exclude)
 							this.loadingSlide = false
 						})
 						.catch(exception => {

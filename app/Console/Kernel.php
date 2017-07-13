@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
 		Commands\DumpCourseStructure::class,
 		Commands\EncryptPasswords::class,
 		Commands\IssueFinalInvoice::class,
+		Commands\InvoicesExport::class,
 		Commands\LessonTags::class,
 		Commands\ListOrders::class,
 		Commands\MigrateUserData::class,

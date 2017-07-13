@@ -60,21 +60,49 @@ class InvoicesExport extends Command
 				continue;
 			}
 
+			$finalNet = 0;
+			$finalVat = 0;
+			$finalGross = 0;
+
 			foreach ($order->invoices as $invoice) {
+				$valuesOverrides = [];
+
 				if ($invoice->series === 'PROFORMA') {
 					continue;
 				}
 
-				$data .= $this->printLine($invoice, $order, $schema);
+				if ($invoice->series === 'F-ZAL') {
+					$finalNet = $finalNet + $this->price($invoice->netValue);
+					$finalVat = $finalVat + $this->price($invoice->vatAmount);
+					$finalGross = $finalGross + $this->price($invoice->amount);
+				}
+
+				if ($invoice->series === 'FK') {
+					$valuesOverrides['netValue'] = $finalNet;
+					$valuesOverrides['amount'] = $finalGross;
+					$valuesOverrides['vatAmount'] = $finalVat;
+				}
+
+				$data .= $this->printLine($invoice, $order, $schema, $valuesOverrides);
 			}
 		}
 
 		\Storage::put('exports/invoices ' . Carbon::now()->toDateTimeString() . '.csv', $data);
 	}
 
-	public function printLine($invoice, $order, $schema)
+	public function printLine($invoice, $order, $schema, $valuesOverrides)
 	{
 		$isCompany = $order->user->invoice;
+
+		if ($invoice->series === 'FK') {
+			$netValue = $this->price($valuesOverrides['netValue']);
+			$vatAmount = $this->price($valuesOverrides['vatAmount']);
+			$grossValue = $this->price($valuesOverrides['amount']);
+		} else {
+			$netValue = $this->price($invoice->netValue);
+			$vatAmount = $this->price($invoice->vatAmount);
+			$grossValue = $this->price($invoice->amount);
+		}
 
 		$schema['Seria'] = $invoice->series;
 		$schema['Numer'] = $invoice->number;
@@ -88,10 +116,10 @@ class InvoicesExport extends Command
 		$schema['Sposób płatności'] = $order->method;
 		$schema['Produkt'] = $order->product->name;
 		$schema['Numer produktu'] = $order->product->id;
-		$schema['Wartość netto'] = $this->price($invoice->netValue);
+		$schema['Wartość netto'] = $netValue;
 		$schema['Stawka VAT'] = $invoice->vat;
-		$schema['Kwota VAT'] = $this->price($invoice->vatAmount);
-		$schema['Wartość brutto'] = $this->price($invoice->amount);
+		$schema['Kwota VAT'] = $vatAmount;
+		$schema['Wartość brutto'] = $grossValue;
 
 		$fields = array_map(function ($element) {
 			return '"' . $element . '"';

@@ -77,6 +77,11 @@ class LessonTags extends Command
 							echo("Adding $tag->name to slide $slide->id from screen $screen->name \n");
 							$slide->tags()->attach($tag);
 						}
+
+						if (empty($slide->snippet)) {
+							echo("Adding snippet to slide $slide->id from screen $screen->name \n");
+							$slide->snippet = $slide->content;
+						}
 					}
 				}
 			}

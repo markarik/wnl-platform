@@ -253,6 +253,7 @@ const actions = {
 		return new Promise((resolve) => {
 			commit(types.QUIZ_TOGGLE_PROCESSING, true)
 			const data = [];
+			const reactionsToSet = [];
 			const attempts = getters.getAttempts.length;
 
 			_.each(getters.getUnresolved, question => {
@@ -274,7 +275,7 @@ const actions = {
 					// react
 					const reaction = getters.getReaction('quiz_questions', question.id, 'bookmark').hasReacted;
 
-					attempts === 0 && !state.retry && !reaction && dispatch('setReaction', {
+					attempts === 0 && !state.retry && !reaction && reactionsToSet.push({
 						reactableResource: 'quiz_questions',
 						reactableId: question.id,
 						reaction: 'bookmark',
@@ -291,6 +292,7 @@ const actions = {
 			})
 
 			commit(types.QUIZ_ATTEMPT, {score: getters.getCurrentScore})
+			dispatch('markManyAsReacted', reactionsToSet)
 
 			dispatch('saveQuiz', data);
 

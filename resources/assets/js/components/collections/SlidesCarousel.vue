@@ -8,8 +8,8 @@
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlide.order_number"
 		></wnl-slideshow>
-		<carousel class="wnl-carousel" :paginationEnabled="false" :navigationEnabled="true" :perPage="4">
-			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in slides">
+		<carousel class="wnl-carousel" :paginationEnabled="false" :navigationEnabled="true" :perPage="4" v-if="presentableLoaded">
+			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in sortedSlides">
 				<div class="slide-thumb" @click="showSlide(index)">
 					<p class="metadata">{{slide.header}}</p>
 					<div class="slide-snippet" v-if="!slide.media" v-html="slide.snippet"></div>
@@ -55,7 +55,6 @@
 		props: ['categoryId'],
 		data() {
 			return {
-				// TODO this has to be smarter - show the first slide from collection
 				selectedSlideIndex: 0,
 				screenData: {
 					type: 'slideshow'
@@ -80,8 +79,22 @@
 					id: slide.id
 				}))
 			},
+			sortedSlides() {
+				const sortedSlides = [...this.slides]
+
+				this.presentableLoaded && sortedSlides.sort(({id: id1}, {id: id2}) => {
+					const slideOne = this.allSlides[id1]
+					const slideTwo = this.allSlides[id2]
+					return slideOne.order_number - slideTwo.order_number
+				})
+
+				return sortedSlides
+			},
+			presentableLoaded() {
+				return Object.keys(this.allSlides).length
+			},
 			currentSlide() {
-				const selectedSlide = this.slides[this.selectedSlideIndex];
+				const selectedSlide = this.sortedSlides[this.selectedSlideIndex];
 
 				return selectedSlide && this.allSlides[selectedSlide.id] || {}
 			}
@@ -90,6 +103,6 @@
 			showSlide(index) {
 				this.selectedSlideIndex = index;
 			}
-		}
+		},
 	}
 </script>

@@ -53,6 +53,9 @@
 				</div>
 				<div class="level-right">
 					<div class="level-item">
+						<a class="button is-primary" v-if="chartReady" @click="updateChart">Aktualizuj diagram</a>
+					</div>
+					<div class="level-item">
 						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any()" @click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
@@ -77,8 +80,9 @@
 	import Form from 'js/classes/forms/Form'
 	import Code from 'js/admin/components/forms/Code'
 	import Checkbox from 'js/admin/components/forms/Checkbox'
-	import _ from 'lodash'
 	import {resource} from 'js/utils/config'
+	import {getUrl} from 'js/utils/env'
+	import _ from 'lodash'
 
 	export default {
 		name: 'SlideEditor',
@@ -99,11 +103,19 @@
 				screenId: '',
 				loadingSlide: false,
 				loading: false,
+				slideId: null,
 			}
 		},
 		computed: {
 			slideNumber() {
 				return this.slideOrderNo - 1
+			},
+			chartReady() {
+				let match = null
+				if (this.form.content){
+					match = this.form.content.match('class="chart"')
+				}
+				return !!this.slideId && !!match
 			}
 		},
 		methods: {
@@ -131,6 +143,7 @@
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
 							this.form.populate(this.resourceUrl)
 							this.loadingSlide = false
+							this.slideId = slideId
 						})
 						.catch(exception => {
 							this.submissionFailed = true
@@ -170,6 +183,12 @@
 			reset() {
 				this.saved            = false
 				this.submissionFailed = false
+			},
+			updateChart() {
+				axios.get(getUrl(`admin/update-charts/${this.slideId}`))
+						.then(response => {
+							this.getSlide()
+						})
 			}
 		}
 	}

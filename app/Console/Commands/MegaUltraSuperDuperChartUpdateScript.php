@@ -19,7 +19,7 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'charts:update {slide?}';
+	protected $signature = 'charts:update {id?}';
 
 	/**
 	 * The console command description.
@@ -45,11 +45,19 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 	 */
 	public function handle()
 	{
-		$slides = Slide::all();
+		if ($id = $this->argument('id')) {
+			$this->update(Slide::find($id));
 
+			return true;
+		}
+
+		$slides = Slide::all();
+		$this->info('Searching for charts in ' . $slides->count() . ' slides...' . PHP_EOL);
 		foreach ($slides as $slide) {
 			$this->update($slide);
 		}
+
+		return true;
 	}
 
 	protected function update($slide)
@@ -62,8 +70,9 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 		$chartHash = preg_replace('/.png(.*)/', '', $originalFileName);
 		if (!$this->updateFile($chartHash)) return;
 
-		$newFileName = env('APP_URL') . '/storage/charts/' . $chartHash . '.png?cb=' . str_random(32);
-		$slide->content = preg_replace(self::CHART_URL_PATTERN, $newFileName, $slide->content);
+		$originalPath = $this->match(self::CHART_URL_PATTERN, $slide->content);
+		$newPath = env('APP_URL') . '/storage/charts/' . $chartHash . '.png?cb=' . str_random(32);
+		$slide->content = str_replace($originalPath[0][1], $newPath, $slide->content);
 		$slide->save();
 		$this->info('OK.');
 	}
@@ -85,9 +94,11 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 			$image = Image::make($urlFormatted)->stream('png');
 			$path = "charts/{$chartId}.png";
 			Storage::put('public/' . $path, $image);
-		} catch (NotReadableException $e) {
-				$this->warn($e->getMessage());
-				return false;
+		}
+		catch (NotReadableException $e) {
+			$this->warn($e->getMessage());
+
+			return false;
 		}
 
 		return true;

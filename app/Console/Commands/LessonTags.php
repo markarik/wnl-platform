@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Tag;
 use App\Models\QuizSet;
+use App\Models\Lesson;
 
 class LessonTags extends Command
 {
@@ -57,6 +58,29 @@ class LessonTags extends Command
 		}
 
 		// Attach lessons tags to slides
+		$lessons = Lesson::all();
+
+		foreach ($lessons as $lesson) {
+			$lessonScreens = $lesson->screens;
+			$tag = Tag::firstOrCreate(['name' => $lesson->name]);
+
+			foreach ($lessonScreens as $screen) {
+				if ($screen->type == 'slideshow') {
+					if (empty($screen->slideshow)) {
+						echo("Can't tag slides from screen $screen->id from lesson $lesson->name because slideshow does't exist \n");
+						continue;
+					}
+
+					$slides = $screen->slideshow->slides;
+					foreach($slides as $slide) {
+						if (!$slide->tags->contains($tag)) {
+							echo("Adding $tag->name to slide $slide->id from screen $screen->name \n");
+							$slide->tags()->attach($tag);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private function getLessonTagForQuizSet($key)

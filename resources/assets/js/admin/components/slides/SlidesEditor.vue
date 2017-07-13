@@ -1,5 +1,12 @@
 <template>
 	<div class="slides-editor">
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+				   :alert="alert"
+				   cssClass="fixed"
+				   :key="timestamp"
+				   :timestamp="timestamp"
+				   @delete="onDelete"
+		></wnl-alert>
 		<p class="title is-3">Edycja slajdu</p>
 		<div class="slides-search">
 			<div class="level margin vertical">
@@ -83,6 +90,7 @@
 	import {resource} from 'js/utils/config'
 	import {getUrl} from 'js/utils/env'
 	import _ from 'lodash'
+	import { alerts } from 'js/mixins/alerts'
 
 	export default {
 		name: 'SlideEditor',
@@ -90,6 +98,7 @@
 			'wnl-form-code': Code,
 			'wnl-form-checkbox': Checkbox,
 		},
+		mixins: [ alerts ],
 		data() {
 			return {
 				form: new Form({
@@ -189,6 +198,11 @@
 				axios.get(getUrl(`admin/update-charts/${this.slideId}`))
 						.then(response => {
 							this.getSlide()
+							this.successFading('Diagram zaktualizowany!', 2000)
+						})
+						.catch(error => {
+							this.errorFading('Ups... Coś poszło nie tak.', 4000)
+							$wnl.logger.capture(error)
 						})
 			}
 		}

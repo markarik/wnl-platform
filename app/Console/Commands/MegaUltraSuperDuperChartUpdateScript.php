@@ -2,14 +2,19 @@
 
 namespace App\Console\Commands;
 
-use Intervention\Image\Exception\NotReadableException;
+use App;
 use Storage;
 use App\Models\Slide;
 use Illuminate\Console\Command;
 use Intervention\Image\Facades\Image;
+use App\Notifications\ChartsUpdatingDone;
+use Illuminate\Notifications\Notifiable;
+use Intervention\Image\Exception\NotReadableException;
 
 class MegaUltraSuperDuperChartUpdateScript extends Command
 {
+	use Notifiable;
+
 	const CHART_PATH_PATTERN = '/storage\/charts\/([^"]*)"/';
 
 	const CHART_URL_PATTERN = '/src="([^"]*)".*class="chart"/';
@@ -19,7 +24,7 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'charts:update {id?}';
+	protected $signature = 'charts:update {id?} {--notify}';
 
 	/**
 	 * The console command description.
@@ -45,6 +50,8 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 	 */
 	public function handle()
 	{
+		\Log::debug('Running charts updater with "notify" option set to ' . $this->option('notify'));
+
 		if ($id = $this->argument('id')) {
 			$this->update(Slide::find($id));
 
@@ -57,6 +64,11 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 			$this->update($slide);
 		}
 
+		if ($this->option('notify')) {
+			$this->notify(new ChartsUpdatingDone());
+		}
+
+		\Log::debug('Charts updater done.');
 		return true;
 	}
 
@@ -102,5 +114,14 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 		}
 
 		return true;
+	}
+
+	public function routeNotificationForSlack()
+	{
+		if (App::environment('production')) {
+			return env('SLACK_SLIDESHOWS');
+		}
+
+		return env('SLACK_TEST');
 	}
 }

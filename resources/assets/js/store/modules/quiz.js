@@ -253,6 +253,7 @@ const actions = {
 		return new Promise((resolve) => {
 			commit(types.QUIZ_TOGGLE_PROCESSING, true)
 			const data = [];
+			const reactionsToSet = [];
 			const attempts = getters.getAttempts.length;
 
 			_.each(getters.getUnresolved, question => {
@@ -270,15 +271,28 @@ const actions = {
 
 				if (!_.isNull(selected) && selected.is_correct) {
 					commit(types.QUIZ_RESOLVE_QUESTION, {id})
-				} else if (attempts < 2) {
-					commit(types.QUIZ_RESET_ANSWER, {id})
-					if (!question.preserve_order) {
-						commit(types.QUIZ_SHUFFLE_ANSWERS, {id})
+				} else {
+					// react
+					const reaction = getters.getReaction('quiz_questions', question.id, 'bookmark').hasReacted;
+
+					attempts === 0 && !state.retry && !reaction && reactionsToSet.push({
+						reactableResource: 'quiz_questions',
+						reactableId: question.id,
+						reaction: 'bookmark',
+						hasReacted: question.hasReacted
+					});
+
+					 if (attempts < 2) {
+						commit(types.QUIZ_RESET_ANSWER, {id})
+						if (!question.preserve_order) {
+							commit(types.QUIZ_SHUFFLE_ANSWERS, {id})
+						}
 					}
 				}
 			})
 
 			commit(types.QUIZ_ATTEMPT, {score: getters.getCurrentScore})
+			dispatch('markManyAsReacted', reactionsToSet)
 
 			dispatch('saveQuiz', data);
 

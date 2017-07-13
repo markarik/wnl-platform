@@ -37,6 +37,25 @@ class Invoice extends Model
 		return $this->series . '/' . $this->number;
 	}
 
+	public function getVatRateAttribute()
+	{
+		if ($this->vat === 'zw') {
+			return 0;
+		}
+
+		return (int) $this->vat / 100;
+	}
+
+	public function getVatAmountAttribute()
+	{
+		return $this->amount - $this->netValue;
+	}
+
+	public function getNetValueAttribute()
+	{
+		return $this->amount / (1 + $this->vatRate);
+	}
+
 	public function scopeRecent($query)
 	{
 		return $query

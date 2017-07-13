@@ -270,10 +270,21 @@ const actions = {
 
 				if (!_.isNull(selected) && selected.is_correct) {
 					commit(types.QUIZ_RESOLVE_QUESTION, {id})
-				} else if (attempts < 2) {
-					commit(types.QUIZ_RESET_ANSWER, {id})
-					if (!question.preserve_order) {
-						commit(types.QUIZ_SHUFFLE_ANSWERS, {id})
+				} else {
+					// react
+					const reaction = getters.getReaction('quiz_questions', question.id, 'bookmark').hasReacted;
+					!reaction && dispatch('setReaction', {
+						reactableResource: 'quiz_questions',
+						reactableId: question.id,
+						reaction: 'bookmark',
+						hasReacted: question.hasReacted
+					});
+
+					 if (attempts < 2) {
+						commit(types.QUIZ_RESET_ANSWER, {id})
+						if (!question.preserve_order) {
+							commit(types.QUIZ_SHUFFLE_ANSWERS, {id})
+						}
 					}
 				}
 			})

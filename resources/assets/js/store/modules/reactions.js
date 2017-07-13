@@ -43,6 +43,17 @@ export const reactionsActions = {
 					$wnl.logger.error(error)
 					reject()
 				})
+		}).then(() => {
+			const hasReacted = !payload.hasReacted
+			const count = hasReacted ? payload.count + 1 : payload.count - 1;
+
+			commit(types.SET_REACTION, {
+				count,
+				hasReacted,
+				reactableResource: payload.reactableResource,
+				reactableId: payload.reactableId,
+				reaction: payload.reaction,
+			})
 		})
 	},
 }

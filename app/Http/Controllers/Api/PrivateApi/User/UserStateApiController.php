@@ -96,9 +96,7 @@ class UserStateApiController extends ApiController
 
 		try {
 			if (!empty($recordedAnswers)) {
-				foreach ($recordedAnswers as $record) {
-					UserQuizResults::updateOrCreate($record, $record);
-				}
+				UserQuizResults::insert($recordedAnswers);
 			}
 		} catch
 		(QueryException $e) {

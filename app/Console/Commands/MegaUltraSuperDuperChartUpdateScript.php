@@ -6,6 +6,7 @@ use App;
 use Storage;
 use App\Models\Slide;
 use Illuminate\Console\Command;
+use Facades\Lib\SlideParser\Parser;
 use Intervention\Image\Facades\Image;
 use App\Notifications\ChartsUpdatingDone;
 use Illuminate\Notifications\Notifiable;
@@ -69,12 +70,14 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 		}
 
 		\Log::debug('Charts updater done.');
+
 		return true;
 	}
 
 	protected function update($slide)
 	{
 		$match = $this->match(self::CHART_PATH_PATTERN, $slide->content);
+		$this->tryParsingLucidIframe($slide);
 		if (!$match) return;
 
 		$this->info('Found chart! Updating image...');
@@ -123,5 +126,15 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 		}
 
 		return env('SLACK_TEST');
+	}
+
+	public function tryParsingLucidIframe($slide)
+	{
+		$result = Parser::handleCharts($slide->content);
+
+		if ($result !== $slide->content) {
+			$slide->content = $result;
+			$slide->save();
+		}
 	}
 }

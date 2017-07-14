@@ -8,7 +8,7 @@
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlide.order_number"
 		></wnl-slideshow>
-		<carousel class="wnl-carousel" :paginationEnabled="false" :navigationEnabled="true" :perPage="4" v-if="presentableLoaded">
+		<carousel class="wnl-carousel" :paginationEnabled="false" :navigationEnabled="true" :perPage="4" v-if="presentableLoaded && sortedSlides.lenth">
 			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in sortedSlides">
 				<div class="slide-thumb" @click="showSlide(index)">
 					<p class="metadata">{{slide.header}}</p>

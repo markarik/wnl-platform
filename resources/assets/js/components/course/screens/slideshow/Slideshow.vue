@@ -218,10 +218,12 @@
 				return index + 1
 			},
 			goToSlide(slideIndex) {
-				this.slideChanged = true
-				this.child.call('goToSlide', slideIndex)
-				this.setCurrentSlideFromIndex(slideIndex)
-				this.focusSlideshow()
+				if(slideIndex || slideIndex === 0) {
+					this.slideChanged = true
+					this.child.call('goToSlide', slideIndex)
+					this.setCurrentSlideFromIndex(slideIndex)
+					this.focusSlideshow()
+				}
 			},
 			changeBackground(background = 'image') {
 				this.child.call('changeBackground', background)

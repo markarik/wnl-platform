@@ -184,6 +184,7 @@
 			...mapActions(['toggleOverlay']),
 			toggleBookmarkedState(slideIndex, hasReacted) {
 				this.bookmarkLoading = true
+				const slideId = this.getSlideId(slideIndex)
 
 				return this.$store.dispatch(`slideshow/setReaction`, {
 					hasReacted,
@@ -198,6 +199,7 @@
 					})
 				}).then((data) => {
 					this.child.call('setBookmarkedState', data)
+					this.$emit('slideBookmarked', {slideId, hasReacted: data.hasReacted})
 				}).then(() => {
 					this.bookmarkLoading = false
 				})

@@ -26,7 +26,7 @@ class UpdateTagsUniqueName extends Migration
 	public function down()
 	{
 		Schema::table('tags', function (Blueprint $table) {
-			$table->dropUnique('name');
+			// $table->dropUnique('name');
 		});
 	}
 }

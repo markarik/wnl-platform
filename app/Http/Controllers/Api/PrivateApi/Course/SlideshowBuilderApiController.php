@@ -11,6 +11,11 @@ use App\Http\Controllers\Api\ApiController;
 
 class SlideshowBuilderApiController extends ApiController
 {
+	public function __construct(Request $request)
+	{
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.slides');
+	}
 
 	public function get($slideshowId)
 	{

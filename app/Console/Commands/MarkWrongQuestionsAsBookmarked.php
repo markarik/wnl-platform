@@ -27,13 +27,6 @@ class MarkWrongQuestionsAsBookmarked extends Command
 	public function __construct()
 	{
 		parent::__construct();
-		$this->now = Carbon::now();
-		$this->insertValuesBase = [
-			'reaction_id' => Reaction::type('bookmark')->id, // bookmark
-			'reactable_type' => 'App\\Models\\QuizQuestion',
-			'created_at' => $this->now,
-			'updated_at' => $this->now,
-		];
 	}
 
 	/**
@@ -43,6 +36,8 @@ class MarkWrongQuestionsAsBookmarked extends Command
 	 */
 	public function handle()
 	{
+		$this->setup();
+
 		$wrongResults = \DB::table('user_quiz_results')
 			->select('user_quiz_results.quiz_question_id as reactable_id', 'user_quiz_results.user_id')
 			->join('quiz_answers', 'quiz_answers.id', '=', 'user_quiz_results.quiz_answer_id')
@@ -69,5 +64,16 @@ class MarkWrongQuestionsAsBookmarked extends Command
 		$bar->finish();
 		$this->info("\n\nDone! " . $added . ' reactions added, ' . $ignored
 		 . " ignored. \n");
+	}
+
+	public function setup()
+	{
+		$this->now = Carbon::now();
+		$this->insertValuesBase = [
+			'reaction_id' => Reaction::type('bookmark')->id, // bookmark
+			'reactable_type' => 'App\\Models\\QuizQuestion',
+			'created_at' => $this->now,
+			'updated_at' => $this->now,
+		];
 	}
 }

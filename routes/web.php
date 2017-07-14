@@ -76,4 +76,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admi
 
 	// Using front-end routing for the admin panel application
 	Route::get('/app/{path?}', 'AppController@index')->where('path', '(.*)');
+
+	Route::get('/update-charts', function() { Artisan::queue('charts:update', ['--notify' => true]); });
+	Route::get('/update-charts/{slideId}', function($id) { Artisan::call('charts:update', ['id' => $id]); });
 });

@@ -36,7 +36,7 @@
 				</div>
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
-						<wnl-slides-carousel :categoryId="categoryId"></wnl-slides-carousel>
+						<!-- <wnl-slides-carousel :categoryId="categoryId"></wnl-slides-carousel> -->
 						<wnl-qna-collection
 							:rootCategoryName="rootCategoryName"
 							:categoryName="categoryName"
@@ -143,7 +143,7 @@
 	import MainNav from 'js/components/MainNav'
 	import QnaCollection from 'js/components/collections/QnaCollection'
 	import QuizCollection from 'js/components/collections/QuizCollection'
-	import SlidesCarousel from 'js/components/collections/SlidesCarousel'
+	// import SlidesCarousel from 'js/components/collections/SlidesCarousel'
 	import { resource } from 'js/utils/config'
 	import navigation from 'js/services/navigation'
 	import { layouts } from 'js/store/modules/ui'
@@ -156,7 +156,7 @@
 			'wnl-main-nav': MainNav,
 			'wnl-qna-collection': QnaCollection,
 			'wnl-quiz-collection': QuizCollection,
-			'wnl-slides-carousel': SlidesCarousel
+			// 'wnl-slides-carousel': SlidesCarousel
 		},
 		data() {
 			return {
@@ -232,7 +232,7 @@
 				return this.categoryName && Promise.all([
 					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
 					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
-					this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
+					// this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
 				])
 			},
 			navigateToDefaultCategoryIfNone() {

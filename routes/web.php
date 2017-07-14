@@ -45,10 +45,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
-Route::group(['namespace' => 'Course', 'middleware' => ['auth']], function () {
-	Route::get('/slideshow-builder/{screenId}', 'SlideShowController@build')->name('slideshow-builder');
-});
-
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admin'], function () {
 	Route::group(['namespace' => 'Invoice', 'prefix' => 'invoice'], function () {
 		Route::get('advance', function () {
@@ -80,4 +76,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admi
 
 	// Using front-end routing for the admin panel application
 	Route::get('/app/{path?}', 'AppController@index')->where('path', '(.*)');
+
+	Route::get('/update-charts', function() { Artisan::queue('charts:update', ['--notify' => true]); });
+	Route::get('/update-charts/{slideId}', function($id) { Artisan::call('charts:update', ['id' => $id]); });
 });

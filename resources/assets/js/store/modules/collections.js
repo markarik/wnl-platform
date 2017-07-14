@@ -14,6 +14,8 @@ function getInitialState() {
 		qna_answers: [],
 		quiz_questions: [],
 		slides: [],
+		categories: [],
+		slidesContent: []
 	}
 }
 
@@ -33,7 +35,9 @@ const getters = {
 	qnaQuestionsIds: (state) => state.qna_questions.map(question => question.reactable_id),
 	qnaAnswersIds: (state) => state.qna_answers,
 	quizQuestionsIds: (state) => state.quiz_questions.map(question => question.reactable_id),
-	slides: (state) => state.slides,
+	slidesIds: (state) => state.slides.map(slide => slide.reactable_id),
+	categories: (state) => state.categories,
+	slidesContent: (state) => state.slidesContent
 }
 
 const mutations = {
@@ -48,24 +52,57 @@ const mutations = {
 	},
 	[types.COLLECTIONS_SET_REACTABLE] (state, payload) {
 		payload.items.forEach((item) => state[payload.resource].push(item))
-		// state[payload.resource].push(payload.item)
+	},
+	[types.COLLECTIONS_SET_CATEGORIES] (state, categories) {
+		set(state, 'categories', categories)
+	},
+	[types.SLIDES_LOADING] (state, isLoading) {
+		set(state, 'slidesLoaded', !isLoading)
+	},
+	[types.COLLECTIONS_SET_SLIDES] (state, slides) {
+		set(state, 'slidesContent', slides)
 	},
 }
 
 const actions = {
 	fetchReactions({commit}) {
-		_getReactions().then(response => {
-			if (response.data.length === 0) {
+		return _getReactions().then(({data: { reactions }}) => {
+			if (reactions === 0) {
 				commit(types.IS_LOADING, false)
 				return false
 			}
 
 			_.each(resourcesMap, (model, resource) => {commit(types.COLLECTIONS_SET_REACTABLE, {
 					resource,
-					items: response.data.filter((item) => item.reactable_type === model)
+					items: reactions.filter((item) => item.reactable_type === model)
 				})
 			})
 			commit(types.IS_LOADING, false)
+		})
+	},
+	fetchCategories({commit}) {
+		return axios.get(getApiUrl('categories/all'))
+			.then(({data: categories}) => commit(types.COLLECTIONS_SET_CATEGORIES, categories));
+	},
+	fetchSlidesByTagName({commit}, {tagName, ids}) {
+		commit(types.SLIDES_LOADING, true);
+		return axios.post(getApiUrl('slides/.search'), {
+			query: {
+				whereHas: {
+					tags: {
+						where: [['tags.name', '=', tagName]]
+					}
+				},
+				whereIn: ['id', ids],
+			},
+			order: {
+				id: 'desc',
+			},
+		}).then(({data}) => {
+			commit(types.COLLECTIONS_SET_SLIDES, data)
+			commit(types.SLIDES_LOADING, false);
+		}).catch((error) => {
+			commit(types.SLIDES_LOADING, false);
 		})
 	}
 }

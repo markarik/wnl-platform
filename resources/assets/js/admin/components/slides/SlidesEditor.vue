@@ -1,5 +1,12 @@
 <template>
 	<div class="slides-editor">
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+				   :alert="alert"
+				   cssClass="fixed"
+				   :key="timestamp"
+				   :timestamp="timestamp"
+				   @delete="onDelete"
+		></wnl-alert>
 		<p class="title is-3">Edycja slajdu</p>
 		<div class="slides-search">
 			<div class="level margin vertical">
@@ -53,6 +60,9 @@
 				</div>
 				<div class="level-right">
 					<div class="level-item">
+						<a class="button is-primary" :class="{'is-loading': updatingChart}" v-if="chartReady" @click="updateChart">Aktualizuj diagram</a>
+					</div>
+					<div class="level-item">
 						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any()" @click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
@@ -77,8 +87,10 @@
 	import Form from 'js/classes/forms/Form'
 	import Code from 'js/admin/components/forms/Code'
 	import Checkbox from 'js/admin/components/forms/Checkbox'
-	import _ from 'lodash'
 	import {resource} from 'js/utils/config'
+	import {getUrl} from 'js/utils/env'
+	import _ from 'lodash'
+	import { alerts } from 'js/mixins/alerts'
 
 	export default {
 		name: 'SlideEditor',
@@ -86,6 +98,7 @@
 			'wnl-form-code': Code,
 			'wnl-form-checkbox': Checkbox,
 		},
+		mixins: [ alerts ],
 		data() {
 			return {
 				form: new Form({
@@ -99,11 +112,20 @@
 				screenId: '',
 				loadingSlide: false,
 				loading: false,
+				slideId: null,
+				updatingChart: false,
 			}
 		},
 		computed: {
 			slideNumber() {
 				return this.slideOrderNo - 1
+			},
+			chartReady() {
+				let match = null
+				if (this.form.content){
+					match = this.form.content.match('class="chart"')
+				}
+				return !!this.slideId && !!match
 			}
 		},
 		methods: {
@@ -128,9 +150,11 @@
 							return this.getSlideId(slideshowId)
 						})
 						.then(slideId => {
+							let exclude = ['snippet']
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
-							this.form.populate(this.resourceUrl)
+							this.form.populate(this.resourceUrl, exclude)
 							this.loadingSlide = false
+							this.slideId = slideId
 						})
 						.catch(exception => {
 							this.submissionFailed = true
@@ -170,6 +194,20 @@
 			reset() {
 				this.saved            = false
 				this.submissionFailed = false
+			},
+			updateChart() {
+				this.updatingChart = true
+				axios.get(getUrl(`admin/update-charts/${this.slideId}`))
+						.then(response => {
+							this.getSlide()
+							this.successFading('Diagram zaktualizowany!', 2000)
+							this.updatingChart = false
+						})
+						.catch(error => {
+							this.errorFading('Ups... Coś poszło nie tak.', 4000)
+							$wnl.logger.capture(error)
+							this.updatingChart = false
+						})
 			}
 		}
 	}

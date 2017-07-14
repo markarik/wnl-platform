@@ -85,22 +85,12 @@ let routes = [
 		component: require('js/components/collections/Collections.vue'),
 		meta: {keepsNavOpen: true},
 		props: true,
-		// redirect: { name: "my-profile" },
 		children: [
 			{
-				name: 'collection-slides',
-				path: 'slides',
-				component: require('js/components/collections/SlidesCollection.vue')
-			},
-			{
-				name: 'collection-qna',
-				path: 'qna',
-				component: require('js/components/collections/QnaCollection.vue')
-			},
-			{
-				name: 'collection-quiz',
-				path: 'quiz',
-				component: require('js/components/collections/QuizCollection.vue')
+				props: true,
+				name: 'collections-categories',
+				path: ':rootCategoryName/:categoryName',
+				component: require('js/components/collections/Collections.vue')
 			},
 		]
 	},

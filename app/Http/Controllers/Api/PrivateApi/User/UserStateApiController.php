@@ -162,4 +162,3 @@ class UserStateApiController extends ApiController
 		return sprintf(self::KEY_USER_TIME_TEMPLATE, $userId, self::CACHE_VERSION);
 	}
 }
-

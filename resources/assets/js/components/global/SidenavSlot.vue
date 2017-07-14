@@ -60,13 +60,15 @@
 			width: 100%
 
 		.course-sidenav,
-		.help-sidenav
+		.help-sidenav,
+		.collections-sidenav
 			max-width: none
 			width: auto
 
 		.wnl-sidenav,
 		.course-sidenav,
-		.help-sidenav
+		.help-sidenav,
+		.collections-sidenav
 			padding: 0
 </style>
 

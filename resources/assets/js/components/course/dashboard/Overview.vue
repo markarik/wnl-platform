@@ -34,7 +34,7 @@
 
 		<wnl-active-users/>
 		<!-- Latest Q&A -->
-		<wnl-qna title="Ostatnie pytania"></wnl-qna>
+		<wnl-qna title="Ostatnie pytania" class="wnl-overview-qna"></wnl-qna>
 	</div>
 </template>
 
@@ -49,11 +49,14 @@
 
 	.wnl-overview
 		padding-bottom: 20em
+
+	.wnl-overview-qna
+		margin: $margin-huge 0
 </style>
 
 <script>
 	import emoji from 'node-emoji'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	import Qna from 'js/components/qna/Qna'
 	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
@@ -84,6 +87,9 @@
 			'wnl-next-lesson': NextLesson,
 			'wnl-your-progress': YourProgress,
 		},
+		methods: {
+			...mapActions('qna', ['fetchLatestQuestions'])
+		},
 		beforeMount() {
 			if (this.isBeginning) {
 				this.$router.replace({
@@ -94,6 +100,9 @@
 					}
 				})
 			}
+		},
+		mounted() {
+			this.fetchLatestQuestions()
 		}
 	}
 </script>

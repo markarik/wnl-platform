@@ -4,10 +4,11 @@
 			:class="{
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
+				'is-mobile': isMobile,
 			}">
 			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
-					<div class="card-header-title">
+					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
 						<div v-html="text"></div>
 					</div>
 					<div class="card-header-icons">
@@ -20,7 +21,7 @@
 					</div>
 				</div>
 			</header>
-			<div class="quiz-answers card-content">
+			<div class="quiz-answers card-content" v-if="!headerOnly">
 				<ul>
 					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
 						:answer="answer"
@@ -34,12 +35,13 @@
 				</ul>
 				<div class="quiz-question-meta">#{{id}}</div>
 			</div>
-			<div class="card-footer" v-if="isComplete">
+			<div class="card-footer" v-if="(!headerOnly && displayResults) || showComments">
 				<div class="quiz-question-comments">
 					<wnl-comments-list
 						module="quiz"
 						commentableResource="quiz_questions"
-						:commentableId="id">
+						:commentableId="id"
+						:isUnique="showComments">
 					</wnl-comments-list>
 				</div>
 			</div>
@@ -72,6 +74,9 @@
 		align-items: flex-start
 		flex-direction: column
 
+	.card-header-title.is-short-form
+		font-size: $font-size-minus-1
+
 	.quiz-header-top
 		display: flex
 		width: 100%
@@ -86,8 +91,24 @@
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
 
+		&.is-mobile
+
+			.quiz-header,
+			.quiz-answers
+				padding: $margin-small
+
+				.card-header-title,
+				.card-header-icons
+					padding: $margin-small
+
+			.quiz-header
+				font-size: $font-size-minus-1
+
+			.quiz-answer
+				font-size: $font-size-minus-1
+
 	.quiz-question-comments
-		padding: $margin-small $margin-big $margin-big
+		padding: $margin-small $margin-big $margin-base
 		width: 100%
 
 	.has-errors .is-unanswered
@@ -110,13 +131,14 @@
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
 		},
+		props: ['id', 'index', 'text', 'total', 'readOnly', 'headerOnly', 'showComments'],
 		data() {
 			return {
 				reactableResource: "quiz_questions"
 			}
 		},
-		props: ['id', 'index', 'text', 'total', 'readOnly'],
 		computed: {
+			...mapGetters(['isMobile']),
 			...mapGetters('quiz', [
 				'getAnswers',
 				'isComplete',
@@ -135,18 +157,6 @@
 			},
 			isUnanswered() {
 				return this.selectedAnswer === null
-			},
-			/**
-			 * @return {Boolean}
-			 */
-			hasComments() {
-				// return this.comments.length > 0
-			},
-			/**
-			 * @return {Boolean}
-			 */
-			showComments() {
-				// return this.isComplete && this.hasComments
 			},
 			reactionState() {
 				return this.getReaction(this.reactableResource, this.id, "bookmark")

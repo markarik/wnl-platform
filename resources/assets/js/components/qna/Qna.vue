@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<div class="qna-loader" v-if="!ready">
+		<div class="qna-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="wnl-qna" v-if="ready">
+		<div class="wnl-qna" v-if="!loading">
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
@@ -15,7 +15,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="level-right" v-if="!readOnly && tags">
+				<div class="level-right" v-if="!readOnly && tags && tags.length">
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
@@ -32,12 +32,13 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
 				</div>
 			</transition>
-			<wnl-qna-sorting></wnl-qna-sorting>
+			<wnl-qna-sorting v-if="howManyQuestions > 0"></wnl-qna-sorting>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
-				:readOnly="readOnly">
-			</wnl-qna-question>
+				:readOnly="readOnly"
+				:reactionsDisabled="reactionsDisabled"
+			></wnl-qna-question>
 		</div>
 	</div>
 </template>
@@ -45,12 +46,7 @@
 <style lang="sass" rel="stylesheet/sass">
 	@import '../../../sass/variables'
 
-	.qna-loader
-		margin-top: $margin-huge
-
 	.wnl-qna
-		margin: $margin-huge 0
-
 		#question-icon
 			margin: $margin-tiny $margin-tiny 0 $margin-small
 
@@ -115,7 +111,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'ids', 'readOnly', 'title'],
+		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
 		data() {
 			return {
 				ready: false,
@@ -127,13 +123,11 @@
 			...mapGetters('qna', [
 				'loading',
 				'currentSorting',
-				'questionsByTime',
-				'questionsNoAnswer',
-				'questionsByVotes',
-				'questionsMy'
+				'questions',
+				'getSortedQuestions'
 			]),
 			howManyQuestions() {
-				return this.questionsList.length || 0
+				return Object.keys(this.questions).length || 0
 			},
 			tagsFiltered() {
 				if (!this.tags) return [];
@@ -144,56 +138,17 @@
 			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestions', 'fetchQuestionsByIds', 'fetchLatestQuestions', 'destroyQna']),
-			getSortedQuestions(sorting, list) {
-				if (sorting === 'latest') {
-					return this.questionsByTime;
-				} else if (sorting === 'no-answer') {
-					return this.questionsNoAnswer;
-				} else if (sorting === "my") {
-					return this.questionsMy;
-				} else {
-					return this.questionsByVotes;
-				}
-			}
+			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			new Promise((resolve, rejected) => {
-				if (this.tags) {
-					this.fetchQuestions(this.tags).then(() => {
-						this.ready = true
-						resolve()
-					}).catch(error => $wnl.logger.error(error))
-				} else if (this.ids) {
-					this.fetchQuestionsByIds(this.ids).then(() => {
-						this.ready = true
-						resolve()
-					}).catch(error => $wnl.logger.error(error))
-				} else {
-					this.fetchLatestQuestions(this.ids).then(() => {
-						this.ready = true
-						resolve()
-					}).catch(error => $wnl.logger.error(error))
-				}
-			}).then(() => {
-				this.questionsList = this.getSortedQuestions(this.currentSorting);
-			})
-		},
-		beforeDestroy() {
-			this.destroyQna()
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
 		},
 		watch: {
-			'tags' (newValue, oldValue) {
-				if (newValue !== oldValue) {
-					this.ready = false
-					this.destroyQna()
-					this.fetchQuestions(newValue).then(() => {
-						this.ready = true
-					})
-				}
+			'currentSorting' (newValue) {
+				this.questionsList = this.getSortedQuestions(newValue, this.questions);
 			},
-			'currentSorting' (newValue, oldValue) {
-				this.questionsList = this.getSortedQuestions(newValue);
+			'questions' (newValue) {
+				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
 			}
 		}
 	}

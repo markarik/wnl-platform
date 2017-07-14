@@ -53,7 +53,9 @@ class OptimaExport extends Command
 			})->get();
 
 		foreach ($orders as $order) {
-			list($contractors[], $invoices[]) = $this->processOrder($order);
+			if ($order->user) {
+				list($contractors[], $invoices[]) = $this->processOrder($order);
+			}
 		}
 
 		$data = [
@@ -76,7 +78,6 @@ class OptimaExport extends Command
 			],
 		];
 
-//		dd($this->toXml($data));
 		\Storage::put('exports/optima.xml', $this->toXml($data));
 	}
 
@@ -128,7 +129,7 @@ class OptimaExport extends Command
 	{
 		$user = $order->user;
 		$invoice = $order->invoices->last();
-		$product = $order->product;
+//		$product = $order->product;
 
 		if ($user->invoice) {
 			$name = $user->invoice_name;
@@ -191,7 +192,7 @@ class OptimaExport extends Command
 		$vatValue = $this->price($invoice->amount - $priceNet);
 		$priceGross = $this->price($invoice->amount);
 
-		$invoice = [
+		$invoiceData = [
 			'ID_ZRODLA'               => '',
 			'MODUL'                   => 'Rejestr Vat',
 			'TYP'                     => 'Rejestr sprzedaży',
@@ -240,39 +241,39 @@ class OptimaExport extends Command
 					'UWZ_W_PROPORCJI' => $uwz,
 				],
 			],
-			'PLATNOSCI'               => [
-				'PLATNOSC' => [
-					'ID_ZRODLA_PLAT'               => '',
-					'TERMIN_PLAT'                  => $deadline,
-					'FORMA_PLATNOSCI_PLAT'         => 'przelew',
-					'FORMA_PLATNOSCI_ID_PLAT'      => 'A',
-					'KWOTA_PLAT'                   => "$priceGross",
-					'WALUTA_PLAT'                  => 'PLN',
-					'PLATNOSC_TYP_PODMIOTU'        => 'kontrahent',
-					'PLATNOSC_PODMIOT'             => $user->id,
-					'PLATNOSC_PODMIOT_ID'          => $user->id,
-					'PLATNOSC_PODMIOT_NIP'         => $vatId,
-					'KURS_WALUTY_PLAT'             => 'NBP',
-					'NOTOWANIE_WALUTY_ILE_PLAT'    => '1',
-					'NOTOWANIE_WALUTY_ZA_ILE_PLAT' => '1',
-					'KWOTA_PLN_PLAT'               => "$priceGross",
-					'KIERUNEK'                     => 'przychód',
-					'PODLEGA_ROZLICZENIU'          => 'tak',
-					'KONTO'                        => '',
-					'NIE_NALICZAJ_ODSETEK'         => 'Nie',
-					'PRZELEW_SEPA'                 => 'Nie',
-					'DATA_KURSU_PLAT'              => $deadline,
-					'WALUTA_DOK'                   => 'PLN',
-					'PLAT_ELIXIR_O1'               => '',
-					'PLAT_ELIXIR_O2'               => '',
-					'PLAT_ELIXIR_O3'               => '',
-					'PLAT_ELIXIR_O4'               => '',
-				],
-			],
 		];
 
+		if ($invoice->series !== self::FINAL_SERIES_NAME) {
+			$invoiceData['PLATNOSCI'] = [
+				'ID_ZRODLA_PLAT'               => '',
+				'TERMIN_PLAT'                  => $deadline,
+				'FORMA_PLATNOSCI_PLAT'         => 'przelew',
+				'FORMA_PLATNOSCI_ID_PLAT'      => 'A',
+				'KWOTA_PLAT'                   => "$priceGross",
+				'WALUTA_PLAT'                  => 'PLN',
+				'PLATNOSC_TYP_PODMIOTU'        => 'kontrahent',
+				'PLATNOSC_PODMIOT'             => $user->id,
+				'PLATNOSC_PODMIOT_ID'          => $user->id,
+				'PLATNOSC_PODMIOT_NIP'         => $vatId,
+				'KURS_WALUTY_PLAT'             => 'NBP',
+				'NOTOWANIE_WALUTY_ILE_PLAT'    => '1',
+				'NOTOWANIE_WALUTY_ZA_ILE_PLAT' => '1',
+				'KWOTA_PLN_PLAT'               => "$priceGross",
+				'KIERUNEK'                     => 'przychód',
+				'PODLEGA_ROZLICZENIU'          => 'tak',
+				'KONTO'                        => '',
+				'NIE_NALICZAJ_ODSETEK'         => 'Nie',
+				'PRZELEW_SEPA'                 => 'Nie',
+				'DATA_KURSU_PLAT'              => $deadline,
+				'WALUTA_DOK'                   => 'PLN',
+				'PLAT_ELIXIR_O1'               => '',
+				'PLAT_ELIXIR_O2'               => '',
+				'PLAT_ELIXIR_O3'               => '',
+				'PLAT_ELIXIR_O4'               => '',
+			];
+		}
 
-		return [$contractor, $invoice];
+		return [$contractor, $invoiceData];
 	}
 
 	protected function price($number)

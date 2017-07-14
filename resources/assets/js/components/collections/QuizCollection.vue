@@ -1,34 +1,40 @@
 <template>
-	<div>
-		<h3>Twoja kolekcja pytań kontrolnych</h3>
-		<div class="notification margin top"><strong>Kolekcje już wkrótce będzie można łatwo przeszukiwać m.in.&nbsp;po&nbsp;przedmiotach oraz słowach kluczowych, więc będą służyć jako wartościowe narzędzie do powtórek!</strong> Dlatego zachęcamy Cię gorąco do zapisywania w&nbsp;Twoich Kolekcjach slajdów, pytań oraz pytań kontrolnych na bieżąco!</div>
-		<wnl-quiz-list v-if="isLoaded" readOnly="true"></wnl-quiz-list>
+	<div class="collections-quiz">
+		<p class="title is-4" v-if="isLoaded">Zapisane pytania kontrolne ({{howManyQuestions}})</p>
+		<div v-if="isLoaded">
+			<wnl-quiz-widget v-if="howManyQuestions > 0"></wnl-quiz-widget>
+			<div v-else class="notification has-text-centered">
+				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
+			</div>
+		</div>
+		<wnl-text-loader v-else></wnl-text-loader>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
 
+	.collections-quiz
+		padding: $margin-base 0
 </style>
 
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import QuizList from 'js/components/course/screens/quiz/QuizList'
+	import QuizWidget from 'js/components/course/screens/quiz/QuizWidget'
 
 	export default {
 		name: 'QuizCollection',
 		components: {
-			'wnl-quiz-list': QuizList,
+			'wnl-quiz-widget': QuizWidget,
 		},
+		props: ['categoryName', 'rootCategoryName'],
 		computed: {
 			...mapGetters('collections', ['quizQuestionsIds']),
-			...mapGetters('quiz', ['isLoaded']),
-		},
-		methods: {
-			...mapActions('quiz', ['fetchQuestionsCollection']),
-		},
-		mounted() {
-			this.fetchQuestionsCollection(this.quizQuestionsIds)
-		},
+			...mapGetters('quiz', ['isLoaded', 'getQuestions']),
+			howManyQuestions() {
+				return this.getQuestions.length
+			},
+		}
 	}
 </script>

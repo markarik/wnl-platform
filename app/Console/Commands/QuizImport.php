@@ -9,14 +9,14 @@ class QuizImport extends Command
 {
 	const VALUE_DELIMITER = "\t";
 	const ROW_DELIMITER = "\r\n";
-	const DIRECTORY = 'quiz';
+	const BASE_DIRECTORY = 'quiz';
 
 	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:import';
+	protected $signature = 'quiz:import {dir?}';
 
 	/**
 	 * The console command description.
@@ -24,6 +24,7 @@ class QuizImport extends Command
 	 * @var string
 	 */
 	protected $description = 'Import quiz sets to database from storage.';
+	protected $path;
 
 	/**
 	 * Create a new command instance.
@@ -32,6 +33,8 @@ class QuizImport extends Command
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->path = self::BASE_DIRECTORY;
 	}
 
 	/**
@@ -41,7 +44,12 @@ class QuizImport extends Command
 	 */
 	public function handle()
 	{
-		$files = Storage::disk('s3')->files(self::DIRECTORY);
+		if ($subDir = $this->argument('dir'))
+		{
+			$this->path .= '/' . $subDir;
+		}
+
+		$files = Storage::disk('s3')->files($this->path);
 
 		$this->info('Importing quiz files...');
 		$bar = $this->output->createProgressBar(count($files));
@@ -66,7 +74,7 @@ class QuizImport extends Command
 		array_shift($lines);
 
 		$quizSet = QuizSet::firstOrcreate([
-			'name' => str_replace(self::DIRECTORY . '/', '', $file),
+			'name' => str_replace($this->path . '/', '', $file),
 		]);
 
 		foreach ($lines as $line) {
@@ -101,7 +109,9 @@ class QuizImport extends Command
 
 		foreach ($tagNames as $tagName) {
 			$tag = Tag::firstOrCreate(['name' => $tagName]);
-			$question->tags()->attach($tag);
+			if (!$question->tags->contains($tag)) {
+				$question->tags()->attach($tag);
+			}
 		}
 
 		$question->preserve_order = (bool)$values[10];

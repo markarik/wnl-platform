@@ -81,6 +81,7 @@ class LessonTags extends Command
 						if (empty($slide->snippet)) {
 							echo("Adding snippet to slide $slide->id from screen $screen->name \n");
 							$slide->snippet = $slide->content;
+							$slide->save();
 						}
 					}
 				}

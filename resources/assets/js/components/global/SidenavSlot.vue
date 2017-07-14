@@ -12,7 +12,7 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav-slot
@@ -59,16 +59,12 @@
 			max-width: 400px
 			width: 100%
 
-		.course-sidenav,
-		.help-sidenav,
-		.collections-sidenav
+		.sidenav-aside
 			max-width: none
 			width: auto
 
 		.wnl-sidenav,
-		.course-sidenav,
-		.help-sidenav,
-		.collections-sidenav
+		.sidenav-aside
 			padding: 0
 </style>
 

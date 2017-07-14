@@ -5,7 +5,7 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="collections-sidenav">
+			<aside class="sidenav-aside collections-sidenav">
 				<wnl-sidenav :items="getNavigation()"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
@@ -36,7 +36,7 @@
 				</div>
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
-						<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
+						<!-- <wnl-slides-carousel :categoryId="categoryId"></wnl-slides-carousel> -->
 						<wnl-qna-collection
 							:rootCategoryName="rootCategoryName"
 							:categoryName="categoryName"
@@ -69,7 +69,7 @@
 		flex: 1
 		min-width: $sidenav-min-width
 		overflow: auto
-		padding: 7px 0
+		padding: $margin-small 0
 		width: $sidenav-width
 
 	.collections-breadcrumbs
@@ -143,7 +143,7 @@
 	import MainNav from 'js/components/MainNav'
 	import QnaCollection from 'js/components/collections/QnaCollection'
 	import QuizCollection from 'js/components/collections/QuizCollection'
-	import SlidesCarousel from 'js/components/collections/SlidesCarousel'
+	// import SlidesCarousel from 'js/components/collections/SlidesCarousel'
 	import { resource } from 'js/utils/config'
 	import navigation from 'js/services/navigation'
 	import { layouts } from 'js/store/modules/ui'
@@ -156,7 +156,7 @@
 			'wnl-main-nav': MainNav,
 			'wnl-qna-collection': QnaCollection,
 			'wnl-quiz-collection': QuizCollection,
-			'wnl-slides-carousel': SlidesCarousel
+			// 'wnl-slides-carousel': SlidesCarousel
 		},
 		data() {
 			return {
@@ -166,7 +166,7 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
+			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds', 'getCategoryByName']),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
 			},
@@ -182,6 +182,15 @@
 					quiz: 'Pytania kontrolne',
 				}
 			},
+			categoryId() {
+				const rootCategoryObject = this.categories
+					.find((category) => category.name === this.rootCategoryName)
+
+				const categoryObject = rootCategoryObject
+					&& rootCategoryObject.categories.find((category) => category.name === this.categoryName)
+
+				return categoryObject && categoryObject.id
+			}
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),

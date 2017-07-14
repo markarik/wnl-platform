@@ -60,6 +60,36 @@ $border-color: $color-inactive-gray
 		&.has-some
 			background-color: $color-ocean-blue
 
+.bookmark
+	align-items: center
+	cursor: pointer
+	flex-direction: column
+	position: absolute
+	right: $fixed-elements-padding
+	top: $fixed-elements-padding
+	z-index: 1
+	display: flex
+
+	.bookmark-image-remove
+		display: none
+
+	&.is-bookmarked
+		.bookmark-image-add
+			display: none
+		.bookmark-image-remove
+			display: initial
+
+	.bookmark-image
+		width: $font-size-base
+		height: $font-size-base
+
+	span
+		color: $color-ocean-blue
+		font-size: $font-size-minus-2
+		font-weight: $font-weight-light
+		text-transform: uppercase
+		margin-top: $margin-tiny
+
 .slideshow-annotations
 	background: $annotations-background
 	border-radius: 5px

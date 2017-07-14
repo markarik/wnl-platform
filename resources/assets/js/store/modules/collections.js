@@ -37,7 +37,11 @@ const getters = {
 	quizQuestionsIds: (state) => state.quiz_questions.map(question => question.reactable_id),
 	slidesIds: (state) => state.slides.map(slide => slide.reactable_id),
 	categories: (state) => state.categories,
-	slidesContent: (state) => state.slidesContent
+	slidesContent: (state) => state.slidesContent,
+	getCategoryByName: (state, getters) => (categoryName) => getters.categories.find((category) => {
+		console.log(category, categoryName, '...categories');
+		return false
+	})
 }
 
 const mutations = {
@@ -62,6 +66,16 @@ const mutations = {
 	[types.COLLECTIONS_SET_SLIDES] (state, slides) {
 		set(state, 'slidesContent', slides)
 	},
+	[types.COLLECTIONS_APPEND_SLIDE] (state, slide) {
+		const slidesContent = state.slidesContent || []
+
+		set(state, 'slidesContent', [...slidesContent, slide])
+	},
+	[types.COLLECTIONS_REMOVE_SLIDE] (state, slideId) {
+		const updatedSlides = state.slidesContent.filter(({id}) => slideId !== id)
+
+		set(state, 'slidesContent', updatedSlides)
+	}
 }
 
 const actions = {
@@ -104,6 +118,21 @@ const actions = {
 		}).catch((error) => {
 			commit(types.SLIDES_LOADING, false);
 		})
+	},
+	addSlideToCollection({commit}, slideId) {
+		return axios.post(getApiUrl('slides/.search'), {
+			query: {
+				where: [['id', '=', slideId]],
+			},
+			order: {
+				id: 'desc',
+			},
+		}).then(({data}) => {
+			data && data.length && commit(types.COLLECTIONS_APPEND_SLIDE, data[0]);
+		})
+	},
+	removeSlideFromCollection({commit, state}, slideId) {
+		commit(types.COLLECTIONS_REMOVE_SLIDE, slideId)
 	}
 }
 

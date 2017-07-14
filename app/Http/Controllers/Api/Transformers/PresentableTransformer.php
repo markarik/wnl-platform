@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\Transformers;
 
 use App\Models\Presentable;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\Slide;
 
 
 class PresentableTransformer extends ApiTransformer
@@ -20,6 +21,11 @@ class PresentableTransformer extends ApiTransformer
 			'order_number'     => $presentable->order_number,
 			'is_functional'    => $presentable->is_functional,
 		];
+
+		if (self::shouldInclude('reactions')) {
+			$slide = Slide::find($presentable->slide_id);
+			$data = array_merge($data, ReactionsCountTransformer::transform($slide));
+		}
 
 		return $data;
 	}

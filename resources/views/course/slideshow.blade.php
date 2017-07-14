@@ -27,6 +27,11 @@
 	</style>
 </head>
 	<body>
+		<a class="bookmark">
+			<img class="bookmark-image bookmark-image-add" src="{{ asset('images/star-o.svg') }}" alt="Dodaj do zakładek">
+			<img class="bookmark-image bookmark-image-remove" src="{{ asset('images/star.svg') }}" alt="Usuń z zakładek">
+			<span>zapisz</span>
+		</a>
 		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
 			<div class="reveal image-custom-background">
 				<div class="slides">

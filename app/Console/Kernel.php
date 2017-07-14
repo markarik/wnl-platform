@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
 		Commands\PopulateAmountColumns::class,
 		Commands\SectionsUpdate::class,
 		Commands\SlideshowsRemove::class,
+		Commands\SlidesFromCategory::class,
 		Commands\SlidesImport::class,
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,

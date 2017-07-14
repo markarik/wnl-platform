@@ -8,15 +8,14 @@
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
 		></wnl-slideshow>
-		<carousel class="wnl-carousel" :paginationEnabled="false" :navigationEnabled="true" :perPage="4" v-if="presentableLoaded && sortedSlides.length">
-			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in sortedSlides">
-				<div class="slide-thumb" @click="showSlide(index)">
-					<p class="metadata">{{slide.header}}</p>
-					<div class="slide-snippet" v-if="!slide.media" v-html="slide.snippet"></div>
-					<div class="slide-snippet" v-else>Obraz lub film</div>
-				</div>
-			</slide>
-		</carousel>
+
+		<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
+			<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
+				<p class="metadata">{{slide.header}}</p>
+				<div class="slide-snippet" v-if="!slide.media" v-html="slide.snippet"></div>
+				<div class="slide-snippet" v-else>Obraz lub film</div>
+			</div>
+		</div>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -36,18 +35,27 @@
 		width: 100%
 		height: 400px
 
+	.slides-carousel
+		display: flex
+		flex-wrap: nowrap
+		overflow-y: hidden
+		overflow-x: auto
+
 	.slide-thumb
 		background-color: white
 		border: $border-light-gray
 		cursor: pointer
-		height: 100px
+		flex: 1 0 160px
+		height: 90px
+		margin-bottom: $margin-base
 		margin-right: $margin-small
+		overflow: hidden
 		padding: $margin-small
+		width: 160px
 </style>
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
-	import { Carousel, Slide } from 'vue-carousel';
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
 
 	export default {
@@ -64,8 +72,6 @@
 		},
 		components: {
 			'wnl-slideshow': Slideshow,
-			Carousel,
-			Slide
 		},
 		computed: {
 			...mapGetters('collections', ['slidesContent']),

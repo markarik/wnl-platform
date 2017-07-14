@@ -6,7 +6,7 @@
 			:presentableId="categoryId"
 			:presentableType="presentableType"
 			:preserveRoute="true"
-			:slideOrderNumber="currentSlide.order_number"
+			:slideOrderNumber="currentSlideOrderNumber"
 		></wnl-slideshow>
 		<carousel class="wnl-carousel" :paginationEnabled="false" :navigationEnabled="true" :perPage="4" v-if="presentableLoaded && sortedSlides.length">
 			<slide class="wnl-slide" v-bind:key="index" v-for="(slide, index) in sortedSlides">
@@ -80,28 +80,27 @@
 				}))
 			},
 			sortedSlides() {
-				if (this.presentableLoaded) {
-					const filteredSlides = this.slides.filter((slide) => this.allSlides[slide.id])
+				const filteredSlides = [...this.currentSlideshowSlides]
 
-					filteredSlides.sort(({id: id1}, {id: id2}) => {
-						const slideOne = this.allSlides[id1]
-						const slideTwo = this.allSlides[id2]
+				filteredSlides.sort(({id: id1}, {id: id2}) => {
+					const slideOne = this.allSlides[id1]
+					const slideTwo = this.allSlides[id2]
 
-						return slideOne.order_number - slideTwo.order_number
-					})
+					return slideOne.order_number - slideTwo.order_number
+				})
 
-					return filteredSlides
-				}
-
-				return []
+				return filteredSlides
 			},
 			presentableLoaded() {
 				return Object.keys(this.allSlides).length > 0
 			},
-			currentSlide() {
+			currentSlideshowSlides() {
+				return (this.presentableLoaded && this.slides.filter((slide) => this.allSlides[slide.id])) || []
+			},
+			currentSlideOrderNumber() {
 				const selectedSlide = this.sortedSlides[this.selectedSlideIndex];
 
-				return selectedSlide && this.allSlides[selectedSlide.id] || {}
+				return selectedSlide && this.allSlides[selectedSlide.id].order_number || 0
 			}
 		},
 		methods: {
@@ -109,5 +108,10 @@
 				this.selectedSlideIndex = index;
 			}
 		},
+		watch: {
+			'categoryId'() {
+				this.selectedSlideIndex = 0
+			}
+		}
 	}
 </script>

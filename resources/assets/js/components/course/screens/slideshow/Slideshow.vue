@@ -414,6 +414,7 @@
 				}
 			},
 			'presentableId' (newValue, oldValue) {
+				newValue && this.toggleOverlay({source: 'slideshow', display: true})
 				newValue && this.setupByPresentable({type: this.presentableType, id: newValue})
 				.then(() => {
 					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))

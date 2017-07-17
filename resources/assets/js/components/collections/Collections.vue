@@ -36,16 +36,20 @@
 				</div>
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
-						<wnl-slides-carousel :categoryId="categoryId"></wnl-slides-carousel>
-						<wnl-qna-collection
-							:rootCategoryName="rootCategoryName"
+						<wnl-slides-carousel
+							:categoryId="categoryId"
 							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
+						></wnl-slides-carousel>
+						<wnl-qna-collection
+							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
 						></wnl-qna-collection>
 					</div>
 					<div class="column" v-show="isQuizPanelVisible">
 						<wnl-quiz-collection
-							:rootCategoryName="rootCategoryName"
 							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
 						></wnl-quiz-collection>
 					</div>
 				</div>
@@ -83,11 +87,11 @@
 		display: flex
 		margin-right: $margin-base
 
-		.breadcrub
-			max-width: 200px;
-			overflow-x: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
+		.breadcrumb
+			max-width: 200px
+			overflow-x: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
 
 	.collections-controls
 		align-items: center

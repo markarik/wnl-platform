@@ -1,8 +1,8 @@
 <template>
 	<div class="wnl-slides-collection">
 		<p class="title is-4">Twoja kolekcja slajdów <span v-if="presentableLoaded">({{sortedSlides.length}})</span></p>
-		<div class="slides-carousel-container">
-			<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
+		<div class="slides-carousel-container" v-if="presentableLoaded && sortedSlides.length">
+			<div class="slides-carousel">
 				<div class="slide-thumb" :class="" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
 					<p class="thumb-heading metadata">{{slide.header}}</p>
 					<div class="slide-snippet" v-html="slide.snippet"></div>
@@ -15,6 +15,9 @@
 					<div class="shadow"></div>
 				</div>
 			</div>
+		</div>
+		<div v-else class="notification has-text-centered">
+			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
 			:screenData="screenData"
@@ -33,9 +36,6 @@
 	$carousel-height: 105px
 	$thumb-height: 90px
 	$thumb-width: 160px
-
-	.title
-		margin-bottom: $margin-base
 
 	.wnl-slides-collection
 		margin-top: $margin-base
@@ -71,16 +71,18 @@
 		cursor: pointer
 		flex: 1 0 $thumb-width
 		height: $thumb-height
-		margin: $margin-small
+		margin: $margin-small $margin-small $margin-base
 		max-width: $thumb-width
 		overflow: hidden
 		padding: $margin-small
 		position: relative
 		text-align: center
+		transition: color $transition-length-base
 		width: $thumb-width
 
 		&:hover
-			background-color: $color-background-lighter-gray
+			color: $color-ocean-blue
+			transition: color $transition-length-base
 
 			.shadow
 				height: 0
@@ -128,7 +130,7 @@
 
 	export default {
 		name: 'SlidesCarousel',
-		props: ['categoryId'],
+		props: ['categoryId', 'rootCategoryName', 'categoryName'],
 		data() {
 			return {
 				selectedSlideIndex: 0,

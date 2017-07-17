@@ -21,7 +21,7 @@
 		margin: 0 $margin-base
 
 		&.is-mobile
-			margin: 0
+			margin: 0 $margin-small
 
 	.metadata
 		margin-bottom: -$margin-base

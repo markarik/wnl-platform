@@ -61,7 +61,6 @@
 		left: 0
 		overflow-y: hidden
 		overflow-x: auto
-		padding: 0 $margin-small
 		position: absolute
 		top: 0
 		width: 100%

@@ -70,6 +70,9 @@
 			.column
 				width: 100%
 
+	.full-width
+		width: 100vw
+
 	.collections-header
 		border-bottom: $border-light-gray
 		display: block

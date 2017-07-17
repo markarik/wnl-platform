@@ -10,6 +10,7 @@
 			@slideBookmarked="onSlideBookmarked"
 		></wnl-slideshow>
 
+		<p class="metadata">Twoje zapisane slajdy</p>
 		<div class="slides-carousel-container">
 			<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
 				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
@@ -23,6 +24,7 @@
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
 	.wnl-slides-collection
 		margin-top: $margin-base
@@ -59,6 +61,7 @@
 		height: 90px
 		margin-bottom: $margin-base
 		margin-right: $margin-small
+		max-width: 160px
 		overflow: hidden
 		padding: $margin-small
 		width: 160px

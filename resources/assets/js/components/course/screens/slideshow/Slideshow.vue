@@ -36,7 +36,6 @@
 
 	.wnl-slideshow-background-control
 		align-items: center
-		border-top: $border-light-gray
 		color: $color-gray-dimmed
 		display: flex
 		font-size: $font-size-minus-2

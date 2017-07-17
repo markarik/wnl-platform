@@ -1,6 +1,21 @@
 <template>
 	<div class="wnl-slides-collection">
-		<p class="title is-4">Twoja kolekcja slajdów</p>
+		<p class="title is-4">Twoja kolekcja slajdów <span v-if="presentableLoaded">({{sortedSlides.length}})</span></p>
+		<div class="slides-carousel-container">
+			<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
+				<div class="slide-thumb" :class="" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
+					<p class="thumb-heading metadata">{{slide.header}}</p>
+					<div class="slide-snippet" v-html="slide.snippet"></div>
+					<div class="slide-snippet has-media" v-if="slide.media">
+						<span class="icon is-tiny">
+							<i class="fa" :class="slide.media.icon"></i>
+						</span>
+						{{slide.media.text}}
+					</div>
+					<div class="shadow"></div>
+				</div>
+			</div>
+		</div>
 		<wnl-slideshow
 			:screenData="screenData"
 			:presentableId="categoryId"
@@ -9,22 +24,18 @@
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
 		></wnl-slideshow>
-
-		<p class="metadata">Twoje zapisane slajdy</p>
-		<div class="slides-carousel-container">
-			<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
-				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
-					<p class="metadata">{{slide.header}}</p>
-					<div class="slide-snippet" v-if="!slide.media" v-html="slide.snippet"></div>
-					<div class="slide-snippet" v-else>Obraz lub film</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
+
+	$carousel-height: 105px
+	$thumb-height: 90px
+	$thumb-width: 160px
+
+	.title
+		margin-bottom: $margin-base
 
 	.wnl-slides-collection
 		margin-top: $margin-base
@@ -36,40 +47,84 @@
 	.VueCarousel-inner
 		margin: 0 auto
 
-	.slide
-		width: 100%
-		height: 400px
-
 	.slides-carousel-container
-		height: 150px
+		+scrollbar(15px, $color-light-gray, $color-background-lighter-gray)
+		+scrollbar-body($color-light-gray, $color-background-lighter-gray)
+
+		height: $carousel-height
+		margin-bottom: $margin-base
 		position: relative
 
 	.slides-carousel
+		background: $color-background-lighter-gray
 		display: flex
 		left: 0
 		overflow-y: hidden
 		overflow-x: auto
+		padding: 0 $margin-small
 		position: absolute
 		top: 0
 		width: 100%
 
 	.slide-thumb
-		background-color: white
-		border: $border-light-gray
+		background-color: $color-white
 		cursor: pointer
-		flex: 1 0 160px
-		height: 90px
-		margin-bottom: $margin-base
-		margin-right: $margin-small
-		max-width: 160px
+		flex: 1 0 $thumb-width
+		height: $thumb-height
+		margin: $margin-small
+		max-width: $thumb-width
 		overflow: hidden
 		padding: $margin-small
-		width: 160px
+		position: relative
+		text-align: center
+		width: $thumb-width
+
+		&:hover
+			background-color: $color-background-lighter-gray
+
+			.shadow
+				height: 0
+				transition: height $transition-length-base
+
+		.shadow
+			+white-shadow-inside()
+
+			bottom: 0
+			height: 50%
+			position: absolute
+			transition: height $transition-length-base
+			width: 100%
+
+		.thumb-heading
+			line-height: $line-height-minus
+			margin-bottom: $margin-small
+
+		.slide-snippet
+			font-size: $font-size-minus-2
+			line-height: $line-height-minus
+
+			&.has-media
+				margin-top: $margin-small
 </style>
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
+
+	const mediaMap = {
+		chart: {
+			icon: 'fa-sitemap',
+			text: 'Diagram',
+		},
+		movie: {
+			icon: 'fa-film',
+			text: 'Film',
+		},
+		audio: {
+			icon: 'fa-music',
+			text: 'Nagranie audio',
+		},
+	}
 
 	export default {
 		name: 'SlidesCarousel',
@@ -93,7 +148,7 @@
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,
 					snippet: slide.snippet.content,
-					media: slide.snippet.media,
+					media: slide.snippet.media !== null ? mediaMap[slide.snippet.media] : null,
 					content: slide.content,
 					id: slide.id
 				}))
@@ -117,10 +172,10 @@
 				return (this.presentableLoaded && this.slides.filter((slide) => this.currentPresentableSlides[slide.id])) || []
 			},
 			currentSlideOrderNumber() {
-				const selectedSlide = this.sortedSlides[this.selectedSlideIndex];
+				const selectedSlide = this.sortedSlides[this.selectedSlideIndex]
 
 				return selectedSlide && this.currentPresentableSlides[selectedSlide.id].order_number || 0
-			}
+			},
 		},
 		methods: {
 			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
@@ -133,6 +188,9 @@
 				} else {
 					this.removeSlideFromCollection(slideId)
 				}
+			},
+			mediaIcon(mediaType) {
+				return this.mediaMap[mediaType].icon
 			}
 		},
 		watch: {

@@ -20,6 +20,7 @@
 			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
+			ref="slideshow"
 			:class="{
 				'is-not-visible' : !presentableLoaded || sortedSlides.length === 0,
 				'is-folded' : presentableLoaded && sortedSlides.length === 0,
@@ -191,7 +192,10 @@
 		methods: {
 			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
 			showSlide(index) {
-				this.selectedSlideIndex = index;
+				if (this.selectedSlideIndex === index) {
+					this.$refs.slideshow.goToSlide(index)
+				}
+				this.selectedSlideIndex = index
 			},
 			onSlideBookmarked({slideId, hasReacted}) {
 				if (hasReacted) {

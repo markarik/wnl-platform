@@ -30,7 +30,7 @@
 
 		.sidenav-content
 			display: flex
-			height: 100%
+			height: $main-height
 			width: 100%
 
 	.wnl-sidenav-detached

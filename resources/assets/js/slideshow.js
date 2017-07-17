@@ -85,14 +85,18 @@ const handshake = new Postmate.Model({
 		isSavingBookmark = false
 	},
 	setBookmarkedState(data) {
-		const bookmarkedClassname = 'is-bookmarked';
-
-		bookmarkedSlideNumbers.push(data.slideIndex)
+		const bookmarkedClassname = 'is-bookmarked'
 
 		if (data.hasReacted) {
-			bookmarkElement.classList.add(bookmarkedClassname);
+			bookmarkedSlideNumbers.push(data.slideIndex)
+			bookmarkElement.classList.add(bookmarkedClassname)
 		} else {
-			bookmarkElement.classList.remove(bookmarkedClassname);
+			let indexOfSlide = bookmarkedSlideNumbers.indexOf(data.slideIndex)
+
+			if (indexOfSlide > -1) {
+				bookmarkedSlideNumbers.splice(indexOfSlide, 1)
+			}
+			bookmarkElement.classList.remove(bookmarkedClassname)
 		}
 
 		isSavingBookmark = false

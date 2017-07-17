@@ -7,6 +7,7 @@
 			:presentableType="presentableType"
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
+			@slideBookmarked="onSlideBookmarked"
 		></wnl-slideshow>
 
 		<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
@@ -75,7 +76,7 @@
 		},
 		computed: {
 			...mapGetters('collections', ['slidesContent']),
-			...mapGetters('slideshow', {'allSlides': 'slides'}),
+			...mapGetters('slideshow', {'currentPresentableSlides': 'slides'}),
 			slides() {
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,
@@ -89,8 +90,8 @@
 				const filteredSlides = [...this.currentSlideshowSlides]
 
 				filteredSlides.sort(({id: id1}, {id: id2}) => {
-					const slideOne = this.allSlides[id1]
-					const slideTwo = this.allSlides[id2]
+					const slideOne = this.currentPresentableSlides[id1]
+					const slideTwo = this.currentPresentableSlides[id2]
 
 					return slideOne.order_number - slideTwo.order_number
 				})
@@ -98,20 +99,28 @@
 				return filteredSlides
 			},
 			presentableLoaded() {
-				return Object.keys(this.allSlides).length > 0
+				return Object.keys(this.currentPresentableSlides).length > 0
 			},
 			currentSlideshowSlides() {
-				return (this.presentableLoaded && this.slides.filter((slide) => this.allSlides[slide.id])) || []
+				return (this.presentableLoaded && this.slides.filter((slide) => this.currentPresentableSlides[slide.id])) || []
 			},
 			currentSlideOrderNumber() {
 				const selectedSlide = this.sortedSlides[this.selectedSlideIndex];
 
-				return selectedSlide && this.allSlides[selectedSlide.id].order_number || 0
+				return selectedSlide && this.currentPresentableSlides[selectedSlide.id].order_number || 0
 			}
 		},
 		methods: {
+			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
 			showSlide(index) {
 				this.selectedSlideIndex = index;
+			},
+			onSlideBookmarked({slideId, hasReacted}) {
+				if (hasReacted) {
+					this.addSlideToCollection(slideId)
+				} else {
+					this.removeSlideFromCollection(slideId)
+				}
 			}
 		},
 		watch: {

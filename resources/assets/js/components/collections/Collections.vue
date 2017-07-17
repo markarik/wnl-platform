@@ -177,7 +177,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isisTouchScreen', 'currentLayout']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds', 'getCategoryByName']),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')

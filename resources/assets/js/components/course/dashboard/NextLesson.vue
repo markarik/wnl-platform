@@ -68,38 +68,13 @@
 				'getLessons',
 				'getLesson',
 				'isLessonAvailable',
+				'nextLesson'
 			]),
 			...mapGetters('progress', [
 				'wasLessonStarted',
 				'getFirstLessonIdInProgress',
 				'isLessonComplete',
 			]),
-			nextLesson() {
-				let lesson = { status: STATUS_NONE },
-					inProgressId = this.getFirstLessonIdInProgress(this.courseId)
-
-				if (inProgressId > 0) {
-					lesson = this.getLesson(inProgressId)
-					lesson.status = STATUS_IN_PROGRESS
-				} else {
-					for (var lessonId in this.getLessons) {
-						let isAvailable = this.isLessonAvailable(lessonId)
-						if (isAvailable &&
-							!this.wasLessonStarted(this.courseId, lessonId)
-						) {
-							lesson = this.getLesson(lessonId)
-							lesson.status = STATUS_AVAILABLE
-							break
-						} else if (!isAvailable) {
-							lesson = this.getLesson(lessonId)
-							lesson.status = STATUS_NONE
-							break
-						}
-					}
-				}
-
-				return lesson
-			},
 			hasNextLesson() {
 				return this.nextLesson.status !== STATUS_NONE
 			},

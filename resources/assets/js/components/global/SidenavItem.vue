@@ -33,7 +33,7 @@
 					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
 				</span>
 				<span class="icon is-small" v-if="isGroupToggle">
-					<i :title="toggle" class="fa" :class="toggleIcon"></i>
+					<i title="toggle" class="fa" :class="toggleIcon"></i>
 				</span>
 			</div>
 			<span class="sidenav-item-content">

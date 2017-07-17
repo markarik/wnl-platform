@@ -34,6 +34,7 @@
 
 <script>
 	import SidenavItem from 'js/components/global/SidenavItem'
+	import { mapGetters } from 'vuex'
 
 	export default {
 		components: {
@@ -45,6 +46,7 @@
 			return { isOpen: false }
 		},
 		computed: {
+			...mapGetters('course', ['nextLesson']),
 			canRenderSubitems() {
 				return this.hasSubitems && this.isOpen
 			},
@@ -55,7 +57,20 @@
 				return this.hasSubitems
 			},
 			toggleIcon() {
-				return this.isOpen ? 'fa-chevron-up' : 'fa-chevron-down'
+				return this.isOpen ? 'fa-chevron-down' : 'fa-chevron-right'
+			}
+		},
+		watch: {
+			nextLesson(val) {
+				if (!this.item || !this.item.subitems) {
+					return
+				}
+
+				const isCurrentlyInProgress = this.item.subitems.some((subitem) => {
+					return subitem.to.params.lessonId === val.id
+				})
+
+				this.isOpen = isCurrentlyInProgress
 			}
 		},
 		methods: {

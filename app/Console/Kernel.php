@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
 		Commands\MigrateUserData::class,
 		Commands\MarkOrderAsPaid::class,
 		Commands\MarkWrongQuestionsAsBookmarked::class,
+		Commands\MegaUltraSuperDuperChartUpdateScript::class,
 		Commands\OptimaExport::class,
 		Commands\OrdersExport::class,
 		Commands\QuizImport::class,
@@ -37,12 +38,9 @@ class Kernel extends ConsoleKernel
 		Commands\SlideshowsRemove::class,
 		Commands\SlidesFromCategory::class,
 		Commands\SlidesImport::class,
+		Commands\SlidesSnippets::class,
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
-		Commands\IssueFinalInvoice::class,
-		Commands\CategoriesTags::class,
-		Commands\LessonTags::class,
-		Commands\MegaUltraSuperDuperChartUpdateScript::class,
 		Commands\WarmUpCache::class,
 	];
 

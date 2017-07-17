@@ -24,7 +24,7 @@ class Parser
 
 	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
 
-	const HEADER_PATTERN = '/<h.*>([^<>"]*)<\/h.*>/';
+	const HEADER_PATTERN = '/<h.*>([\s\S]*)<\/h.*>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
@@ -371,7 +371,7 @@ class Parser
 		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
 
 		if ($match) {
-			$snippet['header'] = $match[0][1];
+			$snippet['header'] = strip_tags($match[0][1]);
 			$slideHtml = preg_replace(self::HEADER_PATTERN, '', $slideHtml);
 		}
 

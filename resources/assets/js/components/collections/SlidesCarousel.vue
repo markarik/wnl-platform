@@ -193,7 +193,7 @@
 			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
 			showSlide(index) {
 				if (this.selectedSlideIndex === index) {
-					this.$refs.slideshow.goToSlide(index)
+					this.$refs.slideshow.goToSlide(this.currentSlideOrderNumber)
 				}
 				this.selectedSlideIndex = index
 			},

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Notifications\Channels;
+namespace App\Notifications\Media;
 
-use Illuminate\Notifications\Notification;
+use App\Notifications\EventNotification;
+use App\Models\Notification as NotificationModel;
 
 class DatabaseChannel
 {
@@ -10,11 +11,19 @@ class DatabaseChannel
 	 * Send the given notification.
 	 *
 	 * @param  mixed $notifiable
-	 * @param  \Illuminate\Notifications\Notification $notification
-	 * @return void
+	 * @param EventNotification $notification
 	 */
-	public function send($notifiable, Notification $notification)
+	public function send($notifiable, EventNotification $notification)
 	{
-
+		NotificationModel::create([
+			'id' => $notification->id,
+			'type' => get_class($notification),
+			'notifiable_id' => $notifiable->id,
+			'notifiable_type' => get_class($notifiable),
+			'data' => $notification->event->data,
+			'channel' => $notification->channel,
+			'read_at' => null,
+			'seen_at' => null,
+		]);
 	}
 }

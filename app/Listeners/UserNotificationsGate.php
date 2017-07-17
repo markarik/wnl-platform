@@ -1,17 +1,21 @@
 <?php namespace App\Listeners;
 
+use App\Models\User;
+use App\Events\ReactionAdded;
 use App\Events\CommentPosted;
 use App\Events\Qna\AnswerPosted;
 use App\Events\Qna\QuestionPosted;
-use App\Events\ReactionAdded;
-use App\Models\User;
 use App\Notifications\EventNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class NotifyUser implements ShouldQueue
+class UserNotificationsGate implements ShouldQueue
 {
 	const TEXT_LIMIT = 160;
+
+	const CHANNELS = [
+		'moderators' => 'moderators',
+	];
 
 	/**
 	 * Handle the event.
@@ -81,16 +85,6 @@ class NotifyUser implements ShouldQueue
 	}
 
 	/**
-	 * Handle notifications for PrivateMessageSent event.
-	 *
-	 * @param $event
-	 */
-	public function handlePrivateMessageSent($event)
-	{
-		// :(
-	}
-
-	/**
 	 * Notify all moderators about an event.
 	 *
 	 * @param $event
@@ -105,8 +99,8 @@ class NotifyUser implements ShouldQueue
 		}
 
 		$moderators = User::ofRole('moderator');
-
-		Notification::send($moderators, new EventNotification($event));
+		$notification = new EventNotification($event, self::CHANNELS['moderators']);
+		Notification::send($moderators, $notification);
 
 		// For some reason event is not deserialized here by default
 		// calling __wakeup() forces an event to deserialize, hence we can access question and user property
@@ -114,5 +108,15 @@ class NotifyUser implements ShouldQueue
 		$event->__wakeup();
 
 		return true;
+	}
+
+	private function notifyPrivate($user, $event)
+	{
+
+	}
+
+	private function notifyPrivateStream($user, $event)
+	{
+
 	}
 }

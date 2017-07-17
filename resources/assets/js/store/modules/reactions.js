@@ -58,6 +58,10 @@ export const reactionsActions = {
 	},
 
 	markManyAsReacted({commit}, payload) {
+		if (payload.length === 0) {
+			return Promise.resolve();
+		}
+
 		return new Promise((resolve, reject) => {
 			const serializedPayload = payload.map((reaction) => {
 				const hasReacted = true

@@ -39,7 +39,6 @@ const getters = {
 	categories: (state) => state.categories,
 	slidesContent: (state) => state.slidesContent,
 	getCategoryByName: (state, getters) => (categoryName) => getters.categories.find((category) => {
-		console.log(category, categoryName, '...categories');
 		return false
 	})
 }

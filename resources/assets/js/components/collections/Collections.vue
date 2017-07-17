@@ -83,6 +83,12 @@
 		display: flex
 		margin-right: $margin-base
 
+		.breadcrub
+			max-width: 200px;
+			overflow-x: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+
 	.collections-controls
 		align-items: center
 		display: flex
@@ -171,7 +177,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isisTouchScreen', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds', 'getCategoryByName']),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
@@ -180,7 +186,7 @@
 				return this.isPanelActive('slides')
 			},
 			isSinglePanelView() {
-				return this.isMobile
+				return this.isTouchScreen
 			},
 			panels() {
 				return {

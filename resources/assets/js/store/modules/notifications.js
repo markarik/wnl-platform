@@ -77,7 +77,7 @@ const actions = {
 	},
 	markAllAsSeen({commit, getters}) {
 		let data = _.mapValues(getters.unseen, (notification) => {
-			return { 'seen_at' : 'now'}
+			return { 'seen_at' : 'now' }
 		})
 
 		_updateMany(getters.user, data)
@@ -89,7 +89,7 @@ const actions = {
 	},
 	markAllAsRead({commit, getters}) {
 		let data = _.mapValues(getters.unread, (notification) => {
-			return { 'read_at' : 'now'}
+			return { 'read_at' : 'now' }
 		})
 
 		_updateMany(getters.user, data)
@@ -116,7 +116,8 @@ function _getNotifications(userId) {
 	const conditions = {
 		'query': {
 			'where': [
-				['read_at', '=', null]
+				['read_at', '=', null],
+				['channel', '=', `private-${userId}`]
 			]
 		}
 	}

@@ -1,87 +1,28 @@
 <?php namespace App\Listeners;
 
 use App\Models\User;
-use App\Events\ReactionAdded;
-use App\Events\CommentPosted;
-use App\Events\Qna\AnswerPosted;
-use App\Events\Qna\QuestionPosted;
 use App\Notifications\EventNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
 class UserNotificationsGate implements ShouldQueue
 {
-	const TEXT_LIMIT = 160;
-
 	const CHANNELS = [
 		'moderators' => 'moderators',
+		'private'    => 'private-%d',
+		'stream'     => 'private-stream-%d',
 	];
 
-	/**
-	 * Handle the event.
-	 *
-	 * @param $event
-	 *
-	 * @return void
-	 */
-	public function handle($event)
+	public function notifyPrivate($user, $event)
 	{
-		if (method_exists($event, 'transform')) {
-			$event->transform();
-		}
-		$this->{'handle' . class_basename($event)}($event);
+		$channelFormatted = sprintf(self::CHANNELS['private'], $user->id);
+		$user->notify(new EventNotification($event, $channelFormatted));
 	}
 
-	/**
-	 * Handle notifications for AnswerPosted event.
-	 *
-	 * @param $event
-	 */
-	private function handleAnswerPosted(AnswerPosted $event)
+	public function notifyPrivateStream($user, $event)
 	{
-		$this->notifyModerators($event);
-
-		$user = $event->qnaAnswer->question->user;
-		$user->notify(new EventNotification($event));
-	}
-
-	/**
-	 * Handle notifications for QuestionPosted event.
-	 *
-	 * @param $event
-	 */
-	public function handleQuestionPosted(QuestionPosted $event)
-	{
-		$this->notifyModerators($event);
-	}
-
-	/**
-	 * Handle notifications for CommentPosted event.
-	 *
-	 * @param $event
-	 */
-	public function handleCommentPosted(CommentPosted $event)
-	{
-		$this->notifyModerators($event);
-
-		$commentableAuthor = $event->comment->commentable->user;
-
-		if ($commentableAuthor) {
-			$commentableAuthor->notify(new EventNotification($event));
-		}
-	}
-
-	/**
-	 * Handle notifications for ReactionAdded event.
-	 *
-	 * @param $event
-	 */
-	public function handleReactionAdded(ReactionAdded $event)
-	{
-		$reactableAuthor = $event->reactable->user;
-		if ($reactableAuthor && $event->reaction->type !== 'bookmark') {
-			$reactableAuthor->notify(new EventNotification($event));
-		}
+		$channelFormatted = sprintf(self::CHANNELS['stream'], $user->id);
+		$user->notify(new EventNotification($event, $channelFormatted));
 	}
 
 	/**
@@ -91,7 +32,7 @@ class UserNotificationsGate implements ShouldQueue
 	 *
 	 * @return bool
 	 */
-	private function notifyModerators($event)
+	public function notifyModerators($event)
 	{
 		$actor = User::find($event->data['actors']['id']);
 		if ($actor->hasRole('moderator') || $actor->hasRole('admin')) {
@@ -110,13 +51,20 @@ class UserNotificationsGate implements ShouldQueue
 		return true;
 	}
 
-	private function notifyPrivate($user, $event)
+	/**
+	 * Handle the event.
+	 *
+	 * @param $event
+	 *
+	 * @return void
+	 */
+	public function handle($event)
 	{
+		if (method_exists($event, 'transform')) {
+			$event->transform();
+		}
 
-	}
-
-	private function notifyPrivateStream($user, $event)
-	{
-
+		$handler = app('App\Listeners\Handlers\\' . class_basename($event) . 'Handler');
+		$handler->handle($event, $this);
 	}
 }

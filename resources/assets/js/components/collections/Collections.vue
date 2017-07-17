@@ -36,16 +36,20 @@
 				</div>
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
-						<!-- <wnl-slides-carousel :categoryId="categoryId"></wnl-slides-carousel> -->
-						<wnl-qna-collection
-							:rootCategoryName="rootCategoryName"
+						<wnl-slides-carousel
+							:categoryId="categoryId"
 							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
+						></wnl-slides-carousel>
+						<wnl-qna-collection
+							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
 						></wnl-qna-collection>
 					</div>
 					<div class="column" v-show="isQuizPanelVisible">
 						<wnl-quiz-collection
-							:rootCategoryName="rootCategoryName"
 							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
 						></wnl-quiz-collection>
 					</div>
 				</div>
@@ -60,6 +64,14 @@
 	.wnl-app-layout-main
 		width: 100%
 		max-width: initial
+
+		&.full-width
+
+			.column
+				width: 100%
+
+	.full-width
+		width: 100vw
 
 	.collections-header
 		border-bottom: $border-light-gray
@@ -77,6 +89,12 @@
 		color: $color-gray-dimmed
 		display: flex
 		margin-right: $margin-base
+
+		.breadcrumb
+			max-width: 200px
+			overflow-x: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
 
 	.collections-controls
 		align-items: center
@@ -132,6 +150,7 @@
 
 	.column
 		max-width: $course-content-max-width
+		width: 50%
 </style>
 
 <script>
@@ -143,7 +162,7 @@
 	import MainNav from 'js/components/MainNav'
 	import QnaCollection from 'js/components/collections/QnaCollection'
 	import QuizCollection from 'js/components/collections/QuizCollection'
-	// import SlidesCarousel from 'js/components/collections/SlidesCarousel'
+	import SlidesCarousel from 'js/components/collections/SlidesCarousel'
 	import { resource } from 'js/utils/config'
 	import navigation from 'js/services/navigation'
 	import { layouts } from 'js/store/modules/ui'
@@ -156,7 +175,7 @@
 			'wnl-main-nav': MainNav,
 			'wnl-qna-collection': QnaCollection,
 			'wnl-quiz-collection': QuizCollection,
-			// 'wnl-slides-carousel': SlidesCarousel
+			'wnl-slides-carousel': SlidesCarousel
 		},
 		data() {
 			return {
@@ -165,7 +184,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
 			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds', 'getCategoryByName']),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
@@ -174,7 +193,7 @@
 				return this.isPanelActive('slides')
 			},
 			isSinglePanelView() {
-				return this.isMobile
+				return this.isTouchScreen
 			},
 			panels() {
 				return {
@@ -232,7 +251,7 @@
 				return this.categoryName && Promise.all([
 					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
 					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
-					// this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
+					this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
 				])
 			},
 			navigateToDefaultCategoryIfNone() {

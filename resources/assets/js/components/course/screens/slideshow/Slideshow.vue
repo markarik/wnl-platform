@@ -18,7 +18,7 @@
 				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }">
 				</div>
 			</div>
-			<div class="margin top slideshow-menu">
+			<div class="slideshow-menu">
 				<wnl-annotations
 					v-if="!isLoading"
 					:currentSlide="currentSlideNumber"
@@ -36,7 +36,6 @@
 
 	.wnl-slideshow-background-control
 		align-items: center
-		border-top: $border-light-gray
 		color: $color-gray-dimmed
 		display: flex
 		font-size: $font-size-minus-2
@@ -96,11 +95,10 @@
 				transition: opacity $transition-length-base
 
 	.slideshow-menu
+		border: $border-light-gray
 		display: flex
-
-		.slideshow-fullscreen
-			flex: 0
-			padding-left: $margin-base
+		margin-top: -3px
+		padding-top: $margin-base
 </style>
 
 <script>

@@ -179,6 +179,17 @@ a.secondary-link {
 	width: 100%;
 }
 
+// Icons
+
+.icon.is-tiny {
+	height: 0.75rem;
+	width: 0.75rem;
+
+	.fa {
+		font-size: 10px;
+	}
+}
+
 // Forms
 
 .form-header {

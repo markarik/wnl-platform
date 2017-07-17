@@ -15,13 +15,15 @@ class DatabaseChannel
 	 */
 	public function send($notifiable, EventNotification $notification)
 	{
+		$channel = $notification->broadcastOn();
+
 		NotificationModel::create([
 			'id' => $notification->id,
 			'type' => get_class($notification),
 			'notifiable_id' => $notifiable->id,
 			'notifiable_type' => get_class($notifiable),
 			'data' => $notification->event->data,
-			'channel' => $notification->channel,
+			'channel' => $channel->name,
 			'read_at' => null,
 			'seen_at' => null,
 		]);

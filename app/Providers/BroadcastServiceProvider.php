@@ -23,10 +23,26 @@ class BroadcastServiceProvider extends ServiceProvider
 		/*
 		 * Authenticate the user's personal channel...
 		 */
-		Broadcast::channel('user.{userId}', function ($user, $userId) {
+		Broadcast::channel('{userId}', function ($user, $userId) {
 			$requestedUser = User::find($userId);
 
 			return $requestedUser->can('viewMultiple', Notification::class);
+		});
+
+		/*
+		 * Authenticate the user's personal stream channel...
+		 */
+		Broadcast::channel('private-stream.{userId}', function ($user, $userId) {
+			$requestedUser = User::find($userId);
+
+			return $requestedUser->can('viewMultiple', Notification::class);
+		});
+
+		/*
+		 * Authenticate the mederators channel...
+		 */
+		Broadcast::channel('role.{roleName}', function ($user, $roleName) {
+			return $user->hasRole($roleName);
 		});
 	}
 }

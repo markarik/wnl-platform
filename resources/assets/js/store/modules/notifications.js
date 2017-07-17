@@ -63,8 +63,9 @@ const actions = {
 		})
 	},
 	setupLiveNotifications({commit}, userId) {
-		Echo.private(`user.${userId}`)
+		Echo.private(userId)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
+				console.log(notification)
 				commit(types.ADD_NOTIFICATION, notification)
 			});
 	},

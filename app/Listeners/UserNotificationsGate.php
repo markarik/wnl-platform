@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Notification;
 class UserNotificationsGate implements ShouldQueue
 {
 	const CHANNELS = [
-		'moderators' => 'moderators',
-		'private'    => 'private-%d',
-		'stream'     => 'private-stream-%d',
+		'role'           => 'role.%s',
+		'private'        => '%d',
+		'private-stream' => 'stream.%d',
 	];
 
 	public function notifyPrivate($user, $event)
@@ -40,7 +40,8 @@ class UserNotificationsGate implements ShouldQueue
 		}
 
 		$moderators = User::ofRole('moderator');
-		$notification = new EventNotification($event, self::CHANNELS['moderators']);
+		$channelFormatted = sprintf(self::CHANNELS['role'], 'moderator');
+		$notification = new EventNotification($event, $channelFormatted);
 		Notification::send($moderators, $notification);
 
 		// For some reason event is not deserialized here by default

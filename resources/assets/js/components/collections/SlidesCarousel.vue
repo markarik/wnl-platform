@@ -4,6 +4,10 @@
 		<div class="slides-carousel-container" v-if="presentableLoaded && sortedSlides.length">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :class="" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
+					<div class="thumb-meta">
+						<span class="thumb-slide-number">{{getSlideDisplayNumberFromIndex(index)}}</span>
+						<span class="icon is-tiny" v-if="slide.media"><i class="fa" :class="slide.media.icon"></i></span>
+					</div>
 					<p class="thumb-heading metadata">{{slide.header}}</p>
 					<div class="slide-snippet" v-html="slide.snippet"></div>
 					<div class="slide-snippet has-media" v-if="slide.media">
@@ -52,7 +56,7 @@
 		margin-top: $margin-base
 
 	.wnl-carousel
-		justify-content: space-around
+		justify-content: space-between
 		margin: $margin-base 0
 
 	.VueCarousel-inner
@@ -98,14 +102,16 @@
 				height: 0
 				transition: height $transition-length-base
 
-		.shadow
-			+white-shadow-inside()
+		.thumb-meta
+			align-items: center
+			display: flex
+			justify-content: space-around
 
-			bottom: 0
-			height: 50%
-			position: absolute
-			transition: height $transition-length-base
-			width: 100%
+		.thumb-slide-number
+			font-size: $font-size-minus-3
+			line-height: $line-height-minus
+			margin-bottom: $margin-tiny
+			text-align: left
 
 		.thumb-heading
 			line-height: $line-height-minus
@@ -117,6 +123,15 @@
 
 			&.has-media
 				margin-top: $margin-small
+
+		.shadow
+			+white-shadow-inside()
+
+			bottom: 0
+			height: 50%
+			position: absolute
+			transition: height $transition-length-base
+			width: 100%
 </style>
 
 <script>
@@ -184,9 +199,7 @@
 				return (this.presentableLoaded && this.slides.filter((slide) => this.currentPresentableSlides[slide.id])) || []
 			},
 			currentSlideOrderNumber() {
-				const selectedSlide = this.sortedSlides[this.selectedSlideIndex]
-
-				return selectedSlide && this.currentPresentableSlides[selectedSlide.id].order_number || 0
+				return this.getSlideOrderNumberFromIndex(this.selectedSlideIndex)
 			},
 		},
 		methods: {
@@ -206,6 +219,14 @@
 			},
 			mediaIcon(mediaType) {
 				return this.mediaMap[mediaType].icon
+			},
+			getSlideOrderNumberFromIndex(index) {
+				const selectedSlide = this.sortedSlides[index]
+
+				return selectedSlide && this.currentPresentableSlides[selectedSlide.id].order_number || 0
+			},
+			getSlideDisplayNumberFromIndex(index) {
+				return this.getSlideOrderNumberFromIndex(index) + 1
 			}
 		},
 		watch: {

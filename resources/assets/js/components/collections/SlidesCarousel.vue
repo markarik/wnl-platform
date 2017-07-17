@@ -56,7 +56,7 @@
 		margin-top: $margin-base
 
 	.wnl-carousel
-		justify-content: space-between
+		justify-content: space-around
 		margin: $margin-base 0
 
 	.VueCarousel-inner
@@ -105,7 +105,7 @@
 		.thumb-meta
 			align-items: center
 			display: flex
-			justify-content: space-around
+			justify-content: space-between
 
 		.thumb-slide-number
 			font-size: $font-size-minus-3

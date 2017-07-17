@@ -10,11 +10,13 @@
 			@slideBookmarked="onSlideBookmarked"
 		></wnl-slideshow>
 
-		<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
-			<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
-				<p class="metadata">{{slide.header}}</p>
-				<div class="slide-snippet" v-if="!slide.media" v-html="slide.snippet"></div>
-				<div class="slide-snippet" v-else>Obraz lub film</div>
+		<div class="slides-carousel-container">
+			<div v-if="presentableLoaded && sortedSlides.length" class="slides-carousel">
+				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
+					<p class="metadata">{{slide.header}}</p>
+					<div class="slide-snippet" v-if="!slide.media" v-html="slide.snippet"></div>
+					<div class="slide-snippet" v-else>Obraz lub film</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -36,11 +38,18 @@
 		width: 100%
 		height: 400px
 
+	.slides-carousel-container
+		height: 150px
+		position: relative
+
 	.slides-carousel
 		display: flex
-		flex-wrap: nowrap
+		left: 0
 		overflow-y: hidden
 		overflow-x: auto
+		position: absolute
+		top: 0
+		width: 100%
 
 	.slide-thumb
 		background-color: white

@@ -4,7 +4,10 @@
 		<div class="slides-carousel-container" v-if="presentableLoaded && sortedSlides.length">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :class="" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
-					<p class="thumb-slide-number">{{getSlideDisplayNumberFromIndex(index)}}</p>
+					<div class="thumb-meta">
+						<span class="thumb-slide-number">{{getSlideDisplayNumberFromIndex(index)}}</span>
+						<span class="icon is-tiny" v-if="slide.media"><i class="fa" :class="slide.media.icon"></i></span>
+					</div>
 					<p class="thumb-heading metadata">{{slide.header}}</p>
 					<div class="slide-snippet" v-html="slide.snippet"></div>
 					<div class="slide-snippet has-media" v-if="slide.media">
@@ -53,7 +56,7 @@
 		margin-top: $margin-base
 
 	.wnl-carousel
-		justify-content: space-around
+		justify-content: space-between
 		margin: $margin-base 0
 
 	.VueCarousel-inner
@@ -98,6 +101,11 @@
 			.shadow
 				height: 0
 				transition: height $transition-length-base
+
+		.thumb-meta
+			align-items: center
+			display: flex
+			justify-content: space-around
 
 		.thumb-slide-number
 			font-size: $font-size-minus-3

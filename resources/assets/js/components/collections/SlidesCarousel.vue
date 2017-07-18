@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-slides-collection">
-		<p class="title is-4">Zapisane slajdy <span v-if="slideshowReady">({{sortedSlides.length}})</span></p>
-		<div class="slides-carousel-container" v-if="slideshowReady && sortedSlides.length">
+		<p class="title is-4">Zapisane slajdy <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span></p>
+		<div class="slides-carousel-container" v-if="!!savedSlidesCount">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :class="" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
 					<div class="thumb-meta">
@@ -20,20 +20,18 @@
 				</div>
 			</div>
 		</div>
-		<div v-else-if="slideshowReady" class="notification has-text-centered">
+		<div v-else-if="!savedSlidesCount" class="notification has-text-centered">
 			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
 			ref="slideshow"
-			v-if="!slideshowReady || sortedSlides.length"
-			:class="{'is-not-visible': !slideshowReady}"
+			v-if="!!savedSlidesCount"
 			:screenData="screenData"
 			:presentableId="categoryId"
 			:presentableType="presentableType"
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
-			@slideshowReady="slideshowReady = true"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -151,7 +149,7 @@
 
 	export default {
 		name: 'SlidesCarousel',
-		props: ['categoryId', 'rootCategoryName', 'categoryName'],
+		props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
 		data() {
 			return {
 				presentableType: 'App\\Models\\Category',
@@ -159,7 +157,6 @@
 					type: 'slideshow'
 				},
 				selectedSlideIndex: 0,
-				slideshowReady: false,
 			}
 		},
 		components: {
@@ -229,10 +226,7 @@
 		watch: {
 			'categoryId'() {
 				this.selectedSlideIndex = 0
-			},
-			'categoryName'() {
-				this.slideshowReady = false
-			},
+			}
 		}
 	}
 </script>

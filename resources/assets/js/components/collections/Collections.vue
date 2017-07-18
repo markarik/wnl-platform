@@ -40,6 +40,7 @@
 							:categoryId="categoryId"
 							:categoryName="categoryName"
 							:rootCategoryName="rootCategoryName"
+							:savedSlidesCount="slidesIds.length"
 						></wnl-slides-carousel>
 						<wnl-qna-collection
 							:categoryName="categoryName"
@@ -50,6 +51,7 @@
 						<wnl-quiz-collection
 							:categoryName="categoryName"
 							:rootCategoryName="rootCategoryName"
+							:quizQuestionsIds="quizQuestionsIds"
 						></wnl-quiz-collection>
 					</div>
 				</div>
@@ -215,7 +217,15 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds', 'getCategoryByName']),
+			...mapGetters('collections', [
+				'isLoading',
+				'getQuizQuestionsIdsForCategory',
+				'categories',
+				'getQnaQuestionsIdsForCategory',
+				'getSlidesIdsForCategory',
+				'getCategoryByName',
+				'getItemsCount'
+			]),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
 			},
@@ -239,19 +249,29 @@
 					&& rootCategoryObject.categories.find((category) => category.name === this.categoryName)
 
 				return categoryObject && categoryObject.id
+			},
+			quizQuestionsIds() {
+				return this.getQuizQuestionsIdsForCategory(this.categoryName)
+			},
+			qnaQuestionsIds() {
+				return this.getQnaQuestionsIdsForCategory(this.categoryName)
+			},
+			slidesIds() {
+				return this.getSlidesIdsForCategory(this.categoryName)
 			}
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
-			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
-			...mapActions('qna', ['fetchQuestionsByTagName']),
+			...mapActions('quiz', {'fetchQuiz': 'fetchQuestionsCollectionByTagName', 'resetQuiz': 'resetState'}),
+			...mapActions('qna', {'fetchQna':'fetchQuestionsByTagName', 'resetQna': 'destroyQna'}),
 			...mapActions(['toggleOverlay']),
 			getNavigation() {
 				let navigation = []
 
 				this.categories.forEach((rootCategory) => {
 					const groupItem = this.getGroupItem({name: rootCategory.name});
-					const childItems = rootCategory.categories.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
+					const childItems = rootCategory.categories
+						.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
 
 					navigation = [...navigation, groupItem, ...childItems]
 				})
@@ -267,6 +287,7 @@
 			getChildCategory(childCategory) {
 				return navigation.composeItem({
 					text: childCategory.name,
+					meta: `(${this.getItemsCount(childCategory.name)})`,
 					itemClass: 'has-icon',
 					routeName: this.routeName,
 					routeParams: {
@@ -278,21 +299,25 @@
 				})
 			},
 			setupContentForCategory() {
-				return this.categoryName && Promise.all([
-					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
-					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
-					this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
-				])
-			},
-			navigateToDefaultCategoryIfNone() {
-				if ((this.isTouchScreen && !this.isSidenavVisible && !this.categoryName) || (!this.isTouchScreen && !this.categoryName)) {
-					const firstCategory = this.categories[0].categories[0];
+				const contentToFetch = [];
 
-					this.$router.replace({name: this.routeName, params: {
-						categoryName: firstCategory.name,
-						rootCategoryName: this.categories[0].name
-					}})
+				if (this.quizQuestionsIds.length) {
+					contentToFetch.push(this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds}))
+				} else {
+					this.resetQuiz()
 				}
+
+				if (this.qnaQuestionsIds.length) {
+					contentToFetch.push(this.fetchQna({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+				} else {
+					this.resetQna()
+				}
+
+				if (this.slidesIds.length) {
+					contentToFetch.push(this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds}))
+				}
+
+				return this.categoryName && Promise.all(contentToFetch)
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {

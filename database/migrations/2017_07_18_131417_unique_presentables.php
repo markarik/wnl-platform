@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateTagsUniqueName extends Migration
+class UniquePresentables extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateTagsUniqueName extends Migration
 	 */
 	public function up()
 	{
-		Schema::table('tags', function (Blueprint $table) {
-			$table->unique('name');
+		Schema::table('presentables', function (Blueprint $table) {
+			$table->unique(['presentable_type', 'presentable_id', 'slide_id']);
 		});
 	}
 
@@ -25,8 +25,8 @@ class UpdateTagsUniqueName extends Migration
 	 */
 	public function down()
 	{
-		Schema::table('tags', function (Blueprint $table) {
-			$table->dropUnique('name');
+		Schema::table('presentables', function (Blueprint $table) {
+			$table->dropUnique(['presentable_type', 'presentable_id', 'slide_id']);
 		});
 	}
 }

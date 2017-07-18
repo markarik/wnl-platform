@@ -11,7 +11,9 @@ export const commentsGetters = {
 	 * @param  {Object} commentable { commentable_resource: String, commentable_id: Int }
 	 */
 	comments: (state) => (payload) => {
-		if (!state[payload.resource][payload.id].hasOwnProperty('comments')) {
+		if (typeof state[payload.resource][payload.id] !== 'object' ||
+			!state[payload.resource][payload.id].hasOwnProperty('comments')
+		) {
 			return []
 		}
 

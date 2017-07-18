@@ -215,7 +215,7 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds', 'getCategoryByName']),
+			...mapGetters('collections', ['isLoading', 'getQuizQuestionsIdsForCategory', 'categories', 'getQnaQuestionsIdsForCategory', 'getSlidesIdsForCategory', 'getCategoryByName']),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
 			},
@@ -239,6 +239,15 @@
 					&& rootCategoryObject.categories.find((category) => category.name === this.categoryName)
 
 				return categoryObject && categoryObject.id
+			},
+			quizQuestionsIds() {
+				return this.getQuizQuestionsIdsForCategory(this.categoryName)
+			},
+			qnaQuestionsIds() {
+				return this.getQnaQuestionsIdsForCategory(this.categoryName)
+			},
+			slidesIds() {
+				return this.getSlidesIdsForCategory(this.categoryName)
 			}
 		},
 		methods: {
@@ -279,20 +288,10 @@
 			},
 			setupContentForCategory() {
 				return this.categoryName && Promise.all([
-					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
+					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids: this.quizQuestionsIds}),
 					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
 					this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
 				])
-			},
-			navigateToDefaultCategoryIfNone() {
-				if ((this.isTouchScreen && !this.isSidenavVisible && !this.categoryName) || (!this.isTouchScreen && !this.categoryName)) {
-					const firstCategory = this.categories[0].categories[0];
-
-					this.$router.replace({name: this.routeName, params: {
-						categoryName: firstCategory.name,
-						rootCategoryName: this.categories[0].name
-					}})
-				}
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {

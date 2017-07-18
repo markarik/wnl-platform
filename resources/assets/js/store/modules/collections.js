@@ -4,26 +4,22 @@ import {getApiUrl} from 'js/utils/env'
 import {set} from 'vue'
 
 function _getReactions() {
-	return axios.get(getApiUrl('users/current/reactions/bookmark'))
+	return axios.get(getApiUrl('users/current/reactions/byCategory/bookmark'))
 }
 
 function getInitialState() {
 	return {
 		loading: true,
-		qna_questions: [],
-		qna_answers: [],
-		quiz_questions: [],
-		slides: [],
+		reactions: {},
 		categories: [],
 		slidesContent: []
 	}
 }
 
 const resourcesMap = {
-	qna_answers: 'App\\Models\\QnaAnswer',
-	qna_questions: 'App\\Models\\QnaQuestion',
-	quiz_questions: 'App\\Models\\QuizQuestion',
-	slides: 'App\\Models\\Slide',
+	'App\\Models\\QnaQuestion': 'qna_questions',
+	'App\\Models\\QuizQuestion': 'quiz_questions',
+	'App\\Models\\Slide': 'slides',
 }
 
 const namespaced = true
@@ -32,10 +28,9 @@ const state = getInitialState()
 
 const getters = {
 	isLoading: (state) => state.loading,
-	qnaQuestionsIds: (state) => state.qna_questions.map(question => question.reactable_id),
-	qnaAnswersIds: (state) => state.qna_answers,
-	quizQuestionsIds: (state) => state.quiz_questions.map(question => question.reactable_id),
-	slidesIds: (state) => state.slides.map(slide => slide.reactable_id),
+	getQnaQuestionsIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].qna_questions.map(qna => qna.reactable_id)) || [],
+	getQuizQuestionsIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].quiz_questions.map(quiz => quiz.reactable_id)) || [],
+	getSlidesIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].slides.map(slide => slide.reactable_id)) || [],
 	categories: (state) => state.categories,
 	slidesContent: (state) => state.slidesContent,
 	getCategoryByName: (state, getters) => (categoryName) => getters.categories.find((category) => {
@@ -53,8 +48,8 @@ const mutations = {
 			set(state, field, initialState[field])
 		})
 	},
-	[types.COLLECTIONS_SET_REACTABLE] (state, payload) {
-		payload.items.forEach((item) => state[payload.resource].push(item))
+	[types.COLLECTIONS_SET_REACTABLES] (state, reactions) {
+		set(state, 'reactions', reactions)
 	},
 	[types.COLLECTIONS_SET_CATEGORIES] (state, categories) {
 		set(state, 'categories', categories)
@@ -79,23 +74,35 @@ const mutations = {
 
 const actions = {
 	fetchReactions({commit}) {
-		return _getReactions().then(({data: { reactions }}) => {
-			if (reactions === 0) {
+		return _getReactions()
+		.then(({data: { reactions }}) => {
+			if (Array.isArray(reactions) && reactions.length === 0) {
 				commit(types.IS_LOADING, false)
-				return false
 			}
 
-			_.each(resourcesMap, (model, resource) => {commit(types.COLLECTIONS_SET_REACTABLE, {
-					resource,
-					items: reactions.filter((item) => item.reactable_type === model)
+			const serializedReactions = {};
+			Object.keys(reactions).forEach((category) => {
+				const categoriesReactions = {}
+
+				Object.values(resourcesMap).forEach((resource) => categoriesReactions[resource] = [])
+
+				reactions[category]
+				.filter(reaction => Object.keys(resourcesMap).includes(reaction.reactable_type))
+				.forEach(reaction => {
+					const resource = resourcesMap[reaction.reactable_type]
+					categoriesReactions[resource].push(reaction)
 				})
+
+				serializedReactions[category] = categoriesReactions
 			})
+			commit(types.COLLECTIONS_SET_REACTABLES, serializedReactions)
 			commit(types.IS_LOADING, false)
+
 		})
 	},
 	fetchCategories({commit}) {
 		return axios.get(getApiUrl('categories/all'))
-			.then(({data: categories}) => commit(types.COLLECTIONS_SET_CATEGORIES, categories));
+		.then(({data: categories}) => commit(types.COLLECTIONS_SET_CATEGORIES, categories));
 	},
 	fetchSlidesByTagName({commit}, {tagName, ids}) {
 		commit(types.SLIDES_LOADING, true);

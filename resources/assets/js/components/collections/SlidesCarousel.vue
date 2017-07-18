@@ -20,12 +20,12 @@
 				</div>
 			</div>
 		</div>
-		<div v-else-if="slideshowReady" class="notification has-text-centered">
+		<div v-else-if="!sortedSlides.length" class="notification has-text-centered">
 			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
 			ref="slideshow"
-			v-if="!slideshowReady || sortedSlides.length"
+			v-if="sortedSlides.length"
 			:class="{'is-not-visible': !slideshowReady}"
 			:screenData="screenData"
 			:presentableId="categoryId"

@@ -40,6 +40,7 @@
 							:categoryId="categoryId"
 							:categoryName="categoryName"
 							:rootCategoryName="rootCategoryName"
+							:savedSlidesCount="slidesIds.length"
 						></wnl-slides-carousel>
 						<wnl-qna-collection
 							:categoryName="categoryName"
@@ -50,6 +51,7 @@
 						<wnl-quiz-collection
 							:categoryName="categoryName"
 							:rootCategoryName="rootCategoryName"
+							:quizQuestionsIds="quizQuestionsIds"
 						></wnl-quiz-collection>
 					</div>
 				</div>
@@ -215,7 +217,14 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
-			...mapGetters('collections', ['isLoading', 'getQuizQuestionsIdsForCategory', 'categories', 'getQnaQuestionsIdsForCategory', 'getSlidesIdsForCategory', 'getCategoryByName']),
+			...mapGetters('collections', [
+				'isLoading',
+				'getQuizQuestionsIdsForCategory',
+				'categories',
+				'getQnaQuestionsIdsForCategory',
+				'getSlidesIdsForCategory',
+				'getCategoryByName'
+			]),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
 			},
@@ -260,7 +269,8 @@
 
 				this.categories.forEach((rootCategory) => {
 					const groupItem = this.getGroupItem({name: rootCategory.name});
-					const childItems = rootCategory.categories.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
+					const childItems = rootCategory.categories
+						.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
 
 					navigation = [...navigation, groupItem, ...childItems]
 				})
@@ -287,11 +297,21 @@
 				})
 			},
 			setupContentForCategory() {
-				return this.categoryName && Promise.all([
-					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids: this.quizQuestionsIds}),
-					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
-					this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
-				])
+				const contentToFetch = [];
+
+				if (this.quizQuestionsIds.length) {
+					contentToFetch.push(this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids: this.quizQuestionsIds}))
+				}
+
+				if (this.qnaQuestionsIds.length) {
+					contentToFetch.push(this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+				}
+
+				if (this.slidesIds.length) {
+					contentToFetch.push(this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds}))
+				}
+
+				return this.categoryName && Promise.all(contentToFetch)
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {

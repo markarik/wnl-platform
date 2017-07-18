@@ -39,7 +39,7 @@ function getInitialState() {
 		attempts: [],
 		comments: {},
 		isComplete: false,
-		loaded: false,
+		loaded: true,
 		questionsIds: [],
 		quiz_answers: {},
 		quiz_questions: {},

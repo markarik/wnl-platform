@@ -10,7 +10,7 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
-			<div class="scrollable-main-container">
+			<div class="scrollable-main-container" v-if="rootCategoryName && categoryName">
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">
 						<div class="breadcrumb">
@@ -54,6 +54,11 @@
 					</div>
 				</div>
 			</div>
+			<div class="collections-placeholder">
+				<span class="icon main"><i class="fa fa-star-o"></i></span>
+				<span class="welcome">Witaj w Kolekcjach!</span>
+				<span>Wybierz temat z menu <span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span> i przeglądaj zapisane fragmenty kursu</span>
+			</div>
 		</div>
 	</div>
 </template>
@@ -72,6 +77,29 @@
 
 	.full-width
 		width: 100vw
+
+	.collections-placeholder
+		align-items: center
+		display: flex
+		flex-direction: column
+		height: 100%
+		justify-content: center
+		text-align: center
+		width: 100%
+
+		.icon.main
+			height: $font-size-plus-7
+			width: $font-size-plus-7
+
+			.fa
+				color: $color-inactive-gray
+				font-size: $font-size-plus-7
+
+		.welcome
+			color: $color-inactive-gray
+			font-size: $font-size-plus-3
+			font-weight: $font-weight-light
+			line-height: $line-height-plus
 
 	.collections-header
 		border-bottom: $border-light-gray
@@ -293,16 +321,12 @@
 			this.toggleOverlay({source: 'collections', display: true})
 			this.fetchCategories()
 				.then(this.fetchReactions)
-				.then(this.navigateToDefaultCategoryIfNone)
 				.then(this.setupContentForCategory)
 				.then(() => this.toggleOverlay({source: 'collections', display: false}))
 		},
 		watch: {
 			'$route' () {
 				this.categoryName && this.setupContentForCategory()
-			},
-			'isSidenavVisible'(isOpen, wasOpen) {
-				this.isTouchScreen && !isOpen && wasOpen && this.navigateToDefaultCategoryIfNone()
 			}
 		},
 	}

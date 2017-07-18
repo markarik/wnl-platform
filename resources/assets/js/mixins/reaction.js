@@ -1,8 +1,5 @@
-import { mapGetters, mapActions } from 'vuex'
-import { SET_REACTION } from 'js/store/mutations-types'
-
 export const reaction = {
-	props: ['module', 'reactableResource', 'reactableId', 'updateLocally', 'state'],
+	props: ['module', 'reactableResource', 'reactableId', 'updateLocally', 'state', 'reactionsDisabled'],
 	data() {
 		return {
 			isLoading: false,
@@ -23,7 +20,7 @@ export const reaction = {
 			return this.$store.dispatch(`${this.module}/setReaction`, payload)
 		},
 		toggleReaction() {
-			if (this.isLoading) {
+			if (this.isLoading || this.reactionsDisabled) {
 				return false
 			}
 			this.wasJustClicked = true
@@ -33,20 +30,10 @@ export const reaction = {
 				reactableId: this.reactableId,
 				reaction: this.name,
 				hasReacted: this.hasReacted,
+				count: this.count
 			}).then((response) => {
-				const hasReacted = !this.hasReacted
-				const count = hasReacted ? this.count + 1 : this.count - 1;
-
 				this.isLoading = false
 				this.wasJustClicked = false
-
-				this.mutation(SET_REACTION, {
-					count,
-					hasReacted,
-					reactableResource: this.reactableResource,
-					reactableId: this.reactableId,
-					reaction: this.name,
-				})
 			})
 			.catch((error) => {
 				$wnl.logger.error(error)
@@ -54,9 +41,6 @@ export const reaction = {
 				this.wasJustClicked = false
 			})
 		},
-		mutation(name, payload) {
-			this.$store.commit(`${this.module}/${name}`, payload)
-		}
 	},
 	mounted() {
 		this.isReady = true

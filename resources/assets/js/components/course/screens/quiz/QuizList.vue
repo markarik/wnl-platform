@@ -29,6 +29,7 @@
 	.wnl-quiz-list
 		border-top: $border-light-gray
 		margin: $margin-big 0
+		padding-top: $margin-base
 </style>
 
 <script>
@@ -56,9 +57,10 @@
 				'getUnresolved',
 				'getUnanswered',
 				'getQuestions',
+				'hasQuestions'
 			]),
 			displayResults() {
-				return this.isComplete || this.readOnly
+				return this.isComplete || this.readOnly || !this.hasQuestions
 			},
 			howManyLeft() {
 				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestions)}`

@@ -115,10 +115,13 @@ class Form {
 	 *
 	 * @param url
 	 */
-	populate(url) {
+	populate(url, exclude = []) {
 		return axios.get(url)
 			.then(response => {
 				Object.keys(response.data).forEach((field) => {
+					if (exclude.indexOf(field) > -1) {
+						return false
+					}
 					this[field] = response.data[field]
 					this.originalData[field] = response.data[field]
 				})

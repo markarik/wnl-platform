@@ -21,6 +21,7 @@
 						:reactableId="questionId"
 						:reactableResource="reactableResource"
 						:state="bookmarkState"
+						:reactionsDisabled="reactionsDisabled"
 						module="qna"
 					></wnl-bookmark>
 				</div>
@@ -180,7 +181,7 @@
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
 		},
-		props: ['questionId', 'readOnly'],
+		props: ['questionId', 'readOnly', 'reactionsDisabled'],
 		data() {
 			return {
 				allAnswers: false,

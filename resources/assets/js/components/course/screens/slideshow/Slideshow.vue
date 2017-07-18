@@ -3,7 +3,7 @@
 		<div class="wnl-slideshow-container">
 			<div class="wnl-slideshow-background-control">
 				<div class="controls-left">
-					<wnl-slideshow-navigation></wnl-slideshow-navigation>
+					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
 				</div>
 				<div class="controls-right">
 					<div class="controls-item">
@@ -18,7 +18,7 @@
 				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }">
 				</div>
 			</div>
-			<div class="margin top slideshow-menu">
+			<div class="slideshow-menu">
 				<wnl-annotations
 					v-if="!isLoading"
 					:currentSlide="currentSlideNumber"
@@ -36,7 +36,6 @@
 
 	.wnl-slideshow-background-control
 		align-items: center
-		border-top: $border-light-gray
 		color: $color-gray-dimmed
 		display: flex
 		font-size: $font-size-minus-2
@@ -96,11 +95,10 @@
 				transition: opacity $transition-length-base
 
 	.slideshow-menu
+		border: $border-light-gray
 		display: flex
-
-		.slideshow-fullscreen
-			flex: 0
-			padding-left: $margin-base
+		margin-top: -3px
+		padding-top: $margin-base
 </style>
 
 <script>
@@ -112,7 +110,7 @@
 
 	import Annotations from './Annotations'
 	import SlideshowNavigation from './SlideshowNavigation'
-	import {isDebug, getUrl} from 'js/utils/env'
+	import {isDebug, getApiUrl} from 'js/utils/env'
 
 	let debounced, handshake
 
@@ -125,14 +123,17 @@
 		data() {
 			return {
 				child: {},
-				currentSlideNumber: Math.max(this.$route.params.slide, 1) || 1,
+				// slides order number is index from 0
+				currentSlideNumber: this.slideOrderNumber + 1 || Math.max(this.$route.params.slide, 1) || 1,
 				loaded: false,
 				isFauxFullscreen: false,
 				isFocused: false,
-				slideChanged: false
+				slideChanged: false,
+				currentSlideId: 0,
+				bookmarkLoading: false
 			}
 		},
-		props: ['screenData', 'slide'],
+		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
 		computed: {
 			...mapGetters(['getSetting']),
 			...mapGetters('slideshow', [
@@ -142,9 +143,12 @@
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
+				'presentables',
+				'bookmarkedSlideNumbers',
+				'getReaction'
 			]),
 			currentSlideIndex() {
-				return this.currentSlideNumber - 1
+				 return this.currentSlideNumber - 1
 			},
 			container() {
 				return this.$el.getElementsByClassName('wnl-slideshow-content')[0]
@@ -153,10 +157,10 @@
 				return this.$route.params.screenId
 			},
 			slideshowId() {
-				return this.screenData.meta.resources[0].id
+				return this.screenData.meta && this.screenData.meta.resources[0].id
 			},
 			slideshowUrl() {
-				return getUrl(`slideshow-builder/${this.slideshowId}`)
+				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
 			},
 			slideshowElement() {
 				return this.container.getElementsByTagName('iframe')[0]
@@ -169,10 +173,35 @@
 					return this.$el.getElementsByTagName('iframe')[0]
 				}
 			},
+			bookmarkState() {
+				return this.getReaction('slides', this.currentSlideId, 'bookmark')
+			}
 		},
 		methods: {
-			...mapActions('slideshow', ['setup']),
+			...mapActions('slideshow', ['setup', 'setupPresentables', 'setupByPresentable', 'resetModule']),
 			...mapActions(['toggleOverlay']),
+			toggleBookmarkedState(slideIndex, hasReacted) {
+				this.bookmarkLoading = true
+				const slideId = this.getSlideId(slideIndex)
+
+				return this.$store.dispatch(`slideshow/setReaction`, {
+					hasReacted,
+					reactableResource: 'slides',
+					reactableId: this.getSlideId(slideIndex),
+					reaction: 'bookmark',
+					count: this.bookmarkState.count
+				}).then(() => {
+					return Promise.resolve({
+						hasReacted: !hasReacted,
+						slideIndex,
+					})
+				}).then((data) => {
+					this.child.call('setBookmarkedState', data)
+					this.$emit('slideBookmarked', {slideId, hasReacted: data.hasReacted})
+				}).then(() => {
+					this.bookmarkLoading = false
+				})
+			},
 			toggleFullscreen() {
 				if (screenfull.enabled) {
 					screenfull.toggle(this.slideshowElement)
@@ -189,17 +218,22 @@
 				return index + 1
 			},
 			goToSlide(slideIndex) {
-				this.slideChanged = true
-				this.child.call('goToSlide', slideIndex)
-				this.setCurrentSlideFromIndex(slideIndex)
-				this.focusSlideshow()
+				if(slideIndex || slideIndex === 0) {
+					this.slideChanged = true
+					this.child.call('goToSlide', slideIndex)
+					this.setCurrentSlideFromIndex(slideIndex)
+					this.focusSlideshow()
+				}
 			},
 			changeBackground(background = 'image') {
 				this.child.call('changeBackground', background)
 				this.focusSlideshow()
 			},
 			focusSlideshow() {
-				if (this.child.hasOwnProperty('frame') && typeof this.child.frame !== undefined) {
+				if (typeof this.child !== 'undefined' &&
+					this.child.hasOwnProperty('frame') &&
+					typeof this.child.frame !== 'undefined'
+				) {
 					this.child.frame.click()
 					this.child.frame.focus()
 				}
@@ -208,14 +242,14 @@
 			checkFocus() {
 				this.isFocused = this.iframe === document.activeElement
 			},
-			initSlideshow() {
+			initSlideshow(slideshowUrl) {
 				this.toggleOverlay({source: 'slideshow', display: true})
 				handshake = new Postmate({
 					container: this.container,
-					url: this.slideshowUrl
+					url: slideshowUrl || this.slideshowUrl,
 				})
 
-				handshake.then(child => {
+				return handshake.then(child => {
 					this.child = child
 					this.loaded = true
 					child.frame.setAttribute('mozallowfullscreen', '');
@@ -231,6 +265,15 @@
 					}))
 				}).catch(exception => $wnl.logger.capture(exception))
 			},
+			updateRoute(slideNumber) {
+				!this.preserveRoute && this.$router.replace({
+					name: 'screens',
+					params: { slide: slideNumber }
+				})
+			},
+			navigateToSlide(slideNumber) {
+				this.preserveRoute ? this.goToSlide(slideNumber - 1) : this.updateRoute(slideNumber)
+			},
 			messageEventListener(event) {
 
 				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
@@ -242,10 +285,7 @@
 						) {
 							let currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
 							this.currentSlideNumber = currentSlideNumber
-							this.$router.replace({
-								name: 'screens',
-								params: { slide: currentSlideNumber }
-							})
+							this.updateRoute(currentSlideNumber)
 							this.focusSlideshow()
 						}
 
@@ -258,6 +298,11 @@
 						this.toggleFullscreen()
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
+						this.child.call('setupBookmarks', this.bookmarkedSlideNumbers)
+					} else if (event.data.value.name === 'bookmark') {
+						const slideData = event.data.value.data
+
+						!this.bookmarkLoading && this.toggleBookmarkedState(slideData.index, slideData.isBookmarked)
 					}
 				}
 			},
@@ -296,10 +341,12 @@
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
 				removeEventListener('message', debounced)
+
+				this.resetModule()
 				this.loaded = false
 			},
 			onAnnotationsUpdated(comments) {
-				if (typeof this.child.call === 'function') {
+				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
 					let annotations = _.cloneDeep(comments)
 
 					if (annotations.length > 0) {
@@ -320,8 +367,23 @@
 		},
 		mounted() {
 			Postmate.debug = isDebug()
-			this.initSlideshow()
-			this.setup(this.slideshowId)
+			this.toggleOverlay({source: 'slideshow', display: true})
+			if (this.presentableId || this.presentableType) {
+				this.presentableId && this.setupByPresentable({type: this.presentableType, id: this.presentableId})
+				.then(() => {
+					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					.then(() => {
+						this.goToSlide(this.slideOrderNumber)
+					})
+					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+				})
+			} else {
+				this.setup(this.slideshowId)
+				.then(() => {
+					this.initSlideshow()
+					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+				})
+			}
 		},
 		beforeDestroy() {
 			this.destroySlideshow()
@@ -329,6 +391,10 @@
 		watch: {
 			'$route' (to, from) {
 				if (to.params.screenId != from.params.screenId) {
+					this.destroySlideshow()
+				}
+
+				if (to.params.categoryName != from.params.categoryName) {
 					this.destroySlideshow()
 				}
 
@@ -350,6 +416,23 @@
 					this.initSlideshow()
 				}
 			},
+			'presentableId' (newValue, oldValue) {
+				newValue && this.toggleOverlay({source: 'slideshow', display: true})
+				newValue && this.setupByPresentable({type: this.presentableType, id: newValue})
+				.then(() => {
+					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+					.then(() => {
+						this.goToSlide(this.slideOrderNumber)
+					})
+					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+				})
+			},
+			'currentSlideIndex' (newValue, oldValue) {
+				this.currentSlideId = this.getSlideId(newValue)
+			},
+			'slideOrderNumber' (newValue, oldValue) {
+				typeof this.child.call === 'function' && this.goToSlide(newValue)
+			}
 		}
 	}
 </script>

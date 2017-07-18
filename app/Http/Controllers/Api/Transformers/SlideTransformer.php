@@ -14,6 +14,8 @@ class SlideTransformer extends ApiTransformer
 		$data = [
 			'content'       => $slide->content,
 			'is_functional' => $slide->is_functional,
+			'snippet'       => $slide->snippet,
+			'id'            => $slide->id
 		];
 
 		return $data;

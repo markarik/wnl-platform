@@ -35,5 +35,7 @@ return [
 		'chat-rooms'          => 'chat_rooms',
 		'chat-messages'       => 'chat_messages',
 		'reactions'           => 'reactions',
+		'categories'          => 'categories',
+		'slideshow-builder'   => 'slideshow_builder',
 	],
 ];

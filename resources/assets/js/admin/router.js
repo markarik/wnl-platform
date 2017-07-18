@@ -26,6 +26,11 @@ let routes = [
 		component: require('js/admin/components/slides/SlidesEditor.vue'),
 	},
 	{
+		name: 'charts',
+		path: '/admin/app/charts',
+		component: require('js/admin/components/slides/Charts.vue'),
+	},
+	{
 		name: 'quizes',
 		path: '/admin/app/quizes',
 		component: require('js/admin/components/quizes/Quizes.vue'),

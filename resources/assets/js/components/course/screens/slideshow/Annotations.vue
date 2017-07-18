@@ -1,6 +1,6 @@
 <template>
 	<div class="slideshow-annotations" :class="{'is-mobile': isMobile}">
-		<p class="metadata">Komentarze do slajdu</p>
+		<p class="metadata">Komentarze do slajdu {{currentSlide}}</p>
 		<wnl-comments-list
 			v-if="currentSlideId > 0"
 			module="slideshow"
@@ -13,15 +13,18 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.slideshow-annotations
 		flex: 1 auto
-		margin: 0 $margin-huge
+		margin: 0 $margin-base
 
 		&.is-mobile
-			margin: 0
+			margin: 0 $margin-small
+
+	.metadata
+		margin-bottom: -$margin-base
 </style>
 
 <script>

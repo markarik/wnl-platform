@@ -1,5 +1,5 @@
 <template>
-	<aside class="course-sidenav">
+	<aside class="sidenav-aside course-sidenav">
 		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading"></wnl-sidenav>
 	</aside>
 </template>
@@ -24,6 +24,7 @@
 	import * as mutations from 'js/store/mutations-types'
 	import { resource } from 'js/utils/config'
 	import {STATUS_COMPLETE} from "../../services/progressStore";
+	import navigation from 'js/services/navigation'
 
 	export default {
 		name: 'Navigation',
@@ -141,48 +142,20 @@
 
 				return navigation
 			},
-			composeItem(
-				text,
-				itemClass,
-				routeName = '',
-				routeParams = {},
-				isDisabled = false,
-				method = 'push',
-				iconClass = '',
-				iconTitle = '',
-				completed = false,
-				active = false,
-				meta = '',
-			) {
-				let to = {}
-				if (!isDisabled && routeName.length > 0) {
-					to = {
-						name: routeName,
-						params: routeParams
-					}
-				}
-
-				return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed, active, meta }
-			},
 			getCourseItem() {
-				return this.composeItem(
-					this.name,
-					'has-icon',
-					resource('courses'),
-					{
+				return navigation.composeItem({
+					text: this.name,
+					itemClass: 'has-icon',
+					routeName: resource('courses'),
+					routeParms: {
 						courseId: this.context.courseId,
 					},
-					false,
-					'push',
-					'fa-home',
-					'Strona główna kursu'
-				)
+					iconClass: 'fa-home',
+					iconTitle: 'Strona główna kursu'
+				})
 			},
 			getGroupItem(group) {
-				return this.composeItem(
-					group.name,
-					'heading small'
-				)
+				return navigation.composeItem({text: group.name, itemClass: 'heading small'})
 			},
 			getLessonItem(lesson, withProgress = true) {
 				let cssClass = '', iconClass = '', iconTitle = ''
@@ -199,19 +172,18 @@
 					iconTitle = 'Obecna lekcja'
 				}
 
-				return this.composeItem(
-					lesson.name,
-					cssClass,
-					resource('lessons'),
-					{
+				return navigation.composeItem({
+					text: lesson.name,
+					itemClass: cssClass,
+					routeName: resource('lessons'),
+					routeParams: {
 						courseId: lesson[resource('editions')],
 						lessonId: lesson.id,
 					},
-					!this.isLessonAvailable(lesson.id),
-					'push',
+					isDisabled: !this.isLessonAvailable(lesson.id),
 					iconClass,
 					iconTitle
-				)
+				})
 
 			},
 			getScreenItem(screen) {
@@ -223,19 +195,15 @@
 
 				const lesson = this.getLessonProgress(params.courseId, params.lessonId);
 				const screens = lesson && lesson.screens || [];
-				const isCompleted = screens[screen.id] && screens[screen.id].status === STATUS_COMPLETE;
+				const completed = screens[screen.id] && screens[screen.id].status === STATUS_COMPLETE;
 
-				return this.composeItem(
-					screen.name,
-					'todo',
-					resource('screens'),
-					params,
-					false,
-					'push',
-					'',
-					'',
-					isCompleted
-				)
+				return navigation.composeItem({
+					text: screen.name,
+					itemClass: 'todo',
+					routeName: resource('screens'),
+					routeParams: params,
+					completed
+				})
 			},
 			getSectionItem(section) {
 				const params = {
@@ -249,19 +217,18 @@
 				const sections = screen && screen.sections || {}
 				const isSectionActive = this.lessonState.activeSection === section.id
 
-				return this.composeItem(
-					section.name,
-					'small subitem todo',
-					resource('screens'),
-					params,
-					false,
-					'replace',
-					'fa-angle-right',
-					section.name,
-					!!sections[section.id], //isCompleted
-					isSectionActive, // isActive
-					`(${section.slidesCount})`
-				)
+				return navigation.composeItem({
+					text: section.name,
+					itemClass: 'small subitem todo',
+					routeName: resource('screens'),
+					routeParams: params,
+					method: 'replace',
+					iconClass: 'fa-angle-right',
+					iconTitle: section.name,
+					completed: !!sections[section.id],
+					active: isSectionActive,
+					meta: `(${section.slidesCount})`
+				})
 			}
 		},
 		components: {

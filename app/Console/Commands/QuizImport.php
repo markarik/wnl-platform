@@ -109,7 +109,9 @@ class QuizImport extends Command
 
 		foreach ($tagNames as $tagName) {
 			$tag = Tag::firstOrCreate(['name' => $tagName]);
-			$question->tags()->attach($tag);
+			if (!$question->tags->contains($tag)) {
+				$question->tags()->attach($tag);
+			}
 		}
 
 		$question->preserve_order = (bool)$values[10];

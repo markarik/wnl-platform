@@ -24,10 +24,20 @@ class Parser
 
 	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
 
+	const HEADER_PATTERN = '/<h.*>([\s\S]*)<\/h.*>/';
+
+	const MEDIA_PATTERNS = [
+		'chart' => '/<img.*class="chart".*>/',
+		'movie' => '/<iframe.*youtube\.com.*>/',
+		'audio' => '/<iframe.*clyp.it.*>/',
+	];
+
 	protected $categoryTags;
 	protected $courseTags;
 	protected $categoryModels = [];
 	protected $courseModels = [];
+	protected $lessonTag;
+	protected $groupTag;
 
 	/**
 	 * Parser constructor.
@@ -51,6 +61,7 @@ class Parser
 
 	/**
 	 * @param $fileContents - string/html
+	 *
 	 * @throws ParseErrorException
 	 */
 	public function parse($fileContents)
@@ -61,6 +72,8 @@ class Parser
 		$slides = $this->matchSlides($fileContents);
 		Log::debug('Parsing...');
 		$names = [];
+		$slideshowTag = Tag::firstOrCreate(['name' => 'Prezentacja']);
+
 		foreach ($slides as $currentSlide => $slideHtml) {
 			$iteration++;
 
@@ -94,6 +107,7 @@ class Parser
 						'course_id' => 1,
 					]);
 					$this->courseModels['group'] = $group;
+					$this->groupTag = Tag::firstOrCreate(['name' => $group->name]);
 				}
 
 				if ($courseTag['name'] == 'lesson') {
@@ -101,11 +115,14 @@ class Parser
 						'name'     => $courseTag['value'],
 						'group_id' => $this->courseModels['group']->id,
 					]);
+					$this->lessonTag = Tag::firstOrCreate(['name' => $lesson->name]);
+
 					$slideshow = Slideshow::create([
 						'background' => $this->getBackground($fileContents),
 					]);
 					$orderNumber = 0;
 					$this->courseModels['slideshow'] = $slideshow;
+
 					$this->courseModels['screen'] = $lesson->screens()->create([
 						'type' => 'slideshow',
 						'name' => 'Prezentacja',
@@ -118,15 +135,9 @@ class Parser
 							],
 						],
 					]);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => $lesson->name])
-					);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => $group->name])
-					);
-					$this->courseModels['screen']->tags()->attach(
-						Tag::firstOrCreate(['name' => 'Prezentacja'])
-					);
+					$this->courseModels['screen']->tags()->attach($slideshowTag);
+					$this->courseModels['screen']->tags()->attach($this->lessonTag);
+					$this->courseModels['screen']->tags()->attach($this->groupTag);
 				}
 
 				if ($courseTag['name'] == 'section') {
@@ -136,6 +147,13 @@ class Parser
 					]);
 					$this->courseModels['section'] = $section;
 				}
+			}
+
+			if ($this->lessonTag) {
+				$slide->tags()->attach($this->lessonTag);
+			}
+			if ($this->groupTag) {
+				$slide->tags()->attach($this->groupTag);
 			}
 			if (array_key_exists('slideshow', $this->courseModels)) {
 				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);
@@ -191,6 +209,7 @@ class Parser
 
 	/**
 	 * @param $data - string/html
+	 *
 	 * @return array
 	 */
 	protected function matchSlides($data):array
@@ -204,6 +223,7 @@ class Parser
 
 	/**
 	 * @param $data - string/html
+	 *
 	 * @return bool
 	 */
 	protected function isFunctional($data):bool
@@ -215,6 +235,7 @@ class Parser
 	 * @param $pattern
 	 * @param $data
 	 * @param \Closure $errback
+	 *
 	 * @return mixed
 	 * @internal param \Closure $callback
 	 */
@@ -236,6 +257,7 @@ class Parser
 
 	/**
 	 * @param $slideHtml
+	 *
 	 * @return array
 	 */
 	public function getTags($slideHtml)
@@ -336,5 +358,41 @@ class Parser
 		Storage::put('public/' . $path, $image);
 
 		return sprintf($viewerHtml, asset('storage/' . $path));
+	}
+
+	public function createSnippet($slideHtml)
+	{
+		$snippet = [
+			'header'  => '',
+			'content' => '',
+			'media'   => null,
+		];
+
+		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
+
+		if ($match) {
+			$snippet['header'] = strip_tags($match[0][1]);
+			$slideHtml = preg_replace(self::HEADER_PATTERN, '', $slideHtml);
+		}
+
+		foreach (self::MEDIA_PATTERNS as $name => $pattern) {
+			$match = $this->match($pattern, $slideHtml);
+			if ($match) {
+				$snippet['media'] = $name;
+			}
+		}
+
+		$slideHtml = str_replace(["\n", "\r"], ',', $slideHtml);
+		$slideHtml = str_replace('&nbsp;', '', $slideHtml);
+		$slideHtml = strip_tags($slideHtml);
+		$slideHtml = str_replace('.,', '.', $slideHtml);
+		$slideHtml = str_replace([',,', ', ,'], ',', $slideHtml);
+		$slideHtml = preg_replace(['/^,/', '/\s,/'], '', $slideHtml);
+		$slideHtml = preg_replace('/\s+/', ' ', $slideHtml);
+		$slideHtml = preg_replace('/^\s/', '', $slideHtml);
+		$slideHtml = str_replace(['&gt;', '&lt;'], '', $slideHtml);
+		$snippet['content'] = $slideHtml;
+
+		return $snippet;
 	}
 }

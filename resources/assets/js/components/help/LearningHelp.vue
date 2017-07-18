@@ -10,7 +10,7 @@
 		<p class="strong">Cześć {{currentUserName}}!</p>
 		<p>Chętnie odpowiemy na wszystkie Twoje pytania odnośnie nauki podczas kursu "Więcej niż LEK" (i nie tylko)! Jeżeli szukasz informacji na temat efektywnej nauki, wiele przydatnej wiedzy znajdziesz we Wstępie do kursu.</p>
 		<p>Jeśli jednak macie jakiekolwiek pytania dotyczące nauki - możecie śmiało zadawać je tutaj!</p>
-		<wnl-qna :tags="tags" v-if="!loading"></wnl-qna>
+		<wnl-qna :tags="tags" reactionsDisabled="true"></wnl-qna>
 	</div>
 </template>
 
@@ -21,7 +21,7 @@
 <script>
 	import _ from 'lodash'
 	import axios from 'axios'
-	import {mapGetters} from 'vuex'
+	import {mapGetters, mapActions} from 'vuex'
 
 	import Qna from 'js/components/qna/Qna'
 	import {getApiUrl} from 'js/utils/env'
@@ -33,7 +33,6 @@
 		},
 		data() {
 			return {
-				loading: true,
 				tags: [],
 			}
 		},
@@ -54,15 +53,21 @@
 				}
 			},
 		},
+		methods: {
+			...mapActions('qna', ['fetchQuestionsByTags'])
+		},
 		mounted() {
 			axios.post(getApiUrl('tags/.search'), {
 				query: { where: [ ['name', '=', 'Pomoc w nauce'] ], }
 			})
-				.then(response => {
-					this.tags = _.values(response.data)
-					this.loading = false
-				})
+				.then(response => this.tags = _.values(response.data))
+				.then(() => this.fetchQuestionsByTags({tags: this.tags}))
 				.catch(error => $wnl.logger.error(error))
 		},
+		watch: {
+			'tags' (newValue) {
+				this.showQna && this.fetchQuestionsByTags({tags: newValue})
+			}
+		}
 	}
 </script>

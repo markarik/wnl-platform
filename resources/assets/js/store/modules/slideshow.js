@@ -6,6 +6,36 @@ import {getApiUrl} from 'js/utils/env'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions'
 
+function _fetchReactables(presentables) {
+	let slideIds = presentables.map(presentable => presentable.slide_id)
+	let data     = {
+		query: {
+			where: [
+				['reactable_type', 'App\\Models\\Slide'],
+				['reaction_id', 4],
+			],
+			whereIn: ['reactable_id', slideIds]
+		},
+	}
+
+	return axios.post(getApiUrl('reactables/.search'), data)
+		.then(response => {
+			let reactables = {}
+			response.data.forEach(reactable => {
+				reactables[reactable.reactable_id] = reactable
+			})
+
+			return presentables.map(presentable => {
+				let slideId = presentable.slide_id
+				presentable.bookmark = {
+					hasReacted: reactables.hasOwnProperty(slideId)
+				}
+
+				return presentable
+			})
+		})
+}
+
 function _fetchPresentables(slideshowId) {
 	let data = {
 		query: {
@@ -20,11 +50,12 @@ function _fetchPresentables(slideshowId) {
 		order: {
 			order_number: 'asc',
 		},
-		include: 'reactions',
-
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
+		.then(response => {
+			return _fetchReactables(response.data)
+		})
 }
 
 function _fetchPresentablesByPresentable({type, id}) {
@@ -41,11 +72,13 @@ function _fetchPresentablesByPresentable({type, id}) {
 		order: {
 			order_number: 'asc',
 		},
-		include: 'reactions',
 
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
+		.then(response => {
+			return _fetchReactables(response.data)
+		})
 }
 
 function _fetchComments(slidesIds) {
@@ -108,8 +141,8 @@ const getters = {
 
 		return state.presentables[slideNumber - 1].is_functional
 	},
-	isLoading:    (state) => state.loading,
-	getSlideId:   (state) => (slideOrderNumber) => {
+	isLoading: (state) => state.loading,
+	getSlideId: (state) => (slideOrderNumber) => {
 		return state.presentables.length === 0 ? -1 : state.presentables[slideOrderNumber].id
 	},
 	slides: (state) => state.slides,
@@ -127,14 +160,14 @@ const getters = {
 			})
 	},
 	findRegularSlide: (state, getters) => (slideNumber, direction) => {
-		let step = direction === 'previous' ? -1 : 1,
+		let step   = direction === 'previous' ? -1 : 1,
 			length = state.presentables.length
 
-		for (;;slideNumber = slideNumber + step) {
+		for (; ; slideNumber = slideNumber + step) {
 			if (!getters.isFunctional(slideNumber)) {
 				return slideNumber
 			}
-			if (slideNumber <= 0 ) {
+			if (slideNumber <= 0) {
 				return 1
 			}
 			if (slideNumber >= length) {
@@ -201,8 +234,8 @@ const actions = {
 	setupPresentables({commit}, slideshowId) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(slideshowId)
-				.then((response) => {
-					commit(types.SLIDESHOW_SET_PRESENTABLES, response.data)
+				.then((presentables) => {
+					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
 					resolve()
 				})
@@ -215,8 +248,8 @@ const actions = {
 	setupPresentablesByPresentable({commit}, presentable) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentablesByPresentable(presentable)
-				.then((response) => {
-					commit(types.SLIDESHOW_SET_PRESENTABLES, response.data)
+				.then((presentables) => {
+					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
 					resolve()
 				})

@@ -57,7 +57,7 @@
 			<div class="collections-placeholder">
 				<span class="icon main"><i class="fa fa-star-o"></i></span>
 				<span class="welcome">Witaj w Kolekcjach!</span>
-				<span>Wybierz temat z menu <span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span> i przeglądaj zapisane fragmenty kursu</span>
+				<span>Wybierz temat z menu <span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
 			</div>
 		</div>
 	</div>
@@ -80,10 +80,14 @@
 
 	.collections-placeholder
 		align-items: center
+		color: $color-gray-dimmed
 		display: flex
 		flex-direction: column
+		font-size: $font-size-plus-1
 		height: 100%
+		min-height: 50vh
 		justify-content: center
+		padding: $margin-big
 		text-align: center
 		width: 100%
 
@@ -92,11 +96,9 @@
 			width: $font-size-plus-7
 
 			.fa
-				color: $color-inactive-gray
 				font-size: $font-size-plus-7
 
 		.welcome
-			color: $color-inactive-gray
 			font-size: $font-size-plus-3
 			font-weight: $font-weight-light
 			line-height: $line-height-plus

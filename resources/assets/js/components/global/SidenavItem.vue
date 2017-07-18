@@ -33,7 +33,7 @@
 					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
 				</span>
 				<span class="icon is-small" v-if="isGroupToggle">
-					<i title="toggle" class="fa" :class="toggleIcon"></i>
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
 				</span>
 			</div>
 			<span class="sidenav-item-content">
@@ -49,6 +49,9 @@
 	.item-wrapper
 		height: 100%
 		width: 100%
+
+	.is-grouped
+		padding-left: $margin-base
 
 	.has-icon
 		.icon
@@ -95,6 +98,9 @@
 
 		.icon.is-small
 			margin-right: 0
+
+	.toggle
+		transition: all $transition-length-base
 </style>
 
 <script>
@@ -102,7 +108,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['item', 'onClick', 'isGroupToggle', 'toggleIcon'],
+		props: ['item', 'onClick', 'isGroupToggle', 'isOpen'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')

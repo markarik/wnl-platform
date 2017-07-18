@@ -28,7 +28,7 @@
 			width: 100%
 
 			.item
-				border-bottom: 1px solid $color-light-gray
+				border-bottom: $border-light-gray
 
 				&.with-border
 					padding: 0
@@ -48,7 +48,7 @@
 					line-height: 26px
 
 			.heading
-				background: $color-light-gray
+				background: $color-background-lighter-gray
 				margin-bottom: 0
 
 	.breadcrumbs
@@ -57,6 +57,11 @@
 	.items
 		.item
 			padding: 0
+			transition: background-color $transition-length-base
+
+			&:hover
+				background: $color-background-lighter-gray
+				transition: background-color $transition-length-base
 
 			.item-wrapper
 				display: flex
@@ -70,10 +75,6 @@
 
 				&:first-child
 					padding: $margin-tiny 0
-
-		a.item-wrapper
-			&:hover
-				background: $color-background-lighter-gray
 
 		.heading
 			padding-top: 10px

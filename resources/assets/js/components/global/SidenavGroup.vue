@@ -1,24 +1,24 @@
 <template>
 	<div class="wnl-sidenav-group">
 		<div class="wnl-sidenav-item-wrapper">
-			<div class="wnl-sidenav-group-toggle" @click="toggleSubitems">
+			<div class="wnl-sidenav-group-toggle" :class="{'no-items': !isGroupToggle}" @click="toggleSubitems">
 				<wnl-sidenav-item
 					:item="item"
 					:isGroupToggle="isGroupToggle"
 					:toggleIcon="toggleIcon"
+					:isOpen="isOpen"
 				>
 					{{item.text}}
 				</wnl-sidenav-item>
 			</div>
 			<ul class="wnl-sidenav-subitems" v-if="canRenderSubitems">
-				<li v-for="(subitem, index) in item.subitems">
-					<wnl-sidenav-item
-						:item="subitem"
-						:key="index"
-					>
-						{{subitem.text}}
-					</wnl-sidenav-item>
-				</li>
+				<wnl-sidenav-item
+					v-for="(subitem, index) in item.subitems"
+					:item="subitem"
+					:key="index"
+				>
+					{{subitem.text}}
+				</wnl-sidenav-item>
 			</ul>
 		</div>
 	</div>
@@ -28,8 +28,14 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav-group-toggle
+		color: $color-gray
 		cursor: pointer
 
+		&.no-items
+			color: $color-background-gray
+
+			&:hover
+				background-color: $color-white
 </style>
 
 <script>
@@ -57,8 +63,8 @@
 				return this.hasSubitems
 			},
 			toggleIcon() {
-				return this.isOpen ? 'fa-chevron-down' : 'fa-chevron-right'
-			}
+				return this.isOpen ? 'fa-angle-up' : 'fa-angle-down'
+			},
 		},
 		watch: {
 			nextLesson(val) {

@@ -158,7 +158,7 @@
 				return navigation.composeItem({text: group.name, itemClass: 'heading small'})
 			},
 			getLessonItem(lesson, withProgress = true) {
-				let cssClass = '', iconClass = '', iconTitle = ''
+				let cssClass = 'is-grouped ', iconClass = '', iconTitle = ''
 
 				if (withProgress) {
 					cssClass += 'with-progress'

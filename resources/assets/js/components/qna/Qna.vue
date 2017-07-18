@@ -63,7 +63,7 @@
 
 	.qna-container
 		flex: 1 auto
-		overflow-x: hidden
+		overflow: hidden
 		word-wrap: break-word
 
 	.qna-meta

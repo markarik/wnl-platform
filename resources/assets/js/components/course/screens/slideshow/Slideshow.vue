@@ -230,7 +230,10 @@
 				this.focusSlideshow()
 			},
 			focusSlideshow() {
-				if (this.child.hasOwnProperty('frame') && typeof this.child.frame !== undefined) {
+				if (typeof this.child !== 'undefined' &&
+					this.child.hasOwnProperty('frame') &&
+					typeof this.child.frame !== 'undefined'
+				) {
 					this.child.frame.click()
 					this.child.frame.focus()
 				}
@@ -295,11 +298,12 @@
 						this.toggleFullscreen()
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
-						this.child.call('setupBookmarks', this.bookmarkedSlideNumbers);
+						this.child.call('setupBookmarks', this.bookmarkedSlideNumbers)
+						this.$emit('slideshowReady')
 					} else if (event.data.value.name === 'bookmark') {
-						const slideData = event.data.value.data;
+						const slideData = event.data.value.data
 
-						!this.bookmarkLoading && this.toggleBookmarkedState(slideData.index, slideData.isBookmarked);
+						!this.bookmarkLoading && this.toggleBookmarkedState(slideData.index, slideData.isBookmarked)
 					}
 				}
 			},
@@ -343,7 +347,7 @@
 				this.loaded = false
 			},
 			onAnnotationsUpdated(comments) {
-				if (typeof this.child.call === 'function') {
+				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
 					let annotations = _.cloneDeep(comments)
 
 					if (annotations.length > 0) {

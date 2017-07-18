@@ -91,14 +91,15 @@ const actions = {
 			Object.keys(reactions).forEach((category) => {
 				let categoriesReactions = {}
 
-				Object.values(resourcesMap).forEach((resource) => categoriesReactions[resource] = [])
+				Object.values(resourcesMap)
+					.forEach((resource) => categoriesReactions[resource] = [])
 
 				reactions[category]
-				.filter(reaction => Object.keys(resourcesMap).includes(reaction.reactable_type))
-				.forEach(reaction => {
-					let resource = resourcesMap[reaction.reactable_type]
-					categoriesReactions[resource].push(reaction)
-				})
+					.filter(reaction => Object.keys(resourcesMap).includes(reaction.reactable_type))
+					.forEach(reaction => {
+						let resource = resourcesMap[reaction.reactable_type]
+						categoriesReactions[resource].push(reaction)
+					})
 
 				serializedReactions[category] = categoriesReactions
 			})

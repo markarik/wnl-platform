@@ -95,7 +95,7 @@
 
 <script>
 	import {join} from 'lodash'
-	import { mapActions, mapGetters, mapMutations } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	import QnaSorting from 'js/components/qna/QnaSorting'
 	import QnaQuestion from 'js/components/qna/QnaQuestion'

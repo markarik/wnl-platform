@@ -262,8 +262,8 @@
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
-			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
-			...mapActions('qna', ['fetchQuestionsByTagName']),
+			...mapActions('quiz', {'fetchQuiz': 'fetchQuestionsCollectionByTagName', 'resetQuiz': 'resetState'}),
+			...mapActions('qna', {'fetchQna':'fetchQuestionsByTagName', 'resetQna': 'destroyQna'}),
 			...mapActions(['toggleOverlay']),
 			getNavigation() {
 				let navigation = []
@@ -302,11 +302,15 @@
 				const contentToFetch = [];
 
 				if (this.quizQuestionsIds.length) {
-					contentToFetch.push(this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids: this.quizQuestionsIds}))
+					contentToFetch.push(this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds}))
+				} else {
+					this.resetQuiz()
 				}
 
 				if (this.qnaQuestionsIds.length) {
-					contentToFetch.push(this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+					contentToFetch.push(this.fetchQna({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+				} else {
+					this.resetQna()
 				}
 
 				if (this.slidesIds.length) {

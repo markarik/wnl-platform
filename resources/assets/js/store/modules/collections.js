@@ -87,16 +87,16 @@ const actions = {
 				commit(types.IS_LOADING, false)
 			}
 
-			const serializedReactions = {};
+			let serializedReactions = {};
 			Object.keys(reactions).forEach((category) => {
-				const categoriesReactions = {}
+				let categoriesReactions = {}
 
 				Object.values(resourcesMap).forEach((resource) => categoriesReactions[resource] = [])
 
 				reactions[category]
 				.filter(reaction => Object.keys(resourcesMap).includes(reaction.reactable_type))
 				.forEach(reaction => {
-					const resource = resourcesMap[reaction.reactable_type]
+					let resource = resourcesMap[reaction.reactable_type]
 					categoriesReactions[resource].push(reaction)
 				})
 

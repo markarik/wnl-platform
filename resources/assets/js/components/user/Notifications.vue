@@ -10,7 +10,7 @@
 			<div class="box drawer" v-if="isActive">
 				<div class="level wnl-screen-title">
 					<strong>Powiadomienia</strong>
-					<a class="link" @click="markAllAsRead">Oznacz wszystkie jako przeczytane</a>
+					<a class="link" @click="markAllAsRead(channel)">Oznacz wszystkie jako przeczytane</a>
 				</div>
 
 				<div class="notification aligncenter" v-if="empty">
@@ -117,6 +117,7 @@
 		},
 		computed: {
 			...mapGetters('notifications', ['notifications', 'isLoading', 'unseen']),
+			...mapGetters(['currentUserId']),
 			empty() {
 				return !this.isLoading && _.size(this.notifications) === 0
 			},
@@ -125,13 +126,19 @@
 			},
 			unseenCount() {
 				return _.size(this.unseen)
+			},
+			channel() {
+				return {
+					name: `private-${this.currentUserId}`,
+					userId: this.currentUserId
+				}
 			}
 		},
 		methods: {
-			...mapActions('notifications', ['markAllAsSeen', 'markAllAsRead']),
+			...mapActions('notifications', ['markAllAsSeen', 'markAllAsRead', 'initNotifications']),
 			toggle() {
 				if (!this.isActive && this.hasUnseen) {
-					this.markAllAsSeen()
+					this.markAllAsSeen(this.channel)
 				}
 				this.isActive = !this.isActive
 			}
@@ -141,5 +148,8 @@
 				this.isActive = false
 			}
 		},
+		mounted() {
+			this.initNotifications(this.channel)
+		}
 	}
 </script>

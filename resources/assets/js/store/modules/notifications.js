@@ -8,7 +8,8 @@ const namespaced = true
 const state = {
 	loading: true,
 	notifications: {},
-	user: 0
+	channels: [],
+	// user: 0
 }
 
 const getters = {
@@ -43,14 +44,14 @@ const mutations = {
 			}
 		})
 	},
-	[types.SET_NOTIFICATIONS_USER] (state, user) {
-		set(state, 'user', user)
-	}
+	// [types.SET_NOTIFICATIONS_USER] (state, user) {
+	// 	set(state, 'user', user)
+	// }
 }
 
 const actions = {
-	pullNotifications({commit}, userId) {
-		_getNotifications(userId).then(response => {
+	pullNotifications({commit}, channel) {
+		_getNotifications(channel).then(response => {
 			if (typeof response.data[0] !== 'object') {
 				commit(types.IS_LOADING, false)
 				return false
@@ -62,8 +63,8 @@ const actions = {
 			commit(types.IS_LOADING, false)
 		})
 	},
-	setupLiveNotifications({commit}, userId) {
-		Echo.private(userId)
+	setupLiveNotifications({commit}, channel) {
+		Echo.channel(channel.name)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
 				console.log(notification)
 				commit(types.ADD_NOTIFICATION, notification)
@@ -75,61 +76,56 @@ const actions = {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
 	},
-	markAllAsSeen({commit, getters}) {
+	markAllAsSeen({commit, getters}, channel) {
 		let data = _.mapValues(getters.unseen, (notification) => {
 			return { 'seen_at' : 'now' }
 		})
 
-		_updateMany(getters.user, data)
+		_updateMany(channel, data)
 			.then((response) => {
 				_.each(response.data, (notification) => {
 					commit(types.ADD_NOTIFICATION, notification)
 				})
 			})
 	},
-	markAllAsRead({commit, getters}) {
+	markAllAsRead({commit, getters}, channel) {
 		let data = _.mapValues(getters.unread, (notification) => {
 			return { 'read_at' : 'now' }
 		})
 
-		_updateMany(getters.user, data)
+		_updateMany(channel, data)
 			.then((response) => {
 				_.each(response.data, (notification) => {
 					commit(types.ADD_NOTIFICATION, notification)
 				})
 			})
 	},
-	initNotifications({commit, dispatch, rootGetters}) {
-		let userId = rootGetters.currentUserId
-		if (rootGetters.hasRole('moderator')) {
-			userId = env('MODERATORS_CHANNEL')
-		}
-
-		commit(types.SET_NOTIFICATIONS_USER, userId)
-		dispatch('pullNotifications', userId)
-		dispatch('setupLiveNotifications', userId)
+	initNotifications({dispatch}, channel) {
+		dispatch('pullNotifications', channel)
+		dispatch('setupLiveNotifications', channel)
 	}
 }
 
 
-function _getNotifications(userId) {
+function _getNotifications(channel) {
+
 	const conditions = {
 		'query': {
 			'where': [
 				['read_at', '=', null],
-				['channel', '=', `private-${userId}`]
+				['channel', '=', channel.name]
 			]
 		}
 	}
-	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
+	return axios.post(getApiUrl(`users/${channel.userId}/notifications/.search`), conditions)
 }
 
-function _updateNotification(userId, notificationId, data) {
-	return axios.patch(getApiUrl(`users/${userId}/notifications/${notificationId}`), data)
+function _updateNotification(channel, notificationId, data) {
+	return axios.patch(getApiUrl(`users/${channel.userId}/notifications/${notificationId}`), data)
 }
 
-function _updateMany(userId, data) {
-	return axios.patch(getApiUrl(`users/${userId}/notifications`), data)
+function _updateMany(channel, data) {
+	return axios.patch(getApiUrl(`users/${channel.userId}/notifications`), data)
 }
 
 

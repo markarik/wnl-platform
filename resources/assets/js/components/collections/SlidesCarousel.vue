@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-slides-collection">
-		<p class="title is-4">Twoja kolekcja slajdów <span v-if="presentableLoaded">({{sortedSlides.length}})</span></p>
+		<p class="title is-4">Zapisane slajdy <span v-if="presentableLoaded">({{sortedSlides.length}})</span></p>
 		<div class="slides-carousel-container" v-if="presentableLoaded && sortedSlides.length">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :class="" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
@@ -51,6 +51,7 @@
 
 	.is-folded
 		height: 0
+		visibility: hidden
 
 	.wnl-slides-collection
 		margin-top: $margin-base
@@ -158,7 +159,7 @@
 		props: ['categoryId', 'rootCategoryName', 'categoryName'],
 		data() {
 			return {
-				selectedSlideIndex: 0,
+				selectedSlideIndex: null,
 				screenData: {
 					type: 'slideshow'
 				},

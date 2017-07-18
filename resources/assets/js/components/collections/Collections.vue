@@ -197,7 +197,7 @@
 			},
 			panels() {
 				return {
-					slides: 'Prezentacja i pytania',
+					slides: 'Slajdy + pytania',
 					quiz: 'Pytania kontrolne',
 				}
 			},

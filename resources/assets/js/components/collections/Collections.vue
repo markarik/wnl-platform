@@ -223,7 +223,8 @@
 				'categories',
 				'getQnaQuestionsIdsForCategory',
 				'getSlidesIdsForCategory',
-				'getCategoryByName'
+				'getCategoryByName',
+				'getItemsCount'
 			]),
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
@@ -286,6 +287,7 @@
 			getChildCategory(childCategory) {
 				return navigation.composeItem({
 					text: childCategory.name,
+					meta: `(${this.getItemsCount(childCategory.name)})`,
 					itemClass: 'has-icon',
 					routeName: this.routeName,
 					routeParams: {

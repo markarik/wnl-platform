@@ -41,6 +41,7 @@ class SlidesFromCategory extends Command
 	public function handle()
 	{
 		$allCategories = Category::all();
+		$bar = $this->output->createProgressBar(count($allCategories));
 
 		foreach ($allCategories as $category) {
 			$categoryTag = Tag::where('name', $category->name)->first();
@@ -51,10 +52,15 @@ class SlidesFromCategory extends Command
 
 				$order_number = 0;
 				foreach($slidesWithTag as $slide) {
-					$category->slides()->attach($slide, ['order_number' => $order_number]);
-					$order_number++;
+					if (!$category->slides->contains($slide)) {
+						$category->slides()->attach($slide, ['order_number' => $order_number]);
+						$order_number++;
+					}
 				}
 			}
+			$bar->advance();
 		}
+
+		print PHP_EOL;
 	}
 }

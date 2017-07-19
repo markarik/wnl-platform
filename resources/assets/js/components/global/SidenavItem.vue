@@ -49,6 +49,7 @@
 	.item-wrapper
 		height: 100%
 		width: 100%
+		user-select: none
 
 	.is-grouped
 		padding-left: $margin-base
@@ -100,6 +101,7 @@
 			margin-right: 0
 
 	.toggle
+		color: $color-background-gray
 		transition: all $transition-length-base
 </style>
 

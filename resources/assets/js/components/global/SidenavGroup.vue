@@ -33,9 +33,10 @@
 
 		&.no-items
 			color: $color-background-gray
+			cursor: default
 
-			&:hover
-				background-color: $color-white
+			.item:hover
+				background: transparent
 </style>
 
 <script>

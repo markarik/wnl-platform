@@ -47,10 +47,10 @@
 		max-width: $main-nav-max-size
 		min-width: $main-nav-min-size
 		width: $main-nav-size
-		overflow-x: hidden
+		overflow-x: hidden;
 
 		&.horizontal
-			border-bottom: $border-light-gray
+			border-bottom: 1px solid $color-light-gray
 			flex-direction: row
 			max-width: 100%
 			min-width: initial
@@ -75,7 +75,7 @@
 
 			&:hover,
 			&.is-active
-				background: $color-background-lighter-gray
+				background: $color-background-light-gray
 				color: $color-ocean-blue
 				transition: all $transition-length-base
 

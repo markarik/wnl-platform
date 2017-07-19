@@ -26,9 +26,7 @@
 					></wnl-bookmark>
 				</div>
 				<div class="tags" v-if="tags.length > 0">
-					<span v-for="tag, key in tags" class="tag is-light">
-						<span>{{tag}}</span>
-					</span>
+					<span v-for="tag, key in tags" class="tag is-light" v-text="tag"></span>
 				</div>
 				<div class="qna-question-meta qna-meta">
 					<wnl-avatar

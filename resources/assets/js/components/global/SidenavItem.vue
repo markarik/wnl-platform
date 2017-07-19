@@ -1,9 +1,9 @@
 <template>
-	<li class="item" :class="[itemClass, { disabled: item.isDisabled }]">
+	<li class="item" :class="[itemClass, { disabled: isDisabled }]">
 		<router-link
 			class="item-wrapper"
 			v-if="isLink"
-			:class="{'is-active': item.active, 'is-disabled': item.isDisabled, 'is-completed': item.completed}"
+			:class="{'is-active': active, 'is-disabled': isDisabled, 'is-completed': completed}"
 			:replace="replace"
 			:to="to"
 		>
@@ -14,7 +14,7 @@
 					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
 				</span>
 				<span class="icon is-small" v-if="hasIcon">
-					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
+					<i :title="iconTitle" class="fa" :class="iconClass"></i>
 				</span>
 			</div>
 			<span class="sidenav-item-content">
@@ -30,10 +30,7 @@
 					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
 				</span>
 				<span class="icon is-small" v-if="hasIcon">
-					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
-				</span>
-				<span class="icon is-small" v-if="hasSubitems">
-					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
+					<i :title="iconTitle" class="fa" :class="iconClass"></i>
 				</span>
 			</div>
 			<span class="sidenav-item-content">
@@ -49,10 +46,6 @@
 	.item-wrapper
 		height: 100%
 		width: 100%
-		user-select: none
-
-	.is-grouped
-		padding-left: $margin-base
 
 	.has-icon
 		.icon
@@ -99,10 +92,6 @@
 
 		.icon.is-small
 			margin-right: 0
-
-	.toggle
-		color: $color-background-gray
-		transition: all $transition-length-base
 </style>
 
 <script>
@@ -110,7 +99,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['item', 'onClick', 'hasSubitems', 'isOpen'],
+		props: ['itemClass', 'to', 'isDisabled', 'method', 'iconClass', 'iconTitle', 'completed', 'active', 'meta'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
@@ -128,7 +117,7 @@
 				return this.hasClass('complete')
 			},
 			replace() {
-				return this.item.method === 'replace'
+				return this.method === 'replace'
 			},
 			hasIcon() {
 				return this.hasClass('has-icon')
@@ -136,15 +125,6 @@
 			hasMeta() {
 				return typeof this.meta !== 'undefined' && this.meta.length > 0
 			},
-			itemClass() {
-				return this.item.itemClass
-			},
-			meta() {
-				return this.item.meta
-			},
-			to() {
-				return this.item.to
-			}
 		},
 		methods: {
 			hasClass(className) {

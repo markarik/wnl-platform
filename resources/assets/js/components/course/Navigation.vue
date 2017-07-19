@@ -93,20 +93,17 @@
 					) {
 						continue
 					}
-					const groupItem = this.getGroupItem(group);
-					navigation.push(groupItem);
+
+					navigation.push(this.getGroupItem(group))
 
 					if (!group.hasOwnProperty(resource('lessons'))) {
 						continue
 					}
-
-					groupItem.subitems = [];
-
 					for (let j = 0, lessonsLen = group[resource('lessons')].length; j < lessonsLen; j++) {
 						let lessonId = group[resource('lessons')][j],
 							lesson = this.structure[resource('lessons')][lessonId]
 
-						groupItem.subitems.push(this.getLessonItem(lesson))
+						navigation.push(this.getLessonItem(lesson))
 					}
 				}
 
@@ -158,7 +155,7 @@
 				return navigation.composeItem({text: group.name, itemClass: 'heading small'})
 			},
 			getLessonItem(lesson, withProgress = true) {
-				let cssClass = 'is-grouped ', iconClass = '', iconTitle = ''
+				let cssClass = '', iconClass = '', iconTitle = ''
 
 				if (withProgress) {
 					cssClass += 'with-progress'

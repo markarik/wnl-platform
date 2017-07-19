@@ -10,7 +10,7 @@
 			<div class="box drawer" v-if="isActive">
 				<div class="level wnl-screen-title">
 					<strong>Powiadomienia</strong>
-					<a class="link" @click="markAllAsRead()">Oznacz wszystkie jako przeczytane</a>
+					<a class="link" @click="markAllAsRead(this.userChannel)">Oznacz wszystkie jako przeczytane</a>
 				</div>
 
 				<div class="notification aligncenter" v-if="empty">
@@ -18,10 +18,11 @@
 				</div>
 				<div v-else>
 					<wnl-newsfeed-event
-							v-for="(event, index) in notifications"
-							:event="event"
-							:key="index">
-					</wnl-newsfeed-event>
+						v-for="(event, index) in notifications"
+						:event="event"
+						:key="index"
+						:channel="userChannel"
+					></wnl-newsfeed-event>
 				</div>
 			</div>
 		</transition>
@@ -116,7 +117,7 @@
 			}
 		},
 		computed: {
-			...mapGetters('notifications', ['getChannelNotifications', 'isLoading', 'unseen', 'userChannel']),
+			...mapGetters('notifications', ['getChannelNotifications', 'isLoading', 'getUnseen', 'userChannel']),
 			empty() {
 				return !this.isLoading && _.size(this.notifications) === 0
 			},
@@ -124,7 +125,7 @@
 				return this.unseenCount > 0;
 			},
 			unseenCount() {
-				return _.size(this.unseen)
+				return _.size(this.getUnseen(this.userChannel))
 			},
 			notifications() {
 				return this.getChannelNotifications(this.userChannel)
@@ -134,7 +135,7 @@
 			...mapActions('notifications', ['markAllAsSeen', 'markAllAsRead', 'initNotifications']),
 			toggle() {
 				if (!this.isActive && this.hasUnseen) {
-					this.markAllAsSeen()
+					this.markAllAsSeen(this.userChannel)
 				}
 				this.isActive = !this.isActive
 			}

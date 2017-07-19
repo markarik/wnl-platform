@@ -14,15 +14,21 @@ const state = {
 const getters = {
 	isLoading: (state) => state.loading,
 	notifications: (state) => state.notifications,
-	userChannel: (state, getters, rootState, rootGetters) => rootGetters.currentUserId && `private-${rootGetters.currentUserId}`,
-	moderatorsChannel: (state, getters, rootState, rootGetters) => rootGetters.isAdmin && `role-role.moderator`,
-	unseen: (state) => {
-		return _.pickBy(state.notifications, (notification) => !notification.seen_at)
+	userChannel: (state, getters, rootState, rootGetters) => {
+		return rootGetters.currentUserId && `private-${rootGetters.currentUserId}`
 	},
-	unread: (state) => {
-		return _.pickBy(state.notifications, (notification) => !notification.read_at)
+	moderatorsChannel: (state, getters, rootState, rootGetters) => {
+		return rootGetters.isAdmin && `private-role.moderator`
 	},
-	getChannelNotifications: ({notifications}) => (channel) => _.pickBy(notifications, (notification) => notification.channel === channel)
+	getUnseen: (state, getters) => (channel) => {
+		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.seen_at)
+	},
+	getUnread: (state, getters) => (channel) => {
+		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.read_at)
+	},
+	getChannelNotifications: ({notifications}) => (channel) => {
+		return _.pickBy(notifications, (notification) => notification.channel === channel)
+	}
 }
 
 const mutations = {
@@ -60,18 +66,17 @@ const actions = {
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
-				console.log(notification)
-				commit(types.ADD_NOTIFICATION, notification)
+				commit(types.ADD_NOTIFICATION, {...notification, channel})
 			});
 	},
-	markAsRead({commit, getters, rootGetters}, notification) {
+	markAsRead({commit, getters, rootGetters}, {notification, channel}) {
 		_updateNotification(rootGetters.currentUserId, notification.id, {'read_at': 'now'})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
 	},
-	markAllAsSeen({commit, getters, rootGetters}) {
-		let data = _.mapValues(getters.unseen, (notification) => {
+	markAllAsSeen({commit, getters, rootGetters}, channel) {
+		let data = _.mapValues(getters.getUnseen(channel), (notification) => {
 			return { 'seen_at' : 'now' }
 		})
 
@@ -82,8 +87,8 @@ const actions = {
 				})
 			})
 	},
-	markAllAsRead({commit, getters, rootGetters}) {
-		let data = _.mapValues(getters.unread, (notification) => {
+	markAllAsRead({commit, getters, rootGetters}, channel) {
+		let data = _.mapValues(getters.getUnread(channel), (notification) => {
 			return { 'read_at' : 'now' }
 		})
 

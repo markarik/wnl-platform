@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="wnl-newsfeed-event">
-		<div class="unread" v-if="isUnread" @click="markAsRead(event)"></div>
+		<div class="unread" v-if="isUnread" @click="markAsRead({notification:event, channel})"></div>
 		<component :is="componentName" :event="event">
 		</component>
 		<small class="time">{{ formattedTime }}</small>
@@ -41,11 +41,11 @@
 	import QnaQuestionPosted from './events/QnaQuestionPosted'
 	import CommentPosted from './events/CommentPosted'
 	import ReactionAdded from './events/ReactionAdded'
-	import {mapActions} from 'vuex'
+	import {mapActions, mapGetters} from 'vuex'
 	import {timeFromS} from 'js/utils/time'
 
 	export default {
-		props: ['event'],
+		props: ['event', 'channel'],
 		components: {
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-qna-question-posted': QnaQuestionPosted,
@@ -64,7 +64,7 @@
 			}
 		},
 		methods: {
-				...mapActions('notifications', ['markAsRead'])
+			...mapActions('notifications', ['markAsRead'])
 		}
 	}
 </script>

@@ -3,7 +3,7 @@
 		<small class="time">{{ formattedTime }}</small>
 		<component :is="componentName" :event="event">
 		</component>
-		<span class="icon is-small mark-read" @click="markAsRead(event)" v-if="!isRead">
+		<span class="icon is-small mark-read" @click="markAsRead({notification: event, channel})" v-if="!isRead">
 			<i class="fa fa-check"></i>
 		</span>
 	</div>
@@ -37,7 +37,7 @@
 	import {mapActions} from 'vuex'
 	export default {
 		name: 'wnl-newsfeed-event',
-		props: ['event'],
+		props: ['event', 'channel'],
 		computed: {
 			componentName() {
 				return `wnl-event-${this.event.event}`

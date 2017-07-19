@@ -64,6 +64,11 @@
 				return this.isOpen ? 'fa-angle-up' : 'fa-angle-down'
 			},
 		},
+		methods: {
+			toggleSubitems() {
+				this.isOpen = !this.isOpen
+			}
+		},
 		watch: {
 			nextLesson(val) {
 				if (!this.item || !this.item.subitems) {
@@ -75,11 +80,6 @@
 				})
 
 				this.isOpen = isCurrentlyInProgress
-			}
-		},
-		methods: {
-			toggleSubitems() {
-				this.isOpen = !this.isOpen
 			}
 		},
 	}

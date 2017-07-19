@@ -8,11 +8,17 @@
 					{{itemsHeading}}
 				</span>
 			</li>
-			<wnl-sidenav-group v-for="(item, index) in items"
+			<!-- <wnl-sidenav-group v-if="hasGroups" v-for="(item, index) in items"
 				:item="item"
 				:key="index"
 			>
-			</wnl-sidenav-group>
+			</wnl-sidenav-group> -->
+			<wnl-sidenav-item v-else v-for="(item, index) in items"
+				:item="item"
+				:key="index"
+			>
+				{{item.text}}
+			</wnl-sidenav-item>
 		</ul>
 	</div>
 </template>
@@ -82,6 +88,9 @@
 			&:first-child
 				padding-top: 0
 
+			&:hover
+				background: transparent
+
 		.small
 			font-size: $font-size-minus-1
 
@@ -116,13 +125,15 @@
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import SidenavGroup from 'js/components/global/SidenavGroup'
+	import SidenavItem from 'js/components/global/SidenavItem'
 	import { mapGetters } from 'vuex'
 
 	export default {
-		props: ['breadcrumbs', 'items', 'itemsHeading'],
+		props: ['breadcrumbs', 'items', 'itemsHeading', 'hasGroups'],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-sidenav-group': SidenavGroup
+			'wnl-sidenav-group': SidenavGroup,
+			'wnl-sidenav-item': SidenavItem,
 		},
 		computed: {
 			...mapGetters(['isMobileNavigation'])

@@ -99,6 +99,10 @@ const getters = {
 		return undefined
 	},
 	nextLesson: (state, getters, rootState, rootGetters) => {
+		if (typeof getters.getLessons === 'undefined') {
+			return false
+		}
+
 		let lesson = { status: STATUS_NONE },
 			inProgressId = rootGetters['progress/getFirstLessonIdInProgress'](state.id)
 
@@ -106,16 +110,16 @@ const getters = {
 			lesson = getters.getLesson(inProgressId)
 			lesson.status = STATUS_IN_PROGRESS
 		} else {
-			for (let lessonId in this.getLessons) {
+			for (let lessonId in getters.getLessons) {
 				let isAvailable = rootGetters['progress/isLessonAvailable'](lessonId)
 				if (isAvailable &&
 					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
 				) {
-					lesson = this.getLesson(lessonId)
+					lesson = getters.getLesson(lessonId)
 					lesson.status = STATUS_AVAILABLE
 					return lesson
 				} else if (!isAvailable) {
-					lesson = this.getLesson(lessonId)
+					lesson = getters.getLesson(lessonId)
 					lesson.status = STATUS_NONE
 					return lesson
 				}

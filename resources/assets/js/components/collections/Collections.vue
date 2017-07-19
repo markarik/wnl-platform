@@ -295,7 +295,6 @@
 						rootCategoryName: childCategory.parent
 					},
 					iconClass: 'fa-angle-right',
-					iconTitle: 'Obecna lekcja'
 				})
 			},
 			setupContentForCategory() {

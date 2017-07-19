@@ -16,15 +16,16 @@ class QuizImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:import {dir?}';
+	protected $signature = 'quiz:import {dir?}',
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Import quiz sets to database from storage.';
-	protected $path;
+		$description = 'Import quiz sets to database from storage.',
+		$path,
+		$globalTags = [];
 
 	/**
 	 * Create a new command instance.
@@ -93,9 +94,6 @@ class QuizImport extends Command
 		for ($i = 1; $i <= 5; $i++) {
 			$hits = 0;
 			$isCorrect = $values[6] === chr(64 + $i);
-			if (env('APP_ENV') === 'dev') {
-				$hits = rand(1, 100 * (1 + 2 * intval($isCorrect)));
-			}
 
 			$question->answers()->firstOrCreate([
 				'text'       => $values[$i],
@@ -104,8 +102,16 @@ class QuizImport extends Command
 			]);
 		}
 
+		if (!empty($values[12])) {
+			$this->globalTags[] = trim($values[12]);
+		}
+
 		$tagNames = ['LEK-' . $values[8], $values[9]];
-		$tagNames = array_merge($tagNames, explode('/', $values[11]));
+		$tagNames = array_merge($tagNames, array_map('trim', explode('/', $values[11])));
+
+		if (!empty($this->globalTags)) {
+			$tagNames = array_merge($tagNames, $this->globalTags);
+		}
 
 		foreach ($tagNames as $tagName) {
 			$tag = Tag::firstOrCreate(['name' => $tagName]);

@@ -369,13 +369,13 @@
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
 			if (this.presentableId) {
-				this.setup(this.presentableId, this.presentableType)
+				this.setup({id: this.presentableId, type: this.presentableType})
 					.then(() => {
 						this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
 							.then(() => this.goToSlide(this.slideOrderNumber))
 					})
 			} else {
-				this.setup(this.slideshowId)
+				this.setup({id: this.slideshowId})
 					.then(() => {
 						this.initSlideshow()
 						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
@@ -416,7 +416,7 @@
 			'presentableId' (presentableId, oldValue) {
 				if (presentableId) {
 					this.toggleOverlay({source: 'slideshow', display: true})
-					this.setup(presentableId, this.presentableType)
+					this.setup({id: presentableId, type: this.presentableType})
 						.then(() => {
 							this.initSlideshow(getApiUrl(`slideshow_builder/category/${presentableId}`))
 							.then(() => this.goToSlide(this.slideOrderNumber))

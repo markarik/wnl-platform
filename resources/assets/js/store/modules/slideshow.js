@@ -36,11 +36,11 @@ function _fetchReactables(presentables) {
 		})
 }
 
-function _fetchPresentables(slideshowId, type='App\\Models\\Slideshow') {
+function _fetchPresentables(slideshowId, type) {
 	let data = {
 		query: {
 			where: [
-				['presentable_type', 'App\\Models\\Slideshow'],
+				['presentable_type', type],
 				['presentable_id', '=', slideshowId],
 			],
 		},
@@ -192,25 +192,17 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setup({commit, dispatch, getters}, slideshowId) {
+	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentables', slideshowId)
+			dispatch('setupPresentables', {id, type})
 				.then(() => dispatch('setupComments', getters.slidesIds))
 				.then(() => resolve())
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupByPresentable({commit, dispatch, getters}, presentable) {
+	setupPresentables({commit}, {id, type}) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentables', presentable.id, presentable.type)
-				.then(() => dispatch('setupComments', getters.slidesIds))
-				.then(() => resolve())
-				.catch((reason) => reject(reason))
-		})
-	},
-	setupPresentables({commit}, slideshowId, type='App\\Models\\Slideshow') {
-		return new Promise((resolve, reject) => {
-			_fetchPresentables(slideshowId)
+			_fetchPresentables(id, type)
 				.then((presentables) => {
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)

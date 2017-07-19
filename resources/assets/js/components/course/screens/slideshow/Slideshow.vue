@@ -143,7 +143,6 @@
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
-				'presentables',
 				'bookmarkedSlideNumbers',
 				'getReaction'
 			]),
@@ -187,7 +186,7 @@
 				return this.$store.dispatch(`slideshow/setReaction`, {
 					hasReacted,
 					reactableResource: 'slides',
-					reactableId: this.getSlideId(slideIndex),
+					reactableId: slideId,
 					reaction: 'bookmark',
 					count: this.bookmarkState.count
 				}).then(() => {
@@ -372,7 +371,10 @@
 				this.setup({id: this.presentableId, type: this.presentableType})
 					.then(() => {
 						this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
-							.then(() => this.goToSlide(this.slideOrderNumber))
+							.then(() => {
+								this.goToSlide(this.slideOrderNumber)
+								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+							})
 					})
 			} else {
 				this.setup({id: this.slideshowId})
@@ -419,15 +421,18 @@
 					this.setup({id: presentableId, type: this.presentableType})
 						.then(() => {
 							this.initSlideshow(getApiUrl(`slideshow_builder/category/${presentableId}`))
-							.then(() => this.goToSlide(this.slideOrderNumber))
+							.then(() => {
+								this.goToSlide(this.slideOrderNumber)
+								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+							})
 						})
 				}
 			},
-			'currentSlideIndex' (newValue, oldValue) {
-				this.currentSlideId = this.getSlideId(newValue)
+			'currentSlideIndex' (slideIndex, oldValue) {
+				this.currentSlideId = this.getSlideId(slideIndex)
 			},
-			'slideOrderNumber' (newValue, oldValue) {
-				typeof this.child.call === 'function' && this.goToSlide(newValue)
+			'slideOrderNumber' (slideOrderNumber, oldValue) {
+				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)
 			}
 		}
 	}

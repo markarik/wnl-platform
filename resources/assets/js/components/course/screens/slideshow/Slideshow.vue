@@ -178,7 +178,7 @@
 			}
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'setupPresentables', 'setupByPresentable', 'resetModule']),
+			...mapActions('slideshow', ['setup', 'resetModule']),
 			...mapActions(['toggleOverlay']),
 			toggleBookmarkedState(slideIndex, hasReacted) {
 				this.bookmarkLoading = true
@@ -242,11 +242,11 @@
 			checkFocus() {
 				this.isFocused = this.iframe === document.activeElement
 			},
-			initSlideshow(slideshowUrl) {
+			initSlideshow(slideshowUrl = this.slideshowUrl) {
 				this.toggleOverlay({source: 'slideshow', display: true})
 				handshake = new Postmate({
 					container: this.container,
-					url: slideshowUrl || this.slideshowUrl,
+					url: slideshowUrl,
 				})
 
 				return handshake.then(child => {
@@ -369,21 +369,18 @@
 		mounted() {
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
-			if (this.presentableId || this.presentableType) {
-				this.presentableId && this.setupByPresentable({type: this.presentableType, id: this.presentableId})
-				.then(() => {
-					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+			if (this.presentableId) {
+				this.setup(this.presentableId, this.presentableType)
 					.then(() => {
-						this.goToSlide(this.slideOrderNumber)
+						this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+							.then(() => this.goToSlide(this.slideOrderNumber))
 					})
-					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-				})
 			} else {
 				this.setup(this.slideshowId)
-				.then(() => {
-					this.initSlideshow()
-					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-				})
+					.then(() => {
+						this.initSlideshow()
+						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+					})
 			}
 		},
 		beforeDestroy() {
@@ -417,16 +414,15 @@
 					this.initSlideshow()
 				}
 			},
-			'presentableId' (newValue, oldValue) {
-				newValue && this.toggleOverlay({source: 'slideshow', display: true})
-				newValue && this.setupByPresentable({type: this.presentableType, id: newValue})
-				.then(() => {
-					this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
-					.then(() => {
-						this.goToSlide(this.slideOrderNumber)
-					})
-					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-				})
+			'presentableId' (presentableId, oldValue) {
+				if (presentableId) {
+					this.toggleOverlay({source: 'slideshow', display: true})
+					this.setup(presentableId, this.presentableType)
+						.then(() => {
+							this.initSlideshow(getApiUrl(`slideshow_builder/category/${presentableId}`))
+							.then(() => this.goToSlide(this.slideOrderNumber))
+						})
+				}
 			},
 			'currentSlideIndex' (newValue, oldValue) {
 				this.currentSlideId = this.getSlideId(newValue)

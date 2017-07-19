@@ -36,7 +36,7 @@ function _fetchReactables(presentables) {
 		})
 }
 
-function _fetchPresentables(slideshowId) {
+function _fetchPresentables(slideshowId, type='App\\Models\\Slideshow') {
 	let data = {
 		query: {
 			where: [
@@ -50,29 +50,6 @@ function _fetchPresentables(slideshowId) {
 		order: {
 			order_number: 'asc',
 		},
-	}
-
-	return axios.post(getApiUrl('presentables/.search'), data)
-		.then(response => {
-			return _fetchReactables(response.data)
-		})
-}
-
-function _fetchPresentablesByPresentable({type, id}) {
-	let data = {
-		query: {
-			where: [
-				['presentable_type', type],
-				['presentable_id', '=', id],
-			],
-		},
-		join: [
-			['slides', 'presentables.slide_id', '=', 'slides.id'],
-		],
-		order: {
-			order_number: 'asc',
-		},
-
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
@@ -225,29 +202,15 @@ const actions = {
 	},
 	setupByPresentable({commit, dispatch, getters}, presentable) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentablesByPresentable', presentable)
+			dispatch('setupPresentables', presentable.id, presentable.type)
 				.then(() => dispatch('setupComments', getters.slidesIds))
 				.then(() => resolve())
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupPresentables({commit}, slideshowId) {
+	setupPresentables({commit}, slideshowId, type='App\\Models\\Slideshow') {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(slideshowId)
-				.then((presentables) => {
-					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
-					commit(types.SLIDESHOW_SET_SLIDES)
-					resolve()
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-					reject()
-				})
-		})
-	},
-	setupPresentablesByPresentable({commit}, presentable) {
-		return new Promise((resolve, reject) => {
-			_fetchPresentablesByPresentable(presentable)
 				.then((presentables) => {
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)

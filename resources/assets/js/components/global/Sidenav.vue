@@ -14,7 +14,8 @@
 				:forceGroupOpen="forceGroupsOpen"
 			>
 			</wnl-sidenav-group>
-			<wnl-sidenav-item v-else v-for="(item, index) in items"
+			<!-- v-else doesnt cooperate with v-for https://github.com/vuejs/vue/issues/3479 -->
+			<wnl-sidenav-item v-if="!hasGroups" v-for="(item, index) in items"
 				:item="item"
 				:key="index"
 			>

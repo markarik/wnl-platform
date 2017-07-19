@@ -1,6 +1,7 @@
 <?php namespace App\Console\Commands;
 
 use Storage;
+use Artisan;
 use Lib\SlideParser\Parser;
 use Illuminate\Console\Command;
 
@@ -46,8 +47,7 @@ class SlidesImport extends Command
 	{
 		$path = self::BASE_DIRECTORY;
 
-		if ($subDir = $this->argument('dir'))
-		{
+		if ($subDir = $this->argument('dir')) {
 			$path .= '/' . $subDir;
 		}
 
@@ -59,7 +59,12 @@ class SlidesImport extends Command
 			$bar->advance();
 			\Log::debug($file . ' processed');
 		}
+		if (!$files) $this->importFile($path);
 		print PHP_EOL;
+
+		Artisan::queue('tags:fromCategories');
+		Artisan::queue('slides:fromCategory');
+		Artisan::queue('cache:tag', ['tag' => 'api']);
 
 		return;
 	}

@@ -190,6 +190,19 @@ a.secondary-link {
 	}
 }
 
+// Tags
+
+.tag {
+
+	span {
+		min-width: 0;
+		max-width: 150px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
 // Forms
 
 .form-header {

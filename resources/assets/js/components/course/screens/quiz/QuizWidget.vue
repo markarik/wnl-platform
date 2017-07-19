@@ -110,6 +110,7 @@
 		methods: {
 			...mapActions('quiz', [
 				'changeQuestion',
+				'shuffleAnswers',
 				'resolveQuestion',
 				'resetState',
 			]),
@@ -118,21 +119,20 @@
 					this.resolveQuestion(this.currentQuestion.id)
 				}
 			},
-			getQuestionElement(resource) {
-				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
+			performChangeQuestion(index) {
+				this.shuffleAnswers({id: this.getQuestions[index].id})
+				this.changeQuestion(index)
+				scrollToElement(this.$el, 75)
 			},
 			nextQuestion() {
-				this.changeQuestion(1)
-				scrollToElement(this.$el, 75)
+				this.performChangeQuestion(1)
 			},
 			previousQuestion() {
-				this.changeQuestion(this.lastIndex)
-				scrollToElement(this.$el, 75)
+				this.performChangeQuestion(this.lastIndex)
 			},
 			selectQuestionFromList(index) {
-				let fullIndex = index + 1
-				this.changeQuestion(fullIndex)
-				scrollToElement(this.$el, 75)
+				const fullIndex = index + 1
+				this.performChangeQuestion(fullIndex)
 			},
 		},
 	}

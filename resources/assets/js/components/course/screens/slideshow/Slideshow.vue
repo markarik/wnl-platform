@@ -299,7 +299,6 @@
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						this.child.call('setupBookmarks', this.bookmarkedSlideNumbers)
-						this.$emit('slideshowReady')
 					} else if (event.data.value.name === 'bookmark') {
 						const slideData = event.data.value.data
 

@@ -58,7 +58,7 @@
 				return this.hasSubitems && this.isOpen
 			},
 			hasSubitems() {
-				return this.item.subitems && this.item.subitems.length > -1
+				return this.item.subitems && this.item.subitems.length > 0
 			},
 			isGroupToggle() {
 				return this.hasSubitems

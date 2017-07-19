@@ -8,11 +8,11 @@
 					{{itemsHeading}}
 				</span>
 			</li>
-			<!-- <wnl-sidenav-group v-if="hasGroups" v-for="(item, index) in items"
+			<wnl-sidenav-group v-if="hasGroups" v-for="(item, index) in items"
 				:item="item"
 				:key="index"
 			>
-			</wnl-sidenav-group> -->
+			</wnl-sidenav-group>
 			<wnl-sidenav-item v-else v-for="(item, index) in items"
 				:item="item"
 				:key="index"

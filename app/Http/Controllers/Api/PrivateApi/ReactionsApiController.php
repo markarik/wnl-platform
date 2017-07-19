@@ -1,11 +1,11 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Events\ReactionAdded;
-use Carbon\Carbon;
 use DB;
 use Auth;
+use Carbon\Carbon;
 use App\Models\Reaction;
 use Illuminate\Http\Request;
+use App\Events\ReactionAdded;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Reactions\CreateReaction;
 use App\Http\Requests\Reactions\DeleteReaction;
@@ -23,7 +23,7 @@ class ReactionsApiController extends ApiController
 		$user = Auth::user();
 		$reactions = $request->all();
 
-		foreach($reactions as $index => $reactionParam) {
+		foreach ($reactions as $index => $reactionParam) {
 			$modelName = self::getResourceModel($reactionParam['reactable_resource']);
 			$reactable = $modelName::find($reactionParam['reactable_id']);
 			$reaction = Reaction::type($reactionParam['reaction_type']);

@@ -6,11 +6,41 @@ import {getApiUrl} from 'js/utils/env'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions'
 
-function _fetchPresentables(slideshowId) {
+function _fetchReactables(presentables) {
+	let slideIds = presentables.map(presentable => presentable.slide_id)
+	let data     = {
+		query: {
+			where: [
+				['reactable_type', 'App\\Models\\Slide'],
+				['reaction_id', 4],
+			],
+			whereIn: ['reactable_id', slideIds]
+		},
+	}
+
+	return axios.post(getApiUrl('reactables/.search'), data)
+		.then(response => {
+			let reactables = {}
+			response.data.forEach(reactable => {
+				reactables[reactable.reactable_id] = reactable
+			})
+
+			return presentables.map(presentable => {
+				let slideId = presentable.slide_id
+				presentable.bookmark = {
+					hasReacted: reactables.hasOwnProperty(slideId)
+				}
+
+				return presentable
+			})
+		})
+}
+
+function _fetchPresentables(slideshowId, type) {
 	let data = {
 		query: {
 			where: [
-				['presentable_type', 'App\\Models\\Slideshow'],
+				['presentable_type', type],
 				['presentable_id', '=', slideshowId],
 			],
 		},
@@ -20,32 +50,12 @@ function _fetchPresentables(slideshowId) {
 		order: {
 			order_number: 'asc',
 		},
-		include: 'reactions',
-
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
-}
-
-function _fetchPresentablesByPresentable({type, id}) {
-	let data = {
-		query: {
-			where: [
-				['presentable_type', type],
-				['presentable_id', '=', id],
-			],
-		},
-		join: [
-			['slides', 'presentables.slide_id', '=', 'slides.id'],
-		],
-		order: {
-			order_number: 'asc',
-		},
-		include: 'reactions',
-
-	}
-
-	return axios.post(getApiUrl('presentables/.search'), data)
+		.then(response => {
+			return _fetchReactables(response.data)
+		})
 }
 
 function _fetchComments(slidesIds) {
@@ -108,8 +118,8 @@ const getters = {
 
 		return state.presentables[slideNumber - 1].is_functional
 	},
-	isLoading:    (state) => state.loading,
-	getSlideId:   (state) => (slideOrderNumber) => {
+	isLoading: (state) => state.loading,
+	getSlideId: (state) => (slideOrderNumber) => {
 		return state.presentables.length === 0 ? -1 : state.presentables[slideOrderNumber].id
 	},
 	slides: (state) => state.slides,
@@ -127,14 +137,14 @@ const getters = {
 			})
 	},
 	findRegularSlide: (state, getters) => (slideNumber, direction) => {
-		let step = direction === 'previous' ? -1 : 1,
+		let step   = direction === 'previous' ? -1 : 1,
 			length = state.presentables.length
 
-		for (;;slideNumber = slideNumber + step) {
+		for (; ; slideNumber = slideNumber + step) {
 			if (!getters.isFunctional(slideNumber)) {
 				return slideNumber
 			}
-			if (slideNumber <= 0 ) {
+			if (slideNumber <= 0) {
 				return 1
 			}
 			if (slideNumber >= length) {
@@ -182,41 +192,19 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setup({commit, dispatch, getters}, slideshowId) {
+	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentables', slideshowId)
+			dispatch('setupPresentables', {id, type})
 				.then(() => dispatch('setupComments', getters.slidesIds))
 				.then(() => resolve())
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupByPresentable({commit, dispatch, getters}, presentable) {
+	setupPresentables({commit}, {id, type}) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentablesByPresentable', presentable)
-				.then(() => dispatch('setupComments', getters.slidesIds))
-				.then(() => resolve())
-				.catch((reason) => reject(reason))
-		})
-	},
-	setupPresentables({commit}, slideshowId) {
-		return new Promise((resolve, reject) => {
-			_fetchPresentables(slideshowId)
-				.then((response) => {
-					commit(types.SLIDESHOW_SET_PRESENTABLES, response.data)
-					commit(types.SLIDESHOW_SET_SLIDES)
-					resolve()
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-					reject()
-				})
-		})
-	},
-	setupPresentablesByPresentable({commit}, presentable) {
-		return new Promise((resolve, reject) => {
-			_fetchPresentablesByPresentable(presentable)
-				.then((response) => {
-					commit(types.SLIDESHOW_SET_PRESENTABLES, response.data)
+			_fetchPresentables(id, type)
+				.then((presentables) => {
+					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
 					resolve()
 				})

@@ -32,7 +32,7 @@
 				<span class="icon is-small" v-if="hasIcon">
 					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
 				</span>
-				<span class="icon is-small" v-if="isGroupToggle">
+				<span class="icon is-small" v-if="hasSubitems">
 					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
 				</span>
 			</div>
@@ -110,7 +110,7 @@
 
 	export default {
 		name: 'SidenavItem',
-		props: ['item', 'onClick', 'isGroupToggle', 'isOpen'],
+		props: ['item', 'onClick', 'hasSubitems', 'isOpen'],
 		computed: {
 			isLink() {
 				return typeof this.to === 'object' && this.to.hasOwnProperty('name')

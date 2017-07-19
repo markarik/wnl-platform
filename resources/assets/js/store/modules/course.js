@@ -106,18 +106,18 @@ const getters = {
 			lesson = getters.getLesson(inProgressId)
 			lesson.status = STATUS_IN_PROGRESS
 		} else {
-			for (var lessonId in this.getLessons) {
+			for (let lessonId in this.getLessons) {
 				let isAvailable = rootGetters['progress/isLessonAvailable'](lessonId)
 				if (isAvailable &&
 					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
 				) {
 					lesson = this.getLesson(lessonId)
 					lesson.status = STATUS_AVAILABLE
-					break
+					return lesson
 				} else if (!isAvailable) {
 					lesson = this.getLesson(lessonId)
 					lesson.status = STATUS_NONE
-					break
+					return lesson
 				}
 			}
 		}

@@ -1,10 +1,10 @@
 <template>
 	<div class="wnl-sidenav-group">
 		<div class="wnl-sidenav-item-wrapper">
-			<div class="wnl-sidenav-group-toggle" :class="{'no-items': !isGroupToggle}" @click="toggleSubitems">
+			<div class="wnl-sidenav-group-toggle" :class="{'no-items': !hasSubitems}" @click="toggleSubitems">
 				<wnl-sidenav-item
 					:item="item"
-					:isGroupToggle="isGroupToggle"
+					:hasSubitems="hasSubitems"
 					:toggleIcon="toggleIcon"
 					:isOpen="isOpen"
 				>
@@ -59,9 +59,6 @@
 			},
 			hasSubitems() {
 				return this.item.subitems && this.item.subitems.length > 0
-			},
-			isGroupToggle() {
-				return this.hasSubitems
 			},
 			toggleIcon() {
 				return this.isOpen ? 'fa-angle-up' : 'fa-angle-down'

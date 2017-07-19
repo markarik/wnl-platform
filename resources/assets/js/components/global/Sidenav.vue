@@ -8,11 +8,20 @@
 					{{itemsHeading}}
 				</span>
 			</li>
-			<wnl-sidenav-group v-for="(item, index) in items"
-				:item="item"
+			<wnl-sidenav-item v-for="(item, index) in items"
+				:itemClass="item.itemClass"
+				:to="item.to"
+				:isDisabled="item.isDisabled"
+				:method="item.method"
+				:iconClass="item.iconClass"
+				:iconTitle="item.iconTitle"
 				:key="index"
+				:completed="item.completed"
+				:active="item.active"
+				:meta="item.meta"
 			>
-			</wnl-sidenav-group>
+				{{item.text}}
+			</wnl-sidenav-item>
 		</ul>
 	</div>
 </template>
@@ -28,7 +37,7 @@
 			width: 100%
 
 			.item
-				border-bottom: $border-light-gray
+				border-bottom: 1px solid $color-light-gray
 
 				&.with-border
 					padding: 0
@@ -48,7 +57,7 @@
 					line-height: 26px
 
 			.heading
-				background: $color-background-lighter-gray
+				background: $color-light-gray
 				margin-bottom: 0
 
 	.breadcrumbs
@@ -57,11 +66,6 @@
 	.items
 		.item
 			padding: 0
-			transition: background-color $transition-length-base
-
-			&:hover
-				background: $color-background-lighter-gray
-				transition: background-color $transition-length-base
 
 			.item-wrapper
 				display: flex
@@ -75,6 +79,10 @@
 
 				&:first-child
 					padding: $margin-tiny 0
+
+		a.item-wrapper
+			&:hover
+				background: $color-background-lighter-gray
 
 		.heading
 			padding-top: 10px
@@ -115,14 +123,14 @@
 
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
-	import SidenavGroup from 'js/components/global/SidenavGroup'
+	import SidenavItem from 'js/components/global/SidenavItem'
 	import { mapGetters } from 'vuex'
 
 	export default {
 		props: ['breadcrumbs', 'items', 'itemsHeading'],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-sidenav-group': SidenavGroup
+			'wnl-sidenav-item': SidenavItem,
 		},
 		computed: {
 			...mapGetters(['isMobileNavigation'])

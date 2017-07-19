@@ -30,9 +30,9 @@
 
 	export default {
 		name: 'wnl-feed',
-		props: ['type'],
+		props: ['type', 'notifications'],
 		computed: {
-			...mapGetters('notifications', ['notifications', 'isLoading']),
+			...mapGetters('notifications', ['isLoading']),
 			eventComponent() {
 				return `wnl-newsfeed-event-${this.type}`
 			},

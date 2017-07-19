@@ -9,7 +9,7 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container" v-if="ready">
-				<wnl-feed type="moderator"/>
+				<wnl-feed type="moderator" :notifications="notifications"/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -84,6 +84,7 @@
 				'isChatToggleVisible'
 			]),
 			...mapGetters('course', ['ready']),
+			...mapGetters('notifications', ['getChannelNotifications', 'moderatorsChannel']),
 			chatRooms() {
 				return [
 					{name: '#moderatorzy', channel: 'moderatorzy'},
@@ -92,6 +93,9 @@
 			isMainRoute() {
 				return this.$route.name === 'help'
 			},
+			notifications() {
+				return this.getChannelNotifications(this.moderatorsChannel)
+			}
 		},
 		methods: {
 			...mapActions(['toggleChat']),

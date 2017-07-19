@@ -9,23 +9,20 @@ const state = {
 	loading: true,
 	notifications: {},
 	channels: [],
-	// user: 0
 }
 
 const getters = {
 	isLoading: (state) => state.loading,
 	notifications: (state) => state.notifications,
-	user: (state) => state.user,
+	userChannel: (state, getters, rootState, rootGetters) => rootGetters.currentUserId && `private-${rootGetters.currentUserId}`,
+	moderatorsChannel: (state, getters, rootState, rootGetters) => rootGetters.isAdmin && `role-role.moderator`,
 	unseen: (state) => {
-		return _.pickBy(state.notifications, (notification) => {
-			return !notification.seen_at
-		})
+		return _.pickBy(state.notifications, (notification) => !notification.seen_at)
 	},
 	unread: (state) => {
-		return _.pickBy(state.notifications, (notification) => {
-			return !notification.read_at
-		})
+		return _.pickBy(state.notifications, (notification) => !notification.read_at)
 	},
+	getChannelNotifications: ({notifications}) => (channel) => _.pickBy(notifications, (notification) => notification.channel === channel)
 }
 
 const mutations = {
@@ -44,14 +41,11 @@ const mutations = {
 			}
 		})
 	},
-	// [types.SET_NOTIFICATIONS_USER] (state, user) {
-	// 	set(state, 'user', user)
-	// }
 }
 
 const actions = {
-	pullNotifications({commit}, channel) {
-		_getNotifications(channel).then(response => {
+	pullNotifications({commit, rootGetters}, channel) {
+		_getNotifications(channel, rootGetters.currentUserId).then(response => {
 			if (typeof response.data[0] !== 'object') {
 				commit(types.IS_LOADING, false)
 				return false
@@ -64,68 +58,73 @@ const actions = {
 		})
 	},
 	setupLiveNotifications({commit}, channel) {
-		Echo.channel(channel.name)
+		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
 				console.log(notification)
 				commit(types.ADD_NOTIFICATION, notification)
 			});
 	},
-	markAsRead({commit, getters}, notification) {
-		_updateNotification(getters.user, notification.id, {'read_at': 'now'})
+	markAsRead({commit, getters, rootGetters}, notification) {
+		_updateNotification(rootGetters.currentUserId, notification.id, {'read_at': 'now'})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
 	},
-	markAllAsSeen({commit, getters}, channel) {
+	markAllAsSeen({commit, getters, rootGetters}) {
 		let data = _.mapValues(getters.unseen, (notification) => {
 			return { 'seen_at' : 'now' }
 		})
 
-		_updateMany(channel, data)
+		_updateMany(rootGetters.currentUserId, data)
 			.then((response) => {
 				_.each(response.data, (notification) => {
 					commit(types.ADD_NOTIFICATION, notification)
 				})
 			})
 	},
-	markAllAsRead({commit, getters}, channel) {
+	markAllAsRead({commit, getters, rootGetters}) {
 		let data = _.mapValues(getters.unread, (notification) => {
 			return { 'read_at' : 'now' }
 		})
 
-		_updateMany(channel, data)
+		_updateMany(rootGetters.currentUserId, data)
 			.then((response) => {
 				_.each(response.data, (notification) => {
 					commit(types.ADD_NOTIFICATION, notification)
 				})
 			})
 	},
-	initNotifications({dispatch}, channel) {
-		dispatch('pullNotifications', channel)
-		dispatch('setupLiveNotifications', channel)
+	initNotifications({getters, dispatch}) {
+		dispatch('pullNotifications', getters.userChannel)
+		dispatch('setupLiveNotifications', getters.userChannel)
+
+		if (getters.moderatorsChannel) {
+			dispatch('pullNotifications', getters.moderatorsChannel)
+			dispatch('setupLiveNotifications', getters.moderatorsChannel)
+		}
 	}
 }
 
 
-function _getNotifications(channel) {
+function _getNotifications(channel, userId) {
 
 	const conditions = {
 		'query': {
 			'where': [
 				['read_at', '=', null],
-				['channel', '=', channel.name]
+				['channel', '=', channel]
 			]
 		}
 	}
-	return axios.post(getApiUrl(`users/${channel.userId}/notifications/.search`), conditions)
+	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
 }
 
-function _updateNotification(channel, notificationId, data) {
-	return axios.patch(getApiUrl(`users/${channel.userId}/notifications/${notificationId}`), data)
+function _updateNotification(userId, notificationId, data) {
+	return axios.patch(getApiUrl(`users/${userId}/notifications/${notificationId}`), data)
 }
 
-function _updateMany(channel, data) {
-	return axios.patch(getApiUrl(`users/${channel.userId}/notifications`), data)
+function _updateMany(userId, data) {
+	return axios.patch(getApiUrl(`users/${userId}/notifications`), data)
 }
 
 

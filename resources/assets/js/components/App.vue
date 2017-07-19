@@ -62,7 +62,7 @@
 				'userJoined',
 				'userLeft'
 			]),
-//			...mapActions('notifications', ['initNotifications']),
+			...mapActions('notifications', ['initNotifications']),
 			setupNotifications() {
 				Echo.private(`user.${this.currentUserId}`)
 						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
@@ -78,7 +78,7 @@
 						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
 					}, 1000 * 60 * 3)
 				})
-//					.then(() => this.initNotifications())
+				.then(this.initNotifications)
 		},
 		mounted() {
 			this.$router.afterEach((to) => {

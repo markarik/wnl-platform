@@ -37,5 +37,6 @@ return [
 		'reactions'           => 'reactions',
 		'categories'          => 'categories',
 		'slideshow-builder'   => 'slideshow_builder',
+		'profiles'            => 'user_profiles',
 	],
 ];

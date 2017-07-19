@@ -3,12 +3,12 @@
 
 namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\OrderTransformer;
 use Illuminate\Http\Request;
+use League\Fractal\Resource\Item;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\Item;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\OrderTransformer;
 
 class OrdersApiController extends ApiController
 {

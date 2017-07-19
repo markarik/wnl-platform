@@ -88,6 +88,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'User\UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'User\UserReactionsApiController@getReactionsByCategory');
 
+	// User Profiles
+	Route::post("{$r['profiles']}/.search", 'User\UserProfileApiController@search');
+
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 

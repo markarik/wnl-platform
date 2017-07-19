@@ -30,13 +30,22 @@
 	.wnl-sidenav-group-toggle
 		color: $color-gray
 		cursor: pointer
+		transition: background-color $transition-length-base
+
+		&:hover
+			background-color: $color-background-lighter-gray
+			transition: background-color $transition-length-base
 
 		&.no-items
 			color: $color-background-gray
 			cursor: default
 
-			.item:hover
+			&:hover
 				background: transparent
+
+			.item
+				margin: 0
+				padding: $margin-tiny 0
 </style>
 
 <script>

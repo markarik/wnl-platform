@@ -57,7 +57,10 @@
 
 			.heading
 				background: $color-background-lighter-gray
-				margin-bottom: 0
+				margin: 0
+
+				&:hover
+					background: $color-background-lighter-gray
 
 	.breadcrumbs
 		margin: 19px 0
@@ -85,10 +88,8 @@
 					padding: $margin-tiny 0
 
 		.heading
-			padding-top: 10px
-
-			&:first-child
-				padding-top: 0
+			margin: $margin-small 0 0
+			padding: $margin-small 0
 
 			&:hover
 				background: transparent

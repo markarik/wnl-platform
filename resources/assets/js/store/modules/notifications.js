@@ -8,7 +8,6 @@ const namespaced = true
 const state = {
 	loading: true,
 	notifications: {},
-	channels: [],
 }
 
 const getters = {
@@ -36,7 +35,7 @@ const mutations = {
 		set(state, 'loading', isLoading)
 	},
 	[types.ADD_NOTIFICATION] (state, notification) {
-		set(state.notifications, notification.id, notification)
+		set(state, 'notifications', {[notification.id]: notification, ...state.notifications})
 	},
 	[types.MODIFY_NOTIFICATION] (state, payload) {
 		set(state, 'notifications', {

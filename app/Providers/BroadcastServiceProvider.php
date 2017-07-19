@@ -21,18 +21,9 @@ class BroadcastServiceProvider extends ServiceProvider
 		require base_path('routes/channels.php');
 
 		/*
-		 * Authenticate the user's personal channel...
-		 */
-		Broadcast::channel('{userId}', function ($user, $userId) {
-			$requestedUser = User::find($userId);
-
-			return $requestedUser->can('viewMultiple', Notification::class);
-		});
-
-		/*
 		 * Authenticate the user's personal stream channel...
 		 */
-		Broadcast::channel('private-stream.{userId}', function ($user, $userId) {
+		Broadcast::channel('stream.{userId}', function ($user, $userId) {
 			$requestedUser = User::find($userId);
 
 			return $requestedUser->can('viewMultiple', Notification::class);
@@ -43,6 +34,15 @@ class BroadcastServiceProvider extends ServiceProvider
 		 */
 		Broadcast::channel('role.{roleName}', function ($user, $roleName) {
 			return $user->hasRole($roleName);
+		});
+
+		/*
+		 * Authenticate the user's personal channel...
+		 */
+		Broadcast::channel('{userId}', function ($user, $userId) {
+			$requestedUser = User::find($userId);
+
+			return $requestedUser->can('viewMultiple', Notification::class);
 		});
 	}
 }

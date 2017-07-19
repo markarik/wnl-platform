@@ -23,6 +23,7 @@ class DatabaseChannel
 			'notifiable_id' => $notifiable->id,
 			'notifiable_type' => get_class($notifiable),
 			'data' => $notification->event->data,
+			'event_id' => $notification->event->id,
 			'channel' => $channel->name,
 			'read_at' => null,
 			'seen_at' => null,

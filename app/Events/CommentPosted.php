@@ -2,17 +2,12 @@
 
 namespace App\Events;
 
-use Request;
 use App\Models\Comment;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CommentPosted
+class CommentPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
@@ -23,8 +18,6 @@ class CommentPosted
 
 	public $comment;
 
-	public $referer;
-
 	/**
 	 * Create a new event instance.
 	 *
@@ -32,18 +25,8 @@ class CommentPosted
 	 */
 	public function __construct(Comment $comment)
 	{
+		parent::__construct();
 		$this->comment = $comment;
-		$this->referer = Request::header('X-BETHINK-LOCATION');
-	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
 	}
 
 	public function transform()

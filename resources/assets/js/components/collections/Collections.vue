@@ -56,7 +56,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="collections-placeholder">
+			<div v-else class="collections-placeholder">
 				<span class="icon main"><i class="fa fa-star-o"></i></span>
 				<span class="welcome">Witaj w Kolekcjach!</span>
 				<span>Wybierz temat z menu <span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>

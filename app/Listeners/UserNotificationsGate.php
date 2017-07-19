@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Notification;
 class UserNotificationsGate implements ShouldQueue
 {
 	const CHANNELS = [
-		'role'           => 'role.%s',
+		'role'           => 'role.%s.%d',
 		'private'        => '%d',
 		'private-stream' => 'stream.%d',
 	];
@@ -40,9 +40,11 @@ class UserNotificationsGate implements ShouldQueue
 		}
 
 		$moderators = User::ofRole('moderator');
-		$channelFormatted = sprintf(self::CHANNELS['role'], 'moderator');
-		$notification = new EventNotification($event, $channelFormatted);
-		Notification::send($moderators, $notification);
+		foreach ($moderators as $moderator) {
+			$channelFormatted = sprintf(self::CHANNELS['role'], 'moderator', $moderator->id);
+			$notification = new EventNotification($event, $channelFormatted);
+			Notification::send($moderator, $notification);
+		}
 
 		// For some reason event is not deserialized here by default
 		// calling __wakeup() forces an event to deserialize, hence we can access question and user property

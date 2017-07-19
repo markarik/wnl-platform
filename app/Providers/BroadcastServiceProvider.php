@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Notification;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -32,7 +32,7 @@ class BroadcastServiceProvider extends ServiceProvider
 		/*
 		 * Authenticate the mederators channel...
 		 */
-		Broadcast::channel('role.{roleName}', function ($user, $roleName) {
+		Broadcast::channel('role.{roleName}.{userId}', function ($user, $roleName, $userId) {
 			return $user->hasRole($roleName);
 		});
 

@@ -6,7 +6,7 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside collections-sidenav">
-				<wnl-sidenav :items="getNavigation()"></wnl-sidenav>
+				<wnl-sidenav :items="getNavigation()" :hasGroups="true"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
@@ -273,7 +273,9 @@
 					const childItems = rootCategory.categories
 						.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
 
-					navigation = [...navigation, groupItem, ...childItems]
+					groupItem.subitems = childItems;
+
+					navigation = [...navigation, groupItem]
 				})
 
 				return navigation

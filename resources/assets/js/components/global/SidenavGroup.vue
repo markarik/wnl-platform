@@ -48,9 +48,9 @@
 			'wnl-sidenav-item': SidenavItem
 		},
 		name: 'SidenavGroup',
-		props: ['item'],
+		props: ['item', 'forceGroupOpen'],
 		data() {
-			return { isOpen: false }
+			return { isOpen: !!this.forceGroupOpen }
 		},
 		computed: {
 			...mapGetters('course', ['nextLesson']),

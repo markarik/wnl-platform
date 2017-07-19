@@ -6,7 +6,7 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside collections-sidenav">
-				<wnl-sidenav :items="getNavigation()" :hasGroups="true"></wnl-sidenav>
+				<wnl-sidenav :items="getNavigation()" :hasGroups="true" :forceGroupsOpen="true"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">

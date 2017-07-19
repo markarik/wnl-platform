@@ -11,6 +11,7 @@
 			<wnl-sidenav-group v-if="hasGroups" v-for="(item, index) in items"
 				:item="item"
 				:key="index"
+				:forceGroupOpen="forceGroupsOpen"
 			>
 			</wnl-sidenav-group>
 			<wnl-sidenav-item v-else v-for="(item, index) in items"
@@ -129,7 +130,7 @@
 	import { mapGetters } from 'vuex'
 
 	export default {
-		props: ['breadcrumbs', 'items', 'itemsHeading', 'hasGroups'],
+		props: ['breadcrumbs', 'items', 'itemsHeading', 'hasGroups', 'forceGroupsOpen'],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-sidenav-group': SidenavGroup,

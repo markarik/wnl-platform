@@ -1,14 +1,14 @@
 <template>
-	<div class="wnl-sidenav-group">
+	<div class="wnl-sidenav-group" :class="{'no-items': !hasSubitems}">
 		<div class="wnl-sidenav-item-wrapper">
-			<div class="wnl-sidenav-group-toggle" :class="{'no-items': !hasSubitems}" @click="toggleSubitems">
+			<div class="wnl-sidenav-group-toggle" @click="toggleSubitems">
 				<wnl-sidenav-item
 					:item="item"
 					:hasSubitems="hasSubitems"
 					:toggleIcon="toggleIcon"
 					:isOpen="isOpen"
 				>
-					{{item.text}}
+					{{item.text}} <span class="subitems-count" v-if="hasSubitems">({{item.subitems.length}})</span>
 				</wnl-sidenav-item>
 			</div>
 			<ul class="wnl-sidenav-subitems" v-if="canRenderSubitems">
@@ -27,6 +27,9 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.wnl-sidenav-group
+		margin-bottom: $margin-base
+
 	.wnl-sidenav-group-toggle
 		color: $color-gray
 		cursor: pointer
@@ -36,7 +39,14 @@
 			background-color: $color-background-lighter-gray
 			transition: background-color $transition-length-base
 
-		&.no-items
+		.subitems-count
+			color: $color-background-gray
+			font-size: $font-size-minus-3
+
+	.wnl-sidenav-group.no-items
+		margin-bottom: 0
+
+		.wnl-sidenav-group-toggle
 			color: $color-background-gray
 			cursor: default
 
@@ -46,6 +56,7 @@
 			.item
 				margin: 0
 				padding: $margin-tiny 0
+
 </style>
 
 <script>
@@ -76,7 +87,7 @@
 		methods: {
 			toggleSubitems() {
 				this.isOpen = !this.isOpen
-			}
+			},
 		},
 		watch: {
 			nextLesson(val) {

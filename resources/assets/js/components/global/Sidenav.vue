@@ -29,7 +29,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav
-		height: $main-height
+		height: calc($main-height - 2 * $margin-small)
 
 		&.mobile
 			height: auto
@@ -62,6 +62,9 @@
 				&:hover
 					background: $color-background-lighter-gray
 
+			.wnl-sidenav-group
+				margin: 0
+
 	.breadcrumbs
 		margin: 19px 0
 
@@ -88,7 +91,6 @@
 					padding: $margin-tiny 0
 
 		.heading
-			margin: $margin-small 0 0
 			padding: $margin-small 0
 
 			&:hover

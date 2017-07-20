@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Notification;
 class UserNotificationsGate implements ShouldQueue
 {
 	const CHANNELS = [
-		'role'           => 'role.%s.%d',
-		'private'        => '%d',
-		'private-stream' => 'stream.%d',
+		'role'           => 'private-role.%s.%d',
+		'private'        => 'private-%d',
+		'private-stream' => 'private-stream.%d',
 	];
 
 	public function notifyPrivate($user, $event)

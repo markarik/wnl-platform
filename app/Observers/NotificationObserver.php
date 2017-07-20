@@ -2,8 +2,11 @@
 
 
 use App\Models\Notification;
+use App\Models\User;
 use App\Notifications\EventNotification;
+use App\Notifications\Media\LiveChannel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Notification as Notify;
 
 
 class NotificationObserver
@@ -33,19 +36,25 @@ class NotificationObserver
 
 		foreach ($twinNotifications as $twinNotification) {
 			$twinNotification->update($modifiedFields);
-			$this->pushLive($notification);
+			$this->pushLive($twinNotification);
 		}
 
 		$this->eventsOn($dispatcher);
 	}
 
-	public function recoverEvent($notification)
+	public function pushLive($notification)
 	{
 		$event = new \stdClass();
 		$event->data = $notification->data;
 		$event->id = $notification->event_id;
-		
-		$notification = new EventNotification($event, $notification->channel);
+		$event->data['read_at'] = $notification->read_at->timestamp ?? null;
+		$event->data['seen_at'] = $notification->seen_at->timestamp ?? null;
+
+		$user = User::find($notification->user_id);
+
+		$newNotification = new EventNotification($event, $notification->channel);
+		$newNotification->id = $notification->id;
+		Notify::sendNow($user, $newNotification, [LiveChannel::class]);
 	}
 
 	private function eventsOff()

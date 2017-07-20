@@ -3,6 +3,7 @@
 namespace App\Events\Qna;
 
 use Request;
+use App\Events\Event;
 use App\Models\QnaAnswer;
 use Illuminate\Broadcasting\Channel;
 use App\Events\SanitizesUserContent;
@@ -11,7 +12,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class AnswerPosted
+class AnswerPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
@@ -22,8 +23,6 @@ class AnswerPosted
 
 	public $qnaAnswer;
 
-	public $referer;
-
 	/**
 	 * Create a new event instance.
 	 *
@@ -31,8 +30,8 @@ class AnswerPosted
 	 */
 	public function __construct(QnaAnswer $qnaAnswer)
 	{
+		parent::__construct();
 		$this->qnaAnswer = $qnaAnswer;
-		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**

@@ -12,17 +12,17 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class ReactionAdded
+class ReactionAdded extends Event
 {
-	use Dispatchable, InteractsWithSockets, SerializesModels;
+	use Dispatchable,
+		InteractsWithSockets,
+		SerializesModels;
 
 	public $reaction;
 
 	public $reactable;
 
 	public $userId;
-
-	public $referer;
 
 	/**
 	 * Create a new event instance.
@@ -32,10 +32,10 @@ class ReactionAdded
 	 */
 	public function __construct(Reaction $reaction, Model $reactable, $userId)
 	{
+		parent::__construct();
 		$this->reaction = $reaction;
 		$this->reactable = $reactable;
 		$this->userId = $userId;
-		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**

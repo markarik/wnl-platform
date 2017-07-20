@@ -25,9 +25,12 @@ const getters = {
 	getUnread: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.read_at)
 	},
-	getChannelNotifications: ({notifications}) => (channel) => {
-		return _.pickBy(notifications, (notification) => notification.channel === channel)
-	}
+	getChannelNotifications: ({notifications}, getters) => (channel) => {
+		return _.pickBy(getters.getSortedNotifications, (notification) => notification.channel === channel)
+	},
+	getSortedNotifications: ({notifications}) => {
+		return _.reverse(_.sortBy(_.values(notifications), (notification) => notification.timestamp))
+	},
 }
 
 const mutations = {
@@ -35,7 +38,7 @@ const mutations = {
 		set(state, 'loading', isLoading)
 	},
 	[types.ADD_NOTIFICATION] (state, notification) {
-		set(state, 'notifications', {[notification.id]: notification, ...state.notifications})
+		set(state.notifications, notification.id, notification)
 	},
 	[types.MODIFY_NOTIFICATION] (state, payload) {
 		set(state, 'notifications', {
@@ -65,6 +68,7 @@ const actions = {
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
+				console.log(notification)
 				commit(types.ADD_NOTIFICATION, {...notification, channel})
 			});
 	},
@@ -76,7 +80,7 @@ const actions = {
 	},
 	markAllAsSeen({commit, getters, rootGetters}, channel) {
 		let data = _.mapValues(getters.getUnseen(channel), (notification) => {
-			return { 'seen_at' : 'now' }
+			return {'seen_at': 'now'}
 		})
 
 		_updateMany(rootGetters.currentUserId, data)
@@ -88,7 +92,7 @@ const actions = {
 	},
 	markAllAsRead({commit, getters, rootGetters}, channel) {
 		let data = _.mapValues(getters.getUnread(channel), (notification) => {
-			return { 'read_at' : 'now' }
+			return {'read_at': 'now'}
 		})
 
 		_updateMany(rootGetters.currentUserId, data)

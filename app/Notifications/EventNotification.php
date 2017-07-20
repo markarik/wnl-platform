@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Bus\Queueable;
 use App\Notifications\Media\LiveChannel;
 use Illuminate\Notifications\Notification;
@@ -15,6 +16,8 @@ class EventNotification extends Notification
 	public $event;
 
 	public $channel;
+
+	public $read_at;
 
 	/**
 	 * Create a new notification instance.
@@ -43,6 +46,6 @@ class EventNotification extends Notification
 
 	public function broadcastOn()
 	{
-		return new PrivateChannel($this->channel);
+		return new Channel($this->channel);
 	}
 }

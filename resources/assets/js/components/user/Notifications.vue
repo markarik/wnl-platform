@@ -117,7 +117,7 @@
 			}
 		},
 		computed: {
-			...mapGetters('notifications', ['getChannelNotifications', 'isLoading', 'getUnseen', 'userChannel']),
+			...mapGetters('notifications', ['getSortedNotifications', 'isLoading', 'getUnseen', 'userChannel']),
 			empty() {
 				return !this.isLoading && _.size(this.notifications) === 0
 			},
@@ -128,7 +128,7 @@
 				return _.size(this.getUnseen(this.userChannel))
 			},
 			notifications() {
-				return this.getChannelNotifications(this.userChannel)
+				return this.getSortedNotifications(this.userChannel)
 			}
 		},
 		methods: {

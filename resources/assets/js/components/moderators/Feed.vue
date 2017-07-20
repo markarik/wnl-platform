@@ -83,14 +83,14 @@
 				'isChatVisible',
 				'isChatToggleVisible'
 			]),
-			...mapGetters('notifications', ['getChannelNotifications', 'moderatorsChannel']),
+			...mapGetters('notifications', ['getSortedNotifications', 'moderatorsChannel']),
 			chatRooms() {
 				return [
 					{name: '#moderatorzy', channel: 'moderatorzy'},
 				]
 			},
 			notifications() {
-				return this.getChannelNotifications(this.moderatorsChannel)
+				return this.getSortedNotifications(this.moderatorsChannel)
 			}
 		},
 		methods: {

@@ -25,10 +25,11 @@ const getters = {
 	getUnread: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.read_at)
 	},
-	getChannelNotifications: ({notifications}, getters) => (channel) => {
-		return _.pickBy(getters.getSortedNotifications, (notification) => notification.channel === channel)
+	getChannelNotifications: ({notifications}) => (channel) => {
+		return _.pickBy(notifications, (notification) => notification.channel === channel)
 	},
-	getSortedNotifications: ({notifications}) => {
+	getSortedNotifications: (state, getters) => (channel) => {
+		const notifications = getters.getChannelNotifications(channel)
 		return _.reverse(_.sortBy(_.values(notifications), (notification) => notification.timestamp))
 	},
 }

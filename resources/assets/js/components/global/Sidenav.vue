@@ -39,6 +39,12 @@
 			.item
 				border-bottom: $border-light-gray
 
+				&:hover
+					background: transparent
+
+				&:active
+					background: $color-background-lighter-gray
+
 				&.with-border
 					padding: 0
 

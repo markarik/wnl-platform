@@ -8,7 +8,7 @@
 					:toggleIcon="toggleIcon"
 					:isOpen="isOpen"
 				>
-					{{item.text}} <span class="subitems-count" v-if="hasSubitems">({{item.subitems.length}})</span>
+					{{item.text}} <span class="subitems-count" v-if="showSubitemsCount && hasSubitems">({{item.subitems.length}})</span>
 				</wnl-sidenav-item>
 			</div>
 			<ul class="wnl-sidenav-subitems" v-if="canRenderSubitems">
@@ -68,7 +68,7 @@
 			'wnl-sidenav-item': SidenavItem
 		},
 		name: 'SidenavGroup',
-		props: ['item', 'forceGroupOpen'],
+		props: ['item', 'forceGroupOpen', 'showSubitemsCount'],
 		data() {
 			return { isOpen: !!this.forceGroupOpen }
 		},

@@ -1,6 +1,6 @@
 <template>
 	<aside class="sidenav-aside course-sidenav">
-		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading" :options="{hasGroups: true}"></wnl-sidenav>
+		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading" :options="sidenavOptions"></wnl-sidenav>
 	</aside>
 </template>
 
@@ -44,6 +44,12 @@
 				getScreenProgress: 'getScreen',
 				getLessonProgress: 'getLesson'
 			}),
+			sidenavOptions() {
+				return {
+					hasGroups: true,
+					showSubitemsCount: true,
+				}
+			},
 			isStructureEmpty() {
 				return typeof this.structure !== 'object' || this.structure.length === 0
 			},

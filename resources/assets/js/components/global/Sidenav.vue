@@ -12,6 +12,7 @@
 				:item="item"
 				:key="index"
 				:forceGroupOpen="isOption('forceGroupsOpen')"
+				:showSubitemsCount="isOption('showSubitemsCount')"
 			>
 			</wnl-sidenav-group>
 			<!-- v-else doesnt cooperate with v-for https://github.com/vuejs/vue/issues/3479 -->

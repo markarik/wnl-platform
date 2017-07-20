@@ -46,7 +46,7 @@
 			}),
 			sidenavOptions() {
 				return {
-					hasGroups: true,
+					hasGroups: !this.isLesson,
 					showSubitemsCount: true,
 				}
 			},

@@ -53,14 +53,16 @@
 					padding: $margin-medium $margin-medium $margin-medium $column-padding
 
 			.subitem
-				.item-wrapper
-					padding: $margin-medium 0 $margin-medium $margin-medium + $column-padding
+				margin-left: 0
 
 				&.with-border
 					padding: 0
 
 				a
 					line-height: 26px
+
+				.item-wrapper
+					padding: $margin-medium 0 $margin-medium $margin-big
 
 			.heading
 				background: $color-background-lighter-gray

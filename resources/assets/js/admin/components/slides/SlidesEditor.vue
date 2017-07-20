@@ -23,6 +23,14 @@
 							</div>
 						</div>
 					</div>
+					<div class="level-item">
+						<div class="field is-grouped">
+							<div class="control">
+								<label class="label">lub ID slajdu</label>
+								<input @keyup.enter="getSlide" type="text" class="input" v-model="slideIdInput">
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="level-right">
 					<div class="level-item">
@@ -113,6 +121,7 @@
 				loadingSlide: false,
 				loading: false,
 				slideId: null,
+				slideIdInput: '',
 				updatingChart: false,
 			}
 		},
@@ -143,14 +152,16 @@
 						})
 			},
 			getSlide() {
+				let exclude = ['snippet']
+
 				this.loadingSlide = true
 				this.reset()
-				this.getSlideshowId()
+				if (!this.slideIdInput) {
+					this.getSlideshowId()
 						.then(slideshowId => {
 							return this.getSlideId(slideshowId)
 						})
 						.then(slideId => {
-							let exclude = ['snippet']
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
 							this.form.populate(this.resourceUrl, exclude)
 							this.loadingSlide = false
@@ -161,6 +172,12 @@
 							this.loadingSlide = false
 							console.log(exception)
 						})
+				} else {
+					this.resourceUrl = `/papi/v1/slides/${this.slideIdInput}`
+					this.form.populate(this.resourceUrl, exclude)
+					this.loadingSlide = false
+					this.slideId = parseInt(this.slideIdInput)
+				}
 			},
 			getSlideshowId() {
 				return axios.get(`/papi/v1/screens/${this.screenId}`)

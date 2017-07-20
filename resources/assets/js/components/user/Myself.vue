@@ -5,7 +5,7 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="myself-sidenav">
+			<aside class="sidenav-aside myself-sidenav">
 				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>

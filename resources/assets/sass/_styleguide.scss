@@ -179,6 +179,30 @@ a.secondary-link {
 	width: 100%;
 }
 
+// Icons
+
+.icon.is-tiny {
+	height: 0.75rem;
+	width: 0.75rem;
+
+	.fa {
+		font-size: 10px;
+	}
+}
+
+// Tags
+
+.tag {
+
+	span {
+		min-width: 0;
+		max-width: 150px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
 // Forms
 
 .form-header {

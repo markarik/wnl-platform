@@ -5,12 +5,12 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="collections-sidenav">
-				<wnl-sidenav :items="getNavigation()"></wnl-sidenav>
+			<aside class="sidenav-aside collections-sidenav">
+				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
-			<div class="scrollable-main-container">
+			<div class="scrollable-main-container" v-if="rootCategoryName && categoryName">
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">
 						<div class="breadcrumb">
@@ -36,19 +36,30 @@
 				</div>
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
-						<!-- <wnl-slides-carousel></wnl-slides-carousel> -->
-						<wnl-qna-collection
-							:rootCategoryName="rootCategoryName"
+						<wnl-slides-carousel
+							:categoryId="categoryId"
 							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
+							:savedSlidesCount="slidesIds.length"
+						></wnl-slides-carousel>
+						<wnl-qna-collection
+							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
 						></wnl-qna-collection>
 					</div>
 					<div class="column" v-show="isQuizPanelVisible">
 						<wnl-quiz-collection
-							:rootCategoryName="rootCategoryName"
 							:categoryName="categoryName"
+							:rootCategoryName="rootCategoryName"
+							:quizQuestionsIds="quizQuestionsIds"
 						></wnl-quiz-collection>
 					</div>
 				</div>
+			</div>
+			<div v-else class="collections-placeholder">
+				<span class="icon main"><i class="fa fa-star-o"></i></span>
+				<span class="welcome">Witaj w Kolekcjach!</span>
+				<span>Wybierz temat z menu <span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
 			</div>
 		</div>
 	</div>
@@ -61,6 +72,39 @@
 		width: 100%
 		max-width: initial
 
+		&.full-width
+
+			.column
+				width: 100%
+
+	.full-width
+		width: 100vw
+
+	.collections-placeholder
+		align-items: center
+		color: $color-gray-dimmed
+		display: flex
+		flex-direction: column
+		font-size: $font-size-plus-1
+		height: 100%
+		min-height: 50vh
+		justify-content: center
+		padding: $margin-big
+		text-align: center
+		width: 100%
+
+		.icon.main
+			height: $font-size-plus-7
+			width: $font-size-plus-7
+
+			.fa
+				font-size: $font-size-plus-7
+
+		.welcome
+			font-size: $font-size-plus-3
+			font-weight: $font-weight-light
+			line-height: $line-height-plus
+
 	.collections-header
 		border-bottom: $border-light-gray
 		display: block
@@ -69,7 +113,7 @@
 		flex: 1
 		min-width: $sidenav-min-width
 		overflow: auto
-		padding: 7px 0
+		padding: $margin-small 0
 		width: $sidenav-width
 
 	.collections-breadcrumbs
@@ -77,6 +121,12 @@
 		color: $color-gray-dimmed
 		display: flex
 		margin-right: $margin-base
+
+		.breadcrumb
+			max-width: 200px
+			overflow-x: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
 
 	.collections-controls
 		align-items: center
@@ -132,6 +182,7 @@
 
 	.column
 		max-width: $course-content-max-width
+		width: 50%
 </style>
 
 <script>
@@ -165,8 +216,22 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobile', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
-			...mapGetters('collections', ['isLoading', 'quizQuestionsIds', 'categories', 'qnaQuestionsIds', 'slidesIds']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isTouchScreen', 'currentLayout']),
+			...mapGetters('collections', [
+				'isLoading',
+				'getQuizQuestionsIdsForCategory',
+				'categories',
+				'getQnaQuestionsIdsForCategory',
+				'getSlidesIdsForCategory',
+				'getCategoryByName',
+				'getItemsCount'
+			]),
+			navigationOptions() {
+				return {
+					hasGroups: true,
+					forceGroupsOpen: true,
+				}
+			},
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
 			},
@@ -174,28 +239,49 @@
 				return this.isPanelActive('slides')
 			},
 			isSinglePanelView() {
-				return this.isMobile
+				return this.isTouchScreen
 			},
 			panels() {
 				return {
-					slides: 'Pytania i odpowiedzi',
+					slides: 'Slajdy + pytania',
 					quiz: 'Pytania kontrolne',
 				}
 			},
+			categoryId() {
+				const rootCategoryObject = this.categories
+					.find((category) => category.name === this.rootCategoryName)
+
+				const categoryObject = rootCategoryObject
+					&& rootCategoryObject.categories.find((category) => category.name === this.categoryName)
+
+				return categoryObject && categoryObject.id
+			},
+			quizQuestionsIds() {
+				return this.getQuizQuestionsIdsForCategory(this.categoryName)
+			},
+			qnaQuestionsIds() {
+				return this.getQnaQuestionsIdsForCategory(this.categoryName)
+			},
+			slidesIds() {
+				return this.getSlidesIdsForCategory(this.categoryName)
+			}
 		},
 		methods: {
 			...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
-			...mapActions('quiz', ['fetchQuestionsCollectionByTagName']),
-			...mapActions('qna', ['fetchQuestionsByTagName']),
+			...mapActions('quiz', {'fetchQuiz': 'fetchQuestionsCollectionByTagName', 'resetQuiz': 'resetState'}),
+			...mapActions('qna', {'fetchQna':'fetchQuestionsByTagName', 'resetQna': 'destroyQna'}),
 			...mapActions(['toggleOverlay']),
 			getNavigation() {
 				let navigation = []
 
 				this.categories.forEach((rootCategory) => {
 					const groupItem = this.getGroupItem({name: rootCategory.name});
-					const childItems = rootCategory.categories.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
+					const childItems = rootCategory.categories
+						.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
 
-					navigation = [...navigation, groupItem, ...childItems]
+					groupItem.subitems = childItems;
+
+					navigation = [...navigation, groupItem]
 				})
 
 				return navigation
@@ -209,6 +295,7 @@
 			getChildCategory(childCategory) {
 				return navigation.composeItem({
 					text: childCategory.name,
+					meta: `(${this.getItemsCount(childCategory.name)})`,
 					itemClass: 'has-icon',
 					routeName: this.routeName,
 					routeParams: {
@@ -216,25 +303,28 @@
 						rootCategoryName: childCategory.parent
 					},
 					iconClass: 'fa-angle-right',
-					iconTitle: 'Obecna lekcja'
 				})
 			},
 			setupContentForCategory() {
-				return this.categoryName && Promise.all([
-					this.fetchQuestionsCollectionByTagName({tagName: this.categoryName, ids:this.quizQuestionsIds}),
-					this.fetchQuestionsByTagName({tagName: this.categoryName, ids: this.qnaQuestionsIds}),
-					// this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds})
-				])
-			},
-			navigateToDefaultCategoryIfNone() {
-				if ((this.isTouchScreen && !this.isSidenavVisible && !this.categoryName) || (!this.isTouchScreen && !this.categoryName)) {
-					const firstCategory = this.categories[0].categories[0];
+				const contentToFetch = [];
 
-					this.$router.replace({name: this.routeName, params: {
-						categoryName: firstCategory.name,
-						rootCategoryName: this.categories[0].name
-					}})
+				if (this.quizQuestionsIds.length) {
+					contentToFetch.push(this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds}))
+				} else {
+					this.resetQuiz()
 				}
+
+				if (this.qnaQuestionsIds.length) {
+					contentToFetch.push(this.fetchQna({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
+				} else {
+					this.resetQna()
+				}
+
+				if (this.slidesIds.length) {
+					contentToFetch.push(this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds}))
+				}
+
+				return this.categoryName && Promise.all(contentToFetch)
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {
@@ -265,16 +355,12 @@
 			this.toggleOverlay({source: 'collections', display: true})
 			this.fetchCategories()
 				.then(this.fetchReactions)
-				.then(this.navigateToDefaultCategoryIfNone)
 				.then(this.setupContentForCategory)
 				.then(() => this.toggleOverlay({source: 'collections', display: false}))
 		},
 		watch: {
 			'$route' () {
 				this.categoryName && this.setupContentForCategory()
-			},
-			'isSidenavVisible'(isOpen, wasOpen) {
-				this.isTouchScreen && !isOpen && wasOpen && this.navigateToDefaultCategoryIfNone()
 			}
 		},
 	}

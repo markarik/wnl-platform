@@ -142,7 +142,7 @@ const mutations = {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
 	},
 	[types.QUIZ_SHUFFLE_ANSWERS] (state, payload) {
-		set(state.quiz_questions[payload.id], 'answers', _.shuffle(state.quiz_questions[payload.id].quiz_answers))
+		set(state.quiz_questions[payload.id], 'quiz_answers', _.shuffle(state.quiz_questions[payload.id].quiz_answers))
 	},
 	[types.QUIZ_TOGGLE_PROCESSING] (state, isProcessing) {
 		set(state, 'processing', isProcessing)
@@ -345,6 +345,10 @@ const actions = {
 	commitSelectAnswer({commit}, payload){
 		commit(types.QUIZ_SELECT_ANSWER, payload)
 	},
+
+	shuffleAnswers({commit}, payload) {
+		commit(types.QUIZ_SHUFFLE_ANSWERS, payload)
+	}
 }
 
 export default {

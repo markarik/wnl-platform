@@ -131,7 +131,8 @@ html {
 }
 
 .scrollable-main-container {
-	height: 100%;
+	height: $main-height;
+	max-height: $main-height;
 	overflow-y: auto;
 	padding: $column-padding;
 	width: 100%;

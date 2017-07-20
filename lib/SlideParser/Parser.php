@@ -24,7 +24,7 @@ class Parser
 
 	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
 
-	const HEADER_PATTERN = '/<h.*>([^"]*)<\/h.*>/';
+	const HEADER_PATTERN = '/<h.*>([\s\S]*)<\/h.*>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
@@ -371,7 +371,7 @@ class Parser
 		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
 
 		if ($match) {
-			$snippet['header'] = $match[0][1];
+			$snippet['header'] = strip_tags($match[0][1]);
 			$slideHtml = preg_replace(self::HEADER_PATTERN, '', $slideHtml);
 		}
 
@@ -384,8 +384,14 @@ class Parser
 
 		$slideHtml = str_replace(["\n", "\r"], ',', $slideHtml);
 		$slideHtml = str_replace('&nbsp;', '', $slideHtml);
-		$slideHtml = preg_replace('/(\>)[,\s]*(\<)/m', '$1$2', $slideHtml);
-		$snippet['content'] = strip_tags($slideHtml);
+		$slideHtml = strip_tags($slideHtml);
+		$slideHtml = str_replace('.,', '.', $slideHtml);
+		$slideHtml = str_replace([',,', ', ,'], ',', $slideHtml);
+		$slideHtml = preg_replace(['/^,/', '/\s,/'], '', $slideHtml);
+		$slideHtml = preg_replace('/\s+/', ' ', $slideHtml);
+		$slideHtml = preg_replace('/^\s/', '', $slideHtml);
+		$slideHtml = str_replace(['&gt;', '&lt;'], '', $slideHtml);
+		$snippet['content'] = $slideHtml;
 
 		return $snippet;
 	}

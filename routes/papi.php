@@ -87,6 +87,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/time", 'User\UserStateApiController@incrementTime');
 
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'User\UserReactionsApiController@getReactions');
+	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'User\UserReactionsApiController@getReactionsByCategory');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
@@ -136,6 +137,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post($r['reactions'], 'ReactionsApiController@postMany');
 	Route::delete("{$r['reactions']}", 'ReactionsApiController@destroy');
 
+	// Reactables
+	Route::post("{$r['reactables']}/.search", 'ReactablesApiController@search');
+
 	// Public image upload
 	Route::post("upload", 'UploadApiController@post');
 
@@ -143,6 +147,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['categories']}/{id}", 'CategoriesApiController@get');
 
 	// Slideshow builder
-	Route::get("{$r['slideshow-builder']}/category/{id}", 'Course\SlideshowBuilderApiController@byCategory');
+	Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'Course\SlideshowBuilderApiController@byCategory');
 	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'Course\SlideshowBuilderApiController@get');
 });

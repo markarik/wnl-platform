@@ -4,12 +4,43 @@ import {set, delete as destroy} from 'vue'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions'
 
-function _fetchPresentables(slideshowId) {
+function _fetchReactables(presentables) {
+	let slideIds = presentables.map(presentable => presentable.slide_id)
+	let data     = {
+		query: {
+			where: [
+				['reactable_type', 'App\\Models\\Slide'],
+				['reaction_id', 4],
+			],
+			whereIn: ['reactable_id', slideIds]
+		},
+	}
+
+	return axios.post(getApiUrl('reactables/.search'), data)
+		.then(response => {
+			let reactables = {}
+			response.data.forEach(reactable => {
+				reactables[reactable.reactable_id] = reactable
+			})
+
+			return presentables.map(presentable => {
+				let slideId = presentable.slide_id
+				presentable.bookmark = {
+					hasReacted: reactables.hasOwnProperty(slideId)
+				}
+
+				return presentable
+			})
+		})
+}
+
+function _fetchPresentables(slideshowId, type) {
 	let data = {
 		query: {
 			where: [
-				['presentable_type', 'App\\Models\\Slideshow'],
+				['presentable_type', type],
 				['presentable_id', '=', slideshowId],
 			],
 		},
@@ -22,6 +53,9 @@ function _fetchPresentables(slideshowId) {
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
+		.then(response => {
+			return _fetchReactables(response.data)
+		})
 }
 
 function _fetchComments(slidesIds) {
@@ -76,6 +110,7 @@ const state = getInitialState()
 
 const getters = {
 	...commentsGetters,
+	...reactionsGetters,
 	isFunctional: (state) => (slideNumber) => {
 		let slideIndex = slideNumber - 1
 
@@ -83,20 +118,33 @@ const getters = {
 
 		return state.presentables[slideNumber - 1].is_functional
 	},
-	isLoading:    (state) => state.loading,
-	getSlideId:   (state) => (slideOrderNumber) => {
-		return state.presentables.length === 0 ? 0 : state.presentables[slideOrderNumber].id
+	isLoading: (state) => state.loading,
+	getSlideId: (state) => (slideOrderNumber) => {
+		return state.presentables.length === 0 ? -1 : state.presentables[slideOrderNumber].id
 	},
-	slidesIds:    (state) => Object.keys(state.slides),
+	slides: (state) => state.slides,
+	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
+	slidesIds: (state) => Object.keys(state.slides),
+	bookmarkedSlideNumbers: (state) => {
+		const slides = state.slides;
+
+		return Object.keys(slides)
+			.filter((slideIndex) => {
+				return slides[slideIndex].bookmark.hasReacted === true
+			})
+			.map((slideIndex) => {
+				return slides[slideIndex].order_number
+			})
+	},
 	findRegularSlide: (state, getters) => (slideNumber, direction) => {
-		let step = direction === 'previous' ? -1 : 1,
+		let step   = direction === 'previous' ? -1 : 1,
 			length = state.presentables.length
 
-		for (;;slideNumber = slideNumber + step) {
+		for (; ; slideNumber = slideNumber + step) {
 			if (!getters.isFunctional(slideNumber)) {
 				return slideNumber
 			}
-			if (slideNumber <= 0 ) {
+			if (slideNumber <= 0) {
 				return 1
 			}
 			if (slideNumber >= length) {
@@ -108,6 +156,7 @@ const getters = {
 
 const mutations = {
 	...commentsMutations,
+	...reactionsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading)
 	},
@@ -119,6 +168,7 @@ const mutations = {
 			set(state.slides, element.slide_id, {
 				order_number: element.order_number,
 				comments: [],
+				bookmark: element.bookmark,
 			})
 		})
 	},
@@ -141,15 +191,20 @@ const mutations = {
 
 const actions = {
 	...commentsActions,
-	setup({commit, dispatch, getters}, slideshowId) {
-		dispatch('setupPresentables', slideshowId)
-			.then(() => dispatch('setupComments', getters.slidesIds))
-	},
-	setupPresentables({commit}, slideshowId) {
+	...reactionsActions,
+	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
-			_fetchPresentables(slideshowId)
-				.then((response) => {
-					commit(types.SLIDESHOW_SET_PRESENTABLES, response.data)
+			dispatch('setupPresentables', {id, type})
+				.then(() => dispatch('setupComments', getters.slidesIds))
+				.then(() => resolve())
+				.catch((reason) => reject(reason))
+		})
+	},
+	setupPresentables({commit}, {id, type}) {
+		return new Promise((resolve, reject) => {
+			_fetchPresentables(id, type)
+				.then((presentables) => {
+					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
 					resolve()
 				})
@@ -165,8 +220,7 @@ const actions = {
 				.then((response) => {
 					if (!response.data.hasOwnProperty('included')) {
 						commit(types.IS_LOADING, false)
-						resolve()
-						return false
+						return resolve()
 					}
 
 					commit(types.SLIDESHOW_SET_COMMENTS, response.data)
@@ -179,6 +233,9 @@ const actions = {
 				})
 		})
 	},
+	resetModule({commit}) {
+		commit(types.RESET_MODULE)
+	}
 }
 
 export default {

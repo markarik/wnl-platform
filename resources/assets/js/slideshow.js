@@ -16,8 +16,13 @@ const $slideAnnotations     = $slideshowAnnotations.find('.annotations-to-slide'
 const $annotationsCounters  = $('.annotations-count')
 const $toggleAnnotations    = $('.toggle-annotations')
 const $toggleFullscreen     = $('.toggle-fullscreen')
+const bookmarkElement       = document.querySelector('.bookmark')
+const bookmarkImageAdd      = bookmarkElement.querySelector('.bookmark-image-add')
+const bookmarkImageRemove   = bookmarkElement.querySelector('.bookmark-image-remove')
 
-// const viewer    = ImageViewer()
+let isSavingBookmark = false
+let bookmarkedSlideNumbers = [];
+
 const handshake = new Postmate.Model({
 	changeBackground: (background) => {
 		let containerClass = container.className,
@@ -74,6 +79,28 @@ const handshake = new Postmate.Model({
 		$annotationsContainer.append(createAnnotations(annotationsData))
 		$annotationsContainer.show()
 	},
+	setupBookmarks(currentBookmarkedSlideNumbers) {
+		bookmarkedSlideNumbers = currentBookmarkedSlideNumbers;
+		setBookmarkedState(Reveal.getState().indexh)
+		isSavingBookmark = false
+	},
+	setBookmarkedState(data) {
+		const bookmarkedClassname = 'is-bookmarked'
+
+		if (data.hasReacted) {
+			bookmarkedSlideNumbers.push(data.slideIndex)
+			bookmarkElement.classList.add(bookmarkedClassname)
+		} else {
+			let indexOfSlide = bookmarkedSlideNumbers.indexOf(data.slideIndex)
+
+			if (indexOfSlide > -1) {
+				bookmarkedSlideNumbers.splice(indexOfSlide, 1)
+			}
+			bookmarkElement.classList.remove(bookmarkedClassname)
+		}
+
+		isSavingBookmark = false
+	}
 })
 
 let parent = {},
@@ -84,6 +111,7 @@ handshake.then(parentWindow => {
 	parent = parentWindow
 	parent.emit('loaded', true)
 	setMenuListeners(parent)
+	setBookmarks(parent)
 }).catch(exception => {
 	console.error(exception)
 
@@ -113,12 +141,15 @@ Reveal.initialize({
 
 Reveal.addEventListener('slidechanged', (event) => {
 	let $chartContainer = $(event.currentSlide).find('.iv-image-container')
+
 	if ($chartContainer.length > 0) {
 		let index = $.inArray($chartContainer[0], $chartsContainers)
 		if (index > -1) {
 			viewers[index].refresh()
 		}
 	}
+
+	setBookmarkedState(event.indexh);
 })
 
 if ($controls.length > 0) {
@@ -190,6 +221,28 @@ function setMenuListeners(parent) {
 		emitToggleFullscreen();
 	});
 	$toggleAnnotations.on('click', toggleAnnotations)
+}
+
+function setBookmarks(parent) {
+	$('.bookmark').click(function (event) {
+		if (isSavingBookmark) return
+
+		isSavingBookmark = true;
+		parent.emit('bookmark', {
+			index: Reveal.getState().indexh,
+			isBookmarked: this.classList.contains('is-bookmarked')
+		});
+	});
+}
+
+function setBookmarkedState(currentSlideNumber) {
+	const bookmarkedClassname = 'is-bookmarked';
+
+	if (bookmarkedSlideNumbers.indexOf(currentSlideNumber) > -1 ) {
+		bookmarkElement.classList.add(bookmarkedClassname);
+	} else {
+		bookmarkElement.classList.remove(bookmarkedClassname);
+	}
 }
 
 function emitToggleFullscreen() {

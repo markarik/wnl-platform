@@ -8,11 +8,19 @@
 					{{itemsHeading}}
 				</span>
 			</li>
-			<wnl-sidenav-group v-for="(item, index) in items"
+			<wnl-sidenav-group v-if="hasGroups" v-for="(item, index) in items"
+				:item="item"
+				:key="index"
+				:forceGroupOpen="forceGroupsOpen"
+			>
+			</wnl-sidenav-group>
+			<!-- v-else doesnt cooperate with v-for https://github.com/vuejs/vue/issues/3479 -->
+			<wnl-sidenav-item v-if="!hasGroups" v-for="(item, index) in items"
 				:item="item"
 				:key="index"
 			>
-			</wnl-sidenav-group>
+				{{item.text}}
+			</wnl-sidenav-item>
 		</ul>
 	</div>
 </template>
@@ -21,7 +29,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-sidenav
-		height: $main-height
+		height: calc($main-height - 2 * $margin-small)
 
 		&.mobile
 			height: auto
@@ -49,7 +57,13 @@
 
 			.heading
 				background: $color-background-lighter-gray
-				margin-bottom: 0
+				margin: 0
+
+				&:hover
+					background: $color-background-lighter-gray
+
+			.wnl-sidenav-group
+				margin: 0
 
 	.breadcrumbs
 		margin: 19px 0
@@ -77,10 +91,10 @@
 					padding: $margin-tiny 0
 
 		.heading
-			padding-top: 10px
+			padding: $margin-small 0
 
-			&:first-child
-				padding-top: 0
+			&:hover
+				background: transparent
 
 		.small
 			font-size: $font-size-minus-1
@@ -116,13 +130,15 @@
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import SidenavGroup from 'js/components/global/SidenavGroup'
+	import SidenavItem from 'js/components/global/SidenavItem'
 	import { mapGetters } from 'vuex'
 
 	export default {
-		props: ['breadcrumbs', 'items', 'itemsHeading'],
+		props: ['breadcrumbs', 'items', 'itemsHeading', 'hasGroups', 'forceGroupsOpen'],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-sidenav-group': SidenavGroup
+			'wnl-sidenav-group': SidenavGroup,
+			'wnl-sidenav-item': SidenavItem,
 		},
 		computed: {
 			...mapGetters(['isMobileNavigation'])

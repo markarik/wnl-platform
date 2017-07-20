@@ -32,6 +32,9 @@ const getters = {
 		const notifications = getters.getChannelNotifications(channel)
 		return _.reverse(_.sortBy(_.values(notifications), (notification) => notification.timestamp))
 	},
+	getOldestNotification: (state, getters) => (channel) => {
+		return _.last(getters.getSortedNotifications(channel))
+	}
 }
 
 const mutations = {
@@ -130,6 +133,10 @@ function _getNotifications(channel, userId, options) {
 
 	if (options.hasOwnProperty('limit')) {
 		conditions.limit = [options.limit, 0]
+	}
+
+	if (options.hasOwnProperty('olderThan')) {
+		conditions.query.where.push(['created_at', '<', `timestamp:${options.olderThan}`])
 	}
 
 	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)

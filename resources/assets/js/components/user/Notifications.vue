@@ -18,11 +18,13 @@
 				</div>
 				<div v-else>
 					<wnl-newsfeed-event
-						v-for="(event, index) in notifications"
-						:event="event"
-						:key="index"
-						:channel="userChannel"
+							v-for="(event, index) in notifications"
+							:event="event"
+							:key="index"
+							:channel="userChannel"
 					></wnl-newsfeed-event>
+
+					<a class="button" @click="loadMore">Wincyj!</a>
 				</div>
 			</div>
 		</transition>
@@ -117,7 +119,13 @@
 			}
 		},
 		computed: {
-			...mapGetters('notifications', ['getSortedNotifications', 'isLoading', 'getUnseen', 'userChannel']),
+			...mapGetters('notifications', [
+				'getSortedNotifications',
+				'isLoading',
+				'getUnseen',
+				'userChannel',
+				'getOldestNotification'
+			]),
 			empty() {
 				return !this.isLoading && _.size(this.notifications) === 0
 			},
@@ -132,12 +140,26 @@
 			}
 		},
 		methods: {
-			...mapActions('notifications', ['markAllAsSeen', 'markAllAsRead', 'initNotifications']),
+			...mapActions('notifications', [
+				'markAllAsSeen',
+				'markAllAsRead',
+				'initNotifications',
+				'pullNotifications'
+			]),
 			toggle() {
 				if (!this.isActive && this.hasUnseen) {
 					this.markAllAsSeen(this.userChannel)
 				}
 				this.isActive = !this.isActive
+			},
+			loadMore() {
+				const channel = this.userChannel
+				const oldest = this.getOldestNotification(channel)
+				const options = {
+					limit: 15,
+					olderThan: oldest.timestamp
+				}
+				this.pullNotifications([channel, options])
 			}
 		},
 		watch: {

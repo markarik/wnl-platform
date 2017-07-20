@@ -6,7 +6,7 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside collections-sidenav">
-				<wnl-sidenav :items="getNavigation()"></wnl-sidenav>
+				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
@@ -226,6 +226,12 @@
 				'getCategoryByName',
 				'getItemsCount'
 			]),
+			navigationOptions() {
+				return {
+					hasGroups: true,
+					forceGroupsOpen: true,
+				}
+			},
 			isQuizPanelVisible() {
 				return this.isPanelActive('quiz')
 			},
@@ -273,7 +279,9 @@
 					const childItems = rootCategory.categories
 						.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
 
-					navigation = [...navigation, groupItem, ...childItems]
+					groupItem.subitems = childItems;
+
+					navigation = [...navigation, groupItem]
 				})
 
 				return navigation
@@ -295,7 +303,6 @@
 						rootCategoryName: childCategory.parent
 					},
 					iconClass: 'fa-angle-right',
-					iconTitle: 'Obecna lekcja'
 				})
 			},
 			setupContentForCategory() {

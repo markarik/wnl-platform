@@ -8,14 +8,14 @@
 					{{itemsHeading}}
 				</span>
 			</li>
-			<wnl-sidenav-group v-if="hasGroups" v-for="(item, index) in items"
+			<wnl-sidenav-group v-if="isOption('hasGroups')" v-for="(item, index) in items"
 				:item="item"
 				:key="index"
-				:forceGroupOpen="forceGroupsOpen"
+				:forceGroupOpen="isOption('forceGroupsOpen')"
 			>
 			</wnl-sidenav-group>
 			<!-- v-else doesnt cooperate with v-for https://github.com/vuejs/vue/issues/3479 -->
-			<wnl-sidenav-item v-if="!hasGroups" v-for="(item, index) in items"
+			<wnl-sidenav-item v-if="!isOption('hasGroups')" v-for="(item, index) in items"
 				:item="item"
 				:key="index"
 			>
@@ -134,7 +134,7 @@
 	import { mapGetters } from 'vuex'
 
 	export default {
-		props: ['breadcrumbs', 'items', 'itemsHeading', 'hasGroups', 'forceGroupsOpen'],
+		props: ['breadcrumbs', 'items', 'itemsHeading', 'options'],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-sidenav-group': SidenavGroup,
@@ -142,6 +142,11 @@
 		},
 		computed: {
 			...mapGetters(['isMobileNavigation'])
+		},
+		methods: {
+			isOption(option) {
+				return typeof this.options === 'object' && !!this.options[option]
+			}
 		}
 	}
 </script>

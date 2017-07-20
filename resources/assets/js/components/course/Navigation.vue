@@ -1,6 +1,6 @@
 <template>
 	<aside class="sidenav-aside course-sidenav">
-		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading" :hasGroups="true"></wnl-sidenav>
+		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading" :options="{hasGroups: true}"></wnl-sidenav>
 	</aside>
 </template>
 

@@ -53,18 +53,19 @@ const mutations = {
 }
 
 const actions = {
-	pullNotifications({commit, rootGetters}, channel) {
-		_getNotifications(channel, rootGetters.currentUserId).then(response => {
-			if (typeof response.data[0] !== 'object') {
-				commit(types.IS_LOADING, false)
-				return false
-			}
-			_.each(response.data, (notification) => {
-				commit(types.ADD_NOTIFICATION, notification)
-			})
+	pullNotifications({commit, rootGetters}, [ channel, options ]) {
+		_getNotifications(channel, rootGetters.currentUserId, options)
+			.then(response => {
+				if (typeof response.data[0] !== 'object') {
+					commit(types.IS_LOADING, false)
+					return false
+				}
+				_.each(response.data, (notification) => {
+					commit(types.ADD_NOTIFICATION, notification)
+				})
 
-			commit(types.IS_LOADING, false)
-		})
+				commit(types.IS_LOADING, false)
+			})
 	},
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
@@ -103,27 +104,34 @@ const actions = {
 			})
 	},
 	initNotifications({getters, dispatch}) {
-		dispatch('pullNotifications', getters.userChannel)
+		dispatch('pullNotifications', [getters.userChannel, {limit: 15}])
 		dispatch('setupLiveNotifications', getters.userChannel)
 
 		if (getters.moderatorsChannel) {
-			dispatch('pullNotifications', getters.moderatorsChannel)
+			dispatch('pullNotifications', [getters.moderatorsChannel, {unread: true}])
 			dispatch('setupLiveNotifications', getters.moderatorsChannel)
 		}
 	}
 }
 
 
-function _getNotifications(channel, userId) {
-
+function _getNotifications(channel, userId, options) {
 	const conditions = {
 		'query': {
 			'where': [
-				['read_at', '=', null],
 				['channel', '=', channel]
 			]
 		}
 	}
+
+	if (options.hasOwnProperty('unread') && options.unread === true) {
+		conditions.query.where.push(['read_at', '=', null])
+	}
+
+	if (options.hasOwnProperty('limit')) {
+		conditions.limit = [options.limit, 0]
+	}
+
 	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
 }
 

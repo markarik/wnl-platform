@@ -10,7 +10,7 @@
 			<div class="box drawer" v-if="isActive">
 				<div class="level wnl-screen-title">
 					<strong>Powiadomienia</strong>
-					<a class="link" @click="markAllAsRead(this.userChannel)">Oznacz wszystkie jako przeczytane</a>
+					<a class="link" @click="markAllAsRead(userChannel)">Oznacz wszystkie jako przeczytane</a>
 				</div>
 
 				<div class="notification aligncenter" v-if="empty">

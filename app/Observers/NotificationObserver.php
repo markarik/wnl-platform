@@ -2,6 +2,7 @@
 
 
 use App\Models\Notification;
+use App\Notifications\EventNotification;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 
@@ -32,9 +33,19 @@ class NotificationObserver
 
 		foreach ($twinNotifications as $twinNotification) {
 			$twinNotification->update($modifiedFields);
+			$this->pushLive($notification);
 		}
 
 		$this->eventsOn($dispatcher);
+	}
+
+	public function recoverEvent($notification)
+	{
+		$event = new \stdClass();
+		$event->data = $notification->data;
+		$event->id = $notification->event_id;
+		
+		$notification = new EventNotification($event, $notification->channel);
 	}
 
 	private function eventsOff()

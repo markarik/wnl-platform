@@ -1,25 +1,20 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi\Events;
 
-use App\Events\Mentioned;
-use App\Http\Controllers\Api\ApiController;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Events\Mentioned;
+use App\Http\Requests\PostMention;
+use App\Http\Controllers\Api\ApiController;
 
 class MentionsApiController extends ApiController
 {
-	public function post(Request $request) {
-		$originResource = $request->get('origin_resource');
-		$originId = $request->get('origin_id');
-		$mentions = $request->get('mentions');
+	public function post(PostMention $request)
+	{
+		$data = $request->all();
+		$mentionedUsers = $request->get('mentioned_users');
 
-		$originModel = self::getResourceModel($originResource);
-		$origin = $originModel::find($originId);
-		if (!$origin)
-			return $this->respondInvalidInput('Origin resource doesn\'t exist.');
-
-		foreach ($mentions as $userId) {
+		foreach ($mentionedUsers as $userId) {
 			$user = User::find($userId);
-			event(new Mentioned($user, $origin));
+			event(new Mentioned($user, $data));
 		}
 
 		return $this->respondOk();

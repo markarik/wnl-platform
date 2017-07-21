@@ -1,30 +1,25 @@
-<?php
-
-namespace App\Events;
+<?php namespace App\Events;
 
 use App\Models\User;
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class Mentioned
+class Mentioned extends Event
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable,
+		InteractsWithSockets,
+		SerializesModels;
 
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param User $user
-	 * @param Model $origin
+	 * @param $requestData
 	 */
-    public function __construct(User $user, Model $origin)
+    public function __construct(User $user, $requestData)
     {
-        //
+    	parent::__construct();
     }
 
 	public function transform()

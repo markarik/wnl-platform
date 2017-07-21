@@ -17,13 +17,13 @@ class EventsTest extends ApiTestCase
 		$data = [
 			'origin_id'       => 1,
 			'origin_resource' => 'comments',
-			'mentions'        => [1, 2, 3],
+			'mentioned_users' => [1, 2, 3],
 		];
 
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/events/mentions'), $data);
-
+		dd($response->dump());
 		$response
 			->assertStatus(200);
 	}

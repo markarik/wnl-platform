@@ -13,10 +13,16 @@ export const feed = {
 			type: Number,
 		}
 	},
+	data() {
+		return {
+			hasMore: true,
+		}
+	},
 	computed: {
 		...mapGetters('notifications', [
 			'getOldestNotification',
 			'getSortedNotifications',
+			'isFetching',
 			'isLoading',
 		]),
 		isEmpty() {
@@ -31,10 +37,16 @@ export const feed = {
 			'pullNotifications',
 		]),
 		loadMore() {
-			return this.pullNotifications([this.channel, {
+			if (this.isFetching) return;
+
+			this.pullNotifications([this.channel, {
 				limit: this.limit,
 				olderThan: this.getOldestNotification(this.channel).timestamp
-			}])
+			}]).then((response) => {
+				if (response.data.length < this.limit) {
+					this.hasMore = false
+				}
+			})
 		},
 	}
 }

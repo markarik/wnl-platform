@@ -1,9 +1,9 @@
 <template>
 	<div class="personal-notification" v-if="hasComponent" @click="goToContext">
-		<div class="author">
+		<div class="actor">
 			<wnl-event-actor :message="message"/>
 		</div>
-		<component :is="componentName" :message="message" @contextReady="setContext">
+		<component class="notification-content" :is="componentName" :message="message" @contextReady="setContext">
 			<template scope="props">
 				<div>{{ message.actors.full_name }} {{ props.action }} {{ message.objects.type }} {{ message.objects.text }}</div>
 				<div v-if="message.subject.text">{{ message.subject.text }}</div>
@@ -15,7 +15,7 @@
 			</template>
 		</component>
 		<div class="link-symbol">
-			<span v-if="hasContext" class="icon" :class="{'has-text-dimmed': isRead}">
+			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
 				<i class="fa fa-angle-right"></i>
 			</span>
 		</div>
@@ -26,34 +26,45 @@
 	@import 'resources/assets/sass/variables'
 
 	.personal-notification
+		align-items: flex-start
 		border-bottom: $border-light-gray
-		padding: $margin-small
+		display: flex
+		justify-content: space-between
+		padding: $margin-medium
 		position: relative
+		transition: background-color $transition-length-base
 
 		&:hover
 			background: $color-background-lighter-gray
 			cursor: pointer
+			transition: background-color $transition-length-base
+
+	.actor
+		margin-top: 5px
+
+	.notification-content
+		flex: 1 auto
+		padding: 0 $margin-medium
 
 		.time
+			color: $color-background-gray
+
+	.link-symbol
+		display: flex
+		flex: 0
+		width:
+
+		.icon
 			color: $color-inactive-gray
 
-		.wnl-avatar-small
-			display: inline-flex
+			&.unread
+				color: $color-ocean-blue
 
-		.unread
-			position: absolute
-			background: $color-ocean-blue
-			color: $color-white
-			top: 10px
-			right: 10px
-			width: 10px
-			height: 10px
-			border-radius: 100%
 </style>
 
 <script>
 	import Actor from 'js/components/notifications/Actor'
-	import { CommentPosted, QnaAnswerPosted, QnaQuestionPosted, ReactionAdded } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
 	import { notification } from 'js/components/notifications/notification'
 
 	export default {
@@ -63,7 +74,6 @@
 			'wnl-event-actor': Actor,
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
-			'wnl-event-qna-question-posted': QnaQuestionPosted,
 			'wnl-event-reaction-added': ReactionAdded,
 		},
 	}

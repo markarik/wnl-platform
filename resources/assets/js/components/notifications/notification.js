@@ -39,7 +39,7 @@ export const notification = {
 			return this.context.length > 0
 		},
 		isRead() {
-			return this.message.read_at
+			return !!this.message.read_at
 		},
 	},
 	methods: {
@@ -47,11 +47,14 @@ export const notification = {
 		goToContext() {
 			if(!this.hasContext) return false;
 
-			if (typeof this.context === 'object') {
-				this.$router.push(this.context)
-			} else if (typeof this.context === 'string') {
-				window.location.href=this.context
-			}
+			this.markAsRead({notification: this.message, channel: this.channel})
+				.then(() => {
+					if (typeof this.context === 'object') {
+						this.$router.push(this.context)
+					} else if (typeof this.context === 'string') {
+						window.location.href=this.context
+					}
+				})
 		},
 		setContext(context) {
 			this.context = context

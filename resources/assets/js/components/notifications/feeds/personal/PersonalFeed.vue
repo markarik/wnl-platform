@@ -7,23 +7,38 @@
 			</span>
 		</div>
 		<transition name="fade">
-			<div class="box drawer" v-if="isActive">
-				<div class="level wnl-screen-title">
-					<strong>Powiadomienia</strong>
-					<a class="link" @click="markAllAsRead(channel)">Oznacz wszystkie jako przeczytane</a>
+			<div class="box drawer" :class="{'is-mobile': isMobile}" v-if="isActive">
+				<div class="personal-feed-header">
+					<span class="feed-heading">Powiadomienia</span>
 				</div>
 
-				<div class="notification aligncenter" v-if="isEmpty">
-					Nic tu nie ma ¯\_(ツ)_/¯
+				<div class="personal-feed-body">
+					<div class="notification aligncenter" v-if="isEmpty">
+						Nic tu nie ma ¯\_(ツ)_/¯
+					</div>
+					<div v-else>
+						<wnl-personal-notification
+							v-for="(message, id) in notifications"
+							:channel="channel"
+							:message="message"
+							:key="id"
+						/>
+						<div class="show-more">
+							<a v-if="hasMore" class="button is-small is-outlined"
+								:class="{'is-loading': isFetching}"
+								@click="loadMore"
+							>
+								Pokaż więcej
+							</a>
+							<span class="small text-dimmed has-text-centered" v-else>
+								Gratulacje! Wszystkie powiadomienia już przeczytane! <wnl-emoji name="tada"/>
+							</span>
+						</div>
+					</div>
 				</div>
-				<div v-else>
-					<wnl-personal-notification
-						v-for="(message, id) in notifications"
-						:channel="channel"
-						:message="message"
-						:key="id"
-					/>
-					<a class="button" @click="loadMore">Wincyj!</a>
+
+				<div class="personal-feed-footer">
+					<a class="link" @click="markAllAsRead(channel)">Oznacz wszystkie jako przeczytane</a>
 				</div>
 			</div>
 		</transition>
@@ -32,6 +47,12 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	$header-height: 40px
+	$footer-height: 40px
+	$body-margin-top: $header-height
+	$body-margin-bottom: $footer-height + $margin-big
 
 	.wnl-dropdown
 		height: 100%
@@ -78,11 +99,20 @@
 			margin: 0 $margin-tiny
 
 	.drawer
-		right: 0
+		+shadow()
+
+		max-width: 100vw
+		padding: 0
 		position: absolute
+		right: 0
 		top: 95%
-		z-index: 100
 		width: 440px
+		z-index: 100
+
+		&.is-mobile
+			border-radius: 0
+			position: fixed
+			top: $navbar-height
 
 	.metadata,
 	.drawer-item
@@ -99,6 +129,54 @@
 	.drawer-link,
 	.drawer-link.is-active
 		font-weight: $font-weight-regular
+
+	.personal-feed
+		position: relative
+
+	.personal-feed-header,
+	.personal-feed-footer
+		align-items: center
+		background: $color-white
+		display: flex
+		position: absolute
+		width: 100%
+		z-index: $z-index-overlay
+
+	.personal-feed-header
+		border-radius: $border-radius-small $border-radius-small 0 0
+		border-bottom: $border-light-gray
+		height: $header-height
+		justify-content: space-between
+		padding: $margin-small $margin-medium
+		top: 0
+
+		.feed-heading
+			font-size: $font-size-minus-2
+			font-weight: $font-weight-bold
+			text-transform: uppercase
+
+	.personal-feed-body
+		height: 70vh
+		padding: $body-margin-top 0 $body-margin-bottom
+		max-height: 400px
+		overflow-y: auto
+
+		.show-more
+			align-items: center
+			display: flex
+			justify-content: center
+			margin: $margin-base
+
+	.personal-feed-footer
+		+white-shadow-top()
+
+		align-items: center
+		bottom: 0
+		border-radius: 0 0 $border-radius-small $border-radius-small
+		border-top: $border-light-gray
+		height: $footer-height
+		justify-content: center
+		padding: $margin-small $margin-medium
 </style>
 
 <script>
@@ -120,6 +198,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			...mapGetters('notifications', {
 				channel: 'userChannel',
 				getUnseen: 'getUnseen',

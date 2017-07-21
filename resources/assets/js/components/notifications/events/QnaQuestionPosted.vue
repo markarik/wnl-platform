@@ -24,7 +24,7 @@
 				return 'zadał/-a pytanie'
 			},
 			icon() {
-				return 'fa-question'
+				return 'fa-question-circle-o'
 			},
 		},
 		methods: {

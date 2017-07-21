@@ -24,7 +24,7 @@
 				return 'skomentował/-a'
 			},
 			icon() {
-				return 'fa-comment'
+				return 'fa-comments-o'
 			},
 		},
 		methods: {

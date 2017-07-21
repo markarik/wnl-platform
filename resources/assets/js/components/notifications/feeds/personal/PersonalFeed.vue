@@ -134,7 +134,7 @@
 				'markAllAsRead',
 			]),
 			toggle() {
-				if (!this.isActive && this.hasUnseen) {
+				if (!this.isActive && !!this.unseenCount) {
 					this.markAllAsSeen(this.channel)
 				}
 				this.isActive = !this.isActive

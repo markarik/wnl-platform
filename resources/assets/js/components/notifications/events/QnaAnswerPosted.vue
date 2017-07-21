@@ -24,7 +24,7 @@
 				return 'odpowiedział/-a na'
 			},
 			icon() {
-				return 'fa-question'
+				return 'fa-reply'
 			},
 		},
 		methods: {

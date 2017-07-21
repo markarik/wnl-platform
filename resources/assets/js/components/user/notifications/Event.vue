@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="wnl-newsfeed-event" @click="clickMe()">
+	<div class="wnl-newsfeed-event">
 		<div class="unread" v-if="isUnread" @click="markAsRead({notification:event, channel})"></div>
 		<component ref="event-child" :is="componentName" :event="event">
 		</component>

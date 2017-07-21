@@ -24,7 +24,7 @@
 				return 'polubił/-a'
 			},
 			icon() {
-				return 'fa-thumbs-up-o'
+				return 'fa-thumbs-o-up'
 			},
 		},
 		methods: {

@@ -31,12 +31,10 @@ export const feed = {
 			'pullNotifications',
 		]),
 		loadMore() {
-			return new Promise((resolve) => {
-				this.pullNotifications([this.channel, {
-					limit: this.limit,
-					olderThan: this.getOldestNotification(this.channel).timestamp
-				}]).then(() => resolve())
-			})
+			return this.pullNotifications([this.channel, {
+				limit: this.limit,
+				olderThan: this.getOldestNotification(this.channel).timestamp
+			}])
 		},
 	}
 }

@@ -57,27 +57,21 @@ const mutations = {
 
 const actions = {
 	pullNotifications({commit, rootGetters}, [ channel, options ]) {
-		return new Promise((resolve) => {
-			_getNotifications(channel, rootGetters.currentUserId, options)
-				.then(response => {
-					if (typeof response.data[0] !== 'object') {
-						commit(types.IS_LOADING, false)
-						resolve()
-					}
-					_.each(response.data, (notification) => {
-						commit(types.ADD_NOTIFICATION, notification)
-					})
-
+		return _getNotifications(channel, rootGetters.currentUserId, options)
+			.then(response => {
+				if (typeof response.data[0] !== 'object') {
 					commit(types.IS_LOADING, false)
-
-					resolve()
+				}
+				_.each(response.data, (notification) => {
+					commit(types.ADD_NOTIFICATION, notification)
 				})
-		})
+
+				commit(types.IS_LOADING, false)
+			})
 	},
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
-				console.log(notification)
 				commit(types.ADD_NOTIFICATION, {...notification, channel})
 			});
 	},
@@ -125,11 +119,14 @@ const actions = {
 
 function _getNotifications(channel, userId, options) {
 	const conditions = {
-		'query': {
-			'where': [
-				['channel', '=', channel]
-			]
-		}
+		query: {
+			where: [
+				['channel', '=', channel],
+			],
+		},
+		order: {
+			created_at: 'desc',
+		},
 	}
 
 	if (options.hasOwnProperty('unread') && options.unread === true) {

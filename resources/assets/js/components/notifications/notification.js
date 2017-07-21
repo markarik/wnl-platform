@@ -5,6 +5,8 @@
 
 import { mapActions } from 'vuex'
 
+import { timeFromS } from 'js/utils/time'
+
 export const notification = {
 	props: {
 		channel: {
@@ -33,6 +35,9 @@ export const notification = {
 			return typeof components === 'object' &&
 				Object.keys(components).indexOf(this.componentName) > -1
 		},
+		hasContext() {
+			return this.context.length > 0
+		},
 		isRead() {
 			return this.message.read_at
 		},
@@ -40,7 +45,7 @@ export const notification = {
 	methods: {
 		...mapActions('notifications', ['markAsRead']),
 		goToContext() {
-			if(!this.context) return false;
+			if(!this.hasContext) return false;
 
 			if (typeof this.context === 'object') {
 				this.$router.push(this.context)

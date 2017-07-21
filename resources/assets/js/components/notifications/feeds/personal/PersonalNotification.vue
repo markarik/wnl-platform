@@ -4,21 +4,18 @@
 			<wnl-event-actor :message="message"/>
 		</div>
 		<component :is="componentName" :message="message" @contextReady="setContext">
-			<!-- <template scope="props">
-				<div>
-					{{ message.actors.full_name }} {{ props.action }} {{ message.object.type }} {{ message.object.text }}
-				</div>
+			<template scope="props">
+				<div>{{ message.actors.full_name }} {{ props.action }} {{ message.objects.type }} {{ message.objects.text }}</div>
 				<div v-if="message.subject.text">{{ message.subject.text }}</div>
 				<small class="time">
 					<span class="icon is-small">
-						<i class="fa" :class="{{ props.icon }}"></i>
+						<i class="fa" :class="props.icon"></i>
 					</span> {{ formattedTime }}
 				</small>
-				<div>Punkcja</div>
-			</template> -->
+			</template>
 		</component>
 		<div class="link-symbol">
-			<span class="icon" :class="{'has-text-dimmed': isRead}">
+			<span v-if="hasContext" class="icon" :class="{'has-text-dimmed': isRead}">
 				<i class="fa fa-angle-right"></i>
 			</span>
 		</div>
@@ -61,6 +58,7 @@
 
 	export default {
 		name: 'PersonalNotification',
+		mixins: [notification],
 		components: {
 			'wnl-event-actor': Actor,
 			'wnl-event-comment-posted': CommentPosted,
@@ -68,6 +66,5 @@
 			'wnl-event-qna-question-posted': QnaQuestionPosted,
 			'wnl-event-reaction-added': ReactionAdded,
 		},
-		mixins: [notification],
 	}
 </script>

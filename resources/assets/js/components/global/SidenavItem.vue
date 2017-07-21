@@ -148,7 +148,7 @@
 		},
 		methods: {
 			hasClass(className) {
-				return this.itemClass.indexOf(className) > -1
+				return !!this.itemClass && this.itemClass.indexOf(className) > -1
 			}
 		},
 	}

@@ -1,7 +1,7 @@
 <template lang="html">
-	<div class="wnl-newsfeed-event">
+	<div class="wnl-newsfeed-event" @click="clickMe()">
 		<div class="unread" v-if="isUnread" @click="markAsRead({notification:event, channel})"></div>
-		<component :is="componentName" :event="event">
+		<component ref="event-child" :is="componentName" :event="event">
 		</component>
 		<small class="time">{{ formattedTime }}</small>
 	</div>
@@ -64,7 +64,7 @@
 			}
 		},
 		methods: {
-			...mapActions('notifications', ['markAsRead'])
+			...mapActions('notifications', ['markAsRead']),
 		}
 	}
 </script>

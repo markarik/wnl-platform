@@ -1,13 +1,36 @@
 <template>
-
+	<div class="event-reaction-added">
+		<slot
+			:action="action"
+			:icon="icon"
+		></slot>
+	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
-
 <script>
+	import { baseEvent } from 'js/components/notifications/base-event'
+
 	export default {
-		name: ''
+		name: 'ReactionAdded',
+		mixins: [baseEvent],
+		props: {
+			message: {
+				required: true,
+				type: Object,
+			},
+		},
+		computed: {
+			action() {
+				return 'polubił/-a'
+			},
+			icon() {
+				return 'fa-thumbs-up-o'
+			},
+		},
+		methods: {
+			buildContext() {
+				return this.message.referer
+			}
+		}
 	}
 </script>

@@ -63,13 +63,15 @@ class CommentPosted extends Event
 	{
 		$qnaAnswer = $this->comment->commentable;
 		$screen = $qnaAnswer->question->screen;
+
 		if (!$screen) return false;
 
 		$lesson = $qnaAnswer->question->screen->lesson;
 
 		$this->data['context'] = [
-			'screenId' => $screen->id,
+			'courseId' => $lesson->group->course->id,
 			'lessonId' => $lesson->id,
+			'screenId' => $screen->id,
 		];
 
 		return true;

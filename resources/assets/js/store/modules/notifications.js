@@ -57,22 +57,27 @@ const mutations = {
 
 const actions = {
 	pullNotifications({commit, rootGetters}, [ channel, options ]) {
-		_getNotifications(channel, rootGetters.currentUserId, options)
-			.then(response => {
-				if (typeof response.data[0] !== 'object') {
-					commit(types.IS_LOADING, false)
-					return false
-				}
-				_.each(response.data, (notification) => {
-					commit(types.ADD_NOTIFICATION, notification)
-				})
+		return new Promise((resolve) => {
+			_getNotifications(channel, rootGetters.currentUserId, options)
+				.then(response => {
+					if (typeof response.data[0] !== 'object') {
+						commit(types.IS_LOADING, false)
+						resolve()
+					}
+					_.each(response.data, (notification) => {
+						commit(types.ADD_NOTIFICATION, notification)
+					})
 
-				commit(types.IS_LOADING, false)
-			})
+					commit(types.IS_LOADING, false)
+
+					resolve()
+				})
+		})
 	},
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
+				console.log(notification)
 				commit(types.ADD_NOTIFICATION, {...notification, channel})
 			});
 	},

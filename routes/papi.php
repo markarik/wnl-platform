@@ -89,6 +89,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'User\UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'User\UserReactionsApiController@getReactionsByCategory');
 
+	// User Profiles
+	Route::post("{$r['profiles']}/.search", 'User\UserProfileApiController@search');
+
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 
@@ -149,4 +152,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Slideshow builder
 	Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'Course\SlideshowBuilderApiController@byCategory');
 	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'Course\SlideshowBuilderApiController@get');
+
+	// Events
+	Route::post("events/mentions", 'Events\MentionsApiController@post');
 });

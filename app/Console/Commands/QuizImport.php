@@ -78,6 +78,8 @@ class QuizImport extends Command
 			'name' => str_replace($this->path . '/', '', $file),
 		]);
 
+		$this->globalTags = [];
+
 		foreach ($lines as $line) {
 			$this->createQuestion($line, $quizSet);
 		}

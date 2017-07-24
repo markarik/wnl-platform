@@ -101,10 +101,12 @@
 					return subitem.to.params.lessonId === val.id
 				})
 
-				this.toggleNavigationGroup({
-					groupIndex: this.groupIndex,
-					isOpen: isCurrentlyInProgress
-				})
+				if (isCurrentlyInProgress) {
+					this.toggleNavigationGroup({
+						groupIndex: this.groupIndex,
+						isOpen: true
+					})
+				}
 			}
 		},
 	}

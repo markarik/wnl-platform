@@ -60,6 +60,14 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('cache:warmup')
 			->dailyAt('00:30');
+
+		$schedule
+			->command('time:store')
+			->dailyAt('01:30');
+
+		$schedule
+			->command('progress:store')
+			->dailyAt('02:30');
 	}
 
 	/**

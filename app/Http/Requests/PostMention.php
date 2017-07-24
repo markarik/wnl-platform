@@ -24,8 +24,7 @@ class PostMention extends FormRequest
 	public function rules()
 	{
 		return [
-			'origin_resource' => 'required',
-			'origin_id'       => 'required',
+			'subject' => 'required',
 			'mentioned_users' => 'required',
 		];
 	}

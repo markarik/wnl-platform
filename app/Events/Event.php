@@ -9,6 +9,8 @@ abstract class Event
 
 	public $referer;
 
+	public $data;
+
 	public function __construct()
 	{
 		$this->referer = Request::header('X-BETHINK-LOCATION');

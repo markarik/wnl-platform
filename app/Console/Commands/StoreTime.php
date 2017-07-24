@@ -48,7 +48,7 @@ class StoreTime extends Command
 		$passedUserId = $this->argument('user');
 
 		if (empty($passedUserId)) {
-			$keyPattern = UserStateApiController::getUserTimeRedisKey('?');
+			$keyPattern = UserStateApiController::getUserTimeRedisKey('*');
 		} else {
 			$keyPattern = UserStateApiController::getUserTimeRedisKey($passedUserId);
 		}

@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-sidenav-group" :class="{'no-items': !hasSubitems}">
 		<div class="wnl-sidenav-item-wrapper">
-			<div class="wnl-sidenav-group-toggle" @click="toggleSubitems">
+			<div class="wnl-sidenav-group-toggle" @click="toggleNavigationGroup({groupIndex, isOpen: !isOpen})">
 				<wnl-sidenav-item
 					:item="item"
 					:hasSubitems="hasSubitems"
@@ -61,7 +61,7 @@
 
 <script>
 	import SidenavItem from 'js/components/global/SidenavItem'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		components: {
@@ -69,10 +69,8 @@
 		},
 		name: 'SidenavGroup',
 		props: ['item', 'forceGroupOpen', 'showSubitemsCount'],
-		data() {
-			return { isOpen: !!this.forceGroupOpen }
-		},
 		computed: {
+			...mapGetters(['isNavigationGroupExpanded']),
 			...mapGetters('course', ['nextLesson']),
 			canRenderSubitems() {
 				return this.hasSubitems && this.isOpen
@@ -83,11 +81,15 @@
 			toggleIcon() {
 				return this.isOpen ? 'fa-angle-up' : 'fa-angle-down'
 			},
+			isOpen() {
+				return this.forceGroupOpen || this.isNavigationGroupExpanded(this.groupIndex)
+			},
+			groupIndex() {
+				return `${this.$route.name}/${this.item.text}`
+			}
 		},
 		methods: {
-			toggleSubitems() {
-				this.isOpen = !this.isOpen
-			},
+			...mapActions(['toggleNavigationGroup'])
 		},
 		watch: {
 			nextLesson(val) {
@@ -99,7 +101,10 @@
 					return subitem.to.params.lessonId === val.id
 				})
 
-				this.isOpen = isCurrentlyInProgress
+				this.toggleNavigationGroup({
+					groupIndex: this.groupIndex,
+					isOpen: isCurrentlyInProgress
+				})
 			}
 		},
 	}

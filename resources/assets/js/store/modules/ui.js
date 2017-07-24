@@ -8,7 +8,8 @@ const state = {
 	isChatOpen: false,
 	isOverlayVisible: false,
 	overlays: {},
-	canShowChat: false
+	canShowChat: false,
+	navigationToggleState: {}
 }
 
 const layouts = {
@@ -45,7 +46,8 @@ const getters = {
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
 	canShowChat: state => state.canShowChat,
 	isOverlayVisible: state => state.isOverlayVisible,
-	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0
+	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
+	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex]
 }
 
 // Mutations
@@ -97,6 +99,9 @@ const mutations = {
 			destroy(state.overlays, payload.source)
 		}
 	},
+	[types.UI_TOGGLE_NAVIGATION_GROUP] (state, {groupIndex, isOpen}) {
+		set(state.navigationToggleState, groupIndex, isOpen)
+	}
 }
 
 // Actions
@@ -124,6 +129,9 @@ const actions = {
 	},
 	toggleOverlay({ commit }, payload) {
 		commit(types.UI_DISPLAY_OVERLAY, payload)
+	},
+	toggleNavigationGroup({commit}, payload) {
+		commit(types.UI_TOGGLE_NAVIGATION_GROUP, payload)
 	}
 }
 

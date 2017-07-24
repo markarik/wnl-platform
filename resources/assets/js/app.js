@@ -13,11 +13,11 @@ sync(store, router)
 import VueI18n from 'vue-i18n'
 import { pl } from 'js/i18n'
 
-const messages = {
-	pl,
-}
+Vue.use(VueI18n)
+Vue.config.lang = 'pl'
 
-Vue.use(VueI18n, {locale: 'pl', messages})
+const messages = {pl}
+const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages})
 
 // SweetAlert2
 import VueSweetAlert from 'vue-sweetalert'
@@ -68,6 +68,7 @@ import App from 'js/components/App.vue'
 const app = new Vue({
 	router,
 	store,
+	i18n,
 	...App
 }).$mount('#app')
 

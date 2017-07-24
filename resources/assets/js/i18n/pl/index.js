@@ -1,5 +1,5 @@
 import { notifications } from './notifications'
 
-export const pl = {
+export {
 	notifications,
 }

@@ -33,13 +33,16 @@ class CommentPosted extends Event
 	{
 		$comment = $this->comment;
 		$actor = $comment->user;
-		$commentableType = snake_case(class_basename($comment->commentable));
+		$commentable = $comment->commentable;
+		$commentableType = snake_case(class_basename($commentable));
 
 		$this->data = [
 			'event'   => 'comment-posted',
 			'objects' => [
 				'type' => $commentableType,
-				'id'   => $comment->commentable->id,
+				'id'   => $commentable->id,
+				'text' => $commentable->text ?? null,
+				'snippet' => $commentable->snippet ?? null
 			],
 			'subject' => [
 				'type' => 'comment',

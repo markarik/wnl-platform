@@ -32,6 +32,10 @@ class EventServiceProvider extends ServiceProvider
 		'App\Events\Chat\PrivateMessageSent' => [
 			'App\Listeners\UserNotificationsGate',
 		],
+
+		'App\Events\Mentioned' => [
+			'App\Listeners\UserNotificationsGate',
+		],
 	];
 
 	/**

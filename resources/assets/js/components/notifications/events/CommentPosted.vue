@@ -12,14 +12,13 @@
 						lessonId: props.message.context.lessonId,
 						screenId: props.message.context.screenId,
 					}
-				}[props.message.object.type]
-			})
+				}
+			})[props.message.objects.type]
 
 			return createElement(props.notificationComponent, {
 				props: {
 					message: props.message,
 					channel: props.channel,
-					action: 'skomentował/-a',
 					icon: 'fa-comments-o',
 					routeContext: getContextRoute(contextRoute, props.message.referer),
 				},

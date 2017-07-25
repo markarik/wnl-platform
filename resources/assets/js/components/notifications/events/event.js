@@ -1,11 +1,13 @@
 export const getContextRoute = (routeContext, fallback) => {
+	let context = fallback
+
 	try {
-		return routeContext()
+		context = routeContext()
 	} catch (e) {
 		$wnl.logger.error(e)
-	} finally {
-		return fallback
 	}
+
+	return context
 }
 
 export const baseProps = {

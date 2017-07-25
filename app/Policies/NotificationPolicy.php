@@ -17,7 +17,7 @@ class NotificationPolicy
 			return true;
 		}
 
-		return false;
+		return null;
 	}
 
 	public function viewMultiple(User $user)
@@ -63,8 +63,19 @@ class NotificationPolicy
 	public function update(User $user, Notification $notification)
 	{
 		return
-			$user->id === $notification->notifiable_type &&
+			$user->id === $notification->notifiable_id &&
 			$notification->notifiable_type === 'App\\Models\\User';
+	}
+
+	public function updateMultiple(User $user, $notifications)
+	{
+		foreach ($notifications as $notification) {
+			if (!$this->update($user, $notification)){
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**

@@ -8,11 +8,11 @@
 		</div>
 		<div v-else class="container">
 			<component
-					v-for="(event, index) in notifications"
-					:is="eventComponent"
-					:event="event"
-					:key="index">
-			</component>
+				v-for="(event, index) in notifications"
+				:is="eventComponent"
+				:event="event"
+				:key="index"
+			></component>
 		</div>
 	</div>
 </template>
@@ -30,9 +30,9 @@
 
 	export default {
 		name: 'wnl-feed',
-		props: ['type'],
+		props: ['type', 'notifications', 'channel'],
 		computed: {
-			...mapGetters('notifications', ['notifications', 'isLoading']),
+			...mapGetters('notifications', ['isLoading']),
 			eventComponent() {
 				return `wnl-newsfeed-event-${this.type}`
 			},

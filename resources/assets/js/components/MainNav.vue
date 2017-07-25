@@ -27,7 +27,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
-			v-show="$moderatorFeed.isAllowed('access')"
+			v-if="$moderatorFeed.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-list"></i>

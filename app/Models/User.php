@@ -158,15 +158,6 @@ class User extends Authenticatable
 	}
 
 	/**
-	 * The channels the user receives notification broadcasts on.
-	 * @return mixed
-	 */
-	public function receivesBroadcastNotificationsOn()
-	{
-		return 'user.' . $this->id;
-	}
-
-	/**
 	 * Get the current user or find by id.
 	 *
 	 * @param $id

@@ -2,6 +2,7 @@
 
 namespace App\Events\Qna;
 
+use App\Events\Event;
 use Request;
 use App\Models\QnaQuestion;
 use Illuminate\Broadcasting\Channel;
@@ -11,7 +12,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class QuestionPosted
+class QuestionPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
@@ -19,8 +20,6 @@ class QuestionPosted
 		SanitizesUserContent;
 
 	public $qnaQuestion;
-
-	public $referer;
 
 	const TEXT_LIMIT = 160;
 
@@ -31,8 +30,8 @@ class QuestionPosted
 	 */
 	public function __construct(QnaQuestion $qnaQuestion)
 	{
+		parent::__construct();
 		$this->qnaQuestion = $qnaQuestion;
-		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**
@@ -63,5 +62,17 @@ class QuestionPosted
 			],
 			'referer' => $this->referer,
 		];
+
+		$screen = $this->qnaQuestion->screen;
+
+		if ($screen) {
+			$lesson = $screen->lesson;
+
+			$this->data['context'] = [
+				'screenId' => $screen->id,
+				'lessonId' => $lesson->id,
+				'courseId' => $lesson->group->course->id,
+			];
+		}
 	}
 }

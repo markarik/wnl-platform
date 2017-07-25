@@ -3,6 +3,7 @@
 namespace App\Events\Qna;
 
 use Request;
+use App\Events\Event;
 use App\Models\QnaAnswer;
 use Illuminate\Broadcasting\Channel;
 use App\Events\SanitizesUserContent;
@@ -11,18 +12,14 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class AnswerPosted
+class AnswerPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
 		SerializesModels,
 		SanitizesUserContent;
 
-	const TEXT_LIMIT = 160;
-
 	public $qnaAnswer;
-
-	public $referer;
 
 	/**
 	 * Create a new event instance.
@@ -31,8 +28,8 @@ class AnswerPosted
 	 */
 	public function __construct(QnaAnswer $qnaAnswer)
 	{
+		parent::__construct();
 		$this->qnaAnswer = $qnaAnswer;
-		$this->referer = Request::header('X-BETHINK-LOCATION');
 	}
 
 	/**
@@ -50,6 +47,7 @@ class AnswerPosted
 		$this->data = [
 			'event'   => 'qna-answer-posted',
 			'objects' => [
+				'author' => $this->qnaAnswer->question->user->id,
 				'type' => 'qna_question',
 				'id'   => $this->qnaAnswer->question->id,
 				'text' => $this->sanitize($this->qnaAnswer->question->text),
@@ -57,7 +55,7 @@ class AnswerPosted
 			'subject' => [
 				'type' => 'qna_answer',
 				'id'   => $this->qnaAnswer->id,
-				'text' => $this->sanitize($this->qnaAnswer->text, self::TEXT_LIMIT),
+				'text' => $this->sanitize($this->qnaAnswer->text),
 			],
 			'actors'  => [
 				'id'         => $this->qnaAnswer->user->id,
@@ -76,7 +74,8 @@ class AnswerPosted
 
 			$this->data['context'] = [
 				'screenId' => $screen->id,
-				'lessonId' => $lesson->id
+				'lessonId' => $lesson->id,
+				'courseId' => $lesson->group->course->id,
 			];
 		}
 	}

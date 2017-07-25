@@ -1,10 +1,7 @@
 <template>
-	<div class="wnl-dropdown">
+	<div class="wnl-dropdown" ref="dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="isActive = !isActive">
 			<wnl-avatar></wnl-avatar>
-			<!-- <span class="username">
-				{{ currentUserName }}
-			</span> -->
 			<span class="icon">
 				<i class="fa fa-angle-down"></i>
 			</span>
@@ -117,10 +114,23 @@
 				]
 			}
 		},
+		methods: {
+			clickHandler({target}) {
+				if (!this.$refs.dropdown.contains(target)) {
+					this.isActive = false
+				}
+			}
+		},
 		watch: {
 			'$route' (to, from) {
 				this.isActive = false
 			}
 		},
+		mounted() {
+			document.addEventListener('click', this.clickHandler)
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
+		}
 	}
 </script>

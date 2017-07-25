@@ -2,11 +2,12 @@
 
 namespace App\Notifications;
 
-use Request;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Bus\Queueable;
+use App\Notifications\Media\LiveChannel;
 use Illuminate\Notifications\Notification;
-use App\Notifications\Channels\LiveChannel;
-use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Broadcasting\PrivateChannel;
+use App\Notifications\Media\DatabaseChannel;
 
 class EventNotification extends Notification
 {
@@ -14,40 +15,37 @@ class EventNotification extends Notification
 
 	public $event;
 
+	public $channel;
+
+	public $read_at;
+
 	/**
 	 * Create a new notification instance.
 	 *
 	 * @param $event
+	 * @param $channel
 	 */
-	public function __construct($event)
+	public function __construct($event, $channel)
 	{
 		$event->data['timestamp'] = time();
 		$this->event = $event;
+		$this->channel = $channel;
 	}
 
 	/**
 	 * Get the notification's delivery channels.
 	 *
 	 * @param  mixed $notifiable
+	 *
 	 * @return array
 	 */
 	public function via($notifiable)
 	{
-		return [LiveChannel::class, 'database'];
+		return [LiveChannel::class, DatabaseChannel::class];
 	}
 
-	public function toLive()
+	public function broadcastOn()
 	{
-		return new BroadcastMessage($this->event->data);
-	}
-	
-	public function toBroadcast($notifiable)
-	{
-		return new BroadcastMessage($this->event->data);
-	}
-
-	public function toDatabase($notifiable)
-	{
-		return $this->event->data;
+		return new Channel($this->channel);
 	}
 }

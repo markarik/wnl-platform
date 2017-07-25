@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="wnl-newsfeed-notification box" :class="">
+	<div class="wnl-newsfeed-event" :class="">
 		<small class="time">{{ formattedTime }}</small>
 		<component :is="componentName" :event="event">
 		</component>
@@ -9,7 +9,8 @@
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
-	.wnl-newsfeed-notification
+	.wnl-newsfeed-event
+		border-bottom: $border-light-gray
 
 		.time
 			color: $color-inactive-gray

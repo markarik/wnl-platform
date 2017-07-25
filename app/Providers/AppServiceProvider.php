@@ -5,16 +5,18 @@ namespace App\Providers;
 use App;
 use Log;
 use Validator;
-use App\Models\Lesson;
-use App\Models\Order;
 use App\Models\User;
-use App\Observers\LessonObserver;
-use App\Observers\OrderObserver;
+use App\Models\Order;
+use App\Models\Lesson;
+use App\Models\Notification;
 use App\Observers\UserObserver;
+use App\Observers\OrderObserver;
+use App\Observers\LessonObserver;
 use Monolog\Handler\RavenHandler;
 use Illuminate\Support\Facades\Auth;
 use Monolog\Formatter\LineFormatter;
 use Laravel\Dusk\DuskServiceProvider;
+use App\Observers\NotificationObserver;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Tinker\TinkerServiceProvider;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
 		Order::observe(OrderObserver::class);
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
+		Notification::observe(NotificationObserver::class);
 
 		if ($this->useExternalLogger()) {
 			$this->addSentryLogger();

@@ -2,28 +2,19 @@
 
 namespace App\Events;
 
-use Request;
 use App\Models\Comment;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CommentPosted
+class CommentPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
 		SerializesModels,
 		SanitizesUserContent;
 
-	const TEXT_LIMIT = 160;
-
 	public $comment;
-
-	public $referer;
 
 	/**
 	 * Create a new event instance.
@@ -32,31 +23,25 @@ class CommentPosted
 	 */
 	public function __construct(Comment $comment)
 	{
+		parent::__construct();
 		$this->comment = $comment;
-		$this->referer = Request::header('X-BETHINK-LOCATION');
-	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
 	}
 
 	public function transform()
 	{
 		$comment = $this->comment;
 		$actor = $comment->user;
-		$commentableType = snake_case(class_basename($comment->commentable));
+		$commentable = $comment->commentable;
+		$commentableType = snake_case(class_basename($commentable));
 
 		$this->data = [
 			'event'   => 'comment-posted',
 			'objects' => [
+				'author' => $commentable->user->id ?? null,
 				'type' => $commentableType,
-				'id'   => $comment->commentable->id,
+				'id'   => $commentable->id,
+				'text' => $this->sanitize($commentable->text ?? ''),
+				'snippet' => $this->sanitize($commentable->snippet ?? ''),
 			],
 			'subject' => [
 				'type' => 'comment',
@@ -80,13 +65,15 @@ class CommentPosted
 	{
 		$qnaAnswer = $this->comment->commentable;
 		$screen = $qnaAnswer->question->screen;
+
 		if (!$screen) return false;
 
 		$lesson = $qnaAnswer->question->screen->lesson;
 
 		$this->data['context'] = [
-			'screenId' => $screen->id,
+			'courseId' => $lesson->group->course->id,
 			'lessonId' => $lesson->id,
+			'screenId' => $screen->id,
 		];
 
 		return true;

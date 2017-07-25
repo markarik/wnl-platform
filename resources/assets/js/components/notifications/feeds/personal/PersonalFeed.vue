@@ -33,7 +33,7 @@
 								Pokaż więcej
 							</a>
 							<span class="small text-dimmed has-text-centered" v-else>
-								Gratulacje! Wszystkie powiadomienia już przeczytane! <wnl-emoji name="tada"/>
+								Wszystkie powiadomienia przeczytane <wnl-emoji name="+1"/>
 							</span>
 						</div>
 					</div>

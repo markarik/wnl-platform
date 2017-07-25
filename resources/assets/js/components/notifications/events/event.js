@@ -1,6 +1,6 @@
 export const getContextRoute = (routeContext, fallback) => {
 	try {
-		return routeContext
+		return routeContext()
 	} catch (e) {
 		$wnl.logger.error(e)
 	} finally {

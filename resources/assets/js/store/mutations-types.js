@@ -1,5 +1,6 @@
 // Common
 export const IS_LOADING      = 'IS_LOADING'
+export const IS_FETCHING     = 'IS_FETCHING'
 export const UPDATE_INCLUDED = 'UPDATE_INCLUDED'
 export const RESET_MODULE    = 'RESET_MODULE'
 

@@ -16,7 +16,8 @@ class ReactionAdded extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels;
+		SerializesModels,
+		SanitizesUserContent;
 
 	public $reaction;
 
@@ -57,8 +58,10 @@ class ReactionAdded extends Event
 		$this->data = [
 			'event'   => 'reaction-added',
 			'objects' => [
+				'author' => $reactable->user->id ?? null,
 				'type' => snake_case(class_basename($reactable)),
 				'id'   => $reactable->id,
+				'text' => $this->sanitize($reactable->text ?? ''),
 			],
 			'subject' => [
 				'type'          => 'reaction',

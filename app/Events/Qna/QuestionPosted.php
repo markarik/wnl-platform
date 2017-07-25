@@ -62,5 +62,17 @@ class QuestionPosted extends Event
 			],
 			'referer' => $this->referer,
 		];
+
+		$screen = $this->qnaQuestion->screen;
+
+		if ($screen) {
+			$lesson = $screen->lesson;
+
+			$this->data['context'] = [
+				'screenId' => $screen->id,
+				'lessonId' => $lesson->id,
+				'courseId' => $lesson->group->course->id,
+			];
+		}
 	}
 }

@@ -103,8 +103,6 @@
 </style>
 
 <script>
-	import {isDemo} from 'js/utils/env'
-	import {set} from 'vue'
 	import {mapGetters, mapActions} from 'vuex'
 	import Event from 'js/components/user/notifications/Event'
 
@@ -143,7 +141,6 @@
 			...mapActions('notifications', [
 				'markAllAsSeen',
 				'markAllAsRead',
-				'initNotifications',
 				'pullNotifications'
 			]),
 			toggle() {
@@ -157,7 +154,7 @@
 				const oldest = this.getOldestNotification(channel)
 				const options = {
 					limit: 15,
-					olderThan: oldest.timestamp
+					olderThan: oldest.timestamp,
 				}
 				this.pullNotifications([channel, options])
 			}

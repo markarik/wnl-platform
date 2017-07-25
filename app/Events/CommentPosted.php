@@ -14,8 +14,6 @@ class CommentPosted extends Event
 		SerializesModels,
 		SanitizesUserContent;
 
-	const TEXT_LIMIT = 160;
-
 	public $comment;
 
 	/**
@@ -39,10 +37,11 @@ class CommentPosted extends Event
 		$this->data = [
 			'event'   => 'comment-posted',
 			'objects' => [
+				'author' => $commentable->user->id ?? null,
 				'type' => $commentableType,
 				'id'   => $commentable->id,
-				'text' => $commentable->text ?? null,
-				'snippet' => $commentable->snippet ?? null
+				'text' => $this->sanitize($commentable->text ?? ''),
+				'snippet' => $this->sanitize($commentable->snippet ?? ''),
 			],
 			'subject' => [
 				'type' => 'comment',
@@ -66,13 +65,15 @@ class CommentPosted extends Event
 	{
 		$qnaAnswer = $this->comment->commentable;
 		$screen = $qnaAnswer->question->screen;
+
 		if (!$screen) return false;
 
 		$lesson = $qnaAnswer->question->screen->lesson;
 
 		$this->data['context'] = [
-			'screenId' => $screen->id,
+			'courseId' => $lesson->group->course->id,
 			'lessonId' => $lesson->id,
+			'screenId' => $screen->id,
 		];
 
 		return true;

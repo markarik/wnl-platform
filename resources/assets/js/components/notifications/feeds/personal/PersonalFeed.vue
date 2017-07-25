@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-dropdown">
+	<div class="wnl-dropdown" ref="dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="toggle">
 			<div class="flag" v-if="!!unseenCount">{{ unseenCount }}</div>
 			<span class="icon">
@@ -224,11 +224,22 @@
 				}
 				this.isActive = !this.isActive
 			},
+			clickHandler({target}) {
+				if (!this.$refs.dropdown.contains(target)) {
+					this.isActive = false
+				}
+			}
 		},
 		watch: {
 			'$route' (to, from) {
 				this.isActive = false
 			}
 		},
+		mounted() {
+			document.addEventListener('click', this.clickHandler)
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
+		}
 	}
 </script>

@@ -1,10 +1,8 @@
 <template>
 	<div>
-		<wnl-avatar
-			size="medium"
+		<wnl-avatar size="medium"
 			:url="message.actors.avatar"
-			:fullName="message.actors.full_name"
-		></wnl-avatar>
+			:fullName="message.actors.full_name"/>
 	</div>
 </template>
 

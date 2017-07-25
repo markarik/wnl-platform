@@ -19,7 +19,7 @@
 					channel: props.channel,
 					action: 'zadał/-a pytanie',
 					icon: 'fa-question-circle-o',
-					routeContext: getContextRoute(contextRoute, message.referer),
+					routeContext: getContextRoute(contextRoute, props.message.referer),
 				},
 			})
 		},

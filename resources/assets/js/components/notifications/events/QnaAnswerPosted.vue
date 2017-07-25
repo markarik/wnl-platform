@@ -13,7 +13,7 @@
 					routeContext: getContextRoute({
 						name: 'screens',
 						params: {
-							courseId: props.message.content.courseId,
+							courseId: props.message.context.courseId,
 							lessonId: props.message.context.lessonId,
 							screenId: props.message.context.screenId,
 						}

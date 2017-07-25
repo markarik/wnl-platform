@@ -1,4 +1,6 @@
 <script>
+	import {baseProps} from './event'
+
 	export default {
 		functional: true,
 		render: (createElement, context) => {
@@ -12,19 +14,6 @@
 				},
 			})
 		},
-		props: {
-			message: {
-				required: true,
-				type: Object,
-			},
-			channel: {
-				required: true,
-				type: String
-			},
-			notificationComponent: {
-				required: true,
-				type: Object
-			}
-		}
+		props: baseProps
 	}
 </script>

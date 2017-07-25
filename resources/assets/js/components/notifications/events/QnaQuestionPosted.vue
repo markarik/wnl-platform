@@ -12,6 +12,7 @@
 					screenId: props.message.context.screenId,
 				}
 			})
+
 			return createElement(props.notificationComponent, {
 				props: {
 					message: props.message,

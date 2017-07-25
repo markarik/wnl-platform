@@ -3,14 +3,14 @@
 
 	export default {
 		functional: true,
-		render: (createElement, context) => {
+		render: (createElement, {props}) => {
 			return createElement(props.notificationComponent, {
 				props: {
-					message: context.props.message,
-					channel: context.props.channel,
+					message: props.message,
+					channel: props.channel,
 					action: 'polubił/-a',
 					icon: 'fa-thumbs-o-up',
-					routeContext: context.props.message.referer,
+					routeContext: props.message.referer,
 				},
 			})
 		},

@@ -1,35 +1,29 @@
-<template>
-	<div class="event-reaction-added">
-		<slot
-			:action="action"
-			:icon="icon"
-		></slot>
-	</div>
-</template>
-
 <script>
-	import { baseEvent } from 'js/components/notifications/base-event'
-
 	export default {
-		name: 'ReactionAdded',
-		mixins: [baseEvent],
+		functional: true,
+		render: (createElement, context) => {
+			return createElement(context.props.notificationComponent, {
+				props: {
+					message: context.props.message,
+					channel: context.props.channel,
+					action: 'polubił/-a',
+					icon: 'fa-thumbs-o-up',
+					routeContext: context.props.message.referer,
+				},
+			})
+		},
 		props: {
 			message: {
 				required: true,
 				type: Object,
 			},
-		},
-		computed: {
-			action() {
-				return 'polubił/-a'
+			channel: {
+				required: true,
+				type: String
 			},
-			icon() {
-				return 'fa-thumbs-o-up'
-			},
-		},
-		methods: {
-			buildContext() {
-				return this.message.referer
+			notificationComponent: {
+				required: true,
+				type: Object
 			}
 		}
 	}

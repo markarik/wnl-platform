@@ -1,42 +1,36 @@
-<template>
-	<div class="event-qna-question-added">
-		<slot
-			:action="action"
-			:icon="icon"
-		></slot>
-	</div>
-</template>
-
 <script>
-	import { baseEvent } from 'js/components/notifications/base-event'
-
 	export default {
-		name: 'QnaQuestionPosted',
-		mixins: [baseEvent],
+		functional: true,
+		render: (createElement, {props}) => {
+			return createElement(context.props.notificationComponent, {
+				props: {
+					message: props.message,
+					channel: props.channel,
+					action: 'zadał/-a pytanie',
+					icon: 'fa-question-circle-o',
+					routeContext: {
+						name: 'screens',
+						params: {
+							courseId: props.message.content.courseId,
+							lessonId: props.message.context.lessonId,
+							screenId: props.message.context.screenId,
+						}
+					},
+				},
+			})
+		},
 		props: {
 			message: {
 				required: true,
 				type: Object,
 			},
-		},
-		computed: {
-			action() {
-				return 'zadał/-a pytanie'
+			channel: {
+				required: true,
+				type: String
 			},
-			icon() {
-				return 'fa-question-circle-o'
-			},
-		},
-		methods: {
-			buildContext() {
-				return {
-					name: 'screens',
-					params: {
-						courseId: this.message.content.courseId,
-						lessonId: this.message.context.lessonId,
-						screenId: this.message.context.screenId,
-					}
-				}
+			notificationComponent: {
+				required: true,
+				type: Object
 			}
 		}
 	}

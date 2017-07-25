@@ -17,26 +17,16 @@ export const notification = {
 			required: true,
 			type: Object,
 		},
-	},
-	data() {
-		return {
-			context: {},
+		routeContext: {
+			type: String|Object
 		}
 	},
 	computed: {
-		componentName() {
-			return `wnl-event-${this.message.event}`
-		},
 		formattedTime () {
 			return timeFromS(this.message.timestamp)
 		},
-		hasComponent() {
-			const components = this.$options.components
-			return typeof components === 'object' &&
-				Object.keys(components).indexOf(this.componentName) > -1
-		},
 		hasContext() {
-			return this.context.length > 0
+			return this.routeContext.length > 0
 		},
 		isRead() {
 			return !!this.message.read_at
@@ -49,15 +39,12 @@ export const notification = {
 
 			this.markAsRead({notification: this.message, channel: this.channel})
 				.then(() => {
-					if (typeof this.context === 'object') {
-						this.$router.push(this.context)
-					} else if (typeof this.context === 'string') {
-						window.location.href=this.context
+					if (typeof this.routeContext === 'object') {
+						this.$router.push(this.routeContext)
+					} else if (typeof this.routeContext === 'string') {
+						window.location.href=this.routeContext
 					}
 				})
-		},
-		setContext(context) {
-			this.context = context
 		},
 	},
 }

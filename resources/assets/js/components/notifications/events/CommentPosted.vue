@@ -1,44 +1,38 @@
-<template>
-	<div class="event-comment-posted">
-		<slot
-			:action="action"
-			:icon="icon"
-		></slot>
-	</div>
-</template>
-
 <script>
-	import { baseEvent } from 'js/components/notifications/base-event'
-
 	export default {
-		name: 'CommentPosted',
-		mixins: [baseEvent],
+		functional: true,
+		render: (createElement, {props}) => {
+			return createElement(context.props.notificationComponent, {
+				props: {
+					message: props.message,
+					channel: props.channel,
+					action: 'skomentował/-a',
+					icon: 'fa-comments-o',
+					routeContext: {
+						'qna_answer': {
+							name: 'screens',
+							params: {
+								courseId: props.message.content.courseId,
+								lessonId: props.message.context.lessonId,
+								screenId: props.message.context.screenId,
+							}
+						}
+					},
+				},
+			})
+		},
 		props: {
 			message: {
 				required: true,
 				type: Object,
 			},
-		},
-		computed: {
-			action() {
-				return 'skomentował/-a'
+			channel: {
+				required: true,
+				type: String
 			},
-			icon() {
-				return 'fa-comments-o'
-			},
-		},
-		methods: {
-			buildContext() {
-				return {
-					'qna_answer': {
-						name: 'screens',
-						params: {
-							courseId: this.message.context.courseId,
-							lessonId: this.message.context.lessonId,
-							screenId: this.message.context.screenId,
-						},
-					}
-				}[this.message.object.type]
+			notificationComponent: {
+				required: true,
+				type: Object
 			}
 		}
 	}

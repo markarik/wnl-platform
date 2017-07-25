@@ -48,5 +48,14 @@ export const feed = {
 				}
 			})
 		},
+		getEventComponent(message) {
+			return `wnl-event-${message.event}`
+		},
+		hasComponentForEvent(message) {
+			const components = this.$options.components
+
+			return typeof components === 'object' &&
+				Object.keys(components).indexOf(this.getEventComponent(message)) > -1
+		}
 	}
 }

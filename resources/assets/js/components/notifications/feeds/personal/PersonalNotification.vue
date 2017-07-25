@@ -1,19 +1,17 @@
 <template>
-	<div class="personal-notification" v-if="hasComponent" @click="goToContext">
+	<div class="personal-notification" @click="goToContext">
 		<div class="actor">
 			<wnl-event-actor :message="message"/>
 		</div>
-		<component class="notification-content" :is="componentName" :message="message" @contextReady="setContext">
-			<template scope="props">
-				<div>{{ message.actors.full_name }} {{ props.action }} {{ message.objects.type }} {{ message.objects.text }}</div>
-				<div v-if="message.subject.text">{{ message.subject.text }}</div>
-				<small class="time">
-					<span class="icon is-small">
-						<i class="fa" :class="props.icon"></i>
-					</span> {{ formattedTime }}
-				</small>
-			</template>
-		</component>
+			<div>
+				{{ message.actors.full_name }} {{ action }} {{ message.objects.type }} {{ message.objects.text }}
+			</div>
+			<div v-if="message.subject.text">{{ message.subject.text }}</div>
+			<small class="time">
+				<span class="icon is-small">
+					<i class="fa" :class="icon"></i>
+				</span> {{ formattedTime }}
+			</small>
 		<div class="link-symbol">
 			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
 				<i class="fa fa-angle-right"></i>
@@ -64,17 +62,23 @@
 
 <script>
 	import Actor from 'js/components/notifications/Actor'
-	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
 	import { notification } from 'js/components/notifications/notification'
 
 	export default {
 		name: 'PersonalNotification',
 		mixins: [notification],
+		props: {
+			action: {
+				required: true,
+				type: String
+			},
+			icon: {
+				required: true,
+				type: String
+			},
+		},
 		components: {
 			'wnl-event-actor': Actor,
-			'wnl-event-comment-posted': CommentPosted,
-			'wnl-event-qna-answer-posted': QnaAnswerPosted,
-			'wnl-event-reaction-added': ReactionAdded,
 		},
 	}
 </script>

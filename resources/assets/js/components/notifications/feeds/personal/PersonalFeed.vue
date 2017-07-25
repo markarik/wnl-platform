@@ -17,11 +17,13 @@
 						Nic tu nie ma ¯\_(ツ)_/¯
 					</div>
 					<div v-else>
-						<wnl-personal-notification
-							v-for="(message, id) in notifications"
+						<component :is="getEventComponent(message)"
 							:channel="channel"
 							:message="message"
 							:key="id"
+							:notificationComponent="PersonalNotification"
+							v-for="(message, id) in notifications"
+							v-if="hasComponentForEvent(message)"
 						/>
 						<div class="show-more">
 							<a v-if="hasMore" class="button is-small is-outlined"
@@ -184,17 +186,21 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 
 	export default {
 		name: 'PersonalFeed',
 		mixins: [feed],
 		components: {
-			'wnl-personal-notification': PersonalNotification,
+			'wnl-event-comment-posted': CommentPosted,
+			'wnl-event-qna-answer-posted': QnaAnswerPosted,
+			'wnl-event-reaction-added': ReactionAdded,
 		},
 		data() {
 			return {
 				isActive: false,
+				PersonalNotification
 			}
 		},
 		computed: {

@@ -1,14 +1,16 @@
 <script>
+	import {getContextRoute, baseProps} from './event'
+
 	export default {
 		functional: true,
 		render: (createElement, {props}) => {
-			return createElement(context.props.notificationComponent, {
+			return createElement(props.notificationComponent, {
 				props: {
 					message: props.message,
 					channel: props.channel,
 					action: 'skomentował/-a',
 					icon: 'fa-comments-o',
-					routeContext: {
+					routeContext: getContextRoute({
 						'qna_answer': {
 							name: 'screens',
 							params: {
@@ -17,23 +19,10 @@
 								screenId: props.message.context.screenId,
 							}
 						}
-					},
+					}, message.referer),
 				},
 			})
 		},
-		props: {
-			message: {
-				required: true,
-				type: Object,
-			},
-			channel: {
-				required: true,
-				type: String
-			},
-			notificationComponent: {
-				required: true,
-				type: Object
-			}
-		}
+		props: baseProps
 	}
 </script>

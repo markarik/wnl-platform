@@ -2,7 +2,7 @@
 	export default {
 		functional: true,
 		render: (createElement, context) => {
-			return createElement(context.props.notificationComponent, {
+			return createElement(props.notificationComponent, {
 				props: {
 					message: context.props.message,
 					channel: context.props.channel,

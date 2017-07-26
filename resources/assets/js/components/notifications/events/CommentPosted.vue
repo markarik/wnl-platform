@@ -15,7 +15,6 @@
 				props: {
 					message,
 					channel: message.channel,
-					action: 'skomentował/-a',
 					icon: 'fa-comments-o',
 					routeContext: getContextRoute(contextRoute, message.referer),
 				},

@@ -149,7 +149,11 @@ Reveal.addEventListener('slidechanged', (event) => {
 		}
 	}
 
-	setBookmarkedState(event.indexh);
+	setBookmarkedState(event.indexh)
+
+	if (typeof fullScreenViewer.hide === 'function') {
+		fullScreenViewer.hide()
+	}
 })
 
 if ($controls.length > 0) {

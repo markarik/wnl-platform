@@ -8,7 +8,6 @@
 				props: {
 					message,
 					channel: message.channel,
-					action: 'polubił/-a',
 					icon: 'fa-thumbs-o-up',
 					routeContext: message.referer,
 				},

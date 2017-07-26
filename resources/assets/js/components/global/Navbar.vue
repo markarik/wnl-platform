@@ -12,8 +12,8 @@
 				<img :src="logoSrc" :alt="logoAlt">
 			</router-link>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-profile">
-			<wnl-personal-feed v-if="$moderatorFeed.isAllowed('access')"/>
+		<div class="wnl-navbar-item wnl-navbar-profile" v-if="$moderatorFeed.isAllowed('access')">
+			<wnl-personal-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown></wnl-user-dropdown>

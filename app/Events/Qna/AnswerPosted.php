@@ -19,8 +19,6 @@ class AnswerPosted extends Event
 		SerializesModels,
 		SanitizesUserContent;
 
-	const TEXT_LIMIT = 160;
-
 	public $qnaAnswer;
 
 	/**
@@ -49,6 +47,7 @@ class AnswerPosted extends Event
 		$this->data = [
 			'event'   => 'qna-answer-posted',
 			'objects' => [
+				'author' => $this->qnaAnswer->question->user->id,
 				'type' => 'qna_question',
 				'id'   => $this->qnaAnswer->question->id,
 				'text' => $this->sanitize($this->qnaAnswer->question->text),
@@ -56,7 +55,7 @@ class AnswerPosted extends Event
 			'subject' => [
 				'type' => 'qna_answer',
 				'id'   => $this->qnaAnswer->id,
-				'text' => $this->sanitize($this->qnaAnswer->text, self::TEXT_LIMIT),
+				'text' => $this->sanitize($this->qnaAnswer->text),
 			],
 			'actors'  => [
 				'id'         => $this->qnaAnswer->user->id,

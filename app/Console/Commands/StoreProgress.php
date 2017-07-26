@@ -50,11 +50,13 @@ class StoreProgress extends Command
 		$this->transaction(function () use ($passedUserId) {
 
 			if (empty($passedUserId)) {
-				$keyPattern = UserStateApiController::getCourseRedisKey('?', 1);
+				$keyPattern = UserStateApiController::getCourseRedisKey('*', 1);
 				$allKeys = $this->redis->keys($keyPattern);
 				foreach ($allKeys as $key) {
-					$userId = $this->extractUserIdFromKey($key);
-					$this->storeProgress($key, $userId);
+					if (count(explode(':', $key)) === 5) {
+						$userId = $this->extractUserIdFromKey($key);
+						$this->storeProgress($key, $userId);
+					}
 				}
 			} else {
 				$key = UserStateApiController::getCourseRedisKey($passedUserId, 1);
@@ -91,12 +93,13 @@ class StoreProgress extends Command
 			$lessonsProgress = json_decode($lessonsProgressRaw);
 
 			foreach ($lessonsProgress as $lessonId => $lessonData) {
-				$model = UserCourseProgress::firstOrNew(
-					['lesson_id' => $lessonId, 'user_id' => $userId]
-				);
-
-				$model->status = $lessonData->status;
-				$model->save();
+				if ($lessonId !== 'undefined') {
+					$model = UserCourseProgress::firstOrNew(
+						['lesson_id' => $lessonId, 'user_id' => $userId]
+					);
+					$model->status = $lessonData->status;
+					$model->save();
+				}
 			}
 		}
 	}

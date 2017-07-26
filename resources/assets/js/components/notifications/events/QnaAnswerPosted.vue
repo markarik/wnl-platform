@@ -16,7 +16,6 @@
 				props: {
 					message,
 					channel: message.channel,
-					action: 'odpowiedział/-a na',
 					icon: 'fa-reply',
 					routeContext: getContextRoute(contextRoute, message.referer),
 				},

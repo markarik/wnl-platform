@@ -13,7 +13,6 @@
 				props: {
 					message,
 					channel: message.channel,
-					action: 'zadał/-a pytanie',
 					icon: 'fa-question-circle-o',
 					routeContext: getContextRoute(contextRoute, message.referer),
 				},

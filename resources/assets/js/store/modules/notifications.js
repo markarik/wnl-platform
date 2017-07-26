@@ -117,11 +117,12 @@ const actions = {
 			return {'read_at': 'now'}
 		})
 
-		_updateMany(rootGetters.currentUserId, data)
+		return _updateMany(rootGetters.currentUserId, data)
 			.then((response) => {
 				_.each(response.data, (notification) => {
 					commit(types.ADD_NOTIFICATION, notification)
 				})
+				return response
 			})
 	},
 	initNotifications({getters, dispatch}) {

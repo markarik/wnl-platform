@@ -40,8 +40,9 @@
 					</div>
 				</div>
 
-				<div class="personal-feed-footer">
-					<a class="link" @click="markAllAsRead(channel)">Oznacz wszystkie jako przeczytane</a>
+				<div class="personal-feed-footer" v-if="unreadCount > 0">
+					<a class="link" @click="allRead">Oznacz wszystkie jako przeczytane</a>
+					<span v-if="allReadLoading" class="loader"></span>
 				</div>
 			</div>
 		</transition>
@@ -59,20 +60,26 @@
 
 	.wnl-dropdown
 		height: 100%
+		max-width: $navbar-height
 		min-height: 100%
+		min-width: $navbar-height
 		position: relative
+		width: $navbar-height
 
 	.flag
-		position: absolute
-		border-radius: 20%
-		font-size: $font-size-minus-4
-		background: $color-red
+		align-items: center
+		background: $color-ocean-blue
+		border-radius: $border-radius-full
 		color: $color-white
-		padding: 1px 3px 1px 3px
-		top: 10px
-		right: 3px
-		border: thin solid white
-		line-height: 100%
+		display: flex
+		font-size: $font-size-minus-3
+		font-weight: $font-weight-black
+		justify-content: center
+		height: 1.7em
+		position: absolute
+		left: ($navbar-height / 2.1)
+		top: $margin-medium
+		width: 1.7em
 
 	.activator
 		align-items: center
@@ -82,12 +89,8 @@
 		height: 100%
 		justify-content: center
 		margin-left: -$margin-small
-		max-width: $navbar-height
 		min-height: 100%
-		min-width: $navbar-height
-		padding: 0 $margin-small
 		transition: background $transition-length-base
-		width: $navbar-height
 
 		&:hover
 			background-color: $color-background-light-gray
@@ -185,6 +188,9 @@
 		height: $footer-height
 		justify-content: center
 		padding: $margin-small $margin-medium
+
+		.loader
+			margin-left: $margin-small
 </style>
 
 <script>
@@ -209,6 +215,7 @@
 		},
 		data() {
 			return {
+				allReadLoading: false,
 				isActive: false,
 				limit: 15,
 				PersonalNotification,
@@ -219,6 +226,7 @@
 			...mapGetters('notifications', {
 				channel: 'userChannel',
 				getUnseen: 'getUnseen',
+				getUnread: 'getUnread',
 			}),
 			canShowMore() {
 				return this.hasMore(this.channel)
@@ -235,22 +243,30 @@
 			unseenCount() {
 				return _.size(this.getUnseen(this.channel))
 			},
+			unreadCount() {
+				return _.size(this.getUnread(this.channel))
+			},
 		},
 		methods: {
 			...mapActions('notifications', [
 				'markAllAsSeen',
 				'markAllAsRead',
 			]),
-			toggle() {
-				if (!this.isActive && !!this.unseenCount) {
-					this.markAllAsSeen(this.channel)
-				}
-				this.isActive = !this.isActive
+			allRead() {
+				this.allReadLoading = true
+				this.markAllAsRead(this.channel)
+					.then(() => {
+						this.allReadLoading = false
+					})
 			},
 			clickHandler({target}) {
 				if (!this.$refs.dropdown.contains(target)) {
 					this.isActive = false
 				}
+			},
+			toggle() {
+				this.markAllAsSeen(this.channel)
+				this.isActive = !this.isActive
 			},
 		},
 		watch: {

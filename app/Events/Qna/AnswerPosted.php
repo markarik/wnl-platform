@@ -68,15 +68,10 @@ class AnswerPosted extends Event
 			'referer' => $this->referer,
 		];
 
-		$screen = $this->qnaAnswer->question->screen;
+		if (!empty($this->qnaAnswer->question->meta)) {
+			$decodedMeta = json_decode($this->qnaAnswer->question->meta);
 
-		if ($screen){
-			$lesson = $this->qnaAnswer->question->screen->lesson;
-
-			$this->data['context'] = [
-				'screenId' => $screen->id,
-				'lessonId' => $lesson->id
-			];
+			$this->data['context'] = $decodedMeta->context;
 		}
 	}
 }

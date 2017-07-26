@@ -18,7 +18,6 @@
 					</div>
 					<div v-else>
 						<component :is="getEventComponent(message)"
-							:channel="channel"
 							:message="message"
 							:key="id"
 							:notificationComponent="PersonalNotification"

@@ -3,25 +3,21 @@
 
 	export default {
 		functional: true,
-		render: (createElement, {props}) => {
+		render: (createElement, {props: {message, notificationComponent}}) => {
 			const contextRoute = () => ({
 				'qna_answer': {
-					name: 'screens',
-					params: {
-						courseId: props.message.context.courseId,
-						lessonId: props.message.context.lessonId,
-						screenId: props.message.context.screenId,
-					}
-				}[props.message.object.type]
+					name: message.context.name,
+					params: message.context.params
+				}[message.object.type]
 			})
 
-			return createElement(props.notificationComponent, {
+			return createElement(notificationComponent, {
 				props: {
-					message: props.message,
-					channel: props.channel,
+					message,
+					channel: message.channel,
 					action: 'skomentował/-a',
 					icon: 'fa-comments-o',
-					routeContext: getContextRoute(contextRoute, props.message.referer),
+					routeContext: getContextRoute(contextRoute, message.referer),
 				},
 			})
 		},

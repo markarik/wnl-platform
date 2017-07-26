@@ -62,5 +62,11 @@ class QuestionPosted extends Event
 			],
 			'referer' => $this->referer,
 		];
+
+		if (!empty($this->qnaQuestion->meta)) {
+			$decodedMeta = json_decode($this->qnaQuestion->meta);
+
+			$this->data['context'] = $decodedMeta->context;
+		}
 	}
 }

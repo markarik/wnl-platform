@@ -13,10 +13,6 @@ export const baseProps = {
 		required: true,
 		type: Object,
 	},
-	channel: {
-		required: true,
-		type: String
-	},
 	notificationComponent: {
 		required: true,
 		type: Object

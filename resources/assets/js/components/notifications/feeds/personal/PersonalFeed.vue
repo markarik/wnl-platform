@@ -26,14 +26,14 @@
 							v-if="hasComponentForEvent(message)"
 						/>
 						<div class="show-more">
-							<a v-if="hasMore" class="button is-small is-outlined"
-								:class="{'is-loading': isFetching}"
+							<a v-if="canShowMore" class="button is-small is-outlined"
+								:class="{'is-loading': fetching}"
 								@click="loadMore"
 							>
 								Pokaż więcej
 							</a>
-							<span class="small text-dimmed has-text-centered" v-else>
-								Wszystkie powiadomienia przeczytane <wnl-emoji name="+1"/>
+							<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
+								To już wszystko! <wnl-emoji name="+1"/>
 							</span>
 						</div>
 					</div>
@@ -200,7 +200,8 @@
 		data() {
 			return {
 				isActive: false,
-				PersonalNotification
+				limit: 15,
+				PersonalNotification,
 			}
 		},
 		computed: {
@@ -211,6 +212,12 @@
 			}),
 			unseenCount() {
 				return _.size(this.getUnseen(this.channel))
+			},
+			canShowMore() {
+				return this.hasMore(this.channel)
+			},
+			showEndInfo() {
+				return this.totalNotifications > this.limit && !this.canShowMore
 			},
 		},
 		methods: {
@@ -228,12 +235,12 @@
 				if (!this.$refs.dropdown.contains(target)) {
 					this.isActive = false
 				}
-			}
+			},
 		},
 		watch: {
 			'$route' (to, from) {
 				this.isActive = false
-			}
+			},
 		},
 		mounted() {
 			document.addEventListener('click', this.clickHandler)

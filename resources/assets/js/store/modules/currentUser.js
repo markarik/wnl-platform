@@ -25,6 +25,7 @@ const getters = {
 	currentUser: state => state.profile,
 	currentUserId: state => state.profile.id,
 	currentUserAvatar: state => state.profile.avatar,
+	currentUserEmail: state => state.profile.public_email,
 	currentUserName: state => state.profile.first_name,
 	currentUserFullName: state => state.profile.full_name,
 	currentUserRoles: state => state.profile.roles,

@@ -2,6 +2,8 @@ export const notifications = {
 	personal: {
 		heading: 'Powiadomienia',
 		markAllAsRead: 'Oznacz wszystkie jako przeczytane',
+		showMore: 'Pokaż więcej',
+		thatsAll: 'To już wszystko!',
 		turnOff: 'Wycisz',
 		turnOn: 'Włącz',
 	},

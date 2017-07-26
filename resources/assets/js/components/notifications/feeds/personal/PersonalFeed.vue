@@ -1,15 +1,16 @@
 <template>
-	<div class="wnl-dropdown" ref="dropdown">
-		<div class="activator" :class="{ 'is-active' : isActive, 'is-off': !isOn }" @click="toggle">
-			<div v-if="isOn && !!unseenCount" class="flag">{{ unseenCount }}</div>
-			<span class="icon">
-				<i class="fa" :class="iconClass"></i>
-			</span>
-		</div>
-		<transition name="fade">
-			<div class="box drawer" :class="{'is-mobile': isMobile}" v-if="isActive">
+	<div class="dropdown-container">
+		<wnl-dropdown :options="{isWide: true}" @toggled="toggle">
+			<div slot="activator" class="notifications-toggle"
+				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
+				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
+				<span class="icon">
+					<i class="fa" :class="iconClass"></i>
+				</span>
+			</div>
+			<div slot="content">
 				<div class="personal-feed-header">
-					<span class="feed-heading">Powiadomienia</span>
+					<span class="feed-heading">{{$t('notifications.personal.heading')}}</span>
 					<wnl-notifications-toggle/>
 				</div>
 
@@ -31,21 +32,21 @@
 								:class="{'is-loading': fetching}"
 								@click="loadMore"
 							>
-								Pokaż więcej
+								{{$t('notifications.personal.showMore')}}
 							</a>
 							<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
-								To już wszystko! <wnl-emoji name="+1"/>
+								{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
 							</span>
 						</div>
 					</div>
 				</div>
 
 				<div class="personal-feed-footer" v-if="unreadCount > 0">
-					<a class="link" @click="allRead">Oznacz wszystkie jako przeczytane</a>
+					<a class="link" @click="allRead">{{$t('notifications.personal.markAllAsRead')}}</a>
 					<span v-if="allReadLoading" class="loader"></span>
 				</div>
 			</div>
-		</transition>
+		</wnl-dropdown>
 	</div>
 </template>
 
@@ -58,30 +59,14 @@
 	$body-margin-top: $header-height
 	$body-margin-bottom: $footer-height + $margin-big
 
-	.wnl-dropdown
-		height: 100%
-		max-width: $navbar-height
-		min-height: 100%
-		min-width: $navbar-height
-		position: relative
+	.dropdown-container
+		align-items: center
+		display: flex
+		height: $navbar-height
+		justify-content: center
 		width: $navbar-height
 
-	.flag
-		align-items: center
-		background: $color-ocean-blue
-		border-radius: $border-radius-full
-		color: $color-white
-		display: flex
-		font-size: $font-size-minus-3
-		font-weight: $font-weight-black
-		justify-content: center
-		height: 1.7em
-		position: absolute
-		left: ($navbar-height / 2.1)
-		top: $margin-medium
-		width: 1.7em
-
-	.activator
+	.notifications-toggle
 		align-items: center
 		color: $color-gray-dimmed
 		cursor: pointer
@@ -92,7 +77,7 @@
 		min-height: 100%
 		transition: background $transition-length-base
 
-		&:hover
+		&.is-desktop:hover
 			background-color: $color-background-light-gray
 			transition: background $transition-length-base
 
@@ -109,37 +94,20 @@
 		.icon
 			margin: 0 $margin-tiny
 
-	.drawer
-		+shadow()
-
-		max-width: 100vw
-		padding: 0
+	.counter
+		align-items: center
+		background: $color-ocean-blue
+		border-radius: $border-radius-full
+		color: $color-white
+		display: flex
+		font-size: $font-size-minus-3
+		font-weight: $font-weight-black
+		justify-content: center
+		height: 1.7em
 		position: absolute
-		right: 0
-		top: 95%
-		width: 440px
-		z-index: 100
-
-		&.is-mobile
-			border-radius: 0
-			position: fixed
-			top: $navbar-height
-
-	.metadata,
-	.drawer-item
-		padding: $margin-small $margin-base
-		text-align: right
-		white-space: nowrap
-
-	.drawer-item
-		font-size: $font-size-minus-1
-
-		&:last-child
-			border: 0
-
-	.drawer-link,
-	.drawer-link.is-active
-		font-weight: $font-weight-regular
+		left: ($navbar-height / 2.1)
+		top: $margin-medium
+		width: 1.7em
 
 	.personal-feed
 		position: relative
@@ -169,7 +137,7 @@
 	.personal-feed-body
 		height: 70vh
 		padding: $body-margin-top 0 $body-margin-bottom
-		max-height: 400px
+		max-height: 390px
 		overflow-y: auto
 
 		.show-more
@@ -197,8 +165,9 @@
 	import _ from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
-	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
+	import Dropdown from 'js/components/global/Dropdown'
 	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
+	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
 	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 
@@ -208,6 +177,7 @@
 		name: 'PersonalFeed',
 		mixins: [feed],
 		components: {
+			'wnl-dropdown': Dropdown,
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-reaction-added': ReactionAdded,
@@ -222,7 +192,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobile', 'getSetting']),
+			...mapGetters(['isTouchScreen', 'getSetting']),
 			...mapGetters('notifications', {
 				channel: 'userChannel',
 				getUnseen: 'getUnseen',
@@ -256,29 +226,14 @@
 				this.allReadLoading = true
 				this.markAllAsRead(this.channel)
 					.then(() => {
+						this.markAllAsSeen(this.channel)
 						this.allReadLoading = false
 					})
 			},
-			clickHandler({target}) {
-				if (!this.$refs.dropdown.contains(target)) {
-					this.isActive = false
-				}
-			},
-			toggle() {
+			toggle(isActive) {
+				this.isActive = isActive
 				this.markAllAsSeen(this.channel)
-				this.isActive = !this.isActive
 			},
 		},
-		watch: {
-			'$route' (to, from) {
-				this.isActive = false
-			},
-		},
-		mounted() {
-			document.addEventListener('click', this.clickHandler)
-		},
-		beforeDestroy() {
-			document.removeEventListener('click', this.clickHandler)
-		}
 	}
 </script>

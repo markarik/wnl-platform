@@ -7,9 +7,38 @@ import store from 'js/store/store'
 import router from 'js/router'
 sync(store, router)
 
+
 // Import plugins
+// i18n
+import VueI18n from 'vue-i18n'
+import { pl } from 'js/i18n'
+
+Vue.use(VueI18n)
+Vue.config.lang = 'pl'
+
+const messages = {pl}
+const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages})
+
+// SweetAlert2
 import VueSweetAlert from 'vue-sweetalert'
 Vue.use(VueSweetAlert)
+
+// Simple Breakpoints
+import VueSimpleBreakpoints from 'vue-simple-breakpoints'
+Vue.use(VueSimpleBreakpoints, {
+	mobile: 759, //mobile needs a top boundary, not a bottom one
+	tablet: 760,
+	small_desktop: 980,
+	large_desktop: 1280
+})
+
+// Kindergarten
+import VueKindergarten from 'vue-kindergarten'
+Vue.use(VueKindergarten, {
+	child(store) {
+		return store && store.getters.currentUser
+	}
+})
 
 // Import and register global components
 import Alert from 'js/components/global/Alert.vue'
@@ -18,22 +47,7 @@ import Emoji from 'js/components/global/Emoji.vue'
 import Icon from 'js/components/global/Icon.vue'
 import ImageButton from 'js/components/global/ImageButton.vue'
 import TextLoader from 'js/components/global/TextLoader.vue'
-import VueSimpleBreakpoints from 'vue-simple-breakpoints'
-import VueKindergarten from 'vue-kindergarten'
 import Upload from 'js/components/global/Upload.vue'
-
-Vue.use(VueSimpleBreakpoints, {
-	mobile: 759, //mobile needs a top boundary, not a bottom one
-	tablet: 760,
-	small_desktop: 980,
-	large_desktop: 1280
-})
-
-Vue.use(VueKindergarten, {
-	child(store) {
-		return store && store.getters.currentUser
-	}
-})
 
 Vue.component('wnl-alert', Alert)
 Vue.component('wnl-avatar', Avatar)
@@ -54,6 +68,7 @@ import App from 'js/components/App.vue'
 const app = new Vue({
 	router,
 	store,
+	i18n,
 	...App
 }).$mount('#app')
 

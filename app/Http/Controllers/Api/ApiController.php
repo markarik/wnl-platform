@@ -86,7 +86,7 @@ class ApiController extends Controller
 	 * @param $resource
 	 * @return string
 	 */
-	protected static function getResourceModel($resource)
+	public static function getResourceModel($resource)
 	{
 		return 'App\Models\\' . self::getResourcesStudly($resource);
 	}

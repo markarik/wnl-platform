@@ -12,6 +12,9 @@
 				<img :src="logoSrc" :alt="logoAlt">
 			</router-link>
 		</div>
+		<div class="wnl-navbar-item wnl-navbar-profile" v-if="$moderatorFeed.isAllowed('access')">
+			<wnl-personal-feed/>
+		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown></wnl-user-dropdown>
 		</div>
@@ -90,6 +93,8 @@
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Dropdown from 'js/components/user/Dropdown.vue'
+	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
+	import moderatorFeed from 'js/perimeters/moderatorFeed';
 	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -98,6 +103,7 @@
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-user-dropdown': Dropdown,
+			'wnl-personal-feed': PersonalFeed,
 		},
 		computed: {
 			...mapGetters([
@@ -127,6 +133,9 @@
 		},
 		methods: {
 			...mapActions(['toggleSidenav', 'toggleChat'])
-		}
+		},
+		perimeters: [
+			moderatorFeed
+		]
 	}
 </script>

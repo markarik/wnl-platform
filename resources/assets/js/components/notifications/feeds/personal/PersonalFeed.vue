@@ -1,15 +1,16 @@
 <template>
 	<div class="wnl-dropdown" ref="dropdown">
-		<div class="activator" :class="{ 'is-active' : isActive }" @click="toggle">
-			<div class="flag" v-if="!!unseenCount">{{ unseenCount }}</div>
+		<div class="activator" :class="{ 'is-active' : isActive, 'is-off': !isOn }" @click="toggle">
+			<div v-if="isOn && !!unseenCount" class="flag">{{ unseenCount }}</div>
 			<span class="icon">
-				<i class="fa fa-bell"></i>
+				<i class="fa" :class="iconClass"></i>
 			</span>
 		</div>
 		<transition name="fade">
 			<div class="box drawer" :class="{'is-mobile': isMobile}" v-if="isActive">
 				<div class="personal-feed-header">
 					<span class="feed-heading">Powiadomienia</span>
+					<wnl-notifications-toggle/>
 				</div>
 
 				<div class="personal-feed-body">
@@ -81,9 +82,12 @@
 		height: 100%
 		justify-content: center
 		margin-left: -$margin-small
+		max-width: $navbar-height
 		min-height: 100%
+		min-width: $navbar-height
 		padding: 0 $margin-small
 		transition: background $transition-length-base
+		width: $navbar-height
 
 		&:hover
 			background-color: $color-background-light-gray
@@ -93,9 +97,11 @@
 			background-color: $color-background-light-gray
 			color: $color-gray
 
-			.username
-				color: $color-gray
-				font-weight: $font-weight-regular
+		&.is-off
+			color: $color-inactive-gray
+
+			&.is-active
+				color: $color-white
 
 		.icon
 			margin: 0 $margin-tiny
@@ -186,8 +192,11 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
+	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
+
+	const setting = 'notify_live'
 
 	export default {
 		name: 'PersonalFeed',
@@ -196,6 +205,7 @@
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-reaction-added': ReactionAdded,
+			'wnl-notifications-toggle': NotificationsToggle,
 		},
 		data() {
 			return {
@@ -205,19 +215,25 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobile']),
+			...mapGetters(['isMobile', 'getSetting']),
 			...mapGetters('notifications', {
 				channel: 'userChannel',
 				getUnseen: 'getUnseen',
 			}),
-			unseenCount() {
-				return _.size(this.getUnseen(this.channel))
-			},
 			canShowMore() {
 				return this.hasMore(this.channel)
 			},
+			iconClass() {
+				return this.isOn ? 'fa-bell' : 'fa-bell-slash'
+			},
+			isOn() {
+				return this.getSetting(setting)
+			},
 			showEndInfo() {
 				return this.totalNotifications > this.limit && !this.canShowMore
+			},
+			unseenCount() {
+				return _.size(this.getUnseen(this.channel))
 			},
 		},
 		methods: {

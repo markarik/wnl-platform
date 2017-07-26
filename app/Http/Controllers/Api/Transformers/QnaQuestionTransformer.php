@@ -29,8 +29,8 @@ class QnaQuestionTransformer extends ApiTransformer
 			$data['lessons'] = $this->parent;
 		}
 
-		if (!empty($question->context)) {
-			$data['context'] = json_decode($question->context);
+		if (!empty($question->meta)) {
+			$data['meta'] = $question->meta;
 		}
 
 		if (self::shouldInclude('reactions')) {

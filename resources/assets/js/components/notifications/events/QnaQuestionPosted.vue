@@ -6,7 +6,10 @@
 		render: (createElement, {props: {message, notificationComponent}}) => {
 			const contextRoute = () => ({
 				name: message.context.name,
-				params: message.context.params
+				params: message.context.params,
+				query: {
+					'qna_question': message.subjects.id
+				}
 			})
 
 			return createElement(notificationComponent, {

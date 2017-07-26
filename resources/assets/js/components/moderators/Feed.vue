@@ -9,7 +9,7 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
-				<wnl-feed type="moderator" :notifications="notifications" channel="moderatorsChannel"/>
+				<wnl-feed type="moderator" :notifications="notifications" :channel="moderatorsChannel"/>
 			</div>
 		</div>
 		<wnl-sidenav-slot

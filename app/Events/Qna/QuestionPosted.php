@@ -64,9 +64,7 @@ class QuestionPosted extends Event
 		];
 
 		if (!empty($this->qnaQuestion->meta)) {
-			$decodedMeta = json_decode($this->qnaQuestion->meta);
-
-			$this->data['context'] = $decodedMeta->context;
+			$this->data['context'] = $this->qnaQuestion->meta['context'];
 		}
 	}
 }

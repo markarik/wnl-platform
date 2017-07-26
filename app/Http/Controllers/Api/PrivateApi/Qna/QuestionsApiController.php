@@ -31,7 +31,7 @@ class QuestionsApiController extends ApiController
 		$question = QnaQuestion::create([
 			'text'    => $text,
 			'user_id' => $user->id,
-			'meta' => json_encode(['context' => $context])
+			'meta' => ['context' => $context]
 		]);
 
 		foreach ($tags as $tag) {

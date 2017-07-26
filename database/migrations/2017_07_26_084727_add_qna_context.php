@@ -14,8 +14,8 @@ class AddQnaContext extends Migration
 	public function up()
 	{
 		Schema::table('qna_questions', function (Blueprint $table) {
-			$table->mediumText('meta')->default(null)->after('text');
-		});	
+			$table->json('meta')->nullable()->after('text');
+		});
 	}
 
 	/**

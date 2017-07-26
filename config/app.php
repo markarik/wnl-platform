@@ -173,6 +173,8 @@ return [
 		Barryvdh\DomPDF\ServiceProvider::class,
 		Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 		Intervention\Image\ImageServiceProvider::class,
+		Laravel\Scout\ScoutServiceProvider::class,
+		ScoutEngines\Elasticsearch\ElasticsearchProvider::class,
 
         /*
          * Application Service Providers...

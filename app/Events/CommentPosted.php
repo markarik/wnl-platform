@@ -41,7 +41,7 @@ class CommentPosted extends Event
 				'type' => $commentableType,
 				'id'   => $commentable->id,
 				'text' => $this->sanitize($commentable->text ?? ''),
-				'snippet' => $this->sanitize($commentable->snippet ?? ''),
+				'snippet' => $commentable->snippet ?? [],
 			],
 			'subject' => [
 				'type' => 'comment',

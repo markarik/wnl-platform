@@ -44,6 +44,7 @@ export const notification = {
 
 			this.loading = true
 
+			// TODO mark as read only when NOT read
 			this.markAsRead({notification: this.message, channel: this.channel})
 				.then(() => {
 					this.loading = false

@@ -8,7 +8,7 @@
 				name: message.context.name,
 				params: message.context.params,
 				query: {
-					'qna_question': message.object.id
+					'qna_question': message.objects.id
 				}
 			})
 

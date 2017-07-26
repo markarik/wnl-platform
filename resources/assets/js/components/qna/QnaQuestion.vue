@@ -1,9 +1,9 @@
 <template>
-	<div class="qna-thread" :class="{'is-mobile': isMobile}">
+	<div class="qna-thread" :class="{'is-mobile': isMobile, 'isHighlighted': isHighlighted}">
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="qna-question">
+		<div :class="{'qna-question': true, 'isHighlighted': isHighlighted}">
 			<div class="votes">
 				<wnl-vote
 					type="up"
@@ -15,7 +15,7 @@
 			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content" v-html="content"></div>
+					<div class="qna-question-content" v-html="content" ref="question"></div>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"
@@ -159,6 +159,21 @@
 		margin-right: $margin-small
 		margin-top: $margin-small
 
+	.isHighlighted
+		@keyframes colorchange
+			0%
+				background: yellowgreen
+			75%
+				background: initial
+
+		@-webkit-keyframes colorchange
+			0%
+				background: yellowgreen
+			75%
+				background: initial
+
+		animation: colorchange 5s
+		-webkit-animation: colorchange 5s
 </style>
 
 <script>
@@ -173,6 +188,7 @@
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 
 	import { timeFromS } from 'js/utils/time'
+	import { scrollToElement } from 'js/utils/animations'
 
 	export default {
 		name: 'QnaQuestion',
@@ -253,6 +269,10 @@
 			},
 			voteState() {
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")
+			},
+			isHighlighted() {
+				// dobule "=" because one is numeric and second one is string... :(
+				return _.get(this.$route.query, 'qna_question') == this.questionId
 			}
 		},
 		methods: {
@@ -275,5 +295,8 @@
 				this.removeQuestion(this.id)
 			},
 		},
+		mounted() {
+			this.isHighlighted && scrollToElement(this.$refs.question)
+		}
 	}
 </script>

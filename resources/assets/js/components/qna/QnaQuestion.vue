@@ -304,10 +304,13 @@
 				}
 
 				return false;
+			},
+			scrollToIfHighlighted() {
+				this.isHighlighted && scrollToElement(this.$refs.question)
 			}
 		},
 		mounted() {
-			this.isHighlighted && scrollToElement(this.$refs.question)
+			this.scrollToIfHighlighted()
 			this.allAnswers = this.shouldExpandAll()
 		}
 	}

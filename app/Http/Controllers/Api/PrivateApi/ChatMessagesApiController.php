@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Api\PrivateApi\Chat;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use Auth;
 use App\Models\ChatRoom;

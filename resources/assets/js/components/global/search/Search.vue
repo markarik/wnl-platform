@@ -8,7 +8,7 @@
 			<input type="text"
 				   ref="must"
 				   v-model="phrase"
-				   @change="search"
+				   @keyup="search"
 				   placeholder="Szukaj...">
 
 		</div>
@@ -39,6 +39,8 @@
 </style>
 
 <script>
+	import {getApiUrl} from 'js/utils/env'
+
 	export default {
 		name: 'Search',
 		data() {
@@ -59,7 +61,7 @@
 				this.phrase = ''
 			},
 			search() {
-
+				axios.get(getApiUrl(`slides/.search?q=${this.phrase}`))
 			},
 			keyDown(e) {
 				// Ctrl + Alt + f
@@ -75,5 +77,5 @@
 		mounted() {
 			window.addEventListener('keydown', this.keyDown)
 		}
-	}
+	};
 </script>

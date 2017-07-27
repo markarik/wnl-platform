@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Api\PrivateApi\Quiz;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;

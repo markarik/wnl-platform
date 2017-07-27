@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Api\PrivateApi\Course;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Models\Category;
 use App\Models\Screen;

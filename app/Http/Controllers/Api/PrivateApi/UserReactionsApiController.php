@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Api\PrivateApi\User;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\Transformers\ReactableTransformer;
 use Auth;

@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Api\PrivateApi\Course;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;

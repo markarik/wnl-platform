@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Api\PrivateApi\Qna;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\Transformers\QnaAnswerTransformer;
 use App\Http\Controllers\Api\ApiController;

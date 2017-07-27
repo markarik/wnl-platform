@@ -92,7 +92,7 @@ class ApiCache
 	{
 		if (!empty($this->tags)) return $this->tags;
 
-		$resource = $request->route()->controller->resourceName;
+		$resource = $this->getResource($request);
 
 		$this->tags = ['api', $resource];
 
@@ -108,5 +108,19 @@ class ApiCache
 		}
 
 		return $this->tags;
+	}
+
+	/**
+	 * @param $request
+	 *
+	 * @return mixed
+	 */
+	protected function getResource($request)
+	{
+		if ($request->route('resource') !== null) {
+			return $request->route('resource');
+		}
+
+		return $request->route()->controller->resourceName;
 	}
 }

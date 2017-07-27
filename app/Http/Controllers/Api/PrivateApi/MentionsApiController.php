@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Api\PrivateApi\Events;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use Auth;
 use App\Models\User;

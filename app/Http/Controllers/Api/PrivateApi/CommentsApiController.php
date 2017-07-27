@@ -1,7 +1,4 @@
-<?php
-
-
-namespace App\Http\Controllers\Api\PrivateApi;
+<?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\CommentTransformer;

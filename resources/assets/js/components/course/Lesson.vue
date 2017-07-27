@@ -182,6 +182,8 @@
 				});
 			},
 			goToDefaultScreenIfNone() {
+				const query = this.$route.query || {}
+
 				if (!this.screenId) {
 					this.getSavedLesson(this.courseId, this.lessonId)
 						.then(({route, status}) => {
@@ -194,9 +196,9 @@
 								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
 									params.slide = 1;
 								}
-								this.$router.replace({name: resource('screens'), params})
+								this.$router.replace({name: resource('screens'), params, query})
 							} else if (route && route.hasOwnProperty('name')) {
-								this.$router.replace(route)
+								this.$router.replace({...route, query})
 							}
 						});
 				} else if (this.screenId && !this.slide) {
@@ -209,7 +211,7 @@
 					if (this.currentScreen.type === 'slideshow') {
 						params.slide = 1;
 					}
-					this.$router.replace({name: resource('screens'), params})
+					this.$router.replace({name: resource('screens'), params, query})
 				}
 
 				this.updateLessonNav({

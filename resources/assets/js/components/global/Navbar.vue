@@ -13,6 +13,9 @@
 			</router-link>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile" v-if="$moderatorFeed.isAllowed('access')">
+			<wnl-search/>
+		</div>
+		<div class="wnl-navbar-item wnl-navbar-profile" v-if="$moderatorFeed.isAllowed('access')">
 			<wnl-personal-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
@@ -92,6 +95,7 @@
 
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
+	import Search from 'js/components/global/search/Search'
 	import Dropdown from 'js/components/user/Dropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
 	import moderatorFeed from 'js/perimeters/moderatorFeed';
@@ -104,6 +108,7 @@
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-user-dropdown': Dropdown,
 			'wnl-personal-feed': PersonalFeed,
+			'wnl-search': Search,
 		},
 		computed: {
 			...mapGetters([

@@ -295,7 +295,7 @@
 			onDeleteSuccess() {
 				this.removeQuestion(this.id)
 			},
-			shouldExpandAll() {
+			isQuestionAnswerHighlighted() {
 				const answerId = _.get(this.$route, 'query.qna_answer')
 				if (answerId) {
 					const questionAnswers = this.questionAnswers(this.questionId)
@@ -311,7 +311,16 @@
 		},
 		mounted() {
 			this.scrollToIfHighlighted()
-			this.allAnswers = this.shouldExpandAll()
+			this.allAnswers = this.isQuestionAnswerHighlighted()
+		},
+		watch: {
+			'$route' (newRoute, oldRoute) {
+				this.dispatchFetchQuestion()
+					.then(() => {
+						this.scrollToIfHighlighted()
+						this.allAnswers = this.isQuestionAnswerHighlighted()
+					})
+			}
 		}
 	}
 </script>

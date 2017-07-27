@@ -25,6 +25,9 @@ export const mapMessageToRoute = (message, query) => {
 	return {
 		name: message.context.name,
 		params: message.context.params,
-		query,
+		query: {
+			...query,
+			noScroll: true
+		},
 	}
 }

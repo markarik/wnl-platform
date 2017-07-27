@@ -6,7 +6,6 @@ const state = {
 	currentLayout: '',
 	isSidenavOpen: false,
 	isChatOpen: false,
-	isOverlayVisible: false,
 	overlays: {},
 	canShowChat: false,
 	navigationToggleState: {}
@@ -45,7 +44,7 @@ const getters = {
 	isChatToggleVisible: (state, getters) => !getters.isMobile && !getters.isChatVisible,
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
 	canShowChat: state => state.canShowChat,
-	isOverlayVisible: state => state.isOverlayVisible,
+	isOverlayVisible: state => _.size(state.overlays) > 0,
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
 	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex]
 }
@@ -88,9 +87,6 @@ const mutations = {
 	},
 	[types.UI_KILL_CHAT] (state) {
 		set(state, 'canShowChat', false)
-	},
-	[types.UI_TOGGLE_OVERLAY] (state, isVisible) {
-		set(state, 'isOverlayVisible', isVisible)
 	},
 	[types.UI_DISPLAY_OVERLAY] (state, payload) {
 		if (payload.display) {

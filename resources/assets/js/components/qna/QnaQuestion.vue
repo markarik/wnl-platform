@@ -217,7 +217,7 @@
 				'getReaction',
 				'questionAnswers'
 			]),
-			...mapGetters(['currentUserId', 'isMobile']),
+			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
 			question() {
 				return this.getQuestion(this.questionId)
 			},
@@ -273,7 +273,7 @@
 			},
 			isHighlighted() {
 				// dobule "=" because one is numeric and second one is string... :(
-				return _.get(this.$route.query, 'qna_question') == this.questionId
+				return !this.isOverlayVisible && _.get(this.$route.query, 'qna_question') == this.questionId
 			}
 		},
 		methods: {
@@ -305,21 +305,23 @@
 
 				return false;
 			},
-			scrollToIfHighlighted() {
-				this.isHighlighted && scrollToElement(this.$refs.question)
+			scrollToAndShowAnswersIfHighlighted() {
+				if (this.isHighlighted) {
+					scrollToElement(this.$refs.question)
+				}
+				this.allAnswers = this.isQuestionAnswerHighlighted()
 			}
 		},
 		mounted() {
-			this.scrollToIfHighlighted()
-			this.allAnswers = this.isQuestionAnswerHighlighted()
+			this.scrollToAndShowAnswersIfHighlighted()
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
-				this.dispatchFetchQuestion()
-					.then(() => {
-						this.scrollToIfHighlighted()
-						this.allAnswers = this.isQuestionAnswerHighlighted()
-					})
+				this.isHighlighted && this.dispatchFetchQuestion()
+					.then(() => this.scrollToAndShowAnswersIfHighlighted())
+			},
+			'isOverlayVisible' (isVisible) {
+				this.scrollToAndShowAnswersIfHighlighted()
 			}
 		}
 	}

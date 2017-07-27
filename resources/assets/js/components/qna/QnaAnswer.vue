@@ -158,7 +158,7 @@
 				'answerComments',
 				'getReaction'
 			]),
-			...mapGetters(['currentUserId']),
+			...mapGetters(['currentUserId', 'isOverlayVisible']),
 			id() {
 				return this.answer.id
 			},
@@ -190,7 +190,7 @@
 				return this.getReaction(this.reactableResource, this.answer.id, "upvote")
 			},
 			isHighlighted() {
-				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+				return !this.isOverlayVisible && _.get(this.$route.query, 'qna_answer') == this.answer.id
 			}
 		},
 		methods: {
@@ -204,7 +204,7 @@
 			},
 			dispatchFetchComments() {
 				this.loading = true
-				this.fetchComments(this.id)
+				return this.fetchComments(this.id)
 					.then(() => {
 						this.commentsFetched = true
 						this.showComments = true
@@ -222,9 +222,22 @@
 					answerId: this.id,
 				})
 			},
+			scrollToAndShowCommentsIfHighlighted() {
+				!this.isOverlayVisible && this.isHighlighted && this.dispatchFetchComments()
+					.then(() => scrollToElement(this.$refs.answer, 150)
+				)
+			}
 		},
 		mounted() {
-			this.isHighlighted && scrollToElement(this.$refs.answer, 150)
+			this.scrollToAndShowCommentsIfHighlighted()
+		},
+		watch: {
+			'$route' (newRoute, oldRoute) {
+				this.scrollToAndShowCommentsIfHighlighted()
+			},
+			'isOverlayVisible' () {
+				this.scrollToAndShowCommentsIfHighlighted()
+			}
 		}
 	}
 </script>

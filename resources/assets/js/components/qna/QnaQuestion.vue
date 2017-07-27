@@ -15,7 +15,7 @@
 			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content" v-html="content" ref="question"></div>
+					<div class="qna-question-content" v-html="content"></div>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="qna-answers">
+		 <div class="qna-answers" ref="question">
 			<div class="level">
 				<div class="level-left">
 					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -296,7 +296,7 @@
 			},
 		},
 		mounted() {
-			this.isHighlighted && scrollToElement(this.$refs.question)
+			this.isHighlighted && scrollToElement(this.$refs.question, 0)
 		}
 	}
 </script>

@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Facades\Lib\SlideParser\Parser;
+use Laravel\Scout\Searchable;
 
 class Slide extends Model
 {
-	use Cached;
+	use Cached, Searchable;
 
 	protected $fillable = ['content', 'is_functional', 'snippet'];
 

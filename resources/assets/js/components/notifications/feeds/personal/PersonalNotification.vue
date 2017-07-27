@@ -33,7 +33,7 @@
 		align-items: flex-start
 		border-bottom: $border-light-gray
 		display: flex
-		font-size: $font-size-minus-2
+		font-size: $font-size-minus-1
 		justify-content: space-between
 		padding: $margin-medium
 		position: relative
@@ -70,13 +70,13 @@
 			color: $color-gray-dimmed
 
 		.subject
-			font-size: $font-size-minus-1
+			font-size: $font-size-base
 			line-height: $line-height-minus
 			margin-top: $margin-tiny
 
 		.time
 			color: $color-background-gray
-			font-size: $font-size-minus-3
+			font-size: $font-size-minus-2
 			margin-top: $margin-tiny
 
 			.icon

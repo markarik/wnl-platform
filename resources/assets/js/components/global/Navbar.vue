@@ -16,7 +16,7 @@
 			<wnl-personal-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
-			<wnl-user-dropdown></wnl-user-dropdown>
+			<wnl-user-dropdown/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-chat-toggle" v-if="canShowChatToggleInNavbar">
 			<span class="icon is-big"><i class="fa" v-bind:class="chatIconClass" @click="toggleChat"></i></span>
@@ -92,7 +92,7 @@
 
 <script>
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
-	import Dropdown from 'js/components/user/Dropdown.vue'
+	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
 	import moderatorFeed from 'js/perimeters/moderatorFeed';
 	import { mapGetters, mapActions } from 'vuex'
@@ -102,7 +102,7 @@
 		name: 'Navbar',
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-user-dropdown': Dropdown,
+			'wnl-user-dropdown': UserDropdown,
 			'wnl-personal-feed': PersonalFeed,
 		},
 		computed: {

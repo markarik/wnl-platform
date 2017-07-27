@@ -22,6 +22,8 @@
 		font-weight: $font-weight-black
 		cursor: default
 
+	.wnl-avatar
+		user-select: none
 </style>
 <script>
 	import _ from 'lodash'

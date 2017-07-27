@@ -6,14 +6,16 @@ import {set} from 'vue'
 const namespaced = true
 
 const state = {
-	fetching: false,
-	loading: true,
+	fetching: {},
+	hasMore: {},
 	notifications: {},
 }
 
 const getters = {
-	isLoading: (state) => state.loading,
-	isFetching: (state) => state.fetching,
+	hasMore: (state) => (channel) => state.hasMore[channel],
+	isFetching: (state) => (channel) => {
+		return _.isUndefined(state.fetching[channel]) || !!state.fetching[channel]
+	},
 	notifications: (state) => state.notifications,
 	userChannel: (state, getters, rootState, rootGetters) => {
 		return rootGetters.currentUserId && `private-${rootGetters.currentUserId}`
@@ -40,14 +42,14 @@ const getters = {
 }
 
 const mutations = {
-	[types.IS_LOADING] (state, isLoading) {
-		set(state, 'loading', isLoading)
-	},
-	[types.IS_FETCHING] (state, isFetching) {
-		set(state, 'fetching', isFetching)
-	},
 	[types.ADD_NOTIFICATION] (state, notification) {
 		set(state.notifications, notification.id, notification)
+	},
+	[types.CHANNEL_HAS_MORE] (state, {channel, hasMore}) {
+		set(state.hasMore, channel, hasMore)
+	},
+	[types.IS_FETCHING] (state, {channel, isFetching}) {
+		set(state.fetching, channel, isFetching)
 	},
 	[types.MODIFY_NOTIFICATION] (state, payload) {
 		set(state, 'notifications', {
@@ -62,20 +64,25 @@ const mutations = {
 
 const actions = {
 	pullNotifications({commit, rootGetters}, [ channel, options ]) {
-		commit(types.IS_FETCHING, true)
+		commit(types.IS_FETCHING, {channel, isFetching: true})
 		return new Promise ((resolve, reject) => {
 			_getNotifications(channel, rootGetters.currentUserId, options)
 				.then(response => {
 					if (typeof response.data[0] !== 'object') {
-						commit(types.IS_LOADING, false)
-						commit(types.IS_FETCHING, false)
+						commit(types.CHANNEL_HAS_MORE, {channel, hasMore: false})
+						commit(types.IS_FETCHING, {channel, isFetching: false})
+						resolve(response)
 					}
+
 					_.each(response.data, (notification) => {
 						commit(types.ADD_NOTIFICATION, notification)
 					})
 
-					commit(types.IS_LOADING, false)
-					commit(types.IS_FETCHING, false)
+					commit(types.CHANNEL_HAS_MORE, {
+						channel,
+						hasMore: !!options.limit && response.data.length >= options.limit
+					})
+					commit(types.IS_FETCHING, {channel, isFetching: false})
 
 					resolve(response)
 				})
@@ -110,11 +117,12 @@ const actions = {
 			return {'read_at': 'now'}
 		})
 
-		_updateMany(rootGetters.currentUserId, data)
+		return _updateMany(rootGetters.currentUserId, data)
 			.then((response) => {
 				_.each(response.data, (notification) => {
 					commit(types.ADD_NOTIFICATION, notification)
 				})
+				return response
 			})
 	},
 	initNotifications({getters, dispatch}) {

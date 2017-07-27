@@ -12,15 +12,10 @@
 					<span class="object-text" v-if="objectText">{{ objectText }}</span>
 				</div>
 				<div class="subject" v-if="subjectText">{{ subjectText }}</div>
-				<div class="notification-footer">
-					<div class="time">
-						<span class="icon is-tiny">
-							<i class="fa" :class="icon"></i>
-						</span> {{ formattedTime }}
-					</div>
-					<div class="goTo">
-
-					</div>
+				<div class="time">
+					<span class="icon is-tiny">
+						<i class="fa" :class="icon"></i>
+					</span> {{ formattedTime }}
 				</div>
 			</div>
 		</div>

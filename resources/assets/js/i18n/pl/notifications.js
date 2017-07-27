@@ -6,7 +6,7 @@ export const notifications = {
 		reactionAdded: 'polubił/-a',
 	},
 	moderators: {
-		isEmpty: 'Gratulację! Wszystkie powiadomienia sprawdzone!'
+		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!'
 	},
 	objects: {
 		comment: 'komentarz',

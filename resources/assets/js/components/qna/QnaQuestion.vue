@@ -3,7 +3,7 @@
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div :class="{'isHighlighted': isHighlighted, 'qna-question': true}" >
+		<div :class="{'highlighted': highlighted, 'qna-question': true}" >
 			<div class="votes">
 				<wnl-vote
 					type="up"
@@ -112,15 +112,10 @@
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
 		padding: $margin-base
+		transition: background 5s
 
-		&.isHighlighted
-			@keyframes colorchange
-				0%
-					background: yellowgreen
-				100%
-					background: $color-background-lighter-gray
-
-			animation: colorchange 5s
+		&.highlighted
+			background: green
 
 	.qna-question-content
 		font-size: $font-size-plus-1
@@ -198,7 +193,8 @@
 				allAnswers: false,
 				loading: false,
 				showAnswerForm: false,
-				reactableResource: "qna_questions"
+				reactableResource: "qna_questions",
+				highlighted: false
 			}
 		},
 		computed: {
@@ -264,9 +260,8 @@
 			voteState() {
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")
 			},
-			isHighlighted() {
-				// dobule "=" because one is numeric and second one is string... :(
-				return !this.isOverlayVisible && _.get(this.$route.query, 'qna_question') == this.questionId
+			isQuestionInUrl() {
+				return _.get(this.$route, 'query.qna_question') == this.questionId
 			}
 		},
 		methods: {
@@ -290,6 +285,7 @@
 			},
 			isQuestionAnswerHighlighted() {
 				const answerId = _.get(this.$route, 'query.qna_answer')
+
 				if (answerId) {
 					const questionAnswers = this.questionAnswers(this.questionId)
 
@@ -298,23 +294,44 @@
 
 				return false;
 			},
-			scrollToAndShowAnswersIfHighlighted() {
-				if (this.isHighlighted) {
-					scrollToElement(this.$refs.question)
-				}
-				this.allAnswers = this.isQuestionAnswerHighlighted()
+			scrollToQuestion() {
+				scrollToElement(this.$refs.question)
+				this.highlighted = true
+				this.allAnswers = true
+			},
+			cleanupRoute() {
+				const {qna_question, notification, noScroll, ...query} = this.$route.query
+				this.$router.replace({
+					...this.$route,
+					query
+				})
 			}
 		},
 		mounted() {
-			this.scrollToAndShowAnswersIfHighlighted()
+			if (this.isQuestionAnswerHighlighted) this.allAnswers = true
+
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.scrollToQuestion()
+				this.cleanupRoute()
+			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
-				this.isHighlighted && this.dispatchFetchQuestion()
-					.then(() => this.scrollToAndShowAnswersIfHighlighted())
+				this.highlighted = false
+				if (this.isQuestionAnswerHighlighted) this.allAnswers = true
+
+				!this.isOverlayVisible && this.isQuestionInUrl
+					&& this.dispatchFetchQuestion()
+						.then(() => {
+							this.scrollToQuestion()
+							this.cleanupRoute()
+						})
+
 			},
-			'isOverlayVisible' (isVisible) {
-				this.scrollToAndShowAnswersIfHighlighted()
+			'isOverlayVisible' () {
+				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.scrollToQuestion()
+				}
 			}
 		}
 	}

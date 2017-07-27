@@ -120,14 +120,7 @@
 				100%
 					background: $color-background-lighter-gray
 
-			@-webkit-keyframes colorchange
-				0%
-					background: yellowgreen
-				100%
-					background: $color-background-lighter-gray
-
 			animation: colorchange 5s
-			-webkit-animation: colorchange 5s
 
 	.qna-question-content
 		font-size: $font-size-plus-1

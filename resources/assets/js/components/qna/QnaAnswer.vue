@@ -81,14 +81,7 @@
 				100%
 					background: initial
 
-			@-webkit-keyframes colorchange
-				0%
-					background: blue
-				100%
-					background: initial
-
 			animation: colorchange 5s
-			-webkit-animation: colorchange 5s
 
 	.qna-answer-content
 		word-wrap: break-word

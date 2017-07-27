@@ -178,9 +178,6 @@ const getters = {
 				return sortByVotes(list)
 		}
 	},
-	getQuestionIndex: state => (id, list) => {
-		list.findIndex((question) => question.id === id)
-	},
 	// Resources
 	getQuestion: state => (id) => state.qna_questions[id],
 	answer:      state => (id) => state.qna_answers[id],

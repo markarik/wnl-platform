@@ -42,8 +42,6 @@
 
 	.drawer
 		border: $border-light-gray
-		-webkit-box-shadow: 2px 2px 10px 5px rgba(67,73,90,0.3)
-		-moz-box-shadow: 2px 2px 10px 5px rgba(67,73,90,0.3)
 		box-shadow: 2px 2px 10px 5px rgba(67,73,90,0.3)
 		padding: 0
 		position: absolute

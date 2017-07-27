@@ -1,5 +1,5 @@
 <template>
-	<div class="personal-notification" @click="goToContext">
+	<div class="personal-notification" @click="markAsReadAndGo">
 		<div class="actor">
 			<wnl-event-actor :message="message"/>
 		</div>
@@ -138,6 +138,24 @@
 
 				return truncate(this.message.subject.text, {length: 150})
 			}
-		}
+		},
+		methods: {
+			markAsReadAndGo() {
+				if(!this.hasContext) return false;
+
+				this.loading = true
+
+				if (!this.isRead) {
+					this.markAsRead({notification: this.message, channel: this.channel})
+					.then(() => {
+						this.goToContext()
+						this.loading = false
+					})
+				} else {
+					this.goToContext()
+					this.loading = false
+				}
+			},
+		},
 	}
 </script>

@@ -214,7 +214,8 @@
 				'getQuestion',
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
-				'getReaction'
+				'getReaction',
+				'questionAnswers'
 			]),
 			...mapGetters(['currentUserId', 'isMobile']),
 			question() {
@@ -294,9 +295,20 @@
 			onDeleteSuccess() {
 				this.removeQuestion(this.id)
 			},
+			shouldExpandAll() {
+				const answerId = _.get(this.$route, 'query.qna_answer')
+				if (answerId) {
+					const questionAnswers = this.questionAnswers(this.questionId)
+
+					return !!questionAnswers.find((answer) => answer.id == answerId)
+				}
+
+				return false;
+			}
 		},
 		mounted() {
 			this.isHighlighted && scrollToElement(this.$refs.question)
+			this.allAnswers = this.shouldExpandAll()
 		}
 	}
 </script>

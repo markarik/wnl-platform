@@ -1,9 +1,9 @@
 <template>
-	<div class="qna-thread" :class="{'is-mobile': isMobile, 'isHighlighted': isHighlighted}">
+	<div class="qna-thread" :class="{'is-mobile': isMobile}" ref="question">
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div :class="{'qna-question': true, 'isHighlighted': isHighlighted}">
+		<div :class="{'isHighlighted': isHighlighted, 'qna-question': true}" >
 			<div class="votes">
 				<wnl-vote
 					type="up"
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-		 <div class="qna-answers" ref="question">
+		 <div class="qna-answers">
 			<div class="level">
 				<div class="level-left">
 					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -113,6 +113,22 @@
 		border-bottom: $border-light-gray
 		padding: $margin-base
 
+		&.isHighlighted
+			@keyframes colorchange
+				0%
+					background: yellowgreen
+				100%
+					background: $color-background-lighter-gray
+
+			@-webkit-keyframes colorchange
+				0%
+					background: yellowgreen
+				100%
+					background: $color-background-lighter-gray
+
+			animation: colorchange 5s
+			-webkit-animation: colorchange 5s
+
 	.qna-question-content
 		font-size: $font-size-plus-1
 		justify-content: flex-start
@@ -158,22 +174,6 @@
 	.tag
 		margin-right: $margin-small
 		margin-top: $margin-small
-
-	.isHighlighted
-		@keyframes colorchange
-			0%
-				background: yellowgreen
-			75%
-				background: initial
-
-		@-webkit-keyframes colorchange
-			0%
-				background: yellowgreen
-			75%
-				background: initial
-
-		animation: colorchange 5s
-		-webkit-animation: colorchange 5s
 </style>
 
 <script>
@@ -296,7 +296,7 @@
 			},
 		},
 		mounted() {
-			this.isHighlighted && scrollToElement(this.$refs.question, 0)
+			this.isHighlighted && scrollToElement(this.$refs.question)
 		}
 	}
 </script>

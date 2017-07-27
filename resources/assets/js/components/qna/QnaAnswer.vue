@@ -1,5 +1,5 @@
 <template>
-	<div class="qna-answer-container">
+	<div :class="{'isHighlighted': isHighlighted, 'qna-answer-container': true}" ref="answer">
 		<div class="qna-answer">
 			<div class="votes">
 				<wnl-vote
@@ -74,6 +74,22 @@
 		border-top: $border-light-gray
 		margin-bottom: $margin-big
 
+		&.isHighlighted
+			@keyframes colorchange
+				0%
+					background: blue
+				100%
+					background: initial
+
+			@-webkit-keyframes colorchange
+				0%
+					background: blue
+				100%
+					background: initial
+
+			animation: colorchange 5s
+			-webkit-animation: colorchange 5s
+
 	.qna-answer-content
 		word-wrap: break-word
 		word-break: break-word
@@ -104,7 +120,6 @@
 
 	.qna-bookmark
 		justify-content: flex-end
-
 </style>
 
 <script>
@@ -117,6 +132,7 @@
 	import Vote from 'js/components/global/reactions/Vote'
 
 	import { timeFromS } from 'js/utils/time'
+	import { scrollToElement } from 'js/utils/animations'
 
 	export default {
 		name: 'QnaAnswer',
@@ -172,6 +188,9 @@
 			},
 			upvoteState() {
 				return this.getReaction(this.reactableResource, this.answer.id, "upvote")
+			},
+			isHighlighted() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
 			}
 		},
 		methods: {
@@ -204,5 +223,8 @@
 				})
 			},
 		},
+		mounted() {
+			this.isHighlighted && scrollToElement(this.$refs.answer, 150)
+		}
 	}
 </script>

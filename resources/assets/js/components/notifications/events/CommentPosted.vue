@@ -1,14 +1,11 @@
 <script>
-	import {getContextRoute, baseProps} from './event'
+	import {getContextRoute, baseProps, mapMessageToRoute} from './event'
 
 	export default {
 		functional: true,
 		render: (createElement, {props: {message, notificationComponent}}) => {
-			const contextRoute = () => ({
-				'qna_answer': {
-					name: message.context.name,
-					params: message.context.params
-				}[message.object.type]
+			const contextRoute = () => mapMessageToRoute(message, {
+				[message.objects.type]: message.objects.id
 			})
 
 			return createElement(notificationComponent, {

@@ -20,3 +20,11 @@ export const baseProps = {
 		type: Object
 	}
 }
+
+export const mapMessageToRoute = (message, query) => {
+	return {
+		name: message.context.name,
+		params: message.context.params,
+		query,
+	}
+}

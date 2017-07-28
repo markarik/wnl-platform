@@ -16,9 +16,10 @@ class LiveChannel
 	 */
 	public function send($notifiable, EventNotification $notification)
 	{
-		// This is a custom implementation of broadcast channel, as
-		// the laravel's built-in broadcast channel doesn't allow for
-		// using 'toOthers' method (or at least I haven't found a way to do that).
+		if ($notifiable->id === $notification->event->data['actors']['id']){
+			return;
+		}
+
 		$message = new BroadcastMessage($notification->event->data);
 
 		$event = new LiveNotificationCreated(

@@ -1,9 +1,9 @@
 <template>
-	<div class="qna-thread" :class="{'is-mobile': isMobile}" ref="question">
+	<div class="qna-thread" :class="{'is-mobile': isMobile}">
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div :class="{'highlighted': highlighted, 'qna-question': true}" >
+		<div class="qna-question" ref="highlight">
 			<div class="votes">
 				<wnl-vote
 					type="up"
@@ -114,9 +114,6 @@
 		padding: $margin-base
 		transition: background 5s
 
-		&.highlighted
-			background: green
-
 	.qna-question-content
 		font-size: $font-size-plus-1
 		justify-content: flex-start
@@ -166,7 +163,6 @@
 
 <script>
 	import _ from 'lodash'
-	import { nextTick } from 'vue'
 	import { mapGetters, mapActions } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
@@ -174,12 +170,13 @@
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/global/reactions/Vote'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
+	import highlight from 'js/mixins/highlight'
 
 	import { timeFromS } from 'js/utils/time'
-	import { scrollToElement } from 'js/utils/animations'
 
 	export default {
 		name: 'QnaQuestion',
+		mixins: [ highlight ],
 		components: {
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
@@ -194,7 +191,7 @@
 				loading: false,
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
-				highlighted: false
+				highlightableResource: "qna_question"
 			}
 		},
 		computed: {
@@ -294,43 +291,36 @@
 
 				return false;
 			},
-			scrollToQuestion() {
-				scrollToElement(this.$refs.question)
-				this.highlighted = true
-				this.allAnswers = true
-			},
-			cleanupRoute() {
-				const {qna_question, notification, noScroll, ...query} = this.$route.query
-				this.$router.replace({
-					...this.$route,
-					query
-				})
-			}
 		},
 		mounted() {
 			if (this.isQuestionAnswerHighlighted) this.allAnswers = true
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.scrollToQuestion()
+				this.scrollToHighlight()
 				this.cleanupRoute()
+				this.highlight()
 			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
-				this.highlighted = false
 				if (this.isQuestionAnswerHighlighted) this.allAnswers = true
 
 				!this.isOverlayVisible && this.isQuestionInUrl
 					&& this.dispatchFetchQuestion()
 						.then(() => {
-							this.scrollToQuestion()
+							this.scrollToHighlight()
 							this.cleanupRoute()
+							this.highlight()
+
+							this.allAnswers = true
 						})
 
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.scrollToQuestion()
+					this.scrollToHighlight()
+					this.cleanupRoute()
+					this.highlight()
 				}
 			}
 		}

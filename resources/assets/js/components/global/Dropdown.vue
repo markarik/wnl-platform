@@ -84,7 +84,7 @@
 		},
 		methods: {
 			clickHandler({target}) {
-				if (!this.$el.contains(target)) {
+				if (this.isActive && !this.$el.contains(target)) {
 					this.isActive = false
 					this.$emit('toggled', false)
 				}

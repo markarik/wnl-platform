@@ -140,6 +140,10 @@
 			}
 		},
 		methods: {
+			dispatchGoToContext() {
+				this.goToContext()
+				this.loading = false
+			},
 			markAsReadAndGo() {
 				if(!this.hasContext) return false;
 
@@ -147,13 +151,11 @@
 
 				if (!this.isRead) {
 					this.markAsRead({notification: this.message, channel: this.channel})
-					.then(() => {
-						this.goToContext()
-						this.loading = false
-					})
+						.then(() => {
+							this.dispatchGoToContext()
+						})
 				} else {
-					this.goToContext()
-					this.loading = false
+					this.dispatchGoToContext()
 				}
 			},
 		},

@@ -40,6 +40,7 @@ export const notification = {
 	methods: {
 		...mapActions('notifications', ['markAsRead']),
 		goToContext() {
+			this.$emit('goingToContext')
 			if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)
 			} else if (typeof this.routeContext === 'string') {

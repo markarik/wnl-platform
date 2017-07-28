@@ -100,11 +100,5 @@
 		mounted() {
 			document.addEventListener('click', this.clickHandler)
 		},
-		watch: {
-			'$route' (to, from) {
-				this.isActive = false
-				this.$emit('toggled', false)
-			},
-		},
 	}
 </script>

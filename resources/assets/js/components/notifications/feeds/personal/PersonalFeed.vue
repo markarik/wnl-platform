@@ -29,6 +29,7 @@
 							:message="message"
 							:key="id"
 							:notificationComponent="PersonalNotification"
+							@goingToContext="toggle(false)"
 							v-for="(message, id) in notifications"
 							v-if="hasComponentForEvent(message)"
 						/>

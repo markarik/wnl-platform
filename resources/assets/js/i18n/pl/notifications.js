@@ -22,5 +22,7 @@ export const notifications = {
 		thatsAll: 'To już wszystko!',
 		turnOff: 'Wycisz',
 		turnOn: 'Włącz',
+		zeroState: 'Gdy zaczniesz zadawać pytania, odpowiadać oraz komentować, tu znajdziesz powiadomienia dotyczące swoich wpisów!',
+		zeroStateImage: 'Włącz się do dyskusji',
 	},
 }

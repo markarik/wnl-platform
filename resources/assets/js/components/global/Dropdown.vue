@@ -76,7 +76,7 @@
 		},
 		data() {
 			return {
-				isActive: false,
+				isActive: true,
 			}
 		},
 		computed: {

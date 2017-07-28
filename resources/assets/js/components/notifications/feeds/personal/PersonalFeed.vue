@@ -15,10 +15,16 @@
 				</div>
 
 				<div class="personal-feed-body">
-					<div class="notification aligncenter" v-if="isEmpty">
-						Nic tu nie ma ¯\_(ツ)_/¯
+					<div class="zero-state" v-if="isEmpty">
+						<img class="zero-state-image"
+							title="$t('notifications.personal.zeroStateImage')"
+							:alt="$t('notifications.personal.zeroStateImage')"
+							:src="zeroStateImage">
+						<p class="zero-state-text">
+							{{$t('notifications.personal.zeroState')}}
+						</p>
 					</div>
-					<div v-else>
+					<div v-else class="personal-feed-content">
 						<component :is="getEventComponent(message)"
 							:message="message"
 							:key="id"
@@ -135,9 +141,11 @@
 
 	.personal-feed-body
 		height: 70vh
-		padding: $body-margin-top 0 $body-margin-bottom
 		max-height: 390px
 		overflow-y: auto
+
+		.personal-feed-content
+			padding: $body-margin-top 0 $body-margin-bottom
 
 		.show-more
 			align-items: center
@@ -158,6 +166,25 @@
 
 		.loader
 			margin-left: $margin-small
+
+	.zero-state
+		align-items: center
+		display: flex
+		flex-direction: column
+		justify-content: center
+		height: 100%
+		padding: $margin-big
+		width: 100%
+
+		.zero-state-image
+			min-width: 150px
+			width: 50%
+
+		.zero-state-text
+			color: $color-gray-dimmed
+			font-size: $font-size-minus-1
+			margin-top: $margin-big
+			text-align: center
 </style>
 
 <script>
@@ -169,6 +196,7 @@
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
 	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
+	import { getImageUrl } from 'js/utils/env'
 
 	const setting = 'notify_live'
 
@@ -214,6 +242,9 @@
 			},
 			unreadCount() {
 				return _.size(this.getUnread(this.channel))
+			},
+			zeroStateImage() {
+				return getImageUrl('notifications-zero.png')
 			},
 		},
 		methods: {

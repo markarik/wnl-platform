@@ -3,6 +3,7 @@
 
 use App\Events\CommentPosted;
 use App\Listeners\UserNotificationsGate;
+use App\Models\User;
 
 class CommentPostedHandler
 {
@@ -29,8 +30,12 @@ class CommentPostedHandler
 
 	protected function notifyCoCommentators($commentable, $gate, $event):void
 	{
-		foreach ($commentable->comments as $comment) {
-			$gate->notifyPrivate($comment->user, $event);
+		$users = User::whereHas('comments', function($query) use ($commentable) {
+			$query->whereIn('id', $commentable->comments->pluck('id'));
+		})->get();
+
+		foreach ($users as $user) {
+			$gate->notifyPrivate($user, $event);
 		}
 	}
 }

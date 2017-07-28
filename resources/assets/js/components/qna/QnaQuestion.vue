@@ -265,6 +265,12 @@
 
 				return questionId == this.questionId && answerId
 			},
+			isCommentToAnswerHighlighted() {
+				const answerId = _.get(this.$route, 'query.qna_answer')
+				return answerId &&
+					_.get(this.$route, 'query.comment') &&
+					this.hasAnswer(answerId)
+			},
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
@@ -278,16 +284,24 @@
 						this.loading = false
 					})
 			},
-			onSubmitSuccess() {
-				this.showAnswerForm = false
-				this.dispatchFetchQuestion()
+			getAnswer(id) {
+				return this.answersFromHighestUpvoteCount.filter(answer => answer.id == id)
+			},
+			hasAnswer(id) {
+				return this.getAnswer(id).length > 0
 			},
 			onDeleteSuccess() {
 				this.removeQuestion(this.id)
 			},
+			onSubmitSuccess() {
+				this.showAnswerForm = false
+				this.dispatchFetchQuestion()
+			},
 		},
 		mounted() {
-			if (this.isQuestionAnswerHighlighted) this.allAnswers = true
+			if (this.isQuestionAnswerHighlighted || this.isCommentToAnswerHighlighted) {
+				this.allAnswers = true
+			}
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
 				this.allAnswers = true

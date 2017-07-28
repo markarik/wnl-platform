@@ -1,3 +1,6 @@
+import queryString from 'query-string'
+import appendQuery from 'append-query'
+
 export const getContextRoute = (routeContext, fallback) => {
 	let context = fallback
 
@@ -23,7 +26,13 @@ export const baseProps = {
 
 export const mapMessageToRoute = (message, query) => {
 	if (!message.context.name) {
-		return message.referer
+		const url = message.referer.split('?')[0];
+
+		return appendQuery(url, queryString.stringify({
+			...query,
+			notification: message.id,
+			noScroll: true
+		}));
 	}
 
 	return {

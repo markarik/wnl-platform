@@ -13,7 +13,7 @@
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-profile" v-if="$moderatorFeed.isAllowed('access')">
+		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-personal-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
@@ -103,7 +103,6 @@
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
-	import moderatorFeed from 'js/perimeters/moderatorFeed';
 	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -140,8 +139,5 @@
 		methods: {
 			...mapActions(['toggleSidenav', 'toggleChat'])
 		},
-		perimeters: [
-			moderatorFeed
-		]
 	}
 </script>

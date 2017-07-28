@@ -18,7 +18,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Search
 	Route::get("{resource}/.search", function($resource) {
 		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
-		App::make($controller)->search(App::make('request'));
+		return App::make($controller)->search(App::make('request'));
 	});
 
 	// Courses

@@ -8,9 +8,9 @@
 			<input type="text"
 				   ref="must"
 				   v-model="phrase"
-				   @keyup="search"
 				   placeholder="Szukaj...">
 
+			<wnl-slides-search :phrase="phrase" />
 		</div>
 	</div>
 </template>
@@ -39,14 +39,17 @@
 </style>
 
 <script>
-	import {getApiUrl} from 'js/utils/env'
+	import SlidesSearch from './SlidesSearch'
 
 	export default {
 		name: 'Search',
+		components: {
+			'wnl-slides-search': SlidesSearch
+		},
 		data() {
 			return {
 				active: false,
-				phrase: '',
+				phrase: ''
 			}
 		},
 		methods: {
@@ -59,9 +62,6 @@
 			hideOverlay() {
 				this.active = false
 				this.phrase = ''
-			},
-			search() {
-				axios.get(getApiUrl(`slides/.search?q=${this.phrase}`))
 			},
 			keyDown(e) {
 				// Ctrl + Alt + f

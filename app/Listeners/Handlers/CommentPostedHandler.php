@@ -34,7 +34,7 @@ class CommentPostedHandler
 			->whereHas('comments', function ($query) use ($commentable) {
 				$query->whereIn('id', $commentable->comments->pluck('id'));
 			})
-			->where('id', '!=', $event->data['actor']['id'])
+			->where('id', '!=', $event->data['actors']['id'])
 			->get();
 
 		foreach ($users as $user) {

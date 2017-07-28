@@ -26,7 +26,6 @@ const getters = {
 	isTouchScreen: state =>
 		[layouts.mobile, layouts.tablet].indexOf(state.currentLayout) !== -1,
 	canShowSidenavTrigger: (state, getters) => getters.isTouchScreen,
-	canShowBreadcrumbsInNavbar: (state, getters) => !getters.isTouchScreen,
 	canShowControlsInNavbar: (state, getters) => !getters.isMobile,
 	canShowChatToggleInNavbar: (state, getters, rootState) => {
 		// TODO: Figure out how to hide chat in a smarter way

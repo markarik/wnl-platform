@@ -9,7 +9,10 @@
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-branding">
 			<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
-				<img :src="logoSrc" :alt="logoAlt">
+				<!-- <img v-if="isMobile" class="logo-mobile" :src="logoSrcMobile" :alt="$t('nav.navbar.logoAlt')">
+				<img v-else :src="logoSrc" :alt="$t('nav.navbar.logoAlt')"> -->
+				<img class="logo-image" :src="logoSrc" :alt="$t('nav.navbar.logoAlt')">
+				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile" v-if="$moderatorFeed.isAllowed('access')">
@@ -78,13 +81,21 @@
 		padding-right: 0
 
 	.wnl-logo-link
+		align-items: center
 		box-sizing: content-box
-		display: block
-		max-width: 150px
+		display: flex
 		padding: $margin-base 0
 
-		img
+		.logo-image,
+		.logo-text
 			display: block
+
+		.logo-image
+			width: 50px
+
+		.logo-text
+			margin-left: $margin-small
+			width: 90px
 
 	.wnl-right
 		height: 100%
@@ -107,29 +118,26 @@
 		},
 		computed: {
 			...mapGetters([
-				'currentUserFullName',
-				'canShowSidenavTrigger',
-				'isSidenavOpen',
-				'isChatVisible',
-				'canShowBreadcrumbsInNavbar',
+				'canShowChatToggleInNavbar',
 				'canShowControlsInNavbar',
-				'canShowChatToggleInNavbar'
+				'canShowSidenavTrigger',
+				'currentUserFullName',
+				'isChatVisible',
+				'isMobile',
+				'isSidenavOpen',
 			]),
-			paymentUrl() {
-				return 'https://wiecejnizlek.pl'
+			chatIconClass() {
+				return this.isChatVisible ? 'fa-close' : 'fa-comments-o'
 			},
 			logoSrc() {
-				return getImageUrl('wnl-logo.svg')
+				return getImageUrl('wnl-logo-image.svg')
 			},
-			logoAlt() {
-				return 'Logo Więcej niż LEK'
+			logoTextSrc() {
+				return getImageUrl('wnl-logo-text.svg')
 			},
 			sidenavIconClass() {
 				return this.isSidenavOpen ? 'fa-close' : 'fa-bars'
 			},
-			chatIconClass() {
-				return this.isChatVisible ? 'fa-close' : 'fa-comments-o'
-			}
 		},
 		methods: {
 			...mapActions(['toggleSidenav', 'toggleChat'])

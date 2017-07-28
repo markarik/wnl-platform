@@ -38,6 +38,11 @@ const highlight = {
 				.start()
 
 			animate()
+		},
+		scrollAndHighlight() {
+			this.scrollToHighlight()
+			this.highlight()
+			this.cleanupRoute()
 		}
 	},
 }

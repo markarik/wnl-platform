@@ -259,7 +259,18 @@
 			},
 			isQuestionInUrl() {
 				return _.get(this.$route, 'query.qna_question') == this.questionId
-			}
+			},
+			isQuestionAnswerHighlighted() {
+				const answerId = _.get(this.$route, 'query.qna_answer')
+
+				if (answerId) {
+					const questionAnswers = this.questionAnswers(this.questionId)
+
+					return !!questionAnswers.find((answer) => answer.id == answerId)
+				}
+
+				return false;
+			},
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
@@ -280,48 +291,28 @@
 			onDeleteSuccess() {
 				this.removeQuestion(this.id)
 			},
-			isQuestionAnswerHighlighted() {
-				const answerId = _.get(this.$route, 'query.qna_answer')
-
-				if (answerId) {
-					const questionAnswers = this.questionAnswers(this.questionId)
-
-					return !!questionAnswers.find((answer) => answer.id == answerId)
-				}
-
-				return false;
-			},
 		},
 		mounted() {
 			if (this.isQuestionAnswerHighlighted) this.allAnswers = true
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.scrollToHighlight()
-				this.cleanupRoute()
-				this.highlight()
+				this.scrollAndHighlight()
 			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
-				if (this.isQuestionAnswerHighlighted) this.allAnswers = true
-
-				!this.isOverlayVisible && this.isQuestionInUrl
-					&& this.dispatchFetchQuestion()
-						.then(() => {
-							this.scrollToHighlight()
-							this.cleanupRoute()
-							this.highlight()
-
-							this.allAnswers = true
-						})
-
+				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.dispatchFetchQuestion()
+						.then(this.scrollAndHighlight())
+				}
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.scrollToHighlight()
-					this.cleanupRoute()
-					this.highlight()
+					this.scrollAndHighlight()
 				}
+			},
+			'isQuestionAnswerHighlighted' (newValue) {
+				if (newValue) this.allAnswers = true
 			}
 		}
 	}

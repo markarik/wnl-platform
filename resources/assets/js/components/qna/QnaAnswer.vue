@@ -1,5 +1,5 @@
 <template>
-	<div :class="{'isHighlighted': isHighlighted, 'qna-answer-container': true}" ref="answer">
+	<div class="qna-answer-container" ref="highlight">
 		<div class="qna-answer">
 			<div class="votes">
 				<wnl-vote
@@ -74,15 +74,6 @@
 		border-top: $border-light-gray
 		margin-bottom: $margin-big
 
-		&.isHighlighted
-			@keyframes colorchange
-				0%
-					background: blue
-				100%
-					background: initial
-
-			animation: colorchange 5s
-
 	.qna-answer-content
 		word-wrap: break-word
 		word-break: break-word
@@ -90,7 +81,6 @@
 		width: 100%
 
 	.qna-answer
-		// background: $color-background-lighter-gray
 		padding: 0 $margin-base
 		margin-top: $margin-base
 
@@ -123,9 +113,9 @@
 	import NewCommentForm from 'js/components/qna/NewCommentForm'
 	import QnaComment from 'js/components/qna/QnaComment'
 	import Vote from 'js/components/global/reactions/Vote'
+	import highlight from 'js/mixins/highlight'
 
 	import { timeFromS } from 'js/utils/time'
-	import { scrollToElement } from 'js/utils/animations'
 
 	export default {
 		name: 'QnaAnswer',
@@ -135,6 +125,7 @@
 			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
 		},
+		mixins: [ highlight ],
 		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly'],
 		data() {
 			return {
@@ -142,7 +133,8 @@
 				loading: false,
 				showComments: false,
 				showCommentForm: false,
-				reactableResource: "qna_answers"
+				reactableResource: "qna_answers",
+				highlightableResource: "qna_answer"
 			}
 		},
 		computed: {
@@ -182,8 +174,8 @@
 			upvoteState() {
 				return this.getReaction(this.reactableResource, this.answer.id, "upvote")
 			},
-			isHighlighted() {
-				return !this.isOverlayVisible && _.get(this.$route.query, 'qna_answer') == this.answer.id
+			isAnswerInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
 			}
 		},
 		methods: {
@@ -215,21 +207,25 @@
 					answerId: this.id,
 				})
 			},
-			scrollToAndShowCommentsIfHighlighted() {
-				!this.isOverlayVisible && this.isHighlighted && this.dispatchFetchComments()
-					.then(() => scrollToElement(this.$refs.answer, 150)
-				)
-			}
 		},
 		mounted() {
-			this.scrollToAndShowCommentsIfHighlighted()
+			if (!this.isOverlayVisible && this.isAnswerInUrl) {
+				this.dispatchFetchComments()
+					.then(this.scrollAndHighlight)
+			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
-				this.scrollToAndShowCommentsIfHighlighted()
+				if (!this.isOverlayVisible && this.isAnswerInUrl) {
+					this.dispatchFetchComments()
+						.then(this.scrollAndHighlight)
+				}
+
 			},
 			'isOverlayVisible' () {
-				this.scrollToAndShowCommentsIfHighlighted()
+				if (!this.isOverlayVisible && this.isAnswerInUrl) {
+					this.scrollAndHighlight()
+				}
 			}
 		}
 	}

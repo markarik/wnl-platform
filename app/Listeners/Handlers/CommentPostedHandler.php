@@ -13,7 +13,7 @@ class CommentPostedHandler
 	 * @param CommentPosted $event
 	 * @param UserNotificationsGate $gate
 	 */
-	public function handle(CommentPosted $event, UserNotificationsGate $gate):void
+	public function handle(CommentPosted $event, UserNotificationsGate $gate)
 	{
 		$commentable = $event->comment->commentable;
 
@@ -28,7 +28,7 @@ class CommentPostedHandler
 		$this->notifyCoCommentators($commentable, $gate, $event);
 	}
 
-	protected function notifyCoCommentators($commentable, $gate, $event):void
+	protected function notifyCoCommentators($commentable, $gate, $event)
 	{
 		$users = User::whereHas('comments', function($query) use ($commentable) {
 			$query->whereIn('id', $commentable->comments->pluck('id'));

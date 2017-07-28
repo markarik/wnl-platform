@@ -5,7 +5,8 @@
 		functional: true,
 		render: (createElement, {props: {message, notificationComponent}}) => {
 			const contextRoute = () => mapMessageToRoute(message, {
-				'qna_answer': message.subject.id
+				'qna_answer': message.subject.id,
+				'qna_question': message.objects.id
 			})
 
 			return createElement(notificationComponent, {

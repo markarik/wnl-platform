@@ -61,7 +61,7 @@
 			'wnl-comment': Comment,
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'highlightableResource'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'highlightableResources', 'urlParam'],
 		data() {
 			return {
 				formElement: {},
@@ -84,7 +84,7 @@
 				return this.showComments ? 'Schowaj' : 'Pokaż'
 			},
 			isCommentableInUrl() {
-				return _.get(this.$route, `query.${this.highlightableResource}`) == this.commentableId
+				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
 			}
 		},
 		methods: {

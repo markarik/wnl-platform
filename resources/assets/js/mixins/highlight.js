@@ -8,7 +8,13 @@ const highlight = {
 			scrollToElement(this.$refs.highlight)
 		},
 		cleanupRoute() {
-			const {[this.highlightableResource]: resourceName, notification, ...query} = this.$route.query
+			const {notification, ...queryParams} = this.$route.query
+			let query = {}
+
+			Object.keys(this.$route.query).forEach((param) => {
+				if (!this.highlightableResources.includes(param)) query = {...query, [param]: queryParams[param]}
+			})
+
 			this.$router.replace({
 				...this.$route,
 				query

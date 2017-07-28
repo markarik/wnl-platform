@@ -190,7 +190,7 @@
 				loading: false,
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
-				highlightableResource: "qna_question",
+				highlightableResources: ["qna_question"],
 			}
 		},
 		computed: {
@@ -257,18 +257,13 @@
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")
 			},
 			isQuestionInUrl() {
-				return _.get(this.$route, 'query.qna_question') == this.questionId
+				return !this.isQuestionAnswerHighlighted && _.get(this.$route, 'query.qna_question') == this.questionId
 			},
 			isQuestionAnswerHighlighted() {
 				const answerId = _.get(this.$route, 'query.qna_answer')
+				const questionId = _.get(this.$route, 'query.qna_question')
 
-				if (answerId) {
-					const questionAnswers = this.questionAnswers(this.questionId)
-
-					return !!questionAnswers.find((answer) => answer.id == answerId)
-				}
-
-				return false;
+				return questionId == this.questionId && answerId
 			},
 		},
 		methods: {
@@ -302,19 +297,20 @@
 		watch: {
 			'$route' (newRoute, oldRoute) {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.allAnswers = true
 					this.dispatchFetchQuestion()
 						.then(() => this.scrollAndHighlight())
 				}
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.allAnswers = true
 					this.scrollAndHighlight()
 				}
 			},
 			'isQuestionAnswerHighlighted' (newValue) {
-				if (newValue) this.allAnswers = true
+				newValue && this.dispatchFetchQuestion()
+					.then(() => {
+						this.allAnswers = true
+					})
 			}
 		},
 	}

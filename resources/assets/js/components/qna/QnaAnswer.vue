@@ -134,7 +134,7 @@
 				showComments: false,
 				showCommentForm: false,
 				reactableResource: "qna_answers",
-				highlightableResource: "qna_answer"
+				highlightableResources: ["qna_answer", "qna_question"]
 			}
 		},
 		computed: {

@@ -34,7 +34,8 @@
 
 		<wnl-active-users/>
 		<!-- Latest Q&A -->
-		<wnl-qna title="Ostatnie pytania" class="wnl-overview-qna"></wnl-qna>
+		<!-- <wnl-qna title="Ostatnie pytania" class="wnl-overview-qna"/> -->
+		<wnl-stream-feed/>
 	</div>
 </template>
 
@@ -58,10 +59,11 @@
 	import emoji from 'node-emoji'
 	import { mapGetters, mapActions } from 'vuex'
 
-	import Qna from 'js/components/qna/Qna'
 	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 	import DashboardNews from 'js/components/course/dashboard/DashboardNews'
 	import NextLesson from 'js/components/course/dashboard/NextLesson'
+	import Qna from 'js/components/qna/Qna'
+	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
 	import { getFirstLessonId } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
@@ -81,10 +83,11 @@
 			},
 		},
 		components: {
-			'wnl-qna': Qna,
 			'wnl-active-users': ActiveUsers,
 			'wnl-dashboard-news': DashboardNews,
 			'wnl-next-lesson': NextLesson,
+			'wnl-qna': Qna,
+			'wnl-stream-feed': StreamFeed,
 			'wnl-your-progress': YourProgress,
 		},
 		methods: {

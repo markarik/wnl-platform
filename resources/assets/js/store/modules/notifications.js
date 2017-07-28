@@ -17,11 +17,14 @@ const getters = {
 		return _.isUndefined(state.fetching[channel]) || !!state.fetching[channel]
 	},
 	notifications: (state) => state.notifications,
-	userChannel: (state, getters, rootState, rootGetters) => {
-		return rootGetters.currentUserId && `private-${rootGetters.currentUserId}`
-	},
 	moderatorsChannel: (state, getters, rootState, rootGetters) => {
 		return rootGetters.isModerator && `private-role.moderator.${rootGetters.currentUserId}`
+	},
+	streamChannel: (state, getters, rootState, rootGetters) => {
+		return rootGetters.currentUserId && `private-stream.${rootGetters.currentUserId}`
+	},
+	userChannel: (state, getters, rootState, rootGetters) => {
+		return rootGetters.currentUserId && `private-${rootGetters.currentUserId}`
 	},
 	getUnseen: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.seen_at)

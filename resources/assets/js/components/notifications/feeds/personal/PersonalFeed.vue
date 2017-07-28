@@ -17,9 +17,9 @@
 				<div class="personal-feed-body">
 					<div class="zero-state" v-if="isEmpty">
 						<img class="zero-state-image"
-							title="$t('notifications.personal.zeroStateImage')"
 							:alt="$t('notifications.personal.zeroStateImage')"
-							:src="zeroStateImage">
+							:src="zeroStateImage"
+							:title="$t('notifications.personal.zeroStateImage')">
 						<p class="zero-state-text">
 							{{$t('notifications.personal.zeroState')}}
 						</p>

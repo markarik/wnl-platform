@@ -211,16 +211,15 @@
 		mounted() {
 			if (!this.isOverlayVisible && this.isAnswerInUrl) {
 				this.dispatchFetchComments()
-					.then(this.scrollAndHighlight)
+					.then(() => this.scrollAndHighlight())
 			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
 				if (!this.isOverlayVisible && this.isAnswerInUrl) {
 					this.dispatchFetchComments()
-						.then(this.scrollAndHighlight)
+						.then(() => this.scrollAndHighlight())
 				}
-
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isAnswerInUrl) {

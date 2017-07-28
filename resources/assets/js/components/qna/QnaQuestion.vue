@@ -112,7 +112,6 @@
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
 		padding: $margin-base
-		transition: background 5s
 
 	.qna-question-content
 		font-size: $font-size-plus-1
@@ -296,18 +295,21 @@
 			if (this.isQuestionAnswerHighlighted) this.allAnswers = true
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.allAnswers = true
 				this.scrollAndHighlight()
 			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.allAnswers = true
 					this.dispatchFetchQuestion()
-						.then(this.scrollAndHighlight())
+						.then(() => this.scrollAndHighlight())
 				}
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.allAnswers = true
 					this.scrollAndHighlight()
 				}
 			},

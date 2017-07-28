@@ -21,7 +21,7 @@ const getters = {
 		return rootGetters.currentUserId && `private-${rootGetters.currentUserId}`
 	},
 	moderatorsChannel: (state, getters, rootState, rootGetters) => {
-		return rootGetters.isAdmin && `private-role.moderator.${rootGetters.currentUserId}`
+		return rootGetters.isModerator && `private-role.moderator.${rootGetters.currentUserId}`
 	},
 	getUnseen: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.seen_at)

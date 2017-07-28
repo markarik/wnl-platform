@@ -34,6 +34,7 @@ const getters = {
 	getAllSettings: state => state.settings,
 	hasRole: state => role => state.profile.roles.indexOf(role) > -1,
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
+	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
 }
 

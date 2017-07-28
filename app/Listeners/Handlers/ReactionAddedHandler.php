@@ -12,7 +12,7 @@ class ReactionAddedHandler
 	 * @param ReactionAdded $event
 	 * @param UserNotificationsGate $gate
 	 */
-	public function handle(ReactionAdded $event, UserNotificationsGate $gate):void
+	public function handle(ReactionAdded $event, UserNotificationsGate $gate)
 	{
 		$notifiable = $event->reactable->user;
 

@@ -10,7 +10,11 @@ class QnaQuestion extends Model
 {
 	use Cached;
 
-	protected $fillable = ['text', 'user_id'];
+	protected $fillable = ['text', 'user_id', 'meta'];
+
+	protected $casts = [
+		'meta' => 'array',
+	];
 
 	protected $events = [
 		'created' => QuestionPosted::class,

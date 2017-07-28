@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
 	 */
 	protected $commands = [
 		Commands\AddressesExport::class,
+		Commands\AddContext::class,
 		Commands\ArchiveChatMessages::class,
 		Commands\CancelOrder::class,
 		Commands\CategoriesTags::class,

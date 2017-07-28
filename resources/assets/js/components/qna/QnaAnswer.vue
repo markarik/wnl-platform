@@ -1,5 +1,5 @@
 <template>
-	<div class="qna-answer-container">
+	<div class="qna-answer-container" ref="highlight">
 		<div class="qna-answer">
 			<div class="votes">
 				<wnl-vote
@@ -81,7 +81,6 @@
 		width: 100%
 
 	.qna-answer
-		// background: $color-background-lighter-gray
 		padding: 0 $margin-base
 		margin-top: $margin-base
 
@@ -104,7 +103,6 @@
 
 	.qna-bookmark
 		justify-content: flex-end
-
 </style>
 
 <script>
@@ -115,6 +113,7 @@
 	import NewCommentForm from 'js/components/qna/NewCommentForm'
 	import QnaComment from 'js/components/qna/QnaComment'
 	import Vote from 'js/components/global/reactions/Vote'
+	import highlight from 'js/mixins/highlight'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -126,6 +125,7 @@
 			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
 		},
+		mixins: [ highlight ],
 		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly'],
 		data() {
 			return {
@@ -133,7 +133,8 @@
 				loading: false,
 				showComments: false,
 				showCommentForm: false,
-				reactableResource: "qna_answers"
+				reactableResource: "qna_answers",
+				highlightableResources: ["qna_answer", "qna_question", "comment"]
 			}
 		},
 		computed: {
@@ -142,7 +143,7 @@
 				'answerComments',
 				'getReaction'
 			]),
-			...mapGetters(['currentUserId']),
+			...mapGetters(['currentUserId', 'isOverlayVisible']),
 			id() {
 				return this.answer.id
 			},
@@ -172,6 +173,17 @@
 			},
 			upvoteState() {
 				return this.getReaction(this.reactableResource, this.answer.id, "upvote")
+			},
+			isAnswerInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'qna_question') == this.questionId
+			},
+			isCommentInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'comment')
+			},
+			shouldHighlight() {
+				return !this.isOverlayVisible && this.isAnswerInUrl || this.isCommentInUrl
 			}
 		},
 		methods: {
@@ -185,7 +197,7 @@
 			},
 			dispatchFetchComments() {
 				this.loading = true
-				this.fetchComments(this.id)
+				return this.fetchComments(this.id)
 					.then(() => {
 						this.commentsFetched = true
 						this.showComments = true
@@ -204,5 +216,24 @@
 				})
 			},
 		},
+		mounted() {
+			if (this.shouldHighlight) {
+				this.dispatchFetchComments()
+					.then(() => this.scrollAndHighlight())
+			}
+		},
+		watch: {
+			'$route' (newRoute, oldRoute) {
+				if (this.shouldHighlight) {
+					this.dispatchFetchComments()
+						.then(() => this.scrollAndHighlight())
+				}
+			},
+			'isOverlayVisible' () {
+				if (this.shouldHighlight) {
+					this.scrollAndHighlight()
+				}
+			}
+		}
 	}
 </script>

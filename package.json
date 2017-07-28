@@ -9,11 +9,13 @@
     "test": "cross-env BABEL_ENV=test karma start resources/assets/js/tests/karma.conf.js --single-run"
   },
   "dependencies": {
+    "append-query": "^2.0.1",
     "axios": "^0.15.3",
     "bootstrap-sass": "^3.3.7",
     "brace": "^0.10.0",
     "bulma": "^0.4.1",
     "emoji": "^0.3.2",
+    "es6-tween": "^2.4.0",
     "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
     "jquery": "^3.2.1",
@@ -24,6 +26,7 @@
     "moment-duration-format": "^1.3.0",
     "node-emoji": "^1.5.1",
     "postmate-fork": "^1.1.10",
+    "query-string": "^5.0.0",
     "quill": "^1.2.4",
     "raven-js": "^3.14.2",
     "screenfull": "^3.0.2",

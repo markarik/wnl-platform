@@ -3,7 +3,7 @@
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="qna-question">
+		<div class="qna-question" ref="highlight">
 			<div class="votes">
 				<wnl-vote
 					type="up"
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="qna-answers">
+		 <div class="qna-answers">
 			<div class="level">
 				<div class="level-left">
 					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -158,12 +158,10 @@
 	.tag
 		margin-right: $margin-small
 		margin-top: $margin-small
-
 </style>
 
 <script>
 	import _ from 'lodash'
-	import { nextTick } from 'vue'
 	import { mapGetters, mapActions } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
@@ -171,11 +169,13 @@
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/global/reactions/Vote'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
+	import highlight from 'js/mixins/highlight'
 
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaQuestion',
+		mixins: [ highlight ],
 		components: {
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
@@ -189,7 +189,8 @@
 				allAnswers: false,
 				loading: false,
 				showAnswerForm: false,
-				reactableResource: "qna_questions"
+				reactableResource: "qna_questions",
+				highlightableResources: ["qna_question"],
 			}
 		},
 		computed: {
@@ -198,9 +199,10 @@
 				'getQuestion',
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
-				'getReaction'
+				'getReaction',
+				'questionAnswers'
 			]),
-			...mapGetters(['currentUserId', 'isMobile']),
+			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
 			question() {
 				return this.getQuestion(this.questionId)
 			},
@@ -253,7 +255,16 @@
 			},
 			voteState() {
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")
-			}
+			},
+			isQuestionInUrl() {
+				return !this.isQuestionAnswerHighlighted && _.get(this.$route, 'query.qna_question') == this.questionId
+			},
+			isQuestionAnswerHighlighted() {
+				const answerId = _.get(this.$route, 'query.qna_answer')
+				const questionId = _.get(this.$route, 'query.qna_question')
+
+				return questionId == this.questionId && answerId
+			},
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
@@ -274,6 +285,33 @@
 			onDeleteSuccess() {
 				this.removeQuestion(this.id)
 			},
+		},
+		mounted() {
+			if (this.isQuestionAnswerHighlighted) this.allAnswers = true
+
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.allAnswers = true
+				this.scrollAndHighlight()
+			}
+		},
+		watch: {
+			'$route' (newRoute, oldRoute) {
+				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.dispatchFetchQuestion()
+						.then(() => this.scrollAndHighlight())
+				}
+			},
+			'isOverlayVisible' () {
+				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.scrollAndHighlight()
+				}
+			},
+			'isQuestionAnswerHighlighted' (newValue) {
+				newValue && this.dispatchFetchQuestion()
+					.then(() => {
+						this.allAnswers = true
+					})
+			}
 		},
 	}
 </script>

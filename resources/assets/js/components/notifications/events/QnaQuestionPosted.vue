@@ -1,24 +1,19 @@
 <script>
-	import {getContextRoute, baseProps} from './event'
+	import {getContextRoute, baseProps, mapMessageToRoute} from './event'
 
 	export default {
 		functional: true,
-		render: (createElement, {props}) => {
-			const contextRoute = () => ({
-				name: 'screens',
-				params: {
-					courseId: props.message.context.courseId,
-					lessonId: props.message.context.lessonId,
-					screenId: props.message.context.screenId,
-				}
+		render: (createElement, {props: {message, notificationComponent}}) => {
+			const contextRoute = () => mapMessageToRoute(message, {
+				'qna_question': message.subjects.id
 			})
 
-			return createElement(props.notificationComponent, {
+			return createElement(notificationComponent, {
 				props: {
-					message: props.message,
-					channel: props.channel,
+					message,
+					channel: message.channel,
 					icon: 'fa-question-circle-o',
-					routeContext: getContextRoute(contextRoute, props.message.referer),
+					routeContext: getContextRoute(contextRoute, message.referer),
 				},
 			})
 		},

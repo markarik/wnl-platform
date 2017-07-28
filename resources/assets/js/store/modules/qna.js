@@ -89,26 +89,6 @@ function _getComments(answerId) {
 }
 
 /**
- * @param lessonId
- * @param text
- * @returns {Promise}
- * @private
- */
-function _postQuestion(lessonId, text) {
-	return axios.post(getApiUrl(`questions`), {lessonId, text})
-}
-
-/**
- * @param questionId
- * @param text
- * @returns {Promise}
- * @private
- */
-function _postAnswer(questionId, text) {
-	return axios.post(getApiUrl(`answers`), {questionId, text})
-}
-
-/**
  * @param answerId
  * @returns {Promise}
  * @private
@@ -198,7 +178,6 @@ const getters = {
 				return sortByVotes(list)
 		}
 	},
-
 	// Resources
 	getQuestion: state => (id) => state.qna_questions[id],
 	answer:      state => (id) => state.qna_answers[id],

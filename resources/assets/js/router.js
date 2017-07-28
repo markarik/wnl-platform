@@ -126,7 +126,7 @@ let routes = [
 	{
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
-		component: require('js/components/moderators/Feed.vue'),
+		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		meta: {keepsNavOpen: true},
 		beforeEnter: (to, from, next) => {
 			const sandbox = createSandbox(store.getters.currentUser, {
@@ -164,6 +164,10 @@ export default new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
 	scrollBehavior: (to, from, savedPosition) => {
+		if (to.query && to.query.noScroll) {
+			return;
+		}
+
 		if (!from.params.hasOwnProperty('slide') || !to.params.hasOwnProperty('slide') ||
 			parseInt(from.params.screenId) !== parseInt(to.params.screenId))
 		{

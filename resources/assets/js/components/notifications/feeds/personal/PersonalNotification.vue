@@ -1,5 +1,5 @@
 <template>
-	<div class="personal-notification" @click="goToContext">
+	<div class="personal-notification" @click="markAsReadAndGo">
 		<div class="actor">
 			<wnl-event-actor :message="message"/>
 		</div>
@@ -33,7 +33,7 @@
 		align-items: flex-start
 		border-bottom: $border-light-gray
 		display: flex
-		font-size: $font-size-minus-2
+		font-size: $font-size-minus-1
 		justify-content: space-between
 		padding: $margin-medium
 		position: relative
@@ -70,13 +70,13 @@
 			color: $color-gray-dimmed
 
 		.subject
-			font-size: $font-size-minus-1
+			font-size: $font-size-base
 			line-height: $line-height-minus
 			margin-top: $margin-tiny
 
 		.time
 			color: $color-background-gray
-			font-size: $font-size-minus-3
+			font-size: $font-size-minus-2
 			margin-top: $margin-tiny
 
 			.icon
@@ -138,6 +138,26 @@
 
 				return truncate(this.message.subject.text, {length: 150})
 			}
-		}
+		},
+		methods: {
+			dispatchGoToContext() {
+				this.goToContext()
+				this.loading = false
+			},
+			markAsReadAndGo() {
+				if(!this.hasContext) return false;
+
+				this.loading = true
+
+				if (!this.isRead) {
+					this.markAsRead({notification: this.message, channel: this.channel})
+						.then(() => {
+							this.dispatchGoToContext()
+						})
+				} else {
+					this.dispatchGoToContext()
+				}
+			},
+		},
 	}
 </script>

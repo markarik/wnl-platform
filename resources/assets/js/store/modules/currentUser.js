@@ -25,6 +25,7 @@ const getters = {
 	currentUser: state => state.profile,
 	currentUserId: state => state.profile.id,
 	currentUserAvatar: state => state.profile.avatar,
+	currentUserEmail: state => state.profile.public_email,
 	currentUserName: state => state.profile.first_name,
 	currentUserFullName: state => state.profile.full_name,
 	currentUserRoles: state => state.profile.roles,
@@ -33,6 +34,7 @@ const getters = {
 	getAllSettings: state => state.settings,
 	hasRole: state => role => state.profile.roles.indexOf(role) > -1,
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
+	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
 }
 

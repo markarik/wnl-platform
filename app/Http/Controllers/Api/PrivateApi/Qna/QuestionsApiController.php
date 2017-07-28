@@ -25,11 +25,13 @@ class QuestionsApiController extends ApiController
 	{
 		$tags = $request->get('tags');
 		$text = $request->get('text');
+		$context = $request->get('context');
 		$user = Auth::user();
 
 		$question = QnaQuestion::create([
 			'text'    => $text,
 			'user_id' => $user->id,
+			'meta' => ['context' => $context]
 		]);
 
 		foreach ($tags as $tag) {

@@ -150,6 +150,9 @@
 			'questions' (newValue) {
 				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
 			}
+		},
+		beforeDestroy() {
+		   this.destroyQna()
 		}
 	}
 </script>

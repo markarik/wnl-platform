@@ -5,6 +5,7 @@ namespace App\Events\Qna;
 use App\Events\Event;
 use Request;
 use App\Models\QnaQuestion;
+use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
 use App\Events\SanitizesUserContent;
 use Illuminate\Queue\SerializesModels;
@@ -17,7 +18,8 @@ class QuestionPosted extends Event
 	use Dispatchable,
 		InteractsWithSockets,
 		SerializesModels,
-		SanitizesUserContent;
+		SanitizesUserContent,
+		EventContextTrait;
 
 	public $qnaQuestion;
 
@@ -61,18 +63,7 @@ class QuestionPosted extends Event
 				'avatar'     => $this->qnaQuestion->user->profile->avatar_url,
 			],
 			'referer' => $this->referer,
+			'context' => $this->addEventContext($this->qnaQuestion)
 		];
-
-		$screen = $this->qnaQuestion->screen;
-
-		if ($screen) {
-			$lesson = $screen->lesson;
-
-			$this->data['context'] = [
-				'screenId' => $screen->id,
-				'lessonId' => $lesson->id,
-				'courseId' => $lesson->group->course->id,
-			];
-		}
 	}
 }

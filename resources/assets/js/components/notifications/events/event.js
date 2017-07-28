@@ -22,6 +22,10 @@ export const baseProps = {
 }
 
 export const mapMessageToRoute = (message, query) => {
+	if (!message.context.name) {
+		return message.referer
+	}
+
 	return {
 		name: message.context.name,
 		params: message.context.params,

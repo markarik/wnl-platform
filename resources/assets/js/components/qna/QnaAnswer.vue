@@ -134,7 +134,7 @@
 				showComments: false,
 				showCommentForm: false,
 				reactableResource: "qna_answers",
-				highlightableResources: ["qna_answer", "qna_question"]
+				highlightableResources: ["qna_answer", "qna_question", "comment"]
 			}
 		},
 		computed: {
@@ -176,6 +176,14 @@
 			},
 			isAnswerInUrl() {
 				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'qna_question') == this.questionId
+			},
+			isCommentInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'comment')
+			},
+			shouldHighlight() {
+				return !this.isOverlayVisible && this.isAnswerInUrl || this.isCommentInUrl
 			}
 		},
 		methods: {
@@ -209,20 +217,20 @@
 			},
 		},
 		mounted() {
-			if (!this.isOverlayVisible && this.isAnswerInUrl) {
+			if (this.shouldHighlight) {
 				this.dispatchFetchComments()
 					.then(() => this.scrollAndHighlight())
 			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
-				if (!this.isOverlayVisible && this.isAnswerInUrl) {
+				if (this.shouldHighlight) {
 					this.dispatchFetchComments()
 						.then(() => this.scrollAndHighlight())
 				}
 			},
 			'isOverlayVisible' () {
-				if (!this.isOverlayVisible && this.isAnswerInUrl) {
+				if (this.shouldHighlight) {
 					this.scrollAndHighlight()
 				}
 			}

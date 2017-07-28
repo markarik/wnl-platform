@@ -4,7 +4,6 @@
 		<wnl-comments-list
 			v-if="currentSlideId > 0"
 			module="slideshow"
-			highlightableResources="['slide']"
 			urlParam="slide"
 			commentableResource="slides"
 			isUnique="true"

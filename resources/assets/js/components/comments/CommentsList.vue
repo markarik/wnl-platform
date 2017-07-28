@@ -61,12 +61,13 @@
 			'wnl-comment': Comment,
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'highlightableResources', 'urlParam'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam'],
 		data() {
 			return {
 				formElement: {},
 				listElement: {},
-				showComments: false
+				showComments: false,
+				highlightableResources: [this.urlParam, 'comment']
 			}
 		},
 		computed: {

@@ -103,6 +103,7 @@
 		watch: {
 			'$route' (to, from) {
 				this.isActive = false
+				this.$emit('toggled', false)
 			},
 		},
 	}

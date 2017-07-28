@@ -50,10 +50,11 @@ class NotificationObserver
 		$event->data['read_at'] = $notification->read_at->timestamp ?? null;
 		$event->data['seen_at'] = $notification->seen_at->timestamp ?? null;
 
-		$user = User::find($notification->user_id);
+		$user = User::find($notification->notifiable_id);
 
 		$newNotification = new EventNotification($event, $notification->channel);
 		$newNotification->id = $notification->id;
+		$newNotification->event = $event;
 		Notify::sendNow($user, $newNotification, [LiveChannel::class]);
 	}
 

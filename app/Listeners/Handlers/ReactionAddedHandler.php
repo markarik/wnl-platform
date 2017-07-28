@@ -14,13 +14,15 @@ class ReactionAddedHandler
 	 */
 	public function handle(ReactionAdded $event, UserNotificationsGate $gate)
 	{
+		if ($event->reaction->type === 'bookmark') return;
+
 		$notifiable = $event->reactable->user;
+
+		if (!$notifiable) return;
 
 		if ($this->isDuplicated($event, $notifiable)) return;
 
-		if ($notifiable && $event->reaction->type !== 'bookmark') {
-			$gate->notifyPrivate($notifiable, $event);
-		}
+		$gate->notifyPrivate($notifiable, $event);
 	}
 
 	private function isDuplicated($event, $notifiable):bool

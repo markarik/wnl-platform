@@ -32,7 +32,6 @@ class UserProfile extends Model
 
 	public function setUsernameAttribute($value)
 	{
-		if ($value === '')
-			$this->attributes['username'] = null;
+		$this->attributes['username'] = $value === '' ? null : $value;
 	}
 }

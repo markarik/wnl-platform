@@ -9,8 +9,6 @@
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-branding">
 			<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
-				<!-- <img v-if="isMobile" class="logo-mobile" :src="logoSrcMobile" :alt="$t('nav.navbar.logoAlt')">
-				<img v-else :src="logoSrc" :alt="$t('nav.navbar.logoAlt')"> -->
 				<img class="logo-image" :src="logoSrc" :alt="$t('nav.navbar.logoAlt')">
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>

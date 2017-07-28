@@ -24,7 +24,7 @@ const highlight = {
 				.to({value: 1}, 2000)
 				.easing(Easing.Elastic.InOut)
 				.on('update', function() {
-					this.object.el.style.background = 'lime';
+					this.object.el.style.background = 'rgba(68, 180, 144, 0.5)';
 				})
 				.once('complete', () => {
 					new Tween(element)

@@ -263,7 +263,9 @@
 			},
 			toggle(isActive) {
 				this.isActive = isActive
-				this.markAllAsSeen(this.channel)
+				if (this.unseenCount > 0) {
+					this.markAllAsSeen(this.channel)
+				}
 			},
 		},
 	}

@@ -190,7 +190,7 @@
 				loading: false,
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
-				highlightableResource: "qna_question"
+				highlightableResource: "qna_question",
 			}
 		},
 		computed: {
@@ -316,6 +316,6 @@
 			'isQuestionAnswerHighlighted' (newValue) {
 				if (newValue) this.allAnswers = true
 			}
-		}
+		},
 	}
 </script>

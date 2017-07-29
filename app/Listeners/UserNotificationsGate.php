@@ -19,10 +19,14 @@ class UserNotificationsGate implements ShouldQueue
 		$user->notify(new EventNotification($event, $channelFormatted));
 	}
 
-	public function notifyPrivateStream($user, $event)
+	public function notifyPrivateStream(array $excluded, $event)
 	{
-		$channelFormatted = sprintf(self::CHANNELS['stream'], $user->id);
-		$user->notify(new EventNotification($event, $channelFormatted));
+		foreach (User::all() as $user){
+			if (in_array($user->id, $excluded)) continue;
+
+			$channelFormatted = sprintf(self::CHANNELS['private-stream'], $user->id);
+			$user->notify(new EventNotification($event, $channelFormatted));
+		}
 	}
 
 	/**

@@ -73,7 +73,7 @@
 		},
 		computed: {
 			...mapGetters('notifications', {
-				channel: 'moderatorsChannel',
+				channel: 'userChannel',
 			}),
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

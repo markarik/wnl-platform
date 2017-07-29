@@ -1,29 +1,26 @@
 <template>
-	<div class="notification-container">
-		<div class="moderators-notification" :class="{'is-read': isRead, 'is-desktop': !isTouchScreen}" @click="goToContext">
-			<div class="actor">
-				<wnl-event-actor :message="message"/>
+	<div class="personal-notification" @click="markAsReadAndGo">
+		<div class="actor">
+			<wnl-event-actor :message="message"/>
+		</div>
+		<div class="notification-content">
+			<div class="notification-header">
+				<span class="actor">{{ message.actors.full_name }}</span>
+				<span class="action">{{ action }}</span>
+				<span class="object" v-if="object">{{ object }}</span>
+				<span class="object-text" v-if="objectText">{{ objectText }}</span>
 			</div>
-			<div class="notification-content">
-				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
-					<span class="action">{{ action }}</span>
-					<span class="object" v-if="object">{{ object }}</span>
-					<span class="object-text" v-if="objectText">{{ objectText }}</span>
-				</div>
-				<div class="subject" v-if="subjectText">{{ subjectText }}</div>
-				<div class="time">
-					<span class="icon is-tiny">
-						<i class="fa" :class="icon"></i>
-					</span> {{ formattedTime }}
-				</div>
+			<div class="subject" v-if="subjectText">{{ subjectText }}</div>
+			<div class="time">
+				<span class="icon is-tiny">
+					<i class="fa" :class="icon"></i>
+				</span> {{ formattedTime }}
 			</div>
 		</div>
 		<div class="link-symbol">
-			<span class="icon checkmark" v-if="!isRead"
-				@click="dispatchMarkAsRead">
-				<span v-if="loading" class="loader"></span>
-				<i v-else class="fa fa-check"></i>
+			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
+				<i v-if="loading" class="loader"></i>
+				<i v-else class="fa fa-angle-right"></i>
 			</span>
 		</div>
 	</div>
@@ -32,36 +29,20 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.notification-container
-		display: flex
-		justify-content: space-between
-		margin-bottom: $margin-big
-
-	.moderators-notification
+	.personal-notification
 		align-items: flex-start
-		border: $border-light-gray
-		border-radius: $border-radius-small
-		cursor: pointer
+		border-bottom: $border-light-gray
 		display: flex
-		flex: 1 auto
+		font-size: $font-size-minus-1
 		justify-content: space-between
-		margin-right: $margin-base
 		padding: $margin-medium
 		position: relative
 		transition: background-color $transition-length-base
 
-		&.is-desktop:hover
-			background-color: $color-background-lighter-gray
+		&:hover
+			background: $color-background-lighter-gray
+			cursor: pointer
 			transition: background-color $transition-length-base
-
-		&.is-read
-			opacity: 0.5
-			transition: opacity $transition-length-base
-
-			&:hover
-				background-color: initial
-				opacity: 1
-				transition: opacity $transition-length-base
 
 	.actor
 		font-weight: bold
@@ -89,42 +70,33 @@
 			color: $color-gray-dimmed
 
 		.subject
-			font-size: $font-size-plus-1
+			font-size: $font-size-base
 			line-height: $line-height-minus
-			margin: $margin-small 0
+			margin-top: $margin-tiny
 
 		.time
 			color: $color-background-gray
-			font-size: $font-size-minus-1
+			font-size: $font-size-minus-2
 			margin-top: $margin-tiny
 
 			.icon
 				margin-right: $margin-tiny
 
 	.link-symbol
-		align-items: flex-end
 		display: flex
 		flex: 0
-		flex-direction: column
-		justify-content: space-between
-		height: 100%
 
-		.checkmark
-			border: $border-light-gray
-			border-radius: $border-radius-small
-			color: $color-green
-			cursor: pointer
-			padding: $margin-big
-			transition: background-color $transition-length-base
+		.icon
+			color: $color-inactive-gray
 
-			&:hover
-				background-color: $color-background-lighter-gray
-				transition: background-color $transition-length-base
+			&.unread
+				color: $color-ocean-blue
+
 </style>
 
 <script>
 	import { truncate } from 'lodash'
-	import { mapActions, mapGetters } from 'vuex'
+	import { mapGetters } from 'vuex'
 
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
@@ -142,7 +114,7 @@
 			},
 		},
 		computed: {
-			...mapGetters(['isTouchScreen']),
+			...mapGetters(['currentUserId']),
 			action() {
 				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
 			},
@@ -150,26 +122,41 @@
 				const objects = this.message.objects
 				if (!objects) return false;
 
-				return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1)
+				return this.$tc(
+					`notifications.objects.${_.camelCase(objects.type)}`,
+					this.currentUserId === objects.author ? 2 : 1
+				)
 			},
 			objectText() {
 				if (!this.object) return false;
 
-				return truncate(this.message.objects.text, {length: 150})
+				return truncate(this.message.objects.text, {length: 75})
 			},
 			subjectText() {
 				if (!this.message.subject) return false;
 
-				return truncate(this.message.subject.text, {length: 250})
+				return truncate(this.message.subject.text, {length: 150})
 			}
 		},
 		methods: {
-			...mapActions('notifications', ['markAsRead']),
-			dispatchMarkAsRead() {
+			dispatchGoToContext() {
+				this.goToContext()
+				this.loading = false
+			},
+			markAsReadAndGo() {
+				if(!this.hasContext) return false;
+
 				this.loading = true
-				this.markAsRead({notification: this.message, channel: this.channel})
-					.then(() => this.loading = false)
-			}
+
+				if (!this.isRead) {
+					this.markAsRead({notification: this.message, channel: this.channel})
+						.then(() => {
+							this.dispatchGoToContext()
+						})
+				} else {
+					this.dispatchGoToContext()
+				}
+			},
 		},
 	}
 </script>

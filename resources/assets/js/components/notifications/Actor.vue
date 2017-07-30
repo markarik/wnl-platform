@@ -1,9 +1,8 @@
 <template>
-	<div>
-		<wnl-avatar size="medium"
-			:url="message.actors.avatar"
-			:fullName="message.actors.full_name"/>
-	</div>
+	<wnl-avatar
+		:fullName="message.actors.full_name"
+		:size="size"
+		:url="message.actors.avatar"/>
 </template>
 
 <script>
@@ -13,6 +12,10 @@
 			message: {
 				required: true,
 				type: Object,
+			},
+			size: {
+				default: 'medium',
+				type: String,
 			},
 		},
 	}

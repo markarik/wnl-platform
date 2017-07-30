@@ -12,15 +12,13 @@
 			</div>
 			<div class="subject" v-if="subjectText">{{ subjectText }}</div>
 			<div class="time">
-				<span class="icon is-tiny">
-					<i class="fa" :class="icon"></i>
-				</span> {{ formattedTime }}
+				{{ formattedTime }}
 			</div>
 		</div>
 		<div class="link-symbol">
-			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
+			<span v-if="hasContext" class="icon is-small" :class="{'unread': !isRead}">
 				<i v-if="loading" class="loader"></i>
-				<i v-else class="fa fa-angle-right"></i>
+				<i v-else class="fa" :class="icon"></i>
 			</span>
 		</div>
 	</div>

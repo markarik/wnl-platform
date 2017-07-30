@@ -8,10 +8,11 @@
 				:src="zeroStateImage"
 				:title="$t('notifications.personal.zeroStateImage')">
 			<p class="zero-state-text">
-				{{$t('notifications.personal.zeroState')}}
+				{{$t('notifications.stream.zeroState')}}
 			</p>
 		</div>
-		<div v-else>
+		<div class="stream-notifications" v-else>
+			<div class="stream-line"></div>
 			<component :is="getEventComponent(message)"
 				:message="message"
 				:key="id"
@@ -28,6 +29,18 @@
 
 	.stream-feed
 		margin-top: $margin-big
+		margin-bottom: $margin-huge
+
+	.stream-notifications
+		position: relative
+
+		.stream-line
+			border-left: 1px solid $color-light-gray
+			left: 30px
+			height: 100%
+			position: absolute
+			top: 0
+			z-index: -1
 
 	.zero-state
 		align-items: center

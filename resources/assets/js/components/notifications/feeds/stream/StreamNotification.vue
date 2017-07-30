@@ -1,26 +1,25 @@
 <template>
-	<div class="personal-notification" @click="markAsReadAndGo">
-		<div class="actor">
-			<wnl-event-actor :message="message"/>
+	<div class="stream-notification" @click="markAsReadAndGo">
+		<div class="meta">
+			<wnl-event-actor size="large" class="meta-actor" :message="message"/>
+			<span class="meta-time">{{justDate}}</span>
+			<span class="meta-time">{{justTime}}</span>
 		</div>
 		<div class="notification-content">
 			<div class="notification-header">
 				<span class="actor">{{ message.actors.full_name }}</span>
 				<span class="action">{{ action }}</span>
-				<span class="object" v-if="object">{{ object }}</span>
-				<span class="object-text" v-if="objectText">{{ objectText }}</span>
+				<span class="object">{{ object }}</span>
 			</div>
-			<div class="subject" v-if="subjectText">{{ subjectText }}</div>
+			<div class="object-text" v-if="objectText">{{ objectText }}</div>
+			<div class="subject" :class="{'unread': !isRead}" v-if="subjectText">{{ subjectText }}</div>
 			<div class="time">
-				<span class="icon is-tiny">
-					<i class="fa" :class="icon"></i>
-				</span> {{ formattedTime }}
 			</div>
 		</div>
 		<div class="link-symbol">
-			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
+			<span v-if="hasContext" class="icon is-small" :class="{'unread': !isRead}">
 				<i v-if="loading" class="loader"></i>
-				<i v-else class="fa fa-angle-right"></i>
+				<i v-else class="fa" :class="icon"></i>
 			</span>
 		</div>
 	</div>
@@ -29,12 +28,14 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.personal-notification
+	.stream-notification
 		align-items: flex-start
-		border-bottom: $border-light-gray
+		background: $color-white
+		border: $border-light-gray
 		display: flex
 		font-size: $font-size-minus-1
 		justify-content: space-between
+		margin-bottom: $margin-big
 		padding: $margin-medium
 		position: relative
 		transition: background-color $transition-length-base
@@ -44,35 +45,48 @@
 			cursor: pointer
 			transition: background-color $transition-length-base
 
-	.actor
-		font-weight: bold
+	.meta
+		display: flex
+		flex-direction: column
+		justify-content: center
+		margin: -$margin-small 0
+		padding: $margin-small 0
+
+		.meta-actor
+			margin-bottom: $margin-small
+
+		.meta-time
+			color: $color-background-gray
+			font-size: $font-size-minus-3
+			line-height: $line-height-minus
+			text-align: center
 
 	.notification-content
 		flex: 1 auto
-		padding: 0 $margin-medium
+		padding: 0 $margin-base 0 $margin-medium
 
 		.notification-header
 			line-height: $line-height-minus
+			margin-bottom: $margin-base
 
-		.object
-			font-weight: $font-weight-bold
-
-		.object-text,
-		.subject
-
-			&::before
-				content: '« '
-
-			&::after
-				content: ' »'
+			.actor,
+			.object
+				font-weight: $font-weight-bold
 
 		.object-text
 			color: $color-gray-dimmed
+			font-style: italic
+			line-height: $line-height-minus
+			margin-bottom: $margin-base
 
 		.subject
+			border-left: $border-thick solid $color-inactive-gray
 			font-size: $font-size-base
-			line-height: $line-height-minus
 			margin-top: $margin-tiny
+			padding-left: $margin-medium
+
+			&.unread
+				border-color: $color-ocean-blue
 
 		.time
 			color: $color-background-gray
@@ -100,6 +114,7 @@
 
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
+	import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time'
 
 	export default {
 		name: 'StreamNotification',
@@ -118,25 +133,30 @@
 			action() {
 				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
 			},
+			justDate() {
+				return justMonthAndDayFromS(this.message.timestamp)
+			},
+			justTime() {
+				return justTimeFromS(this.message.timestamp)
+			},
 			object() {
 				const objects = this.message.objects
-				if (!objects) return false;
+				const subject = this.message.subject
+				const type = !!objects ? objects.type : subject.type
+				const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1
 
-				return this.$tc(
-					`notifications.objects.${_.camelCase(objects.type)}`,
-					this.currentUserId === objects.author ? 2 : 1
-				)
+				return this.$tc(`notifications.objects.${_.camelCase(type)}`, choice)
 			},
 			objectText() {
-				if (!this.object) return false;
+				if (!this.message.objects) return false
 
-				return truncate(this.message.objects.text, {length: 75})
+				return truncate(this.message.objects.text, {length: 200})
 			},
 			subjectText() {
-				if (!this.message.subject) return false;
+				if (!this.message.subject) return false
 
-				return truncate(this.message.subject.text, {length: 150})
-			}
+				return truncate(this.message.subject.text, {length: 300})
+			},
 		},
 		methods: {
 			dispatchGoToContext() {

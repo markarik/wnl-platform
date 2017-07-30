@@ -1,7 +1,7 @@
 export const notifications = {
 	events: {
 		commentPosted: 'skomentował/-a',
-		qnaQuestionPosted: 'zadał/-a pytanie',
+		qnaQuestionPosted: 'zadał/-a',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
 	},

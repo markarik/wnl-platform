@@ -35,8 +35,8 @@
 <script>
 	import _ from 'lodash'
 
-	import QuizList from 'js/components/course/screens/quiz/QuizList'
-	import QuizSummary from 'js/components/course/screens/quiz/QuizSummary'
+	import QuizList from 'js/components/quiz/QuizList'
+	import QuizSummary from 'js/components/quiz/QuizSummary'
 	import { mapActions, mapGetters } from 'vuex'
 
 	export default {

@@ -1,7 +1,7 @@
 <template>
 	<div class="stream-notification" @click="markAsReadAndGo">
 		<div class="meta">
-			<wnl-event-actor size="large" class="meta-actor" :message="message"/>
+			<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 			<span class="meta-time">{{justDate}}</span>
 			<span class="meta-time">{{justTime}}</span>
 		</div>
@@ -10,6 +10,7 @@
 				<span class="actor">{{ message.actors.full_name }}</span>
 				<span class="action">{{ action }}</span>
 				<span class="object">{{ object }}</span>
+				<span class="context">{{ contextInfo }}</span>
 			</div>
 			<div class="object-text" v-if="objectText">{{ objectText }}</div>
 			<div class="subject" :class="{'unread': !isRead}" v-if="subjectText">{{ subjectText }}</div>
@@ -70,7 +71,8 @@
 			margin-bottom: $margin-base
 
 			.actor,
-			.object
+			.object,
+			.context
 				font-weight: $font-weight-bold
 
 		.object-text
@@ -129,7 +131,7 @@
 			},
 		},
 		computed: {
-			...mapGetters(['currentUserId']),
+			...mapGetters(['currentUserId', 'isMobile']),
 			action() {
 				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
 			},

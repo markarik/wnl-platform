@@ -3,7 +3,7 @@
 
 	export default {
 		functional: true,
-		render: (createElement, {props: {message, notificationComponent}}) => {
+		render: (createElement, {props: {message, notificationComponent}, data: {on}}) => {
 			const contextRoute = () => mapMessageToRoute(message, {
 				[message.objects.type]: message.objects.id,
 				[message.subject.type]: message.subject.id
@@ -16,6 +16,7 @@
 					icon: 'fa-comments-o',
 					routeContext: getContextRoute(contextRoute, message.referer),
 				},
+				on,
 			})
 		},
 		props: baseProps

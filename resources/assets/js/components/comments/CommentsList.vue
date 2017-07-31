@@ -169,11 +169,8 @@
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isCommentableInUrl) {
-					this.refresh()
-						.then(() => {
-							this.scrollAndHighlight()
-							this.showComments = true
-						})
+					this.scrollAndHighlight()
+					this.showComments = true
 				}
 			},
 			'showComments' (newValue, oldValue) {
@@ -182,8 +179,12 @@
 			},
 			'$route' (newRoute, oldRoute) {
 				if (!this.isOverlayVisible && this.isCommentableInUrl) {
-					this.scrollAndHighlight()
-					this.showComments = true
+					this.refresh()
+						.then(() => {
+							this.scrollAndHighlight()
+							this.showComments = true
+
+						})
 				}
 			},
 		},

@@ -6,23 +6,25 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div class="single-question">
-			<div class="question-container" v-if="isLoaded">
-				<div class="question-header">
-					<span class="question-title">{{title}}</span>
-					<a class="question-back" @click="goBack">
-						<span class="icon is-small">
-							<i class="fa fa-angle-left"></i>
-						</span>
-						{{$t('quiz.single.back')}}
-					</a>
+		<div class="scrollable-main-container">
+			<div class="single-question">
+				<div class="question-container" v-if="isLoaded">
+					<div class="question-header">
+						<span class="question-title">{{title}}</span>
+						<a class="question-back" @click="goBack">
+							<span class="icon is-small">
+								<i class="fa fa-angle-left"></i>
+							</span>
+							{{$t('quiz.single.back')}}
+						</a>
+					</div>
+					<div v-if="hasError" class="notification">
+						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
+					</div>
+					<wnl-quiz-widget v-else :isSingle="true"/>
 				</div>
-				<div v-if="hasError" class="notification">
-					{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
-				</div>
-				<wnl-quiz-widget v-else :isSingle="true"/>
+				<wnl-text-loader v-else/>
 			</div>
-			<wnl-text-loader v-else/>
 		</div>
 		<wnl-sidenav-slot
 			class="right-sidenav"
@@ -64,6 +66,7 @@
 		width: 600px
 
 	.wnl-quiz-widget
+		margin-bottom: $margin-humongous
 		width: 100%
 
 	.right-sidenav
@@ -107,6 +110,9 @@
 			goBack() {
 				this.$router.go(-1)
 			},
+		},
+		created() {
+			this.destroyQuiz()
 		},
 		mounted() {
 			if (!this.id) {

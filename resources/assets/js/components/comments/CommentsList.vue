@@ -162,16 +162,12 @@
 			}
 		},
 		watch: {
-			'showComments' (newValue, oldValue) {
-				let eventName = newValue ? 'commentsShown' : 'commentsHidden'
-				this.$emit(eventName)
-			},
 			'comments' (newValue, oldValue) {
 				if (newValue !== oldValue) {
 					this.$emit('commentsUpdated', newValue)
 				}
 			},
-			'$route' (newRoute, oldRoute) {
+			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isCommentableInUrl) {
 					this.refresh()
 						.then(() => {
@@ -180,7 +176,11 @@
 						})
 				}
 			},
-			'isOverlayVisible' () {
+			'showComments' (newValue, oldValue) {
+				let eventName = newValue ? 'commentsShown' : 'commentsHidden'
+				this.$emit(eventName)
+			},
+			'$route' (newRoute, oldRoute) {
 				if (!this.isOverlayVisible && this.isCommentableInUrl) {
 					this.scrollAndHighlight()
 					this.showComments = true

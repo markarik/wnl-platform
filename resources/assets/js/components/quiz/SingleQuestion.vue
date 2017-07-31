@@ -103,7 +103,7 @@
 			},
 		},
 		methods: {
-			...mapActions('quiz', ['fetchSingleQuestion']),
+			...mapActions('quiz', ['destroyQuiz', 'fetchSingleQuestion']),
 			goBack() {
 				this.$router.go(-1)
 			},
@@ -120,6 +120,9 @@
 				.catch(error => {
 					this.hasError = true
 				})
-		}
+		},
+		beforeDestroy() {
+			this.destroyQuiz()
+		},
 	}
 </script>

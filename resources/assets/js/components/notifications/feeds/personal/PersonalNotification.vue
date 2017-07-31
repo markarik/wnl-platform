@@ -13,13 +13,15 @@
 			</div>
 			<div class="subject" v-if="subjectText">{{ subjectText }}</div>
 			<div class="time">
-				{{ formattedTime }}
+				<span class="icon is-small">
+					<i class="fa" :class="icon"></i>
+				</span>{{ formattedTime }}
 			</div>
 		</div>
 		<div class="link-symbol">
-			<span v-if="hasContext" class="icon is-small" :class="{'unread': !isRead}">
+			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
 				<i v-if="loading" class="loader"></i>
-				<i v-else class="fa" :class="icon"></i>
+				<i v-else class="fa fa-angle-right"></i>
 			</span>
 		</div>
 	</div>
@@ -80,7 +82,7 @@
 			margin-top: $margin-tiny
 
 			.icon
-				margin-right: $margin-tiny
+				margin-right: $margin-small
 
 	.link-symbol
 		display: flex

@@ -4,6 +4,7 @@
 			<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 			<span class="meta-time">{{justDate}}</span>
 			<span class="meta-time">{{justTime}}</span>
+			<span class="icon is-small"><i class="fa" :class="icon"></i></span>
 		</div>
 		<div class="notification-content">
 			<div class="notification-header">
@@ -18,9 +19,9 @@
 			</div>
 		</div>
 		<div class="link-symbol">
-			<span v-if="hasContext" class="icon is-small" :class="{'unread': !isRead}">
+			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
 				<i v-if="loading" class="loader"></i>
-				<i v-else class="fa" :class="icon"></i>
+				<i v-else class="fa fa-angle-right"></i>
 			</span>
 		</div>
 	</div>
@@ -47,9 +48,9 @@
 			transition: background-color $transition-length-base
 
 	.meta
+		align-items: center
 		display: flex
 		flex-direction: column
-		justify-content: center
 		margin: -$margin-small 0
 		padding: $margin-small 0
 
@@ -61,6 +62,11 @@
 			font-size: $font-size-minus-3
 			line-height: $line-height-minus
 			text-align: center
+
+		.icon
+			color: $color-background-gray
+			text-align: center
+			margin-top: $margin-small
 
 	.notification-content
 		flex: 1 auto

@@ -63,7 +63,7 @@
 	$header-height: 40px
 	$footer-height: 40px
 	$body-margin-top: $header-height
-	$body-margin-bottom: $footer-height + $margin-big
+	$body-margin-bottom: $footer-height
 
 	.dropdown-container
 		align-items: center

@@ -5,11 +5,11 @@ export default createPerimeter({
 
 	govern: {
 		'can access': function () {
-			return this.isAdmin();
+			return this.isModerator();
 		}
 	},
 
-	isAdmin() {
-		return this.child && this.child.roles.includes('admin');
+	isModerator() {
+		return this.child && this.child.roles.includes('moderator');
 	}
 });

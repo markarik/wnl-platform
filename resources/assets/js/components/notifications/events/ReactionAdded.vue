@@ -1,15 +1,20 @@
 <script>
-	import {baseProps} from './event'
+	import {baseProps, getContextRoute, mapMessageToRoute} from './event'
 
 	export default {
 		functional: true,
-		render: (createElement, {props}) => {
-			return createElement(props.notificationComponent, {
+		render: (createElement, {props: {message, notificationComponent}}) => {
+			const contextRoute = () => mapMessageToRoute(message, {
+				[message.objects.type]: message.objects.id,
+				[message.subject.type]: message.subject.reaction_type
+			})
+
+			return createElement(notificationComponent, {
 				props: {
-					message: props.message,
-					channel: props.channel,
+					message,
+					channel: message.channel,
 					icon: 'fa-thumbs-o-up',
-					routeContext: props.message.referer,
+					routeContext: getContextRoute(contextRoute, message.referer),
 				},
 			})
 		},

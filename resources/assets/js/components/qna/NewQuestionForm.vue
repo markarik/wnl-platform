@@ -66,7 +66,11 @@
 		computed: {
 			attachedData() {
 				return {
-					tags: this.tags.map((tag) => tag.id)
+					tags: this.tags.map((tag) => tag.id),
+					context: {
+						name: this.$route.name,
+						params: this.$route.params
+					}
 				}
 			},
 			toolbar() {

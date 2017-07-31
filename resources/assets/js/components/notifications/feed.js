@@ -7,26 +7,21 @@ import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 export const feed = {
-	props: {
-		limit: {
-			default: 15,
-			type: Number,
-		}
-	},
-	data() {
-		return {
-			hasMore: true,
-		}
-	},
 	computed: {
 		...mapGetters('notifications', [
 			'getOldestNotification',
 			'getSortedNotifications',
+			'hasMore',
 			'isFetching',
-			'isLoading',
 		]),
+		fetching() {
+			return this.isFetching(this.channel)
+		},
+		totalNotifications() {
+			return _.size(this.notifications)
+		},
 		isEmpty() {
-			return !this.isLoading && _.size(this.notifications) === 0
+			return !this.fetching && this.totalNotifications === 0
 		},
 		notifications() {
 			return this.getSortedNotifications(this.channel)
@@ -36,18 +31,6 @@ export const feed = {
 		...mapActions('notifications', [
 			'pullNotifications',
 		]),
-		loadMore() {
-			if (this.isFetching) return;
-
-			this.pullNotifications([this.channel, {
-				limit: this.limit,
-				olderThan: this.getOldestNotification(this.channel).timestamp
-			}]).then((response) => {
-				if (response.data.length < this.limit) {
-					this.hasMore = false
-				}
-			})
-		},
 		getEventComponent(message) {
 			return `wnl-event-${message.event}`
 		},
@@ -56,6 +39,14 @@ export const feed = {
 
 			return typeof components === 'object' &&
 				Object.keys(components).indexOf(this.getEventComponent(message)) > -1
-		}
+		},
+		loadMore() {
+			if (this.fetching) return;
+
+			this.pullNotifications([this.channel, {
+				limit: this.limit,
+				olderThan: this.getOldestNotification(this.channel).timestamp
+			}])
+		},
 	}
 }

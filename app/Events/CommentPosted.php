@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Comment;
+use App\Traits\EventContextTrait;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -12,7 +13,8 @@ class CommentPosted extends Event
 	use Dispatchable,
 		InteractsWithSockets,
 		SerializesModels,
-		SanitizesUserContent;
+		SanitizesUserContent,
+		EventContextTrait;
 
 	public $comment;
 
@@ -56,26 +58,7 @@ class CommentPosted extends Event
 				'avatar'     => $actor->profile->avatar_url,
 			],
 			'referer' => $this->referer,
+			'context' => $this->addEventContext($commentable)
 		];
-
-		if ($commentableType === 'qna_answer') $this->addQnaAnswerContext();
-	}
-
-	public function addQnaAnswerContext()
-	{
-		$qnaAnswer = $this->comment->commentable;
-		$screen = $qnaAnswer->question->screen;
-
-		if (!$screen) return false;
-
-		$lesson = $qnaAnswer->question->screen->lesson;
-
-		$this->data['context'] = [
-			'courseId' => $lesson->group->course->id,
-			'lessonId' => $lesson->id,
-			'screenId' => $screen->id,
-		];
-
-		return true;
 	}
 }

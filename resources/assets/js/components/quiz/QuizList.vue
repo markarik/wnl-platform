@@ -34,7 +34,7 @@
 
 <script>
 	import _ from 'lodash'
-	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
+	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'

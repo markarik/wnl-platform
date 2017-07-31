@@ -5,6 +5,7 @@ namespace App\Events;
 use Request;
 use App\Models\User;
 use App\Models\Reaction;
+use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
@@ -17,7 +18,8 @@ class ReactionAdded extends Event
 	use Dispatchable,
 		InteractsWithSockets,
 		SerializesModels,
-		SanitizesUserContent;
+		SanitizesUserContent,
+		EventContextTrait;
 
 	public $reaction;
 
@@ -76,6 +78,7 @@ class ReactionAdded extends Event
 				'avatar'     => $actor->profile->avatar_url,
 			],
 			'referer' => $this->referer,
+			'context' => $this->addEventContext($reactable)
 		];
 	}
 }

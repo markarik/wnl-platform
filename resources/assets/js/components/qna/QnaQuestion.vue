@@ -3,7 +3,7 @@
 		<div class="question-loader" v-if="loading">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="qna-question">
+		<div class="qna-question" ref="highlight">
 			<div class="votes">
 				<wnl-vote
 					type="up"
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="qna-answers">
+		 <div class="qna-answers">
 			<div class="level">
 				<div class="level-left">
 					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -75,14 +75,15 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly"></wnl-qna-answer>
+			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
 			<wnl-qna-answer v-if="allAnswers"
 				v-for="answer in otherAnswers"
 				:answer="answer"
 				:questionId="questionId"
 				:key="answer.id"
-				:readOnly="readOnly">
-			</wnl-qna-answer>
+				:readOnly="readOnly"
+				:refresh="refreshQuestionAndShowAnswers"
+			></wnl-qna-answer>
 			<a class="qna-answers-show-all"
 				v-if="!allAnswers && otherAnswers.length > 0"
 				@click="allAnswers = true">
@@ -158,12 +159,10 @@
 	.tag
 		margin-right: $margin-small
 		margin-top: $margin-small
-
 </style>
 
 <script>
 	import _ from 'lodash'
-	import { nextTick } from 'vue'
 	import { mapGetters, mapActions } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
@@ -171,11 +170,13 @@
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/global/reactions/Vote'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
+	import highlight from 'js/mixins/highlight'
 
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaQuestion',
+		mixins: [ highlight ],
 		components: {
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
@@ -189,7 +190,8 @@
 				allAnswers: false,
 				loading: false,
 				showAnswerForm: false,
-				reactableResource: "qna_questions"
+				reactableResource: "qna_questions",
+				highlightableResources: ["qna_question", "reaction"],
 			}
 		},
 		computed: {
@@ -198,9 +200,10 @@
 				'getQuestion',
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
-				'getReaction'
+				'getReaction',
+				'questionAnswers'
 			]),
-			...mapGetters(['currentUserId', 'isMobile']),
+			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
 			question() {
 				return this.getQuestion(this.questionId)
 			},
@@ -253,6 +256,22 @@
 			},
 			voteState() {
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")
+			},
+			isQuestionInUrl() {
+				return !_.get(this.$route, 'query.qna_answer') && _.get(this.$route, 'query.qna_question') == this.questionId
+			},
+			answerInUrl() {
+				return _.get(this.$route, 'query.qna_answer')
+			},
+			isQuestionAnswerInUrl() {
+				if (this.isNotFetchedAnswerInUrl) return true
+
+				return !!this.questionAnswers(this.questionId).find((answer) => answer.id == this.answerInUrl)
+			},
+			isNotFetchedAnswerInUrl() {
+				const questionId = _.get(this.$route, 'query.qna_question')
+
+				if (questionId == this.questionId && this.answerInUrl) return true
 			}
 		},
 		methods: {
@@ -267,12 +286,50 @@
 						this.loading = false
 					})
 			},
+			getAnswer(id) {
+				return this.answersFromHighestUpvoteCount.filter(answer => answer.id == id)
+			},
+			hasAnswer(id) {
+				return this.getAnswer(id).length > 0
+			},
+			onDeleteSuccess() {
+				this.removeQuestion(this.id)
+			},
 			onSubmitSuccess() {
 				this.showAnswerForm = false
 				this.dispatchFetchQuestion()
 			},
-			onDeleteSuccess() {
-				this.removeQuestion(this.id)
+			refreshQuestionAndShowAnswers() {
+				return this.dispatchFetchQuestion(() => {
+					this.allAnswers = true
+				})
+			}
+		},
+		mounted() {
+			if (this.isQuestionAnswerInUrl) {
+				this.allAnswers = true
+			}
+
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.scrollAndHighlight()
+			}
+		},
+		watch: {
+			'$route' (newRoute, oldRoute) {
+				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.dispatchFetchQuestion()
+						.then(() => this.scrollAndHighlight())
+				}
+
+				if (this.isQuestionAnswerInUrl) {
+					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
+					this.allAnswers = true
+				}
+			},
+			'isOverlayVisible' () {
+				if (!this.isOverlayVisible && this.isQuestionInUrl) {
+					this.scrollAndHighlight()
+				}
 			},
 		},
 	}

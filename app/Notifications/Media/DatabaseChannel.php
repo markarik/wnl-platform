@@ -15,6 +15,10 @@ class DatabaseChannel
 	 */
 	public function send($notifiable, EventNotification $notification)
 	{
+		if ($notifiable->id === $notification->event->data['actors']['id']){
+			return;
+		}
+
 		$channel = $notification->broadcastOn();
 
 		NotificationModel::create([

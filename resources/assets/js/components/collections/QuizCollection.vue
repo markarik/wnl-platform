@@ -21,7 +21,7 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import QuizWidget from 'js/components/course/screens/quiz/QuizWidget'
+	import QuizWidget from 'js/components/quiz/QuizWidget'
 
 	export default {
 		name: 'QuizCollection',

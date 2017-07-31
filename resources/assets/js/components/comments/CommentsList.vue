@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-comments">
+	<div class="wnl-comments" ref="highlight">
 		<div class="comments-controls">
 			<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 			Komentarze ({{comments.length}})
@@ -50,6 +50,7 @@
 
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
+	import highlight from 'js/mixins/highlight'
 
 	import { scrollWithMargin } from 'js/utils/animations'
 
@@ -59,16 +60,18 @@
 			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
 		},
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique'],
+		mixins: [highlight],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam'],
 		data() {
 			return {
 				formElement: {},
 				listElement: {},
 				showComments: false,
+				highlightableResources: [this.urlParam, 'comment']
 			}
 		},
 		computed: {
-			...mapGetters(['currentUser']),
+			...mapGetters(['currentUser', 'isOverlayVisible']),
 			comments() {
 				return this.getterFunction('comments', {
 					resource: this.commentableResource,
@@ -81,6 +84,9 @@
 			toggleCommentsText() {
 				return this.showComments ? 'Schowaj' : 'Pokaż'
 			},
+			isCommentableInUrl() {
+				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
+			}
 		},
 		methods: {
 			action(action, payload = {}) {
@@ -143,6 +149,11 @@
 		},
 		mounted() {
 			this.formElement = this.$el.getElementsByClassName('form-container')[0]
+
+			if (!this.isOverlayVisible && this.isCommentableInUrl) {
+				this.scrollAndHighlight()
+				this.showComments = true
+			}
 		},
 		watch: {
 			'showComments' (newValue, oldValue) {
@@ -152,6 +163,18 @@
 			'comments' (newValue, oldValue) {
 				if (newValue !== oldValue) {
 					this.$emit('commentsUpdated', newValue)
+				}
+			},
+			'$route' (newRoute, oldRoute) {
+				if (!this.isOverlayVisible && this.isCommentableInUrl) {
+					this.scrollAndHighlight()
+					this.showComments = true
+				}
+			},
+			'isOverlayVisible' () {
+				if (!this.isOverlayVisible && this.isCommentableInUrl) {
+					this.scrollAndHighlight()
+					this.showComments = true
 				}
 			},
 		},

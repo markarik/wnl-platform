@@ -174,7 +174,7 @@
 			},
 			bookmarkState() {
 				return this.getReaction('slides', this.currentSlideId, 'bookmark')
-			}
+			},
 		},
 		methods: {
 			...mapActions('slideshow', ['setup', 'resetModule']),

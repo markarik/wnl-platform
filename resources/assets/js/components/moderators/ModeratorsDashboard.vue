@@ -5,11 +5,10 @@
 				:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
-				<wnl-feed type="moderator" :notifications="notifications" channel="moderatorsChannel"/>
+				<wnl-moderators-feed/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -59,20 +58,20 @@
 	import {mapActions, mapGetters} from 'vuex'
 
 	import MainNav from 'js/components/MainNav'
+	import ModeratorsFeed from 'js/components/notifications/feeds/moderators/ModeratorsFeed'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import withChat from 'js/mixins/with-chat'
-	import Feed from 'js/components/newsfeed/Feed'
 
 	export default {
-		name: 'Help',
+		name: 'ModeratorsDashboard',
 		components: {
 			'wnl-main-nav': MainNav,
+			'wnl-moderators-feed': ModeratorsFeed,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-feed': Feed,
 		},
 		mixins: [withChat],
 		computed: {
@@ -83,15 +82,11 @@
 				'isChatVisible',
 				'isChatToggleVisible'
 			]),
-			...mapGetters('notifications', ['getSortedNotifications', 'moderatorsChannel']),
 			chatRooms() {
 				return [
 					{name: '#moderatorzy', channel: 'moderatorzy'},
 				]
 			},
-			notifications() {
-				return this.getSortedNotifications(this.moderatorsChannel)
-			}
 		},
 		methods: {
 			...mapActions(['toggleChat']),

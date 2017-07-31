@@ -1,5 +1,5 @@
 <template>
-	<div class="qna-answer-container">
+	<div class="qna-answer-container" ref="highlight">
 		<div class="qna-answer">
 			<div class="votes">
 				<wnl-vote
@@ -81,7 +81,6 @@
 		width: 100%
 
 	.qna-answer
-		// background: $color-background-lighter-gray
 		padding: 0 $margin-base
 		margin-top: $margin-base
 
@@ -104,7 +103,6 @@
 
 	.qna-bookmark
 		justify-content: flex-end
-
 </style>
 
 <script>
@@ -115,6 +113,7 @@
 	import NewCommentForm from 'js/components/qna/NewCommentForm'
 	import QnaComment from 'js/components/qna/QnaComment'
 	import Vote from 'js/components/global/reactions/Vote'
+	import highlight from 'js/mixins/highlight'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -126,14 +125,16 @@
 			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
 		},
-		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly'],
+		mixins: [ highlight ],
+		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly', 'refresh'],
 		data() {
 			return {
 				commentsFetched: false,
 				loading: false,
 				showComments: false,
 				showCommentForm: false,
-				reactableResource: "qna_answers"
+				reactableResource: "qna_answers",
+				highlightableResources: ["qna_answer", "qna_question", "comment", "reaction"]
 			}
 		},
 		computed: {
@@ -142,7 +143,7 @@
 				'answerComments',
 				'getReaction'
 			]),
-			...mapGetters(['currentUserId']),
+			...mapGetters(['currentUserId', 'isOverlayVisible']),
 			id() {
 				return this.answer.id
 			},
@@ -172,6 +173,21 @@
 			},
 			upvoteState() {
 				return this.getReaction(this.reactableResource, this.answer.id, "upvote")
+			},
+			isAnswerInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'qna_question') == this.questionId
+			},
+			isCommentInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'comment')
+			},
+			isReactionInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'reaction')
+			},
+			shouldHighlight() {
+				return this.isAnswerInUrl || this.isCommentInUrl || this.isReactionInUrl
 			}
 		},
 		methods: {
@@ -185,7 +201,7 @@
 			},
 			dispatchFetchComments() {
 				this.loading = true
-				this.fetchComments(this.id)
+				return this.fetchComments(this.id)
 					.then(() => {
 						this.commentsFetched = true
 						this.showComments = true
@@ -203,6 +219,41 @@
 					answerId: this.id,
 				})
 			},
+			refreshAnswer() {
+				this.commentsFetched = false
+				this.showComments = false
+				this.showCommentForm = false
+
+				return this.refresh()
+			}
 		},
+		mounted() {
+			if (this.shouldHighlight) {
+				return new Promise((resolve) => {
+					if (this.isCommentInUrl) return this.dispatchFetchComments().then(resolve)
+					return resolve()
+				})
+				.then(() => {
+					!this.isOverlayVisible && this.scrollAndHighlight()
+				})
+			}
+		},
+		watch: {
+			'$route' (newRoute, oldRoute) {
+				if (this.shouldHighlight) {
+					this.refreshAnswer()
+					.then(() => {
+						return this.isCommentInUrl ? this.dispatchFetchComments() : Promise.resolve()
+					}).then(() => {
+						!this.isOverlayVisible && this.scrollAndHighlight()
+					})
+				}
+			},
+			'isOverlayVisible' () {
+				if (!this.isOverlayVisible && this.shouldHighlight) {
+					this.scrollAndHighlight()
+				}
+			}
+		}
 	}
 </script>

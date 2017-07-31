@@ -40,19 +40,12 @@ export const notification = {
 	methods: {
 		...mapActions('notifications', ['markAsRead']),
 		goToContext() {
-			if(!this.hasContext) return false;
-
-			this.loading = true
-
-			this.markAsRead({notification: this.message, channel: this.channel})
-				.then(() => {
-					this.loading = false
-					if (typeof this.routeContext === 'object') {
-						this.$router.push(this.routeContext)
-					} else if (typeof this.routeContext === 'string') {
-						window.location.href=this.routeContext
-					}
-				})
+			this.$emit('goingToContext')
+			if (typeof this.routeContext === 'object') {
+				this.$router.push(this.routeContext)
+			} else if (typeof this.routeContext === 'string') {
+				window.location.href=this.routeContext
+			}
 		},
 	},
 }

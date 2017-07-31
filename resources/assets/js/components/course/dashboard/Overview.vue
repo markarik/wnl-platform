@@ -17,7 +17,12 @@
 			<wnl-active-users/>
 		</div>
 
-		<div class="news-heading metadata">{{ $t('dashboard.news.heading') }}</div>
+		<div class="news-heading metadata">
+			{{ $t('dashboard.news.heading') }}
+			<span class="news-heading-description">
+				{{ $t('dashboard.news.description') }}
+			</span>
+		</div>
 		<div class="current-view-controls">
 			<a v-for="panel, index in panels" class="panel-toggle"
 				:class="{'is-active': overviewView === panel.slug}"
@@ -47,6 +52,12 @@
 	.news-heading
 		border-bottom: $border-light-gray
 		margin: $margin-big 0 $margin-small
+
+		.news-heading-description
+			color: $color-background-gray
+			display: block
+			font-weight: $font-weight-regular
+			text-transform: none
 
 	.current-view-controls
 		align-items: center
@@ -103,7 +114,7 @@
 					{
 						name: this.$t('dashboard.news.stream'),
 						slug: 'stream',
-						icon: 'fa-globe'
+						icon: 'fa-commenting-o'
 					},
 					{
 						name: this.$t('dashboard.news.qna'),

@@ -61,8 +61,7 @@
 		width: 100%
 
 	.question-container
-		max-width: 100vw
-		padding: 0 $margin-base
+		max-width: 90vw
 		width: 600px
 
 	.wnl-quiz-widget

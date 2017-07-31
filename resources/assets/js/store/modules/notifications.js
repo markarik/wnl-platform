@@ -26,6 +26,23 @@ const getters = {
 	userChannel: (state, getters, rootState, rootGetters) => {
 		return rootGetters.currentUserId && `private-${rootGetters.currentUserId}`
 	},
+	filterSlides: (state, getters) => (channel) => {
+		return _.pickBy(getters.getSortedNotifications(channel), (notification) => {
+			return notification.objects && notification.objects.type === 'slide'
+		})
+	},
+	filterQuiz: (state, getters) => (channel) => {
+		return _.pickBy(getters.getSortedNotifications(channel), (notification) => {
+			return notification.objects && notification.objects.type === 'quiz_question'
+		})
+	},
+	filterQna: (state, getters) => (channel) => {
+		return _.pickBy(getters.getSortedNotifications(channel), (notification) => {
+			return notification.objects &&
+				(notification.objects.type === 'qna_question' || notification.objects.type === 'qna_answer') ||
+				notification.subject && notification.subject.type === 'qna_question'
+		})
+	},
 	getUnseen: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.seen_at)
 	},

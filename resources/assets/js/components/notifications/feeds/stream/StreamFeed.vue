@@ -9,15 +9,18 @@
 				{{$t('notifications.stream.zeroState')}}
 			</p>
 		</div>
-		<div class="stream-notifications" v-else>
-			<div class="stream-line"></div>
-			<component :is="getEventComponent(message)"
-				:message="message"
-				:key="id"
-				:notificationComponent="StreamNotification"
-				v-for="(message, id) in notifications"
-				v-if="hasComponentForEvent(message)"
-			/>
+		<div v-else>
+			<wnl-stream-sorting @changeSorting="changeSorting"/>
+			<div class="stream-notifications">
+				<div class="stream-line"></div>
+				<component :is="getEventComponent(message)"
+					:message="message"
+					:key="id"
+					:notificationComponent="StreamNotification"
+					v-for="(message, id) in filtered"
+					v-if="hasComponentForEvent(message)"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -26,7 +29,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.stream-feed
-		margin-top: $margin-big
+		margin-top: $margin-base + $margin-small
 		margin-bottom: $margin-huge
 
 	.stream-notifications
@@ -65,6 +68,7 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import StreamNotification from 'js/components/notifications/feeds/stream/StreamNotification'
+	import StreamSorting from 'js/components/notifications/feeds/stream/StreamSorting'
 	import { CommentPosted, QnaAnswerPosted, QnaQuestionPosted } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
@@ -76,18 +80,32 @@
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-qna-question-posted': QnaQuestionPosted,
+			'wnl-stream-sorting': StreamSorting,
 		},
 		data() {
 			return {
 				StreamNotification,
+				sorting: 'all',
 			}
 		},
 		computed: {
 			...mapGetters('notifications', {
 				channel: 'streamChannel',
+				filterSlides: 'filterSlides',
+				filterQna: 'filterQna',
+				filterQuiz: 'filterQuiz',
 			}),
+			filtered() {
+				if (this.sorting === 'all') return this.notifications
+				return this[`filter${_.upperFirst(this.sorting)}`](this.channel)
+			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')
+			},
+		},
+		methods: {
+			changeSorting(sorting) {
+				this.sorting = sorting
 			},
 		},
 	}

@@ -29,16 +29,16 @@
 			</div>
 			<transition name="fade">
 				<div class="qna-new-question" v-if="showForm">
-					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
+					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="howManyQuestions > 0"></wnl-qna-sorting>
+			<wnl-qna-sorting v-if="howManyQuestions > 0"/>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
-			></wnl-qna-question>
+			/>
 		</div>
 	</div>
 </template>

@@ -124,6 +124,12 @@ let routes = [
 		]
 	},
 	{
+		name: 'quizQuestion',
+		path: '/app/quiz_questions/:id',
+		component: require('js/components/quiz/SingleQuestion.vue'),
+		props: true,
+	},
+	{
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),

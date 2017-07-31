@@ -13,8 +13,8 @@
 </style>
 
 <script>
-	import QuizList from 'js/components/course/screens/quiz/QuizList.vue'
-	import QuizStats from 'js/components/course/screens/quiz/QuizStats.vue'
+	import QuizList from 'js/components/quiz/QuizList.vue'
+	import QuizStats from 'js/components/quiz/QuizStats.vue'
 	import { mapGetters } from 'vuex'
 
 	export default {

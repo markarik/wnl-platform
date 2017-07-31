@@ -7,10 +7,10 @@
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
-						<p class="title is-4">
+						<p class="title is-4" v-if="title !== false">
 							{{displayedTitle}} ({{howManyQuestions}})
 						</p>
-						<div class="tags">
+						<div class="tags" v-if="tags">
 							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
 						</div>
 					</div>

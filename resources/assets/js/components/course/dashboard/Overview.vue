@@ -33,9 +33,21 @@
 		</div>
 
 		<wnl-active-users/>
-		<!-- Latest Q&A -->
-		<!-- <wnl-qna title="Ostatnie pytania" class="wnl-overview-qna"/> -->
-		<wnl-stream-feed/>
+
+		<div class="current-view-controls">
+			<a v-for="panel, index in panels" class="panel-toggle"
+				:class="{'is-active': currentView === panel.slug}"
+				:key="index"
+				@click="currentView = panel.slug"
+			>
+				{{panel.name}}
+				<span class="icon is-small">
+					<i class="fa" :class="panel.icon"></i>
+				</span>
+			</a>
+		</div>
+		<wnl-stream-feed v-show="currentView === 'stream'"/>
+		<wnl-qna v-show="currentView === 'qna'" :title="false" class="wnl-overview-qna"/>
 	</div>
 </template>
 
@@ -52,7 +64,13 @@
 		padding-bottom: 20em
 
 	.wnl-overview-qna
-		margin: $margin-huge 0
+		margin: 0 0 $margin-huge
+
+	.current-view-controls
+		align-items: center
+		display: flex
+		flex-wrap: wrap
+		margin-bottom: $margin-base
 </style>
 
 <script>
@@ -70,6 +88,11 @@
 
 	export default {
 		props: ['courseId'],
+		data() {
+			return {
+				currentView: 'stream',
+			}
+		},
 		computed: {
 			...mapGetters('progress', [
 				'isLessonComplete',
@@ -80,6 +103,20 @@
 			]),
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)
+			},
+			panels() {
+				return [
+					{
+						name: this.$t('dashboard.news.stream'),
+						slug: 'stream',
+						icon: 'fa-globe'
+					},
+					{
+						name: this.$t('dashboard.news.qna'),
+						slug: 'qna',
+						icon: 'fa-question-circle-o',
+					},
+				]
 			},
 		},
 		components: {

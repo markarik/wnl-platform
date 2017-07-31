@@ -1,7 +1,5 @@
 <template>
 	<div class="stream-feed">
-		<p class="title is-4">Aktualności</p>
-
 		<div class="zero-state" v-if="isEmpty">
 			<img class="zero-state-image"
 				:alt="$t('notifications.personal.zeroStateImage')"

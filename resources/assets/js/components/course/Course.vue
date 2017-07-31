@@ -66,7 +66,7 @@
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
-			...mapGetters('course', ['ready', 'isLessonAvailable']),
+			...mapGetters('course', ['isLessonAvailable', 'ready']),
 			...mapGetters([
 				'currentUserRoles',
 				'isSidenavVisible',
@@ -75,16 +75,6 @@
 				'isChatVisible',
 				'isChatToggleVisible'
 			]),
-			breadcrumb() {
-				return {
-					level: 0,
-					text: 'Kurs',
-					to: {
-						name: 'courses',
-						courseId: this.courseId,
-					},
-				}
-			},
 			context() {
 				return {
 					courseId: this.courseId,
@@ -127,23 +117,11 @@
 		},
 		mixins: [withChat, breadcrumb],
 		methods: {
-			...mapActions('course', [
-				'setup',
-				'checkUserRoles',
-			]),
-			...mapActions(['toggleChat', 'toggleOverlay']),
+			...mapActions('course', ['checkUserRoles']),
+			...mapActions(['toggleChat']),
 		},
 		created() {
-			this.toggleOverlay({source: 'course', display: true})
-			this.setup(this.courseId)
-				.then(() => {
-					this.checkUserRoles(this.currentUserRoles)
-					this.toggleOverlay({source: 'course', display: false})
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-					this.toggleOverlay({source: 'course', display: false})
-				})
+			this.checkUserRoles(this.currentUserRoles)
 		}
 	}
 </script>

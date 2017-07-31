@@ -1,4 +1,10 @@
 export const notifications = {
+	context: {
+		lesson: 'w lekcji {lesson}',
+		quizQuestion: '#{id}',
+		page: 'na stronie {page}',
+		slide: '{slide}',
+	},
 	events: {
 		commentPosted: 'skomentował/-a',
 		qnaQuestionPosted: 'zadał/-a pytanie',

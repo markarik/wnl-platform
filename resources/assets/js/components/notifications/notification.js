@@ -2,8 +2,8 @@
  * A mixin with basic logic for a component of a Notification type.
  * @type {Object}
  */
-import { isEmpty } from 'lodash'
-import { mapActions } from 'vuex'
+import { isEmpty, isObject, truncate } from 'lodash'
+import { mapActions, mapGetters } from 'vuex'
 
 import { timeFromS } from 'js/utils/time'
 
@@ -27,6 +27,37 @@ export const notification = {
 		}
 	},
 	computed: {
+		...mapGetters('course', ['getLesson']),
+		contextInfo() {
+			if (!isObject(this.routeContext)) return ''
+
+			const route = this.routeContext.name
+
+			if (route === 'screens') {
+				const lessonId = this.routeContext.params.lessonId
+				const slide = this.routeContext.params.slide
+
+				let contextInfo = this.$t('notifications.context.lesson', {
+					lesson: _.truncate(this.getLesson(lessonId).name, {length: 20}),
+				})
+
+				if (slide) {
+					contextInfo = `${this.$t('notifications.context.slide', {slide})} ${contextInfo}`
+				}
+
+				return contextInfo
+			} else if (route === 'quizQuestion') {
+				return this.$t('notifications.context.quizQuestion', {
+					id: this.routeContext.params.id,
+				})
+			} else if (route.indexOf('help') > -1) {
+				return this.$t('notifications.context.page', {
+					page: this.$t(`routes.help.${route}`),
+				})
+			}
+
+			return ''
+		},
 		formattedTime () {
 			return timeFromS(this.message.timestamp)
 		},

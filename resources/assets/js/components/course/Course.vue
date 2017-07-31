@@ -68,7 +68,6 @@
 		computed: {
 			...mapGetters('course', ['isLessonAvailable', 'ready']),
 			...mapGetters([
-				'currentUserRoles',
 				'isSidenavVisible',
 				'isSidenavMounted',
 				'isChatMounted',
@@ -117,11 +116,7 @@
 		},
 		mixins: [withChat, breadcrumb],
 		methods: {
-			...mapActions('course', ['checkUserRoles']),
 			...mapActions(['toggleChat']),
 		},
-		created() {
-			this.checkUserRoles(this.currentUserRoles)
-		}
 	}
 </script>

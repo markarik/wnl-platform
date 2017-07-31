@@ -50,8 +50,7 @@
 			'wnl-navbar': Navbar
 		},
 		computed: {
-			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay']),
-			...mapGetters('course', ['ready']),
+			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay', 'currentUserRoles']),
 		},
 		methods: {
 			...mapActions([
@@ -65,44 +64,38 @@
 			]),
 			...mapActions('notifications', ['initNotifications']),
 			...mapActions('course', {
-				courseSetup: 'setup'
+				courseSetup: 'setup',
+				checkUserRoles: 'checkUserRoles',
 			}),
 		},
 		mounted() {
 			this.toggleOverlay({source: 'course', display: true})
-			this.setupCurrentUser()
+			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
-					this.currentUserId && axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
 					window.setInterval(() => {
 						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
 					}, 1000 * 60 * 3)
-				})
-				.then(() => {
-					this.courseSetup(1) // Ugh...
-						.then(() => {
-							this.toggleOverlay({source: 'course', display: false})
-							this.initNotifications()
+
+					this.initNotifications()
+
+					this.$router.afterEach((to) => {
+						to.matched.some((record) => {
+							!record.meta.keepsNavOpen && this.resetLayout()
 						})
-						.then(() => {
-							this.$router.afterEach((to) => {
-								to.matched.some((record) => {
-									if (!record.meta.keepsNavOpen) {
-										this.resetLayout()
-									}
-								})
-							})
+					})
 
-							this.setLayout(this.$breakpoints.currentBreakpoint())
-							this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
-								this.setLayout(currentLayout)
-							})
+					this.setLayout(this.$breakpoints.currentBreakpoint())
+					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
+						this.setLayout(currentLayout)
+					})
 
+					window.Echo.join('active-users')
+						.here(users => this.setActiveUsers(users))
+						.joining(user => this.userJoined(user))
+						.leaving(user => this.userLeft(user))
 
-							window.Echo.join('active-users')
-								.here(users => this.setActiveUsers(users))
-								.joining(user => this.userJoined(user))
-								.leaving(user => this.userLeft(user))
-						})
+					this.checkUserRoles(this.currentUserRoles)
+					this.toggleOverlay({source: 'course', display: false})
 				})
 				.catch(error => {
 					$wnl.logger.error(error)

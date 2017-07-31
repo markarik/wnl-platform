@@ -6,7 +6,13 @@
 			<span class="lesson">{{ lessonName }}</span>
 		</div>
 		<div class="cta">
-			<router-link v-if="hasNextLesson" class="link" :to="to">{{ callToAction }}</router-link>
+			<router-link v-if="hasNextLesson"
+				class="button is-primary"
+				:class="{'is-outlined': status === 'in-progress'}"
+				:to="to"
+			>
+				{{ callToAction }}
+			</router-link>
 			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {data: nextLessonDate}) }}</span>
 		</div>
 	</div>
@@ -38,7 +44,9 @@
 	.cta
 		font-size: $font-size-minus-1
 
-		.link
+		.button
+			margin-top: $margin-medium
+			font-size: $font-size-minus-2
 
 		.text
 			color: $color-gray-dimmed

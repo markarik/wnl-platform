@@ -418,9 +418,7 @@
 					.then(() => {
 						this.initSlideshow()
 							.then(() => {
-								debugger;
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
-								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 							})
 					})
 				}

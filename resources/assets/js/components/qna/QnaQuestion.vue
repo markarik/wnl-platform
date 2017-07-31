@@ -321,7 +321,10 @@
 						.then(() => this.scrollAndHighlight())
 				}
 
-				if (this.isNotFetchedAnswerInUrl) this.refreshQuestionAndShowAnswers()
+				if (this.isQuestionAnswerInUrl) {
+					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
+					this.allAnswers = true
+				}
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {

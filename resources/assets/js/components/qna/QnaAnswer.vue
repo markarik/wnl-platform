@@ -219,19 +219,25 @@
 					answerId: this.id,
 				})
 			},
+			refreshAnswer() {
+				this.commentsFetched = false
+				this.showComments = false
+				this.showCommentForm = false
+
+				return this.refresh()
+			}
 		},
 		mounted() {
 			if (this.shouldHighlight) {
-				this.dispatchFetchComments()
-					.then(this.scrollAndHighlight)
+				this.scrollAndHighlight()
 			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
 				if (this.shouldHighlight) {
-					this.refresh()
+					this.refreshAnswer()
 					.then(() => {
-						return this.dispatchFetchComments()
+						return this.isCommentInUrl ? this.dispatchFetchComments() : Promise.resolve()
 					}).then(() => {
 						!this.isOverlayVisible && this.scrollAndHighlight()
 					})

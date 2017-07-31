@@ -281,7 +281,7 @@ a.secondary-link {
 	user-select: none;
 
 	&:hover {
-		border-color: $color-gray;
+		border-color: $color-gray-dimmed;
 		color: $color-gray;
 		transition: all $transition-length-base;
 	}

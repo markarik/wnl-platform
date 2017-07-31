@@ -1,20 +1,26 @@
 <template>
 	<div class="your-progress">
-		<p class="progress-message big">{{ progressMessage }}</p>
+		<p class="heading">{{ $t('dashboard.progress.howYouDoin') }}</p>
 		<wnl-progress
 			:value="progressValue"
 			:max="progressMax"
 			:hasNumbers="progressHasNumbers"
 			:modifyingClass="progressModifyingClass">
 		</wnl-progress>
+		<p class="progress-message">{{ progressMessage }}</p>
 	</div>
 </template>
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.heading
+		text-align: center
+
 	.progress-message
-		margin: 0 0 $margin-base
+		color: $color-gray-lighter
+		font-size: $font-size-minus-1
+		text-align: center
 </style>
 
 <script>
@@ -46,7 +52,6 @@
 		}
 
 	export default {
-		props: ['courseId'],
 		computed: {
 			...mapGetters('course', [
 				'getAvailableLessons',
@@ -54,6 +59,9 @@
 			...mapGetters('progress', [
 				'getCompleteLessons'
 			]),
+			courseId() {
+				return this.$route.params.courseId
+			},
 			progressValue() {
 				return this.getCompleteLessons(this.courseId).length
 			},

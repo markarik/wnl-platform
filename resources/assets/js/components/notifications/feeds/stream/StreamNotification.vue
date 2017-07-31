@@ -68,7 +68,7 @@
 
 		.notification-header
 			line-height: $line-height-minus
-			margin-bottom: $margin-base
+			margin-bottom: $margin-tiny
 
 			.actor,
 			.object,
@@ -79,12 +79,12 @@
 			color: $color-gray-dimmed
 			font-style: italic
 			line-height: $line-height-minus
-			margin-bottom: $margin-base
+			margin-bottom: $margin-tiny
 
 		.subject
 			border-left: $border-thick solid $color-inactive-gray
 			font-size: $font-size-base
-			margin-top: $margin-tiny
+			margin-top: $margin-base
 			padding-left: $margin-medium
 
 			&.unread

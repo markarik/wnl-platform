@@ -1,39 +1,23 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item metadata">
-					Cześć {{currentUserName}}!
-				</div>
-			</div>
-		</div>
-
 		<!-- Dashboard news -->
-		<wnl-dashboard-news></wnl-dashboard-news>
+		<wnl-dashboard-news/>
+
+		<div class="welcome">
+			{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
+		</div>
 
 		<!-- Next lesson -->
-		<div>
-			<div class="wnl-overview-section">
-				<wnl-next-lesson :courseId="courseId"></wnl-next-lesson>
-			</div>
+		<div class="overview-progress box">
+			<wnl-next-lesson/>
+			<wnl-your-progress/>
 		</div>
 
-		<!-- Your progress -->
-		<div>
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item metadata">
-						Jak Ci idzie?
-					</div>
-				</div>
-			</div>
-			<div class="wnl-overview-section">
-				<wnl-your-progress :courseId="courseId"></wnl-your-progress>
-			</div>
+		<div class="active-users">
+			<wnl-active-users/>
 		</div>
 
-		<wnl-active-users/>
-
+		<div class="news-heading metadata">{{ $t('dashboard.news.heading') }}</div>
 		<div class="current-view-controls">
 			<a v-for="panel, index in panels" class="panel-toggle"
 				:class="{'is-active': currentView === panel.slug}"
@@ -54,23 +38,27 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.content
-		color: $color-gray
+	.welcome
+		font-size: $font-size-minus-1
+		font-weight: bold
+		margin-bottom: $margin-base
+		text-transform: uppercase
 
-	.wnl-overview-section
-		margin-bottom: $margin-big
-
-	.wnl-overview
-		padding-bottom: 20em
-
-	.wnl-overview-qna
-		margin: 0 0 $margin-huge
+	.news-heading
+		border-bottom: $border-light-gray
+		margin: $margin-big 0 $margin-small
 
 	.current-view-controls
 		align-items: center
 		display: flex
 		flex-wrap: wrap
 		margin-bottom: $margin-base
+
+		.panel-toggle
+			margin-top: $margin-small
+
+	.wnl-overview-qna
+		margin: 0 0 $margin-huge
 </style>
 
 <script>

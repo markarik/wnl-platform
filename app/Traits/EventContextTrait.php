@@ -21,6 +21,17 @@ trait EventContextTrait {
 				}
 				return [];
 
+			case 'App\Models\QuizQuestion':
+				if (!empty($model)) {
+					return [
+						'name' => 'quizQuestion',
+						'params' => [
+							'id' => $model->id,
+						],
+					];
+				}
+				return [];
+
 			case 'App\Models\Slide':
 				if (!empty($model->sections)) {
 					$section = $model->sections->first();

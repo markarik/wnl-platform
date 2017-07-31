@@ -3,7 +3,7 @@
 
 	export default {
 		functional: true,
-		render: (createElement, {props: {message, notificationComponent}}) => {
+		render: (createElement, {props: {message, notificationComponent}, data: {on}}) => {
 			const contextRoute = () => mapMessageToRoute(message, {
 				'qna_answer': message.subject.id,
 				'qna_question': message.objects.id
@@ -16,6 +16,7 @@
 					icon: 'fa-reply',
 					routeContext: getContextRoute(contextRoute, message.referer),
 				},
+				on,
 			})
 		},
 		props: baseProps

@@ -24,6 +24,10 @@
 			</div>
 			<wnl-text-loader v-else/>
 		</div>
+		<wnl-sidenav-slot
+			class="right-sidenav"
+			:isVisible="isSidenavVisible"
+		/>
 	</div>
 </template>
 
@@ -61,6 +65,9 @@
 
 	.wnl-quiz-widget
 		width: 100%
+
+	.right-sidenav
+		border-left: $border-light-gray
 </style>
 
 <script>

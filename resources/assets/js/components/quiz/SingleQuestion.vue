@@ -6,7 +6,7 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div class="single-question">
+		<div class="single-question" v-if="!isOverlayVisible">
 			<div class="question-container" v-if="isLoaded">
 				<div class="question-header">
 					<span class="question-title">{{title}}</span>
@@ -89,7 +89,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavVisible', 'isSidenavMounted']),
+			...mapGetters(['isOverlayVisible', 'isSidenavVisible', 'isSidenavMounted']),
 			...mapGetters('quiz', ['isLoaded']),
 			title() {
 				return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', {id: this.id})

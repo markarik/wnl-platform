@@ -229,7 +229,13 @@
 		},
 		mounted() {
 			if (this.shouldHighlight) {
-				this.scrollAndHighlight()
+				return new Promise((resolve) => {
+					if (this.isCommentInUrl) return this.dispatchFetchComments().then(resolve)
+					return resolve()
+				})
+				.then(() => {
+					!this.isOverlayVisible && this.scrollAndHighlight()
+				})
 			}
 		},
 		watch: {

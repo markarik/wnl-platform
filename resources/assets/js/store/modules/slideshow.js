@@ -3,6 +3,7 @@ import {set, delete as destroy} from 'vue'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {modelToResourceMap} from 'js/utils/config'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions'
 
@@ -56,23 +57,6 @@ function _fetchPresentables(slideshowId, type) {
 		.then(response => {
 			return _fetchReactables(response.data)
 		})
-}
-
-function _fetchComments(slidesIds) {
-	let data = {
-		query: {
-			where: [
-				['commentable_type', 'App\\Models\\Slide'],
-			],
-			whereIn: ['commentable_id', slidesIds],
-		},
-		order: {
-			id: 'asc',
-		},
-		include: 'profiles',
-	}
-
-	return axios.post(getApiUrl('comments/.search'), data)
 }
 
 function getInitialState() {
@@ -172,15 +156,6 @@ const mutations = {
 			})
 		})
 	},
-	[types.SLIDESHOW_SET_COMMENTS] (state, payload) {
-		set(state, 'profiles', payload.included.profiles)
-		destroy(payload, 'included')
-
-		_.each(payload, (comment, index) => {
-			set(state.comments, comment.id, comment)
-			state.slides[comment.commentable_id].comments.push(comment.id)
-		})
-	},
 	[types.RESET_MODULE] (state) {
 		let initialState = getInitialState()
 		Object.keys(initialState).forEach((field) => {
@@ -214,24 +189,10 @@ const actions = {
 				})
 		})
 	},
-	setupComments({commit}, slidesIds) {
-		return new Promise((resolve, reject) => {
-			_fetchComments(slidesIds)
-				.then((response) => {
-					if (!response.data.hasOwnProperty('included')) {
-						commit(types.IS_LOADING, false)
-						return resolve()
-					}
-
-					commit(types.SLIDESHOW_SET_COMMENTS, response.data)
-					commit(types.IS_LOADING, false)
-					resolve()
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-					reject()
-				})
-		})
+	setupComments({commit, dispatch}, slidesIds) {
+		return dispatch('fetchComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
+			.then(() => commit(types.IS_LOADING, false))
+			.catch(() => commit(types.IS_LOADING, false))
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)

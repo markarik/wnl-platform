@@ -29,7 +29,7 @@ trait EventContextTrait {
 					$orderNumber = (int) Presentable::where([
 						['presentable_type', '=', 'App\\Models\\Section'],
 						['slide_id', '=', $model->id],
-					])->get()->first()->order_number;
+					])->first()->order_number;
 
 					return [
 						'name' => 'screens',

@@ -1,6 +1,6 @@
 <template>
 	<div class="dropdown-container">
-		<wnl-dropdown :options="{isWide: true}" @toggled="toggle">
+		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
 			<div slot="activator" class="notifications-toggle"
 				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
 				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
@@ -29,7 +29,7 @@
 							:message="message"
 							:key="id"
 							:notificationComponent="PersonalNotification"
-							@goingToContext="toggle(false)"
+							@goingToContext="onGoingToContext"
 							v-for="(message, id) in notifications"
 							v-if="hasComponentForEvent(message)"
 						/>
@@ -260,6 +260,11 @@
 						this.markAllAsSeen(this.channel)
 						this.allReadLoading = false
 					})
+			},
+			onGoingToContext() {
+				if (typeof this.$refs.dropdown.toggleActive === 'function') {
+					this.$refs.dropdown.toggleActive(false)
+				}
 			},
 			toggle(isActive) {
 				this.isActive = isActive

@@ -4,6 +4,28 @@ import { set, delete as destroy } from 'vue'
 
 import * as types from 'js/store/mutations-types'
 import { getApiUrl } from 'js/utils/env'
+import { getModelByResource, modelToResourceMap } from 'js/utils/config'
+
+function _fetchComments(ids, model) {
+	if (!model) {
+		return Promise.reject('Model not defined')
+	}
+
+	let data = {
+		query: {
+			where: [
+				['commentable_type', model],
+			],
+			whereIn: ['commentable_id', ids],
+		},
+		order: {
+			id: 'asc',
+		},
+		include: 'profiles',
+	}
+
+	return axios.post(getApiUrl('comments/.search'), data)
+}
 
 export const commentsGetters = {
 	/**
@@ -48,6 +70,20 @@ export const commentsMutations = {
 		destroy(state.comments, payload.id)
 		set(state[resource][resourceId], 'comments', comments)
 	},
+	[types.SET_COMMENTS] (state, payload) {
+		set(state, 'profiles', payload.included.profiles)
+		destroy(payload, 'included')
+
+		_.each(payload, (comment, index) => {
+			let resource = modelToResourceMap[comment.commentable_type],
+				resourceId = comment.commentable_id
+
+			set(state.comments, comment.id, comment)
+
+			!state[resource][resourceId].comments.includes(comment.id)
+				&& state[resource][resourceId].comments.push(comment.id)
+		})
+	}
 }
 
 export const commentsActions = {
@@ -57,4 +93,23 @@ export const commentsActions = {
 	removeComment({commit}, payload) {
 		commit(types.REMOVE_COMMENT, payload)
 	},
+	fetchComments({commit}, {ids, resource}) {
+		return new Promise((resolve, reject) => {
+			const model = getModelByResource(resource)
+
+			_fetchComments(ids, model)
+				.then((response) => {
+					if (!response.data.hasOwnProperty('included')) {
+						return resolve()
+					}
+
+					commit(types.SET_COMMENTS, response.data)
+					resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					reject()
+				})
+		})
+	}
 }

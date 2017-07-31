@@ -50,55 +50,57 @@
 			'wnl-navbar': Navbar
 		},
 		computed: {
-			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay'])
+			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay', 'currentUserRoles']),
 		},
 		methods: {
 			...mapActions([
-				'setupCurrentUser',
-				'setLayout',
 				'resetLayout',
-				'toggleOverlay',
 				'setActiveUsers',
+				'setLayout',
+				'setupCurrentUser',
+				'toggleOverlay',
 				'userJoined',
 				'userLeft'
 			]),
 			...mapActions('notifications', ['initNotifications']),
-			setupNotifications() {
-				Echo.private(`user.${this.currentUserId}`)
-						.listen('.App.Notifications.Events.LiveNotificationCreated', (notification) => {
-							$wnl.logger.debug('Notification', notification);
-						});
-			},
+			...mapActions('course', {
+				courseSetup: 'setup',
+				checkUserRoles: 'checkUserRoles',
+			}),
 		},
-		created: function () {
-			this.setupCurrentUser()
+		mounted() {
+			this.toggleOverlay({source: 'course', display: true})
+			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
-					this.currentUserId && axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
 					window.setInterval(() => {
 						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
 					}, 1000 * 60 * 3)
+
+					this.initNotifications()
+
+					this.$router.afterEach((to) => {
+						to.matched.some((record) => {
+							!record.meta.keepsNavOpen && this.resetLayout()
+						})
+					})
+
+					this.setLayout(this.$breakpoints.currentBreakpoint())
+					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
+						this.setLayout(currentLayout)
+					})
+
+					window.Echo.join('active-users')
+						.here(users => this.setActiveUsers(users))
+						.joining(user => this.userJoined(user))
+						.leaving(user => this.userLeft(user))
+
+					this.checkUserRoles(this.currentUserRoles)
+					this.toggleOverlay({source: 'course', display: false})
 				})
-				.then(this.initNotifications)
-		},
-		mounted() {
-			this.$router.afterEach((to) => {
-				to.matched.some((record) => {
-					if (!record.meta.keepsNavOpen) {
-						this.resetLayout()
-					}
+				.catch(error => {
+					$wnl.logger.error(error)
+					this.toggleOverlay({source: 'course', display: false})
 				})
-			})
-
-			this.setLayout(this.$breakpoints.currentBreakpoint())
-			this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
-				this.setLayout(currentLayout)
-			})
-
-
-			window.Echo.join('active-users')
-				.here(users => this.setActiveUsers(users))
-				.joining(user => this.userJoined(user))
-				.leaving(user => this.userLeft(user));
 		},
 		watch: {
 			'$route' (to, from) {

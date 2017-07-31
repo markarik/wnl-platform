@@ -17,7 +17,7 @@
 	import End from 'js/components/course/screens/End.vue'
 	import Html from 'js/components/course/screens/Html.vue'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
-	import Quiz from 'js/components/course/screens/quiz/Quiz.vue'
+	import Quiz from 'js/components/quiz/Quiz.vue'
 	import Widget from 'js/components/course/screens/Widget.vue'
 	import Qna from 'js/components/qna/Qna'
 	import {mapGetters, mapActions} from 'vuex';

@@ -3,9 +3,10 @@
 
 	export default {
 		functional: true,
-		render: (createElement, {props: {message, notificationComponent}}) => {
+		render: (createElement, {props: {message, notificationComponent}, data: {on}}) => {
 			const contextRoute = () => mapMessageToRoute(message, {
-				[message.objects.type]: message.objects.id
+				[message.objects.type]: message.objects.id,
+				[message.subject.type]: message.subject.reaction_type
 			})
 
 			return createElement(notificationComponent, {
@@ -15,6 +16,7 @@
 					icon: 'fa-thumbs-o-up',
 					routeContext: getContextRoute(contextRoute, message.referer),
 				},
+				on,
 			})
 		},
 		props: baseProps

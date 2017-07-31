@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {modelToResourceMap} from 'js/utils/config'
 import {set} from 'vue'
 
 function _getReactions() {
@@ -14,12 +15,6 @@ function getInitialState() {
 		categories: [],
 		slidesContent: []
 	}
-}
-
-const resourcesMap = {
-	'App\\Models\\QnaQuestion': 'qna_questions',
-	'App\\Models\\QuizQuestion': 'quiz_questions',
-	'App\\Models\\Slide': 'slides',
 }
 
 const namespaced = true
@@ -91,13 +86,13 @@ const actions = {
 			Object.keys(reactions).forEach((category) => {
 				let categoriesReactions = {}
 
-				Object.values(resourcesMap)
+				Object.values(modelToResourceMap)
 					.forEach((resource) => categoriesReactions[resource] = [])
 
 				reactions[category]
-					.filter(reaction => Object.keys(resourcesMap).includes(reaction.reactable_type))
+					.filter(reaction => Object.keys(modelToResourceMap).includes(reaction.reactable_type))
 					.forEach(reaction => {
-						let resource = resourcesMap[reaction.reactable_type]
+						let resource = modelToResourceMap[reaction.reactable_type]
 						categoriesReactions[resource].push(reaction)
 					})
 

@@ -83,7 +83,7 @@
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-				elementHeight: this.$parent.$el.offsetHeight || '100%'
+				elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%'
 			}
 		},
 		computed: {

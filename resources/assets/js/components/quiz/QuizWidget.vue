@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-quiz-widget">
-		<div class="quiz-widget-controls">
+		<div v-if="!isSingle" class="quiz-widget-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
 					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
@@ -25,7 +25,7 @@
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
 			</a>
-			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
+			<a v-else-if="!isSingle" class="button is-primary is-outlined" @click="nextQuestion()">
 				Następne
 			</a>
 		</p>
@@ -65,7 +65,7 @@
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
-	import QuizQuestion from 'js/components/course/screens/quiz/QuizQuestion.vue'
+	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 
@@ -74,7 +74,16 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly'],
+		props: {
+			isSingle: {
+				default: false,
+				type: Boolean,
+			},
+			readOnly: {
+				default: false,
+				type: Boolean,
+			},
+		},
 		data() {
 			return {
 				hasErrors: false,

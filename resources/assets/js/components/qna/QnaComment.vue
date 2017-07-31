@@ -30,10 +30,10 @@
 	@import 'resources/assets/sass/variables'
 
 	.qna-comment
-		border-top: $border-light-gray
+		border-bottom: $border-light-gray
 		font-size: $font-size-minus-1
-		margin-bottom: $margin-base
-		padding-top: $margin-base
+		margin-left: 24px
+		padding: $margin-small 0
 
 		&:first-child
 			border: 0

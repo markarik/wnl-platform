@@ -51,6 +51,8 @@
 			margin: $margin-tiny $margin-tiny 0 $margin-small
 
 	.wnl-qna-header
+		margin-bottom: 0
+
 		.title
 			margin-bottom: $margin-small
 

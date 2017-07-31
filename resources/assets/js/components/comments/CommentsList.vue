@@ -146,6 +146,12 @@
 					id,
 				})
 			},
+			refresh() {
+				return this.action('fetchComments', {
+					resource: this.commentableResource,
+					ids: [this.commentableId]
+				})
+			}
 		},
 		mounted() {
 			this.formElement = this.$el.getElementsByClassName('form-container')[0]
@@ -167,8 +173,11 @@
 			},
 			'$route' (newRoute, oldRoute) {
 				if (!this.isOverlayVisible && this.isCommentableInUrl) {
-					this.scrollAndHighlight()
-					this.showComments = true
+					this.refresh()
+						.then(() => {
+							this.scrollAndHighlight()
+							this.showComments = true
+						})
 				}
 			},
 			'isOverlayVisible' () {

@@ -1,27 +1,41 @@
 <template>
 	<div class="stream-feed">
-		<div class="zero-state" v-if="isEmpty">
-			<img class="zero-state-image"
-				:alt="$t('notifications.personal.zeroStateImage')"
-				:src="zeroStateImage"
-				:title="$t('notifications.personal.zeroStateImage')">
-			<p class="zero-state-text">
-				{{$t('notifications.stream.zeroState')}}
-			</p>
-		</div>
-		<div v-else>
-			<wnl-stream-sorting @changeSorting="changeSorting"/>
-			<div class="stream-notifications">
-				<div class="stream-line"></div>
-				<component :is="getEventComponent(message)"
-					:message="message"
-					:key="id"
-					:notificationComponent="StreamNotification"
-					v-for="(message, id) in filtered"
-					v-if="hasComponentForEvent(message)"
-				/>
+		<div v-if="!loading">
+			<div class="zero-state" v-if="isEmpty">
+				<img class="zero-state-image"
+					:alt="$t('notifications.personal.zeroStateImage')"
+					:src="zeroStateImage"
+					:title="$t('notifications.personal.zeroStateImage')">
+				<p class="zero-state-text">
+					{{$t('notifications.stream.zeroState')}}
+				</p>
+			</div>
+			<div v-else>
+				<wnl-stream-sorting @changeSorting="changeSorting"/>
+				<div class="stream-notifications">
+					<div class="stream-line"></div>
+					<component :is="getEventComponent(message)"
+						:message="message"
+						:key="id"
+						:notificationComponent="StreamNotification"
+						v-for="(message, id) in filtered"
+						v-if="hasComponentForEvent(message)"
+					/>
+				</div>
+				<div class="show-more">
+					<a v-if="canShowMore" class="button is-small is-outlined"
+						:class="{'is-loading': fetching}"
+						@click="loadMore"
+					>
+						{{$t('notifications.personal.showMore')}}
+					</a>
+					<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
+						{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
+					</span>
+				</div>
 			</div>
 		</div>
+		<wnl-text-loader v-else/>
 	</div>
 </template>
 
@@ -61,6 +75,11 @@
 			font-size: $font-size-minus-1
 			margin-top: $margin-big
 			text-align: center
+
+	.show-more
+		align-items: center
+		display: flex
+		justify-content: center
 </style>
 
 <script>
@@ -84,17 +103,25 @@
 		},
 		data() {
 			return {
-				StreamNotification,
+				limit: 25,
 				sorting: 'all',
+				StreamNotification,
 			}
 		},
 		computed: {
 			...mapGetters('notifications', {
 				channel: 'streamChannel',
-				filterSlides: 'filterSlides',
-				filterQna: 'filterQna',
-				filterQuiz: 'filterQuiz',
 			}),
+			...mapGetters('notifications', [
+				'filterSlides',
+				'filterQna',
+				'filterQuiz',
+				'isLoading',
+				'loading',
+			]),
+			loading() {
+				return this.totalNotifications === 0 && this.fetching
+			},
 			filtered() {
 				if (this.sorting === 'all') return this.notifications
 				return this[`filter${_.upperFirst(this.sorting)}`](this.channel)

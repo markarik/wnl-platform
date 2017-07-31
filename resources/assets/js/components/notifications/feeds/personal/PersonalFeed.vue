@@ -226,17 +226,11 @@
 				getUnseen: 'getUnseen',
 				getUnread: 'getUnread',
 			}),
-			canShowMore() {
-				return this.hasMore(this.channel)
-			},
 			iconClass() {
 				return this.isOn ? 'fa-bell' : 'fa-bell-slash'
 			},
 			isOn() {
 				return this.getSetting(setting)
-			},
-			showEndInfo() {
-				return this.totalNotifications > this.limit && !this.canShowMore
 			},
 			unseenCount() {
 				return _.size(this.getUnseen(this.channel))

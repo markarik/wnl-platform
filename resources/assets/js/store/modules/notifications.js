@@ -149,7 +149,7 @@ const actions = {
 		dispatch('pullNotifications', [getters.userChannel, {limit: 15}])
 		dispatch('setupLiveNotifications', getters.userChannel)
 
-		dispatch('pullNotifications', [getters.streamChannel, {limit: 15}])
+		dispatch('pullNotifications', [getters.streamChannel, {limit: 25}])
 		dispatch('setupLiveNotifications', getters.streamChannel)
 
 		if (getters.moderatorsChannel) {

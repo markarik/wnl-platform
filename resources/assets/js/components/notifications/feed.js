@@ -14,17 +14,23 @@ export const feed = {
 			'hasMore',
 			'isFetching',
 		]),
+		canShowMore() {
+			return this.hasMore(this.channel)
+		},
 		fetching() {
 			return this.isFetching(this.channel)
-		},
-		totalNotifications() {
-			return _.size(this.notifications)
 		},
 		isEmpty() {
 			return !this.fetching && this.totalNotifications === 0
 		},
 		notifications() {
 			return this.getSortedNotifications(this.channel)
+		},
+		showEndInfo() {
+			return this.totalNotifications > this.limit && !this.canShowMore
+		},
+		totalNotifications() {
+			return _.size(this.notifications)
 		},
 	},
 	methods: {

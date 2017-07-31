@@ -24,6 +24,7 @@ class QuizQuestionTransformer extends ApiTransformer
 			'text'           => $quizQuestion->text,
 			'explanation'    => $quizQuestion->explanation,
 			'preserve_order' => $quizQuestion->preserve_order,
+			'tags'           => $quizQuestion->tags,
 			'total_hits'     => $quizQuestion->answers->sum('hits'),
 		];
 

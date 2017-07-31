@@ -126,7 +126,7 @@
 			'wnl-vote': Vote,
 		},
 		mixins: [ highlight ],
-		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly'],
+		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly', 'refresh'],
 		data() {
 			return {
 				commentsFetched: false,
@@ -134,7 +134,7 @@
 				showComments: false,
 				showCommentForm: false,
 				reactableResource: "qna_answers",
-				highlightableResources: ["qna_answer", "qna_question", "comment"]
+				highlightableResources: ["qna_answer", "qna_question", "comment", "reaction"]
 			}
 		},
 		computed: {
@@ -182,8 +182,12 @@
 				return _.get(this.$route.query, 'qna_answer') == this.answer.id
 					&& _.get(this.$route.query, 'comment')
 			},
+			isReactionInUrl() {
+				return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'reaction')
+			},
 			shouldHighlight() {
-				return !this.isOverlayVisible && this.isAnswerInUrl || this.isCommentInUrl
+				return this.isAnswerInUrl || this.isCommentInUrl || this.isReactionInUrl
 			}
 		},
 		methods: {
@@ -215,22 +219,38 @@
 					answerId: this.id,
 				})
 			},
+			refreshAnswer() {
+				this.commentsFetched = false
+				this.showComments = false
+				this.showCommentForm = false
+
+				return this.refresh()
+			}
 		},
 		mounted() {
 			if (this.shouldHighlight) {
-				this.dispatchFetchComments()
-					.then(() => this.scrollAndHighlight())
+				return new Promise((resolve) => {
+					if (this.isCommentInUrl) return this.dispatchFetchComments().then(resolve)
+					return resolve()
+				})
+				.then(() => {
+					!this.isOverlayVisible && this.scrollAndHighlight()
+				})
 			}
 		},
 		watch: {
 			'$route' (newRoute, oldRoute) {
 				if (this.shouldHighlight) {
-					this.dispatchFetchComments()
-						.then(() => this.scrollAndHighlight())
+					this.refreshAnswer()
+					.then(() => {
+						return this.isCommentInUrl ? this.dispatchFetchComments() : Promise.resolve()
+					}).then(() => {
+						!this.isOverlayVisible && this.scrollAndHighlight()
+					})
 				}
 			},
 			'isOverlayVisible' () {
-				if (this.shouldHighlight) {
+				if (!this.isOverlayVisible && this.shouldHighlight) {
 					this.scrollAndHighlight()
 				}
 			}

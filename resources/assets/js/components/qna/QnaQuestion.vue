@@ -75,14 +75,15 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly"></wnl-qna-answer>
+			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
 			<wnl-qna-answer v-if="allAnswers"
 				v-for="answer in otherAnswers"
 				:answer="answer"
 				:questionId="questionId"
 				:key="answer.id"
-				:readOnly="readOnly">
-			</wnl-qna-answer>
+				:readOnly="readOnly"
+				:refresh="refreshQuestionAndShowAnswers"
+			></wnl-qna-answer>
 			<a class="qna-answers-show-all"
 				v-if="!allAnswers && otherAnswers.length > 0"
 				@click="allAnswers = true">
@@ -190,7 +191,7 @@
 				loading: false,
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
-				highlightableResources: ["qna_question"],
+				highlightableResources: ["qna_question", "reaction"],
 			}
 		},
 		computed: {
@@ -257,20 +258,21 @@
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")
 			},
 			isQuestionInUrl() {
-				return !this.isQuestionAnswerHighlighted && _.get(this.$route, 'query.qna_question') == this.questionId
+				return !_.get(this.$route, 'query.qna_answer') && _.get(this.$route, 'query.qna_question') == this.questionId
 			},
-			isQuestionAnswerHighlighted() {
-				const answerId = _.get(this.$route, 'query.qna_answer')
+			answerInUrl() {
+				return _.get(this.$route, 'query.qna_answer')
+			},
+			isQuestionAnswerInUrl() {
+				if (this.isNotFetchedAnswerInUrl) return true
+
+				return !!this.questionAnswers(this.questionId).find((answer) => answer.id == this.answerInUrl)
+			},
+			isNotFetchedAnswerInUrl() {
 				const questionId = _.get(this.$route, 'query.qna_question')
 
-				return questionId == this.questionId && answerId
-			},
-			isCommentToAnswerHighlighted() {
-				const answerId = _.get(this.$route, 'query.qna_answer')
-				return answerId &&
-					_.get(this.$route, 'query.comment') &&
-					this.hasAnswer(answerId)
-			},
+				if (questionId == this.questionId && this.answerInUrl) return true
+			}
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
@@ -297,14 +299,18 @@
 				this.showAnswerForm = false
 				this.dispatchFetchQuestion()
 			},
+			refreshQuestionAndShowAnswers() {
+				return this.dispatchFetchQuestion(() => {
+					this.allAnswers = true
+				})
+			}
 		},
 		mounted() {
-			if (this.isQuestionAnswerHighlighted || this.isCommentToAnswerHighlighted) {
+			if (this.isQuestionAnswerInUrl) {
 				this.allAnswers = true
 			}
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.allAnswers = true
 				this.scrollAndHighlight()
 			}
 		},
@@ -314,18 +320,17 @@
 					this.dispatchFetchQuestion()
 						.then(() => this.scrollAndHighlight())
 				}
+
+				if (this.isQuestionAnswerInUrl) {
+					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
+					this.allAnswers = true
+				}
 			},
 			'isOverlayVisible' () {
 				if (!this.isOverlayVisible && this.isQuestionInUrl) {
 					this.scrollAndHighlight()
 				}
 			},
-			'isQuestionAnswerHighlighted' (newValue) {
-				newValue && this.dispatchFetchQuestion()
-					.then(() => {
-						this.allAnswers = true
-					})
-			}
 		},
 	}
 </script>

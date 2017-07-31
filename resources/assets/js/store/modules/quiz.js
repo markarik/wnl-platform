@@ -34,6 +34,10 @@ function _fetchQuestionsCollectionByTagName(tagName, ids) {
 	})
 }
 
+function _fetchSingleQuestion(id) {
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers,comments.profiles,reactions`))
+}
+
 function getInitialState() {
 	return {
 		attempts: [],
@@ -247,6 +251,43 @@ const actions = {
 
 			commit(types.QUIZ_IS_LOADED, true)
 		})
+	},
+
+	fetchSingleQuestion({commit}, id) {
+		commit(types.QUIZ_IS_LOADED, false)
+
+		return _fetchSingleQuestion(id)
+			.then(response => {
+				if (response.data.included) {
+					const included = _.clone(response.data.included)
+					destroy(response.data, 'included')
+
+					const id = response.data.id
+					included['quiz_questions'] = {}
+					included['quiz_questions'][id] = response.data
+
+					commit(types.UPDATE_INCLUDED, included)
+					commit(types.QUIZ_SET_QUESTIONS, {
+						setId: 0,
+						setName: `Pytanie numer ${id}`,
+						let: 1,
+						questionsIds: [id],
+					})
+					commit(types.QUIZ_RESET_PROGRESS)
+					commit(types.QUIZ_TOGGLE_PROCESSING, false)
+				} else {
+					commit(types.QUIZ_DESTROY)
+				}
+
+				commit(types.QUIZ_IS_LOADED, true)
+
+				return response
+			})
+			.catch(error => {
+				$wnl.logger.error(error)
+				commit(types.QUIZ_IS_LOADED, true)
+				return error
+			})
 	},
 
 	checkQuiz({state, commit, getters, dispatch, rootGetters}) {

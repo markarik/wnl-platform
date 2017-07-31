@@ -40,6 +40,7 @@
 					<wnl-comments-list
 						module="quiz"
 						commentableResource="quiz_questions"
+						urlParam="quiz_question"
 						:commentableId="id"
 						:isUnique="showComments">
 					</wnl-comments-list>
@@ -118,7 +119,7 @@
 <script>
 	import { mapGetters, mapActions } from 'vuex'
 
-	import QuizAnswer from 'js/components/course/screens/quiz/QuizAnswer'
+	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 

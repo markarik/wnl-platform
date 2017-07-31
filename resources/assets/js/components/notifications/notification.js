@@ -2,13 +2,8 @@
  * A mixin with basic logic for a component of a Notification type.
  * @type {Object}
  */
-<<<<<<< HEAD
-import { isEmpty, isObject } from 'lodash'
-import { mapGetters, mapActions } from 'vuex'
-=======
 import { isEmpty, isObject, truncate } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
->>>>>>> master
 
 import { timeFromS } from 'js/utils/time'
 
@@ -36,18 +31,6 @@ export const notification = {
 		contextInfo() {
 			if (!isObject(this.routeContext)) return ''
 
-<<<<<<< HEAD
-			const name = this.routeContext.name
-
-			if (name === 'screens') {
-				const lessonId = this.routeContext.params.lessonId
-				return this.$t('notifications.context.lesson', {
-					lesson: this.getLesson(lessonId).name
-				})
-			} else if (name.indexOf('help') > -1) {
-				return this.$t('notifications.context.page', {
-					page: this.$t(`routes.help.${name}`)
-=======
 			const route = this.routeContext.name
 
 			if (route === 'screens') {
@@ -70,7 +53,6 @@ export const notification = {
 			} else if (route.indexOf('help') > -1) {
 				return this.$t('notifications.context.page', {
 					page: this.$t(`routes.help.${route}`),
->>>>>>> master
 				})
 			}
 

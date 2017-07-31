@@ -1,13 +1,9 @@
 export const notifications = {
 	context: {
 		lesson: 'w lekcji {lesson}',
-<<<<<<< HEAD
-		page: 'na stronie {page}',
-=======
 		quizQuestion: '#{id}',
 		page: 'na stronie {page}',
 		slide: '{slide}',
->>>>>>> master
 	},
 	events: {
 		commentPosted: 'skomentował/-a',

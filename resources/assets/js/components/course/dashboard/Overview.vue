@@ -20,9 +20,9 @@
 		<div class="news-heading metadata">{{ $t('dashboard.news.heading') }}</div>
 		<div class="current-view-controls">
 			<a v-for="panel, index in panels" class="panel-toggle"
-				:class="{'is-active': currentView === panel.slug}"
+				:class="{'is-active': overviewView === panel.slug}"
 				:key="index"
-				@click="currentView = panel.slug"
+				@click="changeOverviewView(panel.slug)"
 			>
 				{{panel.name}}
 				<span class="icon is-small">
@@ -30,8 +30,8 @@
 				</span>
 			</a>
 		</div>
-		<wnl-stream-feed v-show="currentView === 'stream'"/>
-		<wnl-qna v-show="currentView === 'qna'" :title="false" class="wnl-overview-qna"/>
+		<wnl-stream-feed v-show="overviewView === 'stream'"/>
+		<wnl-qna v-show="overviewView === 'qna'" :title="false" class="wnl-overview-qna"/>
 	</div>
 </template>
 
@@ -58,7 +58,8 @@
 			margin-top: $margin-small
 
 	.wnl-overview-qna
-		margin: 0 0 $margin-huge
+		margin: -$margin-base 0 $margin-huge
+
 </style>
 
 <script>
@@ -75,12 +76,16 @@
 	import { resource } from 'js/utils/config'
 
 	export default {
-		props: ['courseId'],
-		data() {
-			return {
-				currentView: 'stream',
-			}
+		name: 'Overview',
+		components: {
+			'wnl-active-users': ActiveUsers,
+			'wnl-dashboard-news': DashboardNews,
+			'wnl-next-lesson': NextLesson,
+			'wnl-qna': Qna,
+			'wnl-stream-feed': StreamFeed,
+			'wnl-your-progress': YourProgress,
 		},
+		props: ['courseId'],
 		computed: {
 			...mapGetters('progress', [
 				'isLessonComplete',
@@ -88,6 +93,7 @@
 			]),
 			...mapGetters([
 				'currentUserName',
+				'overviewView',
 			]),
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)
@@ -107,16 +113,9 @@
 				]
 			},
 		},
-		components: {
-			'wnl-active-users': ActiveUsers,
-			'wnl-dashboard-news': DashboardNews,
-			'wnl-next-lesson': NextLesson,
-			'wnl-qna': Qna,
-			'wnl-stream-feed': StreamFeed,
-			'wnl-your-progress': YourProgress,
-		},
 		methods: {
-			...mapActions('qna', ['fetchLatestQuestions'])
+			...mapActions(['changeOverviewView']),
+			...mapActions('qna', ['fetchLatestQuestions']),
 		},
 		beforeMount() {
 			if (this.isBeginning) {

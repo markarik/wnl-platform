@@ -46,7 +46,7 @@
 			transition: background-color $transition-length-base
 
 	.actor
-		font-weight: bold
+		font-weight: $font-weight-bold
 
 	.notification-content
 		flex: 1 auto
@@ -55,8 +55,7 @@
 		.notification-header
 			line-height: $line-height-minus
 
-		.context,
-		.object
+		.context
 			font-weight: $font-weight-bold
 
 		.object-text,
@@ -74,12 +73,12 @@
 		.subject
 			font-size: $font-size-base
 			line-height: $line-height-minus
-			margin-top: $margin-tiny
+			margin-top: $margin-small
 
 		.time
 			color: $color-background-gray
 			font-size: $font-size-minus-2
-			margin-top: $margin-tiny
+			margin-top: $margin-small
 
 			.icon
 				margin-right: $margin-small

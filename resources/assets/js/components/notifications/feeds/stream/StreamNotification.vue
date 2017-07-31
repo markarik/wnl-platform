@@ -77,7 +77,6 @@
 			margin-bottom: $margin-tiny
 
 			.actor,
-			.object,
 			.context
 				font-weight: $font-weight-bold
 

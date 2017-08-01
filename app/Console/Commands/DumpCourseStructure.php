@@ -76,7 +76,7 @@ class DumpCourseStructure extends Command
 	protected function dump($fileName)
 	{
 		if (!$fileName) {
-			$fileName = Carbon::now()->format('i_h_d_m_Y');
+			$fileName = Carbon::now()->format('Y_m_d_h_i');
 		}
 		$fileName = snake_case($fileName);
 		$lessons = Lesson::with('screens');

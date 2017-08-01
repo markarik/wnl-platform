@@ -13,7 +13,7 @@
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-profile" v-if="$moderatorFeed.isAllowed('access')">
+		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-search/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">

@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Events\Qna\AnswerPosted;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class QnaAnswer extends Model
 {
-	use Cached;
+	use Cached, Searchable;
 
 	protected $fillable = ['text', 'user_id', 'question_id'];
 

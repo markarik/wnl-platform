@@ -43,14 +43,14 @@ const getters = {
 				notification.subject && notification.subject.type === 'qna_question'
 		})
 	},
+	getChannelNotifications: (state) => (channel) => {
+		return _.pickBy(state.notifications, (notification) => notification.channel === channel)
+	},
 	getUnseen: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.seen_at)
 	},
 	getUnread: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.read_at)
-	},
-	getChannelNotifications: ({notifications}) => (channel) => {
-		return _.pickBy(notifications, (notification) => notification.channel === channel)
 	},
 	getSortedNotifications: (state, getters) => (channel) => {
 		const notifications = getters.getChannelNotifications(channel)

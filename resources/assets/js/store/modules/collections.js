@@ -23,13 +23,13 @@ const state = getInitialState()
 
 const getters = {
 	isLoading: (state) => state.loading,
-	getQnaQuestionsIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].qna_questions.map(qna => qna.reactable_id)) || [],
-	getQuizQuestionsIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].quiz_questions.map(quiz => quiz.reactable_id)) || [],
-	getSlidesIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].slides.map(slide => slide.reactable_id)) || [],
-	getItemsCount: ({reactions}) => (category) => {
-		return reactions[category]
-			&& Object.keys(reactions[category])
-				.map((items) => reactions[category][items].length)
+	getQnaQuestionsIdsForCategory: (state) => (category) => (state.reactions[category] && state.reactions[category].qna_questions.map(qna => qna.reactable_id)) || [],
+	getQuizQuestionsIdsForCategory: (state) => (category) => (state.reactions[category] && state.reactions[category].quiz_questions.map(quiz => quiz.reactable_id)) || [],
+	getSlidesIdsForCategory: (state) => (category) => (state.reactions[category] && state.reactions[category].slides.map(slide => slide.reactable_id)) || [],
+	getItemsCount: (state) => (category) => {
+		return state.reactions[category]
+			&& Object.keys(state.reactions[category])
+				.map((items) => state.reactions[category][items].length)
 				.reduce((sum, count) => sum + count, 0)
 			|| 0
 	},

@@ -33,12 +33,17 @@ class CommentPostedHandler
 
 	protected function notifyCoCommentators($commentable, $gate, $event)
 	{
-		$users = User::select()
+		$query = User::select()
 			->whereHas('comments', function ($query) use ($commentable) {
 				$query->whereIn('id', $commentable->comments->pluck('id'));
 			})
-			->where('id', '!=', $event->data['actors']['id'])
-			->get();
+			->where('id', '!=', $event->data['actors']['id']);
+
+		if (!empty($commentable->user)) {
+			$query->where('id', '!=', $commentable->user->id);
+		}
+
+		$users = $query->get();
 
 		foreach ($users as $user) {
 			$gate->notifyPrivate($user, $event);

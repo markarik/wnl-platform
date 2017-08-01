@@ -11,7 +11,7 @@
 				</p>
 			</div>
 			<div v-else>
-				<wnl-stream-sorting @changeSorting="changeSorting"/>
+				<wnl-stream-filtering @changeFiltering="changeFiltering"/>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
@@ -87,7 +87,7 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import StreamNotification from 'js/components/notifications/feeds/stream/StreamNotification'
-	import StreamSorting from 'js/components/notifications/feeds/stream/StreamSorting'
+	import StreamFiltering from 'js/components/notifications/feeds/stream/StreamFiltering'
 	import { CommentPosted, QnaAnswerPosted, QnaQuestionPosted } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
@@ -99,12 +99,12 @@
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-qna-question-posted': QnaQuestionPosted,
-			'wnl-stream-sorting': StreamSorting,
+			'wnl-stream-filtering': StreamFiltering,
 		},
 		data() {
 			return {
 				limit: 25,
-				sorting: 'all',
+				filtering: 'all',
 				StreamNotification,
 			}
 		},
@@ -123,16 +123,16 @@
 				return this.totalNotifications === 0 && this.fetching
 			},
 			filtered() {
-				if (this.sorting === 'all') return this.notifications
-				return this[`filter${_.upperFirst(this.sorting)}`](this.channel)
+				if (this.filtering === 'all') return this.notifications
+				return this[`filter${_.upperFirst(this.filtering)}`](this.channel)
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')
 			},
 		},
 		methods: {
-			changeSorting(sorting) {
-				this.sorting = sorting
+			changeFiltering(filtering) {
+				this.filtering = filtering
 			},
 		},
 	}

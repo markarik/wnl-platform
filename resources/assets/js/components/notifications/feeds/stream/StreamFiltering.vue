@@ -1,9 +1,9 @@
 <template>
-	<div class="stream-sorting">
+	<div class="stream-filtering">
 		<div v-if="!isMobile" class="tabs">
 			<ul>
-				<li v-for="(option, index) in sortingOptions" :key="index" :class="{'is-active': isTabActive(option.slug)}">
-					<a @click="changeSorting(option.slug)">
+				<li v-for="(option, index) in filteringOptions" :key="index" :class="{'is-active': isTabActive(option.slug)}">
+					<a @click="changeFiltering(option.slug)">
 						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
 					</a>
 				</li>
@@ -11,8 +11,8 @@
 		</div>
 		<div v-else class="control">
 			<span class="select">
-				<select @input="changeSortingWithSelect">
-					<option v-for="(option, index) in sortingOptions"
+				<select @input="changeFilteringWithSelect">
+					<option v-for="(option, index) in filteringOptions"
 						:key="index"
 						:value="option.slug"
 						:selected="isTabActive(option.slug)"
@@ -28,7 +28,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.stream-sorting
+	.stream-filtering
 		margin-bottom: $margin-base
 
 	.is-active
@@ -38,7 +38,7 @@
 <script>
 	import {mapGetters} from 'vuex'
 
-	const sortingOptions = [
+	const filteringOptions = [
 		{
 			slug: 'all',
 			icon: 'fa-globe',
@@ -62,7 +62,7 @@
 	]
 
 	export default {
-		name: 'StreamSorting',
+		name: 'StreamFiltering',
 		data() {
 			return {
 				activeTab: 'all',
@@ -70,17 +70,17 @@
 		},
 		computed: {
 			...mapGetters(['isMobile']),
-			sortingOptions() {
-				return sortingOptions
+			filteringOptions() {
+				return filteringOptions
 			}
 		},
 		methods: {
-			changeSorting(tab) {
+			changeFiltering(tab) {
 				this.activeTab = tab
-				this.$emit('changeSorting', tab)
+				this.$emit('changeFiltering', tab)
 			},
-			changeSortingWithSelect(event) {
-				this.changeSorting(event.target.value)
+			changeFilteringWithSelect(event) {
+				this.changeFiltering(event.target.value)
 			},
 			isTabActive(tab) {
 				return this.activeTab === tab

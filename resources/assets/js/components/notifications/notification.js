@@ -41,10 +41,7 @@ export const notification = {
 					lesson: _.truncate(this.getLesson(lessonId).name, {length: 20}),
 				})
 
-				if (this.message.objects &&
-					this.message.objects.type === 'slide' &&
-					slide
-				) {
+				if (_.get(this.message, 'objects.type') === 'slide' && slide) {
 					contextInfo = `${this.$t('notifications.context.slide', {slide})} ${contextInfo}`
 				}
 

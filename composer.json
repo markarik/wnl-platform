@@ -16,7 +16,7 @@
 	"league/flysystem-aws-s3-v3": "^1.0",
 	"intervention/image": "^2.3",
     "laravel/scout": "^3.0",
-    "tamayo/laravel-scout-elastic": "^3.0"
+    "bethink/elastic-scout": "^3.0"
   },
   "require-dev": {
 	"laravel/dusk": "^1.0",

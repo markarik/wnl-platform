@@ -15,5 +15,6 @@ class QuestionPostedHandler
 	public function handle(QuestionPosted $event, UserNotificationsGate $gate)
 	{
 		$gate->notifyModerators($event);
+		$gate->notifyPrivateStream($excluded = [], $event);
 	}
 }

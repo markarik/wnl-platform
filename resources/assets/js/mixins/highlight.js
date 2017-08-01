@@ -30,7 +30,7 @@ const highlight = {
 			const tween = new Tween(element)
 				.to({value: 1}, 2000)
 				.on('update', function() {
-					this.object.el.style.background = 'rgba(68, 180, 144, 0.5)';
+					this.object.el.style.background = 'rgba(15, 150, 152, 0.2)';
 				})
 				.once('complete', () => {
 					new Tween(element)

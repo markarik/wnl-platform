@@ -8,13 +8,14 @@
 				<span class="actor">{{ message.actors.full_name }}</span>
 				<span class="action">{{ action }}</span>
 				<span class="object" v-if="object">{{ object }}</span>
+				<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
 				<span class="object-text" v-if="objectText">{{ objectText }}</span>
 			</div>
 			<div class="subject" v-if="subjectText">{{ subjectText }}</div>
 			<div class="time">
-				<span class="icon is-tiny">
+				<span class="icon is-small">
 					<i class="fa" :class="icon"></i>
-				</span> {{ formattedTime }}
+				</span>{{ formattedTime }}
 			</div>
 		</div>
 		<div class="link-symbol">
@@ -45,7 +46,7 @@
 			transition: background-color $transition-length-base
 
 	.actor
-		font-weight: bold
+		font-weight: $font-weight-bold
 
 	.notification-content
 		flex: 1 auto
@@ -54,7 +55,7 @@
 		.notification-header
 			line-height: $line-height-minus
 
-		.object
+		.context
 			font-weight: $font-weight-bold
 
 		.object-text,
@@ -72,15 +73,15 @@
 		.subject
 			font-size: $font-size-base
 			line-height: $line-height-minus
-			margin-top: $margin-tiny
+			margin-top: $margin-small
 
 		.time
 			color: $color-background-gray
 			font-size: $font-size-minus-2
-			margin-top: $margin-tiny
+			margin-top: $margin-small
 
 			.icon
-				margin-right: $margin-tiny
+				margin-right: $margin-small
 
 	.link-symbol
 		display: flex

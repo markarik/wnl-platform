@@ -16,6 +16,7 @@
 		display: flex
 
 	.progress
+		margin-bottom: $margin-small
 		width: auto
 
 	.progress-bar

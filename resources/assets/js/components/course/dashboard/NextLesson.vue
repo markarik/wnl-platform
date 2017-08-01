@@ -1,17 +1,19 @@
 <template>
-	<div class="nextLesson box">
-		<div class="level">
-			<div class="level-left">
-				<div class="level-item caption">
-					{{ heading }}
-				</div>
-			</div>
+	<div class="next-lesson">
+		<div class="next">{{ next }}</div>
+		<div>
+			<span class="group">{{ groupName }} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> </span>
+			<span class="lesson">{{ lessonName }}</span>
 		</div>
-		<div class="lesson">
-			<p class="group">{{ groupName }}</p>
-			<p class="name">{{ lessonName }}</p>
-			<router-link :to="to" class="button" :class="buttonClass" v-if="hasNextLesson">{{ callToAction }}</router-link>
-			<div v-else>Otwiera się {{ nextLessonDate }}</div>
+		<div class="cta">
+			<router-link v-if="hasNextLesson"
+				class="button is-primary"
+				:class="{'is-outlined': status === 'in-progress'}"
+				:to="to"
+			>
+				{{ callToAction }}
+			</router-link>
+			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {data: nextLessonDate}) }}</span>
 		</div>
 	</div>
 </template>
@@ -19,22 +21,42 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.lesson
-		text-align: center
+	.next-lesson
+		margin-bottom: $margin-big
 
-	.group
+		div
+			text-align: center
+
+	.next
+		font-weight: $font-weight-bold
+		margin-bottom: $margin-medium
 		text-transform: uppercase
 
-	.name
-		font-size: $font-size-plus-6
-		line-height: $line-height-plus
-		margin-bottom: 0.5em
+	.group
+		font-size: $font-size-minus-1
+		letter-spacing: 1px
+		text-transform: uppercase
+
+	.lesson
+		font-size: $font-size-plus-1
+
+
+	.cta
+		font-size: $font-size-minus-1
+
+		.button
+			margin-top: $margin-medium
+			font-size: $font-size-minus-2
+
+		.text
+			color: $color-gray-dimmed
+
 </style>
 
 <script>
+	import { truncate } from 'lodash'
 	import { mapGetters } from 'vuex'
 
-	import Emoji from 'js/components/global/Emoji.vue'
 	import { getUrl } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
 	import { timeFromDate } from 'js/utils/time'
@@ -43,25 +65,8 @@
 	const STATUS_IN_PROGRESS = 'in-progress'
 	const STATUS_AVAILABLE = 'available'
 
-	const statusParams = {
-		[STATUS_NONE]: {
-			heading: 'Najbliższa lekcja',
-		},
-		[STATUS_IN_PROGRESS]: {
-			heading: 'Lekcja w trakcie',
-			callToAction: 'Wróć do lekcji',
-			buttonClass: 'is-primary is-outlined',
-		},
-		[STATUS_AVAILABLE]: {
-			heading: 'Następna lekcja',
-			callToAction: 'Rozpocznij lekcję',
-			buttonClass: 'is-primary',
-		},
-	}
-
 	export default {
 		name: 'NextLesson',
-		props: ['courseId'],
 		computed: {
 			...mapGetters('course', [
 				'getGroup',
@@ -75,26 +80,32 @@
 				'getFirstLessonIdInProgress',
 				'isLessonComplete',
 			]),
-			hasNextLesson() {
-				return this.nextLesson.status !== STATUS_NONE
-			},
-			heading() {
-				return this.getParam('heading')
-			},
-			callToAction() {
-				return this.getParam('callToAction')
-			},
 			buttonClass() {
 				return this.getParam('buttonClass')
+			},
+			callToAction() {
+				return this.$t(`dashboard.progress.${this.status}-CTA`)
+			},
+			courseId() {
+				return this.$route.params.courseId
 			},
 			groupName() {
 				return this.getGroup(this.nextLesson.groups).name
 			},
+			hasNextLesson() {
+				return this.status !== STATUS_NONE
+			},
 			lessonName() {
-				return this.nextLesson.name
+				return truncate(this.nextLesson.name, {length: 30})
+			},
+			next() {
+				return this.$t(`dashboard.progress.${this.status}`)
 			},
 			nextLessonDate() {
 				return timeFromDate(this.nextLesson.startDate.date)
+			},
+			status() {
+				return this.nextLesson.status
 			},
 			to() {
 				return {
@@ -108,11 +119,8 @@
 		},
 		methods: {
 			getParam(name) {
-				return statusParams[this.nextLesson.status][name]
+				return statusParams[this.status][name]
 			}
 		},
-		components: {
-			'wnl-emoji': Emoji
-		}
 	}
 </script>

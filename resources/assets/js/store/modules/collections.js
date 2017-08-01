@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {modelToResourceMap} from 'js/utils/config'
 import {set} from 'vue'
 
 function _getReactions() {
@@ -16,25 +17,19 @@ function getInitialState() {
 	}
 }
 
-const resourcesMap = {
-	'App\\Models\\QnaQuestion': 'qna_questions',
-	'App\\Models\\QuizQuestion': 'quiz_questions',
-	'App\\Models\\Slide': 'slides',
-}
-
 const namespaced = true
 
 const state = getInitialState()
 
 const getters = {
 	isLoading: (state) => state.loading,
-	getQnaQuestionsIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].qna_questions.map(qna => qna.reactable_id)) || [],
-	getQuizQuestionsIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].quiz_questions.map(quiz => quiz.reactable_id)) || [],
-	getSlidesIdsForCategory: ({reactions}) => (category) => (reactions[category] && reactions[category].slides.map(slide => slide.reactable_id)) || [],
-	getItemsCount: ({reactions}) => (category) => {
-		return reactions[category]
-			&& Object.keys(reactions[category])
-				.map((items) => reactions[category][items].length)
+	getQnaQuestionsIdsForCategory: (state) => (category) => (state.reactions[category] && state.reactions[category].qna_questions.map(qna => qna.reactable_id)) || [],
+	getQuizQuestionsIdsForCategory: (state) => (category) => (state.reactions[category] && state.reactions[category].quiz_questions.map(quiz => quiz.reactable_id)) || [],
+	getSlidesIdsForCategory: (state) => (category) => (state.reactions[category] && state.reactions[category].slides.map(slide => slide.reactable_id)) || [],
+	getItemsCount: (state) => (category) => {
+		return state.reactions[category]
+			&& Object.keys(state.reactions[category])
+				.map((items) => state.reactions[category][items].length)
 				.reduce((sum, count) => sum + count, 0)
 			|| 0
 	},
@@ -91,13 +86,13 @@ const actions = {
 			Object.keys(reactions).forEach((category) => {
 				let categoriesReactions = {}
 
-				Object.values(resourcesMap)
+				Object.values(modelToResourceMap)
 					.forEach((resource) => categoriesReactions[resource] = [])
 
 				reactions[category]
-					.filter(reaction => Object.keys(resourcesMap).includes(reaction.reactable_type))
+					.filter(reaction => Object.keys(modelToResourceMap).includes(reaction.reactable_type))
 					.forEach(reaction => {
-						let resource = resourcesMap[reaction.reactable_type]
+						let resource = modelToResourceMap[reaction.reactable_type]
 						categoriesReactions[resource].push(reaction)
 					})
 

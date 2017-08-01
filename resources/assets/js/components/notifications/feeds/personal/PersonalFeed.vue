@@ -1,6 +1,6 @@
 <template>
 	<div class="dropdown-container">
-		<wnl-dropdown :options="{isWide: true}" @toggled="toggle">
+		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
 			<div slot="activator" class="notifications-toggle"
 				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
 				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
@@ -17,9 +17,9 @@
 				<div class="personal-feed-body">
 					<div class="zero-state" v-if="isEmpty">
 						<img class="zero-state-image"
-							title="$t('notifications.personal.zeroStateImage')"
 							:alt="$t('notifications.personal.zeroStateImage')"
-							:src="zeroStateImage">
+							:src="zeroStateImage"
+							:title="$t('notifications.personal.zeroStateImage')">
 						<p class="zero-state-text">
 							{{$t('notifications.personal.zeroState')}}
 						</p>
@@ -29,7 +29,7 @@
 							:message="message"
 							:key="id"
 							:notificationComponent="PersonalNotification"
-							@goingToContext="toggle(false)"
+							@goingToContext="onGoingToContext"
 							v-for="(message, id) in notifications"
 							v-if="hasComponentForEvent(message)"
 						/>
@@ -63,7 +63,7 @@
 	$header-height: 40px
 	$footer-height: 40px
 	$body-margin-top: $header-height
-	$body-margin-bottom: $footer-height + $margin-big
+	$body-margin-bottom: $footer-height
 
 	.dropdown-container
 		align-items: center
@@ -226,17 +226,11 @@
 				getUnseen: 'getUnseen',
 				getUnread: 'getUnread',
 			}),
-			canShowMore() {
-				return this.hasMore(this.channel)
-			},
 			iconClass() {
 				return this.isOn ? 'fa-bell' : 'fa-bell-slash'
 			},
 			isOn() {
 				return this.getSetting(setting)
-			},
-			showEndInfo() {
-				return this.totalNotifications > this.limit && !this.canShowMore
 			},
 			unseenCount() {
 				return _.size(this.getUnseen(this.channel))
@@ -260,6 +254,11 @@
 						this.markAllAsSeen(this.channel)
 						this.allReadLoading = false
 					})
+			},
+			onGoingToContext() {
+				if (typeof this.$refs.dropdown.toggleActive === 'function') {
+					this.$refs.dropdown.toggleActive(false)
+				}
 			},
 			toggle(isActive) {
 				this.isActive = isActive

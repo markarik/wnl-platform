@@ -412,7 +412,15 @@
 			},
 			'screenData' (newValue, oldValue) {
 				if (newValue.type === 'slideshow') {
-					this.initSlideshow()
+					this.toggleOverlay({source: 'slideshow', display: true})
+
+					this.setup({id: this.slideshowId})
+					.then(() => {
+						this.initSlideshow()
+							.then(() => {
+								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
+							})
+					})
 				}
 			},
 			'presentableId' (presentableId, oldValue) {

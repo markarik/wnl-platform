@@ -133,49 +133,6 @@
 		display: flex
 		flex-wrap: wrap
 		margin-bottom: $margin-base
-		user-select: none
-
-		.panel-toggle
-			border: $border-light-gray
-			border-radius: $border-radius-small
-			color: $color-gray-dimmed
-			font-size: $font-size-minus-2
-			font-weight: $font-weight-bold
-			margin: $margin-base $margin-small 0 0
-			padding: $margin-small
-			text-transform: uppercase
-			transition: background $transition-length-base
-
-			&:hover
-				background: $color-light-gray
-				transition: background $transition-length-base
-
-			&:last-child
-				margin-right: 0
-
-			&.is-active
-				background: $color-ocean-blue
-				border-color: $color-ocean-blue
-				color: $color-white
-				opacity: 1
-				transition: opacity $transition-length-base
-
-				&:hover
-					opacity: 0.5
-					transition: opacity $transition-length-base
-
-			&.is-single
-				font-size: $font-size-minus-3
-
-				.icon
-					height: $font-size-minus-2
-					width: $font-size-minus-2
-
-				.fa
-					font-size: $font-size-minus-2
-
-			.icon
-				margin-left: $margin-tiny
 
 	.columns
 		justify-content: space-around

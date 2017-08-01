@@ -28,7 +28,7 @@ class NotificationObserver
 
 		$twinNotifications = Notification::select()
 			->where('event_id', $eventId)
-			->where('id', '!=' ,$notification->event_id)
+			->where('id', '!=' , $notification->id)
 			->where('channel', 'like', 'private-role.moderator%')
 			->get();
 

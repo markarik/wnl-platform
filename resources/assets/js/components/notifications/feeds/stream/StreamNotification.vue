@@ -2,9 +2,9 @@
 	<div class="stream-notification" @click="markAsReadAndGo">
 		<div class="meta">
 			<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
+			<span class="icon is-small"><i class="fa" :class="icon"></i></span>
 			<span class="meta-time">{{justDate}}</span>
 			<span class="meta-time">{{justTime}}</span>
-			<span class="icon is-small"><i class="fa" :class="icon"></i></span>
 		</div>
 		<div class="notification-content">
 			<div class="notification-header">
@@ -66,7 +66,7 @@
 		.icon
 			color: $color-background-gray
 			text-align: center
-			margin-top: $margin-small
+			margin-bottom: $margin-small
 
 	.notification-content
 		flex: 1 auto

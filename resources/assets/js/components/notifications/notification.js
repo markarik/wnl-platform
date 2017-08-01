@@ -38,7 +38,7 @@ export const notification = {
 				const slide = this.routeContext.params.slide
 
 				let contextInfo = this.$t('notifications.context.lesson', {
-					lesson: _.truncate(this.getLesson(lessonId).name, {length: 20}),
+					lesson: _.truncate(this.getLesson(lessonId).name, {length: 30}),
 				})
 
 				if (_.get(this.message, 'objects.type') === 'slide' && slide) {

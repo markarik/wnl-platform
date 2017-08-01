@@ -17,11 +17,31 @@ const getters = {
 		return _.isUndefined(state.fetching[channel]) || !!state.fetching[channel]
 	},
 	notifications: (state) => state.notifications,
+	moderatorsChannel: (state, getters, rootState, rootGetters) => {
+		return rootGetters.isModerator && `private-role.moderator.${rootGetters.currentUserId}`
+	},
+	streamChannel: (state, getters, rootState, rootGetters) => {
+		return rootGetters.currentUserId && `private-stream.${rootGetters.currentUserId}`
+	},
 	userChannel: (state, getters, rootState, rootGetters) => {
 		return rootGetters.currentUserId && `private-${rootGetters.currentUserId}`
 	},
-	moderatorsChannel: (state, getters, rootState, rootGetters) => {
-		return rootGetters.isModerator && `private-role.moderator.${rootGetters.currentUserId}`
+	filterSlides: (state, getters) => (channel) => {
+		return _.pickBy(getters.getSortedNotifications(channel), (notification) => {
+			return notification.objects && notification.objects.type === 'slide'
+		})
+	},
+	filterQuiz: (state, getters) => (channel) => {
+		return _.pickBy(getters.getSortedNotifications(channel), (notification) => {
+			return notification.objects && notification.objects.type === 'quiz_question'
+		})
+	},
+	filterQna: (state, getters) => (channel) => {
+		return _.pickBy(getters.getSortedNotifications(channel), (notification) => {
+			return notification.objects &&
+				(notification.objects.type === 'qna_question' || notification.objects.type === 'qna_answer') ||
+				notification.subject && notification.subject.type === 'qna_question'
+		})
 	},
 	getChannelNotifications: (state) => (channel) => {
 		return _.pickBy(state.notifications, (notification) => notification.channel === channel)
@@ -128,6 +148,9 @@ const actions = {
 	initNotifications({getters, dispatch}) {
 		dispatch('pullNotifications', [getters.userChannel, {limit: 15}])
 		dispatch('setupLiveNotifications', getters.userChannel)
+
+		dispatch('pullNotifications', [getters.streamChannel, {limit: 25}])
+		dispatch('setupLiveNotifications', getters.streamChannel)
 
 		if (getters.moderatorsChannel) {
 			dispatch('pullNotifications', [getters.moderatorsChannel, {unread: true}])

@@ -37,7 +37,7 @@
 			</div>
 		</div>
 		<div class="qna-answer-comments">
-			<p class="qna-title">
+			<p class="qna-title" :class="{'is-expanded': showComments}">
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 				Komentarze ({{comments.length}})
 				<span v-if="comments.length > 0">
@@ -85,7 +85,11 @@
 		margin-top: $margin-base
 
 	.qna-answer-comments
-		margin-left: $margin-humongous
+		margin-left: 60px
+
+		.qna-title.is-expanded
+			padding-bottom: $margin-small
+			border-bottom: $border-light-gray
 
 	.qna-title
 		font-size: $font-size-minus-1

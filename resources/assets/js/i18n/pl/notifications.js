@@ -7,7 +7,7 @@ export const notifications = {
 	},
 	events: {
 		commentPosted: 'skomentował/-a',
-		qnaQuestionPosted: 'zadał/-a pytanie',
+		qnaQuestionPosted: 'zadał/-a',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
 	},
@@ -30,5 +30,8 @@ export const notifications = {
 		turnOn: 'Włącz',
 		zeroState: 'Gdy zaczniesz zadawać pytania, odpowiadać oraz komentować, tu znajdziesz powiadomienia dotyczące swoich wpisów!',
 		zeroStateImage: 'Włącz się do dyskusji',
+	},
+	stream: {
+		zeroState: 'Tu powiadomimy Cię o wszystkich dyskusjach, które toczą się w ramach kursu - zaglądaj tu często, a nie umkną Ci żadne wydarzenia!',
 	},
 }

@@ -76,7 +76,7 @@ function _handleGetQuestionsError(commit, error) {
 }
 
 function _getAnswers(questionId) {
-	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,reactions`))
+	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles,reactions`))
 }
 
 /**

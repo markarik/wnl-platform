@@ -24,7 +24,7 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import ModeratorsNotification from 'js/components/notifications/feeds/moderators/ModeratorsNotification'
-	import { CommentPosted, QnaAnswerPosted, QnaQuestionPosted, ReactionAdded } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, QnaQuestionPosted } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 
 	export default {
@@ -34,7 +34,6 @@
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-qna-question-posted': QnaQuestionPosted,
-			'wnl-event-reaction-added': ReactionAdded,
 		},
 		data() {
 			return {

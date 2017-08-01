@@ -9,6 +9,7 @@
 					<span class="actor">{{ message.actors.full_name }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object" v-if="object">{{ object }}</span>
+					<span class="context">{{ contextInfo }}</span>
 					<span class="object-text" v-if="objectText">{{ objectText }}</span>
 				</div>
 				<div class="subject" v-if="subjectText">{{ subjectText }}</div>
@@ -44,6 +45,7 @@
 		cursor: pointer
 		display: flex
 		flex: 1 auto
+		font-size: $font-size-minus-1
 		justify-content: space-between
 		margin-right: $margin-base
 		padding: $margin-medium
@@ -73,6 +75,7 @@
 		.notification-header
 			line-height: $line-height-minus
 
+		.context,
 		.object
 			font-weight: $font-weight-bold
 
@@ -89,7 +92,7 @@
 			color: $color-gray-dimmed
 
 		.subject
-			font-size: $font-size-plus-1
+			font-size: $font-size-base
 			line-height: $line-height-minus
 			margin: $margin-small 0
 

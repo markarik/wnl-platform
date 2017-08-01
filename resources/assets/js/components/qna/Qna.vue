@@ -7,10 +7,10 @@
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
-						<p class="title is-4">
+						<p class="title is-4" v-if="title !== false">
 							{{displayedTitle}} ({{howManyQuestions}})
 						</p>
-						<div class="tags">
+						<div class="tags" v-if="tags">
 							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
 						</div>
 					</div>
@@ -29,16 +29,16 @@
 			</div>
 			<transition name="fade">
 				<div class="qna-new-question" v-if="showForm">
-					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"></wnl-new-question>
+					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="howManyQuestions > 0"></wnl-qna-sorting>
+			<wnl-qna-sorting v-if="howManyQuestions > 0"/>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
-			></wnl-qna-question>
+			/>
 		</div>
 	</div>
 </template>
@@ -50,7 +50,6 @@
 		#question-icon
 			margin: $margin-tiny $margin-tiny 0 $margin-small
 
-	.wnl-qna-header
 		.title
 			margin-bottom: $margin-small
 

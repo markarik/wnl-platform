@@ -17,5 +17,8 @@ class AnswerPostedHandler
 
 		$user = $event->qnaAnswer->question->user;
 		$gate->notifyPrivate($user, $event);
+
+		$excluded = [$user->id];
+		$gate->notifyPrivateStream($excluded, $event);
 	}
 }

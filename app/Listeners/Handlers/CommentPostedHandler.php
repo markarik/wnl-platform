@@ -25,7 +25,10 @@ class CommentPostedHandler
 			$gate->notifyPrivate($commentableAuthor, $event);
 		}
 
-		$this->notifyCoCommentators($commentable, $gate, $event);
+		$excluded = $this->notifyCoCommentators($commentable, $gate, $event);
+
+		$excluded->push($commentableAuthor);
+		$gate->notifyPrivateStream($excluded->pluck('id')->toArray(), $event);
 	}
 
 	protected function notifyCoCommentators($commentable, $gate, $event)
@@ -45,5 +48,7 @@ class CommentPostedHandler
 		foreach ($users as $user) {
 			$gate->notifyPrivate($user, $event);
 		}
+
+		return $users;
 	}
 }

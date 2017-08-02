@@ -9,9 +9,11 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Lesson;
 use App\Models\Notification;
+use App\Models\QnaAnswer;
 use App\Observers\UserObserver;
 use App\Observers\OrderObserver;
 use App\Observers\LessonObserver;
+use App\Observers\NotificationModelObserver;
 use Monolog\Handler\RavenHandler;
 use Illuminate\Support\Facades\Auth;
 use Monolog\Formatter\LineFormatter;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
 		Notification::observe(NotificationObserver::class);
+		QnaAnswer::observe(NotificationModelObserver::class);
 
 		if ($this->useExternalLogger()) {
 			$this->addSentryLogger();

@@ -122,15 +122,16 @@
 		},
 		data() {
 			return {
+				bookmarkLoading: false,
 				child: {},
+				currentSlideId: 0,
 				// slides order number is index from 0
 				currentSlideNumber: this.slideOrderNumber + 1 || Math.max(this.$route.params.slide, 1) || 1,
-				loaded: false,
 				isFauxFullscreen: false,
 				isFocused: false,
+				loaded: false,
 				slideChanged: false,
-				currentSlideId: 0,
-				bookmarkLoading: false
+				slideshowElement: {},
 			}
 		},
 		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
@@ -160,9 +161,6 @@
 			},
 			slideshowUrl() {
 				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
-			},
-			slideshowElement() {
-				return this.container.getElementsByTagName('iframe')[0]
 			},
 			slideshowSizeClass() {
 				return this.isFauxFullscreen ? 'is-faux-fullscreen' : 'wnl-ratio-16-9'
@@ -253,6 +251,9 @@
 					this.loaded = true
 					child.frame.setAttribute('mozallowfullscreen', '');
 					child.frame.setAttribute('allowfullscreen', '');
+
+					this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
+
 					this.setEventListeners()
 
 					this.goToSlide(this.currentSlideIndex)
@@ -274,7 +275,6 @@
 				this.preserveRoute ? this.goToSlide(slideNumber - 1) : this.updateRoute(slideNumber)
 			},
 			messageEventListener(event) {
-
 				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
 					try {
 						let data = JSON.parse(event.data)

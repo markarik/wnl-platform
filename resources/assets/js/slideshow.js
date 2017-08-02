@@ -51,7 +51,7 @@ const handshake = new Postmate.Model({
 		let annotationsLength = annotationsData.length
 
 		$slideAnnotations.find('.slide-annotations-container').hide()
-		$annotationsCounters.text(annotationsLength)
+		$annotationsCounters.text(annotationsLength > 0 ? annotationsLength : '')
 
 		if (annotationsLength === 0) {
 			$annotationsCounters.removeClass('has-some')

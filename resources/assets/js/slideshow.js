@@ -225,6 +225,13 @@ function setMenuListeners(parent) {
 		emitToggleFullscreen();
 	});
 	$toggleAnnotations.on('click', toggleAnnotations)
+	document.addEventListener('keydown', closeFullscreenWithEsc)
+}
+
+function closeFullscreenWithEsc(e) {
+	if (e.keyCode === 27) {
+		emitToggleFullscreen(false)
+	}
 }
 
 function setBookmarks(parent) {
@@ -249,6 +256,6 @@ function setBookmarkedState(currentSlideNumber) {
 	}
 }
 
-function emitToggleFullscreen() {
-	parent.emit('toggle-fullscreen', true)
+function emitToggleFullscreen(state = true) {
+	parent.emit('toggle-fullscreen', state)
 }

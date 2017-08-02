@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App;
+use App\Models\Comment;
+use App\Models\QnaQuestion;
 use Log;
 use Validator;
 use App\Models\User;
@@ -37,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
 		Lesson::observe(LessonObserver::class);
 		Notification::observe(NotificationObserver::class);
 		QnaAnswer::observe(NotificationModelObserver::class);
+		QnaQuestion::observe(NotificationModelObserver::class);
+		Comment::observe(NotificationModelObserver::class);
 
 		if ($this->useExternalLogger()) {
 			$this->addSentryLogger();

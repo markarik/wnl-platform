@@ -67,6 +67,9 @@ export const notification = {
 		isRead() {
 			return !!this.message.read_at
 		},
+		isSeen() {
+			return !!this.message.seen_at
+		},
 	},
 	methods: {
 		...mapActions('notifications', ['markAsRead']),

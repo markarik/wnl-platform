@@ -1,6 +1,8 @@
 <template>
 	<div class="notification-container">
-		<div class="moderators-notification" :class="{'is-read': isRead, 'is-desktop': !isTouchScreen}" @click="goToContext">
+		<div class="moderators-notification"
+			:class="{'is-unseen': !isSeen, 'is-read': isRead, 'is-desktop': !isTouchScreen}"
+		>
 			<div class="actor">
 				<wnl-event-actor :message="message"/>
 			</div>
@@ -13,15 +15,20 @@
 					<span class="object-text" v-if="objectText">{{ objectText }}</span>
 				</div>
 				<div class="subject" v-if="subjectText">{{ subjectText }}</div>
-				<div class="time">
-					<span class="icon is-tiny">
-						<i class="fa" :class="icon"></i>
-					</span> {{ formattedTime }}
+				<div class="time" :class="{'is-mobile': isMobile}">
+					<span>
+						<span class="icon is-tiny">
+							<i class="fa" :class="icon"></i>
+						</span> {{ formattedTime }}
+					</span>
+					<a class="button is-small is-outlined" @click="goToNotification">
+						{{ $t('notifications.moderators.cta') }}
+					</a>
 				</div>
 			</div>
 		</div>
 		<div class="link-symbol">
-			<span class="icon checkmark" v-if="!isRead"
+			<span class="icon is-small checkmark" v-if="!isRead"
 				@click="dispatchMarkAsRead">
 				<span v-if="loading" class="loader"></span>
 				<i v-else class="fa fa-check"></i>
@@ -42,7 +49,6 @@
 		align-items: flex-start
 		border: $border-light-gray
 		border-radius: $border-radius-small
-		cursor: pointer
 		display: flex
 		flex: 1 auto
 		font-size: $font-size-minus-1
@@ -52,9 +58,8 @@
 		position: relative
 		transition: background-color $transition-length-base
 
-		&.is-desktop:hover
-			background-color: $color-background-lighter-gray
-			transition: background-color $transition-length-base
+		&.is-unseen
+			background: $color-background-light-gray
 
 		&.is-read
 			opacity: 0.5
@@ -98,8 +103,14 @@
 
 		.time
 			color: $color-background-gray
+			display: flex
+			flex-direction: row
 			font-size: $font-size-minus-1
+			justify-content: space-between
 			margin-top: $margin-tiny
+
+			&.is-mobile
+				flex-direction: column
 
 			.icon
 				margin-right: $margin-tiny
@@ -117,7 +128,7 @@
 			border-radius: $border-radius-small
 			color: $color-green
 			cursor: pointer
-			padding: $margin-big
+			padding: $margin-base
 			transition: background-color $transition-length-base
 
 			&:hover
@@ -131,6 +142,7 @@
 
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
+	import { getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'ModeratorsNotification',
@@ -145,7 +157,7 @@
 			},
 		},
 		computed: {
-			...mapGetters(['isTouchScreen']),
+			...mapGetters(['isMobile', 'isTouchScreen']),
 			action() {
 				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
 			},
@@ -167,12 +179,23 @@
 			}
 		},
 		methods: {
-			...mapActions('notifications', ['markAsRead']),
+			...mapActions('notifications', ['markAsSeen', 'markAsRead']),
 			dispatchMarkAsRead() {
 				this.loading = true
 				this.markAsRead({notification: this.message, channel: this.channel})
 					.then(() => this.loading = false)
-			}
+			},
+			goToNotification() {
+				this.$emit('goingToContext')
+				let url = ''
+				if (typeof this.routeContext === 'object') {
+					url = getUrl(this.$router.resolve(this.routeContext).resolved.fullPath)
+				} else if (typeof this.routeContext === 'string') {
+					url = this.routeContext
+				}
+				this.markAsSeen({notification: this.message, channel: this.channel})
+				window.open(url, '_blank')
+			},
 		},
 	}
 </script>

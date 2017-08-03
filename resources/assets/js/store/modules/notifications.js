@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl, envValue as env} from 'js/utils/env'
-import {set} from 'vue'
+import {set, delete as destroy} from 'vue'
 
 const namespaced = true
 
@@ -63,7 +63,11 @@ const getters = {
 
 const mutations = {
 	[types.ADD_NOTIFICATION] (state, notification) {
-		set(state.notifications, notification.id, notification)
+		if (notification.deleted) {
+			destroy(state.notifications, notification.id)
+		} else {
+			set(state.notifications, notification.id, notification)
+		}
 	},
 	[types.CHANNEL_HAS_MORE] (state, {channel, hasMore}) {
 		set(state.hasMore, channel, hasMore)

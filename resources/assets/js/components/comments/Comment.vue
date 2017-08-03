@@ -10,7 +10,7 @@
 		<div class="media-content">
 			<div class="comment-content">
 				<span class="author">{{profile.full_name}}</span>
-				<div class="comment-text" v-html="comment.text"></div>
+				<div class="comment-text wrap" v-html="comment.text"></div>
 				<small>{{time}}</small>
 				<span v-if="isCurrentUserAuthor">
 					&nbsp;·

@@ -1,40 +1,42 @@
 <template>
-	<div class="notification-container">
-		<div class="moderators-notification"
-			:class="{'is-unseen': !isSeen, 'is-read': isRead, 'is-desktop': !isTouchScreen, deleted}"
-		>
-			<div class="actor">
-				<wnl-event-actor :message="message"/>
+	<div class="notification-wrapper">
+		<div class="notification-container">
+			<div class="moderators-notification"
+				:class="{'is-unseen': !isSeen, 'is-read': isRead, 'is-desktop': !isTouchScreen, deleted}"
+			>
+				<div class="actor">
+					<wnl-event-actor :message="message"/>
+				</div>
+				<div class="notification-content">
+					<div class="notification-header">
+						<span class="actor">{{ message.actors.full_name }}</span>
+						<span class="action">{{ action }}</span>
+						<span class="object" v-if="object">{{ object }}</span>
+						<span class="context">{{ contextInfo }}</span>
+						<span class="object-text" v-if="objectText">{{ objectText }}</span>
+					</div>
+					<div class="subject" v-if="subjectText">{{ subjectText }}</div>
+					<div class="time" :class="{'is-mobile': isMobile}">
+						<span>
+							<span class="icon is-tiny">
+								<i class="fa" :class="icon"></i>
+							</span> {{ formattedTime }}
+						</span>
+						<a class="button is-small is-outlined" @click="goToNotification">
+							{{ $t('notifications.moderators.cta') }}
+						</a>
+					</div>
+				</div>
 			</div>
-			<p class="message" v-if="deleted">{{$t('notifications.messages.deleted')}}</p>
-			<div class="notification-content">
-				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
-					<span class="action">{{ action }}</span>
-					<span class="object" v-if="object">{{ object }}</span>
-					<span class="context">{{ contextInfo }}</span>
-					<span class="object-text" v-if="objectText">{{ objectText }}</span>
-				</div>
-				<div class="subject" v-if="subjectText">{{ subjectText }}</div>
-				<div class="time" :class="{'is-mobile': isMobile}">
-					<span>
-						<span class="icon is-tiny">
-							<i class="fa" :class="icon"></i>
-						</span> {{ formattedTime }}
-					</span>
-					<a class="button is-small is-outlined" @click="goToNotification">
-						{{ $t('notifications.moderators.cta') }}
-					</a>
-				</div>
+			<div class="link-symbol">
+				<span class="icon is-small checkmark" v-if="!isRead"
+					@click="dispatchMarkAsRead">
+					<span v-if="loading" class="loader"></span>
+					<i v-else class="fa fa-check"></i>
+				</span>
 			</div>
 		</div>
-		<div class="link-symbol">
-			<span class="icon is-small checkmark" v-if="!isRead"
-				@click="dispatchMarkAsRead">
-				<span v-if="loading" class="loader"></span>
-				<i v-else class="fa fa-check"></i>
-			</span>
-		</div>
+		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
 	</div>
 </template>
 
@@ -135,21 +137,6 @@
 			&:hover
 				background-color: $color-background-lighter-gray
 				transition: background-color $transition-length-base
-
-	.deleted
-		pointer-events: none
-		cursor: not-allowed
-		position: relative
-
-		.notification-content
-			filter: blur(5px)
-
-		.message
-			position: absolute
-			text-align: center
-			width: 100%
-			font-weight: bold
-			background: transparent
 </style>
 
 <script>

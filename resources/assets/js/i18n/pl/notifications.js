@@ -11,6 +11,9 @@ export const notifications = {
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
 	},
+	messages: {
+		deleted: 'Treść usunięta przez autora'
+	},
 	moderators: {
 		cta: 'Jedziesz szwagier!',
 		fromOldest: 'Od najstarszych',
@@ -37,7 +40,4 @@ export const notifications = {
 	stream: {
 		zeroState: 'Tu powiadomimy Cię o wszystkich dyskusjach, które toczą się w ramach kursu - zaglądaj tu często, a nie umkną Ci żadne wydarzenia!',
 	},
-	messages: {
-		deleted: 'Treść została usunięta przez autora'
-	}
 }

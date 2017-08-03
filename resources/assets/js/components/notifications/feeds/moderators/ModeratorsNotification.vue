@@ -1,9 +1,10 @@
 <template>
 	<div class="notification-container">
-		<div class="moderators-notification" :class="{'is-read': isRead, 'is-desktop': !isTouchScreen}" @click="goToContext">
+		<div class="moderators-notification" :class="{'is-read': isRead, 'is-desktop': !isTouchScreen, deleted}" @click="goToContext">
 			<div class="actor">
 				<wnl-event-actor :message="message"/>
 			</div>
+			<p class="message" v-if="deleted">{{$t('notifications.messages.deleted')}}</p>
 			<div class="notification-content">
 				<div class="notification-header">
 					<span class="actor">{{ message.actors.full_name }}</span>
@@ -123,6 +124,21 @@
 			&:hover
 				background-color: $color-background-lighter-gray
 				transition: background-color $transition-length-base
+
+	.deleted
+		pointer-events: none
+		cursor: not-allowed
+		position: relative
+
+		.notification-content
+			filter: blur(5px)
+
+		.message
+			position: absolute
+			text-align: center
+			width: 100%
+			font-weight: bold
+			background: transparent
 </style>
 
 <script>

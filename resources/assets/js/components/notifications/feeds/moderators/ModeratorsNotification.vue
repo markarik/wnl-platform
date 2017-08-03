@@ -156,6 +156,12 @@
 				type: String
 			},
 		},
+		data() {
+			return {
+				objectTextLength: 150,
+				subjectTextLength: 250,
+			}
+		},
 		computed: {
 			...mapGetters(['isMobile', 'isTouchScreen']),
 			action() {
@@ -167,16 +173,6 @@
 
 				return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1)
 			},
-			objectText() {
-				if (!this.object) return false;
-
-				return truncate(this.message.objects.text, {length: 150})
-			},
-			subjectText() {
-				if (!this.message.subject) return false;
-
-				return truncate(this.message.subject.text, {length: 250})
-			}
 		},
 		methods: {
 			...mapActions('notifications', ['markAsSeen', 'markAsRead']),

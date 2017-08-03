@@ -5,6 +5,8 @@ namespace App\Providers;
 use App;
 use App\Models\Comment;
 use App\Models\QnaQuestion;
+use App\Observers\QnaAnswerObserver;
+use App\Observers\QnaQuestionObserver;
 use Log;
 use Validator;
 use App\Models\User;
@@ -38,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
 		User::observe(UserObserver::class);
 		Lesson::observe(LessonObserver::class);
 		Notification::observe(NotificationObserver::class);
+		QnaQuestion::observe(QnaQuestionObserver::class);
+		QnaAnswer::observe(QnaAnswerObserver::class);
+
 		QnaAnswer::observe(NotificationModelObserver::class);
 		QnaQuestion::observe(NotificationModelObserver::class);
 		Comment::observe(NotificationModelObserver::class);

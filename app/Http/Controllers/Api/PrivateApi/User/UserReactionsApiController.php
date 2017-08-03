@@ -1,14 +1,13 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi\User;
 
-use App\Http\Controllers\Api\Transformers\ReactableTransformer;
 use Auth;
 use App\Models\User;
 use App\Models\Reaction;
-use App\Models\Reactable;
 use App\Models\Category;
-use App\Models\Tag;
-use App\Http\Controllers\Api\ApiController;
+use App\Models\Reactable;
 use League\Fractal\Resource\Collection;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\ReactableTransformer;
 
 
 class UserReactionsApiController extends ApiController
@@ -59,10 +58,6 @@ class UserReactionsApiController extends ApiController
 		$categories = Category::all();
 		$categorizedReactables = [];
 
-		foreach ($categories as $category) {
-			$categorizedReactables[$category->name] = [];
-		}
-
 		$grouped = $reactables->groupBy('reactable_type');
 
 		foreach ($grouped as $key => $item) {
@@ -73,16 +68,19 @@ class UserReactionsApiController extends ApiController
 				->get();
 
 			foreach ($models as $model) {
-				$grouped->{$key}[$model->id]->reactableTags = $model->tags->pluck('name');
+				$tags = $model->tags->pluck('name')->map(function ($el) {
+					return trim($el);
+				});
+				$grouped->{$key}[$model->id]->reactableTags = $tags;
 			}
 		}
 
 		foreach ($grouped->flatten() as $reactable) {
-			$tagNames = $reactable->reactableTags;
+			$tags = $reactable->reactableTags;
 
-			foreach ($tagNames as $tagName) {
-				if (array_key_exists($tagName, $categorizedReactables)) {
-					$categorizedReactables[$tagName][] = $reactable;
+			foreach ($categories as $category) {
+				if ($tags->contains($category->name)) {
+					$categorizedReactables[$category->name][] = $reactable;
 				}
 			}
 		}

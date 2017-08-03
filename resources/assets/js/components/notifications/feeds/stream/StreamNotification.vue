@@ -14,8 +14,8 @@
 				<span class="object">{{ object }}</span>
 				<span class="context">{{ contextInfo }}</span>
 			</div>
-			<div class="object-text" v-if="objectText">{{ objectText }}</div>
-			<div class="subject" :class="{'unread': !isRead}" v-if="subjectText">{{ subjectText }}</div>
+			<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
+			<div class="subject wrap" :class="{'unread': !isRead}" v-if="subjectText">{{ subjectText }}</div>
 			<div class="time">
 			</div>
 		</div>

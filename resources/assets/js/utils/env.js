@@ -28,7 +28,8 @@ export function getFirstLessonId() {
 // URLs
 
 export function getUrl(path) {
-	return `${envValue('appUrl')}/${path}`
+	const delimiter = path.indexOf('/') === 0 ? '' : '/'
+	return `${envValue('appUrl')}${delimiter}${path}`
 }
 
 export function getApiUrl(path) {

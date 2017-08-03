@@ -69,7 +69,10 @@ export const notification = {
 		},
 		deleted() {
 			return !!this.message.deleted
-		}
+		},
+		isSeen() {
+			return !!this.message.seen_at
+		},
 	},
 	methods: {
 		...mapActions('notifications', ['markAsRead']),

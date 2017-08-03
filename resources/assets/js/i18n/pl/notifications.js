@@ -12,7 +12,10 @@ export const notifications = {
 		reactionAdded: 'polubił/-a',
 	},
 	moderators: {
-		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!'
+		cta: 'Jedziesz szwagier!',
+		fromOldest: 'Od najstarszych',
+		fromNewest: 'Od najnowszych',
+		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!',
 	},
 	objects: {
 		comment: 'komentarz',

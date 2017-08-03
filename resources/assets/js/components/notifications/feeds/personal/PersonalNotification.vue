@@ -10,9 +10,9 @@
 				<span class="action">{{ action }}</span>
 				<span class="object" v-if="object">{{ object }}</span>
 				<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
-				<span class="object-text" v-if="objectText">{{ objectText }}</span>
+				<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
 			</div>
-			<div class="subject" v-if="subjectText">{{ subjectText }}</div>
+			<div class="subject wrap" v-if="subjectText">{{ subjectText }}</div>
 			<div class="time">
 				<span class="icon is-small">
 					<i class="fa" :class="icon"></i>

@@ -137,6 +137,12 @@
 				type: String
 			},
 		},
+		data() {
+			return {
+				objectTextLength: 200,
+				subjectTextLength: 300,
+			}
+		},
 		computed: {
 			...mapGetters(['currentUserId', 'isMobile']),
 			action() {
@@ -155,16 +161,6 @@
 				const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1
 
 				return this.$tc(`notifications.objects.${_.camelCase(type)}`, choice)
-			},
-			objectText() {
-				if (!this.message.objects) return false
-
-				return truncate(this.message.objects.text, {length: 200})
-			},
-			subjectText() {
-				if (!this.message.subject) return false
-
-				return truncate(this.message.subject.text, {length: 300})
 			},
 		},
 		methods: {

@@ -131,16 +131,6 @@
 					this.currentUserId === objects.author ? 2 : 1
 				)
 			},
-			objectText() {
-				if (!this.object) return false;
-
-				return truncate(this.message.objects.text, {length: 75})
-			},
-			subjectText() {
-				if (!this.message.subject) return false;
-
-				return truncate(this.message.subject.text, {length: 150})
-			}
 		},
 		methods: {
 			dispatchGoToContext() {

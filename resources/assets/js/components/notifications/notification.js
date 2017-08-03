@@ -2,6 +2,7 @@
  * A mixin with basic logic for a component of a Notification type.
  * @type {Object}
  */
+import { decode } from 'he'
 import { isEmpty, isObject, truncate } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -24,6 +25,8 @@ export const notification = {
 	data() {
 		return {
 			loading: false,
+			objectTextLength: 75,
+			subjectTextLength: 150,
 		}
 	},
 	computed: {
@@ -70,6 +73,24 @@ export const notification = {
 		isSeen() {
 			return !!this.message.seen_at
 		},
+		objectText() {
+			if (!this.message.objects) return false
+
+			if (this.objectTextLength > 0) {
+				return decode(truncate(this.message.objects.text, {length: this.objectTextLength}))
+			}
+
+			return decode(this.message.objects.text)
+		},
+		subjectText() {
+			if (!this.message.subject) return false
+
+			if (this.objectTextLength > 0) {
+				return decode(truncate(this.message.subject.text, {length: this.subjectTextLength}))
+			}
+
+			return decode(this.message.subject.text)
+		}
 	},
 	methods: {
 		...mapActions('notifications', ['markAsRead']),

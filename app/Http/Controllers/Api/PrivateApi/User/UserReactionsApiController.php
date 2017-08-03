@@ -61,25 +61,34 @@ class UserReactionsApiController extends ApiController
 		$categories = Category::all();
 		$categorizedReactables = [];
 
-		foreach($categories as $category) {
+		foreach ($categories as $category) {
 			$categorizedReactables[$category->name] = [];
 		}
 
-		foreach ($reactables as $reactable) {
-			$id = $reactable->reactable_id;
-			$type = $reactable->reactable_type;
-			$model = $type::find($id);
+		$grouped = $reactables->groupBy('reactable_type');
 
-			$tagNames = $model->tags->pluck('name');
+		foreach ($grouped as $key => $item) {
+			$grouped->{$key} = $item->keyBy('reactable_id');
 
-			foreach($tagNames as $tagName) {
+			$models = $key::with(['tags'])
+				->whereIn('id', $item->pluck('reactable_id'))
+				->get();
+
+			foreach ($models as $model) {
+				$grouped->{$key}[$model->id]->reactableTags = $model->tags->pluck('name');
+			}
+		}
+
+		foreach ($grouped->flatten() as $reactable) {
+			$tagNames = $reactable->reactableTags;
+
+			foreach ($tagNames as $tagName) {
 				if (array_key_exists($tagName, $categorizedReactables)) {
-					$categorizedReactables[$category->name][] = $reactable;
+					$categorizedReactables[$tagName][] = $reactable;
 				}
 			}
 		}
 
-		return view('layouts.app');
 		return $this->json(['reactions' => $categorizedReactables]);
 	}
 }

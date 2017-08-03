@@ -38,6 +38,8 @@ export const notifications = {
 		zeroStateImage: 'Włącz się do dyskusji',
 	},
 	stream: {
+		showRead: 'Pokaż ukryte',
+		hideRead: 'Schowaj ukryte',
 		zeroState: 'Tu powiadomimy Cię o wszystkich dyskusjach, które toczą się w ramach kursu - zaglądaj tu często, a nie umkną Ci żadne wydarzenia!',
 	},
 }

@@ -1,6 +1,6 @@
 <template>
 	<div class="notification-wrapper">
-		<div class="stream-notification" :class="{deleted}">
+		<div class="stream-notification" :class="{'is-read': isRead, deleted}">
 			<div class="meta">
 				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
@@ -15,18 +15,18 @@
 					<span class="context">{{ contextInfo }}</span>
 				</div>
 				<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
-				<div class="subject wrap" :class="{'unread': !isRead}" v-if="subjectText">{{ subjectText }}</div>
+				<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{ subjectText }}</div>
 				<div class="time">
 				</div>
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
-				<span v-if="hasContext" class="icon" :class="{'unread': !isRead}" @click="markAsReadAndGo">
-					<i v-if="loading" class="loader"></i>
+				<span v-if="hasContext" class="icon" :class="{'unseen': !isSeen}" @click="markAsSeenAndGo">
+					<span v-if="loading" class="loader"></span>
 					<i v-else class="fa fa-angle-right"></i>
 				</span>
-				<span class="icon is-small toggle-hidden">
-					<i v-if="loading" class="loader"></i>
-					<i v-else class="fa fa-eye-slash"></i>
+				<span class="icon is-small toggle-hidden" @click="toggleNotification">
+					<span v-if="loading" class="loader"></span>
+					<i v-else class="fa" :class="isRead ? 'fa-eye' : 'fa-eye-slash'"></i>
 				</span>
 			</div>
 		</div>
@@ -47,6 +47,17 @@
 		margin-bottom: $margin-big
 		padding: $margin-medium
 		position: relative
+
+		&.is-read
+			opacity: 0.75
+
+			.link-symbol
+
+				.icon
+					color: $color-inactive-gray
+
+					&.unseen
+						border-color: $color-inactive-gray
 
 	.meta
 		align-items: center
@@ -93,7 +104,7 @@
 			margin-top: $margin-base
 			padding-left: $margin-medium
 
-			&.unread
+			&.unseen
 				border-color: $color-ocean-blue
 
 		.time
@@ -126,21 +137,21 @@
 		.icon
 			border: $border-light-gray
 			border-radius: $border-radius-small
-			color: $color-inactive-gray
+			color: $color-background-gray
 			padding: $margin-base
 
-			&.unread
+			&.unseen
 				border-color: $color-ocean-blue
 				color: $color-ocean-blue
 
 			&.toggle-hidden
-				// margin-top: $margin-big
+				margin-top: $margin-base
 				padding: $margin-medium
 </style>
 
 <script>
 	import { truncate } from 'lodash'
-	import { mapGetters } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
@@ -185,17 +196,29 @@
 			},
 		},
 		methods: {
+			...mapActions('notifications', ['markAsUnread']),
 			dispatchGoToContext() {
 				this.goToContext()
 				this.loading = false
 			},
-			markAsReadAndGo() {
+			toggleNotification() {
+				this.loading = true
+
+				if (this.isRead) {
+					return this.markAsUnread({notification: this.message, channel: this.channel})
+						.then(() => this.loading = false)
+				}
+
+				return this.markAsRead({notification: this.message, channel: this.channel})
+					.then(() => this.loading = false)
+			},
+			markAsSeenAndGo() {
 				if(!this.hasContext) return false;
 
 				this.loading = true
 
-				if (!this.isRead) {
-					this.markAsRead({notification: this.message, channel: this.channel})
+				if (!this.isSeen) {
+					this.markAsSeen({notification: this.message, channel: this.channel})
 						.then(() => {
 							this.dispatchGoToContext()
 						})

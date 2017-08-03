@@ -22,10 +22,10 @@
 				</select>
 			</span>
 		</div>
-		<a class="button is-small toggle-archived">
-			<span class="text">Pokaż ukryte</span>
+		<a class="button is-small toggle-archived" @click="$emit('toggleShowRead')">
+			<span class="text">{{buttonMessage}}</span>
 			<span class="icon is-small">
-				<i class="fa fa-eye"></i>
+				<i class="fa" :class="showRead ? 'fa-eye-slash' : 'fa-eye'"></i>
 			</span>
 		</a>
 	</div>
@@ -86,6 +86,11 @@
 
 	export default {
 		name: 'StreamFiltering',
+		props: {
+			showRead: {
+				type: Boolean,
+			}
+		},
 		data() {
 			return {
 				activeTab: 'all',
@@ -95,6 +100,9 @@
 			...mapGetters(['isMobile']),
 			filteringOptions() {
 				return filteringOptions
+			},
+			buttonMessage() {
+				return this.showRead ? this.$t('notifications.stream.hideRead') : this.$t('notifications.stream.showRead')
 			},
 		},
 		methods: {

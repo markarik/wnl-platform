@@ -61,6 +61,9 @@ export const notification = {
 
 			return ''
 		},
+		deleted() {
+			return !!this.message.deleted
+		},
 		formattedTime () {
 			return timeFromS(this.message.timestamp)
 		},
@@ -69,9 +72,6 @@ export const notification = {
 		},
 		isRead() {
 			return !!this.message.read_at
-		},
-		deleted() {
-			return !!this.message.deleted
 		},
 		isSeen() {
 			return !!this.message.seen_at
@@ -96,7 +96,7 @@ export const notification = {
 		}
 	},
 	methods: {
-		...mapActions('notifications', ['markAsRead']),
+		...mapActions('notifications', ['markAsRead', 'markAsSeen']),
 		goToContext() {
 			if (this.message.deleted) {
 				return;

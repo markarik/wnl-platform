@@ -126,6 +126,12 @@ const actions = {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.seen_at, field: 'seen_at'})
 			})
 	},
+	markAsUnread({commit, getters, rootGetters}, {notification, channel}) {
+		return _updateNotification(rootGetters.currentUserId, notification.id, {'read_at': null})
+			.then((response) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
+			})
+	},
 	markAllAsSeen({commit, getters, rootGetters}, channel) {
 		let data = _.mapValues(getters.getUnseen(channel), (notification) => {
 			return {'seen_at': 'now'}

@@ -11,7 +11,7 @@
 				</p>
 			</div>
 			<div v-else>
-				<wnl-stream-filtering @changeFiltering="changeFiltering"/>
+				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="showRead = !showRead"/>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
@@ -105,6 +105,7 @@
 			return {
 				limit: 25,
 				filtering: 'all',
+				showRead: false,
 				StreamNotification,
 			}
 		},
@@ -123,8 +124,17 @@
 				return this.totalNotifications === 0 && this.fetching
 			},
 			filtered() {
-				if (this.filtering === 'all') return this.notifications
-				return this[`filter${_.upperFirst(this.filtering)}`](this.channel)
+				let filtered = this.notifications
+
+				if (this.filtering !== 'all') {
+					filtered = this[`filter${_.upperFirst(this.filtering)}`](this.channel)
+				}
+
+				if (!this.showRead) {
+					filtered = _.filter(filtered, (notification) => notification.read_at === null)
+				}
+
+				return filtered
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

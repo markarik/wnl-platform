@@ -1,11 +1,12 @@
 <template>
-	<div class="stream-notification" @click="markAsReadAndGo">
+	<div class="stream-notification" @click="markAsReadAndGo" :class="{'deleted': deleted}">
 		<div class="meta">
 			<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 			<span class="icon is-small"><i class="fa" :class="icon"></i></span>
 			<span class="meta-time">{{justDate}}</span>
 			<span class="meta-time">{{justTime}}</span>
 		</div>
+		<p class="message" v-if="deleted">{{$t('notifications.messages.deleted')}}</p>
 		<div class="notification-content">
 			<div class="notification-header">
 				<span class="actor">{{ message.actors.full_name }}</span>
@@ -112,6 +113,21 @@
 
 			&.unread
 				color: $color-ocean-blue
+
+	.deleted
+		pointer-events: none
+		cursor: not-allowed
+		position: relative
+
+		.notification-content
+			filter: blur(5px)
+
+		.message
+			position: absolute
+			text-align: center
+			width: 100%
+			font-weight: bold
+			background: transparent
 
 </style>
 

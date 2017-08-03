@@ -67,10 +67,17 @@ export const notification = {
 		isRead() {
 			return !!this.message.read_at
 		},
+		deleted() {
+			return !!this.message.deleted
+		}
 	},
 	methods: {
 		...mapActions('notifications', ['markAsRead']),
 		goToContext() {
+			if (this.message.deleted) {
+				return;
+			}
+
 			this.$emit('goingToContext')
 			if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)

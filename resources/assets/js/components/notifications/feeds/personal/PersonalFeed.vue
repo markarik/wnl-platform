@@ -233,10 +233,10 @@
 				return this.getSetting(setting)
 			},
 			unseenCount() {
-				return _.size(this.getUnseen(this.channel))
+				return _.size(_.filter(this.getUnseen(this.channel), (notification) => !notification.deleted))
 			},
 			unreadCount() {
-				return _.size(this.getUnread(this.channel))
+				return _.size(_.filter(this.getUnread(this.channel), (notification) => !notification.deleted))
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

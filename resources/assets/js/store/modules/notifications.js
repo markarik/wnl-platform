@@ -63,12 +63,7 @@ const getters = {
 
 const mutations = {
 	[types.ADD_NOTIFICATION] (state, notification) {
-		if (notification.deleted) {
-			// destroy(state.notifications, notification.id)
-			set(state.notifications, notification.id, notification)
-		} else {
-			set(state.notifications, notification.id, notification)
-		}
+		set(state.notifications, notification.id, notification)
 	},
 	[types.CHANNEL_HAS_MORE] (state, {channel, hasMore}) {
 		set(state.hasMore, channel, hasMore)

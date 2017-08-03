@@ -133,7 +133,6 @@ let routes = [
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
-		meta: {keepsNavOpen: true},
 		beforeEnter: (to, from, next) => {
 			const sandbox = createSandbox(store.getters.currentUser, {
 				perimeters: [moderatorFeed],

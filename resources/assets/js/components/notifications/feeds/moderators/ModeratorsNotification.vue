@@ -12,9 +12,9 @@
 					<span class="action">{{ action }}</span>
 					<span class="object" v-if="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
-					<span class="object-text" v-if="objectText">{{ objectText }}</span>
+					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
 				</div>
-				<div class="subject" v-if="subjectText">{{ subjectText }}</div>
+				<div class="subject wrap" v-if="subjectText">{{ subjectText }}</div>
 				<div class="time" :class="{'is-mobile': isMobile}">
 					<span>
 						<span class="icon is-tiny">

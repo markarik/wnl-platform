@@ -22,6 +22,12 @@
 				</select>
 			</span>
 		</div>
+		<a class="button is-small toggle-archived">
+			<span class="text">Pokaż ukryte</span>
+			<span class="icon is-small">
+				<i class="fa fa-eye"></i>
+			</span>
+		</a>
 	</div>
 </template>
 
@@ -29,7 +35,24 @@
 	@import 'resources/assets/sass/variables'
 
 	.stream-filtering
+		align-items: flex-end
+		display: flex
 		margin-bottom: $margin-base
+		justify-content: space-between
+
+		.tabs
+			flex: 1 auto
+			font-size: $font-size-minus-1
+			margin-bottom: 0
+
+	.toggle-archived
+		margin-left: $margin-base
+
+		.text
+			padding-right: $margin-tiny
+
+		.icon
+			color: $color-gray-dimmed
 
 	.is-active
 		font-weight: $font-weight-regular
@@ -72,7 +95,7 @@
 			...mapGetters(['isMobile']),
 			filteringOptions() {
 				return filteringOptions
-			}
+			},
 		},
 		methods: {
 			changeFiltering(tab) {

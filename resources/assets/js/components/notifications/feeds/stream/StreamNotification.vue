@@ -1,6 +1,6 @@
 <template>
 	<div class="notification-wrapper">
-		<div class="stream-notification" @click="markAsReadAndGo" :class="{'deleted': deleted}">
+		<div class="stream-notification" :class="{deleted}">
 			<div class="meta">
 				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
@@ -19,10 +19,14 @@
 				<div class="time">
 				</div>
 			</div>
-			<div class="link-symbol">
-				<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
+			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
+				<span v-if="hasContext" class="icon" :class="{'unread': !isRead}" @click="markAsReadAndGo">
 					<i v-if="loading" class="loader"></i>
 					<i v-else class="fa fa-angle-right"></i>
+				</span>
+				<span class="icon is-small toggle-hidden">
+					<i v-if="loading" class="loader"></i>
+					<i v-else class="fa fa-eye-slash"></i>
 				</span>
 			</div>
 		</div>
@@ -43,12 +47,6 @@
 		margin-bottom: $margin-big
 		padding: $margin-medium
 		position: relative
-		transition: background-color $transition-length-base
-
-		&:hover
-			background: $color-background-lighter-gray
-			cursor: pointer
-			transition: background-color $transition-length-base
 
 	.meta
 		align-items: center
@@ -107,14 +105,37 @@
 				margin-right: $margin-tiny
 
 	.link-symbol
+		align-items: center
 		display: flex
 		flex: 0
+		flex-direction: column
+		height: 100%
+		justify-content: space-between
+		min-height: 100%
+
+		&.is-desktop
+
+			.icon
+				cursor: pointer
+				transition: background $transition-length-base
+
+				&:hover
+					background: $color-background-lighter-gray
+					transition: background $transition-length-base
 
 		.icon
+			border: $border-light-gray
+			border-radius: $border-radius-small
 			color: $color-inactive-gray
+			padding: $margin-base
 
 			&.unread
+				border-color: $color-ocean-blue
 				color: $color-ocean-blue
+
+			&.toggle-hidden
+				// margin-top: $margin-big
+				padding: $margin-medium
 </style>
 
 <script>
@@ -144,7 +165,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserId', 'isMobile']),
+			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
 			action() {
 				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
 			},

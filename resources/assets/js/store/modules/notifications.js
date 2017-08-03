@@ -58,13 +58,14 @@ const getters = {
 	},
 	getOldestNotification: (state, getters) => (channel) => {
 		return _.last(getters.getSortedNotifications(channel))
-	}
+	},
 }
 
 const mutations = {
 	[types.ADD_NOTIFICATION] (state, notification) {
 		if (notification.deleted) {
-			destroy(state.notifications, notification.id)
+			// destroy(state.notifications, notification.id)
+			set(state.notifications, notification.id, notification)
 		} else {
 			set(state.notifications, notification.id, notification)
 		}

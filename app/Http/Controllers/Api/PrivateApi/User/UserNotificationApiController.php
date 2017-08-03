@@ -17,7 +17,7 @@ class UserNotificationApiController extends ApiController
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.user-notifications');
 	}
-	
+
 	public function get($id)
 	{
 		$user = User::fetch($id);
@@ -72,6 +72,10 @@ class UserNotificationApiController extends ApiController
 			->where('notifiable_type', 'App\\Models\\User')
 			->where('id', $notificationId)
 			->first();
+
+		if (!$notification) {
+			return $this->respondNotFound();
+		}
 
 		if (!$user->can('update', $notification)) {
 			return $this->respondUnauthorized();

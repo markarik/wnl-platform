@@ -39,7 +39,7 @@ class UserReactionsApiController extends ApiController
 		return $this->json(['reactions' => $data]);
 	}
 
-	public function getReactionsByCategory($id, $type = null)
+	public function getReactionsByCategory($id, $type)
 	{
 		$user = User::fetch($id);
 		if (!$user) {
@@ -52,10 +52,8 @@ class UserReactionsApiController extends ApiController
 
 		$reactablesBuilder = Reactable::where(['user_id' => $user->id]);
 
-		if ($type) {
-			$reaction = Reaction::type($type);
-			$reactablesBuilder->where('reaction_id', $reaction->id);
-		}
+		$reaction = Reaction::type($type);
+		$reactablesBuilder->where('reaction_id', $reaction->id);
 
 		$reactables = $reactablesBuilder->get();
 		$categories = Category::all();

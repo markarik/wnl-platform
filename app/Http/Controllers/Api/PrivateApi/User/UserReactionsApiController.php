@@ -39,7 +39,7 @@ class UserReactionsApiController extends ApiController
 		return $this->json(['reactions' => $data]);
 	}
 
-	public function getReactionsByCategory($id, $type = null)
+	public function getReactionsByCategory($id, $type)
 	{
 		$user = User::fetch($id);
 		if (!$user) {
@@ -52,24 +52,37 @@ class UserReactionsApiController extends ApiController
 
 		$reactablesBuilder = Reactable::where(['user_id' => $user->id]);
 
-		if ($type) {
-			$reaction = Reaction::type($type);
-			$reactablesBuilder->where('reaction_id', $reaction->id);
-		}
+		$reaction = Reaction::type($type);
+		$reactablesBuilder->where('reaction_id', $reaction->id);
 
 		$reactables = $reactablesBuilder->get();
 		$categories = Category::all();
 		$categorizedReactables = [];
 
-		foreach ($reactables as $reactable) {
-			$id = $reactable->reactable_id;
-			$type = $reactable->reactable_type;
-			$model = $type::find($id);
+		foreach ($categories as $category) {
+			$categorizedReactables[$category->name] = [];
+		}
 
-			foreach($categories as $category) {
-				$tag = Tag::where('name', $category->name)->first();
-				if ($model->tags->contains($tag)) {
-					$categorizedReactables[$category->name][] = $reactable;
+		$grouped = $reactables->groupBy('reactable_type');
+
+		foreach ($grouped as $key => $item) {
+			$grouped->{$key} = $item->keyBy('reactable_id');
+
+			$models = $key::with(['tags'])
+				->whereIn('id', $item->pluck('reactable_id'))
+				->get();
+
+			foreach ($models as $model) {
+				$grouped->{$key}[$model->id]->reactableTags = $model->tags->pluck('name');
+			}
+		}
+
+		foreach ($grouped->flatten() as $reactable) {
+			$tagNames = $reactable->reactableTags;
+
+			foreach ($tagNames as $tagName) {
+				if (array_key_exists($tagName, $categorizedReactables)) {
+					$categorizedReactables[$tagName][] = $reactable;
 				}
 			}
 		}

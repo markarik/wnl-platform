@@ -70,6 +70,9 @@ export const notification = {
 		hasContext() {
 			return !isEmpty(this.routeContext)
 		},
+		hasFullContext() {
+			return isObject(this.routeContext)
+		},
 		isRead() {
 			return !!this.message.read_at
 		},
@@ -98,9 +101,7 @@ export const notification = {
 	methods: {
 		...mapActions('notifications', ['markAsRead', 'markAsSeen']),
 		goToContext() {
-			if (this.message.deleted) {
-				return;
-			}
+			if (this.message.deleted) return
 
 			this.$emit('goingToContext')
 			if (typeof this.routeContext === 'object') {

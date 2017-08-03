@@ -12,6 +12,12 @@
 			</div>
 			<div v-else>
 				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="showRead = !showRead"/>
+				<div class="all-seen" v-if="unseenCount > 0">
+					<a v-if="!marking" class="link" @click="allSeen">
+						{{$t('notifications.markAllAsRead')}}
+					</a>
+					<span v-else class="loader"></span>
+				</div>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
@@ -45,6 +51,12 @@
 	.stream-feed
 		margin-top: $margin-base + $margin-small
 		margin-bottom: $margin-huge
+
+	.all-seen
+		align-items: center
+		display: flex
+		justify-content: center
+		margin-bottom: $margin-base
 
 	.stream-notifications
 		position: relative
@@ -105,6 +117,7 @@
 			return {
 				limit: 25,
 				filtering: 'all',
+				marking: false,
 				showRead: false,
 				StreamNotification,
 			}
@@ -117,7 +130,7 @@
 				'filterSlides',
 				'filterQna',
 				'filterQuiz',
-				'isLoading',
+				'getUnseen',
 				'loading',
 			]),
 			loading() {
@@ -131,18 +144,28 @@
 				}
 
 				if (!this.showRead) {
-					filtered = _.filter(filtered, (notification) => notification.read_at === null)
+					filtered = _.filter(filtered, (notification) => !notification.read_at)
 				}
 
 				return filtered
+			},
+			unseenCount() {
+				return _.size(this.getUnseen(this.channel))
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')
 			},
 		},
 		methods: {
+			...mapActions('notifications', ['markAllAsSeen']),
 			changeFiltering(filtering) {
 				this.filtering = filtering
+			},
+			allSeen() {
+				this.marking = true
+
+				this.markAllAsSeen(this.channel)
+					.then(() => this.marking = false)
 			},
 		},
 	}

@@ -1,4 +1,5 @@
 export const notifications = {
+	markAllAsRead: 'Oznacz wszystkie jako przeczytane',
 	context: {
 		lesson: 'w lekcji {lesson}',
 		quizQuestion: '#{id}',
@@ -29,7 +30,6 @@ export const notifications = {
 	},
 	personal: {
 		heading: 'Powiadomienia',
-		markAllAsRead: 'Oznacz wszystkie jako przeczytane',
 		showMore: 'Pokaż więcej',
 		thatsAll: 'To już wszystko!',
 		turnOff: 'Wycisz',

@@ -21,9 +21,10 @@ class AnswerPostedHandler
 		$answer = QnaAnswer::find($event->qnaAnswer->id);
 		$gate->notifyPrivate($user, $event);
 
-		$excluded = [$user->id];
+		$excluded = $this->notifyCollaborators($answer, $gate, $event);
+		$excluded->push($user->id);
+
 		$gate->notifyPrivateStream($excluded, $event);
-		$this->notifyCollaborators($answer, $gate, $event);
 	}
 
 	protected function notifyCollaborators($answer, $gate, $event)
@@ -39,5 +40,7 @@ class AnswerPostedHandler
 		foreach ($users as $user) {
 			$gate->notifyPrivate($user, $event);
 		}
+
+		return $users;
 	}
 }

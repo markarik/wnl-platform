@@ -22,9 +22,9 @@ class AnswerPostedHandler
 		$gate->notifyPrivate($user, $event);
 
 		$excluded = $this->notifyCollaborators($answer, $gate, $event);
-		$excluded->push($user->id);
+		$excluded->push($user);
 
-		$gate->notifyPrivateStream($excluded, $event);
+		$gate->notifyPrivateStream($excluded->pluck('id')->toArray(), $event);
 	}
 
 	protected function notifyCollaborators($answer, $gate, $event)

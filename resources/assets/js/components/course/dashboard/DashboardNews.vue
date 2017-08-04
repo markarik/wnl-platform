@@ -1,13 +1,13 @@
 <template>
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
-		<p class="strong">Cześć {{currentUserName}}!</p>
+		<p>Za nami już ponad połowa kursu i jesteśmy bardzo ciekawi Waszych opinii! Wasze odpowiedzi w pierwszej ankiecie były dla nas niezwykle pomocne. <wnl-emoji name="bar_chart"/></p>
 
-		<p>Nagrania z warsztatów z Interny są już dostępne! Wrzuciliśmy je na YouTube jako prywatne nagrania. <wnl-emoji name="tv"/></p>
+		<p>Dziś ponownie prosimy Cię o pomoc. Do końca kursu zostało jeszcze sporo czasu i chcielibyśmy jak najwięcej zrobić, aby odpowiedzieć na Wasze potrzeby i problemy. Będziemy wdzięczni, jeżeli poświęcisz kilka minut na odpowiedzenie na 15&nbsp;krótkich&nbsp;pytań.&nbsp;<wnl-emoji name="wink"/></p>
 
-		<p>Aby uzyskać do nich dostęp, napiszcie do nas na warsztaty@wiecejnizlek.pl lub na facebooku wysyłając swój <strong>adres e-mail, którego używacie na YouTube</strong>. Inne maile niestety nie zadziałają, sprawdziliśmy to. <wnl-emoji name="wink"/></p>
+		<p class="has-text-centered"><a class="button is-primary is-outlined is-small" href="https://goo.gl/forms/myBvbDblkFiE4r623">Przejdź do ankiety</a></p>
 
-		<p>Do zobaczenia!</p>
+		<p>Dziękujemy!</p>
 	</div>
 </template>
 
@@ -15,8 +15,8 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'workshop-movie'
-	const REQUIRED_ROLE = 'workshop-participant'
+	const CURRENT_NEWS = 'survey-2'
+	const REQUIRED_ROLE = ''
 
 	export default {
 		name: 'DashboardNews',

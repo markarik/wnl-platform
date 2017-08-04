@@ -96,6 +96,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Comment');
 	}
 
+	public function qnaAnswers()
+	{
+		return $this->hasMany('App\Models\QnaAnswer');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */

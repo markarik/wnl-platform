@@ -119,12 +119,19 @@ const actions = {
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
+			.catch((error) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'})
+			})
 	},
 	markAsSeen({commit, getters, rootGetters}, {notification, channel}) {
 		return _updateNotification(rootGetters.currentUserId, notification.id, {'seen_at': 'now'})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.seen_at, field: 'seen_at'})
 			})
+			.catch((error) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'})
+			})
+
 	},
 	markAsUnread({commit, getters, rootGetters}, {notification, channel}) {
 		return _updateNotification(rootGetters.currentUserId, notification.id, {'read_at': null})

@@ -20,7 +20,7 @@
 				</div>
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
-				<span v-if="hasContext" class="icon" :class="{'unseen': !isSeen}" @click="markAsSeenAndGo">
+				<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}" @click="markAsSeenAndGo">
 					<span v-if="loading" class="loader"></span>
 					<i v-else class="fa fa-angle-right"></i>
 				</span>
@@ -99,10 +99,11 @@
 			margin-bottom: $margin-tiny
 
 		.subject
-			border-left: $border-thick solid $color-inactive-gray
+			border-left: 2px solid $color-inactive-gray
 			font-size: $font-size-base
 			margin-top: $margin-base
 			padding-left: $margin-medium
+			padding-bottom: $margin-tiny
 
 			&.unseen
 				border-color: $color-ocean-blue
@@ -143,6 +144,10 @@
 			&.unseen
 				border-color: $color-ocean-blue
 				color: $color-ocean-blue
+
+			&.go-to-link
+				.fa
+					padding: 0 0 $margin-tiny 1px
 
 			&.toggle-hidden
 				margin-top: $margin-base

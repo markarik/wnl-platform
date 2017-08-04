@@ -128,6 +128,10 @@ const actions = {
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.seen_at, field: 'seen_at'})
 			})
+			.catch((error) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'})
+			})
+
 	},
 	markAllAsSeen({commit, getters, rootGetters}, channel) {
 		let data = _.mapValues(getters.getUnseen(channel), (notification) => {

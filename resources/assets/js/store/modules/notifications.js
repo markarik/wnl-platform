@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl, envValue as env} from 'js/utils/env'
-import {set} from 'vue'
+import {set, delete as destroy} from 'vue'
 
 const namespaced = true
 
@@ -58,7 +58,7 @@ const getters = {
 	},
 	getOldestNotification: (state, getters) => (channel) => {
 		return _.last(getters.getSortedNotifications(channel))
-	}
+	},
 }
 
 const mutations = {
@@ -119,12 +119,19 @@ const actions = {
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
+			.catch((error) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'})
+			})
 	},
 	markAsSeen({commit, getters, rootGetters}, {notification, channel}) {
 		return _updateNotification(rootGetters.currentUserId, notification.id, {'seen_at': 'now'})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.seen_at, field: 'seen_at'})
 			})
+			.catch((error) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'})
+			})
+
 	},
 	markAllAsSeen({commit, getters, rootGetters}, channel) {
 		let data = _.mapValues(getters.getUnseen(channel), (notification) => {

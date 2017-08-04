@@ -1,29 +1,32 @@
 <template>
-	<div class="stream-notification" @click="markAsReadAndGo">
-		<div class="meta">
-			<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
-			<span class="icon is-small"><i class="fa" :class="icon"></i></span>
-			<span class="meta-time">{{justDate}}</span>
-			<span class="meta-time">{{justTime}}</span>
-		</div>
-		<div class="notification-content">
-			<div class="notification-header">
-				<span class="actor">{{ message.actors.full_name }}</span>
-				<span class="action">{{ action }}</span>
-				<span class="object">{{ object }}</span>
-				<span class="context">{{ contextInfo }}</span>
+	<div class="notification-wrapper">
+		<div class="stream-notification" @click="markAsReadAndGo" :class="{'deleted': deleted}">
+			<div class="meta">
+				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
+				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
+				<span class="meta-time">{{justDate}}</span>
+				<span class="meta-time">{{justTime}}</span>
 			</div>
-			<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
-			<div class="subject wrap" :class="{'unread': !isRead}" v-if="subjectText">{{ subjectText }}</div>
-			<div class="time">
+			<div class="notification-content">
+				<div class="notification-header">
+					<span class="actor">{{ message.actors.full_name }}</span>
+					<span class="action">{{ action }}</span>
+					<span class="object">{{ object }}</span>
+					<span class="context">{{ contextInfo }}</span>
+				</div>
+				<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
+				<div class="subject wrap" :class="{'unread': !isRead}" v-if="subjectText">{{ subjectText }}</div>
+				<div class="time">
+				</div>
+			</div>
+			<div class="link-symbol">
+				<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
+					<i v-if="loading" class="loader"></i>
+					<i v-else class="fa fa-angle-right"></i>
+				</span>
 			</div>
 		</div>
-		<div class="link-symbol">
-			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
-				<i v-if="loading" class="loader"></i>
-				<i v-else class="fa fa-angle-right"></i>
-			</span>
-		</div>
+		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
 	</div>
 </template>
 
@@ -112,7 +115,6 @@
 
 			&.unread
 				color: $color-ocean-blue
-
 </style>
 
 <script>

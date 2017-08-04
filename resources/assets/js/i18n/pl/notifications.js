@@ -11,6 +11,9 @@ export const notifications = {
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
 	},
+	messages: {
+		deleted: 'Treść usunięta przez autora'
+	},
 	moderators: {
 		cta: 'Jedziesz szwagier!',
 		fromOldest: 'Od najstarszych',

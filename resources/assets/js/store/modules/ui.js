@@ -10,6 +10,7 @@ const state = {
 	navigationToggleState: {},
 	overlays: {},
 	overviewView: 'stream',
+	globalNotification: false
 }
 
 const layouts = {
@@ -48,6 +49,8 @@ const getters = {
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
 	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex],
 	overviewView: state => state.overviewView,
+	globalNotificationMessage: state => state.globalNotification.message,
+	globalNotificationType: state => state.globalNotification.type
 }
 
 // Mutations
@@ -102,6 +105,9 @@ const mutations = {
 	[types.UI_CHANGE_OVERVIEW_VIEW] (state, view) {
 		set(state, 'overviewView', view)
 	},
+	[types.UI_SHOW_GLOBAL_NOTIFICATION] (state, globalNotification) {
+		set(state, 'globalNotification', globalNotification)
+	}
 }
 
 // Actions
@@ -136,6 +142,13 @@ const actions = {
 	changeOverviewView({commit}, view) {
 		commit(types.UI_CHANGE_OVERVIEW_VIEW, view)
 	},
+	showNotification({commit}, {type = 'success', message, timeout = 3000}) {
+		commit(types.UI_SHOW_GLOBAL_NOTIFICATION, {type, message})
+
+		setTimeout(() => {
+			commit(types.UI_SHOW_GLOBAL_NOTIFICATION, false)
+		}, timeout)
+	}
 }
 
 export default {
@@ -144,3 +157,8 @@ export default {
 	mutations,
 	actions
 }
+
+export const GLOBAL_NOTIFICATION_TYPES = {
+	INFO: 'info'
+}
+

@@ -45,6 +45,7 @@
 	import { mapGetters, mapActions } from 'vuex'
 	import axios from 'axios';
 	import {getApiUrl} from 'js/utils/env';
+	import sessionStore from 'js/services/sessionStore';
 
 	export default {
 		name: 'App',
@@ -73,6 +74,8 @@
 		},
 		mounted() {
 			this.toggleOverlay({source: 'course', display: true})
+			sessionStore.clearAll()
+
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
 					window.setInterval(() => {

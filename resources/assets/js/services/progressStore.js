@@ -9,32 +9,13 @@ export const STATUS_COMPLETE = 'complete';
 
 const CACHE_VERSION = 1;
 
-const setCourseProgress = ({courseId, lessonId, ...props}) => {
-	const key = getCourseStoreKey(courseId);
-	const courseProgress = store.get(key) || {};
-
-	const updatedCourseProgress = {
-		...courseProgress,
-		lessons: {
-			...courseProgress.lessons,
-			[lessonId]: {
-				...props
-			}
-		}
-	};
-
-	store.set(key, updatedCourseProgress);
-
+const setCourseProgress = ({courseId, lessonId, ...props}, value) => {
 	getCurrentUser().then(({data: {id}}) => {
-		axios.put(getApiUrl(`users/${id}/state/course/${courseId}`), updatedCourseProgress);
+		axios.put(getApiUrl(`users/${id}/state/course/${courseId}`), value);
 	})
 };
 
 const setLessonProgress = ({courseId, lessonId}, value) => {
-	const key = getLessonStoreKey(courseId, lessonId);
-
-	store.set(key, value);
-
 	getCurrentUser().then(({data: {id}}) => {
 		axios.put(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
 			lesson: value
@@ -42,7 +23,7 @@ const setLessonProgress = ({courseId, lessonId}, value) => {
 	})
 };
 
-const completeSection = (lessonState, {screenId, sectionId, route}) => {
+const completeSection = (lessonState, {screenId, sectionId, route, ...payload}) => {
 	const updatedState = lessonState ? {...lessonState} : {};
 
 	updatedState.route = route;
@@ -66,10 +47,12 @@ const completeSection = (lessonState, {screenId, sectionId, route}) => {
 		}
 	}
 
+	setLessonProgress(payload, updatedState)
+
 	return updatedState;
 };
 
-const completeScreen = (lessonState, {screenId, route}) => {
+const completeScreen = (lessonState, {screenId, route, ...payload}) => {
 	const updatedState = {...lessonState};
 
 	updatedState.route = route;
@@ -78,99 +61,89 @@ const completeScreen = (lessonState, {screenId, route}) => {
 	updatedState.screens[screenId] = updatedState.screens[screenId] || {};
 	updatedState.screens[screenId].status = STATUS_COMPLETE;
 
+
+	setLessonProgress(payload, updatedState)
+
 	return updatedState;
 };
 
-const completeLesson = (lessonState, payload) => {
-	return {
+const completeLesson = (courseState, payload) => {
+	const lessonState = courseState.lessons[payload.lessonId];
+	const updatedLessonState = {
 		...lessonState,
 		status: STATUS_COMPLETE,
 		route: payload.route
 	};
+	const updatedCourseState = {
+		...courseState,
+		lessons: {
+			...courseState.lessons,
+			[payload.lessonId]: {
+				status: STATUS_COMPLETE
+			}
+		}
+	}
+
+
+	setLessonProgress(payload, updatedLessonState)
+	setCourseProgress(payload, updatedCourseState)
+
+	return updatedLessonState
 };
 
-const startLesson = (lessonState, {route, ...payload}) => {
-	const updatedState = {
+const startLesson = (courseState, payload) => {
+	const lessonState = courseState.lessons[payload.lessonId];
+	const updatedLessonState = {
 		...lessonState,
 		status: STATUS_IN_PROGRESS,
-		route
+		route: payload.route
 	};
+	const updatedCourseState = {
+		...courseState,
+		lessons: {
+			...courseState.lessons,
+			[payload.lessonId]: {
+				status: STATUS_IN_PROGRESS
+			}
+		}
+	}
 
-	setLessonProgress(payload, updatedState);
-	return updatedState;
-};
 
-const resetLessonProgress = ({courseId, lessonId}) => {
-	const key = getLessonStoreKey(courseId, lessonId);
+	setLessonProgress(payload, updatedLessonState)
+	setCourseProgress(payload, updatedCourseState)
 
-	store.remove(key);
-
-	getCurrentUser().then(({data: {id}}) => {
-		axios.delete(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
-	});
+	return updatedLessonState
 };
 
 const getCourseProgress = ({courseId}) => {
-	const key = getCourseStoreKey(courseId);
-	const localStorageValue = store.get(key);
-
-	if (typeof localStorageValue !== 'object') {
-		return new Promise((resolve) => {
-			getCurrentUser()
-				.then(({data: {id}}) => {
-					return axios.get(getApiUrl(`users/${id}/state/course/${courseId}`));
+	return new Promise((resolve) => {
+		getCurrentUser()
+			.then(({data: {id}}) => {
+				return axios.get(getApiUrl(`users/${id}/state/course/${courseId}`));
+			})
+			.then(({data: {lessons} = {}}) => {
+				return resolve({
+					lessons
 				})
-				.then(({data: {lessons} = {}}) => {
-					store.set(key, {
-						lessons
-					});
-
-					return resolve({
-						lessons
-					})
-				});
-		});
-	} else {
-		return Promise.resolve(localStorageValue);
-	}
+			});
+	});
 };
 
 const getLessonProgress = ({courseId, lessonId}) => {
-	const lessonStoreKey = getLessonStoreKey(courseId, lessonId);
-	const localStorageValue = store.get(lessonStoreKey);
-
-	if (typeof localStorageValue !== 'object') {
-		return new Promise((resolve) => {
-			getCurrentUser()
-				.then(({data: {id}}) => {
-					return axios.get(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
-				})
-				.then(({data: {lesson}} = {}) => {
-					store.set(lessonStoreKey, lesson);
-
-					return resolve(lesson)
-				});
-		});
-	} else {
-		return Promise.resolve(localStorageValue);
-	}
+	return new Promise((resolve) => {
+		getCurrentUser()
+			.then(({data: {id}}) => {
+				return axios.get(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
+			})
+			.then(({data: {lesson}} = {}) => {
+				return resolve(lesson)
+			});
+	});
 };
-
-const getLessonStoreKey = (courseId, lessonId) => {
-	return `progress-courses-${courseId}-lessons-${lessonId}-${CACHE_VERSION}`
-};
-
-const getCourseStoreKey = (courseId) => {
-	return `progress-courses-${courseId}-${CACHE_VERSION}`
-};
-
 
 export default {
 	getCourseProgress,
-	setCourseProgress,
 	getLessonProgress,
-	setLessonProgress,
-	resetLessonProgress,
 	completeSection,
 	completeScreen,
 	completeLesson,

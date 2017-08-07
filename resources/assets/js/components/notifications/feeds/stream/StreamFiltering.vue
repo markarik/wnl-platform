@@ -102,7 +102,7 @@
 				return filteringOptions
 			},
 			buttonMessage() {
-				return this.showRead ? this.$t('notifications.stream.hideRead') : this.$t('notifications.stream.showRead')
+				return this.showRead ? this.$t('notifications.stream.showUnread') : this.$t('notifications.stream.showRead')
 			},
 		},
 		methods: {

@@ -1,19 +1,10 @@
 <template>
 	<div class="stream-feed">
 		<div v-if="!loading">
-			<div class="zero-state" v-if="isEmpty">
-				<img class="zero-state-image"
-					:alt="$t('notifications.personal.zeroStateImage')"
-					:src="zeroStateImage"
-					:title="$t('notifications.personal.zeroStateImage')">
-				<p class="zero-state-text">
-					{{$t('notifications.stream.zeroState')}}
-				</p>
-			</div>
-			<div v-else>
-				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="showRead = !showRead"/>
-				<div class="all-seen" v-if="unseenCount > 0">
-					<a v-if="!marking" class="link" @click="allSeen">
+			<div>
+				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
+				<div class="all-seen" v-if="unreadCount > 0">
+					<a v-if="!marking" class="link" @click="allRead">
 						{{$t('notifications.markAllAsRead')}}
 					</a>
 					<span v-else class="loader"></span>
@@ -35,7 +26,7 @@
 					>
 						{{$t('notifications.personal.showMore')}}
 					</a>
-					<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
+					<span v-else class="small text-dimmed has-text-centered">
 						{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
 					</span>
 				</div>
@@ -130,7 +121,8 @@
 				'filterSlides',
 				'filterQna',
 				'filterQuiz',
-				'getUnseen',
+				'getUnread',
+				'getRead',
 				'loading',
 			]),
 			loading() {
@@ -143,30 +135,40 @@
 					filtered = this[`filter${_.upperFirst(this.filtering)}`](this.channel)
 				}
 
-				if (!this.showRead) {
-					filtered = _.filter(filtered, (notification) => !notification.read_at)
-				}
+				filtered = _.filter(filtered, (notification) => this.showRead ? notification.read_at : !notification.read_at)
 
 				return filtered
 			},
-			unseenCount() {
-				return _.size(this.getUnseen(this.channel))
+			unreadCount() {
+				return _.size(this.getUnread(this.channel))
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')
 			},
+			notificationsParams() {
+				return {
+					unread: !this.showRead
+				}
+			},
 		},
 		methods: {
-			...mapActions('notifications', ['markAllAsSeen']),
+			...mapActions('notifications', ['markAllAsRead']),
 			changeFiltering(filtering) {
 				this.filtering = filtering
 			},
-			allSeen() {
+			allRead() {
 				this.marking = true
 
-				this.markAllAsSeen(this.channel)
+				this.markAllAsRead(this.channel)
 					.then(() => this.marking = false)
 			},
+			toggleShowRead() {
+				this.showRead = !this.showRead
+
+				if (this.showRead && !_.size(this.getRead(this.channel))) {
+					this.loadMore()
+				}
+			}
 		},
 	}
 </script>

@@ -24,11 +24,6 @@ class Slide extends Model
 		return $this->morphedByMany('\App\Models\Category', 'presentable');
 	}
 
-	public function screens()
-	{
-		return $this->morphedByMany('\App\Models\Screen', 'presentable');
-	}
-
 	public function sections()
 	{
 		return $this->morphedByMany('\App\Models\Section', 'presentable');

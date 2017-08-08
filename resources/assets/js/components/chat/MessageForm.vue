@@ -38,10 +38,10 @@
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
 	.media
-		align-items: center;
+		align-items: center
 </style>
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 
@@ -63,7 +63,8 @@
 							}
 						}
 					}
-				}
+				},
+				isWaitingToSendMentions: false
 			}
 		},
 		components: {
@@ -90,11 +91,13 @@
 			}
 		},
 		methods: {
+			...mapActions(['saveMentions']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
 				}
 				this.error = ''
+				this.isWaitingToSendMentions = true
 				this.socket.emit('send-message', {
 					room: this.room,
 					message: {
@@ -103,16 +106,37 @@
 					}
 				})
 			},
+			getMentions() {
+				const mentions = this.quillEditor
+					.$el
+					.querySelectorAll('.quill-mention')
+
+				return Array.prototype.map.call(mentions, el => el.dataset.id)
+			},
+			getMentionsData(userIds, message) {
+				return {
+					mentioned_users: userIds,
+					subject: {
+						type: 'chat_message',
+						id,
+						text: message,
+						channel: this.room
+					}
+				}
+			},
 			suppressEnter(event) {
 				event.preventDefault()
 			},
 			setListeners() {
 				this.socket.on('message-processed', (data) => {
+					debugger
 					if (data.sent) {
 						this.quillEditor.quill.deleteText(0, this.content.length);
+						this.saveMentions(this.getMentions())
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
+					this.isWaitingToSendMentions = false
 				})
 			},
 			onInput(input) {

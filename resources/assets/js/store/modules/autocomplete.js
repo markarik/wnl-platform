@@ -26,7 +26,7 @@ function getUserSearchConditions(data) {
 		['last_name', 'like', `%${data.lastName}%`]
 	)
 
-	return { query: { where } }
+	return { query: { where }, limit: [5, 0] }
 }
 
 // Actions

@@ -10,6 +10,14 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
+
+	.quill-container
+		position: relative
+
+	.quill-mention
+		background: #eee
+		border: 1px solid #ddd
+		padding: 3px
 </style>
 
 <script>

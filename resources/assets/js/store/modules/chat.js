@@ -53,6 +53,10 @@ const actions = {
 			$wnl.logger.debug('Joined chat room', data)
 			socket.emit('join-room', 1);
 		})
+	},
+
+	saveMentions({}, data) {
+		//ToDo
 	}
 }
 

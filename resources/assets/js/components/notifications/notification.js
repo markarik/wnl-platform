@@ -61,17 +61,20 @@ export const notification = {
 
 			return ''
 		},
+		deleted() {
+			return !!this.message.deleted
+		},
 		formattedTime () {
 			return timeFromS(this.message.timestamp)
 		},
 		hasContext() {
 			return !isEmpty(this.routeContext)
 		},
+		hasFullContext() {
+			return isObject(this.routeContext)
+		},
 		isRead() {
 			return !!this.message.read_at
-		},
-		deleted() {
-			return !!this.message.deleted
 		},
 		isSeen() {
 			return !!this.message.seen_at
@@ -96,11 +99,9 @@ export const notification = {
 		}
 	},
 	methods: {
-		...mapActions('notifications', ['markAsRead']),
+		...mapActions('notifications', ['markAsRead', 'markAsSeen']),
 		goToContext() {
-			if (this.message.deleted) {
-				return;
-			}
+			if (this.message.deleted) return
 
 			this.$emit('goingToContext')
 			if (typeof this.routeContext === 'object') {

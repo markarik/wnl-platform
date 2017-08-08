@@ -48,7 +48,7 @@
 				</div>
 
 				<div class="personal-feed-footer" v-if="unreadCount > 0">
-					<a class="link" @click="allRead">{{$t('notifications.personal.markAllAsRead')}}</a>
+					<a class="link" @click="allRead">{{$t('notifications.markAllAsRead')}}</a>
 					<span v-if="allReadLoading" class="loader"></span>
 				</div>
 			</div>

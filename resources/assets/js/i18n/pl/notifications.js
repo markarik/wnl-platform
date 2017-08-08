@@ -1,4 +1,5 @@
 export const notifications = {
+	markAllAsRead: 'Ukryj wszystkie dyskusje',
 	context: {
 		lesson: 'w lekcji {lesson}',
 		quizQuestion: '#{id}',
@@ -29,7 +30,6 @@ export const notifications = {
 	},
 	personal: {
 		heading: 'Powiadomienia',
-		markAllAsRead: 'Oznacz wszystkie jako przeczytane',
 		showMore: 'Pokaż więcej',
 		thatsAll: 'To już wszystko!',
 		turnOff: 'Wycisz',
@@ -38,6 +38,8 @@ export const notifications = {
 		zeroStateImage: 'Włącz się do dyskusji',
 	},
 	stream: {
+		showRead: 'Pokaż ukryte',
+		showUnread: 'Pokaż aktywne',
 		zeroState: 'Tu powiadomimy Cię o wszystkich dyskusjach, które toczą się w ramach kursu - zaglądaj tu często, a nie umkną Ci żadne wydarzenia!',
 	},
 }

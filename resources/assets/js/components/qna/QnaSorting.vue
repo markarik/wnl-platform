@@ -31,6 +31,9 @@
 	.qna-sorting
 		margin-bottom: $margin-base
 
+		.tabs
+			font-size: $font-size-minus-1
+
 	.is-active
 		font-weight: $font-weight-regular
 </style>

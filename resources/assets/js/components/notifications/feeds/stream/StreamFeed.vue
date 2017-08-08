@@ -1,17 +1,8 @@
 <template>
 	<div class="stream-feed">
 		<div v-if="!loading">
-			<div class="zero-state" v-if="isEmpty">
-				<img class="zero-state-image"
-					:alt="$t('notifications.personal.zeroStateImage')"
-					:src="zeroStateImage"
-					:title="$t('notifications.personal.zeroStateImage')">
-				<p class="zero-state-text">
-					{{$t('notifications.stream.zeroState')}}
-				</p>
-			</div>
-			<div v-else>
-				<wnl-stream-filtering @changeFiltering="changeFiltering"/>
+			<div>
+				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
@@ -22,6 +13,12 @@
 						v-if="hasComponentForEvent(message)"
 					/>
 				</div>
+				<div class="all-seen" v-if="!showRead && unreadCount > 0">
+					<a v-if="!marking" class="link" @click="allRead">
+						{{$t('notifications.markAllAsRead')}}
+					</a>
+					<span v-else class="loader"></span>
+				</div>
 				<div class="show-more">
 					<a v-if="canShowMore" class="button is-small is-outlined"
 						:class="{'is-loading': fetching}"
@@ -29,7 +26,7 @@
 					>
 						{{$t('notifications.personal.showMore')}}
 					</a>
-					<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
+					<span v-else class="small text-dimmed has-text-centered">
 						{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
 					</span>
 				</div>
@@ -45,6 +42,14 @@
 	.stream-feed
 		margin-top: $margin-base + $margin-small
 		margin-bottom: $margin-huge
+
+	.all-seen
+		align-items: center
+		display: flex
+		font-size: $font-size-minus-2
+		justify-content: flex-end
+		margin-bottom: $margin-base
+		text-transform: uppercase
 
 	.stream-notifications
 		position: relative
@@ -103,8 +108,10 @@
 		},
 		data() {
 			return {
-				limit: 25,
+				limit: 100,
 				filtering: 'all',
+				marking: false,
+				showRead: false,
 				StreamNotification,
 			}
 		},
@@ -116,24 +123,54 @@
 				'filterSlides',
 				'filterQna',
 				'filterQuiz',
-				'isLoading',
+				'getUnread',
+				'getRead',
 				'loading',
 			]),
 			loading() {
 				return this.totalNotifications === 0 && this.fetching
 			},
 			filtered() {
-				if (this.filtering === 'all') return this.notifications
-				return this[`filter${_.upperFirst(this.filtering)}`](this.channel)
+				let filtered = this.notifications
+
+				if (this.filtering !== 'all') {
+					filtered = this[`filter${_.upperFirst(this.filtering)}`](this.channel)
+				}
+
+				filtered = _.filter(filtered, (notification) => this.showRead ? notification.read_at : !notification.read_at)
+
+				return filtered
+			},
+			unreadCount() {
+				return _.size(this.getUnread(this.channel))
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')
 			},
+			notificationsParams() {
+				return {
+					unread: !this.showRead
+				}
+			},
 		},
 		methods: {
+			...mapActions('notifications', ['markAllAsRead']),
 			changeFiltering(filtering) {
 				this.filtering = filtering
 			},
+			allRead() {
+				this.marking = true
+
+				this.markAllAsRead(this.channel)
+					.then(() => this.marking = false)
+			},
+			toggleShowRead() {
+				this.showRead = !this.showRead
+
+				if (this.showRead && !_.size(this.getRead(this.channel))) {
+					this.loadMore()
+				}
+			}
 		},
 	}
 </script>

@@ -178,7 +178,6 @@
 			},
 		},
 		methods: {
-			...mapActions('notifications', ['markAsSeen', 'markAsRead']),
 			dispatchMarkAsRead() {
 				this.loading = true
 				this.markAsRead({notification: this.message, channel: this.channel})

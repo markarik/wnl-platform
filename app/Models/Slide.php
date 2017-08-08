@@ -69,6 +69,15 @@ class Slide extends Model
 			$section = $this->sections->first();
 			$screen = $section->screen;
 			$lesson = $screen->lesson;
+			$group = $lesson->group;
+
+			// psay ay ay...
+			if (!$lesson->isAvailable(1)) {
+				dump('lesson not available', $lesson->id);
+				$this->unsearchable();
+				return [];
+			}
+
 			$orderNumber = (int) Presentable::where([
 				['presentable_type', '=', 'App\\Models\\Section'],
 				['slide_id', '=', $this->id],
@@ -81,7 +90,6 @@ class Slide extends Model
 			$model['context']['group']['id'] = $lesson->group->id;
 			$model['context']['course']['id'] = $lesson->group->course->id;
 			$model['context']['orderNumber'] = $orderNumber;
-			// TODO check if lesson available and if not - remove from index
 		} else {
 			$this->unsearchable();
 			return [];

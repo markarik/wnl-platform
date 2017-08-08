@@ -77,7 +77,7 @@
 			goToResult({context}) {
 				this.hideOverlay()
 
-				this.$router.replace({
+				this.$router.push({
 					name: 'screens',
 					params: {
 						courseId: context.course.id,

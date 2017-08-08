@@ -1,15 +1,15 @@
 <template lang="html">
 	<div class="wnl-slides-search">
-		<div class="slide-thumb" :key="index" v-for="(slide, index) in slides">
+		<div class="slide-thumb" :key="index" v-for="(slide, index) in slides" @click="emitResultClicked(slide)">
 			<div class="thumb-meta">
 				<span class="icon is-tiny" v-if="slide.media"><i class="fa" :class="slide.media.icon"></i></span>
 			</div>
 			<p class="thumb-heading metadata" v-html="slide.header"></p>
 			<div class="slide-snippet" v-html="slide.snippet"></div>
 			<div class="slide-snippet has-media" v-if="slide.media">
-						<span class="icon is-tiny">
-							<i class="fa" :class="slide.media.icon"></i>
-						</span>
+				<span class="icon is-tiny">
+					<i class="fa" :class="slide.media.icon"></i>
+				</span>
 				{{ slide.media.text }}
 			</div>
 			<div class="shadow"></div>
@@ -107,8 +107,9 @@
 		computed: {
 			slides() {
 				return this.hits.map((hit) => ({
-					header: this.tryThis(() => hit.highlight['snippet.header']) || hit._source.snippet.header,
-					snippet: this.tryThis(() => hit.highlight['snippet.content']) || hit._source.snippet.content,
+					header: this.getHighlight(hit, 'snippet.header') || hit._source.snippet.header,
+					snippet: this.getHighlight(hit, 'snippet.content') || hit._source.snippet.content,
+					context: hit._source.context,
 					media: hit._source.snippet.media !== null ? mediaMap[hit._source.snippet.media] : null,
 					content: hit._source.content,
 					id: hit._source.id
@@ -129,17 +130,17 @@
 							this.hits = response.data.hits.hits
 						})
 			},
-			tryThis(callback) {
-				try {
-					let result = callback()
-					if (Array.isArray(result)) {
-						return result.join(' ... ')
-					}
-					return result
-				} catch (e) {
-					console.log(e)
-					return false
+			getHighlight(hit, key) {
+				const highlight = _.get(hit, `highlight["${key}"]`)
+
+				if (Array.isArray(highlight)) {
+					return highlight.join('...')
 				}
+
+				return highlight
+			},
+			emitResultClicked(result) {
+				this.$emit('resultClicked', result)
 			}
 		},
 		watch: {

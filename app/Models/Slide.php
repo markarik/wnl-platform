@@ -6,6 +6,7 @@ use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Facades\Lib\SlideParser\Parser;
 use Laravel\Scout\Searchable;
+use App\Models\Presentable;
 
 class Slide extends Model
 {
@@ -62,16 +63,28 @@ class Slide extends Model
 	 public function toSearchableArray()
 	{
 		$model = $this->toArray();
+		$model['context'] = [];
 
 		if (!empty($this->sections) && !empty($this->sections->first())) {
 			$section = $this->sections->first();
 			$screen = $section->screen;
 			$lesson = $screen->lesson;
-			$model['section']['id'] = $section->name;
-			$model['section']['id'] = $section->id;
-			$model['screen']['id'] = $screen->id;
-			$model['lesson']['id'] = $lesson->id;
-			$model['group']['id'] = $lesson->group->id;
+			$orderNumber = (int) Presentable::where([
+				['presentable_type', '=', 'App\\Models\\Section'],
+				['slide_id', '=', $this->id],
+			])->first()->order_number;
+
+			$model['context']['section']['id'] = $section->name;
+			$model['context']['section']['id'] = $section->id;
+			$model['context']['screen']['id'] = $screen->id;
+			$model['context']['lesson']['id'] = $lesson->id;
+			$model['context']['group']['id'] = $lesson->group->id;
+			$model['context']['course']['id'] = $lesson->group->course->id;
+			$model['context']['orderNumber'] = $orderNumber;
+			// TODO check if lesson available and if not - remove from index
+		} else {
+			$this->unsearchable();
+			return [];
 		}
 
 		return $model;

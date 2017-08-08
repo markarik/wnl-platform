@@ -4,13 +4,13 @@
 			<i class="fa fa-search"></i>
 		</span>
 
-		<div class="wnl-overlay" v-if="active">
+		<div class="wnl-overlay" v-show="active">
 			<input type="text"
-				   ref="must"
-				   v-model="phrase"
-				   placeholder="Szukaj...">
-
-			<wnl-slides-search :phrase="phrase" />
+				placeholder="Szukaj..."
+				@input="debounceInput"
+				ref="input"
+			>
+			<wnl-slides-search :phrase="phrase" @resultClicked="goToResult" />
 		</div>
 	</div>
 </template>
@@ -55,9 +55,7 @@
 		methods: {
 			showOverlay() {
 				this.active = true
-				this.$nextTick(() => {
-					this.$refs.must.focus()
-				})
+				this.$nextTick(() => this.$refs.input.focus())
 			},
 			hideOverlay() {
 				this.active = false
@@ -72,10 +70,29 @@
 				if (e.keyCode === 27) {
 					this.hideOverlay()
 				}
+			},
+			debounceInput: _.debounce(function({target: {value}}) {
+				this.phrase = value
+			}, 500),
+			goToResult({context}) {
+				this.hideOverlay()
+
+				this.$router.replace({
+					name: 'screens',
+					params: {
+						courseId: context.course.id,
+						lessonId: context.lesson.id,
+						screenId: context.screen.id,
+						slide: context.orderNumber + 1
+					}
+				})
 			}
 		},
 		mounted() {
 			window.addEventListener('keydown', this.keyDown)
+		},
+		beforeDestroy() {
+			window.removeEventListener('keydown', this.keyDown)
 		}
 	};
 </script>

@@ -19,12 +19,20 @@
 				<div class="time">
 				</div>
 			</div>
-			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
-				<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}" @click="markAsSeenAndGo">
-					<span v-if="loading" class="loader"></span>
-					<i v-else class="fa fa-angle-right"></i>
-				</span>
-				<span class="icon is-small toggle-hidden" @click="toggleNotification">
+			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}" @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
+				<router-link v-if="hasFullContext" :to="routeContext">
+					<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+						<span v-if="loading" class="loader"></span>
+						<i v-else class="fa fa-angle-right"></i>
+					</span>
+				</router-link>
+				<a v-else :href="routeContext">
+					<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+						<span v-if="loading" class="loader"></span>
+						<i v-else class="fa fa-angle-right"></i>
+					</span>
+				</a>
+				<span class="icon is-small toggle-hidden" :title="$t('notifications.stream.hideNotification')" @click="toggleNotification">
 					<span v-if="loading" class="loader"></span>
 					<i v-else class="fa" :class="isRead ? 'fa-eye' : 'fa-eye-slash'"></i>
 				</span>
@@ -202,10 +210,6 @@
 		},
 		methods: {
 			...mapActions('notifications', ['markAsUnread']),
-			dispatchGoToContext() {
-				this.goToContext()
-				this.loading = false
-			},
 			toggleNotification() {
 				this.loading = true
 
@@ -217,7 +221,7 @@
 				return this.markAsRead({notification: this.message, channel: this.channel})
 					.then(() => this.loading = false)
 			},
-			markAsSeenAndGo() {
+			dispatchMarkAsSeen() {
 				if(!this.hasContext) return false;
 
 				this.loading = true
@@ -225,10 +229,10 @@
 				if (!this.isSeen) {
 					this.markAsSeen({notification: this.message, channel: this.channel})
 						.then(() => {
-							this.dispatchGoToContext()
+							this.loading = false
 						})
 				} else {
-					this.dispatchGoToContext()
+					this.loading = false
 				}
 			},
 		},

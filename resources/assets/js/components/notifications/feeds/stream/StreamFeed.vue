@@ -3,12 +3,6 @@
 		<div v-if="!loading">
 			<div>
 				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
-				<div class="all-seen" v-if="!showRead && unreadCount > 0">
-					<a v-if="!marking" class="link" @click="allRead">
-						{{$t('notifications.markAllAsRead')}}
-					</a>
-					<span v-else class="loader"></span>
-				</div>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
@@ -18,6 +12,12 @@
 						v-for="(message, id) in filtered"
 						v-if="hasComponentForEvent(message)"
 					/>
+				</div>
+				<div class="all-seen" v-if="!showRead && unreadCount > 0">
+					<a v-if="!marking" class="link" @click="allRead">
+						{{$t('notifications.markAllAsRead')}}
+					</a>
+					<span v-else class="loader"></span>
 				</div>
 				<div class="show-more">
 					<a v-if="canShowMore" class="button is-small is-outlined"

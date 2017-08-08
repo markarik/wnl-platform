@@ -25,7 +25,7 @@
 		<a class="button is-small toggle-archived" @click="$emit('toggleShowRead')">
 			<span class="text">{{buttonMessage}}</span>
 			<span class="icon is-small">
-				<i class="fa" :class="showRead ? 'fa-eye-slash' : 'fa-eye'"></i>
+				<i class="fa" :class="showRead ? 'fa-eye' : 'fa-eye-slash'"></i>
 			</span>
 		</a>
 	</div>

@@ -46,8 +46,10 @@
 	.all-seen
 		align-items: center
 		display: flex
-		justify-content: center
+		font-size: $font-size-minus-2
+		justify-content: flex-end
 		margin-bottom: $margin-base
+		text-transform: uppercase
 
 	.stream-notifications
 		position: relative
@@ -106,7 +108,7 @@
 		},
 		data() {
 			return {
-				limit: 25,
+				limit: 100,
 				filtering: 'all',
 				marking: false,
 				showRead: false,

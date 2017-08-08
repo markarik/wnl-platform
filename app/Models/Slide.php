@@ -58,4 +58,22 @@ class Slide extends Model
 	{
 		$this->attributes['snippet'] = json_encode(Parser::createSnippet($value));
 	}
+
+	 public function toSearchableArray()
+	{
+		$model = $this->toArray();
+
+		if (!empty($this->sections) && !empty($this->sections->first())) {
+			$section = $this->sections->first();
+			$screen = $section->screen;
+			$lesson = $screen->lesson;
+			$model['section']['id'] = $section->name;
+			$model['section']['id'] = $section->id;
+			$model['screen']['id'] = $screen->id;
+			$model['lesson']['id'] = $lesson->id;
+			$model['group']['id'] = $lesson->group->id;
+		}
+
+		return $model;
+	}
 }

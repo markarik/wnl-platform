@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
-import sessionStore from '../js/services/sessionStore';
 import moderatorFeed from 'js/perimeters/moderatorFeed';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
@@ -154,7 +153,6 @@ let routes = [
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			sessionStore.clearAll();
 			document.getElementById('logout-form').submit()
 		}
 	},

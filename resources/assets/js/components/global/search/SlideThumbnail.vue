@@ -43,19 +43,17 @@
 		.group-and-lesson
 			align-items: center
 			display: flex
-			font-size: $font-size-minus-1
+			font-size: $font-size-minus-2
 			justify-content: center
 
 			.group-name
 				letter-spacing: 1px
 				text-transform: uppercase
 
-			.lesson-name
-				font-weight: $font-weight-bold
-
 		.section-name
-			font-size: $font-size-minus-1
+			font-size: $font-size-minus-2
 			font-weight: $font-weight-bold
+			line-height: $line-height-minus
 			text-align: center
 
 	.slide-thumb
@@ -133,7 +131,7 @@
 				return this.hit._source.content
 			},
 			groupName() {
-				return this.getGroup(this.context.group.id).name
+				return truncate(this.getGroup(this.context.group.id).name, {length: 15})
 			},
 			header() {
 				return this.getHighlight(this.hit, 'snippet.header') || this.hit._source.snippet.header
@@ -148,7 +146,7 @@
 				return this.hit._source.snippet && this.hit._source.snippet.media !== null ? mediaMap[this.hit._source.snippet.media] : null
 			},
 			sectionName() {
-				return this.getSection(this.context.section.id).name
+				return truncate(this.getSection(this.context.section.id).name, {length: 40})
 			},
 			slideNumber() {
 				return this.context.orderNumber + 1

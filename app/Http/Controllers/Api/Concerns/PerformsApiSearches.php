@@ -32,7 +32,9 @@ trait PerformsApiSearches
 	{
 		$params = [
 			'body' => [
-				'query'     => [
+				'from'     => 0,
+				'size'     => 32,
+				'query'    => [
 					'bool' => [
 						'should' => [
 							[

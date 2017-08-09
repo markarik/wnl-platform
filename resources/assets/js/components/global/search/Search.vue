@@ -5,21 +5,28 @@
 		</span>
 
 		<transition name="fade">
-			<div class="wnl-overlay" ref="overlay" :class="{'is-mobile': isMobile}" @click.stop="" v-show="active">
+			<div v-show="active"
+				class="search-overlay"
+				ref="overlay"
+				:class="{'is-touch-screen': isTouchScreen}"
+				@click.stop="$refs.input.focus()"
+			>
 				<div class="search-input">
-					<input
-						class="input is-loading"
-						placeholder="Szukaj..."
-						ref="input"
-						type="text"
-						@input="debounceInput"
-					>
-					<span class="icon is-large" @click="hideOverlay">
+					<div class="control" :class="{'is-loading': loading}">
+						<input
+							class="input"
+							placeholder="Szukaj..."
+							ref="input"
+							type="text"
+							@input="debounceInput"
+						>
+					</div>
+					<span class="close-icon icon is-large" @click="hideOverlay">
 						<i class="fa fa-close"></i>
 					</span>
 				</div>
 				<div class="results">
-					<wnl-slides-search :phrase="phrase" @searchComplete="onSearchComplete"/>
+					<wnl-slides-search :phrase="phrase" @searchStarted="loading = true" @searchComplete="onSearchComplete"/>
 				</div>
 			</div>
 		</transition>
@@ -30,11 +37,8 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
-	.wnl-overlay
-		background: $color-white-overlay
-		background: linear-gradient(to bottom, $color-white 0%, $color-white-overlay 100%)
-		cursor: default
-		overflow-y: auto
+	$close-icon-size: 40px
+	$close-icon-font-size: 28px
 
 	.wnl-search
 		align-items: center
@@ -49,21 +53,31 @@
 			&:hover
 				cursor: pointer
 
-		.wnl-overlay
+		.search-overlay
 			align-items: flex-start
+			background: $color-white-overlay
+			background: linear-gradient(to bottom, $color-white 0%, $color-white-overlay 100%)
+			bottom: 0
+			cursor: default
+			overflow-y: auto
+			left: 0
 			justify-content: flex-start
+			position: fixed
+			right: 0
+			top: 0
+			z-index: $z-index-fullscren
 
-			&.is-mobile
+			&.is-touch-screen
 				.search-input
-					.icon
-						height: 7vh
-						width: 7vh
+					.close-icon
+						height: $close-icon-size / 1.5
+						width: $close-icon-size / 1.5
 
 						i
-							font-size: 5vh
+							font-size: $close-icon-font-size / 1.5
 
 				.results
-					padding: $margin-huge $margin-base
+					padding: $margin-huge + $margin-base $margin-base
 
 		.results
 			margin: 7vh 0 $margin-base
@@ -81,30 +95,40 @@
 			width: 100%
 			z-index: $z-index-fullscren-close
 
-			.icon
+			.close-icon
 				border-radius: $border-radius-full
 				background: $color-inactive-gray
 				color: $color-white
-				height: 4vh
-				width: 4vh
+				height: $close-icon-size
+				width: $close-icon-size
 				transition: background-color $transition-length-base
+				z-index: $z-index-fullscren-close
 
 				i
-					font-size: 2vh
+					font-size: $close-icon-font-size
 
 				&:hover
 					background: $color-background-gray
 					transition: background-color $transition-length-base
 
-			input
+			.control
+				flex: 1 auto
+				max-width: 80vw
+
+				&::after
+					top: 38%
+					height: 4vh
+					right: $margin-base
+					width: 4vh
+
+			.input
 				background: $color-white
 				border: 0
 				box-shadow: none
-				flex: 1 auto
 				font-family: $font-family-sans-serif
 				font-size: 6vh
-				max-width: 80vw
-				padding: $margin-small $margin-base $margin-small 0
+				padding: $margin-base $margin-base $margin-base 0
+				width: 100%
 
 				&:focus
 					outline: none
@@ -123,12 +147,13 @@
 		},
 		data() {
 			return {
-				active: true,
-				phrase: ''
+				active: false,
+				loading: false,
+				phrase: '',
 			}
 		},
 		computed: {
-			...mapGetters(['isMobile']),
+			...mapGetters(['isTouchScreen']),
 		},
 		methods: {
 			debounceInput: _.debounce(function({target: {value}}) {
@@ -149,6 +174,7 @@
 				}
 			},
 			onSearchComplete() {
+				this.loading = false
 				scrollToY(0, 500, this.$refs.overlay)
 			},
 			showOverlay() {

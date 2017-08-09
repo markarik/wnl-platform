@@ -3,6 +3,7 @@ import { nav } from './nav'
 import { notifications } from './notifications'
 import { qna } from './qna'
 import { quiz } from './quiz'
+import { search } from './search'
 import { routes } from './routes'
 
 export {
@@ -11,5 +12,6 @@ export {
 	notifications,
 	qna,
 	quiz,
+	search,
 	routes,
 }

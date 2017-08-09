@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Artisan;
 
 class Kernel extends ConsoleKernel
 {
@@ -60,13 +61,15 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command("scout:import 'App\\Models\\Slide'")
+			->dailyAt('00:30')
 			->after(function () use ($schedule) {
-				$schedule->command('cache:clear --tags api,slides,search');
+				Artisan::call('cache:clear', [
+					'--tags' => 'api,slides,search',
+				]);
 			})
 			->after(function () use ($schedule) {
-				$schedule->command('cache:warmup');
-			})
-			->dailyAt('00:30');
+				Artisan::call('cache:warmup');
+			});
 
 		$schedule
 			->command('time:store')

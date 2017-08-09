@@ -74,8 +74,10 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
-				'currentUserAvatar'
+				'currentUserAvatar',
+				'currentUserId'
 			]),
+			...mapGetters('course', ['courseId']),
 			sendingDisabled() {
 				return !this.loaded || this.message.length === 0
 			},
@@ -118,9 +120,13 @@
 					mentioned_users: userIds,
 					subject: {
 						type: 'chat_message',
-						id,
-						text: message,
+						id: `${message.time}${this.currentUserId}`,
+						text: message.content,
 						channel: this.room
+					},
+					context: {
+						courseId: this.courseId,
+						lessonId: ''
 					}
 				}
 			},
@@ -129,10 +135,16 @@
 			},
 			setListeners() {
 				this.socket.on('message-processed', (data) => {
-					debugger
 					if (data.sent) {
+						const mentions = this.getMentions()
+
+						if (mentions && mentions.length) {
+							this.saveMentions(
+								this.getMentionsData(mentions, data.message)
+							)
+						}
+
 						this.quillEditor.quill.deleteText(0, this.content.length);
-						this.saveMentions(this.getMentions())
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}

@@ -1,6 +1,7 @@
 import {set} from 'vue'
 import * as types from '../mutations-types'
 import * as socket from '../../socket'
+import {getApiUrl} from 'js/utils/env'
 
 // Initial state
 const state = {
@@ -17,52 +18,15 @@ const getters = {
 	messages: state => state.messages
 }
 
-// Mutations
-const mutations = {
-	[types.CHAT_SET_ROOM] (state, room){
-		set(state, 'currentRoom', room)
-	},
-
-	[types.CHAT_SET_MESSAGES] (state, messages) {
-		set(state, 'messages', messages)
-	},
-
-	[types.CHAT_ADD_NEW_MESSAGE] (state, message) {
-		state.thread.push(message)
-	},
-
-	[types.CHAT_TOGGLE_LOADED] (state) {
-		set(state, 'loaded', !state.loaded)
-	},
-
-	[types.CHAT_SET_MESSAGES] (state, users) {
-		set(state, 'users', users)
-	},
-}
-
 // Actions
 const actions = {
-	sendMessage ({commit, state}, content) {
-		this.$socket.emit('send-message', content)
-	},
-
-	chatJoinRoom ({commit}) {
-		const socket = socket.getSocket()
-		socket.on('connected', function (data) {
-			commit(types.CHAT_SET_SOCKET, socket)
-			$wnl.logger.debug('Joined chat room', data)
-			socket.emit('join-room', 1);
-		})
-	},
-
-	saveMentions({}, data) {
-		//ToDo
+	saveMentions({ commit }, data) {
+		return axios.post(getApiUrl('events/mentions'), data)
 	}
 }
 
 export default {
 	state,
 	getters,
-	mutations,
 	actions
 }

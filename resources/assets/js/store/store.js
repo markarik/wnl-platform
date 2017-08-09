@@ -7,6 +7,7 @@ import * as actions from 'js/store/actions'
 import * as getters from 'js/store/getters'
 
 // Modules
+import chat from 'js/store/modules/chat'
 import course from 'js/store/modules/course'
 import collections from 'js/store/modules/collections'
 import notifications from 'js/store/modules/notifications'
@@ -30,6 +31,7 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 	modules: {
+		chat,
 		course,
 		collections,
 		notifications,

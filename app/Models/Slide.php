@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Facades\Lib\SlideParser\Parser;
-use Laravel\Scout\Searchable;
+use ScoutEngines\Elasticsearch\Searchable;
 use App\Models\Presentable;
 
 class Slide extends Model

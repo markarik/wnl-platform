@@ -88,6 +88,14 @@ trait GeneratesApiResponses
 			->json();
 	}
 
+	protected function respondNotImplemented($message = null)
+	{
+		return $this
+			->setMessage($message ?? 'Not Implemented')
+			->setStatusCode(501)
+			->json();
+	}
+
 	protected function respondInternalError()
 	{
 		return $this

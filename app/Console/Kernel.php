@@ -69,6 +69,13 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('progress:store')
 			->dailyAt('02:30');
+
+		$schedule
+			->command("scout:import 'App\Models\Slide'")
+			->after(function() use ($schedule){
+				$schedule->command('cache:clear --tags api,search,slides');
+			})
+			->dailyAt('02:00');
 	}
 
 	/**

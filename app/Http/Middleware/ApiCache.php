@@ -100,6 +100,10 @@ class ApiCache
 			$this->tags = array_merge($this->tags, preg_split('/[.,]+/', $request->get('include')));
 		}
 
+		if ($request->method() === 'GET' && str_is('*.search*', $request->getRequestUri()) && $request->has('q')) {
+			$this->tags[] = 'search';
+		}
+
 		$searchParams = ['query', 'order', 'limit', 'join'];
 		foreach ($searchParams as $searchParam) {
 			if ($request->has($searchParam)) {

@@ -26,7 +26,12 @@
 					</span>
 				</div>
 				<div class="results">
-					<wnl-slides-search :phrase="phrase" @searchStarted="loading = true" @searchComplete="onSearchComplete"/>
+					<wnl-slides-search
+						:phrase="phrase"
+						@resultClicked="hideOverlay"
+						@searchStarted="loading = true"
+						@searchComplete="onSearchComplete"
+					/>
 				</div>
 			</div>
 		</transition>
@@ -76,6 +81,9 @@
 						i
 							font-size: $close-icon-font-size / 1.5
 
+				.control
+					max-width: 80vw
+
 				.results
 					padding: $margin-huge + $margin-base $margin-base
 
@@ -113,7 +121,8 @@
 
 			.control
 				flex: 1 auto
-				max-width: 80vw
+				padding-right: 5vh
+				max-width: 700px
 
 				&::after
 					top: 38%

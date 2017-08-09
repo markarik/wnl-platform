@@ -5,6 +5,7 @@
 				v-for="(hit, index) in hits"
 				:key="index"
 				:hit="hit"
+				@resultClicked="emitResultClicked"
 			/>
 		</div>
 		<div v-else-if="hasSearched" class="slides-zero-state">
@@ -74,8 +75,8 @@
 						this.$emit('searchComplete')
 					})
 			},
-			emitResultClicked(result) {
-				this.$emit('resultClicked', result)
+			emitResultClicked() {
+				this.$emit('resultClicked')
 			}
 		},
 		watch: {

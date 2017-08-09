@@ -10,7 +10,7 @@
 				{{sectionName}}
 			</div>
 		</div>
-		<div class="slide-thumb">
+		<div class="slide-thumb" @click="onThumbnailClick">
 			<div class="thumb-meta">
 				<span class="slide-number">{{slideNumber}}</span>
 				<span class="icon is-tiny" v-if="media"><i class="fa" :class="media.icon"></i></span>
@@ -175,6 +175,11 @@
 				}
 
 				return highlight
+			},
+			onThumbnailClick(event) {
+				if (!event.metaKey && !event.ctrlKey) {
+					this.$emit('resultClicked')
+				}
 			},
 		}
 	}

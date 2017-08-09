@@ -28,17 +28,29 @@ trait PerformsApiSearches
 	}
 
 
-	protected function buildQuery($query) {
+	protected function buildQuery($query)
+	{
 		$params = [
-			'body'  => [
+			'body' => [
 				'query'     => [
 					'bool' => [
-						'must' => [
+						'should' => [
 							[
 								'query_string' => [
-									'query'            => "*{$query}* OR {$query}~",
+									'query'            => "*{$query}*",
 									'analyze_wildcard' => true,
-									'all_fields'       => true,
+									'fields'           => ['content'],
+									'boost'            => 1,
+									'fuzziness'        => 0.5,
+								],
+							],
+							[
+								'query_string' => [
+									'query'            => "*{$query}*",
+									'analyze_wildcard' => true,
+									'fields'           => ['snippet.header'],
+									'fuzziness'        => 0.5,
+									'boost'            => 2,
 								],
 							],
 						],

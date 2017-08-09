@@ -27,7 +27,6 @@ class LiveChannel
 		);
 
 		$event
-			->dontBroadcastToCurrentUser()
 			->onConnection($message->connection)
 			->onQueue($message->queue);
 

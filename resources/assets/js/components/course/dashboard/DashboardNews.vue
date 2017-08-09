@@ -1,21 +1,13 @@
 <template>
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
-		<p class="strong">Cześć {{currentUserName}}!</p>
-		<p>Już w tę sobotę odbędą się pierwsze warsztaty ze specjalistą w ramach kursu "Więcej niż LEK", które poprowadzi Pan <strong>dr&nbsp;hab.&nbsp;n.&nbsp;med.&nbsp;Mariusz&nbsp;Puszczewicz</strong>.</p>
+		<p>Za nami już ponad połowa kursu i jesteśmy bardzo ciekawi Waszych opinii! Wasze odpowiedzi w pierwszej ankiecie były dla nas niezwykle pomocne. <wnl-emoji name="bar_chart"/></p>
 
-		<p>Przypominamy, że zajęcia odbywają się w <strong>Collegium da Vinci</strong> przy ul. Gen. Tadeusza Kutrzeby 10 w Poznaniu, <strong>sala N205</strong>.</p>
+		<p>Dziś ponownie prosimy Cię o pomoc. Do końca kursu zostało jeszcze sporo czasu i chcielibyśmy jak najwięcej zrobić, aby odpowiedzieć na Wasze potrzeby i problemy. Będziemy wdzięczni, jeżeli poświęcisz kilka minut na odpowiedzenie na 15&nbsp;krótkich&nbsp;pytań.&nbsp;<wnl-emoji name="wink"/></p>
 
-		<p>
-			<strong>Plan warsztatów:</strong><br>
-			<strong>11:00 - 12:30</strong> - Wstęp do diagnostyki w Internie, z naciskiem na Reumatologię + Pytania i Odpowiedzi<br>
-			<strong>12:30 - 14:00</strong> - Przerwa obiadowa<br>
-			<strong>14:00 - 15:45</strong> - Przypadki kliniczne + Omówienie<br>
-			<strong>15:45 - 16:00</strong> - Przerwa kawowa<br>
-			<strong>16:00 - 17:00</strong> - Godzina z mentorem (może ulec przedłużeniu)<br>
-		</p>
+		<p class="has-text-centered"><a class="button is-primary is-outlined is-small" href="https://goo.gl/forms/myBvbDblkFiE4r623">Przejdź do ankiety</a></p>
 
-		<p>Wszystkie powyższe informacje znajdziesz też w lekcji Warsztaty / Interna. :) Do zobaczenia!</p>
+		<p>Dziękujemy!</p>
 	</div>
 </template>
 
@@ -23,8 +15,8 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = ''
-	const REQUIRED_ROLE = 'workshop-participant'
+	const CURRENT_NEWS = 'survey-2'
+	const REQUIRED_ROLE = ''
 
 	export default {
 		name: 'DashboardNews',

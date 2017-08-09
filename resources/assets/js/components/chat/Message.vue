@@ -45,7 +45,10 @@
 					margin-bottom: $margin-tiny
 
 				.wnl-message-time
-				margin-left: $margin-small
+					margin-left: $margin-small
+
+				p
+					margin: 0
 </style>
 <script>
 	import { timeFromMs } from 'js/utils/time'

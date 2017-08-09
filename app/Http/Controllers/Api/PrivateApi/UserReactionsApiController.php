@@ -1,14 +1,13 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Http\Controllers\Api\Transformers\ReactableTransformer;
 use Auth;
 use App\Models\User;
 use App\Models\Reaction;
-use App\Models\Reactable;
 use App\Models\Category;
-use App\Models\Tag;
-use App\Http\Controllers\Api\ApiController;
+use App\Models\Reactable;
 use League\Fractal\Resource\Collection;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\ReactableTransformer;
 
 
 class UserReactionsApiController extends ApiController
@@ -39,7 +38,7 @@ class UserReactionsApiController extends ApiController
 		return $this->json(['reactions' => $data]);
 	}
 
-	public function getReactionsByCategory($id, $type = null)
+	public function getReactionsByCategory($id, $type)
 	{
 		$user = User::fetch($id);
 		if (!$user) {
@@ -52,23 +51,35 @@ class UserReactionsApiController extends ApiController
 
 		$reactablesBuilder = Reactable::where(['user_id' => $user->id]);
 
-		if ($type) {
-			$reaction = Reaction::type($type);
-			$reactablesBuilder->where('reaction_id', $reaction->id);
-		}
+		$reaction = Reaction::type($type);
+		$reactablesBuilder->where('reaction_id', $reaction->id);
 
 		$reactables = $reactablesBuilder->get();
 		$categories = Category::all();
 		$categorizedReactables = [];
 
-		foreach ($reactables as $reactable) {
-			$id = $reactable->reactable_id;
-			$type = $reactable->reactable_type;
-			$model = $type::find($id);
+		$grouped = $reactables->groupBy('reactable_type');
 
-			foreach($categories as $category) {
-				$tag = Tag::where('name', $category->name)->first();
-				if ($model->tags->contains($tag)) {
+		foreach ($grouped as $key => $item) {
+			$grouped->{$key} = $item->keyBy('reactable_id');
+
+			$models = $key::with(['tags'])
+				->whereIn('id', $item->pluck('reactable_id'))
+				->get();
+
+			foreach ($models as $model) {
+				$tags = $model->tags->pluck('name')->map(function ($el) {
+					return trim($el);
+				});
+				$grouped->{$key}[$model->id]->reactableTags = $tags;
+			}
+		}
+
+		foreach ($grouped->flatten() as $reactable) {
+			$tags = $reactable->reactableTags;
+
+			foreach ($categories as $category) {
+				if ($tags->contains($category->name)) {
 					$categorizedReactables[$category->name][] = $reactable;
 				}
 			}

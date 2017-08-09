@@ -22,6 +22,12 @@
 				</select>
 			</span>
 		</div>
+		<a class="button is-small toggle-archived" @click="$emit('toggleShowRead')">
+			<span class="text">{{buttonMessage}}</span>
+			<span class="icon is-small">
+				<i class="fa" :class="showRead ? 'fa-eye' : 'fa-eye-slash'"></i>
+			</span>
+		</a>
 	</div>
 </template>
 
@@ -29,7 +35,24 @@
 	@import 'resources/assets/sass/variables'
 
 	.stream-filtering
+		align-items: flex-end
+		display: flex
 		margin-bottom: $margin-base
+		justify-content: space-between
+
+		.tabs
+			flex: 1 auto
+			font-size: $font-size-minus-1
+			margin-bottom: 0
+
+	.toggle-archived
+		margin-left: $margin-base
+
+		.text
+			padding-right: $margin-tiny
+
+		.icon
+			color: $color-gray-dimmed
 
 	.is-active
 		font-weight: $font-weight-regular
@@ -63,6 +86,11 @@
 
 	export default {
 		name: 'StreamFiltering',
+		props: {
+			showRead: {
+				type: Boolean,
+			}
+		},
 		data() {
 			return {
 				activeTab: 'all',
@@ -72,7 +100,10 @@
 			...mapGetters(['isMobile']),
 			filteringOptions() {
 				return filteringOptions
-			}
+			},
+			buttonMessage() {
+				return this.showRead ? this.$t('notifications.stream.showUnread') : this.$t('notifications.stream.showRead')
+			},
 		},
 		methods: {
 			changeFiltering(tab) {

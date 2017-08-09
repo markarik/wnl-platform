@@ -337,6 +337,11 @@ html {
 	cursor: pointer;
 }
 
+.wrap {
+	word-break: break-word;
+	word-wrap: break-word;
+}
+
 /* Firefox hack :/ */
 @-moz-document url-prefix() {
 	.wnl-chat-content {

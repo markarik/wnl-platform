@@ -51,7 +51,7 @@ const handshake = new Postmate.Model({
 		let annotationsLength = annotationsData.length
 
 		$slideAnnotations.find('.slide-annotations-container').hide()
-		$annotationsCounters.text(annotationsLength)
+		$annotationsCounters.text(annotationsLength > 0 ? annotationsLength : '')
 
 		if (annotationsLength === 0) {
 			$annotationsCounters.removeClass('has-some')
@@ -225,6 +225,13 @@ function setMenuListeners(parent) {
 		emitToggleFullscreen();
 	});
 	$toggleAnnotations.on('click', toggleAnnotations)
+	document.addEventListener('keydown', closeFullscreenWithEsc)
+}
+
+function closeFullscreenWithEsc(e) {
+	if (e.keyCode === 27) {
+		emitToggleFullscreen(false)
+	}
 }
 
 function setBookmarks(parent) {
@@ -249,6 +256,6 @@ function setBookmarkedState(currentSlideNumber) {
 	}
 }
 
-function emitToggleFullscreen() {
-	parent.emit('toggle-fullscreen', true)
+function emitToggleFullscreen(state = true) {
+	parent.emit('toggle-fullscreen', state)
 }

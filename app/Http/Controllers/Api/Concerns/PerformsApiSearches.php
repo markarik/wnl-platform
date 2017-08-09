@@ -63,7 +63,7 @@ trait PerformsApiSearches
 										"query" => $query,
 										'boost' => 1.5,
 									],
-								]
+								],
 							],
 							[
 								'match_phrase' => [
@@ -71,7 +71,7 @@ trait PerformsApiSearches
 										"query" => $query,
 										'boost' => 2,
 									],
-								]
+								],
 							],
 							[
 								'query_string' => [
@@ -96,8 +96,12 @@ trait PerformsApiSearches
 				// next step - decouple
 				'highlight' => [
 					'fields' => [
-						'snippet.content' => new \stdClass(),
-						'snippet.header'  => new \stdClass(),
+						'snippet.content' => [
+							'fragment_size' => 5000,
+						],
+						'snippet.header'  => [
+							'fragment_size' => 5000,
+						],
 					],
 				],
 			],

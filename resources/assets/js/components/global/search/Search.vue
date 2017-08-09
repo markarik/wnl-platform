@@ -4,7 +4,7 @@
 			<i class="fa fa-search"></i>
 		</span>
 
-		<div class="wnl-overlay" v-show="active">
+		<div class="wnl-overlay" @click.stop="" v-show="active">
 			<input class="search-input"
 				placeholder="Szukaj..."
 				ref="input"
@@ -18,6 +18,11 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
+
+	.wnl-overlay
+		background: $color-white-overlay
+		cursor: default
+		overflow-y: auto
 
 	.wnl-search
 		align-items: center

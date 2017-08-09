@@ -1,7 +1,18 @@
 <template>
-	<router-link :to="to">
+	<router-link class="slide-router-link" :to="to">
+		<div class="slide-context">
+			<div class="group-and-lesson">
+				<span class="group-name" v-text="groupName"></span>
+				<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+				<span class="lesson-name" v-text="lessonName"></span>
+			</div>
+			<div class="section-name">
+				{{sectionName}}
+			</div>
+		</div>
 		<div class="slide-thumb">
 			<div class="thumb-meta">
+				<span class="slide-number">{{slideNumber}}</span>
 				<span class="icon is-tiny" v-if="media"><i class="fa" :class="media.icon"></i></span>
 			</div>
 			<p class="thumb-heading metadata" v-html="header"></p>
@@ -22,40 +33,58 @@
 	$thumb-height: 190px
 	$thumb-width: 250px
 
+	.slide-router-link
+		color: $color-gray
+		margin: $margin-small $margin-small $margin-base
+
+	.slide-context
+		margin-bottom: $margin-small
+
+		.group-and-lesson
+			align-items: center
+			display: flex
+			font-size: $font-size-minus-1
+			justify-content: center
+
+			.group-name
+				letter-spacing: 1px
+				text-transform: uppercase
+
+			.lesson-name
+				font-weight: $font-weight-bold
+
+		.section-name
+			font-size: $font-size-minus-1
+			font-weight: $font-weight-bold
+			text-align: center
+
 	.slide-thumb
 		border: $border-light-gray
 		cursor: pointer
 		flex: 1 0 $thumb-width
 		height: $thumb-height
-		margin: $margin-small $margin-small $margin-base
 		max-width: $thumb-width
 		padding: $margin-small
 		text-align: center
 		transition: color $transition-length-base
 		overflow-y: hidden
 
-		em
-			color: $color-blue
-			font-weight: 700
-
 		&:hover
 			color: $color-ocean-blue
 			transition: color $transition-length-base
 
-			.shadow
-				height: 0
-				transition: height $transition-length-base
+		em
+			color: $color-blue
+			font-weight: 700
 
 		.thumb-meta
 			align-items: center
 			display: flex
 			justify-content: space-between
 
-		.thumb-slide-number
-			font-size: $font-size-minus-3
-			line-height: $line-height-minus
-			margin-bottom: $margin-tiny
-			text-align: left
+			.slide-number
+				font-size: $font-size-minus-3
+				line-height: $line-height-minus
 
 		.thumb-heading
 			line-height: $line-height-minus
@@ -67,18 +96,12 @@
 
 			&.has-media
 				margin-top: $margin-small
-
-		.shadow
-			+white-shadow-inside()
-
-			bottom: 0
-			height: 50%
-			position: absolute
-			transition: height $transition-length-base
-			width: 100%
 </style>
 
 <script>
+	import {truncate} from 'lodash'
+
+	import {mapGetters} from 'vuex'
 
 	const mediaMap = {
 		chart: {
@@ -104,11 +127,15 @@
 			},
 		},
 		computed: {
+			...mapGetters('course', ['getGroup', 'getLesson', 'getSection']),
 			context() {
 				return this.hit._source.context
 			},
 			content() {
 				return this.hit._source.content
+			},
+			groupName() {
+				return this.getGroup(this.context.group.id).name
 			},
 			header() {
 				return this.getHighlight(this.hit, 'snippet.header') || this.hit._source.snippet.header
@@ -116,8 +143,17 @@
 			id() {
 				return this.hit._source.id
 			},
+			lessonName() {
+				return truncate(this.getLesson(this.context.lesson.id).name, {length: 20})
+			},
 			media() {
 				return this.hit._source.snippet && this.hit._source.snippet.media !== null ? mediaMap[this.hit._source.snippet.media] : null
+			},
+			sectionName() {
+				return this.getSection(this.context.section.id).name
+			},
+			slideNumber() {
+				return this.context.orderNumber + 1
 			},
 			snippet() {
 				return this.getHighlight(this.hit, 'snippet.content') || this.hit._source.snippet.content
@@ -129,7 +165,7 @@
 						courseId: this.context.course.id,
 						lessonId: this.context.lesson.id,
 						screenId: this.context.screen.id,
-						slide: this.context.orderNumber + 1,
+						slide: this.slideNumber,
 					}
 				}
 			},

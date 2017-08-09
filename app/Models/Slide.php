@@ -55,7 +55,7 @@ class Slide extends Model
 		$this->attributes['snippet'] = json_encode(Parser::createSnippet($value));
 	}
 
-	 public function toSearchableArray()
+	public function toSearchableArray()
 	{
 		$model = $this->toArray();
 		$model['context'] = [];

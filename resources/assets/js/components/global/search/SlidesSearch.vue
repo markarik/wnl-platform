@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="wnl-slides-search">
+	<div class="wnl-slides-search" :class="{'is-mobile': isMobile}">
 		<wnl-slide-thumbnail
 			v-for="(hit, index) in hits"
 			:key="index"
@@ -15,27 +15,16 @@
 		justify-content: flex-start
 		display: flex
 		flex-wrap: wrap
-		margin: $margin-base 0
+
+		&.is-mobile
+			justify-content: center
 </style>
 
 <script>
+	import {mapGetters} from 'vuex'
+
 	import SlideThumbnail from 'js/components/global/search/SlideThumbnail'
 	import {getApiUrl} from 'js/utils/env'
-
-	const mediaMap = {
-		chart: {
-			icon: 'fa-sitemap',
-			text: 'Diagram',
-		},
-		movie: {
-			icon: 'fa-film',
-			text: 'Film',
-		},
-		audio: {
-			icon: 'fa-music',
-			text: 'Nagranie audio',
-		},
-	}
 
 	export default {
 		name: 'SlidesSearch',
@@ -53,12 +42,18 @@
 				hits: [],
 			}
 		},
+		computed: {
+			...mapGetters(['isMobile']),
+		},
 		methods: {
 			search() {
 				if (!this.phrase) return
 
 				axios.get(getApiUrl(`slides/.search?q=${this.phrase}`))
-					.then(response => this.hits = response.data.hits.hits)
+					.then(response => {
+						this.hits = response.data.hits.hits
+						this.$emit('searchComplete')
+					})
 			},
 			emitResultClicked(result) {
 				this.$emit('resultClicked', result)

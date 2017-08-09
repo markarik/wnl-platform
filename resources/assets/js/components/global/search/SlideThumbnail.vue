@@ -1,5 +1,5 @@
 <template>
-	<router-link class="slide-router-link" :to="to">
+	<router-link class="slide-router-link unselectable" :to="to">
 		<div class="slide-context">
 			<div class="group-and-lesson">
 				<span class="group-name" v-text="groupName"></span>
@@ -64,18 +64,15 @@
 		flex: 1 0 $thumb-width
 		height: $thumb-height
 		max-width: $thumb-width
+		overflow-y: auto
 		padding: $margin-small
 		text-align: center
 		transition: color $transition-length-base
-		overflow-y: hidden
+		width: $thumb-width
 
 		&:hover
 			color: $color-ocean-blue
 			transition: color $transition-length-base
-
-		em
-			color: $color-blue
-			font-weight: 700
 
 		.thumb-meta
 			align-items: center
@@ -85,6 +82,7 @@
 			.slide-number
 				font-size: $font-size-minus-3
 				line-height: $line-height-minus
+				margin-bottom: $margin-tiny
 
 		.thumb-heading
 			line-height: $line-height-minus

@@ -19,19 +19,21 @@
 				<div class="time">
 				</div>
 			</div>
-			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}" @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-				<router-link v-if="hasFullContext" :to="routeContext">
-					<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
-						<span v-if="loading" class="loader"></span>
-						<i v-else class="fa fa-angle-right"></i>
-					</span>
-				</router-link>
-				<a v-else :href="routeContext">
-					<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
-						<span v-if="loading" class="loader"></span>
-						<i v-else class="fa fa-angle-right"></i>
-					</span>
-				</a>
+			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
+				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
+					<router-link v-if="hasFullContext" :to="routeContext">
+						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+							<span v-if="loading" class="loader"></span>
+							<i v-else class="fa fa-angle-right"></i>
+						</span>
+					</router-link>
+					<a v-else :href="routeContext">
+						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+							<span v-if="loading" class="loader"></span>
+							<i v-else class="fa fa-angle-right"></i>
+						</span>
+					</a>
+				</div>
 				<span class="icon is-small toggle-hidden" :title="$t('notifications.stream.hideNotification')" @click="toggleNotification">
 					<span v-if="loading" class="loader"></span>
 					<i v-else class="fa" :class="isRead ? 'fa-eye' : 'fa-eye-slash'"></i>

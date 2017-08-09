@@ -59,7 +59,13 @@ class Kernel extends ConsoleKernel
 			->hourly();
 
 		$schedule
-			->command('cache:warmup')
+			->command("scout:import 'App\\Models\\Slide'")
+			->after(function () use ($schedule) {
+				$schedule->command('cache:clear --tags api,slides,search');
+			})
+			->after(function () use ($schedule) {
+				$schedule->command('cache:warmup');
+			})
 			->dailyAt('00:30');
 
 		$schedule
@@ -69,13 +75,6 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('progress:store')
 			->dailyAt('02:30');
-
-		$schedule
-			->command("scout:import 'App\Models\Slide'")
-			->after(function() use ($schedule){
-				$schedule->command('cache:clear --tags api,slides,search');
-			})
-			->dailyAt('02:00');
 	}
 
 	/**

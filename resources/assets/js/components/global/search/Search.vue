@@ -1,16 +1,17 @@
 <template lang="html">
-	<div class="wnl-search">
-		<span class="icon" @click="showOverlay">
+	<div class="wnl-search" @click="showOverlay">
+		<span class="icon">
 			<i class="fa fa-search"></i>
 		</span>
 
 		<div class="wnl-overlay" v-show="active">
-			<input type="text"
+			<input class="search-input"
 				placeholder="Szukaj..."
-				@input="debounceInput"
 				ref="input"
+				type="text"
+				@input="debounceInput"
 			>
-			<wnl-slides-search :phrase="phrase" @resultClicked="goToResult" />
+			<wnl-slides-search :phrase="phrase" @resultClicked="goToResult"/>
 		</div>
 	</div>
 </template>
@@ -19,7 +20,15 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-search
+		align-items: center
+		display: flex
+		height: 100%
+		justify-content: center
+		width: 100%
+
 		.icon
+			color: $color-gray-dimmed
+
 			&:hover
 				cursor: pointer
 
@@ -27,11 +36,11 @@
 			align-items: flex-start
 			justify-content: flex-start
 
-		input
+		.search-input
 			background: none
-			border: rgba(255, 255, 255, 0)
+			border: 0
 			font-family: $font-family-sans-serif
-			font-size: 6rem
+			font-size: 10vh
 			margin: $margin-big
 
 			&:focus
@@ -48,7 +57,7 @@
 		},
 		data() {
 			return {
-				active: false,
+				active: true,
 				phrase: ''
 			}
 		},

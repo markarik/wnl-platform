@@ -1,6 +1,7 @@
 <template lang="html">
 	<div class="wnl-slides-search">
 		<div class="slide-thumb" :key="index" v-for="(slide, index) in slides" @click="emitResultClicked(slide)">
+			<small>score: {{ slide.score }}</small>
 			<div class="thumb-meta">
 				<span class="icon is-tiny" v-if="slide.media"><i class="fa" :class="slide.media.icon"></i></span>
 			</div>
@@ -112,7 +113,8 @@
 					context: hit._source.context,
 					media: hit._source.snippet.media !== null ? mediaMap[hit._source.snippet.media] : null,
 					content: hit._source.content,
-					id: hit._source.id
+					id: hit._source.id,
+					score: hit._score
 				}))
 			},
 		},

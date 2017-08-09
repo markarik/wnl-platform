@@ -37,20 +37,56 @@ trait PerformsApiSearches
 						'should' => [
 							[
 								'query_string' => [
-									'query'            => "*{$query}*",
-									'analyze_wildcard' => true,
-									'fields'           => ['content'],
-									'boost'            => 1,
-									'fuzziness'        => 0.5,
+									'query'  => $query,
+									'fields' => ['snippet.content'],
+									'boost'  => 0.5,
 								],
+							],
+							[
+								'query_string' => [
+									'query'  => $query,
+									'fields' => ['snippet.header'],
+									'boost'  => 1,
+								],
+							],
+							[
+								'match_phrase' => [
+									'snippet.header' => [
+										"query" => $query,
+										'boost' => 0.7,
+									],
+								],
+							],
+							[
+								'match_phrase' => [
+									'snippet.content' => [
+										"query" => $query,
+										'boost' => 1.5,
+									],
+								]
+							],
+							[
+								'match_phrase' => [
+									'snippet.header' => [
+										"query" => $query,
+										'boost' => 2,
+									],
+								]
 							],
 							[
 								'query_string' => [
 									'query'            => "*{$query}*",
 									'analyze_wildcard' => true,
-									'fields'           => ['snippet.header'],
-									'fuzziness'        => 0.5,
-									'boost'            => 2,
+									'fields'           => ['snippet.header', 'snippet.content'],
+									'boost'            => 0.5,
+								],
+							],
+							[
+								'query_string' => [
+									'query'            => "{$query}~",
+									'analyze_wildcard' => true,
+									'fields'           => ['snippet.header', 'snippet.content'],
+									'boost'            => 0.1,
 								],
 							],
 						],

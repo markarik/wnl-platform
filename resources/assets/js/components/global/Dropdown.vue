@@ -34,11 +34,9 @@
 
 	.wnl-dropdown
 		height: 100%
-		max-width: $navbar-height
 		min-height: 100%
-		min-width: $navbar-height
 		position: relative
-		width: $navbar-height
+		width: 100%
 
 	.drawer
 		border: $border-light-gray

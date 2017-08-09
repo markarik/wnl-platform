@@ -38,7 +38,7 @@
 		font-weight: $font-weight-regular
 
 	.select
-		font-size: $font-size-minus-1
+		font-size: $font-size-minus-2
 </style>
 
 <script>

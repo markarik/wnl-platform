@@ -30,8 +30,8 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
-	$thumb-height: 190px
-	$thumb-width: 250px
+	$thumb-height: 210px
+	$thumb-width: 290px
 
 	.slide-router-link
 		color: $color-gray
@@ -85,9 +85,10 @@
 		.thumb-heading
 			line-height: $line-height-minus
 			margin-bottom: $margin-small
+			padding: 0 $margin-base
 
 		.slide-snippet
-			font-size: $font-size-minus-2
+			font-size: $font-size-minus-1
 			line-height: $line-height-minus
 
 			&.has-media
@@ -115,7 +116,7 @@
 	}
 
 	export default {
-		name: 'SlideThumbnail',
+		name: 'SlideSearchResult',
 		props: {
 			hit: {
 				required: true,

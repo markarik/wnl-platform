@@ -109,7 +109,8 @@
 				color: $color-white
 				height: $close-icon-size
 				width: $close-icon-size
-				transition: background-color $transition-length-base
+				transform: rotate(0)
+				transition: all $transition-length-base
 				z-index: $z-index-fullscren-close
 
 				i
@@ -117,7 +118,8 @@
 
 				&:hover
 					background: $color-background-gray
-					transition: background-color $transition-length-base
+					transform: rotate(90deg)
+					transition: all $transition-length-base
 
 			.control
 				flex: 1 auto

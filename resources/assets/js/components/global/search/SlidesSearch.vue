@@ -36,13 +36,13 @@
 	import {size} from 'lodash'
 	import {mapGetters} from 'vuex'
 
-	import SlideThumbnail from 'js/components/global/search/SlideThumbnail'
+	import SlideSearchResult from 'js/components/global/search/SlideSearchResult'
 	import {getApiUrl} from 'js/utils/env'
 
 	export default {
 		name: 'SlidesSearch',
 		components: {
-			'wnl-slide-thumbnail': SlideThumbnail,
+			'wnl-slide-thumbnail': SlideSearchResult,
 		},
 		props: {
 			phrase: {

@@ -64,6 +64,9 @@
 			.wnl-navbar-search
 				width: $navbar-height
 
+	.wnl-navbar-profile
+		margin-left: $margin-small
+
 	.wnl-navbar-branding
 		justify-content: flex-start
 		flex-grow: 1

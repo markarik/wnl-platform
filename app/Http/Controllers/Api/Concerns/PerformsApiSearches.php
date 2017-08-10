@@ -30,6 +30,8 @@ trait PerformsApiSearches
 
 	protected function buildQuery($query)
 	{
+		// Right now it's tightly coupled with slides
+		// next step - decouple
 		$params = [
 			'body' => [
 				'query'     => [
@@ -47,14 +49,6 @@ trait PerformsApiSearches
 									'query'  => $query,
 									'fields' => ['snippet.header'],
 									'boost'  => 1,
-								],
-							],
-							[
-								'match_phrase' => [
-									'snippet.header' => [
-										"query" => $query,
-										'boost' => 0.7,
-									],
 								],
 							],
 							[
@@ -92,8 +86,6 @@ trait PerformsApiSearches
 						],
 					],
 				],
-				// Right now it's tightly coupled with slides
-				// next step - decouple
 				'highlight' => [
 					'fields' => [
 						'snippet.content' => [

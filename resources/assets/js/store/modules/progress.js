@@ -17,6 +17,8 @@ const getters = {
 		if (state.courses.hasOwnProperty(courseId)) {
 			return state.courses[courseId]
 		}
+
+		return false
 	},
 	getLesson: (state) => (courseId, lessonId) => {
 		return state.courses[courseId] && state.courses[courseId].lessons && state.courses[courseId].lessons[lessonId];
@@ -48,11 +50,13 @@ const getters = {
 	},
 	getFirstLessonIdInProgress: (state) => (courseId) => {
 		let lessons = state.courses[courseId].lessons
+
 		for (var lessonId in lessons) {
 			if (lessons[lessonId].status === STATUS_IN_PROGRESS) {
 				return lessonId
 			}
 		}
+
 		return 0
 	},
 	isLessonComplete: (state, getters) => (courseId, lessonId) => {

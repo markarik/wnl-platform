@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 
-class TagsApiController extends ApiController
+class PresentablesApiController extends ApiController
 {
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->resourceName = config('papi.resources.tags');
+		$this->resourceName = config('papi.resources.presentables');
 	}
 }

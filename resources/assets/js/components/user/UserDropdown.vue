@@ -3,7 +3,7 @@
 		<wnl-dropdown @toggled="toggle">
 			<div slot="activator" class="user-toggle" :class="{ 'is-active' : isActive, 'is-desktop': !isTouchScreen }">
 				<wnl-avatar/>
-				<span class="icon">
+				<span v-show="!isTouchScreen" class="icon">
 					<i class="fa fa-angle-down"></i>
 				</span>
 			</div>
@@ -40,6 +40,7 @@
 	.dropdown-container
 		height: 100%
 		min-height: 100%
+		width: 100%
 
 	.user-toggle
 		align-items: center
@@ -48,10 +49,9 @@
 		display: flex
 		height: 100%
 		justify-content: center
-		margin-left: -$margin-small
 		min-height: 100%
-		padding: 0 $margin-small
 		transition: background $transition-length-base
+		width: 100%
 
 		&.is-desktop:hover
 			background-color: $color-background-light-gray

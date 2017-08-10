@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
 use League\Fractal\Resource\Collection;
+use App\Http\Controllers\Api\Concerns\FiltersApiQueries;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 class ApiController extends Controller
 {
 	use GeneratesApiResponses,
+		FiltersApiQueries,
 		PerformsApiSearches;
 
 	protected $fractal;

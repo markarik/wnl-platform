@@ -70,7 +70,7 @@
 		display: flex
 		height: $navbar-height
 		justify-content: center
-		width: $navbar-height
+		width: 100%
 
 	.notifications-toggle
 		align-items: center
@@ -79,13 +79,7 @@
 		display: flex
 		height: 100%
 		justify-content: center
-		margin-left: -$margin-small
 		min-height: 100%
-		transition: background $transition-length-base
-
-		&.is-desktop:hover
-			background-color: $color-background-light-gray
-			transition: background $transition-length-base
 
 		&.is-active
 			background-color: $color-background-light-gray

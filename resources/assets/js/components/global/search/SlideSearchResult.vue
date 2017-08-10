@@ -2,10 +2,9 @@
 	<router-link class="slide-router-link unselectable" :to="to">
 		<div class="slide-context">
 			<div class="group-and-lesson">
-				 <span class="group-name" v-text="groupName"></span>
+				 <span class="group-name" :title="groupName">{{truncate(groupName, 15)}}</span>
 				<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-				<span class="lesson-name" v-text="lessonName"></span>
-				<span>>>>Score: {{score}}</span>
+				<span class="lesson-name" :title="lessonName">{{truncate(lessonName, 30)}}</span>
 			</div>
 			<div class="section-name" :title="sectionName">
 				{{truncate(sectionName, 40)}}
@@ -24,6 +23,7 @@
 				</span>
 				{{ media.text }}
 			</div>
+			<div v-if="page" class="page">{{page}}</div>
 		</div>
 	</router-link>
 </template>
@@ -88,12 +88,24 @@
 			margin-bottom: $margin-small
 			padding: 0 $margin-base
 
+		.thumb-subheading
+			font-size: $font-size-minus-2
+			line-height: $line-height-minus
+			margin-bottom: $margin-small
+			padding: 0 $margin-base
+			text-transform: uppercase
+
 		.slide-snippet
 			font-size: $font-size-minus-1
 			line-height: $line-height-minus
 
 			&.has-media
 				margin-top: $margin-small
+
+		.page
+			font-size: $font-size-minus-3
+			line-height: $line-height-minus
+			margin-top: $margin-small
 </style>
 
 <script>
@@ -147,6 +159,9 @@
 			media() {
 				return this.hit._source.snippet && this.hit._source.snippet.media !== null ? mediaMap[this.hit._source.snippet.media] : null
 			},
+			page() {
+				return this.hit._source.snippet.page
+			},
 			sectionName() {
 				return this.getSection(this.context.section.id).name
 			},
@@ -155,9 +170,6 @@
 			},
 			snippet() {
 				return this.getHighlight(this.hit, 'snippet.content') || this.hit._source.snippet.content
-			},
-			score() {
-				return this.hit._score
 			},
 			to() {
 				return {

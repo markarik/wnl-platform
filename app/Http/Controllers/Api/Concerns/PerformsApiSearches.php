@@ -94,11 +94,6 @@ trait PerformsApiSearches
 								'analyze_wildcard' => true,
 								'fields'           => ['snippet.header', 'snippet.content'],
 							]],
-							['query_string' => [
-								'query'            => "{$query}~",
-								'analyze_wildcard' => true,
-								'fields'           => ['snippet.header', 'snippet.content'],
-							]],
 						],
 					],
 				],
@@ -113,8 +108,17 @@ trait PerformsApiSearches
 					],
 				],
 			],
-			'explain' => true,
 		];
+
+		if (!preg_match('/\s/', $query)) {
+			$params['body']['query']['bool']['should'][] = [
+				'query_string' => [
+					'query'            => "{$query}~",
+					'analyze_wildcard' => true,
+					'fields'           => ['snippet.header^5', 'snippet.content'],
+				]
+			];
+		}
 
 		return $params;
 	}

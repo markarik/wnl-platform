@@ -2,12 +2,12 @@
 	<router-link class="slide-router-link unselectable" :to="to">
 		<div class="slide-context">
 			<div class="group-and-lesson">
-				<span class="group-name" v-text="groupName"></span>
+				<span class="group-name" :title="groupName">{{truncate(groupName, 15)}}</span>
 				<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-				<span class="lesson-name" v-text="lessonName"></span>
+				<span class="lesson-name" :title="lessonName">{{truncate(lessonName, 30)}}</span>
 			</div>
-			<div class="section-name">
-				{{sectionName}}
+			<div class="section-name" :title="sectionName">
+				{{truncate(sectionName, 40)}}
 			</div>
 		</div>
 		<div class="slide-thumb" @click="onThumbnailClick">
@@ -132,7 +132,7 @@
 				return this.hit._source.content
 			},
 			groupName() {
-				return truncate(this.getGroup(this.context.group.id).name, {length: 15})
+				return this.getGroup(this.context.group.id).name
 			},
 			header() {
 				return this.getHighlight(this.hit, 'snippet.header') || this.hit._source.snippet.header
@@ -141,13 +141,13 @@
 				return this.hit._source.id
 			},
 			lessonName() {
-				return truncate(this.getLesson(this.context.lesson.id).name, {length: 20})
+				return this.getLesson(this.context.lesson.id).name
 			},
 			media() {
 				return this.hit._source.snippet && this.hit._source.snippet.media !== null ? mediaMap[this.hit._source.snippet.media] : null
 			},
 			sectionName() {
-				return truncate(this.getSection(this.context.section.id).name, {length: 40})
+				return this.getSection(this.context.section.id).name
 			},
 			slideNumber() {
 				return this.context.orderNumber + 1
@@ -181,6 +181,9 @@
 				if (!event.metaKey && !event.ctrlKey) {
 					this.$emit('resultClicked')
 				}
+			},
+			truncate(text, length) {
+				return truncate(text, {length})
 			},
 		}
 	}

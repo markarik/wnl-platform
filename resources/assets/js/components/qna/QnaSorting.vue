@@ -36,6 +36,9 @@
 
 	.is-active
 		font-weight: $font-weight-regular
+
+	.select
+		font-size: $font-size-minus-2
 </style>
 
 <script>

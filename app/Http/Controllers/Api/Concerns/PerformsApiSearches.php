@@ -34,7 +34,9 @@ trait PerformsApiSearches
 		// next step - decouple
 		$params = [
 			'body' => [
-				'query'     => [
+				'from'     => 0,
+				'size'     => 32,
+				'query'    => [
 					'bool' => [
 						'should' => [
 							[

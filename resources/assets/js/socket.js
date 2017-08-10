@@ -1,9 +1,10 @@
 import * as io from 'socket.io-client'
-import { envValue } from 'js/utils/env'
+import {envValue} from 'js/utils/env'
 
 function getSocket() {
 	if (!global.$socket) {
 		global.$socket = io(`${envValue('chatHost')}:${envValue('chatPort')}`)
+		global.$socket.on('error', _socketError);
 	}
 	return global.$socket
 }
@@ -35,4 +36,12 @@ export function disconnect() {
 		destroySocket()
 		resolve()
 	})
+}
+
+function _socketError(error) {
+	if (error = 'Authentication error') {
+		window.location.replace('/login');
+		return
+	}
+	$wnl.logger.error(`Socket error: ${error}`)
 }

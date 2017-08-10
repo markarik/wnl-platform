@@ -174,7 +174,7 @@ const actions = {
 				});
 
 				if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
-					$wnl.logger.info(`Starting lesson ${payload.lessonId}`, payload)
+					$wnl.logger.debug(`Starting lesson ${payload.lessonId}`, payload)
 					commit(types.PROGRESS_START_LESSON, payload)
 
 					return true;
@@ -185,7 +185,7 @@ const actions = {
 	},
 	completeLesson({commit, getters}, payload) {
 		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {
-			$wnl.logger.info(`Completing lesson ${payload.lessonId}`, payload)
+			$wnl.logger.debug(`Completing lesson ${payload.lessonId}`, payload)
 			commit(types.PROGRESS_COMPLETE_LESSON, payload)
 		}
 	},

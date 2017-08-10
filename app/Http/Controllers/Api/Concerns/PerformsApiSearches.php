@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api\Concerns;
 
-
 use Illuminate\Http\Request;
 use ScoutEngines\Elasticsearch\Searchable;
 
@@ -34,59 +33,70 @@ trait PerformsApiSearches
 		// next step - decouple
 		$params = [
 			'body' => [
-				'from'     => 0,
-				'size'     => 32,
-				'query'    => [
+				'from' => 0,
+				'size' => 32,
+				'query' => [
 					'bool' => [
 						'should' => [
-							[
-								'query_string' => [
-									'query'  => $query,
-									'fields' => ['snippet.content'],
-									'boost'  => 0.5,
-								],
-							],
-							[
-								'query_string' => [
-									'query'  => $query,
-									'fields' => ['snippet.header'],
-									'boost'  => 1,
-								],
-							],
-							[
-								'match_phrase' => [
-									'snippet.content' => [
-										"query" => $query,
-										'boost' => 1.5,
-									],
-								],
-							],
-							[
-								'match_phrase' => [
+							[ "constant_score" => [
+								'query' => ['match_phrase' => [
 									'snippet.header' => [
 										"query" => $query,
-										'boost' => 2,
 									],
 								],
-							],
-							[
-								'query_string' => [
-									'query'            => "*{$query}*",
-									'analyze_wildcard' => true,
-									'fields'           => ['snippet.header', 'snippet.content'],
-									'boost'            => 0.5,
 								],
+								'boost' => 100,
+								]
 							],
-							[
-								'query_string' => [
-									'query'            => "{$query}~",
-									'analyze_wildcard' => true,
-									'fields'           => ['snippet.header', 'snippet.content'],
-									'boost'            => 0.1,
-								],
+							[ "constant_score" => [
+								'query' => ['match_phrase' => [
+									'snippet.content' => [
+										"query" => $query,
+									],
+								]],
+								'boost' => 90,
+								]
 							],
+							[ "constant_score" => [
+								'query' => ['match_phrase_prefix' => [
+									'snippet.header' => [
+										"query" => $query,
+									],
+								]],
+								'boost' => 10,
+								]
+							],
+							[ "constant_score" => [
+								'query' => ['match_phrase_prefix' => [
+									'snippet.content' => [
+										"query" => $query,
+									],
+								]],
+								'boost' => 9,
+								]
+							],
+							['multi_match' => [
+								"query" => $query,
+								'fields' => ['snippet.content', 'snippet.header^5'],
+								"type" => "cross_fields",
+							]],
+							['query_string' => [
+								"query" => $query,
+								'fields' => ['snippet.content'],
+								"default_operator" => "and",
+							]],
+							[ 'query_string' => [
+								'query'            => "*{$query}*",
+								'analyze_wildcard' => true,
+								'fields'           => ['snippet.header', 'snippet.content'],
+							]],
+							['query_string' => [
+								'query'            => "{$query}~",
+								'analyze_wildcard' => true,
+								'fields'           => ['snippet.header', 'snippet.content'],
+							]]
 						],
-					],
+					]
 				],
 				'highlight' => [
 					'fields' => [
@@ -99,6 +109,7 @@ trait PerformsApiSearches
 					],
 				],
 			],
+			'explain' => true
 		];
 
 		return $params;

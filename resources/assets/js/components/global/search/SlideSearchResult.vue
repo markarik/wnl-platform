@@ -2,9 +2,10 @@
 	<router-link class="slide-router-link unselectable" :to="to">
 		<div class="slide-context">
 			<div class="group-and-lesson">
-				<span class="group-name" :title="groupName">{{truncate(groupName, 15)}}</span>
+				 <span class="group-name" v-text="groupName"></span>
 				<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-				<span class="lesson-name" :title="lessonName">{{truncate(lessonName, 30)}}</span>
+				<span class="lesson-name" v-text="lessonName"></span>
+				<span>>>>Score: {{score}}</span>
 			</div>
 			<div class="section-name" :title="sectionName">
 				{{truncate(sectionName, 40)}}
@@ -154,6 +155,9 @@
 			},
 			snippet() {
 				return this.getHighlight(this.hit, 'snippet.content') || this.hit._source.snippet.content
+			},
+			score() {
+				return this.hit._score
 			},
 			to() {
 				return {

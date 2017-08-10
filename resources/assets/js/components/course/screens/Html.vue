@@ -1,6 +1,10 @@
 <template>
+
 	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
-		<div class="content" v-html="content"></div>
+		<fullscreen :imagesSources="imagesSources" :currentImageSource="currentImageSource" v-if="currentImageSource"
+		></fullscreen>
+		<div class="content" v-html="content">
+		</div>
 		<p class="end-button has-text-centered" v-if="showBacklink">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
 				Wróć do auli
@@ -45,10 +49,20 @@
 
 <script>
 	import _ from 'lodash'
+	import Fullscreen from 'js/components/global/Fullscreen'
 
 	export default {
 		name: 'Html',
+		data() {
+			return {
+				imagesSources: [],
+				currentImageSource: ''
+			}
+		},
 		props: ['screenData', 'showBacklink'],
+		components: {
+			'fullscreen': Fullscreen
+		},
 		computed: {
 			content() {
 				return this.screenData.content
@@ -72,10 +86,19 @@
 						wrapper.appendChild(iframe)
 					})
 				}
-			}
+			},
+			clickOnImg(event) {
+				this.currentImageSource = event.target.src
+			},
 		},
 		mounted() {
-			this.wrapEmbedded()
+			this.wrapEmbedded();
+			var img = document.querySelectorAll(".wnl-screen-html img");
+			var i;
+			for (i = 0; i < img.length; i++) {
+				this.imagesSources.push(img[i].src);
+				img[i].addEventListener('click', this.clickOnImg)
+			};
 		},
 		updated() {
 			this.wrapEmbedded()

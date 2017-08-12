@@ -2,7 +2,7 @@
 
 namespace Tests\Api\User;
 
-use App\Http\Controllers\Api\PrivateApi\User\UserStateApiController;
+use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\User;
 use App\Models\UserQuizResults;
 use Illuminate\Database\QueryException;

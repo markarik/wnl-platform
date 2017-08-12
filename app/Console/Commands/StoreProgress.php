@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Api\PrivateApi\User\UserStateApiController;
+use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\UserCourseProgress;
 use Closure;
 use Exception;

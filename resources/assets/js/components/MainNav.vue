@@ -34,6 +34,15 @@
 			</span>
 			<span class="text">Feed</span>
 		</router-link>
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{name: 'questions'}"
+		>
+			<span class="icon is-medium">
+				<i class="fa fa-question"></i>
+			</span>
+		<span class="text">{{$t('nav.sideNav.questions')}}</span>
+		</router-link>
 	</div>
 </template>
 

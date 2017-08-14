@@ -129,6 +129,12 @@ let routes = [
 		props: true,
 	},
 	{
+		name: 'questions',
+		path: '/app/questions',
+		component: require('js/components/questions/Dashboard.vue'),
+		props: true,
+	},
+	{
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),

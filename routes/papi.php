@@ -105,18 +105,18 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post("{$r['tags']}/.search", 'TagsApiController@filter');
 
 	// Q&A Questions
-	Route::post($r['questions'], 'QuestionsApiController@post');
-	Route::get("{$r['questions']}/{id}", 'QuestionsApiController@get');
-	Route::put("{$r['questions']}/{id}", 'QuestionsApiController@put');
-	Route::delete("{$r['questions']}/{id}", 'QuestionsApiController@delete');
-	Route::post("{$r['questions']}/.search", 'QuestionsApiController@filter');
+	Route::post($r['questions'], 'QnaQuestionsApiController@post');
+	Route::get("{$r['questions']}/{id}", 'QnaQuestionsApiController@get');
+	Route::put("{$r['questions']}/{id}", 'QnaQuestionsApiController@put');
+	Route::delete("{$r['questions']}/{id}", 'QnaQuestionsApiController@delete');
+	Route::post("{$r['questions']}/.search", 'QnaQuestionsApiController@filter');
 
 	// Q&A Answers
-	Route::post($r['answers'], 'AnswersApiController@post');
-	Route::get("{$r['answers']}/{id}", 'AnswersApiController@get');
-	Route::put("{$r['answers']}/{id}", 'AnswersApiController@put');
-	Route::delete("{$r['answers']}/{id}", 'AnswersApiController@delete');
-	Route::post("{$r['answers']}/.search", 'AnswersApiController@filter');
+	Route::post($r['answers'], 'QnaAnswersApiController@post');
+	Route::get("{$r['answers']}/{id}", 'QnaAnswersApiController@get');
+	Route::put("{$r['answers']}/{id}", 'QnaAnswersApiController@put');
+	Route::delete("{$r['answers']}/{id}", 'QnaAnswersApiController@delete');
+	Route::post("{$r['answers']}/.search", 'QnaAnswersApiController@filter');
 
 	// Quiz Sets
 	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');

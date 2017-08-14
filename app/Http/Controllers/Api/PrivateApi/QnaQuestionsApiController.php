@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Auth;
 use League\Fractal\Resource\Item;
 
-class QuestionsApiController extends ApiController
+class QnaQuestionsApiController extends ApiController
 {
 	public function __construct(Request $request)
 	{

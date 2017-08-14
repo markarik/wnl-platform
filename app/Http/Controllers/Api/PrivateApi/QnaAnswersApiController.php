@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\QnaQuestion;
 use Auth;
 
-class AnswersApiController extends ApiController
+class QnaAnswersApiController extends ApiController
 {
 	public function __construct(Request $request)
 	{

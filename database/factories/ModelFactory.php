@@ -39,7 +39,6 @@ $factory->define(App\Models\UserQuizResults::class, function (Faker\Generator $f
 
 $factory->define(App\Models\QuizSet::class, function (Faker\Generator $faker) {
 	return [
-		'id' => $faker->randomDigitNotNull,
 		'name' => $faker->name,
 		'created_at' => $faker->dateTime,
 		'updated_at' => $faker->dateTime
@@ -48,7 +47,6 @@ $factory->define(App\Models\QuizSet::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\QuizQuestion::class, function (Faker\Generator $faker) {
 	return [
-		'id' => $faker->numberBetween(500, 1000),
 		'text' => $faker->text,
 		'explanation' => $faker->text,
 		'preserve_order' => $faker->numberBetween(1, 20),
@@ -59,7 +57,6 @@ $factory->define(App\Models\QuizQuestion::class, function (Faker\Generator $fake
 
 $factory->define(App\Models\QuizAnswer::class, function (Faker\Generator $faker) {
 	return [
-		'id' => $faker->numberBetween(500, 1000),
 		'quiz_question_id' => function () {
 			return factory(App\Models\QuizQuestion::class)->create()->id;
 		},
@@ -119,7 +116,6 @@ $factory->define(App\Models\Course::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\QnaQuestion::class, function (Faker\Generator $faker) {
 	return [
-		'id' => $faker->numberBetween(500, 1000),
 		'text' => $faker->text,
 		'user_id' => 1,
 	];

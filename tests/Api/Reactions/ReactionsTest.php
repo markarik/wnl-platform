@@ -18,10 +18,12 @@ class ReactionsTest extends ApiTestCase
 		$user = User::find(1);
 
 		$data = [
-			'reactable_resource' => config('papi.resources.answers'),
-			'reactable_id'       => 2,
-			'reaction_type'      => 'thanks',
-			'context'            => '{"very": "cool", "json": {"data": "or", "whatever": true}}',
+			[
+				'reactable_resource' => config('papi.resources.answers'),
+				'reactable_id'       => 2,
+				'reaction_type'      => 'thanks',
+				'context'            => '{"very": "cool", "json": {"data": "or", "whatever": true}}',
+			]
 		];
 
 		$response = $this
@@ -38,9 +40,11 @@ class ReactionsTest extends ApiTestCase
 		$user = User::find(1);
 
 		$data = [
-			'reactable_resource' => config('papi.resources.slides'),
-			'reactable_id'       => 100,
-			'reaction_type'      => 'bookmark',
+			[
+				'reactable_resource' => config('papi.resources.slides'),
+				'reactable_id'       => 100,
+				'reaction_type'      => 'bookmark',
+			]
 		];
 
 		$response = $this

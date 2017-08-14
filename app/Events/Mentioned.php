@@ -43,6 +43,12 @@ class Mentioned extends Event
 	{
 		$actor = $this->payload['actor'];
 
+		$this->data['event'] = 'mentioned';
+
+		if (!empty($this->payload['context'])) {
+			$this->data['context'] = $this->payload['context'];
+		}
+
 		$this->data['actors'] = [
 			'id'         => $actor->id,
 			'first_name' => $actor->profile->first_name,

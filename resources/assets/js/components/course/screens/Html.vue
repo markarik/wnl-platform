@@ -93,7 +93,6 @@
 			clickOnImg(event) {
 				this.currentImageSource = event.target.src;
 				this.$emit('updateImageSource', this.currentImageSource);
-				console.log('click');
 			},
 			methodOnImages() {
 				var img = document.querySelectorAll(".wnl-screen-html img");

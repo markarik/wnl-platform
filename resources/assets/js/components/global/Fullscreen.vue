@@ -15,28 +15,26 @@
         background-color: rgba(0,0,0,0.9)
         display: none
         height: 100%
-        left: 0
         overflow: auto
         padding-top: 100px
         position: fixed
-        top: 0
         width: 100%
         z-index: 60
 
     .modal-content
         display: block
         margin: auto
-        max-width: 700px
+        // max-width: 70%
         width: 80%
 
     #close
         color: #f1f1f1
-        font-size: 40px
+        font-size: 80px
         font-weight: bold
         position: absolute
         right: 35px
         transition: 0.3
-        top: 15px
+        top: 35px
 </style>
 
 <script>
@@ -45,17 +43,20 @@ export default {
     props: ['imagesSources', 'currentImageSource'],
     data() {
         return {
-            mutableCurrentImageSource: this.currentImageSource
+            MutableCurrentImageSource: this.currentImageSource
         }
     },
     methods: {
+        // closeModal() {
+        //     document.getElementById('myModal').style.display = "none";
+        // },
         closeLightbox() {
             document.getElementById('myModal').style.display = "none";
         },
         changeImageSource(value) {
-            this.currentImageSource = value;
+            this.MutableCurrentImageSource = value;
             document.getElementById('myModal').style.display = "block";
-            document.querySelector('.modal-content').setAttribute('src', this.currentImageSource)
+            document.querySelector('.modal-content').setAttribute('src', this.MutableCurrentImageSource)
         },
     },
     mounted() {

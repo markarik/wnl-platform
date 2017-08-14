@@ -5,17 +5,16 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Collection;
 use Illuminate\Database\QueryException;
 
-trait FiltersApiQueries
+trait TranslatesApiQueries
 {
-
 	/**
-	 * Generates JSON response based on the search params.
+	 * Generates JSON response based on the query params.
 	 *
 	 * @param Request $request
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function filter(Request $request)
+	public function query(Request $request)
 	{
 		$modelName = self::getResourceModel($this->resourceName);
 		$model = new $modelName;
@@ -207,15 +206,4 @@ trait FiltersApiQueries
 			return $v;
 		}, $array);
 	}
-
-	protected function transformAndRespond($results)
-	{
-		$transformerName = self::getResourceTransformer($this->resourceName);
-		$resource = new Collection($results, new $transformerName, $this->resourceName);
-
-		$data = $this->fractal->createData($resource)->toArray();
-
-		return $this->json($data);
-	}
-
 }

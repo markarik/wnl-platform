@@ -9,16 +9,18 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
 use League\Fractal\Resource\Collection;
-use App\Http\Controllers\Api\Concerns\FiltersApiQueries;
+use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
+use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
 
 class ApiController extends Controller
 {
 	use GeneratesApiResponses,
-		FiltersApiQueries,
-		PerformsApiSearches;
+		TranslatesApiQueries,
+		PerformsApiSearches,
+		ProvidesApiFiltering;
 
 	protected $fractal;
 	protected $request;
@@ -124,5 +126,20 @@ class ApiController extends Controller
 	public static function shouldInclude($name)
 	{
 		return str_is("*{$name}*", \Request::get('include'));
+	}
+
+	/**
+	 * @param $results
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	protected function transformAndRespond($results)
+	{
+		$transformerName = self::getResourceTransformer($this->resourceName);
+		$resource = new Collection($results, new $transformerName, $this->resourceName);
+
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->json($data);
 	}
 }

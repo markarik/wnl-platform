@@ -83,6 +83,10 @@
 				default: false,
 				type: Boolean,
 			},
+			questions: {
+				type: Array,
+				default: [],
+			}
 		},
 		data() {
 			return {
@@ -91,17 +95,14 @@
 		},
 		computed: {
 			...mapGetters(['isMobile']),
-			...mapGetters('quiz', [
-				'getQuestions',
-			]),
 			currentQuestion() {
-				return this.getQuestions[0]
+				return this.questions[0]
 			},
 			otherQuestions() {
-				return _.tail(this.getQuestions) || []
+				return _.tail(this.questions) || []
 			},
 			lastIndex() {
-				return this.getQuestions.length - 1
+				return this.questions.length - 1
 			},
 			hasAnswer() {
 				return this.currentQuestion.selectedAnswer !== null
@@ -121,27 +122,24 @@
 				'changeQuestion',
 				'shuffleAnswers',
 				'resolveQuestion',
-				'resetState',
 			]),
 			verify() {
 				if (this.hasAnswer) {
-					this.resolveQuestion(this.currentQuestion.id)
+					this.$emit('verify', this.currentQuestion.id)
 				}
 			},
-			performChangeQuestion(index) {
-				this.shuffleAnswers({id: this.getQuestions[index].id})
-				this.changeQuestion(index)
+			nextQuestion() {
+				this.$emit('changeQuestion', 1)
 				scrollToElement(this.$el, 75)
 			},
-			nextQuestion() {
-				this.performChangeQuestion(1)
-			},
 			previousQuestion() {
-				this.performChangeQuestion(this.lastIndex)
+				this.$emit('changeQuestion', this.lastIndex)
+				scrollToElement(this.$el, 75)
 			},
 			selectQuestionFromList(index) {
 				const fullIndex = index + 1
-				this.performChangeQuestion(fullIndex)
+				this.$emit('changeQuestion', fullIndex)
+				scrollToElement(this.$el, 75)
 			},
 		},
 	}

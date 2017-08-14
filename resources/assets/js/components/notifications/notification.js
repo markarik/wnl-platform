@@ -2,6 +2,7 @@
  * A mixin with basic logic for a component of a Notification type.
  * @type {Object}
  */
+import { decode } from 'he'
 import { isEmpty, isObject, truncate } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -24,6 +25,8 @@ export const notification = {
 	data() {
 		return {
 			loading: false,
+			objectTextLength: 75,
+			subjectTextLength: 150,
 		}
 	},
 	computed: {
@@ -38,10 +41,10 @@ export const notification = {
 				const slide = this.routeContext.params.slide
 
 				let contextInfo = this.$t('notifications.context.lesson', {
-					lesson: _.truncate(this.getLesson(lessonId).name, {length: 20}),
+					lesson: _.truncate(this.getLesson(lessonId).name, {length: 30}),
 				})
 
-				if (slide) {
+				if (_.get(this.message, 'objects.type') === 'slide' && slide) {
 					contextInfo = `${this.$t('notifications.context.slide', {slide})} ${contextInfo}`
 				}
 
@@ -58,19 +61,48 @@ export const notification = {
 
 			return ''
 		},
+		deleted() {
+			return !!this.message.deleted
+		},
 		formattedTime () {
 			return timeFromS(this.message.timestamp)
 		},
 		hasContext() {
 			return !isEmpty(this.routeContext)
 		},
+		hasFullContext() {
+			return isObject(this.routeContext)
+		},
 		isRead() {
 			return !!this.message.read_at
 		},
+		isSeen() {
+			return !!this.message.seen_at
+		},
+		objectText() {
+			if (!this.message.objects) return false
+
+			if (this.objectTextLength > 0) {
+				return decode(truncate(this.message.objects.text, {length: this.objectTextLength}))
+			}
+
+			return decode(this.message.objects.text)
+		},
+		subjectText() {
+			if (!this.message.subject) return false
+
+			if (this.objectTextLength > 0) {
+				return decode(truncate(this.message.subject.text, {length: this.subjectTextLength}))
+			}
+
+			return decode(this.message.subject.text)
+		}
 	},
 	methods: {
-		...mapActions('notifications', ['markAsRead']),
+		...mapActions('notifications', ['markAsRead', 'markAsSeen']),
 		goToContext() {
+			if (this.message.deleted) return
+
 			this.$emit('goingToContext')
 			if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)

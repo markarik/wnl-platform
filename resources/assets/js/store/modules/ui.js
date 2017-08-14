@@ -3,12 +3,14 @@ import { set, delete as destroy } from 'vue'
 
 // Initial state
 const state = {
+	canShowChat: false,
 	currentLayout: '',
 	isSidenavOpen: false,
 	isChatOpen: false,
+	navigationToggleState: {},
 	overlays: {},
-	canShowChat: false,
-	navigationToggleState: {}
+	overviewView: 'stream',
+	globalNotification: false
 }
 
 const layouts = {
@@ -45,7 +47,10 @@ const getters = {
 	canShowChat: state => state.canShowChat,
 	isOverlayVisible: state => _.size(state.overlays) > 0,
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
-	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex]
+	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex],
+	overviewView: state => state.overviewView,
+	globalNotificationMessage: state => state.globalNotification.message,
+	globalNotificationType: state => state.globalNotification.type
 }
 
 // Mutations
@@ -96,6 +101,12 @@ const mutations = {
 	},
 	[types.UI_TOGGLE_NAVIGATION_GROUP] (state, {groupIndex, isOpen}) {
 		set(state.navigationToggleState, groupIndex, isOpen)
+	},
+	[types.UI_CHANGE_OVERVIEW_VIEW] (state, view) {
+		set(state, 'overviewView', view)
+	},
+	[types.UI_SHOW_GLOBAL_NOTIFICATION] (state, globalNotification) {
+		set(state, 'globalNotification', globalNotification)
 	}
 }
 
@@ -127,6 +138,16 @@ const actions = {
 	},
 	toggleNavigationGroup({commit}, payload) {
 		commit(types.UI_TOGGLE_NAVIGATION_GROUP, payload)
+	},
+	changeOverviewView({commit}, view) {
+		commit(types.UI_CHANGE_OVERVIEW_VIEW, view)
+	},
+	showNotification({commit}, {type = 'success', message, timeout = 3000}) {
+		commit(types.UI_SHOW_GLOBAL_NOTIFICATION, {type, message})
+
+		setTimeout(() => {
+			commit(types.UI_SHOW_GLOBAL_NOTIFICATION, false)
+		}, timeout)
 	}
 }
 
@@ -136,3 +157,8 @@ export default {
 	mutations,
 	actions
 }
+
+export const GLOBAL_NOTIFICATION_TYPES = {
+	INFO: 'info'
+}
+

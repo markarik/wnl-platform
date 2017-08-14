@@ -26,6 +26,10 @@ class Parser
 
 	const HEADER_PATTERN = '/<h.*>([\s\S]*)<\/h.*>/';
 
+	const SUBHEADER_PATTERN = '/<[ph\d]+.*>([\s\S](?!<p.*>))*<\/[ph\d]+>/';
+
+	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
+
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
 		'movie' => '/<iframe.*youtube\.com.*>/',
@@ -363,9 +367,11 @@ class Parser
 	public function createSnippet($slideHtml)
 	{
 		$snippet = [
-			'header'  => '',
-			'content' => '',
-			'media'   => null,
+			'header'     => '',
+			'subheader'  => '',
+			'content'    => '',
+			'media'      => null,
+			'page' => '',
 		];
 
 		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
@@ -375,6 +381,15 @@ class Parser
 			$slideHtml = preg_replace(self::HEADER_PATTERN, '', $slideHtml);
 		}
 
+		$match = $this->match(self::SUBHEADER_PATTERN, $slideHtml);
+
+		if ($match) {
+			$subheader = strip_tags($match[0][0]);
+			if ($this->match('/\w+/', $subheader)) {
+				$snippet['subheader'] = trim($subheader);
+			}
+		}
+
 		foreach (self::MEDIA_PATTERNS as $name => $pattern) {
 			$match = $this->match($pattern, $slideHtml);
 			if ($match) {
@@ -382,16 +397,31 @@ class Parser
 			}
 		}
 
-		$slideHtml = str_replace(["\n", "\r"], ',', $slideHtml);
+		$match = $this->match(self::PAGE_PATTERN, $slideHtml);
+
+		if ($match) {
+			$snippet['page'] = $match[0][2];
+			$slideHtml = preg_replace(self::PAGE_PATTERN, '', $slideHtml);
+		}
+
+		$slideHtml = str_replace(["\n", "\r"], '|', $slideHtml);
 		$slideHtml = str_replace('&nbsp;', '', $slideHtml);
+		$slideHtml = preg_replace('/p>\s*\-/', 'p>br-', $slideHtml);
 		$slideHtml = strip_tags($slideHtml);
-		$slideHtml = str_replace('.,', '.', $slideHtml);
-		$slideHtml = str_replace([',,', ', ,'], ',', $slideHtml);
-		$slideHtml = preg_replace(['/^,/', '/\s,/'], '', $slideHtml);
+		$slideHtml = str_replace('br-', '<br>-', $slideHtml);
+
+		if (!$this->match('/\w/', $slideHtml)) {
+			$snippet['content'] = '';
+			return $snippet;
+		}
+
+		$slideHtml = preg_replace('/[\|\s]+/', ' ', $slideHtml);
 		$slideHtml = preg_replace('/\s+/', ' ', $slideHtml);
 		$slideHtml = preg_replace('/^\s/', '', $slideHtml);
-		$slideHtml = str_replace(['&gt;', '&lt;'], '', $slideHtml);
-		$snippet['content'] = $slideHtml;
+		$slideHtml = preg_replace('/\(\s+/', '(', $slideHtml);
+		$slideHtml = preg_replace('/\s+\)/', ')', $slideHtml);
+
+		$snippet['content'] = trim($slideHtml);
 
 		return $snippet;
 	}

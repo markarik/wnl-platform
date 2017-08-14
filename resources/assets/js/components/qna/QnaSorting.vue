@@ -4,7 +4,7 @@
 			<ul>
 				<li v-for="(option, index) in sortingOptions" :key="index" :class="{'is-active': isTabActive(option.slug)}">
 					<a @click="changeSorting(option.slug)">
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
+						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{$t(`qna.sorting.${option.slug}`)}}
 					</a>
 				</li>
 			</ul>
@@ -17,7 +17,7 @@
 						:value="option.slug"
 						:selected="isTabActive(option.slug)"
 					>
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
+						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{$t(`qna.sorting.${option.slug}`)}}
 					</option>
 				</select>
 			</span>
@@ -31,8 +31,14 @@
 	.qna-sorting
 		margin-bottom: $margin-base
 
+		.tabs
+			font-size: $font-size-minus-1
+
 	.is-active
 		font-weight: $font-weight-regular
+
+	.select
+		font-size: $font-size-minus-2
 </style>
 
 <script>
@@ -40,24 +46,20 @@
 
 	const sortingOptions = [
 		{
-			slug: 'hottest',
-			icon: 'fa-thumbs-o-up',
-			text: 'Popularne',
-		},
-		{
 			slug: 'latest',
 			icon: 'fa-clock-o',
-			text: 'Najnowsze',
 		},
 		{
 			slug: 'no-answer',
 			icon: 'fa-question-circle-o',
-			text: 'Bez odpowiedzi',
+		},
+		{
+			slug: 'hottest',
+			icon: 'fa-thumbs-o-up',
 		},
 		{
 			slug: 'my',
 			icon: 'fa-user-o',
-			text: 'Moje',
 		},
 	]
 
@@ -72,11 +74,11 @@
 		},
 		methods: {
 			...mapActions('qna', ['changeSorting']),
-			isTabActive(slug) {
-				return this.currentSorting === slug
-			},
 			changeSortingWithSelect(event) {
 				this.changeSorting(event.target.value)
+			},
+			isTabActive(slug) {
+				return this.currentSorting === slug
 			},
 		}
 	}

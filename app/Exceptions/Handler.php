@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
 	public function report(Exception $exception)
 	{
 		// Send exceptions to Sentry
-		if ($this->shouldReport($exception)) {
+		if ($this->reportToSentry($exception)) {
 			app('sentry')->captureException($exception);
 		}
 
@@ -101,5 +101,12 @@ class Handler extends ExceptionHandler
 		}
 
 		return redirect()->guest('login');
+	}
+
+	public function reportToSentry($e)
+	{
+		return
+			parent::shouldReport($e) &&
+			! App::environment(['dev', 'testing']);
 	}
 }

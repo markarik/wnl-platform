@@ -2,7 +2,7 @@
 
 return [
 
-	'version' => '1.6.0',
+	'version' => '1.8.4',
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -173,6 +173,8 @@ return [
 		Barryvdh\DomPDF\ServiceProvider::class,
 		Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 		Intervention\Image\ImageServiceProvider::class,
+		Laravel\Scout\ScoutServiceProvider::class,
+		ScoutEngines\Elasticsearch\ElasticsearchProvider::class,
 
         /*
          * Application Service Providers...

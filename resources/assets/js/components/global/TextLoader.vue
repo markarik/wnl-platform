@@ -1,8 +1,6 @@
 <template>
 	<div class="text-loader">
-		<span class="icon">
-			<i class="fa fa-spin fa-circle-o-notch"></i>
-		</span>
+		<span class="loader"></span>
 		<slot>Momencik, ładuję dane...</slot>
 	</div>
 </template>
@@ -11,11 +9,14 @@
 	@import 'resources/assets/sass/variables'
 
 	.text-loader
-		color: $color-gray-dimmed
+		align-items: center
+		color: $color-background-gray
+		display: flex
+		justify-content: center
 		text-align: center
 
-		.icon
-			margin-right: $margin-tiny
+	.loader
+		margin-right: $margin-small
 </style>
 
 <script>

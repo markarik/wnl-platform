@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Laravel\Scout\Searchable;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
 class QuizQuestion extends Model
 {
-	use Cached;
+	use Cached, Searchable;
 
 	protected $fillable = ['text', 'explanation', 'preserve_order'];
 

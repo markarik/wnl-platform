@@ -17,9 +17,9 @@
 				<div class="personal-feed-body">
 					<div class="zero-state" v-if="isEmpty">
 						<img class="zero-state-image"
-							title="$t('notifications.personal.zeroStateImage')"
 							:alt="$t('notifications.personal.zeroStateImage')"
-							:src="zeroStateImage">
+							:src="zeroStateImage"
+							:title="$t('notifications.personal.zeroStateImage')">
 						<p class="zero-state-text">
 							{{$t('notifications.personal.zeroState')}}
 						</p>
@@ -48,7 +48,7 @@
 				</div>
 
 				<div class="personal-feed-footer" v-if="unreadCount > 0">
-					<a class="link" @click="allRead">{{$t('notifications.personal.markAllAsRead')}}</a>
+					<a class="link" @click="allRead">{{$t('notifications.markAllAsRead')}}</a>
 					<span v-if="allReadLoading" class="loader"></span>
 				</div>
 			</div>
@@ -63,14 +63,14 @@
 	$header-height: 40px
 	$footer-height: 40px
 	$body-margin-top: $header-height
-	$body-margin-bottom: $footer-height + $margin-big
+	$body-margin-bottom: $footer-height
 
 	.dropdown-container
 		align-items: center
 		display: flex
 		height: $navbar-height
 		justify-content: center
-		width: $navbar-height
+		width: 100%
 
 	.notifications-toggle
 		align-items: center
@@ -79,13 +79,7 @@
 		display: flex
 		height: 100%
 		justify-content: center
-		margin-left: -$margin-small
 		min-height: 100%
-		transition: background $transition-length-base
-
-		&.is-desktop:hover
-			background-color: $color-background-light-gray
-			transition: background $transition-length-base
 
 		&.is-active
 			background-color: $color-background-light-gray
@@ -226,23 +220,17 @@
 				getUnseen: 'getUnseen',
 				getUnread: 'getUnread',
 			}),
-			canShowMore() {
-				return this.hasMore(this.channel)
-			},
 			iconClass() {
 				return this.isOn ? 'fa-bell' : 'fa-bell-slash'
 			},
 			isOn() {
 				return this.getSetting(setting)
 			},
-			showEndInfo() {
-				return this.totalNotifications > this.limit && !this.canShowMore
-			},
 			unseenCount() {
-				return _.size(this.getUnseen(this.channel))
+				return _.size(_.filter(this.getUnseen(this.channel), (notification) => !notification.deleted))
 			},
 			unreadCount() {
-				return _.size(this.getUnread(this.channel))
+				return _.size(_.filter(this.getUnread(this.channel), (notification) => !notification.deleted))
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

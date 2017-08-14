@@ -1,20 +1,20 @@
 <template>
-	<div class="active-users-container" v-if="activeUsersCount">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="active-users-title level-item metadata">Uczą się teraz z Tobą ({{activeUsersCount}})</div>
-			</div>
+	<div>
+		<div class="metadata">
+			{{ $t('dashboard.activeUsers', {count: activeUsersCount}) }}
 		</div>
-		<div class="absolute-container">
-			<ul class="avatars-list" ref="avatarsList">
-				<li v-for="user in usersToCount" class="avatar">
-					<wnl-avatar
-							:fullName="user.fullName"
-							:url="user.avatar"
-							size="medium">
-					</wnl-avatar>
-				</li>
-			</ul>
+		<div class="active-users-container" v-if="activeUsersCount">
+			<div class="absolute-container">
+				<ul class="avatars-list" ref="avatarsList">
+					<li v-for="user in usersToCount" class="avatar">
+						<wnl-avatar
+								:fullName="user.fullName"
+								:url="user.avatar"
+								size="medium">
+						</wnl-avatar>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </template>
@@ -23,10 +23,18 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	$square-size: 'medium'
+	$container-height: map-get($rounded-square-sizes, $square-size)
+
+	.metadata
+		border-bottom: $border-light-gray
+		margin-bottom: $margin-small
+
 	.wnl-screen-title
 		margin-bottom: $margin-small
 
 	.active-users-container
+		height: $container-height
 		padding-bottom: $margin-big
 		position: relative
 
@@ -35,7 +43,7 @@
 		bottom: 0
 		left: 0
 		right: 0
-		top: $margin-big
+		top: 0
 
 	.avatars-list
 		display: flex
@@ -44,10 +52,10 @@
 
 		&::after
 			content: ""
-			height: map-get($rounded-square-sizes, 'medium')
+			height: $container-height
 			position: absolute
 			right: 0
-			width: map-get($rounded-square-sizes, 'medium') * 2
+			width: $container-height * 2
 			+gradient-horizontal(rgba(0,0,0,0), $color-white)
 
 	.avatars-list .avatar
@@ -60,7 +68,7 @@
 	export default {
 		name: 'ActiveUsers',
 		computed: {
-			...mapGetters(['activeUsers', 'currentUserId']),
+			...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
 			usersToCount() {
 				return this.activeUsers.filter((user) => this.currentUserId !== user.id)
 			},

@@ -7,12 +7,12 @@ const highlight = {
 		scrollToHighlight() {
 			scrollToElement(this.$refs.highlight)
 		},
-		cleanupRoute() {
+		cleanupRoute(paramsToUnset = this.highlightableResources) {
 			const {notification, ...queryParams} = this.$route.query
 			let query = {}
 
 			Object.keys(this.$route.query).forEach((param) => {
-				if (!this.highlightableResources.includes(param)) query = {...query, [param]: queryParams[param]}
+				if (!paramsToUnset.includes(param)) query = {...query, [param]: queryParams[param]}
 			})
 
 			this.$router.replace({

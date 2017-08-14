@@ -57,6 +57,7 @@ const getters = {
 		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
+	getSection: state => (sectionId) => state.structure['sections'][sectionId],
 	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
 		const sectionsIds = getters.getScreen(screenId).sections;
@@ -99,7 +100,7 @@ const getters = {
 		return undefined
 	},
 	nextLesson: (state, getters, rootState, rootGetters) => {
-		if (typeof getters.getLessons === 'undefined') {
+		if (typeof getters.getLessons === 'undefined' || !rootGetters['progress/getCourse'](state.id)) {
 			return false
 		}
 
@@ -111,7 +112,7 @@ const getters = {
 			lesson.status = STATUS_IN_PROGRESS
 		} else {
 			for (let lessonId in getters.getLessons) {
-				let isAvailable = rootGetters['progress/isLessonAvailable'](lessonId)
+				let isAvailable = getters.isLessonAvailable(lessonId)
 				if (isAvailable &&
 					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
 				) {
@@ -158,9 +159,9 @@ const actions = {
 				dispatch('setStructure', courseId),
 				dispatch('progress/setupCourse', courseId, {root: true}),
 			])
-
 			.then(resolutions => {
 				$wnl.logger.debug('Course ready, yay!')
+				commit(types.COURSE_READY)
 				resolve()
 			}, reason => {
 				$wnl.logger.error(reason)
@@ -171,11 +172,11 @@ const actions = {
 	setStructure({commit}, courseId) {
 		return new Promise((resolve, reject) => {
 			axios.get(getCourseApiUrl(courseId))
-				.then((response) => {
+				.then(response => {
 					commit(types.SET_STRUCTURE, response.data)
 					resolve()
 				})
-				.catch((exception) => {
+				.catch(exception => {
 						$wnl.logger.capture(exception)
 						reject()
 					}
@@ -201,7 +202,6 @@ const actions = {
 			toRemove.forEach((payload) => {
 				commit(types.COURSE_REMOVE_GROUP, payload)
 			})
-			commit(types.COURSE_READY)
 		})
 	},
 }

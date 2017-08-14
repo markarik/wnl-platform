@@ -1,72 +1,101 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item metadata">
-					Cześć {{currentUserName}}!
-				</div>
-			</div>
-		</div>
-
 		<!-- Dashboard news -->
-		<wnl-dashboard-news></wnl-dashboard-news>
+		<wnl-dashboard-news/>
+
+		<div class="welcome">
+			{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
+		</div>
 
 		<!-- Next lesson -->
-		<div>
-			<div class="wnl-overview-section">
-				<wnl-next-lesson :courseId="courseId"></wnl-next-lesson>
-			</div>
+		<div class="overview-progress box">
+			<wnl-next-lesson/>
+			<wnl-your-progress/>
 		</div>
 
-		<!-- Your progress -->
-		<div>
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item metadata">
-						Jak Ci idzie?
-					</div>
-				</div>
-			</div>
-			<div class="wnl-overview-section">
-				<wnl-your-progress :courseId="courseId"></wnl-your-progress>
-			</div>
+		<div class="active-users">
+			<wnl-active-users/>
 		</div>
 
-		<wnl-active-users/>
-		<!-- Latest Q&A -->
-		<wnl-qna title="Ostatnie pytania" class="wnl-overview-qna"></wnl-qna>
+		<div class="news-heading metadata">
+			{{ $t('dashboard.news.heading') }}
+			<span class="news-heading-description">
+				{{ $t('dashboard.news.description') }}
+			</span>
+		</div>
+		<div class="current-view-controls">
+			<a v-for="panel, index in panels" class="panel-toggle"
+				:class="{'is-active': overviewView === panel.slug}"
+				:key="index"
+				@click="changeOverviewView(panel.slug)"
+			>
+				{{panel.name}}
+				<span class="icon is-small">
+					<i class="fa" :class="panel.icon"></i>
+				</span>
+			</a>
+		</div>
+		<wnl-stream-feed v-show="overviewView === 'stream'"/>
+		<wnl-qna v-show="overviewView === 'qna'" :title="false" class="wnl-overview-qna"/>
 	</div>
 </template>
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.content
-		color: $color-gray
+	.welcome
+		font-size: $font-size-minus-1
+		font-weight: bold
+		margin-bottom: $margin-base
+		text-transform: uppercase
 
-	.wnl-overview-section
-		margin-bottom: $margin-big
+	.news-heading
+		border-bottom: $border-light-gray
+		margin: $margin-big 0 $margin-small
 
-	.wnl-overview
-		padding-bottom: 20em
+		.news-heading-description
+			color: $color-background-gray
+			display: block
+			font-weight: $font-weight-regular
+			text-transform: none
+
+	.current-view-controls
+		align-items: center
+		display: flex
+		flex-wrap: wrap
+		margin-bottom: $margin-base
+
+		.panel-toggle
+			margin-top: $margin-small
 
 	.wnl-overview-qna
-		margin: $margin-huge 0
+		margin: -$margin-base 0 $margin-huge
+
 </style>
 
 <script>
 	import emoji from 'node-emoji'
 	import { mapGetters, mapActions } from 'vuex'
 
-	import Qna from 'js/components/qna/Qna'
 	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 	import DashboardNews from 'js/components/course/dashboard/DashboardNews'
 	import NextLesson from 'js/components/course/dashboard/NextLesson'
+	import Qna from 'js/components/qna/Qna'
+	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
 	import { getFirstLessonId } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
 
 	export default {
+		name: 'Overview',
+		components: {
+			'wnl-active-users': ActiveUsers,
+			'wnl-dashboard-news': DashboardNews,
+			'wnl-next-lesson': NextLesson,
+			'wnl-qna': Qna,
+			'wnl-stream-feed': StreamFeed,
+			'wnl-your-progress': YourProgress,
+		},
 		props: ['courseId'],
 		computed: {
 			...mapGetters('progress', [
@@ -75,20 +104,29 @@
 			]),
 			...mapGetters([
 				'currentUserName',
+				'overviewView',
 			]),
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)
 			},
-		},
-		components: {
-			'wnl-qna': Qna,
-			'wnl-active-users': ActiveUsers,
-			'wnl-dashboard-news': DashboardNews,
-			'wnl-next-lesson': NextLesson,
-			'wnl-your-progress': YourProgress,
+			panels() {
+				return [
+					{
+						name: this.$t('dashboard.news.stream'),
+						slug: 'stream',
+						icon: 'fa-commenting-o'
+					},
+					{
+						name: this.$t('dashboard.news.qna'),
+						slug: 'qna',
+						icon: 'fa-question-circle-o',
+					},
+				]
+			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchLatestQuestions'])
+			...mapActions(['changeOverviewView']),
+			...mapActions('qna', ['fetchLatestQuestions']),
 		},
 		beforeMount() {
 			if (this.isBeginning) {

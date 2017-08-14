@@ -1,4 +1,5 @@
 export const notifications = {
+	markAllAsRead: 'Ukryj wszystkie dyskusje',
 	context: {
 		lesson: 'w lekcji {lesson}',
 		quizQuestion: '#{id}',
@@ -7,12 +8,18 @@ export const notifications = {
 	},
 	events: {
 		commentPosted: 'skomentował/-a',
-		qnaQuestionPosted: 'zadał/-a pytanie',
+		qnaQuestionPosted: 'zadał/-a',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
 	},
+	messages: {
+		deleted: 'Treść usunięta przez autora'
+	},
 	moderators: {
-		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!'
+		cta: 'Jedziesz szwagier!',
+		fromOldest: 'Od najstarszych',
+		fromNewest: 'Od najnowszych',
+		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!',
 	},
 	objects: {
 		comment: 'komentarz',
@@ -23,12 +30,17 @@ export const notifications = {
 	},
 	personal: {
 		heading: 'Powiadomienia',
-		markAllAsRead: 'Oznacz wszystkie jako przeczytane',
 		showMore: 'Pokaż więcej',
 		thatsAll: 'To już wszystko!',
 		turnOff: 'Wycisz',
 		turnOn: 'Włącz',
 		zeroState: 'Gdy zaczniesz zadawać pytania, odpowiadać oraz komentować, tu znajdziesz powiadomienia dotyczące swoich wpisów!',
 		zeroStateImage: 'Włącz się do dyskusji',
+	},
+	stream: {
+		hideNotification: 'Ukryj tę notyfikację',
+		showRead: 'Pokaż ukryte',
+		showUnread: 'Pokaż aktywne',
+		zeroState: 'Tu powiadomimy Cię o wszystkich dyskusjach, które toczą się w ramach kursu - zaglądaj tu często, a nie umkną Ci żadne wydarzenia!',
 	},
 }

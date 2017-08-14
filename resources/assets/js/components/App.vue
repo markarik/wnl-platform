@@ -5,6 +5,7 @@
 			<span class="loader-text">Uwaga, nadjeżdża wiedza...</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
+		<wnl-global-notification/>
 		<div class="wnl-main">
 			<router-view></router-view>
 		</div>
@@ -40,14 +41,17 @@
 	// Import global components
 	import store from 'store'
 	import Navbar from 'js/components/global/Navbar.vue'
+	import GlobalNotification from 'js/components/global/GlobalNotification.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import axios from 'axios';
 	import {getApiUrl} from 'js/utils/env';
+	import sessionStore from 'js/services/sessionStore';
 
 	export default {
 		name: 'App',
 		components: {
-			'wnl-navbar': Navbar
+			'wnl-navbar': Navbar,
+			'wnl-global-notification': GlobalNotification
 		},
 		computed: {
 			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay', 'currentUserRoles']),
@@ -70,6 +74,8 @@
 		},
 		mounted() {
 			this.toggleOverlay({source: 'course', display: true})
+			sessionStore.clearAll()
+
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
 					window.setInterval(() => {

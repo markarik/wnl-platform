@@ -15,8 +15,8 @@ export function scrollWithMargin(scrollTop, duration = 500) {
 	scrollToY(scrollTop - 0.4 * window.innerHeight, duration)
 }
 
-export function scrollToY(scrollTop, duration = 500) {
-	let container = document.getElementsByClassName('scrollable-main-container')[0]
+export function scrollToY(scrollTop, duration = 500, scrollable = false) {
+	let container = scrollable || document.getElementsByClassName('scrollable-main-container')[0]
 
 	if (typeof container === 'undefined') return false;
 
@@ -29,7 +29,7 @@ export function scrollToY(scrollTop, duration = 500) {
 
 	scroll = new SweetScroll({
 		duration,
-	}, '.scrollable-main-container')
+	}, container)
 
 	scroll.to(scrollTop)
 }

@@ -1,9 +1,15 @@
 <template>
-	<ul class="autocomplete-box" v-if="hasItems">
+	<ul
+		class="autocomplete-box"
+		v-if="hasItems"
+		tabindex="-1"
+		@keydown="onKeyDown"
+	>
 		<li
 			class="autocomplete-box__item"
-			v-for="item in items"
+			v-for="item in itemsForDisplay"
 			@click="onItemClicked(item)"
+			v-bind:class="{ active: item.active }"
 		>
 			<div class="autocomplete-box__avatar">
 				<wnl-avatar :fullName="item.full_name" :url="item.avatar"></wnl-avatar>
@@ -32,12 +38,12 @@
 			padding: 10px 15px
 			display: flex
 
-			&:hover
+			&:hover,
+			&.active
 				background: #f9f9f9
 
 		&__text
 			padding: 5px 10px
-
 </style>
 
 <script>
@@ -48,10 +54,70 @@
 			hasItems() {
 				return this.items && this.items.length
 			},
+			itemsForDisplay() {
+				return this.items
+			}
 		},
 		methods: {
 			onItemClicked(item) {
 				this.onItemChosen(item)
+			},
+			onKeyDown(evt) {
+				switch (evt.keyCode){
+					case 38:
+						this.onArrowUp(evt)
+						break
+					case 40:
+						this.onArrowDown(evt)
+						break
+					case 13:
+						this.onEnter(evt)
+						break
+				}
+			},
+			onArrowUp() {
+				if (!this.items || !this.items.length) return
+
+				const activeItem = _.find(this.items, { active: true });
+				if (!activeItem || activeItem === this.items[0]) {
+					this.$set(this.items[this.items.length - 1], 'active', true);
+				} else {
+					this.$set(this.items[this.items.indexOf(activeItem) - 1], 'active', true)
+				}
+
+				if (activeItem) this.$set(activeItem, 'active', false)
+				this.$el.focus();
+			},
+			onArrowDown() {
+				if (!this.items || !this.items.length) return
+
+				const activeItem = _.find(this.items, { active: true });
+
+				if (!activeItem || activeItem === this.items[this.items.length - 1]) {
+					this.$set(this.items[0], 'active', true)
+				} else {
+					this.$set(this.items[this.items.indexOf(activeItem) + 1], 'active', true)
+				}
+
+				if (activeItem) this.$set(activeItem, 'active', false)
+				this.$el.focus();
+			},
+
+			onEnter(evt) {
+				const activeItem = _.find(this.items, { active: true });
+
+				if (!activeItem) return
+
+				this.$set(activeItem, 'active', false)
+				this.onItemClicked(activeItem)
+
+				evt.preventDefault();
+				evt.stopPropagation();
+				return false
+			},
+
+			onEsc(evt) {
+				this.$set(this, 'items', null)
 			}
 		}
 	}

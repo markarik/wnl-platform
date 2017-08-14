@@ -1,8 +1,13 @@
 <template>
 	<div class="quill-container">
-		<wnl-autocomplete :items="autocompleteItems" :onItemChosen="insertMention"></wnl-autocomplete>
+		<wnl-autocomplete
+			:items="autocompleteItems"
+			:onItemChosen="insertMention"
+			ref="autocomplete"
+		>
+		</wnl-autocomplete>
 
-		<div ref="quill">
+		<div ref="quill" @keydown="onKeyDown">
 			<slot></slot>
 		</div>
 	</div>
@@ -39,6 +44,7 @@
 
 	const firstAndLastNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+) {1}([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
 	const firstNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
+	const autocompleteChar = '@'
 
 	export default {
 		name: 'Quill',
@@ -77,6 +83,7 @@
 			return {
 				focused: this.autofocus,
 				quill: null,
+				autocomplete: null,
 				editor: null,
 				autocompleteItems: [],
 				lastAutocompleteQuery: null,
@@ -133,7 +140,10 @@
 			  	if (!range || range.length != 0) return
 			  	const position = range.index - lastMentionQueryLength
 
-			  	this.quill.insertEmbed(position, 'mention', {name: data.full_name, id:"123"}, Quill.sources.API);
+			  	this.quill.insertEmbed(position, 'mention', {
+					name: `${autocompleteChar}${data.full_name}`,
+					id: '123'
+				}, Quill.sources.API);
 			  	this.quill.insertText(position + 1, ' ', Quill.sources.API);
 			  	this.quill.setSelection(position + 2, Quill.sources.API);
 			},
@@ -181,6 +191,24 @@
 
 			onMentionsFetched(response) {
 				this.autocompleteItems = response.data
+			},
+
+			onKeyDown(evt) {
+				if (!this.$refs.autocomplete) return
+				if (evt.keyCode === 27) {
+					this.onEsc(evt)
+					return
+				}
+				if ([13, 38, 40].indexOf(evt.keyCode) === -1) return
+				if (evt.keyCode === 13 && !this.$refs.autocomplete.hasItems) return
+				this.$refs.autocomplete.onKeyDown(evt)
+
+				evt.preventDefault();
+				evt.stopPropagation();
+				return false
+			},
+			onEsc(evt) {
+				this.autocompleteItems = [];
 			}
 		},
 		mounted () {

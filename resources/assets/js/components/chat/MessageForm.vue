@@ -44,6 +44,7 @@
 	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
+	import _ from 'lodash';
 
 	export default{
 		props: ['loaded', 'socket', 'room'],

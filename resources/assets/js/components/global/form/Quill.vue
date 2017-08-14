@@ -142,7 +142,7 @@
 
 			  	this.quill.insertEmbed(position, 'mention', {
 					name: `${autocompleteChar}${data.full_name}`,
-					id: '123'
+					id: data.id
 				}, Quill.sources.API);
 			  	this.quill.insertText(position + 1, ' ', Quill.sources.API);
 			  	this.quill.setSelection(position + 2, Quill.sources.API);

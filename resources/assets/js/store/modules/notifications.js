@@ -114,6 +114,7 @@ const actions = {
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (notification) => {
+				console.log('pierdolenieoszopenie', notification)
 				commit(types.ADD_NOTIFICATION, {...notification, channel})
 			});
 	},

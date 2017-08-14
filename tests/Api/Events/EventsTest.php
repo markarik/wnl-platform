@@ -12,7 +12,8 @@ class EventsTest extends ApiTestCase
 	/** @test */
 	public function post_mention_from_chat_message()
 	{
-		$user = User::find(1);
+		$user = factory(User::class)->create();
+		$mentioned = factory(User::class)->create();
 
 		$data = [
 			'subject' => [
@@ -21,7 +22,7 @@ class EventsTest extends ApiTestCase
 				'text' => 'Siema siema',
 				'channel' => '#kardiologia-1'
 			],
-			'mentioned_users' => [2, 3],
+			'mentioned_users' => [$mentioned->id],
 		];
 
 		$headers = [
@@ -31,8 +32,6 @@ class EventsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/events/mentions'), $data, $headers);
-
-		dump($response->dump());
 
 		$response
 			->assertStatus(200);
@@ -58,8 +57,6 @@ class EventsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/events/mentions'), $data, $headers);
-
-		dump($response->dump());
 
 		$response
 			->assertStatus(200);

@@ -29,7 +29,7 @@ class ScreensTest extends ApiTestCase
 	/** @test */
 	public function delete_screen_acting_as_regular_user()
 	{
-		$user = User::find(4);
+		$user = factory(User::class)->create();
 
 		$response = $this
 			->actingAs($user)

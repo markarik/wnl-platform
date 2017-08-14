@@ -1,10 +1,10 @@
 <template>
 
 	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
-		<fullscreen :imagesSources="imagesSources" :currentImageSource="currentImageSource" v-if="currentImageSource"
-		></fullscreen>
 		<div class="content" v-html="content">
 		</div>
+		<fullscreen :imagesSources="imagesSources" :currentImageSource="currentImageSource" v-if="currentImageSource"
+		></fullscreen>
 		<p class="end-button has-text-centered" v-if="showBacklink">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
 				Wróć do auli
@@ -18,6 +18,9 @@
 
 	.wnl-screen-html
 		margin: $margin-big 0
+		img:hover
+			opacity: 0.7
+
 
 	.wnl-repetitions
 		ol
@@ -56,7 +59,7 @@
 		data() {
 			return {
 				imagesSources: [],
-				currentImageSource: ''
+				currentImageSource: '',
 			}
 		},
 		props: ['screenData', 'showBacklink'],
@@ -88,17 +91,22 @@
 				}
 			},
 			clickOnImg(event) {
-				this.currentImageSource = event.target.src
+				this.currentImageSource = event.target.src;
+				this.$emit('updateImageSource', this.currentImageSource);
+				console.log('click');
+			},
+			methodOnImages() {
+				var img = document.querySelectorAll(".wnl-screen-html img");
+				var i;
+				for (i = 0; i < img.length; i++) {
+					this.imagesSources.push(img[i].src);
+					img[i].addEventListener('click', this.clickOnImg);
+				};
 			},
 		},
 		mounted() {
 			this.wrapEmbedded();
-			var img = document.querySelectorAll(".wnl-screen-html img");
-			var i;
-			for (i = 0; i < img.length; i++) {
-				this.imagesSources.push(img[i].src);
-				img[i].addEventListener('click', this.clickOnImg)
-			};
+			this.methodOnImages();
 		},
 		updated() {
 			this.wrapEmbedded()

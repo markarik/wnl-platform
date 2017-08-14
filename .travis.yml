@@ -1,0 +1,25 @@
+sudo: required
+language: php
+dist: trusty
+
+php:
+  - 7.0
+
+services:
+  - mysql
+
+before_install:
+  - bash .travis.install-mysql-5.7.sh
+  - mysql -e 'CREATE DATABASE test_db;'
+
+install:
+  - composer install --no-interaction
+
+before_script:
+  - mv .env.testing .env
+  - php artisan key:generate
+  - php artisan migrate
+  - php artisan db:seed --class=UsersTableSeeder
+
+script:
+  - phpunit --filter=Api

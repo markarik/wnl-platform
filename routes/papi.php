@@ -105,18 +105,18 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post("{$r['tags']}/.search", 'TagsApiController@filter');
 
 	// Q&A Questions
-	Route::post($r['questions'], 'QnaQuestionsApiController@post');
-	Route::get("{$r['questions']}/{id}", 'QnaQuestionsApiController@get');
-	Route::put("{$r['questions']}/{id}", 'QnaQuestionsApiController@put');
-	Route::delete("{$r['questions']}/{id}", 'QnaQuestionsApiController@delete');
-	Route::post("{$r['questions']}/.search", 'QnaQuestionsApiController@filter');
+	Route::post($r['qna-questions'], 'QnaQuestionsApiController@post');
+	Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
+	Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
+	Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');
+	Route::post("{$r['qna-questions']}/.search", 'QnaQuestionsApiController@filter');
 
 	// Q&A Answers
-	Route::post($r['answers'], 'QnaAnswersApiController@post');
-	Route::get("{$r['answers']}/{id}", 'QnaAnswersApiController@get');
-	Route::put("{$r['answers']}/{id}", 'QnaAnswersApiController@put');
-	Route::delete("{$r['answers']}/{id}", 'QnaAnswersApiController@delete');
-	Route::post("{$r['answers']}/.search", 'QnaAnswersApiController@filter');
+	Route::post($r['qna-answers'], 'QnaAnswersApiController@post');
+	Route::get("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@get');
+	Route::put("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@put');
+	Route::delete("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@delete');
+	Route::post("{$r['qna-answers']}/.search", 'QnaAnswersApiController@filter');
 
 	// Quiz Sets
 	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
@@ -161,4 +161,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Events
 	Route::post("events/mentions", 'MentionsApiController@post');
+
+	// Temporary Questions controller
+	Route::get("{$r['questions']}", 'QuestionsApiController@all');
 });

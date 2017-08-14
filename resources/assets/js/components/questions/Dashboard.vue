@@ -6,6 +6,7 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside">
+				ELOSZKA
 				<!-- <wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav> -->
 			</aside>
 		</wnl-sidenav-slot>
@@ -26,7 +27,7 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -41,5 +42,11 @@
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
 		},
+		methods: {
+			...mapActions('questions', ['getQuestions'])
+		},
+		mounted() {
+			this.getQuestions()
+		}
 	}
 </script>

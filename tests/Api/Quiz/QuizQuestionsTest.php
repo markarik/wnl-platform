@@ -37,7 +37,7 @@ class QuizQuestionsTest extends ApiTestCase
 				'whereHas' => [
 					'tags' => [
 						'where' => [
-							['tags.name', '=', 'Kardiologia 1']
+							['tags.name', '=', 'Kardiologia 1'],
 						],
 					],
 				],
@@ -47,6 +47,54 @@ class QuizQuestionsTest extends ApiTestCase
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.search'), $data);
 
+		$response
+			->assertStatus(200);
+	}
+
+	/** @test */
+	public function filter_quiz_questions()
+	{
+		$user = factory(User::class)->create();
+
+		$data = [
+			'fields'  => ['id', 'text', 'created_at'],
+			'search'  => [
+				'phrase' => 'Gastropareza',
+				'mode'   => 'phrase_match',
+			],
+			'filters' => [
+				[
+					'tags' => ['LEK-2016'],
+				],
+				[
+					'categories' => ['Kardiologia', 'Pulmonologia'],
+				],
+				[
+					'query' => [
+						'doesntHave' => ['quiz_set'],
+					],
+				],
+				[
+					'pre_filter' => [
+						'name'   => 'quiz_by_correct_answer',
+						'params' => ['user_id' => 255, 'correct' => false],
+					],
+				],
+				[
+					'pre_filter' => [
+						'name'   => 'quiz_is_done',
+						'params' => ['user_id' => 255, 'done' => false],
+					],
+				],
+			],
+//			'include' => 'comments,comments.profiles,reactions',
+			'limit'   => 5,
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/quiz_questions/.filter'), $data);
+dd($response->dump());
 		$response
 			->assertStatus(200);
 	}

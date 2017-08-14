@@ -41,6 +41,7 @@ class ApiController extends Controller
 	 * Get a resource.
 	 *
 	 * @param $id
+	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function get($id)
@@ -63,6 +64,7 @@ class ApiController extends Controller
 	 * Delete a resource.
 	 *
 	 * @param $id
+	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function delete($id)
@@ -88,6 +90,7 @@ class ApiController extends Controller
 	 * Get resource model class name.
 	 *
 	 * @param $resource
+	 *
 	 * @return string
 	 */
 	public static function getResourceModel($resource)
@@ -99,6 +102,7 @@ class ApiController extends Controller
 	 * Get resource transformer name.
 	 *
 	 * @param $resource
+	 *
 	 * @return string
 	 */
 	protected static function getResourceTransformer($resource)
@@ -110,6 +114,7 @@ class ApiController extends Controller
 	 * Convert resource name to a class name.
 	 *
 	 * @param $resource
+	 *
 	 * @return string
 	 */
 	protected static function getResourcesStudly($resource)
@@ -121,6 +126,7 @@ class ApiController extends Controller
 	 * Determine whether a resource should be included.
 	 *
 	 * @param $name
+	 *
 	 * @return bool
 	 */
 	public static function shouldInclude($name)
@@ -135,11 +141,45 @@ class ApiController extends Controller
 	 */
 	protected function transformAndRespond($results)
 	{
+		$data = $this->transform($results);
+
+		return $this->json($data);
+	}
+
+	/**
+	 * @param $results
+	 *
+	 * @return array
+	 */
+	protected function transform($results)
+	{
 		$transformerName = self::getResourceTransformer($this->resourceName);
 		$resource = new Collection($results, new $transformerName, $this->resourceName);
 
 		$data = $this->fractal->createData($resource)->toArray();
 
-		return $this->json($data);
+		return $data;
+	}
+
+	/**
+	 * @param $model
+	 * @param $limit
+	 *
+	 * @return array
+	 */
+	protected function paginatedResponse($model, $limit)
+	{
+		$paginator = $model::paginate($limit);
+
+		$response = [
+			'data'         => $this->transform($paginator->getCollection()),
+			'total'        => $paginator->total(),
+			'has_more'     => $paginator->hasMorePages(),
+			'last_page'    => $paginator->lastPage(),
+			'per_page'     => $paginator->perPage(),
+			'current_page' => $paginator->currentPage(),
+		];
+
+		return $response;
 	}
 }

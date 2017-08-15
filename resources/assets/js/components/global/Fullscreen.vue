@@ -47,20 +47,17 @@ export default {
         }
     },
     methods: {
-        // closeModal() {
-        //     document.getElementById('myModal').style.display = "none";
-        // },
         closeLightbox() {
             document.getElementById('myModal').style.display = "none";
+            this.$emit('childCurrentImageSourceRemove')
         },
-        changeImageSource(value) {
-            this.MutableCurrentImageSource = value;
+        setImageSource() {
+            document.querySelector('.modal-content').setAttribute('src', this.MutableCurrentImageSource);
             document.getElementById('myModal').style.display = "block";
-            document.querySelector('.modal-content').setAttribute('src', this.MutableCurrentImageSource)
         },
     },
     mounted() {
-        this.$parent.$on('updateImageSource', this.changeImageSource)
+        this.setImageSource()
     },
 }
 </script>

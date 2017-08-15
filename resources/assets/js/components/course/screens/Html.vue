@@ -3,7 +3,7 @@
 	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
 		<div class="content" v-html="content">
 		</div>
-		<fullscreen :imagesSources="imagesSources" :currentImageSource="currentImageSource" v-if="currentImageSource"
+		<fullscreen :imagesSources="imagesSources" :currentImageSource="currentImageSource" v-if="currentImageSource" v-on:childCurrentImageSourceRemove="childCurrentImageSourceRemove"
 		></fullscreen>
 		<p class="end-button has-text-centered" v-if="showBacklink">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
@@ -92,7 +92,6 @@
 			},
 			clickOnImg(event) {
 				this.currentImageSource = event.target.src;
-				this.$emit('updateImageSource', this.currentImageSource);
 			},
 			methodOnImages() {
 				var img = document.querySelectorAll(".wnl-screen-html img");
@@ -102,6 +101,9 @@
 					img[i].addEventListener('click', this.clickOnImg);
 				};
 			},
+			childCurrentImageSourceRemove() {
+				this.currentImageSource = "";
+			}
 		},
 		mounted() {
 			this.wrapEmbedded();

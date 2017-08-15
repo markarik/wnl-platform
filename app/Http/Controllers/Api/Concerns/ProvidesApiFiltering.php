@@ -35,10 +35,11 @@ trait ProvidesApiFiltering
 	{
 		$this->checkIsArray($filter);
 		$filterName = array_keys($filter)[0];
-		$this->checkIsArray($filter[$filterName]);
+		$params = $filter[$filterName];
+		$this->checkIsArray($params);
+		$filterClass = $this->getFilterClass($filterName);
 
-		return $this->getFilterClass($filterName);
-
+		return new $filterClass($params);
 	}
 
 	private function getFilterClass($filterName)
@@ -49,7 +50,7 @@ trait ProvidesApiFiltering
 			})
 			->implode('\\') . 'Filter';
 
-		return app('App\Http\Controllers\Api\Filters\\' . $className);
+		return 'App\Http\Controllers\Api\Filters\\' . $className;
 	}
 
 	private function checkIsArray($filter)

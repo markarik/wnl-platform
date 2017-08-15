@@ -6,9 +6,12 @@ use ScoutEngines\Elasticsearch\Searchable;
 
 class SearchFilter extends ApiFilter
 {
+	protected $expected = ['phrase', 'mode'];
+
 	public function apply($model)
 	{
 		$this->checkIsSearchable($model);
+
 		return $model;
 	}
 

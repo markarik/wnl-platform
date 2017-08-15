@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Qna;
 
+use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
 use App\Models\User;
 use Tests\Api\ApiTestCase;
@@ -59,6 +60,7 @@ class AnswerTest extends ApiTestCase
 	public function update_answer()
 	{
 		$user = User::find(1);
+		$qnaAnswer = factory(QnaAnswer::class)->create();
 
 		$data = [
 			'text' => 'joł!',
@@ -66,7 +68,7 @@ class AnswerTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('PUT', $this->url('/qna_answers/1'), $data);
+			->json('PUT', $this->url("/qna_answers/{$qnaAnswer->id}"), $data);
 
 		$response
 			->assertStatus(200);

@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Comments;
 
+use App\Models\Comment;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
 use App\Models\Screen;
@@ -73,10 +74,13 @@ class CommentsTest extends ApiTestCase
 	public function delete_comment()
 	{
 		$user = User::find(1);
+		$comment = factory(Comment::class)->create([
+			'user_id' => $user->id
+		]);
 
 		$response = $this
 			->actingAs($user)
-			->json('DELETE', $this->url('/comments/2'));
+			->json('DELETE', $this->url("/comments/{$comment->id}"));
 
 		$response
 			->assertStatus(200);

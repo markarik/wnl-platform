@@ -2,6 +2,8 @@
 
 namespace Tests\Api\Qna;
 
+use App\Models\QnaAnswer;
+use App\Models\Slide;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
@@ -16,11 +18,12 @@ class ReactionsTest extends ApiTestCase
 	public function post_reaction_with_context()
 	{
 		$user = User::find(1);
+		$qnaAnswer = factory(QnaAnswer::class)->create();
 
 		$data = [
 			[
-				'reactable_resource' => config('papi.resources.answers'),
-				'reactable_id'       => 2,
+				'reactable_resource' => 'qna_answer',
+				'reactable_id'       => $qnaAnswer->id,
 				'reaction_type'      => 'thanks',
 				'context'            => '{"very": "cool", "json": {"data": "or", "whatever": true}}',
 			]
@@ -38,11 +41,12 @@ class ReactionsTest extends ApiTestCase
 	public function post_reaction_to_slide()
 	{
 		$user = User::find(1);
+		$slide = factory(Slide::class)->create();
 
 		$data = [
 			[
 				'reactable_resource' => config('papi.resources.slides'),
-				'reactable_id'       => 100,
+				'reactable_id'       => $slide->id,
 				'reaction_type'      => 'bookmark',
 			]
 		];
@@ -59,10 +63,11 @@ class ReactionsTest extends ApiTestCase
 	public function delete_reaction()
 	{
 		$user = User::find(1);
+		$qnaAnswer = factory(QnaAnswer::class)->create();
 
 		$data = [
 			'reactable_resource' => config('papi.resources.answers'),
-			'reactable_id'       => 1,
+			'reactable_id'       => $qnaAnswer->id,
 			'reaction_type'      => 'upvote',
 		];
 

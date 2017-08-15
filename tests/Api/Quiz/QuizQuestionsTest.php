@@ -58,11 +58,13 @@ class QuizQuestionsTest extends ApiTestCase
 
 		$data = [
 			'fields'  => ['id', 'text', 'created_at'],
-			'search'  => [
-				'phrase' => 'Gastropareza',
-				'mode'   => 'phrase_match',
-			],
 			'filters' => [
+				[
+					'search' => [
+						'phrase' => 'Gastropareza',
+						'mode'   => 'phrase_match',
+					],
+				],
 				[
 					'tags' => ['LEK-2016'],
 				],
@@ -75,15 +77,15 @@ class QuizQuestionsTest extends ApiTestCase
 					],
 				],
 				[
-					'pre_filter' => [
-						'name'   => 'quiz_by_correct_answer',
-						'params' => ['user_id' => 255, 'correct' => false],
+					'quiz.correct_answer' => [
+						'user_id' => 255,
+						'correct' => false
 					],
 				],
 				[
-					'pre_filter' => [
-						'name'   => 'quiz_is_done',
-						'params' => ['user_id' => 255, 'done' => false],
+					'quiz.is_done' => [
+						'user_id' => 255,
+						'done' => false
 					],
 				],
 			],
@@ -94,7 +96,7 @@ class QuizQuestionsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filter'), $data);
-dd($response->dump());
+		dd($response->dump());
 		$response
 			->assertStatus(200);
 	}

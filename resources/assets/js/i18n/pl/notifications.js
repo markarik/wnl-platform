@@ -5,12 +5,14 @@ export const notifications = {
 		quizQuestion: '#{id}',
 		page: 'na stronie {page}',
 		slide: '{slide}',
+		channel: 'na kanale chatu {channel}'
 	},
 	events: {
 		commentPosted: 'skomentował/-a',
 		qnaQuestionPosted: 'zadał/-a',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
+		mentioned: 'wspomniał/-a Cię na czacie'
 	},
 	messages: {
 		deleted: 'Treść usunięta przez autora'

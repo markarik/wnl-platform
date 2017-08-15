@@ -86,7 +86,9 @@
 				}
 
 				if (activeItem) this.$set(activeItem, 'active', false)
-				this.$el.focus();
+
+				//Something would steal the focus back to the Quill input when if we'd do it synchronously
+				this.$nextTick(() => { this.$el.focus(); })
 			},
 			onArrowDown() {
 				if (!this.items || !this.items.length) return
@@ -100,7 +102,9 @@
 				}
 
 				if (activeItem) this.$set(activeItem, 'active', false)
-				this.$el.focus();
+
+				//Something would steal the focus back to the Quill input when if we'd do it synchronously
+				this.$nextTick(() => { this.$el.focus(); })
 			},
 
 			onEnter(evt) {

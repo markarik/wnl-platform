@@ -60,12 +60,11 @@ class Mentioned extends Event
 		$this->data['referer'] = $this->referer;
 
 		if ($this->payload['subject']['type'] === 'chat_message') {
-			$this->data['subject'] = $this->payload['subject'];
-
-			return;
+			$this->transformSubjectForChatMessage();
+		} else {
+			$this->transformSubject();
 		}
 
-		$this->transformSubject();
 	}
 
 	protected function transformSubject():void
@@ -81,5 +80,12 @@ class Mentioned extends Event
 			'id'   => $subject->id,
 			'text' => $subject->text ?? null,
 		];
+	}
+
+	protected function transformSubjectForChatMessage():void
+	{
+		$payloadSubject = $this->payload['subject'];
+		$this->data['subject'] = $payloadSubject;
+		$this->data['subject']['text'] = strip_tags($payloadSubject['text']) ?? null;
 	}
 }

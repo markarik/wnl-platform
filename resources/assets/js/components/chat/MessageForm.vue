@@ -65,7 +65,8 @@
 						}
 					}
 				},
-				isWaitingToSendMentions: false
+				isWaitingToSendMentions: false,
+				mentions: []
 			}
 		},
 		components: {
@@ -76,11 +77,12 @@
 			...mapGetters([
 				'currentUserFullName',
 				'currentUserAvatar',
-				'currentUserId'
+				'currentUserId',
+				'currentUser'
 			]),
 			...mapGetters('course', ['courseId']),
 			sendingDisabled() {
-				return !this.loaded || this.message.length === 0
+				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0)
 			},
 			toolbar() {
 				return [
@@ -110,6 +112,7 @@
 				})
 			},
 			getMentions() {
+				if (!this.quillEditor) return []
 				const mentions = this.quillEditor
 					.$el
 					.querySelectorAll('.quill-mention')
@@ -127,8 +130,11 @@
 					},
 					context: {
 						courseId: this.courseId,
-						lessonId: ''
-					}
+						lessonId: this.$route.params.lessonId,
+						slideId: this.$route.params.slideId,
+						channel: this.room
+					},
+					actors: this.currentUser
 				}
 			},
 			suppressEnter(event) {
@@ -145,7 +151,8 @@
 							)
 						}
 
-						this.quillEditor.quill.deleteText(0, this.content.length);
+						this.quillEditor.quill.deleteText(0, this.content.length)
+						this.mentions = []
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
@@ -154,6 +161,7 @@
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
+				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
 			}
 		},

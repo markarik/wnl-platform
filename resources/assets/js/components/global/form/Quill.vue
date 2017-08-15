@@ -149,6 +149,7 @@
 			},
 			getCurrentMention() {
 				this.lastRange = this.quill.getSelection()
+
 			    if (!this.lastRange) {
 					return
 				}
@@ -161,8 +162,6 @@
 			    const bothNamesMatch = firstAndLastNameMatcher.exec(contents)
 
 				if (bothNamesMatch) {
-					console.log('both names matched', bothNamesMatch)
-
 					currentMentionMatch = {
 						firstName: bothNamesMatch[1],
 						lastName: bothNamesMatch[2],
@@ -172,8 +171,6 @@
 					const oneNameMatch = firstNameMatcher.exec(contents)
 
 					if (oneNameMatch) {
-						console.log('one name matched', oneNameMatch)
-
 						currentMentionMatch = {
 							firstName: oneNameMatch[1],
 							lastName: ''

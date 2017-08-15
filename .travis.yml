@@ -7,6 +7,7 @@ php:
 
 services:
   - mysql
+  - redis-server
 
 before_install:
   - bash .travis.install-mysql-5.7.sh

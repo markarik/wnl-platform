@@ -3,7 +3,7 @@
 	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
 		<div class="content" v-html="content">
 		</div>
-		<fullscreen :imagesSources="imagesSources" :currentImageSource="currentImageSource" v-if="currentImageSource" v-on:childCurrentImageSourceRemove="childCurrentImageSourceRemove"
+		<fullscreen :imagesSources="imagesSources" :currentImageSource="currentImageSource" v-if="currentImageSource" v-on:childCurrentImageSourceRemove="childCurrentImageSourceRemove" v-on:nextImage="nextImage" v-on:prevImage="prevImage"
 		></fullscreen>
 		<p class="end-button has-text-centered" v-if="showBacklink">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
@@ -103,7 +103,16 @@
 			},
 			childCurrentImageSourceRemove() {
 				this.currentImageSource = "";
-			}
+			},
+			nextImage() {
+				if (this.imagesSources.indexOf(JSON.stringify(this.currentImageSource))) {
+					this.currentImageSource = this.imagesSources[this.imagesSources.indexOf(this.currentImageSource)+1];
+					console.log(this.currentImageSource);
+				}
+			},
+			prevImage() {
+
+			},
 		},
 		mounted() {
 			this.wrapEmbedded();

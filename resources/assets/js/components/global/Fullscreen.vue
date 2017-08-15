@@ -6,6 +6,9 @@
 
         <img class="modal-content" src="this.currentImageSource">
 
+        <a class="prev" v-on:click="minusSlides">&#10094;</a>
+        <a class="next" v-on:click="plusSlides">&#10095;</a>
+
     </div>
 
 </template>
@@ -14,7 +17,6 @@
     .modal
         background-color: rgba(0,0,0,0.9)
         display: none
-        height: 100%
         overflow: auto
         padding-top: 100px
         position: fixed
@@ -24,8 +26,9 @@
     .modal-content
         display: block
         margin: auto
-        // max-width: 70%
-        width: 80%
+        height: 100vh
+        // max-width: 90%
+        width: 100vw
 
     #close
         color: #f1f1f1
@@ -35,6 +38,26 @@
         right: 35px
         transition: 0.3
         top: 35px
+
+    .prev,
+    .next
+        cursor: pointer
+        position: absolute
+        top: 50%
+        width: auto
+        padding: 16px
+        margin-top: -50px
+        color: white
+        font-weight: bold
+        font-size: 20px
+        transition: 0.6s ease
+        border-radius: 0 3px 3px 0
+        user-select: none
+        -webkit-user-select: none
+
+    .next
+        right: 0
+        border-radius: 3px 0 0 3px
 </style>
 
 <script>
@@ -54,6 +77,12 @@ export default {
         setImageSource() {
             document.querySelector('.modal-content').setAttribute('src', this.MutableCurrentImageSource);
             document.getElementById('myModal').style.display = "block";
+        },
+        plusSlides() {
+            this.$emit('nextImage');
+        },
+        minusSlides() {
+            this.$emit('prevImage');
         },
     },
     mounted() {

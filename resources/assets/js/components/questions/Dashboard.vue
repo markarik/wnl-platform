@@ -12,11 +12,19 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
+				<div>
+					<div v-for="(filterGroup, key) in Object.keys(filters)" :key="key">
+						<div v-for="(filter, key) in Object.keys(filters[filterGroup])" :key="key">
+							<input type="checkbox" :name="filter" :value="`${filterGroup}.${filter}`" v-model="activeFilters">
+							<label :for="filter">{{filters[filterGroup][filter].name}}</label>
+						</div>
+					</div>
+				</div>
 				<wnl-quiz-widget
-				:questions="getQuestionsList"
-				@changeQuestion="performChangeQuestion"
-				@verify="resolveQuestion"
-			></wnl-quiz-widget>
+					:questions="questionsList"
+					@changeQuestion="performChangeQuestion"
+					@verify="resolveQuestion"
+				></wnl-quiz-widget>
 			</div>
 		</div>
 	</div>
@@ -46,15 +54,20 @@
 			'wnl-main-nav': MainNav,
 			'wnl-quiz-widget': QuizWidget,
 		},
-		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
-			...mapGetters('questions', ['getQuestionsList']),
-			highlightedQuestion() {
-				return this.getQuestionsList[0]
+		data() {
+			return {
+				activeFilters: []
 			}
 		},
+		computed: {
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
+			...mapGetters('questions', ['questionsList', 'filters']),
+			highlightedQuestion() {
+				return this.questionsList[0]
+			},
+		},
 		methods: {
-			...mapActions('questions', ['fetchQuestions', 'fetchQuestionAnswers']),
+			...mapActions('questions', ['fetchQuestions', 'fetchQuestionAnswers', 'fetchDynamicFilters']),
 			performChangeQuestion() {
 
 			},
@@ -63,11 +76,10 @@
 			}
 		},
 		mounted() {
-			this.fetchQuestions()
+			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters()])
 				.then(() => {
-					console.log(this.highlightedQuestion.id)
 					this.fetchQuestionAnswers(this.highlightedQuestion.id)
 				})
-		}
+		},
 	}
 </script>

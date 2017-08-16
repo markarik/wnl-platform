@@ -33,7 +33,7 @@ class QuestionsApiController extends ApiController
 
 		return $this->respondOk([
 			'chrono' => $chronoTags->toArray(),
-			'subjects' => $chronoTags->toArray()
+			'subjects' => $subjectsTags->toArray()
 		]);
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Qna;
 
+use App\Models\Comment;
 use App\Models\User;
 use Tests\Api\ApiTestCase;
 
@@ -12,7 +13,8 @@ class EventsTest extends ApiTestCase
 	/** @test */
 	public function post_mention_from_chat_message()
 	{
-		$user = User::find(1);
+		$user = factory(User::class)->create();
+		$mentioned = factory(User::class)->create();
 
 		$data = [
 			'subject' => [
@@ -21,7 +23,7 @@ class EventsTest extends ApiTestCase
 				'text' => 'Siema siema',
 				'channel' => '#kardiologia-1'
 			],
-			'mentioned_users' => [2, 3],
+			'mentioned_users' => [$mentioned->id],
 		];
 
 		$headers = [
@@ -31,8 +33,6 @@ class EventsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/events/mentions'), $data, $headers);
-
-		dump($response->dump());
 
 		$response
 			->assertStatus(200);
@@ -42,13 +42,15 @@ class EventsTest extends ApiTestCase
 	public function post_mention_from_comment()
 	{
 		$user = User::find(1);
+		$mentioned = factory(User::class)->create();
+		$comment = factory(Comment::class)->create();
 
 		$data = [
 			'subject' => [
 				'type' => 'comment',
-				'id'   => 1,
+				'id'   => $comment->id,
 			],
-			'mentioned_users' => [2],
+			'mentioned_users' => [$mentioned->id],
 		];
 
 		$headers = [
@@ -58,8 +60,6 @@ class EventsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/events/mentions'), $data, $headers);
-
-		dump($response->dump());
 
 		$response
 			->assertStatus(200);

@@ -3,6 +3,7 @@
 namespace Tests\Api\Course;
 
 use App\Models\Edition;
+use App\Models\Screen;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
@@ -15,12 +16,13 @@ class ScreensTest extends ApiTestCase
 	public function patch_screen()
 	{
 		$user = User::find(1);
+		$screen = factory(Screen::class)->create();
 
 		$payload = ['order_number' => 5];
 
 		$response = $this
 			->actingAs($user)
-			->json('PATCH', $this->url('/screens/3'), $payload);
+			->json('PATCH', $this->url("/screens/{$screen->id}"), $payload);
 
 		$response
 			->assertStatus(200);
@@ -29,11 +31,12 @@ class ScreensTest extends ApiTestCase
 	/** @test */
 	public function delete_screen_acting_as_regular_user()
 	{
-		$user = User::find(4);
+		$user = factory(User::class)->create();
+		$screen = factory(Screen::class)->create();
 
 		$response = $this
 			->actingAs($user)
-			->json('DELETE', $this->url('/screens/3'));
+			->json('DELETE', $this->url("/screens/{$screen->id}"));
 
 		$response
 			->assertStatus(401);
@@ -43,10 +46,11 @@ class ScreensTest extends ApiTestCase
 	public function delete_screen_acting_as_admin()
 	{
 		$user = User::find(1);
+		$screen = factory(Screen::class)->create();
 
 		$response = $this
 			->actingAs($user)
-			->json('DELETE', $this->url('/screens/3'));
+			->json('DELETE', $this->url("/screens/{$screen->id}"));
 
 		$response
 			->assertStatus(200);

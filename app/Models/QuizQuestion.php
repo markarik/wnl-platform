@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Laravel\Scout\Searchable;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class QuizQuestion extends Model
 {
@@ -39,5 +39,10 @@ class QuizQuestion extends Model
 	public function reactions()
 	{
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
+	}
+
+	public function userQuizResults()
+	{
+		return $this->hasMany('App\Models\UserQuizResults');
 	}
 }

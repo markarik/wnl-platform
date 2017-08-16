@@ -38,7 +38,7 @@ class UserNotificationApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	public function filter(Request $request)
+	public function query(Request $request)
 	{
 		$user = User::fetch($request->route('id'));
 

@@ -157,7 +157,7 @@ trait TranslatesApiQueries
 		$limit = $request->get('limit');
 		$join = $request->get('join');
 
-		$model = $this->parseQeury($model, $query);
+		$model = $this->parseQuery($model, $query);
 
 		if (!empty ($order)) {
 			$model = $this->parseOrder($model, $order);

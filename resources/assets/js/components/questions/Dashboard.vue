@@ -25,7 +25,7 @@
 					:questions="questionsList"
 					@changeQuestion="performChangeQuestion"
 					@verify="onVerify"
-					@selectAnswer="onAnswerSelect"
+					@selectAnswer="selectAnswer"
 				></wnl-quiz-widget>
 			</div>
 		</div>
@@ -58,15 +58,19 @@
 		},
 		data() {
 			return {
-				activeFilters: []
+				activeFilters: [],
+				orderedQuestionsList: []
 			}
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
-			...mapGetters('questions', ['questionsList', 'filters']),
+			...mapGetters('questions', ['questions', 'filters']),
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},
+			questionsList() {
+				return this.orderedQuestionsList.length ? this.orderedQuestionsList : Object.values(this.questions)
+			}
 		},
 		methods: {
 			...mapActions('questions', [
@@ -74,13 +78,14 @@
 				'fetchQuestionData',
 				'fetchDynamicFilters',
 				'selectAnswer',
-				'resolveQuestion'
+				'resolveQuestion',
 			]),
-			performChangeQuestion() {
+			performChangeQuestion(index) {
+				const beforeIndex = this.questionsList.slice(0, index);
+				const afterIndex = this.questionsList.slice(index)
 
-			},
-			onAnswerSelect(data) {
-				this.selectAnswer(data)
+				this.orderedQuestionsList = [...afterIndex, ...beforeIndex]
+				// TODO if we decide on pagination we can fetch new question here
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
@@ -93,5 +98,16 @@
 					this.fetchQuestionData(this.highlightedQuestion.id)
 				})
 		},
+		watch: {
+			activeFilters() {
+				//TODO watch active filters and issue request for matching ids
+			},
+			highlightedQuestion() {
+				if (!this.highlightedQuestion.answers) {
+					// TODO loading state
+					this.fetchQuestionData(this.highlightedQuestion.id)
+				}
+			}
+		}
 	}
 </script>

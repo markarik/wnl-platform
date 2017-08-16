@@ -32,7 +32,6 @@ const state = {
 // Getters
 const getters = {
 	questions: state => state.questions,
-	questionsList: state => Object.values(state.questions),
 	filters: state => state.filters
 }
 
@@ -79,7 +78,7 @@ const mutations = {
 	},
 	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
 		set(state.questions[questionId], 'isResolved', true)
-	}
+	},
 }
 
 // Actions
@@ -107,7 +106,7 @@ const actions = {
 	},
 	resolveQuestion({commit}, questionId) {
 		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)
-	}
+	},
 }
 
 

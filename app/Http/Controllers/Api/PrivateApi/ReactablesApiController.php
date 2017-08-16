@@ -13,7 +13,7 @@ class ReactablesApiController extends ApiController
 		$this->resourceName = config('papi.resources.reactables');
 	}
 
-	public function filter(Request $request)
+	public function query(Request $request)
 	{
 		$user = Auth::user();
 

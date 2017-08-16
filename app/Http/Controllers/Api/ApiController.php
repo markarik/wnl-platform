@@ -9,16 +9,18 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
 use League\Fractal\Resource\Collection;
-use App\Http\Controllers\Api\Concerns\FiltersApiQueries;
+use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
+use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
 
 class ApiController extends Controller
 {
 	use GeneratesApiResponses,
-		FiltersApiQueries,
-		PerformsApiSearches;
+		TranslatesApiQueries,
+		PerformsApiSearches,
+		ProvidesApiFiltering;
 
 	protected $fractal;
 	protected $request;
@@ -39,6 +41,7 @@ class ApiController extends Controller
 	 * Get a resource.
 	 *
 	 * @param $id
+	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function get($id)
@@ -61,6 +64,7 @@ class ApiController extends Controller
 	 * Delete a resource.
 	 *
 	 * @param $id
+	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function delete($id)
@@ -86,6 +90,7 @@ class ApiController extends Controller
 	 * Get resource model class name.
 	 *
 	 * @param $resource
+	 *
 	 * @return string
 	 */
 	public static function getResourceModel($resource)
@@ -97,6 +102,7 @@ class ApiController extends Controller
 	 * Get resource transformer name.
 	 *
 	 * @param $resource
+	 *
 	 * @return string
 	 */
 	protected static function getResourceTransformer($resource)
@@ -108,6 +114,7 @@ class ApiController extends Controller
 	 * Convert resource name to a class name.
 	 *
 	 * @param $resource
+	 *
 	 * @return string
 	 */
 	protected static function getResourcesStudly($resource)
@@ -119,10 +126,60 @@ class ApiController extends Controller
 	 * Determine whether a resource should be included.
 	 *
 	 * @param $name
+	 *
 	 * @return bool
 	 */
 	public static function shouldInclude($name)
 	{
 		return str_is("*{$name}*", \Request::get('include'));
+	}
+
+	/**
+	 * @param $results
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	protected function transformAndRespond($results)
+	{
+		$data = $this->transform($results);
+
+		return $this->json($data);
+	}
+
+	/**
+	 * @param $results
+	 *
+	 * @return array
+	 */
+	protected function transform($results)
+	{
+		$transformerName = self::getResourceTransformer($this->resourceName);
+		$resource = new Collection($results, new $transformerName, $this->resourceName);
+
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $data;
+	}
+
+	/**
+	 * @param $model
+	 * @param $limit
+	 *
+	 * @return array
+	 */
+	protected function paginatedResponse($model, $limit)
+	{
+		$paginator = $model->paginate($limit);
+
+		$response = [
+			'data'         => $this->transform($paginator->getCollection()),
+			'total'        => $paginator->total(),
+			'has_more'     => $paginator->hasMorePages(),
+			'last_page'    => $paginator->lastPage(),
+			'per_page'     => $paginator->perPage(),
+			'current_page' => $paginator->currentPage(),
+		];
+
+		return $response;
 	}
 }

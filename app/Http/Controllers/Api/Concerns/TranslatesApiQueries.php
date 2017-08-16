@@ -5,17 +5,16 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Collection;
 use Illuminate\Database\QueryException;
 
-trait FiltersApiQueries
+trait TranslatesApiQueries
 {
-
 	/**
-	 * Generates JSON response based on the search params.
+	 * Generates JSON response based on the query params.
 	 *
 	 * @param Request $request
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function filter(Request $request)
+	public function query(Request $request)
 	{
 		$modelName = self::getResourceModel($this->resourceName);
 		$model = new $modelName;
@@ -158,25 +157,7 @@ trait FiltersApiQueries
 		$limit = $request->get('limit');
 		$join = $request->get('join');
 
-		if (!empty($query['whereIn'])) {
-			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
-		}
-
-		if (!empty ($query['where'])) {
-			$model = $model->where($query['where']);
-		}
-
-		if (!empty ($query['whereHas'])) {
-			$model = $this->parseWhereHas($model, $query['whereHas']);
-		}
-
-		if (!empty ($query['whereDoesntHave'])) {
-			$model = $this->parseWhereDoesntHave($model, $query['whereDoesntHave']);
-		}
-
-		if (!empty ($query['hasIn'])) {
-			$model = $this->parseHasIn($model, $query['hasIn']);
-		}
+		$model = $this->parseQuery($model, $query);
 
 		if (!empty ($order)) {
 			$model = $this->parseOrder($model, $order);
@@ -208,14 +189,32 @@ trait FiltersApiQueries
 		}, $array);
 	}
 
-	protected function transformAndRespond($results)
+	protected function parseQuery($model, $query)
 	{
-		$transformerName = self::getResourceTransformer($this->resourceName);
-		$resource = new Collection($results, new $transformerName, $this->resourceName);
+		if (!empty($query['whereIn'])) {
+			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
+		}
 
-		$data = $this->fractal->createData($resource)->toArray();
+		if (!empty ($query['where'])) {
+			$model = $model->where($query['where']);
+		}
 
-		return $this->json($data);
+		if (!empty ($query['whereHas'])) {
+			$model = $this->parseWhereHas($model, $query['whereHas']);
+		}
+
+		if (!empty ($query['whereDoesntHave'])) {
+			$model = $this->parseWhereDoesntHave($model, $query['whereDoesntHave']);
+		}
+
+		if (!empty ($query['doesntHave'])) {
+			$model = $model->doesntHave($query['doesntHave']);
+		}
+
+		if (!empty ($query['hasIn'])) {
+			$model = $this->parseHasIn($model, $query['hasIn']);
+		}
+
+		return $model;
 	}
-
 }

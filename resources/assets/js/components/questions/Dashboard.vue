@@ -12,6 +12,11 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
+				<wnl-quiz-widget
+				:questions="getQuestionsList"
+				@changeQuestion="performChangeQuestion"
+				@verify="resolveQuestion"
+			></wnl-quiz-widget>
 			</div>
 		</div>
 	</div>
@@ -32,21 +37,30 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
+	import QuizWidget from 'js/components/quiz/QuizWidget'
 
 	export default {
 		components: {
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-main-nav': MainNav,
+			'wnl-quiz-widget': QuizWidget,
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
+			...mapGetters('questions', ['getQuestionsList'])
 		},
 		methods: {
-			...mapActions('questions', ['getQuestions'])
+			...mapActions('questions', ['fetchQuestions']),
+			performChangeQuestion() {
+
+			},
+			resolveQuestion() {
+
+			}
 		},
 		mounted() {
-			this.getQuestions()
+			this.fetchQuestions()
 		}
 	}
 </script>

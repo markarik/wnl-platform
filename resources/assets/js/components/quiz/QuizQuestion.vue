@@ -9,11 +9,11 @@
 			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
 					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
-						<div v-html="text"></div>
+						<div v-html="question.text"></div>
 					</div>
 					<div class="card-header-icons">
 						<wnl-bookmark
-							:reactableId="id"
+							:reactableId="question.id"
 							:reactableResource="reactableResource"
 							:state="reactionState"
 							module="quiz"
@@ -23,17 +23,17 @@
 			</header>
 			<div class="quiz-answers card-content" v-if="!headerOnly">
 				<ul>
-					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
+					<wnl-quiz-answer v-for="(answer, answerIndex) in question.answers"
 						:answer="answer"
 						:index="answerIndex"
-						:questionId="id"
-						:totalHits="total"
+						:questionId="question.id"
+						:totalHits="question.total_hits"
 						:key="answerIndex"
 						:readOnly="readOnly"
 						@answerSelected="selectAnswer(answerIndex)"
 					></wnl-quiz-answer>
 				</ul>
-				<div class="quiz-question-meta">#{{id}}</div>
+				<div class="quiz-question-meta">#{{question.id}}</div>
 			</div>
 			<div class="card-footer" v-if="(!headerOnly && displayResults) || showComments">
 				<div class="quiz-question-comments">
@@ -41,7 +41,7 @@
 						module="quiz"
 						commentableResource="quiz_questions"
 						urlParam="quiz_question"
-						:commentableId="id"
+						:commentableId="question.id"
 						:isUnique="showComments">
 					</wnl-comments-list>
 				</div>
@@ -132,7 +132,7 @@
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
 		},
-		props: ['id', 'index', 'text', 'total', 'readOnly', 'headerOnly', 'showComments'],
+		props: ['index', 'readOnly', 'headerOnly', 'showComments', 'question'],
 		data() {
 			return {
 				reactableResource: "quiz_questions"
@@ -141,26 +141,22 @@
 		computed: {
 			...mapGetters(['isMobile']),
 			...mapGetters('quiz', [
-				'getAnswers',
 				'isComplete',
 				'isResolved',
 				'getSelectedAnswer',
 				'getReaction'
 			]),
 			displayResults() {
-				return this.readOnly || this.isComplete || this.isResolved(this.id)
-			},
-			answers() {
-				return this.getAnswers(this.id)
+				return this.readOnly || this.isComplete || this.isResolved(this.question.id)
 			},
 			selectedAnswer() {
-				return this.getSelectedAnswer(this.id)
+				return this.getSelectedAnswer(this.question.id)
 			},
 			isUnanswered() {
 				return this.selectedAnswer === null
 			},
 			reactionState() {
-				return this.getReaction(this.reactableResource, this.id, "bookmark")
+				return this.getReaction(this.reactableResource, this.question.id, "bookmark")
 			}
 		},
 		methods: {
@@ -175,7 +171,7 @@
 			selectAnswer(answerIndex) {
 				if (!this.isComplete) {
 					this.commitSelectAnswer({
-						id: this.id,
+						id: this.question.id,
 						answer: answerIndex
 					})
 				}

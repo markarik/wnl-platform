@@ -4,7 +4,7 @@
 		<div v-if="isLoaded || howManyQuestions === 0">
 			<wnl-quiz-widget
 				v-if="howManyQuestions > 0"
-				:questions="getQuestions"
+				:questions="getQuestionsWithAnswers"
 				@changeQuestion="performChangeQuestion"
 				@verify="resolveQuestion"
 			></wnl-quiz-widget>
@@ -35,7 +35,7 @@
 		},
 		props: ['categoryName', 'rootCategoryName', 'quizQuestionsIds'],
 		computed: {
-			...mapGetters('quiz', ['isLoaded', 'getQuestions']),
+			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers']),
 			howManyQuestions() {
 				return this.quizQuestionsIds.length
 			},
@@ -43,7 +43,7 @@
 		methods: {
 			...mapActions('quiz', ['shuffleAnswers', 'changeQuestion', 'resolveQuestion']),
 			performChangeQuestion(index) {
-				this.shuffleAnswers({id: this.getQuestions[index].id})
+				this.shuffleAnswers({id: this.getQuestionsWithAnswers[index].id})
 				this.changeQuestion(index)
 			}
 		}

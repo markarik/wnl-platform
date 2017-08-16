@@ -7,11 +7,8 @@
 		<p class="title is-5" v-if="!displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="(question, index) in questions"
 			:class="`quiz-question-${question.id}`"
-			:id="question.id"
+			:question="question"
 			:index="index"
-			:answers="question.quiz_answers"
-			:text="question.text"
-			:total="question.total_hits"
 			:key="question.id"
 			:readOnly="readOnly"
 		></wnl-quiz-question>
@@ -55,15 +52,16 @@
 				'isComplete',
 				'isProcessing',
 				'getUnresolved',
+				'getUnresolvedWithAnswers',
 				'getUnanswered',
-				'getQuestions',
+				'getQuestionsWithAnswers',
 				'hasQuestions'
 			]),
 			displayResults() {
 				return this.isComplete || this.readOnly || !this.hasQuestions
 			},
 			howManyLeft() {
-				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestions)}`
+				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestionsWithAnswers)}`
 			},
 			unansweredAlert() {
 				return {
@@ -89,10 +87,10 @@
 			},
 			questions() {
 				if (this.isComplete) {
-					return this.getQuestions
+					return this.getQuestionsWithAnswers
 				}
 
-				return this.getUnresolved
+				return this.getUnresolvedWithAnswers
 			},
 		},
 		methods: {
@@ -120,7 +118,7 @@
 			dispatchCheckQuiz() {
 				this.checkQuiz().then(() => {
 					let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
-						firstElement = this.isComplete ? _.head(this.getQuestions) : _.head(this.getUnresolved)
+						firstElement = this.isComplete ? _.head(this.getQuestionsWithAnswers) : _.head(this.getUnresolved)
 
 					this.$swal(this.getAlertConfig(alertOptions))
 						.catch(e => {

@@ -78,9 +78,19 @@ const getters = {
 		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestionsWithAnswers: (state) => {
+		return state.questionsIds.map((id) => {
+			const quizQuestion = state.quiz_questions[id];
+			return {
+				...quizQuestion,
+				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId])
+			}
+		})
+	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
 	getSelectedAnswer: (state, getters) => (id) => state.quiz_questions[id].selectedAnswer,
 	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
+	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(
 		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
 	),

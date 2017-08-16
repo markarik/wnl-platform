@@ -14,6 +14,14 @@ const state = {
 // Getters
 const getters = {
 	questions: state => state.questions,
+	getQuestionsList: state => {
+		return Object.keys(state.questions).map((key) => {
+			return {
+				id: key,
+				text: state.questions[key]
+			}
+		})
+	}
 }
 
 // Mutations
@@ -25,7 +33,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	getQuestions({commit}) {
+	fetchQuestions({commit}) {
 		return _fetchAllQuestions()
 			.then(({data}) => {
 				commit(types.QUESTIONS_SET, data)

@@ -15,9 +15,7 @@
 		<wnl-quiz-question
 			:class="`quiz-question-${currentQuestion.id}`"
 			:id="currentQuestion.id"
-			:answers="currentQuestion.quiz_answers"
-			:text="currentQuestion.text"
-			:total="currentQuestion.total_hits"
+			:question="currentQuestion"
 			:showComments="true"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
@@ -36,12 +34,9 @@
 			<wnl-quiz-question
 				v-for="question, index in otherQuestions"
 				:headerOnly="true"
-				:answers="question.quiz_answers"
-				:class="`clickable quiz-question-${currentQuestion.id}`"
+				:question="question"
+				:class="`clickable quiz-question-${question.id}`"
 				:key="index"
-				:id="question.id"
-				:text="question.text"
-				:total="question.total_hits"
 				@headerClicked="selectQuestionFromList(index)"
 			></wnl-quiz-question>
 		</div>
@@ -118,11 +113,6 @@
 			}
 		},
 		methods: {
-			...mapActions('quiz', [
-				'changeQuestion',
-				'shuffleAnswers',
-				'resolveQuestion',
-			]),
 			verify() {
 				if (this.hasAnswer) {
 					this.$emit('verify', this.currentQuestion.id)

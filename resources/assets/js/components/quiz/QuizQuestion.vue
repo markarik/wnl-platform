@@ -30,6 +30,8 @@
 						:totalHits="question.total_hits"
 						:key="answerIndex"
 						:readOnly="readOnly"
+						:isSelected="question.selectedAnswer === answerIndex"
+						:answersStats="displayResults && question.answersStats"
 						@answerSelected="selectAnswer(answerIndex)"
 					></wnl-quiz-answer>
 				</ul>
@@ -117,13 +119,11 @@
 </style>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex'
+	import { mapGetters} from 'vuex'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
-
-	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'QuizQuestion',
@@ -132,7 +132,7 @@
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
 		},
-		props: ['index', 'readOnly', 'headerOnly', 'showComments', 'question'],
+		props: ['index', 'readOnly', 'headerOnly', 'showComments', 'question', 'getReaction', 'isQuizComplete'],
 		data() {
 			return {
 				reactableResource: "quiz_questions"
@@ -140,41 +140,22 @@
 		},
 		computed: {
 			...mapGetters(['isMobile']),
-			...mapGetters('quiz', [
-				'isComplete',
-				'isResolved',
-				'getSelectedAnswer',
-				'getReaction'
-			]),
 			displayResults() {
-				return this.readOnly || this.isComplete || this.isResolved(this.question.id)
-			},
-			selectedAnswer() {
-				return this.getSelectedAnswer(this.question.id)
+				return this.readOnly || this.isQuizComplete || this.question.isResolved
 			},
 			isUnanswered() {
-				return this.selectedAnswer === null
+				return this.question.selectedAnswer === null
 			},
 			reactionState() {
 				return this.getReaction(this.reactableResource, this.question.id, "bookmark")
 			}
 		},
 		methods: {
-			...mapActions('quiz', ['commitSelectAnswer']),
-
-			/**
-			 * Commits a Vuex mutatation that sets a selectedAnswer for the
-			 * current question.
-			 * @param  {int} answerIndex Index of a selected answer
-			 * @return {void}
-			 */
 			selectAnswer(answerIndex) {
-				if (!this.isComplete) {
-					this.commitSelectAnswer({
-						id: this.question.id,
-						answer: answerIndex
-					})
-				}
+				this.$emit('selectAnswer', {
+					id: this.question.id,
+					answer: answerIndex
+				})
 			}
 		}
 	}

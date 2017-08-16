@@ -11,6 +11,8 @@
 			:index="index"
 			:key="question.id"
 			:readOnly="readOnly"
+			:getReaction="getReaction"
+			@selectAnswer="onSelectAnswer"
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!displayResults">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
@@ -52,16 +54,17 @@
 				'isComplete',
 				'isProcessing',
 				'getUnresolved',
-				'getUnresolvedWithAnswers',
+				'getUnresolvedWithAnswersAndStats',
 				'getUnanswered',
-				'getQuestionsWithAnswers',
-				'hasQuestions'
+				'getQuestionsWithAnswersAndStats',
+				'hasQuestions',
+				'getReaction'
 			]),
 			displayResults() {
 				return this.isComplete || this.readOnly || !this.hasQuestions
 			},
 			howManyLeft() {
-				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestionsWithAnswers)}`
+				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestionsWithAnswersAndStats)}`
 			},
 			unansweredAlert() {
 				return {
@@ -87,16 +90,17 @@
 			},
 			questions() {
 				if (this.isComplete) {
-					return this.getQuestionsWithAnswers
+					return this.getQuestionsWithAnswersAndStats
 				}
 
-				return this.getUnresolvedWithAnswers
+				return this.getUnresolvedWithAnswersAndStats
 			},
 		},
 		methods: {
 			...mapActions('quiz', [
 				'checkQuiz',
 				'resetState',
+				'commitSelectAnswer'
 			]),
 			verify() {
 				if (this.getUnanswered.length > 0) {
@@ -118,7 +122,7 @@
 			dispatchCheckQuiz() {
 				this.checkQuiz().then(() => {
 					let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
-						firstElement = this.isComplete ? _.head(this.getQuestionsWithAnswers) : _.head(this.getUnresolved)
+						firstElement = this.isComplete ? _.head(this.getQuestionsWithAnswersAndStats) : _.head(this.getUnresolved)
 
 					this.$swal(this.getAlertConfig(alertOptions))
 						.catch(e => {
@@ -140,6 +144,12 @@
 			},
 			getQuestionElement(resource) {
 				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
+			},
+			onSelectAnswer(data) {
+				console.log(data)
+				if (!this.isComplete) {
+					this.commitSelectAnswer(data)
+				}
 			}
 		},
 	}

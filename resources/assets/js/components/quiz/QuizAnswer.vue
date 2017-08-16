@@ -11,7 +11,7 @@
 		<div class="quiz-answer-content">
 			{{answer.text}}
 		</div>
-		<div class="quiz-answer-stats" v-if="isComplete && stats !== false">
+		<div class="quiz-answer-stats" v-if="stats !== false">
 			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
 				{{stats}}%
 			</span>
@@ -97,19 +97,13 @@
 
 	export default {
 		name: 'QuizAnswer',
-		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly'],
+		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly', 'isSelected', 'answersStats'],
 		computed: {
 			...mapGetters(['isLargeDesktop']),
 			...mapGetters('quiz', [
 				'isComplete',
-				'getSelectedAnswer',
 				'getStats',
-				'getAnswers'
 			]),
-
-			isSelected() {
-				return this.getSelectedAnswer(this.questionId) === this.index
-			},
 
 			/**
 			 * @param  {int} answerIndex
@@ -124,16 +118,14 @@
 			},
 
 			stats() {
-				const answersWithHit = this.getStats(this.questionId)
+				if (typeof this.answersStats !== 'object' || typeof Object.values !== 'function') return false;
 
-				if (typeof answersWithHit !== 'object' || typeof Object.values !== 'function') return false;
-
-				const allHits = Object.values(answersWithHit).reduce((count, current) => {
+				const allHits = Object.values(this.answersStats).reduce((count, current) => {
 					return count + current
 				}, 0)
 				const answerId = this.answer.id
 
-				return Math.round((answersWithHit[answerId] || 0) / allHits * 100);
+				return Math.round((this.answersStats[answerId] || 0) / allHits * 100);
 			},
 
 			/**

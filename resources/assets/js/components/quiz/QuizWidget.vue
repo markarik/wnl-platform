@@ -17,6 +17,8 @@
 			:id="currentQuestion.id"
 			:question="currentQuestion"
 			:showComments="true"
+			:getReaction="getReaction"
+			@selectAnswer="selectAnswer"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
@@ -37,7 +39,9 @@
 				:question="question"
 				:class="`clickable quiz-question-${question.id}`"
 				:key="index"
+				:getReaction="getReaction"
 				@headerClicked="selectQuestionFromList(index)"
+				@selectAnswer="selectAnswer"
 			></wnl-quiz-question>
 		</div>
 	</div>
@@ -81,6 +85,10 @@
 			questions: {
 				type: Array,
 				default: [],
+			},
+			getReaction: {
+				type: Function,
+				required: true
 			}
 		},
 		data() {
@@ -131,6 +139,9 @@
 				this.$emit('changeQuestion', fullIndex)
 				scrollToElement(this.$el, 75)
 			},
+			selectAnswer(data) {
+				this.$emit('selectAnswer', data)
+			}
 		},
 	}
 </script>

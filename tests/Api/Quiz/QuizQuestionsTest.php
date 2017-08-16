@@ -96,7 +96,7 @@ class QuizQuestionsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filter'), $data);
-		dd($response->dump());
+
 		$response
 			->assertStatus(200);
 	}

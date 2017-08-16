@@ -33,7 +33,7 @@ trait EventContextTrait {
 				return [];
 
 			case 'App\Models\Slide':
-				if (!empty($model->sections)) {
+				if ($model->sections->count() > 0) {
 					$section = $model->sections->first();
 					$screen = $section->screen;
 					$lesson = $screen->lesson;

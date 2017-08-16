@@ -21,9 +21,11 @@
 					</div>
 				</div>
 				<wnl-quiz-widget
+					v-if="questionsList.length > 0"
 					:questions="questionsList"
 					@changeQuestion="performChangeQuestion"
-					@verify="resolveQuestion"
+					@verify="onVerify"
+					@selectAnswer="onAnswerSelect"
 				></wnl-quiz-widget>
 			</div>
 		</div>
@@ -67,18 +69,28 @@
 			},
 		},
 		methods: {
-			...mapActions('questions', ['fetchQuestions', 'fetchQuestionAnswers', 'fetchDynamicFilters']),
+			...mapActions('questions', [
+				'fetchQuestions',
+				'fetchQuestionData',
+				'fetchDynamicFilters',
+				'selectAnswer',
+				'resolveQuestion'
+			]),
 			performChangeQuestion() {
 
 			},
-			resolveQuestion() {
-
+			onAnswerSelect(data) {
+				this.selectAnswer(data)
+			},
+			onVerify(questionId) {
+				this.resolveQuestion(questionId)
+				// TODO record answer in DB
 			}
 		},
 		mounted() {
 			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters()])
 				.then(() => {
-					this.fetchQuestionAnswers(this.highlightedQuestion.id)
+					this.fetchQuestionData(this.highlightedQuestion.id)
 				})
 		},
 	}

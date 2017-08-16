@@ -13,6 +13,7 @@
 					</div>
 					<div class="card-header-icons">
 						<wnl-bookmark
+							v-if="reactionState"
 							:reactableId="question.id"
 							:reactableResource="reactableResource"
 							:state="reactionState"
@@ -147,7 +148,7 @@
 				return this.question.selectedAnswer === null
 			},
 			reactionState() {
-				return this.getReaction(this.reactableResource, this.question.id, "bookmark") || {}
+				return this.getReaction(this.reactableResource, this.question.id, "bookmark")
 			}
 		},
 		methods: {

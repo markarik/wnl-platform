@@ -146,7 +146,6 @@
 				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
 			},
 			onSelectAnswer(data) {
-				console.log(data)
 				if (!this.isComplete) {
 					this.commitSelectAnswer(data)
 				}

@@ -12,21 +12,17 @@ const state = {
 		// TODO transaltions
 		encounter: {
 			resolved: {
-				selected: false,
 				name: 'Rozwiązane'
 			},
 			notResolved: {
-				selected: false,
 				name: 'Nierozwiązane'
 			}
 		},
 		correctness: {
 			correct: {
-				selected: false,
 				name: 'Poprawnie rozwiązane'
 			},
 			incorrect: {
-				selected: false,
 				name: 'Niepoprawnie rozwiązane'
 			}
 		}
@@ -59,25 +55,30 @@ const mutations = {
 		}
 	},
 	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {chrono, subjects}) {
+		// TODO enpoint could return serialied data.
 		const serialized = {
 			chrono: {},
 			subjects: {}
 		};
 		chrono.forEach((tag) => {
 			serialized.chrono[tag.id] = {
-				name: tag.name,
-				selected: false
+				name: tag.name
 			}
 		})
 
 		subjects.forEach((tag) => {
 			serialized.subjects[tag.id] = {
-				name: tag.name,
-				selected: false
+				name: tag.name
 			}
 		})
 		set(state.filters, 'chrono', serialized.chrono)
 		set(state.filters, 'subjects', serialized.subjects)
+	},
+	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
+		set(state.questions[payload.id], 'selectedAnswer', payload.answer)
+	},
+	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
+		set(state.questions[questionId], 'isResolved', true)
 	}
 }
 
@@ -89,8 +90,8 @@ const actions = {
 				commit(types.QUESTIONS_SET, data)
 			})
 	},
-	fetchQuestionAnswers({commit}, id) {
-		return _fetchQuestionAnswers(id)
+	fetchQuestionData({commit}, id) {
+		return _fetchQuestionData(id)
 			.then(({data}) => {
 				commit(types.QUESTIONS_SET_ANSWER, data)
 			})
@@ -100,6 +101,12 @@ const actions = {
 			.then(({data}) => {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
+	},
+	selectAnswer({commit}, payload) {
+		commit(types.QUESTIONS_SELECT_ANSWER, payload)
+	},
+	resolveQuestion({commit}, questionId) {
+		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)
 	}
 }
 
@@ -108,8 +115,8 @@ const _fetchAllQuestions = () => {
 	return axios.get(getApiUrl('questions'))
 }
 
-const _fetchQuestionAnswers = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers`))
+const _fetchQuestionData = (id) => {
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers,comments.profiles,reactions`))
 }
 
 const _fetchDynamicFilters = () => {

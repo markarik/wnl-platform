@@ -7,13 +7,10 @@ class TagsFilter extends ApiFilter
 {
 	use TranslatesApiQueries;
 
+	protected $expected = [];
+
 	public function apply($model)
 	{
 		return $this->parseHasIn($model, ['tags' => ['tags.name', $this->params]]);
-	}
-
-	protected function checkFilterParams()
-	{
-		return;
 	}
 }

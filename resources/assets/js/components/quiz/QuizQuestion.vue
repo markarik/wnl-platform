@@ -147,7 +147,7 @@
 				return this.question.selectedAnswer === null
 			},
 			reactionState() {
-				return this.getReaction(this.reactableResource, this.question.id, "bookmark")
+				return this.getReaction(this.reactableResource, this.question.id, "bookmark") || {}
 			}
 		},
 		methods: {

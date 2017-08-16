@@ -16,7 +16,7 @@ class QnaQuestionsApiController extends ApiController
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->resourceName = config('papi.resources.questions');
+		$this->resourceName = config('papi.resources.qna-questions');
 	}
 
 	public function post(PostQuestion $request)

@@ -88,7 +88,7 @@
 			},
 			getReaction: {
 				type: Function,
-				required: true
+				default: () => {}
 			}
 		},
 		data() {

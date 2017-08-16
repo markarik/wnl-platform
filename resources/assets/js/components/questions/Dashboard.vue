@@ -48,10 +48,13 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
-			...mapGetters('questions', ['getQuestionsList'])
+			...mapGetters('questions', ['getQuestionsList']),
+			highlightedQuestion() {
+				return this.getQuestionsList[0]
+			}
 		},
 		methods: {
-			...mapActions('questions', ['fetchQuestions']),
+			...mapActions('questions', ['fetchQuestions', 'fetchQuestionAnswers']),
 			performChangeQuestion() {
 
 			},
@@ -61,6 +64,10 @@
 		},
 		mounted() {
 			this.fetchQuestions()
+				.then(() => {
+					console.log(this.highlightedQuestion.id)
+					this.fetchQuestionAnswers(this.highlightedQuestion.id)
+				})
 		}
 	}
 </script>

@@ -14,20 +14,26 @@ const state = {
 // Getters
 const getters = {
 	questions: state => state.questions,
-	getQuestionsList: state => {
-		return Object.keys(state.questions).map((key) => {
-			return {
-				id: key,
-				text: state.questions[key]
-			}
-		})
-	}
+	getQuestionsList: state => Object.values(state.questions)
 }
 
 // Mutations
 const mutations = {
 	[types.QUESTIONS_SET] (state, payload) {
-		set(state, 'questions', payload)
+		// TODO endpoint could return data in shape: {id: data, ...}
+		const serialized = {};
+		payload.forEach(question => {
+			serialized[question.id] = {
+				...question
+			}
+		})
+		set(state, 'questions', serialized)
+	},
+	[types.QUESTIONS_SET_ANSWER] (state, {id, included}) {
+		if (included.quiz_answers) {
+			const answers = Object.values(included.quiz_answers).map((answer) => answer)
+			set(state.questions[id], 'answers', answers)
+		}
 	}
 }
 
@@ -38,12 +44,22 @@ const actions = {
 			.then(({data}) => {
 				commit(types.QUESTIONS_SET, data)
 			})
+	},
+	fetchQuestionAnswers({commit}, id) {
+		return _fetchQuestionAnswers(id)
+			.then(({data}) => {
+				commit(types.QUESTIONS_SET_ANSWER, data)
+			})
 	}
 }
 
 
 const _fetchAllQuestions = () => {
 	return axios.get(getApiUrl('questions'))
+}
+
+const _fetchQuestionAnswers = (id) => {
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers`))
 }
 
 export default {

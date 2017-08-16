@@ -13,6 +13,6 @@ class QuestionsApiController extends ApiController
 	}
 
 	public function all() {
-		return $this->respondOk(QuizQuestion::all()->pluck('text', 'id'));
+		return $this->respondOk(QuizQuestion::all()->toArray());
 	}
 }

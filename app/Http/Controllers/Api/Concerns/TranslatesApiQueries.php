@@ -157,25 +157,7 @@ trait TranslatesApiQueries
 		$limit = $request->get('limit');
 		$join = $request->get('join');
 
-		if (!empty($query['whereIn'])) {
-			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
-		}
-
-		if (!empty ($query['where'])) {
-			$model = $model->where($query['where']);
-		}
-
-		if (!empty ($query['whereHas'])) {
-			$model = $this->parseWhereHas($model, $query['whereHas']);
-		}
-
-		if (!empty ($query['whereDoesntHave'])) {
-			$model = $this->parseWhereDoesntHave($model, $query['whereDoesntHave']);
-		}
-
-		if (!empty ($query['hasIn'])) {
-			$model = $this->parseHasIn($model, $query['hasIn']);
-		}
+		$model = $this->parseQeury($model, $query);
 
 		if (!empty ($order)) {
 			$model = $this->parseOrder($model, $order);
@@ -205,5 +187,34 @@ trait TranslatesApiQueries
 
 			return $v;
 		}, $array);
+	}
+
+	protected function parseQuery($model, $query)
+	{
+		if (!empty($query['whereIn'])) {
+			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
+		}
+
+		if (!empty ($query['where'])) {
+			$model = $model->where($query['where']);
+		}
+
+		if (!empty ($query['whereHas'])) {
+			$model = $this->parseWhereHas($model, $query['whereHas']);
+		}
+
+		if (!empty ($query['whereDoesntHave'])) {
+			$model = $this->parseWhereDoesntHave($model, $query['whereDoesntHave']);
+		}
+
+		if (!empty ($query['doesntHave'])) {
+			$model = $model->doesntHave($query['doesntHave']);
+		}
+
+		if (!empty ($query['hasIn'])) {
+			$model = $this->parseHasIn($model, $query['hasIn']);
+		}
+
+		return $model;
 	}
 }

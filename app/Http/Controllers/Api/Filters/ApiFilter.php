@@ -41,9 +41,7 @@ abstract class ApiFilter
 	 */
 	protected function checkFilterParams()
 	{
-		if (!$this->expected){
-			throw new ApiFilterException(static::class . ' has no expected params.');
-		}
+		if (!$this->expected) return;
 
 		$diff = array_diff($this->expected, array_keys($this->params));
 

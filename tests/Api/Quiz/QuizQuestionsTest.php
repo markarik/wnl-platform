@@ -66,14 +66,14 @@ class QuizQuestionsTest extends ApiTestCase
 					],
 				],
 				[
-					'tags' => ['LEK-2016'],
+					'tags' => ['Kardiologia'], // add or/and option
 				],
 				[
-					'categories' => ['Kardiologia', 'Pulmonologia'],
+					'tags' => ['łatwe']
 				],
 				[
 					'query' => [
-						'doesntHave' => ['quiz_set'],
+//						'doesntHave' => 'sets',
 					],
 				],
 				[
@@ -85,7 +85,7 @@ class QuizQuestionsTest extends ApiTestCase
 				[
 					'quiz.is_done' => [
 						'user_id' => 255,
-						'done' => false
+						'done' => true
 					],
 				],
 			],

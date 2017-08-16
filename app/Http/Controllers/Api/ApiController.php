@@ -169,7 +169,7 @@ class ApiController extends Controller
 	 */
 	protected function paginatedResponse($model, $limit)
 	{
-		$paginator = $model::paginate($limit);
+		$paginator = $model->paginate($limit);
 
 		$response = [
 			'data'         => $this->transform($paginator->getCollection()),

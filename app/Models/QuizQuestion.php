@@ -40,4 +40,9 @@ class QuizQuestion extends Model
 	{
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
 	}
+
+	public function userQuizResults()
+	{
+		return $this->hasMany('App\Models\UserQuizResults');
+	}
 }

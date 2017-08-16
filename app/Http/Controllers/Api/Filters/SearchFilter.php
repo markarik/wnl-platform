@@ -12,6 +12,8 @@ class SearchFilter extends ApiFilter
 	{
 		$this->checkIsSearchable($model);
 
+
+
 		return $model;
 	}
 

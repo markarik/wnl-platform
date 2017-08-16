@@ -164,4 +164,5 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Temporary Questions controller
 	Route::get("{$r['questions']}", 'QuestionsApiController@all');
+	Route::get("{$r['questions']}/filters", 'QuestionsApiController@getFilters');
 });

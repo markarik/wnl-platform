@@ -4,7 +4,7 @@
 
         <span id="close" v-on:click="closeLightbox">&times;</span>
 
-        <img class="modal-content" src="this.currentImageSource">
+        <img class="modal-content" :src="currentImageSource">
 
         <a class="prev" v-on:click="minusSlides">&#10094;</a>
         <a class="next" v-on:click="plusSlides">&#10095;</a>
@@ -64,18 +64,13 @@
 export default {
     name: 'Fullscreen',
     props: ['imagesSources', 'currentImageSource'],
-    data() {
-        return {
-            MutableCurrentImageSource: this.currentImageSource
-        }
-    },
     methods: {
         closeLightbox() {
             document.getElementById('myModal').style.display = "none";
             this.$emit('childCurrentImageSourceRemove')
         },
         setImageSource() {
-            document.querySelector('.modal-content').setAttribute('src', this.MutableCurrentImageSource);
+            document.querySelector('.modal-content').setAttribute('src', this.currentImageSource);
             document.getElementById('myModal').style.display = "block";
         },
         plusSlides() {

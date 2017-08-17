@@ -2,9 +2,10 @@
 	<div>
 		<h3>Filtry</h3>
 		<div v-for="(filterGroup, key) in Object.keys(filters)" :key="key">
-			<div v-for="(filter, key) in Object.keys(filters[filterGroup])" :key="key">
+			<h4>{{filterGroup}}</h4>
+			<div v-for="(filter, key) in Object.keys(filters[filterGroup].items)" :key="key">
 				<input type="checkbox" :name="filter" :value="`${filterGroup}.${filter}`" v-model="activeFilters">
-				<label :for="filter">{{filters[filterGroup][filter].name}}</label>
+				<label :for="filter">{{filters[filterGroup].items[filter].name}}</label>
 			</div>
 		</div>
 	</div>

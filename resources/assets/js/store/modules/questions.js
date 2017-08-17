@@ -9,9 +9,9 @@ import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/m
 const namespaced = true
 
 const FILTER_TYPES = {
+	BOOLEAN: 'BOOLEAN',
+	LIST: 'LIST',
 	TAG: 'TAG',
-	BOOLEAN: 'BOOLEAN'
-
 }
 
 // Initial state
@@ -20,34 +20,23 @@ const state = {
 	comments: {},
 	profiles: {},
 	filters: {
-		// TODO transaltions
-		'correct_answer': {
-			'correct': {
-				name: 'Rozwiązane',
-				value: true,
-				field: 'correct',
-				type: FILTER_TYPES.BOOLEAN,
+		// TODO Translations
+		'resolution': {
+			type: FILTER_TYPES.LIST,
+			items: {
+				'unresolved': {
+					name: 'Nierozwiązane',
+					value: 'unresolved',
+				},
+				'correct': {
+					name: 'Poprawne',
+					value: 'correct',
+				},
+				'incorrect': {
+					name: 'Niepoprawne',
+					value: 'incorrect',
+				},
 			},
-			'incorrect': {
-				name: 'Nierozwiązane',
-				field: 'correct',
-				value: false,
-				type: FILTER_TYPES.BOOLEAN,
-			}
-		},
-		'is_done': {
-			'is_done': {
-				name: 'Poprawnie rozwiązane',
-				field: 'is_done',
-				value: true,
-				type: FILTER_TYPES.BOOLEAN
-			},
-			'not_done': {
-				name: 'Niepoprawnie rozwiązane',
-				field: 'is_done',
-				value: false,
-				type: FILTER_TYPES.BOOLEAN
-			}
 		}
 	}
 }
@@ -97,22 +86,26 @@ const mutations = {
 	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {chrono, subjects}) {
 		// TODO enpoint could return serialied data.
 		const serialized = {
-			chrono: {},
-			subjects: {}
+			chrono: {
+				type: FILTER_TYPES.TAG,
+				items: {},
+			},
+			subjects: {
+				type: FILTER_TYPES.TAG,
+				items: {},
+			}
 		};
 		chrono.forEach((tag) => {
-			serialized.chrono[tag.id] = {
+			serialized.chrono.items[tag.id] = {
 				name: tag.name,
 				value: tag.id,
-				type: FILTER_TYPES.TAG
 			}
 		})
 
 		subjects.forEach((tag) => {
-			serialized.subjects[tag.id] = {
+			serialized.subjects.items[tag.id] = {
 				name: tag.name,
 				value: tag.id,
-				type: FILTER_TYPES.TAG
 			}
 		})
 		set(state.filters, 'chrono', serialized.chrono)

@@ -149,7 +149,7 @@ const actions = {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
-	fetchMatchingQuestions({commit, state}, activeFilters) {
+	fetchMatchingQuestions({commit, state, rootGetters}, activeFilters) {
 		const filters = [];
 		const tags = [];
 
@@ -163,7 +163,7 @@ const actions = {
 
 				filters.push({
 					[`quiz.${key}`]: {
-						user_id: 2,
+						user_id: rootGetters.currentUserId,
 						[selectedFilter.field]: selectedFilter.value
 					}
 				})

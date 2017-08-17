@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel
 		Commands\SlidesSnippets::class,
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
+		Commands\TagsCleanup::class,
 		Commands\WarmUpCache::class,
 	];
 

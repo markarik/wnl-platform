@@ -275,12 +275,9 @@ const actions = {
 					const included = _.clone(response.data.included)
 					destroy(response.data, 'included')
 
-					console.log(response.data)
 					const id = response.data.id
 					included['quiz_questions'] = {}
 					included['quiz_questions'][id] = response.data
-
-					console.log(included, '...included')
 
 					commit(types.UPDATE_INCLUDED, included)
 					commit(types.QUIZ_SET_QUESTIONS, {

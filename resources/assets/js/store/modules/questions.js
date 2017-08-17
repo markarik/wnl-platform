@@ -2,12 +2,16 @@ import { set } from 'vue'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
+import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+
 
 const namespaced = true
 
 // Initial state
 const state = {
-	questions: {},
+	quiz_questions: {},
+	comments: {},
+	profiles: {},
 	filters: {
 		// TODO transaltions
 		encounter: {
@@ -31,12 +35,14 @@ const state = {
 
 // Getters
 const getters = {
-	questions: state => state.questions,
+	...commentsGetters,
+	questions: state => state.quiz_questions,
 	filters: state => state.filters
 }
 
 // Mutations
 const mutations = {
+	...commentsMutations,
 	[types.QUESTIONS_SET] (state, payload) {
 		// TODO endpoint could return data in shape: {id: data, ...}
 		const serialized = {};
@@ -45,13 +51,22 @@ const mutations = {
 				...question
 			}
 		})
-		set(state, 'questions', serialized)
+		set(state, 'quiz_questions', serialized)
 	},
-	[types.QUESTIONS_SET_ANSWER] (state, {id, included}) {
-		if (included.quiz_answers) {
-			const answers = Object.values(included.quiz_answers).map((answer) => answer)
-			set(state.questions[id], 'answers', answers)
+	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included: {quiz_answers, ...included}, comments}) {
+		set(state.quiz_questions[id], 'comments', comments)
+
+		if (quiz_answers) {
+			const answers = Object.values(quiz_answers).map((answer) => answer)
+			set(state.quiz_questions[id], 'answers', answers)
 		}
+
+		_.each(included, (items, resource) => {
+			let resourceObject = state[resource]
+			_.each(items, (item, index) => {
+				set(resourceObject, item.id, item)
+			})
+		})
 	},
 	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {chrono, subjects}) {
 		// TODO enpoint could return serialied data.
@@ -74,15 +89,16 @@ const mutations = {
 		set(state.filters, 'subjects', serialized.subjects)
 	},
 	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
-		set(state.questions[payload.id], 'selectedAnswer', payload.answer)
+		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
 	},
 	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
-		set(state.questions[questionId], 'isResolved', true)
+		set(state.quiz_questions[questionId], 'isResolved', true)
 	},
 }
 
 // Actions
 const actions = {
+	...commentsActions,
 	fetchQuestions({commit}) {
 		return _fetchAllQuestions()
 			.then(({data}) => {
@@ -92,7 +108,7 @@ const actions = {
 	fetchQuestionData({commit}, id) {
 		return _fetchQuestionData(id)
 			.then(({data}) => {
-				commit(types.QUESTIONS_SET_ANSWER, data)
+				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
 			})
 	},
 	fetchDynamicFilters({commit}) {

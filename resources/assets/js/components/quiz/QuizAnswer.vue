@@ -102,7 +102,6 @@
 			...mapGetters(['isLargeDesktop']),
 			...mapGetters('quiz', [
 				'isComplete',
-				'getStats',
 			]),
 
 			/**

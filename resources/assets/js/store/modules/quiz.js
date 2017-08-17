@@ -71,12 +71,6 @@ const getters = {
 		)
 	},
 	getAttempts: (state) => state.attempts,
-	getComments: (state) => (id) => {
-		return state.quiz_questions[id].comments.map((commentId) => state.comments[commentId])
-	},
-	getCurrentScore: (state, getters) => {
-		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
-	},
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
 	getQuestionsWithAnswers: (state) => {
 		return state.questionsIds.map((id) => {
@@ -92,7 +86,6 @@ const getters = {
 			const quizQuestion = state.quiz_questions[id];
 			return {
 				...quizQuestion,
-				stats: getters.getStats(id),
 				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId])
 			}
 		})
@@ -110,7 +103,6 @@ const getters = {
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
-	getStats: (state) => (questionId) => state.quiz_stats[questionId],
 	questionsLength: (state) => state.questionsIds.length
 }
 
@@ -283,9 +275,12 @@ const actions = {
 					const included = _.clone(response.data.included)
 					destroy(response.data, 'included')
 
+					console.log(response.data)
 					const id = response.data.id
 					included['quiz_questions'] = {}
 					included['quiz_questions'][id] = response.data
+
+					console.log(included, '...included')
 
 					commit(types.UPDATE_INCLUDED, included)
 					commit(types.QUIZ_SET_QUESTIONS, {

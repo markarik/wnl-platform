@@ -12,15 +12,7 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
-				<div>
-					<div v-for="(filterGroup, key) in Object.keys(filters)" :key="key">
-						<div v-for="(filter, key) in Object.keys(filters[filterGroup])" :key="key">
-							<input type="checkbox" :name="filter" :value="`${filterGroup}.${filter}`" v-model="activeFilters">
-							<label :for="filter">{{filters[filterGroup][filter].name}}</label>
-						</div>
-					</div>
-				</div>
-				<!-- TODO implement zero state - when no questions returned -->
+				<!-- TODO Implement zero state -->
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
 					module="questions"
@@ -32,6 +24,13 @@
 				></wnl-quiz-widget>
 			</div>
 		</div>
+		<wnl-sidenav-slot
+			:isDetached="!isChatMounted"
+			:isVisible="isLargeDesktop"
+			:hasChat="true"
+		>
+			<wnl-questions-filters/>
+		</wnl-sidenav-slot>
 	</div>
 </template>
 
@@ -45,7 +44,9 @@
 </style>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex'
+	import {mapGetters, mapActions} from 'vuex'
+
+	import withChat from 'js/mixins/with-chat'
 
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -59,17 +60,17 @@
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-main-nav': MainNav,
 			'wnl-quiz-widget': QuizWidget,
-			'wnl-questtions-filters': QuestionsFilters
+			'wnl-questions-filters': QuestionsFilters
 		},
+		mixins: [withChat],
 		data() {
 			return {
-				activeFilters: [],
 				orderedQuestionsList: []
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
-			...mapGetters('questions', ['questions', 'filters', 'getReaction']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isChatMounted']),
+			...mapGetters('questions', ['questions', 'getReaction']),
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},
@@ -108,9 +109,6 @@
 				})
 		},
 		watch: {
-			activeFilters() {
-				this.debouncedFetchMatchingQuestions()
-			},
 			highlightedQuestion() {
 				if (!this.highlightedQuestion.answers) {
 					// TODO loading state

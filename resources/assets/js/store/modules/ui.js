@@ -161,4 +161,3 @@ export default {
 export const GLOBAL_NOTIFICATION_TYPES = {
 	INFO: 'info'
 }
-

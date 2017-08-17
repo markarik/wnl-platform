@@ -9,9 +9,9 @@ import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/m
 const namespaced = true
 
 const FILTER_TYPES = {
-	BOOLEAN: 'BOOLEAN',
-	LIST: 'LIST',
-	TAG: 'TAG',
+	BOOLEAN: 'boolean',
+	LIST: 'list',
+	TAG: 'tag',
 }
 
 // Initial state
@@ -23,20 +23,20 @@ const state = {
 		// TODO Translations
 		'resolution': {
 			type: FILTER_TYPES.LIST,
-			items: {
-				'unresolved': {
+			items: [
+				{
 					name: 'Nierozwiązane',
 					value: 'unresolved',
 				},
-				'correct': {
+				{
 					name: 'Poprawne',
 					value: 'correct',
 				},
-				'incorrect': {
+				{
 					name: 'Niepoprawne',
 					value: 'incorrect',
 				},
-			},
+			],
 		}
 	}
 }
@@ -83,33 +83,10 @@ const mutations = {
 			})
 		})
 	},
-	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {chrono, subjects}) {
-		// TODO enpoint could return serialied data.
-		const serialized = {
-			chrono: {
-				type: FILTER_TYPES.TAG,
-				items: {},
-			},
-			subjects: {
-				type: FILTER_TYPES.TAG,
-				items: {},
-			}
-		};
-		chrono.forEach((tag) => {
-			serialized.chrono.items[tag.id] = {
-				name: tag.name,
-				value: tag.id,
-			}
-		})
+	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {exams, subjects}) {
+		const existingFilters = state.filters
 
-		subjects.forEach((tag) => {
-			serialized.subjects.items[tag.id] = {
-				name: tag.name,
-				value: tag.id,
-			}
-		})
-		set(state.filters, 'chrono', serialized.chrono)
-		set(state.filters, 'subjects', serialized.subjects)
+		set(state, 'filters', {...existingFilters, exams, subjects})
 	},
 	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)

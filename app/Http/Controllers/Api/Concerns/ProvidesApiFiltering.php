@@ -23,6 +23,10 @@ trait ProvidesApiFiltering
 
 	private function addFilters($request, $model)
 	{
+		if (empty($request->filters)) {
+			return $model;
+		}
+
 		foreach ($request->filters as $filter) {
 			$filter = $this->getFilter($filter);
 			$model = $filter->apply($model);

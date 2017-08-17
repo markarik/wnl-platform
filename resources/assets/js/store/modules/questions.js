@@ -56,6 +56,11 @@ const mutations = {
 		})
 		set(state, 'quiz_questions', serialized)
 	},
+	[types.QUESTIONS_SET_META] (state, meta) {
+		Object.keys(meta).forEach((key) => {
+			set(state, key, meta[key])
+		})
+	},
 	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included: {quiz_answers, ...included}, comments}) {
 		comments && set(state.quiz_questions[id], 'comments', comments)
 
@@ -105,8 +110,9 @@ const actions = {
 	...reactionsActions,
 	fetchQuestions({commit}) {
 		return _fetchAllQuestions()
-			.then(({data}) => {
+			.then(({data: {data, ...meta}}) => {
 				commit(types.QUESTIONS_SET, data)
+				commit(types.QUESTIONS_SET_META, meta)
 			})
 	},
 	fetchQuestionData({commit}, id) {
@@ -131,7 +137,11 @@ const actions = {
 
 
 const _fetchAllQuestions = () => {
-	return axios.get(getApiUrl('quiz_questions/all?include=reactions'))
+	// TODO pagination and other super stuff
+	return axios.post(getApiUrl('quiz_questions/.filter'), {
+		include: 'reactions',
+		limit: 50
+	})
 }
 
 const _fetchQuestionData = (id) => {
@@ -139,7 +149,7 @@ const _fetchQuestionData = (id) => {
 }
 
 const _fetchDynamicFilters = () => {
-	return axios.get(getApiUrl('questions/filters'))
+	return axios.get(getApiUrl('quiz_questions/filters/get'))
 }
 
 export default {

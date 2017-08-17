@@ -8,6 +8,12 @@ import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/m
 
 const namespaced = true
 
+const FILTER_TYPES = {
+	TAG: 'TAG',
+	BOOLEAN: 'BOOLEAN'
+
+}
+
 // Initial state
 const state = {
 	quiz_questions: {},
@@ -15,20 +21,32 @@ const state = {
 	profiles: {},
 	filters: {
 		// TODO transaltions
-		encounter: {
-			resolved: {
-				name: 'Rozwiązane'
+		'correct_answer': {
+			'correct': {
+				name: 'Rozwiązane',
+				value: true,
+				field: 'correct',
+				type: FILTER_TYPES.BOOLEAN,
 			},
-			notResolved: {
-				name: 'Nierozwiązane'
+			'incorrect': {
+				name: 'Nierozwiązane',
+				field: 'correct',
+				value: false,
+				type: FILTER_TYPES.BOOLEAN,
 			}
 		},
-		correctness: {
-			correct: {
-				name: 'Poprawnie rozwiązane'
+		'is_done': {
+			'is_done': {
+				name: 'Poprawnie rozwiązane',
+				field: 'is_done',
+				value: true,
+				type: FILTER_TYPES.BOOLEAN
 			},
-			incorrect: {
-				name: 'Niepoprawnie rozwiązane'
+			'not_done': {
+				name: 'Niepoprawnie rozwiązane',
+				field: 'is_done',
+				value: false,
+				type: FILTER_TYPES.BOOLEAN
 			}
 		}
 	}
@@ -84,13 +102,17 @@ const mutations = {
 		};
 		chrono.forEach((tag) => {
 			serialized.chrono[tag.id] = {
-				name: tag.name
+				name: tag.name,
+				value: tag.id,
+				type: FILTER_TYPES.TAG
 			}
 		})
 
 		subjects.forEach((tag) => {
 			serialized.subjects[tag.id] = {
-				name: tag.name
+				name: tag.name,
+				value: tag.id,
+				type: FILTER_TYPES.TAG
 			}
 		})
 		set(state.filters, 'chrono', serialized.chrono)
@@ -127,6 +149,37 @@ const actions = {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
+	fetchMatchingQuestions({commit, state}, activeFilters) {
+		const filters = [];
+		const tags = [];
+
+		activeFilters.forEach((filter) => {
+			const selectedFilter = _.get(state.filters, filter)
+
+			if (selectedFilter.type === FILTER_TYPES.TAG) {
+				tags.push(selectedFilter.value)
+			} else if (selectedFilter.type === FILTER_TYPES.BOOLEAN) {
+				const [key] = filter.split('.')
+
+				filters.push({
+					[`quiz.${key}`]: {
+						user_id: 2,
+						[selectedFilter.field]: selectedFilter.value
+					}
+				})
+			}
+		})
+
+		filters.push({
+			tags
+		})
+
+		_fetchAllQuestions({filters})
+			.then(({data: {data, ...meta}}) => {
+				commit(types.QUESTIONS_SET, data)
+				commit(types.QUESTIONS_SET_META, meta)
+			})
+	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
 	},
@@ -136,11 +189,12 @@ const actions = {
 }
 
 
-const _fetchAllQuestions = () => {
+const _fetchAllQuestions = (requestParams) => {
 	// TODO pagination and other super stuff
 	return axios.post(getApiUrl('quiz_questions/.filter'), {
 		include: 'reactions',
-		limit: 50
+		limit: 50,
+		...requestParams
 	})
 }
 

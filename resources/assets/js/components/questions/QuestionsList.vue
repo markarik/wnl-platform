@@ -20,6 +20,7 @@
 						</div>
 					</div>
 				</div>
+				<!-- TODO implement zero state - when no questions returned -->
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
 					module="questions"
@@ -81,6 +82,7 @@
 				'fetchQuestions',
 				'fetchQuestionData',
 				'fetchDynamicFilters',
+				'fetchMatchingQuestions',
 				'selectAnswer',
 				'resolveQuestion',
 			]),
@@ -94,7 +96,10 @@
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
 				// TODO record answer in DB
-			}
+			},
+			debouncedFetchMatchingQuestions: _.debounce(function() {
+				this.fetchMatchingQuestions(this.activeFilters)
+			}, 500)
 		},
 		mounted() {
 			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters()])
@@ -104,7 +109,7 @@
 		},
 		watch: {
 			activeFilters() {
-				//TODO watch active filters and issue request for matching ids
+				this.debouncedFetchMatchingQuestions()
 			},
 			highlightedQuestion() {
 				if (!this.highlightedQuestion.answers) {

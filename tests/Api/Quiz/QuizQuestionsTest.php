@@ -69,7 +69,7 @@ class QuizQuestionsTest extends ApiTestCase
 					'tags' => ['Kardiologia'], // add or/and option
 				],
 				[
-					'tags' => ['łatwe']
+					'tags' => ['łatwe'],
 				],
 				[
 					'query' => [
@@ -77,15 +77,9 @@ class QuizQuestionsTest extends ApiTestCase
 					],
 				],
 				[
-					'quiz.correct_answer' => [
+					'quiz.resolution' => [
 						'user_id' => 255,
-						'correct' => false
-					],
-				],
-				[
-					'quiz.is_done' => [
-						'user_id' => 255,
-						'done' => true
+						'list'   => ['correct', 'incorrect', 'notTouched'],
 					],
 				],
 			],

@@ -131,7 +131,7 @@ let routes = [
 	{
 		name: 'questions',
 		path: '/app/questions',
-		component: require('js/components/questions/Dashboard.vue'),
+		component: require('js/components/questions/QuestionsList.vue'),
 		props: true,
 	},
 	{

@@ -17,7 +17,7 @@
 							:reactableId="question.id"
 							:reactableResource="reactableResource"
 							:state="reactionState"
-							module="quiz"
+							:module="module"
 						></wnl-bookmark>
 					</div>
 				</div>
@@ -41,9 +41,9 @@
 			<div class="card-footer" v-if="(!headerOnly && displayResults) || showComments">
 				<div class="quiz-question-comments">
 					<wnl-comments-list
-						module="quiz"
 						commentableResource="quiz_questions"
 						urlParam="quiz_question"
+						:module="module"
 						:commentableId="question.id"
 						:isUnique="showComments">
 					</wnl-comments-list>
@@ -133,7 +133,7 @@
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
 		},
-		props: ['index', 'readOnly', 'headerOnly', 'showComments', 'question', 'getReaction', 'isQuizComplete'],
+		props: ['index', 'readOnly', 'headerOnly', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
 			return {
 				reactableResource: "quiz_questions"

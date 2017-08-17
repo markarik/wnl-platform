@@ -18,6 +18,7 @@
 			:question="currentQuestion"
 			:showComments="true"
 			:getReaction="getReaction"
+			:module="module"
 			@selectAnswer="selectAnswer"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
@@ -40,6 +41,7 @@
 				:class="`clickable quiz-question-${question.id}`"
 				:key="index"
 				:getReaction="getReaction"
+				:module="module"
 				@headerClicked="selectQuestionFromList(index)"
 				@selectAnswer="selectAnswer"
 			></wnl-quiz-question>
@@ -89,6 +91,10 @@
 			getReaction: {
 				type: Function,
 				default: () => {}
+			},
+			module: {
+				type: String,
+				default: 'quiz'
 			}
 		},
 		data() {

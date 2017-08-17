@@ -21,7 +21,13 @@
 					<div v-if="hasError" class="notification">
 						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
 					</div>
-					<wnl-quiz-widget v-else :isSingle="true"/>
+					<wnl-quiz-widget v-else
+						:isSingle="true"
+						:questions="getQuestionsWithAnswers"
+						:getReaction="getReaction"
+						@selectAnswer="commitSelectAnswer"
+						@verify="resolveQuestion"
+					/>
 				</div>
 				<wnl-text-loader v-else/>
 			</div>
@@ -99,13 +105,13 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavVisible', 'isSidenavMounted']),
-			...mapGetters('quiz', ['isLoaded']),
+			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction']),
 			title() {
 				return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', {id: this.id})
 			},
 		},
 		methods: {
-			...mapActions('quiz', ['destroyQuiz', 'fetchSingleQuestion']),
+			...mapActions('quiz', ['destroyQuiz', 'fetchSingleQuestion', 'commitSelectAnswer', 'resolveQuestion']),
 			goBack() {
 				this.$router.go(-1)
 			},

@@ -12,6 +12,7 @@
 			:key="question.id"
 			:readOnly="readOnly"
 			:getReaction="getReaction"
+			module="quiz"
 			@selectAnswer="onSelectAnswer"
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!displayResults">

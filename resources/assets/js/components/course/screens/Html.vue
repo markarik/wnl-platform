@@ -106,12 +106,21 @@
 			},
 			nextImage() {
 				if (this.imagesSources.indexOf(JSON.stringify(this.currentImageSource))) {
-					this.currentImageSource = this.imagesSources[this.imagesSources.indexOf(this.currentImageSource)+1];
+					if (this.imagesSources.indexOf(this.currentImageSource) === this.imagesSources.length-1) {
+						this.currentImageSource = this.imagesSources[0];
+					} else {
+						this.currentImageSource = this.imagesSources[this.imagesSources.indexOf(this.currentImageSource)+1]
+					}
 				}
 			},
 			prevImage() {
 				if (this.imagesSources.indexOf(JSON.stringify(this.currentImageSource))) {
-					this.currentImageSource = this.imagesSources[this.imagesSources.indexOf(this.currentImageSource)-1];
+					if(this.imagesSources.indexOf(this.currentImageSource) === 0) {
+						this.currentImageSource = this.imagesSources[this.imagesSources.length-1];
+					} else {
+						this.currentImageSource = this.imagesSources[this.imagesSources.indexOf(this.currentImageSource)-1];
+					}
+
 				}
 			},
 		},

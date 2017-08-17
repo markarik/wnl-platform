@@ -79,7 +79,7 @@ class QuizQuestionsTest extends ApiTestCase
 				[
 					'quiz.resolution' => [
 						'user_id' => 255,
-						'list'   => ['correct', 'incorrect', 'notTouched'],
+						'list'   => ['correct', 'incorrect', 'unresolved'],
 					],
 				],
 			],

@@ -83,7 +83,6 @@
 				'fetchQuestions',
 				'fetchQuestionData',
 				'fetchDynamicFilters',
-				'fetchMatchingQuestions',
 				'selectAnswer',
 				'resolveQuestion',
 			]),
@@ -98,9 +97,6 @@
 				this.resolveQuestion(questionId)
 				// TODO record answer in DB
 			},
-			debouncedFetchMatchingQuestions: _.debounce(function() {
-				this.fetchMatchingQuestions(this.activeFilters)
-			}, 500)
 		},
 		mounted() {
 			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters()])

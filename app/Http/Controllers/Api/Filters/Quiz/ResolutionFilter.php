@@ -44,7 +44,7 @@ class ResolutionFilter extends ApiFilter
 		});
 	}
 
-	protected function notTouched($query)
+	protected function unresolved($query)
 	{
 		$query->whereDoesntHave('userQuizResults', function ($query) {
 			$query->where('user_id', $this->params['user_id']);

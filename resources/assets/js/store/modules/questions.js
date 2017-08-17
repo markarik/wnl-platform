@@ -11,7 +11,7 @@ const namespaced = true
 const FILTER_TYPES = {
 	BOOLEAN: 'boolean',
 	LIST: 'list',
-	TAG: 'tag',
+	TAGS: 'tags',
 }
 
 // Initial state
@@ -120,28 +120,30 @@ const actions = {
 			})
 	},
 	fetchMatchingQuestions({commit, state, rootGetters}, activeFilters) {
+		const groupedFilters = {};
 		const filters = [];
-		const tags = [];
+
 
 		activeFilters.forEach((filter) => {
-			const selectedFilter = _.get(state.filters, filter)
+			const [filterGroup, ...tail] = filter.split('.')
+			const [filterValue] = tail.slice(-1)
+			const filterType = state.filters[filterGroup].type
 
-			if (selectedFilter.type === FILTER_TYPES.TAG) {
-				tags.push(selectedFilter.value)
-			} else if (selectedFilter.type === FILTER_TYPES.BOOLEAN) {
-				const [key] = filter.split('.')
+			groupedFilters[filterGroup] = groupedFilters[filterGroup] || []
+			groupedFilters[filterGroup].push(filterValue)
+		})
 
+		Object.keys(groupedFilters).forEach((group) => {
+			if (state.filters[group].type === FILTER_TYPES.TAGS) {
+				filters.push({tags: groupedFilters[group]})
+			} else if (state.filters[group].type === FILTER_TYPES.LIST) {
 				filters.push({
-					[`quiz.${key}`]: {
+					[`quiz.${group}`]: {
 						user_id: rootGetters.currentUserId,
-						[selectedFilter.field]: selectedFilter.value
+						list: groupedFilters[group]
 					}
 				})
 			}
-		})
-
-		filters.push({
-			tags
 		})
 
 		_fetchAllQuestions({filters})

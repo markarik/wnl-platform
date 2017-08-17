@@ -28,9 +28,16 @@
 		computed: {
 			...mapGetters('questions', ['filters']),
 		},
+		methods: {
+			...mapActions('questions', ['fetchMatchingQuestions']),
+			debouncedFetchMatchingQuestions: _.debounce(function() {
+				this.fetchMatchingQuestions(this.activeFilters)
+			}, 500)
+
+		},
 		watch: {
 			activeFilters() {
-				//TODO watch active filters and issue request for matching ids
+				this.debouncedFetchMatchingQuestions()
 			},
 		}
 	}

@@ -3,9 +3,9 @@
 		<h3>Filtry</h3>
 		<div v-for="(filterGroup, key) in Object.keys(filters)" :key="key">
 			<h4>{{filterGroup}}</h4>
-			<div v-for="(filter, key) in Object.keys(filters[filterGroup].items)" :key="key">
-				<input type="checkbox" :name="filter" :value="`${filterGroup}.${filter}`" v-model="activeFilters">
-				<label :for="filter">{{filters[filterGroup].items[filter].name}}</label>
+			<div v-for="(filter, index) in filters[filterGroup].items" :key="index">
+				<input type="checkbox" :name="`${filterGroup}.${filter.value}`" :value="`${filterGroup}.${filter.value}`" v-model="activeFilters">
+				<label :for="`${filterGroup}.${filter.value}`">{{filter.name}}</label>
 			</div>
 		</div>
 	</div>

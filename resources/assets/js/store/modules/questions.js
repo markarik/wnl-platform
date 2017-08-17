@@ -3,6 +3,7 @@ import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
 
 
 const namespaced = true
@@ -36,6 +37,7 @@ const state = {
 // Getters
 const getters = {
 	...commentsGetters,
+	...reactionsGetters,
 	questions: state => state.quiz_questions,
 	filters: state => state.filters
 }
@@ -43,6 +45,7 @@ const getters = {
 // Mutations
 const mutations = {
 	...commentsMutations,
+	...reactionsMutations,
 	[types.QUESTIONS_SET] (state, payload) {
 		// TODO endpoint could return data in shape: {id: data, ...}
 		const serialized = {};
@@ -54,7 +57,7 @@ const mutations = {
 		set(state, 'quiz_questions', serialized)
 	},
 	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included: {quiz_answers, ...included}, comments}) {
-		set(state.quiz_questions[id], 'comments', comments)
+		comments && set(state.quiz_questions[id], 'comments', comments)
 
 		if (quiz_answers) {
 			const answers = Object.values(quiz_answers).map((answer) => answer)
@@ -99,6 +102,7 @@ const mutations = {
 // Actions
 const actions = {
 	...commentsActions,
+	...reactionsActions,
 	fetchQuestions({commit}) {
 		return _fetchAllQuestions()
 			.then(({data}) => {
@@ -127,11 +131,11 @@ const actions = {
 
 
 const _fetchAllQuestions = () => {
-	return axios.get(getApiUrl('questions'))
+	return axios.get(getApiUrl('quiz_questions/all?include=reactions'))
 }
 
 const _fetchQuestionData = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers,comments.profiles,reactions`))
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers,comments.profiles`))
 }
 
 const _fetchDynamicFilters = () => {

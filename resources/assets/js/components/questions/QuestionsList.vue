@@ -22,8 +22,9 @@
 				</div>
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
-					:questions="questionsList"
 					module="questions"
+					:questions="questionsList"
+					:getReaction="getReaction"
 					@changeQuestion="performChangeQuestion"
 					@verify="onVerify"
 					@selectAnswer="selectAnswer"
@@ -67,7 +68,7 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible']),
-			...mapGetters('questions', ['questions', 'filters']),
+			...mapGetters('questions', ['questions', 'filters', 'getReaction']),
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},

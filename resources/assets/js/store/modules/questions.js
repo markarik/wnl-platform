@@ -1,4 +1,5 @@
 import { set, delete as destroy } from 'vue'
+import { get } from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
@@ -47,9 +48,23 @@ const getters = {
 	...commentsGetters,
 	...reactionsGetters,
 	activeFilters: state => state.activeFilters,
+	activeFiltersValues: state => state.activeFilters.map(path => {
+		return get(state.filters, path).value
+	}),
 	allQuestionsCount: state => state.allCount,
 	questions: state => state.quiz_questions,
-	filters: state => state.filters,
+	filters: state => {
+		const order = ['resolution', 'subjects', 'exams']
+
+		let filters = {}
+		order.forEach(group => {
+			if (state.filters.hasOwnProperty(group)) {
+				filters[group] = state.filters[group]
+			}
+		})
+
+		return filters
+	},
 	matchedQuestionsCount: state => state.total,
 }
 
@@ -156,14 +171,13 @@ const actions = {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
-	fetchMatchingQuestions({commit, state, rootGetters}, activeFilters) {
+	fetchMatchingQuestions({commit, state, getters, rootGetters}, activeFilters) {
 		const groupedFilters = {};
 		const filters = [];
 
-
-		activeFilters.forEach((filter) => {
+		activeFilters.forEach((filter, index) => {
 			const [filterGroup, ...tail] = filter.split('.')
-			const [filterValue] = tail.slice(-1)
+			const filterValue = getters.activeFiltersValues[index]
 			const filterType = state.filters[filterGroup].type
 
 			groupedFilters[filterGroup] = groupedFilters[filterGroup] || []

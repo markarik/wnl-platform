@@ -29,8 +29,8 @@
 				v-for="(childItem, index) in item.items"
 				:config="config"
 				:item="childItem"
-				:key="childPath(childItem, index)"
-				:path="childPath(childItem, index)"
+				:key="index"
+				:path="`${path}.items[${index}]`"
 				@itemToggled="onChildItemToggled"
 			/>
 		</div>
@@ -126,9 +126,6 @@
 			},
 		},
 		methods: {
-			childPath(childItem, index) {
-				return `${this.path}.${childItem.value || index}`
-			},
 			isExpanded(path) {
 				return this.config.expanded.indexOf(path) > -1
 			},
@@ -142,10 +139,6 @@
 			},
 			toggleExpanded() {
 				this.expanded = !this.expanded
-				// this.$emit('toggleExpanded', {
-				// 	expanded: this.expanded,
-				// 	path: this.path,
-				// })
 			},
 			toggleSelected() {
 				if (this.isSelectable) {

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Tag;
+use App\Models\Taxonomy;
 
 class QuizQuestionsApiController extends ApiController
 {
@@ -25,44 +26,21 @@ class QuizQuestionsApiController extends ApiController
 			]
 
 		**/
-		$chronoTags = Tag::where('name', 'like', 'lek-%')->get();
-		$subjectsTags = Tag::whereIn('name', [
-			'Kardiologia',
-			'Pulmonologia',
-			'Gastroenterologia',
-			'Endokrynologia',
-			'Hematologia',
-			'Nefrologia',
-			'Reumatologia',
-			'Diabetologia',
-			'Laryngologia'
-		])->get();
+		// TODO id shouldn't be hardcoded here
+		$taxonomyTags = Taxonomy::find(1)->tagsTaxonomy->sortBy("order_number");
+		$examsFilterItems = [];
+
+		foreach($taxonomyTags as $taxonomyTag) {
+			$examsFilterItems[] = [
+				'name' => $taxonomyTag->tag->name,
+				'value' => $taxonomyTag->tag->id
+			];
+		}
 
 		return $this->respondOk([
 			'exams' => [
 				'type' => 'tags',
-				'items' => [
-					[
-						'name' => Tag::find(145)->name,
-						'value' => Tag::find(145)->id
-					],
-					[
-						'name' => Tag::find(120)->name,
-						'value' => Tag::find(120)->id
-					],
-					[
-						'name' => Tag::find(154)->name,
-						'value' => Tag::find(154)->id
-					],
-					[
-						'name' => Tag::find(110)->name,
-						'value' => Tag::find(110)->id
-					],
-					[
-						'name' => Tag::find(144)->name,
-						'value' => Tag::find(144)->id
-					],
-				]
+				'items' => $examsFilterItems
 			],
 			'subjects' => [
 				'type' => 'tags',

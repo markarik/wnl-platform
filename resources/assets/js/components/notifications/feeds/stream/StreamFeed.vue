@@ -15,7 +15,7 @@
 				</div>
 				<div class="all-seen" v-if="!showRead && unreadCount > 0">
 					<a v-if="!marking" class="link" @click="allRead">
-						{{$t('notifications.markAllAsRead')}}
+						{{$t('notifications.hideAll')}}
 					</a>
 					<span v-else class="loader"></span>
 				</div>

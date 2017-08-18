@@ -1,4 +1,4 @@
-import { set } from 'vue'
+import { set, delete as destroy } from 'vue'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
@@ -16,9 +16,8 @@ const FILTER_TYPES = {
 
 // Initial state
 const state = {
-	quiz_questions: {},
+	activeFilters: [],
 	comments: {},
-	profiles: {},
 	filters: {
 		// TODO Translations
 		'resolution': {
@@ -38,13 +37,16 @@ const state = {
 				},
 			],
 		}
-	}
+	},
+	quiz_questions: {},
+	profiles: {},
 }
 
 // Getters
 const getters = {
 	...commentsGetters,
 	...reactionsGetters,
+	activeFilters: state => state.activeFilters,
 	questions: state => state.quiz_questions,
 	filters: state => state.filters
 }
@@ -53,6 +55,20 @@ const getters = {
 const mutations = {
 	...commentsMutations,
 	...reactionsMutations,
+	[types.ACTIVE_FILTERS_ADD] (state, filter) {
+		if (state.activeFilters.indexOf(filter) === -1) {
+			state.activeFilters.push(filter)
+		}
+	},
+	[types.ACTIVE_FILTERS_REMOVE] (state, filter) {
+		const index = state.activeFilters.indexOf(filter)
+		if (index > -1) {
+			state.activeFilters.splice(index, 1)
+		}
+	},
+	[types.ACTIVE_FILTERS_RESET] (state, payload) {
+		state.activeFilters = []
+	},
 	[types.QUESTIONS_SET] (state, payload) {
 		// TODO endpoint could return data in shape: {id: data, ...}
 		const serialized = {};
@@ -100,6 +116,19 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
+	activeFiltersToggle({commit}, {filter, active}) {
+		return new Promise((resolve, reject) => {
+			if (active) {
+				commit(types.ACTIVE_FILTERS_ADD, filter)
+			} else {
+				commit(types.ACTIVE_FILTERS_REMOVE, filter)
+			}
+			resolve()
+		})
+	},
+	activeFiltersReset({commit}) {
+		commit(types.ACTIVE_FILTERS_RESET)
+	},
 	fetchQuestions({commit}) {
 		return _fetchAllQuestions()
 			.then(({data: {data, ...meta}}) => {

@@ -12,6 +12,7 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
+
 				<!-- TODO Implement zero state -->
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
@@ -29,7 +30,7 @@
 			:isVisible="isLargeDesktop"
 			:hasChat="true"
 		>
-			<wnl-questions-filters :filters="filters"/>
+			<wnl-questions-filters :filters="filters" @activeFiltersChanged="onActiveFiltersChanged"/>
 		</wnl-sidenav-slot>
 	</div>
 </template>
@@ -48,6 +49,7 @@
 
 	import withChat from 'js/mixins/with-chat'
 
+	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
@@ -56,11 +58,12 @@
 
 	export default {
 		components: {
+			'wnl-active-filters': ActiveFilters,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-main-nav': MainNav,
 			'wnl-quiz-widget': QuizWidget,
-			'wnl-questions-filters': QuestionsFilters
+			'wnl-questions-filters': QuestionsFilters,
 		},
 		mixins: [withChat],
 		data() {
@@ -71,6 +74,7 @@
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isChatMounted']),
 			...mapGetters('questions', [
+				'activeFilters',
 				'filters',
 				'getReaction',
 				'questions',
@@ -84,22 +88,32 @@
 		},
 		methods: {
 			...mapActions('questions', [
+				'activeFiltersReset',
+				'activeFiltersToggle',
 				'fetchQuestions',
 				'fetchQuestionData',
 				'fetchDynamicFilters',
+				'fetchMatchingQuestions',
 				'selectAnswer',
 				'resolveQuestion',
 			]),
+			debouncedFetchMatchingQuestions: _.debounce(function() {
+				this.fetchMatchingQuestions(this.activeFilters)
+			}, 500),
+			onActiveFiltersChanged(payload) {
+				this.activeFiltersToggle(payload)
+					.then(this.debouncedFetchMatchingQuestions)
+			},
+			onVerify(questionId) {
+				this.resolveQuestion(questionId)
+				// TODO record answer in DB
+			},
 			performChangeQuestion(index) {
 				const beforeIndex = this.questionsList.slice(0, index);
 				const afterIndex = this.questionsList.slice(index)
 
 				this.orderedQuestionsList = [...afterIndex, ...beforeIndex]
 				// TODO if we decide on pagination we can fetch new question here
-			},
-			onVerify(questionId) {
-				this.resolveQuestion(questionId)
-				// TODO record answer in DB
 			},
 		},
 		mounted() {

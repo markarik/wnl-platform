@@ -4,6 +4,7 @@
 		<wnl-accordion
 			:dataSource="filters"
 			:config="accordionConfig"
+			@itemToggled="onItemToggled"
 		/>
 	</div>
 </template>
@@ -34,11 +35,6 @@
 				required: true,
 			},
 		},
-		data() {
-			return {
-				activeFilters: [],
-			}
-		},
 		computed: {
 			...mapGetters(['isMobile']),
 			accordionConfig() {
@@ -50,15 +46,9 @@
 			},
 		},
 		methods: {
-			...mapActions('questions', ['fetchMatchingQuestions']),
-			debouncedFetchMatchingQuestions: _.debounce(function() {
-				this.fetchMatchingQuestions(this.activeFilters)
-			}, 500)
-		},
-		watch: {
-			activeFilters() {
-				this.debouncedFetchMatchingQuestions()
+			onItemToggled({path, selected}) {
+				this.$emit('activeFiltersChanged', {filter: path, active: selected})
 			},
-		}
+		},
 	}
 </script>

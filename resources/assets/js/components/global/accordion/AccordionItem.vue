@@ -31,6 +31,7 @@
 				:item="childItem"
 				:key="childPath(childItem, index)"
 				:path="childPath(childItem, index)"
+				@itemToggled="onChildItemToggled"
 			/>
 		</div>
 	</div>
@@ -48,8 +49,12 @@
 
 	.wnl-accordion-item
 		display: flex
-		padding-left: $margin-base
+		padding: $margin-small 0 $margin-small $margin-base
+		user-select: none
 		width: 100%
+
+		&:hover
+			background: $color-background-lighter-gray
 
 		&.is-selected
 			background-color: $color-green
@@ -62,6 +67,9 @@
 		&.has-children,
 		&.is-selectable
 			cursor: pointer
+
+		.wai-checkbox
+			width: 1.5em
 
 		.wai-content
 			flex: 1 auto
@@ -77,6 +85,8 @@
 </style>
 
 <script>
+	import {size} from 'lodash'
+
 	export default {
 		name: 'AccordionItem',
 		props: {
@@ -132,17 +142,23 @@
 			},
 			toggleExpanded() {
 				this.expanded = !this.expanded
-				this.$emit('toggleExpanded', {
-					expanded: this.expanded,
-					path: this.path,
-				})
+				// this.$emit('toggleExpanded', {
+				// 	expanded: this.expanded,
+				// 	path: this.path,
+				// })
 			},
 			toggleSelected() {
-				this.selected = !this.selected
-				this.$emit('toggleSelected', {
-					path: this.path,
-					selected: this.selected,
-				})
+				if (this.isSelectable) {
+					this.selected = !this.selected
+
+					this.$emit('itemToggled', {
+						path: this.path,
+						selected: this.selected,
+					})
+				}
+			},
+			onChildItemToggled(payload) {
+				this.$emit('itemToggled', payload)
 			},
 		},
 		mounted() {

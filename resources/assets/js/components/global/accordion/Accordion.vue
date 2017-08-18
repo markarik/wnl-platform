@@ -7,6 +7,7 @@
 			:item="item"
 			:key="path"
 			:path="path"
+			@itemToggled="onItemToggled"
 		/>
 	</div>
 </template>
@@ -41,6 +42,11 @@
 		computed: {
 			hasItems() {
 				return size(this.dataSource) > 0
+			}
+		},
+		methods: {
+			onItemToggled(payload) {
+				this.$emit('itemToggled', payload)
 			}
 		},
 	}

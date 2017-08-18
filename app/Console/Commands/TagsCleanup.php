@@ -95,6 +95,9 @@ class TagsCleanup extends Command
 					$tag->name = $commandTarget;
 					$tag->save();
 					continue;
+				case 4:
+					$this->remove($tag);
+					continue;
 			}
 		}
 	}
@@ -111,6 +114,15 @@ class TagsCleanup extends Command
 			$sql = \DB::table('taggables')
 				->where('tag_id', $tag->id)
 				->update(['tag_id' => $newTag->id]);
+			$tag->delete();
+		}
+	}
+
+	private function remove(Tag $tag) {
+		if ($this->confirm("Should I REMOVE tag {$tag->id} with {$tag->name}? ( ಠ◡ಠ )")) {
+			$sql = \DB::table('taggables')
+				->where('tag_id', $tag->id)
+				->delete();
 			$tag->delete();
 		}
 	}

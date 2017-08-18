@@ -14,28 +14,9 @@ class QuizQuestionsApiController extends ApiController
 	}
 
 	public function getFilters() {
-		/***
-			[
-				type: 'tags',
-				items: [
-					['name' => 'Interna', 'value' => 1, 'items': [
-						['name' => 'Kardiologia', 'value' => 64]
-					]],
-					['name' => 'Pediatria', 'value' => 2],
-				]
-			]
-
-		**/
 		// TODO id shouldn't be hardcoded here
-		$taxonomyTags = Taxonomy::find(1)->tagsTaxonomy->sortBy("order_number");
-		$examsFilterItems = [];
-
-		foreach($taxonomyTags as $taxonomyTag) {
-			$examsFilterItems[] = [
-				'name' => $taxonomyTag->tag->name,
-				'value' => $taxonomyTag->tag->id
-			];
-		}
+		$examsFilterItems = $this->buildTaxonomyStructure(1);
+		$subjectsFilterItems = $this->buildTaxonomyStructure(2);
 
 		return $this->respondOk([
 			'exams' => [
@@ -44,47 +25,49 @@ class QuizQuestionsApiController extends ApiController
 			],
 			'subjects' => [
 				'type' => 'tags',
-				'items' => [
-					[
-						'name' => Tag::where('name', 'Interna')->first()->name,
-						'value' => Tag::where('name', 'Interna')->first()->id,
-						'type' => 'tags',
-						'items' => [
-							[
-								'name' => Tag::where('name', 'Kardiologia')->first()->name,
-								'value' => Tag::where('name', 'Kardiologia')->first()->id
-							],
-							[
-								'name' => Tag::where('name', 'Pulmonologia')->first()->name,
-								'value' => Tag::where('name', 'Pulmonologia')->first()->id
-							],
-							[
-								'name' => Tag::where('name', 'Laryngologia')->first()->name,
-								'value' => Tag::where('name', 'Laryngologia')->first()->id
-							]
-						]
-					],
-					[
-						'name' => Tag::where('name', 'Pediatria')->first()->name,
-						'value' => Tag::where('name', 'Pediatria')->first()->id,
-						'type' => 'tags',
-						'items' => [
-							[
-								'name' => Tag::where('name', 'Kardiologia pediatryczna')->first()->name,
-								'value' => Tag::where('name', 'Kardiologia pediatryczna')->first()->id
-							],
-							[
-								'name' => Tag::where('name', 'Pulmonologia pediatryczna')->first()->name,
-								'value' => Tag::where('name', 'Pulmonologia pediatryczna')->first()->id
-							],
-							[
-								'name' => Tag::where('name', 'Hematologia pediatryczna')->first()->name,
-								'value' => Tag::where('name', 'Hematologia pediatryczna')->first()->id
-							]
-						]
-					]
-				]
+				'items' => $subjectsFilterItems
 			]
 		]);
+	}
+
+	protected function getChildItems($expectedParent, $list) {
+		return $list->first(function ($value, $key) use ($expectedParent) {
+			return $key === $expectedParent;
+		});
+	}
+
+	protected function buildChildStructure($tagId, $groupedTags, $structure) {
+		if (!$groupedTags->has($tagId)) {
+			return null;
+		}
+
+		$root = $this->getChildItems($tagId, $groupedTags);
+
+		foreach($root as $rootItem) {
+			$entry = [];
+			$entry = [
+				'name' => $rootItem->tag->name,
+				'value' => $rootItem->tag->id
+			];
+
+			$childStructure = $this->buildChildStructure($rootItem->tag->id, $groupedTags, []);
+
+			if (!empty($childStructure)) {
+				$entry['items'] = $childStructure;
+			}
+
+			$structure[] = $entry;
+		}
+
+
+		return $structure;
+	}
+
+	protected function buildTaxonomyStructure($taxonomyId) {
+		$groupedTags = Taxonomy::find($taxonomyId)->tagsTaxonomy->sortBy('order_number')->groupBy('parent_tag_id');
+		$items = $this->buildChildStructure("", $groupedTags, []);
+
+
+		return $items;
 	}
 }

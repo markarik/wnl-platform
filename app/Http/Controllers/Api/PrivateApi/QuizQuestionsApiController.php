@@ -59,14 +59,12 @@ class QuizQuestionsApiController extends ApiController
 			$structure[] = $entry;
 		}
 
-
 		return $structure;
 	}
 
 	protected function buildTaxonomyStructure($taxonomyId) {
 		$groupedTags = Taxonomy::find($taxonomyId)->tagsTaxonomy->sortBy('order_number')->groupBy('parent_tag_id');
 		$items = $this->buildChildStructure("", $groupedTags, []);
-
 
 		return $items;
 	}

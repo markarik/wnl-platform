@@ -47,8 +47,10 @@ const getters = {
 	...commentsGetters,
 	...reactionsGetters,
 	activeFilters: state => state.activeFilters,
+	allQuestionsCount: state => state.allCount,
 	questions: state => state.quiz_questions,
-	filters: state => state.filters
+	filters: state => state.filters,
+	matchedQuestionsCount: state => state.total,
 }
 
 // Mutations
@@ -134,6 +136,12 @@ const actions = {
 			.then(({data: {data, ...meta}}) => {
 				commit(types.QUESTIONS_SET, data)
 				commit(types.QUESTIONS_SET_META, meta)
+			})
+	},
+	fetchQuestionsCount({commit}) {
+		return axios.get(getApiUrl('quiz_questions/.count'))
+			.then(({data}) => {
+				commit(types.QUESTIONS_SET_META, {allCount: data.count})
 			})
 	},
 	fetchQuestionData({commit}, id) {

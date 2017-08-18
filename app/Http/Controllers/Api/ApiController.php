@@ -87,6 +87,17 @@ class ApiController extends Controller
 	}
 
 	/**
+	 * Returns a count of all model's records
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function count() {
+		return response()->json([
+			'count' => self::getResourceModel($this->resourceName)::all()->count(),
+		]);
+	}
+
+	/**
 	 * Get resource model class name.
 	 *
 	 * @param $resource

@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers\Api\PrivateApi;
+<?php
+
+namespace App\Http\Controllers\Api\PrivateApi;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
@@ -19,14 +21,14 @@ class QuizQuestionsApiController extends ApiController
 		$subjectsFilterItems = $this->buildTaxonomyStructure(2);
 
 		return $this->respondOk([
+			'subjects' => [
+				'type' => 'tags',
+				'items' => $subjectsFilterItems
+			],
 			'exams' => [
 				'type' => 'tags',
 				'items' => $examsFilterItems
 			],
-			'subjects' => [
-				'type' => 'tags',
-				'items' => $subjectsFilterItems
-			]
 		]);
 	}
 

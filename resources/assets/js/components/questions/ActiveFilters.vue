@@ -1,7 +1,11 @@
 <template>
 	<div>
 		<h3>Aktywne filtry</h3>
-		
+		<p v-if="activeFilters.length > 0" v-text="activeFilters.join(', ')"></p>
+		<p v-else>Wyświetlam wszystkie pytania!</p>
+		<p v-if="matchedCount && totalCount">
+			{{matchedCount}} / {{totalCount}}
+		</p>
 	</div>
 </template>
 
@@ -11,6 +15,22 @@
 
 <script>
 	export default {
-		name: 'ActiveFilters'
+		name: 'ActiveFilters',
+		props: {
+			activeFilters: {
+				required: true,
+				type: Array,
+			},
+			filters: {
+				required: true,
+				type: Object,
+			},
+			matchedCount: {
+				type: Number,
+			},
+			totalCount: {
+				type: Number,
+			},
+		},
 	}
 </script>

@@ -12,7 +12,12 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
-
+				<wnl-active-filters
+					:activeFilters="activeFilters"
+					:filters="filters"
+					:matchedCount="matchedQuestionsCount"
+					:totalCount="allQuestionsCount"
+				/>
 				<!-- TODO Implement zero state -->
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
@@ -75,9 +80,11 @@
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isChatMounted']),
 			...mapGetters('questions', [
 				'activeFilters',
+				'allQuestionsCount',
 				'filters',
 				'getReaction',
 				'questions',
+				'matchedQuestionsCount',
 			]),
 			highlightedQuestion() {
 				return this.questionsList[0]
@@ -90,8 +97,9 @@
 			...mapActions('questions', [
 				'activeFiltersReset',
 				'activeFiltersToggle',
-				'fetchQuestions',
 				'fetchQuestionData',
+				'fetchQuestions',
+				'fetchQuestionsCount',
 				'fetchDynamicFilters',
 				'fetchMatchingQuestions',
 				'selectAnswer',
@@ -117,7 +125,7 @@
 			},
 		},
 		mounted() {
-			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters()])
+			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
 				.then(() => {
 					this.fetchQuestionData(this.highlightedQuestion.id)
 				})

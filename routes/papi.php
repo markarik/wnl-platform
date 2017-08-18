@@ -21,6 +21,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 		return App::make($controller)->search(App::make('request'));
 	});
 
+	// Count
+	Route::get("{resource}/.count", function($resource) {
+		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
+		return App::make($controller)->count(App::make('request'));
+	});
+
 	// Faceted search / filtering
 	Route::post("{resource}/.filter", function($resource) {
 		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';

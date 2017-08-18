@@ -26,11 +26,11 @@
 		<div v-if="hasChildren" v-show="expanded || flattened"
 			class="wnl-accordion-item-children" :class="{'is-first-level': isFirstLevel}">
 			<AccordionItem
-				v-for="(childItem, childPath) in item.items"
+				v-for="(childItem, index) in item.items"
 				:config="config"
 				:item="childItem"
-				:key="`${path}.${childPath}`"
-				:path="`${path}.${childPath}`"
+				:key="childPath(childItem, index)"
+				:path="childPath(childItem, index)"
 			/>
 		</div>
 	</div>
@@ -116,6 +116,9 @@
 			},
 		},
 		methods: {
+			childPath(childItem, index) {
+				return `${this.path}.${childItem.value || index}`
+			},
 			isExpanded(path) {
 				return this.config.expanded.indexOf(path) > -1
 			},

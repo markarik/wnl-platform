@@ -29,7 +29,7 @@
 			:isVisible="isLargeDesktop"
 			:hasChat="true"
 		>
-			<wnl-questions-filters/>
+			<wnl-questions-filters :filters="filters"/>
 		</wnl-sidenav-slot>
 	</div>
 </template>
@@ -70,7 +70,11 @@
 		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isChatMounted']),
-			...mapGetters('questions', ['questions', 'getReaction']),
+			...mapGetters('questions', [
+				'filters',
+				'getReaction',
+				'questions',
+			]),
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},

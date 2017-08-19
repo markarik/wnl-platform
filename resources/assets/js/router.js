@@ -143,6 +143,11 @@ let routes = [
 				path: 'list',
 				component: require('js/components/questions/QuestionsList.vue'),
 			},
+			{
+				name: 'questions-stats',
+				path: 'stats',
+				component: require('js/components/questions/QuestionsStats.vue'),
+			},
 		],
 	},
 	{

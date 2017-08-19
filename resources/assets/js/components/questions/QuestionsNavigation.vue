@@ -48,10 +48,23 @@
 					navigation.composeItem({
 						text: 'Dashboard',
 						routeName: 'questions-dashboard',
+						iconClass: 'fa-home',
+						iconTilte: 'Dashboard',
+						itemClass: 'has-icon',
 					}),
 					navigation.composeItem({
 						text: 'Rozwiązywanie pytań',
 						routeName: 'questions-list',
+						iconClass: 'fa-check',
+						iconTilte: 'Rozwiązywanie pytań',
+						itemClass: 'has-icon',
+					}),
+					navigation.composeItem({
+						text: 'Statystyki',
+						routeName: 'questions-stats',
+						iconClass: 'fa-bar-chart',
+						iconTilte: 'Statystyki',
+						itemClass: 'has-icon',
 					}),
 				]
 			}

@@ -3,6 +3,6 @@ export const nav = {
 		logoAlt: 'Logo Więcej niż LEK',
 	},
 	sideNav: {
-		questions: 'Baza pytań'
+		questions: 'Pytania'
 	}
 }

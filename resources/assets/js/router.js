@@ -129,10 +129,21 @@ let routes = [
 		props: true,
 	},
 	{
-		name: 'questions',
-		path: '/app/questions',
-		component: require('js/components/questions/QuestionsList.vue'),
-		props: true,
+		path: 'app/questions',
+		component: require('js/components/questions/Questions.vue'),
+		meta: {keepsNavOpen: true},
+		children: [
+			{
+				name: 'questions-dashboard',
+				path: '',
+				component: require('js/components/questions/QuestionsDashboard.vue'),
+			},
+			{
+				name: 'questions-list',
+				path: 'list',
+				component: require('js/components/questions/QuestionsList.vue'),
+			},
+		],
 	},
 	{
 		name: 'moderatorFeed',

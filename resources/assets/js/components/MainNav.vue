@@ -12,6 +12,15 @@
 			</span>
 			<span class="text">Kolekcje</span>
 		</router-link>
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{name: 'questions-dashboard'}"
+		>
+			<span class="icon is-medium">
+				<i class="fa fa-check-square-o"></i>
+			</span>
+		<span class="text">{{$t('nav.sideNav.questions')}}</span>
+		</router-link>
 		<router-link class="wnl-main-nav-item" :to="{ name: 'myself' }">
 			<span class="icon is-medium">
 				<i class="fa fa-user-o"></i>
@@ -33,15 +42,6 @@
 				<i class="fa fa-list"></i>
 			</span>
 			<span class="text">Feed</span>
-		</router-link>
-		<router-link
-			class="wnl-main-nav-item"
-			:to="{name: 'questions'}"
-		>
-			<span class="icon is-medium">
-				<i class="fa fa-question"></i>
-			</span>
-		<span class="text">{{$t('nav.sideNav.questions')}}</span>
 		</router-link>
 	</div>
 </template>
@@ -86,6 +86,7 @@
 			&.is-active
 				background: $color-background-lighter-gray
 				color: $color-ocean-blue
+				font-weight: $font-weight-regular
 				transition: all $transition-length-base
 
 			.text

@@ -1,15 +1,6 @@
 <template>
 	<div class="wnl-app-layout">
-		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
-		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="sidenav-aside">
-				ELOSZKA
-				<!-- <wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav> -->
-			</aside>
-		</wnl-sidenav-slot>
+		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
 				<wnl-active-filters
@@ -60,20 +51,18 @@
 	import withChat from 'js/mixins/with-chat'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
-	import Sidenav from 'js/components/global/Sidenav'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import MainNav from 'js/components/MainNav'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
+	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
+	import SidenavSlot from 'js/components/global/SidenavSlot'
 
 	export default {
 		components: {
 			'wnl-active-filters': ActiveFilters,
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav,
+			'wnl-questions-navigation': QuestionsNavigation,
 			'wnl-quiz-widget': QuizWidget,
 			'wnl-questions-filters': QuestionsFilters,
+			'wnl-sidenav-slot': SidenavSlot,
 		},
 		mixins: [withChat],
 		data() {

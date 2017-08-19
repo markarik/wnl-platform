@@ -17,6 +17,7 @@
 					:filters="filters"
 					:matchedCount="matchedQuestionsCount"
 					:totalCount="allQuestionsCount"
+					@activeFiltersChanged="onActiveFiltersChanged"
 				/>
 				<!-- TODO Implement zero state -->
 				<wnl-quiz-widget

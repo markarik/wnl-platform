@@ -3,8 +3,9 @@
 		<h3>Aktywne filtry</h3>
 		<div v-if="activeFiltersNames.length > 0">
 			<p v-for="(filters, group) in activeFiltersGrouped" v-if="filters.length > 0" :key="group">
-				{{group}}: <span v-for="(filter, index) in filters" :key="index">
-					{{filter}}
+				{{group}}: <span class="tag" v-for="(filter, index) in filters" :key="index">
+					{{filter.name}}
+					<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
 				</span>
 			</p>
 		</div>
@@ -49,7 +50,7 @@
 
 				this.activeFilters.forEach(filter => {
 					const group = filter.split('.')[0]
-					groupedFilters[group].push(this.getFilter(filter).name)
+					groupedFilters[group].push({path: filter, ...this.getFilter(filter)})
 				})
 
 				return groupedFilters
@@ -64,6 +65,9 @@
 		methods: {
 			getFilter(filter) {
 				return get(this.filters, filter)
+			},
+			removeFilter(filter) {
+				this.$emit('activeFiltersChanged', {filter, active: false})
 			},
 		},
 	}

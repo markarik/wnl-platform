@@ -8,13 +8,13 @@
 			'is-first-level': isFirstLevel,
 			'is-selected': selected,
 			'is-selectable': isSelectable,
-		}" @click="onItemClick">
+		}">
 			<div v-if="isSelectable" class="wai-checkbox" @click="toggleSelected">
 				<span class="icon is-small">
 					<i class="fa" :class="[selected ? 'fa-check-square-o' : 'fa-square-o']"></i>
 				</span>
 			</div>
-			<div class="wai-content" @click="toggleSelected">
+			<div class="wai-content" @click="onItemClick">
 				{{content}}
 			</div>
 			<div v-if="hasChildren" class="wai-expand-icon" @click="toggleExpanded">
@@ -133,7 +133,9 @@
 				return this.config.flattened.indexOf(path) > -1
 			},
 			onItemClick() {
-				if (!this.isSelectable) {
+				if (this.isSelectable) {
+					this.toggleSelected()
+				} else {
 					this.toggleExpanded()
 				}
 			},
@@ -141,14 +143,12 @@
 				this.expanded = !this.expanded
 			},
 			toggleSelected() {
-				if (this.isSelectable) {
-					this.selected = !this.selected
+				this.selected = !this.selected
 
-					this.$emit('itemToggled', {
-						path: this.path,
-						selected: this.selected,
-					})
-				}
+				this.$emit('itemToggled', {
+					path: this.path,
+					selected: this.selected,
+				})
 			},
 			onChildItemToggled(payload) {
 				this.$emit('itemToggled', payload)

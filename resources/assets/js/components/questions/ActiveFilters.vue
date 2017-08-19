@@ -14,7 +14,7 @@
 </style>
 
 <script>
-	import {get} from 'lodash'
+	import {cloneDeep, get} from 'lodash'
 
 	export default {
 		name: 'ActiveFilters',
@@ -36,9 +36,28 @@
 		},
 		computed: {
 			activeFiltersNames() {
-				return this.activeFilters.map(filter => {
-					return get(this.filters, filter).name
+				return this.activeFilters.map(filter => this.getFilter(filter).name)
+			},
+			activeFiltersGrouped() {
+				let groupedFilters = cloneDeep(this.filtersGroups)
+
+				this.activeFilters.forEach(filter => {
+					const group = filter.split('.')[0]
+					groupedFilters[group].push(this.getFilter(filter).name)
 				})
+
+				return groupedFilters
+			},
+			filtersGroups() {
+				return Object.keys(this.filters).reduce((result, element) => {
+					result[element] = []
+					return result
+				}, {})
+			},
+		},
+		methods: {
+			getFilter(filter) {
+				return get(this.filters, filter)
 			},
 		},
 	}

@@ -1,7 +1,13 @@
 <template>
 	<div>
 		<h3>Aktywne filtry</h3>
-		<p v-if="activeFiltersNames.length > 0" v-text="activeFiltersNames.join(', ')"></p>
+		<div v-if="activeFiltersNames.length > 0">
+			<p v-for="(filters, group) in activeFiltersGrouped" v-if="filters.length > 0" :key="group">
+				{{group}}: <span v-for="(filter, index) in filters" :key="index">
+					{{filter}}
+				</span>
+			</p>
+		</div>
 		<p v-else>Wyświetlam wszystkie pytania!</p>
 		<p v-if="totalCount">
 			{{matchedCount || 0}} / {{totalCount}}

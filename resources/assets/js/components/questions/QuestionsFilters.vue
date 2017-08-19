@@ -30,6 +30,10 @@
 			'wnl-accordion': Accordion,
 		},
 		props: {
+			activeFilters: {
+				type: Array,
+				required: true,
+			},
 			filters: {
 				type: Object,
 				required: true,
@@ -42,6 +46,7 @@
 					expanded: ['subjects'],
 					flattened: ['resolution'],
 					isMobile: this.isMobile,
+					selectedElements: this.activeFilters,
 				}
 			},
 		},

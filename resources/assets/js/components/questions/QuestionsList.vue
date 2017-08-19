@@ -36,7 +36,11 @@
 			:isVisible="isLargeDesktop"
 			:hasChat="true"
 		>
-			<wnl-questions-filters :filters="filters" @activeFiltersChanged="onActiveFiltersChanged"/>
+			<wnl-questions-filters
+				:activeFilters="activeFilters"
+				:filters="filters"
+				@activeFiltersChanged="onActiveFiltersChanged"
+			/>
 		</wnl-sidenav-slot>
 	</div>
 </template>

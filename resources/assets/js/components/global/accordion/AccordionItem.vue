@@ -6,12 +6,12 @@
 		<div v-if="!flattened" class="wnl-accordion-item" :class="{
 			'has-children': hasChildren,
 			'is-first-level': isFirstLevel,
-			'is-selected': selected,
+			'is-selected': isSelected,
 			'is-selectable': isSelectable,
 		}">
 			<div v-if="isSelectable" class="wai-checkbox" @click="toggleSelected">
 				<span class="icon is-small">
-					<i class="fa" :class="[selected ? 'fa-check-square-o' : 'fa-square-o']"></i>
+					<i class="fa" :class="[isSelected ? 'fa-check-square-o' : 'fa-square-o']"></i>
 				</span>
 			</div>
 			<div class="wai-content" @click="onItemClick">
@@ -120,6 +120,13 @@
 			},
 			isSelectable() {
 				return !!this.item.value
+			},
+			isSelected() {
+				if (this.config.hasOwnProperty('selectedElements')) {
+					return this.config.selectedElements.indexOf(this.path) > -1
+				}
+
+				return this.selected
 			},
 			content() {
 				return this.item.name || this.path

@@ -42,9 +42,15 @@
 		placeholder: 'Pisz tutaj...',
 	}
 
-	const firstAndLastNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+) {1}([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
-	const firstNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
+	const firstAndLastNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+) {1}([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i
+	const firstNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i
 	const autocompleteChar = '@'
+	const keys = {
+		enter: 13,
+		esc: 27,
+		arrowUp: 38,
+		arrowDown: 40
+	}
 
 	export default {
 		name: 'Quill',
@@ -120,7 +126,7 @@
 				this.$emit('input', this.editor.innerHTML)
 
 				if (source !== Quill.sources.USER || !this.allowMentions) {
-					return;
+					return
 				}
 
 				const currentMention = this.getCurrentMention()
@@ -136,7 +142,8 @@
 
 				this.quill.deleteText(mentionStartIndex, lastMentionQueryLength, Quill.sources.API)
 
-				const range = this.lastRange; // cursor position
+				// cursor position
+				const range = this.lastRange
 
 			  	if (!range || range.length != 0) return
 			  	const position = range.index - lastMentionQueryLength
@@ -144,9 +151,9 @@
 			  	this.quill.insertEmbed(position, 'mention', {
 					name: `${autocompleteChar}${data.full_name}`,
 					id: data.id
-				}, Quill.sources.API);
-			  	this.quill.insertText(position + 1, ' ', Quill.sources.API);
-			  	this.quill.setSelection(position + 2, Quill.sources.API);
+				}, Quill.sources.API)
+			  	this.quill.insertText(position + 1, ' ', Quill.sources.API)
+			  	this.quill.setSelection(position + 2, Quill.sources.API)
 			},
 			getCurrentMention() {
 				this.lastRange = this.quill.getSelection()
@@ -192,26 +199,44 @@
 			},
 
 			onKeyDown(evt) {
-				if (!this.$refs.autocomplete) return
-				if (evt.keyCode === 27) {
+				const { enter, esc, arrowUp, arrowDown } = keys
+
+				if (this.autocompleteItems.length === 0 || !this.allowMentions) {
+					return
+				}
+
+				if (evt.keyCode === esc) {
 					this.onEsc(evt)
 					return
 				}
-				if ([13, 38, 40].indexOf(evt.keyCode) === -1) return
-				if (evt.keyCode === 13 && !this.$refs.autocomplete.hasItems) return
-				this.$refs.autocomplete.onKeyDown(evt)
 
-				evt.preventDefault();
-				evt.stopPropagation();
+				if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
+					return
+				}
+
+				if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
+					return
+				}
+
+				this.$refs.autocomplete.onKeyDown(evt)
+				this.killEvent(evt)
+
+				//for some of the old browsers, returning false is the true way to kill propagation
 				return false
 			},
+
 			onEsc(evt) {
-				this.autocompleteItems = [];
+				this.autocompleteItems = []
+			},
+
+			killEvent(evt) {
+				evt.preventDefault()
+				evt.stopPropagation()
 			}
 		},
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)
-			this.QuillEmbed = Quill.import('blots/embed');
+			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
 		},

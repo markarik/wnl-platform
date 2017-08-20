@@ -18,6 +18,7 @@
 					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
 					:keyboard="keyboard"
 					:toolbar="toolbar"
+					:allowMentions=true
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
@@ -106,7 +107,7 @@
 				this.socket.emit('send-message', {
 					room: this.room,
 					message: {
-						full_name: this.currentUserFullName,
+						user: this.currentUser,
 						content: this.content
 					}
 				})

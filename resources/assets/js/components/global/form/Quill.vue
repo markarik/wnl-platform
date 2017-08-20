@@ -77,6 +77,10 @@
 			keyboard: {
 				type: Object,
 				default: () => {}
+			},
+			allowMentions: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data () {
@@ -115,7 +119,7 @@
 				this.setValue(this.editor.innerHTML)
 				this.$emit('input', this.editor.innerHTML)
 
-				if (source !== Quill.sources.USER) {
+				if (source !== Quill.sources.USER || !this.allowMentions) {
 					return;
 				}
 
@@ -124,9 +128,6 @@
 				if (currentMention) {
 					this.requestUsersAutocomplete(currentMention).then(this.onMentionsFetched.bind(this))
 				}
-			},
-			onSelectionChange(range, oldRange, source) {
-
 			},
 			insertMention(data) {
 				this.autocompleteItems = []
@@ -213,7 +214,6 @@
 			this.QuillEmbed = Quill.import('blots/embed');
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
-			this.quill.on('selection-change', this.onSelectionChange)
 		},
 		watch: {
 			focused (val) {

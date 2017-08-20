@@ -28,7 +28,6 @@
 
 	.active-filters
 		background-color: $color-background-lighter-gray
-		// border: $border-light-gray
 		border-radius: $border-radius-small
 		padding: $margin-medium $margin-base
 

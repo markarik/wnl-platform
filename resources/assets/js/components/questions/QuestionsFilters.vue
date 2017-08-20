@@ -1,8 +1,8 @@
 <template>
 	<div class="wnl-questions-filters">
 		<div style="display: flex; align-items: center; justify-content: space-between;">
-			<span class="metadata margin vertical">Filtry</span>
-			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">Ukryj filtry</a>
+			<span class="metadata margin vertical">{{$t('questions.filters.heading')}}</span>
+			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">{{$t('questions.filters.hide')}}</a>
 		</div>
 		<wnl-accordion
 			:dataSource="filters"
@@ -18,6 +18,7 @@
 </style>
 
 <script>
+	import {uniq} from 'lodash'
 	import {mapActions, mapGetters} from 'vuex'
 
 	import Accordion from 'js/components/global/accordion/Accordion'
@@ -46,15 +47,29 @@
 			...mapGetters(['isChatMounted', 'isChatVisible', 'isMobile']),
 			accordionConfig() {
 				return {
-					expanded: ['subjects'],
+					expanded: this.expandedItems,
 					flattened: ['resolution'],
 					isMobile: this.isMobile,
 					selectedElements: this.activeFilters,
 				}
 			},
+			activeParents() {
+				return this.activeFilters.map(this.getParents).reduce((a, b) => a.concat(b))
+			},
+			expandedItems() {
+				return uniq(['subjects'].concat(this.activeParents))
+			},
+			hasActive() {
+				return this.activeFilters.length > 0
+			},
 		},
 		methods: {
 			...mapActions(['toggleChat']),
+			getParents(filter) {
+				return filter.split('.').map((item, index, splitted) => {
+					return splitted.slice(0, index).join('.')
+				})
+			},
 			onItemToggled({path, selected}) {
 				this.$emit('activeFiltersChanged', {filter: path, active: selected})
 			},

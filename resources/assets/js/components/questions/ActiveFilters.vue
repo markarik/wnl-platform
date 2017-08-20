@@ -41,6 +41,10 @@
 		font-size: $font-size-minus-2
 		letter-spacing: 1px
 		text-transform: uppercase
+		margin-top: $margin-base
+
+	.tag
+		background-color: $color-background-light-gray
 </style>
 
 <script>

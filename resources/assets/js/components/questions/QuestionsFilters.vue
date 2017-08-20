@@ -57,7 +57,8 @@
 				return this.activeFilters.map(this.getParents).reduce((a, b) => a.concat(b))
 			},
 			expandedItems() {
-				return uniq(['subjects'].concat(this.activeParents))
+				const expanded = ['subjects']
+				return this.hasActive ? uniq(expanded.concat(this.activeParents)) : expanded
 			},
 			hasActive() {
 				return this.activeFilters.length > 0

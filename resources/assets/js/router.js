@@ -129,7 +129,7 @@ let routes = [
 		props: true,
 	},
 	{
-		path: 'app/questions',
+		path: '/app/questions',
 		component: require('js/components/questions/Questions.vue'),
 		meta: {keepsNavOpen: true},
 		children: [

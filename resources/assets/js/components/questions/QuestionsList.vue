@@ -9,7 +9,14 @@
 					:matchedCount="matchedQuestionsCount"
 					:totalCount="allQuestionsCount"
 					@activeFiltersChanged="onActiveFiltersChanged"
-				/>
+				>
+					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
+						<span>{{$t('questions.filters.show')}}</span>
+						<span class="icon is-tiny">
+							<i class="fa fa-sliders"></i>
+						</span>
+					</a>
+				</wnl-active-filters>
 				<!-- TODO Implement zero state -->
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
@@ -24,7 +31,7 @@
 		</div>
 		<wnl-sidenav-slot
 			:isDetached="!isChatMounted"
-			:isVisible="isLargeDesktop"
+			:isVisible="isLargeDesktop || isChatVisible"
 			:hasChat="true"
 		>
 			<wnl-questions-filters
@@ -33,6 +40,12 @@
 				@activeFiltersChanged="onActiveFiltersChanged"
 			/>
 		</wnl-sidenav-slot>
+		<div v-if="!isLargeDesktop && isChatToggleVisible" class="wnl-chat-toggle">
+			<span class="icon is-big" @click="toggleChat">
+				<i class="fa fa-sliders"></i>
+				<span>{{$t('questions.filters.show')}}</span>
+			</span>
+		</div>
 	</div>
 </template>
 
@@ -43,12 +56,18 @@
 		width: 100%
 		max-width: initial
 
+	.active-filters
+		margin-bottom: $margin-base
+
+	.mobile-show-active-filters
+		align-items: center
+		display: flex
+		font-size: $font-size-minus-2
+		text-transform: uppercase
 </style>
 
 <script>
 	import {mapGetters, mapActions} from 'vuex'
-
-	import withChat from 'js/mixins/with-chat'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
@@ -64,14 +83,21 @@
 			'wnl-questions-filters': QuestionsFilters,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
-		mixins: [withChat],
 		data() {
 			return {
 				orderedQuestionsList: []
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isLargeDesktop', 'isChatMounted']),
+			...mapGetters([
+				'isChatMounted',
+				'isChatToggleVisible',
+				'isChatVisible',
+				'isMobile',
+				'isLargeDesktop',
+				'isSidenavMounted',
+				'isSidenavVisible',
+			]),
 			...mapGetters('questions', [
 				'activeFilters',
 				'allQuestionsCount',
@@ -88,6 +114,7 @@
 			}
 		},
 		methods: {
+			...mapActions(['toggleChat']),
 			...mapActions('questions', [
 				'activeFiltersReset',
 				'activeFiltersToggle',

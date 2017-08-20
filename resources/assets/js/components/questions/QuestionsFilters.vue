@@ -1,6 +1,9 @@
 <template>
 	<div class="wnl-questions-filters">
-		<h3>Filtry</h3>
+		<div style="display: flex; align-items: center; justify-content: space-between;">
+			<span class="metadata margin vertical">Filtry</span>
+			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">Ukryj filtry</a>
+		</div>
 		<wnl-accordion
 			:dataSource="filters"
 			:config="accordionConfig"
@@ -40,7 +43,7 @@
 			},
 		},
 		computed: {
-			...mapGetters(['isMobile']),
+			...mapGetters(['isChatMounted', 'isChatVisible', 'isMobile']),
 			accordionConfig() {
 				return {
 					expanded: ['subjects'],
@@ -51,6 +54,7 @@
 			},
 		},
 		methods: {
+			...mapActions(['toggleChat']),
 			onItemToggled({path, selected}) {
 				this.$emit('activeFiltersChanged', {filter: path, active: selected})
 			},

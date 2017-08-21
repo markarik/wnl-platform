@@ -78,7 +78,7 @@
 			transition: all $transition-length-base
 
 	.wnl-accordion-item-children
-		padding-left: $margin-base
+		padding-left: $margin-big
 
 		&.is-first-level
 			padding-left: 0
@@ -129,7 +129,7 @@
 				return this.selected
 			},
 			content() {
-				return this.item.name || this.path
+				return this.item.name || this.$t(`${this.config.itemsNamesSource}.${this.path}`)
 			},
 		},
 		methods: {

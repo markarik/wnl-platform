@@ -4,6 +4,11 @@ export const questions = {
 		allQuestions: 'Wyświetlam wszystkie pytania: {totalCount}',
 		heading: 'Filtry',
 		filteringResult: 'Pasujące pytania: {matchedCount}/{totalCount}',
+		items: {
+			exams: 'Egzaminy',
+			subjects: 'Dziedziny',
+			resolution: 'Status',
+		},
 		hide: 'Schowaj filtry',
 		show: 'Pokaż filtry',
 	}

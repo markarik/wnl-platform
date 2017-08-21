@@ -50,6 +50,7 @@
 					expanded: this.expandedItems,
 					flattened: ['resolution'],
 					isMobile: this.isMobile,
+					itemsNamesSource: 'questions.filters.items',
 					selectedElements: this.activeFilters,
 				}
 			},

@@ -10,7 +10,8 @@
 		</div>
 		<div v-if="activeFiltersNames.length > 0">
 			<p class="filters-group" :class="group" v-for="(filters, group) in activeFiltersGrouped" v-if="filters.length > 0" :key="group">
-				{{group}}: <span class="tag" v-for="(filter, index) in filters" :key="index">
+				{{$t(`questions.filters.items.${group}`)}}:
+				<span class="tag" v-for="(filter, index) in filters" :key="index">
 					{{filter.name}}
 					<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
 				</span>

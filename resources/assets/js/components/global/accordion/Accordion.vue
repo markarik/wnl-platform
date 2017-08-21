@@ -35,6 +35,8 @@
 					expanded: [],
 					flattened: [],
 					isMobile: false,
+					itemsNamesSource: '',
+					selectedElements: [],
 				},
 				type: Object,
 			},

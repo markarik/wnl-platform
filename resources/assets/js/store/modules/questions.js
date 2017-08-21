@@ -86,14 +86,16 @@ const mutations = {
 	[types.ACTIVE_FILTERS_RESET] (state, payload) {
 		state.activeFilters = []
 	},
-	[types.QUESTIONS_SET] (state, payload) {
-		// TODO endpoint could return data in shape: {id: data, ...}
-		const serialized = {};
-		payload.forEach(question => {
+	[types.QUESTIONS_SET_WITH_ANSWERS] (state, {questions, answers}) {
+		const serialized = state.quiz_questions || {};
+
+		questions.forEach(question => {
 			serialized[question.id] = {
-				...question
+				...question,
+				answers: _.pick(answers, question.quiz_answers)
 			}
 		})
+
 		set(state, 'quiz_questions', serialized)
 	},
 	[types.QUESTIONS_SET_META] (state, meta) {
@@ -103,11 +105,6 @@ const mutations = {
 	},
 	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included: {quiz_answers, ...included}, comments}) {
 		comments && set(state.quiz_questions[id], 'comments', comments)
-
-		if (quiz_answers) {
-			const answers = Object.values(quiz_answers).map((answer) => answer)
-			set(state.quiz_questions[id], 'answers', answers)
-		}
 
 		_.each(included, (items, resource) => {
 			let resourceObject = state[resource]
@@ -147,11 +144,15 @@ const actions = {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
 	fetchQuestions({commit}) {
-		return _fetchAllQuestions()
-			.then(({data: {data, ...meta}}) => {
-				commit(types.QUESTIONS_SET, data)
-				commit(types.QUESTIONS_SET_META, meta)
+		return _fetchAllQuestions({
+			include: 'reactions,quiz_answers'
+		}).then(({data: {data: {included: {quiz_answers}, ...quizQuestions}}, ...meta}) => {
+			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
+				questions: Object.values(quizQuestions),
+				answers: quiz_answers
 			})
+			commit(types.QUESTIONS_SET_META, meta)
+		})
 	},
 	fetchQuestionsCount({commit}) {
 		return axios.get(getApiUrl('quiz_questions/.count'))
@@ -174,11 +175,14 @@ const actions = {
 	fetchMatchingQuestions({commit, state, getters, rootGetters}, activeFilters) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
 
-		return _fetchAllQuestions({filters})
-			.then(({data: {data, ...meta}}) => {
-				commit(types.QUESTIONS_SET, data)
-				commit(types.QUESTIONS_SET_META, meta)
+		return _fetchAllQuestions({filters, include: 'quiz_answers,reactions'})
+		then(({data: {data: {included: {quiz_answers}, ...quizQuestions}}, ...meta}) => {
+			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
+				questions: Object.values(quizQuestions),
+				answers: quiz_answers
 			})
+			commit(types.QUESTIONS_SET_META, meta)
+		})
 	},
 	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
@@ -186,7 +190,13 @@ const actions = {
 		return _fetchAllQuestions({
 			filters,
 			limit,
-			randomize: true
+			randomize: true,
+			include: 'quiz_answers'
+		}).then(({data: {data: {included: {quiz_answers}, ...quizQuestions}}}) => {
+			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
+				questions: Object.values(quizQuestions),
+				answers: quiz_answers
+			})
 		})
 	},
 	selectAnswer({commit}, payload) {
@@ -201,14 +211,13 @@ const actions = {
 const _fetchAllQuestions = (requestParams) => {
 	// TODO pagination and other super stuff
 	return axios.post(getApiUrl('quiz_questions/.filter'), {
-		include: 'reactions',
 		limit: 50,
 		...requestParams
 	})
 }
 
 const _fetchQuestionData = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers,comments.profiles`))
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles`))
 }
 
 const _fetchDynamicFilters = () => {

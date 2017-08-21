@@ -76,7 +76,7 @@ trait ProvidesApiFiltering
 		->get();
 
 		return [
-			'data' => $randomQuestions
+			'data' => $this->transform($randomQuestions)
 		];
 	}
 }

@@ -10,8 +10,5 @@
 <script>
 export default {
 	props: ['questions', 'time'],
-	mounted() {
-		debugger
-	}
 }
 </script>

@@ -193,9 +193,6 @@
 		},
 		mounted() {
 			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
-				.then(() => {
-					this.fetchQuestionData(this.highlightedQuestion.id)
-				})
 		},
 		watch: {
 			highlightedQuestion() {

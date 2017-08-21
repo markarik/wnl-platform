@@ -24,7 +24,7 @@
 			</header>
 			<div class="quiz-answers card-content" v-if="!headerOnly">
 				<ul>
-					<wnl-quiz-answer v-for="(answer, answerIndex) in question.answers"
+					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
 						:answer="answer"
 						:index="answerIndex"
 						:questionId="question.id"
@@ -149,6 +149,9 @@
 			},
 			reactionState() {
 				return this.getReaction(this.reactableResource, this.question.id, "bookmark")
+			},
+			answers() {
+				return this.question.answers
 			}
 		},
 		methods: {

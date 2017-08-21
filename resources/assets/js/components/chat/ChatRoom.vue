@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-chat">
-		<div class="wnl-chat-messages" @scroll="onScroll">
+		<div class="wnl-chat-messages" @scroll="onScroll" ref="messagesContainer">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
 					<div class="notification aligncenter" v-if="!thereIsMore">
@@ -239,7 +239,7 @@
 
 				if (matchingMessage) {
 					this.$refs.highlight = matchingMessage
-					this.scrollAndHighlight(["chatId", "messageId"])
+					this.scrollAndHighlight(["chatId", "messageId"], this.$refs.messagesContainer)
 				} else {
 					this.scrollToTop()
 				}

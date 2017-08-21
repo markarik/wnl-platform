@@ -96,14 +96,32 @@
 				const query = this.$route.query
 
 				if (query.chatId) {
-					return _.find(this.rooms, room => room.channel === query.chatId)
+					const room = _.find(this.rooms, room => room.channel === query.chatId)
+
+					if (room) {
+						return room.channel
+					} else {
+						this.cleanupChatIdParam()
+						return this.rooms[0].channel
+					}
 				} else {
 					return this.rooms[0].channel
 				}
+			},
+			cleanupChatIdParam() {
+				const query = this.$route.query
+
+				delete query.chatId
+
+				this.$router.replace({
+					...this.$route,
+					query
+				})
 			}
 		},
 		watch: {
 			'rooms' (newValue, oldValue) {
+				if (newValue.length === oldValue.length) return
 				this.changeRoom(newValue[0])
 			}
 		}

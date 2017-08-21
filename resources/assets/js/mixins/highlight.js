@@ -4,11 +4,10 @@ import { Tween, update } from 'es6-tween';
 
 const highlight = {
 	methods: {
-		scrollToHighlight() {
-			scrollToElement(this.$refs.highlight)
+		scrollToHighlight(scrollable = false) {
+			scrollToElement(this.$refs.highlight, 150, 500, scrollable)
 		},
 		cleanupRoute(paramsToUnset = this.highlightableResources) {
-			debugger
 			const {notification, ...queryParams} = this.$route.query
 			let query = {}
 
@@ -45,9 +44,9 @@ const highlight = {
 
 			animate()
 		},
-		scrollAndHighlight(paramsToUnset) {
+		scrollAndHighlight(paramsToUnset, scrollable = false) {
 			this.cleanupRoute(paramsToUnset)
-			this.scrollToHighlight()
+			this.scrollToHighlight(scrollable)
 			this.highlight()
 		}
 	},

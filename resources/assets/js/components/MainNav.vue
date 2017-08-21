@@ -1,12 +1,12 @@
 <template>
 	<div class="wnl-main-nav wnl-column" v-bind:class="{ 'horizontal': isHorizontal }">
-		<router-link class="wnl-main-nav-item" :to="{ name: 'courses', params: { courseId: 1 } }">
+		<router-link class="wnl-main-nav-item" :to="{ name: 'courses', params: { courseId: 1, keepsNavOpen: true }}">
 			<span class="icon is-medium">
 				<i class="fa fa-home"></i>
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'collections' }">
+		<router-link class="wnl-main-nav-item" :to="{ name: 'collections', params: { keepsNavOpen: true } }">
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
 			</span>
@@ -14,20 +14,20 @@
 		</router-link>
 		<router-link
 			class="wnl-main-nav-item"
-			:to="{name: 'questions-dashboard'}"
+			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
 			</span>
 		<span class="text">{{$t('nav.sideNav.questions')}}</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'myself' }">
+		<router-link class="wnl-main-nav-item" :to="{ name: 'myself', params: { keepsNavOpen: true } }">
 			<span class="icon is-medium">
 				<i class="fa fa-user-o"></i>
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'help' }">
+		<router-link class="wnl-main-nav-item" :to="{ name: 'help', params: { keepsNavOpen: true } }">
 			<span class="icon is-medium">
 				<i class="fa fa-heartbeat"></i>
 			</span>

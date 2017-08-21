@@ -13,14 +13,12 @@ let routes = [
 	{
 		path: '/app/courses/:courseId',
 		component: require('js/components/course/Course.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
 				name: resource('courses'),
 				path: '',
 				component: require('js/components/course/dashboard/Overview.vue'),
-				meta: {keepsNavOpen: true},
 				props: true,
 			},
 			{
@@ -43,7 +41,6 @@ let routes = [
 		name: 'myself',
 		path: '/app/myself',
 		component: require('js/components/user/Myself.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
@@ -82,7 +79,6 @@ let routes = [
 		name: 'collections',
 		path: '/app/collections',
 		component: require('js/components/collections/Collections.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
@@ -98,7 +94,6 @@ let routes = [
 		path: '/app/help',
 		component: require('js/components/help/Help.vue'),
 		props: true,
-		meta: {keepsNavOpen: true},
 		children: [
 			{
 				name: 'help-news',
@@ -131,7 +126,6 @@ let routes = [
 	{
 		path: '/app/questions',
 		component: require('js/components/questions/Questions.vue'),
-		meta: {keepsNavOpen: true},
 		children: [
 			{
 				name: 'questions-dashboard',
@@ -175,7 +169,6 @@ let routes = [
 		name: 'dashboard',
 		path: '/app',
 		redirect: {name: 'courses', params: {courseId: 1}},
-		meta: {keepsNavOpen: true},
 	},
 	{
 		name: 'logout',

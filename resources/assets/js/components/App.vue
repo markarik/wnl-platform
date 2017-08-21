@@ -85,9 +85,7 @@
 					this.initNotifications()
 
 					this.$router.afterEach((to) => {
-						to.matched.some((record) => {
-							!record.meta.keepsNavOpen && this.resetLayout()
-						})
+						!to.params.keepsNavOpen && this.resetLayout()
 					})
 
 					this.setLayout(this.$breakpoints.currentBreakpoint())

@@ -5,10 +5,12 @@
 			<div class="scrollable-main-container">
 				<wnl-active-filters
 					:activeFilters="activeFilters"
+					:loading="fetchingQuestions"
 					:filters="filters"
 					:matchedCount="matchedQuestionsCount"
 					:totalCount="allQuestionsCount"
 					@activeFiltersChanged="onActiveFiltersChanged"
+					@fetchMatchingQuestions="onFetchMatchingQuestions"
 				>
 					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
 						<span>{{$t('questions.filters.show')}}</span>
@@ -109,10 +111,11 @@
 		},
 		data() {
 			return {
+				estimatedTime: timeBaseOnQuestions(30),
+				fetchingQuestions: false,
 				orderedQuestionsList: [],
 				showBuilder: false,
 				testQuestionsCount: 30,
-				estimatedTime: timeBaseOnQuestions(30)
 			}
 		},
 		computed: {
@@ -159,7 +162,12 @@
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
-					.then(this.debouncedFetchMatchingQuestions)
+					// .then(this.debouncedFetchMatchingQuestions)
+			},
+			onFetchMatchingQuestions() {
+				this.fetchingQuestions = true
+				this.fetchMatchingQuestions(this.activeFilters)
+					.then(() => this.fetchingQuestions = false)
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)

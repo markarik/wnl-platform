@@ -87,7 +87,7 @@ const mutations = {
 		state.activeFilters = []
 	},
 	[types.QUESTIONS_SET_WITH_ANSWERS] (state, {questions, answers}) {
-		const serialized = state.quiz_questions || {};
+		const serialized = {}
 
 		questions.forEach(question => {
 			serialized[question.id] = {
@@ -144,7 +144,7 @@ const actions = {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
 	fetchQuestions({commit}) {
-		return _fetchAllQuestions({
+		return _fetchQuestions({
 			include: 'reactions,quiz_answers'
 		}).then(({data: {data: {included: {quiz_answers}, ...quizQuestions}}, ...meta}) => {
 			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
@@ -175,19 +175,19 @@ const actions = {
 	fetchMatchingQuestions({commit, state, getters, rootGetters}, activeFilters) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
 
-		return _fetchAllQuestions({filters, include: 'quiz_answers,reactions'})
-		then(({data: {data: {included: {quiz_answers}, ...quizQuestions}}, ...meta}) => {
-			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
-				questions: Object.values(quizQuestions),
-				answers: quiz_answers
+		return _fetchQuestions({filters, include: 'quiz_answers,reactions'})
+			.then(({data: {data: {included: {quiz_answers}, ...quizQuestions}, ...meta}}) => {
+				commit(types.QUESTIONS_SET_WITH_ANSWERS, {
+					questions: Object.values(quizQuestions),
+					answers: quiz_answers
+				})
+				commit(types.QUESTIONS_SET_META, meta)
 			})
-			commit(types.QUESTIONS_SET_META, meta)
-		})
 	},
 	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
 
-		return _fetchAllQuestions({
+		return _fetchQuestions({
 			filters,
 			limit,
 			randomize: true,
@@ -208,7 +208,7 @@ const actions = {
 }
 
 
-const _fetchAllQuestions = (requestParams) => {
+const _fetchQuestions = (requestParams) => {
 	// TODO pagination and other super stuff
 	return axios.post(getApiUrl('quiz_questions/.filter'), {
 		limit: 50,

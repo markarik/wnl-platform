@@ -21,6 +21,11 @@
 			</p>
 		</div>
 		<p class="filtering-result" v-else>{{$t('questions.filters.allQuestions', {totalCount})}}</p>
+		<div>
+			<a class="button is-outlined" :class="{'is-loading': loading}" @click="$emit('fetchMatchingQuestions')">
+				Pokaż pasujące pytania
+			</a>
+		</div>
 	</div>
 </template>
 
@@ -61,6 +66,10 @@
 			filters: {
 				required: true,
 				type: Object,
+			},
+			loading: {
+				default: false,
+				type: Boolean,
 			},
 			matchedCount: {
 				type: Number,

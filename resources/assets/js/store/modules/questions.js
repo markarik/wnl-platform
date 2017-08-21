@@ -172,36 +172,22 @@ const actions = {
 			})
 	},
 	fetchMatchingQuestions({commit, state, getters, rootGetters}, activeFilters) {
-		const groupedFilters = {};
-		const filters = [];
+		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
 
-		activeFilters.forEach((filter, index) => {
-			const [filterGroup, ...tail] = filter.split('.')
-			const filterValue = getters.activeFiltersValues[index]
-			const filterType = state.filters[filterGroup].type
-
-			groupedFilters[filterGroup] = groupedFilters[filterGroup] || []
-			groupedFilters[filterGroup].push(filterValue)
-		})
-
-		Object.keys(groupedFilters).forEach((group) => {
-			if (state.filters[group].type === FILTER_TYPES.TAGS) {
-				filters.push({tags: groupedFilters[group]})
-			} else if (state.filters[group].type === FILTER_TYPES.LIST) {
-				filters.push({
-					[`quiz.${group}`]: {
-						user_id: rootGetters.currentUserId,
-						list: groupedFilters[group]
-					}
-				})
-			}
-		})
-
-		_fetchAllQuestions({filters})
+		return _fetchAllQuestions({filters})
 			.then(({data: {data, ...meta}}) => {
 				commit(types.QUESTIONS_SET, data)
 				commit(types.QUESTIONS_SET_META, meta)
 			})
+	},
+	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
+		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
+
+		return _fetchAllQuestions({
+			filters,
+			limit,
+			randomize: true
+		})
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
@@ -227,6 +213,35 @@ const _fetchQuestionData = (id) => {
 
 const _fetchDynamicFilters = () => {
 	return axios.get(getApiUrl('quiz_questions/filters/get'))
+}
+
+const _parseFilters = (activeFilters, state, getters, rootGetters) => {
+	const filters = []
+	const groupedFilters = {}
+
+	activeFilters.forEach((filter, index) => {
+		const [filterGroup, ...tail] = filter.split('.')
+		const filterValue = getters.activeFiltersValues[index]
+		const filterType = state.filters[filterGroup].type
+
+		groupedFilters[filterGroup] = groupedFilters[filterGroup] || []
+		groupedFilters[filterGroup].push(filterValue)
+	})
+
+	Object.keys(groupedFilters).forEach((group) => {
+		if (state.filters[group].type === FILTER_TYPES.TAGS) {
+			filters.push({tags: groupedFilters[group]})
+		} else if (state.filters[group].type === FILTER_TYPES.LIST) {
+			filters.push({
+				[`quiz.${group}`]: {
+					user_id: rootGetters.currentUserId,
+					list: groupedFilters[group]
+				}
+			})
+		}
+	})
+
+	return filters;
 }
 
 export default {

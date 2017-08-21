@@ -17,6 +17,28 @@
 						</span>
 					</a>
 				</wnl-active-filters>
+				<button @click="toggleBuilder">Zbuduj zestaw</button>
+				<div v-show="showBuilder">
+					<section>
+						<p>Na ile pytań chcesz odpowiedzieć?</p>
+						<input type="radio" name="count" value="30" id="countThirty" v-model="testQuestionsCount"/>
+						<label for="countThirty">30 pytań</label>
+						<input type="radio" name="count" value="50" id="countFifty" v-model="testQuestionsCount"/>
+						<label for="countFifty">50 pytań</label>
+						<input type="radio" name="count" value="100" id="countHundred" v-model="testQuestionsCount"/>
+						<label for="countHundred">100 pytań</label>
+						<input type="radio" name="count" value="150" id="countOneFifty" v-model="testQuestionsCount"/>
+						<label for="countNinty">150 pytań</label>
+						<input type="radio" name="count" value="120" id="countTwoHundred" v-model="testQuestionsCount"/>
+						<label for="countTwoHundred">200 pytań</label>
+					</section>
+					<section>
+						<label for="time">Ile czasu chcesz poświęcić?</label>
+						<input type="text" name="time" :value="estimatedTime"/>
+						<span>minut</span>
+					</section>
+					<button @click="buildTest">No to GO!</button>
+				</div>
 				<!-- TODO Implement zero state -->
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
@@ -75,6 +97,8 @@
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
+	import {timeBaseOnQuestions} from 'js/services/testBuilder'
+
 	export default {
 		components: {
 			'wnl-active-filters': ActiveFilters,
@@ -85,7 +109,10 @@
 		},
 		data() {
 			return {
-				orderedQuestionsList: []
+				orderedQuestionsList: [],
+				showBuilder: false,
+				testQuestionsCount: 30,
+				estimatedTime: timeBaseOnQuestions(30)
 			}
 		},
 		computed: {
@@ -121,6 +148,7 @@
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
+				'fetchTestQuestions',
 				'fetchDynamicFilters',
 				'fetchMatchingQuestions',
 				'selectAnswer',
@@ -144,6 +172,24 @@
 				this.orderedQuestionsList = [...afterIndex, ...beforeIndex]
 				// TODO if we decide on pagination we can fetch new question here
 			},
+			toggleBuilder() {
+				this.showBuilder = !this.showBuilder
+			},
+			buildTest() {
+				this.fetchTestQuestions({
+					activeFilters: this.activeFilters,
+					count: this.testQuestionsCount
+				}).then(() => {
+					this.$router.push({
+						name: 'questionsTest',
+						params: {
+							questions: [],
+							time: this.estimatedTime
+						}
+
+					})// navigate to test with fetched questions
+				})
+			}
 		},
 		mounted() {
 			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
@@ -157,6 +203,9 @@
 					// TODO loading state
 					this.fetchQuestionData(this.highlightedQuestion.id)
 				}
+			},
+			testQuestionsCount() {
+				this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount)
 			}
 		}
 	}

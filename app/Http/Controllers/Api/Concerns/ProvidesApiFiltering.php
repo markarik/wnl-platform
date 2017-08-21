@@ -14,9 +14,15 @@ trait ProvidesApiFiltering
 		$resource = $request->route('resource');
 		$model = app(static::getResourceModel($resource));
 		$this->limit = $request->limit ?? $this->defaultLimit;
+		$randomize = $request->randomize;
 
 		$model = $this->addFilters($request, $model);
-		$response = $this->paginatedResponse($model, $this->limit);
+
+		if (!empty($randomize)) {
+			$response = $this->randomizedResponse($model, $this->limit);
+		} else {
+			$response = $this->paginatedResponse($model, $this->limit);
+		}
 
 		return $this->respondOk($response);
 	}
@@ -62,5 +68,15 @@ trait ProvidesApiFiltering
 		if (is_array($filter)) return;
 
 		throw new ApiFilterException('Filter must be an array of arrays.');
+	}
+
+	private function randomizedResponse($model, $limit) {
+		$randomQuestions = $model->inRandomOrder()
+		->limit($limit)
+		->get();
+
+		return [
+			'data' => $randomQuestions
+		];
 	}
 }

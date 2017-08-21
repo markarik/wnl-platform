@@ -33,6 +33,9 @@
 		position: absolute
 		width: 100%
 
+		&:focus
+			outline: none
+
 		&__item
 			cursor: pointer
 			padding: 10px 15px

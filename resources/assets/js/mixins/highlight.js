@@ -8,6 +8,7 @@ const highlight = {
 			scrollToElement(this.$refs.highlight)
 		},
 		cleanupRoute(paramsToUnset = this.highlightableResources) {
+			debugger
 			const {notification, ...queryParams} = this.$route.query
 			let query = {}
 
@@ -44,8 +45,8 @@ const highlight = {
 
 			animate()
 		},
-		scrollAndHighlight() {
-			this.cleanupRoute()
+		scrollAndHighlight(paramsToUnset) {
+			this.cleanupRoute(paramsToUnset)
 			this.scrollToHighlight()
 			this.highlight()
 		}

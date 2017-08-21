@@ -59,6 +59,7 @@
 <script>
 	import ChatRoom from './ChatRoom'
 	import { mapActions, mapGetters } from 'vuex'
+	import _ from 'lodash'
 
 	export default {
 		name: 'wnl-public-chat',
@@ -68,7 +69,7 @@
 		props: ['title', 'rooms'],
 		data () {
 			return {
-				currentChannel: this.rooms[0].channel,
+				currentChannel: this.getCurrentChannel()
 			}
 		},
 		computed: {
@@ -90,6 +91,15 @@
 			},
 			isActive(room){
 				return room.channel === this.currentChannel
+			},
+			getCurrentChannel() {
+				const query = this.$route.query
+
+				if (query.chatId) {
+					return _.find(this.rooms, room => room.channel === query.chatId)
+				} else {
+					return this.rooms[0].channel
+				}
 			}
 		},
 		watch: {

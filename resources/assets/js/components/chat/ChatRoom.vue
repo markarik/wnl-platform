@@ -13,6 +13,7 @@
 						<wnl-message v-for="(message, index) in messages"
 							 :key="index"
 							 :showAuthor="isAuthorUnique[index]"
+							 :id="getMessageId(message)"
 							 :fullName="message.full_name"
 							 :avatar="message.avatar"
 							 :time="message.time"
@@ -69,6 +70,7 @@
 	import * as socket from '../../socket'
 	import {nextTick} from 'vue'
 	import _ from 'lodash'
+	import highlight from 'js/mixins/highlight'
 
 	export default {
 		props: ['room'],
@@ -82,6 +84,7 @@
 				thereIsMore: true,
 			}
 		},
+		mixins: [highlight],
 		computed: {
 			isAuthorUnique() {
 				return this.messages.map((message, index) => {
@@ -114,11 +117,19 @@
 						this.messages = data.messages
 						this.users    = data.users
 						this.loaded   = true
+
 						nextTick(() => {
-							this.scrollToBottom()
+							const messageId = this.$route.query.messageId
+
+							if (messageId) {
+								this.scrollToMessageById(messageId)
+							} else {
+								this.scrollToBottom()
+							}
 						})
 					}
 				})
+
 				return true
 			},
 			changeRoom(oldRoom) {
@@ -152,6 +163,9 @@
 			},
 			scrollToBottom() {
 				this.container.scrollTop = '1000000000'
+			},
+			scrollToTop() {
+				this.container.scrollTop = '0'
 			},
 			pullDebouncer(event) {
 				let target     = event.target,
@@ -206,13 +220,32 @@
 								}
 							})
 							setTimeout(()=> {
-								this.container.scrollTop = this.container.scrollHeight - originalHeight
+								const messageId = this.$route.query.messageId
+
+								if (messageId) {
+									this.scrollToMessageById(messageId)
+								} else {
+									this.container.scrollTop = this.container.scrollHeight - originalHeight
+								}
 							}, 0)
 							this.isPulling = false
 						})
 						.catch(error => {
 							$wnl.logger.capture(error)
 						})
+			},
+			scrollToMessageById(id) {
+				const matchingMessage = this.$el.querySelector(`[data-id="${id}"]`)
+
+				if (matchingMessage) {
+					this.$refs.highlight = matchingMessage
+					this.scrollAndHighlight(["chatId", "messageId"])
+				} else {
+					this.scrollToTop()
+				}
+			},
+			getMessageId(message) {
+				return `${message.time}${message.user && message.user.id}`
 			}
 		},
 		mounted() {

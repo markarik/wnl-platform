@@ -78,7 +78,7 @@
 
 				this.setupQuestions(meta.resources[0])
 			},
-			onAnswerSelect() {
+			onAnswerSelect(data) {
 				if (!this.isComplete) {
 					this.commitSelectAnswer(data)
 				}

@@ -100,10 +100,6 @@
 		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly', 'isSelected', 'answersStats'],
 		computed: {
 			...mapGetters(['isLargeDesktop']),
-			...mapGetters('quiz', [
-				'isComplete',
-			]),
-
 			/**
 			 * @param  {int} answerIndex
 			 * @return {Boolean}
@@ -111,22 +107,14 @@
 			isCorrect() {
 				return this.answer.is_correct
 			},
-
 			showCorrect() {
 				return this.isCorrect && this.$parent.displayResults
 			},
-
 			stats() {
-				if (typeof this.answersStats !== 'object' || typeof Object.values !== 'function') return false;
+				if (!this.answer.hasOwnProperty('stats')) return false;
 
-				const allHits = Object.values(this.answersStats).reduce((count, current) => {
-					return count + current
-				}, 0)
-				const answerId = this.answer.id
-
-				return Math.round((this.answersStats[answerId] || 0) / allHits * 100);
+				return this.answer.stats
 			},
-
 			/**
 			 * Helper property for debug purposes
 			 * @param  {int} answerIndex

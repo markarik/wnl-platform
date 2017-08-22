@@ -2,7 +2,7 @@
 	<wnl-questions-test v-if="testMode"
 		:questions="questionsList"
 		:results="results"
-		:time="estimatedTime"
+		:time="estimatedTime * 60"
 		:onSelectAnswer="selectAnswer"
 		:onCheckQuiz="checkQuestions"
 	/>
@@ -43,7 +43,7 @@
 					</section>
 					<section>
 						<label for="time">Ile czasu chcesz poświęcić?</label>
-						<input type="text" name="time" :value="estimatedTime"/>
+						<input type="text" name="time" v-model="estimatedTime"/>
 						<span>minut</span>
 					</section>
 					<button @click="buildTest">No to GO!</button>

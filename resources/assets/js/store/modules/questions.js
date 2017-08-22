@@ -106,10 +106,13 @@ const mutations = {
 			set(state, key, meta[key])
 		})
 	},
-	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included: {quiz_answers, ...included}, comments}) {
+	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments}) {
+		if (_.size(included) === 0) return
+
 		comments && set(state.quiz_questions[id], 'comments', comments)
 
-		_.each(included, (items, resource) => {
+		let {included: quiz_answers, ...resources} = included
+		_.each(resources, (items, resource) => {
 			let resourceObject = state[resource]
 			_.each(items, (item, index) => {
 				set(resourceObject, item.id, item)

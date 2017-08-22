@@ -1,5 +1,12 @@
 <template>
-	<div class="wnl-app-layout">
+	<wnl-questions-test v-if="testMode"
+		:questions="questionsList"
+		:results="results"
+		:time="estimatedTime"
+		:onSelectAnswer="selectAnswer"
+		:onCheckQuiz="checkQuestions"
+	/>
+	<div class="wnl-app-layout" v-else>
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
@@ -44,15 +51,15 @@
 
 				<!-- BEGIN Questions Widget -->
 				<wnl-quiz-widget
-					v-if="questionsList.length > 0"
+					v-if="computedQuestionsList.length > 0"
 					module="questions"
-					:questions="questionsList"
+					:questions="computedQuestionsList"
 					:getReaction="getReaction"
 					@changeQuestion="performChangeQuestion"
 					@verify="onVerify"
 					@selectAnswer="selectAnswer"
 				></wnl-quiz-widget>
-				<div class="has-text-centered margin vertical metadata" v-else="questionsList.length === 0">
+				<div class="has-text-centered margin vertical metadata" v-else>
 					{{$t('questions.zeroState')}}
 				</div>
 				<!-- END Questions Widget -->
@@ -101,6 +108,7 @@
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
+	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
@@ -113,6 +121,7 @@
 			'wnl-quiz-widget': QuizWidget,
 			'wnl-questions-filters': QuestionsFilters,
 			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-questions-test': QuestionsTest
 		},
 		data() {
 			return {
@@ -121,6 +130,7 @@
 				orderedQuestionsList: [],
 				showBuilder: false,
 				testQuestionsCount: 30,
+				testMode: false
 			}
 		},
 		computed: {
@@ -138,14 +148,15 @@
 				'allQuestionsCount',
 				'filters',
 				'getReaction',
-				'questions',
-				'matchedQuestionsCount',
+				'questionsList',
+				'results',
+				'matchedQuestionsCount'
 			]),
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},
-			questionsList() {
-				return this.orderedQuestionsList.length ? this.orderedQuestionsList : Object.values(this.questions)
+			computedQuestionsList() {
+				return this.orderedQuestionsList.length ? this.orderedQuestionsList : this.questionsList
 			}
 		},
 		methods: {
@@ -161,6 +172,7 @@
 				'fetchMatchingQuestions',
 				'selectAnswer',
 				'resolveQuestion',
+				'checkQuestions'
 			]),
 			debouncedFetchMatchingQuestions: _.debounce(function() {
 				this.fetchMatchingQuestions(this.activeFilters)
@@ -192,17 +204,7 @@
 				this.fetchTestQuestions({
 					activeFilters: this.activeFilters,
 					count: this.testQuestionsCount
-				}).then(() => {
-					this.$router.push({
-						name: 'questionsTest',
-						params: {
-							questions: Object.values(this.questions),
-							time: this.estimatedTime,
-							onSelectAnswer: this.selectAnswer
-						}
-
-					})
-				})
+				}).then(() => this.testMode = true)
 			}
 		},
 		mounted() {

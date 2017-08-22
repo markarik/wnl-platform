@@ -142,12 +142,6 @@ let routes = [
 				path: 'stats',
 				component: require('js/components/questions/QuestionsStats.vue'),
 			},
-			{
-				name: 'questionsTest',
-				path: 'test',
-				component: require('js/components/questions/QuestionsTest.vue'),
-				props: true
-			}
 		],
 	},
 	{

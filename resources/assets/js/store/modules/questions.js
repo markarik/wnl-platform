@@ -41,6 +41,7 @@ const state = {
 	},
 	quiz_questions: {},
 	profiles: {},
+	results: false
 }
 
 // Getters
@@ -53,6 +54,7 @@ const getters = {
 	}),
 	allQuestionsCount: state => state.allCount,
 	questions: state => state.quiz_questions,
+	questionsList: state => Object.values(state.quiz_questions || {}),
 	filters: state => {
 		const order = ['resolution', 'subjects', 'exams']
 
@@ -66,6 +68,7 @@ const getters = {
 		return filters
 	},
 	matchedQuestionsCount: state => state.total,
+	results: state => state.results
 }
 
 // Mutations
@@ -124,6 +127,9 @@ const mutations = {
 	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
 		set(state.quiz_questions[questionId], 'isResolved', true)
 	},
+	[types.QUESTIONS_SET_RESULTS] (state, results) {
+		set(state, 'results', results)
+	}
 }
 
 // Actions
@@ -188,6 +194,24 @@ const actions = {
 	resolveQuestion({commit}, questionId) {
 		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)
 	},
+	checkQuestions({commit, getters}) {
+		const results = {
+			unanswered: [],
+			incorrect: [],
+			correct: []
+		}
+
+		getters.questionsList.forEach((question) => {
+			if (!question.selectedAnswer) {
+				return results.unanswered.push(question)
+			}
+			const selectedAnswer = question.answers[question.selectedAnswer]
+
+			selectedAnswer.is_correct ? results.correct.push(question) : results.incorrect.push(question)
+		})
+
+		commit(types.QUESTIONS_SET_RESULTS, results)
+	}
 }
 
 

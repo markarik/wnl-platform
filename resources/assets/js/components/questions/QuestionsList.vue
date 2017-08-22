@@ -191,11 +191,11 @@
 					this.$router.push({
 						name: 'questionsTest',
 						params: {
-							questions: [],
+							questions: Object.values(this.questions),
 							time: this.estimatedTime
 						}
 
-					})// navigate to test with fetched questions
+					})
 				})
 			}
 		},

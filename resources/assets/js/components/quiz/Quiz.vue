@@ -19,7 +19,11 @@
 					Rozwiąż wszystkie pytania
 				</a>
 			</p>
-			<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
+			<wnl-quiz-list v-if="isLoaded"
+				:allQuestions="getQuestionsWithAnswersAndStats"
+				:getReaction="getReaction"
+				module="quiz"
+			/>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
 	</div>
@@ -47,11 +51,16 @@
 		},
 		props: ['screenData', 'readOnly'],
 		computed: {
-			...mapGetters('quiz', ['isComplete', 'isLoaded']),
+			...mapGetters('quiz', [
+				'isComplete',
+				'isLoaded',
+				'getQuestionsWithAnswersAndStats',
+				'getReaction'
+			]),
 			...mapGetters(['isAdmin']),
 			displayResults() {
 				return this.readOnly || this.isComplete
-			}
+			},
 		},
 		methods: {
 			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve']),

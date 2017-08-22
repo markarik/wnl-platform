@@ -6,13 +6,13 @@
 
 		<p class="title is-5" v-if="!displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="(question, index) in questions"
+			:module="module"
 			:class="`quiz-question-${question.id}`"
 			:question="question"
 			:index="index"
 			:key="question.id"
 			:readOnly="readOnly"
 			:getReaction="getReaction"
-			module="quiz"
 			@selectAnswer="onSelectAnswer"
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!displayResults">
@@ -44,7 +44,7 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly'],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module'],
 		data() {
 			return {
 				hasErrors: false,
@@ -54,18 +54,26 @@
 			...mapGetters('quiz', [
 				'isComplete',
 				'isProcessing',
-				'getUnresolved',
-				'getUnresolvedWithAnswersAndStats',
-				'getUnanswered',
-				'getQuestionsWithAnswersAndStats',
 				'hasQuestions',
-				'getReaction'
 			]),
+			questions() {
+				if (this.isComplete) {
+					return this.allQuestions
+				}
+
+				return this.questionsUnresolved
+			},
+			questionsUnresolved() {
+				return this.allQuestions.filter((question) => !question.isResolved)
+			},
+			questionsUnaswered() {
+				return _.filter(this.allQuestions, (question) => _.isNull(question.selectedAnswer))
+			},
 			displayResults() {
-				return this.isComplete || this.readOnly || !this.hasQuestions
+				return this.isComplete || this.readOnly || !this.allQuestions.length
 			},
 			howManyLeft() {
-				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestionsWithAnswersAndStats)}`
+				return `${_.size(this.questionsUnresolved)}/${_.size(this.allQuestions)}`
 			},
 			unansweredAlert() {
 				return {
@@ -77,7 +85,7 @@
 			},
 			tryAgainAlert() {
 				return {
-					text: `Pozostałe pytania do rozwiązania: ${this.getUnresolved.length}`,
+					text: `Pozostałe pytania do rozwiązania: ${this.questionsUnresolved.length}`,
 					title: 'Spróbuj jeszcze raz!',
 					type: 'info',
 				}
@@ -89,13 +97,6 @@
 					type: 'success',
 				}
 			},
-			questions() {
-				if (this.isComplete) {
-					return this.getQuestionsWithAnswersAndStats
-				}
-
-				return this.getUnresolvedWithAnswersAndStats
-			},
 		},
 		methods: {
 			...mapActions('quiz', [
@@ -104,7 +105,7 @@
 				'commitSelectAnswer'
 			]),
 			verify() {
-				if (this.getUnanswered.length > 0) {
+				if (this.questionsUnaswered.length > 0) {
 					this.hasErrors = true
 					this.$swal(this.getAlertConfig(this.unansweredAlert))
 						.catch(e => {
@@ -113,7 +114,7 @@
 							$wnl.logger.debug('SweetAlert2 exception', e)
 						})
 
-					scrollToElement(this.getQuestionElement(_.head(this.getUnanswered)))
+					scrollToElement(this.getQuestionElement(_.head(this.questionsUnaswered)))
 					return false
 				}
 
@@ -123,7 +124,7 @@
 			dispatchCheckQuiz() {
 				this.checkQuiz().then(() => {
 					let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
-						firstElement = this.isComplete ? _.head(this.getQuestionsWithAnswersAndStats) : _.head(this.getUnresolved)
+						firstElement = this.isComplete ? _.head(this.allQuestions) : _.head(this.questionsUnresolved)
 
 					this.$swal(this.getAlertConfig(alertOptions))
 						.catch(e => {

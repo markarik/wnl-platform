@@ -148,7 +148,9 @@
 				return this.question.selectedAnswer === null
 			},
 			reactionState() {
-				return this.getReaction(this.reactableResource, this.question.id, "bookmark")
+				if (typeof this.getReaction === 'function') {
+					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
+				}
 			},
 			answers() {
 				return this.question.answers

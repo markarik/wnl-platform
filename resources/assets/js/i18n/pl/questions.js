@@ -1,8 +1,9 @@
 export const questions = {
 	filters: {
 		activeHeading: 'Aktywne filtry',
-		allQuestions: 'Wyświetlam wszystkie pytania: {totalCount}',
-		filteringResult: 'Pasujące pytania: {matchedCount}/{totalCount}',
+		allQuestions: 'Wszystkie pytania',
+		filteringResult: 'Wybrane pytania:',
+		filteringResultNumbers: '{matchedCount} z {totalCount}',
 		items: {
 			exams: 'Egzaminy',
 			subjects: 'Przedmioty i tematy',
@@ -11,6 +12,7 @@ export const questions = {
 		heading: 'Filtry',
 		hide: 'Schowaj filtry',
 		show: 'Pokaż filtry',
+		submit: 'Wybierz pasujące pytania',
 	},
 	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',
 }

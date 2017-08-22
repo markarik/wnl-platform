@@ -25,16 +25,16 @@ const state = {
 			type: FILTER_TYPES.LIST,
 			items: [
 				{
-					name: 'Nierozwiązane',
+					name: 'Bez odpowiedzi',
 					value: 'unresolved',
 				},
 				{
-					name: 'Poprawne',
-					value: 'correct',
+					name: 'Rozwiązane błędnie',
+					value: 'incorrect',
 				},
 				{
-					name: 'Niepoprawne',
-					value: 'incorrect',
+					name: 'Rozwiązane poprawnie',
+					value: 'correct',
 				},
 			],
 		}

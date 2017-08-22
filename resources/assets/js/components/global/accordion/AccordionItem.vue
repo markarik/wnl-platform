@@ -42,7 +42,7 @@
 	@import 'resources/assets/sass/variables'
 
 	$toggle-icon-size: 2 * $margin-base
-	$highlight-color: rgba(68, 180, 144, 0.3)
+	$highlight-color: $color-background-lighter-gray
 
 	.is-mobile
 		.wnl-accordion-item:not(.is-selected):not(.is-first-level):hover
@@ -71,11 +71,8 @@
 		&.is-selected
 			background-color: $highlight-color
 
-			.wai-expand-icon
-				border-color: $color-background-gray
-
 		&.is-first-level
-			background: $color-background-lighter-gray
+			background: $color-background-light-gray
 			font-size: $font-size-minus-1
 			letter-spacing: 1px
 			padding: $margin-medium $margin-small $margin-medium $margin-medium

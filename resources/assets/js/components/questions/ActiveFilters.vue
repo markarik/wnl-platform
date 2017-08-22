@@ -8,22 +8,33 @@
 				<slot name="heading"/>
 			</span>
 		</div>
-		<div v-if="activeFiltersNames.length > 0">
-			<p class="filters-group" :class="group" v-for="(filters, group) in activeFiltersGrouped" v-if="filters.length > 0" :key="group">
-				{{$t(`questions.filters.items.${group}`)}}:
-				<span class="tag" v-for="(filter, index) in filters" :key="index">
+		<div class="filtering-result">
+			{{$t('questions.filters.filteringResult')}}
+			{{$t('questions.filters.filteringResultNumbers', {matchedCount, totalCount})}}
+		</div>
+		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
+			<div class="filters-group" :class="group" v-for="(filters, group) in activeFiltersGrouped" v-if="filters.length > 0" :key="group">
+				<span class="filters-group-heading">{{$t(`questions.filters.items.${group}`)}}:</span>
+				<span v-for="(filter, index) in filters"
+					class="tag"
+					:class="{'is-success': hasChanges}"
+					:key="index"
+				>
 					{{filter.name}}
 					<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
 				</span>
-			</p>
-			<p class="filtering-result" v-if="totalCount">
-				{{$t('questions.filters.filteringResult', {matchedCount, totalCount})}}
-			</p>
+			</div>
 		</div>
-		<p class="filtering-result" v-else>{{$t('questions.filters.allQuestions', {totalCount})}}</p>
-		<div class="has-text-centered margin vertical">
-			<a class="button is-small is-outlined" :class="{'is-loading': loading}" @click="$emit('fetchMatchingQuestions')">
-				Pokaż pasujące pytania
+		<div v-else class="active-filters-list">
+			<div class="filters-group">
+				<span class="tag" :class="{'is-success': hasChanges}">
+					{{$t('questions.filters.allQuestions')}}
+				</span>
+			</div>
+		</div>
+		<div v-if="hasChanges || loading" class="has-text-centered margin top">
+			<a class="button is-small is-success" :class="{'is-loading': loading}" @click="onSubmit">
+				{{$t('questions.filters.submit')}}
 			</a>
 		</div>
 	</div>
@@ -41,20 +52,40 @@
 		align-items: center
 		display: flex
 		justify-content: space-between
-		margin-bottom: $margin-small
+
+	.active-filters-list
+		margin-top: $margin-small
+		width: 100%
+
+		.filters-group
+			align-items: center
+			display: flex
+			margin-bottom: $margin-small
+
+			&:last-of-type
+				margin-bottom: 0
+
+			.filters-group-heading
+				font-size: $font-size-minus-2
+				letter-spacing: 1px
+				text-transform: uppercase
+
+		.tag
+			margin: $margin-tiny
+
+			.delete
+				margin-right: -0.7em
 
 	.filtering-result
 		font-size: $font-size-minus-2
-		letter-spacing: 1px
-		text-transform: uppercase
-		margin-top: $margin-base
+		margin-top: -$margin-small
 
-	.tag
+	.tag:not(.is-success)
 		background-color: $color-background-light-gray
 </style>
 
 <script>
-	import {cloneDeep, get} from 'lodash'
+	import {cloneDeep, isEqual, get} from 'lodash'
 
 	export default {
 		name: 'ActiveFilters',
@@ -78,6 +109,11 @@
 				type: Number,
 			},
 		},
+		data() {
+			return {
+				appliedFilters: [],
+			}
+		},
 		computed: {
 			activeFiltersNames() {
 				return this.activeFilters.map(filter => this.getFilter(filter).name)
@@ -98,14 +134,30 @@
 					return result
 				}, {})
 			},
+			hasAppliedFilters() {
+				return this.appliedFilters.length > 0
+			},
+			hasChanges() {
+				return !isEqual(this.appliedFilters, this.activeFilters)
+			},
 		},
 		methods: {
 			getFilter(filter) {
 				return get(this.filters, filter)
 			},
+			onSubmit() {
+				this.updateAppliedFilters()
+				this.$emit('fetchMatchingQuestions')
+			},
 			removeFilter(filter) {
 				this.$emit('activeFiltersChanged', {filter, active: false})
 			},
+			updateAppliedFilters() {
+				this.appliedFilters = _.cloneDeep(this.activeFilters)
+			},
+		},
+		mounted() {
+			this.updateAppliedFilters()
 		},
 	}
 </script>

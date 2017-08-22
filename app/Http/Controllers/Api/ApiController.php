@@ -92,8 +92,8 @@ class ApiController extends Controller
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function count() {
-		return response()->json([
-			'count' => self::getResourceModel($this->resourceName)::all()->count(),
+		return $this->respondOk([
+			'count' => (self::getResourceModel($this->resourceName))::count(),
 		]);
 	}
 

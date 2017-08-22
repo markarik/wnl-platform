@@ -212,7 +212,7 @@
 		},
 		watch: {
 			highlightedQuestion() {
-				if (this.highlightedQuestion && !this.highlightedQuestion.answers) {
+				if (this.highlightedQuestion) {
 					// TODO loading state
 					this.fetchQuestionData(this.highlightedQuestion.id)
 				}

@@ -218,7 +218,7 @@ const actions = {
 const _fetchQuestions = (requestParams) => {
 	// TODO pagination and other super stuff
 	return axios.post(getApiUrl('quiz_questions/.filter'), {
-		limit: 50,
+		limit: 10,
 		...requestParams
 	})
 }

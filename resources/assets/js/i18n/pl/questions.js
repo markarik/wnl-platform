@@ -5,7 +5,7 @@ export const questions = {
 		filteringResult: 'Pasujące pytania: {matchedCount}/{totalCount}',
 		items: {
 			exams: 'Egzaminy',
-			subjects: 'Dziedziny',
+			subjects: 'Przedmioty i tematy',
 			resolution: 'Status',
 		},
 		heading: 'Filtry',

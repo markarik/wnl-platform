@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-questions-filters">
-		<div style="display: flex; align-items: center; justify-content: space-between;">
+		<div class="filters-heading">
 			<span class="metadata margin vertical">{{$t('questions.filters.heading')}}</span>
 			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">{{$t('questions.filters.hide')}}</a>
 		</div>
@@ -13,8 +13,18 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.wnl-questions-filters
+		overflow-y: auto
 		width: 100%
+
+	.filters-heading
+		align-items: center
+		border-bottom: $border-light-gray
+		display: flex
+		justify-content: space-between
+		padding: $margin-small $margin-base 0
 </style>
 
 <script>

@@ -3,8 +3,6 @@
 	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
 		<div class="content" v-html="content">
 		</div>
-		<fullscreen :images-sources="imagesSources" :current-image-source="currentImageSource" v-if="currentImageSource" v-on:childCurrentImageSourceRemove="childCurrentImageSourceRemove" v-on:nextImage="nextImage" v-on:prevImage="prevImage"
-		></fullscreen>
 		<p class="end-button has-text-centered" v-if="showBacklink">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
 				Wróć do auli
@@ -15,6 +13,7 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
+	@import 'public/css/imageviewer'
 
 	.wnl-screen-html
 		margin: $margin-big 0
@@ -48,24 +47,18 @@
 
 			&::before
 				color: $color-purple
+
+
 </style>
 
 <script>
 	import _ from 'lodash'
-	import Fullscreen from 'js/components/global/Fullscreen'
+	import {imageviewer} from '../../../../../vendor/imageviewer/imageviewer'
+	imageviewer($, window, document)
 
 	export default {
 		name: 'Html',
-		data() {
-			return {
-				imagesSources: [],
-				currentImageSource: '',
-			}
-		},
 		props: ['screenData', 'showBacklink'],
-		components: {
-			'fullscreen': Fullscreen
-		},
 		computed: {
 			content() {
 				return this.screenData.content
@@ -90,43 +83,17 @@
 					})
 				}
 			},
-			clickOnImg(event) {
-				this.currentImageSource = event.target.src;
-			},
-			methodOnImages() {
-				var img = document.querySelectorAll(".wnl-screen-html img");
-				var i;
-				for (i = 0; i < img.length; i++) {
-					this.imagesSources.push(img[i].src);
-					img[i].addEventListener('click', this.clickOnImg);
-				};
-			},
-			childCurrentImageSourceRemove() {
-				this.currentImageSource = "";
-			},
-			nextImage() {
-				if (this.imagesSources.indexOf(JSON.stringify(this.currentImageSource))) {
-					if (this.imagesSources.indexOf(this.currentImageSource) === this.imagesSources.length-1) {
-						this.currentImageSource = this.imagesSources[0];
-					} else {
-						this.currentImageSource = this.imagesSources[this.imagesSources.indexOf(this.currentImageSource)+1]
-					}
-				}
-			},
-			prevImage() {
-				if (this.imagesSources.indexOf(JSON.stringify(this.currentImageSource))) {
-					if(this.imagesSources.indexOf(this.currentImageSource) === 0) {
-						this.currentImageSource = this.imagesSources[this.imagesSources.length-1];
-					} else {
-						this.currentImageSource = this.imagesSources[this.imagesSources.indexOf(this.currentImageSource)-1];
-					}
-
-				}
+			addFullscreen() {
+				document.querySelectorAll(".wnl-screen-html img").forEach(function(e) {
+					e.addEventListener('click', function() {
+						ImageViewer().show(this.src);
+					})
+				})
 			},
 		},
 		mounted() {
 			this.wrapEmbedded();
-			this.methodOnImages();
+			this.addFullscreen();
 		},
 		updated() {
 			this.wrapEmbedded()

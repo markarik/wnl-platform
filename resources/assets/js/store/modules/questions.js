@@ -1,5 +1,5 @@
 import { set, delete as destroy } from 'vue'
-import { get } from 'lodash'
+import { get, size } from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
@@ -143,16 +143,10 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
-	fetchQuestions({commit}) {
+	fetchAllQuestions({commit}) {
 		return _fetchQuestions({
 			include: 'reactions,quiz_answers'
-		}).then(({data: {data: {included: {quiz_answers}, ...quizQuestions}}, ...meta}) => {
-			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
-				questions: Object.values(quizQuestions),
-				answers: quiz_answers
-			})
-			commit(types.QUESTIONS_SET_META, meta)
-		})
+		}).then(response => _handleResponse(response, commit))
 	},
 	fetchQuestionsCount({commit}) {
 		return axios.get(getApiUrl('quiz_questions/.count'))
@@ -176,13 +170,7 @@ const actions = {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
 
 		return _fetchQuestions({filters, include: 'quiz_answers,reactions'})
-			.then(({data: {data: {included: {quiz_answers}, ...quizQuestions}, ...meta}}) => {
-				commit(types.QUESTIONS_SET_WITH_ANSWERS, {
-					questions: Object.values(quizQuestions),
-					answers: quiz_answers
-				})
-				commit(types.QUESTIONS_SET_META, meta)
-			})
+			.then(response => _handleResponse(response, commit))
 	},
 	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
@@ -192,12 +180,7 @@ const actions = {
 			limit,
 			randomize: true,
 			include: 'quiz_answers'
-		}).then(({data: {data: {included: {quiz_answers}, ...quizQuestions}}}) => {
-			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
-				questions: Object.values(quizQuestions),
-				answers: quiz_answers
-			})
-		})
+		}).then(response => _handleResponse(response, commit))
 	},
 	selectAnswer({commit}, payload) {
 		console.log('aaaaaa')
@@ -252,6 +235,20 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 	})
 
 	return filters;
+}
+
+const _handleResponse = (response, commit) => {
+	let {data: {data, ...meta}} = response, quizQuestions = {}, quiz_answers = {}
+
+	if (size(data) > 0) {
+		({included: {quiz_answers}, ...quizQuestions} = data)
+	}
+
+	commit(types.QUESTIONS_SET_WITH_ANSWERS, {
+		questions: Object.values(quizQuestions),
+		answers: quiz_answers
+	})
+	commit(types.QUESTIONS_SET_META, meta)
 }
 
 export default {

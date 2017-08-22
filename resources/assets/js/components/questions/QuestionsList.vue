@@ -41,7 +41,8 @@
 					</section>
 					<button @click="buildTest">No to GO!</button>
 				</div>
-				<!-- TODO Implement zero state -->
+
+				<!-- BEGIN Questions Widget -->
 				<wnl-quiz-widget
 					v-if="questionsList.length > 0"
 					module="questions"
@@ -51,6 +52,10 @@
 					@verify="onVerify"
 					@selectAnswer="selectAnswer"
 				></wnl-quiz-widget>
+				<div class="has-text-centered margin vertical metadata" v-else="questionsList.length === 0">
+					{{$t('questions.zeroState')}}
+				</div>
+				<!-- END Questions Widget -->
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -149,7 +154,7 @@
 				'activeFiltersReset',
 				'activeFiltersToggle',
 				'fetchQuestionData',
-				'fetchQuestions',
+				'fetchAllQuestions',
 				'fetchQuestionsCount',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
@@ -201,11 +206,11 @@
 			}
 		},
 		mounted() {
-			Promise.all([this.fetchQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
+			Promise.all([this.fetchAllQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
 		},
 		watch: {
 			highlightedQuestion() {
-				if (!this.highlightedQuestion.answers) {
+				if (this.highlightedQuestion && !this.highlightedQuestion.answers) {
 					// TODO loading state
 					this.fetchQuestionData(this.highlightedQuestion.id)
 				}

@@ -21,8 +21,8 @@
 			</p>
 		</div>
 		<p class="filtering-result" v-else>{{$t('questions.filters.allQuestions', {totalCount})}}</p>
-		<div>
-			<a class="button is-outlined" :class="{'is-loading': loading}" @click="$emit('fetchMatchingQuestions')">
+		<div class="has-text-centered margin vertical">
+			<a class="button is-small is-outlined" :class="{'is-loading': loading}" @click="$emit('fetchMatchingQuestions')">
 				Pokaż pasujące pytania
 			</a>
 		</div>

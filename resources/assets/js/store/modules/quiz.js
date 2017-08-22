@@ -87,7 +87,7 @@ const getters = {
 	getQuestionsWithAnswersAndStats: (state, getters) => {
 		return state.questionsIds.map((id) => {
 			const quizQuestion = state.quiz_questions[id]
-			const questionStats = state.quiz_stats[id]
+			const questionStats = state.quiz_stats[id] || {}
 			const allHits = Object.values(questionStats).reduce((count, current) => {
 				return count + current
 			}, 0)
@@ -119,7 +119,6 @@ const getters = {
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
 	questionsLength: (state) => state.questionsIds.length,
-	getStats: (state) => (questionId) => state.quiz_stats[questionId]
 }
 
 const mutations = {

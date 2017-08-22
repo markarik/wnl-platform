@@ -183,7 +183,6 @@ const actions = {
 		}).then(response => _handleResponse(response, commit))
 	},
 	selectAnswer({commit}, payload) {
-		console.log('aaaaaa')
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
 	},
 	resolveQuestion({commit}, questionId) {

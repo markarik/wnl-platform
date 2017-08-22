@@ -44,7 +44,7 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'checkQuiz'],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing'],
 		data() {
 			return {
 				hasErrors: false,
@@ -109,22 +109,20 @@
 				}
 
 				this.hasErrors = false
-				this.dispatchCheckQuiz()
+				this.$emit('checkQuiz')
 			},
-			dispatchCheckQuiz() {
-				this.checkQuiz().then(() => {
-					let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
-						firstElement = this.isComplete ? _.head(this.allQuestions) : _.head(this.questionsUnresolved)
+			showAlert() {
+				let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
+					firstElement = this.isComplete ? _.head(this.allQuestions) : _.head(this.questionsUnresolved)
 
-					this.$swal(this.getAlertConfig(alertOptions))
-						.catch(e => {
-							// It's a bug in the library. It throws an exception
-							// if a person closes a timed modal with a click.
-							$wnl.logger.debug('SweetAlert2 exception', e)
-						})
+				this.$swal(this.getAlertConfig(alertOptions))
+					.catch(e => {
+						// It's a bug in the library. It throws an exception
+						// if a person closes a timed modal with a click.
+						$wnl.logger.debug('SweetAlert2 exception', e)
+					})
 
-					scrollToElement(this.getQuestionElement(firstElement))
-				})
+				scrollToElement(this.getQuestionElement(firstElement))
 			},
 			getAlertConfig(options = {}) {
 				const defaults = {

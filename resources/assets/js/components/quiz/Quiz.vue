@@ -5,7 +5,7 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary></wnl-quiz-summary>
+			<wnl-quiz-summary :showAlert="showAlert"></wnl-quiz-summary>
 		</div>
 		<div v-else>
 			<p class="title is-5">
@@ -20,14 +20,15 @@
 				</a>
 			</p>
 			<wnl-quiz-list v-if="isLoaded"
-				:allQuestions="getQuestionsWithAnswersAndStats"
+				:allQuestions="getQuestionsWithAnswers"
 				:getReaction="getReaction"
 				:isProcessing="isProcessing"
 				:isComplete="isComplete"
-				:checkQuiz="checkQuiz"
 				module="quiz"
+				ref="quizList"
 				@selectAnswer="onAnswerSelect"
 				@resetState="resetState"
+				@checkQuiz="onCheckQuiz"
 			/>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
@@ -54,12 +55,17 @@
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-summary': QuizSummary,
 		},
+		data() {
+			return {
+				showAlert: false
+			}
+		},
 		props: ['screenData', 'readOnly'],
 		computed: {
 			...mapGetters('quiz', [
 				'isComplete',
 				'isLoaded',
-				'getQuestionsWithAnswersAndStats',
+				'getQuestionsWithAnswers',
 				'getReaction',
 				'isProcessing',
 			]),
@@ -82,6 +88,9 @@
 				if (!this.isComplete) {
 					this.commitSelectAnswer(data)
 				}
+			},
+			onCheckQuiz() {
+				this.checkQuiz().then(() => this.isComplete ? this.showAlert = true : this.$refs.quizList.showAlert())
 			}
 		},
 		mounted() {

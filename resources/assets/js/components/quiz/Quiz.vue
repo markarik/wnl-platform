@@ -22,7 +22,12 @@
 			<wnl-quiz-list v-if="isLoaded"
 				:allQuestions="getQuestionsWithAnswersAndStats"
 				:getReaction="getReaction"
+				:isProcessing="isProcessing"
+				:isComplete="isComplete"
+				:checkQuiz="checkQuiz"
 				module="quiz"
+				@selectAnswer="onAnswerSelect"
+				@resetState="resetState"
 			/>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
@@ -55,7 +60,8 @@
 				'isComplete',
 				'isLoaded',
 				'getQuestionsWithAnswersAndStats',
-				'getReaction'
+				'getReaction',
+				'isProcessing',
 			]),
 			...mapGetters(['isAdmin']),
 			displayResults() {
@@ -63,7 +69,7 @@
 			},
 		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve']),
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'commitSelectAnswer', 'resetState', 'checkQuiz']),
 			setup() {
 				let meta = this.screenData.meta
 				if (!_.isObject(meta)) {
@@ -72,6 +78,11 @@
 
 				this.setupQuestions(meta.resources[0])
 			},
+			onAnswerSelect() {
+				if (!this.isComplete) {
+					this.commitSelectAnswer(data)
+				}
+			}
 		},
 		mounted() {
 			this.setup()

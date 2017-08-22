@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
 		<p v-if="isComplete" class="has-text-centered margin vertical">
-			<a class="button is-primary is-outlined" @click="resetState">Rozwiąż pytania ponownie</a>
+			<a class="button is-primary is-outlined" @click="$emit('resetState')">Rozwiąż pytania ponownie</a>
 		</p>
 
 		<p class="title is-5" v-if="!displayResults">Pozostało pytań: {{howManyLeft}}</p>
@@ -44,18 +44,13 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly', 'allQuestions', 'getReaction', 'module'],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'checkQuiz'],
 		data() {
 			return {
 				hasErrors: false,
 			}
 		},
 		computed: {
-			...mapGetters('quiz', [
-				'isComplete',
-				'isProcessing',
-				'hasQuestions',
-			]),
 			questions() {
 				if (this.isComplete) {
 					return this.allQuestions
@@ -99,11 +94,6 @@
 			},
 		},
 		methods: {
-			...mapActions('quiz', [
-				'checkQuiz',
-				'resetState',
-				'commitSelectAnswer'
-			]),
 			verify() {
 				if (this.questionsUnaswered.length > 0) {
 					this.hasErrors = true
@@ -148,9 +138,7 @@
 				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
 			},
 			onSelectAnswer(data) {
-				if (!this.isComplete) {
-					this.commitSelectAnswer(data)
-				}
+				this.$emit('selectAnswer', data)
 			}
 		},
 	}

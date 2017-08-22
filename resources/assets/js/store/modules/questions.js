@@ -200,6 +200,7 @@ const actions = {
 		})
 	},
 	selectAnswer({commit}, payload) {
+		console.log('aaaaaa')
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
 	},
 	resolveQuestion({commit}, questionId) {

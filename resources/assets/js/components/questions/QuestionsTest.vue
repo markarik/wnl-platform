@@ -2,7 +2,10 @@
 	<div class="wnl-app-layout">
 		{{ time }}
 		<wnl-quiz-list
-			:allQuestions="questions"
+			:allQuestions="reactiveQuestions"
+			:isComplete="false"
+			:isProcessing="false"
+			@selectAnswer="onSelectAnswer"
 		/>
 	</div>
 </template>
@@ -12,9 +15,20 @@
 
 <script>
 import QuizList from 'js/components/quiz/QuizList'
+import Vue from 'vue'
 
 export default {
-	props: ['questions', 'time'],
+	props: ['questions', 'time', 'onSelectAnswer'],
+	data() {
+		return {
+			allQuestions: []
+		}
+	},
+	computed: {
+		reactiveQuestions() {
+			return this.allQuestions.length ? this.allQuestions : this.questions
+		}
+	},
 	components: {
 		'wnl-quiz-list': QuizList
 	}

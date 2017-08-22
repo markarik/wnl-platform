@@ -192,7 +192,8 @@
 						name: 'questionsTest',
 						params: {
 							questions: Object.values(this.questions),
-							time: this.estimatedTime
+							time: this.estimatedTime,
+							onSelectAnswer: this.selectAnswer
 						}
 
 					})

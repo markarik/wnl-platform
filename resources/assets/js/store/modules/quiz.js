@@ -149,9 +149,6 @@ const mutations = {
 
 		_.forEach(payload.quiz_questions, (value, id) => {
 			if (!_.isUndefined(state.quiz_questions[id])) {
-				if (!_.isUndefined(value.selectedAnswer)) {
-					set(state.quiz_questions[id], 'selectedAnswer', value.selectedAnswer)
-				}
 				if (!_.isUndefined(value.isResolved)) {
 					set(state.quiz_questions[id], 'isResolved', value.isResolved)
 				}

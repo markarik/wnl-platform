@@ -44,6 +44,7 @@ class Kernel extends ConsoleKernel
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
 		Commands\TaxonomizeTags::class,
+		Commands\TagsCleanup::class,
 		Commands\WarmUpCache::class,
 	];
 

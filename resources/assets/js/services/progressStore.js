@@ -1,4 +1,3 @@
-import store from './sessionStore';
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 import {getCurrentUser} from './user';

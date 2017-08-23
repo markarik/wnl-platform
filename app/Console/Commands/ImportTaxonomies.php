@@ -177,6 +177,9 @@ class ImportTaxonomies extends Command
 					$parentTagId = 0;
 					$taxonomyId = $item['parent']->id;
 				} else {
+					if (!$item['parent'] instanceof Model) {
+						continue;
+					}
 					$parentTagId = $item['parent']->id;
 					$taxonomyId = $taxonomiesMap->get($item['parent']->id);
 				}

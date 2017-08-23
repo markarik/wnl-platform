@@ -1,6 +1,7 @@
 <?php namespace App\Console\Commands;
 
 use App\Models\Tag;
+use App\Models\TagsTaxonomy;
 use Storage;
 use App\Models\QuizSet;
 use Illuminate\Console\Command;
@@ -18,11 +19,11 @@ class QuizImport extends Command
 	 */
 	protected $signature = 'quiz:import {dir?}',
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
+		/**
+		 * The console command description.
+		 *
+		 * @var string
+		 */
 		$description = 'Import quiz sets to database from storage.',
 		$path,
 		$globalTags = [];
@@ -45,8 +46,7 @@ class QuizImport extends Command
 	 */
 	public function handle()
 	{
-		if ($subDir = $this->argument('dir'))
-		{
+		if ($subDir = $this->argument('dir')) {
 			$this->path .= '/' . $subDir;
 		}
 
@@ -59,6 +59,7 @@ class QuizImport extends Command
 			$bar->advance();
 		}
 		print PHP_EOL;
+
 		return;
 	}
 
@@ -122,7 +123,28 @@ class QuizImport extends Command
 			}
 		}
 
+		$this->tryMatchingCollectionTaxonomy($question);
+
 		$question->preserve_order = (bool)$values[10];
 		$question->save();
+	}
+
+	protected function tryMatchingCollectionTaxonomy($question)
+	{
+		$collectionsTagsTx = TagsTaxonomy::select()
+			->whereHas('taxonomy', function ($query) {
+				$query->where('name', 'collections');
+			})
+			->whereIn('tag_id', $question->tags->pluck('id'))
+			->get();
+
+		foreach ($collectionsTagsTx as $tagTaxonomy) {
+			if ($tagTaxonomy->parent_tag_id === 0) return;
+
+			$parentTag = Tag::find($tagTaxonomy->parent_tag_id);
+			if (!$question->tags->contains($parentTag)) {
+				$question->tags()->attach($parentTag);
+			}
+		}
 	}
 }

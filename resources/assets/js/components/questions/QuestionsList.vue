@@ -174,7 +174,7 @@
 				'selectAnswer',
 				'resolveQuestion',
 				'checkQuestions',
-				'saveQuestionResult'
+				'saveQuestionsResults'
 			]),
 			debouncedFetchMatchingQuestions: _.debounce(function() {
 				this.fetchMatchingQuestions(this.activeFilters)
@@ -190,7 +190,7 @@
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
-				this.saveQuestionResult(questionId)
+				this.saveQuestionsResults([questionId])
 			},
 			performChangeQuestion(index) {
 				const beforeIndex = this.questionsList.slice(0, index);

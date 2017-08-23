@@ -227,16 +227,23 @@ const actions = {
 
 		return Promise.resolve(results)
 	},
-	saveQuestionResult({commit, getters, rootGetters}, questionId) {
-		const question = getters.getQuestion(questionId)
+	saveQuestionsResults({commit, getters, rootGetters}, questionIds) {
+		const results = questionIds.map((questionId) => {
+			const question = getters.getQuestion(questionId)
+
+			if (!question.hasOwnProperty('selectedAnswer')) return
+			if (!question.answers.hasOwnProperty(question.selectedAnswer)) return
+
+			return {
+				questionId,
+				answerId: question.selectedAnswer
+			}
+
+		}).filter((result) => result)
+
+		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results})
 
 		// maybe an error that question has no selected answer or answer does not exist?
-		if (!question.hasOwnProperty('selectedAnswer')) return
-		if (!question.answers.hasOwnProperty(question.selectedAnswer)) return
-
-		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {
-			results: [{answerId: question.selectedAnswer, questionId}]
-		})
 	}
 }
 

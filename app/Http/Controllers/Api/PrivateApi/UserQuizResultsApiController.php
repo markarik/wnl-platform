@@ -30,35 +30,35 @@ class UserQuizResultsApiController extends ApiController
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
-    }
+	}
 
-    public function post(Request $request) {
-        $results = $request->get('results');
-        $userId = $request->route('userId');
-        $user = User::fetch($userId);
-        $recordsToInsert = [];
+	public function post(Request $request) {
+		$results = $request->get('results');
+		$userId = $request->route('userId');
+		$user = User::fetch($userId);
+		$recordsToInsert = [];
 
-        if (!Auth::user()->can('view', $user)) {
-            return $this->respondUnauthorized();
-        }
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondUnauthorized();
+		}
 
-        foreach ($results as $result) {
-            $questionId = $result['questionId'];
-            $answerId = $result['answerId'];
-            $question = QuizQuestion::find($questionId);
-            $answer = QuizAnswer::find($answerId);
+		foreach ($results as $result) {
+			$questionId = $result['questionId'];
+			$answerId = $result['answerId'];
+			$question = QuizQuestion::find($questionId);
+			$answer = QuizAnswer::find($answerId);
 
-            if (!empty($question) && !empty($answer)) {
-                $recordsToInsert[] = [
-                    'quiz_question_id' => $questionId,
-                    'quiz_answer_id' => $answerId,
-                    'user_id' => $userId
-                ];
-            }
-        }
+			if (!empty($question) && !empty($answer)) {
+				$recordsToInsert[] = [
+					'quiz_question_id' => $questionId,
+					'quiz_answer_id' => $answerId,
+					'user_id' => $userId
+				];
+			}
+		}
 
-        UserQuizResults::insert($recordsToInsert);
+		UserQuizResults::insert($recordsToInsert);
 
-        $this->respondOk();
-    }
+		$this->respondOk();
+	}
 }

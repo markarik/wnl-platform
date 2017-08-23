@@ -183,11 +183,12 @@ class ImportTaxonomies extends Command
 
 				foreach ($item['tags'] as $tag) {
 					$taxonomiesMap->put($tag->id, $taxonomyId);
-					TagsTaxonomy::create([
+					$data = [
 						'parent_tag_id' => $parentTagId,
 						'tag_id'        => $tag->id,
 						'taxonomy_id'   => $taxonomyId,
-					]);
+					];
+					TagsTaxonomy::updateOrCreate($data, $data);
 				}
 			}
 		}

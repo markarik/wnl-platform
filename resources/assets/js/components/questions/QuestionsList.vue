@@ -1,7 +1,6 @@
 <template>
 	<wnl-questions-test v-if="testMode"
 		:questions="questionsList"
-		:results="results"
 		:time="estimatedTime * 60"
 		:onSelectAnswer="selectAnswer"
 		:onCheckQuiz="checkQuestions"

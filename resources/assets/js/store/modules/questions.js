@@ -203,12 +203,14 @@ const actions = {
 	resolveQuestion({commit}, questionId) {
 		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)
 	},
-	checkQuestions({commit, getters}) {
+	checkQuestions({commit, getters, dispatch}) {
 		const results = {
-			unanswered: [],
-			incorrect: [],
-			correct: []
-		}
+				unanswered: [],
+				incorrect: [],
+				correct: []
+			},
+			questionsToStore = []
+
 
 		getters.questionsList.forEach((question) => {
 			if (!question.selectedAnswer) {
@@ -218,8 +220,11 @@ const actions = {
 
 			selectedAnswer.is_correct ? results.correct.push(question) : results.incorrect.push(question)
 
+			questionsToStore.push(question.id)
 			dispatch('resolveQuestion', question.id)
 		})
+
+		dispatch('saveQuestionsResults', questionsToStore)
 
 		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
 		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"

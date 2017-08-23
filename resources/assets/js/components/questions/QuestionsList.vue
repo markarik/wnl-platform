@@ -188,10 +188,6 @@
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
-<<<<<<< HEAD
-					// .then(this.debouncedFetchQuestions)
-=======
->>>>>>> Move Active Filters to right panel
 			},
 			onFetchMatchingQuestions() {
 				this.fetchingQuestions = true

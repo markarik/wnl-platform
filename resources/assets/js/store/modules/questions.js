@@ -67,6 +67,7 @@ const getters = {
 
 		return filters
 	},
+	getQuestion: state => questionId => state.quiz_questions[questionId],
 	matchedQuestionsCount: state => state.total,
 	results: state => state.results
 }
@@ -216,6 +217,8 @@ const actions = {
 			const selectedAnswer = question.answers[question.selectedAnswer]
 
 			selectedAnswer.is_correct ? results.correct.push(question) : results.incorrect.push(question)
+
+			dispatch('resolveQuestion', question.id)
 		})
 
 		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
@@ -223,6 +226,15 @@ const actions = {
 		// commit(types.QUESTIONS_SET_RESULTS, results)
 
 		return Promise.resolve(results)
+	},
+	saveQuestionResult({commit, getters, rootGetters}, questionId) {
+		const question = getters.getQuestion(questionId)
+
+		// TODO be a bit smarter about it
+		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {
+			answerId: question.answers[question.selectedAnswer].id,
+			questionId
+		})
 	}
 }
 

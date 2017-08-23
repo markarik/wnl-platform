@@ -173,7 +173,8 @@
 				'fetchMatchingQuestions',
 				'selectAnswer',
 				'resolveQuestion',
-				'checkQuestions'
+				'checkQuestions',
+				'saveQuestionResult'
 			]),
 			debouncedFetchMatchingQuestions: _.debounce(function() {
 				this.fetchMatchingQuestions(this.activeFilters)
@@ -189,7 +190,7 @@
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
-				// TODO record answer in DB
+				this.saveQuestionResult(questionId)
 			},
 			performChangeQuestion(index) {
 				const beforeIndex = this.questionsList.slice(0, index);

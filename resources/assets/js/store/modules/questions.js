@@ -158,11 +158,6 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
-	fetchAllQuestions({commit}) {
-		return _fetchQuestions({
-			include: 'reactions,quiz_answers'
-		}).then(response => _handleResponse(response, commit))
-	},
 	fetchQuestionsCount({commit}) {
 		return axios.get(getApiUrl('quiz_questions/.count'))
 			.then(({data}) => {
@@ -181,10 +176,10 @@ const actions = {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
-	fetchMatchingQuestions({commit, state, getters, rootGetters}, activeFilters) {
-		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
+	fetchQuestions({commit, state, getters, rootGetters}, {filters}) {
+		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
-		return _fetchQuestions({filters, include: 'quiz_answers,reactions'})
+		return _fetchQuestions({filters: parsedFilters, include: 'quiz_answers'})
 			.then(response => _handleResponse(response, commit))
 	},
 	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {

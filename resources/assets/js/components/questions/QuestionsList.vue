@@ -165,26 +165,25 @@
 				'activeFiltersReset',
 				'activeFiltersToggle',
 				'fetchQuestionData',
-				'fetchAllQuestions',
+				'fetchQuestions',
 				'fetchQuestionsCount',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
-				'fetchMatchingQuestions',
 				'selectAnswer',
 				'resolveQuestion',
 				'checkQuestions',
 				'saveQuestionsResults'
 			]),
 			debouncedFetchMatchingQuestions: _.debounce(function() {
-				this.fetchMatchingQuestions(this.activeFilters)
+				this.fetchQuestions({filters: this.activeFilters})
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
-					// .then(this.debouncedFetchMatchingQuestions)
+					// .then(this.debouncedFetchQuestions)
 			},
 			onFetchMatchingQuestions() {
 				this.fetchingQuestions = true
-				this.fetchMatchingQuestions(this.activeFilters)
+				this.fetchQuestions({filters: this.activeFilters})
 					.then(() => this.fetchingQuestions = false)
 			},
 			onVerify(questionId) {
@@ -209,7 +208,7 @@
 			}
 		},
 		mounted() {
-			Promise.all([this.fetchAllQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
+			Promise.all([this.fetchQuestions({filters: []}), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
 		},
 		watch: {
 			highlightedQuestion(currentQuestion, previousQuestion = {}) {

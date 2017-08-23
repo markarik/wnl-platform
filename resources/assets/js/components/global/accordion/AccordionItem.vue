@@ -1,23 +1,24 @@
 <template>
 	<div class="wnl-accordion-item-container" :class="{
-		'is-expaned': expanded,
+		'is-expanded': expanded,
 		'is-flat': flattened,
+		'is-mobile': config.isMobile,
 	}">
 		<div v-if="!flattened" class="wnl-accordion-item" :class="{
 			'has-children': hasChildren,
 			'is-first-level': isFirstLevel,
 			'is-selected': isSelected,
 			'is-selectable': isSelectable,
-		}">
-			<div v-if="isSelectable" class="wai-checkbox" @click="toggleSelected">
+		}" @click="onItemClick">
+			<div v-if="isSelectable" class="wai-checkbox">
 				<span class="icon is-small">
 					<i class="fa" :class="[isSelected ? 'fa-check-square-o' : 'fa-square-o']"></i>
 				</span>
 			</div>
-			<div class="wai-content" @click="onItemClick">
+			<div class="wai-content">
 				{{content}}
 			</div>
-			<div v-if="hasChildren" class="wai-expand-icon" @click="toggleExpanded">
+			<div v-if="hasChildren" class="wai-expand-icon" ref="expand">
 				<span class="icon is-small">
 					<i class="fa fa-angle-down" :class="[expanded ? 'fa-rotate-180' : '']"></i>
 				</span>
@@ -40,29 +41,45 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	$toggle-icon-size: 2 * $margin-base
+	$highlight-color: $color-background-lighter-gray
+
+	.is-mobile
+		.wnl-accordion-item:not(.is-selected):not(.is-first-level):hover
+				background-color: initial
+
 	.wnl-accordion-item-container
 		width: 100%
 
-		&.is-flat
-			.wnl-accordion-item
-				padding-left: 0
+		&.is-expanded
+			border-bottom: $border-light-gray
+			padding-bottom: $margin-base
 
 	.wnl-accordion-item
+		align-items: center
 		display: flex
-		padding: $margin-small 0 $margin-small $margin-base
+		font-size: $font-size-minus-1
+		line-height: $line-height-minus
+		padding: $margin-small $margin-small $margin-small $margin-base
 		user-select: none
 		width: 100%
+		height: $toggle-icon-size + 2 * $margin-small
 
 		&:hover
 			background: $color-background-lighter-gray
 
 		&.is-selected
-			background-color: $color-green
+			background-color: $highlight-color
 
 		&.is-first-level
 			background: $color-background-light-gray
-			font-weight: $font-weight-bold
-			padding-left: 0
+			font-size: $font-size-minus-1
+			letter-spacing: 1px
+			padding: $margin-medium $margin-small $margin-medium $margin-medium
+			text-transform: uppercase
+
+			.wai-expand-icon
+				border-color: transparent
 
 		&.has-children,
 		&.is-selectable
@@ -71,11 +88,23 @@
 		.wai-checkbox
 			width: 1.5em
 
+			i
+				font-size: $font-size-minus-1
+
 		.wai-content
 			flex: 1 auto
 
-		.wai-expand-icon i
-			transition: all $transition-length-base
+		.wai-expand-icon
+			align-items: center
+			border: $border-light-gray
+			border-radius: $border-radius-small
+			display: flex
+			height: $toggle-icon-size
+			justify-content: center
+			width: $toggle-icon-size
+
+			i
+				transition: all $transition-length-base
 
 	.wnl-accordion-item-children
 		padding-left: $margin-big
@@ -139,8 +168,8 @@
 			isFlattened(path) {
 				return this.config.flattened.indexOf(path) > -1
 			},
-			onItemClick() {
-				if (this.isSelectable) {
+			onItemClick(event) {
+				if (this.isSelectable && event.path.indexOf(this.$refs.expand) === -1) {
 					this.toggleSelected()
 				} else {
 					this.toggleExpanded()

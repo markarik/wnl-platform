@@ -25,22 +25,23 @@ const state = {
 			type: FILTER_TYPES.LIST,
 			items: [
 				{
-					name: 'Nierozwiązane',
+					name: 'Bez odpowiedzi',
 					value: 'unresolved',
 				},
 				{
-					name: 'Poprawne',
-					value: 'correct',
+					name: 'Rozwiązane błędnie',
+					value: 'incorrect',
 				},
 				{
-					name: 'Niepoprawne',
-					value: 'incorrect',
+					name: 'Rozwiązane poprawnie',
+					value: 'correct',
 				},
 			],
 		}
 	},
 	quiz_questions: {},
 	profiles: {},
+	results: false
 }
 
 // Getters
@@ -53,6 +54,7 @@ const getters = {
 	}),
 	allQuestionsCount: state => state.allCount,
 	questions: state => state.quiz_questions,
+	questionsList: state => Object.values(state.quiz_questions || {}),
 	filters: state => {
 		const order = ['resolution', 'subjects', 'exams']
 
@@ -65,7 +67,9 @@ const getters = {
 
 		return filters
 	},
+	getQuestion: state => questionId => state.quiz_questions[questionId],
 	matchedQuestionsCount: state => state.total,
+	results: state => state.results
 }
 
 // Mutations
@@ -103,10 +107,13 @@ const mutations = {
 			set(state, key, meta[key])
 		})
 	},
-	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included: {quiz_answers, ...included}, comments}) {
+	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments}) {
+		if (_.size(included) === 0) return
+
 		comments && set(state.quiz_questions[id], 'comments', comments)
 
-		_.each(included, (items, resource) => {
+		let {included: quiz_answers, ...resources} = included
+		_.each(resources, (items, resource) => {
 			let resourceObject = state[resource]
 			_.each(items, (item, index) => {
 				set(resourceObject, item.id, item)
@@ -123,6 +130,26 @@ const mutations = {
 	},
 	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
 		set(state.quiz_questions[questionId], 'isResolved', true)
+	},
+	[types.UPDATE_INCLUDED] (state, included) {
+		_.each(included, (items, resource) => {
+			let resourceObject = state[resource]
+			_.each(items, (item, index) => {
+				set(resourceObject, item.id, item)
+			})
+		})
+	},
+	[types.QUESTIONS_UPDATE] (state, {data: questions}) {
+		const serialized = state.quiz_questions || {}
+
+		questions.forEach(question => {
+			serialized[question.id] = {
+				...serialized[question.id],
+				...question
+			}
+		})
+
+		set(state, 'quiz_questions', serialized)
 	},
 }
 
@@ -143,11 +170,6 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
-	fetchAllQuestions({commit}) {
-		return _fetchQuestions({
-			include: 'reactions,quiz_answers'
-		}).then(response => _handleResponse(response, commit))
-	},
 	fetchQuestionsCount({commit}) {
 		return axios.get(getApiUrl('quiz_questions/.count'))
 			.then(({data}) => {
@@ -155,7 +177,7 @@ const actions = {
 			})
 	},
 	fetchQuestionData({commit}, id) {
-		return _fetchQuestionData(id)
+		return _fetchQuestionsComments(id)
 			.then(({data}) => {
 				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
 			})
@@ -166,10 +188,10 @@ const actions = {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
-	fetchMatchingQuestions({commit, state, getters, rootGetters}, activeFilters) {
-		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
+	fetchQuestions({commit, state, getters, rootGetters}, {filters}) {
+		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
-		return _fetchQuestions({filters, include: 'quiz_answers,reactions'})
+		return _fetchQuestions({filters: parsedFilters, include: 'quiz_answers'})
 			.then(response => _handleResponse(response, commit))
 	},
 	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
@@ -179,8 +201,20 @@ const actions = {
 			filters,
 			limit,
 			randomize: true,
-			include: 'quiz_answers'
+			include: 'quiz_answers,reactions,comments.profiles'
 		}).then(response => _handleResponse(response, commit))
+	},
+	fetchQuestionsReactions({commit}, questionsIds) {
+		return _fetchQuestions({
+			filters: [
+				{
+					query: {
+						whereIn: ['id', questionsIds],
+					}
+				}
+			],
+			include: 'reactions'
+		}).then(({data}) => commit(types.QUESTIONS_UPDATE, data))
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
@@ -188,18 +222,62 @@ const actions = {
 	resolveQuestion({commit}, questionId) {
 		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)
 	},
+	checkQuestions({commit, getters, dispatch}) {
+		const results = {
+				unanswered: [],
+				incorrect: [],
+				correct: []
+			},
+			questionsToStore = []
+
+
+		getters.questionsList.forEach((question) => {
+			if (!question.selectedAnswer) {
+				return results.unanswered.push(question)
+			}
+			const selectedAnswer = question.answers[question.selectedAnswer]
+
+			selectedAnswer.is_correct ? results.correct.push(question) : results.incorrect.push(question)
+
+			questionsToStore.push(question.id)
+			dispatch('resolveQuestion', question.id)
+		})
+
+		dispatch('saveQuestionsResults', questionsToStore)
+
+		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
+		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"
+		// commit(types.QUESTIONS_SET_RESULTS, results)
+
+		return Promise.resolve(results)
+	},
+	saveQuestionsResults({commit, getters, rootGetters}, questionIds) {
+		const results = questionIds.map((questionId) => {
+			const question = getters.getQuestion(questionId)
+
+			if (!question.hasOwnProperty('selectedAnswer')) return
+			if (!question.answers.hasOwnProperty(question.selectedAnswer)) return
+
+			return {
+				questionId,
+				answerId: question.selectedAnswer
+			}
+		}).filter((result) => result)
+
+		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results})
+	}
 }
 
 
 const _fetchQuestions = (requestParams) => {
 	// TODO pagination and other super stuff
 	return axios.post(getApiUrl('quiz_questions/.filter'), {
-		limit: 50,
+		limit: 10,
 		...requestParams
 	})
 }
 
-const _fetchQuestionData = (id) => {
+const _fetchQuestionsComments = (id) => {
 	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles`))
 }
 
@@ -237,10 +315,14 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 }
 
 const _handleResponse = (response, commit) => {
-	let {data: {data, ...meta}} = response, quizQuestions = {}, quiz_answers = {}
+	var {data: {data, ...meta}} = response,
+		quizQuestions = {},
+		quiz_answers = {},
+		included = {}
 
 	if (size(data) > 0) {
-		({included: {quiz_answers}, ...quizQuestions} = data)
+		// this var is here on purpose due to error in babel and problems with spread operator :(
+		var {included: {quiz_answers, ...included}, ...quizQuestions} = data
 	}
 
 	commit(types.QUESTIONS_SET_WITH_ANSWERS, {
@@ -248,6 +330,8 @@ const _handleResponse = (response, commit) => {
 		answers: quiz_answers
 	})
 	commit(types.QUESTIONS_SET_META, meta)
+
+	commit(types.UPDATE_INCLUDED, included)
 }
 
 export default {

@@ -1,24 +1,31 @@
 <template>
-	<div class="wnl-app-layout">
+	<wnl-questions-test v-if="testMode"
+		:questions="questionsList"
+		:time="estimatedTime * 60"
+		:onSelectAnswer="selectAnswer"
+		:onCheckQuiz="checkQuestions"
+		:getReaction="getReaction"
+		@endTest="testMode = false"
+	/>
+	<div class="wnl-app-layout" v-else>
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
-				<wnl-active-filters
-					:activeFilters="activeFilters"
-					:loading="fetchingQuestions"
-					:filters="filters"
-					:matchedCount="matchedQuestionsCount"
-					:totalCount="allQuestionsCount"
-					@activeFiltersChanged="onActiveFiltersChanged"
-					@fetchMatchingQuestions="onFetchMatchingQuestions"
-				>
-					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
-						<span>{{$t('questions.filters.show')}}</span>
-						<span class="icon is-tiny">
-							<i class="fa fa-sliders"></i>
-						</span>
-					</a>
-				</wnl-active-filters>
+				<div class="questions-breadcrumbs">
+					<div class="breadcrumb">
+						<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+					</div>
+					<div class="breadcrumb">
+						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+						<span>{{$t('questions.nav.solving')}}</span>
+					</div>
+				</div>
+				<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
+					<span>{{$t('questions.filters.show')}}</span>
+					<span class="icon is-tiny">
+						<i class="fa fa-sliders"></i>
+					</span>
+				</a>
 				<button @click="toggleBuilder">Zbuduj zestaw</button>
 				<div v-show="showBuilder">
 					<section>
@@ -36,7 +43,7 @@
 					</section>
 					<section>
 						<label for="time">Ile czasu chcesz poświęcić?</label>
-						<input type="text" name="time" :value="estimatedTime"/>
+						<input type="text" name="time" v-model="estimatedTime"/>
 						<span>minut</span>
 					</section>
 					<button @click="buildTest">No to GO!</button>
@@ -44,15 +51,15 @@
 
 				<!-- BEGIN Questions Widget -->
 				<wnl-quiz-widget
-					v-if="questionsList.length > 0"
+					v-if="computedQuestionsList.length > 0"
 					module="questions"
-					:questions="questionsList"
-					:getReaction="getReaction"
+					:questions="computedQuestionsList"
+					:getReaction="computedGetReaction"
 					@changeQuestion="performChangeQuestion"
 					@verify="onVerify"
 					@selectAnswer="selectAnswer"
 				></wnl-quiz-widget>
-				<div class="has-text-centered margin vertical metadata" v-else="questionsList.length === 0">
+				<div class="has-text-centered margin vertical metadata" v-else>
 					{{$t('questions.zeroState')}}
 				</div>
 				<!-- END Questions Widget -->
@@ -65,8 +72,10 @@
 		>
 			<wnl-questions-filters
 				:activeFilters="activeFilters"
+				:fetchingQuestions="fetchingQuestions"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
+				@fetchMatchingQuestions="onFetchMatchingQuestions"
 			/>
 		</wnl-sidenav-slot>
 		<div v-if="!isLargeDesktop && isChatToggleVisible" class="wnl-chat-toggle">
@@ -85,14 +94,23 @@
 		width: 100%
 		max-width: initial
 
-	.active-filters
-		margin-bottom: $margin-base
-
 	.mobile-show-active-filters
 		align-items: center
 		display: flex
 		font-size: $font-size-minus-2
 		text-transform: uppercase
+
+	.questions-breadcrumbs
+		align-items: center
+		color: $color-gray-dimmed
+		display: flex
+		margin-right: $margin-base
+
+		.breadcrumb
+			max-width: 200px
+			overflow-x: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
 </style>
 
 <script>
@@ -101,6 +119,7 @@
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
+	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
@@ -113,6 +132,7 @@
 			'wnl-quiz-widget': QuizWidget,
 			'wnl-questions-filters': QuestionsFilters,
 			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-questions-test': QuestionsTest
 		},
 		data() {
 			return {
@@ -121,6 +141,8 @@
 				orderedQuestionsList: [],
 				showBuilder: false,
 				testQuestionsCount: 30,
+				testMode: false,
+				reactionsFetched: false
 			}
 		},
 		computed: {
@@ -135,17 +157,18 @@
 			]),
 			...mapGetters('questions', [
 				'activeFilters',
-				'allQuestionsCount',
 				'filters',
 				'getReaction',
-				'questions',
-				'matchedQuestionsCount',
+				'questionsList',
 			]),
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},
-			questionsList() {
-				return this.orderedQuestionsList.length ? this.orderedQuestionsList : Object.values(this.questions)
+			computedQuestionsList() {
+				return this.orderedQuestionsList.length ? this.orderedQuestionsList : this.questionsList
+			},
+			computedGetReaction() {
+				return this.reactionsFetched && this.getReaction
 			}
 		},
 		methods: {
@@ -154,33 +177,34 @@
 				'activeFiltersReset',
 				'activeFiltersToggle',
 				'fetchQuestionData',
-				'fetchAllQuestions',
+				'fetchQuestions',
 				'fetchQuestionsCount',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
-				'fetchMatchingQuestions',
+				'fetchQuestionsReactions',
 				'selectAnswer',
 				'resolveQuestion',
+				'checkQuestions',
+				'saveQuestionsResults'
 			]),
 			debouncedFetchMatchingQuestions: _.debounce(function() {
-				this.fetchMatchingQuestions(this.activeFilters)
+				this.fetchQuestions({filters: this.activeFilters})
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
-					// .then(this.debouncedFetchMatchingQuestions)
 			},
 			onFetchMatchingQuestions() {
 				this.fetchingQuestions = true
-				this.fetchMatchingQuestions(this.activeFilters)
+				this.fetchQuestions({filters: this.activeFilters})
 					.then(() => this.fetchingQuestions = false)
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
-				// TODO record answer in DB
+				this.saveQuestionsResults([questionId])
 			},
 			performChangeQuestion(index) {
-				const beforeIndex = this.questionsList.slice(0, index);
-				const afterIndex = this.questionsList.slice(index)
+				const beforeIndex = this.computedQuestionsList.slice(0, index);
+				const afterIndex = this.computedQuestionsList.slice(index)
 
 				this.orderedQuestionsList = [...afterIndex, ...beforeIndex]
 				// TODO if we decide on pagination we can fetch new question here
@@ -192,27 +216,19 @@
 				this.fetchTestQuestions({
 					activeFilters: this.activeFilters,
 					count: this.testQuestionsCount
-				}).then(() => {
-					this.$router.push({
-						name: 'questionsTest',
-						params: {
-							questions: Object.values(this.questions),
-							time: this.estimatedTime,
-							onSelectAnswer: this.selectAnswer
-						}
-
-					})
-				})
+				}).then(() => this.testMode = true)
 			}
 		},
 		mounted() {
-			Promise.all([this.fetchAllQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
+			Promise.all([this.fetchQuestions({filters: []}), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
+				.then(() => this.fetchQuestionsReactions(this.questionsList.map(question => question.id)))
+				.then(() => this.reactionsFetched = true)
 		},
 		watch: {
-			highlightedQuestion() {
-				if (this.highlightedQuestion && !this.highlightedQuestion.answers) {
+			highlightedQuestion(currentQuestion, previousQuestion = {}) {
+				if (currentQuestion.id !== previousQuestion.id) {
 					// TODO loading state
-					this.fetchQuestionData(this.highlightedQuestion.id)
+					this.fetchQuestionData(currentQuestion.id)
 				}
 			},
 			testQuestionsCount() {

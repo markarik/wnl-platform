@@ -179,8 +179,7 @@
 				this.expanded = !this.expanded
 			},
 			toggleSelected() {
-				this.selected = !this.selected
-
+				this.selected = !this.isSelected
 				this.$emit('itemToggled', {
 					path: this.path,
 					selected: this.selected,

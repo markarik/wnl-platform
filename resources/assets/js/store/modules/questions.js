@@ -53,8 +53,6 @@ const getters = {
 		return get(state.filters, path).value
 	}),
 	allQuestionsCount: state => state.allCount,
-	questions: state => state.quiz_questions,
-	questionsList: state => Object.values(state.quiz_questions || {}),
 	filters: state => {
 		const order = ['resolution', 'subjects', 'exams']
 
@@ -69,7 +67,9 @@ const getters = {
 	},
 	getQuestion: state => questionId => state.quiz_questions[questionId],
 	matchedQuestionsCount: state => state.total,
-	results: state => state.results
+	questions: state => state.quiz_questions,
+	questionsList: state => Object.values(state.quiz_questions || {}),
+	results: state => state.results,
 }
 
 // Mutations

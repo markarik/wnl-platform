@@ -6,6 +6,7 @@ import { questions } from './questions'
 import { quiz } from './quiz'
 import { search } from './search'
 import { routes } from './routes'
+import { ui } from './ui'
 
 export {
 	dashboard,
@@ -16,4 +17,5 @@ export {
 	quiz,
 	search,
 	routes,
+	ui,
 }

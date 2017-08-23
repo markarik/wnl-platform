@@ -75,7 +75,6 @@
 				:fetchingQuestions="fetchingQuestions"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
-				@fetchMatchingQuestions="onFetchMatchingQuestions"
 			/>
 		</wnl-sidenav-slot>
 		<div v-if="!isLargeDesktop && isChatToggleVisible" class="wnl-chat-toggle">
@@ -161,18 +160,21 @@
 				'getReaction',
 				'questionsList',
 			]),
-			highlightedQuestion() {
-				return this.questionsList[0]
+			computedGetReaction() {
+				return this.reactionsFetched ? this.getReaction : () => {}
 			},
 			computedQuestionsList() {
 				return this.orderedQuestionsList.length ? this.orderedQuestionsList : this.questionsList
 			},
-			computedGetReaction() {
-				return this.reactionsFetched && this.getReaction
-			}
+			highlightedQuestion() {
+				return this.questionsList[0]
+			},
+			overlay() {
+				this.toggleOverlay({source: 'filters', display: this.fetchingQuestions})
+			},
 		},
 		methods: {
-			...mapActions(['toggleChat']),
+			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', [
 				'activeFiltersReset',
 				'activeFiltersToggle',
@@ -188,19 +190,24 @@
 				'saveQuestionsResults'
 			]),
 			debouncedFetchMatchingQuestions: _.debounce(function() {
+				this.switchOverlay(true)
 				this.fetchQuestions({filters: this.activeFilters})
+					.then(() => this.switchOverlay(false))
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
+					.then(this.debouncedFetchMatchingQuestions())
 			},
 			onFetchMatchingQuestions() {
-				this.fetchingQuestions = true
 				this.fetchQuestions({filters: this.activeFilters})
 					.then(() => this.fetchingQuestions = false)
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
 				this.saveQuestionsResults([questionId])
+			},
+			switchOverlay(display) {
+				this.toggleOverlay({source: 'filters', display, text: this.$t('ui.loading.questions')})
 			},
 			performChangeQuestion(index) {
 				const beforeIndex = this.computedQuestionsList.slice(0, index);

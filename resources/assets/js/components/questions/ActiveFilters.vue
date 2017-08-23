@@ -1,5 +1,12 @@
 <template>
 	<div class="active-filters">
+		<div class="filtering-result">
+			{{$t('questions.filters.filteringResult')}}
+			<span class="matched-count">{{matchedCount}}</span>
+			<span class="total-count">
+				{{$t('questions.filters.filteringResultFrom', {totalCount})}}
+			</span>
+		</div>
 		<div class="active-filters-heading">
 			<span class="metadata">
 				{{$t('questions.filters.activeHeading')}}
@@ -8,37 +15,21 @@
 				<slot name="heading"/>
 			</span>
 		</div>
-		<div class="filtering-result" v-if="!loading && !hasChanges">
-			{{$t('questions.filters.filteringResult')}}
-			<span class="matched-count">{{matchedCount}}</span>
-			<span class="total-count">
-				{{$t('questions.filters.filteringResultFrom', {totalCount})}}
-			</span>
-		</div>
 		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
-			<div class="filters-group" :class="group" v-for="(filters, group) in activeFiltersGrouped" v-if="filters.length > 0" :key="group">
-				<span class="filters-group-heading">{{$t(`questions.filters.items.${group}`)}}:</span>
-				<span v-for="(filter, index) in filters"
-					class="tag"
-					:class="{'is-success': hasChanges}"
-					:key="index"
-				>
-					{{filter.name}}
-					<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
-				</span>
-			</div>
+			<span v-for="(filter, index) in activeFiltersObjects"
+				class="tag is-success"
+				:key="index"
+			>
+				{{filter.name}}
+				<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
+			</span>
 		</div>
 		<div v-else class="active-filters-list">
 			<div class="filters-group">
-				<span class="tag" :class="{'is-success': hasChanges}">
+				<span class="tag">
 					{{$t('questions.filters.allQuestions')}}
 				</span>
 			</div>
-		</div>
-		<div v-if="hasChanges || loading" class="has-text-centered margin top">
-			<a class="button is-small is-success" :class="{'is-loading': loading}" @click="onSubmit">
-				{{$t('questions.filters.submit')}}
-			</a>
 		</div>
 	</div>
 </template>
@@ -50,13 +41,23 @@
 		background-color: $color-background-lighter-gray
 		padding: $margin-medium $margin-base
 
+	.filtering-result
+		font-size: $font-size-minus-1
+
+		.matched-count
+			color: $color-green
+			font-weight: $font-weight-bold
+
+		.total-count
+			color: $color-gray-dimmed
+
 	.active-filters-heading
 		align-items: center
 		display: flex
 		justify-content: space-between
+		margin-top: $margin-small
 
 	.active-filters-list
-		margin-top: $margin-small
 		width: 100%
 
 		.filters-group
@@ -73,21 +74,10 @@
 				text-transform: uppercase
 
 		.tag
-			margin: $margin-tiny
+			margin: $margin-tiny $margin-small $margin-tiny 0
 
 			.delete
 				margin-right: -0.7em
-
-	.filtering-result
-		font-size: $font-size-minus-1
-		margin-top: -$margin-small
-
-		.matched-count
-			color: $color-green
-			font-weight: $font-weight-bold
-
-		.total-count
-			color: $color-gray-dimmed
 
 	.tag:not(.is-success)
 		background-color: $color-background-light-gray
@@ -118,36 +108,9 @@
 				type: Number,
 			},
 		},
-		data() {
-			return {
-				appliedFilters: [],
-			}
-		},
 		computed: {
-			activeFiltersNames() {
-				return this.activeFilters.map(filter => this.getFilter(filter).name)
-			},
-			activeFiltersGrouped() {
-				let groupedFilters = cloneDeep(this.filtersGroups)
-
-				this.activeFilters.forEach(filter => {
-					const group = filter.split('.')[0]
-					groupedFilters[group].push({path: filter, ...this.getFilter(filter)})
-				})
-
-				return groupedFilters
-			},
-			filtersGroups() {
-				return Object.keys(this.filters).reduce((result, element) => {
-					result[element] = []
-					return result
-				}, {})
-			},
-			hasAppliedFilters() {
-				return this.appliedFilters.length > 0
-			},
-			hasChanges() {
-				return !isEqual(this.appliedFilters, this.activeFilters)
+			activeFiltersObjects() {
+				return this.activeFilters.map(filter => ({path: filter, ...this.getFilter(filter)}))
 			},
 		},
 		methods: {
@@ -161,12 +124,6 @@
 			removeFilter(filter) {
 				this.$emit('activeFiltersChanged', {filter, active: false})
 			},
-			updateAppliedFilters() {
-				this.appliedFilters = _.cloneDeep(this.activeFilters)
-			},
-		},
-		mounted() {
-			this.updateAppliedFilters()
 		},
 	}
 </script>

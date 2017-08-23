@@ -1,5 +1,6 @@
 import * as types from '../mutations-types'
 import { set, delete as destroy } from 'vue'
+import { isString, pickBy, values } from 'lodash'
 
 // Initial state
 const state = {
@@ -50,7 +51,8 @@ const getters = {
 	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex],
 	overviewView: state => state.overviewView,
 	globalNotificationMessage: state => state.globalNotification.message,
-	globalNotificationType: state => state.globalNotification.type
+	globalNotificationType: state => state.globalNotification.type,
+	overlayTexts: state => values(pickBy(state.overlays, isString)),
 }
 
 // Mutations
@@ -94,7 +96,7 @@ const mutations = {
 	},
 	[types.UI_DISPLAY_OVERLAY] (state, payload) {
 		if (payload.display) {
-			set(state.overlays, payload.source, true)
+			set(state.overlays, payload.source, payload.text || true)
 		} else {
 			destroy(state.overlays, payload.source)
 		}

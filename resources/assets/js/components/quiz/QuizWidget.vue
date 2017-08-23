@@ -89,8 +89,8 @@
 				default: [],
 			},
 			getReaction: {
+				default: () => {},
 				type: Function,
-				default: () => {}
 			},
 			module: {
 				type: String,

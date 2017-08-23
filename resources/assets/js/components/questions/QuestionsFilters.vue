@@ -37,7 +37,6 @@
 		display: flex
 		justify-content: space-between
 		padding: 0 $margin-base
-
 </style>
 
 <script>

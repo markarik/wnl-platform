@@ -8,9 +8,12 @@
 				<slot name="heading"/>
 			</span>
 		</div>
-		<div class="filtering-result">
+		<div class="filtering-result" v-if="!loading && !hasChanges">
 			{{$t('questions.filters.filteringResult')}}
-			{{$t('questions.filters.filteringResultNumbers', {matchedCount, totalCount})}}
+			<span class="matched-count">{{matchedCount}}</span>
+			<span class="total-count">
+				{{$t('questions.filters.filteringResultFrom', {totalCount})}}
+			</span>
 		</div>
 		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
 			<div class="filters-group" :class="group" v-for="(filters, group) in activeFiltersGrouped" v-if="filters.length > 0" :key="group">
@@ -45,7 +48,6 @@
 
 	.active-filters
 		background-color: $color-background-lighter-gray
-		border-radius: $border-radius-small
 		padding: $margin-medium $margin-base
 
 	.active-filters-heading
@@ -77,8 +79,15 @@
 				margin-right: -0.7em
 
 	.filtering-result
-		font-size: $font-size-minus-2
+		font-size: $font-size-minus-1
 		margin-top: -$margin-small
+
+		.matched-count
+			color: $color-green
+			font-weight: $font-weight-bold
+
+		.total-count
+			color: $color-gray-dimmed
 
 	.tag:not(.is-success)
 		background-color: $color-background-light-gray

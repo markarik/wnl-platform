@@ -2,17 +2,22 @@ export const questions = {
 	filters: {
 		activeHeading: 'Aktywne filtry',
 		allQuestions: 'Wszystkie pytania',
-		filteringResult: 'Wybrane pytania:',
-		filteringResultNumbers: '{matchedCount} z {totalCount}',
+		filteringResult: 'Pasujące pytania:',
+		filteringResultFrom: 'z {totalCount} w bazie',
 		items: {
 			exams: 'Egzaminy',
 			subjects: 'Przedmioty i tematy',
 			resolution: 'Status',
 		},
-		heading: 'Filtry',
+		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',
 		show: 'Pokaż filtry',
 		submit: 'Wybierz pasujące pytania',
+	},
+	nav: {
+		dashboard: 'Dashboard',
+		solving: 'Rozwiązywanie pytań',
+		stats: 'Statystyki',
 	},
 	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',
 }

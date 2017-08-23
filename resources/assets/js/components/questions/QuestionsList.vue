@@ -11,22 +11,21 @@
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
-				<wnl-active-filters
-					:activeFilters="activeFilters"
-					:loading="fetchingQuestions"
-					:filters="filters"
-					:matchedCount="matchedQuestionsCount"
-					:totalCount="allQuestionsCount"
-					@activeFiltersChanged="onActiveFiltersChanged"
-					@fetchMatchingQuestions="onFetchMatchingQuestions"
-				>
-					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
-						<span>{{$t('questions.filters.show')}}</span>
-						<span class="icon is-tiny">
-							<i class="fa fa-sliders"></i>
-						</span>
-					</a>
-				</wnl-active-filters>
+				<div class="questions-breadcrumbs">
+					<div class="breadcrumb">
+						<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+					</div>
+					<div class="breadcrumb">
+						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+						<span>{{$t('questions.nav.solving')}}</span>
+					</div>
+				</div>
+				<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
+					<span>{{$t('questions.filters.show')}}</span>
+					<span class="icon is-tiny">
+						<i class="fa fa-sliders"></i>
+					</span>
+				</a>
 				<button @click="toggleBuilder">Zbuduj zestaw</button>
 				<div v-show="showBuilder">
 					<section>
@@ -73,8 +72,10 @@
 		>
 			<wnl-questions-filters
 				:activeFilters="activeFilters"
+				:fetchingQuestions="fetchingQuestions"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
+				@fetchMatchingQuestions="onFetchMatchingQuestions"
 			/>
 		</wnl-sidenav-slot>
 		<div v-if="!isLargeDesktop && isChatToggleVisible" class="wnl-chat-toggle">
@@ -93,14 +94,23 @@
 		width: 100%
 		max-width: initial
 
-	.active-filters
-		margin-bottom: $margin-base
-
 	.mobile-show-active-filters
 		align-items: center
 		display: flex
 		font-size: $font-size-minus-2
 		text-transform: uppercase
+
+	.questions-breadcrumbs
+		align-items: center
+		color: $color-gray-dimmed
+		display: flex
+		margin-right: $margin-base
+
+		.breadcrumb
+			max-width: 200px
+			overflow-x: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
 </style>
 
 <script>
@@ -146,11 +156,9 @@
 			]),
 			...mapGetters('questions', [
 				'activeFilters',
-				'allQuestionsCount',
 				'filters',
 				'getReaction',
 				'questionsList',
-				'matchedQuestionsCount'
 			]),
 			highlightedQuestion() {
 				return this.questionsList[0]
@@ -179,7 +187,10 @@
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
+<<<<<<< HEAD
 					// .then(this.debouncedFetchQuestions)
+=======
+>>>>>>> Move Active Filters to right panel
 			},
 			onFetchMatchingQuestions() {
 				this.fetchingQuestions = true

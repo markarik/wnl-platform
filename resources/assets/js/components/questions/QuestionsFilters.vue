@@ -1,7 +1,19 @@
 <template>
 	<div class="wnl-questions-filters">
+		<wnl-active-filters
+		:activeFilters="activeFilters"
+		:loading="fetchingQuestions"
+		:filters="filters"
+		:matchedCount="matchedQuestionsCount"
+		:totalCount="allQuestionsCount"
+		@activeFiltersChanged="onActiveFiltersChanged"
+		@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
+		/>
 		<div class="filters-heading">
-			<span class="metadata margin vertical">{{$t('questions.filters.heading')}}</span>
+			<span class="metadata margin vertical">
+				<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
+				{{$t('questions.filters.heading')}}
+			</span>
 			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">{{$t('questions.filters.hide')}}</a>
 		</div>
 		<wnl-accordion
@@ -24,7 +36,8 @@
 		border-bottom: $border-light-gray
 		display: flex
 		justify-content: space-between
-		padding: $margin-small $margin-base 0
+		padding: 0 $margin-base
+
 </style>
 
 <script>
@@ -32,6 +45,7 @@
 	import {mapActions, mapGetters} from 'vuex'
 
 	import Accordion from 'js/components/global/accordion/Accordion'
+	import ActiveFilters from 'js/components/questions/ActiveFilters'
 
 	const config = {
 		flattened: ['resolution'],
@@ -42,11 +56,16 @@
 		name: 'QuestionsFilters',
 		components: {
 			'wnl-accordion': Accordion,
+			'wnl-active-filters': ActiveFilters,
 		},
 		props: {
 			activeFilters: {
 				type: Array,
 				required: true,
+			},
+			fetchingQuestions: {
+				default: false,
+				type: Boolean,
 			},
 			filters: {
 				type: Object,
@@ -55,6 +74,10 @@
 		},
 		computed: {
 			...mapGetters(['isChatMounted', 'isChatVisible', 'isMobile']),
+			...mapGetters('questions', [
+				'allQuestionsCount',
+				'matchedQuestionsCount',
+			]),
 			accordionConfig() {
 				return {
 					expanded: this.expandedItems,
@@ -81,6 +104,9 @@
 				return filter.split('.').map((item, index, splitted) => {
 					return splitted.slice(0, index).join('.')
 				})
+			},
+			onActiveFiltersChanged(payload) {
+				this.$emit('activeFiltersChanged', payload)
 			},
 			onItemToggled({path, selected}) {
 				this.$emit('activeFiltersChanged', {filter: path, active: selected})

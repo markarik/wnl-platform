@@ -33,27 +33,31 @@ class UserQuizResultsApiController extends ApiController
     }
 
     public function post(Request $request) {
-        $questionId = $request->get('questionId');
-        $answerId = $request->get('answerId');
+        $results = $request->get('results');
         $userId = $request->route('userId');
-
         $user = User::fetch($userId);
-        $question = QuizQuestion::find($questionId);
-        $answer = QuizAnswer::find($answerId);
+        $recordsToInsert = [];
 
         if (!Auth::user()->can('view', $user)) {
             return $this->respondUnauthorized();
         }
 
-        if (empty($question) || empty($answer)) {
-            return $this->respondNotFound();
+        foreach ($results as $result) {
+            $questionId = $result['questionId'];
+            $answerId = $result['answerId'];
+            $question = QuizQuestion::find($questionId);
+            $answer = QuizAnswer::find($answerId);
+
+            if (!empty($question) && !empty($answer)) {
+                $recordsToInsert[] = [
+                    'quiz_question_id' => $questionId,
+                    'quiz_answer_id' => $answerId,
+                    'user_id' => $userId
+                ];
+            }
         }
 
-        UserQuizResults::insert([[
-            'quiz_question_id' => $question->id,
-            'quiz_answer_id' => $answer->id,
-            'user_id' => $user->id
-        ]]);
+        UserQuizResults::insert($recordsToInsert);
 
         $this->respondOk();
     }

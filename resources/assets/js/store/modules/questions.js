@@ -230,10 +230,12 @@ const actions = {
 	saveQuestionResult({commit, getters, rootGetters}, questionId) {
 		const question = getters.getQuestion(questionId)
 
-		// TODO be a bit smarter about it
+		// maybe an error that question has no selected answer or answer does not exist?
+		if (!question.hasOwnProperty('selectedAnswer')) return
+		if (!question.answers.hasOwnProperty(question.selectedAnswer)) return
+
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {
-			answerId: question.answers[question.selectedAnswer].id,
-			questionId
+			results: [{answerId: question.selectedAnswer, questionId}]
 		})
 	}
 }

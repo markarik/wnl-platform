@@ -18,54 +18,52 @@ class QuizStatsTest extends ApiTestCase
 	/** @test * */
 	public function get_quiz_set_stats()
 	{
-		$QUIZ_SET_ID = 500;
+		$quizSet = factory(QuizSet::class)->create();
+
+		$quizSet->questions()
+			->saveMany([
+				$q1 = factory(QuizQuestion::class)->create(),
+				$q2 = factory(QuizQuestion::class)->create(),
+			]);
 
 		factory(UserQuizResults::class)->create([
 			'user_id' => 1,
-			'quiz_question_id' => 1001,
+			'quiz_question_id' => $q1->id,
 			'quiz_answer_id' => 11
 		]);
 
 		factory(UserQuizResults::class)->create([
 			'user_id' => 2,
-			'quiz_question_id' => 1001,
+			'quiz_question_id' => $q1->id,
 			'quiz_answer_id' => 12
 		]);
 
 		factory(UserQuizResults::class)->create([
 			'user_id' => 3,
-			'quiz_question_id' => 1001,
+			'quiz_question_id' => $q1->id,
 			'quiz_answer_id' => 11
 		]);
 
 		factory(UserQuizResults::class)->create([
 			'user_id' => 3,
-			'quiz_question_id' => 1000,
+			'quiz_question_id' => $q2->id,
 			'quiz_answer_id' => 13
 		]);
-
-		$quizSet = factory(QuizSet::class)->create(['id' => $QUIZ_SET_ID]);
-
-		$quizSet->questions()
-			->saveMany([
-				factory(QuizQuestion::class)->create(['id' => 1001]),
-				factory(QuizQuestion::class)->create(['id' => 1000]),
-			]);
 
 		$user = User::find(1);
 		$response = $this
 			->actingAs($user)
-			->json('GET', $this->url('/quiz_sets/'. $QUIZ_SET_ID . '/stats'));
+			->json('GET', $this->url('/quiz_sets/'. $quizSet->id . '/stats'));
 
 		$response
 			->assertStatus(200)
 			->assertJson([
 				'stats' => [
-					"1001" => [
+					$q1->id => [
 						"11" => 2,
 						"12" => 1
 					],
-					"1000" => [
+					$q2->id => [
 						"13" => 1
 					]
 				]

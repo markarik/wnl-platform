@@ -67,7 +67,7 @@ class Mentioned extends Event
 
 	}
 
-	protected function transformSubject():void
+	protected function transformSubject()
 	{
 		$resourcePlural = str_plural($this->payload['subject']['type']);
 		$resourceId = $this->payload['subject']['id'];

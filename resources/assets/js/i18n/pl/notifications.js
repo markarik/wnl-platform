@@ -1,5 +1,6 @@
 export const notifications = {
-	markAllAsRead: 'Ukryj wszystkie dyskusje',
+	markAllAsRead: 'Oznacz wszystkie jako przeczytane',
+	hideAll: 'Ukryj wszystkie dyskusje',
 	context: {
 		lesson: 'w lekcji {lesson}',
 		quizQuestion: '#{id}',

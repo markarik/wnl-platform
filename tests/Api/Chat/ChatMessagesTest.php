@@ -4,11 +4,15 @@
 namespace Tests\Api\Chat;
 
 
+use App\Models\ChatRoom;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 
 class ChatMessagesTest extends ApiTestCase
 {
+	use DatabaseTransactions;
+
 	/** @test */
 	public function get_public_chat_room_history_for_non_existing_room()
 	{
@@ -38,6 +42,7 @@ class ChatMessagesTest extends ApiTestCase
 	public function get_public_chat_room_history()
 	{
 		$user = User::find(1);
+		$room = factory(ChatRoom::class)->create();
 
 		$data = [
 			'query'   => [
@@ -54,7 +59,7 @@ class ChatMessagesTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('POST', $this->url('/chat_rooms/courses-1/chat_messages/.search'), $data);
+			->json('POST', $this->url("/chat_rooms/{$room->name}/chat_messages/.search"), $data);
 
 		$response
 			->assertStatus(200);
@@ -64,6 +69,9 @@ class ChatMessagesTest extends ApiTestCase
 	public function get_private_chat_room_history()
 	{
 		$user = User::find(1);
+		$room = factory(ChatRoom::class)->create([
+			'name' => 'private-room'
+		]);
 
 		$data = [
 			'query' => [
@@ -79,7 +87,7 @@ class ChatMessagesTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('POST', $this->url('/chat_rooms/private-room/chat_messages/.search?include=profiles'), $data);
+			->json('POST', $this->url("/chat_rooms/{$room->name}/chat_messages/.search?include=profiles"), $data);
 
 		$response
 			->assertStatus(401);

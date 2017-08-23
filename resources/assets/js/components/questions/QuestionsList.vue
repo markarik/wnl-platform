@@ -54,7 +54,7 @@
 					v-if="computedQuestionsList.length > 0"
 					module="questions"
 					:questions="computedQuestionsList"
-					:getReaction="getReaction"
+					:getReaction="computedGetReaction"
 					@changeQuestion="performChangeQuestion"
 					@verify="onVerify"
 					@selectAnswer="selectAnswer"
@@ -141,7 +141,8 @@
 				orderedQuestionsList: [],
 				showBuilder: false,
 				testQuestionsCount: 30,
-				testMode: false
+				testMode: false,
+				reactionsFetched: false
 			}
 		},
 		computed: {
@@ -165,6 +166,9 @@
 			},
 			computedQuestionsList() {
 				return this.orderedQuestionsList.length ? this.orderedQuestionsList : this.questionsList
+			},
+			computedGetReaction() {
+				return this.reactionsFetched && this.getReaction
 			}
 		},
 		methods: {
@@ -218,6 +222,7 @@
 		mounted() {
 			Promise.all([this.fetchQuestions({filters: []}), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
 				.then(() => this.fetchQuestionsReactions(this.questionsList.map(question => question.id)))
+				.then(() => this.reactionsFetched = true)
 		},
 		watch: {
 			highlightedQuestion(currentQuestion, previousQuestion = {}) {

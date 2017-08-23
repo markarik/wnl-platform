@@ -192,8 +192,8 @@
 				this.saveQuestionsResults([questionId])
 			},
 			performChangeQuestion(index) {
-				const beforeIndex = this.questionsList.slice(0, index);
-				const afterIndex = this.questionsList.slice(index)
+				const beforeIndex = this.computedQuestionsList.slice(0, index);
+				const afterIndex = this.computedQuestionsList.slice(index)
 
 				this.orderedQuestionsList = [...afterIndex, ...beforeIndex]
 				// TODO if we decide on pagination we can fetch new question here
@@ -212,10 +212,10 @@
 			Promise.all([this.fetchAllQuestions(), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
 		},
 		watch: {
-			highlightedQuestion() {
-				if (this.highlightedQuestion) {
+			highlightedQuestion(currentQuestion, previousQuestion = {}) {
+				if (currentQuestion.id !== previousQuestion.id) {
 					// TODO loading state
-					this.fetchQuestionData(this.highlightedQuestion.id)
+					this.fetchQuestionData(currentQuestion.id)
 				}
 			},
 			testQuestionsCount() {

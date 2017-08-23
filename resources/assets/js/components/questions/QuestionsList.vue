@@ -5,6 +5,8 @@
 		:time="estimatedTime * 60"
 		:onSelectAnswer="selectAnswer"
 		:onCheckQuiz="checkQuestions"
+		:getReaction="getReaction"
+		@endTest="testMode = false"
 	/>
 	<div class="wnl-app-layout" v-else>
 		<wnl-questions-navigation/>
@@ -149,7 +151,6 @@
 				'filters',
 				'getReaction',
 				'questionsList',
-				'results',
 				'matchedQuestionsCount'
 			]),
 			highlightedQuestion() {

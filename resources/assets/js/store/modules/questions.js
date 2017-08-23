@@ -130,9 +130,14 @@ const mutations = {
 	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
 		set(state.quiz_questions[questionId], 'isResolved', true)
 	},
-	[types.QUESTIONS_SET_RESULTS] (state, results) {
-		set(state, 'results', results)
-	}
+	[types.UPDATE_INCLUDED] (state, included) {
+		_.each(included, (items, resource) => {
+			let resourceObject = state[resource]
+			_.each(items, (item, index) => {
+				set(resourceObject, item.id, item)
+			})
+		})
+	},
 }
 
 // Actions
@@ -188,7 +193,7 @@ const actions = {
 			filters,
 			limit,
 			randomize: true,
-			include: 'quiz_answers'
+			include: 'quiz_answers,reactions,comments.profiles'
 		}).then(response => _handleResponse(response, commit))
 	},
 	selectAnswer({commit}, payload) {
@@ -213,7 +218,11 @@ const actions = {
 			selectedAnswer.is_correct ? results.correct.push(question) : results.incorrect.push(question)
 		})
 
-		commit(types.QUESTIONS_SET_RESULTS, results)
+		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
+		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"
+		// commit(types.QUESTIONS_SET_RESULTS, results)
+
+		return Promise.resolve(results)
 	}
 }
 
@@ -264,10 +273,14 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 }
 
 const _handleResponse = (response, commit) => {
-	let {data: {data, ...meta}} = response, quizQuestions = {}, quiz_answers = {}
+	var {data: {data, ...meta}} = response,
+		quizQuestions = {},
+		quiz_answers = {},
+		included = {}
 
 	if (size(data) > 0) {
-		({included: {quiz_answers}, ...quizQuestions} = data)
+		// this var is here on purpose due to error in babel and problems with spread operator :(
+		var {included: {quiz_answers, ...included}, ...quizQuestions} = data
 	}
 
 	commit(types.QUESTIONS_SET_WITH_ANSWERS, {
@@ -275,6 +288,8 @@ const _handleResponse = (response, commit) => {
 		answers: quiz_answers
 	})
 	commit(types.QUESTIONS_SET_META, meta)
+
+	commit(types.UPDATE_INCLUDED, included)
 }
 
 export default {

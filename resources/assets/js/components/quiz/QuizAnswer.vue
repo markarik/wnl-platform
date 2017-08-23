@@ -26,6 +26,9 @@
 		.quiz-answer
 			cursor: pointer
 
+			&.is-selected
+				background: $color-ocean-blue
+
 			&:hover
 				background: $color-light-gray
 
@@ -38,7 +41,7 @@
 	.wnl-quiz-question
 		.quiz-answer
 			&.is-selected
-				background: $color-ocean-blue
+				background: $color-red
 				color: $color-white
 
 				&:active, &:hover

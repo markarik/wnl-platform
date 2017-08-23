@@ -11,21 +11,23 @@
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
-				<div class="questions-breadcrumbs">
-					<div class="breadcrumb">
-						<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+				<div class="questions-header">
+					<div class="questions-breadcrumbs">
+						<div class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+						</div>
+						<div class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span>{{$t('questions.nav.solving')}}</span>
+						</div>
 					</div>
-					<div class="breadcrumb">
-						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-						<span>{{$t('questions.nav.solving')}}</span>
-					</div>
+					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
+						<span>{{$t('questions.filters.show')}}</span>
+						<span class="icon is-tiny">
+							<i class="fa fa-sliders"></i>
+						</span>
+					</a>
 				</div>
-				<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
-					<span>{{$t('questions.filters.show')}}</span>
-					<span class="icon is-tiny">
-						<i class="fa fa-sliders"></i>
-					</span>
-				</a>
 				<button @click="toggleBuilder">Zbuduj zestaw</button>
 				<div v-show="showBuilder">
 					<section>
@@ -94,10 +96,14 @@
 		max-width: initial
 
 	.mobile-show-active-filters
-		align-items: center
-		display: flex
 		font-size: $font-size-minus-2
 		text-transform: uppercase
+
+	.questions-header
+		align-items: center
+		display: flex
+		justify-content: space-between
+		margin-bottom: $margin-small
 
 	.questions-breadcrumbs
 		align-items: center

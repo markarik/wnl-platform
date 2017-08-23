@@ -11,7 +11,7 @@ export const questions = {
 		},
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',
-		show: 'Pokaż filtry',
+		show: 'Zmień filtry',
 		submit: 'Wybierz pasujące pytania',
 	},
 	nav: {

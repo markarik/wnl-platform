@@ -43,6 +43,7 @@
 
 	.filtering-result
 		font-size: $font-size-minus-1
+		margin-top: $margin-tiny
 
 		.matched-count
 			color: $color-green

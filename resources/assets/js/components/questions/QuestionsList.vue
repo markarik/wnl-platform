@@ -177,6 +177,7 @@
 				'fetchQuestionsCount',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
+				'fetchQuestionsReactions',
 				'selectAnswer',
 				'resolveQuestion',
 				'checkQuestions',
@@ -220,6 +221,7 @@
 		},
 		mounted() {
 			Promise.all([this.fetchQuestions({filters: []}), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
+				.then(() => this.fetchQuestionsReactions(this.questionsList.map(question => question.id)))
 		},
 		watch: {
 			highlightedQuestion(currentQuestion, previousQuestion = {}) {

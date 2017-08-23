@@ -139,6 +139,18 @@ const mutations = {
 			})
 		})
 	},
+	[types.QUESTIONS_UPDATE] (state, {data: questions}) {
+		const serialized = state.quiz_questions || {}
+
+		questions.forEach(question => {
+			serialized[question.id] = {
+				...serialized[question.id],
+				...question
+			}
+		})
+
+		set(state, 'quiz_questions', serialized)
+	},
 }
 
 // Actions
@@ -165,7 +177,7 @@ const actions = {
 			})
 	},
 	fetchQuestionData({commit}, id) {
-		return _fetchQuestionData(id)
+		return _fetchQuestionsComments(id)
 			.then(({data}) => {
 				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
 			})
@@ -191,6 +203,18 @@ const actions = {
 			randomize: true,
 			include: 'quiz_answers,reactions,comments.profiles'
 		}).then(response => _handleResponse(response, commit))
+	},
+	fetchQuestionsReactions({commit}, questionsIds) {
+		return _fetchQuestions({
+			filters: [
+				{
+					query: {
+						whereIn: ['id', questionsIds],
+					}
+				}
+			],
+			include: 'reactions'
+		}).then(({data}) => commit(types.QUESTIONS_UPDATE, data))
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
@@ -238,12 +262,9 @@ const actions = {
 				questionId,
 				answerId: question.selectedAnswer
 			}
-
 		}).filter((result) => result)
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results})
-
-		// maybe an error that question has no selected answer or answer does not exist?
 	}
 }
 
@@ -256,7 +277,7 @@ const _fetchQuestions = (requestParams) => {
 	})
 }
 
-const _fetchQuestionData = (id) => {
+const _fetchQuestionsComments = (id) => {
 	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles`))
 }
 

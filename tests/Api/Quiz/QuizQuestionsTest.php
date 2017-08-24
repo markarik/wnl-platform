@@ -4,84 +4,89 @@ namespace Tests\Api\Quiz;
 
 use App\Models\User;
 use Tests\Api\ApiTestCase;
+use Carbon\Carbon;
 
 
 class QuizQuestionsTest extends ApiTestCase
 {
 
-	/** @test * */
-	public function search_quiz_questions()
-	{
-		$user = User::find(1);
+	// /** @test * */
+	// public function search_quiz_questions()
+	// {
+	// 	$user = User::find(1);
 
-		$data = [
-			'query' => [
-				'whereIn' => ['id', [1, 2, 3]],
-			],
-		];
-		$response = $this
-			->actingAs($user)
-			->json('POST', $this->url('/quiz_questions/.search'), $data);
+	// 	$data = [
+	// 		'query' => [
+	// 			'whereIn' => ['id', [1, 2, 3]],
+	// 		],
+	// 	];
+	// 	$response = $this
+	// 		->actingAs($user)
+	// 		->json('POST', $this->url('/quiz_questions/.search'), $data);
 
-		$response
-			->assertStatus(200);
-	}
+	// 	$response
+	// 		->assertStatus(200);
+	// }
 
-	/** @test * */
-	public function search_quiz_questions_by_tag_name()
-	{
-		$user = User::find(1);
+	// /** @test * */
+	// public function search_quiz_questions_by_tag_name()
+	// {
+	// 	$user = User::find(1);
 
-		$data = [
-			'query' => [
-				'whereHas' => [
-					'tags' => [
-						'where' => [
-							['tags.name', '=', 'Kardiologia 1'],
-						],
-					],
-				],
-			],
-		];
-		$response = $this
-			->actingAs($user)
-			->json('POST', $this->url('/quiz_questions/.search'), $data);
+	// 	$data = [
+	// 		'query' => [
+	// 			'whereHas' => [
+	// 				'tags' => [
+	// 					'where' => [
+	// 						['tags.name', '=', 'Kardiologia 1'],
+	// 					],
+	// 				],
+	// 			],
+	// 		],
+	// 	];
+	// 	$response = $this
+	// 		->actingAs($user)
+	// 		->json('POST', $this->url('/quiz_questions/.search'), $data);
 
-		$response
-			->assertStatus(200);
-	}
+	// 	$response
+	// 		->assertStatus(200);
+	// }
 
 	/** @test */
 	public function filter_quiz_questions()
 	{
-		$user = factory(User::class)->create();
+		$user = User::find(1);
 
 		$data = [
-			'fields'  => ['id', 'text', 'created_at'],
+			// 'fields'  => ['id', 'text', 'created_at'],
 			'filters' => [
+				// [
+				// 	'search' => [
+				// 		'phrase' => 'Gastropareza',
+				// 		'mode'   => 'phrase_match',
+				// 	],
+				// ],
+				// [
+					// 'tags' => ['łatwe'],
+				// ],
+// 				[
+// 					'query' => [
+// //						'doesntHave' => 'sets',
+// 					],
+// 				],
+				// [
+				// 	'quiz.resolution' => [
+				// 		'user_id' => 255,
+				// 		'list'   => ['correct', 'incorrect', 'unresolved'],
+				// 	],
+				// ],
 				[
-					'search' => [
-						'phrase' => 'Gastropareza',
-						'mode'   => 'phrase_match',
+					'quiz.planned_for_day' => [
+						'user_id' => 2,
+						'list' => [Carbon::now()->toDateTimeString()]
 					],
 				],
-				[
-					'tags' => ['Kardiologia'], // add or/and option
-				],
-				[
-					'tags' => ['łatwe'],
-				],
-				[
-					'query' => [
-//						'doesntHave' => 'sets',
-					],
-				],
-				[
-					'quiz.resolution' => [
-						'user_id' => 255,
-						'list'   => ['correct', 'incorrect', 'unresolved'],
-					],
-				],
+
 			],
 //			'include' => 'comments,comments.profiles,reactions',
 			'limit'   => 5,

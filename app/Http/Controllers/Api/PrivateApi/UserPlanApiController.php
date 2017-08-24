@@ -31,7 +31,6 @@ class UserPlanApiController extends ApiController
 		$slackDays = $request->get('slackDays');
 		$userId = $request->route('userId');
 
-		// TODO handle empty filters
 		// TODO handle empty dates
 
 		$filteredQuestions = $this->addFilters($request, app('App\\Models\\QuizQuestion'))->get()->pluck('id');

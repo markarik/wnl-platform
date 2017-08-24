@@ -5,6 +5,7 @@ namespace App\Models;
 use Laravel\Scout\Searchable;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class UserPlan extends Model
 {
@@ -12,13 +13,19 @@ class UserPlan extends Model
 		'start_date',
 		'end_date',
 		'slack_days_planned',
-        'slack_days_left',
-        'user_id'
-    ];
+		'slack_days_left',
+		'user_id'
+	];
 
-    protected $table = 'users_plans';
+	protected $dates = [
+		'start_date',
+		'end_date',
+		'created_at'
+	];
 
-    public $timestamps = false;
+	protected $table = 'users_plans';
+
+	public $timestamps = false;
 
 	public function user()
 	{
@@ -27,6 +34,36 @@ class UserPlan extends Model
 
 	public function questionsProgress()
 	{
-		return $this->hasMany('App\Models\UsersPlanProgress');
+		return $this->hasMany('App\Models\UserPlanProgress', 'plan_id');
+	}
+
+	public function daysLeftFromDate($date) {
+		$startDate = $date->lt($this->start_date) ? $this->start_date : $date;
+
+		return $this->end_date->diff($startDate)->days - $this->slack_days_left;
+	}
+
+	public function remainingQuestionsFromDate($date) {
+		return $this->questionsProgress->whereIn('resolved_at', [null, $date]);
+	}
+
+	public function questionsForDay($date) {
+		$remainingQuestions = $this->remainingQuestionsFromDate($date);
+		$daysLeft = $this->daysLeftFromDate($date);
+
+		if (empty($remainingQuestions) || $daysLeft <= 0) {
+			return 0;
+		}
+
+		$questionsPerDay = floor($remainingQuestions->count() / $daysLeft);
+
+		$todaysQuestions = $remainingQuestions
+			->sortBy('id')
+			->take($questionsPerDay)
+			->filter(function($value, $key) {
+				return empty($value->resolved_at);
+			});
+
+		return $todaysQuestions;
 	}
 }

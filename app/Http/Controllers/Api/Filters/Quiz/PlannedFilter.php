@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\Filters\ApiFilter;
 use App\Models\UserPlan;
 use Carbon\Carbon;
 
-class PlannedForDayFilter extends ApiFilter
+class PlannedFilter extends ApiFilter
 {
 	protected $expected = ['user_id'];
 

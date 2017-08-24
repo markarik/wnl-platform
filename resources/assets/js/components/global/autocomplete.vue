@@ -32,6 +32,7 @@
 		left: 0
 		position: absolute
 		width: 100%
+		z-index: $z-index-autocomplete
 
 		&:focus
 			outline: none

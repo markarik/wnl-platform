@@ -17,8 +17,8 @@ class QuizQuestionsApiController extends ApiController
 
 	public function getFilters() {
 		// TODO id shouldn't be hardcoded here
-		$examsFilterItems = $this->buildTaxonomyStructure(1);
-		$subjectsFilterItems = $this->buildTaxonomyStructure(2);
+		$examsFilterItems = $this->buildTaxonomyStructure('exams');
+		$subjectsFilterItems = $this->buildTaxonomyStructure('subjects');
 
 		return $this->respondOk([
 			'subjects' => [
@@ -64,9 +64,9 @@ class QuizQuestionsApiController extends ApiController
 		return $structure;
 	}
 
-	protected function buildTaxonomyStructure($taxonomyId) {
-		$groupedTags = Taxonomy::find($taxonomyId)->tagsTaxonomy->sortBy('order_number')->groupBy('parent_tag_id');
-		$items = $this->buildChildStructure("", $groupedTags, []);
+	protected function buildTaxonomyStructure($taxonomyName) {
+		$groupedTags = Taxonomy::where('name', $taxonomyName)->first()->tagsTaxonomy->sortBy('order_number')->groupBy('parent_tag_id');
+		$items = $this->buildChildStructure(0, $groupedTags, []);
 
 		return $items;
 	}

@@ -26,7 +26,7 @@ const state = {
 			items: [
 				{
 					name: 'Zaplanowane na dziś',
-					value: 'today',
+					value: new Date(),
 				}
 			],
 		},
@@ -34,7 +34,7 @@ const state = {
 			type: FILTER_TYPES.LIST,
 			items: [
 				{
-					name: 'Bez odpowiedzi',
+					name: 'Nierozwiązane',
 					value: 'unresolved',
 				},
 				{

@@ -180,4 +180,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Events
 	Route::post("events/mentions", 'MentionsApiController@post');
+
+	// Users Plans
+	Route::get("{$r['users-plans']}/{userId}", 'UsersPlansApiController@get');
 });

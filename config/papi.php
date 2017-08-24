@@ -39,6 +39,7 @@ return [
 		'reactables'          => 'reactables',
 		'categories'          => 'categories',
 		'slideshow-builder'   => 'slideshow_builder',
-		'profiles'            => 'user_profiles'
+		'profiles'            => 'user_profiles',
+		'users-plans'         => 'users_plans'
 	],
 ];

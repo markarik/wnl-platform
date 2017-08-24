@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<input name="startDate" :v-bind="startDate" type="date"/>
 		<label for="startDate">Kiedy zaczynasz?</label>
-		<input name="endDate" :v-bind="endDate" type="date"/>
+		<input name="startDate" v-model="startDate" type="date"/>
 		<label for="endDate">Kiedy kończysz?</label>
-		<input name="slackDays" :v-bind="slackDays" type="number"/>
+		<input name="endDate" v-model="endDate" type="date"/>
 		<label for="slackDays">Ile dni wolnych?</label>
+		<input name="slackDays" v-model="slackDays" type="number"/>
 
 		<p><button @click="createPlan">Ułóż plan!</button></p>
 		<p>Pytania z których kategorii Ciebie interesują?</p>
@@ -40,19 +40,30 @@
 			...mapGetters('questions', [
 				'activeFilters',
 				'filters',
-				'getReaction',
-				'questionsList',
 			]),
 		},
 		methods: {
 			...mapActions('questions', [
 				'fetchQuestionsCount',
 				'fetchDynamicFilters',
-				'activeFiltersToggle'
+				'activeFiltersToggle',
+				'buildPlan'
 			]),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
 			},
+			createPlan() {
+				console.log(this.startDate, '...startDate')
+				console.log(this.endDate, '...endDate')
+				console.log(this.activeFilters, '...activeFilters')
+				console.log(this.slackDays, '...slackDays')
+				this.buildPlan({
+					startDate: this.startDate,
+					endDate: this.endDate,
+					activeFilters: this.activeFilters,
+					slackDays: this.slackDays
+				})
+			}
 		},
 		mounted() {
 			Promise.all([this.fetchDynamicFilters(), this.fetchQuestionsCount()])

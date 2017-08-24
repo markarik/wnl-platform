@@ -12,8 +12,13 @@ class UserPlan extends Model
 		'start_date',
 		'end_date',
 		'slack_days_planned',
-		'slack_days_left'
-	];
+        'slack_days_left',
+        'user_id'
+    ];
+
+    protected $table = 'users_plans';
+
+    public $timestamps = false;
 
 	public function user()
 	{

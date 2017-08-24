@@ -265,6 +265,15 @@ const actions = {
 		}).filter((result) => result)
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results})
+	},
+	buildPlan({state, getters, rootGetters, commit}, {activeFilters, startDate, endDate, slackDays}) {
+		const filters = _parseFilters(activeFilters, state, getters, rootGetters);
+		return axios.post(getApiUrl('user-plan/2'), {
+			filters,
+			startDate,
+			endDate,
+			slackDays
+		})
 	}
 }
 

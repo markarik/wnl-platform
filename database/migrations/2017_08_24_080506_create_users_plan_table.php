@@ -14,12 +14,13 @@ class CreateUsersPlanTable extends Migration
 	 public function up()
 	 {
 		 Schema::create('users_plans', function (Blueprint $table) {
-			 $table->increments('id');
-			 $table->unsignedInteger('user_id');
-			 $table->unsignedInteger('slack_days_planned');
-			 $table->unsignedInteger('slack_days_left');
-			 $table->timestamp('start_date');
-			 $table->timestamp('end_date')->nullable();
+			$table->increments('id');
+			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('slack_days_planned');
+			$table->unsignedInteger('slack_days_left');
+			$table->timestamp('created_at');
+			$table->timestamp('start_date')->nullable();
+			$table->timestamp('end_date')->nullable();
 		 });
 	 }
 
@@ -30,6 +31,6 @@ class CreateUsersPlanTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('user_plans');
+		Schema::dropIfExists('users_plans');
 	}
 }

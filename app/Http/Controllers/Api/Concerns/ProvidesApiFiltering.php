@@ -27,7 +27,7 @@ trait ProvidesApiFiltering
 		return $this->respondOk($response);
 	}
 
-	private function addFilters($request, $model)
+	protected function addFilters($request, $model)
 	{
 		if (empty($request->filters)) {
 			return $model;

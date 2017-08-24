@@ -16,7 +16,7 @@
 				<span>Ukryj czat</span>
 			</span>
 		</a>
-		<wnl-chat :room="currentChannel"></wnl-chat>
+		<wnl-chat :room="currentRoom"></wnl-chat>
 	</div>
 </template>
 
@@ -69,7 +69,7 @@
 		props: ['title', 'rooms'],
 		data () {
 			return {
-				currentChannel: this.getCurrentChannel()
+				currentRoom: this.getCurrentRoom()
 			}
 		},
 		computed: {
@@ -87,31 +87,31 @@
 		methods: {
 			...mapActions(['toggleChat']),
 			changeRoom(room) {
-				this.currentChannel = room.channel
+				this.currentRoom = room
 			},
 			isActive(room){
 				return room.channel === this.currentChannel
 			},
-			getCurrentChannel() {
+			getCurrentRoom() {
 				const query = this.$route.query
 
-				if (query.chatId) {
-					const room = _.find(this.rooms, room => room.channel === query.chatId)
+				if (query.chatChannel) {
+					const room = _.find(this.rooms, room => room.channel === query.chatChannel)
 
 					if (room) {
-						return room.channel
+						return room
 					} else {
-						this.cleanupChatIdParam()
-						return this.rooms[0].channel
+						this.cleanupChatChannelParam()
+						return this.rooms[0]
 					}
 				} else {
-					return this.rooms[0].channel
+					return this.rooms[0]
 				}
 			},
-			cleanupChatIdParam() {
+			cleanupChatChannelParam() {
 				const query = this.$route.query
 
-				delete query.chatId
+				delete query.chatChannel
 
 				this.$router.replace({
 					...this.$route,

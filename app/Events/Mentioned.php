@@ -61,6 +61,7 @@ class Mentioned extends Event
 
 		if ($this->payload['subject']['type'] === 'chat_message') {
 			$this->transformSubjectForChatMessage();
+			$this->data['objects'] = $this->payload['objects'];
 		} else {
 			$this->transformSubject();
 		}

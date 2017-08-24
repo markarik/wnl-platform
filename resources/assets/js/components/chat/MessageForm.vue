@@ -118,7 +118,7 @@
 					.$el
 					.querySelectorAll('.quill-mention')
 
-				return Array.prototype.map.call(mentions, el => el.dataset.id)
+				return _.uniq(Array.prototype.map.call(mentions, el => el.dataset.id))
 			},
 			getMentionsData(userIds, message) {
 				return {
@@ -127,13 +127,16 @@
 						type: 'chat_message',
 						id: `${message.time}${this.currentUserId}`,
 						text: message.content,
-						channel: this.room
+						channel: this.room.channel
+					},
+					objects: {
+						type: "chat_channel",
+						text: this.room.name
 					},
 					context: {
 						courseId: this.courseId,
 						lessonId: this.$route.params.lessonId,
-						slideId: this.$route.params.slideId,
-						channel: this.room
+						slideId: this.$route.params.slideId,	
 					},
 					actors: this.currentUser
 				}

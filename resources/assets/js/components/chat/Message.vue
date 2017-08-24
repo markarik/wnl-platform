@@ -20,6 +20,7 @@
 
 	.media.wnl-chat-message
 		border-top: 0
+		line-height: 24px
 		padding-top: 0
 		margin-top: 0.5rem
 

@@ -110,7 +110,7 @@
 		methods: {
 			joinRoom() {
 				typeof this.socket.emit === 'function' && this.socket.emit('join-room', {
-					room: this.room
+					room: this.room.channel
 				})
 				typeof this.socket.on === 'function' && this.socket.on('join-room-success', (data) => {
 					if (!this.loaded) {
@@ -135,7 +135,7 @@
 			changeRoom(oldRoom) {
 				this.loaded = false
 				typeof this.socket.emit === 'function' && this.socket.emit('leave-room', {
-					room: oldRoom
+					room: oldRoom.channel
 				})
 				this.joinRoom()
 			},
@@ -239,7 +239,7 @@
 
 				if (matchingMessage) {
 					this.$refs.highlight = matchingMessage
-					this.scrollAndHighlight(["chatId", "messageId"], this.$refs.messagesContainer)
+					this.scrollAndHighlight(["chatChannel", "messageId"], this.$refs.messagesContainer)
 				} else {
 					this.scrollToTop()
 				}

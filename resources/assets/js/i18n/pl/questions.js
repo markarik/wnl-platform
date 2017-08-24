@@ -16,8 +16,9 @@ export const questions = {
 	},
 	nav: {
 		dashboard: 'Dashboard',
-		solving: 'Rozwiązywanie pytań',
-		stats: 'Statystyki',
+		planner: 'Zaplanuj pracę',
+		solving: 'Rozwiązuj pytania',
+		stats: 'Sprawdź statystyki',
 	},
 	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',
 }

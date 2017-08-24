@@ -69,7 +69,7 @@
 					navigation.composeItem({
 						text: this.$t('questions.nav.planner'),
 						routeName: 'questions-planner',
-						iconClass: 'fa-bar-chart',
+						iconClass: 'fa-calendar',
 						iconTilte: this.$t('questions.nav.planner'),
 						itemClass: 'has-icon',
 					}),

@@ -23,6 +23,10 @@ class EventsTest extends ApiTestCase
 				'text' => 'Siema siema',
 				'channel' => '#kardiologia-1'
 			],
+			'objects' => [
+				'type' => 'chat_channel',
+				'text' => 'Channel Name'
+			],
 			'mentioned_users' => [$mentioned->id],
 		];
 

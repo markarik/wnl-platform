@@ -3,8 +3,10 @@
 use Auth;
 use App\Models\User;
 use App\Models\UserQuizResults;
+use App\Models\UserPlanProgress;
 use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
@@ -37,6 +39,7 @@ class UserQuizResultsApiController extends ApiController
 		$userId = $request->route('userId');
 		$user = User::fetch($userId);
 		$recordsToInsert = [];
+		$questionsIds = [];
 
 		if (!Auth::user()->can('view', $user)) {
 			return $this->respondUnauthorized();
@@ -54,10 +57,18 @@ class UserQuizResultsApiController extends ApiController
 					'quiz_answer_id' => $answerId,
 					'user_id' => $userId
 				];
+
+				$questionsIds[] = $questionId;
 			}
 		}
 
 		UserQuizResults::insert($recordsToInsert);
+
+		UserPlanProgress
+			::where('user_id', $userId)
+			->whereIn('question_id', $questionsIds)
+			->where('resolved_at', null)
+			->update(['resolved_at' => Carbon::today()]);
 
 		$this->respondOk();
 	}

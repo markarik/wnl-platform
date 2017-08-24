@@ -81,7 +81,7 @@ class QuizQuestionsTest extends ApiTestCase
 				// 	],
 				// ],
 				[
-					'quiz.planned_for_day' => [
+					'quiz.planned' => [
 						'user_id' => 2,
 						'list' => [Carbon::now()->toDateTimeString()]
 					],

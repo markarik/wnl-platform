@@ -40,22 +40,24 @@ class UserPlan extends Model
 	public function daysLeftFromDate($date) {
 		$startDate = $date->lt($this->start_date) ? $this->start_date : $date;
 
-		return $this->end_date->diff($startDate)->days - $this->slack_days_left;
+		return $this->end_date->diff($startDate)->days - $this->slack_days_left; // 2
 	}
 
 	public function remainingQuestionsFromDate($date) {
-		return $this->questionsProgress->whereIn('resolved_at', [null, $date]);
+		return $this->questionsProgress()->where('resolved_at', null)
+			->orWhere('resolved_at', '>=', $date->toDateString())->get(); //1001
 	}
 
 	public function questionsForDay($date) {
 		$remainingQuestions = $this->remainingQuestionsFromDate($date);
 		$daysLeft = $this->daysLeftFromDate($date);
 
+		// TODO be smarter!
 		if (empty($remainingQuestions) || $daysLeft <= 0) {
 			return 0;
 		}
 
-		$questionsPerDay = floor($remainingQuestions->count() / $daysLeft);
+		$questionsPerDay = floor($remainingQuestions->count() / $daysLeft); // 500
 
 		$todaysQuestions = $remainingQuestions
 			->sortBy('id')

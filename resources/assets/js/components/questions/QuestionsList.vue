@@ -131,6 +131,13 @@
 	import {timeBaseOnQuestions} from 'js/services/testBuilder'
 
 	export default {
+		name: 'QuestionsList',
+		props: {
+			presetFilters: {
+				default: () => [],
+				type: Array,
+			},
+		},
 		components: {
 			'wnl-active-filters': ActiveFilters,
 			'wnl-questions-navigation': QuestionsNavigation,
@@ -182,7 +189,7 @@
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', [
-				'activeFiltersReset',
+				'activeFiltersSet',
 				'activeFiltersToggle',
 				'fetchQuestionData',
 				'fetchQuestions',
@@ -233,7 +240,12 @@
 			}
 		},
 		mounted() {
-			Promise.all([this.fetchQuestions({filters: []}), this.fetchDynamicFilters(), this.fetchQuestionsCount()])
+			this.activeFiltersSet(this.presetFilters)
+			Promise.all([
+				this.fetchQuestions({filters: this.activeFilters}),
+				this.fetchDynamicFilters(),
+				this.fetchQuestionsCount(),
+			])
 				.then(() => this.fetchQuestionsReactions(this.questionsList.map(question => question.id)))
 				.then(() => this.reactionsFetched = true)
 		},

@@ -21,6 +21,15 @@ const state = {
 	comments: {},
 	filters: {
 		// TODO Translations
+		'planned': {
+			type: FILTER_TYPES.LIST,
+			items: [
+				{
+					name: 'Zaplanowane na dziś',
+					value: 'today',
+				}
+			],
+		},
 		'resolution': {
 			type: FILTER_TYPES.LIST,
 			items: [
@@ -54,7 +63,7 @@ const getters = {
 	}),
 	allQuestionsCount: state => state.allCount,
 	filters: state => {
-		const order = ['resolution', 'subjects', 'exams']
+		const order = ['planned', 'resolution', 'subjects', 'exams']
 
 		let filters = {}
 		order.forEach(group => {
@@ -80,6 +89,9 @@ const mutations = {
 		if (state.activeFilters.indexOf(filter) === -1) {
 			state.activeFilters.push(filter)
 		}
+	},
+	[types.ACTIVE_FILTERS_SET] (state, filters) {
+		set(state, 'activeFilters', filters)
 	},
 	[types.ACTIVE_FILTERS_REMOVE] (state, filter) {
 		const index = state.activeFilters.indexOf(filter)
@@ -157,8 +169,11 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
+	activeFiltersSet({commit}, filters) {
+		commit(types.ACTIVE_FILTERS_SET, filters)
+	},
 	activeFiltersToggle({commit}, {filter, active}) {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			if (active) {
 				commit(types.ACTIVE_FILTERS_ADD, filter)
 			} else {

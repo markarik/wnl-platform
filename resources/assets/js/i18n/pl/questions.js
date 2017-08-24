@@ -6,8 +6,9 @@ export const questions = {
 		filteringResultFrom: 'z {totalCount} w bazie',
 		items: {
 			exams: 'Egzaminy',
-			subjects: 'Przedmioty i tematy',
+			planned: 'Zaplanowane',
 			resolution: 'Status',
+			subjects: 'Przedmioty i tematy',
 		},
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',

@@ -4,6 +4,10 @@
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
 				<p class="title is-3">Dashboard</p>
+				<router-link class="button is-outlined is-small"
+					:to="{name: 'questions-list', params: {presetFilters: ['planned.items[0]']}}">
+					Krok zgodny z planem
+				</router-link>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -33,6 +37,6 @@
 		},
 		computed: {
 			...mapGetters(['isChatMounted', 'isLargeDesktop']),
-		}
+		},
 	}
 </script>

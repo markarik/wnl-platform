@@ -80,7 +80,7 @@
 			accordionConfig() {
 				return {
 					expanded: this.expandedItems,
-					flattened: ['resolution'],
+					flattened: ['planned', 'resolution'],
 					isMobile: this.isMobile,
 					itemsNamesSource: 'questions.filters.items',
 					selectedElements: this.activeFilters,

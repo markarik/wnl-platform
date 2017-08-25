@@ -24,7 +24,20 @@ trait ProvidesApiFiltering
 			$response = $this->paginatedResponse($model, $this->limit);
 		}
 
+		$response = array_merge($response, $this->listFilters($model));
+
 		return $this->respondOk($response);
+	}
+
+	public function listFilters($builder)
+	{
+		foreach (static::AVAILABLE_FILTERS as $filterName) {
+			$filter = $this->getFilter($filterName);
+
+			dump($filter->count($builder));
+		}
+
+		return ['available' => []];
 	}
 
 	protected function addFilters($request, $model)
@@ -34,31 +47,32 @@ trait ProvidesApiFiltering
 		}
 
 		foreach ($request->filters as $filter) {
-			$filter = $this->getFilter($filter);
-			$model = $filter->apply($model);
+			$filterName = array_keys($filter)[0];
+			$filter = $this->getFilter($filterName);
+			$params = $filter[$filterName];
+			$this->checkIsArray($filter);
+			$this->checkIsArray($params);
+
+			$model = $filter->apply($model, $params);
 		}
 
 		return $model;
 	}
 
-	private function getFilter($filter)
+	private function getFilter($filterName)
 	{
-		$this->checkIsArray($filter);
-		$filterName = array_keys($filter)[0];
-		$params = $filter[$filterName];
-		$this->checkIsArray($params);
 		$filterClass = $this->getFilterClass($filterName);
 
-		return new $filterClass($params);
+		return new $filterClass();
 	}
 
 	private function getFilterClass($filterName)
 	{
 		$className = collect(explode('.', $filterName))
-			->map(function ($v) {
-				return studly_case($v);
-			})
-			->implode('\\') . 'Filter';
+				->map(function ($v) {
+					return studly_case($v);
+				})
+				->implode('\\') . 'Filter';
 
 		return 'App\Http\Controllers\Api\Filters\\' . $className;
 	}
@@ -70,13 +84,15 @@ trait ProvidesApiFiltering
 		throw new ApiFilterException('Filter must be an array of arrays.');
 	}
 
-	private function randomizedResponse($model, $limit) {
-		$randomQuestions = $model->inRandomOrder()
-		->limit($limit)
-		->get();
+	private function randomizedResponse($model, $limit)
+	{
+		$data = $model
+			->inRandomOrder()
+			->limit($limit)
+			->get();
 
 		return [
-			'data' => $this->transform($randomQuestions)
+			'data' => $this->transform($data),
 		];
 	}
 }

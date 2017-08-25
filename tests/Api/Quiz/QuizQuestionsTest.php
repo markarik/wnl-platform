@@ -106,16 +106,23 @@ class QuizQuestionsTest extends ApiTestCase
 		$user = User::find(1);
 
 		$data = [
-			'filters' => [],
+			'filters' => [
+				[
+					'tags' => [154],
+				],
+			],
 			'limit'   => 1,
 		];
+
+		$start = microtime(true);
 
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filter'), $data);
 
-		dd($response->dump());
-
+		$stop = microtime(true) - $start;
+		dd(json_decode($response->getContent()), 'time ' . $stop . 's');
+//		$response->dump();
 		$response
 			->assertStatus(200);
 	}

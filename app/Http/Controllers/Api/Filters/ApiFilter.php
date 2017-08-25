@@ -2,7 +2,7 @@
 
 
 use App\Exceptions\ApiFilterException;
-use Doctrine\DBAL\Query\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 abstract class ApiFilter
@@ -37,9 +37,9 @@ abstract class ApiFilter
 	/**
 	 * Apply filter to the builder.
 	 *
-	 * @param QueryBuilder $builder
+	 * @param Builder $builder
 	 *
-	 * @return QueryBuilder
+	 * @return Builder
 	 */
 	protected abstract function handle($builder);
 
@@ -50,7 +50,7 @@ abstract class ApiFilter
 	 * @param $builder
 	 * @param $params
 	 *
-	 * @return QueryBuilder
+	 * @return Builder
 	 */
 	public function apply($builder, $params)
 	{

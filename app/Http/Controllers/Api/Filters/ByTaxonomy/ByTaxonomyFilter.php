@@ -52,4 +52,35 @@ abstract class ByTaxonomyFilter extends ApiFilter
 
 		return $items;
 	}
+
+	public function count($builder)
+	{
+		$model = $builder->getModel();
+
+		$result = $model::searchRaw(
+			$this->elasticCraziness()
+		);
+
+		return ['whatever' => $result];
+	}
+
+	protected function elasticCraziness()
+	{
+		return [
+			'body' => [
+				'size'  => 0,
+				'query' => [
+					'match_all' => new \stdClass(), // <- TODO: Resolve dynamically
+				],
+				'aggs'  => [
+					'tags' => [
+						'terms' => [
+							'field' => 'tags',
+							'size'  => 300, // <- TODO: Resolve dynamically
+						],
+					],
+				],
+			],
+		];
+	}
 }

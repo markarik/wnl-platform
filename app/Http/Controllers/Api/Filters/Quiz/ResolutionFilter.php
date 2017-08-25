@@ -30,7 +30,10 @@ class ResolutionFilter extends ApiFilter
 		$counted = [];
 
 		foreach ($this->values() as $value) {
-			$counted[$value] = $this->{$value}($builder)->count();
+			$counted[] = [
+				'value' => $value,
+				'count' => $this->{$value}($builder)->count(),
+			];
 		}
 
 		return $counted;

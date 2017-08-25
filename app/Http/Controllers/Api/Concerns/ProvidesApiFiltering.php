@@ -31,13 +31,13 @@ trait ProvidesApiFiltering
 
 	public function listFilters($builder)
 	{
+		$available = [];
 		foreach (static::AVAILABLE_FILTERS as $filterName) {
 			$filter = $this->getFilter($filterName);
-
-			dump($filter->count($builder));
+			$available[$filterName] = $filter->count($builder);
 		}
 
-		return ['available' => []];
+		return compact('available');
 	}
 
 	protected function addFilters($request, $model)
@@ -48,12 +48,11 @@ trait ProvidesApiFiltering
 
 		foreach ($request->filters as $filter) {
 			$filterName = array_keys($filter)[0];
-			$filter = $this->getFilter($filterName);
 			$params = $filter[$filterName];
 			$this->checkIsArray($filter);
 			$this->checkIsArray($params);
-
-			$model = $filter->apply($model, $params);
+			$oFilter = $this->getFilter($filterName);
+			$model = $oFilter->apply($model, $params);
 		}
 
 		return $model;

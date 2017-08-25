@@ -2,7 +2,7 @@
 	<div class="notification-wrapper">
 		<div class="notification-container">
 			<div class="moderators-notification"
-				:class="{'is-unseen': !isSeen, 'is-read': isRead, 'is-desktop': !isTouchScreen, deleted}"
+				:class="{'is-seen': isSeen, 'is-read': isRead, 'is-desktop': !isTouchScreen, deleted}"
 			>
 				<div class="actor">
 					<wnl-event-actor :message="message"/>
@@ -22,9 +22,20 @@
 								<i class="fa" :class="icon"></i>
 							</span> {{ formattedTime }}
 						</span>
-						<a class="button is-small is-outlined" @click="goToNotification">
-							{{ $t('notifications.moderators.cta') }}
-						</a>
+						<span class="actions">
+							<a v-if="!isSeen" class="button is-small is-primary" @click="markAsSeen({notification: message, channel})">
+								{{ $t('notifications.moderators.takeIt') }}
+							</a>
+							<span class="status-text in-progress" v-else-if="isSeen && !isRead">
+								{{ $t('notifications.moderators.inProgress') }}
+							</span>
+							<span class="status-text done" v-else-if="isRead">
+								{{ $t('notifications.moderators.done') }}
+							</span>
+							<a class="button is-small is-outlined" @click="goToNotification">
+								{{ $t('notifications.moderators.cta') }}
+							</a>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -61,9 +72,7 @@
 		position: relative
 		transition: background-color $transition-length-base
 
-		&.is-unseen
-			background: $color-background-light-gray
-
+		&.is-seen,
 		&.is-read
 			opacity: 0.5
 			transition: opacity $transition-length-base
@@ -105,6 +114,7 @@
 			margin: $margin-small 0
 
 		.time
+			align-items: center
 			color: $color-background-gray
 			display: flex
 			flex-direction: row
@@ -117,6 +127,20 @@
 
 			.icon
 				margin-right: $margin-tiny
+
+			.actions
+				.button + .button
+					margin-left: $margin-small
+
+			.status-text
+				margin-right: $margin-small
+				text-transform: uppercase
+
+				&.in-progress
+					color: $color-blue
+
+				&.done
+					color: $color-green
 
 	.link-symbol
 		align-items: flex-end
@@ -191,7 +215,6 @@
 				} else if (typeof this.routeContext === 'string') {
 					url = this.routeContext
 				}
-				this.markAsSeen({notification: this.message, channel: this.channel})
 				window.open(url, '_blank')
 			},
 		},

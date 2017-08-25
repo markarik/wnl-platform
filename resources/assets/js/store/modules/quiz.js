@@ -110,7 +110,13 @@ const mutations = {
 		set(state.quiz_questions[payload.id], 'isResolved', false)
 	},
 	[types.QUIZ_RESOLVE_QUESTION] (state, payload) {
-		set(state.quiz_questions[payload.id], 'isResolved', true)
+		const question = state.quiz_questions[payload.id]
+		if (question.hasOwnProperty('original_answers')) {
+			let selectedId = question.quiz_answers[question.selectedAnswer]
+			question.quiz_answers = question.original_answers
+			question.selectedAnswer = question.quiz_answers.indexOf(selectedId)
+		}
+		set(question, 'isResolved', true)
 	},
 	[types.QUIZ_RESTORE_STATE] (state, payload) {
 		set(state, 'setId', payload.setId)
@@ -143,7 +149,11 @@ const mutations = {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
 	},
 	[types.QUIZ_SHUFFLE_ANSWERS] (state, payload) {
-		set(state.quiz_questions[payload.id], 'quiz_answers', _.shuffle(state.quiz_questions[payload.id].quiz_answers))
+		const question = state.quiz_questions[payload.id]
+		if (!question.hasOwnProperty('original_answers')) {
+			set(question, 'original_answers', _.cloneDeep(question.quiz_answers))
+		}
+		set(question, 'quiz_answers', _.shuffle(question.quiz_answers))
 	},
 	[types.QUIZ_TOGGLE_PROCESSING] (state, isProcessing) {
 		set(state, 'processing', isProcessing)

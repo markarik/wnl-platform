@@ -4,9 +4,57 @@
 		<div class="field">
 			<div class="control">
 				<label class="label">
-					Nazwa zestawu
+					<span>Pytanie</span>
+					<input type="text" class="input">
 				</label>
-				<input type="text" class="input">
+			</div>
+		</div>
+		<div class="field">
+			<div class="control">
+				<label class="label">
+					<span>Odpowiedź 1</span>
+					<input type="text" class="input">
+				</label>
+				<label class="label">
+					<span>Prawidłowa?</span>
+					<input type="checkbox">
+				</label>
+			</div>
+		</div>
+		<div class="field">
+			<div class="control">
+				<label class="label">
+					<span>Odpowiedź 2</span>
+					<input type="text" class="input">
+				</label>
+				<label class="label">
+					<span>Prawidłowa?</span>
+					<input type="checkbox">
+				</label>
+			</div>
+		</div>
+		<div class="field">
+			<div class="control">
+				<label class="label">
+					<span>Odpowiedź 3</span>
+					<input type="text" class="input">
+				</label>
+				<label class="label">
+					<span>Prawidłowa?</span>
+					<input type="checkbox">
+				</label>
+			</div>
+		</div>
+		<div class="field">
+			<div class="control">
+				<label class="label">
+					<span>Odpowiedź 4</span>
+					<input type="text" class="input">
+				</label>
+				<label class="label">
+					<span>Prawidłowa?</span>
+					<input type="checkbox">
+				</label>
 			</div>
 		</div>
 		<p class="title is-5 margin top">Pytania</p>
@@ -30,7 +78,16 @@
 </style>
 
 <script>
+	import { mapActions } from 'vuex';
+
 	export default {
 		name: 'QuizesEditor',
+		methods: {
+			...mapActions(['getQuizQuestion'])
+		},
+		created() {
+			debugger
+			this.getQuizQuestion(this.$route.params.quizId);
+		}
 	}
 </script>

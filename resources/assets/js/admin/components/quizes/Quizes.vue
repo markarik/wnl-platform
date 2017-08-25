@@ -1,12 +1,12 @@
 <template>
 	<div class="quizes">
 		<div class="quizes-list">
-			<p class="title is-5">Wybierz zestaw pytań</p>
-			<div v-for="quiz in quizes" :key="quiz.id">
-				<router-link :to="{name: 'quiz-editor', params: { quizId: quiz.id }}">
-					{{ quiz.name }}
+			<form>
+				<input v-model="questionId">
+				<router-link :to="{name: 'quiz-editor', params: { quizId: questionId }}">
+					Szukej!
 				</router-link>
-			</div>
+			</form>
 		</div>
 		<div class="quiz-editor">
 			<router-view></router-view>
@@ -32,16 +32,7 @@
 		name: 'Quizes',
 		data() {
 			return {
-				quizes: [
-					{
-						id: 1,
-						name: 'Quiz 1',
-					},
-					{
-						id: 2,
-						name: 'Quiz 2',
-					},
-				],
+				questionId: ''
 			}
 		}
 	}

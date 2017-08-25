@@ -10,6 +10,7 @@ import * as getters from 'js/admin/store/getters'
 import currentUser from 'js/store/modules/currentUser'
 import lessons from 'js/admin/store/modules/lessons'
 import notifications from 'js/store/modules/notifications'
+import quiz from 'js/admin/store/modules/quiz'
 
 Vue.use(Vuex)
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
 		currentUser,
 		notifications,
 		lessons,
+		quiz
 	},
 	strict: debug
 })

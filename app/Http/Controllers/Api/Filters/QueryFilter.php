@@ -9,8 +9,8 @@ class QueryFilter extends ApiFilter
 
 	protected $expected = [];
 
-	public function handle($builder)
+	public function apply($model)
 	{
-		return $this->parseQuery($builder, $this->params);
+		return $this->parseQuery($model, $this->params);
 	}
 }

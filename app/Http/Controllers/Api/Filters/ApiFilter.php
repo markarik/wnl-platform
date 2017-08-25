@@ -2,7 +2,6 @@
 
 
 use App\Exceptions\ApiFilterException;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Illuminate\Http\Request;
 
 abstract class ApiFilter
@@ -20,70 +19,25 @@ abstract class ApiFilter
 	protected $expected;
 
 	/**
-	 * Filter params.
-	 *
-	 * @var array
+	 * @param array $params
 	 */
-	protected $params;
-
-	/**
-	 * ApiFilter constructor.
-	 */
-	public function __construct()
+	public function __construct(array $params)
 	{
 		$this->request = app(Request::class);
-	}
-
-	/**
-	 * Apply filter to the builder.
-	 *
-	 * @param QueryBuilder $builder
-	 *
-	 * @return QueryBuilder
-	 */
-	protected abstract function handle($builder);
-
-	/**
-	 * Perform some common actions on input values and call the
-	 * actual filtering method.
-	 *
-	 * @param $builder
-	 * @param $params
-	 *
-	 * @return QueryBuilder
-	 */
-	public function apply($builder, $params)
-	{
 		$this->params = $params;
 		$this->checkFilterParams();
-
-		return $this->handle($builder);
 	}
 
 	/**
-	 * Provides possible values that can be fed to the filter.
+	 * Apply filter to model.
 	 *
-	 * @return array
+	 * @param $model
 	 */
-	public function values()
-	{
-		return [];
-	}
-
-	/**
-	 * Provides values list with items count.
-	 *
-	 * @return array
-	 */
-	public function count($builder)
-	{
-		return [];
-	}
+	public abstract function apply($model);
 
 	/**
 	 * Make sure filter has received all information it requires.
-	 *
-	 * @throws ApiFilterException
+	 * Override this method for filters without params.
 	 */
 	protected function checkFilterParams()
 	{
@@ -91,7 +45,7 @@ abstract class ApiFilter
 
 		$diff = array_diff($this->expected, array_keys($this->params));
 
-		if ($diff) {
+		if ($diff){
 			throw new ApiFilterException('Missing filter params: ' . implode($diff, ','));
 		}
 	}

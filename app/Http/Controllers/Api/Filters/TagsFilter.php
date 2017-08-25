@@ -9,7 +9,7 @@ class TagsFilter extends ApiFilter
 
 	protected $expected = [];
 
-	public function handle($model)
+	public function apply($model)
 	{
 		return $model->whereHas('tags', function($query) {
 			$query->whereIn('tags.id', $this->params);

@@ -45,19 +45,4 @@ class QuizQuestion extends Model
 	{
 		return $this->hasMany('App\Models\UserQuizResults');
 	}
-
-	public function toSearchableArray()
-	{
-		$tags = $this->tags->pluck('name')->toArray();
-
-		$data = [
-			'id'         => $this->id,
-			'text'       => $this->text,
-			'created_at' => $this->created_at->timestamp,
-			'updated_at' => $this->updated_at->timestamp,
-			'tags'       => $tags,
-		];
-
-		return $data;
-	}
 }

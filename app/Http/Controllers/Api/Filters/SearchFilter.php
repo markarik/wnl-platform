@@ -8,13 +8,13 @@ class SearchFilter extends ApiFilter
 {
 	protected $expected = ['phrase', 'mode'];
 
-	public function handle($builder)
+	public function apply($model)
 	{
-		$this->checkIsSearchable($builder);
+		$this->checkIsSearchable($model);
 
 
 
-		return $builder;
+		return $model;
 	}
 
 	private function checkIsSearchable($model) {

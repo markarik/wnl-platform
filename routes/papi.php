@@ -137,9 +137,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Quiz Stats
 	Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
 
-	// Temporary Questions controller
-	Route::get("{$r['quiz-questions']}/filters/get", 'QuizQuestionsApiController@getFilters');
-
 	// Quiz Questions
 	Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
 	Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');

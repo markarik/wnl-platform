@@ -28,6 +28,17 @@
 						</span>
 					</a>
 				</div>
+				<wnl-questions-solving
+					v-if="computedQuestionsList.length > 0"
+					:activeFilters="activeFiltersNames"
+					:questionsCurrentPage="questionsCurrentPage"
+					:getReaction="computedGetReaction"
+					:allQuestionsCount="matchedQuestionsCount"
+					:meta="meta"
+					@verify="onVerify"
+					@selectAnswer="selectAnswer"
+					@changePage="onChangePage"
+				/>
 				<button @click="toggleBuilder">Zbuduj zestaw</button>
 				<div v-show="showBuilder">
 					<section>
@@ -52,7 +63,7 @@
 				</div>
 
 				<!-- BEGIN Questions Widget -->
-				<wnl-quiz-widget
+				<!-- <wnl-quiz-widget
 					v-if="computedQuestionsList.length > 0"
 					module="questions"
 					:questions="computedQuestionsList"
@@ -63,7 +74,7 @@
 				></wnl-quiz-widget>
 				<div class="has-text-centered margin vertical metadata" v-else>
 					{{$t('questions.zeroState')}}
-				</div>
+				</div> -->
 				<!-- END Questions Widget -->
 			</div>
 		</div>
@@ -124,8 +135,9 @@
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
-	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
+	import QuestionsSolving from 'js/components/questions/QuestionsSolving'
+	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
 	import {timeBaseOnQuestions} from 'js/services/testBuilder'
@@ -144,7 +156,8 @@
 			'wnl-quiz-widget': QuizWidget,
 			'wnl-questions-filters': QuestionsFilters,
 			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-questions-test': QuestionsTest
+			'wnl-questions-test': QuestionsTest,
+			'wnl-questions-solving': QuestionsSolving,
 		},
 		data() {
 			return {
@@ -169,8 +182,12 @@
 			]),
 			...mapGetters('questions', [
 				'activeFilters',
+				'activeFiltersNames',
+				'questionsCurrentPage',
 				'filters',
 				'getReaction',
+				'matchedQuestionsCount',
+				'meta',
 				'questionsList',
 			]),
 			computedGetReaction() {
@@ -191,6 +208,7 @@
 			...mapActions('questions', [
 				'activeFiltersSet',
 				'activeFiltersToggle',
+				'changePage',
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
@@ -210,6 +228,9 @@
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
 					.then(this.debouncedFetchMatchingQuestions())
+			},
+			onChangePage(page) {
+				this.changePage(page).then(() => console.log(page))
 			},
 			onFetchMatchingQuestions() {
 				this.fetchQuestions({filters: this.activeFilters})

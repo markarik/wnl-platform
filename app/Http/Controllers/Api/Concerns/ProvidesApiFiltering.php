@@ -14,6 +14,7 @@ trait ProvidesApiFiltering
 		$resource = $request->route('resource');
 		$model = app(static::getResourceModel($resource));
 		$this->limit = $request->limit ?? $this->defaultLimit;
+		$this->page = $request->page ?? 1;
 		$randomize = $request->randomize;
 
 		$model = $this->addFilters($request, $model);
@@ -21,7 +22,7 @@ trait ProvidesApiFiltering
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
-			$response = $this->paginatedResponse($model, $this->limit);
+			$response = $this->paginatedResponse($model, $this->limit, $this->page);
 		}
 
 		return $this->respondOk($response);

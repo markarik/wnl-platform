@@ -1,5 +1,5 @@
 import { set, delete as destroy } from 'vue'
-import { get, isEmpty, merge, size } from 'lodash'
+import { get, isEqual, isEmpty, merge, size } from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
@@ -22,9 +22,8 @@ const state = {
 	activeFilters: [],
 	comments: {},
 	currentQuestion: {
-		id: 0,
 		index: 0,
-		page: 1,
+		page: 0,
 	},
 	filters: {
 		// TODO Translations and move it to backend
@@ -75,6 +74,12 @@ const getters = {
 		return get(state.filters, path).value
 	}),
 	allQuestionsCount: state => state.allCount,
+	currentQuestion: state => {
+		if (!state.currentQuestion.page) return {}
+		const {page, index} = state.currentQuestion
+
+		return {page, index, ...state.quiz_questions[state.questionsPages[page][index]]}
+	},
 	filters: state => {
 		const order = ['planned', 'resolution', 'subjects', 'exams']
 
@@ -138,6 +143,9 @@ const mutations = {
 		Object.keys(meta).forEach((key) => {
 			set(state, key, meta[key])
 		})
+	},
+	[types.QUESTIONS_SET_CURRENT] (state, {page, index}) {
+		set(state, 'currentQuestion', {page, index})
 	},
 	[types.QUESTIONS_SET_PAGE] (state, page) {
 		set(state, 'current_page', page)
@@ -301,6 +309,9 @@ const actions = {
 
 		return Promise.resolve(results)
 	},
+	resetCurrentQuestion({commit}) {
+		commit(types.QUESTIONS_SET_CURRENT, {index: 0, page: 1})
+	},
 	saveQuestionsResults({commit, getters, rootGetters}, questionIds) {
 		const results = questionIds.map((questionId) => {
 			const question = getters.getQuestion(questionId)
@@ -324,7 +335,7 @@ const actions = {
 			endDate,
 			slackDays
 		})
-	}
+	},
 }
 
 

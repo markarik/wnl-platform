@@ -9,7 +9,7 @@
 				>
 					<a>
 						<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
-						{{$t(`questions.solving.tabs.${view.name}`, {count: allQuestionsCount})}}
+						{{$t(`questions.solving.tabs.${view.name}`, {count: questionsListCount})}}
 					</a>
 				</li>
 			</ul>
@@ -17,13 +17,31 @@
 		<div class="active-filters">
 			{{activeFiltersForDisplay}}
 		</div>
-		<div v-if="questionsCurrentPage.length > 0" v-for="(question, index) in questionsCurrentPage" :key="index">
-			<p class="margin bottom">{{questionNumber(index)}}. {{question.text}}</p>
+
+		<!-- Current Question -->
+		<div v-if="activeView === 'current'">
+			<wnl-quiz-widget
+				v-if="hasCurrentQuestion"
+				:questions="[currentQuestion]"
+				:module="module"
+				:getReaction="getReaction"
+			/>
 		</div>
-		<wnl-pagination v-if="meta.lastPage"
-			:lastPage="meta.lastPage"
-			@changePage="changePage"
-		/>
+
+		<!-- List -->
+		<div v-if="activeView === 'list'">
+			<wnl-pagination v-if="meta.lastPage"
+				:initialPage="meta.currentPage"
+				:lastPage="meta.lastPage"
+				@changePage="changePage"
+			/>
+			<div v-if="questionsCurrentPage.length > 0" v-for="(question, index) in questionsCurrentPage" :key="index">
+				<p class="margin bottom">{{questionNumber(index)}}. {{question.text}}</p>
+			</div>
+		</div>
+
+		<!-- Test -->
+
 	</div>
 </template>
 
@@ -44,6 +62,9 @@
 </style>
 
 <script>
+	import {isEmpty} from 'lodash'
+
+	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import Pagination from 'js/components/global/Pagination'
 
 	const views = [
@@ -66,6 +87,7 @@
 	export default {
 		name: 'QuestionsSolving',
 		components: {
+			'wnl-quiz-widget': QuizWidget,
 			'wnl-pagination': Pagination,
 		},
 		props: {
@@ -73,7 +95,11 @@
 				default: () => [],
 				type: Array,
 			},
-			allQuestionsCount: {
+			currentQuestion: {
+				default: () => {},
+				type: Object,
+			},
+			questionsListCount: {
 				default: 0,
 				type: Number,
 			},
@@ -113,6 +139,9 @@
 			},
 			count() {
 				return this.questions.length
+			},
+			hasCurrentQuestion() {
+				return !isEmpty(this.currentQuestion)
 			},
 			views() {
 				return views

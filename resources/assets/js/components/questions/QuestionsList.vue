@@ -31,9 +31,10 @@
 				<wnl-questions-solving
 					v-if="computedQuestionsList.length > 0"
 					:activeFilters="activeFiltersNames"
+					:currentQuestion="currentQuestion"
+					:questionsListCount="matchedQuestionsCount"
 					:questionsCurrentPage="questionsCurrentPage"
 					:getReaction="computedGetReaction"
-					:allQuestionsCount="matchedQuestionsCount"
 					:meta="meta"
 					@verify="onVerify"
 					@selectAnswer="selectAnswer"
@@ -183,6 +184,7 @@
 			...mapGetters('questions', [
 				'activeFilters',
 				'activeFiltersNames',
+				'currentQuestion',
 				'questionsCurrentPage',
 				'filters',
 				'getReaction',
@@ -216,25 +218,34 @@
 				'fetchDynamicFilters',
 				'fetchQuestionsReactions',
 				'selectAnswer',
+				'resetCurrentQuestion',
 				'resolveQuestion',
 				'checkQuestions',
 				'saveQuestionsResults'
 			]),
 			debouncedFetchMatchingQuestions: _.debounce(function() {
 				this.switchOverlay(true)
-				this.fetchQuestions({filters: this.activeFilters})
+				return this.fetchQuestions({filters: this.activeFilters})
 					.then(() => this.switchOverlay(false))
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
 					.then(this.debouncedFetchMatchingQuestions())
+					.then(() => {
+						console.log('onActiveFiltersChanged')
+						this.resetCurrentQuestion()
+					})
 			},
 			onChangePage(page) {
-				this.changePage(page).then(() => console.log(page))
+				this.changePage(page)
 			},
 			onFetchMatchingQuestions() {
 				this.fetchQuestions({filters: this.activeFilters})
-					.then(() => this.fetchingQuestions = false)
+					.then(() => {
+						console.log('onFetchMatchingQuestions')
+						this.resetCurrentQuestion()
+						this.fetchingQuestions = false
+					})
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
@@ -267,7 +278,10 @@
 				this.fetchDynamicFilters(),
 				this.fetchQuestionsCount(),
 			])
-				.then(() => this.fetchQuestionsReactions(this.questionsList.map(question => question.id)))
+				.then(() => {
+					this.resetCurrentQuestion()
+					this.fetchQuestionsReactions(this.questionsList.map(question => question.id))
+				})
 				.then(() => this.reactionsFetched = true)
 		},
 		watch: {

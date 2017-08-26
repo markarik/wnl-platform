@@ -36,10 +36,11 @@
 					:questionsCurrentPage="questionsCurrentPage"
 					:getReaction="computedGetReaction"
 					:meta="meta"
-					@verify="onVerify"
-					@selectAnswer="selectAnswer"
 					@changeQuestion="onChangeQuestion"
 					@changePage="onChangePage"
+					@selectAnswer="selectAnswer"
+					@setQuestion="setQuestion"
+					@verify="onVerify"
 				/>
 				<button @click="toggleBuilder">Zbuduj zestaw</button>
 				<div v-show="showBuilder">
@@ -221,6 +222,7 @@
 				'fetchQuestionsReactions',
 				'selectAnswer',
 				'resetCurrentQuestion',
+				'resetPages',
 				'resolveQuestion',
 				'checkQuestions',
 				'saveQuestionsResults'
@@ -232,9 +234,11 @@
 			}, 500),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
-					.then(this.debouncedFetchMatchingQuestions())
 					.then(() => {
-						console.log('onActiveFiltersChanged')
+						this.resetPages()
+						return this.debouncedFetchMatchingQuestions()
+					})
+					.then(() => {
 						this.resetCurrentQuestion()
 					})
 			},
@@ -282,6 +286,9 @@
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
 				this.saveQuestionsResults([questionId])
+			},
+			setQuestion({page, index}) {
+				this.changeCurrentQuestion({page, index})
 			},
 			switchOverlay(display) {
 				this.toggleOverlay({source: 'filters', display, text: this.$t('ui.loading.questions')})

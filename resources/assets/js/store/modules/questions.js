@@ -75,7 +75,7 @@ const getters = {
 	}),
 	allQuestionsCount: state => state.allCount,
 	currentQuestion: state => {
-		if (!state.currentQuestion.page) return {}
+		if (isEmpty(state.questionsPages) || !state.currentQuestion.page) return {}
 		const {page, index} = state.currentQuestion
 
 		return {page, index, ...state.quiz_questions[state.questionsPages[page][index]]}
@@ -174,6 +174,9 @@ const mutations = {
 	},
 	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
+	},
+	[types.QUESTIONS_RESET_PAGES] (state) {
+		set(state, 'questionsPages', {})
 	},
 	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
 		set(state.quiz_questions[questionId], 'isResolved', true)
@@ -318,6 +321,9 @@ const actions = {
 	},
 	resetCurrentQuestion({commit}) {
 		commit(types.QUESTIONS_SET_CURRENT, {index: 0, page: 1})
+	},
+	resetPages({commit}) {
+		commit(types.QUESTIONS_RESET_PAGES)
 	},
 	saveQuestionsResults({commit, getters, rootGetters}, questionIds) {
 		const results = questionIds.map((questionId) => {

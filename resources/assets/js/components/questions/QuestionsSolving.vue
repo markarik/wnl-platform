@@ -41,7 +41,7 @@
 				@changePage="changePage"
 			/>
 			<div v-if="questionsCurrentPage.length > 0" v-for="(question, index) in questionsCurrentPage" :key="index">
-				<p class="margin bottom">{{questionNumber(index)}}. {{question.text}}</p>
+				<p class="margin bottom" @click="setQuestion(meta.currentPage, index)">{{questionNumber(index)}}. {{question.text}}</p>
 			</div>
 		</div>
 
@@ -167,6 +167,10 @@
 			},
 			questionNumber(index) {
 				return (this.meta.currentPage - 1) * limit + index + 1
+			},
+			setQuestion(page, index) {
+				this.$emit('setQuestion', {page, index})
+				this.activeView = 'current'
 			},
 		}
 	}

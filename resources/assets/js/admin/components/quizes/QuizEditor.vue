@@ -5,63 +5,21 @@
 			<div class="control">
 				<label class="label">
 					<span>Pytanie</span>
-					<input type="text" class="input">
+					<input type="text" class="input" :value="questionText">
 				</label>
 			</div>
 		</div>
-		<div class="field">
+		<div class="field" v-for="(answer, index) in questionAnswers">
 			<div class="control">
 				<label class="label">
-					<span>Odpowiedź 1</span>
-					<input type="text" class="input">
+					<span>Odpowiedź {{index}}</span>
+					<input type="text" class="input" :value="answer.text">
 				</label>
 				<label class="label">
 					<span>Prawidłowa?</span>
-					<input type="checkbox">
+					<input type="checkbox" :checked="answer.is_correct">
 				</label>
 			</div>
-		</div>
-		<div class="field">
-			<div class="control">
-				<label class="label">
-					<span>Odpowiedź 2</span>
-					<input type="text" class="input">
-				</label>
-				<label class="label">
-					<span>Prawidłowa?</span>
-					<input type="checkbox">
-				</label>
-			</div>
-		</div>
-		<div class="field">
-			<div class="control">
-				<label class="label">
-					<span>Odpowiedź 3</span>
-					<input type="text" class="input">
-				</label>
-				<label class="label">
-					<span>Prawidłowa?</span>
-					<input type="checkbox">
-				</label>
-			</div>
-		</div>
-		<div class="field">
-			<div class="control">
-				<label class="label">
-					<span>Odpowiedź 4</span>
-					<input type="text" class="input">
-				</label>
-				<label class="label">
-					<span>Prawidłowa?</span>
-					<input type="checkbox">
-				</label>
-			</div>
-		</div>
-		<p class="title is-5 margin top">Pytania</p>
-		<div>
-			<a class="quiz-add-question button is-primary is-outlined">
-				Dodaj pytanie
-			</a>
 		</div>
 	</div>
 </template>
@@ -78,10 +36,13 @@
 </style>
 
 <script>
-	import { mapActions } from 'vuex';
+	import { mapActions, mapGetters } from 'vuex';
 
 	export default {
 		name: 'QuizesEditor',
+		computed: {
+			...mapGetters(['questionText', 'questionAnswers'])
+		},
 		methods: {
 			...mapActions(['getQuizQuestion'])
 		},

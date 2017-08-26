@@ -23,14 +23,18 @@
 							</span> {{ formattedTime }}
 						</span>
 						<span class="actions">
-							<a v-if="!isSeen" class="button is-small is-primary" @click="markAsSeen({notification: message, channel})">
+							<a v-if="!isSeen && !isRead"
+								class="button is-small is-primary"
+								:class="{'is-loading': loading}"
+								@click="assignToMe"
+							>
 								{{ $t('notifications.moderators.takeIt') }}
 							</a>
-							<span class="status-text in-progress" v-else-if="isSeen && !isRead">
-								{{ $t('notifications.moderators.inProgress') }}
-							</span>
 							<span class="status-text done" v-else-if="isRead">
 								{{ $t('notifications.moderators.done') }}
+							</span>
+							<span class="status-text in-progress" v-else="isSeen">
+								{{ $t('notifications.moderators.inProgress') }}
 							</span>
 							<a class="button is-small is-outlined" @click="goToNotification">
 								{{ $t('notifications.moderators.cta') }}
@@ -202,6 +206,11 @@
 			},
 		},
 		methods: {
+			assignToMe() {
+				this.loading = true
+				this.markAsSeen({notification: this.message, channel: this.channel})
+					.then(() => this.loading = false)
+			},
 			dispatchMarkAsRead() {
 				this.loading = true
 				this.markAsRead({notification: this.message, channel: this.channel})

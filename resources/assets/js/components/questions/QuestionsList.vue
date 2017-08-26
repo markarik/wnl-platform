@@ -38,6 +38,7 @@
 					:meta="meta"
 					@verify="onVerify"
 					@selectAnswer="selectAnswer"
+					@changeQuestion="onChangeQuestion"
 					@changePage="onChangePage"
 				/>
 				<button @click="toggleBuilder">Zbuduj zestaw</button>
@@ -211,6 +212,7 @@
 				'activeFiltersSet',
 				'activeFiltersToggle',
 				'changePage',
+				'changeCurrentQuestion',
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
@@ -235,6 +237,36 @@
 						console.log('onActiveFiltersChanged')
 						this.resetCurrentQuestion()
 					})
+			},
+			onChangeQuestion(direction) {
+				const currentIndex = this.currentQuestion.index
+				const currentPage = this.currentQuestion.page
+
+				if (!!direction) {
+					// Next
+					if (currentIndex + 1 >= this.meta.perPage) {
+						if (currentPage === this.meta.lastPage) return false
+						const newPage = currentPage + 1
+
+						this.changePage(newPage).then(() => {
+							this.changeCurrentQuestion({page: newPage, index: 0})
+						})
+					} else {
+						this.changeCurrentQuestion({page: currentPage, index: currentIndex + 1})
+					}
+				} else {
+					// Previous
+					if (currentIndex === 0) {
+						if (currentPage === 1) return false
+						const newPage = currentPage - 1
+
+						this.changePage(newPage).then(() => {
+							this.changeCurrentQuestion({page: newPage, index: this.meta.perPage - 1})
+						})
+					} else {
+						this.changeCurrentQuestion({page: currentPage, index: currentIndex - 1})
+					}
+				}
 			},
 			onChangePage(page) {
 				this.changePage(page)

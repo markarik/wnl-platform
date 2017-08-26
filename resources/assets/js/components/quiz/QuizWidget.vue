@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-quiz-widget">
-		<div v-if="hasOtherQuestions" class="quiz-widget-controls">
+		<div v-if="!isSingle" class="quiz-widget-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
 					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie

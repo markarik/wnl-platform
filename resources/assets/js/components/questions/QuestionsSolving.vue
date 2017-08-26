@@ -19,12 +19,17 @@
 		</div>
 
 		<!-- Current Question -->
+		<p>
+			{{$t('questions.solving.current', {number: currentQuestionNumber})}}
+			<span class="matched-count">{{questionsListCount}}</span>
+		</p>
 		<div v-if="activeView === 'current'">
 			<wnl-quiz-widget
 				v-if="hasCurrentQuestion"
 				:questions="[currentQuestion]"
 				:module="module"
 				:getReaction="getReaction"
+				@changeQuestion="changeQuestion"
 			/>
 		</div>
 
@@ -59,6 +64,9 @@
 
 		.is-active
 			font-weight: $font-weight-regular
+
+	.matched-count
+		color: $color-green
 </style>
 
 <script>
@@ -139,6 +147,9 @@
 			},
 			count() {
 				return this.questions.length
+			},
+			currentQuestionNumber() {
+				return (this.currentQuestion.page - 1) * this.meta.perPage + this.currentQuestion.index + 1
 			},
 			hasCurrentQuestion() {
 				return !isEmpty(this.currentQuestion)

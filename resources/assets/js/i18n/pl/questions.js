@@ -23,6 +23,7 @@ export const questions = {
 		stats: 'Sprawdź statystyki',
 	},
 	solving: {
+		current: 'Pytanie {number} z ',
 		tabs: {
 			current: 'Aktualne pytanie',
 			list: 'Lista pytań ({count})',

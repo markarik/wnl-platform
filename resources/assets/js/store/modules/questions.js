@@ -94,7 +94,11 @@ const getters = {
 	},
 	getQuestion: state => questionId => state.quiz_questions[questionId],
 	matchedQuestionsCount: state => state.total,
-	meta: state => ({lastPage: state.last_page, currentPage: state.current_page}),
+	meta: state => ({
+		lastPage: state.last_page,
+		currentPage: state.current_page,
+		perPage: state.per_page,
+	}),
 	questions: state => state.quiz_questions,
 	questionsList: state => Object.values(state.quiz_questions || {}),
 	questionsCurrentPage: state => {
@@ -215,6 +219,9 @@ const actions = {
 	},
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
+	},
+	changeCurrentQuestion({state, commit}, {page, index}) {
+		commit(types.QUESTIONS_SET_CURRENT, {page, index})
 	},
 	changePage({state, commit, dispatch}, page) {
 		return new Promise(resolve => {

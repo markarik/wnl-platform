@@ -35,13 +35,15 @@
 
 			<!-- List -->
 			<div v-if="activeView === 'list'" class="questions-list">
-				<wnl-pagination v-if="meta.lastPage"
-					:initialPage="meta.currentPage"
-					:lastPage="meta.lastPage"
-					@changePage="changePage"
-				/>
+				<div>
+					<wnl-pagination v-if="meta.lastPage"
+						:initialPage="meta.currentPage"
+						:lastPage="meta.lastPage"
+						@changePage="changePage"
+					/>
 
-				<a @click="showListResults = !showListResults">Pokaż odpowiedzi</a>
+					<a @click="showListResults = !showListResults">Pokaż odpowiedzi</a>
+				</div>
 
 				<div v-if="questionsCurrentPage.length > 0"
 					v-for="(question, index) in questionsCurrentPage"
@@ -63,6 +65,7 @@
 						:question="question"
 						:readOnly="showListResults"
 						:showComments="showListResults"
+						@headerClicked="setQuestion(index)"
 					/>
 				</div>
 
@@ -256,8 +259,8 @@
 			selectAnswer(payload) {
 				this.$emit('selectAnswer', payload)
 			},
-			setQuestion(page, index) {
-				this.$emit('setQuestion', {page, index})
+			setQuestion(index) {
+				this.$emit('setQuestion', {page: this.meta.currentPage, index})
 				this.activeView = 'current'
 			},
 			onVerify(payload) {

@@ -206,11 +206,11 @@
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
 					.then(() => {
+						this.resetCurrentQuestion()
 						this.resetPages()
 						return this.fetchMatchingQuestions()
 					})
 					.then(() => {
-						this.resetCurrentQuestion()
 						this.fetchQuestionsReactions(this.getPage(1))
 					})
 			},
@@ -234,11 +234,7 @@
 					newIndex = currentIndex + step
 				}
 
-				this.changePage(newPage)
-					.then(response => {
-						return this.changeCurrentQuestion({page: newPage, index: newIndex})
-					})
-					.then(question => this.fetchQuestionData(question.id))
+				this.setQuestion({page: newPage, index: newIndex})
 			},
 			onChangePage(page) {
 				return this.changePage(page).then(response => {
@@ -248,10 +244,8 @@
 				})
 			},
 			onFetchMatchingQuestions() {
+				this.resetCurrentQuestion()
 				this.fetchQuestions({filters: this.activeFilters})
-					.then(() => {
-						this.resetCurrentQuestion()
-					})
 			},
 			onSelectAnswer(payload) {
 				this.selectAnswer(payload)
@@ -261,7 +255,11 @@
 				this.saveQuestionsResults([questionId])
 			},
 			setQuestion({page, index}) {
-				this.changeCurrentQuestion({page, index})
+				this.changePage(page)
+					.then(response => {
+						return this.changeCurrentQuestion({page, index})
+					})
+					.then(question => this.fetchQuestionData(question.id))
 			},
 			switchOverlay(display) {
 				this.fetchingQuestions = display

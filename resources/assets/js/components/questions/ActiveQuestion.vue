@@ -1,10 +1,14 @@
 <template>
-	<div class="wnl-quiz-widget">
-		<div class="quiz-widget-controls">
+	<div class="wnl-active-question">
+		<div class="active-question-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
 					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
 				</a>
+			</div>
+			<div class="widget-control">
+				{{$t('questions.solving.current', {number: questionNumber})}}
+				<span class="matched-count">{{allQuestionsCount}}</span>
 			</div>
 			<div class="widget-control">
 				<a class="small unselectable" @click="nextQuestion()">
@@ -13,17 +17,17 @@
 			</div>
 		</div>
 		<wnl-quiz-question
-			v-if="currentQuestion"
-			:class="`quiz-question-${currentQuestion.id}`"
-			:id="currentQuestion.id"
-			:question="currentQuestion"
+			v-if="question"
+			:class="`quiz-question-${question.id}`"
+			:id="question.id"
+			:question="question"
 			:showComments="true"
 			:getReaction="getReaction"
 			:module="module"
 			@selectAnswer="selectAnswer"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
-			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
+			<a v-if="!question.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
 			</a>
 			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
@@ -36,9 +40,16 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.quiz-widget-controls
+	.wnl-active-question
+		padding-top: $margin-base
+
+	.active-question-controls
 		display: flex
+		font-size: $font-size-base
 		justify-content: space-between
+
+	.matched-count
+		color: $color-green
 </style>
 
 <script>
@@ -55,9 +66,9 @@
 			'wnl-quiz-question': QuizQuestion,
 		},
 		props: {
-			currentQuestion: {
-				type: Object,
-				default: {},
+			allQuestionsCount: {
+				default: 0,
+				type: Number,
 			},
 			getReaction: {
 				default: () => {},
@@ -66,7 +77,15 @@
 			module: {
 				type: String,
 				default: 'questions'
-			}
+			},
+			question: {
+				type: Object,
+				default: {},
+			},
+			questionNumber: {
+				type: Number,
+				default: 0,
+			},
 		},
 		data() {
 			return {
@@ -77,19 +96,19 @@
 			...mapGetters(['isMobile']),
 			...mapGetters('questions', ['getQuestion']),
 			hasAnswer() {
-				return this.currentQuestion.selectedAnswer !== null
+				return this.question.selectedAnswer !== null
 			},
 			isSubmitDisabled() {
 				return !this.hasAnswer
 			},
 			displayResults() {
-				return this.currentQuestion.isResolved
+				return this.question.isResolved
 			},
 		},
 		methods: {
 			verify() {
 				if (this.hasAnswer) {
-					this.$emit('verify', this.currentQuestion.id)
+					this.$emit('verify', this.question.id)
 				}
 			},
 			nextQuestion() {
@@ -97,7 +116,7 @@
 				scrollToElement(this.$el, 75)
 			},
 			previousQuestion() {
-				this.$emit('changeQuestion', this.lastIndex)
+				this.$emit('changeQuestion', -1)
 				scrollToElement(this.$el, 75)
 			},
 			selectAnswer(data) {

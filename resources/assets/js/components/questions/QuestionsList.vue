@@ -32,10 +32,11 @@
 					v-if="computedQuestionsList.length > 0"
 					:activeFilters="activeFiltersNames"
 					:currentQuestion="currentQuestion"
-					:questionsListCount="matchedQuestionsCount"
-					:questionsCurrentPage="questionsCurrentPage"
+					:loading="fetchingQuestions"
 					:getReaction="computedGetReaction"
 					:meta="meta"
+					:questionsListCount="matchedQuestionsCount"
+					:questionsCurrentPage="questionsCurrentPage"
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
 					@changePage="onChangePage"
@@ -43,6 +44,7 @@
 					@setQuestion="setQuestion"
 					@verify="onVerify"
 				/>
+				<div v-else class="text-loader"><wnl-text-loader/></div>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -86,6 +88,7 @@
 	.questions-breadcrumbs
 		align-items: center
 		color: $color-gray-dimmed
+		font-size: $font-size-minus-1
 		display: flex
 		margin-right: $margin-base
 
@@ -94,6 +97,10 @@
 			overflow-x: hidden
 			text-overflow: ellipsis
 			white-space: nowrap
+
+	.text-loader
+		display: flex
+		justify-content: center
 </style>
 
 <script>
@@ -169,9 +176,6 @@
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},
-			overlay() {
-				this.toggleOverlay({source: 'filters', display: this.fetchingQuestions})
-			},
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
@@ -193,50 +197,51 @@
 				'checkQuestions',
 				'saveQuestionsResults'
 			]),
-			debouncedFetchMatchingQuestions: _.debounce(function() {
+			fetchMatchingQuestions() {
 				this.switchOverlay(true)
 				return this.fetchQuestions({filters: this.activeFilters})
+					.catch(error => $wnl.logger.error(error))
 					.then(() => this.switchOverlay(false))
-			}, 500),
+			},
+			fetchReactions() {
+				return this.fetchQuestionsReactions(this.questionsCurrentPage)
+			},
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
 					.then(() => {
 						this.resetPages()
-						return this.debouncedFetchMatchingQuestions()
+						return this.fetchMatchingQuestions()
 					})
 					.then(() => {
 						this.resetCurrentQuestion()
+						this.fetchReactions()
 					})
 			},
-			onChangeQuestion(direction) {
+			onChangeQuestion(step) {
 				const currentIndex = this.currentQuestion.index
 				const currentPage = this.currentQuestion.page
+				const perPage = this.meta.perPage
+				const pageStep = Math.ceil(step/perPage)
 
-				if (!!direction) {
-					// Next
-					if (currentIndex + 1 >= this.meta.perPage) {
-						if (currentPage === this.meta.lastPage) return false
-						const newPage = currentPage + 1
+				let newIndex, newPage
 
-						this.changePage(newPage).then(response => {
-							this.changeCurrentQuestion({page: newPage, index: 0})
-						})
-					} else {
-						this.changeCurrentQuestion({page: currentPage, index: currentIndex + 1})
-					}
-				} else {
-					// Previous
-					if (currentIndex === 0) {
-						if (currentPage === 1) return false
-						const newPage = currentPage - 1
-
-						this.changePage(newPage).then(() => {
-							this.changeCurrentQuestion({page: newPage, index: this.meta.perPage - 1})
-						})
-					} else {
-						this.changeCurrentQuestion({page: currentPage, index: currentIndex - 1})
-					}
+				if (step > 0 && currentIndex + step >= perPage) {
+					newIndex = 0
+					newPage = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep
 				}
+				else if (step < 0 && currentIndex === 0) {
+					newIndex = perPage - 1
+					newPage = currentPage === 1 ? this.meta.lastPage : currentPage - pageStep
+				} else {
+					newPage = currentPage
+					newIndex = currentIndex + step
+				}
+
+				this.changePage(newPage)
+					.then(response => {
+						return this.changeCurrentQuestion({page: newPage, index: newIndex})
+					})
+					.then(question => this.fetchQuestionData(question.id))
 			},
 			onChangePage(page) {
 				return this.changePage(page).then(response => {
@@ -249,7 +254,6 @@
 				this.fetchQuestions({filters: this.activeFilters})
 					.then(() => {
 						this.resetCurrentQuestion()
-						this.fetchingQuestions = false
 					})
 			},
 			onSelectAnswer(payload) {
@@ -263,6 +267,7 @@
 				this.changeCurrentQuestion({page, index})
 			},
 			switchOverlay(display) {
+				this.fetchingQuestions = display
 				this.toggleOverlay({source: 'filters', display, text: this.$t('ui.loading.questions')})
 			},
 			performChangeQuestion(index) {
@@ -291,7 +296,7 @@
 			])
 				.then(() => {
 					this.resetCurrentQuestion()
-					this.fetchQuestionsReactions(this.questionsList.map(question => question.id))
+					this.fetchReactions()
 				})
 				.then(() => this.reactionsFetched = true)
 		},

@@ -194,16 +194,10 @@ const mutations = {
 		})
 	},
 	[types.QUESTIONS_UPDATE] (state, {data: questions}) {
-		const serialized = state.quiz_questions || {}
-
 		questions.forEach(question => {
-			serialized[question.id] = {
-				...serialized[question.id],
-				...question
-			}
+			const original = state.quiz_questions[question.id]
+			set(state.quiz_questions, question.id, {...original, ...question})
 		})
-
-		set(state, 'quiz_questions', serialized)
 	},
 }
 
@@ -228,7 +222,10 @@ const actions = {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
 	changeCurrentQuestion({state, getters, commit}, {page, index}) {
-		commit(types.QUESTIONS_SET_CURRENT, {page, index})
+		return new Promise((resolve, reject) => {
+			commit(types.QUESTIONS_SET_CURRENT, {page, index})
+			return resolve(getters.currentQuestion)
+		})
 	},
 	changePage({state, commit, dispatch}, page) {
 		return new Promise(resolve => {
@@ -360,7 +357,6 @@ const actions = {
 
 
 const _fetchQuestions = (requestParams) => {
-	// TODO pagination and other super stuff
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
 }
 

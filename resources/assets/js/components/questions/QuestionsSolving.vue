@@ -21,14 +21,12 @@
 		<div v-if="hasCurrentQuestion">
 			<!-- Current Question -->
 			<div v-if="activeView === 'current'">
-				<p>
-					{{$t('questions.solving.current', {number: currentQuestionNumber})}}
-					<span class="matched-count">{{questionsListCount}}</span>
-				</p>
 				<wnl-active-question
-					:currentQuestion="currentQuestion"
 					:module="module"
 					:getReaction="getReaction"
+					:question="currentQuestion"
+					:questionNumber="currentQuestionNumber"
+					:allQuestionsCount="questionsListCount"
 					@changeQuestion="changeQuestion"
 					@selectAnswer="selectAnswer"
 					@verify="onVerify"
@@ -71,7 +69,7 @@
 			</div>
 		</div>
 
-		<div v-else class="has-text-centered margin vertical metadata">
+		<div v-else-if="!loading" class="has-text-centered margin vertical metadata">
 			{{$t('questions.zeroState')}}
 		</div>
 	</div>
@@ -84,16 +82,13 @@
 		font-size: $font-size-minus-2
 		font-style: italic
 		color: $color-background-gray
-		margin: -$margin-base 0 $margin-medium
+		margin: -$margin-base 0 0
 
 	.tabs
 		font-size: $font-size-minus-1
 
 		.is-active
 			font-weight: $font-weight-regular
-
-	.matched-count
-		color: $color-green
 </style>
 
 <script>
@@ -134,17 +129,13 @@
 				default: () => {},
 				type: Object,
 			},
-			questionsListCount: {
-				default: 0,
-				type: Number,
-			},
-			questionsCurrentPage: {
-				default: () => [],
-				type: Array,
-			},
 			getReaction: {
 				default: () => {},
 				type: Function,
+			},
+			loading: {
+				default: false,
+				type: Boolean,
 			},
 			meta: {
 				default: () => {},
@@ -157,6 +148,14 @@
 			questions: {
 				default: () => [],
 				type: Array,
+			},
+			questionsCurrentPage: {
+				default: () => [],
+				type: Array,
+			},
+			questionsListCount: {
+				default: 0,
+				type: Number,
 			},
 		},
 		data() {

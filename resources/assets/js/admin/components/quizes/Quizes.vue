@@ -1,11 +1,17 @@
 <template>
 	<div class="quizes">
 		<div class="quizes-list">
-			<form>
-				<input v-model="questionId">
-				<router-link :to="{name: 'quiz-editor', params: { quizId: questionId }}">
-					Szukej!
-				</router-link>
+			<form>				
+				<div class="field has-addons">
+					<div class="control">
+						<input class="input" type="text" placeholder="Numer pytania" v-model="questionId">
+					</div>
+					<div class="control">
+						<router-link :to="{name: 'quiz-editor', params: { quizId: questionId }}" class="button is-info">
+							Szukej!
+						</router-link>
+					</div>
+				</div>
 			</form>
 		</div>
 		<div class="quiz-editor">

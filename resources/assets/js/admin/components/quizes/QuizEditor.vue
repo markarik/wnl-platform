@@ -120,6 +120,9 @@
 		watch: {
 			questionText(val) {
 				if (val) this.$refs.questionEditor.editor.innerHTML = val
+			},
+			'$route.params.quizId'(quizId) {
+				this.getQuizQuestion(this.$route.params.quizId);
 			}
 		},
 		created() {

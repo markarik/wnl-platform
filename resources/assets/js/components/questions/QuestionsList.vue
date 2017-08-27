@@ -43,10 +43,6 @@
 					@setQuestion="setQuestion"
 					@verify="onVerify"
 				/>
-
-				<!-- <div class="has-text-centered margin vertical metadata" v-else>
-					{{$t('questions.zeroState')}}
-				</div> -->
 			</div>
 		</div>
 		<wnl-sidenav-slot

@@ -30,6 +30,8 @@
 				:module="module"
 				:getReaction="getReaction"
 				@changeQuestion="changeQuestion"
+				@selectAnswer="selectAnswer"
+				@verify="onVerify"
 			/>
 		</div>
 
@@ -168,9 +170,15 @@
 			questionNumber(index) {
 				return (this.meta.currentPage - 1) * limit + index + 1
 			},
+			selectAnswer(payload) {
+				this.$emit('selectAnswer', payload)
+			},
 			setQuestion(page, index) {
 				this.$emit('setQuestion', {page, index})
 				this.activeView = 'current'
+			},
+			onVerify(payload) {
+				this.$emit('verify', payload)
 			},
 		}
 	}

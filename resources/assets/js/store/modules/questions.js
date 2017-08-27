@@ -136,7 +136,7 @@ const mutations = {
 		questions.forEach(question => {
 			serialized[question.id] = {
 				...question,
-				answers: _.pick(answers, question.quiz_answers)
+				answers: question.quiz_answers.map(id => answers[id])
 			}
 		})
 
@@ -174,6 +174,10 @@ const mutations = {
 	},
 	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
+
+		// TODO: A way to force Vuex to rebuild currentQuestion with a new answer - improve
+		const {page, index} = state.currentQuestion
+		set(state, 'currentQuestion', {page, index})
 	},
 	[types.QUESTIONS_RESET_PAGES] (state) {
 		set(state, 'questionsPages', {})

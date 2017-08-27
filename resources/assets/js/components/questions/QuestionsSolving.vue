@@ -34,15 +34,43 @@
 			</div>
 
 			<!-- List -->
-			<div v-if="activeView === 'list'">
+			<div v-if="activeView === 'list'" class="questions-list">
 				<wnl-pagination v-if="meta.lastPage"
 					:initialPage="meta.currentPage"
 					:lastPage="meta.lastPage"
 					@changePage="changePage"
 				/>
-				<div v-if="questionsCurrentPage.length > 0" v-for="(question, index) in questionsCurrentPage" :key="index">
-					<p class="margin bottom" @click="setQuestion(meta.currentPage, index)">{{questionNumber(index)}}. {{question.text}}</p>
+
+				<a @click="showListResults = !showListResults">Pokaż odpowiedzi</a>
+
+				<div v-if="questionsCurrentPage.length > 0"
+					v-for="(question, index) in questionsCurrentPage"
+					class="questions-list-item"
+					:key="index"
+				>
+					<div class="questions-list-numbering">
+						<span class="matched-count">
+							{{ $t('questions.solving.withNumber', {number: questionNumber(index)}) }}/{{questionsListCount}}
+						</span>
+						<span class="question-id">#{{question.id}}</span>
+					</div>
+					<wnl-quiz-question
+						:class="`quiz-question-${question.id}`"
+						:getReaction="getReaction"
+						:headerOnly="!showListResults"
+						:id="question.id"
+						:module="module"
+						:question="question"
+						:readOnly="showListResults"
+						:showComments="showListResults"
+					/>
 				</div>
+
+				<wnl-pagination v-if="meta.lastPage"
+					:initialPage="meta.currentPage"
+					:lastPage="meta.lastPage"
+					@changePage="changePage"
+				/>
 			</div>
 
 			<!-- Test -->
@@ -89,12 +117,35 @@
 
 		.is-active
 			font-weight: $font-weight-regular
+
+	.questions-list-item
+		.questions-list-numbering
+			color: $color-background-gray
+			display: flex
+			justify-content: space-between
+			font-size: $font-size-minus-2
+			line-height: $line-height-minus
+			margin-bottom: $margin-small
+
+			.matched-count
+				font-weight: bold
+
+			.question-id
+				font-weight: $font-weight-regular
+
+		.wnl-quiz-question-container
+			margin-bottom: -$margin-base
+			width: 100%
+
+			.wnl-quiz-question
+				margin: 0
 </style>
 
 <script>
 	import {isEmpty} from 'lodash'
 
 	import ActiveQuestion from 'js/components/questions/ActiveQuestion'
+	import QuizQuestion from 'js/components/quiz/QuizQuestion'
 	import Pagination from 'js/components/global/Pagination'
 
 	const views = [
@@ -118,6 +169,7 @@
 		name: 'QuestionsSolving',
 		components: {
 			'wnl-active-question': ActiveQuestion,
+			'wnl-quiz-question': QuizQuestion,
 			'wnl-pagination': Pagination,
 		},
 		props: {
@@ -160,8 +212,9 @@
 		},
 		data() {
 			return {
-				activeView: 'current',
+				activeView: 'list',
 				estimatedTime: 0,
+				showListResults: false,
 				testQuestionsCount: 0,
 			}
 		},
@@ -209,6 +262,11 @@
 			},
 			onVerify(payload) {
 				this.$emit('verify', payload)
+			},
+		},
+		watch: {
+			activeFilters() {
+				this.showListResults = false
 			},
 		}
 	}

@@ -203,9 +203,6 @@
 					.catch(error => $wnl.logger.error(error))
 					.then(() => this.switchOverlay(false))
 			},
-			fetchReactions() {
-				return this.fetchQuestionsReactions(this.questionsCurrentPage)
-			},
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
 					.then(() => {
@@ -214,7 +211,7 @@
 					})
 					.then(() => {
 						this.resetCurrentQuestion()
-						this.fetchReactions()
+						this.fetchQuestionsReactions(this.getPage(1))
 					})
 			},
 			onChangeQuestion(step) {
@@ -296,7 +293,7 @@
 			])
 				.then(() => {
 					this.resetCurrentQuestion()
-					this.fetchReactions()
+					return this.fetchQuestionsReactions(this.getPage(1))
 				})
 				.then(() => this.reactionsFetched = true)
 		},

@@ -25,7 +25,7 @@
 			:getReaction="getReaction"
 			:module="module"
 			@selectAnswer="selectAnswer"
-		></wnl-quiz-question>
+		/>
 		<p class="has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -41,12 +41,13 @@
 	@import 'resources/assets/sass/variables'
 
 	.wnl-active-question
-		padding-top: $margin-base
+		padding-top: $margin-medium
 
 	.active-question-controls
 		display: flex
 		font-size: $font-size-base
 		justify-content: space-between
+		margin-bottom: $margin-base
 
 	.matched-count
 		color: $color-green

@@ -24,6 +24,7 @@ export const questions = {
 	},
 	solving: {
 		current: 'Pytanie {number} z ',
+		withNumber: 'Pytanie {number}',
 		tabs: {
 			current: 'Aktualne pytanie',
 			list: 'Lista pytań ({count})',

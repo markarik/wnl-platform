@@ -1,5 +1,5 @@
 <template>
-	<div class="quiz-editor">
+	<div class="quiz-question-editor">
 		<p class="title is-5">Edycja pytania</p>
 		<wnl-form
 			class="chat-message-form"
@@ -52,7 +52,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.quiz-editor
+	.quiz-question-editor
 		max-width: 800px
 		padding: 0 20px
 

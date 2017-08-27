@@ -33,12 +33,12 @@ let routes = [
 	{
 		name: 'quizes',
 		path: '/admin/app/quizes',
-		component: require('js/admin/components/quizes/Quizes.vue'),
+		component: require('js/admin/components/quizes/QuizQuestions.vue'),
 		children: [
 			{
 				name: 'quiz-editor',
 				path: 'edit/:quizId',
-				component: require('js/admin/components/quizes/QuizEditor.vue')
+				component: require('js/admin/components/quizes/QuizQuestionEditor.vue')
 			}
 		],
 	},

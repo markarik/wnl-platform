@@ -48,7 +48,27 @@
 		</div>
 
 		<!-- Test -->
-
+		<div v-if="activeView === 'test'">
+			<section>
+				<p>Na ile pytań chcesz odpowiedzieć?</p>
+				<input type="radio" name="count" value="30" id="countThirty" v-model="testQuestionsCount"/>
+				<label for="countThirty">30 pytań</label>
+				<input type="radio" name="count" value="50" id="countFifty" v-model="testQuestionsCount"/>
+				<label for="countFifty">50 pytań</label>
+				<input type="radio" name="count" value="100" id="countHundred" v-model="testQuestionsCount"/>
+				<label for="countHundred">100 pytań</label>
+				<input type="radio" name="count" value="150" id="countOneFifty" v-model="testQuestionsCount"/>
+				<label for="countNinty">150 pytań</label>
+				<input type="radio" name="count" value="120" id="countTwoHundred" v-model="testQuestionsCount"/>
+				<label for="countTwoHundred">200 pytań</label>
+			</section>
+			<section>
+				<label for="time">Ile czasu chcesz poświęcić?</label>
+				<input type="text" name="time" v-model="estimatedTime"/>
+				<span>minut</span>
+			</section>
+			<button @click="buildTest">No to GO!</button>
+		</div>
 	</div>
 </template>
 
@@ -137,6 +157,8 @@
 		data() {
 			return {
 				activeView: 'current',
+				estimatedTime: 0,
+				testQuestionsCount: 0,
 			}
 		},
 		computed: {
@@ -161,6 +183,10 @@
 			},
 		},
 		methods: {
+			buildTest() {
+				// TODO: Allow to change time
+				this.$emit('buildTest', {count: this.testQuestionsCount})
+			},
 			changeQuestion(direction) {
 				this.$emit('changeQuestion', direction)
 			},

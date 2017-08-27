@@ -14,8 +14,13 @@
 				</li>
 			</ul>
 		</div>
-		<div class="active-filters">
-			{{activeFiltersForDisplay}}
+		<div class="questions-list-info">
+			<div class="active-filters">
+				{{activeFiltersForDisplay}}
+			</div>
+			<a v-if="activeView === 'list'" class="button is-small is-outlined" @click="showListResults = !showListResults">
+				{{$tc('questions.solving.showAnswers', parseInt(showListResults))}}
+			</a>
 		</div>
 
 		<div v-if="hasCurrentQuestion">
@@ -35,14 +40,12 @@
 
 			<!-- List -->
 			<div v-if="activeView === 'list'" class="questions-list">
-				<div>
+				<div class="pagination-container">
 					<wnl-pagination v-if="meta.lastPage"
-						:initialPage="meta.currentPage"
+						:currentPage="meta.currentPage"
 						:lastPage="meta.lastPage"
 						@changePage="changePage"
 					/>
-
-					<a @click="showListResults = !showListResults">Pokaż odpowiedzi</a>
 				</div>
 
 				<div v-if="questionsCurrentPage.length > 0"
@@ -69,11 +72,13 @@
 					/>
 				</div>
 
-				<wnl-pagination v-if="meta.lastPage"
-					:initialPage="meta.currentPage"
-					:lastPage="meta.lastPage"
-					@changePage="changePage"
-				/>
+				<div class="pagination-container">
+					<wnl-pagination v-if="meta.lastPage"
+						:currentPage="meta.currentPage"
+						:lastPage="meta.lastPage"
+						@changePage="changePage"
+					/>
+				</div>
 			</div>
 
 			<!-- Test -->
@@ -109,17 +114,28 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.active-filters
-		font-size: $font-size-minus-2
-		font-style: italic
-		color: $color-background-gray
-		margin: -$margin-base 0 0
-
 	.tabs
 		font-size: $font-size-minus-1
 
 		.is-active
 			font-weight: $font-weight-regular
+
+	.questions-list-info
+		align-items: flex-start
+		display: flex
+		justify-content: space-between
+		margin: -$margin-base 0 0
+
+		.active-filters
+			font-size: $font-size-minus-2
+			font-style: italic
+			color: $color-background-gray
+
+	.pagination-container
+		display: flex
+		justify-content: center
+		margin: $margin-base 0
+		width: 100%
 
 	.questions-list-item
 		.questions-list-numbering

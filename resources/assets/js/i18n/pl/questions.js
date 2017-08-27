@@ -24,12 +24,13 @@ export const questions = {
 	},
 	solving: {
 		current: 'Pytanie {number} z ',
-		withNumber: 'Pytanie {number}',
 		tabs: {
 			current: 'Aktualne pytanie',
 			list: 'Lista pytań ({count})',
 			test: 'Sprawdź się!',
 		},
+		showAnswers: 'Pokaż odpowiedzi | Ukryj odpowiedzi',
+		withNumber: 'Pytanie {number}',
 	},
 	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',
 }

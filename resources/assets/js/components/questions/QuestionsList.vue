@@ -152,11 +152,12 @@
 				'activeFilters',
 				'activeFiltersNames',
 				'currentQuestion',
-				'questionsCurrentPage',
 				'filters',
+				'getPage',
 				'getReaction',
 				'matchedQuestionsCount',
 				'meta',
+				'questionsCurrentPage',
 				'questionsList',
 			]),
 			computedGetReaction() {
@@ -186,7 +187,6 @@
 				'fetchDynamicFilters',
 				'fetchQuestionsReactions',
 				'selectAnswer',
-				'refreshCurrentQuestion',
 				'resetCurrentQuestion',
 				'resetPages',
 				'resolveQuestion',
@@ -218,7 +218,7 @@
 						if (currentPage === this.meta.lastPage) return false
 						const newPage = currentPage + 1
 
-						this.changePage(newPage).then(() => {
+						this.changePage(newPage).then(response => {
 							this.changeCurrentQuestion({page: newPage, index: 0})
 						})
 					} else {
@@ -239,7 +239,11 @@
 				}
 			},
 			onChangePage(page) {
-				this.changePage(page)
+				return this.changePage(page).then(response => {
+					if (!isEmpty(response)) {
+						this.fetchQuestionsReactions(this.getPage(page))
+					}
+				})
 			},
 			onFetchMatchingQuestions() {
 				this.fetchQuestions({filters: this.activeFilters})
@@ -250,11 +254,9 @@
 			},
 			onSelectAnswer(payload) {
 				this.selectAnswer(payload)
-				this.refreshCurrentQuestion()
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
-				this.refreshCurrentQuestion()
 				this.saveQuestionsResults([questionId])
 			},
 			setQuestion({page, index}) {

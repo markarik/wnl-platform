@@ -93,6 +93,7 @@ const getters = {
 		return filters
 	},
 	getQuestion: state => questionId => state.quiz_questions[questionId],
+	getPage: state => page => state.questionsPages[page],
 	matchedQuestionsCount: state => state.total,
 	meta: state => ({
 		lastPage: state.last_page,
@@ -130,25 +131,21 @@ const mutations = {
 	[types.ACTIVE_FILTERS_RESET] (state, payload) {
 		state.activeFilters = []
 	},
-	[types.QUESTIONS_REFRESH_CURRENT_QUESTION] (state, payload) {
-		// TODO: A way to force Vuex to rebuild currentQuestion with a new answer - improve
-		const {page, index} = state.currentQuestion
-		set(state, 'currentQuestion', {page, index})
-	},
 	[types.QUESTIONS_SET_WITH_ANSWERS] (state, {questions, answers, page}) {
-		const serialized = {}
+		const pageIds = []
 
 		questions.forEach(question => {
-			serialized[question.id] = {
+			pageIds.push(question.id)
+
+			set(state.quiz_questions, question.id, {
 				...question,
 				answers: question.quiz_answers.map(id => answers[id]),
 				selectedAnswer: false,
 				isResolved: false,
-			}
+			})
 		})
 
-		set(state, 'quiz_questions', merge(state.quiz_questions, serialized))
-		set(state.questionsPages, page, Object.keys(serialized))
+		set(state.questionsPages, page, pageIds)
 	},
 	[types.QUESTIONS_SET_META] (state, meta) {
 		Object.keys(meta).forEach((key) => {
@@ -230,7 +227,7 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
-	changeCurrentQuestion({state, commit}, {page, index}) {
+	changeCurrentQuestion({state, getters, commit}, {page, index}) {
 		commit(types.QUESTIONS_SET_CURRENT, {page, index})
 	},
 	changePage({state, commit, dispatch}, page) {
@@ -242,7 +239,7 @@ const actions = {
 			}
 
 			return dispatch('fetchQuestions', {filters: state.activeFilters, page})
-				.then(() => resolve())
+				.then(response => resolve(response))
 		})
 	},
 	fetchQuestionsCount({commit}) {
@@ -267,7 +264,10 @@ const actions = {
 		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
 		return _fetchQuestions({filters: parsedFilters, include: 'quiz_answers', page})
-			.then(response => _handleResponse(response, commit))
+			.then(response => {
+				_handleResponse(response, commit)
+				return response
+			})
 	},
 	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
@@ -293,9 +293,6 @@ const actions = {
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
-	},
-	refreshCurrentQuestion({commit}) {
-		commit(types.QUESTIONS_REFRESH_CURRENT_QUESTION)
 	},
 	resolveQuestion({commit}, questionId) {
 		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)

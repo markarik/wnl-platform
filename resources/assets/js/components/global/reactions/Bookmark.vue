@@ -1,8 +1,9 @@
 <template>
 	<div v-if="!reactionsDisabled" class="bookmark" @click="toggleReaction">
-		<span class="icon is-small">
+		<span v-if="!isLoading" class="icon is-small">
 			<i class="fa" :class="hasReactedClass"></i>
 		</span>
+		<span v-else class="loader"></span>
 		<span v-if="!isMobile">Zapisz</span>
 	</div>
 </template>
@@ -18,6 +19,10 @@
 		font-size: $font-size-minus-2
 		flex-direction: column
 		text-transform: uppercase
+
+	.loader
+		height: 1rem
+		width: 1rem
 </style>
 
 <script>

@@ -19,14 +19,14 @@
 		</div>
 
 		<!-- Current Question -->
-		<p>
-			{{$t('questions.solving.current', {number: currentQuestionNumber})}}
-			<span class="matched-count">{{questionsListCount}}</span>
-		</p>
 		<div v-if="activeView === 'current'">
-			<wnl-quiz-widget
+			<p v-if="hasCurrentQuestion">
+				{{$t('questions.solving.current', {number: currentQuestionNumber})}}
+				<span class="matched-count">{{questionsListCount}}</span>
+			</p>
+			<wnl-active-question
 				v-if="hasCurrentQuestion"
-				:questions="[currentQuestion]"
+				:currentQuestion="currentQuestion"
 				:module="module"
 				:getReaction="getReaction"
 				@changeQuestion="changeQuestion"
@@ -74,7 +74,7 @@
 <script>
 	import {isEmpty} from 'lodash'
 
-	import QuizWidget from 'js/components/quiz/QuizWidget'
+	import ActiveQuestion from 'js/components/questions/ActiveQuestion'
 	import Pagination from 'js/components/global/Pagination'
 
 	const views = [
@@ -97,7 +97,7 @@
 	export default {
 		name: 'QuestionsSolving',
 		components: {
-			'wnl-quiz-widget': QuizWidget,
+			'wnl-active-question': ActiveQuestion,
 			'wnl-pagination': Pagination,
 		},
 		props: {

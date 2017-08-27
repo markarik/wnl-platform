@@ -38,7 +38,7 @@
 					:meta="meta"
 					@changeQuestion="onChangeQuestion"
 					@changePage="onChangePage"
-					@selectAnswer="selectAnswer"
+					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
 					@verify="onVerify"
 				/>
@@ -65,20 +65,9 @@
 					<button @click="buildTest">No to GO!</button>
 				</div>
 
-				<!-- BEGIN Questions Widget -->
-				<!-- <wnl-quiz-widget
-					v-if="computedQuestionsList.length > 0"
-					module="questions"
-					:questions="computedQuestionsList"
-					:getReaction="computedGetReaction"
-					@changeQuestion="performChangeQuestion"
-					@verify="onVerify"
-					@selectAnswer="selectAnswer"
-				></wnl-quiz-widget>
-				<div class="has-text-centered margin vertical metadata" v-else>
+				<!-- <div class="has-text-centered margin vertical metadata" v-else>
 					{{$t('questions.zeroState')}}
 				</div> -->
-				<!-- END Questions Widget -->
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -133,6 +122,7 @@
 </style>
 
 <script>
+	import {isEmpty} from 'lodash'
 	import {mapGetters, mapActions} from 'vuex'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
@@ -221,6 +211,7 @@
 				'fetchDynamicFilters',
 				'fetchQuestionsReactions',
 				'selectAnswer',
+				'refreshCurrentQuestion',
 				'resetCurrentQuestion',
 				'resetPages',
 				'resolveQuestion',
@@ -278,13 +269,17 @@
 			onFetchMatchingQuestions() {
 				this.fetchQuestions({filters: this.activeFilters})
 					.then(() => {
-						console.log('onFetchMatchingQuestions')
 						this.resetCurrentQuestion()
 						this.fetchingQuestions = false
 					})
 			},
+			onSelectAnswer(payload) {
+				this.selectAnswer(payload)
+				this.refreshCurrentQuestion()
+			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
+				this.refreshCurrentQuestion()
 				this.saveQuestionsResults([questionId])
 			},
 			setQuestion({page, index}) {

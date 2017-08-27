@@ -130,13 +130,20 @@ const mutations = {
 	[types.ACTIVE_FILTERS_RESET] (state, payload) {
 		state.activeFilters = []
 	},
+	[types.QUESTIONS_REFRESH_CURRENT_QUESTION] (state, payload) {
+		// TODO: A way to force Vuex to rebuild currentQuestion with a new answer - improve
+		const {page, index} = state.currentQuestion
+		set(state, 'currentQuestion', {page, index})
+	},
 	[types.QUESTIONS_SET_WITH_ANSWERS] (state, {questions, answers, page}) {
 		const serialized = {}
 
 		questions.forEach(question => {
 			serialized[question.id] = {
 				...question,
-				answers: question.quiz_answers.map(id => answers[id])
+				answers: question.quiz_answers.map(id => answers[id]),
+				selectedAnswer: false,
+				isResolved: false,
 			}
 		})
 
@@ -174,10 +181,6 @@ const mutations = {
 	},
 	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
-
-		// TODO: A way to force Vuex to rebuild currentQuestion with a new answer - improve
-		const {page, index} = state.currentQuestion
-		set(state, 'currentQuestion', {page, index})
 	},
 	[types.QUESTIONS_RESET_PAGES] (state) {
 		set(state, 'questionsPages', {})
@@ -290,6 +293,9 @@ const actions = {
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
+	},
+	refreshCurrentQuestion({commit}) {
+		commit(types.QUESTIONS_REFRESH_CURRENT_QUESTION)
 	},
 	resolveQuestion({commit}, questionId) {
 		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)

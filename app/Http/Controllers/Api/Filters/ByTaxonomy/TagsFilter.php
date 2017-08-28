@@ -8,5 +8,8 @@ class TagsFilter extends ByTaxonomyFilter
 		// TODO: Implement handle() method.
 	}
 
-
+	public function count($builder)
+	{
+		return [];
+	}
 }

@@ -15,23 +15,23 @@
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
 	$r = config('papi.resources');
 
+	function api_action($type, $method) {
+		Route::$type("{resource}/.{$method}", function($resource) use ($method){
+			$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
+			return App::make($controller)->$method(App::make('request'));
+		});
+	}
 	// Search
-	Route::get("{resource}/.search", function($resource) {
-		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
-		return App::make($controller)->search(App::make('request'));
-	});
+	api_action('get', 'search');
 
 	// Count
-	Route::get("{resource}/.count", function($resource) {
-		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
-		return App::make($controller)->count(App::make('request'));
-	});
+	api_action('get', 'count');
 
 	// Faceted search / filtering
-	Route::post("{resource}/.filter", function($resource) {
-		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
-		return App::make($controller)->filter(App::make('request'));
-	});
+	api_action('post', 'filter');
+
+	// Faceted search available filters
+	api_action('post', 'filterList');
 
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');

@@ -25,12 +25,25 @@ trait ProvidesApiFiltering
 			$response = $this->paginatedResponse($model, $this->limit, $this->page);
 		}
 
-		$response = array_merge($response, $this->listFilters($model));
-
 		return $this->respondOk($response);
 	}
 
-	public function listFilters($builder)
+	public function filterList(Request $request)
+	{
+		$resource = $request->route('resource');
+		$model = app(static::getResourceModel($resource));
+		if (!empty($filter)){
+			$builder = $this->addFilters($request, $model);
+		} else {
+			$builder = $model::select();
+		}
+
+		$items = $this->getCounters($builder);
+
+		return $this->respondOk(compact('items'));
+	}
+
+	protected function getCounters($builder)
 	{
 		$available = [];
 		foreach (static::AVAILABLE_FILTERS as $filterName) {
@@ -38,7 +51,7 @@ trait ProvidesApiFiltering
 			$available[$filterName] = $filter->count($builder);
 		}
 
-		return compact('available');
+		return $available;
 	}
 
 	protected function addFilters($request, $model)

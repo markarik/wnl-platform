@@ -11,7 +11,7 @@ class TagsFilter extends ApiFilter
 
 	public function handle($model)
 	{
-		return $model->whereHas('tags', function($query) {
+		return $model->whereHas('tags', function ($query) {
 			$query->whereIn('tags.id', $this->params);
 		});
 	}

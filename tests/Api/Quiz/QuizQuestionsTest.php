@@ -101,16 +101,12 @@ class QuizQuestionsTest extends ApiTestCase
 	}
 
 	/** @test */
-	public function get_quiz_questions_filters()
+	public function get_quiz_questions_filters_no_active_filters()
 	{
 		$user = User::find(1);
 
 		$data = [
-			'filters' => [
-				[
-					'tags' => [154],
-				],
-			],
+			'filters' => [],
 			'limit'   => 1,
 		];
 
@@ -118,11 +114,11 @@ class QuizQuestionsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('POST', $this->url('/quiz_questions/.filter'), $data);
+			->json('POST', $this->url('/quiz_questions/.filterList'), $data);
 
 		$stop = microtime(true) - $start;
-		dd(json_decode($response->getContent()), 'time ' . $stop . 's');
-//		$response->dump();
+		dump('time ' . $stop . 's');
+		$response->dump();
 		$response
 			->assertStatus(200);
 	}

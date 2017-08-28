@@ -248,6 +248,7 @@ const actions = {
 	fetchDynamicFilters({commit}) {
 		return _fetchDynamicFilters()
 			.then(({data}) => {
+				console.log(data)
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
@@ -362,7 +363,8 @@ const _fetchQuestionsComments = (id) => {
 }
 
 const _fetchDynamicFilters = () => {
-	return axios.get(getApiUrl('quiz_questions/filters/get'))
+	const data = {}
+	return axios.post(getApiUrl('quiz_questions/.filterList'), data)
 }
 
 const _parseFilters = (activeFilters, state, getters, rootGetters) => {

@@ -48,14 +48,16 @@ class QuizQuestion extends Model
 
 	public function toSearchableArray()
 	{
-		$tags = $this->tags->pluck('name')->toArray();
+		$tags = $this->tags;
 
 		$data = [
 			'id'         => $this->id,
 			'text'       => $this->text,
 			'created_at' => $this->created_at->timestamp,
 			'updated_at' => $this->updated_at->timestamp,
-			'tags'       => $tags,
+			'tags'       => $tags->map(function ($tag) {
+				return ['id' => $tag->id, 'name' => $tag->name];
+			}),
 		];
 
 		return $data;

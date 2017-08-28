@@ -8,5 +8,17 @@ class ExamsFilter extends ByTaxonomyFilter
 		// TODO: Implement handle() method.
 	}
 
+	public function count($builder)
+	{
+		$taxonomyTags = $this->getTaxonomyTags('exams');
+		$tagIds = $taxonomyTags->pluck('tag_id');
 
+		$aggregatedTags = collect(
+			$this->fetchAggregation($builder, $tagIds)
+		)->keyBy('key'); // :D
+
+		$structure = $this->buildTaxonomyStructure($taxonomyTags, $aggregatedTags);
+
+		return $structure;
+	}
 }

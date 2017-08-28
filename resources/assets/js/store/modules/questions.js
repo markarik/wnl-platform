@@ -227,14 +227,8 @@ const actions = {
 			return resolve(getters.currentQuestion)
 		})
 	},
-	changePage({state, commit, dispatch}, page) {
+	fetchPage({state, commit, dispatch}, page) {
 		return new Promise(resolve => {
-			if (state.questionsPages.hasOwnProperty(page)) {
-				commit(types.QUESTIONS_SET_PAGE, page)
-				resolve()
-				return
-			}
-
 			return dispatch('fetchQuestions', {filters: state.activeFilters, page})
 				.then(response => resolve(response))
 		})
@@ -343,6 +337,9 @@ const actions = {
 		}).filter((result) => result)
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results})
+	},
+	setPage({commit}, page) {
+		commit(types.QUESTIONS_SET_PAGE, page)
 	},
 	buildPlan({state, getters, rootGetters, commit}, {activeFilters, startDate, endDate, slackDays}) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters);

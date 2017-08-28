@@ -23,7 +23,7 @@
 		name: 'Pagination',
 		props: {
 			adjacentItems: {
-				default: 3,
+				default: 2,
 				type: Number,
 			},
 			currentPage: {

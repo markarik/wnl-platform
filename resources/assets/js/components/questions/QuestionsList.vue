@@ -39,7 +39,7 @@
 					:questionsCurrentPage="questionsCurrentPage"
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
-					@changePage="onChangePage"
+					@changePage="changePage"
 					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
 					@verify="onVerify"
@@ -182,21 +182,37 @@
 			...mapActions('questions', [
 				'activeFiltersSet',
 				'activeFiltersToggle',
-				'changePage',
 				'changeCurrentQuestion',
+				'checkQuestions',
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
+				'fetchPage',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
 				'fetchQuestionsReactions',
-				'selectAnswer',
 				'resetCurrentQuestion',
 				'resetPages',
 				'resolveQuestion',
-				'checkQuestions',
-				'saveQuestionsResults'
+				'saveQuestionsResults',
+				'selectAnswer',
+				'setPage',
 			]),
+			changePage(page) {
+				return new Promise((resolve, reject) => {
+					if (this.getPage(page)) {
+						this.setPage(page)
+						resolve()
+						return
+					}
+
+					this.switchOverlay(true)
+					return this.fetchPage(page)
+						.then(() => this.switchOverlay(false))
+						.then(() => this.fetchQuestionsReactions(this.getPage(page)))
+						.then(() => resolve())
+				})
+			},
 			fetchMatchingQuestions() {
 				this.switchOverlay(true)
 				return this.fetchQuestions({filters: this.activeFilters})
@@ -236,13 +252,6 @@
 
 				this.setQuestion({page: newPage, index: newIndex})
 			},
-			onChangePage(page) {
-				return this.changePage(page).then(response => {
-					if (!isEmpty(response)) {
-						this.fetchQuestionsReactions(this.getPage(page))
-					}
-				})
-			},
 			onFetchMatchingQuestions() {
 				this.resetCurrentQuestion()
 				this.fetchQuestions({filters: this.activeFilters})
@@ -256,9 +265,7 @@
 			},
 			setQuestion({page, index}) {
 				this.changePage(page)
-					.then(response => {
-						return this.changeCurrentQuestion({page, index})
-					})
+					.then(() => this.changeCurrentQuestion({page, index}))
 					.then(question => this.fetchQuestionData(question.id))
 			},
 			switchOverlay(display) {

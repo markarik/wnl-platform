@@ -18,8 +18,11 @@
 			<div class="active-filters">
 				{{activeFiltersForDisplay}}
 			</div>
-			<a v-if="activeView === 'list'" class="button is-small is-outlined" @click="showListResults = !showListResults">
-				{{$tc('questions.solving.showAnswers', parseInt(showListResults))}}
+			<a v-if="activeView === 'list'"
+				class="button is-small is-outlined"
+				@click="showListResults = !showListResults"
+			>
+				{{toggleAnswersMessage}}
 			</a>
 		</div>
 
@@ -41,7 +44,7 @@
 			<!-- List -->
 			<div v-if="activeView === 'list'" class="questions-list">
 				<div class="pagination-container">
-					<wnl-pagination v-if="meta.lastPage"
+					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
 						:currentPage="meta.currentPage"
 						:lastPage="meta.lastPage"
 						@changePage="changePage"
@@ -72,8 +75,8 @@
 					/>
 				</div>
 
-				<div class="pagination-container">
-					<wnl-pagination v-if="meta.lastPage"
+				<div v-if="questionsCurrentPage.length > 5" class="pagination-container">
+					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
 						:currentPage="meta.currentPage"
 						:lastPage="meta.lastPage"
 						@changePage="changePage"
@@ -231,7 +234,7 @@
 		},
 		data() {
 			return {
-				activeView: 'list',
+				activeView: 'current',
 				estimatedTime: 0,
 				showListResults: false,
 				testQuestionsCount: 0,
@@ -253,6 +256,10 @@
 			},
 			hasCurrentQuestion() {
 				return !isEmpty(this.currentQuestion) && !!this.currentQuestion.id
+			},
+			toggleAnswersMessage() {
+				const msg = this.showListResults ? 'hide' : 'show'
+				return this.$t(`questions.solving.${msg}Answers`)
 			},
 			views() {
 				return views

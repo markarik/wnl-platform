@@ -89,25 +89,13 @@
 
 			<!-- Test -->
 			<div v-if="activeView === 'test'">
-				<section>
-					<p>Na ile pytań chcesz odpowiedzieć?</p>
-					<input type="radio" name="count" value="30" id="countThirty" v-model="testQuestionsCount"/>
-					<label for="countThirty">30 pytań</label>
-					<input type="radio" name="count" value="50" id="countFifty" v-model="testQuestionsCount"/>
-					<label for="countFifty">50 pytań</label>
-					<input type="radio" name="count" value="100" id="countHundred" v-model="testQuestionsCount"/>
-					<label for="countHundred">100 pytań</label>
-					<input type="radio" name="count" value="150" id="countOneFifty" v-model="testQuestionsCount"/>
-					<label for="countNinty">150 pytań</label>
-					<input type="radio" name="count" value="120" id="countTwoHundred" v-model="testQuestionsCount"/>
-					<label for="countTwoHundred">200 pytań</label>
-				</section>
-				<section>
-					<label for="time">Ile czasu chcesz poświęcić?</label>
-					<input type="text" name="time" v-model="estimatedTime"/>
-					<span>minut</span>
-				</section>
-				<button @click="buildTest">No to GO!</button>
+				<wnl-questions-test-builder
+					:testMode="testMode"
+					:questions="testQuestions"
+					@buildTest="buildTest"
+					@checkQuestions="checkQuestions"
+					@selectedAnswer="selectAnswer"
+				/>
 			</div>
 		</div>
 
@@ -170,6 +158,7 @@
 	import {isEmpty} from 'lodash'
 
 	import ActiveQuestion from 'js/components/questions/ActiveQuestion'
+	import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder'
 	import QuizQuestion from 'js/components/quiz/QuizQuestion'
 	import Pagination from 'js/components/global/Pagination'
 
@@ -194,6 +183,7 @@
 		name: 'QuestionsSolving',
 		components: {
 			'wnl-active-question': ActiveQuestion,
+			'wnl-questions-test-builder': QuestionsTestBuilder,
 			'wnl-quiz-question': QuizQuestion,
 			'wnl-pagination': Pagination,
 		},
@@ -234,13 +224,19 @@
 				default: 0,
 				type: Number,
 			},
+			testMode: {
+				default: false,
+				type: Boolean,
+			},
+			testQuestions: {
+				default: () => [],
+				type: Array,
+			},
 		},
 		data() {
 			return {
-				activeView: 'current',
-				estimatedTime: 0,
+				activeView: 'test',
 				showListResults: false,
-				testQuestionsCount: 0,
 			}
 		},
 		computed: {
@@ -269,12 +265,14 @@
 			},
 		},
 		methods: {
-			buildTest() {
-				// TODO: Allow to change time
-				this.$emit('buildTest', {count: this.testQuestionsCount})
+			buildTest(payload) {
+				this.$emit('buildTest', payload)
 			},
 			changeQuestion(direction) {
 				this.$emit('changeQuestion', direction)
+			},
+			checkQuestions() {
+				this.$emit('checkQuestions')
 			},
 			changePage(page) {
 				this.$emit('changePage', page)

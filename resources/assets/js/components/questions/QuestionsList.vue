@@ -1,12 +1,4 @@
 <template>
-	<wnl-questions-test v-if="testMode"
-		:questions="questionsList"
-		:time="estimatedTime * 60"
-		:onSelectAnswer="selectAnswer"
-		:onCheckQuiz="checkQuestions"
-		:getReaction="getReaction"
-		@endTest="testMode = false"
-	/>
 	<div class="wnl-app-layout" v-else>
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
@@ -37,9 +29,12 @@
 					:meta="meta"
 					:questionsListCount="matchedQuestionsCount"
 					:questionsCurrentPage="questionsCurrentPage"
+					:testMode="testMode"
+					:testQuestions="testQuestions"
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
 					@changePage="changePage"
+					@checkQuestions="checkQuestions"
 					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
 					@verify="onVerify"
@@ -115,8 +110,6 @@
 	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
-	import {timeBaseOnQuestions} from 'js/services/testBuilder'
-
 	export default {
 		name: 'QuestionsList',
 		props: {
@@ -136,11 +129,9 @@
 		},
 		data() {
 			return {
-				estimatedTime: timeBaseOnQuestions(30),
 				fetchingQuestions: false,
 				orderedQuestionsList: [],
 				showBuilder: false,
-				testQuestionsCount: 30,
 				testMode: false,
 				reactionsFetched: false
 			}
@@ -166,6 +157,7 @@
 				'meta',
 				'questionsCurrentPage',
 				'questionsList',
+				'testQuestions',
 			]),
 			computedGetReaction() {
 				return this.reactionsFetched ? this.getReaction : () => {}
@@ -193,12 +185,15 @@
 				'fetchQuestionsReactions',
 				'resetCurrentQuestion',
 				'resetPages',
+				'resetTest',
 				'resolveQuestion',
 				'saveQuestionsResults',
 				'selectAnswer',
 				'setPage',
 			]),
 			buildTest({count}) {
+				this.resetTest()
+				this.testMode = true
 				this.fetchTestQuestions({
 					activeFilters: this.activeFilters,
 					count: count

@@ -31,6 +31,14 @@ export const questions = {
 			test: 'Sprawdź się!',
 		},
 		showAnswers: 'Pokaż odpowiedzi',
+		test: {
+			headers: {
+				count: 'Na ile pytań chcesz odpowiedzieć?',
+				time: 'Ile czasu chcesz poświęcić?'
+			},
+			start: 'Rozpocznij test!',
+			title: 'Rozwiąż zestaw ułożony na podstawie aktywnych filtrów...',
+		},
 		withNumber: 'Pytanie {number}',
 	},
 	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',

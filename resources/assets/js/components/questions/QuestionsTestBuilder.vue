@@ -1,43 +1,121 @@
 <template>
-	<div>
+	<div class="questions-test-builder" :class="{'is-desktop': isLargeDesktop}">
 		<wnl-questions-test v-if="testMode && hasQuestions"
 			:questions="questions"
 			:time="time * 60"
 			:onSelectAnswer="selectAnswer"
-			:onCheckQuiz="checkQuestions"
 			:getReaction="getReaction"
-			@endTest="testMode = false"
+			:testResults="testResults"
+			@checkQuiz="$emit('checkQuiz')"
 		/>
 		<div v-else>
-			<section>
-				<p>Na ile pytań chcesz odpowiedzieć?</p>
-				<input type="radio" name="count" value="30" id="countThirty" v-model="testQuestionsCount"/>
-				<label for="countThirty">30 pytań</label>
-				<input type="radio" name="count" value="50" id="countFifty" v-model="testQuestionsCount"/>
-				<label for="countFifty">50 pytań</label>
-				<input type="radio" name="count" value="100" id="countHundred" v-model="testQuestionsCount"/>
-				<label for="countHundred">100 pytań</label>
-				<input type="radio" name="count" value="150" id="countOneFifty" v-model="testQuestionsCount"/>
-				<label for="countNinty">150 pytań</label>
-				<input type="radio" name="count" value="200" id="countTwoHundred" v-model="testQuestionsCount"/>
-				<label for="countTwoHundred">200 pytań</label>
-			</section>
-			<section>
-				<label for="time">Ile czasu chcesz poświęcić?</label>
-				<input type="text" name="time" v-model="time"/>
-				<span>minut</span>
-			</section>
-			<button @click="buildTest">No to GO!</button>
+			<p class="test-builder-title">
+				{{$t('questions.solving.test.title')}}
+			</p>
+			<div class="box has-text-centered">
+				<section>
+					<p class="test-builder-header">
+						<span class="icon is-small">
+							<i class="fa fa-signal"></i>
+						</span>
+						{{$t('questions.solving.test.headers.count')}}
+					</p>
+					<ul class="set-sizes">
+						<li v-for="size, index in sizesToChoose"
+							class="set-sizes-option"
+							:class="{'is-selected': size === testQuestionsCount}"
+							:key="index"
+							v-text="size"
+							@click="testQuestionsCount = size"
+						></li>
+					</ul>
+				</section>
+				<section>
+					<p class="test-builder-header">
+						<span class="icon is-small">
+							<i class="fa fa-hourglass-start"></i>
+						</span>
+						{{$t('questions.solving.test.headers.time')}}
+					</p>
+					<input class="input-clean" max="999" maxlength="3" type="number" v-model="time"/>
+					<span class="time-unit">{{$t('units.time.minutes')}}</span>
+				</section>
+				<a class="button is-small is-primary" @click="buildTest">
+					{{$t('questions.solving.test.start')}}
+				</a>
+			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
+	section
+		padding-bottom: $margin-big
+
+	.test-builder-title
+		color: $color-background-gray
+		font-size: $font-size-minus-1
+		margin: $margin-small 0
+
+	.test-builder-header
+		font-size: $font-size-minus-1
+		letter-spacing: 1px
+		margin-bottom: $margin-small
+		text-align: center
+		text-transform: uppercase
+
+	.icon
+		color: $color-background-gray
+		margin-right: $margin-small
+
+	.set-sizes
+		+flex-center()
+
+		.set-sizes-option
+			+flex-center()
+			+clickable()
+			border: $border-light-gray
+			border-color: $color-ocean-blue
+			border-radius: $border-radius-small
+			color: $color-ocean-blue
+			font-size: $font-size-minus-1
+			font-weight: $font-weight-bold
+			height: 3em
+			margin: 0 $margin-small
+			transition: all $transition-length-base
+			width: 3em
+
+			&.is-selected
+				background: $color-ocean-blue
+				color: $color-white
+				transition: all $transition-length-base
+
+	.input-clean
+		border: 0
+		border-bottom: 1px solid $color-ocean-blue
+		box-shadow: none
+		color: $color-ocean-blue
+		font-size: $font-size-plus-2
+		font-weight: $font-weight-bold
+		padding-left: $margin-base
+		text-align: center
+		width: 4em
+
+		&:active,
+		&:focus
+			box-shadow: none
+			outline: none
+
+	.time-unit
+		font-size: $font-size-minus-1
 </style>
 
 <script>
 	import {isEmpty} from 'lodash'
+	import {mapGetters} from 'vuex'
 
 	import QuestionsTest from 'js/components/questions/QuestionsTest'
 
@@ -57,9 +135,21 @@
 				default: () => [],
 				type: Array,
 			},
+			questionsPoolSize: {
+				default: 0,
+				type: Number,
+			},
+			setSizes: {
+				default: () => [15, 30, 50, 100, 200],
+				type: Array,
+			},
 			testMode: {
 				default: false,
 				type: Boolean,
+			},
+			testResults: {
+				default: () => {},
+				type: Object,
 			},
 		},
 		data() {
@@ -69,21 +159,31 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isLargeDesktop']),
 			hasQuestions() {
 				return !isEmpty(this.questions)
+			},
+			sizesToChoose() {
+				if (this.questionsPoolSize > Math.max.apply(null, this.setSizes)) {
+					return this.setSizes
+				}
+
+				const sufficientSizes = this.setSizes.filter(n => n < this.questionsPoolSize)
+				sufficientSizes.push(this.questionsPoolSize)
+
+				return sufficientSizes
 			},
 		},
 		methods: {
 			buildTest() {
-				// TODO: Allow to change time
 				this.$emit('buildTest', {count: this.testQuestionsCount, time: this.time})
-			},
-			checkQuestions() {
-				this.$emit('checkQuestions')
 			},
 			selectAnswer(payload) {
 				this.$emit('selectAnswer', payload)
 			},
+		},
+		mounted() {
+			this.testQuestionsCount = this.sizesToChoose[0]
 		},
 		watch: {
 			testQuestionsCount() {

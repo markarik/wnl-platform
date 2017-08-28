@@ -10,6 +10,7 @@
 			:class="`quiz-question-${question.id}`"
 			:question="question"
 			:index="index"
+			:isQuizComplete="isComplete"
 			:key="question.id"
 			:readOnly="readOnly"
 			:getReaction="getReaction"

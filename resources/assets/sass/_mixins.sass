@@ -70,3 +70,12 @@
 	@each $size in $sizes
 		.wnl-#{$element}-#{$size}
 			+rounded-square(map-get($rounded-square-sizes, $size))
+
+=flex-center()
+	align-items: center
+	display: flex
+	justify-content: center
+
+=clickable()
+	cursor: pointer
+	user-select: none

@@ -90,11 +90,14 @@
 			<!-- Test -->
 			<div v-if="activeView === 'test'">
 				<wnl-questions-test-builder
-					:testMode="testMode"
+					:getReaction="getReaction"
 					:questions="testQuestions"
+					:questionsPoolSize="questionsListCount"
+					:testMode="testMode"
+					:testResults="testResults"
 					@buildTest="buildTest"
-					@checkQuestions="checkQuestions"
-					@selectedAnswer="selectAnswer"
+					@selectAnswer="selectAnswer"
+					@checkQuiz="$emit('checkQuiz')"
 				/>
 			</div>
 		</div>
@@ -232,6 +235,10 @@
 				default: () => [],
 				type: Array,
 			},
+			testResults: {
+				default: () => {},
+				type: Object,
+			},
 		},
 		data() {
 			return {
@@ -241,11 +248,11 @@
 		},
 		computed: {
 			activeFiltersForDisplay() {
-				if (this.activeFilters.length === 0) return ''
+				const filters = isEmpty(this.activeFilters)
+					? this.$t('questions.filters.allQuestions')
+					: this.activeFilters.join(', ')
 
-				return this.$t('questions.filters.activeFiltersReview', {
-					filters: this.activeFilters.join(', ')
-				})
+				return this.$t('questions.filters.activeFiltersReview', {filters})
 			},
 			count() {
 				return this.questions.length

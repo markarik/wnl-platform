@@ -7,6 +7,7 @@ import { quiz } from './quiz'
 import { search } from './search'
 import { routes } from './routes'
 import { ui } from './ui'
+import { units } from './units'
 
 export {
 	dashboard,
@@ -18,4 +19,5 @@ export {
 	search,
 	routes,
 	ui,
+	units,
 }

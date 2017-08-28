@@ -1,27 +1,21 @@
 <template>
-	<div class="wnl-app-layout">
-		<div v-if="!results">
-			<wnl-quiz-timer :time="time" @timesUp="checkQuiz" ref="timer"/>
-			<wnl-quiz-list
-				:allQuestions="questions"
-				:isComplete="false"
-				:isProcessing="false"
-				@selectAnswer="onSelectAnswer"
-				@checkQuiz="checkQuiz"
-			/>
+	<div>
+		<div v-if="!isComplete">
+			<wnl-quiz-timer :time="time" @timesUp="$emit('checkQuiz')" ref="timer"/>
 		</div>
 		<div v-else>
 			TEST ROZWIAZANY!!!!
 			<button @click="$emit('endTest')">Wroć do bazy pytań</button>
-			<wnl-quiz-list
-				:allQuestions="questions"
-				:isComplete="true"
-				:readOnly="true"
-				:isProcessing="false"
-				:getReaction="getReaction"
-				module="questions"
-			/>
 		</div>
+		<wnl-quiz-list
+			:allQuestions="questions"
+			:getReaction="getReaction"
+			:isComplete="isComplete"
+			:isProcessing="false"
+			module="questions"
+			@selectAnswer="onSelectAnswer"
+			@checkQuiz="$emit('checkQuiz')"
+		/>
 	</div>
 </template>
 
@@ -29,29 +23,25 @@
 </style>
 
 <script>
-import QuizList from 'js/components/quiz/QuizList'
-import QuizTimer from 'js/components/quiz/QuizTimer'
-import Vue from 'vue'
+	import {isEmpty} from 'lodash'
 
-export default {
-	props: ['questions', 'time', 'onSelectAnswer', 'onCheckQuiz', 'getReaction'],
-	components: {
-		'wnl-quiz-list': QuizList,
-		'wnl-quiz-timer': QuizTimer
-	},
-	data() {
-		return {
-			results: false
+	import QuizList from 'js/components/quiz/QuizList'
+	import QuizTimer from 'js/components/quiz/QuizTimer'
+
+	export default {
+		name: 'QuestionsTest',
+		props: ['questions', 'time', 'onSelectAnswer', 'onCheckQuiz', 'getReaction', 'testResults'],
+		components: {
+			'wnl-quiz-list': QuizList,
+			'wnl-quiz-timer': QuizTimer
+		},
+		computed: {
+			isComplete() {
+				return !isEmpty(this.testResults)
+			},
+		},
+		mounted() {
+			!this.isComplete && this.$refs.timer.startTimer()
 		}
-	},
-	methods: {
-		checkQuiz() {
-			this.$refs.timer.stopTimer()
-			this.onCheckQuiz().then((results) => this.results = results)
-		}
-	},
-	mounted() {
-		!this.results && this.$refs.timer.startTimer()
 	}
-}
 </script>

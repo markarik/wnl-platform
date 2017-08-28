@@ -31,10 +31,11 @@
 					:questionsCurrentPage="questionsCurrentPage"
 					:testMode="testMode"
 					:testQuestions="testQuestions"
+					:testResults="testResults"
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
 					@changePage="changePage"
-					@checkQuestions="checkQuestions"
+					@checkQuiz="performCheckQuestions"
 					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
 					@verify="onVerify"
@@ -133,7 +134,8 @@
 				orderedQuestionsList: [],
 				showBuilder: false,
 				testMode: false,
-				reactionsFetched: false
+				testResults: {},
+				reactionsFetched: false,
 			}
 		},
 		computed: {
@@ -192,12 +194,13 @@
 				'setPage',
 			]),
 			buildTest({count}) {
+				this.switchOverlay(true, 'testBuilding', 'testBuilding')
 				this.resetTest()
 				this.testMode = true
 				this.fetchTestQuestions({
 					activeFilters: this.activeFilters,
 					count: count
-				}).then(() => this.testMode = true)
+				}).then(() => this.switchOverlay(false, 'testBuilding'))
 			},
 			changePage(page) {
 				return new Promise((resolve, reject) => {
@@ -264,6 +267,13 @@
 				this.resolveQuestion(questionId)
 				this.saveQuestionsResults([questionId])
 			},
+			performCheckQuestions() {
+				this.switchOverlay(true, 'testChecking', 'testChecking')
+				return this.checkQuestions().then(results => {
+					this.testResults = results
+					this.switchOverlay(false, 'testChecking')
+				})
+			},
 			setQuestion({page, index}) {
 				this.switchOverlay(true, 'currentQuestion')
 				this.changePage(page)
@@ -273,9 +283,9 @@
 						this.fetchQuestionData(question.id)
 					})
 			},
-			switchOverlay(display, source = 'filters') {
+			switchOverlay(display, source = 'filters', message = 'questions') {
 				this.fetchingQuestions = display
-				this.toggleOverlay({source, display, text: this.$t('ui.loading.questions')})
+				this.toggleOverlay({source, display, text: this.$t(`ui.loading.${message}`)})
 			},
 			toggleBuilder() {
 				this.showBuilder = !this.showBuilder

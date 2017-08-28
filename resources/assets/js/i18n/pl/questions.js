@@ -26,7 +26,7 @@ export const questions = {
 		current: 'Pytanie {number} z ',
 		hideAnswers: 'Ukryj odpowiedzi',
 		tabs: {
-			current: 'Aktualne pytanie',
+			current: 'Aktualne pytanie ({current})',
 			list: 'Lista pytań ({count})',
 			test: 'Sprawdź się!',
 		},

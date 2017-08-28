@@ -198,6 +198,12 @@
 				'selectAnswer',
 				'setPage',
 			]),
+			buildTest({count}) {
+				this.fetchTestQuestions({
+					activeFilters: this.activeFilters,
+					count: count
+				}).then(() => this.testMode = true)
+			},
 			changePage(page) {
 				return new Promise((resolve, reject) => {
 					if (this.getPage(page)) {
@@ -234,17 +240,17 @@
 				const currentIndex = this.currentQuestion.index
 				const currentPage = this.currentQuestion.page
 				const perPage = this.meta.perPage
-				const pageStep = Math.ceil(step/perPage)
+				const pageStep = Math.sign(step) * Math.ceil(Math.abs(step/perPage))
 
 				let newIndex, newPage
 
-				if (step > 0 && currentIndex + step >= perPage) {
+				if (step > 0 && currentIndex + step >= this.questionsCurrentPage.length) {
 					newIndex = 0
 					newPage = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep
 				}
 				else if (step < 0 && currentIndex === 0) {
-					newIndex = perPage - 1
-					newPage = currentPage === 1 ? this.meta.lastPage : currentPage - pageStep
+					newIndex = currentPage === 1 ? this.matchedQuestionsCount % this.meta.perPage - 1 : perPage - 1
+					newPage = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep
 				} else {
 					newPage = currentPage
 					newIndex = currentIndex + step
@@ -264,30 +270,21 @@
 				this.saveQuestionsResults([questionId])
 			},
 			setQuestion({page, index}) {
+				this.switchOverlay(true, 'currentQuestion')
 				this.changePage(page)
 					.then(() => this.changeCurrentQuestion({page, index}))
-					.then(question => this.fetchQuestionData(question.id))
+					.then(question => {
+						this.switchOverlay(false, 'currentQuestion')
+						this.fetchQuestionData(question.id)
+					})
 			},
-			switchOverlay(display) {
+			switchOverlay(display, source = 'filters') {
 				this.fetchingQuestions = display
-				this.toggleOverlay({source: 'filters', display, text: this.$t('ui.loading.questions')})
-			},
-			performChangeQuestion(index) {
-				const beforeIndex = this.computedQuestionsList.slice(0, index);
-				const afterIndex = this.computedQuestionsList.slice(index)
-
-				this.orderedQuestionsList = [...afterIndex, ...beforeIndex]
-				// TODO if we decide on pagination we can fetch new question here
+				this.toggleOverlay({source, display, text: this.$t('ui.loading.questions')})
 			},
 			toggleBuilder() {
 				this.showBuilder = !this.showBuilder
 			},
-			buildTest({count}) {
-				this.fetchTestQuestions({
-					activeFilters: this.activeFilters,
-					count: count
-				}).then(() => this.testMode = true)
-			}
 		},
 		mounted() {
 			this.activeFiltersSet(this.presetFilters)

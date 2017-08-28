@@ -9,7 +9,10 @@
 				>
 					<a>
 						<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
-						{{$t(`questions.solving.tabs.${view.name}`, {count: questionsListCount})}}
+						{{$t(`questions.solving.tabs.${view.name}`, {
+							count: questionsListCount,
+							current: questionNumber(currentQuestion.index)
+						})}}
 					</a>
 				</li>
 			</ul>

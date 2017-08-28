@@ -73,7 +73,7 @@
 						:module="module"
 						:question="question"
 						:readOnly="showListResults"
-						:showComments="showListResults"
+						:hideComments="true"
 						@headerClicked="setQuestion(index)"
 					/>
 				</div>

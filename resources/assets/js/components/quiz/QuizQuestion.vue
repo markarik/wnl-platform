@@ -38,7 +38,7 @@
 				</ul>
 				<div class="quiz-question-meta">#{{question.id}}</div>
 			</div>
-			<div class="card-footer" v-if="(!headerOnly && displayResults) || showComments">
+			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
 				<div class="quiz-question-comments">
 					<wnl-comments-list
 						commentableResource="quiz_questions"
@@ -133,7 +133,7 @@
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
 		},
-		props: ['index', 'readOnly', 'headerOnly', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
+		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
 			return {
 				reactableResource: "quiz_questions"

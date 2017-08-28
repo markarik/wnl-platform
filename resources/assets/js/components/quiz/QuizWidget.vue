@@ -26,7 +26,7 @@
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
 			</a>
-			<a v-else-if="!isSingle" class="button is-primary is-outlined" @click="nextQuestion()">
+			<a v-else-if="hasOtherQuestions" class="button is-primary is-outlined" @click="nextQuestion()">
 				Następne
 			</a>
 		</p>

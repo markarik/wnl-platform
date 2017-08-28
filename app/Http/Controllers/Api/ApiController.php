@@ -178,9 +178,9 @@ class ApiController extends Controller
 	 *
 	 * @return array
 	 */
-	protected function paginatedResponse($model, $limit)
+	protected function paginatedResponse($model, $limit, $page = 1)
 	{
-		$paginator = $model->paginate($limit);
+		$paginator = $model->paginate($limit, ['*'], 'page', $page);
 
 		$response = [
 			'data'         => $this->transform($paginator->getCollection()),

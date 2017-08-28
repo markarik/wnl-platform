@@ -29,6 +29,10 @@
 			&.is-selected
 				background: $color-ocean-blue
 
+				&:active, &:hover
+					background: $color-ocean-blue
+					color: $color-white
+
 			&:hover
 				background: $color-light-gray
 
@@ -45,8 +49,7 @@
 				color: $color-white
 
 				&:active, &:hover
-					background: $color-ocean-blue
-					color: $color-white
+					background: $color-red
 
 	.quiz-answer
 		display: flex

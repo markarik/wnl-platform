@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<div class="wnl-quiz-question card margin vertical"
+	<div class="wnl-quiz-question-container">
+		<div class="wnl-quiz-question card"
 			:class="{
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
@@ -158,10 +158,12 @@
 		},
 		methods: {
 			selectAnswer(answerIndex) {
-				this.$emit('selectAnswer', {
-					id: this.question.id,
-					answer: answerIndex
-				})
+				if (!this.question.isResolved) {
+					this.$emit('selectAnswer', {
+						id: this.question.id,
+						answer: answerIndex
+					})
+				}
 			}
 		}
 	}

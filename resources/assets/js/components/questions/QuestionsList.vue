@@ -28,43 +28,23 @@
 						</span>
 					</a>
 				</div>
-				<button @click="toggleBuilder">Zbuduj zestaw</button>
-				<div v-show="showBuilder">
-					<section>
-						<p>Na ile pytań chcesz odpowiedzieć?</p>
-						<input type="radio" name="count" value="30" id="countThirty" v-model="testQuestionsCount"/>
-						<label for="countThirty">30 pytań</label>
-						<input type="radio" name="count" value="50" id="countFifty" v-model="testQuestionsCount"/>
-						<label for="countFifty">50 pytań</label>
-						<input type="radio" name="count" value="100" id="countHundred" v-model="testQuestionsCount"/>
-						<label for="countHundred">100 pytań</label>
-						<input type="radio" name="count" value="150" id="countOneFifty" v-model="testQuestionsCount"/>
-						<label for="countNinty">150 pytań</label>
-						<input type="radio" name="count" value="120" id="countTwoHundred" v-model="testQuestionsCount"/>
-						<label for="countTwoHundred">200 pytań</label>
-					</section>
-					<section>
-						<label for="time">Ile czasu chcesz poświęcić?</label>
-						<input type="text" name="time" v-model="estimatedTime"/>
-						<span>minut</span>
-					</section>
-					<button @click="buildTest">No to GO!</button>
-				</div>
-
-				<!-- BEGIN Questions Widget -->
-				<wnl-quiz-widget
+				<wnl-questions-solving
 					v-if="computedQuestionsList.length > 0"
-					module="questions"
-					:questions="computedQuestionsList"
+					:activeFilters="activeFiltersNames"
+					:currentQuestion="currentQuestion"
+					:loading="fetchingQuestions"
 					:getReaction="computedGetReaction"
-					@changeQuestion="performChangeQuestion"
+					:meta="meta"
+					:questionsListCount="matchedQuestionsCount"
+					:questionsCurrentPage="questionsCurrentPage"
+					@buildTest="buildTest"
+					@changeQuestion="onChangeQuestion"
+					@changePage="changePage"
+					@selectAnswer="onSelectAnswer"
+					@setQuestion="setQuestion"
 					@verify="onVerify"
-					@selectAnswer="selectAnswer"
-				></wnl-quiz-widget>
-				<div class="has-text-centered margin vertical metadata" v-else>
-					{{$t('questions.zeroState')}}
-				</div>
-				<!-- END Questions Widget -->
+				/>
+				<div v-else class="text-loader"><wnl-text-loader/></div>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -108,6 +88,7 @@
 	.questions-breadcrumbs
 		align-items: center
 		color: $color-gray-dimmed
+		font-size: $font-size-minus-1
 		display: flex
 		margin-right: $margin-base
 
@@ -116,16 +97,22 @@
 			overflow-x: hidden
 			text-overflow: ellipsis
 			white-space: nowrap
+
+	.text-loader
+		display: flex
+		justify-content: center
 </style>
 
 <script>
+	import {isEmpty} from 'lodash'
 	import {mapGetters, mapActions} from 'vuex'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
-	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
+	import QuestionsSolving from 'js/components/questions/QuestionsSolving'
+	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
 	import {timeBaseOnQuestions} from 'js/services/testBuilder'
@@ -144,7 +131,8 @@
 			'wnl-quiz-widget': QuizWidget,
 			'wnl-questions-filters': QuestionsFilters,
 			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-questions-test': QuestionsTest
+			'wnl-questions-test': QuestionsTest,
+			'wnl-questions-solving': QuestionsSolving,
 		},
 		data() {
 			return {
@@ -169,8 +157,14 @@
 			]),
 			...mapGetters('questions', [
 				'activeFilters',
+				'activeFiltersNames',
+				'currentQuestion',
 				'filters',
+				'getPage',
 				'getReaction',
+				'matchedQuestionsCount',
+				'meta',
+				'questionsCurrentPage',
 				'questionsList',
 			]),
 			computedGetReaction() {
@@ -182,62 +176,115 @@
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},
-			overlay() {
-				this.toggleOverlay({source: 'filters', display: this.fetchingQuestions})
-			},
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', [
 				'activeFiltersSet',
 				'activeFiltersToggle',
+				'changeCurrentQuestion',
+				'checkQuestions',
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
+				'fetchPage',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
 				'fetchQuestionsReactions',
-				'selectAnswer',
+				'resetCurrentQuestion',
+				'resetPages',
 				'resolveQuestion',
-				'checkQuestions',
-				'saveQuestionsResults'
+				'saveQuestionsResults',
+				'selectAnswer',
+				'setPage',
 			]),
-			debouncedFetchMatchingQuestions: _.debounce(function() {
+			buildTest({count}) {
+				this.fetchTestQuestions({
+					activeFilters: this.activeFilters,
+					count: count
+				}).then(() => this.testMode = true)
+			},
+			changePage(page) {
+				return new Promise((resolve, reject) => {
+					if (this.getPage(page)) {
+						this.setPage(page)
+						resolve()
+						return
+					}
+
+					this.switchOverlay(true)
+					return this.fetchPage(page)
+						.then(() => this.switchOverlay(false))
+						.then(() => this.fetchQuestionsReactions(this.getPage(page)))
+						.then(() => resolve())
+				})
+			},
+			fetchMatchingQuestions() {
 				this.switchOverlay(true)
-				this.fetchQuestions({filters: this.activeFilters})
+				return this.fetchQuestions({filters: this.activeFilters})
+					.catch(error => $wnl.logger.error(error))
 					.then(() => this.switchOverlay(false))
-			}, 500),
+			},
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
-					.then(this.debouncedFetchMatchingQuestions())
+					.then(() => {
+						this.resetCurrentQuestion()
+						this.resetPages()
+						return this.fetchMatchingQuestions()
+					})
+					.then(() => {
+						this.fetchQuestionsReactions(this.getPage(1))
+					})
+			},
+			onChangeQuestion(step) {
+				const currentIndex = this.currentQuestion.index
+				const currentPage = this.currentQuestion.page
+				const perPage = this.meta.perPage
+				const pageStep = Math.sign(step) * Math.ceil(Math.abs(step/perPage))
+
+				let newIndex, newPage
+
+				if (step > 0 && currentIndex + step >= this.questionsCurrentPage.length) {
+					newIndex = 0
+					newPage = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep
+				}
+				else if (step < 0 && currentIndex === 0) {
+					newIndex = currentPage === 1 ? this.matchedQuestionsCount % this.meta.perPage - 1 : perPage - 1
+					newPage = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep
+				} else {
+					newPage = currentPage
+					newIndex = currentIndex + step
+				}
+
+				this.setQuestion({page: newPage, index: newIndex})
 			},
 			onFetchMatchingQuestions() {
+				this.resetCurrentQuestion()
 				this.fetchQuestions({filters: this.activeFilters})
-					.then(() => this.fetchingQuestions = false)
+			},
+			onSelectAnswer(payload) {
+				this.selectAnswer(payload)
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
 				this.saveQuestionsResults([questionId])
 			},
-			switchOverlay(display) {
-				this.toggleOverlay({source: 'filters', display, text: this.$t('ui.loading.questions')})
+			setQuestion({page, index}) {
+				this.switchOverlay(true, 'currentQuestion')
+				this.changePage(page)
+					.then(() => this.changeCurrentQuestion({page, index}))
+					.then(question => {
+						this.switchOverlay(false, 'currentQuestion')
+						this.fetchQuestionData(question.id)
+					})
 			},
-			performChangeQuestion(index) {
-				const beforeIndex = this.computedQuestionsList.slice(0, index);
-				const afterIndex = this.computedQuestionsList.slice(index)
-
-				this.orderedQuestionsList = [...afterIndex, ...beforeIndex]
-				// TODO if we decide on pagination we can fetch new question here
+			switchOverlay(display, source = 'filters') {
+				this.fetchingQuestions = display
+				this.toggleOverlay({source, display, text: this.$t('ui.loading.questions')})
 			},
 			toggleBuilder() {
 				this.showBuilder = !this.showBuilder
 			},
-			buildTest() {
-				this.fetchTestQuestions({
-					activeFilters: this.activeFilters,
-					count: this.testQuestionsCount
-				}).then(() => this.testMode = true)
-			}
 		},
 		mounted() {
 			this.activeFiltersSet(this.presetFilters)
@@ -246,7 +293,10 @@
 				this.fetchDynamicFilters(),
 				this.fetchQuestionsCount(),
 			])
-				.then(() => this.fetchQuestionsReactions(this.questionsList.map(question => question.id)))
+				.then(() => {
+					this.resetCurrentQuestion()
+					return this.fetchQuestionsReactions(this.getPage(1))
+				})
 				.then(() => this.reactionsFetched = true)
 		},
 		watch: {

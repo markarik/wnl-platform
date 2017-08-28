@@ -13,13 +13,15 @@ const namespaced = false
 // Initial state
 const state = {
 	question: null,
+	questionId: null,
 	answers: null
 }
 
 // Getters
 const getters = {
 	questionText: state => state.question && state.question.text,
-	questionAnswers: state => state.answers
+	questionAnswers: state => state.answers,
+	questionId: state => state.question && state.question.id
 }
 
 // Mutations

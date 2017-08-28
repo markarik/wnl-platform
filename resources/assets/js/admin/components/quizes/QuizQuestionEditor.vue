@@ -5,9 +5,9 @@
 			class="chat-message-form"
 			hideDefaultSubmit="true"
 			name="QuizQuestionEditor"
-			method="post"
+			:method="formMethod"
 			suppressEnter="false"
-			resourceRoute="quiz_question"
+			:resourceRoute="formResourceRoute"
 		>
 			<div class="field">
 				<div class="control">
@@ -30,6 +30,8 @@
 						<span>Prawidłowa?</span>
 						<input
 							type="checkbox"
+							:name="answer.id"
+							:id="answer.id"
 							class="right-answer-checkbox"
 							:checked="answer.is_correct"
 							@change="onRightAnswerChange"
@@ -100,7 +102,17 @@
 			}
 		},
 		computed: {
-			...mapGetters(['questionText', 'questionAnswers'])
+			...mapGetters(['questionText', 'questionAnswers', 'questionId']),
+			formResourceRoute() {
+				if (this.method === 'post') {
+					return 'quiz_questions'
+				} else {
+					return `quiz_questions/${this.questionId}`
+				}
+			},
+			formMethod() {
+				return this.questionId ? 'put' : 'post'
+			}
 		},
 		methods: {
 			...mapActions(['getQuizQuestion']),

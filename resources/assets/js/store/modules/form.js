@@ -39,6 +39,9 @@ const form = {
 			set(state, 'original', _.cloneDeep(state.data))
 			set(state, 'hasChanges', false)
 		},
+		[types.FORM_UPDATE_URL] (state, newUrl) {
+			set(state, 'resourceUrl', newUrl)
+		},
 		[types.FORM_POPULATE] (state, payload) {
 			_.each(payload, (value, name) => {
 				set(state.data, name, value)

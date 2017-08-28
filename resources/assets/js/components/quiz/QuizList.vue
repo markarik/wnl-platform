@@ -1,10 +1,10 @@
 <template>
-	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
-		<p v-if="isComplete" class="has-text-centered margin vertical">
+	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors, 'has-header': !plainList}">
+		<p v-if="!plainList && isComplete" class="has-text-centered margin vertical">
 			<a class="button is-primary is-outlined" @click="$emit('resetState')">Rozwiąż pytania ponownie</a>
 		</p>
 
-		<p class="title is-5" v-if="!displayResults">Pozostało pytań: {{howManyLeft}}</p>
+		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="(question, index) in questions"
 			:module="module"
 			:class="`quiz-question-${question.id}`"
@@ -27,7 +27,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-quiz-list
+	.wnl-quiz-list.has-header
 		border-top: $border-light-gray
 		margin: $margin-big 0
 		padding-top: $margin-base
@@ -45,7 +45,7 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing'],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList'],
 		data() {
 			return {
 				hasErrors: false,
@@ -63,7 +63,9 @@
 				return this.allQuestions.filter((question) => !question.isResolved)
 			},
 			questionsUnaswered() {
-				return _.filter(this.allQuestions, (question) => _.isNull(question.selectedAnswer))
+				return _.filter(this.allQuestions, (question) => {
+					return [null, false].indexOf(question.selectedAnswer) > -1
+				})
 			},
 			displayResults() {
 				return this.isComplete || this.readOnly || !this.allQuestions.length

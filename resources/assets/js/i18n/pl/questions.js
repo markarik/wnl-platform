@@ -33,8 +33,10 @@ export const questions = {
 		showAnswers: 'Pokaż odpowiedzi',
 		test: {
 			headers: {
+				answered: 'Rozwiązanych: {answered}/{total}',
 				count: 'Na ile pytań chcesz odpowiedzieć?',
-				time: 'Ile czasu chcesz poświęcić?'
+				remaining: 'Pozostało:',
+				time: 'Ile czasu chcesz poświęcić?',
 			},
 			start: 'Rozpocznij test!',
 			title: 'Rozwiąż zestaw ułożony na podstawie aktywnych filtrów...',

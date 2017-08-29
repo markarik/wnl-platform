@@ -267,7 +267,7 @@ const actions = {
 
 
 		getters.testQuestions.forEach((question) => {
-			if (!question.selectedAnswer) {
+			if ([null, false].indexOf(question.selectedAnswer) > -1) {
 				return results.unanswered.push(question)
 			}
 			const selectedAnswer = question.answers[question.selectedAnswer]

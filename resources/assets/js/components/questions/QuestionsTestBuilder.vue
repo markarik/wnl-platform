@@ -7,6 +7,7 @@
 			:getReaction="getReaction"
 			:testResults="testResults"
 			@checkQuiz="$emit('checkQuiz')"
+			@endQuiz="$emit('endQuiz')"
 		/>
 		<div v-else>
 			<p class="test-builder-title">

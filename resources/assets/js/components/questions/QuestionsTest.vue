@@ -2,30 +2,48 @@
 	<div>
 		<div class="questions-test-header-container">
 			<div class="questions-test-header" :class="{'is-sticky': hasStickyHeader}" ref="header">
-				<div v-if="!isComplete" class="in-progress">
-					<span class="answered">
-						{{$t('questions.solving.test.headers.answered', {
-							answered: answeredCount,
-							total: totalCount,
-						})}}
-					</span>
-					<wnl-quiz-timer ref="timer"
-						:time="time"
-						@timesUp="$emit('checkQuiz')"/>
+				<div v-if="!isComplete">
+					<div class="in-progress">
+						<span class="answered">
+							{{$t('questions.solving.test.headers.answered', {
+								answered: answeredCount,
+								total: totalCount,
+							})}}
+						</span>
+						<wnl-quiz-timer ref="timer"
+							:time="time"
+							@timesUp="$emit('checkQuiz')"/>
+					</div>
+					<progress class="progress is-success" :max="totalCount" :value="answeredCount">
+						{{answeredCount}}
+					</progress>
 				</div>
 				<div v-else class="complete">
-					TEST ROZWIAZANY!!!!
-					<button @click="$emit('endTest')">Wroć do bazy pytań</button>
+					<div class="end-quiz">
+						<a class="button is-small is-primary" @click="$emit('endQuiz')">
+							{{$t('questions.solving.end')}}
+						</a>
+					</div>
+					<div class="results">
+						<span class="results-heading">
+							{{$t('questions.solving.results.displayOnly')}}
+						</span>
+						<span v-for="questions, status in testResults"
+							v-if="questions.length > 0"
+							:class="[{'is-active': filterResults === status}, `results-${status}`]"
+							:key="status"
+							@click="toggleFilter(status)"
+						>
+							{{$t(`questions.solving.results.${status}`)}} ({{questions.length}})
+						</span>
+					</div>
 				</div>
-				<progress class="progress is-success" :max="totalCount" :value="answeredCount">
-					{{answeredCount}}
-				</progress>
 			</div>
 		</div>
 
 		<wnl-quiz-list
 			module="questions"
-			:allQuestions="questions"
+			:allQuestions="filteredQuestions"
 			:getReaction="getReaction"
 			:isComplete="isComplete"
 			:isProcessing="false"
@@ -38,14 +56,15 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
-	$header-height: 40px
+	$header-height: 60px
 
 	.questions-test-header-container
 		height: $header-height + 2 * $margin-base
 
 	.questions-test-header
-		height: $header-height
+		height: $header-height + 2 * $margin-base
 		padding: $margin-base 0
 
 		&.is-sticky
@@ -55,13 +74,9 @@
 			padding: $margin-small $margin-base
 			position: absolute
 			right: 0
-			top: -25px
+			top: 0
 			transition: top $transition-length-base
 			z-index: $z-index-navbar - 1
-
-			&:hover
-				top: 0
-				transition: top $transition-length-base
 
 		.in-progress
 			display: flex
@@ -70,6 +85,37 @@
 
 			.answered
 				text-transform: uppercase
+
+		.complete
+
+			.end-quiz
+				margin-bottom: $margin-base
+				text-align: center
+
+			.results
+				font-size: $font-size-minus-1
+
+				span
+					+clickable()
+					margin-right: $margin-small
+
+					&.is-active
+						font-weight: $font-weight-bold
+						text-decoration: underline
+
+				.results-correct
+					color: $color-green
+
+				.results-incorrect
+					color: $color-red
+
+				.results-unanswered
+					color: $color-background-gray
+
+			.results-heading
+				color: $color-background-gray
+
+
 
 	.progress
 		height: 2px
@@ -92,6 +138,7 @@
 		data() {
 			return {
 				currentScroll: 0,
+				filterResults: false,
 				headerOffset: 0,
 				scrollableContainer: {},
 			}
@@ -105,6 +152,13 @@
 					return [null, false].indexOf(question.selectedAnswer) === -1
 				})
 			},
+			filteredQuestions() {
+				if (!this.isComplete) return this.questions
+
+				return isEmpty(this.filterResults)
+					? this.questions
+					: this.testResults[this.filterResults]
+			},
 			hasStickyHeader() {
 				return this.currentScroll > this.headerOffset
 			},
@@ -116,6 +170,9 @@
 			},
 		},
 		methods: {
+			toggleFilter(status) {
+				this.filterResults = this.filterResults === status ? '' : status
+			},
 			onScroll: debounce(function({target: {scrollTop}}) {
 				this.currentScroll = scrollTop
 			}, 50),

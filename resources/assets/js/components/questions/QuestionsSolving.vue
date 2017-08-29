@@ -98,6 +98,7 @@
 					@buildTest="buildTest"
 					@selectAnswer="selectAnswer"
 					@checkQuiz="$emit('checkQuiz')"
+					@endQuiz="$emit('endQuiz')"
 				/>
 			</div>
 		</div>

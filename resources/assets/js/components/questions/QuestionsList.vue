@@ -36,6 +36,7 @@
 					@changeQuestion="onChangeQuestion"
 					@changePage="changePage"
 					@checkQuiz="performCheckQuestions"
+					@endQuiz="endQuiz"
 					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
 					@verify="onVerify"
@@ -102,6 +103,8 @@
 <script>
 	import {isEmpty} from 'lodash'
 	import {mapGetters, mapActions} from 'vuex'
+
+	import { scrollToTop } from 'js/utils/animations'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
@@ -217,6 +220,11 @@
 						.then(() => resolve())
 				})
 			},
+			endQuiz() {
+				this.testMode = false
+				this.testResults = {}
+				this.resetTest()
+			},
 			fetchMatchingQuestions() {
 				this.switchOverlay(true)
 				return this.fetchQuestions({filters: this.activeFilters})
@@ -269,9 +277,10 @@
 			},
 			performCheckQuestions() {
 				this.switchOverlay(true, 'testChecking', 'testChecking')
-				return this.checkQuestions().then(results => {
+				this.checkQuestions().then(results => {
 					this.testResults = results
 					this.switchOverlay(false, 'testChecking')
+					scrollToTop()
 				})
 			},
 			setQuestion({page, index}) {

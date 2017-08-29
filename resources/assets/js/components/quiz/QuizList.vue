@@ -75,9 +75,9 @@
 			},
 			unansweredAlert() {
 				return {
-					title: 'Brakuje odpowiedzi',
-					timer: 5000,
 					text: 'Aby zakończyć test, musisz rozwiązać poprawnie na wszystkie pytania, więc spróbuj odpowiedzieć na każde.',
+					timer: 5000,
+					title: 'Brakuje odpowiedzi',
 					type: 'warning',
 				}
 			},
@@ -98,16 +98,12 @@
 		},
 		methods: {
 			verify() {
-				if (this.questionsUnaswered.length > 0) {
+				if (!this.plainList && this.questionsUnaswered.length > 0) {
 					this.hasErrors = true
 					this.$swal(this.getAlertConfig(this.unansweredAlert))
-						.catch(e => {
-							// It's a bug in the library. It throws an exception
-							// if a person closes a timed modal with a click.
-							$wnl.logger.debug('SweetAlert2 exception', e)
-						})
+						.catch(e => false)
 
-					scrollToElement(this.getQuestionElement(_.head(this.questionsUnaswered)))
+					this.scrollToFirstUnanswered()
 					return false
 				}
 
@@ -119,11 +115,7 @@
 					firstElement = this.isComplete ? _.head(this.allQuestions) : _.head(this.questionsUnresolved)
 
 				this.$swal(this.getAlertConfig(alertOptions))
-					.catch(e => {
-						// It's a bug in the library. It throws an exception
-						// if a person closes a timed modal with a click.
-						$wnl.logger.debug('SweetAlert2 exception', e)
-					})
+					.catch(e => false)
 
 				scrollToElement(this.getQuestionElement(firstElement))
 			},
@@ -140,7 +132,10 @@
 			},
 			onSelectAnswer(data) {
 				this.$emit('selectAnswer', data)
-			}
+			},
+			scrollToFirstUnanswered() {
+				scrollToElement(this.getQuestionElement(_.head(this.questionsUnaswered)))
+			},
 		},
 	}
 </script>

@@ -1,12 +1,4 @@
 <template>
-	<wnl-questions-test v-if="testMode"
-		:questions="questionsList"
-		:time="estimatedTime * 60"
-		:onSelectAnswer="selectAnswer"
-		:onCheckQuiz="checkQuestions"
-		:getReaction="getReaction"
-		@endTest="testMode = false"
-	/>
 	<div class="wnl-app-layout" v-else>
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
@@ -37,9 +29,14 @@
 					:meta="meta"
 					:questionsListCount="matchedQuestionsCount"
 					:questionsCurrentPage="questionsCurrentPage"
+					:testMode="testMode"
+					:testQuestions="testQuestions"
+					:testResults="testResults"
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
 					@changePage="changePage"
+					@checkQuiz="performCheckQuestions"
+					@endQuiz="endQuiz"
 					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
 					@verify="onVerify"
@@ -107,6 +104,8 @@
 	import {isEmpty} from 'lodash'
 	import {mapGetters, mapActions} from 'vuex'
 
+	import { scrollToTop } from 'js/utils/animations'
+
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
@@ -114,8 +113,6 @@
 	import QuestionsSolving from 'js/components/questions/QuestionsSolving'
 	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
-
-	import {timeBaseOnQuestions} from 'js/services/testBuilder'
 
 	export default {
 		name: 'QuestionsList',
@@ -136,13 +133,12 @@
 		},
 		data() {
 			return {
-				estimatedTime: timeBaseOnQuestions(30),
 				fetchingQuestions: false,
 				orderedQuestionsList: [],
 				showBuilder: false,
-				testQuestionsCount: 30,
 				testMode: false,
-				reactionsFetched: false
+				testResults: {},
+				reactionsFetched: false,
 			}
 		},
 		computed: {
@@ -166,6 +162,7 @@
 				'meta',
 				'questionsCurrentPage',
 				'questionsList',
+				'testQuestions',
 			]),
 			computedGetReaction() {
 				return this.reactionsFetched ? this.getReaction : () => {}
@@ -193,16 +190,20 @@
 				'fetchQuestionsReactions',
 				'resetCurrentQuestion',
 				'resetPages',
+				'resetTest',
 				'resolveQuestion',
 				'saveQuestionsResults',
 				'selectAnswer',
 				'setPage',
 			]),
 			buildTest({count}) {
+				this.switchOverlay(true, 'testBuilding', 'testBuilding')
+				this.resetTest()
+				this.testMode = true
 				this.fetchTestQuestions({
 					activeFilters: this.activeFilters,
 					count: count
-				}).then(() => this.testMode = true)
+				}).then(() => this.switchOverlay(false, 'testBuilding'))
 			},
 			changePage(page) {
 				return new Promise((resolve, reject) => {
@@ -218,6 +219,11 @@
 						.then(() => this.fetchQuestionsReactions(this.getPage(page)))
 						.then(() => resolve())
 				})
+			},
+			endQuiz() {
+				this.testMode = false
+				this.testResults = {}
+				this.resetTest()
 			},
 			fetchMatchingQuestions() {
 				this.switchOverlay(true)
@@ -269,6 +275,14 @@
 				this.resolveQuestion(questionId)
 				this.saveQuestionsResults([questionId])
 			},
+			performCheckQuestions() {
+				this.switchOverlay(true, 'testChecking', 'testChecking')
+				this.checkQuestions().then(results => {
+					this.testResults = results
+					this.switchOverlay(false, 'testChecking')
+					scrollToTop()
+				})
+			},
 			setQuestion({page, index}) {
 				this.switchOverlay(true, 'currentQuestion')
 				this.changePage(page)
@@ -278,9 +292,9 @@
 						this.fetchQuestionData(question.id)
 					})
 			},
-			switchOverlay(display, source = 'filters') {
+			switchOverlay(display, source = 'filters', message = 'questions') {
 				this.fetchingQuestions = display
-				this.toggleOverlay({source, display, text: this.$t('ui.loading.questions')})
+				this.toggleOverlay({source, display, text: this.$t(`ui.loading.${message}`)})
 			},
 			toggleBuilder() {
 				this.showBuilder = !this.showBuilder

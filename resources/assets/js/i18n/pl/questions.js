@@ -24,13 +24,30 @@ export const questions = {
 	},
 	solving: {
 		current: 'Pytanie {number} z ',
+		end: 'Zakończ test',
 		hideAnswers: 'Ukryj odpowiedzi',
+		results: {
+			correct: 'Rozwiązane poprawnie',
+			displayOnly: 'Wyświetl tylko:',
+			incorrect: 'Rozwiązane błędnie',
+			unanswered: 'Nierozwiązane',
+		},
+		showAnswers: 'Pokaż odpowiedzi',
 		tabs: {
 			current: 'Aktualne pytanie ({current})',
 			list: 'Lista pytań ({count})',
 			test: 'Sprawdź się!',
 		},
-		showAnswers: 'Pokaż odpowiedzi',
+		test: {
+			headers: {
+				answered: 'Rozwiązanych: {answered}/{total}',
+				count: 'Na ile pytań chcesz odpowiedzieć?',
+				remaining: 'Pozostało:',
+				time: 'Ile czasu chcesz poświęcić?',
+			},
+			start: 'Rozpocznij test!',
+			title: 'Rozwiąż zestaw ułożony na podstawie aktywnych filtrów...',
+		},
 		withNumber: 'Pytanie {number}',
 	},
 	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',

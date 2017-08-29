@@ -59,7 +59,8 @@ const state = {
 	},
 	quiz_questions: {},
 	profiles: {},
-	results: false
+	results: false,
+	testQuestions: [],
 }
 
 // Getters
@@ -108,6 +109,7 @@ const getters = {
 		return isEmpty(ids) ? [] : ids.map(id => state.quiz_questions[id])
 	},
 	results: state => state.results,
+	testQuestions: state => state.testQuestions.map(id => state.quiz_questions[id]),
 }
 
 // Mutations
@@ -131,6 +133,63 @@ const mutations = {
 	[types.ACTIVE_FILTERS_RESET] (state, payload) {
 		state.activeFilters = []
 	},
+	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {exams, subjects}) {
+		const existingFilters = state.filters
+
+		set(state, 'filters', {...existingFilters, exams, subjects})
+	},
+	[types.QUESTIONS_RESET_TEST] (state) {
+		set(state, 'testQuestions', [])
+	},
+	[types.QUESTIONS_RESET_PAGES] (state) {
+		set(state, 'questionsPages', {})
+	},
+	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
+		set(state.quiz_questions[questionId], 'isResolved', true)
+	},
+	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
+		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
+	},
+	[types.QUESTIONS_SET_CURRENT] (state, {page, index}) {
+		set(state, 'currentQuestion', {page, index})
+	},
+	[types.QUESTIONS_SET_META] (state, meta) {
+		Object.keys(meta).forEach((key) => {
+			set(state, key, meta[key])
+		})
+	},
+	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments}) {
+		if (_.size(included) === 0) return
+
+		comments && set(state.quiz_questions[id], 'comments', comments)
+
+		let {included: quiz_answers, ...resources} = included
+		_.each(resources, (items, resource) => {
+			let resourceObject = state[resource]
+			_.each(items, (item, index) => {
+				set(resourceObject, item.id, item)
+			})
+		})
+	},
+	[types.QUESTIONS_SET_PAGE] (state, page) {
+		set(state, 'current_page', page)
+	},
+	[types.QUESTIONS_SET_TEST] (state, {questions, answers}) {
+		let testQuestions = []
+
+		questions.forEach(question => {
+			testQuestions.push(question.id)
+
+			set(state.quiz_questions, question.id, {
+				...question,
+				answers: question.quiz_answers.map(id => answers[id]),
+				selectedAnswer: false,
+				isResolved: false,
+			})
+		})
+
+		set(state, 'testQuestions', testQuestions)
+	},
 	[types.QUESTIONS_SET_WITH_ANSWERS] (state, {questions, answers, page}) {
 		const pageIds = []
 
@@ -147,43 +206,11 @@ const mutations = {
 
 		set(state.questionsPages, page, pageIds)
 	},
-	[types.QUESTIONS_SET_META] (state, meta) {
-		Object.keys(meta).forEach((key) => {
-			set(state, key, meta[key])
+	[types.QUESTIONS_UPDATE] (state, {data: questions}) {
+		questions.forEach(question => {
+			const original = state.quiz_questions[question.id]
+			set(state.quiz_questions, question.id, {...original, ...question})
 		})
-	},
-	[types.QUESTIONS_SET_CURRENT] (state, {page, index}) {
-		set(state, 'currentQuestion', {page, index})
-	},
-	[types.QUESTIONS_SET_PAGE] (state, page) {
-		set(state, 'current_page', page)
-	},
-	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments}) {
-		if (_.size(included) === 0) return
-
-		comments && set(state.quiz_questions[id], 'comments', comments)
-
-		let {included: quiz_answers, ...resources} = included
-		_.each(resources, (items, resource) => {
-			let resourceObject = state[resource]
-			_.each(items, (item, index) => {
-				set(resourceObject, item.id, item)
-			})
-		})
-	},
-	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, data) {
-		const existingFilters = state.filters
-
-		set(state, 'filters', {...existingFilters, ...data})
-	},
-	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
-		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
-	},
-	[types.QUESTIONS_RESET_PAGES] (state) {
-		set(state, 'questionsPages', {})
-	},
-	[types.QUESTIONS_RESOLVE_QUESTION] (state, questionId) {
-		set(state.quiz_questions[questionId], 'isResolved', true)
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
@@ -191,12 +218,6 @@ const mutations = {
 			_.each(items, (item, index) => {
 				set(resourceObject, item.id, item)
 			})
-		})
-	},
-	[types.QUESTIONS_UPDATE] (state, {data: questions}) {
-		questions.forEach(question => {
-			const original = state.quiz_questions[question.id]
-			set(state.quiz_questions, question.id, {...original, ...question})
 		})
 	},
 }
@@ -221,76 +242,20 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
+	buildPlan({state, getters, rootGetters, commit}, {activeFilters, startDate, endDate, slackDays}) {
+		const filters = _parseFilters(activeFilters, state, getters, rootGetters);
+		return axios.post(getApiUrl('user-plan/2'), {
+			filters,
+			startDate,
+			endDate,
+			slackDays
+		})
+	},
 	changeCurrentQuestion({state, getters, commit}, {page, index}) {
 		return new Promise((resolve, reject) => {
 			commit(types.QUESTIONS_SET_CURRENT, {page, index})
 			return resolve(getters.currentQuestion)
 		})
-	},
-	fetchPage({state, commit, dispatch}, page) {
-		return new Promise(resolve => {
-			return dispatch('fetchQuestions', {filters: state.activeFilters, page})
-				.then(response => resolve(response))
-		})
-	},
-	fetchQuestionsCount({commit}) {
-		return axios.get(getApiUrl('quiz_questions/.count'))
-			.then(({data}) => {
-				commit(types.QUESTIONS_SET_META, {allCount: data.count})
-			})
-	},
-	fetchQuestionData({commit}, id) {
-		return _fetchQuestionsComments(id)
-			.then(({data}) => {
-				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
-			})
-	},
-	fetchDynamicFilters({commit}) {
-		return _fetchDynamicFilters()
-			.then(({data}) => {
-				// const tmp = { // TODO: !
-				// 	exams: data['by_taxonomy.exams'],
-				// 	subjects: data['by_taxonomy.subjects'],
-				// }
-				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
-			})
-	},
-	fetchQuestions({commit, state, getters, rootGetters}, {filters, page}) {
-		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
-
-		return _fetchQuestions({filters: parsedFilters, include: 'quiz_answers', page})
-			.then(response => {
-				_handleResponse(response, commit)
-				return response
-			})
-	},
-	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
-		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
-
-		return _fetchQuestions({
-			filters,
-			limit,
-			randomize: true,
-			include: 'quiz_answers,reactions,comments.profiles'
-		}).then(response => _handleResponse(response, commit))
-	},
-	fetchQuestionsReactions({commit}, questionsIds) {
-		return _fetchQuestions({
-			filters: [
-				{
-					query: {
-						whereIn: ['id', questionsIds],
-					}
-				}
-			],
-			include: 'reactions'
-		}).then(({data}) => commit(types.QUESTIONS_UPDATE, data))
-	},
-	selectAnswer({commit}, payload) {
-		commit(types.QUESTIONS_SELECT_ANSWER, payload)
-	},
-	resolveQuestion({commit}, questionId) {
-		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)
 	},
 	checkQuestions({commit, getters, dispatch}) {
 		const results = {
@@ -301,8 +266,8 @@ const actions = {
 			questionsToStore = []
 
 
-		getters.questionsList.forEach((question) => {
-			if (!question.selectedAnswer) {
+		getters.testQuestions.forEach((question) => {
+			if ([null, false].indexOf(question.selectedAnswer) > -1) {
 				return results.unanswered.push(question)
 			}
 			const selectedAnswer = question.answers[question.selectedAnswer]
@@ -321,11 +286,76 @@ const actions = {
 
 		return Promise.resolve(results)
 	},
-	resetCurrentQuestion({commit}) {
-		commit(types.QUESTIONS_SET_CURRENT, {index: 0, page: 1})
+	fetchDynamicFilters({commit}) {
+		return _fetchDynamicFilters()
+			.then(({data}) => {
+				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
+			})
 	},
-	resetPages({commit}) {
-		commit(types.QUESTIONS_RESET_PAGES)
+	fetchQuestions({commit, state, getters, rootGetters}, {filters, page}) {
+		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
+
+		return _fetchQuestions({filters: parsedFilters, include: 'quiz_answers', page})
+			.then(function(response) {
+				const {answers, questions, meta, included} = _handleResponse(response, commit)
+
+				commit(types.QUESTIONS_SET_WITH_ANSWERS, {
+					answers,
+					questions,
+					page: meta.current_page,
+				})
+				commit(types.QUESTIONS_SET_META, meta)
+				commit(types.UPDATE_INCLUDED, included)
+
+				return response
+			})
+	},
+	fetchQuestionsCount({commit}) {
+		return axios.get(getApiUrl('quiz_questions/.count'))
+			.then(({data}) => {
+				commit(types.QUESTIONS_SET_META, {allCount: data.count})
+			})
+	},
+	fetchQuestionData({commit}, id) {
+		return _fetchQuestionsComments(id)
+			.then(({data}) => {
+				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
+			})
+	},
+	fetchQuestionsReactions({commit}, questionsIds) {
+		return _fetchQuestions({
+			filters: [
+				{
+					query: {
+						whereIn: ['id', questionsIds],
+					}
+				}
+			],
+			include: 'reactions'
+		}).then(({data}) => commit(types.QUESTIONS_UPDATE, data))
+	},
+	fetchPage({state, commit, dispatch}, page) {
+		return new Promise(resolve => {
+			return dispatch('fetchQuestions', {filters: state.activeFilters, page})
+				.then(response => resolve(response))
+		})
+	},
+	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
+		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
+
+		return _fetchQuestions({
+			filters,
+			limit,
+			randomize: true,
+			include: 'quiz_answers,reactions,comments.profiles'
+		}).then(response => {
+			const {answers, questions, included} = _handleResponse(response, commit)
+
+			commit(types.QUESTIONS_SET_TEST, {answers, questions})
+			commit(types.UPDATE_INCLUDED, included)
+
+			return response
+		})
 	},
 	saveQuestionsResults({commit, getters, rootGetters}, questionIds) {
 		const results = questionIds.map((questionId) => {
@@ -342,17 +372,23 @@ const actions = {
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results})
 	},
+	selectAnswer({commit}, payload) {
+		commit(types.QUESTIONS_SELECT_ANSWER, payload)
+	},
 	setPage({commit}, page) {
 		commit(types.QUESTIONS_SET_PAGE, page)
 	},
-	buildPlan({state, getters, rootGetters, commit}, {activeFilters, startDate, endDate, slackDays}) {
-		const filters = _parseFilters(activeFilters, state, getters, rootGetters);
-		return axios.post(getApiUrl('user-plan/2'), {
-			filters,
-			startDate,
-			endDate,
-			slackDays
-		})
+	resolveQuestion({commit}, questionId) {
+		commit(types.QUESTIONS_RESOLVE_QUESTION, questionId)
+	},
+	resetCurrentQuestion({commit}) {
+		commit(types.QUESTIONS_SET_CURRENT, {index: 0, page: 1})
+	},
+	resetPages({commit}) {
+		commit(types.QUESTIONS_RESET_PAGES)
+	},
+	resetTest({commit}) {
+		commit(types.QUESTIONS_RESET_TEST)
 	},
 }
 
@@ -399,7 +435,7 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 	return filters;
 }
 
-const _handleResponse = (response, commit) => {
+const _handleResponse = (response) => {
 	var {data: {data, ...meta}} = response,
 		quizQuestions = {},
 		quiz_answers = {},
@@ -410,20 +446,18 @@ const _handleResponse = (response, commit) => {
 		var {included: {quiz_answers, ...included}, ...quizQuestions} = data
 	}
 
-	commit(types.QUESTIONS_SET_WITH_ANSWERS, {
-		questions: Object.values(quizQuestions),
+	return {
 		answers: quiz_answers,
-		page: meta.current_page,
-	})
-	commit(types.QUESTIONS_SET_META, meta)
-
-	commit(types.UPDATE_INCLUDED, included)
+		included,
+		meta,
+		questions: Object.values(quizQuestions),
+	}
 }
 
 export default {
-	namespaced,
-	state,
+	actions,
 	getters,
 	mutations,
-	actions
+	namespaced,
+	state,
 }

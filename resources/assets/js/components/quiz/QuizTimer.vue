@@ -1,27 +1,46 @@
 <template>
-	<div class="timer sticky">
-	{{remaingTime}}
-	</div>
+	<span class="timer">
+		{{hms}}
+		<span class="icon is-small">
+			<i class="fa" :class="hourglassClass"></i>
+		</span>
+	</span>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
-	.timer.sticky
-		position: fixed
-		bottom: 10px
-		right: 10px
-		font-size: 24px
-		z-index: 10000
+<style lang="sass" ref="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.icon
+		color: $color-background-gray
 </style>
 
 <script>
+	import {msFromSeconds, hmsFromSeconds} from 'js/utils/time'
+
 	export default {
 		name: 'QuizTimer',
-		props: ['time'],
+		props: {
+			time: {
+				required: true,
+				type: Number,
+			}
+		},
 		data() {
 			return {
 				timerId: 0,
-				remaingTime: this.time
+				remainingTime: this.time
 			}
+		},
+		computed: {
+			hms() {
+				return this.time > 60 * 60
+					? hmsFromSeconds(this.remainingTime)
+					: msFromSeconds(this.remainingTime)
+			},
+			hourglassClass() {
+				if (this.time === this.remainingTime) return 'fa-hourglass-1'
+				return `fa-hourglass-${Math.ceil((this.time - this.remainingTime) * 3 / this.time)}`
+			},
 		},
 		methods: {
 			startTimer() {
@@ -32,7 +51,7 @@
 				clearInterval(this.timerId)
 			},
 			countDown() {
-				if (--this.remaingTime < 0) {
+				if (--this.remainingTime < 0) {
 					this.$emit('timesUp')
 				}
 			}

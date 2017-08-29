@@ -16,7 +16,8 @@
 				</span>
 			</div>
 			<div class="wai-content">
-				{{content}} ({{ item.count }})
+				<span class="text">{{content}}</span>
+				<span class="tag count" v-if="item.count">{{ item.count }}</span>
 			</div>
 			<div v-if="hasChildren" class="wai-expand-icon" ref="expand">
 				<span class="icon is-small">
@@ -92,7 +93,15 @@
 				font-size: $font-size-minus-1
 
 		.wai-content
+			align-items: center
+			display: flex
 			flex: 1 auto
+			justify-content: space-between
+
+			.text
+
+			.count
+				font-size: $font-size-minus-3
 
 		.wai-expand-icon
 			align-items: center
@@ -101,6 +110,7 @@
 			display: flex
 			height: $toggle-icon-size
 			justify-content: center
+			margin-left: $margin-small
 			width: $toggle-icon-size
 
 			i
@@ -158,7 +168,11 @@
 				return this.selected
 			},
 			content() {
-				return this.item.name || this.$t(`${this.config.itemsNamesSource}.${this.path}`)
+				if (this.item.hasOwnProperty('name')) return this.item.name
+
+				const messageKey = this.item.hasOwnProperty('message') ? this.item.message : this.item.value
+
+				return this.$t(`${this.config.itemsNamesSource}.${messageKey}`)
 			},
 		},
 		methods: {

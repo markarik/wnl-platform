@@ -22,7 +22,7 @@ class ResolutionFilter extends ApiFilter
 
 	public function values()
 	{
-		return ['correct', 'incorrect', 'unresolved'];
+		return ['unresolved', 'incorrect', 'correct'];
 	}
 
 	public function count($builder)
@@ -31,12 +31,16 @@ class ResolutionFilter extends ApiFilter
 
 		foreach ($this->values() as $value) {
 			$items[] = [
-				'value' => $value,
 				'count' => $this->{$value}($builder)->count(),
+				'value' => $value,
 			];
 		}
 
-		return compact('items');
+		return [
+			'items' => $items,
+			'type' => 'list',
+			'message' => 'resolution',
+		];
 	}
 
 	protected function incorrect($query)

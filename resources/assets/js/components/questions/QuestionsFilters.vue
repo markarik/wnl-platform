@@ -4,6 +4,7 @@
 		:activeFilters="activeFilters"
 		:loading="fetchingQuestions"
 		:filters="filters"
+		:itemsNamesSource="itemsNamesSource"
 		:matchedCount="matchedQuestionsCount"
 		:totalCount="allQuestionsCount"
 		@activeFiltersChanged="onActiveFiltersChanged"
@@ -80,9 +81,9 @@
 			accordionConfig() {
 				return {
 					expanded: this.expandedItems,
-					flattened: ['planned', 'resolution'],
+					flattened: ['quiz-planned', 'quiz-resolution'],
 					isMobile: this.isMobile,
-					itemsNamesSource: 'questions.filters.items',
+					itemsNamesSource: this.itemsNamesSource,
 					selectedElements: this.activeFilters,
 				}
 			},
@@ -90,11 +91,14 @@
 				return this.activeFilters.map(this.getParents).reduce((a, b) => a.concat(b))
 			},
 			expandedItems() {
-				const expanded = ['subjects']
+				const expanded = ['by_taxonomy-subjects']
 				return this.hasActive ? uniq(expanded.concat(this.activeParents)) : expanded
 			},
 			hasActive() {
 				return this.activeFilters.length > 0
+			},
+			itemsNamesSource() {
+				return 'questions.filters.items'
 			},
 		},
 		methods: {

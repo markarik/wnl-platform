@@ -21,6 +21,7 @@ class SubjectsFilter extends ByTaxonomyFilter
 
 		return [
 			'type'  => 'tags',
+			'message' => 'subjects',
 			'items' => $structure,
 		];
 	}

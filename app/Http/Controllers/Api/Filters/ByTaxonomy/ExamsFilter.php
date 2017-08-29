@@ -21,6 +21,7 @@ class ExamsFilter extends ByTaxonomyFilter
 
 		return [
 			'type'  => 'tags',
+			'message' => 'exams',
 			'items' => $structure,
 		];
 	}

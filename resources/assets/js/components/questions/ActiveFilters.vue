@@ -20,7 +20,7 @@
 				class="tag is-success"
 				:key="index"
 			>
-				{{filter.name}}
+				{{filterDisplayName(filter)}}
 				<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
 			</span>
 		</div>
@@ -98,6 +98,10 @@
 				required: true,
 				type: Object,
 			},
+			itemsNamesSource: {
+				required: true,
+				type: String,
+			},
 			loading: {
 				default: false,
 				type: Boolean,
@@ -115,6 +119,13 @@
 			},
 		},
 		methods: {
+			filterDisplayName(filter) {
+				if (filter.hasOwnProperty('name')) return filter.name
+
+				const messageKey = filter.hasOwnProperty('message') ? filter.message : filter.value
+
+				return this.$t(`${this.itemsNamesSource}.${messageKey}`)
+			},
 			getFilter(filter) {
 				return get(this.filters, filter)
 			},

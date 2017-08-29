@@ -45,8 +45,9 @@ class Kernel extends ConsoleKernel
 		Commands\SlidesSnippets::class,
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
-		Commands\TaxonomizeTags::class,
 		Commands\TagsCleanup::class,
+		Commands\TagsFromTaxonomies::class,
+		Commands\TaxonomizeTags::class,
 		Commands\WarmUpCache::class,
 	];
 

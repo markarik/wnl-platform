@@ -160,6 +160,7 @@
 				'activeFiltersNames',
 				'currentQuestion',
 				'filters',
+				'getQuestion',
 				'getPage',
 				'getReaction',
 				'matchedQuestionsCount',
@@ -211,6 +212,7 @@
 				}).then(() => this.switchOverlay(false, 'testBuilding'))
 			},
 			changePage(page) {
+				scrollToTop()
 				return new Promise((resolve, reject) => {
 					if (this.getPage(page)) {
 						this.setPage(page)
@@ -297,7 +299,10 @@
 				this.fetchQuestions({filters: this.activeFilters})
 			},
 			onSelectAnswer(payload) {
-				this.selectAnswer(payload)
+				payload.answer === this.getQuestion(payload.id).selectedAnswer
+					&& !this.testMode
+					? this.onVerify(payload.id)
+					: this.selectAnswer(payload)
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)

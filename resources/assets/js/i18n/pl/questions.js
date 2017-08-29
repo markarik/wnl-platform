@@ -34,7 +34,7 @@ export const questions = {
 			yes: 'Tak, chcę dokończyć!',
 		},
 		current: 'Pytanie {number} z ',
-		hideAnswers: 'Ukryj odpowiedzi',
+		hideAnswers: 'Ukryj rozwiązania',
 		new: 'Nowy test',
 		resolve: 'Sprawdź wyniki',
 		results: {
@@ -44,7 +44,8 @@ export const questions = {
 			unanswered: 'Nierozwiązane',
 		},
 		score: 'Wynik:',
-		showAnswers: 'Pokaż odpowiedzi',
+		setAsCurrent: 'Ustaw jako aktualne',
+		showAnswers: 'Pokaż rozwiązania',
 		tabs: {
 			current: 'Aktualne pytanie ({current})',
 			list: 'Lista pytań ({count})',

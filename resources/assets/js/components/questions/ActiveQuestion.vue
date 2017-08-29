@@ -116,9 +116,7 @@
 				scrollToElement(this.$el, 75)
 			},
 			selectAnswer(data) {
-				data.answer === this.question.selectedAnswer
-					? this.$emit('verify', this.question.id)
-					: this.$emit('selectAnswer', data)
+				this.$emit('selectAnswer', data)
 			},
 			verify() {
 				this.hasAnswer && this.$emit('verify', this.question.id)

@@ -22,7 +22,7 @@
 				{{activeFiltersForDisplay}}
 			</div>
 			<a v-if="activeView === 'list'"
-				class="button is-small is-outlined"
+				class="button is-small is-outlined is-primary"
 				@click="showListResults = !showListResults"
 			>
 				{{toggleAnswersMessage}}
@@ -62,19 +62,21 @@
 					<div class="questions-list-numbering">
 						<span class="matched-count">
 							{{ $t('questions.solving.withNumber', {number: questionNumber(index)}) }}/{{questionsListCount}}
+							<a @click="setQuestion(index)">
+								{{ $t('questions.solving.setAsCurrent') }}
+							</a>
 						</span>
 						<span class="question-id">#{{question.id}}</span>
 					</div>
 					<wnl-quiz-question
 						:class="`quiz-question-${question.id}`"
 						:getReaction="getReaction"
-						:headerOnly="!showListResults"
 						:id="question.id"
 						:module="module"
 						:question="question"
 						:readOnly="showListResults"
 						:hideComments="true"
-						@headerClicked="setQuestion(index)"
+						@selectAnswer="selectAnswer"
 					/>
 				</div>
 

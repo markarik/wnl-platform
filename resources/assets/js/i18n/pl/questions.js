@@ -60,6 +60,10 @@ export const questions = {
 			start: 'Rozpocznij test!',
 			title: 'Rozwiąż zestaw ułożony na podstawie aktywnych filtrów...',
 		},
+		unanswered: {
+			all: 'Pokaż wszystkie pytania',
+			filter: 'Pokaż tylko nierozwiązane',
+		},
 		withNumber: 'Pytanie {number}',
 	},
 	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',

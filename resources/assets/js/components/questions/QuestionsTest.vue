@@ -3,16 +3,23 @@
 		<div class="questions-test-header-container">
 			<div class="questions-test-header" :class="{'is-sticky': hasStickyHeader}" ref="header">
 				<div v-if="!isComplete">
-					<div class="in-progress" @click="hideTime = !hideTime">
-						<span class="answered">
-							{{$t('questions.solving.test.headers.answered', {
-								answered: answeredCount,
-								total: totalCount,
-							})}}
+					<div class="in-progress">
+						<span>
+							<span class="answered">
+								{{$t('questions.solving.test.headers.answered', {
+									answered: answeredCount,
+									total: totalCount,
+								})}}
+							</span>
+							<a v-show="unansweredCount > 0" class="toggle-unanswered"
+								@click="filterUnanswered = !filterUnanswered">
+								{{unansweredToggleMessage}}
+							</a>
 						</span>
 						<wnl-quiz-timer ref="timer"
 							:hideTime="hideTime"
 							:time="time"
+							@clicked="hideTime = !hideTime"
 							@timesUp="onTimesUp"/>
 					</div>
 					<progress class="progress is-success" :max="totalCount" :value="answeredCount">
@@ -59,6 +66,7 @@
 
 		<wnl-quiz-list
 			module="questions"
+			ref="quizlist"
 			:allQuestions="filteredQuestions"
 			:getReaction="getReaction"
 			:isComplete="isComplete"
@@ -104,6 +112,13 @@
 
 			.answered
 				text-transform: uppercase
+
+			.toggle-unanswered
+				font-size: $font-size-minus-2
+				margin-left: $margin-small
+
+			.timer
+				+clickable()
 
 		.complete
 
@@ -174,6 +189,7 @@
 			return {
 				currentScroll: 0,
 				filterResults: false,
+				filterUnanswered: false,
 				headerOffset: 0,
 				hideTime: false,
 				scrollableContainer: {},
@@ -181,16 +197,20 @@
 		},
 		computed: {
 			answeredCount() {
-				return this.answeredQuestions.length
+				return this.totalCount - this.unansweredCount
 			},
-			answeredQuestions() {
-				return this.questions.filter(question => isNumber(question.selectedAnswer))
+			unansweredQuestions() {
+				return this.questions.filter(question => !isNumber(question.selectedAnswer))
 			},
 			correctCount() {
 				return this.testResults && size(this.testResults.correct)
 			},
 			filteredQuestions() {
-				if (!this.isComplete) return this.questions
+				if (!this.isComplete) {
+					return this.filterUnanswered && this.unansweredCount > 0
+						? this.unansweredQuestions
+						: this.questions
+				}
 
 				return isEmpty(this.filterResults)
 					? this.questions
@@ -210,12 +230,20 @@
 				return this.questions.length
 			},
 			unansweredCount() {
-				return this.totalCount - this.answeredCount
+				return this.unansweredQuestions.length
+			},
+			unansweredToggleMessage() {
+				return this.filterUnanswered
+					? this.$t('questions.solving.unanswered.all')
+					: this.$t('questions.solving.unanswered.filter')
 			},
 		},
 		methods: {
 			checkQuiz() {
 				this.$emit('checkQuiz', {unansweredCount: this.unansweredCount})
+				if (this.unansweredCount > 0) {
+					this.$refs.quizlist.scrollToFirstUnanswered()
+				}
 			},
 			toggleFilter(status) {
 				this.filterResults = this.filterResults === status ? '' : status

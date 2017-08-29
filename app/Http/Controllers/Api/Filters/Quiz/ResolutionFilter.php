@@ -7,24 +7,41 @@ class ResolutionFilter extends ApiFilter
 {
 	protected $expected = ['user_id', 'list'];
 
-	public function apply($model)
+	public function handle($builder)
 	{
-		$model = $model->where(function ($query) {
+		$builder = $builder->where(function ($query) {
 			foreach ($this->params['list'] as $state) {
 				$query->orWhere(function ($query) use ($state) {
-					if (method_exists($this, $state)) {
-						$this->{$state}($query);
-					}
+					$this->{$state}($query);
 				});
 			}
 		});
 
-		return $model;
+		return $builder;
 	}
 
-	private function incorrect($query)
+	public function values()
 	{
-		$query->whereHas('userQuizResults', function ($query) {
+		return ['correct', 'incorrect', 'unresolved'];
+	}
+
+	public function count($builder)
+	{
+		$counted = [];
+
+		foreach ($this->values() as $value) {
+			$counted[] = [
+				'value' => $value,
+				'count' => $this->{$value}($builder)->count(),
+			];
+		}
+
+		return $counted;
+	}
+
+	protected function incorrect($query)
+	{
+		return $query->whereHas('userQuizResults', function ($query) {
 			$query
 				->where('user_id', $this->params['user_id'])
 				->whereHas('quizAnswer', function ($query) {
@@ -35,7 +52,7 @@ class ResolutionFilter extends ApiFilter
 
 	protected function correct($query)
 	{
-		$query->whereHas('userQuizResults', function ($query) {
+		return $query->whereHas('userQuizResults', function ($query) {
 			$query
 				->where('user_id', $this->params['user_id'])
 				->whereHas('quizAnswer', function ($query) {
@@ -46,7 +63,7 @@ class ResolutionFilter extends ApiFilter
 
 	protected function unresolved($query)
 	{
-		$query->whereDoesntHave('userQuizResults', function ($query) {
+		return $query->whereDoesntHave('userQuizResults', function ($query) {
 			$query->where('user_id', $this->params['user_id']);
 		});
 	}

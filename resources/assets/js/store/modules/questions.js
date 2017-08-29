@@ -91,7 +91,7 @@ const getters = {
 			}
 		})
 
-		return filters
+		return state.filters
 	},
 	getQuestion: state => questionId => state.quiz_questions[questionId],
 	getPage: state => page => state.questionsPages[page],
@@ -402,7 +402,8 @@ const _fetchQuestionsComments = (id) => {
 }
 
 const _fetchDynamicFilters = () => {
-	return axios.get(getApiUrl('quiz_questions/filters/get'))
+	const data = {}
+	return axios.post(getApiUrl('quiz_questions/.filterList'), data)
 }
 
 const _parseFilters = (activeFilters, state, getters, rootGetters) => {

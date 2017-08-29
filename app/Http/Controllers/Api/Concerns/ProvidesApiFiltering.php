@@ -28,6 +28,32 @@ trait ProvidesApiFiltering
 		return $this->respondOk($response);
 	}
 
+	public function filterList(Request $request)
+	{
+		$resource = $request->route('resource');
+		$model = app(static::getResourceModel($resource));
+		if (!empty($filter)){
+			$builder = $this->addFilters($request, $model);
+		} else {
+			$builder = $model::select();
+		}
+
+		$items = $this->getCounters($builder);
+
+		return $this->respondOk($items);
+	}
+
+	protected function getCounters($builder)
+	{
+		$available = [];
+		foreach (static::AVAILABLE_FILTERS as $filterName) {
+			$filter = $this->getFilter($filterName);
+			$available[$filterName] = $filter->count($builder);
+		}
+
+		return $available;
+	}
+
 	protected function addFilters($request, $model)
 	{
 		if (empty($request->filters)) {
@@ -35,31 +61,31 @@ trait ProvidesApiFiltering
 		}
 
 		foreach ($request->filters as $filter) {
-			$filter = $this->getFilter($filter);
-			$model = $filter->apply($model);
+			$filterName = array_keys($filter)[0];
+			$params = $filter[$filterName];
+			$this->checkIsArray($filter);
+			$this->checkIsArray($params);
+			$oFilter = $this->getFilter($filterName);
+			$model = $oFilter->apply($model, $params);
 		}
 
 		return $model;
 	}
 
-	private function getFilter($filter)
+	private function getFilter($filterName)
 	{
-		$this->checkIsArray($filter);
-		$filterName = array_keys($filter)[0];
-		$params = $filter[$filterName];
-		$this->checkIsArray($params);
 		$filterClass = $this->getFilterClass($filterName);
 
-		return new $filterClass($params);
+		return new $filterClass();
 	}
 
 	private function getFilterClass($filterName)
 	{
 		$className = collect(explode('.', $filterName))
-			->map(function ($v) {
-				return studly_case($v);
-			})
-			->implode('\\') . 'Filter';
+				->map(function ($v) {
+					return studly_case($v);
+				})
+				->implode('\\') . 'Filter';
 
 		return 'App\Http\Controllers\Api\Filters\\' . $className;
 	}
@@ -71,13 +97,15 @@ trait ProvidesApiFiltering
 		throw new ApiFilterException('Filter must be an array of arrays.');
 	}
 
-	private function randomizedResponse($model, $limit) {
-		$randomQuestions = $model->inRandomOrder()
-		->limit($limit)
-		->get();
+	private function randomizedResponse($model, $limit)
+	{
+		$data = $model
+			->inRandomOrder()
+			->limit($limit)
+			->get();
 
 		return [
-			'data' => $this->transform($randomQuestions)
+			'data' => $this->transform($data),
 		];
 	}
 }

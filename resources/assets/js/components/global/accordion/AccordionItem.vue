@@ -16,7 +16,7 @@
 				</span>
 			</div>
 			<div class="wai-content">
-				{{content}}
+				{{content}} ({{ item.count }})
 			</div>
 			<div v-if="hasChildren" class="wai-expand-icon" ref="expand">
 				<span class="icon is-small">

@@ -2,6 +2,7 @@
 
 
 use App\Exceptions\ApiFilterException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 abstract class ApiFilter
@@ -19,25 +20,70 @@ abstract class ApiFilter
 	protected $expected;
 
 	/**
-	 * @param array $params
+	 * Filter params.
+	 *
+	 * @var array
 	 */
-	public function __construct(array $params)
+	protected $params;
+
+	/**
+	 * ApiFilter constructor.
+	 */
+	public function __construct()
 	{
 		$this->request = app(Request::class);
-		$this->params = $params;
-		$this->checkFilterParams();
 	}
 
 	/**
-	 * Apply filter to model.
+	 * Apply filter to the builder.
 	 *
-	 * @param $model
+	 * @param Builder $builder
+	 *
+	 * @return Builder
 	 */
-	public abstract function apply($model);
+	protected abstract function handle($builder);
+
+	/**
+	 * Perform some common actions on input values and call the
+	 * actual filtering method.
+	 *
+	 * @param $builder
+	 * @param $params
+	 *
+	 * @return Builder
+	 */
+	public function apply($builder, $params)
+	{
+		$this->params = $params;
+		$this->checkFilterParams();
+
+		return $this->handle($builder);
+	}
+
+	/**
+	 * Provides possible values that can be fed to the filter.
+	 *
+	 * @return array
+	 */
+	public function values()
+	{
+		return [];
+	}
+
+	/**
+	 * Provides values list with items count.
+	 *
+	 * @return array
+	 */
+	public function count($builder)
+	{
+		return [];
+	}
 
 	/**
 	 * Make sure filter has received all information it requires.
-	 * Override this method for filters without params.
+	 *
+	 * @throws ApiFilterException
 	 */
 	protected function checkFilterParams()
 	{
@@ -45,7 +91,7 @@ abstract class ApiFilter
 
 		$diff = array_diff($this->expected, array_keys($this->params));
 
-		if ($diff){
+		if ($diff) {
 			throw new ApiFilterException('Missing filter params: ' . implode($diff, ','));
 		}
 	}

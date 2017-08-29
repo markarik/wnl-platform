@@ -2,72 +2,23 @@
 
 namespace App\Http\Controllers\Api\PrivateApi;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
-use App\Models\Tag;
+use Illuminate\Http\Request;
 use App\Models\Taxonomy;
 
 class QuizQuestionsApiController extends ApiController
 {
+	const AVAILABLE_FILTERS = [
+		'by_taxonomy.subjects',
+		'by_taxonomy.exams',
+		'by_taxonomy.tags',
+		'quiz.resolution',
+//		'quiz.planned',
+	];
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.quiz-questions');
-	}
-
-	public function getFilters() {
-		// TODO id shouldn't be hardcoded here
-		$examsFilterItems = $this->buildTaxonomyStructure('exams');
-		$subjectsFilterItems = $this->buildTaxonomyStructure('subjects');
-
-		return $this->respondOk([
-			'subjects' => [
-				'type' => 'tags',
-				'items' => $subjectsFilterItems
-			],
-			'exams' => [
-				'type' => 'tags',
-				'items' => $examsFilterItems
-			],
-		]);
-	}
-
-	protected function getChildItems($expectedParent, $list) {
-		return $list->first(function ($value, $key) use ($expectedParent) {
-			return $key === $expectedParent;
-		});
-	}
-
-	protected function buildChildStructure($tagId, $groupedTags, $structure) {
-		if (!$groupedTags->has($tagId)) {
-			return null;
-		}
-
-		$root = $this->getChildItems($tagId, $groupedTags);
-
-		foreach($root as $rootItem) {
-			$entry = [];
-			$entry = [
-				'name' => $rootItem->tag->name,
-				'value' => $rootItem->tag->id
-			];
-
-			$childStructure = $this->buildChildStructure($rootItem->tag->id, $groupedTags, []);
-
-			if (!empty($childStructure)) {
-				$entry['items'] = $childStructure;
-			}
-
-			$structure[] = $entry;
-		}
-
-		return $structure;
-	}
-
-	protected function buildTaxonomyStructure($taxonomyName) {
-		$groupedTags = Taxonomy::where('name', $taxonomyName)->first()->tagsTaxonomy->sortBy('order_number')->groupBy('parent_tag_id');
-		$items = $this->buildChildStructure(0, $groupedTags, []);
-
-		return $items;
 	}
 }

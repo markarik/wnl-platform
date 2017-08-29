@@ -158,12 +158,10 @@
 		},
 		methods: {
 			selectAnswer(answerIndex) {
-				if (!this.question.isResolved) {
-					this.$emit('selectAnswer', {
-						id: this.question.id,
-						answer: answerIndex
-					})
-				}
+				const data = {id: this.question.id, answer: answerIndex}
+				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
+
+				this.$emit(eventName, data)
 			}
 		}
 	}

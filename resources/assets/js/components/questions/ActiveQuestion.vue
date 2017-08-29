@@ -27,7 +27,7 @@
 			@selectAnswer="selectAnswer"
 		/>
 		<p class="has-text-centered">
-			<a v-if="!question.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
+			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
 				Sprawdź odpowiedź
 			</a>
 			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
@@ -97,7 +97,7 @@
 			...mapGetters(['isMobile']),
 			...mapGetters('questions', ['getQuestion']),
 			hasAnswer() {
-				return this.question.selectedAnswer !== null
+				return _.isNumber(this.question.selectedAnswer)
 			},
 			isSubmitDisabled() {
 				return !this.hasAnswer
@@ -107,11 +107,6 @@
 			},
 		},
 		methods: {
-			verify() {
-				if (this.hasAnswer) {
-					this.$emit('verify', this.question.id)
-				}
-			},
 			nextQuestion() {
 				this.$emit('changeQuestion', 1)
 				scrollToElement(this.$el, 75)
@@ -121,8 +116,13 @@
 				scrollToElement(this.$el, 75)
 			},
 			selectAnswer(data) {
-				this.$emit('selectAnswer', data)
-			}
+				data.answer === this.question.selectedAnswer
+					? this.$emit('verify', this.question.id)
+					: this.$emit('selectAnswer', data)
+			},
+			verify() {
+				this.hasAnswer && this.$emit('verify', this.question.id)
+			},
 		},
 	}
 </script>

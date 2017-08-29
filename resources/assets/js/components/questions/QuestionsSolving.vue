@@ -94,6 +94,7 @@
 					:questions="testQuestions"
 					:questionsPoolSize="questionsListCount"
 					:testMode="testMode"
+					:testProcessing="testProcessing"
 					:testResults="testResults"
 					@buildTest="buildTest"
 					@selectAnswer="selectAnswer"
@@ -235,6 +236,10 @@
 			testQuestions: {
 				default: () => [],
 				type: Array,
+			},
+			testProcessing: {
+				default: false,
+				type: Boolean,
 			},
 			testResults: {
 				default: () => {},

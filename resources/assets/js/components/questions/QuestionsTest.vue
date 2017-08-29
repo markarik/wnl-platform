@@ -70,7 +70,7 @@
 			:allQuestions="filteredQuestions"
 			:getReaction="getReaction"
 			:isComplete="isComplete"
-			:isProcessing="false"
+			:isProcessing="testProcessing"
 			:plainList="true"
 			@selectAnswer="onSelectAnswer"
 			@checkQuiz="checkQuiz"
@@ -184,7 +184,15 @@
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-timer': QuizTimer
 		},
-		props: ['questions', 'time', 'onSelectAnswer', 'onCheckQuiz', 'getReaction', 'testResults'],
+		props: [
+			'getReaction',
+			'questions',
+			'onCheckQuiz',
+			'onSelectAnswer',
+			'testProcessing',
+			'testResults',
+			'time',
+		],
 		data() {
 			return {
 				currentScroll: 0,

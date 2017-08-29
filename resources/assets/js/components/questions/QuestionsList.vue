@@ -31,6 +31,7 @@
 					:questionsCurrentPage="questionsCurrentPage"
 					:testMode="testMode"
 					:testQuestions="testQuestions"
+					:testProcessing="testProcessing"
 					:testResults="testResults"
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
@@ -139,6 +140,7 @@
 				orderedQuestionsList: [],
 				showBuilder: false,
 				testMode: false,
+				testProcessing: false,
 				testResults: {},
 				reactionsFetched: false,
 			}
@@ -245,6 +247,7 @@
 				})
 			},
 			endQuiz() {
+				this.testProcessing = false
 				this.testMode = false
 				this.testResults = {}
 				this.resetTest()
@@ -301,12 +304,12 @@
 				this.saveQuestionsResults([questionId])
 			},
 			performCheckQuestions() {
+				scrollToTop()
 				this.testMode = false
-				this.switchOverlay(true, 'testChecking', 'testChecking')
+				this.testProcessing = true
 				this.checkQuestions().then(results => {
-					scrollToTop()
 					this.testResults = results
-					this.switchOverlay(false, 'testChecking')
+					this.testProcessing = false
 				})
 			},
 			setQuestion({page, index}) {

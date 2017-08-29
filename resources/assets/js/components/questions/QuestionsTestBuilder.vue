@@ -5,6 +5,7 @@
 			:time="time * 60"
 			:onSelectAnswer="selectAnswer"
 			:getReaction="getReaction"
+			:testProcessing="testProcessing"
 			:testResults="testResults"
 			@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 			@endQuiz="$emit('endQuiz')"
@@ -145,6 +146,10 @@
 				type: Array,
 			},
 			testMode: {
+				default: false,
+				type: Boolean,
+			},
+			testProcessing: {
 				default: false,
 				type: Boolean,
 			},

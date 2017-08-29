@@ -1,6 +1,6 @@
 <template>
 	<div class="questions-test-builder" :class="{'is-desktop': isLargeDesktop}">
-		<wnl-questions-test v-if="testMode && hasQuestions"
+		<wnl-questions-test v-if="hasQuestions"
 			:questions="questions"
 			:time="time * 60"
 			:onSelectAnswer="selectAnswer"

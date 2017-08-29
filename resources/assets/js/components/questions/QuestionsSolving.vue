@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="tabs">
+		<div class="tabs" v-if="!testMode">
 			<ul>
 				<li
 					v-for="view in views"
@@ -17,7 +17,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="questions-list-info">
+		<div class="questions-list-info" v-if="!testMode">
 			<div class="active-filters">
 				{{activeFiltersForDisplay}}
 			</div>
@@ -243,7 +243,7 @@
 		},
 		data() {
 			return {
-				activeView: 'test',
+				activeView: 'current',
 				showListResults: false,
 			}
 		},

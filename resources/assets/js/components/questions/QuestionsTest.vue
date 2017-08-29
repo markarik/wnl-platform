@@ -3,7 +3,7 @@
 		<div class="questions-test-header-container">
 			<div class="questions-test-header" :class="{'is-sticky': hasStickyHeader}" ref="header">
 				<div v-if="!isComplete">
-					<div class="in-progress">
+					<div class="in-progress" @click="hideTime = !hideTime">
 						<span class="answered">
 							{{$t('questions.solving.test.headers.answered', {
 								answered: answeredCount,
@@ -11,12 +11,21 @@
 							})}}
 						</span>
 						<wnl-quiz-timer ref="timer"
+							:hideTime="hideTime"
 							:time="time"
-							@timesUp="$emit('checkQuiz')"/>
+							@timesUp="onTimesUp"/>
 					</div>
 					<progress class="progress is-success" :max="totalCount" :value="answeredCount">
 						{{answeredCount}}
 					</progress>
+					<div class="test-controls">
+						<a class="button is-small is-primary is-outlined" @click="checkQuiz">
+							{{$t('questions.solving.resolve')}}
+						</a>
+						<a class="button is-small" @click="$emit('endQuiz')">
+							{{$t('questions.solving.abort')}}
+						</a>
+					</div>
 				</div>
 				<div v-else class="complete">
 					<div class="end-quiz">
@@ -56,7 +65,7 @@
 			:isProcessing="false"
 			:plainList="true"
 			@selectAnswer="onSelectAnswer"
-			@checkQuiz="$emit('checkQuiz', {unansweredCount})"
+			@checkQuiz="checkQuiz"
 		/>
 	</div>
 </template>
@@ -73,8 +82,11 @@
 	.questions-test-header
 		height: $header-height + 2 * $margin-base
 		padding: $margin-base 0
+		top: -50px
 
 		&.is-sticky
+			+shadow()
+
 			background: $color-white-overlay
 			left: 0
 			height: $header-height + 2 * $margin-small
@@ -139,7 +151,10 @@
 
 	.progress
 		height: 2px
-		margin-top: $margin-small
+		margin: $margin-small 0
+
+	.test-controls
+		+flex-space-between()
 </style>
 
 <script>
@@ -160,6 +175,7 @@
 				currentScroll: 0,
 				filterResults: false,
 				headerOffset: 0,
+				hideTime: false,
 				scrollableContainer: {},
 			}
 		},
@@ -181,7 +197,7 @@
 					: this.testResults[this.filterResults]
 			},
 			hasStickyHeader() {
-				return this.currentScroll > this.headerOffset
+				return this.currentScroll > this.headerOffset + 100
 			},
 			isComplete() {
 				return !isEmpty(this.testResults)
@@ -198,12 +214,19 @@
 			},
 		},
 		methods: {
+			checkQuiz() {
+				this.$emit('checkQuiz', {unansweredCount: this.unansweredCount})
+			},
 			toggleFilter(status) {
 				this.filterResults = this.filterResults === status ? '' : status
 			},
 			onScroll: debounce(function({target: {scrollTop}}) {
 				this.currentScroll = scrollTop
 			}, 50),
+			onTimesUp() {
+				this.$refs.timer.stopTimer()
+				this.checkQuiz()
+			},
 		},
 		mounted() {
 			!this.isComplete && this.$refs.timer.startTimer()
@@ -216,5 +239,10 @@
 		beforeDestroy() {
 			this.scrollableContainer.removeEventListener('scroll', this.onScroll)
 		},
+		watch: {
+			hasStickyHeader(to, from) {
+				this.hideTime = to
+			},
+		}
 	}
 </script>

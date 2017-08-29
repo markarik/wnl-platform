@@ -26,15 +26,17 @@ export const questions = {
 		stats: 'Sprawdź statystyki',
 	},
 	solving: {
+		abort: 'Przerwij',
 		confirm: {
 			no: 'Nie, przerywam',
-			title: 'Czy chcesz dokończyć test?',
+			title: 'Może jednak chcesz dokończyć test?',
 			unanswered: 'Pytań bez odpowiedzi: {count}',
-			yes: 'Tak, rozwiązuję dalej!',
+			yes: 'Tak, chcę dokończyć!',
 		},
 		current: 'Pytanie {number} z ',
 		hideAnswers: 'Ukryj odpowiedzi',
 		new: 'Nowy test',
+		resolve: 'Sprawdź wyniki',
 		results: {
 			correct: 'Rozwiązane poprawnie',
 			displayOnly: 'Wyświetl tylko:',

@@ -1,7 +1,7 @@
 <template>
 	<span class="timer">
-		{{hms}}
-		<span class="icon is-small">
+		<span v-show="!hideTime">{{hms}}</span>
+		<span v-show="!hideIcon" class="icon is-small">
 			<i class="fa" :class="hourglassClass"></i>
 		</span>
 	</span>
@@ -9,6 +9,9 @@
 
 <style lang="sass" ref="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.timer
+		user-select: none
 
 	.icon
 		color: $color-background-gray
@@ -23,7 +26,15 @@
 			time: {
 				required: true,
 				type: Number,
-			}
+			},
+			hideIcon: {
+				default: false,
+				type: Boolean,
+			},
+			hideTime: {
+				default: false,
+				type: Boolean,
+			},
 		},
 		data() {
 			return {
@@ -51,7 +62,7 @@
 				clearInterval(this.timerId)
 			},
 			countDown() {
-				if (--this.remainingTime < 0) {
+				if (--this.remainingTime <= 0) {
 					this.$emit('timesUp')
 				}
 			}

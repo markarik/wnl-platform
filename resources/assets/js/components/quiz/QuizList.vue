@@ -18,7 +18,7 @@
 		></wnl-quiz-question>
 		<p class="has-text-centered" v-if="!displayResults">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
-				Sprawdź pytania
+				Sprawdź wyniki
 			</a>
 		</p>
 	</div>

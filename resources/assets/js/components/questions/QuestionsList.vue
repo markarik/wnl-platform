@@ -36,7 +36,7 @@
 					@changeQuestion="onChangeQuestion"
 					@changePage="changePage"
 					@checkQuiz="verifyCheckQuestions"
-					@endQuiz="endQuiz"
+					@endQuiz="verifyEndQuiz"
 					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
 					@verify="onVerify"
@@ -50,13 +50,14 @@
 			:hasChat="true"
 		>
 			<wnl-questions-filters
+				v-show="!testMode"
 				:activeFilters="activeFilters"
 				:fetchingQuestions="fetchingQuestions"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
 			/>
 		</wnl-sidenav-slot>
-		<div v-if="!isLargeDesktop && isChatToggleVisible" class="wnl-chat-toggle">
+		<div v-if="!testMode && !isLargeDesktop && isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
 				<i class="fa fa-sliders"></i>
 				<span>{{$t('questions.filters.show')}}</span>
@@ -222,6 +223,27 @@
 						.then(() => resolve())
 				})
 			},
+			confirmQuizEnd(text = '') {
+				const config = swalConfig({
+					confirmButtonText: this.$t('questions.solving.confirm.yes'),
+					cancelButtonText: this.$t('questions.solving.confirm.no'),
+					reverseButtons: true,
+					showCancelButton: true,
+					showConfirmButton: true,
+					title: this.$t('questions.solving.confirm.title'),
+					type: 'question',
+				})
+
+				if (!isEmpty(text)) {
+					config.text = text
+				}
+
+				return new Promise((resolve, reject) => {
+					this.$swal(config)
+						.then(() => resolve(), () => reject())
+						.catch(e => reject())
+				})
+			},
 			endQuiz() {
 				this.testMode = false
 				this.testResults = {}
@@ -279,6 +301,7 @@
 				this.saveQuestionsResults([questionId])
 			},
 			performCheckQuestions() {
+				this.testMode = false
 				this.switchOverlay(true, 'testChecking', 'testChecking')
 				this.checkQuestions().then(results => {
 					scrollToTop()
@@ -304,7 +327,7 @@
 			},
 			verifyCheckQuestions({unansweredCount}) {
 				if (unansweredCount) {
-					this.verifyQuizEnd(this.$t('questions.solving.confirm.unanswered', {
+					this.confirmQuizEnd(this.$t('questions.solving.confirm.unanswered', {
 						count: unansweredCount
 					})).then(() => false)
 						.catch(() => this.performCheckQuestions())
@@ -312,22 +335,14 @@
 					this.performCheckQuestions()
 				}
 			},
-			verifyQuizEnd(text = '') {
-				const config = swalConfig({
-					confirmButtonText: this.$t('questions.solving.confirm.yes'),
-					cancelButtonText: this.$t('questions.solving.confirm.no'),
-					showCancelButton: true,
-					showConfirmButton: true,
-					text,
-					title: this.$t('questions.solving.confirm.title'),
-					type: 'question',
-				})
-
-				return new Promise((resolve, reject) => {
-					this.$swal(config)
-						.then(() => resolve(), () => reject())
-						.catch(e => reject())
-				})
+			verifyEndQuiz() {
+				if (this.testMode) {
+					this.confirmQuizEnd()
+						.then(() => false)
+						.catch(() => this.endQuiz())
+				} else {
+					this.endQuiz()
+				}
 			},
 		},
 		mounted() {
@@ -345,7 +360,7 @@
 		},
 		beforeRouteLeave(to, from, next) {
 			if (this.testMode) {
-				this.verifyQuizEnd()
+				this.confirmQuizEnd()
 					.then(() => next(false))
 					.catch(() => next())
 			} else {

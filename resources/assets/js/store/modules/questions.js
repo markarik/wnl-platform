@@ -263,7 +263,7 @@ const actions = {
 	},
 	fetchDynamicFilters({commit, getters, rootGetters}) {
 		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
-		return _fetchDynamicFilters(parsedFilters)
+		return _fetchDynamicFilters({filters: parsedFilters})
 			.then(({data}) => {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
@@ -399,7 +399,7 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 			filters.push({tags: groupedFilters[group]})
 		} else if (state.filters[group].type === FILTER_TYPES.LIST) {
 			filters.push({
-				[`quiz.${group}`]: {
+				[group]: {
 					user_id: rootGetters.currentUserId,
 					list: groupedFilters[group]
 				}

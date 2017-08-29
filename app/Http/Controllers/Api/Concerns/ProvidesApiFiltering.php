@@ -32,11 +32,7 @@ trait ProvidesApiFiltering
 	{
 		$resource = $request->route('resource');
 		$model = app(static::getResourceModel($resource));
-		if (!empty($filter)){
-			$builder = $this->addFilters($request, $model);
-		} else {
-			$builder = $model::select();
-		}
+		$builder = $this->addFilters($request, $model);
 
 		$items = $this->getCounters($builder);
 

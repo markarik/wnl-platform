@@ -122,4 +122,27 @@ class QuizQuestionsTest extends ApiTestCase
 		$response
 			->assertStatus(200);
 	}
+
+	/** @test */
+	public function get_quiz_questions_filters_with_active_filters()
+	{
+		$user = User::find(1);
+
+		$data = [
+			'filters' => [
+				[
+					'tags' => [119]
+				]
+			],
+			'limit'   => 1,
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/quiz_questions/.filterList'), $data);
+
+		$response->dump();
+
+	    $this->asseretEquals();
+	}
 }

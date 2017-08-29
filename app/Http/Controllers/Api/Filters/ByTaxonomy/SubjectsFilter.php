@@ -3,11 +3,6 @@
 
 class SubjectsFilter extends ByTaxonomyFilter
 {
-	protected function handle($builder)
-	{
-		// TODO: Implement handle() method.
-	}
-
 	public function count($builder)
 	{
 		$taxonomyTags = $this->getTaxonomyTags('subjects');

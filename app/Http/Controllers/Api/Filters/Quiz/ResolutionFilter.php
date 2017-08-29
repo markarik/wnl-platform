@@ -31,7 +31,7 @@ class ResolutionFilter extends ApiFilter
 
 		foreach ($this->values() as $value) {
 			$items[] = [
-				'count' => $this->{$value}($builder)->count(),
+				'count' => $this->$value($builder)->count(),
 				'value' => $value,
 			];
 		}

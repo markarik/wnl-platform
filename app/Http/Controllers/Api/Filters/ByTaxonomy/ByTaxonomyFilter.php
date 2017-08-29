@@ -3,9 +3,17 @@
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
 use App\Models\Taxonomy;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class ByTaxonomyFilter extends ApiFilter
 {
+	public function handle($builder)
+	{
+		return $builder->whereHas('tags', function ($query) {
+			$query->whereIn('tags.id', $this->params);
+		});
+	}
+
 	protected function getChildItems($expectedParent, $list)
 	{
 		return $list->first(function ($value, $key) use ($expectedParent) {
@@ -26,7 +34,7 @@ abstract class ByTaxonomyFilter extends ApiFilter
 			$entry = [
 				'name'  => $rootItem->tag->name,
 				'value' => $rootItem->tag->id,
-				'count' => $aggregatedTags->get($rootItem->tag->id)['doc_count']
+				'count' => $aggregatedTags->get($rootItem->tag->id)['doc_count'] ?? 0,
 			];
 
 			$childStructure = $this->buildChildStructure($rootItem->tag->id, $groupedTags, [], $aggregatedTags);
@@ -62,10 +70,19 @@ abstract class ByTaxonomyFilter extends ApiFilter
 
 	public function fetchAggregation($builder, $tags)
 	{
-		$model = $builder->getModel();
+		$ids = [];
+		if ($builder instanceof Model) {
+			$model = $builder;
+		} else {
+			$model = $builder->getModel();
+			$ids = $builder
+				->get(['id'])
+				->pluck('id')
+				->toArray();
+		}
 
 		$result = $model::searchRaw(
-			$this->elasticCraziness()
+			$this->elasticCraziness($ids, $tags)
 		);
 
 		$tagsAggregation = $result['aggregations']['tags']['buckets'];
@@ -73,19 +90,29 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		return $tagsAggregation;
 	}
 
-	protected function elasticCraziness()
+	protected function elasticCraziness($ids, $tags)
 	{
+		if ($ids !== []) {
+			$query = [
+				'terms' => ['id' => $ids],
+			];
+			$size = count($ids);
+		} else {
+			$query = [
+				'terms' => ['tags.id' => $tags],
+			];
+			$size = count($tags);
+		}
+
 		return [
 			'body' => [
 				'size'  => 0,
-				'query' => [
-					'match_all' => new \stdClass(), // <- TODO: Resolve dynamically
-				],
+				'query' => $query,
 				'aggs'  => [
 					'tags' => [
 						'terms' => [
 							'field' => 'tags.id',
-							'size'  => 300, // <- TODO: Resolve dynamically
+							'size'  => $size,
 						],
 					],
 				],

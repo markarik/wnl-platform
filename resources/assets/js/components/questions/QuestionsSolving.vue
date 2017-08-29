@@ -97,7 +97,7 @@
 					:testResults="testResults"
 					@buildTest="buildTest"
 					@selectAnswer="selectAnswer"
-					@checkQuiz="$emit('checkQuiz')"
+					@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 					@endQuiz="$emit('endQuiz')"
 				/>
 			</div>

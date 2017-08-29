@@ -1,5 +1,5 @@
 import { set, delete as destroy } from 'vue'
-import { get, isEqual, isEmpty, merge, size } from 'lodash'
+import { get, isEqual, isEmpty, isNumber, merge, size } from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
@@ -87,6 +87,9 @@ const getters = {
 	},
 	results: state => state.results,
 	testQuestions: state => state.testQuestions.map(id => state.quiz_questions[id]),
+	testQuestionsUnanswered: (state, getters) => getters.testQuestions.filter(question => {
+		return !isNumber(question.selectedAnswer)
+	})
 }
 
 // Mutations
@@ -242,7 +245,7 @@ const actions = {
 
 
 		getters.testQuestions.forEach((question) => {
-			if ([null, false].indexOf(question.selectedAnswer) > -1) {
+			if (!isNumber(question.selectedAnswer)) {
 				return results.unanswered.push(question)
 			}
 			const selectedAnswer = question.answers[question.selectedAnswer]

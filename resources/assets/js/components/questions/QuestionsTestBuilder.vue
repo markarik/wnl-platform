@@ -6,7 +6,7 @@
 			:onSelectAnswer="selectAnswer"
 			:getReaction="getReaction"
 			:testResults="testResults"
-			@checkQuiz="$emit('checkQuiz')"
+			@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 			@endQuiz="$emit('endQuiz')"
 		/>
 		<div v-else>

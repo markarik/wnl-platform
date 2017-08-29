@@ -20,8 +20,15 @@
 				</div>
 				<div v-else class="complete">
 					<div class="end-quiz">
-						<a class="button is-small is-primary" @click="$emit('endQuiz')">
-							{{$t('questions.solving.end')}}
+						<span class="result">
+							{{$t('questions.solving.score')}}
+							<span class="percent">{{score}}%</span>
+							<span class="score">
+								(<span class="correct">{{correctCount}}</span>/{{totalCount}})
+							</span>
+						</span>
+						<a class="button is-small is-outlined" @click="$emit('endQuiz')">
+							{{$t('questions.solving.new')}}
 						</a>
 					</div>
 					<div class="results">
@@ -49,7 +56,7 @@
 			:isProcessing="false"
 			:plainList="true"
 			@selectAnswer="onSelectAnswer"
-			@checkQuiz="$emit('checkQuiz')"
+			@checkQuiz="$emit('checkQuiz', {unansweredCount})"
 		/>
 	</div>
 </template>
@@ -89,8 +96,23 @@
 		.complete
 
 			.end-quiz
+				+flex-space-between()
 				margin-bottom: $margin-base
-				text-align: center
+
+				.result
+					letter-spacing: 1px
+					text-transform: uppercase
+
+					.correct
+						color: $color-green
+						font-weight: $font-weight-bold
+
+					.percent
+						font-size: $font-size-plus-2
+						font-weight: $font-weight-bold
+
+					.score
+						font-size: $font-size-minus-1
 
 			.results
 				font-size: $font-size-minus-1
@@ -115,15 +137,13 @@
 			.results-heading
 				color: $color-background-gray
 
-
-
 	.progress
 		height: 2px
 		margin-top: $margin-small
 </style>
 
 <script>
-	import {debounce, isEmpty} from 'lodash'
+	import {debounce, isEmpty, isNumber, size} from 'lodash'
 
 	import QuizList from 'js/components/quiz/QuizList'
 	import QuizTimer from 'js/components/quiz/QuizTimer'
@@ -148,9 +168,10 @@
 				return this.answeredQuestions.length
 			},
 			answeredQuestions() {
-				return this.questions.filter(question => {
-					return [null, false].indexOf(question.selectedAnswer) === -1
-				})
+				return this.questions.filter(question => isNumber(question.selectedAnswer))
+			},
+			correctCount() {
+				return this.testResults && size(this.testResults.correct)
 			},
 			filteredQuestions() {
 				if (!this.isComplete) return this.questions
@@ -165,8 +186,15 @@
 			isComplete() {
 				return !isEmpty(this.testResults)
 			},
+			score() {
+				return this.testResults &&
+					Math.floor(this.correctCount * 100 / this.totalCount)
+			},
 			totalCount() {
 				return this.questions.length
+			},
+			unansweredCount() {
+				return this.totalCount - this.answeredCount
 			},
 		},
 		methods: {

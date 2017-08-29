@@ -64,7 +64,7 @@
 			},
 			questionsUnaswered() {
 				return _.filter(this.allQuestions, (question) => {
-					return [null, false].indexOf(question.selectedAnswer) > -1
+					return !_.isNumber(question.selectedAnswer)
 				})
 			},
 			displayResults() {

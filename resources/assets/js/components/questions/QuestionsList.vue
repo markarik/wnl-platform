@@ -35,7 +35,7 @@
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
 					@changePage="changePage"
-					@checkQuiz="performCheckQuestions"
+					@checkQuiz="verifyCheckQuestions"
 					@endQuiz="endQuiz"
 					@selectAnswer="onSelectAnswer"
 					@setQuestion="setQuestion"
@@ -104,8 +104,6 @@
 	import {isEmpty} from 'lodash'
 	import {mapGetters, mapActions} from 'vuex'
 
-	import { scrollToTop } from 'js/utils/animations'
-
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
@@ -113,6 +111,9 @@
 	import QuestionsSolving from 'js/components/questions/QuestionsSolving'
 	import QuestionsTest from 'js/components/questions/QuestionsTest'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
+
+	import { scrollToTop } from 'js/utils/animations'
+	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'QuestionsList',
@@ -163,6 +164,7 @@
 				'questionsCurrentPage',
 				'questionsList',
 				'testQuestions',
+				'testQuestionsUnanswered',
 			]),
 			computedGetReaction() {
 				return this.reactionsFetched ? this.getReaction : () => {}
@@ -279,9 +281,9 @@
 			performCheckQuestions() {
 				this.switchOverlay(true, 'testChecking', 'testChecking')
 				this.checkQuestions().then(results => {
+					scrollToTop()
 					this.testResults = results
 					this.switchOverlay(false, 'testChecking')
-					scrollToTop()
 				})
 			},
 			setQuestion({page, index}) {
@@ -300,6 +302,33 @@
 			toggleBuilder() {
 				this.showBuilder = !this.showBuilder
 			},
+			verifyCheckQuestions({unansweredCount}) {
+				if (unansweredCount) {
+					this.verifyQuizEnd(this.$t('questions.solving.confirm.unanswered', {
+						count: unansweredCount
+					})).then(() => false)
+						.catch(() => this.performCheckQuestions())
+				} else {
+					this.performCheckQuestions()
+				}
+			},
+			verifyQuizEnd(text = '') {
+				const config = swalConfig({
+					confirmButtonText: this.$t('questions.solving.confirm.yes'),
+					cancelButtonText: this.$t('questions.solving.confirm.no'),
+					showCancelButton: true,
+					showConfirmButton: true,
+					text,
+					title: this.$t('questions.solving.confirm.title'),
+					type: 'question',
+				})
+
+				return new Promise((resolve, reject) => {
+					this.$swal(config)
+						.then(() => resolve(), () => reject())
+						.catch(e => reject())
+				})
+			},
 		},
 		mounted() {
 			this.activeFiltersSet(this.presetFilters)
@@ -313,6 +342,15 @@
 					return this.fetchQuestionsReactions(this.getPage(1))
 				})
 				.then(() => this.reactionsFetched = true)
+		},
+		beforeRouteLeave(to, from, next) {
+			if (this.testMode) {
+				this.verifyQuizEnd()
+					.then(() => next(false))
+					.catch(() => next())
+			} else {
+				next()
+			}
 		},
 		watch: {
 			highlightedQuestion(currentQuestion, previousQuestion = {}) {

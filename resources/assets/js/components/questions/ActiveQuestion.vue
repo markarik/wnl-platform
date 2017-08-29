@@ -21,7 +21,7 @@
 			:class="`quiz-question-${question.id}`"
 			:id="question.id"
 			:question="question"
-			:showComments="true"
+			:showComments="displayResults"
 			:getReaction="getReaction"
 			:module="module"
 			@selectAnswer="selectAnswer"

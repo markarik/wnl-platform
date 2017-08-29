@@ -90,7 +90,7 @@ const getters = {
 			}
 		})
 
-		return filters
+		return state.filters
 	},
 	getQuestion: state => questionId => state.quiz_questions[questionId],
 	getPage: state => page => state.questionsPages[page],
@@ -171,10 +171,10 @@ const mutations = {
 			})
 		})
 	},
-	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {exams, subjects}) {
+	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, data) {
 		const existingFilters = state.filters
 
-		set(state, 'filters', {...existingFilters, exams, subjects})
+		set(state, 'filters', {...existingFilters, ...data})
 	},
 	[types.QUESTIONS_SELECT_ANSWER] (state, payload) {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
@@ -248,7 +248,10 @@ const actions = {
 	fetchDynamicFilters({commit}) {
 		return _fetchDynamicFilters()
 			.then(({data}) => {
-				console.log(data)
+				// const tmp = { // TODO: !
+				// 	exams: data['by_taxonomy.exams'],
+				// 	subjects: data['by_taxonomy.subjects'],
+				// }
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},

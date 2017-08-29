@@ -19,6 +19,9 @@ class SubjectsFilter extends ByTaxonomyFilter
 
 		$structure = $this->buildTaxonomyStructure($taxonomyTags, $aggregatedTags);
 
-		return $structure;
+		return [
+			'type'  => 'tags',
+			'items' => $structure,
+		];
 	}
 }

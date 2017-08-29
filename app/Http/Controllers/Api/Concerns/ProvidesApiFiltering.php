@@ -40,7 +40,7 @@ trait ProvidesApiFiltering
 
 		$items = $this->getCounters($builder);
 
-		return $this->respondOk(compact('items'));
+		return $this->respondOk($items);
 	}
 
 	protected function getCounters($builder)

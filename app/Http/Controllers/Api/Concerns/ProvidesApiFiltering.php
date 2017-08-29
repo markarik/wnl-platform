@@ -44,7 +44,10 @@ trait ProvidesApiFiltering
 		$available = [];
 		foreach (static::AVAILABLE_FILTERS as $filterName) {
 			$filter = $this->getFilter($filterName);
-			$available[$filterName] = $filter->count($builder);
+			$counters = $filter->count($builder);
+			if ($counters) {
+				$available[$filterName] = $counters;
+			}
 		}
 
 		return $available;

@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
+use Auth;
 
 class ResolutionFilter extends ApiFilter
 {
@@ -28,6 +29,7 @@ class ResolutionFilter extends ApiFilter
 	public function count($builder)
 	{
 		$items = [];
+		$this->params['user_id'] = Auth::user()->id;
 
 		foreach ($this->values() as $value) {
 			$items[] = [

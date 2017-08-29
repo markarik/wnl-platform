@@ -4,6 +4,7 @@
 use App\Http\Controllers\Api\Filters\ApiFilter;
 use App\Models\UserPlan;
 use Carbon\Carbon;
+use Auth;
 
 class PlannedFilter extends ApiFilter
 {
@@ -19,5 +20,26 @@ class PlannedFilter extends ApiFilter
 		$questionsForDay = $plan->questionsForDay($supportedDate)->pluck('question_id')->toArray();
 
 		return $builder->whereIn('id', $questionsForDay);
+	}
+
+	public function count($builder)
+	{
+		$plan = UserPlan::where('user_id', Auth::user()->id)->first();
+
+		if (!$plan) return false;
+
+		$questionsForDay = $plan->questionsForDay(Carbon::now())->pluck('question_id')->toArray();
+		$count = $builder->whereIn('id', $questionsForDay)->count();
+
+		return [
+			'items'   => [
+				[
+					'value' => 'planned',
+					'count' => $count,
+				]
+			],
+			'message' => 'planned',
+			'type'    => 'list',
+		];
 	}
 }

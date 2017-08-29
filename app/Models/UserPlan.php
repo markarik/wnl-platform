@@ -54,7 +54,7 @@ class UserPlan extends Model
 
 		// TODO be smarter!
 		if (empty($remainingQuestions) || $daysLeft <= 0) {
-			return 0;
+			return collect();
 		}
 
 		$questionsPerDay = floor($remainingQuestions->count() / $daysLeft); // 500

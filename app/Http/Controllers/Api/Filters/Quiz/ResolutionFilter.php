@@ -32,8 +32,14 @@ class ResolutionFilter extends ApiFilter
 		$this->params['user_id'] = Auth::user()->id;
 
 		foreach ($this->values() as $value) {
+
+			$count = (clone $builder)
+				->orWhere(function ($query) use ($value) {
+					$this->$value($query);
+				})->count();
+
 			$items[] = [
-				'count' => $this->$value($builder)->count(),
+				'count' => $count,
 				'value' => $value,
 			];
 		}

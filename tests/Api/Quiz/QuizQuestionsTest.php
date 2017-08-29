@@ -130,9 +130,15 @@ class QuizQuestionsTest extends ApiTestCase
 
 		$data = [
 			'filters' => [
+//				[
+//					'tags' => [119],
+//				],
 				[
-					'tags' => [119]
-				]
+					'quiz-resolution' => [
+						'user_id' => 1,
+						'list'    => ['correct'],
+					],
+				],
 			],
 			'limit'   => 1,
 		];
@@ -143,6 +149,6 @@ class QuizQuestionsTest extends ApiTestCase
 
 		$response->dump();
 
-	    $this->asseretEquals();
+		$this->asseretEquals();
 	}
 }

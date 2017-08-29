@@ -99,9 +99,9 @@ abstract class ByTaxonomyFilter extends ApiFilter
 			$size = count($ids);
 		} else {
 			$query = [
-				'terms' => ['tags.id' => $tags],
+				'terms' => ['tags.id' => $tags->toArray()],
 			];
-			$size = count($tags);
+			$size = $tags->count();
 		}
 
 		return [

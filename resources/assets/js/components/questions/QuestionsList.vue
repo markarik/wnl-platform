@@ -236,6 +236,7 @@
 					.then(() => {
 						this.resetCurrentQuestion()
 						this.resetPages()
+						this.fetchDynamicFilters()
 						return this.fetchMatchingQuestions()
 					})
 					.then(() => {

@@ -81,7 +81,7 @@ trait ProvidesApiFiltering
 
 	private function getFilterClass($filterName)
 	{
-		$className = collect(explode('.', $filterName))
+		$className = collect(explode('-', $filterName))
 				->map(function ($v) {
 					return studly_case($v);
 				})

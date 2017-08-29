@@ -55,11 +55,11 @@ const getters = {
 	},
 	filters: state => {
 		const order = [
-			'quiz.planned',
-			'quiz.resolution',
-			'by_taxonomy.subjects',
-			'by_taxonomy.exams',
-			'by_taxonomy.tags',
+			'quiz-planned',
+			'quiz-resolution',
+			'by_taxonomy-subjects',
+			'by_taxonomy-exams',
+			'by_taxonomy-tags',
 		]
 
 		let filters = {}

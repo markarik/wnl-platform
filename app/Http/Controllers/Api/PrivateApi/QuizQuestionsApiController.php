@@ -9,11 +9,11 @@ use App\Models\Taxonomy;
 class QuizQuestionsApiController extends ApiController
 {
 	const AVAILABLE_FILTERS = [
-		'by_taxonomy.subjects',
-		'by_taxonomy.exams',
-		'by_taxonomy.tags',
-		'quiz.resolution',
-//		'quiz.planned',
+		'by_taxonomy-subjects',
+		'by_taxonomy-exams',
+		// 'by_taxonomy-tags',
+		'quiz-resolution',
+		// 'quiz-planned',
 	];
 
 	public function __construct(Request $request)

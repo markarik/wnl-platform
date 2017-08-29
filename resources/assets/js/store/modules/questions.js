@@ -25,35 +25,7 @@ const state = {
 		index: 0,
 		page: 0,
 	},
-	filters: {
-		// TODO Translations and move it to backend
-		'planned': {
-			type: FILTER_TYPES.LIST,
-			items: [
-				{
-					name: 'Zaplanowane na dziś',
-					value: new Date(),
-				}
-			],
-		},
-		'resolution': {
-			type: FILTER_TYPES.LIST,
-			items: [
-				{
-					name: 'Nierozwiązane',
-					value: 'unresolved',
-				},
-				{
-					name: 'Rozwiązane błędnie',
-					value: 'incorrect',
-				},
-				{
-					name: 'Rozwiązane poprawnie',
-					value: 'correct',
-				},
-			],
-		}
-	},
+	filters: {},
 	questionsPages: {
 		// {pageNumber} => []
 	},
@@ -82,7 +54,13 @@ const getters = {
 		return {page, index, ...state.quiz_questions[state.questionsPages[page][index]]}
 	},
 	filters: state => {
-		const order = ['planned', 'resolution', 'subjects', 'exams']
+		const order = [
+			'quiz.planned',
+			'quiz.resolution',
+			'by_taxonomy.subjects',
+			'by_taxonomy.exams',
+			'by_taxonomy.tags',
+		]
 
 		let filters = {}
 		order.forEach(group => {
@@ -133,10 +111,8 @@ const mutations = {
 	[types.ACTIVE_FILTERS_RESET] (state, payload) {
 		state.activeFilters = []
 	},
-	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, {exams, subjects}) {
-		const existingFilters = state.filters
-
-		set(state, 'filters', {...existingFilters, exams, subjects})
+	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, data) {
+		set(state, 'filters', data)
 	},
 	[types.QUESTIONS_RESET_TEST] (state) {
 		set(state, 'testQuestions', [])
@@ -286,8 +262,9 @@ const actions = {
 
 		return Promise.resolve(results)
 	},
-	fetchDynamicFilters({commit}) {
-		return _fetchDynamicFilters()
+	fetchDynamicFilters({commit, getters, rootGetters}) {
+		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		return _fetchDynamicFilters(parsedFilters)
 			.then(({data}) => {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
@@ -401,9 +378,8 @@ const _fetchQuestionsComments = (id) => {
 	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles`))
 }
 
-const _fetchDynamicFilters = () => {
-	const data = {}
-	return axios.post(getApiUrl('quiz_questions/.filterList'), data)
+const _fetchDynamicFilters = (activeFilters) => {
+	return axios.post(getApiUrl('quiz_questions/.filterList'), activeFilters)
 }
 
 const _parseFilters = (activeFilters, state, getters, rootGetters) => {

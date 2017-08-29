@@ -27,16 +27,16 @@ class ResolutionFilter extends ApiFilter
 
 	public function count($builder)
 	{
-		$counted = [];
+		$items = [];
 
 		foreach ($this->values() as $value) {
-			$counted[] = [
+			$items[] = [
 				'value' => $value,
 				'count' => $this->{$value}($builder)->count(),
 			];
 		}
 
-		return $counted;
+		return compact('items');
 	}
 
 	protected function incorrect($query)

@@ -1,5 +1,5 @@
-import { set, delete as destroy } from 'vue'
-import { get, isEqual, isEmpty, isNumber, merge, size } from 'lodash'
+import {set, delete as destroy} from 'vue'
+import {get, isEqual, isEmpty, isNumber, merge, size} from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
@@ -236,12 +236,12 @@ const actions = {
 		})
 	},
 	checkQuestions({commit, getters, dispatch}) {
-		const results = {
-				unanswered: [],
-				incorrect: [],
-				correct: []
-			},
-			questionsToStore = []
+		const results          = {
+				  unanswered: [],
+				  incorrect: [],
+				  correct: []
+			  },
+			  questionsToStore = []
 
 
 		getters.testQuestions.forEach((question) => {
@@ -271,23 +271,32 @@ const actions = {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
-	fetchQuestions({commit, state, getters, rootGetters}, {filters, page}) {
+	fetchQuestions({commit, state, getters, rootGetters}, {filters, page, useCached}) {
 		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
-		return _fetchQuestions({filters: parsedFilters, include: 'quiz_answers', page})
-			.then(function(response) {
-				const {answers, questions, meta, included} = _handleResponse(response, commit)
+		return _fetchQuestions({
+			filters: parsedFilters,
+			include: 'quiz_answers',
+			page,
+			active: filters,
+			useCached: useCached
+		}).then(function (response) {
+			const {answers, questions, meta, included} = _handleResponse(response, commit)
 
-				commit(types.QUESTIONS_SET_WITH_ANSWERS, {
-					answers,
-					questions,
-					page: meta.current_page,
-				})
-				commit(types.QUESTIONS_SET_META, meta)
-				commit(types.UPDATE_INCLUDED, included)
-
-				return response
+			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
+				answers,
+				questions,
+				page: meta.current_page,
 			})
+			commit(types.QUESTIONS_SET_META, meta)
+			commit(types.UPDATE_INCLUDED, included)
+
+			if (!isEmpty(meta.active)) {
+				commit(types.ACTIVE_FILTERS_SET, meta.active)
+			}
+
+			return response
+		})
 	},
 	fetchQuestionsCount({commit}) {
 		return axios.get(getApiUrl('quiz_questions/.count'))
@@ -385,13 +394,13 @@ const _fetchDynamicFilters = (activeFilters) => {
 }
 
 const _parseFilters = (activeFilters, state, getters, rootGetters) => {
-	const filters = []
+	const filters        = []
 	const groupedFilters = {}
 
 	activeFilters.forEach((filter, index) => {
 		const [filterGroup, ...tail] = filter.split('.')
-		const filterValue = getters.activeFiltersValues[index]
-		const filterType = state.filters[filterGroup].type
+		const filterValue            = getters.activeFiltersValues[index]
+		const filterType             = state.filters[filterGroup].type
 
 		groupedFilters[filterGroup] = groupedFilters[filterGroup] || []
 		groupedFilters[filterGroup].push(filterValue)
@@ -415,9 +424,9 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 
 const _handleResponse = (response) => {
 	var {data: {data, ...meta}} = response,
-		quizQuestions = {},
-		quiz_answers = {},
-		included = {}
+		quizQuestions           = {},
+		quiz_answers            = {},
+		included                = {}
 
 	if (size(data) > 0) {
 		// this var is here on purpose due to error in babel and problems with spread operator :(

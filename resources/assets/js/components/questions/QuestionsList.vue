@@ -355,8 +355,13 @@
 		},
 		mounted() {
 			this.activeFiltersSet(this.presetFilters)
+
 			Promise.all([
-				this.fetchQuestions({filters: this.activeFilters}),
+				this.fetchQuestions({
+					filters: this.activeFilters,
+					page: 1,
+					useCached: isEmpty(this.presetFilters)
+				}),
 				this.fetchDynamicFilters(),
 				this.fetchQuestionsCount(),
 			])

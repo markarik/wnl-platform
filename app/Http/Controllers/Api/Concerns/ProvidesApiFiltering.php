@@ -2,9 +2,13 @@
 
 use App\Exceptions\ApiFilterException;
 use Illuminate\Http\Request;
+use Redis;
+use Auth;
 
 trait ProvidesApiFiltering
 {
+	static $ACTIVE_FILTERS_KEY = 'active-filters-user-%d-resource-%s';
+
 	public $defaultLimit = 30;
 
 	public $limit;
@@ -16,14 +20,18 @@ trait ProvidesApiFiltering
 		$this->limit = $request->limit ?? $this->defaultLimit;
 		$this->page = $request->page ?? 1;
 		$randomize = $request->randomize;
+		$this->saveActiveFilters($request);
+		list ($filters, $paths) = $this->getFilters($request);
 
-		$model = $this->addFilters($request->filters, $model);
+		$model = $this->addFilters($filters, $model);
 
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
 			$response = $this->paginatedResponse($model, $this->limit, $this->page);
 		}
+
+		$response = array_merge($response, ['active' => $paths]);
 
 		return $this->respondOk($response);
 	}
@@ -32,18 +40,18 @@ trait ProvidesApiFiltering
 	{
 		$resource = $request->route('resource');
 		$model = app(static::getResourceModel($resource));
-
-		$items = $this->getCounters($request, $model);
+		$filters = $this->getFilters($request);
+		$items = $this->getCounters($filters[0], $model);
 
 		return $this->respondOk($items);
 	}
 
-	protected function getCounters($request, $model)
+	protected function getCounters($filters, $model)
 	{
 		$available = [];
 		foreach (static::AVAILABLE_FILTERS as $filterName) {
 			$filter = $this->getFilter($filterName);
-			$filters = $this->filtersExcept($request->filters, $filterName);
+			$filters = $this->filtersExcept($filters, $filterName);
 			$builder = $this->addFilters($filters, $model);
 			$counters = $filter->count($builder);
 			if ($counters) {
@@ -133,5 +141,36 @@ trait ProvidesApiFiltering
 			});
 
 		return $filtered->toArray();
+	}
+
+	protected function saveActiveFilters($request)
+	{
+		if (empty($request->filters) ||
+			empty($request->active)
+		) return;
+
+		$key = $this->filtersFormatKey($request);
+		$data = json_encode([$request->filters, $request->active]);
+
+		Redis::set($key, $data);
+	}
+
+	protected function getFilters($request)
+	{
+		$key = $this->filtersFormatKey($request);
+		$default = [$request->filters, []];
+		$data = Redis::get($key);
+
+		if (!$data || !$request->useCached) return $default;
+
+		return json_decode($data, true);
+	}
+
+	protected function filtersFormatKey($request)
+	{
+		$userId = Auth::user()->id;
+		$resource = $request->route('resource');
+
+		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
 	}
 }

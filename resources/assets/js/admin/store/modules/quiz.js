@@ -43,13 +43,16 @@ const actions = {
 				commit(types.SETUP_QUIZ_QUESTION, response.data)
 			})
 	},
-	saveQuestion({ commit }) {
-		axios.post(getApiUrl('questions'))
-			.then((response) => {
-				commit(types.SETUP_LESSONS, response.data)
-			})
-	}
-	
+	saveAnswers({ commit }, answers) {
+		const promises = answers.map(
+			answer => axios.put(
+				getApiUrl(`quiz_answers/${answer.id}`),
+				{ text: answer.text, is_correct: answer.isCorrect }
+			)
+		)
+
+		return Promise.all(promises)
+	},
 }
 
 export default {

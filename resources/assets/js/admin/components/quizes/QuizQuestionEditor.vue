@@ -23,31 +23,42 @@
 					</label>
 				</div>
 			</div>
-			<div class="field" v-for="(answer, index) in questionAnswers">
+
+			<div class="field">
+				<div class="control">
+					<button class="button is-primary" @click="onFormSave">Zapisz</button>
+				</div>
+			</div>
+		</wnl-form>
+
+		<form ref="answersForm">
+			<div
+				class="field answer-field"
+				v-for="(answer, index) in questionAnswers"
+				:data-id="answer.id"
+			>
 				<h4>Odpowiedź {{index + 1}}</h4>
 				<div class="control answer-control">
 					<label class="label checkbox-label">
 						<span>Prawidłowa?</span>
 						<input
 							type="checkbox"
-							:name="answer.id"
+							:name="'is_correct.' + answer.id"
 							:id="answer.id"
-							class="right-answer-checkbox"
+							class="answer-correct"
 							:checked="answer.is_correct"
 							@change="onRightAnswerChange"
 						>
 					</label>
-					<label class="label">
-						<input type="text" class="input answer-input" :value="answer.text">
-					</label>
+					<input
+						class="input answer-text"
+						:value="answer.text"
+						:name="'answer.' + answer.id"
+						type="text"
+					>
 				</div>
 			</div>
-			<div class="field">
-				<div class="control">
-					<button class="button is-primary">Zapisz</button>
-				</div>
-			</div>
-		</wnl-form>
+		</form>
 	</div>
 </template>
 
@@ -81,7 +92,7 @@
 			span
 				margin-right: 8px
 	
-	.answer-input
+	.answer-text
 		flex-grow: 1
 </style>
 
@@ -105,28 +116,42 @@
 			...mapGetters(['questionText', 'questionAnswers', 'questionId']),
 			formResourceRoute() {
 				if (this.method === 'post') {
-					return 'quiz_questions'
+					return 'quiz_questions?include=quiz_answers'
 				} else {
-					return `quiz_questions/${this.questionId}`
+					return `quiz_questions/${this.$route.params.quizId}?include=quiz_answers`
 				}
 			},
 			formMethod() {
-				return this.questionId ? 'put' : 'post'
+				return this.$route.params.quizId ? 'put' : 'post'
 			}
 		},
 		methods: {
-			...mapActions(['getQuizQuestion']),
+			...mapActions(['getQuizQuestion', 'saveAnswers']),
 			onInput() {
 				this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML
 			},
 			onRightAnswerChange(evt) {
-				const previouslyChecked = this.$el.querySelectorAll('.right-answer-checkbox')
+				const previouslyChecked = this.$el.querySelectorAll('.answer-correct')
 
 				Array.prototype.forEach.call(previouslyChecked, checkbox => {
 					if (checkbox !== evt.target) {
 						checkbox.checked = false
 					}
 				});
+			},
+			onFormSave() {
+				const fields = this.$refs.answersForm.querySelectorAll('.answer-field')
+				const fieldsArray = Array.prototype.slice.call(fields)
+				debugger
+				const answersData = fieldsArray.map(
+					field => ({ 
+						id: field.dataset.id,
+						text: field.querySelector('.answer-text').value,
+						isCorrect: field.querySelector('.answer-correct').checked
+					})
+				)
+
+				this.saveAnswers(answersData)
 			}
 		},
 		watch: {
@@ -134,7 +159,7 @@
 				if (val) this.$refs.questionEditor.editor.innerHTML = val
 			},
 			'$route.params.quizId'(quizId) {
-				this.getQuizQuestion(this.$route.params.quizId);
+				this.getQuizQuestion(this.$route.params.quizId)
 			}
 		},
 		created() {

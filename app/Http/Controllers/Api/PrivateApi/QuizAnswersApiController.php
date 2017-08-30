@@ -28,7 +28,7 @@ class QuizAnswersApiController extends ApiController
 
 		$answer->update([
 			'text' => $request->input('text'),
-			'is_correct' => $request->input('is_correct'),
+			'is_correct' => $request->input('is_correct')
 		]);
 
 		return $this->respondOk();

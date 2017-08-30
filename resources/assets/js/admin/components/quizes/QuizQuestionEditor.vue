@@ -1,6 +1,6 @@
 <template>
 	<div class="quiz-question-editor">
-		<p class="title is-5">Edycja pytania</p>
+		<p class="title is-5">Edycja pytania {{$route.params.quizId}}</p>
 		<wnl-form
 			class="chat-message-form"
 			hideDefaultSubmit="true"

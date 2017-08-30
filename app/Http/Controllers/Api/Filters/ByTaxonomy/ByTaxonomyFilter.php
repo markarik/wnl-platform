@@ -14,11 +14,33 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		});
 	}
 
-	protected function getChildItems($expectedParent, $list)
+	public function taxonomyCounters($builder, $taxonomyName = '')
 	{
-		return $list->first(function ($value, $key) use ($expectedParent) {
-			return $key === $expectedParent;
-		});
+		$taxonomyTags = $this->getTaxonomyTags($taxonomyName);
+		$tagIds = $taxonomyTags->pluck('tag_id');
+
+		$aggregatedTags = collect(
+			$this->fetchAggregation($builder, $tagIds)
+		)->keyBy('key'); // :D
+
+		$structure = $this->buildTaxonomyStructure($taxonomyTags, $aggregatedTags);
+
+		return [
+			'type'  => 'tags',
+			'message' => $taxonomyName,
+			'items' => $structure,
+		];
+	}
+
+	protected function buildTaxonomyStructure($taxonomyTags, $aggregatedTags)
+	{
+		$groupedTags = $taxonomyTags
+			->sortBy('order_number')
+			->groupBy('parent_tag_id');
+
+		$items = $this->buildChildStructure(0, $groupedTags, [], $aggregatedTags);
+
+		return $items;
 	}
 
 	protected function buildChildStructure($tagId, $groupedTags, $structure, $aggregatedTags)
@@ -49,15 +71,11 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		return $structure;
 	}
 
-	protected function buildTaxonomyStructure($taxonomyTags, $aggregatedTags)
+	protected function getChildItems($expectedParent, $list)
 	{
-		$groupedTags = $taxonomyTags
-			->sortBy('order_number')
-			->groupBy('parent_tag_id');
-
-		$items = $this->buildChildStructure(0, $groupedTags, [], $aggregatedTags);
-
-		return $items;
+		return $list->first(function ($value, $key) use ($expectedParent) {
+			return $key === $expectedParent;
+		});
 	}
 
 	protected function getTaxonomyTags($taxonomyName)
@@ -97,11 +115,13 @@ abstract class ByTaxonomyFilter extends ApiFilter
 				'terms' => ['id' => $ids],
 			];
 			$size = count($ids);
+			$include = '.*';
 		} else {
 			$query = [
-				'terms' => ['tags.id' => $tags->toArray()],
+				'match_all' => new \stdClass(),
 			];
 			$size = $tags->count();
+			$include = $tags->toArray();
 		}
 
 		return [
@@ -113,6 +133,7 @@ abstract class ByTaxonomyFilter extends ApiFilter
 						'terms' => [
 							'field' => 'tags.id',
 							'size'  => $size,
+							'include' => $include
 						],
 					],
 				],

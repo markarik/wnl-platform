@@ -16,7 +16,7 @@
 			:getReaction="getReaction"
 			@selectAnswer="onSelectAnswer"
 		></wnl-quiz-question>
-		<p class="has-text-centered" v-if="!displayResults">
+		<p class="has-text-centered" v-if="!plainList && !displayResults">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
 				Sprawdź wyniki
 			</a>

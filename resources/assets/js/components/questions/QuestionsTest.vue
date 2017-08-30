@@ -64,17 +64,39 @@
 			</div>
 		</div>
 
+		<div class="pagination top">
+			<wnl-pagination
+				ref="firstpagination"
+				:currentPage="currentPage"
+				:lastPage="lastPage"
+				@changePage="changePage"
+			/>
+		</div>
+
 		<wnl-quiz-list
 			module="questions"
 			ref="quizlist"
-			:allQuestions="filteredQuestions"
+			:allQuestions="questionsCurrentPage"
 			:getReaction="getReaction"
 			:isComplete="isComplete"
 			:isProcessing="testProcessing"
 			:plainList="true"
 			@selectAnswer="onSelectAnswer"
-			@checkQuiz="checkQuiz"
 		/>
+
+		<div class="pagination bottom">
+			<wnl-pagination
+				:currentPage="currentPage"
+				:lastPage="lastPage"
+				@changePage="changePage"
+			/>
+		</div>
+
+		<p v-if="!isComplete" class="questions-test-resolve">
+			<a class="button is-outlined is-small is-primary" :class="{'is-loading': testProcessing}" @click="checkQuiz">
+				{{$t('questions.solving.resolve')}}
+			</a>
+		</p>
 	</div>
 </template>
 
@@ -86,6 +108,15 @@
 
 	.questions-test-header-container
 		height: $header-height + 2 * $margin-base
+
+	.pagination
+		+flex-center()
+
+		&.top
+			margin: $margin-base 0
+
+		&.bottom
+			margin-bottom: $margin-big
 
 	.questions-test-header
 		height: $header-height + 2 * $margin-base
@@ -170,19 +201,28 @@
 
 	.test-controls
 		+flex-space-between()
+
+	.questions-test-resolve
+		+flex-center()
+		margin-bottom: $margin-huge
 </style>
 
 <script>
+	import {nextTick} from 'vue'
 	import {debounce, isEmpty, isNumber, size} from 'lodash'
 
 	import QuizList from 'js/components/quiz/QuizList'
 	import QuizTimer from 'js/components/quiz/QuizTimer'
+	import Pagination from 'js/components/global/Pagination'
+
+	import {scrollToElement} from 'js/utils/animations'
 
 	export default {
 		name: 'QuestionsTest',
 		components: {
 			'wnl-quiz-list': QuizList,
-			'wnl-quiz-timer': QuizTimer
+			'wnl-quiz-timer': QuizTimer,
+			'wnl-pagination': Pagination,
 		},
 		props: [
 			'getReaction',
@@ -195,20 +235,19 @@
 		],
 		data() {
 			return {
+				currentPage: 1,
 				currentScroll: 0,
 				filterResults: false,
 				filterUnanswered: false,
 				headerOffset: 0,
 				hideTime: false,
+				perPage: 30,
 				scrollableContainer: {},
 			}
 		},
 		computed: {
 			answeredCount() {
 				return this.totalCount - this.unansweredCount
-			},
-			unansweredQuestions() {
-				return this.questions.filter(question => !isNumber(question.selectedAnswer))
 			},
 			correctCount() {
 				return this.testResults && size(this.testResults.correct)
@@ -230,6 +269,13 @@
 			isComplete() {
 				return !isEmpty(this.testResults)
 			},
+			lastPage() {
+				return Math.ceil(size(this.filteredQuestions) / this.perPage)
+			},
+			questionsCurrentPage() {
+				let c = this.currentPage, p = this.perPage
+				return this.filteredQuestions.slice((c - 1) * p, c * p)
+			},
 			score() {
 				return this.testResults &&
 					Math.floor(this.correctCount * 100 / this.totalCount)
@@ -240,6 +286,9 @@
 			unansweredCount() {
 				return this.unansweredQuestions.length
 			},
+			unansweredQuestions() {
+				return this.questions.filter(question => !isNumber(question.selectedAnswer))
+			},
 			unansweredToggleMessage() {
 				return this.filterUnanswered
 					? this.$t('questions.solving.unanswered.all')
@@ -247,6 +296,12 @@
 			},
 		},
 		methods: {
+			changePage(n) {
+				this.currentPage = n
+				if (this.currentScroll > 200) {
+					scrollToElement(this.$refs.firstpagination.$el)
+				}
+			},
 			checkQuiz() {
 				this.$emit('checkQuiz', {unansweredCount: this.unansweredCount})
 				if (this.unansweredCount > 0) {
@@ -278,6 +333,9 @@
 		watch: {
 			hasStickyHeader(to, from) {
 				this.hideTime = to
+			},
+			lastPage(to, from) {
+				if (to < this.currentPage) this.currentPage = to
 			},
 		}
 	}

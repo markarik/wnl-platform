@@ -57,6 +57,12 @@
 				adjacentLeft = adjacentLeft + !hasRightElipsis + !displayLast
 				adjacentRight = adjacentRight + !hasLeftElipsis + !displayInitial
 
+				// And now, calculate it again...
+				displayInitial = c - adjacentLeft > i
+				displayLast = c + adjacentRight < l
+				hasLeftElipsis = c - adjacentLeft > i + 1
+				hasRightElipsis = c + adjacentRight < l - 1
+
 				if (displayInitial) items.push(i)
 				if (hasLeftElipsis) items.push(fill)
 

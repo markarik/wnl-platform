@@ -61,10 +61,7 @@ class UserPlan extends Model
 
 		$todaysQuestions = $remainingQuestions
 			->sortBy('id')
-			->take($questionsPerDay)
-			->filter(function($value, $key) {
-				return empty($value->resolved_at);
-			});
+			->take($questionsPerDay);
 
 		return $todaysQuestions;
 	}

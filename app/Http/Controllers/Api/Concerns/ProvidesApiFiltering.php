@@ -65,9 +65,9 @@ trait ProvidesApiFiltering
 	protected function addFilters($filters, $model)
 	{
 		foreach ($filters as $filter) {
+			$this->checkIsArray($filter);
 			$filterName = array_keys($filter)[0];
 			$params = $filter[$filterName];
-			$this->checkIsArray($filter);
 			$this->checkIsArray($params);
 			$oFilter = $this->getFilter($filterName);
 			$model = $oFilter->apply($model, $params);

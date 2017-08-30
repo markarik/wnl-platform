@@ -222,7 +222,7 @@ const actions = {
 	},
 	buildPlan({state, getters, rootGetters, commit}, {activeFilters, startDate, endDate, slackDays}) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters);
-		return axios.post(getApiUrl('user-plan/2'), {
+		return axios.post(getApiUrl(`user-plan/${rootGetters.currentUserId}`), {
 			filters,
 			startDate,
 			endDate,
@@ -236,13 +236,12 @@ const actions = {
 		})
 	},
 	checkQuestions({commit, getters, dispatch}) {
-		const results          = {
-				  unanswered: [],
-				  incorrect: [],
-				  correct: []
-			  },
-			  questionsToStore = []
-
+		const results = {
+				unanswered: [],
+				incorrect: [],
+				correct: []
+			},
+			questionsToStore = []
 
 		getters.testQuestions.forEach((question) => {
 			if (!isNumber(question.selectedAnswer)) {

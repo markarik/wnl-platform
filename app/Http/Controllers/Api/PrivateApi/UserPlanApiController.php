@@ -33,7 +33,7 @@ class UserPlanApiController extends ApiController
 
 		// TODO handle empty dates
 
-		$filteredQuestions = $this->addFilters($request, app('App\\Models\\QuizQuestion'))->get()->pluck('id');
+		$filteredQuestions = $this->addFilters($request->filters, app('App\\Models\\QuizQuestion'))->get()->pluck('id');
 		$activeDays = (new \DateTime($endDate))->diff(new \DateTime($startDate))->format('%a') - $slackDays;
 
 		$createdPlan = UserPlan::create([

@@ -10,7 +10,7 @@ export const questions = {
 			'exams': 'Egzaminy',
 			'incorrect': 'Rozwiązane błędnie',
 			'subjects': 'Przedmioty i tematy',
-			'planned': 'Zaplanowane',
+			'planned': 'Zaplanowane na dziś',
 			'resolution': 'Status',
 			'unresolved': 'Nierozwiązane',
 		},

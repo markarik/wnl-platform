@@ -162,7 +162,7 @@
 </style>
 
 <script>
-	import {isEmpty} from 'lodash'
+	import {isEmpty, isNumber} from 'lodash'
 
 	import ActiveQuestion from 'js/components/questions/ActiveQuestion'
 	import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder'
@@ -293,7 +293,9 @@
 				this.$emit('changePage', page)
 			},
 			questionNumber(index) {
-				return (this.meta.currentPage - 1) * limit + index + 1
+				return isNumber(index)
+					? (this.currentQuestion.page - 1) * limit + index + 1
+					: ''
 			},
 			selectAnswer(payload) {
 				this.$emit('selectAnswer', payload)

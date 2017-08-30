@@ -12,9 +12,7 @@ class PlannedFilter extends ApiFilter
 
 	public function handle($builder)
 	{
-		$dates = $this->params['list'];
-		// currently only one date is supported but model is most likely ready to handle any date
-		$supportedDate = Carbon::parse($dates[0]);
+		$supportedDate = Carbon::now();
 
 		$plan = UserPlan::where('user_id', $this->params['user_id'])->first();
 		$questionsForDay = $plan->questionsForDay($supportedDate)->pluck('question_id')->toArray();

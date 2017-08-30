@@ -2,6 +2,8 @@
 	<div class="wnl-quiz-question-container">
 		<div class="wnl-quiz-question card"
 			:class="{
+				'is-correct': displayResults && !isUnanswered && isCorrect,
+				'is-incorrect': displayResults && !isUnanswered && !isCorrect,
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
 				'is-mobile': isMobile,
@@ -95,6 +97,12 @@
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
 
+		&.is-correct
+			box-shadow: 0 2px 3px $color-correct-shadow, 0 0 0 1px $color-correct-shadow
+
+		&.is-incorrect
+			box-shadow: 0 2px 3px $color-incorrect-shadow, 0 0 0 1px $color-incorrect-shadow
+
 		&.is-mobile
 
 			.quiz-header,
@@ -120,7 +128,8 @@
 </style>
 
 <script>
-	import { mapGetters} from 'vuex'
+	import { isNumber } from 'lodash'
+	import { mapGetters } from 'vuex'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
@@ -141,20 +150,24 @@
 		},
 		computed: {
 			...mapGetters(['isMobile']),
+			answers() {
+				return this.question.answers
+			},
 			displayResults() {
 				return this.readOnly || this.isQuizComplete || this.question.isResolved
 			},
+			isCorrect() {
+				const selected = this.question.selectedAnswer
+				return isNumber(selected) && this.answers[selected].is_correct
+			},
 			isUnanswered() {
-				return this.question.selectedAnswer === null
+				return !isNumber(this.question.selectedAnswer)
 			},
 			reactionState() {
 				if (typeof this.getReaction === 'function') {
 					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
 				}
 			},
-			answers() {
-				return this.question.answers
-			}
 		},
 		methods: {
 			selectAnswer(answerIndex) {

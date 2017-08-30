@@ -40,8 +40,8 @@ const getters = {
 	...commentsGetters,
 	...reactionsGetters,
 	activeFilters: state => state.activeFilters,
-	activeFiltersNames: state => state.activeFilters.map(path => {
-		return get(state.filters, path).name
+	activeFiltersObjects: state => state.activeFilters.map(path => {
+		return get(state.filters, path)
 	}),
 	activeFiltersValues: state => state.activeFilters.map(path => {
 		return get(state.filters, path).value

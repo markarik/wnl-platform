@@ -103,7 +103,7 @@
 </style>
 
 <script>
-	import {isEmpty} from 'lodash'
+	import {isEmpty, get} from 'lodash'
 	import {mapGetters, mapActions} from 'vuex'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
@@ -157,7 +157,7 @@
 			]),
 			...mapGetters('questions', [
 				'activeFilters',
-				'activeFiltersNames',
+				'activeFiltersObjects',
 				'currentQuestion',
 				'filters',
 				'getQuestion',
@@ -170,6 +170,15 @@
 				'testQuestions',
 				'testQuestionsUnanswered',
 			]),
+			activeFiltersNames() {
+				return this.activeFiltersObjects.map(filter => {
+					return filter.hasOwnProperty('name')
+						? filter.name
+						: filter.hasOwnProperty('message')
+							? this.$t(`questions.filters.items.${filter.message}`)
+							: this.$t(`questions.filters.items.${filter.value}`)
+				})
+			},
 			computedGetReaction() {
 				return this.reactionsFetched ? this.getReaction : () => {}
 			},
@@ -360,7 +369,8 @@
 				this.fetchQuestions({
 					filters: this.activeFilters,
 					page: 1,
-					useCached: isEmpty(this.presetFilters)
+					// useCached: isEmpty(this.presetFilters)
+					useCached: false
 				}),
 				this.fetchDynamicFilters(),
 				this.fetchQuestionsCount(),

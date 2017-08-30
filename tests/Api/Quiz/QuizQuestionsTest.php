@@ -130,9 +130,9 @@ class QuizQuestionsTest extends ApiTestCase
 
 		$data = [
 			'filters' => [
-//				[
-//					'tags' => [119],
-//				],
+				[
+					'by_taxonomy-tags' => [119],
+				],
 				[
 					'quiz-resolution' => [
 						'user_id' => 1,

@@ -17,7 +17,7 @@ trait ProvidesApiFiltering
 		$this->page = $request->page ?? 1;
 		$randomize = $request->randomize;
 
-		$model = $this->addFilters($request, $model);
+		$model = $this->addFilters($request->filters, $model);
 
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);
@@ -32,18 +32,19 @@ trait ProvidesApiFiltering
 	{
 		$resource = $request->route('resource');
 		$model = app(static::getResourceModel($resource));
-		$builder = $this->addFilters($request, $model);
 
-		$items = $this->getCounters($builder);
+		$items = $this->getCounters($request, $model);
 
 		return $this->respondOk($items);
 	}
 
-	protected function getCounters($builder)
+	protected function getCounters($request, $model)
 	{
 		$available = [];
 		foreach (static::AVAILABLE_FILTERS as $filterName) {
 			$filter = $this->getFilter($filterName);
+			$filters = $this->filtersExcept($request->filters, $filterName);
+			$builder = $this->addFilters($filters, $model);
 			$counters = $filter->count($builder);
 			if ($counters) {
 				$available[$filterName] = $counters;
@@ -53,13 +54,9 @@ trait ProvidesApiFiltering
 		return $available;
 	}
 
-	protected function addFilters($request, $model)
+	protected function addFilters($filters, $model)
 	{
-		if (empty($request->filters)) {
-			return $model;
-		}
-
-		foreach ($request->filters as $filter) {
+		foreach ($filters as $filter) {
 			$filterName = array_keys($filter)[0];
 			$params = $filter[$filterName];
 			$this->checkIsArray($filter);
@@ -71,14 +68,14 @@ trait ProvidesApiFiltering
 		return $model;
 	}
 
-	private function getFilter($filterName)
+	protected function getFilter($filterName)
 	{
 		$filterClass = $this->getFilterClass($filterName);
 
 		return new $filterClass();
 	}
 
-	private function getFilterClass($filterName)
+	protected function getFilterClass($filterName)
 	{
 		$className = collect(explode('-', $filterName))
 				->map(function ($v) {
@@ -89,14 +86,14 @@ trait ProvidesApiFiltering
 		return 'App\Http\Controllers\Api\Filters\\' . $className;
 	}
 
-	private function checkIsArray($filter)
+	protected function checkIsArray($filter)
 	{
 		if (is_array($filter)) return;
 
 		throw new ApiFilterException('Filter must be an array of arrays.');
 	}
 
-	private function randomizedResponse($model, $limit)
+	protected function randomizedResponse($model, $limit)
 	{
 		$data = $model
 			->inRandomOrder()
@@ -106,5 +103,35 @@ trait ProvidesApiFiltering
 		return [
 			'data' => $this->transform($data),
 		];
+	}
+
+	protected function searchFilters($request, $filterName)
+	{
+		if (empty($request->filters)) return [];
+
+		$filtered = collect($request->filters)
+			->filter(function ($val, $key) use ($filterName) {
+				return array_key_exists($filterName, $val);
+			});
+
+		if ($filtered->count() > 0) {
+			$first = $filtered->shift();
+
+			return $first[$filterName];
+		}
+
+		return [];
+	}
+
+	protected function filtersExcept($filters, $except)
+	{
+		if (empty($filters)) return [];
+
+		$filtered = collect($filters)
+			->filter(function ($val, $key) use ($except) {
+				return !array_key_exists($except, $val);
+			});
+
+		return $filtered->toArray();
 	}
 }

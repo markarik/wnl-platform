@@ -95,4 +95,9 @@ abstract class ApiFilter
 			throw new ApiFilterException('Missing filter params: ' . implode($diff, ','));
 		}
 	}
+
+	public function setParams($params)
+	{
+		$this->params = $params;
+	}
 }

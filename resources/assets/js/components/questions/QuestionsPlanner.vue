@@ -70,10 +70,6 @@
 				this.activeFiltersToggle(payload)
 			},
 			createPlan() {
-				console.log(this.startDate, '...startDate')
-				console.log(this.endDate, '...endDate')
-				console.log(this.activeFilters, '...activeFilters')
-				console.log(this.slackDays, '...slackDays')
 				this.buildPlan({
 					startDate: this.startDate,
 					endDate: this.endDate,

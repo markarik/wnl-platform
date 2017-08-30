@@ -36,6 +36,7 @@
 						:isSelected="question.selectedAnswer === answerIndex"
 						:answersStats="displayResults && question.answersStats"
 						@answerSelected="selectAnswer(answerIndex)"
+						@dblclick.native="$emit('answerDoubleclick', {answer: answerIndex})"
 					></wnl-quiz-answer>
 				</ul>
 				<div class="quiz-question-meta">#{{question.id}}</div>

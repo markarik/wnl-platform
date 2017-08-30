@@ -25,6 +25,7 @@
 			:getReaction="getReaction"
 			:module="module"
 			@selectAnswer="selectAnswer"
+			@answerDoubleclick="onAnswerDoubleclick"
 		/>
 		<p class="has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
@@ -91,6 +92,8 @@
 		data() {
 			return {
 				hasErrors: false,
+				allowDoubleclick: true,
+				timeout: 0,
 			}
 		},
 		computed: {
@@ -111,12 +114,19 @@
 				this.$emit('changeQuestion', 1)
 				scrollToElement(this.$el, 75)
 			},
+			onAnswerDoubleclick() {
+				this.allowDoubleclick && this.displayResults && this.nextQuestion()
+			},
 			previousQuestion() {
 				this.$emit('changeQuestion', -1)
 				scrollToElement(this.$el, 75)
 			},
 			selectAnswer(data) {
+				this.allowDoubleclick = false
 				this.$emit('selectAnswer', data)
+				this.timeout = setTimeout(() => {
+					this.allowDoubleclick = true
+				}, 500)
 			},
 			verify() {
 				this.hasAnswer && this.$emit('verify', this.question.id)

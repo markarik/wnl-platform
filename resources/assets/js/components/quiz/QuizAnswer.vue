@@ -6,7 +6,7 @@
 			'is-hinted': hintCorrect,
 			'is-large-desktop': isLargeDesktop,
 		}"
-		@click="$emit('answerSelected')"
+		@click.prevent="$emit('answerSelected')"
 	>
 		<div class="quiz-answer-content">
 			{{answer.text}}
@@ -59,6 +59,7 @@
 		padding: $margin-small $margin-small $margin-small $margin-huge
 		position: relative
 		margin: 0
+		user-select: none
 
 		&::before
 			content: counter(list, upper-alpha) ")"

@@ -1,6 +1,5 @@
 <template>
 	<div class="quiz-question-editor">
-		<p class="title is-5">Edycja pytania {{$route.params.quizId}}</p>
 		<wnl-form
 			class="chat-message-form"
 			hideDefaultSubmit="true"
@@ -9,6 +8,14 @@
 			suppressEnter="false"
 			:resourceRoute="formResourceRoute"
 		>
+			<div class="question-form-header">
+				<p class="title is-5">Edycja pytania {{$route.params.quizId}}</p>
+				<div class="field save-button-field">
+					<div class="control">
+						<button class="button is-primary" @click="onFormSave">Zapisz</button>
+					</div>
+				</div>
+			</div>
 			<div class="field">
 				<div class="control">
 					<label class="label">
@@ -21,12 +28,6 @@
 							@input="onInput"
 					></wnl-quill>
 					</label>
-				</div>
-			</div>
-
-			<div class="field">
-				<div class="control">
-					<button class="button is-primary" @click="onFormSave">Zapisz</button>
 				</div>
 			</div>
 		</wnl-form>
@@ -75,6 +76,10 @@
 
 	.quill-container
 		height: 200px
+
+	.question-form-header
+		display: flex
+		justify-content: space-between
 
 	.answer-control
 		display: flex

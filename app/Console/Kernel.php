@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Comment;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Artisan;
@@ -20,6 +21,7 @@ class Kernel extends ConsoleKernel
 		Commands\CancelOrder::class,
 		Commands\CategoriesTags::class,
 		Commands\ChangeOrderPaymentMethod::class,
+		Commands\CheckQuizQuestions::class,
 		Commands\DropTables::class,
 		Commands\DumpCourseStructure::class,
 		Commands\EncryptPasswords::class,

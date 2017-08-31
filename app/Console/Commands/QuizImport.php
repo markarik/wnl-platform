@@ -1,5 +1,6 @@
 <?php namespace App\Console\Commands;
 
+use App\Models\QuizQuestion;
 use App\Models\Tag;
 use Storage;
 use App\Models\QuizSet;
@@ -25,7 +26,8 @@ class QuizImport extends Command
 	 */
 		$description = 'Import quiz sets to database from storage.',
 		$path,
-		$globalTags = [];
+		$globalTags = [],
+		$questions;
 
 	/**
 	 * Create a new command instance.
@@ -36,6 +38,8 @@ class QuizImport extends Command
 		parent::__construct();
 
 		$this->path = self::BASE_DIRECTORY;
+
+		$this->questions = QuizQuestion::all();
 	}
 
 	/**
@@ -89,9 +93,13 @@ class QuizImport extends Command
 	{
 		$values = explode(self::VALUE_DELIMITER, $line);
 
+		if (!$this->checkSimilarity($values[0])) return;
+
 		$question = $quizSet->questions()->firstOrCreate([
 			'text' => nl2br($values[0]),
 		]);
+
+		$this->questions->push($question);
 
 		for ($i = 1; $i <= 5; $i++) {
 			$hits = 0;
@@ -124,5 +132,40 @@ class QuizImport extends Command
 
 		$question->preserve_order = (bool)$values[10];
 		$question->save();
+	}
+
+	protected function tryMatchingCollectionTaxonomy($question)
+	{
+		$collectionsTagsTx = TagsTaxonomy::select()
+			->whereHas('taxonomy', function ($query) {
+				$query->where('name', 'collections');
+			})
+			->whereIn('tag_id', $question->tags->pluck('id'))
+			->get();
+
+		foreach ($collectionsTagsTx as $tagTaxonomy) {
+			if ($tagTaxonomy->parent_tag_id === 0) return;
+
+			$parentTag = Tag::find($tagTaxonomy->parent_tag_id);
+			if (!$question->tags->contains($parentTag)) {
+				$question->tags()->attach($parentTag);
+			}
+		}
+	}
+
+	protected function checkSimilarity($text)
+	{
+		foreach ($this->questions as $question) {
+			similar_text($question->text, $text, $similarity);
+
+			if ($similarity > 78) {
+				$this->warn('Similar question found! Similarity: ' . ceil($similarity) . '%');
+				print 'Database: ' . $question->text . PHP_EOL;
+				print 'File: ' . $text . PHP_EOL;
+				if (!$this->confirm('Add question?')) return false;
+			}
+		}
+
+		return true;
 	}
 }

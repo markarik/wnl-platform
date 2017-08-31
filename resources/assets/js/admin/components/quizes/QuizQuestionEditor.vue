@@ -17,8 +17,6 @@
 					</div>
 				</div>
 			</div>
-			<span>Tagi</span>
-			<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
 			<div class="field">
 				<div class="control">
 					<label class="label">
@@ -33,6 +31,8 @@
 					</label>
 				</div>
 			</div>
+			<span>Tagi</span>
+			<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
 		</wnl-form>
 
 		<form ref="answersForm">

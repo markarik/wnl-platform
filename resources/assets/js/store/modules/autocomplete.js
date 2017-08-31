@@ -29,12 +29,14 @@ function getUserSearchConditions(data) {
 	return { query: { where }, limit: [5, 0] }
 }
 
-function getTagSearchConditions(data) {
+function getTagSearchConditions(name, tags = []) {
 	const where = [
-		['name', 'like', `%${data.name}%`]
+		['name', 'like', `%${name}%`]
 	]
 
-	return { query: { where }, limit: [5, 0] }
+	const whereNotIn = ['id',  tags.map(tag => tag.id)]
+
+	return { query: { where, whereNotIn }, limit: [5, 0] }
 }
 
 // Actions
@@ -44,8 +46,8 @@ const actions = {
 
 		return axios.post(getApiUrl('user_profiles/.search'), conditions)
 	},
-	requestTagsAutocomplete({}, data) {
-		const conditions = getTagSearchConditions(data)
+	requestTagsAutocomplete({}, { name, tags }) {
+		const conditions = getTagSearchConditions(name, tags)
 
 		return axios.post(getApiUrl('tags/.search'), conditions)
 	}

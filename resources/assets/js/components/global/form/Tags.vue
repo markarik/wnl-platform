@@ -12,11 +12,11 @@
 				class="input"
 				@input="onInput"
 				ref=input
+				placeholder="Dodaj tag"
 			>
 			<wnl-autocomplete
 				:items="autocompleteItems"
 				:onItemChosen="insertTag"
-				:isDown="true"
 				:itemComponent="'wnl-tag-autocomplete-item'"
 				ref="autocomplete"
 			>
@@ -122,7 +122,7 @@
 			},
 
 			onInput(evt) {
-				const data = { name: evt.target.value }
+				const data = { name: evt.target.value, tags: this.tags }
 
 				if (!data.name) return
 

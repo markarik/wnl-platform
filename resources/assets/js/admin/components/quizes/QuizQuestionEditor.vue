@@ -1,6 +1,7 @@
 <template>
 	<div class="quiz-question-editor">
 		<wnl-form
+			:attach="attach"
 			class="chat-message-form"
 			hideDefaultSubmit="true"
 			name="QuizQuestionEditor"
@@ -16,6 +17,8 @@
 					</div>
 				</div>
 			</div>
+			<span>Tagi</span>
+			<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
 			<div class="field">
 				<div class="control">
 					<label class="label">
@@ -37,6 +40,7 @@
 				class="field answer-field"
 				v-for="(answer, index) in questionAnswers"
 				:data-id="answer.id"
+				v-bind:key="answer.id"
 			>
 				<h4>Odpowiedź {{index + 1}}</h4>
 				<div class="control answer-control">
@@ -103,22 +107,24 @@
 
 <script>
 	import { mapActions, mapGetters } from 'vuex';
-	import { Quill, Form } from 'js/components/global/form'
-	import {nextTick} from 'vue'
+	import { Quill, Form, Tags } from 'js/components/global/form'
+	import { nextTick } from 'vue'
 
 	export default {
 		name: 'QuizesEditor',
 		components: {
 			'wnl-form': Form,
-			'wnl-quill': Quill
+			'wnl-quill': Quill,
+			'wnl-tags': Tags
 		},
 		data: function () {
 			return {
-				questionQuillContent: ''
+				questionQuillContent: '',
+				attach: null
 			}
 		},
 		computed: {
-			...mapGetters(['questionText', 'questionAnswers', 'questionId']),
+			...mapGetters(['questionText', 'questionAnswers', 'questionId', 'questionTags']),
 			formResourceRoute() {
 				if (this.method === 'post') {
 					return 'quiz_questions?include=quiz_answers'
@@ -147,7 +153,7 @@
 			onFormSave() {
 				const fields = this.$refs.answersForm.querySelectorAll('.answer-field')
 				const fieldsArray = Array.prototype.slice.call(fields)
-				debugger
+
 				const answersData = fieldsArray.map(
 					field => ({ 
 						id: field.dataset.id,
@@ -155,7 +161,8 @@
 						isCorrect: field.querySelector('.answer-correct').checked
 					})
 				)
-
+				const $newTags = this.$refs.tags.tags
+				this.attach = this.$refs.tags.haveTagsChanged() ? { tags: $newTags } : {}
 				this.saveAnswers(answersData)
 			}
 		},

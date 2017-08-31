@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\QuizQuestion;
+use App\Models\Tag;
 use App\Http\Requests\Quiz\UpdateQuizQuestion;
 
 class QuizQuestionsApiController extends ApiController
@@ -24,6 +25,16 @@ class QuizQuestionsApiController extends ApiController
 
 		if (!$question) {
 			return $this->respondNotFound();
+		}
+
+		if ($request->has('tags')) {
+			$question->tags()->detach();
+
+			foreach($request->tags as $tag) {
+				$tagModel = Tag::firstOrCreate(['id' => $tag['id'] ]);
+
+				$question->tags()->attach($tagModel);
+			}
 		}
 
 		$question->update([

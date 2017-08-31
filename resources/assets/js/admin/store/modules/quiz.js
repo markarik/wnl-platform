@@ -21,7 +21,8 @@ const state = {
 const getters = {
 	questionText: state => state.question && state.question.text,
 	questionAnswers: state => state.answers,
-	questionId: state => state.question && state.question.id
+	questionId: state => state.question && state.question.id,
+	questionTags: state => state.question && state.question.tags
 }
 
 // Mutations

@@ -107,9 +107,13 @@ class QuizImport extends Command
 
 		$this->info('Creating new question!');
 
+		if (!$this->checkSimilarity($values[0])) return;
+
 		$question = $quizSet->questions()->firstOrCreate([
 			'text' => $text,
 		]);
+
+		$this->questions->push($question);
 
 		$this->questions->push($question);
 

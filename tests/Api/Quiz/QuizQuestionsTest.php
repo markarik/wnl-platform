@@ -75,13 +75,13 @@ class QuizQuestionsTest extends ApiTestCase
 					],
 				],
 				[
-					'quiz.resolution' => [
+					'quiz-resolution' => [
 						'user_id' => 255,
 						'list'    => ['correct', 'incorrect', 'unresolved'],
 					],
 				],
 				[
-					'quiz.planned' => [
+					'quiz-planned' => [
 						'user_id' => 2,
 						'list'    => [Carbon::now()->toDateTimeString()],
 					],
@@ -130,13 +130,19 @@ class QuizQuestionsTest extends ApiTestCase
 
 		$data = [
 			'filters' => [
+//				[
+//					'by_taxonomy-exams' => [119],
+//				],
+//				[
+//					'quiz-resolution' => [
+//						'user_id' => 1,
+//						'list'    => ['correct'],
+//					],
+//				],
 				[
-					'by_taxonomy-tags' => [119],
-				],
-				[
-					'quiz-resolution' => [
-						'user_id' => 1,
-						'list'    => ['correct'],
+					'quiz-planned' => [
+						'user_id' => 2,
+						'list'    => [Carbon::now()->toDateTimeString()],
 					],
 				],
 			],

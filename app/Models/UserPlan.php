@@ -52,7 +52,6 @@ class UserPlan extends Model
 		$remainingQuestions = $this->remainingQuestionsFromDate($date);
 		$daysLeft = $this->daysLeftFromDate($date);
 
-		// TODO be smarter!
 		if (empty($remainingQuestions) || $daysLeft <= 0) {
 			return collect();
 		}

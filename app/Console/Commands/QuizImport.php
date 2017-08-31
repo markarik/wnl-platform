@@ -1,5 +1,6 @@
 <?php namespace App\Console\Commands;
 
+use App\Models\QuizQuestion;
 use App\Models\Tag;
 use App\Models\TagsTaxonomy;
 use Storage;
@@ -26,7 +27,8 @@ class QuizImport extends Command
 		 */
 		$description = 'Import quiz sets to database from storage.',
 		$path,
-		$globalTags = [];
+		$globalTags = [],
+		$questions;
 
 	/**
 	 * Create a new command instance.
@@ -37,6 +39,8 @@ class QuizImport extends Command
 		parent::__construct();
 
 		$this->path = self::BASE_DIRECTORY;
+
+		$this->questions = QuizQuestion::all();
 	}
 
 	/**
@@ -90,9 +94,13 @@ class QuizImport extends Command
 	{
 		$values = explode(self::VALUE_DELIMITER, $line);
 
+		if (!$this->checkSimilarity($values[0])) return;
+
 		$question = $quizSet->questions()->firstOrCreate([
 			'text' => nl2br($values[0]),
 		]);
+
+		$this->questions->push($question);
 
 		for ($i = 1; $i <= 5; $i++) {
 			$hits = 0;
@@ -146,5 +154,21 @@ class QuizImport extends Command
 				$question->tags()->attach($parentTag);
 			}
 		}
+	}
+
+	protected function checkSimilarity($text)
+	{
+		foreach ($this->questions as $question) {
+			similar_text($question->text, $text, $similarity);
+
+			if ($similarity > 78) {
+				$this->warn('Similar question found! Similarity: ' . ceil($similarity) . '%');
+				print 'Database: ' . $question->text . PHP_EOL;
+				print 'File: ' . $text . PHP_EOL;
+				if (!$this->confirm('Add question?')) return false;
+			}
+		}
+
+		return true;
 	}
 }

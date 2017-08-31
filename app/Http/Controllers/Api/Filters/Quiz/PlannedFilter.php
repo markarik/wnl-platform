@@ -15,6 +15,9 @@ class PlannedFilter extends ApiFilter
 		$supportedDate = Carbon::now();
 
 		$plan = UserPlan::where('user_id', $this->params['user_id'])->first();
+
+		if (!$plan) return $builder;
+
 		$questionsForDay = $plan->questionsForDay($supportedDate)->pluck('question_id')->toArray();
 
 		return $builder->whereIn('id', $questionsForDay);

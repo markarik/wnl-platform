@@ -51,8 +51,8 @@ trait ProvidesApiFiltering
 		$available = [];
 		foreach (static::AVAILABLE_FILTERS as $filterName) {
 			$filter = $this->getFilter($filterName);
-			$filters = $this->filtersExcept($filters, $filterName);
-			$builder = $this->addFilters($filters, $model);
+			$filteredFilters = $this->filtersExcept($filters, $filterName);
+			$builder = $this->addFilters($filteredFilters, $model);
 			$counters = $filter->count($builder);
 			if ($counters) {
 				$available[$filterName] = $counters;

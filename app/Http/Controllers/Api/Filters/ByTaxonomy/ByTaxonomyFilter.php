@@ -83,7 +83,9 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		return Taxonomy::select()
 			->where('name', $taxonomyName)
 			->first()
-			->tagsTaxonomy;
+			->tagsTaxonomy()
+			->with('tag')
+			->get();
 	}
 
 	public function fetchAggregation($builder, $tags)

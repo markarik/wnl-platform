@@ -1,9 +1,25 @@
 <template>
 	<div class="wnl-app-layout">
 		<wnl-questions-navigation/>
-		<div class="wnl-middle wnl-app-layout-main">
+		<div class="wnl-middle wnl-app-layout-main" :class="{'is-full-width': isLargeDesktop}">
 			<div class="scrollable-main-container">
-				<p class="title is-3">Planner</p>
+				<div class="questions-header">
+					<div class="questions-breadcrumbs">
+						<div class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+						</div>
+						<div class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span>{{$t('questions.nav.planner')}}</span>
+						</div>
+					</div>
+					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters">
+						<span>{{$t('questions.filters.show')}}</span>
+						<span class="icon is-tiny">
+							<i class="fa fa-sliders"></i>
+						</span>
+					</a>
+				</div>
 				<label for="startDate">Kiedy zaczynasz?</label>
 				<input name="startDate" v-model="startDate" type="date"/>
 				<label for="endDate">Kiedy kończysz?</label>
@@ -13,12 +29,6 @@
 
 				<p><button @click="createPlan">Ułóż plan!</button></p>
 				<p>Pytania z których kategorii Ciebie interesują?</p>
-				<wnl-questions-filters
-					:activeFilters="activeFilters"
-					:fetchingQuestions="false"
-					:filters="filters"
-					@activeFiltersChanged="onActiveFiltersChanged"
-				/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -26,9 +36,35 @@
 			:isVisible="isLargeDesktop"
 			:hasChat="true"
 		>
+			<wnl-questions-filters
+				:activeFilters="activeFilters"
+				:fetchingQuestions="false"
+				:filters="filters"
+				@activeFiltersChanged="onActiveFiltersChanged"
+			/>
 		</wnl-sidenav-slot>
 	</div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
+	.questions-breadcrumbs
+		align-items: center
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-1
+		display: flex
+		margin-right: $margin-base
+
+		.breadcrumb
+			max-width: 200px
+			overflow-x: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
+
+	.wnl-app-layout-main.is-full-width
+		max-width: 100%
+</style>
 
 <script>
 	import {mapActions, mapGetters} from 'vuex'
@@ -53,7 +89,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isChatMounted', 'isLargeDesktop']),
+			...mapGetters(['isChatMounted', 'isChatVisible', 'isLargeDesktop']),
 			...mapGetters('questions', [
 				'activeFilters',
 				'filters',
@@ -61,10 +97,9 @@
 		},
 		methods: {
 			...mapActions('questions', [
+				'buildPlan',
 				'fetchQuestionsCount',
 				'fetchDynamicFilters',
-				'activeFiltersToggle',
-				'buildPlan'
 			]),
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
@@ -79,7 +114,10 @@
 			}
 		},
 		mounted() {
-			Promise.all([this.fetchDynamicFilters(), this.fetchQuestionsCount()])
+			Promise.all([
+				this.fetchDynamicFilters(),
+				this.fetchQuestionsCount()
+			])
 		},
 	}
 </script>

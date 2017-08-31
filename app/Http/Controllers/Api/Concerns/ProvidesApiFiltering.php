@@ -146,7 +146,8 @@ trait ProvidesApiFiltering
 	protected function saveActiveFilters($request)
 	{
 		if (empty($request->filters) ||
-			empty($request->active)
+			empty($request->active) ||
+			!$request->useCached
 		) return;
 
 		$key = $this->filtersFormatKey($request);

@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout" v-else>
+	<div class="wnl-app-layout">
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">

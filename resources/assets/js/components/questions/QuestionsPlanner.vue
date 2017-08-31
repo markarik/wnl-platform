@@ -89,7 +89,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isChatMounted', 'isChatVisible', 'isLargeDesktop']),
+			...mapGetters(['isChatMounted', 'isChatVisible', 'isLargeDesktop', 'isMobile']),
 			...mapGetters('questions', [
 				'activeFilters',
 				'filters',
@@ -97,6 +97,7 @@
 		},
 		methods: {
 			...mapActions('questions', [
+				'activeFiltersToggle',
 				'buildPlan',
 				'fetchQuestionsCount',
 				'fetchDynamicFilters',
@@ -114,6 +115,10 @@
 			}
 		},
 		mounted() {
+			const presetFilters = []
+
+			this.activeFiltersSet()
+
 			Promise.all([
 				this.fetchDynamicFilters(),
 				this.fetchQuestionsCount()

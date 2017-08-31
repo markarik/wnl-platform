@@ -20,9 +20,12 @@ trait ProvidesApiFiltering
 		$this->limit = $request->limit ?? $this->defaultLimit;
 		$this->page = $request->page ?? 1;
 		$randomize = $request->randomize;
-		$this->saveActiveFilters($request);
-		list ($filters, $paths) = $this->getFilters($request);
 
+		if (!$request->doNotSaveFilters) {
+			$this->saveActiveFilters($request);
+		}
+
+		list ($filters, $paths) = $this->getFilters($request);
 		$model = $this->addFilters($filters, $model);
 
 		if (!empty($randomize)) {
@@ -158,11 +161,14 @@ trait ProvidesApiFiltering
 
 	protected function getFilters($request)
 	{
-		$key = $this->filtersFormatKey($request);
 		$default = [$request->filters, []];
+
+		if (!$request->useSavedFilters) return $default;
+
+		$key = $this->filtersFormatKey($request);
 		$data = Redis::get($key);
 
-		if (!$data || !$request->useCached) return $default;
+		if (!$data) return $default;
 
 		return json_decode($data, true);
 	}

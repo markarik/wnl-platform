@@ -270,15 +270,18 @@ const actions = {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
-	fetchQuestions({commit, state, getters, rootGetters}, {filters, page, useCached}) {
+	fetchQuestions({commit, state, getters, rootGetters},
+		{filters, page, useSavedFilters, doNotSaveFilters}
+	) {
 		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
 		return _fetchQuestions({
+			active: filters,
+			doNotSaveFilters,
 			filters: parsedFilters,
 			include: 'quiz_answers',
 			page,
-			active: filters,
-			useCached: useCached
+			useSavedFilters,
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 

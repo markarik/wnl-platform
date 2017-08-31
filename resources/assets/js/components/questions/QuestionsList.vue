@@ -363,19 +363,21 @@
 			},
 		},
 		mounted() {
-			this.activeFiltersSet(this.presetFilters)
+			const hasPresetFilters = !isEmpty(this.presetFilters)
 
+			this.switchOverlay(true)
 			Promise.all([
 				this.fetchQuestions({
-					filters: this.activeFilters,
+					doNotSaveFilters: !hasPresetFilters,
+					filters: this.presetFilters,
 					page: 1,
-					// useCached: isEmpty(this.presetFilters)
-					useCached: false
+					useSavedFilters: hasPresetFilters,
 				}),
-				this.fetchDynamicFilters(),
 				this.fetchQuestionsCount(),
 			])
+				.then(() => this.fetchDynamicFilters())
 				.then(() => {
+					this.switchOverlay(false)
 					this.resetCurrentQuestion()
 					return this.fetchQuestionsReactions(this.getPage(1))
 				})

@@ -4,8 +4,7 @@
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
 				<p class="title is-3">Dashboard</p>
-				<router-link class="button is-outlined is-small"
-					:to="{name: 'questions-list', params: {presetFilters: ['planned.items[0]']}}">
+				<router-link v-if="planRoute" class="button is-outlined is-small" :to="planRoute">
 					Krok zgodny z planem
 				</router-link>
 			</div>
@@ -24,7 +23,8 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
+	import {isEmpty} from 'lodash'
+	import {mapActions, mapGetters} from 'vuex'
 
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -35,8 +35,34 @@
 			'wnl-questions-navigation': QuestionsNavigation,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
+		data() {
+			return {
+				planRoute: {},
+			}
+		},
 		computed: {
-			...mapGetters(['isChatMounted', 'isLargeDesktop']),
+			...mapGetters(['currentUserId','isChatMounted', 'isLargeDesktop']),
+			...mapGetters('questions', ['filters']),
+		},
+		methods: {
+			...mapActions('questions', ['fetchDynamicFilters']),
+			setPlanRoute() {
+				console.log(this.filters)
+				this.planRoute = {
+					name: 'questions-list',
+					params: {
+						presetFilters: [
+							'quiz-planned.items[0]',
+							'quiz-resolution.items[0]',
+						],
+					},
+				}
+			}
+		},
+		mounted() {
+			isEmpty(this.filters)
+				? this.fetchDynamicFilters().then(this.setPlanRoute)
+				: this.setPlanRoute()
 		},
 	}
 </script>

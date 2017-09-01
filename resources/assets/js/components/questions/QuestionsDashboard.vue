@@ -47,7 +47,6 @@
 		methods: {
 			...mapActions('questions', ['fetchDynamicFilters']),
 			setPlanRoute() {
-				console.log(this.filters)
 				this.planRoute = {
 					name: 'questions-list',
 					params: {

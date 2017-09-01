@@ -67,6 +67,7 @@
 </style>
 
 <script>
+	import {isEmpty} from 'lodash'
 	import {mapActions, mapGetters} from 'vuex'
 
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
@@ -83,9 +84,13 @@
 		props: [],
 		data() {
 			return {
-				startDate: new Date(),
 				endDate: new Date(),
-				slackDays: 0
+				presetFilters: [
+					'quiz-resolution.items[0]',
+					'quiz-resolution.items[1]',
+				],
+				slackDays: 0,
+				startDate: new Date(),
 			}
 		},
 		computed: {
@@ -97,14 +102,12 @@
 		},
 		methods: {
 			...mapActions('questions', [
+				'activeFiltersSet',
 				'activeFiltersToggle',
 				'buildPlan',
 				'fetchQuestionsCount',
 				'fetchDynamicFilters',
 			]),
-			onActiveFiltersChanged(payload) {
-				this.activeFiltersToggle(payload)
-			},
 			createPlan() {
 				this.buildPlan({
 					startDate: this.startDate,
@@ -112,17 +115,29 @@
 					activeFilters: this.activeFilters,
 					slackDays: this.slackDays
 				})
+			},
+			onActiveFiltersChanged(payload) {
+				this.activeFiltersToggle(payload)
+			},
+			setupFilters() {
+				return new Promise((resolve, reject) => {
+					if (!isEmpty(this.filters)) {
+						this.activeFiltersSet(this.presetFilters)
+						return resolve()
+					}
+
+					this.fetchDynamicFilters().then(() => {
+						this.activeFiltersSet(this.presetFilters)
+						return resolve()
+					})
+				})
 			}
 		},
 		mounted() {
-			const presetFilters = []
-
-			this.activeFiltersSet()
-
-			Promise.all([
-				this.fetchDynamicFilters(),
+			this.setupFilters().then(() => {
+				this.fetchDynamicFilters()
 				this.fetchQuestionsCount()
-			])
+			})
 		},
 	}
 </script>

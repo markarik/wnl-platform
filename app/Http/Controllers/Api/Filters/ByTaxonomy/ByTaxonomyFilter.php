@@ -117,14 +117,13 @@ abstract class ByTaxonomyFilter extends ApiFilter
 				'terms' => ['id' => $ids],
 			];
 			$size = count($ids);
-			$include = '.*';
 		} else {
 			$query = [
 				'match_all' => new \stdClass(),
 			];
 			$size = $tags->count();
-			$include = $tags->toArray();
 		}
+		$include = $tags->toArray();
 
 		return [
 			'body' => [

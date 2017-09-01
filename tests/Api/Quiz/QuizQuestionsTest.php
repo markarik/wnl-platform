@@ -106,7 +106,7 @@ class QuizQuestionsTest extends ApiTestCase
 		\DB::listen(function($query) {
 			dump($query->sql, $query->time);
 		});
-		$user = User::find(190);
+		$user = User::find(77);
 
 		$data = [
 			'filters' => [],

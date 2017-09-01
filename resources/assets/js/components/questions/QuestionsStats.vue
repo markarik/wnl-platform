@@ -4,12 +4,23 @@
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
 				<p class="title is-3">Stats</p>
+
+				<p>Cała baza: {{ allQuestionsCount }} {{ totalUnresolved }}</p>
+
+				<p>% przerobionia bazy:</p>
+
+				<p>% przerobienia przedmiotów:</p>
+
+				<p>% poprawnych odpowiedzi:</p>
+
+				<p>% poprawnych odpowiedzi - przedmioty:</p>
+
 			</div>
 		</div>
 		<wnl-sidenav-slot
-			:isDetached="!isChatMounted"
-			:isVisible="isLargeDesktop"
-			:hasChat="true"
+				:isDetached="!isChatMounted"
+				:isVisible="isLargeDesktop"
+				:hasChat="true"
 		>
 		</wnl-sidenav-slot>
 	</div>
@@ -20,19 +31,34 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
-
+	import {mapGetters, mapActions} from 'vuex'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
 	export default {
-		name: 'QuestionsDashboard',
+		name: 'QuestionsStats',
 		components: {
 			'wnl-questions-navigation': QuestionsNavigation,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
 		computed: {
 			...mapGetters(['isChatMounted', 'isLargeDesktop']),
+			...mapGetters('questions', [
+				'allQuestionsCount',
+				'filters'
+			]),
+			totalUnresolved() {
+				let dupa = this.filters
+				console.log(dupa)
+			},
+		},
+		methods: {
+			...mapActions('questions', [
+
+			]),
+		},
+		mounted() {
+
 		}
 	}
 </script>

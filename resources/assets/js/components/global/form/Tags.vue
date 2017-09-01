@@ -11,6 +11,7 @@
 				type="text"
 				class="input"
 				@input="onInput"
+				@keydown="onKeyDown"
 				ref=input
 				placeholder="Dodaj tag"
 			>
@@ -38,6 +39,11 @@
 
 		.icon
 			padding: 5px
+	
+	.tags-control
+		.autocomplete-box
+			box-shadow: 0px -5px 24px -5px rgba(0,0,0,0.42);
+			bottom: 32px
 </style>
 
 <script>
@@ -72,7 +78,7 @@
 		},
 		methods: {
 			...mapActions(['requestTagsAutocomplete']),
-			onKeyDown() {
+			onKeyDown(evt) {
 				const { enter, esc, arrowUp, arrowDown } = keys
 
 				if (this.autocompleteItems.length === 0) {
@@ -122,9 +128,13 @@
 			},
 
 			onInput(evt) {
-				const data = { name: evt.target.value, tags: this.tags }
+				const name = evt.target.value
+				const data = { name, tags: this.tags }
 
-				if (!data.name) return
+				if (!name) {
+					this.autocompleteItems = []
+					return
+				}
 
 				this.requestTagsAutocomplete(data).then(
 					data => {

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Models\QuizQuestion;
 use App\Models\Tag;
 use App\Http\Requests\Quiz\UpdateQuizQuestion;
+use App\Http\Controllers\Api\QuizQuestionTransformer;
 
 class QuizQuestionsApiController extends ApiController
 {
@@ -14,8 +15,14 @@ class QuizQuestionsApiController extends ApiController
 		$this->resourceName = config('papi.resources.quiz-questions');
 	}
 
-	public function post($request)
+	public function post(UpdateQuizQuestion $request)
 	{
+		$question = QuizQuestion::create(['text' => $request->input('question')]);
+
+		$resource = new Item($question, new QuizQuestionTransformer, $this->resourceName);
+
+		$data = $this->fractal->createData($resource)->toArray();
+
 		return $this->respondOk($data);
 	}
 

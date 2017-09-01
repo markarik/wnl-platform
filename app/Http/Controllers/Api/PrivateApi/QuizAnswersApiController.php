@@ -15,7 +15,10 @@ class QuizAnswersApiController extends ApiController
 
 	public function post(UpdateQuizAnswer $request)
 	{
-		return $this->respondOk($data);
+		// Create new answer
+		$answer = QuizAnswer::find($request->route('id'));
+		
+		return $this->respondOk();
 	}
 
 	public function put(UpdateQuizAnswer $request)

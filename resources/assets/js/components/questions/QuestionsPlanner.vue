@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout">
+	<div class="wnl-app-layout" :class="{'is-mobile': isMobile}">
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'is-full-width': isLargeDesktop}">
 			<div class="scrollable-main-container">
@@ -21,17 +21,70 @@
 					</a>
 				</div>
 				<div class="questions-planner">
-					<label for="startDate">Kiedy zaczynasz?</label>
-					<wnl-datepicker v-model="startDate" :config="startDateConfig"/>
-					<!-- <input name="startDate" v-model="startDate" type="date"/> -->
-					<label for="endDate">Kiedy kończysz?</label>
-					<!-- <input name="endDate" v-model="endDate" type="date"/> -->
-					<wnl-datepicker v-model="endDate" :config="endDateConfig"/>
-					<label for="slackDays">Ile dni wolnych?</label>
-					<input name="slackDays" v-model="slackDays" type="number"/>
+					<div class="questions-planner-heading">
+						{{$t('questions.plan.headings.dates')}}
+					</div>
+					<div class="dates columns">
+						<div class="column">
+							<label class="date-label" for="startDate">
+								{{$t('questions.plan.headings.startDate')}}
+								<span class="icon is-small">
+									<i class="fa fa-hourglass-1"></i>
+								</span>
+							</label>
+							<wnl-datepicker v-model="startDate" :config="startDateConfig"/>
+							<p class="tip">
+								{{$t('questions.plan.tips.startDate')}}
+							</p>
+						</div>
+						<div class="column">
+							<label class="date-label" for="endDate">
+								{{$t('questions.plan.headings.endDate')}}
+								<span class="icon is-small">
+									<i class="fa fa-hourglass-3"></i>
+								</span>
+							</label>
+							<wnl-datepicker v-model="endDate" :config="endDateConfig"/>
+							<p class="tip">
+								{{$t('questions.plan.tips.endDate')}}
+							</p>
+						</div>
+					</div>
 
-					<p><button @click="createPlan">Ułóż plan!</button></p>
-					<p>Pytania z których kategorii Ciebie interesują?</p>
+					<div class="questions-planner-heading">
+						{{$t('questions.plan.headings.slackDays')}}
+					</div>
+					<div class="slack-days">
+						<input class="slack-days-input" v-model="slackDays" type="number"/>
+						<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
+					</div>
+
+					<div class="questions-planner-heading">
+						{{$t('questions.plan.headings.questions')}}
+					</div>
+					<div class="questions-plan-options">
+						<div v-for="filters, option in planOptions" :key="option">
+							<a
+								class="plan-option panel-toggle"
+								:class="{'is-active': selectedOption === option}"
+								@click="selectOption(option, filters)"
+							>
+								{{$t(`questions.plan.options.${option}`)}}
+							</a>
+							<p class="tip">
+								<span v-if="counts[option] > 0">({{counts[option]}})</span>
+								<span v-else>&nbsp;</span>
+							</p>
+						</div>
+					</div>
+
+					<div class="questions-planner-heading">
+						{{$t('questions.plan.headings.summary')}}
+					</div>
+
+					<p class="has-text-centered margin top">
+						<a class="button is-primary" @click="createPlan">Ułóż plan!</a>
+					</p>
 				</div>
 			</div>
 		</div>
@@ -41,6 +94,7 @@
 			:hasChat="true"
 		>
 			<wnl-questions-filters
+				v-show="selectedOption === 'custom'"
 				:activeFilters="activeFilters"
 				:fetchingQuestions="false"
 				:filters="filters"
@@ -50,8 +104,12 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	.wnl-app-layout-main.is-full-width
+		max-width: 100%
 
 	.questions-breadcrumbs
 		align-items: center
@@ -66,11 +124,64 @@
 			text-overflow: ellipsis
 			white-space: nowrap
 
-	.wnl-app-layout-main.is-full-width
-		max-width: 100%
+	.tip
+		color: $color-background-gray
+		font-size: $font-size-minus-2
+		text-align: center
+
+	.questions-planner-heading
+		border-bottom: $border-light-gray
+		font-size: $font-size-minus-1
+		margin: $margin-base 0 $margin-small
+		text-align: center
+		text-transform: uppercase
+
+		.icon
+			color: $color-background-gray
+			margin-right: $margin-small
+
+	.dates
+		margin-bottom: $margin-big
+
+		.icon
+			color: $color-background-gray
+			margin-left: $margin-small
+
+		.date-label
+			display: block
+			font-size: $font-size-minus-1
+			text-align: center
+			text-transform: uppercase
+			width: 100%
+
+	.slack-days
+		+flex-center()
+		flex-direction: column
+		margin-bottom: $margin-big
+
+		.slack-days-input
+			border: 0
+			border-bottom: 1px solid $color-ocean-blue
+			border-radius: 0
+			box-shadow: none
+			display: block
+			font-size: $font-size-plus-1
+			font-weight: bold
+			margin-top: $margin-small
+			outline: 0
+			text-align: center
+
+	.questions-plan-options
+		+flex-center()
+		margin-bottom: $margin-big
+
+		.plan-option
+			display: block
+			line-height: $line-height-minus
 </style>
 
 <script>
+	import axios from 'axios'
 	import {pl} from 'flatpickr/dist/l10n/pl.js'
 	import {isEmpty, merge} from 'lodash'
 	import {mapActions, mapGetters} from 'vuex'
@@ -79,21 +190,14 @@
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import {getApiUrl} from 'js/utils/env'
 
-	const planOptions = {
-			all: [],
-			custom: [],
-			unresolvedAndIncorrect: [
-				'quiz-resolution.items[0]',
-				'quiz-resolution.items[1]',
-			],
-		},
-		defaultDateConfig = () => {
-			return {
-				altInput: true,
-				locale: pl,
-			}
+	const defaultDateConfig = () => {
+		return {
+			altInput: true,
+			locale: pl,
 		}
+	}
 
 	export default {
 		name: 'QuestionsPlanner',
@@ -106,8 +210,11 @@
 		props: [],
 		data() {
 			return {
+				unresolvedAndIncorrectCount: 0,
+				customCount: 0,
 				endDate: '',
-				selectedPlan: 'unresolvedAndIncorrect',
+				lastCustomFilters: [],
+				selectedOption: 'unresolvedAndIncorrect',
 				slackDays: 0,
 				startDate: '',
 			}
@@ -116,13 +223,31 @@
 			...mapGetters(['isChatMounted', 'isChatVisible', 'isLargeDesktop', 'isMobile']),
 			...mapGetters('questions', [
 				'activeFilters',
+				'allQuestionsCount',
 				'filters',
 			]),
+			counts() {
+				return {
+					all: this.allQuestionsCount,
+					unresolvedAndIncorrect: this.unresolvedAndIncorrectCount,
+					custom: this.customCount,
+				}
+			},
 			endDateConfig() {
 				return merge(defaultDateConfig(), {
 					defaultDate: new Date('September 21, 2017 00:00:00'),
 					minDate: 'today',
 				})
+			},
+			planOptions() {
+				return {
+					unresolvedAndIncorrect: [
+						'quiz-resolution.items[0]',
+						'quiz-resolution.items[1]',
+					],
+					all: [],
+					custom: this.lastCustomFilters,
+				}
 			},
 			startDateConfig() {
 				return merge(defaultDateConfig(), {
@@ -150,24 +275,34 @@
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload)
 			},
-			setupFilters() {
-				const presetFilters = planOptions[this.selectedPlan]
-
+			selectOption(option, filters) {
+				this.selectedOption = option
+				this.activeFiltersSet(filters)
+				return this.fetchDynamicFilters()
+			},
+			setFilters(filters) {
 				return new Promise((resolve, reject) => {
 					if (!isEmpty(this.filters)) {
-						this.activeFiltersSet(presetFilters)
+						this.activeFiltersSet(filters)
 						return resolve()
 					}
 
 					this.fetchDynamicFilters().then(() => {
-						this.activeFiltersSet(presetFilters)
+						this.activeFiltersSet(filters)
 						return resolve()
 					})
 				})
-			}
+			},
+			setUnresolvedAndIncorrectCount() {
+				axios.get(getApiUrl('quiz_questions/stats')).then(({data: {correct, total}}) => {
+					this.unresolvedAndIncorrectCount = total - correct
+				})
+			},
 		},
 		mounted() {
-			this.setupFilters().then(() => {
+			const presetFilters = this.planOptions[this.selectedOption]
+			this.setFilters(presetFilters).then(() => {
+				this.setUnresolvedAndIncorrectCount()
 				this.fetchDynamicFilters()
 				this.fetchQuestionsCount()
 			})

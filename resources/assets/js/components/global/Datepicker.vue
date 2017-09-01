@@ -1,12 +1,25 @@
 <template>
-	<input class="input"
+	<input class="input datepicker"
 		:placeholder="placeholder"
 		:value="date"
 	/>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
+<style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
 
+	.datepicker-container
+		position: relative
+
+	.datepicker
+		border: 0
+		border-bottom: 1px solid $color-ocean-blue
+		border-radius: 0
+		box-shadow: none
+		font-size: $font-size-plus-1
+		font-weight: bold
+		outline: 0
+		text-align: center
 </style>
 
 <script>
@@ -62,7 +75,7 @@
 				this.datepicker = new Flatpickr(this.$el, this.config)
 				this.setDate(this.value)
 			}
-			// this.$watch('config', this.redraw)
+			this.$watch('config', this.redraw)
 			this.$watch('value', this.setDate)
 		},
 		beforeDestroy () {

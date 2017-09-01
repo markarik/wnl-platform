@@ -26,10 +26,24 @@ export const questions = {
 		stats: 'Sprawdź statystyki',
 	},
 	plan: {
+		headings: {
+			dates: '1. Ile masz czasu?',
+			endDate: 'Koniec',
+			questions: '3. Ile pytań chcesz rozwiązać?',
+			slackDays: '2. Ile dni wolnych planujesz?',
+			startDate: 'Start',
+			summary: '4. Podsumowanie planu',
+		},
 		options: {
 			all: 'Wszystkie pytania',
 			custom: 'Własny zakres',
-			unresolvedAndIncorrect: 'Nierozwiązane i rozwiązane błędnie',
+			unresolvedAndIncorrect: 'Nierozwiązane + rozwiązane błędnie',
+			count: 'Pytań: {count}',
+		},
+		tips: {
+			endDate: 'Kliknij, aby zmienić końcową datę',
+			slackDays: 'Wpisz ilość dni, w których nie planujesz przerabiać pytań',
+			startDate: 'Kliknij, aby zmienić początkową datę',
 		}
 	},
 	solving: {

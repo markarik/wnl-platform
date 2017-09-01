@@ -25,6 +25,13 @@ export const questions = {
 		solving: 'Rozwiązuj pytania',
 		stats: 'Sprawdź statystyki',
 	},
+	plan: {
+		options: {
+			all: 'Wszystkie pytania',
+			custom: 'Własny zakres',
+			unresolvedAndIncorrect: 'Nierozwiązane i rozwiązane błędnie',
+		}
+	},
 	solving: {
 		abort: 'Przerwij',
 		confirm: {

@@ -349,6 +349,18 @@ a.secondary-link {
 	}
 }
 
+// Datepicker
+
+.flatpickr-day.selected {
+	background: $color-ocean-blue;
+	border-color: $color-ocean-blue;
+
+	&:hover {
+		background: $color-sky-blue;
+		border-color: $color-sky-blue;
+	}
+}
+
 // Embedded
 .ratio-16-9-wrapper {
 	padding-bottom: 56.25%;

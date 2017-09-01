@@ -10,5 +10,8 @@ export const ui = {
 		questions: 'Pytania już fruną!',
 		testBuilding: 'Już układamy zestawik...',
 		testChecking: 'No, zobaczmy...',
-	}
+	},
+	placeholders: {
+		date: 'Wybierz datę',
+	},
 }

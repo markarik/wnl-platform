@@ -103,7 +103,10 @@ class QuizQuestionsTest extends ApiTestCase
 	/** @test */
 	public function get_quiz_questions_filters_no_active_filters()
 	{
-		$user = User::find(1);
+		\DB::listen(function($query) {
+			dump($query->sql, $query->time);
+		});
+		$user = User::find(190);
 
 		$data = [
 			'filters' => [],
@@ -118,7 +121,7 @@ class QuizQuestionsTest extends ApiTestCase
 
 		$stop = microtime(true) - $start;
 		dump('time ' . $stop . 's');
-		$response->dump();
+//		$response->dump();
 		$response
 			->assertStatus(200);
 	}

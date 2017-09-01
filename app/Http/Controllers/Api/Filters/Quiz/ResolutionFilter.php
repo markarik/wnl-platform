@@ -52,30 +52,42 @@ class ResolutionFilter extends ApiFilter
 
 	protected function incorrect($query)
 	{
-		return $query->whereHas('userQuizResults', function ($query) {
-			$query
-				->where('user_id', $this->params['user_id'])
-				->whereHas('quizAnswer', function ($query) {
-					$query->where('is_correct', false);
-				});
-		});
+		$userId = $this->params['user_id'];
+
+//		return $query->whereHas('userQuizResults', function ($query) {
+//			$query
+//				->where('user_id', $this->params['user_id'])
+//				->whereHas('quizAnswer', function ($query) {
+//					$query->where('is_correct', false);
+//				});
+//		});
+
+		return $query->whereRaw("id in (select user_quiz_results.quiz_question_id from user_quiz_results inner join quiz_answers on user_quiz_results.quiz_answer_id = quiz_answers.id where user_id = {$userId} and is_correct = 0 group by user_quiz_results.quiz_question_id)");
 	}
 
 	protected function correct($query)
 	{
-		return $query->whereHas('userQuizResults', function ($query) {
-			$query
-				->where('user_id', $this->params['user_id'])
-				->whereHas('quizAnswer', function ($query) {
-					$query->where('is_correct', true);
-				});
-		});
+		$userId = $this->params['user_id'];
+
+//		return $query->whereHas('userQuizResults', function ($query) {
+//			$query
+//				->where('user_id', $this->params['user_id'])
+//				->whereHas('quizAnswer', function ($query) {
+//					$query->where('is_correct', true);
+//				});
+//		});
+
+		return $query->whereRaw("id in (select user_quiz_results.quiz_question_id from user_quiz_results inner join quiz_answers on user_quiz_results.quiz_answer_id = quiz_answers.id where user_id = {$userId} group by user_quiz_results.quiz_question_id) and 1 = all (select is_correct from user_quiz_results inner join quiz_answers on user_quiz_results.quiz_answer_id = quiz_answers.id where user_id = {$userId} and user_quiz_results.quiz_question_id = quiz_questions.id)");
 	}
 
 	protected function unresolved($query)
 	{
-		return $query->whereDoesntHave('userQuizResults', function ($query) {
-			$query->where('user_id', $this->params['user_id']);
-		});
+		$userId = $this->params['user_id'];
+
+//		return $query->whereDoesntHave('userQuizResults', function ($query) {
+//			$query->where('user_id', $this->params['user_id']);
+//		});
+
+		return $query->whereRaw("id not in (select quiz_question_id from user_quiz_results where user_id = {$userId} group by quiz_question_id)");
 	}
 }

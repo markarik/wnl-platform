@@ -356,7 +356,7 @@ const actions = {
 
 			return {
 				questionId,
-				answerId: question.selectedAnswer
+				answerId: question.answers[question.selectedAnswer].id
 			}
 		}).filter((result) => result)
 

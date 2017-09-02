@@ -49,7 +49,6 @@
 						<input
 							type="checkbox"
 							:name="'is_correct.' + answer.id"
-							:id="answer.id"
 							class="answer-correct"
 							:checked="answer.is_correct"
 							@change="onRightAnswerChange"
@@ -123,17 +122,18 @@
 				attach: null
 			}
 		},
+		props: ['isEdit'],
 		computed: {
 			...mapGetters(['questionText', 'questionAnswers', 'questionId', 'questionTags']),
 			formResourceRoute() {
-				if (this.method === 'post') {
+				if (!this.isEdit) {
 					return 'quiz_questions?include=quiz_answers'
 				} else {
 					return `quiz_questions/${this.$route.params.quizId}?include=quiz_answers`
 				}
 			},
 			formMethod() {
-				return this.$route.params.quizId ? 'put' : 'post'
+				return this.isEdit ? 'put' : 'post'
 			}
 		},
 		methods: {
@@ -163,7 +163,7 @@
 				)
 				const $newTags = this.$refs.tags.tags
 				this.attach = this.$refs.tags.haveTagsChanged() ? { tags: $newTags } : {}
-				this.saveAnswers(answersData)
+				this.saveAnswers({ answersData, isEdit: this.isEdit })
 			}
 		},
 		watch: {
@@ -175,7 +175,7 @@
 			}
 		},
 		created() {
-			this.getQuizQuestion(this.$route.params.quizId);
+			this.isEdit && this.getQuizQuestion(this.$route.params.quizId)
 		},
 	}
 </script>

@@ -14,15 +14,40 @@ const namespaced = false
 const state = {
 	question: null,
 	questionId: null,
-	answers: null
+	answers: null,
+}
+
+function getEmptyAnswers(stateAnswers) {
+	return [
+		{
+			text: '',
+			is_correct: false
+		},
+		{
+			text: '',
+			is_correct: false
+		},
+		{
+			text: '',
+			is_correct: false
+		},
+		{
+			text: '',
+			is_correct: false
+		},
+		{
+			text: '',
+			is_correct: false
+		}
+	]
 }
 
 // Getters
 const getters = {
-	questionText: state => state.question && state.question.text,
-	questionAnswers: state => state.answers,
+	questionText: state => state.question ? state.question.text : '',
+	questionAnswers: state => state.answers || getEmptyAnswers(),
 	questionId: state => state.question && state.question.id,
-	questionTags: state => state.question && state.question.tags
+	questionTags: state => state.question ? state.question.tags : []
 }
 
 // Mutations
@@ -44,12 +69,21 @@ const actions = {
 				commit(types.SETUP_QUIZ_QUESTION, response.data)
 			})
 	},
-	saveAnswers({ commit }, answers) {
-		const promises = answers.map(
-			answer => axios.put(
-				getApiUrl(`quiz_answers/${answer.id}`),
-				{ text: answer.text, is_correct: answer.isCorrect }
-			)
+	saveAnswers({ commit }, { answersData, isEdit } ) {
+		const promises = answersData.map(
+			answer => {
+				if (isEdit) {
+					return axios.put(
+						getApiUrl(`quiz_answers/${answer.id}`),
+						{ text: answer.text, is_correct: answer.isCorrect }
+					)
+				} else {
+					return axios.post(
+						getApiUrl(`quiz_answers`),
+						{ text: answer.text, is_correct: answer.isCorrect }
+					)
+				}
+			}
 		)
 
 		return Promise.all(promises)

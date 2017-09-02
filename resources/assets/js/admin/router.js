@@ -38,7 +38,12 @@ let routes = [
 			{
 				name: 'quiz-editor',
 				path: 'edit/:quizId',
-				component: require('js/admin/components/quizes/QuizQuestionEditor.vue')
+				component: require('js/admin/components/quizes/QuizQuestionEdit.vue')
+			},
+			{
+				name: 'quiz-creator',
+				path: 'new',
+				component: require('js/admin/components/quizes/QuizQuestionCreate.vue')
 			}
 		],
 	},

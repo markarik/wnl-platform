@@ -5,7 +5,8 @@ use App\Http\Controllers\Api\ApiController;
 use App\Models\QuizQuestion;
 use App\Models\Tag;
 use App\Http\Requests\Quiz\UpdateQuizQuestion;
-use App\Http\Controllers\Api\QuizQuestionTransformer;
+use App\Http\Controllers\Api\Transformers\QuizQuestionTransformer;
+use League\Fractal\Resource\Item;
 
 class QuizQuestionsApiController extends ApiController
 {

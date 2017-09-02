@@ -9,6 +9,7 @@
 			'is-first-level': isFirstLevel,
 			'is-selected': isSelected,
 			'is-selectable': isSelectable,
+			'loading': loading,
 		}" @click="onItemClick">
 			<div v-if="isSelectable" class="wai-checkbox">
 				<span class="icon is-small">
@@ -17,7 +18,8 @@
 			</div>
 			<div class="wai-content">
 				<span class="text">{{content}}</span>
-				<span class="count" v-if="count !== false">{{ `(${count})` }}</span>
+				<span class="count" v-if="!loading && count !== false">{{ `(${count})` }}</span>
+				<span class="loader" v-if="loading"></span>
 			</div>
 			<div v-if="hasChildren" class="wai-expand-icon" ref="expand">
 				<span class="icon is-small">
@@ -32,6 +34,7 @@
 				:config="config"
 				:item="childItem"
 				:key="index"
+				:loading="loading"
 				:path="`${path}.items[${index}]`"
 				@itemToggled="onChildItemToggled"
 			/>
@@ -79,12 +82,18 @@
 			padding: $margin-medium $margin-small $margin-medium $margin-medium
 			text-transform: uppercase
 
+			&:hover
+				background: $color-background-light-gray
+
 			.wai-expand-icon
 				border-color: transparent
 
 		&.has-children,
 		&.is-selectable
 			cursor: pointer
+
+		&.loading
+			cursor: wait
 
 		.wai-checkbox
 			width: 1.5em
@@ -98,7 +107,8 @@
 			flex: 1 auto
 			justify-content: flex-start
 
-			.text
+			.loader
+				margin-left: $margin-small
 
 			.count
 				align-self: flex-end
@@ -149,6 +159,10 @@
 				required: true,
 				type: Object,
 			},
+			loading: {
+				default: false,
+				type: Boolean,
+			},
 			path: {
 				required: true,
 				type: String,
@@ -196,7 +210,7 @@
 				return this.config.flattened.indexOf(path) > -1
 			},
 			onItemClick(event) {
-				if (this.isSelectable && event.path.indexOf(this.$refs.expand) === -1) {
+				if (!this.loading && this.isSelectable && event.path.indexOf(this.$refs.expand) === -1) {
 					this.toggleSelected()
 				} else {
 					this.toggleExpanded()

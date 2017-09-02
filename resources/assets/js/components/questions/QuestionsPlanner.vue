@@ -55,7 +55,7 @@
 						{{$t('questions.plan.headings.slackDays')}}
 					</div>
 					<div class="slack-days">
-						<input class="slack-days-input" v-model="slackDays" type="number"/>
+						<input class="slack-days-input" min="0" :max="maxSlack" v-model="slackDays" type="number"/>
 						<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
 					</div>
 
@@ -81,9 +81,24 @@
 					<div class="questions-planner-heading">
 						{{$t('questions.plan.headings.summary')}}
 					</div>
+					<div class="questions-plan-summary">
+						<span class="count">{{currentPlan.count}}</span>
+						{{$t('questions.plan.summaryCount')}}
+						<span class="days">{{currentPlan.days}}</span>
+						{{$t('questions.plan.summaryDays')}}
+						<span class="average" :class="averageClass">{{currentPlan.average}}</span>
+						{{$t('questions.plan.summaryAverage')}}
+					</div>
+					<div class="questions-plan-tip">
+						<p class="tip">
+							{{$t('questions.plan.summaryTip')}}
+						</p>
+					</div>
 
 					<p class="has-text-centered margin top">
-						<a class="button is-primary" @click="createPlan">Ułóż plan!</a>
+						<a class="button is-primary" :class="{'is-loading': saving}" @click="createPlan">
+							{{$t('questions.plan.submit')}}
+						</a>
 					</p>
 				</div>
 			</div>
@@ -96,7 +111,7 @@
 			<wnl-questions-filters
 				v-show="selectedOption === 'custom'"
 				:activeFilters="activeFilters"
-				:fetchingQuestions="false"
+				:fetchingQuestions="fetchingQuestions"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
 			/>
@@ -131,7 +146,7 @@
 
 	.questions-planner-heading
 		border-bottom: $border-light-gray
-		font-size: $font-size-minus-1
+		letter-spacing: 1px
 		margin: $margin-base 0 $margin-small
 		text-align: center
 		text-transform: uppercase
@@ -170,6 +185,7 @@
 			margin-top: $margin-small
 			outline: 0
 			text-align: center
+			width: 250px
 
 	.questions-plan-options
 		+flex-center()
@@ -178,10 +194,35 @@
 		.plan-option
 			display: block
 			line-height: $line-height-minus
+
+	.questions-plan-summary
+		margin: $margin-medium 0
+		text-align: center
+
+		.average, .count, .days
+			font-size: $font-size-plus-2
+			font-weight: $font-weight-bold
+
+		.count
+			color: $color-purple
+
+		.days
+			color: $color-blue
+
+		.average
+			&.easy
+				color: $color-green
+
+			&.medium
+				color: $color-yellow
+
+			&.hard
+				color: $color-red
 </style>
 
 <script>
 	import axios from 'axios'
+	import moment from 'moment'
 	import {pl} from 'flatpickr/dist/l10n/pl.js'
 	import {isEmpty, merge} from 'lodash'
 	import {mapActions, mapGetters} from 'vuex'
@@ -210,13 +251,14 @@
 		props: [],
 		data() {
 			return {
-				unresolvedAndIncorrectCount: 0,
 				customCount: 0,
-				endDate: '',
-				lastCustomFilters: [],
+				endDate: new Date('September 21, 2017 00:00:00'),
+				fetchingQuestions: false,
+				saving: false,
 				selectedOption: 'unresolvedAndIncorrect',
 				slackDays: 0,
-				startDate: '',
+				startDate: new Date(),
+				unresolvedAndIncorrectCount: 0,
 			}
 		},
 		computed: {
@@ -226,6 +268,13 @@
 				'allQuestionsCount',
 				'filters',
 			]),
+			averageClass() {
+				return this.currentPlan.average <= 100
+					? 'easy'
+					: this.currentPlan.average <= 200
+						? 'medium'
+						: 'hard'
+			},
 			counts() {
 				return {
 					all: this.allQuestionsCount,
@@ -233,11 +282,22 @@
 					custom: this.customCount,
 				}
 			},
+			currentPlan() {
+				const count = this.counts[this.selectedOption]
+				const days = this.datesRangeInDays + 1 - this.slackDays
+
+				return {average: Math.ceil(count/days), count, days}
+			},
+			datesRangeInDays() {
+				return moment(this.endDate).diff(moment(this.startDate), 'days')
+			},
 			endDateConfig() {
 				return merge(defaultDateConfig(), {
-					defaultDate: new Date('September 21, 2017 00:00:00'),
 					minDate: 'today',
 				})
+			},
+			maxSlack() {
+				return this.datesRangeInDays
 			},
 			planOptions() {
 				return {
@@ -246,12 +306,11 @@
 						'quiz-resolution.items[1]',
 					],
 					all: [],
-					custom: this.lastCustomFilters,
+					custom: [],
 				}
 			},
 			startDateConfig() {
 				return merge(defaultDateConfig(), {
-					defaultDate: 'today',
 					minDate: 'today',
 				})
 			},
@@ -261,19 +320,37 @@
 				'activeFiltersSet',
 				'activeFiltersToggle',
 				'buildPlan',
-				'fetchQuestionsCount',
 				'fetchDynamicFilters',
+				'fetchQuestions',
+				'fetchQuestionsCount',
 			]),
 			createPlan() {
+				this.saving = true
 				this.buildPlan({
 					startDate: this.startDate,
 					endDate: this.endDate,
 					activeFilters: this.activeFilters,
 					slackDays: this.slackDays
+				}).then(() => this.saving = false)
+			},
+			fetchMatchingQuestions(filters = []) {
+				this.fetchingQuestions = true
+				return this.fetchQuestions({
+					doNotSaveFilters: true,
+					filters,
+					useSavedFilters: false,
 				})
+					.catch(error => $wnl.logger.error(error))
+					.then(({data: {total}}) => {
+						this.customCount = total
+						this.fetchingQuestions = false
+					})
 			},
 			onActiveFiltersChanged(payload) {
-				this.activeFiltersToggle(payload)
+				this.activeFiltersToggle(payload).then(() => {
+					this.fetchDynamicFilters()
+					return this.fetchMatchingQuestions(this.activeFilters)
+				})
 			},
 			selectOption(option, filters) {
 				this.selectedOption = option
@@ -301,11 +378,17 @@
 		},
 		mounted() {
 			const presetFilters = this.planOptions[this.selectedOption]
+
 			this.setFilters(presetFilters).then(() => {
 				this.setUnresolvedAndIncorrectCount()
 				this.fetchDynamicFilters()
 				this.fetchQuestionsCount()
 			})
+		},
+		watch: {
+			selectedOption(to) {
+				to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions()
+			}
 		},
 	}
 </script>

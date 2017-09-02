@@ -40,7 +40,7 @@ class UserPlan extends Model
 	public function daysLeftFromDate($date) {
 		$startDate = $date->lt($this->start_date) ? $this->start_date : $date;
 
-		return $this->end_date->diff($startDate)->days - $this->slack_days_left; // 2
+		return $this->end_date->diff($startDate)->days - $this->slack_days_left + 1; // 2
 	}
 
 	public function remainingQuestionsFromDate($date) {

@@ -48,7 +48,7 @@
 				set(newValue) {
 					if (this.selectedDates !== newValue) {
 						this.selectedDates = newValue
-						this.$emit('input', newValue)
+						this.$emit('input', new Date(newValue))
 					}
 				}
 			},

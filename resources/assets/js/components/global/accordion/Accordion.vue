@@ -6,6 +6,7 @@
 			:isFirstLevel="true"
 			:item="item"
 			:key="path"
+			:loading="loading"
 			:path="path"
 			@itemToggled="onItemToggled"
 		/>
@@ -26,10 +27,6 @@
 			'wnl-accordion-item': AccordionItem,
 		},
 		props: {
-			dataSource: {
-				required: true,
-				type: Object,
-			},
 			config: {
 				default: {
 					expanded: [],
@@ -39,6 +36,14 @@
 					selectedElements: [],
 				},
 				type: Object,
+			},
+			dataSource: {
+				required: true,
+				type: Object,
+			},
+			loading: {
+				default: false,
+				type: Boolean,
 			},
 		},
 		computed: {

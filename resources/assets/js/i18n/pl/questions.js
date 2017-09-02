@@ -40,6 +40,11 @@ export const questions = {
 			unresolvedAndIncorrect: 'Nierozwiązane + rozwiązane błędnie',
 			count: 'Pytań: {count}',
 		},
+		submit: 'Akceptuję plan!',
+		summaryAverage: 'pytań na dzień',
+		summaryCount: 'pytań w',
+		summaryDays: 'dni, daje średnio',
+		summaryTip: 'poniżej 100: plan spokojny, 100 - 200: plan intensywny, powyżej 200: plan hardkor',
 		tips: {
 			endDate: 'Kliknij, aby zmienić końcową datę',
 			slackDays: 'Wpisz ilość dni, w których nie planujesz przerabiać pytań',

@@ -14,7 +14,7 @@ class PlannedFilter extends ApiFilter
 	{
 		$supportedDate = Carbon::now();
 
-		$plan = UserPlan::where('user_id', $this->params['user_id'])->first();
+		$plan = UserPlan::where('user_id', $this->params['user_id'])->orderBy('id', 'desc')->first();
 
 		if (!$plan) return $builder;
 
@@ -25,7 +25,7 @@ class PlannedFilter extends ApiFilter
 
 	public function count($builder)
 	{
-		$plan = UserPlan::where('user_id', Auth::user()->id)->first();
+		$plan = UserPlan::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->first();
 
 		if (!$plan) return false;
 

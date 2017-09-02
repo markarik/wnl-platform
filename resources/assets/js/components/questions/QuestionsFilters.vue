@@ -20,6 +20,7 @@
 		<wnl-accordion
 			:dataSource="filters"
 			:config="accordionConfig"
+			:loading="fetchingQuestions"
 			@itemToggled="onItemToggled"
 		/>
 	</div>

@@ -11,6 +11,13 @@
 					</router-link>
 				</div>
 			</div>
+			<div class="field has-addons">
+				<div class="control">
+					<router-link :to="{name: 'quiz-creator'}" class="button is-info">
+						Utwórz nowe pytanie
+					</router-link>
+				</div>
+			</div>
 		</form>
 		<div class="quiz-question-editor">
 			<router-view></router-view>

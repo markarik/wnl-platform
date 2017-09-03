@@ -3,7 +3,17 @@
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div v-if="!id" class="scrollable-main-container">
-				<p class="title is-3">Dashboard</p>
+				<div class="questions-header">
+					<div class="questions-breadcrumbs">
+						<div class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+						</div>
+						<div class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span>{{$t('questions.nav.dashboard')}}</span>
+						</div>
+					</div>
+				</div>
 				<router-link v-if="planRoute" class="button is-outlined is-small" :to="planRoute">
 					Krok zgodny z planem
 				</router-link>
@@ -21,7 +31,20 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
 
+	.questions-breadcrumbs
+		align-items: center
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-1
+		display: flex
+		margin-right: $margin-base
+
+		.breadcrumb
+			max-width: 200px
+			overflow-x: hidden
+			text-overflow: ellipsis
+			white-space: nowrap
 </style>
 
 <script>

@@ -118,7 +118,7 @@ let routes = [
 		]
 	},
 	{
-		path: '/app/quiz_questions',
+		path: '/app/questions',
 		component: require('js/components/questions/Questions.vue'),
 		children: [
 			{

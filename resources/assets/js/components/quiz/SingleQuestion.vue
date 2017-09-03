@@ -99,25 +99,33 @@
 			goBack() {
 				this.$router.go(-1)
 			},
+			setupQuestion() {
+				if (!this.id) {
+					this.hasError = true
+					return
+				}
+				this.fetchSingleQuestion(this.id)
+					.then(response => {
+						if (!response.data) this.hasError = true
+					})
+					.catch(error => {
+						this.hasError = true
+					})
+			},
 		},
 		created() {
 			this.destroyQuiz()
 		},
 		mounted() {
-			if (!this.id) {
-				this.hasError = true
-				return
-			}
-			this.fetchSingleQuestion(this.id)
-				.then(response => {
-					if (!response.data) this.hasError = true
-				})
-				.catch(error => {
-					this.hasError = true
-				})
+			this.setupQuestion()
 		},
 		beforeDestroy() {
 			this.destroyQuiz()
 		},
+		watch: {
+			id(to) {
+				!!to && this.setupQuestion()
+			}
+		}
 	}
 </script>

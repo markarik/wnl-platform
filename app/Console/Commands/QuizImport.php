@@ -93,11 +93,22 @@ class QuizImport extends Command
 	public function createQuestion($line, $quizSet)
 	{
 		$values = explode(self::VALUE_DELIMITER, $line);
+		$text = nl2br($values[0]);
 
-		if (!$this->checkSimilarity($values[0])) return;
+		$similarQuestion = $this->checkSimilarity($text, $values);
+		if ($similarQuestion !== false) {
+			if (!$quizSet->questions->contains($similarQuestion)) {
+				$quizSet->questions()->attach($similarQuestion);
+				$this->info('Attached to set!');
+			}
+			$this->info('Set already has this question');
+			return;
+		}
+
+		$this->info('Creating new question!');
 
 		$question = $quizSet->questions()->firstOrCreate([
-			'text' => nl2br($values[0]),
+			'text' => $text,
 		]);
 
 		$this->questions->push($question);
@@ -156,19 +167,29 @@ class QuizImport extends Command
 		}
 	}
 
-	protected function checkSimilarity($text)
+	protected function checkSimilarity($text, $values)
 	{
 		foreach ($this->questions as $question) {
+			if ($question->text === $text) return $question;
 			similar_text($question->text, $text, $similarity);
 
 			if ($similarity > 78) {
 				$this->warn('Similar question found! Similarity: ' . ceil($similarity) . '%');
-				print 'Database: ' . $question->text . PHP_EOL;
-				print 'File: ' . $text . PHP_EOL;
-				if (!$this->confirm('Add question?')) return false;
+				$this->info('Database:');
+				dump($question->text . PHP_EOL);
+				dump($question->answers->pluck('text')->toArray());
+
+				$this->info('File:');
+				dump($text . PHP_EOL);
+				for ($i = 1; $i <= 5; $i++) {
+					dump($values[$i] . PHP_EOL);
+				}
+				if ($this->confirm('Add as new question?')) {
+					return $question;
+				}
 			}
 		}
 
-		return true;
+		return false;
 	}
 }

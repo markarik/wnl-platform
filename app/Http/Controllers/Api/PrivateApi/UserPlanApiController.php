@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Http\Controllers\Api\Transformers\UserPlanTransformer;
 use App\Models\User;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Database\QueryException;
@@ -8,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\QuizQuestion;
 use App\Models\UserPlan;
 use Carbon\Carbon;
+use League\Fractal\Resource\Item;
 
 class UserPlanApiController extends ApiController
 {
@@ -24,14 +26,8 @@ class UserPlanApiController extends ApiController
 
 		if (!$plan) return $this->respondNoContent();
 
-		$data = [
-			'user_id' => $plan->user_id,
-			'start_date' => $plan->start_date,
-			'end_date' => $plan->end_date,
-			'slack_days_planned' => $plan->slack_days_planned,
-			'slack_days_left' => $plan->slack_days_left,
-			'stats' => $plan->stats($plan->id),
-		];
+		$resource = new Item($plan, new UserPlanTransformer, $this->resourceName);
+		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
 	}
@@ -69,6 +65,9 @@ class UserPlanApiController extends ApiController
 
 		\DB::table('users_plan_progress')->insert($valuesToInsert);
 
-		$this->respondOk();
+		$resource = new Item($createdPlan, new UserPlanTransformer, $this->resourceName);
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
 	}
 }

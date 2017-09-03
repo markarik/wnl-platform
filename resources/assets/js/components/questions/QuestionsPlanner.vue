@@ -371,7 +371,7 @@
 					activeFilters: this.activeFilters,
 					slackDays: this.slackDays
 				})
-				.then(() => this.getPlan())
+				.then(({status, data}) => this.plan = data)
 				.then(() => {
 					this.saving = false
 					this.showPlanner = false

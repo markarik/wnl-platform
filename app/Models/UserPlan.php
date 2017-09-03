@@ -73,20 +73,25 @@ class UserPlan extends Model
 		return $todaysQuestions;
 	}
 
-	public function stats($planId)
+	public function getStatsAttribute()
 	{
-		$progress = $this->questionsProgress($planId);
-
-		$total = $progress->get()->count();
-		$remaining = $progress->where('resolved_at', null)->get()->count();
+		$total = $this->questionsProgress()->count();
+		$remaining = $this->questionsProgress()
+			->where('resolved_at', null)
+			->count();
 		$done = $total - $remaining;
+		$doneToday = $this->questionsProgress()
+			->where('resolved_at', '>=', Carbon::today())
+			->count();
 
 		// TODO: Group resolved_at by day
-
-		return [
-			'done'      => $done,
-			'remaining' => $remaining,
-			'total'     => $total,
+		$stats = [
+			'done'       => $done,
+			'remaining'  => $remaining,
+			'total'      => $total,
+			'done_today' => $doneToday,
 		];
+
+		return $stats;
 	}
 }

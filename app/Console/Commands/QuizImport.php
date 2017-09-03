@@ -39,8 +39,6 @@ class QuizImport extends Command
 		parent::__construct();
 
 		$this->path = self::BASE_DIRECTORY;
-
-		$this->questions = QuizQuestion::all();
 	}
 
 	/**
@@ -50,6 +48,8 @@ class QuizImport extends Command
 	 */
 	public function handle()
 	{
+		$this->questions = QuizQuestion::all();
+
 		if ($subDir = $this->argument('dir')) {
 			$this->path .= '/' . $subDir;
 		}

@@ -20,9 +20,20 @@ class UserPlanApiController extends ApiController
 
 	public function get($userId)
 	{
-		return [
-			"questions" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+		$plan = UserPlan::where('user_id', $userId)->get()->last();
+
+		if (!$plan) return $this->respondNoContent();
+
+		$data = [
+			'user_id' => $plan->user_id,
+			'start_date' => $plan->start_date,
+			'end_date' => $plan->end_date,
+			'slack_days_planned' => $plan->slack_days_planned,
+			'slack_days_left' => $plan->slack_days_left,
+			'stats' => $plan->stats($plan->id),
 		];
+
+		return $this->respondOk($data);
 	}
 
 	public function post(Request $request) {

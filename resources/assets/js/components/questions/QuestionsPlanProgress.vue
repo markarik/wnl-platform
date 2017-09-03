@@ -1,0 +1,135 @@
+<template>
+	<div>
+		<div class="questions-plan-progress-heading">
+			<span class="progress-day">
+				{{$t('questions.plan.progress.day', {day: daysSoFar})}}
+				/ {{plannedDaysCount}}
+			</span>
+			<a class="button is-outlined is-small" @click="$emit('changePlan')">
+				{{$t('questions.plan.change')}}
+			</a>
+		</div>
+		<div class="box">
+			<div class="questions-progress-heading">
+				{{$t('questions.plan.progress.heading')}}
+			</div>
+			<div class="plan-progress-bar">
+				<progress class="progress is-success" :value="plan.stats.done" :max="plan.stats.total">
+					{{donePercent}}%
+				</progress>
+				<div class="plan-progress-score">
+					<span class="done">{{plan.stats.done}}</span>
+					/ {{plan.stats.total}}
+				</div>
+			</div>
+			<div class="plan-progress-average" :class="averageStatus">
+				{{$t('questions.plan.progress.average.is')}}
+				<span class="average">{{average}}</span>
+				{{$t(`questions.plan.progress.average.${averageStatus}`)}}
+				<span class="average-planned">{{averagePlanned}}</span>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	.questions-plan-progress-heading
+		+flex-space-between()
+		font-size: $font-size-minus-1
+		margin-bottom: $margin-medium
+
+		.progress-day
+			font-weight: $font-weight-bold
+			text-transform: uppercase
+
+		.plan-change
+
+
+	.questions-progress-heading
+		letter-spacing: 1px
+		margin: 0 0 $margin-small
+		text-align: center
+		text-transform: uppercase
+
+	.plan-progress-bar
+		+flex-space-between()
+
+		.progress
+			margin: 0 $margin-base 0 0
+
+		.plan-progress-score
+			font-size: $font-size-minus-1
+			line-height: $line-height-none
+			white-space: nowrap
+
+			.done
+				color: $color-green
+				font-weight: $font-weight-bold
+
+	.plan-progress-average
+		+flex-center()
+		font-size: $font-size-minus-1
+		margin-top: $margin-medium
+		text-align: center
+
+		.average,
+		.average-planned
+			font-size: $font-size-base
+			font-weight: $font-weight-bold
+			margin: 0 3px
+
+		&.less .average
+			color: $color-orange
+
+		&.greater .average
+			color: $color-green
+
+		.average-planned
+			color: $color-green
+</style>
+
+<script>
+	import moment from 'moment'
+
+	export default {
+		name: 'QuestionsPlanProgress',
+		props: {
+			plan: {
+				required: true,
+				type: Object,
+			},
+		},
+		computed: {
+			average() {
+				return Math.ceil(this.plan.stats.done / this.daysSoFar - this.plan.slack_days_left)
+			},
+			averagePlanned() {
+				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
+			},
+			averageStatus() {
+				return this.average >= this.averagePlanned ? 'greater' : 'less'
+			},
+			created() {
+				return moment(this.plan.created_at).format('LLL')
+			},
+			daysSoFar() {
+				return moment().diff(this.startDate, 'days') + 1
+			},
+			donePercent() {
+				return Math.round(this.plan.stats.done * 100 / this.plan.stats.total)
+			},
+			endDate() {
+				return moment(this.plan.end_date.date)
+			},
+			plannedDaysCount() {
+				return this.endDate.diff(this.startDate, 'days') - this.plan.slack_days_planned + 1
+			},
+			startDate() {
+				return moment(this.plan.start_date.date)
+			},
+		},
+	}
+</script>

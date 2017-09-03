@@ -20,8 +20,25 @@
 						</span>
 					</a>
 				</div>
-				<div class="questions-planner">
+				<div v-if="plan === null" class="margin vertical">
+					<wnl-text-loader/>
+				</div>
+				<div v-else-if="hasPlan && !showPlanner" class="questions-plan-progress">
+					<wnl-questions-plan-progress :plan="plan" @changePlan="showPlanner = true"/>
+				</div>
+				<div v-else class="questions-planner">
 					<div class="questions-planner-heading">
+						<span>
+							{{$t(`questions.plan.headings.${plannerHeading}`)}}
+						</span>
+						<a v-if="hasPlan"
+							class="button is-small is-primary is-outlined"
+							@click="showPlanner = false"
+						>
+							{{$t('questions.plan.dontChange')}}
+						</a>
+					</div>
+					<div class="planner-form-heading">
 						{{$t('questions.plan.headings.dates')}}
 					</div>
 					<div class="dates columns">
@@ -51,7 +68,7 @@
 						</div>
 					</div>
 
-					<div class="questions-planner-heading">
+					<div class="planner-form-heading">
 						{{$t('questions.plan.headings.slackDays')}}
 					</div>
 					<div class="slack-days">
@@ -59,7 +76,7 @@
 						<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
 					</div>
 
-					<div class="questions-planner-heading">
+					<div class="planner-form-heading">
 						{{$t('questions.plan.headings.questions')}}
 					</div>
 					<div class="questions-plan-options">
@@ -78,7 +95,7 @@
 						</div>
 					</div>
 
-					<div class="questions-planner-heading">
+					<div class="planner-form-heading">
 						{{$t('questions.plan.headings.summary')}}
 					</div>
 					<div class="questions-plan-summary">
@@ -145,6 +162,15 @@
 		text-align: center
 
 	.questions-planner-heading
+		+flex-space-between()
+		margin-top: $margin-base
+
+		span
+			font-size: $font-size-minus-1
+			font-weight: $font-weight-bold
+			text-transform: uppercase
+
+	.planner-form-heading
 		border-bottom: $border-light-gray
 		letter-spacing: 1px
 		margin: $margin-base 0 $margin-small
@@ -218,6 +244,9 @@
 
 			&.hard
 				color: $color-red
+
+	.questions-plan-progress
+		margin: $margin-base 0 $margin-big
 </style>
 
 <script>
@@ -230,6 +259,7 @@
 	import Datepicker from 'js/components/global/Datepicker'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
+	import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import {getApiUrl} from 'js/utils/env'
 
@@ -246,6 +276,7 @@
 			'wnl-datepicker': Datepicker,
 			'wnl-questions-filters': QuestionsFilters,
 			'wnl-questions-navigation': QuestionsNavigation,
+			'wnl-questions-plan-progress': QuestionsPlanProgress,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
 		props: [],
@@ -254,15 +285,17 @@
 				customCount: 0,
 				endDate: new Date('September 21, 2017 00:00:00'),
 				fetchingQuestions: false,
+				plan: null,
 				saving: false,
 				selectedOption: 'unresolvedAndIncorrect',
+				showPlanner: false,
 				slackDays: 0,
 				startDate: new Date(),
 				unresolvedAndIncorrectCount: 0,
 			}
 		},
 		computed: {
-			...mapGetters(['isChatMounted', 'isChatVisible', 'isLargeDesktop', 'isMobile']),
+			...mapGetters(['currentUserId', 'isChatMounted', 'isChatVisible', 'isLargeDesktop', 'isMobile']),
 			...mapGetters('questions', [
 				'activeFilters',
 				'allQuestionsCount',
@@ -296,8 +329,14 @@
 					minDate: 'today',
 				})
 			},
+			hasPlan() {
+				return !isEmpty(this.plan)
+			},
 			maxSlack() {
 				return this.datesRangeInDays
+			},
+			plannerHeading() {
+				return this.hasPlan ? 'change' : 'create'
 			},
 			planOptions() {
 				return {
@@ -346,6 +385,16 @@
 						this.fetchingQuestions = false
 					})
 			},
+			getPlan() {
+				return new Promise((resolve, reject) => {
+					return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
+						.then(({status, data}) => {
+							if (status === 204) return resolve({})
+							return resolve(data)
+						})
+						.catch((error) => reject(error))
+				})
+			},
 			onActiveFiltersChanged(payload) {
 				this.activeFiltersToggle(payload).then(() => {
 					this.fetchDynamicFilters()
@@ -375,19 +424,28 @@
 					this.unresolvedAndIncorrectCount = total - correct
 				})
 			},
+			setupPlanner() {
+				const presetFilters = this.planOptions[this.selectedOption]
+
+				this.setFilters(presetFilters).then(() => {
+					this.setUnresolvedAndIncorrectCount()
+					this.fetchDynamicFilters()
+					this.fetchQuestionsCount()
+				})
+			}
 		},
 		mounted() {
-			const presetFilters = this.planOptions[this.selectedOption]
-
-			this.setFilters(presetFilters).then(() => {
-				this.setUnresolvedAndIncorrectCount()
-				this.fetchDynamicFilters()
-				this.fetchQuestionsCount()
+			this.getPlan().then(plan => {
+				this.plan = plan
+				isEmpty(plan) && this.setupPlanner()
 			})
 		},
 		watch: {
 			selectedOption(to) {
 				to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions()
+			},
+			showPlanner(to) {
+				to && isEmpty(this.counts.all) && this.setupPlanner()
 			}
 		},
 	}

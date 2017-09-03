@@ -26,7 +26,11 @@ export const questions = {
 		stats: 'Sprawdź statystyki',
 	},
 	plan: {
+		change: 'Zmieniam plan',
+		dontChange: 'Nie zmieniam planu',
 		headings: {
+			change: 'Zmień plan',
+			create: 'Stwórz nowy plan',
 			dates: '1. Ile masz czasu?',
 			endDate: 'Koniec',
 			questions: '3. Ile pytań chcesz rozwiązać?',
@@ -39,6 +43,16 @@ export const questions = {
 			custom: 'Własny zakres',
 			unresolvedAndIncorrect: 'Nierozwiązane + rozwiązane błędnie',
 			count: 'Pytań: {count}',
+		},
+		progress: {
+			average: {
+				greater: ' i jest większa lub równa planowanej ',
+				is: 'Twoja dzienna średnia wynosi ',
+				less: ' i jest mniejsza, niż planowana ',
+			},
+			currentPlan: 'Obecny plan',
+			day: 'Dzień {day}',
+			heading: 'Jak Ci idzie?',
 		},
 		submit: 'Akceptuję plan!',
 		summaryAverage: 'pytań na dzień',

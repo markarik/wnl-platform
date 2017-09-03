@@ -64,4 +64,19 @@ class UserPlan extends Model
 
 		return $todaysQuestions;
 	}
+
+	public function stats($planId) {
+		$progress = $this->questionsProgress($planId);
+
+		$total = $progress->get()->count();
+		$remaining = $progress->where('resolved_at', null)->get()->count();
+		$done = $total - $remaining;
+		// TODO: Group resolved_at by day
+
+		return [
+			'done' => $done,
+			'remaining' => $remaining,
+			'total' => $total,
+		];
+	}
 }

@@ -40,6 +40,6 @@ return [
 		'categories'          => 'categories',
 		'slideshow-builder'   => 'slideshow_builder',
 		'profiles'            => 'user_profiles',
-		'user-plan'           => 'user-plan'
+		'user-plan'           => 'user_plan'
 	],
 ];

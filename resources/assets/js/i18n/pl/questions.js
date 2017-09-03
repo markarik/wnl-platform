@@ -54,6 +54,11 @@ export const questions = {
 			day: 'Dzień {day}',
 			heading: 'Jak Ci idzie?',
 		},
+		solvePlanned: 'Rozwiązuj zaplanowane na dzisiaj',
+		start: {
+			heading: 'Zaczynasz {date}',
+			tip: 'Obecny plan zakłada zrobienie {count} pytań w {days} dni, co daje średnio {average} pytań na dzień.',
+		},
 		submit: 'Akceptuję plan!',
 		summaryAverage: 'pytań na dzień',
 		summaryCount: 'pytań w',
@@ -107,5 +112,5 @@ export const questions = {
 		},
 		withNumber: 'Pytanie {number}',
 	},
-	zeroState: 'O-o, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',
+	zeroState: 'Oho, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',
 }

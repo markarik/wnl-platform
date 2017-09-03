@@ -59,13 +59,13 @@
 						iconTilte: this.$t('questions.nav.solving'),
 						itemClass: 'has-icon',
 					}),
-					navigation.composeItem({
-						text: this.$t('questions.nav.stats'),
-						routeName: 'questions-stats',
-						iconClass: 'fa-bar-chart',
-						iconTilte: this.$t('questions.nav.stats'),
-						itemClass: 'has-icon',
-					}),
+					// navigation.composeItem({
+					// 	text: this.$t('questions.nav.stats'),
+					// 	routeName: 'questions-stats',
+					// 	iconClass: 'fa-bar-chart',
+					// 	iconTilte: this.$t('questions.nav.stats'),
+					// 	itemClass: 'has-icon',
+					// }),
 					navigation.composeItem({
 						text: this.$t('questions.nav.planner'),
 						routeName: 'questions-planner',

@@ -438,15 +438,15 @@
 				const presetFilters = this.planOptions[this.selectedOption]
 
 				this.setFilters(presetFilters).then(() => {
-					this.setUnresolvedAndIncorrectCount()
 					this.fetchDynamicFilters()
+					this.setUnresolvedAndIncorrectCount()
 					this.fetchQuestionsCount()
 				})
 			}
 		},
 		mounted() {
 			this.getPlan().then(plan => {
-				isEmpty(plan) && this.setupPlanner()
+				isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters()
 			})
 		},
 		watch: {

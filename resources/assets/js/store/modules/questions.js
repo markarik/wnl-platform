@@ -399,9 +399,9 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 	const filters        = []
 	const groupedFilters = {}
 
-	activeFilters.forEach((filter, index) => {
-		const [filterGroup, ...tail] = filter.split('.')
-		const filterValue            = getters.activeFiltersValues[index]
+	activeFilters.forEach((path, index) => {
+		const [filterGroup, ...tail] = path.split('.')
+		const filterValue            = get(state.filters, path).value
 		const filterType             = state.filters[filterGroup].type
 
 		groupedFilters[filterGroup] = groupedFilters[filterGroup] || []

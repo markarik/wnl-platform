@@ -1,10 +1,11 @@
 <template>
 	<div>
 		<div class="questions-plan-progress-heading">
-			<span class="progress-day">
+			<span v-if="hasStarted" class="progress-day">
 				{{$t('questions.plan.progress.day', {day: daysSoFar})}}
 				/ {{plannedDaysCount}}
 			</span>
+			<span v-else></span>
 			<a class="button is-outlined is-small" @click="$emit('changePlan')">
 				{{$t('questions.plan.change')}}
 			</a>
@@ -13,21 +14,40 @@
 			<div class="questions-progress-heading">
 				{{$t('questions.plan.progress.heading')}}
 			</div>
-			<div class="plan-progress-bar">
-				<progress class="progress is-success" :value="plan.stats.done" :max="plan.stats.total">
-					{{donePercent}}%
-				</progress>
-				<div class="plan-progress-score">
-					<span class="done">{{plan.stats.done}}</span>
-					/ {{plan.stats.total}}
+			<div v-if="hasStarted" lang="">
+				<div class="plan-progress-bar">
+					<progress class="progress is-success" :value="plan.stats.done" :max="plan.stats.total">
+						{{donePercent}}%
+					</progress>
+					<div class="plan-progress-score">
+						<span class="done">{{plan.stats.done}}</span>
+						/ {{plan.stats.total}}
+					</div>
+				</div>
+				<div class="plan-progress-average" :class="averageStatus">
+					{{$t('questions.plan.progress.average.is')}}
+					<span class="average">{{average}}</span>
+					{{$t(`questions.plan.progress.average.${averageStatus}`)}}
+					<span class="average-planned">{{averagePlanned}}</span>
 				</div>
 			</div>
-			<div class="plan-progress-average" :class="averageStatus">
-				{{$t('questions.plan.progress.average.is')}}
-				<span class="average">{{average}}</span>
-				{{$t(`questions.plan.progress.average.${averageStatus}`)}}
-				<span class="average-planned">{{averagePlanned}}</span>
+			<div v-else>
+				<p class="plan-starts">
+					{{ $t('questions.plan.start.heading', {
+						date: this.startDate.format('LL')
+					}) }}
+				</p>
+				<p class="plan-progress-average">{{$t('questions.plan.start.tip', {
+					average: averagePlanned,
+					count: plan.stats.total,
+					days: plannedDaysCount,
+				})}}</p>
 			</div>
+		</div>
+		<div v-if="hasStarted" class="margin top has-text-centered">
+			<router-link class="button is-primary" :to="plannedRoute">
+				{{$t('questions.plan.solvePlanned')}}
+			</router-link>
 		</div>
 	</div>
 </template>
@@ -68,6 +88,11 @@
 			.done
 				color: $color-green
 				font-weight: $font-weight-bold
+
+	.plan-starts
+		font-size: $font-size-plus-1
+		font-weight: bold
+		text-align: center
 
 	.plan-progress-average
 		+flex-center()
@@ -116,7 +141,8 @@
 				return moment(this.plan.created_at).format('LLL')
 			},
 			daysSoFar() {
-				return moment().diff(this.startDate, 'days') + 1
+				const diff = moment().startOf('day').diff(this.startDate, 'days')
+				return diff < 0 ? 0 : diff + 1
 			},
 			donePercent() {
 				return Math.round(this.plan.stats.done * 100 / this.plan.stats.total)
@@ -124,8 +150,22 @@
 			endDate() {
 				return moment(this.plan.end_date.date)
 			},
+			hasStarted() {
+				return this.daysSoFar > 0
+			},
 			plannedDaysCount() {
 				return this.endDate.diff(this.startDate, 'days') - this.plan.slack_days_planned + 1
+			},
+			plannedRoute() {
+				return {
+					name: 'questions-list',
+					params: {
+						presetFilters: [
+							'quiz-planned.items[0]',
+							'quiz-resolution.items[0]',
+						],
+					},
+				}
 			},
 			startDate() {
 				return moment(this.plan.start_date.date)

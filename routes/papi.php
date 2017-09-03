@@ -10,17 +10,20 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-
-Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
-	$r = config('papi.resources');
-
-	function api_action($type, $method) {
-		Route::$type("{resource}/.{$method}", function($resource) use ($method){
+if (!function_exists('api_action')) {
+	function api_action($type, $method)
+	{
+		Route::$type("{resource}/.{$method}", function ($resource) use ($method) {
 			$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
+
 			return App::make($controller)->$method(App::make('request'));
 		});
 	}
+}
+
+Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
+	$r = config('papi.resources');
+	
 	// Search
 	api_action('get', 'search');
 

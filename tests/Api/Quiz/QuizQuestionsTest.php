@@ -95,7 +95,7 @@ class QuizQuestionsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filter'), $data);
-		dd($response->dump());
+
 		$response
 			->assertStatus(200);
 	}
@@ -103,9 +103,9 @@ class QuizQuestionsTest extends ApiTestCase
 	/** @test */
 	public function get_quiz_questions_filters_no_active_filters()
 	{
-		\DB::listen(function($query) {
-			dump($query->sql, $query->time);
-		});
+//		\DB::listen(function($query) {
+//			dump($query->sql, $query->time);
+//		});
 		$user = User::find(77);
 
 		$data = [
@@ -113,14 +113,14 @@ class QuizQuestionsTest extends ApiTestCase
 			'limit'   => 1,
 		];
 
-		$start = microtime(true);
+//		$start = microtime(true);
 
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filterList'), $data);
 
-		$stop = microtime(true) - $start;
-		dump('time ' . $stop . 's');
+//		$stop = microtime(true) - $start;
+//		dump('time ' . $stop . 's');
 //		$response->dump();
 		$response
 			->assertStatus(200);
@@ -156,8 +156,7 @@ class QuizQuestionsTest extends ApiTestCase
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filterList'), $data);
 
-		$response->dump();
-
-		$this->asseretEquals();
+		$response
+			->assertStatus(200);
 	}
 }

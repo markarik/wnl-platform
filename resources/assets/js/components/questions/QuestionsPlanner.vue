@@ -394,7 +394,7 @@
 				return new Promise((resolve, reject) => {
 					return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
 						.then(({status, data}) => {
-							const plan = data
+							let plan = data
 							if (status === 204) {
 								plan = {}
 							}

@@ -41,6 +41,7 @@ class UserPlanApiController extends ApiController
 		$endDate = $request->get('endDate');
 		$slackDays = $request->get('slackDays');
 		$userId = $request->route('userId');
+		$filters = $request->get('filters');
 
 		// TODO handle empty dates
 
@@ -52,7 +53,8 @@ class UserPlanApiController extends ApiController
 			'start_date' => Carbon::parse($startDate),
 			'end_date' => Carbon::parse($endDate),
 			'slack_days_planned' => $slackDays,
-			'slack_days_left' => $slackDays
+			'slack_days_left' => $slackDays,
+			'filters' => $filters
 		]);
 
 		$valuesToInsert = [];

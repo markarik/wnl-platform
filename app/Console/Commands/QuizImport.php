@@ -18,7 +18,7 @@ class QuizImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:import {dir?}',
+	protected $signature = 'quiz:import {dir?} {--check} {--debug}',
 
 		/**
 		 * The console command description.
@@ -99,13 +99,14 @@ class QuizImport extends Command
 		if ($similarQuestion !== false) {
 			if (!$quizSet->questions->contains($similarQuestion)) {
 				$quizSet->questions()->attach($similarQuestion);
-				$this->info('Attached to set!');
+				$this->debug('Attached to set!');
 			}
-			$this->info('Set already has this question');
+			$this->debug('Set already has this question');
+
 			return;
 		}
 
-		$this->info('Creating new question!');
+		$this->debug('Creating new question!');
 
 		$question = $quizSet->questions()->firstOrCreate([
 			'text' => $text,
@@ -169,6 +170,8 @@ class QuizImport extends Command
 	{
 		foreach ($this->questions as $question) {
 			if ($question->text === $text) return $question;
+
+			if (!$this->option('check')) continue;
 			similar_text($question->text, $text, $similarity);
 
 			if ($similarity > 78) {
@@ -183,11 +186,19 @@ class QuizImport extends Command
 					dump($values[$i] . PHP_EOL);
 				}
 				if ($this->confirm('Add as new question?')) {
+					return false;
+				} else {
 					return $question;
 				}
 			}
 		}
 
 		return false;
+	}
+
+	protected function debug($message)
+	{
+		if (!$this->option('debug')) return;
+		$this->info($message);
 	}
 }

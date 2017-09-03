@@ -126,7 +126,7 @@
 			:hasChat="true"
 		>
 			<wnl-questions-filters
-				v-show="selectedOption === 'custom'"
+				v-show="showPlanner && selectedOption === 'custom'"
 				:activeFilters="activeFilters"
 				:fetchingQuestions="fetchingQuestions"
 				:filters="filters"
@@ -370,7 +370,12 @@
 					endDate: this.endDate,
 					activeFilters: this.activeFilters,
 					slackDays: this.slackDays
-				}).then(() => this.saving = false)
+				})
+				.then(() => this.getPlan())
+				.then(() => {
+					this.saving = false
+					this.showPlanner = false
+				})
 			},
 			fetchMatchingQuestions(filters = []) {
 				this.fetchingQuestions = true
@@ -389,8 +394,13 @@
 				return new Promise((resolve, reject) => {
 					return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
 						.then(({status, data}) => {
-							if (status === 204) return resolve({})
-							return resolve(data)
+							const plan = data
+							if (status === 204) {
+								plan = {}
+							}
+
+							this.plan = plan
+							return resolve(plan)
 						})
 						.catch((error) => reject(error))
 				})
@@ -436,7 +446,6 @@
 		},
 		mounted() {
 			this.getPlan().then(plan => {
-				this.plan = plan
 				isEmpty(plan) && this.setupPlanner()
 			})
 		},

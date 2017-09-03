@@ -222,7 +222,7 @@ const actions = {
 	},
 	buildPlan({state, getters, rootGetters, commit}, {activeFilters, startDate, endDate, slackDays}) {
 		const filters = _parseFilters(activeFilters, state, getters, rootGetters);
-		return axios.post(getApiUrl(`user-plan/${rootGetters.currentUserId}`), {
+		return axios.post(getApiUrl(`user_plan/${rootGetters.currentUserId}`), {
 			filters,
 			startDate,
 			endDate,

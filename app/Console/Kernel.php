@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
 		Commands\FlushCacheByTag::class,
 		Commands\ImportTaxonomies::class,
 		Commands\IssueFinalInvoice::class,
+		Commands\ImportQuizTagsFromMap::class,
 		Commands\InvoicesExport::class,
 		Commands\LessonTags::class,
 		Commands\ListOrders::class,

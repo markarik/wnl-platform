@@ -129,7 +129,7 @@ let routes = [
 				children: [
 					{
 						name: 'quizQuestion',
-						path: ':id',
+						path: 'single/:id',
 						component: require('js/components/quiz/SingleQuestion.vue'),
 					},
 				],

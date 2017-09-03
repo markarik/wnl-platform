@@ -118,19 +118,21 @@ let routes = [
 		]
 	},
 	{
-		name: 'quizQuestion',
-		path: '/app/quiz_questions/:id',
-		component: require('js/components/quiz/SingleQuestion.vue'),
-		props: true,
-	},
-	{
-		path: '/app/questions',
+		path: '/app/quiz_questions',
 		component: require('js/components/questions/Questions.vue'),
 		children: [
 			{
 				name: 'questions-dashboard',
 				path: '',
 				component: require('js/components/questions/QuestionsDashboard.vue'),
+				props: true,
+				children: [
+					{
+						name: 'quizQuestion',
+						path: ':id',
+						component: require('js/components/quiz/SingleQuestion.vue'),
+					},
+				],
 			},
 			{
 				name: 'questions-list',

@@ -2,18 +2,20 @@
 	<div class="wnl-app-layout">
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
-			<div class="scrollable-main-container">
+			<div v-if="!id" class="scrollable-main-container">
 				<p class="title is-3">Dashboard</p>
 				<router-link v-if="planRoute" class="button is-outlined is-small" :to="planRoute">
 					Krok zgodny z planem
 				</router-link>
 			</div>
+			<router-view v-else :id="id"/>
 		</div>
 		<wnl-sidenav-slot
 			:isDetached="!isChatMounted"
 			:isVisible="isLargeDesktop"
 			:hasChat="true"
 		>
+			<wnl-questions-feed/>
 		</wnl-sidenav-slot>
 	</div>
 </template>
@@ -27,13 +29,21 @@
 	import {mapActions, mapGetters} from 'vuex'
 
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
+	import QuestionsFeed from 'js/components/notifications/feeds/questions/QuestionsFeed'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
 	export default {
 		name: 'QuestionsDashboard',
 		components: {
 			'wnl-questions-navigation': QuestionsNavigation,
+			'wnl-questions-feed': QuestionsFeed,
 			'wnl-sidenav-slot': SidenavSlot,
+		},
+		props: {
+			id: {
+				default: 0,
+				type: Number|String,
+			}
 		},
 		data() {
 			return {

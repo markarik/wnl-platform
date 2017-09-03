@@ -1,41 +1,29 @@
 <template>
-	<div class="wnl-app-layout layout">
-		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
-		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-		</wnl-sidenav-slot>
-		<div class="scrollable-main-container">
-			<div class="single-question">
-				<div class="question-container" v-if="isLoaded">
-					<div class="question-header">
-						<span class="question-title">{{title}}</span>
-						<a class="question-back" @click="goBack">
-							<span class="icon is-small">
-								<i class="fa fa-angle-left"></i>
-							</span>
-							{{$t('quiz.single.back')}}
-						</a>
-					</div>
-					<div v-if="hasError" class="notification">
-						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
-					</div>
-					<wnl-quiz-widget v-else
-						:isSingle="true"
-						:questions="getQuestionsWithAnswers"
-						:getReaction="getReaction"
-						@selectAnswer="commitSelectAnswer"
-						@verify="resolveQuestion"
-					/>
+	<div class="scrollable-main-container">
+		<div class="single-question">
+			<div class="question-container" v-if="isLoaded">
+				<div class="question-header">
+					<span class="question-title">{{title}}</span>
+					<a class="question-back" @click="goBack">
+						<span class="icon is-small">
+							<i class="fa fa-angle-left"></i>
+						</span>
+						{{$t('quiz.single.back')}}
+					</a>
 				</div>
-				<wnl-text-loader v-else/>
+				<div v-if="hasError" class="notification">
+					{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
+				</div>
+				<wnl-quiz-widget v-else
+					:isSingle="true"
+					:questions="getQuestionsWithAnswers"
+					:getReaction="getReaction"
+					@selectAnswer="commitSelectAnswer"
+					@verify="resolveQuestion"
+				/>
 			</div>
+			<wnl-text-loader v-else/>
 		</div>
-		<wnl-sidenav-slot
-			class="right-sidenav"
-			:isVisible="isSidenavVisible"
-		/>
 	</div>
 </template>
 
@@ -81,16 +69,12 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
-	import MainNav from 'js/components/MainNav'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
 
 	export default {
 		name: 'SingleQuestion',
 		components: {
-			'wnl-main-nav': MainNav,
 			'wnl-quiz-widget': QuizWidget,
-			'wnl-sidenav-slot': SidenavSlot,
 		},
 		props: {
 			id: {

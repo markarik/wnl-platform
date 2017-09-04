@@ -83,7 +83,7 @@ class Mentioned extends Event
 		];
 	}
 
-	protected function transformSubjectForChatMessage():void
+	protected function transformSubjectForChatMessage()
 	{
 		$payloadSubject = $this->payload['subject'];
 		$this->data['subject'] = $payloadSubject;

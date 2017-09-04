@@ -206,6 +206,7 @@
 
 	.questions-feed-container
 		width: 100%
+		overflow-y: auto
 
 	.questions-feed-heading
 		border-bottom: $border-light-gray

@@ -49,7 +49,7 @@
 									<i class="fa fa-hourglass-1"></i>
 								</span>
 							</label>
-							<wnl-datepicker v-model="startDate" :config="startDateConfig"/>
+							<wnl-datepicker v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -61,62 +61,64 @@
 									<i class="fa fa-hourglass-3"></i>
 								</span>
 							</label>
-							<wnl-datepicker v-model="endDate" :config="endDateConfig"/>
+							<wnl-datepicker v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.endDate')}}
 							</p>
 						</div>
 					</div>
 
-					<div class="planner-form-heading">
-						{{$t('questions.plan.headings.slackDays')}}
-					</div>
-					<div class="slack-days">
-						<input class="slack-days-input" min="0" :max="maxSlack" v-model="slackDays" type="number"/>
-						<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
-					</div>
+					<div v-if="!hasMissingDates">
+						<div class="planner-form-heading">
+							{{$t('questions.plan.headings.slackDays')}}
+						</div>
+						<div class="slack-days">
+							<input class="slack-days-input" min="0" :max="maxSlack" v-model="slackDays" type="number"/>
+							<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
+						</div>
 
-					<div class="planner-form-heading">
-						{{$t('questions.plan.headings.questions')}}
-					</div>
-					<div class="questions-plan-options">
-						<div v-for="filters, option in planOptions" :key="option">
-							<a
-								class="plan-option panel-toggle"
-								:class="{'is-active': selectedOption === option}"
-								@click="selectOption(option, filters)"
-							>
-								{{$t(`questions.plan.options.${option}`)}}
-							</a>
+						<div class="planner-form-heading">
+							{{$t('questions.plan.headings.questions')}}
+						</div>
+						<div class="questions-plan-options">
+							<div v-for="filters, option in planOptions" :key="option">
+								<a
+									class="plan-option panel-toggle"
+									:class="{'is-active': selectedOption === option}"
+									@click="selectOption(option, filters)"
+								>
+									{{$t(`questions.plan.options.${option}`)}}
+								</a>
+								<p class="tip">
+									<span v-if="counts[option] > 0">({{counts[option]}})</span>
+									<span v-else>&nbsp;</span>
+								</p>
+							</div>
+						</div>
+
+						<div class="planner-form-heading">
+							{{$t('questions.plan.headings.summary')}}
+						</div>
+						<div class="questions-plan-summary">
+							<span class="count">{{currentPlan.count}}</span>
+							{{$t('questions.plan.summaryCount')}}
+							<span class="days">{{currentPlan.days}}</span>
+							{{$t('questions.plan.summaryDays')}}
+							<span class="average" :class="averageClass">{{currentPlan.average}}</span>
+							{{$t('questions.plan.summaryAverage')}}
+						</div>
+						<div class="questions-plan-tip">
 							<p class="tip">
-								<span v-if="counts[option] > 0">({{counts[option]}})</span>
-								<span v-else>&nbsp;</span>
+								{{$t('questions.plan.summaryTip')}}
 							</p>
 						</div>
-					</div>
 
-					<div class="planner-form-heading">
-						{{$t('questions.plan.headings.summary')}}
-					</div>
-					<div class="questions-plan-summary">
-						<span class="count">{{currentPlan.count}}</span>
-						{{$t('questions.plan.summaryCount')}}
-						<span class="days">{{currentPlan.days}}</span>
-						{{$t('questions.plan.summaryDays')}}
-						<span class="average" :class="averageClass">{{currentPlan.average}}</span>
-						{{$t('questions.plan.summaryAverage')}}
-					</div>
-					<div class="questions-plan-tip">
-						<p class="tip">
-							{{$t('questions.plan.summaryTip')}}
+						<p class="has-text-centered margin top">
+							<a class="button is-primary" :class="{'is-loading': saving}" @click="createPlan">
+								{{$t('questions.plan.submit')}}
+							</a>
 						</p>
 					</div>
-
-					<p class="has-text-centered margin top">
-						<a class="button is-primary" :class="{'is-loading': saving}" @click="createPlan">
-							{{$t('questions.plan.submit')}}
-						</a>
-					</p>
 				</div>
 			</div>
 		</div>
@@ -263,13 +265,6 @@
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import {getApiUrl} from 'js/utils/env'
 
-	const defaultDateConfig = () => {
-		return {
-			altInput: true,
-			locale: pl,
-		}
-	}
-
 	export default {
 		name: 'QuestionsPlanner',
 		components: {
@@ -325,9 +320,12 @@
 				return moment(this.endDate).diff(moment(this.startDate), 'days')
 			},
 			endDateConfig() {
-				return merge(defaultDateConfig(), {
-					minDate: 'today',
+				return merge(this.defaultDateConfig(), {
+					minDate: this.startDate,
 				})
+			},
+			hasMissingDates() {
+				return this.startDate === null || this.endDate === null
 			},
 			hasPlan() {
 				return !isEmpty(this.plan)
@@ -349,7 +347,7 @@
 				}
 			},
 			startDateConfig() {
-				return merge(defaultDateConfig(), {
+				return merge(this.defaultDateConfig(), {
 					minDate: 'today',
 				})
 			},
@@ -377,6 +375,13 @@
 					this.saving = false
 					this.showPlanner = false
 				})
+			},
+			defaultDateConfig() {
+				return {
+					altInput: true,
+					disableMobile: true,
+					locale: pl,
+				}
 			},
 			fetchMatchingQuestions(filters = []) {
 				this.fetchingQuestions = true
@@ -411,6 +416,12 @@
 					this.fetchDynamicFilters()
 					return this.fetchMatchingQuestions(this.activeFilters)
 				})
+			},
+			onEndDateChange(payload) {
+				if (isEmpty(payload)) this.endDate = null
+			},
+			onStartDateChange(payload) {
+				if (isEmpty(payload)) this.startDate = null
 			},
 			selectOption(option, filters) {
 				this.selectedOption = option

@@ -20,6 +20,9 @@
 		font-weight: bold
 		outline: 0
 		text-align: center
+
+		&.active
+			background: $color-background-light-gray
 </style>
 
 <script>
@@ -57,6 +60,12 @@
 			},
 		},
 		methods: {
+			dateUpdated(selectedDates, dateStr) {
+				this.date = dateStr
+			},
+			onChange(payload) {
+				this.$emit('onChange', payload)
+			},
 			redraw(newConfig) {
 				this.datepicker.config = Object.assign(this.datepicker.config, newConfig)
 				this.datepicker.redraw()
@@ -65,12 +74,10 @@
 			setDate(newDate, oldDate) {
 				newDate && this.datepicker.setDate(newDate)
 			},
-			dateUpdated(selectedDates, dateStr) {
-				this.date = dateStr
-			},
 		},
 		mounted() {
 			if (!this.datepicker) {
+				this.config.onChange = this.onChange
 				this.config.onValueUpdate = this.dateUpdated
 				this.datepicker = new Flatpickr(this.$el, this.config)
 				this.setDate(this.value)

@@ -55,7 +55,8 @@
 				</div>
 				<div class="question-edit-link" v-if="isAdmin">
 					<a
-						class="button is-small is-primary"
+						class="small"
+						target="_blank"
 						:href="`/admin/app/quizes/edit/${question.id}`"
 					>
 						{{$t('questions.question.edit')}}
@@ -120,8 +121,12 @@
 		+flex-space-between()
 		color: $color-gray-dimmed
 		font-size: $font-size-minus-2
+		line-height: $line-height-minus
 		padding: $margin-small $margin-base 0
 		width: 100%
+
+		.quiz-question-tags
+			margin-right: $margin-small
 
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
@@ -140,6 +145,8 @@
 
 				.card-header-title,
 				.card-header-icons
+					font-weight: $font-weight-regular
+					line-height: $line-height-minus
 					padding: $margin-small
 
 			.quiz-header

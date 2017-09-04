@@ -52,8 +52,9 @@
 		display: flex
 		border-bottom: $border-light-gray
 		justify-content: space-between
+		line-height: $line-height-minus
 		list-style-type: none
-		padding: $margin-small $margin-small $margin-small $margin-huge
+		padding: $margin-medium $margin-small $margin-medium $margin-big + $margin-tiny
 		position: relative
 		margin: 0
 		user-select: none
@@ -71,6 +72,7 @@
 				right: $margin-base
 
 		&.is-large-desktop
+			line-height: $line-height-base
 			padding: $margin-base $margin-base $margin-base $margin-huge
 
 	.quiz-answer.is-correct

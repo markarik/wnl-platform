@@ -124,7 +124,7 @@
 		</div>
 		<wnl-sidenav-slot
 			:isDetached="!isChatMounted"
-			:isVisible="isLargeDesktop"
+			:isVisible="isLargeDesktop || isChatVisible"
 			:hasChat="true"
 		>
 			<wnl-questions-filters

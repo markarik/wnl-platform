@@ -15,7 +15,10 @@
 				<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
 				{{$t('questions.filters.heading')}}
 			</span>
-			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">{{$t('questions.filters.hide')}}</a>
+			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">
+				{{$t('questions.filters.hide')}}
+				<span class="icon is-small"><i class="fa fa-close"></i></span>
+			</a>
 		</div>
 		<wnl-accordion
 			:dataSource="filters"

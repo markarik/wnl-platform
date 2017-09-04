@@ -95,7 +95,7 @@
 		</div>
 		<wnl-sidenav-slot
 			:isDetached="!isChatMounted"
-			:isVisible="isLargeDesktop"
+			:isVisible="isLargeDesktop || isChatVisible"
 			:hasChat="true"
 		>
 			<div class="questions-feed-container">

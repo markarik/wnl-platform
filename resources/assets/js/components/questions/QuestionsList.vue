@@ -26,6 +26,7 @@
 					:currentQuestion="currentQuestion"
 					:loading="fetchingQuestions"
 					:getReaction="computedGetReaction"
+					:isMobile="isMobile"
 					:meta="meta"
 					:questionsListCount="matchedQuestionsCount"
 					:questionsCurrentPage="questionsCurrentPage"
@@ -35,7 +36,7 @@
 					:testResults="testResults"
 					@buildTest="buildTest"
 					@changeQuestion="onChangeQuestion"
-					@changePage="changePage"
+					@changePage="onChangePage"
 					@checkQuiz="verifyCheckQuestions"
 					@endQuiz="verifyEndQuiz"
 					@selectAnswer="onSelectAnswer"
@@ -222,7 +223,6 @@
 				}).then(() => this.switchOverlay(false, 'testBuilding'))
 			},
 			changePage(page) {
-				scrollToTop()
 				return new Promise((resolve, reject) => {
 					if (this.getPage(page)) {
 						this.setPage(page)
@@ -305,6 +305,10 @@
 				}
 
 				this.setQuestion({page: newPage, index: newIndex})
+			},
+			onChangePage(page) {
+				scrollToTop()
+				this.changePage(page)
 			},
 			onFetchMatchingQuestions() {
 				this.resetCurrentQuestion()

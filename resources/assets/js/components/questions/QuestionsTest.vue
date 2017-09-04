@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<div class="questions-test-header-container">
+		<div class="questions-test-header-container" :class="{'is-mobile': isMobile, 'is-complete': isComplete}">
 			<div class="questions-test-header" :class="{'is-sticky': hasStickyHeader}" ref="header">
 				<div v-if="!isComplete">
 					<div class="in-progress">
 						<span>
-							<span class="answered">
+							<span class="answered" v-if="!isMobile || unansweredCount === 0">
 								{{$t('questions.solving.test.headers.answered', {
 									answered: answeredCount,
 									total: totalCount,
@@ -14,6 +14,7 @@
 							<a v-show="unansweredCount > 0" class="toggle-unanswered"
 								@click="filterUnanswered = !filterUnanswered">
 								{{unansweredToggleMessage}}
+								({{unansweredToggleCount}})
 							</a>
 						</span>
 						<wnl-quiz-timer ref="timer"
@@ -26,10 +27,10 @@
 						{{answeredCount}}
 					</progress>
 					<div class="test-controls">
-						<a class="button is-small is-primary is-outlined" @click="checkQuiz">
+						<a class="is-small is-primary is-outlined" :class="{'button': !isMobile}" @click="checkQuiz">
 							{{$t('questions.solving.resolve')}}
 						</a>
-						<a class="button is-small" @click="$emit('endQuiz')">
+						<a class="is-small" :class="{'button': !isMobile}" @click="$emit('endQuiz')">
 							{{$t('questions.solving.abort')}}
 						</a>
 					</div>
@@ -64,7 +65,7 @@
 			</div>
 		</div>
 
-		<div class="pagination top">
+		<div v-if="lastPage > 1" class="pagination top">
 			<wnl-pagination
 				ref="firstpagination"
 				:currentPage="currentPage"
@@ -84,7 +85,7 @@
 			@selectAnswer="onSelectAnswer"
 		/>
 
-		<div class="pagination bottom">
+		<div v-if="lastPage > 1" class="pagination bottom">
 			<wnl-pagination
 				:currentPage="currentPage"
 				:lastPage="lastPage"
@@ -109,6 +110,17 @@
 	.questions-test-header-container
 		height: $header-height + 2 * $margin-base
 
+		&.is-mobile
+
+			.is-small
+				font-size: $font-size-minus-1
+
+			&.is-complete
+				height: $header-height * 2
+
+				.questions-test-header
+					height: $header-height * 2
+
 	.pagination
 		+flex-center()
 
@@ -122,6 +134,7 @@
 		height: $header-height + 2 * $margin-base
 		padding: $margin-base 0
 		top: -50px
+		transition: top $transition-length-base
 
 		&.is-sticky
 			+shadow()
@@ -142,14 +155,16 @@
 			justify-content: space-between
 
 			.answered
+				margin-right: $margin-small
 				text-transform: uppercase
 
 			.toggle-unanswered
 				font-size: $font-size-minus-2
-				margin-left: $margin-small
+				white-space: nowrap
 
 			.timer
 				+clickable()
+				white-space: nowrap
 
 		.complete
 
@@ -208,7 +223,7 @@
 </style>
 
 <script>
-	import {nextTick} from 'vue'
+	import {mapGetters} from 'vuex'
 	import {debounce, isEmpty, isNumber, size} from 'lodash'
 
 	import QuizList from 'js/components/quiz/QuizList'
@@ -235,6 +250,7 @@
 		],
 		data() {
 			return {
+				canShowStickyHeader: true,
 				currentPage: 1,
 				currentScroll: 0,
 				filterResults: false,
@@ -246,6 +262,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			answeredCount() {
 				return this.totalCount - this.unansweredCount
 			},
@@ -264,7 +281,8 @@
 					: this.testResults[this.filterResults]
 			},
 			hasStickyHeader() {
-				return this.currentScroll > this.headerOffset + 100
+				return this.canShowStickyHeader &&
+					this.currentScroll > this.headerOffset + 100
 			},
 			isComplete() {
 				return !isEmpty(this.testResults)
@@ -289,6 +307,9 @@
 			unansweredQuestions() {
 				return this.questions.filter(question => !isNumber(question.selectedAnswer))
 			},
+			unansweredToggleCount() {
+				return this.filterUnanswered ? this.totalCount : this.unansweredCount
+			},
 			unansweredToggleMessage() {
 				return this.filterUnanswered
 					? this.$t('questions.solving.unanswered.all')
@@ -312,7 +333,11 @@
 				this.filterResults = this.filterResults === status ? '' : status
 			},
 			onScroll: debounce(function({target: {scrollTop}}) {
-				this.currentScroll = scrollTop
+				if (this.isMobile) {
+					this.canShowStickyHeader = scrollTop < this.currentScroll
+				}
+
+				return this.currentScroll = scrollTop
 			}, 50),
 			onTimesUp() {
 				this.$refs.timer.stopTimer()

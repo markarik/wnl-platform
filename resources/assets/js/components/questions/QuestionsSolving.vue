@@ -1,21 +1,35 @@
 <template>
-	<div>
-		<div class="tabs" v-if="!testMode">
-			<ul>
-				<li
-					v-for="view in views"
-					:class="{'is-active': view.name === activeView}"
-					@click="activeView = view.name"
-				>
-					<a>
-						<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
-						{{$t(`questions.solving.tabs.${view.name}`, {
-							count: questionsListCount,
-							current: questionNumber(currentQuestion.index)
-						})}}
-					</a>
-				</li>
-			</ul>
+	<div class="questions-solving-container" :class="{'is-mobile': isMobile}">
+		<div class="questions-solving-view" v-if="!testMode">
+			<div class="tabs" v-if="!isMobile">
+				<ul>
+					<li v-for="view in views" :class="{'is-active': view.name === activeView}" @click="activeView = view.name">
+						<a>
+							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
+							{{$t(`questions.solving.tabs.${view.name}`, {
+								count: questionsListCount,
+								current: questionNumber(currentQuestion.index)
+							})}}
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div v-else class="questions-solving-select control">
+				<span class="select">
+					<select @input="changeViewWithSelect">
+						<option v-for="(view, index) in views"
+							:key="index"
+							:value="view.name"
+							:selected="view.name === activeView"
+						>
+							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span> {{$t(`questions.solving.tabs.${view.name}`, {
+								count: questionsListCount,
+								current: questionNumber(currentQuestion.index)
+							})}}
+						</option>
+					</select>
+				</span>
+			</div>
 		</div>
 		<div class="questions-list-info" v-if="!testMode">
 			<div class="active-filters">
@@ -29,7 +43,7 @@
 			</a>
 		</div>
 
-		<div v-if="hasCurrentQuestion">
+		<div v-if="hasCurrentQuestion" ref="view">
 			<!-- Current Question -->
 			<div v-if="activeView === 'current'">
 				<wnl-active-question
@@ -114,6 +128,22 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	.questions-solving-container
+		&.is-mobile
+			.questions-solving-view
+				+flex-center()
+
+			.questions-list-info
+				align-items: center
+				flex-direction: column
+				text-align: center
+				margin: -$margin-medium 0 0
+
+				.active-filters
+					line-height: $line-height-minus
+					margin-bottom: $margin-small
 
 	.tabs
 		font-size: $font-size-minus-1
@@ -121,11 +151,14 @@
 		.is-active
 			font-weight: $font-weight-regular
 
+	.questions-solving-select
+		height: 4em
+
 	.questions-list-info
 		align-items: flex-start
 		display: flex
 		justify-content: space-between
-		margin: -$margin-base 0 0
+		margin: $margin-medium 0 0
 
 		.active-filters
 			font-size: $font-size-minus-2
@@ -168,6 +201,7 @@
 	import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder'
 	import QuizQuestion from 'js/components/quiz/QuizQuestion'
 	import Pagination from 'js/components/global/Pagination'
+	import { scrollToElement } from 'js/utils/animations'
 
 	const views = [
 		{
@@ -206,6 +240,10 @@
 			getReaction: {
 				default: () => {},
 				type: Function,
+			},
+			isMobile: {
+				default: false,
+				type: Boolean,
 			},
 			loading: {
 				default: false,
@@ -292,6 +330,9 @@
 			changePage(page) {
 				this.$emit('changePage', page)
 			},
+			changeViewWithSelect(event) {
+				this.activeView = event.target.value
+			},
 			questionNumber(index) {
 				return isNumber(index)
 					? (this.currentQuestion.page - 1) * limit + index + 1
@@ -311,6 +352,9 @@
 		watch: {
 			activeFilters() {
 				this.showListResults = false
+			},
+			activeView() {
+				scrollToElement(this.$refs.view, 200)
 			},
 		}
 	}

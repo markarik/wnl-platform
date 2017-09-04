@@ -27,7 +27,7 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleclick"
 		/>
-		<p class="has-text-centered">
+		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
 				Sprawdź odpowiedź
 			</a>
@@ -52,6 +52,10 @@
 
 	.matched-count
 		color: $color-green
+
+	.active-question-button
+		margin-bottom: $margin-big
+		margin-top: -$margin-big
 </style>
 
 <script>
@@ -112,14 +116,14 @@
 		methods: {
 			nextQuestion() {
 				this.$emit('changeQuestion', 1)
-				scrollToElement(this.$el, 75)
+				scrollToElement(this.$el, 55)
 			},
 			onAnswerDoubleclick() {
 				this.allowDoubleclick && this.displayResults && this.nextQuestion()
 			},
 			previousQuestion() {
 				this.$emit('changeQuestion', -1)
-				scrollToElement(this.$el, 75)
+				scrollToElement(this.$el, 55)
 			},
 			selectAnswer(data) {
 				this.allowDoubleclick = false

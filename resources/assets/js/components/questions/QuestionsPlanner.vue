@@ -437,6 +437,7 @@
 			setupPlanner() {
 				const presetFilters = this.planOptions[this.selectedOption]
 
+				this.showPlanner = true
 				this.setFilters(presetFilters).then(() => {
 					this.fetchDynamicFilters()
 					this.setUnresolvedAndIncorrectCount()

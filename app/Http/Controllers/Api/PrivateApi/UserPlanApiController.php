@@ -32,34 +32,38 @@ class UserPlanApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	public function post(Request $request) {
+	public function post(Request $request)
+	{
 		$startDate = $request->get('startDate');
 		$endDate = $request->get('endDate');
 		$slackDays = $request->get('slackDays');
 		$userId = $request->route('userId');
 		$filters = $request->get('filters');
+		$this->deleteProgress($userId);
 
 		// TODO handle empty dates
 
-		$filteredQuestions = $this->addFilters($request->filters, app('App\\Models\\QuizQuestion'))->get()->pluck('id');
-		$activeDays = (new \DateTime($endDate))->diff(new \DateTime($startDate))->format('%a') - $slackDays;
+		$filteredQuestions = $this
+			->addFilters($request->filters, app('App\\Models\\QuizQuestion'))
+			->get()
+			->pluck('id');
 
 		$createdPlan = UserPlan::create([
-			'user_id' => $userId,
-			'start_date' => Carbon::parse($startDate),
-			'end_date' => Carbon::parse($endDate),
+			'user_id'            => $userId,
+			'start_date'         => Carbon::parse($startDate),
+			'end_date'           => Carbon::parse($endDate),
 			'slack_days_planned' => $slackDays,
-			'slack_days_left' => $slackDays,
-			'filters' => $filters
+			'slack_days_left'    => $slackDays,
+			'filters'            => $filters,
 		]);
 
 		$valuesToInsert = [];
 
-		foreach($filteredQuestions as $question) {
+		foreach ($filteredQuestions as $question) {
 			$valuesToInsert[] = [
-				'user_id' => $userId,
-				'plan_id' => $createdPlan->id,
-				'question_id' => $question
+				'user_id'     => $userId,
+				'plan_id'     => $createdPlan->id,
+				'question_id' => $question,
 			];
 		}
 
@@ -69,5 +73,12 @@ class UserPlanApiController extends ApiController
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
+	}
+
+	protected function deleteProgress($userId)
+	{
+		$recentPlan = UserPlan::where('user_id', $userId)->get()->last();
+		if (!$recentPlan) return;
+		$recentPlan->questionsProgress()->delete();
 	}
 }

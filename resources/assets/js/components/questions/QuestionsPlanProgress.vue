@@ -6,7 +6,7 @@
 				/ {{plannedDaysCount}}
 			</span>
 			<span v-else></span>
-			<a class="button is-outlined is-small" @click="$emit('changePlan')">
+			<a v-if="allowChange" class="button is-outlined is-small" @click="$emit('changePlan')">
 				{{$t('questions.plan.change')}}
 			</a>
 		</div>
@@ -122,6 +122,10 @@
 	export default {
 		name: 'QuestionsPlanProgress',
 		props: {
+			allowChange: {
+				default: true,
+				type: Boolean,
+			},
 			plan: {
 				required: true,
 				type: Object,
@@ -129,7 +133,7 @@
 		},
 		computed: {
 			average() {
-				return Math.ceil(this.plan.stats.done / this.daysSoFar - this.plan.slack_days_left)
+				return Math.ceil(this.plan.stats.done / (this.daysSoFar - this.slackDaysUsed))
 			},
 			averagePlanned() {
 				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
@@ -166,6 +170,9 @@
 						],
 					},
 				}
+			},
+			slackDaysUsed() {
+				return this.plan.slack_days_planned - this.plan.slack_days_left
 			},
 			startDate() {
 				return moment(this.plan.start_date.date)

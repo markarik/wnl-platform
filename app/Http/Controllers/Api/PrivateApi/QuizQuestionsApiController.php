@@ -40,9 +40,8 @@ class QuizQuestionsApiController extends ApiController
 			'resolved'      => $resolved,
 			'resolved_perc' => $resolved / $total * 100,
 			'correct'       => $correct,
-			'correct_perc'  => $correct / $total * 100,
+			'correct_perc'  => $resolved == 0 ? 0 : $correct / $resolved * 100,
 			'subjects'      => $this->getSubjectsStats($model, $userId),
-
 		];
 
 		return $this->respondOk($data);
@@ -103,7 +102,7 @@ class QuizQuestionsApiController extends ApiController
 				'resolved'      => $resolved,
 				'resolved_perc' => $resolved / $total * 100,
 				'correct'       => $correct,
-				'correct_perc'  => $correct / $total * 100,
+				'correct_perc'  => $resolved == 0 ? 0 : $correct / $resolved * 100,
 			];
 		}
 

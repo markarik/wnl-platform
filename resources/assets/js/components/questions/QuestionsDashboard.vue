@@ -180,7 +180,7 @@
 
 			.progress
 				flex: 1 auto
-				height: 2px
+				height: 4px
 				margin-bottom: 0
 				margin-right: $margin-medium
 				min-width: 150px

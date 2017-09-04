@@ -7,6 +7,7 @@ import * as actions from 'js/store/actions'
 import * as getters from 'js/store/getters'
 
 // Modules
+import chat from 'js/store/modules/chat'
 import course from 'js/store/modules/course'
 import collections from 'js/store/modules/collections'
 import notifications from 'js/store/modules/notifications'
@@ -18,6 +19,7 @@ import progress from 'js/store/modules/progress'
 import slideshow from 'js/store/modules/slideshow'
 import ui from 'js/store/modules/ui'
 import activeUsers from 'js/store/modules/activeUsers'
+import autocomplete from 'js/store/modules/autocomplete'
 
 Vue.use(Vuex)
 
@@ -29,6 +31,7 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 	modules: {
+		chat,
 		course,
 		collections,
 		notifications,
@@ -39,7 +42,8 @@ export default new Vuex.Store({
 		progress,
 		slideshow,
 		ui,
-		activeUsers
+		activeUsers,
+		autocomplete
 	},
 	strict: debug
 })

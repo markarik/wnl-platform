@@ -43,6 +43,12 @@ class Mentioned extends Event
 	{
 		$actor = $this->payload['actor'];
 
+		$this->data['event'] = 'mentioned';
+
+		if (!empty($this->payload['context'])) {
+			$this->data['context'] = $this->payload['context'];
+		}
+
 		$this->data['actors'] = [
 			'id'         => $actor->id,
 			'first_name' => $actor->profile->first_name,
@@ -54,12 +60,12 @@ class Mentioned extends Event
 		$this->data['referer'] = $this->referer;
 
 		if ($this->payload['subject']['type'] === 'chat_message') {
-			$this->data['subject'] = $this->payload['subject'];
-
-			return;
+			$this->transformSubjectForChatMessage();
+			$this->data['objects'] = $this->payload['objects'];
+		} else {
+			$this->transformSubject();
 		}
 
-		$this->transformSubject();
 	}
 
 	protected function transformSubject()
@@ -75,5 +81,12 @@ class Mentioned extends Event
 			'id'   => $subject->id,
 			'text' => $subject->text ?? null,
 		];
+	}
+
+	protected function transformSubjectForChatMessage():void
+	{
+		$payloadSubject = $this->payload['subject'];
+		$this->data['subject'] = $payloadSubject;
+		$this->data['subject']['text'] = strip_tags($payloadSubject['text']) ?? null;
 	}
 }

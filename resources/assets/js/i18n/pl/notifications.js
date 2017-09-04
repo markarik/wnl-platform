@@ -6,12 +6,14 @@ export const notifications = {
 		quizQuestion: '#{id}',
 		page: 'na stronie {page}',
 		slide: '{slide}',
+		channel: 'na kanale chatu {channel}'
 	},
 	events: {
 		commentPosted: 'skomentował/-a',
 		qnaQuestionPosted: 'zadał/-a',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
+		mentioned: 'wspomniał/-a Cię'
 	},
 	messages: {
 		deleted: 'Treść usunięta przez autora'
@@ -31,6 +33,7 @@ export const notifications = {
 		qnaQuestion: 'pytanie | Twoje pytanie',
 		quizQuestion: 'pytanie kontrolne',
 		slide: 'slajd',
+		chatChannel: 'na kanale chatu'
 	},
 	personal: {
 		heading: 'Powiadomienia',

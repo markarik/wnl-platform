@@ -23,6 +23,7 @@
 		cursor: default
 
 	.wnl-avatar
+		overflow: hidden
 		user-select: none
 </style>
 <script>

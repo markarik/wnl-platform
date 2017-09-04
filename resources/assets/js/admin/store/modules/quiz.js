@@ -54,7 +54,7 @@ const getters = {
 const mutations = {
 	[types.SETUP_QUIZ_QUESTION] (state, data) {
 		const answersObject = data.included['quiz_answers'] || {}
-		const answersArray = Object.keys(answersObject).map(key => answersObject[key])
+		const answersArray = data['quiz_answers'].map(id => answersObject[id])
 
 		set(state, 'question', data)
 		set(state, 'answers', answersArray)

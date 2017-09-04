@@ -26,6 +26,7 @@ export const questions = {
 		stats: 'Sprawdź statystyki',
 	},
 	question: {
+		edit: 'Edytuj pytanie',
 		tags: 'Tagi',
 	},
 	plan: {

@@ -28,13 +28,13 @@
 							<wnl-text-loader/>
 						</div>
 						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan"/>
-						<div v-else>
-							<p class="questions-plan-create">Zaplanuje pracę z pytaniami!<p>
+						<div class="questions-plan-create" v-else>
+							<p class="questions-plan-create-heading">Zaplanuj pracę z pytaniami!<p>
 							<p class="questions-plan-create-tip">
 								Plan pracy pomoże Ci określić tempo, którym spokojnie rozwiążesz wszystkie pytania!
 							</p>
 							<p class="margin vertical has-text-centered">
-								<router-link :to="{name: 'questions-planner'}">
+								<router-link class="button is-primary is-outlined" :to="{name: 'questions-planner'}">
 									Zaplanuj pracę
 								</router-link>
 							</p>
@@ -141,6 +141,22 @@
 		.icon
 			color: $color-background-gray
 			margin-right: $margin-small
+
+	.questions-plan-create
+		margin-bottom: $margin-big
+
+	.questions-plan-create-heading
+		font-size: $font-size-plus-1
+		margin: $margin-medium 0 $margin-small
+		text-align: center
+		width: 100%
+
+	.questions-plan-create-tip
+		font-size: $font-size-minus-1
+
+	.questions-plan-create-tip
+		text-align: center
+		width: 100%
 
 	.questions-dashboard-subheading
 		font-size: $font-size-minus-1

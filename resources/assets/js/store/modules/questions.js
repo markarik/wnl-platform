@@ -414,7 +414,7 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 
 	Object.keys(groupedFilters).forEach((group) => {
 		if (state.filters[group].type === FILTER_TYPES.TAGS) {
-			filters.push({tags: groupedFilters[group]})
+			filters.push({[group]: groupedFilters[group]})
 		} else if (state.filters[group].type === FILTER_TYPES.LIST) {
 			filters.push({
 				[group]: {

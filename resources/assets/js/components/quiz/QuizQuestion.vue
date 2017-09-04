@@ -21,15 +21,6 @@
 							:state="reactionState"
 							:module="module"
 						></wnl-bookmark>
-						<a
-							:href="'/admin/app/quizes/edit/' + question.id"
-							class="question-edit-link"
-							v-if="isAdmin"
-						>
-							<span class="icon is-medium">
-								<i class="fa fa-pencil-square-o"></i>
-							</span>
-						</a>
 					</div>
 				</div>
 			</header>
@@ -58,7 +49,20 @@
 							#{{tag.name}}
 						</span>
 					</div>
-					<div class="quiz-question-id">#{{question.id}}</div>
+					<div class="quiz-question-id">
+						#{{question.id}}
+					</div>
+				</div>
+				<div class="question-edit-link" v-if="isAdmin">
+					<a
+						class="button is-small is-primary"
+						:href="`/admin/app/quizes/edit/${question.id}`"
+					>
+						{{$t('questions.question.edit')}}
+						<span class="icon is-small">
+							<i class="fa fa-pencil-square-o"></i>
+						</span>
+					</a>
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
@@ -105,10 +109,6 @@
 		.card-header-icons
 			display: flex
 
-		.question-edit-link
-			margin-left: 10px
-			color: $color-sky-blue
-
 	.card-header-title.is-short-form
 		font-size: $font-size-minus-1
 
@@ -147,6 +147,13 @@
 
 			.quiz-answer
 				font-size: $font-size-minus-1
+
+	.question-edit-link
+		margin: $margin-medium 0
+		text-align: center
+		.button
+			.icon:first-child
+				margin-left: $margin-small
 
 	.quiz-question-comments
 		padding: $margin-small $margin-big $margin-base

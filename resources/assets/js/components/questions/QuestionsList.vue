@@ -380,6 +380,7 @@
 			this.switchOverlay(true)
 			this.fetchingFilters = true
 			this.setupFilters().then(() => {
+				hasPresetFilters && this.activeFiltersSet(this.presetFilters)
 				Promise.all([
 					this.fetchQuestions({
 						doNotSaveFilters: !hasPresetFilters,

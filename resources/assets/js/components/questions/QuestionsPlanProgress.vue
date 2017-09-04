@@ -176,7 +176,6 @@
 					params: {
 						presetFilters: [
 							'quiz-planned.items[0]',
-//							'quiz-resolution.items[0]',
 						],
 					},
 				}

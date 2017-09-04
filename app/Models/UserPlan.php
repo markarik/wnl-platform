@@ -51,8 +51,15 @@ class UserPlan extends Model
 
 	public function remainingQuestionsFromDate($date)
 	{
-		return $this->questionsProgress()->where('resolved_at', null)
-			->orWhere('resolved_at', '>=', $date->toDateString())->get(); //1001
+		$result = $this->questionsProgress()
+			->where(function ($query) use ($date) {
+				$query
+					->where('resolved_at', null)
+					->orWhere('resolved_at', '>=', $date->toDateString());
+			})
+			->get();
+
+		return $result;
 	}
 
 	public function questionsForDay($date)
@@ -64,7 +71,7 @@ class UserPlan extends Model
 			return collect();
 		}
 
-		$questionsPerDay = floor($remainingQuestions->count() / $daysLeft); // 500
+		$questionsPerDay = ceil($remainingQuestions->count() / $daysLeft); // 500
 
 		$todaysQuestions = $remainingQuestions
 			->sortBy('id')

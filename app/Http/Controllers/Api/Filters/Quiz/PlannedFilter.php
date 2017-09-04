@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
+use App\Models\QuizQuestion;
 use App\Models\UserPlan;
 use Carbon\Carbon;
 use Auth;
@@ -12,7 +13,7 @@ class PlannedFilter extends ApiFilter
 
 	public function handle($builder)
 	{
-		$supportedDate = Carbon::now();
+		$supportedDate = Carbon::today();
 
 		$plan = UserPlan::where('user_id', $this->params['user_id'])->orderBy('id', 'desc')->first();
 
@@ -29,7 +30,8 @@ class PlannedFilter extends ApiFilter
 
 		if (!$plan) return false;
 
-		$questionsForDay = $plan->questionsForDay(Carbon::now())->pluck('question_id')->toArray();
+		$questionsForDay = $plan->questionsForDay(Carbon::today())->pluck('question_id')->toArray();
+
 		$count = $builder->whereIn('id', $questionsForDay)->count();
 
 		return [

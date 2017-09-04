@@ -1,39 +1,30 @@
 <template>
-	<div class="notification-wrapper">
+	<div class="notification-wrapper" :class="{'is-desktop': !isTouchScreen}">
 		<div class="questions-notification" :class="{'is-read': isRead, deleted}">
-			<div class="meta">
-				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
-				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
-				<span class="meta-time">{{justDate}}</span>
-				<span class="meta-time">{{justTime}}</span>
-			</div>
-			<div class="notification-content">
-				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
-					<span class="action">{{ action }}</span>
-					<span class="object">{{ object }}</span>
-					<span class="context">{{ contextInfo }}</span>
-				</div>
-				<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
-				<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{ subjectText }}</div>
-				<div class="time">
-				</div>
-			</div>
-			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
-				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-					<router-link v-if="hasFullContext" :to="routeContext">
-						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
-							<span v-if="loading" class="loader"></span>
-							<i v-else class="fa fa-angle-right"></i>
-						</span>
-					</router-link>
-					<a v-else :href="routeContext">
-						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
-							<span v-if="loading" class="loader"></span>
-							<i v-else class="fa fa-angle-right"></i>
-						</span>
-					</a>
-				</div>
+			<div class="notification-container" :class="{'unseen': !isSeen}"
+				@click="dispatchMarkAsSeen"
+				@contextmenu="dispatchMarkAsSeen"
+			>
+				<router-link class="notification-link" :to="routeContext">
+					<div class="meta">
+						<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
+						<span class="icon is-small"><i class="fa" :class="icon"></i></span>
+						<span class="meta-time">{{justDate}}</span>
+						<span class="meta-time">{{justTime}}</span>
+					</div>
+					<div class="notification-content">
+						<div class="notification-header">
+							<span class="actor">{{ message.actors.full_name }}</span>
+							<span class="action">{{ action }}</span>
+							<span class="object">{{ object }}</span>
+							<span class="context">{{ contextInfo }}</span>
+						</div>
+						<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
+						<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{ subjectText }}</div>
+						<div class="time">
+						</div>
+					</div>
+				</router-link>
 			</div>
 		</div>
 		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
@@ -43,27 +34,25 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.stream-notification
+	.is-desktop
+		.notification-link
+			&:hover
+				background-color: $color-background-lighter-gray
+
+	.notification-link
 		align-items: flex-start
 		background: $color-white
-		border: $border-light-gray
+		border-bottom: $border-light-gray
+		color: $color-gray
 		display: flex
 		font-size: $font-size-minus-1
 		justify-content: space-between
-		margin-bottom: $margin-big
+		margin-bottom: $margin-base
 		padding: $margin-medium
 		position: relative
 
-		&.is-read
-			opacity: 0.75
-
-			.link-symbol
-
-				.icon
-					color: $color-inactive-gray
-
-					&.unseen
-						border-color: $color-inactive-gray
+		&.is-active
+			font-weight: $font-weight-regular
 
 	.meta
 		align-items: center
@@ -88,7 +77,7 @@
 
 	.notification-content
 		flex: 1 auto
-		padding: 0 $margin-base 0 $margin-medium
+		padding: 0 0 0 $margin-medium
 
 		.notification-header
 			line-height: $line-height-minus
@@ -129,6 +118,7 @@
 		flex-direction: column
 		height: 100%
 		justify-content: space-between
+		margin-right: $margin-medium
 		min-height: 100%
 
 		&.is-desktop
@@ -154,10 +144,6 @@
 			&.go-to-link
 				.fa
 					padding: 0 0 $margin-tiny 1px
-
-			&.toggle-hidden
-				margin-top: $margin-base
-				padding: $margin-medium
 </style>
 
 <script>
@@ -182,7 +168,7 @@
 		},
 		data() {
 			return {
-				objectTextLength: 200,
+				objectTextLength: 100,
 				subjectTextLength: 300,
 			}
 		},

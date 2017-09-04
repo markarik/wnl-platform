@@ -1,37 +1,32 @@
 <template>
-	<div class="scrollable-main-container">
-		<div class="single-question">
-			<div class="question-container" v-if="isLoaded">
-				<div class="question-header">
-					<span class="question-title">{{title}}</span>
-					<a class="question-back" @click="goBack">
-						<span class="icon is-small">
-							<i class="fa fa-angle-left"></i>
-						</span>
-						{{$t('quiz.single.back')}}
-					</a>
-				</div>
-				<div v-if="hasError" class="notification">
-					{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
-				</div>
-				<wnl-quiz-widget v-else
-					:isSingle="true"
-					:questions="getQuestionsWithAnswers"
-					:getReaction="getReaction"
-					@selectAnswer="commitSelectAnswer"
-					@verify="resolveQuestion"
-				/>
+	<div class="single-question">
+		<div class="question-container" v-if="isLoaded">
+			<div class="question-header">
+				<span class="question-title">{{title}}</span>
+				<a class="question-back" @click="goBack">
+					<span class="icon is-small">
+						<i class="fa fa-angle-left"></i>
+					</span>
+					{{$t('quiz.single.back')}}
+				</a>
 			</div>
-			<wnl-text-loader v-else/>
+			<div v-if="hasError" class="notification">
+				{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
+			</div>
+			<wnl-quiz-widget v-else
+				:isSingle="true"
+				:questions="getQuestionsWithAnswers"
+				:getReaction="getReaction"
+				@selectAnswer="commitSelectAnswer"
+				@verify="resolveQuestion"
+			/>
 		</div>
+		<wnl-text-loader v-else/>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-
-	.layout
-		justify-content: space-between
 
 	.question-header
 		align-items: center
@@ -61,9 +56,6 @@
 	.wnl-quiz-widget
 		margin-bottom: $margin-humongous
 		width: 100%
-
-	.right-sidenav
-		border-left: $border-light-gray
 </style>
 
 <script>

@@ -2,7 +2,7 @@
 	<div class="wnl-app-layout">
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
-			<div v-if="!id" class="scrollable-main-container">
+			<div class="scrollable-main-container">
 				<div class="questions-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
@@ -12,80 +12,86 @@
 							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 							<span>{{$t('questions.nav.dashboard')}}</span>
 						</div>
+						<div v-if="id" class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span>#{{id}}</span>
+						</div>
 					</div>
 				</div>
-				<div class="questions-dashboard-plan">
-					<div class="questions-dashboard-heading">
-						<span class="icon is-small"><i class="fa fa-calendar"></i></span>
-						Plan pracy
+				<div v-if="!id">
+					<div class="questions-dashboard-plan">
+						<div class="questions-dashboard-heading">
+							<span class="icon is-small"><i class="fa fa-calendar"></i></span>
+							Plan pracy
+						</div>
+						<div v-if="plan === null" class="margin vertical">
+							<wnl-text-loader/>
+						</div>
+						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan"/>
+						<div v-else>
+							<p class="questions-plan-create">Zaplanuje pracę z pytaniami!<p>
+							<p class="questions-plan-create-tip">
+								Plan pracy pomoże Ci określić tempo, którym spokojnie rozwiążesz wszystkie pytania!
+							</p>
+							<p class="margin vertical has-text-centered">
+								<router-link :to="{name: 'questions-planner'}">
+									Zaplanuj pracę
+								</router-link>
+							</p>
+						</div>
 					</div>
-					<div v-if="plan === null" class="margin vertical">
+					<div v-if="stats === null">
+						Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!
+					</div>
+					<div v-else-if="!hasStats" class="margin vertical">
 						<wnl-text-loader/>
 					</div>
-					<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan"/>
 					<div v-else>
-						<p class="questions-plan-create">Zaplanuje pracę z pytaniami!<p>
-						<p class="questions-plan-create-tip">
-							Plan pracy pomoże Ci określić tempo, którym spokojnie rozwiążesz wszystkie pytania!
-						</p>
-						<p class="margin vertical has-text-centered">
-							<router-link :to="{name: 'questions-planner'}">
-								Zaplanuj pracę
-							</router-link>
-						</p>
-					</div>
-				</div>
-				<div v-if="stats === null">
-					Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!
-				</div>
-				<div v-else-if="!hasStats" class="margin vertical">
-					<wnl-text-loader/>
-				</div>
-				<div v-else>
-					<div class="questions-dashboard-heading">
-						<span class="icon is-small"><i class="fa fa-bar-chart"></i></span>
-						Twoje statystyki
-					</div>
-					<div class="questions-dashboard-subheading">
-						<span class="icon is-small"><i class="fa fa-tasks"></i></span>
-						Rozwiązane pytania
-					</div>
-					<div class="questions-stats">
-						<div v-for="stats, index in statsResolved"
-							class="stats-item stats-resolved"
-							:class="{'is-first': index === 0}"
-						>
-							<span class="stats-title">{{stats.title}}</span>
-							<div class="bar-and-score">
-								<progress class="progress is-success"
-									:value="stats.progress"
-									:max="stats.total"/>
-								<span class="stats-score">{{stats.score}}</span>
+						<div class="questions-dashboard-heading">
+							<span class="icon is-small"><i class="fa fa-bar-chart"></i></span>
+							Twoje statystyki
+						</div>
+						<div class="questions-dashboard-subheading">
+							<span class="icon is-small"><i class="fa fa-tasks"></i></span>
+							Rozwiązane pytania
+						</div>
+						<div class="questions-stats">
+							<div v-for="stats, index in statsResolved"
+								class="stats-item stats-resolved"
+								:class="{'is-first': index === 0}"
+							>
+								<span class="stats-title">{{stats.title}}</span>
+								<div class="bar-and-score">
+									<progress class="progress is-success"
+										:value="stats.progress"
+										:max="stats.total"/>
+									<span class="stats-score">{{stats.score}}</span>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="questions-dashboard-subheading">
-						<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
-						Twoje wyniki
-					</div>
-					<div class="questions-stats">
-						<div v-for="stats, index in statsScore"
-							class="stats-item stats-score"
-							:class="{'is-first': index === 0}"
-						>
-							<span class="stats-title">{{stats.title}}</span>
-							<div class="bar-and-score">
-								<progress class="progress"
-									:class="scoreClass(stats.score)"
-									:value="stats.progress"
-									:max="stats.total"/>
-								<span class="stats-score">{{stats.score}}%</span>
+						<div class="questions-dashboard-subheading">
+							<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
+							Twoje wyniki
+						</div>
+						<div class="questions-stats">
+							<div v-for="stats, index in statsScore"
+								class="stats-item stats-score"
+								:class="{'is-first': index === 0}"
+							>
+								<span class="stats-title">{{stats.title}}</span>
+								<div class="bar-and-score">
+									<progress class="progress"
+										:class="scoreClass(stats.score)"
+										:value="stats.progress"
+										:max="stats.total"/>
+									<span class="stats-score">{{stats.score}}%</span>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<router-view v-else :id="id"/>
 			</div>
-			<router-view v-else :id="id"/>
 		</div>
 		<wnl-sidenav-slot
 			:isDetached="!isChatMounted"
@@ -100,6 +106,10 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
+
+	.wnl-middle
+		max-width: 100%
+		width: 100%
 
 	.questions-breadcrumbs
 		align-items: center

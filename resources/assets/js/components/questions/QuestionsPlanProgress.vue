@@ -1,5 +1,5 @@
 <template>
-	<div class="questions-plan-progress-container">
+	<div class="questions-plan-progress-container" :class="{'is-mobile': isMobile}">
 		<div class="questions-plan-progress-heading">
 			<span v-if="hasStarted" class="progress-day">
 				{{$t('questions.plan.progress.day', {day: daysSoFar})}}
@@ -105,7 +105,6 @@
 		text-align: center
 
 	.plan-progress-average
-		+flex-center()
 		font-size: $font-size-minus-1
 		margin-top: $margin-medium
 		text-align: center
@@ -114,7 +113,6 @@
 		.average-planned
 			font-size: $font-size-base
 			font-weight: $font-weight-bold
-			margin: 0 3px
 
 		&.less .average
 			color: $color-orange
@@ -128,6 +126,7 @@
 
 <script>
 	import moment from 'moment'
+	import {mapGetters, mapActions} from 'vuex'
 
 	export default {
 		name: 'QuestionsPlanProgress',
@@ -142,6 +141,7 @@
 			},
 		},
 		computed: {
+			...mapGetters(['isMobile']),
 			average() {
 				return Math.ceil(this.plan.stats.done / (this.daysSoFar - this.slackDaysUsed))
 			},

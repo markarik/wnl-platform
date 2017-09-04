@@ -98,7 +98,7 @@
 			:isVisible="isLargeDesktop"
 			:hasChat="true"
 		>
-			<div>
+			<div class="questions-feed-container">
 				<p class="questions-feed-heading">
 					<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
 					Ostatnie dyskusje
@@ -187,6 +187,9 @@
 
 			.stats-score
 				width: 100px
+
+	.questions-feed-container
+		width: 100%
 
 	.questions-feed-heading
 		border-bottom: $border-light-gray

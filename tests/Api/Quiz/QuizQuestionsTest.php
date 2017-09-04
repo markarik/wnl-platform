@@ -60,12 +60,12 @@ class QuizQuestionsTest extends ApiTestCase
 		$data = [
 			// 'fields'  => ['id', 'text', 'created_at'],
 			'filters' => [
-				[
-					'search' => [
-						'phrase' => 'Gastropareza',
-						'mode'   => 'phrase_match',
-					],
-				],
+//				[
+//					'search' => [
+//						'phrase' => 'Gastropareza',
+//						'mode'   => 'phrase_match',
+//					],
+//				],
 				[
 					'tags' => ['łatwe'],
 				],
@@ -103,9 +103,7 @@ class QuizQuestionsTest extends ApiTestCase
 	/** @test */
 	public function get_quiz_questions_filters_no_active_filters()
 	{
-//		\DB::listen(function($query) {
-//			dump($query->sql, $query->time);
-//		});
+		$this->markTestSkipped();
 		$user = factory(User::class)->create();
 
 		$data = [
@@ -113,15 +111,10 @@ class QuizQuestionsTest extends ApiTestCase
 			'limit'   => 1,
 		];
 
-//		$start = microtime(true);
-
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filterList'), $data);
 
-//		$stop = microtime(true) - $start;
-//		dump('time ' . $stop . 's');
-//		$response->dump();
 		$response
 			->assertStatus(200);
 	}
@@ -129,6 +122,7 @@ class QuizQuestionsTest extends ApiTestCase
 	/** @test */
 	public function get_quiz_questions_filters_with_active_filters()
 	{
+		$this->markTestSkipped();
 		$user = User::find(1);
 
 		$data = [

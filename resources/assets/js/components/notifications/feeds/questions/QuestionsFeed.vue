@@ -29,9 +29,9 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
 	.questions-feed
-		margin-top: $margin-base + $margin-small
 		margin-bottom: $margin-huge
 
 	.all-seen
@@ -39,7 +39,7 @@
 		display: flex
 		font-size: $font-size-minus-2
 		justify-content: flex-end
-		margin-bottom: $margin-base
+		margin: $margin-base 0
 		text-transform: uppercase
 
 	.questions-notifications
@@ -73,9 +73,8 @@
 			text-align: center
 
 	.show-more
-		align-items: center
-		display: flex
-		justify-content: center
+		+flex-center()
+		margin-top: $margin-base
 </style>
 
 <script>

@@ -47,7 +47,6 @@
 		display: flex
 		font-size: $font-size-minus-1
 		justify-content: space-between
-		margin-bottom: $margin-base
 		padding: $margin-medium
 		position: relative
 
@@ -110,40 +109,6 @@
 
 			.icon
 				margin-right: $margin-tiny
-
-	.link-symbol
-		align-items: center
-		display: flex
-		flex: 0
-		flex-direction: column
-		height: 100%
-		justify-content: space-between
-		margin-right: $margin-medium
-		min-height: 100%
-
-		&.is-desktop
-
-			.icon
-				cursor: pointer
-				transition: background $transition-length-base
-
-				&:hover
-					background: $color-background-lighter-gray
-					transition: background $transition-length-base
-
-		.icon
-			border: $border-light-gray
-			border-radius: $border-radius-small
-			color: $color-background-gray
-			padding: $margin-base
-
-			&.unseen
-				border-color: $color-ocean-blue
-				color: $color-ocean-blue
-
-			&.go-to-link
-				.fa
-					padding: 0 0 $margin-tiny 1px
 </style>
 
 <script>

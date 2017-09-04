@@ -98,7 +98,13 @@
 			:isVisible="isLargeDesktop"
 			:hasChat="true"
 		>
-			<wnl-questions-feed/>
+			<div>
+				<p class="questions-feed-heading">
+					<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
+					Ostatnie dyskusje
+				</p>
+				<wnl-questions-feed/>
+			</div>
 		</wnl-sidenav-slot>
 	</div>
 </template>
@@ -181,6 +187,19 @@
 
 			.stats-score
 				width: 100px
+
+	.questions-feed-heading
+		border-bottom: $border-light-gray
+		font-size: $font-size-minus-1
+		letter-spacing: 1px
+		margin-top: $margin-base
+		padding-bottom: $margin-small
+		text-align: center
+		text-transform: uppercase
+
+		.icon
+			color: $color-background-gray
+			margin-right: $margin-small
 </style>
 
 <script>

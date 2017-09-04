@@ -2,7 +2,7 @@
 	<div class="wnl-questions-filters">
 		<wnl-active-filters
 		:activeFilters="activeFilters"
-		:loading="fetchingQuestions"
+		:loading="fetchingData"
 		:filters="filters"
 		:itemsNamesSource="itemsNamesSource"
 		:matchedCount="matchedQuestionsCount"
@@ -20,7 +20,7 @@
 		<wnl-accordion
 			:dataSource="filters"
 			:config="accordionConfig"
-			:loading="fetchingQuestions"
+			:loading="fetchingData"
 			@itemToggled="onItemToggled"
 		/>
 	</div>
@@ -64,7 +64,7 @@
 				type: Array,
 				required: true,
 			},
-			fetchingQuestions: {
+			fetchingData: {
 				default: false,
 				type: Boolean,
 			},

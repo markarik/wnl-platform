@@ -53,7 +53,7 @@
 			<wnl-questions-filters
 				v-show="!testMode"
 				:activeFilters="activeFilters"
-				:fetchingQuestions="fetchingQuestions"
+				:fetchingData="fetchingQuestions || fetchingFilters"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
 			/>
@@ -136,6 +136,7 @@
 		},
 		data() {
 			return {
+				fetchingFilters: false,
 				fetchingQuestions: false,
 				orderedQuestionsList: [],
 				showBuilder: false,
@@ -270,6 +271,7 @@
 					.then(() => this.switchOverlay(false))
 			},
 			onActiveFiltersChanged(payload) {
+				this.fetchingFilters = true
 				this.activeFiltersToggle(payload)
 					.then(() => {
 						this.resetCurrentQuestion()
@@ -278,6 +280,7 @@
 						return this.fetchMatchingQuestions()
 					})
 					.then(() => {
+						this.fetchingFilters = false
 						this.fetchQuestionsReactions(this.getPage(1))
 					})
 			},
@@ -335,6 +338,15 @@
 						this.fetchQuestionData(question.id)
 					})
 			},
+			setupFilters(activeFilters = []) {
+				return new Promise((resolve, reject) => {
+					if (!isEmpty(this.filters)) return resolve()
+
+					return this.fetchDynamicFilters()
+						.then(() => resolve())
+						.catch((e) => reject(e))
+				})
+			},
 			switchOverlay(display, source = 'filters', message = 'questions') {
 				this.fetchingQuestions = display
 				this.toggleOverlay({source, display, text: this.$t(`ui.loading.${message}`)})
@@ -366,22 +378,31 @@
 			const hasPresetFilters = !isEmpty(this.presetFilters)
 
 			this.switchOverlay(true)
-			Promise.all([
-				this.fetchQuestions({
-					doNotSaveFilters: !hasPresetFilters,
-					filters: this.presetFilters,
-					page: 1,
-					useSavedFilters: hasPresetFilters,
-				}),
-				this.fetchQuestionsCount(),
-			])
-				.then(() => this.fetchDynamicFilters())
-				.then(() => {
-					this.switchOverlay(false)
-					this.resetCurrentQuestion()
-					return this.fetchQuestionsReactions(this.getPage(1))
-				})
-				.then(() => this.reactionsFetched = true)
+			this.fetchingFilters = true
+			this.setupFilters().then(() => {
+				Promise.all([
+					this.fetchQuestions({
+						doNotSaveFilters: !hasPresetFilters,
+						filters: this.presetFilters,
+						page: 1,
+						useSavedFilters: !hasPresetFilters,
+					}),
+					this.fetchQuestionsCount(),
+				])
+					.then(() => this.fetchDynamicFilters())
+					.then(() => {
+						this.fetchingFilters = false
+						this.switchOverlay(false)
+						this.resetCurrentQuestion()
+						return this.fetchQuestionsReactions(this.getPage(1))
+					})
+					.then(() => this.reactionsFetched = true)
+					.catch(e => {
+						$wnl.logger.error(e)
+						this.fetchingFilters = false
+						this.switchOverlay(false)
+					})
+			})
 		},
 		beforeRouteLeave(to, from, next) {
 			if (this.testMode) {

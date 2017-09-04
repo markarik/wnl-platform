@@ -40,12 +40,16 @@ const getters = {
 	...commentsGetters,
 	...reactionsGetters,
 	activeFilters: state => state.activeFilters,
-	activeFiltersObjects: state => state.activeFilters.map(path => {
-		return get(state.filters, path)
-	}),
-	activeFiltersValues: state => state.activeFilters.map(path => {
-		return get(state.filters, path).value
-	}),
+	activeFiltersObjects: state => {
+		return isEmpty(state.filters)
+			? []
+			: state.activeFilters.map(path => get(state.filters, path))
+	},
+	activeFiltersValues: state => {
+		return isEmpty(state.filters)
+			? []
+			: state.activeFilters.map(path => get(state.filters, path).value)
+	},
 	allQuestionsCount: state => state.allCount,
 	currentQuestion: state => {
 		if (isEmpty(state.questionsPages) || !state.currentQuestion.page) return {}

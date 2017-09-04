@@ -128,7 +128,7 @@
 			<wnl-questions-filters
 				v-show="showPlanner && selectedOption === 'custom'"
 				:activeFilters="activeFilters"
-				:fetchingQuestions="fetchingQuestions"
+				:fetchingData="fetchingQuestions"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
 			/>

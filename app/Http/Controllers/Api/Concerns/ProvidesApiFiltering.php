@@ -148,7 +148,7 @@ trait ProvidesApiFiltering
 
 	protected function saveActiveFilters($request)
 	{
-		// if (empty($request->filters) || empty($request->active)) return;
+		if (!$request->has('filters') || !$request->has('active')) return;
 
 		$key = $this->filtersFormatKey($request);
 		$data = json_encode([$request->filters, $request->active]);

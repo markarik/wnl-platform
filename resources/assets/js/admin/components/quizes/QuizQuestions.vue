@@ -7,7 +7,7 @@
 				</div>
 				<div class="control">
 					<router-link :to="{name: 'quiz-editor', params: { quizId: questionId }}" class="button is-info">
-						Szukej!
+						Szukaj!
 					</router-link>
 				</div>
 			</div>

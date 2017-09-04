@@ -137,7 +137,11 @@
 			}
 		},
 		methods: {
-			...mapActions(['getQuizQuestion', 'saveAnswers']),
+			...mapActions([
+				'getQuizQuestion',
+				'saveAnswers',
+				'setupFreshQuestion'
+			]),
 			onInput() {
 				this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML
 			},
@@ -175,7 +179,11 @@
 			}
 		},
 		created() {
-			this.isEdit && this.getQuizQuestion(this.$route.params.quizId)
+			if (this.isEdit) {
+				this.getQuizQuestion(this.$route.params.quizId)
+			} else {
+				this.setupFreshQuestion()
+			}
 		},
 	}
 </script>

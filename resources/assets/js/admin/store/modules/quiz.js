@@ -53,11 +53,14 @@ const getters = {
 // Mutations
 const mutations = {
 	[types.SETUP_QUIZ_QUESTION] (state, data) {
-		const answersObject = data.included['quiz_answers']
+		const answersObject = data.included['quiz_answers'] || {}
 		const answersArray = Object.keys(answersObject).map(key => answersObject[key])
 
 		set(state, 'question', data)
 		set(state, 'answers', answersArray)
+	},
+	[types.CLEAR_QUIZ_QUESTION_ANSWERS] (state, data) {
+		set(state, 'answers', getEmptyAnswers())
 	}
 }
 
@@ -68,6 +71,9 @@ const actions = {
 			.then((response) => {
 				commit(types.SETUP_QUIZ_QUESTION, response.data)
 			})
+	},
+	setupFreshQuestion({ commit }) {
+		commit(types.CLEAR_QUIZ_QUESTION_ANSWERS)
 	},
 	saveAnswers({ commit }, { answersData, isEdit } ) {
 		const promises = answersData.map(

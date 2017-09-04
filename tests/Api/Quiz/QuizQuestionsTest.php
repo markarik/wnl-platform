@@ -4,6 +4,7 @@ namespace Tests\Api\Quiz;
 
 use App\Models\User;
 use Tests\Api\ApiTestCase;
+use Carbon\Carbon;
 
 
 class QuizQuestionsTest extends ApiTestCase
@@ -54,40 +55,38 @@ class QuizQuestionsTest extends ApiTestCase
 	/** @test */
 	public function filter_quiz_questions()
 	{
-		$user = factory(User::class)->create();
+		$user = User::find(1);
 
 		$data = [
-			'fields'  => ['id', 'text', 'created_at'],
+			// 'fields'  => ['id', 'text', 'created_at'],
 			'filters' => [
+//				[
+//					'search' => [
+//						'phrase' => 'Gastropareza',
+//						'mode'   => 'phrase_match',
+//					],
+//				],
 				[
-					'search' => [
-						'phrase' => 'Gastropareza',
-						'mode'   => 'phrase_match',
-					],
-				],
-				[
-					'tags' => ['Kardiologia'], // add or/and option
-				],
-				[
-					'tags' => ['łatwe']
+					'tags' => ['łatwe'],
 				],
 				[
 					'query' => [
-//						'doesntHave' => 'sets',
+						'doesntHave' => 'sets',
 					],
 				],
 				[
-					'quiz.correct_answer' => [
+					'quiz-resolution' => [
 						'user_id' => 255,
-						'correct' => false
+						'list'    => ['correct', 'incorrect', 'unresolved'],
 					],
 				],
 				[
-					'quiz.is_done' => [
-						'user_id' => 255,
-						'done' => true
+					'quiz-planned' => [
+						'user_id' => 2,
+						'list'    => [Carbon::now()->toDateTimeString()],
 					],
 				],
+
 			],
 //			'include' => 'comments,comments.profiles,reactions',
 			'limit'   => 5,
@@ -96,6 +95,60 @@ class QuizQuestionsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filter'), $data);
+
+		$response
+			->assertStatus(200);
+	}
+
+	/** @test */
+	public function get_quiz_questions_filters_no_active_filters()
+	{
+		$this->markTestSkipped();
+		$user = factory(User::class)->create();
+
+		$data = [
+			'filters' => [],
+			'limit'   => 1,
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/quiz_questions/.filterList'), $data);
+
+		$response
+			->assertStatus(200);
+	}
+
+	/** @test */
+	public function get_quiz_questions_filters_with_active_filters()
+	{
+		$this->markTestSkipped();
+		$user = User::find(1);
+
+		$data = [
+			'filters' => [
+//				[
+//					'by_taxonomy-exams' => [119],
+//				],
+//				[
+//					'quiz-resolution' => [
+//						'user_id' => 1,
+//						'list'    => ['correct'],
+//					],
+//				],
+				[
+					'quiz-planned' => [
+						'user_id' => 2,
+						'list'    => [Carbon::now()->toDateTimeString()],
+					],
+				],
+			],
+			'limit'   => 1,
+		];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/quiz_questions/.filterList'), $data);
 
 		$response
 			->assertStatus(200);

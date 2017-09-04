@@ -70,17 +70,46 @@ const getters = {
 			(answerId) => state.quiz_answers[answerId]
 		)
 	},
-	getAttempts: (state) => state.attempts,
-	getComments: (state) => (id) => {
-		return state.quiz_questions[id].comments.map((commentId) => state.comments[commentId])
-	},
 	getCurrentScore: (state, getters) => {
 		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
+	getAttempts: (state) => state.attempts,
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestionsWithAnswers: (state) => {
+		return state.questionsIds.map((id) => {
+			const quizQuestion = state.quiz_questions[id];
+			return {
+				...quizQuestion,
+				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId])
+			}
+		})
+	},
+	getQuestionsWithAnswersAndStats: (state, getters) => {
+		return state.questionsIds.map((id) => {
+			const quizQuestion = state.quiz_questions[id]
+			const questionStats = state.quiz_stats[id] || {}
+			const allHits = Object.values(questionStats).reduce((count, current) => {
+				return count + current
+			}, 0)
+
+
+			return {
+				...quizQuestion,
+				answers: quizQuestion.quiz_answers.map((answerId) => {
+					const answer = state.quiz_answers[answerId]
+					return {
+						...answer,
+						stats: Math.round((questionStats[answerId] || 0) / allHits * 100)
+					}
+				})
+			}
+		})
+	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
 	getSelectedAnswer: (state, getters) => (id) => state.quiz_questions[id].selectedAnswer,
 	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
+	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
+	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(
 		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
 	),
@@ -89,8 +118,7 @@ const getters = {
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
-	getStats: (state) => (questionId) => state.quiz_stats[questionId],
-	questionsLength: (state) => state.questionsIds.length
+	questionsLength: (state) => state.questionsIds.length,
 }
 
 const mutations = {

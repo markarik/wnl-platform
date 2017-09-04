@@ -5,7 +5,7 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary></wnl-quiz-summary>
+			<wnl-quiz-summary :showAlert="showAlert"></wnl-quiz-summary>
 		</div>
 		<div v-else>
 			<p class="title is-5">
@@ -19,7 +19,17 @@
 					Rozwiąż wszystkie pytania
 				</a>
 			</p>
-			<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
+			<wnl-quiz-list v-if="isLoaded"
+				:allQuestions="getQuestionsWithAnswers"
+				:getReaction="getReaction"
+				:isProcessing="isProcessing"
+				:isComplete="isComplete"
+				module="quiz"
+				ref="quizList"
+				@selectAnswer="onAnswerSelect"
+				@resetState="resetState"
+				@checkQuiz="onCheckQuiz"
+			/>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
 	</div>
@@ -45,16 +55,27 @@
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-summary': QuizSummary,
 		},
+		data() {
+			return {
+				showAlert: false
+			}
+		},
 		props: ['screenData', 'readOnly'],
 		computed: {
-			...mapGetters('quiz', ['isComplete', 'isLoaded']),
+			...mapGetters('quiz', [
+				'isComplete',
+				'isLoaded',
+				'getQuestionsWithAnswers',
+				'getReaction',
+				'isProcessing',
+			]),
 			...mapGetters(['isAdmin']),
 			displayResults() {
 				return this.readOnly || this.isComplete
-			}
+			},
 		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve']),
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'commitSelectAnswer', 'resetState', 'checkQuiz']),
 			setup() {
 				let meta = this.screenData.meta
 				if (!_.isObject(meta)) {
@@ -63,6 +84,14 @@
 
 				this.setupQuestions(meta.resources[0])
 			},
+			onAnswerSelect(data) {
+				if (!this.isComplete) {
+					this.commitSelectAnswer(data)
+				}
+			},
+			onCheckQuiz() {
+				this.checkQuiz().then(() => this.isComplete ? this.showAlert = true : this.$refs.quizList.showAlert())
+			}
 		},
 		mounted() {
 			this.setup()

@@ -6,12 +6,12 @@
 			'is-hinted': hintCorrect,
 			'is-large-desktop': isLargeDesktop,
 		}"
-		@click="$emit('answerSelected')"
+		@click.prevent="$emit('answerSelected')"
 	>
 		<div class="quiz-answer-content">
 			{{answer.text}}
 		</div>
-		<div class="quiz-answer-stats" v-if="isComplete && stats !== false">
+		<div class="quiz-answer-stats" v-if="stats !== false">
 			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
 				{{stats}}%
 			</span>
@@ -29,6 +29,10 @@
 			&.is-selected
 				background: $color-ocean-blue
 
+				&:active, &:hover
+					background: $color-ocean-blue
+					color: $color-white
+
 			&:hover
 				background: $color-light-gray
 
@@ -44,18 +48,16 @@
 				background: $color-red
 				color: $color-white
 
-				&:active, &:hover
-					background: $color-ocean-blue
-					color: $color-white
-
 	.quiz-answer
 		display: flex
 		border-bottom: $border-light-gray
 		justify-content: space-between
+		line-height: $line-height-minus
 		list-style-type: none
-		padding: $margin-small $margin-small $margin-small $margin-huge
+		padding: $margin-medium $margin-small $margin-medium $margin-big + $margin-tiny
 		position: relative
 		margin: 0
+		user-select: none
 
 		&::before
 			content: counter(list, upper-alpha) ")"
@@ -70,6 +72,7 @@
 				right: $margin-base
 
 		&.is-large-desktop
+			line-height: $line-height-base
 			padding: $margin-base $margin-base $margin-base $margin-huge
 
 	.quiz-answer.is-correct
@@ -100,20 +103,9 @@
 
 	export default {
 		name: 'QuizAnswer',
-		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly'],
+		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly', 'isSelected', 'answersStats'],
 		computed: {
 			...mapGetters(['isLargeDesktop']),
-			...mapGetters('quiz', [
-				'isComplete',
-				'getSelectedAnswer',
-				'getStats',
-				'getAnswers'
-			]),
-
-			isSelected() {
-				return this.getSelectedAnswer(this.questionId) === this.index
-			},
-
 			/**
 			 * @param  {int} answerIndex
 			 * @return {Boolean}
@@ -121,24 +113,14 @@
 			isCorrect() {
 				return this.answer.is_correct
 			},
-
 			showCorrect() {
 				return this.isCorrect && this.$parent.displayResults
 			},
-
 			stats() {
-				const answersWithHit = this.getStats(this.questionId)
+				if (!this.answer.hasOwnProperty('stats')) return false;
 
-				if (typeof answersWithHit !== 'object' || typeof Object.values !== 'function') return false;
-
-				const allHits = Object.values(answersWithHit).reduce((count, current) => {
-					return count + current
-				}, 0)
-				const answerId = this.answer.id
-
-				return Math.round((answersWithHit[answerId] || 0) / allHits * 100);
+				return this.answer.stats
 			},
-
 			/**
 			 * Helper property for debug purposes
 			 * @param  {int} answerIndex

@@ -11,9 +11,13 @@ $color-light-gray: #efefef;
 $color-background-gray: #7a7f91;
 $color-background-light-gray: #efefef;
 $color-background-lighter-gray: #f7f7f7;
+$color-background-lightest-gray: #fafafa;
 $color-white: rgba(255,255,255,1);
 $color-white-transparent: rgba(255,255,255,0.5);
 $color-white-overlay: rgba(255,255,255,0.93);
+
+$color-correct-shadow: rgba(68, 180, 144, 0.7);
+$color-incorrect-shadow: rgba(229, 61, 44, 0.7);
 
 $color-green: #44b490;
 $color-yellow: #eca005;
@@ -44,6 +48,7 @@ $font-size-plus-5: 2.5rem;
 $font-size-plus-6: 3rem;
 $font-size-plus-7: 3.375rem;
 
+$line-height-none: 1em;
 $line-height-minus: 1.25em;
 $line-height-base: 1.5em;
 $line-height-plus: 1.75em;

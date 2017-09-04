@@ -17,5 +17,6 @@ class TestSeeder extends Seeder
 		$this->call(EditionsTableSeeder::class);
 		$this->call(GroupsTableSeeder::class);
 		$this->call(ReactionsSeeder::class);
+		$this->call(TaxonomiesSeeder::class);
 	}
 }

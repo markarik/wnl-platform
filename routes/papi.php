@@ -10,22 +10,31 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+if (!function_exists('api_action')) {
+	function api_action($type, $method)
+	{
+		Route::$type("{resource}/.{$method}", function ($resource) use ($method) {
+			$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
 
+			return App::make($controller)->$method(App::make('request'));
+		});
+	}
+}
 
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
 	$r = config('papi.resources');
-
+	
 	// Search
-	Route::get("{resource}/.search", function($resource) {
-		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
-		return App::make($controller)->search(App::make('request'));
-	});
+	api_action('get', 'search');
+
+	// Count
+	api_action('get', 'count');
 
 	// Faceted search / filtering
-	Route::post("{resource}/.filter", function($resource) {
-		$controller = 'App\Http\Controllers\Api\PrivateApi\\' . studly_case($resource) . 'ApiController';
-		return App::make($controller)->filter(App::make('request'));
-	});
+	api_action('post', 'filter');
+
+	// Faceted search available filters
+	api_action('post', 'filterList');
 
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
@@ -111,18 +120,18 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::post("{$r['tags']}/.search", 'TagsApiController@query');
 
 	// Q&A Questions
-	Route::post($r['questions'], 'QuestionsApiController@post');
-	Route::get("{$r['questions']}/{id}", 'QuestionsApiController@get');
-	Route::put("{$r['questions']}/{id}", 'QuestionsApiController@put');
-	Route::delete("{$r['questions']}/{id}", 'QuestionsApiController@delete');
-	Route::post("{$r['questions']}/.search", 'QuestionsApiController@query');
+	Route::post($r['qna-questions'], 'QnaQuestionsApiController@post');
+	Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
+	Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
+	Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');
+	Route::post("{$r['qna-questions']}/.search", 'QnaQuestionsApiController@query');
 
 	// Q&A Answers
-	Route::post($r['answers'], 'AnswersApiController@post');
-	Route::get("{$r['answers']}/{id}", 'AnswersApiController@get');
-	Route::put("{$r['answers']}/{id}", 'AnswersApiController@put');
-	Route::delete("{$r['answers']}/{id}", 'AnswersApiController@delete');
-	Route::post("{$r['answers']}/.search", 'AnswersApiController@query');
+	Route::post($r['qna-answers'], 'QnaAnswersApiController@post');
+	Route::get("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@get');
+	Route::put("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@put');
+	Route::delete("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@delete');
+	Route::post("{$r['qna-answers']}/.search", 'QnaAnswersApiController@query');
 
 	// Quiz Sets
 	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
@@ -131,6 +140,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Quiz Stats
 	Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
+
+	// Quiz Questions Stats
+	Route::get("{$r['quiz-questions']}/stats", 'QuizQuestionsApiController@stats');
 
 	// Quiz Questions
 	Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
@@ -141,6 +153,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Quiz Answers
 	Route::post("{$r['quiz-answers']}", 'QuizAnswersApiController@post');
 	Route::put("{$r['quiz-answers']}/{id}", 'QuizAnswersApiController@put');
+
+	// User Quiz Results
+	Route::get("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@get');
+	Route::post("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@post');
 
 	// Comments
 	Route::post($r['comments'], 'CommentsApiController@post');
@@ -174,4 +190,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Events
 	Route::post("events/mentions", 'MentionsApiController@post');
+
+	// Users Plans
+	Route::get("{$r['user-plan']}/{userId}", 'UserPlanApiController@get');
+	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
 });

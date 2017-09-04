@@ -66,7 +66,7 @@ class ReactionsTest extends ApiTestCase
 		$qnaAnswer = factory(QnaAnswer::class)->create();
 
 		$data = [
-			'reactable_resource' => config('papi.resources.answers'),
+			'reactable_resource' => config('papi.resources.qna-answers'),
 			'reactable_id'       => $qnaAnswer->id,
 			'reaction_type'      => 'upvote',
 		];

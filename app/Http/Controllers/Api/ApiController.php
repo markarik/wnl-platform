@@ -87,6 +87,17 @@ class ApiController extends Controller
 	}
 
 	/**
+	 * Returns a count of all model's records
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function count() {
+		return $this->respondOk([
+			'count' => (self::getResourceModel($this->resourceName))::count(),
+		]);
+	}
+
+	/**
 	 * Get resource model class name.
 	 *
 	 * @param $resource
@@ -167,9 +178,9 @@ class ApiController extends Controller
 	 *
 	 * @return array
 	 */
-	protected function paginatedResponse($model, $limit)
+	protected function paginatedResponse($model, $limit, $page = 1)
 	{
-		$paginator = $model->paginate($limit);
+		$paginator = $model->paginate($limit, ['*'], 'page', $page);
 
 		$response = [
 			'data'         => $this->transform($paginator->getCollection()),

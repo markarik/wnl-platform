@@ -20,3 +20,11 @@ export function timeFromMs(timestamp) {
 export function timeFromDate(date) {
 	return moment(date).format('LL')
 }
+
+export function msFromSeconds(s) {
+	return moment('2015-01-01').startOf('day').seconds(s).format('mm:ss')
+}
+
+export function hmsFromSeconds(s) {
+	return moment('2015-01-01').startOf('day').seconds(s).format('H:mm:ss')
+}

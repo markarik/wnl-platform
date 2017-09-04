@@ -10,12 +10,12 @@ use Illuminate\Http\Request;
 use App\Models\QnaQuestion;
 use Auth;
 
-class AnswersApiController extends ApiController
+class QnaAnswersApiController extends ApiController
 {
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->resourceName = config('papi.resources.answers');
+		$this->resourceName = config('papi.resources.qna-answers');
 	}
 
 	public function post(PostAnswer $request)

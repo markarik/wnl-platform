@@ -29,7 +29,7 @@ class CommentsTest extends ApiTestCase
 		$screen->tags()->attach($tag);
 
 		$data = [
-			'commentable_resource' => config('papi.resources.answers'),
+			'commentable_resource' => config('papi.resources.qna-answers'),
 			'commentable_id' => $answer->id,
 			'text' => 'Kolekcjonuję antarktyczne drewniane kaczki, gdyby ktoś coś miał, proszę o info na priv. Pozdrawiam.',
 		];

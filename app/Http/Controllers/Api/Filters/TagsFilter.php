@@ -9,8 +9,10 @@ class TagsFilter extends ApiFilter
 
 	protected $expected = [];
 
-	public function apply($model)
+	public function handle($model)
 	{
-		return $this->parseHasIn($model, ['tags' => ['tags.name', $this->params]]);
+		return $model->whereHas('tags', function ($query) {
+			$query->whereIn('tags.id', $this->params);
+		});
 	}
 }

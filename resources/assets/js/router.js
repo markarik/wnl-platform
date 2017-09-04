@@ -13,14 +13,12 @@ let routes = [
 	{
 		path: '/app/courses/:courseId',
 		component: require('js/components/course/Course.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
 				name: resource('courses'),
 				path: '',
 				component: require('js/components/course/dashboard/Overview.vue'),
-				meta: {keepsNavOpen: true},
 				props: true,
 			},
 			{
@@ -43,7 +41,6 @@ let routes = [
 		name: 'myself',
 		path: '/app/myself',
 		component: require('js/components/user/Myself.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
@@ -82,7 +79,6 @@ let routes = [
 		name: 'collections',
 		path: '/app/collections',
 		component: require('js/components/collections/Collections.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
@@ -98,7 +94,6 @@ let routes = [
 		path: '/app/help',
 		component: require('js/components/help/Help.vue'),
 		props: true,
-		meta: {keepsNavOpen: true},
 		children: [
 			{
 				name: 'help-news',
@@ -123,10 +118,39 @@ let routes = [
 		]
 	},
 	{
-		name: 'quizQuestion',
-		path: '/app/quiz_questions/:id',
-		component: require('js/components/quiz/SingleQuestion.vue'),
-		props: true,
+		path: '/app/questions',
+		component: require('js/components/questions/Questions.vue'),
+		children: [
+			{
+				name: 'questions-dashboard',
+				path: '',
+				component: require('js/components/questions/QuestionsDashboard.vue'),
+				props: true,
+				children: [
+					{
+						name: 'quizQuestion',
+						path: 'single/:id',
+						component: require('js/components/quiz/SingleQuestion.vue'),
+					},
+				],
+			},
+			{
+				name: 'questions-list',
+				path: 'list',
+				component: require('js/components/questions/QuestionsList.vue'),
+				props: true,
+			},
+			{
+				name: 'questions-stats',
+				path: 'stats',
+				component: require('js/components/questions/QuestionsStats.vue'),
+			},
+			{
+				name: 'questions-planner',
+				path: 'plan',
+				component: require('js/components/questions/QuestionsPlanner.vue'),
+			},
+		],
 	},
 	{
 		name: 'moderatorFeed',
@@ -147,7 +171,6 @@ let routes = [
 		name: 'dashboard',
 		path: '/app',
 		redirect: {name: 'courses', params: {courseId: 1}},
-		meta: {keepsNavOpen: true},
 	},
 	{
 		name: 'logout',

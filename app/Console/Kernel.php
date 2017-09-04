@@ -22,11 +22,14 @@ class Kernel extends ConsoleKernel
 		Commands\CategoriesTags::class,
 		Commands\ChangeOrderPaymentMethod::class,
 		Commands\CheckQuizQuestions::class,
+		Commands\CreateTaxonomy::class,
 		Commands\DropTables::class,
 		Commands\DumpCourseStructure::class,
 		Commands\EncryptPasswords::class,
 		Commands\FlushCacheByTag::class,
+		Commands\ImportTaxonomies::class,
 		Commands\IssueFinalInvoice::class,
+		Commands\ImportQuizTagsFromMap::class,
 		Commands\InvoicesExport::class,
 		Commands\LessonTags::class,
 		Commands\ListOrders::class,
@@ -46,6 +49,8 @@ class Kernel extends ConsoleKernel
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
 		Commands\TagsCleanup::class,
+		Commands\TagsFromTaxonomies::class,
+		Commands\TaxonomizeTags::class,
 		Commands\WarmUpCache::class,
 	];
 

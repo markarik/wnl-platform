@@ -1,23 +1,24 @@
 <template>
-	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors}">
-		<p v-if="isComplete" class="has-text-centered margin vertical">
-			<a class="button is-primary is-outlined" @click="resetState">Rozwiąż pytania ponownie</a>
+	<div class="wnl-quiz-list" :class="{'has-errors': hasErrors, 'has-header': !plainList}">
+		<p v-if="!plainList && isComplete" class="has-text-centered margin vertical">
+			<a class="button is-primary is-outlined" @click="$emit('resetState')">Rozwiąż pytania ponownie</a>
 		</p>
 
-		<p class="title is-5" v-if="!displayResults">Pozostało pytań: {{howManyLeft}}</p>
+		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<wnl-quiz-question v-for="(question, index) in questions"
+			:module="module"
 			:class="`quiz-question-${question.id}`"
-			:id="question.id"
+			:question="question"
 			:index="index"
-			:answers="question.quiz_answers"
-			:text="question.text"
-			:total="question.total_hits"
+			:isQuizComplete="isComplete"
 			:key="question.id"
 			:readOnly="readOnly"
+			:getReaction="getReaction"
+			@selectAnswer="onSelectAnswer"
 		></wnl-quiz-question>
-		<p class="has-text-centered" v-if="!displayResults">
+		<p class="has-text-centered" v-if="!plainList && !displayResults">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
-				Sprawdź pytania
+				Sprawdź wyniki
 			</a>
 		</p>
 	</div>
@@ -26,7 +27,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-quiz-list
+	.wnl-quiz-list.has-header
 		border-top: $border-light-gray
 		margin: $margin-big 0
 		padding-top: $margin-base
@@ -44,38 +45,45 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly'],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList'],
 		data() {
 			return {
 				hasErrors: false,
 			}
 		},
 		computed: {
-			...mapGetters('quiz', [
-				'isComplete',
-				'isProcessing',
-				'getUnresolved',
-				'getUnanswered',
-				'getQuestions',
-				'hasQuestions'
-			]),
+			questions() {
+				if (this.isComplete) {
+					return this.allQuestions
+				}
+
+				return this.questionsUnresolved
+			},
+			questionsUnresolved() {
+				return this.allQuestions.filter((question) => !question.isResolved)
+			},
+			questionsUnaswered() {
+				return _.filter(this.allQuestions, (question) => {
+					return !_.isNumber(question.selectedAnswer)
+				})
+			},
 			displayResults() {
-				return this.isComplete || this.readOnly || !this.hasQuestions
+				return this.isComplete || this.readOnly || !this.allQuestions.length
 			},
 			howManyLeft() {
-				return `${_.size(this.getUnresolved)}/${_.size(this.getQuestions)}`
+				return `${_.size(this.questionsUnresolved)}/${_.size(this.allQuestions)}`
 			},
 			unansweredAlert() {
 				return {
-					title: 'Brakuje odpowiedzi',
-					timer: 5000,
 					text: 'Aby zakończyć test, musisz rozwiązać poprawnie na wszystkie pytania, więc spróbuj odpowiedzieć na każde.',
+					timer: 5000,
+					title: 'Brakuje odpowiedzi',
 					type: 'warning',
 				}
 			},
 			tryAgainAlert() {
 				return {
-					text: `Pozostałe pytania do rozwiązania: ${this.getUnresolved.length}`,
+					text: `Pozostałe pytania do rozwiązania: ${this.questionsUnresolved.length}`,
 					title: 'Spróbuj jeszcze raz!',
 					type: 'info',
 				}
@@ -87,50 +95,29 @@
 					type: 'success',
 				}
 			},
-			questions() {
-				if (this.isComplete) {
-					return this.getQuestions
-				}
-
-				return this.getUnresolved
-			},
 		},
 		methods: {
-			...mapActions('quiz', [
-				'checkQuiz',
-				'resetState',
-			]),
 			verify() {
-				if (this.getUnanswered.length > 0) {
+				if (!this.plainList && this.questionsUnaswered.length > 0) {
 					this.hasErrors = true
 					this.$swal(this.getAlertConfig(this.unansweredAlert))
-						.catch(e => {
-							// It's a bug in the library. It throws an exception
-							// if a person closes a timed modal with a click.
-							$wnl.logger.debug('SweetAlert2 exception', e)
-						})
+						.catch(e => false)
 
-					scrollToElement(this.getQuestionElement(_.head(this.getUnanswered)))
+					this.scrollToFirstUnanswered()
 					return false
 				}
 
 				this.hasErrors = false
-				this.dispatchCheckQuiz()
+				this.$emit('checkQuiz')
 			},
-			dispatchCheckQuiz() {
-				this.checkQuiz().then(() => {
-					let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
-						firstElement = this.isComplete ? _.head(this.getQuestions) : _.head(this.getUnresolved)
+			showAlert() {
+				let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
+					firstElement = this.isComplete ? _.head(this.allQuestions) : _.head(this.questionsUnresolved)
 
-					this.$swal(this.getAlertConfig(alertOptions))
-						.catch(e => {
-							// It's a bug in the library. It throws an exception
-							// if a person closes a timed modal with a click.
-							$wnl.logger.debug('SweetAlert2 exception', e)
-						})
+				this.$swal(this.getAlertConfig(alertOptions))
+					.catch(e => false)
 
-					scrollToElement(this.getQuestionElement(firstElement))
-				})
+				scrollToElement(this.getQuestionElement(firstElement))
 			},
 			getAlertConfig(options = {}) {
 				const defaults = {
@@ -142,7 +129,13 @@
 			},
 			getQuestionElement(resource) {
 				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
-			}
+			},
+			onSelectAnswer(data) {
+				this.$emit('selectAnswer', data)
+			},
+			scrollToFirstUnanswered() {
+				scrollToElement(this.getQuestionElement(_.head(this.questionsUnaswered)))
+			},
 		},
 	}
 </script>

@@ -2,6 +2,7 @@
 
 use App\Models\QuizQuestion;
 use App\Models\Tag;
+use App\Models\TagsTaxonomy;
 use Storage;
 use App\Models\QuizSet;
 use Illuminate\Console\Command;
@@ -17,13 +18,13 @@ class QuizImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:import {dir?}',
+	protected $signature = 'quiz:import {dir?} {--check} {--debug}',
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
+		/**
+		 * The console command description.
+		 *
+		 * @var string
+		 */
 		$description = 'Import quiz sets to database from storage.',
 		$path,
 		$globalTags = [],
@@ -38,8 +39,6 @@ class QuizImport extends Command
 		parent::__construct();
 
 		$this->path = self::BASE_DIRECTORY;
-
-		$this->questions = QuizQuestion::all();
 	}
 
 	/**
@@ -49,8 +48,9 @@ class QuizImport extends Command
 	 */
 	public function handle()
 	{
-		if ($subDir = $this->argument('dir'))
-		{
+		$this->questions = QuizQuestion::all();
+
+		if ($subDir = $this->argument('dir')) {
 			$this->path .= '/' . $subDir;
 		}
 
@@ -63,6 +63,7 @@ class QuizImport extends Command
 			$bar->advance();
 		}
 		print PHP_EOL;
+
 		return;
 	}
 
@@ -92,14 +93,24 @@ class QuizImport extends Command
 	public function createQuestion($line, $quizSet)
 	{
 		$values = explode(self::VALUE_DELIMITER, $line);
+		$text = nl2br($values[0]);
 
-		if (!$this->checkSimilarity($values[0])) return;
+		$similarQuestion = $this->checkSimilarity($text, $values);
+		if ($similarQuestion !== false) {
+			if (!$quizSet->questions->contains($similarQuestion)) {
+				$quizSet->questions()->attach($similarQuestion);
+				$this->debug('Attached to set!');
+			}
+			$this->debug('Set already has this question');
+
+			return;
+		}
+
+		$this->debug('Creating new question!');
 
 		$question = $quizSet->questions()->firstOrCreate([
-			'text' => nl2br($values[0]),
+			'text' => $text,
 		]);
-
-		$this->questions->push($question);
 
 		for ($i = 1; $i <= 5; $i++) {
 			$hits = 0;
@@ -130,6 +141,8 @@ class QuizImport extends Command
 			}
 		}
 
+		$this->tryMatchingCollectionTaxonomy($question);
+
 		$question->preserve_order = (bool)$values[10];
 		$question->save();
 	}
@@ -153,19 +166,39 @@ class QuizImport extends Command
 		}
 	}
 
-	protected function checkSimilarity($text)
+	protected function checkSimilarity($text, $values)
 	{
 		foreach ($this->questions as $question) {
+			if ($question->text === $text) return $question;
+
+			if (!$this->option('check')) continue;
 			similar_text($question->text, $text, $similarity);
 
 			if ($similarity > 78) {
 				$this->warn('Similar question found! Similarity: ' . ceil($similarity) . '%');
-				print 'Database: ' . $question->text . PHP_EOL;
-				print 'File: ' . $text . PHP_EOL;
-				if (!$this->confirm('Add question?')) return false;
+				$this->info('Database:');
+				dump($question->text . PHP_EOL);
+				dump($question->answers->pluck('text')->toArray());
+
+				$this->info('File:');
+				dump($text . PHP_EOL);
+				for ($i = 1; $i <= 5; $i++) {
+					dump($values[$i] . PHP_EOL);
+				}
+				if ($this->confirm('Add as new question?')) {
+					return false;
+				} else {
+					return $question;
+				}
 			}
 		}
 
-		return true;
+		return false;
+	}
+
+	protected function debug($message)
+	{
+		if (!$this->option('debug')) return;
+		$this->info($message);
 	}
 }

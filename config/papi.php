@@ -17,11 +17,12 @@ return [
 		'user-notifications'  => 'notifications',
 		'user-reactions'      => 'reactions',
 		'user-state'          => 'state',
+		'user-quiz-results'   => 'quiz_results',
 		'editions'            => 'editions',
 		'orders'              => 'orders',
 		'tags'                => 'tags',
-		'questions'           => 'qna_questions',
-		'answers'             => 'qna_answers',
+		'qna-questions'       => 'qna_questions',
+		'qna-answers'         => 'qna_answers',
 		'lesson-availability' => 'lesson_availability',
 		'user-progress'       => 'user_progress',
 		'slideshows'          => 'slideshows',
@@ -39,5 +40,6 @@ return [
 		'categories'          => 'categories',
 		'slideshow-builder'   => 'slideshow_builder',
 		'profiles'            => 'user_profiles',
+		'user-plan'           => 'user_plan'
 	],
 ];

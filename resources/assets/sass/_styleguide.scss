@@ -266,6 +266,22 @@ a.secondary-link {
 	}
 }
 
+// Datepicker
+
+@media only screen and (max-width: 400px) {
+	.flatpickr-calendar,
+	.flatpickr-weekdays,
+	.flatpickr-days,
+	.dayContainer {
+		max-width: 90vw;
+		// width: 90vw;
+	}
+
+	.dayContainer {
+		min-width: 0;
+	}
+}
+
 // Toggles
 
 .panel-toggle {
@@ -346,6 +362,18 @@ a.secondary-link {
 		text-align: center;
 		top: 0;
 		width: 100%;
+	}
+}
+
+// Datepicker
+
+.flatpickr-day.selected {
+	background: $color-ocean-blue;
+	border-color: $color-ocean-blue;
+
+	&:hover {
+		background: $color-sky-blue;
+		border-color: $color-sky-blue;
 	}
 }
 

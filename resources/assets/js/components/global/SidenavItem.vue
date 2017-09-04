@@ -3,7 +3,7 @@
 		<router-link
 			class="item-wrapper"
 			v-if="isLink"
-			:class="{'is-active': item.active, 'is-disabled': item.isDisabled, 'is-completed': item.completed}"
+			:class="{'router-link-exact-active': item.active, 'is-disabled': item.isDisabled, 'is-completed': item.completed}"
 			:replace="replace"
 			:to="to"
 		>
@@ -80,10 +80,13 @@
 		&:hover
 			color: $color-ocean-blue
 
-		&.is-active
+		&.router-link-exact-active
 			background: $color-background-lighter-gray
 			font-weight: $font-weight-regular
 			transition: background-color $transition-length-base
+
+		&.is-active
+			font-weight: $font-weight-regular
 
 	.todo
 		a:before

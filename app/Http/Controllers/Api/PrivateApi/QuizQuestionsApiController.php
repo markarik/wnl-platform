@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\Transformers\QuizQuestionTransformer;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Api\Filters\ByTaxonomy\SubjectsFilter;
 use App\Http\Controllers\Api\Filters\Quiz\ResolutionFilter;
-use App\Models\QuizQuestion;
 use Illuminate\Http\Request;
 use App\Models\Taxonomy;
 use Auth;

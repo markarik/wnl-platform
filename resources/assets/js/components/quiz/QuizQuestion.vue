@@ -22,7 +22,7 @@
 							:module="module"
 						></wnl-bookmark>
 						<a
-							:href="'/admin/app/quizes/edit/' + id"
+							:href="'/admin/app/quizes/edit/' + question.id"
 							class="question-edit-link"
 							v-if="isAdmin"
 						>
@@ -184,7 +184,6 @@
 				'isComplete',
 				'isResolved',
 				'getSelectedAnswer',
-				'getReaction'
 			]),
 			displayResults() {
 				return this.readOnly || this.isComplete || this.isResolved(this.id)

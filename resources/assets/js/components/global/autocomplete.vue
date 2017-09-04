@@ -1,6 +1,7 @@
 <template>
 	<ul
 		class="autocomplete-box"
+		v-bind:class="{'is-down': isDown}"
 		v-if="hasItems"
 		tabindex="-1"
 		@keydown="onKeyDown"
@@ -10,13 +11,9 @@
 			v-for="item in itemsForDisplay"
 			@click="onItemClicked(item)"
 			v-bind:class="{ active: item.active }"
+			v-bind:key="item.id"
 		>
-			<div class="autocomplete-box__avatar">
-				<wnl-avatar :fullName="item.full_name" :url="item.avatar"></wnl-avatar>
-			</div>
-			<div class="autocomplete-box__text">
-				{{ item.full_name }}
-			</div>
+			<component :is='itemComponent' :item="item"></component>
 		</li>
 	</ul>
 </template>
@@ -33,6 +30,10 @@
 		position: absolute
 		width: 100%
 		z-index: $z-index-autocomplete
+
+		&.is-down
+			bottom: auto
+			top: 44px
 
 		&:focus
 			outline: none
@@ -51,9 +52,16 @@
 </style>
 
 <script>
+	import UserAutocomplete from 'js/components/global/UserAutocompleteItem'
+	import TagAutocomplete from 'js/components/global/TagAutocompleteItem'
+
 	export default {
 		name: 'Autocomplete',
-		props: ['items', 'onItemChosen'],
+		props: ['items', 'onItemChosen', 'itemComponent', 'isDown'],
+		components: {
+			'wnl-tag-autocomplete-item': TagAutocomplete,
+			'wnl-user-autocomplete-item': UserAutocomplete
+		},
 		computed: {
 			hasItems() {
 				return this.items && this.items.length

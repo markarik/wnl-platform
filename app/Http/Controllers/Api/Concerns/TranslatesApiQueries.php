@@ -195,6 +195,10 @@ trait TranslatesApiQueries
 			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
 		}
 
+		if (!empty($query['whereNotIn'])) {
+			$model = $model->whereNotIn($query['whereNotIn'][0], $query['whereNotIn'][1]);
+		}
+
 		if (!empty ($query['where'])) {
 			$model = $model->where($query['where']);
 		}

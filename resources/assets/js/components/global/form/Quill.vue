@@ -3,6 +3,7 @@
 		<wnl-autocomplete
 			:items="autocompleteItems"
 			:onItemChosen="insertMention"
+			:itemComponent="'wnl-user-autocomplete-item'"
 			ref="autocomplete"
 		>
 		</wnl-autocomplete>

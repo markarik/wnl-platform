@@ -25,6 +25,9 @@ export const questions = {
 		solving: 'Rozwiązuj pytania',
 		stats: 'Sprawdź statystyki',
 	},
+	question: {
+		tags: 'Tagi',
+	},
 	plan: {
 		change: 'Zmieniam plan',
 		dontChange: 'Nie zmieniam planu',

@@ -39,7 +39,18 @@
 						@dblclick.native="$emit('answerDoubleclick', {answer: answerIndex})"
 					></wnl-quiz-answer>
 				</ul>
-				<div class="quiz-question-meta">#{{question.id}}</div>
+				<div class="quiz-question-meta">
+					<div class="quiz-question-tags">
+						<span v-if="displayResults && question.tags">{{$t('questions.question.tags')}}:</span>
+						<span v-if="displayResults" v-for="tag, index in question.tags"
+							class="quiz-question-tag"
+							:key="index"
+						>
+							#{{tag.name}}
+						</span>
+					</div>
+					<div class="quiz-question-id">#{{question.id}}</div>
+				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
 				<div class="quiz-question-comments">
@@ -58,6 +69,7 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
 	.card-content ul
 		counter-reset: list
@@ -89,10 +101,10 @@
 		width: 100%
 
 	.quiz-question-meta
+		+flex-space-between()
 		color: $color-gray-dimmed
 		font-size: $font-size-minus-2
 		padding: $margin-small $margin-base 0
-		text-align: right
 		width: 100%
 
 	.wnl-quiz-question

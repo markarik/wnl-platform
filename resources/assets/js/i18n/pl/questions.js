@@ -46,12 +46,14 @@ export const questions = {
 		},
 		progress: {
 			average: {
+				congrats: ' - gratulacje!',
 				greater: ' i jest większa lub równa planowanej ',
 				is: 'Twoja dzienna średnia wynosi ',
 				less: ' i jest mniejsza, niż planowana ',
 			},
 			currentPlan: 'Obecny plan',
 			day: 'Dzień {day}',
+			explain: 'Rozwiązane pytania',
 			heading: 'Jak Ci idzie?',
 		},
 		solvePlanned: 'Rozwiązuj zaplanowane na dzisiaj',

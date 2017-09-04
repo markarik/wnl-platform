@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="questions-plan-progress-container">
 		<div class="questions-plan-progress-heading">
 			<span v-if="hasStarted" class="progress-day">
 				{{$t('questions.plan.progress.day', {day: daysSoFar})}}
@@ -14,7 +14,10 @@
 			<div class="questions-progress-heading">
 				{{$t('questions.plan.progress.heading')}}
 			</div>
-			<div v-if="hasStarted" lang="">
+			<div v-if="hasStarted">
+				<p class="plan-progress-explain">
+					{{$t('questions.plan.progress.explain')}}
+				</p>
 				<div class="plan-progress-bar">
 					<progress class="progress is-success" :value="plan.stats.done" :max="plan.stats.total">
 						{{donePercent}}%
@@ -29,6 +32,9 @@
 					<span class="average">{{average}}</span>
 					{{$t(`questions.plan.progress.average.${averageStatus}`)}}
 					<span class="average-planned">{{averagePlanned}}</span>
+					<span v-if="averageStatus === 'greater'">
+						{{$t('questions.plan.progress.average.congrats')}}
+					</span>
 				</div>
 			</div>
 			<div v-else>
@@ -44,7 +50,7 @@
 				})}}</p>
 			</div>
 		</div>
-		<div v-if="hasStarted" class="margin top has-text-centered">
+		<div v-if="hasStarted && average < averagePlanned" class="margin top has-text-centered">
 			<router-link class="button is-primary" :to="plannedRoute">
 				{{$t('questions.plan.solvePlanned')}}
 			</router-link>
@@ -73,6 +79,10 @@
 		margin: 0 0 $margin-small
 		text-align: center
 		text-transform: uppercase
+
+	.plan-progress-explain
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-1
 
 	.plan-progress-bar
 		+flex-space-between()

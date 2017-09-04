@@ -14,8 +14,9 @@
 						</div>
 					</div>
 				</div>
-				<div>
+				<div class="questions-dashboard-plan">
 					<div class="questions-dashboard-heading">
+						<span class="icon is-small"><i class="fa fa-calendar"></i></span>
 						Plan pracy
 					</div>
 					<div v-if="plan === null" class="margin vertical">
@@ -42,6 +43,7 @@
 				</div>
 				<div v-else>
 					<div class="questions-dashboard-heading">
+						<span class="icon is-small"><i class="fa fa-bar-chart"></i></span>
 						Twoje statystyki
 					</div>
 					<div class="questions-dashboard-subheading">
@@ -50,14 +52,16 @@
 					</div>
 					<div class="questions-stats">
 						<div v-for="stats, index in statsResolved"
-							class="stats-resolved"
+							class="stats-item stats-resolved"
 							:class="{'is-first': index === 0}"
 						>
-							<span>{{stats.title}}</span>
-							<progress class="progress is-success"
-								:value="stats.progress"
-								:max="stats.total"/>
-							<span>{{stats.score}}</span>
+							<span class="stats-title">{{stats.title}}</span>
+							<div class="bar-and-score">
+								<progress class="progress is-success"
+									:value="stats.progress"
+									:max="stats.total"/>
+								<span class="stats-score">{{stats.score}}</span>
+							</div>
 						</div>
 					</div>
 					<div class="questions-dashboard-subheading">
@@ -66,15 +70,17 @@
 					</div>
 					<div class="questions-stats">
 						<div v-for="stats, index in statsScore"
-							class="stats-score"
+							class="stats-item stats-score"
 							:class="{'is-first': index === 0}"
 						>
-							<span>{{stats.title}}</span>
-							<progress class="progress"
-								:class="scoreClass(stats.score)"
-								:value="stats.progress"
-								:max="stats.total"/>
-							<span>{{stats.score}}%</span>
+							<span class="stats-title">{{stats.title}}</span>
+							<div class="bar-and-score">
+								<progress class="progress"
+									:class="scoreClass(stats.score)"
+									:value="stats.progress"
+									:max="stats.total"/>
+								<span class="stats-score">{{stats.score}}%</span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -93,6 +99,7 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
 	.questions-breadcrumbs
 		align-items: center
@@ -106,6 +113,64 @@
 			overflow-x: hidden
 			text-overflow: ellipsis
 			white-space: nowrap
+
+	.questions-dashboard-heading
+		border-bottom: $border-light-gray
+		font-weight: $font-weight-bold
+		letter-spacing: 1px
+		margin-top: $margin-base
+		text-align: center
+		text-transform: uppercase
+
+		.icon
+			color: $color-background-gray
+			margin-right: $margin-small
+
+	.questions-dashboard-subheading
+		font-size: $font-size-minus-1
+		margin: $margin-medium 0
+		text-align: center
+		text-transform: uppercase
+
+		.icon
+			color: $color-background-gray
+			margin-right: $margin-small
+
+	.questions-plan-progress-container
+		margin: $margin-medium 0 $margin-huge
+
+	.questions-stats
+
+		.stats-item
+			+flex-space-between()
+			flex-wrap: wrap
+			font-size: $font-size-minus-1
+			margin-bottom: $margin-small
+
+			&.is-first
+				font-size: $font-size-base
+				font-weight: $font-weight-bold
+
+				.progress
+					height: 1rem
+
+			.stats-title
+				margin-right: $margin-medium
+				width: 150px
+
+			.bar-and-score
+				+flex-space-between()
+				flex: 1 auto
+
+			.progress
+				flex: 1 auto
+				height: 2px
+				margin-bottom: 0
+				margin-right: $margin-medium
+				min-width: 150px
+
+			.stats-score
+				width: 100px
 </style>
 
 <script>
@@ -223,7 +288,6 @@
 				})
 			},
 			scoreClass(score) {
-				console.log(score > 56)
 				return score > 56 ? 'is-success' : 'is-danger'
 			},
 		},

@@ -6,6 +6,7 @@
 	}">
 		<div v-if="!flattened" class="wnl-accordion-item" :class="{
 			'has-children': hasChildren,
+			'is-disabled': isDisabled,
 			'is-first-level': isFirstLevel,
 			'is-selected': isSelected,
 			'is-selectable': isSelectable,
@@ -71,6 +72,20 @@
 
 		&:hover
 			background: $color-background-lighter-gray
+
+		&.is-disabled
+			color: $color-inactive-gray
+			cursor: default
+
+			&:hover
+				background: initial
+
+			&.has-children, &.is-selectable
+				cursor: default
+
+			.wai-content
+				.count
+					color: $color-inactive-gray
 
 		&.is-selected
 			background-color: $highlight-color
@@ -176,19 +191,6 @@
 			}
 		},
 		computed: {
-			hasChildren() {
-				return !!this.item.items
-			},
-			isSelectable() {
-				return !!this.item.value
-			},
-			isSelected() {
-				if (this.config.hasOwnProperty('selectedElements')) {
-					return this.config.selectedElements.indexOf(this.path) > -1
-				}
-
-				return this.selected
-			},
 			content() {
 				if (this.item.hasOwnProperty('name')) return this.item.name
 
@@ -201,6 +203,22 @@
 
 				return this.item.count || 0
 			},
+			hasChildren() {
+				return !!this.item.items
+			},
+			isDisabled() {
+				return this.config.disableEmpty && this.count === 0
+			},
+			isSelectable() {
+				return !!this.item.value
+			},
+			isSelected() {
+				if (this.config.hasOwnProperty('selectedElements')) {
+					return this.config.selectedElements.indexOf(this.path) > -1
+				}
+
+				return this.selected
+			},
 		},
 		methods: {
 			isExpanded(path) {
@@ -209,7 +227,12 @@
 			isFlattened(path) {
 				return this.config.flattened.indexOf(path) > -1
 			},
+			onChildItemToggled(payload) {
+				this.$emit('itemToggled', payload)
+			},
 			onItemClick(event) {
+				if (this.isDisabled) return false
+
 				if (!this.loading && this.isSelectable && event.path.indexOf(this.$refs.expand) === -1) {
 					this.toggleSelected()
 				} else {
@@ -225,9 +248,6 @@
 					path: this.path,
 					selected: this.selected,
 				})
-			},
-			onChildItemToggled(payload) {
-				this.$emit('itemToggled', payload)
 			},
 		},
 		mounted() {

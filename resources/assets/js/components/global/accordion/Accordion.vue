@@ -29,6 +29,7 @@
 		props: {
 			config: {
 				default: {
+					disableEmpty: false,
 					expanded: [],
 					flattened: [],
 					isMobile: false,

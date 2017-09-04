@@ -81,6 +81,7 @@
 			]),
 			accordionConfig() {
 				return {
+					disableEmpty: true,
 					expanded: this.expandedItems,
 					flattened: ['quiz-planned', 'quiz-resolution'],
 					isMobile: this.isMobile,

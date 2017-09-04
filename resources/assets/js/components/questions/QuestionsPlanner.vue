@@ -372,6 +372,7 @@
 					slackDays: this.slackDays
 				})
 				.then(({status, data}) => this.plan = data)
+				.then(this.fetchDynamicFilters)
 				.then(() => {
 					this.saving = false
 					this.showPlanner = false

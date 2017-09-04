@@ -28,11 +28,12 @@ class PlannedFilter extends ApiFilter
 	{
 		$plan = UserPlan::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->first();
 
-		if (!$plan) return false;
-
-		$questionsForDay = $plan->questionsForDay(Carbon::today())->pluck('question_id')->toArray();
-
-		$count = $builder->whereIn('id', $questionsForDay)->count();
+		if ($plan) {
+			$questionsForDay = $plan->questionsForDay(Carbon::today())->pluck('question_id')->toArray();
+			$count = $builder->whereIn('id', $questionsForDay)->count();
+		} else {
+			$count = 0;
+		}
 
 		return [
 			'items'   => [

@@ -34,6 +34,7 @@ export const SET_REACTION  = 'SET_REACTION'
 // Forms
 export const FORM_SETUP                = 'FORM_SETUP'
 export const FORM_UPDATE_ORIGINAL_DATA = 'FORM_UPDATE_ORIGINAL_DATA'
+export const FORM_UPDATE_URL           = 'FORM_UPDATE_URL'
 export const FORM_POPULATE             = 'FORM_POPULATE'
 export const FORM_HAS_CHANGES          = 'FORM_HAS_CHANGES'
 export const FORM_IS_LOADING           = 'FORM_IS_LOADING'
@@ -153,3 +154,6 @@ export const ACTIVE_FILTERS_ADD = 'ACTIVE_FILTERS_ADD'
 export const ACTIVE_FILTERS_RESET = 'ACTIVE_FILTERS_RESET'
 export const ACTIVE_FILTERS_SET = 'ACTIVE_FILTERS_SET'
 export const ACTIVE_FILTERS_REMOVE = 'ACTIVE_FILTERS_REMOVE'
+
+// Autocomplete
+export const GET_USERS_AUTOCOMPLETE = 'GET_USERS_AUTOCOMPLETE'

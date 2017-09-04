@@ -136,6 +136,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Quiz Sets
 	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
 	Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
+	Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
 
 	// Quiz Stats
 	Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
@@ -146,6 +147,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Quiz Questions
 	Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
 	Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
+	Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
+	Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
+
+	// Quiz Answers
+	Route::post("{$r['quiz-answers']}", 'QuizAnswersApiController@post');
+	Route::put("{$r['quiz-answers']}/{id}", 'QuizAnswersApiController@put');
 
 	// User Quiz Results
 	Route::get("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@get');

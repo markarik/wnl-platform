@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-chat">
-		<div class="wnl-chat-messages" @scroll="onScroll">
+		<div class="wnl-chat-messages" @scroll="onScroll" ref="messagesContainer">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
 					<div class="notification aligncenter" v-if="!thereIsMore">
@@ -13,6 +13,7 @@
 						<wnl-message v-for="(message, index) in messages"
 							 :key="index"
 							 :showAuthor="isAuthorUnique[index]"
+							 :id="getMessageId(message)"
 							 :fullName="message.full_name"
 							 :avatar="message.avatar"
 							 :time="message.time"
@@ -69,6 +70,7 @@
 	import * as socket from '../../socket'
 	import {nextTick} from 'vue'
 	import _ from 'lodash'
+	import highlight from 'js/mixins/highlight'
 
 	export default {
 		props: ['room'],
@@ -82,6 +84,7 @@
 				thereIsMore: true,
 			}
 		},
+		mixins: [highlight],
 		computed: {
 			isAuthorUnique() {
 				return this.messages.map((message, index) => {
@@ -107,24 +110,32 @@
 		methods: {
 			joinRoom() {
 				typeof this.socket.emit === 'function' && this.socket.emit('join-room', {
-					room: this.room
+					room: this.room.channel
 				})
 				typeof this.socket.on === 'function' && this.socket.on('join-room-success', (data) => {
 					if (!this.loaded) {
 						this.messages = data.messages
 						this.users    = data.users
 						this.loaded   = true
+
 						nextTick(() => {
-							this.scrollToBottom()
+							const messageId = this.$route.query.messageId
+
+							if (messageId) {
+								this.scrollToMessageById(messageId)
+							} else {
+								this.scrollToBottom()
+							}
 						})
 					}
 				})
+
 				return true
 			},
 			changeRoom(oldRoom) {
 				this.loaded = false
 				typeof this.socket.emit === 'function' && this.socket.emit('leave-room', {
-					room: oldRoom
+					room: oldRoom.channel
 				})
 				this.joinRoom()
 			},
@@ -152,6 +163,9 @@
 			},
 			scrollToBottom() {
 				this.container.scrollTop = '1000000000'
+			},
+			scrollToTop() {
+				this.container.scrollTop = '0'
 			},
 			pullDebouncer(event) {
 				let target     = event.target,
@@ -206,13 +220,32 @@
 								}
 							})
 							setTimeout(()=> {
-								this.container.scrollTop = this.container.scrollHeight - originalHeight
+								const messageId = this.$route.query.messageId
+
+								if (messageId) {
+									this.scrollToMessageById(messageId)
+								} else {
+									this.container.scrollTop = this.container.scrollHeight - originalHeight
+								}
 							}, 0)
 							this.isPulling = false
 						})
 						.catch(error => {
 							$wnl.logger.capture(error)
 						})
+			},
+			scrollToMessageById(id) {
+				const matchingMessage = this.$el.querySelector(`[data-id="${id}"]`)
+
+				if (matchingMessage) {
+					this.$refs.highlight = matchingMessage
+					this.scrollAndHighlight(["chatChannel", "messageId"], this.$refs.messagesContainer)
+				} else {
+					this.scrollToTop()
+				}
+			},
+			getMessageId(message) {
+				return `${message.time}${message.user && message.user.id}`
 			}
 		},
 		mounted() {

@@ -104,6 +104,14 @@
 					})
 			}
 		},
+		watch: {
+			resourceRoute(val) {
+				this.mutation(
+					types.FORM_UPDATE_URL,
+					getApiUrl(this.resourceRoute)
+				)
+			}
+		},
 		created() {
 			if (!this.$store.state.hasOwnProperty(this.name)) {
 				this.$store.registerModule(this.name, createForm())

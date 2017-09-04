@@ -21,6 +21,15 @@
 							:state="reactionState"
 							:module="module"
 						></wnl-bookmark>
+						<a
+							:href="'/admin/app/quizes/edit/' + id"
+							class="question-edit-link"
+							v-if="isAdmin"
+						>
+							<span class="icon is-medium">
+								<i class="fa fa-pencil-square-o"></i>
+							</span>
+						</a>
 					</div>
 				</div>
 			</header>
@@ -80,6 +89,13 @@
 	.quiz-header
 		align-items: flex-start
 		flex-direction: column
+
+		.card-header-icons
+			display: flex
+
+		.question-edit-link
+			margin-left: 10px
+			color: $color-sky-blue
 
 	.card-header-title.is-short-form
 		font-size: $font-size-minus-1
@@ -150,7 +166,17 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobile']),
+			...mapGetters(['isMobile', 'isAdmin']),
+			...mapGetters('quiz', [
+				'getAnswers',
+				'isComplete',
+				'isResolved',
+				'getSelectedAnswer',
+				'getReaction'
+			]),
+			displayResults() {
+				return this.readOnly || this.isComplete || this.isResolved(this.id)
+			},
 			answers() {
 				return this.question.answers
 			},

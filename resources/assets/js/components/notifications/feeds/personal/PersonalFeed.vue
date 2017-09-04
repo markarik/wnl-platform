@@ -189,7 +189,7 @@
 	import Dropdown from 'js/components/global/Dropdown'
 	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
-	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -203,6 +203,7 @@
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-reaction-added': ReactionAdded,
+			'wnl-event-mentioned': Mentioned,
 			'wnl-notifications-toggle': NotificationsToggle,
 		},
 		data() {

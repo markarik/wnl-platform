@@ -1,6 +1,14 @@
 <template>
 	<div class="quill-container">
-		<div ref="quill">
+		<wnl-autocomplete
+			:items="autocompleteItems"
+			:onItemChosen="insertMention"
+			:itemComponent="'wnl-user-autocomplete-item'"
+			ref="autocomplete"
+		>
+		</wnl-autocomplete>
+
+		<div ref="quill" @keydown="onKeyDown">
 			<slot></slot>
 		</div>
 	</div>
@@ -8,15 +16,26 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
+
+	.quill-container
+		position: relative
+
+	.quill-mention
+		background: #eee
+		border: 1px solid #ddd
+		padding: 3px
 </style>
 
 <script>
 	import _ from 'lodash'
 	import Quill from 'quill'
 	import { set } from 'vue'
+	import { mapActions } from 'vuex'
 
 	import { formInput } from 'js/mixins/form-input'
 	import { fontColors } from 'js/utils/colors'
+	import { mentionBlot } from 'js/classes/mentionblot'
+	import Autocomplete from 'js/components/global/autocomplete'
 
 	const defaults = {
 		theme: 'snow',
@@ -24,9 +43,22 @@
 		placeholder: 'Pisz tutaj...',
 	}
 
+	const firstAndLastNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+) {1}([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i
+	const firstNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i
+	const autocompleteChar = '@'
+	const keys = {
+		enter: 13,
+		esc: 27,
+		arrowUp: 38,
+		arrowDown: 40
+	}
+
 	export default {
 		name: 'Quill',
 		mixins: [formInput],
+		components: {
+			'wnl-autocomplete': Autocomplete
+		},
 		props: {
 			options: {
 				type: Object,
@@ -52,13 +84,21 @@
 			keyboard: {
 				type: Object,
 				default: () => {}
+			},
+			allowMentions: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data () {
 			return {
 				focused: this.autofocus,
 				quill: null,
+				autocomplete: null,
 				editor: null,
+				autocompleteItems: [],
+				lastAutocompleteQuery: null,
+				lastRange: null
 			}
 		},
 		computed: {
@@ -81,13 +121,123 @@
 			},
 		},
 		methods: {
-			onTextChange() {
+			...mapActions(['requestUsersAutocomplete']),
+			onTextChange(delta, oldDelta, source) {
 				this.setValue(this.editor.innerHTML)
 				this.$emit('input', this.editor.innerHTML)
+
+				if (source !== Quill.sources.USER || !this.allowMentions) {
+					return
+				}
+
+				const currentMention = this.getCurrentMention()
+
+				if (currentMention) {
+					this.requestUsersAutocomplete(currentMention).then(this.onMentionsFetched.bind(this))
+				}
+			},
+			insertMention(data) {
+				this.autocompleteItems = []
+				const lastMentionQueryLength = this.lastAutocompleteQuery.length
+				const mentionStartIndex = this.lastRange.index - lastMentionQueryLength
+
+				this.quill.deleteText(mentionStartIndex, lastMentionQueryLength, Quill.sources.API)
+
+				// cursor position
+				const range = this.lastRange
+
+			  	if (!range || range.length != 0) return
+			  	const position = range.index - lastMentionQueryLength
+
+			  	this.quill.insertEmbed(position, 'mention', {
+					name: `${autocompleteChar}${data.full_name}`,
+					id: data.id
+				}, Quill.sources.API)
+			  	this.quill.insertText(position + 1, ' ', Quill.sources.API)
+			  	this.quill.setSelection(position + 2, Quill.sources.API)
+			},
+			getCurrentMention() {
+				this.lastRange = this.quill.getSelection()
+
+			    if (!this.lastRange) {
+					return
+				}
+
+			    var cursor = this.lastRange.index,
+			        contents = this.quill.getText(0, cursor)
+
+				let currentMentionMatch = null
+
+			    const bothNamesMatch = firstAndLastNameMatcher.exec(contents)
+
+				if (bothNamesMatch) {
+					currentMentionMatch = {
+						firstName: bothNamesMatch[1],
+						lastName: bothNamesMatch[2],
+					}
+					this.lastAutocompleteQuery = bothNamesMatch[0]
+				} else {
+					const oneNameMatch = firstNameMatcher.exec(contents)
+
+					if (oneNameMatch) {
+						currentMentionMatch = {
+							firstName: oneNameMatch[1],
+							lastName: ''
+						}
+						this.lastAutocompleteQuery = oneNameMatch[0]
+					}
+				}
+
+				if (!currentMentionMatch) {
+					this.autocompleteItems = []
+				}
+
+				return currentMentionMatch
+			},
+
+			onMentionsFetched(response) {
+				this.autocompleteItems = response.data
+			},
+
+			onKeyDown(evt) {
+				const { enter, esc, arrowUp, arrowDown } = keys
+
+				if (this.autocompleteItems.length === 0 || !this.allowMentions) {
+					return
+				}
+
+				if (evt.keyCode === esc) {
+					this.onEsc(evt)
+					return
+				}
+
+				if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
+					return
+				}
+
+				if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
+					return
+				}
+
+				this.$refs.autocomplete.onKeyDown(evt)
+				this.killEvent(evt)
+
+				//for some of the old browsers, returning false is the true way to kill propagation
+				return false
+			},
+
+			onEsc(evt) {
+				this.autocompleteItems = []
+			},
+
+			killEvent(evt) {
+				evt.preventDefault()
+				evt.stopPropagation()
 			}
 		},
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)
+			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
 		},

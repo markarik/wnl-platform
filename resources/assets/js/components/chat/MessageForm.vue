@@ -105,10 +105,11 @@
 				this.error = ''
 				this.isWaitingToSendMentions = true
 				this.socket.emit('send-message', {
-					room: this.room,
+					room: this.room.channel,
 					message: {
 						user: this.currentUser,
-						content: this.content
+						content: this.content,
+						full_name: this.currentUserFullName,
 					}
 				})
 			},
@@ -136,7 +137,7 @@
 					context: {
 						courseId: this.courseId,
 						lessonId: this.$route.params.lessonId,
-						slideId: this.$route.params.slideId,	
+						slideId: this.$route.params.slideId,
 					},
 					actors: this.currentUser
 				}

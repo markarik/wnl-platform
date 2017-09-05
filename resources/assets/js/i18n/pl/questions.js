@@ -1,4 +1,24 @@
 export const questions = {
+	dashboard: {
+		notifications: {
+			close: 'Zamknij',
+			heading: 'Ostatnie dyskusje',
+			toggle: 'Powiadomienia',
+		},
+		plan: {
+			create: {
+				cta: 'Zaplanuj pracę',
+				heading: 'Zaplanuj pracę z pytaniami!',
+				tip: 'Plan pracy pomoże Ci określić tempo, którym spokojnie rozwiążesz wszystkie pytania!',
+			},
+			heading: 'Plan pracy',
+		},
+		stats: {
+			error: 'Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!',
+			heading: 'Twoje statystyki',
+			scores: 'Rozwiązane pytania i wyniki',
+		},
+	},
 	filters: {
 		activeFiltersReview: 'Aktywne filtry: {filters}',
 		activeHeading: 'Aktywne filtry',

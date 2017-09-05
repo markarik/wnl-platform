@@ -21,7 +21,7 @@
 					</a>
 				</div>
 				<wnl-questions-solving
-					v-if="computedQuestionsList.length > 0"
+					v-if="computedQuestionsList.length > 0 || !fetchingQuestions"
 					:activeFilters="activeFiltersNames"
 					:currentQuestion="currentQuestion"
 					:loading="fetchingQuestions"

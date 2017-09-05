@@ -22,7 +22,7 @@
 				<span class="count" v-if="!loading && count !== false">{{ `(${count})` }}</span>
 				<span class="loader" v-if="loading"></span>
 			</div>
-			<div v-if="hasChildren" class="wai-expand-icon" ref="expand">
+			<div v-if="hasChildren" class="wai-expand-icon" @click.stop="toggleExpanded">
 				<span class="icon is-small">
 					<i class="fa fa-angle-down" :class="[expanded ? 'fa-rotate-180' : '']"></i>
 				</span>
@@ -233,10 +233,8 @@
 			onItemClick(event) {
 				if (this.isDisabled) return false
 
-				if (!this.loading && this.isSelectable && event.path.indexOf(this.$refs.expand) === -1) {
+				if (!this.loading && this.isSelectable) {
 					this.toggleSelected()
-				} else {
-					this.toggleExpanded()
 				}
 			},
 			toggleExpanded() {

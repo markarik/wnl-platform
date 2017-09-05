@@ -46,7 +46,7 @@
 							class="quiz-question-tag"
 							:key="index"
 						>
-							#{{tag.name}}
+							{{trim(tag.name)}}
 						</span>
 					</div>
 					<div class="quiz-question-id">
@@ -119,14 +119,19 @@
 
 	.quiz-question-meta
 		+flex-space-between()
+		align-items: flex-start
 		color: $color-gray-dimmed
 		font-size: $font-size-minus-2
 		line-height: $line-height-minus
-		padding: $margin-small $margin-base 0
+		padding: $margin-base $margin-base 0
 		width: 100%
 
 		.quiz-question-tags
-			margin-right: $margin-small
+			margin-right: $margin-base
+
+			.quiz-question-tag
+				display: inline-block
+				padding-right: $margin-tiny * 2
 
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
@@ -138,6 +143,9 @@
 			box-shadow: 0 2px 3px $color-incorrect-shadow, 0 0 0 1px $color-incorrect-shadow
 
 		&.is-mobile
+
+			.quiz-question-tags
+				margin-right: $margin-small
 
 			.quiz-header,
 			.quiz-answers
@@ -171,7 +179,7 @@
 </style>
 
 <script>
-	import { isNumber } from 'lodash'
+	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
@@ -227,7 +235,10 @@
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
 
 				this.$emit(eventName, data)
-			}
+			},
+			trim(text) {
+				return trim(text)
+			},
 		}
 	}
 </script>

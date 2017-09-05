@@ -3,9 +3,9 @@
 		<wnl-accordion-item
 			v-for="(item, path) in dataSource"
 			:config="config"
-			:isFirstLevel="true"
 			:item="item"
 			:key="path"
+			:level="0"
 			:loading="loading"
 			:path="path"
 			@itemToggled="onItemToggled"

@@ -4,14 +4,13 @@
 		'is-flat': flattened,
 		'is-mobile': config.isMobile,
 	}">
-		<div v-if="!flattened" class="wnl-accordion-item" :class="{
+		<div v-if="!flattened" class="wnl-accordion-item" :class="[`level-${level}`, {
 			'has-children': hasChildren,
 			'is-disabled': isDisabled,
-			'is-first-level': isFirstLevel,
 			'is-selected': isSelected,
 			'is-selectable': isSelectable,
 			'loading': loading,
-		}" @click="onItemClick">
+		}]" @click="onItemClick">
 			<div v-if="isSelectable" class="wai-checkbox">
 				<span class="icon is-small">
 					<i class="fa" :class="[isSelected ? 'fa-check-square-o' : 'fa-square-o']"></i>
@@ -22,19 +21,20 @@
 				<span class="count" v-if="!loading && count !== false">{{ `(${count})` }}</span>
 				<span class="loader" v-if="loading"></span>
 			</div>
-			<div v-if="hasChildren" class="wai-expand-icon" ref="expand">
+			<div v-if="hasChildren" class="wai-expand-icon" @click.stop="toggleExpanded">
 				<span class="icon is-small">
 					<i class="fa fa-angle-down" :class="[expanded ? 'fa-rotate-180' : '']"></i>
 				</span>
 			</div>
 		</div>
 		<div v-if="hasChildren" v-show="expanded || flattened"
-			class="wnl-accordion-item-children" :class="{'is-first-level': isFirstLevel}">
+			class="wnl-accordion-item-children" :class="[`level-${level}`]">
 			<AccordionItem
 				v-for="(childItem, index) in item.items"
 				:config="config"
 				:item="childItem"
 				:key="index"
+				:level="level + 1"
 				:loading="loading"
 				:path="`${path}.items[${index}]`"
 				@itemToggled="onChildItemToggled"
@@ -50,7 +50,7 @@
 	$highlight-color: $color-background-lighter-gray
 
 	.is-mobile
-		.wnl-accordion-item:not(.is-selected):not(.is-first-level):hover
+		.wnl-accordion-item:not(.is-selected):not(.level-0):hover
 				background-color: initial
 
 	.wnl-accordion-item-container
@@ -90,8 +90,9 @@
 		&.is-selected
 			background-color: $highlight-color
 
-		&.is-first-level
+		&.level-0
 			background: $color-background-light-gray
+			border: 0
 			font-size: $font-size-minus-1
 			letter-spacing: 1px
 			padding: $margin-medium $margin-small $margin-medium $margin-medium
@@ -102,6 +103,9 @@
 
 			.wai-expand-icon
 				border-color: transparent
+
+		&.level-2
+			border-left: $border-light-gray
 
 		&.has-children,
 		&.is-selectable
@@ -152,7 +156,7 @@
 	.wnl-accordion-item-children
 		padding-left: $margin-big
 
-		&.is-first-level
+		&.level-0
 			padding-left: 0
 </style>
 
@@ -166,13 +170,13 @@
 				required: true,
 				type: Object,
 			},
-			isFirstLevel: {
-				default: false,
-				type: Boolean,
-			},
 			item: {
 				required: true,
 				type: Object,
+			},
+			level: {
+				default: 0,
+				type: Number,
 			},
 			loading: {
 				default: false,
@@ -231,9 +235,9 @@
 				this.$emit('itemToggled', payload)
 			},
 			onItemClick(event) {
-				if (this.isDisabled) return false
+				if (this.isDisabled || this.loading) return false
 
-				if (!this.loading && this.isSelectable && event.path.indexOf(this.$refs.expand) === -1) {
+				if (this.isSelectable) {
 					this.toggleSelected()
 				} else {
 					this.toggleExpanded()

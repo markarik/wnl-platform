@@ -1,5 +1,6 @@
 <template>
 	<div class="wnl-active-question">
+		<p class="tip">{{$t('questions.solving.activeQuestionTip')}}</p>
 		<div class="active-question-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
@@ -41,8 +42,14 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-active-question
-		padding-top: $margin-medium
+	.tip
+		color: $color-gray-dimmed
+		font-size: $font-size-minus-2
+		margin-bottom: $margin-base
+
+	.active-question-button
+		margin-bottom: $margin-big
+		margin-top: -$margin-big
 
 	.active-question-controls
 		display: flex
@@ -52,10 +59,6 @@
 
 	.matched-count
 		color: $color-green
-
-	.active-question-button
-		margin-bottom: $margin-big
-		margin-top: -$margin-big
 </style>
 
 <script>
@@ -116,14 +119,14 @@
 		methods: {
 			nextQuestion() {
 				this.$emit('changeQuestion', 1)
-				scrollToElement(this.$el, 55)
+				scrollToElement(this.$el, 10)
 			},
 			onAnswerDoubleclick() {
 				this.allowDoubleclick && this.displayResults && this.nextQuestion()
 			},
 			previousQuestion() {
 				this.$emit('changeQuestion', -1)
-				scrollToElement(this.$el, 55)
+				scrollToElement(this.$el, 10)
 			},
 			selectAnswer(data) {
 				this.allowDoubleclick = false

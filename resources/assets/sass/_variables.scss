@@ -98,7 +98,7 @@ $column-padding: $margin-base;
 
 $main-nav-size: 7vw;
 $main-nav-max-size: 80px;
-$main-nav-min-size: 60px;
+$main-nav-min-size: 55px;
 
 $sidenav-min-width: 150px;
 $sidenav-max-width: 250px;
@@ -122,6 +122,7 @@ $text: $color-gray;
 
 // z-index positioning
 $z-index-navbar: 50;
+$z-index-active-filters: 40;
 $z-index-sidenav-slot: $z-index-navbar - 1;
 $z-index-overlay: $z-index-navbar + 1;
 $z-index-autocomplete: $z-index-overlay;

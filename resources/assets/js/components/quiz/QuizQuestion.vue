@@ -6,6 +6,7 @@
 				'is-incorrect': displayResults && !isUnanswered && !isCorrect,
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
+				'is-large-desktop': isLargeDesktop,
 				'is-mobile': isMobile,
 			}">
 			<header class="quiz-header card-header">
@@ -46,7 +47,7 @@
 							class="quiz-question-tag"
 							:key="index"
 						>
-							#{{tag.name}}
+							{{trim(tag.name)}}
 						</span>
 					</div>
 					<div class="quiz-question-id">
@@ -61,7 +62,7 @@
 					>
 						{{$t('questions.question.edit')}}
 						<span class="icon is-small">
-							<i class="fa fa-pencil-square-o"></i>
+							<i class="fa fa-pencil"></i>
 						</span>
 					</a>
 				</div>
@@ -99,10 +100,6 @@
 			display: block
 			margin: 0 auto -0.2em
 
-	.quiz-header,
-	.quiz-answers
-		padding: $margin-base
-
 	.quiz-header
 		align-items: flex-start
 		flex-direction: column
@@ -119,14 +116,19 @@
 
 	.quiz-question-meta
 		+flex-space-between()
+		align-items: flex-start
 		color: $color-gray-dimmed
 		font-size: $font-size-minus-2
 		line-height: $line-height-minus
-		padding: $margin-small $margin-base 0
+		padding: $margin-base $margin-base 0
 		width: 100%
 
 		.quiz-question-tags
-			margin-right: $margin-small
+			margin-right: $margin-base
+
+			.quiz-question-tag
+				display: inline-block
+				padding-right: $margin-tiny * 2
 
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
@@ -137,7 +139,34 @@
 		&.is-incorrect
 			box-shadow: 0 2px 3px $color-incorrect-shadow, 0 0 0 1px $color-incorrect-shadow
 
+		.quiz-header,
+		.quiz-answers
+			padding: $margin-medium
+
+		.card-header-title,
+		.card-header-icons
+			font-weight: $font-weight-regular
+			padding: $margin-medium
+
+		&.is-large-desktop
+			.quiz-header,
+			.quiz-answers
+				padding: $margin-base
+
+				.card-header-title,
+				.card-header-icons
+					font-weight: $font-weight-regular
+					padding: $margin-base
+
+			.quiz-header
+				font-size: $font-size-base
+
+			.quiz-answer
+				font-size: $font-size-base
+
 		&.is-mobile
+			.quiz-question-tags
+				margin-right: $margin-small
 
 			.quiz-header,
 			.quiz-answers
@@ -171,7 +200,7 @@
 </style>
 
 <script>
-	import { isNumber } from 'lodash'
+	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
@@ -192,7 +221,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobile', 'isAdmin']),
+			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
 			...mapGetters('quiz', [
 				'getAnswers',
 				'isComplete',
@@ -227,7 +256,10 @@
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
 
 				this.$emit(eventName, data)
-			}
+			},
+			trim(text) {
+				return trim(text)
+			},
 		}
 	}
 </script>

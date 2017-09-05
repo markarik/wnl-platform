@@ -1,8 +1,29 @@
 export const questions = {
+	dashboard: {
+		notifications: {
+			close: 'Zamknij',
+			heading: 'Ostatnie dyskusje',
+			toggle: 'Powiadomienia',
+		},
+		plan: {
+			create: {
+				cta: 'Zaplanuj pracę',
+				heading: 'Zaplanuj pracę z pytaniami!',
+				tip: 'Plan pracy pomoże Ci określić tempo, którym spokojnie rozwiążesz wszystkie pytania!',
+			},
+			heading: 'Plan pracy',
+		},
+		stats: {
+			error: 'Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!',
+			heading: 'Twoje statystyki',
+			scores: 'Rozwiązane pytania i wyniki',
+		},
+	},
 	filters: {
 		activeFiltersReview: 'Aktywne filtry: {filters}',
 		activeHeading: 'Aktywne filtry',
 		allQuestions: 'Wszystkie pytania',
+		autorefresh: 'Odświeżaj automatycznie',
 		filteringResult: 'Pasujące pytania:',
 		filteringResultFrom: 'z {totalCount} w bazie',
 		items: {
@@ -16,7 +37,8 @@ export const questions = {
 		},
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',
-		show: 'Zmień filtry',
+		refresh: 'Odśwież',
+		show: 'Pokaż filtry',
 		submit: 'Wybierz pasujące pytania',
 	},
 	nav: {
@@ -78,6 +100,7 @@ export const questions = {
 	},
 	solving: {
 		abort: 'Przerwij',
+		activeQuestionTip: 'Kliknij ponownie na wybraną odpowiedź, aby potwierdzić ją i sprawdzić wynik. Następnie, możesz kliknąć dwa razy w dowolną odpowiedź, aby przejść do następnego pytania.',
 		confirm: {
 			no: 'Nie, przerywam',
 			title: 'Może jednak chcesz dokończyć test?',

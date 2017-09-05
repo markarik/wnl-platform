@@ -213,6 +213,8 @@ const actions = {
 	},
 	activeFiltersToggle({commit}, {filter, active}) {
 		return new Promise(resolve => {
+			if (!filter) return resolve()
+
 			if (active) {
 				commit(types.ACTIVE_FILTERS_ADD, filter)
 			} else {

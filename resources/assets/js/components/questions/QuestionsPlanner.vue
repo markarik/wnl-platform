@@ -3,7 +3,7 @@
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'is-full-width': isLargeDesktop}">
 			<div class="scrollable-main-container">
-				<div class="questions-header">
+				<div class="questions-header questions-plan-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
 							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
@@ -13,12 +13,6 @@
 							<span>{{$t('questions.nav.planner')}}</span>
 						</div>
 					</div>
-					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters">
-						<span>{{$t('questions.filters.show')}}</span>
-						<span class="icon is-tiny">
-							<i class="fa fa-sliders"></i>
-						</span>
-					</a>
 				</div>
 				<div v-if="plan === null" class="margin vertical">
 					<wnl-text-loader/>
@@ -94,6 +88,23 @@
 									<span v-else>&nbsp;</span>
 								</p>
 							</div>
+						</div>
+						<div  v-if="!isLargeDesktop && selectedOption === 'custom'" class="questions-plan-toggle-filters">
+							<div class="active-filters tip">
+								<span>{{$t('questions.filters.activeHeading')}}:</span>
+								<span v-if="activeFiltersNames.length > 0">
+									{{activeFiltersNames}}
+								</span>
+								<span v-else>
+									{{$t('questions.filters.allQuestions')}}
+								</span>
+							</div>
+							<a class="button is-small is-outlined is-primary" @click="toggleChat">
+								<span>{{$t('questions.filters.show')}}</span>
+								<span class="icon is-tiny">
+									<i class="fa fa-sliders"></i>
+								</span>
+							</a>
 						</div>
 
 						<div class="planner-form-heading">
@@ -223,6 +234,10 @@
 			display: block
 			line-height: $line-height-minus
 
+	.questions-plan-toggle-filters
+		margin: -$margin-base 0 $margin-big
+		text-align: center
+
 	.questions-plan-summary
 		margin: $margin-medium 0
 		text-align: center
@@ -293,9 +308,19 @@
 			...mapGetters(['currentUserId', 'isChatMounted', 'isChatVisible', 'isLargeDesktop', 'isMobile']),
 			...mapGetters('questions', [
 				'activeFilters',
+				'activeFiltersObjects',
 				'allQuestionsCount',
 				'filters',
 			]),
+			activeFiltersNames() {
+				return this.activeFiltersObjects.map(filter => {
+					return filter.hasOwnProperty('name')
+						? filter.name
+						: filter.hasOwnProperty('message')
+							? this.$t(`questions.filters.items.${filter.message}`)
+							: this.$t(`questions.filters.items.${filter.value}`)
+				}).join(', ')
+			},
 			averageClass() {
 				return this.currentPlan.average <= 100
 					? 'easy'
@@ -353,6 +378,7 @@
 			},
 		},
 		methods: {
+			...mapActions(['toggleChat']),
 			...mapActions('questions', [
 				'activeFiltersSet',
 				'activeFiltersToggle',
@@ -412,10 +438,14 @@
 				})
 			},
 			onActiveFiltersChanged(payload) {
-				this.activeFiltersToggle(payload).then(() => {
-					this.fetchDynamicFilters()
-					return this.fetchMatchingQuestions(this.activeFilters)
-				})
+				if (payload.refresh) {
+					return this.activeFiltersToggle(payload).then(() => {
+						this.fetchDynamicFilters()
+						return this.fetchMatchingQuestions(this.activeFilters)
+					})
+				}
+
+				this.activeFiltersToggle(payload)
 			},
 			onEndDateChange(payload) {
 				if (isEmpty(payload)) this.endDate = null

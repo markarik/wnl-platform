@@ -8,7 +8,7 @@
 						<div class="breadcrumb">
 							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
 						</div>
-						<div class="breadcrumb">
+						<div class="breadcrumb" @click="$router.push({name: 'questions-dashboard'})">
 							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 							<span>{{$t('questions.nav.dashboard')}}</span>
 						</div>
@@ -17,31 +17,39 @@
 							<span>#{{id}}</span>
 						</div>
 					</div>
+					<a v-if="!isLargeDesktop" class="toggle-notifications" @click="toggleChat">
+						<span>{{$t('questions.dashboard.notifications.toggle')}}</span>
+						<span class="icon is-small">
+							<i class="fa fa-commenting-o"></i>
+						</span>
+					</a>
 				</div>
 				<div v-if="!id">
 					<div class="questions-dashboard-plan">
 						<div class="questions-dashboard-heading">
 							<span class="icon is-small"><i class="fa fa-calendar"></i></span>
-							Plan pracy
+							{{$t('questions.dashboard.plan.heading')}}
 						</div>
 						<div v-if="plan === null" class="margin vertical">
 							<wnl-text-loader/>
 						</div>
 						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan"/>
 						<div class="questions-plan-create" v-else>
-							<p class="questions-plan-create-heading">Zaplanuj pracę z pytaniami!<p>
+							<p class="questions-plan-create-heading">
+								{{$t('questions.dashboard.plan.create.heading')}}
+							<p>
 							<p class="questions-plan-create-tip">
-								Plan pracy pomoże Ci określić tempo, którym spokojnie rozwiążesz wszystkie pytania!
+								{{$t('questions.dashboard.plan.create.tip')}}
 							</p>
 							<p class="margin vertical has-text-centered">
 								<router-link class="button is-primary is-outlined" :to="{name: 'questions-planner'}">
-									Zaplanuj pracę
+									{{$t('questions.dashboard.plan.create.cta')}}
 								</router-link>
 							</p>
 						</div>
 					</div>
 					<div v-if="stats === null">
-						Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!
+						{{$t('questions.dashboard.stats.error')}}
 					</div>
 					<div v-else-if="!hasStats" class="margin vertical">
 						<wnl-text-loader/>
@@ -49,42 +57,24 @@
 					<div v-else>
 						<div class="questions-dashboard-heading">
 							<span class="icon is-small"><i class="fa fa-bar-chart"></i></span>
-							Twoje statystyki
+							{{$t('questions.dashboard.stats.heading')}}
 						</div>
 						<div class="questions-dashboard-subheading">
 							<span class="icon is-small"><i class="fa fa-tasks"></i></span>
-							Rozwiązane pytania
+							{{$t('questions.dashboard.stats.scores')}}
 						</div>
 						<div class="questions-stats">
-							<div v-for="stats, index in statsResolved"
+							<div v-for="stats, index in statsParsed"
 								class="stats-item stats-resolved"
 								:class="{'is-first': index === 0}"
 							>
 								<span class="stats-title">{{stats.title}}</span>
-								<div class="bar-and-score">
+								<div class="progress-bar">
 									<progress class="progress is-success"
 										:value="stats.progress"
 										:max="stats.total"/>
-									<span class="stats-score">{{stats.score}}</span>
-								</div>
-							</div>
-						</div>
-						<div class="questions-dashboard-subheading">
-							<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
-							Twoje wyniki
-						</div>
-						<div class="questions-stats">
-							<div v-for="stats, index in statsScore"
-								class="stats-item stats-score"
-								:class="{'is-first': index === 0}"
-							>
-								<span class="stats-title">{{stats.title}}</span>
-								<div class="bar-and-score">
-									<progress class="progress"
-										:class="scoreClass(stats.score)"
-										:value="stats.progress"
-										:max="stats.total"/>
-									<span class="stats-score">{{stats.score}}%</span>
+									<span class="progress-number">{{stats.progressNumber}}</span>
+									<div class="score" :class="scoreClass(stats.score)">{{stats.score}}%</div>
 								</div>
 							</div>
 						</div>
@@ -99,10 +89,18 @@
 			:hasChat="true"
 		>
 			<div class="questions-feed-container">
-				<p class="questions-feed-heading">
-					<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
-					Ostatnie dyskusje
-				</p>
+				<div class="questions-feed-heading" :class="{'detached': !isChatMounted}">
+					<div>
+						<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
+						{{$t('questions.dashboard.notifications.heading')}}
+					</div>
+					<div v-if="!isChatMounted">
+						<span class="metadata">{{$t('questions.dashboard.notifications.close')}}</span>
+						<span class="icon is-small" @click="toggleChat">
+							<i class="fa fa-close"></i>
+						</span>
+					</div>
+				</div>
 				<wnl-questions-feed/>
 			</div>
 		</wnl-sidenav-slot>
@@ -117,6 +115,9 @@
 		max-width: 100%
 		width: 100%
 
+	.questions-header
+		+flex-space-between()
+
 	.questions-breadcrumbs
 		align-items: center
 		color: $color-gray-dimmed
@@ -129,6 +130,9 @@
 			overflow-x: hidden
 			text-overflow: ellipsis
 			white-space: nowrap
+
+	.toggle-notifications
+		font-size: $font-size-minus-1
 
 	.questions-dashboard-heading
 		border-bottom: $border-light-gray
@@ -172,7 +176,6 @@
 		margin: $margin-medium 0 $margin-huge
 
 	.questions-stats
-
 		.stats-item
 			+flex-space-between()
 			flex-wrap: wrap
@@ -190,7 +193,7 @@
 				margin-right: $margin-medium
 				width: 150px
 
-			.bar-and-score
+			.progress-bar
 				+flex-space-between()
 				flex: 1 auto
 
@@ -199,10 +202,21 @@
 				height: 4px
 				margin-bottom: 0
 				margin-right: $margin-medium
-				min-width: 150px
+				min-width: 120px
 
-			.stats-score
+			.progress-number
 				width: 100px
+				text-align: center
+
+			.score
+				text-align: center
+				width: 60px
+
+				&.is-danger
+					color: $color-red
+
+				&.is-success
+					color: $color-green
 
 	.questions-feed-container
 		width: 100%
@@ -216,6 +230,10 @@
 		padding-bottom: $margin-small
 		text-align: center
 		text-transform: uppercase
+
+		&.detached
+			+flex-space-between()
+			padding: 0 $margin-base $margin-small
 
 		.icon
 			color: $color-background-gray
@@ -254,7 +272,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserId','isChatMounted', 'isLargeDesktop']),
+			...mapGetters(['currentUserId','isChatMounted', 'isChatVisible', 'isLargeDesktop']),
 			...mapGetters('questions', ['filters']),
 			hasPlan() {
 				return !isEmpty(this.plan)
@@ -262,39 +280,22 @@
 			hasStats() {
 				return !isEmpty(this.stats)
 			},
-			statsScore() {
+			statsParsed() {
 				let stats = [{
-					title: 'Cała baza',
-					progress: this.stats.correct,
-					total: this.stats.resolved,
-					score: Math.round(this.stats.correct_perc),
-				}]
-
-				this.stats.subjects.forEach((subject) => {
-					stats.push({
-						title: subject.name,
-						progress: subject.correct,
-						total: subject.resolved,
-						score: Math.round(subject.correct_perc),
-					})
-				})
-
-				return stats
-			},
-			statsResolved() {
-				let stats = [{
-					title: 'Cała baza',
 					progress: this.stats.resolved,
+					progressNumber: `${this.stats.resolved}/${this.stats.total}`,
+					score: Math.round(this.stats.correct_perc),
+					title: 'Cała baza',
 					total: this.stats.total,
-					score: `${this.stats.resolved}/${this.stats.total}`,
 				}]
 
 				this.stats.subjects.forEach((subject) => {
 					stats.push({
-						title: subject.name,
 						progress: subject.resolved,
+						progressNumber: `${subject.resolved}/${subject.total}`,
+						score: Math.round(subject.correct_perc),
+						title: subject.name,
 						total: subject.total,
-						score: `${subject.resolved}/${subject.total}`,
 					})
 				})
 
@@ -302,6 +303,7 @@
 			},
 		},
 		methods: {
+			...mapActions(['toggleChat']),
 			...mapActions('questions', ['fetchDynamicFilters']),
 			setPlanRoute() {
 				this.planRoute = {
@@ -347,5 +349,10 @@
 				? this.fetchDynamicFilters().then(this.setPlanRoute)
 				: this.setPlanRoute()
 		},
+		watch: {
+			'$route' (to, from) {
+				this.isChatVisible && this.toggleChat()
+			}
+		}
 	}
 </script>

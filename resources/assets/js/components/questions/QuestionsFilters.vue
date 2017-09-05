@@ -1,40 +1,68 @@
 <template>
-	<div class="wnl-questions-filters">
-		<wnl-active-filters
-		:activeFilters="activeFilters"
-		:loading="fetchingData"
-		:filters="filters"
-		:itemsNamesSource="itemsNamesSource"
-		:matchedCount="matchedQuestionsCount"
-		:totalCount="allQuestionsCount"
-		@activeFiltersChanged="onActiveFiltersChanged"
-		@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
-		/>
-		<div class="filters-heading">
-			<span class="metadata margin vertical">
-				<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
-				{{$t('questions.filters.heading')}}
-			</span>
-			<a v-if="!isChatMounted && isChatVisible" @click="toggleChat">
-				{{$t('questions.filters.hide')}}
-				<span class="icon is-small"><i class="fa fa-close"></i></span>
-			</a>
+	<div class="questions-filters-container">
+		<div class="questions-filters-content">
+			<div class="wnl-active-filters-container">
+				<wnl-active-filters
+				:activeFilters="activeFilters"
+				:loading="fetchingData"
+				:filters="filters"
+				:itemsNamesSource="itemsNamesSource"
+				:matchedCount="matchedQuestionsCount"
+				:totalCount="allQuestionsCount"
+				@activeFiltersChanged="onActiveFiltersChanged"
+				@autorefreshChange="onAutorefreshChange"
+				@elementHeight="setActiveFiltersHeight"
+				@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
+				@refresh="onRefresh"
+				/>
+			</div>
+			<div class="wnl-questions-filters" :style="{paddingTop: activeFiltersHeight + 'px'}">
+				<div class="filters-heading">
+					<span class="metadata margin vertical">
+						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
+						{{$t('questions.filters.heading')}}
+					</span>
+					<a v-if="!isChatMounted && isChatVisible" class="hide-filters" @click="toggleChat">
+						{{$t('questions.filters.hide')}}
+						<span class="icon is-small"><i class="fa fa-close"></i></span>
+					</a>
+				</div>
+				<wnl-accordion
+					:dataSource="filters"
+					:config="accordionConfig"
+					:loading="fetchingData"
+					@itemToggled="onItemToggled"
+				/>
+			</div>
 		</div>
-		<wnl-accordion
-			:dataSource="filters"
-			:config="accordionConfig"
-			:loading="fetchingData"
-			@itemToggled="onItemToggled"
-		/>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	.questions-filters-container
+		height: 100%
+		position: relative
+		width: 100%
+
+	.questions-filters-content
+		height: 100%
+		overflow-y: auto
+		padding-bottom: $margin-huge * 2
+		width: 100%
 
 	.wnl-questions-filters
-		overflow-y: auto
 		width: 100%
+
+	.wnl-active-filters-container
+		background-color: $color-background-light-gray
+		left: 0
+		position: absolute
+		right: 0
+		top: 0
+		z-index: $z-index-active-filters
 
 	.filters-heading
 		align-items: center
@@ -42,10 +70,15 @@
 		display: flex
 		justify-content: space-between
 		padding: 0 $margin-base
+
+	.hide-filters
+		font-size: $font-size-minus-2
+		font-weight: $font-weight-bold
+		text-transform: uppercase
 </style>
 
 <script>
-	import {uniq} from 'lodash'
+	import {isEmpty, uniq} from 'lodash'
 	import {mapActions, mapGetters} from 'vuex'
 
 	import Accordion from 'js/components/global/accordion/Accordion'
@@ -75,6 +108,12 @@
 				type: Object,
 				required: true,
 			},
+		},
+		data() {
+			return {
+				activeFiltersHeight: 0,
+				autorefresh: true,
+			}
 		},
 		computed: {
 			...mapGetters(['isChatMounted', 'isChatVisible', 'isMobile']),
@@ -114,10 +153,27 @@
 				})
 			},
 			onActiveFiltersChanged(payload) {
-				this.$emit('activeFiltersChanged', payload)
+				console.log(this.autorefresh)
+				this.$emit('activeFiltersChanged', {
+					refresh: this.autorefresh,
+					...payload
+				})
+			},
+			onAutorefreshChange(autorefresh) {
+				this.autorefresh = autorefresh
 			},
 			onItemToggled({path, selected}) {
-				this.$emit('activeFiltersChanged', {filter: path, active: selected})
+				this.$emit('activeFiltersChanged', {
+					active: selected,
+					filter: path,
+					refresh: this.autorefresh,
+				})
+			},
+			onRefresh(payload) {
+				this.$emit('activeFiltersChanged', {refresh: true, ...payload})
+			},
+			setActiveFiltersHeight(height) {
+				this.activeFiltersHeight = height
 			},
 		},
 	}

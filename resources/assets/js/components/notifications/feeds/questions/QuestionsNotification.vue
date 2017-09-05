@@ -7,7 +7,7 @@
 			>
 				<router-link class="notification-link" :to="routeContext">
 					<div class="meta">
-						<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
+						<wnl-event-actor :size="isMobile ? 'small' : 'medium'" class="meta-actor" :message="message"/>
 						<span class="icon is-small"><i class="fa" :class="icon"></i></span>
 						<span class="meta-time">{{justDate}}</span>
 						<span class="meta-time">{{justTime}}</span>
@@ -74,6 +74,10 @@
 			text-align: center
 			margin-bottom: $margin-small
 
+	.unseen
+		.icon
+			color: $color-ocean-blue
+
 	.notification-content
 		flex: 1 auto
 		padding: 0 0 0 $margin-medium
@@ -94,8 +98,8 @@
 
 		.subject
 			border-left: 2px solid $color-inactive-gray
-			font-size: $font-size-base
-			margin-top: $margin-base
+			font-size: $font-size-minus-1
+			margin-top: $margin-small
 			padding-left: $margin-medium
 			padding-bottom: $margin-tiny
 

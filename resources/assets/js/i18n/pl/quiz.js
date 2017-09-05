@@ -3,6 +3,6 @@ export const quiz = {
 		back: 'Powrót do poprzedniej strony',
 		error: 'Niestety, nie udało nam się znaleźć pytania o numerze #{id}...',
 		errorTitle: 'Ups...',
-		title: 'Pytanie kontrolne #{id}',
+		title: 'Pytanie #{id}',
 	}
 }

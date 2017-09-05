@@ -68,6 +68,13 @@
 			min-height: $main-nav-min-size
 			height: $main-nav-size
 
+			.icon
+				height: 1.5rem
+				width: 1.5rem
+
+				.fa
+					font-size: 23px
+
 		.wnl-main-nav-item
 			align-items: center
 			color: $color-gray-dimmed

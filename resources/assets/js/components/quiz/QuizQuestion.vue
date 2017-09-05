@@ -62,7 +62,7 @@
 					>
 						{{$t('questions.question.edit')}}
 						<span class="icon is-small">
-							<i class="fa fa-pencil-square-o"></i>
+							<i class="fa fa-pencil"></i>
 						</span>
 					</a>
 				</div>

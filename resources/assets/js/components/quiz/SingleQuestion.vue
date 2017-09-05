@@ -1,7 +1,7 @@
 <template>
 	<div class="single-question">
 		<div class="question-container" v-if="isLoaded">
-			<div class="question-header">
+			<div class="question-header" :class="{'is-mobile': isMobile}">
 				<span class="question-title">{{title}}</span>
 				<a class="question-back" @click="goBack">
 					<span class="icon is-small">
@@ -43,6 +43,14 @@
 			.is-active
 				font-weight: $font-weight-regular
 
+		&.is-mobile
+			.question-title
+				font-size: $font-size-minus-1
+				font-weight: $font-weight-regular
+
+			.question-back
+				font-size: $font-size-minus-2
+
 	.single-question
 		display: flex
 		justify-content: center
@@ -80,7 +88,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavVisible', 'isSidenavMounted']),
+			...mapGetters(['isSidenavVisible', 'isSidenavMounted', 'isMobile']),
 			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction']),
 			title() {
 				return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', {id: this.id})

@@ -235,9 +235,9 @@
 				this.$emit('itemToggled', payload)
 			},
 			onItemClick(event) {
-				if (this.isDisabled) return false
+				if (this.isDisabled || this.loading) return false
 
-				if (!this.loading && this.isSelectable) {
+				if (this.isSelectable) {
 					this.toggleSelected()
 				} else {
 					this.toggleExpanded()

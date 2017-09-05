@@ -8,7 +8,7 @@
 						<div class="breadcrumb">
 							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
 						</div>
-						<div class="breadcrumb">
+						<div class="breadcrumb" @click="$router.push({name: 'questions-dashboard'})">
 							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 							<span>{{$t('questions.nav.dashboard')}}</span>
 						</div>
@@ -17,6 +17,12 @@
 							<span>#{{id}}</span>
 						</div>
 					</div>
+					<a v-if="!isLargeDesktop" class="toggle-notifications" @click="toggleChat">
+						<span>Powiadomienia</span>
+						<span class="icon is-small">
+							<i class="fa fa-commenting-o"></i>
+						</span>
+					</a>
 				</div>
 				<div v-if="!id">
 					<div class="questions-dashboard-plan">
@@ -99,10 +105,17 @@
 			:hasChat="true"
 		>
 			<div class="questions-feed-container">
-				<p class="questions-feed-heading">
-					<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
-					Ostatnie dyskusje
-				</p>
+				<div class="questions-feed-heading" :class="{'detached': !isChatMounted}">
+					<div>
+						<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
+						Ostatnie dyskusje
+					</div>
+					<div v-if="!isChatMounted">
+						<span class="icon is-small" @click="toggleChat">
+							<i class="fa fa-close"></i>
+						</span>
+					</div>
+				</div>
 				<wnl-questions-feed/>
 			</div>
 		</wnl-sidenav-slot>
@@ -117,6 +130,9 @@
 		max-width: 100%
 		width: 100%
 
+	.questions-header
+		+flex-space-between()
+
 	.questions-breadcrumbs
 		align-items: center
 		color: $color-gray-dimmed
@@ -129,6 +145,9 @@
 			overflow-x: hidden
 			text-overflow: ellipsis
 			white-space: nowrap
+
+	.toggle-notifications
+		font-size: $font-size-minus-1
 
 	.questions-dashboard-heading
 		border-bottom: $border-light-gray
@@ -217,6 +236,10 @@
 		text-align: center
 		text-transform: uppercase
 
+		&.detached
+			+flex-space-between()
+			padding: 0 $margin-base $margin-small
+
 		.icon
 			color: $color-background-gray
 			margin-right: $margin-small
@@ -254,7 +277,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserId','isChatMounted', 'isLargeDesktop']),
+			...mapGetters(['currentUserId','isChatMounted', 'isChatVisible', 'isLargeDesktop']),
 			...mapGetters('questions', ['filters']),
 			hasPlan() {
 				return !isEmpty(this.plan)
@@ -302,6 +325,7 @@
 			},
 		},
 		methods: {
+			...mapActions(['toggleChat']),
 			...mapActions('questions', ['fetchDynamicFilters']),
 			setPlanRoute() {
 				this.planRoute = {
@@ -347,5 +371,10 @@
 				? this.fetchDynamicFilters().then(this.setPlanRoute)
 				: this.setPlanRoute()
 		},
+		watch: {
+			'$route' (to, from) {
+				this.isChatVisible && this.toggleChat()
+			}
+		}
 	}
 </script>

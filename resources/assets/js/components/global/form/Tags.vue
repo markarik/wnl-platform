@@ -8,12 +8,13 @@
 				</span>
 			</div>
 			<input
-				type="text"
+				v-model="tagInput"
 				class="input"
+				type="text"
+				placeholder="Dodaj tag"
+				ref="input"
 				@input="onInput"
 				@keydown="onKeyDown"
-				ref=input
-				placeholder="Dodaj tag"
 			>
 			<wnl-autocomplete
 				:items="autocompleteItems"
@@ -28,7 +29,7 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-	
+
 	.tag
 		color: $color-ocean-blue
 		cursor: pointer
@@ -39,7 +40,7 @@
 
 		.icon
 			padding: 5px
-	
+
 	.tags-control
 		.autocomplete-box
 			box-shadow: 0px -5px 24px -5px rgba(0,0,0,0.42);
@@ -68,13 +69,14 @@
 		data: function () {
 			return {
 				autocompleteItems: [],
-				tags: []
+				tags: [],
+				tagInput: '',
 			}
 		},
 		computed: {
 			default() {
 				return ''
-			},
+			}
 		},
 		methods: {
 			...mapActions(['requestTagsAutocomplete']),
@@ -117,7 +119,8 @@
 			insertTag(tag) {
 				this.tags.push(tag);
 				this.autocompleteItems = []
-				this.$refs.input.value = ''
+				this.tagInput = ''
+				this.$refs.input.focus()
 			},
 
 			removeTag(tag) {
@@ -128,7 +131,7 @@
 			},
 
 			onInput(evt) {
-				const name = evt.target.value
+				const name = this.tagInput
 				const data = { name, tags: this.tags }
 
 				if (!name) {

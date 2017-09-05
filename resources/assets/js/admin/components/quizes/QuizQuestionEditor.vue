@@ -17,18 +17,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="field">
+			<div class="field question-field">
 				<div class="control">
-					<label class="label">
-						<span>Pytanie</span>
-						<wnl-quill
-							ref="questionEditor"
-							name="question"
-							:options="{ theme: 'bubble', placeholder: 'Pytanie' }"
-							:allowMentions=false
-							@input="onInput"
-					></wnl-quill>
-					</label>
+					<span>Pytanie</span>
+					<wnl-quill
+						ref="questionEditor"
+						name="question"
+						:options="{ theme: 'snow', placeholder: 'Pytanie' }"
+						:allowMentions=false
+						@input="onInput"
+					/>
 				</div>
 			</div>
 			<span>Tagi</span>
@@ -84,6 +82,9 @@
 		display: flex
 		justify-content: space-between
 
+	.question-field
+		margin-bottom: $margin-huge
+
 	.answer-control
 		display: flex
 		padding: 10px 0
@@ -92,14 +93,14 @@
 			align-items: center
 			display: flex
 			flex-grow: 1
-	
+
 		.checkbox-label
 			flex-grow: 0
 			margin-right: 20px
 
 			span
 				margin-right: 8px
-	
+
 	.answer-text
 		flex-grow: 1
 </style>
@@ -159,7 +160,7 @@
 				const fieldsArray = Array.prototype.slice.call(fields)
 
 				const answersData = fieldsArray.map(
-					field => ({ 
+					field => ({
 						id: field.dataset.id,
 						text: field.querySelector('.answer-text').value,
 						isCorrect: field.querySelector('.answer-correct').checked

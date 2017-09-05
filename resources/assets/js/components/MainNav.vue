@@ -15,7 +15,6 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
-			v-if="$moderatorFeed.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>

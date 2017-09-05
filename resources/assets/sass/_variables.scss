@@ -122,6 +122,7 @@ $text: $color-gray;
 
 // z-index positioning
 $z-index-navbar: 50;
+$z-index-active-filters: 40;
 $z-index-sidenav-slot: $z-index-navbar - 1;
 $z-index-overlay: $z-index-navbar + 1;
 $z-index-autocomplete: $z-index-overlay;

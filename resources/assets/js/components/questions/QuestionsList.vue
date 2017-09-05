@@ -24,7 +24,7 @@
 					v-if="computedQuestionsList.length > 0 || !fetchingQuestions"
 					:activeFilters="activeFiltersNames"
 					:currentQuestion="currentQuestion"
-					:loading="fetchingQuestions"
+					:loading="fetchingQuestions || fetchingFilters"
 					:getReaction="computedGetReaction"
 					:isMobile="isMobile"
 					:meta="meta"
@@ -265,15 +265,15 @@
 				this.resetTest()
 			},
 			fetchMatchingQuestions() {
-				this.switchOverlay(true)
 				return this.fetchQuestions({filters: this.activeFilters})
 					.catch(error => $wnl.logger.error(error))
-					.then(() => this.switchOverlay(false))
 			},
 			onActiveFiltersChanged(payload) {
 				this.fetchingFilters = true
 				this.activeFiltersToggle(payload)
 					.then(() => {
+						if (!payload.refresh) return false
+
 						this.resetCurrentQuestion()
 						this.resetPages()
 						this.fetchDynamicFilters()
@@ -281,6 +281,8 @@
 					})
 					.then(() => {
 						this.fetchingFilters = false
+
+						if (!payload.refresh) return false
 						this.fetchQuestionsReactions(this.getPage(1))
 					})
 			},

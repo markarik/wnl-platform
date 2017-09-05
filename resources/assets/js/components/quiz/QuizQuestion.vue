@@ -6,6 +6,7 @@
 				'is-incorrect': displayResults && !isUnanswered && !isCorrect,
 				'is-unresolved': !displayResults,
 				'is-unanswered': isUnanswered,
+				'is-large-desktop': isLargeDesktop,
 				'is-mobile': isMobile,
 			}">
 			<header class="quiz-header card-header">
@@ -99,10 +100,6 @@
 			display: block
 			margin: 0 auto -0.2em
 
-	.quiz-header,
-	.quiz-answers
-		padding: $margin-base
-
 	.quiz-header
 		align-items: flex-start
 		flex-direction: column
@@ -142,8 +139,32 @@
 		&.is-incorrect
 			box-shadow: 0 2px 3px $color-incorrect-shadow, 0 0 0 1px $color-incorrect-shadow
 
-		&.is-mobile
+		.quiz-header,
+		.quiz-answers
+			padding: $margin-medium
 
+		.card-header-title,
+		.card-header-icons
+			font-weight: $font-weight-regular
+			padding: $margin-medium
+
+		&.is-large-desktop
+			.quiz-header,
+			.quiz-answers
+				padding: $margin-base
+
+				.card-header-title,
+				.card-header-icons
+					font-weight: $font-weight-regular
+					padding: $margin-base
+
+			.quiz-header
+				font-size: $font-size-base
+
+			.quiz-answer
+				font-size: $font-size-base
+
+		&.is-mobile
 			.quiz-question-tags
 				margin-right: $margin-small
 
@@ -200,7 +221,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobile', 'isAdmin']),
+			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
 			...mapGetters('quiz', [
 				'getAnswers',
 				'isComplete',

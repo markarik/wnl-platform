@@ -3,6 +3,7 @@ export const questions = {
 		activeFiltersReview: 'Aktywne filtry: {filters}',
 		activeHeading: 'Aktywne filtry',
 		allQuestions: 'Wszystkie pytania',
+		autorefresh: 'Odświeżaj automatycznie',
 		filteringResult: 'Pasujące pytania:',
 		filteringResultFrom: 'z {totalCount} w bazie',
 		items: {
@@ -16,7 +17,8 @@ export const questions = {
 		},
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',
-		show: 'Zmień filtry',
+		refresh: 'Odśwież',
+		show: 'Pokaż filtry',
 		submit: 'Wybierz pasujące pytania',
 	},
 	nav: {

@@ -1,5 +1,17 @@
 <template>
 	<div class="active-filters">
+		<div class="refresh">
+			<div class="refresh-link">
+				<span class="icon is-tiny">
+					<i class="fa fa-refresh" :class="{'fa-spin': loading}"></i>
+				</span>
+				<a @click="$emit('refresh')">{{$t('questions.filters.refresh')}}</a>
+			</div>
+			<div class="autorefresh control">
+				<label for="autorefresh">{{$t('questions.filters.autorefresh')}}</label>
+				<input name="autorefresh" type="checkbox" class="checkbox" v-model="autorefresh">
+			</div>
+		</div>
 		<div class="filtering-result">
 			{{$t('questions.filters.filteringResult')}}
 			<span class="matched-count">{{matchedCount}}</span>
@@ -36,10 +48,31 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	.refresh
+		+flex-space-between()
+
+		.refresh-link
+			font-size: $font-size-minus-2
+			text-transform: uppercase
+
+			.icon
+				color: $color-background-gray
+
+		.autorefresh
+			align-items: center
+			color: $color-gray-dimmed
+			display: flex
+			justify-content: flex-end
+			font-size: $font-size-minus-2
+			text-transform: uppercase
+
+			.checkbox
+				margin-left: $margin-small
 
 	.active-filters
-		background-color: $color-background-lighter-gray
-		padding: $margin-medium $margin-base
+		padding: $margin-small $margin-base $margin-medium
 
 	.filtering-result
 		font-size: $font-size-minus-1
@@ -79,12 +112,10 @@
 
 			.delete
 				margin-right: -0.7em
-
-	.tag:not(.is-success)
-		background-color: $color-background-light-gray
 </style>
 
 <script>
+	import {nextTick} from 'vue'
 	import {cloneDeep, isEqual, get} from 'lodash'
 
 	export default {
@@ -113,6 +144,12 @@
 				type: Number,
 			},
 		},
+		data() {
+			return {
+				autorefresh: true,
+				elementHeight: 0,
+			}
+		},
 		computed: {
 			activeFiltersObjects() {
 				return this.activeFilters.map(filter => ({path: filter, ...this.getFilter(filter)}))
@@ -129,13 +166,23 @@
 			getFilter(filter) {
 				return get(this.filters, filter)
 			},
-			onSubmit() {
-				this.updateAppliedFilters()
-				this.$emit('fetchMatchingQuestions')
+			emitHeight() {
+				this.$emit('elementHeight', this.$el.offsetHeight)
 			},
 			removeFilter(filter) {
 				this.$emit('activeFiltersChanged', {filter, active: false})
 			},
 		},
+		mounted() {
+			this.emitHeight()
+		},
+		watch: {
+			activeFilters() {
+				nextTick(this.emitHeight)
+			},
+			autorefresh(to) {
+				this.$emit('autorefreshChange', to)
+			},
+		}
 	}
 </script>

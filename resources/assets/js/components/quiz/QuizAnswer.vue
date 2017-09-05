@@ -4,7 +4,7 @@
 			'is-selected': isSelected && !showCorrect,
 			'is-correct': showCorrect,
 			'is-hinted': hintCorrect,
-			'is-large-desktop': isLargeDesktop,
+			'is-mobile': isMobile,
 		}"
 		@click.prevent="$emit('answerSelected')"
 	>
@@ -54,7 +54,7 @@
 		justify-content: space-between
 		line-height: $line-height-minus
 		list-style-type: none
-		padding: $margin-medium $margin-small $margin-medium $margin-big + $margin-tiny
+		padding: $margin-base $margin-base $margin-base $margin-huge
 		position: relative
 		margin: 0
 		user-select: none
@@ -71,9 +71,8 @@
 				position: absolute
 				right: $margin-base
 
-		&.is-large-desktop
-			line-height: $line-height-base
-			padding: $margin-base $margin-base $margin-base $margin-huge
+		&.is-mobile
+			padding: $margin-medium $margin-small $margin-medium $margin-big + $margin-tiny
 
 	.quiz-answer.is-correct
 		background: $color-green
@@ -105,7 +104,7 @@
 		name: 'QuizAnswer',
 		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly', 'isSelected', 'answersStats'],
 		computed: {
-			...mapGetters(['isLargeDesktop']),
+			...mapGetters(['isMobile']),
 			/**
 			 * @param  {int} answerIndex
 			 * @return {Boolean}

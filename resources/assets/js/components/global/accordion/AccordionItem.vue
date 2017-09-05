@@ -239,6 +239,8 @@
 
 				if (!this.loading && this.isSelectable) {
 					this.toggleSelected()
+				} else {
+					this.toggleExpanded()
 				}
 			},
 			toggleExpanded() {

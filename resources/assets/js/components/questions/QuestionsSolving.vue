@@ -123,6 +123,9 @@
 		<div v-else-if="!loading" class="has-text-centered margin vertical metadata">
 			{{$t('questions.zeroState')}}
 		</div>
+		<div v-else>
+			<wnl-text-loader>{{$t('ui.loading.questions')}}</wnl-text-loader>
+		</div>
 	</div>
 </template>
 

@@ -100,6 +100,7 @@ export const questions = {
 	},
 	solving: {
 		abort: 'Przerwij',
+		activeQuestionTip: 'Kliknij ponownie na wybraną odpowiedź, aby potwierdzić ją i sprawdzić wynik. Następnie, możesz kliknąć dwa razy w dowolną odpowiedź, aby przejść do następnego pytania.',
 		confirm: {
 			no: 'Nie, przerywam',
 			title: 'Może jednak chcesz dokończyć test?',

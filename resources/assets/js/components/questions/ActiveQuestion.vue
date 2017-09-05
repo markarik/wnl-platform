@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-active-question">
-		<p class="tip">{{$t('questions.solving.activeQuestionTip')}}</p>
+		<p v-if="!isMobile" class="tip">{{$t('questions.solving.activeQuestionTip')}}</p>
 		<div class="active-question-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
@@ -48,7 +48,7 @@
 		margin-bottom: $margin-base
 
 	.active-question-button
-		margin-bottom: $margin-big
+		margin-bottom: $margin-big * 6
 		margin-top: -$margin-big
 
 	.active-question-controls
@@ -119,14 +119,14 @@
 		methods: {
 			nextQuestion() {
 				this.$emit('changeQuestion', 1)
-				scrollToElement(this.$el, 10)
+				scrollToElement(this.$el, 63)
 			},
 			onAnswerDoubleclick() {
 				this.allowDoubleclick && this.displayResults && this.nextQuestion()
 			},
 			previousQuestion() {
 				this.$emit('changeQuestion', -1)
-				scrollToElement(this.$el, 10)
+				scrollToElement(this.$el, 63)
 			},
 			selectAnswer(data) {
 				this.allowDoubleclick = false

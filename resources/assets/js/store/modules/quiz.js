@@ -111,7 +111,7 @@ const getters = {
 	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
 	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(
-		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
+		getters.getQuestions, (question) => !_.isNumber(question.selectedAnswer)
 	),
 	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0 && getters.hasQuestions,
 	isLoaded: (state) => state.loaded,
@@ -139,7 +139,7 @@ const mutations = {
 	},
 	[types.QUIZ_RESOLVE_QUESTION] (state, payload) {
 		const question = state.quiz_questions[payload.id]
-		if (question.hasOwnProperty('original_answers')) {
+		if (_.isNumber(question.selectedAnswer) && question.hasOwnProperty('original_answers')) {
 			let selectedId = question.quiz_answers[question.selectedAnswer]
 			question.quiz_answers = question.original_answers
 			question.selectedAnswer = question.quiz_answers.indexOf(selectedId)
@@ -325,7 +325,7 @@ const actions = {
 			})
 	},
 
-	checkQuiz({state, commit, getters, dispatch, rootGetters}) {
+	checkQuiz({state, commit, getters, dispatch, rootGetters}, force = false) {
 		return new Promise((resolve) => {
 			commit(types.QUIZ_TOGGLE_PROCESSING, true)
 			const data = [];
@@ -333,19 +333,22 @@ const actions = {
 			const attempts = getters.getAttempts.length;
 
 			_.each(getters.getUnresolved, question => {
-				let selectedId = question.quiz_answers[question.selectedAnswer],
-					selected = state.quiz_answers[selectedId],
-					id = question.id
+				let id = question.id,
+					selectedId = question.quiz_answers[question.selectedAnswer],
+					selected = state.quiz_answers[selectedId]
 
-				if (attempts === 0) {
-					data.push({
-						'quiz_question_id': id,
-						'quiz_answer_id': selectedId,
-						'user_id': rootGetters.currentUserId
-					});
+				if (_.isNumber(question.selectedAnswer)) {
+
+					if (!attempts) {
+						data.push({
+							'quiz_question_id': id,
+							'quiz_answer_id': selectedId,
+							'user_id': rootGetters.currentUserId
+						});
+					}
 				}
 
-				if (!_.isNull(selected) && selected.is_correct) {
+				if (_.isNumber(question.selectedAnswer) && selected.is_correct) {
 					commit(types.QUIZ_RESOLVE_QUESTION, {id})
 				} else {
 					// react
@@ -368,11 +371,14 @@ const actions = {
 			})
 
 			commit(types.QUIZ_ATTEMPT, {score: getters.getCurrentScore})
-			dispatch('markManyAsReacted', reactionsToSet)
+
+			if (reactionsToSet.length) {
+				dispatch('markManyAsReacted', reactionsToSet)
+			}
 
 			dispatch('saveQuiz', data);
 
-			if (getters.getUnresolved.length === 0) {
+			if (force || getters.getUnresolved.length === 0) {
 				commit(types.QUIZ_COMPLETE)
 			}
 

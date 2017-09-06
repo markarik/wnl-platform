@@ -16,7 +16,7 @@ export const questions = {
 		stats: {
 			error: 'Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!',
 			heading: 'Twoje statystyki',
-			scores: 'Rozwiązane pytania i wyniki',
+			scores: 'Ilość rozwiązanych pytań i procent prawidłowych odpowiedzi',
 		},
 	},
 	filters: {

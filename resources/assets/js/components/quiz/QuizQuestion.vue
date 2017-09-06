@@ -145,8 +145,8 @@
 
 		.card-header-title,
 		.card-header-icons
-			font-weight: $font-weight-regular
-			padding: $margin-medium
+			font-weight: $font-weight-bold
+			padding: 0 $margin-medium
 
 		&.is-large-desktop
 			.quiz-header,
@@ -155,8 +155,7 @@
 
 				.card-header-title,
 				.card-header-icons
-					font-weight: $font-weight-regular
-					padding: $margin-base
+					padding: 0 $margin-base
 
 			.quiz-header
 				font-size: $font-size-base
@@ -174,7 +173,6 @@
 
 				.card-header-title,
 				.card-header-icons
-					font-weight: $font-weight-regular
 					line-height: $line-height-minus
 					padding: $margin-small
 

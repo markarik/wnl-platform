@@ -72,7 +72,7 @@ class QuizQuestionsApiController extends ApiController
 
 		$model = app(QuizQuestion::class);
 		$total = (clone $model)::count();
-		$resolved = $this->resolved($total, $model, $userId);
+		$resolved = $this->resolved($model, $userId);
 		$correct = $this->correct($model, $userId);
 
 		$data = [
@@ -87,11 +87,10 @@ class QuizQuestionsApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	protected function resolved($total, $model, $userId)
+	protected function resolved($model, $userId)
 	{
-		$builder = $this->applyResolution($model, $userId, 'unresolved');
-		$unresolved = $builder->count();
-		$resolved = $total - $unresolved;
+		$builder = $this->applyResolution($model, $userId, 'resolved');
+		$resolved = $builder->count();
 
 		return $resolved;
 	}
@@ -107,7 +106,6 @@ class QuizQuestionsApiController extends ApiController
 	protected function getSubjectsStats($model, $userId)
 	{
 		$filter = app(SubjectsFilter::class);
-		$params = ['user_id' => $userId];
 
 		$txTags = $this->taxonomyTags();
 		$tagIds = $txTags->pluck('tag_id');
@@ -116,25 +114,27 @@ class QuizQuestionsApiController extends ApiController
 			$filter->fetchAggregation($model, $tagIds)
 		)->keyBy('key');
 
-		$unresolvedAggregated = collect(
+		$resolvedAggregated = collect(
 			$filter->fetchAggregation(
-				$this->applyResolution($model, $userId, 'unresolved'),
-				$tagIds
+				$this->applyResolution($model, $userId, 'resolved'),
+				$tagIds,
+				false
 			)
 		)->keyBy('key');
 
 		$correctAggregated = collect(
 			$filter->fetchAggregation(
 				$this->applyResolution($model, $userId, 'correct'),
-				$tagIds
+				$tagIds,
+				false
 			)
 		)->keyBy('key');
 
 		foreach ($txTags as $txTag) {
 			$total = $totalAggregated->get($txTag->tag_id)['doc_count'];
-			$unresolved = $unresolvedAggregated->get($txTag->tag_id)['doc_count'] ?? 0;
-			$resolved = $total - $unresolved;
+			$resolved = $resolvedAggregated->get($txTag->tag_id)['doc_count'] ?? 0;
 			$correct = $correctAggregated->get($txTag->tag_id)['doc_count'] ?? 0;
+
 			$subjects[] = [
 				'tag_id'        => $txTag->tag_id,
 				'name'          => $txTag->tag->name,

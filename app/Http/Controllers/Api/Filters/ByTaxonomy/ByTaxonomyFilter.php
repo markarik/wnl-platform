@@ -26,9 +26,9 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		$structure = $this->buildTaxonomyStructure($taxonomyTags, $aggregatedTags);
 
 		return [
-			'type'  => 'tags',
+			'type'    => 'tags',
 			'message' => $taxonomyName,
-			'items' => $structure,
+			'items'   => $structure,
 		];
 	}
 
@@ -88,7 +88,7 @@ abstract class ByTaxonomyFilter extends ApiFilter
 			->get();
 	}
 
-	public function fetchAggregation($builder, $tags)
+	public function fetchAggregation($builder, $tags, $matchAll = true)
 	{
 		$ids = [];
 		if ($builder instanceof Model) {
@@ -102,7 +102,7 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		}
 
 		$result = $model::searchRaw(
-			$this->elasticCraziness($ids, $tags)
+			$this->elasticCraziness($ids, $tags, $matchAll)
 		);
 
 		$tagsAggregation = $result['aggregations']['tags']['buckets'];
@@ -110,17 +110,21 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		return $tagsAggregation;
 	}
 
-	protected function elasticCraziness($ids, $tags)
+	protected function elasticCraziness($ids, $tags, $matchAll)
 	{
-		if ($ids !== []) {
-			$query = [
-				'terms' => ['id' => $ids],
-			];
-			$size = count($ids);
-		} else {
+		if ($ids === [] && $matchAll) {
 			$query = [
 				'match_all' => new \stdClass(),
 			];
+		} else {
+			$query = [
+				'terms' => ['id' => $ids],
+			];
+		}
+
+		if ($ids !== []) {
+			$size = count($ids);
+		} else {
 			$size = $tags->count();
 		}
 		$include = $tags->toArray();
@@ -132,9 +136,9 @@ abstract class ByTaxonomyFilter extends ApiFilter
 				'aggs'  => [
 					'tags' => [
 						'terms' => [
-							'field' => 'tags.id',
-							'size'  => $size,
-							'include' => $include
+							'field'   => 'tags.id',
+							'size'    => $size,
+							'include' => $include,
 						],
 					],
 				],

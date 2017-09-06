@@ -90,4 +90,11 @@ class ResolutionFilter extends ApiFilter
 
 		return $query->whereRaw("id not in (select quiz_question_id from user_quiz_results where user_id = {$userId} group by quiz_question_id)");
 	}
+
+	protected function resolved($query)
+	{
+		$userId = $this->params['user_id'];
+
+		return $query->whereRaw("id in (select quiz_question_id from user_quiz_results where user_id = {$userId} group by quiz_question_id)");
+	}
 }

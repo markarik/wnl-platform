@@ -25,6 +25,7 @@
 	.wnl-quiz-question.is-unresolved
 		.quiz-answer
 			cursor: pointer
+			user-select: none
 
 			&.is-selected
 				background: $color-ocean-blue
@@ -57,7 +58,6 @@
 		padding: $margin-base $margin-base $margin-base $margin-huge
 		position: relative
 		margin: 0
-		user-select: none
 
 		&::before
 			content: counter(list, upper-alpha) ")"
@@ -72,7 +72,7 @@
 				right: $margin-base
 
 		&.is-mobile
-			padding: $margin-medium $margin-small $margin-medium $margin-big + $margin-tiny
+			padding: $margin-base $margin-small $margin-base $margin-big + $margin-tiny
 
 	.quiz-answer.is-correct
 		background: $color-green

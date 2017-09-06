@@ -109,6 +109,7 @@
 					:getReaction="getReaction"
 					:questions="testQuestions"
 					:questionsPoolSize="questionsListCount"
+					:presetOptions="presetOptions"
 					:testMode="testMode"
 					:testProcessing="testProcessing"
 					:testResults="testResults"
@@ -272,6 +273,10 @@
 				default: 0,
 				type: Number,
 			},
+			presetOptions: {
+				default: () => {},
+				type: Object,
+			},
 			testMode: {
 				default: false,
 				type: Boolean,
@@ -352,11 +357,18 @@
 				this.$emit('verify', payload)
 			},
 		},
+		mounted() {
+			if (this.presetOptions.hasOwnProperty('activeView')) {
+				this.activeView = this.presetOptions.activeView
+			}
+		},
 		watch: {
 			activeFilters() {
 				this.showListResults = false
 			},
 			activeView() {
+				if (!this.$refs.view) return false
+
 				scrollToElement(this.$refs.view, 200)
 			},
 		}

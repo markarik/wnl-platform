@@ -14,12 +14,13 @@
 </style>
 
 <script>
-	import End from 'js/components/course/screens/End.vue'
-	import Html from 'js/components/course/screens/Html.vue'
-	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
-	import Quiz from 'js/components/quiz/Quiz.vue'
-	import Widget from 'js/components/course/screens/Widget.vue'
+	import End from 'js/components/course/screens/End'
+	import Html from 'js/components/course/screens/Html'
+	import MockExam from 'js/components/course/screens/MockExam'
 	import Qna from 'js/components/qna/Qna'
+	import Quiz from 'js/components/quiz/Quiz'
+	import Slideshow from 'js/components/course/screens/slideshow/Slideshow'
+	import Widget from 'js/components/course/screens/Widget'
 	import {mapGetters, mapActions} from 'vuex';
 
 	const typesToComponents = {
@@ -28,6 +29,7 @@
 		slideshow: 'wnl-slideshow',
 		quiz: 'wnl-quiz',
 		widget: 'wnl-widget',
+		mockexam: 'wnl-mock-exam',
 	}
 
 	export default {
@@ -35,9 +37,10 @@
 		components: {
 			'wnl-end': End,
 			'wnl-html': Html,
-			'wnl-slideshow': Slideshow,
+			'wnl-mock-exam': MockExam,
 			'wnl-qna': Qna,
 			'wnl-quiz': Quiz,
+			'wnl-slideshow': Slideshow,
 			'wnl-widget': Widget,
 		},
 		props: ['screenId'],

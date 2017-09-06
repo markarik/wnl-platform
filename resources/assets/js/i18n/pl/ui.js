@@ -7,6 +7,7 @@ export const ui = {
 	},
 	loading: {
 		default: 'Uwaga, nadjeżdża wiedza...',
+		mockExam: 'Brace yourself. The exam is coming...',
 		questions: 'Pytania już fruną!',
 		testBuilding: 'Już układamy zestawik...',
 		testChecking: 'No, zobaczmy...',

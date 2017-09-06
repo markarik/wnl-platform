@@ -135,6 +135,11 @@
 			value: 'end',
 			hasMeta: false,
 		},
+		mockexam: {
+			text: 'Próbny egzamin',
+			value: 'mockexam',
+			hasMeta: false,
+		},
 	}
 
 	export default {

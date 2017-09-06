@@ -41,6 +41,7 @@ class Kernel extends ConsoleKernel
 		Commands\OrdersExport::class,
 		Commands\QuizImport::class,
 		Commands\PopulateAmountColumns::class,
+		Commands\SlackDaysCron::class,
 		Commands\SectionsUpdate::class,
 		Commands\SlideshowsRemove::class,
 		Commands\SlidesFromCategory::class,
@@ -85,6 +86,10 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('progress:store')
+			->dailyAt('02:30');
+
+		$schedule
+			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
 	}
 

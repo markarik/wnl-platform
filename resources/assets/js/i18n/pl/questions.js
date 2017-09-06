@@ -41,6 +41,7 @@ export const questions = {
 		show: 'Pokaż filtry',
 		submit: 'Wybierz pasujące pytania',
 		preserveProgress: 'Zachowaj rozwiązane pytania z poprzedniego planu',
+		preserveProgressTip: 'Jeżeli odznaczysz tę opcję, ilość rozwiązanych pytań w nowym planie będzie wynosiła 0.',
 	},
 	nav: {
 		dashboard: 'Dashboard',

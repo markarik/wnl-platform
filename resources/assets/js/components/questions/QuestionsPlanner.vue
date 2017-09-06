@@ -93,6 +93,7 @@
 							<input id="preserveProgress" type="checkbox" class="checkbox" v-model="preserveProgress">
 							<label for="preserveProgress">{{$t('questions.filters.preserveProgress')}}</label>
 						</div>
+						<p class="tip has-text-centered">{{$t('questions.filters.preserveProgressTip')}}</p>
 						<div  v-if="!isLargeDesktop && selectedOption === 'custom'" class="questions-plan-toggle-filters">
 							<div class="active-filters tip">
 								<span>{{$t('questions.filters.activeHeading')}}:</span>
@@ -218,7 +219,6 @@
 		display: flex
 		justify-content: center
 		font-size: $font-size-minus-2
-		margin-bottom: $margin-big
 		text-transform: uppercase
 
 	.slack-days

@@ -39,10 +39,10 @@ class UserPlanApiController extends ApiController
 		$slackDays = $request->get('slackDays');
 		$userId = $request->route('userId');
 		$filters = $request->get('filters');
-		$this->deleteProgress($userId);
+		$preserveProgress = $request->get('preserveProgress');
+		$recentPlan = UserPlan::where('user_id', $userId)->get()->last();
 
 		// TODO handle empty dates
-
 		$filteredQuestions = $this
 			->addFilters($request->filters, app('App\\Models\\QuizQuestion'))
 			->get()
@@ -57,17 +57,23 @@ class UserPlanApiController extends ApiController
 			'filters'            => $filters,
 		]);
 
-		$valuesToInsert = [];
+		$valuesToInsert = collect();
 
 		foreach ($filteredQuestions as $question) {
-			$valuesToInsert[] = [
+			$valuesToInsert->push([
 				'user_id'     => $userId,
 				'plan_id'     => $createdPlan->id,
 				'question_id' => $question,
-			];
+			]);
 		}
 
-		\DB::table('users_plan_progress')->insert($valuesToInsert);
+		if ($recentPlan && $preserveProgress === true) {
+			$valuesToInsert = $this->rewriteProgress($recentPlan, $valuesToInsert);
+		}
+
+		\DB::table('users_plan_progress')->insert($valuesToInsert->toArray());
+
+		$this->deleteProgress($recentPlan);
 
 		$resource = new Item($createdPlan, new UserPlanTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
@@ -75,10 +81,21 @@ class UserPlanApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	protected function deleteProgress($userId)
+	protected function rewriteProgress($recentPlan, $valuesToInsert)
 	{
-		$recentPlan = UserPlan::where('user_id', $userId)->get()->last();
-		if (!$recentPlan) return;
-		$recentPlan->questionsProgress()->delete();
+		$recentProgress = $recentPlan->questionsProgress->keyBy('question_id');
+		$valuesToInsert = $valuesToInsert->map(function ($item) use ($recentProgress) {
+			$item['resolved_at'] = $recentProgress->get($item['question_id'])->resolved_at ?? null;
+
+			return $item;
+		});
+
+		return $valuesToInsert;
+	}
+
+	protected function deleteProgress($plan)
+	{
+		if (!$plan) return;
+		$plan->questionsProgress()->delete();
 	}
 }

@@ -40,6 +40,7 @@ export const questions = {
 		refresh: 'Odśwież',
 		show: 'Pokaż filtry',
 		submit: 'Wybierz pasujące pytania',
+		preserveProgress: 'Zachowaj rozwiązane pytania z poprzedniego planu',
 	},
 	nav: {
 		dashboard: 'Dashboard',

@@ -226,14 +226,9 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
-	buildPlan({state, getters, rootGetters, commit}, {activeFilters, startDate, endDate, slackDays}) {
-		const filters = _parseFilters(activeFilters, state, getters, rootGetters);
-		return axios.post(getApiUrl(`user_plan/${rootGetters.currentUserId}`), {
-			filters,
-			startDate,
-			endDate,
-			slackDays
-		})
+	buildPlan({state, getters, rootGetters, commit}, data) {
+		data.filters = _parseFilters(data.activeFilters, state, getters, rootGetters);
+		return axios.post(getApiUrl(`user_plan/${rootGetters.currentUserId}`), data)
 	},
 	changeCurrentQuestion({state, getters, commit}, {page, index}) {
 		return new Promise((resolve, reject) => {

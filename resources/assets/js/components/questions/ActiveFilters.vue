@@ -9,7 +9,7 @@
 			</div>
 			<div class="autorefresh control">
 				<label for="autorefresh">{{$t('questions.filters.autorefresh')}}</label>
-				<input name="autorefresh" type="checkbox" class="checkbox" v-model="autorefresh">
+				<input id="autorefresh" type="checkbox" class="checkbox" v-model="autorefresh">
 			</div>
 		</div>
 		<div class="filtering-result">

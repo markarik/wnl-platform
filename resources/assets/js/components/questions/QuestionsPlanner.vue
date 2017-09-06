@@ -89,6 +89,10 @@
 								</p>
 							</div>
 						</div>
+						<div class="preserveProgress control" v-if="hasPlan">
+							<input id="preserveProgress" type="checkbox" class="checkbox" v-model="preserveProgress">
+							<label for="preserveProgress">{{$t('questions.filters.preserveProgress')}}</label>
+						</div>
 						<div  v-if="!isLargeDesktop && selectedOption === 'custom'" class="questions-plan-toggle-filters">
 							<div class="active-filters tip">
 								<span>{{$t('questions.filters.activeHeading')}}:</span>
@@ -208,6 +212,15 @@
 			text-transform: uppercase
 			width: 100%
 
+	.preserveProgress
+		align-items: center
+		color: $color-gray-dimmed
+		display: flex
+		justify-content: center
+		font-size: $font-size-minus-2
+		margin-bottom: $margin-big
+		text-transform: uppercase
+
 	.slack-days
 		+flex-center()
 		flex-direction: column
@@ -228,7 +241,7 @@
 
 	.questions-plan-options
 		+flex-center()
-		margin-bottom: $margin-big
+		margin-bottom: $margin-medium
 
 		.plan-option
 			display: block
@@ -302,6 +315,7 @@
 				slackDays: 0,
 				startDate: new Date(),
 				unresolvedAndIncorrectCount: 0,
+				preserveProgress: true
 			}
 		},
 		computed: {
@@ -393,7 +407,8 @@
 					startDate: this.startDate,
 					endDate: this.endDate,
 					activeFilters: this.activeFilters,
-					slackDays: this.slackDays
+					slackDays: this.slackDays,
+					preserveProgress: this.preserveProgress
 				})
 				.then(({status, data}) => this.plan = data)
 				.then(this.fetchDynamicFilters)

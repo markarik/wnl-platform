@@ -15,6 +15,8 @@ class AddKeys extends Migration
 	{
 		Schema::table('users_plan_progress', function (Blueprint $table) {
 			$table->index('user_id');
+			$table->index('plan_id');
+			$table->index('question_id');
 		});
 
 		Schema::table('users_plans', function (Blueprint $table) {
@@ -122,6 +124,8 @@ class AddKeys extends Migration
 	{
 		Schema::table('users_plan_progress', function (Blueprint $table) {
 			$table->dropIndex(['user_id']);
+			$table->dropIndex(['plan_id']);
+			$table->dropIndex(['question_id']);
 		});
 
 		Schema::table('users_plans', function (Blueprint $table) {

@@ -134,6 +134,9 @@ export const questions = {
 				remaining: 'Pozostało:',
 				time: 'Ile czasu chcesz poświęcić?',
 			},
+			preset: {
+				time: 'Test potrwa {time} minut.',
+			},
 			start: 'Rozpocznij test!',
 			title: 'Rozwiąż zestaw ułożony na podstawie aktywnych filtrów...',
 		},

@@ -30,6 +30,7 @@
 					:meta="meta"
 					:questionsListCount="matchedQuestionsCount"
 					:questionsCurrentPage="questionsCurrentPage"
+					:presetOptions="presetOptionsToPass"
 					:testMode="testMode"
 					:testQuestions="testQuestions"
 					:testProcessing="testProcessing"
@@ -125,6 +126,10 @@
 				default: () => [],
 				type: Array,
 			},
+			presetOptions: {
+				default: () => {},
+				type: Object,
+			}
 		},
 		components: {
 			'wnl-active-filters': ActiveFilters,
@@ -190,6 +195,9 @@
 			highlightedQuestion() {
 				return this.questionsList[0]
 			},
+			presetOptionsToPass() {
+				return isEmpty(this.presetOptions) ? {} : this.presetOptions
+			},
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
@@ -214,7 +222,11 @@
 				'setPage',
 			]),
 			buildTest({count}) {
-				this.switchOverlay(true, 'testBuilding', 'testBuilding')
+				const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
+					? this.presetOptionsToPass.loadingText
+					: 'testBuilding'
+				
+				this.switchOverlay(true, 'testBuilding', text)
 				this.resetTest()
 				this.testMode = true
 				this.fetchTestQuestions({

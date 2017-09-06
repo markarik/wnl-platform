@@ -18,7 +18,7 @@ class QuizImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:import {dir?} {--check} {--debug}',
+	protected $signature = 'quiz:import {dir?} {--check} {--debug} {--addNewTags}',
 
 		/**
 		 * The console command description.
@@ -100,8 +100,14 @@ class QuizImport extends Command
 			if (!$quizSet->questions->contains($similarQuestion)) {
 				$quizSet->questions()->attach($similarQuestion);
 				$this->debug('Attached to set!');
+			} else {
+				$this->debug('Set already has this question');
 			}
-			$this->debug('Set already has this question');
+
+			if ($this->option('addNewTags')) {
+				$this->attachTags($similarQuestion, $values);
+				$this->tryMatchingCollectionTaxonomy($similarQuestion);
+			}
 
 			return;
 		}
@@ -123,6 +129,16 @@ class QuizImport extends Command
 			]);
 		}
 
+		$this->attachTags($question, $values);
+
+		$this->tryMatchingCollectionTaxonomy($question);
+
+		$question->preserve_order = (bool)$values[10];
+		$question->save();
+	}
+
+	protected function attachTags(&$question, $values)
+	{
 		if (!empty($values[12])) {
 			$this->globalTags[] = trim($values[12]);
 		}
@@ -134,17 +150,14 @@ class QuizImport extends Command
 			$tagNames = array_merge($tagNames, $this->globalTags);
 		}
 
+		$tagNames = array_unique($tagNames);
+
 		foreach ($tagNames as $tagName) {
 			$tag = Tag::firstOrCreate(['name' => $tagName]);
 			if (!$question->tags->contains($tag)) {
 				$question->tags()->attach($tag);
 			}
 		}
-
-		$this->tryMatchingCollectionTaxonomy($question);
-
-		$question->preserve_order = (bool)$values[10];
-		$question->save();
 	}
 
 	protected function tryMatchingCollectionTaxonomy($question)

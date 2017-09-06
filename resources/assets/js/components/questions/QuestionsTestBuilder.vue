@@ -32,7 +32,7 @@
 						></li>
 					</ul>
 				</section>
-				<section>
+				<section v-if="canChangeTime">
 					<p class="test-builder-header">
 						<span class="icon is-small">
 							<i class="fa fa-hourglass-start"></i>
@@ -41,6 +41,14 @@
 					</p>
 					<input class="input-clean" max="999" maxlength="3" type="number" v-model="time"/>
 					<span class="time-unit">{{$t('units.time.minutes')}}</span>
+				</section>
+				<section v-else>
+					<p class="test-preset-time">
+						<span class="icon is-small">
+							<i class="fa fa-hourglass-start"></i>
+						</span>
+						{{$t('questions.solving.test.preset.time', {time: this.time})}}
+					</p>
 				</section>
 				<a class="button is-small is-primary" @click="buildTest">
 					{{$t('questions.solving.test.start')}}
@@ -141,6 +149,10 @@
 				default: 0,
 				type: Number,
 			},
+			presetOptions: {
+				default: () => {},
+				type: Object,
+			},
 			setSizes: {
 				default: () => [15, 30, 50, 100, 200],
 				type: Array,
@@ -166,10 +178,19 @@
 		},
 		computed: {
 			...mapGetters(['isLargeDesktop']),
+			canChangeTime() {
+				return this.presetOptions.hasOwnProperty('canChangeTime')
+					? this.presetOptions.canChangeTime
+					: true
+			},
 			hasQuestions() {
 				return !isEmpty(this.questions)
 			},
 			sizesToChoose() {
+				if (this.presetOptions.hasOwnProperty('sizesToChoose')) {
+					return this.presetOptions.sizesToChoose
+				}
+
 				if (this.questionsPoolSize > Math.max.apply(null, this.setSizes)) {
 					return this.setSizes
 				}
@@ -189,7 +210,15 @@
 			},
 		},
 		mounted() {
-			this.testQuestionsCount = this.sizesToChoose[0]
+			if (this.presetOptions.hasOwnProperty('testQuestionsCount')) {
+				this.testQuestionsCount = this.presetOptions.testQuestionsCount
+			} else {
+				this.testQuestionsCount = this.sizesToChoose[0]
+			}
+
+			if (this.presetOptions.hasOwnProperty('time')) {
+				this.time = this.presetOptions.time
+			}
 		},
 		watch: {
 			testQuestionsCount() {

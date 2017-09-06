@@ -20,6 +20,9 @@
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
 				Sprawdź wyniki
 			</a>
+			<p v-if="canEndQuiz && !displayResults" class="has-text-centered margin vertical">
+				<a class="link" @click="$emit('checkQuiz', true)">Przerwij test i sprawdź wyniki</a>
+			</p>
 		</p>
 	</div>
 </template>
@@ -45,7 +48,7 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList'],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz'],
 		data() {
 			return {
 				hasErrors: false,

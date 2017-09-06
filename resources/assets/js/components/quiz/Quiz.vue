@@ -20,12 +20,13 @@
 				</a>
 			</p>
 			<wnl-quiz-list v-if="isLoaded"
+				module="quiz"
+				ref="quizList"
 				:allQuestions="getQuestionsWithAnswers"
+				:canEndQuiz="canEndQuiz"
 				:getReaction="getReaction"
 				:isProcessing="isProcessing"
 				:isComplete="isComplete"
-				module="quiz"
-				ref="quizList"
 				@selectAnswer="onAnswerSelect"
 				@resetState="resetState"
 				@checkQuiz="onCheckQuiz"
@@ -64,13 +65,17 @@
 		props: ['screenData', 'readOnly'],
 		computed: {
 			...mapGetters('quiz', [
-				'isComplete',
-				'isLoaded',
+				'getAttempts',
 				'getQuestionsWithAnswers',
 				'getReaction',
+				'isComplete',
+				'isLoaded',
 				'isProcessing',
 			]),
 			...mapGetters(['isAdmin']),
+			canEndQuiz() {
+				return this.getAttempts.length > 2
+			},
 			displayResults() {
 				return this.readOnly || this.isComplete
 			},

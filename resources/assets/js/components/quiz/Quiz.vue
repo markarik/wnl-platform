@@ -44,10 +44,11 @@
 
 <script>
 	import _ from 'lodash'
+	import { mapActions, mapGetters } from 'vuex'
 
 	import QuizList from 'js/components/quiz/QuizList'
 	import QuizSummary from 'js/components/quiz/QuizSummary'
-	import { mapActions, mapGetters } from 'vuex'
+	import {scrollToTop} from 'js/utils/animations'
 
 	export default {
 		name: 'Quiz',
@@ -89,8 +90,17 @@
 					this.commitSelectAnswer(data)
 				}
 			},
-			onCheckQuiz() {
-				this.checkQuiz().then(() => this.isComplete ? this.showAlert = true : this.$refs.quizList.showAlert())
+			onCheckQuiz(force = false) {
+				this.checkQuiz(force).then(() => {
+					if (this.isComplete) {
+						if (!force) {
+							this.showAlert = true
+						}
+						scrollToTop()
+					} else {
+						this.$refs.quizList.showAlert()
+					}
+				})
 			}
 		},
 		mounted() {

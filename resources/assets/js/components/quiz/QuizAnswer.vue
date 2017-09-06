@@ -11,7 +11,7 @@
 		<div class="quiz-answer-content">
 			{{answer.text}}
 		</div>
-		<div class="quiz-answer-stats" v-if="stats !== false">
+		<div class="quiz-answer-stats" v-if="isNumber(stats)">
 			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
 				{{stats}}%
 			</span>
@@ -97,6 +97,7 @@
 
 <script>
 	import { mapGetters } from 'vuex'
+	import { isFinite } from 'lodash'
 
 	import { isDebug } from 'js/utils/env'
 
@@ -129,5 +130,10 @@
 				return isDebug() && this.isCorrect
 			},
 		},
+		methods: {
+			isNumber(n) {
+				return isFinite(n)
+			}
+		}
 	}
 </script>

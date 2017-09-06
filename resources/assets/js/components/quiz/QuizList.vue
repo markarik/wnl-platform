@@ -37,7 +37,7 @@
 	import _ from 'lodash'
 	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { mapGetters, mapActions } from 'vuex'
-	import { scrollToElement } from 'js/utils/animations'
+	import { scrollToTop, scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
@@ -97,11 +97,34 @@
 			},
 		},
 		methods: {
+			confirmQuizEnd(unanswered) {
+				const config = swalConfig({
+					confirmButtonText: this.$t('questions.solving.confirm.yes'),
+					cancelButtonText: this.$t('questions.solving.confirm.no'),
+					reverseButtons: true,
+					showCancelButton: true,
+					showConfirmButton: true,
+					text: this.$t('questions.solving.confirm.unanswered', {
+						count: unanswered
+					}),
+					title: this.$t('questions.solving.confirm.title'),
+					type: 'question',
+				})
+
+				return new Promise((resolve, reject) => {
+					this.$swal(config)
+						.then(() => resolve(), () => reject())
+						.catch(e => reject())
+				})
+			},
 			verify() {
-				if (!this.plainList && this.questionsUnaswered.length > 0) {
+				const unanswered = this.questionsUnaswered.length
+				if (!this.plainList && unanswered > 0) {
 					this.hasErrors = true
-					this.$swal(this.getAlertConfig(this.unansweredAlert))
-						.catch(e => false)
+
+					this.confirmQuizEnd(unanswered)
+						.then(() => false)
+						.catch(() => this.$emit('checkQuiz', true))
 
 					this.scrollToFirstUnanswered()
 					return false

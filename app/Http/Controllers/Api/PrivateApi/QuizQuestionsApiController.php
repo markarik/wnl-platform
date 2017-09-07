@@ -130,13 +130,14 @@ class QuizQuestionsApiController extends ApiController
 			$correct = $correctAggregated->get($txTag->tag_id)['doc_count'] ?? 0;
 
 			$subjects[] = [
-				'tag_id'        => $txTag->tag_id,
-				'name'          => $txTag->tag->name,
-				'total'         => $total ?? 0,
-				'resolved'      => $resolved,
-				'resolved_perc' => $resolved == 0 ? 0 : $resolved / $total * 100,
-				'correct'       => $correct,
-				'correct_perc'  => $correct == 0 ? 0 : $correct / $resolved * 100,
+				'tag_id'             => $txTag->tag_id,
+				'name'               => $txTag->tag->name,
+				'total'              => $total ?? 0,
+				'resolved'           => $resolved,
+				'resolved_perc'      => $resolved == 0 ? 0 : $resolved / $total * 100,
+				'correct'            => $correct,
+				'correct_perc'       => $correct == 0 ? 0 : $correct / $resolved * 100,
+				'correct_perc_total' => $total == 0 ? 0 : $correct / $total * 100,
 			];
 		}
 
@@ -184,12 +185,13 @@ class QuizQuestionsApiController extends ApiController
 		$correct = $this->correct((clone $model), $userId);
 
 		return [
-			'total'         => $total,
-			'resolved'      => $resolved,
-			'resolved_perc' => $resolved / $total * 100,
-			'correct'       => $correct,
-			'correct_perc'  => $resolved == 0 ? 0 : $correct / $resolved * 100,
-			'subjects'      => $this->getSubjectsStats((clone $model), $userId),
+			'total'              => $total,
+			'resolved'           => $resolved,
+			'resolved_perc'      => $resolved / $total * 100,
+			'correct'            => $correct,
+			'correct_perc'       => $resolved == 0 ? 0 : $correct / $resolved * 100,
+			'correct_perc_total' => $total == 0 ? 0 : $correct / $total * 100,
+			'subjects'           => $this->getSubjectsStats((clone $model), $userId),
 		];
 	}
 }

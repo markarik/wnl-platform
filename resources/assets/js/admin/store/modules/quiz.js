@@ -75,26 +75,7 @@ const actions = {
 	},
 	setupFreshQuestion({ commit }) {
 		commit(types.CLEAR_QUIZ_QUESTION_ANSWERS)
-	},
-	saveAnswers({ commit }, { answersData, isEdit } ) {
-		const promises = answersData.map(
-			answer => {
-				if (isEdit) {
-					return axios.put(
-						getApiUrl(`quiz_answers/${answer.id}`),
-						{ text: answer.text, is_correct: answer.isCorrect }
-					)
-				} else {
-					return axios.post(
-						getApiUrl(`quiz_answers`),
-						{ text: answer.text, is_correct: answer.isCorrect }
-					)
-				}
-			}
-		)
-
-		return Promise.all(promises)
-	},
+	}
 }
 
 export default {

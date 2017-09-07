@@ -156,7 +156,6 @@
 		methods: {
 			...mapActions([
 				'getQuizQuestion',
-				'saveAnswers',
 				'setupFreshQuestion'
 			]),
 			onInput() {

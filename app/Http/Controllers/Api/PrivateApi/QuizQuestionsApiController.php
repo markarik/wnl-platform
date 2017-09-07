@@ -34,9 +34,19 @@ class QuizQuestionsApiController extends ApiController
 	public function post(UpdateQuizQuestion $request)
 	{
 		$question = QuizQuestion::create(['text' => $request->input('question')]);
+		$questionId = $question['id'];
+
+		if ($request->has('answers')) {
+			foreach($request->answers as $answer) {
+				$answerModel = QuizAnswer::create([
+					'text' => $request->input('text'),
+					'is_correct' => $request->input('is_correct'),
+					'quiz_question_id' => $questionId
+				]);
+			}
+		}
 
 		$resource = new Item($question, new QuizQuestionTransformer, $this->resourceName);
-
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
@@ -65,7 +75,8 @@ class QuizQuestionsApiController extends ApiController
 				$answerModel = QuizAnswer::find($answer['id']);
 
 				$answerModel->update([
-					'text' => $answer['text']
+					'text' => $request->input('text'),
+					'is_correct' => $request->input('is_correct')
 				]);
 			}
 		}

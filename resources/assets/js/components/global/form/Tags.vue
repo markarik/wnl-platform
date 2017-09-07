@@ -153,7 +153,7 @@
 		},
 		watch: {
 			defaultTags() {
-				this.tags = this.defaultTags
+				this.tags = this.defaultTags.slice()
 			}
 		}
 	}

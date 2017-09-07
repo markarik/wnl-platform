@@ -52,8 +52,8 @@ class QuizQuestionsApiController extends ApiController
 		if ($request->has('tags')) {
 			$question->tags()->detach();
 
-			foreach($request->tags as $tag) {
-				$tagModel = Tag::firstOrCreate(['id' => $tag['id'] ]);
+			foreach ($request->tags as $tag) {
+				$tagModel = Tag::firstOrCreate(['id' => $tag['id']]);
 
 				$question->tags()->attach($tagModel);
 			}
@@ -71,18 +71,12 @@ class QuizQuestionsApiController extends ApiController
 		$userId = Auth::user()->id;
 
 		$model = app(QuizQuestion::class);
-		$total = (clone $model)::count();
-		$resolved = $this->resolved($model, $userId);
-		$correct = $this->correct($model, $userId);
+		$data = $this->getOverall((clone $model), $userId);
 
-		$data = [
-			'total'         => $total,
-			'resolved'      => $resolved,
-			'resolved_perc' => $resolved / $total * 100,
-			'correct'       => $correct,
-			'correct_perc'  => $resolved == 0 ? 0 : $correct / $resolved * 100,
-			'subjects'      => $this->getSubjectsStats($model, $userId),
-		];
+		$mockExam = $this->getMockExam((clone $model), $userId);
+		if ($mockExam) {
+			$data = array_merge($data, $mockExam);
+		}
 
 		return $this->respondOk($data);
 	}
@@ -138,11 +132,11 @@ class QuizQuestionsApiController extends ApiController
 			$subjects[] = [
 				'tag_id'        => $txTag->tag_id,
 				'name'          => $txTag->tag->name,
-				'total'         => $total,
+				'total'         => $total ?? 0,
 				'resolved'      => $resolved,
-				'resolved_perc' => $resolved / $total * 100,
+				'resolved_perc' => $resolved == 0 ? 0 : $resolved / $total * 100,
 				'correct'       => $correct,
-				'correct_perc'  => $resolved == 0 ? 0 : $correct / $resolved * 100,
+				'correct_perc'  => $correct == 0 ? 0 : $correct / $resolved * 100,
 			];
 		}
 
@@ -169,5 +163,33 @@ class QuizQuestionsApiController extends ApiController
 			->with('tag')
 			->where('parent_tag_id', 0)
 			->get();
+	}
+
+	protected function getMockExam($model, $userId)
+	{
+		$builder = $model->whereHas('tags', function ($query) {
+			$query->where('name', 'Próbny LEK');
+		});
+
+		$resolved = $this->resolved((clone $builder), $userId);
+		if ($resolved === 0) return [];
+
+		return ['mock_exam' => $this->getOverall((clone $builder), $userId)];
+	}
+
+	protected function getOverall($model, $userId)
+	{
+		$total = (clone $model)->count();
+		$resolved = $this->resolved((clone $model), $userId);
+		$correct = $this->correct((clone $model), $userId);
+
+		return [
+			'total'         => $total,
+			'resolved'      => $resolved,
+			'resolved_perc' => $resolved / $total * 100,
+			'correct'       => $correct,
+			'correct_perc'  => $resolved == 0 ? 0 : $correct / $resolved * 100,
+			'subjects'      => $this->getSubjectsStats((clone $model), $userId),
+		];
 	}
 }

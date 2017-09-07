@@ -45,7 +45,8 @@ function getEmptyAnswers(stateAnswers) {
 // Getters
 const getters = {
 	questionText: state => state.question ? state.question.text : '',
-	questionAnswers: state => state.answers || getEmptyAnswers(),
+	questionAnswers: state => state.question && state.question['quiz_answers'].map(id => state.answers[id]),
+	questionAnswersMap: state => state.answers,
 	questionId: state => state.question && state.question.id,
 	questionTags: state => state.question ? state.question.tags : []
 }
@@ -57,7 +58,7 @@ const mutations = {
 		const answersArray = data['quiz_answers'].map(id => answersObject[id])
 
 		set(state, 'question', data)
-		set(state, 'answers', answersArray)
+		set(state, 'answers', answersObject)
 	},
 	[types.CLEAR_QUIZ_QUESTION_ANSWERS] (state, data) {
 		set(state, 'answers', getEmptyAnswers())

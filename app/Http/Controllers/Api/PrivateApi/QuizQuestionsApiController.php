@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Models\QuizQuestion;
+use App\Models\QuizAnswer;
 use App\Models\Tag;
 use App\Http\Requests\Quiz\UpdateQuizQuestion;
 use App\Http\Controllers\Api\Transformers\QuizQuestionTransformer;
@@ -56,6 +57,16 @@ class QuizQuestionsApiController extends ApiController
 				$tagModel = Tag::firstOrCreate(['id' => $tag['id'] ]);
 
 				$question->tags()->attach($tagModel);
+			}
+		}
+
+		if ($request->has('answers')) {
+			foreach($request->answers as $answer) {
+				$answerModel = QuizAnswer::find($answer['id']);
+
+				$answerModel->update([
+					'text' => $answer['text']
+				]);
 			}
 		}
 

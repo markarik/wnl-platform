@@ -55,6 +55,7 @@
 						<wnl-text-loader/>
 					</div>
 					<div v-else>
+						<!-- All questions -->
 						<div class="questions-dashboard-heading">
 							<span class="icon is-small"><i class="fa fa-bar-chart"></i></span>
 							{{$t('questions.dashboard.stats.heading')}}
@@ -63,18 +64,36 @@
 							<span class="icon is-small"><i class="fa fa-tasks"></i></span>
 							{{$t('questions.dashboard.stats.scores')}}
 						</div>
-						<div class="questions-stats">
-							<div v-for="stats, index in statsParsed"
+						<div class="questions-stats margin bottom">
+							<div v-for="stats, index in parseStats(stats)"
 								class="stats-item stats-resolved"
 								:class="{'is-first': index === 0}"
 							>
 								<span class="stats-title">{{stats.title}}</span>
 								<div class="progress-bar">
-									<progress class="progress is-success"
+									<progress class="progress"
 										:value="stats.progress"
 										:max="stats.total"/>
 									<span class="progress-number">{{stats.progressNumber}}</span>
 									<div class="score" :class="scoreClass(stats.score)">{{stats.score}}%</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Mock exam -->
+						<div v-if="stats.mock_exam">
+							<div class="questions-dashboard-subheading margin top">
+								<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
+								{{$t('questions.dashboard.stats.mockExam')}}
+							</div>
+							<div class="questions-stats stats-exam">
+								<div v-for="stats, index in parseStats(stats.mock_exam)"
+									class="stats-item stats-exam"
+									:class="{'is-first': index === 0}"
+								>
+									<span class="stats-title">{{stats.title}}</span>
+									<span class="progress-number" :class="scoreClass(stats.scoreTotal)">{{stats.scoreNumber}}</span>
+									<div class="score" :class="scoreClass(stats.scoreTotal)">{{stats.scoreTotal}}%</div>
 								</div>
 							</div>
 						</div>
@@ -182,6 +201,13 @@
 			font-size: $font-size-minus-1
 			margin-bottom: $margin-small
 
+			&.stats-exam
+				flex-wrap: nowrap
+				justify-content: center
+
+				.progress-number
+					width: 50px
+
 			&.is-first
 				font-size: $font-size-base
 				font-weight: $font-weight-bold
@@ -212,6 +238,8 @@
 				text-align: center
 				width: 60px
 
+			.score,
+			.progress-number
 				&.is-danger
 					color: $color-red
 
@@ -280,27 +308,6 @@
 			hasStats() {
 				return !isEmpty(this.stats)
 			},
-			statsParsed() {
-				let stats = [{
-					progress: this.stats.resolved,
-					progressNumber: `${this.stats.resolved}/${this.stats.total}`,
-					score: Math.round(this.stats.correct_perc),
-					title: 'Cała baza',
-					total: this.stats.total,
-				}]
-
-				this.stats.subjects.forEach((subject) => {
-					stats.push({
-						progress: subject.resolved,
-						progressNumber: `${subject.resolved}/${subject.total}`,
-						score: Math.round(subject.correct_perc),
-						title: subject.name,
-						total: subject.total,
-					})
-				})
-
-				return stats
-			},
 		},
 		methods: {
 			...mapActions(['toggleChat']),
@@ -338,8 +345,33 @@
 						.catch(e => this.stats = null)
 				})
 			},
+			parseStats(source) {
+				let stats = [{
+					progress: source.resolved,
+					progressNumber: `${source.resolved}/${source.total}`,
+					score: Math.round(source.correct_perc),
+					scoreNumber: `${source.correct}/${source.total}`,
+					scoreTotal: Math.round(source.correct_perc_total),
+					title: 'Cała baza',
+					total: source.total,
+				}]
+
+				source.subjects.forEach((subject) => {
+					stats.push({
+						progress: subject.resolved,
+						progressNumber: `${subject.resolved}/${subject.total}`,
+						score: Math.round(subject.correct_perc),
+						scoreNumber: `${subject.correct}/${subject.total}`,
+						scoreTotal: Math.round(subject.correct_perc_total),
+						title: subject.name,
+						total: subject.total,
+					})
+				})
+
+				return stats
+			},
 			scoreClass(score) {
-				return score > 56 ? 'is-success' : 'is-danger'
+				return score >= 56 ? 'is-success' : 'is-danger'
 			},
 		},
 		mounted() {

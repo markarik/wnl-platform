@@ -225,7 +225,7 @@
 				const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 					? this.presetOptionsToPass.loadingText
 					: 'testBuilding'
-				
+
 				this.switchOverlay(true, 'testBuilding', text)
 				this.resetTest()
 				this.testMode = true
@@ -266,7 +266,11 @@
 
 				return new Promise((resolve, reject) => {
 					this.$swal(config)
-						.then(() => resolve(), () => reject())
+						.then(() => resolve(), (dismiss) => {
+							if (dismiss === 'cancel') {
+								return reject()
+							}
+						})
 						.catch(e => reject())
 				})
 			},

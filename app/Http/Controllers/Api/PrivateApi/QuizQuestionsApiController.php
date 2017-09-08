@@ -39,8 +39,8 @@ class QuizQuestionsApiController extends ApiController
 		if ($request->has('answers')) {
 			foreach($request->answers as $answer) {
 				$answerModel = QuizAnswer::create([
-					'text' => $request->input('text'),
-					'is_correct' => $request->input('is_correct'),
+					'text' => $answer['text'],
+					'is_correct' => $answer['is_correct'],
 					'quiz_question_id' => $questionId
 				]);
 			}

@@ -45,10 +45,11 @@ function getEmptyAnswers(stateAnswers) {
 // Getters
 const getters = {
 	questionText: state => state.question ? state.question.text : '',
-	questionAnswers: state => state.question && state.question['quiz_answers'].map(id => state.answers[id]),
-	questionAnswersMap: state => state.answers,
+	questionAnswers: state => state.answers || state.getEmptyAnswers(),
+	questionAnswersMap: state => state.answersMap,
 	questionId: state => state.question && state.question.id,
-	questionTags: state => state.question ? state.question.tags : []
+	questionTags: state => state.question ? state.question.tags : [],
+	preserveOrder: state => state.question && state.question.preserve_order
 }
 
 // Mutations
@@ -58,9 +59,10 @@ const mutations = {
 		const answersArray = data['quiz_answers'].map(id => answersObject[id])
 
 		set(state, 'question', data)
-		set(state, 'answers', answersObject)
+		set(state, 'answers', answersArray)
+		set(state, 'answersMap', answersObject)
 	},
-	[types.CLEAR_QUIZ_QUESTION_ANSWERS] (state, data) {
+	[types.CLEAR_QUIZ_QUESTION] (state, data) {
 		set(state, 'answers', getEmptyAnswers())
 	}
 }
@@ -74,7 +76,7 @@ const actions = {
 			})
 	},
 	setupFreshQuestion({ commit }) {
-		commit(types.CLEAR_QUIZ_QUESTION_ANSWERS)
+		commit(types.CLEAR_QUIZ_QUESTION)
 	}
 }
 

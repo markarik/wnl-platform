@@ -8,7 +8,7 @@
 			:method="formMethod"
 			suppressEnter="false"
 			:resourceRoute="formResourceRoute"
-			@submitSuccess="getQuizQuestion($route.params.quizId)"
+			@submitSuccess="onSubmitSuccess"
 		>
 			<div class="question-form-header">
 				<p class="title is-5">Edycja pytania {{$route.params.quizId}}</p>
@@ -33,6 +33,17 @@
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
 				<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
+			</fieldset>
+			<fieldset class="question-form-fieldset">
+				<label class="label checkbox-label">
+						<span>Czy zagwarantować kolejność pytań?</span>
+						<input
+							type="checkbox"
+							name="preserveOrder"
+							class="preserve-order"
+							checked="preserveOrder"
+						>
+					</label>
 			</fieldset>
 			<div
 				class="field answer-field"
@@ -140,7 +151,8 @@
 				'questionAnswers',
 				'questionAnswersMap',
 				'questionId',
-				'questionTags'
+				'questionTags',
+				'preserveOrder'
 			]),
 			formResourceRoute() {
 				if (!this.isEdit) {
@@ -175,7 +187,6 @@
 				this.attach = this.getAttachedData()
 			},
 			getAttachedData() {
-				debugger
 				const attachedData = {};
 				const answerFields = this.$el.querySelectorAll('.answer-field')
 				const answerFieldsArray = Array.prototype.slice.call(answerFields)
@@ -184,11 +195,8 @@
 					.map(field => ({
 						id: field.dataset.id,
 						text: field.querySelector('.answer-text').value,
-						isCorrect: field.querySelector('.answer-correct').checked
+						is_correct: field.querySelector('.answer-correct').checked,
 					}))
-					.filter(
-						answerData => answerData.text !== this.questionAnswersMap[answerData.id].text
-					)
 
 				attachedData.answers = answersData;
 
@@ -196,7 +204,16 @@
 					attachedData.tags = this.$refs.tags.tags
 				}
 
+				attachedData['preserve_order'] = this.$el.querySelector('preserve-order').checked
+
 				return attachedData
+			},
+			onSubmitSuccess(data) {
+				if (this.isEdit) {
+					this.getQuizQuestion($route.params.quizId)
+				} else {
+					this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
+				}
 			}
 		},
 		watch: {

@@ -41,7 +41,7 @@
 							type="checkbox"
 							name="preserveOrder"
 							class="preserve-order"
-							checked="preserveOrder"
+							:checked="preserveOrder"
 						>
 					</label>
 			</fieldset>
@@ -204,13 +204,13 @@
 					attachedData.tags = this.$refs.tags.tags
 				}
 
-				attachedData['preserve_order'] = this.$el.querySelector('preserve-order').checked
+				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked
 
 				return attachedData
 			},
 			onSubmitSuccess(data) {
 				if (this.isEdit) {
-					this.getQuizQuestion($route.params.quizId)
+					this.getQuizQuestion(this.$route.params.quizId)
 				} else {
 					this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
 				}

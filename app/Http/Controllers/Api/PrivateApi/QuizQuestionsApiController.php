@@ -41,7 +41,8 @@ class QuizQuestionsApiController extends ApiController
 				$answerModel = QuizAnswer::create([
 					'text' => $answer['text'],
 					'is_correct' => $answer['is_correct'],
-					'quiz_question_id' => $questionId
+					'quiz_question_id' => $questionId,
+					'preserve_order' => $request->input('preserve_order')
 				]);
 			}
 		}
@@ -75,14 +76,15 @@ class QuizQuestionsApiController extends ApiController
 				$answerModel = QuizAnswer::find($answer['id']);
 
 				$answerModel->update([
-					'text' => $request->input('text'),
-					'is_correct' => $request->input('is_correct')
+					'text' => $answer['text'],
+					'is_correct' => $answer['is_correct']
 				]);
 			}
 		}
 
 		$question->update([
 			'text' => $request->input('question'),
+			'preserve_order' => $request->input('preserve_order')
 		]);
 
 		return $this->respondOk();

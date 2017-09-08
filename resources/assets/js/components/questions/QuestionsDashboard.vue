@@ -17,7 +17,7 @@
 							<span>#{{id}}</span>
 						</div>
 					</div>
-					<a v-if="!isLargeDesktop" class="toggle-notifications" @click="toggleChat">
+					<a v-if="isMobile" class="toggle-notifications" @click="toggleChat">
 						<span>{{$t('questions.dashboard.notifications.toggle')}}</span>
 						<span class="icon is-small">
 							<i class="fa fa-commenting-o"></i>
@@ -104,7 +104,7 @@
 		</div>
 		<wnl-sidenav-slot
 			:isDetached="!isChatMounted"
-			:isVisible="isLargeDesktop || isChatVisible"
+			:isVisible="isChatVisible"
 			:hasChat="true"
 		>
 			<div class="questions-feed-container">
@@ -113,9 +113,9 @@
 						<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
 						{{$t('questions.dashboard.notifications.heading')}}
 					</div>
-					<div v-if="!isChatMounted">
+					<div class="clickable" @click="toggleChat">
 						<span class="metadata">{{$t('questions.dashboard.notifications.close')}}</span>
-						<span class="icon is-small" @click="toggleChat">
+						<span class="icon is-small">
 							<i class="fa fa-close"></i>
 						</span>
 					</div>
@@ -123,6 +123,12 @@
 				<wnl-questions-feed/>
 			</div>
 		</wnl-sidenav-slot>
+		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
+			<span class="icon is-big" @click="toggleChat">
+				<i class="fa fa-commenting-o"></i>
+				<span>{{$t('questions.dashboard.notifications.toggleBar')}}</span>
+			</span>
+		</div>
 	</div>
 </template>
 
@@ -130,8 +136,12 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	.wnl-app-layout
+		+flex-space-between()
+		align-items: stretch
+
 	.wnl-middle
-		max-width: 100%
+		max-width: $course-content-max-width
 		width: 100%
 
 	.questions-header
@@ -251,17 +261,13 @@
 		overflow-y: auto
 
 	.questions-feed-heading
+		+flex-space-between()
 		border-bottom: $border-light-gray
 		font-size: $font-size-minus-1
 		letter-spacing: 1px
 		margin-top: $margin-base
-		padding-bottom: $margin-small
-		text-align: center
+		padding: 0 $margin-base $margin-small
 		text-transform: uppercase
-
-		&.detached
-			+flex-space-between()
-			padding: 0 $margin-base $margin-small
 
 		.icon
 			color: $color-background-gray
@@ -277,6 +283,7 @@
 	import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import {getApiUrl} from 'js/utils/env'
+	import withChat from 'js/mixins/with-chat'
 
 	export default {
 		name: 'QuestionsDashboard',
@@ -286,6 +293,7 @@
 			'wnl-questions-plan-progress': QuestionsPlanProgress,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
+		mixins: [withChat],
 		props: {
 			id: {
 				default: 0,
@@ -300,7 +308,14 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserId','isChatMounted', 'isChatVisible', 'isLargeDesktop']),
+			...mapGetters([
+				'currentUserId',
+				'isChatMounted',
+				'isChatToggleVisible',
+				'isChatVisible',
+				'isLargeDesktop',
+				'isMobile',
+			]),
 			...mapGetters('questions', ['filters']),
 			hasPlan() {
 				return !isEmpty(this.plan)
@@ -383,7 +398,7 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				this.isChatVisible && this.toggleChat()
+				!this.isChatMounted && this.isChatVisible && this.toggleChat()
 			}
 		}
 	}

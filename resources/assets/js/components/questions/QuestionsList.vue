@@ -176,6 +176,7 @@
 				'questionsList',
 				'testQuestions',
 				'testQuestionsUnanswered',
+				'getSafePage',
 			]),
 			activeFiltersNames() {
 				return this.activeFiltersObjects.map(filter => {
@@ -225,7 +226,7 @@
 				const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 					? this.presetOptionsToPass.loadingText
 					: 'testBuilding'
-				
+
 				this.switchOverlay(true, 'testBuilding', text)
 				this.resetTest()
 				this.testMode = true
@@ -350,7 +351,9 @@
 			setQuestion({page, index}) {
 				this.switchOverlay(true, 'currentQuestion')
 				this.changePage(page)
-					.then(() => this.changeCurrentQuestion({page, index}))
+					// last page may change after fetching the page
+					// when "nierozwiązane pytania" filter is active
+					.then(() => this.changeCurrentQuestion({page: this.getSafePage(page), index}))
 					.then(question => {
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)

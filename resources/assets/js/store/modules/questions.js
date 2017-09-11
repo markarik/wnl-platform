@@ -78,7 +78,12 @@ const getters = {
 		return state.filters
 	},
 	getQuestion: state => questionId => state.quiz_questions[questionId],
-	getPage: state => page => state.questionsPages[page],
+	getSafePage: state => page => {
+		return page > state.last_page ? state.last_page : page
+	},
+	getPage: (state, getters) => page => {
+		return state.questionsPages[getters.getSafePage(page)];
+	},
 	matchedQuestionsCount: state => state.total,
 	meta: state => ({
 		lastPage: state.last_page,

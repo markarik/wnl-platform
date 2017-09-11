@@ -326,7 +326,7 @@ const actions = {
 			filters: [
 				{
 					query: {
-						whereIn: ['id', questionsIds],
+						whereIn: ['id', questionsIds || []],
 					}
 				}
 			],

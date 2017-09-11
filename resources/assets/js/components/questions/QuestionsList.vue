@@ -311,7 +311,7 @@
 					newPage = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep
 				}
 				else if (step < 0 && currentIndex === 0) {
-					newIndex = currentPage === 1 ? this.matchedQuestionsCount % this.meta.perPage - 1 : perPage - 1
+					newIndex = currentPage === 1 ? -1 : perPage - 1
 					newPage = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep
 				} else {
 					newPage = currentPage

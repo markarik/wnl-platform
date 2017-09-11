@@ -54,8 +54,11 @@ const getters = {
 	currentQuestion: state => {
 		if (isEmpty(state.questionsPages) || !state.currentQuestion.page) return {}
 		const {page, index} = state.currentQuestion
+		let computedIndex = index
 
-		return {page, index, ...state.quiz_questions[state.questionsPages[page][index]]}
+		if (index === -1) computedIndex = state.questionsPages[page].length - 1
+
+		return {page, index: computedIndex, ...state.quiz_questions[state.questionsPages[page][computedIndex]]}
 	},
 	filters: state => {
 		const order = [

@@ -116,7 +116,11 @@
 
 				return new Promise((resolve, reject) => {
 					this.$swal(config)
-						.then(() => resolve(), () => reject())
+						.then(() => resolve(), (dismiss) => {
+							if (dismiss==='cancel') {
+								reject()
+							}
+						})
 						.catch(e => reject())
 				})
 			},

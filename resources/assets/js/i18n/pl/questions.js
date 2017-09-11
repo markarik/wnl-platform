@@ -1,9 +1,10 @@
 export const questions = {
 	dashboard: {
 		notifications: {
-			close: 'Zamknij',
+			close: 'Ukryj',
 			heading: 'Ostatnie dyskusje',
-			toggle: 'Powiadomienia',
+			toggle: 'Pokaż dyskusje',
+			toggleBar: 'Dyskusje',
 		},
 		plan: {
 			create: {

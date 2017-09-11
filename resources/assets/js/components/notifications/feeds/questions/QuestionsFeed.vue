@@ -23,7 +23,7 @@
 				</span>
 			</div>
 		</div>
-		<wnl-text-loader v-else/>
+		<wnl-text-loader class="margin vertical" v-else/>
 	</div>
 </template>
 

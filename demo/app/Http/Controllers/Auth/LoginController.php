@@ -46,15 +46,32 @@ class LoginController extends Controller
 	 * Handle a login request to the application.
 	 *
 	 * @param  \Illuminate\Http\Request $request
+	 *
 	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
 	 */
 	public function login(Request $request)
 	{
 		$user = User::create([
-			'first_name' => $request->get('first_name'),
-			'last_name'  => ' ',
-			'email'      => str_random() . '@wiecejnizlek.pl',
-			'password'   => 'secret',
+			'first_name'         => $request->get('first_name'),
+			'last_name'          => ' ',
+			'email'              => str_random() . '@wiecejnizlek.pl',
+			'password'           => bcrypt('secret'),
+			'address'            => '',
+			'zip'                => '',
+			'city'               => '',
+			'phone'              => '',
+			'invoice'            => false,
+			'invoice_name'       => '',
+			'invoice_nip'        => '',
+			'invoice_address'    => '',
+			'invoice_zip'        => '',
+			'invoice_city'       => '',
+			'invoice_country'    => '',
+			'consent_newsletter' => true,
+			'consent_account'    => true,
+			'consent_order'      => true,
+			'consent_terms'      => true,
+
 		]);
 
 		Auth::login($user);
@@ -76,6 +93,7 @@ class LoginController extends Controller
 	 * Log the user out of the application.
 	 *
 	 * @param  \Illuminate\Http\Request $request
+	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function logout(Request $request)

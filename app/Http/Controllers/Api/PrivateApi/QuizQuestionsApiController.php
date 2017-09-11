@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Models\QuizQuestion;
+use App\Models\QuizAnswer;
 use App\Models\Tag;
 use App\Http\Requests\Quiz\UpdateQuizQuestion;
 use App\Http\Controllers\Api\Transformers\QuizQuestionTransformer;
@@ -32,10 +33,23 @@ class QuizQuestionsApiController extends ApiController
 
 	public function post(UpdateQuizQuestion $request)
 	{
-		$question = QuizQuestion::create(['text' => $request->input('question')]);
+		$question = QuizQuestion::create([
+			'text' => $request->input('question'),
+			'preserve_order' => $request->input('preserve_order')
+		]);
+		$questionId = $question['id'];
+
+		if ($request->has('answers')) {
+			foreach($request->answers as $answer) {
+				$answerModel = QuizAnswer::create([
+					'text' => $answer['text'],
+					'is_correct' => $answer['is_correct'],
+					'quiz_question_id' => $questionId,
+				]);
+			}
+		}
 
 		$resource = new Item($question, new QuizQuestionTransformer, $this->resourceName);
-
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
@@ -59,8 +73,20 @@ class QuizQuestionsApiController extends ApiController
 			}
 		}
 
+		if ($request->has('answers')) {
+			foreach($request->answers as $answer) {
+				$answerModel = QuizAnswer::find($answer['id']);
+
+				$answerModel->update([
+					'text' => $answer['text'],
+					'is_correct' => $answer['is_correct']
+				]);
+			}
+		}
+
 		$question->update([
 			'text' => $request->input('question'),
+			'preserve_order' => $request->input('preserve_order')
 		]);
 
 		return $this->respondOk();

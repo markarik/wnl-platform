@@ -18,7 +18,7 @@
 					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
 					:keyboard="keyboard"
 					:toolbar="toolbar"
-					:allowMentions=false
+					:allowMentions=true
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>

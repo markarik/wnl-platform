@@ -12,6 +12,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 	.user-autocomplete-item
+		align-items: center
 		cursor: pointer
 		display: flex
 </style>

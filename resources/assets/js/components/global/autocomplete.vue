@@ -39,6 +39,7 @@
 			outline: none
 
 		&__item
+			align-items: center
 			cursor: pointer
 			padding: 10px 15px
 			display: flex

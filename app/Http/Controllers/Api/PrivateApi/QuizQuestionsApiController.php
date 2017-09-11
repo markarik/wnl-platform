@@ -33,7 +33,10 @@ class QuizQuestionsApiController extends ApiController
 
 	public function post(UpdateQuizQuestion $request)
 	{
-		$question = QuizQuestion::create(['text' => $request->input('question')]);
+		$question = QuizQuestion::create([
+			'text' => $request->input('question'),
+			'preserve_order' => $request->input('preserve_order')
+		]);
 		$questionId = $question['id'];
 
 		if ($request->has('answers')) {
@@ -42,7 +45,6 @@ class QuizQuestionsApiController extends ApiController
 					'text' => $answer['text'],
 					'is_correct' => $answer['is_correct'],
 					'quiz_question_id' => $questionId,
-					'preserve_order' => $request->input('preserve_order')
 				]);
 			}
 		}

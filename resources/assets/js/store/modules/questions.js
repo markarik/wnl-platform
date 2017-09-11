@@ -54,8 +54,11 @@ const getters = {
 	currentQuestion: state => {
 		if (isEmpty(state.questionsPages) || !state.currentQuestion.page) return {}
 		const {page, index} = state.currentQuestion
+		let computedIndex = index
 
-		return {page, index, ...state.quiz_questions[state.questionsPages[page][index]]}
+		if (index === -1) computedIndex = state.questionsPages[page].length - 1
+
+		return {page, index: computedIndex, ...state.quiz_questions[state.questionsPages[page][computedIndex]]}
 	},
 	filters: state => {
 		const order = [
@@ -75,7 +78,12 @@ const getters = {
 		return state.filters
 	},
 	getQuestion: state => questionId => state.quiz_questions[questionId],
-	getPage: state => page => state.questionsPages[page],
+	getSafePage: state => page => {
+		return page > state.last_page ? state.last_page : page
+	},
+	getPage: (state, getters) => page => {
+		return state.questionsPages[getters.getSafePage(page)];
+	},
 	matchedQuestionsCount: state => state.total,
 	meta: state => ({
 		lastPage: state.last_page,

@@ -31,6 +31,9 @@
 		width: 100%
 		z-index: $z-index-autocomplete
 
+		&__text
+			padding: 5px 10px
+
 		&.is-down
 			bottom: auto
 			top: 44px
@@ -47,9 +50,6 @@
 			&:hover,
 			&.active
 				background: #f9f9f9
-
-		&__text
-			padding: 5px 10px
 </style>
 
 <script>

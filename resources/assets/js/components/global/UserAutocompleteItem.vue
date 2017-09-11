@@ -15,6 +15,9 @@
 		align-items: center
 		cursor: pointer
 		display: flex
+
+	.autocomplete-box__text
+		padding: 5px 10px
 </style>
 
 <script>

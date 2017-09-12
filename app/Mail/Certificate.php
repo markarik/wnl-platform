@@ -32,8 +32,8 @@ class Certificate extends Mailable
 	 */
 	public function build()
 	{
-		$firstName = title_case($this->user->first_name);
-		$lastName = title_case($this->user->last_name);
+		$firstName = title_case(trim($this->user->first_name));
+		$lastName = title_case(trim($this->user->last_name));
 		$fileName = "Certyfikat_{$firstName}_{$lastName}.pdf";
 
 		return $this

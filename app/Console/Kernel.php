@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
 		Commands\DropTables::class,
 		Commands\DumpCourseStructure::class,
 		Commands\EncryptPasswords::class,
+		Commands\ExamsResults::class,
 		Commands\FlushCacheByTag::class,
 		Commands\ImportTaxonomies::class,
 		Commands\IssueFinalInvoice::class,

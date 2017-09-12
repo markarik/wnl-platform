@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel
 		Commands\PopulateAmountColumns::class,
 		Commands\SlackDaysCron::class,
 		Commands\SectionsUpdate::class,
+		Commands\SendCertificates::class,
 		Commands\SlideshowsRemove::class,
 		Commands\SlidesFromCategory::class,
 		Commands\SlidesImport::class,

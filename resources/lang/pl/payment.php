@@ -24,19 +24,19 @@ return [
 	'select-product-onsite-heading' => 'Kurs stacjonarny',
 	'select-product-online-description' => '
 		<li class="list-group-item">
-			Uczestnictwo w 12-tygodniowym kursie internetowym - dostęp do jedynego wirtualnego pokoju nauki do LEK-u, wspierającego łatwe dzielenie się wiedzą (czat, system pytań i odpowiedzi, prywatne wiadomości)
+			Uczestnictwo w 14-tygodniowym kursie internetowym - dostęp do jedynego wirtualnego pokoju nauki do LEK-u, wspierającego łatwe dzielenie się wiedzą (czat, system pytań i odpowiedzi, prywatne wiadomości)
 		</li>
 		<li class="list-group-item">
-			Gotowy, zsynchronizowany plan pracy, uwzględniający powtórki i rozwiązywanie pytań - 55 dni lekcyjnych
+			Gotowy, zsynchronizowany plan pracy, uwzględniający powtórki i rozwiązywanie pytań - 65 dni lekcyjnych
 		</li>
 		<li class="list-group-item">
-			Ponad 12 tysięcy slajdów w estetycznych i funkcjonalnych prezentacjach - z nami nie musisz kupować wszystkich podręczników!
+			Ponad 15 tysięcy slajdów w estetycznych i funkcjonalnych prezentacjach - z nami nie musisz kupować wszystkich podręczników!
 		</li>
 		<li class="list-group-item">
 			Autorskie materiały ułatwiające notowanie, powtórki i systematyzację wiedzy (przesyłka kurierska w cenie)
 		</li>
 		<li class="list-group-item">
-			Baza 2000 pytań do LEK-u w cenie! System ułatwiający powtarzanie najtrudniejszych pytań i łatwe przerobienie wszystkich!
+			Baza 3500 pytań do LEK-u w cenie! System ułatwiający powtarzanie najtrudniejszych pytań i łatwe przerobienie wszystkich!
 		</li>
 		<li class="list-group-item">
 			Codzienna porcja wiedzy o efektywnym procesie nauki, która przyda się nie tylko podczas przygotowań do egzaminu!
@@ -47,16 +47,10 @@ return [
 	',
 	'select-product-onsite-description' => '
 		<li class="list-group-item">
-			Uczestnictwo w 6 warsztatach weekendowych w Poznaniu - spotykamy się i pracujemy razem!
+			Uczestnictwo w 4 warsztatach weekendowych w Poznaniu - spotykamy się i pracujemy razem!
 			<ul class="sublist-group">
 				<li>
 					“Jak się uczyć?”- nasz przepis na LEK, czyli wprowadzenie do kursu i metody efektywnej nauki
-				</li>
-				<li>
-					Choroby wewnętrzne - dr hab. n. med. Mariusz Puszczewicz, prof. UM
-				</li>
-				<li>
-					Choroby dziecięce - dr hab. n. med. Anna Mania
 				</li>
 				<li>
 					Stany nagłe - lek. Michał Szemień
@@ -76,9 +70,9 @@ return [
 	'select-product-online-button-label' => 'Wybieram kurs internetowy',
 	'select-product-features-bonus-knowledge' => 'Indywidualne spotkania z prowadzącymi kurs',
 	'select-product-workshops-heading' => 'O warsztatach',
-	'select-product-workshops-description' => '<a href="https://wiecejnizlek.pl/o-warsztatach">Warsztaty</a> w ramach naszego kursu do LEK-u, to nie tylko okazja do uzyskania odpowiedzi na najtrudniejsze pytania! Pozwalają również skorzystać z doświadczenia wyjątkowych dydaktyków i specjalistów w dziedzinach chorób wewnętrznych, pediatrii, medycyny ratunkowej oraz prawa medycznego.',
+	'select-product-workshops-description' => '<a href="https://wiecejnizlek.pl/o-warsztatach" target="_blank">Warsztaty</a> w ramach naszego kursu do LEK-u, to nie tylko okazja do uzyskania odpowiedzi na najtrudniejsze pytania! Pozwalają również skorzystać z doświadczenia wyjątkowych dydaktyków i specjalistów w dziedzinach chorób wewnętrznych, pediatrii, medycyny ratunkowej oraz prawa medycznego.',
 	'select-product-q-and-a-heading' => 'Masz wątpliwości?',
-	'select-product-q-and-a-description' => 'Na podstronie <a href="https://wiecejnizlek.pl/o-kursie">O kursie</a> odpowiadamy na wszystkie pytania dotyczące kursu. Od dat i planu zajęć, przez opis metodyki i materiałów, po misję, która motywuje nas do działania - wszystko w jednym miejscu. :) Jeżeli nie rozwiejemy Twoich wątpliwości, napisz do nas, a na pewno dodamy odpowiedź do strony!',
+	'select-product-q-and-a-description' => 'Na podstronie <a href="https://wiecejnizlek.pl/o-kursie" target="_blank">O kursie</a> odpowiadamy na wszystkie pytania dotyczące kursu. Od dat i planu zajęć, przez opis metodyki i materiałów, po misję, która motywuje nas do działania - wszystko w jednym miejscu. :) Jeżeli nie rozwiejemy Twoich wątpliwości, napisz do nas, a na pewno dodamy odpowiedź do strony!',
 	'select-product-read-more' => 'Przeczytaj więcej',
 
 	/**

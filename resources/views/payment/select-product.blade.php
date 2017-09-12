@@ -36,8 +36,8 @@
 			<div class="column">
 				<div class="box">
 					<p class="title">@lang('payment.select-product-onsite-heading')</p>
-					<p class="subtitle">@lang('common.currency', ['value' => 2200])</p>
-					<p class="caption">@lang('payment.select-product-coupon', ['value' => 2000])</p>
+					<p class="subtitle">@lang('common.currency', ['value' => 2000])</p>
+					{{-- <p class="caption">@lang('payment.select-product-coupon', ['value' => 2000])</p> --}}
 					<ul class="list-group">
 						@lang('payment.select-product-online-description')
 					</ul>
@@ -61,7 +61,7 @@
 				<div class="box">
 					<p class="title">@lang('payment.select-product-online-heading')</p>
 					<p class="subtitle">@lang('common.currency', ['value' => '1500'])</p>
-					<p class="caption">@lang('payment.select-product-coupon', ['value' => 1300])</p>
+					{{-- <p class="caption">@lang('payment.select-product-coupon', ['value' => 1300])</p> --}}
 					<ul class="list-group">
 						@lang('payment.select-product-online-description')
 					</ul>
@@ -110,7 +110,7 @@
 					<h3 class="title">@lang('payment.select-product-workshops-heading')</h3>
 					<p>@lang('payment.select-product-workshops-description')</p>
 					<p class="margin vertical has-text-centered">
-						<a href="https://wiecejnizlek.pl/o-warsztatach">@lang('payment.select-product-read-more')</a>
+						<a href="https://wiecejnizlek.pl/o-warsztatach" target="_blank">@lang('payment.select-product-read-more')</a>
 					</p>
 				</div>
 			</div>
@@ -119,7 +119,7 @@
 					<h3 class="title">@lang('payment.select-product-q-and-a-heading')</h3>
 					<p>@lang('payment.select-product-q-and-a-description')</p>
 					<p class="margin vertical has-text-centered">
-						<a href="https://wiecejnizlek.pl/o-kursie">@lang('payment.select-product-read-more')</a>
+						<a href="https://wiecejnizlek.pl/o-kursie" target="_blank">@lang('payment.select-product-read-more')</a>
 					</p>
 				</div>
 			</div>

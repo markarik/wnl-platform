@@ -95,6 +95,7 @@ class PersonalDataController extends Controller
 		$order = $user->orders()->create([
 			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
+			'invoice'    => $request->get('invoice') ?? 0,
 		]);
 
 		if (session()->has('coupon')) {

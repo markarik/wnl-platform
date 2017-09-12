@@ -10,13 +10,14 @@ class Order extends Model
 	protected $casts = [
 		'paid'        => 'boolean',
 		'canceled'    => 'boolean',
+		'invoice'     => 'boolean',
 		'canceled_at' => 'date',
 		'paid_amount' => 'float',
 	];
 
 	protected $fillable = [
 		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id', 'canceled', 'canceled_at',
-		'paid_amount',
+		'paid_amount', 'invoice',
 	];
 
 	protected $guarded = [

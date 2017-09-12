@@ -30,7 +30,11 @@ class OrderObserver
 			$this->dispatch(new OrderConfirmed($order));
 			$order->product->quantity--;
 			$order->product->save();
-			// TODO: Decrement coupon usages
+
+			if ($order->coupon && $order->coupon->times_usable) {
+				$order->coupon->times_usable--;
+				$order->coupon->save();
+			}
 
 			$this->notify(new OrderCreated($order));
 		}

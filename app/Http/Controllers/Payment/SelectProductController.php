@@ -11,7 +11,7 @@ class SelectProductController extends Controller
 	public function index()
 	{
 
-		$products = Product::select(['quantity', 'slug'])->get()->keyBy('slug');
+		$products = Product::select(['quantity', 'slug', 'initial'])->get()->keyBy('slug');
 		$onsite = $products['wnl-online-onsite'];
 		$online = $products['wnl-online'];
 

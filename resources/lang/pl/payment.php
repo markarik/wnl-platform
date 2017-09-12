@@ -5,6 +5,11 @@ return [
 	'back-to-website' => 'Strona o kursie',
 
 	/**
+	 * Voucher
+	 */
+	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
+
+	/**
 	 * Payment Steps Menu
 	 */
 	'payment-steps-select-product' => 'Wybór wariantu kursu',

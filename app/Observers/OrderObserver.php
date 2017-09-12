@@ -30,10 +30,9 @@ class OrderObserver
 			$this->dispatch(new OrderConfirmed($order));
 			$order->product->quantity--;
 			$order->product->save();
+			// TODO: Decrement coupon usages
 
-			if (App::environment('production')) {
-				$this->notify(new OrderCreated($order));
-			}
+			$this->notify(new OrderCreated($order));
 		}
 	}
 
@@ -44,6 +43,10 @@ class OrderObserver
 
 	public function routeNotificationForSlack()
 	{
-		return env('SLACK_ORDERS_URL');
+		if (App::environment('production')) {
+			return env('SLACK_ORDERS_URL');
+		} else {
+			return env('SLACK_TEST');
+		}
 	}
 }

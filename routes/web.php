@@ -23,6 +23,9 @@ Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => '
 
 	Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
 	Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
+
+	Route::get('voucher', 'VoucherController@index')->name('payment-voucher');
+	Route::post('voucher', 'VoucherController@handle')->name('payment-voucher-post');
 });
 
 Route::group(['middleware' => 'auth'], function () {

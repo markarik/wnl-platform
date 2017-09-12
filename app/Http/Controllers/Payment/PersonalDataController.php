@@ -62,6 +62,7 @@ class PersonalDataController extends Controller
 
 		if (!$form->isValid()) {
 			Log::notice('Sing up form invalid, redirecting...');
+
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
@@ -96,7 +97,9 @@ class PersonalDataController extends Controller
 			'session_id' => str_random(32),
 		]);
 
-		if ($user->is_subscriber){
+		if (session()->has('coupon')) {
+			$order->attachCoupon(session()->get('coupon'));
+		} elseif ($user->is_subscriber) {
 			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
 		}
 
@@ -108,6 +111,7 @@ class PersonalDataController extends Controller
 
 	/**
 	 * @param $productSlug
+	 *
 	 * @return null|Product
 	 */
 	private function getProduct($productSlug = null)

@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Models\User;
-use App\Models\UserQuizResults;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -69,48 +68,6 @@ class UserStateApiController extends ApiController
 		$lesson = $request->lesson;
 
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
-
-		return $this->respondOk();
-	}
-
-	public function getQuiz($id, $quizId)
-	{
-		$values = Redis::get(self::getQuizRedisKey($id, $quizId));
-
-		if (!empty($values)) {
-			$quiz = json_decode($values);
-		} else {
-			$quiz = [];
-		}
-		return $this->json([
-			'quiz' => $quiz
-		]);
-	}
-
-	public function putQuiz(Request $request, $id, $quizId)
-	{
-		$quiz = $request->quiz;
-		$recordedAnswers = $request->recordedAnswers;
-
-		try {
-			if (!empty($recordedAnswers)) {
-				UserQuizResults::insert($recordedAnswers);
-
-				UserPlanProgress
-					::where('user_id', $userId)
-					->whereIn('question_id', array_map(function($results) {
-						return $results['quiz_question_id'];
-					}, $recordedAnswers))
-					->where('resolved_at', null)
-					->update(['resolved_at' => Carbon::today()]);
-
-			}
-		} catch
-		(QueryException $e) {
-			throw $e;
-		} finally {
-			Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
-		}
 
 		return $this->respondOk();
 	}

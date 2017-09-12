@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Redis;
 use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\UserQuizResultsTransformer;
+use Illuminate\Database\QueryException;
+
 
 class UserQuizResultsApiController extends ApiController
 {

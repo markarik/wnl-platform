@@ -8,12 +8,17 @@ use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\UserQuizResultsTransformer;
 
 class UserQuizResultsApiController extends ApiController
 {
+	// quizSetId - userId - cacheVersion
+	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s';
+	const CACHE_VERSION = 1;
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
@@ -71,5 +76,52 @@ class UserQuizResultsApiController extends ApiController
 			->update(['resolved_at' => Carbon::today()]);
 
 		$this->respondOk();
+	}
+
+	public function getQuiz($id, $quizId)
+	{
+		$values = Redis::get(self::getQuizRedisKey($id, $quizId));
+
+		if (!empty($values)) {
+			$quiz = json_decode($values);
+		} else {
+			$quiz = [];
+		}
+		return $this->json([
+			'quiz' => $quiz
+		]);
+	}
+
+	public function putQuiz(Request $request, $id, $quizId)
+	{
+		$quiz = $request->quiz;
+		$recordedAnswers = $request->recordedAnswers;
+
+		try {
+			if (!empty($recordedAnswers)) {
+				UserQuizResults::insert($recordedAnswers);
+
+				UserPlanProgress
+					::where('user_id', $id)
+					->whereIn('question_id', array_map(function($results) {
+						return $results['quiz_question_id'];
+					}, $recordedAnswers))
+					->where('resolved_at', null)
+					->update(['resolved_at' => Carbon::today()]);
+
+			}
+		} catch
+		(QueryException $e) {
+			throw $e;
+		} finally {
+			Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
+		}
+
+		return $this->respondOk();
+	}
+
+	static function getQuizRedisKey($userId, $quizId)
+	{
+		return sprintf(self::KEY_QUIZ_TEMPLATE, $quizId, $userId, self::CACHE_VERSION);
 	}
 }

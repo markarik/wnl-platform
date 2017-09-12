@@ -21,8 +21,6 @@ class UserStateApiController extends ApiController
 	const KEY_COURSE_TEMPLATE = 'UserState:Course:%s:%s:%s';
 	// courseId - lessonId - userId - cacheVersion
 	const KEY_LESSON_TEMPLATE = 'UserState:Course:%s:%s:%s:%s';
-	// quizSetId - userId - cacheVersion
-	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s';
 	// userId - cacheVersion
 	const KEY_USER_TIME_TEMPLATE = 'UserState:Time:%s:%s';
 	const CACHE_VERSION = 1;
@@ -97,6 +95,15 @@ class UserStateApiController extends ApiController
 		try {
 			if (!empty($recordedAnswers)) {
 				UserQuizResults::insert($recordedAnswers);
+
+				UserPlanProgress
+					::where('user_id', $userId)
+					->whereIn('question_id', array_map(function($results) {
+						return $results['quiz_question_id'];
+					}, $recordedAnswers))
+					->where('resolved_at', null)
+					->update(['resolved_at' => Carbon::today()]);
+
 			}
 		} catch
 		(QueryException $e) {
@@ -108,8 +115,7 @@ class UserStateApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public
-	function getTime($user)
+	public function getTime($user)
 	{
 		$userInstance = User::find($user);
 
@@ -124,8 +130,7 @@ class UserStateApiController extends ApiController
 		]);
 	}
 
-	public
-	function incrementTime(Request $request, $user)
+	public function incrementTime(Request $request, $user)
 	{
 		$userInstance = User::find($user);
 		if (!Auth::user()->can('view', $userInstance)) {
@@ -150,11 +155,6 @@ class UserStateApiController extends ApiController
 	static function getLessonRedisKey($userId, $courseId, $lessonId)
 	{
 		return sprintf(self::KEY_LESSON_TEMPLATE, $courseId, $lessonId, $userId, self::CACHE_VERSION);
-	}
-
-	static function getQuizRedisKey($userId, $quizId)
-	{
-		return sprintf(self::KEY_QUIZ_TEMPLATE, $quizId, $userId, self::CACHE_VERSION);
 	}
 
 	static function getUserTimeRedisKey($userId)

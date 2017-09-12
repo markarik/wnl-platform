@@ -39,6 +39,7 @@
 			'hideDefaultSubmit',
 			'suppressEnter',
 			'resetAfterSubmit',
+			'allowSubmitWithoutChanges'
 		],
 		computed: {
 			anyErrors() {
@@ -70,7 +71,9 @@
 				}
 			},
 			onSubmitForm() {
-				if (this.anyErrors || !this.hasChanges) {
+				const hasAttachChanged = this.hasAttachChanged();
+
+				if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 					return false
 				}
 
@@ -91,6 +94,8 @@
 							}
 
 							this.$emit('submitSuccess', response, this.getter('getData'))
+
+							hasAttachChanged && this.cacheAttach()
 						},
 						reason => {
 							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
@@ -102,6 +107,15 @@
 						this.errorFading('Nie udało się.')
 						this.$emit('submitError')
 					})
+			},
+			cacheAttach() {
+				this.cachedAttach = _.cloneDeep(this.attach);
+			},
+			hasAttachChanged() {
+				return !_.isEqual(this.attach, this.cachedAttach)
+			},
+			canSave(hasFieldChanges, hasAttachChanges) {
+				return !this.anyErrors && (hasFieldChanges || hasAttachChanges)
 			}
 		},
 		watch: {
@@ -145,6 +159,8 @@
 			} else {
 				this.mutation(types.FORM_IS_LOADED)
 			}
+
+			this.cacheAttach()
 
 			this.$on('submitForm', this.onSubmitForm)
 		},

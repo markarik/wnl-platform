@@ -20,6 +20,7 @@ class QuizQuestionsApiController extends ApiController
 	const AVAILABLE_FILTERS = [
 		'quiz-planned',
 		'quiz-resolution',
+		'quiz-collection',
 		'by_taxonomy-subjects',
 		'by_taxonomy-exams',
 //		'by_taxonomy-tags',

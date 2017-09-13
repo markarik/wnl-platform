@@ -33,7 +33,7 @@ export const questions = {
 			'exams': 'Egzaminy',
 			'incorrect': 'Rozwiązane błędnie',
 			'subjects': 'Przedmioty i tematy',
-			'today': 'Zaplanowane na dziś',
+			'planned': 'Zaplanowane na dziś',
 			'all': 'Wszystkie zaplanowane',
 			'resolution': 'Status',
 			'unresolved': 'Nierozwiązane',

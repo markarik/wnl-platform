@@ -51,7 +51,8 @@ class ExamsResults extends Command
 
 		if (!empty($userId)) {
 			$results = $this->getUserResults($userId);
-			$this->printResults([[$userId, $results['correct_perc'], $results['resolved_perc']]]);
+			$user = User::find($userId);
+			$this->printResults([[$userId, $user->fullName, $results['correct_perc'], $results['resolved_perc']]]);
 		} else {
 			$rows = [];
 			$allUsers = User::all();
@@ -61,7 +62,7 @@ class ExamsResults extends Command
 				$results = $this->getUserResults($user->id);
 
 				if (!empty($results)) {
-					$rows[] = [$user->id, $results['correct_perc'], $results['resolved_perc']];
+					$rows[] = [$user->id, $user->fullName, $results['correct_perc'], $results['resolved_perc']];
 				}
 
 				$bar->advance();
@@ -150,10 +151,10 @@ class ExamsResults extends Command
 			$subjects[] = [
 				'total'              => $total,
 				'name'               => $txTag->tag->name,
-				'resolved'           => $resolved,
-				'resolved_perc'      => $resolved / $total * 100,
 				'correct'            => $correct,
 				'correct_perc'       => $correct / $total * 100,
+				'resolved'           => $resolved,
+				'resolved_perc'      => $resolved / $total * 100
 			];
 		}
 
@@ -168,7 +169,7 @@ class ExamsResults extends Command
 
 	protected function printResults($rows) {
 		$this->table(
-			['user_id', '% correct', '% resolved'],
+			['user_id', 'full name', '% correct', '% resolved'],
 			$rows
 		);
 	}

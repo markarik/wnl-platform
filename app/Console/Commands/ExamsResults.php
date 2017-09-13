@@ -9,12 +9,13 @@ use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
 use App\Models\Taxonomy;
 use App\Http\Controllers\Api\Filters\ByTaxonomy\SubjectsFilter;
+use App\Models\ExamResults;
 
 class ExamsResults extends Command
 {
 	const LEK_TAG_ID = 505;
 	const QUESTIONS_IN_EXAM = 200;
-	const MUST_MATCH = 15;
+	const MUST_MATCH = 120;
 
 	/**
 	 * The name and signature of the console command.
@@ -52,7 +53,12 @@ class ExamsResults extends Command
 		if (!empty($userId)) {
 			$results = $this->getUserResults($userId);
 			$user = User::find($userId);
-			$this->printResults([[$userId, $user->fullName, $results['correct_perc'], $results['resolved_perc']]]);
+
+			if (!empty($results)) {
+				$this->saveInDB($userId, $results);
+				$this->printResults([[$userId, $user->fullName, $results['correct_perc'], $results['resolved_perc']]]);
+			}
+
 		} else {
 			$rows = [];
 			$allUsers = User::all();
@@ -62,6 +68,7 @@ class ExamsResults extends Command
 				$results = $this->getUserResults($user->id);
 
 				if (!empty($results)) {
+					$this->saveInDB($user->id, $results);
 					$rows[] = [$user->id, $user->fullName, $results['correct_perc'], $results['resolved_perc']];
 				}
 
@@ -172,5 +179,19 @@ class ExamsResults extends Command
 			['user_id', 'full name', '% correct', '% resolved'],
 			$rows
 		);
+	}
+
+	protected function saveInDB($userId, $results) {
+		ExamResults::create([
+			'user_id' => $userId,
+			'correct' => $results['correct'],
+			'correct_percentage' => $results['correct_perc'],
+			'resolved' => $results['resolved'],
+			'resolved_percentage' => $results['resolved_perc'],
+			'exam_tag_id' => self::LEK_TAG_ID,
+			'details' => json_encode([
+				'subjects' => $results['subjects']
+			])
+		]);
 	}
 }

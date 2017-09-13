@@ -62,7 +62,8 @@ class UserQuizResultsApiController extends ApiController
 				$recordsToInsert[] = [
 					'quiz_question_id' => $questionId,
 					'quiz_answer_id' => $answerId,
-					'user_id' => $userId
+					'user_id' => $userId,
+					'created_at' => Carbon::now(),
 				];
 
 				$questionsIds[] = $questionId;
@@ -101,13 +102,16 @@ class UserQuizResultsApiController extends ApiController
 
 		try {
 			if (!empty($recordedAnswers)) {
-				UserQuizResults::insert($recordedAnswers);
+				$recordedAnswersWithTimestamps = array_map(function($results) {
+					$results['created_at'] = Carbon::now();
+					return $results;
+				}, $recordedAnswers);
+
+				UserQuizResults::insert($recordedAnswersWithTimestamps);
 
 				UserPlanProgress
 					::where('user_id', $id)
-					->whereIn('question_id', array_map(function($results) {
-						return $results['quiz_question_id'];
-					}, $recordedAnswers))
+					->whereIn('question_id', collect($recordedAnswers)->pluck('quiz_question_id')->toArray())
 					->where('resolved_at', null)
 					->update(['resolved_at' => Carbon::today()]);
 

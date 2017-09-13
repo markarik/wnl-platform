@@ -183,13 +183,8 @@ class QuizQuestionsApiController extends ApiController
 
 	protected function taxonomyTags()
 	{
-		return Taxonomy::select()
-			->where('name', 'subjects')
-			->first()
-			->tagsTaxonomy()
-			->with('tag')
-			->where('parent_tag_id', 0)
-			->get();
+		return Taxonomy::where('name', 'subjects')->first()->rootTagsFromTaxonomy();
+
 	}
 
 	protected function getMockExam($model, $userId)

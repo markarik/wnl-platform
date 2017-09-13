@@ -36,13 +36,13 @@ class PlannedFilter extends ApiFilter
 
 		if ($plan) {
 			$all = $this->all($plan, $builder)->count();
-			$today = $this->today($plan, $builder)->count();
+			$today = $this->planned($plan, $builder)->count();
 		}
 
 		return [
 			'items'   => [
 				[
-					'value' => 'today',
+					'value' => 'planned',
 					'count' => $today,
 				],
 				[
@@ -62,7 +62,7 @@ class PlannedFilter extends ApiFilter
 		return $builder->whereIn('id', $questions);
 	}
 
-	protected function today($plan, $builder)
+	protected function planned($plan, $builder)
 	{
 		$supportedDate = Carbon::today();
 

@@ -8,7 +8,6 @@ use App\Models\UserQuizResults;
 use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
 use App\Models\Taxonomy;
-
 use App\Http\Controllers\Api\Filters\ByTaxonomy\SubjectsFilter;
 
 class ExamsResults extends Command
@@ -22,7 +21,7 @@ class ExamsResults extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'exams:results {user}';
+	protected $signature = 'exams:results {user?}';
 
 	/**
 	 * The console command description.
@@ -49,6 +48,32 @@ class ExamsResults extends Command
 	public function handle()
 	{
 		$userId = $this->argument('user');
+
+		if (!empty($userId)) {
+			$results = $this->getUserResults($userId);
+			$this->printResults([[$userId, $results['correct_perc'], $results['resolved_perc']]]);
+		} else {
+			$rows = [];
+			$allUsers = User::all();
+			$bar = $this->output->createProgressBar($allUsers->count());
+
+			foreach($allUsers as $user) {
+				$results = $this->getUserResults($user->id);
+
+				if (!empty($results)) {
+					$rows[] = [$user->id, $results['correct_perc'], $results['resolved_perc']];
+				}
+
+				$bar->advance();
+			}
+
+			$bar->finish();
+
+			$this->printResults($rows);
+		}
+	}
+
+	protected function getUserResults($userId) {
 		$lekQuestions = QuizQuestion::whereHas('tags', function($tag) {
 			$tag->where('tags.id', self::LEK_TAG_ID);
 		})->get()->pluck('id')->toArray();
@@ -66,9 +91,8 @@ class ExamsResults extends Command
 			return true;
 		});
 
-		if (!$key) {
-			echo "No results for user \n";
-			die;
+		if ($key === false) {
+			return [];
 		}
 
 		$resolvedLekQuestions = $userQuizResults
@@ -118,7 +142,6 @@ class ExamsResults extends Command
 			)
 		)->keyBy('key');
 
-
 		foreach ($txTags as $txTag) {
 			$correct = $correctAggregated->get($txTag->tag_id)['doc_count'] ?? 0;
 			$total = $totalAggregated->get($txTag->tag_id)['doc_count'];
@@ -134,12 +157,19 @@ class ExamsResults extends Command
 			];
 		}
 
-		dd([
+		return [
 			'subjects' => $subjects,
 			'correct'  => $correctlyAnswered->count(),
 			'correct_perc' => $correctlyAnswered->count() / self::QUESTIONS_IN_EXAM * 100,
 			'resolved' => $resolvedLekQuestions->count(),
 			'resolved_perc' => $resolvedLekQuestions->count() / self::QUESTIONS_IN_EXAM * 100
-		]);
+		];
+	}
+
+	protected function printResults($rows) {
+		$this->table(
+			['user_id', '% correct', '% resolved'],
+			$rows
+		);
 	}
 }

@@ -148,5 +148,8 @@
 
 			this.$on('submitForm', this.onSubmitForm)
 		},
+		beforeDestroy() {
+			this.mutation(types.FORM_RESET)
+		}
 	}
 </script>

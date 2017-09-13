@@ -66,7 +66,11 @@ class ExamsResults extends Command
 			return true;
 		});
 
-		$lekResults = $userQuizResults->slice($key, self::QUESTIONS_IN_EXAM);
+		$lekResults = $userQuizResults
+			->slice($key, self::QUESTIONS_IN_EXAM)
+			->filter(function($value) use ($lekQuestions) {
+				return in_array($value->quiz_question_id, $lekQuestions);
+			});
 
 		$lekResults->map(function($result) {
 			$correct = QuizAnswer::find($result->quiz_answer_id)->is_correct;
@@ -78,11 +82,14 @@ class ExamsResults extends Command
 		$tagIds = $txTags->pluck('tag_id');
 		$filter = app(SubjectsFilter::class);
 		$quizQuestion = app(QuizQuestion::class);
+		$correctlyAnswered = $lekResults->filter(function($value) {
+			return $value->is_correct;
+		});
 
 		$totalAggregated = collect(
 			$filter->fetchAggregationByIds(
 				$quizQuestion,
-				$lekResults->pluck('quiz_question_id')->toArray(),
+				$lekQuestions,
 				$tagIds
 			)
 		)->keyBy('key');
@@ -90,9 +97,16 @@ class ExamsResults extends Command
 		$correctAggregated = collect(
 			$filter->fetchAggregationByIds(
 				$quizQuestion,
-				$lekResults->filter(function($value) {
-					return $value->is_correct;
-				})->pluck('quiz_question_id')->toArray(),
+				$correctlyAnswered->pluck('quiz_question_id')->toArray(),
+				$tagIds,
+				false
+			)
+		)->keyBy('key');
+
+		$resolvedAggregated = collect(
+			$filter->fetchAggregationByIds(
+				$quizQuestion,
+				$lekResults->pluck('quiz_question_id')->toArray(),
 				$tagIds,
 				false
 			)
@@ -100,18 +114,26 @@ class ExamsResults extends Command
 
 
 		foreach ($txTags as $txTag) {
-			$total = $totalAggregated->get($txTag->tag_id)['doc_count'];
 			$correct = $correctAggregated->get($txTag->tag_id)['doc_count'] ?? 0;
+			$total = $totalAggregated->get($txTag->tag_id)['doc_count'];
+			$resolved = $resolvedAggregated->get($txTag->tag_id)['doc_count'];
 
 			$subjects[] = [
-				'tag_id'             => $txTag->tag_id,
+				'total'              => $total,
 				'name'               => $txTag->tag->name,
-				'total'              => $total ?? 0,
+				'resolved'           => $resolved,
+				'resolved_perc'      => $resolved / $total * 100,
 				'correct'            => $correct,
-				'correct_perc'       => $correct == 0 ? 0 : $correct / $total * 100,
+				'correct_perc'       => $correct / $total * 100,
 			];
 		}
 
-		dd($subjects);
+		dd([
+			'subjects' => $subjects,
+			'correct'  => $correctlyAnswered->count(),
+			'correct_perc' => $correctlyAnswered->count() / self::QUESTIONS_IN_EXAM * 100,
+			'resolved' => $lekResults->count(),
+			'resolved_perc' => $lekResults->count() / self::QUESTIONS_IN_EXAM * 100
+		]);
 	}
 }

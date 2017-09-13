@@ -6,10 +6,12 @@ use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\UserQuizResults;
 use App\Models\QuizQuestion;
+use App\Models\QuizAnswer;
 
 class ExamsResults extends Command
 {
 	const LEK_TAG_ID = 505;
+	const QUESTIONS_IN_EXAM = 200;
 
 	/**
 	 * The name and signature of the console command.
@@ -66,7 +68,12 @@ class ExamsResults extends Command
 				&& !empty($userQuizResults->get($key + 14)) && in_array($userQuizResults->get($key + 14)->quiz_question_id, $lekQuestions);
 		});
 
-		$lekResults = $userQuizResults->slice($key, 200);
-		dd($lekResults->pluck('quiz_question_id')->toArray());
+		$lekResults = $userQuizResults->slice($key, self::QUESTIONS_IN_EXAM);
+
+		$lekResults->map(function($result) {
+			$correct = QuizAnswer::find($result->quiz_answer_id)->is_correct;
+
+			return $result->is_correct = $correct;
+		});
 	}
 }

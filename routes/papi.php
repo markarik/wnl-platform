@@ -23,7 +23,7 @@ if (!function_exists('api_action')) {
 
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
 	$r = config('papi.resources');
-	
+
 	// Search
 	api_action('get', 'search');
 
@@ -100,9 +100,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@getLesson');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@putLesson');
 
-	Route::get("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserStateApiController@getQuiz');
-	Route::put("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserStateApiController@putQuiz');
-
 	Route::get("{$r['users']}/{user}/{$r['user-state']}/time", 'UserStateApiController@getTime');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/time", 'UserStateApiController@incrementTime');
 
@@ -153,6 +150,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// User Quiz Results
 	Route::get("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@get');
 	Route::post("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@post');
+	// TODO change route here in the future so it's consistant with route above
+	// I didn't change it upfront because it's a quick fix and route change could cause problem between backend and frontend sync
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
+	Route::put("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
 
 	// Comments
 	Route::post($r['comments'], 'CommentsApiController@post');

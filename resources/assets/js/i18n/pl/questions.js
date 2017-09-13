@@ -37,6 +37,7 @@ export const questions = {
 			'all': 'Wszystkie zaplanowane',
 			'resolution': 'Status',
 			'unresolved': 'Nierozwiązane',
+			'collection': 'Zapisane w Kolekcjach',
 		},
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',

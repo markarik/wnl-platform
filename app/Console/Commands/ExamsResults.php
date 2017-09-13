@@ -182,8 +182,7 @@ class ExamsResults extends Command
 	}
 
 	protected function saveInDB($userId, $results) {
-		ExamResults::create([
-			'user_id' => $userId,
+		ExamResults::firstOrCreate(['user_id' => $userId, 'exam_tag_id' => self::LEK_TAG_ID], [
 			'correct' => $results['correct'],
 			'correct_percentage' => $results['correct_perc'],
 			'resolved' => $results['resolved'],

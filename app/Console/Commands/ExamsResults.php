@@ -66,25 +66,31 @@ class ExamsResults extends Command
 			return true;
 		});
 
-		$lekResults = $userQuizResults
+		if (!$key) {
+			echo "No results for user \n";
+			die;
+		}
+
+		$resolvedLekQuestions = $userQuizResults
 			->slice($key, self::QUESTIONS_IN_EXAM)
 			->filter(function($value) use ($lekQuestions) {
 				return in_array($value->quiz_question_id, $lekQuestions);
+			})
+			->map(function($result) {
+				$correct = QuizAnswer::find($result->quiz_answer_id)->is_correct;
+				$result->is_correct = $correct;
+
+				return $result;
 			});
 
-		$lekResults->map(function($result) {
-			$correct = QuizAnswer::find($result->quiz_answer_id)->is_correct;
-
-			return $result->is_correct = $correct;
+		$correctlyAnswered = $resolvedLekQuestions->filter(function($value) {
+			return $value->is_correct;
 		});
 
 		$txTags = Taxonomy::where('name', 'subjects')->first()->rootTagsFromTaxonomy();
 		$tagIds = $txTags->pluck('tag_id');
 		$filter = app(SubjectsFilter::class);
 		$quizQuestion = app(QuizQuestion::class);
-		$correctlyAnswered = $lekResults->filter(function($value) {
-			return $value->is_correct;
-		});
 
 		$totalAggregated = collect(
 			$filter->fetchAggregationByIds(
@@ -106,7 +112,7 @@ class ExamsResults extends Command
 		$resolvedAggregated = collect(
 			$filter->fetchAggregationByIds(
 				$quizQuestion,
-				$lekResults->pluck('quiz_question_id')->toArray(),
+				$resolvedLekQuestions->pluck('quiz_question_id')->toArray(),
 				$tagIds,
 				false
 			)
@@ -132,8 +138,8 @@ class ExamsResults extends Command
 			'subjects' => $subjects,
 			'correct'  => $correctlyAnswered->count(),
 			'correct_perc' => $correctlyAnswered->count() / self::QUESTIONS_IN_EXAM * 100,
-			'resolved' => $lekResults->count(),
-			'resolved_perc' => $lekResults->count() / self::QUESTIONS_IN_EXAM * 100
+			'resolved' => $resolvedLekQuestions->count(),
+			'resolved_perc' => $resolvedLekQuestions->count() / self::QUESTIONS_IN_EXAM * 100
 		]);
 	}
 }

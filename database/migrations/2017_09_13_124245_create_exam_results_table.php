@@ -17,6 +17,7 @@ class CreateExamResultsTable extends Migration
 			$table->increments('id');
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('exam_tag_id');
+			$table->unsignedInteger('total');
 			$table->unsignedInteger('correct');
 			$table->float('correct_percentage');
 			$table->unsignedInteger('resolved');

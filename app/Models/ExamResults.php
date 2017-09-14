@@ -9,7 +9,7 @@ class ExamResults extends Model
 {
 	use Cached;
 
-	protected $fillable = ['exam_tag_id', 'user_id', 'correct', 'correct_percentage', 'resolved', 'resolved_percentage', 'details'];
+	protected $fillable = ['exam_tag_id', 'user_id', 'correct', 'correct_percentage', 'resolved', 'resolved_percentage', 'details', 'total'];
 	protected $table = 'exams_results';
 
 	public function user()

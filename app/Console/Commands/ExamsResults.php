@@ -190,7 +190,8 @@ class ExamsResults extends Command
 			'exam_tag_id' => self::LEK_TAG_ID,
 			'details' => json_encode([
 				'subjects' => $results['subjects']
-			])
+			]),
+			'total' => self::QUESTIONS_IN_EXAM
 		]);
 	}
 }

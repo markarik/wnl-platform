@@ -117,6 +117,7 @@ class CalculateExamResults implements ShouldQueue
 			'exam_tag_id' => $this->examId,
 			'user_id' => $this->userId,
 			'exam_tag_id' => $this->examId,
+			'total' => count($examQuestions),
 			'details' => json_encode(['subjects' => $subjects])
 		]);
 	}

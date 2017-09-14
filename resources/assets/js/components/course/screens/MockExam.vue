@@ -40,6 +40,7 @@
 							sizesToChoose: [200],
 							testQuestionsCount: 200,
 							time: 240,
+							examMode: true
 						},
 					},
 				}

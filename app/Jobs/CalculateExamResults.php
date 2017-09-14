@@ -109,11 +109,13 @@ class CalculateExamResults implements ShouldQueue
 			];
 		}
 
-		ExamResults::firstOrCreate(['user_id' => $this->userId, 'exam_tag_id' => $this->examId], [
+		ExamResults::create([
 			'correct' => $correctlyAnswered->count(),
 			'correct_percentage' => $correctlyAnswered->count() / count($examQuestions) * 100,
 			'resolved' => $resolvedLekQuestions->count(),
 			'resolved_percentage' => $resolvedLekQuestions->count() / count($examQuestions) * 100,
+			'exam_tag_id' => $this->examId,
+			'user_id' => $this->userId,
 			'exam_tag_id' => $this->examId,
 			'details' => json_encode(['subjects' => $subjects])
 		]);

@@ -22,11 +22,13 @@
 	@import 'resources/assets/sass/variables'
 
 	.autocomplete-box
-		background: #fff
-		border: $border-light-gray
+		background: $autocomplete-box-background
+		border: $autocomplete-box-border
+		box-shadow: $autocomplete-box-shadow
 		bottom: 44px
-		color: #666
+		color: $autocomplete-text-color
 		left: 0
+		max-width: 300px
 		position: absolute
 		width: 100%
 		z-index: $z-index-autocomplete
@@ -44,12 +46,19 @@
 		&__item
 			align-items: center
 			cursor: pointer
-			padding: 10px 15px
 			display: flex
+			font-size: 12px
+			font-weight: 900
+			padding: 8px 10px
+			text-align: left
 
 			&:hover,
 			&.active
-				background: #f9f9f9
+				background: $autocomplete-active-item-background
+				color: $autocomplete-active-item-text-color
+
+		&__text
+			padding: 5px 10px
 </style>
 
 <script>

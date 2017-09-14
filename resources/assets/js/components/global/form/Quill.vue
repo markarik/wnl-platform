@@ -21,9 +21,7 @@
 		position: relative
 
 	.quill-mention
-		background: #eee
-		border: 1px solid #ddd
-		padding: 3px
+		color: $mention-text-color
 </style>
 
 <script>

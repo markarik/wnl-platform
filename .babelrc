@@ -1,14 +1,9 @@
 {
   "presets": [
-      ["es2015"]
+    ["es2015", {"modules": false}]
   ],
   "plugins": [
       "transform-object-rest-spread"
-  ],
-  // no idea why... :(
-  // but babel breaks it...
-  "ignore": [
-    "resources/vendor/reveal/reveal.js"
   ],
   "env": {
     "test": {

@@ -1,9 +1,10 @@
 export const questions = {
 	dashboard: {
 		notifications: {
-			close: 'Zamknij',
+			close: 'Ukryj',
 			heading: 'Ostatnie dyskusje',
-			toggle: 'Powiadomienia',
+			toggle: 'Pokaż dyskusje',
+			toggleBar: 'Dyskusje',
 		},
 		plan: {
 			create: {
@@ -33,8 +34,10 @@ export const questions = {
 			'incorrect': 'Rozwiązane błędnie',
 			'subjects': 'Przedmioty i tematy',
 			'planned': 'Zaplanowane na dziś',
+			'all': 'Wszystkie zaplanowane',
 			'resolution': 'Status',
 			'unresolved': 'Nierozwiązane',
+			'collection': 'Zapisane w Kolekcjach',
 		},
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',

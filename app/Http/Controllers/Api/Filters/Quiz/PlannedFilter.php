@@ -9,41 +9,65 @@ use Auth;
 
 class PlannedFilter extends ApiFilter
 {
-	protected $expected = ['user_id'];
+	protected $expected = ['user_id', 'list'];
 
 	public function handle($builder)
 	{
-		$supportedDate = Carbon::today();
-
 		$plan = UserPlan::where('user_id', $this->params['user_id'])->orderBy('id', 'desc')->first();
 
 		if (!$plan) return $builder;
 
-		$questionsForDay = $plan->questionsForDay($supportedDate)->pluck('question_id')->toArray();
+		$builder = $builder->where(function ($query) use ($plan){
+			foreach ($this->params['list'] as $state) {
+				$query->orWhere(function ($query) use ($state, $plan) {
+					$this->{$state}($plan, $query);
+				});
+			}
+		});
 
-		return $builder->whereIn('id', $questionsForDay);
+		return $builder;
 	}
 
 	public function count($builder)
 	{
 		$plan = UserPlan::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->first();
+		$all = 0;
+		$today = 0;
 
 		if ($plan) {
-			$questionsForDay = $plan->questionsForDay(Carbon::today())->pluck('question_id')->toArray();
-			$count = $builder->whereIn('id', $questionsForDay)->count();
-		} else {
-			$count = 0;
+			$all = $this->all($plan, $builder)->count();
+			$today = $this->planned($plan, $builder)->count();
 		}
 
 		return [
 			'items'   => [
 				[
 					'value' => 'planned',
-					'count' => $count,
-				]
+					'count' => $today,
+				],
+				[
+					'value' => 'all',
+					'count' => $all,
+				],
 			],
 			'message' => 'planned',
 			'type'    => 'list',
 		];
+	}
+
+	protected function all($plan, $builder)
+	{
+		$questions = $plan->questionsProgress->pluck('question_id')->toArray();
+
+		return $builder->whereIn('id', $questions);
+	}
+
+	protected function planned($plan, $builder)
+	{
+		$supportedDate = Carbon::today();
+
+		$questionsForDay = $plan->questionsForDay($supportedDate)->pluck('question_id')->toArray();
+
+		return $builder->whereIn('id', $questionsForDay);
 	}
 }

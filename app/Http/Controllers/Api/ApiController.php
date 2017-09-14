@@ -182,6 +182,10 @@ class ApiController extends Controller
 	{
 		$paginator = $model->paginate($limit, ['*'], 'page', $page);
 
+		if ($paginator->lastPage() < $page) {
+			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
+		}
+
 		$response = [
 			'data'         => $this->transform($paginator->getCollection()),
 			'total'        => $paginator->total(),

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class UserQuizResults extends Model
 {
 	use Cached;
-	public $timestamps = false;
 
 	protected $fillable = ['user_id', 'quiz_answer_id', 'quiz_question_id'];
 

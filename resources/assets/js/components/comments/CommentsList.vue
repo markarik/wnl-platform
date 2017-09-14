@@ -11,7 +11,7 @@
 			</span>
 		</div>
 		<wnl-comment
-			v-if="showComments"
+			v-show="showComments"
 			v-for="comment in comments"
 			:key="comment.id"
 			:comment="comment"
@@ -20,7 +20,7 @@
 			>
 			{{comment.text}}
 		</wnl-comment>
-		<div class="form-container" v-if="showComments">
+		<div class="form-container" v-show="showComments">
 			<transition name="fade">
 				<wnl-new-comment-form
 					:commentableResource="commentableResource"

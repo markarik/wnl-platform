@@ -176,6 +176,7 @@
 				'questionsList',
 				'testQuestions',
 				'testQuestionsUnanswered',
+				'getSafePage',
 			]),
 			activeFiltersNames() {
 				return this.activeFiltersObjects.map(filter => {
@@ -225,7 +226,7 @@
 				const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 					? this.presetOptionsToPass.loadingText
 					: 'testBuilding'
-				
+
 				this.switchOverlay(true, 'testBuilding', text)
 				this.resetTest()
 				this.testMode = true
@@ -266,7 +267,11 @@
 
 				return new Promise((resolve, reject) => {
 					this.$swal(config)
-						.then(() => resolve(), () => reject())
+						.then(() => resolve(), (dismiss) => {
+							if (dismiss === 'cancel') {
+								return reject()
+							}
+						})
 						.catch(e => reject())
 				})
 			},
@@ -311,7 +316,7 @@
 					newPage = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep
 				}
 				else if (step < 0 && currentIndex === 0) {
-					newIndex = currentPage === 1 ? this.matchedQuestionsCount % this.meta.perPage - 1 : perPage - 1
+					newIndex = currentPage === 1 ? -1 : perPage - 1
 					newPage = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep
 				} else {
 					newPage = currentPage
@@ -350,7 +355,9 @@
 			setQuestion({page, index}) {
 				this.switchOverlay(true, 'currentQuestion')
 				this.changePage(page)
-					.then(() => this.changeCurrentQuestion({page, index}))
+					// last page may change after fetching the page
+					// when "nierozwiązane pytania" filter is active
+					.then(() => this.changeCurrentQuestion({page: this.getSafePage(page), index}))
 					.then(question => {
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)

@@ -46,8 +46,10 @@ function getEmptyAnswers(stateAnswers) {
 const getters = {
 	questionText: state => state.question ? state.question.text : '',
 	questionAnswers: state => state.answers || getEmptyAnswers(),
+	questionAnswersMap: state => state.answersMap,
 	questionId: state => state.question && state.question.id,
-	questionTags: state => state.question ? state.question.tags : []
+	questionTags: state => state.question ? state.question.tags : [],
+	preserveOrder: state => state.question && state.question.preserve_order
 }
 
 // Mutations
@@ -58,8 +60,9 @@ const mutations = {
 
 		set(state, 'question', data)
 		set(state, 'answers', answersArray)
+		set(state, 'answersMap', answersObject)
 	},
-	[types.CLEAR_QUIZ_QUESTION_ANSWERS] (state, data) {
+	[types.CLEAR_QUIZ_QUESTION] (state, data) {
 		set(state, 'answers', getEmptyAnswers())
 	}
 }
@@ -73,27 +76,8 @@ const actions = {
 			})
 	},
 	setupFreshQuestion({ commit }) {
-		commit(types.CLEAR_QUIZ_QUESTION_ANSWERS)
-	},
-	saveAnswers({ commit }, { answersData, isEdit } ) {
-		const promises = answersData.map(
-			answer => {
-				if (isEdit) {
-					return axios.put(
-						getApiUrl(`quiz_answers/${answer.id}`),
-						{ text: answer.text, is_correct: answer.isCorrect }
-					)
-				} else {
-					return axios.post(
-						getApiUrl(`quiz_answers`),
-						{ text: answer.text, is_correct: answer.isCorrect }
-					)
-				}
-			}
-		)
-
-		return Promise.all(promises)
-	},
+		commit(types.CLEAR_QUIZ_QUESTION)
+	}
 }
 
 export default {

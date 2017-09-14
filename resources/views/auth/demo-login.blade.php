@@ -9,7 +9,7 @@
 		@endif
 		<h2 class="wnl-login-title">Witaj na <strong>wersji demo</strong> platformy "Więcej niż LEK"</h2>
 		<p class="wnl-login-subtitle">Aby rozpocząć, podaj Imię i Nazwisko, mogą być zmyślone. :)</p>
-		<form class="wnl-login-form" action="{{ url('/login') }}" method="post">
+		<form class="wnl-login-form" action="{{ url('/login/demo') }}" method="post">
 			{{ csrf_field() }}
 
 			{{-- First name, last name --}}

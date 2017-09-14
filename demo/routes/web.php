@@ -14,8 +14,11 @@ use Illuminate\Support\Facades\Input;
 */
 
 Route::get('/login', '\Demo\App\Http\Controllers\Auth\LoginController@showLoginForm');
-Route::post('/login', '\Demo\App\Http\Controllers\Auth\LoginController@login');
+Route::post('/login/demo', '\Demo\App\Http\Controllers\Auth\LoginController@login');
 Route::post('/logout', '\Demo\App\Http\Controllers\Auth\LoginController@logout');
+
+Route::get('/login/admin', '\App\Http\Controllers\Auth\LoginController@showLoginForm');
+Route::post('/login', '\App\Http\Controllers\Auth\LoginController@login');
 
 Route::get('/styleguide', function () {
 	return Response::view('styleguide');

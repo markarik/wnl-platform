@@ -3,6 +3,7 @@
 		<h4>{{name}}</h4>
 		<component :is="component" :screenData="screenData"></component>
 		<wnl-qna v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
+		<wnl-conversion-box class="conversion-box" v-if="isTouchScreen"/>
 	</div>
 </template>
 
@@ -14,6 +15,7 @@
 </style>
 
 <script>
+	import ConversionBox from '../demo/ConversionBox.vue'
 	import End from 'js/components/course/screens/End'
 	import Html from 'js/components/course/screens/Html'
 	import MockExam from 'js/components/course/screens/MockExam'
@@ -35,6 +37,7 @@
 	export default {
 		name: 'Screen',
 		components: {
+			'wnl-conversion-box': ConversionBox,
 			'wnl-end': End,
 			'wnl-html': Html,
 			'wnl-mock-exam': MockExam,
@@ -45,6 +48,7 @@
 		},
 		props: ['screenId'],
 		computed: {
+			...mapGetters(['isTouchScreen']),
 			...mapGetters('course', [
 				'getScreen',
 				'getScreenSectionsCheckpoints',

@@ -7,6 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside help-sidenav">
 				<wnl-sidenav :items="sidenavItems" itemsHeading="Pomoc"></wnl-sidenav>
+				<wnl-conversion-box class="conversion-box"/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
@@ -61,6 +62,7 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
+	import ConversionBox from '../demo/ConversionBox.vue'
 	import ComingSoonHelp from 'js/components/help/ComingSoonHelp'
 	import MainNav from 'js/components/MainNav'
 	import PublicChat from 'js/components/chat/PublicChat'
@@ -71,6 +73,7 @@
 	export default {
 		name: 'Help',
 		components: {
+			'wnl-conversion-box': ConversionBox,
 			'wnl-coming-soon-help': ComingSoonHelp,
 			'wnl-main-nav': MainNav,
 			'wnl-public-chat': PublicChat,

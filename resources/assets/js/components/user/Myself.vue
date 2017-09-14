@@ -7,6 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside myself-sidenav">
 				<wnl-sidenav :items="items"></wnl-sidenav>
+				<wnl-conversion-box class="conversion-box"/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
@@ -36,6 +37,7 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
+	import ConversionBox from '../demo/ConversionBox.vue'
 	import MainNav from 'js/components/MainNav'
 	import MyProfile from 'js/components/user/MyProfile'
 	import Sidenav from 'js/components/global/Sidenav'
@@ -45,6 +47,7 @@
 	export default {
 		name: 'Myself',
 		components: {
+			'wnl-conversion-box': ConversionBox,
 			'wnl-main-nav': MainNav,
 			'wnl-my-profile': MyProfile,
 			'wnl-sidenav': Sidenav,

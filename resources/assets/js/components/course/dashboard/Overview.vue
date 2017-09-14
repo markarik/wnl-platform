@@ -1,11 +1,11 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
-		<!-- Dashboard news -->
-		<wnl-dashboard-news/>
-
 		<div class="welcome">
 			{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
 		</div>
+
+		<!-- Dashboard news -->
+		<wnl-dashboard-news/>
 
 		<!-- Next lesson -->
 		<div class="overview-progress box">

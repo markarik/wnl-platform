@@ -5,6 +5,7 @@
 				<span class="icon">
 					<i class="fa" v-bind:class="sidenavIconClass"></i>
 				</span>
+				<span class="text">Menu</span>
 			</a>
 		</div>
 		<div class="wnl-navbar-branding">
@@ -12,6 +13,14 @@
 				<img class="logo-image" :src="logoSrc" :alt="$t('nav.navbar.logoAlt')">
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
+		</div>
+		<div class="wnl-navbar-signup" v-if="!isMobile">
+			<a target="_blank" href="https://wiecejnizlek.pl/zostaw-e-mail" class="button is-success is-small is-outlined">
+				<span>Zapisz się</span>&nbsp;
+				<span class="icon is-small">
+					<i class="fa fa-thumbs-o-up"></i>
+				</span>
+			</a>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-search">
 			<wnl-search/>
@@ -72,6 +81,12 @@
 		flex-grow: 1
 		padding: 0 $margin-small
 
+	.wnl-navbar-signup
+		+flex-center()
+		cursor: pointer
+		height: $navbar-height
+		min-height: $navbar-height
+
 	.wnl-navbar-item
 		align-items: center
 		cursor: pointer
@@ -87,6 +102,16 @@
 
 	.wnl-navbar-sidenav-toggle
 		padding-left: 0
+
+		.wnl-navbar-sidenav-trigger
+			+flex-center()
+			flex-direction: column
+
+			.text
+				color: $color-gray-dimmed
+				font-size: $font-size-minus-3
+				margin-top: -5px
+				text-transform: uppercase
 
 	.wnl-navbar-chat-toggle
 		padding-right: 0

@@ -1,6 +1,7 @@
 <template>
 	<aside class="sidenav-aside course-sidenav">
 		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading" :options="sidenavOptions"></wnl-sidenav>
+		<wnl-conversion-box class="conversion-box"/>
 	</aside>
 </template>
 
@@ -20,6 +21,7 @@
 	import { mapGetters } from 'vuex'
 
 	import Sidenav from 'js/components/global/Sidenav.vue'
+	import ConversionBox from '../demo/ConversionBox.vue'
 
 	import * as mutations from 'js/store/mutations-types'
 	import { resource } from 'js/utils/config'
@@ -46,6 +48,7 @@
 			}),
 			sidenavOptions() {
 				return {
+					forceGroupsOpen: true,
 					hasGroups: !this.isLesson,
 					showSubitemsCount: true,
 				}
@@ -238,6 +241,7 @@
 			}
 		},
 		components: {
+			'wnl-conversion-box': ConversionBox,
 			'wnl-sidenav': Sidenav,
 		}
 	}

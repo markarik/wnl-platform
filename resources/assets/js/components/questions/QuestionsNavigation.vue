@@ -6,6 +6,7 @@
 		<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 		<aside class="sidenav-aside">
 			<wnl-sidenav :items="navigationItems"></wnl-sidenav>
+			<wnl-conversion-box class="conversion-box"/>
 		</aside>
 	</wnl-sidenav-slot>
 </template>
@@ -24,6 +25,7 @@
 <script>
 	import {mapGetters} from 'vuex'
 
+	import ConversionBox from '../demo/ConversionBox.vue'
 	import MainNav from 'js/components/MainNav'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -33,6 +35,7 @@
 	export default {
 		name: 'QuestionsNavigation',
 		components: {
+			'wnl-conversion-box': ConversionBox,
 			'wnl-main-nav': MainNav,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,

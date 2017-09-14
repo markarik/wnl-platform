@@ -7,6 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside collections-sidenav">
 				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
+				<wnl-conversion-box class="conversion-box"/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
@@ -146,6 +147,7 @@
 	import { pull } from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
+	import ConversionBox from '../demo/ConversionBox.vue'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
@@ -159,6 +161,7 @@
 	export default {
 		props: ['categoryName', 'rootCategoryName'],
 		components: {
+			'wnl-conversion-box': ConversionBox,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-main-nav': MainNav,

@@ -3,7 +3,7 @@
 		<div class="content" v-html="content"></div>
 		<p class="margin vertical has-text-centered">
 			<router-link :to="routeParams" class="button is-primary">
-				Rozwiąż próbny LEK!
+				{{this.$t('questions.nav.mockExam')}}!
 			</router-link>
 		</p>
 	</div>

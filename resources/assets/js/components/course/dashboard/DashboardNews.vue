@@ -2,15 +2,27 @@
 	<div class="margin bottom">
 		<div class="notification content" v-if="showNews">
 			<button class="delete" @click="seenCurrentNews"></button>
-			<p>Kiedy to się stało?! 12 tygodni pierwszej edycji kursu już za nami! Chcielibyśmy niezwykle podziękować Ci za zaangażowanie i pogratulować tak długiej i systematycznej nauki! Jesteśmy naprawdę pod wrażeniem! <wnl-emoji name="tada"/></p>
+			<p>Serdecznie witamy Cię w naszym wirtualnym pokoju nauki&nbsp;do&nbsp;LEK&#8209;u!&nbsp;<wnl-emoji name="raised_hands"/></p>
 
-			<p>Na zakończenie kursu, prosimy Cię o wypełnienie ostatniej ankiety ewaluacyjnej. Część pytań na pewno rozpoznasz z poprzednich kwestionariuszy, ale tym razem skupimy się też na ocenie poszczególnych przedmiotów, w końcu możecie je porównać już między sobą. <wnl-emoji name="bar_chart"/></p>
+			<p>Jest to wersja demonstracyjna platformy, więc możesz ją śmiało zwiedzać, klikać na co masz ochotę i pisać... no, może nie wszystko. <wnl-emoji name="wink"/></p>
 
-			<p>Ankieta jest tym razem nieco dłuższa, ale wciąż nie powinna zająć więcej, niż 15 minut. <wnl-emoji name="wink"/></p>
+			<p>Jeśli wiesz niewiele na temat kursu Więcej niż LEK, zapraszamy Cię do zapoznania się z lekcją <router-link :to="introLessonRoute">O kursie</router-link>. Znajdziesz w niej odpowiedzi na wiele pytań, w tym to najważniejsze - dlaczego warto uczyć się z nami? <wnl-emoji name="thinking_face"/></p>
 
-			<p class="has-text-centered"><a class="button is-primary is-outlined is-small" target="_blank" href="https://goo.gl/forms/C1mQ0MUwUzZBJyTO2">Przejdź do ostatniej ankiety</a></p>
+			<p>Może jednak być tak, że o kursie wiesz już niemal wszystko, ale odwiedzasz nas, żeby bliżej zapoznać się z lekcjami i samą platformą. W takim razie zapraszamy prosto do przykładowych lekcji, które znajdziesz w&nbsp;<span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span>&nbsp;MENU!</p>
 
-			<p>Dziękujemy i trzymamy za Ciebie kciuki!</p>
+			<!-- &nbsp;<wnl-emoji name="mortar_board"/> -->
+
+			<p>Oprócz lekcji, w MENU mamy dziś również Kolekcje - zbiór zapisanych przez Ciebie slajdów i pytań kontrolnych, oraz Pytania - naszą autorską aplikację do pracy z obszerną bazą 3500 pytań! Poklikasz? <wnl-emoji name="smirk"/></p>
+
+			<p>Życzymy Ci przyjemnego korzystania z platformy i... do zobaczenia na kursie!</p>
+
+			<p class="has-text-centered">
+				<router-link class="button is-primary is-outlined is-small" :to="introLessonRoute">
+					Przejdź do lekcji O kursie
+				</router-link>
+			</p>
+
+			<p>P.S. W razie problemów, w MENU znajdziesz też Pomoc! <wnl-emoji name="ambulance"/></p>
 		</div>
 		<div class="has-text-centered small" v-else>
 			<a @click="showNews = true">Pokaż powitanie</a>
@@ -21,8 +33,9 @@
 <script>
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
+	import { getFirstLessonId } from '../../../utils/env'
 
-	const CURRENT_NEWS = 'survey-end'
+	const CURRENT_NEWS = 'demo-welcome'
 	const REQUIRED_ROLE = ''
 
 	export default {
@@ -33,10 +46,19 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserName', 'hasRole']),
+			...mapGetters(['currentUserName', 'hasRole', 'isTouchScreen']),
 			newsStoreKey() {
 				return `seen-dashboard-news-${CURRENT_NEWS}`
-			}
+			},
+			introLessonRoute() {
+				return {
+					name: 'lessons',
+					params: {
+						courseId: 1,
+						lessonId: getFirstLessonId(),
+					},
+				}
+			},
 		},
 		methods: {
 			seenCurrentNews() {

@@ -4,6 +4,7 @@ use App\Exceptions\ApiFilterException;
 use Illuminate\Http\Request;
 use Redis;
 use Auth;
+use Cache;
 
 trait ProvidesApiFiltering
 {
@@ -31,7 +32,7 @@ trait ProvidesApiFiltering
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
-			$response = $this->paginatedResponse($model, $this->limit, $this->page);
+			$response = $this->cachedPaginatedResponse($request, $model, $this->limit, $this->page);
 		}
 
 		$response = array_merge($response, ['active' => $paths]);
@@ -176,5 +177,45 @@ trait ProvidesApiFiltering
 		$resource = $request->route('resource');
 
 		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
+	}
+
+	protected function cachedPaginatedResponse(Request $request, $model, $limit, $page = 1) {
+		$collection = $model->get();
+		$paginator = $model->paginate($limit, ['*'], 'page', $page);
+		$resource = $request->route('resource');
+		$userId = Auth::user()->id;
+
+		// @TODO calculate checksum from active filters
+		$data = json_encode($request->active);
+
+		if ($paginator->lastPage() < $page) {
+			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
+		}
+
+		$meta = [
+			'total'        => $paginator->total(),
+			'last_page'    => $paginator->lastPage(),
+			'per_page'     => $paginator->perPage(),
+		];
+
+		$chunks = $collection->chunk($limit);
+		$page = 1;
+
+		foreach($chunks as $chunk) {
+			$results = array_merge($meta, [
+				'raw_data' => $chunk,
+				'has_more' => $page <= $paginator->lastPage(),
+				'current_page' => $page
+			]);
+
+			Cache::tags([$resource, 'filters', "user-{$userId}"])->put($page, $results, 60);
+			$page++;
+		}
+
+		return array_merge($meta, [
+			'data' => $this->transform($paginator->getCollection()),
+			'has_more' => $paginator->hasMorePages(),
+			'current_page' => $paginator->currentPage()
+		]);
 	}
 }

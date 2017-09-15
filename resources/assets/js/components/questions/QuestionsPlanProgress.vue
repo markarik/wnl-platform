@@ -40,7 +40,7 @@
 			<div v-else>
 				<p class="plan-starts">
 					{{ $t('questions.plan.start.heading', {
-						date: this.startDate.format('LL')
+						date: this.planStartDate.format('LL')
 					}) }}
 				</p>
 				<p class="plan-progress-average">{{$t('questions.plan.start.tip', {
@@ -143,7 +143,7 @@
 		computed: {
 			...mapGetters(['isMobile']),
 			average() {
-				return Math.ceil(this.plan.stats.done / (this.daysSoFar - this.slackDaysUsed))
+				return Math.ceil(this.plan.stats.done / (this.planResolvingSince - this.slackDaysUsed))
 			},
 			averagePlanned() {
 				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
@@ -155,7 +155,7 @@
 				return moment(this.plan.created_at).format('LLL')
 			},
 			daysSoFar() {
-				const diff = moment().startOf('day').diff(this.startDate, 'days')
+				const diff = moment().startOf('day').diff(this.planStartDate, 'days')
 				return diff < 0 ? 0 : diff + 1
 			},
 			donePercent() {
@@ -168,7 +168,7 @@
 				return this.daysSoFar > 0
 			},
 			plannedDaysCount() {
-				return this.endDate.diff(this.startDate, 'days') - this.plan.slack_days_planned + 1
+				return this.endDate.diff(this.planStartDate, 'days') - this.plan.slack_days_planned + 1
 			},
 			plannedRoute() {
 				return {
@@ -183,9 +183,18 @@
 			slackDaysUsed() {
 				return this.plan.slack_days_planned - this.plan.slack_days_left
 			},
-			startDate() {
-				return this.plan.calculated_start_date ? moment(this.plan.calculated_start_date.date) : moment(this.plan.start_date.date)
+			planStartDate() {
+				return moment(this.plan.start_date.date)
 			},
+			planResolvingSince() {
+				const resolvingStarted =  this.plan.calculated_start_date
+					? moment(this.plan.calculated_start_date.date) : moment(this.plan.start_date.date)
+
+				const diff = moment().startOf('day').diff(resolvingStarted, 'days')
+
+				return diff < 0 ? 0 : diff + 1
+			}
+
 		},
 	}
 </script>

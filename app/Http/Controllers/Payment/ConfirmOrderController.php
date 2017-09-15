@@ -13,7 +13,6 @@ class ConfirmOrderController extends Controller
 {
 	public function index(Payment $payment)
 	{
-
 		$user = Auth::user();
 
 		if (!$user) {

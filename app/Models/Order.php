@@ -74,7 +74,7 @@ class Order extends Model
 		if (is_null($coupon)) return 0;
 
 		if ($coupon->is_percentage) {
-			return number_format($coupon->value * $this->product->price / 100, 2);
+			return number_format($coupon->value * $this->product->price / 100, 2, '.', '');
 		}
 
 		return $coupon->value;

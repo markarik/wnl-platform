@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Input;
 
 Auth::routes();
 
-Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'payment'], function () {
+Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' => 'payment'*/], function () {
 	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
 
 	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');

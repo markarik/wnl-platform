@@ -35,6 +35,11 @@ class PersonalDataController extends Controller
 			return redirect()->route('payment-select-product');
 		}
 
+		if (Auth::check()) {
+			$this->createOrder(Auth::user());
+			return redirect()->route('payment-confirm-order');
+		}
+
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
@@ -91,19 +96,8 @@ class PersonalDataController extends Controller
 				'consent_terms'      => $request->get('consent_terms') ?? 0,
 			]
 		);
-		Log::notice('Creating order');
-		$order = $user->orders()->create([
-			'product_id' => Session::get('product')->id,
-			'session_id' => str_random(32),
-			'invoice'    => $request->get('invoice') ?? 0,
-		]);
 
-		if (session()->has('coupon')) {
-			$order->attachCoupon(session()->get('coupon'));
-		} elseif ($user->is_subscriber) {
-			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
-		}
-
+		$this->createOrder($user, ['invoice' => $request->invoice]);
 		Auth::login($user);
 		Log::notice('User automatically logged in after registration.');
 
@@ -126,5 +120,24 @@ class PersonalDataController extends Controller
 		}
 
 		return Product::slug($productSlug);
+	}
+
+	protected function createOrder($user, $data = [])
+	{
+		Log::notice('Creating order');
+		$order = $user->orders()->create([
+			'product_id' => Session::get('product')->id,
+			'session_id' => str_random(32),
+			'invoice'    => $data['invoice'] ?? $user->invoice ?? 0,
+		]);
+
+		if ($coupon = $user->coupons->first()) {
+			$order->attachCoupon($coupon);
+		}
+		elseif (session()->has('coupon')) {
+			$order->attachCoupon(session()->get('coupon'));
+		} elseif ($user->is_subscriber) {
+			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
+		}
 	}
 }

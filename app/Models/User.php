@@ -51,6 +51,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Order');
 	}
 
+	public function coupons()
+	{
+		return $this->hasMany('App\Models\Coupon');
+	}
+
 	public function profile()
 	{
 		return $this->hasOne('App\Models\UserProfile');

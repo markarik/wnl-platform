@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
-	protected $fillable = ['name', 'slug', 'code', 'type', 'value', 'expires_at'];
+	protected $fillable = ['name', 'slug', 'code', 'type', 'value', 'expires_at', 'user_id'];
+
+	protected $dates = [
+		'expires_at'
+	];
 
 	public function getIsPercentageAttribute()
 	{

@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
 		Commands\DumpCourseStructure::class,
 		Commands\EncryptPasswords::class,
 		Commands\FlushCacheByTag::class,
+		Commands\GenerateCouponsForUsers::class,
 		Commands\ImportTaxonomies::class,
 		Commands\IssueFinalInvoice::class,
 		Commands\ImportQuizTagsFromMap::class,

@@ -24,7 +24,7 @@ trait PerformsApiSearches
 
 		$model::savePhrase(['phrase' => $phrase, 'user_id' => $user->id]);
 
-		$query = $this->buildQuery($phrase);
+		$query = $this->buildQuery($this->escapeQuery($phrase));
 		$raw = $model::searchRaw($query);
 
 		return $this->respondOk($raw);
@@ -121,5 +121,14 @@ trait PerformsApiSearches
 		}
 
 		return $params;
+	}
+
+	/**
+	 * :facepalm:
+	 * @param  String $query
+	 * @return String
+	 */
+	private function escapeQuery($query) {
+		return preg_replace('/(\+|\-|\=|\&|\||\!|\(|\)|\{|\}|\[|\]|\^|\"|\~|\*|\<|\>|\?|\:|\\\\|\/)/', ' ', $query);
 	}
 }

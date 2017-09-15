@@ -356,7 +356,7 @@ const actions = {
 			return response
 		})
 	},
-	saveQuestionsResults({commit, getters, rootGetters}, {questions, meta}) {
+	saveQuestionsResults({commit, getters, rootGetters}, {questions, meta={}}) {
 		const results = questions.map((questionId) => {
 			const question = getters.getQuestion(questionId)
 

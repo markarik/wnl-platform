@@ -2,6 +2,7 @@
 
 namespace Tests\Api\User;
 
+use App\Http\Controllers\Api\PrivateApi\UserQuizResultsApiController;
 use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\User;
 use App\Models\UserQuizResults;
@@ -158,7 +159,7 @@ class UserStateTest extends ApiTestCase
 	public function get_quiz_state()
 	{
 		$user = User::find(1);
-		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1);
+		$redisKey = UserQuizResultsApiController::getQuizRedisKey($user->id, 1);
 
 		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey)->andReturn(json_encode(['foo' => 'bar']));
 
@@ -181,7 +182,7 @@ class UserStateTest extends ApiTestCase
 	public function get_empty_quiz_state()
 	{
 		$user = User::find(1);
-		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1);
+		$redisKey = UserQuizResultsApiController::getQuizRedisKey($user->id, 1);
 
 		$mockedRedis = Redis::shouldReceive('get')->once()->with($redisKey)->andReturn(null);
 
@@ -202,7 +203,7 @@ class UserStateTest extends ApiTestCase
 	public function update_quiz_state()
 	{
 		$user = User::find(1);
-		$redisKey = UserStateApiController::getQuizRedisKey($user->id, 1);
+		$redisKey = UserQuizResultsApiController::getQuizRedisKey($user->id, 1);
 		$encodedData = json_encode(['something']);
 
 		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, $encodedData);
@@ -248,7 +249,7 @@ class UserStateTest extends ApiTestCase
 				'user_id' => $USER_ID
 			]
 		];
-		$redisKey = UserStateApiController::getQuizRedisKey($USER_ID, 1);
+		$redisKey = UserQuizResultsApiController::getQuizRedisKey($USER_ID, 1);
 		$encodedData = json_encode($quizData);
 
 		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, $encodedData);
@@ -297,7 +298,7 @@ class UserStateTest extends ApiTestCase
 			'quiz_answer_id' => 11
 		]);
 
-		$redisKey = UserStateApiController::getQuizRedisKey($USER_ID, 1);
+		$redisKey = UserQuizResultsApiController::getQuizRedisKey($USER_ID, 1);
 		$encodedData = json_encode($quizData);
 
 		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, $encodedData);
@@ -337,7 +338,7 @@ class UserStateTest extends ApiTestCase
 			]
 		];
 		$recordedAnswers = [];
-		$redisKey = UserStateApiController::getQuizRedisKey($USER_ID, 1);
+		$redisKey = UserQuizResultsApiController::getQuizRedisKey($USER_ID, 1);
 		$encodedData = json_encode($quizData);
 
 		$mockedRedis = Redis::shouldReceive('set')->once()->with($redisKey, $encodedData);

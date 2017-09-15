@@ -83,7 +83,7 @@ class QuizQuestionsTest extends ApiTestCase
 				[
 					'quiz-planned' => [
 						'user_id' => 2,
-						'list'    => [Carbon::now()->toDateTimeString()],
+						'list'    => ['all'],
 					],
 				],
 

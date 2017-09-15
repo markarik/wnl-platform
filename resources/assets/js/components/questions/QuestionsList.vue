@@ -341,7 +341,7 @@
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
-				this.saveQuestionsResults([questionId])
+				this.saveQuestionsResults({questions: [questionId]})
 			},
 			performCheckQuestions() {
 				scrollToTop()

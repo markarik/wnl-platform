@@ -184,7 +184,7 @@
 				return this.plan.slack_days_planned - this.plan.slack_days_left
 			},
 			startDate() {
-				return moment(this.plan.start_date.date)
+				return this.plan.calculated_start_date ? moment(this.plan.calculated_start_date.date) : moment(this.plan.start_date.date)
 			},
 		},
 	}

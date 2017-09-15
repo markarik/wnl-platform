@@ -150,6 +150,7 @@
 				testProcessing: false,
 				testResults: {},
 				reactionsFetched: false,
+				presetOptionsToPass: isEmpty(this.presetOptions) ? {} : this.presetOptions
 			}
 		},
 		computed: {
@@ -193,11 +194,11 @@
 			computedQuestionsList() {
 				return this.orderedQuestionsList.length ? this.orderedQuestionsList : this.questionsList
 			},
+			examMode() {
+				return !!this.presetOptionsToPass.examMode && this.testMode
+			},
 			highlightedQuestion() {
 				return this.questionsList[0]
-			},
-			presetOptionsToPass() {
-				return isEmpty(this.presetOptions) ? {} : this.presetOptions
 			},
 		},
 		methods: {
@@ -276,8 +277,7 @@
 				})
 			},
 			endQuiz() {
-				this.testProcessing = false
-				this.testMode = false
+				this.testMode = this.testProcessing = false
 				this.testResults = {}
 				this.resetTest()
 			},
@@ -345,11 +345,12 @@
 			},
 			performCheckQuestions() {
 				scrollToTop()
-				this.testMode = false
 				this.testProcessing = true
-				this.checkQuestions().then(results => {
+				this.checkQuestions({examMode: this.examMode}).then(results => {
 					this.testResults = results
 					this.testProcessing = false
+					this.testMode = false
+					this.presetOptionsToPass = {}
 				})
 			},
 			setQuestion({page, index}) {

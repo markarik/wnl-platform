@@ -34,8 +34,10 @@ export const questions = {
 			'incorrect': 'Rozwiązane błędnie',
 			'subjects': 'Przedmioty i tematy',
 			'planned': 'Zaplanowane na dziś',
+			'all': 'Wszystkie zaplanowane',
 			'resolution': 'Status',
 			'unresolved': 'Nierozwiązane',
+			'collection': 'Zapisane w Kolekcjach',
 		},
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',
@@ -50,6 +52,7 @@ export const questions = {
 		planner: 'Zaplanuj pracę',
 		solving: 'Rozwiązuj pytania',
 		stats: 'Sprawdź statystyki',
+		mockExam: 'Rozwiąż próbny LEK'
 	},
 	question: {
 		edit: 'Edytuj pytanie',

@@ -113,8 +113,8 @@ a.secondary-link {
 }
 
 // Buttons
-
-.button {
+a.button,
+button.button {
 	border-radius: $border-radius-full;
 	font-size: $font-size-minus-1;
 	font-weight: $font-weight-black;

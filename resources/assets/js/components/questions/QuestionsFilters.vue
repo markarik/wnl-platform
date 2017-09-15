@@ -125,7 +125,7 @@
 				return {
 					disableEmpty: true,
 					expanded: this.expandedItems,
-					flattened: ['quiz-planned', 'quiz-resolution'],
+					flattened: ['quiz-planned', 'quiz-resolution', 'quiz-collection'],
 					isMobile: this.isMobile,
 					itemsNamesSource: this.itemsNamesSource,
 					selectedElements: this.activeFilters,

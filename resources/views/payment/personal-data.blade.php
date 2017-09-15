@@ -23,9 +23,9 @@
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
-				<div class="notification is-info">
+				{{-- <div class="notification is-info">
 					<p class="strong">@lang('payment.personal-data-email-info')</p>
-				</div>
+				</div> --}}
 			</div>
 			<div class="form-group">
 				<div class="control">
@@ -138,7 +138,7 @@
 
 			<div class="form-group small">
 				<div class="box">
-					<div class="control">
+					<div class="control margin bottom">
 						{!! form_widget($form->consent_account) !!}
 						{!! html_entity_decode(form_label($form->consent_account)) !!}
 						{!! form_errors($form->consent_account) !!}

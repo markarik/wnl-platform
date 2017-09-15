@@ -52,6 +52,7 @@ export const questions = {
 		planner: 'Zaplanuj pracę',
 		solving: 'Rozwiązuj pytania',
 		stats: 'Sprawdź statystyki',
+		mockExam: 'Rozwiąż próbny LEK'
 	},
 	question: {
 		edit: 'Edytuj pytanie',

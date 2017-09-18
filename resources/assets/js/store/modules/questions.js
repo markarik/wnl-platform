@@ -244,7 +244,7 @@ const actions = {
 			return resolve(getters.currentQuestion)
 		})
 	},
-	checkQuestions({commit, getters, dispatch}) {
+	checkQuestions({commit, getters, dispatch}, meta) {
 		const results = {
 				unanswered: [],
 				incorrect: [],
@@ -264,7 +264,7 @@ const actions = {
 			dispatch('resolveQuestion', question.id)
 		})
 
-		dispatch('saveQuestionsResults', questionsToStore)
+		dispatch('saveQuestionsResults', {questions: questionsToStore, meta})
 
 		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
 		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"
@@ -356,20 +356,22 @@ const actions = {
 			return response
 		})
 	},
-	saveQuestionsResults({commit, getters, rootGetters}, questionIds) {
-		const results = questionIds.map((questionId) => {
+	saveQuestionsResults({commit, getters, rootGetters}, {questions, meta={}}) {
+		const results = questions.map((questionId) => {
 			const question = getters.getQuestion(questionId)
 
 			if (!question.hasOwnProperty('selectedAnswer')) return
 			if (!question.answers.hasOwnProperty(question.selectedAnswer)) return
 
-			return {
-				questionId,
-				answerId: question.answers[question.selectedAnswer].id
-			}
-		}).filter((result) => result)
+				return {
+					questionId,
+					answerId: question.answers[question.selectedAnswer].id
+				}
+			}).filter((result) => result)
 
-		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results})
+		const filters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+
+		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results, meta: {...meta, filters}})
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)

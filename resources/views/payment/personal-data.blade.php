@@ -22,6 +22,9 @@
 		<section class="section">
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
+
+				<a class="button opens-login-modal">Mam już konto</a>
+
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
 				{{-- <div class="notification is-info">
 					<p class="strong">@lang('payment.personal-data-email-info')</p>

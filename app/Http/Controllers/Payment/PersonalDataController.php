@@ -22,6 +22,8 @@ class PersonalDataController extends Controller
 
 	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
+		$request = app(Request::class);
+
 		if ($productSlug !== null) {
 			$product = Product::slug($productSlug);
 
@@ -35,7 +37,7 @@ class PersonalDataController extends Controller
 			return redirect()->route('payment-select-product');
 		}
 
-		if (Auth::check()) {
+		if (Auth::check() && !$request->edit) {
 			$this->createOrder(Auth::user());
 			return redirect()->route('payment-confirm-order');
 		}
@@ -47,6 +49,8 @@ class PersonalDataController extends Controller
 		])->modify('password', 'password', [
 			'value' => '',
 		]);
+
+		session()->flash('url.intended', route('payment-personal-data'));
 
 		return view('payment.personal-data', [
 			'form'    => $form,

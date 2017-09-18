@@ -8,6 +8,11 @@
 			:modifyingClass="progressModifyingClass">
 		</wnl-progress>
 		<p class="progress-message">{{ progressMessage }}</p>
+		<p class="has-text-centered margin vertical" v-if="isFull">
+			<a href="https://wiecejnizlek.pl/zostaw-e-mail" target="_blank" class="button is-small is-success">
+				Zapisz się
+			</a>
+		</p>
 	</div>
 </template>
 
@@ -34,7 +39,7 @@
 		STATE_DANGER = 'danger',
 		stateData = {
 			[STATE_FULL]: {
-				message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone i należy Ci się zasłużony odpoczynek! ${emoji.get('slightly_smiling_face')}`,
+				message: `To już koniec! Dziękujemy za zapoznanie się z kursem! Pozostało się już tylko zapisać! ${emoji.get('slightly_smiling_face')}`,
 				modifyingClass: 'is-success'
 			},
 			[STATE_GOOD]: {
@@ -61,6 +66,9 @@
 			]),
 			courseId() {
 				return this.$route.params.courseId
+			},
+			isFull() {
+				return this.progressState === STATE_FULL
 			},
 			progressValue() {
 				return this.getCompleteLessons(this.courseId).length

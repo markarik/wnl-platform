@@ -3,6 +3,7 @@
 		<p class="has-text-centered metadata">Odkryj naukę na nowo!</p>
 		<p class="has-text-centered small margin bottom">Dołącz do jedynego wirtualnego pokoju nauki do LEK-u</p>
 		<p class="has-text-centered">
+			<!-- Remember to change YourProgress.vue as well -->
 			<a target="_blank" href="https://wiecejnizlek.pl/zostaw-e-mail" class="button is-success is-small">
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">

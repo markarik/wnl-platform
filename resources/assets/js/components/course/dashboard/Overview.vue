@@ -9,7 +9,7 @@
 
 		<!-- Next lesson -->
 		<div class="overview-progress box">
-			<wnl-next-lesson/>
+			<wnl-next-lesson v-if="shouldDisplayNextLesson"/>
 			<wnl-your-progress/>
 		</div>
 
@@ -99,6 +99,7 @@
 		props: ['courseId'],
 		computed: {
 			...mapGetters('progress', [
+				'isCourseOver',
 				'isLessonComplete',
 				'wasCourseStarted',
 			]),
@@ -122,6 +123,9 @@
 						icon: 'fa-question-circle-o',
 					},
 				]
+			},
+			shouldDisplayNextLesson() {
+				return !this.isCourseOver(this.courseId)
 			},
 		},
 		methods: {

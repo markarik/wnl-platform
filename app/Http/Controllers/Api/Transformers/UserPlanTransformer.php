@@ -20,12 +20,13 @@ class UserPlanTransformer extends ApiTransformer
 	public function transform(UserPlan $userPlan)
 	{
 		$data = [
-			'user_id'            => $userPlan->user_id,
-			'start_date'         => $userPlan->start_date,
-			'end_date'           => $userPlan->end_date,
-			'slack_days_planned' => $userPlan->slack_days_planned,
-			'slack_days_left'    => $userPlan->slack_days_left,
-			'stats'              => $userPlan->stats,
+			'user_id'               => $userPlan->user_id,
+			'start_date'            => $userPlan->start_date,
+			'calculated_start_date' => $userPlan->calculatedStartDate(),
+			'end_date'              => $userPlan->end_date,
+			'slack_days_planned'    => $userPlan->slack_days_planned,
+			'slack_days_left'       => $userPlan->slack_days_left,
+			'stats'                 => $userPlan->stats,
 		];
 
 		if ($this->parent) {

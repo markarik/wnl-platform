@@ -181,12 +181,22 @@ trait ProvidesApiFiltering
 
 	protected function cachedPaginatedResponse(Request $request, $model, $limit, $page = 1) {
 		$collection = $model->get();
-		$paginator = $model->paginate($limit, ['*'], 'page', $page);
 		$resource = $request->route('resource');
 		$userId = Auth::user()->id;
+		$hashedFilters = $this->hashedFilters($request->active);
+		$cacheTags = $this->getFiltersCacheTags($resource, $userId);
 
-		// @TODO calculate checksum from active filters
-		$data = json_encode($request->active);
+		if (Cache::tags($cacheTags)->has($this->filtersKey($hashedFilters, 1))) {
+			$results = Cache::tags($cacheTags)->get($this->filtersKey($hashedFilters, $page));
+
+			if (!empty($results)) {
+				$results['data'] = $this->transform($results['raw_data']);
+				return $results;
+			}
+
+		}
+		Cache::tags($cacheTags)->flush();
+		$paginator = $model->paginate($limit, ['*'], 'page', $page);
 
 		if ($paginator->lastPage() < $page) {
 			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
@@ -207,8 +217,9 @@ trait ProvidesApiFiltering
 				'has_more' => $page <= $paginator->lastPage(),
 				'current_page' => $page
 			]);
+			$cacheKey = $this->filtersKey($hashedFilters, $page);
 
-			Cache::tags([$resource, 'filters', "user-{$userId}"])->put($page, $results, 60);
+			Cache::tags($cacheTags)->put($cacheKey, $results, 60);
 			$page++;
 		}
 
@@ -217,5 +228,17 @@ trait ProvidesApiFiltering
 			'has_more' => $paginator->hasMorePages(),
 			'current_page' => $paginator->currentPage()
 		]);
+	}
+
+	protected function filtersKey($hashedFilters, $page) {
+		return "{$hashedFilters}-{$page}";
+	}
+
+	protected function hashedFilters($activeFilters) {
+		$hashedFilters = hash('md5', json_encode($activeFilters));
+	}
+
+	protected function getFiltersCacheTags($resource, $userId) {
+		return [$resource, 'filters', "user-{$userId}"];
 	}
 }

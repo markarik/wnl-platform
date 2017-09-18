@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
+use Cache;
 
 class UserStateApiController extends ApiController
 {
@@ -101,6 +102,26 @@ class UserStateApiController extends ApiController
 
 		return $this->json([
 			'time' => $incrementedTime
+		]);
+	}
+
+	public function saveQuizPosition(Request $request, $user) {
+		$cacheKey = $this->hashedFilters($request->active);
+		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
+		Cache::tags($cacheTags)->put($cacheKey, $request->position);
+
+		return $this->json([
+			'position' => $request->position
+		]);
+	}
+
+	public function getQuizPosition(Request $request, $user) {
+		$cacheKey = $this->hashedFilters($request->active);
+		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
+		$cachedPosition = Cache::tags($cacheTags)->get($cacheKey, $request->position);
+
+		return $this->json([
+			'position' => $cachedPosition
 		]);
 	}
 

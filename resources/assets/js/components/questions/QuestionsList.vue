@@ -197,9 +197,6 @@
 			examMode() {
 				return !!this.presetOptionsToPass.examMode && this.testMode
 			},
-			highlightedQuestion() {
-				return this.questionsList[0]
-			},
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
@@ -220,6 +217,7 @@
 				'resetTest',
 				'resolveQuestion',
 				'saveQuestionsResults',
+				'savePosition',
 				'selectAnswer',
 				'setPage',
 			]),
@@ -362,6 +360,8 @@
 					.then(question => {
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)
+					}).then(() => {
+						this.savePosition({page: this.getSafePage(page), index})
 					})
 			},
 			setupFilters(activeFilters = []) {
@@ -423,6 +423,10 @@
 						this.resetCurrentQuestion()
 						return this.fetchQuestionsReactions(this.getPage(1))
 					})
+					.then(this.fetchPosition)
+					.then((cachedPosition) => {
+						this.changeCurrentQuestion(cachedPosition)
+					})
 					.then(() => this.reactionsFetched = true)
 					.catch(e => {
 						$wnl.logger.error(e)
@@ -441,12 +445,6 @@
 			}
 		},
 		watch: {
-			highlightedQuestion(currentQuestion, previousQuestion = {}) {
-				if (currentQuestion.id !== previousQuestion.id) {
-					// TODO loading state
-					this.fetchQuestionData(currentQuestion.id)
-				}
-			},
 			testQuestionsCount() {
 				this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount)
 			}

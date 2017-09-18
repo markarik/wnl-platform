@@ -36,17 +36,17 @@
 						</tr>
 						<tr>
 							<td>1</td>
-							<td>do 7 dni od zamówienia</td>
+							<td>23 października 2017r.</td>
 							<td>{{ instalments['1'] }}zł</td>
 						</tr>
 						<tr>
 							<td>2</td>
-							<td>15 czerwca 2017r.</td>
+							<td>20 listopada 2017r.</td>
 							<td>{{ instalments['2'] }}zł</td>
 						</tr>
 						<tr>
 							<td>3</td>
-							<td>15 lipca 2017r.</td>
+							<td>20 grudnia 2017r.</td>
 							<td>{{ instalments['3'] }}zł</td>
 						</tr>
 						<tr>
@@ -149,7 +149,7 @@
 			},
 			transferDetails() {
 				return !this.order.paid &&
-					(this.order.method === 'transfer' ||
+						(this.order.method === 'transfer' ||
 						this.order.method === 'instalments')
 			},
 			paymentStatus() {
@@ -187,7 +187,10 @@
 				return `Zamówienie numer ${this.order.id}`
 			},
 			instalments() {
-				return configValue('payment').instalments[this.order.total]
+				const total = this.order.total,
+					  first = Math.ceil(total * 0.004) * 100
+
+				return {1: first, 2: first, 3: total - (2 * first)}
 			}
 		},
 		methods: {

@@ -99,7 +99,7 @@
 				</div>
 			</div>
 		</section>
-		{{-- <section class="has-text-centered">
+		 <section class="has-text-centered">
 			<div class="expandable">
 				<div class="margin vertical">
 					<a class="link expand">Płatność na raty</a>
@@ -107,15 +107,15 @@
 				<div class="expandable-content box">
 					<h4>Płatność w 3 ratach</h4>
 					<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-					<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do 7 dni od zamówienia</strong> i kolejnych do <strong>15 czerwca</strong> i <strong>15 lipca</strong>.</p>
+					<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do końca zapisów</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
 
-					@php $instalment = $instalments[intval($order->total_with_coupon)] @endphp
+					@php $instalment = $instalments(intval($order->total_with_coupon)) @endphp
 					<table class="table is-bordered margin vertical">
 						<tr>
 							<th>Twój wariant kursu</th>
-							<th>1. rata<br>(do 7 dni od zamówienia)</th>
-							<th>2. rata<br>(do 15 czerwca 2017r.)</th>
-							<th>3. rata<br>(do 15 lipca 2017r.)</th>
+							<th>1. rata<br>(do 23 października 2017r.)</th>
+							<th>2. rata<br>(do 20 listopada 2017r.)</th>
+							<th>3. rata<br>(do 20 grudnia 2017r.)</th>
 							<th>Razem</th>
 						</tr>
 						<tr>
@@ -140,6 +140,6 @@
 					</form>
 				</div>
 			</div>
-		</section> --}}
+		</section>
 	</div>
 @endsection

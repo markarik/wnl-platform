@@ -180,6 +180,10 @@ trait ProvidesApiFiltering
 	}
 
 	protected function cachedPaginatedResponse(Request $request, $model, $limit, $page = 1) {
+		if (!isset($request->active)) {
+			return $this->paginatedResponse($model, $limit, $page);
+		}
+
 		$collection = $model->get();
 		$resource = $request->route('resource');
 		$userId = Auth::user()->id;
@@ -195,6 +199,7 @@ trait ProvidesApiFiltering
 			}
 
 		}
+
 		Cache::tags($cacheTags)->flush();
 		$paginator = $model->paginate($limit, ['*'], 'page', $page);
 
@@ -215,7 +220,9 @@ trait ProvidesApiFiltering
 			$results = array_merge($meta, [
 				'raw_data' => $chunk,
 				'has_more' => $page <= $paginator->lastPage(),
-				'current_page' => $page
+				'current_page' => $page,
+				'cached' => true,
+				'checksum' => $hashedFilters
 			]);
 			$cacheKey = $this->filtersKey($hashedFilters, $page);
 
@@ -235,7 +242,7 @@ trait ProvidesApiFiltering
 	}
 
 	protected function hashedFilters($activeFilters) {
-		$hashedFilters = hash('md5', json_encode($activeFilters));
+		return hash('md5', json_encode($activeFilters));
 	}
 
 	protected function getFiltersCacheTags($resource, $userId) {

@@ -115,26 +115,6 @@ class User extends Authenticatable
 		return $this->first_name . ' ' . $this->last_name;
 	}
 
-	public function getFirstNameAttribute($value)
-	{
-		return decrypt($value);
-	}
-
-	public function setFirstNameAttribute($value)
-	{
-		$this->attributes['first_name'] = encrypt($value);
-	}
-
-	public function getLastNameAttribute($value)
-	{
-		return decrypt($value);
-	}
-
-	public function setLastNameAttribute($value)
-	{
-		$this->attributes['last_name'] = encrypt($value);
-	}
-
 	public function getAddressAttribute($value)
 	{
 		return decrypt($value);

@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
 		Commands\ChangeOrderPaymentMethod::class,
 		Commands\CheckQuizQuestions::class,
 		Commands\CreateTaxonomy::class,
+		Commands\DecryptUserNames::class,
 		Commands\DropTables::class,
 		Commands\DumpCourseStructure::class,
 		Commands\EncryptPasswords::class,

@@ -33,7 +33,7 @@
 	import { formInput } from 'js/mixins/form-input'
 	import { fontColors } from 'js/utils/colors'
 	import { mentionBlot } from 'js/classes/mentionblot'
-	import Autocomplete from 'js/components/global/autocomplete'
+	import Autocomplete from 'js/components/global/Autocomplete'
 
 	const defaults = {
 		theme: 'snow',

@@ -49,7 +49,7 @@
 
 <script>
 	import { formInput } from 'js/mixins/form-input'
-	import Autocomplete from 'js/components/global/autocomplete'
+	import Autocomplete from 'js/components/global/Autocomplete'
 	import _ from 'lodash'
 	import { mapActions } from 'vuex'
 

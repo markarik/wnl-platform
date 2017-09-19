@@ -205,6 +205,7 @@
 				'activeFiltersToggle',
 				'changeCurrentQuestion',
 				'checkQuestions',
+				'getPosition',
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
@@ -361,7 +362,7 @@
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)
 					}).then(() => {
-						this.savePosition({page: this.getSafePage(page), index})
+						this.savePosition({position: {page: this.getSafePage(page), index}})
 					})
 			},
 			setupFilters(activeFilters = []) {
@@ -419,13 +420,13 @@
 					.then(() => this.fetchDynamicFilters())
 					.then(() => {
 						this.fetchingFilters = false
-						this.switchOverlay(false)
 						this.resetCurrentQuestion()
 						return this.fetchQuestionsReactions(this.getPage(1))
 					})
-					.then(this.fetchPosition)
-					.then((cachedPosition) => {
-						this.changeCurrentQuestion(cachedPosition)
+					.then(this.getPosition)
+					.then(({data = {}}) => {
+						data.position && this.changeCurrentQuestion(data.position)
+						this.switchOverlay(false)
 					})
 					.then(() => this.reactionsFetched = true)
 					.catch(e => {

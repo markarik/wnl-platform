@@ -373,8 +373,14 @@ const actions = {
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results, meta: {...meta, filters}})
 	},
-	savePosition({}, payload) {
-		console.log(payload)
+	savePosition({getters, rootGetters}, payload) {
+		axios.put(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`), {
+			...payload,
+			active: getters.activeFilters
+		})
+	},
+	getPosition({getters, rootGetters}) {
+		return axios.post(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`),{active: getters.activeFilters})
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)

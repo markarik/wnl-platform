@@ -335,7 +335,7 @@
 			onSelectAnswer(payload) {
 				payload.answer === this.getQuestion(payload.id).selectedAnswer
 					&& !this.testMode
-					? this.onVerify(payload.id)
+					? this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}))
 					: this.selectAnswer(payload)
 			},
 			onVerify(questionId) {
@@ -361,7 +361,6 @@
 					.then(question => {
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)
-					}).then(() => {
 						this.savePosition({position: {page: this.getSafePage(page), index}})
 					})
 			},

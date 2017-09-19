@@ -12,7 +12,7 @@
 
 			<!-- &nbsp;<wnl-emoji name="mortar_board"/> -->
 
-			<p>Oprócz lekcji, w MENU mamy dziś również Kolekcje - zbiór zapisanych przez Ciebie slajdów i pytań kontrolnych, oraz Pytania - naszą autorską aplikację do pracy z obszerną bazą 3500 pytań! Poklikasz? <wnl-emoji name="smirk"/></p>
+			<p>Oprócz lekcji, w MENU mamy dziś również Kolekcje - zbiór zapisanych przez Ciebie slajdów i pytań kontrolnych, oraz Pytania - naszą autorską aplikację do pracy z obszerną bazą 3500 pytań! Brzmi dobrze? <wnl-emoji name="smirk"/></p>
 
 			<p>Życzymy Ci przyjemnego korzystania z platformy i... do zobaczenia na kursie!</p>
 

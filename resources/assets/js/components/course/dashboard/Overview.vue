@@ -5,7 +5,8 @@
 		</div>
 
 		<!-- Dashboard news -->
-		<wnl-dashboard-news/>
+		<wnl-dashboard-news v-if="!courseOver"/>
+		<wnl-conversion-box v-else/>
 
 		<!-- Next lesson -->
 		<div class="overview-progress box">
@@ -77,6 +78,7 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
+	import ConversionBox from '../../demo/ConversionBox.vue'
 	import DashboardNews from 'js/components/course/dashboard/DashboardNews'
 	import NextLesson from 'js/components/course/dashboard/NextLesson'
 	import Qna from 'js/components/qna/Qna'
@@ -89,6 +91,7 @@
 		name: 'Overview',
 		components: {
 			'wnl-active-users': ActiveUsers,
+			'wnl-conversion-box': ConversionBox,
 			'wnl-dashboard-news': DashboardNews,
 			'wnl-next-lesson': NextLesson,
 			'wnl-qna': Qna,
@@ -108,6 +111,9 @@
 			]),
 			bannerUrl() {
 				return getImageUrl('bannerwnl.png')
+			},
+			courseOver() {
+				return this.isCourseOver(this.courseId)
 			},
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)

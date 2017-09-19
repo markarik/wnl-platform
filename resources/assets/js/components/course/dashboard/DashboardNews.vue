@@ -33,6 +33,7 @@
 <script>
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
+	import { snakeCase } from 'lodash'
 	import { getFirstLessonId } from '../../../utils/env'
 
 	const CURRENT_NEWS = 'demo-welcome'
@@ -48,7 +49,7 @@
 		computed: {
 			...mapGetters(['currentUserName', 'hasRole', 'isTouchScreen']),
 			newsStoreKey() {
-				return `seen-dashboard-news-${CURRENT_NEWS}`
+				return `seen-dashboard-news-${CURRENT_NEWS}-${snakeCase(this.currentUserName)}`
 			},
 			introLessonRoute() {
 				return {

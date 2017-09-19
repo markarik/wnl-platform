@@ -63,7 +63,14 @@
 
 	export default {
 		name: 'Course',
-		mixins: [breadcrumb],
+		components: {
+			'wnl-course-navigation': Navigation,
+			'wnl-public-chat': PublicChat,
+			'wnl-breadcrumbs': Breadcrumbs,
+			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-main-nav': MainNav
+		},
+		mixins: [withChat],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
 			...mapGetters('course', ['isLessonAvailable', 'ready']),
@@ -107,14 +114,6 @@
 				return this.isSidenavVisible && this.ready
 			}
 		},
-		components: {
-			'wnl-course-navigation': Navigation,
-			'wnl-public-chat': PublicChat,
-			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav
-		},
-		mixins: [withChat, breadcrumb],
 		methods: {
 			...mapActions(['toggleChat']),
 		},

@@ -132,17 +132,17 @@
 			...mapActions(['changeOverviewView']),
 			...mapActions('qna', ['fetchLatestQuestions']),
 		},
-		beforeMount() {
-			if (this.isBeginning) {
-				this.$router.replace({
-					name: resource('lessons'),
-					params: {
-						lessonId: getFirstLessonId(),
-						courseId: this.courseId
-					}
-				})
-			}
-		},
+		// beforeMount() {
+		// 	if (this.isBeginning) {
+		// 		this.$router.replace({
+		// 			name: resource('lessons'),
+		// 			params: {
+		// 				lessonId: getFirstLessonId(),
+		// 				courseId: this.courseId
+		// 			}
+		// 		})
+		// 	}
+		// },
 		mounted() {
 			this.fetchLatestQuestions()
 		}

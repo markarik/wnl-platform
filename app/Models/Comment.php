@@ -9,7 +9,7 @@ class Comment extends Model
 {
 	protected $fillable = ['text', 'user_id'];
 
-	protected $dispatchesEvents = [
+	protected $events = [
 		'created' => CommentPosted::class,
 	];
 

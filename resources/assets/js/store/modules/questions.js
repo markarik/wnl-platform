@@ -3,6 +3,7 @@ import {get, isEqual, isEmpty, isNumber, merge, size} from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import axios from 'axios'
+import moment from 'moment'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
 
@@ -356,7 +357,7 @@ const actions = {
 			return response
 		})
 	},
-	saveQuestionsResults({commit, getters, rootGetters}, {questions, meta={}}) {
+	saveQuestionsResults({commit, getters, rootGetters, state}, {questions, meta={}}) {
 		const results = questions.map((questionId) => {
 			const question = getters.getQuestion(questionId)
 
@@ -373,14 +374,18 @@ const actions = {
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results, meta: {...meta, filters}})
 	},
-	savePosition({getters, rootGetters}, payload) {
+	savePosition({getters, rootGetters, state}, payload) {
+		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+
 		axios.put(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`), {
 			...payload,
-			active: getters.activeFilters
+			filters: parsedFilters
 		})
 	},
-	getPosition({getters, rootGetters}) {
-		return axios.post(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`),{active: getters.activeFilters})
+	getPosition({getters, rootGetters, state}) {
+		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+
+		return axios.post(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`),{filters: parsedFilters})
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
@@ -435,6 +440,7 @@ const _parseFilters = (activeFilters, state, getters, rootGetters) => {
 			filters.push({
 				[group]: {
 					user_id: rootGetters.currentUserId,
+					date: moment().subtract(3, 'hours').format('YYYY-MM-DD'),
 					list: groupedFilters[group]
 				}
 			})

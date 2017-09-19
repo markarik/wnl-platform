@@ -106,9 +106,9 @@ class UserStateApiController extends ApiController
 	}
 
 	public function saveQuizPosition(Request $request, $user) {
-		$cacheKey = $this->hashedFilters($request->active);
+		$cacheKey = $this->hashedFilters($request->filters);
 		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
-		Cache::tags($cacheTags)->put($cacheKey, $request->position, 60);
+		Cache::tags($cacheTags)->put($cacheKey, $request->position, 60 * 24);
 
 		return $this->json([
 			'position' => $request->position
@@ -116,7 +116,7 @@ class UserStateApiController extends ApiController
 	}
 
 	public function getQuizPosition(Request $request, $user) {
-		$cacheKey = $this->hashedFilters($request->active);
+		$cacheKey = $this->hashedFilters($request->filters);
 		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
 		$cachedPosition = Cache::tags($cacheTags)->get($cacheKey, $request->position);
 

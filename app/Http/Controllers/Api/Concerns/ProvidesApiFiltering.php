@@ -32,7 +32,7 @@ trait ProvidesApiFiltering
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
-			$response = $this->cachedPaginatedResponse($request, $model, $this->limit, $this->page, $paths);
+			$response = $this->cachedPaginatedResponse($request, $model, $this->limit, $this->page, $filters);
 		}
 
 		$response = array_merge($response, ['active' => $paths]);
@@ -179,17 +179,17 @@ trait ProvidesApiFiltering
 		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
 	}
 
-	protected function cachedPaginatedResponse(Request $request, $model, $limit, $page = 1, $cachedActiveFilters) {
+	protected function cachedPaginatedResponse(Request $request, $model, $limit, $page = 1, $cachedFilters) {
 		if (!$request->has('active') || !$request->has('filters')) {
 			return $this->paginatedResponse($model, $limit, $page);
 		}
 
-		$activeFilters = empty($request->active) ? $cachedActiveFilters : $request->active;
+		$filters = empty($request->filters) ? $cachedFilters : $request->filters;
 
 		$collection = $model->get();
 		$resource = $request->route('resource');
 		$userId = Auth::user()->id;
-		$hashedFilters = $this->hashedFilters($activeFilters);
+		$hashedFilters = $this->hashedFilters($filters);
 		$cacheTags = $this->getFiltersCacheTags($resource, $userId);
 
 		if (Cache::tags($cacheTags)->has($this->filtersKey($hashedFilters, 1))) {
@@ -224,11 +224,11 @@ trait ProvidesApiFiltering
 				'has_more' => $page <= $paginator->lastPage(),
 				'current_page' => $page,
 				'cached' => true,
-				'active_filters' => $activeFilters
+				'active_filters' => $filters
 			]);
 			$cacheKey = $this->filtersKey($hashedFilters, $page);
 
-			Cache::tags($cacheTags)->put($cacheKey, $results, 60);
+			Cache::tags($cacheTags)->put($cacheKey, $results, 60 * 24);
 			$page++;
 		}
 

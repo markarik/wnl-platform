@@ -51,12 +51,23 @@ Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
 });
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function () {
-	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
-	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
+	Route::get('/version', function () {
+		return Response::view('version', ['laravel' => app()]);
+	});
 	Route::get('/email/{template}', function ($template) {
 		return Response::view('mail/' . $template);
 	});
 	Route::get('/newsletter/{template}', function ($template) {
 		return Response::view('mail/newsletter/' . $template);
 	});
+	Route::get('/upload-slides', 'UploadSlidesController@index')->name('admin-upload-slides');
+	Route::post('/upload-slides', 'UploadSlidesController@handle')->name('admin-upload-slides-post');
+
+	Route::get('/piggyback/{userId}', 'PiggybackController@index');
+
+	// Using front-end routing for the admin panel application
+	Route::get('/app/{path?}', 'AppController@index')->where('path', '(.*)');
+
+	Route::get('/update-charts', function() { Artisan::queue('charts:update', ['--notify' => true]); });
+	Route::get('/update-charts/{slideId}', function($id) { Artisan::call('charts:update', ['id' => $id]); });
 });

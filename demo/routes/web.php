@@ -50,7 +50,7 @@ Route::group(['namespace' => 'Course', 'middleware' => 'auth'], function () {
 	Route::get('/slideshow-builder/{screenId}', 'SlideShowController@build')->name('slideshow-builder');
 });
 
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth'], function () {
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admin'], function () {
 	Route::get('/version', function () {
 		return Response::view('version', ['laravel' => app()]);
 	});

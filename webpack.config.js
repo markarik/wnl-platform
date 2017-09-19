@@ -356,7 +356,7 @@ if (Mix.inProduction) {
 				NODE_ENV: '"production"'
 			}
 		}),
-		new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
+		new webpack.optimize.UglifyJsPlugin(Object.assign({}, Mix.options.uglify, {ecma: 6}))
 	);
 }
 

@@ -70,7 +70,6 @@
 
 	.wnl-overview-qna
 		margin: -$margin-base 0 $margin-huge
-
 </style>
 
 <script>
@@ -83,7 +82,7 @@
 	import Qna from 'js/components/qna/Qna'
 	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
-	import { getFirstLessonId } from 'js/utils/env'
+	import { getFirstLessonId, getImageUrl, getSignupsUrl } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
 
 	export default {
@@ -107,6 +106,9 @@
 				'currentUserName',
 				'overviewView',
 			]),
+			bannerUrl() {
+				return getImageUrl('bannerwnl.png')
+			},
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)
 			},
@@ -126,6 +128,9 @@
 			},
 			shouldDisplayNextLesson() {
 				return !this.isCourseOver(this.courseId)
+			},
+			signupsUrl() {
+				return getSignupsUrl()
 			},
 		},
 		methods: {

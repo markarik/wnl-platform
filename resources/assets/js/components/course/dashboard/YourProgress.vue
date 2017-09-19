@@ -43,7 +43,7 @@
 				modifyingClass: 'is-success'
 			},
 			[STATE_GOOD]: {
-				message: 'Jesteś na dobrej drodze! Tak trzymaj, a spokojnie się wyrobisz. :)',
+				message: 'Pasek postępu będzie towarzyszył Ci w trakcie całego kursu i mobilizował do realizacji planu. ;)',
 				modifyingClass: 'is-success'
 			},
 			[STATE_WARNING]: {
@@ -79,7 +79,7 @@
 			progressState() {
 				const incompleteLessons = this.progressMax - this.progressValue
 
-				if (incompleteLessons === 0) {
+				if (incompleteLessons <= 0) {
 					return 'full'
 				} else if (incompleteLessons < 7) {
 					return 'good'

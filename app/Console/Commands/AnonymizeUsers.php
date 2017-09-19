@@ -17,7 +17,7 @@ class AnonymizeUsers extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'users:anonymize {file?} {--includeAdmins}';
+	protected $signature = 'users:anonymize {file?} {--includeAdmins} {--avatarsFromId}';
 
 	/**
 	 * The console command description.
@@ -75,7 +75,7 @@ class AnonymizeUsers extends Command
 			$profile->public_email = $data['public_email'];
 			$profile->public_phone = $data['public_phone'];
 			$profile->username = $data['username'];
-			$profile->avatar = null;
+			$profile->avatar = $this->option('avatarsFromId') ? 'avatars/' . $user->id . '.jpg' : null;
 			$profile->save();
 
 			$i++;

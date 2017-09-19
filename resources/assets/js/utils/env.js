@@ -39,3 +39,7 @@ export function getApiUrl(path) {
 export function getImageUrl(filename) {
 	return getUrl(`images/${filename}`)
 }
+
+export function getSignupsUrl() {
+	return 'https://wiecejnizlek.pl/zostaw-e-mail'
+}

@@ -7,12 +7,24 @@
 				</span>
 				<span>{{previousScreenName}}</span>
 			</router-link>
+			<router-link class="nxt-prvs-link" :to="{name: 'dashboard'}" v-else>
+				<span class="icon is-small">
+					<i class="fa fa-home"></i>
+				</span>
+				<span>Powrót do Auli</span>
+			</router-link>
 		</div>
 		<div class="next">
 			<router-link class="nxt-prvs-link" :to="nextScreenRoute" v-if="nextScreenId">
 				<span>{{nextScreenName}}</span>
 				<span class="icon is-small">
 					<i class="fa fa-arrow-circle-right"></i>
+				</span>
+			</router-link>
+			<router-link class="nxt-prvs-link" :to="{name: 'dashboard'}" v-else>
+				<span>Powrót do Auli</span>
+				<span class="icon is-small">
+					<i class="fa fa-home"></i>
 				</span>
 			</router-link>
 		</div>

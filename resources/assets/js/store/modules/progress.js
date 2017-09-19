@@ -111,8 +111,8 @@ const getters = {
 		}
 		return lessons
 	},
-	isCourseOver: (state, getters) => (courseId) => {
-		return _.size(getters.getCompleteLessons(courseId)) === _.size(state.courses[courseId].lessons)
+	isCourseOver: (state, getters, rootState, rootGetters) => (courseId) => {
+		return _.size(getters.getCompleteLessons(courseId)) === _.size(rootGetters['course/getLessons'])
 	},
 }
 

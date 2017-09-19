@@ -113,6 +113,7 @@
 				return getImageUrl('bannerwnl.png')
 			},
 			courseOver() {
+				console.log(this.isCourseOver(this.courseId))
 				return this.isCourseOver(this.courseId)
 			},
 			isBeginning() {

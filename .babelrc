@@ -1,11 +1,11 @@
 {
   "presets": [
-    // ["env", {
-    //   "targets": {
-    //     "browsers": ["last 1 version", "safari 9", "ios 9"]
-    //   },
-    //   "modules": false
-    // }]
+    ["env", {
+      "targets": {
+        "browsers": ["last 1 version", "safari 9", "ios 9"]
+      },
+      "modules": false
+    }]
   ],
   "plugins": [
       "transform-object-rest-spread"

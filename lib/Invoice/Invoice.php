@@ -285,11 +285,11 @@ class Invoice
 		return $invoice;
 	}
 
-	public function corrective(Order $order/*, $corrected, $reason, $difference*/)
+	public function corrective(Order $order, $corrected, $reason, $difference)
 	{
-		$corrected = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get()->last();
-		$reason = 'Anomalie pogodowe w południowo-zachodniej Polsce';
-		$difference = -100;
+//		$corrected = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get()->last();
+//		$reason = 'Anomalie pogodowe w południowo-zachodniej Polsce';
+//		$difference = -100;
 
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');

@@ -46,7 +46,7 @@
 			])
 		])
 	</section>
-	@elseif (!empty(Auth::user()->coupons))
+	@elseif (Auth::user()->coupons->count() !== 0)
 	<section class="voucher notification is-info has-text-centered">
 		@lang('payment.voucher-current', [
 			'name' => Auth::user()->coupons[0]['name'],

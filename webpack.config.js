@@ -79,7 +79,6 @@ if (Mix.options.extractVueStyles) {
 }
 
 
-
 module.exports.module = {
 	rules: [
 		{
@@ -266,7 +265,6 @@ module.exports.devServer = {
  |
  */
 
-
 module.exports.plugins = (module.exports.plugins || []).concat([
 	new webpack.ProvidePlugin(Mix.autoload || {
 			jQuery: 'jquery',
@@ -361,7 +359,6 @@ if (Mix.inProduction) {
 		new UglifyJSPlugin({
 			ecma: 6,
 			cache: true
-			// workers: 2
 		})
 	);
 }

@@ -1,7 +1,9 @@
-let path    = require('path');
-let webpack = require('webpack');
-let Mix     = require('laravel-mix').config;
-let plugins = require('laravel-mix').plugins;
+const path    = require('path');
+const webpack = require('webpack');
+const Mix     = require('laravel-mix').config;
+const plugins = require('laravel-mix').plugins;
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
 /*
@@ -44,8 +46,6 @@ module.exports.context = Mix.Paths.root();
  */
 
 module.exports.entry = Mix.entry();
-
-
 /*
  |--------------------------------------------------------------------------
  | Webpack Output
@@ -57,8 +57,7 @@ module.exports.entry = Mix.entry();
  |
  */
 
-module.exports.output = Mix.output();
-
+module.exports.output =  Mix.output();
 
 /*
  |--------------------------------------------------------------------------
@@ -291,7 +290,8 @@ module.exports.plugins = (module.exports.plugins || []).concat([
 		}
 	}),
 
-	new webpack.IgnorePlugin(/brace\/mode/)
+	new webpack.IgnorePlugin(/brace\/mode/),
+	new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /pl/)
 ]);
 
 
@@ -356,7 +356,10 @@ if (Mix.inProduction) {
 				NODE_ENV: '"production"'
 			}
 		}),
-		new webpack.optimize.UglifyJsPlugin(Mix.options.uglify)
+		new UglifyJSPlugin({
+			ecma: 6,
+			cache: true
+		})
 	);
 }
 

@@ -56,7 +56,7 @@
 			<img class="fs-open" src="{{ asset('images/fullscreen-arrows.svg') }}" alt="Pełen ekran">
 		</a>
 		<script src="{{ mix('js/manifest.js') }}"></script>
-		<script src="{{ mix('js/vendor.js') }}"></script>
+		<script src="{{ mix('js/dupa.js') }}"></script>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>
 </html>

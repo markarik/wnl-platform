@@ -45,7 +45,7 @@ module.exports.context = Mix.Paths.root();
  |
  */
 
-module.exports.entry = Mix.entry();
+module.exports.entry = Object.assign({}, Mix.entry())
 /*
  |--------------------------------------------------------------------------
  | Webpack Output
@@ -265,6 +265,33 @@ module.exports.devServer = {
  | extensions, for versioning, OS notifications, and much more.
  |
  */
+
+
+module.exports.plugins.push(
+	// new BundleAnalyzerPlugin({analyzerMode: 'static'}),
+	new webpack.optimize.CommonsChunkPlugin({
+		name: 'dupa',
+		filename: path.join(Mix.js.base, Mix.output().filename).replace(/\\/g, '/'),
+		minChunks(module, count) {
+			var context = module.context;
+			var targets = ['lodash', 'jquery', 'postmate-fork']
+			return context && context.indexOf('node_modules') >= 0 && targets.find((t) => context.indexOf(t) >= 0);
+		},
+	}),
+	new webpack.optimize.CommonsChunkPlugin({
+		name: 'vendor',
+		filename: path.join(Mix.js.base, Mix.output().filename).replace(/\\/g, '/'),
+		minChunks(module, count) {
+			const context = module.context;
+			return context && context.indexOf('node_modules') >= 0;
+		}
+	}),
+
+	new webpack.optimize.CommonsChunkPlugin({
+		name: 'manifest',
+		filename: path.join(Mix.js.base, Mix.output().filename).replace(/\\/g, '/')
+	})
+)
 
 module.exports.plugins = (module.exports.plugins || []).concat([
 	new webpack.ProvidePlugin(Mix.autoload || {

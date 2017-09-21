@@ -1,8 +1,10 @@
-let path    = require('path');
-let webpack = require('webpack');
-let Mix     = require('laravel-mix').config;
-let plugins = require('laravel-mix').plugins;
+const path    = require('path');
+const webpack = require('webpack');
+const Mix     = require('laravel-mix').config;
+const plugins = require('laravel-mix').plugins;
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 /*
  |--------------------------------------------------------------------------
@@ -57,7 +59,14 @@ module.exports.entry = Mix.entry();
  |
  */
 
-module.exports.output = Mix.output();
+console.log(Mix.output())
+
+module.exports.output =  Object.assign({},
+	Mix.output(),
+	{
+    	chunkFilename: '[name]-chunk.js'
+	}
+);
 
 
 /*
@@ -267,6 +276,18 @@ module.exports.devServer = {
  |
  */
 
+module.exports.plugins.push(
+	new BundleAnalyzerPlugin({analyzerMode: 'static'}),
+	new webpack.optimize.CommonsChunkPlugin({
+		name: 'vendor',
+		filename: path.join(Mix.output().publicPath, 'js', Mix.output().filename),
+		minChunks(module, count) {
+			const context = module.context;
+			return context && context.indexOf('node_modules') >= 0;
+		}
+	})
+)
+
 module.exports.plugins = (module.exports.plugins || []).concat([
 	new webpack.ProvidePlugin(Mix.autoload || {
 			jQuery: 'jquery',
@@ -360,7 +381,8 @@ if (Mix.inProduction) {
 		}),
 		new UglifyJSPlugin({
 			ecma: 6,
-			cache: true
+			cache: true,
+			workers: 2
 		})
 	);
 }

@@ -69,6 +69,7 @@
     "sinon": "^2.1.0",
     "sinon-chai": "^2.8.0",
     "uglifyjs-webpack-plugin": "1.0.0-beta.1",
+    "webpack-bundle-analyzer": "^2.9.0",
     "webpack-merge": "^4.1.0"
   }
 }

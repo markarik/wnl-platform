@@ -7,6 +7,9 @@ return [
 	/**
 	 * Voucher
 	 */
+	'voucher-current' => 'Super! Korzystasz ze zniżki <strong>:name</strong>, która obniży ostateczną kwotę zamówienia o :value!',
+	'voucher-percentage' => ':value%',
+	'voucher-amount' => ':valuezł',
 	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
 
 	/**
@@ -139,7 +142,7 @@ return [
 	'confirm-order-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
 	'confirm-order-heading' => 'Twoje zamówienie',
 	'confirm-order-price' => ':pricezł brutto',
-	'confirm-order-coupon' => 'Korzystasz z kuponu <strong>:name</strong> o wartości <strong>:value</strong>.',
+	'confirm-order-coupon' => 'Korzystasz ze zniżki <strong>:name</strong> o wartości <strong>:value</strong>.',
 
 	'confirm-personal-data-heading' => 'Twoje dane',
 

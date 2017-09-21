@@ -37,4 +37,23 @@
 			</div>
 		</div>
 	</section>
+	@if (Session::has('coupon'))
+	<section class="voucher notification is-info has-text-centered">
+		@lang('payment.voucher-current', [
+			'name' => session('coupon')['name'],
+			'value' => trans('payment.voucher-' . session('coupon')['type'], [
+				'value' => session('coupon')['value'],
+			])
+		])
+	</section>
+	@elseif (!empty(Auth::user()->coupons))
+	<section class="voucher notification is-info has-text-centered">
+		@lang('payment.voucher-current', [
+			'name' => Auth::user()->coupons[0]['name'],
+			'value' => trans('payment.voucher-' . Auth::user()->coupons[0]['type'], [
+				'value' => Auth::user()->coupons[0]['value'],
+			])
+		])
+	</section>
+	@endif
 </div>

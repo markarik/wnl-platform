@@ -263,6 +263,12 @@ html {
 	}
 }
 
+section.voucher {
+	strong {
+		color: $color-white;
+	}
+}
+
 #payment-steps {
 	margin-bottom: 3em;
 }

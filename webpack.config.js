@@ -2,7 +2,7 @@ let path    = require('path');
 let webpack = require('webpack');
 let Mix     = require('laravel-mix').config;
 let plugins = require('laravel-mix').plugins;
-
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 /*
  |--------------------------------------------------------------------------
@@ -358,7 +358,10 @@ if (Mix.inProduction) {
 				NODE_ENV: '"production"'
 			}
 		}),
-		new webpack.optimize.UglifyJsPlugin(Object.assign({}, Mix.options.uglify, {ecma: 6}))
+		new UglifyJSPlugin({
+			ecma: 6,
+			cache: true
+		})
 	);
 }
 

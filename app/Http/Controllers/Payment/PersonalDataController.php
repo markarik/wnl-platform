@@ -8,6 +8,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Kris\LaravelFormBuilder\FormBuilder;
@@ -39,6 +40,7 @@ class PersonalDataController extends Controller
 
 		if (Auth::check() && !$request->edit) {
 			$this->createOrder(Auth::user());
+
 			return redirect()->route('payment-confirm-order');
 		}
 
@@ -137,11 +139,29 @@ class PersonalDataController extends Controller
 
 		if ($coupon = $user->coupons->first()) {
 			$order->attachCoupon($coupon);
-		}
-		elseif (session()->has('coupon')) {
+		} elseif (session()->has('coupon')) {
 			$order->attachCoupon(session()->get('coupon'));
 		} elseif ($user->is_subscriber) {
 			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
+		} else {
+			$this->generateStudyBuddy($order);
 		}
+	}
+
+	protected function generateStudyBuddy($order)
+	{
+		$expires = Carbon::now()->addYears(20);
+		$coupon = Coupon::create([
+			'name'         => 'Study Buddy',
+			'type'         => 'amount',
+			'value'        => 100,
+			'expires_at'   => $expires,
+			'code'         => strtoupper(str_random(7)),
+			'times_usable' => 0,
+		]);
+
+		$order->studyBuddy()->create([
+			'code' => $coupon->code,
+		]);
 	}
 }

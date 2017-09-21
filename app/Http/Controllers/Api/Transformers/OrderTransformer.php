@@ -21,10 +21,10 @@ class OrderTransformer extends ApiTransformer
 			'canceled'    => $order->canceled,
 			'created_at'  => $order->created_at->format('d-m-Y'),
 			'product'     => [
-				'id'      => $order->product->id,
-				'name'    => $order->product->name,
-				'slug'    => $order->product->slug,
-				'price'   => $order->product->price,
+				'id'    => $order->product->id,
+				'name'  => $order->product->name,
+				'slug'  => $order->product->slug,
+				'price' => $order->product->price,
 			],
 		];
 
@@ -38,6 +38,15 @@ class OrderTransformer extends ApiTransformer
 				'slug'  => $order->coupon->slug,
 			];
 		}
+
+		if ($order->studyBuddy) [
+			$data['studyBuddy'] = [
+				'id'        => $order->studyBuddy->id,
+				'code'      => $order->studyBuddy->code,
+				'recipient' => $order->studyBuddy->recipient,
+				'refunded'  => $order->studyBuddy->refunded,
+			],
+		];
 
 		return $data;
 	}

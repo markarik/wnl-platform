@@ -14,7 +14,7 @@
 				<form action="{{ route('payment-voucher-post') }}" method="post">
 					{!! csrf_field() !!}
 					<label for="code">Kod: </label>
-					<input type="text" id="code" name="code">
+					<input type="text" id="code" name="code" value="{{ request('code') ?? '' }}">
 					@foreach ($errors->get('code') as $message)
 						<div class="error">{{ $message }}</div>
 					@endforeach

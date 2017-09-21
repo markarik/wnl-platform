@@ -42,6 +42,11 @@ class Order extends Model
 		return $this->belongsTo('App\Models\Coupon');
 	}
 
+	public function studyBuddy()
+	{
+		return $this->hasOne('App\Models\StudyBuddy');
+	}
+
 	public function invoices()
 	{
 		return $this->hasMany('App\Models\Invoice');

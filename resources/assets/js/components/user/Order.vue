@@ -57,6 +57,10 @@
 					</table>
 				</div>
 				<small>Zamówienie złożono {{ order.created_at }}</small>
+				<div v-if="studyBuddy">
+					Kod Study Buddy:
+					<a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a>
+				</div>
 			</div>
 		</div>
 		<div class="card-footer">
@@ -191,6 +195,9 @@
 					  first = Math.ceil(total * 0.004) * 100
 
 				return {1: first, 2: first, 3: total - (2 * first)}
+			},
+			studyBuddy() {
+				return this.order.hasOwnProperty('studyBuddy') && this.order.paid
 			}
 		},
 		methods: {
@@ -205,7 +212,10 @@
 							}
 						})
 						.catch(exception => $wnl.logger.capture(exception))
-			}
+			},
+			voucherUrl(code){
+				return getUrl(`payment/voucher?code=${code}`)
+			},
 		},
 		mounted() {
 			if (this.isPending) this.checkStatus()

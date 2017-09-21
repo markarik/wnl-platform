@@ -34,7 +34,32 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
+		$this->sendConfirmation();
+		$this->handleStudyBuddy();
+	}
+
+	protected function sendConfirmation()
+	{
 		$invoice = Invoice::issueFromOrder($this->order);
 		Mail::to($this->order->user)->send(new PaymentConfirmation($this->order, $invoice));
+	}
+
+	protected function handleStudyBuddy()
+	{
+		$order = $this->order;
+		// Activate SB code & send email containing code link
+		$studyBuddy = $order->studyBuddy;
+		if ($studyBuddy) {
+			$studyBuddy->coupon->times_usable++;
+			$studyBuddy->coupon->save();
+			$studyBuddy->status = 'active';
+			$studyBuddy->save();
+		}
+
+		// Check if order has SB code and handle the refund
+		if ($order->coupon && $order->coupon->studyBuddy) {
+			$order->coupon->studyBuddy->status = 'awaiting-refund';
+			$order->coupon->studyBuddy->save();
+		}
 	}
 }

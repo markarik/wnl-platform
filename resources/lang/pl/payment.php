@@ -11,6 +11,12 @@ return [
 	'voucher-percentage' => ':value%',
 	'voucher-amount' => ':valuezł',
 	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
+	'voucher-already-has' => 'Wygląda na to, że do Twojego konta jest już przypisana zniżka <strong>:name</strong>. Przypominamy, że promocje nie łączą się. ;)',
+	'voucher-title' => 'Masz kod? Super!',
+	'voucher-subtitle' => 'Wpisz go poniżej, aby wykorzystać zniżkę!',
+	'voucher-skip' => 'Pomiń ten krok i przejdź do wyboru kursu',
+	'voucher-label' => 'Wpisz kod:',
+	'voucher-submit' => 'Wykorzystaj kod',
 
 	/**
 	 * Payment Steps Menu

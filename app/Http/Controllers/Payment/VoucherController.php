@@ -20,8 +20,10 @@ class VoucherController extends Controller
 			'code' => 'required|alpha_num',
 		]);
 
+		$code = strtoupper($request->code);
+
 		if ($request->has('code')) {
-			$coupon = $this->validateVoucher($request->code);
+			$coupon = $this->validateVoucher($code);
 			$validator->after(function ($validator) use ($coupon) {
 				if (!$coupon) {
 					$validator->errors()->add(

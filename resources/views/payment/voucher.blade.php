@@ -3,21 +3,42 @@
 @section('content')
 
 	@include('payment.payment-hero', [
-		'step' => 1,
-		'title' => trans('payment.select-product-title'),
-		'subtitle' => trans('payment.select-product-subtitle'),
+		'step' => 0,
+		'title' => trans('payment.voucher-title'),
+		'subtitle' => trans('payment.voucher-subtitle'),
 	])
 
 	<section class="section">
 		<div class="container">
-			<div class="has-text-centered">
+			@if (!empty(Auth::user()->coupons))
+				<div class="notification has-text-centered">
+					@lang('payment.voucher-already-has', [ 'name' => Auth::user()->coupons[0]['name'] ])
+					<p>
+						<a href="{{ route('payment-select-product') }}">
+							@lang('payment.voucher-skip')
+						</a>
+					</p>
+				</div>
+			@endif
+			<div class="voucher-code">
 				<form action="{{ route('payment-voucher-post') }}" method="post">
 					{!! csrf_field() !!}
-					<label for="code">Kod: </label>
-					<input type="text" id="code" name="code" value="{{ request('code') ?? '' }}">
+
+					<p><label for="code">@lang('payment.voucher-label')</label></p>
+					<input type="text" class="code-input" id="code" name="code" placeholder="XXXXXXXX" value="{{ Session::get('_old_input.code') ?? '' }}">
 					@foreach ($errors->get('code') as $message)
-						<div class="error">{{ $message }}</div>
+						<div class="is-error">{{ $message }}</div>
 					@endforeach
+					<p class="margin vertical has-text-centered">
+						<button type="submit" class="button is-primary">
+							@lang('payment.voucher-submit')
+						</button>
+					</p>
+					<p class="voucher-skip has-text-centered">
+						<a href="{{ route('payment-select-product') }}">
+							@lang('payment.voucher-skip')
+						</a>
+					</p>
 				</form>
 			</div>
 		</div>

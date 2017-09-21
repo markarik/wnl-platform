@@ -51,7 +51,7 @@ class GenerateCouponsForUsers extends Command
 		foreach ($users as $user) {
 			Coupon::create([
 				'user_id'    => $user->id,
-				'name'       => 'Kupon zmiżkowy 50% dla uczestników I edycji kursu Więcej niż LEK.',
+				'name'       => 'Zniżka -50% dla uczestników poprzednich edycji kursu Więcej niż LEK',
 				'type'       => 'percentage',
 				'value'      => 50,
 				'expires_at' => $expires,

@@ -137,10 +137,10 @@ class PersonalDataController extends Controller
 			'invoice'    => $data['invoice'] ?? $user->invoice ?? 0,
 		]);
 
-		if ($coupon = $user->coupons->first()) {
+		if (session()->has('coupon')) {
+		$order->attachCoupon(session()->get('coupon'));
+		} elseif ($coupon = $user->coupons->first()) {
 			$order->attachCoupon($coupon);
-		} elseif (session()->has('coupon')) {
-			$order->attachCoupon(session()->get('coupon'));
 		} elseif ($user->is_subscriber) {
 			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
 		} else {

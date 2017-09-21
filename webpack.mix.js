@@ -26,6 +26,7 @@ mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
 	.js('resources/assets/js/guest.js', 'public/js/guest.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
 	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js')
+	.extract(['vue', 'jquery', 'moment', 'lodash', 'quill', 'emoji', 'he'])
 
 if (mix.config.inProduction) {
 	mix.version()

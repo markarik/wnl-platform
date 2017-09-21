@@ -46,8 +46,6 @@ module.exports.context = Mix.Paths.root();
  */
 
 module.exports.entry = Mix.entry();
-
-
 /*
  |--------------------------------------------------------------------------
  | Webpack Output
@@ -59,15 +57,7 @@ module.exports.entry = Mix.entry();
  |
  */
 
-console.log(Mix.output())
-
-module.exports.output =  Object.assign({},
-	Mix.output(),
-	{
-    	chunkFilename: '[name]-chunk.js'
-	}
-);
-
+module.exports.output =  Mix.output();
 
 /*
  |--------------------------------------------------------------------------
@@ -275,18 +265,6 @@ module.exports.devServer = {
  | extensions, for versioning, OS notifications, and much more.
  |
  */
-
-module.exports.plugins.push(
-	// new BundleAnalyzerPlugin({analyzerMode: 'static'}),
-	new webpack.optimize.CommonsChunkPlugin({
-		name: 'vendor',
-		filename: path.join(Mix.output().publicPath, 'js', Mix.output().filename),
-		minChunks(module, count) {
-			const context = module.context;
-			return context && context.indexOf('node_modules') >= 0;
-		}
-	})
-)
 
 module.exports.plugins = (module.exports.plugins || []).concat([
 	new webpack.ProvidePlugin(Mix.autoload || {

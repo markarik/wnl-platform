@@ -277,7 +277,7 @@ module.exports.devServer = {
  */
 
 module.exports.plugins.push(
-	new BundleAnalyzerPlugin({analyzerMode: 'static'}),
+	// new BundleAnalyzerPlugin({analyzerMode: 'static'}),
 	new webpack.optimize.CommonsChunkPlugin({
 		name: 'vendor',
 		filename: path.join(Mix.output().publicPath, 'js', Mix.output().filename),
@@ -381,8 +381,8 @@ if (Mix.inProduction) {
 		}),
 		new UglifyJSPlugin({
 			ecma: 6,
-			cache: true,
-			workers: 2
+			cache: true
+			// workers: 2
 		})
 	);
 }

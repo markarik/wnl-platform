@@ -1,7 +1,6 @@
 <template>
 
 	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
-		<button @click="destroy"></button>
 		<div class="content" v-html="content">
 		</div>
 		<p class="end-button has-text-centered" v-if="showBacklink">

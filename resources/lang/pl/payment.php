@@ -168,5 +168,5 @@ return [
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',
-
+	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu Kursu stacjonarnego!',
 ];

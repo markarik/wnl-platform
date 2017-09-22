@@ -12,7 +12,7 @@
 			<div class="box">
 				<p class="title">@lang('payment.confirm-order-heading')</p>
 				<p class="subtitle">{{ $order->product->name }}</p>
-				@if($order->coupon)
+				@if($order->coupon && ($order->coupon->slug !== 'wnl-online-only' || $order->product->slug === 'wnl-online'))
 					<p class="strikethrough">
 						@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])
 					</p>

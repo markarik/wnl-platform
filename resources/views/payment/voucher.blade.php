@@ -10,7 +10,7 @@
 
 	<section class="section">
 		<div class="container">
-			@if (Auth::user() && Auth::user()->coupons->count() > 0))
+			@if (Auth::user() && Auth::user()->coupons->count() > 0)
 				<div class="notification has-text-centered">
 					@lang('payment.voucher-already-has', [ 'name' => Auth::user()->coupons[0]['name'] ])
 					<p>

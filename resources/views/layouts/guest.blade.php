@@ -57,7 +57,7 @@
 						</a>
 						@if (Auth::check())
 							<a href="{{url('app/')}}" class="nav-item">
-								Kurs
+								Platforma
 							</a>
 							<a href="{{url('app/myself/orders')}}" class="nav-item">
 								Twoje zamówienia

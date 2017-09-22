@@ -54,6 +54,7 @@
 					'value' => Auth::user()->coupons[0]['value'],
 				])
 			])
+			<p>@lang('payment.voucher-current-explanation')</p>
 		</section>
 	@endif
 </div>

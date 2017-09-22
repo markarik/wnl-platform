@@ -63,6 +63,9 @@ class AppServiceProvider extends ServiceProvider
 		$monolog = Log::getMonolog();
 		$monolog->pushHandler($handler);
 		$monolog->pushProcessor(function ($record) {
+			// record app version
+			$record['context']['app_version'] = config('app.version');
+
 			// record the current user
 			$user = Auth::user();
 			if ($user) {

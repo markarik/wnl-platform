@@ -1,6 +1,7 @@
 <template>
 
 	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
+		<button @click="destroy"></button>
 		<div class="content" v-html="content">
 		</div>
 		<p class="end-button has-text-centered" v-if="showBacklink">
@@ -47,13 +48,11 @@
 
 			&::before
 				color: $color-purple
-
-
 </style>
 
 <script>
 	import _ from 'lodash'
-	import {imageviewer} from '../../../../../vendor/imageviewer/imageviewer'
+	import {imageviewer} from 'vendor/imageviewer/imageviewer'
 	imageviewer($, window, document)
 
 	export default {
@@ -65,6 +64,11 @@
 			},
 			isRepetitions() {
 				return this.screenData.name.indexOf('Powtórki') > -1
+			}
+		},
+		data() {
+			return {
+				worked: false
 			}
 		},
 		methods: {
@@ -84,12 +88,35 @@
 				}
 			},
 			addFullscreen() {
-				document.querySelectorAll(".wnl-screen-html img").forEach(function(e) {
-					e.addEventListener('click', function() {
+				function setImageViewer() {
 						ImageViewer().show(this.src);
-					})
+				}
+
+				let img = document.querySelectorAll(".wnl-screen-html img")
+
+				if (img.length) {
+					this.worked = true
+				}
+				img.forEach(function(e) {
+					e.addEventListener('click', setImageViewer);
 				})
 			},
+			onClick(event) {
+				if (!this.worked) {
+					document.querySelectorAll(".wnl-screen-html img").forEach(function(e) {
+						e.addEventListener('click', setImageViewer);
+					})
+
+					if (event.target.tagName === 'IMG') {
+						ImageViewer().show(event.target.src);
+						this.worked = true
+					}
+
+				}
+			}
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', setImageViewer);
 		},
 		mounted() {
 			this.wrapEmbedded();

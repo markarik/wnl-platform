@@ -78,13 +78,13 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobileProfile', 'currentUserStats']),
+			...mapGetters(['isMobileProfile']),
 			isProduction() {
 				return isProduction()
 			},
 		},
 		methods: {
-			...mapActions(['updateCurrentUser', 'fetchCurrentUserStats']),
+			...mapActions(['updateCurrentUser']),
 			onUploadError() {
 				this.loading = false
 			},

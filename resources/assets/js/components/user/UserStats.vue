@@ -18,23 +18,6 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-
-	.myself-sidenav
-		flex: 1
-
-	.wnl-sidenav
-		flex: 1
-		padding: 7px 0
-
-		&.mobile
-			padding: 0
-
-	.mobile-main
-		overflow-y: auto
-</style>
-
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import moment from 'moment'

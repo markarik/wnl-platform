@@ -157,11 +157,14 @@ return [
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie, dokonaj płatności przez system Przelewy24',
+	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie wybierz metodę płatności',
 	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
 	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
 	'confirm-method-instalments-button'    => 'Kupuję i płacę na raty',
 	'confirm-method-online-payment-button' => 'Kupuję i płacę przez Przelewy24',
+	'confirm-method-free-button' => 'Kupuję korzystając ze 100% zniżki',
+
+	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',

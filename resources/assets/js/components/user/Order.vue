@@ -120,6 +120,7 @@
 		data() {
 			return {
 				paymentMethods: {
+					'free': '100% zniżki',
 					'transfer': 'Przelew bankowy',
 					'online': 'Szybki przelew',
 					'instalments': 'Raty',

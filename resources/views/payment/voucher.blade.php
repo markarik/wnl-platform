@@ -10,7 +10,7 @@
 
 	<section class="section">
 		<div class="container">
-			@if (!empty(Auth::user()->coupons))
+			@if (Auth::user() && Auth::user()->coupons->count() > 0))
 				<div class="notification has-text-centered">
 					@lang('payment.voucher-already-has', [ 'name' => Auth::user()->coupons[0]['name'] ])
 					<p>
@@ -25,7 +25,7 @@
 					{!! csrf_field() !!}
 
 					<p><label for="code">@lang('payment.voucher-label')</label></p>
-					<input type="text" class="code-input" id="code" name="code" placeholder="XXXXXXXX" value="{{ Session::get('_old_input.code') ?? '' }}">
+					<input type="text" class="code-input" id="code" name="code" placeholder="XXXXXXXX" value="{{ request('code') ?? session('_old_input.code') ?? '' }}">
 					@foreach ($errors->get('code') as $message)
 						<div class="is-error">{{ $message }}</div>
 					@endforeach

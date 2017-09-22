@@ -68,13 +68,13 @@ class Invoice
 		];
 		$totalPrice = $order->product->price;
 
-		if ($order->coupon) {
+		if ($coupon = $order->coupon) {
 			$data['coupon'] = [
 				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
-			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 
 		// Calculate netto, brutto, VAT
@@ -136,13 +136,13 @@ class Invoice
 		];
 		$totalPrice = $order->product->price;
 
-		if ($order->coupon) {
+		if ($coupon = $order->coupon) {
 			$data['coupon'] = [
 				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
-			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 
 		// Calculate netto, brutto, VAT
@@ -217,13 +217,13 @@ class Invoice
 		];
 		$totalPrice = $order->product->price;
 
-		if ($order->coupon) {
+		if ($coupon = $order->coupon) {
 			$data['coupon'] = [
 				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
-			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 
 		// Calculate netto, brutto, VAT
@@ -339,13 +339,13 @@ class Invoice
 		$totalPrice = $corrected->amount;
 		$totalCorrected = $corrected->amount + $difference;
 
-		if ($order->coupon) {
+		if ($coupon = $order->coupon) {
 			$data['coupon'] = [
 				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
-			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 
 		// Calculate netto, brutto, VAT

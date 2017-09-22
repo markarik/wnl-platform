@@ -26,6 +26,10 @@ Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' =>
 
 	Route::get('voucher', 'VoucherController@index')->name('payment-voucher');
 	Route::post('voucher', 'VoucherController@handle')->name('payment-voucher-post');
+
+	Route::get('/', function () {
+		return redirect(route('payment-select-product'));
+	});
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -80,6 +84,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admi
 	// Using front-end routing for the admin panel application
 	Route::get('/app/{path?}', 'AppController@index')->where('path', '(.*)');
 
-	Route::get('/update-charts', function() { Artisan::queue('charts:update', ['--notify' => true]); });
-	Route::get('/update-charts/{slideId}', function($id) { Artisan::call('charts:update', ['id' => $id]); });
+	Route::get('/update-charts', function () {
+		Artisan::queue('charts:update', ['--notify' => true]);
+	});
+	Route::get('/update-charts/{slideId}', function ($id) {
+		Artisan::call('charts:update', ['id' => $id]);
+	});
 });

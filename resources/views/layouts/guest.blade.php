@@ -112,6 +112,7 @@
 					</section>
 				</div>
 			</div>
+			@if(request()->route())
 			<div id="login-modal" class="modal">
 				<div class="modal-background"></div>
 				<div class="modal-card">
@@ -124,6 +125,7 @@
 					</section>
 				</div>
 			</div>
+			@endif
 		</div>
 		<!-- Scripts -->
 		<script src="{{ mix('js/guest.js') }}"></script>

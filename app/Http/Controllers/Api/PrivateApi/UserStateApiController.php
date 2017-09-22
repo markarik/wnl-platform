@@ -140,8 +140,8 @@ class UserStateApiController extends ApiController
 		$qnaQuestionsPosted = QnaQuestion::where('user_id', $user)->count();
 		$qnaAnswersPosted = QnaAnswer::where('user_id', $user)->count();
 		$quizQuestionsSolved = UserQuizResults::where('user_id', $user)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
-		$numberOfQuizQuestions = QuizQuestion::all()->count();
-		$numberOfLessons = Lesson::all()->count();
+		$numberOfQuizQuestions = QuizQuestion::count();
+		$numberOfLessons = Lesson::count();
 
 		$stats = [
 			'time' => [

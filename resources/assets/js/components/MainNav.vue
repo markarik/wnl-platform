@@ -6,7 +6,11 @@
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'collections', params: { keepsNavOpen: true } }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
+			v-if="$moderatorFeed.isAllowed('access')"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
 			</span>
@@ -15,19 +19,26 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
+			v-if="$firstEditionParticipant.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
 			</span>
 		<span class="text">{{$t('nav.sideNav.questions')}}</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'myself', params: { keepsNavOpen: true } }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'myself', params: { keepsNavOpen: true } }"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-user-o"></i>
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'help', params: { keepsNavOpen: true } }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'help', params: { keepsNavOpen: true } }"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-heartbeat"></i>
 			</span>
@@ -102,13 +113,15 @@
 </style>
 
 <script>
-	import moderatorFeed from 'js/perimeters/moderatorFeed';
+	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
+	import moderatorFeed from 'js/perimeters/moderatorFeed'
 
 	export default {
 		name: 'MainNav',
 		props: ['isHorizontal'],
 		perimeters: [
-			moderatorFeed
+			firstEditionParticipant,
+			moderatorFeed,
 		]
 	}
 </script>

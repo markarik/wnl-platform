@@ -6,22 +6,26 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
+				v-if="$firstEditionParticipant.isAllowed('access')"
 				:context="context"
 				:isLesson="isLesson"
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column">
+		<div class="wnl-course-content wnl-column" v-if="$firstEditionParticipant.isAllowed('access')">
 			<router-view></router-view>
+		</div>
+		<div v-else class="wnl-course-content wnl-column">
+			<wnl-splash-screen/>
 		</div>
 		<wnl-sidenav-slot
 			:isVisible="isChatVisible"
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-		<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms" v-if="$firstEditionParticipant.isAllowed('access')"/>
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
+		<div v-if="$firstEditionParticipant.isAllowed('access') && isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -57,12 +61,23 @@
 	import Navigation from 'js/components/course/Navigation'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
+	import SplashScreen from 'js/components/global/SplashScreen.vue'
 	import { breadcrumb } from 'js/mixins/breadcrumb'
 	import { getApiUrl } from 'js/utils/env'
 	import withChat from 'js/mixins/with-chat'
+	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
 
 	export default {
 		name: 'Course',
+		perimeters: [firstEditionParticipant],
+		components: {
+			'wnl-course-navigation': Navigation,
+			'wnl-public-chat': PublicChat,
+			'wnl-breadcrumbs': Breadcrumbs,
+			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-main-nav': MainNav,
+			'wnl-splash-screen': SplashScreen,
+		},
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
@@ -106,13 +121,6 @@
 			canRenderSidenav() {
 				return this.isSidenavVisible && this.ready
 			}
-		},
-		components: {
-			'wnl-course-navigation': Navigation,
-			'wnl-public-chat': PublicChat,
-			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav
 		},
 		mixins: [withChat, breadcrumb],
 		methods: {

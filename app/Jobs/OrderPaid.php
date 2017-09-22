@@ -40,6 +40,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function sendConfirmation()
 	{
+		\Log::notice('Issuing invoice and sending order confirmation.');
 		$invoice = Invoice::issueFromOrder($this->order);
 		Mail::to($this->order->user)->send(new PaymentConfirmation($this->order, $invoice));
 	}
@@ -50,6 +51,7 @@ class OrderPaid implements ShouldQueue
 		// Activate SB code & send email containing code link
 		$studyBuddy = $order->studyBuddy;
 		if ($studyBuddy) {
+			\Log::notice('Activating Study Buddy coupon.');
 			$studyBuddy->coupon->times_usable++;
 			$studyBuddy->coupon->save();
 			$studyBuddy->status = 'active';
@@ -58,6 +60,7 @@ class OrderPaid implements ShouldQueue
 
 		// Check if order has SB code and handle the refund
 		if ($order->coupon && $order->coupon->studyBuddy) {
+			\Log::notice('Study Buddy coupon used - awaiting refund.');
 			$order->coupon->studyBuddy->status = 'awaiting-refund';
 			$order->coupon->studyBuddy->save();
 		}

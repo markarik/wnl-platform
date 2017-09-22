@@ -36,6 +36,7 @@ const getters = {
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
+	currentUserStats: state => state.stats
 }
 
 // Mutations
@@ -57,6 +58,9 @@ const mutations = {
 	[types.USERS_CHANGE_SETTING] (state, payload) {
 		set(state.settings, payload.setting, payload.value)
 	},
+	[types.USERS_SET_STATS] (state, payload) {
+		set(state, 'stats', payload)
+	}
 }
 
 // Actions
@@ -78,6 +82,20 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			getCurrentUser().then((response) => {
 				commit(types.USERS_SETUP_CURRENT, response.data)
+				resolve()
+			})
+			.catch((error) => {
+				$wnl.logger.error(error)
+				reject()
+			})
+		})
+	},
+
+	fetchCurrentUserStats({commit, getters}) {
+		return new Promise((resolve, reject) => {
+			_fetchUserStats(getters.currentUserId)
+			.then(({data}) => {
+				commit(types.USERS_SET_STATS, data)
 				resolve()
 			})
 			.catch((error) => {
@@ -122,6 +140,10 @@ const actions = {
 	syncSettings({ commit, getters }) {
 		setUserSettings(getters.getAllSettings)
 	}
+}
+
+const _fetchUserStats = (userId) => {
+	return axios.get(getApiUrl(`users/${userId}/state/stats`));
 }
 
 export default {

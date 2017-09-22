@@ -1,5 +1,20 @@
 <template lang="html">
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
+		<div class="wnl-user-stats" v-if="currentUserStats"
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item big strong">
+						Statystyki
+					</div>
+				</div>
+			</div>
+
+			<div class="level-left">Liczba spędzonych minut na platformie: {{time}}</div>
+			<div class="level-left">Procent przerobionych lekcji: {{lessonsCompleted}}</div>
+			<div class="level-left">Procent rozpoczętych lekcji: {{lessonsStarted}}</div>
+			<div class="margin vertical">
+		</div>
+
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -59,6 +74,7 @@
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
+	import moment from 'moment'
 
 	import Upload from 'js/components/global/Upload'
 	import { Form, Text } from 'js/components/global/form'
@@ -77,13 +93,24 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobileProfile']),
+			...mapGetters(['isMobileProfile', 'currentUserStats']),
 			isProduction() {
 				return isProduction()
+			},
+			time() {
+				return moment.duration({...this.currentUserStats.time}).asMinutes()
+			},
+			lessonsStarted() {
+				const {started, total} = this.currentUserStats.progress;
+				return Math.floor(started / total * 100)
+			},
+			lessonsCompleted() {
+				const {total, completed} = this.currentUserStats.progress;
+				return Math.floor(completed / total * 100)
 			}
 		},
 		methods: {
-			...mapActions(['updateCurrentUser']),
+			...mapActions(['updateCurrentUser', 'fetchCurrentUserStats']),
 			onUploadError() {
 				this.loading = false
 			},
@@ -95,5 +122,8 @@
 				this.loading = false
 			},
 		},
+		mounted() {
+			this.fetchCurrentUserStats();
+		}
 	}
 </script>

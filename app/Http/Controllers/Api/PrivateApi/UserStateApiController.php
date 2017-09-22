@@ -168,10 +168,8 @@ class UserStateApiController extends ApiController
 			$completedCount = isset($grouped['complete']) ? count($grouped['complete']) : 0;
 			$startedCount  = isset($grouped['in-progress']) ? count($grouped['in-progress']) : 0;
 
-			$stats['lessons'] = [
-				'completed' => $completedCount,
-				'started' => $startedCount,
-			];
+			$stats['lessons']['completed'] = $completedCount;
+			$stats['lessons']['started'] = $startedCount;
 		}
 
 		return $this->json($stats);

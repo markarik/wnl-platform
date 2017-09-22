@@ -16,6 +16,12 @@ class UsersApiController extends ApiController
 		$this->resourceName = config('papi.resources.users');
 	}
 
+	public function singleUser(Users $user)
+	{
+		$singleUser = User::find($user);
+		return response($singleUser);
+	}
+
 	public function get($id)
 	{
 		$user = User::fetch($id);

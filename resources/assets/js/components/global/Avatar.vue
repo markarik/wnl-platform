@@ -1,7 +1,9 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
-		<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
-		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
+		<router-link class="link" :to="{ name: 'user', params: { userId: userId}}">
+			<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
+			<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
+		</router-link>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -33,7 +35,7 @@
 
 	export default {
 		name: 'Avatar',
-		props: ['fullName', 'size', 'url'],
+		props: ['fullName', 'size', 'url', 'userId', 'user'],
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
@@ -69,6 +71,6 @@
 			imageClass() {
 				return this.isCustom ? 'with-image' : 'without-image'
 			},
-		}
+		},
 	}
 </script>

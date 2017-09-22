@@ -170,6 +170,11 @@ let routes = [
 		}
 	},
 	{
+		name: 'user',
+		path: '/user/:userId',
+		component: require('js/components/user/UserProfile.vue')
+	},
+	{
 		path: '*',
 		redirect: '/app/'
 	}

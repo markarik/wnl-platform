@@ -1,4 +1,4 @@
-<template>
+ <template>
 	<div>
 		<div class="metadata">
 			{{ $t('dashboard.activeUsers', {count: activeUsersCount}) }}
@@ -10,6 +10,8 @@
 						<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
+								:userId="user.id"
+								:user="user"
 								size="medium">
 						</wnl-avatar>
 					</li>

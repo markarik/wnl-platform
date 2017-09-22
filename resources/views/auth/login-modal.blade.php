@@ -1,5 +1,5 @@
 <div class="wnl-login-view">
-	<div class="wnl-login-container">
+	<div class="wnl-modal-login-container">
 		@if(session('logout'))
 			<div class="notification has-text-centered">Wylogowano, do zobaczenia!</div>
 		@elseif(session('suspended'))

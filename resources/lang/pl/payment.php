@@ -11,12 +11,14 @@ return [
 	'voucher-percentage' => ':value%',
 	'voucher-amount' => ':valuezł',
 	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
-	'voucher-already-has' => 'Wygląda na to, że do Twojego konta jest już przypisana zniżka <strong>:name</strong>. Przypominamy, że promocje nie łączą się. ;)',
+	'voucher-already-has' => 'Wygląda na to, że do Twojego konta jest już przypisana zniżka <strong>:name</strong>.<br>Przypominamy, że promocje nie łączą się, więc użycie kodu ZASTĄPI 50% zniżkę. ;)',
 	'voucher-title' => 'Masz kod? Super!',
 	'voucher-subtitle' => 'Wpisz go poniżej, aby wykorzystać zniżkę!',
 	'voucher-skip' => 'Pomiń ten krok i przejdź do wyboru kursu',
 	'voucher-label' => 'Wpisz kod:',
 	'voucher-submit' => 'Wykorzystaj kod',
+	'voucher-existing-user' => 'Chcesz skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzednich edycji? Zaloguj się i kontynuuj zamówienie!',
+	'voucher-existing-user-button' => 'Zaloguj się',
 
 	/**
 	 * Payment Steps Menu

@@ -38,22 +38,22 @@
 		</div>
 	</section>
 	@if (Session::has('coupon'))
-	<section class="voucher notification is-info has-text-centered">
-		@lang('payment.voucher-current', [
-			'name' => session('coupon')['name'],
-			'value' => trans('payment.voucher-' . session('coupon')['type'], [
-				'value' => session('coupon')['value'],
+		<section class="voucher notification is-info has-text-centered">
+			@lang('payment.voucher-current', [
+				'name' => session('coupon')['name'],
+				'value' => trans('payment.voucher-' . session('coupon')['type'], [
+					'value' => session('coupon')['value'],
+				])
 			])
-		])
-	</section>
+		</section>
 	@elseif (Auth::user() && Auth::user()->coupons->count() !== 0)
-	<section class="voucher notification is-info has-text-centered">
-		@lang('payment.voucher-current', [
-			'name' => Auth::user()->coupons[0]['name'],
-			'value' => trans('payment.voucher-' . Auth::user()->coupons[0]['type'], [
-				'value' => Auth::user()->coupons[0]['value'],
+		<section class="voucher notification is-info has-text-centered">
+			@lang('payment.voucher-current', [
+				'name' => Auth::user()->coupons[0]['name'],
+				'value' => trans('payment.voucher-' . Auth::user()->coupons[0]['type'], [
+					'value' => Auth::user()->coupons[0]['value'],
+				])
 			])
-		])
-	</section>
+		</section>
 	@endif
 </div>

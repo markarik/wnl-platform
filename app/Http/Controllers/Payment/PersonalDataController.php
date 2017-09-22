@@ -39,7 +39,7 @@ class PersonalDataController extends Controller
 		}
 
 		if (Auth::check() && !$request->edit) {
-			$this->createOrder(Auth::user());
+			$this->createOrder(Auth::user(), $request);
 
 			return redirect()->route('payment-confirm-order');
 		}
@@ -65,10 +65,14 @@ class PersonalDataController extends Controller
 	{
 		$form = $this->form(SignUpForm::class);
 
-		if (Auth::check()) {
-			$user = Auth::user();
-			// Authenticated users should be able to edit only their own account.
-			$form->validate(['email' => 'required|email|in:' . $user->email]);
+		$user = Auth::user();
+		if ($user) {
+			// Don't require email and pass when updating order/account data.
+			$form->validate([
+				'email'                 => 'email',
+				'password'              => '',
+				'password_confirmation' => '',
+			]);
 		}
 
 		if (!$form->isValid()) {
@@ -77,68 +81,28 @@ class PersonalDataController extends Controller
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
-		Log::notice('Creating user account');
-		$user = User::updateOrCreate(
-			['email' => $request->get('email')],
-			[
-				'first_name'         => $request->get('first_name'),
-				'last_name'          => $request->get('last_name'),
-				'address'            => $request->get('address'),
-				'zip'                => $request->get('zip'),
-				'city'               => $request->get('city'),
-				'email'              => $request->get('email'),
-				'phone'              => $request->get('phone'),
-				'password'           => bcrypt($request->get('password')),
-				'invoice'            => $request->get('invoice') ?? 0,
-				'invoice_name'       => $request->get('invoice_name'),
-				'invoice_nip'        => $request->get('invoice_nip'),
-				'invoice_address'    => $request->get('invoice_address'),
-				'invoice_zip'        => $request->get('invoice_zip'),
-				'invoice_city'       => $request->get('invoice_city'),
-				'invoice_country'    => $request->get('invoice_country'),
-				'consent_newsletter' => $request->get('consent_newsletter') ?? 0,
-				'consent_account'    => $request->get('consent_account') ?? 0,
-				'consent_order'      => $request->get('consent_order') ?? 0,
-				'consent_terms'      => $request->get('consent_terms') ?? 0,
-			]
-		);
-
-		$this->createOrder($user, ['invoice' => $request->invoice]);
-		Auth::login($user);
-		Log::notice('User automatically logged in after registration.');
+		if ($user && $request->edit == 'true') {
+			$this->updateAccount($user, $request);
+			$this->updateOrder($user, $request);
+		} else {
+			$user = $this->createAccount($request);
+			$this->createOrder($user, $request);
+		}
 
 		return redirect(route('payment-confirm-order'));
 	}
 
-	/**
-	 * @param $productSlug
-	 *
-	 * @return null|Product
-	 */
-	private function getProduct($productSlug = null)
-	{
-		$product = Session::get('product', function () use ($productSlug) {
-			return Product::slug($productSlug);
-		});
-
-		if ($product instanceof Product && $product !== null && $product->slug !== $productSlug) {
-			return $product;
-		}
-
-		return Product::slug($productSlug);
-	}
-
-	protected function createOrder($user, $data = [])
+	protected function createOrder($user, $request)
 	{
 		Log::notice('Creating order');
 		$order = $user->orders()->create([
 			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
-			'invoice'    => $data['invoice'] ?? $user->invoice ?? 0,
+			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
 
 		if (session()->has('coupon')) {
-		$order->attachCoupon(session()->get('coupon'));
+			$order->attachCoupon(session()->get('coupon'));
 		} elseif ($coupon = $user->coupons->first()) {
 			$order->attachCoupon($coupon);
 		} elseif ($user->is_subscriber) {
@@ -162,6 +126,56 @@ class PersonalDataController extends Controller
 
 		$order->studyBuddy()->create([
 			'code' => $coupon->code,
+		]);
+	}
+
+	protected function createAccount($request)
+	{
+		Log::notice('Creating user account');
+		$user = User::create(
+			[
+				'first_name'         => $request->get('first_name'),
+				'last_name'          => $request->get('last_name'),
+				'address'            => $request->get('address'),
+				'zip'                => $request->get('zip'),
+				'city'               => $request->get('city'),
+				'email'              => $request->get('email'),
+				'phone'              => $request->get('phone'),
+				'password'           => bcrypt($request->get('password')),
+				'invoice'            => $request->get('invoice') ?? 0,
+				'invoice_name'       => $request->get('invoice_name'),
+				'invoice_nip'        => $request->get('invoice_nip'),
+				'invoice_address'    => $request->get('invoice_address'),
+				'invoice_zip'        => $request->get('invoice_zip'),
+				'invoice_city'       => $request->get('invoice_city'),
+				'invoice_country'    => $request->get('invoice_country'),
+				'consent_newsletter' => $request->get('consent_newsletter') ?? 0,
+				'consent_account'    => $request->get('consent_account') ?? 0,
+				'consent_order'      => $request->get('consent_order') ?? 0,
+				'consent_terms'      => $request->get('consent_terms') ?? 0,
+			]
+		);
+
+		Auth::login($user);
+		Log::notice('User automatically logged in after registration.');
+
+		return $user;
+	}
+
+	protected function updateAccount($user, $request)
+	{
+		$user->update($request->all());
+	}
+
+	protected function updateOrder($user, $request)
+	{
+		Log::notice('Updating order');
+		$order = $user->orders()
+			->recent()
+			->update([
+			'product_id' => Session::get('product')->id,
+			'session_id' => str_random(32),
+			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
 	}
 }

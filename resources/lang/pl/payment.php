@@ -140,6 +140,7 @@ return [
 	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',
 
 	'personal-data-submit' => 'Załóż konto i przejdź dalej',
+	'personal-data-edit' => 'Zapisz i przejdź dalej',
 
 	/**
 	 * Personal data verification step

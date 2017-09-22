@@ -20,10 +20,12 @@
 		{!! form_start($form)  !!}
 
 		<section class="section">
+
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 
 				<a class="button opens-login-modal">Mam już konto</a>
+
 
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
 				{{-- <div class="notification is-info">
@@ -36,18 +38,22 @@
 					{!! form_widget($form->email) !!}
 					{!! form_errors($form->email) !!}
 				</div>
-				<div class="control">
-					{!! form_label($form->password) !!}
-					{!! form_widget($form->password) !!}
-					{!! form_errors($form->password) !!}
-				</div>
-				<div class="control">
-					{!! form_label($form->password_confirmation) !!}
-					{!! form_widget($form->password_confirmation) !!}
-					{!! form_errors($form->password_confirmation) !!}
-				</div>
+
+				@if(!Auth::user())
+					<div class="control">
+						{!! form_label($form->password) !!}
+						{!! form_widget($form->password) !!}
+						{!! form_errors($form->password) !!}
+					</div>
+					<div class="control">
+						{!! form_label($form->password_confirmation) !!}
+						{!! form_widget($form->password_confirmation) !!}
+						{!! form_errors($form->password_confirmation) !!}
+					</div>
+				@endif
 			</div>
 		</section>
+
 		<section id="personal-data" class="section">
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-heading')</h2>
@@ -98,7 +104,8 @@
 					{!! form_label($form->invoice) !!}
 					{!! form_errors($form->invoice) !!}
 				</div>
-				<div id="personal-data-invoice-form" class="form-group @if (Session::get('_old_input.invoice')) show @else hidden @endif">
+				<div id="personal-data-invoice-form"
+					 class="form-group @if (Session::get('_old_input.invoice')) show @else hidden @endif">
 					<div class="control">
 						{!! form_label($form->invoice_name) !!}
 						{!! form_widget($form->invoice_name) !!}
@@ -179,10 +186,17 @@
 
 		<section class="form-end">
 			<div class="block has-text-centered">
-				<button class="button is-primary">@lang('payment.personal-data-submit')</button>
+				<button class="button is-primary">
+					@if(request()->has('edit'))
+						@lang('payment.personal-data-edit')
+					@else
+						@lang('payment.personal-data-submit')
+					@endif
+				</button>
 			</div>
 		</section>
 
+		<input type="hidden" name="edit" value="{{ request('edit') }}">
 		{!! form_end($form, false)  !!}
 
 	</div>

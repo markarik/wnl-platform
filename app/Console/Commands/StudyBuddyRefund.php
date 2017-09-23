@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\StudyBuddy;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Lib\Invoice\Invoice;
+use Mail;
 
 class StudyBuddyRefund extends Command
 {
@@ -68,14 +70,17 @@ class StudyBuddyRefund extends Command
 			->where('series', Invoice::ADVANCE_SERIES_NAME)
 			->get()
 			->last();
-		$reason = 'Zniżka przedzielona po dokonaniu zapłaty (Study Buddy).';
+		$reason = 'Zniżka przydzielona po dokonaniu zapłaty (Study Buddy).';
 		$difference = $coupon->value * -1;
-		(new Invoice)->corrective($order, $recentInvoice, $reason, $difference);
+		$invoice = (new Invoice)->corrective($order, $recentInvoice, $reason, $difference);
 
 		$order->attachCoupon($coupon);
 
-		$studyBuddy->status = 'refunded';
 		$studyBuddy->save();
+		$studyBuddy->status = 'refunded';
+
+		Mail::to($order->user)->send(new StudyBuddy($order, $invoice));
+
 		$this->info('OK.');
 
 		return 42;

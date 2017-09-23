@@ -53,6 +53,7 @@ class GenerateCouponsForUsers extends Command
 				'user_id'    => $user->id,
 				'name'       => 'Zniżka -50% na Kurs internetowy dla uczestników poprzednich edycji kursu Więcej niż LEK',
 				'type'       => 'percentage',
+				'slug'       => 'wnl-online-only',
 				'value'      => 50,
 				'expires_at' => $expires,
 			]);

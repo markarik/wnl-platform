@@ -19,10 +19,21 @@
 					<strong>Naliczona zniżka: "{{ coupon.name }}" o wartości {{ getCouponValue(coupon) }}</strong><br>
 					Cena ze zniżką: {{ order.total }}zł
 				</p>
-				<div v-else-if="studyBuddy">
-					Kod Study Buddy:
-					<a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a>
+				<div class="margin bottom" v-else-if="studyBuddy">
+					<p class="strong has-text-centered">
+						Dziękujemy za opłacenie zamówienia! Możesz teraz skorzystać z promocji Study Buddy!
+					</p>
+					Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się z Twoim unikalnym kodem:
+					<span class="code">{{order.studyBuddy.code}}</span>
+					Obydwoje otrzymacie 100zł zniżki, <strong>jeżeli jej zamówienie zostanie opłacone</strong>! Przed zwrotem napiszemy do Ciebie, aby uzyskać dane do przelewu. <wnl-emoji name="wink"/>
+					<p class="small margin vertical has-text-centered">
+						Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)" target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
+					</p>
+					<!-- <a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a> -->
 				</div>
+				<p v-else-if="!order.coupon" class="notification has-text-centered">
+					Po opłaceniu zamówienia w tym miejscu pojawi się Twój unikalny kod, który możesz wysłać znajomym i skorzystać z promocji <strong>Study Buddy</strong> - gdy ktoś zapisze się używając Twojego kodu i opłaci zamówienie - obydwoje dostaniecie 100zł zniżki! Przed zwrotem napiszemy do Ciebie, aby uzyskać dane do przelewu. <wnl-emoji name="wink"/>
+				</p>
 
 				<p>Metoda płatności: {{ paymentMethod }}</p>
 
@@ -114,6 +125,16 @@
 
 		&.text-info
 			color: $color-gray-lighter
+
+	.code
+		background-color: $color-background-light-gray
+		display: block
+		font-size: $font-size-plus-2
+		font-weight: $font-weight-bold
+		letter-spacing: 1px
+		margin: $margin-medium 0
+		padding: $margin-small
+		text-align: center
 </style>
 
 <script>
@@ -173,8 +194,10 @@
 			},
 			paymentStatus() {
 				if (this.order.paid) {
-					if (this.order.total <= this.order.paid_amount) {
+					if (this.order.total == this.order.paid_amount) {
 						return 'Zapłacono'
+					} else if (this.order.paid_amount > this.order.total) {
+						return `Do zwrotu: ${this.order.paid_amount - this.order.total}zł`
 					} else {
 						return `Wpłacono ${this.order.paid_amount}zł`
 					}
@@ -223,7 +246,7 @@
 						.catch(exception => $wnl.logger.capture(exception))
 			},
 			voucherUrl(code){
-				return getUrl(`payment/voucher?code=${code}`)
+				return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher')
 			},
 			instalmentDate(date) {
 				return moment(date.date).format('LL')

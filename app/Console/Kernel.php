@@ -44,6 +44,8 @@ class Kernel extends ConsoleKernel
 		Commands\OrdersExport::class,
 		Commands\QuizImport::class,
 		Commands\PopulateAmountColumns::class,
+		Commands\RoleAdd::class,
+		Commands\RoleAssign::class,
 		Commands\SlackDaysCron::class,
 		Commands\SectionsUpdate::class,
 		Commands\SlideshowsRemove::class,

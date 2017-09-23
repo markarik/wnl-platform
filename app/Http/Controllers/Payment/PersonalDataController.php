@@ -94,19 +94,20 @@ class PersonalDataController extends Controller
 
 	protected function createOrder($user, $request)
 	{
-		Log::notice('Creating order');
+		\Log::notice('Creating order');
 		$order = $user->orders()->create([
 			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
 
+		$userCoupon = $user->coupons->first();
 		if (session()->has('coupon')) {
-			$order->attachCoupon(session()->get('coupon'));
-		} elseif ($coupon = $user->coupons->first()) {
-			$order->attachCoupon($coupon);
+			$this->addCoupon($order, session()->get('coupon'));
+		} elseif ($userCoupon) {
+			$this->addCoupon($order, $userCoupon);
 		} elseif ($user->is_subscriber) {
-			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
+			$this->addCoupon($order, Coupon::slug('subscriber-coupon'));
 		} else {
 			$this->generateStudyBuddy($order);
 		}
@@ -173,9 +174,20 @@ class PersonalDataController extends Controller
 		$order = $user->orders()
 			->recent()
 			->update([
-			'product_id' => Session::get('product')->id,
-			'session_id' => str_random(32),
-			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
-		]);
+				'product_id' => Session::get('product')->id,
+				'session_id' => str_random(32),
+				'invoice'    => $request->invoice ?? $user->invoice ?? 0,
+			]);
+	}
+
+	protected function addCoupon($order, $coupon)
+	{
+		if ($coupon->slug === 'wnl-online-only' &&
+			$order->product->slug !== 'wnl-online'
+		) {
+			return;
+		}
+
+		$order->attachCoupon($coupon);
 	}
 }

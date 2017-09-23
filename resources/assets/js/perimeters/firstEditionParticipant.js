@@ -10,6 +10,6 @@ export default createPerimeter({
 	},
 
 	isFirstEditionParticipant() {
-		return this.child && this.child.roles.includes('edition-1-participant');
+		return this.child && this.child.roles.includes('edition-1-participant')
 	}
 });

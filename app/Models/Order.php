@@ -85,6 +85,53 @@ class Order extends Model
 		return $coupon->value;
 	}
 
+	public function getInstalmentsAttribute()
+	{
+		$instalments = [];
+		$leftFromPaid = $this->paid_amount;
+		$nextPayment = null;
+		$now = Carbon::now();
+		$paymentDates = [
+			Carbon::createFromDate(2017, 10, 23),
+			Carbon::createFromDate(2017, 11, 20),
+			Carbon::createFromDate(2017, 12, 20),
+		];
+		$toDistribute = $this->total_with_coupon;
+		$allPaid = $this->paid_amount >= $this->total_with_coupon;
+
+		if ($allPaid) {
+			return ['allPaid' => true];
+		}
+
+		end($paymentDates);
+		$lastKey = key($paymentDates);
+		reset($paymentDates);
+
+		for ($i = 0; $i <= $lastKey; $i++) {
+			$date = $paymentDates[$i];
+
+			$instalment = ['date' => $paymentDates[$i]];
+			$instalment['amount'] = $i === $lastKey ? $toDistribute : 0.5 * $toDistribute;
+			$instalment['left'] = $leftFromPaid > $instalment['amount'] ? 0 : $instalment['amount'] - max($leftFromPaid, 0);
+			$instalments[] = $instalment;
+
+			$toDistribute = $toDistribute - $instalment['amount'];
+			$leftFromPaid = $leftFromPaid - $instalment['amount'];
+			if ($nextPayment === null && $instalment['left'] > 0) {
+				$nextPayment = [
+					'amount' => $instalment['left'],
+					'date' => $date,
+				];
+			}
+		}
+
+		return [
+			'allPaid' => false,
+			'instalments' => $instalments,
+			'nextPayment' => $nextPayment,
+		];
+	}
+
 	public function cancel()
 	{
 		$this->canceled = true;

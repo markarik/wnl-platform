@@ -26,19 +26,11 @@ class ConfirmOrderController extends Controller
 		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
 		Log::notice('Order confirmation');
 
-		$instalments = function ($total) {
-			$first = ceil($total * 0.004) * 100;
-
-			return ['1' => $first,
-					'2' => $first,
-					'3' => $total - (2 * $first)];
-		};
-
 		return view('payment.confirm-order', [
 			'order'       => $order,
 			'user'        => $user,
 			'checksum'    => $checksum,
-			'instalments' => $instalments,
+			'instalments' => $order->instalments['instalments'],
 		]);
 	}
 

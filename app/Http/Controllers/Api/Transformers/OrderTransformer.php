@@ -48,6 +48,10 @@ class OrderTransformer extends ApiTransformer
 			],
 		];
 
+		if (is_null($order->method) || $order->method === 'instalments') {
+			$data['instalments'] = $order->instalments;
+		}
+
 		return $data;
 	}
 }

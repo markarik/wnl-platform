@@ -9,11 +9,56 @@
 				</div>
 				<div class="media-content">
 					<p class="title is-4">{{ order.product.name }}</p>
-					<p class="subtitle is-6">{{ orderNumber }}</p>
+					<p class="subtitle is-6">{{ orderNumber }}
+						<br><small>Cena produktu: {{ order.product.price }}zł, zamówienie złożono {{ order.created_at }}</small>
+					</p>
 				</div>
 			</div>
 			<div class="content" v-if="!order.canceled">
+				<p v-if="coupon">
+					<strong>Naliczona zniżka: "{{ coupon.name }}" o wartości {{ getCouponValue(coupon) }}</strong><br>
+					Cena ze zniżką: {{ order.total }}zł
+				</p>
+				<div v-else-if="studyBuddy">
+					Kod Study Buddy:
+					<a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a>
+				</div>
+
 				<p>Metoda płatności: {{ paymentMethod }}</p>
+
+				<!-- Instalments -->
+				<div class="payment-details" v-if="!isFullyPaid">
+					<p class="big strong" v-if="order.method === 'transfer'">
+						Kwota: {{ order.total }}zł
+					</p>
+					<div v-if="order.method === 'instalments'">
+						<table class="table is-striped">
+							<tr>
+								<th>Rata</th>
+								<th>Termin płatności</th>
+								<th>Zapłacone / Do&nbsp;zapłaty</th>
+							</tr>
+							<tr v-for="instalment, index in order.instalments.instalments">
+								<td>{{index + 1}}</td>
+								<td>{{ instalmentDate(instalment.date) }}</td>
+								<td>
+									{{instalment.amount - instalment.left}}zł / {{instalment.amount}}zł
+								</td>
+							</tr>
+							<tr>
+								<td>Razem</td>
+								<td></td>
+								<td>{{ order.total }}zł</td>
+							</tr>
+						</table>
+						<p class="next-payment margin bottom">
+							Kolejna wpłata: <strong>{{ order.instalments.nextPayment.amount }}zł do
+							{{ instalmentDate(order.instalments.nextPayment.date) }}</strong>
+						</p>
+					</div>
+				</div>
+
+				<!-- Transfer details -->
 				<div class="transfer-details notification" v-if="transferDetails">
 					<p>Dane do przelewu</p>
 					<small>
@@ -23,43 +68,6 @@
 						60-817, Poznań<br>
 						82 1020 4027 0000 1102 1400 9197 (PKO BP)
 					</small>
-				</div>
-				<div class="payment-details">
-					<p class="big strong" v-if="order.method === 'transfer'">
-						Kwota: {{ order.total }}zł
-					</p>
-					<table class="table is-striped" v-if="order.method === 'instalments'">
-						<tr>
-							<th>Rata</th>
-							<th>Termin płatności</th>
-							<th>Kwota</th>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>23 października 2017r.</td>
-							<td>{{ instalments['1'] }}zł</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>20 listopada 2017r.</td>
-							<td>{{ instalments['2'] }}zł</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>20 grudnia 2017r.</td>
-							<td>{{ instalments['3'] }}zł</td>
-						</tr>
-						<tr>
-							<td>Razem</td>
-							<td></td>
-							<td>{{ order.total }}zł</td>
-						</tr>
-					</table>
-				</div>
-				<small>Zamówienie złożono {{ order.created_at }}</small>
-				<div v-if="studyBuddy">
-					Kod Study Buddy:
-					<a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a>
 				</div>
 			</div>
 		</div>
@@ -109,6 +117,7 @@
 </style>
 
 <script>
+	import moment from 'moment'
 	import axios from 'axios'
 	import {configValue} from 'js/utils/config'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
@@ -128,6 +137,9 @@
 			}
 		},
 		computed: {
+			coupon() {
+				return this.order.coupon
+			},
 			loaderSrc() {
 				return getImageUrl('loader.svg')
 			},
@@ -137,6 +149,9 @@
 			},
 			isPaid() {
 				return this.order.paid
+			},
+			isFullyPaid() {
+				return this.order.paid_amount >= this.order.total
 			},
 			isPending() {
 				// show loader only if there is an online payment waiting for confirmation
@@ -153,9 +168,8 @@
 				return 'fa-info-circle'
 			},
 			transferDetails() {
-				return !this.order.paid &&
-						(this.order.method === 'transfer' ||
-						this.order.method === 'instalments')
+				return !this.isFullyPaid && (this.order.method === 'transfer' ||
+					this.order.method === 'instalments')
 			},
 			paymentStatus() {
 				if (this.order.paid) {
@@ -191,12 +205,6 @@
 			orderNumber() {
 				return `Zamówienie numer ${this.order.id}`
 			},
-			instalments() {
-				const total = this.order.total,
-					  first = Math.ceil(total * 0.004) * 100
-
-				return {1: first, 2: first, 3: total - (2 * first)}
-			},
 			studyBuddy() {
 				return this.order.hasOwnProperty('studyBuddy') && this.order.paid
 			}
@@ -217,6 +225,12 @@
 			voucherUrl(code){
 				return getUrl(`payment/voucher?code=${code}`)
 			},
+			instalmentDate(date) {
+				return moment(date.date).format('LL')
+			},
+			getCouponValue(coupon) {
+				return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`
+			}
 		},
 		mounted() {
 			if (this.isPending) this.checkStatus()

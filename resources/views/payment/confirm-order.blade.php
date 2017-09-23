@@ -114,48 +114,53 @@
 					</div>
 				</div>
 			</section>
-			 <section class="has-text-centered">
-				<div class="expandable">
-					<div class="margin vertical">
-						<a class="link expand">Płatność na raty</a>
+			@if($instalments)
+				 <section class="has-text-centered">
+					<div class="expandable">
+						<div class="margin vertical">
+							<a class="link expand">Płatność na raty</a>
+						</div>
+						<div class="expandable-content box">
+							<h4>Płatność w 3 ratach</h4>
+							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
+							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do końca zapisów</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
+
+							<table class="table is-bordered margin vertical">
+								<tr>
+									<th>Twój wariant kursu</th>
+									@for ($i = 0; $i < count($instalments); $i++)
+										<th>
+											{{ $i + 1 }}. rata (do&nbsp;{{ $instalments[$i]['date']->format('d.m.Y') }})
+										</th>
+									@endfor
+									<th>Razem</th>
+								</tr>
+								<tr>
+									<td>{{ $order->product->name }}</td>
+									@for ($i = 0; $i < count($instalments); $i++)
+										<th>
+											{{ $instalments[$i]['amount'] }}zł
+										</th>
+									@endfor
+									<td>{{ $order->total_with_coupon }}zł</td>
+								</tr>
+							</table>
+
+							<p class="margin vertical has-text-centered">
+								Więcej informacji na temat rat znajdziesz w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a> oraz w <a class="tou-open-modal-link">Regulaminie</a>.
+							</p>
+
+							<form action="{{route('payment-confirm-order-post')}}" method="post">
+								{!! csrf_field() !!}
+								<input type="hidden" name="method" value="instalments"/>
+								<button type="submit" class="button margin top">
+									@lang('payment.confirm-method-instalments-button')
+								</button>
+							</form>
+						</div>
 					</div>
-					<div class="expandable-content box">
-						<h4>Płatność w 3 ratach</h4>
-						<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-						<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do końca zapisów</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
-
-						@php $instalment = $instalments(intval($order->total_with_coupon)) @endphp
-						<table class="table is-bordered margin vertical">
-							<tr>
-								<th>Twój wariant kursu</th>
-								<th>1. rata<br>(do 23 października 2017r.)</th>
-								<th>2. rata<br>(do 20 listopada 2017r.)</th>
-								<th>3. rata<br>(do 20 grudnia 2017r.)</th>
-								<th>Razem</th>
-							</tr>
-							<tr>
-								<td>{{ $order->product->name }}</td>
-								<td>{{ $instalment['1'] }}zł</td>
-								<td>{{ $instalment['2'] }}zł</td>
-								<td>{{ $instalment['3'] }}zł</td>
-								<td>{{ $order->total_with_coupon }}zł</td>
-							</tr>
-						</table>
-
-						<p class="margin vertical has-text-centered">
-							Więcej informacji na temat rat znajdziesz w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a> oraz w <a class="tou-open-modal-link">Regulaminie</a>.
-						</p>
-
-						<form action="{{route('payment-confirm-order-post')}}" method="post">
-							{!! csrf_field() !!}
-							<input type="hidden" name="method" value="instalments"/>
-							<button type="submit" class="button margin top">
-								@lang('payment.confirm-method-instalments-button')
-							</button>
-						</form>
-					</div>
-				</div>
-			</section>
+				</section>
+			@endif
 		@endif
 	</div>
 @endsection

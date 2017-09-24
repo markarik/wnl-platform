@@ -24,10 +24,11 @@
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
-
-				<p class="has-account">
-					<a class="button opens-login-modal">Mam już konto</a>
-				</p>
+				@if(!Auth::user())
+					<p class="has-account">
+						<a class="button opens-login-modal">Mam już konto</a>
+					</p>
+				@endif
 				{{-- <div class="notification is-info">
 					<p class="strong">@lang('payment.personal-data-email-info')</p>
 				</div> --}}

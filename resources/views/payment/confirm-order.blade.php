@@ -58,7 +58,7 @@
 		@endif
 
 		<section class="subsection">
-			<p class="has-text-centered">
+			<p class="has-text-centered edit-personal-data">
 				<a href="{{ route('payment-personal-data') }}?edit=true">@lang('payment.confirm-change-order')</a>
 			</p>
 		</section>
@@ -118,7 +118,7 @@
 				 <section class="has-text-centered">
 					<div class="expandable">
 						<div class="margin vertical">
-							<a class="link expand">Płatność na raty</a>
+							<a class="link expand" id="expand-instalments">Płatność na raty</a>
 						</div>
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
@@ -153,7 +153,7 @@
 							<form action="{{route('payment-confirm-order-post')}}" method="post">
 								{!! csrf_field() !!}
 								<input type="hidden" name="method" value="instalments"/>
-								<button type="submit" class="button margin top">
+								<button type="submit" class="button margin top" id="instalments-button">
 									@lang('payment.confirm-method-instalments-button')
 								</button>
 							</form>

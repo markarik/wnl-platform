@@ -210,7 +210,6 @@
 				}
 
 				if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-					console.log('returning with', event.key)
 					return
 				}
 
@@ -228,13 +227,23 @@
 			killEvent(evt) {
 				evt.preventDefault()
 				evt.stopPropagation()
-			}
+			},
+
+			clickHandler({ target }) {
+				if (this.$el !== target && !this.$el.contains(target)) {
+					this.autocompleteItems = []
+				}
+			},
 		},
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)
 			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
+			document.addEventListener('click', this.clickHandler)
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
 		},
 		watch: {
 			focused (val) {

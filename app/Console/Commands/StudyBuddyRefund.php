@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\StudyBuddy;
+use App\Mail\Refund;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Lib\Invoice\Invoice;
@@ -55,6 +55,13 @@ class StudyBuddyRefund extends Command
 			return 42;
 		}
 
+		if (count($order->invoices()->get()) > 2 &&
+			!$this->confirm('This order has suspiciously many invoices... Do you want to continue?')
+		) {
+			$this->info('Aborted.');
+			exit;
+		}
+
 		$this->studyBuddyRefund($order);
 
 		return 42;
@@ -62,6 +69,17 @@ class StudyBuddyRefund extends Command
 
 	protected function studyBuddyRefund($order)
 	{
+		$this->info("Do you want to refund this order:");
+		$this->table(
+			['id', 'email', 'name', 'product',],
+			[[$order->id, $order->user->email, $order->user->full_name, $order->product->name]]
+		);
+
+		if (!$this->confirm("Please confirm")) {
+			$this->info('Aborted.');
+			exit;
+		}
+
 		$studyBuddy = $order->studyBuddy;
 		$coupon = $studyBuddy->coupon;
 
@@ -71,15 +89,21 @@ class StudyBuddyRefund extends Command
 			->get()
 			->last();
 		$reason = 'Zniżka przydzielona po dokonaniu zapłaty (Study Buddy).';
-		$difference = $coupon->value * -1;
+		$value = $coupon->value;
+		$difference = $value * -1;
 		$invoice = (new Invoice)->corrective($order, $recentInvoice, $reason, $difference);
 
 		$order->attachCoupon($coupon);
+		$order->paid_amount = $order->paid_amount + $difference;
+		$order->save();
 
-		$studyBuddy->save();
+		$coupon->times_usable = 0;
+		$coupon->save();
+
 		$studyBuddy->status = 'refunded';
+		$studyBuddy->save();
 
-		Mail::to($order->user)->send(new StudyBuddy($order, $invoice));
+		Mail::to($order->user)->send(new Refund($order, $invoice, $value));
 
 		$this->info('OK.');
 

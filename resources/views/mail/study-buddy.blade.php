@@ -9,11 +9,11 @@
 
 	<p style="font-size: 1.25em;">Twój Study Buddy dołączył właśnie do kursu!</p>
 
-	<p>Spieszymy z informacją, że Twój unikalny kod promocyjny został wykorzystany! Dzięki temu obdarowana przez Ciebie osoba i Ty, otrzymujecie 100zł zniżki na kurs! Dziękujemy Ci za podzielenie się informacją o Więcej niż LEK!</p>
+	<p>Spieszymy z informacją, że Twój unikalny kod promocyjny został wykorzystany! Dzięki temu obdarowana przez Ciebie osoba i Ty, otrzymujecie 100zł zniżki na kurs! Dziękujemy Ci za podzielenie się informacją o Więcej niż LEK! :)</p>
 
-	<p>Już wysłaliśmy zwrot na Twoje konto, w załączniku znajdziesz fakturę korygującą do Twojego zamówienia.</p>
+	<p style="font-size: 1.25em;">Prosimy Cię o przesłanie w odpowiedzi danych, na które mamy wykonać przelew ze zwrotem. :)</p>
 
-	<p>Dziękujemy!</p>
+	<p>W razie pytań pozostajemy do dyspozycji!</p>
 
 	<p>Z pozdrowieniami,</p>
 @endsection

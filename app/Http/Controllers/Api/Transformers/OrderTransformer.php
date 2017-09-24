@@ -45,6 +45,7 @@ class OrderTransformer extends ApiTransformer
 				'code'      => $order->studyBuddy->code,
 				'recipient' => $order->studyBuddy->recipient,
 				'refunded'  => $order->studyBuddy->refunded,
+				'status'    => $order->studyBuddy->status,
 			],
 		];
 

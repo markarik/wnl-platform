@@ -5,7 +5,7 @@
 
 	<p>Piszemy do Ciebie, żeby potwierdzić zamówienie numer {{ $order->id or '{order_no}' }} złożone na kurs <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
 
-	<p><strong>Status swojego zamówienia możesz śledzić na stronie <a href="https://platforma.wiecejnizlek.pl/app/myself/orders">Twoje zamówienia</a>.</strong> Tam znajdziesz też wszystkie szczegóły dotyczące płatności.</p>
+	<p><strong>Status swojego zamówienia możesz śledzić na stronie <a href="{{url('app/myself/orders')}}">Konto > Twoje zamówienia</a>.</strong> Tam znajdziesz też wszystkie szczegóły dotyczące płatności.</p>
 
 	@if ($order->method == 'transfer')
 		<p>Płatności przelewem bankowym możesz dokonać przy użyciu poniższych danych:</p>
@@ -36,7 +36,7 @@
 
 		<p>Zarezerwowaliśmy dla Ciebie miejsce na kursie i przez najbliższe 7 dni czekamy na wpłatę. :)</p>
 	@elseif ($order->method == 'instalments')
-		<p>Aby uzyskać szczegółowe informacje o terminach i kwotach rat, odwiedź <a href="https://platforma.wiecejnizlek.pl/app/myself/orders">Twoje zamówienia</a>. :)</p>
+		<p>Aby uzyskać szczegółowe informacje o terminach i kwotach rat, odwiedź <a href="{{url('app/myself/orders')}}">Konto > Twoje zamówienia</a>. :)</p>
 	@endif
 
 	<p>W załączniku znajdziesz dokument pro forma, który zawiera szczegóły zamówienia. Stanowi on jednocześnie podstawę do płatności.</p>

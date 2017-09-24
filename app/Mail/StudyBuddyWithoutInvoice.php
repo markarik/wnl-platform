@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class StudyBuddy extends Mailable
+class StudyBuddyWithoutInvoice extends Mailable
 {
 	use Queueable, SerializesModels;
 	public $order;
@@ -34,7 +34,7 @@ class StudyBuddy extends Mailable
 	public function build()
 	{
 		return $this
-			->view('mail.study-buddy')
+			->view('mail.study-buddy-without-invoice')
 			->subject("Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {$this->order->id})")
 			->bcc('zamowienia@wiecejnizlek.pl');
 	}

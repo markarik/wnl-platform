@@ -20,15 +20,28 @@
 					Cena ze zniżką: {{ order.total }}zł
 				</p>
 				<div class="margin bottom" v-else-if="studyBuddy">
-					<p class="strong has-text-centered">
-						Dziękujemy za opłacenie zamówienia! Możesz teraz skorzystać z promocji Study Buddy!
-					</p>
-					Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się z Twoim unikalnym kodem:
-					<span class="code">{{order.studyBuddy.code}}</span>
-					Obydwoje otrzymacie 100zł zniżki, <strong>jeżeli jej zamówienie zostanie opłacone</strong>! Przed zwrotem napiszemy do Ciebie, aby uzyskać dane do przelewu. <wnl-emoji name="wink"/>
-					<p class="small margin vertical has-text-centered">
-						Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)" target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
-					</p>
+					<div v-if="order.studyBuddy.status === 'awaiting-refund'">
+						<p class="strong has-text-centered">
+							Twój Study Buddy dołączył już do kursu!
+						</p>
+						<p>
+							Jeśli wysłałeś już do nas w odpowiedzi na maila dane do przelewu, w ciągu najbliższych dni otrzymasz zwrot. <wnl-emoji name="+1"/>
+						</p>
+						<p>
+							Jeżeli nie, prosimy sprawdź swoją skrzynkę mailową. Znajdziesz tam wiadomość od nas o tytule "Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {{order.id}})". W odpowiedzi wyślij nam dane do przelewu, których możemy użyć do zwrotu. <wnl-emoji name="wink"/>
+						</p>
+					</div>
+					<div v-else>
+						<p class="strong has-text-centered">
+							Dziękujemy za opłacenie zamówienia! Możesz teraz skorzystać z promocji Study Buddy!
+						</p>
+						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się z Twoim unikalnym kodem:
+						<span class="code">{{order.studyBuddy.code}}</span>
+						Obydwoje otrzymacie 100zł zniżki, <strong>jeżeli jej zamówienie zostanie opłacone</strong>! Przed zwrotem otrzymasz od nas maila o tytule "Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {{order.id}})" z prośbą o przekazanie danych, na który wykonamy przelew ze zwrotem. <wnl-emoji name="wink"/>
+						<p class="small margin vertical has-text-centered">
+							Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)" target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
+						</p>
+					</div>
 					<!-- <a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a> -->
 				</div>
 				<p v-else-if="!order.coupon" class="notification has-text-centered">
@@ -195,9 +208,9 @@
 			paymentStatus() {
 				if (this.order.paid) {
 					if (this.order.total == this.order.paid_amount) {
-						return 'Zapłacono'
+						return `Zapłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
 					} else if (this.order.paid_amount > this.order.total) {
-						return `Do zwrotu: ${this.order.paid_amount - this.order.total}zł`
+						return `Wpłacono ${this.order.paid_amount}zł, do zwrotu ${this.order.paid_amount - this.order.total}zł`
 					} else {
 						return `Wpłacono ${this.order.paid_amount}zł`
 					}

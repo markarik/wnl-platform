@@ -135,9 +135,8 @@
 						text: this.room.name
 					},
 					context: {
-						courseId: this.courseId,
-						lessonId: this.$route.params.lessonId,
-						slideId: this.$route.params.slideId,
+						name: this.$route.name,
+						params: this.$route.params
 					},
 					actors: this.currentUser
 				}

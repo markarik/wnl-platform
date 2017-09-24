@@ -11,6 +11,7 @@ Vue.use(Router)
 
 let routes = [
 	{
+		name: 'course',
 		path: '/app/courses/:courseId',
 		component: require('js/components/course/Course.vue'),
 		props: true,

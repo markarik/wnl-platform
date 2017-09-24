@@ -1,5 +1,5 @@
 <template>
-	<div class="quill-container">
+	<div class="quill-container" @keydown="onKeyDown">
 		<wnl-autocomplete
 			:items="autocompleteItems"
 			:onItemChosen="insertMention"
@@ -8,7 +8,7 @@
 		>
 		</wnl-autocomplete>
 
-		<div ref="quill" @keydown="onKeyDown">
+		<div ref="quill">
 			<slot></slot>
 		</div>
 	</div>
@@ -210,10 +210,7 @@
 				}
 
 				if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-					return
-				}
-
-				if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
+					console.log('returning with', event.key)
 					return
 				}
 

@@ -8,8 +8,8 @@
 	>
 		<li
 			class="autocomplete-box__item"
-			v-for="item in itemsForDisplay"
-			@click="onItemClicked(item)"
+			v-for="item in items"
+			@click="onItemChosen(item)"
 			v-bind:class="{ active: item.active }"
 			v-bind:key="item.id"
 		>
@@ -76,14 +76,8 @@
 			hasItems() {
 				return this.items && this.items.length
 			},
-			itemsForDisplay() {
-				return this.items
-			}
 		},
 		methods: {
-			onItemClicked(item) {
-				this.onItemChosen(item)
-			},
 			onKeyDown(evt) {
 				switch (evt.keyCode){
 					case 38:
@@ -100,7 +94,7 @@
 			onArrowUp() {
 				if (!this.items || !this.items.length) return
 
-				const activeItem = _.find(this.items, { active: true });
+				const activeItem = this.getActiveItem();
 				if (!activeItem || activeItem === this.items[0]) {
 					this.$set(this.items[this.items.length - 1], 'active', true);
 				} else {
@@ -115,7 +109,7 @@
 			onArrowDown() {
 				if (!this.items || !this.items.length) return
 
-				const activeItem = _.find(this.items, { active: true });
+				const activeItem = this.getActiveItem();
 
 				if (!activeItem || activeItem === this.items[this.items.length - 1]) {
 					this.$set(this.items[0], 'active', true)
@@ -135,7 +129,7 @@
 				if (!activeItem) return
 
 				this.$set(activeItem, 'active', false)
-				this.onItemClicked(activeItem)
+				this.onItemChosen(activeItem)
 
 				evt.preventDefault();
 				evt.stopPropagation();
@@ -144,6 +138,10 @@
 
 			onEsc(evt) {
 				this.$set(this, 'items', null)
+			},
+
+			getActiveItem() {
+				return _.find(this.items, { active: true })
 			}
 		}
 	}

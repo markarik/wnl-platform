@@ -77,6 +77,7 @@
 			...mapGetters('course', ['getLesson']),
 			chatTitle() {
 				let lessonId = this.$route.params.lessonId
+
 				if(typeof lessonId === 'undefined') {
 					return 'Ogólny czat kursu'
 				}
@@ -123,6 +124,9 @@
 			'rooms' (newValue, oldValue) {
 				if (newValue.length === oldValue.length) return
 				this.changeRoom(newValue[0])
+			},
+			'$route.query.chatChannel' () {
+				this.changeRoom(this.getCurrentRoom());
 			}
 		}
 	}

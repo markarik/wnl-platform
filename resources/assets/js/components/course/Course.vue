@@ -19,7 +19,7 @@
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-		<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
@@ -118,5 +118,10 @@
 		methods: {
 			...mapActions(['toggleChat']),
 		},
+		watch: {
+			'$route.query.chatChannel' (newVal) {
+				newVal && !this.isChatVisible && this.toggleChat();
+			}
+		}
 	}
 </script>

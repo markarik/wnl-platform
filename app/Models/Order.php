@@ -100,7 +100,10 @@ class Order extends Model
 		$allPaid = $this->paid_amount >= $this->total_with_coupon;
 
 		if ($allPaid) {
-			return ['allPaid' => true];
+			return [
+				'allPaid'     => true,
+				'instalments' => $instalments,
+			];
 		}
 
 		end($paymentDates);
@@ -120,13 +123,13 @@ class Order extends Model
 			if ($nextPayment === null && $instalment['left'] > 0) {
 				$nextPayment = [
 					'amount' => $instalment['left'],
-					'date' => $date,
+					'date'   => $date,
 				];
 			}
 		}
 
 		return [
-			'allPaid' => false,
+			'allPaid'     => false,
 			'instalments' => $instalments,
 			'nextPayment' => $nextPayment,
 		];

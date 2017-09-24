@@ -31,7 +31,7 @@ class UserQuizResultsApiController extends ApiController
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->resourceName = config('papi.resources.quiz_results');
+		$this->resourceName = config('papi.resources.user-quiz-results');
 	}
 
 	public function get($userId)

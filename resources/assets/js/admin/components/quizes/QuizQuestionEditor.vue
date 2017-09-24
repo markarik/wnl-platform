@@ -212,7 +212,10 @@
 				if (this.isEdit) {
 					this.getQuizQuestion(this.$route.params.quizId)
 				} else {
-					this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
+					//Timeout for the user to see the success banner
+					setTimeout(() => {
+						this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
+					}, 2000)
 				}
 			}
 		},

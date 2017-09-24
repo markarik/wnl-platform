@@ -17,7 +17,7 @@ class QnaQuestion extends Model
 		'meta' => 'array',
 	];
 
-	protected $dispatchesEvents = [
+	protected $events = [
 		'created' => QuestionPosted::class,
 	];
 

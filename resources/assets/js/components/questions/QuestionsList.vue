@@ -197,9 +197,6 @@
 			examMode() {
 				return !!this.presetOptionsToPass.examMode && this.testMode
 			},
-			highlightedQuestion() {
-				return this.questionsList[0]
-			},
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
@@ -208,6 +205,7 @@
 				'activeFiltersToggle',
 				'changeCurrentQuestion',
 				'checkQuestions',
+				'getPosition',
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
@@ -220,6 +218,7 @@
 				'resetTest',
 				'resolveQuestion',
 				'saveQuestionsResults',
+				'savePosition',
 				'selectAnswer',
 				'setPage',
 			]),
@@ -336,7 +335,7 @@
 			onSelectAnswer(payload) {
 				payload.answer === this.getQuestion(payload.id).selectedAnswer
 					&& !this.testMode
-					? this.onVerify(payload.id)
+					? this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}))
 					: this.selectAnswer(payload)
 			},
 			onVerify(questionId) {
@@ -362,6 +361,7 @@
 					.then(question => {
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)
+						this.savePosition({position: {page: this.getSafePage(page), index}})
 					})
 			},
 			setupFilters(activeFilters = []) {
@@ -419,9 +419,13 @@
 					.then(() => this.fetchDynamicFilters())
 					.then(() => {
 						this.fetchingFilters = false
-						this.switchOverlay(false)
 						this.resetCurrentQuestion()
 						return this.fetchQuestionsReactions(this.getPage(1))
+					})
+					.then(this.getPosition)
+					.then(({data = {}}) => {
+						data.position && this.changeCurrentQuestion(data.position)
+						this.switchOverlay(false)
 					})
 					.then(() => this.reactionsFetched = true)
 					.catch(e => {
@@ -441,12 +445,6 @@
 			}
 		},
 		watch: {
-			highlightedQuestion(currentQuestion, previousQuestion = {}) {
-				if (currentQuestion.id !== previousQuestion.id) {
-					// TODO loading state
-					this.fetchQuestionData(currentQuestion.id)
-				}
-			},
 			testQuestionsCount() {
 				this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount)
 			}

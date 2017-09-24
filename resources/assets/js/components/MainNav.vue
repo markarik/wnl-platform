@@ -44,6 +44,12 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
+		<a v-if="$firstEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
+			<span class="icon is-medium">
+				<i class="fa fa-thumbs-o-up"></i>
+			</span>
+			<span class="text">Zapisz się!</span>
+		</a>
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
@@ -115,6 +121,7 @@
 <script>
 	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
 	import moderatorFeed from 'js/perimeters/moderatorFeed'
+	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'MainNav',
@@ -122,6 +129,11 @@
 		perimeters: [
 			firstEditionParticipant,
 			moderatorFeed,
-		]
+		],
+		computed: {
+			signUpLink() {
+				return getUrl('payment/select-product')
+			}
+		},
 	}
 </script>

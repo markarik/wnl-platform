@@ -6,13 +6,13 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
-				v-if="$firstEditionParticipant.isAllowed('access')"
+				v-if="canAccess"
 				:context="context"
 				:isLesson="isLesson"
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column" v-if="$firstEditionParticipant.isAllowed('access')">
+		<div class="wnl-course-content wnl-column" v-if="canAccess">
 			<router-view></router-view>
 		</div>
 		<div v-else class="wnl-course-content wnl-column">
@@ -23,9 +23,9 @@
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms" v-if="$firstEditionParticipant.isAllowed('access')"/>
+			<wnl-public-chat :rooms="chatRooms" v-if="canAccess"/>
 		</wnl-sidenav-slot>
-		<div v-if="$firstEditionParticipant.isAllowed('access') && isChatToggleVisible" class="wnl-chat-toggle">
+		<div v-if="canAccess && isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -65,11 +65,9 @@
 	import { breadcrumb } from 'js/mixins/breadcrumb'
 	import { getApiUrl } from 'js/utils/env'
 	import withChat from 'js/mixins/with-chat'
-	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
 
 	export default {
 		name: 'Course',
-		perimeters: [firstEditionParticipant],
 		components: {
 			'wnl-course-navigation': Navigation,
 			'wnl-public-chat': PublicChat,
@@ -83,12 +81,16 @@
 		computed: {
 			...mapGetters('course', ['isLessonAvailable', 'ready']),
 			...mapGetters([
+				'currentUser',
 				'isSidenavVisible',
 				'isSidenavMounted',
 				'isChatMounted',
 				'isChatVisible',
-				'isChatToggleVisible'
+				'isChatToggleVisible',
 			]),
+			canAccess() {
+				return this.currentUser.roles.includes('edition-1-participant')
+			},
 			context() {
 				return {
 					courseId: this.courseId,
@@ -117,7 +119,6 @@
 			localStorageKey() {
 				return `course-structure-${this.courseId}`
 			},
-
 			canRenderSidenav() {
 				return this.isSidenavVisible && this.ready
 			}

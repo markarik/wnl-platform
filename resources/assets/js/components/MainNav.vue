@@ -19,7 +19,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
-			v-if="$firstEditionParticipant.isAllowed('access')"
+			v-if="canAccess"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
@@ -44,7 +44,7 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
-		<a v-if="$firstEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
+		<a v-if="canAccess" class="wnl-main-nav-item" :href="signUpLink">
 			<span class="icon is-medium">
 				<i class="fa fa-thumbs-o-up"></i>
 			</span>
@@ -119,7 +119,7 @@
 </style>
 
 <script>
-	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
+	import {mapGetters} from 'vuex'
 	import moderatorFeed from 'js/perimeters/moderatorFeed'
 	import {getUrl} from 'js/utils/env'
 
@@ -127,13 +127,16 @@
 		name: 'MainNav',
 		props: ['isHorizontal'],
 		perimeters: [
-			firstEditionParticipant,
 			moderatorFeed,
 		],
 		computed: {
+			...mapGetters(['currentUser']),
+			canAccess() {
+				return this.currentUser.roles.includes('edition-1-participant')
+			},
 			signUpLink() {
 				return getUrl('payment/select-product')
-			}
+			},
 		},
 	}
 </script>

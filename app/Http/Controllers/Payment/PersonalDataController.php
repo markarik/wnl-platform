@@ -106,8 +106,6 @@ class PersonalDataController extends Controller
 			$this->addCoupon($order, session()->get('coupon'));
 		} elseif ($userCoupon) {
 			$this->addCoupon($order, $userCoupon);
-		} elseif ($user->is_subscriber) {
-			$this->addCoupon($order, Coupon::slug('subscriber-coupon'));
 		} else {
 			$this->generateStudyBuddy($order);
 		}

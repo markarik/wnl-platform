@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use Validator;
@@ -50,7 +51,12 @@ class VoucherController extends Controller
 	{
 		$coupon = Coupon::select()
 			->where('code', $code)
-			->where('times_usable', '>', 0)
+			->where(function ($query) {
+				$query
+					->where('times_usable', '>', 0)
+					->orWhere('times_usable', null);
+			})
+			->where('expires_at', '>', Carbon::now())
 			->first();
 
 		if (!$coupon) return false;

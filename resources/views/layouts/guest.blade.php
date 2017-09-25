@@ -78,8 +78,13 @@
 			<footer class="footer has-text-centered">
 				<p>
 					<small>
-						<a class="tou-open-modal-link">
+						{{-- <a class="tou-open-modal-link"> --}}
+						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf">
 							@lang('payment.personal-data-tou-link-content')
+						</a>
+						&nbsp;|&nbsp;
+						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminPromocjiStudyBuddy.pdf">
+							Regulamin Promocji Study Buddy
 						</a>
 						&nbsp;|&nbsp;
 						<a class="privacy-policy-open-modal-link">

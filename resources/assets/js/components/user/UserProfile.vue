@@ -44,13 +44,18 @@
 	import { isProduction } from 'js/utils/env'
 
 	export default {
-		name: 'Myself',
+		name: 'UserProfile',
 		components: {
             'wnl-avatar' : Avatar,
 			'wnl-main-nav': MainNav,
 			'wnl-my-profile': MyProfile,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
+		},
+		data() {
+			return {
+				params: params
+			}
 		},
 		props: ['view'],
 		computed: {
@@ -152,5 +157,8 @@
 				}
 			}
 		},
+        mounted() {
+            axios.get()
+        }
 	}
 </script>

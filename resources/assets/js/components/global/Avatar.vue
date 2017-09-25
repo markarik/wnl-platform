@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
-		<router-link class="link" :to="{ name: 'user', params: { userId: userId}}">
+		<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
 			<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
 			<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 		</router-link>

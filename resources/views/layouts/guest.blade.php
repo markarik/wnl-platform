@@ -83,12 +83,19 @@
 							@lang('payment.personal-data-tou-link-content')
 						</a>
 						&nbsp;|&nbsp;
-						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminPromocjiStudyBuddy.pdf">
-							Regulamin Promocji
-						</a>
-						&nbsp;|&nbsp;
 						<a class="privacy-policy-open-modal-link">
 							@lang('payment.personal-data-privacy-link-content')
+						</a>
+					</small>
+				</p>
+				<p>
+					<small>
+						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminPromocjiStudyBuddy.pdf">
+							Regulamin Promocji "Study Buddy"
+						</a>
+						&nbsp;|&nbsp;
+						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminPromocjiUczestnikPoprzedniejEdycji.pdf">
+							Regulamin Promocji "Uczestnik poprzedniej edycji"
 						</a>
 					</small>
 				</p>

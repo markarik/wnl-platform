@@ -9,6 +9,12 @@
 		otworzyliśmy zapisy na drugą edycję kursu “Więcej niż LEK”!
 	</p>
 
+	<div style="text-align: center; margin: 10px auto 20px;">
+		<a class="button" href="https://platforma.wiecejnizlek.pl/payment/select-product">
+			Zapisz się na kurs
+		</a>
+	</div>
+
 	<h3>Co nowego?</h3>
 	<p>
 		Bogatsi o doświadczenia zebrane podczas pierwszej edycji kursu, szykujemy sporo zmian (na lepsze)! ;) Tym razem
@@ -47,6 +53,10 @@
 		opłaceniu zamówienia otrzymasz swój unikalny kod. Przekaż go znajomej osobie, aby wykorzystała go przy
 		rejestracji! Gdy otrzymamy od niej wpłatę, zniżka naliczy się też do Twojego zamówienia. :)
 	</p>
+
+	<div style="text-align: center; margin: 10px auto 20px;">
+		<a href="https://demo.platforma.wiecejnizlek.pl/" class="button">Zobacz demo platformy</a>
+	</div>
 
 	<h3>Więcej informacji</h3>
 	<p>

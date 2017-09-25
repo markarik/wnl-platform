@@ -49,6 +49,14 @@
 		zrealizować podstawowy cel i pomóc Ci uzyskać lepszy wynik na LEK-u! :)
 	</p>
 
+
+	<div style="text-align: center; margin: 10px auto 20px;">
+		<a class="button" href="https://platforma.wiecejnizlek.pl/payment/select-product">
+			Zapisz się na kurs
+		</a>
+	</div>
+
+
 	<p>
 		Z serdecznymi pozdrowieniami,
 	</p>

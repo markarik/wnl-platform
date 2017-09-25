@@ -171,5 +171,5 @@ return [
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',
-	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu Kursu stacjonarnego!',
+	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu Kursu stacjonarnego! Cena nie obejmuje nowych materiałów. Możesz dokupić je osobno, korzystając z linku <a href="https://platforma.wiecejnizlek.pl/payment/personal-data/wnl-album">https://platforma.wiecejnizlek.pl/payment/personal-data/wnl-album</a>',
 ];

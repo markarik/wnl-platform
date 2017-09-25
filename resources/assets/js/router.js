@@ -171,8 +171,8 @@ let routes = [
 	},
 	{
 		name: 'user',
-		path: '/user/:userId',
-		component: require('js/components/user/UserProfile.vue')
+		path: '/app/user/:userId',
+		component: require('js/components/user/Themselves.vue')
 	},
 	{
 		path: '*',

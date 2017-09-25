@@ -41,7 +41,7 @@
 	import MyProfile from 'js/components/user/MyProfile'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import { isProduction } from 'js/utils/env'
+	import { isProduction, getApiUrl } from 'js/utils/env'
 
 	export default {
 		name: 'UserProfile',
@@ -54,7 +54,8 @@
 		},
 		data() {
 			return {
-				params: params
+				params: this.$route.params.userId,
+				apiResponse: []
 			}
 		},
 		props: ['view'],
@@ -158,7 +159,11 @@
 			}
 		},
         mounted() {
-            axios.get()
+            axios.get(getApiUrl(`users/${this.params}/profile`))
+				.then((response) => {
+					this.apiResponse = response
+				})
+			.catch(exception => $wnl.logger.capture(exception))
         }
 	}
 </script>

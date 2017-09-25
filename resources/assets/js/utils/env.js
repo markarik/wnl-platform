@@ -41,5 +41,5 @@ export function getImageUrl(filename) {
 }
 
 export function getSignupsUrl() {
-	return 'https://wiecejnizlek.pl/zostaw-e-mail'
+	return 'https://platforma.wiecejnizlek.pl/payment/select-product'
 }

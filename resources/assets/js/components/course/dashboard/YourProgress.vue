@@ -9,7 +9,7 @@
 		</wnl-progress>
 		<p class="progress-message">{{ progressMessage }}</p>
 		<p class="has-text-centered margin vertical" v-if="isFull">
-			<a href="https://wiecejnizlek.pl/zostaw-e-mail" target="_blank" class="button is-small is-success">
+			<a :href="signupsUrl" target="_blank" class="button is-small is-success">
 				Zapisz się
 			</a>
 		</p>
@@ -32,6 +32,7 @@
 	import emoji from 'node-emoji'
 	import Progress from 'js/components/global/Progress.vue'
 	import { mapGetters } from 'vuex'
+	import { getSignupsUrl } from 'js/utils/env'
 
 	const STATE_FULL = 'full',
 		STATE_GOOD = 'good',
@@ -96,6 +97,9 @@
 			},
 			progressMessage() {
 				return stateData[this.progressState].message
+			},
+			signupsUrl() {
+				return getSignupsUrl()
 			},
 		},
 		components: {

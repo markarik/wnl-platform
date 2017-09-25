@@ -15,7 +15,7 @@
 			</router-link>
 		</div>
 		<div class="wnl-navbar-signup" v-if="!isMobile">
-			<a target="_blank" href="https://wiecejnizlek.pl/zostaw-e-mail" class="button is-success is-small is-outlined">
+			<a target="_blank" :href="signupsUrl" class="button is-success is-small is-outlined">
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">
 					<i class="fa fa-thumbs-o-up"></i>
@@ -143,7 +143,7 @@
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
 	import { mapGetters, mapActions } from 'vuex'
-	import { getImageUrl } from 'js/utils/env'
+	import { getImageUrl, getSignupsUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Navbar',
@@ -175,6 +175,9 @@
 			},
 			sidenavIconClass() {
 				return this.isSidenavOpen ? 'fa-close' : 'fa-bars'
+			},
+			signupsUrl() {
+				return getSignupsUrl()
 			},
 		},
 		methods: {

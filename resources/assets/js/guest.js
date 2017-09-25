@@ -13,9 +13,12 @@ $(function() {
 		$touModal = $modalsContainer.find('#tou-modal'),
 		$touOpenModalLinks = $('.tou-open-modal-link'),
 		$touCloseModalButton = $touModal.find('.delete'),
+		$loginModalButton = $('.opens-login-modal'),
 		$privacyModal = $modalsContainer.find('#privacy-policy-modal'),
+		$loginModal = $modalsContainer.find('#login-modal'),
 		$privacyOpenModalLinks = $('.privacy-policy-open-modal-link'),
 		$privacyCloseModalButton = $privacyModal.find('.delete'),
+		$loginCloseModalButton = $loginModal.find('.delete'),
 		$expandable = $('.expandable')
 
 	$buttons.removeClass('is-disabled').removeClass('is-loading')
@@ -23,6 +26,11 @@ $(function() {
 	$navToggle.click((event) => {
 		$navToggle.toggleClass('is-active')
 		$navMenu.toggleClass('is-active')
+	})
+
+	$loginModalButton.on('mousedown touchstart', function (event) {
+		event.preventDefault();
+		$loginModal.addClass('is-active');
 	})
 
 	$touOpenModalLinks.on('mousedown touchstart', function (event) {
@@ -43,6 +51,11 @@ $(function() {
 	$privacyCloseModalButton.on('mousedown touchstart', function (event) {
 		event.preventDefault();
 		$privacyModal.removeClass('is-active');
+	})
+
+	$loginCloseModalButton.on('mousedown touchstart', function (event) {
+		event.preventDefault();
+		$loginModal.removeClass('is-active');
 	})
 
 	$form.on('submit', (event) => {

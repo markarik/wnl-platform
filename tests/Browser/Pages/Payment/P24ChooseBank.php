@@ -37,9 +37,11 @@ class P24ChooseBank extends BasePage
 	{
 		return [
 			'@ing-logo'        => '.bank-logo-112',
-			'@accept-tou'      => '#reagulation-accept-button',
+			'@accept-tou'      => 'button[id="reagulation-accept-button"]',
 			'@login-button'    => 'button[type="submit"]',
 			'@confirm-payment' => '#pay_by_link_pay',
+			'@decline-payment' => '#pay_by_link_decline',
+			'@return'          => '#btn-return',
 		];
 	}
 }

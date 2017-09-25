@@ -54,8 +54,8 @@ class ListOrders extends Command
 			return [
 				$order->id,
 				$order->user_id,
-				$order->user->email,
-				$order->user->full_name,
+				$order->user->email ?? '-',
+				$order->user->full_name ?? '-',
 				$order->product->name,
 				$order->paid,
 				$order->paid_amount,

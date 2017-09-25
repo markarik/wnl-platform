@@ -5,6 +5,22 @@ return [
 	'back-to-website' => 'Strona o kursie',
 
 	/**
+	 * Voucher
+	 */
+	'voucher-current' => 'Super! Korzystasz ze zniżki <strong>:name</strong>, która obniży ostateczną kwotę zamówienia o :value!',
+	'voucher-percentage' => ':value%',
+	'voucher-amount' => ':valuezł',
+	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
+	'voucher-already-has' => 'Wygląda na to, że do Twojego konta jest już przypisana zniżka <strong>:name</strong>.<br>Przypominamy, że promocje nie łączą się, więc użycie kodu ZASTĄPI 50% zniżkę. ;)',
+	'voucher-title' => 'Masz kod? Super!',
+	'voucher-subtitle' => 'Wpisz go poniżej, aby wykorzystać zniżkę!',
+	'voucher-skip' => 'Pomiń ten krok i przejdź do wyboru kursu',
+	'voucher-label' => 'Wpisz kod:',
+	'voucher-submit' => 'Wykorzystaj kod',
+	'voucher-existing-user' => 'Chcesz skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzednich edycji? Zaloguj się i kontynuuj zamówienie!',
+	'voucher-existing-user-button' => 'Zaloguj się',
+
+	/**
 	 * Payment Steps Menu
 	 */
 	'payment-steps-select-product' => 'Wybór wariantu kursu',
@@ -126,6 +142,7 @@ return [
 	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',
 
 	'personal-data-submit' => 'Załóż konto i przejdź dalej',
+	'personal-data-edit' => 'Zapisz i przejdź dalej',
 
 	/**
 	 * Personal data verification step
@@ -134,19 +151,22 @@ return [
 	'confirm-order-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
 	'confirm-order-heading' => 'Twoje zamówienie',
 	'confirm-order-price' => ':pricezł brutto',
-	'confirm-order-coupon' => 'Korzystasz z kuponu <strong>:name</strong> o wartości <strong>:value</strong>.',
+	'confirm-order-coupon' => 'Korzystasz ze zniżki <strong>:name</strong> o wartości <strong>:value</strong>.',
 
 	'confirm-personal-data-heading' => 'Twoje dane',
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie, dokonaj płatności przez system Przelewy24',
+	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie wybierz metodę płatności',
 	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
 	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
 	'confirm-method-instalments-button'    => 'Kupuję i płacę na raty',
 	'confirm-method-online-payment-button' => 'Kupuję i płacę przez Przelewy24',
+	'confirm-method-free-button' => 'Kupuję korzystając ze 100% zniżki',
+
+	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',
-
+	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu Kursu stacjonarnego!',
 ];

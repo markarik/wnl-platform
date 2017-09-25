@@ -49,12 +49,15 @@
 						<form method="post" action="/logout" id="logout-form">
 							{{ csrf_field() }}
 						</form>
+						<a href="{{ url('payment/select-product') }}" class="nav-item">
+							Zapisz się na kurs
+						</a>
 						<a href="@lang('common.course-website-link')" class="nav-item">
 							@lang('payment.back-to-website')
 						</a>
 						@if (Auth::check())
 							<a href="{{url('app/')}}" class="nav-item">
-								Kurs
+								Platforma
 							</a>
 							<a href="{{url('app/myself/orders')}}" class="nav-item">
 								Twoje zamówienia
@@ -112,6 +115,20 @@
 					</section>
 				</div>
 			</div>
+			@if(request()->route())
+			<div id="login-modal" class="modal">
+				<div class="modal-background"></div>
+				<div class="modal-card">
+					<header class="modal-card-head">
+						<p class="modal-card-title"></p>
+						<button class="delete"></button>
+					</header>
+					<section class="modal-card-body content">
+						@include('auth.login-modal')
+					</section>
+				</div>
+			</div>
+			@endif
 		</div>
 		<!-- Scripts -->
 		<script src="{{ mix('js/guest.js') }}"></script>

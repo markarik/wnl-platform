@@ -24,13 +24,13 @@ class BethinkBrowser extends Browser
 		$config = config('dusk');
 
 		$this->position(
-			$config['default_position']['x'],
-			$config['default_position']['y']
+			intval($config['default_position']['x']),
+			intval($config['default_position']['y'])
 		);
 
 		$this->resize(
-			$config['desktop_size']['width'],
-			$config['desktop_size']['height']
+			intval($config[$config['screen-size']]['width']),
+			intval($config[$config['screen-size']]['height'])
 		);
 	}
 
@@ -58,9 +58,30 @@ class BethinkBrowser extends Browser
 	}
 
 	/**
+	 * Scroll browser window one page up
+	 */
+	public function pageUp()
+	{
+		$this->driver->executeScript('window.scrollBy(0, -window.innerHeight)');
+
+		return $this;
+	}
+
+	/**
+	 * Scroll browser window to top
+	 */
+	public function scrollTop()
+	{
+		$this->driver->executeScript('window.scrollBy(0, -100000000)');
+
+		return $this;
+	}
+
+	/**
 	 * Find element by xpath
 	 *
 	 * @param $pattern
+	 *
 	 * @return \Facebook\WebDriver\Remote\RemoteWebElement
 	 */
 	public function xpath($pattern)
@@ -72,6 +93,7 @@ class BethinkBrowser extends Browser
 	 * Assert that all the given texts appear on the page.
 	 *
 	 * @param array $items
+	 *
 	 * @return $this
 	 */
 	public function assertSeeAll(array $items)
@@ -88,6 +110,7 @@ class BethinkBrowser extends Browser
 	 *
 	 * @param array $items
 	 * @param  int $seconds
+	 *
 	 * @return $this
 	 * @internal param string $text
 	 */
@@ -122,7 +145,8 @@ class BethinkBrowser extends Browser
 	{
 		try {
 			$this->driver->findElement(WebDriverBy::cssSelector($selector));
-		} catch (NoSuchElementException $e) {
+		}
+		catch (NoSuchElementException $e) {
 			return false;
 		}
 
@@ -132,6 +156,14 @@ class BethinkBrowser extends Browser
 	public function scrollTo($selector)
 	{
 		$this->executeScript('return document.querySelector(arguments[0]).scrollIntoView(true)', [$selector]);
+
 		return $this;
+	}
+
+	public function getCurrentPath()
+	{
+		return parse_url(
+			$this->driver->getCurrentURL()
+		)['path'];
 	}
 }

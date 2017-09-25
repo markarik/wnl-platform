@@ -25,15 +25,28 @@ class OrderObserver
 			$this->dispatch(new OrderPaid($order));
 		}
 
-		if ($order->getOriginal('method') === null && $order->method !== null) {
+		if (!$order->paid &&
+			$order->getOriginal('method') === null &&
+			$order->method !== null
+		) {
 			\Log::notice('Order payment method set, decrementing product quantity.');
 			$this->dispatch(new OrderConfirmed($order));
 			$order->product->quantity--;
 			$order->product->save();
 
-			if (App::environment('production')) {
-				$this->notify(new OrderCreated($order));
+			if ($order->coupon && $order->coupon->times_usable) {
+				$order->coupon->times_usable--;
+				$order->coupon->save();
 			}
+
+			if (intval($order->total_with_coupon) === 0) {
+				\Log::notice('Order total is 0, marking as paid and dispatching OrderPaid job.');
+				$order->paid = true;
+				$order->save();
+				$this->dispatch(new OrderPaid($order));
+			}
+
+			$this->notify(new OrderCreated($order));
 		}
 	}
 
@@ -44,6 +57,10 @@ class OrderObserver
 
 	public function routeNotificationForSlack()
 	{
-		return env('SLACK_ORDERS_URL');
+		if (App::environment('production')) {
+			return env('SLACK_ORDERS_URL');
+		} else {
+			return env('SLACK_TEST');
+		}
 	}
 }

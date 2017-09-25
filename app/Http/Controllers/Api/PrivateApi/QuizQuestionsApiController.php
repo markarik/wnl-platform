@@ -37,6 +37,7 @@ class QuizQuestionsApiController extends ApiController
 	{
 		$question = QuizQuestion::create([
 			'text' => $request->input('question'),
+			'explanation' => $request->input('explanation'),
 			'preserve_order' => $request->input('preserve_order')
 		]);
 		$questionId = $question['id'];
@@ -88,6 +89,7 @@ class QuizQuestionsApiController extends ApiController
 
 		$question->update([
 			'text' => $request->input('question'),
+			'explanation' => $request->input('explanation'),			
 			'preserve_order' => $request->input('preserve_order')
 		]);
 

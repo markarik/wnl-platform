@@ -42,6 +42,7 @@ class Kernel extends ConsoleKernel
 		Commands\MegaUltraSuperDuperChartUpdateScript::class,
 		Commands\OptimaExport::class,
 		Commands\OrdersExport::class,
+		Commands\OrdersStats::class,
 		Commands\QuizImport::class,
 		Commands\PopulateAmountColumns::class,
 		Commands\RoleAdd::class,

@@ -4,77 +4,65 @@
 
 	<h3>Cześć!</h3>
 
-	<p>Zgodnie z obietnicą, spieszymy do Ciebie z dobrą wiadomością:</p>
-
-	<p style="text-align: center; font-weight: bold;">Zapisy na kurs “Więcej niż LEK” są już otwarte!</p>
-
-	<p>Zapisując się, podaj zostawiony wcześniej na stronie wiecejnizlek.pl adres e-mail, aby skorzystać z <strong>200zł zniżki na dowolny wariant kursu</strong> - stacjonarny lub internetowy!</p>
-
-	<div style="text-align: center; margin: 10px auto 20px;">
-		<a class="button" href="https://platforma.wiecejnizlek.pl/payment/select-product">
-			Zapisz się na kurs
-		</a>
-	</div>
-
-	<p>W związku z zapisami, opublikowaliśmy dzisiaj wiele nowości dotyczących kursu. Oto krótkie podsumowanie:</p>
-
-	<h3>Pytania i odpowiedzi</h3>
-	<p>Przez ostatnie miesiące dostaliśmy od Was niezliczoną ilość pytań poprzez facebooka i maile, a kilka nawet telefonicznie! Postanowiliśmy zebrać je wszystkie w jednym miejscu na naszej stronie. Jeśli masz jeszcze wątpliwości - zajrzyj na stronę O kursie</a>.</p>
-
-	<div style="text-align: center; margin: 10px auto 20px;">
-		<a href="https://wiecejnizlek.pl/o-kursie" class="button">Przeczytaj pytania i odpowiedzi</a>
-	</div>
-	<hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
-
-	<h3>Kadra</h3>
-	<p>Na kurs stacjonarny, w ramach którego odbędzie się w Poznaniu 6 spotkań, udało nam się zaprosić doskonałych dydaktyków! Zajęcia, w ramach swoich specjalizacji, poprowadzą:</p>
-
-	<p><strong>Choroby dziecięce</strong></p>
-	<p>dr hab. n. med. Anna Mania,<br>
-		Specjalista pediatrii, chorób zakaźnych, hepatolog (certyfikat PTH).<br>
-		Prodziekan Wydziału Lekarskiego UM w Poznaniu ds. programów studiów i kształcenia oraz studentów I - II roku.
+	<p>
+		Dziękujemy za dołączenie do naszego newslettera! Cieszymy się, że możemy Cię dziś poinformować, że właśnie
+		otworzyliśmy zapisy na drugą edycję kursu “Więcej niż LEK”!
 	</p>
 
-	<p><strong>Choroby wewnętrzne</strong></p>
-	<p>dr hab. n. med. Mariusz Puszczewicz, <br>
-		Specjalista Chorób Wewnętrznych II stopnia i Reumatologii<br>
-		Kierownik Katedry i Kliniki Reumatologii i Chorób Wewnętrznych
-		UM im. Karola Marcinkowskiego w Poznaniu.
-		Prorektor do spraw studenckich UM im. Karola Marcinkowskiego w Poznaniu w kadencji 2008-2012. Wyróżniony tytułem
-		honorowym “Amicus studentorum” przez studentów Akademii Medycznej im. Karola Marcinkowskiego w Poznaniu.</p>
-
-	<p><strong>Stany nagłe</strong></p>
-	<p>lek. Michał Szemień,<br>Rezydent medycyny ratunkowej w Szpitalnym Oddziale Ratunkowym Centrum urazowego
-		Wielospecjalistycznym Szpitalu Miejskim im. J. Strusia w Poznaniu.,<br>
-		Koordynator ds. Wydziału Lekarskiego I, Zakładu Medycyny Ratunkowej UM w Poznaniu.
-		<br>
-		Instruktor europejskiej rady resuscytacji z zakresu BLS, EPALS, ALS i ETC.
-		Emergency Point-of-Care Ultrasonography Provider.</p>
-
-	<p><strong>Prawo medyczne</strong></p>
-	<p>dr n. praw. Radosław Tymiński,<br>Wykładowca na Akademii Leona Koźmińskiego,
-		Wykładowca Prawa Medycznego na Warszawskim Uniwersytecie Medycznym,<br>
-		Autor bloga <a href="http://prawalekarzy.pl/">prawalekarzy.pl</a>
+	<h3>Co nowego?</h3>
+	<p>
+		Bogatsi o doświadczenia zebrane podczas pierwszej edycji kursu, szykujemy sporo zmian (na lepsze)! ;) Tym razem
+		kurs potrwa aż 14 tygodni - od 6 listopada do 10 lutego! I tym razem przewidzieliśmy limit miejsc - 40 na Kurs
+		stacjonarny oraz 400 na Kurs internetowy. Nieustannie pracujemy też nad ważnymi usprawnieniami:
+	<ul>
+		<li>
+			Prezentacje podlegają solidnej rewizj, a w przypadku Kardiologii i Ginekologii - całkowitej przebudowie.
+			Będą całkowicie pokrywały bazę pytań, nie tylko wskazując poprawną odpowiedź, ale pozwalając ją zrozumieć!
+			Co więcej, pytania testowe połączymy z odpowiadającymi slajdami bezpośrednimi linkami, dzięki czemu
+			odnalezienie kontekstu stanie się bajecznie proste!
+		</li>
+		<li>
+			Wprowadzamy zmiany na platformie ułatwiające odnajdywanie ważnych informacji i pomagające śledzić
+			najciekawsze dyskusje! Widzimy niesamowity potencjał w społecznych interakcjach podczas nauki, dlatego
+			możecie też spodziewać się jeszcze większych możliwości komunikacyjnych. :)
+		</li>
+	</ul>
 	</p>
 
-	<div style="text-align: center; margin: 10px auto 20px;">
-		<a href="https://wiecejnizlek.pl/o-warsztatach" class="button">Przeczytaj więcej o warsztatach</a>
-	</div>
-	<hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+	<p>
+		Pierwsza edycja kursu spotkała się z wyjątkowo pozytywnym odzewem, ale dla nas to tylko mobilizacja do ciągłego
+		podnoszenia jakości naszej oferty! Żywimy głęboką nadzieję, że odpowie ona na Twoje oczekiwania! :)
+	</p>
 
-	<h4>Wersja demonstracyjna platformy</h4>
-	<p>Bardzo zależało nam na tym, aby z momentem otwarcia zapisów dać Ci możliwości zapoznania się z naszą platformą e-learningowej. Do czasu kursu pracujemy ile sił w mózgach nad uczynieniem jej jeszcze bardziej przyjazną i atrakcyjną! :)</p>
+	<h3>Promocje</h3>
+	<p>
+		Przede wszystkim w konkursach naszych i naszych partnerów możesz wygrać vouchery zniżkowe na 10%, 20%, a nawet
+		darmowe uczestnictwo w kursie! Nie musisz jednak czekać z zapisami na wygranie voucherów - będzie można je
+		aplikować również po opłaceniu zamówienia i uzyskać zwrot. ;)
+	</p>
 
-	<p>Na dziś mamy dla Was wersję demonstracyjną zawierającą 3 pokazowe lekcje. W ramach nich możecie też swobodnie korzystać z czata oraz pytań i odpowiedzi. Do skorzystania z wersji demonstracyjnej platformy nie jest wymagana żadna rejestracja, ani podawanie prawdziwych danych osobowych. :)</p>
+	<p>
+		Vouchery to jednak nie jedyna forma promocji, jaką przygotowaliśmy na drugą edycję! Zachęć znajomą osobę do
+		wspólnego uczestnictwa w kursie, a obydwoje otrzymacie 100zł zniżki! Jeśli nie skorzystasz z innych promocji, po
+		opłaceniu zamówienia otrzymasz swój unikalny kod. Przekaż go znajomej osobie, aby wykorzystała go przy
+		rejestracji! Gdy otrzymamy od niej wpłatę, zniżka naliczy się też do Twojego zamówienia. :)
+	</p>
 
-	<div style="text-align: center; margin: 10px auto 20px;">
-		<a href="https://demo.platforma.wiecejnizlek.pl/" class="button">Zobacz demo platformy</a>
-	</div>
-	<hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+	<h3>Więcej informacji</h3>
+	<p>
+		Wszystkie szczegółowe informacje o kursie, promocjach, założeniach i inne, znajdziesz na naszej stronie
+		internetowej <a href="https://wiecejnizlek.pl">wiecejnizlek.pl</a>. Zapraszamy Cię również do zapoznania
+		się z wersją demo naszej platformy -
+		<a href="https://demo.wiecejnizlek.pl">demo.wiecejnizlek.pl</a>, gdzie możesz przetestować wszystkie jej
+		funkcje oraz zapoznać się z przykładowymi
+		lekcjami!
+	</p>
 
-	<p>Na koniec chcieliśmy podziękować Ci za zaufanie. Każdy adres e-mail, który pojawiał się na naszej liście, dodawał nam motywacji i sił do dalszej pracy.</p>
+	<p>W razie pytań pisz do nas śmiało na <a href="https://www.facebook.com/wiecejnizlek/">facebooku</a> lub na
+		<a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl.</a> :) </p>
 
-	<p>Od dziś poddajemy nasze starania ostatecznej weryfikacji. Wierzymy, że jesteśmy na dobrej drodze do tego, aby dzięki atmosferze, którą chcemy razem z Tobą budować wokół "Więcej niż LEK", powrót mentoringu i współpracy w środowisku medycznym stanie się rzeczywistością.</p>
+	<p>Do zobaczenia na kursie!</p>
 
-	<p>Dziękujemy i… mamy nadzieję, że do zobaczenia na kursie!</p>
+	<p>Z serdecznymi pozdrowieniami,</p>
+
 @endsection

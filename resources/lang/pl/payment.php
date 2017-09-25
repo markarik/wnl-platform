@@ -55,6 +55,9 @@ return [
 			Baza 3500 pytań do LEK-u w cenie! System ułatwiający powtarzanie najtrudniejszych pytań i łatwe przerobienie wszystkich!
 		</li>
 		<li class="list-group-item">
+			2500 otwartych pytań pomagających na bieżąco weryfikować wiedzę!
+		</li>
+		<li class="list-group-item">
 			Codzienna porcja wiedzy o efektywnym procesie nauki, która przyda się nie tylko podczas przygotowań do egzaminu!
 		</li>
 		<li class="list-group-item">

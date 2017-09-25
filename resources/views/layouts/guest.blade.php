@@ -84,7 +84,7 @@
 						</a>
 						&nbsp;|&nbsp;
 						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminPromocjiStudyBuddy.pdf">
-							Regulamin Promocji Study Buddy
+							Regulamin Promocji
 						</a>
 						&nbsp;|&nbsp;
 						<a class="privacy-policy-open-modal-link">

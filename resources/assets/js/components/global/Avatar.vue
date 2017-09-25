@@ -72,5 +72,8 @@
 				return this.isCustom ? 'with-image' : 'without-image'
 			},
 		},
+		mounted() {
+			console.log(this.fullName);
+		}
 	}
 </script>

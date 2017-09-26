@@ -24,4 +24,5 @@ return [
 		NIP: 781-194-37-56, KRS: 0000668811',
 	'percent' => ':value%',
 	'currency' => ':valuezł',
+	'not-supported-browser' => 'Nie mam pojęcia co tu napisać :( czy znajdzie się jakiś orator?'
 ];

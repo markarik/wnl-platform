@@ -36,6 +36,7 @@
 	<form method="post" action="/logout" id="logout-form">
 		{{ csrf_field() }}
 	</form>
+	@include('not-supported-browser-modal')
 	@include ('footer')
 </body>
 </html>

@@ -1,35 +1,39 @@
 (function () {
-	var modal = document.getElementById('notSupportedBrowserModal'),
-		supportedBrowsers = {
+	var supportedBrowsers = {
 			'chrome': 55,
 			'firefox': 52,
 			'ios': 10,
 			'safari': 10
 		},
 		detectedBrowser = parseUserAgent(window.navigator.userAgent),
-		closeButton = document.getElementById('notSupportedBrowserModalClose');
+		cookieName = 'wnl_supported_browser',
+		cookieSet = getCookie(cookieName);
+
 
 	if (!detectedBrowser) {
+		return !cookieSet && showModal();
+	}
+
+	if (!supportedBrowsers[detectedBrowser.name] || supportedBrowsers[detectedBrowser.name] > detectedBrowser.version) {
+		return !cookieSet && showModal();
+	}
+
+	function showModal() {
+		var modal = document.getElementById('notSupportedBrowserModal'),
+			closeButton = document.getElementById('notSupportedBrowserModalClose');
+
 		modal.classList.add('is-active')
 		closeButton.addEventListener('click', function() {
 			modal.classList.remove('is-active')
 		});
-
-		return;
-	}
-
-	if (!supportedBrowsers[detectedBrowser.name] || supportedBrowsers[detectedBrowser.name] > detectedBrowser.version) {
-		modal.classList.add('is-active')
-		closeButton.addEventListener('click', function() {
-			modal.classList.remove('is-active');
-		});
+		setCookie(cookieName, true);
 	}
 
 	function parseUserAgent(userAgentString) {
 		var browsers = supportedBrowsersRules();
 
 		if (!userAgentString) {
-			return null;
+			return {};
 		}
 
 		var detected = browsers.map(function (browser) {
@@ -66,5 +70,27 @@
 				rule: tuple[1]
 			};
 		});
+	}
+
+	function setCookie(cname, cvalue, exdays) {
+		var d = new Date(), expires;
+		d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+		expires = "expires="+d.toUTCString();
+		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	}
+
+	function getCookie(cname) {
+		var name = cname + "=";
+		var ca = document.cookie.split(';');
+		for(var i = 0; i < ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
 	}
 }())

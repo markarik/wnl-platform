@@ -8,9 +8,6 @@
 			</div>
 		</div>
 		<div class="wnl-user-profile-avatar">
-			<div class="margin vertical">
-				<label class="label">Avatar</label>
-			</div>
 				<wnl-avatar
 				:fullName="this.response.data.full_name"
                 :url="this.response.data.avatar"

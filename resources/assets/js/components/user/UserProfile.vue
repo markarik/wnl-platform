@@ -19,7 +19,7 @@
 		</div>
 
 		<div class="margin vertical">
-            <p>{{ this.response.data.first_name }}</p>
+            <wnl-text></wnl-text>
         </div>
 
 
@@ -41,9 +41,6 @@
 
 			.button
 				margin-top: 20px
-
-			form
-				padding: 0 5%
 </style>
 
 <script>
@@ -51,22 +48,20 @@
 
     import Avatar from 'js/components/global/Avatar'
 	import Upload from 'js/components/global/Upload'
-	import { Form, Text } from 'js/components/global/form'
-	import { isProduction, getApiUrl } from 'js/utils/env'
+	import Text from 'js/components/global/form/Text'
+	import { isProduction } from 'js/utils/env'
 
 	export default {
 		name: 'UserProfile',
 		components: {
             'wnl-avatar': Avatar,
-			'wnl-form': Form,
-			'wnl-form-text': Text,
+			'wnl-text': Text,
 			'wnl-upload': Upload,
 		},
+		props: ['response'],
 		data() {
 			return {
 				loading: false,
-                param: this.$route.params.userId,
-                response: {}
 			}
 		},
 		computed: {
@@ -75,12 +70,5 @@
 				return isProduction()
 			}
 		},
-        mounted() {
-            axios.get(getApiUrl(`users/${this.param}/profile`))
-				.then((response) => {
-					this.response = response
-				})
-			.catch(exception => $wnl.logger.capture(exception))
-        },
 	}
 </script>

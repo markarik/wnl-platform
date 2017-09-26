@@ -7,7 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile></wnl-user-profile>
+			<wnl-user-profile :response="response"></wnl-user-profile>
 		</div>
 	</div>
 </template>
@@ -35,7 +35,7 @@
 	import MainNav from 'js/components/MainNav'
 	import UserProfile from 'js/components/user/UserProfile'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import { isProduction } from 'js/utils/env'
+	import { isProduction, getApiUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Themselves',
@@ -45,6 +45,12 @@
 			'wnl-sidenav-slot': SidenavSlot,
 		},
 		props: ['view'],
+		data() {
+			return {
+				param: this.$route.params.userId,
+				response: {},
+			}
+		},
 		computed: {
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
 			isProduction() {
@@ -58,6 +64,13 @@
 					this.$router.replace({ name: 'my-orders' })
 				}
 			}
+		},
+		mounted() {
+            axios.get(getApiUrl(`users/${this.param}/profile`))
+				.then((response) => {
+					this.response = response
+				})
+			.catch(exception => $wnl.logger.capture(exception))
 		},
 	}
 </script>

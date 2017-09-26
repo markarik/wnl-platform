@@ -14,7 +14,7 @@
 				<wnl-avatar
 				:fullName="this.response.data.full_name"
                 :url="this.response.data.avatar"
-                class="image is-128x128" size="huge"></wnl-avatar>
+                class="image is-128x128" size="large"></wnl-avatar>
 				<hr>
 		</div>
 

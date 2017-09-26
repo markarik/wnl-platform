@@ -98,7 +98,7 @@
 		},
 		watch: {
 			nextLesson(val) {
-				if (!this.item || !this.item.subitems) {
+				if (!this.item || !this.item.subitems || !val) {
 					return
 				}
 

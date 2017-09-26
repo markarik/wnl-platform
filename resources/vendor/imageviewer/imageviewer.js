@@ -155,7 +155,7 @@ let imageviewer = function ($, window, document, undefined) {
 
         self.zoomValue = 100;
 
-        if (!container.find('.snap-view').length) {
+        if (!container.find('.iv-snap-view').length) {
             container.prepend(imageViewHtml);
         }
 
@@ -461,19 +461,15 @@ let imageviewer = function ($, window, document, undefined) {
                 }
             }
 
-            // imageWrap.on('touchmove' + eventSuffix + ' mousemove' + eventSuffix, function () {
-            //     showSnapView();
-            // });
-
             var snapEventsCallback = {};
             snapEventsCallback['mouseenter' + eventSuffix + ' touchstart' + eventSuffix] = function () {
                 snapViewVisible = false;
-                showSnapView(true);
+                showSnapView(false);
             };
 
             snapEventsCallback['mouseleave' + eventSuffix + ' touchend' + eventSuffix] = function () {
                 snapViewVisible = false;
-                showSnapView();
+                showSnapView(false);
             };
 
             viewer.snapView.on(snapEventsCallback);
@@ -666,13 +662,17 @@ let imageviewer = function ($, window, document, undefined) {
         },
         show: function (image, hiResImg) {
             if (this._fullPage) {
-                this.container.show();
+                this.container.fadeIn({
+                    duration: 300
+                });
                 if (image) this.load(image, hiResImg);
             }
         },
         hide: function () {
             if (this._fullPage) {
-                this.container.hide();
+                this.container.fadeOut({
+                    duration: 300
+                });
             }
         },
         options: function (key, value) {

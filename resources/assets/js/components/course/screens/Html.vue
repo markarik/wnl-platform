@@ -54,7 +54,7 @@
 	imageviewer($, window, document)
 	function showImage() {
 		// this is not Vue component, it's "event triggered" this
-		ImageViewer().show(this.src);
+		ImageViewer({snapViewPersist: false}).show(this.src);
 	}
 
 

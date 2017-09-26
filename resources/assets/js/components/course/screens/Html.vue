@@ -1,6 +1,5 @@
 <template>
-
-	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
+	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}" @click="onClick">
 		<div class="content" v-html="content">
 		</div>
 		<p class="end-button has-text-centered" v-if="showBacklink">
@@ -13,7 +12,6 @@
 
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
-	@import 'public/css/imageviewer'
 
 	.wnl-screen-html
 		margin: $margin-big 0
@@ -52,7 +50,13 @@
 <script>
 	import _ from 'lodash'
 	import {imageviewer} from 'vendor/imageviewer/imageviewer'
+
 	imageviewer($, window, document)
+	function showImage() {
+		// this is not Vue component, it's "event triggered" this
+		ImageViewer().show(this.src);
+	}
+
 
 	export default {
 		name: 'Html',
@@ -67,7 +71,8 @@
 		},
 		data() {
 			return {
-				worked: false
+				imagesLoaded: false,
+				imagesSelector: '.wnl-screen-html img',
 			}
 		},
 		methods: {
@@ -87,35 +92,31 @@
 				}
 			},
 			addFullscreen() {
-				function setImageViewer() {
-						ImageViewer().show(this.src);
+				const images = document.querySelectorAll(this.imagesSelector)
+
+				if (images.length) {
+					this.imagesLoaded = true
 				}
 
-				let img = document.querySelectorAll(".wnl-screen-html img")
-
-				if (img.length) {
-					this.worked = true
-				}
-				img.forEach(function(e) {
-					e.addEventListener('click', setImageViewer);
+				images.forEach((image) => {
+					image.addEventListener('click', showImage);
 				})
 			},
 			onClick(event) {
-				if (!this.worked) {
-					document.querySelectorAll(".wnl-screen-html img").forEach(function(e) {
-						e.addEventListener('click', setImageViewer);
+				if (!this.imagesLoaded) {
+					document.querySelectorAll(this.imagesSelector).forEach((image) => {
+						image.addEventListener('click', showImage);
 					})
 
-					if (event.target.tagName === 'IMG') {
+					if (event.target.matches(this.imagesSelector)) {
 						ImageViewer().show(event.target.src);
-						this.worked = true
+						this.imagesLoaded = true
 					}
-
 				}
 			}
 		},
 		beforeDestroy() {
-			document.removeEventListener('click', setImageViewer);
+			document.removeEventListener('click', showImage);
 		},
 		mounted() {
 			this.wrapEmbedded();

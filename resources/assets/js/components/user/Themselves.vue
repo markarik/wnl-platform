@@ -7,7 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile :response="response"></wnl-user-profile>
+			<wnl-user-profile v-if="responseCondition" :response="response"></wnl-user-profile>
 		</div>
 	</div>
 </template>
@@ -56,6 +56,9 @@
 			isProduction() {
 				return isProduction()
 			},
+			responseCondition() {
+				return !_.isEmpty(this.response)
+			}
 		},
 		methods: {
 			...mapActions(['killChat']),

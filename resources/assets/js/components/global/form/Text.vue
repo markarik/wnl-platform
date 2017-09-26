@@ -11,7 +11,8 @@
 				:name="name"
 				:placeholder="placeholder || $slots.default[0].text || ''"
 				@input="onInput"
-				v-model="inputValue">
+				v-model="inputValue"
+				:disabled="disableInput">
 		</div>
 
 		<span class="help is-danger"
@@ -31,7 +32,7 @@
 
 	export default {
 		name: 'Text',
-		props: ['name', 'placeholder'],
+		props: ['name', 'placeholder', 'disableInput'],
 		mixins: [formInput],
 		computed: {
 			default() {

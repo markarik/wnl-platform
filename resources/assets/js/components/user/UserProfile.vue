@@ -18,9 +18,13 @@
 				<hr>
 		</div>
 
-		<div class="margin vertical">
-            <wnl-text></wnl-text>
-        </div>
+		<wnl-form :hideDefaultSubmit="hideDefaultSubmit" class="margin vertical" name="UserProfile" :resourceRoute="computedResourceRoute" populate="true">
+			<wnl-form-text :disableInput="disableInput" name="first_name">Imię</wnl-form-text>
+			<wnl-form-text :disableInput="disableInput" name="last_name">Nazwisko</wnl-form-text>
+			<wnl-form-text :disableInput="disableInput" name="username">Nazwa użytkownika</wnl-form-text>
+			<wnl-form-text :disableInput="disableInput" name="public_email">Adres e-mail</wnl-form-text>
+			<wnl-form-text :disableInput="disableInput" name="public_phone">Numer telefonu</wnl-form-text>
+		</wnl-form>
 
 
 	</div>
@@ -48,26 +52,33 @@
 
     import Avatar from 'js/components/global/Avatar'
 	import Upload from 'js/components/global/Upload'
-	import Text from 'js/components/global/form/Text'
+	import { Form, Text } from 'js/components/global/form'
 	import { isProduction } from 'js/utils/env'
 
 	export default {
 		name: 'UserProfile',
 		components: {
             'wnl-avatar': Avatar,
-			'wnl-text': Text,
+			'wnl-form': Form,
+			'wnl-form-text': Text,
 			'wnl-upload': Upload,
 		},
 		props: ['response'],
 		data() {
 			return {
 				loading: false,
+				hideDefaultSubmit: true,
+				id: this.$route.params.userId,
+				disableInput: true,
 			}
 		},
 		computed: {
 			...mapGetters(['isMobileProfile']),
 			isProduction() {
 				return isProduction()
+			},
+			computedResourceRoute() {
+				return `users/${this.id}/profile`
 			}
 		},
 	}

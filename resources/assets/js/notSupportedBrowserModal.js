@@ -20,10 +20,14 @@
 
 	function showModal() {
 		var modal = document.getElementById('notSupportedBrowserModal'),
+			background = document.getElementById('notSupportedBrowserModalBackground'),
 			closeButton = document.getElementById('notSupportedBrowserModalClose');
 
 		modal.classList.add('is-active')
 		closeButton.addEventListener('click', function() {
+			modal.classList.remove('is-active')
+		});
+		background.addEventListener('click', function() {
 			modal.classList.remove('is-active')
 		});
 		setCookie(cookieName, true);

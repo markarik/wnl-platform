@@ -413,4 +413,8 @@ section.voucher {
 /* Not supported browser modal */
 .not-supported-browser-modal {
 	z-index: $z-index-overlay;
+
+	.content {
+		font-weight: $font-weight-regular;
+	}
 }

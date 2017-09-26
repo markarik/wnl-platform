@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Comments;
 
+use App\Models\Comment;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
 use App\Models\Screen;
@@ -28,7 +29,7 @@ class CommentsTest extends ApiTestCase
 		$screen->tags()->attach($tag);
 
 		$data = [
-			'commentable_resource' => config('papi.resources.answers'),
+			'commentable_resource' => config('papi.resources.qna-answers'),
 			'commentable_id' => $answer->id,
 			'text' => 'Kolekcjonuję antarktyczne drewniane kaczki, gdyby ktoś coś miał, proszę o info na priv. Pozdrawiam.',
 		];
@@ -73,10 +74,13 @@ class CommentsTest extends ApiTestCase
 	public function delete_comment()
 	{
 		$user = User::find(1);
+		$comment = factory(Comment::class)->create([
+			'user_id' => $user->id
+		]);
 
 		$response = $this
 			->actingAs($user)
-			->json('DELETE', $this->url('/comments/2'));
+			->json('DELETE', $this->url("/comments/{$comment->id}"));
 
 		$response
 			->assertStatus(200);

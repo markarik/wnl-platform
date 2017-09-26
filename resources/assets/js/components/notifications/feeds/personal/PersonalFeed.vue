@@ -48,7 +48,7 @@
 				</div>
 
 				<div class="personal-feed-footer" v-if="unreadCount > 0">
-					<a class="link" @click="allRead">{{$t('notifications.personal.markAllAsRead')}}</a>
+					<a class="link" @click="allRead">{{$t('notifications.markAllAsRead')}}</a>
 					<span v-if="allReadLoading" class="loader"></span>
 				</div>
 			</div>
@@ -70,7 +70,7 @@
 		display: flex
 		height: $navbar-height
 		justify-content: center
-		width: $navbar-height
+		width: 100%
 
 	.notifications-toggle
 		align-items: center
@@ -79,13 +79,7 @@
 		display: flex
 		height: 100%
 		justify-content: center
-		margin-left: -$margin-small
 		min-height: 100%
-		transition: background $transition-length-base
-
-		&.is-desktop:hover
-			background-color: $color-background-light-gray
-			transition: background $transition-length-base
 
 		&.is-active
 			background-color: $color-background-light-gray
@@ -195,7 +189,7 @@
 	import Dropdown from 'js/components/global/Dropdown'
 	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
-	import { CommentPosted, QnaAnswerPosted, ReactionAdded } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -209,6 +203,7 @@
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-reaction-added': ReactionAdded,
+			'wnl-event-mentioned': Mentioned,
 			'wnl-notifications-toggle': NotificationsToggle,
 		},
 		data() {
@@ -233,10 +228,10 @@
 				return this.getSetting(setting)
 			},
 			unseenCount() {
-				return _.size(this.getUnseen(this.channel))
+				return _.size(_.filter(this.getUnseen(this.channel), (notification) => !notification.deleted))
 			},
 			unreadCount() {
-				return _.size(this.getUnread(this.channel))
+				return _.size(_.filter(this.getUnread(this.channel), (notification) => !notification.deleted))
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

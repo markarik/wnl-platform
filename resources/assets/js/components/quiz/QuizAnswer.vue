@@ -4,14 +4,14 @@
 			'is-selected': isSelected && !showCorrect,
 			'is-correct': showCorrect,
 			'is-hinted': hintCorrect,
-			'is-large-desktop': isLargeDesktop,
+			'is-mobile': isMobile,
 		}"
-		@click="$emit('answerSelected')"
+		@click.prevent="$emit('answerSelected')"
 	>
 		<div class="quiz-answer-content">
 			{{answer.text}}
 		</div>
-		<div class="quiz-answer-stats" v-if="isComplete && stats !== false">
+		<div class="quiz-answer-stats" v-if="isNumber(stats)">
 			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
 				{{stats}}%
 			</span>
@@ -25,6 +25,14 @@
 	.wnl-quiz-question.is-unresolved
 		.quiz-answer
 			cursor: pointer
+			user-select: none
+
+			&.is-selected
+				background: $color-ocean-blue
+
+				&:active, &:hover
+					background: $color-ocean-blue
+					color: $color-white
 
 			&:hover
 				background: $color-light-gray
@@ -38,19 +46,16 @@
 	.wnl-quiz-question
 		.quiz-answer
 			&.is-selected
-				background: $color-ocean-blue
+				background: $color-red
 				color: $color-white
-
-				&:active, &:hover
-					background: $color-ocean-blue
-					color: $color-white
 
 	.quiz-answer
 		display: flex
 		border-bottom: $border-light-gray
 		justify-content: space-between
+		line-height: $line-height-minus
 		list-style-type: none
-		padding: $margin-small $margin-small $margin-small $margin-huge
+		padding: $margin-base $margin-base $margin-base $margin-huge
 		position: relative
 		margin: 0
 
@@ -66,8 +71,8 @@
 				position: absolute
 				right: $margin-base
 
-		&.is-large-desktop
-			padding: $margin-base $margin-base $margin-base $margin-huge
+		&.is-mobile
+			padding: $margin-base $margin-small $margin-base $margin-big + $margin-tiny
 
 	.quiz-answer.is-correct
 		background: $color-green
@@ -92,25 +97,15 @@
 
 <script>
 	import { mapGetters } from 'vuex'
+	import { isFinite } from 'lodash'
 
 	import { isDebug } from 'js/utils/env'
 
 	export default {
 		name: 'QuizAnswer',
-		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly'],
+		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly', 'isSelected', 'answersStats'],
 		computed: {
-			...mapGetters(['isLargeDesktop']),
-			...mapGetters('quiz', [
-				'isComplete',
-				'getSelectedAnswer',
-				'getStats',
-				'getAnswers'
-			]),
-
-			isSelected() {
-				return this.getSelectedAnswer(this.questionId) === this.index
-			},
-
+			...mapGetters(['isMobile']),
 			/**
 			 * @param  {int} answerIndex
 			 * @return {Boolean}
@@ -118,24 +113,14 @@
 			isCorrect() {
 				return this.answer.is_correct
 			},
-
 			showCorrect() {
 				return this.isCorrect && this.$parent.displayResults
 			},
-
 			stats() {
-				const answersWithHit = this.getStats(this.questionId)
+				if (!this.answer.hasOwnProperty('stats')) return false;
 
-				if (typeof answersWithHit !== 'object' || typeof Object.values !== 'function') return false;
-
-				const allHits = Object.values(answersWithHit).reduce((count, current) => {
-					return count + current
-				}, 0)
-				const answerId = this.answer.id
-
-				return Math.round((answersWithHit[answerId] || 0) / allHits * 100);
+				return this.answer.stats
 			},
-
 			/**
 			 * Helper property for debug purposes
 			 * @param  {int} answerIndex
@@ -145,5 +130,10 @@
 				return isDebug() && this.isCorrect
 			},
 		},
+		methods: {
+			isNumber(n) {
+				return isFinite(n)
+			}
+		}
 	}
 </script>

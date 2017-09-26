@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Laravel\Scout\Searchable;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
 
 class UserProfile extends Model
 {
+	use Searchable;
+
 	protected $fillable = [
 		'first_name',
 		'last_name',

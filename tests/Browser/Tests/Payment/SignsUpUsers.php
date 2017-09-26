@@ -21,6 +21,7 @@ trait SignsUpUsers
 	 * Generate user data needed for filling in the sign-up form
 	 *
 	 * @param Factory $faker
+	 *
 	 * @return array
 	 */
 	protected function generateFormData($faker)
@@ -51,14 +52,17 @@ trait SignsUpUsers
 	 * @param $user
 	 * @param $browser
 	 * @param bool $invoice
+	 * @param bool $password
 	 */
-	protected function fillInForm($user, $browser, $invoice = false)
+	protected function fillInForm($user, $browser, $invoice = false, $password = true)
 	{
-		$browser
-			->type('email', $user['email'])
-			->type('password', $user['password'])
-			->type('password_confirmation', $user['password'])
-			->type('phone', $user['phoneNumber'])
+		$browser->type('email', $user['email']);
+		if ($password) {
+			$browser
+				->type('password', $user['password'])
+				->type('password_confirmation', $user['password']);
+		}
+		$browser->type('phone', $user['phoneNumber'])
 			->pageDown()
 			->type('first_name', $user['firstName'])
 			->type('last_name', $user['lastName'])
@@ -74,7 +78,8 @@ trait SignsUpUsers
 				->type('invoice_address', $user['invoice_address'])
 				->type('invoice_zip', $user['invoice_postcode'])
 				->type('invoice_city', $user['invoice_city'])
-				->type('invoice_country', $user['invoice_country']);
+				->type('invoice_country', $user['invoice_country'])
+				->pageDown();
 		}
 
 		$browser->check('consent_account')

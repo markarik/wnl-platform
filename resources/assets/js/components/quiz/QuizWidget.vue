@@ -15,17 +15,18 @@
 		<wnl-quiz-question
 			:class="`quiz-question-${currentQuestion.id}`"
 			:id="currentQuestion.id"
-			:answers="currentQuestion.quiz_answers"
-			:text="currentQuestion.text"
-			:total="currentQuestion.total_hits"
+			:question="currentQuestion"
 			:showComments="true"
+			:getReaction="getReaction"
+			:module="module"
+			@selectAnswer="selectAnswer"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
 			</a>
-			<a v-else-if="!isSingle" class="button is-primary is-outlined" @click="nextQuestion()">
+			<a v-else-if="hasOtherQuestions" class="button is-primary is-outlined" @click="nextQuestion()">
 				Następne
 			</a>
 		</p>
@@ -36,13 +37,13 @@
 			<wnl-quiz-question
 				v-for="question, index in otherQuestions"
 				:headerOnly="true"
-				:answers="question.quiz_answers"
-				:class="`clickable quiz-question-${currentQuestion.id}`"
+				:question="question"
+				:class="`clickable quiz-question-${question.id}`"
 				:key="index"
-				:id="question.id"
-				:text="question.text"
-				:total="question.total_hits"
+				:getReaction="getReaction"
+				:module="module"
 				@headerClicked="selectQuestionFromList(index)"
+				@selectAnswer="selectAnswer"
 			></wnl-quiz-question>
 		</div>
 	</div>
@@ -83,6 +84,18 @@
 				default: false,
 				type: Boolean,
 			},
+			questions: {
+				type: Array,
+				default: [],
+			},
+			getReaction: {
+				default: () => {},
+				type: Function,
+			},
+			module: {
+				type: String,
+				default: 'quiz'
+			}
 		},
 		data() {
 			return {
@@ -91,17 +104,14 @@
 		},
 		computed: {
 			...mapGetters(['isMobile']),
-			...mapGetters('quiz', [
-				'getQuestions',
-			]),
 			currentQuestion() {
-				return this.getQuestions[0]
+				return this.questions[0]
 			},
 			otherQuestions() {
-				return _.tail(this.getQuestions) || []
+				return _.tail(this.questions) || []
 			},
 			lastIndex() {
-				return this.getQuestions.length - 1
+				return this.questions.length - 1
 			},
 			hasAnswer() {
 				return this.currentQuestion.selectedAnswer !== null
@@ -117,32 +127,27 @@
 			}
 		},
 		methods: {
-			...mapActions('quiz', [
-				'changeQuestion',
-				'shuffleAnswers',
-				'resolveQuestion',
-				'resetState',
-			]),
 			verify() {
 				if (this.hasAnswer) {
-					this.resolveQuestion(this.currentQuestion.id)
+					this.$emit('verify', this.currentQuestion.id)
 				}
 			},
-			performChangeQuestion(index) {
-				this.shuffleAnswers({id: this.getQuestions[index].id})
-				this.changeQuestion(index)
+			nextQuestion() {
+				this.$emit('changeQuestion', 1)
 				scrollToElement(this.$el, 75)
 			},
-			nextQuestion() {
-				this.performChangeQuestion(1)
-			},
 			previousQuestion() {
-				this.performChangeQuestion(this.lastIndex)
+				this.$emit('changeQuestion', this.lastIndex)
+				scrollToElement(this.$el, 75)
 			},
 			selectQuestionFromList(index) {
 				const fullIndex = index + 1
-				this.performChangeQuestion(fullIndex)
+				this.$emit('changeQuestion', fullIndex)
+				scrollToElement(this.$el, 75)
 			},
+			selectAnswer(data) {
+				this.$emit('selectAnswer', data)
+			}
 		},
 	}
 </script>

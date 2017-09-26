@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Models\Comment;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Artisan;
 
 class Kernel extends ConsoleKernel
 {
@@ -19,11 +21,18 @@ class Kernel extends ConsoleKernel
 		Commands\CancelOrder::class,
 		Commands\CategoriesTags::class,
 		Commands\ChangeOrderPaymentMethod::class,
+		Commands\CheckQuizQuestions::class,
+		Commands\CreateTaxonomy::class,
+		Commands\DecryptUserNames::class,
 		Commands\DropTables::class,
 		Commands\DumpCourseStructure::class,
 		Commands\EncryptPasswords::class,
+		Commands\ExamsResults::class,
 		Commands\FlushCacheByTag::class,
+		Commands\GenerateCouponsForUsers::class,
+		Commands\ImportTaxonomies::class,
 		Commands\IssueFinalInvoice::class,
+		Commands\ImportQuizTagsFromMap::class,
 		Commands\InvoicesExport::class,
 		Commands\LessonTags::class,
 		Commands\ListOrders::class,
@@ -33,8 +42,12 @@ class Kernel extends ConsoleKernel
 		Commands\MegaUltraSuperDuperChartUpdateScript::class,
 		Commands\OptimaExport::class,
 		Commands\OrdersExport::class,
+		Commands\OrdersStats::class,
 		Commands\QuizImport::class,
 		Commands\PopulateAmountColumns::class,
+		Commands\RoleAdd::class,
+		Commands\RoleAssign::class,
+		Commands\SlackDaysCron::class,
 		Commands\SectionsUpdate::class,
 		Commands\SlideshowsRemove::class,
 		Commands\SlidesFromCategory::class,
@@ -42,6 +55,11 @@ class Kernel extends ConsoleKernel
 		Commands\SlidesSnippets::class,
 		Commands\StoreProgress::class,
 		Commands\StoreTime::class,
+		Commands\StudyBuddyList::class,
+		Commands\StudyBuddyRefund::class,
+		Commands\TagsCleanup::class,
+		Commands\TagsFromTaxonomies::class,
+		Commands\TaxonomizeTags::class,
 		Commands\WarmUpCache::class,
 	];
 
@@ -59,8 +77,16 @@ class Kernel extends ConsoleKernel
 			->hourly();
 
 		$schedule
-			->command('cache:warmup')
-			->dailyAt('00:30');
+			->command("scout:import 'App\\Models\\Slide'")
+			->dailyAt('00:30')
+			->after(function () use ($schedule) {
+				Artisan::call('cache:clear', [
+					'--tags' => 'api,slides,search',
+				]);
+			})
+			->after(function () use ($schedule) {
+				Artisan::call('cache:warmup');
+			});
 
 		$schedule
 			->command('time:store')
@@ -68,6 +94,10 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('progress:store')
+			->dailyAt('02:30');
+
+		$schedule
+			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
 	}
 

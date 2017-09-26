@@ -38,7 +38,7 @@ class PersonalDataPage extends BasePage
 	public function elements()
 	{
 		return [
-			'@element' => '#selector',
+			'@login' => '.has-account a',
 		];
 	}
 }

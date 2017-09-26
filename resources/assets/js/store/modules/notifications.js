@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl, envValue as env} from 'js/utils/env'
-import {set} from 'vue'
+import {set, delete as destroy} from 'vue'
 
 const namespaced = true
 
@@ -52,13 +52,16 @@ const getters = {
 	getUnread: (state, getters) => (channel) => {
 		return _.pickBy(getters.getChannelNotifications(channel), (notification) => !notification.read_at)
 	},
+	getRead: (state, getters) => (channel) => {
+		return _.pickBy(getters.getChannelNotifications(channel), (notification) => notification.read_at)
+	},
 	getSortedNotifications: (state, getters) => (channel) => {
 		const notifications = getters.getChannelNotifications(channel)
 		return _.reverse(_.sortBy(_.values(notifications), (notification) => notification.timestamp))
 	},
 	getOldestNotification: (state, getters) => (channel) => {
-		return _.last(getters.getSortedNotifications(channel))
-	}
+		return _.last(getters.getSortedNotifications(channel)) || {}
+	},
 }
 
 const mutations = {
@@ -119,6 +122,25 @@ const actions = {
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
 			})
+			.catch((error) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'})
+			})
+	},
+	markAsSeen({commit, getters, rootGetters}, {notification, channel}) {
+		return _updateNotification(rootGetters.currentUserId, notification.id, {'seen_at': 'now'})
+			.then((response) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.seen_at, field: 'seen_at'})
+			})
+			.catch((error) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'})
+			})
+
+	},
+	markAsUnread({commit, getters, rootGetters}, {notification, channel}) {
+		return _updateNotification(rootGetters.currentUserId, notification.id, {'read_at': null})
+			.then((response) => {
+				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'})
+			})
 	},
 	markAllAsSeen({commit, getters, rootGetters}, channel) {
 		let data = _.mapValues(getters.getUnseen(channel), (notification) => {
@@ -149,7 +171,7 @@ const actions = {
 		dispatch('pullNotifications', [getters.userChannel, {limit: 15}])
 		dispatch('setupLiveNotifications', getters.userChannel)
 
-		dispatch('pullNotifications', [getters.streamChannel, {limit: 25}])
+		dispatch('pullNotifications', [getters.streamChannel, {limit: 100, unread: true}])
 		dispatch('setupLiveNotifications', getters.streamChannel)
 
 		if (getters.moderatorsChannel) {
@@ -172,15 +194,16 @@ function _getNotifications(channel, userId, options) {
 		},
 	}
 
-	if (options.hasOwnProperty('unread') && options.unread === true) {
-		conditions.query.where.push(['read_at', '=', null])
+	if (options.hasOwnProperty('unread')) {
+		 options.unread ? conditions.query.where.push(['read_at', '=', null])
+			: conditions.query.where.push(['read_at', '!=', null])
 	}
 
 	if (options.hasOwnProperty('limit')) {
 		conditions.limit = [options.limit, 0]
 	}
 
-	if (options.hasOwnProperty('olderThan')) {
+	if (options.hasOwnProperty('olderThan') && options.olderThan) {
 		conditions.query.where.push(['created_at', '<', `timestamp:${options.olderThan}`])
 	}
 

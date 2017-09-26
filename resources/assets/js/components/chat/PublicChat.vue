@@ -16,7 +16,7 @@
 				<span>Ukryj czat</span>
 			</span>
 		</a>
-		<wnl-chat :room="currentChannel"></wnl-chat>
+		<wnl-chat :room="currentRoom"></wnl-chat>
 	</div>
 </template>
 
@@ -59,6 +59,7 @@
 <script>
 	import ChatRoom from './ChatRoom'
 	import { mapActions, mapGetters } from 'vuex'
+	import _ from 'lodash'
 
 	export default {
 		name: 'wnl-public-chat',
@@ -68,7 +69,7 @@
 		props: ['title', 'rooms'],
 		data () {
 			return {
-				currentChannel: this.rooms[0].channel,
+				currentRoom: this.getCurrentRoom()
 			}
 		},
 		computed: {
@@ -86,14 +87,41 @@
 		methods: {
 			...mapActions(['toggleChat']),
 			changeRoom(room) {
-				this.currentChannel = room.channel
+				this.currentRoom = room
 			},
 			isActive(room){
 				return room.channel === this.currentChannel
+			},
+			getCurrentRoom() {
+				const query = this.$route.query
+
+				if (query.chatChannel) {
+					const room = _.find(this.rooms, room => room.channel === query.chatChannel)
+
+					if (room) {
+						return room
+					} else {
+						this.cleanupChatChannelParam()
+						return this.rooms[0]
+					}
+				} else {
+					return this.rooms[0]
+				}
+			},
+			cleanupChatChannelParam() {
+				const query = this.$route.query
+
+				delete query.chatChannel
+
+				this.$router.replace({
+					...this.$route,
+					query
+				})
 			}
 		},
 		watch: {
 			'rooms' (newValue, oldValue) {
+				if (newValue.length === oldValue.length) return
 				this.changeRoom(newValue[0])
 			}
 		}

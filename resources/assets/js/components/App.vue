@@ -2,9 +2,10 @@
 	<div id="app" v-if="!isCurrentUserLoading">
 		<div class="wnl-overlay" v-if="shouldDisplayOverlay">
 			<span class="loader"></span>
-			<span class="loader-text">Uwaga, nadjeżdża wiedza...</span>
+			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
+		<wnl-global-notification/>
 		<div class="wnl-main">
 			<router-view></router-view>
 		</div>
@@ -37,20 +38,33 @@
 </style>
 
 <script>
-	// Import global components
-	import store from 'store'
-	import Navbar from 'js/components/global/Navbar.vue'
-	import { mapGetters, mapActions } from 'vuex'
 	import axios from 'axios';
+	import store from 'store'
+	import { mapGetters, mapActions } from 'vuex'
+	import { isEmpty } from 'lodash'
+
+	import Navbar from 'js/components/global/Navbar.vue'
+	import GlobalNotification from 'js/components/global/GlobalNotification.vue'
+	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 
 	export default {
 		name: 'App',
 		components: {
-			'wnl-navbar': Navbar
+			'wnl-navbar': Navbar,
+			'wnl-global-notification': GlobalNotification
 		},
 		computed: {
-			...mapGetters(['currentUserId', 'isCurrentUserLoading', 'shouldDisplayOverlay', 'currentUserRoles']),
+			...mapGetters([
+				'currentUserId',
+				'currentUserRoles',
+				'isCurrentUserLoading',
+				'overlayTexts',
+				'shouldDisplayOverlay',
+			]),
+			currentOverlayText() {
+				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
+			},
 		},
 		methods: {
 			...mapActions([
@@ -70,6 +84,8 @@
 		},
 		mounted() {
 			this.toggleOverlay({source: 'course', display: true})
+			sessionStore.clearAll()
+
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
 					window.setInterval(() => {
@@ -79,9 +95,7 @@
 					this.initNotifications()
 
 					this.$router.afterEach((to) => {
-						to.matched.some((record) => {
-							!record.meta.keepsNavOpen && this.resetLayout()
-						})
+						!to.params.keepsNavOpen && this.resetLayout()
 					})
 
 					this.setLayout(this.$breakpoints.currentBreakpoint())

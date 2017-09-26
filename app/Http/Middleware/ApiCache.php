@@ -74,30 +74,37 @@ class ApiCache
 
 	protected function excluded($request)
 	{
-		$excludedTags = ['users', 'profiles', 'reactions', 'orders', 'state', 'quiz_stats', 'notifications'];
+		$excludedTags = ['users', 'profiles', 'reactions', 'orders',
+			'state', 'quiz_stats', 'notifications', 'user_plan', 'quiz_results'];
 
 		$methodExcluded = !in_array($request->method(), ['GET', 'POST']);
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));
 		$urlExcluded = str_is('*current*', $request->getRequestUri());
 		$postExcluded = $request->method() === 'POST' && !str_is('*.search*', $request->getRequestUri());
+		$quizStats = str_is('*quiz_questions/stats*', $request->getRequestUri());
 
 		return
 			$methodExcluded ||
 			$queryExcluded ||
 			$urlExcluded ||
-			$postExcluded;
+			$postExcluded ||
+			$quizStats;
 	}
 
 	protected function getTags($request)
 	{
 		if (!empty($this->tags)) return $this->tags;
 
-		$resource = $request->route()->controller->resourceName;
+		$resource = $this->getResource($request);
 
 		$this->tags = ['api', $resource];
 
 		if ($request->has('include')) {
 			$this->tags = array_merge($this->tags, preg_split('/[.,]+/', $request->get('include')));
+		}
+
+		if ($request->method() === 'GET' && str_is('*.search*', $request->getRequestUri()) && $request->has('q')) {
+			$this->tags[] = 'search';
 		}
 
 		$searchParams = ['query', 'order', 'limit', 'join'];
@@ -108,5 +115,19 @@ class ApiCache
 		}
 
 		return $this->tags;
+	}
+
+	/**
+	 * @param $request
+	 *
+	 * @return mixed
+	 */
+	protected function getResource($request)
+	{
+		if ($request->route('resource') !== null) {
+			return $request->route('resource');
+		}
+
+		return $request->route()->controller->resourceName;
 	}
 }

@@ -2,13 +2,16 @@
 
 namespace Tests\Browser\Tests\Payment;
 
+use Tests\Browser\Tests\Payment\Modules\ConfirmOrderModule;
+use Tests\Browser\Tests\Payment\Modules\PersonalDataModule;
+use Tests\Browser\Tests\Payment\Modules\UserModule;
 use Faker\Factory;
 use Tests\Browser\Pages\Payment\ConfirmOrderPage;
-use Tests\Browser\Pages\Payment\P24AcceptTou;
 use Tests\Browser\Pages\Payment\P24ChooseBank;
 use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Pages\Payment\SelectProductPage;
 use Tests\Browser\Pages\User\OrdersPage;
+use Tests\Browser\Tests\Payment\Modules\VoucherModule;
 use Tests\DuskTestCase;
 
 class PaymentTest extends DuskTestCase
@@ -89,7 +92,8 @@ class PaymentTest extends DuskTestCase
 					->waitFor('@accept-tou')
 					//TODO this should be handled by pressing button not by executing script
 					->executeScript("$('#reagulation-accept-button').click()");
-			} catch (\Exception $e) {
+			}
+			catch (\Exception $e) {
 				print PHP_EOL . '@accept-tou element not found' . PHP_EOL;
 			}
 
@@ -139,5 +143,54 @@ class PaymentTest extends DuskTestCase
 		});
 
 		$this->closeAll();
+	}
+
+	/** @test */
+	public function randomCheckoutTest()
+	{
+		if (file_exists('scenario.dusk')) unlink('scenario.dusk');
+//		file_put_contents('scenario.dusk', '---------------------------------' . PHP_EOL, FILE_APPEND);
+		$this->browse(function ($browser) {
+			$next = UserModule::class;
+			while ($next) $next = $this->callRandom($next, $browser);
+		});
+	}
+
+	protected function callRandom($next, $browser)
+	{
+		if (is_array($next)) {
+			$next = array_random($next);
+		}
+		$methods = get_class_methods($next);
+		if (empty($methods)) {
+			return false;
+		}
+		$method = array_random($methods);
+
+		$action = class_basename($next) . '->' . $method . PHP_EOL;
+		file_put_contents('scenario.dusk', $action, FILE_APPEND);
+
+		return (new $next)->$method($browser);
+	}
+
+	/** @test */
+	public function fromScenario()
+	{
+		if (!file_exists('scenario.dusk')) {
+			print 'File scenario.dusk not found!';
+		}
+
+		$this->browse(function ($browser) {
+			$contents = file_get_contents('scenario.dusk');
+			$namespace = 'Tests\Browser\Tests\Payment\Modules\\';
+			foreach (explode("\n", $contents) as $item) {
+				$browser->pause(5000);
+				if (!$item) continue;
+//				fwrite(STDOUT, $item . PHP_EOL);
+				list($module, $method) = explode('->', $item);
+				$module = $namespace . $module;
+				(new $module)->$method($browser);
+			}
+		});
 	}
 }

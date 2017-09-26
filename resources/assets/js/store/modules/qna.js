@@ -100,7 +100,7 @@ function _getAnswer(answerId) {
 function getInitialState() {
 	return {
 		loading: [],
-		sorting: 'hottest',
+		sorting: 'latest',
 		questionsIds: [],
 		qna_questions: {},
 		qna_answers: {},

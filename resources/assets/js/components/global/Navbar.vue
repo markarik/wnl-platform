@@ -1,5 +1,5 @@
 <template>
-	<nav class="wnl-navbar has-shadow">
+	<nav class="wnl-navbar has-shadow" :class="{'is-desktop': !isTouchScreen}">
 		<div class="wnl-navbar-item wnl-navbar-sidenav-toggle" v-if="canShowSidenavTrigger">
 			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
@@ -7,13 +7,19 @@
 				</span>
 			</a>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-branding">
+		<div class="wnl-navbar-branding">
 			<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
 				<img class="logo-image" :src="logoSrc" :alt="$t('nav.navbar.logoAlt')">
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-profile">
+		<div
+			v-if="$firstEditionParticipant.isAllowed('access')"
+			class="wnl-navbar-item wnl-navbar-search"
+		>
+			<wnl-search/>
+		</div>
+		<div class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
@@ -29,48 +35,58 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	$logo-width: 50px
+	$logo-text-width: 90px
+
 	.wnl-navbar
 		+small-shadow()
 		display: flex
 		flex: 0 $navbar-height
-		padding: 0 1em
 		z-index: $z-index-navbar
+
+		&.is-desktop
+			padding: 0 $margin-medium
+
+			.wnl-navbar-branding
+				padding: 0
+
+			.wnl-navbar-item:hover
+				background-color: $color-background-light-gray
+				transition: background $transition-length-base
+
+			.wnl-logo-link
+				max-width: $logo-width + $logo-text-width + $margin-small
+
+			.wnl-navbar-item
+				width: $navbar-height + 2 * $margin-tiny
+
+			.wnl-navbar-profile
+				width: $navbar-height + 2 * $margin-small
+
+			.wnl-navbar-feed,
+			.wnl-navbar-search
+				width: $navbar-height
+
+	.wnl-navbar-profile
+		margin-left: $margin-small
+
+	.wnl-navbar-branding
+		justify-content: flex-start
+		flex-grow: 1
+		padding: 0 $margin-small
 
 	.wnl-navbar-item
 		align-items: center
+		cursor: pointer
 		display: flex
 		height: $navbar-height
+		justify-content: center
 		min-height: $navbar-height
-		padding: 0 0.75em
+		transition: background $transition-length-base
+		width: $navbar-height - 2 * $margin-small
 
 		.icon
 			color: $color-gray-dimmed
-			cursor: pointer
-
-	.wnl-navbar-branding
-		padding-left: 5px
-		padding-right: 5px
-		flex-grow: 1
-
-	.wnl-navbar-profile
-		padding-right: 0
-
-	.breadcrumbs
-		flex-direction: row
-		margin-left: $margin-base
-		margin-top: 15px
-
-	.wnl-navbar-controls
-		.icon
-			color: $color-gray-dimmed
-			cursor: pointer
-			margin-left: $margin-big
-
-			&.is-active
-				color: $color-gray
-
-			&.has-notifications
-				color: $color-ocean-blue
 
 	.wnl-navbar-sidenav-toggle
 		padding-left: 0
@@ -80,27 +96,30 @@
 
 	.wnl-logo-link
 		align-items: center
-		box-sizing: content-box
 		display: flex
-		padding: $margin-base 0
+		height: $navbar-height
+		max-width: $logo-width
 
 		.logo-image,
 		.logo-text
 			display: block
 
 		.logo-image
-			width: 50px
+			width: $logo-width
 
 		.logo-text
 			margin-left: $margin-small
-			width: 90px
+			width: $logo-text-width
 
 	.wnl-right
 		height: 100%
 </style>
 
 <script>
+	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
+
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
+	import Search from 'js/components/global/search/Search'
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
 	import { mapGetters, mapActions } from 'vuex'
@@ -108,10 +127,12 @@
 
 	export default {
 		name: 'Navbar',
+		perimeters: [firstEditionParticipant],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-user-dropdown': UserDropdown,
 			'wnl-personal-feed': PersonalFeed,
+			'wnl-search': Search,
 		},
 		computed: {
 			...mapGetters([
@@ -121,6 +142,7 @@
 				'currentUserFullName',
 				'isChatVisible',
 				'isMobile',
+				'isTouchScreen',
 				'isSidenavOpen',
 			]),
 			chatIconClass() {

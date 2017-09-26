@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
-import sessionStore from '../js/services/sessionStore';
 import moderatorFeed from 'js/perimeters/moderatorFeed';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
@@ -14,14 +13,12 @@ let routes = [
 	{
 		path: '/app/courses/:courseId',
 		component: require('js/components/course/Course.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
 				name: resource('courses'),
 				path: '',
 				component: require('js/components/course/dashboard/Overview.vue'),
-				meta: {keepsNavOpen: true},
 				props: true,
 			},
 			{
@@ -44,7 +41,6 @@ let routes = [
 		name: 'myself',
 		path: '/app/myself',
 		component: require('js/components/user/Myself.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
@@ -77,13 +73,17 @@ let routes = [
 				path: 'password',
 				component: require('js/components/user/MyPassword.vue')
 			},
+			{
+				name: 'stats',
+				path: 'stats',
+				component: require('js/components/user/UserStats'),
+			},
 		]
 	},
 	{
 		name: 'collections',
 		path: '/app/collections',
 		component: require('js/components/collections/Collections.vue'),
-		meta: {keepsNavOpen: true},
 		props: true,
 		children: [
 			{
@@ -99,13 +99,7 @@ let routes = [
 		path: '/app/help',
 		component: require('js/components/help/Help.vue'),
 		props: true,
-		meta: {keepsNavOpen: true},
 		children: [
-			{
-				name: 'help-news',
-				path: 'news',
-				component: require('js/components/help/News.vue'),
-			},
 			{
 				name: 'help-learning',
 				path: 'learning',
@@ -124,16 +118,39 @@ let routes = [
 		]
 	},
 	{
-		name: 'quizQuestion',
-		path: '/app/quiz_questions/:id',
-		component: require('js/components/quiz/SingleQuestion.vue'),
-		props: true,
+		path: '/app/questions',
+		component: require('js/components/questions/Questions.vue'),
+		children: [
+			{
+				name: 'questions-dashboard',
+				path: '',
+				component: require('js/components/questions/QuestionsDashboard.vue'),
+				props: true,
+				children: [
+					{
+						name: 'quizQuestion',
+						path: 'single/:id',
+						component: require('js/components/quiz/SingleQuestion.vue'),
+					},
+				],
+			},
+			{
+				name: 'questions-list',
+				path: 'list',
+				component: require('js/components/questions/QuestionsList.vue'),
+				props: true,
+			},
+			{
+				name: 'questions-planner',
+				path: 'plan',
+				component: require('js/components/questions/QuestionsPlanner.vue'),
+			},
+		],
 	},
 	{
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
-		meta: {keepsNavOpen: true},
 		beforeEnter: (to, from, next) => {
 			const sandbox = createSandbox(store.getters.currentUser, {
 				perimeters: [moderatorFeed],
@@ -149,13 +166,11 @@ let routes = [
 		name: 'dashboard',
 		path: '/app',
 		redirect: {name: 'courses', params: {courseId: 1}},
-		meta: {keepsNavOpen: true},
 	},
 	{
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			sessionStore.clearAll();
 			document.getElementById('logout-form').submit()
 		}
 	},

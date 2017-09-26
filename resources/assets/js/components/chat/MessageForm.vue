@@ -18,6 +18,7 @@
 					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
 					:keyboard="keyboard"
 					:toolbar="toolbar"
+					:allowMentions=false
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
@@ -38,12 +39,13 @@
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
 	.media
-		align-items: center;
+		align-items: center
 </style>
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
+	import _ from 'lodash';
 
 	export default{
 		props: ['loaded', 'socket', 'room'],
@@ -63,7 +65,9 @@
 							}
 						}
 					}
-				}
+				},
+				isWaitingToSendMentions: false,
+				mentions: []
 			}
 		},
 		components: {
@@ -73,10 +77,13 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
-				'currentUserAvatar'
+				'currentUserAvatar',
+				'currentUserId',
+				'currentUser'
 			]),
+			...mapGetters('course', ['courseId']),
 			sendingDisabled() {
-				return !this.loaded || this.message.length === 0
+				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0)
 			},
 			toolbar() {
 				return [
@@ -90,18 +97,50 @@
 			}
 		},
 		methods: {
+			...mapActions(['saveMentions']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
 				}
 				this.error = ''
+				this.isWaitingToSendMentions = true
 				this.socket.emit('send-message', {
-					room: this.room,
+					room: this.room.channel,
 					message: {
+						user: this.currentUser,
+						content: this.content,
 						full_name: this.currentUserFullName,
-						content: this.content
 					}
 				})
+			},
+			getMentions() {
+				if (!this.quillEditor) return []
+				const mentions = this.quillEditor
+					.$el
+					.querySelectorAll('.quill-mention')
+
+				return _.uniq(Array.prototype.map.call(mentions, el => el.dataset.id))
+			},
+			getMentionsData(userIds, message) {
+				return {
+					mentioned_users: userIds,
+					subject: {
+						type: 'chat_message',
+						id: `${message.time}${this.currentUserId}`,
+						text: message.content,
+						channel: this.room.channel
+					},
+					objects: {
+						type: "chat_channel",
+						text: this.room.name
+					},
+					context: {
+						courseId: this.courseId,
+						lessonId: this.$route.params.lessonId,
+						slideId: this.$route.params.slideId,
+					},
+					actors: this.currentUser
+				}
 			},
 			suppressEnter(event) {
 				event.preventDefault()
@@ -109,14 +148,25 @@
 			setListeners() {
 				this.socket.on('message-processed', (data) => {
 					if (data.sent) {
-						this.quillEditor.quill.deleteText(0, this.content.length);
+						const mentions = this.getMentions()
+
+						if (mentions && mentions.length) {
+							this.saveMentions(
+								this.getMentionsData(mentions, data.message)
+							)
+						}
+
+						this.quillEditor.quill.deleteText(0, this.content.length)
+						this.mentions = []
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
+					this.isWaitingToSendMentions = false
 				})
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
+				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
 			}
 		},

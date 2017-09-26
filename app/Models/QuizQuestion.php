@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class QuizQuestion extends Model
 {
-	use Cached;
+	use Cached, Searchable;
 
 	protected $fillable = ['text', 'explanation', 'preserve_order'];
 
@@ -38,5 +39,27 @@ class QuizQuestion extends Model
 	public function reactions()
 	{
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
+	}
+
+	public function userQuizResults()
+	{
+		return $this->hasMany('App\Models\UserQuizResults');
+	}
+
+	public function toSearchableArray()
+	{
+		$tags = $this->tags;
+
+		$data = [
+			'id'         => $this->id,
+			'text'       => $this->text,
+			'created_at' => $this->created_at->timestamp,
+			'updated_at' => $this->updated_at->timestamp,
+			'tags'       => $tags->map(function ($tag) {
+				return ['id' => $tag->id, 'name' => $tag->name];
+			}),
+		];
+
+		return $data;
 	}
 }

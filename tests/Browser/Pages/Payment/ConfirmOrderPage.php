@@ -36,6 +36,9 @@ class ConfirmOrderPage extends BasePage
 	{
 		return [
 			'@online-payment-button' => 'button.p24-submit',
+			'@edit-persona-data'     => '.edit-personal-data a',
+			'@expand-instalments'    => '#expand-instalments',
+			'@instalments-button'    => '#instalments-button',
 		];
 	}
 }

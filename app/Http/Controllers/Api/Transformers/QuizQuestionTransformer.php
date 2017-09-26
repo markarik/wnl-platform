@@ -24,8 +24,11 @@ class QuizQuestionTransformer extends ApiTransformer
 			'text'           => $quizQuestion->text,
 			'explanation'    => $quizQuestion->explanation,
 			'preserve_order' => $quizQuestion->preserve_order,
+			// Not sure why tags are included here...
+			// let's see what's going to happen if I comment it out :D
 			'tags'           => $quizQuestion->tags,
-			'total_hits'     => $quizQuestion->answers->sum('hits'),
+			// Looks like the only purpose of 'total_hits' was to slow down the response ¯\_(ツ)_/¯
+			// 'total_hits'     => $quizQuestion->answers->sum('hits'),
 		];
 
 		if ($this->parent) {

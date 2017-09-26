@@ -21,6 +21,7 @@ class UserProfileTransformer extends ApiTransformer
 	{
 		$data = [
 			'id'           => $profile->id,
+			'user_id'      => $profile->user_id,
 			'first_name'   => $profile->first_name,
 			'last_name'    => $profile->last_name,
 			'public_email' => $profile->public_email,
@@ -28,7 +29,7 @@ class UserProfileTransformer extends ApiTransformer
 			'username'     => $profile->username,
 			'full_name'    => $profile->full_name,
 			'avatar'       => $profile->avatar_url,
-			'roles'        => $profile->user->roles->pluck('name')->toArray(),
+			'roles'        => $profile->user->roles->pluck('name')->toArray() ?? [],
 		];
 
 		if ($this->parent) {

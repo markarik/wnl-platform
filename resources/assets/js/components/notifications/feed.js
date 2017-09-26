@@ -49,9 +49,12 @@ export const feed = {
 		loadMore() {
 			if (this.fetching) return;
 
+			const extraParams = this.notificationsParams || {}
+
 			this.pullNotifications([this.channel, {
 				limit: this.limit,
-				olderThan: this.getOldestNotification(this.channel).timestamp
+				olderThan: this.getOldestNotification(this.channel).timestamp,
+				...extraParams
 			}])
 		},
 	}

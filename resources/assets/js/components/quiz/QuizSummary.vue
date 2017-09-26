@@ -1,7 +1,15 @@
 <template>
 	<div class="wnl-quiz-summary">
 		<wnl-quiz-stats></wnl-quiz-stats>
-		<wnl-quiz-list></wnl-quiz-list>
+		<wnl-quiz-list
+			:allQuestions="getQuestionsWithAnswersAndStats"
+			:getReaction="getReaction"
+			:isProcessing="isProcessing"
+			:isComplete="isComplete"
+			module="quiz"
+			ref="quizList"
+			@resetState="resetState"
+		/>
 	</div>
 </template>
 
@@ -15,13 +23,31 @@
 <script>
 	import QuizList from 'js/components/quiz/QuizList.vue'
 	import QuizStats from 'js/components/quiz/QuizStats.vue'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		name: 'QuizSummary',
+		props: ['showAlert'],
 		components: {
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-stats': QuizStats,
+		},
+		computed: {
+			...mapGetters('quiz', [
+				'isComplete',
+				'getQuestionsWithAnswersAndStats',
+				'getReaction',
+				'isProcessing',
+			]),
+		},
+		methods: {
+			...mapActions('quiz', [
+				'resetState',
+				'checkQuiz'
+			]),
+		},
+		mounted() {
+			this.showAlert && this.$refs.quizList.showAlert()
 		},
 	}
 </script>

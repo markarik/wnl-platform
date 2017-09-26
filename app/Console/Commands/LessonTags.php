@@ -107,7 +107,12 @@ class LessonTags extends Command
 			'Pediatria 7 - Układ moczowo-płciowy nefrologia  - Arkusz1.tsv' => 'P7 Układ Moczowy / Neurologia',
 			'Pediatria 8 - Endokrynologia Reumatologia - Arkusz1.tsv' => 'P8 Endokrynologia / Reumatologia',
 			'Pediatria 9 - Choroby zakaźne Szczepienia choroby alergiczne odporność  - Arkusz1.tsv' => 'P9 Zakaźne / Szczepienia / Alergie / Odporność',
-			'Pediatria 10 - Stany nagłe otolaryngologia - Arkusz1.tsv' => 'P10 Otolaryngologia / Stany Nagłe'
+			'Pediatria 10 - Stany nagłe otolaryngologia - Arkusz1.tsv' => 'P10 Otolaryngologia / Stany Nagłe',
+			'Chirurgia 1 - Sheet1.tsv' => 'Wstęp / Traumatologia / Wstrząs',
+			'Chirurgia 2 - Sheet1.tsv' => 'Chirurgia naczyniowa / Torakochirurgia',
+			'Chirurgia 3 - Sheet1.tsv' => 'Kardio. / Uro. / Neuroch. / Plast. / Sutek / Endokryn. / Transpl.',
+			'Chirurgia 4 - Sheet1.tsv' => 'Chirurgia układu pokarmowego 1',
+			'Chirurgia 5 - Sheet1.tsv' => 'Chirurgia układu pokarmowego 2 / Dziecięca'
 		];
 	}
 }

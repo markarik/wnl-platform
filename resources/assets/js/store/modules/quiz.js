@@ -70,27 +70,55 @@ const getters = {
 			(answerId) => state.quiz_answers[answerId]
 		)
 	},
-	getAttempts: (state) => state.attempts,
-	getComments: (state) => (id) => {
-		return state.quiz_questions[id].comments.map((commentId) => state.comments[commentId])
-	},
 	getCurrentScore: (state, getters) => {
 		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
+	getAttempts: (state) => state.attempts,
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestionsWithAnswers: (state) => {
+		return state.questionsIds.map((id) => {
+			const quizQuestion = state.quiz_questions[id];
+			return {
+				...quizQuestion,
+				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId])
+			}
+		})
+	},
+	getQuestionsWithAnswersAndStats: (state, getters) => {
+		return state.questionsIds.map((id) => {
+			const quizQuestion = state.quiz_questions[id]
+			const questionStats = state.quiz_stats[id] || {}
+			const allHits = Object.values(questionStats).reduce((count, current) => {
+				return count + current
+			}, 0)
+
+
+			return {
+				...quizQuestion,
+				answers: quizQuestion.quiz_answers.map((answerId) => {
+					const answer = state.quiz_answers[answerId]
+					return {
+						...answer,
+						stats: Math.round((questionStats[answerId] || 0) / allHits * 100)
+					}
+				})
+			}
+		})
+	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
 	getSelectedAnswer: (state, getters) => (id) => state.quiz_questions[id].selectedAnswer,
 	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
+	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
+	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(
-		getters.getQuestions, (question) => _.isNull(question.selectedAnswer)
+		getters.getQuestions, (question) => !_.isNumber(question.selectedAnswer)
 	),
 	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0 && getters.hasQuestions,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
 	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
-	getStats: (state) => (questionId) => state.quiz_stats[questionId],
-	questionsLength: (state) => state.questionsIds.length
+	questionsLength: (state) => state.questionsIds.length,
 }
 
 const mutations = {
@@ -110,7 +138,13 @@ const mutations = {
 		set(state.quiz_questions[payload.id], 'isResolved', false)
 	},
 	[types.QUIZ_RESOLVE_QUESTION] (state, payload) {
-		set(state.quiz_questions[payload.id], 'isResolved', true)
+		const question = state.quiz_questions[payload.id]
+		if (_.isNumber(question.selectedAnswer) && question.hasOwnProperty('original_answers')) {
+			let selectedId = question.quiz_answers[question.selectedAnswer]
+			question.quiz_answers = question.original_answers
+			question.selectedAnswer = question.quiz_answers.indexOf(selectedId)
+		}
+		set(question, 'isResolved', true)
 	},
 	[types.QUIZ_RESTORE_STATE] (state, payload) {
 		set(state, 'setId', payload.setId)
@@ -121,9 +155,6 @@ const mutations = {
 
 		_.forEach(payload.quiz_questions, (value, id) => {
 			if (!_.isUndefined(state.quiz_questions[id])) {
-				if (!_.isUndefined(value.selectedAnswer)) {
-					set(state.quiz_questions[id], 'selectedAnswer', value.selectedAnswer)
-				}
 				if (!_.isUndefined(value.isResolved)) {
 					set(state.quiz_questions[id], 'isResolved', value.isResolved)
 				}
@@ -146,7 +177,11 @@ const mutations = {
 		set(state.quiz_questions[payload.id], 'selectedAnswer', payload.answer)
 	},
 	[types.QUIZ_SHUFFLE_ANSWERS] (state, payload) {
-		set(state.quiz_questions[payload.id], 'quiz_answers', _.shuffle(state.quiz_questions[payload.id].quiz_answers))
+		const question = state.quiz_questions[payload.id]
+		if (!question.hasOwnProperty('original_answers')) {
+			set(question, 'original_answers', _.cloneDeep(question.quiz_answers))
+		}
+		set(question, 'quiz_answers', _.shuffle(question.quiz_answers))
 	},
 	[types.QUIZ_TOGGLE_PROCESSING] (state, isProcessing) {
 		set(state, 'processing', isProcessing)
@@ -290,7 +325,7 @@ const actions = {
 			})
 	},
 
-	checkQuiz({state, commit, getters, dispatch, rootGetters}) {
+	checkQuiz({state, commit, getters, dispatch, rootGetters}, force = false) {
 		return new Promise((resolve) => {
 			commit(types.QUIZ_TOGGLE_PROCESSING, true)
 			const data = [];
@@ -298,19 +333,22 @@ const actions = {
 			const attempts = getters.getAttempts.length;
 
 			_.each(getters.getUnresolved, question => {
-				let selectedId = question.quiz_answers[question.selectedAnswer],
-					selected = state.quiz_answers[selectedId],
-					id = question.id
+				let id = question.id,
+					selectedId = question.quiz_answers[question.selectedAnswer],
+					selected = state.quiz_answers[selectedId]
 
-				if (attempts === 0) {
-					data.push({
-						'quiz_question_id': id,
-						'quiz_answer_id': selectedId,
-						'user_id': rootGetters.currentUserId
-					});
+				if (_.isNumber(question.selectedAnswer)) {
+
+					if (!attempts) {
+						data.push({
+							'quiz_question_id': id,
+							'quiz_answer_id': selectedId,
+							'user_id': rootGetters.currentUserId
+						});
+					}
 				}
 
-				if (!_.isNull(selected) && selected.is_correct) {
+				if (_.isNumber(question.selectedAnswer) && selected.is_correct) {
 					commit(types.QUIZ_RESOLVE_QUESTION, {id})
 				} else {
 					// react
@@ -333,11 +371,14 @@ const actions = {
 			})
 
 			commit(types.QUIZ_ATTEMPT, {score: getters.getCurrentScore})
-			dispatch('markManyAsReacted', reactionsToSet)
+
+			if (reactionsToSet.length) {
+				dispatch('markManyAsReacted', reactionsToSet)
+			}
 
 			dispatch('saveQuiz', data);
 
-			if (getters.getUnresolved.length === 0) {
+			if (force || getters.getUnresolved.length === 0) {
 				commit(types.QUIZ_COMPLETE)
 			}
 

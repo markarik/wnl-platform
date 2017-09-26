@@ -1,7 +1,8 @@
 @import "variables";
 
 // External frameworks
-@import "node_modules/bulma/bulma";
+@import 'node_modules/bulma/bulma';
+@import 'node_modules/flatpickr/dist/flatpickr';
 @import 'node_modules/quill/dist/quill.bubble';
 @import 'node_modules/quill/dist/quill.snow';
 
@@ -100,12 +101,6 @@ html {
 	padding: 20px 0;
 }
 
-// .wnl-sidenav {
-// 	height: 100%;
-// 	min-height: 100%;
-// 	width: 300px;
-// }
-
 .wnl-app-layout-main {
 	flex: $three-column-main-flex;
 	max-width: 800px;
@@ -147,6 +142,15 @@ html {
 // Screens
 .wnl-screen-title {
 	border-bottom: $border-light-gray;
+}
+
+// Search
+.wnl-search {
+	em {
+		color: $gradient-bg-image-right;
+		font-weight: 700;
+		font-style: inherit;
+	}
 }
 
 // Videos
@@ -222,23 +226,30 @@ html {
 }
 
 // Notifications
-.swal2-spacer {
-	background: transparent;
-}
 
-.wnl-alert {
-	font-family: $font-family-sans-serif !important;
+.wnl-alert.swal2-modal {
+	font-family: $font-family-sans-serif;
 
 	.swal2-icon {
-		margin: 20px auto 15px !important;
+		margin: 20px auto 15px;
 	}
 
 	.swal2-title {
-		font-weight: 400 !important;
+		font-size: 20px;
+		font-weight: 400;
+	}
+
+	.swal2-content {
+		font-size: 16px;
+	}
+
+	.swal2-spacer {
+		background: transparent;
+		margin: 10px 0;
 	}
 
 	.button {
-		margin: 0 1em;
+		margin: 0 1em 1em;
 	}
 }
 
@@ -249,6 +260,46 @@ html {
 	.text-danger {
 		font-size: $font-size-minus-1;
 		font-weight: $font-weight-bold;
+	}
+}
+
+section.voucher {
+	strong {
+		color: $color-white;
+	}
+}
+
+.voucher-code {
+	@include flex-center;
+
+	form {
+		width: 280px;
+	}
+
+	label {
+		font-size: $font-size-minus-1;
+		font-weight: $font-weight-bold;
+		margin-bottom: $margin-base;
+		text-transform: uppercase;
+	}
+
+	input {
+		@include simple-input
+
+		font-size: $font-size-plus-2;
+		font-weight: $font-weight-bold;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		width: 100%;
+	}
+
+	.is-error {
+		color: $color-red;
+		text-align: center;
+	}
+
+	.voucher-skip {
+		margin-top: $margin-huge;
 	}
 }
 
@@ -289,8 +340,8 @@ html {
 	font-weight: $font-weight-black;
 	line-height: 1.5em;
 	margin-bottom: 10px;
-	height: 1.5em;
-	width: 1.5em;
+	height: 1.7em;
+	width: 1.7em;
 }
 
 .payment-step-text {
@@ -335,6 +386,11 @@ html {
 
 .clickable {
 	cursor: pointer;
+}
+
+.wrap {
+	word-break: break-word;
+	word-wrap: break-word;
 }
 
 /* Firefox hack :/ */

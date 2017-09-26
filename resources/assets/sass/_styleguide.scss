@@ -113,8 +113,8 @@ a.secondary-link {
 }
 
 // Buttons
-
-.button {
+a.button,
+button.button {
 	border-radius: $border-radius-full;
 	font-size: $font-size-minus-1;
 	font-weight: $font-weight-black;
@@ -266,6 +266,22 @@ a.secondary-link {
 	}
 }
 
+// Datepicker
+
+@media only screen and (max-width: 400px) {
+	.flatpickr-calendar,
+	.flatpickr-weekdays,
+	.flatpickr-days,
+	.dayContainer {
+		max-width: 90vw;
+		// width: 90vw;
+	}
+
+	.dayContainer {
+		min-width: 0;
+	}
+}
+
 // Toggles
 
 .panel-toggle {
@@ -318,6 +334,46 @@ a.secondary-link {
 
 	.icon {
 		margin-left: $margin-tiny;
+	}
+}
+
+// Notifications
+
+.notification-wrapper {
+	position: relative;
+
+	.deleted {
+		pointer-events: none;
+		cursor: not-allowed;
+		filter: blur(5px);
+		position: relative;
+	}
+
+	.delete-message {
+		align-items: center;
+		background: transparent;
+		color: $color-background-gray;
+		display: flex;
+		font-size: $font-size-minus-1;
+		height: 100%;
+		justify-content: center;
+		letter-spacing: 1px;
+		position: absolute;
+		text-align: center;
+		top: 0;
+		width: 100%;
+	}
+}
+
+// Datepicker
+
+.flatpickr-day.selected {
+	background: $color-ocean-blue;
+	border-color: $color-ocean-blue;
+
+	&:hover {
+		background: $color-sky-blue;
+		border-color: $color-sky-blue;
 	}
 }
 

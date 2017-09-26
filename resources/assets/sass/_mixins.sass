@@ -52,12 +52,16 @@
 	width: $baseSize
 
 	&.without-image
+		border-radius: $baseSize * 0.1
+
 		img, object, svg
 			height: $baseSize * 0.6
 			margin: $baseSize * 0.2
 			width: $baseSize * 0.6
 
 	&.with-image
+		border-radius: $baseSize * 0.1
+
 		img, object, svg
 			border-radius: $baseSize * 0.1
 			height: $baseSize
@@ -70,3 +74,24 @@
 	@each $size in $sizes
 		.wnl-#{$element}-#{$size}
 			+rounded-square(map-get($rounded-square-sizes, $size))
+
+=flex-center()
+	align-items: center
+	display: flex
+	justify-content: center
+
+=flex-space-between()
+	align-items: center
+	display: flex
+	justify-content: space-between
+
+=clickable()
+	cursor: pointer
+	user-select: none
+
+=simple-input()
+	border: 0
+	border-bottom: 1px solid $color-ocean-blue
+	border-radius: 0
+	box-shadow: none
+	text-align: center

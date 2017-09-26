@@ -17,3 +17,5 @@ npm-debug.log
 public/hot
 .env.dusk.*
 phpunit.dusk.xml
+scenario.dusk
+public/report.html

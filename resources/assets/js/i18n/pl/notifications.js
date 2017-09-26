@@ -1,18 +1,31 @@
 export const notifications = {
+	markAllAsRead: 'Oznacz wszystkie jako przeczytane',
+	hideAll: 'Ukryj wszystkie dyskusje',
 	context: {
 		lesson: 'w lekcji {lesson}',
 		quizQuestion: '#{id}',
 		page: 'na stronie {page}',
 		slide: '{slide}',
+		channel: 'na kanale chatu {channel}'
 	},
 	events: {
 		commentPosted: 'skomentował/-a',
 		qnaQuestionPosted: 'zadał/-a',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
+		mentioned: 'wspomniał/-a Cię'
+	},
+	messages: {
+		deleted: 'Treść usunięta przez autora'
 	},
 	moderators: {
-		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!'
+		cta: 'Jedziesz szwagier',
+		done: 'Zrobione!',
+		fromOldest: 'Od najstarszych',
+		fromNewest: 'Od najnowszych',
+		inProgress: 'Ktoś już to ogarnia',
+		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!',
+		takeIt: 'Biere to!',
 	},
 	objects: {
 		comment: 'komentarz',
@@ -20,10 +33,10 @@ export const notifications = {
 		qnaQuestion: 'pytanie | Twoje pytanie',
 		quizQuestion: 'pytanie kontrolne',
 		slide: 'slajd',
+		chatChannel: 'na kanale chatu'
 	},
 	personal: {
 		heading: 'Powiadomienia',
-		markAllAsRead: 'Oznacz wszystkie jako przeczytane',
 		showMore: 'Pokaż więcej',
 		thatsAll: 'To już wszystko!',
 		turnOff: 'Wycisz',
@@ -32,6 +45,9 @@ export const notifications = {
 		zeroStateImage: 'Włącz się do dyskusji',
 	},
 	stream: {
+		hideNotification: 'Ukryj tę notyfikację',
+		showRead: 'Pokaż ukryte',
+		showUnread: 'Pokaż aktywne',
 		zeroState: 'Tu powiadomimy Cię o wszystkich dyskusjach, które toczą się w ramach kursu - zaglądaj tu często, a nie umkną Ci żadne wydarzenia!',
 	},
 }

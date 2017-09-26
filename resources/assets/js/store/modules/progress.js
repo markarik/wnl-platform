@@ -17,6 +17,8 @@ const getters = {
 		if (state.courses.hasOwnProperty(courseId)) {
 			return state.courses[courseId]
 		}
+
+		return false
 	},
 	getLesson: (state) => (courseId, lessonId) => {
 		return state.courses[courseId] && state.courses[courseId].lessons && state.courses[courseId].lessons[lessonId];
@@ -48,11 +50,13 @@ const getters = {
 	},
 	getFirstLessonIdInProgress: (state) => (courseId) => {
 		let lessons = state.courses[courseId].lessons
+
 		for (var lessonId in lessons) {
 			if (lessons[lessonId].status === STATUS_IN_PROGRESS) {
 				return lessonId
 			}
 		}
+
 		return 0
 	},
 	isLessonComplete: (state, getters) => (courseId, lessonId) => {
@@ -122,19 +126,16 @@ const mutations = {
 		set(state.courses[payload.courseId], 'lessons', updatedState)
 	},
 	[types.PROGRESS_START_LESSON] (state, payload) {
-		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		//TODO consider issuing one request instead of two when starting lesson
-		const updatedState = progressStore.startLesson(lessonState, payload);
-		progressStore.setCourseProgress({...payload, status: STATUS_IN_PROGRESS});
+		const courseState = state.courses[payload.courseId]
+		const updatedLessonState = progressStore.startLesson(courseState, payload);
 
-		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState)
+		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedLessonState)
 	},
 	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
-		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		const updatedState = progressStore.completeLesson(lessonState, payload);
-		progressStore.setCourseProgress({...payload, status: STATUS_COMPLETE});
+		const courseState = state.courses[payload.courseId];
+		const updatedLessonState = progressStore.completeLesson(courseState, payload);
 
-		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedState)
+		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedLessonState)
 	},
 	[types.PROGRESS_COMPLETE_SECTION] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
@@ -150,12 +151,6 @@ const mutations = {
 		set(lessonState, 'screens', updatedState.screens);
 		set(lessonState, 'route', payload.route);
 	},
-	[types.PROGRESS_SAVE] (state, {lessonId, courseId}) {
-		const lessonState = state.courses[courseId].lessons[lessonId];
-		//TODO consider issuing one request instead of two when starting lesson
-		progressStore.setLessonProgress({lessonId, courseId}, lessonState);
-		progressStore.setCourseProgress({courseId, lessonId, status: lessonState.status})
-	}
 };
 
 // Actions
@@ -183,7 +178,7 @@ const actions = {
 				});
 
 				if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
-					$wnl.logger.info(`Starting lesson ${payload.lessonId}`, payload)
+					$wnl.logger.debug(`Starting lesson ${payload.lessonId}`, payload)
 					commit(types.PROGRESS_START_LESSON, payload)
 
 					return true;
@@ -194,7 +189,7 @@ const actions = {
 	},
 	completeLesson({commit, getters}, payload) {
 		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {
-			$wnl.logger.info(`Completing lesson ${payload.lessonId}`, payload)
+			$wnl.logger.debug(`Completing lesson ${payload.lessonId}`, payload)
 			commit(types.PROGRESS_COMPLETE_LESSON, payload)
 		}
 	},
@@ -204,9 +199,6 @@ const actions = {
 	completeSection({commit}, payload) {
 		commit(types.PROGRESS_COMPLETE_SECTION, payload)
 	},
-	saveLessonProgress({commit}, payload) {
-		commit(types.PROGRESS_SAVE, payload)
-	}
 };
 
 export default {

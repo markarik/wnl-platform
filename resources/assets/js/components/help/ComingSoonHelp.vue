@@ -8,13 +8,7 @@
 			</div>
 		</div>
 		<p class="strong">Hej {{currentUserName}}!</p>
-		<p>Nieustająco staramy się ulepszać naszą platformę i czynić ją bogatszą w przydatne funkcje! Nad tymi nowościami pracujemy obecnie:</p>
-		<ul>
-			<li><strong>Kolekcje</strong> - wyświetlanie zapisanych slajdów, pytań kontrolnych, czy wątków z pytań i odpowiedzi</li>
-			<li><strong>Notyfikacje i newsfeed</strong> - bieżące informacje o aktywności uczestników. Ktoś skomentował Twoją odpowiedź? Ktoś odpowiedział na Twoje pytanie? Dowiesz się o tym z notyfikacji. Oprócz tego na głównej stronie kursu stworzymy poszerzony widok ostatnich wydarzeń (jak newsfeed na facebooku). ;)</li>
-			<li><strong>Wyszukiwarka</strong> - mamy dostęp do ogrodnej bazy wiedzy medycznej! Teraz trzeba móc łatwo ją przeszukiwać... :)</li>
-			<li><strong>Prywatne wiadomości</strong> - czasem po prostu chcemy pogadać z kimś prywatnie. Nasza platforma oczywiście będzie na to pozwalała.</li>
-		</ul>
+		<p>Nieustająco staramy się ulepszać naszą platformę i czynić ją bogatszą w przydatne funkcje!</p>
 		<p>Jeśli macie pomysł co jeszcze moglibyśmy wziąć na warsztat - tu jest doskonałe miejsce na Wasze sugestie!</p>
 		<wnl-qna :tags="tags" reactionsDisabled="true"></wnl-qna>
 	</div>

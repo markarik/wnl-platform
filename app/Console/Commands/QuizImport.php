@@ -1,6 +1,8 @@
 <?php namespace App\Console\Commands;
 
+use App\Models\QuizQuestion;
 use App\Models\Tag;
+use App\Models\TagsTaxonomy;
 use Storage;
 use App\Models\QuizSet;
 use Illuminate\Console\Command;
@@ -16,16 +18,17 @@ class QuizImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:import {dir?}',
+	protected $signature = 'quiz:import {dir?} {--check} {--debug} {--addNewTags}',
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
+		/**
+		 * The console command description.
+		 *
+		 * @var string
+		 */
 		$description = 'Import quiz sets to database from storage.',
 		$path,
-		$globalTags = [];
+		$globalTags = [],
+		$questions;
 
 	/**
 	 * Create a new command instance.
@@ -45,8 +48,9 @@ class QuizImport extends Command
 	 */
 	public function handle()
 	{
-		if ($subDir = $this->argument('dir'))
-		{
+		$this->questions = QuizQuestion::all();
+
+		if ($subDir = $this->argument('dir')) {
 			$this->path .= '/' . $subDir;
 		}
 
@@ -59,6 +63,7 @@ class QuizImport extends Command
 			$bar->advance();
 		}
 		print PHP_EOL;
+
 		return;
 	}
 
@@ -88,9 +93,29 @@ class QuizImport extends Command
 	public function createQuestion($line, $quizSet)
 	{
 		$values = explode(self::VALUE_DELIMITER, $line);
+		$text = nl2br($values[0]);
+
+		$similarQuestion = $this->checkSimilarity($text, $values);
+		if ($similarQuestion !== false) {
+			if (!$quizSet->questions->contains($similarQuestion)) {
+				$quizSet->questions()->attach($similarQuestion);
+				$this->debug('Attached to set!');
+			} else {
+				$this->debug('Set already has this question');
+			}
+
+			if ($this->option('addNewTags')) {
+				$this->attachTags($similarQuestion, $values);
+				$this->tryMatchingCollectionTaxonomy($similarQuestion);
+			}
+
+			return;
+		}
+
+		$this->debug('Creating new question!');
 
 		$question = $quizSet->questions()->firstOrCreate([
-			'text' => nl2br($values[0]),
+			'text' => $text,
 		]);
 
 		for ($i = 1; $i <= 5; $i++) {
@@ -104,6 +129,16 @@ class QuizImport extends Command
 			]);
 		}
 
+		$this->attachTags($question, $values);
+
+		$this->tryMatchingCollectionTaxonomy($question);
+
+		$question->preserve_order = (bool)$values[10];
+		$question->save();
+	}
+
+	protected function attachTags(&$question, $values)
+	{
 		if (!empty($values[12])) {
 			$this->globalTags[] = trim($values[12]);
 		}
@@ -115,14 +150,68 @@ class QuizImport extends Command
 			$tagNames = array_merge($tagNames, $this->globalTags);
 		}
 
+		$tagNames = array_unique($tagNames);
+
 		foreach ($tagNames as $tagName) {
 			$tag = Tag::firstOrCreate(['name' => $tagName]);
 			if (!$question->tags->contains($tag)) {
 				$question->tags()->attach($tag);
 			}
 		}
+	}
 
-		$question->preserve_order = (bool)$values[10];
-		$question->save();
+	protected function tryMatchingCollectionTaxonomy($question)
+	{
+		$collectionsTagsTx = TagsTaxonomy::select()
+			->whereHas('taxonomy', function ($query) {
+				$query->where('name', 'collections');
+			})
+			->whereIn('tag_id', $question->tags->pluck('id'))
+			->get();
+
+		foreach ($collectionsTagsTx as $tagTaxonomy) {
+			if ($tagTaxonomy->parent_tag_id === 0) return;
+
+			$parentTag = Tag::find($tagTaxonomy->parent_tag_id);
+			if (!$question->tags->contains($parentTag)) {
+				$question->tags()->attach($parentTag);
+			}
+		}
+	}
+
+	protected function checkSimilarity($text, $values)
+	{
+		foreach ($this->questions as $question) {
+			if ($question->text === $text) return $question;
+
+			if (!$this->option('check')) continue;
+			similar_text($question->text, $text, $similarity);
+
+			if ($similarity > 78) {
+				$this->warn('Similar question found! Similarity: ' . ceil($similarity) . '%');
+				$this->info('Database:');
+				dump($question->text . PHP_EOL);
+				dump($question->answers->pluck('text')->toArray());
+
+				$this->info('File:');
+				dump($text . PHP_EOL);
+				for ($i = 1; $i <= 5; $i++) {
+					dump($values[$i] . PHP_EOL);
+				}
+				if ($this->confirm('Add as new question?')) {
+					return false;
+				} else {
+					return $question;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	protected function debug($message)
+	{
+		if (!$this->option('debug')) return;
+		$this->info($message);
 	}
 }

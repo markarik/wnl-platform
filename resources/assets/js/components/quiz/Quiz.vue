@@ -5,7 +5,7 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary></wnl-quiz-summary>
+			<wnl-quiz-summary :showAlert="showAlert"></wnl-quiz-summary>
 		</div>
 		<div v-else>
 			<p class="title is-5">
@@ -19,7 +19,18 @@
 					Rozwiąż wszystkie pytania
 				</a>
 			</p>
-			<wnl-quiz-list v-if="isLoaded"></wnl-quiz-list>
+			<wnl-quiz-list v-if="isLoaded"
+				module="quiz"
+				ref="quizList"
+				:allQuestions="getQuestionsWithAnswers"
+				:canEndQuiz="canEndQuiz"
+				:getReaction="getReaction"
+				:isProcessing="isProcessing"
+				:isComplete="isComplete"
+				@selectAnswer="onAnswerSelect"
+				@resetState="resetState"
+				@checkQuiz="onCheckQuiz"
+			/>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
 	</div>
@@ -34,10 +45,11 @@
 
 <script>
 	import _ from 'lodash'
+	import { mapActions, mapGetters } from 'vuex'
 
 	import QuizList from 'js/components/quiz/QuizList'
 	import QuizSummary from 'js/components/quiz/QuizSummary'
-	import { mapActions, mapGetters } from 'vuex'
+	import {scrollToTop} from 'js/utils/animations'
 
 	export default {
 		name: 'Quiz',
@@ -45,16 +57,31 @@
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-summary': QuizSummary,
 		},
-		props: ['screenData', 'readOnly'],
-		computed: {
-			...mapGetters('quiz', ['isComplete', 'isLoaded']),
-			...mapGetters(['isAdmin']),
-			displayResults() {
-				return this.readOnly || this.isComplete
+		data() {
+			return {
+				showAlert: false
 			}
 		},
+		props: ['screenData', 'readOnly'],
+		computed: {
+			...mapGetters('quiz', [
+				'getAttempts',
+				'getQuestionsWithAnswers',
+				'getReaction',
+				'isComplete',
+				'isLoaded',
+				'isProcessing',
+			]),
+			...mapGetters(['isAdmin']),
+			canEndQuiz() {
+				return this.getAttempts.length > 2
+			},
+			displayResults() {
+				return this.readOnly || this.isComplete
+			},
+		},
 		methods: {
-			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve']),
+			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'commitSelectAnswer', 'resetState', 'checkQuiz']),
 			setup() {
 				let meta = this.screenData.meta
 				if (!_.isObject(meta)) {
@@ -63,6 +90,23 @@
 
 				this.setupQuestions(meta.resources[0])
 			},
+			onAnswerSelect(data) {
+				if (!this.isComplete) {
+					this.commitSelectAnswer(data)
+				}
+			},
+			onCheckQuiz(force = false) {
+				this.checkQuiz(force).then(() => {
+					if (this.isComplete) {
+						if (!force) {
+							this.showAlert = true
+						}
+						scrollToTop()
+					} else {
+						this.$refs.quizList.showAlert()
+					}
+				})
+			}
 		},
 		mounted() {
 			this.setup()

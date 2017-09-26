@@ -39,7 +39,7 @@
 		data () {
 			return {
 				loaded: false,
-				orders: {}
+				orders: []
 			}
 		},
 		computed: {
@@ -61,7 +61,7 @@
 								this.orders = []
 							}
 
-							this.orders = response.data.filter(this.isConfirmed)
+							this.orders = _.reverse(response.data.filter(this.isConfirmed))
 							this.loaded = true
 						})
 						.catch(exception => $wnl.logger.capture(exception))

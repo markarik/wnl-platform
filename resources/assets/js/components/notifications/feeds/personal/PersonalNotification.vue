@@ -1,29 +1,32 @@
 <template>
-	<div class="personal-notification" @click="markAsReadAndGo">
-		<div class="actor">
-			<wnl-event-actor :message="message"/>
-		</div>
-		<div class="notification-content">
-			<div class="notification-header">
-				<span class="actor">{{ message.actors.full_name }}</span>
-				<span class="action">{{ action }}</span>
-				<span class="object" v-if="object">{{ object }}</span>
-				<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
-				<span class="object-text" v-if="objectText">{{ objectText }}</span>
+	<div class="notification-wrapper">
+		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted}">
+			<div class="actor">
+				<wnl-event-actor :message="message"/>
 			</div>
-			<div class="subject" v-if="subjectText">{{ subjectText }}</div>
-			<div class="time">
-				<span class="icon is-small">
-					<i class="fa" :class="icon"></i>
-				</span>{{ formattedTime }}
+			<div class="notification-content">
+				<div class="notification-header">
+					<span class="actor">{{ message.actors.full_name }}</span>
+					<span class="action">{{ action }}</span>
+					<span class="object" v-if="object">{{ object }}</span>
+					<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
+					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
+				</div>
+				<div class="subject wrap" v-if="subjectText">{{ subjectText }}</div>
+				<div class="time">
+					<span class="icon is-small">
+						<i class="fa" :class="icon"></i>
+					</span>{{ formattedTime }}
+				</div>
+			</div>
+			<div class="link-symbol">
+				<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
+					<i v-if="loading" class="loader"></i>
+					<i v-else class="fa fa-angle-right"></i>
+				</span>
 			</div>
 		</div>
-		<div class="link-symbol">
-			<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
-				<i v-if="loading" class="loader"></i>
-				<i v-else class="fa fa-angle-right"></i>
-			</span>
-		</div>
+		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
 	</div>
 </template>
 
@@ -93,7 +96,6 @@
 
 			&.unread
 				color: $color-ocean-blue
-
 </style>
 
 <script>
@@ -129,16 +131,6 @@
 					this.currentUserId === objects.author ? 2 : 1
 				)
 			},
-			objectText() {
-				if (!this.object) return false;
-
-				return truncate(this.message.objects.text, {length: 75})
-			},
-			subjectText() {
-				if (!this.message.subject) return false;
-
-				return truncate(this.message.subject.text, {length: 150})
-			}
 		},
 		methods: {
 			dispatchGoToContext() {

@@ -1,0 +1,41 @@
+<?php
+
+
+namespace Tests\Browser\Tests\Payment\Modules;
+
+
+use Tests\Browser\Pages\Payment\P24ChooseBank;
+
+class OnlinePaymentModule
+{
+	public function successfulPayment($browser)
+	{
+		$this->payment($browser);
+		$browser->press('@confirm-payment');
+
+		return MyOrdersModule::class;
+	}
+
+	public function rejectedPayment($browser)
+	{
+		$this->payment($browser);
+		$browser->press('@decline-payment');
+		$browser->click('@return');
+
+		return MyOrdersModule::class;
+	}
+
+	protected function payment($browser)
+	{
+		$browser
+			->on(new P24ChooseBank)
+			->press('@ing-logo');
+
+		$browser->pause(500);
+		$browser->driver->executeScript("$('#reagulation-accept-button').click()");
+
+		$browser
+			->waitFor('@login-button', 40)
+			->press('@login-button');
+	}
+}

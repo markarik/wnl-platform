@@ -1,29 +1,55 @@
 <template>
 	<div class="wnl-main-nav wnl-column" v-bind:class="{ 'horizontal': isHorizontal }">
-		<router-link class="wnl-main-nav-item" :to="{ name: 'courses', params: { courseId: 1 } }">
+		<router-link class="wnl-main-nav-item" :to="{ name: 'courses', params: { courseId: 1, keepsNavOpen: true }}">
 			<span class="icon is-medium">
 				<i class="fa fa-home"></i>
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'collections' }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
+			v-if="$moderatorFeed.isAllowed('access')"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
 			</span>
 			<span class="text">Kolekcje</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'myself' }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
+			v-if="canAccess"
+		>
+			<span class="icon is-medium">
+				<i class="fa fa-check-square-o"></i>
+			</span>
+		<span class="text">{{$t('nav.sideNav.questions')}}</span>
+		</router-link>
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'myself', params: { keepsNavOpen: true } }"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-user-o"></i>
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'help' }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'help', params: { keepsNavOpen: true } }"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-heartbeat"></i>
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
+		<a v-if="canAccess" class="wnl-main-nav-item" :href="signUpLink">
+			<span class="icon is-medium">
+				<i class="fa fa-thumbs-o-up"></i>
+			</span>
+			<span class="text">Zapisz się!</span>
+		</a>
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
@@ -59,6 +85,13 @@
 			min-height: $main-nav-min-size
 			height: $main-nav-size
 
+			.icon
+				height: 1.5rem
+				width: 1.5rem
+
+				.fa
+					font-size: 23px
+
 		.wnl-main-nav-item
 			align-items: center
 			color: $color-gray-dimmed
@@ -77,6 +110,7 @@
 			&.is-active
 				background: $color-background-lighter-gray
 				color: $color-ocean-blue
+				font-weight: $font-weight-regular
 				transition: all $transition-length-base
 
 			.text
@@ -85,13 +119,24 @@
 </style>
 
 <script>
-	import moderatorFeed from 'js/perimeters/moderatorFeed';
+	import {mapGetters} from 'vuex'
+	import moderatorFeed from 'js/perimeters/moderatorFeed'
+	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'MainNav',
 		props: ['isHorizontal'],
 		perimeters: [
-			moderatorFeed
-		]
+			moderatorFeed,
+		],
+		computed: {
+			...mapGetters(['currentUser']),
+			canAccess() {
+				return this.currentUser.roles.includes('edition-1-participant')
+			},
+			signUpLink() {
+				return getUrl('payment/select-product')
+			},
+		},
 	}
 </script>

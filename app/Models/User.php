@@ -51,6 +51,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Order');
 	}
 
+	public function coupons()
+	{
+		return $this->hasMany('App\Models\Coupon');
+	}
+
 	public function profile()
 	{
 		return $this->hasOne('App\Models\UserProfile');
@@ -96,6 +101,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Comment');
 	}
 
+	public function qnaAnswers()
+	{
+		return $this->hasMany('App\Models\QnaAnswer');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -103,26 +113,6 @@ class User extends Authenticatable
 	public function getFullNameAttribute()
 	{
 		return $this->first_name . ' ' . $this->last_name;
-	}
-
-	public function getFirstNameAttribute($value)
-	{
-		return decrypt($value);
-	}
-
-	public function setFirstNameAttribute($value)
-	{
-		$this->attributes['first_name'] = encrypt($value);
-	}
-
-	public function getLastNameAttribute($value)
-	{
-		return decrypt($value);
-	}
-
-	public function setLastNameAttribute($value)
-	{
-		$this->attributes['last_name'] = encrypt($value);
 	}
 
 	public function getAddressAttribute($value)

@@ -5,6 +5,8 @@ import Vue from 'vue'
 import {sync} from 'vuex-router-sync'
 import store from 'js/store/store'
 import router from 'js/router'
+import Quill from 'quill'
+import MentionBlot from 'js/classes/mentionblot'
 sync(store, router)
 
 
@@ -71,6 +73,10 @@ const app = new Vue({
 	i18n,
 	...App
 }).$mount('#app')
+
+Quill.register({
+  'formats/mention': MentionBlot
+});
 
 // TODO: Move it to a separate component
 $.ajaxSetup({

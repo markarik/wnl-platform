@@ -8,9 +8,9 @@
 			</p>
 		</figure>
 		<div class="media-content">
-			<div class="content">
-				<strong>{{profile.full_name}}</strong>
-				<div class="comment-text" v-html="comment.text"></div>
+			<div class="comment-content">
+				<span class="author">{{profile.full_name}}</span>
+				<div class="comment-text wrap" v-html="comment.text"></div>
 				<small>{{time}}</small>
 				<span v-if="isCurrentUserAuthor">
 					&nbsp;·
@@ -28,12 +28,18 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.content
+	.comment-content
 		margin-top: -5px
 
-	p.comment-text
+	.author
+		font-weight: $font-weight-bold
+
+	.comment-text
 		margin: $margin-small 0
 		padding: 0
+
+		p
+			margin: 0
 
 	.comment-icon-link
 		.icon

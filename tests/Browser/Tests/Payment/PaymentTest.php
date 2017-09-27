@@ -149,7 +149,6 @@ class PaymentTest extends DuskTestCase
 	public function randomCheckoutTest()
 	{
 		if (file_exists('scenario.dusk')) unlink('scenario.dusk');
-//		file_put_contents('scenario.dusk', '---------------------------------' . PHP_EOL, FILE_APPEND);
 		$this->browse(function ($browser) {
 			$next = UserModule::class;
 			while ($next) $next = $this->callRandom($next, $browser);
@@ -184,7 +183,6 @@ class PaymentTest extends DuskTestCase
 			$contents = file_get_contents('scenario.dusk');
 			$namespace = 'Tests\Browser\Tests\Payment\Modules\\';
 			foreach (explode("\n", $contents) as $item) {
-				$browser->pause(5000);
 				if (!$item) continue;
 //				fwrite(STDOUT, $item . PHP_EOL);
 				list($module, $method) = explode('->', $item);

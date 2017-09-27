@@ -4,6 +4,7 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 
+use App\Models\Order;
 use App\Models\User;
 use Faker\Factory;
 use Faker\Generator;
@@ -83,7 +84,9 @@ class PersonalDataModule extends TestModule
 
 		if (!$this->isEdit($browser)) {
 			$browser->user = User::where('email', $userData['email'])->first();
+			$browser->order = $browser->user->orders()->recent();
 			PHPUnit::assertTrue($browser->user instanceof User);
+			PHPUnit::assertTrue($browser->order instanceof Order);
 		}
 	}
 

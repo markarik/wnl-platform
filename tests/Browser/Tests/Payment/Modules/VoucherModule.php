@@ -25,6 +25,11 @@ class VoucherModule
 		return $this->useCode($browser, 100);
 	}
 
+//	public function existingUser50PercCoupon()
+//	{
+//
+//	}
+
 	public function skip($browser)
 	{
 		$browser

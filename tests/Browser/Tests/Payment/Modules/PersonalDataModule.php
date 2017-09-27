@@ -24,9 +24,6 @@ class PersonalDataModule extends TestModule
 	{
 		$this->navigate($browser);
 
-		if (!empty($browser->user)) {
-			return ConfirmOrderModule::class;
-		}
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, false);
 
@@ -37,9 +34,6 @@ class PersonalDataModule extends TestModule
 	{
 		$this->navigate($browser);
 
-		if (!empty($browser->user)) {
-			return ConfirmOrderModule::class;
-		}
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, true);
 
@@ -80,7 +74,7 @@ class PersonalDataModule extends TestModule
 		$this->fillInForm($userData, $browser, $invoiceFlag, !$this->isEdit($browser));
 		$browser->userData = $userData;
 
-		$browser->xpath('.//button[@class="button is-primary"]')->click();
+		$browser->xpathClick('.//button[@class="button is-primary"]');
 
 		if (!$this->isEdit($browser)) {
 			$browser->user = User::where('email', $userData['email'])->first();

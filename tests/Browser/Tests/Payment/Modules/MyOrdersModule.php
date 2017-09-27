@@ -15,7 +15,7 @@ class MyOrdersModule
 	public function studyBuddy($browser)
 	{
 		// make assertions
-		dd($browser->order);
+//		dd($browser->order);
 		// mark order as paid
 		// refresh
 		// start new session

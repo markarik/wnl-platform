@@ -203,6 +203,15 @@ class BethinkBrowser extends Browser
 		return $this;
 	}
 
+	public function press($button)
+	{
+		$element = $this->resolver->resolveForButtonPress($button);
+		$this->scrollToElement($element);
+		$element->click();
+
+		return $this;
+	}
+
 	public function xpathClick($pattern)
 	{
 		$element = $this->xpath($pattern);

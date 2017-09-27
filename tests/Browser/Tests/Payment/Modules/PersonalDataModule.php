@@ -14,7 +14,7 @@ use Tests\Browser\Pages\Login;
 use Tests\Browser\Pages\LoginModal;
 use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Tests\Payment\SignsUpUsers;
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert;
 
 class PersonalDataModule extends TestModule
 {
@@ -85,8 +85,8 @@ class PersonalDataModule extends TestModule
 		if (!$this->isEdit($browser)) {
 			$browser->user = User::where('email', $userData['email'])->first();
 			$browser->order = $browser->user->orders()->recent();
-			PHPUnit::assertTrue($browser->user instanceof User);
-			PHPUnit::assertTrue($browser->order instanceof Order);
+			Assert::assertTrue($browser->user instanceof User);
+			Assert::assertTrue($browser->order instanceof Order);
 		}
 	}
 

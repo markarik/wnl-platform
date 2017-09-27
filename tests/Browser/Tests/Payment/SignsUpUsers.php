@@ -63,7 +63,6 @@ trait SignsUpUsers
 				->type('password_confirmation', $user['password']);
 		}
 		$browser->type('phone', $user['phoneNumber'])
-			->pageDown()
 			->type('first_name', $user['firstName'])
 			->type('last_name', $user['lastName'])
 			->type('address', $user['address'])
@@ -78,14 +77,12 @@ trait SignsUpUsers
 				->type('invoice_address', $user['invoice_address'])
 				->type('invoice_zip', $user['invoice_postcode'])
 				->type('invoice_city', $user['invoice_city'])
-				->type('invoice_country', $user['invoice_country'])
-				->pageDown();
+				->type('invoice_country', $user['invoice_country']);
 		}
 
-		$browser->check('consent_account')
-			->check('consent_order')
-			->check('consent_newsletter')
-			->check('consent_terms')
-			->pageDown();
+		$browser->check('consent_account');
+		$browser->check('consent_order');
+		$browser->check('consent_newsletter');
+		$browser->check('consent_terms');
 	}
 }

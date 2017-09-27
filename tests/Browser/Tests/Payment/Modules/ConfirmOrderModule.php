@@ -12,7 +12,6 @@ class ConfirmOrderModule
 	{
 		$browser
 			->on(new ConfirmOrderPage)
-			->pageDown()
 			->click('@edit-persona-data');
 
 		return PersonalDataModule::class;
@@ -22,8 +21,7 @@ class ConfirmOrderModule
 	{
 		$browser
 			->on(new ConfirmOrderPage)
-			->pageDown()
-			->xpath('.//button[1]')->click();
+			->xpathClick('.//button[1]');
 
 		return MyOrdersModule::class;
 	}
@@ -32,7 +30,6 @@ class ConfirmOrderModule
 	{
 		$browser
 			->on(new ConfirmOrderPage)
-			->pageDown()
 			->press('button.p24-submit')
 			->waitForText('Wybierz formę płatności', 30);
 
@@ -43,10 +40,8 @@ class ConfirmOrderModule
 	{
 		$browser
 			->on(new ConfirmOrderPage)
-			->pageDown()
 			->click('@expand-instalments')
 			->pause(500)
-			->pageDown()
 			->press('@instalments-button');
 
 		return MyOrdersModule::class;

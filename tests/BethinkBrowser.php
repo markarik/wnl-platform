@@ -47,6 +47,13 @@ class BethinkBrowser extends Browser
 		);
 	}
 
+	public function scrollTo($x, $y)
+	{
+		$this->driver->executeScript("window.scroll({$x} - window.innerWidth/2, {$y} - window.innerHeight/2)");
+
+		return $this;
+	}
+
 	/**
 	 * Scroll browser window one page down
 	 */
@@ -153,9 +160,17 @@ class BethinkBrowser extends Browser
 		return true;
 	}
 
-	public function scrollTo($selector)
+	public function scrollToSelector($selector)
 	{
 		$this->executeScript('return document.querySelector(arguments[0]).scrollIntoView(true)', [$selector]);
+
+		return $this;
+	}
+
+	public function scrollToElement($element)
+	{
+		$location = $element->getLocation();
+		$this->scrollTo($location->getX(), $location->getY());
 
 		return $this;
 	}
@@ -165,5 +180,35 @@ class BethinkBrowser extends Browser
 		return parse_url(
 			$this->driver->getCurrentURL()
 		)['path'];
+	}
+
+	public function check($field, $value = null)
+	{
+		$element = $this->resolver->resolveForChecking($field, $value);
+		$this->scrollToElement($element);
+
+		if (!$element->isSelected()) {
+			$element->click();
+		}
+
+		return $this;
+	}
+
+	public function click($selector)
+	{
+		$element = $this->resolver->findOrFail($selector);
+		$this->scrollToElement($element);
+		$element->click();
+
+		return $this;
+	}
+
+	public function xpathClick($pattern)
+	{
+		$element = $this->xpath($pattern);
+		$this->scrollToElement($element);
+		$element->click();
+
+		return $this;
 	}
 }

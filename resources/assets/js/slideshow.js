@@ -1,15 +1,13 @@
 import $ from 'jquery'
-import {template} from 'lodash'
 import Postmate from 'postmate-fork'
 import Reveal from '../../vendor/reveal/reveal'
-import {imageviewer} from '../../vendor/imageviewer/imageviewer'
 
 import {timeFromS} from 'js/utils/time'
 
-imageviewer($, window, document)
+const ImageViewer = window.parent.ImageViewer
 
 const container             = document.getElementsByClassName('reveal')[0]
-const $controls             = $('.wnl-slideshow-control')
+const controls              = document.querySelectorAll('.wnl-slideshow-control')
 const $chartsContainers     = $('.slides').find('.iv-image-container')
 const $slideshowAnnotations = $('.slideshow-annotations')
 const $slideAnnotations     = $slideshowAnnotations.find('.annotations-to-slide')
@@ -156,10 +154,10 @@ Reveal.addEventListener('slidechanged', (event) => {
 	}
 })
 
-if ($controls.length > 0) {
-	$.each($controls, (index, element) => {
-		$(element).on('click', handleControlClick)
-	})
+if (controls.length > 0) {
+	controls.forEach((control) => {
+		control.addEventListener('click', handleControlClick)
+	});
 }
 
 $(() => {

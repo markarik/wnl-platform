@@ -49,9 +49,7 @@
 
 <script>
 	import _ from 'lodash'
-	import {imageviewer} from 'vendor/imageviewer/imageviewer'
 
-	imageviewer($, window, document)
 	function showImage() {
 		// this is not Vue component, it's "event triggered" this
 		ImageViewer({snapViewPersist: false}).show(this.src);

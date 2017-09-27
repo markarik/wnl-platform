@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 /*
     ImageViewer v 1.1.3
     Author: Sudhanshu Yadav

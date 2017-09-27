@@ -7,6 +7,7 @@ import store from 'js/store/store'
 import router from 'js/router'
 import Quill from 'quill'
 import MentionBlot from 'js/classes/mentionblot'
+import {imageviewer} from 'vendor/imageviewer/imageviewer'
 sync(store, router)
 
 
@@ -77,6 +78,8 @@ const app = new Vue({
 Quill.register({
   'formats/mention': MentionBlot
 });
+
+imageviewer($, window, document)
 
 // TODO: Move it to a separate component
 $.ajaxSetup({

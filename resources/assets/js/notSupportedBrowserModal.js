@@ -53,7 +53,7 @@
 				// only take the major version
 				version: version[0]
 			};
-		}).filter(Boolean)[0] || null;
+		}).filter(Boolean)[0] || {};
 
 		return detected;
 	}

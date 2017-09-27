@@ -446,10 +446,12 @@ let imageviewer = function ($, window, document, undefined) {
             //display snapView on interaction
             var snapViewTimeout, snapViewVisible;
 
-            function showSnapView(noTimeout) {
+            function showSnapView(noTimeout, forceShow) {
+                var forceShow = forceShow || false;
+
                 if(!options.snapView) return;
 
-                if (snapViewVisible || viewer.zoomValue <= 100 || !viewer.loaded) return;
+                if (!forceShow && (snapViewVisible || viewer.zoomValue <= 100 || !viewer.loaded)) return;
                 clearTimeout(snapViewTimeout);
                 snapViewVisible = true;
                 viewer.snapView.css('opacity', 1);
@@ -491,6 +493,10 @@ let imageviewer = function ($, window, document, undefined) {
                     viewer.hide();
                 });
             }
+
+            container.on('loaded', function() {
+                showSnapView(false, true)
+            })
         },
 
         //method to zoom images
@@ -726,6 +732,7 @@ let imageviewer = function ($, window, document, undefined) {
 
                 //hide loader
                 container.find('.iv-loader').hide();
+                container.trigger('loaded')
             }
 
             if (imageLoaded(currentImg[0])) {

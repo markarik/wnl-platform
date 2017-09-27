@@ -70,6 +70,15 @@ export const commentsMutations = {
 		destroy(state.comments, payload.id)
 		set(state[resource][resourceId], 'comments', comments)
 	},
+	[types.RESOLVE_COMMENT] (state, payload) {
+		let id = payload.id,
+			resource = payload.commentableResource,
+			resourceId = payload.commentableId,
+			comments = state[resource][resourceId].comments.filter(comment => comment !== id)
+
+		destroy(state.comments, payload.id)
+		set(state[resource][resourceId], 'comments', comments)
+	},
 	[types.SET_COMMENTS] (state, payload) {
 		set(state, 'profiles', payload.included.profiles)
 		destroy(payload, 'included')
@@ -92,6 +101,9 @@ export const commentsActions = {
 	},
 	removeComment({commit}, payload) {
 		commit(types.REMOVE_COMMENT, payload)
+	},
+	resolveComment({commit}, payload) {
+		commit(types.RESOLVE_COMMENT, payload)
 	},
 	fetchComments({commit}, {ids, resource}) {
 		return new Promise((resolve, reject) => {

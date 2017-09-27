@@ -120,7 +120,7 @@
 
 <script>
 	import {mapGetters} from 'vuex'
-	import moderatorFeed from 'js/perimeters/moderatorFeed'
+	import moderatorFeed from 'js/perimeters/moderator'
 	import {getUrl} from 'js/utils/env'
 
 	export default {

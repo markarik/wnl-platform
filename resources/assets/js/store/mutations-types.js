@@ -28,6 +28,7 @@ export const SET_NAVIGATION = 'SET_NAVIGATION'
 export const SET_COMMENTS   = 'SET_COMMENTS'
 export const ADD_COMMENT    = 'ADD_COMMENT'
 export const REMOVE_COMMENT = 'REMOVE_COMMENT'
+export const RESOLVE_COMMENT = 'RESOLVE_COMMENT'
 
 // Reactions
 export const SET_REACTION  = 'SET_REACTION'

@@ -20,6 +20,11 @@
 						@deleteSuccess="onDeleteSuccess"
 					></wnl-delete>
 				</span>
+				<!-- resolvable mixin related logic -->
+				<span class="resolvable" v-if="$moderatorFeed.isAllowed('access')">
+					&nbsp;·
+					<i class="fa fa-check icon" @click="$emit('resolveComment', id)"/>
+				</span>
 			</div>
 		</div>
 	</article>
@@ -45,6 +50,11 @@
 		.icon
 			font-size: $font-size-minus-3
 			vertical-align: middle
+	.resolvable
+		.icon
+			cursor: pointer
+			&:hover
+				color: $color-red
 </style>
 
 <script>
@@ -52,12 +62,14 @@
 
 	import Delete from 'js/components/global/form/Delete'
 	import { timeFromS } from 'js/utils/time'
+	import resolvable from 'js/mixins/resolvable'
 
 	export default {
 		name: 'Comment',
 		components: {
 			'wnl-delete': Delete,
 		},
+		mixins: [resolvable],
 		props: ['comment', 'profile'],
 		computed: {
 			...mapGetters(['currentUserId']),

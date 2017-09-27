@@ -17,7 +17,8 @@
 			:comment="comment"
 			:profile="commentProfile(comment.profiles[0])"
 			@removeComment="onRemoveComment"
-			>
+			@resolveComment="onResolveComment"
+		>
 			{{comment.text}}
 		</wnl-comment>
 		<div class="form-container" v-if="showComments">
@@ -141,6 +142,13 @@
 			},
 			onRemoveComment(id) {
 				this.action('removeComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
+			onResolveComment(id) {
+				this.action('resolveComment', {
 					commentableResource: this.commentableResource,
 					commentableId: this.commentableId,
 					id,

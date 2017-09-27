@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
-import moderatorFeed from 'js/perimeters/moderatorFeed';
+import moderatorFeed from 'js/perimeters/moderator';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
 

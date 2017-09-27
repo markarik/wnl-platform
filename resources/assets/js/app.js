@@ -37,7 +37,7 @@ Vue.use(VueSimpleBreakpoints, {
 // Kindergarten
 import VueKindergarten from 'vue-kindergarten'
 Vue.use(VueKindergarten, {
-	child(store) {
+	child: (store) => {
 		return store && store.getters.currentUser
 	}
 })

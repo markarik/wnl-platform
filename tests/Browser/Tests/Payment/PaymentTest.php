@@ -8,53 +8,93 @@ use Tests\Browser\Tests\Payment\Modules\OnlinePaymentModule;
 use Tests\Browser\Tests\Payment\Modules\PersonalDataModule;
 use Tests\Browser\Tests\Payment\Modules\SelectProductModule;
 use Tests\Browser\Tests\Payment\Modules\UserModule;
-use Faker\Factory;
-use Tests\Browser\Pages\Payment\ConfirmOrderPage;
-use Tests\Browser\Pages\Payment\P24ChooseBank;
-use Tests\Browser\Pages\Payment\PersonalDataPage;
-use Tests\Browser\Pages\Payment\SelectProductPage;
-use Tests\Browser\Pages\User\OrdersPage;
 use Tests\Browser\Tests\Payment\Modules\VoucherModule;
 use Tests\DuskTestCase;
+use Mail;
 
 class PaymentTest extends DuskTestCase
 {
-	/** @test */
+	/**
+	 * @test
+	 * @group checkout
+	 */
 	public function registerAndPayOnline()
 	{
 		$this->execute([
-			UserModule::class          => 'newUser',
-			SelectProductModule::class => 'onsite',
-			PersonalDataModule::class  => 'signUpNoInvoice',
-			ConfirmOrderModule::class  => 'payOnline',
-			OnlinePaymentModule::class => 'successfulPayment',
-			MyOrdersModule::class      => 'end',
+			[UserModule::class          , 'newUser'],
+			[SelectProductModule::class , 'onsite'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payOnline'],
+			[OnlinePaymentModule::class , 'successfulPayment'],
+			[MyOrdersModule::class      , 'end'],
 		]);
 	}
 
-	/** @test */
+	/**
+	 * @test
+	 * @group checkout
+	 */
 	public function logInEditDataAndOrder()
 	{
 		$this->execute([
-			UserModule::class          => 'existingUser',
-			VoucherModule::class       => 'skip',
-			SelectProductModule::class => 'online',
-			ConfirmOrderModule::class  => 'editData',
-			PersonalDataModule::class  => 'signUpCustomInvoice',
-			ConfirmOrderModule::class  => 'payByTransfer',
-			MyOrdersModule::class      => 'end',
+			[UserModule::class          , 'existingUser'],
+			[VoucherModule::class       , 'skip'],
+			[SelectProductModule::class , 'online'],
+			[ConfirmOrderModule::class  , 'editData'],
+			[PersonalDataModule::class  , 'signUpCustomInvoice'],
+			[ConfirmOrderModule::class  , 'payByTransfer'],
+			[MyOrdersModule::class      , 'end'],
 		]);
 	}
 
-	/** @test */
+	/**
+	 * @test
+	 * @group checkout
+	 */
 	public function registerAndPayByInstalments()
 	{
 		$this->execute([
-			UserModule::class          => 'newUser',
-			SelectProductModule::class => 'online',
-			PersonalDataModule::class  => 'signUpNoInvoice',
-			ConfirmOrderModule::class  => 'payByInstalments',
-			MyOrdersModule::class      => 'end',
+			[UserModule::class          , 'newUser'],
+			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByInstalments'],
+			[MyOrdersModule::class      , 'end'],
+		]);
+	}
+
+	/**
+	 * @test
+	 * @group checkout
+	 */
+	public function studyBuddy()
+	{
+		$this->execute([
+			[UserModule::class          , 'newUser'],
+			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByInstalments'],
+			[MyOrdersModule::class      , 'studyBuddy'],
+			[VoucherModule::class       , 'default'],
+			[SelectProductModule::class , 'onsite'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByTransfer'],
+			[MyOrdersModule::class      , 'end'],
+		]);
+	}
+
+	/**
+	 * @test
+	 * @group checkout
+	 */
+	public function freeCourseCoupon()
+	{
+		$this->execute([
+			[UserModule::class          , 'newUser'],
+			[VoucherModule::class       , 'code100Percent'],
+			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByTransfer'],
+			[MyOrdersModule::class      , 'end'],
 		]);
 	}
 
@@ -108,7 +148,7 @@ class PaymentTest extends DuskTestCase
 	protected function execute($scenario)
 	{
 		$this->browse(function ($browser) use ($scenario) {
-			foreach ($scenario as $module => $method) {
+			foreach ($scenario as list($module, $method)) {
 				(new $module)->$method($browser);
 			}
 		});

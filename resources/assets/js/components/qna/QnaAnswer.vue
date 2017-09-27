@@ -37,32 +37,13 @@
 			</div>
 		</div>
 		<div class="qna-answer-comments">
-			<p class="qna-title" :class="{'is-expanded': showComments}">
-				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
-				Komentarze ({{comments.length}})
-				<span v-if="comments.length > 0">
-					 · <a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
-				</span>
-				<span v-if="!readOnly">
-					 · <a class="secondary-link" @click="showCommentForm = !showCommentForm">Skomentuj</a>
-				</span>
-			</p>
-			<transition name="fade">
-				<wnl-qna-new-comment-form v-if="showCommentForm"
-					:answerId="this.id"
-					@submitSuccess="onSubmitSuccess">
-				</wnl-qna-new-comment-form>
-			</transition>
-			<wnl-qna-comment v-if="showComments"
-				v-for="comment in comments"
-				:answerId="id"
-				:comment="comment"
-				:key="comment.id"
-				:readOnly="readOnly">
-			</wnl-qna-comment>
-			<div class="comments-loader" v-if="loading">
-				<wnl-text-loader></wnl-text-loader>
-			</div>
+			<wnl-comments-list
+				commentableResource="qna_answers"
+				urlParam="qna_answer"
+				module="qna"
+				:commentableId="this.id"
+				:isUnique="true">
+			</wnl-comments-list>
 		</div>
 	</div>
 </template>
@@ -94,13 +75,6 @@
 	.qna-title
 		font-size: $font-size-minus-1
 
-	.comment-icon
-		margin-right: $margin-small
-		margin-top: -$margin-small
-
-	.comments-loader
-		margin: $margin-base 0
-
 	.qna-wrapper
 		display: flex
 		align-items: flex-start
@@ -114,10 +88,9 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
-	import NewCommentForm from 'js/components/qna/NewCommentForm'
-	import QnaComment from 'js/components/qna/QnaComment'
 	import Vote from 'js/components/global/reactions/Vote'
 	import highlight from 'js/mixins/highlight'
+	import CommentsList from 'js/components/comments/CommentsList'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -125,26 +98,21 @@
 		name: 'QnaAnswer',
 		components: {
 			'wnl-delete': Delete,
-			'wnl-qna-new-comment-form': NewCommentForm,
-			'wnl-qna-comment': QnaComment,
 			'wnl-vote': Vote,
+			'wnl-comments-list': CommentsList
 		},
 		mixins: [ highlight ],
-		props: ['answer', 'questionId', 'reactableId', 'module', 'readOnly', 'refresh'],
+		props: ['answer', 'questionId', 'reactableId', 'readOnly', 'refresh'],
 		data() {
 			return {
-				commentsFetched: false,
 				loading: false,
-				showComments: false,
-				showCommentForm: false,
 				reactableResource: "qna_answers",
-				highlightableResources: ["qna_answer", "qna_question", "comment", "reaction"]
+				highlightableResources: ["qna_answer", "qna_question", "reaction"]
 			}
 		},
 		computed: {
 			...mapGetters('qna', [
 				'profile',
-				'answerComments',
 				'getReaction'
 			]),
 			...mapGetters(['currentUserId', 'isOverlayVisible']),
@@ -163,12 +131,6 @@
 			author() {
 				return this.profile(this.answer.profiles[0])
 			},
-			comments() {
-				return this.answerComments(this.id)
-			},
-			toggleCommentsText() {
-				return this.showComments ? 'Schowaj' : 'Pokaż'
-			},
 			isCurrentUserAuthor() {
 				return this.currentUserId === this.author.id
 			},
@@ -182,41 +144,16 @@
 				return _.get(this.$route.query, 'qna_answer') == this.answer.id
 					&& _.get(this.$route.query, 'qna_question') == this.questionId
 			},
-			isCommentInUrl() {
-				return _.get(this.$route.query, 'qna_answer') == this.answer.id
-					&& _.get(this.$route.query, 'comment')
-			},
 			isReactionInUrl() {
 				return _.get(this.$route.query, 'qna_answer') == this.answer.id
 					&& _.get(this.$route.query, 'reaction')
 			},
 			shouldHighlight() {
-				return this.isAnswerInUrl || this.isCommentInUrl || this.isReactionInUrl
+				return this.isAnswerInUrl || this.isReactionInUrl
 			}
 		},
 		methods: {
-			...mapActions('qna', ['fetchComments', 'removeAnswer']),
-			toggleComments() {
-				if (!this.commentsFetched) {
-					this.dispatchFetchComments()
-				} else {
-					this.showComments = !this.showComments
-				}
-			},
-			dispatchFetchComments() {
-				this.loading = true
-				return this.fetchComments(this.id)
-					.then(() => {
-						this.commentsFetched = true
-						this.showComments = true
-						this.loading = false
-					})
-			},
-			onSubmitSuccess() {
-				this.showComments = true
-				this.showCommentForm = false
-				this.dispatchFetchComments()
-			},
+			...mapActions('qna', ['removeAnswer']),
 			onDeleteSuccess() {
 				this.removeAnswer({
 					questionId: this.questionId,
@@ -224,22 +161,12 @@
 				})
 			},
 			refreshAnswer() {
-				this.commentsFetched = false
-				this.showComments = false
-				this.showCommentForm = false
-
 				return this.refresh()
 			}
 		},
 		mounted() {
 			if (this.shouldHighlight) {
-				return new Promise((resolve) => {
-					if (this.isCommentInUrl) return this.dispatchFetchComments().then(resolve)
-					return resolve()
-				})
-				.then(() => {
-					!this.isOverlayVisible && this.scrollAndHighlight()
-				})
+				!this.isOverlayVisible && this.scrollAndHighlight()
 			}
 		},
 		watch: {
@@ -247,8 +174,6 @@
 				if (this.shouldHighlight) {
 					this.refreshAnswer()
 					.then(() => {
-						return this.isCommentInUrl ? this.dispatchFetchComments() : Promise.resolve()
-					}).then(() => {
 						!this.isOverlayVisible && this.scrollAndHighlight()
 					})
 				}

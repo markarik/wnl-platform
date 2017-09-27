@@ -183,7 +183,6 @@
 						.then(() => {
 							this.scrollAndHighlight()
 							this.showComments = true
-
 						})
 				}
 			},

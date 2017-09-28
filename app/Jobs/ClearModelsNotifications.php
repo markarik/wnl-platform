@@ -75,16 +75,16 @@ class ClearModelsNotifications implements ShouldQueue
 		$newNotification->id = $notification->id;
 		$newNotification->event = $event;
 
-		Notify::sendNow($user, $newNotification, [LiveChannel::class]);
+		// Notify::sendNow($user, $newNotification, [LiveChannel::class]);
 	}
 
 	private function deleteNotifications($notifications)
 	{
-		$notificationsIds = $notifications->pluck('id')->toArray();
+		// $notificationsIds = $notifications->pluck('id')->toArray();
 
-		DB::table('notifications')
-			->whereIn('id', $notificationsIds)
-			->delete();
+		// DB::table('notifications')
+		// 	->whereIn('id', $notificationsIds)
+		// 	->delete();
 	}
 
 	private function getNotifications($model)

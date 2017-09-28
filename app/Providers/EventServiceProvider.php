@@ -25,6 +25,10 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\UserNotificationsGate',
 		],
 
+		'App\Events\CommentResolved' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
 		'App\Events\ReactionAdded' => [
 			'App\Listeners\UserNotificationsGate',
 		],

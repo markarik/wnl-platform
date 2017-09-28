@@ -16,6 +16,10 @@ class UpdateComment extends FormRequest
 	{
 		$comment = Comment::find($this->route('id'));
 
+		if ($this->user()->isAdmin()) {
+			return true;
+		}
+
 		return $this->user()->can('update', $comment);
 	}
 

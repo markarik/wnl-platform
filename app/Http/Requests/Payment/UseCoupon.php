@@ -4,7 +4,9 @@ namespace App\Http\Requests\Payment;
 
 use App\Models\Coupon;
 use Carbon\Carbon;
+use GrahamCampbell\Throttle\Facades\Throttle;
 use Illuminate\Foundation\Http\FormRequest;
+use Auth;
 
 class UseCoupon extends FormRequest
 {
@@ -35,13 +37,19 @@ class UseCoupon extends FormRequest
 		$code = $this->request->get('code');
 		if (!$code) return;
 
-		$code = strtoupper($code);
-		$coupon = $this->validateVoucher($code);
-		$validator->after(function ($validator) use ($coupon) {
+		$limitReached = $this->limitReached();
+		$coupon = $this->validateVoucher(strtoupper($code));
+		$validator->after(function ($validator) use ($coupon, $limitReached) {
 			if (!$coupon) {
 				$validator->errors()->add(
 					'code',
 					trans('payment.voucher-is-invalid')
+				);
+			}
+			if ($limitReached) {
+				$validator->errors()->add(
+					'code',
+					trans('payment.voucher-tries-limit-reached')
 				);
 			}
 		});
@@ -62,5 +70,15 @@ class UseCoupon extends FormRequest
 		if (!$coupon) return false;
 
 		return $coupon;
+	}
+
+	protected function limitReached()
+	{
+		$throttler = Throttle::hit([
+			'ip'    => app('request')->server('REMOTE_ADDR'),
+			'route' => 'coupon-tries-limit',
+		], 10, 60 * 24);
+
+		return !$throttler->check();
 	}
 }

@@ -11,6 +11,7 @@ return [
 	'voucher-percentage' => ':value%',
 	'voucher-amount' => ':valuezł',
 	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
+	'voucher-tries-limit-reached' => 'Dozwolona liczba prób wpisania kuponu została przekroczona.',
 	'voucher-already-has' => 'Wygląda na to, że do Twojego konta jest już przypisana zniżka <strong>:name</strong>.<br>Przypominamy, że promocje nie łączą się, więc użycie kodu ZASTĄPI 50% zniżkę. ;)',
 	'voucher-title' => 'Masz kod? Super!',
 	'voucher-subtitle' => 'Wpisz go poniżej, aby wykorzystać zniżkę!',

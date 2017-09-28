@@ -17,7 +17,8 @@
 	"intervention/image": "^2.3",
 	"laravel/scout": "^3.0",
 	"bethink/elastic-scout": "3.*",
-	"doctrine/dbal": "^2.5"
+	"doctrine/dbal": "^2.5",
+    "graham-campbell/throttle": "^6.0"
   },
   "require-dev": {
 	"laravel/dusk": "^2.0",

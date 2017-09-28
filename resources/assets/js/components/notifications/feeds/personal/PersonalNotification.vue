@@ -1,6 +1,6 @@
 <template>
 	<div class="notification-wrapper">
-		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted}">
+		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
 			<div class="actor">
 				<wnl-event-actor :message="message"/>
 			</div>
@@ -27,6 +27,7 @@
 			</div>
 		</div>
 		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
+		<div class="delete-message" v-if="resolved">{{$t('notifications.messages.resolved')}}</div>
 	</div>
 </template>
 

@@ -16,7 +16,8 @@ export const notifications = {
 		mentioned: 'wspomniał/-a Cię'
 	},
 	messages: {
-		deleted: 'Treść usunięta przez autora'
+		deleted: 'Treść usunięta przez autora',
+		resolved: 'Treść została rozwiązana przez moderatora'
 	},
 	moderators: {
 		cta: 'Jedziesz szwagier',

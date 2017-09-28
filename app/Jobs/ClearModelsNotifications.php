@@ -48,8 +48,15 @@ class ClearModelsNotifications implements ShouldQueue
 		$notifications = $this->getNotifications($model);
 		$this->deleteNotifications($notifications);
 
+		// notification is resolved by moderator, not deleted by an author
+		if (!empty($model->deleted_at) && !$model->forceDeleting) {
+			$params = ['resolved' => true];
+		} else {
+			$params = ['deleted' => true];
+		}
+
 		foreach ($notifications as $notification) {
-			$notification->data = $this->modify($notification->data);
+			$notification->data = $this->update($notification->data, $params);
 			$this->pushLive($notification);
 		}
 	}
@@ -99,13 +106,13 @@ class ClearModelsNotifications implements ShouldQueue
 			->get();
 	}
 
-	private function modify($data)
-	{
-		$data['deleted'] = true;
-		$data['referer'] = '';
-		$data['context'] = '';
-		$data['subject']['text'] = '';
+	private function update($data, $params) {
+		$deletedNotificationParams = [
+			'referer' => '',
+			'context' => '',
+			'subject' => ['text' => '']
+		];
 
-		return $data;
+		return array_merge($data, $deletedNotificationParams, $params);
 	}
 }

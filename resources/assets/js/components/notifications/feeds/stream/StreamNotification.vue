@@ -41,6 +41,7 @@
 			</div>
 		</div>
 		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
+		<div class="delete-message" v-if="resolved">{{$t('notifications.messages.deleted')}}</div>
 	</div>
 </template>
 

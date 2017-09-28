@@ -2,6 +2,7 @@
 
 
 use App\Events\CommentResolved;
+use App\Models\Comment;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 
@@ -15,6 +16,12 @@ class CommentResolvedHandler
 	 */
 	public function handle(CommentResolved $event, UserNotificationsGate $gate)
 	{
+		$comment = Comment::find($event->comment->id);
+
+		if (empty($comment)) {
+			return;
+		}
+
 		$commentAuthor = $event->comment->user;
 
 		if ($commentAuthor) {

@@ -12,7 +12,7 @@
 				<span class="author">{{profile.full_name}}</span>
 				<div class="comment-text wrap" v-html="comment.text"></div>
 				<small>{{time}}</small>
-				<span v-if="isCurrentUserAuthor">
+				<span v-if="isCurrentUserAuthor || $moderatorFeed.isAllowed('access')">
 					&nbsp;·
 					<wnl-delete
 						:requestRoute="requestRoute"

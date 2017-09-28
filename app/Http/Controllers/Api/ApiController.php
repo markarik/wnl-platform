@@ -78,7 +78,7 @@ class ApiController extends Controller
 		}
 
 		if (Auth::user()->can('delete', $model)) {
-			$model::destroy($id);
+			$model->forceDelete();
 
 			return $this->respondOk();
 		}

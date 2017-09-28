@@ -4,7 +4,6 @@ namespace App\Events;
 
 use App\Models\Comment;
 use App\Traits\EventContextTrait;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
@@ -12,7 +11,6 @@ class CommentResolved extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels,
 		SanitizesUserContent,
 		EventContextTrait;
 
@@ -40,7 +38,7 @@ class CommentResolved extends Event
 			'event'   => 'comment-resolved',
 			'objects' => [
 				'author' => $actor->id,
-				'type' => Comment::class,
+				'type' => 'comment',
 				'id'   => $comment->id,
 				'text' => $this->sanitize($comment->text ?? ''),
 				'snippet' => $comment->snippet ?? [],

@@ -10,9 +10,60 @@ use Tests\Browser\Pages\Payment\VoucherPage;
 
 class VoucherModule
 {
-	public function useCode($browser)
+	public function default($browser)
 	{
-		$coupon = factory(Coupon::class)->create();
+		$this->useCode($browser);
+	}
+
+	public function code10Percent($browser)
+	{
+		return $this->useCode($browser, 10);
+	}
+
+	public function code20Percent($browser)
+	{
+		return $this->useCode($browser, 20);
+	}
+
+	public function code100Percent($browser)
+	{
+		return $this->useCode($browser, 100);
+	}
+
+//	public function existingUser50PercCoupon()
+//	{
+//
+//	}
+
+	public function skip($browser)
+	{
+		if (!empty($browser->studyBuddy)) {
+			return $this->useCode($browser);
+		}
+
+		$browser
+			->visit(new VoucherPage())
+			->click('@skip')
+			->assertPathIs(
+				(new SelectProductPage)->url()
+			);
+
+		return [
+			SelectProductModule::class,
+		];
+	}
+
+	protected function useCode($browser, $value = 10)
+	{
+		if (!empty($browser->studyBuddy)) {
+			return $this->studyBuddy($browser);
+		}
+
+		$coupon = factory(Coupon::class)->create([
+			'value' => $value,
+		]);
+
+		$browser->coupon = $coupon;
 
 		$browser
 			->visit(new VoucherPage())
@@ -27,11 +78,16 @@ class VoucherModule
 		];
 	}
 
-	public function skip($browser)
+	protected function studyBuddy($browser)
 	{
+		$studyBuddy = $browser->studyBuddy;
+
+		$browser->coupon = $studyBuddy->coupon;
+
 		$browser
-			->visit(new VoucherPage())
-			->click('@skip')
+			->visit(new VoucherPage)
+			->type('code', $browser->studyBuddy->code)
+			->click('@use')
 			->assertPathIs(
 				(new SelectProductPage)->url()
 			);

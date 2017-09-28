@@ -48,7 +48,7 @@ class ClearModelsNotifications implements ShouldQueue
 		$notifications = $this->getNotifications($model);
 		$this->deleteNotifications($notifications);
 
-		// notification is resolved by moderator, not deleted by an author
+		// subject is resolved by moderator, not deleted by an author
 		if (!empty($model->deleted_at) && !$model->forceDeleting) {
 			$params = ['resolved' => true];
 		} else {
@@ -75,16 +75,16 @@ class ClearModelsNotifications implements ShouldQueue
 		$newNotification->id = $notification->id;
 		$newNotification->event = $event;
 
-		// Notify::sendNow($user, $newNotification, [LiveChannel::class]);
+		Notify::sendNow($user, $newNotification, [LiveChannel::class]);
 	}
 
 	private function deleteNotifications($notifications)
 	{
-		// $notificationsIds = $notifications->pluck('id')->toArray();
+		$notificationsIds = $notifications->pluck('id')->toArray();
 
-		// DB::table('notifications')
-		// 	->whereIn('id', $notificationsIds)
-		// 	->delete();
+		DB::table('notifications')
+			->whereIn('id', $notificationsIds)
+			->delete();
 	}
 
 	private function getNotifications($model)

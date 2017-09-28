@@ -39,23 +39,23 @@ class CommentResolved extends Event
 		$this->data = [
 			'event'   => 'comment-resolved',
 			'objects' => [
-				'author' => $commentable->user->id ?? null,
-				'type' => $commentableType,
-				'id'   => $commentable->id,
-				'text' => $this->sanitize($commentable->text ?? ''),
-				'snippet' => $commentable->snippet ?? [],
+				'author' => $actor->id,
+				'type' => Comment::class,
+				'id'   => $comment->id,
+				'text' => $this->sanitize($comment->text ?? ''),
+				'snippet' => $comment->snippet ?? [],
 			],
 			'subject' => [
 				'type' => 'comment',
-				'id'   => $comment->id,
+				'id'   => null,
 				'text' => $this->sanitize($comment->text),
 			],
+			'commentable' => [
+				'id' => $commentable->id,
+				'type' => $commentableType
+			],
 			'actors'  => [
-				'id'         => $actor->id,
-				'first_name' => $actor->profile->first_name,
-				'last_name'  => $actor->profile->last_name,
-				'full_name'  => $actor->profile->full_name,
-				'avatar'     => $actor->profile->avatar_url,
+				'id' => null
 			],
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($commentable)

@@ -28,6 +28,7 @@ class UpdateComment extends FormRequest
 	{
 		return [
 			'text' => 'required|string',
+			'resolve' => 'boolean'
 		];
 	}
 }

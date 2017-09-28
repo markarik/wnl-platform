@@ -45,7 +45,7 @@ function _getQuestionsLatest(limit = 10) {
 				where: [ ['tags.id', '=', 69] ],
 			},
 		},
-	}, [limit, 0], 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments');
+	}, [limit, 0], 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles');
 }
 
 function _getQuestionsByTagName(tagName, ids) {

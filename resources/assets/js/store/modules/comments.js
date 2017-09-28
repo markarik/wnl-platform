@@ -27,6 +27,13 @@ function _fetchComments(ids, model) {
 	return axios.post(getApiUrl('comments/.search'), data)
 }
 
+function _resolveComment(id) {
+	return axios.put(getApiUrl(`comments/${id}`), {
+		resolve: true,
+		text: 'bla bla'
+	})
+}
+
 export const commentsGetters = {
 	/**
 	 * [getComments description]
@@ -103,7 +110,8 @@ export const commentsActions = {
 		commit(types.REMOVE_COMMENT, payload)
 	},
 	resolveComment({commit}, payload) {
-		commit(types.RESOLVE_COMMENT, payload)
+		_resolveComment(payload.id)
+			.then(() => commit(types.RESOLVE_COMMENT, payload))
 	},
 	fetchComments({commit}, {ids, resource}) {
 		return new Promise((resolve, reject) => {

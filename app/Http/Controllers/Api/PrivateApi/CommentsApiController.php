@@ -47,9 +47,13 @@ class CommentsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$comment->update([
-			'text' => $request->input('text'),
-		]);
+		if (!empty($request->input('resolve'))) {
+			$comment->delete();
+		} else {
+			$comment->update([
+				'text' => $request->input('text'),
+			]);
+		}
 
 		return $this->respondOk();
 	}

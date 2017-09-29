@@ -69,9 +69,10 @@ class ApiController extends Controller
 	 */
 	public function delete($id)
 	{
-		$modelName = self::getResourceModel($this->resourceName);
+		$modelFullName = self::getResourceModel($this->resourceName);
+		$modelName = self::getResourcesStudly($this->resourceName);
 
-		$model = $modelName::find($id);
+		$model = $modelFullName::find($id);
 
 		if (!$model) {
 			return $this->respondNotFound();
@@ -79,6 +80,7 @@ class ApiController extends Controller
 
 		if (Auth::user()->can('delete', $model)) {
 			$model->forceDelete();
+			self::dispatchEvent($model, $modelName, 'deleted');
 
 			return $this->respondOk();
 		}
@@ -107,6 +109,36 @@ class ApiController extends Controller
 	public static function getResourceModel($resource)
 	{
 		return 'App\Models\\' . self::getResourcesStudly($resource);
+	}
+
+	/**
+	 * Get resource event class name.
+	 *
+	 * @param $resourceName
+	 * @param string $eventName
+	 *
+	 * @return string
+	 */
+	protected static function getResourceEvent($resourceName, $eventName)
+	{
+		return 'App\Events\\' . $resourceName . ucfirst($eventName);
+	}
+
+	/**
+	 * Dispatch event.
+	 *
+	 * @param $resourceName
+	 * @param string $eventName
+	 *
+	 * @return string
+	 */
+	protected static function dispatchEvent($model, $resourceName, $eventName)
+	{
+		$eventClass = self::getResourceEvent($resourceName, $eventName);
+
+		if (class_exists($eventClass)) {
+			event(new $eventClass($model, Auth::user()->id));
+		}
 	}
 
 	/**

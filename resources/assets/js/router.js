@@ -171,8 +171,26 @@ let routes = [
 	},
 	{
 		name: 'user',
-		path: '/app/user/:userId',
-		component: require('js/components/user/Themselves.vue')
+		path: '/app/users/:userId',
+		component: require('js/components/user/Themselves.vue'),
+	},
+	{
+		name: 'all-users',
+		path: '/app/users',
+		component: require('js/components/users/MainUsers.vue'),
+		props: true,
+		children: [
+			{
+				name: 'active-users',
+				path: 'active-users',
+				component: require('js/components/course/dashboard/ActiveUsers.vue')
+			},
+			{
+				name: 'users-by-location',
+				path: 'users-by-location',
+				component: require('js/components/users/UsersByLocation.vue')
+			},
+		]
 	},
 	{
 		path: '*',

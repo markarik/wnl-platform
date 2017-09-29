@@ -10,7 +10,7 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile v-if="responseCondition" :response="response"></wnl-user-profile>
+			<wnl-active-users></wnl-active-users>
 		</div>
 	</div>
 </template>
@@ -36,16 +36,16 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import MainNav from 'js/components/MainNav'
-	import UserProfile from 'js/components/user/UserProfile'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import { isProduction, getApiUrl } from 'js/utils/env'
+    import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 
 	export default {
 		name: 'Themselves',
 		components: {
 			'wnl-main-nav': MainNav,
-			'wnl-user-profile': UserProfile,
+			'wnl-active-users': ActiveUsers,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
@@ -63,7 +63,46 @@
 			},
 			items() {
 				let items = [
-
+					{
+						text: 'Ziomki',
+						itemClass: 'heading small',
+					},
+					{
+						text: 'Wszystkie ziomki',
+						itemClass: 'has-icon',
+						to: {
+							name: 'all-users',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-address-book',
+						iconTitle: 'Wszystkie ziomki',
+					},
+                    {
+                        text: 'Aktywne ziomki',
+						itemClass: 'has-icon',
+						to: {
+							name: 'active-users',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-address-book-o',
+						iconTitle: 'Aktywne ziomki',
+                    },
+					{
+                        text: 'Ziomy z dzielni',
+						itemClass: 'has-icon',
+						to: {
+							name: 'users-by-location',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-compass',
+						iconTitle: 'Ziomy z dzielni',
+                    }
 				]
 
 				return items

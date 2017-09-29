@@ -27,6 +27,12 @@
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
+		<router-link class="wnl-main-nav-item" :to="{ name: 'all-users', params: { keepsNavOpen: true }}">
+			<span class="icon is-medium">
+				<i class="fa fa-address-book"></i>
+			</span>
+			<span class="text">Ziomki</span>
+		</router-link>
 		<router-link class="wnl-main-nav-item" :to="{ name: 'help', params: { keepsNavOpen: true } }">
 			<span class="icon is-medium">
 				<i class="fa fa-heartbeat"></i>

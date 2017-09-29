@@ -9,7 +9,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
-			v-if="$moderatorFeed.isAllowed('access')"
+			v-if="$moderatorFeatures.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
@@ -53,7 +53,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
-			v-if="$moderatorFeed.isAllowed('access')"
+			v-if="$moderatorFeatures.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-list"></i>
@@ -120,14 +120,14 @@
 
 <script>
 	import {mapGetters} from 'vuex'
-	import moderatorFeed from 'js/perimeters/moderator'
+	import moderatorFeatures from 'js/perimeters/moderator'
 	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'MainNav',
 		props: ['isHorizontal'],
 		perimeters: [
-			moderatorFeed,
+			moderatorFeatures,
 		],
 		computed: {
 			...mapGetters(['currentUser']),

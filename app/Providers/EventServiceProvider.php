@@ -17,6 +17,10 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\UserNotificationsGate',
 		],
 
+		'App\Events\Qna\QnaQuestionResolved' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
 		'App\Events\Qna\AnswerPosted' => [
 			'App\Listeners\UserNotificationsGate',
 		],

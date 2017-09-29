@@ -10,6 +10,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Auth;
 use League\Fractal\Resource\Item;
+use App\Events\Qna\QnaQuestionResolved;
 
 class QnaQuestionsApiController extends ApiController
 {
@@ -52,9 +53,14 @@ class QnaQuestionsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$qnaQuestion->update([
-			'text' => $request->input('text'),
-		]);
+		if (!empty($request->input('resolve'))) {
+			$qnaQuestion->delete();
+			event(new QnaQuestionResolved($qnaQuestion, Auth::user()->id));
+		} else {
+			$qnaQuestion->update([
+				'text' => $request->input('text'),
+			]);
+		}
 
 		return $this->respondOk();
 	}

@@ -20,6 +20,13 @@ import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modu
 	return axios.post(getApiUrl('qna_questions/.search'), data);
 }
 
+function _resolveQuestion(questionId) {
+	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
+		resolve: true,
+		text: 'bla bla...'
+	})
+}
+
 function _getQuestionsByTags(tags) {
 	if (tags.length === 0) {
 		return Promise.reject('No tags passed to search for Q&A questions.')
@@ -261,6 +268,13 @@ const mutations = {
 		destroy(state.qna_questions, id)
 		set(state, 'questionsIds', questionsIds)
 	},
+	[types.QNA_RESOLVE_QUESTION] (state, payload) {
+		let id = payload.questionId,
+			questionsIds = _.pull(state.questionsIds, id)
+
+		destroy(state.qna_questions, id)
+		set(state, 'questionsIds', questionsIds)
+	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
 			data = _.merge(state.qna_answers[id], payload.data)
@@ -404,6 +418,10 @@ const actions = {
 			commit(types.QNA_REMOVE_QUESTION, {questionId})
 			resolve()
 		})
+	},
+	resolveQuestion({commit}, questionId) {
+		return _resolveQuestion(questionId)
+			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}))
 	},
 	removeAnswer({commit}, payload) {
 		return new Promise((resolve, reject) => {

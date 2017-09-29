@@ -12,7 +12,7 @@
 				<span class="author">{{profile.full_name}}</span>
 				<div class="comment-text wrap" v-html="comment.text"></div>
 				<small>{{time}}</small>
-				<span v-if="isCurrentUserAuthor || $moderatorFeed.isAllowed('access')">
+				<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 					&nbsp;·
 					<wnl-delete
 						:requestRoute="requestRoute"
@@ -20,11 +20,7 @@
 						@deleteSuccess="onDeleteSuccess"
 					></wnl-delete>
 				</span>
-				<!-- resolvable mixin related logic -->
-				<span class="resolvable" v-if="$moderatorFeed.isAllowed('access')">
-					&nbsp;·
-					<i class="fa fa-check icon" @click="$emit('resolveComment', id)"/>
-				</span>
+				<wnl-resolve @resolveResource="$emit('resolveComment', id)"/>
 			</div>
 		</div>
 	</article>
@@ -50,26 +46,21 @@
 		.icon
 			font-size: $font-size-minus-3
 			vertical-align: middle
-	.resolvable
-		.icon
-			cursor: pointer
-			&:hover
-				color: $color-red
 </style>
 
 <script>
 	import { mapGetters } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
+	import Resolve from 'js/components/global/form/Resolve'
 	import { timeFromS } from 'js/utils/time'
-	import resolvable from 'js/mixins/resolvable'
 
 	export default {
 		name: 'Comment',
 		components: {
 			'wnl-delete': Delete,
+			'wnl-resolve': Resolve
 		},
-		mixins: [resolvable],
 		props: ['comment', 'profile'],
 		computed: {
 			...mapGetters(['currentUserId']),

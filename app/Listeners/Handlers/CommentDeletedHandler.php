@@ -10,7 +10,7 @@ class CommentDeletedHandler
 	/**
 	 * Notification rules for CommentDeleted event.
 	 *
-	 * @param CommentResolved $event
+	 * @param CommentDeleted $event
 	 * @param UserNotificationsGate $gate
 	 */
 	public function handle(CommentDeleted $event, UserNotificationsGate $gate)

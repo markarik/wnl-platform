@@ -49,6 +49,7 @@
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
+					<wnl-resolve @resolveResource="resolveQuestion(id)"/>
 				</div>
 			</div>
 		</div>
@@ -166,6 +167,7 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
+	import Resolve from 'js/components/global/form/Resolve'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/global/reactions/Vote'
@@ -179,6 +181,7 @@
 		mixins: [ highlight ],
 		components: {
 			'wnl-delete': Delete,
+			'wnl-resolve': Resolve,
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
@@ -275,7 +278,7 @@
 			}
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
+			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion']),
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {

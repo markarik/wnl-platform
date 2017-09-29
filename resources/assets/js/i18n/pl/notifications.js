@@ -13,7 +13,8 @@ export const notifications = {
 		commentResolved: 'został rozwiązany',
 		commentDeleted: 'został usunięty',
 		qnaQuestionPosted: 'zadał/-a',
-		qnaQuestionResolved: 'Twoje pytanie zostało rozwiązane',
+		qnaQuestionResolved: 'Twoje pytanie zostało rozwiązane przez moderatora',
+		qnaQuestionDeleted: 'Twoje pytanie zostało usunięte przez moderatora',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',
 		mentioned: 'wspomniał/-a Cię'

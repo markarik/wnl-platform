@@ -205,6 +205,7 @@
 			'wnl-event-comment-deleted': CommentResolved,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-qna-question-resolved': QnaQuestionResolved,
+			'wnl-event-qna-question-deleted': QnaQuestionResolved,
 			'wnl-event-reaction-added': ReactionAdded,
 			'wnl-event-mentioned': Mentioned,
 			'wnl-notifications-toggle': NotificationsToggle,

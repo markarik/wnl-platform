@@ -10,7 +10,7 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-all></wnl-all>
+			<wnl-active-users></wnl-active-users>
 		</div>
 	</div>
 </template>
@@ -40,12 +40,14 @@
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import { isProduction, getApiUrl } from 'js/utils/env'
     import AllUsers from 'js/components/users/AllUsers'
+	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 
 	export default {
 		name: 'Themselves',
 		components: {
 			'wnl-main-nav': MainNav,
 			'wnl-all': AllUsers,
+			'wnl-active-users': ActiveUsers,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 		},

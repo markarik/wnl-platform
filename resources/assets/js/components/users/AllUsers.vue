@@ -72,11 +72,11 @@
        computed: {
            ...mapGetters(['users', 'currentUserId', 'currentUserName']),
            usersToCount() {
-               return this.activeUsers.filter((user) => this.currentUserId !== user.id)
+               return this.allUsers
            },
-           activeUsersCount() {
-               return this.usersToCount.length || 0
-           },
+        //    activeUsersCount() {
+        //        return this.usersToCount.length || 0
+        //    },
 
        },
            methods: {

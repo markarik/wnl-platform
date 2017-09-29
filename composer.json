@@ -18,7 +18,8 @@
 	"laravel/scout": "^3.0",
 	"bethink/elastic-scout": "3.*",
 	"doctrine/dbal": "^2.5",
-    "graham-campbell/throttle": "^6.0"
+    "graham-campbell/throttle": "^6.0",
+	"nao-pon/flysystem-google-drive": "~1.1"
   },
   "require-dev": {
 	"laravel/dusk": "^2.0",

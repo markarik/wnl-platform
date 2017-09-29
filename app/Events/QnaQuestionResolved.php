@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events\Qna;
+namespace App\Events;
 
 use App\Models\QnaQuestion;
 use App\Traits\EventContextTrait;

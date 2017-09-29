@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\Qna\QuestionPosted;
+use App\Events\QnaQuestionPosted;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
@@ -21,7 +21,7 @@ class QnaQuestion extends Model
 	protected $dates = ['deleted_at'];
 
 	protected $events = [
-		'created' => QuestionPosted::class,
+		'created' => QnaQuestionPosted::class,
 	];
 
 	public function answers()

@@ -54,6 +54,7 @@
 	import Delete from 'js/components/global/form/Delete'
 	import Resolve from 'js/components/global/form/Resolve'
 	import { timeFromS } from 'js/utils/time'
+	import moderatorFeatures from 'js/perimeters/moderator'
 
 	export default {
 		name: 'Comment',
@@ -61,6 +62,7 @@
 			'wnl-delete': Delete,
 			'wnl-resolve': Resolve
 		},
+		perimeters: [moderatorFeatures],
 		props: ['comment', 'profile'],
 		computed: {
 			...mapGetters(['currentUserId']),

@@ -14,7 +14,7 @@ class QnaAnswer extends Model
 	protected $fillable = ['text', 'user_id', 'question_id'];
 
 	protected $events = [
-		'created' => AnswerPosted::class,
+		'created' => QnaAnswerPosted::class,
 	];
 
 	public function question()

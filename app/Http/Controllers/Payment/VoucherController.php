@@ -18,8 +18,9 @@ class VoucherController extends Controller
 
 	public function handle(UseCoupon $request)
 	{
+		$code = mb_convert_case($request->code, MB_CASE_UPPER, "UTF-8");
 		$coupon = Coupon::select()
-			->where('code', $request->code)
+			->where('code', $code)
 			->where(function ($query) {
 				$query
 					->where('times_usable', '>', 0)

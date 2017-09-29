@@ -28,7 +28,7 @@ class UseCoupon extends FormRequest
 	public function rules()
 	{
 		return [
-			'code' => 'required|alpha_num',
+			'code' => 'required|alpha_spaces',
 		];
 	}
 
@@ -38,7 +38,7 @@ class UseCoupon extends FormRequest
 		if (!$code) return;
 
 		$limitReached = $this->limitReached();
-		$coupon = $this->validateVoucher(strtoupper($code));
+		$coupon = $this->validateVoucher(mb_convert_case($code, MB_CASE_UPPER, "UTF-8"));
 		$validator->after(function ($validator) use ($coupon, $limitReached) {
 			if (!$coupon) {
 				$validator->errors()->add(

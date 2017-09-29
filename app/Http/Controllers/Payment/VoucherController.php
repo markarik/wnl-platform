@@ -19,16 +19,7 @@ class VoucherController extends Controller
 	public function handle(UseCoupon $request)
 	{
 		$code = mb_convert_case($request->code, MB_CASE_UPPER, "UTF-8");
-		$coupon = Coupon::select()
-			->where('code', $code)
-			->where(function ($query) {
-				$query
-					->where('times_usable', '>', 0)
-					->orWhere('times_usable', null);
-			})
-			->where('expires_at', '>', Carbon::now())
-			->first();
-
+		$coupon = Coupon::validCode($code);
 		session()->put('coupon', $coupon);
 
 		return redirect()->route('payment-select-product');

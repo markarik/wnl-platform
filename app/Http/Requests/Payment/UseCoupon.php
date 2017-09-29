@@ -28,7 +28,7 @@ class UseCoupon extends FormRequest
 	public function rules()
 	{
 		return [
-			'code' => 'required|alpha_spaces',
+			'code' => 'required',
 		];
 	}
 

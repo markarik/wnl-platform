@@ -65,18 +65,25 @@
 </style>
 
 <script>
-   import {mapGetters} from 'vuex'
+   import {mapGetters, mapActions} from 'vuex'
 
    export default {
        name: 'AllUsers',
        computed: {
-           ...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
+           ...mapGetters(['users', 'currentUserId', 'currentUserName']),
            usersToCount() {
                return this.activeUsers.filter((user) => this.currentUserId !== user.id)
            },
            activeUsersCount() {
                return this.usersToCount.length || 0
            },
+
        },
+           methods: {
+               ...mapActions(['setAllUsers'])
+           },
+           mounted() {
+               this.setAllUsers()
+           }
    }
 </script>

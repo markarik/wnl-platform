@@ -2,8 +2,10 @@
 
 
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\User\UpdateUserProfile;
 use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
@@ -37,5 +39,13 @@ class UserProfileApiController extends ApiController
 		$user->profile()->updateOrCreate(['user_id' => $user->id], $request->all());
 
 		return $this->respondOk();
+	}
+	public function getAll()
+	{
+		$profiles = UserProfile::all();
+
+		$resource = new Collection($profiles, new UserProfileTransformer, 'user_profile');
+		$data = $this->fractal->createData($resource)->toArray();
+		return $this->respondOk($data);
 	}
 }

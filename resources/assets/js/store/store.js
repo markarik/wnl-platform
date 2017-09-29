@@ -19,8 +19,8 @@ import questions from 'js/store/modules/questions'
 import progress from 'js/store/modules/progress'
 import slideshow from 'js/store/modules/slideshow'
 import ui from 'js/store/modules/ui'
-import activeUsers from 'js/store/modules/activeUsers'
 import autocomplete from 'js/store/modules/autocomplete'
+import users from 'js/store/modules/users'
 
 Vue.use(Vuex)
 
@@ -44,7 +44,7 @@ export default new Vuex.Store({
 		progress,
 		slideshow,
 		ui,
-		activeUsers,
+		users,
 		autocomplete
 	},
 	strict: debug

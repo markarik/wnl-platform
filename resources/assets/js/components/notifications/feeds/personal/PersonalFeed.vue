@@ -189,7 +189,7 @@
 	import Dropdown from 'js/components/global/Dropdown'
 	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
-	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned, CommentResolved } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned, CommentResolved, QnaQuestionResolved } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -204,6 +204,7 @@
 			'wnl-event-comment-resolved': CommentResolved,
 			'wnl-event-comment-deleted': CommentResolved,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
+			'wnl-event-qna-question-resolved': QnaQuestionResolved,
 			'wnl-event-reaction-added': ReactionAdded,
 			'wnl-event-mentioned': Mentioned,
 			'wnl-notifications-toggle': NotificationsToggle,

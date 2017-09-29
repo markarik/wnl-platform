@@ -2,7 +2,6 @@
 
 
 use App\Events\CommentResolved;
-use App\Models\Comment;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 
@@ -16,15 +15,10 @@ class CommentResolvedHandler
 	 */
 	public function handle(CommentResolved $event, UserNotificationsGate $gate)
 	{
-		$comment = Comment::find($event->comment->id);
+		$commentAuthor = $event->comment->user->id;
+		$commentResolver = $event->data['actors']['id'] ?? 0;
 
-		if (empty($comment)) {
-			return;
-		}
-
-		$commentAuthor = $event->comment->user;
-
-		if ($commentAuthor) {
+		if ($commentAuthor !== $commentResolver) {
 			$gate->notifyPrivate($commentAuthor, $event);
 		}
 	}

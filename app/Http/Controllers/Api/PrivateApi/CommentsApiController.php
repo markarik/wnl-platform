@@ -8,6 +8,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Resource\Item;
+use App\Events\CommentResolved;
 
 class CommentsApiController extends ApiController
 {
@@ -49,6 +50,7 @@ class CommentsApiController extends ApiController
 
 		if (!empty($request->input('resolve'))) {
 			$comment->delete();
+			event(new CommentResolved($comment, Auth::user()->id));
 		} else {
 			$comment->update([
 				'text' => $request->input('text'),

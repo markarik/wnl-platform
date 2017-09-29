@@ -15,8 +15,7 @@ class Comment extends Model
 	protected $dates = ['deleted_at'];
 
 	protected $events = [
-		'created' => CommentPosted::class,
-		'deleted' => CommentResolved::class
+		'created' => CommentPosted::class
 	];
 
 	public function user()

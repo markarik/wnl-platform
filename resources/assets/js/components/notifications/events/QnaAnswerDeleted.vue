@@ -5,8 +5,8 @@
 		functional: true,
 		render: (createElement, {props: {message, notificationComponent}, data: {on}}) => {
 			const contextRoute = () => mapMessageToRoute(message, {
-				[message.commentable.type]: message.commentable.id,
-				[message.subject.type]: null
+				'qna_question': message.objects.id,
+				'qna_answer': null
 			})
 			const {objects, ...messageWithoutObject} = message
 
@@ -14,7 +14,7 @@
 				props: {
 					message: messageWithoutObject,
 					channel: message.channel,
-					icon: 'fa-comments-o',
+					icon: 'fa-reply',
 					routeContext: getContextRoute(contextRoute, message.referer),
 				},
 				on,

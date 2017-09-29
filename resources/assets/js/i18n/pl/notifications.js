@@ -10,12 +10,13 @@ export const notifications = {
 	},
 	events: {
 		commentPosted: 'skomentował/-a',
-		commentResolved: 'został rozwiązany',
+		commentResolved: 'Twój komentarz został rozwiązany przez moderatora',
 		commentDeleted: 'został usunięty',
 		qnaQuestionPosted: 'zadał/-a',
 		qnaQuestionResolved: 'Twoje pytanie zostało rozwiązane przez moderatora',
 		qnaQuestionDeleted: 'Twoje pytanie zostało usunięte przez moderatora',
 		qnaAnswerPosted: 'odpowiedział/-a na',
+		qnaAnswerDeleted: 'Twoje odpowiedź została usunięta przez moderatora',
 		reactionAdded: 'polubił/-a',
 		mentioned: 'wspomniał/-a Cię'
 	},

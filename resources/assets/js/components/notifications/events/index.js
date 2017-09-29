@@ -5,6 +5,7 @@ import QnaQuestionResolved from './QnaQuestionResolved'
 import ReactionAdded from './ReactionAdded'
 import Mentioned from './Mentioned'
 import CommentResolved from './CommentResolved'
+import QnaAnswerDeleted from './QnaAnswerDeleted'
 
 export {
 	CommentPosted,
@@ -14,4 +15,5 @@ export {
 	ReactionAdded,
 	Mentioned,
 	CommentResolved,
+	QnaAnswerDeleted,
 }

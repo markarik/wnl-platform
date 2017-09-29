@@ -202,6 +202,7 @@
 			'wnl-dropdown': Dropdown,
 			'wnl-event-comment-posted': CommentPosted,
 			'wnl-event-comment-resolved': CommentResolved,
+			'wnl-event-comment-deleted': CommentResolved,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
 			'wnl-event-reaction-added': ReactionAdded,
 			'wnl-event-mentioned': Mentioned,

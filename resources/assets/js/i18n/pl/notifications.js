@@ -11,6 +11,7 @@ export const notifications = {
 	events: {
 		commentPosted: 'skomentował/-a',
 		commentResolved: 'został rozwiązany',
+		commentDeleted: 'został usunięty',
 		qnaQuestionPosted: 'zadał/-a',
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		reactionAdded: 'polubił/-a',

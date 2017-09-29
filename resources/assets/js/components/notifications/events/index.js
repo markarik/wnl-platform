@@ -11,5 +11,5 @@ export {
 	QnaQuestionPosted,
 	ReactionAdded,
 	Mentioned,
-	CommentResolved
+	CommentResolved,
 }

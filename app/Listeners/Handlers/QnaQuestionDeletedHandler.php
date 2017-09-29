@@ -16,9 +16,9 @@ class QnaQuestionDeletedHandler
 	public function handle(QnaQuestionDeleted $event, UserNotificationsGate $gate)
 	{
 		$questionAuthor = $event->qnaQuestion->user;
-		$questionResolver = $event->data['actors']['id'] ?? 0;
+		$questionRemover = $event->data['actors']['id'] ?? 0;
 
-		if ($questionAuthor->id !== $questionResolver) {
+		if ($questionAuthor->id !== $questionRemover) {
 			$gate->notifyPrivate($questionAuthor, $event);
 		}
 	}

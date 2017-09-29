@@ -1,6 +1,6 @@
 <?php namespace App\Listeners\Handlers;
 
-use App\Events\Qna\QnaAnswerPosted;
+use App\Events\QnaAnswerPosted;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 use App\Models\QnaAnswer;
@@ -10,7 +10,7 @@ class QnaAnswerPostedHandler
 	/**
 	 * Notification rules for QnaAnswerPosted event.
 	 *
-	 * @param QnaAnswerPosted $event
+	 * @param AnswerPosted $event
 	 * @param UserNotificationsGate $gate
 	 */
 	public function handle(QnaAnswerPosted $event, UserNotificationsGate $gate)

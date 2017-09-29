@@ -26,7 +26,7 @@
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
-					<span v-if="isCurrentUserAuthor && !readOnly">
+					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
@@ -91,6 +91,7 @@
 	import Vote from 'js/components/global/reactions/Vote'
 	import highlight from 'js/mixins/highlight'
 	import CommentsList from 'js/components/comments/CommentsList'
+	import moderatorFeatures from 'js/perimeters/moderator'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -101,6 +102,7 @@
 			'wnl-vote': Vote,
 			'wnl-comments-list': CommentsList
 		},
+		perimeters: [moderatorFeatures],
 		mixins: [ highlight ],
 		props: ['answer', 'questionId', 'reactableId', 'readOnly', 'refresh'],
 		data() {

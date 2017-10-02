@@ -59,8 +59,10 @@ class OrdersStatsExport extends Command
 		$orders = (new Order)
 			->with(['coupon', 'product'])
 			->where('method', '!=', null)
+			->where('canceled', null)
 			->whereBetween('created_at', [$startDate, $endDate])
-			->get();
+			->get()
+			->unique('user_id');
 
 		$daysDiff = $startDate->diffInDays($endDate);
 		$datePointer = $startDate;

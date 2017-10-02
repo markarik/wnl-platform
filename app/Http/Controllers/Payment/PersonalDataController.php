@@ -106,7 +106,7 @@ class PersonalDataController extends Controller
 			$this->addCoupon($order, session()->get('coupon'));
 		} elseif ($userCoupon) {
 			$this->addCoupon($order, $userCoupon);
-		} else {
+		} elseif ($order->product->slug !== 'wnl-album') {
 			$this->generateStudyBuddy($order);
 		}
 	}

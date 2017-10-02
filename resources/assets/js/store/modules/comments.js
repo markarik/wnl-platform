@@ -29,14 +29,14 @@ function _fetchComments(ids, model) {
 
 function _resolveComment(id) {
 	return axios.put(getApiUrl(`comments/${id}`), {
-		resolve: true,
+		resolved: true,
 		text: 'bla bla'
 	})
 }
 
 function _unresolveComment(id) {
 	return axios.put(getApiUrl(`comments/${id}`), {
-		unresolve: true,
+		resolved: false,
 		text: 'bla bla'
 	})
 }
@@ -92,6 +92,16 @@ export const commentsMutations = {
 			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? {...comment, resolved: true} : comment)
 
 		set(state.comments, payload.id, {...comment, resolved: true})
+		set(state[resource][resourceId], 'comments', comments)
+	},
+	[types.UNRESOLVE_COMMENT] (state, payload) {
+		const id = payload.id,
+			comment = state.comments[payload.id],
+			resource = payload.commentableResource,
+			resourceId = payload.commentableId,
+			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? {...comment, resolved: false} : comment)
+
+		set(state.comments, payload.id, {...comment, resolved: false})
 		set(state[resource][resourceId], 'comments', comments)
 	},
 	[types.SET_COMMENTS] (state, payload) {

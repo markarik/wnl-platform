@@ -3,8 +3,10 @@
 
 use App\Events\CommentRestored;
 use App\Listeners\UserNotificationsGate;
-use App\Models\User;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Notification as Notify;
+use App\Notifications\EventNotification;
+use App\Notifications\Media\LiveChannel;
 
 class CommentRestoredHandler
 {
@@ -21,9 +23,16 @@ class CommentRestoredHandler
 
 		if ($commentAuthor->id !== $commentRemover) {
 			$notification = $this->getNotification($event->comment);
+
 			$event->id = $notification->event_id;
+
+			$newNotification = new EventNotification($event, $notification->channel);
+			$newNotification->id = $notification->id;
+			$newNotification->event = $event;
+
+			Notify::sendNow($commentAuthor, $newNotification, [LiveChannel::class]);
+
 			$notification->delete();
-			$gate->notifyPrivate($commentAuthor, $event);
 		}
 	}
 
@@ -36,6 +45,5 @@ class CommentRestoredHandler
 				->whereRaw('data->"$.objects.type" = "comment"');
 		})
 		->first();
-
 	}
 }

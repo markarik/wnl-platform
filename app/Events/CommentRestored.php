@@ -38,7 +38,7 @@ class CommentRestored extends Event
 		$commentableType = snake_case(class_basename($commentable));
 
 		$this->data = [
-			'event'   => 'comment-deleted',
+			'event'   => 'comment-resolved',
 			'subject' => [
 				'text' => '',
 			],

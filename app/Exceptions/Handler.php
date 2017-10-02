@@ -58,7 +58,11 @@ class Handler extends ExceptionHandler
 		$production = App::environment('production');
 
 		if ($exception instanceof TokenMismatchException) {
-			return $this->unauthenticated($request);
+			if ($request->expectsJson()) {
+				return response()->json(['error' => 'Unauthenticated.'], 401);
+			}
+
+			return redirect()->guest('login');
 		}
 
 		if (!$production) {
@@ -70,7 +74,7 @@ class Handler extends ExceptionHandler
 		}
 
 		if ($exception instanceof AuthenticationException) {
-			return $this->unauthenticated($request);
+			return $this->unauthenticated($request, $exception);
 		}
 
 		if ($exception instanceof ValidationException) {

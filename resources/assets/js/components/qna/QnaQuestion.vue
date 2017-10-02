@@ -49,7 +49,7 @@
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
-					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question"/>
+					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolve="unresolveQuestion(id)"/>
 				</div>
 			</div>
 		</div>
@@ -280,7 +280,7 @@
 			}
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion']),
+			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {

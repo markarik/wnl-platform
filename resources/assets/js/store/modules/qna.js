@@ -190,7 +190,7 @@ const getters = {
 	// Resources
 	getQuestion: state => (id) => state.qna_questions[id],
 	answer:      state => (id) => state.qna_answers[id],
-	profile:     state => (id) => state.profiles[id],
+	profile:     state => (id) => state.profiles[id] || {},
 
 	// Question
 	questionContent: state => (id) => state.qna_questions[id].text,

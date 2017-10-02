@@ -96,6 +96,10 @@ export const commentsMutations = {
 
 			set(state.comments, comment.id, comment)
 
+			if (!state[resource][resourceId].comments) {
+				state[resource][resourceId].comments = [];
+			}
+
 			!state[resource][resourceId].comments.includes(comment.id)
 				&& state[resource][resourceId].comments.push(comment.id)
 		})

@@ -39,8 +39,8 @@ class OrdersStatsExport extends Command
 	 */
 	public function handle()
 	{
-		$setOne = $this->stats(Carbon::parse('2017-04-01 00:00'), Carbon::parse('2017-09-24 23:59'));
-		$setTwo = $this->stats(Carbon::parse('2017-09-25 00:00'), Carbon::now());
+		$setOne = $this->stats(Carbon::parse('2017-03-31 23:59'), Carbon::parse('2017-09-24 23:59'));
+		$setTwo = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::now());
 
 		$rows = collect();
 		foreach ($setOne as $setOneRow) {
@@ -64,7 +64,7 @@ class OrdersStatsExport extends Command
 			->get()
 			->unique('user_id');
 
-		$daysDiff = $startDate->diffInDays($endDate);
+		$daysDiff = $startDate->diffInDays($endDate)+1;
 		$datePointer = $startDate;
 		for ($day = 1; $day <= $daysDiff; $day++) {
 			$datePointer->addDay();

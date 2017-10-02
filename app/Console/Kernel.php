@@ -33,6 +33,10 @@ class Kernel extends ConsoleKernel
 			->hourly();
 
 		$schedule
+			->command('orders:statsExport')
+			->hourly();
+
+		$schedule
 			->command("scout:import 'App\\Models\\Slide'")
 			->dailyAt('00:30')
 			->after(function () use ($schedule) {

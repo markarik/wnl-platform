@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Carbon\Carbon;
-use Storage;
+use Google_Service_Sheets_ValueRange;
 use App\Models\Order;
 use Illuminate\Console\Command;
 
@@ -39,18 +39,15 @@ class OrdersStatsExport extends Command
 	 */
 	public function handle()
 	{
-		$storage = Storage::disk('local');
-		$rootDir = 'exports';
-
 		$setOne = $this->stats(Carbon::parse('2017-04-01 00:00'), Carbon::parse('2017-09-24 23:59'));
 		$setTwo = $this->stats(Carbon::parse('2017-09-25 00:00'), Carbon::now());
 
 		$rows = collect();
 		foreach ($setOne as $setOneRow) {
-			$rows->push(implode("\t", array_merge($setOneRow, $setTwo->shift() ?? [])));
+			$rows->push(array_merge($setOneRow, $setTwo->shift() ?? []));
 		}
 
-		$storage->put($rootDir . '/Stats.tsv', $rows->implode("\n"));
+		$this->writeRange($rows->toArray());
 
 		return 42;
 	}
@@ -78,10 +75,30 @@ class OrdersStatsExport extends Command
 				$ordersToDate->sum('total_with_coupon'),
 				$ordersToDate->sum('paid_amount'),
 				$ordersToDate->where('coupon', true)->count(),
-				''
+				'',
 			]);
 		}
 
 		return $rows;
+	}
+
+	protected function writeRange($rows)
+	{
+		$config = config('filesystems.disks.google');
+		$client = new \Google_Client();
+		$client->setClientId($config['clientId']);
+		$client->setClientSecret($config['clientSecret']);
+		$client->refreshToken($config['refreshToken']);
+		$service = new \Google_Service_Sheets($client);
+
+		$file = env('GOOGLE_SHEETS_ORDERS_STATS');
+		$range = 'A:L';
+		$body = new Google_Service_Sheets_ValueRange([
+			'values' => $rows,
+		]);
+		$params = [
+			'valueInputOption' => 'RAW',
+		];
+		$service->spreadsheets_values->update($file, $range, $body, $params);
 	}
 }

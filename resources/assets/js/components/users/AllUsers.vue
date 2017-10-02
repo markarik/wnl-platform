@@ -8,7 +8,7 @@
                <ul class="avatars-list" ref="avatarsList">
                    <li v-for="user in usersToCount" class="avatar">
                        <wnl-avatar
-                               :fullName="user.fullName"
+                               :fullName="user.full_name"
                                :url="user.avatar"
                                :userId="user.id"
                                :user="user"
@@ -73,6 +73,7 @@
            ...mapGetters(['currentUserId', 'currentUserName']),
            ...mapGetters('users', ['allUsers']),
            usersToCount() {
+               debugger
                return this.allUsers
            },
            allUsersCount() {

@@ -1,9 +1,9 @@
 <template>
    <div>
        <div class="metadata">
-           {{ $t('dashboard.activeUsers', {count: activeUsersCount}) }}
+           {{ $t('dashboard.activeUsers', {count: allUsersCount}) }}
        </div>
-       <div class="active-users-container" v-if="activeUsersCount">
+       <div class="all-users-container" v-if="allUsersCount">
            <div class="absolute-container">
                <ul class="avatars-list" ref="avatarsList">
                    <li v-for="user in usersToCount" class="avatar">
@@ -70,7 +70,8 @@
    export default {
        name: 'AllUsers',
        computed: {
-           ...mapGetters(['users', 'currentUserId', 'currentUserName']),
+           ...mapGetters(['currentUserId', 'currentUserName']),
+           ...mapGetters('users', ['allUsers']),
            usersToCount() {
                return this.allUsers
            },
@@ -80,9 +81,10 @@
 
        },
            methods: {
-               ...mapActions(['setAllUsers'])
+               ...mapActions('users', ['setAllUsers'])
            },
            mounted() {
+
                this.setAllUsers()
            }
    }

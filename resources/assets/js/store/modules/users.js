@@ -2,13 +2,15 @@ import {set} from 'vue'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 
+const namespaced = true;
+
 const state = {
     // activeUsers: [],
     allUsers: [],
 };
 
 const getters = {
-    allusers: state => state.allUsers,
+    allUsers: state => state.allUsers,
     // activeUsers: state => state.activeUsers,
     // getUsersByLoaction: function(state) {
     //     return function(city) {
@@ -24,8 +26,9 @@ const mutations = {
     // [types.ACTIVE_USERS_SET] (state, activeUsers) {
 	// 	set(state, 'activeUsers', activeUsers)
 	// },
-    [types.ALL_USERS_SET] (state, payload) {
-        set(state, 'allUsers', payload)
+    [types.ALL_USERS_SET] (state, response) {
+        set(state, 'allUsers', response.data)
+        console.log(response.data);
     }
 };
 
@@ -51,5 +54,6 @@ export default {
 	state,
 	getters,
 	mutations,
-	actions
+	actions,
+    namespaced
 }

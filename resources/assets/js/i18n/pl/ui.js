@@ -5,6 +5,9 @@ export const ui = {
 		no: 'Nie',
 		yes: 'Tak',
 	},
+	action: {
+		undo: 'Cofnij'
+	},
 	loading: {
 		default: 'Uwaga, nadjeżdża wiedza...',
 		mockExam: 'Brace yourself. The exam is coming...',

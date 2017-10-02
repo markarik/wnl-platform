@@ -20,7 +20,7 @@
 						@deleteSuccess="onDeleteSuccess"
 					></wnl-delete>
 				</span>
-				<wnl-resolve @resolveResource="$emit('resolveComment', id)"/>
+				<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)"/>
 			</div>
 		</div>
 	</article>

@@ -34,6 +34,13 @@ function _resolveComment(id) {
 	})
 }
 
+function _unresolveComment(id) {
+	return axios.put(getApiUrl(`comments/${id}`), {
+		unresolve: true,
+		text: 'bla bla'
+	})
+}
+
 export const commentsGetters = {
 	/**
 	 * [getComments description]
@@ -78,12 +85,13 @@ export const commentsMutations = {
 		set(state[resource][resourceId], 'comments', comments)
 	},
 	[types.RESOLVE_COMMENT] (state, payload) {
-		let id = payload.id,
+		const id = payload.id,
+			comment = state.comments[payload.id],
 			resource = payload.commentableResource,
 			resourceId = payload.commentableId,
-			comments = state[resource][resourceId].comments.filter(comment => comment !== id)
+			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? {...comment, resolved: true} : comment)
 
-		destroy(state.comments, payload.id)
+		set(state.comments, payload.id, {...comment, resolved: true})
 		set(state[resource][resourceId], 'comments', comments)
 	},
 	[types.SET_COMMENTS] (state, payload) {
@@ -116,6 +124,10 @@ export const commentsActions = {
 	resolveComment({commit}, payload) {
 		_resolveComment(payload.id)
 			.then(() => commit(types.RESOLVE_COMMENT, payload))
+	},
+	unresolveComment({commit}, payload) {
+		_unresolveComment(payload.id)
+			.then(() => commit(types.UNRESOLVE_COMMENT, payload))
 	},
 	fetchComments({commit}, {ids, resource}) {
 		return new Promise((resolve, reject) => {

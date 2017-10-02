@@ -18,6 +18,7 @@
 			:profile="commentProfile(comment.profiles[0])"
 			@removeComment="onRemoveComment"
 			@resolveComment="onResolveComment"
+			@unresolveComment="onUnresolveComment"
 		>
 			{{comment.text}}
 		</wnl-comment>
@@ -149,6 +150,13 @@
 			},
 			onResolveComment(id) {
 				this.action('resolveComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
+			onUnresolveComment(id) {
+				this.action('unresolveComment', {
 					commentableResource: this.commentableResource,
 					commentableId: this.commentableId,
 					id,

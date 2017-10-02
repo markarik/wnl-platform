@@ -49,7 +49,7 @@
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
-					<wnl-resolve @resolveResource="resolveQuestion(id)"/>
+					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question"/>
 				</div>
 			</div>
 		</div>

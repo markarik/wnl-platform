@@ -62,6 +62,8 @@ class OrdersStatsExport extends Command
 		$orders = (new Order)
 			->with(['coupon', 'product'])
 			->where('method', '!=', null)
+			->where('canceled', null)
+			->distinct('user_id')
 			->whereBetween('created_at', [$startDate, $endDate])
 			->get();
 

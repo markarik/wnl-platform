@@ -116,6 +116,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
+	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');

@@ -32,7 +32,7 @@ class Newsletter extends Mailable
 	public function build()
 	{
 		return $this
-			->to('warsztaty@mail.wiecejnizlek.pl')
+			->to('wnl-edycja-pierwsza@mail.wiecejnizlek.pl')
 			->view('mail.newsletter.' . $this->template)
 			->text('mail.newsletter.' . $this->template . '-plain')
 			->subject($this->subject);

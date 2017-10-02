@@ -10,7 +10,9 @@
 				<div class="media-content">
 					<p class="title is-4">{{ order.product.name }}</p>
 					<p class="subtitle is-6">{{ orderNumber }}
-						<br><small>Cena produktu: {{ order.product.price }}zł, zamówienie złożono {{ order.created_at }}</small>
+						<br>
+						<small>Cena produktu: {{ order.product.price }}zł, zamówienie złożono {{ order.created_at }}
+						</small>
 					</p>
 				</div>
 			</div>
@@ -19,33 +21,48 @@
 					<strong>Naliczona zniżka: "{{ coupon.name }}" o wartości {{ getCouponValue(coupon) }}</strong><br>
 					Cena ze zniżką: {{ order.total }}zł
 				</p>
+
 				<div class="margin bottom" v-else-if="studyBuddy">
 					<div v-if="order.studyBuddy.status === 'awaiting-refund'">
 						<p class="strong has-text-centered">
 							Twój Study Buddy dołączył już do kursu!
 						</p>
 						<p>
-							Jeśli wysłałeś już do nas w odpowiedzi na maila dane do przelewu, w ciągu najbliższych dni otrzymasz zwrot. <wnl-emoji name="+1"/>
+							Jeśli wysłałeś już do nas w odpowiedzi na maila dane do przelewu, w ciągu najbliższych dni
+							otrzymasz zwrot.
+							<wnl-emoji name="+1"/>
 						</p>
 						<p>
-							Jeżeli nie, prosimy sprawdź swoją skrzynkę mailową. Znajdziesz tam wiadomość od nas o tytule "Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {{order.id}})". W odpowiedzi wyślij nam dane do przelewu, których możemy użyć do zwrotu. <wnl-emoji name="wink"/>
+							Jeżeli nie, prosimy sprawdź swoją skrzynkę mailową. Znajdziesz tam wiadomość od nas o tytule
+							"Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {{order.id}})". W odpowiedzi wyślij
+							nam dane do przelewu, których możemy użyć do zwrotu.
+							<wnl-emoji name="wink"/>
 						</p>
 					</div>
 					<div v-else>
 						<p class="strong has-text-centered">
 							Dziękujemy za opłacenie zamówienia! Możesz teraz skorzystać z promocji Study Buddy!
 						</p>
-						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się z Twoim unikalnym kodem:
+						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się
+						z Twoim unikalnym kodem:
 						<span class="code">{{order.studyBuddy.code}}</span>
-						Obydwoje otrzymacie 100zł zniżki, <strong>jeżeli jej zamówienie zostanie opłacone</strong>! Przed zwrotem otrzymasz od nas maila o tytule "Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {{order.id}})" z prośbą o przekazanie danych, na który wykonamy przelew ze zwrotem. <wnl-emoji name="wink"/>
+						Obydwoje otrzymacie 100zł zniżki, <strong>jeżeli jej zamówienie zostanie opłacone</strong>!
+						Przed zwrotem otrzymasz od nas maila o tytule "Twój Study Buddy dołączył właśnie do kursu!
+						(Zamówienie {{order.id}})" z prośbą o przekazanie danych, na który wykonamy przelew ze zwrotem.
+						<wnl-emoji name="wink"/>
 						<p class="small margin vertical has-text-centered">
-							Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)" target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
+							Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)"
+																		   target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
 						</p>
 					</div>
 					<!-- <a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a> -->
 				</div>
 				<p v-else-if="!order.coupon" class="notification has-text-centered">
-					Po opłaceniu zamówienia w tym miejscu pojawi się Twój unikalny kod, który możesz wysłać znajomym i skorzystać z promocji <strong>Study Buddy</strong> - gdy ktoś zapisze się używając Twojego kodu i opłaci zamówienie - obydwoje dostaniecie 100zł zniżki! Przed zwrotem napiszemy do Ciebie, aby uzyskać dane do przelewu. <wnl-emoji name="wink"/>
+					Po opłaceniu zamówienia w tym miejscu pojawi się Twój unikalny kod, który możesz wysłać znajomym i
+					skorzystać z promocji <strong>Study Buddy</strong> - gdy ktoś zapisze się używając Twojego kodu i
+					opłaci zamówienie - obydwoje dostaniecie 100zł zniżki! Przed zwrotem napiszemy do Ciebie, aby
+					uzyskać dane do przelewu.
+					<wnl-emoji name="wink"/>
 				</p>
 
 				<p>Metoda płatności: {{ paymentMethod }}</p>
@@ -92,6 +109,24 @@
 						60-817, Poznań<br>
 						82 1020 4027 0000 1102 1400 9197 (PKO BP)
 					</small>
+				</div>
+
+				<a title="Dodaj lub zmień kod rabatowy" @click="toggleCouponInput">
+					<!--<span class="icon is-small status-icon">
+						<i class="fa fa-pencil-square-o"></i>
+					</span>-->
+					Dodaj lub zmień kod rabatowy
+				</a>
+				<div class="voucher-code" v-if="couponInputVisible">
+					<wnl-form class="margin vertical"
+							  name="CouponCode"
+							  method="put"
+							  :resourceRoute="couponUrl"
+							  hideDefaultSubmit="true"
+							  @submitSuccess="couponSubmitSuccess">
+						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
+						<wnl-submit>Wykorzystaj kod</wnl-submit>
+					</wnl-form>
 				</div>
 			</div>
 		</div>
@@ -156,10 +191,16 @@
 	import {configValue} from 'js/utils/config'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
+	import {Form, Text, Submit} from 'js/components/global/form'
 
 	export default {
 		name: 'Order',
-		props: ['order', 'loaderVisible'],
+		props: ['orderInstance', 'loaderVisible'],
+		components: {
+			'wnl-form': Form,
+			'wnl-form-text': Text,
+			'wnl-submit': Submit,
+		},
 		data() {
 			return {
 				paymentMethods: {
@@ -168,6 +209,9 @@
 					'online': 'Szybki przelew',
 					'instalments': 'Raty',
 				},
+				code: '',
+				couponInputVisible: false,
+				order: this.orderInstance
 			}
 		},
 		computed: {
@@ -203,7 +247,7 @@
 			},
 			transferDetails() {
 				return !this.isFullyPaid && (this.order.method === 'transfer' ||
-					this.order.method === 'instalments')
+						this.order.method === 'instalments')
 			},
 			paymentStatus() {
 				if (this.order.paid) {
@@ -243,6 +287,9 @@
 			},
 			studyBuddy() {
 				return this.order.hasOwnProperty('studyBuddy') && this.order.paid
+			},
+			couponUrl() {
+				return `orders/${this.order.id}/coupon`;
 			}
 		},
 		methods: {
@@ -258,6 +305,14 @@
 						})
 						.catch(exception => $wnl.logger.capture(exception))
 			},
+			couponSubmitSuccess() {
+				axios.get(getApiUrl(`orders/${this.order.id}`))
+						.then(response => {
+							this.order = response.data
+							this.toggleCouponInput()
+						})
+						.catch(exception => $wnl.logger.capture(exception))
+			},
 			voucherUrl(code){
 				return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher')
 			},
@@ -266,6 +321,9 @@
 			},
 			getCouponValue(coupon) {
 				return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`
+			},
+			toggleCouponInput(){
+				this.couponInputVisible = !this.couponInputVisible
 			}
 		},
 		mounted() {

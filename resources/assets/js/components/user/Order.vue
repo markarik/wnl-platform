@@ -65,15 +65,6 @@
 					<wnl-emoji name="wink"/>
 				</p>
 
-				<a title="Dodaj lub zmień kod rabatowy">
-					<span class="icon is-small status-icon">
-						<i class="fa fa-pencil-square-o"></i>
-					</span> Dodaj lub zmień kod rabatowy
-				</a>
-				<wnl-form class="margin vertical" name="CouponCode" method="put" :resourceRoute="couponUrl">
-					<wnl-form-text name="code">Kod: </wnl-form-text>
-				</wnl-form>
-
 				<p>Metoda płatności: {{ paymentMethod }}</p>
 
 				<!-- Instalments -->
@@ -118,6 +109,24 @@
 						60-817, Poznań<br>
 						82 1020 4027 0000 1102 1400 9197 (PKO BP)
 					</small>
+				</div>
+
+				<a title="Dodaj lub zmień kod rabatowy" @click="toggleCouponInput">
+					<!--<span class="icon is-small status-icon">
+						<i class="fa fa-pencil-square-o"></i>
+					</span>-->
+					Dodaj lub zmień kod rabatowy
+				</a>
+				<div class="voucher-code" v-if="couponInputVisible">
+					<wnl-form class="margin vertical"
+							  name="CouponCode"
+							  method="put"
+							  :resourceRoute="couponUrl"
+							  hideDefaultSubmit="true"
+							  @submitSuccess="couponSubmitSuccess">
+						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
+						<wnl-submit>Wykorzystaj kod</wnl-submit>
+					</wnl-form>
 				</div>
 			</div>
 		</div>
@@ -182,14 +191,15 @@
 	import {configValue} from 'js/utils/config'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
-	import { Form, Text } from 'js/components/global/form'
+	import {Form, Text, Submit} from 'js/components/global/form'
 
 	export default {
 		name: 'Order',
-		props: ['order', 'loaderVisible'],
+		props: ['orderInstance', 'loaderVisible'],
 		components: {
 			'wnl-form': Form,
 			'wnl-form-text': Text,
+			'wnl-submit': Submit,
 		},
 		data() {
 			return {
@@ -199,7 +209,9 @@
 					'online': 'Szybki przelew',
 					'instalments': 'Raty',
 				},
-				code: ''
+				code: '',
+				couponInputVisible: false,
+				order: this.orderInstance
 			}
 		},
 		computed: {
@@ -293,6 +305,14 @@
 						})
 						.catch(exception => $wnl.logger.capture(exception))
 			},
+			couponSubmitSuccess() {
+				axios.get(getApiUrl(`orders/${this.order.id}`))
+						.then(response => {
+							this.order = response.data
+							this.toggleCouponInput()
+						})
+						.catch(exception => $wnl.logger.capture(exception))
+			},
 			voucherUrl(code){
 				return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher')
 			},
@@ -302,17 +322,8 @@
 			getCouponValue(coupon) {
 				return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`
 			},
-			submitCode() {
-				axios.put(getApiUrl(`orders/${this.order.id}/coupon`))
-						.then(() => axios.get(getApiUrl(`orders/${this.order.id}`)))
-						.then(response => this.order = response.data)
-						.catch(exception => {
-							if (exception) {
-
-								return
-							}
-							$wnl.logger.capture(exception)
-						})
+			toggleCouponInput(){
+				this.couponInputVisible = !this.couponInputVisible
 			}
 		},
 		mounted() {

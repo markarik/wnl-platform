@@ -74,9 +74,9 @@
            usersToCount() {
                return this.allUsers
            },
-        //    activeUsersCount() {
-        //        return this.usersToCount.length || 0
-        //    },
+           allUsersCount() {
+               return this.usersToCount.length || 0
+           },
 
        },
            methods: {

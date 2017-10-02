@@ -10,7 +10,8 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-active-users></wnl-active-users>
+			<router-view v-if="!isMainRoute"></router-view>
+			<wnl-all v-else></wnl-all>
 		</div>
 	</div>
 </template>
@@ -62,6 +63,9 @@
 			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
 			isProduction() {
 				return isProduction()
+			},
+			isMainRoute() {
+				return this.$route.name === 'all-users'
 			},
 			items() {
 				let items = [
@@ -121,12 +125,12 @@
 				}
 			}
 		},
-		mounted() {
-            axios.get(getApiUrl(`users/${this.param}/profile`))
-				.then((response) => {
-					this.response = response
-				})
-			.catch(exception => $wnl.logger.capture(exception))
-		},
+		// mounted() {
+        //     axios.get(getApiUrl(`users/${this.param}/profile`))
+		// 		.then((response) => {
+		// 			this.response = response
+		// 		})
+		// 	.catch(exception => $wnl.logger.capture(exception))
+		// },
 	}
 </script>

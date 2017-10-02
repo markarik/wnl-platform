@@ -17,7 +17,7 @@ const getters = {
     //         })
     //     }
     // },
-    getUsersByLoaction: state => city => state.allUsers.filter(item => item.city === city)
+    // getUsersByLoaction: state => city => state.allUsers.filter(item => item.city === city)
 };
 
 const mutations = {

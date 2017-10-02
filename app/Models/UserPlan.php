@@ -101,4 +101,18 @@ class UserPlan extends Model
 
 		return $stats;
 	}
+
+	public function calculatedStartDate() {
+		$firstQuestionSolved = $this->questionsProgress()
+			->whereNotNull('resolved_at')
+			->orderBy('resolved_at')
+			->get()
+			->first();
+
+		if (!empty($firstQuestionSolved)) {
+			return $this->start_date->min(new Carbon($firstQuestionSolved->resolved_at));
+		} else {
+			return $this->start_date;
+		}
+	}
 }

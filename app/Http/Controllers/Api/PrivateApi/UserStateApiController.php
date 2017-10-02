@@ -1,11 +1,20 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Models\User;
+use App\Models\UserTime;
+use App\Models\UserCourseProgress;
+use App\Models\Comment;
+use App\Models\Lesson;
+use App\Models\QnaQuestion;
+use App\Models\QnaAnswer;
+use App\Models\UserQuizResults;
+use App\Models\QuizQuestion;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
+use Cache;
 
 class UserStateApiController extends ApiController
 {
@@ -102,6 +111,68 @@ class UserStateApiController extends ApiController
 		return $this->json([
 			'time' => $incrementedTime
 		]);
+	}
+
+	public function saveQuizPosition(Request $request, $user) {
+		$cacheKey = $this->hashedFilters($request->filters);
+		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
+		Cache::tags($cacheTags)->put($cacheKey, $request->position, 60 * 24);
+
+		return $this->json([
+			'position' => $request->position
+		]);
+	}
+
+	public function getQuizPosition(Request $request, $user) {
+		$cacheKey = $this->hashedFilters($request->filters);
+		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
+		$cachedPosition = Cache::tags($cacheTags)->get($cacheKey, $request->position);
+
+		return $this->json([
+			'position' => $cachedPosition
+		]);
+	}
+
+	public function getStats(Request $request, $user) {
+		$userTime = UserTime::where('user_id', $user)->first();
+		$userCourseProgress = UserCourseProgress::where('user_id', $user)->get();
+		$userComments = Comment::where('user_id', $user)->count();
+		$qnaQuestionsPosted = QnaQuestion::where('user_id', $user)->count();
+		$qnaAnswersPosted = QnaAnswer::where('user_id', $user)->count();
+		$quizQuestionsSolved = UserQuizResults::where('user_id', $user)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
+		$numberOfQuizQuestions = QuizQuestion::count();
+		$numberOfLessons = Lesson::count();
+
+		$stats = [
+			'time' => [
+				'minutes' => !empty($userTime) ? $userTime->time : 0
+			],
+			'lessons' => [
+				'completed' => 0,
+				'started' => 0,
+				'total' => $numberOfLessons
+			],
+			'social' => [
+				'comments' => $userComments,
+				'qna_questions' => $qnaQuestionsPosted,
+				'qna_answers' => $qnaAnswersPosted
+			],
+			'quiz_questions' => [
+				'solved' => $quizQuestionsSolved,
+				'total' => $numberOfQuizQuestions
+			]
+		];
+
+		if (!empty($userCourseProgress)) {
+			$grouped = $userCourseProgress->groupBy('status');
+			$completedCount = isset($grouped['complete']) ? count($grouped['complete']) : 0;
+			$startedCount  = isset($grouped['in-progress']) ? count($grouped['in-progress']) : 0;
+
+			$stats['lessons']['completed'] = $completedCount;
+			$stats['lessons']['started'] = $startedCount;
+		}
+
+		return $this->json($stats);
 	}
 
 	static function getCourseRedisKey($userId, $courseId)

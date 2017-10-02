@@ -21,6 +21,7 @@ class UserProfileTransformer extends ApiTransformer
 	{
 		$data = [
 			'id'           => $profile->id,
+			'user_id'      => $profile->user_id,
 			'first_name'   => $profile->first_name,
 			'last_name'    => $profile->last_name,
 			'public_email' => $profile->public_email,

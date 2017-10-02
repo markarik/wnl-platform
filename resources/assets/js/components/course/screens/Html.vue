@@ -1,6 +1,7 @@
 <template>
-	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}">
-		<div class="content" v-html="content"></div>
+	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}" @click="onClick">
+		<div class="content" v-html="content">
+		</div>
 		<p class="end-button has-text-centered" v-if="showBacklink">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
 				Wróć do auli
@@ -14,6 +15,9 @@
 
 	.wnl-screen-html
 		margin: $margin-big 0
+		img:hover
+			opacity: 0.7
+
 
 	.wnl-repetitions
 		ol
@@ -45,6 +49,14 @@
 
 <script>
 	import _ from 'lodash'
+	import {imageviewer} from 'vendor/imageviewer/imageviewer'
+
+	imageviewer($, window, document)
+	function showImage() {
+		// this is not Vue component, it's "event triggered" this
+		ImageViewer({snapViewPersist: false}).show(this.src);
+	}
+
 
 	export default {
 		name: 'Html',
@@ -55,6 +67,12 @@
 			},
 			isRepetitions() {
 				return this.screenData.name.indexOf('Powtórki') > -1
+			}
+		},
+		data() {
+			return {
+				imagesLoaded: false,
+				imagesSelector: '.wnl-screen-html img',
 			}
 		},
 		methods: {
@@ -72,10 +90,37 @@
 						wrapper.appendChild(iframe)
 					})
 				}
+			},
+			addFullscreen() {
+				const images = document.querySelectorAll(this.imagesSelector)
+
+				if (images.length) {
+					this.imagesLoaded = true
+				}
+
+				images.forEach((image) => {
+					image.addEventListener('click', showImage);
+				})
+			},
+			onClick(event) {
+				if (!this.imagesLoaded) {
+					document.querySelectorAll(this.imagesSelector).forEach((image) => {
+						image.addEventListener('click', showImage);
+					})
+
+					if (event.target.matches(this.imagesSelector)) {
+						ImageViewer().show(event.target.src);
+						this.imagesLoaded = true
+					}
+				}
 			}
 		},
+		beforeDestroy() {
+			document.removeEventListener('click', showImage);
+		},
 		mounted() {
-			this.wrapEmbedded()
+			this.wrapEmbedded();
+			this.addFullscreen();
 		},
 		updated() {
 			this.wrapEmbedded()

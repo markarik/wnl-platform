@@ -103,6 +103,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{user}/{$r['user-state']}/time", 'UserStateApiController@getTime');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/time", 'UserStateApiController@incrementTime');
 
+	Route::post("{$r['users']}/{user}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
+	Route::put("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@saveQuizPosition');
+
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/stats", 'UserStateApiController@getStats');
+
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'UserReactionsApiController@getReactionsByCategory');
 
@@ -111,6 +116,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
+	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');

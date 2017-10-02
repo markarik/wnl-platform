@@ -45,6 +45,7 @@ function getEmptyAnswers(stateAnswers) {
 // Getters
 const getters = {
 	questionText: state => state.question ? state.question.text : '',
+	questionExplanation: state => state.question ? state.question.explanation : '',
 	questionAnswers: state => state.answers || getEmptyAnswers(),
 	questionAnswersMap: state => state.answersMap,
 	questionId: state => state.question && state.question.id,

@@ -150,6 +150,7 @@
 				testProcessing: false,
 				testResults: {},
 				reactionsFetched: false,
+				presetOptionsToPass: isEmpty(this.presetOptions) ? {} : this.presetOptions
 			}
 		},
 		computed: {
@@ -193,11 +194,8 @@
 			computedQuestionsList() {
 				return this.orderedQuestionsList.length ? this.orderedQuestionsList : this.questionsList
 			},
-			highlightedQuestion() {
-				return this.questionsList[0]
-			},
-			presetOptionsToPass() {
-				return isEmpty(this.presetOptions) ? {} : this.presetOptions
+			examMode() {
+				return !!this.presetOptionsToPass.examMode && this.testMode
 			},
 		},
 		methods: {
@@ -207,6 +205,7 @@
 				'activeFiltersToggle',
 				'changeCurrentQuestion',
 				'checkQuestions',
+				'getPosition',
 				'fetchQuestionData',
 				'fetchQuestions',
 				'fetchQuestionsCount',
@@ -219,6 +218,7 @@
 				'resetTest',
 				'resolveQuestion',
 				'saveQuestionsResults',
+				'savePosition',
 				'selectAnswer',
 				'setPage',
 			]),
@@ -276,8 +276,7 @@
 				})
 			},
 			endQuiz() {
-				this.testProcessing = false
-				this.testMode = false
+				this.testMode = this.testProcessing = false
 				this.testResults = {}
 				this.resetTest()
 			},
@@ -336,20 +335,21 @@
 			onSelectAnswer(payload) {
 				payload.answer === this.getQuestion(payload.id).selectedAnswer
 					&& !this.testMode
-					? this.onVerify(payload.id)
+					? this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}))
 					: this.selectAnswer(payload)
 			},
 			onVerify(questionId) {
 				this.resolveQuestion(questionId)
-				this.saveQuestionsResults([questionId])
+				this.saveQuestionsResults({questions: [questionId]})
 			},
 			performCheckQuestions() {
 				scrollToTop()
-				this.testMode = false
 				this.testProcessing = true
-				this.checkQuestions().then(results => {
+				this.checkQuestions({examMode: this.examMode}).then(results => {
 					this.testResults = results
 					this.testProcessing = false
+					this.testMode = false
+					this.presetOptionsToPass = {}
 				})
 			},
 			setQuestion({page, index}) {
@@ -361,6 +361,7 @@
 					.then(question => {
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)
+						this.savePosition({position: {page: this.getSafePage(page), index}})
 					})
 			},
 			setupFilters(activeFilters = []) {
@@ -418,9 +419,13 @@
 					.then(() => this.fetchDynamicFilters())
 					.then(() => {
 						this.fetchingFilters = false
-						this.switchOverlay(false)
 						this.resetCurrentQuestion()
 						return this.fetchQuestionsReactions(this.getPage(1))
+					})
+					.then(this.getPosition)
+					.then(({data = {}}) => {
+						data.position && this.changeCurrentQuestion(data.position)
+						this.switchOverlay(false)
 					})
 					.then(() => this.reactionsFetched = true)
 					.catch(e => {
@@ -440,12 +445,6 @@
 			}
 		},
 		watch: {
-			highlightedQuestion(currentQuestion, previousQuestion = {}) {
-				if (currentQuestion.id !== previousQuestion.id) {
-					// TODO loading state
-					this.fetchQuestionData(currentQuestion.id)
-				}
-			},
 			testQuestionsCount() {
 				this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount)
 			}

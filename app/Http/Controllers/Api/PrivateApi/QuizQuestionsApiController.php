@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
 use App\Models\Tag;
+use App\Models\ExamResults;
 use App\Http\Requests\Quiz\UpdateQuizQuestion;
 use App\Http\Controllers\Api\Transformers\QuizQuestionTransformer;
 use League\Fractal\Resource\Item;
@@ -20,6 +21,7 @@ class QuizQuestionsApiController extends ApiController
 	const AVAILABLE_FILTERS = [
 		'quiz-planned',
 		'quiz-resolution',
+		'quiz-collection',
 		'by_taxonomy-subjects',
 		'by_taxonomy-exams',
 //		'by_taxonomy-tags',
@@ -35,6 +37,7 @@ class QuizQuestionsApiController extends ApiController
 	{
 		$question = QuizQuestion::create([
 			'text' => $request->input('question'),
+			'explanation' => $request->input('explanation'),
 			'preserve_order' => $request->input('preserve_order')
 		]);
 		$questionId = $question['id'];
@@ -86,6 +89,7 @@ class QuizQuestionsApiController extends ApiController
 
 		$question->update([
 			'text' => $request->input('question'),
+			'explanation' => $request->input('explanation'),			
 			'preserve_order' => $request->input('preserve_order')
 		]);
 
@@ -183,25 +187,44 @@ class QuizQuestionsApiController extends ApiController
 
 	protected function taxonomyTags()
 	{
-		return Taxonomy::select()
-			->where('name', 'subjects')
-			->first()
-			->tagsTaxonomy()
-			->with('tag')
-			->where('parent_tag_id', 0)
-			->get();
+		return Taxonomy::where('name', 'subjects')->first()->rootTagsFromTaxonomy();
+
 	}
 
 	protected function getMockExam($model, $userId)
 	{
-		$builder = $model->whereHas('tags', function ($query) {
-			$query->where('name', 'Próbny LEK');
-		});
+		$userExamResults = ExamResults::where('user_id', $userId)
+			->get()
+			->sortByDesc('created_at')
+			->first();
 
-		$resolved = $this->resolved((clone $builder), $userId);
-		if ($resolved === 0) return [];
+		if (empty($userExamResults)) {
+			return [];
+		}
 
-		return ['mock_exam' => $this->getOverall((clone $builder), $userId)];
+		$subjects = array_map(function($subject) {
+			return [
+				'name'               => $subject->name,
+				'total'              => $subject->total ?? 0,
+				'resolved'           => $subject->resolved,
+				'resolved_perc'      => $subject->resolved_perc,
+				'correct'            => $subject->correct,
+				'correct_perc'       => $subject->correct == 0 ? 0 : $subject->correct / $subject->resolved * 100,
+				'correct_perc_total' => $subject->correct_perc,
+			];
+		}, json_decode($userExamResults->details)->subjects);
+
+		return [
+			'mock_exam' => [
+				'total'              => $userExamResults->total,
+				'resolved'           => $userExamResults->resolved,
+				'resolved_perc'      => $userExamResults->resolved_percentage,
+				'correct'            => $userExamResults->correct,
+				'correct_perc'       => $userExamResults->resolved == 0 ? 0 : $userExamResults->correct / $userExamResults->resolved * 100,
+				'correct_perc_total' => $userExamResults->correct_percentage,
+				'subjects'           => $subjects
+			]
+		];
 	}
 
 	protected function getOverall($model, $userId)

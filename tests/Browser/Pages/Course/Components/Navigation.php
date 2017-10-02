@@ -11,7 +11,7 @@ class Navigation extends BasePage
 	public function elements()
 	{
 		return [
-			'@dropdown_trigger' => '.wnl-dropdown .activator',
+			'@dropdown_trigger' => '.wnl-navbar-profile .activator',
 			'@logout' => 'a[href="/logout"]',
 			'@dropdown_username' => '.wnl-dropdown .box.drawer .metadata'
 		];

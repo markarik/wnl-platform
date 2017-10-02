@@ -29,24 +29,11 @@ class OrderObserver
 			$order->getOriginal('method') === null &&
 			$order->method !== null
 		) {
-			\Log::notice('Order payment method set, decrementing product quantity.');
-			$this->dispatch(new OrderConfirmed($order));
-			$order->product->quantity--;
-			$order->product->save();
+			$this->handlePaymentMethodSet($order);
+		}
 
-			if ($order->coupon && $order->coupon->times_usable) {
-				$order->coupon->times_usable--;
-				$order->coupon->save();
-			}
-
-			if (intval($order->total_with_coupon) === 0) {
-				\Log::notice('Order total is 0, marking as paid and dispatching OrderPaid job.');
-				$order->paid = true;
-				$order->save();
-				$this->dispatch(new OrderPaid($order));
-			}
-
-			$this->notify(new OrderCreated($order));
+		if ($order->getOriginal('coupon_id') !== $order->coupon_id) {
+			$this->handleCouponChange($order);
 		}
 	}
 
@@ -61,6 +48,36 @@ class OrderObserver
 			return env('SLACK_ORDERS_URL');
 		} else {
 			return env('SLACK_TEST');
+		}
+	}
+
+	protected function handlePaymentMethodSet($order)
+	{
+		\Log::notice('Order payment method set, decrementing product quantity.');
+		$this->dispatch(new OrderConfirmed($order));
+		$order->product->quantity--;
+		$order->product->save();
+
+		if ($order->coupon && $order->coupon->times_usable) {
+			$order->coupon->times_usable--;
+			$order->coupon->save();
+		}
+
+		if (intval($order->total_with_coupon) === 0) {
+			\Log::notice('Order total is 0, marking as paid and dispatching OrderPaid job.');
+			$order->paid = true;
+			$order->save();
+			$this->dispatch(new OrderPaid($order));
+		}
+
+		$this->notify(new OrderCreated($order));
+	}
+
+	protected function handleCouponChange($order)
+	{
+		\Log::notice('Order coupon changed.');
+		if ($order->studyBuddy) {
+			$order->studyBuddy->delete();
 		}
 	}
 }

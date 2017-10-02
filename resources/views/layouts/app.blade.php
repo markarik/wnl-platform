@@ -21,6 +21,7 @@
 	<!-- Styles -->
 	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
 	<link href="{{ mix('css/emoji.css') }}" rel="stylesheet">
+	<link href="{{ mix('css/imageviewer.css') }}" rel="stylesheet">
 
 	<!-- Scripts -->
 	<script>
@@ -36,6 +37,7 @@
 	<form method="post" action="/logout" id="logout-form">
 		{{ csrf_field() }}
 	</form>
+	@include('not-supported-browser-modal')
 	@include ('footer')
 </body>
 </html>

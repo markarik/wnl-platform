@@ -3,153 +3,105 @@
 namespace Tests\Browser\Tests\Payment;
 
 use Tests\Browser\Tests\Payment\Modules\ConfirmOrderModule;
+use Tests\Browser\Tests\Payment\Modules\MyOrdersModule;
+use Tests\Browser\Tests\Payment\Modules\OnlinePaymentModule;
 use Tests\Browser\Tests\Payment\Modules\PersonalDataModule;
+use Tests\Browser\Tests\Payment\Modules\SelectProductModule;
 use Tests\Browser\Tests\Payment\Modules\UserModule;
-use Faker\Factory;
-use Tests\Browser\Pages\Payment\ConfirmOrderPage;
-use Tests\Browser\Pages\Payment\P24ChooseBank;
-use Tests\Browser\Pages\Payment\PersonalDataPage;
-use Tests\Browser\Pages\Payment\SelectProductPage;
-use Tests\Browser\Pages\User\OrdersPage;
 use Tests\Browser\Tests\Payment\Modules\VoucherModule;
 use Tests\DuskTestCase;
+use Mail;
 
 class PaymentTest extends DuskTestCase
 {
-	use SignsUpUsers;
+	/**
+	 * @test
+	 * @group checkout
+	 */
+	public function registerAndPayOnline()
+	{
+		$this->execute([
+			[UserModule::class          , 'newUser'],
+			[SelectProductModule::class , 'onsite'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payOnline'],
+			[OnlinePaymentModule::class , 'successfulPayment'],
+			[MyOrdersModule::class      , 'end'],
+		]);
+	}
 
 	/**
-	 * @var (Faker) Factory
+	 * @test
+	 * @group checkout
 	 */
-	protected $faker;
+	public function logInEditDataAndOrder()
+	{
+		$this->execute([
+			[UserModule::class          , 'existingUser'],
+			[VoucherModule::class       , 'skip'],
+			[SelectProductModule::class , 'online'],
+			[ConfirmOrderModule::class  , 'editData'],
+			[PersonalDataModule::class  , 'signUpCustomInvoice'],
+			[ConfirmOrderModule::class  , 'payByTransfer'],
+			[MyOrdersModule::class      , 'end'],
+		]);
+	}
 
 	/**
-	 * Setup faker
+	 * @test
+	 * @group checkout
 	 */
-	public function setUp()
+	public function registerAndPayByInstalments()
 	{
-		parent::setUp();
-		$this->faker = Factory::create();
+		$this->execute([
+			[UserModule::class          , 'newUser'],
+			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByInstalments'],
+			[MyOrdersModule::class      , 'end'],
+		]);
 	}
 
-	/** @test */
-	public function user_can_sign_up_and_place_order()
+	/**
+	 * @test
+	 * @group checkout
+	 */
+	public function studyBuddy()
 	{
-		$this->browse(function ($browser) {
-			$browser
-				->visit(new SelectProductPage)
-				->clickLink('Wybieram kurs stacjonarny');
-
-			$user = $this->generateFormData($this->faker);
-			$browser->on(new PersonalDataPage);
-			$this->fillInForm($user, $browser);
-			$browser->xpath('.//button[@class="button is-primary"]')->click();
-
-			$browser
-				->on(new ConfirmOrderPage)
-				->assertSeeAll([$user['email'], $user['firstName'], $user['lastName'], $user['address']])
-				->xpath('.//button[1]')->click();
-
-			$browser
-				->on(new OrdersPage)
-				->waitForAll(['Twoje zamówienia', 'Zamówienie złożono']);
-
-		});
-
-		$this->closeAll();
+		$this->execute([
+			[UserModule::class          , 'newUser'],
+			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByInstalments'],
+			[MyOrdersModule::class      , 'studyBuddy'],
+			[VoucherModule::class       , 'default'],
+			[SelectProductModule::class , 'onsite'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByTransfer'],
+			[MyOrdersModule::class      , 'end'],
+		]);
 	}
 
-	/** @test */
-	public function user_can_place_order_and_successfully_pay_online()
+	/**
+	 * @test
+	 * @group checkout
+	 */
+	public function freeCourseCoupon()
 	{
-		//TODO fix Platnosci24 webhook so it works on dev environment
-		if (env('APP_ENV') !== 'sandbox') {
-			$this->markTestSkipped(PHP_EOL . 'Omitting test ' . __METHOD__ . ' (applicable only on sandbox env)' . PHP_EOL);
-		}
-
-		$this->browse(function ($browser) {
-			$browser
-				->visit(new SelectProductPage)
-				->clickLink('Wybieram kurs internetowy');
-
-			$user = $this->generateFormData($this->faker);
-			$browser->on(new PersonalDataPage);
-			$this->fillInForm($user, $browser);
-			$browser->xpath('.//button[@class="button is-primary"]')->click();
-
-			$browser
-				->on(new ConfirmOrderPage)
-				->assertSeeAll([$user['email'], $user['firstName'], $user['lastName'], $user['address']])
-				->press('button.p24-submit')
-				->waitForText('Wybierz formę płatności', 30);
-
-			$browser
-				->on(new P24ChooseBank)
-				->press('@ing-logo');
-
-			try {
-				$browser
-					->waitFor('@accept-tou')
-					//TODO this should be handled by pressing button not by executing script
-					->executeScript("$('#reagulation-accept-button').click()");
-			}
-			catch (\Exception $e) {
-				print PHP_EOL . '@accept-tou element not found' . PHP_EOL;
-			}
-
-			$browser
-				->waitFor('@login-button')
-				->press('@login-button')
-				->press('@confirm-payment');
-
-			$browser
-				->waitForAll(['Twoje zamówienia', 'Zamówienie złożono'])
-				->waitForText('Zapłacono', 60);
-		});
-
-		$this->closeAll();
-	}
-
-	/** @test */
-	public function user_cant_place_order_and_request_an_invoice()
-	{
-		$this->browse(function ($browser) {
-			$browser
-				->visit(new SelectProductPage)
-				->clickLink('Wybieram kurs internetowy');
-
-			$user = $this->generateFormData($this->faker);
-			$browser->on(new PersonalDataPage);
-			$this->fillInForm($user, $browser, $invoice = true);
-			$browser->xpath('.//button[@class="button is-primary"]')->click();
-
-			$browser
-				->on(new ConfirmOrderPage)
-				->assertSeeAll([
-					$user['email'],
-					$user['firstName'],
-					$user['lastName'],
-					$user['address'],
-					$user['invoice_company'],
-					$user['invoice_address'],
-					$user['invoice_postcode'],
-					$user['invoice_country'],
-				])
-				->xpath('.//button[1]')->click();
-
-			$browser
-				->on(new OrdersPage)
-				->waitForAll(['Twoje zamówienia', 'Zamówienie złożono']);
-		});
-
-		$this->closeAll();
+		$this->execute([
+			[UserModule::class          , 'newUser'],
+			[VoucherModule::class       , 'code100Percent'],
+			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByTransfer'],
+			[MyOrdersModule::class      , 'end'],
+		]);
 	}
 
 	/** @test */
 	public function randomCheckoutTest()
 	{
 		if (file_exists('scenario.dusk')) unlink('scenario.dusk');
-//		file_put_contents('scenario.dusk', '---------------------------------' . PHP_EOL, FILE_APPEND);
 		$this->browse(function ($browser) {
 			$next = UserModule::class;
 			while ($next) $next = $this->callRandom($next, $browser);
@@ -174,7 +126,7 @@ class PaymentTest extends DuskTestCase
 	}
 
 	/** @test */
-	public function fromScenario()
+	public function fromScenarioFile()
 	{
 		if (!file_exists('scenario.dusk')) {
 			print 'File scenario.dusk not found!';
@@ -184,11 +136,19 @@ class PaymentTest extends DuskTestCase
 			$contents = file_get_contents('scenario.dusk');
 			$namespace = 'Tests\Browser\Tests\Payment\Modules\\';
 			foreach (explode("\n", $contents) as $item) {
-				$browser->pause(5000);
 				if (!$item) continue;
-//				fwrite(STDOUT, $item . PHP_EOL);
+				fwrite(STDOUT, $item . PHP_EOL);
 				list($module, $method) = explode('->', $item);
 				$module = $namespace . $module;
+				(new $module)->$method($browser);
+			}
+		});
+	}
+
+	protected function execute($scenario)
+	{
+		$this->browse(function ($browser) use ($scenario) {
+			foreach ($scenario as list($module, $method)) {
 				(new $module)->$method($browser);
 			}
 		});

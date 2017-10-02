@@ -409,3 +409,12 @@ section.voucher {
 	max-width: none;
 	width: 100%;
 }
+
+/* Not supported browser modal */
+.not-supported-browser-modal {
+	z-index: $z-index-overlay;
+
+	.content {
+		font-weight: $font-weight-regular;
+	}
+}

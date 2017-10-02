@@ -35,7 +35,7 @@ const getters = {
 	name: state => state.name,
 	groups: state => state[resource('groups')],
 	structure: state => state.structure,
-	getGroup: state => (groupId) => state.structure[resource('groups')][groupId],
+	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
 	getLessons: state => state.structure[resource('lessons')],
 	getAvailableLessons: (state, getters, rootState, rootGetters) => {
 		if (rootGetters.isAdmin) {
@@ -51,7 +51,7 @@ const getters = {
 		}
 		return lessons
 	},
-	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
+	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId] || {},
 	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
 	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
 		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable

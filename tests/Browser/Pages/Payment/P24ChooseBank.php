@@ -4,7 +4,7 @@ namespace Tests\Browser\Pages\Payment;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert;
 
 class P24ChooseBank extends BasePage
 {
@@ -25,7 +25,7 @@ class P24ChooseBank extends BasePage
 	 */
 	public function assert(Browser $browser)
 	{
-		PHPUnit::assertStringStartsWith($this->url(), $browser->driver->getCurrentURL());
+		Assert::assertStringStartsWith($this->url(), $browser->driver->getCurrentURL());
 	}
 
 	/**

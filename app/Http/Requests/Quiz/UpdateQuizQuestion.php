@@ -25,6 +25,7 @@ class UpdateQuizQuestion extends FormRequest
     {
         return [
             'question' => 'string|required',
+            'explanation' => 'string',
             'tags' => 'array',
             'answers' => 'array'
 		];

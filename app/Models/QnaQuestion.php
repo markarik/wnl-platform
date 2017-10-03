@@ -20,7 +20,7 @@ class QnaQuestion extends Model
 
 	protected $dates = ['deleted_at'];
 
-	protected $events = [
+	protected $dispatchesEvents = [
 		'created' => QnaQuestionPosted::class,
 	];
 

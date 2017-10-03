@@ -287,10 +287,6 @@ class Invoice
 
 	public function corrective(Order $order, $corrected, $reason, $difference)
 	{
-//		$corrected = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get()->last();
-//		$reason = 'Anomalie pogodowe w południowo-zachodniej Polsce';
-//		$difference = -100;
-
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
@@ -357,12 +353,6 @@ class Invoice
 		$data['ordersCorrected'][0]['priceNet'] = $this->price($totalCorrected / (1 + $vatValue));
 		$data['ordersCorrected'][0]['vat'] = $vatString;
 
-//		$data['settlement'] = [
-//			'priceNet'   => $this->price($recentSettlement / (1 + $vatValue)),
-//			'vatValue'   => $this->price($recentSettlement - $recentSettlement / (1 + $vatValue)),
-//			'priceGross' => $this->price($recentSettlement),
-//		];
-
 		$data['remainingAmount'] = $this->price($totalPrice - $totalPaid);
 
 		$data['previousAdvances'] = $previousAdvances;
@@ -375,10 +365,6 @@ class Invoice
 			$data['ordersList'][0]['vatValue'] = $this->price($vatValue * $totalPrice / (1 + $vatValue)) . 'zł';
 			$data['ordersCorrected'][0]['vatValue'] = $this->price($vatValue * $totalCorrected / (1 + $vatValue)) . 'zł';
 		}
-
-//		$data['summary'] = [
-//			'total' => $this->price($totalPrice),
-//		];
 
 		$data['taxDifference'] = [
 			'gross' => $difference,

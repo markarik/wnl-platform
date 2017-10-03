@@ -4,6 +4,7 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 
+use App\Models\Order;
 use App\Models\User;
 use Faker\Factory;
 use Faker\Generator;
@@ -13,7 +14,7 @@ use Tests\Browser\Pages\Login;
 use Tests\Browser\Pages\LoginModal;
 use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Tests\Payment\SignsUpUsers;
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert;
 
 class PersonalDataModule extends TestModule
 {
@@ -23,9 +24,6 @@ class PersonalDataModule extends TestModule
 	{
 		$this->navigate($browser);
 
-		if (!empty($browser->user)) {
-			return ConfirmOrderModule::class;
-		}
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, false);
 
@@ -36,9 +34,6 @@ class PersonalDataModule extends TestModule
 	{
 		$this->navigate($browser);
 
-		if (!empty($browser->user)) {
-			return ConfirmOrderModule::class;
-		}
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, true);
 
@@ -79,11 +74,13 @@ class PersonalDataModule extends TestModule
 		$this->fillInForm($userData, $browser, $invoiceFlag, !$this->isEdit($browser));
 		$browser->userData = $userData;
 
-		$browser->xpath('.//button[@class="button is-primary"]')->click();
+		$browser->xpathClick('.//button[@class="button is-primary"]');
 
 		if (!$this->isEdit($browser)) {
 			$browser->user = User::where('email', $userData['email'])->first();
-			PHPUnit::assertTrue($browser->user instanceof User);
+			$browser->order = $browser->user->orders()->recent();
+			Assert::assertTrue($browser->user instanceof User);
+			Assert::assertTrue($browser->order instanceof Order);
 		}
 	}
 

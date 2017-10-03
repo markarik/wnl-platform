@@ -13,8 +13,8 @@ class Comment extends Model
 	protected $fillable = ['text', 'user_id'];
 	protected $dates = ['deleted_at'];
 
-	protected $events = [
-		'created' => CommentPosted::class
+	protected $dispatchesEvents = [
+		'created' => CommentPosted::class,
 	];
 
 	public function user()

@@ -11,7 +11,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class QnaAnswerDeleted extends Event
+class QnaAnswerRemoved extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,

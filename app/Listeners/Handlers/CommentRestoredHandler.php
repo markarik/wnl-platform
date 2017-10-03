@@ -4,7 +4,7 @@ class CommentRestoredHandler extends Common\ResourceRestoredHandler
 {
 
 	protected function shouldNotify($event) {
-		$commentAuthor = $event->model->user;
+		$commentAuthor = $this->getUserToNotify($event);
 		$commentRemover = $event->data['actors']['id'] ?? 0;
 
 		return $commentAuthor->id !== $commentRemover;

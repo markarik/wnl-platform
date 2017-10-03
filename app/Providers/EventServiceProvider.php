@@ -29,7 +29,7 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\UserNotificationsGate',
 		],
 
-		'App\Events\QnaAnswerDeleted' => [
+		'App\Events\QnaAnswerRemoved' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 

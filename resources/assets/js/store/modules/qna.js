@@ -20,17 +20,9 @@ import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modu
 	return axios.post(getApiUrl('qna_questions/.search'), data);
 }
 
-function _resolveQuestion(questionId) {
+function _resolveQuestion(questionId, status = true) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
-		resolved: true,
-		text: 'bla bla...'
-	})
-}
-
-function _unresolveQuestion(questionId) {
-	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
-		resolved: false,
-		text: 'bla bla...'
+		resolved: status
 	})
 }
 
@@ -436,7 +428,7 @@ const actions = {
 			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}))
 	},
 	unresolveQuestion({commit}, questionId) {
-		return _unresolveQuestion(questionId)
+		return _resolveQuestion(questionId, false)
 			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}))
 	},
 	removeAnswer({commit}, payload) {

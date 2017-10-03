@@ -18,10 +18,4 @@ class CommentObserver
 	{
 		//
 	}
-
-	public function deleted(Comment $comment)
-	{
-		//
-	}
-
 }

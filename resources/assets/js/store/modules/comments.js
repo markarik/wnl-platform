@@ -27,17 +27,9 @@ function _fetchComments(ids, model) {
 	return axios.post(getApiUrl('comments/.search'), data)
 }
 
-function _resolveComment(id) {
+function _resolveComment(id, status = true) {
 	return axios.put(getApiUrl(`comments/${id}`), {
-		resolved: true,
-		text: 'bla bla'
-	})
-}
-
-function _unresolveComment(id) {
-	return axios.put(getApiUrl(`comments/${id}`), {
-		resolved: false,
-		text: 'bla bla'
+		resolved: status
 	})
 }
 
@@ -136,7 +128,7 @@ export const commentsActions = {
 			.then(() => commit(types.RESOLVE_COMMENT, payload))
 	},
 	unresolveComment({commit}, payload) {
-		_unresolveComment(payload.id)
+		_resolveComment(payload.id, false)
 			.then(() => commit(types.UNRESOLVE_COMMENT, payload))
 	},
 	fetchComments({commit}, {ids, resource}) {

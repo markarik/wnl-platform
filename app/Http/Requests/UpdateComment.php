@@ -31,8 +31,8 @@ class UpdateComment extends FormRequest
 	public function rules()
 	{
 		return [
-			'text' => 'required|string',
-			'resolve' => 'boolean'
+			'text' => 'required_without_all:resolved|string',
+			'resolved' => 'required_without_all:text|boolean'
 		];
 	}
 }

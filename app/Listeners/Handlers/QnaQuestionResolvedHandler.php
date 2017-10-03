@@ -1,7 +1,7 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\Qna\QnaQuestionResolved;
+use App\Events\QnaQuestionResolved;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 

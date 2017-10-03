@@ -29,7 +29,7 @@ function _resolveQuestion(questionId) {
 
 function _unresolveQuestion(questionId) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
-		resolved: true,
+		resolved: false,
 		text: 'bla bla...'
 	})
 }
@@ -277,10 +277,15 @@ const mutations = {
 	},
 	[types.QNA_RESOLVE_QUESTION] (state, payload) {
 		let id = payload.questionId,
-			questionsIds = _.pull(state.questionsIds, id)
+			question = state.qna_questions[id];
 
-		destroy(state.qna_questions, id)
-		set(state, 'questionsIds', questionsIds)
+		set(state.qna_questions, id, {...question, resolved: true})
+	},
+	[types.QNA_UNRESOLVE_QUESTION] (state, payload) {
+		let id = payload.questionId,
+			question = state.qna_questions[id];
+
+		set(state.qna_questions, id, {...question, resolved: false})
 	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,

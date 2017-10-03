@@ -10,8 +10,8 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Auth;
 use League\Fractal\Resource\Item;
-use App\Events\Qna\QnaQuestionResolved;
-use App\Events\Qna\QnaQuestionRestored;
+use App\Events\QnaQuestionResolved;
+use App\Events\QnaQuestionRestored;
 
 class QnaQuestionsApiController extends ApiController
 {

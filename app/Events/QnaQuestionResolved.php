@@ -44,6 +44,11 @@ class QnaQuestionResolved extends Event
 				'id'   => $this->qnaQuestion->id,
 				'text' => $this->sanitize($this->qnaQuestion->text),
 			],
+			'objects' => [
+				'type' => 'qna_question',
+				'id'   => $this->qnaQuestion->id,
+				'text' => $this->sanitize($this->qnaQuestion->text),
+			],
 			'actors'  => [
 				'id'         => $this->userId,
 			],

@@ -10,7 +10,7 @@
 			</div>
 			<div slot="content">
 				<div class="personal-feed-header">
-					<span class="feed-heading">{{$t('notifications.personal.heading')}}</span>
+					<span class="feed-heading" v-t="'notifications.personal.heading'"/>
 					<wnl-notifications-toggle/>
 				</div>
 
@@ -20,9 +20,7 @@
 							:alt="$t('notifications.personal.zeroStateImage')"
 							:src="zeroStateImage"
 							:title="$t('notifications.personal.zeroStateImage')">
-						<p class="zero-state-text">
-							{{$t('notifications.personal.zeroState')}}
-						</p>
+						<p class="zero-state-text" v-t='"notifications.personal.zeroState"'/>
 					</div>
 					<div v-else class="personal-feed-content">
 						<component :is="getEventComponent(message)"
@@ -37,9 +35,8 @@
 							<a v-if="canShowMore" class="button is-small is-outlined"
 								:class="{'is-loading': fetching}"
 								@click="loadMore"
-							>
-								{{$t('notifications.personal.showMore')}}
-							</a>
+								v-t="'notifications.personal.showMore'"
+							/>
 							<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
 								{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
 							</span>
@@ -48,7 +45,7 @@
 				</div>
 
 				<div class="personal-feed-footer" v-if="unreadCount > 0">
-					<a class="link" @click="allRead">{{$t('notifications.markAllAsRead')}}</a>
+					<a class="link" @click="allRead" v-t="notifications.markAllAsRead"/>
 					<span v-if="allReadLoading" class="loader"></span>
 				</div>
 			</div>

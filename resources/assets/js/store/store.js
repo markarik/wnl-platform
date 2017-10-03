@@ -21,7 +21,6 @@ import slideshow from 'js/store/modules/slideshow'
 import ui from 'js/store/modules/ui'
 import autocomplete from 'js/store/modules/autocomplete'
 import users from 'js/store/modules/users'
-import activeUsers from 'js/store/modules/activeUsers'
 
 Vue.use(Vuex)
 
@@ -46,7 +45,6 @@ export default new Vuex.Store({
 		slideshow,
 		ui,
 		users,
-		activeUsers,
 		autocomplete
 	},
 	strict: debug

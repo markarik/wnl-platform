@@ -8,7 +8,7 @@
 				<ul class="avatars-list" ref="avatarsList">
 					<li v-for="user in usersToCount" class="avatar">
 						<wnl-avatar
-								:fullName="user.fullName"
+								:fullName="user.full_name"
 								:url="user.avatar"
 								:userId="user.id"
 								:user="user"
@@ -65,18 +65,22 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
+import {
+    mapGetters
+} from 'vuex'
 
-	export default {
-		name: 'ActiveUsers',
-		computed: {
-			...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
-			usersToCount() {
-				return this.activeUsers.filter((user) => this.currentUserId !== user.id)
-			},
-			activeUsersCount() {
-				return this.usersToCount.length || 0
-			},
-		},
-	}
+export default {
+    name: 'ActiveUsers',
+    computed: {
+        ...mapGetters(['currentUserId', 'currentUserName']),
+        ...mapGetters('users', ['activeUsers']),
+        usersToCount() {
+            console.log(this.activeU);
+            return this.activeUsers.filter((user) => this.currentUserId !== user.id)
+        },
+        activeUsersCount() {
+            return this.usersToCount.length || 0
+        },
+    },
+}
 </script>

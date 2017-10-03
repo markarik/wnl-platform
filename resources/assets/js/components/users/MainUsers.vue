@@ -84,31 +84,7 @@
 						method: 'push',
 						iconClass: 'fa-address-book',
 						iconTitle: 'Wszystkie ziomki',
-					},
-                    {
-                        text: 'Aktywne ziomki',
-						itemClass: 'has-icon',
-						to: {
-							name: 'active-users',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-address-book-o',
-						iconTitle: 'Aktywne ziomki',
-                    },
-					{
-                        text: 'Ziomy z dzielni',
-						itemClass: 'has-icon',
-						to: {
-							name: 'users-by-location',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-compass',
-						iconTitle: 'Ziomy z dzielni',
-                    }
+					}
 				]
 
 				return items

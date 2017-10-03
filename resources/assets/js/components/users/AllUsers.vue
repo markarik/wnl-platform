@@ -1,24 +1,20 @@
 <template>
-   <div>
-       <div class="metadata">
-           {{ $t('dashboard.activeUsers', {count: allUsersCount}) }}
-       </div>
-       <div class="all-users-container" v-if="allUsersCount">
-           <div class="absolute-container">
-               <ul class="avatars-list" ref="avatarsList">
-                   <li v-for="user in usersToCount" class="avatar">
-                       <wnl-avatar
-                               :fullName="user.full_name"
-                               :url="user.avatar"
-                               :userId="user.id"
-                               :user="user"
-                               size="medium">
-                       </wnl-avatar>
-                   </li>
-               </ul>
-           </div>
-       </div>
-   </div>
+<div class="main-userscontainer">
+    <div class="input" v-model="filterValue">
+        <input type="text">filtruj</input>
+    </div>
+    <div class="metadata">
+        {{ $t('dashboard.activeUsers', {count: allUsersCount}) }}
+    </div>
+    <div class="all-users-container" v-if="allUsersCount">
+        <ul class="avatars-list" ref="avatarsList">
+            <li v-for="user in usersToCount" class="avatar">
+                <wnl-avatar :fullName="user.full_name" :url="user.avatar" :userId="user.id" :user="user" size="medium">
+                </wnl-avatar>
+            </li>
+        </ul>
+    </div>
+</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -31,6 +27,7 @@
    .metadata
        border-bottom: $border-light-gray
        margin-bottom: $margin-small
+       flex-direction: column
 
    .wnl-screen-title
        margin-bottom: $margin-small
@@ -40,53 +37,44 @@
        padding-bottom: $margin-big
        position: relative
 
-   .absolute-container
-       position: absolute
-       bottom: 0
-       left: 0
-       right: 0
-       top: 0
-
    .avatars-list
        display: flex
-       overflow: hidden
        position: relative
-
-       &::after
-           content: ""
-           height: $container-height
-           position: absolute
-           right: 0
-           width: $container-height * 2
-           +gradient-horizontal(rgba(0,0,0,0), $color-white)
+       flex-wrap: wrap
 
    .avatars-list .avatar
        margin-right: $margin-small
 </style>
 
 <script>
-   import {mapGetters, mapActions} from 'vuex'
+import {
+    mapGetters,
+    mapActions
+} from 'vuex'
 
-   export default {
-       name: 'AllUsers',
-       computed: {
-           ...mapGetters(['currentUserId', 'currentUserName']),
-           ...mapGetters('users', ['allUsers']),
-           usersToCount() {
-               debugger
-               return this.allUsers
-           },
-           allUsersCount() {
-               return this.usersToCount.length || 0
-           },
+export default {
+    name: 'AllUsers',
+    data() {
+        return {
+            filterValue: ''
+        }
+    },
+    computed: {
+        ...mapGetters(['currentUserId', 'currentUserName']),
+        ...mapGetters('users', ['allUsers']),
+        usersToCount() {
+            return this.allUsers.filter((user) => this.currentUserId !== user.id)
+        },
+        allUsersCount() {
+            return this.usersToCount.length || 0
+        },
 
-       },
-           methods: {
-               ...mapActions('users', ['setAllUsers'])
-           },
-           mounted() {
-
-               this.setAllUsers()
-           }
-   }
+    },
+    methods: {
+        ...mapActions('users', ['setAllUsers'])
+    },
+    mounted() {
+        this.setAllUsers()
+    },
+}
 </script>

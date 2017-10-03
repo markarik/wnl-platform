@@ -69,13 +69,11 @@
 		methods: {
 			...mapActions([
 				'resetLayout',
-				'setActiveUsers',
 				'setLayout',
 				'setupCurrentUser',
-				'toggleOverlay',
-				'userJoined',
-				'userLeft'
+				'toggleOverlay'
 			]),
+			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
 			...mapActions('course', {
 				courseSetup: 'setup',

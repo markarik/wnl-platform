@@ -1,14 +1,5 @@
 <template>
 	<div class="wnl-app-layout">
-		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
-		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="sidenav-aside myself-sidenav">
-				<wnl-sidenav :items="items"></wnl-sidenav>
-			</aside>
-		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<wnl-user-profile v-if="responseCondition" :response="response"></wnl-user-profile>
 		</div>

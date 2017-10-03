@@ -41,13 +41,6 @@ class CommentResolved extends Event
 
 		$this->data = [
 			'event'   => 'comment-resolved',
-			'objects' => [
-				'author' => $comment->user->id,
-				'type' => 'comment',
-				'id'   => $comment->id,
-				'text' => $this->sanitize($comment->text ?? ''),
-				'snippet' => $comment->snippet ?? [],
-			],
 			'subject' => [
 				'type' => 'comment',
 				'id'   => $comment->id,

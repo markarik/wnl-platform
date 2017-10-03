@@ -9,7 +9,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use App\Events\SanitizesUserContent;
 use App\Events\Event;
 
-class QnaQuestionDeleted extends Event
+class QnaQuestionRemoved extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
@@ -17,7 +17,7 @@ class QnaQuestionDeleted extends Event
 		EventContextTrait;
 
 	public $qnaQuestion;
-
+	public $action;
 	public $userId;
 
 	/**
@@ -26,27 +26,36 @@ class QnaQuestionDeleted extends Event
 	 * @param QnaQuestion $qnaQuestion
 	 * @param int $userId
 	 */
-	public function __construct(QnaQuestion $qnaQuestion, $userId)
+	public function __construct(QnaQuestion $qnaQuestion, $userId, $action)
 	{
 		parent::__construct();
 		$this->qnaQuestion = $qnaQuestion;
 		$this->userId = $userId;
+		$this->action = $action;
 	}
 
 	public function transform()
 	{
+		$qnaQuestion = $this->serializedModel();
+
 		$this->data = [
-			'event'   => 'qna-question-deleted',
+			'event'   => 'qna-question-' . $this->action,
 			'subject' => [
 				'type' => 'qna_question',
 				'id'   => $this->qnaQuestion->id,
-				'text' => $this->sanitize($this->qnaQuestion->text),
+				'text' => $this->sanitize($qnaQuestion->text),
 			],
 			'actors'  => [
 				'id' => $this->userId,
 			],
 			'referer' => $this->referer,
-			'context' => $this->addEventContext($this->qnaQuestion)
+			'context' => $this->addEventContext($qnaQuestion)
 		];
+	}
+
+	private function serializedModel() {
+		$serializedModel = QnaQuestion::find($this->qnaQuestion->id);
+
+		return !empty($serializedModel) ? $serializedModel : $this->qnaQuestion;
 	}
 }

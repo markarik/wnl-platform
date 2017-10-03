@@ -189,7 +189,7 @@
 	import Dropdown from 'js/components/global/Dropdown'
 	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
-	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned, CommentResolved, QnaQuestionResolved, QnaAnswerDeleted } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned, CommentRemoved, QnaQuestionRemoved, QnaAnswerRemoved } from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -201,12 +201,12 @@
 		components: {
 			'wnl-dropdown': Dropdown,
 			'wnl-event-comment-posted': CommentPosted,
-			'wnl-event-comment-resolved': CommentResolved,
-			'wnl-event-comment-deleted': CommentResolved,
+			'wnl-event-comment-resolved': CommentRemoved,
+			'wnl-event-comment-deleted': CommentRemoved,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
-			'wnl-event-qna-answer-deleted': QnaAnswerDeleted,
-			'wnl-event-qna-question-resolved': QnaQuestionResolved,
-			'wnl-event-qna-question-deleted': QnaQuestionResolved,
+			'wnl-event-qna-answer-deleted': QnaAnswerRemoved,
+			'wnl-event-qna-question-resolved': QnaQuestionRemoved,
+			'wnl-event-qna-question-deleted': QnaQuestionRemoved,
 			'wnl-event-reaction-added': ReactionAdded,
 			'wnl-event-mentioned': Mentioned,
 			'wnl-notifications-toggle': NotificationsToggle,

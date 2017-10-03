@@ -1,19 +1,19 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\QnaQuestionDeleted;
+use App\Events\QnaQuestionRemoved;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 
-class QnaQuestionDeletedHandler
+class QnaQuestionRemovedHandler
 {
 	/**
-	 * Notification rules for QnaQuestionDeleted event.
+	 * Notification rules for QnaQuestionRemoved event.
 	 *
-	 * @param QnaQuestionDeleted $event
+	 * @param QnaQuestionRemoved $event
 	 * @param UserNotificationsGate $gate
 	 */
-	public function handle(QnaQuestionDeleted $event, UserNotificationsGate $gate)
+	public function handle(QnaQuestionRemoved $event, UserNotificationsGate $gate)
 	{
 		$questionAuthor = $event->qnaQuestion->user;
 		$questionRemover = $event->data['actors']['id'] ?? 0;

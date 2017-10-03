@@ -6,18 +6,16 @@ use App\Models\Comment;
 use App\Traits\EventContextTrait;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Queue\SerializesModels;
 
-class CommentResolved extends Event
+class CommentRemoved extends Event
 {
 	use Dispatchable,
-		SerializesModels,
 		InteractsWithSockets,
 		SanitizesUserContent,
 		EventContextTrait;
 
 	public $comment;
-
+	public $action;
 	public $userId;
 
 	/**
@@ -26,21 +24,22 @@ class CommentResolved extends Event
 	 * @param Comment $comment
 	 * @param int $userId
 	 */
-	public function __construct(Comment $comment, $userId)
+	public function __construct(Comment $comment, $userId, $action)
 	{
 		parent::__construct();
 		$this->comment = $comment;
 		$this->userId = $userId;
+		$this->action = $action;
 	}
 
 	public function transform()
 	{
-		$comment = $this->comment;
+		$comment = $this->serializedModel();
 		$commentable = $comment->commentable;
 		$commentableType = snake_case(class_basename($commentable));
 
 		$this->data = [
-			'event'   => 'comment-resolved',
+			'event'   => 'comment-' . $this->action,
 			'subject' => [
 				'type' => 'comment',
 				'id'   => $comment->id,
@@ -56,5 +55,11 @@ class CommentResolved extends Event
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($commentable)
 		];
+	}
+
+	private function serializedModel() {
+		$serializedModel = Comment::find($this->comment->id);
+
+		return !empty($serializedModel) ? $serializedModel : $this->comment;
 	}
 }

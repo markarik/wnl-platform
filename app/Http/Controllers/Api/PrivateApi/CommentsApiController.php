@@ -8,7 +8,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Resource\Item;
-use App\Events\CommentResolved;
+use App\Events\CommentRemoved;
 use App\Events\CommentRestored;
 
 class CommentsApiController extends ApiController
@@ -53,7 +53,7 @@ class CommentsApiController extends ApiController
 		if (isset($statusResolved)) {
 			if ($statusResolved) {
 				$comment->delete();
-				event(new CommentResolved($comment, Auth::user()->id));
+				event(new CommentRemoved($comment, Auth::user()->id, 'resolved'));
 			} else {
 				$comment->restore();
 				event(new CommentRestored($comment, Auth::user()->id));

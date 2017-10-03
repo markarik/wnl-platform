@@ -37,15 +37,11 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\UserNotificationsGate',
 		],
 
-		'App\Events\CommentResolved' => [
+		'App\Events\CommentRemoved' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 
 		'App\Events\CommentRestored' => [
-			'App\Listeners\UserNotificationsGate',
-		],
-
-		'App\Events\CommentDeleted' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 

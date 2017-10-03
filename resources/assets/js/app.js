@@ -59,6 +59,8 @@ Vue.component('wnl-image-button', ImageButton)
 Vue.component('wnl-text-loader', TextLoader)
 Vue.component('wnl-upload', Upload)
 
+console.log(Vue.config.optionMergeStrategies)
+
 // Setup a logger
 import Logger from 'js/utils/logger'
 $wnl.logger = new Logger()

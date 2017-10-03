@@ -50,7 +50,7 @@ class QnaAnswerDeleted extends Event
 				'text' => $this->sanitize($this->qnaAnswer->text),
 			],
 			'actors'  => [
-				'id'         => $this->userId
+				'id' => $this->userId
 			],
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($this->qnaAnswer)

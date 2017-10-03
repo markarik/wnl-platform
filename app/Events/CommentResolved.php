@@ -50,7 +50,7 @@ class CommentResolved extends Event
 			],
 			'subject' => [
 				'type' => 'comment',
-				'id'   => null,
+				'id'   => $comment->id,
 				'text' => $this->sanitize($comment->text),
 			],
 			'commentable' => [

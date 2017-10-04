@@ -18,4 +18,9 @@ export const ui = {
 	placeholders: {
 		date: 'Wybierz datę',
 	},
+	error: {
+		notFound: `Ups, zapisywanie nie powiodło się.
+			Najprawdopodobniej treść do której się odwołujesz została usunięta.
+			W przypadku dalszych problemów odśwież stronę.`
+	}
 }

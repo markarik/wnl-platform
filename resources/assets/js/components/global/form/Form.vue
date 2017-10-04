@@ -98,10 +98,7 @@
 						},
 						reason => {
 							if (reason.response.status === 404) {
-								this.errorFading(`Ups, zapisywanie nie powiodło się.
-									Najprawdopodobniej treść do której się odwołujesz została usunięta.
-									W przypadku dalszych problemów odśwież stronę.`
-								)
+								this.errorFading(this.$t('ui.error.notFound'))
 							} else {
 								this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 							}

@@ -126,20 +126,16 @@
 			},
 
 			onEnter(evt) {
-				const activeItem = _.find(this.items, { active: true });
+				const activeIndex = this.getActiveItem();
 
-				if (!activeItem) return
+				if (activeIndex < 0) return
 
-				this.$set(activeItem, 'active', false)
-				this.onItemChosen(activeItem)
+				this.$set(this.items[activeIndex], 'active', false)
+				this.onItemChosen(this.items[activeIndex])
 
 				evt.preventDefault();
 				evt.stopPropagation();
 				return false
-			},
-
-			onEsc(evt) {
-				this.$set(this, 'items', null)
 			},
 
 			getActiveItem() {

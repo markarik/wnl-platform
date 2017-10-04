@@ -155,8 +155,8 @@
 							)
 						}
 
-						this.quillEditor.quill.deleteText(0, this.content.length)
 						this.mentions = []
+						this.quillEditor.clear();
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}

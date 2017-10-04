@@ -7,7 +7,6 @@
 			ref="autocomplete"
 		>
 		</wnl-autocomplete>
-
 		<div ref="quill">
 			<slot></slot>
 		</div>
@@ -222,6 +221,7 @@
 
 			onEsc(evt) {
 				this.autocompleteItems = []
+				this.editor.focus()
 			},
 
 			killEvent(evt) {
@@ -234,6 +234,11 @@
 					this.autocompleteItems = []
 				}
 			},
+
+			clear() {
+				this.autocompleteItems = []
+				this.quill.deleteText(0, this.editor.innerHTML.length)
+			}
 		},
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)

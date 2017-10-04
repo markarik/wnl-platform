@@ -53,7 +53,7 @@
 				</div>
 			</div>
 		</div>
-		 <div class="qna-answers">
+		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<div class="level">
 				<div class="level-left">
 					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -127,9 +127,19 @@
 			font-weight: $font-weight-black
 
 	.qna-answers
-		margin-left: $margin-huge
-		margin-top: $margin-base
 		margin: $margin-base $margin-huge $margin-huge $margin-huge
+		position: relative
+
+		&.disabled:before
+			background: $color-white-transparent
+			position: absolute
+			content: ' '
+			cursor: not-allowed
+			height: calc(100% + #{$margin-base} + #{$margin-huge})
+			left: -$margin-huge
+			top: -$margin-base
+			width: calc(100% + #{$margin-huge} + #{$margin-huge})
+			z-index: $z-index-overlay
 
 	.qna-thread.is-mobile
 		.qna-answers

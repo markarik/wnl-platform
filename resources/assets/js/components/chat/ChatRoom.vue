@@ -72,6 +72,8 @@
 	import _ from 'lodash'
 	import highlight from 'js/mixins/highlight'
 
+	import { mapGetters } from 'vuex'
+
 	export default {
 		props: ['room'],
 		data() {
@@ -86,6 +88,7 @@
 		},
 		mixins: [highlight],
 		computed: {
+			...mapGetters(['isOverlayVisible']),
 			isAuthorUnique() {
 				return this.messages.map((message, index) => {
 					if (index === 0) return true
@@ -272,7 +275,14 @@
 				if (newRoom !== oldRoom) {
 					this.changeRoom(oldRoom)
 				}
-			}
+			},
+			'$route' (newRoute, oldRoute) {
+				const messageId = this.$route.query.messageId
+
+				if (messageId && !this.isOverlayVisible) {
+					this.scrollToMessageById(messageId)
+				}
+			},
 		}
 	}
 

@@ -19,6 +19,7 @@
 
 	.resolvable
 		cursor: pointer
+		width: auto
 
 		&:hover
 			color: $color-red

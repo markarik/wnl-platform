@@ -81,9 +81,11 @@
 			onKeyDown(evt) {
 				switch (evt.keyCode){
 					case 38:
+						evt.stopPropagation()
 						this.onArrowUp(evt)
 						break
 					case 40:
+						evt.stopPropagation()
 						this.onArrowDown(evt)
 						break
 					case 13:
@@ -92,32 +94,32 @@
 				}
 			},
 			onArrowUp() {
-				if (!this.items || !this.items.length) return
+				if (!this.hasItems) return
 
-				const activeItem = this.getActiveItem();
-				if (!activeItem || activeItem === this.items[0]) {
+				const activeIndex = this.getActiveItem();
+				if (activeIndex <= 0) {
 					this.$set(this.items[this.items.length - 1], 'active', true);
 				} else {
-					this.$set(this.items[this.items.indexOf(activeItem) - 1], 'active', true)
+					this.$set(this.items[activeIndex - 1], 'active', true)
 				}
 
-				if (activeItem) this.$set(activeItem, 'active', false)
+				if (activeIndex >= 0) this.$set(this.items[activeIndex], 'active', false)
 
 				//Something would steal the focus back to the Quill input when if we'd do it synchronously
 				this.$nextTick(() => { this.$el.focus(); })
 			},
 			onArrowDown() {
-				if (!this.items || !this.items.length) return
+				if (!this.hasItems) return
 
-				const activeItem = this.getActiveItem();
+				const activeIndex = this.getActiveItem();
 
-				if (!activeItem || activeItem === this.items[this.items.length - 1]) {
+				if (activeIndex < 0 || activeIndex === this.items.length - 1) {
 					this.$set(this.items[0], 'active', true)
 				} else {
-					this.$set(this.items[this.items.indexOf(activeItem) + 1], 'active', true)
+					this.$set(this.items[activeIndex + 1], 'active', true)
 				}
 
-				if (activeItem) this.$set(activeItem, 'active', false)
+				if (activeIndex > -1) this.$set(this.items[activeIndex], 'active', false)
 
 				//Something would steal the focus back to the Quill input when if we'd do it synchronously
 				this.$nextTick(() => { this.$el.focus(); })
@@ -141,7 +143,7 @@
 			},
 
 			getActiveItem() {
-				return _.find(this.items, { active: true })
+				return this.items.findIndex((item) => item.active)
 			}
 		}
 	}

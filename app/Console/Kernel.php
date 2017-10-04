@@ -10,50 +10,14 @@ use Artisan;
 class Kernel extends ConsoleKernel
 {
 	/**
-	 * The Artisan commands provided by your application.
+	 * Register the commands for the application.
 	 *
-	 * @var array
+	 * @return void
 	 */
-	protected $commands = [
-		Commands\AddressesExport::class,
-		Commands\AddContext::class,
-		Commands\ArchiveChatMessages::class,
-		Commands\CancelOrder::class,
-		Commands\CategoriesTags::class,
-		Commands\ChangeOrderPaymentMethod::class,
-		Commands\CheckQuizQuestions::class,
-		Commands\CreateTaxonomy::class,
-		Commands\DropTables::class,
-		Commands\DumpCourseStructure::class,
-		Commands\EncryptPasswords::class,
-		Commands\FlushCacheByTag::class,
-		Commands\ImportTaxonomies::class,
-		Commands\IssueFinalInvoice::class,
-		Commands\ImportQuizTagsFromMap::class,
-		Commands\InvoicesExport::class,
-		Commands\LessonTags::class,
-		Commands\ListOrders::class,
-		Commands\MigrateUserData::class,
-		Commands\MarkOrderAsPaid::class,
-		Commands\MarkWrongQuestionsAsBookmarked::class,
-		Commands\MegaUltraSuperDuperChartUpdateScript::class,
-		Commands\OptimaExport::class,
-		Commands\OrdersExport::class,
-		Commands\QuizImport::class,
-		Commands\PopulateAmountColumns::class,
-		Commands\SlackDaysCron::class,
-		Commands\SectionsUpdate::class,
-		Commands\SlideshowsRemove::class,
-		Commands\SlidesFromCategory::class,
-		Commands\SlidesImport::class,
-		Commands\SlidesSnippets::class,
-		Commands\StoreProgress::class,
-		Commands\StoreTime::class,
-		Commands\TagsCleanup::class,
-		Commands\TagsFromTaxonomies::class,
-		Commands\TaxonomizeTags::class,
-		Commands\WarmUpCache::class,
-	];
+	protected function commands()
+	{
+		$this->load(__DIR__.'/Commands');
+	}
 
 	/**
 	 * Define the application's command schedule.
@@ -66,6 +30,10 @@ class Kernel extends ConsoleKernel
 	{
 		$schedule
 			->command('chat:archive-messages')
+			->hourly();
+
+		$schedule
+			->command('orders:statsExport')
 			->hourly();
 
 		$schedule
@@ -91,15 +59,5 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
-	}
-
-	/**
-	 * Register the Closure based commands for the application.
-	 *
-	 * @return void
-	 */
-	protected function commands()
-	{
-		require base_path('routes/console.php');
 	}
 }

@@ -24,13 +24,13 @@ class BethinkBrowser extends Browser
 		$config = config('dusk');
 
 		$this->position(
-			$config['default_position']['x'],
-			$config['default_position']['y']
+			intval($config['default_position']['x']),
+			intval($config['default_position']['y'])
 		);
 
 		$this->resize(
-			$config['desktop_size']['width'],
-			$config['desktop_size']['height']
+			intval($config[$config['screen-size']]['width']),
+			intval($config[$config['screen-size']]['height'])
 		);
 	}
 
@@ -47,6 +47,13 @@ class BethinkBrowser extends Browser
 		);
 	}
 
+	public function scrollTo($x, $y)
+	{
+		$this->driver->executeScript("window.scroll({$x} - window.innerWidth/2, {$y} - window.innerHeight/2)");
+
+		return $this;
+	}
+
 	/**
 	 * Scroll browser window one page down
 	 */
@@ -58,9 +65,30 @@ class BethinkBrowser extends Browser
 	}
 
 	/**
+	 * Scroll browser window one page up
+	 */
+	public function pageUp()
+	{
+		$this->driver->executeScript('window.scrollBy(0, -window.innerHeight)');
+
+		return $this;
+	}
+
+	/**
+	 * Scroll browser window to top
+	 */
+	public function scrollTop()
+	{
+		$this->driver->executeScript('window.scrollBy(0, -100000000)');
+
+		return $this;
+	}
+
+	/**
 	 * Find element by xpath
 	 *
 	 * @param $pattern
+	 *
 	 * @return \Facebook\WebDriver\Remote\RemoteWebElement
 	 */
 	public function xpath($pattern)
@@ -72,6 +100,7 @@ class BethinkBrowser extends Browser
 	 * Assert that all the given texts appear on the page.
 	 *
 	 * @param array $items
+	 *
 	 * @return $this
 	 */
 	public function assertSeeAll(array $items)
@@ -88,6 +117,7 @@ class BethinkBrowser extends Browser
 	 *
 	 * @param array $items
 	 * @param  int $seconds
+	 *
 	 * @return $this
 	 * @internal param string $text
 	 */
@@ -122,16 +152,72 @@ class BethinkBrowser extends Browser
 	{
 		try {
 			$this->driver->findElement(WebDriverBy::cssSelector($selector));
-		} catch (NoSuchElementException $e) {
+		}
+		catch (NoSuchElementException $e) {
 			return false;
 		}
 
 		return true;
 	}
 
-	public function scrollTo($selector)
+	public function scrollToSelector($selector)
 	{
 		$this->executeScript('return document.querySelector(arguments[0]).scrollIntoView(true)', [$selector]);
+
+		return $this;
+	}
+
+	public function scrollToElement($element)
+	{
+		$location = $element->getLocation();
+		$this->scrollTo($location->getX(), $location->getY());
+
+		return $this;
+	}
+
+	public function getCurrentPath()
+	{
+		return parse_url(
+			$this->driver->getCurrentURL()
+		)['path'];
+	}
+
+	public function check($field, $value = null)
+	{
+		$element = $this->resolver->resolveForChecking($field, $value);
+		$this->scrollToElement($element);
+
+		if (!$element->isSelected()) {
+			$element->click();
+		}
+
+		return $this;
+	}
+
+	public function click($selector)
+	{
+		$element = $this->resolver->findOrFail($selector);
+		$this->scrollToElement($element);
+		$element->click();
+
+		return $this;
+	}
+
+	public function press($button)
+	{
+		$element = $this->resolver->resolveForButtonPress($button);
+		$this->scrollToElement($element);
+		$element->click();
+
+		return $this;
+	}
+
+	public function xpathClick($pattern)
+	{
+		$element = $this->xpath($pattern);
+		$this->scrollToElement($element);
+		$element->click();
+
 		return $this;
 	}
 }

@@ -74,6 +74,11 @@ let routes = [
 				path: 'password',
 				component: require('js/components/user/MyPassword.vue')
 			},
+			{
+				name: 'stats',
+				path: 'stats',
+				component: require('js/components/user/UserStats'),
+			},
 		]
 	},
 	{
@@ -96,11 +101,6 @@ let routes = [
 		component: require('js/components/help/Help.vue'),
 		props: true,
 		children: [
-			{
-				name: 'help-news',
-				path: 'news',
-				component: require('js/components/help/News.vue'),
-			},
 			{
 				name: 'help-learning',
 				path: 'learning',

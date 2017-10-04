@@ -101,6 +101,11 @@ abstract class ByTaxonomyFilter extends ApiFilter
 				->toArray();
 		}
 
+		return $this->fetchAggregationByIds($model, $ids, $tags, $matchAll);
+	}
+
+	public function fetchAggregationByIds($model, $ids, $tags, $matchAll = true)
+	{
 		$result = $model::searchRaw(
 			$this->elasticCraziness($ids, $tags, $matchAll)
 		);

@@ -4,6 +4,7 @@ use App\Exceptions\ApiFilterException;
 use Illuminate\Http\Request;
 use Redis;
 use Auth;
+use Cache;
 
 trait ProvidesApiFiltering
 {
@@ -31,7 +32,7 @@ trait ProvidesApiFiltering
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
-			$response = $this->paginatedResponse($model, $this->limit, $this->page);
+			$response = $this->cachedPaginatedResponse($request, $model, $this->limit, $this->page, $filters);
 		}
 
 		$response = array_merge($response, ['active' => $paths]);
@@ -176,5 +177,77 @@ trait ProvidesApiFiltering
 		$resource = $request->route('resource');
 
 		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
+	}
+
+	protected function cachedPaginatedResponse(Request $request, $model, $limit, $page = 1, $cachedFilters) {
+		if (!$request->has('active') || !$request->has('filters')) {
+			return $this->paginatedResponse($model, $limit, $page);
+		}
+
+		$filters = empty($request->filters) ? $cachedFilters : $request->filters;
+
+		$collection = $model->get();
+		$resource = $request->route('resource');
+		$userId = Auth::user()->id;
+		$hashedFilters = $this->hashedFilters($filters);
+		$cacheTags = $this->getFiltersCacheTags($resource, $userId);
+
+		if (Cache::tags($cacheTags)->has($this->filtersKey($hashedFilters, 1))) {
+			$results = Cache::tags($cacheTags)->get($this->filtersKey($hashedFilters, $page));
+
+			if (!empty($results)) {
+				$results['data'] = $this->transform($results['raw_data']);
+				return $results;
+			}
+
+		}
+
+		Cache::tags($cacheTags)->flush();
+		$paginator = $model->paginate($limit, ['*'], 'page', $page);
+
+		if ($paginator->lastPage() < $page) {
+			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
+		}
+
+		$meta = [
+			'total'        => $paginator->total(),
+			'last_page'    => $paginator->lastPage(),
+			'per_page'     => $paginator->perPage(),
+		];
+
+		$chunks = $collection->chunk($limit);
+		$page = 1;
+
+		foreach($chunks as $chunk) {
+			$results = array_merge($meta, [
+				'raw_data' => $chunk,
+				'has_more' => $page <= $paginator->lastPage(),
+				'current_page' => $page,
+				'cached' => true,
+				'active_filters' => $filters
+			]);
+			$cacheKey = $this->filtersKey($hashedFilters, $page);
+
+			Cache::tags($cacheTags)->put($cacheKey, $results, 60 * 24);
+			$page++;
+		}
+
+		return array_merge($meta, [
+			'data' => $this->transform($paginator->getCollection()),
+			'has_more' => $paginator->hasMorePages(),
+			'current_page' => $paginator->currentPage()
+		]);
+	}
+
+	protected function filtersKey($hashedFilters, $page) {
+		return "{$hashedFilters}-{$page}";
+	}
+
+	protected function hashedFilters($activeFilters) {
+		return hash('md5', json_encode($activeFilters));
+	}
+
+	protected function getFiltersCacheTags($resource, $userId) {
+		return [$resource, 'filters', "user-{$userId}"];
 	}
 }

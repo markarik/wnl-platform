@@ -13,11 +13,11 @@ class ConfirmOrderController extends Controller
 {
 	public function index(Payment $payment)
 	{
-
 		$user = Auth::user();
 
 		if (!$user) {
 			Log::notice('Auth failed, redirecting...');
+
 			return redirect(route('payment-select-product'));
 		}
 
@@ -25,11 +25,12 @@ class ConfirmOrderController extends Controller
 
 		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
 		Log::notice('Order confirmation');
+
 		return view('payment.confirm-order', [
 			'order'       => $order,
 			'user'        => $user,
 			'checksum'    => $checksum,
-			'instalments' => config('payment.instalments'),
+			'instalments' => $order->instalments['instalments'],
 		]);
 	}
 

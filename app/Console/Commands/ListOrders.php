@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class ListOrders extends Command
@@ -12,7 +13,7 @@ class ListOrders extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'orders {id?*}';
+	protected $signature = 'orders {id?*} {--refund} {--since=}';
 
 	/**
 	 * The console command description.
@@ -50,14 +51,27 @@ class ListOrders extends Command
 			}
 		}
 
+		if ($this->option('refund')) {
+			$orders = $orders->filter(function ($order) {
+				return $order->paid_amount > $order->total_with_coupon;
+			});
+		}
+
+		if ($this->option('since')) {
+			$orders = $orders->filter(function ($order) {
+				return $order->created_at > Carbon::parse($this->option('since'));
+			});
+		}
+
 		$orders = $orders->map(function ($order) {
 			return [
 				$order->id,
 				$order->user_id,
-				$order->user->email,
-				$order->user->full_name,
+				$order->user->email ?? '-',
+				$order->user->full_name ?? '-',
 				$order->product->name,
 				$order->paid,
+				$order->total_with_coupon,
 				$order->paid_amount,
 				$order->method,
 				$order->external_id,
@@ -74,6 +88,7 @@ class ListOrders extends Command
 				'user name',
 				'product',
 				'paid',
+				'total',
 				'paid_amount',
 				'method',
 				'p24 ID',

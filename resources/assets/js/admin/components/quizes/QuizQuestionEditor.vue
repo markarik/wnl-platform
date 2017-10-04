@@ -8,39 +8,66 @@
 			:method="formMethod"
 			suppressEnter="false"
 			:resourceRoute="formResourceRoute"
+			@submitSuccess="onSubmitSuccess"
 		>
-			<div class="question-form-header">
-				<p class="title is-5">Edycja pytania {{$route.params.quizId}}</p>
+			<header class="question-form-header">
+				<h4 v-if="isEdit">Edycja pytania <strong>{{$route.params.quizId}}</strong></h4>
+				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
 						<button class="button is-primary" @click="onFormSave">Zapisz</button>
 					</div>
 				</div>
-			</div>
-			<div class="field question-field">
-				<div class="control">
-					<span>Pytanie</span>
-					<wnl-quill
-						ref="questionEditor"
-						name="question"
-						:options="{ theme: 'snow', placeholder: 'Pytanie' }"
-						:allowMentions=false
-						@input="onInput"
-					/>
+			</header>
+			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Pytanie</legend>
+				<div class="field question-field">
+					<div class="control">
+						<wnl-quill
+							ref="questionEditor"
+							name="question"
+							:options="{ theme: 'snow', placeholder: 'Pytanie' }"
+							@input="onQuestionInput"
+						/>
+					</div>
 				</div>
-			</div>
-			<span>Tagi</span>
-			<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
-		</wnl-form>
-
-		<form ref="answersForm">
+			</fieldset>
+			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Wyjaśnienie</legend>
+				<div class="field question-field">
+					<div class="control">
+						<wnl-quill
+							ref="explanationEditor"
+							name="explanation"
+							:options="{ theme: 'snow', placeholder: 'Wyjaśnienie' }"
+							@input="onExplanationInput"
+						/>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Tagi</legend>
+				<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
+			</fieldset>
+			<fieldset class="question-form-fieldset">
+				<label class="label checkbox-label">
+						<span>Czy zagwarantować kolejność odpowiedzi ?</span>
+						<input
+							type="checkbox"
+							name="preserveOrder"
+							class="preserve-order"
+							:checked="preserveOrder"
+						>
+					</label>
+			</fieldset>
 			<div
 				class="field answer-field"
 				v-for="(answer, index) in questionAnswers"
 				:data-id="answer.id"
 				v-bind:key="answer.id"
 			>
-				<h4>Odpowiedź {{index + 1}}</h4>
+			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Odpowiedź {{index + 1}}</legend>
 				<div class="control answer-control">
 					<label class="label checkbox-label">
 						<span>Prawidłowa?</span>
@@ -59,8 +86,9 @@
 						type="text"
 					>
 				</div>
+			</fieldset>
 			</div>
-		</form>
+		</wnl-form>
 	</div>
 </template>
 
@@ -103,6 +131,14 @@
 
 	.answer-text
 		flex-grow: 1
+
+	.question-form-fieldset
+		border: $border-light-gray
+		padding: 10px 15px
+		margin: 15px 0
+
+	.question-form-legend
+		font-size: 1.25rem
 </style>
 
 <script>
@@ -120,12 +156,21 @@
 		data: function () {
 			return {
 				questionQuillContent: '',
+				explanationQuillContent: '',
 				attach: null
 			}
 		},
 		props: ['isEdit'],
 		computed: {
-			...mapGetters(['questionText', 'questionAnswers', 'questionId', 'questionTags']),
+			...mapGetters([
+				'questionText',
+				'questionExplanation',
+				'questionAnswers',
+				'questionAnswersMap',
+				'questionId',
+				'questionTags',
+				'preserveOrder'
+			]),
 			formResourceRoute() {
 				if (!this.isEdit) {
 					return 'quiz_questions?include=quiz_answers'
@@ -140,11 +185,13 @@
 		methods: {
 			...mapActions([
 				'getQuizQuestion',
-				'saveAnswers',
 				'setupFreshQuestion'
 			]),
-			onInput() {
+			onQuestionInput() {
 				this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML
+			},
+			onExplanationInput() {
+				this.explanationQuillContent = this.$refs.explanationEditor.editor.innerHTML
 			},
 			onRightAnswerChange(evt) {
 				const previouslyChecked = this.$el.querySelectorAll('.answer-correct')
@@ -156,24 +203,48 @@
 				});
 			},
 			onFormSave() {
-				const fields = this.$refs.answersForm.querySelectorAll('.answer-field')
-				const fieldsArray = Array.prototype.slice.call(fields)
+				// This way we can attach answers and tags
+				this.attach = this.getAttachedData()
+			},
+			getAttachedData() {
+				const attachedData = {};
+				const answerFields = this.$el.querySelectorAll('.answer-field')
+				const answerFieldsArray = Array.prototype.slice.call(answerFields)
 
-				const answersData = fieldsArray.map(
-					field => ({
+				const answersData = answerFieldsArray
+					.map(field => ({
 						id: field.dataset.id,
 						text: field.querySelector('.answer-text').value,
-						isCorrect: field.querySelector('.answer-correct').checked
-					})
-				)
-				const $newTags = this.$refs.tags.tags
-				this.attach = this.$refs.tags.haveTagsChanged() ? { tags: $newTags } : {}
-				this.saveAnswers({ answersData, isEdit: this.isEdit })
+						is_correct: field.querySelector('.answer-correct').checked,
+					}))
+
+				attachedData.answers = answersData;
+
+				if (this.$refs.tags.haveTagsChanged()) {
+					attachedData.tags = this.$refs.tags.tags
+				}
+
+				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked
+
+				return attachedData
+			},
+			onSubmitSuccess(data) {
+				if (this.isEdit) {
+					this.getQuizQuestion(this.$route.params.quizId)
+				} else {
+					//Timeout for the user to see the success banner
+					setTimeout(() => {
+						this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
+					}, 2000)
+				}
 			}
 		},
 		watch: {
 			questionText(val) {
 				if (val) this.$refs.questionEditor.editor.innerHTML = val
+			},
+			questionExplanation(val) {
+				if (val) this.$refs.explanationEditor.editor.innerHTML = val
 			},
 			'$route.params.quizId'(quizId) {
 				this.getQuizQuestion(this.$route.params.quizId)

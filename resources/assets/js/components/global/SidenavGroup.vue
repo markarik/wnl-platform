@@ -82,7 +82,7 @@
 				return this.isOpen ? 'fa-angle-up' : 'fa-angle-down'
 			},
 			isOpen() {
-				return this.forceGroupOpen || this.isNavigationGroupExpanded(this.groupIndex)
+				return this.isNavigationGroupExpanded(this.groupIndex)
 			},
 			groupIndex() {
 				return `${this.$route.name}/${this.item.text}`
@@ -91,9 +91,14 @@
 		methods: {
 			...mapActions(['toggleNavigationGroup'])
 		},
+		mounted() {
+			if (this.forceGroupOpen && this.isNavigationGroupExpanded(this.groupIndex) !== false) {
+				this.toggleNavigationGroup({groupIndex: this.groupIndex, isOpen: true})
+			}
+		},
 		watch: {
 			nextLesson(val) {
-				if (!this.item || !this.item.subitems) {
+				if (!this.item || !this.item.subitems || !val) {
 					return
 				}
 

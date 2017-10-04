@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Http\Requests\Payment\UseCoupon;
+use App\Models\Coupon;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use Illuminate\Support\Facades\Auth;
@@ -30,5 +33,19 @@ class OrdersApiController extends ApiController
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return response()->json($data);
+	}
+
+	public function putCoupon(UseCoupon $request)
+	{
+		$user = Auth::user();
+		$orderId = $request->route('id');
+		$order = $user->orders()->find($orderId);
+
+		$code = mb_convert_case($request->code, MB_CASE_UPPER, "UTF-8");
+		$coupon = Coupon::validCode($code);
+
+		$order->attachCoupon($coupon);
+
+		return $this->respondOk();
 	}
 }

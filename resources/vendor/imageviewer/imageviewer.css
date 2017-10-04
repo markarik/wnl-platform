@@ -92,7 +92,7 @@
 	-moz-transition: all ease 400ms;
 	-o-transition: all ease 400ms;
 	transition: all ease 400ms;
-	opacity: 1;
+	opacity: 0;
 }
 
 .iv-snap-image-wrap {

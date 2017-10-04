@@ -90,7 +90,7 @@
 						:question="question"
 						:readOnly="showListResults"
 						:hideComments="true"
-						@selectAnswer="selectAnswer"
+						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 					/>
 				</div>
 
@@ -346,8 +346,8 @@
 					? (this.currentQuestion.page - 1) * limit + index + 1
 					: ''
 			},
-			selectAnswer(payload) {
-				this.$emit('selectAnswer', payload)
+			selectAnswer(payload, position) {
+				this.$emit('selectAnswer', {...payload, ...position})
 			},
 			setQuestion(index) {
 				this.$emit('setQuestion', {page: this.meta.currentPage, index})

@@ -13,7 +13,10 @@
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-search">
+		<div
+			v-if="$firstEditionParticipant.isAllowed('access')"
+			class="wnl-navbar-item wnl-navbar-search"
+		>
 			<wnl-search/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-feed">
@@ -113,6 +116,8 @@
 </style>
 
 <script>
+	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
+
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Search from 'js/components/global/search/Search'
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
@@ -122,6 +127,7 @@
 
 	export default {
 		name: 'Navbar',
+		perimeters: [firstEditionParticipant],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-user-dropdown': UserDropdown,

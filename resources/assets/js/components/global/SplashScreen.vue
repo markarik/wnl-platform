@@ -1,11 +1,11 @@
 <template>
 	<div class="splash-screen scrollable-main-container">
-		<p class="title is-4">Do kursu "Więcej niż LEK" pozostało jeszcze</p>
+		<p class="title is-4">Do drugiej edycji kursu "Więcej niż LEK" pozostało jeszcze</p>
 		<p class="splash-screen-countdown">
 			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
 		</p>
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
-		<a href="http://demo.platforma.wiecejnizlek.pl" class="button is-primary is-outlined">
+		<a href="http://demo.wiecejnizlek.pl" class="button is-primary is-outlined">
 			Zobacz wersję demonstracyjną platformy
 		</a>
 	</div>
@@ -44,7 +44,7 @@
 
 	require('moment-duration-format')
 
-	const theDate = "2017-06-17"
+	const theDate = "2017-11-04"
 
 	export default {
 		name: 'SplashScreen',

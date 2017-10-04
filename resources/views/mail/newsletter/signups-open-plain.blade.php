@@ -1,64 +1,27 @@
 Cześć!
 
-Zgodnie z obietnicą, spieszymy do Ciebie z dobrą wiadomością:
+Dziękujemy za dołączenie do naszego newslettera! Cieszymy się, że możemy Cię dziś poinformować, że właśnie otworzyliśmy zapisy na drugą edycję kursu “Więcej niż LEK”!
 
-Zapisy na kurs "Więcej niż LEK" są już otwarte!
+Co nowego?
+Bogatsi o doświadczenia zebrane podczas pierwszej edycji kursu, szykujemy sporo zmian (na lepsze)! ;) Tym razem kurs potrwa aż 14 tygodni - od 6 listopada do 10 lutego! I tym razem przewidzieliśmy limit miejsc - 40 na Kurs stacjonarny oraz 400 na Kurs internetowy. Nieustannie pracujemy też nad ważnymi usprawnieniami:
 
-Zapisując się, podaj zostawiony wcześniej na stronie wiecejnizlek.pl adres e-mail, aby skorzystać z 200zł zniżki na dowolny wariant kursu - stacjonarny lub internetowy!
+Prezentacje podlegają solidnej rewizj, a w przypadku Kardiologii i Ginekologii - całkowitej przebudowie. Będą całkowicie pokrywały bazę pytań, nie tylko wskazując poprawną odpowiedź, ale pozwalając ją zrozumieć! Co więcej, pytania testowe połączymy z odpowiadającymi slajdami bezpośrednimi linkami, dzięki czemu odnalezienie kontekstu stanie się bajecznie proste
+Wprowadzamy zmiany na platformie ułatwiające odnajdywanie ważnych informacji i pomagające śledzić najciekawsze dyskusje! Widzimy niesamowity potencjał w społecznych interakcjach podczas nauki, dlatego możecie też spodziewać się jeszcze większych możliwości komunikacyjnych. :)
 
-Zapisz się na kurs - https://platforma.wiecejnizlek.pl/payment/select-product
+Pierwsza edycja kursu spotkała się z wyjątkowo pozytywnym odzewem, ale dla nas to tylko mobilizacja do ciągłego podnoszenia jakości naszej oferty! Żywimy głęboką nadzieję, że odpowie ona na Twoje oczekiwania! :)
 
-W związku z zapisami, opublikowaliśmy dzisiaj wiele nowości dotyczących kursu. Oto krótkie podsumowanie:
+Promocje
+Przede wszystkim w konkursach naszych i naszych partnerów możesz wygrać vouchery zniżkowe na 10%, 20%, a nawet darmowe uczestnictwo w kursie! Nie musisz jednak czekać z zapisami na wygranie voucherów - będzie można je aplikować również po opłaceniu zamówienia i uzyskać zwrot. ;)
 
-Pytania i odpowiedzi
-Przez ostatnie miesiące dostaliśmy od Was niezliczoną ilość pytań poprzez facebooka i maile, a kilka nawet telefonicznie! Postanowiliśmy zebrać je wszystkie w jednym miejscu na naszej stronie. Jeśli masz jeszcze wątpliwości - zajrzyj na stronę O kursie.
+Vouchery to jednak nie jedyna forma promocji, jaką przygotowaliśmy na drugą edycję! Zachęć znajomą osobę do wspólnego uczestnictwa w kursie, a obydwoje otrzymacie 100zł zniżki! Jeśli nie skorzystasz z innych promocji, po opłaceniu zamówienia otrzymasz swój unikalny kod. Przekaż go znajomej osobie, aby wykorzystała go przy rejestracji! Gdy otrzymamy od niej wpłatę, zniżka naliczy się też do Twojego zamówienia. :)
 
-Przeczytaj pytania i odpowiedzi - https://wiecejnizlek.pl/o-kursie
+Więcej informacji
+Wszystkie szczegółowe informacje o kursie, promocjach, założeniach i inne, znajdziesz na naszej stronie internetowej https://wiecejnizlek.pl. Zapraszamy Cię również do zapoznania się z wersją demo naszej platformy - https://demo.wiecejnizlek.pl, gdzie możesz przetestować wszystkie jej funkcje oraz zapoznać się z przykładowymi lekcjami!
 
-Kadra
-Na kurs stacjonarny, w ramach którego odbędzie się w Poznaniu 6 spotkań, udało nam się zaprosić doskonałych dydaktyków! Zajęcia, w ramach swoich specjalizacji, poprowadzą:
+W razie pytań pisz do nas śmiało na facebooku [link] lub na info@wiecejnizlek.pl. :)
 
-Choroby dziecięce
-dr hab. n. med. Anna Mania,
-Specjalista pediatrii, chorób zakaźnych, hepatolog (certyfikat PTH).
-Prodziekan Wydziału Lekarskiego UM w Poznaniu ds. programów studiów i kształcenia oraz studentów I - II roku.
+Do zobaczenia na kursie!
 
-Choroby wewnętrzne
-dr hab. n. med. Mariusz Puszczewicz,
-Specjalista Chorób Wewnętrznych II stopnia  i Reumatologii
-
-Kierownik Katedry i Kliniki Reumatologii i Chorób Wewnętrznych
-UM im. Karola Marcinkowskiego w Poznaniu.
-Prorektor do spraw studenckich UM im. Karola Marcinkowskiego w Poznaniu  w kadencji 2008-2012. Wyróżniony tytułem honorowym “Amicus studentorum” przez studentów Akademii Medycznej im. Karola Marcinkowskiego w Poznaniu.
-
-Stany nagłe
-lek. Michał Szemień,Rezydent medycyny ratunkowej w Szpitalnym Oddziale Ratunkowym Centrum urazowego  Wielospecjalistycznym Szpitalu Miejskim im. J. Strusia w Poznaniu.
-
-Koordynator ds. Wydziału Lekarskiego I, Zakładu Medycyny Ratunkowej UM w Poznaniu.
-
-Instruktor europejskiej rady resuscytacji z zakresu BLS, EPALS, ALS i ETC.
-Emergency Point-of-Care Ultrasonography Provider.
-
-Prawo medyczne
-dr n. praw. Radosław Tymiński,
-
-Wykładowca na Akademii Leona Koźmińskiego,
-Wykładowca Prawa Medycznego na Warszawskim Uniwersytecie Medycznym,
-Autor bloga http://prawalekarzy.pl/
-
-Przeczytaj więcej o warsztatach - https://wiecejnizlek.pl/o-warsztatach
-
-Wersja demonstracyjna platformy
-Bardzo zależało nam na tym, aby z momentem otwarcia zapisów dać Ci możliwości zapoznania się z naszą platformą e-learningowej. Do czasu kursu pracujemy ile sił w mózgach nad uczynieniem jej jeszcze bardziej przyjazną i atrakcyjną! :)
-
-Na dziś mamy dla Was wersję demonstracyjną zawierającą 3 pokazowe lekcje. W ramach nich możecie też swobodnie korzystać z czata oraz pytań i odpowiedzi. Do skorzystania z wersji demonstracyjnej platformy nie jest wymagana żadna rejestracja, ani podawanie prawdziwych danych osobowych. :)
-
-Zobacz demo platformy - https://demo.platforma.wiecejnizlek.pl/
-
-Na koniec chcieliśmy podziękować Ci za zaufanie. Każdy adres e-mail, który pojawiał się na naszej liście, dodawał nam motywacji i sił do dalszej pracy.
-
-Od dziś poddajemy nasze starania ostatecznej weryfikacji. Wierzymy, że jesteśmy na dobrej drodze do tego, aby dzięki atmosferze, którą chcemy razem z Tobą budować wokół “Więcej niż LEK”, powrót mentoringu i współpracy w środowisku medycznym stanie się rzeczywistością.
-
-Dziękujemy i… mamy nadzieję, że do zobaczenia na kursie!
+Z serdecznymi pozdrowieniami,
 
 Ekipa Więcej niż LEK

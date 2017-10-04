@@ -4,7 +4,7 @@ namespace Tests\Browser\Pages\Payment;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert;
 
 class P24ChooseBank extends BasePage
 {
@@ -25,7 +25,7 @@ class P24ChooseBank extends BasePage
 	 */
 	public function assert(Browser $browser)
 	{
-		PHPUnit::assertStringStartsWith($this->url(), $browser->driver->getCurrentURL());
+		Assert::assertStringStartsWith($this->url(), $browser->driver->getCurrentURL());
 	}
 
 	/**
@@ -37,9 +37,11 @@ class P24ChooseBank extends BasePage
 	{
 		return [
 			'@ing-logo'        => '.bank-logo-112',
-			'@accept-tou'      => '#reagulation-accept-button',
+			'@accept-tou'      => 'button[id="reagulation-accept-button"]',
 			'@login-button'    => 'button[type="submit"]',
 			'@confirm-payment' => '#pay_by_link_pay',
+			'@decline-payment' => '#pay_by_link_decline',
+			'@return'          => '#btn-return',
 		];
 	}
 }

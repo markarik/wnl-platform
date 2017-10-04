@@ -30,12 +30,14 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.tags-control
+		margin-bottom: 5px
 	.tag
 		color: $color-ocean-blue
 		cursor: pointer
 		font-size: 1rem
 		height: auto
-		margin: 10px 10px 10px 0
+		margin: 0 10px 10px 0
 		padding: 5px 10px
 
 		.icon

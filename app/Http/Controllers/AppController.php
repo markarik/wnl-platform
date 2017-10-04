@@ -22,6 +22,7 @@ class AppController extends Controller
 				'SENTRY_DSN_VUE_PUB' => env('SENTRY_DSN_VUE_PUB'),
 				'FIRST_LESSON_ID'    => env('FIRST_LESSON_ID'),
 				'MODERATORS_CHANNEL' => env('MODERATORS_CHANNEL', 3),
+				'appVersion'         => config('app.version')
 			],
 			'config' => [
 				'papi'    => config('papi'),

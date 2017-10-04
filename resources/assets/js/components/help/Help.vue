@@ -12,7 +12,7 @@
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
 				<router-view v-if="!isMainRoute"></router-view>
-				<wnl-help-news v-else></wnl-help-news>
+				<wnl-coming-soon-help v-else></wnl-coming-soon-help>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -61,7 +61,7 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import News from 'js/components/help/News'
+	import ComingSoonHelp from 'js/components/help/ComingSoonHelp'
 	import MainNav from 'js/components/MainNav'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
@@ -71,7 +71,7 @@
 	export default {
 		name: 'Help',
 		components: {
-			'wnl-help-news': News,
+			'wnl-coming-soon-help': ComingSoonHelp,
 			'wnl-main-nav': MainNav,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
@@ -93,16 +93,16 @@
 			sidenavItems() {
 				return [
 					{
-						text: 'Ogłoszenia',
+						text: 'Nad czym pracujemy?',
 						itemClass: 'has-icon',
 						to: {
-							name: 'help-news',
+							name: 'help-new',
 							params: {},
 						},
 						isDisabled: false,
 						method: 'push',
-						iconClass: 'fa-bullhorn',
-						iconTitle: 'Ogłoszenia',
+						iconClass: 'fa-gift',
+						iconTitle: 'Nad czym pracujemy?',
 					},
 					{
 						text: 'Pomoc w nauce',
@@ -127,18 +127,6 @@
 						method: 'push',
 						iconClass: 'fa-magic',
 						iconTitle: 'Pomoc techniczna',
-					},
-					{
-						text: 'Nad czym pracujemy?',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-new',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-gift',
-						iconTitle: 'Nad czym pracujemy?',
 					},
 				]
 			},

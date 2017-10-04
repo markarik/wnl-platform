@@ -79,7 +79,7 @@ class UserReactionsApiController extends ApiController
 			$tags = $reactable->reactableTags;
 
 			foreach ($categories as $category) {
-				if ($tags->contains($category->name)) {
+				if ($tags !== null && $tags->contains($category->name)) {
 					$categorizedReactables[$category->name][] = $reactable;
 				}
 			}

@@ -300,7 +300,7 @@ const mutations = {
 			answers = _.pull(state.qna_questions[questionId].qna_answers, id)
 
 		destroy(state.qna_answers, id)
-		set(state.qna_questions, 'qna_answers', answers)
+		set(state.qna_questions[questionId], 'qna_answers', answers)
 	},
 	[types.QNA_REMOVE_COMMENT] (state, payload) {
 		let id = payload.commentId,

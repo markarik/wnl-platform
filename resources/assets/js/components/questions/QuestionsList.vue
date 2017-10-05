@@ -447,6 +447,9 @@
 		watch: {
 			testQuestionsCount() {
 				this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount)
+			},
+			'$route.query.chatChannel' (newVal) {
+				newVal && !this.isChatVisible && this.toggleChat();
 			}
 		}
 	}

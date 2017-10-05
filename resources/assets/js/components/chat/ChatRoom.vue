@@ -57,6 +57,9 @@
 		flex-direction: column-reverse
 		overflow-y: auto
 
+	.wnl-chat-content
+		position: relative
+
 	.wnl-chat-form
 		border-top: $border-light-gray
 		margin: $margin-base 0 0
@@ -72,8 +75,10 @@
 	import _ from 'lodash'
 	import highlight from 'js/mixins/highlight'
 
+	import { mapGetters } from 'vuex'
+
 	export default {
-		props: ['room'],
+		props: ['room', 'switchRoom'],
 		data() {
 			return {
 				loaded: false,
@@ -86,6 +91,7 @@
 		},
 		mixins: [highlight],
 		computed: {
+			...mapGetters(['isOverlayVisible']),
 			isAuthorUnique() {
 				return this.messages.map((message, index) => {
 					if (index === 0) return true
@@ -109,6 +115,15 @@
 		},
 		methods: {
 			joinRoom() {
+				const channel = this.$route.query.chatChannel
+
+				if (channel && channel !== this.room.channel) {
+					return this.switchRoom({
+						channel,
+						name:`#${_.last(channel.split('-'))}`
+					})
+				}
+
 				typeof this.socket.emit === 'function' && this.socket.emit('join-room', {
 					room: this.room.channel
 				})
@@ -121,7 +136,7 @@
 						nextTick(() => {
 							const messageId = this.$route.query.messageId
 
-							if (messageId) {
+							if (messageId && !this.isOverlayVisible) {
 								this.scrollToMessageById(messageId)
 							} else {
 								this.scrollToBottom()
@@ -221,8 +236,14 @@
 							})
 							setTimeout(()=> {
 								const messageId = this.$route.query.messageId
+								const channel = this.$route.query.chatChannel
 
-								if (messageId) {
+								if (channel && channel !== this.room.channel) {
+									this.switchRoom({
+										channel,
+										name:`#${_.last(channel.split('-'))}`
+									})
+								} else if (messageId && !this.isOverlayVisible) {
 									this.scrollToMessageById(messageId)
 								} else {
 									this.container.scrollTop = this.container.scrollHeight - originalHeight
@@ -239,7 +260,11 @@
 
 				if (matchingMessage) {
 					this.$refs.highlight = matchingMessage
-					this.scrollAndHighlight(["chatChannel", "messageId"], this.$refs.messagesContainer)
+					this.scrollToPositionAndHighlight(
+						["chatChannel", "messageId"],
+						matchingMessage.offsetTop,
+						this.$refs.messagesContainer
+					)
 				} else {
 					this.scrollToTop()
 				}
@@ -272,7 +297,20 @@
 				if (newRoom !== oldRoom) {
 					this.changeRoom(oldRoom)
 				}
-			}
+			},
+			'$route' (newRoute, oldRoute) {
+				const messageId = this.$route.query.messageId
+				const channel = this.$route.query.chatChannel
+
+				if (channel && channel !== this.room.channel) {
+					this.switchRoom({
+						channel,
+						name:`#${_.last(channel.split('-'))}`
+					})
+				} else if (messageId && !this.isOverlayVisible) {
+					this.scrollToMessageById(messageId)
+				}
+			},
 		}
 	}
 

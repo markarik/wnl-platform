@@ -13,6 +13,19 @@
 			<router-view v-if="!isMainRoute"></router-view>
 			<wnl-all v-else></wnl-all>
 		</div>
+		<!-- <wnl-sidenav-slot
+			:isDetached="!isChatMounted"
+			:isVisible="isLargeDesktop || isChatVisible"
+			:hasChat="true"
+		>
+			<wnl-questions-filters
+				v-show="!testMode"
+				:activeFilters="activeFilters"
+				:fetchingData="fetchingQuestions || fetchingFilters"
+				:filters="filters"
+				@activeFiltersChanged="onActiveFiltersChanged"
+			/>
+		</wnl-sidenav-slot> -->
 	</div>
 </template>
 
@@ -31,6 +44,7 @@
 
 	.mobile-main
 		overflow-y: auto
+
 </style>
 
 <script>
@@ -41,14 +55,13 @@
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import { isProduction, getApiUrl } from 'js/utils/env'
     import AllUsers from 'js/components/users/AllUsers'
-	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
+	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
 
 	export default {
-		name: 'Themselves',
+		name: 'MainUsers',
 		components: {
 			'wnl-main-nav': MainNav,
 			'wnl-all': AllUsers,
-			'wnl-active-users': ActiveUsers,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
@@ -57,10 +70,11 @@
 			return {
 				param: this.$route.params.userId,
 				response: {},
+				testMode: false,
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isChatMounted', 'isLargeDesktop', 'isChatVisible']),
 			isProduction() {
 				return isProduction()
 			},
@@ -94,7 +108,6 @@
 			}
 		},
 		methods: {
-			...mapActions(['killChat']),
 			goToDefaultRoute() {
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })

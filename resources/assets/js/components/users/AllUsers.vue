@@ -1,8 +1,5 @@
 <template>
 <div class="main-userscontainer">
-    <div class="input" v-model="filterValue">
-        <input type="text">filtruj</input>
-    </div>
     <div class="metadata">
         {{ $t('dashboard.activeUsers', {count: allUsersCount}) }}
     </div>
@@ -47,10 +44,7 @@
 </style>
 
 <script>
-import {
-    mapGetters,
-    mapActions
-} from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'AllUsers',

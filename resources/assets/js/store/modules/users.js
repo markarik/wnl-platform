@@ -8,11 +8,13 @@ const state = {
     activeUsers: [],
     allUsers: [],
     usersByLocation: [],
+    activeFilters: [],
 };
 
 const getters = {
     allUsers: state => state.allUsers,
     activeUsers: state => state.activeUsers,
+    activeFilters: state => state.activeFilters,
     // getUsersByLoaction: function(state) {
     //     return function(city) {
     //         return state.allUsers.filter((item) => {
@@ -20,7 +22,7 @@ const getters = {
     //         })
     //     }
     // },
-    getUsersByLoaction: state => city => state.allUsers.filter(item => item.city === city)
+    // getUsersByLoaction: state => city => state.allUsers.filter(item => item.city === city)
 };
 
 const mutations = {
@@ -29,10 +31,6 @@ const mutations = {
 	},
     [types.ALL_USERS_SET] (state, response) {
         set(state, 'allUsers', response.data)
-        console.log(response.data);
-    },
-    [types.USERS_BY_LOCATION] (state, usersByLocation) {
-        set(state, 'usersByLocation', usersByLocation)
     },
 };
 

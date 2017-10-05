@@ -17,6 +17,7 @@ return [
 		'user-notifications'  => 'notifications',
 		'user-reactions'      => 'reactions',
 		'user-state'          => 'state',
+		'user-competency'     => 'competency',
 		'user-quiz-results'   => 'quiz_results',
 		'editions'            => 'editions',
 		'orders'              => 'orders',

@@ -75,7 +75,6 @@ export default {
         ...mapGetters(['currentUserId', 'currentUserName']),
         ...mapGetters('users', ['activeUsers']),
         usersToCount() {
-            console.log(this.activeU);
             return this.activeUsers.filter((user) => this.currentUserId !== user.id)
         },
         activeUsersCount() {

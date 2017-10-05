@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-app-layout">
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile v-if="responseCondition" :response="response"></wnl-user-profile>
+			<wnl-user-profile v-if="responseCondition" :response="response" :competency="competency"></wnl-user-profile>
 		</div>
 	</div>
 </template>
@@ -45,6 +45,7 @@
 			return {
 				param: this.$route.params.userId,
 				response: {},
+				competency: {},
 			}
 		},
 		computed: {
@@ -76,7 +77,13 @@
 				.then((response) => {
 					this.response = response
 				})
-			.catch(exception => $wnl.logger.capture(exception))
+				.catch(exception => $wnl.logger.capture(exception));
+
+			axios.get(getApiUrl(`users/${this.param}/competency/stats`))
+				.then((response) => {
+					this.competency = response
+				})
+				.catch(exception => $wnl.logger.capture(exception))
 		},
 	}
 </script>

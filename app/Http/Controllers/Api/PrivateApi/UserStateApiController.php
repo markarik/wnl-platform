@@ -175,6 +175,22 @@ class UserStateApiController extends ApiController
 		return $this->json($stats);
 	}
 
+	public function getCompetencyStats(Request $request, $user) {
+		$userComments = Comment::where('user_id', $user)->get();
+		$qnaQuestionsPosted = QnaQuestion::where('user_id', $user)->get();
+		$qnaAnswersPosted = QnaAnswer::where('user_id', $user)->get();
+
+		$stats = [
+			'competency' => [
+				'comments' => $userComments,
+				'qna_questions' => $qnaQuestionsPosted,
+				'qna_answers' => $qnaAnswersPosted
+			]
+		];
+
+		return $this->json($stats);
+	}
+
 	static function getCourseRedisKey($userId, $courseId)
 	{
 		return sprintf(self::KEY_COURSE_TEMPLATE, $courseId, $userId, self::CACHE_VERSION);

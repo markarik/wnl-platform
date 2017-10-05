@@ -1,47 +1,34 @@
 <template lang="html">
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					Profil KOSMICZNY
-				</div>
-			</div>
-		</div>
+		<wnl-user-background></wnl-user-background>
 		<div class="wnl-user-profile-avatar">
 				<wnl-avatar
 				:fullName="this.response.data.full_name"
                 :url="this.response.data.avatar"
-                class="image is-128x128" size="large"></wnl-avatar>
-				<hr>
+                class="image is-128x128" size="huge"></wnl-avatar>
 		</div>
 
-		<wnl-form :hideDefaultSubmit="hideDefaultSubmit" class="margin vertical" name="UserProfile" :resourceRoute="computedResourceRoute" populate="true">
-			<wnl-form-text :disableInput="disableInput" name="first_name">Imię</wnl-form-text>
-			<wnl-form-text :disableInput="disableInput" name="last_name">Nazwisko</wnl-form-text>
-			<wnl-form-text :disableInput="disableInput" name="username">Nazwa użytkownika</wnl-form-text>
-			<wnl-form-text :disableInput="disableInput" name="public_email">Adres e-mail</wnl-form-text>
-			<wnl-form-text :disableInput="disableInput" name="public_phone">Numer telefonu</wnl-form-text>
-		</wnl-form>
+		<div class="wnl-user-info">
+			<h1>{{ this.response.data.first_name }} {{ this.response.data.last_name }}</h1>
+		</div>
+
+		<ul>
+			<li v-for="comment in comments">
+				<div v-html="comment.text"/>
+				<hr>
+			</li>
+		</ul>
 
 
 	</div>
 </template>
 
 <style lang="sass">
-	.wnl-user-profile
-		&.mobile
-			h1
-				text-align: center
 
-			.wnl-upload,
-			.wnl-user-profile-avatar
-				align-items: center
-				display: flex
-				flex-direction: column
-				margin-top: 12px
+	.image
+		align-self: center
+		margin: auto
 
-			.button
-				margin-top: 20px
 </style>
 
 <script>
@@ -51,22 +38,27 @@
 	import Upload from 'js/components/global/Upload'
 	import { Form, Text } from 'js/components/global/form'
 	import { isProduction } from 'js/utils/env'
+	import UserBackground from 'js/components/users/UserBackground'
 
 	export default {
 		name: 'UserProfile',
 		components: {
+			'wnl-user-background': UserBackground,
             'wnl-avatar': Avatar,
 			'wnl-form': Form,
 			'wnl-form-text': Text,
 			'wnl-upload': Upload,
 		},
-		props: ['response'],
+		props: ['response', 'competency'],
 		data() {
 			return {
 				loading: false,
 				hideDefaultSubmit: true,
 				id: this.$route.params.userId,
 				disableInput: true,
+				comments: this.competency.data.competency.comments,
+				// qna_answers: this.competency.data.competency.qna_answers,
+				// qna_questions: this.competency.data.competency.qna_questions,
 			}
 		},
 		computed: {

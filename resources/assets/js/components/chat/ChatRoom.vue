@@ -78,7 +78,7 @@
 	import { mapGetters } from 'vuex'
 
 	export default {
-		props: ['room'],
+		props: ['room', 'switchRoom'],
 		data() {
 			return {
 				loaded: false,
@@ -115,6 +115,15 @@
 		},
 		methods: {
 			joinRoom() {
+				const channel = this.$route.query.chatChannel
+
+				if (channel && channel !== this.room.channel) {
+					return this.switchRoom({
+						channel,
+						name:`#${_.last(channel.split('-'))}`
+					})
+				}
+
 				typeof this.socket.emit === 'function' && this.socket.emit('join-room', {
 					room: this.room.channel
 				})
@@ -127,7 +136,7 @@
 						nextTick(() => {
 							const messageId = this.$route.query.messageId
 
-							if (messageId) {
+							if (messageId && !this.isOverlayVisible) {
 								this.scrollToMessageById(messageId)
 							} else {
 								this.scrollToBottom()
@@ -227,8 +236,14 @@
 							})
 							setTimeout(()=> {
 								const messageId = this.$route.query.messageId
+								const channel = this.$route.query.chatChannel
 
-								if (messageId) {
+								if (channel && channel !== this.room.channel) {
+									this.switchRoom({
+										channel,
+										name:`#${_.last(channel.split('-'))}`
+									})
+								} else if (messageId && !this.isOverlayVisible) {
 									this.scrollToMessageById(messageId)
 								} else {
 									this.container.scrollTop = this.container.scrollHeight - originalHeight
@@ -285,8 +300,14 @@
 			},
 			'$route' (newRoute, oldRoute) {
 				const messageId = this.$route.query.messageId
+				const channel = this.$route.query.chatChannel
 
-				if (messageId && !this.isOverlayVisible) {
+				if (channel && channel !== this.room.channel) {
+					this.switchRoom({
+						channel,
+						name:`#${_.last(channel.split('-'))}`
+					})
+				} else if (messageId && !this.isOverlayVisible) {
 					this.scrollToMessageById(messageId)
 				}
 			},

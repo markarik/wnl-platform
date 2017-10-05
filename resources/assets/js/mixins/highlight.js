@@ -1,4 +1,4 @@
-import { scrollToElement } from 'js/utils/animations'
+import { scrollToElement, scrollToY } from 'js/utils/animations'
 import { Tween, update } from 'es6-tween';
 
 
@@ -47,6 +47,11 @@ const highlight = {
 		scrollAndHighlight(paramsToUnset, scrollable = false) {
 			this.cleanupRoute(paramsToUnset)
 			this.scrollToHighlight(scrollable)
+			this.highlight()
+		},
+		scrollToPositionAndHighlight(paramsToUnset, scrollY = 0, scrollable = false) {
+			this.cleanupRoute(paramsToUnset)
+			scrollToY(scrollY, 500, scrollable)
 			this.highlight()
 		}
 	},

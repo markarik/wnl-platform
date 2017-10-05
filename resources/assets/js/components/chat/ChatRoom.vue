@@ -57,6 +57,9 @@
 		flex-direction: column-reverse
 		overflow-y: auto
 
+	.wnl-chat-content
+		position: relative
+
 	.wnl-chat-form
 		border-top: $border-light-gray
 		margin: $margin-base 0 0
@@ -242,7 +245,11 @@
 
 				if (matchingMessage) {
 					this.$refs.highlight = matchingMessage
-					this.scrollAndHighlight(["chatChannel", "messageId"], this.$refs.messagesContainer)
+					this.scrollToPositionAndHighlight(
+						["chatChannel", "messageId"],
+						matchingMessage.offsetTop,
+						this.$refs.messagesContainer
+					)
 				} else {
 					this.scrollToTop()
 				}

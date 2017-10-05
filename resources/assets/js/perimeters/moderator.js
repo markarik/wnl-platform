@@ -1,11 +1,11 @@
 import { createPerimeter } from 'vue-kindergarten';
 
 export default createPerimeter({
-	purpose: 'moderatorFeed',
+	purpose: 'moderatorFeatures',
 
-	govern: {
-		'can access': function () {
-			return this.isModerator();
+	can: {
+		access() {
+			return this.isModerator()
 		}
 	},
 

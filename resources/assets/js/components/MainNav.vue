@@ -9,7 +9,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
-			v-if="$moderatorFeed.isAllowed('access')"
+			v-if="$moderatorFeatures.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
@@ -19,7 +19,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
-			v-if="canAccess"
+			v-if="$firstEditionParticipant.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
@@ -44,7 +44,7 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
-		<a v-if="canAccess" class="wnl-main-nav-item" :href="signUpLink">
+		<a v-if="$firstEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
 			<span class="icon is-medium">
 				<i class="fa fa-thumbs-o-up"></i>
 			</span>
@@ -53,7 +53,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
-			v-if="$moderatorFeed.isAllowed('access')"
+			v-if="$moderatorFeatures.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-list"></i>
@@ -120,20 +120,16 @@
 
 <script>
 	import {mapGetters} from 'vuex'
-	import moderatorFeed from 'js/perimeters/moderatorFeed'
+	import moderatorFeatures from 'js/perimeters/moderator'
+	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
 	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'MainNav',
 		props: ['isHorizontal'],
-		perimeters: [
-			moderatorFeed,
-		],
+		perimeters: [moderatorFeatures, firstEditionParticipant],
 		computed: {
 			...mapGetters(['currentUser']),
-			canAccess() {
-				return this.currentUser.roles.includes('edition-1-participant')
-			},
 			signUpLink() {
 				return getUrl('payment/select-product')
 			},

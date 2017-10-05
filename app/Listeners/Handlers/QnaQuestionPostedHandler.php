@@ -1,18 +1,18 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\Qna\QuestionPosted;
+use App\Events\QnaQuestionPosted;
 use App\Listeners\UserNotificationsGate;
 
-class QuestionPostedHandler
+class QnaQuestionPostedHandler
 {
 	/**
-	 * Notification rules for QuestionPosted event.
+	 * Notification rules for QnaQuestionPosted event.
 	 *
-	 * @param QuestionPosted $event
+	 * @param QnaQuestionPosted $event
 	 * @param UserNotificationsGate $gate
 	 */
-	public function handle(QuestionPosted $event, UserNotificationsGate $gate)
+	public function handle(QnaQuestionPosted $event, UserNotificationsGate $gate)
 	{
 		$gate->notifyModerators($event);
 		$gate->notifyPrivateStream($excluded = [], $event);

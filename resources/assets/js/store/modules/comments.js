@@ -27,6 +27,12 @@ function _fetchComments(ids, model) {
 	return axios.post(getApiUrl('comments/.search'), data)
 }
 
+function _resolveComment(id, status = true) {
+	return axios.put(getApiUrl(`comments/${id}`), {
+		resolved: status
+	})
+}
+
 export const commentsGetters = {
 	/**
 	 * [getComments description]
@@ -70,6 +76,26 @@ export const commentsMutations = {
 		destroy(state.comments, payload.id)
 		set(state[resource][resourceId], 'comments', comments)
 	},
+	[types.RESOLVE_COMMENT] (state, payload) {
+		const id = payload.id,
+			comment = state.comments[payload.id],
+			resource = payload.commentableResource,
+			resourceId = payload.commentableId,
+			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? {...comment, resolved: true} : comment)
+
+		set(state.comments, payload.id, {...comment, resolved: true})
+		set(state[resource][resourceId], 'comments', comments)
+	},
+	[types.UNRESOLVE_COMMENT] (state, payload) {
+		const id = payload.id,
+			comment = state.comments[payload.id],
+			resource = payload.commentableResource,
+			resourceId = payload.commentableId,
+			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? {...comment, resolved: false} : comment)
+
+		set(state.comments, payload.id, {...comment, resolved: false})
+		set(state[resource][resourceId], 'comments', comments)
+	},
 	[types.SET_COMMENTS] (state, payload) {
 		set(state, 'profiles', payload.included.profiles)
 		destroy(payload, 'included')
@@ -79,6 +105,10 @@ export const commentsMutations = {
 				resourceId = comment.commentable_id
 
 			set(state.comments, comment.id, comment)
+
+			if (!state[resource][resourceId].comments) {
+				state[resource][resourceId].comments = [];
+			}
 
 			!state[resource][resourceId].comments.includes(comment.id)
 				&& state[resource][resourceId].comments.push(comment.id)
@@ -92,6 +122,14 @@ export const commentsActions = {
 	},
 	removeComment({commit}, payload) {
 		commit(types.REMOVE_COMMENT, payload)
+	},
+	resolveComment({commit}, payload) {
+		_resolveComment(payload.id)
+			.then(() => commit(types.RESOLVE_COMMENT, payload))
+	},
+	unresolveComment({commit}, payload) {
+		_resolveComment(payload.id, false)
+			.then(() => commit(types.UNRESOLVE_COMMENT, payload))
 	},
 	fetchComments({commit}, {ids, resource}) {
 		return new Promise((resolve, reject) => {

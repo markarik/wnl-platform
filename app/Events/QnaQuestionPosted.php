@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Events\Qna;
+namespace App\Events;
 
-use App\Events\Event;
 use Request;
 use App\Models\QnaQuestion;
 use App\Traits\EventContextTrait;
@@ -13,7 +12,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class QuestionPosted extends Event
+class QnaQuestionPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,

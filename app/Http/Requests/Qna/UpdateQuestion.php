@@ -16,6 +16,10 @@ class UpdateQuestion extends FormRequest
 	{
 		$qnaQuestion = QnaQuestion::find($this->route('id'));
 
+		if ($this->user()->isAdmin()) {
+			return true;
+		}
+
 		return $this->user()->can('update', $qnaQuestion);
 	}
 
@@ -27,7 +31,8 @@ class UpdateQuestion extends FormRequest
 	public function rules()
 	{
 		return [
-			'text' => 'string|required',
+			'text' => 'required_without_all:resolved|string',
+			'resolved' => 'required_without_all:text|boolean'
 		];
 	}
 }

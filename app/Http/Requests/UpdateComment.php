@@ -16,6 +16,10 @@ class UpdateComment extends FormRequest
 	{
 		$comment = Comment::find($this->route('id'));
 
+		if ($this->user()->isAdmin()) {
+			return true;
+		}
+
 		return $this->user()->can('update', $comment);
 	}
 
@@ -27,7 +31,8 @@ class UpdateComment extends FormRequest
 	public function rules()
 	{
 		return [
-			'text' => 'required|string',
+			'text' => 'required_without_all:resolved|string',
+			'resolved' => 'required_without_all:text|boolean'
 		];
 	}
 }

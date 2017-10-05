@@ -13,15 +13,35 @@ class EventServiceProvider extends ServiceProvider
 	 * @var array
 	 */
 	protected $listen = [
-		'App\Events\Qna\QuestionPosted' => [
+		'App\Events\QnaQuestionPosted' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 
-		'App\Events\Qna\AnswerPosted' => [
+		'App\Events\QnaQuestionRemoved' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
+		'App\Events\QnaQuestionRestored' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
+		'App\Events\QnaAnswerPosted' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
+		'App\Events\QnaAnswerRemoved' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 
 		'App\Events\CommentPosted' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
+		'App\Events\CommentRemoved' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
+		'App\Events\CommentRestored' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 

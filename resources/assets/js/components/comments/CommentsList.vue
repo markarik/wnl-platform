@@ -17,7 +17,9 @@
 			:comment="comment"
 			:profile="commentProfile(comment.profiles[0])"
 			@removeComment="onRemoveComment"
-			>
+			@resolveComment="onResolveComment"
+			@unresolveComment="onUnresolveComment"
+		>
 			{{comment.text}}
 		</wnl-comment>
 		<div class="form-container" v-if="showComments">
@@ -146,6 +148,20 @@
 					id,
 				})
 			},
+			onResolveComment(id) {
+				this.action('resolveComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
+			onUnresolveComment(id) {
+				this.action('unresolveComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
 			refresh() {
 				return this.action('fetchComments', {
 					resource: this.commentableResource,
@@ -183,7 +199,6 @@
 						.then(() => {
 							this.scrollAndHighlight()
 							this.showComments = true
-
 						})
 				}
 			},

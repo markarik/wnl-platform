@@ -10,6 +10,8 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Auth;
 use League\Fractal\Resource\Item;
+use App\Events\QnaQuestionRemoved;
+use App\Events\QnaQuestionRestored;
 
 class QnaQuestionsApiController extends ApiController
 {
@@ -46,15 +48,26 @@ class QnaQuestionsApiController extends ApiController
 
 	public function put(UpdateQuestion $request)
 	{
-		$qnaQuestion = QnaQuestion::find($request->route('id'));
+		$qnaQuestion = QnaQuestion::withTrashed()->find($request->route('id'));
 
 		if (!$qnaQuestion) {
 			return $this->respondNotFound();
 		}
 
-		$qnaQuestion->update([
-			'text' => $request->input('text'),
-		]);
+		$statusResolved = $request->input('resolved');
+		if (isset($statusResolved)) {
+			if ($statusResolved) {
+				$qnaQuestion->delete();
+				event(new QnaQuestionRemoved($qnaQuestion, Auth::user()->id, 'resolved'));
+			} else {
+				$qnaQuestion->restore();
+				event(new QnaQuestionRestored($qnaQuestion, Auth::user()->id));
+			}
+		} else {
+			$qnaQuestion->update([
+				'text' => $request->input('text'),
+			]);
+		}
 
 		return $this->respondOk();
 	}

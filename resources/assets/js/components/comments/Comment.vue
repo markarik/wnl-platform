@@ -12,7 +12,7 @@
 				<span class="author">{{profile.full_name}}</span>
 				<div class="comment-text wrap" v-html="comment.text"></div>
 				<small>{{time}}</small>
-				<span v-if="isCurrentUserAuthor">
+				<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 					&nbsp;·
 					<wnl-delete
 						:requestRoute="requestRoute"
@@ -20,6 +20,7 @@
 						@deleteSuccess="onDeleteSuccess"
 					></wnl-delete>
 				</span>
+				<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)"/>
 			</div>
 		</div>
 	</article>
@@ -51,13 +52,17 @@
 	import { mapGetters } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
+	import Resolve from 'js/components/global/form/Resolve'
 	import { timeFromS } from 'js/utils/time'
+	import moderatorFeatures from 'js/perimeters/moderator'
 
 	export default {
 		name: 'Comment',
 		components: {
 			'wnl-delete': Delete,
+			'wnl-resolve': Resolve
 		},
+		perimeters: [moderatorFeatures],
 		props: ['comment', 'profile'],
 		computed: {
 			...mapGetters(['currentUserId']),

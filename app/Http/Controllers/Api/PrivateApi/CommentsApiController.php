@@ -8,6 +8,8 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Resource\Item;
+use App\Events\CommentRemoved;
+use App\Events\CommentRestored;
 
 class CommentsApiController extends ApiController
 {
@@ -41,15 +43,26 @@ class CommentsApiController extends ApiController
 
 	public function put(UpdateComment $request)
 	{
-		$comment = Comment::find($request->route('id'));
+		$comment = Comment::withTrashed()->find($request->route('id'));
 
 		if (!$comment) {
 			return $this->respondNotFound();
 		}
 
-		$comment->update([
-			'text' => $request->input('text'),
-		]);
+		$statusResolved = $request->input('resolved');
+		if (isset($statusResolved)) {
+			if ($statusResolved) {
+				$comment->delete();
+				event(new CommentRemoved($comment, Auth::user()->id, 'resolved'));
+			} else {
+				$comment->restore();
+				event(new CommentRestored($comment, Auth::user()->id));
+			}
+		} else {
+			$comment->update([
+				'text' => $request->input('text'),
+			]);
+		}
 
 		return $this->respondOk();
 	}

@@ -1,6 +1,6 @@
 <template>
 	<div class="notification-wrapper">
-		<div class="stream-notification" :class="{'is-read': isRead, deleted}">
+		<div class="stream-notification" :class="{'is-read': isRead, 'deleted': deleted || resolved}">
 			<div class="meta">
 				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 				<span class="icon is-small"><i class="fa" :class="icon"></i></span>

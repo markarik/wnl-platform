@@ -73,17 +73,15 @@
 			}
 		},
 		mounted() {
-            axios.get(getApiUrl(`users/${this.param}/profile`))
-				.then((response) => {
-					this.response = response
-				})
-				.catch(exception => $wnl.logger.capture(exception));
+			const promisedProfile = axios.get(getApiUrl(`users/${this.param}/profile`))
+			const promisedCompetency = axios.get(getApiUrl(`users/${this.param}/competency/stats`))
 
-			axios.get(getApiUrl(`users/${this.param}/competency/stats`))
-				.then((response) => {
-					this.competency = response
-				})
-				.catch(exception => $wnl.logger.capture(exception))
+			Promise.all([promisedProfile, promisedCompetency])
+			.then(([profile, competency]) => {
+				this.response = profile
+				this.competency = competency
+			})
+			.catch(exception => $wnl.logger.capture(exception))
 		},
 	}
 </script>

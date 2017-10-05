@@ -177,8 +177,8 @@ class UserStateApiController extends ApiController
 
 	public function getCompetencyStats(Request $request, $user) {
 		$userComments = Comment::where('user_id', $user)->get();
-		$qnaQuestionsPosted = QnaQuestion::where('user_id', $user)->get();
-		$qnaAnswersPosted = QnaAnswer::where('user_id', $user)->get();
+		$qnaQuestionsPosted = QnaQuestion::with(['reactions'])->where('user_id', $user)->get();
+		$qnaAnswersPosted = QnaAnswer::with(['reactions'])->where('user_id', $user)->get();
 
 		$stats = [
 			'competency' => [

@@ -11,6 +11,8 @@
 		<div class="wnl-user-info">
 			<h1>{{ this.response.data.first_name }} {{ this.response.data.last_name }}</h1>
 		</div>
+		<h1>KOMENTARZE</h1>
+		<hr>
 
 		<ul>
 			<li v-for="comment in comments">
@@ -19,7 +21,27 @@
 			</li>
 		</ul>
 
+		<h1>QNA_ANSWERS</h1>
+		<hr>
 
+		<ul>
+			<li v-for="qna_answer in qna_answers">
+				<div v-html="qna_answer.text"/>
+				<div>{{ this.answerReactionsLength }}</div>
+				<hr>
+			</li>
+		</ul>
+
+		<h1>QNA_QUESTIONS</h1>
+		<hr>
+
+		<ul>
+			<li v-for="qna_question in qna_questions">
+				<div v-html="qna_question.text"/>
+
+				<hr>
+			</li>
+		</ul>
 	</div>
 </template>
 
@@ -57,8 +79,9 @@
 				id: this.$route.params.userId,
 				disableInput: true,
 				comments: this.competency.data.competency.comments,
-				// qna_answers: this.competency.data.competency.qna_answers,
-				// qna_questions: this.competency.data.competency.qna_questions,
+				qna_answers: this.competency.data.competency.qna_answers,
+				answerReactionsLength: this.competency.data.competency.qna_answers[0].reactions.length,
+				qna_questions: this.competency.data.competency.qna_questions,
 			}
 		},
 		computed: {
@@ -66,9 +89,17 @@
 			isProduction() {
 				return isProduction()
 			},
-			computedResourceRoute() {
+			sorted() {
+				return this.qna_answers.sort(function(a, b) {
+					return b.reactions.length - a.reactions.length
+				})
+			},
+ 			computedResourceRoute() {
 				return `users/${this.id}/profile`
 			}
 		},
+		mounted() {
+			console.log(this.sorted);
+		}
 	}
 </script>

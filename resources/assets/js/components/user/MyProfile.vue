@@ -59,6 +59,7 @@
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
+	import moment from 'moment'
 
 	import Upload from 'js/components/global/Upload'
 	import { Form, Text } from 'js/components/global/form'
@@ -80,7 +81,7 @@
 			...mapGetters(['isMobileProfile']),
 			isProduction() {
 				return isProduction()
-			}
+			},
 		},
 		methods: {
 			...mapActions(['updateCurrentUser']),

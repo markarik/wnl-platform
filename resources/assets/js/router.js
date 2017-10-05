@@ -73,6 +73,11 @@ let routes = [
 				path: 'password',
 				component: require('js/components/user/MyPassword.vue')
 			},
+			{
+				name: 'stats',
+				path: 'stats',
+				component: require('js/components/user/UserStats'),
+			},
 		]
 	},
 	{

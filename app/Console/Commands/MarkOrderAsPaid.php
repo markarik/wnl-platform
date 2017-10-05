@@ -55,8 +55,15 @@ class MarkOrderAsPaid extends Command
 
 		$this->info("You're about to mark following order as paid:");
 		$this->table(
-			['id', 'email', 'name', 'product',],
-			[[$order->id, $order->user->email, $order->user->full_name, $order->product->name]]
+			['id', 'email', 'name', 'product', 'method', 'paid_amount'],
+			[[
+				$order->id,
+				$order->user->email,
+				$order->user->full_name,
+				$order->product->name,
+				$order->method,
+				$order->paid_amount,
+			]]
 		);
 
 		if (!$this->confirm("Please confirm")) {
@@ -64,7 +71,7 @@ class MarkOrderAsPaid extends Command
 			exit;
 		}
 
-		$amount = $this->ask("Paid amount ({$order->total_with_coupon})", $order->total_with_coupon);
+		$amount = $this->ask("Enter amount from transfer (already paid: {$order->paid_amount})", $order->total_with_coupon);
 
 		$order->paid = 1;
 		$order->paid_amount += $amount;

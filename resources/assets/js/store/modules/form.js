@@ -114,7 +114,7 @@ const form = {
 						commit(types.FORM_IS_LOADED)
 
 						if (error.response.status === 422) {
-							commit(types.ERRORS_RECORD, error.response.data)
+							commit(types.ERRORS_RECORD, error.response.data.errors)
 							reject(error)
 						} else {
 							reject(error)

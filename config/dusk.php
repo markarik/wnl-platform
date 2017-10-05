@@ -9,7 +9,7 @@ return [
 	],
 
 	// Default browser window size
-	'default_size'     => [
+	'custom_size'     => [
 		'width'  => env('DUSK_WINDOW_WIDTH', 960),
 		'height' => env('DUSK_WINDOW_HEIGHT', 1080),
 	],
@@ -24,6 +24,8 @@ return [
 		'height' => env('DUSK_WINDOW_HEIGHT', 1080),
 	],
 
+	'screen-size' => env('DUSK_SIZE_PRESET', 'desktop_size'),
+
 	// Basic auth settings
 	// (set up only if target app requires authentication)
 	'auth'             => [
@@ -31,5 +33,4 @@ return [
 		'login'    => env('DUSK_LOGIN'),
 		'password' => env('DUSK_PASSWORD'),
 	],
-
 ];

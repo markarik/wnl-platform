@@ -31,7 +31,7 @@
 	<p>Opcja ta dostępna jest w ostatnim kroku procesu rejestracji - "Potwierdzenie zamówienia" - podczas wyboru metody płatności. Dokładną instrukcję również znajdziecie w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a>.</p>
 
 	<h4>Czy można zmienić metodę płatności?</h4>
-	<p>Jak najbardziej! Jeżeli Twoje zamówienie nie zostało jeszcze opłacone, możesz zmienić metodę płatności poprzez stronę <a href="https://platforma.wiecejnizlek.pl/app/myself/orders">Twoje zamówienia</a>.</p>
+	<p>Jak najbardziej! Jeżeli Twoje zamówienie nie zostało jeszcze opłacone, możesz zmienić metodę płatności poprzez stronę <a href="https://platforma.wiecejnizlek.pl/app/myself/orders">Konto > Twoje zamówienia</a>.</p>
 
 <hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
 	<p>Dziękujemy Wam raz jeszcze za wsparcie! Jeśli chcecie podzielić się wątpliwościami, uwagami, czy po prostu pogadać - piszcie śmiało na <a href="https://facebook.com/wiecejnizlek">facebooku</a> lub na info@wiecejnizlek.pl</p>

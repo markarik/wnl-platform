@@ -8,6 +8,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Kris\LaravelFormBuilder\FormBuilder;
@@ -22,6 +23,8 @@ class PersonalDataController extends Controller
 
 	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
+		$request = app(Request::class);
+
 		if ($productSlug !== null) {
 			$product = Product::slug($productSlug);
 
@@ -35,6 +38,12 @@ class PersonalDataController extends Controller
 			return redirect()->route('payment-select-product');
 		}
 
+		if (Auth::check() && !$request->edit) {
+			$this->createOrder(Auth::user(), $request);
+
+			return redirect()->route('payment-confirm-order');
+		}
+
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
@@ -42,6 +51,8 @@ class PersonalDataController extends Controller
 		])->modify('password', 'password', [
 			'value' => '',
 		]);
+
+		session()->flash('url.intended', route('payment-personal-data'));
 
 		return view('payment.personal-data', [
 			'form'    => $form,
@@ -54,20 +65,73 @@ class PersonalDataController extends Controller
 	{
 		$form = $this->form(SignUpForm::class);
 
-		if (Auth::check()) {
-			$user = Auth::user();
-			// Authenticated users should be able to edit only their own account.
-			$form->validate(['email' => 'required|email|in:' . $user->email]);
+		$user = Auth::user();
+		if ($user) {
+			// Don't require email and pass when updating order/account data.
+			$form->validate([
+				'email'                 => 'email',
+				'password'              => '',
+				'password_confirmation' => '',
+			]);
 		}
 
 		if (!$form->isValid()) {
 			Log::notice('Sing up form invalid, redirecting...');
+
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
+		if ($user && $request->edit == 'true') {
+			$this->updateAccount($user, $request);
+			$this->updateOrder($user, $request);
+		} else {
+			$user = $this->createAccount($request);
+			$this->createOrder($user, $request);
+		}
+
+		return redirect(route('payment-confirm-order'));
+	}
+
+	protected function createOrder($user, $request)
+	{
+		\Log::notice('Creating order');
+		$order = $user->orders()->create([
+			'product_id' => Session::get('product')->id,
+			'session_id' => str_random(32),
+			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
+		]);
+
+		$userCoupon = $user->coupons->first();
+		if (session()->has('coupon')) {
+			$this->addCoupon($order, session()->get('coupon'));
+		} elseif ($userCoupon) {
+			$this->addCoupon($order, $userCoupon);
+		} elseif ($order->product->slug !== 'wnl-album') {
+			$this->generateStudyBuddy($order);
+		}
+	}
+
+	protected function generateStudyBuddy($order)
+	{
+		$expires = Carbon::now()->addYears(20);
+		$coupon = Coupon::create([
+			'name'         => 'Study Buddy',
+			'type'         => 'amount',
+			'value'        => 100,
+			'expires_at'   => $expires,
+			'code'         => strtoupper(str_random(7)),
+			'times_usable' => 0,
+		]);
+
+		$order->studyBuddy()->create([
+			'code' => $coupon->code,
+		]);
+	}
+
+	protected function createAccount($request)
+	{
 		Log::notice('Creating user account');
-		$user = User::updateOrCreate(
-			['email' => $request->get('email')],
+		$user = User::create(
 			[
 				'first_name'         => $request->get('first_name'),
 				'last_name'          => $request->get('last_name'),
@@ -90,36 +154,38 @@ class PersonalDataController extends Controller
 				'consent_terms'      => $request->get('consent_terms') ?? 0,
 			]
 		);
-		Log::notice('Creating order');
-		$order = $user->orders()->create([
-			'product_id' => Session::get('product')->id,
-			'session_id' => str_random(32),
-		]);
-
-		if ($user->is_subscriber){
-			$order->attachCoupon(Coupon::slug('subscriber-coupon'));
-		}
 
 		Auth::login($user);
 		Log::notice('User automatically logged in after registration.');
 
-		return redirect(route('payment-confirm-order'));
+		return $user;
 	}
 
-	/**
-	 * @param $productSlug
-	 * @return null|Product
-	 */
-	private function getProduct($productSlug = null)
+	protected function updateAccount($user, $request)
 	{
-		$product = Session::get('product', function () use ($productSlug) {
-			return Product::slug($productSlug);
-		});
+		$user->update($request->all());
+	}
 
-		if ($product instanceof Product && $product !== null && $product->slug !== $productSlug) {
-			return $product;
+	protected function updateOrder($user, $request)
+	{
+		Log::notice('Updating order');
+		$order = $user->orders()
+			->recent()
+			->update([
+				'product_id' => Session::get('product')->id,
+				'session_id' => str_random(32),
+				'invoice'    => $request->invoice ?? $user->invoice ?? 0,
+			]);
+	}
+
+	protected function addCoupon($order, $coupon)
+	{
+		if ($coupon->slug === 'wnl-online-only' &&
+			$order->product->slug !== 'wnl-online'
+		) {
+			return;
 		}
 
-		return Product::slug($productSlug);
+		$order->attachCoupon($coupon);
 	}
 }

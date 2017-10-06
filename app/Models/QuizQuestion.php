@@ -41,6 +41,11 @@ class QuizQuestion extends Model
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
 	}
 
+	public function slides()
+	{
+		return $this->belongsToMany('App\Models\Slide', 'slide_quiz_question');
+	}
+
 	public function userQuizResults()
 	{
 		return $this->hasMany('App\Models\UserQuizResults');

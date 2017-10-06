@@ -285,6 +285,7 @@ const actions = {
 	) {
 		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
+		console.log(parsedFilters);
 		return _fetchQuestions({
 			active: filters,
 			doNotSaveFilters,

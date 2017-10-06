@@ -8,7 +8,24 @@ import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/m
 import * as types from 'js/store/mutations-types'
 import quizStore, {getLocalStorageKey} from 'js/services/quizStore'
 
+
 function fetchQuizSet(id) {
+	const _fetchQuestions = (requestParams) => {
+		return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
+	}
+
+	_fetchQuestions({
+		active: [],
+		doNotSaveFilters: true,
+		filters: [{'quiz-set': {
+			'quiz_set_id': id,
+		}}],
+		include: 'quiz_answers,comments.profiles,reactions,slides',
+		useSavedFilters: false,
+	}).then(function (response) {
+		console.log(response)
+	})
+
 	return axios.get(
 		getApiUrl(`quiz_sets/${id}?include=quiz_questions.quiz_answers,quiz_questions.comments.profiles,reactions`)
 	)

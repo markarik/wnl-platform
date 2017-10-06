@@ -38,7 +38,7 @@ class Parser
 
 	protected $categoryTags;
 	protected $courseTags;
-	protected $questionTag = 'questions';
+	protected $questionTag = 'question';
 	protected $categoryModels = [];
 	protected $courseModels = [];
 	protected $lessonTag;
@@ -98,11 +98,14 @@ class Parser
 
 			$foundCourseTags = [];
 			$foundQuestionsIds = [];
+
 			foreach ($tags as $tagName => $tagValue) {
 				$searchResult = $this->courseTags->search($tagName);
 				if ($searchResult !== false) {
 					$foundCourseTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
-				} else if ($searchResult === $this->questionTag) {
+				}
+
+				if ($tagName === $this->questionTag) {
 					$foundQuestionsIds[] = $tagValue;
 				}
 			}
@@ -170,6 +173,7 @@ class Parser
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 
+			Log::debug(count($foundQuestionsIds));
 			if (!empty($foundQuestionsIds)) {
 				$slide->quizQuestions()->attach($foundQuestionsIds);
 			}

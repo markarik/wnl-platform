@@ -44,7 +44,7 @@ class Slide extends Model
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
 
-	public function questions()
+	public function quizQuestions()
 	{
 		return $this->belongsToMany('App\Models\QuizQuestion', 'slide_quiz_question');
 	}

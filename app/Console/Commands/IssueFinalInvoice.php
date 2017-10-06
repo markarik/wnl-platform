@@ -17,7 +17,7 @@ class IssueFinalInvoice extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'invoice:final';
+	protected $signature = 'invoice:final {id? : The ID of the order}';
 
 	/**
 	 * The console command description.
@@ -43,16 +43,29 @@ class IssueFinalInvoice extends Command
 	 */
 	public function handle()
 	{
-		$orders = Order::with(['product'])
+		$orderId = $this->argument('id');
+
+		if ($orderId) {
+			$order = Order::find($orderId);
+
+			if (!$order) {
+				$this->error("Order {$orderId} not found.");
+				return;
+			}
+
+			$this->dispatch(new IssueFinalAndSend($order));
+		} else {
+			$orders = Order::with(['product'])
 			->whereDoesntHave('invoices', function ($query) {
 				$query->where('series', Invoice::FINAL_SERIES_NAME);
 			})
 			->where('paid', 1)
 			->get();
 
-		foreach ($orders as $order) {
-			if ($order->paid_amount === $order->total_with_coupon) {
-				$this->dispatch(new IssueFinalAndSend($order));
+			foreach ($orders as $order) {
+				if ($order->paid_amount === $order->total_with_coupon) {
+					$this->dispatch(new IssueFinalAndSend($order));
+				}
 			}
 		}
 

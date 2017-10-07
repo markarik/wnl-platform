@@ -9,13 +9,6 @@
 					<div>
 						<p class="title is-4" v-if="title !== false">
 							{{displayedTitle}} ({{howManyQuestions}})
-							<wnl-watch
-								:reactableId="question.id"
-								:reactableResource="reactableResource"
-								:state="bookmarkState"
-								:reactionsDisabled="reactionsDisabled"
-							>
-							</wnl-watch>
 						</p>
 						<div class="tags" v-if="tags">
 							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
@@ -106,22 +99,18 @@
 	import QnaSorting from 'js/components/qna/QnaSorting'
 	import QnaQuestion from 'js/components/qna/QnaQuestion'
 	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
-	import Watch from 'js/components/global/reactions/Watch'
 
 	import * as types from 'js/store/mutations-types'
 	import {invisibleTags} from 'js/utils/config'
-	import { reaction } from 'js/mixins/reaction'
 
 	export default {
 		name: 'Qna',
 		components: {
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
-			'wnl-qna-sorting': QnaSorting,
-			'wnl-watch': Watch
+			'wnl-qna-sorting': QnaSorting
 		},
 		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
-		mixins: [reaction],
 		data() {
 			return {
 				ready: false,
@@ -153,7 +142,6 @@
 		},
 		mounted() {
 			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions)
-			debugger
 		},
 		watch: {
 			'currentSorting' (newValue) {

@@ -22,6 +22,14 @@
 							:state="reactionState"
 							:module="module"
 						></wnl-bookmark>
+						<wnl-watch
+							:reactableId="question.id"
+							:reactableResource="reactableResource"
+							:state="watchState"
+							:reactionsDisabled="false"
+							:module="module"
+						>
+						</wnl-watch>
 					</div>
 				</div>
 			</header>
@@ -204,6 +212,7 @@
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
+	import Watch from 'js/components/global/reactions/Watch'
 
 	export default {
 		name: 'QuizQuestion',
@@ -211,6 +220,7 @@
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
+			'wnl-watch': Watch
 		},
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
@@ -245,6 +255,11 @@
 			reactionState() {
 				if (typeof this.getReaction === 'function') {
 					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
+				}
+			},
+			watchState() {
+				if (typeof this.getReaction === 'function') {
+					return this.getReaction(this.reactableResource, this.question.id, "watch")
 				}
 			},
 		},

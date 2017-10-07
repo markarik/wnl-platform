@@ -16,6 +16,14 @@
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-question-content" v-html="content"></div>
+					<wnl-watch
+						:reactableId="questionId"
+						:reactableResource="reactableResource"
+						:state="watchState"
+						:reactionsDisabled="reactionsDisabled"
+						module="qna"
+					>
+					</wnl-watch>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"
@@ -171,6 +179,7 @@
 	import Vote from 'js/components/global/reactions/Vote'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import highlight from 'js/mixins/highlight'
+	import Watch from 'js/components/global/reactions/Watch'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -183,6 +192,7 @@
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
+			'wnl-watch': Watch
 		},
 		props: ['questionId', 'readOnly', 'reactionsDisabled'],
 		data() {
@@ -253,6 +263,9 @@
 			},
 			bookmarkState() {
 				return this.getReaction(this.reactableResource, this.questionId, "bookmark")
+			},
+			watchState() {
+				return this.getReaction(this.reactableResource, this.questionId, "watch")
 			},
 			voteState() {
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")

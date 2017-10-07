@@ -92,7 +92,6 @@ const getters = {
 				return count + current
 			}, 0)
 
-
 			return {
 				...quizQuestion,
 				answers: quizQuestion.quiz_answers.map((answerId) => {

@@ -78,7 +78,7 @@
 					</wnl-comments-list>
 				</div>
 			</div>
-			<wnl-slide-link v-for="slide, index in slides" :key="index" :context="slide.context">
+			<wnl-slide-link v-if="displayResults" v-for="slide, index in slides" :key="index" :context="slide.context">
 				<div>Przejdź do slajdu...</div>
 			</wnl-slide-link>
 		</div>
@@ -225,13 +225,6 @@
 		},
 		computed: {
 			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
-			...mapGetters('quiz', [
-				'isComplete',
-				'isResolved',
-			]),
-			displayResults() {
-				return this.readOnly || this.isComplete || this.isResolved(this.id)
-			},
 			answers() {
 				return this.question.answers
 			},

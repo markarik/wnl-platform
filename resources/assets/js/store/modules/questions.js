@@ -155,7 +155,7 @@ const mutations = {
 
 		comments && set(state.quiz_questions[id], 'comments', comments)
 
-		let {quiz_answers, slides: includedSlides, ...resources} = included
+		let {slides: includedSlides} = included
 
 		if (includedSlides) {
 			set(state.quiz_questions[id], 'slides', slides.map((slideId) => includedSlides[slideId]))
@@ -164,7 +164,7 @@ const mutations = {
 	[types.QUESTIONS_SET_PAGE] (state, page) {
 		set(state, 'current_page', page)
 	},
-	[types.QUESTIONS_SET_TEST] (state, {questions, answers}) {
+	[types.QUESTIONS_SET_TEST] (state, {questions, answers, slides}) {
 		let testQuestions = []
 
 		questions.forEach(question => {
@@ -173,6 +173,7 @@ const mutations = {
 			set(state.quiz_questions, question.id, {
 				...question,
 				answers: question.quiz_answers.map(id => answers[id]),
+				slides: (question.slides || []).map((slideId) => slides[slideId]),
 				selectedAnswer: false,
 				isResolved: false,
 			})
@@ -292,11 +293,10 @@ const actions = {
 			page,
 			useSavedFilters,
 		}).then(function (response) {
-			const {answers, questions, meta, included, slides} = _handleResponse(response, commit)
+			const {answers, questions, meta, included} = _handleResponse(response, commit)
 
 			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
 				answers,
-				slides,
 				questions,
 				page: meta.current_page,
 			})
@@ -349,9 +349,9 @@ const actions = {
 			randomize: true,
 			include: 'quiz_answers,reactions,comments.profiles,slides'
 		}).then(response => {
-			const {answers, questions, included} = _handleResponse(response, commit)
+			const {answers, questions, slides, included} = _handleResponse(response, commit)
 
-			commit(types.QUESTIONS_SET_TEST, {answers, questions})
+			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides})
 			commit(types.UPDATE_INCLUDED, included)
 
 			return response

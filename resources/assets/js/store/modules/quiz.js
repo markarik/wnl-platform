@@ -128,7 +128,6 @@ const getters = {
 	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0 && getters.hasQuestions,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
-	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
 	questionsLength: (state) => state.questionsIds.length,
 }

@@ -1,13 +1,12 @@
 <?php namespace App\Http\Controllers\Api\Filters\Quiz;
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
-use App\Models\Reactable;
-use Carbon\Carbon;
+use App\Models\QuizSet;
 use Auth;
 
-class CollectionFilter extends ApiFilter
+class SetFilter extends ApiFilter
 {
-	protected $expected = ['user_id'];
+	protected $expected = ['quiz_set_id'];
 
 	public function handle($builder)
 	{
@@ -17,9 +16,8 @@ class CollectionFilter extends ApiFilter
 	public function count($builder)
 	{
 		$items = [];
-		$this->params['user_id'] = Auth::user()->id;
-
-		$count = $this->collection($builder)->count();
+        $count = $this->collection($builder)->count();
+        Auth::user()->id;
 
 		return [
 			'items'   => [
@@ -35,12 +33,9 @@ class CollectionFilter extends ApiFilter
 
 	protected function collection($builder)
 	{
-		$ids = Reactable::select('reactable_id')
-			->where('user_id', $this->params['user_id'])
-			->where('reactable_type', 'App\\Models\\QuizQuestion')
-			->where('reaction_id', 4)
-			->get()
-			->pluck('reactable_id')
+        $ids = QuizSet::find($this->params['quiz_set_id'])
+            ->questions()
+			->pluck('quiz_question_id')
 			->toArray();
 
 		return $builder->whereIn('id', $ids);

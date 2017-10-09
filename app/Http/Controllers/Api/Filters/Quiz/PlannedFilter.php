@@ -2,7 +2,6 @@
 
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
-use App\Models\QuizQuestion;
 use App\Models\UserPlan;
 use Carbon\Carbon;
 use Auth;

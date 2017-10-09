@@ -68,6 +68,17 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
+				<div v-if="displayResults && hasSlides" class="slides-list">
+					<header @click="toggleSlidesList" class="slides-list-header">
+						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
+						{{$t('quiz.annotations.slides.header')}} ({{slides.length}})
+						&nbsp;·&nbsp;
+						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+					</header>
+					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context">
+						{{slideLink(slide)}}
+					</wnl-slide-link>
+				</div>
 				<div class="quiz-question-comments">
 					<wnl-comments-list
 						commentableResource="quiz_questions"
@@ -86,8 +97,25 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	.slides-list
+		border-bottom: 1px solid #dbdbdb
+
+		header
+			color: $color-gray-dimmed
+			cursor: pointer
+			font-size: $font-size-minus-1
+			margin-bottom: $margin-base
+			margin-top: $margin-base
+
+		.slide-list-item
+			font-size: 0.825em
+			padding-left: $margin-base
+
 	.card-content ul
 		counter-reset: list
+
+	.card-footer
+		flex-direction: column
 
 	.quiz-question-icon
 		display: block
@@ -189,7 +217,7 @@
 			.icon:first-child
 				margin-left: $margin-small
 
-	.quiz-question-comments
+	.quiz-question-comments, .slides-list
 		padding: $margin-small $margin-big $margin-base
 		width: 100%
 
@@ -204,6 +232,7 @@
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
+	import SlideLink from 'js/components/global/SlideLink'
 
 	export default {
 		name: 'QuizQuestion',
@@ -211,24 +240,18 @@
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
+			'wnl-slide-link': SlideLink,
 		},
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
 			return {
-				reactableResource: "quiz_questions"
+				reactableResource: "quiz_questions",
+				slidesExpanded: false
 			}
 		},
 		computed: {
 			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
-			...mapGetters('quiz', [
-				'getAnswers',
-				'isComplete',
-				'isResolved',
-				'getSelectedAnswer',
-			]),
-			displayResults() {
-				return this.readOnly || this.isComplete || this.isResolved(this.id)
-			},
+			...mapGetters('course', ['getLesson', 'getSection']),
 			answers() {
 				return this.question.answers
 			},
@@ -247,6 +270,12 @@
 					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
 				}
 			},
+			slides() {
+				return this.question.slides
+			},
+			hasSlides() {
+				return (this.question.slides || []).length
+			}
 		},
 		methods: {
 			selectAnswer(answerIndex) {
@@ -258,6 +287,21 @@
 			trim(text) {
 				return trim(text)
 			},
+			toggleSlidesList() {
+				this.slidesExpanded = !this.slidesExpanded
+			},
+			slideLink(slide) {
+				let linkText = ''
+
+				if (_.get(slide, 'context.lesson.id')) {
+					linkText += this.getLesson(slide.context.lesson.id).name
+
+					if (_.get(slide, 'context.section.id')) {
+						linkText += ` / ${this.getSection(slide.context.section.id).name}`
+					}
+				}
+				return linkText || this.$t('quiz.annotations.slides.defaultLink')
+			}
 		}
 	}
 </script>

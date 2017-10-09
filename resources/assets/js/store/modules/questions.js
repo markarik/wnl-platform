@@ -154,13 +154,11 @@ const mutations = {
 
 		comments && set(state.quiz_questions[id], 'comments', comments)
 
-		let {slides: includedSlides} = included
+		let {quiz_answers, slides: includedSlides, ...resources} = included
 
 		if (includedSlides) {
 			set(state.quiz_questions[id], 'slides', slides.map((slideId) => includedSlides[slideId]))
 		}
-
-		let {included: quiz_answers, ...resources} = included
 
 		_.each(resources, (items, resource) => {
 				let resourceObject = state[resource]

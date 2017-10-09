@@ -285,7 +285,7 @@ class Invoice
 		return $invoice;
 	}
 
-	public function corrective(Order $order, $corrected, $reason, $difference)
+	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference)
 	{
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
@@ -340,7 +340,6 @@ class Invoice
 				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
-			$totalPrice = $order->total_with_coupon;
 			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 

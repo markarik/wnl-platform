@@ -78,6 +78,9 @@
 					</wnl-comments-list>
 				</div>
 			</div>
+			<wnl-slide-link v-for="slide, index in slides" :key="index" :context="slide.context">
+				<div>Przejdź do slajdu...</div>
+			</wnl-slide-link>
 		</div>
 	</div>
 </template>
@@ -204,6 +207,7 @@
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
+	import SlideLink from 'js/components/global/SlideLink'
 
 	export default {
 		name: 'QuizQuestion',
@@ -211,6 +215,7 @@
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
+			'wnl-slide-link': SlideLink,
 		},
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
@@ -221,10 +226,8 @@
 		computed: {
 			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
 			...mapGetters('quiz', [
-				'getAnswers',
 				'isComplete',
 				'isResolved',
-				'getSelectedAnswer',
 			]),
 			displayResults() {
 				return this.readOnly || this.isComplete || this.isResolved(this.id)
@@ -247,6 +250,9 @@
 					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
 				}
 			},
+			slides() {
+				return this.question.slides
+			}
 		},
 		methods: {
 			selectAnswer(answerIndex) {

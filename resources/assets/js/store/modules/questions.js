@@ -34,6 +34,7 @@ const state = {
 	profiles: {},
 	results: false,
 	testQuestions: [],
+	slides: {}
 }
 
 // Getters
@@ -149,18 +150,16 @@ const mutations = {
 			set(state, key, meta[key])
 		})
 	},
-	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments}) {
+	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments, slides}) {
 		if (_.size(included) === 0) return
 
 		comments && set(state.quiz_questions[id], 'comments', comments)
 
-		let {included: quiz_answers, ...resources} = included
-		_.each(resources, (items, resource) => {
-			let resourceObject = state[resource]
-			_.each(items, (item, index) => {
-				set(resourceObject, item.id, item)
-			})
-		})
+		let {quiz_answers, slides: includedSlides, ...resources} = included
+
+		if (includedSlides) {
+			set(state.quiz_questions[id], 'slides', slides.map((slideId) => includedSlides[slideId]))
+		}
 	},
 	[types.QUESTIONS_SET_PAGE] (state, page) {
 		set(state, 'current_page', page)
@@ -285,7 +284,6 @@ const actions = {
 	) {
 		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
-		console.log(parsedFilters);
 		return _fetchQuestions({
 			active: filters,
 			doNotSaveFilters,
@@ -294,10 +292,11 @@ const actions = {
 			page,
 			useSavedFilters,
 		}).then(function (response) {
-			const {answers, questions, meta, included} = _handleResponse(response, commit)
+			const {answers, questions, meta, included, slides} = _handleResponse(response, commit)
 
 			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
 				answers,
+				slides,
 				questions,
 				page: meta.current_page,
 			})
@@ -318,7 +317,7 @@ const actions = {
 			})
 	},
 	fetchQuestionData({commit}, id) {
-		return _fetchQuestionsComments(id)
+		return _fetchQuestionsData(id)
 			.then(({data}) => {
 				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
 			})
@@ -348,7 +347,7 @@ const actions = {
 			filters,
 			limit,
 			randomize: true,
-			include: 'quiz_answers,reactions,comments.profiles'
+			include: 'quiz_answers,reactions,comments.profiles,slides'
 		}).then(response => {
 			const {answers, questions, included} = _handleResponse(response, commit)
 
@@ -413,8 +412,8 @@ const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
 }
 
-const _fetchQuestionsComments = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles`))
+const _fetchQuestionsData = (id) => {
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,slides`))
 }
 
 const _fetchDynamicFilters = (activeFilters) => {
@@ -455,15 +454,17 @@ const _handleResponse = (response) => {
 	var {data: {data, ...meta}} = response,
 		quizQuestions           = {},
 		quiz_answers            = {},
+		slides                  = {},
 		included                = {}
 
 	if (size(data) > 0) {
 		// this var is here on purpose due to error in babel and problems with spread operator :(
-		var {included: {quiz_answers, ...included}, ...quizQuestions} = data
+		var {included: {quiz_answers, slides, ...included}, ...quizQuestions} = data
 	}
 
 	return {
 		answers: quiz_answers,
+		slides,
 		included,
 		meta,
 		questions: Object.values(quizQuestions),

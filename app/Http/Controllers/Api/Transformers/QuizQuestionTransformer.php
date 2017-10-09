@@ -59,9 +59,6 @@ class QuizQuestionTransformer extends ApiTransformer
 	{
 		$slides = $quizQuestion->slides;
 
-		// if (!($slides)->isEmpty()) {
-		// 	dd($slides);
-		// }
 		return $this->collection($slides, new SlideTransformer([
 			'quiz_questions' => $quizQuestion->id
 		], true), 'slides');

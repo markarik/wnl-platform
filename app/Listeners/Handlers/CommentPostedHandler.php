@@ -15,7 +15,8 @@ class CommentPostedHandler
 	 */
 	public function handle(CommentPosted $event, UserNotificationsGate $gate)
 	{
-		$commentable = $event->comment->commentable;
+		$comment = $event->comment;
+		$commentable = $comment->commentable;
 
 		$gate->notifyModerators($event);
 
@@ -26,6 +27,12 @@ class CommentPostedHandler
 		}
 
 		$excluded = $this->notifyCoCommentators($commentable, $gate, $event);
+
+		$watchers = $this->notifyWatchers($comment, $gate, $event);
+
+		forEach($watchers as $watcher) {
+			$excluded->push($watcher);
+		}
 
 		$excluded->push($commentableAuthor);
 
@@ -53,6 +60,26 @@ class CommentPostedHandler
 			$gate->notifyPrivate($user, $event);
 		}
 
+		return $users;
+	}
+
+	protected function notifyWatchers($comment, $gate, $event)
+	{
+		$reaction = \App\Models\Reaction::type('watch');
+		$reactables = \App\Models\Reactable::select()
+			->where('reaction_id', $reaction->id)
+			->where('reactable_type', $comment->commentable_type)
+			->where('reactable_id', $comment->commentable_id)
+			->get();
+
+		$userIds = $reactables->pluck('user_id')->toArray();
+		$users = \App\Models\User::whereIn('id', $userIds)
+			->get();
+
+		foreach ($users as $user) {
+			$gate->notifyPrivate($user, $event);
+		}
+		
 		return $users;
 	}
 }

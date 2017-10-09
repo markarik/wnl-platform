@@ -43,4 +43,24 @@ class AnswerPostedHandler
 
 		return $users;
 	}
+
+
+	protected function notifyWatchers($commentable, $gate, $event, $excluded)
+	{
+		$reaction = \App\Models\Reaction::type('watch');
+		$reactables = \App\Models\Reactable::select()
+			->where('reaction_id', $reaction->id)
+			->where('reactable_type', '\\App\\Models\\QnaQuestion')
+			->get();
+
+		$userIds = $reactables->pluck('user_id')->toArray();
+		$users = \App\Models\User::whereIn('id', $userIds)
+			->get();
+
+		foreach ($users as $user) {
+			$gate->notifyPrivate($user, $event);
+		}
+		
+		return $users;
+	}
 }

@@ -14,7 +14,9 @@ class ReactionAddedHandler
 	 */
 	public function handle(ReactionAdded $event, UserNotificationsGate $gate)
 	{
-		if ($event->reaction->type === 'bookmark') return;
+		$type = $event->reaction->type;
+		
+		if ($type === 'bookmark' || $type === 'watch') return;
 
 		$notifiable = $event->reactable->user;
 

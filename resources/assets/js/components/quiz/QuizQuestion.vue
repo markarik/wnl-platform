@@ -68,6 +68,17 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
+				<div v-if="displayResults && slides.length" class="slides-list">
+					<header @click="toggleSlidesList" class="slides-list-header">
+						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
+						List powiązanych slajdów ({{slides.length}})
+						&nbsp;·&nbsp;
+						<span>{{slidesExpanded ? "Ukryj": "Pokaż"}}</span>
+					</header>
+					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context">
+						{{slideLink(slide)}}
+					</wnl-slide-link>
+				</div>
 				<div class="quiz-question-comments">
 					<wnl-comments-list
 						commentableResource="quiz_questions"
@@ -78,9 +89,6 @@
 					</wnl-comments-list>
 				</div>
 			</div>
-			<wnl-slide-link v-if="displayResults" v-for="slide, index in slides" :key="index" :context="slide.context">
-				<div>Przejdź do slajdu...</div>
-			</wnl-slide-link>
 		</div>
 	</div>
 </template>
@@ -89,8 +97,25 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	.slides-list
+		border-bottom: 1px solid #dbdbdb
+
+		header
+			color: $color-gray-dimmed
+			cursor: pointer
+			font-size: $font-size-minus-1
+			margin-bottom: $margin-base
+			margin-top: $margin-base
+
+		.slide-list-item
+			font-size: 0.825em
+			padding-left: $margin-base
+
 	.card-content ul
 		counter-reset: list
+
+	.card-footer
+		flex-direction: column
 
 	.quiz-question-icon
 		display: block
@@ -192,7 +217,7 @@
 			.icon:first-child
 				margin-left: $margin-small
 
-	.quiz-question-comments
+	.quiz-question-comments, .slides-list
 		padding: $margin-small $margin-big $margin-base
 		width: 100%
 
@@ -220,11 +245,13 @@
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
 			return {
-				reactableResource: "quiz_questions"
+				reactableResource: "quiz_questions",
+				slidesExpanded: false
 			}
 		},
 		computed: {
 			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
+			...mapGetters('course', ['getLesson', 'getSection']),
 			answers() {
 				return this.question.answers
 			},
@@ -257,6 +284,21 @@
 			trim(text) {
 				return trim(text)
 			},
+			toggleSlidesList() {
+				this.slidesExpanded = !this.slidesExpanded
+			},
+			slideLink(slide) {
+				let linkText = ''
+
+				if (_.get(slide, 'context.lesson.id')) {
+					linkText += this.getLesson(slide.context.lesson.id).name
+
+					if (_.get(slide, 'context.section.id')) {
+						linkText += ` / ${this.getSection(slide.context.section.id).name}`
+					}
+				}
+				return linkText || 'Przejdź do slajdu...'
+			}
 		}
 	}
 </script>

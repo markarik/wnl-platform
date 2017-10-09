@@ -159,6 +159,15 @@ const mutations = {
 		if (includedSlides) {
 			set(state.quiz_questions[id], 'slides', slides.map((slideId) => includedSlides[slideId]))
 		}
+
+		let {included: quiz_answers, ...resources} = included
+
+		_.each(resources, (items, resource) => {
+				let resourceObject = state[resource]
+			_.each(items, (item, index) => {
+				set(resourceObject, item.id, item)
+			})
+		})
 	},
 	[types.QUESTIONS_SET_PAGE] (state, page) {
 		set(state, 'current_page', page)

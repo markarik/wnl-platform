@@ -68,7 +68,7 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
-				<div v-if="displayResults && hasSlides" class="slides-list">
+				<div v-if="hasSlides" class="slides-list">
 					<header @click="toggleSlidesList" class="slides-list-header">
 						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
 						{{$t('quiz.annotations.slides.header')}} ({{slides.length}})

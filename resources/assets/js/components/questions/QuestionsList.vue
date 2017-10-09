@@ -428,6 +428,7 @@
 						this.switchOverlay(false)
 					})
 					.then(() => this.reactionsFetched = true)
+					.then(() => this.fetchQuestionData(this.currentQuestion.id))
 					.catch(e => {
 						$wnl.logger.error(e)
 						this.fetchingFilters = false

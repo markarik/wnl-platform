@@ -86,7 +86,7 @@ class InvoiceCorrect extends Command
 			return 42;
 		}
 
-		$reason = $this->ask('Reason');
+		$reason = $this->ask('Reason', 'Zwrot na podstawie rabatu naliczonego po opłaceniu zamówienia.');
 		$value = $this->ask('Refunded amount');
 		$invoice = (new Invoice)->corrective($order, $corrected, $reason, -$value);
 		$order->paid_amount -= $value;
@@ -94,7 +94,7 @@ class InvoiceCorrect extends Command
 
 		Mail::to($order->user)->send(new Refund($order, $invoice, $value));
 
-		$this->info('OK.');
+		$this->info('OK. Invoice number: ' . $invoice->full_number);
 
 		return 42;
 	}

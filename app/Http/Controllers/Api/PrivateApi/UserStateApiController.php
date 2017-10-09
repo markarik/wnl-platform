@@ -9,6 +9,7 @@ use App\Models\QnaQuestion;
 use App\Models\QnaAnswer;
 use App\Models\UserQuizResults;
 use App\Models\QuizQuestion;
+use App\Traits\EventContextTrait;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ use Cache;
 class UserStateApiController extends ApiController
 {
 
+	use EventContextTrait;
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
@@ -180,12 +182,18 @@ class UserStateApiController extends ApiController
 		$qnaQuestionsPosted = QnaQuestion::with(['reactions'])->where('user_id', $user)->get();
 		$qnaAnswersPosted = QnaAnswer::with(['reactions'])->where('user_id', $user)->get();
 
+		foreach ($userComments as $comment) {
+			$userCommentable = $comment->commentable;
+			$userCommentContext = $this->addEventContext($userCommentable);
+			$comment->context = $userCommentContext;
+		}
+
 		$stats = [
 			'competency' => [
 				'comments' => $userComments,
 				'qna_questions' => $qnaQuestionsPosted,
 				'qna_answers' => $qnaAnswersPosted
-			]
+			],
 		];
 
 		return $this->json($stats);

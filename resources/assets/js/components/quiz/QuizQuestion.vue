@@ -73,7 +73,7 @@
 						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
 						List powiązanych slajdów ({{slides.length}})
 						&nbsp;·&nbsp;
-						<span>{{slidesExpanded ? "Ukryj": "Pokaż"}}</span>
+						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
 					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context">
 						{{slideLink(slide)}}
@@ -297,7 +297,7 @@
 						linkText += ` / ${this.getSection(slide.context.section.id).name}`
 					}
 				}
-				return linkText || 'Przejdź do slajdu...'
+				return linkText || this.$t('quiz.annotations.slides.defaultLink')
 			}
 		}
 	}

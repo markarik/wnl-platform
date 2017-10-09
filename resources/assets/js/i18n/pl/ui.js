@@ -6,7 +6,9 @@ export const ui = {
 		yes: 'Tak',
 	},
 	action: {
-		undo: 'Cofnij'
+		undo: 'Cofnij',
+		hide: 'Schowaj',
+		show: 'Pokaż'
 	},
 	loading: {
 		default: 'Uwaga, nadjeżdża wiedza...',
@@ -22,5 +24,5 @@ export const ui = {
 		notFound: `Ups, zapisywanie nie powiodło się.
 			Najprawdopodobniej treść do której się odwołujesz została usunięta.
 			W przypadku dalszych problemów odśwież stronę.`
-	}
+	},
 }

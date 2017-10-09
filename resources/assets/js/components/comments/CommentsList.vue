@@ -84,7 +84,7 @@
 				return !_.isEmpty(this.comments)
 			},
 			toggleCommentsText() {
-				return this.showComments ? 'Schowaj' : 'Pokaż'
+				return this.showComments ? this.$t('ui.action.hide') : this.$t('ui.action.show')
 			},
 			isCommentableInUrl() {
 				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId

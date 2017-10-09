@@ -34,7 +34,6 @@ const state = {
 	profiles: {},
 	results: false,
 	testQuestions: [],
-	slides: {}
 }
 
 // Getters

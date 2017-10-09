@@ -173,7 +173,6 @@ class Parser
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 
-			Log::debug(count($foundQuestionsIds));
 			if (!empty($foundQuestionsIds)) {
 				$slide->quizQuestions()->attach($foundQuestionsIds);
 			}

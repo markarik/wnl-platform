@@ -7,7 +7,8 @@ export const quiz = {
 	},
 	annotations: {
 		slides: {
-			defaultLink: 'Przejdź do slajdu...'
+			defaultLink: 'Przejdź do slajdu...',
+			header: 'Powiązane slajdy'
 		}
 	}
 }

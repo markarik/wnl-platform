@@ -68,10 +68,10 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
-				<div v-if="displayResults && slides.length" class="slides-list">
+				<div v-if="displayResults && hasSlides" class="slides-list">
 					<header @click="toggleSlidesList" class="slides-list-header">
 						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
-						List powiązanych slajdów ({{slides.length}})
+						{{$t('quiz.annotations.slides.header')}} ({{slides.length}})
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
@@ -272,6 +272,9 @@
 			},
 			slides() {
 				return this.question.slides
+			},
+			hasSlides() {
+				return (this.question.slides || []).length
 			}
 		},
 		methods: {

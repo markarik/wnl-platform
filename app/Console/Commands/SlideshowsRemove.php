@@ -40,7 +40,7 @@ class SlideshowsRemove extends Command
 	{
 		$screensIds = explode(self::SCREENS_DELIMITER, $this->argument('screensIds'));
 
-		if (count($screensIds) === 0) die("Screen with ID $screenId does not exist.\n");
+		if (count($screensIds) === 0) die("Screen with ID $screensIds does not exist.\n");
 
 		$confirm = "You are about to remove screens " . $this->argument('screensIds') . ", with all slides, tags etc. Are you absolutely sure?";
 

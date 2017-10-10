@@ -180,9 +180,7 @@ class PersonalDataController extends Controller
 
 	protected function addCoupon($order, $coupon)
 	{
-		if ($coupon->slug === 'wnl-online-only' &&
-			$order->product->slug !== 'wnl-online'
-		) {
+		if (!$coupon->products->contains($order->product)) {
 			return;
 		}
 

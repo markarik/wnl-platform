@@ -32,14 +32,21 @@ class UseCoupon extends FormRequest
 		];
 	}
 
+	public function getValidator()
+	{
+		return $this->getValidatorInstance();
+	}
+
 	public function withValidator($validator)
 	{
 		$code = $this->request->get('code');
 		if (!$code) return;
 
-		$limitReached = $this->limitReached();
-		$coupon = $this->validateVoucher(mb_convert_case($code, MB_CASE_UPPER, "UTF-8"));
-		$validator->after(function ($validator) use ($coupon, $limitReached) {
+		$validator->after(function ($validator) use ($code) {
+
+			$limitReached = $this->limitReached();
+			$coupon = $this->validateVoucher(mb_convert_case($code, MB_CASE_UPPER, "UTF-8"));
+
 			if (!$coupon) {
 				$validator->errors()->add(
 					'code',
@@ -52,7 +59,23 @@ class UseCoupon extends FormRequest
 					trans('payment.voucher-tries-limit-reached')
 				);
 			}
+
+			if ($coupon && !$this->checkProduct($coupon)) {
+				$validator->errors()->add(
+					'code',
+					trans('payment.voucher-product-incompatible')
+				);
+			}
 		});
+	}
+
+	protected function checkProduct($coupon)
+	{
+		$user = Auth::user();
+		$orderId = $this->route('id');
+		$order = $user->orders()->find($orderId);
+
+		return $coupon->products->contains($order->product);
 	}
 
 	protected function validateVoucher($code)

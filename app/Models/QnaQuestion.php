@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Events\Qna\QuestionPosted;
+use App\Events\QnaQuestionPosted;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class QnaQuestion extends Model
 {
-	use Cached, Searchable;
+	use Cached, Searchable, SoftDeletes;
 
 	protected $fillable = ['text', 'user_id', 'meta'];
 
@@ -17,8 +18,10 @@ class QnaQuestion extends Model
 		'meta' => 'array',
 	];
 
+	protected $dates = ['deleted_at'];
+
 	protected $dispatchesEvents = [
-		'created' => QuestionPosted::class,
+		'created' => QnaQuestionPosted::class,
 	];
 
 	public function answers()

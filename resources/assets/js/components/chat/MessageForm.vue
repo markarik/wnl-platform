@@ -18,7 +18,7 @@
 					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
 					:keyboard="keyboard"
 					:toolbar="toolbar"
-					:allowMentions=false
+					:allowMentions=true
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
@@ -135,9 +135,8 @@
 						text: this.room.name
 					},
 					context: {
-						courseId: this.courseId,
-						lessonId: this.$route.params.lessonId,
-						slideId: this.$route.params.slideId,
+						name: this.$route.name,
+						params: this.$route.params
 					},
 					actors: this.currentUser
 				}
@@ -156,8 +155,8 @@
 							)
 						}
 
-						this.quillEditor.quill.deleteText(0, this.content.length)
 						this.mentions = []
+						this.quillEditor.clear();
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}

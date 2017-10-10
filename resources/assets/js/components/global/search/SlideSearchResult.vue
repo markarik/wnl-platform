@@ -1,5 +1,5 @@
 <template>
-	<router-link class="slide-router-link unselectable" :to="to">
+	<wnl-slide-link class="slide-router-link unselectable" :context="context">
 		<div class="slide-context">
 			<div class="group-and-lesson">
 				 <span class="group-name" :title="groupName">{{truncate(groupName, 15)}}</span>
@@ -25,7 +25,7 @@
 			</div>
 			<div v-if="page" class="page">{{page}}</div>
 		</div>
-	</router-link>
+	</wnl-slide-link>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -110,8 +110,9 @@
 
 <script>
 	import {truncate} from 'lodash'
-
 	import {mapGetters} from 'vuex'
+
+	import SlideLink from 'js/components/global/SlideLink'
 
 	const mediaMap = {
 		chart: {
@@ -135,6 +136,9 @@
 				required: true,
 				type: Object,
 			},
+		},
+		components: {
+			'wnl-slide-link': SlideLink,
 		},
 		computed: {
 			...mapGetters('course', ['getGroup', 'getLesson', 'getSection']),
@@ -170,17 +174,6 @@
 			},
 			snippet() {
 				return this.getHighlight(this.hit, 'snippet.content') || this.hit._source.snippet.content
-			},
-			to() {
-				return {
-					name: 'screens',
-					params: {
-						courseId: this.context.course.id,
-						lessonId: this.context.lesson.id,
-						screenId: this.context.screen.id,
-						slide: this.slideNumber,
-					}
-				}
 			},
 		},
 		methods: {

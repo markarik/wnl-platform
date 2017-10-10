@@ -1,6 +1,6 @@
 <template>
 	<div class="notification-wrapper">
-		<div class="stream-notification" :class="{'is-read': isRead, deleted}">
+		<div class="stream-notification" :class="{'is-read': isRead, 'deleted': deleted || resolved}">
 			<div class="meta">
 				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
@@ -40,7 +40,8 @@
 				</span>
 			</div>
 		</div>
-		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
+		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
+		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
 	</div>
 </template>
 

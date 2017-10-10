@@ -399,6 +399,9 @@
 		watch: {
 			'$route' (to, from) {
 				!this.isChatMounted && this.isChatVisible && this.toggleChat()
+			},
+			'$route.query.chatChannel' (newVal) {
+				newVal && !this.isChatVisible && this.toggleChat();
 			}
 		}
 	}

@@ -50,17 +50,18 @@
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
-					<span v-if="isCurrentUserAuthor && !readOnly">
+					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
+					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
 				</div>
 			</div>
 		</div>
-		 <div class="qna-answers">
+		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<div class="level">
 				<div class="level-left">
 					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -134,9 +135,19 @@
 			font-weight: $font-weight-black
 
 	.qna-answers
-		margin-left: $margin-huge
-		margin-top: $margin-base
 		margin: $margin-base $margin-huge $margin-huge $margin-huge
+		position: relative
+
+		&.disabled:before
+			background: $color-white-transparent
+			position: absolute
+			content: ' '
+			cursor: not-allowed
+			height: calc(100% + #{$margin-base} + #{$margin-huge})
+			left: -$margin-huge
+			top: -$margin-base
+			width: calc(100% + #{$margin-huge} + #{$margin-huge})
+			z-index: $z-index-overlay
 
 	.qna-thread.is-mobile
 		.qna-answers
@@ -174,20 +185,23 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import Delete from 'js/components/global/form/Delete'
+	import Resolve from 'js/components/global/form/Resolve'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/global/reactions/Vote'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import highlight from 'js/mixins/highlight'
 	import Watch from 'js/components/global/reactions/Watch'
-
+	import moderatorFeatures from 'js/perimeters/moderator'
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaQuestion',
 		mixins: [ highlight ],
+		perimeters: [moderatorFeatures],
 		components: {
 			'wnl-delete': Delete,
+			'wnl-resolve': Resolve,
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
@@ -288,7 +302,7 @@
 			}
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
+			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {

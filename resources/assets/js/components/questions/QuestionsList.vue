@@ -428,6 +428,7 @@
 						this.switchOverlay(false)
 					})
 					.then(() => this.reactionsFetched = true)
+					.then(() => this.fetchQuestionData(this.currentQuestion.id))
 					.catch(e => {
 						$wnl.logger.error(e)
 						this.fetchingFilters = false
@@ -447,6 +448,9 @@
 		watch: {
 			testQuestionsCount() {
 				this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount)
+			},
+			'$route.query.chatChannel' (newVal) {
+				newVal && !this.isChatVisible && this.toggleChat();
 			}
 		}
 	}

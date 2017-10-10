@@ -8,10 +8,25 @@ import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/m
 import * as types from 'js/store/mutations-types'
 import quizStore, {getLocalStorageKey} from 'js/services/quizStore'
 
+const _fetchQuestions = (requestParams) => {
+	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
+}
+
+const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,reactions,slides';
+
 function fetchQuizSet(id) {
-	return axios.get(
-		getApiUrl(`quiz_sets/${id}?include=quiz_questions.quiz_answers,quiz_questions.comments.profiles,reactions`)
-	)
+	return new Promise((resolve, reject) => {
+		_fetchQuestions({
+			filters: [{'quiz-set': {
+				'quiz_set_id': id,
+			}}],
+			include: DEFAULT_INCLUDE,
+		}).then(({data: data}) => {
+			resolve(data)
+		}).catch((err) => {
+			reject(err);
+		})
+	})
 }
 
 function fetchQuizSetStats(id) {
@@ -30,12 +45,12 @@ function _fetchQuestionsCollectionByTagName(tagName, ids) {
 			},
 			whereIn: ['id', ids],
 		},
-		include: 'quiz_answers,comments.profiles,reactions',
+		include: DEFAULT_INCLUDE,
 	})
 }
 
 function _fetchSingleQuestion(id) {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers,comments.profiles,reactions`))
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=${DEFAULT_INCLUDE}`))
 }
 
 function getInitialState() {
@@ -47,6 +62,7 @@ function getInitialState() {
 		questionsIds: [],
 		quiz_answers: {},
 		quiz_questions: {},
+		slides: {},
 		processing: false,
 		profiles: {},
 		setId: null,
@@ -65,11 +81,6 @@ const state = getInitialState()
 const getters = {
 	...commentsGetters,
 	...reactionsGetters,
-	getAnswers: (state) => (questionId) => {
-		return state.quiz_questions[questionId].quiz_answers.map(
-			(answerId) => state.quiz_answers[answerId]
-		)
-	},
 	getCurrentScore: (state, getters) => {
 		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
@@ -80,7 +91,8 @@ const getters = {
 			const quizQuestion = state.quiz_questions[id];
 			return {
 				...quizQuestion,
-				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId])
+				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId]),
+				slides: (quizQuestion.slides || []).map(slideId => state.slides[slideId])
 			}
 		})
 	},
@@ -100,12 +112,12 @@ const getters = {
 						...answer,
 						stats: Math.round((questionStats[answerId] || 0) / allHits * 100)
 					}
-				})
+				}),
+				slides: (quizQuestion.slides || []).map(slideId => state.slides[slideId])
 			}
 		})
 	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
-	getSelectedAnswer: (state, getters) => (id) => state.quiz_questions[id].selectedAnswer,
 	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
 	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
 	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
@@ -115,7 +127,6 @@ const getters = {
 	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0 && getters.hasQuestions,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
-	isResolved: (state) => (index) => state.quiz_questions[index].isResolved,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
 	questionsLength: (state) => state.questionsIds.length,
 }
@@ -227,7 +238,7 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setupQuestions({commit, rootGetters}, resource) {
+	setupQuestions({commit, rootGetters, getters, state}, resource) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		Promise.all([
@@ -235,20 +246,26 @@ const actions = {
 			fetchQuizSet(resource.id),
 			fetchQuizSetStats(resource.id)
 		]).then(([storedState, response, quizStats]) => {
-			let included = response.data.included,
-				questionsIds = response.data.quiz_questions,
-				len = questionsIds.length
+			const {included, ...quizQuestions} = response.data,
+				quizQuestionsOldWay = {};
 
-			commit(types.UPDATE_INCLUDED, included)
+			Object.values(quizQuestions).forEach((quizQuestion) => {
+				quizQuestionsOldWay[quizQuestion.id] = quizQuestion
+			})
+
+			const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
+				len = quizQuestionsIds;
+
+			commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay})
 
 			if (!_.isEmpty(storedState)) {
 				commit(types.QUIZ_RESTORE_STATE, storedState)
 			} else {
 				commit(types.QUIZ_SET_QUESTIONS, {
-					setId: response.data.id,
-					setName: response.data.name,
+					setId: resource.id,
+					setName: '',
 					len,
-					questionsIds,
+					questionsIds: quizQuestionsIds,
 				})
 			}
 			commit(types.QUIZ_TOGGLE_PROCESSING, false)

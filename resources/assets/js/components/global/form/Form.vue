@@ -97,7 +97,11 @@
 							hasAttachChanged && this.cacheAttach()
 						},
 						reason => {
-							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+							if (reason.response.status === 404) {
+								this.errorFading(this.$t('ui.error.notFound'))
+							} else {
+								this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+							}
 							this.$emit('submitError')
 						},
 					)

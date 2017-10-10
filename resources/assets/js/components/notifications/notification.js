@@ -64,6 +64,9 @@ export const notification = {
 		deleted() {
 			return !!this.message.deleted
 		},
+		resolved() {
+			return !!this.message.resolved
+		},
 		formattedTime () {
 			return timeFromS(this.message.timestamp)
 		},

@@ -18,6 +18,11 @@ class Coupon extends Model
 		return $this->hasOne('App\Models\StudyBuddy', 'code', 'code');
 	}
 
+	public function products()
+	{
+		return $this->belongsToMany('App\Models\Product');
+	}
+
 	public function getIsPercentageAttribute()
 	{
 		return $this->type === 'percentage';

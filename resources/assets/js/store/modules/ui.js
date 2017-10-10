@@ -150,6 +150,9 @@ const actions = {
 		setTimeout(() => {
 			commit(types.UI_SHOW_GLOBAL_NOTIFICATION, false)
 		}, timeout)
+	},
+	openChat({ commit }) {
+		commit(types.UI_SET_CHAT_OPEN);
 	}
 }
 

@@ -8,8 +8,8 @@
 	>
 		<li
 			class="autocomplete-box__item"
-			v-for="item in itemsForDisplay"
-			@click="onItemClicked(item)"
+			v-for="item in items"
+			@click="onItemChosen(item)"
 			v-bind:class="{ active: item.active }"
 			v-bind:key="item.id"
 		>
@@ -22,14 +22,19 @@
 	@import 'resources/assets/sass/variables'
 
 	.autocomplete-box
-		background: #fff
-		border: $border-light-gray
+		background: $autocomplete-box-background
+		border: $autocomplete-box-border
+		box-shadow: $autocomplete-box-shadow
 		bottom: 44px
-		color: #666
+		color: $autocomplete-text-color
 		left: 0
+		max-width: 300px
 		position: absolute
 		width: 100%
 		z-index: $z-index-autocomplete
+
+		&__text
+			padding: 5px 10px
 
 		&.is-down
 			bottom: auto
@@ -39,13 +44,18 @@
 			outline: none
 
 		&__item
+			align-items: center
 			cursor: pointer
-			padding: 10px 15px
 			display: flex
+			font-size: 12px
+			font-weight: 900
+			padding: 8px 10px
+			text-align: left
 
 			&:hover,
 			&.active
-				background: #f9f9f9
+				background: $autocomplete-active-item-background
+				color: $autocomplete-active-item-text-color
 
 		&__text
 			padding: 5px 10px
@@ -66,20 +76,16 @@
 			hasItems() {
 				return this.items && this.items.length
 			},
-			itemsForDisplay() {
-				return this.items
-			}
 		},
 		methods: {
-			onItemClicked(item) {
-				this.onItemChosen(item)
-			},
 			onKeyDown(evt) {
 				switch (evt.keyCode){
 					case 38:
+						evt.stopPropagation()
 						this.onArrowUp(evt)
 						break
 					case 40:
+						evt.stopPropagation()
 						this.onArrowDown(evt)
 						break
 					case 13:
@@ -88,52 +94,52 @@
 				}
 			},
 			onArrowUp() {
-				if (!this.items || !this.items.length) return
+				if (!this.hasItems) return
 
-				const activeItem = _.find(this.items, { active: true });
-				if (!activeItem || activeItem === this.items[0]) {
+				const activeIndex = this.getActiveItem();
+				if (activeIndex <= 0) {
 					this.$set(this.items[this.items.length - 1], 'active', true);
 				} else {
-					this.$set(this.items[this.items.indexOf(activeItem) - 1], 'active', true)
+					this.$set(this.items[activeIndex - 1], 'active', true)
 				}
 
-				if (activeItem) this.$set(activeItem, 'active', false)
+				if (activeIndex >= 0) this.$set(this.items[activeIndex], 'active', false)
 
 				//Something would steal the focus back to the Quill input when if we'd do it synchronously
 				this.$nextTick(() => { this.$el.focus(); })
 			},
 			onArrowDown() {
-				if (!this.items || !this.items.length) return
+				if (!this.hasItems) return
 
-				const activeItem = _.find(this.items, { active: true });
+				const activeIndex = this.getActiveItem();
 
-				if (!activeItem || activeItem === this.items[this.items.length - 1]) {
+				if (activeIndex < 0 || activeIndex === this.items.length - 1) {
 					this.$set(this.items[0], 'active', true)
 				} else {
-					this.$set(this.items[this.items.indexOf(activeItem) + 1], 'active', true)
+					this.$set(this.items[activeIndex + 1], 'active', true)
 				}
 
-				if (activeItem) this.$set(activeItem, 'active', false)
+				if (activeIndex > -1) this.$set(this.items[activeIndex], 'active', false)
 
 				//Something would steal the focus back to the Quill input when if we'd do it synchronously
 				this.$nextTick(() => { this.$el.focus(); })
 			},
 
 			onEnter(evt) {
-				const activeItem = _.find(this.items, { active: true });
+				const activeIndex = this.getActiveItem();
 
-				if (!activeItem) return
+				if (activeIndex < 0) return
 
-				this.$set(activeItem, 'active', false)
-				this.onItemClicked(activeItem)
+				this.$set(this.items[activeIndex], 'active', false)
+				this.onItemChosen(this.items[activeIndex])
 
 				evt.preventDefault();
 				evt.stopPropagation();
 				return false
 			},
 
-			onEsc(evt) {
-				this.$set(this, 'items', null)
+			getActiveItem() {
+				return this.items.findIndex((item) => item.active)
 			}
 		}
 	}

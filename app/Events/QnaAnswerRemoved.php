@@ -1,53 +1,43 @@
 <?php
 
-namespace App\Events\Qna;
+namespace App\Events;
 
 use Request;
-use App\Events\Event;
 use App\Models\QnaAnswer;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
 use App\Events\SanitizesUserContent;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class AnswerPosted extends Event
+class QnaAnswerRemoved extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels,
 		SanitizesUserContent,
 		EventContextTrait;
 
 	public $qnaAnswer;
+
+	public $userId;
 
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param QnaAnswer $qnaAnswer
 	 */
-	public function __construct(QnaAnswer $qnaAnswer)
+	public function __construct(QnaAnswer $qnaAnswer, $userId)
 	{
 		parent::__construct();
 		$this->qnaAnswer = $qnaAnswer;
-	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
+		$this->userId = $userId;
 	}
 
 	public function transform()
 	{
 		$this->data = [
-			'event'   => 'qna-answer-posted',
+			'event'   => 'qna-answer-deleted',
 			'objects' => [
 				'author' => $this->qnaAnswer->question->user->id,
 				'type' => 'qna_question',
@@ -60,11 +50,7 @@ class AnswerPosted extends Event
 				'text' => $this->sanitize($this->qnaAnswer->text),
 			],
 			'actors'  => [
-				'id'         => $this->qnaAnswer->user->id,
-				'first_name' => $this->qnaAnswer->user->profile->first_name,
-				'last_name'  => $this->qnaAnswer->user->profile->last_name,
-				'full_name'  => $this->qnaAnswer->user->profile->full_name,
-				'avatar'     => $this->qnaAnswer->user->profile->avatar_url,
+				'id' => $this->userId
 			],
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($this->qnaAnswer)

@@ -16,7 +16,7 @@
 				<span>Ukryj czat</span>
 			</span>
 		</a>
-		<wnl-chat :room="currentRoom"></wnl-chat>
+		<wnl-chat :room="currentRoom" :switchRoom="changeRoom"></wnl-chat>
 	</div>
 </template>
 
@@ -77,6 +77,7 @@
 			...mapGetters('course', ['getLesson']),
 			chatTitle() {
 				let lessonId = this.$route.params.lessonId
+
 				if(typeof lessonId === 'undefined') {
 					return 'Ogólny czat kursu'
 				}
@@ -90,7 +91,7 @@
 				this.currentRoom = room
 			},
 			isActive(room){
-				return room.channel === this.currentChannel
+				return room.channel === this.currentRoom.channel
 			},
 			getCurrentRoom() {
 				const query = this.$route.query
@@ -123,7 +124,7 @@
 			'rooms' (newValue, oldValue) {
 				if (newValue.length === oldValue.length) return
 				this.changeRoom(newValue[0])
-			}
+			},
 		}
 	}
 </script>

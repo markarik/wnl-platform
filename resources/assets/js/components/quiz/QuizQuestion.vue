@@ -68,13 +68,12 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
-				<div v-if="question.explanation" class="card-item" @click="toggleExplanation">
+				<div v-if="question.explanation" class="card-item">
 					<header>
 						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
-						<span v-t="'quiz.annotations.explanation.header'"/>
-						<a class="secondary-link">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+						<span v-t="'quiz.annotations.explanation.header'"/>&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<p :class="{'collapsed': !showExplanation}">{{explanation}}</p>
+					<div :class="{'collapsed': !showExplanation}" v-html="explanation"></div>
 				</div>
 				<div v-if="hasSlides" class="card-item">
 					<header @click="toggleSlidesList">
@@ -123,7 +122,7 @@
 			padding-left: $margin-base
 
 		.collapsed
-			height: 2em
+			height: 1em
 			overflow: hidden
 
 		.collapsed:after

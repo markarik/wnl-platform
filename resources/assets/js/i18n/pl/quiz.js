@@ -11,7 +11,7 @@ export const quiz = {
 			header: 'Powiązane slajdy'
 		},
 		explanation: {
-			header: 'Objaśnienie'
+			header: 'Wyjaśnienie'
 		}
 	}
 }

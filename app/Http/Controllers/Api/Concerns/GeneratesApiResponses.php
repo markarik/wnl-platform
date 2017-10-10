@@ -88,6 +88,14 @@ trait GeneratesApiResponses
 			->json();
 	}
 
+	protected function respondUnprocessableEntity($data = [], $message = '')
+	{
+		return $this
+			->setMessage($message ?? 'Unprocessable Entity')
+			->setStatusCode(422)
+			->json($data);
+	}
+
 	protected function respondNotImplemented($message = null)
 	{
 		return $this

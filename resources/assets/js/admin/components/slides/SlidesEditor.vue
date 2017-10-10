@@ -147,7 +147,7 @@
 
 				const isValid = this.validateContent(this.form.content)
 				if (!isValid) {
-					this.errorFading('Upewnij się że slajd posiada tag <section> na początku i </section> na końcu')
+					this.errorFading('Upewnij się że slajd posiada tag section na początku i na końcu treści')
 					this.loading = false;
 					this.submissionFailed = true
 					return;

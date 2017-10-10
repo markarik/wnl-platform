@@ -22,6 +22,13 @@ class AnswerPostedHandler
 		$gate->notifyPrivate($user, $event);
 
 		$excluded = $this->notifyCollaborators($answer, $gate, $event);
+
+		$watchers = $this->notifyWatchers($answer, $gate, $event);
+
+		forEach($watchers as $watcher) {
+			$excluded->push($watcher);
+		}
+
 		$excluded->push($user);
 
 		$gate->notifyPrivateStream($excluded->pluck('id')->toArray(), $event);
@@ -45,12 +52,14 @@ class AnswerPostedHandler
 	}
 
 
-	protected function notifyWatchers($commentable, $gate, $event, $excluded)
+	protected function notifyWatchers($answer, $gate, $event)
 	{
 		$reaction = \App\Models\Reaction::type('watch');
+
 		$reactables = \App\Models\Reactable::select()
 			->where('reaction_id', $reaction->id)
-			->where('reactable_type', '\\App\\Models\\QnaQuestion')
+			->where('reactable_type', 'App\\Models\\QnaQuestion')
+			->where('reactable_id', $answer->question->id)
 			->get();
 
 		$userIds = $reactables->pluck('user_id')->toArray();
@@ -60,7 +69,7 @@ class AnswerPostedHandler
 		foreach ($users as $user) {
 			$gate->notifyPrivate($user, $event);
 		}
-		
+
 		return $users;
 	}
 }

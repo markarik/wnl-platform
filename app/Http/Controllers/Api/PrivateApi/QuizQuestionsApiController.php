@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Filters\Quiz\ResolutionFilter;
 use Illuminate\Http\Request;
 use App\Models\Taxonomy;
 use Auth;
+use App\Events\QuizQuestionEdited;
 
 class QuizQuestionsApiController extends ApiController
 {
@@ -92,6 +93,8 @@ class QuizQuestionsApiController extends ApiController
 			'explanation' => $request->input('explanation'),			
 			'preserve_order' => $request->input('preserve_order')
 		]);
+
+		event(new QuizQuestionEdited($question));
 
 		return $this->respondOk();
 	}

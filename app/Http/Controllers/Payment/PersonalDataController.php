@@ -180,7 +180,9 @@ class PersonalDataController extends Controller
 
 	protected function addCoupon($order, $coupon)
 	{
-		if (!$coupon->products->contains($order->product)) {
+		if ($coupon->products->count() > 0 &&
+			!$coupon->products->contains($order->product)
+		) {
 			return;
 		}
 

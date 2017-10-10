@@ -53,6 +53,7 @@ class UseCoupon extends FormRequest
 					trans('payment.voucher-is-invalid')
 				);
 			}
+
 			if ($limitReached) {
 				$validator->errors()->add(
 					'code',
@@ -75,7 +76,9 @@ class UseCoupon extends FormRequest
 		$orderId = $this->route('id');
 		$order = $user->orders()->find($orderId);
 
-		return $coupon->products->contains($order->product);
+		return
+			$coupon->products->count() > 0 &&
+			$coupon->products->contains($order->product);
 	}
 
 	protected function validateVoucher($code)

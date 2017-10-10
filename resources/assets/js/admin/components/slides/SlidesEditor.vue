@@ -100,6 +100,9 @@
 	import _ from 'lodash'
 	import { alerts } from 'js/mixins/alerts'
 
+	const SECTION_OPEN_TAG_REGEX = /<section.*>$/
+	const SECTION_CLOSE_TAG_REGEX = /<\/section>$/
+
 	export default {
 		name: 'SlideEditor',
 		components: {
@@ -141,6 +144,14 @@
 			onSubmit() {
 				this.loading = true
 				this.reset()
+
+				const isValid = this.validateContent(this.form.content)
+				if (!isValid) {
+					this.errorFading('Upewnij się że slajd posiada tag section na początku i na końcu treści')
+					this.loading = false;
+					this.submissionFailed = true
+					return;
+				}
 				this.form.put(this.resourceUrl)
 						.then(response => {
 							this.saved = true
@@ -150,6 +161,15 @@
 							this.submissionFailed = true
 							this.loading = false
 						})
+			},
+			validateContent(content) {
+				const contentSplited = content
+					.split('\n')
+					.map(line => line.trim())
+					.filter(line => line);
+
+				return SECTION_OPEN_TAG_REGEX.test(contentSplited[0])
+					&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1])
 			},
 			getSlide() {
 				let exclude = ['snippet']

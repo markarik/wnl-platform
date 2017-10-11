@@ -48,13 +48,16 @@ class StudyBuddyList extends Command
 			$studyBuddies = StudyBuddy::where('status', $status)->get();
 		}
 
-		$headers = ['user_id', 'order_id', 'code', 'status'];
+		$headers = ['order_id', 'user_id', 'user email', 'user name', 'payment method', 'code', 'status'];
 		$rows = [];
 
 		foreach ($studyBuddies as $studyBuddy) {
 			$rows[] = [
-				$studyBuddy->order->user->id,
 				$studyBuddy->order_id,
+				$studyBuddy->order->user->id,
+				$studyBuddy->order->user->email,
+				$studyBuddy->order->user->full_name,
+				$studyBuddy->order->method,
 				$studyBuddy->code,
 				$studyBuddy->status,
 			];

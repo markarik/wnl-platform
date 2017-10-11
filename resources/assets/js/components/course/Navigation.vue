@@ -255,7 +255,7 @@
 
 				return navigation.composeItem({
 					text: subsection.name,
-					itemClass: 'small subitem todo',
+					itemClass: 'small subitem--second todo',
 					routeName: resource('screens'),
 					routeParams: params,
 					method: 'replace',

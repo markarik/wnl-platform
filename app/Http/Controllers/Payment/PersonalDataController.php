@@ -191,7 +191,9 @@ class PersonalDataController extends Controller
 			return;
 		}
 
-		if ($coupon->times_usable < 1) {
+		if ($coupon->times_usable < 1 &&
+			$coupon->times_usable !== null
+		) {
 			return;
 		}
 

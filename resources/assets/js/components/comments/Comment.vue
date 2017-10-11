@@ -21,7 +21,8 @@
 					></wnl-delete>
 				</span>
 			</div>
-		</div>
+			<slot></slot>
+	</div>
 	</article>
 </template>
 
@@ -81,6 +82,6 @@
 			onDeleteSuccess() {
 				this.$emit('removeComment', this.id)
 			}
-		}
+		},
 	}
 </script>

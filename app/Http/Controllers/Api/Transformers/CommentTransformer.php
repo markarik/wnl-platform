@@ -6,9 +6,12 @@ namespace App\Http\Controllers\Api\Transformers;
 
 use App\Models\Comment;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Traits\EventContextTrait;
 
 class CommentTransformer extends ApiTransformer
 {
+
+	use EventContextTrait;
 	protected $parent;
 
 	protected $availableIncludes = ['profiles'];
@@ -34,6 +37,11 @@ class CommentTransformer extends ApiTransformer
 			$data = array_merge($data, $this->parent);
 		}
 
+		if (self::shouldInclude('context')) {
+			$context = $this->addEventContext($comment->commentable);
+			$data = array_merge($data, compact('context'));
+		}
+		
 		return $data;
 	}
 

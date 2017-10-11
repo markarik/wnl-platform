@@ -13,35 +13,14 @@
 		</div>
 		<h1>KOMENTARZE</h1>
 		<hr>
-
-		<ul>
-			<li v-for="comment in comments">
-				<div v-html="comment.text"/>
-				<hr>
-			</li>
-		</ul>
-
-		<h1>QNA_ANSWERS</h1>
-		<hr>
-
-		<ul>
-			<li v-for="qna_answer in qna_answers">
-				<div v-html="qna_answer.text"/>
-				<div>{{ this.answerReactionsLength }}</div>
-				<hr>
-			</li>
-		</ul>
-
-		<h1>QNA_QUESTIONS</h1>
-		<hr>
-
-		<ul>
-			<li v-for="qna_question in qna_questions">
-				<div v-html="qna_question.text"/>
-
-				<hr>
-			</li>
-		</ul>
+		<wnl-comment
+			v-for="comment in commentsCompetency.data"
+			:comment="comment"
+			:key="comment.id"
+			:profile="profile"
+		>
+		<router-link :to="{ name: comment.context.name, params: comment.context.params }">Pokaż kontekst</router-link>
+		</wnl-comment>
 	</div>
 </template>
 
@@ -57,6 +36,7 @@
 	import { mapActions, mapGetters } from 'vuex'
 
     import Avatar from 'js/components/global/Avatar'
+	import Comment from 'js/components/comments/Comment'
 	import Upload from 'js/components/global/Upload'
 	import { Form, Text } from 'js/components/global/form'
 	import { isProduction } from 'js/utils/env'
@@ -67,21 +47,19 @@
 		components: {
 			'wnl-user-background': UserBackground,
             'wnl-avatar': Avatar,
+			'wnl-comment': Comment,
 			'wnl-form': Form,
 			'wnl-form-text': Text,
 			'wnl-upload': Upload,
 		},
-		props: ['response', 'competency'],
+		props: ['response', 'commentsCompetency'],
 		data() {
 			return {
 				loading: false,
 				hideDefaultSubmit: true,
 				id: this.$route.params.userId,
 				disableInput: true,
-				comments: this.competency.data.competency.comments,
-				qna_answers: this.competency.data.competency.qna_answers,
-				answerReactionsLength: this.competency.data.competency.qna_answers[0].reactions.length,
-				qna_questions: this.competency.data.competency.qna_questions,
+				profile: this.response.data
 			}
 		},
 		computed: {
@@ -99,7 +77,8 @@
 			}
 		},
 		mounted() {
-			console.log(this.sorted);
+			// debugger
+			// console.log(this.sorted);
 		}
 	}
 </script>

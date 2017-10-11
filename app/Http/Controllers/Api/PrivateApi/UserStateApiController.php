@@ -21,6 +21,7 @@ class UserStateApiController extends ApiController
 {
 
 	use EventContextTrait;
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
@@ -173,28 +174,6 @@ class UserStateApiController extends ApiController
 			$stats['lessons']['completed'] = $completedCount;
 			$stats['lessons']['started'] = $startedCount;
 		}
-
-		return $this->json($stats);
-	}
-
-	public function getCompetencyStats(Request $request, $user) {
-		$userComments = Comment::where('user_id', $user)->get();
-		$qnaQuestionsPosted = QnaQuestion::with(['reactions'])->where('user_id', $user)->get();
-		$qnaAnswersPosted = QnaAnswer::with(['reactions'])->where('user_id', $user)->get();
-
-		foreach ($userComments as $comment) {
-			$userCommentable = $comment->commentable;
-			$userCommentContext = $this->addEventContext($userCommentable);
-			$comment->context = $userCommentContext;
-		}
-
-		$stats = [
-			'competency' => [
-				'comments' => $userComments,
-				'qna_questions' => $qnaQuestionsPosted,
-				'qna_answers' => $qnaAnswersPosted
-			],
-		];
 
 		return $this->json($stats);
 	}

@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-app-layout">
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile v-if="responseCondition" :response="response" :competency="competency"></wnl-user-profile>
+			<wnl-user-profile v-if="responseCondition" :response="response" :commentsCompetency="commentsCompetency"></wnl-user-profile>
 		</div>
 	</div>
 </template>
@@ -45,7 +45,7 @@
 			return {
 				param: this.$route.params.userId,
 				response: {},
-				competency: {},
+				commentsCompetency: {},
 			}
 		},
 		computed: {
@@ -73,13 +73,20 @@
 			}
 		},
 		mounted() {
+			const data = {
+				query: {
+					where: [[ 'user_id', this.param ]]
+				},
+				include: 'context'
+			}
 			const promisedProfile = axios.get(getApiUrl(`users/${this.param}/profile`))
-			const promisedCompetency = axios.get(getApiUrl(`users/${this.param}/competency/stats`))
-
-			Promise.all([promisedProfile, promisedCompetency])
+			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), data)
+			// const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna-questions/.search`))
+			
+			Promise.all([promisedProfile, promisedCommentsCompetency])
 			.then(([profile, competency]) => {
 				this.response = profile
-				this.competency = competency
+				this.commentsCompetency = competency
 			})
 			.catch(exception => $wnl.logger.capture(exception))
 		},

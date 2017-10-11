@@ -199,10 +199,6 @@ class Parser
 			if (array_key_exists('section', $this->courseModels)) {
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
 
-				Log::debug('LAST SECTION');
-				Log::debug($lastSectionFound);
-				Log::debug('CURRENT SECTION');
-				Log::debug($this->courseModels['section']);
 				if ($lastSectionFound === null) {
 					$lastSectionFound = $this->courseModels['section'];
 				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {

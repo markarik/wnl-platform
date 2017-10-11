@@ -68,8 +68,15 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
-				<div v-if="hasSlides" class="slides-list">
-					<header @click="toggleSlidesList" class="slides-list-header">
+				<div v-if="question.explanation" class="card-item relative">
+					<header>
+						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
+						<span v-t="'quiz.annotations.explanation.header'"/>&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+					</header>
+					<div :class="{'collapsed': !showExplanation}" v-html="explanation"></div>
+				</div>
+				<div v-if="hasSlides" class="card-item">
+					<header @click="toggleSlidesList">
 						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
 						{{$t('quiz.annotations.slides.header')}} ({{slides.length}})
 						&nbsp;·&nbsp;
@@ -79,7 +86,7 @@
 						{{slideLink(slide)}}
 					</wnl-slide-link>
 				</div>
-				<div class="quiz-question-comments">
+				<div class="card-item">
 					<wnl-comments-list
 						commentableResource="quiz_questions"
 						urlParam="quiz_question"
@@ -97,8 +104,12 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
-	.slides-list
+	.relative
+		position: relative
+	.card-item
 		border-bottom: 1px solid #dbdbdb
+		padding: $margin-small $margin-big $margin-base
+		width: 100%
 
 		header
 			color: $color-gray-dimmed
@@ -110,6 +121,21 @@
 		.slide-list-item
 			font-size: 0.825em
 			padding-left: $margin-base
+
+		.collapsed
+			height: 1em
+			overflow: hidden
+
+		.collapsed:after
+			content: ''
+			position: absolute
+			width: 100%
+			height: 2em
+			display: block
+			left: 0
+			bottom: $margin-base
+			+gradient-vertical(rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 100%)
+
 
 	.card-content ul
 		counter-reset: list
@@ -217,9 +243,7 @@
 			.icon:first-child
 				margin-left: $margin-small
 
-	.quiz-question-comments, .slides-list
-		padding: $margin-small $margin-big $margin-base
-		width: 100%
+
 
 	.has-errors .is-unanswered
 		color: $color-orange
@@ -246,7 +270,8 @@
 		data() {
 			return {
 				reactableResource: "quiz_questions",
-				slidesExpanded: false
+				slidesExpanded: false,
+				showExplanation: false
 			}
 		},
 		computed: {
@@ -275,6 +300,9 @@
 			},
 			hasSlides() {
 				return (this.question.slides || []).length
+			},
+			explanation() {
+				return this.question.explanation
 			}
 		},
 		methods: {
@@ -289,6 +317,9 @@
 			},
 			toggleSlidesList() {
 				this.slidesExpanded = !this.slidesExpanded
+			},
+			toggleExplanation() {
+				this.showExplanation = !this.showExplanation
 			},
 			slideLink(slide) {
 				let linkText = ''

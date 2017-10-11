@@ -103,7 +103,8 @@ class PersonalDataController extends Controller
 
 		$userCoupon = $user->coupons->first();
 		if (session()->has('coupon')) {
-			$this->addCoupon($order, session()->get('coupon'));
+			$coupon = session()->get('coupon')->fresh();
+			$this->addCoupon($order, $coupon);
 		} elseif ($userCoupon) {
 			$this->addCoupon($order, $userCoupon);
 		} elseif ($order->product->slug !== 'wnl-album') {
@@ -190,7 +191,12 @@ class PersonalDataController extends Controller
 			return;
 		}
 
+		if ($coupon->times_usable < 1 &&
+			$coupon->times_usable !== null
+		) {
+			return;
+		}
+
 		$order->attachCoupon($coupon);
-		session()->forget('coupon');
 	}
 }

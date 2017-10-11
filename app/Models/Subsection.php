@@ -9,7 +9,7 @@ class Subsection extends Model
 {
 	use Cached;
 
-	protected $fillable = ['name', 'screen_id'];
+	protected $fillable = ['name', 'section_id'];
 
 	public function slides() {
 		return $this->morphToMany('\App\Models\Slide', 'presentable');

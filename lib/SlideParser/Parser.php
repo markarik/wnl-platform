@@ -96,6 +96,7 @@ class Parser
 		Log::debug('Parsing...');
 		$names = [];
 		$slideshowTag = Tag::firstOrCreate(['name' => 'Prezentacja']);
+		$lastSectionFound = null;
 
 		foreach ($slides as $currentSlide => $slideHtml) {
 			$iteration++;
@@ -116,7 +117,6 @@ class Parser
 
 			$foundCourseTags = [];
 			$foundQuestionsIds = [];
-			$lastSectionFound = null;
 
 			foreach ($tags as $tagName => $tagValue) {
 				$searchResult = $this->courseTags->search($tagName);
@@ -199,7 +199,9 @@ class Parser
 			if (array_key_exists('section', $this->courseModels)) {
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
 
-				if ($lastSectionFound !== $this->courseModels['section']) {
+				if ($lastSectionFound === null) {
+					$lastSectionFound = $this->courseModels['section'];
+				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {
 					$lastSectionFound = $this->courseModels['section'];
 					unset($this->courseModels['subsection']);
 				}

@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Slide;
 use App\Models\Lesson;
 use App\Models\Section;
+use App\Models\Subsection;
 use App\Models\Slideshow;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -77,6 +78,7 @@ class Parser
 			0 => 'group',
 			1 => 'lesson',
 			2 => 'section',
+			3 => 'subsection'
 		]);
 	}
 
@@ -174,6 +176,16 @@ class Parser
 					]);
 					$this->courseModels['section'] = $section;
 				}
+
+				if ($courseTag['name'] == 'subsection') {
+					Log::debug($this->courseModels['section']->id);
+
+					$subsection = Subsection::firstOrCreate([
+						'name'      => $this->cleanName($courseTag['value']),
+						'section_id' => $this->courseModels['section']->id,
+					]);
+					$this->courseModels['subsection'] = $subsection;
+				}
 			}
 
 			if ($this->lessonTag) {
@@ -187,6 +199,10 @@ class Parser
 			}
 			if (array_key_exists('section', $this->courseModels)) {
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
+			}
+
+			if (array_key_exists('subsection', $this->courseModels)) {
+				$this->courseModels['subsection']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 
 			if (!empty($foundQuestionsIds)) {

@@ -178,9 +178,7 @@ class Parser
 				}
 
 				if ($courseTag['name'] == 'subsection') {
-					Log::debug('*******');
 					Log::debug($this->courseModels['section']->id);
-					Log::debug('*******');
 
 					$subsection = Subsection::firstOrCreate([
 						'name'      => $this->cleanName($courseTag['value']),

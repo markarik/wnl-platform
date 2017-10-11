@@ -123,6 +123,10 @@ class PersonalDataController extends Controller
 			'times_usable' => 0,
 		]);
 
+		$coupon->products()->attach(
+			Product::whereIn('slug', ['wnl-online', 'wnl-online-onsite'])->get()
+		);
+
 		$order->studyBuddy()->create([
 			'code' => $coupon->code,
 		]);
@@ -187,5 +191,6 @@ class PersonalDataController extends Controller
 		}
 
 		$order->attachCoupon($coupon);
+		session()->forget('coupon');
 	}
 }

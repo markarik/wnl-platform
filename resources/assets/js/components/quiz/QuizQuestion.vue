@@ -113,7 +113,6 @@
 
 		header
 			color: $color-gray-dimmed
-			cursor: pointer
 			font-size: $font-size-minus-1
 			margin-bottom: $margin-base
 			margin-top: $margin-base

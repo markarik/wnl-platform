@@ -42,4 +42,15 @@ class SectionsTransformer extends ApiTransformer
 		return $data;
 	}
 
+	public function includeSubsection(Section $section) {
+		$subsections = $section->subsections;
+
+		$meta = collect([
+			'sectionId' => $section->id,
+		]);
+		$meta = $meta->merge($this->parent);
+
+		return $this->collection($subsections, new SubsectionsTransformer($meta), 'subsections');
+	}
+
 }

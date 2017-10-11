@@ -8,7 +8,7 @@ import * as types from 'js/store/mutations-types'
 // Helper functions
 function getCourseApiUrl(courseId) {
 	return getApiUrl(
-		`${resource('editions')}/${courseId}?include=${resource('groups')}.${resource('lessons')}.${resource('screens')}.${resource('sections')}`
+		`${resource('editions')}/${courseId}?include=${resource('groups')}.${resource('lessons')}.${resource('screens')}.${resource('sections')}.subsections`
 	)
 }
 

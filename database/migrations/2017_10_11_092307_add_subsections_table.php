@@ -15,9 +15,9 @@ class AddSubsectionsTable extends Migration
 	{
 		Schema::create('subsections', function (Blueprint $table) {
 			$table->increments('id');
-			$table->unsignedInteger('slide_id');
-			$table->unsignedInteger('quiz_question_id');
-			$table->timestamps();
+            $table->string('name');
+            $table->unsignedInteger('section_id');
+            $table->timestamps();
 		});
 	}
 

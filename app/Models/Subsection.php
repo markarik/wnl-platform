@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 
-class Section extends Model
+class Subsection extends Model
 {
 	use Cached;
 
@@ -15,13 +15,8 @@ class Section extends Model
 		return $this->morphToMany('\App\Models\Slide', 'presentable');
 	}
 
-	public function screen()
+	public function section()
 	{
-		return $this->belongsTo('App\Models\Screen');
-	}
-
-	public function subsections()
-	{
-		return $this->hasMany('\App\Models\Subsection');
+		return $this->belongsTo('App\Models\Section');
 	}
 }

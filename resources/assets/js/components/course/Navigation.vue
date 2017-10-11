@@ -142,6 +142,15 @@
 						sectionsIds.forEach((sectionId, index) => {
 							let section = this.structure[resource('sections')][sectionId]
 							navigation.push(this.getSectionItem(section))
+
+							if (section.hasOwnProperty('subsections')) {
+								let subsectionsIds = section.subsections
+
+								subsectionsIds.forEach((subsectionId, index) => {
+									let subsection = this.structure['subsections'][subsectionId]
+									navigation.push(this.getSubsectionItem(subsection, section))
+								});
+							}
 						});
 					}
 				});
@@ -234,6 +243,27 @@
 					completed: !!sections[section.id],
 					active: isSectionActive,
 					meta: `(${section.slidesCount})`
+				})
+			},
+			getSubsectionItem(subsection, section) {
+				const params = {
+					courseId: subsection[resource('editions')],
+					lessonId: subsection[resource('lessons')],
+					screenId: subsection[resource('screens')],
+					slide: subsection.slide,
+				};
+
+				return navigation.composeItem({
+					text: subsection.name,
+					itemClass: 'small subitem todo',
+					routeName: resource('screens'),
+					routeParams: params,
+					method: 'replace',
+					iconClass: 'fa-angle-right',
+					iconTitle: subsection.name,
+					completed: false,
+					active: false,
+					meta: `(${subsection.slidesCount})`
 				})
 			}
 		},

@@ -42,6 +42,8 @@ class ConfirmOrderController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
+		session()->forget(['coupon', 'product']);
+
 		return redirect(url('/app/myself/orders?payment'));
 	}
 

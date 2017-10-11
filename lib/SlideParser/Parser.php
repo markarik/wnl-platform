@@ -116,6 +116,7 @@ class Parser
 
 			$foundCourseTags = [];
 			$foundQuestionsIds = [];
+			$lastSectionFound = null;
 
 			foreach ($tags as $tagName => $tagValue) {
 				$searchResult = $this->courseTags->search($tagName);
@@ -178,8 +179,6 @@ class Parser
 				}
 
 				if ($courseTag['name'] == 'subsection') {
-					Log::debug($this->courseModels['section']->id);
-
 					$subsection = Subsection::firstOrCreate([
 						'name'      => $this->cleanName($courseTag['value']),
 						'section_id' => $this->courseModels['section']->id,
@@ -199,6 +198,11 @@ class Parser
 			}
 			if (array_key_exists('section', $this->courseModels)) {
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
+
+				if ($lastSectionFound !== $this->courseModels['section']) {
+					$lastSectionFound = $this->courseModels['section'];
+					unset($this->courseModels['subsection']);
+				}
 			}
 
 			if (array_key_exists('subsection', $this->courseModels)) {

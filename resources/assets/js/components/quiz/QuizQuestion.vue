@@ -68,7 +68,7 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
-				<div v-if="question.explanation" class="card-item">
+				<div v-if="question.explanation" class="card-item relative">
 					<header>
 						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
 						<span v-t="'quiz.annotations.explanation.header'"/>&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
@@ -104,10 +104,11 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	.relative
+		position: relative
 	.card-item
 		border-bottom: 1px solid #dbdbdb
 		padding: $margin-small $margin-big $margin-base
-		position: relative
 		width: 100%
 
 		header

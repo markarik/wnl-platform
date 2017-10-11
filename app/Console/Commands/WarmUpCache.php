@@ -44,6 +44,6 @@ class WarmUpCache extends Command
 	{
 		Cache::tags('lessons')->flush();
 
-		$pinger->ping('/papi/v1/editions/1?include=groups.lessons.screens.sections');
+		$pinger->ping('/papi/v1/editions/1?include=groups.lessons.screens.sections.subsections');
 	}
 }

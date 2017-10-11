@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 use DB;
-use App\Models\Section;
+use App\Models\Subsection;
 use App\Http\Controllers\Api\ApiTransformer;
 
 class SubsectionsTransformer extends ApiTransformer
@@ -17,15 +17,16 @@ class SubsectionsTransformer extends ApiTransformer
 		$this->parent = collect($parentData);
 	}
 
-	public function transform(Section $section)
+	public function transform(Subsection $subsection)
 	{
 		$subsectionSlides = DB::table('presentables')
 			->select('order_number')
 			->where('presentable_type', 'App\Models\Subsection')
-			->where('presentable_id', $section->id)
+			->where('presentable_id', $subsection->id)
+			->orderBy('order_number', 'asc')
 			->get(['order_number']);
 
-		$firstSlideNumber = $subsectionSlides->orderBy('order_number', 'asc')->first()->order_number;
+		$firstSlideNumber = $subsectionSlides->first()->order_number;
 		$slidesCount = $subsectionSlides->count();
 
 		$data = [
@@ -35,7 +36,7 @@ class SubsectionsTransformer extends ApiTransformer
 			'groups'      => $this->parent->get('groupId') ?? $subsection->section->screen->lesson->group->id,
 			'editions'    => $this->parent->get('editionId'),
 			'screens'     => $subsection->section->screen_id,
-			'section'     => $subsection->section->screen_id,
+			'sections'    => $subsection->section->id,
 			'slide'       => $firstSlideNumber + 1,
 			'slidesCount' => $slidesCount,
 		];

@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ApiTransformer;
 
 class SectionsTransformer extends ApiTransformer
 {
-	protected $availableIncludes = [];
+	protected $availableIncludes = ['subsections'];
 	protected $parent;
 
 	public function __construct($parentData = [])
@@ -42,7 +42,7 @@ class SectionsTransformer extends ApiTransformer
 		return $data;
 	}
 
-	public function includeSubsection(Section $section) {
+	public function includeSubsections(Section $section) {
 		$subsections = $section->subsections;
 
 		$meta = collect([

@@ -9,6 +9,9 @@ export const quiz = {
 		slides: {
 			defaultLink: 'Przejdź do slajdu...',
 			header: 'Powiązane slajdy'
+		},
+		explanation: {
+			header: 'Wyjaśnienie'
 		}
 	}
 }

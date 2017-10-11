@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Slide;
 use App\Models\Lesson;
 use App\Models\Section;
+use App\Models\Subsection;
 use App\Models\Slideshow;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -30,14 +31,31 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
+	const IMAGE_PATTERN = '/<img.*data-src="(.*)".*>/';
+
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
 		'movie' => '/<iframe.*youtube\.com.*>/',
 		'audio' => '/<iframe.*clyp.it.*>/',
 	];
 
+	const IMAGE_VIEWER_TEMPLATE = '
+		<div class="iv-image-container">
+			<img src="%s" class="chart">
+			<a class="iv-image-fullscreen" title="Pełen ekran">
+				<span class="fullscreen-icon">
+					<span class="inner"></span>
+					<span class="horizontal"></span>
+					<span class="vertical"></span>
+				</span>
+			</a>
+		</div>';
+
+	const GIF_TEMPLATE = '<img src="%s" class="gif">';
+
 	protected $categoryTags;
 	protected $courseTags;
+	protected $questionTag = 'question';
 	protected $categoryModels = [];
 	protected $courseModels = [];
 	protected $lessonTag;
@@ -60,6 +78,7 @@ class Parser
 			0 => 'group',
 			1 => 'lesson',
 			2 => 'section',
+			3 => 'subsection'
 		]);
 	}
 
@@ -96,10 +115,16 @@ class Parser
 			$tags = $this->getTags($slideHtml);
 
 			$foundCourseTags = [];
+			$foundQuestionsIds = [];
+
 			foreach ($tags as $tagName => $tagValue) {
 				$searchResult = $this->courseTags->search($tagName);
 				if ($searchResult !== false) {
 					$foundCourseTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
+				}
+
+				if ($tagName === $this->questionTag) {
+					$foundQuestionsIds[] = $tagValue;
 				}
 			}
 			ksort($foundCourseTags);
@@ -151,6 +176,16 @@ class Parser
 					]);
 					$this->courseModels['section'] = $section;
 				}
+
+				if ($courseTag['name'] == 'subsection') {
+					Log::debug($this->courseModels['section']->id);
+
+					$subsection = Subsection::firstOrCreate([
+						'name'      => $this->cleanName($courseTag['value']),
+						'section_id' => $this->courseModels['section']->id,
+					]);
+					$this->courseModels['subsection'] = $subsection;
+				}
 			}
 
 			if ($this->lessonTag) {
@@ -166,49 +201,16 @@ class Parser
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 
+			if (array_key_exists('subsection', $this->courseModels)) {
+				$this->courseModels['subsection']->slides()->attach($slide, ['order_number' => $orderNumber]);
+			}
+
+			if (!empty($foundQuestionsIds)) {
+				$slide->quizQuestions()->attach($foundQuestionsIds);
+			}
+
 			$orderNumber++;
-			if ($slide->is_functional) continue; /* jump to next iteration */
-
-//			$foundCategoryTags = [];
-//			foreach ($tags as $tagName => $tagValue) {
-//				$searchResult = $this->categoryTags->search($tagName);
-//				if ($searchResult !== false) {
-//					$foundCategoryTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
-//				}
-//			}
-//			if ($currentSlide === 0 && !array_key_exists(0, $foundCategoryTags)) {
-//				Log::warning('Highest level category tag not found!');
-//				continue;
-//			}
-//			ksort($foundCategoryTags);
-//			foreach ($foundCategoryTags as $index => $categoryTag) {
-//				if ($index === 0) {
-//					$parentId = null;
-//				} else {
-//					$parentId = $this->categoryModels[$index - 1]->id;
-//				}
-//
-//				$this->categoryModels = array_filter($this->categoryModels, function ($key) use ($index) {
-//					return $key < $index;
-//				}, ARRAY_FILTER_USE_KEY);
-//
-//				$this->categoryModels[] = Category::firstOrCreate([
-//					'name'      => $categoryTag['value'],
-//					'parent_id' => $parentId,
-//				]);
-//
-//				if ($index === 0) {
-//					$this->categoryModels[0]->slides()->detach();
-//					Category::where('parent_id', $this->categoryModels[0]->id)->delete();
-//				}
-//			}
-//
-//			foreach ($this->categoryModels as $model) {
-//				$model->slides()->attach($slide);
-//			}
-
 		}
-		// die('kuniec');
 	}
 
 	/**
@@ -316,6 +318,7 @@ class Parser
 		$html = preg_replace($regexSearch, '', $html);
 		$html = str_replace($textSearch, '', $html);
 		$html = $this->handleCharts($html);
+		$html = $this->handleImages($html);
 
 		return $html;
 	}
@@ -344,34 +347,23 @@ class Parser
 	public function chartViewer($chartId)
 	{
 		$lucidUrl = 'https://www.lucidchart.com/documents/thumb/%s/0/0/NULL/%d';
-		$viewerHtml = '
-			<div class="iv-image-container">
-				<img src="%s" class="chart">
-				<a class="iv-image-fullscreen" title="Pełen ekran">
-					<span class="fullscreen-icon">
-						<span class="inner"></span>
-						<span class="horizontal"></span>
-						<span class="vertical"></span>
-					</span>
-				</a>
-			</div>';
 		$imageSizePx = 2000;
 		$urlFormatted = sprintf($lucidUrl, $chartId, $imageSizePx);
 		$image = Image::make($urlFormatted)->stream('png');
 		$path = "charts/{$chartId}.png";
 		Storage::put('public/' . $path, $image);
 
-		return sprintf($viewerHtml, asset('storage/' . $path));
+		return sprintf(self::IMAGE_VIEWER_TEMPLATE, asset('storage/' . $path));
 	}
 
 	public function createSnippet($slideHtml)
 	{
 		$snippet = [
-			'header'     => '',
-			'subheader'  => '',
-			'content'    => '',
-			'media'      => null,
-			'page' => '',
+			'header'    => '',
+			'subheader' => '',
+			'content'   => '',
+			'media'     => null,
+			'page'      => '',
 		];
 
 		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
@@ -412,6 +404,7 @@ class Parser
 
 		if (!$this->match('/\w/', $slideHtml)) {
 			$snippet['content'] = '';
+
 			return $snippet;
 		}
 
@@ -424,5 +417,60 @@ class Parser
 		$snippet['content'] = trim($slideHtml);
 
 		return $snippet;
+	}
+
+	protected function handleImages($html)
+	{
+		$match = $this->match(self::IMAGE_PATTERN, $html);
+
+		if ($match === false) {
+			return $html;
+		}
+
+		$imgTag = $match[0][0];
+		$imageUrl = $match[0][1];
+
+		try {
+			$image = Image::make($imageUrl);
+		}
+		catch (\Exception $e) {
+			\Log::error("Fetching image from {$imageUrl} failed.");
+
+			return $html;
+		}
+
+		$mime = $image->mime;
+		$supported = ['image/jpeg', 'image/gif', 'image/png'];
+		if (!in_array($mime, $supported)) {
+			\Log::error("Unsupported image type: {$mime}");
+
+			return $html;
+		}
+
+		if ($mime === 'image/gif') {
+			$data = @file_get_contents($imageUrl);
+			$ext = 'gif';
+			$template = self::GIF_TEMPLATE;
+		} else {
+			$background = $image->resize(1920, 1080);
+			$canvas = Image::canvas(1920, 1080, '#fff');
+			$data = $canvas->insert($background)->stream('jpg', 80);
+			$ext = 'jpg';
+			$template = self::IMAGE_VIEWER_TEMPLATE;
+		}
+
+		if (!$data) {
+			\Log::error("Fetching image from {$imageUrl} failed.");
+
+			return $html;
+		}
+
+		$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
+		Storage::put('public/' . $path, $data);
+
+		$viewerHtml = sprintf($template, asset('storage/' . $path));
+		$html = str_replace($imgTag, $viewerHtml, $html);
+
+		return $html;
 	}
 }

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
-import moderatorFeed from 'js/perimeters/moderatorFeed';
+import moderatorFeatures from 'js/perimeters/moderator';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
 
@@ -11,6 +11,7 @@ Vue.use(Router)
 
 let routes = [
 	{
+		name: 'course',
 		path: '/app/courses/:courseId',
 		component: require('js/components/course/Course.vue'),
 		props: true,
@@ -153,7 +154,7 @@ let routes = [
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
 			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [moderatorFeed],
+				perimeters: [moderatorFeatures],
 			});
 
 			if (!sandbox.isAllowed('access')) {

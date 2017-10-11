@@ -19,4 +19,9 @@ class Section extends Model
 	{
 		return $this->belongsTo('App\Models\Screen');
 	}
+
+	public function subsections()
+	{
+		return $this->hasMany('\App\Models\Subsection');
+	}
 }

@@ -1,5 +1,5 @@
 <template>
-	<div class="quill-container">
+	<div class="quill-container" @keydown="onKeyDown">
 		<wnl-autocomplete
 			:items="autocompleteItems"
 			:onItemChosen="insertMention"
@@ -7,8 +7,7 @@
 			ref="autocomplete"
 		>
 		</wnl-autocomplete>
-
-		<div ref="quill" @keydown="onKeyDown">
+		<div ref="quill">
 			<slot></slot>
 		</div>
 	</div>
@@ -21,9 +20,7 @@
 		position: relative
 
 	.quill-mention
-		background: #eee
-		border: 1px solid #ddd
-		padding: 3px
+		color: $mention-text-color
 </style>
 
 <script>
@@ -35,7 +32,7 @@
 	import { formInput } from 'js/mixins/form-input'
 	import { fontColors } from 'js/utils/colors'
 	import { mentionBlot } from 'js/classes/mentionblot'
-	import Autocomplete from 'js/components/global/autocomplete'
+	import Autocomplete from 'js/components/global/Autocomplete'
 
 	const defaults = {
 		theme: 'snow',
@@ -215,10 +212,6 @@
 					return
 				}
 
-				if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
-					return
-				}
-
 				this.$refs.autocomplete.onKeyDown(evt)
 				this.killEvent(evt)
 
@@ -228,11 +221,23 @@
 
 			onEsc(evt) {
 				this.autocompleteItems = []
+				this.editor.focus()
 			},
 
 			killEvent(evt) {
 				evt.preventDefault()
 				evt.stopPropagation()
+			},
+
+			clickHandler({ target }) {
+				if (this.$el !== target && !this.$el.contains(target)) {
+					this.autocompleteItems = []
+				}
+			},
+
+			clear() {
+				this.autocompleteItems = []
+				this.quill.deleteText(0, this.editor.innerHTML.length)
 			}
 		},
 		mounted () {
@@ -240,6 +245,10 @@
 			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
+			document.addEventListener('click', this.clickHandler)
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
 		},
 		watch: {
 			focused (val) {

@@ -32,20 +32,28 @@ class UseCoupon extends FormRequest
 		];
 	}
 
+	public function getValidator()
+	{
+		return $this->getValidatorInstance();
+	}
+
 	public function withValidator($validator)
 	{
 		$code = $this->request->get('code');
 		if (!$code) return;
 
-		$limitReached = $this->limitReached();
-		$coupon = $this->validateVoucher(mb_convert_case($code, MB_CASE_UPPER, "UTF-8"));
-		$validator->after(function ($validator) use ($coupon, $limitReached) {
+		$validator->after(function ($validator) use ($code) {
+
+			$limitReached = $this->limitReached();
+			$coupon = $this->validateVoucher(mb_convert_case($code, MB_CASE_UPPER, "UTF-8"));
+
 			if (!$coupon) {
 				$validator->errors()->add(
 					'code',
 					trans('payment.voucher-is-invalid')
 				);
 			}
+
 			if ($limitReached) {
 				$validator->errors()->add(
 					'code',

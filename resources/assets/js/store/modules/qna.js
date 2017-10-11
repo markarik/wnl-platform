@@ -4,9 +4,10 @@ import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import { set, delete as destroy } from 'vue'
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions'
+import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 
 // API
- function _getQuestions(query, limit, include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments') {
+ function _getQuestions(query, limit, include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles') {
 	let data = {
 		include,
 		query,
@@ -17,6 +18,12 @@ import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store
 	}
 
 	return axios.post(getApiUrl('qna_questions/.search'), data);
+}
+
+function _resolveQuestion(questionId, status = true) {
+	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
+		resolved: status
+	})
 }
 
 function _getQuestionsByTags(tags) {
@@ -44,7 +51,7 @@ function _getQuestionsLatest(limit = 10) {
 				where: [ ['tags.id', '=', 69] ],
 			},
 		},
-	}, [limit, 0], 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments');
+	}, [limit, 0], 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles');
 }
 
 function _getQuestionsByTagName(tagName, ids) {
@@ -163,6 +170,7 @@ const state = getInitialState()
 // Getters
 const getters = {
 	...reactionsGetters,
+	...commentsGetters,
 	loading: state => state.loading.length > 0,
 	currentSorting: state => state.sorting,
 	questions: state => state.qna_questions,
@@ -181,8 +189,7 @@ const getters = {
 	// Resources
 	getQuestion: state => (id) => state.qna_questions[id],
 	answer:      state => (id) => state.qna_answers[id],
-	profile:     state => (id) => state.profiles[id],
-	comment:     state => (id) => state.comments[id],
+	profile:     state => (id) => state.profiles[id] || {},
 
 	// Question
 	questionContent: state => (id) => state.qna_questions[id].text,
@@ -213,22 +220,13 @@ const getters = {
 			)
 		)
 	},
-
-	// Answer
-	answerComments: state => (id) => {
-		let commentsIds = state.qna_answers[id].comments
-		if (_.isUndefined(commentsIds)) {
-			return []
-		}
-
-		return commentsIds.map((id) => state.comments[id])
-	},
 }
 
 
 // Mutations
 const mutations = {
 	...reactionsMutations,
+	...commentsMutations,
 	[types.IS_LOADING] (state, isLoading) {
 		const loadingStatus = state.loading
 		if (isLoading) {
@@ -269,6 +267,18 @@ const mutations = {
 		destroy(state.qna_questions, id)
 		set(state, 'questionsIds', questionsIds)
 	},
+	[types.QNA_RESOLVE_QUESTION] (state, payload) {
+		let id = payload.questionId,
+			question = state.qna_questions[id];
+
+		set(state.qna_questions, id, {...question, resolved: true})
+	},
+	[types.QNA_UNRESOLVE_QUESTION] (state, payload) {
+		let id = payload.questionId,
+			question = state.qna_questions[id];
+
+		set(state.qna_questions, id, {...question, resolved: false})
+	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
 			data = _.merge(state.qna_answers[id], payload.data)
@@ -290,7 +300,7 @@ const mutations = {
 			answers = _.pull(state.qna_questions[questionId].qna_answers, id)
 
 		destroy(state.qna_answers, id)
-		set(state.qna_questions, 'qna_answers', answers)
+		set(state.qna_questions[questionId], 'qna_answers', answers)
 	},
 	[types.QNA_REMOVE_COMMENT] (state, payload) {
 		let id = payload.commentId,
@@ -320,6 +330,7 @@ const mutations = {
 // Actions
 const actions = {
 	...reactionsActions,
+	...commentsActions,
 	changeSorting({commit}, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting)
 	},
@@ -412,38 +423,19 @@ const actions = {
 			resolve()
 		})
 	},
+	resolveQuestion({commit}, questionId) {
+		return _resolveQuestion(questionId)
+			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}))
+	},
+	unresolveQuestion({commit}, questionId) {
+		return _resolveQuestion(questionId, false)
+			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}))
+	},
 	removeAnswer({commit}, payload) {
 		return new Promise((resolve, reject) => {
 			commit(types.QNA_REMOVE_ANSWER, {
 				questionId: payload.questionId,
 				answerId: payload.answerId,
-			})
-			resolve()
-		})
-	},
-	fetchComments({commit}, answerId) {
-		return new Promise((resolve, reject) => {
-			_getComments(answerId)
-				.then((response) => {
-					let data = response.data,
-						included = data.included
-
-					commit(types.UPDATE_INCLUDED, included)
-					delete(data.included)
-					commit(types.QNA_UPDATE_ANSWER, {answerId, data})
-					resolve()
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-					reject()
-				})
-		})
-	},
-	removeComment({commit}, payload) {
-		return new Promise((resolve, reject) => {
-			commit(types.QNA_REMOVE_COMMENT, {
-				answerId: payload.answerId,
-				commentId: payload.commentId,
 			})
 			resolve()
 		})

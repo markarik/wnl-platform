@@ -6,7 +6,7 @@ class MentionBlot extends EmbedBlot {
 
 	static create(data) {
 		const node = super.create(data.name)
-		node.innerHTML = data.name
+		node.innerHTML = `<span contenteditable="false">${data.name}</span>`
 		node.setAttribute('spellcheck', "false")
 		node.setAttribute('autocomplete', "off")
 		node.setAttribute('autocorrect', "off")
@@ -49,47 +49,7 @@ class MentionBlot extends EmbedBlot {
 		quill.deleteText(cursorPosition + text.length - 1, 1, Quill.sources.USER);
 	}
 
-	changeText(oldText, newText) {
-		const name = this._data.name;
-
-		const valid = (oldText == name) && (newText != oldText);
-		if (!valid) return;
-
-		let cursorPosition = quill.getSelection().index;
-		
-		if (cursorPosition == -1) {
-			cursorPosition = 1;
-		}
-
-		const blotCursorPosition = quill.selection.getNativeRange().end.offset;
-		let realPosition = cursorPosition;
-
-		if (!this._removedBlot) {
-			realPosition += blotCursorPosition;
-		}
-
-		if (newText.startsWith(name) && oldText == name) { // append
-			const extra = newText.substr(name.length);
-
-			this.domNode.innerHTML = name;
-
-			quill.insertText(cursorPosition, extra, Quill.sources.USER);
-			quill.setSelection(cursorPosition + extra.length, Quill.sources.API);
-			return;
-		} else if (newText.endsWith(name) && oldText == name) { // prepend
-			const end = newText.length - name.length;
-			const extra = newText.substr(0, end);
-			const pos = cursorPosition > 0 ? cursorPosition - 1 : cursorPosition;
-
-			this.domNode.innerHTML = name;
-
-			quill.insertText(pos, extra, Quill.sources.USER);
-			quill.setSelection(pos + extra.length, Quill.sources.API);
-
-			return;
-		}
-		setTimeout(() => this._replaceBlotWithText(newText), 0)
-	}
+	changeText(oldText, newText) {}
 
 	update(mutations) {
 		mutations

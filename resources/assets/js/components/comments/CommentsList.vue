@@ -17,7 +17,9 @@
 			:comment="comment"
 			:profile="commentProfile(comment.profiles[0])"
 			@removeComment="onRemoveComment"
-			>
+			@resolveComment="onResolveComment"
+			@unresolveComment="onUnresolveComment"
+		>
 			{{comment.text}}
 		</wnl-comment>
 		<div class="form-container" v-if="showComments">
@@ -45,7 +47,7 @@
 
 <script>
 	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+	import { mapGetters } from 'vuex'
 	import { nextTick } from 'vue'
 
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
@@ -82,7 +84,7 @@
 				return !_.isEmpty(this.comments)
 			},
 			toggleCommentsText() {
-				return this.showComments ? 'Schowaj' : 'Pokaż'
+				return this.showComments ? this.$t('ui.action.hide') : this.$t('ui.action.show')
 			},
 			isCommentableInUrl() {
 				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
@@ -146,6 +148,20 @@
 					id,
 				})
 			},
+			onResolveComment(id) {
+				this.action('resolveComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
+			onUnresolveComment(id) {
+				this.action('unresolveComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
 			refresh() {
 				return this.action('fetchComments', {
 					resource: this.commentableResource,
@@ -183,7 +199,6 @@
 						.then(() => {
 							this.scrollAndHighlight()
 							this.showComments = true
-
 						})
 				}
 			},

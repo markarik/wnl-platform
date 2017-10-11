@@ -3,7 +3,7 @@
 </template>
 
 <script>
-	import firstEditionParticipant from '../../perimeters/firstEditionParticipant'
+	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
 
 	export default {
 		name: 'Questions',

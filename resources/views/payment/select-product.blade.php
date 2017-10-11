@@ -10,6 +10,13 @@
 
 <section class="section">
 	<div class="container">
+		<div class="has-text-centered">
+			<p class="margin bottom">
+				<a href="{{route('payment-personal-data', 'wnl-album')}}">
+					Zamów tylko nowe materiały
+				</a>
+			</p>
+		</div>
 		<div class="columns is-hidden-mobile has-text-centered">
 			<div class="column">
 				@if(!$onsite->available)

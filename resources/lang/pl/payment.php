@@ -12,6 +12,7 @@ return [
 	'voucher-amount' => ':valuezł',
 	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
 	'voucher-tries-limit-reached' => 'Dozwolona liczba prób wpisania kuponu została przekroczona.',
+	'voucher-product-incompatible' => 'Kupon nie obowiązuje dla zamówionego przez Ciebie produktu.',
 	'voucher-already-has' => 'Wygląda na to, że do Twojego konta jest już przypisana zniżka <strong>:name</strong>.<br>Przypominamy, że promocje nie łączą się, więc użycie kodu ZASTĄPI 50% zniżkę. ;)',
 	'voucher-title' => 'Masz kod? Super!',
 	'voucher-subtitle' => 'Wpisz go poniżej, aby wykorzystać zniżkę!',
@@ -172,5 +173,5 @@ return [
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',
-	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu Kursu stacjonarnego! Cena nie obejmuje nowych materiałów. Możesz dokupić je osobno, kontaktując się z nami bezpośrednio. :)',
+	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu innych produktów. Cena nie obejmuje nowych materiałów.',
 ];

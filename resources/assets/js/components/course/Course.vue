@@ -127,5 +127,10 @@
 		methods: {
 			...mapActions(['toggleChat']),
 		},
+		watch: {
+			'$route.query.chatChannel' (newVal) {
+				newVal && !this.isChatVisible && this.toggleChat();
+			}
+		}
 	}
 </script>

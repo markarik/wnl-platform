@@ -123,6 +123,10 @@ class PersonalDataController extends Controller
 			'times_usable' => 0,
 		]);
 
+		$coupon->products()->attach(
+			Product::whereIn('slug', ['wnl-online', 'wnl-online-onsite'])->get()
+		);
+
 		$order->studyBuddy()->create([
 			'code' => $coupon->code,
 		]);
@@ -180,12 +184,13 @@ class PersonalDataController extends Controller
 
 	protected function addCoupon($order, $coupon)
 	{
-		if ($coupon->slug === 'wnl-online-only' &&
-			$order->product->slug !== 'wnl-online'
+		if ($coupon->products->count() > 0 &&
+			!$coupon->products->contains($order->product)
 		) {
 			return;
 		}
 
 		$order->attachCoupon($coupon);
+		session()->forget('coupon');
 	}
 }

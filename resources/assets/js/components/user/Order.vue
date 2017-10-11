@@ -22,7 +22,7 @@
 					Cena ze zniżką: {{ order.total }}zł
 				</p>
 
-				<div class="margin bottom" v-else-if="studyBuddy">
+				<div class="margin bottom" v-else-if="studyBuddy && order.paid">
 					<div v-if="order.studyBuddy.status === 'awaiting-refund'">
 						<p class="strong has-text-centered">
 							Twój Study Buddy dołączył już do kursu!
@@ -57,7 +57,7 @@
 					</div>
 					<!-- <a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a> -->
 				</div>
-				<p v-else-if="!order.coupon" class="notification has-text-centered">
+				<p v-else-if="!order.coupon && studyBuddy" class="notification has-text-centered">
 					Po opłaceniu zamówienia w tym miejscu pojawi się Twój unikalny kod, który możesz wysłać znajomym i
 					skorzystać z promocji <strong>Study Buddy</strong> - gdy ktoś zapisze się używając Twojego kodu i
 					opłaci zamówienie - obydwoje dostaniecie 100zł zniżki! Przed zwrotem napiszemy do Ciebie, aby
@@ -111,22 +111,24 @@
 					</small>
 				</div>
 
-				<a title="Dodaj lub zmień kod rabatowy" @click="toggleCouponInput">
-					<!--<span class="icon is-small status-icon">
-						<i class="fa fa-pencil-square-o"></i>
-					</span>-->
-					Dodaj lub zmień kod rabatowy
-				</a>
-				<div class="voucher-code" v-if="couponInputVisible">
-					<wnl-form class="margin vertical"
-							  name="CouponCode"
-							  method="put"
-							  :resourceRoute="couponUrl"
-							  hideDefaultSubmit="true"
-							  @submitSuccess="couponSubmitSuccess">
-						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
-						<wnl-submit>Wykorzystaj kod</wnl-submit>
-					</wnl-form>
+				<div v-if="order.status !== 'closed'">
+					<a title="Dodaj lub zmień kod rabatowy" @click="toggleCouponInput">
+						<!--<span class="icon is-small status-icon">
+							<i class="fa fa-pencil-square-o"></i>
+						</span>-->
+						Dodaj lub zmień kod rabatowy
+					</a>
+					<div class="voucher-code" v-if="couponInputVisible">
+						<wnl-form class="margin vertical"
+								  name="CouponCode"
+								  method="put"
+								  :resourceRoute="couponUrl"
+								  hideDefaultSubmit="true"
+								  @submitSuccess="couponSubmitSuccess">
+							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
+							<wnl-submit>Wykorzystaj kod</wnl-submit>
+						</wnl-form>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -286,7 +288,7 @@
 				return `Zamówienie numer ${this.order.id}`
 			},
 			studyBuddy() {
-				return this.order.hasOwnProperty('studyBuddy') && this.order.paid
+				return this.order.hasOwnProperty('studyBuddy')
 			},
 			couponUrl() {
 				return `orders/${this.order.id}/coupon`;

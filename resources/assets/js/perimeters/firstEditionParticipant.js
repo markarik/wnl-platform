@@ -3,9 +3,9 @@ import { createPerimeter } from 'vue-kindergarten';
 export default createPerimeter({
 	purpose: 'firstEditionParticipant',
 
-	govern: {
-		'can access': function () {
-			return this.isFirstEditionParticipant();
+	can: {
+		access() {
+			return this.isFirstEditionParticipant()
 		}
 	},
 

@@ -77,6 +77,7 @@ class Parser
 			0 => 'group',
 			1 => 'lesson',
 			2 => 'section',
+			3 => 'subsection'
 		]);
 	}
 

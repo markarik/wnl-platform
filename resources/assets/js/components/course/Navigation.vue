@@ -42,7 +42,8 @@
 			...mapGetters('progress', {
 				getCourseProgress: 'getCourse',
 				getScreenProgress: 'getScreen',
-				getLessonProgress: 'getLesson'
+				getLessonProgress: 'getLesson',
+				getSectionProgress: 'getSection'
 			}),
 			sidenavOptions() {
 				return {
@@ -253,6 +254,10 @@
 					slide: subsection.slide,
 				};
 
+				const sectionProgress = this.getSectionProgress(params.courseId, params.lessonId, params.screenId, section.id) || {}
+				const completedSubsections = sectionProgress.subsections || {}
+				const isSubsectionActive = this.lessonState.activeSubsection === subsection.id
+
 				return navigation.composeItem({
 					text: subsection.name,
 					itemClass: 'small subitem--second todo',
@@ -261,8 +266,8 @@
 					method: 'replace',
 					iconClass: 'fa-angle-right',
 					iconTitle: subsection.name,
-					completed: false,
-					active: false,
+					completed: !!completedSubsections[subsection.id],
+					active: isSubsectionActive,
 					meta: `(${subsection.slidesCount})`
 				})
 			}

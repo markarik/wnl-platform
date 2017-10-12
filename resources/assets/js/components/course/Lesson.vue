@@ -275,7 +275,8 @@
 
 					this.updateLessonNav({
 						activeSection: (this.currentSection && this.currentSection.id) || 0,
-						activeScreen: parseInt(this.screenId) || 0
+						activeSubsection: parseInt(this.currentSubsection && this.currentSubsection.id,) || 0,
+						activeScreen: parseInt(this.screenId) || 0,
 					})
 				}
 			},

@@ -26,6 +26,9 @@ const getters = {
 	getScreen: (state) => (courseId, lessonId, screenId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}]`);
 	},
+	getSection: (state) => (courseId, lessonId, screenId, sectionId) => {
+		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}].sections[${sectionId}]`);
+	},
 	wasCourseStarted: (state, getters) => (courseId) => {
 		return !_.isEmpty(getters.getCourse(courseId).lessons)
 	},

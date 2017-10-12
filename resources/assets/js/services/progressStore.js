@@ -45,6 +45,7 @@ const completeSection = (lessonState, {screenId, sectionId, route, ...payload}) 
 		updatedState.screens[screenId].sections = {
 			...updatedState.screens[screenId].sections,
 			[sectionId]: {
+				...updatedState.screens[screenId].sections[sectionId],
 				status: STATUS_COMPLETE
 			}
 		}
@@ -78,6 +79,7 @@ const completeSubsection = (lessonState, {screenId, sectionId, subsectionId, rou
 		updatedState.screens[screenId].sections = {
 			...updatedState.screens[screenId].sections,
 			[sectionId]: {
+				...updatedState.screens[screenId].sections[sectionId],
 				status: STATUS_COMPLETE
 			}
 		}

@@ -10,7 +10,7 @@
     .wnl-user-profile-background-photo
         height: 20vh
         background-color: black
-        width: 100vw
+        width: 100%
 </style>
 
 <script>

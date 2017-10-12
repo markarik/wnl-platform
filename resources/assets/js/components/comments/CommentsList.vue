@@ -19,9 +19,7 @@
 			@removeComment="onRemoveComment"
 			@resolveComment="onResolveComment"
 			@unresolveComment="onUnresolveComment"
-		>
-			{{comment.text}}
-		</wnl-comment>
+		/>
 		<div class="form-container" v-if="showComments">
 			<transition name="fade">
 				<wnl-new-comment-form

@@ -3,13 +3,13 @@
 		<wnl-user-background></wnl-user-background>
 		<div class="wnl-user-profile-avatar">
 				<wnl-avatar
-				:fullName="this.response.data.full_name"
-                :url="this.response.data.avatar"
+				:fullName="profile.full_name"
+                :url="profile.avatar"
                 class="image is-128x128" size="huge"></wnl-avatar>
 		</div>
 
 		<div class="wnl-user-info">
-			<h1>{{ this.response.data.first_name }} {{ this.response.data.last_name }}</h1>
+			<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
 		</div>
 		<h1>KOMENTARZE</h1>
 		<hr>
@@ -52,14 +52,13 @@
 			'wnl-form-text': Text,
 			'wnl-upload': Upload,
 		},
-		props: ['response', 'commentsCompetency'],
+		props: ['profile', 'commentsCompetency'],
 		data() {
 			return {
 				loading: false,
 				hideDefaultSubmit: true,
 				id: this.$route.params.userId,
 				disableInput: true,
-				profile: this.response.data
 			}
 		},
 		computed: {
@@ -72,12 +71,9 @@
 					return b.reactions.length - a.reactions.length
 				})
 			},
- 			computedResourceRoute() {
-				return `users/${this.id}/profile`
-			}
 		},
 		mounted() {
-			// debugger
+
 			// console.log(this.sorted);
 		}
 	}

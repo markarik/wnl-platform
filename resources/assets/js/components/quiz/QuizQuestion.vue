@@ -332,6 +332,6 @@
 				}
 				return linkText || this.$t('quiz.annotations.slides.defaultLink')
 			}
-		}
+		},
 	}
 </script>

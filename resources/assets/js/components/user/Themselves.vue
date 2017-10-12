@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-app-layout">
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile v-if="responseCondition" :response="response" :commentsCompetency="commentsCompetency"></wnl-user-profile>
+			<wnl-user-profile v-if="responseCondition" :profile="profile.data" :commentsCompetency="commentsCompetency"></wnl-user-profile>
 		</div>
 	</div>
 </template>
@@ -44,8 +44,10 @@
 		data() {
 			return {
 				param: this.$route.params.userId,
-				response: {},
+				profile: {},
 				commentsCompetency: {},
+				qnaQuestionsCompotency: {},
+				promisedQnaAnswersCompetency: {},
 			}
 		},
 		computed: {
@@ -61,8 +63,9 @@
 				return items
 			},
 			responseCondition() {
-				return !_.isEmpty(this.response)
-			}
+				return !_.isEmpty(this.profile)
+			},
+
 		},
 		methods: {
 			...mapActions(['killChat']),
@@ -73,20 +76,29 @@
 			}
 		},
 		mounted() {
-			const data = {
+			const dataForComments = {
 				query: {
 					where: [[ 'user_id', this.param ]]
 				},
 				include: 'context'
 			}
+			const dataForQna = {
+				query: {
+					where: [[ 'user_id', this.param ]]
+				},
+				include: 'reactions'
+			}
 			const promisedProfile = axios.get(getApiUrl(`users/${this.param}/profile`))
-			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), data)
-			// const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna-questions/.search`))
-			
-			Promise.all([promisedProfile, promisedCommentsCompetency])
-			.then(([profile, competency]) => {
-				this.response = profile
-				this.commentsCompetency = competency
+			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
+			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQna)
+			const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_answers/.search`), dataForQna)
+
+			Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
+			.then(([profile, commentsCompetency, qnaQuestionsCompetency, qommentsCompetency, qnaAnswersCompetency]) => {
+				this.profile = profile
+				this.commentsCompetency = commentsCompetency
+				this.qnaQuestionsCompetency = qnaQuestionsCompetency
+				this.qnaAnswersCompetency = qnaAnswersCompetency
 			})
 			.catch(exception => $wnl.logger.capture(exception))
 		},

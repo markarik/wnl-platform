@@ -20,6 +20,7 @@ class OrderTransformer extends ApiTransformer
 			'total'       => $order->total_with_coupon,
 			'canceled'    => $order->canceled,
 			'created_at'  => $order->created_at->format('d-m-Y'),
+			'status'      => $order->status,
 			'product'     => [
 				'id'    => $order->product->id,
 				'name'  => $order->product->name,

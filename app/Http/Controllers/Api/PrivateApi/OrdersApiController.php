@@ -44,6 +44,18 @@ class OrdersApiController extends ApiController
 		$code = mb_convert_case($request->code, MB_CASE_UPPER, "UTF-8");
 		$coupon = Coupon::validCode($code);
 
+		if ($coupon->products->count() > 0 &&
+			!$coupon->products->contains($order->product)
+		) {
+			return $this->respondUnprocessableEntity([
+				'errors' => [
+					'code' => [
+						trans('payment.voucher-product-incompatible'),
+					],
+				],
+			]);
+		}
+
 		$order->attachCoupon($coupon);
 
 		return $this->respondOk();

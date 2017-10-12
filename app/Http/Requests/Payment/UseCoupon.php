@@ -60,25 +60,7 @@ class UseCoupon extends FormRequest
 					trans('payment.voucher-tries-limit-reached')
 				);
 			}
-
-			if ($coupon && !$this->checkProduct($coupon)) {
-				$validator->errors()->add(
-					'code',
-					trans('payment.voucher-product-incompatible')
-				);
-			}
 		});
-	}
-
-	protected function checkProduct($coupon)
-	{
-		$user = Auth::user();
-		$orderId = $this->route('id');
-		$order = $user->orders()->find($orderId);
-
-		return
-			$coupon->products->count() > 0 &&
-			$coupon->products->contains($order->product);
 	}
 
 	protected function validateVoucher($code)

@@ -7,7 +7,7 @@ export const ui = {
 	},
 	action: {
 		undo: 'Cofnij',
-		hide: 'Schowaj',
+		hide: 'Ukryj',
 		show: 'Pokaż',
 		watch: 'Obserwuj',
 		watching: 'Obserwujesz',

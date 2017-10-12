@@ -116,9 +116,6 @@
 					{name: '#aula', channel: chatRoom},
 				]
 			},
-			localStorageKey() {
-				return `course-structure-${this.courseId}`
-			},
 			canRenderSidenav() {
 				return this.isSidenavVisible && this.ready
 			}

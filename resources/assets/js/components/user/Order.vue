@@ -111,22 +111,24 @@
 					</small>
 				</div>
 
-				<a title="Dodaj lub zmień kod rabatowy" @click="toggleCouponInput">
-					<!--<span class="icon is-small status-icon">
-						<i class="fa fa-pencil-square-o"></i>
-					</span>-->
-					Dodaj lub zmień kod rabatowy
-				</a>
-				<div class="voucher-code" v-if="couponInputVisible">
-					<wnl-form class="margin vertical"
-							  name="CouponCode"
-							  method="put"
-							  :resourceRoute="couponUrl"
-							  hideDefaultSubmit="true"
-							  @submitSuccess="couponSubmitSuccess">
-						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
-						<wnl-submit>Wykorzystaj kod</wnl-submit>
-					</wnl-form>
+				<div v-if="order.status !== 'closed'">
+					<a title="Dodaj lub zmień kod rabatowy" @click="toggleCouponInput">
+						<!--<span class="icon is-small status-icon">
+							<i class="fa fa-pencil-square-o"></i>
+						</span>-->
+						Dodaj lub zmień kod rabatowy
+					</a>
+					<div class="voucher-code" v-if="couponInputVisible">
+						<wnl-form class="margin vertical"
+								  name="CouponCode"
+								  method="put"
+								  :resourceRoute="couponUrl"
+								  hideDefaultSubmit="true"
+								  @submitSuccess="couponSubmitSuccess">
+							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
+							<wnl-submit>Wykorzystaj kod</wnl-submit>
+						</wnl-form>
+					</div>
 				</div>
 			</div>
 		</div>

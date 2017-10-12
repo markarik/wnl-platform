@@ -42,7 +42,8 @@
 			...mapGetters('progress', {
 				getCourseProgress: 'getCourse',
 				getScreenProgress: 'getScreen',
-				getLessonProgress: 'getLesson'
+				getLessonProgress: 'getLesson',
+				getSectionProgress: 'getSection'
 			}),
 			sidenavOptions() {
 				return {
@@ -142,6 +143,15 @@
 						sectionsIds.forEach((sectionId, index) => {
 							let section = this.structure[resource('sections')][sectionId]
 							navigation.push(this.getSectionItem(section))
+
+							if (section.hasOwnProperty('subsections')) {
+								let subsectionsIds = section.subsections
+
+								subsectionsIds.forEach((subsectionId, index) => {
+									let subsection = this.structure['subsections'][subsectionId]
+									navigation.push(this.getSubsectionItem(subsection, section))
+								});
+							}
 						});
 					}
 				});
@@ -202,14 +212,19 @@
 				const lesson = this.getLessonProgress(params.courseId, params.lessonId);
 				const screens = lesson && lesson.screens || [];
 				const completed = screens[screen.id] && screens[screen.id].status === STATUS_COMPLETE;
-
-				return navigation.composeItem({
+				const itemProps = {
 					text: screen.name,
 					itemClass: 'todo',
 					routeName: resource('screens'),
 					routeParams: params,
 					completed
-				})
+				}
+
+				if (screen.slides_count) {
+					return navigation.composeItem({...itemProps, meta: `(${screen.slides_count})`})
+				}
+
+				return navigation.composeItem(itemProps)
 			},
 			getSectionItem(section) {
 				const params = {
@@ -234,6 +249,31 @@
 					completed: !!sections[section.id],
 					active: isSectionActive,
 					meta: `(${section.slidesCount})`
+				})
+			},
+			getSubsectionItem(subsection, section) {
+				const params = {
+					courseId: subsection[resource('editions')],
+					lessonId: subsection[resource('lessons')],
+					screenId: subsection[resource('screens')],
+					slide: subsection.slide,
+				};
+
+				const sectionProgress = this.getSectionProgress(params.courseId, params.lessonId, params.screenId, section.id) || {}
+				const completedSubsections = sectionProgress.subsections || {}
+				const isSubsectionActive = this.lessonState.activeSubsection === subsection.id
+
+				return navigation.composeItem({
+					text: subsection.name,
+					itemClass: 'small subitem--second todo',
+					routeName: resource('screens'),
+					routeParams: params,
+					method: 'replace',
+					iconClass: 'fa-angle-right',
+					iconTitle: subsection.name,
+					completed: !!completedSubsections[subsection.id],
+					active: isSubsectionActive,
+					meta: `(${subsection.slidesCount})`
 				})
 			}
 		},

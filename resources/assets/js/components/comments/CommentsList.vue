@@ -10,6 +10,7 @@
 				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 			</span>
 			<wnl-watch
+				v-if="!hideWatchlist"
 				:reactableId="commentableId"
 				:reactableResource="commentableResource"
 				:state="watchState"
@@ -46,18 +47,11 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.comments-controls,
-	.watch
+	.comments-controls
 		color: $color-gray-dimmed
 		font-size: $font-size-minus-1
 		margin-bottom: $margin-base
 		margin-top: $margin-base
-
-	.watch
-		align-items: center
-		display: inline-flex
-		flex-direction: row
-		text-transform: lowercase
 </style>
 
 <script>
@@ -81,7 +75,7 @@
 			'wnl-watch': Watch
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist'],
 		data() {
 			return {
 				formElement: {},

@@ -1,10 +1,10 @@
 <template>
-	<div v-if="!reactionsDisabled" class="watch" @click="toggleReaction">
+	<div v-if="!reactionsDisabled" class="watch" :class="{'has-reacted': hasReacted}" @click="toggleReaction">
+		<span v-if="!isMobile" v-t="reactionMessage"></span>
 		<span v-if="!isLoading" class="icon is-small watch-icon">
 			<i class="fa" :class="hasReactedClass"></i>
 		</span>
 		<span v-else class="loader"></span>
-		<span v-if="!isMobile">Obserwuj</span>
 	</div>
 </template>
 
@@ -13,20 +13,24 @@
 
 	.watch
 		align-items: center
-		color: $color-sky-blue
+		border: $border-light-gray
 		cursor: pointer
-		display: flex
+		display: inline-flex
 		font-size: $font-size-minus-2
-		flex-direction: column
-		margin-left: 4px
-		margin-right: 4px
+		margin: 0 $margin-small
+		padding: 0 $margin-small
 		text-transform: uppercase
-	
+
+		&.has-reacted
+			border-color: $color-green
+			color: $color-green
+
 	.watch-icon
-		margin-right: 4px
+		margin-left: $margin-small
 
 	.loader
 		height: 1rem
+		margin-left: $margin-small
 		width: 1rem
 </style>
 
@@ -37,17 +41,28 @@
 
 	export default {
 		name: 'Watch',
-		mixins: [reaction],
+		// mixins: [reaction], // TODO: Uncomment when making it work
 		data() {
 			return {
+				hasReacted: false, // TODO: Remove to get it to work
 				isLoading: false,
 				name: 'watch',
+				reactionsDisabled: false, // TODO: Remove to get it to work
 			}
 		},
 		computed: {
 			...mapGetters(['isMobile']),
 			hasReactedClass() {
-				return this.hasReacted ? 'fa-eye-slash' : 'fa-eye'
+				return this.hasReacted ? 'fa-check' : 'fa-eye'
+			},
+			reactionMessage() {
+				return this.hasReacted ? 'ui.action.watching' : 'ui.action.watch'
+			},
+		},
+		methods: {
+			// TODO: Remove to get it to work
+			toggleReaction() {
+				this.hasReacted = !this.hasReacted
 			},
 		},
 	}

@@ -16,14 +16,6 @@
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-question-content" v-html="content"></div>
-					<wnl-watch
-						:reactableId="questionId"
-						:reactableResource="reactableResource"
-						:state="watchState"
-						:reactionsDisabled="reactionsDisabled"
-						module="qna"
-					>
-					</wnl-watch>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"
@@ -63,8 +55,16 @@
 		</div>
 		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<div class="level">
-				<div class="level-left">
-					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
+				<div class="level-left qna-answers-heading">
+					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
+					<wnl-watch
+						:reactableId="questionId"
+						:reactableResource="reactableResource"
+						:state="watchState"
+						:reactionsDisabled="reactionsDisabled"
+						module="qna"
+					>
+					</wnl-watch>
 				</div>
 				<div class="level-right" v-if="!readOnly">
 					<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
@@ -133,6 +133,9 @@
 
 		strong
 			font-weight: $font-weight-black
+
+	.qna-answers-heading
+		color: $color-gray-dimmed
 
 	.qna-answers
 		margin: $margin-base $margin-huge $margin-huge $margin-huge

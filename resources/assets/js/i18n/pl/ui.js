@@ -8,7 +8,10 @@ export const ui = {
 	action: {
 		undo: 'Cofnij',
 		hide: 'Schowaj',
-		show: 'Pokaż'
+		show: 'Pokaż',
+		watch: 'Obserwuj',
+		watching: 'Obserwujesz',
+		unwatch: 'Nie obserwuj',
 	},
 	loading: {
 		default: 'Uwaga, nadjeżdża wiedza...',

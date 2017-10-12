@@ -19,7 +19,7 @@
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
-					<a class="button is-small is-primary is-outlined" @click="showForm = true" v-if="!showForm">
+					<a class="button is-small is-primary" @click="showForm = true" v-if="!showForm">
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
 							<i class="fa fa-question-circle-o"></i>
@@ -48,7 +48,7 @@
 
 	.wnl-qna
 		#question-icon
-			margin: $margin-tiny $margin-tiny 0 $margin-small
+			margin: 0 $margin-tiny 0 $margin-small
 
 		.title
 			margin-bottom: $margin-small

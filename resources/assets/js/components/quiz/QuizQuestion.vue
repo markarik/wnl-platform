@@ -22,14 +22,6 @@
 							:state="reactionState"
 							:module="module"
 						></wnl-bookmark>
-						<wnl-watch
-							:reactableId="question.id"
-							:reactableResource="reactableResource"
-							:state="watchState"
-							:reactionsDisabled="false"
-							:module="module"
-						>
-						</wnl-watch>
 					</div>
 				</div>
 			</header>

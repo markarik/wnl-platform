@@ -22,6 +22,6 @@ class Section extends Model
 
 	public function subsections()
 	{
-		return $this->hasMany('\App\Models\Subsection');
+		return $this->hasMany('App\Models\Subsection');
 	}
 }

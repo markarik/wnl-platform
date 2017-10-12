@@ -94,6 +94,7 @@
 				'getSubsections',
 				'getScreen',
 				'getScreenSectionsCheckpoints',
+				'getSectionSubsectionsCheckpoints',
 				'isLessonAvailable',
 			]),
 			...mapGetters('progress', {
@@ -179,6 +180,7 @@
 				'completeLesson',
 				'completeScreen',
 				'completeSection',
+				'completeSubsection',
 				'saveLessonProgress'
 			]),
 			...mapActions([
@@ -251,17 +253,22 @@
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					let updateProgress = false;
 					if (this.currentSection) {
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
 						}
 					}
 
-					if (this.shouldCompleteScreen(this.courseId, this.lessonId, this.screenId)) {
+					if (this.currentSubsection) {
+						if (this.getSectionSubsectionsCheckpoints(this.currentSection.id).includes(this.slide)) {
+							this.completeSubsection({...this.lessonProgressContext, sectionId: this.currentSection.id, subsectionId: this.currentSubsection.id})
+						}
+					}
+
+					if (this.shouldCompleteScreen()) {
 						this.completeScreen(this.lessonProgressContext);
 
-						if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {
+						if (this.shouldCompleteLesson()) {
 							this.completeLesson(this.lessonProgressContext)
 						}
 					}

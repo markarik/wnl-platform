@@ -106,6 +106,13 @@ const mutations = {
 		set(lessonState, 'screens', updatedState.screens);
 		set(lessonState, 'route', payload.route);
 	},
+	[types.PROGRESS_COMPLETE_SUBSECTION] (state, payload) {
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+		const updatedState = progressStore.completeSubsection(lessonState, payload);
+
+		set(lessonState, 'screens', updatedState.screens);
+		set(lessonState, 'route', payload.route);
+	},
 	[types.PROGRESS_COMPLETE_SCREEN] (state, payload) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
 		const updatedState = progressStore.completeScreen(lessonState, payload);
@@ -160,6 +167,9 @@ const actions = {
 	},
 	completeSection({commit}, payload) {
 		commit(types.PROGRESS_COMPLETE_SECTION, payload)
+	},
+	completeSubsection({commit}, payload) {
+		commit(types.PROGRESS_COMPLETE_SUBSECTION, payload)
 	},
 };
 

@@ -37,12 +37,64 @@ const completeSection = (lessonState, {screenId, sectionId, route, ...payload}) 
 
 	if (!updatedState.screens[screenId].sections) {
 		updatedState.screens[screenId].sections = {
-			[sectionId]: STATUS_COMPLETE
+			[sectionId]: {
+				status: STATUS_COMPLETE
+			}
 		}
 	} else {
 		updatedState.screens[screenId].sections = {
 			...updatedState.screens[screenId].sections,
-			[sectionId]: STATUS_COMPLETE
+			[sectionId]: {
+				status: STATUS_COMPLETE
+			}
+		}
+	}
+
+	setLessonProgress(payload, updatedState)
+
+	return updatedState;
+};
+
+const completeSubsection = (lessonState, {screenId, sectionId, subsectionId, route, ...payload}) => {
+	const updatedState = lessonState ? {...lessonState} : {};
+
+	updatedState.route = route;
+
+	updatedState.screens = updatedState.screens || {};
+
+	if (!updatedState.screens[screenId]) {
+		updatedState.screens[screenId] = {
+			status: STATUS_IN_PROGRESS
+		}
+	}
+
+	if (!updatedState.screens[screenId].sections) {
+		updatedState.screens[screenId].sections = {
+			[sectionId]: {
+				status: STATUS_COMPLETE
+			}
+		}
+	} else {
+		updatedState.screens[screenId].sections = {
+			...updatedState.screens[screenId].sections,
+			[sectionId]: {
+				status: STATUS_COMPLETE
+			}
+		}
+	}
+
+	if (!updatedState.screens[screenId].sections[sectionId].subsections) {
+		updatedState.screens[screenId].sections[sectionId].subsections = {
+			[subsectionId]: {
+				status: STATUS_COMPLETE
+			}
+		}
+	} else {
+		updatedState.screens[screenId].sections[sectionId].subsections = {
+			...updatedState.screens[screenId].sections[sectionId].subsections,
+			[subsectionId]: {
+				status: STATUS_COMPLETE
+			}
 		}
 	}
 
@@ -146,5 +198,6 @@ export default {
 	completeSection,
 	completeScreen,
 	completeLesson,
+	completeSubsection,
 	startLesson
 };

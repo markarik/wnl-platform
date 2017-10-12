@@ -2,9 +2,9 @@
 
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Concerns\Slides\AddsSlides;
 use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
-use App\Models\Presentable;
 use App\Models\Screen;
 use App\Models\Slide;
 use Illuminate\Http\Request;
@@ -12,6 +12,8 @@ use DB;
 
 class SlidesApiController extends ApiController
 {
+	use AddsSlides;
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
@@ -40,30 +42,14 @@ class SlidesApiController extends ApiController
 	{
 		$screen = Screen::find($request->screen);
 		$slideshow = $screen->slideshow;
-		$orderNumber = $request->order_number;
+		$orderNumber = $request->order_number - 1; // https://goo.gl/ZzMWT3
 
-		// get slide that currently has the given order no.
-		// + get its section and subsection
-		$currentSlideId = Presentable::select(['slide_id'])
-			->where('presentable_id', $slideshow->id)
-			->where('presentable_type', 'App\\Models\\Slideshow')
-			->where('order_number', $orderNumber)
-			->first()
-			->slide_id;
-		$currentSlide = Slide::find($currentSlideId);
-
-		$section = $currentSlide->sections()
-			->whereHas('screen', function ($query) use ($screen) {
-				$query->where('id', $screen->id);
-			})->first();
+		// Get slide that currently has the given order no. + get its section, subsection etc.
+		$currentSlide = $this->getCurrentFromPresentables($slideshow->id, $orderNumber);
+		list ($section, $subsection, $categories) = $this->getSlidePresentables($currentSlide, $screen);
 
 		// Incr. order no. of all slides above the submitted order no.
-		DB::statement(implode(' ', [
-			"update presentables set order_number = (order_number + 1)",
-			"where order_number >= {$orderNumber}",
-			"and ((presentable_type = 'App\\\\Models\\\\Slideshow' and presentable_id = {$slideshow->id}) or",
-			"(presentable_type = 'App\\\\Models\\\\Section' and presentable_id = {$section->id}))",
-		]));
+		$this->incrementOrderNumber($orderNumber, $slideshow, $section, $subsection, $categories);
 
 		// Create new slide
 		$slide = Slide::create([
@@ -72,8 +58,7 @@ class SlidesApiController extends ApiController
 		]);
 
 		// Attach slide to screen, section, subsection etc.
-		$slideshow->slides()->attach($slide, ['order_number' => $orderNumber]);
-		$section->slides()->attach($slide, ['order_number' => $orderNumber]);
+		$this->attachSlide($slide, $orderNumber, $slideshow, $section, $subsection, $categories);
 
 		return $this->respondOk();
 	}

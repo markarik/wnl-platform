@@ -47,7 +47,7 @@
 	@import 'resources/assets/sass/variables'
 
 	=subitem-indent($nestLevel)
-		margin-left: $margin-base * $nestLevel
+		margin-left: $margin-base + $margin-base * $nestLevel
 
 	.item-wrapper
 		height: 100%
@@ -101,7 +101,7 @@
 			content: '✓'
 
 	.subitem
-		+subitem-indent(1)
+		+subitem-indent(0)
 
 		.icon.is-small
 			margin-right: 0

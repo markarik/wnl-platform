@@ -13,7 +13,7 @@ class SlideshowTransformer extends ApiTransformer
 	{
 		$data = [
 			'id'             => $slideshow->id,
-			'background_url' => $slideshow->background_url,
+			'background_url' => $slideshow->background_url
 		];
 
 		return $data;

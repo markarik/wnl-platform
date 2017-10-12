@@ -212,14 +212,19 @@
 				const lesson = this.getLessonProgress(params.courseId, params.lessonId);
 				const screens = lesson && lesson.screens || [];
 				const completed = screens[screen.id] && screens[screen.id].status === STATUS_COMPLETE;
-
-				return navigation.composeItem({
+				const itemProps = {
 					text: screen.name,
 					itemClass: 'todo',
 					routeName: resource('screens'),
 					routeParams: params,
 					completed
-				})
+				}
+
+				if (screen.slides_count) {
+					return navigation.composeItem({...itemProps, meta: `(${screen.slides_count})`})
+				}
+
+				return navigation.composeItem(itemProps)
 			},
 			getSectionItem(section) {
 				const params = {

@@ -23,7 +23,12 @@ class SlideshowBuilderApiController extends ApiController
 			return response('Not found', 404);
 		}
 
-		return $this->renderView($slideshow->slides, $slideshow->background_url);
+		$slides = $slideshow
+			->slides()
+			->orderBy('order_number')
+			->get();
+
+		return $this->renderView($slides, $slideshow->background_url);
 	}
 
 	public function byCategory($categoryId)
@@ -38,6 +43,7 @@ class SlideshowBuilderApiController extends ApiController
 			->whereHas('tags', function ($query) use ($category) {
 				$query->where('tags.name', $category->name);
 			})
+			->orderBy('order_number')
 			->get();
 
 		$screen = Screen::select()

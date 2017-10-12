@@ -57,13 +57,20 @@ const getters = {
 		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
-	getSection: state => (sectionId) => state.structure['sections'][sectionId],
-	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),
+	getSection: state => (sectionId) => state.structure['sections'][sectionId] || {},
+	getSections: state => (sections) => sections.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {})) || [],
+	getSubsections: state => (subsections) => subsections.map((subsectionId) => _.get(state.structure, `subsections.${subsectionId}`, {})) || [],
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
 		const sectionsIds = getters.getScreen(screenId).sections;
 		const sections = getters.getSections(sectionsIds);
 
 		return sections.map((section) => section.slide);
+	},
+	getSectionSubsectionsCheckpoints: (state, getters) => (sectionId) => {
+		const subsectionsIds = getters.getSection(sectionId).subsections;
+		const subsections = getters.getSubsections(subsectionsIds);
+
+		return subsections.map((subsections) => subsections.slide);
 	},
 	getScreens: state => (lessonId) => {
 		let screensIds = state.structure[resource('lessons')][lessonId][resource('screens')]

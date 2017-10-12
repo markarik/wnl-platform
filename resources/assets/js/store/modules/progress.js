@@ -21,7 +21,7 @@ const getters = {
 		return false
 	},
 	getLesson: (state) => (courseId, lessonId) => {
-		return state.courses[courseId] && state.courses[courseId].lessons && state.courses[courseId].lessons[lessonId];
+		return _.get(state.courses[courseId], `lessons.${lessonId}`)
 	},
 	getScreen: (state) => (courseId, lessonId, screenId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}]`);
@@ -62,44 +62,6 @@ const getters = {
 	isLessonComplete: (state, getters) => (courseId, lessonId) => {
 		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE
-	},
-	shouldCompleteLesson: (state, getters, rootState, rootGetters) => (courseId, lessonId) => {
-		const allScreens = rootGetters['course/getScreens'](lessonId);
-		const startedScreens = _.get(state.courses[courseId].lessons[lessonId], 'screens');
-
-		if (!startedScreens) {
-			return false;
-		}
-
-		return !allScreens.find(({id}) => {
-			if (!startedScreens[id]) {
-				return true;
-			} else if (startedScreens[id].status === STATUS_IN_PROGRESS) {
-				return true;
-			}
-
-			return false;
-		});
-	},
-	shouldCompleteScreen: (state, getters, rootState, rootGetters) => (courseId, lessonId, screenId) => {
-		const screen = rootGetters['course/getScreen'](screenId);
-
-		if (!screen.sections) {
-			return true;
-		}
-
-		const allSections = rootGetters['course/getSections'](screen.sections);
-		const lesson = state.courses[courseId].lessons[lessonId];
-
-		if (!_.get(lesson, `screens[${screenId}].sections`)) {
-			return false;
-		}
-
-		const startedSections = lesson.screens[screenId].sections;
-
-		return !allSections.find(({id}) => {
-			return !startedSections[id];
-		});
 	},
 	getCompleteLessons: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lesson, lessons = []

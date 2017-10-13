@@ -81,21 +81,6 @@ class UserStateApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function getTime($user)
-	{
-		$userInstance = User::find($user);
-
-		if (!Auth::user()->can('view', $userInstance)) {
-			return $this->respondForbidden();
-		}
-
-		$time = Redis::get(self::getUserTimeRedisKey($user));
-
-		return $this->json([
-			'time' => empty($time) ? 0 : $time
-		]);
-	}
-
 	public function incrementTime(Request $request, $user)
 	{
 		$userInstance = User::find($user);

@@ -6,7 +6,7 @@ use App\Mail\StudyBuddy;
 use App\Mail\StudyBuddyWithoutInvoice;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Facades\Lib\Invoice\Invoice;
+use Lib\Invoice\Invoice;
 use App\Mail\PaymentConfirmation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
@@ -43,7 +43,7 @@ class OrderPaid implements ShouldQueue
 	protected function sendConfirmation()
 	{
 		\Log::notice('Issuing invoice and sending order confirmation.');
-		$invoice = Invoice::issueFromOrder($this->order);
+		$invoice = (new Invoice)->advance($this->order);
 		Mail::to($this->order->user)->send(new PaymentConfirmation($this->order, $invoice));
 	}
 

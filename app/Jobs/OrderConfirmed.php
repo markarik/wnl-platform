@@ -5,7 +5,7 @@ namespace App\Jobs;
 use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Facades\Lib\Invoice\Invoice;
+use Lib\Invoice\Invoice;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,7 +34,7 @@ class OrderConfirmed implements ShouldQueue
 	 */
 	public function handle()
 	{
-		$invoice = Invoice::issueFromOrder($this->order, $proforma = true);
+		$invoice = (new Invoice)->proforma($this->order);
 		Mail::to($this->order->user)->send(new OrderConfirmation($this->order, $invoice));
 	}
 }

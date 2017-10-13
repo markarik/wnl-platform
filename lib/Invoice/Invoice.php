@@ -26,15 +26,6 @@ class Invoice
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
 
-	public function issueFromOrder(Order $order, $proforma = false)
-	{
-		if ($proforma) {
-			return $this->proforma($order);
-		} else {
-			return $this->advance($order);
-		}
-	}
-
 	public function proforma(Order $order)
 	{
 		$vatValue = $this->getVatValue();

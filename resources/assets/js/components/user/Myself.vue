@@ -133,6 +133,17 @@
 						iconClass: 'fa-line-chart',
 						iconTitle: 'Statystyki',
 					},
+					{
+						text: 'Notyfikacje',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-notifications'
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-bell',
+						iconTitle: 'Notyfikacje',
+					},
 					// {
 					// 	text: 'Zmiana hasła',
 					// 	itemClass: 'has-icon',

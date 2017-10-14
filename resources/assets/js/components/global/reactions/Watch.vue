@@ -41,13 +41,11 @@
 
 	export default {
 		name: 'Watch',
-		// mixins: [reaction], // TODO: Uncomment when making it work
+		mixins: [reaction],
 		data() {
 			return {
-				hasReacted: false, // TODO: Remove to get it to work
 				isLoading: false,
 				name: 'watch',
-				reactionsDisabled: false, // TODO: Remove to get it to work
 			}
 		},
 		computed: {
@@ -58,12 +56,6 @@
 			reactionMessage() {
 				return this.hasReacted ? 'ui.action.watching' : 'ui.action.watch'
 			},
-		},
-		methods: {
-			// TODO: Remove to get it to work
-			toggleReaction() {
-				this.hasReacted = !this.hasReacted
-			},
-		},
+		}
 	}
 </script>

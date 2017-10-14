@@ -79,6 +79,11 @@ let routes = [
 				path: 'stats',
 				component: require('js/components/user/UserStats'),
 			},
+			{
+				name: 'my-notifications',
+				path: 'notifications',
+				component: require('js/components/user/MyNotifications.vue')
+			},
 		]
 	},
 	{
@@ -180,7 +185,6 @@ let routes = [
 		redirect: '/app/'
 	}
 ]
-
 
 export default new Router({
 	mode: 'history',

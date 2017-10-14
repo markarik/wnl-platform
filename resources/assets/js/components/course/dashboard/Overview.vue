@@ -35,7 +35,7 @@
 				</span>
 			</a>
 		</div>
-		<wnl-stream-feed v-show="overviewView === 'stream'"/>
+		<wnl-public-feed v-show="overviewView === 'stream'"/>
 		<wnl-qna v-show="overviewView === 'qna'" :title="false" class="wnl-overview-qna"/>
 	</div>
 </template>
@@ -81,7 +81,7 @@
 	import DashboardNews from 'js/components/course/dashboard/DashboardNews'
 	import NextLesson from 'js/components/course/dashboard/NextLesson'
 	import Qna from 'js/components/qna/Qna'
-	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
+	import PublicFeed from 'js/components/notifications/feeds/stream/PublicFeed'
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
 	import { getFirstLessonId } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
@@ -93,7 +93,7 @@
 			'wnl-dashboard-news': DashboardNews,
 			'wnl-next-lesson': NextLesson,
 			'wnl-qna': Qna,
-			'wnl-stream-feed': StreamFeed,
+			'wnl-public-feed': PublicFeed,
 			'wnl-your-progress': YourProgress,
 		},
 		props: ['courseId'],

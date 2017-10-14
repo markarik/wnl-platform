@@ -106,6 +106,7 @@
 			'wnl-event-qna-question-posted': QnaQuestionPosted,
 			'wnl-stream-filtering': StreamFiltering,
 		},
+		props: ['channel'],
 		data() {
 			return {
 				limit: 100,
@@ -116,9 +117,6 @@
 			}
 		},
 		computed: {
-			...mapGetters('notifications', {
-				channel: 'streamChannel',
-			}),
 			...mapGetters('notifications', [
 				'filterSlides',
 				'filterQna',

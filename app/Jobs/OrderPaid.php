@@ -42,9 +42,17 @@ class OrderPaid implements ShouldQueue
 
 	protected function sendConfirmation()
 	{
+		$order = $this->order;
+
 		\Log::notice('Issuing invoice and sending order confirmation.');
-		$invoice = (new Invoice)->advance($this->order);
-		Mail::to($this->order->user)->send(new PaymentConfirmation($this->order, $invoice));
+
+		if ($order->product->delivery_date->isPast()) {
+			$invoice = (new Invoice)->vatInvoice($order);
+		} elseif ($order->method !== 'instalments') {
+			$invoice = (new Invoice)->advance($order);
+		}
+
+		Mail::to($order->user)->send(new PaymentConfirmation($order, $invoice));
 	}
 
 	protected function handleStudyBuddy()

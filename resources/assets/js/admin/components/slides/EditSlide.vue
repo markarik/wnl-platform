@@ -1,15 +1,13 @@
 <template>
-	<div>
-		<wnl-slides-editor
-			:slideId="slideId"
-			:resourceUrl="resourceUrl"
-			:excluded="['snippet']"
-		>
-			<wnl-slides-search
-				@resourceUrlFetched="onResourceUrlFetched"
-			/>
-		</wnl-slides-editor>
-	</div>
+	<wnl-slides-editor
+		:slideId="slideId"
+		:resourceUrl="resourceUrl"
+		:excluded="['snippet']"
+	>
+		<wnl-slides-search
+			@resourceUrlFetched="onResourceUrlFetched"
+		/>
+	</wnl-slides-editor>
 </template>
 
 <script>

@@ -53,7 +53,7 @@ class SlidesApiController extends ApiController
 
 		// Create new slide
 		$slide = Slide::create([
-			'is_functional' => $request->is_functional,
+			'is_functional' => empty($request->is_functional) ? false : true,
 			'content'       => $request->content,
 		]);
 

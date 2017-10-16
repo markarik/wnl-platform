@@ -40,7 +40,7 @@
 						<a class="button is-primary" :class="{'is-loading': updatingChart}" v-if="chartReady" @click="updateChart">Aktualizuj diagram</a>
 					</div>
 					<div class="level-item">
-						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any()" @click="onSubmit">Zapisz slajd</a>
+						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any() || !form.content" @click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
 			</div>
@@ -64,7 +64,6 @@
 	import Form from 'js/classes/forms/Form'
 	import Code from 'js/admin/components/forms/Code'
 	import Checkbox from 'js/admin/components/forms/Checkbox'
-	import {resource} from 'js/utils/config'
 	import {getUrl} from 'js/utils/env'
 	import _ from 'lodash'
 	import { alerts } from 'js/mixins/alerts'
@@ -89,7 +88,15 @@
 			},
 			excluded: {
 				type: Array,
-				default: []
+				default: () => []
+			},
+			method: {
+				type: String,
+				default: 'put'
+			},
+			requestPayload: {
+				type: Object,
+				default: () => {}
 			}
 		},
 		mixins: [ alerts ],
@@ -127,7 +134,7 @@
 					this.submissionFailed = true
 					return;
 				}
-				this.form.put(this.resourceUrl)
+				this.form.submit(this.method, this.resourceUrl, this.requestPayload)
 						.then(response => {
 							this.saved = true
 							this.loading = false

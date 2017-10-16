@@ -55,7 +55,7 @@ export default {
 	},
 	computed: {
 		slideNumber() {
-			return this.slideOrderNo - 1
+			return String(this.slideOrderNo - 1)
 		}
 	},
 	methods: {
@@ -71,7 +71,6 @@ export default {
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
 							this.loading = false
 							this.slideId = slideId
-							this.slideIdInput = slideId
 
 							this.$emit('resourceUrlFetched', {
 								url: this.resourceUrl,
@@ -88,7 +87,7 @@ export default {
 					this.resourceUrl = `/papi/v1/slides/${this.slideIdInput}`
 					this.slideId = parseInt(this.slideIdInput)
 					this.screenId = null
-					this.slideNumber = null
+					this.slideOrderNo = null
 					this.loading = false
 
 					this.$emit('resourceUrlFetched', {

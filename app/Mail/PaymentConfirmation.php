@@ -13,7 +13,7 @@ class PaymentConfirmation extends Mailable
 {
 	use Queueable, SerializesModels;
 	public $order;
-	protected $invoice;
+	public $invoice;
 
 	/**
 	 * Create a new message instance.
@@ -21,7 +21,7 @@ class PaymentConfirmation extends Mailable
 	 * @param Order $order
 	 * @param Invoice $invoice
 	 */
-	public function __construct(Order $order, Invoice $invoice)
+	public function __construct(Order $order, $invoice)
 	{
 		$this->order = $order;
 		$this->invoice = $invoice;
@@ -34,13 +34,18 @@ class PaymentConfirmation extends Mailable
 	 */
 	public function build()
 	{
-		return $this
+		$this
 			->view('mail.payment-confirmation')
 			->subject("Otrzymaliśmy wpłatę za kurs! (zamówienie numer {$this->order->id})")
-			->attach($this->invoice->file_path, [
+			->bcc('zamowienia@wiecejnizlek.pl');
+
+		if ($this->invoice) {
+			$this->attach($this->invoice->file_path, [
 				'as'   => $this->invoice->number_slugged . '.pdf',
 				'mime' => 'application/pdf',
-			])
-			->bcc('zamowienia@wiecejnizlek.pl');
+			]);
+		}
+
+		return $this;
 	}
 }

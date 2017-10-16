@@ -46,11 +46,7 @@ class OrderPaid implements ShouldQueue
 
 		\Log::notice('Issuing invoice and sending order confirmation.');
 
-		if ($order->product->delivery_date->isPast()) {
-			$invoice = (new Invoice)->vatInvoice($order);
-		} elseif ($order->method !== 'instalments') {
-			$invoice = (new Invoice)->advance($order);
-		}
+		$invoice = $this->getInvoice($order);
 
 		Mail::to($order->user)->send(new PaymentConfirmation($order, $invoice));
 	}
@@ -89,5 +85,18 @@ class OrderPaid implements ShouldQueue
 			$order->coupon->save();
 			$order->coupon->studyBuddy->save();
 		}
+	}
+
+	protected function getInvoice($order)
+	{
+		if ($order->product->delivery_date->isPast()) {
+			if ($order->method === 'instalments') {
+				return false;
+			}
+
+			return (new Invoice)->vatInvoice($order);
+		}
+
+		return (new Invoice)->advance($order);
 	}
 }

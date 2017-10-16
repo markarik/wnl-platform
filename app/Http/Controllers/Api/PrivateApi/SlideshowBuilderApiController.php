@@ -31,6 +31,27 @@ class SlideshowBuilderApiController extends ApiController
 		return $this->renderView($slides, $slideshow->background_url);
 	}
 
+	public function previewScreen(Request $request, $screenId)
+	{
+		$screen = Screen::find($screenId);
+
+		if (!$screen) {
+			return response('screen not found', 404);
+		}
+
+		$slideshow = $screen->slideshow;
+		$slide = $request->get('slide');
+
+		$view = view('course.slideshow', [
+			'slides'         => $slide,
+			'background_url' => $slideshow->background_url,
+		]);
+
+		$view->render();
+
+		return response($view);
+	}
+
 	public function byCategory($categoryId)
 	{
 		$category = Category::find($categoryId);

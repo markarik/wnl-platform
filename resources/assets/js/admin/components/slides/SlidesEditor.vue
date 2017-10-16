@@ -39,6 +39,7 @@
 					<div class="level-item">
 						<a class="button is-primary" :class="{'is-loading': updatingChart}" v-if="chartReady" @click="updateChart">Aktualizuj diagram</a>
 					</div>
+					<slot name="action"/>
 					<div class="level-item">
 						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any() || !form.content" @click="onSubmit">Zapisz slajd</a>
 					</div>
@@ -120,6 +121,9 @@
 					match = this.form.content.match('class="chart"')
 				}
 				return !!this.slideId && !!match
+			},
+			content() {
+				return this.form.content
 			}
 		},
 		methods: {
@@ -127,7 +131,7 @@
 				this.loading = true
 				this.reset()
 
-				const isValid = this.validateContent(this.form.content)
+				const isValid = this.validateContent(this.content)
 				if (!isValid) {
 					this.errorFading('Upewnij się że slajd posiada tag section na początku i na końcu treści')
 					this.loading = false;
@@ -175,6 +179,9 @@
 		watch: {
 			resourceUrl(newValue, oldValue) {
 				newValue !== '' && this.form.populate(this.resourceUrl, this.excluded)
+			},
+			content(newValue) {
+				this.$emit('contentChanged', newValue)
 			}
 		}
 	}

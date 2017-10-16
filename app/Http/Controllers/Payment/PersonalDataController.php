@@ -81,7 +81,7 @@ class PersonalDataController extends Controller
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
-		if ($user && $request->edit == 'true') {
+		if ($user) {
 			$this->updateAccount($user, $request);
 			$this->updateOrder($user, $request);
 		} else {

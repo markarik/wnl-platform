@@ -23,7 +23,12 @@ let routes = [
 	{
 		name: 'slides',
 		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
-		component: require('js/admin/components/slides/SlidesEditor.vue'),
+		component: require('js/admin/components/slides/EditSlide.vue'),
+	},
+	{
+		name: 'add-slide',
+		path: '/admin/app/slides/add/:lessonId?/:screenId?',
+		component: require('js/admin/components/slides/AddSlide.vue'),
 	},
 	{
 		name: 'charts',

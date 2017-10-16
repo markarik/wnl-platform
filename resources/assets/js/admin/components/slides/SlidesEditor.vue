@@ -1,51 +1,20 @@
 <template>
 	<div class="slides-editor">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
-				   :alert="alert"
-				   cssClass="fixed"
-				   :key="timestamp"
-				   :timestamp="timestamp"
-				   @delete="onDelete"
-		></wnl-alert>
-		<p class="title is-3">Edycja slajdu</p>
-		<div class="slides-search">
-			<div class="level margin vertical">
-				<div class="level-left">
-					<div class="level-item">
-						<div class="field is-grouped">
-							<div class="control">
-								<label class="label">Numer screena</label>
-								<input @keyup.enter="getSlide" type="text" class="input" v-model="screenId">
-							</div>
-							<div class="control">
-								<label class="label">Numer slajdu</label>
-								<input @keyup.enter="getSlide" type="text" class="input" v-model="slideOrderNo">
-							</div>
-						</div>
-					</div>
-					<div class="level-item">
-						<div class="field is-grouped">
-							<div class="control">
-								<label class="label">lub ID slajdu</label>
-								<input @keyup.enter="getSlide" type="text" class="input" v-model="slideIdInput">
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="level-right">
-					<div class="level-item">
-						<a class="button is-outlined" @click="getSlide" :class="{'is-loading': loadingSlide}">
-							Zaciung slajd
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
+			:alert="alert"
+			cssClass="fixed"
+			:key="timestamp"
+			:timestamp="timestamp"
+			@delete="onDelete"
+		/>
+		<p class="title is-3">{{title}}</p>
 
-		<div class="notification is-success has-text-centered" v-if="saved">
+		<slot/>
+
+		<div class="notification is-success has-text-centered" v-show="saved">
 			Zapisano
 		</div>
-		<div class="notification is-danger has-text-centered" v-if="submissionFailed">
+		<div class="notification is-danger has-text-centered" v-show="submissionFailed">
 			Coś poszło nie tak...
 		</div>
 
@@ -53,7 +22,7 @@
 			  @keydown="form.errors.clear($event.target.name)">
 
 			<div class="slide-content-editor">
-				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"></wnl-form-code>
+				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
 			</div>
 			<div class="level">
 				<div class="level-left">
@@ -109,6 +78,20 @@
 			'wnl-form-code': Code,
 			'wnl-form-checkbox': Checkbox,
 		},
+		props: {
+			title: {
+				type: String,
+				default: 'Edytuj slajd'
+			},
+			resourceUrl: {
+				type: String,
+				default: ''
+			},
+			excluded: {
+				type: Array,
+				default: []
+			}
+		},
 		mixins: [ alerts ],
 		data() {
 			return {
@@ -116,22 +99,14 @@
 					content: null,
 					is_functional: null,
 				}),
-				resourceUrl: '',
 				saved: false,
 				submissionFailed: false,
-				slideOrderNo: '',
 				screenId: '',
-				loadingSlide: false,
 				loading: false,
-				slideId: null,
-				slideIdInput: '',
 				updatingChart: false,
 			}
 		},
 		computed: {
-			slideNumber() {
-				return this.slideOrderNo - 1
-			},
 			chartReady() {
 				let match = null
 				if (this.form.content){
@@ -171,63 +146,6 @@
 				return SECTION_OPEN_TAG_REGEX.test(contentSplited[0])
 					&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1])
 			},
-			getSlide() {
-				let exclude = ['snippet']
-
-				this.loadingSlide = true
-				this.reset()
-				if (!this.slideIdInput) {
-					this.getSlideshowId()
-						.then(slideshowId => {
-							return this.getSlideId(slideshowId)
-						})
-						.then(slideId => {
-							this.resourceUrl = `/papi/v1/slides/${slideId}`
-							this.form.populate(this.resourceUrl, exclude)
-							this.loadingSlide = false
-							this.slideId = slideId
-						})
-						.catch(exception => {
-							this.submissionFailed = true
-							this.loadingSlide = false
-							console.log(exception)
-						})
-				} else {
-					this.resourceUrl = `/papi/v1/slides/${this.slideIdInput}`
-					this.form.populate(this.resourceUrl, exclude)
-					this.loadingSlide = false
-					this.slideId = parseInt(this.slideIdInput)
-				}
-			},
-			getSlideshowId() {
-				return axios.get(`/papi/v1/screens/${this.screenId}`)
-						.then(response => {
-							let resources    = response.data.meta.resources
-							let resourceName = resource('slideshows')
-							let slideshowId
-							Object.keys(resources).forEach((key) => {
-								if (resources[key].name === resourceName) {
-									slideshowId = resources[key].id
-								}
-							})
-							return slideshowId
-						})
-			},
-			getSlideId (slideshowId) {
-				const conditions = {
-					query: {
-						where: [
-							['presentable_type', '=', 'App\\Models\\Slideshow'],
-							['presentable_id', '=', slideshowId],
-							['order_number', '=', this.slideNumber],
-						]
-					}
-				}
-				return axios.post('/papi/v1/presentables/.search', conditions)
-						.then(response => {
-							return response.data[0].slide_id
-						})
-			},
 			reset() {
 				this.saved            = false
 				this.submissionFailed = false
@@ -245,6 +163,11 @@
 							$wnl.logger.capture(error)
 							this.updatingChart = false
 						})
+			}
+		},
+		watch: {
+			resourceUrl(newValue, oldValue) {
+				newValue !== '' && this.form.populate(this.resourceUrl, this.excluded)
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 <template>
 	<div class="qna-answer-container" ref="highlight">
 		<div class="qna-answer">
-			<div class="votes">
 				<wnl-vote
 					type="up"
 					:reactableId="id"
@@ -9,7 +8,6 @@
 					:state="upvoteState"
 					module="qna"
 				></wnl-vote>
-			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-answer-content" v-html="content"></div>

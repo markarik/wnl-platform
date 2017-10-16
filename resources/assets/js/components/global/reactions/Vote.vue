@@ -1,15 +1,21 @@
 <template>
-	<div class="vote" :class="iconClass" @click="toggleReaction">
-		<span class="icon is-small">
-			<i class="fa" :class="hasReactedClass"></i>
-		</span>
-		<span class="count">{{ count }}</span>
-		<span class="flash-bg" :class="{'flash': wasJustClicked}"></span>
+	<div class="votes">
+	    <div class="vote" :class="iconClass" @click="toggleReaction">
+	        <span class="icon is-small">
+				<i class="fa" :class="hasReactedClass"></i>
+			</span>
+	        <span class="count">{{ count }}</span>
+	        <span class="flash-bg" :class="{'flash': wasJustClicked}"></span>
+	    </div>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.votes
+		flex: 0 auto
+		margin-right: $margin-base
 
 	.vote
 		align-items: center
@@ -55,25 +61,27 @@
 </style>
 
 <script>
-	import { reaction } from 'js/mixins/reaction'
+import {
+    reaction
+} from 'js/mixins/reaction'
 
-	export default {
-		name: 'Vote',
-		mixins: [reaction],
-		props: ['type'],
-		data() {
-			return {
-				isLoading: false,
-				name: 'upvote',
-			}
-		},
-		computed: {
-			iconClass() {
-				return `vote-${this.type}`
-			},
-			hasReactedClass() {
-				return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
-			},
-		},
-	}
+export default {
+    name: 'Vote',
+    mixins: [reaction],
+    props: ['type'],
+    data() {
+        return {
+            isLoading: false,
+            name: 'upvote',
+        }
+    },
+    computed: {
+        iconClass() {
+            return `vote-${this.type}`
+        },
+        hasReactedClass() {
+            return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
+        },
+    },
+}
 </script>

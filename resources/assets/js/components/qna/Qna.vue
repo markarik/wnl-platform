@@ -56,10 +56,6 @@
 		.tag
 			margin-right: $margin-small
 
-	.votes
-		flex: 0 auto
-		margin-right: $margin-base
-
 	.qna-container
 		flex: 1 auto
 		overflow: hidden
@@ -110,7 +106,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
+		props: ['tags', 'readOnly', 'title', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency'],
 		data() {
 			return {
 				ready: false,
@@ -126,7 +122,7 @@
 				'getSortedQuestions'
 			]),
 			howManyQuestions() {
-				return Object.keys(this.questions).length || 0
+				return Object.keys(this.filterQnaDisplay).length || 0
 			},
 			tagsFiltered() {
 				if (!this.tags) return [];
@@ -135,18 +131,29 @@
 			displayedTitle() {
 				return this.title || 'Pytania i odpowiedzi'
 			},
+			filterQnaDisplay() {
+				if (this.qnaQuestionsCompetency) {
+					return this.qnaQuestionsCompetency
+					// console.log(getter.questions);
+				}
+				else if (this.qnaAnswersCompetency) {
+					return this.qnaAnswersCompetency
+				} else {
+					return this.questions
+				}
+			}
 		},
 		methods: {
 			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.filterQnaDisplay);
 		},
 		watch: {
 			'currentSorting' (newValue) {
-				this.questionsList = this.getSortedQuestions(newValue, this.questions);
+				this.questionsList = this.getSortedQuestions(newValue, this.filterQnaDisplay);
 			},
-			'questions' (newValue) {
+			'filterQnaDisplay' (newValue) {
 				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
 			}
 		},

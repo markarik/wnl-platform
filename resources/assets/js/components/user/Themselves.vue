@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-app-layout">
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile v-if="responseCondition" :profile="profile.data" :commentsCompetency="commentsCompetency"></wnl-user-profile>
+			<wnl-user-profile v-if="responseCondition" :profile="profile.data" :commentsCompetency="commentsCompetency" :qnaQuestionsCompetency="qnaQuestionsCompetency" :qnaAnswersCompetency="qnaAnswersCompetency" :readOnly="readOnly"></wnl-user-profile>
 		</div>
 	</div>
 </template>
@@ -46,8 +46,9 @@
 				param: this.$route.params.userId,
 				profile: {},
 				commentsCompetency: {},
-				qnaQuestionsCompotency: {},
-				promisedQnaAnswersCompetency: {},
+				qnaQuestionsCompetency: {},
+				qnaAnswersCompetency: {},
+				readOnly: true
 			}
 		},
 		computed: {
@@ -82,19 +83,29 @@
 				},
 				include: 'context'
 			}
-			const dataForQna = {
+			const dataForQnaQuestions = {
 				query: {
 					where: [[ 'user_id', this.param ]]
 				},
-				include: 'reactions'
+				include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+			}
+			const dataForQnaAnswers = {
+				query: {
+					whereHas: {
+						answers: {
+							where: [[ 'user_id', this.param ]]
+						}
+					}
+				},
+				include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			}
 			const promisedProfile = axios.get(getApiUrl(`users/${this.param}/profile`))
 			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
-			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQna)
-			const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_answers/.search`), dataForQna)
+			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
+			const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
 
 			Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
-			.then(([profile, commentsCompetency, qnaQuestionsCompetency, qommentsCompetency, qnaAnswersCompetency]) => {
+			.then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
 				this.profile = profile
 				this.commentsCompetency = commentsCompetency
 				this.qnaQuestionsCompetency = qnaQuestionsCompetency

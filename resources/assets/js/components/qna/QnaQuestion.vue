@@ -4,7 +4,6 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div class="qna-question" ref="highlight">
-			<div class="votes">
 				<wnl-vote
 					type="up"
 					:reactableId="questionId"
@@ -12,7 +11,6 @@
 					:state="voteState"
 					module="qna"
 				></wnl-vote>
-			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-question-content" v-html="content"></div>
@@ -91,6 +89,7 @@
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
+		<slot></slot>
 	</div>
 </template>
 

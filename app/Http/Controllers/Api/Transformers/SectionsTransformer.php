@@ -23,6 +23,7 @@ class SectionsTransformer extends ApiTransformer
 			->select('order_number')
 			->where('presentable_type', 'App\Models\Section')
 			->where('presentable_id', $section->id)
+			->orderBy('order_number', 'asc')
 			->get(['order_number']);
 
 		$firstSlideNumber = $sectionSlides->first()->order_number;

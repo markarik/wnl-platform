@@ -7,6 +7,7 @@ use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
 use App\Models\Screen;
 use App\Models\Slide;
+use Lib\SlideParser\Parser;
 use Illuminate\Http\Request;
 use DB;
 
@@ -41,6 +42,7 @@ class SlidesApiController extends ApiController
 	public function post(PostSlide $request)
 	{
 		$screen = Screen::find($request->screen);
+		$content = $request->get('content');
 		$slideshow = $screen->slideshow;
 		$orderNumber = $request->order_number - 1; // https://goo.gl/ZzMWT3
 
@@ -51,10 +53,15 @@ class SlidesApiController extends ApiController
 		// Incr. order no. of all slides above the submitted order no.
 		$this->incrementOrderNumber($orderNumber, $slideshow, $section, $subsection, $categories);
 
+		// Handle chart and images
+		$parser = new Parser;
+		$content = $parser->handleCharts($content);
+		$content = $parser->handleImages($content);
+
 		// Create new slide
 		$slide = Slide::create([
 			'is_functional' => empty($request->is_functional) ? false : true,
-			'content'       => $request->content,
+			'content'       => $content,
 		]);
 
 		// Attach slide to screen, section, subsection etc.

@@ -1,12 +1,12 @@
 <template lang="html">
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 		<div class="user-content">
-			<wnl-user-background :fullName="fullName"></wnl-user-background>
+			<wnl-user-background class="user-background":fullName="fullName"></wnl-user-background>
 			<div class="wnl-user-profile-avatar">
-				<wnl-avatar
+				<wnl-avatar class="user-avatar image is-128x128" size="extralarge"
 				:fullName="profile.full_name"
 				:url="profile.avatar"
-				class="image is-128x128" size="extralarge"></wnl-avatar>
+				></wnl-avatar>
 			</div>
 
 			<div class="wnl-user-info">
@@ -58,8 +58,6 @@
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 </template>
 
@@ -75,6 +73,10 @@
 		display: flex
 		flex-wrap: wrap
 		margin-bottom: $margin-base
+
+	.user-avatar
+		z-index: 1
+		top: -5vh
 
 </style>
 

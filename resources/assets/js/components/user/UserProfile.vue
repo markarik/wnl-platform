@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 		<div class="user-content">
-			<wnl-user-background></wnl-user-background>
+			<wnl-user-background :fullName="fullName"></wnl-user-background>
 			<div class="wnl-user-profile-avatar">
 				<wnl-avatar
 				:fullName="profile.full_name"
@@ -113,6 +113,7 @@
 				disableInput: true,
 				reactionsDisabled: true,
 				activePanels: ['comments'],
+				fullName: this.profile.full_name,
 			}
 		},
 		computed: {

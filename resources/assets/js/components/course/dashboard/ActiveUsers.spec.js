@@ -26,16 +26,6 @@ describe('ActiveUsers.vue', () => {
 			});
 		});
 
-		it('Renders avatars base on activeUsers', () => {
-			const wrapper = mount(ActiveUsers, {store});
-			expect(wrapper.find(Avatar).length).to.equal(1);
-		});
-
-		it('Renders title correctly', () => {
-			const wrapper = mount(ActiveUsers, {store});
-			expect(wrapper.first('.active-users-title').text()).to.equal('Uczą się teraz z Tobą (1)');
-		});
-
 		it('Counts users correctly', () => {
 			const wrapper = mount(ActiveUsers, {store});
 			expect(wrapper.vm.activeUsersCount).to.equal(1);

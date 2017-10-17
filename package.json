@@ -45,7 +45,7 @@
     "vuex-router-sync": "^4.2.0"
   },
   "devDependencies": {
-    "avoriaz": "^2.2.0",
+    "avoriaz": "^6.0.0",
     "babel": "6.3.13",
     "babel-plugin-rewire": "^1.1.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
@@ -67,6 +67,7 @@
     "sinon": "^2.1.0",
     "sinon-chai": "^2.8.0",
     "uglifyjs-webpack-plugin": "1.0.0-beta.1",
-    "vue-loader": "^12.2.1"
+    "vue-loader": "^12.2.1",
+    "webpack-merge": "^4.1.0"
   }
 }

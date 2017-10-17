@@ -47,6 +47,7 @@
 	import GlobalNotification from 'js/components/global/GlobalNotification.vue'
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
+	import {startTracking} from 'js/services/activityMonitor';
 
 	export default {
 		name: 'App',
@@ -88,11 +89,9 @@
 
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
-					window.setInterval(() => {
-						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
-					}, 1000 * 60 * 3)
-
 					this.initNotifications()
+
+					startTracking(this.currentUserId);
 
 					this.$router.afterEach((to) => {
 						!to.params.keepsNavOpen && this.resetLayout()

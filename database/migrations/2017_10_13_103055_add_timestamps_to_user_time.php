@@ -16,7 +16,6 @@ class AddTimestampsToUserTime extends Migration
 		Schema::table('user_time', function (Blueprint $table) {
 			$table->timestamps();
 			$table->increments('id')->first('user_id');
-			$table->dropUnique('user_time_user_id_unique');
 			$table->unique(
 				[
 					'user_id',
@@ -24,6 +23,14 @@ class AddTimestampsToUserTime extends Migration
 				],
 				'user_time_per_day'
 			);
+
+			try {
+				$table->dropUnique('user_time_user_id_unique');
+			} catch (\Illuminate\Database\QueryException $e) {
+				// it means index already dropped
+			} catch (PDOException $ex) {
+				// it means index already dropped
+			}
 		});
 	}
 

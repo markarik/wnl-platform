@@ -6,7 +6,7 @@
 				<wnl-avatar
 				:fullName="profile.full_name"
 				:url="profile.avatar"
-				class="image is-128x128" size="huge"></wnl-avatar>
+				class="image is-128x128" size="extralarge"></wnl-avatar>
 			</div>
 
 			<div class="wnl-user-info">

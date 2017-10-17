@@ -141,7 +141,7 @@
 				} else {
 					return this.questions
 				}
-			}
+			},
 		},
 		methods: {
 			...mapActions('qna', ['destroyQna']),

@@ -13,47 +13,68 @@
 				<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
 			</div>
 		</div>
-		<div class="comments-content">
-			<h1>KOMENTARZE</h1>
-			<hr>
-			<wnl-comment
-			v-for="comment in commentsCompetency.data"
-			:comment="comment"
-			:key="comment.id"
-			:profile="profile"
-			>
-			<router-link :to="{ name: comment.context.name, params: comment.context.params }">Pokaż kontekst</router-link>
-			</wnl-comment>
+		<div class="collections-controls">
+			<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"  :key="panel" @click="togglePanel(panel)">
+				{{name}}
+				<span class="icon is-small">
+					<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+				</span>
+			</a>
+		</div>
+		<div class="columns">
+			<div class="column" v-show="isCommentsPanelVisible">
+				<div class="comments-content">
+					<hr>
+					<p class="title is-4">Komentarze ({{howManyComments}})</p>
+					<hr>
+					<wnl-comment
+					v-for="comment in commentsCompetency.data"
+					:comment="comment"
+					:key="comment.id"
+					:profile="profile"
+					>
+					<router-link :to="{ name: comment.context.name, params: comment.context.params }">Pokaż kontekst</router-link>
+				</wnl-comment>
+				</div>
+			</div>
+			<div class="column" v-show="isAnswersPanelVisible">
+				<div class="qna-answers">
+					<hr>
+					<wnl-qna
+					:readOnly="readOnly"
+					:reactionsDisabled="reactionsDisabled"
+					:qnaAnswersCompetency="qnaAnswersComputed"
+					></wnl-qna>
+				</div>
+			</div>
+			<div class="column" v-show="isQuestionsPanelVisible">
+				<div class="qna-questions">
+					<hr>
+					<wnl-qna
+					:readOnly="readOnly"
+					:reactionsDisabled="reactionsDisabled"
+					:qnaQuestionsCompetency="qnaQuestionsComputed"
+					></wnl-qna>
+				</div>
+			</div>
 		</div>
 
-		<div class="qna-answers">
-			<h1>ODPOWIEDZI</h1>
-			<hr>
-			<wnl-qna
-				:readOnly="readOnly"
-				:reactionsDisabled="reactionsDisabled"
-				:qnaAnswersCompetency="qnaAnswersComputed"
-			></wnl-qna>
-		</div>
-
-		<div class="qna-questions">
-			<h1>PYTANIA</h1>
-			<hr>
-			<wnl-qna
-				:readOnly="readOnly"
-				:reactionsDisabled="reactionsDisabled"
-				:qnaQuestionsCompetency="qnaQuestionsComputed"
-			></wnl-qna>
-		</div>
 
 	</div>
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
 
 	.image
 		align-self: center
 		margin: auto
+
+	.collections-controls
+		align-items: center
+		display: flex
+		flex-wrap: wrap
+		margin-bottom: $margin-base
 
 </style>
 
@@ -91,10 +112,14 @@
 				id: this.$route.params.userId,
 				disableInput: true,
 				reactionsDisabled: true,
+				activePanels: ['comments'],
 			}
 		},
 		computed: {
-			...mapGetters(['isMobileProfile']),
+			...mapGetters(['isMobileProfile', 'isTouchScreen']),
+			howManyComments() {
+				return this.commentsCompetency.data.length
+			},
 			isProduction() {
 				return isProduction()
 			},
@@ -103,6 +128,15 @@
 					return b.reactions.length - a.reactions.length
 				})
 			},
+			isCommentsPanelVisible() {
+				return this.isPanelActive('comments')
+			},
+			isQuestionsPanelVisible() {
+				return this.isPanelActive('questions')
+			},
+			isAnswersPanelVisible() {
+				return this.isPanelActive('answers')
+			},
 			qnaQuestionsComputed() {
 				const {included, ...questions} = this.qnaQuestionsCompetency.data;
 				return questions;
@@ -110,10 +144,30 @@
 			qnaAnswersComputed() {
 				const {included, ...questions} = this.qnaAnswersCompetency.data;
 				return questions;
+			},
+			panels() {
+				return {
+					comments: 'Komentarze',
+					questions: 'Pytania',
+					answers: 'Odpowiedzi'
+				}
+			},
+			isSinglePanelView() {
+				return this.isTouchScreen
 			}
 		},
 		methods: {
-			...mapActions('qna', ['setUserQnaQuestions'])
+			...mapActions('qna', ['setUserQnaQuestions']),
+			togglePanel(panel) {
+					return this.activePanels = [panel]
+			},
+			isPanelActive(panel) {
+				if (this.isSinglePanelView) {
+					return this.activePanels[0] === panel
+				}
+
+				return this.activePanels.includes(panel)
+			},
 		},
 		mounted() {
 			this.setUserQnaQuestions(this.qnaQuestionsCompetency.data)

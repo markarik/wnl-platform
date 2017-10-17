@@ -5,10 +5,12 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Concerns\Slides\AddsSlides;
 use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
+use App\Jobs\SearchImportAll;
 use App\Models\Screen;
 use App\Models\Slide;
 use Lib\SlideParser\Parser;
 use Illuminate\Http\Request;
+use Artisan;
 use DB;
 
 class SlidesApiController extends ApiController
@@ -66,6 +68,9 @@ class SlidesApiController extends ApiController
 
 		// Attach slide to screen, section, subsection etc.
 		$this->attachSlide($slide, $orderNumber, $slideshow, $section, $subsection, $categories);
+
+		// Re-index all slides... Psayayay
+		dispatch(new SearchImportAll(new Slide));
 
 		return $this->respondOk();
 	}

@@ -57,6 +57,10 @@ class OrdersApiController extends ApiController
 		}
 
 		$order->attachCoupon($coupon);
+		if ($order->paid && $coupon->times_usable > 0) {
+			$coupon->times_usable--;
+			$coupon->save();
+		}
 
 		return $this->respondOk();
 	}

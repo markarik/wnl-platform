@@ -36,8 +36,20 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
+		$this->handleCoupon();
 		$this->sendConfirmation();
 		$this->handleStudyBuddy();
+
+	}
+
+	protected function handleCoupon()
+	{
+		$order = $this->order;
+
+		if ($order->coupon && $order->coupon->times_usable > 0) {
+			$order->coupon->times_usable--;
+			$order->coupon->save();
+		}
 	}
 
 	protected function sendConfirmation()

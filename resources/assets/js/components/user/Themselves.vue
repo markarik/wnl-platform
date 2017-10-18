@@ -44,6 +44,7 @@
 		data() {
 			return {
 				param: this.$route.params.userId,
+				// address: {},
 				profile: {},
 				commentsCompetency: {},
 				qnaQuestionsCompetency: {},
@@ -99,6 +100,7 @@
 				},
 				include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			}
+			// const promisedAddress = axios.get(getApiUrl(`users/${this.param}/address`))
 			const promisedProfile = axios.get(getApiUrl(`users/${this.param}/profile`))
 			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
 			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)

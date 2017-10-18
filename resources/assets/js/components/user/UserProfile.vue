@@ -9,9 +9,25 @@
 				></wnl-avatar>
 			</div>
 
-			<div class="wnl-user-info">
+			<div class="user-info">
 				<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
+				<h3>{{ profile.public_email }}</h3>
+				<!-- <h3>{{ address.city }}</h3> -->
 			</div>
+		</div>
+		<hr>
+		<div class="top-activities">
+			<p class="title is-4">Topowe aktywności</p>
+			<wnl-qna
+				:readOnly="readOnly"
+				:reactionsDisabled="reactionsDisabled"
+				:qnaQuestionsCompetency="convertSortedQuestionsToObject"
+			></wnl-qna>
+			<wnl-qna
+				:readOnly="readOnly"
+				:reactionsDisabled="reactionsDisabled"
+				:qnaAnswersCompetency="convertSortedAnswersToObject"
+			></wnl-qna>
 		</div>
 		<div class="collections-controls">
 			<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"  :key="panel" @click="togglePanel(panel)">
@@ -74,13 +90,22 @@
 		flex-wrap: wrap
 		margin-bottom: $margin-base
 
+	.user-info
+		display: flex
+		justify-content: center
+		flex-direction: column
+		align-items: center
+		position: relative
+		top: -5vh
+
 	.user-avatar
-		z-index: 1
+		z-index: 2
 		top: -5vh
 
 </style>
 
 <script>
+	import _ from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
     import Avatar from 'js/components/global/Avatar'
@@ -106,7 +131,7 @@
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna': Qna,
 		},
-		props: ['profile', 'readOnly', 'commentsCompetency', 'qnaAnswersCompetency', 'qnaQuestionsCompetency'],
+		props: ['address', 'profile', 'readOnly', 'commentsCompetency', 'qnaAnswersCompetency', 'qnaQuestionsCompetency'],
 		data() {
 			return {
 				loading: false,
@@ -148,6 +173,28 @@
 				const {included, ...questions} = this.qnaAnswersCompetency.data;
 				return questions;
 			},
+			sortQuestionsCompetency() {
+				 return Object.values(this.qnaQuestionsComputed).sort((a, b) => {
+					return b.upvote.count - a.upvote.count
+				})
+			},
+			sortAnswersCompetency() {
+				return Object.values(this.qnaAnswersComputed).sort((a, b) => {
+				   return b.upvote.count - a.upvote.count
+			   })
+		   },
+		   convertSortedQuestionsToObject() {
+			   return {
+				   0: this.sortQuestionsCompetency[0],
+				   1: this.sortQuestionsCompetency[1]
+			   }
+		   },
+		   convertSortedAnswersToObject() {
+			   return {
+				   0: this.sortAnswersCompetency[0],
+				   1: this.sortAnswersCompetency[1]
+			   }
+		   },
 			panels() {
 				return {
 					comments: 'Komentarze',
@@ -175,6 +222,7 @@
 		mounted() {
 			this.setUserQnaQuestions(this.qnaQuestionsCompetency.data)
 			this.setUserQnaQuestions(this.qnaAnswersCompetency.data)
+			console.log(this.convertSortedQuestionsToObject);
 		},
 	}
 </script>

@@ -55,7 +55,9 @@ class OrdersApiController extends ApiController
 			]);
 		}
 
-		dispatch(new OrderStudyBuddy($order));
+		if ($coupon->studyBuddy) {
+			dispatch(new OrderStudyBuddy($order));
+		}
 		$order->attachCoupon($coupon);
 
 		return $this->respondOk();

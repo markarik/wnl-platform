@@ -41,11 +41,15 @@
 					</div>
 					<slot name="action"/>
 					<div class="level-item">
+						<a class="button" :disabled="!this.slideId && !this.screenId" @click="preview">Podgląd</a>
+					</div>
+					<div class="level-item">
 						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any() || !form.content" @click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
 			</div>
 		</form>
+		<wnl-slide-preview :showModal="showPreviewModal" :content="previewModalContent" @closeModal="showPreviewModal=false"/>
 	</div>
 </template>
 
@@ -62,11 +66,13 @@
 </style>
 
 <script>
-	import Form from 'js/classes/forms/Form'
-	import Code from 'js/admin/components/forms/Code'
-	import Checkbox from 'js/admin/components/forms/Checkbox'
-	import {getUrl} from 'js/utils/env'
 	import _ from 'lodash'
+
+	import Form from 'js/classes/forms/Form'
+	import {getUrl, getApiUrl} from 'js/utils/env'
+	import Code from 'js/admin/components/forms/Code'
+	import SlidePreview from 'js/admin/components/slides/SlidePreview'
+	import Checkbox from 'js/admin/components/forms/Checkbox'
 	import { alerts } from 'js/mixins/alerts'
 
 	const SECTION_OPEN_TAG_REGEX = /<section.*>$/
@@ -77,6 +83,7 @@
 		components: {
 			'wnl-form-code': Code,
 			'wnl-form-checkbox': Checkbox,
+			'wnl-slide-preview': SlidePreview,
 		},
 		props: {
 			title: {
@@ -98,6 +105,15 @@
 			requestPayload: {
 				type: Object,
 				default: () => {}
+			},
+			slideId: {
+				type: Number,
+				default: 0
+			},
+			screenId: {
+				type: Number,
+				default: 0,
+				validator: (value) => !isNaN(value)
 			}
 		},
 		mixins: [ alerts ],
@@ -107,9 +123,10 @@
 					content: null,
 					is_functional: null,
 				}),
+				showPreviewModal: false,
+				previewModalContent: '',
 				saved: false,
 				submissionFailed: false,
-				screenId: '',
 				loading: false,
 				updatingChart: false,
 			}
@@ -174,15 +191,26 @@
 							$wnl.logger.capture(error)
 							this.updatingChart = false
 						})
-			}
+			},
+			preview(event) {
+				event.preventDefault();
+				event.stopPropagation();
+
+				this.showPreviewModal = true
+
+				axios.post(getApiUrl('slideshow_builder/preview'), {
+					content: this.form.content,
+					slideId: this.slideId ? this.slideId : null,
+					screenId: this.screenId ? this.screenId : null
+				}).then(({ data }) => {
+					this.previewModalContent = data
+				})
+			},
 		},
 		watch: {
 			resourceUrl(newValue, oldValue) {
 				newValue !== '' && this.form.populate(this.resourceUrl, this.excluded)
 			},
-			content(newValue) {
-				this.$emit('contentChanged', newValue)
-			}
 		}
 	}
 </script>

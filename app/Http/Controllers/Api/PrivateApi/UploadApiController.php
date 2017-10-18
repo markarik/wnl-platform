@@ -19,21 +19,21 @@ class UploadApiController extends ApiController
 		$user = Auth::user();
 
 		if (!$request->hasFile('file')) {
-			return $this->respondInvalidInput([], 'The request contained no file.');
+			return $this->respondInvalidInput('The request contained no file.');
 		}
 
 		$file = $request->file;
 
 		if (!$file->isValid()) {
-			return $this->respondInvalidInput([], 'File upload failed.');
+			return $this->respondInvalidInput('File upload failed.');
 		}
 
 		if (!in_array($file->getClientMimeType(), self::AVATAR_ALLOWED_TYPES)) {
-			return $this->respondInvalidInput([], 'Unsupported file type.');
+			return $this->respondInvalidInput('Unsupported file type.');
 		}
 
 		if ($file->getClientSize() > self::AVATAR_MAX_FILE_SIZE) {
-			return $this->respondInvalidInput([], 'Max. allowed file size exceeded.');
+			return $this->respondInvalidInput('Max. allowed file size exceeded.');
 		}
 
 		if ($file->getClientMimeType() === 'image/gif') {

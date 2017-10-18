@@ -31,20 +31,44 @@ class SlideshowBuilderApiController extends ApiController
 		return $this->renderView($slides, $slideshow->background_url);
 	}
 
-	public function previewScreen(Request $request, $screenId)
+	public function preview(Request $request)
 	{
-		$screen = Screen::find($screenId);
+		$screenId = $request->get('screenId');
+		$slideId = $request->get('slideId');
+		$content = $request->get('content');
+
+		if (empty($screenId) && empty($slideId)) {
+			return $this->respondInvalidInput('Pass either screenId or slideId');
+		}
+
+		if (!empty($screenId)) {
+			$screen = Screen::find($screenId);
+		} else {
+			$slide = Slide::find($slideId);
+
+			if (!$slide) {
+				return response('slide not found', 404);
+			}
+
+			if (!empty($slide->sections) && !empty($slide->sections->first())) {
+				$section = $slide->sections->first();
+				$screen = $section->screen;
+			}
+		}
 
 		if (!$screen) {
 			return response('screen not found', 404);
 		}
 
-		$slideshow = $screen->slideshow;
-		$slide = $request->get('slide');
+		if (!empty($screen->slideshow)) {
+			$backgroundUrl = $screen->slideshow->background_url;
+		} else {
+			$backgroundUrl = '';
+		}
 
 		$view = view('course.slideshow', [
-			'slides'         => $slide,
-			'background_url' => $slideshow->background_url,
+			'slides'         => $content,
+			'background_url' => $backgroundUrl,
 		]);
 
 		$view->render();

@@ -190,8 +190,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Slideshow builder
 	Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'SlideshowBuilderApiController@byCategory');
+	Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
 	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
-	Route::post("{$r['slideshow-builder']}/screen/{screenId}/preview", 'SlideshowBuilderApiController@previewScreen');
 
 	// Events
 	Route::post("events/mentions", 'MentionsApiController@post');

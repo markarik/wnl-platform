@@ -74,7 +74,8 @@ export default {
 
 							this.$emit('resourceUrlFetched', {
 								url: this.resourceUrl,
-								slideId: this.slideId
+								slideId: this.slideId,
+								screenId: this.screenId
 							})
 							this.error = false
 						})

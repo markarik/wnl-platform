@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\Transformers\UserPlanTransformer;
 use App\Models\User;
 use App\Http\Controllers\Api\ApiController;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\QuizQuestion;

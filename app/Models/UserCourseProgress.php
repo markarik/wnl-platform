@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserCourseProgress extends Model
 {
-	public $timestamps = false;
 	protected $table = 'user_course_progress';
 
-	protected $fillable = ['user_id', 'lesson_id', 'status'];
+	protected $fillable = ['user_id', 'lesson_id', 'screen_id', 'section_id', 'status'];
 }

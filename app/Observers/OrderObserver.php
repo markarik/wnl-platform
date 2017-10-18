@@ -58,7 +58,7 @@ class OrderObserver
 		$order->product->quantity--;
 		$order->product->save();
 
-		if ($order->coupon && $order->coupon->times_usable) {
+		if ($order->coupon && $order->coupon->times_usable > 0) {
 			$order->coupon->times_usable--;
 			$order->coupon->save();
 		}

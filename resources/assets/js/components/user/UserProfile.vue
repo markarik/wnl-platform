@@ -190,15 +190,31 @@
 			   })
 		   },
 		   convertSortedQuestionsToObject() {
-			   return {
-				   0: this.sortQuestionsCompetency[0],
-				   1: this.sortQuestionsCompetency[1]
+			   if (this.sortQuestionsCompetency.length > 1) {
+				   return {
+					   0: this.sortQuestionsCompetency[0],
+					   1: this.sortQuestionsCompetency[1]
+				   }
+			   } else if (this.sortQuestionsCompetency.length = 1) {
+				   return {
+					   0: this.sortQuestionsCompetency[0]
+				   }
+			   } else {
+				   return ''
 			   }
 		   },
 		   convertSortedAnswersToObject() {
-			   return {
-				   0: this.sortAnswersCompetency[0],
-				   1: this.sortAnswersCompetency[1]
+			   if (this.sortAnswersCompetency.length > 1) {
+				   return {
+					   0: this.sortAnswersCompetency[0],
+					   1: this.sortAnswersCompetency[1]
+				   }
+			   } else if (this.sortAnswersCompetency.length = 1) {
+				   return {
+					   0: this.sortAnswersCompetency[0]
+				   }
+			   } else {
+				   return ''
 			   }
 		   },
 			panels() {
@@ -211,6 +227,11 @@
 			isSinglePanelView() {
 				return this.isTouchScreen
 			}
+		},
+		pointsForQuestions() {
+			return Object.values(this.qnaQuestionsComputed.data).reduce((sum, el) => {
+				return sum + el.upvote.count
+			}, 0)
 		},
 		methods: {
 			...mapActions('qna', ['setUserQnaQuestions']),
@@ -226,9 +247,12 @@
 			},
 		},
 		mounted() {
+			// this.pointsForQuestions()
 			this.setUserQnaQuestions(this.qnaQuestionsCompetency.data)
 			this.setUserQnaQuestions(this.qnaAnswersCompetency.data)
-			console.log(this.convertSortedQuestionsToObject);
+			console.log(Object.values(this.commentsCompetency.data).length);
+			console.log(Object.values(this.qnaAnswersCompetency.data).length - 1);
+			// console.log(this.pointsForQuestions);
 		},
 	}
 </script>

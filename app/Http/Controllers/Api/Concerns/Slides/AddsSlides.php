@@ -108,10 +108,14 @@ trait AddsSlides
 				$query->where('id', $screen->id);
 			})->first();
 
-		$subsection = $slide->subsections()
-			->whereHas('section', function ($query) use ($section) {
-				$query->where('id', $section->id);
-			})->first();
+		if (!$section) {
+			$subsection = null;
+		} else {
+			$subsection = $slide->subsections()
+				->whereHas('section', function ($query) use ($section) {
+					$query->where('id', $section->id);
+				})->first();
+		}
 
 		$categories = $slide->categories;
 

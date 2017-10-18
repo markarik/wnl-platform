@@ -91,7 +91,7 @@ return [
 	'select-product-online-button-label' => 'Wybieram kurs internetowy',
 	'select-product-features-bonus-knowledge' => 'Indywidualne spotkania z prowadzącymi kurs',
 	'select-product-workshops-heading' => 'O warsztatach',
-	'select-product-workshops-description' => '<a href="https://wiecejnizlek.pl/o-warsztatach" target="_blank">Warsztaty</a> w ramach naszego kursu do LEK-u, to nie tylko okazja do uzyskania odpowiedzi na najtrudniejsze pytania! Pozwalają również skorzystać z doświadczenia wyjątkowych dydaktyków i specjalistów w dziedzinach chorób wewnętrznych, pediatrii, medycyny ratunkowej oraz prawa medycznego.',
+	'select-product-workshops-description' => '<a href="https://wiecejnizlek.pl/o-warsztatach" target="_blank">Warsztaty</a> w ramach naszego kursu, to doskonała okazja do lepszego przygotowania się do pierwszych kroków w praktyce zawodowej! Poruszane tematy mają w zamyśle przygotować Was lepiej do pracy oraz nauki w trakcie specjalizacji.',
 	'select-product-q-and-a-heading' => 'Masz wątpliwości?',
 	'select-product-q-and-a-description' => 'Na podstronie <a href="https://wiecejnizlek.pl/o-kursie" target="_blank">O kursie</a> odpowiadamy na wszystkie pytania dotyczące kursu. Od dat i planu zajęć, przez opis metodyki i materiałów, po misję, która motywuje nas do działania - wszystko w jednym miejscu. :) Jeżeli nie rozwiejemy Twoich wątpliwości, napisz do nas, a na pewno dodamy odpowiedź do strony!',
 	'select-product-read-more' => 'Przeczytaj więcej',

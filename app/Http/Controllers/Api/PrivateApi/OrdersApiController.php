@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Requests\Payment\UseCoupon;
+use App\Jobs\OrderStudyBuddy;
 use App\Models\Coupon;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,20 +45,42 @@ class OrdersApiController extends ApiController
 		$code = mb_convert_case($request->code, MB_CASE_UPPER, "UTF-8");
 		$coupon = Coupon::validCode($code);
 
-		if ($coupon->products->count() > 0 &&
-			!$coupon->products->contains($order->product)
-		) {
+		$errors = $this->validateCoupon($order, $coupon);
+
+		if (!empty($errors)) {
 			return $this->respondUnprocessableEntity([
 				'errors' => [
-					'code' => [
-						trans('payment.voucher-product-incompatible'),
-					],
+					'code' => $errors,
 				],
 			]);
 		}
 
+		dispatch(new OrderStudyBuddy($order));
 		$order->attachCoupon($coupon);
 
 		return $this->respondOk();
+	}
+
+	/**
+	 * Additional coupon validation, that couldn't be done
+	 * in custom request class.
+	 */
+	public function validateCoupon($order, $coupon)
+	{
+		$errors = [];
+
+		if ($coupon->products->count() > 0 &&
+			!$coupon->products->contains($order->product)
+		) {
+			array_push($errors, trans('payment.voucher-product-incompatible'));
+		}
+
+		if ($order->studyBuddy &&
+			$order->studyBuddy->code === $coupon->code
+		) {
+			array_push($errors, trans('payment.study-buddy-self-application'));
+		}
+
+		return $errors;
 	}
 }

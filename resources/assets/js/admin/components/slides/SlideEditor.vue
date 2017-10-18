@@ -77,6 +77,8 @@
 
 	const SECTION_OPEN_TAG_REGEX = /<section.*>$/
 	const SECTION_CLOSE_TAG_REGEX = /<\/section>$/
+	const COURSE_TAG_REGEX = /[#!]+\(.*\)/
+	const FUNCTIONAL_SLIDE_TAG_REGEX = /[#!]+\(functional\)/
 
 	export default {
 		name: 'SlideEditor',
@@ -206,11 +208,20 @@
 					this.previewModalContent = data
 				})
 			},
+			removeCourseTags() {
+				if (FUNCTIONAL_SLIDE_TAG_REGEX.test(this.form.content)) {
+					this.form.is_functional = true
+				}
+				this.form.content = this.form.content.replace(COURSE_TAG_REGEX, '')
+			}
 		},
 		watch: {
 			resourceUrl(newValue, oldValue) {
 				newValue !== '' && this.form.populate(this.resourceUrl, this.excluded)
 			},
+			content(newValue, oldValue) {
+				this.removeCourseTags()
+			}
 		}
 	}
 </script>

@@ -70,7 +70,7 @@ class SlidesApiController extends ApiController
 		$this->attachSlide($slide, $orderNumber, $slideshow, $section, $subsection, $categories);
 
 		// Re-index all slides... Psayayay
-		dispatch(new SearchImportAll(new Slide));
+		dispatch(new SearchImportAll('App\\Models\\Slide'));
 
 		return $this->respondOk();
 	}

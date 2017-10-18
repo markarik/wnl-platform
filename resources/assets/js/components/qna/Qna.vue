@@ -32,7 +32,7 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="howManyQuestions > 0"/>
+			<wnl-qna-sorting v-if="sortingEnabled"/>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
@@ -106,7 +106,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'readOnly', 'title', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency'],
+		props: ['tags', 'readOnly', 'title', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency', 'sortingEnabled'],
 		data() {
 			return {
 				ready: false,

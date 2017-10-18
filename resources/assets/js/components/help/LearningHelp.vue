@@ -10,7 +10,7 @@
 		<p class="strong">Cześć {{currentUserName}}!</p>
 		<p>Chętnie odpowiemy na wszystkie Twoje pytania odnośnie nauki podczas kursu "Więcej niż LEK" (i nie tylko)! Jeżeli szukasz informacji na temat efektywnej nauki, wiele przydatnej wiedzy znajdziesz we Wstępie do kursu.</p>
 		<p>Jeśli jednak macie jakiekolwiek pytania dotyczące nauki - możecie śmiało zadawać je tutaj!</p>
-		<wnl-qna :tags="tags" reactionsDisabled="true"></wnl-qna>
+		<wnl-qna :sortingEnabled="sortingEnabled" :tags="tags" reactionsDisabled="true"></wnl-qna>
 	</div>
 </template>
 
@@ -34,6 +34,7 @@
 		data() {
 			return {
 				tags: [],
+				sortingEnabled: true,
 			}
 		},
 		computed: {

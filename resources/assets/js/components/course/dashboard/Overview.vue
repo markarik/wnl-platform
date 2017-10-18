@@ -36,7 +36,7 @@
 			</a>
 		</div>
 		<wnl-stream-feed v-show="overviewView === 'stream'"/>
-		<wnl-qna v-show="overviewView === 'qna'" :title="false" class="wnl-overview-qna"/>
+		<wnl-qna :sortingEnabled="sortingEnabled" v-show="overviewView === 'qna'" :title="false" class="wnl-overview-qna"/>
 	</div>
 </template>
 

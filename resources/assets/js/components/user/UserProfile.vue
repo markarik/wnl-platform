@@ -19,11 +19,13 @@
 		<div class="top-activities">
 			<p class="title is-4">Topowe aktywności</p>
 			<wnl-qna
+				:sordingEnabled="sortingDisabled"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
 				:qnaQuestionsCompetency="convertSortedQuestionsToObject"
 			></wnl-qna>
 			<wnl-qna
+				:sordingEnabled="sortingDisabled"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
 				:qnaAnswersCompetency="convertSortedAnswersToObject"
@@ -44,10 +46,10 @@
 					<p class="title is-4">Komentarze ({{howManyComments}})</p>
 					<hr>
 					<wnl-comment
-					v-for="comment in commentsCompetency.data"
-					:comment="comment"
-					:key="comment.id"
-					:profile="profile"
+						v-for="comment in commentsCompetency.data"
+						:comment="comment"
+						:key="comment.id"
+						:profile="profile"
 					>
 					<router-link :to="{ name: comment.context.name, params: comment.context.params }">Pokaż kontekst</router-link>
 				</wnl-comment>
@@ -57,9 +59,10 @@
 				<div class="qna-answers">
 					<hr>
 					<wnl-qna
-					:readOnly="readOnly"
-					:reactionsDisabled="reactionsDisabled"
-					:qnaAnswersCompetency="qnaAnswersComputed"
+						:sortingEnabled="sortingEnabled"
+						:readOnly="readOnly"
+						:reactionsDisabled="reactionsDisabled"
+						:qnaAnswersCompetency="qnaAnswersComputed"
 					></wnl-qna>
 				</div>
 			</div>
@@ -67,9 +70,10 @@
 				<div class="qna-questions">
 					<hr>
 					<wnl-qna
-					:readOnly="readOnly"
-					:reactionsDisabled="reactionsDisabled"
-					:qnaQuestionsCompetency="qnaQuestionsComputed"
+						:sortingEnabled="sortingEnabled"
+						:readOnly="readOnly"
+						:reactionsDisabled="reactionsDisabled"
+						:qnaQuestionsCompetency="qnaQuestionsComputed"
 					></wnl-qna>
 				</div>
 			</div>
@@ -134,6 +138,8 @@
 		props: ['address', 'profile', 'readOnly', 'commentsCompetency', 'qnaAnswersCompetency', 'qnaQuestionsCompetency'],
 		data() {
 			return {
+				sortingDisabled: false,
+				sortingEnabled: true,
 				loading: false,
 				hideDefaultSubmit: true,
 				id: this.$route.params.userId,

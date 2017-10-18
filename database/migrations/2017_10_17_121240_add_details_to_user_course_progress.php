@@ -16,8 +16,8 @@ class AddDetailsToUserCourseProgress extends Migration
 	{
 		Schema::table('user_course_progress', function (Blueprint $table) {
 			$table->timestamps();
-			$table->unsignedInteger('section_id');
-			$table->unsignedInteger('screen_id');
+			$table->unsignedInteger('screen_id')->after('lesson_id')->nullable();
+			$table->unsignedInteger('section_id')->after('screen_id')->nullable();
 			$table->unique(
 				[
 					'user_id',

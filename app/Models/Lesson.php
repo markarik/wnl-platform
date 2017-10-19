@@ -41,11 +41,11 @@ class Lesson extends Model
 	public function isAvailable($editionId)
 	{
 		$user = \Auth::user();
-		$lessonAccess = $user->lessons()->where('lesson_id', $this->id)->first();
+		$lessonAccess = $user->lessonsAccess()->where('lesson_id', $this->id)->first();
 		if ($lessonAccess) {
 			return true;
 		}
-		
+
 		$availability = $this->availability->where('edition_id', $editionId)->first();
 		if (!is_null($availability)) {
 			return $availability->start_date->isPast();

@@ -106,9 +106,9 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\QnaAnswer');
 	}
 
-	public function lessons()
+	public function lessonsAccess()
 	{
-		return $this->belongsToMany('App\Models\Lesson');
+		return $this->belongsToMany('App\Models\Lesson', 'lesson_user_access');
 	}
 
 	/**

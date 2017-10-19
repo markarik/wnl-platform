@@ -89,6 +89,24 @@ function _getAnswers(questionId) {
 	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles,reactions`))
 }
 
+/**
+ * @param answerId
+ * @returns {Promise}
+ * @private
+ */
+function _getComments(answerId) {
+	return axios.get(getApiUrl(`qna_answers/${answerId}?include=comments.profiles`))
+}
+
+/**
+ * @param answerId
+ * @returns {Promise}
+ * @private
+ */
+function _getAnswer(answerId) {
+	return axios.get(getApiUrl(`answers/${answerId}?include=users`))
+}
+
 function getInitialState() {
 	return {
 		loading: [],
@@ -177,6 +195,11 @@ const getters = {
 	profile:     state => (id) => state.profiles[id] || {},
 
 	// Question
+	questionContent: state => (id) => state.qna_questions[id].text,
+	questionAuthor: (state, getters) => (id) => {
+		return getters.profile(state.qna_questions[id].profiles[0])
+	},
+	questionTimestamp: state => (id) => state.qna_questions[id].created_at,
 	questionAnswers: state => (id) => {
 		let answersIds = state.qna_questions[id].qna_answers
 		if (_.isUndefined(answersIds)) {
@@ -303,7 +326,7 @@ const mutations = {
 const actions = {
 	...reactionsActions,
 	...commentsActions,
-	changeSorting({commit}, sorting) {
+	changeSorting({commit, dispatch}, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting)
 	},
 	fetchQuestionsByTags({commit, dispatch}, {tags, sorting}) {
@@ -371,7 +394,7 @@ const actions = {
 		})
 	},
 
-	fetchQuestion({commit}, questionId) {
+	fetchQuestion({commit, dispatch}, questionId) {
 		return new Promise((resolve, reject) => {
 			_getAnswers(questionId)
 				.then((response) => {
@@ -389,21 +412,21 @@ const actions = {
 				})
 		})
 	},
-	removeQuestion({commit}, questionId) {
+	removeQuestion({commit, dispatch}, questionId) {
 		return new Promise((resolve, reject) => {
 			commit(types.QNA_REMOVE_QUESTION, {questionId})
 			resolve()
 		})
 	},
-	resolveQuestion({commit}, questionId) {
+	resolveQuestion({commit, dispatch}, questionId) {
 		return _resolveQuestion(questionId)
 			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}))
 	},
-	unresolveQuestion({commit}, questionId) {
+	unresolveQuestion({commit, dispatch}, questionId) {
 		return _resolveQuestion(questionId, false)
 			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}))
 	},
-	removeAnswer({commit}, payload) {
+	removeAnswer({commit, dispatch}, payload) {
 		return new Promise((resolve, reject) => {
 			commit(types.QNA_REMOVE_ANSWER, {
 				questionId: payload.questionId,
@@ -412,7 +435,7 @@ const actions = {
 			resolve()
 		})
 	},
-	destroyQna({commit}) {
+	destroyQna({commit, dispatch}) {
 		commit(types.QNA_DESTROY)
 	},
 }

@@ -12,7 +12,7 @@ const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
 }
 
-const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,reactions,slides';
+const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,comments.reactions,reactions,slides';
 
 function fetchQuizSet(id) {
 	return new Promise((resolve, reject) => {

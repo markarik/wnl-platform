@@ -1,9 +1,9 @@
 <template>
 	<article class="wnl-comment media">
+		<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		<figure class="media-left">
 			<p class="image is-32x32">
-				<wnl-avatar size="medium" :fullName="profile.full_name"
-							:url="profile.avatar">
+				<wnl-avatar size="medium" :fullName="profile.full_name" :url="profile.avatar">
 				</wnl-avatar>
 			</p>
 		</figure>
@@ -14,13 +14,9 @@
 				<small>{{time}}</small>
 				<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 					&nbsp;·
-					<wnl-delete
-						:requestRoute="requestRoute"
-						:target="target"
-						@deleteSuccess="onDeleteSuccess"
-					></wnl-delete>
+					<wnl-delete :requestRoute="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
 				</span>
-				<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)"/>
+				<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
 			</div>
 		</div>
 	</article>
@@ -49,43 +45,49 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-	import Delete from 'js/components/global/form/Delete'
-	import Resolve from 'js/components/global/form/Resolve'
-	import { timeFromS } from 'js/utils/time'
-	import moderatorFeatures from 'js/perimeters/moderator'
+import Delete from 'js/components/global/form/Delete'
+import Resolve from 'js/components/global/form/Resolve'
+import { timeFromS } from 'js/utils/time'
+import moderatorFeatures from 'js/perimeters/moderator'
+import Vote from 'js/components/global/reactions/Vote'
 
-	export default {
-		name: 'Comment',
-		components: {
-			'wnl-delete': Delete,
-			'wnl-resolve': Resolve
+export default {
+	name: 'Comment',
+	components: {
+		'wnl-delete': Delete,
+		'wnl-resolve': Resolve,
+		'wnl-vote': Vote,
+	},
+	perimeters: [moderatorFeatures],
+	props: ['comment', 'profile'],
+	computed: {
+		...mapGetters(['currentUserId']),
+		...mapGetters('comments', ['getReaction']),
+		id() {
+			return this.comment.id
 		},
-		perimeters: [moderatorFeatures],
-		props: ['comment', 'profile'],
-		computed: {
-			...mapGetters(['currentUserId']),
-			id() {
-				return this.comment.id
-			},
-			time() {
-				return timeFromS(this.comment.created_at)
-			},
-			requestRoute() {
-				return `comments/${this.id}`
-			},
-			target() {
-				return 'ten komentarz'
-			},
-			isCurrentUserAuthor() {
-				return this.profile.id === this.currentUserId
-			},
+		time() {
+			return timeFromS(this.comment.created_at)
 		},
-		methods: {
-			onDeleteSuccess() {
-				this.$emit('removeComment', this.id)
-			}
+		requestRoute() {
+			return `comments/${this.id}`
+		},
+		target() {
+			return 'ten komentarz'
+		},
+		isCurrentUserAuthor() {
+			return this.profile.id === this.currentUserId
+		},
+		voteState() {
+			return this.getReaction('comments', this.id, "upvote")
+		},
+	},
+	methods: {
+		onDeleteSuccess() {
+			this.$emit('removeComment', this.id)
 		}
 	}
+}
 </script>

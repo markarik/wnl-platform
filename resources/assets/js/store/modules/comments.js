@@ -5,6 +5,7 @@ import { set, delete as destroy } from 'vue'
 import * as types from 'js/store/mutations-types'
 import { getApiUrl } from 'js/utils/env'
 import { getModelByResource, modelToResourceMap } from 'js/utils/config'
+import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
 
 function _fetchComments(ids, model) {
 	if (!model) {
@@ -33,7 +34,10 @@ function _resolveComment(id, status = true) {
 	})
 }
 
+const state = {};
+
 export const commentsGetters = {
+	...reactionsGetters,
 	/**
 	 * [getComments description]
 	 * @param  {Object} commentable { commentable_resource: String, commentable_id: Int }
@@ -51,6 +55,7 @@ export const commentsGetters = {
 }
 
 export const commentsMutations = {
+	...reactionsMutations,
 	[types.ADD_COMMENT] (state, payload) {
 		let resource = payload.commentableResource,
 			resourceId = payload.commentableId,
@@ -117,6 +122,7 @@ export const commentsMutations = {
 }
 
 export const commentsActions = {
+	...reactionsActions,
 	addComment({commit}, payload) {
 		commit(types.ADD_COMMENT, payload)
 	},
@@ -150,4 +156,12 @@ export const commentsActions = {
 				})
 		})
 	}
+}
+
+export default {
+	actions: commentsActions,
+	mutations: commentsMutations,
+	getters: commentsGetters,
+	state,
+	namespaced: true
 }

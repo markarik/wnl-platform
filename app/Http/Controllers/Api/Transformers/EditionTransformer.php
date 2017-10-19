@@ -24,10 +24,7 @@ class EditionTransformer extends ApiTransformer
 
 	public function includeGroups(Edition $edition)
 	{
-//		$groups = Group::where('course_id', $edition->course_id)
-//			->orderBy('order_number', 'asc')
-//			->get();
-		$groups = $edition->course->groups;
+		$groups = $edition->course->groups->sortBy('order_number');
 
 		return $this->collection($groups, new GroupTransformer($edition->id), 'groups');
 	}

@@ -1,22 +1,23 @@
 <template>
 	<article class="wnl-comment media">
-		<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
-		<figure class="media-left">
-			<p class="image is-32x32">
-				<wnl-avatar size="medium" :fullName="profile.full_name" :url="profile.avatar">
-				</wnl-avatar>
-			</p>
-		</figure>
-		<div class="media-content">
-			<div class="comment-content">
-				<span class="author">{{profile.full_name}}</span>
-				<div class="comment-text wrap" v-html="comment.text"></div>
-				<small>{{time}}</small>
-				<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
-					&nbsp;·
-					<wnl-delete :requestRoute="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
-				</span>
-				<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
+		<div class="wnl-comment-side">
+			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
+			<figure class="media-left">
+				<p class="image is-32x32">
+					<wnl-avatar size="medium" :fullName="profile.full_name" :url="profile.avatar">
+					</wnl-avatar>
+				</p>
+			</figure>
+		</div>
+		<div class="media-content comment-content">
+			<span class="author">{{profile.full_name}}</span>
+			<div class="comment-text wrap" v-html="comment.text"></div>
+			<small>{{time}}</small>
+			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
+				&nbsp;·
+				<wnl-delete :requestRoute="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
+			</span>
+			<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
 			</div>
 		</div>
 	</article>
@@ -25,8 +26,15 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.media-left
+		margin-bottom: 5px
+
 	.comment-content
 		margin-top: -5px
+
+	.wnl-comment-side
+		display: flex
+		flex-direction: column-reverse
 
 	.author
 		font-weight: $font-weight-bold

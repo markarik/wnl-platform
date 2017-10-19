@@ -15,7 +15,7 @@ class LessonUser extends Command
 	 */
 	protected $signature = 'lesson:user 
     						{action : allow or deny}
-    						{lesson : lesson ID}
+    						{lessons : lesson ID or comma separated list of lesson IDs}
     						{--U|users= : User ID or comma separated list of user IDs}
     						{--R|role= : Pass role name to grant/revoke access to all users having this role}';
 
@@ -45,7 +45,7 @@ class LessonUser extends Command
 	{
 		$users = $this->option('users');
 		$role = $this->option('role');
-		$lesson = Lesson::find($this->argument('lesson'));
+		$lessons = explode(',', $this->argument('lessons'));
 		$action = $this->argument('action');
 
 		if (!$users && !$role) {
@@ -68,11 +68,11 @@ class LessonUser extends Command
 
 		if ($action === 'deny') {
 			foreach ($users as $user) {
-				$user->lessonsAccess()->detach($lesson);
+				$user->lessonsAccess()->detach($lessons);
 			}
 		} elseif ($action === 'allow') {
 			foreach ($users as $user) {
-				$user->lessonsAccess()->attach($lesson);
+				$user->lessonsAccess()->attach($lessons);
 			}
 		} else {
 			$this->error('Invalid action name provided.');

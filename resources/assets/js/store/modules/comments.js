@@ -22,7 +22,7 @@ function _fetchComments(ids, model) {
 		order: {
 			id: 'asc',
 		},
-		include: 'profiles',
+		include: 'profiles,reactions',
 	}
 
 	return axios.post(getApiUrl('comments/.search'), data)
@@ -120,7 +120,9 @@ export const commentsMutations = {
 		})
 	},
 	[types.SET_COMMENTS_RAW] (state, payload) {
-		set(state, 'comments', payload)
+		set(state, 'comments', {
+			...state, ...payload
+		})
 	}
 }
 
@@ -140,10 +142,10 @@ export const commentsActions = {
 		_resolveComment(payload.id, false)
 			.then(() => commit(types.UNRESOLVE_COMMENT, payload))
 	},
-	setComments({commit}, payload) {
-		commit(types.SET_COMMENTS_RAW, payload)
+	setComments({commit}, {included, ...comments}) {
+		commit(types.SET_COMMENTS_RAW, comments)
 	},
-	fetchComments({commit}, {ids, resource}) {
+	fetchComments({commit, dispatch}, {ids, resource}) {
 		return new Promise((resolve, reject) => {
 			const model = getModelByResource(resource)
 
@@ -154,7 +156,15 @@ export const commentsActions = {
 					}
 
 					commit(types.SET_COMMENTS, response.data)
-					resolve()
+
+					const {included, ...comments} = response.data
+					const serializedComments = {};
+					Object.values(comments).map(comment => {
+						serializedComments[comment.id] = comment
+					})
+					dispatch('comments/setComments', serializedComments, {root:true})
+
+					resolve(response.data)
 				})
 				.catch((error) => {
 					$wnl.logger.error(error)

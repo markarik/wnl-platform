@@ -12,7 +12,7 @@ const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
 }
 
-const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,reactions,slides';
+const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,comments.reactions,reactions,slides';
 
 function fetchQuizSet(id) {
 	return new Promise((resolve, reject) => {
@@ -239,7 +239,7 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setupQuestions({commit, rootGetters, getters, state}, resource) {
+	setupQuestions({commit, rootGetters, getters, state, dispatch}, resource) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		Promise.all([
@@ -257,6 +257,7 @@ const actions = {
 			const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
 				len = quizQuestionsIds;
 
+			included.comments && dispatch('comments/setComments', {...included.comments}, {root:true})
 			commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay})
 
 			if (!_.isEmpty(storedState)) {

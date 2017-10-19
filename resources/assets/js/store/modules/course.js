@@ -6,9 +6,11 @@ import {resource} from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
 // Helper functions
-function getCourseApiUrl(courseId) {
+function getCourseApiUrl(courseId, userId) {
 	return getApiUrl(
-		`${resource('editions')}/${courseId}?include=${resource('groups')}.${resource('lessons')}.${resource('screens')}.${resource('sections')}.subsections`
+		`${resource('editions')}/${courseId}
+		?include=groups.lessons.screens.sections.subsections
+		&user=current`
 	)
 }
 
@@ -176,9 +178,9 @@ const actions = {
 			})
 		})
 	},
-	setStructure({commit}, courseId) {
+	setStructure({commit, rootGetters}, courseId) {
 		return new Promise((resolve, reject) => {
-			axios.get(getCourseApiUrl(courseId))
+			axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
 				.then(response => {
 					commit(types.SET_STRUCTURE, response.data)
 					resolve()

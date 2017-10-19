@@ -79,14 +79,12 @@ class ApiCache
 
 		$methodExcluded = !in_array($request->method(), ['GET', 'POST']);
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));
-		$urlExcluded = str_is('*current*', $request->getRequestUri());
 		$postExcluded = $request->method() === 'POST' && !str_is('*.search*', $request->getRequestUri());
 		$quizStats = str_is('*quiz_questions/stats*', $request->getRequestUri());
 
 		return
 			$methodExcluded ||
 			$queryExcluded ||
-			$urlExcluded ||
 			$postExcluded ||
 			$quizStats;
 	}
@@ -112,6 +110,10 @@ class ApiCache
 			if ($request->has($searchParam)) {
 				array_push($this->tags, json_encode($request->get($searchParam)));
 			}
+		}
+
+		if (str_is('*current*', $request->getRequestUri())) {
+			array_push($this->tags, 'user-' . \Auth::user()->id);
 		}
 
 		return $this->tags;

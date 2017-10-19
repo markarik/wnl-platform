@@ -49,8 +49,9 @@ class ApiCache
 
 	protected function handleResponse($request, $data)
 	{
-		if ($request->expectsJson()) {
-			return $this->respondOk($data);
+		$decoded = json_decode($data, true);
+		if ($decoded !== null) {
+			return $this->respondOk($decoded);
 		}
 
 		return response($data);
@@ -59,7 +60,7 @@ class ApiCache
 	protected function getData($response)
 	{
 		if ($response instanceof JsonResponse) {
-			return $response->getData();
+			return json_encode($response->getData(), JSON_UNESCAPED_SLASHES);
 		}
 
 		return $response->getContent();

@@ -106,6 +106,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\QnaAnswer');
 	}
 
+	public function lessons()
+	{
+		return $this->belongsToMany('App\Models\Lesson');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */

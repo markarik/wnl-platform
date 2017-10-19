@@ -118,6 +118,9 @@ export const commentsMutations = {
 			!state[resource][resourceId].comments.includes(comment.id)
 				&& state[resource][resourceId].comments.push(comment.id)
 		})
+	},
+	[types.SET_COMMENTS_RAW] (state, payload) {
+		set(state, 'comments', payload)
 	}
 }
 
@@ -136,6 +139,9 @@ export const commentsActions = {
 	unresolveComment({commit}, payload) {
 		_resolveComment(payload.id, false)
 			.then(() => commit(types.UNRESOLVE_COMMENT, payload))
+	},
+	setComments({commit}, payload) {
+		commit(types.SET_COMMENTS_RAW, payload)
 	},
 	fetchComments({commit}, {ids, resource}) {
 		return new Promise((resolve, reject) => {

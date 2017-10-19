@@ -5,7 +5,7 @@ import { set, delete as destroy } from 'vue'
 import * as types from 'js/store/mutations-types'
 import { getApiUrl } from 'js/utils/env'
 import { getModelByResource, modelToResourceMap } from 'js/utils/config'
-import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
+import {reactionsGetters, reactionsMutations, reactionsActions, convertToReactable} from 'js/store/modules/reactions'
 
 function _fetchComments(ids, model) {
 	if (!model) {
@@ -121,14 +121,17 @@ export const commentsMutations = {
 	},
 	[types.SET_COMMENTS_RAW] (state, payload) {
 		set(state, 'comments', {
-			...state, ...payload
+			...state.comments, ...payload
 		})
 	}
 }
 
 export const commentsActions = {
 	...reactionsActions,
-	addComment({commit}, payload) {
+	addComment({commit, dispatch}, payload) {
+		const {comment} = payload
+		const withReaction = convertToReactable(comment);
+		dispatch('comments/setComments', {[withReaction.id]: withReaction}, {root:true})
 		commit(types.ADD_COMMENT, payload)
 	},
 	removeComment({commit}, payload) {

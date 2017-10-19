@@ -26,6 +26,11 @@ class Lesson extends Model
 		return $this->hasMany('App\Models\LessonAvailability');
 	}
 
+	public function userAccess()
+	{
+		return $this->hasMany('App\Models\LessonUserAccess');
+	}
+
 	public function tags()
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
@@ -41,7 +46,7 @@ class Lesson extends Model
 	public function isAvailable($editionId)
 	{
 		$user = \Auth::user();
-		$lessonAccess = $user->lessonsAccess()->where('lesson_id', $this->id)->first();
+		$lessonAccess = $this->userAccess->where('user_id', $user->id)->first();
 		if ($lessonAccess) {
 			return true;
 		}

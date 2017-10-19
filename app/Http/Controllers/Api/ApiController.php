@@ -34,6 +34,7 @@ class ApiController extends Controller
 		$this->fractal->setSerializer(new ApiJsonSerializer());
 		if ($this->request->has('include')) {
 			$this->fractal->parseIncludes($this->request->get('include'));
+			$this->include = $this->request->get('include');
 		}
 	}
 
@@ -47,16 +48,20 @@ class ApiController extends Controller
 	public function get($id)
 	{
 		$modelName = self::getResourceModel($this->resourceName);
+//		$model = $modelName::select();
+		$model = $this->eagerLoadIncludes($modelName);
 		$transformerName = self::getResourceTransformer($this->resourceName);
 		if ($id === 'all') {
-			$models = $modelName::all();
-			$resource = new Collection($models, new $transformerName, $this->resourceName);
+			$results = $model->all();
+			$resource = new Collection($results, new $transformerName, $this->resourceName);
 		} else {
-			$models = $modelName::find($id);
-			$resource = new Item($models, new $transformerName, $this->resourceName);
+			$results = $model->find($id);
+			$resource = new Item($results, new $transformerName, $this->resourceName);
 		}
 		$data = $this->fractal->createData($resource)->toArray();
 
+
+//		return view('layouts.app');
 		return response()->json($data);
 	}
 
@@ -80,6 +85,7 @@ class ApiController extends Controller
 
 		if (Auth::user()->can('delete', $model)) {
 			$model->forceDelete();
+
 			// self::dispatchRemovedEvent($model, $modelName);
 
 			return $this->respondOk();
@@ -93,7 +99,8 @@ class ApiController extends Controller
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function count() {
+	public function count()
+	{
 		return $this->respondOk([
 			'count' => (self::getResourceModel($this->resourceName))::count(),
 		]);
@@ -228,5 +235,47 @@ class ApiController extends Controller
 		];
 
 		return $response;
+	}
+
+	protected function eagerLoadIncludes(string $model)
+	{
+		if (empty($this->include)) return $model::select();
+		$relationships = [];
+
+		foreach (explode(',', $this->include) as $chain) {
+			$confirmedChain = $this->processChain($chain, $model);
+			if ($confirmedChain) {
+				array_push($relationships, $confirmedChain);
+			}
+		}
+
+		return $model::with($relationships);
+	}
+
+	protected function modelHasMethod(string $model, string $method)
+	{
+		return method_exists((new $model), $method);
+	}
+
+	protected function processChain(string $chain, string $parentModel)
+	{
+		$resources = explode('.', $chain);
+		$depth = count($resources);
+		for ($i = 0; $i < $depth; $i++) {
+			if ($i === 0) {
+				if (!$this->modelHasMethod($parentModel, $resources[$i])) {
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$parentModel}");
+					return false;
+				}
+			} else {
+				$model = self::getResourceModel($resources[$i-1]);
+				if (!$this->modelHasMethod($model, $resources[$i])) {
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$model}");
+					return false;
+				}
+			}
+		}
+
+		return $chain;
 	}
 }

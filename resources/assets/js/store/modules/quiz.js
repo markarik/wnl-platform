@@ -306,7 +306,7 @@ const actions = {
 		})
 	},
 
-	fetchSingleQuestion({commit}, id) {
+	fetchSingleQuestion({commit, dispatch}, id) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		return _fetchSingleQuestion(id)
@@ -319,6 +319,7 @@ const actions = {
 					included['quiz_questions'] = {}
 					included['quiz_questions'][id] = response.data
 
+					included.comments && dispatch('comments/setComments', included.comments, {root:true})
 					commit(types.UPDATE_INCLUDED, included)
 					commit(types.QUIZ_SET_QUESTIONS, {
 						setId: 0,

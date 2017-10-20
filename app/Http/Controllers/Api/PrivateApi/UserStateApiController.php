@@ -35,7 +35,7 @@ class UserStateApiController extends ApiController
 	// userId - cacheVersion
 	const KEY_USER_TIME_TEMPLATE = 'UserState:Time:%s:%s';
 	const CACHE_VERSION = 1;
-	const INCREMENT_BY_MINUTES = 3;
+	const INCREMENT_BY_MINUTES = 10;
 
 	public function getCourse($id, $courseId)
 	{
@@ -82,21 +82,6 @@ class UserStateApiController extends ApiController
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
 
 		return $this->respondOk();
-	}
-
-	public function getTime($user)
-	{
-		$userInstance = User::find($user);
-
-		if (!Auth::user()->can('view', $userInstance)) {
-			return $this->respondForbidden();
-		}
-
-		$time = Redis::get(self::getUserTimeRedisKey($user));
-
-		return $this->json([
-			'time' => empty($time) ? 0 : $time
-		]);
 	}
 
 	public function incrementTime(Request $request, $user)

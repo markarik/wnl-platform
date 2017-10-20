@@ -52,7 +52,6 @@
 		computed: {
 			...mapGetters('course', [
 				'getScreen',
-				'getScreenSectionsCheckpoints',
 			]),
 			screenData() {
 				return this.getScreen(this.screenId)

@@ -32,9 +32,13 @@ class Screen extends Model
 
 	public function getSlideshowAttribute()
 	{
-		$metaResources = collect($this->meta['resources'])->keyBy('name');
-		$slideshowResource = $metaResources->get('slideshows');
+		if (!empty($this->meta)) {
+			$metaResources = collect($this->meta['resources'])->keyBy('name');
+			$slideshowResource = $metaResources->get('slideshows');
 
-		return Slideshow::find($slideshowResource['id']);
+			return Slideshow::find($slideshowResource['id']);
+		}
+
+		return null;
 	}
 }

@@ -22,33 +22,39 @@ const setLessonProgress = ({courseId, lessonId}, value) => {
 	})
 };
 
-const completeSection = (lessonState, {screenId, sectionId, route, ...payload}) => {
-	const updatedState = lessonState ? {...lessonState} : {};
+const completeSection = (lessonState, payload) => {
+	const {screenId, sectionId} = payload
+	const stateWithScreen = _getScreenProgress(lessonState, payload)
+	const stateWithSections = _getSectionProgress(stateWithScreen, payload)
 
-	updatedState.route = route;
+	setLessonProgress(payload, stateWithSections)
 
-	updatedState.screens = updatedState.screens || {};
+	return stateWithSections;
+};
 
-	if (!updatedState.screens[screenId]) {
-		updatedState.screens[screenId] = {
-			status: STATUS_IN_PROGRESS
-		}
-	}
+const completeSubsection = (lessonState, payload) => {
+	const {sectionId, screenId, subsectionId, route} = payload;
+	const stateWithScreen = _getScreenProgress(lessonState, payload)
+	const stateWithSections = _getSectionProgress(stateWithScreen, payload)
 
-	if (!updatedState.screens[screenId].sections) {
-		updatedState.screens[screenId].sections = {
-			[sectionId]: STATUS_COMPLETE
+	if (!stateWithSections.screens[screenId].sections[sectionId].subsections) {
+		stateWithSections.screens[screenId].sections[sectionId].subsections = {
+			[subsectionId]: {
+				status: STATUS_COMPLETE
+			}
 		}
 	} else {
-		updatedState.screens[screenId].sections = {
-			...updatedState.screens[screenId].sections,
-			[sectionId]: STATUS_COMPLETE
+		stateWithSections.screens[screenId].sections[sectionId].subsections = {
+			...stateWithSections.screens[screenId].sections[sectionId].subsections,
+			[subsectionId]: {
+				status: STATUS_COMPLETE
+			}
 		}
 	}
 
-	setLessonProgress(payload, updatedState)
+	setLessonProgress(payload, stateWithSections)
 
-	return updatedState;
+	return stateWithSections;
 };
 
 const completeScreen = (lessonState, {screenId, route, ...payload}) => {
@@ -140,11 +146,50 @@ const getLessonProgress = ({courseId, lessonId}) => {
 	});
 };
 
+const _getScreenProgress = (lessonState = {}, {route, screenId}) => {
+	const updatedState = {
+		screens: {},
+		...lessonState,
+		route,
+	}
+
+	if (!updatedState.screens[screenId]) {
+		updatedState.screens[screenId] = {
+			status: STATUS_IN_PROGRESS
+		}
+	}
+
+	return updatedState;
+}
+
+const _getSectionProgress = (lessonState = {}, {route, screenId, sectionId}) => {
+	const updatedState = {...lessonState};
+
+	if (!updatedState.screens[screenId].sections) {
+		updatedState.screens[screenId].sections = {
+			[sectionId]: {
+				status: STATUS_COMPLETE
+			}
+		}
+	} else {
+		updatedState.screens[screenId].sections = {
+			...updatedState.screens[screenId].sections,
+			[sectionId]: {
+				...updatedState.screens[screenId].sections[sectionId],
+				status: STATUS_COMPLETE
+			}
+		}
+	}
+
+	return updatedState
+}
+
 export default {
 	getCourseProgress,
 	getLessonProgress,
 	completeSection,
 	completeScreen,
 	completeLesson,
+	completeSubsection,
 	startLesson
 };

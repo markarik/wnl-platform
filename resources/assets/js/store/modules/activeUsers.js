@@ -12,7 +12,7 @@ const getters = {
 }
 
 // Mutations
-const mutations = {
+export const mutations = {
 	[types.ACTIVE_USERS_SET] (state, {users, channel}) {
 		set(state, 'activeUsers', {
 			...state.activeUsers,

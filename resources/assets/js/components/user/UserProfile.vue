@@ -15,8 +15,8 @@
 			</wnl-user-background>
 		</div>
 		<hr>
-		<div class="user-activity-header">
-			<p class="title is-4">Aktywność</p>
+		<div class="user-section-header">
+			<p class="title is-4">AKTYWNOŚĆ</p>
 		</div>
 		<br>
 		<div class="user-activity-content">
@@ -27,7 +27,10 @@
 
 		<hr>
 		<div class="top-activities">
-			<p class="title is-4">Topowe aktywności</p>
+			<div class="user-section-header">
+				<p class="title is-4">TOPOWA AKTYWNOŚĆ</p>
+			</div>
+			<br>
 			<wnl-qna
 				:title="'Nqjlepsze Pytania'"
 				v-if="ifAnyQuestions"
@@ -132,9 +135,9 @@
 		justify-content: space-around
 		align-items: center
 
-	.user-activity-header
+	.user-section-header
 		display: flex
-		justify-content: center
+		justify-content: flex-start
 
 </style>
 

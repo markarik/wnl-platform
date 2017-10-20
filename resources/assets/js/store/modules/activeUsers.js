@@ -24,7 +24,6 @@ const mutations = {
 // Actions
 const actions = {
 	userJoined ({commit, state}, {user, channel}) {
-		console.log(channel)
 		commit(types.ACTIVE_USERS_SET, {users: [user, ...state.activeUsers[channel]], channel})
 	},
 	userLeft({commit, state}, {user, channel}) {

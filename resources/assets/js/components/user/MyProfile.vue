@@ -28,6 +28,13 @@
 			<wnl-form-text name="first_name">Imię</wnl-form-text>
 			<wnl-form-text name="last_name">Nazwisko</wnl-form-text>
 			<wnl-form-text name="username">Nazwa użytkownika</wnl-form-text>
+			<wnl-form-text name="city">Miasto</wnl-form-text>
+			<wnl-form-text name="university=">Uniwersytet</wnl-form-text>
+			<wnl-form-text name="specialization">Specka</wnl-form-text>
+			<wnl-form-text name="help">W czym mogę pomóc?</wnl-form-text>
+			<wnl-form-text name="interests">Zainteresowania</wnl-form-text>
+			<wnl-form-text name="learning_location">Gdzie się uczę?</wnl-form-text>
+			<wnl-form-text name="about">O</wnl-form-text>
 			<wnl-form-text name="public_email">Adres e-mail</wnl-form-text>
 			<wnl-form-text name="public_phone">Numer telefonu</wnl-form-text>
 		</wnl-form>

@@ -13,7 +13,7 @@ class ListOrders extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'orders {id?*} {--refund} {--since=}';
+	protected $signature = 'orders {id?*} {--refund} {--since=} {--remindable} {--cancelable}';
 
 	/**
 	 * The console command description.
@@ -51,15 +51,34 @@ class ListOrders extends Command
 			}
 		}
 
+		if ($this->option('since')) {
+			$orders = $orders->filter(function ($order) {
+				return $order->created_at > Carbon::parse($this->option('since'));
+			});
+		}
+
 		if ($this->option('refund')) {
 			$orders = $orders->filter(function ($order) {
 				return $order->paid_amount > $order->total_with_coupon;
 			});
 		}
 
-		if ($this->option('since')) {
-			$orders = $orders->filter(function ($order) {
-				return $order->created_at > Carbon::parse($this->option('since'));
+		if ($this->option('cancelable')) {
+			$paidUsers = $orders->where('paid', 1)->pluck('user_id')->toArray();
+
+			$orders = $orders->filter(function ($order) use ($paidUsers) {
+				return !$order->paid &&
+					!$order->canceled &&
+					$order->method !== null &&
+					in_array($order->user_id, $paidUsers);
+			});
+		}
+
+		if ($this->option('remindable')) {
+			$now = new Carbon();
+			$orders = $orders->filter(function ($order) use ($now) {
+				return $order->method && !$order->paid && !$order->canceled &&
+					Carbon::parse($order->created_at)->diffInDays($now) > 7;
 			});
 		}
 

@@ -15,6 +15,7 @@
 						</div>
 					</div>
 				</div>
+				<wnl-active-users :channel="presenceChannel"/>
 				<router-view></router-view>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
@@ -65,12 +66,14 @@
 	import {breadcrumb} from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
 	import {STATUS_COMPLETE} from '../../services/progressStore';
+	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 
 	export default {
 		name: 'Lesson',
 		components: {
 			'wnl-previous-next': PreviousNext,
 			'wnl-breadcrumbs': Breadcrumbs,
+			'wnl-active-users': ActiveUsers
 		},
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
@@ -174,7 +177,7 @@
 				}
 			},
 			presenceChannel() {
-				return `lesson.${$this.lessonId}`
+				return `lesson.${this.lessonId}`
 			}
 		},
 		methods: {
@@ -185,12 +188,12 @@
 				'completeSection',
 				'completeSubsection',
 				'saveLessonProgress',
+			]),
+			...mapActions([
+				'updateLessonNav',
 				'setActiveUsers',
 				'userJoined',
 				'userLeft'
-			]),
-			...mapActions([
-				'updateLessonNav'
 			]),
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
@@ -198,9 +201,9 @@
 				});
 
 				window.Echo.join(this.presenceChannel)
-					.here(users => this.setActiveUsers(users, this.presenceChannel))
-					.joining(user => this.userJoined(user, this.presenceChannel))
-					.leaving(user => this.userLeft(user, this.presenceChannel))
+					.here(users => this.setActiveUsers({users, channel: this.presenceChannel}))
+					.joining(user => this.userJoined({user, channel: this.presenceChannel}))
+					.leaving(user => this.userLeft({user, channel: this.presenceChannel}))
 			},
 			goToDefaultScreenIfNone() {
 				const query = this.$route.query || {}

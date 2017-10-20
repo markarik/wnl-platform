@@ -4,9 +4,7 @@ import * as types from '../mutations-types'
 import {testAction} from '../../tests/helpers'
 
 const getInitialState = () => {
-	return {
-		activeUsers: {}
-	}
+	return {}
 }
 
 describe('activeUsers module', () => {
@@ -16,7 +14,7 @@ describe('activeUsers module', () => {
 
 			mutations[types.ACTIVE_USERS_SET](state, {users: ['foo', 'bar'], channel: 'fizz'})
 
-			expect(state.activeUsers).to.eql({
+			expect(state).to.eql({
 				fizz: ['foo', 'bar']
 			})
 		})

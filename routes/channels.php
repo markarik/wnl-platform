@@ -13,8 +13,7 @@ Broadcast::channel('active-users', function ($user) {
 	];
 });
 
-Broadcast::channel('lesson.{$lessonId}', function ($user, $lessonId) {
-	// TODO AUTH ME
+Broadcast::channel('lesson.{lessonId}', function ($user, $lessonId) {
 	return [
 		'id' => $user->id,
 		'email' => $user->email,

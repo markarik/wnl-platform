@@ -1,30 +1,44 @@
 <template lang="html">
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 		<div class="user-content">
-			<wnl-user-background class="user-background":fullName="fullName"></wnl-user-background>
-			<div class="wnl-user-profile-avatar">
+			<wnl-user-background class="user-background"
+				:fullName="fullName">
 				<wnl-avatar class="user-avatar image is-128x128" size="extralarge"
-				:fullName="profile.full_name"
-				:url="profile.avatar"
+					:fullName="profile.full_name"
+					:url="profile.avatar"
 				></wnl-avatar>
-			</div>
-
-			<div class="user-info">
-				<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
-				<h3>{{ profile.public_email }}</h3>
-				<!-- <h3>{{ address.city }}</h3> -->
-			</div>
+				<div class="user-info">
+					<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
+					<h3>{{ profile.public_email }}</h3>
+					<!-- <h3>{{ address.city }}</h3> -->
+				</div>
+			</wnl-user-background>
 		</div>
+		<hr>
+		<div class="user-activity-header">
+			<p class="title is-4">Aktywność</p>
+		</div>
+		<br>
+		<div class="user-activity-content">
+			<wnl-activity-meter class="user-activity" :activity="'Komentarze'" :activityCount="howManyComments"></wnl-activity-meter>
+			<wnl-activity-meter class="user-activity" :activity="'Odpowiedzi'" :activityCount="howManyAnswers"></wnl-activity-meter>
+			<wnl-activity-meter class="user-activity" :activity="'Pytania'" :activityCount="howManyQuestions"></wnl-activity-meter>
+		</div>
+
 		<hr>
 		<div class="top-activities">
 			<p class="title is-4">Topowe aktywności</p>
 			<wnl-qna
+				:title="'Nqjlepsze Pytania'"
+				v-if="ifAnyQuestions"
 				:sordingEnabled="sortingDisabled"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
 				:qnaQuestionsCompetency="convertSortedQuestionsToObject"
 			></wnl-qna>
 			<wnl-qna
+				:title="'Najlepsze Odpowiedzi'"
+				v-if="ifAnyAnswers"
 				:sordingEnabled="sortingDisabled"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
@@ -59,6 +73,7 @@
 				<div class="qna-answers">
 					<hr>
 					<wnl-qna
+						:title="'Wszystkie Odpowiedzi'"
 						:sortingEnabled="sortingEnabled"
 						:readOnly="readOnly"
 						:reactionsDisabled="reactionsDisabled"
@@ -70,6 +85,7 @@
 				<div class="qna-questions">
 					<hr>
 					<wnl-qna
+						:title="'Wszystkie Pytania'"
 						:sortingEnabled="sortingEnabled"
 						:readOnly="readOnly"
 						:reactionsDisabled="reactionsDisabled"
@@ -84,15 +100,24 @@
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
 
-	.image
-		align-self: center
-		margin: auto
-
 	.collections-controls
 		align-items: center
 		display: flex
 		flex-wrap: wrap
 		margin-bottom: $margin-base
+
+	.user-background
+		display: flex
+		flex-direction: row
+		justify-content: flex-start
+		align-items: center
+		padding-left: 2vw
+		.user-avatar
+			z-index: 1
+		.user-info
+			z-index: 1
+			padding-left: 2vw
+
 
 	.user-info
 		display: flex
@@ -100,11 +125,16 @@
 		flex-direction: column
 		align-items: center
 		position: relative
-		top: -5vh
 
-	.user-avatar
-		z-index: 2
-		top: -5vh
+	.user-activity-content
+		display: flex
+		flex-direction: row
+		justify-content: space-around
+		align-items: center
+
+	.user-activity-header
+		display: flex
+		justify-content: center
 
 </style>
 
@@ -121,6 +151,7 @@
 	import QnaQuestion from 'js/components/qna/QnaQuestion'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Qna from 'js/components/qna/Qna'
+	import ActivityMeter from 'js/components/users/ActivityMeter'
 
 	export default {
 		name: 'UserProfile',
@@ -134,6 +165,7 @@
 			'wnl-qna-question': QnaQuestion,
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna': Qna,
+			'wnl-activity-meter': ActivityMeter,
 		},
 		props: ['address', 'profile', 'readOnly', 'commentsCompetency', 'qnaAnswersCompetency', 'qnaQuestionsCompetency'],
 		data() {
@@ -153,6 +185,26 @@
 			...mapGetters(['isMobileProfile', 'isTouchScreen']),
 			howManyComments() {
 				return this.commentsCompetency.data.length
+			},
+			howManyQuestions() {
+				return Object.values(this.qnaQuestionsComputed).length
+			},
+			ifAnyQuestions() {
+				if (this.howManyQuestions === 0) {
+					return false
+				} else {
+					return true
+				}
+			},
+			howManyAnswers() {
+				return Object.values(this.qnaAnswersComputed).length
+			},
+			ifAnyAnswers() {
+				if (this.howManyAnswers === 0) {
+					return false
+				} else {
+					return true
+				}
 			},
 			isProduction() {
 				return isProduction()
@@ -250,9 +302,7 @@
 			// this.pointsForQuestions()
 			this.setUserQnaQuestions(this.qnaQuestionsCompetency.data)
 			this.setUserQnaQuestions(this.qnaAnswersCompetency.data)
-			console.log(Object.values(this.commentsCompetency.data).length);
-			console.log(Object.values(this.qnaAnswersCompetency.data).length - 1);
-			// console.log(this.pointsForQuestions);
+			console.log(Object.values(this.qnaQuestionsComputed).length);
 		},
 	}
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="wnl-background" :class="[colorClass]">
-
+        <slot></slot>
     </div>
 
 </template>
@@ -14,7 +14,7 @@
             background-color: nth($background-colors-list, $i)
 
     .wnl-background
-        height: 20vh
+        height: 22vh
         width: 100%
 </style>
 

@@ -4,10 +4,15 @@
 	export default {
 		functional: true,
 		render: (createElement, {props: {message, notificationComponent}, data: {on}}) => {
-			const contextRoute = () => mapMessageToRoute(message, {
+			const query = {
 				[message.objects.type]: message.objects.id,
 				[message.subject.type]: message.subject.reaction_type
-			})
+			}
+
+			if (message.commentable) {
+				query[message.commentable.type] = message.commentable.id
+			}
+			const contextRoute = () => mapMessageToRoute(message, query)
 
 			return createElement(notificationComponent, {
 				props: {

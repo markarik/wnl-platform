@@ -3,31 +3,38 @@ import * as types from '../mutations-types'
 
 // Initial state
 const state = {
-	activeUsers: [],
+	activeUsers: {},
 };
 
 // Getters
 const getters = {
-	activeUsers: state => state.activeUsers,
+	activeUsers: state => channel =>  state.activeUsers[channel] || [],
 }
 
 // Mutations
 const mutations = {
-	[types.ACTIVE_USERS_SET] (state, activeUsers) {
-		set(state, 'activeUsers', activeUsers)
+	[types.ACTIVE_USERS_SET] (state, {users, channel}) {
+		set(state, 'activeUsers', {
+			...state.activeUsers,
+			[channel]: users
+		})
 	},
 }
 
 // Actions
 const actions = {
-	userJoined ({commit, state}, user) {
-		commit(types.ACTIVE_USERS_SET, [user, ...state.activeUsers])
+	userJoined ({commit, state}, {user, channel}) {
+		console.log(channel)
+		commit(types.ACTIVE_USERS_SET, {users: [user, ...state.activeUsers[channel]], channel})
 	},
-	userLeft({commit, state}, user) {
-		commit(types.ACTIVE_USERS_SET, state.activeUsers.filter((activeUser) => activeUser.id !== user.id))
+	userLeft({commit, state}, {user, channel}) {
+		commit(types.ACTIVE_USERS_SET, {
+			users: state.activeUsers[channel].filter((activeUser) => activeUser.id !== user.id),
+			channel
+		})
 	},
-	setActiveUsers({commit}, users) {
-		commit(types.ACTIVE_USERS_SET, users)
+	setActiveUsers({commit}, payload) {
+		commit(types.ACTIVE_USERS_SET, payload)
 	}
 };
 

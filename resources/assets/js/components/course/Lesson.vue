@@ -173,6 +173,9 @@
 					},
 				}
 			},
+			presenceChannel() {
+				return `lesson.${$this.lessonId}`
+			}
 		},
 		methods: {
 			...mapActions('progress', [
@@ -181,7 +184,10 @@
 				'completeScreen',
 				'completeSection',
 				'completeSubsection',
-				'saveLessonProgress'
+				'saveLessonProgress',
+				'setActiveUsers',
+				'userJoined',
+				'userLeft'
 			]),
 			...mapActions([
 				'updateLessonNav'
@@ -190,6 +196,11 @@
 				this.startLesson(this.lessonProgressContext).then(() => {
 					this.goToDefaultScreenIfNone()
 				});
+
+				window.Echo.join(this.presenceChannel)
+					.here(users => this.setActiveUsers(users, this.presenceChannel))
+					.joining(user => this.userJoined(user, this.presenceChannel))
+					.leaving(user => this.userLeft(user, this.presenceChannel))
 			},
 			goToDefaultScreenIfNone() {
 				const query = this.$route.query || {}

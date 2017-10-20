@@ -6,7 +6,7 @@
 		<div class="active-users-container" v-if="activeUsersCount">
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
-					<li v-for="user in usersToCount" class="avatar">
+					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
 						<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
@@ -67,10 +67,16 @@
 
 	export default {
 		name: 'ActiveUsers',
+		props: {
+			channel: {
+				type: String,
+				default: 'activeUsers'
+			}
+		},
 		computed: {
 			...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
 			usersToCount() {
-				return this.activeUsers.filter((user) => this.currentUserId !== user.id)
+				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
 			},
 			activeUsersCount() {
 				return this.usersToCount.length || 0

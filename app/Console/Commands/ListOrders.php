@@ -64,11 +64,7 @@ class ListOrders extends Command
 		}
 
 		if ($this->option('cancelable')) {
-			$paidUsers = array_values($orders->filter(function ($order) {
-				return $order->paid > 0;
-			})->map(function ($order) {
-				return $order->user_id;
-			})->toArray());
+			$paidUsers = $orders->where('paid', 1)->pluck('user_id')->toArray();
 
 			$orders = $orders->filter(function ($order) use ($paidUsers) {
 				return !$order->paid &&

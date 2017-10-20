@@ -52,7 +52,7 @@ class ApiController extends Controller
 		$model = $this->eagerLoadIncludes($modelName);
 		$transformerName = self::getResourceTransformer($this->resourceName);
 		if ($id === 'all') {
-			$results = $model->all();
+			$results = $model->get();
 			$resource = new Collection($results, new $transformerName, $this->resourceName);
 		} else {
 			$results = $model->find($id);

@@ -22,9 +22,10 @@ export const mutations = {
 }
 
 // Actions
-const actions = {
+export const actions = {
 	userJoined ({commit, state}, {user, channel}) {
-		commit(types.ACTIVE_USERS_SET, {users: [user, ...state.activeUsers[channel]], channel})
+		const usersInChannel = state.activeUsers[channel] || [];
+		commit(types.ACTIVE_USERS_SET, {users: [user, ...usersInChannel], channel})
 	},
 	userLeft({commit, state}, {user, channel}) {
 		commit(types.ACTIVE_USERS_SET, {

@@ -1,15 +1,34 @@
 import {expect} from 'chai'
-import {mutations} from './activeUsers'
+import {mutations, actions} from './activeUsers'
 import * as types from '../mutations-types'
+import {testAction} from '../../tests/helpers'
 
-describe('mutations', () => {
-	it(types.ACTIVE_USERS_SET, () => {
-		const state = { activeUsers: {} };
+const getInitialState = () => {
+	return {
+		activeUsers: {}
+	}
+}
 
-		mutations[types.ACTIVE_USERS_SET](state, {users: ['foo', 'bar'], channel: 'fizz'})
+describe('activeUsers module', () => {
+	describe('mutations', () => {
+		it(types.ACTIVE_USERS_SET, () => {
+			const state = getInitialState();
 
-		expect(state.activeUsers).to.eql({
-			fizz: ['foo', 'bar']
+			mutations[types.ACTIVE_USERS_SET](state, {users: ['foo', 'bar'], channel: 'fizz'})
+
+			expect(state.activeUsers).to.eql({
+				fizz: ['foo', 'bar']
+			})
+		})
+	})
+
+	describe('actions', () => {
+		it('user joined', done => {
+			const payload = {user: 'John', channel: 'active'}
+			// action, payload, state, expected mutations, done callback
+			testAction(actions.userJoined, payload, getInitialState(), [
+				{type: types.ACTIVE_USERS_SET, payload: {users: [payload.user], channel: payload.channel}}
+			], done);
 		})
 	})
 })

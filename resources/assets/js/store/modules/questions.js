@@ -287,17 +287,17 @@ const actions = {
 			})
 	},
 	fetchQuestions({commit, state, getters, rootGetters},
-		{filters, page, useSavedFilters, doNotSaveFilters}
+		{filters, page, saveFilters, useSavedFilters}
 	) {
 		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
 
 		return _fetchQuestions({
 			active: filters,
-			doNotSaveFilters,
 			filters: parsedFilters,
 			include: 'quiz_answers',
 			page,
-			useSavedFilters,
+			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
+			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 

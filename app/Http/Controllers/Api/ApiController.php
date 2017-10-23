@@ -14,13 +14,15 @@ use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
 use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
+use App\Http\Controllers\Api\Concerns\PaginatesResponses;
 
 class ApiController extends Controller
 {
 	use GeneratesApiResponses,
 		TranslatesApiQueries,
 		PerformsApiSearches,
-		ProvidesApiFiltering;
+		ProvidesApiFiltering,
+		PaginatesResponses;
 
 	protected $fractal;
 	protected $request;
@@ -202,31 +204,5 @@ class ApiController extends Controller
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $data;
-	}
-
-	/**
-	 * @param $model
-	 * @param $limit
-	 *
-	 * @return array
-	 */
-	protected function paginatedResponse($model, $limit, $page = 1)
-	{
-		$paginator = $model->paginate($limit, ['*'], 'page', $page);
-
-		if ($paginator->lastPage() < $page) {
-			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
-		}
-
-		$response = [
-			'data'         => $this->transform($paginator->getCollection()),
-			'total'        => $paginator->total(),
-			'has_more'     => $paginator->hasMorePages(),
-			'last_page'    => $paginator->lastPage(),
-			'per_page'     => $paginator->perPage(),
-			'current_page' => $paginator->currentPage(),
-		];
-
-		return $response;
 	}
 }

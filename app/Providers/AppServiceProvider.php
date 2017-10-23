@@ -99,7 +99,7 @@ class AppServiceProvider extends ServiceProvider
 		QnaQuestion::observe(NotificationModelObserver::class);
 		Comment::observe(NotificationModelObserver::class);
 		Comment::observe(CommentObserver::class);
-		QuizQuestion::observe(QuizQuestion::class);
+		QuizQuestion::observe(QuizQuestionObserver::class);
 		Slide::observe(SlideObserver::class);
 	}
 	protected function registerCustomValidators()

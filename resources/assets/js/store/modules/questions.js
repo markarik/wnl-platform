@@ -55,9 +55,7 @@ const getters = {
 	currentQuestion: state => {
 		if (isEmpty(state.questionsPages) || !state.currentQuestion.page) return {}
 		const {page, index} = state.currentQuestion
-		let computedIndex = index
-
-		if (index === -1) computedIndex = state.questionsPages[page].length - 1
+		const computedIndex = index === -1 ? state.questionsPages[page].length - 1 : index
 
 		return {page, index: computedIndex, ...state.quiz_questions[state.questionsPages[page][computedIndex]]}
 	},

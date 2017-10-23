@@ -22,7 +22,7 @@ class UserProfile extends Model
 		'help',
 		'interests',
 		'about',
-		'leraning_location',
+		'learning_location',
 	];
 
 	public function user()

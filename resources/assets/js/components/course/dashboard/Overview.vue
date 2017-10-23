@@ -97,6 +97,11 @@
 			'wnl-your-progress': YourProgress,
 		},
 		props: ['courseId'],
+		data() {
+			return {
+				sortingEnabled: true,
+			}
+		},
 		computed: {
 			...mapGetters('progress', [
 				'isLessonComplete',

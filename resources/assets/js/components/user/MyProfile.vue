@@ -6,6 +6,12 @@
 					Profil publiczny
 				</div>
 			</div>
+			<div class="level-right">
+				<!-- <router-link :to=""> -->
+					<button type="button" name="button">Podgląd mojego profilu</button>
+				<!-- </router-link> -->
+
+			</div>
 		</div>
 		<div class="wnl-user-profile-avatar">
 			<div class="margin vertical">
@@ -29,7 +35,7 @@
 			<wnl-form-text name="last_name">Nazwisko</wnl-form-text>
 			<wnl-form-text name="username">Nazwa użytkownika</wnl-form-text>
 			<wnl-form-text name="city">Miasto</wnl-form-text>
-			<wnl-form-text name="university=">Uniwersytet</wnl-form-text>
+			<wnl-form-text name="university">Uniwersytet</wnl-form-text>
 			<wnl-form-text name="specialization">Specka</wnl-form-text>
 			<wnl-form-text name="help">W czym mogę pomóc?</wnl-form-text>
 			<wnl-form-text name="interests">Zainteresowania</wnl-form-text>

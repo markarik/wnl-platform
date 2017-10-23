@@ -1,17 +1,24 @@
 <?php
 namespace App\Providers;
 use App;
-use App\Models\Comment;
-use App\Models\QnaQuestion;
-use App\Observers\QnaAnswerObserver;
-use App\Observers\QnaQuestionObserver;
 use Log;
 use Validator;
+
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Lesson;
 use App\Models\Notification;
+use App\Models\Comment;
+use App\Models\QnaQuestion;
 use App\Models\QnaAnswer;
+use App\Models\Slide;
+use App\Models\QuizQuestion;
+
+use App\Observers\QnaAnswerObserver;
+use App\Observers\QnaQuestionObserver;
+use App\Observers\CommentObserver;
+use App\Observers\QuizQuestionObserver;
+use App\Observers\SlideObserver;
 use App\Observers\UserObserver;
 use App\Observers\OrderObserver;
 use App\Observers\LessonObserver;
@@ -91,6 +98,9 @@ class AppServiceProvider extends ServiceProvider
 		QnaAnswer::observe(NotificationModelObserver::class);
 		QnaQuestion::observe(NotificationModelObserver::class);
 		Comment::observe(NotificationModelObserver::class);
+		Comment::observe(CommentObserver::class);
+		QuizQuestion::observe(QuizQuestion::class);
+		Slide::observe(SlideObserver::class);
 	}
 	protected function registerCustomValidators()
 	{

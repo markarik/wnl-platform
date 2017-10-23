@@ -9,6 +9,16 @@ const defaultValue = {
 	count: 0
 }
 
+export const convertToReactable = (instance) => {
+	return {
+		...instance,
+		upvote: defaultValue,
+		downvote: defaultValue,
+		bookmark: defaultValue,
+		thanks: defaultValue
+	}
+}
+
 export const reactionsGetters = {
 	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction] || defaultValue,
 }

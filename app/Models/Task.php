@@ -8,6 +8,10 @@ class Task extends Model
 {
 	protected $fillable = [
 		'id',
+		'event_id',
+		'notifiable_id',
+		'notifiable_type',
+		'team',
 		'creator_id',
 		'assignee_id',
 		'priority',

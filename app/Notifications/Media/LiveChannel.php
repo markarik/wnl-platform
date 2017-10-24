@@ -14,7 +14,7 @@ class LiveChannel
 	 * @param  mixed $notifiable
 	 * @param EventNotification $notification
 	 */
-	public function send($notifiable, EventNotification $notification)
+	public function send($notifiable, $notification)
 	{
 		if ($notifiable->id === $notification->event->data['actors']['id']){
 			return;

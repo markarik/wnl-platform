@@ -303,6 +303,7 @@
 			window.addEventListener('resize', this.updateElementHeight)
 		},
 		beforeDestroy () {
+			window.Echo.leave(this.presenceChannel)
 			window.removeEventListener('resize', this.updateElementHeight)
 		},
 		watch: {

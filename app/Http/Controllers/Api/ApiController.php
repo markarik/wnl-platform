@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
+use Illuminate\Database\Eloquent\Model;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
@@ -48,18 +49,22 @@ class ApiController extends Controller
 	 */
 	public function get($id)
 	{
+		$request = $this->request;
 		$modelName = self::getResourceModel($this->resourceName);
-		$transformerName = self::getResourceTransformer($this->resourceName);
+
 		if ($id === 'all') {
 			$models = $modelName::all();
-			$resource = new Collection($models, new $transformerName, $this->resourceName);
 		} else {
 			$models = $modelName::find($id);
-			$resource = new Item($models, new $transformerName, $this->resourceName);
 		}
-		$data = $this->fractal->createData($resource)->toArray();
 
-		return response()->json($data);
+		if ($request->limit) {
+			$data = $this->paginatedResponse($models, $request->limit, $request->page ?? 1);
+		} else {
+			$data = $this->transform($models);
+		}
+
+		return $this->respondOk($data);
 	}
 
 	/**
@@ -82,6 +87,7 @@ class ApiController extends Controller
 
 		if (Auth::user()->can('delete', $model)) {
 			$model->forceDelete();
+
 			// self::dispatchRemovedEvent($model, $modelName);
 
 			return $this->respondOk();
@@ -95,7 +101,8 @@ class ApiController extends Controller
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function count() {
+	public function count()
+	{
 		return $this->respondOk([
 			'count' => (self::getResourceModel($this->resourceName))::count(),
 		]);
@@ -192,14 +199,18 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * @param $results
+	 * @param $data
 	 *
 	 * @return array
 	 */
-	protected function transform($results)
+	protected function transform($data)
 	{
 		$transformerName = self::getResourceTransformer($this->resourceName);
-		$resource = new Collection($results, new $transformerName, $this->resourceName);
+		if ($data instanceof Model) {
+			$resource = new Item($data, new $transformerName, $this->resourceName);
+		} else {
+			$resource = new Collection($data, new $transformerName, $this->resourceName);
+		}
 
 		$data = $this->fractal->createData($resource)->toArray();
 

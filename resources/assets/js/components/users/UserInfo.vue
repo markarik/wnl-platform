@@ -1,7 +1,8 @@
 <template>
     <div class="user-info">
-        <h1>{{ label }}</h1>
-        <h3>{{ info }}</h3>
+        <h3>{{ label }}</h3>
+        <h4>{{ info }}</h4>
+        <hr>
     </div>
 </template>
 

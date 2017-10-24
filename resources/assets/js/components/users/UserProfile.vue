@@ -1,6 +1,5 @@
 <template lang="html">
-	<div  v-if="responseCondition">
-		<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
+		<div v-if="responseCondition" class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 			<div class="user-content">
 				<wnl-user-background class="user-background"
 					:fullName="fullName">
@@ -10,7 +9,8 @@
 					></wnl-avatar>
 					<div class="user-info-header">
 						<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
-						<h3>{{ profile.city }}</h3>
+						<h2>{{ profile.city }}</h2>
+						<h3>{{ profile.help }}</h3>
 						<!-- <h3>{{ address.city }}</h3> -->
 					</div>
 				</wnl-user-background>
@@ -27,7 +27,7 @@
 			</div>
 
 			<hr>
-			<div class="top-activities">
+			<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
 				<div class="user-section-header">
 					<p class="title is-4">TOPOWA AKTYWNOŚĆ</p>
 				</div>
@@ -48,8 +48,8 @@
 					:reactionsDisabled="reactionsDisabled"
 					:qnaAnswersCompetency="convertSortedAnswersToObject"
 				></wnl-qna>
+				<hr>
 			</div>
-			<hr>
 			<div class="user-section-header">
 				<p class="title is-4">WSZYSTKIE WPISY</p>
 			</div>
@@ -103,7 +103,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </template>
 
 <style lang="sass">
@@ -124,17 +123,6 @@
 		.user-avatar
 			z-index: 1
 			margin-right: 1vw
-		.user-info
-			z-index: 1
-			padding-left: 2vw
-
-
-	.user-info
-		display: flex
-		justify-content: center
-		flex-direction: column
-		align-items: center
-		position: relative
 
 	.user-activity-content
 		display: flex
@@ -359,8 +347,9 @@ export default {
 			this.setUserQnaQuestions(qnaAnswersCompetency.data)
 			this.setUserQnaQuestions(qnaQuestionsCompetency.data)
 			this.$emit('userDataLoaded', {
-				profile: this.profile.data
+				profile: this.profile
 			})
+			debugger
 		})
 		.catch(exception => $wnl.logger.capture(exception))
 		//const promisedProfile = axios.get(getApiUrl(`users/${this.param}/profile`))

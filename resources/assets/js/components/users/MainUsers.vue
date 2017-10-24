@@ -9,18 +9,24 @@
 				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
+		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view
 				@userDataLoaded="onDataLoaded"
 				:readOnly="readOnly">
 				</router-view>
 		</div>
 		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute"
-			:isVisible="!isChatVisible"
+			:isVisible="isChatVisible"
 			:isDetached="!isChatMounted"
 		>
-			<p>halko</p>
+			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>
 		</wnl-sidenav-slot>
+		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+			<span class="icon is-big">
+				<i class="fa fa-chevron-left"></i>
+				<span>Pokaż info</span>
+			</span>
+		</div>
 	</div>
 </template>
 
@@ -43,11 +49,15 @@
 	.full-width-sidenav-slot
 		flex-basis: auto
 
+	.wnl-chat-toggle
+		padding: 15px
+
 </style>
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
+	import UserAbout from 'js/components/users/UserAbout.vue'
 	import MainNav from 'js/components/MainNav'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -60,6 +70,7 @@
 			'wnl-main-nav': MainNav,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-user-about': UserAbout,
 		},
 		props: ['view'],
 		data() {
@@ -70,7 +81,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile', 'isChatToggleVisible']),
 			isProduction() {
 				return isProduction()
 			},
@@ -104,14 +115,14 @@
 			},
 		},
 		methods: {
-			...mapActions(['killChat']),
+			...mapActions(['killChat', 'toggleChat']),
 			goToDefaultRoute() {
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
 				}
 			},
 			onDataLoaded({profile}) {
-				console.log('profile...', profile)
+				return this.profile = profile
 			},
 			goToDefaultRoute() {
 				if (!this.view) {

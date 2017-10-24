@@ -14,9 +14,10 @@ trait PaginatesResponses
 	 *
 	 * @return array
 	 */
-	protected function paginatedResponse($model, $limit, $page = 1)
+	protected function paginatedResponse($model, $limit = null, $page = 1)
 	{
 		$paginator = $model->paginate($limit, ['*'], 'page', $page);
+		$limit = $limit || $this->defaultLimit;
 
 		if ($paginator->lastPage() < $page) {
 			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());

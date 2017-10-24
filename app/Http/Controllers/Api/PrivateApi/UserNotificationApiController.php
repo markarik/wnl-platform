@@ -22,7 +22,7 @@ class UserNotificationApiController extends ApiController
 	{
 		$user = User::fetch($id);
 
-		$notifications = $user->notifications;
+		$notifications = $user->notifications();
 
 		if (!$user || !$notifications) {
 			return $this->respondNotFound();
@@ -32,8 +32,11 @@ class UserNotificationApiController extends ApiController
 			return $this->respondUnauthorized();
 		}
 
-		$resource = new Collection($notifications, new NotificationTransformer, 'user_notifications');
-		$data = $this->fractal->createData($resource)->toArray();
+		// TODO - this is just a proof of concept - we need more generic solution when to apply pagination
+		return $this->respondOk($this->paginatedResponse($notifications));
+
+		// $resource = new Collection($notifications, new NotificationTransformer, 'user_notifications');
+		// $data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);
 	}

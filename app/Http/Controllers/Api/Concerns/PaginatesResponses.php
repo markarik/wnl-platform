@@ -1,8 +1,5 @@
 <?php namespace App\Http\Controllers\Api\Concerns;
 
-use App\Exceptions\ApiFilterException;
-use Illuminate\Http\Request;
-use Redis;
 use Auth;
 use Cache;
 

@@ -4,7 +4,6 @@ use App\Exceptions\ApiFilterException;
 use Illuminate\Http\Request;
 use Redis;
 use Auth;
-use Cache;
 
 trait ProvidesApiFiltering
 {

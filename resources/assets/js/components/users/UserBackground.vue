@@ -33,7 +33,7 @@ export default {
             return _.isEmpty(this.fullName)
         },
         usernameToUse() {
-            return this.isCurrentUser ? this.currentUserFullName : this.fullName
+            return this.fullName
         },
         initials() {
             return getInitials(this.usernameToUse)

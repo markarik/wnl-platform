@@ -37,7 +37,7 @@
 		</router-link>
 		<router-link
 			class="wnl-main-nav-item"
-			:to="{ name: 'all-users', params: { keepsNavOpen: true }}"
+			:to="{ name: 'all', params: { keepsNavOpen: true }}"
 			>
 			<span class="icon is-medium">
 				<i class="fa fa-address-book"></i>

@@ -1,7 +1,10 @@
 <template>
 	<div class="wnl-app-layout">
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<wnl-user-profile v-if="responseCondition" :profile="profile.data" :commentsCompetency="commentsCompetency" :qnaQuestionsCompetency="qnaQuestionsCompetency" :qnaAnswersCompetency="qnaAnswersCompetency" :readOnly="readOnly"></wnl-user-profile>
+			<wnl-user-profile
+				:profile="profile.data" :commentsCompetency="commentsCompetency" :qnaQuestionsCompetency="qnaQuestionsCompetency"
+				:qnaAnswersCompetency="qnaAnswersCompetency"
+				:readOnly="readOnly"></wnl-user-profile>
 		</div>
 	</div>
 </template>

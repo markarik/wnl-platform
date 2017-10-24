@@ -10,22 +10,17 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<router-view v-if="!isMainRoute"></router-view>
-			<wnl-all v-else></wnl-all>
+			<router-view
+				@userDataLoaded="onDataLoaded"
+				:readOnly="readOnly">
+				</router-view>
 		</div>
-		<!-- <wnl-sidenav-slot
+		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute"
+			:isVisible="!isChatVisible"
 			:isDetached="!isChatMounted"
-			:isVisible="isLargeDesktop || isChatVisible"
-			:hasChat="true"
 		>
-			<wnl-questions-filters
-				v-show="!testMode"
-				:activeFilters="activeFilters"
-				:fetchingData="fetchingQuestions || fetchingFilters"
-				:filters="filters"
-				@activeFiltersChanged="onActiveFiltersChanged"
-			/>
-		</wnl-sidenav-slot> -->
+			<p>halko</p>
+		</wnl-sidenav-slot>
 	</div>
 </template>
 
@@ -45,6 +40,9 @@
 	.mobile-main
 		overflow-y: auto
 
+	.full-width-sidenav-slot
+		flex-basis: auto
+
 </style>
 
 <script>
@@ -54,32 +52,33 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import { isProduction, getApiUrl } from 'js/utils/env'
-    import AllUsers from 'js/components/users/AllUsers'
 	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
 
 	export default {
 		name: 'MainUsers',
 		components: {
 			'wnl-main-nav': MainNav,
-			'wnl-all': AllUsers,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
 		props: ['view'],
 		data() {
 			return {
-				param: this.$route.params.userId,
-				response: {},
 				testMode: false,
+				profile: {},
+				readOnly: true
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isChatMounted', 'isLargeDesktop', 'isChatVisible']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile']),
+			isProduction() {
+				return isProduction()
+			},
 			isProduction() {
 				return isProduction()
 			},
 			isMainRoute() {
-				return this.$route.name === 'all-users'
+				return this.$route.name === 'all'
 			},
 			items() {
 				let items = [
@@ -91,7 +90,7 @@
 						text: 'Wszystkie ziomki',
 						itemClass: 'has-icon',
 						to: {
-							name: 'all-users',
+							name: 'all',
 							params: {},
 						},
 						isDisabled: false,
@@ -103,23 +102,22 @@
 
 				return items
 			},
-			responseCondition() {
-				return !_.isEmpty(this.response)
-			}
 		},
 		methods: {
+			...mapActions(['killChat']),
+			goToDefaultRoute() {
+				if (!this.view) {
+					this.$router.replace({ name: 'my-orders' })
+				}
+			},
+			onDataLoaded({profile}) {
+				console.log('profile...', profile)
+			},
 			goToDefaultRoute() {
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
 				}
 			}
 		},
-		// mounted() {
-        //     axios.get(getApiUrl(`users/${this.param}/profile`))
-		// 		.then((response) => {
-		// 			this.response = response
-		// 		})
-		// 	.catch(exception => $wnl.logger.capture(exception))
-		// },
 	}
 </script>

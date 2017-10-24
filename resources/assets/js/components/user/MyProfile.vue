@@ -7,10 +7,9 @@
 				</div>
 			</div>
 			<div class="level-right">
-				<!-- <router-link :to=""> -->
-					<button type="button" name="button">Podgląd mojego profilu</button>
-				<!-- </router-link> -->
-
+				<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}">
+					<a class="button is-primary is-outlined:hover">Podgląd mojego profilu</a>
+				</router-link>
 			</div>
 		</div>
 		<div class="wnl-user-profile-avatar">
@@ -23,7 +22,7 @@
 					@uploadError="onUploadError"
 					endpoint="users/current/avatar"
 			>
-				<wnl-avatar size="large" class="clickable-avatar"></wnl-avatar>
+				<wnl-avatar size="extralarge" class="clickable-avatar"></wnl-avatar>
 				<a class="button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
 					Zmień avatar
 				</a>
@@ -68,6 +67,11 @@
 
 		.clickable-avatar
 			cursor: pointer
+
+		.button
+			background: transparent
+			border-color: #11afb2
+			color: #11afb2
 </style>
 
 <script>
@@ -91,7 +95,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isMobileProfile']),
+			...mapGetters(['isMobileProfile', 'currentUserId']),
 			isProduction() {
 				return isProduction()
 			},

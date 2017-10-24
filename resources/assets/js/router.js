@@ -180,11 +180,17 @@ let routes = [
 		path: '/app/users',
 		component: require('js/components/users/MainUsers.vue'),
 		props: true,
+		redirect: {name: 'all'},
 		children: [
+			{
+				name: 'all',
+				path: 'all',
+				component: require('js/components/users/AllUsers.vue')
+			},
 			{
 				name: 'user',
 				path: ':userId',
-				component: require('js/components/user/Themselves.vue'),
+				component: require('js/components/users/UserProfile.vue'),
 			},
 		]
 	},

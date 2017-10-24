@@ -164,3 +164,16 @@ $factory->define(App\Models\Coupon::class, function (Faker\Generator $faker) {
 		'times_usable' => 1,
 	];
 });
+
+$factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
+	return [
+		'creator_id'  => null,
+		'assignee_id' => null,
+		'priority'    => 1,
+		'order'       => 1,
+		'status'      => 'open',
+		'text'        => $faker->text,
+		'labels'      => ['siema', 'pozdro'],
+		'context'     => null,
+	];
+});

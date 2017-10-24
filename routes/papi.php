@@ -196,4 +196,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Users Plans
 	Route::get("{$r['user-plan']}/{userId}", 'UserPlanApiController@get');
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
+
+	// Tasks
+	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
 });

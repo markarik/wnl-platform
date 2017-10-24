@@ -15,7 +15,6 @@
 						</div>
 					</div>
 				</div>
-				<wnl-active-users :channel="presenceChannel"/>
 				<router-view></router-view>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
@@ -66,14 +65,12 @@
 	import {breadcrumb} from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
 	import {STATUS_COMPLETE} from '../../services/progressStore';
-	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 
 	export default {
 		name: 'Lesson',
 		components: {
 			'wnl-previous-next': PreviousNext,
 			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-active-users': ActiveUsers
 		},
 		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
@@ -178,7 +175,7 @@
 			},
 			presenceChannel() {
 				return `lesson.${this.lessonId}`
-			}
+			},
 		},
 		methods: {
 			...mapActions('progress', [

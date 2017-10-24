@@ -19,10 +19,14 @@
 			<wnl-splash-screen/>
 		</div>
 		<wnl-sidenav-slot
+			class="course-chat"
 			:isVisible="isChatVisible"
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
+			<div v-if="isLesson" class="lesson-active-users-container">
+				<wnl-active-users :channel="presenceChannel"/>
+			</div>
 			<wnl-public-chat :rooms="chatRooms" v-if="canAccess"/>
 		</wnl-sidenav-slot>
 		<div v-if="canAccess && isChatToggleVisible" class="wnl-chat-toggle">
@@ -50,12 +54,21 @@
 		max-width: $course-chat-max-width
 		min-width: $course-chat-min-width
 		width: $course-chat-width
+
+	.course-chat
+		.sidenav-content
+			display: flex
+			flex-direction: column
+
+	.lesson-active-users-container
+		margin: $margin-small $margin-base 0
 </style>
 
 <script>
 	import axios from 'axios'
 	import store from 'store'
 	import { mapGetters, mapActions } from 'vuex'
+	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import PublicChat from 'js/components/chat/PublicChat.vue'
 	import Navigation from 'js/components/course/Navigation'
@@ -69,6 +82,7 @@
 	export default {
 		name: 'Course',
 		components: {
+			'wnl-active-users': ActiveUsers,
 			'wnl-course-navigation': Navigation,
 			'wnl-public-chat': PublicChat,
 			'wnl-breadcrumbs': Breadcrumbs,
@@ -118,7 +132,10 @@
 			},
 			canRenderSidenav() {
 				return this.isSidenavVisible && this.ready
-			}
+			},
+			presenceChannel() {
+				return `lesson.${this.lessonId}`
+			},
 		},
 		mixins: [withChat, breadcrumb],
 		methods: {

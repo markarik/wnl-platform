@@ -87,11 +87,13 @@ const mutations = {
 }
 
 const actions = {
-	pullNotifications({commit, rootGetters}, [ channel, options ]) {
+	pullNotifications(context, [ channel, options ]) {
+		const {commit, rootGetters, dispatch}  = context;
 		commit(types.IS_FETCHING, {channel, isFetching: true})
 		return new Promise ((resolve, reject) => {
 			_getNotifications(channel, rootGetters.currentUserId, options)
 				.then(response => {
+					dispatch('pagination/setMeta', response)
 					if (typeof response.data[0] !== 'object') {
 						commit(types.CHANNEL_HAS_MORE, {channel, hasMore: false})
 						commit(types.IS_FETCHING, {channel, isFetching: false})
@@ -211,7 +213,8 @@ function _getNotifications(channel, userId, options) {
 		conditions.query.where.push(['created_at', '<', `timestamp:${options.olderThan}`])
 	}
 
-	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
+	// return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
+	return axios.get(getApiUrl(`users/${userId}/notifications`))
 }
 
 function _updateNotification(userId, notificationId, data) {
@@ -228,5 +231,6 @@ export default {
 	state,
 	mutations,
 	getters,
-	actions
+	actions,
+	modules
 }

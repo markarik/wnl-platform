@@ -9,7 +9,10 @@ import * as types from 'js/store/mutations-types'
 function getCourseApiUrl(courseId, userId) {
 	return getApiUrl(
 		`${resource('editions')}/${courseId}
-		?include=groups.lessons.screens.sections.subsections
+		?include=groups.lessons.screens.sections.subsections,
+		course.groups.lessons.screens.sections.subsections,
+		course.groups.lessons.userAccess,course.groups.lessons.availability,
+		course.groups.lessons.screens.tags
 		&user=current`
 	)
 }

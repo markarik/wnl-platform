@@ -19,16 +19,6 @@ class SubsectionsTransformer extends ApiTransformer
 
 	public function transform(Subsection $subsection)
 	{
-		$subsectionSlides = DB::table('presentables')
-			->select('order_number')
-			->where('presentable_type', 'App\Models\Subsection')
-			->where('presentable_id', $subsection->id)
-			->orderBy('order_number', 'asc')
-			->get(['order_number']);
-
-		$firstSlideNumber = $subsectionSlides->first()->order_number;
-		$slidesCount = $subsectionSlides->count();
-
 		$data = [
 			'id'          => $subsection->id,
 			'name'        => $subsection->name,
@@ -37,8 +27,8 @@ class SubsectionsTransformer extends ApiTransformer
 			'editions'    => $this->parent->get('editionId'),
 			'screens'     => $subsection->section->screen_id,
 			'sections'    => $subsection->section->id,
-			'slide'       => $firstSlideNumber + 1,
-			'slidesCount' => $slidesCount,
+			'slide'       => $subsection->first_slide + 1,
+			'slidesCount' => $subsection->slides_count,
 		];
 
 		return $data;

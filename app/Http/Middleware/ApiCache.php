@@ -34,9 +34,11 @@ class ApiCache
 		$cached = Cache::tags($tags)->get($key);
 
 		if ($cached !== null) {
+			\Log::debug('Loading response from cache ' . $key);
 			return $this->handleResponse($request, $cached);
 		}
 
+		\Log::debug('Request excluded from api cache ' . $key);
 		$response = $next($request);
 
 		if ($this->responseValid($response)) {

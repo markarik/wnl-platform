@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Notification;
 class UserNotificationsGate implements ShouldQueue
 {
 	const CHANNELS = [
-		'role'           => 'private-role.%s',
+		'role'           => 'private-group.%s',
 		'private'        => 'private-%d',
 		'private-stream' => 'private-stream.%d',
 	];

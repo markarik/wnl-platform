@@ -2,7 +2,6 @@ import _ from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl, envValue as env} from 'js/utils/env'
 import {set, delete as destroy} from 'vue'
-import pagination from 'js/store/modules/shared/pagination'
 
 const namespaced = true
 
@@ -87,13 +86,11 @@ const mutations = {
 }
 
 const actions = {
-	pullNotifications(context, [ channel, options ]) {
-		const {commit, rootGetters, dispatch}  = context;
+	pullNotifications({commit, rootGetters}, [ channel, options ]) {
 		commit(types.IS_FETCHING, {channel, isFetching: true})
 		return new Promise ((resolve, reject) => {
 			_getNotifications(channel, rootGetters.currentUserId, options)
 				.then(response => {
-					dispatch('pagination/setMeta', response)
 					if (typeof response.data[0] !== 'object') {
 						commit(types.CHANNEL_HAS_MORE, {channel, hasMore: false})
 						commit(types.IS_FETCHING, {channel, isFetching: false})
@@ -184,10 +181,6 @@ const actions = {
 	}
 }
 
-const modules = {
-	pagination
-}
-
 function _getNotifications(channel, userId, options) {
 	const conditions = {
 		query: {
@@ -213,8 +206,7 @@ function _getNotifications(channel, userId, options) {
 		conditions.query.where.push(['created_at', '<', `timestamp:${options.olderThan}`])
 	}
 
-	// return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
-	return axios.get(getApiUrl(`users/${userId}/notifications`))
+	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
 }
 
 function _updateNotification(userId, notificationId, data) {

@@ -34,7 +34,7 @@ class TasksTest extends ApiTestCase
 	}
 
 	/** @test */
-	public function get_tasks_paginated()
+	public function get_all_tasks_paginated()
 	{
 		$limit = 30;
 		$user = factory(User::class)->create();
@@ -43,7 +43,7 @@ class TasksTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('GET', $this->url('/tasks/' . $task->id . '?limit=' . $limit));
+			->json('GET', $this->url('/tasks/all?limit=' . $limit));
 
 		$response
 			->assertStatus(200)

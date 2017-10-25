@@ -2,32 +2,35 @@ import {set} from 'vue'
 import * as types from '../mutations-types'
 
 // Initial state
-const state = {
-	activeUsers: [],
-};
+const state = {};
 
 // Getters
 const getters = {
-	activeUsers: state => state.activeUsers,
+	activeUsers: state => channel =>  state[channel] || [],
 }
 
 // Mutations
-const mutations = {
-	[types.ACTIVE_USERS_SET] (state, activeUsers) {
-		set(state, 'activeUsers', activeUsers)
+export const mutations = {
+	[types.ACTIVE_USERS_SET] (state, {users, channel}) {
+		set(state, channel, users)
 	},
 }
 
 // Actions
-const actions = {
-	userJoined ({commit, state}, user) {
-		commit(types.ACTIVE_USERS_SET, [user, ...state.activeUsers])
+export const actions = {
+	userJoined ({commit, state}, {user, channel}) {
+		const usersInChannel = state[channel] || [];
+
+		commit(types.ACTIVE_USERS_SET, {users: [user, ...usersInChannel], channel})
 	},
-	userLeft({commit, state}, user) {
-		commit(types.ACTIVE_USERS_SET, state.activeUsers.filter((activeUser) => activeUser.id !== user.id))
+	userLeft({commit, state}, {user, channel}) {
+		commit(types.ACTIVE_USERS_SET, {
+			users: state[channel].filter((activeUser) => activeUser.id !== user.id),
+			channel
+		})
 	},
-	setActiveUsers({commit}, users) {
-		commit(types.ACTIVE_USERS_SET, users)
+	setActiveUsers({commit}, payload) {
+		commit(types.ACTIVE_USERS_SET, payload)
 	}
 };
 

@@ -10,6 +10,7 @@ use App\Models\Task;
 class TaskTransformer extends ApiTransformer
 {
 	protected $parent;
+	protected $availableIncludes = ['events'];
 
 	public function __construct($parent = null)
 	{
@@ -19,15 +20,17 @@ class TaskTransformer extends ApiTransformer
 	public function transform(Task $task)
 	{
 		$data = [
-			'id'          => $task->id,
-			'creator_id'  => $task->creator_id,
-			'assignee_id' => $task->assignee_id,
-			'priority'    => $task->priority,
-			'order'       => $task->order,
-			'status'      => $task->status,
-			'text'        => $task->text,
-			'labels'      => $task->labels,
-			'context'     => $task->context,
+			'id'           => $task->id,
+			'creator_id'   => $task->creator_id,
+			'assignee_id'  => $task->assignee_id,
+			'priority'     => $task->priority,
+			'order'        => $task->order,
+			'status'       => $task->status,
+			'text'         => $task->text,
+			'labels'       => $task->labels,
+			'team'         => $task->team,
+			'subject_id'   => $task->subject_id,
+			'subject_type' => $task->subject_type,
 		];
 
 		if ($this->parent) {
@@ -35,5 +38,12 @@ class TaskTransformer extends ApiTransformer
 		}
 
 		return $data;
+	}
+
+	public function includeEvents(Task $task)
+	{
+		$events = $task->events;
+
+		return $this->collection($events, new EventTransformer, 'events');
 	}
 }

@@ -30,6 +30,10 @@ class Task extends Model
 
 	public $incrementing = false;
 
+	public function events()
+	{
+		return $this->hasMany('App\Models\Event');
+	}
 
 	public function comments()
 	{

@@ -50,9 +50,7 @@ const actions = {
 					}
 
 					dispatch('setPaginationMeta', paginationMeta)
-					_.each(data, (task) => {
-						commit(types.ADD_TASK, task)
-					})
+					data.forEach(task => commit(types.ADD_TASK, task));
 
 					commit(types.IS_FETCHING, false)
 					resolve(response)

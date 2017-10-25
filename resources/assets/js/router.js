@@ -6,6 +6,7 @@ import {isProduction} from 'js/utils/env'
 import moderatorFeatures from 'js/perimeters/moderator';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
+import { getCurrentUser } from 'js/services/user';
 
 Vue.use(Router)
 
@@ -153,14 +154,16 @@ let routes = [
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [moderatorFeatures],
-			});
+			getCurrentUser().then(currentUser => {
+				const sandbox = createSandbox(store.getters.currentUser, {
+					perimeters: [moderatorFeatures],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		}
 	},
 	{

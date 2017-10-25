@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
@@ -209,6 +210,9 @@ class ApiController extends Controller
 		if ($data instanceof Model) {
 			$resource = new Item($data, new $transformerName, $this->resourceName);
 		} else {
+			if ($data instanceof Builder) {
+				$data = $data->get();
+			}
 			$resource = new Collection($data, new $transformerName, $this->resourceName);
 		}
 

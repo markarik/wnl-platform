@@ -48,12 +48,7 @@ class TasksTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'data' => [
-					[
-						'id'   => $task->id,
-						'text' => $task->text,
-					]
-				],
+				'data' => [],
 				'per_page' => $limit
 			]);
 	}
@@ -68,6 +63,6 @@ class TasksTest extends ApiTestCase
 			->json('GET', $this->url('/tasks/all'));
 
 		$response
-			->assertStatus(401);
+			->assertStatus(403);
 	}
 }

@@ -17,4 +17,9 @@ class TaskPolicy
 
 		return null;
 	}
+
+	public function get()
+	{
+		return false;
+	}
 }

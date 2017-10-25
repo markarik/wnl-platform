@@ -167,10 +167,11 @@ $factory->define(App\Models\Coupon::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
 	return [
-		'priority'    => 1,
-		'order'       => 1,
-		'status'      => 'open',
-		'text'        => $faker->text,
-		'labels'      => ['siema', 'pozdro'],
+		'id'       => $faker->uuid,
+		'priority' => 1,
+		'order'    => 1,
+		'status'   => 'open',
+		'text'     => $faker->text,
+		'labels'   => ['siema', 'pozdro'],
 	];
 });

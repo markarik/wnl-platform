@@ -13,7 +13,7 @@
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column" v-if="canAccess">
-			<router-view></router-view>
+			<router-view :presenceChannel="presenceChannel"/>
 		</div>
 		<div v-else class="wnl-course-content wnl-column">
 			<wnl-splash-screen/>

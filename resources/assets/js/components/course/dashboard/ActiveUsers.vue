@@ -1,7 +1,6 @@
 <template>
 	<div class="active-users" v-if="activeUsersCount">
-		<div class="metadata">
-			{{ $t(message, {count: activeUsersCount}) }}
+		<div class="metadata" v-t="{ path: message, args: { count: activeUsersCount } }">
 		</div>
 		<div class="active-users-container">
 			<div class="absolute-container">

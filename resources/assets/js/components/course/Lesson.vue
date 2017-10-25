@@ -14,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<router-view></router-view>
+				<router-view/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
@@ -72,7 +72,7 @@
 			'wnl-breadcrumbs': Breadcrumbs,
 		},
 		mixins: [breadcrumb],
-		props: ['courseId', 'lessonId', 'screenId', 'slide'],
+		props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
 		data() {
 			return {
 				/**
@@ -171,9 +171,6 @@
 						meta: this.$route.meta,
 					},
 				}
-			},
-			presenceChannel() {
-				return `lesson.${this.lessonId}`
 			},
 		},
 		methods: {

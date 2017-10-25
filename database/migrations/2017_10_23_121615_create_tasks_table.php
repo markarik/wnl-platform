@@ -16,9 +16,11 @@ class CreateTasksTable extends Migration
 		Schema::create('tasks', function (Blueprint $table) {
 			$table->uuid('id');
 			$table->primary('id');
-			$table->morphs('notifiable');
-			$table->string('team');
-			$table->uuid('event_id')->nullable()->index();
+			$table->unsignedInteger('notifiable_id')->nullable();
+			$table->string('notifiable_type')->nullable();
+			$table->string('team')->nullable();
+			$table->string('subject_type')->nullable();
+			$table->unsignedInteger('subject_id')->nullable();
 			$table->unsignedInteger('creator_id')->nullable();
 			$table->unsignedInteger('assignee_id')->nullable();
 			$table->smallInteger('priority')->nullable();
@@ -26,8 +28,8 @@ class CreateTasksTable extends Migration
 			$table->string('status')->nullable();
 			$table->text('text')->nullable();
 			$table->json('labels')->nullable();
-			$table->json('context')->nullable();
 			$table->timestamps();
+			$table->index(['subject_type', 'subject_id']);
 		});
 	}
 

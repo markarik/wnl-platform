@@ -8,9 +8,10 @@ class Task extends Model
 {
 	protected $fillable = [
 		'id',
-		'event_id',
 		'notifiable_id',
 		'notifiable_type',
+		'subject_type',
+		'subject_id',
 		'team',
 		'creator_id',
 		'assignee_id',
@@ -19,13 +20,16 @@ class Task extends Model
 		'status',
 		'text',
 		'labels',
-		'context',
 	];
 
 	protected $casts = [
 		'labels'  => 'array',
 		'context' => 'array',
+		'id'      => 'uuid',
 	];
+
+	public $incrementing = false;
+
 
 	public function comments()
 	{

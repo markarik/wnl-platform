@@ -2,8 +2,10 @@
 
 namespace App\Notifications\Media;
 
+use App\Models\Event;
 use App\Models\Task;
 use App\Notifications\EventTaskNotification;
+use Ramsey\Uuid\Uuid;
 
 
 class DatabaseTaskChannel
@@ -20,13 +22,30 @@ class DatabaseTaskChannel
 			return;
 		}
 
-		Task::create([
-			'id'              => $notification->id,
-			'notifiable_id'   => $notifiable->id,
-			'notifiable_type' => get_class($notifiable),
-			'context'         => $notification->event->data,
-			'event_id'        => $notification->event->id,
-			'team'            => $notification->team,
+		$event = $notification->event;
+		$taskSubject = [
+			'type' => $event->data['objects']['type'] ?? $event->data['subject']['type'],
+			'id'   => $event->data['objects']['id'] ?? $event->data['subject']['id'],
+		];
+
+		$task = Task::firstOrCreate(
+			[
+				'subject_type' => $taskSubject['type'],
+				'subject_id'   => $taskSubject['id'],
+			],
+			[
+				'id'              => Uuid::uuid4()->toString(),
+				'subject_type'    => $taskSubject['type'],
+				'subject_id'      => $taskSubject['id'],
+				'notifiable_id'   => $notifiable->id,
+				'notifiable_type' => get_class($notifiable),
+				'team'            => $notification->team,
+			]);
+
+		Event::create([
+			'id'      => $event->id,
+			'data'    => $event->data,
+			'task_id' => $task->id,
 		]);
 	}
 }

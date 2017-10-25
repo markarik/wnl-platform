@@ -154,8 +154,8 @@ let routes = [
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then(currentUser => {
-				const sandbox = createSandbox(store.getters.currentUser, {
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
 					perimeters: [moderatorFeatures],
 				});
 

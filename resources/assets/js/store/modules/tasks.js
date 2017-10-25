@@ -1,7 +1,6 @@
-import _ from 'lodash'
 import * as types from '../mutations-types'
-import {getApiUrl, envValue as env} from 'js/utils/env'
-import {set, delete as destroy} from 'vue'
+import {getApiUrl} from 'js/utils/env'
+import {set} from 'vue'
 import pagination from 'js/store/modules/shared/pagination'
 
 const namespaced = true

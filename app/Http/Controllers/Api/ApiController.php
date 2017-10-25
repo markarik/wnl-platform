@@ -52,15 +52,20 @@ class ApiController extends Controller
 		$request = $this->request;
 		$modelName = self::getResourceModel($this->resourceName);
 
-		if ($id === 'all') {
-			$models = $modelName::all();
-		} else {
-			$models = $modelName::find($id);
-		}
-
 		if ($request->limit) {
-			$data = $this->paginatedResponse($models, $request->limit, $request->page ?? 1);
+			if ($id === 'all') {
+				$data = $this->paginatedResponse(new $modelName(), $request->limit, $request->page ?? 1);
+			} else {
+				$models = $modelName::find($id);
+				$data = $this->paginatedResponse($models, $request->limit, $request->page ?? 1);
+			}
 		} else {
+			if ($id === 'all') {
+				$models = $modelName::all();
+			} else {
+				$models = $modelName::find($id);
+			}
+
 			$data = $this->transform($models);
 		}
 

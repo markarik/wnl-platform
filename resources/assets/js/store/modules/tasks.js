@@ -7,8 +7,8 @@ import pagination from 'js/store/modules/shared/pagination'
 const namespaced = true
 
 const state = {
-    fetching: false,
-    tasks: {}
+	fetching: false,
+	tasks: {}
 }
 
 const getters = {
@@ -20,7 +20,7 @@ const mutations = {
 		set(state.tasks, task.id, task)
 	},
 	[types.IS_FETCHING] (state, isFetching) {
-		set(state.fetching, isFetching)
+		set(state, 'fetching', isFetching)
 	},
 	[types.MODIFY_TASK] (state, payload) {
 		set(state, 'tasks', {
@@ -34,19 +34,23 @@ const mutations = {
 }
 
 const actions = {
-	pullTasks(context) {
-		const {commit, rootGetters, dispatch}  = context;
+	pullTasks({commit, dispatch}) {
 		commit(types.IS_FETCHING, true)
+
 		return new Promise ((resolve, reject) => {
-			_getTasks(rootGetters.currentUserId)
-				.then(response => {
-					if (typeof response.data[0] !== 'object') {
-						dispatch('pagination/setMeta', response)
+			_getTasks()
+				.then(({data: response}) => {
+					const {data, ...paginationMeta} = response;
+
+					// check if response not empty
+					if (typeof data[0] !== 'object') {
+						dispatch('setPaginationMeta', paginationMeta)
 						commit(types.IS_FETCHING, false)
-						resolve(response)
+						return resolve(response)
 					}
 
-					_.each(response.data, (task) => {
+					dispatch('setPaginationMeta', paginationMeta)
+					_.each(data, (task) => {
 						commit(types.ADD_TASK, task)
 					})
 
@@ -55,13 +59,14 @@ const actions = {
 				})
 		})
 	},
+
 	setupLiveListener({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (task) => {
 				commit(types.ADD_TASK, task)
 			});
 	},
-	initNotifications({getters, dispatch}) {
+	initModeratorsFeedListener({getters, dispatch}) {
 		dispatch('pullTasks')
 		dispatch('setupLiveListener', 'private-group.moderators')
 	}
@@ -71,8 +76,12 @@ const modules = {
 	pagination
 }
 
-function _getTasks(channel, userId, options) {
-	return axios.get(getApiUrl('tasks/all'))
+function _getTasks() {
+	return axios.get(getApiUrl('tasks/all'), {
+		params: {
+			limit: 20
+		}
+	})
 }
 
 

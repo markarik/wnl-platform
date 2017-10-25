@@ -22,6 +22,7 @@ import slideshow from 'js/store/modules/slideshow'
 import ui from 'js/store/modules/ui'
 import activeUsers from 'js/store/modules/activeUsers'
 import autocomplete from 'js/store/modules/autocomplete'
+import tasks from 'js/store/modules/tasks'
 
 Vue.use(Vuex)
 
@@ -47,7 +48,8 @@ export default new Vuex.Store({
 		ui,
 		activeUsers,
 		autocomplete,
-		comments
+		comments,
+		tasks
 	},
 	strict: debug
 })

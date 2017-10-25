@@ -1,5 +1,5 @@
 const pagination = {
-	defaultModuleState() {
+	state () {
 		return {
 			currentPage: 1,
 			lastPage: 1,
@@ -9,26 +9,19 @@ const pagination = {
 		}
 	},
 
-	state () {
-		return {
-			modules: {}
-		}
-	},
-
 	getters: {
 
 	},
 
 	actions: {
-		setMeta(context, payload) {
+		setPaginationMeta(context, payload) {
+			console.log(payload, '...payload')
 		}
 	},
 
 	mutations: {
 
-	},
-
-	namespaced: true
+	}
 }
 
 

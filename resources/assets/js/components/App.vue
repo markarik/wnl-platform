@@ -78,6 +78,7 @@
 				'userLeft'
 			]),
 			...mapActions('notifications', ['initNotifications']),
+			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
 				checkUserRoles: 'checkUserRoles',
@@ -90,6 +91,7 @@
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
 					this.initNotifications()
+					this.initModeratorsFeedListener()
 
 					startTracking(this.currentUserId);
 

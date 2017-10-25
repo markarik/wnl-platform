@@ -173,11 +173,6 @@ const actions = {
 
 		dispatch('pullNotifications', [getters.streamChannel, {limit: 100, unread: true}])
 		dispatch('setupLiveNotifications', getters.streamChannel)
-
-		if (getters.moderatorsChannel) {
-			dispatch('pullNotifications', [getters.moderatorsChannel, {unread: true}])
-			dispatch('setupLiveNotifications', getters.moderatorsChannel)
-		}
 	}
 }
 

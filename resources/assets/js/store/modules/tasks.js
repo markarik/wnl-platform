@@ -18,6 +18,9 @@ const mutations = {
 	[types.ADD_TASK] (state, task) {
 		set(state.tasks, task.id, task)
 	},
+	[types.SET_TASKS] (state, tasks) {
+		set(state, 'tasks', tasks)
+	},
 	[types.IS_FETCHING] (state, isFetching) {
 		set(state, 'fetching', isFetching)
 	},
@@ -49,9 +52,13 @@ const actions = {
 					}
 
 					dispatch('setPaginationMeta', paginationMeta)
-					data.forEach(task => commit(types.ADD_TASK, task));
 
+					const serializedTasks = {}
+					data.forEach(task => serializedTasks[task.id] = task)
+
+					commit(types.SET_TASKS, serializedTasks)
 					commit(types.IS_FETCHING, false)
+
 					resolve(response)
 				})
 		})

@@ -166,6 +166,7 @@ export const GET_USERS_AUTOCOMPLETE = 'GET_USERS_AUTOCOMPLETE'
 
 // Tasks
 export const ADD_TASK = 'ADD_TASK'
+export const SET_TASKS = 'SET_TASKS'
 export const MODIFY_TASK = 'MODIFY_TASK'
 
 // Pagination

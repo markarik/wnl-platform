@@ -105,8 +105,32 @@ class SlideshowBuilderApiController extends ApiController
 
 	protected function renderView($slides, $background)
 	{
+		$search = [
+			'<p>&nbsp;</p>',
+			'data-has-custom-html=""',
+			'style="z-index: 11;"',
+			'data-block-type="text"',
+			'font-family: Lato;',
+			'font-variant-ligatures: normal;',
+			'font-variant-caps: normal;',
+			'font-variant-caps: normal;',
+			'font-weight: normal;',
+			'data-has-line-height=""',
+			'font-style: normal;',
+			'font-family: &quot;Open Sans&quot;, sans-serif;',
+			'data-placeholder-text="Text"',
+			'data-placeholder-tag="p"',
+			'   ',
+			"\n",
+		];
+
+		$replace = [
+			'<br>',
+			''
+		];
+
 		$view = view('course.slideshow', [
-			'slides'         => $slides->implode('content', ' '),
+			'slides'         => str_replace($search, $replace, $slides->implode('content', ' ')),
 			'background_url' => $background,
 		]);
 

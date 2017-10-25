@@ -37,6 +37,10 @@
 			</div>
 		</div>
 	</section>
+	<section class="notification is-danger has-text-centered">
+		Pamiętaj! Aby mieć pewność dostarczenia materiałów na czas, dokonaj wpłaty do czwartku 26 października!<br>
+		W przypadku zamówień opłaconych po tej dacie, nie możemy zagwarantować terminowej dostawy przesyłki. :(
+	</section>
 	@if (Session::has('coupon'))
 		<section class="voucher notification is-info has-text-centered">
 			@lang('payment.voucher-current', [

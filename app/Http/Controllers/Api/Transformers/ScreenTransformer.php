@@ -33,12 +33,8 @@ class ScreenTransformer extends ApiTransformer
 			'editions'     => $this->parent->get('editionId'),
 		];
 
-		if (!empty($screen->slideshow)) {
-			$slidesCount = DB::table('presentables')
-				->where('presentable_type', 'App\Models\Slideshow')
-				->where('presentable_id', $screen->slideshow->id)
-				->count();
-			$data['slides_count'] = $slidesCount;
+		if (!empty($screen->meta['slides_count'])) {
+			$data['slides_count'] = $screen->meta['slides_count'];
 		}
 
 		return $data;

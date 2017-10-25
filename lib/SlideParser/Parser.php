@@ -217,6 +217,8 @@ class Parser
 
 			$orderNumber++;
 		}
+
+		\Artisan::call('screens:countSlides');
 	}
 
 	/**

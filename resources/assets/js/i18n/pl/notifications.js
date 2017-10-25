@@ -11,7 +11,7 @@ export const notifications = {
 	events: {
 		commentPosted: 'skomentował/-a',
 		commentResolved: 'Twój komentarz został rozwiązany przez moderatora',
-		commentDeleted: 'został usunięty',
+		commentDeleted: 'Twój komentarz został usunięty przez moderatora',
 		qnaQuestionPosted: 'zadał/-a',
 		qnaQuestionResolved: 'Twoje pytanie zostało rozwiązane przez moderatora',
 		qnaQuestionDeleted: 'Twoje pytanie zostało usunięte przez moderatora',

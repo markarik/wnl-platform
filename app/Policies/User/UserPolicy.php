@@ -18,7 +18,7 @@ class UserPolicy
 	 */
 	public function view(User $user, User $targetUser)
 	{
-		return $user->id === $targetUser->id;
+		return $user->id === $targetUser->id || $user->isAdmin();
 	}
 
 	/**

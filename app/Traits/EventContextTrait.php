@@ -54,6 +54,9 @@ trait EventContextTrait {
 				}
 				return [];
 
+			case 'App\Models\Comment':
+				return $this->addEventContext($model->commentable);
+
 			default:
 				return [];
 		}

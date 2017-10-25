@@ -88,7 +88,8 @@
 			},
 			isCommentableInUrl() {
 				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
-			}
+				|| _.get(this.$route, 'query.commentable') == this.commentableId
+			},
 		},
 		methods: {
 			action(action, payload = {}) {

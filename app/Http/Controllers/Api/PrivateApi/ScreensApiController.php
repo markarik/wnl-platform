@@ -50,8 +50,10 @@ class ScreensApiController extends ApiController
 
 	public function post(UpdateScreen $request)
 	{
-		$screen = Screen::create($request->all());
+		$serializedData = $request->all();
+		$serializedData['meta'] = json_decode($request->get('meta'));
 
+		$screen = Screen::create($serializedData);
 		$resource = new Item($screen, new ScreenTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
 

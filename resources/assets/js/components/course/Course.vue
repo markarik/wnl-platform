@@ -25,7 +25,7 @@
 			:hasChat="true"
 		>
 			<div v-if="isLesson" class="lesson-active-users-container">
-				<wnl-active-users :channel="presenceChannel"/>
+				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>
 			</div>
 			<wnl-public-chat :rooms="chatRooms" v-if="canAccess"/>
 		</wnl-sidenav-slot>
@@ -61,7 +61,8 @@
 			flex-direction: column
 
 	.lesson-active-users-container
-		margin: $margin-small $margin-base 0
+		.active-users
+			margin: $margin-small $margin-base 0
 </style>
 
 <script>

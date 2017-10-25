@@ -1,6 +1,5 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<!-- <div> -->
 		<div class="wnl-lesson" v-if="isLessonAvailable(lesson.id)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">

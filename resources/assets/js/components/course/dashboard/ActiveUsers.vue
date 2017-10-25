@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<div class="active-users" v-if="activeUsersCount">
 		<div class="metadata">
-			{{ $t('dashboard.activeUsers', {count: activeUsersCount}) }}
+			{{ $t(message, {count: activeUsersCount}) }}
 		</div>
-		<div class="active-users-container" v-if="activeUsersCount">
+		<div class="active-users-container">
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
@@ -71,15 +71,19 @@
 			channel: {
 				type: String,
 				default: 'activeUsers'
-			}
+			},
+			message: {
+				type: String,
+				default: 'dashboard.activeUsers',
+			},
 		},
 		computed: {
 			...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
-			usersToCount() {
-				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
-			},
 			activeUsersCount() {
 				return this.usersToCount.length || 0
+			},
+			usersToCount() {
+				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
 			},
 		},
 	}

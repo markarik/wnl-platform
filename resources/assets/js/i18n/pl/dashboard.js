@@ -1,6 +1,7 @@
 export const dashboard = {
 	welcome: 'Cześć {currentUserName}!',
 	activeUsers: 'Uczą się razem z Tobą ({count})',
+	activeUsersLessons: 'Uczestniczą z Tobą w lekcji ({count})',
 	progress: {
 		howYouDoin: 'Jak Ci idzie?',
 		none: 'Najbliższa lekcja',

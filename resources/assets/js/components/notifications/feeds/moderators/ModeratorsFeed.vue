@@ -6,7 +6,7 @@
 		<wnl-pagination v-if="paginationMeta.lastPage > 1"
 			:currentPage="paginationMeta.currentPage"
 			:lastPage="paginationMeta.lastPage"
-			@changePage="changePaginationPage"
+			@changePage="onChangePage"
 		/>
 	</div>
 </template>
@@ -28,7 +28,10 @@
 			...mapGetters('tasks', ['tasks', 'paginationMeta']),
 		},
 		methods: {
-			...mapActions('tasks', ['changePaginationPage'])
+			...mapActions('tasks', ['pullTasks']),
+			onChangePage(page) {
+				this.pullTasks({params: {page}})
+			}
 		}
 	}
 </script>

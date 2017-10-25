@@ -16,18 +16,18 @@ class TaskTransformer extends ApiTransformer
 		$this->parent = $parent;
 	}
 
-	public function transform(Task $tag)
+	public function transform(Task $task)
 	{
 		$data = [
-			'id'          => $tag->id,
-			'creator_id'  => $tag->creator_id,
-			'assignee_id' => $tag->assignee_id,
-			'priority'    => $tag->priority,
-			'order'       => $tag->order,
-			'status'      => $tag->status,
-			'text'        => $tag->text,
-			'labels'      => $tag->labels,
-			'context'     => $tag->context,
+			'id'          => $task->id,
+			'creator_id'  => $task->creator_id,
+			'assignee_id' => $task->assignee_id,
+			'priority'    => $task->priority,
+			'order'       => $task->order,
+			'status'      => $task->status,
+			'text'        => $task->text,
+			'labels'      => $task->labels,
+			'context'     => $task->context,
 		];
 
 		if ($this->parent) {

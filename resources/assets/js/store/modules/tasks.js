@@ -33,11 +33,11 @@ const mutations = {
 }
 
 const actions = {
-	pullTasks({commit, dispatch}) {
+	pullTasks({commit, dispatch}, {params} = {}) {
 		commit(types.IS_FETCHING, true)
 
 		return new Promise ((resolve, reject) => {
-			_getTasks()
+			_getTasks(params)
 				.then(({data: response}) => {
 					const {data, ...paginationMeta} = response;
 
@@ -73,10 +73,11 @@ const modules = {
 	pagination
 }
 
-function _getTasks() {
+function _getTasks(params) {
 	return axios.get(getApiUrl('tasks/all'), {
 		params: {
-			limit: 20
+			limit: 2,
+			...params
 		}
 	})
 }

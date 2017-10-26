@@ -73,8 +73,8 @@
 							:key="comment.id"
 							:profile="profile"
 						>
-						<router-link :to="{ name: comment.context.name, params: comment.context.params }">Pokaż kontekst</router-link>
-					</wnl-comment>
+							<router-link :to="{ name: comment.context.name, params: comment.context.params }">Pokaż kontekst</router-link>
+						</wnl-comment>
 					</div>
 				</div>
 				<div class="column" v-show="isAnswersPanelVisible">
@@ -299,7 +299,7 @@ export default {
 			query: {
 				where: [[ 'user_id', userId ]]
 			},
-			include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+			include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 		}
 		const dataForQnaAnswers = {
 			query: {
@@ -309,7 +309,7 @@ export default {
 					}
 				}
 			},
-			include: 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+			include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 		}
 		// const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
 		const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))

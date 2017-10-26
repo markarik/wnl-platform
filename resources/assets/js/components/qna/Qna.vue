@@ -38,7 +38,9 @@
 				:questionId="question.id"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
-			/>
+			>
+				<router-link slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">Pokaż kontekst</router-link>
+			</wnl-qna-question>
 		</div>
 	</div>
 </template>

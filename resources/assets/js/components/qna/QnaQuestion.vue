@@ -50,6 +50,8 @@
 					</span>
 					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
 				</div>
+				<br>
+				<slot name="context"></slot>
 			</div>
 		</div>
 		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">

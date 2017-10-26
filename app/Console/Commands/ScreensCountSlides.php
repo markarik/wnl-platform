@@ -57,6 +57,7 @@ class ScreensCountSlides extends Command
 				->select('order_number')
 				->where('presentable_type', 'App\Models\Section')
 				->where('presentable_id', $section->id)
+				->orderBy('order_number')
 				->get(['order_number']);
 
 			$section->first_slide = $sectionSlides->first()->order_number;
@@ -70,6 +71,7 @@ class ScreensCountSlides extends Command
 				->where('presentable_type', 'App\Models\Subsection')
 				->where('presentable_id', $subsection->id)
 				->orderBy('order_number', 'asc')
+				->orderBy('order_number')
 				->get(['order_number']);
 
 			$subsection->first_slide = $subsectionSlides->first()->order_number;

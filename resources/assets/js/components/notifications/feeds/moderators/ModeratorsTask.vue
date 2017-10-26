@@ -30,7 +30,7 @@
 		</div>
 		<footer class="card-footer">
 			<router-link :to="taskContext" class="card-footer-item">Idziem tam!</router-link>
-			<div class="card-footer-item" @click="$emit('assign', {assignee: currentUserId, id: task.id})">Biore to!</div>
+			<div class="card-footer-item" @click="$emit('assign', {assignee_id: currentUserId, id: task.id})">Biore to!</div>
 		</footer>
 	</div>
 </template>

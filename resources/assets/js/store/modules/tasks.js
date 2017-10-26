@@ -78,7 +78,7 @@ const actions = {
 	},
 	updateTask({commit}, payload) {
 		_updateTask(payload)
-			.then(({data: {data: task}}) => {
+			.then(({data: {...task}}) => {
 				commit(types.MODIFY_TASK, task)
 			}).catch(() => {
 				// dispatch notification with error

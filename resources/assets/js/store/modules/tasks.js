@@ -42,10 +42,11 @@ const actions = {
 		return new Promise ((resolve, reject) => {
 			_getTasks(params)
 				.then(({data: response}) => {
-					const {data, ...paginationMeta} = response;
+					const {data: {included, ...data}, ...paginationMeta} = response;
+					const dataArray = Object.values(data);
 
 					// check if response not empty
-					if (typeof data[0] !== 'object') {
+					if (typeof dataArray[0] !== 'object') {
 						dispatch('setPaginationMeta', paginationMeta)
 						commit(types.IS_FETCHING, false)
 						return resolve(response)
@@ -54,7 +55,14 @@ const actions = {
 					dispatch('setPaginationMeta', paginationMeta)
 
 					const serializedTasks = {}
-					data.forEach(task => serializedTasks[task.id] = task)
+					dataArray.forEach(task => {
+						Object.keys(included).forEach((include) => {
+							if (task[include]) {
+								task[include] = task[include].map((id) => included[include][id])
+							}
+						});
+						serializedTasks[task.id] = task
+					});
 
 					commit(types.SET_TASKS, serializedTasks)
 					commit(types.IS_FETCHING, false)
@@ -84,6 +92,7 @@ function _getTasks(params) {
 	return axios.get(getApiUrl('tasks/all'), {
 		params: {
 			limit: 2,
+			include: 'events',
 			...params
 		}
 	})

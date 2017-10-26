@@ -1,8 +1,6 @@
 <template>
 	<div class="moderators-feed">
-		<div v-for="(task, index) in tasks" :key="index">
-			{{task.context.event}}
-		</div>
+		<wnl-task v-for="(task, index) in tasks" :key="index" :task="task"/>
 		<wnl-pagination v-if="paginationMeta.lastPage > 1"
 			:currentPage="paginationMeta.currentPage"
 			:lastPage="paginationMeta.lastPage"
@@ -18,11 +16,13 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	import Pagination from 'js/components/global/Pagination'
+	import Task from 'js/components/notifications/feeds/moderators/ModeratorsTask'
 
 	export default {
 		name: 'ModeratorsFeed',
 		components: {
-			'wnl-pagination': Pagination
+			'wnl-pagination': Pagination,
+			'wnl-task': Task
 		},
 		computed: {
 			...mapGetters('tasks', ['tasks', 'paginationMeta']),

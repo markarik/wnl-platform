@@ -21,5 +21,10 @@ class TaskPolicy
 	public function get()
 	{
 		return false;
+
+	}
+	public function update()
+	{
+		return false;
 	}
 }

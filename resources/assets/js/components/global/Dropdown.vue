@@ -2,11 +2,11 @@
 	<div class="wnl-dropdown">
 		<div class="activator" :class="{ 'is-active' : isActive }" @click="toggleActive">
 			<slot name="activator"></slot>
-		</div>
-		<transition name="fade">
 			<div v-if="isActive" class="box drawer" :class="{'is-mobile': isMobile, 'is-wide': options.isWide}">
 				<slot name="content"></slot>
 			</div>
+		</div>
+		<transition name="fade">
 		</transition>
 	</div>
 </template>
@@ -19,6 +19,7 @@
 		height: 100%
 		justify-content: center
 		position: relative
+		cursor: pointer
 
 		&.is-active:before
 			content: ""
@@ -36,7 +37,6 @@
 		height: 100%
 		min-height: 100%
 		position: relative
-		width: 100%
 
 	.drawer
 		border: $border-light-gray

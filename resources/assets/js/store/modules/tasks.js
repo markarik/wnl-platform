@@ -24,14 +24,8 @@ const mutations = {
 	[types.IS_FETCHING] (state, isFetching) {
 		set(state, 'fetching', isFetching)
 	},
-	[types.MODIFY_TASK] (state, payload) {
-		set(state, 'tasks', {
-			...state.tasks,
-			[payload.task.id]: {
-				...payload.task,
-				[payload.field]: payload.value
-			}
-		})
+	[types.MODIFY_TASK] (state, task) {
+		Object.assign(state.tasks[task.id], task)
 	},
 }
 
@@ -81,6 +75,14 @@ const actions = {
 	initModeratorsFeedListener({getters, dispatch}) {
 		dispatch('pullTasks')
 		dispatch('setupLiveListener', 'private-group.moderators')
+	},
+	updateTask({commit}, payload) {
+		_updateTask(payload)
+			.then(({data: {data: task}}) => {
+				commit(types.MODIFY_TASK, task)
+			}).catch(() => {
+				// dispatch notification with error
+			})
 	}
 }
 
@@ -96,6 +98,10 @@ function _getTasks(params) {
 			...params
 		}
 	})
+}
+
+function _updateTask({id, ...fields}) {
+	return axios.patch(getApiUrl(`tasks/${id}`), fields)
 }
 
 

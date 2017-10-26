@@ -199,4 +199,5 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Tasks
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
+	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 });

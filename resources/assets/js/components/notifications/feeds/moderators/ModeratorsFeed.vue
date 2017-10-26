@@ -1,6 +1,10 @@
 <template>
 	<div class="moderators-feed">
-		<wnl-task v-for="(task, index) in tasks" :key="index" :task="task"/>
+		<wnl-task v-for="(task, index) in tasks"
+			:key="index"
+			:task="task"
+			@statusSelected="onStatusSelected"
+		/>
 		<wnl-pagination v-if="paginationMeta.lastPage > 1"
 			:currentPage="paginationMeta.currentPage"
 			:lastPage="paginationMeta.lastPage"
@@ -28,9 +32,12 @@
 			...mapGetters('tasks', ['tasks', 'paginationMeta']),
 		},
 		methods: {
-			...mapActions('tasks', ['pullTasks']),
+			...mapActions('tasks', ['pullTasks', 'updateTask']),
 			onChangePage(page) {
 				this.pullTasks({params: {page}})
+			},
+			onStatusSelected(payload) {
+				this.updateTask(payload)
 			}
 		}
 	}

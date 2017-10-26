@@ -2,8 +2,10 @@
 	<article class="wnl-comment media">
 		<figure class="media-left">
 			<p class="image is-32x32">
-				<wnl-avatar size="medium" :fullName="profile.full_name"
-							:url="profile.avatar">
+				<wnl-avatar size="medium"
+					:fullName="profile.full_name"
+					:url="profile.avatar"
+					:userId="profile.id">
 				</wnl-avatar>
 			</p>
 		</figure>

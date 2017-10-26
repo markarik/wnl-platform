@@ -7,9 +7,11 @@
 				</div>
 			</div>
 			<div class="level-right">
-				<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}">
-					<a class="button is-primary is-outlined:hover">Podgląd mojego profilu</a>
-				</router-link>
+				<span >
+					<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}" :event="handleLink">
+						<a class="button is-primary is-outlined:hover" :disabled="hasChanges">Podgląd mojego profilu</a>
+					</router-link>
+				</span>
 			</div>
 		</div>
 		<div class="wnl-user-profile-avatar">
@@ -29,7 +31,7 @@
 			</wnl-upload>
 		</div>
 
-		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true">
+		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
 			<wnl-form-text name="first_name">Imię</wnl-form-text>
 			<wnl-form-text name="last_name">Nazwisko</wnl-form-text>
 			<wnl-form-text name="username">Nazwa użytkownika</wnl-form-text>
@@ -92,6 +94,7 @@
 		data() {
 			return {
 				loading: false,
+				formLoaded: false,
 			}
 		},
 		computed: {
@@ -99,9 +102,21 @@
 			isProduction() {
 				return isProduction()
 			},
+			hasChanges() {
+				return this.formLoaded && this.getter('hasChanges')
+			},
+			handleLink() {
+				return this.hasChanges ? '' : 'click'
+			},
 		},
 		methods: {
 			...mapActions(['updateCurrentUser']),
+			onFormLoaded() {
+				this.formLoaded = true
+			},
+			getter(getter) {
+				return this.$store.getters[`MyProfile/${getter}`]
+			},
 			onUploadError() {
 				this.loading = false
 			},

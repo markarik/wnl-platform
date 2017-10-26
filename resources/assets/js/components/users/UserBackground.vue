@@ -14,7 +14,7 @@
             background-color: nth($background-colors-list, $i)
 
     .wnl-background
-        height: 22vh
+        height: 30vh
         width: 100%
 </style>
 

@@ -165,9 +165,7 @@ export default {
             sortingDisabled: false,
             sortingEnabled: true,
             loading: false,
-            hideDefaultSubmit: true,
             id: this.$route.params.userId,
-            disableInput: true,
             reactionsDisabled: true,
             activePanels: ['comments'],
 			profile: {},
@@ -185,11 +183,7 @@ export default {
             return Object.values(this.qnaQuestionsComputed).length
         },
         ifAnyQuestions() {
-            if (this.howManyQuestions === 0) {
-                return false
-            } else {
-                return true
-            }
+			return this.howManyQuestions === 0 ? false : true
         },
 		fullName() {
 			return this.profile.full_name
@@ -198,19 +192,10 @@ export default {
             return Object.values(this.qnaAnswersComputed).length
         },
         ifAnyAnswers() {
-            if (this.howManyAnswers === 0) {
-                return false
-            } else {
-                return true
-            }
+            return this.howManyAnswers === 0 ? false : true
         },
         isProduction() {
             return isProduction()
-        },
-        sorted() {
-            return this.qna_answers.sort(function(a, b) {
-                return b.reactions.length - a.reactions.length
-            })
         },
         isCommentsPanelVisible() {
             return this.isPanelActive('comments')
@@ -285,11 +270,6 @@ export default {
         isSinglePanelView() {
             return this.isTouchScreen
         },
-		pointsForQuestions() {
-			return Object.values(this.qnaQuestionsComputed.data).reduce((sum, el) => {
-				return sum + el.upvote.count
-			}, 0)
-		},
 		responseCondition() {
 			return !_.isEmpty(this.profile)
 		},
@@ -349,12 +329,8 @@ export default {
 			this.$emit('userDataLoaded', {
 				profile: this.profile
 			})
-			debugger
 		})
 		.catch(exception => $wnl.logger.capture(exception))
-		//const promisedProfile = axios.get(getApiUrl(`users/${this.param}/profile`))
-
-        console.log(Object.values(this.qnaQuestionsComputed).length);
     },
 }
 </script>

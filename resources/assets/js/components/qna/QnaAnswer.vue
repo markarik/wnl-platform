@@ -16,6 +16,7 @@
 					<wnl-avatar
 							:fullName="author.full_name"
 							:url="author.avatar"
+							:userId="author.id"
 							size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">

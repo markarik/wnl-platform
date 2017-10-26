@@ -40,6 +40,7 @@ class DatabaseTaskChannel
 				'notifiable_id'   => $notifiable->id,
 				'notifiable_type' => get_class($notifiable),
 				'team'            => $notification->team,
+				'text'            => $notification->text,
 			]);
 
 		Event::create([

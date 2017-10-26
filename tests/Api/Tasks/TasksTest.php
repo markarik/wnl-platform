@@ -100,11 +100,12 @@ class TasksTest extends ApiTestCase
 	/** @test */
 	public function patch_task()
 	{
-		$status = 'resolved';
+		$statusBefore = 'open';
+		$statusAfter = 'resolved';
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('moderator'));
-		$task = factory(Task::class)->create();
-		$data = ['status' => $status];
+		$task = factory(Task::class)->create(['status' => $statusBefore]);
+		$data = ['status' => $statusAfter];
 
 		$response = $this
 			->actingAs($user)
@@ -112,6 +113,9 @@ class TasksTest extends ApiTestCase
 
 		$response
 			->assertStatus(200)
-			->assertJson(['status' => $status]);
+			->assertJson([
+				'id'     => $task->id,
+				'status' => $statusAfter,
+			]);
 	}
 }

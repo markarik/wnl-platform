@@ -22,7 +22,11 @@ trait TranslatesApiQueries
 		$model = $this->applyFilters($model, $request);
 
 		try {
-			$results = $model->get();
+			if ($request->limit && !is_array($request->limit)) {
+				$data = $this->paginatedResponse($model, $request->limit, $request->page ?? 1);
+			} else {
+				$data = $this->transform($model);
+			}
 		}
 		catch (QueryException $e) {
 			\Log::error($e);
@@ -30,7 +34,7 @@ trait TranslatesApiQueries
 			return $this->respondInvalidInput();
 		}
 
-		return $this->transformAndRespond($results);
+		return $this->respondOk($data);
 	}
 
 	/**

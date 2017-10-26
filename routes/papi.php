@@ -36,6 +36,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Faceted search available filters
 	api_action('post', 'filterList');
 
+	// Query
+	api_action('post', 'query');
+
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 

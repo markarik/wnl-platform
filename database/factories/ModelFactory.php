@@ -77,7 +77,6 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Screen::class, function (Faker\Generator $faker) {
 	return [
-		'id'        => $faker->numberBetween(500, 1000),
 		'name'      => $faker->name,
 		'type'      => 'slideshow',
 		'lesson_id' => function () {

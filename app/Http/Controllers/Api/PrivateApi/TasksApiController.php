@@ -18,6 +18,12 @@ class TasksApiController extends ApiController
 		return parent::get($id);
 	}
 
+	public function query(Request $request)
+	{
+		$this->authorize('get', Task::class);
+		return parent::query($request);
+	}
+
 	public function patch(Request $request) {
 		$this->authorize('update', Task::class);
 		$id = $request->route('id');

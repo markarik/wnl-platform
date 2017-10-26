@@ -96,4 +96,22 @@ class TasksTest extends ApiTestCase
 		$response
 			->assertStatus(403);
 	}
+
+	/** @test */
+	public function patch_task()
+	{
+		$status = 'resolved';
+		$user = factory(User::class)->create();
+		$user->roles()->attach(Role::byName('moderator'));
+		$task = factory(Task::class)->create();
+		$data = ['status' => $status];
+
+		$response = $this
+			->actingAs($user)
+			->json('PATCH', $this->url('/tasks/' . $task->id), $data);
+
+		$response
+			->assertStatus(200)
+			->assertJson(['status' => $status]);
+	}
 }

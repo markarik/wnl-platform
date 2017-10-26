@@ -15,23 +15,29 @@ class TasksApiController extends ApiController
 	public function get($id)
 	{
 		$this->authorize('get', Task::class);
+
 		return parent::get($id);
 	}
 
 	public function query(Request $request)
 	{
 		$this->authorize('get', Task::class);
+
 		return parent::query($request);
 	}
 
-	public function patch(Request $request) {
+	public function patch(Request $request)
+	{
 		$this->authorize('update', Task::class);
 		$id = $request->route('id');
 
 		$task = Task::find($id);
-		$task->status = $request->status;
-		$task->save();
+		if (!$task) {
+			return $this->respondNotFound();
+		}
+		$task->update($request->all());
+		$data = $this->transform($task);
 
-		return $this->json(['data' => $task]);
+		return $this->respondOk($data);
 	}
 }

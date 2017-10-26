@@ -1,9 +1,10 @@
 <template>
 	<div class="moderators-feed">
-		<wnl-task v-for="(task, index) in tasks"
+		<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
 			:key="index"
 			:task="task"
-			@statusSelected="onStatusSelected"
+			@statusSelected="updateTask"
+			@assign="updateTask"
 		/>
 		<wnl-pagination v-if="paginationMeta.lastPage > 1"
 			:currentPage="paginationMeta.currentPage"
@@ -14,6 +15,10 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.wnl-task-card
+		margin: $margin-base auto
 </style>
 
 <script>
@@ -36,9 +41,6 @@
 			onChangePage(page) {
 				this.pullTasks({params: {page}})
 			},
-			onStatusSelected(payload) {
-				this.updateTask(payload)
-			}
 		}
 	}
 </script>

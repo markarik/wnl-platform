@@ -29,6 +29,8 @@
 			<p>{{taskContent}}</p>
 		</div>
 		<footer class="card-footer">
+			<router-link :to="taskContext" class="card-footer-item">Idziem tam!</router-link>
+			<div class="card-footer-item" @click="$emit('assign', {assignee: currentUserId, id: task.id})">Biore to!</div>
 		</footer>
 	</div>
 </template>
@@ -39,17 +41,23 @@
 	.tag
 		border-radius: 0
 
-	.dropdown-item
+	.card-header-title
+		align-items: center
+
+	.card-footer-item, .dropdown-item
 		cursor: pointer
-		padding: $margin-small
-		border-bottom: $border-light-gray
 
 		&:hover
 			background-color: $color-background-light-gray
+
+	.dropdown-item
+		padding: $margin-small
+		border-bottom: $border-light-gray
 </style>
 
 <script>
 import Dropdown from 'js/components/global/Dropdown'
+import {mapGetters} from 'vuex'
 
 export default {
 	props: {
@@ -71,6 +79,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters(['currentUserId']),
 		title() {
 			return this.task.text || this.$t('tasks.task.defaultTitle')
 		},
@@ -104,9 +113,14 @@ export default {
 		eventsCount() {
 			return this.task.events.length
 		},
+		lastEvent() {
+			return this.task.events[this.eventsCount - 1]
+		},
 		taskContent() {
-			const lastEvent = this.task.events[this.eventsCount - 1]
-			return lastEvent.data.subject.text
+			return this.lastEvent.data.subject.text
+		},
+		taskContext() {
+			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer)
 		}
 	}
 };

@@ -25,7 +25,7 @@ class CreateTasksTable extends Migration
 			$table->unsignedInteger('assignee_id')->nullable();
 			$table->smallInteger('priority')->nullable();
 			$table->integer('order')->nullable();
-			$table->string('status')->nullable();
+			$table->string('status')->default('open');
 			$table->text('text')->nullable();
 			$table->json('labels')->nullable();
 			$table->timestamps();

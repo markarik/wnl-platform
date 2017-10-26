@@ -101,6 +101,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Comment');
 	}
 
+	public function tasks()
+	{
+		return $this->hasMany('App\Models\Task', 'assignee_id');
+	}
+
 	public function qnaAnswers()
 	{
 		return $this->hasMany('App\Models\QnaAnswer');

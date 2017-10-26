@@ -94,7 +94,7 @@ function _getTasks(params) {
 	return axios.get(getApiUrl('tasks/all'), {
 		params: {
 			limit: 2,
-			include: 'events',
+			include: 'events,profiles',
 			...params
 		}
 	})

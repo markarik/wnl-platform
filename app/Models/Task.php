@@ -35,6 +35,11 @@ class Task extends Model
 		return $this->hasMany('App\Models\Event');
 	}
 
+	public function assignee()
+	{
+		return $this->belongsTo('App\Models\User', 'assignee_id', 'id');
+	}
+
 	public function comments()
 	{
 		return $this->morphMany('App\Models\Comment', 'commentable');

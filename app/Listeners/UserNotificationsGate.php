@@ -2,6 +2,7 @@
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserCourseProgress;
 use App\Notifications\EventNotification;
 use App\Notifications\EventTaskNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,12 +24,36 @@ class UserNotificationsGate implements ShouldQueue
 
 	public function notifyPrivateStream(array $excluded, $event)
 	{
-		foreach (User::all() as $user) {
-			if (in_array($user->id, $excluded)) continue;
+		$progress = $this->usersLessonProgress($event);
+		$users = User::all()->filter(function ($user) use ($excluded) {
+			return !in_array($user->id, $excluded);
+		});
+		if ($progress) {
+			$users = $users->filter(function ($user) use ($progress) {
+				return in_array($user->id, $progress);
+			});
+		}
 
+		foreach ($users as $user) {
 			$channelFormatted = sprintf(self::CHANNELS['private-stream'], $user->id);
 			$user->notify(new EventNotification($event, $channelFormatted));
 		}
+	}
+
+	protected function usersLessonProgress($event)
+	{
+		$lessonId = $event->data['context']['params']['lessonId'] ?? null;
+		if (!$lessonId) {
+			return false;
+		}
+
+		$usersIds = UserCourseProgress::select(['user_id'])
+			->where('lesson_id', $lessonId)
+			->get()
+			->pluck('user_id')
+			->toArray();
+
+		return $usersIds;
 	}
 
 	/**

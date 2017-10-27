@@ -56,12 +56,12 @@ trait GeneratesApiResponses
 			->json();
 	}
 
-	protected function respondInvalidInput($data = [], $message = '')
+	protected function respondInvalidInput($message = '', $data = [])
 	{
 		return $this
 			->setMessage($message ?? 'Invalid input')
 			->setStatusCode(400)
-			->json($data);
+			->json(array_merge($data, ['message' => $message]));
 	}
 
 	protected function respondUnauthorized()

@@ -6,7 +6,6 @@ namespace App\Observers;
 
 use App\Models\Order;
 use App\Jobs\OrderPaid;
-use App\Jobs\IssueInvoice;
 use App\Jobs\OrderConfirmed;
 use Illuminate\Support\Facades\App;
 use App\Notifications\OrderCreated;

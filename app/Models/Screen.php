@@ -10,7 +10,7 @@ class Screen extends Model
 	use Cached;
 
 	protected $casts = [
-		'meta' => 'json',
+		'meta' => 'array',
 	];
 
 	protected $fillable = ['content', 'type', 'name', 'meta', 'lesson_id', 'order_number'];

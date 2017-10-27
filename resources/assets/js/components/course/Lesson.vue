@@ -1,6 +1,5 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<!-- <div> -->
 		<div class="wnl-lesson" v-if="isLessonAvailable(lesson.id)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
@@ -15,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<router-view></router-view>
+				<router-view/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
@@ -73,7 +72,7 @@
 			'wnl-breadcrumbs': Breadcrumbs,
 		},
 		mixins: [breadcrumb],
-		props: ['courseId', 'lessonId', 'screenId', 'slide'],
+		props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
 		data() {
 			return {
 				/**
@@ -181,15 +180,23 @@
 				'completeScreen',
 				'completeSection',
 				'completeSubsection',
-				'saveLessonProgress'
+				'saveLessonProgress',
 			]),
 			...mapActions([
-				'updateLessonNav'
+				'updateLessonNav',
+				'setActiveUsers',
+				'userJoined',
+				'userLeft'
 			]),
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
 					this.goToDefaultScreenIfNone()
 				});
+
+				window.Echo.join(this.presenceChannel)
+					.here(users => this.setActiveUsers({users, channel: this.presenceChannel}))
+					.joining(user => this.userJoined({user, channel: this.presenceChannel}))
+					.leaving(user => this.userLeft({user, channel: this.presenceChannel}))
 			},
 			goToDefaultScreenIfNone() {
 				const query = this.$route.query || {}
@@ -289,6 +296,7 @@
 			window.addEventListener('resize', this.updateElementHeight)
 		},
 		beforeDestroy () {
+			window.Echo.leave(this.presenceChannel)
 			window.removeEventListener('resize', this.updateElementHeight)
 		},
 		watch: {

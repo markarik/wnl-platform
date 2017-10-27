@@ -38,6 +38,7 @@ class ApiController extends Controller
 		$this->fractal->setSerializer(new ApiJsonSerializer());
 		if ($this->request->has('include')) {
 			$this->fractal->parseIncludes($this->request->get('include'));
+			$this->include = $this->request->get('include');
 		}
 	}
 
@@ -53,9 +54,10 @@ class ApiController extends Controller
 		$request = $this->request;
 		$modelName = self::getResourceModel($this->resourceName);
 
-		if ($id === 'all') {
-			$models = $modelName::select();
-		} else {
+		$models = $this->eagerLoadIncludes($modelName);
+		$transformerName = self::getResourceTransformer($this->resourceName);
+
+		if ($id !== 'all') {
 			$models = $modelName::find($id);
 		}
 
@@ -219,5 +221,47 @@ class ApiController extends Controller
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $data;
+	}
+
+	protected function eagerLoadIncludes(string $model)
+	{
+		if (empty($this->include)) return $model::select();
+		$relationships = [];
+
+		foreach (explode(',', $this->include) as $chain) {
+			$confirmedChain = $this->processChain($chain, $model);
+			if ($confirmedChain) {
+				array_push($relationships, $confirmedChain);
+			}
+		}
+
+		return $model::with($relationships);
+	}
+
+	protected function modelHasMethod(string $model, string $method)
+	{
+		return method_exists((new $model), $method);
+	}
+
+	protected function processChain(string $chain, string $parentModel)
+	{
+		$resources = explode('.', $chain);
+		$depth = count($resources);
+		for ($i = 0; $i < $depth; $i++) {
+			if ($i === 0) {
+				if (!$this->modelHasMethod($parentModel, $resources[$i])) {
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$parentModel}");
+					return false;
+				}
+			} else {
+				$model = self::getResourceModel($resources[$i-1]);
+				if (!$this->modelHasMethod($model, $resources[$i])) {
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$model}");
+					return false;
+				}
+			}
+		}
+
+		return $chain;
 	}
 }

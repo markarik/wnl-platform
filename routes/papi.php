@@ -63,6 +63,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Slides
 	Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 	Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
+	Route::post("{$r['slides']}", 'SlidesApiController@post');
 	Route::post("{$r['slides']}/.search", 'SlidesApiController@query');
 
 	// Presentables
@@ -191,6 +192,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Slideshow builder
 	Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'SlideshowBuilderApiController@byCategory');
+	Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
 	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
 
 	// Events

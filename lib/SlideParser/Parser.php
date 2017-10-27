@@ -217,6 +217,8 @@ class Parser
 
 			$orderNumber++;
 		}
+
+		\Artisan::call('screens:countSlides');
 	}
 
 	/**
@@ -425,7 +427,7 @@ class Parser
 		return $snippet;
 	}
 
-	protected function handleImages($html)
+	public function handleImages($html)
 	{
 		$match = $this->match(self::IMAGE_PATTERN, $html);
 

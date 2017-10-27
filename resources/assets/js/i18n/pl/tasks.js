@@ -7,7 +7,7 @@ export const tasks = {
 			eventsCount: 'Liczba wątków'
 		},
 		status: {
-			open: 'Weź mnie',
+			open: 'Do wzięcia',
 			inProgress: 'Robi się',
 			done: 'Pozamiatane',
 			unknown: 'Status nieznany'

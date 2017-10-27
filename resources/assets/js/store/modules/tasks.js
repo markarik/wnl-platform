@@ -25,6 +25,7 @@ const mutations = {
 		set(state, 'fetching', isFetching)
 	},
 	[types.MODIFY_TASK] (state, task) {
+		console.log(task, '*****')
 		Object.assign(state.tasks[task.id], task)
 	},
 }
@@ -78,7 +79,14 @@ const actions = {
 	},
 	updateTask({commit}, payload) {
 		_updateTask(payload)
-			.then(({data: {...task}}) => {
+			.then(({data: {included, ...task}}) => {
+
+				Object.keys(included).forEach((include) => {
+					if (task[include]) {
+						task[include] = task[include].map((id) => included[include][id])
+					}
+				});
+
 				commit(types.MODIFY_TASK, task)
 			}).catch(() => {
 				// dispatch notification with error
@@ -101,7 +109,7 @@ function _getTasks(params) {
 }
 
 function _updateTask({id, ...fields}) {
-	return axios.patch(getApiUrl(`tasks/${id}`), fields)
+	return axios.patch(getApiUrl(`tasks/${id}?include=events,profiles`), fields)
 }
 
 

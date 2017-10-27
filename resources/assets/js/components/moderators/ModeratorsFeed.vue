@@ -3,6 +3,7 @@
 		<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
 			:key="index"
 			:task="task"
+			:availableModerators="moderators"
 			@statusSelected="updateTask"
 			@assign="updateTask"
 		/>
@@ -23,15 +24,21 @@
 
 <script>
 	import { mapGetters, mapActions } from 'vuex'
+	import { getApiUrl } from 'js/utils/env'
 
 	import Pagination from 'js/components/global/Pagination'
-	import Task from 'js/components/notifications/feeds/moderators/ModeratorsTask'
+	import Task from 'js/components/moderators/ModeratorsTask'
 
 	export default {
 		name: 'ModeratorsFeed',
 		components: {
 			'wnl-pagination': Pagination,
 			'wnl-task': Task
+		},
+		data() {
+			return {
+				moderators: []
+			}
 		},
 		computed: {
 			...mapGetters('tasks', ['tasks', 'paginationMeta']),
@@ -41,6 +48,20 @@
 			onChangePage(page) {
 				this.pullTasks({params: {page}})
 			},
+		},
+		mounted() {
+			axios.post(getApiUrl('user_profiles/.search'), {
+				query: {
+					whereHas: {
+						roles: {
+							// use role name not id
+							whereIn: ['roles.id', [1,2]]
+						}
+					},
+				}
+			}).then(({data: {...users}}) => {
+				this.moderators = Object.values(users)
+			})
 		}
 	}
 </script>

@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Storage;
+use App\Models\Coupon;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Console\Command;
 
@@ -13,7 +15,7 @@ class AddressesExport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'order:export';
+	protected $signature = 'addresses:export';
 
 	/**
 	 * The console command description.
@@ -39,17 +41,14 @@ class AddressesExport extends Command
 	 */
 	public function handle()
 	{
-		$users = User::with(['address'])
-			->wherehas('orders', function ($query) {
-				return $query->where('paid', 1);
-			})->get();
-
+		$orders = Order::where('paid', 1)
+			->where('product_id', '>', 4)->get();
 		$schema = $this->getSchema();
 
 		$data = '';
 		$data .= $this->printHeaders($schema);
-		foreach ($users as $user) {
-			$data .= $this->printLine($user, $schema);
+		foreach ($orders as $order) {
+			$data .= $this->printLine($order, $schema);
 		}
 
 		Storage::put('exports/inpost.csv', $data);
@@ -57,9 +56,13 @@ class AddressesExport extends Command
 		return;
 	}
 
-	public function printLine($user, $schema)
+	public function printLine($order, $schema)
 	{
+		$user = User::find($order->user_id);
+		$coupon = Coupon::find($order->coupon_id);
+
 		$address = $user->address()->first();
+
 		$schema['receiver_name'] = $user->first_name;
 		$schema['receiver_surname'] = $user->last_name;
 		$schema['receiver_email'] = $user->email;
@@ -68,6 +71,11 @@ class AddressesExport extends Command
 		$schema['receiver_city'] = $address->city;
 		$schema['receiver_phone'] = $address->phone;
 		$schema['user_reference_number'] = $user->id;
+		$schema['description'] = $order->product_id;
+
+		if ($coupon) {
+			$schema['poczta_value'] = $coupon->name;
+		}
 
 		$fields = array_map(function ($element) {
 			return '"' . $element . '"';
@@ -114,7 +122,7 @@ class AddressesExport extends Command
 			'type'                   => 'package',
 			'wrapping'               => '5',
 			'shape'                  => '0',
-			'weight'                 => '10',
+			'weight'                 => '2',
 			'width'                  => '40',
 			'height'                 => '10',
 			'depth'                  => '30',

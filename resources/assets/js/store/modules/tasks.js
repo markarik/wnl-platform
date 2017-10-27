@@ -62,6 +62,8 @@ const actions = {
 					commit(types.IS_FETCHING, false)
 
 					resolve(response)
+				}).catch(() => {
+					// dispatch notification with error
 				})
 		})
 	},
@@ -87,7 +89,6 @@ const actions = {
 
 				commit(types.MODIFY_TASK, task)
 			}).catch(() => {
-				debugger
 				// dispatch notification with error
 			})
 	}

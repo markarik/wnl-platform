@@ -70,7 +70,8 @@ class EventTaskNotification extends Notification
 
 	protected function qnaQuestionPostedDescription($event)
 	{
-		$lessonId = $event['context']['params']['lessonId'];
+		$lessonId = $event['context']['params']['lessonId'] ?? null;
+		if (!$lessonId) return '';
 		$lesson = Lesson::find($lessonId);
 
 		return __('tasks.descriptions.qna_question', [
@@ -80,7 +81,8 @@ class EventTaskNotification extends Notification
 
 	protected function qnaAnswerPostedDescription($event)
 	{
-		$lessonId = $event['context']['params']['lessonId'];
+		$lessonId = $event['context']['params']['lessonId'] ?? null;
+		if (!$lessonId) return '';
 		$lesson = Lesson::find($lessonId);
 
 		return __('tasks.descriptions.qna_answer', [
@@ -93,8 +95,9 @@ class EventTaskNotification extends Notification
 		$objectType = $event['objects']['type'];
 
 		if ($objectType === 'slide') {
-			$lessonId = $event['context']['params']['lessonId'];
-			$slideNumber = $event['context']['params']['slide'];
+			$lessonId = $event['context']['params']['lessonId'] ?? null;
+			$slideNumber = $event['context']['params']['slide'] ?? null;
+			if (!$lessonId || !$slideNumber) return '';
 			$lesson = Lesson::find($lessonId);
 
 			return __('tasks.descriptions.slide_comment', [
@@ -104,7 +107,8 @@ class EventTaskNotification extends Notification
 		}
 
 		if ($objectType === 'qna_answer') {
-			$lessonId = $event['context']['params']['lessonId'];
+			$lessonId = $event['context']['params']['lessonId'] ?? null;
+			if (!$lessonId) return '';
 			$lesson = Lesson::find($lessonId);
 
 			return __('tasks.descriptions.qna_answer_comment', [

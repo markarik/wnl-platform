@@ -3,9 +3,13 @@
     <div class="metadata">
         {{ $t('dashboard.activeUsers', {count: allUsersCount}) }}
     </div>
+    <div class="users-filter">
+        <input type="text" v-model="input">
+        <br>
+    </div>
     <div class="all-users-container" v-if="allUsersCount">
         <ul class="avatars-list" ref="avatarsList">
-            <li v-for="user in usersToCount" class="avatar">
+            <li v-for="user in usersByLocation" class="avatar">
                 <wnl-avatar :fullName="user.full_name" :url="user.avatar" :userId="user.id" :user="user" size="medium">
                 </wnl-avatar>
             </li>
@@ -50,17 +54,21 @@ export default {
     name: 'AllUsers',
     data() {
         return {
-            filterValue: ''
+            filterValue: '',
+            input: '',
         }
     },
     computed: {
         ...mapGetters(['currentUserId', 'currentUserName']),
-        ...mapGetters('users', ['allUsers']),
+        ...mapGetters('users', ['allUsers', 'getUsersByLoaction', 'getUsersByRole']),
         usersToCount() {
             return this.allUsers.filter((user) => this.currentUserId !== user.id)
         },
         allUsersCount() {
             return this.usersToCount.length || 0
+        },
+        usersByLocation() {
+            return this.input.length > 0 ? this.getUsersByLoaction(this.input.toLowerCase()).filter((user) => this.currentUserId !== user.id) : this.usersToCount
         },
 
     },

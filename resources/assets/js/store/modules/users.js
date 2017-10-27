@@ -5,10 +5,11 @@ import {getApiUrl} from 'js/utils/env'
 const namespaced = true;
 
 const state = {
-    activeUsers: [],
     allUsers: [],
-    usersByLocation: [],
+    activeUsers: [],
     activeFilters: [],
+    usersByLocation: [],
+    usersByRole: [],
 };
 
 const getters = {
@@ -22,7 +23,8 @@ const getters = {
     //         })
     //     }
     // },
-    // getUsersByLoaction: state => city => state.allUsers.filter(item => item.city === city)
+    getUsersByLoaction: state => city => state.allUsers.filter(item => item.city.toLowerCase() === city),
+    getUsersByRole: state => role => state.allUsers.filter(item => item.roles.includes(role)),
 };
 
 const mutations = {

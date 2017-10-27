@@ -2,6 +2,7 @@ import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {set} from 'vue'
 import pagination from 'js/store/modules/shared/pagination'
+import profiles from 'js/store/modules/shared/profiles'
 
 const namespaced = true
 
@@ -25,7 +26,6 @@ const mutations = {
 		set(state, 'fetching', isFetching)
 	},
 	[types.MODIFY_TASK] (state, task) {
-		console.log(task, '*****')
 		Object.assign(state.tasks[task.id], task)
 	},
 }
@@ -37,8 +37,11 @@ const actions = {
 		return new Promise ((resolve, reject) => {
 			_getTasks(params)
 				.then(({data: response}) => {
-					const {data: {included, ...data}, ...paginationMeta} = response;
-					const dataArray = Object.values(data);
+					const {data, ...paginationMeta} = response;
+					const {included: allIncluded, ...responseData} = data;
+					const {profiles = {}, ...included} = allIncluded
+
+					const dataArray = Object.values(responseData);
 
 					// check if response not empty
 					if (typeof dataArray[0] !== 'object') {
@@ -51,12 +54,8 @@ const actions = {
 
 					const serializedTasks = {}
 					dataArray.forEach(task => {
-						Object.keys(included).forEach((include) => {
-							if (task[include]) {
-								task[include] = task[include].map((id) => included[include][id])
-							}
-						});
-						serializedTasks[task.id] = task
+						serializedTasks[task.id] = _parseIncludes(included, task)
+						serializedTasks[task.id].assignee = profiles[task.assignee_id] || {}
 					});
 
 					commit(types.SET_TASKS, serializedTasks)
@@ -79,23 +78,24 @@ const actions = {
 	},
 	updateTask({commit}, payload) {
 		_updateTask(payload)
-			.then(({data: {included, ...task}}) => {
+			.then(({data: {included: allIncluded, ...task}}) => {
+				const {profiles = {}, ...included} = allIncluded
 
-				Object.keys(included).forEach((include) => {
-					if (task[include]) {
-						task[include] = task[include].map((id) => included[include][id])
-					}
-				});
+				const assignee = {assignee: profiles[task.assignee_id] || {}};
+
+				Object.assign(task, _parseIncludes(included, task), assignee)
 
 				commit(types.MODIFY_TASK, task)
 			}).catch(() => {
+				debugger
 				// dispatch notification with error
 			})
 	}
 }
 
 const modules = {
-	pagination
+	pagination,
+	profiles
 }
 
 function _getTasks(params) {
@@ -110,6 +110,18 @@ function _getTasks(params) {
 
 function _updateTask({id, ...fields}) {
 	return axios.patch(getApiUrl(`tasks/${id}?include=events,profiles`), fields)
+}
+
+function _parseIncludes(included, object) {
+	const updatedObject = {...object};
+
+	Object.keys(included).forEach((include) => {
+		if (updatedObject[include]) {
+			updatedObject[include] = updatedObject[include].map((id) => included[include][id])
+		}
+	});
+
+	return updatedObject
 }
 
 

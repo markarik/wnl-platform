@@ -108,7 +108,7 @@ export default {
 			}
 		},
 		assigneeText() {
-			return this.task.assignee || '----'
+			return this.task.assignee.full_name || '----'
 		},
 		eventsCount() {
 			return this.task.events.length

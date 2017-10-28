@@ -8,10 +8,8 @@ use App\Http\Requests\Course\UpdateSlide;
 use App\Jobs\SearchImportAll;
 use App\Models\Screen;
 use App\Models\Slide;
-use Lib\SlideParser\Parser;
 use Illuminate\Http\Request;
-use Artisan;
-use DB;
+use Lib\SlideParser\Parser;
 
 class SlidesApiController extends ApiController
 {
@@ -71,6 +69,7 @@ class SlidesApiController extends ApiController
 
 		// Re-index all slides... Psayayay
 		dispatch(new SearchImportAll('App\\Models\\Slide'));
+		\Artisan::queue('screens:countSlides');
 
 		return $this->respondOk();
 	}

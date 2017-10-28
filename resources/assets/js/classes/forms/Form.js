@@ -1,9 +1,7 @@
-import _ from 'lodash'
 import axios from 'axios'
-
 import Errors from './Errors'
 
-class Form {
+export default class Form {
 	/**
 	 * Create a new Form instance.
 	 *
@@ -91,10 +89,11 @@ class Form {
 	 *
 	 * @param {string} requestType
 	 * @param {string} url
+	 * @param {object} payload
 	 */
-	submit(requestType, url) {
+	submit(requestType, url, payload) {
 		return new Promise((resolve, reject) => {
-			axios[requestType](url, this.data())
+			axios[requestType](url, {...this.data(), ...payload})
 				.then(response => {
 					this.onSuccess(response.data);
 
@@ -141,6 +140,3 @@ class Form {
 
 	}
 }
-
-
-export {Form as default}

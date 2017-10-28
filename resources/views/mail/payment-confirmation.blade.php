@@ -32,5 +32,7 @@
 
 	<p>Do zobaczenia wkrótce!</p>
 
-	<p>P.S. W załączniku znajdziesz fakturę potwierdzającą wpłatę. :)</p>
+	@if ($invoice)
+		<p>P.S. W załączniku znajdziesz fakturę potwierdzającą wpłatę. :)</p>
+	@endif
 @endsection

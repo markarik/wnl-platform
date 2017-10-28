@@ -81,7 +81,7 @@ class PersonalDataController extends Controller
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
-		if ($user && $request->edit == 'true') {
+		if ($user) {
 			$this->updateAccount($user, $request);
 			$this->updateOrder($user, $request);
 		} else {
@@ -103,7 +103,8 @@ class PersonalDataController extends Controller
 
 		$userCoupon = $user->coupons->first();
 		if (session()->has('coupon')) {
-			$this->addCoupon($order, session()->get('coupon'));
+			$coupon = session()->get('coupon')->fresh();
+			$this->addCoupon($order, $coupon);
 		} elseif ($userCoupon) {
 			$this->addCoupon($order, $userCoupon);
 		} elseif ($order->product->slug !== 'wnl-album') {
@@ -122,6 +123,10 @@ class PersonalDataController extends Controller
 			'code'         => strtoupper(str_random(7)),
 			'times_usable' => 0,
 		]);
+
+		$coupon->products()->attach(
+			Product::whereIn('slug', ['wnl-online', 'wnl-online-onsite'])->get()
+		);
 
 		$order->studyBuddy()->create([
 			'code' => $coupon->code,
@@ -182,6 +187,12 @@ class PersonalDataController extends Controller
 	{
 		if ($coupon->products->count() > 0 &&
 			!$coupon->products->contains($order->product)
+		) {
+			return;
+		}
+
+		if ($coupon->times_usable < 1 &&
+			$coupon->times_usable !== null
 		) {
 			return;
 		}

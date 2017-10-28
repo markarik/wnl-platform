@@ -9,7 +9,7 @@ class Section extends Model
 {
 	use Cached;
 
-	protected $fillable = ['name', 'screen_id'];
+	protected $fillable = ['name', 'screen_id', 'first_slide', 'slides_count'];
 
 	public function slides() {
 		return $this->morphToMany('\App\Models\Slide', 'presentable');
@@ -18,5 +18,10 @@ class Section extends Model
 	public function screen()
 	{
 		return $this->belongsTo('App\Models\Screen');
+	}
+
+	public function subsections()
+	{
+		return $this->hasMany('App\Models\Subsection');
 	}
 }

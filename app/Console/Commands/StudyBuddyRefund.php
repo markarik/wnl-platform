@@ -105,7 +105,7 @@ class StudyBuddyRefund extends Command
 
 		Mail::to($order->user)->send(new Refund($order, $invoice, $value));
 
-		$this->info('OK.');
+		$this->info('OK. Invoice number: ' . $invoice->full_number);
 
 		return 42;
 	}

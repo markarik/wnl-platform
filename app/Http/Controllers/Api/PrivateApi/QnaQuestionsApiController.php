@@ -58,10 +58,10 @@ class QnaQuestionsApiController extends ApiController
 		if (isset($statusResolved)) {
 			if ($statusResolved) {
 				$qnaQuestion->delete();
-				event(new QnaQuestionRemoved($qnaQuestion, Auth::user()->id, 'resolved'));
+				// event(new QnaQuestionRemoved($qnaQuestion, Auth::user()->id, 'resolved'));
 			} else {
 				$qnaQuestion->restore();
-				event(new QnaQuestionRestored($qnaQuestion, Auth::user()->id));
+				// event(new QnaQuestionRestored($qnaQuestion, Auth::user()->id));
 			}
 		} else {
 			$qnaQuestion->update([

@@ -23,7 +23,57 @@ class SlideshowBuilderApiController extends ApiController
 			return response('Not found', 404);
 		}
 
-		return $this->renderView($slideshow->slides, $slideshow->background_url);
+		$slides = $slideshow
+			->slides()
+			->orderBy('order_number')
+			->get();
+
+		return $this->renderView($slides, $slideshow->background_url);
+	}
+
+	public function preview(Request $request)
+	{
+		$screenId = $request->get('screenId');
+		$slideId = $request->get('slideId');
+		$content = $request->get('content');
+
+		if (empty($screenId) && empty($slideId)) {
+			return $this->respondInvalidInput('Pass either screenId or slideId');
+		}
+
+		if (!empty($screenId)) {
+			$screen = Screen::find($screenId);
+		} else {
+			$slide = Slide::find($slideId);
+
+			if (!$slide) {
+				return response('slide not found', 404);
+			}
+
+			if (!empty($slide->sections) && !empty($slide->sections->first())) {
+				$section = $slide->sections->first();
+				$screen = $section->screen;
+			}
+		}
+
+		if (!$screen) {
+			return response('screen not found', 404);
+		}
+
+		if (!empty($screen->slideshow)) {
+			$backgroundUrl = $screen->slideshow->background_url;
+		} else {
+			$backgroundUrl = '';
+		}
+
+		$view = view('course.slideshow', [
+			'slides'         => $content,
+			'background_url' => $backgroundUrl,
+		]);
+
+		$view->render();
+
+		return response($view);
 	}
 
 	public function byCategory($categoryId)
@@ -38,6 +88,7 @@ class SlideshowBuilderApiController extends ApiController
 			->whereHas('tags', function ($query) use ($category) {
 				$query->where('tags.name', $category->name);
 			})
+			->orderBy('order_number')
 			->get();
 
 		$screen = Screen::select()
@@ -54,8 +105,32 @@ class SlideshowBuilderApiController extends ApiController
 
 	protected function renderView($slides, $background)
 	{
+		$search = [
+			'<p>&nbsp;</p>',
+			'data-has-custom-html=""',
+			'style="z-index: 11;"',
+			'data-block-type="text"',
+			'font-family: Lato;',
+			'font-variant-ligatures: normal;',
+			'font-variant-caps: normal;',
+			'font-variant-caps: normal;',
+			'font-weight: normal;',
+			'data-has-line-height=""',
+			'font-style: normal;',
+			'font-family: &quot;Open Sans&quot;, sans-serif;',
+			'data-placeholder-text="Text"',
+			'data-placeholder-tag="p"',
+			'   ',
+			"\n",
+		];
+
+		$replace = [
+			'<br>',
+			''
+		];
+
 		$view = view('course.slideshow', [
-			'slides'         => $slides->implode('content', ' '),
+			'slides'         => str_replace($search, $replace, $slides->implode('content', ' ')),
 			'background_url' => $background,
 		]);
 

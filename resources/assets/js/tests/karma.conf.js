@@ -7,9 +7,11 @@ module.exports = (config) => {
 		reporters: ['spec'],
 		files: [
 			'../../../../node_modules/babel-polyfill/dist/polyfill.js',
+			'./helpers.js',
 			'./index.js'
 		],
 		preprocessors: {
+			'./helpers.js': ['webpack'],
 			'./index.js': ['webpack', 'sourcemap']
 		},
 		webpack: webpackConfig,

@@ -1,12 +1,11 @@
 <template>
-	<div>
-		<div class="metadata">
-			{{ $t('dashboard.activeUsers', {count: activeUsersCount}) }}
+	<div class="active-users" v-if="activeUsersCount">
+		<div class="metadata" v-t="{ path: message, args: { count: activeUsersCount } }">
 		</div>
-		<div class="active-users-container" v-if="activeUsersCount">
+		<div class="active-users-container">
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
-					<li v-for="user in usersToCount" class="avatar">
+					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
 						<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
@@ -67,13 +66,23 @@
 
 	export default {
 		name: 'ActiveUsers',
+		props: {
+			channel: {
+				type: String,
+				default: 'activeUsers'
+			},
+			message: {
+				type: String,
+				default: 'dashboard.activeUsers',
+			},
+		},
 		computed: {
 			...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
-			usersToCount() {
-				return this.activeUsers.filter((user) => this.currentUserId !== user.id)
-			},
 			activeUsersCount() {
 				return this.usersToCount.length || 0
+			},
+			usersToCount() {
+				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
 			},
 		},
 	}

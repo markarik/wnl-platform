@@ -60,6 +60,10 @@ class EventServiceProvider extends ServiceProvider
 		'App\Events\QuizQuestionEdited' => [
 			'App\Listeners\UserNotificationsGate',
 		],
+
+		'App\Events\UserDataUpdated' => [
+			'App\Listeners\BustUserCache',
+		],
 	];
 
 	/**

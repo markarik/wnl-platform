@@ -12,7 +12,13 @@ class Product extends Model
 	];
 
 	protected $guarded = [
-		'price'
+		'price',
+	];
+
+	protected $dates = [
+		'delivery_date',
+		'start_date',
+		'end_date',
 	];
 
 	public function scopeSlug($query, $slug)

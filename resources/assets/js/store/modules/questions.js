@@ -322,9 +322,10 @@ const actions = {
 				commit(types.QUESTIONS_SET_META, {allCount: data.count})
 			})
 	},
-	fetchQuestionData({commit}, id) {
+	fetchQuestionData({commit, dispatch}, id) {
 		return _fetchQuestionsData(id)
 			.then(({data}) => {
+				_.get(data, 'included.comments') && dispatch('comments/setComments', data.included.comments, {root:true})
 				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
 			})
 	},
@@ -419,7 +420,7 @@ const _fetchQuestions = (requestParams) => {
 }
 
 const _fetchQuestionsData = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,slides`))
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,slides,comments.reactions`))
 }
 
 const _fetchDynamicFilters = (activeFilters) => {

@@ -80,5 +80,14 @@ class ReactionAdded extends Event
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($reactable)
 		];
+
+		// can we think of something better? :(
+		// this is here so we won't refresh all comments list on page but only the one related with commentable
+		if (get_class($reactable) === 'App\Models\Comment') {
+			$this->data['commentable'] = [
+				'type' => snake_case(class_basename($reactable->commentable)),
+				'id' => $reactable->commentable->id
+			];
+		}
 	}
 }

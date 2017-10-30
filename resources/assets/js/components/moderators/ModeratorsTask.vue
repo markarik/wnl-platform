@@ -35,7 +35,9 @@
 						ref="autocomplete"
 					/>
 			</div>
-			<p>{{taskContent}}</p>
+		</div>
+		<div class="card-content">
+			<wnl-task-events :events="task.events" :routeContext="taskContext"/>
 		</div>
 		<footer class="card-footer">
 			<router-link :to="taskContext" class="card-footer-item">Idziem tam!</router-link>
@@ -74,6 +76,7 @@
 <script>
 import Dropdown from 'js/components/global/Dropdown'
 import Autocomplete from 'js/components/global/Autocomplete'
+import TaskEvents from 'js/components/moderators/ModeratorsTaskEvents'
 
 import {mapGetters} from 'vuex'
 
@@ -101,7 +104,8 @@ export default {
 	},
 	components: {
 		'wnl-dropdown': Dropdown,
-		'wnl-autocomplete': Autocomplete
+		'wnl-autocomplete': Autocomplete,
+		'wnl-task-events': TaskEvents
 	},
 	data() {
 		return {
@@ -137,7 +141,7 @@ export default {
 						class: 'is-success',
 						text: this.$t('tasks.task.status.done')
 					}
-				defaut:
+				default:
 					return {
 						class: 'is-ligth',
 						text: this.$t('tasks.task.status.unknown')
@@ -149,9 +153,6 @@ export default {
 		},
 		lastEvent() {
 			return this.task.events[this.eventsCount - 1]
-		},
-		taskContent() {
-			return this.lastEvent.data.subject.text
 		},
 		taskContext() {
 			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer)

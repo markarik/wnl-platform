@@ -5,73 +5,41 @@ namespace App\Http\Controllers\Api\Concerns\Slides;
 use App\Models\Presentable;
 use App\Models\Slide;
 use DB;
+use Illuminate\Support\Collection;
 
 trait AddsSlides
 {
 	/**
 	 * Increment order no. of all slides above the submitted order no.
 	 *
-	 * @param $orderNumber
-	 * @param $slideshow
-	 * @param $section
-	 * @param $subsection
-	 * @param $categories
+	 * @param $presentables
 	 */
-	protected function incrementOrderNumber($orderNumber, $slideshow, $section, $subsection, $categories)
+	protected function incrementOrderNumber($presentables)
 	{
-		$statement = [
-			"update presentables set order_number = (order_number + 1)",
-			"where order_number >= {$orderNumber}",
-			"and ((presentable_type = 'App\\\\Models\\\\Slideshow' and presentable_id = {$slideshow->id})",
-		];
-
-		if ($section) {
-			array_push($statement,
-				"or (presentable_type = 'App\\\\Models\\\\Section' and presentable_id = {$section->id})"
-			);
+		foreach ($presentables as $presentable) {
+			DB::statement(implode(' ', [
+				"update presentables set order_number = (order_number + 1)",
+				"where order_number >= {$presentable->order_number}",
+				"and (presentable_type = '{$presentable->type}'",
+				"and presentable_id = {$presentable->id})",
+			]));
 		}
-
-		if ($subsection) {
-			array_push($statement,
-				"or (presentable_type = 'App\\\\Models\\\\Subsection' and presentable_id = {$subsection->id})"
-			);
-		}
-
-		foreach ($categories as $category) {
-			array_push($statement,
-				"or (presentable_type = 'App\\\\Models\\\\Category' and presentable_id = {$category->id})"
-			);
-		}
-
-		array_push($statement, ")"); // ¯\_(ツ)_/¯
-		DB::statement(implode(' ', $statement));
 	}
 
 	/**
 	 * Attach slide to presentables.
 	 *
 	 * @param $slide
-	 * @param $orderNumber
-	 * @param $slideshow
-	 * @param $section
-	 * @param $subsection
-	 * @param $categories
+	 * @param $presentables
 	 */
-	protected function attachSlide($slide, $orderNumber, $slideshow, $section, $subsection, $categories)
+	protected function attachSlide($slide, $presentables)
 	{
-		$slideshow->slides()->attach($slide, ['order_number' => $orderNumber]);
-
-		if ($section) {
-			$section->slides()->attach($slide, ['order_number' => $orderNumber]);
-		}
-		if ($subsection) {
-			$subsection->slides()->attach($slide, ['order_number' => $orderNumber]);
-		}
-		foreach ($categories as $category) {
-			$category->slides()->attach($slide, ['order_number' => $orderNumber]);
+		foreach ($presentables as $presentable) {
+			$presentable->slides()->attach($slide, [
+				'order_number' => $presentable->order_number,
+			]);
 		}
 	}
-
 
 	/**
 	 * Get slide that currently has the given order no.
@@ -99,26 +67,55 @@ trait AddsSlides
 	 * @param $slide
 	 * @param $screen
 	 *
-	 * @return array
+	 * @return Collection
 	 */
 	protected function getSlidePresentables($slide, $screen)
 	{
+		$presentables = collect();
 		$section = $slide->sections()
 			->whereHas('screen', function ($query) use ($screen) {
 				$query->where('id', $screen->id);
 			})->first();
 
-		if (!$section) {
-			$subsection = null;
-		} else {
+		$presentables->push($section);
+
+		if ($section) {
 			$subsection = $slide->subsections()
 				->whereHas('section', function ($query) use ($section) {
 					$query->where('id', $section->id);
 				})->first();
+			if ($subsection) {
+				$presentables->push($subsection);
+			}
 		}
 
-		$categories = $slide->categories;
+		$presentables = $presentables->merge($slide->categories);
 
-		return [$section, $subsection, $categories];
+		return $presentables;
+	}
+
+	/**
+	 * Figure out the correct order number in each presentables group
+	 *
+	 * @param $currentSlide
+	 * @param $presentables
+	 *
+	 * @return Collection
+	 */
+	protected function getPresentablesOrder($currentSlide, $presentables)
+	{
+		foreach ($presentables as $i => $presentable) {
+			$type = get_class($presentable);
+			$orderNumber = Presentable::select(['order_number'])
+				->where('presentable_id', $presentable->id)
+				->where('presentable_type', $type)
+				->where('slide_id', $currentSlide->id)
+				->first()
+				->order_number;
+			$presentables[$i]->order_number = $orderNumber;
+			$presentables[$i]->type = $type;
+		}
+
+		return $presentables;
 	}
 }

@@ -46,28 +46,25 @@ class SlidesApiController extends ApiController
 		$slideshow = $screen->slideshow;
 		$orderNumber = $request->order_number - 1; // https://goo.gl/ZzMWT3
 
-		// Get slide that currently has the given order no. + get its section, subsection etc.
 		$currentSlide = $this->getCurrentFromPresentables($slideshow->id, $orderNumber);
-		list ($section, $subsection, $categories) = $this->getSlidePresentables($currentSlide, $screen);
+		$presentables = $this->getSlidePresentables($currentSlide, $screen);
 
-		// Incr. order no. of all slides above the submitted order no.
-		$this->incrementOrderNumber($orderNumber, $slideshow, $section, $subsection, $categories);
+		$presentables->push($slideshow);
+		$presentables = $this->getPresentablesOrder($currentSlide, $presentables);
 
-		// Handle chart and images
+		$this->incrementOrderNumber($presentables);
+
 		$parser = new Parser;
 		$content = $parser->handleCharts($content);
 		$content = $parser->handleImages($content);
 
-		// Create new slide
 		$slide = Slide::create([
 			'is_functional' => empty($request->is_functional) ? false : true,
 			'content'       => $content,
 		]);
 
-		// Attach slide to screen, section, subsection etc.
-		$this->attachSlide($slide, $orderNumber, $slideshow, $section, $subsection, $categories);
+		$this->attachSlide($slide, $presentables);
 
-		// Re-index all slides... Psayayay
 		dispatch(new SearchImportAll('App\\Models\\Slide'));
 		\Artisan::queue('screens:countSlides');
 

@@ -93,6 +93,10 @@ export default {
 		availableModerators: {
 			type: Array,
 			default: () => []
+		},
+		closeDropdowns: {
+			type: Boolean,
+			default: false
 		}
 	},
 	components: {
@@ -158,7 +162,7 @@ export default {
 			).slice(0, 5)
 		},
 		assigneeTextComputed() {
-			return this.focused ? this.assigneTextInput : this.task.assignee.full_name
+			return this.focused ? this.assigneeTextInput : this.task.assignee.full_name
 		},
 	},
 	methods: {
@@ -189,8 +193,7 @@ export default {
 			}
 
 			this.$refs.autocomplete.onKeyDown(evt)
-			this.killEvent(evt)
-
+			this.killEvent()
 			//for some of the old browsers, returning false is the true way to kill propagation
 			return false
 		},
@@ -202,9 +205,14 @@ export default {
 			this.showAutocomplete = false
 		},
 		onInput(event) {
-			console.log('...on input', event)
 			this.assigneeTextInput = event.target.value
 		}
 	},
+	watch: {
+		closeDropdowns(newValue) {
+			this.showAutocomplete = false
+			this.$emit('dropdownClosed')
+		}
+	}
 };
 </script>

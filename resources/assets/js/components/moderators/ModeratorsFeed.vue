@@ -4,7 +4,9 @@
 			:key="index"
 			:task="task"
 			:availableModerators="moderators"
+			:closeDropdowns="bodyClicked"
 			@statusSelected="updateTask"
+			@dropdownClosed="onDropdownClosed"
 			@assign="updateTask"
 		/>
 		<wnl-pagination v-if="paginationMeta.lastPage > 1"
@@ -25,6 +27,7 @@
 <script>
 	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
+	import {nextTick} from 	'vue'
 
 	import Pagination from 'js/components/global/Pagination'
 	import Task from 'js/components/moderators/ModeratorsTask'
@@ -37,7 +40,8 @@
 		},
 		data() {
 			return {
-				moderators: []
+				moderators: [],
+				bodyClicked: false
 			}
 		},
 		computed: {
@@ -48,6 +52,15 @@
 			onChangePage(page) {
 				this.pullTasks({params: {page}})
 			},
+			clickHandler() {
+				console.log('...body clicked')
+				this.bodyClicked = true
+			},
+			onDropdownClosed() {
+				nextTick(() => {
+					this.bodyClicked = false
+				})
+			}
 		},
 		mounted() {
 			axios.post(getApiUrl('user_profiles/.search'), {
@@ -62,6 +75,11 @@
 			}).then(({data: {...users}}) => {
 				this.moderators = Object.values(users)
 			})
+
+			document.addEventListener('click', this.clickHandler)
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
 		}
 	}
 </script>

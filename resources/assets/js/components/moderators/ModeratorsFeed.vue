@@ -4,7 +4,7 @@
 			:key="index"
 			:task="task"
 			:availableModerators="moderators"
-			:closeDropdowns="bodyClicked"
+			:closeDropdown="bodyClicked"
 			@statusSelected="updateTask"
 			@dropdownClosed="onDropdownClosed"
 			@assign="updateTask"
@@ -53,7 +53,6 @@
 				this.pullTasks({params: {page}})
 			},
 			clickHandler() {
-				console.log('...body clicked')
 				this.bodyClicked = true
 			},
 			onDropdownClosed() {

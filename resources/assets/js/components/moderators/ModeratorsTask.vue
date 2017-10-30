@@ -26,7 +26,7 @@
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.assignee'"/>
 				<input @focus="onFocus" :value="assigneeTextComputed" @input="onInput" @keydown="onKeyDown"/>
 					<wnl-autocomplete
-						v-show="showAutocomplete"
+						v-if="showAutocomplete"
 						:items="availableModeratorsFilter"
 						:onItemChosen="assign"
 						:itemComponent="'wnl-user-autocomplete-item'"
@@ -94,7 +94,7 @@ export default {
 			type: Array,
 			default: () => []
 		},
-		closeDropdowns: {
+		closeDropdown: {
 			type: Boolean,
 			default: false
 		}
@@ -167,7 +167,8 @@ export default {
 	},
 	methods: {
 		assign(user) {
-			this.showAutocomplete = false
+			this.$emit('assign', {assignee_id: user.user_id, id: this.task.id})
+			this.onClose()
 		},
 		onFocus() {
 			this.focused = true
@@ -182,8 +183,7 @@ export default {
 			}
 
 			if (evt.keyCode === esc) {
-				this.showAutocomplete = false
-				this.focused = false
+				this.onClose()
 				return
 			}
 			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
@@ -193,7 +193,8 @@ export default {
 			}
 
 			this.$refs.autocomplete.onKeyDown(evt)
-			this.killEvent()
+			this.killEvent(evt)
+
 			//for some of the old browsers, returning false is the true way to kill propagation
 			return false
 		},
@@ -203,15 +204,19 @@ export default {
 		},
 		onClose() {
 			this.showAutocomplete = false
+			this.focused = false
+			this.assigneeTextInput = ''
 		},
 		onInput(event) {
 			this.assigneeTextInput = event.target.value
 		}
 	},
 	watch: {
-		closeDropdowns(newValue) {
-			this.showAutocomplete = false
+		closeDropdown(newValue) {
+			if (!newValue) return;
+
 			this.$emit('dropdownClosed')
+			this.onClose()
 		}
 	}
 };

@@ -84,11 +84,9 @@ class SlideshowBuilderApiController extends ApiController
 			return $this->respondNotFound('Category not found');
 		}
 
-		$slides = Slide::select()
-			->whereHas('tags', function ($query) use ($category) {
-				$query->where('tags.name', $category->name);
-			})
-//			->orderBy('order_number')
+		$slides = $category
+			->slides()
+			->orderBy('order_number')
 			->get();
 
 		$screen = Screen::select()
@@ -126,7 +124,7 @@ class SlideshowBuilderApiController extends ApiController
 
 		$replace = [
 			'<br>',
-			''
+			'',
 		];
 
 		$view = view('course.slideshow', [

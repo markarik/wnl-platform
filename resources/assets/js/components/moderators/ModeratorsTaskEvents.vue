@@ -10,6 +10,9 @@
 					<span class="context">{{contextInfo}}</span>
 					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
 					<p class="subject wrap">{{text}}</p>
+					<div class="time">
+						<span>{{ formattedTime }}</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -75,31 +78,13 @@
 					color: $color-blue
 				&.done
 					color: $color-green
-	.link-symbol
-		align-items: flex-end
-		display: flex
-		flex: 0
-		flex-direction: column
-		justify-content: space-between
-		height: 100%
-		.checkmark
-			border: $border-light-gray
-			border-radius: $border-radius-small
-			color: $color-green
-			cursor: pointer
-			padding: $margin-base
-			transition: background-color $transition-length-base
-			&:hover
-				background-color: $color-background-lighter-gray
-				transition: background-color $transition-length-base
-
-
 </style>
 
 <script>
 import { decode } from 'he'
-import { isEmpty, isObject, get, truncate, camelCase } from 'lodash'
+import { isObject, get, truncate, camelCase } from 'lodash'
 import {mapGetters} from 'vuex'
+import { timeFromS } from 'js/utils/time'
 
 export default {
 	props: {
@@ -172,7 +157,9 @@ export default {
 
 			return ''
 		},
-
+		formattedTime() {
+			return timeFromS(this.lastEvent.data.timestamp)
+		},
 	}
 };
 </script>

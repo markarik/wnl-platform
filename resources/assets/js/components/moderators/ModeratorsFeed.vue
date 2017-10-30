@@ -49,8 +49,13 @@
 		},
 		methods: {
 			...mapActions('tasks', ['pullTasks', 'updateTask']),
+			...mapActions(['toggleOverlay']),
 			onChangePage(page) {
+				this.toggleOverlay({source: 'moderatorsFeed', display: true})
 				this.pullTasks({params: {page}})
+					.then(() => {
+						this.toggleOverlay({source: 'moderatorsFeed', display: false})
+					})
 			},
 			clickHandler() {
 				this.bodyClicked = true
@@ -62,6 +67,8 @@
 			}
 		},
 		mounted() {
+			this.toggleOverlay({source: 'moderatorsFeed', display: true})
+
 			axios.post(getApiUrl('user_profiles/.search'), {
 				query: {
 					whereHas: {
@@ -73,6 +80,7 @@
 				}
 			}).then(({data: {...users}}) => {
 				this.moderators = Object.values(users)
+				this.toggleOverlay({source: 'moderatorsFeed', display: false})
 			})
 
 			document.addEventListener('click', this.clickHandler)

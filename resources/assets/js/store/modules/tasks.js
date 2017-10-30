@@ -101,7 +101,7 @@ const modules = {
 function _getTasks(params) {
 	return axios.get(getApiUrl('tasks/all'), {
 		params: {
-			limit: 2,
+			limit: 4,
 			include: 'events,profiles',
 			...params
 		}

@@ -3,7 +3,7 @@
  * @type {Object}
  */
 import { decode } from 'he'
-import { isEmpty, isObject, truncate, get } from 'lodash'
+import { isEmpty, isObject, truncate } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 import { timeFromS } from 'js/utils/time'

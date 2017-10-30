@@ -1,9 +1,11 @@
 <template>
 	<div class="card">
 		<header class="card-header">
-			<p class="card-header-title" v-t="title"/>
-			<span class="tag is-light is-medium" v-t="'tasks.task.fields.eventsCount'"/>
-			<span class="tag is-danger is-medium">{{eventsCount}}</span>
+			<p class="card-header-title">{{title}}</p>
+			<p class="events-counter">
+				<span class="tag is-light is-medium" v-t="'tasks.task.fields.eventsCount'"/>
+				<span class="tag is-danger is-medium">{{eventsCount}}</span>
+			</p>
 		</header>
 		<div class="card-content">
 			<div class="tags field has-addons">
@@ -52,8 +54,11 @@
 	.tag
 		border-radius: 0
 
-	.card-header-title
+	.card-header
 		align-items: center
+
+	.events-counter
+		margin: 0 $margin-small
 
 	.card-footer-item, .dropdown-item
 		cursor: pointer

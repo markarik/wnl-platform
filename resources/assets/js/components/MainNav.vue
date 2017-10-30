@@ -9,7 +9,6 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
-			v-if="$moderatorFeatures.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>

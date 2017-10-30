@@ -1,17 +1,24 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use App\Models\User;
-use App\Models\Reaction;
-use App\Models\Category;
-use App\Models\Reactable;
-use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\ReactableTransformer;
+use App\Models\Category;
+use App\Models\Reactable;
+use App\Models\Reaction;
+use App\Models\User;
+use Auth;
+use Illuminate\Http\Request;
+use League\Fractal\Resource\Collection;
 
 
 class UserReactionsApiController extends ApiController
 {
+	public function __construct(Request $request)
+	{
+		parent::__construct($request);
+		$this->resourceName = config('papi.resources.reactions');
+	}
+
 	public function getReactions($id, $type = null)
 	{
 		$user = User::fetch($id);

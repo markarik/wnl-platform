@@ -42,7 +42,7 @@ class TaskTransformer extends ApiTransformer
 
 	public function includeEvents(Task $task)
 	{
-		$events = $task->events;
+		$events = $task->events->sortBy('created_at');
 
 		return $this->collection($events, new EventTransformer, 'events');
 	}

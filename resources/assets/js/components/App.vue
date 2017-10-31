@@ -44,7 +44,7 @@
 	import { isEmpty } from 'lodash'
 
 	import Navbar from 'js/components/global/Navbar.vue'
-	import Alerts from 'js/components/global/Alerts'
+	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
@@ -92,7 +92,7 @@
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
 					this.initNotifications()
-					this.initModeratorsFeedListener()
+					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
 
 					startTracking(this.currentUserId);
 

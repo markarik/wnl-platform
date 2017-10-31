@@ -8,16 +8,18 @@ const namespaced = true
 
 const state = {
 	fetching: false,
-	tasks: {}
+	tasks: {},
+	updatedTasks: []
 }
 
 const getters = {
-	tasks: (state) => state.tasks
+	tasks: (state) => state.tasks,
+	updatedTasks: state => state.updatedTasks
 }
 
 const mutations = {
 	[types.ADD_TASK] (state, task) {
-		set(state.tasks, task.id, task)
+		set(state, 'updatedTasks', [...state.updatedTasks, task])
 	},
 	[types.SET_TASKS] (state, tasks) {
 		set(state, 'tasks', tasks)

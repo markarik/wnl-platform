@@ -48,7 +48,7 @@ class EventTaskNotification extends Notification
 	 */
 	public function via($notifiable)
 	{
-		return [DatabaseTaskChannel::class];
+		return [LiveChannel::class, DatabaseTaskChannel::class];
 	}
 
 	public function broadcastOn()

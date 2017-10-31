@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<div v-for="(alert, index) in alerts" :key="index" :class="getClass(alert)">
-			ALERT
-		</div>
+		<wnl-alert v-for="(alert, index) in alerts" :key="index" :type="alert.type">
+			{{alert.text}}
+		</wnl-alert>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -10,7 +10,12 @@
 
 </style>
 <script>
+import Alert from 'js/components/global/GlobalAlert'
+
 export default {
+	components: {
+		'wnl-alert': Alert
+	},
 	props: {
 		alerts: {
 			type: Array,

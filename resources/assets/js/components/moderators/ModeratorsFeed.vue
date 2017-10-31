@@ -1,5 +1,9 @@
 <template>
 	<div class="moderators-feed">
+		<wnl-alert v-if="updatedTasks.length > 0" type="info">
+			Pojawiły się nowe notyfikacje.
+			<button class="button">Odśwież</button>
+		</wnl-alert>
 		<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
 			:key="index"
 			:task="task"
@@ -22,6 +26,9 @@
 
 	.wnl-task-card
 		margin: $margin-base auto
+
+	.button
+		border-radius: 0
 </style>
 
 <script>
@@ -31,12 +38,14 @@
 
 	import Pagination from 'js/components/global/Pagination'
 	import Task from 'js/components/moderators/ModeratorsTask'
+	import Alert from 'js/components/global/GlobalAlert'
 
 	export default {
 		name: 'ModeratorsFeed',
 		components: {
 			'wnl-pagination': Pagination,
-			'wnl-task': Task
+			'wnl-task': Task,
+			'wnl-alert': Alert
 		},
 		data() {
 			return {
@@ -45,7 +54,7 @@
 			}
 		},
 		computed: {
-			...mapGetters('tasks', ['tasks', 'paginationMeta']),
+			...mapGetters('tasks', ['tasks', 'paginationMeta', 'updatedTasks']),
 		},
 		methods: {
 			...mapActions('tasks', ['pullTasks', 'updateTask']),

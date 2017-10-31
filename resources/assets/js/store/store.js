@@ -19,6 +19,7 @@ import questions from 'js/store/modules/questions'
 import progress from 'js/store/modules/progress'
 import slideshow from 'js/store/modules/slideshow'
 import ui from 'js/store/modules/ui'
+import alerts from 'js/store/modules/alerts'
 import activeUsers from 'js/store/modules/activeUsers'
 import autocomplete from 'js/store/modules/autocomplete'
 import tasks from 'js/store/modules/tasks'
@@ -47,7 +48,8 @@ export default new Vuex.Store({
 		activeUsers,
 		autocomplete,
 		comments,
-		tasks
+		tasks,
+		alerts
 	},
 	strict: debug
 })

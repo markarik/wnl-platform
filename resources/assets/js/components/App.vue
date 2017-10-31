@@ -5,8 +5,8 @@
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
-		<wnl-global-notification/>
 		<div class="wnl-main">
+			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
 		</div>
 	</div>
@@ -44,7 +44,7 @@
 	import { isEmpty } from 'lodash'
 
 	import Navbar from 'js/components/global/Navbar.vue'
-	import GlobalNotification from 'js/components/global/GlobalNotification.vue'
+	import Alerts from 'js/components/global/Alerts'
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
@@ -53,7 +53,7 @@
 		name: 'App',
 		components: {
 			'wnl-navbar': Navbar,
-			'wnl-global-notification': GlobalNotification
+			'wnl-alerts': Alerts
 		},
 		computed: {
 			...mapGetters([
@@ -62,6 +62,7 @@
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
+				'alerts'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')

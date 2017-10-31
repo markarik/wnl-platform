@@ -40,7 +40,7 @@
 	<p>Podczas samych zajęć zadbamy o to, żeby nie zabrakło wody, soków, kawy, herbaty, a także owoców i słodkich przekąsek. ;)</p>
 
 	<h3>Co na warsztatach?</h3>
-	<p>Pierwsze spotkanie poświęcimy przede wszystkim efektywnej nauce oraz naszemu przepisowi na LEK. Wierzymy, że pozwoli Ci pełniej wykorzystać cały, 12-tygodniowy kurs. W tygodniu poprzedzającym warsztaty wyślemy jeszcze dokładny plan spotkania, z podziałem na moduły.</p>
+	<p>Pierwsze spotkanie poświęcimy przede wszystkim efektywnej nauce oraz naszemu przepisowi na LEK. Wierzymy, że pozwoli Ci pełniej wykorzystać cały, 12-tygodniowy kurs. :)</p>
 
 <hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
 

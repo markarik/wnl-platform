@@ -11,11 +11,11 @@
 <hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
 
 	<h4>1 - 3 listopada</h4>
-	<p>W tych dniach będziemy prowadzić na platformie prace związane z uruchomieniem drugiej edycji. Jeśli jesteś uczestnikiem pierwszej edycji, będziesz mieć w tym czasie dostęp do kursu. Możesz natomiast spotkać się z przerwami w funkcjonowaniu samej platformy oraz poszczególnych lekcji. Prosimy o wyrozumiałość! :)</p>
+	<p>W tych dniach będziemy prowadzić na <a href="https://platforma.wiecejnizlek.pl">platformie</a> prace związane z uruchomieniem drugiej edycji. Jeśli jesteś uczestnikiem pierwszej edycji, będziesz mieć w tym czasie dostęp do kursu. Możesz natomiast spotkać się z przerwami w funkcjonowaniu samej platformy oraz poszczególnych lekcji. Prosimy o wyrozumiałość! :)</p>
 	<p>Ze względu na poważne zmiany w materiałach, część slajdów zapisanych w Twoich Kolekcjach może niestety zniknąć. Nie będą one już po prostu występowały w nowych, poprawionych prezentacjach. Postaramy się jednak zachować wszystkie slajdy, których treść nie uległa zmianie. :)</p>
 
 	<h4>4 listopada</h4>
-	<p>Otwieramy 2. edycję kursu "Więcej niż LEK"! Tego dnia w Poznaniu odbędą się pierwsze warsztaty dla zapisanych na kurs stacjonarny. W tym samym czasie, na platformie pojawi się lekcja "0", czyli Wstęp do kursu. :) Bardzo zachęcamy do poświęcenia jej czasu w weekend, ponieważ zawiera wiele cennych wyjaśnień, które pozwolą Ci lepiej skorzystać z kursu. :)</p>
+	<p>Otwieramy 2. edycję kursu "Więcej niż LEK"! Tego dnia w Poznaniu odbędą się pierwsze warsztaty dla zapisanych na kurs stacjonarny. W tym samym czasie, na <a href="https://platforma.wiecejnizlek.pl">platformie</a> pojawi się lekcja "0", czyli Wstęp do kursu. :) Bardzo zachęcamy do poświęcenia jej czasu w weekend, ponieważ zawiera wiele cennych wyjaśnień, które pozwolą Ci lepiej skorzystać z kursu. :)</p>
 	<p>Każdy z poruszanych aspektów będzie posiadał osobny ekran z możliwością dyskusji, do której serdecznie Cię zapraszamy! Uczestnicy pierwszej edycji wiedzą już, jaka potęga drzemie w wymianie wiedzy oraz pytań paruset osób! ;)</p>
 
 	<h4>6 listopada</h4>

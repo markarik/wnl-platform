@@ -5,7 +5,7 @@
 	W związku z nadchodzącym startem kursu chcielibyśmy przybliżyć Ci co wydarzy się w najbliższych dniach. :)
 
 	1 - 3 listopada
-	W tych dniach będziemy prowadzić na platformie prace związane z uruchomieniem drugiej edycji. Jeśli jesteś uczestnikiem pierwszej edycji, będziesz mieć w tym czasie dostęp do kursu. Możesz natomiast spotkać się z przerwami w funkcjonowaniu samej platformy oraz poszczególnych lekcji. Prosimy o wyrozumiałość! :)
+	W tych dniach będziemy prowadzić na platformie (https://platforma.wiecejnizlek.pl) prace związane z uruchomieniem drugiej edycji. Jeśli jesteś uczestnikiem pierwszej edycji, będziesz mieć w tym czasie dostęp do kursu. Możesz natomiast spotkać się z przerwami w funkcjonowaniu samej platformy oraz poszczególnych lekcji. Prosimy o wyrozumiałość! :)
 	Ze względu na poważne zmiany w materiałach, część slajdów zapisanych w Twoich Kolekcjach może niestety zniknąć. Nie będą one już po prostu występowały w nowych, poprawionych prezentacjach. Postaramy się jednak zachować wszystkie slajdy, których treść nie uległa zmianie. :)
 
 	4 listopada

@@ -23,6 +23,7 @@ const mutations = {
 	},
 	[types.SET_TASKS] (state, tasks) {
 		set(state, 'tasks', tasks)
+		set(state, 'updatedTasks', [])
 	},
 	[types.IS_FETCHING] (state, isFetching) {
 		set(state, 'fetching', isFetching)

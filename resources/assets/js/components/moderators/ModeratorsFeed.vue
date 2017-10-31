@@ -1,8 +1,10 @@
 <template>
 	<div class="moderators-feed">
 		<wnl-alert v-if="updatedTasks.length > 0" type="info">
-			Pojawiły się nowe notyfikacje.
-			<button class="button">Odśwież</button>
+			<div class="notification-container">
+				<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
+				<button @click="onRefresh" class="button">Odśwież</button>
+			</div>
 		</wnl-alert>
 		<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
 			:key="index"
@@ -26,6 +28,12 @@
 
 	.wnl-task-card
 		margin: $margin-base auto
+
+	.notification-container
+		display: flex
+
+	.notification-text
+		width: 100%
 
 	.button
 		border-radius: 0
@@ -73,6 +81,13 @@
 				nextTick(() => {
 					this.bodyClicked = false
 				})
+			},
+			onRefresh() {
+				this.toggleOverlay({source: 'moderatorsFeed', display: true})
+				this.pullTasks()
+					.then(() => {
+						this.toggleOverlay({source: 'moderatorsFeed', display: false})
+					})
 			}
 		},
 		mounted() {

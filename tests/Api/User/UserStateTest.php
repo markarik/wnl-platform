@@ -26,7 +26,7 @@ class UserStateTest extends ApiTestCase
 			->once()
 			->with($redisKey)
 			->andReturn(json_encode([
-				'foo' => 'bar', 'fizz' => 'buzz'
+				'foo' => 'bar', 'fizz' => 'buzz',
 			]));
 
 		$response = $this
@@ -37,8 +37,8 @@ class UserStateTest extends ApiTestCase
 			->assertStatus(200)
 			->assertJson([
 				'lessons' => [
-					'foo' => 'bar', 'fizz' => 'buzz'
-				]
+					'foo' => 'bar', 'fizz' => 'buzz',
+				],
 			]);
 
 		$mockedRedis->verify();
@@ -62,7 +62,7 @@ class UserStateTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'lessons' => []
+				'lessons' => [],
 			]);
 
 		$mockedRedis->verify();
@@ -81,7 +81,7 @@ class UserStateTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->call('PUT', $this->url("/users/{$user->id}/state/course/1"), [
-				'lessons' => 'foo bar'
+				'lessons' => 'foo bar',
 			]);
 
 		$response
@@ -106,8 +106,8 @@ class UserStateTest extends ApiTestCase
 			->assertStatus(200)
 			->assertJson([
 				'lesson' => [
-					'foo' => 'bar'
-				]
+					'foo' => 'bar',
+				],
 			]);
 
 		$mockedRedis->verify();
@@ -128,7 +128,7 @@ class UserStateTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'lesson' => []
+				'lesson' => [],
 			]);
 
 		$mockedRedis->verify();
@@ -146,7 +146,7 @@ class UserStateTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->call('PUT', $this->url("/users/{$user->id}/state/course/1/lesson/1"), [
-				'lesson' => 'something'
+				'lesson' => 'something',
 			]);
 
 		$response
@@ -171,8 +171,8 @@ class UserStateTest extends ApiTestCase
 			->assertStatus(200)
 			->assertJson([
 				'quiz' => [
-					'foo' => 'bar'
-				]
+					'foo' => 'bar',
+				],
 			]);
 
 		$mockedRedis->verify();
@@ -193,7 +193,7 @@ class UserStateTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'quiz' => []
+				'quiz' => [],
 			]);
 
 		$mockedRedis->verify();
@@ -211,7 +211,7 @@ class UserStateTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
-				'quiz' => 'something'
+				'quiz' => 'something',
 			]);
 
 		$response
@@ -228,26 +228,26 @@ class UserStateTest extends ApiTestCase
 		$quizData = [
 			'quiz_questions' => [
 				7 => [
-					'id' => 7,
-					'selectedAnswer' => 8
+					'id'             => 7,
+					'selectedAnswer' => 8,
 				],
 				8 => [
-					'id' => 8,
-					'selectedAnswer' => 12
-				]
-			]
+					'id'             => 8,
+					'selectedAnswer' => 12,
+				],
+			],
 		];
 		$recordedAnswers = [
 			[
 				'quiz_question_id' => 7,
-				'quiz_answer_id' => 10,
-				'user_id' => $USER_ID
+				'quiz_answer_id'   => 10,
+				'user_id'          => $USER_ID,
 			],
 			[
 				'quiz_question_id' => 9,
-				'quiz_answer_id' => 12,
-				'user_id' => $USER_ID
-			]
+				'quiz_answer_id'   => 12,
+				'user_id'          => $USER_ID,
+			],
 		];
 		$redisKey = UserQuizResultsApiController::getQuizRedisKey($USER_ID, 1);
 		$encodedData = json_encode($quizData);
@@ -257,8 +257,8 @@ class UserStateTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
-				'quiz' => $quizData,
-				'recordedAnswers' => $recordedAnswers
+				'quiz'            => $quizData,
+				'recordedAnswers' => $recordedAnswers,
 			]);
 
 		$response
@@ -279,23 +279,23 @@ class UserStateTest extends ApiTestCase
 		$quizData = [
 			'quiz_questions' => [
 				7 => [
-					'id' => 7,
-					'selectedAnswer' => 8
-				]
-			]
+					'id'             => 7,
+					'selectedAnswer' => 8,
+				],
+			],
 		];
 		$recordedAnswers = [
 			[
 				'quiz_question_id' => 7,
-				'quiz_answer_id' => 10,
-				'user_id' => $USER_ID
-			]
+				'quiz_answer_id'   => 10,
+				'user_id'          => $USER_ID,
+			],
 		];
 
 		factory(UserQuizResults::class)->create([
-			'user_id' => $user->id,
+			'user_id'          => $user->id,
 			'quiz_question_id' => 7,
-			'quiz_answer_id' => 11
+			'quiz_answer_id'   => 11,
 		]);
 
 		$redisKey = UserQuizResultsApiController::getQuizRedisKey($USER_ID, 1);
@@ -307,8 +307,8 @@ class UserStateTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
-				'quiz' => $quizData,
-				'recordedAnswers' => $recordedAnswers
+				'quiz'            => $quizData,
+				'recordedAnswers' => $recordedAnswers,
 			]);
 
 		$response
@@ -328,14 +328,14 @@ class UserStateTest extends ApiTestCase
 		$quizData = [
 			'quiz_questions' => [
 				7 => [
-					'id' => 7,
-					'selectedAnswer' => 8
+					'id'             => 7,
+					'selectedAnswer' => 8,
 				],
 				8 => [
-					'id' => 8,
-					'selectedAnswer' => 12
-				]
-			]
+					'id'             => 8,
+					'selectedAnswer' => 12,
+				],
+			],
 		];
 		$recordedAnswers = [];
 		$redisKey = UserQuizResultsApiController::getQuizRedisKey($USER_ID, 1);
@@ -348,8 +348,8 @@ class UserStateTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
-				'quiz' => $quizData,
-				'recordedAnswers' => $recordedAnswers
+				'quiz'            => $quizData,
+				'recordedAnswers' => $recordedAnswers,
 			]);
 
 		$response
@@ -375,7 +375,7 @@ class UserStateTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'time' => UserStateApiController::INCREMENT_BY_MINUTES
+				'time' => UserStateApiController::INCREMENT_BY_MINUTES,
 			]);
 
 		$mockedRedis->verify();
@@ -397,7 +397,7 @@ class UserStateTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'time' => 20 + UserStateApiController::INCREMENT_BY_MINUTES
+				'time' => 20 + UserStateApiController::INCREMENT_BY_MINUTES,
 			]);
 
 		$mockedRedis->verify();

@@ -27,7 +27,6 @@ class SlidesTest extends ApiTestCase
 			->actingAs($user)
 			->json('POST', $this->url('/slides'), $data);
 
-		$response->dump();
 		$response
 			->assertStatus(200);
 	}

@@ -79,7 +79,6 @@ class UserStateApiController extends ApiController
 		UserCourseProgress::firstOrCreate([
 			'user_id'   => $id,
 			'lesson_id' => $lessonId,
-			'status'    => $lesson['status'],
 		]);
 
 		return $this->respondOk();

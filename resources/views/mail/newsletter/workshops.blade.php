@@ -21,7 +21,7 @@
 
 	<p>
 		<strong>Pociąg</strong><br>
-		Godzinę rozpoczęcia przesunęliśmy po sprawdzeniu połączeń PKP z głównych kierunków Waszego przyjazdu - Warszawy, Gdańska, Szczecina i Krakowa. Upewniliśmy się, że przy obowiązującym rozkładzie nikt z Was nie będzie miał problemu z dotarciem na czas. :)
+		Godzinę rozpoczęcia ustaliliśmy po sprawdzeniu połączeń PKP z głównych kierunków Waszego przyjazdu - Warszawy, Łodzi, Gdańska, Szczecina i Krakowa. Upewniliśmy się, że przy obowiązującym rozkładzie nikt z Was nie będzie miał problemu z dotarciem na czas. :)
 	</p>
 
 	<p>

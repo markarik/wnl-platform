@@ -23,7 +23,36 @@ const getters = {
     //         })
     //     }
     // },
-    getUsersByLoaction: state => city => state.allUsers.filter(item => item.city.toLowerCase() === city),
+    // getUsersByLoaction: state => city => state.allUsers.filter(item => item.city.toLowerCase().indexOf(city.toLowerCase())),
+    getUsersByLoaction: function(state) {
+        return function(city) {
+            return state.allUsers.filter(function(item) {
+                if (item.city === null) {
+                    return item.city === ''
+                }
+                return item.city.toLowerCase().indexOf(city.toLowerCase()) === 0
+            })
+        }
+    },
+    getUsersByHelp: function(state) {
+        return function(city) {
+            return state.allUsers.filter(function(item) {
+                if (item.help === null) {
+                    return item.help === ''
+                }
+                return item.help.toLowerCase().indexOf(help.toLowerCase()) === 0
+            })
+        }
+    },
+    // getUsersByLoaction: function(state) {
+    //     return function(city) {
+    //         return state.allUsers.filter((item) => {
+    //             debugger
+    //             return item.city.toLowerCase().indexOf(city.toLowerCase())
+    //         })
+    //     }
+    // },
+    // return this.availableModerators.filter(moderator => moderator.full_name.toLowerCase().indexOf(this.assigneeText.toLowerCase()) > -1).slice(0, 5)
     getUsersByRole: state => role => state.allUsers.filter(item => item.roles.includes(role)),
 };
 

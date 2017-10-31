@@ -9,7 +9,7 @@
                 <span>Ukryj info</span>
             </span>
         </a>
-        <div class="-user-infos">
+        <div class="user-infos">
             <wnl-user-info :label="`Miasto`" :info="profile.city"></wnl-user-info>
             <wnl-user-info :label="`Uniwersytet`" :info="profile.university"></wnl-user-info>
             <wnl-user-info :label="`Wymarzona specjalizacja`" :info="profile.specialization"></wnl-user-info>

@@ -12,8 +12,10 @@
 		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view
 				@userDataLoaded="onDataLoaded"
-				:readOnly="readOnly">
-				</router-view>
+				:readOnly="readOnly"
+				:filterByHelp="filterByHelp"
+				:filterByLocation="filterByLocation">
+			</router-view>
 		</div>
 		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute"
 			:isVisible="isChatVisible"
@@ -21,10 +23,25 @@
 		>
 			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="isMainRoute"
+			:isVisible="isChatVisible"
+			:isDetached="!isChatMounted"
+		>
+			<wnl-users-filters
+				@helpFilterLoaded="helpFilterLoaded"
+				@locationFilterLoaded="locationFilterLoaded"
+			></wnl-users-filters>
+		</wnl-sidenav-slot>
+		<div v-if="isChatToggleVisible && !isMainRoute" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż info</span>
+			</span>
+		</div>
+		<div v-if="isMainRoute && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+			<span class="icon is-big">
+				<i class="fa fa-chevron-left"></i>
+				<span>Filtry</span>
 			</span>
 		</div>
 	</div>
@@ -57,7 +74,8 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
-	import UserAbout from 'js/components/users/UserAbout.vue'
+	import UsersFilters from 'js/components/users/UsersFilters'
+	import UserAbout from 'js/components/users/UserAbout'
 	import MainNav from 'js/components/MainNav'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -67,6 +85,7 @@
 	export default {
 		name: 'MainUsers',
 		components: {
+			'wnl-users-filters': UsersFilters,
 			'wnl-main-nav': MainNav,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
@@ -77,7 +96,9 @@
 			return {
 				testMode: false,
 				profile: {},
-				readOnly: true
+				readOnly: true,
+				filterByHelp: '',
+				filterByLocation: ''
 			}
 		},
 		computed: {
@@ -110,7 +131,6 @@
 						iconTitle: 'Wszystkie ziomki',
 					}
 				]
-
 				return items
 			},
 		},
@@ -120,6 +140,12 @@
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
 				}
+			},
+			helpFilterLoaded(filter) {
+				return this.filterByHelp = filter
+			},
+			locationFilterLoaded(filter) {
+				return this.filterByLocation = filter
 			},
 			onDataLoaded({profile}) {
 				return this.profile = profile

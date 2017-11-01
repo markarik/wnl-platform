@@ -104,8 +104,10 @@
 				'isChatToggleVisible',
 			]),
 			canAccess() {
-				return this.currentUser.roles.includes('edition-1-participant') &&
-					this.currentUser.roles.includes('edition-2-participant')
+				return (this.currentUser.roles.includes('moderator') ||
+						this.currentUser.roles.includes('admin')) ||
+					(this.currentUser.roles.includes('edition-1-participant') &&
+						this.currentUser.roles.includes('edition-2-participant'))
 			},
 			context() {
 				return {

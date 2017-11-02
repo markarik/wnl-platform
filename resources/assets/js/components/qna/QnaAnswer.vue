@@ -42,7 +42,9 @@
 				urlParam="qna_answer"
 				module="qna"
 				:commentableId="this.id"
-				:isUnique="false">
+				:hideWatchlist="true"
+				:isUnique="false"
+			>
 			</wnl-comments-list>
 		</div>
 	</div>

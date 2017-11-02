@@ -19,7 +19,7 @@
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
-					<a class="button is-small is-primary is-outlined" @click="showForm = true" v-if="!showForm">
+					<a class="button is-small is-primary" @click="showForm = true" v-if="!showForm">
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
 							<i class="fa fa-question-circle-o"></i>
@@ -48,7 +48,7 @@
 
 	.wnl-qna
 		#question-icon
-			margin: $margin-tiny $margin-tiny 0 $margin-small
+			margin: 0 $margin-tiny 0 $margin-small
 
 		.title
 			margin-bottom: $margin-small
@@ -108,14 +108,15 @@
 		components: {
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
-			'wnl-qna-sorting': QnaSorting,
+			'wnl-qna-sorting': QnaSorting
 		},
 		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
 		data() {
 			return {
 				ready: false,
 				showForm: false,
-				questionsList: []
+				questionsList: [],
+				name: 'watch'
 			}
 		},
 		computed: {
@@ -140,14 +141,14 @@
 			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions)
 		},
 		watch: {
 			'currentSorting' (newValue) {
 				this.questionsList = this.getSortedQuestions(newValue, this.questions);
 			},
 			'questions' (newValue) {
-				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
+				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue)
 			}
 		},
 		beforeDestroy() {

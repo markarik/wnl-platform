@@ -23,9 +23,9 @@ export const questions = {
 		ui: {
 			deleteModal: {
 				title: 'Czy aby na pewno?',
-				text: `Po zatwierdzeniu zostaną usunięte wszystkie Twoje podejścia do pytań kontrolnych.
-					Dotyczy to zarówno pytań rozwiązywanych w ramach lekcji jak i pytań dostępnych w bazie pytań.
-					Jedyne wyniki, które nie zostaną usunięte to wyniki próbnego egzaminu.`
+				text: `Po zatwierdzeniu, usuniemy wszystkie wyniki Twoich dotychczasowych podejść do pytań kontrolnych.
+					Dotyczy to zarówno pytań rozwiązywanych w ramach lekcji, jak i pozostałych dostępnych w bazie pytań.
+					Jedyne wyniki, które nie zostaną wyczyszczone, to wyniki próbnych egzaminów.`
 			}
 
 		}

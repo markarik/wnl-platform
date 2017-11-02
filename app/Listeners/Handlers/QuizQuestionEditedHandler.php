@@ -13,20 +13,16 @@ class QuizQuestionEditedHandler
 	 */
 	public function handle(QuizQuestionEdited $event, UserNotificationsGate $gate)
 	{
-		$watchers = $this->notifyWatchers($event->quizQuestion);
+		$watchers = $this->notifyWatchers($event->quizQuestion, $event, $gate);
 
 		if (count($watchers) === 0) {
 			return;
 		}
 
-		forEach($watchers as $watcher) {
-			$excluded->push($watcher);
-		}
-
 		$gate->notifyPrivateStream($watchers->pluck('id')->toArray(), $event);
 	}
 
-	protected function notifyWatchers($question)
+	protected function notifyWatchers($question, $event, $gate)
 	{
 		$reaction = \App\Models\Reaction::type('watch');
 

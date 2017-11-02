@@ -4,8 +4,11 @@ import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
 import moderatorFeatures from 'js/perimeters/moderator';
+import firstEditionParticipant from 'js/perimeters/firstEditionParticipant';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
+import { getCurrentUser } from 'js/services/user';
+
 
 Vue.use(Router)
 
@@ -98,7 +101,19 @@ let routes = [
 				path: ':rootCategoryName/:categoryName',
 				component: require('js/components/collections/Collections.vue')
 			},
-		]
+		],
+		beforeEnter: (to, from, next) => {
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [firstEditionParticipant],
+				});
+
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
+		},
 	},
 	{
 		name: 'help',
@@ -152,20 +167,34 @@ let routes = [
 				component: require('js/components/questions/QuestionsPlanner.vue'),
 			},
 		],
+		beforeEnter: (to, from, next) => {
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [firstEditionParticipant],
+				});
+
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
+		},
 	},
 	{
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [moderatorFeatures],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [moderatorFeatures],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		}
 	},
 	{

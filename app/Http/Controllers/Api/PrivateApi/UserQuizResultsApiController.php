@@ -99,9 +99,9 @@ class UserQuizResultsApiController extends ApiController
 		$this->respondOk();
 	}
 
-	public function getQuiz($id, $quizId)
+	public function getQuiz($userId, $quizId)
 	{
-		$values = Redis::get(self::getQuizRedisKey($id, $quizId));
+		$values = Redis::get(self::getQuizRedisKey($userId, $quizId));
 
 		if (!empty($values)) {
 			$quiz = json_decode($values);
@@ -113,7 +113,7 @@ class UserQuizResultsApiController extends ApiController
 		]);
 	}
 
-	public function putQuiz(Request $request, $id, $quizId)
+	public function putQuiz(Request $request, $userId, $quizId)
 	{
 		$quiz = $request->quiz;
 		$recordedAnswers = $request->recordedAnswers;
@@ -128,7 +128,7 @@ class UserQuizResultsApiController extends ApiController
 				UserQuizResults::insert($recordedAnswersWithTimestamps);
 
 				UserPlanProgress
-					::where('user_id', $id)
+					::where('user_id', $userId)
 					->whereIn('question_id', collect($recordedAnswers)->pluck('quiz_question_id')->toArray())
 					->where('resolved_at', null)
 					->update(['resolved_at' => Carbon::today()]);
@@ -138,7 +138,24 @@ class UserQuizResultsApiController extends ApiController
 		(QueryException $e) {
 			throw $e;
 		} finally {
-			Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
+			Redis::set(self::getQuizRedisKey($userId, $quizId), json_encode($quiz));
+		}
+
+		return $this->respondOk();
+	}
+
+	public function delete($userId) {
+		$user = User::fetch($userId);
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondUnauthorized();
+		}
+
+		UserQuizResults::where('user_id', $userId)->delete();
+		UserPlanProgress::where('user_id', $userId)->delete();
+		$keyPattern = self::getQuizRedisKey($userId, '*');
+		$allKeys = Redis::keys($keyPattern);
+		foreach ($allKeys as $key) {
+			Redis::del($key);
 		}
 
 		return $this->respondOk();

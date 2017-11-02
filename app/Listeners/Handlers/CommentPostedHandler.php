@@ -26,12 +26,13 @@ class CommentPostedHandler
 			$gate->notifyPrivate($commentableAuthor, $event);
 		}
 
-		$excluded = $this->notifyCoCommentators($commentable, $gate, $event);
+		$watchers = $this->getWatchers($comment);
+		$coComentators = $this->getCoComentators($commentable, $event);
 
-		$watchers = $this->notifyWatchers($comment, $gate, $event);
+		$excluded = $watchers->merge($coComentators)->unique('id');
 
-		forEach($watchers as $watcher) {
-			$excluded->push($watcher);
+		foreach ($excluded as $user) {
+			$gate->notifyPrivate($user, $event);
 		}
 
 		$excluded->push($commentableAuthor);
@@ -42,7 +43,7 @@ class CommentPostedHandler
 		}
 	}
 
-	protected function notifyCoCommentators($commentable, $gate, $event)
+	protected function getCoComentators($commentable, $event)
 	{
 		$query = User::select()
 			->whereHas('comments', function ($query) use ($commentable) {
@@ -54,16 +55,10 @@ class CommentPostedHandler
 			$query->where('id', '!=', $commentable->user->id);
 		}
 
-		$users = $query->get();
-
-		foreach ($users as $user) {
-			$gate->notifyPrivate($user, $event);
-		}
-
-		return $users;
+		return $query->get();
 	}
 
-	protected function notifyWatchers($comment, $gate, $event)
+	protected function getWatchers($comment)
 	{
 		$reaction = \App\Models\Reaction::type('watch');
 		$reactables = \App\Models\Reactable::select()
@@ -73,13 +68,6 @@ class CommentPostedHandler
 			->get();
 
 		$userIds = $reactables->pluck('user_id')->toArray();
-		$users = \App\Models\User::whereIn('id', $userIds)
-			->get();
-
-		foreach ($users as $user) {
-			$gate->notifyPrivate($user, $event);
-		}
-		
-		return $users;
+		return User::whereIn('id', $userIds)->get();
 	}
 }

@@ -45,7 +45,7 @@
 		data() {
 			return {
 				isLoading: false,
-				name: 'watch',
+				name: 'watch'
 			}
 		},
 		computed: {

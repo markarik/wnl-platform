@@ -90,11 +90,13 @@ class QuizQuestionsApiController extends ApiController
 
 		$question->update([
 			'text' => $request->input('question'),
-			'explanation' => $request->input('explanation'),			
+			'explanation' => $request->input('explanation'),
 			'preserve_order' => $request->input('preserve_order')
 		]);
 
-		event(new QuizQuestionEdited($question));
+		$user = Auth::user();
+
+		event(new QuizQuestionEdited($question, $user));
 
 		return $this->respondOk();
 	}
@@ -196,7 +198,7 @@ class QuizQuestionsApiController extends ApiController
 
 	protected function getMockExam($model, $userId)
 	{
-		$userExamResults = ExamResults::where('user_id', $userId)
+		$userExamResults = ExamResults::where('user_id', $userId)->whereNotIn('exam_tag_id', [505])
 			->get()
 			->sortByDesc('created_at')
 			->first();

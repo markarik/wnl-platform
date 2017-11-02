@@ -19,7 +19,9 @@
 		>
 			<wnl-search/>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-feed">
+		<div
+			v-if="$firstEditionParticipant.isAllowed('access')"
+			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">

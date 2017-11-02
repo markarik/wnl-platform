@@ -1,11 +1,11 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Category;
 use App\Models\Screen;
 use App\Models\Slide;
 use App\Models\Slideshow;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\ApiController;
 
 class SlideshowBuilderApiController extends ApiController
 {
@@ -84,10 +84,8 @@ class SlideshowBuilderApiController extends ApiController
 			return $this->respondNotFound('Category not found');
 		}
 
-		$slides = Slide::select()
-			->whereHas('tags', function ($query) use ($category) {
-				$query->where('tags.name', $category->name);
-			})
+		$slides = $category
+			->slides()
 			->orderBy('order_number')
 			->get();
 
@@ -126,7 +124,7 @@ class SlideshowBuilderApiController extends ApiController
 
 		$replace = [
 			'<br>',
-			''
+			'',
 		];
 
 		$view = view('course.slideshow', [

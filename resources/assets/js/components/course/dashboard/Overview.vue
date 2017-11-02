@@ -83,7 +83,6 @@
 	import Qna from 'js/components/qna/Qna'
 	import PublicFeed from 'js/components/notifications/feeds/stream/PublicFeed'
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
-	import { getFirstLessonId } from 'js/utils/env'
 	import { resource } from 'js/utils/config'
 
 	export default {
@@ -127,17 +126,6 @@
 		methods: {
 			...mapActions(['changeOverviewView']),
 			...mapActions('qna', ['fetchLatestQuestions']),
-		},
-		beforeMount() {
-			if (this.isBeginning) {
-				this.$router.replace({
-					name: resource('lessons'),
-					params: {
-						lessonId: getFirstLessonId(),
-						courseId: this.courseId
-					}
-				})
-			}
 		},
 		mounted() {
 			this.fetchLatestQuestions()

@@ -27,7 +27,6 @@ class IssueFinalInvoice implements ShouldQueue
 	 * Create a new job instance.
 	 *
 	 * @param Order $order
-	 * @param bool $proforma
 	 * @param bool $send
 	 *
 	 * @internal param bool $mail

@@ -47,6 +47,7 @@
 	import GlobalNotification from 'js/components/global/GlobalNotification.vue'
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
+	import {startTracking} from 'js/services/activityMonitor';
 
 	export default {
 		name: 'App',
@@ -88,11 +89,9 @@
 
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
-					window.setInterval(() => {
-						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
-					}, 1000 * 60 * 3)
-
 					this.initNotifications()
+
+					startTracking(this.currentUserId);
 
 					this.$router.afterEach((to) => {
 						!to.params.keepsNavOpen && this.resetLayout()
@@ -104,9 +103,9 @@
 					})
 
 					window.Echo.join('active-users')
-						.here(users => this.setActiveUsers(users))
-						.joining(user => this.userJoined(user))
-						.leaving(user => this.userLeft(user))
+						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
+						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
+						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
 
 					this.checkUserRoles(this.currentUserRoles)
 					this.toggleOverlay({source: 'course', display: false})

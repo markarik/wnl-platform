@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Slide;
 use App\Models\Lesson;
 use App\Models\Section;
+use App\Models\Subsection;
 use App\Models\Slideshow;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -77,6 +78,7 @@ class Parser
 			0 => 'group',
 			1 => 'lesson',
 			2 => 'section',
+			3 => 'subsection'
 		]);
 	}
 
@@ -94,6 +96,7 @@ class Parser
 		Log::debug('Parsing...');
 		$names = [];
 		$slideshowTag = Tag::firstOrCreate(['name' => 'Prezentacja']);
+		$lastSectionFound = null;
 
 		foreach ($slides as $currentSlide => $slideHtml) {
 			$iteration++;
@@ -174,6 +177,14 @@ class Parser
 					]);
 					$this->courseModels['section'] = $section;
 				}
+
+				if ($courseTag['name'] == 'subsection') {
+					$subsection = Subsection::firstOrCreate([
+						'name'      => $this->cleanName($courseTag['value']),
+						'section_id' => $this->courseModels['section']->id,
+					]);
+					$this->courseModels['subsection'] = $subsection;
+				}
 			}
 
 			if ($this->lessonTag) {
@@ -187,6 +198,17 @@ class Parser
 			}
 			if (array_key_exists('section', $this->courseModels)) {
 				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
+
+				if ($lastSectionFound === null) {
+					$lastSectionFound = $this->courseModels['section'];
+				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {
+					$lastSectionFound = $this->courseModels['section'];
+					unset($this->courseModels['subsection']);
+				}
+			}
+
+			if (array_key_exists('subsection', $this->courseModels)) {
+				$this->courseModels['subsection']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 
 			if (!empty($foundQuestionsIds)) {
@@ -195,6 +217,8 @@ class Parser
 
 			$orderNumber++;
 		}
+
+		\Artisan::call('screens:countSlides');
 	}
 
 	/**
@@ -403,7 +427,7 @@ class Parser
 		return $snippet;
 	}
 
-	protected function handleImages($html)
+	public function handleImages($html)
 	{
 		$match = $this->match(self::IMAGE_PATTERN, $html);
 

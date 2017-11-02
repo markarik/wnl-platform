@@ -9,7 +9,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
-			v-if="$moderatorFeatures.isAllowed('access')"
+			v-if="$firstEditionParticipant.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
@@ -44,7 +44,7 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
-		<a v-if="$firstEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
+		<a v-if="!$firstEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
 			<span class="icon is-medium">
 				<i class="fa fa-thumbs-o-up"></i>
 			</span>

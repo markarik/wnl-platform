@@ -12,3 +12,12 @@ Broadcast::channel('active-users', function ($user) {
 		'fullName' => $user->profile->full_name
 	];
 });
+
+Broadcast::channel('lesson.{lessonId}', function ($user, $lessonId) {
+	return [
+		'id' => $user->id,
+		'email' => $user->email,
+		'avatar' => $user->profile->avatar_url,
+		'fullName' => $user->profile->full_name
+	];
+});

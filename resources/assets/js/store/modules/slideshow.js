@@ -104,7 +104,7 @@ const getters = {
 	},
 	isLoading: (state) => state.loading,
 	getSlideId: (state) => (slideOrderNumber) => {
-		return state.presentables.length === 0 ? -1 : state.presentables[slideOrderNumber].id
+		return state.presentables.length === 0 ? -1 : _.get(state, `presentables[${slideOrderNumber}]`, {}).id
 	},
 	slides: (state) => state.slides,
 	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,

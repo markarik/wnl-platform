@@ -153,7 +153,6 @@
 				})
 			},
 			onActiveFiltersChanged(payload) {
-				console.log(this.autorefresh)
 				this.$emit('activeFiltersChanged', {
 					refresh: this.autorefresh,
 					...payload

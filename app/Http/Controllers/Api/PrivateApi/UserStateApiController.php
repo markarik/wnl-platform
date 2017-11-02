@@ -1,20 +1,19 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Models\User;
-use App\Models\UserTime;
-use App\Models\UserCourseProgress;
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Comment;
 use App\Models\Lesson;
-use App\Models\QnaQuestion;
 use App\Models\QnaAnswer;
-use App\Models\UserQuizResults;
+use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
-use App\Http\Controllers\Api\ApiController;
-use Illuminate\Database\QueryException;
+use App\Models\User;
+use App\Models\UserCourseProgress;
+use App\Models\UserQuizResults;
+use App\Models\UserTime;
+use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
-use Cache;
 
 class UserStateApiController extends ApiController
 {
@@ -32,7 +31,7 @@ class UserStateApiController extends ApiController
 	// userId - cacheVersion
 	const KEY_USER_TIME_TEMPLATE = 'UserState:Time:%s:%s';
 	const CACHE_VERSION = 1;
-	const INCREMENT_BY_MINUTES = 3;
+	const INCREMENT_BY_MINUTES = 10;
 
 	public function getCourse($id, $courseId)
 	{
@@ -77,23 +76,12 @@ class UserStateApiController extends ApiController
 		$lesson = $request->lesson;
 
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
+		UserCourseProgress::firstOrCreate([
+			'user_id'   => $id,
+			'lesson_id' => $lessonId,
+		]);
 
 		return $this->respondOk();
-	}
-
-	public function getTime($user)
-	{
-		$userInstance = User::find($user);
-
-		if (!Auth::user()->can('view', $userInstance)) {
-			return $this->respondForbidden();
-		}
-
-		$time = Redis::get(self::getUserTimeRedisKey($user));
-
-		return $this->json([
-			'time' => empty($time) ? 0 : $time
-		]);
 	}
 
 	public function incrementTime(Request $request, $user)

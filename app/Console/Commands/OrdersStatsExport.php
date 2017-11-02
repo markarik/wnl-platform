@@ -39,8 +39,11 @@ class OrdersStatsExport extends Command
 	 */
 	public function handle()
 	{
-		$setOne = $this->stats(Carbon::parse('2017-03-31 23:59'), Carbon::parse('2017-09-24 23:59'));
-		$setTwo = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::now());
+		$setOne = $this->stats(Carbon::parse('2017-03-31 23:59'), Carbon::parse('2017-09-24 23:59'),
+			['date', 'orders_count', 'value', 'paid', 'coupons', '']);
+
+		$setTwo = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::now(),
+			['date', 'orders_count', 'value', 'paid', 'coupons', 'albums', '50%']);
 
 		$rows = collect();
 		foreach ($setOne as $setOneRow) {
@@ -52,9 +55,9 @@ class OrdersStatsExport extends Command
 		return 42;
 	}
 
-	protected function stats($startDate, $endDate)
+	protected function stats($startDate, $endDate, $fields)
 	{
-		$rows = collect([['date', 'orders_count', 'value', 'paid', 'coupons', '']]);
+		$rows = collect([$fields]);
 
 		$orders = (new Order)
 			->with(['coupon', 'product'])
@@ -64,21 +67,18 @@ class OrdersStatsExport extends Command
 			->get()
 			->unique('user_id');
 
-		$daysDiff = $startDate->diffInDays($endDate)+1;
+		$daysDiff = $startDate->diffInDays($endDate) + 1;
 		$datePointer = $startDate;
 		for ($day = 1; $day <= $daysDiff; $day++) {
 			$datePointer->addDay();
+
 			$ordersToDate = $orders->filter(function ($order) use ($datePointer) {
 				return $order->created_at < $datePointer;
 			});
-			$rows->push([
-				$datePointer->format('Y-m-d'),
-				$ordersToDate->count(),
-				$ordersToDate->sum('total_with_coupon'),
-				$ordersToDate->sum('paid_amount'),
-				$ordersToDate->where('coupon', true)->count(),
-				'',
-			]);
+
+			$rows->push(
+				$this->data($datePointer->format('Y-m-d'), $ordersToDate, $fields)
+			);
 		}
 
 		return $rows;
@@ -94,7 +94,7 @@ class OrdersStatsExport extends Command
 		$service = new \Google_Service_Sheets($client);
 
 		$file = env('GOOGLE_SHEETS_ORDERS_STATS');
-		$range = 'A:L';
+		$range = 'A:N';
 		$body = new Google_Service_Sheets_ValueRange([
 			'values' => $rows,
 		]);
@@ -102,5 +102,21 @@ class OrdersStatsExport extends Command
 			'valueInputOption' => 'RAW',
 		];
 		$service->spreadsheets_values->update($file, $range, $body, $params);
+	}
+
+	protected function data($date, $orders, $fields)
+	{
+		$data = [
+			'date'         => $date,
+			'orders_count' => $orders->count(),
+			'value'        => $orders->sum('total_with_coupon'),
+			'paid'         => $orders->sum('paid_amount'),
+			'coupons'      => $orders->where('coupon', true)->count(),
+			'albums'       => $orders->whereNotIn('coupon.slug', ['wnl-online-only'])->count(),
+			'50%'          => $orders->where('coupon.slug', 'wnl-online-only')->count(),
+			''             => '',
+		];
+
+		return array_values(array_intersect_key($data, array_flip($fields)));
 	}
 }

@@ -100,6 +100,7 @@
 			},
 			isCommentableInUrl() {
 				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
+					|| _.get(this.$route, 'query.commentable') == this.commentableId;
 			},
 			watchState() {
 				return this.$store.getters[`${this.module}/getReaction`](
@@ -107,7 +108,7 @@
 					this.commentableId,
 					'watch'
 				)
-			}
+			},
 		},
 		methods: {
 			action(action, payload = {}) {

@@ -1,6 +1,5 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<!-- <div> -->
 		<div class="wnl-lesson" v-if="isLessonAvailable(lesson.id)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
@@ -15,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<router-view></router-view>
+				<router-view/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
@@ -73,7 +72,7 @@
 			'wnl-breadcrumbs': Breadcrumbs,
 		},
 		mixins: [breadcrumb],
-		props: ['courseId', 'lessonId', 'screenId', 'slide'],
+		props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
 		data() {
 			return {
 				/**
@@ -91,15 +90,17 @@
 				'getScreens',
 				'getLesson',
 				'getSections',
+				'getSubsections',
 				'getScreen',
 				'getScreenSectionsCheckpoints',
+				'getSectionSubsectionsCheckpoints',
 				'isLessonAvailable',
 			]),
-			...mapGetters('progress', [
-				'getSavedLesson',
-				'shouldCompleteLesson',
-				'shouldCompleteScreen'
-			]),
+			...mapGetters('progress', {
+				getSavedLesson: 'getSavedLesson',
+				screenProgress: 'getScreen',
+				lessonProgress: 'getLesson'
+			}),
 			breadcrumb() {
 				return {
 					level: 1,
@@ -128,21 +129,28 @@
 			currentScreen() {
 				return this.getScreen(this.screenId);
 			},
-			sectionsReversed() {
-				const sectionsIds = this.currentScreen && this.currentScreen.sections;
-
-				if (!sectionsIds) {
-					return [];
-				}
-
-				const sections = this.getSections(sectionsIds);
-				return sections.map((section) => section).reverse();
-			},
-			hasSections() {
-				return !!this.sectionsReversed;
-			},
 			currentSection() {
 				return this.sectionsReversed.find((section) => this.slide >= section.slide);
+			},
+			currentSubsection() {
+				return this.subsectionsReversed.find((subsection) => this.slide >= subsection.slide);
+			},
+			sectionsReversed() {
+				const sectionsIds = _.get(this.currentScreen, 'sections', []);
+				const sections = this.getSections(sectionsIds);
+
+				// map needed because reverse modifies intial array
+				return sections.map(el => el).reverse();
+			},
+			subsectionsReversed() {
+				const subsectionsIds = _.get(this.currentSection, 'subsections', []);
+				const subsections = this.getSubsections(subsectionsIds);
+
+				// map needed because reverse modifies intial array
+				return subsections.map(el => el).reverse();
+			},
+			hasSubsections() {
+				return this.subsectionsReversed.length > 0
 			},
 			firstScreenId() {
 				if (_.isEmpty(this.screens)) {
@@ -171,15 +179,24 @@
 				'completeLesson',
 				'completeScreen',
 				'completeSection',
-				'saveLessonProgress'
+				'completeSubsection',
+				'saveLessonProgress',
 			]),
 			...mapActions([
-				'updateLessonNav'
+				'updateLessonNav',
+				'setActiveUsers',
+				'userJoined',
+				'userLeft'
 			]),
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
 					this.goToDefaultScreenIfNone()
 				});
+
+				window.Echo.join(this.presenceChannel)
+					.here(users => this.setActiveUsers({users, channel: this.presenceChannel}))
+					.joining(user => this.userJoined({user, channel: this.presenceChannel}))
+					.leaving(user => this.userLeft({user, channel: this.presenceChannel}))
 			},
 			goToDefaultScreenIfNone() {
 				const query = this.$route.query || {}
@@ -216,29 +233,57 @@
 
 				this.updateLessonNav({
 					activeSection: (this.currentSection && this.currentSection.id) || 0,
+					activeSubsection: (this.currentSubsection && this.currentSection.id) || 0,
 					activeScreen: parseInt(this.screenId)
+				});
+			},
+			shouldCompleteScreen() {
+				if (!this.currentScreen.sections) {
+					return true;
+				}
+
+				const allSections = this.currentScreen.sections;
+				const completedSections = _.get(this.screenProgress(this.courseId, this.lessonId, this.currentScreen.id), 'sections', {});
+
+				return !allSections.find(id => !completedSections[id]);
+			},
+			shouldCompleteLesson() {
+				const startedScreens = _.get(this.lessonProgress(this.courseId, this.lessonId), 'screens', {});
+
+				if (this.screens && !startedScreens) {
+					return false;
+				}
+
+				return !this.screens.find(id => {
+					return !startedScreens[id] || startedScreens[id].status === STATUS_IN_PROGRESS;
 				});
 			},
 			updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
-					let updateProgress = false;
-					if (this.hasSections && this.currentSection) {
+					if (this.currentSection) {
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
 						}
 					}
 
-					if (this.shouldCompleteScreen(this.courseId, this.lessonId, this.screenId)) {
+					if (this.currentSubsection) {
+						if (this.getSectionSubsectionsCheckpoints(this.currentSection.id).includes(this.slide)) {
+							this.completeSubsection({...this.lessonProgressContext, sectionId: this.currentSection.id, subsectionId: this.currentSubsection.id})
+						}
+					}
+
+					if (this.shouldCompleteScreen()) {
 						this.completeScreen(this.lessonProgressContext);
 
-						if (this.shouldCompleteLesson(this.courseId, this.lessonId)) {
+						if (this.shouldCompleteLesson()) {
 							this.completeLesson(this.lessonProgressContext)
 						}
 					}
 
 					this.updateLessonNav({
 						activeSection: (this.currentSection && this.currentSection.id) || 0,
-						activeScreen: parseInt(this.screenId) || 0
+						activeSubsection: parseInt(this.currentSubsection && this.currentSubsection.id,) || 0,
+						activeScreen: parseInt(this.screenId) || 0,
 					})
 				}
 			},
@@ -251,6 +296,7 @@
 			window.addEventListener('resize', this.updateElementHeight)
 		},
 		beforeDestroy () {
+			window.Echo.leave(this.presenceChannel)
 			window.removeEventListener('resize', this.updateElementHeight)
 		},
 		watch: {

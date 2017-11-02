@@ -4,6 +4,7 @@ import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
 import moderatorFeatures from 'js/perimeters/moderator';
+import firstEditionParticipant from 'js/perimeters/firstEditionParticipant';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
 
@@ -93,7 +94,17 @@ let routes = [
 				path: ':rootCategoryName/:categoryName',
 				component: require('js/components/collections/Collections.vue')
 			},
-		]
+		],
+		beforeEnter: (to, from, next) => {
+			const sandbox = createSandbox(store.getters.currentUser, {
+				perimeters: [firstEditionParticipant],
+			});
+
+			if (!sandbox.isAllowed('access')) {
+				return next('/');
+			}
+			return next();
+		},
 	},
 	{
 		name: 'help',
@@ -147,6 +158,16 @@ let routes = [
 				component: require('js/components/questions/QuestionsPlanner.vue'),
 			},
 		],
+		beforeEnter: (to, from, next) => {
+			const sandbox = createSandbox(store.getters.currentUser, {
+				perimeters: [firstEditionParticipant],
+			});
+
+			if (!sandbox.isAllowed('access')) {
+				return next('/');
+			}
+			return next();
+		},
 	},
 	{
 		name: 'moderatorFeed',

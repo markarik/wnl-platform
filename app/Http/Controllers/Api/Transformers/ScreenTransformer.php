@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
+use DB;
 use App\Models\Screen;
 use App\Http\Controllers\Api\ApiTransformer;
 
@@ -19,8 +20,7 @@ class ScreenTransformer extends ApiTransformer
 
 	public function transform(Screen $screen)
 	{
-
-		return [
+		$data = [
 			'id'           => $screen->id,
 			'name'         => $screen->name,
 			'content'      => $screen->content,
@@ -32,6 +32,12 @@ class ScreenTransformer extends ApiTransformer
 			'groups'       => $this->parent->get('groupId') ?? $screen->lesson->group->id,
 			'editions'     => $this->parent->get('editionId'),
 		];
+
+		if (!empty($screen->meta['slides_count'])) {
+			$data['slides_count'] = $screen->meta['slides_count'];
+		}
+
+		return $data;
 	}
 
 	public function includeSections(Screen $screen)

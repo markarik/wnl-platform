@@ -4,6 +4,7 @@ namespace App\Events;
 
 use Request;
 use App\Models\QuizQuestion;
+use App\Models\User;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
 use App\Events\SanitizesUserContent;
@@ -21,16 +22,18 @@ class QuizQuestionEdited extends Event
 		EventContextTrait;
 
 	public $quizQuestion;
+	public $user;
 
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param QnaQuestion $qnaQuestion
 	 */
-	public function __construct(QuizQuestion $quizQuestion)
+	public function __construct(QuizQuestion $quizQuestion, User $user)
 	{
 		parent::__construct();
 		$this->quizQuestion = $quizQuestion;
+		$this->user = $user;
 	}
 
 	/**
@@ -52,7 +55,9 @@ class QuizQuestionEdited extends Event
 				'id'   => $this->quizQuestion->id,
 				'text' => $this->sanitize($this->quizQuestion->text),
 			],
-			'actors'  => [],
+			'actors'  => [
+				'id' => $this->user->id
+			],
 		];
 	}
 }

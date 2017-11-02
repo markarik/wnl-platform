@@ -90,11 +90,13 @@ class QuizQuestionsApiController extends ApiController
 
 		$question->update([
 			'text' => $request->input('question'),
-			'explanation' => $request->input('explanation'),			
+			'explanation' => $request->input('explanation'),
 			'preserve_order' => $request->input('preserve_order')
 		]);
 
-		event(new QuizQuestionEdited($question));
+		$user = Auth::user();
+
+		event(new QuizQuestionEdited($question, $user));
 
 		return $this->respondOk();
 	}

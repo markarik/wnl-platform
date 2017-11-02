@@ -255,7 +255,6 @@
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
-	import Watch from 'js/components/global/reactions/Watch'
 	import SlideLink from 'js/components/global/SlideLink'
 
 	export default {
@@ -264,7 +263,6 @@
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
-			'wnl-watch': Watch,
 			'wnl-slide-link': SlideLink
 		},
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],

@@ -7,6 +7,8 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import firstEditionParticipant from 'js/perimeters/firstEditionParticipant';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
+import { getCurrentUser } from 'js/services/user';
+
 
 Vue.use(Router)
 
@@ -96,14 +98,16 @@ let routes = [
 			},
 		],
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [firstEditionParticipant],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [firstEditionParticipant],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		},
 	},
 	{
@@ -159,14 +163,16 @@ let routes = [
 			},
 		],
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [firstEditionParticipant],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [firstEditionParticipant],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		},
 	},
 	{
@@ -174,14 +180,16 @@ let routes = [
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [moderatorFeatures],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [moderatorFeatures],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		}
 	},
 	{

@@ -65,9 +65,10 @@
 							{{$t('questions.dashboard.stats.scores')}}
 						</div>
 						<div class="questions-stats margin bottom">
-							<div v-for="stats, index in parseStats(stats)"
+							<div v-for="(stats, index) in parseStats(stats)"
 								class="stats-item stats-resolved"
 								:class="{'is-first': index === 0}"
+								:key="index"
 							>
 								<span class="stats-title">{{stats.title}}</span>
 								<div class="progress-bar">
@@ -87,7 +88,8 @@
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
 							<div class="questions-stats stats-exam">
-								<div v-for="stats, index in parseStats(stats.mock_exam)"
+								<div v-for="(stats, index) in parseStats(stats.mock_exam)"
+									:key="index"
 									class="stats-item stats-exam"
 									:class="{'is-first': index === 0}"
 								>
@@ -97,6 +99,8 @@
 								</div>
 							</div>
 						</div>
+						<div class="questions-dashboard-heading margin vertical"/>
+						<button @click="resetQuestionsProgress" class="button is-danger to-right">Wyczyść wszystkie wyniki</button>
 					</div>
 				</div>
 				<router-view v-else :id="id"/>
@@ -143,6 +147,9 @@
 	.wnl-middle
 		max-width: $course-content-max-width
 		width: 100%
+
+	.to-right
+		float: right
 
 	.questions-header
 		+flex-space-between()
@@ -283,6 +290,7 @@
 	import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import {getApiUrl} from 'js/utils/env'
+	import { swalConfig } from 'js/utils/swal'
 	import withChat from 'js/mixins/with-chat'
 
 	export default {
@@ -325,8 +333,8 @@
 			},
 		},
 		methods: {
-			...mapActions(['toggleChat']),
-			...mapActions('questions', ['fetchDynamicFilters']),
+			...mapActions(['toggleChat', 'toggleOverlay']),
+			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
 			setPlanRoute() {
 				this.planRoute = {
 					name: 'questions-list',
@@ -388,6 +396,30 @@
 			scoreClass(score) {
 				return score >= 56 ? 'is-success' : 'is-danger'
 			},
+			resetQuestionsProgress() {
+				this.$swal(swalConfig({
+					title: this.$t('questions.dashboard.ui.deleteModal.title'),
+					text: this.$t('questions.dashboard.ui.deleteModal.text'),
+					showCancelButton: true,
+					confirmButtonText: this.$t('ui.confirm.confirm'),
+					cancelButtonText: this.$t('ui.confirm.cancel'),
+					type: 'error',
+					confirmButtonClass: 'button is-danger',
+					reverseButtons: true
+				})).then(() => {
+					this.toggleOverlay({source: 'questionsDashboard', display: true})
+					this.deleteProgress()
+					.then(() => {
+						this.getPlan()
+						this.getStats()
+						this.toggleOverlay({source: 'questionsDashboard', display: false})
+
+						isEmpty(this.filters)
+							? this.fetchDynamicFilters().then(this.setPlanRoute)
+							: this.setPlanRoute()
+					})
+				}).catch(e => false)
+			}
 		},
 		mounted() {
 			this.getPlan()

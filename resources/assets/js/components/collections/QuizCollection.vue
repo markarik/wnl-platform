@@ -37,7 +37,7 @@
 		},
 		props: ['categoryName', 'rootCategoryName', 'quizQuestionsIds'],
 		computed: {
-			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction', 'isComplete']),
+			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction', 'isComplete', 'getQuestion']),
 			howManyQuestions() {
 				return this.quizQuestionsIds.length
 			},
@@ -48,11 +48,11 @@
 				this.shuffleAnswers({id: this.getQuestionsWithAnswers[index].id})
 				this.changeQuestion(index)
 			},
-			onSelectAnswer(data) {
-				if (!this.isComplete) {
-					this.commitSelectAnswer(data)
-				}
-			}
+			onSelectAnswer({id, answer}) {
+				answer === this.getQuestion(id).selectedAnswer
+					? this.resolveQuestion(id)
+					: !this.isComplete && this.commitSelectAnswer({id, answer})
+			},
 		}
 	}
 </script>

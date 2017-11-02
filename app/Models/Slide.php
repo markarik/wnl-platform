@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use Illuminate\Database\Eloquent\Model;
 use Facades\Lib\SlideParser\Parser;
+use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
-use App\Models\Presentable;
 
 class Slide extends Model
 {
@@ -32,6 +31,11 @@ class Slide extends Model
 	public function subsections()
 	{
 		return $this->morphedByMany('\App\Models\Subsection', 'presentable');
+	}
+
+	public function slideshow()
+	{
+		return $this->morphedByMany('\App\Models\Slideshow', 'presentable');
 	}
 
 	public function comments()

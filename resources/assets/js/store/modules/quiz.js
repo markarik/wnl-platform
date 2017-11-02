@@ -86,6 +86,7 @@ const getters = {
 	},
 	getAttempts: (state) => state.attempts,
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestion: state => id => state.quiz_questions[id] || {},
 	getQuestionsWithAnswers: (state) => {
 		return state.questionsIds.map((id) => {
 			const quizQuestion = state.quiz_questions[id];

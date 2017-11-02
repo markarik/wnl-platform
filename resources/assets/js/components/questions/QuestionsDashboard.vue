@@ -87,7 +87,8 @@
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
 							<div class="questions-stats stats-exam">
-								<div v-for="stats, index in parseStats(stats.mock_exam)"
+								<div v-for="(stats, index) in parseStats(stats.mock_exam)"
+									:key="index"
 									class="stats-item stats-exam"
 									:class="{'is-first': index === 0}"
 								>

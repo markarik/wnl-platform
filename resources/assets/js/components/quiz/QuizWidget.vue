@@ -20,6 +20,7 @@
 			:getReaction="getReaction"
 			:module="module"
 			@selectAnswer="selectAnswer"
+			@answerDoubleclick="onAnswerDoubleClick"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
@@ -35,7 +36,7 @@
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
 			<wnl-quiz-question
-				v-for="question, index in otherQuestions"
+				v-for="(question, index) in otherQuestions"
 				:headerOnly="true"
 				:question="question"
 				:class="`clickable quiz-question-${question.id}`"
@@ -44,6 +45,7 @@
 				:module="module"
 				@headerClicked="selectQuestionFromList(index)"
 				@selectAnswer="selectAnswer"
+				@answerDoubleclick="onAnswerDoubleClick"
 			></wnl-quiz-question>
 		</div>
 	</div>
@@ -100,6 +102,7 @@
 		data() {
 			return {
 				hasErrors: false,
+				allowDoubleclick: true
 			}
 		},
 		computed: {
@@ -145,9 +148,19 @@
 				this.$emit('changeQuestion', fullIndex)
 				scrollToElement(this.$el, 75)
 			},
-			selectAnswer(data) {
-				this.$emit('selectAnswer', data)
-			}
+			selectAnswer({answer}) {
+				this.allowDoubleclick = false
+				this.$emit('selectAnswer', {
+					id: this.currentQuestion.id,
+					answer
+				})
+				this.timeout = setTimeout(() => {
+					this.allowDoubleclick = true
+				}, 500)
+			},
+			onAnswerDoubleClick({answer}) {
+				this.allowDoubleclick && this.displayResults && this.nextQuestion()
+			},
 		},
 	}
 </script>

@@ -22,9 +22,6 @@ export function isDebug() {
 	return envValue('appDebug')
 }
 
-export function getFirstLessonId() {
-	return envValue('FIRST_LESSON_ID') || 1;
-}
 // URLs
 
 export function getUrl(path) {

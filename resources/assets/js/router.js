@@ -99,7 +99,7 @@ let routes = [
 		],
 		beforeEnter: (to, from, next) => {
 			getCurrentUser().then(({data: currentUser}) => {
-				const sandbox = createSandbox(store.getters.currentUser, {
+				const sandbox = createSandbox(currentUser, {
 					perimeters: [firstEditionParticipant],
 				});
 
@@ -164,7 +164,7 @@ let routes = [
 		],
 		beforeEnter: (to, from, next) => {
 			getCurrentUser().then(({data: currentUser}) => {
-				const sandbox = createSandbox(store.getters.currentUser, {
+				const sandbox = createSandbox(currentUser, {
 					perimeters: [firstEditionParticipant],
 				});
 

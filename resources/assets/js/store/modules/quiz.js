@@ -275,7 +275,7 @@ const actions = {
 		});
 	},
 
-	fetchQuestionsCollectionByTagName({commit}, {tagName, ids}) {
+	fetchQuestionsCollectionByTagName({commit, dispatch}, {tagName, ids}) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		return _fetchQuestionsCollectionByTagName(tagName, ids).then(response => {
@@ -288,6 +288,7 @@ const actions = {
 				let questionsIds = _.map(response.data, (question) => question.id),
 					len = questionsIds.length
 
+				included.comments && dispatch('comments/setComments', {...included.comments}, {root:true})
 				commit(types.UPDATE_INCLUDED, included)
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: 0,

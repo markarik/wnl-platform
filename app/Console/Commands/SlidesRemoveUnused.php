@@ -19,7 +19,7 @@ class SlidesRemoveUnused extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
+	protected $description = 'Delete slides that are not attached to any slideshow.';
 
 	/**
 	 * Create a new command instance.

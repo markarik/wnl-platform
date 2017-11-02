@@ -17,8 +17,8 @@
 				:filterByLocation="filterByLocation">
 			</router-view>
 		</div>
-		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute"
-			:isVisible="isChatVisible"
+		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute && isLargeDesktop"
+			:isVisible="true"
 			:isDetached="!isChatMounted"
 		>
 			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>
@@ -32,12 +32,12 @@
 				@locationFilterLoaded="locationFilterLoaded"
 			></wnl-users-filters>
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible && !isMainRoute" class="wnl-chat-toggle" @click="toggleChat">
+		<!-- <div v-if="isChatToggleVisible && !isMainRoute" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż info</span>
 			</span>
-		</div>
+		</div> -->
 		<div v-if="isMainRoute && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
@@ -102,7 +102,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile', 'isChatToggleVisible']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile', 'isChatToggleVisible', 'isLargeDesktop']),
 			isProduction() {
 				return isProduction()
 			},
@@ -113,25 +113,26 @@
 				return this.$route.name === 'all'
 			},
 			items() {
-				let items = [
-					{
-						text: 'Ziomki',
-						itemClass: 'heading small',
-					},
-					{
-						text: 'Wszystkie ziomki',
-						itemClass: 'has-icon',
-						to: {
-							name: 'all',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-address-book',
-						iconTitle: 'Wszystkie ziomki',
-					}
-				]
-				return items
+			// 	let items = [
+			// 		{
+			// 			text: 'Ziomki',
+			// 			itemClass: 'heading small',
+			// 		},
+			// 		{
+			// 			text: 'Wszystkie ziomki',
+			// 			itemClass: 'has-icon',
+			// 			to: {
+			// 				name: 'all',
+			// 				params: {},
+			// 			},
+			// 			isDisabled: false,
+			// 			method: 'push',
+			// 			iconClass: 'fa-address-book',
+			// 			iconTitle: 'Wszystkie ziomki',
+			// 		}
+			// 	]
+			// 	return items
+			return ''
 			},
 		},
 		methods: {

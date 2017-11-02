@@ -7,9 +7,9 @@
 				</div>
 			</div>
 			<div class="level-right">
-				<span >
+				<span>
 					<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}" :event="handleLink">
-						<a class="button is-primary is-outlined:hover" :disabled="hasChanges">Podgląd mojego profilu</a>
+						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">Zobacz swój profil</a>
 					</router-link>
 				</span>
 			</div>
@@ -49,6 +49,8 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
+
 	.wnl-user-profile
 		&.mobile
 			h1
@@ -59,10 +61,10 @@
 				align-items: center
 				display: flex
 				flex-direction: column
-				margin-top: 12px
+				margin-top: $margin-medium
 
 			.button
-				margin-top: 20px
+				margin-top: $margin-base
 
 			form
 				padding: 0 5%
@@ -70,10 +72,8 @@
 		.clickable-avatar
 			cursor: pointer
 
-		.button
-			background: transparent
-			border-color: #11afb2
-			color: #11afb2
+		.my-profile-preview-button
+			margin-bottom: $margin-small
 </style>
 
 <script>

@@ -1,14 +1,15 @@
 <template>
     <div class="wnl-public-chat">
         <div class="chat-title">
-            <p>Więcej info o użytkowniku</p>
+            <p>Info o uczestniku</p>
         </div>
-        <a class="wnl-chat-close">
-            <span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
+        <br>
+        <!-- <a class="wnl-chat-close">
+            <span v-if="!canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
                 <i class="fa fa-chevron-right"></i>
                 <span>Ukryj info</span>
             </span>
-        </a>
+        </a> -->
         <div class="user-infos">
             <wnl-user-info :label="`Miasto`" :info="profile.city"></wnl-user-info>
             <wnl-user-info :label="`Uniwersytet`" :info="profile.university"></wnl-user-info>
@@ -31,21 +32,6 @@
         justify-content: flex-start
         padding: $margin-base
         position: relative
-
-        .wnl-chat-close
-            color: $color-ocean-blue
-            cursor: pointer
-            display: flex
-            flex-direction: column
-            position: absolute
-            right: $margin-base
-            top: $margin-base
-
-            span
-                font-size: $font-size-minus-4
-                text-transform: uppercase
-                white-space: nowrap
-
 
     .metadata
         margin: $margin-base 0 0 $margin-base

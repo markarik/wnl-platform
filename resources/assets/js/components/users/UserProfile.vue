@@ -1,39 +1,58 @@
 <template lang="html">
 		<div v-if="responseCondition" class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 			<div class="user-content">
-				<wnl-user-background class="user-background"
-					:fullName="fullName">
-					<wnl-avatar class="user-avatar image is-128x128" size="extralarge"
-						:fullName="fullName"
-						:url="profile.avatar"
-					></wnl-avatar>
-					<div class="user-info-header">
-						<h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
-						<h2>{{ profile.city }}</h2>
-						<h3>{{ profile.help }}</h3>
-						<!-- <h3>{{ address.city }}</h3> -->
+				<wnl-avatar class="user-avatar image is-128x128" size="extralarge"
+					:fullName="fullName"
+					:url="profile.avatar"
+				></wnl-avatar>
+				<div class="user-info-header">
+					<div class="user-info-header-edit">
+						<span v-if="currentUserProfile" title="Edytuj profil" class="icon is-large">
+							<router-link :to="{ name: 'my-profile' }">
+								<i class="fa fa-pencil-square"></i>
+							</router-link>
+						</span>
+						<span class="user-info-header-names">
+							<p class="fullname-title">{{ profile.real_first_name }} {{ profile.real_last_name }}</p>
+							<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
+						</span>
 					</div>
-				</wnl-user-background>
+					<span v-if="profile.city" class="user-info-city">
+						<span class="icon is-small">
+							<i class="fa fa-map-marker"></i>
+						</span>
+						<span class="city-title">{{ profile.city }}</span>
+					</span>
+					<span v-if="profile.help" class="user-info-help">
+						<span class="help-title">W czym mogę pomóc?</span>
+						<div class="notification">
+							<span class="user-help">{{ profile.help }}</span>
+						</div>
+					</span>
+				</div>
 			</div>
 			<hr>
-			<div class="user-section-header">
-				<p class="title is-4">AKTYWNOŚĆ</p>
-			</div>
 			<br>
+
 			<div class="user-activity-content">
-				<wnl-activity-meter class="user-activity" :activity="'Komentarze'" :activityCount="howManyComments"></wnl-activity-meter>
-				<wnl-activity-meter class="user-activity" :activity="'Odpowiedzi'" :activityCount="howManyAnswers"></wnl-activity-meter>
-				<wnl-activity-meter class="user-activity" :activity="'Pytania'" :activityCount="howManyQuestions"></wnl-activity-meter>
+				<div class="wnl-activity-meter" v-for="activity in activityMeterArray">
+					<div class="activity-stat">
+						<span class="icon is-large">
+							<i :class="activity.iconClassToUse"></i>
+						</span>
+						<span class="activity-meter-number">{{ activity.statistic }}</span>
+			        </div>
+			        <p class="activity-title">{{ activity.name }}</p>
+				</div>
 			</div>
 
 			<hr>
 			<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
-				<div class="user-section-header">
-					<p class="title is-4">TOPOWA AKTYWNOŚĆ</p>
-				</div>
-				<br>
 				<wnl-qna
-					:title="'Nqjlepsze Pytania'"
+					:color-header="'color-header'"
+					:numbersDisabled="numbersDisabled"
+					:title="'Najlepsze Pytania'"
+					:icon="iconForQuestions"
 					v-if="ifAnyQuestions"
 					:sortingEnabled="sortingDisabled"
 					:readOnly="readOnly"
@@ -41,6 +60,9 @@
 					:qnaQuestionsCompetency="convertSortedQuestionsToObject"
 				></wnl-qna>
 				<wnl-qna
+					:color-header="'color-header'"
+					:numbersDisabled="numbersDisabled"
+					:icon="iconForAnswers"
 					:title="'Najlepsze Odpowiedzi'"
 					v-if="ifAnyAnswers"
 					:sortingEnabled="sortingDisabled"
@@ -48,20 +70,20 @@
 					:reactionsDisabled="reactionsDisabled"
 					:qnaAnswersCompetency="convertSortedAnswersToObject"
 				></wnl-qna>
-				<hr>
+				<!-- <hr> -->
 			</div>
-			<div class="user-section-header">
+			<!-- <div class="user-section-header">
 				<p class="title is-4">WSZYSTKIE WPISY</p>
-			</div>
-			<div class="collections-controls">
+			</div> -->
+			<!-- <div class="collections-controls">
 				<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"  :key="panel" @click="togglePanel(panel)">
 					{{name}}
 					<span class="icon is-small">
 						<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 					</span>
 				</a>
-			</div>
-			<div class="columns">
+			</div> -->
+			<!-- <div class="columns">
 				<div class="column" v-show="isCommentsPanelVisible">
 					<div class="comments-content">
 						<hr>
@@ -101,11 +123,11 @@
 						></wnl-qna>
 					</div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.collections-controls
@@ -114,21 +136,77 @@
 		flex-wrap: wrap
 		margin-bottom: $margin-base
 
-	.user-background
+	.user-content
 		display: flex
-		flex-direction: row
 		justify-content: flex-start
-		align-items: center
 		padding-left: 2vw
 		.user-avatar
-			z-index: 1
 			margin-right: 1vw
+			z-index: 1
+		.user-info-header
+			display: flex
+			flex-direction: column
+			width: 100%
+			.user-info-header-edit
+				display: flex
+				flex-direction: row-reverse
+				justify-content: space-between
+				color: $color-ocean-blue
+			.user-info-header-names
+				flex-grow: 10
+				.fullname-title
+					color: $color-ocean-blue
+					font-size: $font-size-plus-5
+					font-weight: $font-weight-bold
+					margin-bottom: $margin-small
+					margin-top: $margin-small
+				.chosen-fullname-title
+					color: $color-ocean-blue-opacity
+					font-size: $font-size-plus-2
+					font-weight: $font-weight-regular
+					margin-bottom: $margin-small
+			.user-info-city
+				align-items: center
+				color: $color-gray-dimmed
+				display: flex
+				margin-bottom: $margin-base
+				.city-title
+					font-size: $font-size-plus-1
+					font-weight: $font-weight-regular
+					margin-left: $margin-small
+			.user-info-help
+				.help-title
+					font-size: $font-size-minus-1
+					text-transform: uppercase
+				.notification
+					border-radius: $border-radius-small
+					margin-top: $margin-tiny
+					width: 100%
+					.user-help
+						font-size: $font-size-plus-1
+						font-weight: $font-weight-regular
 
 	.user-activity-content
+		align-items: center
 		display: flex
 		flex-direction: row
 		justify-content: space-around
-		align-items: center
+		.activity-stat
+			align-items: center
+			color: $color-dark-blue
+			display: flex
+			flex-direction: row
+			font-size: $font-size-plus-6
+			font-weight: $font-weight-black
+			margin-bottom: $margin-medium
+			.icon
+				color: $color-dark-blue-opacity
+				margin-right: $margin-base
+		.activity-title
+			color: $color-gray-dimmed
+			letter-spacing: 1px
+			text-align: center
+			text-transform: uppercase
 
 	.user-section-header
 		display: flex
@@ -142,26 +220,27 @@ import { mapActions, mapGetters } from 'vuex'
 import { isProduction, getApiUrl } from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
 import Comment from 'js/components/comments/Comment'
-import UserBackground from 'js/components/users/UserBackground'
+// import UserBackground from 'js/components/users/UserBackground'
 import QnaQuestion from 'js/components/qna/QnaQuestion'
 import QnaAnswer from 'js/components/qna/QnaAnswer'
 import Qna from 'js/components/qna/Qna'
-import ActivityMeter from 'js/components/users/ActivityMeter'
 
 export default {
     name: 'UserProfile',
     components: {
-        'wnl-user-background': UserBackground,
+        // 'wnl-user-background': UserBackground,
         'wnl-avatar': Avatar,
 		'wnl-comment': Comment,
         'wnl-qna-question': QnaQuestion,
         'wnl-qna-answer': QnaAnswer,
         'wnl-qna': Qna,
-        'wnl-activity-meter': ActivityMeter,
     },
     props: ['readOnly'],
     data() {
         return {
+			numbersDisabled: true,
+			iconForQuestions: 'fa fa-question-circle-o',
+			iconForAnswers: 'fa fa-comment-o',
             sortingDisabled: false,
             sortingEnabled: true,
             loading: false,
@@ -176,6 +255,35 @@ export default {
     },
     computed: {
         ...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isTouchScreen']),
+		...mapGetters(['currentUserId']),
+		activityMeterArray() {
+			return [
+				{
+					statistic: this.howManyComments,
+					name: 'Komentarze',
+					iconClassToUse: 'fa fa-comments-o'
+				},
+				{
+					statistic: this.howManyQuestions,
+					name: 'Pytania',
+					iconClassToUse: 'fa fa-question-circle-o'
+				},
+				{
+					statistic: this.howManyAnswers,
+					name: 'Odpowiedzi',
+					iconClassToUse: 'fa fa-comment-o'
+				}
+			]
+		},
+		currentUserProfile() {
+			return this.id == this.currentUserId ? true : false
+		},
+		profileFirstNameToPrint() {
+			return this.profile.real_first_name === this.profile.first_name ? null : this.profile.first_name
+		},
+		profileLastNameToPrint() {
+			return this.profile.real_last_name === this.profile.last_name ? null : this.profile.last_name
+		},
         howManyComments() {
             return this.commentsCompetency.data.length
         },
@@ -208,18 +316,13 @@ export default {
         },
         qnaQuestionsComputed() {
 			if (!this.responseCondition) return {}
-			const {
-                included,
-                ...questions
-            } = this.qnaQuestionsCompetency.data;
+			// !this.responseCondition ? {}
+			const { included, ...questions } = this.qnaQuestionsCompetency.data;
             return questions;
         },
         qnaAnswersComputed() {
 			if (!this.responseCondition) return {}
-            const {
-                included,
-                ...questions
-            } = this.qnaAnswersCompetency.data;
+            const { included, ...questions } = this.qnaAnswersCompetency.data;
             return questions;
         },
         sortQuestionsCompetency() {

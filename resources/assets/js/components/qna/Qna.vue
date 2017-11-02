@@ -7,9 +7,17 @@
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
-						<p class="title is-4" v-if="title !== false">
-							{{displayedTitle}} ({{howManyQuestions}})
-						</p>
+						<div class="wnl-qna-header" :class="color-header">
+							<span v-if="icon" class="icon is-big user-profile-icon">
+								<i :class="icon"></i>
+							</span>
+							<p class="title is-4" v-if="title !== false">
+								{{displayedTitle}}&nbsp;
+							</p>
+							<p class="title is-4" v-if="!numbersDisabled">
+								({{howManyQuestions}})
+							</p>
+						</div>
 						<div class="tags" v-if="tags">
 							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
 						</div>
@@ -57,6 +65,15 @@
 
 		.tag
 			margin-right: $margin-small
+
+	.wnl-qna-header
+		display: flex
+		flex-direction: row
+		.user-profile-icon
+			margin-right: $margin-small
+
+	.color-header
+		color: $color-dark-blue
 
 	.qna-container
 		flex: 1 auto
@@ -108,7 +125,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'readOnly', 'title', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency', 'sortingEnabled'],
+		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency', 'sortingEnabled', 'numbersDisabled', 'color-header'],
 		data() {
 			return {
 				ready: false,

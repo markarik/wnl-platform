@@ -5,7 +5,7 @@
     </div>
     <div class="all-users-container" v-if="allUsersCount">
         <ul class="avatars-list" ref="avatarsList">
-            <li v-for="user in usersByLocation" class="avatar">
+            <li v-for="user in usersByHelp" class="avatar">
                 <wnl-avatar :fullName="user.full_name" :url="user.avatar" :userId="user.id" :user="user" size="medium">
                 </wnl-avatar>
             </li>
@@ -61,6 +61,9 @@ export default {
         usersByLocation() {
             return this.filterByLocation ? this.getUsersByLoaction(this.filterByLocation).filter((user) => this.currentUserId !== user.id) : this.usersToCount
         },
+        usersByHelp() {
+            return this.filterByHelp ? this.getUsersByHelp(this.filterByHelp).filter((user) => this.currentUserId !== user.id) : this.usersToCount
+        }
 
     },
     methods: {

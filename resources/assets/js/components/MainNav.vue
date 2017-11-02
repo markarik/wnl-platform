@@ -35,7 +35,7 @@
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
-		<router-link
+		<!-- <router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'all', params: { keepsNavOpen: true }}"
 			>
@@ -43,7 +43,7 @@
 				<i class="fa fa-address-book"></i>
 			</span>
 			<span class="text">Ziomki</span>
-		</router-link>
+		</router-link> -->
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'help', params: { keepsNavOpen: true } }"

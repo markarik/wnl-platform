@@ -119,7 +119,7 @@ const getters = {
 		})
 	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
-	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
+	getUnresolved: (state, getters) => getters.getQuestions.filter(question => !question.isResolved),
 	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
 	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(

@@ -17,9 +17,18 @@ export const questions = {
 		stats: {
 			error: 'Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!',
 			heading: 'Twoje statystyki',
-			mockExam: 'Wyniki próbnego egzaminu - poprawne/wszystkie i procent poprawnych',
+			mockExam: 'Twój ostatni wynik próbnego egzaminu - poprawne/wszystkie i procent poprawnych',
 			scores: 'Ilość rozwiązanych pytań i procent prawidłowych odpowiedzi',
 		},
+		ui: {
+			deleteModal: {
+				title: 'Czy aby na pewno?',
+				text: `Po zatwierdzeniu zostaną usunięte wszystkie Twoje podejścia do pytań kontrolnych.
+					Dotyczy to zarówno pytań rozwiązywanych w ramach lekcji jak i pytań dostępnych w bazie pytań.
+					Jedyne wyniki, które nie zostaną usunięte to wyniki próbnego egzaminu.`
+			}
+
+		}
 	},
 	filters: {
 		activeFiltersReview: 'Aktywne filtry: {filters}',

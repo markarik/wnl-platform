@@ -1,19 +1,19 @@
 import { createPerimeter } from 'vue-kindergarten';
 
 export default createPerimeter({
-	purpose: 'firstEditionParticipant',
+	purpose: 'currentEditionParticipant',
 
 	can: {
 		access() {
-			return this.isFirstEditionParticipant()
+			return this.isCurrentEditionParticipant()
 		}
 	},
 
-	isFirstEditionParticipant() {
+	isCurrentEditionParticipant() {
 		return this.child &&
 			(this.child.roles.includes('moderator') ||
 				this.child.roles.includes('admin')) ||
-			(this.child.roles.includes('edition-1-participant') &&
-				this.child.roles.includes('edition-2-participant'))
+				this.child.roles.includes('edition-2-participant'
+			)
 	}
 });

@@ -9,9 +9,11 @@ export const ui = {
 		undo: 'Cofnij',
 		hide: 'Ukryj',
 		show: 'Pokaż',
+		showAll: 'Pokaż wszystkie',
 		watch: 'Obserwuj',
 		watching: 'Obserwujesz',
-		unwatch: 'Nie obserwuj'
+		unwatch: 'Nie obserwuj',
+		refresh: 'Odśwież'
 	},
 	loading: {
 		default: 'Uwaga, nadjeżdża wiedza...',

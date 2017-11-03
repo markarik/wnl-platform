@@ -1,7 +1,5 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Http\Request;

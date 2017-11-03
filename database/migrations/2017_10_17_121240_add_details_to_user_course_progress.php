@@ -28,11 +28,7 @@ class AddDetailsToUserCourseProgress extends Migration
 				'unique_user_course_detailed_progress'
 			);
 
-			try {
-				$table->dropUnique('unique_user_course_progress');
-			} catch (QueryException $e) {
-				// it means index already dropped
-			}
+			$table->dropUnique('unique_user_course_progress');
 		});
 	}
 

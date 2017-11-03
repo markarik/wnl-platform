@@ -36,6 +36,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Faceted search available filters
 	api_action('post', 'filterList');
 
+	// Query
+	api_action('post', 'query');
+
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 
@@ -197,4 +200,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Users Plans
 	Route::get("{$r['user-plan']}/{userId}", 'UserPlanApiController@get');
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
+
+	// Tasks
+	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
+	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 });

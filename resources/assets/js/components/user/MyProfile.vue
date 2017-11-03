@@ -24,7 +24,7 @@
 			</wnl-upload>
 		</div>
 
-		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true">
+		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true" ref="form">
 			<wnl-form-text name="first_name">Imię</wnl-form-text>
 			<wnl-form-text name="last_name">Nazwisko</wnl-form-text>
 			<wnl-form-text name="username">Nazwa użytkownika</wnl-form-text>

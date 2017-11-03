@@ -9,7 +9,6 @@ import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
 import { getCurrentUser } from 'js/services/user';
 
-
 Vue.use(Router)
 
 let routes = [

@@ -40,6 +40,11 @@ class Task extends Model
 		return $this->belongsTo('App\Models\User', 'assignee_id', 'id');
 	}
 
+	public function assigneeProfiles()
+	{
+		return $this->belongsTo('App\Models\UserProfile', 'assignee_id', 'user_id');
+	}
+
 	public function comments()
 	{
 		return $this->morphMany('App\Models\Comment', 'commentable');

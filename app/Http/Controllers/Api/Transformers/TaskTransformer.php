@@ -10,7 +10,7 @@ use App\Models\Task;
 class TaskTransformer extends ApiTransformer
 {
 	protected $parent;
-	protected $availableIncludes = ['events', 'profiles'];
+	protected $availableIncludes = ['events', 'assigneeProfiles'];
 
 	public function __construct($parent = null)
 	{
@@ -49,11 +49,11 @@ class TaskTransformer extends ApiTransformer
 		return $this->collection($events, new EventTransformer, 'events');
 	}
 
-	public function includeProfiles(Task $task)
+	public function includeAssigneeProfiles(Task $task)
 	{
-		if (!empty($task->assignee)) {
-			$profile = $task->assignee->profile;
-			return $this->item($profile, new UserProfileTransformer(['tasks' => $task->id]), 'profiles');
+		if ($task->assigneeProfiles->count() > 0) {
+			$profile = $task->assigneeProfiles;
+			return $this->item($profile, new UserProfileTransformer(['tasks' => $task->id]), 'assigneeProfiles');
 		}
 	}
 }

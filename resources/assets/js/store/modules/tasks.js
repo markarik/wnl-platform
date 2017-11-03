@@ -50,7 +50,7 @@ const actions = {
 					}
 
 					const {included: allIncluded, ...responseData} = data;
-					const {profiles = {}, ...included} = allIncluded
+					const {assigneeProfiles = {}, ...included} = allIncluded
 
 					const dataArray = Object.values(responseData);
 
@@ -66,7 +66,7 @@ const actions = {
 					const serializedTasks = {}
 					dataArray.forEach(task => {
 						serializedTasks[task.id] = _parseIncludes(included, task)
-						serializedTasks[task.id].assignee = profiles[task.assignee_id] || {}
+						serializedTasks[task.id].assignee = assigneeProfiles[task.assignee_id] || {}
 					});
 
 					commit(types.SET_TASKS, serializedTasks)
@@ -90,9 +90,9 @@ const actions = {
 	updateTask({commit, dispatch}, payload) {
 		_updateTask(payload)
 			.then(({data: {included: allIncluded, ...task}}) => {
-				const {profiles = {}, ...included} = allIncluded
+				const {assigneeProfiles = {}, ...included} = allIncluded
 
-				const assignee = {assignee: profiles[task.assignee_id] || {}};
+				const assignee = {assignee: assigneeProfiles[task.assignee_id] || {}};
 
 				Object.assign(task, _parseIncludes(included, task), assignee)
 
@@ -113,14 +113,14 @@ function _getTasks(params) {
 	return axios.get(getApiUrl('tasks/all'), {
 		params: {
 			limit: 10,
-			include: 'events,profiles',
+			include: 'events,assigneeProfiles',
 			...params
 		}
 	})
 }
 
 function _updateTask({id, ...fields}) {
-	return axios.patch(getApiUrl(`tasks/${id}?include=events,profiles`), fields)
+	return axios.patch(getApiUrl(`tasks/${id}?include=events,assigneeProfiles`), fields)
 }
 
 function _parseIncludes(included, object) {

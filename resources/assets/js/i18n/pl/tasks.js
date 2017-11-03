@@ -4,7 +4,9 @@ export const tasks = {
 		fields: {
 			status: 'Status',
 			assignee: 'Ogarniacz',
-			eventsCount: 'Liczba wątków'
+			eventsCount: 'Liczba wątków',
+			createdAt: 'Utworzono',
+			updatedAt: 'Zmodyfikowano'
 		},
 		status: {
 			open: 'Do wzięcia',

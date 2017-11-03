@@ -7,7 +7,7 @@
 				<span class="tag is-danger is-medium">{{eventsCount}}</span>
 			</p>
 		</header>
-		<div class="card-content">
+		<div class="card-content task-summary">
 			<div class="tags field has-addons">
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.status'"/>
 				<wnl-dropdown>
@@ -25,6 +25,10 @@
 				</wnl-dropdown>
 			</div>
 			<div class="tags field has-addons is-relative">
+				<span class="tag is-light is-medium" v-t="'tasks.task.fields.createdAt'"/>
+				<span class="tag is-medium">{{formatedCreatedAt}}</span>
+			</div>
+			<div class="tags field has-addons is-relative">
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.assignee'"/>
 				<input @focus="onFocus" :value="assigneeTextComputed" @input="onInput" @keydown="onKeyDown"/>
 					<wnl-autocomplete
@@ -36,6 +40,10 @@
 						class="wnl-autocomplete-dropdown"
 						ref="autocomplete"
 					/>
+			</div>
+			<div class="tags field has-addons is-relative">
+				<span class="tag is-light is-medium" v-t="'tasks.task.fields.updatedAt'"/>
+				<span class="tag is-medium">{{formatedUpdatedAt}}</span>
 			</div>
 		</div>
 		<div class="card-content">
@@ -54,8 +62,17 @@
 	.tag
 		border-radius: 0
 
+	.task-summary
+		display: flex
+		flex-wrap: wrap
+		padding-bottom: 0
+
+		.tags.field
+			flex: 1 0 50%
+
 	.card-header
 		align-items: center
+		background-color: $color-background-light-gray
 
 	.events-counter
 		margin: 0 $margin-small
@@ -79,11 +96,13 @@
 </style>
 
 <script>
+import {mapGetters} from 'vuex'
+
 import Dropdown from 'js/components/global/Dropdown'
 import Autocomplete from 'js/components/global/Autocomplete'
 import TaskEvents from 'js/components/moderators/ModeratorsTaskEvents'
 
-import {mapGetters} from 'vuex'
+import { timeFromS } from 'js/utils/time'
 
 const keys = {
 		enter: 13,
@@ -169,6 +188,12 @@ export default {
 		},
 		assigneeTextComputed() {
 			return this.focused ? this.assigneeTextInput : this.task.assignee.full_name
+		},
+		formatedCreatedAt() {
+			return timeFromS(this.task.created_at)
+		},
+		formatedUpdatedAt() {
+			return timeFromS(this.task.updated_at)
 		},
 	},
 	methods: {

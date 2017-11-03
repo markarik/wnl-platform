@@ -31,6 +31,8 @@ class TaskTransformer extends ApiTransformer
 			'team'         => $task->team,
 			'subject_id'   => $task->subject_id,
 			'subject_type' => $task->subject_type,
+			'created_at'   => $task->created_at->timestamp,
+			'updated_at'   => $task->updated_at->timestamp,
 		];
 
 		if ($this->parent) {

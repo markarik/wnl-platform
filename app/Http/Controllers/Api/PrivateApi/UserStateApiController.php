@@ -6,7 +6,6 @@ use App\Models\Lesson;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
-use App\Traits\EventContextTrait;
 use Illuminate\Database\QueryException;
 use App\Models\User;
 use App\Models\UserCourseProgress;
@@ -19,9 +18,6 @@ use Illuminate\Support\Facades\Redis;
 
 class UserStateApiController extends ApiController
 {
-
-	use EventContextTrait;
-
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);

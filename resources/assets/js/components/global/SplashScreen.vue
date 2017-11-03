@@ -1,9 +1,12 @@
 <template>
 	<div class="splash-screen scrollable-main-container">
-		<p class="title is-4">Do drugiej edycji kursu "Więcej niż LEK" pozostało jeszcze</p>
-		<p class="splash-screen-countdown">
-			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
-		</p>
+		<p class="title is-4">Druga edycja kursu "Więcej niż LEK" oficjalnie wystartowała! </p>
+		<!--<p class="splash-screen-countdown">-->
+			<!--&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>-->
+		<!--</p>-->
+		<p class="has-text-centered">Widzisz ten ekran, ponieważ nie posiadasz dostępu do drugiej edycji.<br>
+		W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
+			<a href="https://facebook.com/wiecejnizlek">facebooku</a>.</p>
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<a href="http://demo.wiecejnizlek.pl" class="button is-primary is-outlined">
 			Zobacz wersję demonstracyjną platformy

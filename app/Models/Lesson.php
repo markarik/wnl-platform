@@ -46,9 +46,11 @@ class Lesson extends Model
 	public function isAvailable($editionId)
 	{
 		$user = \Auth::user();
-		$lessonAccess = $this->userAccess->where('user_id', $user->id)->first();
-		if ($lessonAccess) {
-			return true;
+		if ($user) {
+			$lessonAccess = $this->userAccess->where('user_id', $user->id)->first();
+			if ($lessonAccess) {
+				return true;
+			}
 		}
 
 		$availability = $this->availability->where('edition_id', $editionId)->first();

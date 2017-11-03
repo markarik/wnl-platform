@@ -21,26 +21,41 @@ class QnaAnswerPostedHandler
 		$answer = QnaAnswer::find($event->qnaAnswer->id);
 		$gate->notifyPrivate($user, $event);
 
-		$excluded = $this->notifyCollaborators($answer, $gate, $event);
+		$watchers = $this->getWatchers($answer);
+		$collaborators = $this->getCollaborators($answer, $event);
+		$excluded = $watchers->merge($collaborators)->unique('id');
+		foreach ($excluded as $user) {
+			$gate->notifyPrivate($user, $event);
+		}
+
 		$excluded->push($user);
 
 		$gate->notifyPrivateStream($excluded->pluck('id')->toArray(), $event);
 	}
 
-	protected function notifyCollaborators($answer, $gate, $event)
+	protected function getCollaborators($answer, $event)
 	{
-		$users = User::select()
+		return User::select()
 			->whereHas('qnaAnswers', function ($query) use ($answer) {
 				$query->whereIn('id', $answer->question->answers->pluck('id'));
 			})
 			->where('id', '!=', $event->data['actors']['id'])
 			->where('id', '!=', $answer->question->user->id)
 			->get();
+	}
 
-		foreach ($users as $user) {
-			$gate->notifyPrivate($user, $event);
-		}
 
-		return $users;
+	protected function getWatchers($answer)
+	{
+		$reaction = \App\Models\Reaction::type('watch');
+
+		$reactables = \App\Models\Reactable::select()
+			->where('reaction_id', $reaction->id)
+			->where('reactable_type', 'App\\Models\\QnaQuestion')
+			->where('reactable_id', $answer->question->id)
+			->get();
+
+		$userIds = $reactables->pluck('user_id')->toArray();
+		return User::whereIn('id', $userIds)->get();
 	}
 }

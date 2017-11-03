@@ -63,7 +63,7 @@
 	import {resource} from 'js/utils/config'
 	import {breadcrumb} from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
-	import {STATUS_COMPLETE} from '../../services/progressStore';
+	import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 
 	export default {
 		name: 'Lesson',
@@ -254,7 +254,7 @@
 					return false;
 				}
 
-				return !this.screens.find(id => {
+				return !this.screens.find(({id}) => {
 					return !startedScreens[id] || startedScreens[id].status === STATUS_IN_PROGRESS;
 				});
 			},

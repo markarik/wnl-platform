@@ -1,20 +1,19 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Models\User;
-use App\Models\UserTime;
-use App\Models\UserCourseProgress;
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Comment;
 use App\Models\Lesson;
-use App\Models\QnaQuestion;
 use App\Models\QnaAnswer;
-use App\Models\UserQuizResults;
+use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
-use App\Http\Controllers\Api\ApiController;
-use Illuminate\Database\QueryException;
+use App\Models\User;
+use App\Models\UserCourseProgress;
+use App\Models\UserQuizResults;
+use App\Models\UserTime;
+use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
-use Cache;
 
 class UserStateApiController extends ApiController
 {
@@ -77,6 +76,10 @@ class UserStateApiController extends ApiController
 		$lesson = $request->lesson;
 
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
+		UserCourseProgress::firstOrCreate([
+			'user_id'   => $id,
+			'lesson_id' => $lessonId,
+		]);
 
 		return $this->respondOk();
 	}

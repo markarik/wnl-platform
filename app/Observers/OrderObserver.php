@@ -4,14 +4,14 @@
 namespace App\Observers;
 
 
-use App\Models\Order;
-use App\Jobs\OrderPaid;
-use App\Jobs\IssueInvoice;
 use App\Jobs\OrderConfirmed;
-use Illuminate\Support\Facades\App;
+use App\Jobs\OrderPaid;
+use App\Models\Order;
 use App\Notifications\OrderCreated;
-use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\App;
 
 
 class OrderObserver
@@ -23,6 +23,11 @@ class OrderObserver
 		if ($order->isDirty(['paid_amount']) && $order->paid_amount > $order->getOriginal('paid_amount')) {
 			\Log::notice('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));
+
+			if (!$order->paid) {
+				$order->paid_at = Carbon::now();
+				$order->save();
+			}
 		}
 
 		if (!$order->paid &&

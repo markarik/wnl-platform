@@ -56,8 +56,16 @@
 		</div>
 		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<div class="level">
-				<div class="level-left">
-					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
+				<div class="level-left qna-answers-heading">
+					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
+					<wnl-watch
+						:reactableId="questionId"
+						:reactableResource="reactableResource"
+						:state="watchState"
+						:reactionsDisabled="reactionsDisabled"
+						module="qna"
+					>
+					</wnl-watch>
 				</div>
 				<div class="level-right" v-if="!readOnly">
 					<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
@@ -128,6 +136,9 @@
 		strong
 			font-weight: $font-weight-black
 
+	.qna-answers-heading
+		color: $color-gray-dimmed
+
 	.qna-answers
 		margin: $margin-base $margin-huge $margin-huge $margin-huge
 		position: relative
@@ -185,8 +196,8 @@
 	import Vote from 'js/components/global/reactions/Vote'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import highlight from 'js/mixins/highlight'
+	import Watch from 'js/components/global/reactions/Watch'
 	import moderatorFeatures from 'js/perimeters/moderator'
-
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
@@ -200,6 +211,7 @@
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
+			'wnl-watch': Watch
 		},
 		props: ['questionId', 'readOnly', 'reactionsDisabled'],
 		data() {
@@ -270,6 +282,9 @@
 			},
 			bookmarkState() {
 				return this.getReaction(this.reactableResource, this.questionId, "bookmark")
+			},
+			watchState() {
+				return this.getReaction(this.reactableResource, this.questionId, "watch")
 			},
 			voteState() {
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")

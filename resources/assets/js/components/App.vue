@@ -101,9 +101,9 @@
 					})
 
 					window.Echo.join('active-users')
-						.here(users => this.setActiveUsers(users))
-						.joining(user => this.userJoined(user))
-						.leaving(user => this.userLeft(user))
+						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
+						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
+						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
 
 					this.checkUserRoles(this.currentUserRoles)
 					this.toggleOverlay({source: 'course', display: false})

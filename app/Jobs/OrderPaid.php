@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Facades\Lib\Invoice\Invoice;
+use Lib\Invoice\Invoice;
 use App\Mail\PaymentConfirmation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
@@ -52,13 +52,30 @@ class OrderPaid implements ShouldQueue
 
 	protected function sendConfirmation()
 	{
+		$order = $this->order;
+
 		\Log::notice('Issuing invoice and sending order confirmation.');
-		$invoice = Invoice::issueFromOrder($this->order);
-		Mail::to($this->order->user)->send(new PaymentConfirmation($this->order, $invoice));
+
+		$invoice = $this->getInvoice($order);
+
+		Mail::to($order->user)->send(new PaymentConfirmation($order, $invoice));
 	}
 
 	protected function handleStudyBuddy()
 	{
 		dispatch(new OrderStudyBuddy($this->order));
+	}
+
+	protected function getInvoice($order)
+	{
+		if ($order->product->delivery_date->isPast()) {
+			if ($order->method === 'instalments') {
+				return false;
+			}
+
+			return (new Invoice)->vatInvoice($order);
+		}
+
+		return (new Invoice)->advance($order);
 	}
 }

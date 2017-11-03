@@ -14,7 +14,7 @@ const state = {
 
 const getters = {
     allUsers: state => state.allUsers,
-    activeUsers: state => state.activeUsers,
+    activeUsers: state => channel =>  state[channel] || [],
     activeFilters: state => state.activeFilters,
     // getUsersByLoaction: function(state) {
     //     return function(city) {
@@ -57,8 +57,8 @@ const getters = {
 };
 
 const mutations = {
-    [types.ACTIVE_USERS_SET] (state, activeUsers) {
-		set(state, 'activeUsers', activeUsers)
+    [types.ACTIVE_USERS_SET] (state, {users, channel}) {
+		set(state, channel, users)
 	},
     [types.ALL_USERS_SET] (state, response) {
         set(state, 'allUsers', response.data)
@@ -67,15 +67,20 @@ const mutations = {
 
 // dupa({commit})  -> axiosem pobrac userow wszystkich i zacommitowac razem z mutacja
 const actions = {
-    userJoined ({commit, state}, user) {
-		commit(types.ACTIVE_USERS_SET, [user, ...state.activeUsers])
-	},
-	userLeft({commit, state}, user) {
-		commit(types.ACTIVE_USERS_SET, state.activeUsers.filter((activeUser) => activeUser.id !== user.id))
-	},
-	setActiveUsers({commit}, users) {
-		commit(types.ACTIVE_USERS_SET, users)
-	},
+    userJoined ({commit, state}, {user, channel}) {
+        const usersInChannel = state[channel] || [];
+
+        commit(types.ACTIVE_USERS_SET, {users: [user, ...usersInChannel], channel})
+    },
+    userLeft({commit, state}, {user, channel}) {
+        commit(types.ACTIVE_USERS_SET, {
+            users: state[channel].filter((activeUser) => activeUser.id !== user.id),
+            channel
+        })
+    },
+    setActiveUsers({commit}, payload) {
+        commit(types.ACTIVE_USERS_SET, payload)
+    },
     setAllUsers({commit}) {
         axios.get(getApiUrl('users/all/profile')).then(function(response) {
             commit(types.ALL_USERS_SET, response)

@@ -9,6 +9,15 @@
 			<span>
 				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 			</span>
+			<wnl-watch
+				v-if="!hideWatchlist"
+				:reactableId="commentableId"
+				:reactableResource="commentableResource"
+				:state="watchState"
+				:reactionsDisabled="false"
+				:module="module"
+			>
+			</wnl-watch>
 		</div>
 		<wnl-comment
 			v-if="showComments"
@@ -51,6 +60,8 @@
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
 	import highlight from 'js/mixins/highlight'
+	import Watch from 'js/components/global/reactions/Watch'
+
 
 	import { scrollWithMargin } from 'js/utils/animations'
 
@@ -59,9 +70,10 @@
 		components: {
 			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
+			'wnl-watch': Watch
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist'],
 		data() {
 			return {
 				formElement: {},
@@ -86,7 +98,15 @@
 			},
 			isCommentableInUrl() {
 				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
-			}
+					|| _.get(this.$route, 'query.commentable') == this.commentableId;
+			},
+			watchState() {
+				return this.$store.getters[`${this.module}/getReaction`](
+					this.commentableResource,
+					this.commentableId,
+					'watch'
+				)
+			},
 		},
 		methods: {
 			action(action, payload = {}) {

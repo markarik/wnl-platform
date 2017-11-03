@@ -14,6 +14,7 @@ import notifications from 'js/store/modules/notifications'
 import currentUser from 'js/store/modules/currentUser'
 import navigation from 'js/store/modules/navigation'
 import qna from 'js/store/modules/qna'
+import comments from 'js/store/modules/comments'
 import quiz from 'js/store/modules/quiz'
 import questions from 'js/store/modules/questions'
 import progress from 'js/store/modules/progress'
@@ -45,7 +46,8 @@ export default new Vuex.Store({
 		slideshow,
 		ui,
 		users,
-		autocomplete
+		autocomplete,
+		comments
 	},
 	strict: debug
 })

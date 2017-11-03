@@ -12,7 +12,7 @@ const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
 }
 
-const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,reactions,slides';
+const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,comments,reactions,slides';
 
 function fetchQuizSet(id) {
 	return new Promise((resolve, reject) => {
@@ -86,6 +86,7 @@ const getters = {
 	},
 	getAttempts: (state) => state.attempts,
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestion: state => id => state.quiz_questions[id] || {},
 	getQuestionsWithAnswers: (state) => {
 		return state.questionsIds.map((id) => {
 			const quizQuestion = state.quiz_questions[id];
@@ -104,7 +105,6 @@ const getters = {
 				return count + current
 			}, 0)
 
-
 			return {
 				...quizQuestion,
 				answers: quizQuestion.quiz_answers.map((answerId) => {
@@ -119,7 +119,7 @@ const getters = {
 		})
 	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
-	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
+	getUnresolved: (state, getters) => getters.getQuestions.filter(question => !question.isResolved),
 	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
 	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(
@@ -239,7 +239,7 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setupQuestions({commit, rootGetters, getters, state}, resource) {
+	setupQuestions({commit, rootGetters, getters, state, dispatch}, resource) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		Promise.all([
@@ -257,6 +257,7 @@ const actions = {
 			const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
 				len = quizQuestionsIds;
 
+			included.comments && dispatch('comments/setComments', {...included.comments}, {root:true})
 			commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay})
 
 			if (!_.isEmpty(storedState)) {
@@ -275,7 +276,7 @@ const actions = {
 		});
 	},
 
-	fetchQuestionsCollectionByTagName({commit}, {tagName, ids}) {
+	fetchQuestionsCollectionByTagName({commit, dispatch}, {tagName, ids}) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		return _fetchQuestionsCollectionByTagName(tagName, ids).then(response => {
@@ -288,6 +289,7 @@ const actions = {
 				let questionsIds = _.map(response.data, (question) => question.id),
 					len = questionsIds.length
 
+				included.comments && dispatch('comments/setComments', {...included.comments}, {root:true})
 				commit(types.UPDATE_INCLUDED, included)
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: 0,
@@ -305,7 +307,7 @@ const actions = {
 		})
 	},
 
-	fetchSingleQuestion({commit}, id) {
+	fetchSingleQuestion({commit, dispatch}, id) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		return _fetchSingleQuestion(id)
@@ -318,6 +320,7 @@ const actions = {
 					included['quiz_questions'] = {}
 					included['quiz_questions'][id] = response.data
 
+					included.comments && dispatch('comments/setComments', included.comments, {root:true})
 					commit(types.UPDATE_INCLUDED, included)
 					commit(types.QUIZ_SET_QUESTIONS, {
 						setId: 0,

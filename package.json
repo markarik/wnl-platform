@@ -68,6 +68,6 @@
     "sinon-chai": "^2.8.0",
     "uglifyjs-webpack-plugin": "1.0.0-beta.1",
     "vue-loader": "^12.2.1",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.1"
   }
 }

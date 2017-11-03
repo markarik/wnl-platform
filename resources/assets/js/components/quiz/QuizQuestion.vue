@@ -263,7 +263,7 @@
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
-			'wnl-slide-link': SlideLink,
+			'wnl-slide-link': SlideLink
 		},
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
@@ -292,6 +292,11 @@
 			reactionState() {
 				if (typeof this.getReaction === 'function') {
 					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
+				}
+			},
+			watchState() {
+				if (typeof this.getReaction === 'function') {
+					return this.getReaction(this.reactableResource, this.question.id, "watch")
 				}
 			},
 			slides() {

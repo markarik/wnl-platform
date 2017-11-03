@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\UserDataUpdated;
 use Laravel\Scout\Searchable;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 class UserProfile extends Model
 {
 	use Searchable;
+
+	protected $dispatchesEvents = [
+		'updated' => UserDataUpdated::class,
+	];
 
 	protected $fillable = [
 		'first_name',

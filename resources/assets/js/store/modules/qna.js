@@ -65,11 +65,14 @@ function _getQuestionsByTagName(tagName, ids) {
 	})
 }
 
-function _handleGetQuestionsSuccess(commit, {data}) {
+function _handleGetQuestionsSuccess({commit, dispatch}, {data}) {
 	commit(types.QNA_DESTROY)
 
 	if (!_.isUndefined(data.included)) {
 		commit(types.UPDATE_INCLUDED, data.included)
+
+		data.included.comments && dispatch('comments/setComments', data.included.comments, {root:true})
+
 		destroy(data, 'included')
 		commit(types.QNA_SET_QUESTIONS, data)
 	}
@@ -302,14 +305,6 @@ const mutations = {
 		destroy(state.qna_answers, id)
 		set(state.qna_questions[questionId], 'qna_answers', answers)
 	},
-	[types.QNA_REMOVE_COMMENT] (state, payload) {
-		let id = payload.commentId,
-			answerId = payload.answerId,
-			comments = _.pull(state.qna_answers[answerId].comments, id)
-
-		destroy(state.comments, id)
-		set(state.qna_answers, 'comments', comments)
-	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
 			let resourceObject = state[resource]
@@ -331,17 +326,17 @@ const mutations = {
 const actions = {
 	...reactionsActions,
 	...commentsActions,
-	changeSorting({commit}, sorting) {
+	changeSorting({commit, dispatch}, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting)
 	},
-	fetchQuestionsByTags({commit}, {tags, sorting}) {
+	fetchQuestionsByTags({commit, dispatch}, {tags, sorting}) {
 		commit(types.IS_LOADING, true)
 		sorting && commit(types.QNA_CHANGE_SORTING, sorting)
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsByTags(tags)
 				.then((response) => {
-					_handleGetQuestionsSuccess(commit, response)
+					_handleGetQuestionsSuccess({commit, dispatch}, response)
 					resolve()
 				})
 				.catch((error) => {
@@ -351,13 +346,13 @@ const actions = {
 		})
 	},
 
-	fetchQuestionsByIds({commit}, ids) {
+	fetchQuestionsByIds({commit, dispatch}, ids) {
 		commit(types.IS_LOADING, true)
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsByIds(ids)
 				.then((response) => {
-					_handleGetQuestionsSuccess(commit, response)
+					_handleGetQuestionsSuccess({commit, dispatch}, response)
 					resolve()
 				})
 				.catch((error) => {
@@ -367,13 +362,13 @@ const actions = {
 		})
 	},
 
-	fetchLatestQuestions({commit}, limit = 10) {
+	fetchLatestQuestions({commit, dispatch}, limit = 10) {
 		commit(types.IS_LOADING, true)
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsLatest(limit)
 				.then((response) => {
-					_handleGetQuestionsSuccess(commit, response)
+					_handleGetQuestionsSuccess({commit, dispatch}, response)
 					resolve()
 				})
 				.catch((error) => {
@@ -383,13 +378,13 @@ const actions = {
 		})
 	},
 
-	fetchQuestionsByTagName({commit}, {tagName, ids}) {
+	fetchQuestionsByTagName({commit, dispatch}, {tagName, ids}) {
 		commit(types.IS_LOADING, true)
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsByTagName(tagName, ids)
 				.then((response) => {
-					_handleGetQuestionsSuccess(commit, response);
+					_handleGetQuestionsSuccess({commit, dispatch}, response);
 					resolve();
 				})
 				.catch((error) => {
@@ -399,7 +394,7 @@ const actions = {
 		})
 	},
 
-	fetchQuestion({commit}, questionId) {
+	fetchQuestion({commit, dispatch}, questionId) {
 		return new Promise((resolve, reject) => {
 			_getAnswers(questionId)
 				.then((response) => {
@@ -417,21 +412,21 @@ const actions = {
 				})
 		})
 	},
-	removeQuestion({commit}, questionId) {
+	removeQuestion({commit, dispatch}, questionId) {
 		return new Promise((resolve, reject) => {
 			commit(types.QNA_REMOVE_QUESTION, {questionId})
 			resolve()
 		})
 	},
-	resolveQuestion({commit}, questionId) {
+	resolveQuestion({commit, dispatch}, questionId) {
 		return _resolveQuestion(questionId)
 			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}))
 	},
-	unresolveQuestion({commit}, questionId) {
+	unresolveQuestion({commit, dispatch}, questionId) {
 		return _resolveQuestion(questionId, false)
 			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}))
 	},
-	removeAnswer({commit}, payload) {
+	removeAnswer({commit, dispatch}, payload) {
 		return new Promise((resolve, reject) => {
 			commit(types.QNA_REMOVE_ANSWER, {
 				questionId: payload.questionId,
@@ -440,7 +435,7 @@ const actions = {
 			resolve()
 		})
 	},
-	destroyQna({commit}) {
+	destroyQna({commit, dispatch}) {
 		commit(types.QNA_DESTROY)
     },
     setUserQnaQuestions({commit}, {included, ...qnaQuestions}) {

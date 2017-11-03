@@ -5,6 +5,7 @@ import { set, delete as destroy } from 'vue'
 import * as types from 'js/store/mutations-types'
 import { getApiUrl } from 'js/utils/env'
 import { getModelByResource, modelToResourceMap } from 'js/utils/config'
+import {reactionsGetters, reactionsMutations, reactionsActions, convertToReactable} from 'js/store/modules/reactions'
 
 function _fetchComments(ids, model) {
 	if (!model) {
@@ -21,7 +22,7 @@ function _fetchComments(ids, model) {
 		order: {
 			id: 'asc',
 		},
-		include: 'profiles',
+		include: 'profiles,reactions',
 	}
 
 	return axios.post(getApiUrl('comments/.search'), data)
@@ -33,7 +34,10 @@ function _resolveComment(id, status = true) {
 	})
 }
 
+const state = {};
+
 export const commentsGetters = {
+	...reactionsGetters,
 	/**
 	 * [getComments description]
 	 * @param  {Object} commentable { commentable_resource: String, commentable_id: Int }
@@ -51,6 +55,7 @@ export const commentsGetters = {
 }
 
 export const commentsMutations = {
+	...reactionsMutations,
 	[types.ADD_COMMENT] (state, payload) {
 		let resource = payload.commentableResource,
 			resourceId = payload.commentableId,
@@ -113,11 +118,20 @@ export const commentsMutations = {
 			!state[resource][resourceId].comments.includes(comment.id)
 				&& state[resource][resourceId].comments.push(comment.id)
 		})
+	},
+	[types.SET_COMMENTS_RAW] (state, payload) {
+		set(state, 'comments', {
+			...state.comments, ...payload
+		})
 	}
 }
 
 export const commentsActions = {
-	addComment({commit}, payload) {
+	...reactionsActions,
+	addComment({commit, dispatch}, payload) {
+		const {comment} = payload
+		const withReaction = convertToReactable(comment);
+		dispatch('comments/setComments', {[withReaction.id]: withReaction}, {root:true})
 		commit(types.ADD_COMMENT, payload)
 	},
 	removeComment({commit}, payload) {
@@ -131,7 +145,10 @@ export const commentsActions = {
 		_resolveComment(payload.id, false)
 			.then(() => commit(types.UNRESOLVE_COMMENT, payload))
 	},
-	fetchComments({commit}, {ids, resource}) {
+	setComments({commit}, {included, ...comments}) {
+		commit(types.SET_COMMENTS_RAW, comments)
+	},
+	fetchComments({commit, dispatch}, {ids, resource}) {
 		return new Promise((resolve, reject) => {
 			const model = getModelByResource(resource)
 
@@ -142,7 +159,15 @@ export const commentsActions = {
 					}
 
 					commit(types.SET_COMMENTS, response.data)
-					resolve()
+
+					const {included, ...comments} = response.data
+					const serializedComments = {};
+					Object.values(comments).map(comment => {
+						serializedComments[comment.id] = comment
+					})
+					dispatch('comments/setComments', serializedComments, {root:true})
+
+					resolve(response.data)
 				})
 				.catch((error) => {
 					$wnl.logger.error(error)
@@ -150,4 +175,12 @@ export const commentsActions = {
 				})
 		})
 	}
+}
+
+export default {
+	actions: commentsActions,
+	mutations: commentsMutations,
+	getters: commentsGetters,
+	state,
+	namespaced: true
 }

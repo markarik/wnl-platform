@@ -37,11 +37,16 @@ class CommentTransformer extends ApiTransformer
 			$data = array_merge($data, $this->parent);
 		}
 
+
 		if (self::shouldInclude('context')) {
 			$context = $this->addEventContext($comment->commentable);
 			$data = array_merge($data, compact('context'));
 		}
-		
+
+		if (self::shouldInclude('reactions')) {
+			$data = array_merge($data, ReactionsCountTransformer::transform($comment));
+		}
+
 		return $data;
 	}
 

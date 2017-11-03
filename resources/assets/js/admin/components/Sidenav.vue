@@ -11,7 +11,10 @@
 			Prezentacje
 		</p>
 		<ul class="menu-list">
-			<li><router-link :to="{ name: 'slides' }">Edycja slajdu</router-link></li>
+			<li><router-link :to="{ name: 'slides' }">Edytuj Slajd</router-link></li>
+		</ul>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'add-slide' }">Dodaj Slajd</router-link></li>
 		</ul>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'charts' }">Diagramy</router-link></li>

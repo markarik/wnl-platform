@@ -17,7 +17,7 @@ const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) =
 		store.set(storeKey, state);
 
 		getCurrentUser().then(({data: {id}}) => {
-			axios.put(getApiUrl(`users/${id}/state/quiz/${setId}`), {
+			axios.put(getApiUrl(`quiz_results/${id}/quiz/${setId}`), {
 				quiz: state,
 				recordedAnswers
 			});
@@ -26,20 +26,12 @@ const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) =
 };
 
 const getQuizProgress = (setId, currentUserSlug) => {
-	let storeKey = getLocalStorageKey(setId, currentUserSlug),
-		storedState = store.get(storeKey);
-
 	return new Promise((resolve) => {
-		if (_.isEmpty(storedState)) {
 			getCurrentUser().then(({data: {id}}) => {
-				axios.get(getApiUrl(`users/${id}/state/quiz/${setId}`)).then(({data: {quiz}}) => {
-					store.set(storeKey, quiz);
+				axios.get(getApiUrl(`quiz_results/${id}/quiz/${setId}`)).then(({data: {quiz}}) => {
 					resolve(quiz)
 				});
 			})
-		} else {
-			resolve(storedState);
-		}
 	});
 };
 

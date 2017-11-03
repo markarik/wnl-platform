@@ -69,6 +69,9 @@
 		justify-content: center
 		width: 100%
 
+		.wnl-dropdown
+			width: 100%
+
 	.notifications-toggle
 		align-items: center
 		color: $color-gray-dimmed

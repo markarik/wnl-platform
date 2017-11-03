@@ -7,11 +7,11 @@
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
-						<div class="wnl-qna-header" :class="color-header">
-							<span v-if="icon" class="icon is-big user-profile-icon">
+						<div class="wnl-qna-header">
+							<span v-if="icon" :class="colorHeaderOpacity" class="icon is-big user-profile-icon">
 								<i :class="icon"></i>
 							</span>
-							<p class="title is-4" v-if="title !== false">
+							<p v-if="title !== false" :class="colorHeader" class="title is-4" >
 								{{displayedTitle}}&nbsp;
 							</p>
 							<p class="title is-4" v-if="!numbersDisabled">
@@ -72,6 +72,9 @@
 		.user-profile-icon
 			margin-right: $margin-small
 
+	.color-header-opacity
+		color: $color-dark-blue-opacity
+
 	.color-header
 		color: $color-dark-blue
 
@@ -125,7 +128,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting,
 		},
-		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency', 'sortingEnabled', 'numbersDisabled', 'color-header'],
+		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency', 'sortingEnabled', 'numbersDisabled', 'colorHeaderOpacity', 'colorHeader'],
 		data() {
 			return {
 				ready: false,

@@ -1,77 +1,88 @@
 <template lang="html">
-		<div v-if="responseCondition" class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
-			<div class="user-content">
-				<wnl-avatar class="user-avatar image is-128x128" size="extralarge"
-					:fullName="fullName"
-					:url="profile.avatar"
-				></wnl-avatar>
-				<div class="user-info-header">
-					<div class="user-info-header-edit">
-						<span v-if="currentUserProfile" title="Edytuj profil" class="icon is-large">
-							<router-link :to="{ name: 'my-profile' }">
-								<i class="fa fa-pencil-square"></i>
-							</router-link>
+		<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
+			<div class="text-loader" v-if="isLoading">
+				<wnl-text-loader>
+					Szukamy człowieka...
+				</wnl-text-loader>
+			</div>
+
+			<div class="user-profile"  v-if="!isLoading && responseCondition">
+				<div class="user-content" :class="isMobileAvatar">
+					<wnl-avatar class="user-avatar image" size="extralarge"
+						:fullName="fullName"
+						:url="profile.avatar"
+					></wnl-avatar>
+					<div class="user-info-header">
+						<div class="user-info-header-edit">
+							<span v-if="currentUserProfile" title="Edytuj profil" class="icon is-large">
+								<router-link :to="{ name: 'my-profile' }">
+									<i class="fa fa-pencil-square"></i>
+								</router-link>
+							</span>
+							<span class="user-info-header-names">
+								<p class="fullname-title">{{ profile.real_first_name }} {{ profile.real_last_name }}</p>
+								<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
+							</span>
+						</div>
+						<span v-if="currentUserProfile || profile.city" class="user-info-city">
+							<span class="icon is-small">
+								<i class="fa fa-map-marker"></i>
+							</span>
+							<span class="city-title">{{ cityToDisplay }}</span>
 						</span>
-						<span class="user-info-header-names">
-							<p class="fullname-title">{{ profile.real_first_name }} {{ profile.real_last_name }}</p>
-							<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
+						<span v-if="currentUserProfile || profile.help" class="user-info-help">
+							<span class="help-title">W czym mogę pomóc?</span>
+							<div class="notification">
+								<span class="user-help">{{ helpToDisplay }}</span>
+							</div>
 						</span>
 					</div>
-					<span v-if="profile.city" class="user-info-city">
-						<span class="icon is-small">
-							<i class="fa fa-map-marker"></i>
-						</span>
-						<span class="city-title">{{ profile.city }}</span>
-					</span>
-					<span v-if="profile.help" class="user-info-help">
-						<span class="help-title">W czym mogę pomóc?</span>
-						<div class="notification">
-							<span class="user-help">{{ profile.help }}</span>
-						</div>
-					</span>
+				</div>
+				<hr>
+				<br>
+
+				<div class="user-activity-content">
+					<div class="wnl-activity-meter" v-for="activity in activityMeterArray">
+						<div class="activity-stat">
+							<span class="icon is-large">
+								<i :class="activity.iconClassToUse"></i>
+							</span>
+							<span class="activity-meter-number">{{ activity.statistic }}</span>
+				        </div>
+				        <p class="activity-title">{{ activity.name }}</p>
+					</div>
+				</div>
+
+				<hr>
+				<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
+					<wnl-qna
+						:colorHeader="colorHeader"
+						:colorHeaderOpacity="colorHeaderOpacity"
+						:numbersDisabled="numbersDisabled"
+						:title="'Najlepsze Pytania'"
+						:icon="iconForQuestions"
+						v-if="ifAnyQuestions"
+						:sortingEnabled="sortingDisabled"
+						:readOnly="readOnly"
+						:reactionsDisabled="reactionsDisabled"
+						:qnaQuestionsCompetency="convertSortedQuestionsToObject"
+					></wnl-qna>
+					<wnl-qna
+						:colorHeader="colorHeader"
+						:colorHeaderOpacity="colorHeaderOpacity"
+						:numbersDisabled="numbersDisabled"
+						:icon="iconForAnswers"
+						:title="'Najlepsze Odpowiedzi'"
+						v-if="ifAnyAnswers"
+						:sortingEnabled="sortingDisabled"
+						:readOnly="readOnly"
+						:reactionsDisabled="reactionsDisabled"
+						:qnaAnswersCompetency="convertSortedAnswersToObject"
+					></wnl-qna>
+					<!-- <hr> -->
 				</div>
 			</div>
-			<hr>
-			<br>
 
-			<div class="user-activity-content">
-				<div class="wnl-activity-meter" v-for="activity in activityMeterArray">
-					<div class="activity-stat">
-						<span class="icon is-large">
-							<i :class="activity.iconClassToUse"></i>
-						</span>
-						<span class="activity-meter-number">{{ activity.statistic }}</span>
-			        </div>
-			        <p class="activity-title">{{ activity.name }}</p>
-				</div>
-			</div>
-
-			<hr>
-			<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
-				<wnl-qna
-					:color-header="'color-header'"
-					:numbersDisabled="numbersDisabled"
-					:title="'Najlepsze Pytania'"
-					:icon="iconForQuestions"
-					v-if="ifAnyQuestions"
-					:sortingEnabled="sortingDisabled"
-					:readOnly="readOnly"
-					:reactionsDisabled="reactionsDisabled"
-					:qnaQuestionsCompetency="convertSortedQuestionsToObject"
-				></wnl-qna>
-				<wnl-qna
-					:color-header="'color-header'"
-					:numbersDisabled="numbersDisabled"
-					:icon="iconForAnswers"
-					:title="'Najlepsze Odpowiedzi'"
-					v-if="ifAnyAnswers"
-					:sortingEnabled="sortingDisabled"
-					:readOnly="readOnly"
-					:reactionsDisabled="reactionsDisabled"
-					:qnaAnswersCompetency="convertSortedAnswersToObject"
-				></wnl-qna>
-				<!-- <hr> -->
-			</div>
 			<!-- <div class="user-section-header">
 				<p class="title is-4">WSZYSTKIE WPISY</p>
 			</div> -->
@@ -130,19 +141,38 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.text-loader
+		position: absolute
+		z-index: 10
+		width: 100vw
+		height: 100%
+		background-color: white
+		top: 0
+		left: 0
+
 	.collections-controls
 		align-items: center
 		display: flex
 		flex-wrap: wrap
 		margin-bottom: $margin-base
 
+	.is-mobile-avatar
+		flex-direction: column
+		align-items: center
+
+	.is-desktop-avatar
+		justify-content: flex-start
+
+
 	.user-content
 		display: flex
-		justify-content: flex-start
 		padding-left: 2vw
 		.user-avatar
 			margin-right: 1vw
 			z-index: 1
+			margin-top: $margin-tiny
+			margin-bottom: $margin-small
+
 		.user-info-header
 			display: flex
 			flex-direction: column
@@ -159,7 +189,8 @@
 					font-size: $font-size-plus-5
 					font-weight: $font-weight-bold
 					margin-bottom: $margin-small
-					margin-top: $margin-small
+					// margin-top: $margin-small
+					line-height: $line-height-none
 				.chosen-fullname-title
 					color: $color-ocean-blue-opacity
 					font-size: $font-size-plus-2
@@ -212,25 +243,36 @@
 		display: flex
 		justify-content: flex-start
 
+	.top-activities
+		margin-bottom: $margin-humongous
+
 </style>
 
 <script>
 import _ from 'lodash'
-import { mapActions, mapGetters } from 'vuex'
-import { isProduction, getApiUrl } from 'js/utils/env'
+import {
+    mapActions,
+    mapGetters
+} from 'vuex'
+import {
+    isProduction,
+    getApiUrl
+} from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
 import Comment from 'js/components/comments/Comment'
 // import UserBackground from 'js/components/users/UserBackground'
 import QnaQuestion from 'js/components/qna/QnaQuestion'
 import QnaAnswer from 'js/components/qna/QnaAnswer'
 import Qna from 'js/components/qna/Qna'
+// import TextLoader from 'js/components/global/TextLoader'
 
 export default {
     name: 'UserProfile',
     components: {
         // 'wnl-user-background': UserBackground,
+        // 'wnl-text-loader' : TextLoader,
         'wnl-avatar': Avatar,
-		'wnl-comment': Comment,
+        'wnl-comment': Comment,
         'wnl-qna-question': QnaQuestion,
         'wnl-qna-answer': QnaAnswer,
         'wnl-qna': Qna,
@@ -238,52 +280,63 @@ export default {
     props: ['readOnly'],
     data() {
         return {
-			numbersDisabled: true,
-			iconForQuestions: 'fa fa-question-circle-o',
-			iconForAnswers: 'fa fa-comment-o',
+            isLoading: true,
+            colorHeaderOpacity: 'color-header-opacity',
+            colorHeader: 'color-header',
+            numbersDisabled: true,
+            iconForQuestions: 'fa fa-question-circle-o',
+            iconForAnswers: 'fa fa-comment-o',
             sortingDisabled: false,
             sortingEnabled: true,
             loading: false,
             id: this.$route.params.userId,
             reactionsDisabled: true,
             activePanels: ['comments'],
-			profile: {},
-			qnaAnswersCompetency: {},
-			qnaQuestionsCompetency: {},
-			commentsCompetency: {}
+            profile: {},
+            qnaAnswersCompetency: {},
+            qnaQuestionsCompetency: {},
+            commentsCompetency: {}
         }
     },
     computed: {
         ...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isTouchScreen']),
-		...mapGetters(['currentUserId']),
-		activityMeterArray() {
-			return [
-				{
-					statistic: this.howManyComments,
-					name: 'Komentarze',
-					iconClassToUse: 'fa fa-comments-o'
-				},
-				{
-					statistic: this.howManyQuestions,
-					name: 'Pytania',
-					iconClassToUse: 'fa fa-question-circle-o'
-				},
-				{
-					statistic: this.howManyAnswers,
-					name: 'Odpowiedzi',
-					iconClassToUse: 'fa fa-comment-o'
-				}
-			]
+        ...mapGetters(['currentUserId']),
+        activityMeterArray() {
+            return [{
+                    statistic: this.howManyComments,
+                    name: 'Komentarze',
+                    iconClassToUse: 'fa fa-comments-o'
+                },
+                {
+                    statistic: this.howManyQuestions,
+                    name: 'Pytania',
+                    iconClassToUse: 'fa fa-question-circle-o'
+                },
+                {
+                    statistic: this.howManyAnswers,
+                    name: 'Odpowiedzi',
+                    iconClassToUse: 'fa fa-comment-o'
+                }
+            ]
+        },
+		isMobileAvatar() {
+			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
 		},
-		currentUserProfile() {
-			return this.id == this.currentUserId ? true : false
-		},
-		profileFirstNameToPrint() {
-			return this.profile.real_first_name === this.profile.first_name ? null : this.profile.first_name
-		},
-		profileLastNameToPrint() {
-			return this.profile.real_last_name === this.profile.last_name ? null : this.profile.last_name
-		},
+        helpToDisplay() {
+            return this.profile.help ? this.profile.help : 'Jakie są twoje mocne strony?'
+        },
+        cityToDisplay() {
+            return this.profile.city ? this.profile.city : 'Skąd jesteś?'
+        },
+        currentUserProfile() {
+            return this.id == this.currentUserId ? true : false
+        },
+        profileFirstNameToPrint() {
+            return this.profile.real_first_name === this.profile.first_name ? null : this.profile.first_name
+        },
+        profileLastNameToPrint() {
+            return this.profile.real_last_name === this.profile.last_name ? null : this.profile.last_name
+        },
         howManyComments() {
             return this.commentsCompetency.data.length
         },
@@ -291,11 +344,11 @@ export default {
             return Object.values(this.qnaQuestionsComputed).length
         },
         ifAnyQuestions() {
-			return this.howManyQuestions === 0 ? false : true
+            return this.howManyQuestions === 0 ? false : true
         },
-		fullName() {
-			return this.profile.full_name
-		},
+        fullName() {
+            return this.profile.full_name
+        },
         howManyAnswers() {
             return Object.values(this.qnaAnswersComputed).length
         },
@@ -315,14 +368,20 @@ export default {
             return this.isPanelActive('answers')
         },
         qnaQuestionsComputed() {
-			if (!this.responseCondition) return {}
-			// !this.responseCondition ? {}
-			const { included, ...questions } = this.qnaQuestionsCompetency.data;
+            if (!this.responseCondition) return {}
+            // !this.responseCondition ? {}
+            const {
+                included,
+                ...questions
+            } = this.qnaQuestionsCompetency.data;
             return questions;
         },
         qnaAnswersComputed() {
-			if (!this.responseCondition) return {}
-            const { included, ...questions } = this.qnaAnswersCompetency.data;
+            if (!this.responseCondition) return {}
+            const {
+                included,
+                ...questions
+            } = this.qnaAnswersCompetency.data;
             return questions;
         },
         sortQuestionsCompetency() {
@@ -373,9 +432,9 @@ export default {
         isSinglePanelView() {
             return this.isTouchScreen
         },
-		responseCondition() {
-			return !_.isEmpty(this.profile)
-		},
+        responseCondition() {
+            return !_.isEmpty(this.profile)
+        },
     },
     methods: {
         ...mapActions('qna', ['setUserQnaQuestions']),
@@ -391,49 +450,108 @@ export default {
         },
     },
     mounted() {
-		const userId = this.$route.params.userId;
-		const dataForComments = {
-			query: {
-				where: [[ 'user_id', userId ]]
-			},
-			include: 'context'
-		}
-		const dataForQnaQuestions = {
-			query: {
-				where: [[ 'user_id', userId ]]
-			},
-			include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-		}
-		const dataForQnaAnswers = {
-			query: {
-				whereHas: {
-					answers: {
-						where: [[ 'user_id', userId ]]
-					}
-				}
-			},
-			include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-		}
-		// const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
-		const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-		const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
-		const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
-		const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
+        const userId = this.id;
+        const dataForComments = {
+            query: {
+                where: [
+                    ['user_id', userId]
+                ]
+            },
+            include: 'context'
+        }
+        const dataForQnaQuestions = {
+            query: {
+                where: [
+                    ['user_id', userId]
+                ]
+            },
+            include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+        }
+        const dataForQnaAnswers = {
+            query: {
+                whereHas: {
+                    answers: {
+                        where: [
+                            ['user_id', userId]
+                        ]
+                    }
+                }
+            },
+            include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+        }
+        // const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
+        const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
+        const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
+        const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
+        const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
+		this.isLoading = true
+        Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
+            .then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
+                this.profile = profile.data
+                this.commentsCompetency = commentsCompetency
+                this.qnaQuestionsCompetency = qnaQuestionsCompetency
+                this.qnaAnswersCompetency = qnaAnswersCompetency
 
-		Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
-		.then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
-			this.profile = profile.data
-			this.commentsCompetency = commentsCompetency
-			this.qnaQuestionsCompetency = qnaQuestionsCompetency
-	        this.qnaAnswersCompetency = qnaAnswersCompetency
-
-			this.setUserQnaQuestions(qnaAnswersCompetency.data)
-			this.setUserQnaQuestions(qnaQuestionsCompetency.data)
-			this.$emit('userDataLoaded', {
-				profile: this.profile
-			})
-		})
-		.catch(exception => $wnl.logger.capture(exception))
+                this.setUserQnaQuestions(qnaAnswersCompetency.data)
+                this.setUserQnaQuestions(qnaQuestionsCompetency.data)
+                this.$emit('userDataLoaded', {
+                    profile: this.profile
+                })
+				this.isLoading = false
+            })
+            .catch(exception => $wnl.logger.capture(exception))
     },
+    watch: {
+		'$route' (newRoute, oldRoute) {
+			if ( this.id !== this.$route.params.userId ) {
+			 	const userId = this.$route.params.userId;
+				this.id = userId
+				const dataForComments = {
+					query: {
+						where: [[ 'user_id', userId ]]
+					},
+					include: 'context'
+				}
+				const dataForQnaQuestions = {
+					query: {
+						where: [[ 'user_id', userId ]]
+					},
+					include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+				}
+				const dataForQnaAnswers = {
+					query: {
+						whereHas: {
+							answers: {
+								where: [[ 'user_id', userId ]]
+							}
+						}
+					},
+					include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+				}
+				// const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
+				const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
+				const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
+				const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
+				const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
+				this.isLoading = true
+				Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
+				.then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
+					this.profile = profile.data
+					this.commentsCompetency = commentsCompetency
+					this.qnaQuestionsCompetency = qnaQuestionsCompetency
+					this.qnaAnswersCompetency = qnaAnswersCompetency
+
+					this.setUserQnaQuestions(qnaAnswersCompetency.data)
+					this.setUserQnaQuestions(qnaQuestionsCompetency.data)
+					this.$emit('userDataLoaded', {
+						profile: this.profile
+					})
+					this.isLoading = false
+				})
+				.catch(exception => $wnl.logger.capture(exception))
+			}
+
+		}
+    	}
 }
 </script>

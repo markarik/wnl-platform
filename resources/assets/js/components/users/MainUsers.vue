@@ -17,9 +17,9 @@
 				:filterByLocation="filterByLocation">
 			</router-view>
 		</div>
-		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute && isLargeDesktop"
+		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
 			:isVisible="true"
-			:isDetached="!isChatMounted"
+			:isDetached="false"
 		>
 			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>
 		</wnl-sidenav-slot>
@@ -102,7 +102,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile', 'isChatToggleVisible', 'isLargeDesktop']),
+			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile', 'isChatToggleVisible', 'isLargeDesktop', 'isSmallDesktop']),
 			isProduction() {
 				return isProduction()
 			},

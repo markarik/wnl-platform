@@ -3,6 +3,7 @@ import {getApiUrl} from 'js/utils/env'
 import {set} from 'vue'
 import pagination from 'js/store/modules/shared/pagination'
 import profiles from 'js/store/modules/shared/profiles'
+import {isEmpty} from 'lodash'
 
 const namespaced = true
 
@@ -41,6 +42,13 @@ const actions = {
 			_getTasks(params)
 				.then(({data: response}) => {
 					const {data, ...paginationMeta} = response;
+					if (isEmpty(data)) {
+						commit(types.SET_TASKS, {})
+						commit(types.IS_FETCHING, false)
+
+						return resolve(response)
+					}
+
 					const {included: allIncluded, ...responseData} = data;
 					const {profiles = {}, ...included} = allIncluded
 
@@ -79,7 +87,7 @@ const actions = {
 		dispatch('pullTasks')
 		dispatch('setupLiveListener', 'private-group.moderators')
 	},
-	updateTask({commit}, payload) {
+	updateTask({commit, dispatch}, payload) {
 		_updateTask(payload)
 			.then(({data: {included: allIncluded, ...task}}) => {
 				const {profiles = {}, ...included} = allIncluded
@@ -89,9 +97,9 @@ const actions = {
 				Object.assign(task, _parseIncludes(included, task), assignee)
 
 				commit(types.MODIFY_TASK, task)
-			}).catch(() => {
-				debugger
-				// dispatch notification with error
+			}).catch(error => {
+				dispatch('addAlert', {type: 'error', text: 'Nie udało się zapisać. Odśwież stronę i spróbuj ponownie'}, {root: true})
+				$wnl.logger.error(error)
 			})
 	}
 }
@@ -104,7 +112,7 @@ const modules = {
 function _getTasks(params) {
 	return axios.get(getApiUrl('tasks/all'), {
 		params: {
-			limit: 4,
+			limit: 10,
 			include: 'events,profiles',
 			...params
 		}

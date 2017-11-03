@@ -1,4 +1,5 @@
 export const tasks = {
+	empty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!',
 	task: {
 		defaultTitle: 'Brak Tytułu',
 		fields: {
@@ -13,6 +14,9 @@ export const tasks = {
 			inProgress: 'Robi się',
 			done: 'Pozamiatane',
 			unknown: 'Status nieznany'
+		},
+		action: {
+			go: 'Jedziesz szwagier',
 		}
 	}
 }

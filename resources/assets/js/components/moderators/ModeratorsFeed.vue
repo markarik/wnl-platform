@@ -1,25 +1,28 @@
 <template>
 	<div class="moderators-feed">
-		<wnl-alert v-if="updatedTasks.length > 0" type="info">
+		<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
 			<div class="notification-container">
 				<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
-				<button @click="onRefresh" class="button">Odśwież</button>
+				<button @click="onRefresh" class="button" v-t="'ui.action.refresh'"/>
 			</div>
 		</wnl-alert>
-		<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
-			:key="index"
-			:task="task"
-			:availableModerators="moderators"
-			:closeDropdown="bodyClicked"
-			@statusSelected="updateTask"
-			@dropdownClosed="onDropdownClosed"
-			@assign="updateTask"
-		/>
-		<wnl-pagination v-if="paginationMeta.lastPage > 1"
-			:currentPage="paginationMeta.currentPage"
-			:lastPage="paginationMeta.lastPage"
-			@changePage="onChangePage"
-		/>
+		<div v-if="emptyTasks" v-t="'tasks.empty'"/>
+		<div v-else>
+			<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
+				:key="index"
+				:task="task"
+				:availableModerators="moderators"
+				:closeDropdown="bodyClicked"
+				@statusSelected="updateTask"
+				@dropdownClosed="onDropdownClosed"
+				@assign="updateTask"
+			/>
+			<wnl-pagination v-if="paginationMeta.lastPage > 1"
+				:currentPage="paginationMeta.currentPage"
+				:lastPage="paginationMeta.lastPage"
+				@changePage="onChangePage"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -41,8 +44,9 @@
 
 <script>
 	import { mapGetters, mapActions } from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
 	import {nextTick} from 	'vue'
+	import { getApiUrl } from 'js/utils/env'
+	import {scrollToTop} from 'js/utils/animations'
 
 	import Pagination from 'js/components/global/Pagination'
 	import Task from 'js/components/moderators/ModeratorsTask'
@@ -63,6 +67,9 @@
 		},
 		computed: {
 			...mapGetters('tasks', ['tasks', 'paginationMeta', 'updatedTasks']),
+			emptyTasks() {
+				return Object.keys(this.tasks).length === 0
+			}
 		},
 		methods: {
 			...mapActions('tasks', ['pullTasks', 'updateTask']),
@@ -71,6 +78,7 @@
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
 				this.pullTasks({params: {page}})
 					.then(() => {
+						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
@@ -86,6 +94,7 @@
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
 				this.pullTasks()
 					.then(() => {
+						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			}
@@ -97,8 +106,7 @@
 				query: {
 					whereHas: {
 						roles: {
-							// use role name not id
-							whereIn: ['roles.id', [1,2]]
+							whereIn: ['roles.name', ['moderator', 'admin']]
 						}
 					},
 				}

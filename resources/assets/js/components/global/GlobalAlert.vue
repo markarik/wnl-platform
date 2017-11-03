@@ -2,14 +2,10 @@
 	<div>
 		<div class="notification" :class="typeToClass(type)">
 			<slot/>
-			<button v-if="dismissable" @click="$emit('onDismiss')" class="delete"></button>
+			<button v-if="dismissable" @click="$emit('onDismiss', {id: id})" class="delete"></button>
 		</div>
 	</div>
 </template>
-<style lang="sass" rel="stylesheet/sass">
-	@import 'resources/assets/sass/variables'
-
-</style>
 <script>
 export default {
 	props: {
@@ -19,6 +15,10 @@ export default {
 		dismissable: {
 			type: Boolean,
 			default: true
+		},
+		id: {
+			type: String,
+			default: ''
 		}
 	},
 	methods: {
@@ -33,7 +33,7 @@ export default {
 				default:
 					return 'is-primary'
 			}
-		}
+		},
 	}
 }
 </script>

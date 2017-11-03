@@ -6,7 +6,7 @@
 				<div class="notification-header">
 					<span class="actor">{{ lastEvent.data.actors.full_name }}</span>
 					<span class="action">{{ eventAction(lastEvent) }}</span>
-					<span class="object" v-if="object">{{ object }}</span>
+					<span class="object" v-if="eventObject(lastEvent)">{{ eventObject(lastEvent) }}</span>
 					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
 					<span class="subject wrap">{{eventText(lastEvent)}}</span>
 				</div>
@@ -17,6 +17,7 @@
 				<div class="notification-header">
 					<span class="actor">{{ event.data.actors.full_name }}</span>
 					<span class="action">{{ eventAction(event) }}</span>
+					<span class="object" v-if="eventObject(event)">{{ eventObject(event) }}</span>
 					<span class="subject wrap">{{eventText(event)}}</span>
 				</div>
 			</div>
@@ -146,20 +147,8 @@ export default {
 		action() {
 			return this.$t(`notifications.events.${camelCase(this.lastEvent.data.event)}`)
 		},
-		object() {
-			const objects = this.lastEvent.data.objects
-			const subject = this.lastEvent.data.subject
-			if (!objects && !subject) return false;
-
-			// Qna Quesiton posted
-			if (subject && !objects) {
-				return this.$tc(`notifications.objects.${_.camelCase(subject.type)}`, 1)
-			}
-
-			return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1)
-		},
 		rest() {
-			return this.events.slice(1)
+			return this.events.slice(0, this.events.length - 1)
 		}
 	},
 	methods: {
@@ -171,7 +160,19 @@ export default {
 		},
 		eventText(event) {
 			return decode(truncate(event.data.subject.text, {length: 256}))
-		}
+		},
+		eventObject(event) {
+			const objects = event.data.objects
+			const subject = event.data.subject
+			if (!objects && !subject) return false;
+
+			// Qna Quesiton posted
+			if (subject && !objects) {
+				return this.$tc(`notifications.objects.${_.camelCase(subject.type)}`, 1)
+			}
+
+			return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1)
+		},
 	}
 };
 </script>

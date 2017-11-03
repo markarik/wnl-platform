@@ -16,11 +16,11 @@ const getters = {
 // Mutations
 export const mutations = {
 	[types.GLOBAL_ALERTS_ADD_ALERT] (state, alert) {
-		set(state, alerts, [...state.alerts, alert])
+		set(state, 'alerts', [...state.alerts, alert])
     },
     [types.GLOBAL_ALERTS_CLOSE_ALERT] (state, {id}) {
-		const filteredList = alerts.filter(alert => alert.id !== id);
-		set(state, alerts, filteredList)
+		const filteredList = state.alerts.filter(alert => alert.id !== id);
+		set(state, 'alerts', filteredList)
 	},
 }
 
@@ -29,11 +29,8 @@ export const actions = {
 	addAlert({commit}, {text, type}) {
 		commit(types.GLOBAL_ALERTS_ADD_ALERT, {text, type, id: uuidv1()})
 	},
-	closeAlert({commit, state}, {user, channel}) {
-		commit(types.ACTIVE_USERS_SET, {
-			users: state[channel].filter((activeUser) => activeUser.id !== user.id),
-			channel
-		})
+	closeAlert({commit, state}, payload) {
+		commit(types.GLOBAL_ALERTS_CLOSE_ALERT, payload)
 	}
 };
 

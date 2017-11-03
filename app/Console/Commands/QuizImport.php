@@ -1,11 +1,11 @@
 <?php namespace App\Console\Commands;
 
 use App\Models\QuizQuestion;
+use App\Models\QuizSet;
 use App\Models\Tag;
 use App\Models\TagsTaxonomy;
-use Storage;
-use App\Models\QuizSet;
 use Illuminate\Console\Command;
+use Storage;
 
 class QuizImport extends Command
 {
@@ -94,6 +94,17 @@ class QuizImport extends Command
 	{
 		$values = explode(self::VALUE_DELIMITER, $line);
 		$text = nl2br($values[0]);
+
+		if ($qId = $values[11]) {
+			$question = QuizQuestion::find($qId);
+			if ($question) {
+				// Line contains question id,
+				// so we're just attaching it to the new set.
+				$quizSet->questions()->attach($question);
+
+				return;
+			}
+		}
 
 		$similarQuestion = $this->checkSimilarity($text, $values);
 		if ($similarQuestion !== false) {

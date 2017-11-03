@@ -24,15 +24,6 @@ export const notifications = {
 		deleted: 'Treść usunięta przez autora',
 		resolved: 'Treść została rozwiązana przez moderatora'
 	},
-	moderators: {
-		cta: 'Jedziesz szwagier',
-		done: 'Zrobione!',
-		fromOldest: 'Od najstarszych',
-		fromNewest: 'Od najnowszych',
-		inProgress: 'Ktoś już to ogarnia',
-		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!',
-		takeIt: 'Biere to!',
-	},
 	objects: {
 		comment: 'komentarz',
 		qnaAnswer: 'odpowiedź | Twoją odpowiedź',

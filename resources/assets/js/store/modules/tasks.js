@@ -1,0 +1,146 @@
+import * as types from '../mutations-types'
+import {getApiUrl} from 'js/utils/env'
+import {set} from 'vue'
+import pagination from 'js/store/modules/shared/pagination'
+import profiles from 'js/store/modules/shared/profiles'
+import {isEmpty} from 'lodash'
+
+const namespaced = true
+
+const state = {
+	fetching: false,
+	tasks: {},
+	updatedTasks: []
+}
+
+const getters = {
+	tasks: (state) => state.tasks,
+	updatedTasks: state => state.updatedTasks
+}
+
+const mutations = {
+	[types.ADD_TASK] (state, task) {
+		set(state, 'updatedTasks', [...state.updatedTasks, task])
+	},
+	[types.SET_TASKS] (state, tasks) {
+		set(state, 'tasks', tasks)
+		set(state, 'updatedTasks', [])
+	},
+	[types.IS_FETCHING] (state, isFetching) {
+		set(state, 'fetching', isFetching)
+	},
+	[types.MODIFY_TASK] (state, task) {
+		Object.assign(state.tasks[task.id], task)
+	},
+}
+
+const actions = {
+	pullTasks({commit, dispatch}, {params} = {}) {
+		commit(types.IS_FETCHING, true)
+
+		return new Promise ((resolve, reject) => {
+			_getTasks(params)
+				.then(({data: response}) => {
+					const {data, ...paginationMeta} = response;
+					if (isEmpty(data)) {
+						commit(types.SET_TASKS, {})
+						commit(types.IS_FETCHING, false)
+
+						return resolve(response)
+					}
+
+					const {included: allIncluded, ...responseData} = data;
+					const {assigneeProfiles = {}, ...included} = allIncluded
+
+					const dataArray = Object.values(responseData);
+
+					// check if response not empty
+					if (typeof dataArray[0] !== 'object') {
+						dispatch('setPaginationMeta', paginationMeta)
+						commit(types.IS_FETCHING, false)
+						return resolve(response)
+					}
+
+					dispatch('setPaginationMeta', paginationMeta)
+
+					const serializedTasks = {}
+					dataArray.forEach(task => {
+						serializedTasks[task.id] = _parseIncludes(included, task)
+						serializedTasks[task.id].assignee = assigneeProfiles[task.assignee_id] || {}
+					});
+
+					commit(types.SET_TASKS, serializedTasks)
+					commit(types.IS_FETCHING, false)
+
+					resolve(response)
+				})
+		})
+	},
+
+	setupLiveListener({commit}, channel) {
+		Echo.channel(channel)
+			.listen('.App.Events.LiveNotificationCreated', (task) => {
+				commit(types.ADD_TASK, task)
+			});
+	},
+	initModeratorsFeedListener({getters, dispatch}) {
+		dispatch('pullTasks')
+		dispatch('setupLiveListener', 'private-group.moderators')
+	},
+	updateTask({commit, dispatch}, payload) {
+		_updateTask(payload)
+			.then(({data: {included: allIncluded, ...task}}) => {
+				const {assigneeProfiles = {}, ...included} = allIncluded
+
+				const assignee = {assignee: assigneeProfiles[task.assignee_id] || {}};
+
+				Object.assign(task, _parseIncludes(included, task), assignee)
+
+				commit(types.MODIFY_TASK, task)
+			}).catch(error => {
+				dispatch('addAlert', {type: 'error', text: 'Nie udało się zapisać. Odśwież stronę i spróbuj ponownie'}, {root: true})
+				$wnl.logger.error(error)
+			})
+	}
+}
+
+const modules = {
+	pagination,
+	profiles
+}
+
+function _getTasks(params) {
+	return axios.get(getApiUrl('tasks/all'), {
+		params: {
+			limit: 10,
+			include: 'events,assigneeProfiles',
+			...params
+		}
+	})
+}
+
+function _updateTask({id, ...fields}) {
+	return axios.patch(getApiUrl(`tasks/${id}?include=events,assigneeProfiles`), fields)
+}
+
+function _parseIncludes(included, object) {
+	const updatedObject = {...object};
+
+	Object.keys(included).forEach((include) => {
+		if (updatedObject[include]) {
+			updatedObject[include] = updatedObject[include].map((id) => included[include][id])
+		}
+	});
+
+	return updatedObject
+}
+
+
+export default {
+	namespaced,
+	state,
+	mutations,
+	getters,
+	actions,
+	modules
+}

@@ -58,7 +58,7 @@
 	import {mapActions, mapGetters} from 'vuex'
 
 	import MainNav from 'js/components/MainNav'
-	import ModeratorsFeed from 'js/components/notifications/feeds/moderators/ModeratorsFeed'
+	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -95,6 +95,6 @@
 			'$route.query.chatChannel' (newVal) {
 				newVal && !this.isChatVisible && this.toggleChat();
 			}
-		}
+		},
 	}
 </script>

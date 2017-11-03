@@ -24,13 +24,7 @@ class AddTimestampsToUserTime extends Migration
 				'user_time_per_day'
 			);
 
-			try {
-				$table->dropUnique('user_time_user_id_unique');
-			} catch (\Illuminate\Database\QueryException $e) {
-				// it means index already dropped
-			} catch (PDOException $ex) {
-				// it means index already dropped
-			}
+			$table->dropUnique('user_time_user_id_unique');
 		});
 	}
 

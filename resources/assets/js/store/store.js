@@ -4,7 +4,6 @@ import Vuex from 'vuex'
 // Global mutations, actions and getters
 import mutations from 'js/store/mutations'
 import * as actions from 'js/store/actions'
-import * as getters from 'js/store/getters'
 
 // Modules
 import chat from 'js/store/modules/chat'
@@ -20,8 +19,11 @@ import questions from 'js/store/modules/questions'
 import progress from 'js/store/modules/progress'
 import slideshow from 'js/store/modules/slideshow'
 import ui from 'js/store/modules/ui'
-import autocomplete from 'js/store/modules/autocomplete'
 import users from 'js/store/modules/users'
+import alerts from 'js/store/modules/alerts'
+import activeUsers from 'js/store/modules/activeUsers'
+import autocomplete from 'js/store/modules/autocomplete'
+import tasks from 'js/store/modules/tasks'
 
 Vue.use(Vuex)
 
@@ -29,7 +31,6 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
 	state: {},
-	getters,
 	mutations,
 	actions,
 	modules: {
@@ -47,7 +48,9 @@ export default new Vuex.Store({
 		ui,
 		users,
 		autocomplete,
-		comments
+		comments,
+		tasks,
+		alerts
 	},
 	strict: debug
 })

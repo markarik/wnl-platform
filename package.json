@@ -34,6 +34,7 @@
     "socket.io-client": "^1.7.3",
     "store": "^2.0.4",
     "sweet-scroll": "^2.2.1",
+    "uuid": "^3.1.0",
     "vue": "^2.3.3",
     "vue-i18n": "^7.3.*",
     "vue-kindergarten": "^0.3.2",

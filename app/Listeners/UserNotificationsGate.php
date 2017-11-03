@@ -1,15 +1,17 @@
 <?php namespace App\Listeners;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\UserCourseProgress;
 use App\Notifications\EventNotification;
+use App\Notifications\EventTaskNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
 class UserNotificationsGate implements ShouldQueue
 {
 	const CHANNELS = [
-		'role'           => 'private-role.%s.%d',
+		'role'           => 'private-group.%s',
 		'private'        => 'private-%d',
 		'private-stream' => 'private-stream.%d',
 	];
@@ -68,12 +70,11 @@ class UserNotificationsGate implements ShouldQueue
 			return false;
 		}
 
-		$moderators = User::ofRole('moderator');
-		foreach ($moderators as $moderator) {
-			$channelFormatted = sprintf(self::CHANNELS['role'], 'moderator', $moderator->id);
-			$notification = new EventNotification($event, $channelFormatted);
-			Notification::send($moderator, $notification);
-		}
+		$team = 'moderators';
+		$group = Role::byName('moderator');
+		$channelFormatted = sprintf(self::CHANNELS['role'], $team);
+		$notification = new EventTaskNotification($event, $channelFormatted, $team);
+		Notification::send($group, $notification);
 
 		// For some reason event is not deserialized here by default
 		// calling __wakeup() forces an event to deserialize, hence we can access question and user property

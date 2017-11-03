@@ -12,7 +12,7 @@
 						:fullName="fullName"
 						:url="profile.avatar"
 					></wnl-avatar>
-					<div class="user-info-header">
+					<div class="user-info-header" :class="isMobileUserContent">
 						<div class="user-info-header-edit">
 							<span v-if="currentUserProfile" title="Edytuj profil" class="icon is-large">
 								<router-link :to="{ name: 'my-profile' }">
@@ -172,7 +172,8 @@
 			z-index: 1
 			margin-top: $margin-tiny
 			margin-bottom: $margin-small
-
+		.is-mobile-user-content
+			align-items: center
 		.user-info-header
 			display: flex
 			flex-direction: column
@@ -321,6 +322,9 @@ export default {
         },
 		isMobileAvatar() {
 			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
+		},
+		isMobileUserContent() {
+		return this.isMobileProfile ? 'is-mobile-user-content' : ''
 		},
         helpToDisplay() {
             return this.profile.help ? this.profile.help : 'Jakie są twoje mocne strony?'

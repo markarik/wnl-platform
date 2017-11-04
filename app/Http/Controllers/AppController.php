@@ -20,7 +20,6 @@ class AppController extends Controller
 				'ECHO_HOST'          => env('ECHO_HOST', env('APP_URL')),
 				'ECHO_PORT'          => env('ECHO_PORT', 8755),
 				'SENTRY_DSN_VUE_PUB' => env('SENTRY_DSN_VUE_PUB'),
-				'FIRST_LESSON_ID'    => env('FIRST_LESSON_ID'),
 				'MODERATORS_CHANNEL' => env('MODERATORS_CHANNEL', 3),
 				'appVersion'         => config('app.version')
 			],

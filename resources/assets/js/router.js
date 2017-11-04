@@ -4,9 +4,10 @@ import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import {isProduction} from 'js/utils/env'
 import moderatorFeatures from 'js/perimeters/moderator';
-import firstEditionParticipant from 'js/perimeters/firstEditionParticipant';
+import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import { createSandbox } from 'vue-kindergarten';
 import store from 'js/store/store'
+import { getCurrentUser } from 'js/services/user';
 
 Vue.use(Router)
 
@@ -96,14 +97,16 @@ let routes = [
 			},
 		],
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [firstEditionParticipant],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [currentEditionParticipant],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		},
 	},
 	{
@@ -159,14 +162,16 @@ let routes = [
 			},
 		],
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [firstEditionParticipant],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [currentEditionParticipant],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		},
 	},
 	{
@@ -174,14 +179,16 @@ let routes = [
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [moderatorFeatures],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [moderatorFeatures],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		}
 	},
 	{

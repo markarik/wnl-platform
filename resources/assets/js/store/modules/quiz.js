@@ -86,6 +86,7 @@ const getters = {
 	},
 	getAttempts: (state) => state.attempts,
 	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestion: state => id => state.quiz_questions[id] || {},
 	getQuestionsWithAnswers: (state) => {
 		return state.questionsIds.map((id) => {
 			const quizQuestion = state.quiz_questions[id];
@@ -104,7 +105,6 @@ const getters = {
 				return count + current
 			}, 0)
 
-
 			return {
 				...quizQuestion,
 				answers: quizQuestion.quiz_answers.map((answerId) => {
@@ -119,7 +119,7 @@ const getters = {
 		})
 	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
-	getUnresolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': false}),
+	getUnresolved: (state, getters) => getters.getQuestions.filter(question => !question.isResolved),
 	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
 	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
 	getUnanswered: (state, getters) => _.filter(
@@ -276,7 +276,7 @@ const actions = {
 		});
 	},
 
-	fetchQuestionsCollectionByTagName({commit}, {tagName, ids}) {
+	fetchQuestionsCollectionByTagName({commit, dispatch}, {tagName, ids}) {
 		commit(types.QUIZ_IS_LOADED, false)
 
 		return _fetchQuestionsCollectionByTagName(tagName, ids).then(response => {
@@ -289,6 +289,7 @@ const actions = {
 				let questionsIds = _.map(response.data, (question) => question.id),
 					len = questionsIds.length
 
+				included.comments && dispatch('comments/setComments', {...included.comments}, {root:true})
 				commit(types.UPDATE_INCLUDED, included)
 				commit(types.QUIZ_SET_QUESTIONS, {
 					setId: 0,

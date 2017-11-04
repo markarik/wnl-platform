@@ -407,15 +407,7 @@
 			this.fetchingFilters = true
 			this.setupFilters().then(() => {
 				hasPresetFilters && this.activeFiltersSet(this.presetFilters)
-				Promise.all([
-					this.fetchQuestions({
-						doNotSaveFilters: !hasPresetFilters,
-						filters: this.presetFilters,
-						page: 1,
-						useSavedFilters: !hasPresetFilters,
-					}),
-					this.fetchQuestionsCount(),
-				])
+				this.fetchQuestionsCount()
 					.then(() => this.fetchDynamicFilters())
 					.then(() => {
 						this.fetchingFilters = false
@@ -424,7 +416,17 @@
 					})
 					.then(this.getPosition)
 					.then(({data = {}}) => {
-						data.position && this.changeCurrentQuestion(data.position)
+						return new Promise((resolve, reject) => {
+								this.fetchQuestions({
+								saveFilters: false,
+								useSavedFilters: !hasPresetFilters,
+								filters: this.presetFilters,
+								page: (data.position && data.position.page) || 1
+							}).then(() => resolve(data))
+						})
+					})
+					.then(({position}) => {
+						position && this.changeCurrentQuestion(position)
 						this.switchOverlay(false)
 					})
 					.then(() => this.reactionsFetched = true)

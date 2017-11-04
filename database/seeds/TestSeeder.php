@@ -14,9 +14,11 @@ class TestSeeder extends Seeder
 		$this->call(RolesTableSeeder::class);
 		$this->call(UsersTableSeeder::class);
 		$this->call(UserProfilesTableSeeder::class);
+		$this->call(CoursesTableSeeder::class);
 		$this->call(EditionsTableSeeder::class);
 		$this->call(GroupsTableSeeder::class);
 		$this->call(ReactionsSeeder::class);
 		$this->call(TaxonomiesSeeder::class);
+		$this->call(ReactionsSeeder::class);
 	}
 }

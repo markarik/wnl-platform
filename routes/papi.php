@@ -21,7 +21,7 @@ if (!function_exists('api_action')) {
 	}
 }
 
-Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
+Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api-cache']], function () {
 	$r = config('papi.resources');
 
 	// Search
@@ -35,6 +35,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Faceted search available filters
 	api_action('post', 'filterList');
+
+	// Query
+	api_action('post', 'query');
 
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
@@ -156,10 +159,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// User Quiz Results
 	Route::get("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@get');
 	Route::post("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@post');
-	// TODO change route here in the future so it's consistant with route above
-	// I didn't change it upfront because it's a quick fix and route change could cause problem between backend and frontend sync
-	Route::get("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
-	Route::put("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
+	Route::get("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
+	Route::put("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
+	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
 
 	// Comments
 	Route::post($r['comments'], 'CommentsApiController@post');
@@ -198,4 +200,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Users Plans
 	Route::get("{$r['user-plan']}/{userId}", 'UserPlanApiController@get');
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
+
+	// Tasks
+	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
+	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 });

@@ -3,7 +3,7 @@
  * @type {Object}
  */
 import { decode } from 'he'
-import { isEmpty, isObject, truncate } from 'lodash'
+import { isEmpty, isObject, truncate, get } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 import { timeFromS } from 'js/utils/time'
@@ -41,10 +41,10 @@ export const notification = {
 				const slide = this.routeContext.params.slide
 
 				let contextInfo = this.$t('notifications.context.lesson', {
-					lesson: _.truncate(this.getLesson(lessonId).name, {length: 30}),
+					lesson: truncate(this.getLesson(lessonId).name, {length: 30}),
 				})
 
-				if (_.get(this.message, 'objects.type') === 'slide' && slide) {
+				if (get(this.message, 'objects.type') === 'slide' && slide) {
 					contextInfo = `${this.$t('notifications.context.slide', {slide})} ${contextInfo}`
 				}
 

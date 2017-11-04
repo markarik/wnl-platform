@@ -9,6 +9,7 @@ import { routes } from './routes'
 import { ui } from './ui'
 import { units } from './units'
 import { tasks } from './tasks'
+import { user } from './user'
 
 export {
 	dashboard,
@@ -21,5 +22,6 @@ export {
 	routes,
 	ui,
 	units,
+	user,
 	tasks
 }

@@ -36,7 +36,7 @@
 			</a>
 		</div>
 		<wnl-stream-feed v-show="overviewView === 'stream'"/>
-		<wnl-qna :sortingEnabled="sortingEnabled" :numbersDisabled="true" v-show="overviewView === 'qna'" :title="false" class="wnl-overview-qna"/>
+		<wnl-qna :sortingEnabled="true" :numbersDisabled="true" v-show="overviewView === 'qna'" :title="false" class="wnl-overview-qna"/>
 	</div>
 </template>
 
@@ -96,11 +96,6 @@
 			'wnl-your-progress': YourProgress,
 		},
 		props: ['courseId'],
-		data() {
-			return {
-				sortingEnabled: true,
-			}
-		},
 		computed: {
 			...mapGetters('progress', [
 				'isLessonComplete',

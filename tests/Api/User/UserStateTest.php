@@ -165,7 +165,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('GET', $this->url("/users/{$user->id}/state/quiz/1"));
+			->call('GET', $this->url("/quiz_results/{$user->id}/quiz/1"));
 
 		$response
 			->assertStatus(200)
@@ -188,7 +188,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('GET', $this->url("/users/{$user->id}/state/quiz/1"));
+			->call('GET', $this->url("/quiz_results/{$user->id}/quiz/1"));
 
 		$response
 			->assertStatus(200)
@@ -210,7 +210,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
+			->call('PUT', $this->url("/quiz_results/{$user->id}/quiz/1"), [
 				'quiz' => 'something',
 			]);
 
@@ -256,7 +256,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
+			->call('PUT', $this->url("/quiz_results/{$user->id}/quiz/1"), [
 				'quiz'            => $quizData,
 				'recordedAnswers' => $recordedAnswers,
 			]);
@@ -306,7 +306,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
+			->call('PUT', $this->url("/quiz_results/{$user->id}/state/quiz/1"), [
 				'quiz'            => $quizData,
 				'recordedAnswers' => $recordedAnswers,
 			]);
@@ -347,7 +347,7 @@ class UserStateTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->call('PUT', $this->url("/users/{$user->id}/state/quiz/1"), [
+			->call('PUT', $this->url("/quiz_results/{$user->id}/quiz/1"), [
 				'quiz'            => $quizData,
 				'recordedAnswers' => $recordedAnswers,
 			]);

@@ -2,7 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Presentable;
 use App\Models\Screen;
+use App\Models\Section;
+use App\Models\Slide;
+use App\Models\Subsection;
 use Illuminate\Console\Command;
 
 class SlideshowDetach extends Command
@@ -25,6 +29,9 @@ class SlideshowDetach extends Command
 	 * Create a new command instance.
 	 *
 	 */
+
+	const CACHE_BUSTER_REGEX = '/(\?cb=[^"]*)/';
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -49,27 +56,46 @@ class SlideshowDetach extends Command
 				})
 				->where('type', 'slideshow')
 				->get();
-		}
-
-		elseif ($screen) {
-			$screens = Screen::where('id', $screen)
+		} elseif ($screen) {
+			$screens = Screen::whereIn('id', explode(',', $screen))
 				->where('type', 'slideshow')
 				->get();
 			if ($screens->count() === 0) {
 				$this->error('There is no screen of type slideshow having id: ' . $screen);
 				exit;
 			}
-		}
-
-		else {
+		} else {
 			$this->error('Provide either --group or --screen option to continue.');
 			exit;
 		}
 
 		foreach ($screens as $screen) {
-			$slideshow = '';
+			$slideshow = $screen->slideshow;
+			$slides = $slideshow->slides;
+			$this->removeCacheBusters($slides);
+			$slideIds = $slides->pluck('id')->toArray();
+			$sectionsIds = $screen->sections->pluck('id')->toArray();
+			Presentable::whereIn('slide_id', $slideIds)->delete();
+			Section::whereIn('id', $sectionsIds)->delete();
+			Subsection::whereIn('section_id', $sectionsIds)->delete();
+			$slideshow->delete();
+			$screen->delete();
+			print '.';
 		}
 
+		$this->info('OK.');
+
 		return;
+	}
+
+	protected function removeCacheBusters($slides)
+	{
+		Slide::flushEventListeners();
+		foreach ($slides as $slide) {
+			$slide->update([
+				'content' => preg_replace(self::CACHE_BUSTER_REGEX, '', $slide->content),
+			]);
+			print '-';
+		}
 	}
 }

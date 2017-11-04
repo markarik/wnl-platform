@@ -82,7 +82,7 @@ class Slide extends Model
 
 			// psay ay ay...
 			if (!$lesson->isAvailable(1)) {
-				dump('lesson not available', $lesson->id);
+				\Log::debug('lesson not available ' . $lesson->id);
 				$this->unsearchable();
 				return [];
 			}

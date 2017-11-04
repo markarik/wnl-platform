@@ -39,7 +39,10 @@ class SlidesRemoveUnused extends Command
 	{
 		$slides = Slide::whereDoesntHave('slideshow')->get();
 
-		$this->info($slides->count() . ' slides without slideshow found.');
+		$message = $slides->count() . ' slides will be deleted.';
+		if (!$this->confirm($message)) {
+			exit;
+		}
 		$ids = $slides->pluck('id')->toArray();
 
 		\DB::table('taggables')

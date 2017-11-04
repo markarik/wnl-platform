@@ -3,13 +3,13 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Profil publiczny
+					{{ $t('user.myProfile.publicProfile') }}
 				</div>
 			</div>
 			<div class="level-right">
 				<span>
 					<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}" :event="handleLink">
-						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">Zobacz swój profil</a>
+						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">{{ $t('user.myProfile.previewYourProfileButton') }}</a>
 					</router-link>
 				</span>
 			</div>

@@ -5,9 +5,9 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="sidenav-aside myself-sidenav">
+			<!-- <aside class="sidenav-aside myself-sidenav">
 				<wnl-sidenav :items="items"></wnl-sidenav>
-			</aside>
+			</aside> -->
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view

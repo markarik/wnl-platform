@@ -22,6 +22,5 @@ export default {
             font-size: $font-size-plus-1
             font-weight: $font-weight-regular
             color: $color-gray-dimmed
-        .info
-
+            
 </style>

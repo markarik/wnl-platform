@@ -2,7 +2,7 @@
 		<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 			<div class="text-loader" v-if="isLoading">
 				<wnl-text-loader>
-					Szukamy człowieka...
+					{{ $t('user.userProfile.textLoader') }}
 				</wnl-text-loader>
 			</div>
 
@@ -14,7 +14,7 @@
 					></wnl-avatar>
 					<div class="user-info-header" :class="isMobileUserContent">
 						<div class="user-info-header-edit">
-							<span v-if="currentUserProfile" title="Edytuj profil" class="icon is-large">
+							<span v-if="currentUserProfile" class="icon is-large">
 								<router-link :to="{ name: 'my-profile' }">
 									<i class="fa fa-pencil-square"></i>
 								</router-link>
@@ -62,10 +62,11 @@
 						:title="'Najlepsze Pytania'"
 						:icon="iconForQuestions"
 						v-if="ifAnyQuestions"
-						:sortingEnabled="sortingDisabled"
+						:sortingEnabled="false"
 						:readOnly="readOnly"
 						:reactionsDisabled="reactionsDisabled"
-						:qnaQuestionsCompetency="convertSortedQuestionsToObject"
+						:passedQuestions="convertSortedQuestionsToObject"
+						:showContext="true"
 					></wnl-qna>
 					<wnl-qna
 						:colorHeader="colorHeader"
@@ -74,12 +75,12 @@
 						:icon="iconForAnswers"
 						:title="'Najlepsze Odpowiedzi'"
 						v-if="ifAnyAnswers"
-						:sortingEnabled="sortingDisabled"
+						:sortingEnabled="false"
 						:readOnly="readOnly"
 						:reactionsDisabled="reactionsDisabled"
-						:qnaAnswersCompetency="convertSortedAnswersToObject"
+						:passedQuestions="convertSortedAnswersToObject"
+						:showContext="true"
 					></wnl-qna>
-					<!-- <hr> -->
 				</div>
 			</div>
 
@@ -115,7 +116,7 @@
 						<hr>
 						<wnl-qna
 							:title="'Wszystkie Odpowiedzi'"
-							:sortingEnabled="sortingEnabled"
+							:sortingEnabled="true"
 							:readOnly="readOnly"
 							:reactionsDisabled="reactionsDisabled"
 							:qnaAnswersCompetency="qnaAnswersComputed"
@@ -127,7 +128,7 @@
 						<hr>
 						<wnl-qna
 							:title="'Wszystkie Pytania'"
-							:sortingEnabled="sortingEnabled"
+							:sortingEnabled="true"
 							:readOnly="readOnly"
 							:reactionsDisabled="reactionsDisabled"
 							:qnaQuestionsCompetency="qnaQuestionsComputed"
@@ -287,8 +288,6 @@ export default {
             numbersDisabled: true,
             iconForQuestions: 'fa fa-question-circle-o',
             iconForAnswers: 'fa fa-comment-o',
-            sortingDisabled: false,
-            sortingEnabled: true,
             loading: false,
             id: this.$route.params.userId,
             reactionsDisabled: true,
@@ -452,110 +451,68 @@ export default {
 
             return this.activePanels.includes(panel)
         },
+		loadData() {
+			const userId = this.id;
+			const dataForComments = {
+				query: {
+					where: [
+						['user_id', userId]
+					]
+				},
+				include: 'context'
+			}
+			const dataForQnaQuestions = {
+				query: {
+					where: [
+						['user_id', userId]
+					]
+				},
+				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+			}
+			const dataForQnaAnswers = {
+				query: {
+					whereHas: {
+						answers: {
+							where: [
+								['user_id', userId]
+							]
+						}
+					}
+				},
+				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+			}
+			// const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
+			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
+			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
+			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
+			const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
+			this.isLoading = true
+			Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
+			.then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
+				this.profile = profile.data
+				this.commentsCompetency = commentsCompetency
+				this.qnaQuestionsCompetency = qnaQuestionsCompetency
+				this.qnaAnswersCompetency = qnaAnswersCompetency
+
+				this.setUserQnaQuestions(qnaAnswersCompetency.data)
+				this.setUserQnaQuestions(qnaQuestionsCompetency.data)
+				this.$emit('userDataLoaded', {
+					profile: this.profile
+				})
+				this.isLoading = false
+			})
+			.catch(exception => $wnl.logger.capture(exception))
+		},
     },
     mounted() {
-        const userId = this.id;
-        const dataForComments = {
-            query: {
-                where: [
-                    ['user_id', userId]
-                ]
-            },
-            include: 'context'
-        }
-        const dataForQnaQuestions = {
-            query: {
-                where: [
-                    ['user_id', userId]
-                ]
-            },
-            include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-        }
-        const dataForQnaAnswers = {
-            query: {
-                whereHas: {
-                    answers: {
-                        where: [
-                            ['user_id', userId]
-                        ]
-                    }
-                }
-            },
-            include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-        }
-        // const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
-        const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-        const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
-        const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
-        const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
-		this.isLoading = true
-        Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
-            .then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
-                this.profile = profile.data
-                this.commentsCompetency = commentsCompetency
-                this.qnaQuestionsCompetency = qnaQuestionsCompetency
-                this.qnaAnswersCompetency = qnaAnswersCompetency
-
-                this.setUserQnaQuestions(qnaAnswersCompetency.data)
-                this.setUserQnaQuestions(qnaQuestionsCompetency.data)
-                this.$emit('userDataLoaded', {
-                    profile: this.profile
-                })
-				this.isLoading = false
-            })
-            .catch(exception => $wnl.logger.capture(exception))
-    },
+        this.loadData()
+	},
     watch: {
 		'$route' (newRoute, oldRoute) {
 			if ( this.id !== this.$route.params.userId ) {
-			 	const userId = this.$route.params.userId;
-				this.id = userId
-				const dataForComments = {
-					query: {
-						where: [[ 'user_id', userId ]]
-					},
-					include: 'context'
-				}
-				const dataForQnaQuestions = {
-					query: {
-						where: [[ 'user_id', userId ]]
-					},
-					include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-				}
-				const dataForQnaAnswers = {
-					query: {
-						whereHas: {
-							answers: {
-								where: [[ 'user_id', userId ]]
-							}
-						}
-					},
-					include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-				}
-				// const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
-				const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-				const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
-				const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
-				const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
-				this.isLoading = true
-				Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
-				.then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
-					this.profile = profile.data
-					this.commentsCompetency = commentsCompetency
-					this.qnaQuestionsCompetency = qnaQuestionsCompetency
-					this.qnaAnswersCompetency = qnaAnswersCompetency
-
-					this.setUserQnaQuestions(qnaAnswersCompetency.data)
-					this.setUserQnaQuestions(qnaQuestionsCompetency.data)
-					this.$emit('userDataLoaded', {
-						profile: this.profile
-					})
-					this.isLoading = false
-				})
-				.catch(exception => $wnl.logger.capture(exception))
+			 	this.loadData()
 			}
-
 		}
-    	}
+    }
 }
 </script>

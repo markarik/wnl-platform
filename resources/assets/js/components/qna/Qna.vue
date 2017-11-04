@@ -47,7 +47,7 @@
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
 			>
-				<router-link slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">Pokaż kontekst</router-link>
+				<router-link v-if="showContext" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">Pokaż kontekst</router-link>
 			</wnl-qna-question>
 		</div>
 	</div>
@@ -128,13 +128,13 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting
 		},
-		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'qnaAnswersCompetency', 'qnaQuestionsCompetency', 'sortingEnabled', 'numbersDisabled', 'colorHeaderOpacity', 'colorHeader'],
+		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'passedQuestions', 'sortingEnabled', 'numbersDisabled', 'colorHeaderOpacity', 'colorHeader', 'showContext'],
 		data() {
 			return {
 				ready: false,
 				showForm: false,
 				questionsList: [],
-				name: 'watch'
+				name: 'watch',
 			}
 		},
 		computed: {
@@ -155,12 +155,8 @@
 				return this.title || 'Pytania i odpowiedzi'
 			},
 			filterQnaDisplay() {
-				if (this.qnaQuestionsCompetency) {
-					return this.qnaQuestionsCompetency
-					// console.log(getter.questions);
-				}
-				else if (this.qnaAnswersCompetency) {
-					return this.qnaAnswersCompetency
+				if (this.passedQuestions) {
+					return this.passedQuestions
 				} else {
 					return this.questions
 				}

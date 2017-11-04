@@ -3,13 +3,6 @@
         <div class="chat-title">
             <p>Info o uczestniku</p>
         </div>
-        <br>
-        <!-- <a class="wnl-chat-close">
-            <span v-if="!canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
-                <i class="fa fa-chevron-right"></i>
-                <span>Ukryj info</span>
-            </span>
-        </a> -->
         <div class="user-infos">
             <wnl-user-info :label="`Miasto`" :info="profile.city"></wnl-user-info>
             <wnl-user-info :label="`Uniwersytet`" :info="profile.university"></wnl-user-info>
@@ -40,6 +33,7 @@
         color: $color-gray-dimmed
         font-size: $font-size-minus-2
         text-transform: uppercase
+        margin-bottom: $margin-big
 
 </style>
 

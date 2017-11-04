@@ -83,7 +83,7 @@ import {
 			...mapGetters(['currentUserId', 'currentUserName']),
             ...mapGetters('users', ['activeUsers']),
 			activeUsersCount() {
-				return this.usersToCount.length || 0
+				return this.usersToCount.length
 			},
 			usersToCount() {
 				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)

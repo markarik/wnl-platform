@@ -76,9 +76,15 @@ class Slide extends Model
 
 		if (!empty($this->sections) && !empty($this->sections->first())) {
 			$section = $this->sections->first();
-			$screen = $section->screen;
-			$lesson = $screen->lesson;
-			$group = $lesson->group;
+			$screen = $section->screen ?? null;
+			$lesson = $screen->lesson ?? null;
+			$group = $lesson->group ?? null;
+
+			if (!$screen || !$lesson || !$group) {
+				// Don't index slide if it doesn't have
+				// a parent lesson or screen.
+				return [];
+			}
 
 			// psay ay ay...
 			if (!$lesson->isAvailable(1)) {

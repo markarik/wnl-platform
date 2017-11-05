@@ -447,8 +447,11 @@ class Parser
 			$ext = 'gif';
 			$template = self::GIF_TEMPLATE;
 		} else {
-			$background = $image->resize(1920, 1080);
-			$canvas = Image::canvas(1920, 1080, '#fff');
+			$background = $image->resize(1920, 1080, function ($constraint) {
+				$constraint->aspectRatio();
+				$constraint->upsize();
+			});
+			$canvas = Image::canvas($image->width(), $image->height(), '#fff');
 			$data = $canvas->insert($background)->stream('jpg', 80);
 			$ext = 'jpg';
 			$template = self::IMAGE_VIEWER_TEMPLATE;

@@ -474,7 +474,7 @@ class Parser
 	 * @param $orderNumber
 	 * @param $lastSectionFound
 	 */
-	protected function attachToPresentables($slide, $orderNumber, $lastSectionFound):void
+	protected function attachToPresentables($slide, $orderNumber, $lastSectionFound)
 	{
 		try {
 			if (array_key_exists('slideshow', $this->courseModels)) {

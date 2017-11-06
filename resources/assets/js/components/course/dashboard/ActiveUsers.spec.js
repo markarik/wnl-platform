@@ -19,18 +19,27 @@ Vue.component('wnl-avatar', Avatar)
 describe('ActiveUsers.vue', () => {
 	let store;
 	let getters;
+	let modules;
 
 	context('when users active', () => {
 		beforeEach(() => {
+			modules = {
+				users: {
+					namespaced: true,
+					getters: {
+						activeUsers: () => (channel) => [
+							{fullName: 'foo bar', avatar: null, id: 7},
+							{fullName: 'buzz fizz', avatar: null, id: 10}
+						]
+					}
+				}
+			}
 			getters = {
-				activeUsers: () => (channel) => [
-					{fullName: 'foo bar', avatar: null, id: 7},
-					{fullName: 'buzz fizz', avatar: null, id: 10}
-				],
 				currentUserId: () => 7,
 			};
 			store = new Vuex.Store({
 				getters,
+				modules
 			});
 		});
 
@@ -42,12 +51,20 @@ describe('ActiveUsers.vue', () => {
 
 	context('when no users', () => {
 		beforeEach(() => {
+			modules = {
+				users: {
+					namespaced: true,
+					getters: {
+						activeUsers: () => (channel) => []
+					}
+				}
+			}
 			getters = {
-				activeUsers: () => () => [],
 				currentUserId: () => 7,
 			};
 			store = new Vuex.Store({
 				getters,
+				modules
 			});
 		});
 

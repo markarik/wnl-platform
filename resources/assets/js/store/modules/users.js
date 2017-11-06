@@ -4,23 +4,23 @@ import {getApiUrl} from 'js/utils/env'
 
 const namespaced = true;
 
-const state = {
+export const state = {
     activeUsers: [],
     activeFilters: [],
 };
 
-const getters = {
+export const getters = {
     activeUsers: state => channel =>  state[channel] || [],
     activeFilters: state => state.activeFilters,
 };
 
-const mutations = {
+export const mutations = {
     [types.ACTIVE_USERS_SET] (state, {users, channel}) {
 		set(state, channel, users)
 	},
 };
 
-const actions = {
+export const actions = {
     userJoined ({commit, state}, {user, channel}) {
         const usersInChannel = state[channel] || [];
 

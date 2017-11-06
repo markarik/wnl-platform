@@ -1,13 +1,13 @@
 <template>
 	<div class="moderators-feed">
 		<div class="quick-filters">
-			<span>Szybkie filtry</span>
+			<span v-t="'tasks.quickFilters.title'"/>
 			<a v-for="(quickFilter, index) in quickFilters"
 				class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
 				@click="toggleQuickFilter(quickFilter)"
 				:key="index"
+				v-t="quickFilter.name"
 			>
-				{{quickFilter.name}}
 				<span class="icon is-small">
 					<i class="fa" :class="[quickFilter.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
 				</span>
@@ -78,7 +78,7 @@
 				bodyClicked: false,
 				quickFilters: [
 					{
-						name: 'Przypisane do mnie',
+						name: this.$t('tasks.quickFilters.filters.my'),
 						isActive: false,
 						query: () => {
 							return {
@@ -87,7 +87,7 @@
 						}
 					},
 					{
-						name: 'Niezrobione',
+						name: this.$t('tasks.quickFilters.filters.notDone'),
 						isActive: false,
 						query: () => {
 							return {
@@ -96,7 +96,7 @@
 						}
 					},
 					{
-						name: 'Nieprzypisane',
+						name: this.$t('tasks.quickFilters.filters.unassigned'),
 						isActive: false,
 						query:() => {
 							return {

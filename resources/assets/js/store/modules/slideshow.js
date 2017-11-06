@@ -12,24 +12,30 @@ function _fetchReactables(presentables) {
 	let data     = {
 		query: {
 			where: [
-				['reactable_type', 'App\\Models\\Slide'],
-				['reaction_id', 4],
+				['reactable_type', 'App\\Models\\Slide']
 			],
-			whereIn: ['reactable_id', slideIds]
+			whereIn: ['reactable_id', slideIds],
+			whereIn: ['reaction_id', [4,5]]
 		},
 	}
 
 	return axios.post(getApiUrl('reactables/.search'), data)
 		.then(response => {
-			let reactables = {}
+			let bookmarked = {}
+			let watched = {}
 			response.data.forEach(reactable => {
-				reactables[reactable.reactable_id] = reactable
+				if (reactable.reaction_id === 4) bookmarked[reactable.reactable_id] = reactable
+				if (reactable.reaction_id === 5) watched[reactable.reactable_id] = reactable
 			})
 
 			return presentables.map(presentable => {
 				let slideId = presentable.slide_id
 				presentable.bookmark = {
-					hasReacted: reactables.hasOwnProperty(slideId)
+					hasReacted: bookmarked.hasOwnProperty(slideId)
+				}
+
+				presentable.watch = {
+					hasReacted: watched.hasOwnProperty(slideId)
 				}
 
 				return presentable
@@ -153,6 +159,7 @@ const mutations = {
 				order_number: element.order_number,
 				comments: [],
 				bookmark: element.bookmark,
+				watch: element.watch
 			})
 		})
 	},

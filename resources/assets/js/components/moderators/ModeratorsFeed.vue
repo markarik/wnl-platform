@@ -8,6 +8,19 @@
 		</wnl-alert>
 		<div v-if="emptyTasks" v-t="'tasks.empty'"/>
 		<div v-else>
+			<div class="quick-filters">
+				<span>Szybkie filtry</span>
+				<a v-for="(quickFilter, index) in quickFilters"
+					class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
+					@click="toggleQuickFilter(quickFilter)"
+					:key="index"
+				>
+					{{quickFilter.name}}
+					<span class="icon is-small">
+						<i class="fa" :class="[quickFilter.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					</span>
+				</a>
+			</div>
 			<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
 				:key="index"
 				:task="task"
@@ -62,7 +75,21 @@
 		data() {
 			return {
 				moderators: [],
-				bodyClicked: false
+				bodyClicked: false,
+				quickFilters: [
+					{
+						name: 'Przypisane do mnie',
+						isActive: false
+					},
+					{
+						name: 'Niezrobione',
+						isActive: false
+					},
+					{
+						name: 'Nieprzypisane',
+						isActive: false
+					}
+				]
 			}
 		},
 		computed: {
@@ -97,6 +124,9 @@
 						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
+			},
+			toggleQuickFilter(quickFilter) {
+				quickFilter.isActive = !quickFilter.isActive
 			}
 		},
 		mounted() {

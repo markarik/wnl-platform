@@ -99,7 +99,7 @@ function _getTasks(params) {
 }
 
 function _filterTasks(params) {
-	return axios.post(getApiUrl('tasks/.search'), {
+	return axios.post(getApiUrl('tasks/.query'), {
 		limit: 10,
 		include: 'events,assigneeProfiles',
 		...params

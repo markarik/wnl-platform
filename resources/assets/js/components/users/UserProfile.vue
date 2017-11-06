@@ -7,7 +7,7 @@
 			</div>
 
 			<div class="user-profile"  v-if="!isLoading && responseCondition">
-				<div class="user-content" :class="isMobileAvatar">
+				<div class="user-content" :class="avatarClass">
 					<wnl-avatar class="user-avatar image" size="extralarge"
 						:fullName="fullName"
 						:url="profile.avatar"
@@ -24,13 +24,13 @@
 								<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
 							</span>
 						</div>
-						<span v-if="currentUserProfile || profile.city" class="user-info-city">
+						<span v-if="currentUserProfile" class="user-info-city">
 							<span class="icon is-small">
 								<i class="fa fa-map-marker"></i>
 							</span>
 							<span class="city-title">{{ cityToDisplay }}</span>
 						</span>
-						<span v-if="currentUserProfile || profile.help" class="user-info-help">
+						<span v-if="currentUserProfile" class="user-info-help">
 							<span class="help-title">W czym mogę pomóc?</span>
 							<div class="notification">
 								<span class="user-help">{{ helpToDisplay }}</span>
@@ -38,8 +38,6 @@
 						</span>
 					</div>
 				</div>
-				<hr>
-				<br>
 
 				<div class="user-activity-content">
 					<div class="wnl-activity-meter" v-for="activity in activityMeterArray">
@@ -53,7 +51,6 @@
 					</div>
 				</div>
 
-				<hr>
 				<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
 					<wnl-qna
 						:colorHeader="colorHeader"
@@ -144,10 +141,10 @@
 
 	.text-loader
 		position: absolute
-		z-index: 10
+		z-index: $z-index-navbar
 		width: 100vw
 		height: 100%
-		background-color: white
+		background-color: $color-white
 		top: 0
 		left: 0
 
@@ -164,13 +161,14 @@
 	.is-desktop-avatar
 		justify-content: flex-start
 
-
 	.user-content
 		display: flex
 		padding-left: 2vw
+		margin-bottom: $margin-base
+		border-bottom: $border-light-gray
+		padding-bottom: $margin-base
 		.user-avatar
 			margin-right: 1vw
-			z-index: 1
 			margin-top: $margin-tiny
 			margin-bottom: $margin-small
 		.is-mobile-user-content
@@ -178,7 +176,6 @@
 		.user-info-header
 			display: flex
 			flex-direction: column
-			width: 100%
 			.user-info-header-edit
 				display: flex
 				flex-direction: row-reverse
@@ -191,7 +188,6 @@
 					font-size: $font-size-plus-5
 					font-weight: $font-weight-bold
 					margin-bottom: $margin-small
-					// margin-top: $margin-small
 					line-height: $line-height-none
 				.chosen-fullname-title
 					color: $color-ocean-blue-opacity
@@ -224,6 +220,9 @@
 		display: flex
 		flex-direction: row
 		justify-content: space-around
+		margin-bottom: $margin-base
+		border-bottom: $border-light-gray
+		padding-bottom: $margin-base
 		.activity-stat
 			align-items: center
 			color: $color-dark-blue
@@ -257,7 +256,6 @@ import {
     mapGetters
 } from 'vuex'
 import {
-    isProduction,
     getApiUrl
 } from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
@@ -319,20 +317,20 @@ export default {
                 }
             ]
         },
-		isMobileAvatar() {
+		avatarClass() {
 			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
 		},
 		isMobileUserContent() {
 		return this.isMobileProfile ? 'is-mobile-user-content' : ''
 		},
         helpToDisplay() {
-            return this.profile.help ? this.profile.help : 'Jakie są twoje mocne strony?'
+            // return this.profile.help || "{{ $t('user.userProfile.helpDefaultDescription')}"
         },
         cityToDisplay() {
-            return this.profile.city ? this.profile.city : 'Skąd jesteś?'
+            // return this.profile.city || {{$t('user.userProfile.cityDefaultDescription')}}
         },
         currentUserProfile() {
-            return this.id == this.currentUserId ? true : false
+            return this.id == this.currentUserId
         },
         profileFirstNameToPrint() {
             return this.profile.real_first_name === this.profile.first_name ? null : this.profile.first_name
@@ -347,7 +345,7 @@ export default {
             return Object.values(this.qnaQuestionsComputed).length
         },
         ifAnyQuestions() {
-            return this.howManyQuestions === 0 ? false : true
+            return this.howManyQuestions !== 0
         },
         fullName() {
             return this.profile.full_name
@@ -357,9 +355,6 @@ export default {
         },
         ifAnyAnswers() {
             return this.howManyAnswers === 0 ? false : true
-        },
-        isProduction() {
-            return isProduction()
         },
         isCommentsPanelVisible() {
             return this.isPanelActive('comments')
@@ -372,7 +367,6 @@ export default {
         },
         qnaQuestionsComputed() {
             if (!this.responseCondition) return {}
-            // !this.responseCondition ? {}
             const {
                 included,
                 ...questions
@@ -408,7 +402,7 @@ export default {
                     0: this.sortQuestionsCompetency[0]
                 }
             } else {
-                return ''
+                return {}
             }
         },
         convertSortedAnswersToObject() {
@@ -422,7 +416,7 @@ export default {
                     0: this.sortAnswersCompetency[0]
                 }
             } else {
-                return ''
+                return {}
             }
         },
         panels() {

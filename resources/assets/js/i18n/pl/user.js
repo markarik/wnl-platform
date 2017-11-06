@@ -5,6 +5,8 @@ export const user = {
         editYourProfile: 'Edytuj profil'
     },
     userProfile: {
-        textLoader: 'Szukamy człowieka...'
+        textLoader: 'Szukamy człowieka...',
+        helpDefaultDescription: 'Jakie są twoje mocne strony?',
+        cityDefaultDescription: 'Skąd jesteś?'
     },
 }

@@ -52,7 +52,6 @@ $font-size-minus-3: 0.675rem;
 $font-size-minus-2: 0.75rem;
 $font-size-minus-1: 0.875rem;
 $font-size-base: 14px;
-$font-size-plus-half: 1.05rem;
 $font-size-plus-1: 1.125rem;
 $font-size-plus-2: 1.5rem;
 $font-size-plus-3: 1.75rem;
@@ -75,6 +74,7 @@ $font-weight-black: 900;
 
 // Borders
 $border-light-gray: 1px solid $color-light-gray;
+$border-dark-gray: 1px solid $color-gray-dimmed;
 $border-thick: 3px;
 
 // Buttons

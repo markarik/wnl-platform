@@ -16,14 +16,6 @@ const getters = {
     allUsers: state => state.allUsers,
     activeUsers: state => channel =>  state[channel] || [],
     activeFilters: state => state.activeFilters,
-    // getUsersByLoaction: function(state) {
-    //     return function(city) {
-    //         return state.allUsers.filter((item) => {
-    //             return item.city === city
-    //         })
-    //     }
-    // },
-    // getUsersByLoaction: state => city => state.allUsers.filter(item => item.city.toLowerCase().indexOf(city.toLowerCase())),
     getUsersByLoaction: function(state) {
         return function(city) {
             return state.allUsers.filter(function(item) {
@@ -44,15 +36,6 @@ const getters = {
             })
         }
     },
-    // getUsersByLoaction: function(state) {
-    //     return function(city) {
-    //         return state.allUsers.filter((item) => {
-    //             debugger
-    //             return item.city.toLowerCase().indexOf(city.toLowerCase())
-    //         })
-    //     }
-    // },
-    // return this.availableModerators.filter(moderator => moderator.full_name.toLowerCase().indexOf(this.assigneeText.toLowerCase()) > -1).slice(0, 5)
     getUsersByRole: state => role => state.allUsers.filter(item => item.roles.includes(role)),
 };
 
@@ -65,7 +48,6 @@ const mutations = {
     },
 };
 
-// dupa({commit})  -> axiosem pobrac userow wszystkich i zacommitowac razem z mutacja
 const actions = {
     userJoined ({commit, state}, {user, channel}) {
         const usersInChannel = state[channel] || [];

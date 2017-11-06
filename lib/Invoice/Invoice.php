@@ -494,7 +494,6 @@ class Invoice
 		$pdf->loadHtml($html);
 		$pdf->setPaper('a4');
 
-		Storage::put("invoices/debug.pdf", $pdf->output());
 		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->output());
 	}
 

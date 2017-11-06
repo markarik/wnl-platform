@@ -76,6 +76,47 @@ const actions = {
 				})
 		})
 	},
+	filterTasks({commit, dispatch}, {params} = {}) {
+		commit(types.IS_FETCHING, true)
+
+		return new Promise ((resolve, reject) => {
+			_filterTasks(params)
+				.then(({data: response}) => {
+					const {data, ...paginationMeta} = response;
+					if (isEmpty(data)) {
+						commit(types.SET_TASKS, {})
+						commit(types.IS_FETCHING, false)
+
+						return resolve(response)
+					}
+
+					const {included: allIncluded, ...responseData} = data;
+					const {assigneeProfiles = {}, ...included} = allIncluded
+
+					const dataArray = Object.values(responseData);
+
+					// check if response not empty
+					if (typeof dataArray[0] !== 'object') {
+						dispatch('setPaginationMeta', paginationMeta)
+						commit(types.IS_FETCHING, false)
+						return resolve(response)
+					}
+
+					dispatch('setPaginationMeta', paginationMeta)
+
+					const serializedTasks = {}
+					dataArray.forEach(task => {
+						serializedTasks[task.id] = _parseIncludes(included, task)
+						serializedTasks[task.id].assignee = assigneeProfiles[task.assignee_id] || {}
+					});
+
+					commit(types.SET_TASKS, serializedTasks)
+					commit(types.IS_FETCHING, false)
+
+					resolve(response)
+				})
+		})
+	},
 
 	setupLiveListener({commit}, channel) {
 		Echo.channel(channel)
@@ -116,6 +157,14 @@ function _getTasks(params) {
 			include: 'events,assigneeProfiles',
 			...params
 		}
+	})
+}
+
+function _filterTasks(params) {
+	return axios.post(getApiUrl('tasks/.search'), {
+		limit: 10,
+		include: 'events,assigneeProfiles',
+		...params
 	})
 }
 

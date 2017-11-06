@@ -6,13 +6,13 @@
 				</wnl-text-loader>
 			</div>
 
-			<div class="user-profile"  v-if="!isLoading && responseCondition">
+			<div class="user-profile" :class="isMobile"  v-if="!isLoading && responseCondition">
 				<div class="user-content" :class="avatarClass">
 					<wnl-avatar class="user-avatar image" size="extralarge"
 						:fullName="fullName"
 						:url="profile.avatar"
 					></wnl-avatar>
-					<div class="user-info-header" :class="isMobileUserContent">
+					<div class="user-info-header">
 						<div class="user-info-header-edit">
 							<span v-if="currentUserProfile" class="icon is-large">
 								<router-link :to="{ name: 'my-profile' }">
@@ -24,13 +24,13 @@
 								<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
 							</span>
 						</div>
-						<span v-if="currentUserProfile" class="user-info-city">
+						<span v-if="currentUserProfile || profile.help" class="user-info-city">
 							<span class="icon is-small">
 								<i class="fa fa-map-marker"></i>
 							</span>
 							<span class="city-title">{{ cityToDisplay }}</span>
 						</span>
-						<span v-if="currentUserProfile" class="user-info-help">
+						<span v-if="currentUserProfile || profile.help" class="user-info-help">
 							<span class="help-title">W czym mogę pomóc?</span>
 							<div class="notification">
 								<span class="user-help">{{ helpToDisplay }}</span>
@@ -80,59 +80,6 @@
 					></wnl-qna>
 				</div>
 			</div>
-
-			<!-- <div class="user-section-header">
-				<p class="title is-4">WSZYSTKIE WPISY</p>
-			</div> -->
-			<!-- <div class="collections-controls">
-				<a v-for="name, panel in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"  :key="panel" @click="togglePanel(panel)">
-					{{name}}
-					<span class="icon is-small">
-						<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-					</span>
-				</a>
-			</div> -->
-			<!-- <div class="columns">
-				<div class="column" v-show="isCommentsPanelVisible">
-					<div class="comments-content">
-						<hr>
-						<p class="title is-4">Komentarze ({{howManyComments}})</p>
-						<br>
-						<wnl-comment
-							v-for="comment in commentsCompetency.data"
-							:comment="comment"
-							:key="comment.id"
-							:profile="profile"
-						>
-							<router-link :to="{ name: comment.context.name, params: comment.context.params }">Pokaż kontekst</router-link>
-						</wnl-comment>
-					</div>
-				</div>
-				<div class="column" v-show="isAnswersPanelVisible">
-					<div class="qna-answers">
-						<hr>
-						<wnl-qna
-							:title="'Wszystkie Odpowiedzi'"
-							:sortingEnabled="true"
-							:readOnly="readOnly"
-							:reactionsDisabled="reactionsDisabled"
-							:qnaAnswersCompetency="qnaAnswersComputed"
-						></wnl-qna>
-					</div>
-				</div>
-				<div class="column" v-show="isQuestionsPanelVisible">
-					<div class="qna-questions">
-						<hr>
-						<wnl-qna
-							:title="'Wszystkie Pytania'"
-							:sortingEnabled="true"
-							:readOnly="readOnly"
-							:reactionsDisabled="reactionsDisabled"
-							:qnaQuestionsCompetency="qnaQuestionsComputed"
-						></wnl-qna>
-					</div>
-				</div>
-			</div> -->
 		</div>
 </template>
 
@@ -171,15 +118,13 @@
 			margin-right: 1vw
 			margin-top: $margin-tiny
 			margin-bottom: $margin-small
-		.is-mobile-user-content
-			align-items: center
 		.user-info-header
 			display: flex
 			flex-direction: column
+			width: 100%
 			.user-info-header-edit
 				display: flex
 				flex-direction: row-reverse
-				justify-content: space-between
 				color: $color-ocean-blue
 			.user-info-header-names
 				flex-grow: 10
@@ -215,6 +160,16 @@
 						font-size: $font-size-plus-1
 						font-weight: $font-weight-regular
 
+	div.user-profile
+		&.is-mobile
+			.user-info-header
+				align-items: center
+				text-align: center
+				.user-info-header-edit
+					flex-direction: column
+					justify-content: center
+					align-items: center
+
 	.user-activity-content
 		align-items: center
 		display: flex
@@ -231,6 +186,8 @@
 			font-size: $font-size-plus-6
 			font-weight: $font-weight-black
 			margin-bottom: $margin-medium
+			.activity-meter-number
+				top: -$margin-small
 			.icon
 				color: $color-dark-blue-opacity
 				margin-right: $margin-base
@@ -239,6 +196,14 @@
 			letter-spacing: 1px
 			text-align: center
 			text-transform: uppercase
+
+	div.user-profile
+		&.is-mobile
+			.activity-stat
+				font-size: $font-size-plus-4
+				justify-content: center
+				.icon
+					margin-right: $margin-tiny
 
 	.user-section-header
 		display: flex
@@ -260,17 +225,13 @@ import {
 } from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
 import Comment from 'js/components/comments/Comment'
-// import UserBackground from 'js/components/users/UserBackground'
 import QnaQuestion from 'js/components/qna/QnaQuestion'
 import QnaAnswer from 'js/components/qna/QnaAnswer'
 import Qna from 'js/components/qna/Qna'
-// import TextLoader from 'js/components/global/TextLoader'
 
 export default {
     name: 'UserProfile',
     components: {
-        // 'wnl-user-background': UserBackground,
-        // 'wnl-text-loader' : TextLoader,
         'wnl-avatar': Avatar,
         'wnl-comment': Comment,
         'wnl-qna-question': QnaQuestion,
@@ -320,14 +281,20 @@ export default {
 		avatarClass() {
 			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
 		},
-		isMobileUserContent() {
-		return this.isMobileProfile ? 'is-mobile-user-content' : ''
+		isMobile() {
+			return this.isMobileProfile ? 'is-mobile' : ''
 		},
+		// isMobileUserContent() {
+		// 	return this.isMobileProfile ? 'is-mobile-user-content' : ''
+		// },
+		// isMobileUserHeader() {
+		// 	return this.isMobileProfile ? 'is-mobile-user-header' : ''
+		// },
         helpToDisplay() {
-            // return this.profile.help || "{{ $t('user.userProfile.helpDefaultDescription')}"
+            return this.profile.help || this.$t('user.userProfile.helpDefaultDescription')
         },
         cityToDisplay() {
-            // return this.profile.city || {{$t('user.userProfile.cityDefaultDescription')}}
+            return this.profile.city || this.$t('user.userProfile.cityDefaultDescription')
         },
         currentUserProfile() {
             return this.id == this.currentUserId

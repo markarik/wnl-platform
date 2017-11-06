@@ -92,7 +92,7 @@
 		// TODO it should auto expand
 		// next 2 lines should be gone
 		height: 250px
-		overflow: hidden
+		overflow-y: auto
 </style>
 
 <script>
@@ -184,7 +184,7 @@ export default {
 		availableModeratorsFilter() {
 			return this.availableModerators.filter(moderator => (
 				moderator.full_name.toLowerCase().indexOf(this.assigneeTextInput.toLowerCase()) > -1)
-			).slice(0, 5)
+			)
 		},
 		assigneeTextComputed() {
 			return this.focused ? this.assigneeTextInput : this.task.assignee.full_name
@@ -202,8 +202,7 @@ export default {
 			this.onClose()
 		},
 		onFocus() {
-			this.focused = true
-			this.showAutocomplete = true
+			this.onOpen()
 		},
 		onKeyDown(evt) {
 			const { enter, arrowUp, arrowDown, esc } = keys
@@ -218,8 +217,7 @@ export default {
 				return
 			}
 			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				this.focused = true
-				this.showAutocomplete = true
+				this.onOpen()
 				return
 			}
 
@@ -237,6 +235,10 @@ export default {
 			this.showAutocomplete = false
 			this.focused = false
 			this.assigneeTextInput = ''
+		},
+		onOpen() {
+			this.focused = true
+			this.showAutocomplete = true
 		},
 		onInput(event) {
 			this.assigneeTextInput = event.target.value

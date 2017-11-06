@@ -39,6 +39,8 @@ class Parser
 		'audio' => '/<iframe.*clyp.it.*>/',
 	];
 
+	const IMAGE_TEMPLATE = '<img src="%s">';
+
 	const IMAGE_VIEWER_TEMPLATE = '
 		<div class="iv-image-container">
 			<img src="%s" class="chart">
@@ -454,7 +456,7 @@ class Parser
 			$canvas = Image::canvas($image->width(), $image->height(), '#fff');
 			$data = $canvas->insert($background)->stream('jpg', 80);
 			$ext = 'jpg';
-			$template = self::IMAGE_VIEWER_TEMPLATE;
+			$template = self::IMAGE_TEMPLATE;
 		}
 
 		if (!$data) {

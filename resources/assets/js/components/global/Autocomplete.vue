@@ -143,7 +143,7 @@
 
 			getActiveItem() {
 				return this.items.findIndex((item) => item.active)
-			}
+			},
 		}
 	}
 </script>

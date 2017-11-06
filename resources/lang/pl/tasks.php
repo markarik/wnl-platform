@@ -7,5 +7,10 @@ return [
 		'slide_comment'         => 'Komentarz do slajdu :slideNumber w lekcji :lessonName',
 		'qna_answer_comment'    => 'Komentarz do odpowiedzi na pytanie w lekcji :lessonName',
 		'quiz_question_comment' => 'Komentarz do pytania kontrolnego numer :questionId',
+		'context' => [
+			'help-tech' => 'Pomoc techniczna',
+			'help-learning' => 'Pomoc w nauce',
+			'help-new' => 'Nad czym pracujemy'
+		]
 	],
 ];

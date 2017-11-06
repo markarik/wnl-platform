@@ -71,7 +71,12 @@ class EventTaskNotification extends Notification
 	protected function qnaQuestionPostedDescription($event)
 	{
 		$lessonId = $event['context']['params']['lessonId'] ?? null;
-		if (!$lessonId) return '';
+
+		if (!$lessonId) {
+			$context = __('tasks.descriptions.context.' . $event['context']['name']);
+			return __('tasks.descriptions.qna_question', ['lessonName' => $context]);
+		};
+
 		$lesson = Lesson::find($lessonId);
 
 		return __('tasks.descriptions.qna_question', [
@@ -82,7 +87,12 @@ class EventTaskNotification extends Notification
 	protected function qnaAnswerPostedDescription($event)
 	{
 		$lessonId = $event['context']['params']['lessonId'] ?? null;
-		if (!$lessonId) return '';
+
+		if (!$lessonId) {
+			$context = __('tasks.descriptions.context.' . $event['context']['name']);
+			return __('tasks.descriptions.qna_answer', ['lessonName' => $context]);
+		};
+
 		$lesson = Lesson::find($lessonId);
 
 		return __('tasks.descriptions.qna_answer', [
@@ -108,7 +118,12 @@ class EventTaskNotification extends Notification
 
 		if ($objectType === 'qna_answer') {
 			$lessonId = $event['context']['params']['lessonId'] ?? null;
-			if (!$lessonId) return '';
+
+			if (!$lessonId) {
+				$context = __('tasks.descriptions.context.' . $event['context']['name']);
+				return __('tasks.descriptions.qna_answer_comment', ['lessonName' => $context]);
+			};
+
 			$lesson = Lesson::find($lessonId);
 
 			return __('tasks.descriptions.qna_answer_comment', [

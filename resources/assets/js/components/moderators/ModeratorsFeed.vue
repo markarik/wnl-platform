@@ -53,6 +53,9 @@
 
 	.button
 		border-radius: 0
+
+	.quick-filters
+		margin-bottom: $margin-big
 </style>
 
 <script>
@@ -76,35 +79,7 @@
 			return {
 				moderators: [],
 				bodyClicked: false,
-				quickFilters: [
-					{
-						name: this.$t('tasks.quickFilters.filters.my'),
-						isActive: false,
-						query: () => {
-							return {
-								where: [['assignee_id', this.currentUserId]]
-							}
-						}
-					},
-					{
-						name: this.$t('tasks.quickFilters.filters.notDone'),
-						isActive: false,
-						query: () => {
-							return {
-								whereNotIn:['status', ['done']]
-							}
-						}
-					},
-					{
-						name: this.$t('tasks.quickFilters.filters.unassigned'),
-						isActive: false,
-						query:() => {
-							return {
-								whereNull: ['assignee_id']
-							}
-						}
-					}
-				]
+				quickFilters: this.initialQuickFilters()
 			}
 		},
 		computed: {
@@ -138,6 +113,8 @@
 				this.pullTasks()
 					.then(() => {
 						scrollToTop()
+						this.quickFilters = this.initialQuickFilters()
+
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
@@ -155,6 +132,35 @@
 				})
 
 				this.filterTasks({params: {query}})
+			},
+			initialQuickFilters() {
+				return [
+						{
+							name: this.$t('tasks.quickFilters.filters.my'),
+							isActive: false,
+							query: () => {
+								return {
+									where: [['assignee_id', this.currentUserId]]
+								}
+							}
+						}, {
+							name: this.$t('tasks.quickFilters.filters.notDone'),
+							isActive: false,
+							query: () => {
+								return {
+									whereNotIn:['status', ['done']]
+								}
+							}
+						}, {
+						name: this.$t('tasks.quickFilters.filters.unassigned'),
+						isActive: false,
+						query:() => {
+							return {
+								whereNull: ['assignee_id']
+							}
+						}
+					}
+				]
 			}
 		},
 		mounted() {

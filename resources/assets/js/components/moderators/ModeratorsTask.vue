@@ -30,16 +30,22 @@
 			</div>
 			<div class="tags field has-addons is-relative">
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.assignee'"/>
-				<input @focus="onFocus" :value="assigneeTextComputed" @input="onInput" @keydown="onKeyDown"/>
-					<wnl-autocomplete
-						v-if="showAutocomplete"
-						:items="availableModeratorsFilter"
-						:onItemChosen="assign"
-						:itemComponent="'wnl-user-autocomplete-item'"
-						@close="onClose"
-						class="wnl-autocomplete-dropdown"
-						ref="autocomplete"
-					/>
+				<input
+					:value="assigneeTextComputed"
+					:class="{'is-empty': assigneeTextComputed.length === 0}"
+					@focus="onFocus"
+					@input="onInput"
+					@keydown="onKeyDown"
+				/>
+				<wnl-autocomplete
+					v-if="showAutocomplete"
+					:items="availableModeratorsFilter"
+					:onItemChosen="assign"
+					:itemComponent="'wnl-user-autocomplete-item'"
+					@close="onClose"
+					class="wnl-autocomplete-dropdown"
+					ref="autocomplete"
+				/>
 			</div>
 			<div class="tags field has-addons is-relative">
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.updatedAt'"/>
@@ -89,10 +95,13 @@
 
 	.wnl-autocomplete-dropdown
 		top: 100%
-		// TODO it should auto expand
-		// next 2 lines should be gone
 		height: 250px
-		overflow: hidden
+		overflow-y: auto
+
+	.is-empty
+		border: 2px solid $color-yellow
+		border-radius: 5px
+
 </style>
 
 <script>
@@ -184,10 +193,10 @@ export default {
 		availableModeratorsFilter() {
 			return this.availableModerators.filter(moderator => (
 				moderator.full_name.toLowerCase().indexOf(this.assigneeTextInput.toLowerCase()) > -1)
-			).slice(0, 5)
+			)
 		},
 		assigneeTextComputed() {
-			return this.focused ? this.assigneeTextInput : this.task.assignee.full_name
+			return this.focused ? this.assigneeTextInput : this.task.assignee.full_name || ''
 		},
 		formatedCreatedAt() {
 			return timeFromS(this.task.created_at)
@@ -202,8 +211,7 @@ export default {
 			this.onClose()
 		},
 		onFocus() {
-			this.focused = true
-			this.showAutocomplete = true
+			this.onOpen()
 		},
 		onKeyDown(evt) {
 			const { enter, arrowUp, arrowDown, esc } = keys
@@ -218,8 +226,7 @@ export default {
 				return
 			}
 			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				this.focused = true
-				this.showAutocomplete = true
+				this.onOpen()
 				return
 			}
 
@@ -237,6 +244,10 @@ export default {
 			this.showAutocomplete = false
 			this.focused = false
 			this.assigneeTextInput = ''
+		},
+		onOpen() {
+			this.focused = true
+			this.showAutocomplete = true
 		},
 		onInput(event) {
 			this.assigneeTextInput = event.target.value

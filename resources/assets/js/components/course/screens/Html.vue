@@ -10,13 +10,18 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.wnl-screen-html
 		margin: $margin-big 0
+
 		img:hover
 			opacity: 0.7
+
+		.content
+			font-size: $font-size-plus-1
+			line-height: $line-height-plus
 
 
 	.wnl-repetitions

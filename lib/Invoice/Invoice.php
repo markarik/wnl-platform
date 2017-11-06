@@ -9,11 +9,11 @@ use App\Models\Order;
 use App\Models\User;
 use Barryvdh\DomPDF\PDF;
 use Dompdf\Dompdf;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class Invoice
 {
@@ -269,7 +269,7 @@ class Invoice
 			'invoiceData' => [
 				'id'             => $invoice->id,
 				'full_number'    => $invoice->full_number,
-				'date'           => $invoice->created_at->format('d.m.Y'),
+				'date'           => $order->product->delivery_date->format('d.m.Y'),
 				'payment_date'   => $invoice->created_at->format('d.m.Y'),
 				'payment_method' => 'przelew',
 			],
@@ -319,6 +319,8 @@ class Invoice
 
 		$data['summary'] = [
 			'total' => $this->price($totalPrice),
+			'net' => $this->price($totalPrice / 1.23),
+			'vat' => $this->price($totalPrice - $totalPrice / 1.23),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -348,6 +350,7 @@ class Invoice
 		$data['n'] = function ($price) {
 			return number_format($price, 2, ',', ' ');
 		};
+		$data['invoiceOrder'] = $order;
 
 		$this->renderAndSave('payment.invoices.final', $data);
 
@@ -491,6 +494,7 @@ class Invoice
 		$pdf->loadHtml($html);
 		$pdf->setPaper('a4');
 
+		Storage::put("invoices/debug.pdf", $pdf->output());
 		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->output());
 	}
 

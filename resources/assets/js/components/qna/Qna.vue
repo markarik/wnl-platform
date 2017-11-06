@@ -155,8 +155,16 @@
 				return this.title || 'Pytania i odpowiedzi'
 			},
 			filterQnaDisplay() {
+<<<<<<< HEAD
 				if (this.passedQuestions) {
 					return this.passedQuestions
+=======
+				if (this.qnaQuestionsCompetency) {
+					return this.qnaQuestionsCompetency
+				}
+				else if (this.qnaAnswersCompetency) {
+					return this.qnaAnswersCompetency
+>>>>>>> f9f7a126cb9de93dcf6468bc15f9e4010e3b7c52
 				} else {
 					return this.questions
 				}

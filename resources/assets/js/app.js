@@ -16,7 +16,7 @@ import Emoji from "js/components/global/Emoji.vue";
 import Icon from "js/components/global/Icon.vue";
 import ImageButton from "js/components/global/ImageButton.vue";
 import TextLoader from "js/components/global/TextLoader.vue";
-import Upload from "js/components/global/Upload.vue";''
+import Upload from "js/components/global/Upload.vue";
 import Logger from "js/utils/logger";
 import App from "js/components/App.vue";
 

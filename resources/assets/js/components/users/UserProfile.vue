@@ -53,8 +53,7 @@
 
 				<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
 					<wnl-qna
-						:colorHeader="colorHeader"
-						:colorHeaderOpacity="colorHeaderOpacity"
+						:isUserProfileClass="isUserProfileClass"
 						:numbersDisabled="numbersDisabled"
 						:title="'Najlepsze Pytania'"
 						:icon="iconForQuestions"
@@ -242,8 +241,7 @@ export default {
     data() {
         return {
             isLoading: true,
-            colorHeaderOpacity: 'color-header-opacity',
-            colorHeader: 'color-header',
+            isUserProfileClass: 'is-user-profile',
             numbersDisabled: true,
             iconForQuestions: 'fa fa-question-circle-o',
             iconForAnswers: 'fa fa-comment-o',

@@ -7,11 +7,11 @@
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
-						<div class="wnl-qna-header">
-							<span v-if="icon" :class="colorHeaderOpacity" class="icon is-big user-profile-icon">
+						<div class="wnl-qna-header" :class="isUserProfileClass">
+							<span v-if="icon" class="icon is-big user-profile-icon">
 								<i :class="icon"></i>
 							</span>
-							<p v-if="title !== false" :class="colorHeader" class="title is-4" >
+							<p v-if="title !== false" class="title is-4" >
 								{{displayedTitle}}&nbsp;
 							</p>
 							<p class="title is-4" v-if="!numbersDisabled">
@@ -69,14 +69,14 @@
 	.wnl-qna-header
 		display: flex
 		flex-direction: row
+		&.is-user-profile
+			.icon
+				color: $color-dark-blue-opacity
+			.title
+				color: $color-dark-blue
+
 		.user-profile-icon
 			margin-right: $margin-small
-
-	.color-header-opacity
-		color: $color-dark-blue-opacity
-
-	.color-header
-		color: $color-dark-blue
 
 	.qna-container
 		flex: 1 auto
@@ -128,7 +128,7 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting
 		},
-		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'passedQuestions', 'sortingEnabled', 'numbersDisabled', 'colorHeaderOpacity', 'colorHeader', 'showContext'],
+		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'passedQuestions', 'sortingEnabled', 'numbersDisabled', 'isUserProfileClass', 'showContext'],
 		data() {
 			return {
 				ready: false,
@@ -155,16 +155,8 @@
 				return this.title || 'Pytania i odpowiedzi'
 			},
 			filterQnaDisplay() {
-<<<<<<< HEAD
 				if (this.passedQuestions) {
 					return this.passedQuestions
-=======
-				if (this.qnaQuestionsCompetency) {
-					return this.qnaQuestionsCompetency
-				}
-				else if (this.qnaAnswersCompetency) {
-					return this.qnaAnswersCompetency
->>>>>>> f9f7a126cb9de93dcf6468bc15f9e4010e3b7c52
 				} else {
 					return this.questions
 				}

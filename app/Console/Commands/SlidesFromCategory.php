@@ -74,6 +74,10 @@ class SlidesFromCategory extends Command
 		foreach($lessonsWithTag as $lesson) {
 			$screen = $lesson->screens()->where('type', 'slideshow')->first();
 
+			if (!$screen) {
+				continue;
+			}
+
 			$slidesIds = \DB::table('presentables')
 				->where('presentable_type', 'App\Models\Slideshow')
 				->where('presentable_id', $screen->slideshow->id)

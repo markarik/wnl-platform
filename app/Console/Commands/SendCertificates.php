@@ -2,14 +2,16 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\Certificate;
+use App\Jobs\SendCertificate;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Storage;
-use Mail;
 
 class SendCertificates extends Command
 {
+	use DispatchesJobs;
+
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -22,7 +24,7 @@ class SendCertificates extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
+	protected $description = 'Send certificates';
 
 	const BASE_DIRECTORY = 'certyfikaty';
 
@@ -52,7 +54,7 @@ class SendCertificates extends Command
 				$this->warning('User not found ' . $id);
 				continue;
 			}
-			Mail::to($user)->send(new Certificate($file, $user));
+			$this->dispatch(new SendCertificate($user, $file));
 			print '.';
 		}
 	}

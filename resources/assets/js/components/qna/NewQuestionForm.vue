@@ -12,8 +12,7 @@
 		<wnl-quill
 			class="margin bottom"
 			name="text"
-			:options="{ theme: 'snow', placeholder: 'O co chcesz zapytać?' }"
-			:toolbar="toolbar">
+			:options="{ theme: 'snow', placeholder: 'O co chcesz zapytać?' }">
 		</wnl-quill>
 
 		<div class="level">
@@ -73,13 +72,6 @@
 					}
 				}
 			},
-			toolbar() {
-				return [
-					['bold', 'italic', 'underline', 'link'],
-					[{ color: fontColors }],
-					['clean'],
-				]
-			}
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestionsByTags']),

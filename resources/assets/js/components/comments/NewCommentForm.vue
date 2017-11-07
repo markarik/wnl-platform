@@ -12,8 +12,7 @@
 		<wnl-quill
 			class="margin bottom"
 			name="text"
-			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'bubble' }"
-			:toolbar="toolbar">
+			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'snow' }">
 		</wnl-quill>
 
 		<div class="level">
@@ -58,12 +57,6 @@
 					commentable_id: this.commentableId,
 				}
 			},
-			toolbar() {
-				return [
-					['bold', 'italic', 'underline', 'link'],
-					['clean'],
-				]
-			}
 		},
 		methods: {
 			onSubmitSuccess(data) {

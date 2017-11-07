@@ -11,7 +11,7 @@
 		</div>
 		<div class="media-content comment-content">
 			<span class="author">{{profile.full_name}}</span>
-			<div class="comment-text wrap" v-html="comment.text"></div>
+			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 				&nbsp;·
@@ -27,10 +27,14 @@
 	@import 'resources/assets/sass/variables'
 
 	.media-left
-		margin-bottom: 5px
+		margin-bottom: $margin-small
 
 	.comment-content
-		margin-top: -5px
+		margin-top: -$margin-small
+
+		.comment-text
+			margin: $margin-small 0
+			padding: 0
 
 	.wnl-comment-side
 		align-items: center
@@ -43,13 +47,6 @@
 
 	.author
 		font-weight: $font-weight-bold
-
-	.comment-text
-		margin: $margin-small 0
-		padding: 0
-
-		p
-			margin: 0
 
 	.comment-icon-link
 		.icon

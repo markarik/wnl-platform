@@ -50,18 +50,20 @@ class IssueFinalInvoice extends Command
 
 			if (!$order) {
 				$this->error("Order {$orderId} not found.");
+
 				return;
 			}
 
 			$this->dispatch(new IssueFinalAndSend($order));
 		} else {
 			$orders = Order::with(['product'])
-			->whereDoesntHave('invoices', function ($query) {
-				$query->where('series', Invoice::FINAL_SERIES_NAME);
-				$query->where('series', Invoice::VAT_SERIES_NAME);
-			})
-			->where('paid', 1)
-			->get();
+				->whereDoesntHave('invoices', function ($query) {
+					$query
+						->where('series', Invoice::FINAL_SERIES_NAME)
+						->orWhere('series', Invoice::VAT_SERIES_NAME);
+				})
+				->where('paid', 1)
+				->get();
 
 			foreach ($orders as $order) {
 				$this->dispatch(new IssueFinalAndSend($order));

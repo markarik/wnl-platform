@@ -1,5 +1,18 @@
 <template>
 	<div class="moderators-feed">
+		<div class="quick-filters">
+			<span v-t="'tasks.quickFilters.title'"/>
+			<a v-for="(quickFilter, index) in quickFilters"
+				class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
+				@click="toggleQuickFilter(quickFilter)"
+				:key="index"
+				v-t="quickFilter.name"
+			>
+				<span class="icon is-small">
+					<i class="fa" :class="[quickFilter.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
+				</span>
+			</a>
+		</div>
 		<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
 			<div class="notification-container">
 				<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
@@ -40,6 +53,9 @@
 
 	.button
 		border-radius: 0
+
+	.quick-filters
+		margin-bottom: $margin-big
 </style>
 
 <script>
@@ -62,17 +78,19 @@
 		data() {
 			return {
 				moderators: [],
-				bodyClicked: false
+				bodyClicked: false,
+				quickFilters: this.initialQuickFilters()
 			}
 		},
 		computed: {
 			...mapGetters('tasks', ['tasks', 'paginationMeta', 'updatedTasks']),
+			...mapGetters(['currentUserId']),
 			emptyTasks() {
 				return Object.keys(this.tasks).length === 0
 			}
 		},
 		methods: {
-			...mapActions('tasks', ['pullTasks', 'updateTask']),
+			...mapActions('tasks', ['pullTasks', 'updateTask', 'filterTasks']),
 			...mapActions(['toggleOverlay']),
 			onChangePage(page) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
@@ -95,8 +113,54 @@
 				this.pullTasks()
 					.then(() => {
 						scrollToTop()
+						this.quickFilters = this.initialQuickFilters()
+
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
+			},
+			toggleQuickFilter(quickFilter) {
+				quickFilter.isActive = !quickFilter.isActive
+
+				this.filter()
+			},
+			filter() {
+				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
+				let query = {}
+
+				activeFilters.forEach(filter => {
+					query = {...query, ...filter.query()}
+				})
+
+				this.filterTasks({params: {query}})
+			},
+			initialQuickFilters() {
+				return [
+						{
+							name: this.$t('tasks.quickFilters.filters.my'),
+							isActive: false,
+							query: () => {
+								return {
+									where: [['assignee_id', this.currentUserId]]
+								}
+							}
+						}, {
+							name: this.$t('tasks.quickFilters.filters.notDone'),
+							isActive: false,
+							query: () => {
+								return {
+									whereNotIn:['status', ['done']]
+								}
+							}
+						}, {
+						name: this.$t('tasks.quickFilters.filters.unassigned'),
+						isActive: false,
+						query:() => {
+							return {
+								whereNull: ['assignee_id']
+							}
+						}
+					}
+				]
 			}
 		},
 		mounted() {

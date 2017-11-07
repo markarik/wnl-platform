@@ -138,6 +138,22 @@
 			verify() {
 				this.hasAnswer && this.$emit('verify', this.question.id)
 			},
+			keyDown(e) {
+				// Right arrow
+				if (e.keyCode === 39) {
+					this.nextQuestion()
+				}
+				// Left arrow
+				if (e.keyCode === 37) {
+					this.previousQuestion()
+				}
+			},
 		},
+		mounted() {
+			window.addEventListener('keydown', this.keyDown)
+		},
+		beforeDestroy() {
+			window.removeEventListener('keydown', this.keyDown)
+		}
 	}
 </script>

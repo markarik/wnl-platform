@@ -9,7 +9,7 @@
 	<p>Spotykamy się już dokładnie za dwa tygodnie! W związku z tym chcielibyśmy przekazać Ci wszystkie przydatne informacje organizacyjne.</p>
 
 	<h3>Gdzie i kiedy?</h3>
-	<p>Warsztaty rozpoczną się w sobotę 17 czerwca, <strong>o godzinie 11:00</strong> w <a href="https://goo.gl/maps/f78fwrAzh322">Collegium da Vinci</a>, przy ul. Tadeusza Kutrzeby 20 w Poznaniu. Spotykamy się w sali <strong>N205</strong>, do której będą prowadziły Was od wejścia wskazówki umieszczone na monitorach widocznych w korytarzach Collegium.</p>
+	<p>Warsztaty rozpoczną się w sobotę 17 czerwca, <strong>o godzinie 11:00</strong> w <a href="https://goo.gl/maps/f78fwrAzh322">Collegium da Vinci</a>, przy ul. Tadeusza Kutrzeby 10 w Poznaniu. Spotykamy się w sali <strong>N205</strong>, do której będą prowadziły Was od wejścia wskazówki umieszczone na monitorach widocznych w korytarzach Collegium.</p>
 
 	<p>Warsztaty zaplanowane są na 8 godzin, od 11:00 do 19:00, z uwzględnieniem przerw - dwóch 5-minutowych, dwóch 15-minutowych oraz jednej godzinnej w porze obiadowej.</p>
 

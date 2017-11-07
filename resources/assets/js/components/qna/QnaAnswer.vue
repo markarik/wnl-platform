@@ -136,7 +136,7 @@
 				return this.profile(this.answer.profiles[0])
 			},
 			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.id
+				return this.currentUserId === this.author.user_id
 			},
 			deleteTarget() {
 				return 'tę odpowiedź'

@@ -252,7 +252,7 @@
 				}
 			},
 			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.id
+				return this.currentUserId === this.author.user_id
 			},
 			resourceRoute() {
 				return `qna_questions/${this.id}`

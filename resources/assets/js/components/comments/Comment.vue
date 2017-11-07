@@ -91,7 +91,7 @@ export default {
 			return 'ten komentarz'
 		},
 		isCurrentUserAuthor() {
-			return this.profile.id === this.currentUserId
+			return this.profile.user_id === this.currentUserId
 		},
 		voteState() {
 			return this.getReaction('comments', this.id, "upvote")

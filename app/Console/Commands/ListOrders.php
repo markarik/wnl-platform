@@ -13,7 +13,7 @@ class ListOrders extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'orders {id?*} {--refund} {--since=} {--remindable} {--cancelable}';
+	protected $signature = 'orders {id?*} {--refund} {--since=} {--potential} {--remindable} {--cancelable}';
 
 	/**
 	 * The console command description.
@@ -79,6 +79,14 @@ class ListOrders extends Command
 			$orders = $orders->filter(function ($order) use ($now) {
 				return $order->method && !$order->paid && !$order->canceled &&
 					Carbon::parse($order->created_at)->diffInDays($now) > 7;
+			});
+		}
+
+		if ($this->option('potential')) {
+			$now = new Carbon();
+			$orders = $orders->filter(function ($order) use ($now) {
+				return $order->method && !$order->paid && !$order->canceled &&
+					Carbon::parse($order->created_at)->diffInDays($now) <= 7;
 			});
 		}
 

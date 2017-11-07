@@ -1,13 +1,13 @@
 <template>
 	<article class="wnl-comment media">
 		<div class="wnl-comment-side">
-			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 			<figure class="media-left">
 				<p class="image is-32x32">
 					<wnl-avatar size="medium" :fullName="profile.full_name" :url="profile.avatar" :userId="profile.id">
 					</wnl-avatar>
 				</p>
 			</figure>
+			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
 			<span class="author">{{profile.full_name}}</span>
@@ -33,8 +33,13 @@
 		margin-top: -5px
 
 	.wnl-comment-side
+		align-items: center
 		display: flex
-		flex-direction: column-reverse
+		flex-direction: column
+		margin-right: $margin-small
+
+		.media-left
+			margin-right: 0
 
 	.author
 		font-weight: $font-weight-bold

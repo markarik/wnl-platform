@@ -3,13 +3,13 @@
 </template>
 
 <script>
-	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
+	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
 
 	export default {
 		name: 'Questions',
-		perimeters: [firstEditionParticipant],
+		perimeters: [currentEditionParticipant],
 		mounted() {
-			if (!this.$firstEditionParticipant.isAllowed('access')) {
+			if (!this.$currentEditionParticipant.isAllowed('access')) {
 				this.$router.replace({name: 'dashboard'})
 			}
 		}

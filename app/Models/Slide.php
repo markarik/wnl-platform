@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use Illuminate\Database\Eloquent\Model;
 use Facades\Lib\SlideParser\Parser;
+use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
-use App\Models\Presentable;
 
 class Slide extends Model
 {
@@ -32,6 +31,11 @@ class Slide extends Model
 	public function subsections()
 	{
 		return $this->morphedByMany('\App\Models\Subsection', 'presentable');
+	}
+
+	public function slideshow()
+	{
+		return $this->morphedByMany('\App\Models\Slideshow', 'presentable');
 	}
 
 	public function comments()
@@ -72,13 +76,19 @@ class Slide extends Model
 
 		if (!empty($this->sections) && !empty($this->sections->first())) {
 			$section = $this->sections->first();
-			$screen = $section->screen;
-			$lesson = $screen->lesson;
-			$group = $lesson->group;
+			$screen = $section->screen ?? null;
+			$lesson = $screen->lesson ?? null;
+			$group = $lesson->group ?? null;
+
+			if (!$screen || !$lesson || !$group) {
+				// Don't index slide if it doesn't have
+				// a parent lesson or screen.
+				return [];
+			}
 
 			// psay ay ay...
 			if (!$lesson->isAvailable(1)) {
-				dump('lesson not available', $lesson->id);
+				\Log::debug('lesson not available ' . $lesson->id);
 				$this->unsearchable();
 				return [];
 			}

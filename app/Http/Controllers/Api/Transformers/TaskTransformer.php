@@ -51,7 +51,7 @@ class TaskTransformer extends ApiTransformer
 
 	public function includeAssigneeProfiles(Task $task)
 	{
-		if ($task->assigneeProfiles->count() > 0) {
+		if ($task->assigneeProfiles) {
 			$profile = $task->assigneeProfiles;
 			return $this->item($profile, new UserProfileTransformer(['tasks' => $task->id]), 'assigneeProfiles');
 		}

@@ -1,17 +1,17 @@
 <?php namespace Lib\SlideParser;
 
-use App\Models\Tag;
-use Storage;
+use App\Exceptions\ParseErrorException;
 use App\Models\Group;
-use App\Models\Slide;
 use App\Models\Lesson;
 use App\Models\Section;
-use App\Models\Subsection;
+use App\Models\Slide;
 use App\Models\Slideshow;
-use Illuminate\Support\Str;
+use App\Models\Subsection;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use App\Exceptions\ParseErrorException;
+use Storage;
 
 class Parser
 {
@@ -38,6 +38,8 @@ class Parser
 		'movie' => '/<iframe.*youtube\.com.*>/',
 		'audio' => '/<iframe.*clyp.it.*>/',
 	];
+
+	const IMAGE_TEMPLATE = '<img src="%s">';
 
 	const IMAGE_VIEWER_TEMPLATE = '
 		<div class="iv-image-container">
@@ -78,7 +80,7 @@ class Parser
 			0 => 'group',
 			1 => 'lesson',
 			2 => 'section',
-			3 => 'subsection'
+			3 => 'subsection',
 		]);
 	}
 
@@ -108,10 +110,13 @@ class Parser
 				}
 			}
 
-			$slide = Slide::create([
-				'content'       => $this->cleanSlide($slideHtml),
-				'is_functional' => $this->isFunctional($slideHtml),
-			]);
+			$content = $this->cleanSlide($slideHtml);
+			$slide = Slide::firstOrCreate(
+				['content' => $content],
+				[
+					'content'       => $this->cleanSlide($slideHtml),
+					'is_functional' => $this->isFunctional($slideHtml),
+				]);
 
 			$tags = $this->getTags($slideHtml);
 
@@ -180,36 +185,20 @@ class Parser
 
 				if ($courseTag['name'] == 'subsection') {
 					$subsection = Subsection::firstOrCreate([
-						'name'      => $this->cleanName($courseTag['value']),
+						'name'       => $this->cleanName($courseTag['value']),
 						'section_id' => $this->courseModels['section']->id,
 					]);
 					$this->courseModels['subsection'] = $subsection;
 				}
 			}
 
-			if ($this->lessonTag) {
+			if ($this->lessonTag && !$slide->tags->contains($this->lessonTag)) {
 				$slide->tags()->attach($this->lessonTag);
 			}
-			if ($this->groupTag) {
+			if ($this->groupTag && !$slide->tags->contains($this->groupTag)) {
 				$slide->tags()->attach($this->groupTag);
 			}
-			if (array_key_exists('slideshow', $this->courseModels)) {
-				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);
-			}
-			if (array_key_exists('section', $this->courseModels)) {
-				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
-
-				if ($lastSectionFound === null) {
-					$lastSectionFound = $this->courseModels['section'];
-				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {
-					$lastSectionFound = $this->courseModels['section'];
-					unset($this->courseModels['subsection']);
-				}
-			}
-
-			if (array_key_exists('subsection', $this->courseModels)) {
-				$this->courseModels['subsection']->slides()->attach($slide, ['order_number' => $orderNumber]);
-			}
+			$this->attachToPresentables($slide, $orderNumber, $lastSectionFound);
 
 			if (!empty($foundQuestionsIds)) {
 				$slide->quizQuestions()->attach($foundQuestionsIds);
@@ -218,7 +207,7 @@ class Parser
 			$orderNumber++;
 		}
 
-		\Artisan::call('screens:countSlides');
+		\Artisan::queue('screens:countSlides');
 	}
 
 	/**
@@ -460,11 +449,14 @@ class Parser
 			$ext = 'gif';
 			$template = self::GIF_TEMPLATE;
 		} else {
-			$background = $image->resize(1920, 1080);
-			$canvas = Image::canvas(1920, 1080, '#fff');
+			$background = $image->resize(1920, 1080, function ($constraint) {
+				$constraint->aspectRatio();
+				$constraint->upsize();
+			});
+			$canvas = Image::canvas($image->width(), $image->height(), '#fff');
 			$data = $canvas->insert($background)->stream('jpg', 80);
 			$ext = 'jpg';
-			$template = self::IMAGE_VIEWER_TEMPLATE;
+			$template = self::IMAGE_TEMPLATE;
 		}
 
 		if (!$data) {
@@ -480,5 +472,41 @@ class Parser
 		$html = str_replace($imgTag, $viewerHtml, $html);
 
 		return $html;
+	}
+
+	/**
+	 * @param $slide
+	 * @param $orderNumber
+	 * @param $lastSectionFound
+	 */
+	protected function attachToPresentables($slide, $orderNumber, $lastSectionFound)
+	{
+		try {
+			if (array_key_exists('slideshow', $this->courseModels)) {
+
+				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);
+			}
+			if (array_key_exists('section', $this->courseModels)) {
+				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
+
+				if ($lastSectionFound === null) {
+					$lastSectionFound = $this->courseModels['section'];
+				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {
+					$lastSectionFound = $this->courseModels['section'];
+					unset($this->courseModels['subsection']);
+				}
+			}
+
+			if (array_key_exists('subsection', $this->courseModels)) {
+				$this->courseModels['subsection']->slides()->attach($slide, ['order_number' => $orderNumber]);
+			}
+		}
+		catch (\Illuminate\Database\QueryException $e) {
+			if ($e->errorInfo[1] === 1062) {
+				// Means slide is duplicated.
+			} else {
+				throw $e;
+			}
+		}
 	}
 }

@@ -2,10 +2,9 @@
 
 namespace App\Console;
 
-use App\Models\Comment;
+use Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Artisan;
 
 class Kernel extends ConsoleKernel
 {
@@ -59,5 +58,9 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
+
+		$schedule
+			->command('role:assignFromProducts edition-2-participant 5,6')
+			->everyFiveMinutes();
 	}
 }

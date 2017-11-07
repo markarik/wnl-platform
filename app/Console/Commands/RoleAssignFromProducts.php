@@ -60,8 +60,10 @@ class RoleAssignFromProducts extends Command
 
 		foreach ($orders as $order) {
 			$user = User::find($order->user_id);
-			$user->roles()->attach($role);
-			$i++;
+			if (!$user->roles->contains($role)) {
+				$user->roles()->attach($role);
+				$i++;
+			}
 		}
 
 		$this->info("Assigned role to {$i} users.");

@@ -4,9 +4,9 @@ namespace App\Notifications;
 
 use App\Models\Lesson;
 use App\Notifications\Media\DatabaseTaskChannel;
+use App\Notifications\Media\LiveChannel;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Bus\Queueable;
-use App\Notifications\Media\LiveChannel;
 use Illuminate\Notifications\Notification;
 
 class EventTaskNotification extends Notification
@@ -71,23 +71,39 @@ class EventTaskNotification extends Notification
 	protected function qnaQuestionPostedDescription($event)
 	{
 		$lessonId = $event['context']['params']['lessonId'] ?? null;
-		if (!$lessonId) return '';
-		$lesson = Lesson::find($lessonId);
+		if ($lessonId) {
+			$lesson = Lesson::find($lessonId);
 
-		return __('tasks.descriptions.qna_question', [
-			'lessonName' => $lesson->name ?? '',
-		]);
+			return __('tasks.descriptions.qna_question', [
+				'lessonName' => $lesson->name ?? '',
+			]);
+		}
+
+		$context = __('tasks.descriptions.context.' . $event['context']['name']) ?? null;
+		if ($context) {
+			return __('tasks.descriptions.qna_question', ['lessonName' => $context]);
+		};
+
+		return '';
 	}
 
 	protected function qnaAnswerPostedDescription($event)
 	{
 		$lessonId = $event['context']['params']['lessonId'] ?? null;
-		if (!$lessonId) return '';
-		$lesson = Lesson::find($lessonId);
+		if ($lessonId) {
+			$lesson = Lesson::find($lessonId);
 
-		return __('tasks.descriptions.qna_answer', [
-			'lessonName' => $lesson->name ?? '',
-		]);
+			return __('tasks.descriptions.qna_answer', [
+				'lessonName' => $lesson->name ?? '',
+			]);
+		};
+
+		$context = __('tasks.descriptions.context.' . $event['context']['name']);
+		if ($context) {
+			return __('tasks.descriptions.qna_answer', ['lessonName' => $context]);
+		}
+
+		return '';
 	}
 
 	protected function commentPostedDescription($event)
@@ -108,12 +124,20 @@ class EventTaskNotification extends Notification
 
 		if ($objectType === 'qna_answer') {
 			$lessonId = $event['context']['params']['lessonId'] ?? null;
-			if (!$lessonId) return '';
-			$lesson = Lesson::find($lessonId);
+			if (!$lessonId) {
+				$lesson = Lesson::find($lessonId);
 
-			return __('tasks.descriptions.qna_answer_comment', [
-				'lessonName' => $lesson->name ?? '',
-			]);
+				return __('tasks.descriptions.qna_answer_comment', [
+					'lessonName' => $lesson->name ?? '',
+				]);
+			};
+
+			$context = __('tasks.descriptions.context.' . $event['context']['name']);
+			if ($context) {
+				return __('tasks.descriptions.qna_answer_comment', ['lessonName' => $context]);
+			}
+
+			return '';
 		}
 
 		if ($objectType === 'quiz_question') {

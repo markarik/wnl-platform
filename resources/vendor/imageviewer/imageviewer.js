@@ -454,7 +454,7 @@ let imageviewer = function ($, window, document, undefined) {
                 if (!forceShow && (snapViewVisible || viewer.zoomValue <= 100 || !viewer.loaded)) return;
                 clearTimeout(snapViewTimeout);
                 snapViewVisible = true;
-                viewer.snapView.css('opacity', 1);
+                viewer.snapView.css('opacity', 0.5);
                 if (!options.snapViewPersist && !noTimeout) {
                     snapViewTimeout = setTimeout(function () {
                         viewer.snapView.css('opacity', 0);

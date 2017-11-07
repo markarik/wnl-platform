@@ -1,15 +1,22 @@
 <template>
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
-		<p>Kiedy to się stało?! 12 tygodni pierwszej edycji kursu już za nami! Chcielibyśmy niezwykle podziękować Ci za zaangażowanie i pogratulować tak długiej i systematycznej nauki! Jesteśmy naprawdę pod wrażeniem! <wnl-emoji name="tada"/></p>
 
-		<p>Na zakończenie kursu, prosimy Cię o wypełnienie ostatniej ankiety ewaluacyjnej. Część pytań na pewno rozpoznasz z poprzednich kwestionariuszy, ale tym razem skupimy się też na ocenie poszczególnych przedmiotów, w końcu możecie je porównać już między sobą. <wnl-emoji name="bar_chart"/></p>
+		<p>Serdecznie witamy Cię w wirtualnym pokoju nauki do LEK‑u! Oficjalnie rozpoczynamy 2. edycję kursu! <wnl-emoji name="tada"/></p>
 
-		<p>Ankieta jest tym razem nieco dłuższa, ale wciąż nie powinna zająć więcej, niż 15 minut. <wnl-emoji name="wink"/></p>
+		<p>Mamy nadzieję, że czujesz mobilizację i chęć do odkrycia nauki na nowo! Przed nami 4 miesiące wspólnej pracy. Zachęcamy Cię bardzo gorąco do uczestniczenia w dyskusjach na platformie, dzielenia się wiedzą oraz informowania nas o wszystkich problemach, czy wątpliwościach, z którymi przyjdzie Ci się spotkać. <wnl-emoji name="wink"/></p>
 
-		<p class="has-text-centered"><a class="button is-primary is-outlined is-small" target="_blank" href="https://goo.gl/forms/C1mQ0MUwUzZBJyTO2">Przejdź do ostatniej ankiety</a></p>
+		<p>Zanim usiądziesz wygodnie, aby zmierzyć się z pierwszą lekcją - Kardiologia 1, zapraszamy Cię do zapoznania się z trzema krótkimi lekcjami wstępnymi (w grupie <strong>Więcej niż LEK</strong> w nawigacji po lewej stronie):
+			<ul>
+				<li><strong>Wstęp do kursu</strong>, czyli warto zacząć od podstaw. <wnl-emoji name="wink"/> Tutaj skupimy się na obsłudze platformy oraz celach kursu.</li>
+				<li><strong>5 filarów "Więcej niż LEK"</strong> odpowiadających na 5 podstawowych problemów związanych z przygotowaniem do egzaminu. Pomogą Ci w pełni zrozumieć dlaczego tak, a nie inaczej zaprojektowaliśmy ten kurs.</li>
+				<li><strong>Efektywna nauka</strong> to już lekcja w pełni poświęcona wiedzy o tym jak można uczyć się lepiej, szybciej i zapamiętywać trwalej.</li>
+			</ul>
+		</p>
 
-		<p>Dziękujemy i trzymamy za Ciebie kciuki!</p>
+		<p>W razie jakichkolwiek pytań możesz pisać do nas w Pomocy, na info@wiecejnizlek.pl lub na facebooku. <wnl-emoji name="wink"/></p>
+
+		<p>Trzymamy za Ciebie kciuki i życzymy wiele radości z nauki! <wnl-emoji name="raised_hands"/></p>
 	</div>
 </template>
 
@@ -17,7 +24,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'survey-end'
+	const CURRENT_NEWS = 'course-start'
 	const REQUIRED_ROLE = ''
 
 	export default {

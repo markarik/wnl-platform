@@ -100,7 +100,7 @@ class CategoriesTags extends Command
 
 				foreach($lessonsWithTags as $lesson) {
 					if (!$lesson->tags->contains($createdTag)) {
-						echo(sprintf("Adding tag: %s to lesson with id: %s \n", $createdTag->name, $lesson->id));
+						echo(sprintf("Adding tag: %s to lesson with id: %s and name: %s \n", $createdTag->name, $lesson->id, $lesson->name));
 						$lesson->tags()->save($createdTag);
 					}
 				}

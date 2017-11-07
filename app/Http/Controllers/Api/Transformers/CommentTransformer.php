@@ -38,7 +38,7 @@ class CommentTransformer extends ApiTransformer
 		}
 
 
-		if (self::shouldInclude('context')) {
+		if (self::shouldInclude('context') && $comment->commantable) {
 			$context = $this->addEventContext($comment->commentable);
 			$data = array_merge($data, compact('context'));
 		}

@@ -65,8 +65,7 @@
 						:showContext="true"
 					></wnl-qna>
 					<wnl-qna
-						:colorHeader="colorHeader"
-						:colorHeaderOpacity="colorHeaderOpacity"
+						:isUserProfileClass="isUserProfileClass"
 						:numbersDisabled="numbersDisabled"
 						:icon="iconForAnswers"
 						:title="'Najlepsze Odpowiedzi'"
@@ -282,12 +281,6 @@ export default {
 		isMobile() {
 			return this.isMobileProfile ? 'is-mobile' : ''
 		},
-		// isMobileUserContent() {
-		// 	return this.isMobileProfile ? 'is-mobile-user-content' : ''
-		// },
-		// isMobileUserHeader() {
-		// 	return this.isMobileProfile ? 'is-mobile-user-header' : ''
-		// },
         helpToDisplay() {
             return this.profile.help || this.$t('user.userProfile.helpDefaultDescription')
         },
@@ -397,6 +390,9 @@ export default {
         responseCondition() {
             return !_.isEmpty(this.profile)
         },
+		checkUrlUserId() {
+			return this.$route.params.userId == null ? this.$route.params.userId = this.currentUserId : this.id
+		},
     },
     methods: {
         ...mapActions('qna', ['setUserQnaQuestions']),
@@ -411,7 +407,7 @@ export default {
             return this.activePanels.includes(panel)
         },
 		loadData() {
-			const userId = this.id;
+			const userId = this.checkUrlUserId;
 			const dataForComments = {
 				query: {
 					where: [

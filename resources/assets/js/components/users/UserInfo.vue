@@ -1,6 +1,6 @@
 <template>
     <div class="user-info">
-        <span class="label">{{ label }}</span>
+        <span class="label" v-t="label"></span>
         <span class="info">{{ info }}</span>
     </div>
 </template>

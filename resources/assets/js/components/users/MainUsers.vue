@@ -5,9 +5,6 @@
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<!-- <aside class="sidenav-aside myself-sidenav">
-				<wnl-sidenav :items="items"></wnl-sidenav>
-			</aside> -->
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view
@@ -32,12 +29,6 @@
 				@locationFilterLoaded="locationFilterLoaded"
 			></wnl-users-filters>
 		</wnl-sidenav-slot>
-		<!-- <div v-if="isChatToggleVisible && !isMainRoute" class="wnl-chat-toggle" @click="toggleChat">
-			<span class="icon is-big">
-				<i class="fa fa-chevron-left"></i>
-				<span>Pokaż info</span>
-			</span>
-		</div> -->
 		<div v-if="isMainRoute && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
@@ -111,28 +102,6 @@
 			},
 			isMainRoute() {
 				return this.$route.name === 'all'
-			},
-			items() {
-			// 	let items = [
-			// 		{
-			// 			text: 'Ziomki',
-			// 			itemClass: 'heading small',
-			// 		},
-			// 		{
-			// 			text: 'Wszystkie ziomki',
-			// 			itemClass: 'has-icon',
-			// 			to: {
-			// 				name: 'all',
-			// 				params: {},
-			// 			},
-			// 			isDisabled: false,
-			// 			method: 'push',
-			// 			iconClass: 'fa-address-book',
-			// 			iconTitle: 'Wszystkie ziomki',
-			// 		}
-			// 	]
-			// 	return items
-			return ''
 			},
 		},
 		methods: {

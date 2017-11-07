@@ -11,10 +11,6 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.votes
-		flex: 0 auto
-		margin-right: $margin-base
-
 	.vote
 		align-items: center
 		cursor: pointer

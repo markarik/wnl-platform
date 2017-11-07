@@ -11,10 +11,10 @@
 							<span v-if="icon" class="icon is-big user-profile-icon">
 								<i :class="icon"></i>
 							</span>
-							<p v-if="title !== false" class="title is-4" >
+							<p v-if="title !== false" class="wnl-qna-header-title" >
 								{{displayedTitle}}&nbsp;
 							</p>
-							<p class="title is-4" v-if="!numbersDisabled">
+							<p class="wnl-qna-header-title" v-if="!numbersDisabled">
 								({{howManyQuestions}})
 							</p>
 						</div>
@@ -72,8 +72,10 @@
 		&.is-user-profile
 			.icon
 				color: $color-dark-blue-opacity
-			.title
+			.wnl-qna-header-title
 				color: $color-dark-blue
+		.wnl-qna-header-title
+			font-size: $font-size-plus-4
 
 		.user-profile-icon
 			margin-right: $margin-small

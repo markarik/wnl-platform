@@ -4,12 +4,30 @@
             <p>Info o uczestniku</p>
         </div>
         <div class="user-infos">
-            <wnl-user-info :label="`Miasto`" :info="profile.city"></wnl-user-info>
-            <wnl-user-info :label="`Uniwersytet`" :info="profile.university"></wnl-user-info>
-            <wnl-user-info :label="`Wymarzona specjalizacja`" :info="profile.specialization"></wnl-user-info>
-            <wnl-user-info :label="`Zainteresowania`" :info="profile.interests"></wnl-user-info>
-            <wnl-user-info :label="`O mnie`" :info="profile.about"></wnl-user-info>
-            <wnl-user-info :label="`Gdzie zwykle się uczę?`" :info="profile.learning_location"></wnl-user-info>
+            <wnl-user-info
+                :label="$t('user.userAboutLabels.city')"
+                :info="profile.city"
+                ></wnl-user-info>
+            <wnl-user-info
+                :label="$t('user.userAboutLabels.university')"
+                :info="profile.university"
+            ></wnl-user-info>
+            <wnl-user-info
+                :label="$t('user.userAboutLabels.specialization')"
+                :info="profile.specialization"
+            ></wnl-user-info>
+            <wnl-user-info
+                :label="$t('user.userAboutLabels.interests')"
+                :info="profile.interests"
+            ></wnl-user-info>
+            <wnl-user-info
+                :label="$t('user.userAboutLabels.about')"
+                :info="profile.about"
+            ></wnl-user-info>
+            <wnl-user-info
+                :label="$t('user.userAboutLabels.learning_location')"
+                :info="profile.learning_location"
+            ></wnl-user-info>
         </div>
     </div>
 

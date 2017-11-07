@@ -145,16 +145,26 @@
 		<table>
 			<tr>
 				<th>Termin płatności</th>
-				<th>Kwota</th>
+				<th>Netto</th>
+				<th>Vat</th>
+				<th>Brutto</th>
 			</tr>
 			@foreach($invoiceOrder->instalments['instalments'] as $index => $instalment)
 				@if($instalment['left'] > 0)
 					<tr>
 						<td>{{ $instalment['date']->format('d-m-Y') }}</td>
-						<td>{{ $instalment['amount'] }}zł</td>
+						<td>{{ $n($instalment['amount'] / 1.23) }}zł</td>
+						<td>{{ $n($instalment['amount'] - $instalment['amount'] / 1.23) }}zł</td>
+						<td>{{ $n($instalment['amount']) }}zł</td>
 					</tr>
 				@endif
 			@endforeach
+			<tr>
+				<td><strong>Razem</strong></td>
+				<td>{{ $n($invoiceOrder->instalments['total']/ 1.23) }}zł</td>
+				<td>{{ $n($invoiceOrder->instalments['total']- $invoiceOrder->instalments['total'] / 1.23) }}zł</td>
+				<td>{{ $n($invoiceOrder->instalments['total']) }}zł</td>
+			</tr>
 		</table>
 	@endif
 @endsection

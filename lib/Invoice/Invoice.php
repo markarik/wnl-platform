@@ -252,7 +252,10 @@ class Invoice
 
 	public function finalInvoice(Order $order)
 	{
-		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$previousAdvances = $order->invoices()->whereIn('series', [
+			self::ADVANCE_SERIES_NAME,
+			self::CORRECTIVE_SERIES_NAME,
+		])->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);

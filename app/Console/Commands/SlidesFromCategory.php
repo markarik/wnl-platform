@@ -79,11 +79,10 @@ class SlidesFromCategory extends Command
 					->where('presentable_type', 'App\Models\Slideshow')
 					->where('presentable_id', $screen->slideshow->id)
 					->orderBy('order_number')
-					->get(['slide_id']);
+					->get(['slide_id'])->pluck('slide_id');
 
-				$slides = Slide::find($slidesIds->pluck('slide_id'));
-
-				foreach($slides as $slide) {
+				foreach($slidesIds as $slideId) {
+					$slide = Slide::find($slideId);
 					$category->slides()->attach($slide, ['order_number' => $orderNumber]);
 					$orderNumber++;
 				}

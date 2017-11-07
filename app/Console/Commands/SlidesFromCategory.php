@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Slide;
+use App\Models\Lesson;
 
 class SlidesFromCategory extends Command
 {
@@ -46,15 +47,32 @@ class SlidesFromCategory extends Command
 		foreach ($allCategories as $category) {
 			$categoryTag = Tag::where('name', $category->name)->first();
 			if (!empty($category->parent_id)) {
-				$slidesWithTag = Slide::whereHas('tags', function($tag) use ($categoryTag) {
+				$lessonsWithTag = Lesson::whereHas('tags', function($tag) use ($categoryTag) {
 					$tag->where('name', $categoryTag->name);
-				})->get();
+				})->orderBy('order_number')->get();
 
-				$order_number = 0;
-				foreach($slidesWithTag as $slide) {
-					if (!$category->slides->contains($slide)) {
-						$category->slides()->attach($slide, ['order_number' => $order_number]);
-						$order_number++;
+				$orderNumber = 0;
+
+				foreach($lessonsWithTag as $lesson) {
+					foreach($lesson->screens as $screen) {
+						if (!empty($screen->slideshow)) {
+							$slidesIds = \DB::table('presentables')
+								->where('presentable_type', 'App\Models\Slideshow')
+								->where('presentable_id', $screen->slideshow->id)
+								->orderBy('order_number')
+								->get(['slide_id']);
+
+
+							$slides = Slide::find($slidesIds->pluck('slide_id'));
+
+							foreach($slides as $slide) {
+								if (!$category->slides->contains($slide)) {
+									$category->slides()->attach($slide, ['order_number' => $orderNumber]);
+									$orderNumber++;
+								}
+							}
+							break;
+						}
 					}
 				}
 			}

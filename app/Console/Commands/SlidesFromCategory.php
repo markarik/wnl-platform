@@ -58,35 +58,36 @@ class SlidesFromCategory extends Command
 					$tag->where('name', $categoryTag->name);
 				})->orderBy('order_number')->get();
 
-				$orderNumber = 0;
 
-				foreach($lessonsWithTag as $lesson) {
-					if ($lesson->isAvailable(1)) {
-						foreach($lesson->screens as $screen) {
-							if (!empty($screen->slideshow)) {
-								$slidesIds = \DB::table('presentables')
-									->where('presentable_type', 'App\Models\Slideshow')
-									->where('presentable_id', $screen->slideshow->id)
-									->orderBy('order_number')
-									->get(['slide_id']);
-
-								$slides = Slide::find($slidesIds->pluck('slide_id'));
-
-								foreach($slides as $slide) {
-									if (!$category->slides->contains($slide)) {
-										$category->slides()->attach($slide, ['order_number' => $orderNumber]);
-										$orderNumber++;
-									}
-								}
-								break;
-							}
-						}
-					}
-				}
+				$this->attachLessonsSlidesToCategory($lessonsWithTag, $category);
 			}
+
 			$bar->advance();
 		}
 
 		print PHP_EOL;
+	}
+
+	private function attachLessonsSlidesToCategory($lessonsWithTag, $category) {
+		$orderNumber = 0;
+
+		foreach($lessonsWithTag as $lesson) {
+			if ($lesson->isAvailable(1)) {
+				$screen = $lesson->screens()->where('type', 'slideshow')->first();
+
+				$slidesIds = \DB::table('presentables')
+					->where('presentable_type', 'App\Models\Slideshow')
+					->where('presentable_id', $screen->slideshow->id)
+					->orderBy('order_number')
+					->get(['slide_id']);
+
+				$slides = Slide::find($slidesIds->pluck('slide_id'));
+
+				foreach($slides as $slide) {
+					$category->slides()->attach($slide, ['order_number' => $orderNumber]);
+					$orderNumber++;
+				}
+			}
+		}
 	}
 }

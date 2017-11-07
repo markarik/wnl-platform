@@ -52,10 +52,6 @@ class Kernel extends ConsoleKernel
 			->dailyAt('01:30');
 
 		$schedule
-			->command('slides:fromCategory')
-			->dailyAt('00:30');
-
-		$schedule
 			->command('progress:store')
 			->dailyAt('02:30');
 

@@ -12,7 +12,7 @@
 			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-answer-content" v-html="content"></div>
+					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
 					<wnl-avatar

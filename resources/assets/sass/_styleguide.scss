@@ -266,6 +266,65 @@ button.button {
 	}
 }
 
+.ql-indent-1 {
+	margin-left: $margin-base * 1;
+}
+
+.ql-indent-2 {
+	margin-left: $margin-base * 2;
+}
+
+.ql-indent-3 {
+	margin-left: $margin-base * 3;
+}
+
+.ql-indent-4 {
+	margin-left: $margin-base * 4;
+}
+
+ul {
+	.ql-indent-1 {
+		list-style-type: circle;
+	}
+
+	.ql-indent-2 {
+		list-style-type: square;
+	}
+
+	.ql-indent-3 {
+		list-style-type: disc;
+	}
+}
+
+ol {
+	.ql-indent-1 {
+		list-style-type: lower-roman;
+	}
+
+	.ql-indent-2 {
+		list-style-type: upper-alpha;
+	}
+
+	.ql-indent-3 {
+		list-style-type: lower-alpha;
+	}
+}
+
+.comment-text.content,
+.qna-question-content.content,
+.qna-answer-content, {
+	p,
+	p:not(:last-child) {
+		margin-bottom: 0;
+	}
+}
+
+.comment-text.content:not(:last-child),
+.qna-question-content.content:not(:last-child),
+.qna-answer-content.content:not(:last-child) {
+	margin-bottom: 0;
+}
+
 // Datepicker
 
 @media only screen and (max-width: 400px) {

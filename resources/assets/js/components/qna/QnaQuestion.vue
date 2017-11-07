@@ -15,7 +15,7 @@
 			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content" v-html="content"></div>
+					<div class="qna-question-content content" v-html="content"></div>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"

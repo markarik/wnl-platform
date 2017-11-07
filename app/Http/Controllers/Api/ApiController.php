@@ -91,7 +91,7 @@ class ApiController extends Controller
 		if (Auth::user()->can('delete', $model)) {
 			$model->forceDelete();
 
-			// self::dispatchRemovedEvent($model, $modelName);
+			self::dispatchRemovedEvent($model, $modelName);
 
 			return $this->respondOk();
 		}

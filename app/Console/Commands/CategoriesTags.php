@@ -9,6 +9,7 @@ use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
 use App\Models\Screen;
 use App\Models\Slide;
+use App\Models\Lesson;
 
 class CategoriesTags extends Command
 {
@@ -92,6 +93,15 @@ class CategoriesTags extends Command
 					if (!$screen->tags->contains($createdTag)) {
 						echo(sprintf("Adding tag: %s to screen with id: %s \n", $createdTag->name, $screen->id));
 						$screen->tags()->save($createdTag);
+					}
+				}
+
+				$lessonsWithTags = Lesson::where('name', 'like', "$createdTag->name%")->get();
+
+				foreach($lessonsWithTags as $lesson) {
+					if (!$lesson->tags->contains($createdTag)) {
+						echo(sprintf("Adding tag: %s to lesson with id: %s and name: %s \n", $createdTag->name, $lesson->id, $lesson->name));
+						$lesson->tags()->save($createdTag);
 					}
 				}
 

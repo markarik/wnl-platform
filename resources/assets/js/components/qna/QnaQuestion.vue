@@ -4,13 +4,13 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div class="qna-question" ref="highlight">
-				<wnl-vote
-					type="up"
-					:reactableId="questionId"
-					:reactableResource="reactableResource"
-					:state="voteState"
-					module="qna"
-				></wnl-vote>
+			<wnl-vote
+				type="up"
+				:reactableId="questionId"
+				:reactableResource="reactableResource"
+				:state="voteState"
+				module="qna"
+			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-question-content content" v-html="content"></div>

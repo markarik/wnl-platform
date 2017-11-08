@@ -1,6 +1,6 @@
 <template>
     <div class="user-info">
-        <span class="label" v-t="label"></span>
+        <span class="label"v-t="label"></span>
         <span class="info" v-t="info"></span>
     </div>
 </template>

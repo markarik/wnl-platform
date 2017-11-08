@@ -55,7 +55,7 @@
 					<wnl-qna
 						:isUserProfileClass="isUserProfileClass"
 						:numbersDisabled="true"
-						:title="$t('users.userProfile.bestQuestions')"
+						:title="$t('user.userProfile.bestQuestions')"
 						:icon="iconForQuestions"
 						v-if="ifAnyQuestions"
 						:sortingEnabled="false"
@@ -68,7 +68,7 @@
 						:isUserProfileClass="isUserProfileClass"
 						:numbersDisabled="true"
 						:icon="iconForAnswers"
-						:title="$t('users.userProfile.bestAnswers')"
+						:title="$t('user.userProfile.bestAnswers')"
 						v-if="ifAnyAnswers"
 						:sortingEnabled="false"
 						:readOnly="readOnly"

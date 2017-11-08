@@ -19,7 +19,6 @@
 			</span>
 			<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
 		</div>
-		<slot></slot>
 	</article>
 </template>
 

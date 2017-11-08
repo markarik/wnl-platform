@@ -2,7 +2,6 @@
 
 
 use App\Models\User;
-use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Api\ApiController;

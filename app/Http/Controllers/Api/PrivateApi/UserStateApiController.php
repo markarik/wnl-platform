@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Redis;
 
 class UserStateApiController extends ApiController
 {
+	
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);

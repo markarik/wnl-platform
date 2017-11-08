@@ -203,11 +203,6 @@ let routes = [
 			document.getElementById('logout-form').submit()
 		}
 	},
-	// {
-	// 	name: 'user',
-	// 	path: '/app/users/:userId',
-	// 	component: require('js/components/users/UserProfile.vue'),
-	// },
 	{
 		path: '/app/users',
 		name: 'all-users',
@@ -215,11 +210,6 @@ let routes = [
 		props: true,
 		redirect: {name: 'user'},
 		children: [
-			// {
-			// 	name: 'all',
-			// 	path: 'all',
-			// 	component: require('js/components/users/AllUsers.vue')
-			// },
 			{
 				name: 'user',
 				path: ':userId',

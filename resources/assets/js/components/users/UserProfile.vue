@@ -398,8 +398,7 @@ export default {
 					where: [
 						['user_id', userId]
 					]
-				},
-				include: 'context'
+				}
 			}
 			const dataForQnaQuestions = {
 				query: {
@@ -423,7 +422,7 @@ export default {
 			}
 			// const promisedAddress = axios.get(getApiUrl(`users/${userId}/address`))
 			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.search`), dataForComments)
+			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.count`), dataForComments)
 			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
 			const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaAnswers)
 			this.isLoading = true

@@ -81,7 +81,7 @@ import {
 		},
 		computed: {
 			...mapGetters(['currentUserId', 'currentUserName']),
-            ...mapGetters('users', ['activeUsers']),
+			...mapGetters('users', ['activeUsers']),
 			activeUsersCount() {
 				return this.usersToCount.length
 			},

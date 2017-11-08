@@ -5,7 +5,7 @@
   "presets": [
     ["env", {
       "targets": {
-        "safari": 10
+        "iOS": 10
       },
       "modules": false
     }]

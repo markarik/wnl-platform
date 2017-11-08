@@ -13,7 +13,7 @@
 			>
 				{{ callToAction }}
 			</router-link>
-			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {data: nextLessonDate}) }}</span>
+			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {date: nextLessonDate}) }}</span>
 		</div>
 	</div>
 </template>
@@ -102,6 +102,7 @@
 				return this.$t(`dashboard.progress.${this.status}`)
 			},
 			nextLessonDate() {
+				console.log(timeFromDate(this.nextLesson.startDate.date), this.nextLesson.startDate.date, '********')
 				return timeFromDate(this.nextLesson.startDate.date)
 			},
 			status() {

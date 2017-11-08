@@ -123,7 +123,15 @@ const getters = {
 			lesson = getters.getLesson(inProgressId)
 			lesson.status = STATUS_IN_PROGRESS
 		} else {
-			for (let lessonId in getters.getLessons) {
+			const sortedLessonsIds = Object.keys(getters.getLessons).sort((keyA, keyB) => {
+				const lessonA = getters.getLessons[keyA]
+				const lessonB = getters.getLessons[keyB]
+
+				return lessonA.order_number - lessonB.order_number
+			}).map(Number)
+
+			for (let i = 0; i < sortedLessonsIds.length; i++) {
+				let lessonId = sortedLessonsIds[i];
 				let isAvailable = getters.isLessonAvailable(lessonId)
 				if (isAvailable &&
 					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)

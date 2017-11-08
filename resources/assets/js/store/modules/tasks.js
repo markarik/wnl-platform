@@ -10,7 +10,7 @@ const namespaced = true
 const state = {
 	fetching: false,
 	tasks: {},
-	updatedTasks: []
+	updatedTasks: [],
 }
 
 const getters = {
@@ -35,7 +35,7 @@ const mutations = {
 }
 
 const actions = {
-	pullTasks({commit, dispatch}, {params} = {}) {
+	pullTasks({commit, dispatch}, params) {
 		commit(types.IS_FETCHING, true)
 
 		return new Promise ((resolve, reject) => {
@@ -52,7 +52,6 @@ const actions = {
 			});
 	},
 	initModeratorsFeedListener({getters, dispatch}) {
-		dispatch('pullTasks')
 		dispatch('setupLiveListener', 'private-group.moderators')
 	},
 	updateTask({commit, dispatch}, payload) {

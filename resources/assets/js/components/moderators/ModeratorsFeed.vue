@@ -94,7 +94,7 @@
 			...mapActions(['toggleOverlay']),
 			onChangePage(page) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks({params: {page, query: this.buildQuery()}})
+				this.pullTasks({page, query: this.buildQuery()})
 					.then(() => {
 						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
@@ -121,9 +121,7 @@
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
 
-				this.pullTasks({params: {
-					query: this.buildQuery()
-				}})
+				this.pullTasks({query: this.buildQuery()})
 			},
 			buildQuery() {
 				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
@@ -147,7 +145,7 @@
 							}
 						}, {
 							name: this.$t('tasks.quickFilters.filters.notDone'),
-							isActive: false,
+							isActive: true,
 							query: () => {
 								return {
 									whereNotIn:['status', ['done']]
@@ -168,7 +166,7 @@
 		mounted() {
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})
 
-			axios.post(getApiUrl('user_profiles/.search'), {
+			const promisedModerators = axios.post(getApiUrl('user_profiles/.search'), {
 				query: {
 					whereHas: {
 						roles: {
@@ -176,10 +174,15 @@
 						}
 					},
 				}
-			}).then(({data: {...users}}) => {
-				this.moderators = Object.values(users)
-				this.toggleOverlay({source: 'moderatorsFeed', display: false})
 			})
+			const promisedTasks = this.pullTasks({query: this.buildQuery()})
+
+			Promise.all([promisedModerators, promisedTasks])
+				.then(([moderatorsResponse, tasks]) => {
+					const {data: {...users}} = moderatorsResponse
+					this.moderators = Object.values(users)
+					this.toggleOverlay({source: 'moderatorsFeed', display: false})
+				});
 
 			document.addEventListener('click', this.clickHandler)
 		},

@@ -71,7 +71,7 @@ const actions = {
 			.then(({data: {included: allIncluded, ...task}}) => {
 				const {assigneeProfiles = {}, ...included} = allIncluded
 
-				const assignee = {assignee: assigneeProfiles[task.assignee_id] || {}};
+				const assignee = {assignee: assigneeProfiles[task.assigneeProfiles[0]] || {}};
 
 				Object.assign(task, _parseIncludes(included, task), assignee)
 

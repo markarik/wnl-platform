@@ -29,6 +29,9 @@ class UserProfile extends Model
 	}
 
 	public function roles() {
+		// hacky way of fixing problem with belongsToMany ignoring the third argument
+		$this->primaryKey = 'user_id';
+
 		return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
 	}
 

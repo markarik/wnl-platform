@@ -66,7 +66,9 @@ class IssueFinalInvoice extends Command
 				->get();
 
 			foreach ($orders as $order) {
-				$this->dispatch(new IssueFinalAndSend($order));
+				if (!$order->canceled){
+					$this->dispatch(new IssueFinalAndSend($order));
+				}
 			}
 		}
 

@@ -147,7 +147,7 @@
 							}
 						}, {
 							name: this.$t('tasks.quickFilters.filters.notDone'),
-							isActive: false,
+							isActive: true,
 							query: () => {
 								return {
 									whereNotIn:['status', ['done']]

@@ -1,11 +1,12 @@
 {
   "plugins": [
-      "transform-object-rest-spread"
+      "transform-object-rest-spread",
+      "transform-runtime"
   ],
   "presets": [
     ["env", {
       "targets": {
-        "iOS": 10
+        "browsers": ["iOS >= 10"]
       },
       "modules": false
     }]

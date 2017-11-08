@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 use Cache;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
 class ApiCache
 {
@@ -26,6 +26,8 @@ class ApiCache
 	{
 		$tags = $this->getTags($request);
 		$key = $request->getRequestUri();
+
+		\Log::debug('Api cache tags: ' . implode(',', $tags));
 
 		if ($this->excluded($request)) {
 			return $next($request);

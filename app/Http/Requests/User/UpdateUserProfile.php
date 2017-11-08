@@ -32,14 +32,14 @@ class UpdateUserProfile extends FormRequest
 			'last_name'         => 'required|alpha_spaces|max:20',
 			'public_email'      => 'email|nullable|max:50',
 			'public_phone'      => 'nullable|max:20',
-			'username'          => 'max:30|alpha_num',
-			'city'              => 'max:50|alpha_spaces',
-			'university',       => 'max:200|alpha_spaces'
-			'specialization'    => 'max:400|alpha_spaces',
-			'help'              => 'max:400|alpha_spaces',
-			'interests'         => 'max:400|alpha_spaces',
-			'about'             => 'max:400|alpha_spaces',
-			'learning_location' => 'max:50|alpha_spaces',
+			'username'          => 'max:30|alpha_comas',
+			'city'              => 'max:50|alpha_comas',
+			'university'        => 'max:200|alpha_comas',
+			'specialization'    => 'max:400|alpha_comas',
+			'help'              => 'max:400|alpha_comas',
+			'interests'         => 'max:400|alpha_comas',
+			'about'             => 'max:400|alpha_comas',
+			'learning_location' => 'max:50|alpha_comas',
 		];
 	}
 

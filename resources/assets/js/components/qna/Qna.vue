@@ -47,7 +47,7 @@
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
 			>
-				<router-link v-if="showContext" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">Pokaż kontekst</router-link>
+				<router-link v-if="showContext" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
 			</wnl-qna-question>
 		</div>
 	</div>
@@ -68,7 +68,6 @@
 
 	.wnl-qna-header
 		display: flex
-		flex-direction: row
 		&.is-user-profile
 			.icon
 				color: $color-dark-blue-opacity
@@ -147,7 +146,7 @@
 				'getSortedQuestions'
 			]),
 			howManyQuestions() {
-				return Object.keys(this.filterQnaDisplay).length || 0
+				return Object.keys(this.qnaToDisplay).length || 0
 			},
 			tagsFiltered() {
 				if (!this.tags) return [];
@@ -156,26 +155,22 @@
 			displayedTitle() {
 				return this.title || 'Pytania i odpowiedzi'
 			},
-			filterQnaDisplay() {
-				if (this.passedQuestions) {
-					return this.passedQuestions
-				} else {
-					return this.questions
-				}
+			qnaToDisplay() {
+				return this.passedQuestions ? this.passedQuestions : this.questions
 			},
 		},
 		methods: {
 			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.filterQnaDisplay);
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.qnaToDisplay);
 
 		},
 		watch: {
 			'currentSorting' (newValue) {
-				this.questionsList = this.getSortedQuestions(newValue, this.filterQnaDisplay);
+				this.questionsList = this.getSortedQuestions(newValue, this.qnaToDisplay);
 			},
-			'filterQnaDisplay' (newValue) {
+			'qnaToDisplay' (newValue) {
 				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
 			}
 		},

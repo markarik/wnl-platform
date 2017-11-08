@@ -108,5 +108,10 @@ class AppServiceProvider extends ServiceProvider
 			// Useful for names and surnames - accept letters, spaces and hyphens
 			return preg_match('/^[\pL\s-]+$/u', $value);
 		});
+
+		Validator::extend('alpha_comas', function ($attribute, $value) {
+			// Useful for textareas - accepts letters, comas, dots, spaces and hyphens
+			return preg_match('/^[\pL\s-,.]+$/u', $value);
+		});
 	}
 }

@@ -77,7 +77,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 	Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 
-	Route::get("{$r['users']}/all/{$r['user-profile']}", 'UserProfileApiController@getAll');
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfileApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfileApiController@put');
 

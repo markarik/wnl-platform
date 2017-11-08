@@ -14,27 +14,12 @@
 				:filterByLocation="filterByLocation">
 			</router-view>
 		</div>
-		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
+		<wnl-sidenav-slot class="full-width-sidenav-slot scrollable-container" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
 			:isVisible="true"
 			:isDetached="false"
 		>
 			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>
 		</wnl-sidenav-slot>
-		<wnl-sidenav-slot class="full-width-sidenav-slot" v-if="isMainRoute"
-			:isVisible="isChatVisible"
-			:isDetached="!isChatMounted"
-		>
-			<wnl-users-filters
-				@helpFilterLoaded="helpFilterLoaded"
-				@locationFilterLoaded="locationFilterLoaded"
-			></wnl-users-filters>
-		</wnl-sidenav-slot>
-		<div v-if="isMainRoute && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
-			<span class="icon is-big">
-				<i class="fa fa-chevron-left"></i>
-				<span>Filtry</span>
-			</span>
-		</div>
 	</div>
 </template>
 
@@ -65,7 +50,6 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
-	import UsersFilters from 'js/components/users/UsersFilters'
 	import UserAbout from 'js/components/users/UserAbout'
 	import MainNav from 'js/components/MainNav'
 	import Sidenav from 'js/components/global/Sidenav'
@@ -76,11 +60,10 @@
 	export default {
 		name: 'MainUsers',
 		components: {
-			'wnl-users-filters': UsersFilters,
+			'wnl-user-about': UserAbout,
 			'wnl-main-nav': MainNav,
 			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-user-about': UserAbout,
+			'wnl-sidenav-slot': SidenavSlot
 		},
 		props: ['view'],
 		data() {
@@ -97,20 +80,12 @@
 			isProduction() {
 				return isProduction()
 			},
-			isProduction() {
-				return isProduction()
-			},
 			isMainRoute() {
 				return this.$route.name === 'all'
 			},
 		},
 		methods: {
 			...mapActions(['killChat', 'toggleChat']),
-			goToDefaultRoute() {
-				if (!this.view) {
-					this.$router.replace({ name: 'my-orders' })
-				}
-			},
 			helpFilterLoaded(filter) {
 				return this.filterByHelp = filter
 			},
@@ -120,11 +95,6 @@
 			onDataLoaded({profile}) {
 				return this.profile = profile
 			},
-			goToDefaultRoute() {
-				if (!this.view) {
-					this.$router.replace({ name: 'my-orders' })
-				}
-			}
-		},
+		}
 	}
 </script>

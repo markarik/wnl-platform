@@ -1,7 +1,7 @@
 <template>
-    <div class="wnl-public-chat">
-        <div class="chat-title">
-            <p>Info o uczestniku</p>
+    <div class="wnl-user-about">
+        <div class="about-title">
+            <p>{{ $t('user.userProfile.about') }}</p>
         </div>
         <div class="user-infos">
             <wnl-user-info
@@ -36,7 +36,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
     @import 'resources/assets/sass/variables'
 
-    .wnl-public-chat
+    .wnl-user-about
         display: flex
         flex: 1
         flex-direction: column
@@ -47,7 +47,7 @@
     .metadata
         margin: $margin-base 0 0 $margin-base
 
-    .chat-title
+    .about-title
         color: $color-gray-dimmed
         font-size: $font-size-minus-2
         text-transform: uppercase

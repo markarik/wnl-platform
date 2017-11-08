@@ -32,18 +32,18 @@
 		</div>
 
 		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
-			<wnl-form-text name="first_name">Imię</wnl-form-text>
-			<wnl-form-text name="last_name">Nazwisko</wnl-form-text>
-			<wnl-form-text name="username">Nazwa użytkownika</wnl-form-text>
-			<wnl-form-text name="city">Miasto</wnl-form-text>
-			<wnl-form-text name="university">Uniwersytet</wnl-form-text>
-			<wnl-form-text name="specialization">Specka</wnl-form-text>
-			<wnl-form-text name="help">W czym mogę pomóc?</wnl-form-text>
-			<wnl-form-text name="interests">Zainteresowania</wnl-form-text>
-			<wnl-form-text name="learning_location">Gdzie się uczę?</wnl-form-text>
-			<wnl-form-text name="about">O</wnl-form-text>
-			<wnl-form-text name="public_email">Adres e-mail</wnl-form-text>
-			<wnl-form-text name="public_phone">Numer telefonu</wnl-form-text>
+			<wnl-form-text name="first_name">{{ $t('user.myProfile.first_name') }}</wnl-form-text>
+			<wnl-form-text name="last_name">{{ $t('user.myProfile.last_name') }}</wnl-form-text>
+			<wnl-form-text name="username">{{ $t('user.myProfile.username') }}</wnl-form-text>
+			<wnl-form-text name="city">{{ $t('user.myProfile.city') }}</wnl-form-text>
+			<wnl-form-text name="university">{{ $t('user.myProfile.university') }}</wnl-form-text>
+			<wnl-form-text name="specialization">{{ $t('user.myProfile.specialization') }}</wnl-form-text>
+			<wnl-form-text name="help">{{ $t('user.myProfile.help') }}</wnl-form-text>
+			<wnl-form-text name="interests">{{ $t('user.myProfile.interests') }}</wnl-form-text>
+			<wnl-form-text name="learning_location">{{ $t('user.myProfile.learning_location') }}</wnl-form-text>
+			<wnl-form-text name="about">{{ $t('user.myProfile.about') }}</wnl-form-text>
+			<wnl-form-text name="public_email">{{ $t('user.myProfile.public_email') }}</wnl-form-text>
+			<wnl-form-text name="public_phone">{{ $t('user.myProfile.public_phone') }}</wnl-form-text>
 		</wnl-form>
 	</div>
 </template>

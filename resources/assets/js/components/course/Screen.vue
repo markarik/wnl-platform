@@ -2,7 +2,7 @@
 	<div>
 		<h4>{{name}}</h4>
 		<component :is="component" :screenData="screenData"></component>
-		<wnl-qna :sortingEnabled="sortingEnabled" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
+		<wnl-qna :sortingEnabled="true" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
 	</div>
 </template>
 
@@ -42,11 +42,6 @@
 			'wnl-quiz': Quiz,
 			'wnl-slideshow': Slideshow,
 			'wnl-widget': Widget,
-		},
-		data() {
-			return {
-				sortingEnabled: true,
-			}
 		},
 		props: ['screenId'],
 		computed: {

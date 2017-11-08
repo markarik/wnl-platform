@@ -54,8 +54,8 @@
 				<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
 					<wnl-qna
 						:isUserProfileClass="isUserProfileClass"
-						:numbersDisabled="numbersDisabled"
-						:title="'Najlepsze Pytania'"
+						:numbersDisabled="true"
+						:title="$t('users.userProfile.bestQuestions')"
 						:icon="iconForQuestions"
 						v-if="ifAnyQuestions"
 						:sortingEnabled="false"
@@ -66,9 +66,9 @@
 					></wnl-qna>
 					<wnl-qna
 						:isUserProfileClass="isUserProfileClass"
-						:numbersDisabled="numbersDisabled"
+						:numbersDisabled="true"
 						:icon="iconForAnswers"
-						:title="'Najlepsze Odpowiedzi'"
+						:title="$t('users.userProfile.bestAnswers')"
 						v-if="ifAnyAnswers"
 						:sortingEnabled="false"
 						:readOnly="readOnly"
@@ -222,7 +222,6 @@ import {
     getApiUrl
 } from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
-import Comment from 'js/components/comments/Comment'
 import QnaQuestion from 'js/components/qna/QnaQuestion'
 import QnaAnswer from 'js/components/qna/QnaAnswer'
 import Qna from 'js/components/qna/Qna'
@@ -231,7 +230,6 @@ export default {
     name: 'UserProfile',
     components: {
         'wnl-avatar': Avatar,
-        'wnl-comment': Comment,
         'wnl-qna-question': QnaQuestion,
         'wnl-qna-answer': QnaAnswer,
         'wnl-qna': Qna,
@@ -241,17 +239,14 @@ export default {
         return {
             isLoading: true,
             isUserProfileClass: 'is-user-profile',
-            numbersDisabled: true,
             iconForQuestions: 'fa fa-question-circle-o',
             iconForAnswers: 'fa fa-comment-o',
             loading: false,
             id: this.$route.params.userId,
             reactionsDisabled: true,
-            activePanels: ['comments'],
             profile: {},
             qnaAnswersCompetency: {},
             qnaQuestionsCompetency: {},
-            commentsCompetency: {}
         }
     },
     computed: {
@@ -314,9 +309,6 @@ export default {
         ifAnyAnswers() {
             return this.howManyAnswers === 0 ? false : true
         },
-        isCommentsPanelVisible() {
-            return this.isPanelActive('comments')
-        },
         isQuestionsPanelVisible() {
             return this.isPanelActive('questions')
         },
@@ -377,13 +369,6 @@ export default {
                 return {}
             }
         },
-        panels() {
-            return {
-                comments: 'Komentarze',
-                questions: 'Pytania',
-                answers: 'Odpowiedzi'
-            }
-        },
         isSinglePanelView() {
             return this.isTouchScreen
         },
@@ -407,7 +392,7 @@ export default {
             return this.activePanels.includes(panel)
         },
 		loadData() {
-			const userId = this.checkUrlUserId;
+			const userId = this.$route.params.userId
 			const dataForComments = {
 				query: {
 					where: [

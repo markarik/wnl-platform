@@ -99,7 +99,6 @@
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
-		<slot></slot>
 	</div>
 </template>
 

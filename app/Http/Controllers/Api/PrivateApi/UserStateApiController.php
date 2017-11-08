@@ -6,7 +6,6 @@ use App\Models\Lesson;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
-use Illuminate\Database\QueryException;
 use App\Models\User;
 use App\Models\UserCourseProgress;
 use App\Models\UserQuizResults;

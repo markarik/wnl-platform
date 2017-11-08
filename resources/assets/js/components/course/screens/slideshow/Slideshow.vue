@@ -343,6 +343,7 @@
 
 				this.resetModule()
 				this.loaded = false
+				this.toggleOverlay({source: 'slideshow', display: false})
 			},
 			onAnnotationsUpdated(comments) {
 				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {

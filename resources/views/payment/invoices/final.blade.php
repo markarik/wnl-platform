@@ -14,10 +14,10 @@
 			<td>Data wystawienia:</td>
 			<td>{{ $invoiceData['date'] }}</td>
 		</tr>
-		<tr>
-			<td>Data wpłaty:</td>
-			<td>{{ $invoiceData['payment_date'] }}</td>
-		</tr>
+		{{--<tr>--}}
+		{{--<td>Data wpłaty:</td>--}}
+		{{--<td>{{ $invoiceData['payment_date'] }}</td>--}}
+		{{--</tr>--}}
 		<tr>
 			<td>Metoda płatności</td>
 			<td>{{ $invoiceData['payment_method'] }}</td>
@@ -67,9 +67,9 @@
 		</tr>
 		<tr>
 			<td><strong>Razem:</strong></td>
-			<td>{{ $n($vatSummaryTotal['net']) }}zł</td>
-			<td>{{ $n($vatSummaryTotal['vat']) }}zł</td>
-			<td>{{ $n($vatSummaryTotal['gross']) }}zł</td>
+			<td>{{ $summary['net'] }}zł</td>
+			<td>{{ $summary['vat'] }}zł</td>
+			<td>{{ $summary['total'] }}zł</td>
 		</tr>
 	</table>
 @endsection
@@ -139,6 +139,36 @@
 	</table>
 @endsection
 
+@section('instalments')
+	@if($invoiceOrder->method === 'instalments' && !$invoiceOrder->instalments['allPaid'])
+		<h4>Terminy kolejnych rat</h4>
+		<table>
+			<tr>
+				<th>Termin płatności</th>
+				<th>Netto</th>
+				<th>Vat</th>
+				<th>Brutto</th>
+			</tr>
+			@foreach($invoiceOrder->instalments['instalments'] as $index => $instalment)
+				@if($instalment['left'] > 0)
+					<tr>
+						<td>{{ $instalment['date']->format('d-m-Y') }}</td>
+						<td>{{ $n($instalment['amount'] / 1.23) }}zł</td>
+						<td>{{ $n($instalment['amount'] - $instalment['amount'] / 1.23) }}zł</td>
+						<td>{{ $n($instalment['amount']) }}zł</td>
+					</tr>
+				@endif
+			@endforeach
+			<tr>
+				<td><strong>Razem</strong></td>
+				<td>{{ $n($invoiceOrder->instalments['total']/ 1.23) }}zł</td>
+				<td>{{ $n($invoiceOrder->instalments['total']- $invoiceOrder->instalments['total'] / 1.23) }}zł</td>
+				<td>{{ $n($invoiceOrder->instalments['total']) }}zł</td>
+			</tr>
+		</table>
+	@endif
+@endsection
+
 @section('notes')
 	<ul>
 		@foreach ($notes as $note)
@@ -148,7 +178,8 @@
 @endsection
 
 @section('summary')
-	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
+	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong>
+	</p>
 	<p>Wpłacono: <strong>{{ $previousAdvances->sum('amount') }}zł</strong></p>
 	<p>Pozostało do zapłaty: <strong>{{ $remainingAmount }}zł</strong></p>
 @endsection

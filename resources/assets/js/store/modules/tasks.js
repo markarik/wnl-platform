@@ -45,17 +45,6 @@ const actions = {
 				})
 		})
 	},
-	filterTasks({commit, dispatch}, {params} = {}) {
-		commit(types.IS_FETCHING, true)
-
-		return new Promise ((resolve, reject) => {
-			_filterTasks(params)
-				.then(({data: response}) => {
-					_handleResponse({commit,dispatch}, response, resolve)
-				})
-		})
-	},
-
 	setupLiveListener({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (task) => {
@@ -89,19 +78,10 @@ const modules = {
 }
 
 function _getTasks(params) {
-	return axios.get(getApiUrl('tasks/all'), {
-		params: {
-			limit: 10,
-			include: 'events,assigneeProfiles',
-			...params
-		}
-	})
-}
-
-function _filterTasks(params) {
 	return axios.post(getApiUrl('tasks/.query'), {
 		limit: 10,
 		include: 'events,assigneeProfiles',
+		query: {},
 		...params
 	})
 }

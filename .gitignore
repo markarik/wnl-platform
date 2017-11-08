@@ -2,6 +2,7 @@
 /public/storage
 /vendor
 /.idea
+/.vscode
 .env
 .env.backup
 composer.lock

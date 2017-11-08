@@ -40,7 +40,7 @@
 				</div>
 
 				<div class="user-activity-content">
-					<div class="wnl-activity-meter" v-for="activity in activityMeterArray">
+					<div class="wnl-activity-meter" v-for="(activity, index) in activityMeterArray" :key="index">
 						<div class="activity-stat">
 							<span class="icon is-large">
 								<i :class="activity.iconClassToUse"></i>
@@ -59,8 +59,8 @@
 						:icon="iconForQuestions"
 						v-if="ifAnyQuestions"
 						:sortingEnabled="false"
-						:readOnly="readOnly"
-						:reactionsDisabled="reactionsDisabled"
+						:readOnly="true"
+						:reactionsDisabled="true"
 						:passedQuestions="convertSortedQuestionsToObject"
 						:showContext="true"
 					></wnl-qna>
@@ -71,8 +71,8 @@
 						:title="$t('user.userProfile.bestAnswers')"
 						v-if="ifAnyAnswers"
 						:sortingEnabled="false"
-						:readOnly="readOnly"
-						:reactionsDisabled="reactionsDisabled"
+						:readOnly="true"
+						:reactionsDisabled="true"
 						:passedQuestions="convertSortedAnswersToObject"
 						:showContext="true"
 					></wnl-qna>
@@ -158,16 +158,6 @@
 						font-size: $font-size-plus-1
 						font-weight: $font-weight-regular
 
-	div.user-profile
-		&.is-mobile
-			.user-info-header
-				align-items: center
-				text-align: center
-				.user-info-header-edit
-					flex-direction: column
-					justify-content: center
-					align-items: center
-
 	.user-activity-content
 		align-items: center
 		display: flex
@@ -197,6 +187,13 @@
 
 	div.user-profile
 		&.is-mobile
+			.user-info-header
+				align-items: center
+				text-align: center
+				.user-info-header-edit
+					flex-direction: column
+					justify-content: center
+					align-items: center
 			.activity-stat
 				font-size: $font-size-plus-4
 				justify-content: center
@@ -234,16 +231,13 @@ export default {
         'wnl-qna-answer': QnaAnswer,
         'wnl-qna': Qna,
     },
-    props: ['readOnly'],
     data() {
         return {
             isLoading: true,
             isUserProfileClass: 'is-user-profile',
             iconForQuestions: 'fa fa-question-circle-o',
             iconForAnswers: 'fa fa-comment-o',
-            loading: false,
             id: this.$route.params.userId,
-            reactionsDisabled: true,
             profile: {},
             qnaAnswersCompetency: {},
             qnaQuestionsCompetency: {},
@@ -307,7 +301,7 @@ export default {
             return Object.values(this.qnaAnswersComputed).length
         },
         ifAnyAnswers() {
-            return this.howManyAnswers === 0 ? false : true
+            return this.howManyAnswers !== 0
         },
         isQuestionsPanelVisible() {
             return this.isPanelActive('questions')
@@ -392,6 +386,15 @@ export default {
             return this.activePanels.includes(panel)
         },
 		loadData() {
+			if (!this.$route.params.userId) {
+				this.$router.push({
+					...this.$route,
+					params: {
+						...this.$route.params,
+						userId: this.currentUserId
+					}
+				})
+			}
 			const userId = this.$route.params.userId
 			const dataForComments = {
 				query: {
@@ -438,7 +441,7 @@ export default {
 				this.$emit('userDataLoaded', {
 					profile: this.profile
 				})
-				this.isLoading = false
+			this.isLoading = false
 			})
 			.catch(exception => $wnl.logger.capture(exception))
 		},

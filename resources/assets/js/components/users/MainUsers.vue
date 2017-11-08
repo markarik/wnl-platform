@@ -9,7 +9,6 @@
 		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view
 				@userDataLoaded="onDataLoaded"
-				:readOnly="readOnly"
 				:filterByHelp="filterByHelp"
 				:filterByLocation="filterByLocation">
 			</router-view>
@@ -70,7 +69,6 @@
 			return {
 				testMode: false,
 				profile: {},
-				readOnly: true,
 				filterByHelp: '',
 				filterByLocation: ''
 			}

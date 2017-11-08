@@ -4,7 +4,7 @@
 			<span v-t="'tasks.quickFilters.title'"/>
 			<a v-for="(quickFilter, index) in quickFilters"
 				class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
-				@click="toggleQuickFilter(quickFilter)"
+				@click="onQuickFilterChange(quickFilter)"
 				:key="index"
 				v-t="quickFilter.name"
 			>
@@ -90,11 +90,11 @@
 			}
 		},
 		methods: {
-			...mapActions('tasks', ['pullTasks', 'updateTask', 'filterTasks']),
+			...mapActions('tasks', ['pullTasks', 'updateTask']),
 			...mapActions(['toggleOverlay']),
 			onChangePage(page) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks({params: {page}})
+				this.pullTasks({params: {page, query: this.buildQuery()}})
 					.then(() => {
 						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
@@ -118,12 +118,14 @@
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
-			toggleQuickFilter(quickFilter) {
+			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
 
-				this.filter()
+				this.pullTasks({params: {
+					query: this.buildQuery()
+				}})
 			},
-			filter() {
+			buildQuery() {
 				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
 				let query = {}
 
@@ -131,7 +133,7 @@
 					query = {...query, ...filter.query()}
 				})
 
-				this.filterTasks({params: {query}})
+				return query
 			},
 			initialQuickFilters() {
 				return [

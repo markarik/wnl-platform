@@ -102,7 +102,6 @@
 				return this.$t(`dashboard.progress.${this.status}`)
 			},
 			nextLessonDate() {
-				console.log(timeFromDate(this.nextLesson.startDate.date), this.nextLesson.startDate.date, '********')
 				return timeFromDate(this.nextLesson.startDate.date)
 			},
 			status() {

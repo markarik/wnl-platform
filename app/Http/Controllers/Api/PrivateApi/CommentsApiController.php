@@ -53,10 +53,10 @@ class CommentsApiController extends ApiController
 		if (isset($statusResolved)) {
 			if ($statusResolved) {
 				$comment->delete();
-				// event(new CommentRemoved($comment, Auth::user()->id, 'resolved'));
+				event(new CommentRemoved($comment, Auth::user()->id, 'resolved'));
 			} else {
 				$comment->restore();
-				// event(new CommentRestored($comment, Auth::user()->id));
+				event(new CommentRestored($comment, Auth::user()->id));
 			}
 		} else {
 			$comment->update([

@@ -13,7 +13,7 @@
 				></wnl-vote>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content" v-html="content"></div>
+					<div class="qna-question-content content" v-html="content"></div>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"
@@ -252,7 +252,7 @@
 				}
 			},
 			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.id
+				return this.currentUserId === this.author.user_id
 			},
 			resourceRoute() {
 				return `qna_questions/${this.id}`

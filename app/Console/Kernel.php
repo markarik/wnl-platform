@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
 	 */
 	protected function commands()
 	{
-		$this->load(__DIR__.'/Commands');
+		$this->load(__DIR__ . '/Commands');
 	}
 
 	/**
@@ -61,6 +61,9 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('role:assignFromProducts edition-2-participant 5,6')
-			->everyFiveMinutes();
+			->everyFiveMinutes()
+			->after(function () use ($schedule) {
+				Artisan::call('cache:tag', ['tag' => 'user_profiles']);
+			});
 	}
 }

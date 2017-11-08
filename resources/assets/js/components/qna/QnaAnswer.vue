@@ -10,7 +10,7 @@
 				></wnl-vote>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-answer-content" v-html="content"></div>
+					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
 					<wnl-avatar
@@ -135,7 +135,7 @@
 				return this.profile(this.answer.profiles[0])
 			},
 			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.id
+				return this.currentUserId === this.author.user_id
 			},
 			deleteTarget() {
 				return 'tę odpowiedź'

@@ -10,7 +10,7 @@ const namespaced = true
 const state = {
 	fetching: false,
 	tasks: {},
-	updatedTasks: []
+	updatedTasks: [],
 }
 
 const getters = {
@@ -35,7 +35,7 @@ const mutations = {
 }
 
 const actions = {
-	pullTasks({commit, dispatch}, {params} = {}) {
+	pullTasks({commit, dispatch}, params) {
 		commit(types.IS_FETCHING, true)
 
 		return new Promise ((resolve, reject) => {
@@ -45,17 +45,6 @@ const actions = {
 				})
 		})
 	},
-	filterTasks({commit, dispatch}, {params} = {}) {
-		commit(types.IS_FETCHING, true)
-
-		return new Promise ((resolve, reject) => {
-			_filterTasks(params)
-				.then(({data: response}) => {
-					_handleResponse({commit,dispatch}, response, resolve)
-				})
-		})
-	},
-
 	setupLiveListener({commit}, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.LiveNotificationCreated', (task) => {
@@ -63,7 +52,6 @@ const actions = {
 			});
 	},
 	initModeratorsFeedListener({getters, dispatch}) {
-		dispatch('pullTasks')
 		dispatch('setupLiveListener', 'private-group.moderators')
 	},
 	updateTask({commit, dispatch}, payload) {
@@ -71,7 +59,7 @@ const actions = {
 			.then(({data: {included: allIncluded, ...task}}) => {
 				const {assigneeProfiles = {}, ...included} = allIncluded
 
-				const assignee = {assignee: assigneeProfiles[task.assignee_id] || {}};
+				const assignee = {assignee: assigneeProfiles[task.assigneeProfiles[0]] || {}};
 
 				Object.assign(task, _parseIncludes(included, task), assignee)
 
@@ -89,19 +77,10 @@ const modules = {
 }
 
 function _getTasks(params) {
-	return axios.get(getApiUrl('tasks/all'), {
-		params: {
-			limit: 10,
-			include: 'events,assigneeProfiles',
-			...params
-		}
-	})
-}
-
-function _filterTasks(params) {
 	return axios.post(getApiUrl('tasks/.query'), {
 		limit: 10,
 		include: 'events,assigneeProfiles',
+		query: {},
 		...params
 	})
 }

@@ -4,7 +4,7 @@
 			<span v-t="'tasks.quickFilters.title'"/>
 			<a v-for="(quickFilter, index) in quickFilters"
 				class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
-				@click="toggleQuickFilter(quickFilter)"
+				@click="onQuickFilterChange(quickFilter)"
 				:key="index"
 				v-t="quickFilter.name"
 			>
@@ -90,11 +90,11 @@
 			}
 		},
 		methods: {
-			...mapActions('tasks', ['pullTasks', 'updateTask', 'filterTasks']),
+			...mapActions('tasks', ['pullTasks', 'updateTask']),
 			...mapActions(['toggleOverlay']),
 			onChangePage(page) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks({params: {page}})
+				this.pullTasks({page, query: this.buildQuery()})
 					.then(() => {
 						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
@@ -118,12 +118,12 @@
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
-			toggleQuickFilter(quickFilter) {
+			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
 
-				this.filter()
+				this.pullTasks({query: this.buildQuery()})
 			},
-			filter() {
+			buildQuery() {
 				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
 				let query = {}
 
@@ -131,7 +131,7 @@
 					query = {...query, ...filter.query()}
 				})
 
-				this.filterTasks({params: {query}})
+				return query
 			},
 			initialQuickFilters() {
 				return [
@@ -145,7 +145,7 @@
 							}
 						}, {
 							name: this.$t('tasks.quickFilters.filters.notDone'),
-							isActive: false,
+							isActive: true,
 							query: () => {
 								return {
 									whereNotIn:['status', ['done']]
@@ -166,7 +166,7 @@
 		mounted() {
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})
 
-			axios.post(getApiUrl('user_profiles/.search'), {
+			const promisedModerators = axios.post(getApiUrl('user_profiles/.search'), {
 				query: {
 					whereHas: {
 						roles: {
@@ -174,10 +174,15 @@
 						}
 					},
 				}
-			}).then(({data: {...users}}) => {
-				this.moderators = Object.values(users)
-				this.toggleOverlay({source: 'moderatorsFeed', display: false})
 			})
+			const promisedTasks = this.pullTasks({query: this.buildQuery()})
+
+			Promise.all([promisedModerators, promisedTasks])
+				.then(([moderatorsResponse, tasks]) => {
+					const {data: {...users}} = moderatorsResponse
+					this.moderators = Object.values(users)
+					this.toggleOverlay({source: 'moderatorsFeed', display: false})
+				});
 
 			document.addEventListener('click', this.clickHandler)
 		},

@@ -56,7 +56,7 @@
 			<wnl-task-events :events="task.events" :routeContext="taskContext"/>
 		</div>
 		<footer class="card-footer">
-			<router-link :to="taskContext" class="card-footer-item">{{$t('tasks.task.action.go')}}</router-link>
+			<router-link target="_blank" :to="taskContext" class="card-footer-item">{{$t('tasks.task.action.go')}}</router-link>
 			<div class="card-footer-item" @click="$emit('assign', {assignee_id: currentUserId, id: task.id})">Biore to!</div>
 		</footer>
 	</div>

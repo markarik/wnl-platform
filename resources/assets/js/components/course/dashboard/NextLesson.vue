@@ -13,7 +13,7 @@
 			>
 				{{ callToAction }}
 			</router-link>
-			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {data: nextLessonDate}) }}</span>
+			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {date: nextLessonDate}) }}</span>
 		</div>
 	</div>
 </template>

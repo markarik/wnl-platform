@@ -19,6 +19,9 @@ export const reaction = {
 		setReaction(payload) {
 			return this.$store.dispatch(`${this.module}/setReaction`, payload)
 		},
+		getReaction(payload) {
+			return this.$store.getters[`${this.module}/getReaction`](payload)
+		},
 		toggleReaction() {
 			if (this.isLoading || this.reactionsDisabled) {
 				return false
@@ -30,7 +33,8 @@ export const reaction = {
 				reactableId: this.reactableId,
 				reaction: this.name,
 				hasReacted: this.hasReacted,
-				count: this.count
+				count: this.count,
+				vuexState: this.getReaction(payload.reactableResource, payload.reactableId, payload.reaction)
 			}).then((response) => {
 				this.isLoading = false
 				this.wasJustClicked = false

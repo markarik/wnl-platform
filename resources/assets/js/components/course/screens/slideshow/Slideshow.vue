@@ -181,12 +181,25 @@
 				this.bookmarkLoading = true
 				const slideId = this.getSlideId(slideIndex)
 
+				const vuexState = {
+					hasReacted,
+					slide: {
+						slideId,
+						...this.getReaction('slides', slideId, 'bookmark')
+					},
+					currentSlide: {
+						slideId: this.currentSlideId,
+						...this.bookmarkState
+					}
+				}
+
 				return this.$store.dispatch(`slideshow/setReaction`, {
 					hasReacted,
 					reactableResource: 'slides',
 					reactableId: slideId,
 					reaction: 'bookmark',
-					count: this.bookmarkState.count
+					count: this.bookmarkState.count,
+					vuexState
 				}).then(() => {
 					return Promise.resolve({
 						hasReacted: !hasReacted,

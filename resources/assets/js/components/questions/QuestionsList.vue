@@ -412,7 +412,6 @@
 					.then(() => {
 						this.fetchingFilters = false
 						this.resetCurrentQuestion()
-						return this.fetchQuestionsReactions(this.getPage(1))
 					})
 					.then(this.getPosition)
 					.then(({data = {}}) => {
@@ -429,6 +428,7 @@
 						position && this.changeCurrentQuestion(position)
 						this.switchOverlay(false)
 					})
+					.then(() => this.fetchQuestionsReactions(this.getPage(1)))
 					.then(() => this.reactionsFetched = true)
 					.then(() => this.fetchQuestionData(this.currentQuestion.id))
 					.catch(e => {

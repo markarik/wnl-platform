@@ -50,10 +50,6 @@ export const reactionsActions = {
 			return axios[method](getApiUrl(`reactions`), params)
 				.then((response) => {
 					$wnl.logger.error(response, {extra: {vuexState}})
-					dispatch('addAlert', {
-						type: 'error',
-						text: 'Niestety, nie udało nam się dokonać zapisu. :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił, możesz odświeżyć stronę. :)'
-					}, {root: true})
 					resolve(response)
 				})
 				.catch(error => {

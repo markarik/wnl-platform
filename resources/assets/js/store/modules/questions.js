@@ -421,7 +421,7 @@ const _fetchQuestions = (requestParams) => {
 }
 
 const _fetchQuestionsData = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,slides,comments.reactions`))
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,slides,comments.reactions,reactions`))
 }
 
 const _fetchDynamicFilters = (activeFilters) => {

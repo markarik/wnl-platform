@@ -116,6 +116,9 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\Models\Lesson', 'lesson_user_access');
 	}
 
+	public function reactables() {
+		return $this->hasMany('App\Models\Reactable');
+	}
 	/**
 	 * Dynamic attributes
 	 */

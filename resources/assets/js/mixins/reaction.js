@@ -19,8 +19,8 @@ export const reaction = {
 		setReaction(payload) {
 			return this.$store.dispatch(`${this.module}/setReaction`, payload)
 		},
-		getReaction(payload) {
-			return this.$store.getters[`${this.module}/getReaction`](payload)
+		getReaction(resource, id, reactionName) {
+			return this.$store.getters[`${this.module}/getReaction`](resource, id, reactionName)
 		},
 		toggleReaction() {
 			if (this.isLoading || this.reactionsDisabled) {

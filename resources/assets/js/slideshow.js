@@ -1,8 +1,8 @@
 import $ from 'jquery'
 import {template} from 'lodash'
 import Postmate from 'postmate-fork'
-import Reveal from '../../vendor/reveal/reveal'
-import {imageviewer} from '../../vendor/imageviewer/imageviewer'
+import Reveal from 'vendor/reveal/reveal'
+import {imageviewer} from 'vendor/imageviewer/imageviewer'
 
 import {timeFromS} from 'js/utils/time'
 

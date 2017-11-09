@@ -24,13 +24,13 @@
 								<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
 							</span>
 						</div>
-						<span v-if="currentUserProfile || profile.help" class="user-info-city">
+						<span v-if="profile.city || currentUserProfile" class="user-info-city">
 							<span class="icon is-small">
 								<i class="fa fa-map-marker"></i>
 							</span>
 							<span class="city-title">{{ cityToDisplay }}</span>
 						</span>
-						<span v-if="currentUserProfile || profile.help" class="user-info-help">
+						<span v-if="profile.help || currentUserProfile" class="user-info-help">
 							<span class="help-title">W czym mogę pomóc?</span>
 							<div class="notification">
 								<span class="user-help">{{ helpToDisplay }}</span>

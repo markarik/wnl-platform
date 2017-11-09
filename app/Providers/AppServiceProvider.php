@@ -1,37 +1,35 @@
 <?php
 namespace App\Providers;
 use App;
-use Log;
-use Validator;
-
-use App\Models\User;
-use App\Models\Order;
+use App\Models\Comment;
 use App\Models\Lesson;
 use App\Models\Notification;
-use App\Models\Comment;
-use App\Models\QnaQuestion;
+use App\Models\Order;
 use App\Models\QnaAnswer;
-use App\Models\Slide;
+use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
-
+use App\Models\Slide;
+use App\Models\User;
+use App\Observers\CommentObserver;
+use App\Observers\LessonObserver;
+use App\Observers\NotificationModelObserver;
+use App\Observers\NotificationObserver;
+use App\Observers\OrderObserver;
 use App\Observers\QnaAnswerObserver;
 use App\Observers\QnaQuestionObserver;
-use App\Observers\CommentObserver;
 use App\Observers\QuizQuestionObserver;
 use App\Observers\SlideObserver;
 use App\Observers\UserObserver;
-use App\Observers\OrderObserver;
-use App\Observers\LessonObserver;
-use App\Observers\NotificationModelObserver;
-use Monolog\Handler\RavenHandler;
-use Illuminate\Support\Facades\Auth;
-use Monolog\Formatter\LineFormatter;
-use Laravel\Dusk\DuskServiceProvider;
-use Illuminate\Support\Facades\Schema;
-use App\Observers\NotificationObserver;
-use Illuminate\Support\ServiceProvider;
-use Laravel\Tinker\TinkerServiceProvider;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Dusk\DuskServiceProvider;
+use Laravel\Tinker\TinkerServiceProvider;
+use Log;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RavenHandler;
+use Validator;
+
 class AppServiceProvider extends ServiceProvider
 {
 	/**
@@ -67,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
 		if (!$this->useExternalLogger()) return;
 		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')));
 		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
+		$handler->setLevel(env('APP_LOG_LEVEL'));
 		$monolog = Log::getMonolog();
 		$monolog->pushHandler($handler);
 		$monolog->pushProcessor(function ($record) {
@@ -85,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
 	}
 	public function useExternalLogger()
 	{
-		return !App::environment(['dev', 'testing']) && env('LOG_LEVEL') !== 'debug';
+		return !App::environment(['dev', 'testing']);
 	}
 	protected function registerModelObservers()
 	{

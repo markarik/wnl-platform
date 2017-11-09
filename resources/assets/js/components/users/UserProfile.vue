@@ -14,12 +14,11 @@
 					></wnl-avatar>
 					<div class="user-info-header">
 						<div class="user-info-header-edit">
-								<span></span>
+							<span v-if="currentUserProfile">
 								<router-link :to="{ name: 'my-profile' }">
-									<span v-if="currentUserProfile">
-										<a class="button is-primary is-outlined is-small" :disabled="hasChanges">Edytuj profil</a>
-									</span>
+									<a class="button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
 								</router-link>
+							</span>
 							<span class="user-info-header-names">
 								<p class="fullname-title">{{ profile.real_first_name }} {{ profile.real_last_name }}</p>
 								<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>

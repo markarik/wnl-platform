@@ -156,7 +156,7 @@
 				return this.title || 'Pytania i odpowiedzi'
 			},
 			qnaToDisplay() {
-				return this.passedQuestions ? this.passedQuestions : this.questions
+				return this.passedQuestions || this.questions
 			},
 		},
 		methods: {

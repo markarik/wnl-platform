@@ -46,8 +46,6 @@
 				<wnl-form-text name="about" :placeholder="$t('user.myProfile.aboutPlaceholder')">{{ $t('user.myProfile.about') }}</wnl-form-text>
 				<wnl-form-text name="public_email">{{ $t('user.myProfile.public_email') }}</wnl-form-text>
 			</div>
-			<!-- <wnl-form-text name="username">{{ $t('user.myProfile.username') }}</wnl-form-text> -->
-			<!-- wprowadzic pole nickname - "podpisuj mnie na platformie jakos nickname" - jesli jest nickname print nick, jesli nie ma real. na profilu glwone a pod spodem nick -->
 		</wnl-form>
 	</div>
 </template>

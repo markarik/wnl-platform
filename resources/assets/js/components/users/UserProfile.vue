@@ -163,7 +163,7 @@
 		display: flex
 		flex-direction: row
 		justify-content: space-around
-		margin-bottom: $margin-base
+		margin-bottom: $margin-big
 		border-bottom: $border-light-gray
 		padding-bottom: $margin-base
 		.activity-stat

@@ -33,6 +33,9 @@
 	.wnl-avatar
 		overflow: hidden
 		user-select: none
+
+	.link
+		cursor: pointer
 </style>
 <script>
 	import _ from 'lodash'

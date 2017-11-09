@@ -34,7 +34,7 @@ export const reaction = {
 				reaction: this.name,
 				hasReacted: this.hasReacted,
 				count: this.count,
-				vuexState: this.getReaction(payload.reactableResource, payload.reactableId, payload.reaction)
+				vuexState: this.getReaction(this.reactableResource, this.reactableId, this.name)
 			}).then((response) => {
 				this.isLoading = false
 				this.wasJustClicked = false

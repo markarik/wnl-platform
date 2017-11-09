@@ -37,7 +37,7 @@ export const reactionsMutations = {
 }
 
 export const reactionsActions = {
-	setReaction({commit}, payload) {
+	setReaction({commit, dispatch}, payload) {
 		return new Promise((resolve, reject) => {
 			let data = {
 					'reactable_resource' : payload.reactableResource,
@@ -51,7 +51,10 @@ export const reactionsActions = {
 				.then((response) => resolve(response))
 				.catch(error => {
 					$wnl.logger.error(error)
-					reject()
+					dispatch('addAlert', {
+						type: 'error',
+						text: 'Nie możemy zapisać reakcji :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił możesz odświeżyć stronę.'
+					}, {root: true})
 				})
 		}).then(() => {
 			const hasReacted = !payload.hasReacted
@@ -64,6 +67,12 @@ export const reactionsActions = {
 				reactableId: payload.reactableId,
 				reaction: payload.reaction,
 			})
+		}).catch((error) => {
+			$wnl.logger.error(error)
+			dispatch('addAlert', {
+				type: 'error',
+				text: 'Nie możemy zapisać reakcji :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił możesz odświeżyć stronę.'
+			}, {root: true})
 		})
 	},
 

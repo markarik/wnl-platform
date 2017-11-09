@@ -92,6 +92,7 @@ class Order extends Model
 	public function getInstalmentsAttribute()
 	{
 		$instalments = [];
+		$totalLeft = 0;
 		$leftFromPaid = $this->paid_amount;
 		$nextPayment = null;
 		$now = Carbon::now();
@@ -130,12 +131,14 @@ class Order extends Model
 					'date'   => $date,
 				];
 			}
+			$totalLeft += $instalment['left'];
 		}
 
 		return [
 			'allPaid'     => false,
 			'instalments' => $instalments,
 			'nextPayment' => $nextPayment,
+			'total'       => $totalLeft,
 		];
 	}
 

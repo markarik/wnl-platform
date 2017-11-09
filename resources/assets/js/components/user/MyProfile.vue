@@ -32,18 +32,22 @@
 		</div>
 
 		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
-			<wnl-form-text name="first_name">{{ $t('user.myProfile.first_name') }}</wnl-form-text>
-			<wnl-form-text name="last_name">{{ $t('user.myProfile.last_name') }}</wnl-form-text>
-			<wnl-form-text name="username">{{ $t('user.myProfile.username') }}</wnl-form-text>
-			<wnl-form-text name="city">{{ $t('user.myProfile.city') }}</wnl-form-text>
-			<wnl-form-text name="university">{{ $t('user.myProfile.university') }}</wnl-form-text>
-			<wnl-form-text name="specialization">{{ $t('user.myProfile.specialization') }}</wnl-form-text>
-			<wnl-form-text name="help">{{ $t('user.myProfile.help') }}</wnl-form-text>
-			<wnl-form-text name="interests">{{ $t('user.myProfile.interests') }}</wnl-form-text>
-			<wnl-form-text name="learning_location">{{ $t('user.myProfile.learning_location') }}</wnl-form-text>
-			<wnl-form-text name="about">{{ $t('user.myProfile.about') }}</wnl-form-text>
-			<wnl-form-text name="public_email">{{ $t('user.myProfile.public_email') }}</wnl-form-text>
-			<wnl-form-text name="public_phone">{{ $t('user.myProfile.public_phone') }}</wnl-form-text>
+			<div class="form-input-group">
+				<wnl-form-text name="help" :placeholder="$t('user.myProfile.helpPlaceholder')">{{ $t('user.myProfile.help') }}</wnl-form-text>
+				<wnl-form-text name="specialization">{{ $t('user.myProfile.specialization') }}</wnl-form-text>
+			</div>
+			<div class="form-input-group">
+				<wnl-form-text name="university">{{ $t('user.myProfile.university') }}</wnl-form-text>
+				<wnl-form-text name="city">{{ $t('user.myProfile.city') }}</wnl-form-text>
+				<wnl-form-text name="learning_location">{{ $t('user.myProfile.learning_location') }}</wnl-form-text>
+			</div>
+			<div class="form-input-group">
+				<wnl-form-text name="interests">{{ $t('user.myProfile.interests') }}</wnl-form-text>
+				<wnl-form-text name="about" :placeholder="$t('user.myProfile.aboutPlaceholder')">{{ $t('user.myProfile.about') }}</wnl-form-text>
+				<wnl-form-text name="public_email">{{ $t('user.myProfile.public_email') }}</wnl-form-text>
+			</div>
+			<!-- <wnl-form-text name="username">{{ $t('user.myProfile.username') }}</wnl-form-text> -->
+			<!-- wprowadzic pole nickname - "podpisuj mnie na platformie jakos nickname" - jesli jest nickname print nick, jesli nie ma real. na profilu glwone a pod spodem nick -->
 		</wnl-form>
 	</div>
 </template>

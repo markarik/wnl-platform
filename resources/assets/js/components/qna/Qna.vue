@@ -74,7 +74,7 @@
 			.wnl-qna-header-title
 				color: $color-dark-blue
 		.wnl-qna-header-title
-			font-size: $font-size-plus-4
+			font-size: $font-size-plus-2
 
 		.user-profile-icon
 			margin-right: $margin-small

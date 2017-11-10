@@ -48,7 +48,7 @@ export default class Logger {
 		return !isDev() && levelCode < 7
 	}
 
-	log(level, message) {
+	log(level, [message, extra = {}]) {
 		if (Logger.LEVELS[level] <= this.levelCode) {
 			if (this.useExternal(Logger.LEVELS[level])) {
 				Raven.captureMessage(message, { level })

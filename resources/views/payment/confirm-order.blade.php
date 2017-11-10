@@ -115,7 +115,7 @@
 				</div>
 			</section>
 			@if($instalments)
-				 <section class="has-text-centered">
+				 {{-- <section class="has-text-centered">
 					<div class="expandable">
 						<div class="margin vertical">
 							<a class="link expand" id="expand-instalments">Płatność na raty</a>
@@ -159,7 +159,7 @@
 							</form>
 						</div>
 					</div>
-				</section>
+				</section> --}}
 			@endif
 		@endif
 	</div>

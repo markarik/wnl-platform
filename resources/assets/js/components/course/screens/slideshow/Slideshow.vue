@@ -132,6 +132,7 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
+				destroyed: false
 			}
 		},
 		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
@@ -181,12 +182,25 @@
 				this.bookmarkLoading = true
 				const slideId = this.getSlideId(slideIndex)
 
+				const vuexState = {
+					hasReacted,
+					slide: {
+						slideId,
+						...this.getReaction('slides', slideId, 'bookmark')
+					},
+					currentSlide: {
+						slideId: this.currentSlideId,
+						...this.bookmarkState
+					}
+				}
+
 				return this.$store.dispatch(`slideshow/setReaction`, {
 					hasReacted,
 					reactableResource: 'slides',
 					reactableId: slideId,
 					reaction: 'bookmark',
-					count: this.bookmarkState.count
+					count: this.bookmarkState.count,
+					vuexState
 				}).then(() => {
 					return Promise.resolve({
 						hasReacted: !hasReacted,
@@ -240,7 +254,12 @@
 				this.isFocused = this.iframe === document.activeElement
 			},
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
+				if (this.destroyed) {
+					return;
+				}
+
 				this.toggleOverlay({source: 'slideshow', display: true})
+
 				handshake = new Postmate({
 					container: this.container,
 					url: slideshowUrl,
@@ -263,7 +282,10 @@
 						resource: 'slides',
 						id: this.getSlideId(this.currentSlideIndex),
 					}))
-				}).catch(exception => $wnl.logger.capture(exception))
+				}).catch(error => {
+					this.toggleOverlay({source: 'slideshow', display: false})
+					$wnl.logger.capture(error)
+				})
 			},
 			updateRoute(slideNumber) {
 				!this.preserveRoute && this.$router.replace({
@@ -302,6 +324,8 @@
 						const slideData = event.data.value.data
 
 						!this.bookmarkLoading && this.toggleBookmarkedState(slideData.index, slideData.isBookmarked)
+					} else if (event.data.value.name === 'error') {
+						this.toggleOverlay({source: 'slideshow', display: false})
 					}
 				}
 			},
@@ -328,6 +352,8 @@
 				addEventListener('focusout', this.checkFocus)
 			},
 			destroySlideshow() {
+				this.toggleOverlay({source: 'slideshow', display: false})
+				this.destroyed = true
 				if (typeof this.child.destroy === 'function') {
 					this.child.destroy()
 				}
@@ -343,7 +369,6 @@
 
 				this.resetModule()
 				this.loaded = false
-				this.toggleOverlay({source: 'slideshow', display: false})
 			},
 			onAnnotationsUpdated(comments) {
 				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
@@ -376,12 +401,18 @@
 								this.goToSlide(this.slideOrderNumber)
 								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 							})
+					}).catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 			} else {
 				this.setup({id: this.slideshowId})
 					.then(() => {
 						this.initSlideshow()
 						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+					}).catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 			}
 		},
@@ -420,7 +451,13 @@
 						this.initSlideshow()
 							.then(() => {
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
+							}).catch(error => {
+								this.toggleOverlay({source: 'slideshow', display: false})
+								$wnl.logger.capture(error)
 							})
+					}).catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 				}
 			},
@@ -433,8 +470,14 @@
 							.then(() => {
 								this.goToSlide(this.slideOrderNumber)
 								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+							}).catch(error => {
+								this.toggleOverlay({source: 'slideshow', display: false})
+								$wnl.logger.capture(error)
 							})
-						})
+						}).catch(error => {
+							this.toggleOverlay({source: 'slideshow', display: false})
+							$wnl.logger.capture(error)
+					})
 				}
 			},
 			'currentSlideIndex' (slideIndex, oldValue) {

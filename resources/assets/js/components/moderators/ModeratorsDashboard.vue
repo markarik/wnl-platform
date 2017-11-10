@@ -8,6 +8,7 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
+				<a target="_blank" href="https://calendar.google.com/calendar/embed?src=8pohe9d278hobn46cuq3rgqpgg%40group.calendar.google.com&ctz=Europe%2FWarsaw">Grafik</a>
 				<wnl-moderators-feed/>
 			</div>
 		</div>

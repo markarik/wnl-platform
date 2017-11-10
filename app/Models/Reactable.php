@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Reactable extends Model
 {
 	protected $fillable = ['user_id', 'reaction_id', 'reactable_id', 'reactable_type'];
+
+	public function user() {
+		return $this->belongsTo('App\Models\User');
+	}
 }

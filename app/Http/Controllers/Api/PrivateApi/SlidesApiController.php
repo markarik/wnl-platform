@@ -3,12 +3,14 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Concerns\Slides\AddsSlides;
+use App\Http\Controllers\Api\Transformers\SlideTransformer;
 use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
 use App\Jobs\SearchImportAll;
 use App\Models\Screen;
 use App\Models\Slide;
 use Illuminate\Http\Request;
+use League\Fractal\Resource\Item;
 use Lib\SlideParser\Parser;
 
 class SlidesApiController extends ApiController
@@ -29,9 +31,18 @@ class SlidesApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$slide->update($request->all());
+		$content = $request->get('content');
+		$isFunctional = $request->get('is_functional');
 
-		return $this->respondOk();
+		$slide->update([
+			'content'       => $content,
+			'is_functional' => $isFunctional,
+		]);
+
+		$resource = new Item($slide, new SlideTransformer, $this->resourceName);
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
 	}
 
 	/**

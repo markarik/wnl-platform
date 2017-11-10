@@ -1,25 +1,9 @@
 <?php
 namespace App\Providers;
+
 use App;
-use App\Models\Comment;
-use App\Models\Lesson;
-use App\Models\Notification;
-use App\Models\Order;
-use App\Models\QnaAnswer;
-use App\Models\QnaQuestion;
-use App\Models\QuizQuestion;
-use App\Models\Slide;
-use App\Models\User;
-use App\Observers\CommentObserver;
-use App\Observers\LessonObserver;
-use App\Observers\NotificationModelObserver;
-use App\Observers\NotificationObserver;
-use App\Observers\OrderObserver;
-use App\Observers\QnaAnswerObserver;
-use App\Observers\QnaQuestionObserver;
-use App\Observers\QuizQuestionObserver;
-use App\Observers\SlideObserver;
-use App\Observers\UserObserver;
+use App\Models;
+use App\Observers;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +12,7 @@ use Laravel\Tinker\TinkerServiceProvider;
 use Log;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
+use Monolog\Logger;
 use Validator;
 
 class AppServiceProvider extends ServiceProvider
@@ -43,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
 		$this->registerSentryLogger();
 		$this->registerCustomValidators();
 	}
+
 	/**
 	 * Register any application services.
 	 *
@@ -60,12 +46,14 @@ class AppServiceProvider extends ServiceProvider
 			$this->app->register(DebugBarServiceProvider::class);
 		}
 	}
+
 	public function registerSentryLogger()
 	{
 		if (!$this->useExternalLogger()) return;
-		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')));
+
+		$level = Logger::INFO;
+		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')), $level);
 		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
-		$handler->setLevel(env('APP_LOG_LEVEL'));
 		$monolog = Log::getMonolog();
 		$monolog->pushHandler($handler);
 		$monolog->pushProcessor(function ($record) {
@@ -79,28 +67,32 @@ class AppServiceProvider extends ServiceProvider
 					'email' => $user->email,
 				];
 			}
+
 			return $record;
 		});
 	}
+
 	public function useExternalLogger()
 	{
 		return !App::environment(['dev', 'testing']);
 	}
+
 	protected function registerModelObservers()
 	{
-		Order::observe(OrderObserver::class);
-		User::observe(UserObserver::class);
-		Lesson::observe(LessonObserver::class);
-		Notification::observe(NotificationObserver::class);
-		QnaQuestion::observe(QnaQuestionObserver::class);
-		QnaAnswer::observe(QnaAnswerObserver::class);
-		QnaAnswer::observe(NotificationModelObserver::class);
-		QnaQuestion::observe(NotificationModelObserver::class);
-		Comment::observe(NotificationModelObserver::class);
-		Comment::observe(CommentObserver::class);
-		QuizQuestion::observe(QuizQuestionObserver::class);
-		Slide::observe(SlideObserver::class);
+		Models\Order::observe(Observers\OrderObserver::class);
+		Models\User::observe(Observers\UserObserver::class);
+		Models\Lesson::observe(Observers\LessonObserver::class);
+		Models\Notification::observe(Observers\NotificationObserver::class);
+		Models\QnaQuestion::observe(Observers\QnaQuestionObserver::class);
+		Models\QnaAnswer::observe(Observers\QnaAnswerObserver::class);
+		Models\QnaAnswer::observe(Observers\NotificationModelObserver::class);
+		Models\QnaQuestion::observe(Observers\NotificationModelObserver::class);
+		Models\Comment::observe(Observers\NotificationModelObserver::class);
+		Models\Comment::observe(Observers\CommentObserver::class);
+		Models\QuizQuestion::observe(Observers\QuizQuestionObserver::class);
+		Models\Slide::observe(Observers\SlideObserver::class);
 	}
+
 	protected function registerCustomValidators()
 	{
 		Validator::extend('alpha_spaces', function ($attribute, $value) {

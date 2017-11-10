@@ -34,16 +34,29 @@ class ReactionsApiController extends ApiController
 			}
 
 			$now = Carbon::now();
-			$reactable->reactions()->attach($reaction, [
-				'user_id'    => $user->id,
-				'created_at' => $now,
-				'updated_at' => $now,
-				'context'    => $context,
-			]);
 
-			// Since there's no action performed on reaction model,
-			// we have to trigger the event manually.
-			event(new ReactionAdded($reaction, $reactable, $user->id));
+			if (!$user->reactables->contains(function($value, $key) use ($reactable, $modelName, $reaction) {
+				return $value->reactable_id == $reactable->id
+					&& $value->reactable_type == $modelName
+					&& $value->reaction_id == $reaction->id;
+			})) {
+				$reactable->reactions()->attach($reaction, [
+					'user_id'    => $user->id,
+					'created_at' => $now,
+					'updated_at' => $now,
+					'context'    => $context,
+				]);
+
+				// Since there's no action performed on reaction model,
+				// we have to trigger the event manually.
+				event(new ReactionAdded($reaction, $reactable, $user->id));
+			} else {
+				\Log::debug(
+					'Already had the reaction, skipping for '
+					. $reactionParam['reactable_resource'] . ' '
+					. $reactionParam['reactable_id']
+				);
+			}
 		}
 
 		return $this->respondCreated();

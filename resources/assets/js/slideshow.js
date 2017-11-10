@@ -1,8 +1,8 @@
 import $ from 'jquery'
 import {template} from 'lodash'
 import Postmate from 'postmate-fork'
-import Reveal from '../../vendor/reveal/reveal'
-import {imageviewer} from '../../vendor/imageviewer/imageviewer'
+import Reveal from 'vendor/reveal/reveal'
+import {imageviewer} from 'vendor/imageviewer/imageviewer'
 
 import {timeFromS} from 'js/utils/time'
 
@@ -113,6 +113,7 @@ handshake.then(parentWindow => {
 	setMenuListeners(parent)
 	setBookmarks(parent)
 }).catch(exception => {
+	parent.emit('error')
 	console.error(exception)
 
 	// TODO: Bart, help me do it better... :/
@@ -122,6 +123,7 @@ handshake.then(parentWindow => {
 		parent.emit('loaded', true)
 		setMenuListeners(parent)
 	}).catch(exception => {
+		parent.emit('error')
 		console.error(exception)
 	})
 })

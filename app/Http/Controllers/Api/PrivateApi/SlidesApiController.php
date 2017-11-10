@@ -36,6 +36,10 @@ class SlidesApiController extends ApiController
 		$content = $request->get('content');
 		$isFunctional = $request->get('is_functional');
 
+		$parser = new Parser;
+		$content = $parser->handleCharts($content);
+		$content = $parser->handleImages($content);
+
 		$slide->update([
 			'content'       => $content,
 			'is_functional' => $isFunctional,

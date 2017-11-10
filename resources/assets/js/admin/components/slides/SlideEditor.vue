@@ -153,12 +153,15 @@
 					return;
 				}
 				this.form.submit(this.method, this.resourceUrl, this.requestPayload)
-						.then(response => {
+						.then(data => {
+							this.form.content = data.content
+							this.form.is_functional = data.is_functional
 							this.successFading('Zapisano', 2000)
 							this.loading = false
 						})
 						.catch(exception => {
 							this.errorFading('Ups... Coś poszło nie tak.', 4000)
+							$wnl.logger.capture(error)
 							this.loading = false
 						})
 			},

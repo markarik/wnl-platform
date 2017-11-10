@@ -282,9 +282,9 @@
 						resource: 'slides',
 						id: this.getSlideId(this.currentSlideIndex),
 					}))
-				}).catch(exception => {
+				}).catch(error => {
 					this.toggleOverlay({source: 'slideshow', display: false})
-					$wnl.logger.capture(exception)
+					$wnl.logger.capture(error)
 				})
 			},
 			updateRoute(slideNumber) {
@@ -402,8 +402,8 @@
 								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 							})
 					}).catch(error => {
-						$wnl.logger.capture(exception)
 						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 			} else {
 				this.setup({id: this.slideshowId})
@@ -411,8 +411,8 @@
 						this.initSlideshow()
 						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 					}).catch(error => {
-						$wnl.logger.capture(exception)
 						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 			}
 		},
@@ -452,12 +452,12 @@
 							.then(() => {
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
 							}).catch(error => {
-								$wnl.logger.capture(exception)
 								this.toggleOverlay({source: 'slideshow', display: false})
+								$wnl.logger.capture(error)
 							})
 					}).catch(error => {
-						$wnl.logger.capture(exception)
 						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 				}
 			},
@@ -471,12 +471,12 @@
 								this.goToSlide(this.slideOrderNumber)
 								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 							}).catch(error => {
-								$wnl.logger.capture(exception)
 								this.toggleOverlay({source: 'slideshow', display: false})
+								$wnl.logger.capture(error)
 							})
 						}).catch(error => {
-							$wnl.logger.capture(exception)
 							this.toggleOverlay({source: 'slideshow', display: false})
+							$wnl.logger.capture(error)
 					})
 				}
 			},

@@ -11,9 +11,6 @@
 
 		<slot/>
 
-		<div class="notification is-success has-text-centered" v-show="saved">
-			Zapisano
-		</div>
 		<div class="notification is-danger has-text-centered" v-show="submissionFailed">
 			Coś poszło nie tak...
 		</div>
@@ -127,7 +124,6 @@
 				}),
 				showPreviewModal: false,
 				previewModalContent: '',
-				saved: false,
 				submissionFailed: false,
 				loading: false,
 				updatingChart: false,
@@ -154,16 +150,15 @@
 				if (!isValid) {
 					this.errorFading('Upewnij się że slajd posiada tag section na początku i na końcu treści')
 					this.loading = false;
-					this.submissionFailed = true
 					return;
 				}
 				this.form.submit(this.method, this.resourceUrl, this.requestPayload)
 						.then(response => {
-							this.saved = true
+							this.successFading('Zapisano', 2000)
 							this.loading = false
 						})
 						.catch(exception => {
-							this.submissionFailed = true
+							this.errorFading('Ups... Coś poszło nie tak.', 4000)
 							this.loading = false
 						})
 			},
@@ -177,14 +172,14 @@
 					&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1])
 			},
 			reset() {
-				this.saved            = false
 				this.submissionFailed = false
 			},
 			updateChart() {
 				this.updatingChart = true
-				axios.get(getUrl(`admin/update-charts/${this.slideId}`))
+				axios.get(getApiUrl(`slides/.updateCharts/${this.slideId}`))
 						.then(response => {
-							this.getSlide()
+							this.form.content = response.data.content
+							this.form.is_functional = response.data.is_functional
 							this.successFading('Diagram zaktualizowany!', 2000)
 							this.updatingChart = false
 						})

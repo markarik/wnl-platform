@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Events\QuizQuestionEdited;
 use App\Http\Controllers\Api\ApiController;
-use App\Models\QuizQuestion;
-use App\Models\QuizAnswer;
-use App\Models\Tag;
-use App\Models\ExamResults;
-use App\Http\Requests\Quiz\UpdateQuizQuestion;
-use App\Http\Controllers\Api\Transformers\QuizQuestionTransformer;
-use League\Fractal\Resource\Item;
 use App\Http\Controllers\Api\Filters\ByTaxonomy\SubjectsFilter;
 use App\Http\Controllers\Api\Filters\Quiz\ResolutionFilter;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Transformers\QuizQuestionTransformer;
+use App\Http\Requests\Quiz\UpdateQuizQuestion;
+use App\Models\ExamResults;
+use App\Models\QuizAnswer;
+use App\Models\QuizQuestion;
+use App\Models\Tag;
 use App\Models\Taxonomy;
 use Auth;
-use App\Events\QuizQuestionEdited;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use League\Fractal\Resource\Item;
 
 class QuizQuestionsApiController extends ApiController
 {
@@ -91,7 +92,8 @@ class QuizQuestionsApiController extends ApiController
 		$question->update([
 			'text' => $request->input('question'),
 			'explanation' => $request->input('explanation'),
-			'preserve_order' => $request->input('preserve_order')
+			'preserve_order' => $request->input('preserve_order'),
+			'updated_at' => Carbon::now() // Hack to fire update event
 		]);
 
 		$user = Auth::user();

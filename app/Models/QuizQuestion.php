@@ -10,7 +10,7 @@ class QuizQuestion extends Model
 {
 	use Cached, Searchable;
 
-	protected $fillable = ['text', 'explanation', 'preserve_order'];
+	protected $fillable = ['text', 'explanation', 'preserve_order', 'updated_at'];
 
 	protected $casts = [
 		'preserve_order' => 'boolean',

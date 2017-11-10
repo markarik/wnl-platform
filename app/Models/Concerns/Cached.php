@@ -7,9 +7,8 @@ use App\Observers\CachedModelObserver;
 
 trait Cached
 {
-	public static function boot()
+	public static function bootCached()
 	{
-		parent::boot();
 		static::observe(new CachedModelObserver);
 	}
 }

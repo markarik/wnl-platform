@@ -49,7 +49,6 @@ export const reactionsActions = {
 
 			return axios[method](getApiUrl(`reactions`), params)
 				.then((response) => {
-					$wnl.logger.error(response, {extra: {vuexState}})
 					resolve(response)
 				})
 				.catch(error => {

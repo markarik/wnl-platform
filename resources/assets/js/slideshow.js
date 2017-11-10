@@ -113,6 +113,7 @@ handshake.then(parentWindow => {
 	setMenuListeners(parent)
 	setBookmarks(parent)
 }).catch(exception => {
+	parent.emit('error')
 	console.error(exception)
 
 	// TODO: Bart, help me do it better... :/
@@ -122,6 +123,7 @@ handshake.then(parentWindow => {
 		parent.emit('loaded', true)
 		setMenuListeners(parent)
 	}).catch(exception => {
+		parent.emit('error')
 		console.error(exception)
 	})
 })

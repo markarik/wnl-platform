@@ -61,6 +61,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 
 	// Slides
+	Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
 	Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 	Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
 	Route::post("{$r['slides']}", 'SlidesApiController@post');

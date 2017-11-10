@@ -7,7 +7,7 @@
 				<ul class="avatars-list" ref="avatarsList">
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
 						<wnl-avatar
-								:fullName="user.full_name"
+								:fullName="user.fullName"
 								:url="user.avatar"
 								:userId="user.id"
 								:user="user"

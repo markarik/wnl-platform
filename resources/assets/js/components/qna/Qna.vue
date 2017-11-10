@@ -47,7 +47,7 @@
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
 			>
-				<router-link v-if="showContext" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
+				<router-link v-if="showContext && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
 			</wnl-qna-question>
 		</div>
 	</div>

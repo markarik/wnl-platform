@@ -44,7 +44,6 @@ class QnaAnswerPostedHandler
 			->get();
 	}
 
-
 	protected function getWatchers($answer)
 	{
 		$reaction = \App\Models\Reaction::type('watch');

@@ -146,8 +146,10 @@
 			<wnl-questions-filters
 				v-show="showPlanner && selectedOption === 'custom'"
 				:activeFilters="activeFilters"
+				:allQuestionsCount="allQuestionsCount"
 				:fetchingData="fetchingQuestions"
 				:filters="filters"
+				:matchedQuestionsCount="matchedQuestionsCount"
 				@activeFiltersChanged="onActiveFiltersChanged"
 			/>
 		</wnl-sidenav-slot>
@@ -324,6 +326,7 @@
 				'activeFilters',
 				'activeFiltersObjects',
 				'allQuestionsCount',
+				'matchedQuestionsCount',
 				'filters',
 			]),
 			activeFiltersNames() {

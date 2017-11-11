@@ -14,7 +14,6 @@ sync(store, router)
 // i18n
 import VueI18n from 'vue-i18n'
 import { pl } from 'js/i18n'
-
 Vue.use(VueI18n)
 Vue.config.lang = 'pl'
 

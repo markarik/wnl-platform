@@ -61,7 +61,7 @@ const getters = {
 	},
 	getOldestNotification: (state, getters) => (channel) => {
 		return _.last(getters.getSortedNotifications(channel)) || {}
-	},
+	}
 }
 
 const mutations = {
@@ -168,7 +168,7 @@ const actions = {
 			})
 	},
 	initNotifications({getters, dispatch}) {
-		dispatch('pullNotifications', [getters.userChannel, {limit: 15}])
+		dispatch('pullNotifications', [getters.userChannel, {limit: 100}])
 		dispatch('setupLiveNotifications', getters.userChannel)
 
 		dispatch('pullNotifications', [getters.streamChannel, {limit: 100, unread: true}])
@@ -180,7 +180,6 @@ const actions = {
 		}
 	}
 }
-
 
 function _getNotifications(channel, userId, options) {
 	const conditions = {

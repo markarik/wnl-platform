@@ -24,7 +24,6 @@ class NotificationTransformer extends ApiTransformer
 			'seen_at' => $notification->seen_at->timestamp ?? null,
 			'channel' => $notification->channel,
 		];
-
 		$data = array_merge($data, $notification->data);
 
 		if ($this->parent) {

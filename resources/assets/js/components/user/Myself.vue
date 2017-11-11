@@ -13,6 +13,22 @@
 			<router-view v-if="!isMainRoute"></router-view>
 			<wnl-my-profile v-else></wnl-my-profile>
 		</div>
+		<wnl-sidenav-slot
+			:isDetached="!isChatMounted"
+			:isVisible="isLargeDesktop || isChatVisible"
+			:hasChat="true"
+		>
+			<wnl-questions-filters
+				v-show="shouldRenderFilters"
+				:activeFilters="activeFilters"
+				:allQuestionsCount="notificationsCount"
+				:fetchingData="false"
+				:filters="filters"
+				itemsNamePrefix="notifications.filters.items"
+				:matchedQuestionsCount="1"
+				@activeFiltersChanged="onActiveFiltersChanged"
+			/>
+		</wnl-sidenav-slot>
 	</div>
 </template>
 
@@ -40,6 +56,7 @@
 	import MyProfile from 'js/components/user/MyProfile'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
 	import { isProduction } from 'js/utils/env'
 
 	export default {
@@ -49,12 +66,85 @@
 			'wnl-my-profile': MyProfile,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-questions-filters': QuestionsFilters,
 		},
 		props: ['view'],
+		data() {
+			return {
+				activeFilters: [],
+			}
+		},
 		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
+			...mapGetters([
+				'isSidenavMounted',
+				'isSidenavVisible',
+				'isMobileProfile',
+				'isChatMounted',
+				'isChatToggleVisible',
+				'isChatVisible',
+				'isMobile',
+				'isLargeDesktop',
+			]),
+			...mapGetters('notifications', [
+				'filterSlides',
+				'filterQuiz',
+				'filterQna',
+				'getChannelNotifications',
+				'getSortedNotifications',
+				'userChannel',
+			]),
 			isProduction() {
 				return isProduction()
+			},
+			notificationsCount() {
+				return Object.keys(this.getChannelNotifications(this.userChannel)).length
+			},
+			shouldRenderFilters() {
+				return this.$route.name === 'my-notifications'
+			},
+			filters() {
+				return {
+					observables: {
+						message: 'observables',
+						type: 'tags',
+						items: [
+							{
+								name: 'Slajdy',
+								count: Object.keys(this.filterSlides(this.userChannel)).length,
+								value: 1,
+								slug: 'slides'
+							},
+							{
+								name: 'Pytania Kontrolne',
+								count: Object.keys(this.filterQuiz(this.userChannel)).length,
+								value: 2,
+								slug: 'qna'
+							},
+							{
+								name: 'Pytania i odpowiedzi',
+								count: Object.keys(this.filterQna(this.userChannel)).length,
+								value: 3,
+								slug: 'quiz'
+							}
+						]
+					},
+					status: {
+						message: 'status',
+						type: 'tags',
+						items: [
+							{
+								name: 'Nowe',
+								count: 0,
+								value: 4
+							},
+							{
+								name: 'Zarchiwizowane',
+								count: 0,
+								value: 5
+							}
+						]
+					},
+				}
 			},
 			items() {
 				let items = [
@@ -169,6 +259,15 @@
 			goToDefaultRoute() {
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
+				}
+			},
+			onActiveFiltersChanged: function (filterData) {
+				debugger;
+				if (filterData.active) {
+					this.activeFilters.indexOf(filterData.filter) === -1 && this.activeFilters.push(filterData.filter)
+				} else {
+					const activeFilterIndex = this.activeFilters.indexOf(filterData.filter)
+					activeFilterIndex !== -1 && this.activeFilters.splice(activeFilterIndex, 1)
 				}
 			}
 		},

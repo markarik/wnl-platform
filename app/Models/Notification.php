@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Notification extends Model
 {
+	use Searchable;
+
 	protected $fillable = ['id', 'data', 'channel', 'notifiable_id', 'notifiable_type', 'read_at',
 		'seen_at', 'type', 'event_id'];
 

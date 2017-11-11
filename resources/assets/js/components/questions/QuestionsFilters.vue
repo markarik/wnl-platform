@@ -3,17 +3,17 @@
 		<div class="questions-filters-content">
 			<div class="wnl-active-filters-container">
 				<wnl-active-filters
-				:activeFilters="activeFilters"
-				:loading="fetchingData"
-				:filters="filters"
-				:itemsNamesSource="itemsNamesSource"
-				:matchedCount="matchedQuestionsCount"
-				:totalCount="allQuestionsCount"
-				@activeFiltersChanged="onActiveFiltersChanged"
-				@autorefreshChange="onAutorefreshChange"
-				@elementHeight="setActiveFiltersHeight"
-				@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
-				@refresh="onRefresh"
+					:activeFilters="activeFilters"
+					:loading="fetchingData"
+					:filters="filters"
+					:itemsNamesSource="itemsNamesSource"
+					:matchedCount="matchedQuestionsCount"
+					:totalCount="allQuestionsCount"
+					@activeFiltersChanged="onActiveFiltersChanged"
+					@autorefreshChange="onAutorefreshChange"
+					@elementHeight="setActiveFiltersHeight"
+					@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
+					@refresh="onRefresh"
 				/>
 			</div>
 			<div class="wnl-questions-filters" :style="{paddingTop: activeFiltersHeight + 'px'}">
@@ -108,6 +108,17 @@
 				type: Object,
 				required: true,
 			},
+			allQuestionsCount: {
+				type: Number,
+				required: true
+			},
+			matchedQuestionsCount: {
+				type: Number,
+				required: true
+			},
+			itemsNamePrefix: {
+				type: String
+			}
 		},
 		data() {
 			return {
@@ -117,10 +128,6 @@
 		},
 		computed: {
 			...mapGetters(['isChatMounted', 'isChatVisible', 'isMobile']),
-			...mapGetters('questions', [
-				'allQuestionsCount',
-				'matchedQuestionsCount',
-			]),
 			accordionConfig() {
 				return {
 					disableEmpty: true,
@@ -142,7 +149,7 @@
 				return this.activeFilters.length > 0
 			},
 			itemsNamesSource() {
-				return 'questions.filters.items'
+				return this.itemsNamePrefix || 'questions.filters.items'
 			},
 		},
 		methods: {

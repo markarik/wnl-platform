@@ -20,6 +20,12 @@ export const notifications = {
 		reactionAdded: 'polubił/-a',
 		mentioned: 'wspomniał/-a Cię'
 	},
+	filters: {
+		items: {
+			observables: 'Źródło notyfikacji',
+			status: 'Status notyfikacji'
+		}
+	},
 	messages: {
 		deleted: 'Treść usunięta przez autora',
 		resolved: 'Treść została rozwiązana przez moderatora'

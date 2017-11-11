@@ -55,6 +55,8 @@
 			<wnl-questions-filters
 				v-show="!testMode"
 				:activeFilters="activeFilters"
+				:allQuestionsCount="allQuestionsCount"
+				:matchedQuestionsCount="matchedQuestionsCount"
 				:fetchingData="fetchingQuestions || fetchingFilters"
 				:filters="filters"
 				@activeFiltersChanged="onActiveFiltersChanged"
@@ -166,6 +168,7 @@
 			...mapGetters('questions', [
 				'activeFilters',
 				'activeFiltersObjects',
+				'allQuestionsCount',
 				'currentQuestion',
 				'filters',
 				'getQuestion',

@@ -2,7 +2,12 @@
 	<div class="stream-feed">
 		<div v-if="!loading">
 			<div>
-				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
+				<wnl-stream-filtering
+						v-if=!shouldUseExternalFilters"
+						:showRead="showRead"
+						@changeFiltering="changeFiltering"
+						@toggleShowRead="toggleShowRead"
+				/>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
@@ -106,7 +111,7 @@
 			'wnl-event-qna-question-posted': QnaQuestionPosted,
 			'wnl-stream-filtering': StreamFiltering,
 		},
-		props: ['channel'],
+		props: ['channel', 'shouldUseExternalFilters'],
 		data() {
 			return {
 				limit: 100,

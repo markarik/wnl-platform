@@ -8,7 +8,6 @@
 
 	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
 
-
 	export default {
 		name: 'PublicFeed',
 		components: {

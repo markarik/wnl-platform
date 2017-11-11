@@ -38,7 +38,9 @@ class FlushCacheByTag extends Command
 	 */
 	public function handle()
 	{
-		Cache::tags($this->argument('tag'))->flush();
+		foreach (explode(',', $this->argument('tag')) as $tag) {
+			Cache::tags($tag)->flush();
+		}
 		$this->info('OK.');
 
 		return true;

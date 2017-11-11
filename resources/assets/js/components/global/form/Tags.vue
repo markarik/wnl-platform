@@ -119,7 +119,10 @@
 			},
 
 			insertTag(tag) {
-				this.tags.push(tag);
+				if (_.map(this.tags, (tag) => tag.id).indexOf(tag.id) === -1) {
+					this.tags.push(tag)
+				}
+
 				this.autocompleteItems = []
 				this.tagInput = ''
 				this.$refs.input.focus()

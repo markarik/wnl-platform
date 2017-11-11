@@ -31,7 +31,7 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
-	const IMAGE_PATTERN = '/<img.*data-src="(.*)".*>/';
+	const IMAGE_PATTERN = '/<img.*data-.*src="(.*)".*>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',

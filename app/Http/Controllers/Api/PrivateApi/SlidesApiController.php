@@ -86,6 +86,7 @@ class SlidesApiController extends ApiController
 
 		dispatch(new SearchImportAll('App\\Models\\Slide'));
 		\Artisan::queue('screens:countSlides');
+		\Artisan::queue('slides:fromCategory');
 		\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
 
 		return $this->respondOk();

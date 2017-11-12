@@ -36,7 +36,7 @@ class ReactionsApiController extends ApiController
 			$now = Carbon::now();
 
 			try {
-				if ($user->reactables->contains(function($value, $key) use ($reactable, $modelName, $reaction, $reactions, $user) {
+				if (!$user->reactables->contains(function($value, $key) use ($reactable, $modelName, $reaction, $reactions, $user) {
 					return $value->reactable_id == $reactable->id
 						&& $value->reactable_type == $modelName
 						&& $value->reaction_id == $reaction->id;
@@ -58,12 +58,12 @@ class ReactionsApiController extends ApiController
 						. $reactionParam['reactable_id']
 					);
 				}
-			} catch (Exception $ex) {
-				\Log::error('Integrity error for reactions', [
-					'post_params' => $reactions,
-					'user' => $user
+			} catch (\Illuminate\Database\QueryException $e) {
+				$sentryClient = new \Raven_Client(env('SENTRY_DSN'));
+				$sentryClient->captureException($e, [
+					'extra' => ['post_params' => $reactions,
+					'user' => $user->id]
 				]);
-				throw $ex;
 			}
 
 		}

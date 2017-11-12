@@ -70,7 +70,7 @@ export const reactionsActions = {
 				reaction: payload.reaction,
 			})
 		}).catch((error) => {
-			$wnl.logger.error(error)
+			$wnl.logger.error(error, {extra: {vuexState}})
 			dispatch('addAlert', {
 				type: 'error',
 				text: 'Niestety, nie udało nam się dokonać zapisu. :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił, możesz odświeżyć stronę. :)'

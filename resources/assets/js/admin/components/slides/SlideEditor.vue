@@ -36,12 +36,21 @@
 						</p>
 					</div>
 				</div>
-				<div class="level-center">
-					<div class="level-item">
+				<div class="level-center" v-if="remove">
+					<div class="level-item confirm-detach" v-if="confirmDetach">
+						<div>Na pewno?</div>
+						<a class="button" @click="confirmDetach=false">Nie</a>
+						<a class="button is-danger"
+						   @click="detachSlide">
+							Tak
+						</a>
+					</div>
+					<div class="level-item" v-else="">
 						<a class="button is-danger"
 						   :class="{'is-loading': detachingSlide}"
 						   :disabled="!this.slideId && !this.screenId"
-						   @click="detachSlide">Usuń slajd z prezentacji</a>
+						   @click="confirmDetach=true">Usuń slajd z
+							prezentacji</a>
 					</div>
 				</div>
 				<div class="level-right">
@@ -82,6 +91,10 @@
 		border: $border-light-gray
 		height: 500px
 		margin: $margin-big 0
+
+	.confirm-detach
+		*
+			margin-right: $margin-small
 </style>
 
 <script>
@@ -136,6 +149,10 @@
 				type: Number,
 				default: 0,
 				validator: (value) => !isNaN(value)
+			},
+			remove: {
+				type: Boolean,
+				default: false
 			}
 		},
 		mixins: [alerts],
@@ -151,6 +168,7 @@
 				loading: false,
 				updatingChart: false,
 				detachingSlide: false,
+				confirmDetach: false,
 			}
 		},
 		computed: {
@@ -237,6 +255,7 @@
 				this.form.content = this.form.content.replace(COURSE_TAG_REGEX, '')
 			},
 			detachSlide() {
+				this.confirmDetach = false
 				if (!this.slideId && !this.screenId) return
 				this.detachingSlide = true;
 
@@ -244,8 +263,10 @@
 					slideId: this.slideId,
 					screenId: this.screenId,
 				}).then(response => {
-					this.form.content       = ''
+					this.form.content       = null
 					this.form.is_functional = false
+					this.slideId            = 0
+					this.screenId           = 0
 					this.successFading('Slajd usunięty.', 2000)
 					this.detachingSlide = false;
 				}).catch(error => {

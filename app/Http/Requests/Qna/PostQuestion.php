@@ -26,7 +26,7 @@ class PostQuestion extends FormRequest
 		return [
 			'text'    => 'string|required',
 			'tags'    => 'required',
-			'context' => 'required,'
+			'context' => 'required',
 		];
 	}
 }

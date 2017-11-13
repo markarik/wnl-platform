@@ -338,8 +338,8 @@ export default {
         convertSortedQuestionsToObject() {
             if (this.sortQuestionsCompetency.length > 1) {
                 return {
-                    0: this.sortQuestionsCompetency[0],
-                    1: this.sortQuestionsCompetency[1]
+                    0: this.sortQuestionsCompetency[1],
+                    1: this.sortQuestionsCompetency[0]
                 }
             } else if (this.sortQuestionsCompetency.length = 1) {
                 return {
@@ -352,8 +352,8 @@ export default {
         convertSortedAnswersToObject() {
             if (this.sortAnswersCompetency.length > 1) {
                 return {
-                    0: this.sortAnswersCompetency[0],
-                    1: this.sortAnswersCompetency[1]
+                    0: this.sortAnswersCompetency[1],
+                    1: this.sortAnswersCompetency[0]
                 }
             } else if (this.sortAnswersCompetency.length = 1) {
                 return {

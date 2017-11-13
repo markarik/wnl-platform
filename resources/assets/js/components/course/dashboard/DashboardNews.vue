@@ -2,21 +2,29 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p>Serdecznie witamy Cię w wirtualnym pokoju nauki do LEK‑u! Oficjalnie rozpoczynamy 2. edycję kursu! <wnl-emoji name="tada"/></p>
+		<p>Cześć!</p>
 
-		<p>Mamy nadzieję, że czujesz mobilizację i chęć do odkrycia nauki na nowo! Przed nami 4 miesiące wspólnej pracy. Zachęcamy Cię bardzo gorąco do uczestniczenia w dyskusjach na platformie, dzielenia się wiedzą oraz informowania nas o wszystkich problemach, czy wątpliwościach, z którymi przyjdzie Ci się spotkać. <wnl-emoji name="wink"/></p>
+		<p>Chcielibyśmy przedstawić osoby, które będą pomagać Wam w nauce w trakcie 2. edycji kursu Więcej niż LEK! <wnl-emoji name="tada"/></p>
 
-		<p>Zanim usiądziesz wygodnie, aby zmierzyć się z pierwszą lekcją - Kardiologia 1, zapraszamy Cię do zapoznania się z trzema krótkimi lekcjami wstępnymi (w grupie <strong>Więcej niż LEK</strong> w nawigacji po lewej stronie):
-			<ul>
-				<li><strong>Wstęp do kursu</strong>, czyli warto zacząć od podstaw. <wnl-emoji name="wink"/> Tutaj skupimy się na obsłudze platformy oraz celach kursu.</li>
-				<li><strong>5 filarów "Więcej niż LEK"</strong> odpowiadających na 5 podstawowych problemów związanych z przygotowaniem do egzaminu. Pomogą Ci w pełni zrozumieć dlaczego tak, a nie inaczej zaprojektowaliśmy ten kurs.</li>
-				<li><strong>Efektywna nauka</strong> to już lekcja w pełni poświęcona wiedzy o tym jak można uczyć się lepiej, szybciej i zapamiętywać trwalej.</li>
-			</ul>
-		</p>
+		<p>Moderatorzy, poza swoimi obowiązkami na platformie, również uczą się do egzaminu, dzięki czemu są w stanie najlepiej stwierdzić czego Wam potrzeba. Już w pierwszym tygodniu uwzględniliśmy wiele ich doskonałych sugestii!</p>
 
-		<p>W razie jakichkolwiek pytań możesz pisać do nas w Pomocy, na info@wiecejnizlek.pl lub na facebooku. <wnl-emoji name="wink"/></p>
+		<p>Dotychczas oni także uczyli się poruszać po platformie, jednak od dzisiaj przejmują stery dyskusji na naszym 500-osobowego statku. <wnl-emoji name="wink"/></p> Dzięki temu “stacjonarny” zespół lekarzy może skupić się na tworzeniu nowych materiałów oraz doskonaleniu istniejących.</p>
 
-		<p>Trzymamy za Ciebie kciuki i życzymy wiele radości z nauki! <wnl-emoji name="raised_hands"/></p>
+		<p>Poznajcie zatem:</p>
+
+		<p><strong>Dominikę Bernat</strong> i <strong>Zbyszka Nowickiego</strong> - twórców portalu LEKDay, którzy niestrudzenie pobudzają środowisko medyczne do dyskusji nad pytaniami z LEK-u w ramach swojego fanpage’a oraz spędzają niezliczone ilości godzin na dociekaniu poprawnych odpowiedzi.</p>
+
+		<p><strong>Wojciecha Zarembę</strong> - człowieka-orkiestrę, twórcę niezwykłego portalu wuzetki.pl, niezastąpionego źródła wiedzy dla studentów Uniwersytetu Jagiellońskiego (choć oczywiście nie tylko) oraz bazy pytań stworzonej na podstawie egzaminów z tamtej uczelni.</p>
+
+		<p><strong>Artura Bandurę</strong> - naturalny talent pedagogiczny, któremu wielu studentów UM w Poznaniu zawdzięcza zrozumienie biofizyki. <wnl-emoji name="wink"/> 4-letni przewodniczący koła Onkologii i Radioterapii przy Wielkopolskim Centrum Onkologii, wyróżniany prelegent konferencji naukowych oraz organizator konferencji “Magis in medicinae”, poświęconej komunikacji z pacjentem.</p>
+
+		<p><strong>Martę Bromirską</strong> - wieloletnią przewodniczącą koła reumatologicznego GUMed, łącząca swoją działalność z wykładami o profilaktyce osteoporozy, ChZS oraz zespołów bólowych na uniwersytetach 3. wieku w Gdańsku, Rumii i Malborku. Autorka badań i prelegentka konferencji ISSC w Gdańsku.</p>
+
+		<p><strong>Gabrielę Kozę-Natorę</strong> - autorkę książki “LEK na 200”, oraz założycielkę portalu o tej samej nazwie, które są doskonałym źródłem opracowań pytań z dotychczasowych egzaminów oraz pytań autorskich.</p>
+
+		<p>Jak widzicie, ekipa na tej edycji jest niezwykle silna! Z taką załogą z pewnością dopłyniemy do celu! <wnl-emoji name="raised_hands"/></p>
+
+		<p>Trzymamy za Ciebie kciuki i życzymy dalszej radości z nauki!</p>
 	</div>
 </template>
 
@@ -24,7 +32,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'course-start'
+	const CURRENT_NEWS = 'edition-2-moderators'
 	const REQUIRED_ROLE = ''
 
 	export default {

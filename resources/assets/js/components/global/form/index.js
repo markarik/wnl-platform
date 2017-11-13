@@ -4,6 +4,7 @@ import Quill from './Quill'
 import Submit from './Submit'
 import Check from './Check'
 import Tags from './Tags'
+import SlideIds from './SlideIds'
 
 export {
 	Form,
@@ -11,5 +12,6 @@ export {
 	Quill,
 	Submit,
 	Check,
-	Tags
+	Tags,
+	SlideIds
 }

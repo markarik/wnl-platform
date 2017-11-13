@@ -50,6 +50,10 @@
 				<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
 			</fieldset>
 			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Powiązane slajdy</legend>
+				<wnl-slide-ids :defaultSlides="[]" ref="slides"></wnl-slide-ids>
+			</fieldset>
+			<fieldset class="question-form-fieldset">
 				<label class="label checkbox-label">
 						<span>Czy zagwarantować kolejność odpowiedzi ?</span>
 						<input
@@ -143,15 +147,17 @@
 
 <script>
 	import { mapActions, mapGetters } from 'vuex';
-	import { Quill, Form, Tags } from 'js/components/global/form'
+	import { Quill, Form, Tags, SlideIds } from 'js/components/global/form'
 	import { nextTick } from 'vue'
+	import _ from 'lodash'
 
 	export default {
 		name: 'QuizesEditor',
 		components: {
 			'wnl-form': Form,
 			'wnl-quill': Quill,
-			'wnl-tags': Tags
+			'wnl-tags': Tags,
+			'wnl-slide-ids': SlideIds
 		},
 		data: function () {
 			return {
@@ -222,6 +228,10 @@
 
 				if (this.$refs.tags.haveTagsChanged()) {
 					attachedData.tags = this.$refs.tags.tags
+				}
+
+				if (this.$refs.slides.haveTagsChanged()) {
+					attachedData.tags = _.map(this.$refs.slides.slides, slide => slide.id)
 				}
 
 				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked

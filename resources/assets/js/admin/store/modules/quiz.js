@@ -17,6 +17,43 @@ const state = {
 	answers: null,
 }
 
+function getSlideshowId(screenId) {
+	return axios.get(`/papi/v1/screens/${screenId}`)
+		.then(response => {
+			let resources = response.data.meta.resources
+			let resourceName = resource('slideshows')
+			let slideshowId
+
+			Object.keys(resources).forEach((key) => {
+				if (resources[key].name === resourceName) {
+					slideshowId = resources[key].id
+				}
+			})
+
+			return slideshowId
+		})
+}
+
+function getSlideId(slideshowId, slideNumber) {
+	const conditions = {
+		query: {
+			where: [
+				['presentable_type', '=', 'App\\Models\\Slideshow'],
+				['presentable_id', '=', slideshowId],
+				['order_number', '=', slideNumber],
+			]
+		}
+	}
+	return axios.post('/papi/v1/presentables/.search', conditions)
+		.then(response => {
+			return response.data[0].slide_id
+		})
+}
+
+function getSlideData(slideId) {
+	return axios.get(`/papi/v1/slides/${slideId}?include=context`);
+}
+
 function getEmptyAnswers(stateAnswers) {
 	return [
 		{
@@ -70,14 +107,31 @@ const mutations = {
 
 // Actions
 const actions = {
-	getQuizQuestion({ commit, getters }, id) {
-		axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers`))
+	getQuizQuestion({ commit }, id) {
+		axios.get(getApiUrl(`quiz_questions/${id}?include=quiz_answers,slides`))
 			.then((response) => {
 				commit(types.SETUP_QUIZ_QUESTION, response.data)
 			})
 	},
 	setupFreshQuestion({ commit }) {
 		commit(types.CLEAR_QUIZ_QUESTION)
+	},
+	getSlideDataForQuizEditor({ commit }, { slideNumber, screenId }) {
+		return getSlideshowId(screenId)
+			.then(slideshowId => {
+				return getSlideId(slideshowId, slideNumber)
+			})
+			.then(slideId => {
+				return getSlideData(slideId)
+			})
+			.then(response => {
+				return response.data
+			})
+			.catch(exception => {
+				console.error(exception)
+				this.loading = false
+				this.error = true
+			})
 	}
 }
 

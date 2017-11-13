@@ -8,6 +8,13 @@ export const tasks = {
 			notDone: 'Niezrobione'
 		}
 	},
+	sorting: {
+		title: 'Sortowanie',
+		options: {
+			byCreatedAt: 'Po dacie utworzenia',
+			byUpdatedAt: 'Po dacie modyfikacji'
+		}
+	},
 	task: {
 		defaultTitle: 'Brak Tytułu',
 		fields: {
@@ -21,6 +28,7 @@ export const tasks = {
 			open: 'Do wzięcia',
 			inProgress: 'Robi się',
 			done: 'Pozamiatane',
+			reopen: 'Otwarty ponownie',
 			unknown: 'Status nieznany'
 		},
 		action: {

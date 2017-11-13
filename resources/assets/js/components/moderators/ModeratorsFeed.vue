@@ -1,25 +1,29 @@
 <template>
 	<div class="moderators-feed">
-		<div class="quick-filters">
-			<span v-t="'tasks.quickFilters.title'"/>
-			<a v-for="(quickFilter, index) in quickFilters"
-				class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
-				@click="onQuickFilterChange(quickFilter)"
-				:key="index"
-				v-t="quickFilter.name"
-			/>
-			<span>Sortuj</span>
-			<a v-for="(sort, index) in sorting"
-				class="panel-toggle"
-				:class="{'is-active': sort.isActive}"
-				@click="onSortClick(sort)"
-				:key="index"
-			>
-				{{sort.name}}
-				<span class="icon is-small">
-					<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
-				</span>
-			</a>
+		<div class="quick-actions-container">
+			<div class="quick-action">
+				<span v-t="'tasks.quickFilters.title'"/>
+				<a v-for="(quickFilter, index) in quickFilters"
+					class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
+					@click="onQuickFilterChange(quickFilter)"
+					:key="index"
+					v-t="quickFilter.name"
+				/>
+			</div>
+			<div class="quick-action--right">
+				<span v-t="'tasks.sorting.title'"/>
+				<a v-for="(sort, index) in sorting"
+					class="panel-toggle"
+					:class="{'is-active': sort.isActive}"
+					@click="onSortClick(sort)"
+					:key="index"
+				>
+					{{sort.name}}
+					<span class="icon is-small">
+						<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
+					</span>
+				</a>
+			</div>
 		</div>
 		<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
 			<div class="notification-container">
@@ -62,8 +66,11 @@
 	.button
 		border-radius: 0
 
-	.quick-filters
+	.quick-actions-container
 		margin-bottom: $margin-big
+
+		.quick-action
+			margin-bottom: $margin-base
 </style>
 
 <script>
@@ -193,11 +200,19 @@
 			initialSorting() {
 				return [
 					{
-						name: 'Po dacie stworzenia',
+						name: this.$t('tasks.sorting.options.byCreatedAt'),
 						dir: 'desc',
 						isActive: true,
 						order: (dir = 'desc') => {
 							return {'created_at': dir}
+						}
+					},
+					{
+						name: this.$t('tasks.sorting.options.byUpdatedAt'),
+						dir: 'desc',
+						isActive: false,
+						order: (dir = 'desc') => {
+							return {'updated_at': dir}
 						}
 					}
 				]

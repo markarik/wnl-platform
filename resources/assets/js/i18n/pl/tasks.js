@@ -8,6 +8,13 @@ export const tasks = {
 			notDone: 'Niezrobione'
 		}
 	},
+	sorting: {
+		title: 'Sortowanie',
+		options: {
+			byCreatedAt: 'Po dacie utworzenia',
+			byUpdatedAt: 'Po dacie modyfikacji'
+		}
+	},
 	task: {
 		defaultTitle: 'Brak Tytułu',
 		fields: {

@@ -137,7 +137,7 @@
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
 
-				this.pullTasks({query: this.buildQuery()})
+				this.pullTasks({...this.buildQuery()})
 			},
 			onSortClick(sort) {
 				if (sort.isActive) {

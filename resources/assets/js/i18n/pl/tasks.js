@@ -28,6 +28,7 @@ export const tasks = {
 			open: 'Do wzięcia',
 			inProgress: 'Robi się',
 			done: 'Pozamiatane',
+			reopen: 'Otwarty ponownie',
 			unknown: 'Status nieznany'
 		},
 		action: {

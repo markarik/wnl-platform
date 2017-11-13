@@ -22,6 +22,9 @@ class Task extends Model
 		'labels',
 	];
 
+	const STATUS_DONE = 'done';
+	const STATUS_REOPEN = 'reopen';
+
 	protected $casts = [
 		'labels'  => 'array',
 		'context' => 'array',

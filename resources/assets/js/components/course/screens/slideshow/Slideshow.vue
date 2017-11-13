@@ -137,7 +137,7 @@
 		},
 		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
 		computed: {
-			...mapGetters(['getSetting']),
+			...mapGetters(['getSetting', 'currentUserId']),
 			...mapGetters('slideshow', [
 				'comments',
 				'commentProfile',
@@ -184,6 +184,7 @@
 
 				const vuexState = {
 					hasReacted,
+					userId: this.currentUserId,
 					slide: {
 						slideId,
 						...this.getReaction('slides', slideId, 'bookmark')

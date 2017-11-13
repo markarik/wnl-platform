@@ -74,6 +74,9 @@ class ScreensCountSlides extends Command
 				->orderBy('order_number')
 				->get(['order_number']);
 
+			\Log::debug('subsection id ' .  $subsection->id);
+			\Log::debug('subsection name ' .  $subsection->name);
+			\Log::debug('parent section name ' .  $subsection->section->name);
 			$subsection->first_slide = $subsectionSlides->first()->order_number;
 			$subsection->slides_count = $subsectionSlides->count();
 			$subsection->save();

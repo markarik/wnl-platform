@@ -135,7 +135,6 @@ class Parser
 			}
 			ksort($foundCourseTags);
 			foreach ($foundCourseTags as $index => $courseTag) {
-
 				if ($courseTag['name'] == 'group') {
 					$group = Group::firstOrCreate([
 						'name'      => $courseTag['value'],
@@ -176,14 +175,24 @@ class Parser
 				}
 
 				if ($courseTag['name'] == 'section') {
+					\Log::debug('found section');
+					\Log::debug($this->cleanName($courseTag['value']));
+					\Log::debug('*************');
+
 					$section = Section::firstOrCreate([
 						'name'      => $this->cleanName($courseTag['value']),
 						'screen_id' => $this->courseModels['screen']->id,
 					]);
 					$this->courseModels['section'] = $section;
+
+					$lastSectionFound = $this->courseModels['section'];
+					unset($this->courseModels['subsection']);
 				}
 
 				if ($courseTag['name'] == 'subsection') {
+					\Log::debug('found subsection');
+					\Log::debug($this->cleanName($courseTag['value']));
+					\Log::debug('*************');
 					$subsection = Subsection::firstOrCreate([
 						'name'       => $this->cleanName($courseTag['value']),
 						'section_id' => $this->courseModels['section']->id,
@@ -198,7 +207,7 @@ class Parser
 			if ($this->groupTag && !$slide->tags->contains($this->groupTag)) {
 				$slide->tags()->attach($this->groupTag);
 			}
-			$this->attachToPresentables($slide, $orderNumber, $lastSectionFound);
+			$lastSectionFound = $this->attachToPresentables($slide, $orderNumber, $lastSectionFound);
 
 			if (!empty($foundQuestionsIds)) {
 				$slide->quizQuestions()->attach($foundQuestionsIds);
@@ -492,12 +501,17 @@ class Parser
 				if ($lastSectionFound === null) {
 					$lastSectionFound = $this->courseModels['section'];
 				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {
+					\Log::debug('last section different than courseModel section');
+					\Log::debug('last section ' . $lastSectionFound->name);
+					\Log::debug('course model section ' . $this->courseModels['section']->name);
+					\Log::debug('closing subsection ' . $this->courseModels['subsection']->name);
 					$lastSectionFound = $this->courseModels['section'];
-					unset($this->courseModels['subsection']);
+					// unset($this->courseModels['subsection']);
 				}
 			}
 
 			if (array_key_exists('subsection', $this->courseModels)) {
+				\Log::debug('attaching slides to subsection' .  $this->courseModels['subsection']->name);
 				$this->courseModels['subsection']->slides()->attach($slide, ['order_number' => $orderNumber]);
 			}
 		}
@@ -507,6 +521,8 @@ class Parser
 			} else {
 				throw $e;
 			}
+		} finally {
+			return $lastSectionFound;
 		}
 	}
 }

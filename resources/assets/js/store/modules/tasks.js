@@ -81,6 +81,7 @@ function _getTasks(params) {
 		limit: 10,
 		include: 'events,assigneeProfiles',
 		query: {},
+		order: {},
 		...params
 	})
 }

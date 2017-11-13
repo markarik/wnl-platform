@@ -7,9 +7,17 @@
 				@click="onQuickFilterChange(quickFilter)"
 				:key="index"
 				v-t="quickFilter.name"
+			/>
+			<span>Sortuj</span>
+			<a v-for="(sort, index) in sorting"
+				class="panel-toggle"
+				:class="{'is-active': sort.isActive}"
+				@click="onSortClick(sort)"
+				:key="index"
 			>
+				{{sort.name}}
 				<span class="icon is-small">
-					<i class="fa" :class="[quickFilter.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
 				</span>
 			</a>
 		</div>
@@ -79,7 +87,8 @@
 			return {
 				moderators: [],
 				bodyClicked: false,
-				quickFilters: this.initialQuickFilters()
+				quickFilters: this.initialQuickFilters(),
+				sorting: this.initialSorting()
 			}
 		},
 		computed: {
@@ -123,15 +132,34 @@
 
 				this.pullTasks({query: this.buildQuery()})
 			},
+			onSortClick(sort) {
+				if (sort.isActive) {
+					sort.dir = sort.dir === 'desc' ? 'asc' : 'desc'
+				} else {
+					this.sorting.forEach(sort => sort.isActive = false)
+					sort.isActive = true
+				}
+
+				this.pullTasks({...this.buildQuery()})
+			},
 			buildQuery() {
 				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
+				const activeSorting = this.sorting.filter(filter => filter.isActive)
 				let query = {}
+				let order = {}
 
 				activeFilters.forEach(filter => {
 					query = {...query, ...filter.query()}
 				})
 
-				return query
+				activeSorting.forEach(filter => {
+					order = {...order, ...filter.order(filter.dir)}
+				})
+
+				return {
+					query,
+					order
+				}
 			},
 			initialQuickFilters() {
 				return [
@@ -158,6 +186,18 @@
 							return {
 								whereNull: ['assignee_id']
 							}
+						}
+					}
+				]
+			},
+			initialSorting() {
+				return [
+					{
+						name: 'Po dacie stworzenia',
+						dir: 'desc',
+						isActive: true,
+						order: (dir = 'desc') => {
+							return {'created_at': dir}
 						}
 					}
 				]

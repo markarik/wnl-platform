@@ -110,7 +110,7 @@
 			...mapActions(['toggleOverlay']),
 			onChangePage(page) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks({page, query: this.buildQuery()})
+				this.pullTasks({page, ...this.buildQuery()})
 					.then(() => {
 						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
@@ -126,11 +126,11 @@
 			},
 			onRefresh() {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks()
+				this.quickFilters = this.initialQuickFilters()
+				this.sorting = this.initialSorting()
+				this.pullTasks({...this.buildQuery()})
 					.then(() => {
 						scrollToTop()
-						this.quickFilters = this.initialQuickFilters()
-
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
@@ -230,7 +230,7 @@
 					},
 				}
 			})
-			const promisedTasks = this.pullTasks({query: this.buildQuery()})
+			const promisedTasks = this.pullTasks({...this.buildQuery()})
 
 			Promise.all([promisedModerators, promisedTasks])
 				.then(([moderatorsResponse, tasks]) => {

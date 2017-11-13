@@ -51,7 +51,7 @@
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Powiązane slajdy</legend>
-				<wnl-slide-ids :defaultSlides="[]" ref="slides"></wnl-slide-ids>
+				<wnl-slide-ids :defaultSlides="questionSlides" ref="slides"></wnl-slide-ids>
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<label class="label checkbox-label">
@@ -172,6 +172,7 @@
 				'questionText',
 				'questionExplanation',
 				'questionAnswers',
+				'questionSlides',
 				'questionAnswersMap',
 				'questionId',
 				'questionTags',
@@ -230,8 +231,8 @@
 					attachedData.tags = this.$refs.tags.tags
 				}
 
-				if (this.$refs.slides.haveTagsChanged()) {
-					attachedData.tags = _.map(this.$refs.slides.slides, slide => slide.id)
+				if (this.$refs.slides.haveSlidesChanged()) {
+					attachedData.slides = _.map(this.$refs.slides.slides, slide => slide.id)
 				}
 
 				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked

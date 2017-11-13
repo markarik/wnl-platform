@@ -15,6 +15,7 @@ const state = {
 	question: null,
 	questionId: null,
 	answers: null,
+	slides: null
 }
 
 function getSlideshowId(screenId) {
@@ -84,10 +85,19 @@ const getters = {
 	questionText: state => state.question ? state.question.text : '',
 	questionExplanation: state => state.question ? state.question.explanation : '',
 	questionAnswers: state => state.answers || getEmptyAnswers(),
+	questionSlides: state => state.slides || [],
 	questionAnswersMap: state => state.answersMap,
 	questionId: state => state.question && state.question.id,
 	questionTags: state => state.question ? state.question.tags : [],
 	preserveOrder: state => state.question && state.question.preserve_order
+}
+
+function getSlidesArray(included) {
+	if (!included.slides) {
+		return []
+	} else {
+		return Object.values(included.slides)
+	}
 }
 
 // Mutations
@@ -98,6 +108,7 @@ const mutations = {
 
 		set(state, 'question', data)
 		set(state, 'answers', answersArray)
+		set(state, 'slides', getSlidesArray(data.included))
 		set(state, 'answersMap', answersObject)
 	},
 	[types.CLEAR_QUIZ_QUESTION] (state, data) {
@@ -129,8 +140,6 @@ const actions = {
 			})
 			.catch(exception => {
 				console.error(exception)
-				this.loading = false
-				this.error = true
 			})
 	}
 }

@@ -1,35 +1,70 @@
 <template>
 	<div class="field">
 		<div class="control screens-control">
-			<div v-for="slide in slides" :context="slide.context" :key="slide.id">
-				{{slide.id}}
-				<i class="fa fa-times" @click="removeSlide(slide)"></i>
+			<div class="screens-wrapper">
+				<div class="slide-snippet" v-for="slide in slides" :context="slide.context" :key="slide.id">
+					<h5>{{slide.snippet.header}}</h5>
+					<p>{{slide.snippet.subheader}}</p>
+					<i class="fa fa-times close-icon" @click="removeSlide(slide)"></i>
+				</div>
 			</div>
-			<input
-				v-model="screenIdInput"
-				class="input"
-				type="text"
-				placeholder="Id screena"
-				ref="slideIdInput"
-			>
-			<input
-				v-model="slideNumberInput"
-				class="input"
-				type="number"
-				placeholder="Numer porządkowy"
-				ref="orderNumberInput"
-			>
-			<a
-				@click="onButtonClicked"
-			>
-				Dodaj
-			</a>
+			<div class="inputs-wrapper">
+				<input
+					v-model="screenIdInput"
+					class="input"
+					type="text"
+					placeholder="Id screena"
+					ref="slideIdInput"
+				>
+				<input
+					v-model="slideNumberInput"
+					class="input"
+					type="number"
+					placeholder="Numer slajdu"
+					ref="orderNumberInput"
+				>
+				<a
+					@click="onButtonClicked"
+					class="button"
+				>
+					Dodaj
+				</a>
+			</div>
 		</div>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.screens-wrapper
+		display: flex
+
+	.slide-snippet
+		border: 1px solid #efefef
+		margin: 5px 5px 20px
+		padding: 5px 45px 5px 5px
+		position: relative
+
+	.close-icon
+		cursor: pointer
+		padding: 3px
+		position: absolute
+		right: 0
+		top: 0
+
+	.inputs-wrapper
+		display: flex
+
+	.input
+		margin: 5px
+
+	.button
+		display: block
+		background: #11afb2
+		color: #fff
+		margin: 5px
+
 
 </style>
 
@@ -80,7 +115,7 @@
 
 			removeSlide(slide) {
 				this.slides = _.filter(
-					this.tags,
+					this.slides,
 					foundSlide => slide.id !== foundSlide.id
 				)
 			},
@@ -93,7 +128,7 @@
 		},
 		watch: {
 			defaultSlides() {
-				this.tags = this.defaultSlides.slice()
+				this.slides = this.defaultSlides.slice()
 			}
 		}
 	}

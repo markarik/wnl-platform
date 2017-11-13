@@ -13,7 +13,7 @@
 				:filterByLocation="filterByLocation">
 			</router-view>
 		</div>
-		<wnl-sidenav-slot v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
+		<wnl-sidenav-slot class="full-width-sidenav-slot scrollable-container" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
 			:isVisible="true"
 			:isDetached="false"
 		>
@@ -24,6 +24,9 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.full-width-sidenav-slot
+		flex-basis: auto
 
 	.myself-sidenav
 		flex: 1
@@ -38,11 +41,9 @@
 	.mobile-main
 		overflow-y: auto
 
-	.full-width-sidenav-slot
-		flex-basis: auto
-
 	.wnl-chat-toggle
 		padding: 15px
+		flex-basis: auto
 
 </style>
 

@@ -16,7 +16,7 @@
 						<div class="user-info-header-edit">
 							<span v-if="currentUserProfile">
 								<router-link :to="{ name: 'my-profile' }">
-									<a class="button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
+									<a class="edit-profile button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
 								</router-link>
 							</span>
 							<span class="user-info-header-names">
@@ -124,6 +124,8 @@
 				display: flex
 				flex-direction: row-reverse
 				color: $color-ocean-blue
+				.edit-profile
+					margin-bottom: $margin-small
 			.user-info-header-names
 				flex-grow: 10
 				.fullname-title
@@ -147,6 +149,9 @@
 					font-weight: $font-weight-regular
 					margin-left: $margin-small
 			.user-info-help
+				display: inline-block
+				max-width: 100%
+				word-break: break-all
 				.help-title
 					font-size: $font-size-minus-1
 					text-transform: uppercase
@@ -157,6 +162,9 @@
 					.user-help
 						font-size: $font-size-plus-1
 						font-weight: $font-weight-regular
+						display: inline-block
+			            max-width: 100%
+			            word-break: break-all
 
 	.user-activity-content
 		align-items: center
@@ -352,8 +360,8 @@ export default {
         convertSortedAnswersToObject() {
             if (this.sortAnswersCompetency.length > 1) {
                 return {
-                    0: this.sortAnswersCompetency[1],
-                    1: this.sortAnswersCompetency[0]
+                    0: this.sortAnswersCompetency[0],
+                    1: this.sortAnswersCompetency[1]
                 }
             } else if (this.sortAnswersCompetency.length = 1) {
                 return {

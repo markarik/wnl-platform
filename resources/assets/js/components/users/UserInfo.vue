@@ -29,5 +29,7 @@ export default {
             display: inline-block
             max-width: 100%
             word-wrap: break-word
+            overflow-wrap: break-word
+            word-break: break-all
 
 </style>

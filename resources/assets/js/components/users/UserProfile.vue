@@ -1,5 +1,5 @@
 <template lang="html">
-		<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
+		<div class="wnl-user-profile" :class="{mobile: isMobileProfile}">
 			<div class="text-loader" v-if="isLoading">
 				<wnl-text-loader>
 					{{ $t('user.userProfile.textLoader') }}
@@ -443,7 +443,7 @@ export default {
 				})
 			this.isLoading = false
 			})
-			.catch(exception => $wnl.logger.capture(exception))
+			.catch(exception => $wnl.logger.error(exception))
 		},
     },
     mounted() {

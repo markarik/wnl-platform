@@ -13,7 +13,7 @@
 				:filterByLocation="filterByLocation">
 			</router-view>
 		</div>
-		<wnl-sidenav-slot class="full-width-sidenav-slot scrollable-container" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
+		<wnl-sidenav-slot v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
 			:isVisible="true"
 			:isDetached="false"
 		>

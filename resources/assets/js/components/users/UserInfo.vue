@@ -1,5 +1,5 @@
 <template>
-    <div class="user-info">
+    <div class="user-info full-width-sidenav-slot">
         <span class="label"v-t="label"></span>
         <span class="info" v-t="info"></span>
     </div>
@@ -16,13 +16,18 @@ export default {
     @import 'resources/assets/sass/variables'
 
     .user-info
-        margin-bottom: $margin-base
         border-bottom: $border-light-gray
+        margin-bottom: $margin-base
         padding-bottom: $margin-base
+        width: 100%
         .label
-            text-transform: uppercase
+            color: $color-gray-dimmed
             font-size: $font-size-plus-1
             font-weight: $font-weight-regular
-            color: $color-gray-dimmed
+            text-transform: uppercase
+        .info
+            display: inline-block
+            max-width: 100%
+            word-wrap: break-word
 
 </style>

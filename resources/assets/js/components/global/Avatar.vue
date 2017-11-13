@@ -34,7 +34,7 @@
 		overflow: hidden
 		user-select: none
 
-	.link
+	img
 		cursor: pointer
 </style>
 <script>

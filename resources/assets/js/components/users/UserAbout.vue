@@ -53,6 +53,9 @@
         text-transform: uppercase
         margin-bottom: $margin-big
 
+    .user-infos
+        width: 100%
+
 </style>
 
 <script>

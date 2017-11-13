@@ -16,10 +16,10 @@ class AddUserDetailsToUserProfiles extends Migration
         Schema::table('user_profiles', function (Blueprint $table) {
             $table->string('city')->nullable()->after('avatar');
             $table->string('university')->nullable()->after('city');
-            $table->string('specialization')->nullable()->after('university');
-            $table->string('help')->nullable()->after('specialization');
-            $table->string('interests')->nullable()->after('help');
-            $table->string('about')->nullable()->after('interests');
+            $table->text('specialization')->nullable()->after('university');
+            $table->text('help')->nullable()->after('specialization');
+            $table->text('interests')->nullable()->after('help');
+            $table->text('about')->nullable()->after('interests');
             $table->string('learning_location')->nullable()->after('about');
         });
     }

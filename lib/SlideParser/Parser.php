@@ -135,7 +135,6 @@ class Parser
 			}
 			ksort($foundCourseTags);
 			foreach ($foundCourseTags as $index => $courseTag) {
-
 				if ($courseTag['name'] == 'group') {
 					$group = Group::firstOrCreate([
 						'name'      => $courseTag['value'],
@@ -181,6 +180,9 @@ class Parser
 						'screen_id' => $this->courseModels['screen']->id,
 					]);
 					$this->courseModels['section'] = $section;
+
+					$lastSectionFound = $this->courseModels['section'];
+					unset($this->courseModels['subsection']);
 				}
 
 				if ($courseTag['name'] == 'subsection') {
@@ -198,7 +200,7 @@ class Parser
 			if ($this->groupTag && !$slide->tags->contains($this->groupTag)) {
 				$slide->tags()->attach($this->groupTag);
 			}
-			$this->attachToPresentables($slide, $orderNumber, $lastSectionFound);
+			$lastSectionFound = $this->attachToPresentables($slide, $orderNumber, $lastSectionFound);
 
 			if (!empty($foundQuestionsIds)) {
 				$slide->quizQuestions()->attach($foundQuestionsIds);
@@ -493,7 +495,6 @@ class Parser
 					$lastSectionFound = $this->courseModels['section'];
 				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {
 					$lastSectionFound = $this->courseModels['section'];
-					unset($this->courseModels['subsection']);
 				}
 			}
 
@@ -507,6 +508,8 @@ class Parser
 			} else {
 				throw $e;
 			}
+		} finally {
+			return $lastSectionFound;
 		}
 	}
 }

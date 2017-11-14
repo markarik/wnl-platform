@@ -10,7 +10,8 @@ return [
 		'context' => [
 			'help-tech' => 'Pomoc techniczna',
 			'help-learning' => 'Pomoc w nauce',
-			'help-new' => 'Nad czym pracujemy'
+			'help-new' => 'Nad czym pracujemy',
+			'help' => 'Pomoc'
 		]
 	],
 ];

@@ -145,7 +145,8 @@ export default {
 			status: {
 				OPEN: 'open',
 				IN_PROGRESS: 'inProgress',
-				DONE: 'done'
+				DONE: 'done',
+				REOPEN: 'reopen'
 			},
 			showAutocomplete: false,
 			assigneeTextInput: '',
@@ -173,6 +174,11 @@ export default {
 					return {
 						class: 'is-success',
 						text: this.$t('tasks.task.status.done')
+					}
+				case this.status.REOPEN:
+					return {
+						class: 'is-danger',
+						text: this.$t('tasks.task.status.reopen')
 					}
 				default:
 					return {

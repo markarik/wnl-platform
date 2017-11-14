@@ -1,17 +1,29 @@
 <template>
 	<div class="moderators-feed">
-		<div class="quick-filters">
-			<span v-t="'tasks.quickFilters.title'"/>
-			<a v-for="(quickFilter, index) in quickFilters"
-				class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
-				@click="onQuickFilterChange(quickFilter)"
-				:key="index"
-				v-t="quickFilter.name"
-			>
-				<span class="icon is-small">
-					<i class="fa" :class="[quickFilter.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
-				</span>
-			</a>
+		<div class="quick-actions-container">
+			<div class="quick-action">
+				<span v-t="'tasks.quickFilters.title'"/>
+				<a v-for="(quickFilter, index) in quickFilters"
+					class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
+					@click="onQuickFilterChange(quickFilter)"
+					:key="index"
+					v-t="quickFilter.name"
+				/>
+			</div>
+			<div class="quick-action--right">
+				<span v-t="'tasks.sorting.title'"/>
+				<a v-for="(sort, index) in sorting"
+					class="panel-toggle"
+					:class="{'is-active': sort.isActive}"
+					@click="onSortClick(sort)"
+					:key="index"
+				>
+					{{sort.name}}
+					<span class="icon is-small">
+						<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
+					</span>
+				</a>
+			</div>
 		</div>
 		<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
 			<div class="notification-container">
@@ -54,8 +66,11 @@
 	.button
 		border-radius: 0
 
-	.quick-filters
+	.quick-actions-container
 		margin-bottom: $margin-big
+
+		.quick-action
+			margin-bottom: $margin-base
 </style>
 
 <script>
@@ -79,7 +94,8 @@
 			return {
 				moderators: [],
 				bodyClicked: false,
-				quickFilters: this.initialQuickFilters()
+				quickFilters: this.initialQuickFilters(),
+				sorting: this.initialSorting()
 			}
 		},
 		computed: {
@@ -94,7 +110,7 @@
 			...mapActions(['toggleOverlay']),
 			onChangePage(page) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks({page, query: this.buildQuery()})
+				this.pullTasks({page, ...this.buildQuery()})
 					.then(() => {
 						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
@@ -110,28 +126,47 @@
 			},
 			onRefresh() {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks()
+				this.quickFilters = this.initialQuickFilters()
+				this.sorting = this.initialSorting()
+				this.pullTasks({...this.buildQuery()})
 					.then(() => {
 						scrollToTop()
-						this.quickFilters = this.initialQuickFilters()
-
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
 
-				this.pullTasks({query: this.buildQuery()})
+				this.pullTasks({...this.buildQuery()})
+			},
+			onSortClick(sort) {
+				if (sort.isActive) {
+					sort.dir = sort.dir === 'desc' ? 'asc' : 'desc'
+				} else {
+					this.sorting.forEach(sort => sort.isActive = false)
+					sort.isActive = true
+				}
+
+				this.pullTasks({...this.buildQuery()})
 			},
 			buildQuery() {
 				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
+				const activeSorting = this.sorting.filter(filter => filter.isActive)
 				let query = {}
+				let order = {}
 
 				activeFilters.forEach(filter => {
 					query = {...query, ...filter.query()}
 				})
 
-				return query
+				activeSorting.forEach(filter => {
+					order = {...order, ...filter.order(filter.dir)}
+				})
+
+				return {
+					query,
+					order
+				}
 			},
 			initialQuickFilters() {
 				return [
@@ -161,6 +196,26 @@
 						}
 					}
 				]
+			},
+			initialSorting() {
+				return [
+					{
+						name: this.$t('tasks.sorting.options.byCreatedAt'),
+						dir: 'desc',
+						isActive: true,
+						order: (dir = 'desc') => {
+							return {'created_at': dir}
+						}
+					},
+					{
+						name: this.$t('tasks.sorting.options.byUpdatedAt'),
+						dir: 'desc',
+						isActive: false,
+						order: (dir = 'desc') => {
+							return {'updated_at': dir}
+						}
+					}
+				]
 			}
 		},
 		mounted() {
@@ -175,7 +230,7 @@
 					},
 				}
 			})
-			const promisedTasks = this.pullTasks({query: this.buildQuery()})
+			const promisedTasks = this.pullTasks({...this.buildQuery()})
 
 			Promise.all([promisedModerators, promisedTasks])
 				.then(([moderatorsResponse, tasks]) => {

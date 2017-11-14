@@ -28,7 +28,7 @@ class DatabaseTaskChannel
 			'id'   => $event->data['objects']['id'] ?? $event->data['subject']['id'],
 		];
 
-		$task = Task::firstOrCreate(
+		$task = Task::firstOrNew(
 			[
 				'subject_type' => $taskSubject['type'],
 				'subject_id'   => $taskSubject['id'],
@@ -42,6 +42,12 @@ class DatabaseTaskChannel
 				'team'            => $notification->team,
 				'text'            => $notification->text,
 			]);
+
+		if ($task->status == Task::STATUS_DONE) {
+			$task->status = Task::STATUS_REOPEN;
+		}
+
+		$task->save();
 
 		Event::create([
 			'id'      => $event->id,

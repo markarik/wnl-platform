@@ -131,7 +131,9 @@
 		data() {
 			return {
 				quickFilters: this.initialQuickFilters(),
-				sorting: this.initialSorting()
+				sorting: this.initialSorting(),
+				filters: this.initialFilters(),
+				selectedFilters: this.buildFiltering()
 			}
 		},
 		components: {
@@ -158,42 +160,21 @@
 					{name: '#moderatorzy', channel: 'moderatorzy'},
 				]
 			},
-			filters() {
-				return {
-					'by-object-type': {
-						name: "Filtrowanie po typie",
-						items: [{
-							name: "Slajdy",
-							value: "slide"
-						}, {
-							name: "Pytania Kontrolne",
-							value: "quiz_question"
-						}, {
-							name: "Pytania w Dyskusjach (QnA)",
-							value: "qna_question"
-						}, {
-							name: "Odpowiedzi w Dyskusjach (QnA)",
-							value: "qna_answer"
-						}],
-						message: 'objects',
-						type: 'tags'
-					}
-				}
-			},
 			accordionConfig() {
 				return {
 					disableEmpty: true,
 					isMobile: false,
 					itemsNameSource: 'questions.filters.items',
-					expanded: ['by-object-type']
+					expanded: ['by-object-type'],
+					selectedElements: Object.keys(this.selectedFilters).filter(key => this.selectedFilters[key])
 				}
 			}
 		},
 		methods: {
 			...mapActions(['toggleChat', 'currentUserId', 'toggleOverlay']),
 			...mapActions('tasks', ['pullTasks']),
-			onItemToggled(item) {
-				console.log('item...', item)
+			onItemToggled({path, selected}) {
+				this.selectedFilters[path] = selected
 			},
 			buildQuery() {
 				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
@@ -276,6 +257,44 @@
 					}
 				]
 			},
+			initialFilters() {
+				return {
+					'by-object-type': {
+						name: "Filtrowanie po typie",
+						items: [{
+							name: "Slajdy",
+							value: "slide",
+							query: (value = 'slide') => {
+								return {
+									where: [['type', value]]
+								}
+							}
+						}, {
+							name: "Pytania Kontrolne",
+							value: "quiz_question"
+						}, {
+							name: "Pytania w Dyskusjach (QnA)",
+							value: "qna_question"
+						}, {
+							name: "Odpowiedzi w Dyskusjach (QnA)",
+							value: "qna_answer"
+						}],
+					}
+				}
+			},
+			buildFiltering() {
+				const filters = this.initialFilters();
+				const filterGroups = Object.keys(filters)
+				const selectedFilters = {}
+
+				filterGroups.forEach(filterGroup => {
+					filters[filterGroup].items.forEach((item, index) => {
+						selectedFilters[`${filterGroup}.items[${index}]`] = false
+					})
+				})
+
+				return selectedFilters
+			},
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
 
@@ -304,7 +323,7 @@
 					},
 				}
 			})
-			const promisedTasks = this.pullTasks({...this.buildQuery()})
+			const promisedTasks = this.pullTasks(this.buildQuery())
 
 			Promise.all([promisedModerators, promisedTasks])
 				.then(([moderatorsResponse, tasks]) => {

@@ -4,7 +4,13 @@
 				:isVisible="isSidenavVisible"
 				:isDetached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-accordion
+					:dataSource="filters"
+					:config="accordionConfig"
+					:loading="false"
+					@itemToggled="onItemToggled"
+					class="full-width"
+				/>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
@@ -64,6 +70,7 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import withChat from 'js/mixins/with-chat'
+	import Accordion from 'js/components/global/accordion/Accordion'
 
 	export default {
 		name: 'ModeratorsDashboard',
@@ -73,6 +80,7 @@
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-accordion': Accordion
 		},
 		mixins: [withChat],
 		computed: {
@@ -88,9 +96,39 @@
 					{name: '#moderatorzy', channel: 'moderatorzy'},
 				]
 			},
+			filters() {
+				return {
+					'by-object-type': {
+						name: "Filtrowanie po typie",
+						items: [{
+							name: "Slajdy",
+							value: "slides"
+						}, {
+							name: "Pytania Kontrolne",
+							value: "quiz_questions"
+						}, {
+							name: "Dyskusje (QnA)",
+							value: "qna"
+						}],
+						message: 'objects',
+						type: 'tags'
+					}
+				}
+			},
+			accordionConfig() {
+				return {
+					disableEmpty: true,
+					isMobile: false,
+					itemsNameSource: 'questions.filters.items',
+					expanded: ['by-object-type']
+				}
+			}
 		},
 		methods: {
 			...mapActions(['toggleChat']),
+			onItemToggled(item) {
+				debugger
+			}
 		},
 		watch: {
 			'$route.query.chatChannel' (newVal) {

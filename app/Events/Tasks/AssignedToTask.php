@@ -37,11 +37,9 @@ class AssignedToTask extends Event
 		$this->data = [
 			'event'   => 'assigned-to-task',
 			'objects' => [
-//				'author' => $commentable->user->id ?? null,
-//				'type' => $commentableType,
-//				'id'   => $commentable->id,
-//				'text' => $this->sanitize($commentable->text ?? ''),
-//				'snippet' => $commentable->snippet ?? [],
+				'type' => 'task',
+				'id'   => $task->id,
+				'text' => $task->description,
 			],
 			'subject' => [
 //				'type' => 'comment',

@@ -34,7 +34,7 @@
 		overflow: hidden
 		user-select: none
 
-	img
+	.wnl-avatar-custom, .wnl-avatar-automatic
 		cursor: pointer
 </style>
 <script>

@@ -1,7 +1,8 @@
 export const user = {
     myProfile: {
         publicProfile: 'Profil publiczny',
-        previewYourProfileButton: 'Zobacz swój profil',
+        previewYourProfileButtonEnabled: 'Zobacz swój profil',
+        previewYourProfileButtonDisabled: 'Zapisz, aby zobaczyć profil',
         editYourProfile: 'Edytuj profil',
         city: 'Miasto, w którym mieszkasz',
         university: 'Twój uniwersytet',

@@ -3,7 +3,10 @@
 		<div class="wnl-comment-side">
 			<figure class="media-left">
 				<p class="image is-32x32">
-					<wnl-avatar size="medium" :fullName="profile.full_name" :url="profile.avatar" :userId="profile.id">
+					<wnl-avatar size="medium"
+						:fullName="profile.full_name"
+						:url="profile.avatar"
+						:userId="profile.user_id">
 					</wnl-avatar>
 				</p>
 			</figure>
@@ -97,6 +100,10 @@ export default {
 		onDeleteSuccess() {
 			this.$emit('removeComment', this.id)
 		}
+	},
+	mounted() {
+
+			console.log(this.profile);
 	}
 }
 </script>

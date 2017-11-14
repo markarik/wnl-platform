@@ -84,136 +84,139 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.text-loader
-		position: absolute
-		z-index: $z-index-navbar
-		width: 100vw
-		height: 100%
-		background-color: $color-white
-		top: 0
-		left: 0
+	.wnl-user-profile
+		width: 100%
 
-	.collections-controls
-		align-items: center
-		display: flex
-		flex-wrap: wrap
-		margin-bottom: $margin-base
+		.text-loader
+			position: absolute
+			z-index: $z-index-navbar
+			width: 100vw
+			height: 100%
+			background-color: $color-white
+			top: 0
+			left: 0
 
-	.is-mobile-avatar
-		flex-direction: column
-		align-items: center
-
-	.is-desktop-avatar
-		justify-content: flex-start
-
-	.user-content
-		display: flex
-		padding-left: 2vw
-		margin-bottom: $margin-base
-		border-bottom: $border-light-gray
-		padding-bottom: $margin-base
-		.user-avatar
-			margin-right: 1vw
-			margin-top: $margin-tiny
-			margin-bottom: $margin-small
-		.user-info-header
+		.collections-controls
+			align-items: center
 			display: flex
+			flex-wrap: wrap
+			margin-bottom: $margin-base
+
+		.is-mobile-avatar
 			flex-direction: column
-			width: 100%
-			.user-info-header-edit
+			align-items: center
+
+		.is-desktop-avatar
+			justify-content: flex-start
+
+		.user-content
+			display: flex
+			padding-left: 2vw
+			margin-bottom: $margin-base
+			border-bottom: $border-light-gray
+			padding-bottom: $margin-base
+			.user-avatar
+				margin-right: 1vw
+				margin-top: $margin-tiny
+				margin-bottom: $margin-small
+			.user-info-header
 				display: flex
-				flex-direction: row-reverse
-				color: $color-ocean-blue
-				.edit-profile
-					margin-bottom: $margin-small
-			.user-info-header-names
-				flex-grow: 10
-				.fullname-title
+				flex-direction: column
+				width: 100%
+				.user-info-header-edit
+					display: flex
+					flex-direction: row-reverse
 					color: $color-ocean-blue
-					font-size: $font-size-plus-5
-					font-weight: $font-weight-bold
-					margin-bottom: $margin-small
-					line-height: $line-height-none
-				.chosen-fullname-title
-					color: $color-ocean-blue-opacity
-					font-size: $font-size-plus-2
-					font-weight: $font-weight-regular
-					margin-bottom: $margin-small
-			.user-info-city
-				align-items: center
-				color: $color-gray-dimmed
-				display: flex
-				margin-bottom: $margin-base
-				.city-title
-					font-size: $font-size-plus-1
-					font-weight: $font-weight-regular
-					margin-left: $margin-small
-			.user-info-help
-				display: inline-block
-				max-width: 100%
-				word-break: break-all
-				.help-title
-					font-size: $font-size-minus-1
-					text-transform: uppercase
-				.notification
-					border-radius: $border-radius-small
-					margin-top: $margin-tiny
-					width: 100%
-					.user-help
+					.edit-profile
+						margin-bottom: $margin-small
+				.user-info-header-names
+					flex-grow: 10
+					.fullname-title
+						color: $color-ocean-blue
+						font-size: $font-size-plus-5
+						font-weight: $font-weight-bold
+						margin-bottom: $margin-small
+						line-height: $line-height-none
+					.chosen-fullname-title
+						color: $color-ocean-blue-opacity
+						font-size: $font-size-plus-2
+						font-weight: $font-weight-regular
+						margin-bottom: $margin-small
+				.user-info-city
+					align-items: center
+					color: $color-gray-dimmed
+					display: flex
+					margin-bottom: $margin-base
+					.city-title
 						font-size: $font-size-plus-1
 						font-weight: $font-weight-regular
-						display: inline-block
-			            max-width: 100%
-			            word-break: break-all
+						margin-left: $margin-small
+				.user-info-help
+					display: inline-block
+					max-width: 100%
+					word-break: break-all
+					.help-title
+						font-size: $font-size-minus-1
+						text-transform: uppercase
+					.notification
+						border-radius: $border-radius-small
+						margin-top: $margin-tiny
+						width: 100%
+						.user-help
+							font-size: $font-size-plus-1
+							font-weight: $font-weight-regular
+							display: inline-block
+				            max-width: 100%
+				            word-break: break-all
 
-	.user-activity-content
-		align-items: center
-		display: flex
-		flex-direction: row
-		justify-content: space-around
-		margin-bottom: $margin-big
-		border-bottom: $border-light-gray
-		padding-bottom: $margin-base
-		.activity-stat
+		.user-activity-content
 			align-items: center
-			color: $color-dark-blue
 			display: flex
 			flex-direction: row
-			font-size: $font-size-plus-6
-			font-weight: $font-weight-black
-			margin-bottom: $margin-medium
-			.activity-meter-number
-				top: -$margin-small
-			.icon
-				color: $color-dark-blue-opacity
-				margin-right: $margin-base
-		.activity-title
-			color: $color-gray-dimmed
-			letter-spacing: 1px
-			text-align: center
-			text-transform: uppercase
-
-	div.user-profile
-		&.is-mobile
-			.user-info-header
-				align-items: center
-				text-align: center
-				.user-info-header-edit
-					flex-direction: column
-					justify-content: center
-					align-items: center
+			justify-content: space-around
+			margin-bottom: $margin-big
+			border-bottom: $border-light-gray
+			padding-bottom: $margin-base
 			.activity-stat
-				font-size: $font-size-plus-4
-				justify-content: center
+				align-items: center
+				color: $color-dark-blue
+				display: flex
+				flex-direction: row
+				font-size: $font-size-plus-6
+				font-weight: $font-weight-black
+				margin-bottom: $margin-medium
+				.activity-meter-number
+					top: -$margin-small
 				.icon
-					margin-right: $margin-tiny
+					color: $color-dark-blue-opacity
+					margin-right: $margin-base
+			.activity-title
+				color: $color-gray-dimmed
+				letter-spacing: 1px
+				text-align: center
+				text-transform: uppercase
 
-	.user-section-header
-		display: flex
-		justify-content: flex-start
+		div.user-profile
+			&.is-mobile
+				.user-info-header
+					align-items: center
+					text-align: center
+					.user-info-header-edit
+						flex-direction: column
+						justify-content: center
+						align-items: center
+				.activity-stat
+					font-size: $font-size-plus-4
+					justify-content: center
+					.icon
+						margin-right: $margin-tiny
 
-	.top-activities
-		margin-bottom: $margin-humongous
+		.user-section-header
+			display: flex
+			justify-content: flex-start
+
+		.top-activities
+			margin-bottom: $margin-humongous
 
 </style>
 

@@ -102,7 +102,7 @@ class AppServiceProvider extends ServiceProvider
 
 		Validator::extend('alpha_comas', function ($attribute, $value) {
 			// Useful for textareas - accepts letters, comas, dots, spaces and hyphens
-			return preg_match('/^[\pL\s-,.]+$/u', $value);
+			return preg_match('/^[\pL\s\d-,.:;()]+$/u', $value);
 		});
 	}
 }

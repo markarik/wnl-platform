@@ -9,7 +9,7 @@
 			<div class="level-right">
 				<span>
 					<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}" :event="handleLink">
-						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">{{ $t('user.myProfile.previewYourProfileButton') }}</a>
+						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">{{buttonNameToDisplay}}</a>
 					</router-link>
 				</span>
 			</div>
@@ -103,6 +103,9 @@
 			...mapGetters(['isMobileProfile', 'currentUserId']),
 			isProduction() {
 				return isProduction()
+			},
+			buttonNameToDisplay() {
+				return this.formLoaded && this.getter('hasChanges') ? this.$t('user.myProfile.previewYourProfileButtonDisabled') : this.$t('user.myProfile.previewYourProfileButtonEnabled')
 			},
 			hasChanges() {
 				return this.formLoaded && this.getter('hasChanges')

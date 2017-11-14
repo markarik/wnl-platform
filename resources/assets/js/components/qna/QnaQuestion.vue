@@ -32,7 +32,7 @@
 					<wnl-avatar
 							:fullName="author.full_name"
 							:url="author.avatar"
-							:userId="author.id"
+							:userId="author.user_id"
 							size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">

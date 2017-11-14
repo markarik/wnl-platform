@@ -2,21 +2,29 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p>Serdecznie witamy Cię w wirtualnym pokoju nauki do LEK‑u! Oficjalnie rozpoczynamy 2. edycję kursu! <wnl-emoji name="tada"/></p>
+		<p>Cześć!</p>
 
-		<p>Mamy nadzieję, że czujesz mobilizację i chęć do odkrycia nauki na nowo! Przed nami 4 miesiące wspólnej pracy. Zachęcamy Cię bardzo gorąco do uczestniczenia w dyskusjach na platformie, dzielenia się wiedzą oraz informowania nas o wszystkich problemach, czy wątpliwościach, z którymi przyjdzie Ci się spotkać. <wnl-emoji name="wink"/></p>
+		<p>Chcielibyśmy przedstawić osoby, które będą pomagać Wam w nauce w trakcie 2. edycji kursu Więcej niż LEK! <wnl-emoji name="tada"/></p>
 
-		<p>Zanim usiądziesz wygodnie, aby zmierzyć się z pierwszą lekcją - Kardiologia 1, zapraszamy Cię do zapoznania się z trzema krótkimi lekcjami wstępnymi (w grupie <strong>Więcej niż LEK</strong> w nawigacji po lewej stronie):
-			<ul>
-				<li><strong>Wstęp do kursu</strong>, czyli warto zacząć od podstaw. <wnl-emoji name="wink"/> Tutaj skupimy się na obsłudze platformy oraz celach kursu.</li>
-				<li><strong>5 filarów "Więcej niż LEK"</strong> odpowiadających na 5 podstawowych problemów związanych z przygotowaniem do egzaminu. Pomogą Ci w pełni zrozumieć dlaczego tak, a nie inaczej zaprojektowaliśmy ten kurs.</li>
-				<li><strong>Efektywna nauka</strong> to już lekcja w pełni poświęcona wiedzy o tym jak można uczyć się lepiej, szybciej i zapamiętywać trwalej.</li>
-			</ul>
-		</p>
+		<p>Moderatorzy, poza swoimi obowiązkami na platformie, również uczą się do egzaminu, dzięki czemu są w stanie najlepiej stwierdzić czego Wam potrzeba. Już w pierwszym tygodniu uwzględniliśmy wiele ich doskonałych sugestii!</p>
 
-		<p>W razie jakichkolwiek pytań możesz pisać do nas w Pomocy, na info@wiecejnizlek.pl lub na facebooku. <wnl-emoji name="wink"/></p>
+		<p>Dotychczas oni także uczyli się poruszać po platformie, jednak od dzisiaj przejmują stery dyskusji na naszym 500-osobowego statku. <wnl-emoji name="wink"/></p> Dzięki temu “stacjonarny” zespół lekarzy może skupić się na tworzeniu nowych materiałów oraz doskonaleniu istniejących.</p>
 
-		<p>Trzymamy za Ciebie kciuki i życzymy wiele radości z nauki! <wnl-emoji name="raised_hands"/></p>
+		<p>Poznajcie zatem zespół w składzie:</p>
+
+		<p><wnl-emoji name="muscle"/> <strong>Dominika Bernat</strong> i <strong>Zbyszek Nowicki</strong> - twórcy portalu LEKDay, którzy niestrudzenie pobudzają środowisko medyczne do dyskusji nad pytaniami z LEK-u w ramach swojego fanpage’a oraz spędzają niezliczone ilości godzin na dociekaniu poprawnych odpowiedzi.</p>
+
+		<p><wnl-emoji name="+1"/> <strong>Wojciech Zaremba</strong> - człowiek-orkiestra, twórca niezwykłego portalu wuzetki.pl, niezastąpionego źródła wiedzy dla studentów Uniwersytetu Jagiellońskiego (choć oczywiście nie tylko) oraz bazy pytań stworzonej na podstawie egzaminów z tejże uczelni.</p>
+
+		<p><wnl-emoji name="clap"/> <strong>Artur Bandura</strong> - naturalny talent pedagogiczny, zaczynał od przedegzaminowych seminariów z biofizyki dla znajomych, potem rozpoczął działalność koła Onkologii i Radioterapii przy Wielkopolskim Centrum Onkologii. Wyróżniany prelegent konferencji naukowych oraz inicjator pierwszych dwóch edycji konferencji “Magis in medicinae”, poświęconej komunikacji z pacjentem. Obecnie na stażu w Gdańsku, a popołudniami współuczestnik przygody z "Więcej niż LEK".</p>
+
+		<p><wnl-emoji name="raised_hands"/> <strong>Marta Bromirska</strong> - wieloletnia przewodnicząca koła reumatologicznego GUMed, łącząca swoją działalność z licznymi wykładami m.in. o profilaktyce osteoporozy, leczeniu choroby zwyrodnieniowej oraz zespołów bólowych na uniwersytetach 3. wieku w Gdańsku, Rumi i Malborku. Autorka badań i prelegentka konferencji ISSC w Gdańsku. Po godzinach miłośniczka kinematografii oraz impresjonizmu.</p>
+
+		<p><wnl-emoji name="ok_hand"/> <strong>Gabriela Koza-Natora</strong> - współautorka książki “LEK na 200”, oraz portalu o tej samej nazwie, które są doskonałym źródłem opracowań pytań z dotychczasowych egzaminów oraz pytań autorskich.</p>
+
+		<p>Jak widzicie, ekipa na tej edycji jest niezwykle silna! Z taką załogą z pewnością dopłyniemy do celu! <wnl-emoji name="wink"/></p>
+
+		<p>Trzymamy za Ciebie kciuki i życzymy dalszej radości z nauki!</p>
 	</div>
 </template>
 
@@ -24,7 +32,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'course-start'
+	const CURRENT_NEWS = 'edition-2-moderators'
 	const REQUIRED_ROLE = ''
 
 	export default {

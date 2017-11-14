@@ -10,19 +10,19 @@
 
 		<p>Dotychczas oni także uczyli się poruszać po platformie, jednak od dzisiaj przejmują stery dyskusji na naszym 500-osobowego statku. <wnl-emoji name="wink"/></p> Dzięki temu “stacjonarny” zespół lekarzy może skupić się na tworzeniu nowych materiałów oraz doskonaleniu istniejących.</p>
 
-		<p>Poznajcie zatem:</p>
+		<p>Poznajcie zatem zespół w składzie:</p>
 
-		<p><strong>Dominikę Bernat</strong> i <strong>Zbyszka Nowickiego</strong> - twórców portalu LEKDay, którzy niestrudzenie pobudzają środowisko medyczne do dyskusji nad pytaniami z LEK-u w ramach swojego fanpage’a oraz spędzają niezliczone ilości godzin na dociekaniu poprawnych odpowiedzi.</p>
+		<p><wnl-emoji name="muscle"/> <strong>Dominika Bernat</strong> i <strong>Zbyszek Nowicki</strong> - twórcy portalu LEKDay, którzy niestrudzenie pobudzają środowisko medyczne do dyskusji nad pytaniami z LEK-u w ramach swojego fanpage’a oraz spędzają niezliczone ilości godzin na dociekaniu poprawnych odpowiedzi.</p>
 
-		<p><strong>Wojciecha Zarembę</strong> - człowieka-orkiestrę, twórcę niezwykłego portalu wuzetki.pl, niezastąpionego źródła wiedzy dla studentów Uniwersytetu Jagiellońskiego (choć oczywiście nie tylko) oraz bazy pytań stworzonej na podstawie egzaminów z tamtej uczelni.</p>
+		<p><wnl-emoji name="+1"/> <strong>Wojciech Zaremba</strong> - człowiek-orkiestra, twórca niezwykłego portalu wuzetki.pl, niezastąpionego źródła wiedzy dla studentów Uniwersytetu Jagiellońskiego (choć oczywiście nie tylko) oraz bazy pytań stworzonej na podstawie egzaminów z tejże uczelni.</p>
 
-		<p><strong>Artura Bandurę</strong> - naturalny talent pedagogiczny, któremu wielu studentów UM w Poznaniu zawdzięcza zrozumienie biofizyki. <wnl-emoji name="wink"/> 4-letni przewodniczący koła Onkologii i Radioterapii przy Wielkopolskim Centrum Onkologii, wyróżniany prelegent konferencji naukowych oraz organizator konferencji “Magis in medicinae”, poświęconej komunikacji z pacjentem.</p>
+		<p><wnl-emoji name="clap"/> <strong>Artur Bandura</strong> - naturalny talent pedagogiczny, zaczynał od przedegzaminowych seminariów z biofizyki dla znajomych, potem rozpoczął działalność koła Onkologii i Radioterapii przy Wielkopolskim Centrum Onkologii. Wyróżniany prelegent konferencji naukowych oraz inicjator pierwszych dwóch edycji konferencji “Magis in medicinae”, poświęconej komunikacji z pacjentem. Obecnie na stażu w Gdańsku, a popołudniami współuczestnik przygody z "Więcej niż LEK".</p>
 
-		<p><strong>Martę Bromirską</strong> - wieloletnią przewodniczącą koła reumatologicznego GUMed, łącząca swoją działalność z wykładami o profilaktyce osteoporozy, ChZS oraz zespołów bólowych na uniwersytetach 3. wieku w Gdańsku, Rumii i Malborku. Autorka badań i prelegentka konferencji ISSC w Gdańsku.</p>
+		<p><wnl-emoji name="raised_hands"/> <strong>Marta Bromirska</strong> - wieloletnia przewodnicząca koła reumatologicznego GUMed, łącząca swoją działalność z licznymi wykładami m.in. o profilaktyce osteoporozy, leczeniu choroby zwyrodnieniowej oraz zespołów bólowych na uniwersytetach 3. wieku w Gdańsku, Rumi i Malborku. Autorka badań i prelegentka konferencji ISSC w Gdańsku. Po godzinach miłośniczka kinematografii oraz impresjonizmu.</p>
 
-		<p><strong>Gabrielę Kozę-Natorę</strong> - autorkę książki “LEK na 200”, oraz założycielkę portalu o tej samej nazwie, które są doskonałym źródłem opracowań pytań z dotychczasowych egzaminów oraz pytań autorskich.</p>
+		<p><wnl-emoji name="ok_hand"/> <strong>Gabriela Koza-Natora</strong> - współautorka książki “LEK na 200”, oraz portalu o tej samej nazwie, które są doskonałym źródłem opracowań pytań z dotychczasowych egzaminów oraz pytań autorskich.</p>
 
-		<p>Jak widzicie, ekipa na tej edycji jest niezwykle silna! Z taką załogą z pewnością dopłyniemy do celu! <wnl-emoji name="raised_hands"/></p>
+		<p>Jak widzicie, ekipa na tej edycji jest niezwykle silna! Z taką załogą z pewnością dopłyniemy do celu! <wnl-emoji name="wink"/></p>
 
 		<p>Trzymamy za Ciebie kciuki i życzymy dalszej radości z nauki!</p>
 	</div>

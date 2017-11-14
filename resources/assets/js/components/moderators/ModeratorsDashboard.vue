@@ -175,15 +175,21 @@
 			...mapActions('tasks', ['pullTasks']),
 			onItemToggled({path, selected}) {
 				this.selectedFilters[path] = selected
+				this.onRefresh()
 			},
 			buildQuery() {
-				const activeFilters = this.quickFilters.filter(filter => filter.isActive)
+				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
 				const activeSorting = this.sorting.filter(filter => filter.isActive)
+				const activeFilters = Object.keys(this.selectedFilters).filter(filter => this.selectedFilters[filter])
 				let query = {}
 				let order = {}
 
-				activeFilters.forEach(filter => {
+				activeQuickFilters.forEach(filter => {
 					query = {...query, ...filter.query()}
+				})
+				activeFilters.forEach(filter => {
+					const f = _.get(this.filters, filter)
+					query = {...query, ...f.query()}
 				})
 
 				activeSorting.forEach(filter => {
@@ -266,7 +272,7 @@
 							value: "slide",
 							query: (value = 'slide') => {
 								return {
-									where: [['type', value]]
+									where: [['subject_type', value]]
 								}
 							}
 						}, {

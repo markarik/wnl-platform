@@ -28,8 +28,6 @@ export default {
         .info
             display: inline-block
             max-width: 100%
-            word-wrap: break-word
-            overflow-wrap: break-word
-            word-break: break-all
+            word-wrap: break-all
 
 </style>

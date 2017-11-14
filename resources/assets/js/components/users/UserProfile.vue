@@ -111,7 +111,6 @@
 
 		.user-content
 			display: flex
-			padding-left: 2vw
 			margin-bottom: $margin-base
 			border-bottom: $border-light-gray
 			padding-bottom: $margin-base
@@ -154,7 +153,7 @@
 				.user-info-help
 					display: inline-block
 					max-width: 100%
-					word-break: break-all
+					word-wrap: break-all
 					.help-title
 						font-size: $font-size-minus-1
 						text-transform: uppercase
@@ -167,7 +166,7 @@
 							font-weight: $font-weight-regular
 							display: inline-block
 				            max-width: 100%
-				            word-break: break-all
+				            word-wrap: break-all
 
 		.user-activity-content
 			align-items: center

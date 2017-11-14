@@ -9,7 +9,7 @@ return [
 	"alpha_dash"           => "To pole może zawierać tylko litery, cyfry i podkreślenia.",
 	"alpha_num"            => "To pole może zawierać tylko litery i cyfry.",
 	"alpha_spaces"         => "To pole może zawierać tylko litery, spacje oraz myślniki.",
-	"alpha_comas"          => "To pole może zawierać tylko litery, liczby, przecinki, kropki, spacje, dwukropki, średniki, nawiasy okrągłe oraz myślniki",
+	"alpha_comas"          => "To pole może zawierać tylko litery, liczby, przecinki, kropki, spacje, dwukropki, średniki, nawiasy okrągłe, cudzysłów oraz myślniki",
 	"array"                => "To pole musi być tablicą.",
 	"before"               => "To pole musi być datą wcześniejszą niż :date.",
 	"between"              => [

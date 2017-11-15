@@ -179,49 +179,55 @@
 				this.selectedFilters[path] = selected
 				this.onRefresh()
 			},
-			buildQuery() {
+			buildRequestParams() {
 				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
 				const activeSorting = this.sorting.filter(filter => filter.isActive)
-				const activeFilters = Object.keys(this.selectedFilters).filter(filter => this.selectedFilters[filter])
-				let query = {}
+				const parsedFilters = []
 				let order = {}
 
 				activeQuickFilters.forEach(filter => {
-					const filterQuery = filter.query();
-					// special case for where clause
-					if (filterQuery.where) {
-						query.where = query.where || []
-						query.where.push(filterQuery.where)
-					} else {
-						query = {...query, ...filter.query()}
-					}
+					parsedFilters.push({
+						[filter.group]: filter.value()
+					})
 				})
 
-				activeFilters.forEach(path => {
-					const filter = _.get(this.filters, path)
-					const filterQuery = filter.query();
-					// special case for where clause
-					if (filterQuery.where) {
-						query.where = query.where || []
-						query.where.push(filterQuery.where)
-					} else {
-						query = {...query, ...filter.query()}
-					}
-
-				})
-
-				activeSorting.forEach(filter => {
-					order = {...order, ...filter.order(filter.dir)}
+				activeSorting.forEach(sort => {
+					order = {...order, ...sort.order(sort.dir)}
 				})
 
 				return {
-					query,
+					filters: parsedFilters,
 					order
 				}
 			},
+			initialQuickFilters() {
+				return [
+					{
+						group: 'task-assignee',
+						value: () => ({user_id: this.currentUserId}),
+						isActive: true,
+						name: 'Przypisane do mnie'
+					},
+					{
+						group: 'task-status',
+						value: () => ({
+							excluded: ['done'],
+							included: []
+						}),
+						isActive: true,
+						name: 'Niezrobione'
+					},
+					{
+						group: 'task-assignee',
+						value: () => ({user_id: null}),
+						isActive: false,
+						name: 'Nieprzypisane'
+					}
+				]
+			},
 			onRefresh({...params}) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks({...this.buildQuery(), ...params})
+				this.pullTasks({...this.buildRequestParams(), ...params})
 					.then(() => {
 						scrollToTop()
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
@@ -231,35 +237,6 @@
 				this.quickFilters = this.initialQuickFilters()
 				this.sorting = this.initialSorting()
 				this.onRefresh()
-			},
-			initialQuickFilters() {
-				return [
-						{
-							name: this.$t('tasks.quickFilters.filters.my'),
-							isActive: false,
-							query: () => {
-								return {
-									where: ['assignee_id', this.currentUserId]
-								}
-							}
-						}, {
-							name: this.$t('tasks.quickFilters.filters.notDone'),
-							isActive: true,
-							query: () => {
-								return {
-									whereNotIn:['status', ['done']]
-								}
-							}
-						}, {
-						name: this.$t('tasks.quickFilters.filters.unassigned'),
-						isActive: false,
-						query:() => {
-							return {
-								whereNull: ['assignee_id']
-							}
-						}
-					}
-				]
 			},
 			initialSorting() {
 				return [
@@ -311,8 +288,7 @@
 			},
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
-
-				this.pullTasks(this.buildQuery())
+				this.pullTasks(this.buildRequestParams())
 			},
 			onSortClick(sort) {
 				if (sort.isActive) {
@@ -322,7 +298,7 @@
 					sort.isActive = true
 				}
 
-				this.pullTasks(this.buildQuery())
+				this.pullTasks(this.buildRequestParams())
 			}
 		},
 		mounted() {
@@ -337,7 +313,7 @@
 					},
 				}
 			})
-			const promisedTasks = this.pullTasks(this.buildQuery())
+			const promisedTasks = this.pullTasks(this.buildRequestParams())
 
 			Promise.all([promisedModerators, promisedTasks])
 				.then(([moderatorsResponse, tasks]) => {

@@ -115,6 +115,7 @@
 
 	import { getApiUrl } from 'js/utils/env'
 	import {scrollToTop} from 'js/utils/animations'
+	import {buildFiltersByPath} from 'js/services/apiFiltering'
 
 	import MainNav from 'js/components/MainNav'
 	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
@@ -155,6 +156,7 @@
 				'isChatToggleVisible'
 			]),
 			...mapGetters('tasks', ['updatedTasks']),
+			...mapGetters(['currentUserId']),
 			chatRooms() {
 				return [
 					{name: '#moderatorzy', channel: 'moderatorzy'},
@@ -171,7 +173,7 @@
 			}
 		},
 		methods: {
-			...mapActions(['toggleChat', 'currentUserId', 'toggleOverlay']),
+			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('tasks', ['pullTasks']),
 			onItemToggled({path, selected}) {
 				this.selectedFilters[path] = selected
@@ -185,11 +187,27 @@
 				let order = {}
 
 				activeQuickFilters.forEach(filter => {
-					query = {...query, ...filter.query()}
+					const filterQuery = filter.query();
+					// special case for where clause
+					if (filterQuery.where) {
+						query.where = query.where || []
+						query.where.push(filterQuery.where)
+					} else {
+						query = {...query, ...filter.query()}
+					}
 				})
-				activeFilters.forEach(filter => {
-					const f = _.get(this.filters, filter)
-					query = {...query, ...f.query()}
+
+				activeFilters.forEach(path => {
+					const filter = _.get(this.filters, path)
+					const filterQuery = filter.query();
+					// special case for where clause
+					if (filterQuery.where) {
+						query.where = query.where || []
+						query.where.push(filterQuery.where)
+					} else {
+						query = {...query, ...filter.query()}
+					}
+
 				})
 
 				activeSorting.forEach(filter => {
@@ -221,7 +239,7 @@
 							isActive: false,
 							query: () => {
 								return {
-									where: [['assignee_id', this.currentUserId]]
+									where: ['assignee_id', this.currentUserId]
 								}
 							}
 						}, {
@@ -272,7 +290,7 @@
 							value: "slide",
 							query: (value = 'slide') => {
 								return {
-									where: [['subject_type', value]]
+									where: ['subject_type', value]
 								}
 							}
 						}, {
@@ -289,17 +307,7 @@
 				}
 			},
 			buildFiltering() {
-				const filters = this.initialFilters();
-				const filterGroups = Object.keys(filters)
-				const selectedFilters = {}
-
-				filterGroups.forEach(filterGroup => {
-					filters[filterGroup].items.forEach((item, index) => {
-						selectedFilters[`${filterGroup}.items[${index}]`] = false
-					})
-				})
-
-				return selectedFilters
+				return buildFiltersByPath(this.initialFilters())
 			},
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive

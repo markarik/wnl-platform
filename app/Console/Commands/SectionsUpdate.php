@@ -2,12 +2,20 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Screen;
-use App\Models\Section;
 use App\Models\Presentable;
+use App\Models\Screen;
 use Cache;
+use Illuminate\Console\Command;
 
+
+/**
+ * Class SectionsUpdate
+ *
+ * See usage guide at:
+ * https://github.com/bethinkpl/wnl-platform/wiki/Updating-sections-in-a-slideshow
+ *
+ * @package App\Console\Commands
+ */
 class SectionsUpdate extends Command
 {
 	const SECTIONS_DELIMITER = '#';
@@ -18,12 +26,19 @@ class SectionsUpdate extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'sections:update {screen} {sections}';
+	protected $signature = 'sections:update {screen} {sections} {--subsections}';
+
+
+	/**
+	 * @var string
+	 */
+	protected $description = 'Update sections/subsections in a slideshow.';
+
+	protected $screenId, $presentableName, $presentableType;
 
 	/**
 	 * Create a new command instance.
 	 *
-	 * @return void
 	 */
 	public function __construct()
 	{
@@ -37,37 +52,73 @@ class SectionsUpdate extends Command
 	 */
 	public function handle()
 	{
-		$screenId = $this->argument('screen');
+		$this->screenId = $this->argument('screen');
+		$this->presentableName = $this->option('subsections') ? 'subsections' : 'sections';
+		$this->presentableType = 'App\\Models\\' . studly_case(str_singular($this->presentableName));
 		$sectionsSerialized = $this->argument('sections');
 
-		$screen = Screen::find($screenId);
+		$screen = $this->getScreen();
+		$slideshow = $this->getSlideshow($screen);
+		$slides = $this->getSlides($slideshow);
 
-		if (!$screen) die("Screen with ID $screenId does not exist.\n");
+		$newSectionsData = explode(self::SECTIONS_DELIMITER, $sectionsSerialized);
 
-		$slideshowId = $screen->slideshow->id;
+		if (count($newSectionsData) === 0) die("No new $this->presentableName provided");
 
-		if (!$slideshowId) die("Can't find me a slideshow... :(");
+		$newSections = $this->getNewSections($newSectionsData, $slides);
 
+		($this->presentableType)::where('screen_id', $this->screenId)->delete();
+
+		$this->info("Old {$this->presentableName} deleted. Now, to the new structure!");
+		$this->addNewSections($newSections);
+
+		\Artisan::call('screens:countSlides');
+		Cache::tags($this->presentableName)->flush();
+
+		$this->info("\n\nThe end! Now go, and see what you broke.\n");
+
+		return;
+	}
+
+	protected function getScreen()
+	{
+		$screen = Screen::find($this->screenId);
+
+		if (!$screen) die("Screen with ID {$this->screenId} does not exist.\n");
+
+		return $screen;
+	}
+
+	protected function getSlideshow($screen)
+	{
+		$slideshow = $screen->slideshow ?? null;
+
+		if (!$slideshow) die("Can't find me a slideshow... :(");
+
+		return $slideshow;
+	}
+
+	protected function getSlides($slideshow)
+	{
 		$slides = Presentable::where([
 			['presentable_type', '=', 'App\\Models\\Slideshow'],
-			['presentable_id', '=', $slideshowId],
+			['presentable_id', '=', $slideshow->id],
 		])->orderBy('order_number', 'asc')->pluck('slide_id')->toArray();
 
 		if (!$slides) die("No slides found, sorry!");
 
 		$this->info(sprintf("\nFound %d slides\n", count($slides)));
 
-		$newSectionsData = explode(self::SECTIONS_DELIMITER, $sectionsSerialized);
+		return $slides;
+	}
 
-		if (count($newSectionsData) === 0) die("No new sections provided");
-
+	protected function getNewSections($newSectionsData, $slides)
+	{
+		$tableHeaders = [$this->presentableType, 'Start', 'End', 'Length'];
 		$newSections = [];
-
-		$tableHeaders = ['Section', 'Start', 'End', 'Length'];
 		$tableData = [];
-
 		$offset = 0;
-		for ($i = 0; $i<count($newSectionsData); $i++) {
+		for ($i = 0; $i < count($newSectionsData); $i++) {
 			$section = explode(self::FIELDS_DELIMITER, $newSectionsData[$i]);
 			$name = $section[0];
 			$start = (int)$section[1];
@@ -83,44 +134,47 @@ class SectionsUpdate extends Command
 
 			array_push($tableData, [
 				'section' => $name,
-				'start' => ($start + 1),
-				'end' => ($end + 1),
-				'length' => $length
+				'start'   => ($start + 1),
+				'end'     => ($end + 1),
+				'length'  => $length,
 			]);
 		}
 
-		$this->question('There are some slides left');
+		$slidesLeft = count($slides);
+		$this->question("There are {$slidesLeft} slides left");
 		$this->comment(implode(',', $slides));
 
 		$this->table($tableHeaders, $tableData);
 
-		if ($this->confirm('Does it look ok? Can I replace all sections in this slideshow?')) {
-			$deletedSections = Section::where('screen_id', $screenId)->delete();
-
-			$this->info('Old sections deleted. Now, to the new structure!');
-			$bar = $this->output->createProgressBar(count($newSections));
-
-			foreach($newSections as $name => $slides) {
-				$section = new Section();
-				$section->name = $name;
-				$section->screen_id = $screenId;
-
-				$section->save();
-
-				Presentable::where('presentable_type', 'App\\Models\\Section')
-					->whereIn('slide_id', $slides)
-					->update(['presentable_id' => $section->id]);
-
-				$bar->advance();
-			}
-
-			$bar->finish();
-
-			Cache::tags('sections')->flush();
-
-			$this->info("\n\nThe end! Now go, and see what you broke.\n");
-		} else {
+		$statement = 'Does it look ok? Can I replace all '
+			. $this->presentableName
+			. ' in this slideshow?';
+		if (!$this->confirm($statement)) {
 			$this->question("So go and fix it you moron!");
+			die;
 		}
+
+		return $newSections;
+	}
+
+	protected function addNewSections($newSections)
+	{
+		$bar = $this->output->createProgressBar(count($newSections));
+
+		foreach ($newSections as $name => $slides) {
+			$presentable = new $this->presentableType;
+			$presentable->name = $name;
+			$presentable->screen_id = $this->screenId;
+
+			$presentable->save();
+
+			Presentable::where('presentable_type', $this->presentableType)
+				->whereIn('slide_id', $slides)
+				->update(['presentable_id' => $presentable->id]);
+
+			$bar->advance();
+		}
+
+		$bar->finish();
 	}
 }

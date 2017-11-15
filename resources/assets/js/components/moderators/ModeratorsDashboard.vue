@@ -115,7 +115,7 @@
 
 	import { getApiUrl } from 'js/utils/env'
 	import {scrollToTop} from 'js/utils/animations'
-	import {buildFiltersByPath, parseFilters} from 'js/services/apiFiltering'
+	import {FILTER_TYPES, buildFiltersByPath, parseFilters} from 'js/services/apiFiltering'
 
 	import MainNav from 'js/components/MainNav'
 	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
@@ -241,7 +241,7 @@
 						group: 'task-assignee',
 						value: () => ({user_id: this.currentUserId}),
 						isActive: true,
-						name: 'Przypisane do mnie'
+						name: this.$t('tasks.quickFilters.filters.my')
 					},
 					{
 						group: 'task-status',
@@ -250,33 +250,30 @@
 							included: []
 						}),
 						isActive: true,
-						name: 'Niezrobione'
+						name: this.$t('tasks.quickFilters.filters.notDone')
 					},
 					{
 						group: 'task-assignee',
 						value: () => ({user_id: null}),
 						isActive: false,
-						name: 'Nieprzypisane'
+						name: this.$t('tasks.quickFilters.filters.unassigned')
 					}
 				]
 			},
 			initialFilters() {
 				return {
 					'task-subject_type': {
-						name: "Filtrowanie po typie",
-						type: 'list',
+						name: this.$t('tasks.filters.byType.title'),
+						type: FILTER_TYPES.LIST,
 						items: [{
-							name: "Slajdy",
+							name: this.$t('tasks.filters.byType.slide'),
 							value: "slide",
 						}, {
-							name: "Pytania Kontrolne",
+							name: this.$t('tasks.filters.byType.quiz_question'),
 							value: "quiz_question"
 						}, {
-							name: "Pytania w Dyskusjach (QnA)",
-							value: "qna_question"
-						}, {
-							name: "Odpowiedzi w Dyskusjach (QnA)",
-							value: "qna_answer"
+							name: this.$t('tasks.filters.byType.qna'),
+							value: "qna"
 						}],
 					}
 				}

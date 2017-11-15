@@ -23,7 +23,7 @@ class SubjectTypeFilter extends ApiFilter
 
 	public function values()
 	{
-		return ['slide', 'qna_question', 'qna_answer', 'quiz_question'];
+		return ['slide', 'qna', 'quiz_question'];
 	}
 
 	public function count($builder)
@@ -36,18 +36,13 @@ class SubjectTypeFilter extends ApiFilter
         return $query->where('subject_type', 'slide');
 	}
 
-	protected function qna_question($query)
+	protected function qna($query)
 	{
-		return $query->where('subject_type', 'qna_question');
-	}
-
-	protected function qna_answer($query)
-	{
-		return $query->where('subject_type', 'qna_answer');
+		return $query->whereIn('subject_type', ['qna_question', 'qna_answer']);
 	}
 
 	protected function quiz_question($query)
 	{
-		$query->where('subject_type', 'quiz_question');
+		return $query->where('subject_type', 'quiz_question');
 	}
 }

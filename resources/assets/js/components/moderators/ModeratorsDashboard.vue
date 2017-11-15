@@ -115,7 +115,7 @@
 
 	import { getApiUrl } from 'js/utils/env'
 	import {scrollToTop} from 'js/utils/animations'
-	import {buildFiltersByPath} from 'js/services/apiFiltering'
+	import {buildFiltersByPath, parseFilters} from 'js/services/apiFiltering'
 
 	import MainNav from 'js/components/MainNav'
 	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
@@ -167,9 +167,12 @@
 					disableEmpty: true,
 					isMobile: false,
 					itemsNameSource: 'questions.filters.items',
-					expanded: ['by-object-type'],
-					selectedElements: Object.keys(this.selectedFilters).filter(key => this.selectedFilters[key])
+					expanded: ['task-subject_type'],
+					selectedElements: this.activeFilters
 				}
+			},
+			activeFilters() {
+				return Object.keys(this.selectedFilters).filter(key => this.selectedFilters[key])
 			}
 		},
 		methods: {
@@ -181,49 +184,23 @@
 			},
 			buildRequestParams() {
 				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
-				const activeSorting = this.sorting.filter(filter => filter.isActive)
 				const parsedFilters = []
-				let order = {}
-
 				activeQuickFilters.forEach(filter => {
 					parsedFilters.push({
 						[filter.group]: filter.value()
 					})
 				})
+				parsedFilters.push(...parseFilters(this.activeFilters, this.filters, this.currentUserId))
 
-				activeSorting.forEach(sort => {
-					order = {...order, ...sort.order(sort.dir)}
-				})
+				const activeSorting = this.sorting.find(filter => filter.isActive)
+				const order = {
+					...activeSorting.order(activeSorting.dir)
+				}
 
 				return {
 					filters: parsedFilters,
 					order
 				}
-			},
-			initialQuickFilters() {
-				return [
-					{
-						group: 'task-assignee',
-						value: () => ({user_id: this.currentUserId}),
-						isActive: true,
-						name: 'Przypisane do mnie'
-					},
-					{
-						group: 'task-status',
-						value: () => ({
-							excluded: ['done'],
-							included: []
-						}),
-						isActive: true,
-						name: 'Niezrobione'
-					},
-					{
-						group: 'task-assignee',
-						value: () => ({user_id: null}),
-						isActive: false,
-						name: 'Nieprzypisane'
-					}
-				]
 			},
 			onRefresh({...params}) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
@@ -258,18 +235,39 @@
 					}
 				]
 			},
+			initialQuickFilters() {
+				return [
+					{
+						group: 'task-assignee',
+						value: () => ({user_id: this.currentUserId}),
+						isActive: true,
+						name: 'Przypisane do mnie'
+					},
+					{
+						group: 'task-status',
+						value: () => ({
+							excluded: ['done'],
+							included: []
+						}),
+						isActive: true,
+						name: 'Niezrobione'
+					},
+					{
+						group: 'task-assignee',
+						value: () => ({user_id: null}),
+						isActive: false,
+						name: 'Nieprzypisane'
+					}
+				]
+			},
 			initialFilters() {
 				return {
-					'by-object-type': {
+					'task-subject_type': {
 						name: "Filtrowanie po typie",
+						type: 'list',
 						items: [{
 							name: "Slajdy",
 							value: "slide",
-							query: (value = 'slide') => {
-								return {
-									where: ['subject_type', value]
-								}
-							}
 						}, {
 							name: "Pytania Kontrolne",
 							value: "quiz_question"

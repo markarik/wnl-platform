@@ -17,7 +17,6 @@ export const parseFilters = (activeFilters, filters, userId) => {
     const parsedFilters = []
     const groupedFilters = {}
 
-    debugger
     activeFilters.forEach((path) => {
         const [filterGroup, ...tail] = path.split('.')
         const filterValue = _.get(filters, path, {}).value

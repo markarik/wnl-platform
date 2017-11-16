@@ -64,6 +64,8 @@ class ReactionsApiController extends ApiController
 					'extra' => ['post_params' => $reactions,
 					'user' => $user->id]
 				]);
+
+				return $this->respondInternalError($e->getMessage());
 			}
 
 		}

@@ -1,8 +1,9 @@
 <template>
-	<div class="is-relative">
+	<div class="is-relative input-container">
 		<input
 			:value="valueComputed"
-			:class="{'is-empty': valueComputed.length === 0, 'full-height': true}"
+			:class="{'is-empty': valueComputed.length === 0}"
+			class="full-height autocomplete-input"
 			@focus="onOpen"
 			@input="onInput"
 			@keydown="onKeyDown"
@@ -16,6 +17,11 @@
 			class="wnl-autocomplete-dropdown"
 			ref="autocomplete"
 		/>
+		 <a class="button is-primary is-outlined" @click="$emit('clear')">
+			<span class="icon is-small">
+			<i class="fa fa-times"></i>
+			</span>
+		</a>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -28,9 +34,21 @@
 		height: 250px
 		overflow-y: auto
 
+	.autocomplete-input
+		margin-right: $margin-tiny
+
 	.is-empty
 		border: 2px solid $color-yellow
 		border-radius: 5px
+
+	.input-container
+		display: flex
+		align-items: center
+
+	.button
+		border-radius: 50%
+		width: $font-size-minus-2
+		// height: $font-size-base
 </style>
 
 <script>
@@ -110,12 +128,10 @@ export default {
 			evt.stopPropagation()
 		},
 		onClose() {
-			this.focused = false
 			this.textInputValue = ''
 			this.$emit('close')
 		},
 		onOpen() {
-			this.focused = true
 			this.$emit('show')
 		},
 		onInput(event) {

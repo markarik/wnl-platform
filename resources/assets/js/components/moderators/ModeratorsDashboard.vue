@@ -22,6 +22,7 @@
 				:initialValue="autocompleteUser.full_name"
 				@close="showAutocomplete = false"
 				@show="showAutocomplete = true"
+				@clear="search"
 			/>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
@@ -179,7 +180,7 @@
 				'isChatToggleVisible'
 			]),
 			...mapGetters('tasks', ['updatedTasks']),
-			...mapGetters(['currentUserId', 'currentUser']),
+			...mapGetters(['currentUserId']),
 			chatRooms() {
 				return [
 					{name: '#moderatorzy', channel: 'moderatorzy'},
@@ -324,7 +325,7 @@
 
 				this.pullTasks(this.buildRequestParams())
 			},
-			search(user) {
+			search(user = {}) {
 				const {filters, ...rest} = this.buildRequestParams();
 				this.autocompleteUser = user
 
@@ -355,8 +356,6 @@
 					this.moderators = Object.values(users)
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 				});
-
-				this.autocompleteUser = this.currentUser
 		},
 		watch: {
 			'$route.query.chatChannel' (newVal) {

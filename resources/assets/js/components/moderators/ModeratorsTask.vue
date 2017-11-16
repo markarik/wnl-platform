@@ -37,6 +37,7 @@
 					:onItemChosen="assign"
 					@close="showAutocomplete = false"
 					@show="showAutocomplete = true"
+					@clear="assign"
 				/>
 			</div>
 			<div class="tags field has-addons is-relative">
@@ -185,8 +186,8 @@ export default {
 		},
 	},
 	methods: {
-		assign(user) {
-			this.$emit('assign', {assignee_id: user.user_id, id: this.task.id})
+		assign(user = {}) {
+			this.$emit('assign', {assignee_id: user.user_id || null, id: this.task.id})
 			this.showAutocomplete = false
 		},
 	},

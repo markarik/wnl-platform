@@ -48,7 +48,9 @@
 				</wnl-alert>
 
 				<wnl-moderators-feed
+					v-if="moderators.length > 0"
 					@refresh="onRefresh"
+					:moderators="moderators"
 				/>
 			</div>
 		</div>
@@ -134,7 +136,8 @@
 				quickFilters: this.initialQuickFilters(),
 				sorting: this.initialSorting(),
 				filters: this.initialFilters(),
-				selectedFilters: this.buildFiltering()
+				selectedFilters: this.buildFiltering(),
+				moderators: []
 			}
 		},
 		components: {

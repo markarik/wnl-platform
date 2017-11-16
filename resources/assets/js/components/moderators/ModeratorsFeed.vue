@@ -43,7 +43,7 @@
 		props: {
 			moderators: {
 				type: Array,
-				default: () => []
+				required: true
 			}
 		},
 		data() {

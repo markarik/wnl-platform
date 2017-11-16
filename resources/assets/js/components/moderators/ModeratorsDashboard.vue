@@ -1,8 +1,9 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-				:isVisible="isSidenavVisible"
-				:isDetached="!isSidenavMounted"
+			direction="column"
+			:isVisible="isSidenavVisible"
+			:isDetached="!isSidenavMounted"
 		>
 			<wnl-accordion
 					:dataSource="filters"
@@ -11,6 +12,9 @@
 					@itemToggled="onItemToggled"
 					class="full-width"
 				/>
+			<div class="filter-title full-width">
+				<span class="text">Filtrowanie Po Ogarniaczu</span>
+			</div>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
@@ -48,7 +52,9 @@
 				</wnl-alert>
 
 				<wnl-moderators-feed
+					v-if="moderators.length > 0"
 					@refresh="onRefresh"
+					:moderators="moderators"
 				/>
 			</div>
 		</div>
@@ -84,8 +90,12 @@
 		min-width: $course-chat-min-width
 		width: $course-chat-width
 
-	.help-sidenav
-		flex: 1
+	.filter-title
+		background: $color-background-light-gray
+		font-size: $font-size-minus-1
+		letter-spacing: 1px
+		padding: $margin-medium $margin-small $margin-medium $margin-medium
+		text-transform: uppercase
 
 	.wnl-sidenav
 		flex: 1
@@ -134,7 +144,8 @@
 				quickFilters: this.initialQuickFilters(),
 				sorting: this.initialSorting(),
 				filters: this.initialFilters(),
-				selectedFilters: this.buildFiltering()
+				selectedFilters: this.buildFiltering(),
+				moderators: []
 			}
 		},
 		components: {
@@ -275,7 +286,7 @@
 							name: this.$t('tasks.filters.byType.qna'),
 							value: "qna"
 						}],
-					}
+					},
 				}
 			},
 			buildFiltering() {
@@ -294,7 +305,7 @@
 				}
 
 				this.pullTasks(this.buildRequestParams())
-			}
+			},
 		},
 		mounted() {
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})

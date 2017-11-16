@@ -21,7 +21,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-2-moderators'
+	const CURRENT_NEWS = 'edition-2-first-survey'
 	const REQUIRED_ROLE = ''
 
 	export default {

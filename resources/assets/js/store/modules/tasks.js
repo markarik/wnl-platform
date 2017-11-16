@@ -77,7 +77,7 @@ const modules = {
 }
 
 function _getTasks(params) {
-	return axios.post(getApiUrl('tasks/.query'), {
+	return axios.post(getApiUrl('tasks/.filter'), {
 		limit: 10,
 		include: 'events,assigneeProfiles',
 		query: {},

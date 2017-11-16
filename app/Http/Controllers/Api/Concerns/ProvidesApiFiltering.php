@@ -16,7 +16,13 @@ trait ProvidesApiFiltering
 	public function filter(Request $request)
 	{
 		$resource = $request->route('resource');
+		$order = $request->get('order');
 		$model = app(static::getResourceModel($resource));
+
+		if (!empty ($order)) {
+			$model = $this->parseOrder($model, $order);
+		}
+
 		$this->limit = $request->limit ?? $this->defaultLimit;
 		$this->page = $request->page ?? 1;
 		$randomize = $request->randomize;

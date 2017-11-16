@@ -2,19 +2,13 @@ import {set, delete as destroy} from 'vue'
 import {get, isEqual, isEmpty, isNumber, merge, size} from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {parseFilters} from 'js/services/apiFiltering'
 import axios from 'axios'
-import moment from 'moment'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
 
 
 const namespaced = true
-
-const FILTER_TYPES = {
-	BOOLEAN: 'boolean',
-	LIST: 'list',
-	TAGS: 'tags',
-}
 
 const LIMIT = 25
 
@@ -239,8 +233,8 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
-	buildPlan({state, getters, rootGetters, commit}, data) {
-		data.filters = _parseFilters(data.activeFilters, state, getters, rootGetters);
+	buildPlan({state, rootGetters}, data) {
+		data.filters = parseFilters(data.activeFilters, state.filters, rootGetters.currentUserId);
 		return axios.post(getApiUrl(`user_plan/${rootGetters.currentUserId}`), data)
 	},
 	changeCurrentQuestion({state, getters, commit}, {page, index}) {
@@ -278,7 +272,7 @@ const actions = {
 		return Promise.resolve(results)
 	},
 	fetchDynamicFilters({commit, getters, rootGetters}) {
-		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters,rootGetters.currentUserId)
 		return _fetchDynamicFilters({filters: parsedFilters})
 			.then(({data}) => {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
@@ -287,7 +281,7 @@ const actions = {
 	fetchQuestions({commit, state, getters, rootGetters},
 		{filters, page, saveFilters, useSavedFilters}
 	) {
-		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(filters, state.filters, rootGetters.currentUserId)
 
 		return _fetchQuestions({
 			active: filters,
@@ -346,7 +340,7 @@ const actions = {
 		})
 	},
 	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
-		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
+		const filters = parseFilters(activeFilters, state.filters, rootGetters.currentUserId)
 
 		return _fetchQuestions({
 			filters,
@@ -375,12 +369,12 @@ const actions = {
 				}
 			}).filter((result) => result)
 
-		const filters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const filters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results, meta: {...meta, filters}})
 	},
 	savePosition({getters, rootGetters, state}, payload) {
-		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 
 		axios.put(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`), {
 			...payload,
@@ -388,7 +382,7 @@ const actions = {
 		})
 	},
 	getPosition({getters, rootGetters, state}) {
-		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 
 		return axios.post(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`),{filters: parsedFilters})
 	},
@@ -426,36 +420,6 @@ const _fetchQuestionsData = (id) => {
 
 const _fetchDynamicFilters = (activeFilters) => {
 	return axios.post(getApiUrl('quiz_questions/.filterList'), activeFilters)
-}
-
-const _parseFilters = (activeFilters, state, getters, rootGetters) => {
-	const filters        = []
-	const groupedFilters = {}
-
-	activeFilters.forEach((path, index) => {
-		const [filterGroup, ...tail] = path.split('.')
-		const filterValue            = get(state.filters, path).value
-		const filterType             = state.filters[filterGroup].type
-
-		groupedFilters[filterGroup] = groupedFilters[filterGroup] || []
-		groupedFilters[filterGroup].push(filterValue)
-	})
-
-	Object.keys(groupedFilters).forEach((group) => {
-		if (state.filters[group].type === FILTER_TYPES.TAGS) {
-			filters.push({[group]: groupedFilters[group]})
-		} else if (state.filters[group].type === FILTER_TYPES.LIST) {
-			filters.push({
-				[group]: {
-					user_id: rootGetters.currentUserId,
-					date: moment().subtract(3, 'hours').format('YYYY-MM-DD'),
-					list: groupedFilters[group]
-				}
-			})
-		}
-	})
-
-	return filters;
 }
 
 const _handleResponse = (response) => {

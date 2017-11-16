@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Presentable;
 use App\Models\Screen;
+use App\Models\Section;
+use App\Models\Subsection;
 use Cache;
 use Illuminate\Console\Command;
 
@@ -19,6 +21,7 @@ use Illuminate\Console\Command;
 class SectionsUpdate extends Command
 {
 	const SECTIONS_DELIMITER = '#';
+	const SUBSECTIONS_DELIMITER = '*';
 	const FIELDS_DELIMITER = ';';
 
 	/**
@@ -26,7 +29,7 @@ class SectionsUpdate extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'sections:update {screen} {sections} {--subsections}';
+	protected $signature = 'sections:update {screen} {sections}';
 
 
 	/**
@@ -34,7 +37,7 @@ class SectionsUpdate extends Command
 	 */
 	protected $description = 'Update sections/subsections in a slideshow.';
 
-	protected $screenId, $presentableName, $presentableType;
+	protected $screenId;
 
 	/**
 	 * Create a new command instance.
@@ -53,9 +56,8 @@ class SectionsUpdate extends Command
 	public function handle()
 	{
 		$this->screenId = $this->argument('screen');
-		$this->presentableName = $this->option('subsections') ? 'subsections' : 'sections';
-		$this->presentableType = 'App\\Models\\' . studly_case(str_singular($this->presentableName));
-		$sectionsSerialized = $this->argument('sections');
+		$sectionsSerialized = str_replace("\n", '', $this->argument('sections'));
+		$sectionsSerialized = substr_replace($sectionsSerialized, '', 0, 1);
 
 		$screen = $this->getScreen();
 		$slideshow = $this->getSlideshow($screen);
@@ -63,17 +65,27 @@ class SectionsUpdate extends Command
 
 		$newSectionsData = explode(self::SECTIONS_DELIMITER, $sectionsSerialized);
 
-		if (count($newSectionsData) === 0) die("No new $this->presentableName provided");
+		if (count($newSectionsData) === 0) die("No new sections provided");
+
+		$newSectionsData = array_map(function ($item) {
+			return $this->fuckThisScript($item);
+
+		}, $newSectionsData);
 
 		$newSections = $this->getNewSections($newSectionsData, $slides);
 
-		($this->presentableType)::where('screen_id', $this->screenId)->delete();
+		$oldSections = Section::where('screen_id', $this->screenId)->get();
+		foreach ($oldSections as $oldSection) {
+			$oldSection->subsections()->delete();
+			$oldSection->delete();
+		}
 
-		$this->info("Old {$this->presentableName} deleted. Now, to the new structure!");
+		$this->info("Old sections deleted. Now, to the new structure!");
 		$this->addNewSections($newSections);
 
 		\Artisan::call('screens:countSlides');
-		Cache::tags($this->presentableName)->flush();
+		Cache::tags('sections')->flush();
+		Cache::tags('subsections')->flush();
 
 		$this->info("\n\nThe end! Now go, and see what you broke.\n");
 
@@ -114,15 +126,17 @@ class SectionsUpdate extends Command
 
 	protected function getNewSections($newSectionsData, $slides)
 	{
-		$tableHeaders = [$this->presentableType, 'Start', 'End', 'Length'];
+		$subsectionSlides = $slides;
+		$tableHeaders = ['Section/Subsection', 'Start', 'End', 'Length'];
 		$newSections = [];
 		$tableData = [];
 		$offset = 0;
 		for ($i = 0; $i < count($newSectionsData); $i++) {
-			$section = explode(self::FIELDS_DELIMITER, $newSectionsData[$i]);
-			$name = $section[0];
-			$start = (int)$section[1];
-			$end = (int)$section[2];
+			$newSection = [];
+			$name = $newSectionsData[$i]['name'];
+			$start = (int)$newSectionsData[$i]['start'];
+			$end = (int)$newSectionsData[$i]['end'];
+			$subsections = $newSectionsData[$i]['subsections'];
 
 			if ($i === 0 && $start > 0) {
 				$offset = $start;
@@ -130,7 +144,10 @@ class SectionsUpdate extends Command
 			}
 
 			$length = $end - $start + 1;
-			$newSections[$name] = array_splice($slides, $offset, $length);
+			$newSection = [
+				'name'   => $name,
+				'slides' => array_splice($slides, $offset, $length),
+			];
 
 			array_push($tableData, [
 				'section' => $name,
@@ -138,6 +155,20 @@ class SectionsUpdate extends Command
 				'end'     => ($end + 1),
 				'length'  => $length,
 			]);
+			foreach ($subsections as $subsection) {
+				$length = $subsection['end'] - $subsection['start'] + 1;
+				$newSection['subsections'][] = [
+					'name'   => $subsection['name'],
+					'slides' => array_splice($subsectionSlides, $offset, $length),
+				];
+				array_push($tableData, [
+					'section' => '> ' . $subsection['name'],
+					'start'   => ($subsection['start'] + 1),
+					'end'     => ($subsection['end'] + 1),
+					'length'  => $length,
+				]);
+			}
+			$newSections[] = $newSection;
 		}
 
 		$slidesLeft = count($slides);
@@ -147,8 +178,7 @@ class SectionsUpdate extends Command
 		$this->table($tableHeaders, $tableData);
 
 		$statement = 'Does it look ok? Can I replace all '
-			. $this->presentableName
-			. ' in this slideshow?';
+			. 'sections in this slideshow?';
 		if (!$this->confirm($statement)) {
 			$this->question("So go and fix it you moron!");
 			die;
@@ -161,20 +191,50 @@ class SectionsUpdate extends Command
 	{
 		$bar = $this->output->createProgressBar(count($newSections));
 
-		foreach ($newSections as $name => $slides) {
-			$presentable = new $this->presentableType;
-			$presentable->name = $name;
-			$presentable->screen_id = $this->screenId;
+		foreach ($newSections as $newSection) {
+			$section = Section::create([
+				'name'      => $newSection['name'],
+				'screen_id' => $this->screenId,
+			]);
 
-			$presentable->save();
+			$section->slides()->attach($newSection['slides']);
 
-			Presentable::where('presentable_type', $this->presentableType)
-				->whereIn('slide_id', $slides)
-				->update(['presentable_id' => $presentable->id]);
+			foreach ($newSection['subsections'] as $newSubsection) {
+				$subsection = Subsection::create([
+					'name'      => $newSubsection['name'],
+					'section_id' => $section->id,
+				]);
 
+				$subsection->slides()->attach($newSection['slides']);
+			}
 			$bar->advance();
 		}
-
 		$bar->finish();
+	}
+
+	protected function fuckThisScript($fuck)
+	{
+		$motherfucker = explode('*', $fuck);
+		$section = array_shift($motherfucker);
+		list($name, $start, $end) = explode(self::FIELDS_DELIMITER, $section);
+		$shit = [
+			'name'  => $name,
+			'start' => $start,
+			'end'   => $end,
+		];
+
+		$subsections = [];
+		foreach ($motherfucker as $damnit) {
+			list($name, $start, $end) = explode(self::FIELDS_DELIMITER, $damnit);
+			$subsections[] = [
+				'name'  => $name,
+				'start' => $start,
+				'end'   => $end,
+			];
+		}
+
+		$shit['subsections'] = $subsections;
+
+		return $shit;
 	}
 }

@@ -15,6 +15,14 @@
 			<div class="filter-title full-width">
 				<span class="text">Filtrowanie Po Ogarniaczu</span>
 			</div>
+			<wnl-moderators-autocomplete
+				:show="showAutocomplete"
+				:usersList="moderators"
+				:onItemChosen="search"
+				:initialValue="autocompleteUser.full_name"
+				@close="showAutocomplete = false"
+				@show="showAutocomplete = true"
+			/>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
@@ -129,6 +137,7 @@
 
 	import MainNav from 'js/components/MainNav'
 	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
+	import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -145,12 +154,15 @@
 				sorting: this.initialSorting(),
 				filters: this.initialFilters(),
 				selectedFilters: this.buildFiltering(),
-				moderators: []
+				moderators: [],
+				showAutocomplete: false,
+				autocompleteUser: {}
 			}
 		},
 		components: {
 			'wnl-main-nav': MainNav,
 			'wnl-moderators-feed': ModeratorsFeed,
+			'wnl-moderators-autocomplete': ModeratorsAutocomplete,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
@@ -167,7 +179,7 @@
 				'isChatToggleVisible'
 			]),
 			...mapGetters('tasks', ['updatedTasks']),
-			...mapGetters(['currentUserId']),
+			...mapGetters(['currentUserId', 'currentUser']),
 			chatRooms() {
 				return [
 					{name: '#moderatorzy', channel: 'moderatorzy'},
@@ -202,6 +214,12 @@
 					})
 				})
 				parsedFilters.push(...parseFilters(this.activeFilters, this.filters, this.currentUserId))
+
+				if (this.autocompleteUser.user_id) {
+					parsedFilters.push({
+						'task-assignee': {user_id: this.autocompleteUser.user_id}
+					})
+				}
 
 				const activeSorting = this.sorting.find(filter => filter.isActive)
 				const order = {
@@ -306,6 +324,16 @@
 
 				this.pullTasks(this.buildRequestParams())
 			},
+			search(user) {
+				const {filters, ...rest} = this.buildRequestParams();
+				this.autocompleteUser = user
+
+				this.pullTasks(this.buildRequestParams())
+				.catch(() => {
+					this.autocompleteUser = {}
+				})
+				this.showAutocomplete = false
+			}
 		},
 		mounted() {
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})
@@ -327,6 +355,8 @@
 					this.moderators = Object.values(users)
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 				});
+
+				this.autocompleteUser = this.currentUser
 		},
 		watch: {
 			'$route.query.chatChannel' (newVal) {

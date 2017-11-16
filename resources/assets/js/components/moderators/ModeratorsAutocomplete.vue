@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="is-relative">
 		<input
 			:value="valueComputed"
 			:class="{'is-empty': valueComputed.length === 0, 'full-height': true}"

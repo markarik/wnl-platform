@@ -10,7 +10,7 @@
 		<p>Dlatego prosimy, odpowiedz na <strong>15 krótkich pytań</strong>, które pozwolą nam trafniej ocenić, jak możemy odpowiedzieć na Wasze potrzeby. <wnl-emoji name="+1"/></p>
 
 		<p class="has-text-centered">
-			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/o9HtgPTtLbpABHRo2">Wypełnij krótką ankietę</a>
+			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/Ym8opY88cu3QT31M2">Wypełnij krótką ankietę</a>
 		</p>
 
 		<p></p>

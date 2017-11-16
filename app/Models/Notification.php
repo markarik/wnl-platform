@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Notification extends Model
 {
@@ -31,5 +31,15 @@ class Notification extends Model
 	public function setSeenAtAttribute($value)
 	{
 		$this->attributes['seen_at'] = $value === 'now' ? Carbon::now() : $value;
+	}
+
+	public function toSearchableArray()
+	{
+		$data = [
+			'id'         => $this->id,
+			'data'       => $this->data,
+		];
+
+		return $data;
 	}
 }

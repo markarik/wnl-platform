@@ -46,9 +46,9 @@
 		align-items: center
 
 	.button
-		border-radius: 50%
+		border: none
 		width: $font-size-minus-2
-		// height: $font-size-base
+
 </style>
 
 <script>

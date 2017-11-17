@@ -97,13 +97,6 @@ import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocompl
 
 import { timeFromS } from 'js/utils/time'
 
-const keys = {
-		enter: 13,
-		esc: 27,
-		arrowUp: 38,
-		arrowDown: 40,
-	}
-
 export default {
 	props: {
 		task: {
@@ -195,7 +188,6 @@ export default {
 		closeDropdown(newValue) {
 			if (!newValue) return;
 
-			this.$emit('dropdownClosed')
 			this.showAutocomplete = false
 		}
 	}

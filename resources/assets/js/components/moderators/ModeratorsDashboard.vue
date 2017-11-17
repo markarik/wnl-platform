@@ -62,8 +62,9 @@
 
 				<wnl-moderators-feed
 					v-if="moderators.length > 0"
-					@refresh="onRefresh"
 					:moderators="moderators"
+					:closeDropdowns="bodyClicked"
+					@refresh="onRefresh"
 				/>
 			</div>
 		</div>
@@ -131,6 +132,7 @@
 
 <script>
 	import {mapActions, mapGetters} from 'vuex'
+	import {nextTick} from 	'vue'
 
 	import { getApiUrl } from 'js/utils/env'
 	import {scrollToTop} from 'js/utils/animations'
@@ -157,7 +159,8 @@
 				selectedFilters: this.buildFiltering(),
 				moderators: [],
 				showAutocomplete: false,
-				autocompleteUser: {}
+				autocompleteUser: {},
+				bodyClicked: false
 			}
 		},
 		components: {
@@ -334,9 +337,18 @@
 					this.autocompleteUser = {}
 				})
 				this.showAutocomplete = false
+			},
+			clickHandler() {
+				this.bodyClicked = true
+				this.showAutocomplete = false
+				nextTick(() => {
+					this.bodyClicked = false
+				})
 			}
 		},
 		mounted() {
+			document.addEventListener('click', this.clickHandler)
+
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})
 
 			const promisedModerators = axios.post(getApiUrl('user_profiles/.search'), {
@@ -356,6 +368,9 @@
 					this.moderators = Object.values(users)
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 				});
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
 		},
 		watch: {
 			'$route.query.chatChannel' (newVal) {

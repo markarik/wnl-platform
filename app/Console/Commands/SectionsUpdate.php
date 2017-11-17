@@ -6,7 +6,6 @@ use App\Models\Presentable;
 use App\Models\Screen;
 use App\Models\Section;
 use App\Models\Subsection;
-use Cache;
 use Illuminate\Console\Command;
 
 
@@ -75,7 +74,13 @@ class SectionsUpdate extends Command
 		$newSections = $this->getNewSections($newSectionsData, $slides);
 
 		$oldSections = Section::where('screen_id', $this->screenId)->get();
+		Presentable::where('presentable_type', 'App\\Models\\Section')
+			->whereIn('presentable_id', $oldSections->pluck('id')->toArray())
+			->delete();
 		foreach ($oldSections as $oldSection) {
+			Presentable::where('presentable_type', 'App\\Models\\Subsection')
+				->whereIn('presentable_id', $oldSection->subsections->pluck('id')->toArray())
+				->delete();
 			$oldSection->subsections()->delete();
 			$oldSection->delete();
 		}
@@ -84,8 +89,7 @@ class SectionsUpdate extends Command
 		$this->addNewSections($newSections);
 
 		\Artisan::call('screens:countSlides');
-		Cache::tags('sections')->flush();
-		Cache::tags('subsections')->flush();
+		\Artisan::call('cache:tag', ['tag' => 'sections,subsections,presentables']);
 
 		$this->info("\n\nThe end! Now go, and see what you broke.\n");
 
@@ -112,10 +116,14 @@ class SectionsUpdate extends Command
 
 	protected function getSlides($slideshow)
 	{
-		$slides = Presentable::where([
-			['presentable_type', '=', 'App\\Models\\Slideshow'],
-			['presentable_id', '=', $slideshow->id],
-		])->orderBy('order_number', 'asc')->pluck('slide_id')->toArray();
+		$slides = Presentable::select(['slide_id', 'order_number'])
+			->where([
+				['presentable_type', '=', 'App\\Models\\Slideshow'],
+				['presentable_id', '=', $slideshow->id],
+			])
+			->orderBy('order_number', 'asc')
+			->get()
+			->toArray();
 
 		if (!$slides) die("No slides found, sorry!");
 
@@ -173,8 +181,7 @@ class SectionsUpdate extends Command
 
 		$slidesLeft = count($slides);
 		$this->question("There are {$slidesLeft} slides left");
-		$this->comment(implode(',', $slides));
-
+		$this->comment(collect($slides)->pluck('slide_id')->implode(','));
 		$this->table($tableHeaders, $tableData);
 
 		$statement = 'Does it look ok? Can I replace all '
@@ -197,15 +204,19 @@ class SectionsUpdate extends Command
 				'screen_id' => $this->screenId,
 			]);
 
-			$section->slides()->attach($newSection['slides']);
+			$section->slides()->attach(
+				collect($newSection['slides'])->keyBy('slide_id')
+			);
 
 			foreach ($newSection['subsections'] as $newSubsection) {
 				$subsection = Subsection::create([
-					'name'      => $newSubsection['name'],
+					'name'       => $newSubsection['name'],
 					'section_id' => $section->id,
 				]);
 
-				$subsection->slides()->attach($newSection['slides']);
+				$subsection->slides()->attach(
+					collect($newSubsection['slides'])->keyBy('slide_id')
+				);
 			}
 			$bar->advance();
 		}

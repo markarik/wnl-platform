@@ -4,8 +4,10 @@ namespace App\Notifications\Media;
 
 use App\Models\Event;
 use App\Models\Task;
+use App\Models\QnaAnswer;
 use App\Notifications\EventTaskNotification;
 use Ramsey\Uuid\Uuid;
+use Carbon\Carbon;
 
 
 class DatabaseTaskChannel
@@ -28,6 +30,13 @@ class DatabaseTaskChannel
 			'id'   => $event->data['objects']['id'] ?? $event->data['subject']['id'],
 		];
 
+		if ($taskSubject['type'] === 'qna_answer' && !empty(QnaAnswer::find($taskSubject['id']))) {
+			$taskSubject = [
+				'type' => 'qna_question',
+				'id' => QnaAnswer::find($taskSubject['id'])->question->id
+			];
+		}
+
 		$task = Task::firstOrNew(
 			[
 				'subject_type' => $taskSubject['type'],
@@ -46,6 +55,8 @@ class DatabaseTaskChannel
 		if ($task->status == Task::STATUS_DONE) {
 			$task->status = Task::STATUS_REOPEN;
 		}
+
+		$task->updated_at = Carbon::now();
 
 		$task->save();
 

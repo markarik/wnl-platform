@@ -4,12 +4,54 @@
 				:isVisible="isSidenavVisible"
 				:isDetached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-accordion
+					:dataSource="filters"
+					:config="accordionConfig"
+					:loading="false"
+					@itemToggled="onItemToggled"
+					class="full-width"
+				/>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
 				<a target="_blank" href="https://calendar.google.com/calendar/embed?src=8pohe9d278hobn46cuq3rgqpgg%40group.calendar.google.com&ctz=Europe%2FWarsaw">Grafik</a>
-				<wnl-moderators-feed/>
+				<div class="quick-actions-container">
+					<div class="quick-action">
+						<span v-t="'tasks.quickFilters.title'"/>
+						<a v-for="(quickFilter, index) in quickFilters"
+							class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
+							@click="onQuickFilterChange(quickFilter)"
+							:key="index"
+							v-t="quickFilter.name"
+						/>
+					</div>
+					<div class="quick-action">
+						<span v-t="'tasks.sorting.title'"/>
+						<a v-for="(sort, index) in sorting"
+							class="panel-toggle"
+							:class="{'is-active': sort.isActive}"
+							@click="onSortClick(sort)"
+							:key="index"
+						>
+							{{sort.name}}
+							<span class="icon is-small">
+								<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
+							</span>
+						</a>
+					</div>
+				</div>
+				<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
+					<div class="notification-container">
+						<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
+						<button @click="fetchLatest" class="button" v-t="'ui.action.refresh'"/>
+					</div>
+				</wnl-alert>
+
+				<wnl-moderators-feed
+					v-if="moderators.length > 0"
+					@refresh="onRefresh"
+					:moderators="moderators"
+				/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -53,26 +95,59 @@
 
 		&.mobile
 			padding: 0
+
+	.notification-container
+		display: flex
+
+		.notification-text
+			width: 100%
+
+		.button
+			border-radius: 0
+
+	.quick-actions-container
+		margin-bottom: $margin-big
+
+		.quick-action
+			margin-bottom: $margin-base
 </style>
 
 <script>
 	import {mapActions, mapGetters} from 'vuex'
+
+	import { getApiUrl } from 'js/utils/env'
+	import {scrollToTop} from 'js/utils/animations'
+	import {FILTER_TYPES, buildFiltersByPath, parseFilters} from 'js/services/apiFiltering'
 
 	import MainNav from 'js/components/MainNav'
 	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import Accordion from 'js/components/global/accordion/Accordion'
 	import withChat from 'js/mixins/with-chat'
+	import Alert from 'js/components/global/GlobalAlert'
+
 
 	export default {
 		name: 'ModeratorsDashboard',
+		data() {
+			return {
+				quickFilters: this.initialQuickFilters(),
+				sorting: this.initialSorting(),
+				filters: this.initialFilters(),
+				selectedFilters: this.buildFiltering(),
+				moderators: []
+			}
+		},
 		components: {
 			'wnl-main-nav': MainNav,
 			'wnl-moderators-feed': ModeratorsFeed,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
+			'wnl-accordion': Accordion,
+			'wnl-alert': Alert
 		},
 		mixins: [withChat],
 		computed: {
@@ -83,14 +158,167 @@
 				'isChatVisible',
 				'isChatToggleVisible'
 			]),
+			...mapGetters('tasks', ['updatedTasks']),
+			...mapGetters(['currentUserId']),
 			chatRooms() {
 				return [
 					{name: '#moderatorzy', channel: 'moderatorzy'},
 				]
 			},
+			accordionConfig() {
+				return {
+					disableEmpty: true,
+					isMobile: false,
+					itemsNameSource: 'questions.filters.items',
+					expanded: ['task-subject_type'],
+					selectedElements: this.activeFilters
+				}
+			},
+			activeFilters() {
+				return Object.keys(this.selectedFilters).filter(key => this.selectedFilters[key])
+			}
 		},
 		methods: {
-			...mapActions(['toggleChat']),
+			...mapActions(['toggleChat', 'toggleOverlay']),
+			...mapActions('tasks', ['pullTasks']),
+			onItemToggled({path, selected}) {
+				this.selectedFilters[path] = selected
+				this.onRefresh()
+			},
+			buildRequestParams() {
+				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
+				const parsedFilters = []
+				activeQuickFilters.forEach(filter => {
+					parsedFilters.push({
+						[filter.group]: filter.value()
+					})
+				})
+				parsedFilters.push(...parseFilters(this.activeFilters, this.filters, this.currentUserId))
+
+				const activeSorting = this.sorting.find(filter => filter.isActive)
+				const order = {
+					...activeSorting.order(activeSorting.dir)
+				}
+
+				return {
+					filters: parsedFilters,
+					order
+				}
+			},
+			onRefresh({...params}) {
+				this.toggleOverlay({source: 'moderatorsFeed', display: true})
+				this.pullTasks({...this.buildRequestParams(), ...params})
+					.then(() => {
+						scrollToTop()
+						this.toggleOverlay({source: 'moderatorsFeed', display: false})
+					})
+			},
+			fetchLatest() {
+				this.quickFilters = this.initialQuickFilters()
+				this.sorting = this.initialSorting()
+				this.onRefresh()
+			},
+			initialSorting() {
+				return [
+					{
+						name: this.$t('tasks.sorting.options.byCreatedAt'),
+						dir: 'desc',
+						isActive: true,
+						order: (dir = 'desc') => {
+							return {'created_at': dir}
+						}
+					},
+					{
+						name: this.$t('tasks.sorting.options.byUpdatedAt'),
+						dir: 'desc',
+						isActive: false,
+						order: (dir = 'desc') => {
+							return {'updated_at': dir}
+						}
+					}
+				]
+			},
+			initialQuickFilters() {
+				return [
+					{
+						group: 'task-assignee',
+						value: () => ({user_id: this.currentUserId}),
+						isActive: true,
+						name: this.$t('tasks.quickFilters.filters.my')
+					},
+					{
+						group: 'task-status',
+						value: () => ({
+							excluded: ['done'],
+							included: []
+						}),
+						isActive: true,
+						name: this.$t('tasks.quickFilters.filters.notDone')
+					},
+					{
+						group: 'task-assignee',
+						value: () => ({user_id: null}),
+						isActive: false,
+						name: this.$t('tasks.quickFilters.filters.unassigned')
+					}
+				]
+			},
+			initialFilters() {
+				return {
+					'task-subject_type': {
+						name: this.$t('tasks.filters.byType.title'),
+						type: FILTER_TYPES.LIST,
+						items: [{
+							name: this.$t('tasks.filters.byType.slide'),
+							value: "slide",
+						}, {
+							name: this.$t('tasks.filters.byType.quiz_question'),
+							value: "quiz_question"
+						}, {
+							name: this.$t('tasks.filters.byType.qna'),
+							value: "qna"
+						}],
+					}
+				}
+			},
+			buildFiltering() {
+				return buildFiltersByPath(this.initialFilters())
+			},
+			onQuickFilterChange(quickFilter) {
+				quickFilter.isActive = !quickFilter.isActive
+				this.pullTasks(this.buildRequestParams())
+			},
+			onSortClick(sort) {
+				if (sort.isActive) {
+					sort.dir = sort.dir === 'desc' ? 'asc' : 'desc'
+				} else {
+					this.sorting.forEach(sort => sort.isActive = false)
+					sort.isActive = true
+				}
+
+				this.pullTasks(this.buildRequestParams())
+			}
+		},
+		mounted() {
+			this.toggleOverlay({source: 'moderatorsFeed', display: true})
+
+			const promisedModerators = axios.post(getApiUrl('user_profiles/.search'), {
+				query: {
+					whereHas: {
+						roles: {
+							whereIn: ['roles.name', ['moderator', 'admin']]
+						}
+					},
+				}
+			})
+			const promisedTasks = this.pullTasks(this.buildRequestParams())
+
+			Promise.all([promisedModerators, promisedTasks])
+				.then(([moderatorsResponse, tasks]) => {
+					const {data: {...users}} = moderatorsResponse
+					this.moderators = Object.values(users)
+					this.toggleOverlay({source: 'moderatorsFeed', display: false})
+				});
 		},
 		watch: {
 			'$route.query.chatChannel' (newVal) {

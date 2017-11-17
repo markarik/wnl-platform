@@ -2,29 +2,18 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p>Cześć!</p>
+		<p class="strong">Cześć! <wnl-emoji name="mega"/></p>
+		<p>Większość z Was zakończyła już pierwszy tydzień nauki z kursem "Więcej niż LEK"! <wnl-emoji name="raised_hands"/></p>
 
-		<p>Chcielibyśmy przedstawić osoby, które będą pomagać Wam w nauce w trakcie 2. edycji kursu Więcej niż LEK! <wnl-emoji name="tada"/></p>
+		<p>Usłyszeliśmy od Was wiele dobrych słów na temat kursu, oraz wiele fantastycznych, krytycznych uwag. Wszystkie bardzo pomagają nam każdego dnia poprawiać jakość kursu i podnosić jego wartość dla Was. Jednak im więcej będziemy mieli wskazówek, tym większa szansa, że kurs będzie ewoluował w dobrym kierunku. <wnl-emoji name="wink"/></p>
 
-		<p>Moderatorzy, poza swoimi obowiązkami na platformie, również uczą się do egzaminu, dzięki czemu są w stanie najlepiej stwierdzić czego Wam potrzeba. Już w pierwszym tygodniu uwzględniliśmy wiele ich doskonałych sugestii!</p>
+		<p>Dlatego prosimy, odpowiedz na <strong>15 krótkich pytań</strong>, które pozwolą nam trafniej ocenić, jak możemy odpowiedzieć na Wasze potrzeby. <wnl-emoji name="+1"/></p>
 
-		<p>Dotychczas oni także uczyli się poruszać po platformie, jednak od dzisiaj przejmują stery dyskusji na naszym 500-osobowego statku. <wnl-emoji name="wink"/></p> Dzięki temu “stacjonarny” zespół lekarzy może skupić się na tworzeniu nowych materiałów oraz doskonaleniu istniejących.</p>
+		<p class="has-text-centered">
+			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/Ym8opY88cu3QT31M2">Wypełnij krótką ankietę</a>
+		</p>
 
-		<p>Poznajcie zatem zespół w składzie:</p>
-
-		<p><wnl-emoji name="muscle"/> <strong>Dominika Bernat</strong> i <strong>Zbyszek Nowicki</strong> - twórcy portalu LEKDay, którzy niestrudzenie pobudzają środowisko medyczne do dyskusji nad pytaniami z LEK-u w ramach swojego fanpage’a oraz spędzają niezliczone ilości godzin na dociekaniu poprawnych odpowiedzi.</p>
-
-		<p><wnl-emoji name="+1"/> <strong>Wojciech Zaremba</strong> - człowiek-orkiestra, twórca niezwykłego portalu wuzetki.pl, niezastąpionego źródła wiedzy dla studentów Uniwersytetu Jagiellońskiego (choć oczywiście nie tylko) oraz bazy pytań stworzonej na podstawie egzaminów z tejże uczelni.</p>
-
-		<p><wnl-emoji name="clap"/> <strong>Artur Bandura</strong> - naturalny talent pedagogiczny, zaczynał od przedegzaminowych seminariów z biofizyki dla znajomych, potem rozpoczął działalność koła Onkologii i Radioterapii przy Wielkopolskim Centrum Onkologii. Wyróżniany prelegent konferencji naukowych oraz inicjator pierwszych dwóch edycji konferencji “Magis in medicinae”, poświęconej komunikacji z pacjentem. Obecnie na stażu w Gdańsku, a popołudniami współuczestnik przygody z "Więcej niż LEK".</p>
-
-		<p><wnl-emoji name="raised_hands"/> <strong>Marta Bromirska</strong> - wieloletnia przewodnicząca koła reumatologicznego GUMed, łącząca swoją działalność z licznymi wykładami m.in. o profilaktyce osteoporozy, leczeniu choroby zwyrodnieniowej oraz zespołów bólowych na uniwersytetach 3. wieku w Gdańsku, Rumi i Malborku. Autorka badań i prelegentka konferencji ISSC w Gdańsku. Po godzinach miłośniczka kinematografii oraz impresjonizmu.</p>
-
-		<p><wnl-emoji name="ok_hand"/> <strong>Gabriela Koza-Natora</strong> - współautorka książki “LEK na 200”, oraz portalu o tej samej nazwie, które są doskonałym źródłem opracowań pytań z dotychczasowych egzaminów oraz pytań autorskich.</p>
-
-		<p>Jak widzicie, ekipa na tej edycji jest niezwykle silna! Z taką załogą z pewnością dopłyniemy do celu! <wnl-emoji name="wink"/></p>
-
-		<p>Trzymamy za Ciebie kciuki i życzymy dalszej radości z nauki!</p>
+		<p></p>
 	</div>
 </template>
 
@@ -32,7 +21,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-2-moderators'
+	const CURRENT_NEWS = 'edition-2-first-survey'
 	const REQUIRED_ROLE = ''
 
 	export default {

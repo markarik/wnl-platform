@@ -129,7 +129,18 @@
 			'wnl-new-question': NewQuestionForm,
 			'wnl-qna-sorting': QnaSorting
 		},
-		props: ['tags', 'readOnly', 'title', 'icon', 'reactionsDisabled', 'passedQuestions', 'sortingEnabled', 'numbersDisabled', 'isUserProfileClass', 'showContext'],
+		props: {
+			tags: Array,
+			readOnly: Boolean,
+			title: String,
+			icon: String,
+			reactionsDisabled: Boolean,
+			passedQuestions: Array,
+			sortingEnabled: Boolean,
+			numbersDisabled: Boolean,
+			isUserProfileClass: String,
+			showContext: Boolean,
+		},
 		data() {
 			return {
 				ready: false,
@@ -155,22 +166,22 @@
 			displayedTitle() {
 				return this.title || 'Pytania i odpowiedzi'
 			},
-			qnaToDisplay() {
-				return this.passedQuestions || this.questions
-			},
 		},
 		methods: {
 			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.qnaToDisplay);
-
+			if (!this.sortingEnabled) {
+				this.questionsList = this.passedQuestions
+			} else {
+				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions)
+			}
 		},
 		watch: {
 			'currentSorting' (newValue) {
-				this.questionsList = this.getSortedQuestions(newValue, this.qnaToDisplay);
+				this.questionsList = this.getSortedQuestions(newValue, this.questions);
 			},
-			'qnaToDisplay' (newValue) {
+			'questions' (newValue) {
 				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
 			}
 		},

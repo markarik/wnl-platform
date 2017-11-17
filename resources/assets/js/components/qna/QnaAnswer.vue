@@ -168,7 +168,6 @@
 			}
 		},
 		mounted() {
-			console.log(this.author);
 			if (this.shouldHighlight) {
 				!this.isOverlayVisible && this.scrollAndHighlight()
 			}

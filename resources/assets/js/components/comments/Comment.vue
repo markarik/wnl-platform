@@ -100,10 +100,6 @@ export default {
 		onDeleteSuccess() {
 			this.$emit('removeComment', this.id)
 		}
-	},
-	mounted() {
-
-			console.log(this.profile);
 	}
 }
 </script>

@@ -70,6 +70,7 @@ class ReactionsApiController extends ApiController
 
 		}
 
+		return $this->respondInternalError();
 		return $this->respondCreated();
 	}
 

@@ -140,7 +140,6 @@ class SectionsUpdate extends Command
 		$tableData = [];
 		$offset = 0;
 		for ($i = 0; $i < count($newSectionsData); $i++) {
-			$newSection = [];
 			$name = $newSectionsData[$i]['name'];
 			$start = (int)$newSectionsData[$i]['start'];
 			$end = (int)$newSectionsData[$i]['end'];
@@ -155,6 +154,7 @@ class SectionsUpdate extends Command
 			$newSection = [
 				'name'   => $name,
 				'slides' => array_splice($slides, $offset, $length),
+				'subsections' => []
 			];
 
 			array_push($tableData, [

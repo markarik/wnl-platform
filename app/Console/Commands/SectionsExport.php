@@ -51,15 +51,15 @@ class SectionsExport extends Command
 			$sp = $presentables->whereIn('slide_id',
 				$section->slides->pluck('id')->toArray()
 			);
-			$start = $sp->min('order_number') + 1;
-			$end = $sp->max('order_number') + 1;
+			$start = $sp->min('order_number');
+			$end = $sp->max('order_number');
 			array_push($out, "#{$section->name};{$start};{$end}");
 			foreach ($section->subsections as $subsection) {
 				$ssp = $presentables->whereIn('slide_id',
 					$subsection->slides->pluck('id')->toArray()
 				);
-				$start = $ssp->min('order_number') + 1;
-				$end = $ssp->max('order_number') + 1;
+				$start = $ssp->min('order_number');
+				$end = $ssp->max('order_number');
 				array_push($out, "*{$subsection->name};{$start};{$end}");
 			}
 		}

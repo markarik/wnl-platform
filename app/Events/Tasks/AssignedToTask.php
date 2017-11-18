@@ -39,13 +39,9 @@ class AssignedToTask extends Event
 			'objects' => [
 				'type' => 'task',
 				'id'   => $task->id,
-				'text' => $task->description,
+				'text' => $task->text,
 			],
-			'subject' => [
-//				'type' => 'comment',
-//				'id'   => $comment->id,
-//				'text' => $this->sanitize($comment->text),
-			],
+			'subject' => [],
 			'actors'  => [
 				'id'         => $this->actor->id,
 				'first_name' => $this->actor->profile->first_name,

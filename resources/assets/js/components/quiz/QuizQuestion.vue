@@ -14,7 +14,7 @@
 					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
 						<div v-html="question.text"></div>
 					</div>
-					<div class="card-header-icons">
+					<div class="card-header-icons">x
 						<wnl-bookmark
 							v-if="reactionState"
 							:reactableId="question.id"

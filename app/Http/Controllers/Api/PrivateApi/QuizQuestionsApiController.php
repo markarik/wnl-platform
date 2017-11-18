@@ -11,6 +11,7 @@ use App\Http\Requests\Quiz\UpdateQuizQuestion;
 use App\Models\ExamResults;
 use App\Models\QuizAnswer;
 use App\Models\QuizQuestion;
+use App\Models\Slide;
 use App\Models\Tag;
 use App\Models\Taxonomy;
 use Auth;
@@ -66,6 +67,16 @@ class QuizQuestionsApiController extends ApiController
 
 		if (!$question) {
 			return $this->respondNotFound();
+		}
+
+		if ($request->has('slides')) {
+			$question->slides()->detach();
+
+			foreach ($request->slides as $slideId) {
+				$slide = Slide::find($slideId);
+
+				$question->slides()->attach($slide);
+			}
 		}
 
 		if ($request->has('tags')) {

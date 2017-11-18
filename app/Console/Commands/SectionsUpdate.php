@@ -163,6 +163,9 @@ class SectionsUpdate extends Command
 				'end'     => ($end + 1),
 				'length'  => $length,
 			]);
+			if (!$subsections) {
+				array_splice($subsectionSlides, $offset, $length);
+			}
 			foreach ($subsections as $subsection) {
 				$length = $subsection['end'] - $subsection['start'] + 1;
 				$newSection['subsections'][] = [

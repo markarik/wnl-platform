@@ -134,7 +134,6 @@ class SectionsUpdate extends Command
 
 	protected function getNewSections($newSectionsData, $slides)
 	{
-		$subsectionSlides = $slides;
 		$tableHeaders = ['Section/Subsection', 'Start', 'End', 'Length'];
 		$newSections = [];
 		$tableData = [];
@@ -153,7 +152,7 @@ class SectionsUpdate extends Command
 			$length = $end - $start + 1;
 			$newSection = [
 				'name'   => $name,
-				'slides' => array_splice($slides, $offset, $length),
+				'slides' => array_slice($slides, $start, $length, true),
 				'subsections' => []
 			];
 
@@ -163,14 +162,12 @@ class SectionsUpdate extends Command
 				'end'     => ($end + 1),
 				'length'  => $length,
 			]);
-			if (!$subsections) {
-				array_splice($subsectionSlides, $offset, $length);
-			}
+
 			foreach ($subsections as $subsection) {
 				$length = $subsection['end'] - $subsection['start'] + 1;
 				$newSection['subsections'][] = [
 					'name'   => $subsection['name'],
-					'slides' => array_splice($subsectionSlides, $offset, $length),
+					'slides' => array_slice($slides, $subsection['start'], $length, true),
 				];
 				array_push($tableData, [
 					'section' => '> ' . $subsection['name'],
@@ -182,9 +179,6 @@ class SectionsUpdate extends Command
 			$newSections[] = $newSection;
 		}
 
-		$slidesLeft = count($slides);
-		$this->question("There are {$slidesLeft} slides left");
-		$this->comment(collect($slides)->pluck('slide_id')->implode(','));
 		$this->table($tableHeaders, $tableData);
 
 		$statement = 'Does it look ok? Can I replace all '

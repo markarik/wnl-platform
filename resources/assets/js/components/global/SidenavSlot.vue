@@ -6,7 +6,7 @@
 		ref="slot"
 		@click="onClick"
 	>
-		<div class="sidenav-content">
+		<div class="sidenav-content" :class="direction">
 			<slot></slot>
 		</div>
 	</div>
@@ -32,6 +32,9 @@
 			display: flex
 			height: $main-height
 			width: 100%
+
+			&.column
+				flex-direction: column
 
 	.wnl-sidenav-detached
 		background: rgba(0, 0, 0, 0.8)
@@ -74,7 +77,7 @@ import { mapActions } from 'vuex';
 	import SidenavItem from 'js/components/global/SidenavItem'
 
 	export default {
-		props: ['isVisible', 'isDetached', 'hasChat'],
+		props: ['isVisible', 'isDetached', 'hasChat', 'direction'],
 		methods: {
 			...mapActions(['closeSidenavs']),
 			onClick(event) {

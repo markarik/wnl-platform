@@ -1,8 +1,9 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-				:isVisible="isSidenavVisible"
-				:isDetached="!isSidenavMounted"
+			direction="column"
+			:isVisible="isSidenavVisible"
+			:isDetached="!isSidenavMounted"
 		>
 			<wnl-accordion
 					:dataSource="filters"
@@ -11,6 +12,21 @@
 					@itemToggled="onItemToggled"
 					class="full-width"
 				/>
+			<div class="filter-title full-width">
+				<span class="text">Filtrowanie Po Ogarniaczu</span>
+			</div>
+			<wnl-moderators-autocomplete
+				:show="showAutocomplete"
+				:usersList="moderators"
+				:onItemChosen="search"
+				:initialValue="autocompleteUser.full_name"
+				@close="showAutocomplete = false"
+				@show="showAutocomplete = true"
+				@clear="search"
+			/>
+			<div class="filter-title full-width">
+				<span class="text">Filtrowanie Po Przedmiocie</span>
+			</div>
 			<wnl-accordion
 					:dataSource="subjectFilters"
 					:config="accordionConfig"
@@ -56,8 +72,9 @@
 
 				<wnl-moderators-feed
 					v-if="moderators.length > 0"
-					@refresh="onRefresh"
 					:moderators="moderators"
+					:closeDropdowns="bodyClicked"
+					@refresh="onRefresh"
 				/>
 			</div>
 		</div>
@@ -93,8 +110,12 @@
 		min-width: $course-chat-min-width
 		width: $course-chat-width
 
-	.help-sidenav
-		flex: 1
+	.filter-title
+		background: $color-background-light-gray
+		font-size: $font-size-minus-1
+		letter-spacing: 1px
+		padding: $margin-medium $margin-small $margin-medium $margin-medium
+		text-transform: uppercase
 
 	.wnl-sidenav
 		flex: 1
@@ -121,6 +142,7 @@
 
 <script>
 	import {mapActions, mapGetters} from 'vuex'
+	import {nextTick} from 	'vue'
 
 	import { getApiUrl } from 'js/utils/env'
 	import {scrollToTop} from 'js/utils/animations'
@@ -128,6 +150,7 @@
 
 	import MainNav from 'js/components/MainNav'
 	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
+	import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
@@ -144,13 +167,17 @@
 				sorting: this.initialSorting(),
 				filters: this.initialFilters(),
 				selectedFilters: this.buildFiltering(),
+				subjectFilters: {},
 				moderators: [],
-				subjectFilters: {}
+				showAutocomplete: false,
+				autocompleteUser: {},
+				bodyClicked: false
 			}
 		},
 		components: {
 			'wnl-main-nav': MainNav,
 			'wnl-moderators-feed': ModeratorsFeed,
+			'wnl-moderators-autocomplete': ModeratorsAutocomplete,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
@@ -202,6 +229,12 @@
 					})
 				})
 				parsedFilters.push(...parseFilters(this.activeFilters, this.filters, this.currentUserId))
+
+				if (this.autocompleteUser.user_id) {
+					parsedFilters.push({
+						'task-assignee': {user_id: this.autocompleteUser.user_id}
+					})
+				}
 
 				const activeSorting = this.sorting.find(filter => filter.isActive)
 				const order = {
@@ -286,7 +319,7 @@
 							name: this.$t('tasks.filters.byType.qna'),
 							value: "qna"
 						}],
-					}
+					},
 				}
 			},
 			buildFiltering() {
@@ -305,9 +338,28 @@
 				}
 
 				this.pullTasks(this.buildRequestParams())
+			},
+			search(user = {}) {
+				const {filters, ...rest} = this.buildRequestParams();
+				this.autocompleteUser = user
+
+				this.pullTasks(this.buildRequestParams())
+				.catch(() => {
+					this.autocompleteUser = {}
+				})
+				this.showAutocomplete = false
+			},
+			clickHandler() {
+				this.bodyClicked = true
+				this.showAutocomplete = false
+				nextTick(() => {
+					this.bodyClicked = false
+				})
 			}
 		},
 		mounted() {
+			document.addEventListener('click', this.clickHandler)
+
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})
 
 			const promisedModerators = axios.post(getApiUrl('user_profiles/.search'), {
@@ -329,6 +381,9 @@
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					this.subjectFilters = filters.data
 				});
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
 		},
 		watch: {
 			'$route.query.chatChannel' (newVal) {

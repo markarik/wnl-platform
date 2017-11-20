@@ -6,9 +6,8 @@
 				:key="index"
 				:task="task"
 				:availableModerators="moderators"
-				:closeDropdown="bodyClicked"
+				:closeDropdown="closeDropdowns"
 				@statusSelected="updateTask"
-				@dropdownClosed="onDropdownClosed"
 				@assign="updateTask"
 			/>
 			<wnl-pagination v-if="paginationMeta.lastPage > 1"
@@ -29,7 +28,6 @@
 
 <script>
 	import { mapGetters, mapActions } from 'vuex'
-	import {nextTick} from 	'vue'
 
 	import Pagination from 'js/components/global/Pagination'
 	import Task from 'js/components/moderators/ModeratorsTask'
@@ -44,6 +42,10 @@
 			moderators: {
 				type: Array,
 				required: true
+			},
+			closeDropdowns: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -61,20 +63,6 @@
 		methods: {
 			...mapActions('tasks', ['updateTask']),
 			...mapActions(['toggleOverlay']),
-			clickHandler() {
-				this.bodyClicked = true
-			},
-			onDropdownClosed() {
-				nextTick(() => {
-					this.bodyClicked = false
-				})
-			},
 		},
-		mounted() {
-			document.addEventListener('click', this.clickHandler)
-		},
-		beforeDestroy() {
-			document.removeEventListener('click', this.clickHandler)
-		}
 	}
 </script>

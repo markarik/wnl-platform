@@ -58,8 +58,8 @@ const actions = {
 		_updateTask(payload)
 			.then(({data: {included: allIncluded, ...task}}) => {
 				const {assigneeProfiles = {}, ...included} = allIncluded
-
-				const assignee = {assignee: assigneeProfiles[task.assigneeProfiles[0]] || {}};
+				const taskProfile = task.assigneeProfiles || []
+				const assignee = {assignee: assigneeProfiles[taskProfile[0]] || {}};
 
 				Object.assign(task, _parseIncludes(included, task), assignee)
 

@@ -61,7 +61,7 @@
 						:sortingEnabled="false"
 						:readOnly="true"
 						:reactionsDisabled="true"
-						:passedQuestions="convertSortedQuestionsToObject"
+						:passedQuestions="sortedQnaQuestions"
 						:showContext="true"
 					></wnl-qna>
 					<wnl-qna
@@ -73,7 +73,7 @@
 						:sortingEnabled="false"
 						:readOnly="true"
 						:reactionsDisabled="true"
-						:passedQuestions="sortQuestionsForAnswersCompetency"
+						:passedQuestions="sortedQnaAnswers"
 						:showContext="true"
 					></wnl-qna>
 				</div>
@@ -229,16 +229,12 @@ import {
 	getApiUrl
 } from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
-import QnaQuestion from 'js/components/qna/QnaQuestion'
-import QnaAnswer from 'js/components/qna/QnaAnswer'
 import Qna from 'js/components/qna/Qna'
 
 export default {
 	name: 'UserProfile',
 	components: {
 		'wnl-avatar': Avatar,
-		'wnl-qna-question': QnaQuestion,
-		'wnl-qna-answer': QnaAnswer,
 		'wnl-qna': Qna,
 	},
 	data() {
@@ -337,42 +333,31 @@ export default {
 			} = this.questionsForAnswersCompetency.data
 			return questions;
 		},
-		sortQuestionsForAnswersCompetency() {
-			const x = this.convertSortedAnswersToArray.map((answer) => answer.qna_questions)
+		sortedQnaAnswers() {
+			const questionsIds = this.convertSortedAnswersToArray.map((answer) => answer.qna_questions)
 
-			const y = []
+			const sortedQnaAnswers = []
 
-			x.forEach((id, index) => {
-				y.push(Object.values(this.qnaQuestionsForAnswersComputed).find((question) => {
+			questionsIds.forEach((id, index) => {
+				sortedQnaAnswers.push(Object.values(this.qnaQuestionsForAnswersComputed).find((question) => {
 					return question.id === id
 				}))
 			})
-			return y
+			return sortedQnaAnswers
 		},
 		sortAnswersCompetency() {
-			return Object.values(this.qnaAnswersCompetency.data).sort((a, b) => {
+			const sortedAnswers =  Object.values(this.qnaAnswersCompetency.data).sort((a, b) => {
 				return b.upvote.count - a.upvote.count
 			})
+			console.log('1' + sortedAnswers.slice(0,2));
+			return sortedAnswers.slice(0,2)
 		},
-		convertSortedQuestionsToObject() {
-			const x = this.qnaQuestionsComputed
-			return this.getSortedQuestions('votes', x)
-		},
-		convertSortedQuestionsForAnswers() {
-			if (this.sortQuestionsForAnswersCompetency.length > 1) {
-				return {
-					0: this.sortQuestionsForAnswersCompetency[1],
-					1: this.sortQuestionsForAnswersCompetency[0]
-				}
-			} else if (this.sortQuestionsForAnswersCompetency.length = 1) {
-				return {
-					0: this.sortQuestionsForAnswersCompetency[0]
-				}
-			} else {
-				return {}
-			}
+		sortedQnaQuestions() {
+			const sortedQnaQuestions = this.qnaQuestionsComputed
+			return this.getSortedQuestions('votes', sortedQnaQuestions)
 		},
 		convertSortedAnswersToArray() {
+			console.log('2' + this.sortAnswersCompetency.slice(0,2));
 			return this.sortAnswersCompetency.slice(0,2)
 		},
 		isSinglePanelView() {

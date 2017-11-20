@@ -157,7 +157,7 @@
 				'getSortedQuestions'
 			]),
 			howManyQuestions() {
-				return Object.keys(this.qnaToDisplay).length || 0
+				return Object.keys(this.questionsList).length || 0
 			},
 			tagsFiltered() {
 				if (!this.tags) return [];

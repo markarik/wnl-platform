@@ -39,12 +39,27 @@
 
 	.screens-wrapper
 		display: flex
+		flex-wrap: wrap
 
 	.slide-snippet
 		border: 1px solid #efefef
 		margin: 5px 5px 20px
-		padding: 5px 45px 5px 5px
+		padding: 10px 45px 10px 10px
 		position: relative
+
+	h5, p
+		max-width: 100px;
+
+	h5
+		border-bottom: 1px solid #efefef
+		font-weight: bold
+		margin-bottom: 5px
+		padding-bottom: 5px
+
+	p
+		overflow: hidden
+		text-overflow: ellipsis
+		white-space: nowrap
 
 	.close-icon
 		cursor: pointer

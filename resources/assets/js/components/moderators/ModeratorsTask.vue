@@ -30,21 +30,14 @@
 			</div>
 			<div class="tags field has-addons is-relative">
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.assignee'"/>
-				<input
-					:value="assigneeTextComputed"
-					:class="{'is-empty': assigneeTextComputed.length === 0}"
-					@focus="onFocus"
-					@input="onInput"
-					@keydown="onKeyDown"
-				/>
-				<wnl-autocomplete
-					v-if="showAutocomplete"
-					:items="availableModeratorsFilter"
+				<wnl-moderators-autocomplete
+					:show="showAutocomplete"
+					:initialValue="task.assignee && task.assignee.full_name"
+					:usersList="availableModerators"
 					:onItemChosen="assign"
-					:itemComponent="'wnl-user-autocomplete-item'"
-					@close="onClose"
-					class="wnl-autocomplete-dropdown"
-					ref="autocomplete"
+					@close="showAutocomplete = false"
+					@show="showAutocomplete = true"
+					@clear="assign"
 				/>
 			</div>
 			<div class="tags field has-addons is-relative">
@@ -92,16 +85,6 @@
 	.dropdown-item
 		padding: $margin-small
 		border-bottom: $border-light-gray
-
-	.wnl-autocomplete-dropdown
-		top: 100%
-		height: 250px
-		overflow-y: auto
-
-	.is-empty
-		border: 2px solid $color-yellow
-		border-radius: 5px
-
 </style>
 
 <script>
@@ -110,15 +93,9 @@ import {mapGetters} from 'vuex'
 import Dropdown from 'js/components/global/Dropdown'
 import Autocomplete from 'js/components/global/Autocomplete'
 import TaskEvents from 'js/components/moderators/ModeratorsTaskEvents'
+import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete'
 
 import { timeFromS } from 'js/utils/time'
-
-const keys = {
-		enter: 13,
-		esc: 27,
-		arrowUp: 38,
-		arrowDown: 40,
-	}
 
 export default {
 	props: {
@@ -128,7 +105,7 @@ export default {
 		},
 		availableModerators: {
 			type: Array,
-			default: () => []
+			required: true
 		},
 		closeDropdown: {
 			type: Boolean,
@@ -137,7 +114,7 @@ export default {
 	},
 	components: {
 		'wnl-dropdown': Dropdown,
-		'wnl-autocomplete': Autocomplete,
+		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
 		'wnl-task-events': TaskEvents
 	},
 	data() {
@@ -149,8 +126,6 @@ export default {
 				REOPEN: 'reopen'
 			},
 			showAutocomplete: false,
-			assigneeTextInput: '',
-			focused: false
 		}
 	},
 	computed: {
@@ -196,14 +171,6 @@ export default {
 		taskContext() {
 			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer)
 		},
-		availableModeratorsFilter() {
-			return this.availableModerators.filter(moderator => (
-				moderator.full_name.toLowerCase().indexOf(this.assigneeTextInput.toLowerCase()) > -1)
-			)
-		},
-		assigneeTextComputed() {
-			return this.focused ? this.assigneeTextInput : this.task.assignee.full_name || ''
-		},
 		formatedCreatedAt() {
 			return timeFromS(this.task.created_at)
 		},
@@ -212,59 +179,16 @@ export default {
 		},
 	},
 	methods: {
-		assign(user) {
-			this.$emit('assign', {assignee_id: user.user_id, id: this.task.id})
-			this.onClose()
-		},
-		onFocus() {
-			this.onOpen()
-		},
-		onKeyDown(evt) {
-			const { enter, arrowUp, arrowDown, esc } = keys
-
-			if (this.availableModerators.length === 0) {
-				this.showAutocomplete = false
-				return
-			}
-
-			if (evt.keyCode === esc) {
-				this.onClose()
-				return
-			}
-			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				this.onOpen()
-				return
-			}
-
-			this.$refs.autocomplete.onKeyDown(evt)
-			this.killEvent(evt)
-
-			//for some of the old browsers, returning false is the true way to kill propagation
-			return false
-		},
-		killEvent(evt) {
-			evt.preventDefault()
-			evt.stopPropagation()
-		},
-		onClose() {
+		assign(user = {}) {
+			this.$emit('assign', {assignee_id: user.user_id || null, id: this.task.id})
 			this.showAutocomplete = false
-			this.focused = false
-			this.assigneeTextInput = ''
 		},
-		onOpen() {
-			this.focused = true
-			this.showAutocomplete = true
-		},
-		onInput(event) {
-			this.assigneeTextInput = event.target.value
-		}
 	},
 	watch: {
 		closeDropdown(newValue) {
 			if (!newValue) return;
 
-			this.$emit('dropdownClosed')
-			this.onClose()
+			this.showAutocomplete = false
 		}
 	}
 };

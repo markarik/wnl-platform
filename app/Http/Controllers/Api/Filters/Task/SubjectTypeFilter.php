@@ -6,7 +6,7 @@ use Auth;
 
 class SubjectTypeFilter extends ApiFilter
 {
-	protected $expected = ['user_id', 'list'];
+	protected $expected = ['list'];
 
 	public function handle($builder)
 	{

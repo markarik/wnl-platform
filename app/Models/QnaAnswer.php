@@ -36,4 +36,9 @@ class QnaAnswer extends Model
 	{
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
 	}
+
+	public function tags()
+	{
+		return $this->question->tags;
+	}
 }

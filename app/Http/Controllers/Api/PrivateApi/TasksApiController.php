@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 
 class TasksApiController extends ApiController
 {
+	const AVAILABLE_FILTERS = [
+		'by_taxonomy-subjects'
+	];
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);

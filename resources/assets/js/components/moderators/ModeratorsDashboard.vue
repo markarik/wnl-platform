@@ -11,6 +11,13 @@
 					@itemToggled="onItemToggled"
 					class="full-width"
 				/>
+			<wnl-accordion
+					:dataSource="subjectFilters"
+					:config="accordionConfig"
+					:loading="false"
+					@itemToggled="onItemToggled"
+					class="full-width"
+				/>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
@@ -137,7 +144,8 @@
 				sorting: this.initialSorting(),
 				filters: this.initialFilters(),
 				selectedFilters: this.buildFiltering(),
-				moderators: []
+				moderators: [],
+				subjectFilters: {}
 			}
 		},
 		components: {
@@ -167,7 +175,7 @@
 			},
 			accordionConfig() {
 				return {
-					disableEmpty: true,
+					disableEmpty: false,
 					isMobile: false,
 					itemsNameSource: 'questions.filters.items',
 					expanded: ['task-subject_type'],
@@ -312,12 +320,14 @@
 				}
 			})
 			const promisedTasks = this.pullTasks(this.buildRequestParams())
+			const promisedFilters = axios.post(getApiUrl('tasks/.filterList', {filters: []}))
 
-			Promise.all([promisedModerators, promisedTasks])
-				.then(([moderatorsResponse, tasks]) => {
+			Promise.all([promisedModerators, promisedTasks, promisedFilters])
+				.then(([moderatorsResponse, tasks, filters]) => {
 					const {data: {...users}} = moderatorsResponse
 					this.moderators = Object.values(users)
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
+					this.subjectFilters = filters.data
 				});
 		},
 		watch: {

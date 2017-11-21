@@ -61,7 +61,7 @@
 						:sortingEnabled="false"
 						:readOnly="true"
 						:reactionsDisabled="true"
-						:passedQuestions="convertSortedQuestionsToObject"
+						:passedQuestions="sortedQuestions"
 						:showContext="true"
 					></wnl-qna>
 					<wnl-qna
@@ -229,16 +229,12 @@ import {
 	getApiUrl
 } from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
-import QnaQuestion from 'js/components/qna/QnaQuestion'
-import QnaAnswer from 'js/components/qna/QnaAnswer'
 import Qna from 'js/components/qna/Qna'
 
 export default {
 	name: 'UserProfile',
 	components: {
 		'wnl-avatar': Avatar,
-		'wnl-qna-question': QnaQuestion,
-		'wnl-qna-answer': QnaAnswer,
 		'wnl-qna': Qna,
 	},
 	data() {
@@ -250,7 +246,7 @@ export default {
 			id: this.$route.params.userId,
 			profile: {},
 			qnaAnswersCompetency: {},
-			qnaQuestionsCompetency: {},
+			allQuestions: {},
 			questionsForAnswersCompetency: {},
 		}
 	},
@@ -276,11 +272,11 @@ export default {
 				}
 			]
 		},
-		avatarClass() {
-			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
-		},
 		isMobile() {
 			return this.isMobileProfile ? 'is-mobile' : ''
+		},
+		avatarClass() {
+			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
 		},
 		helpToDisplay() {
 			return this.profile.help || this.$t('user.userProfile.helpDefaultDescription')
@@ -291,6 +287,9 @@ export default {
 		currentUserProfile() {
 			return this.id == this.currentUserId
 		},
+		fullName() {
+			return this.profile.full_name
+		},
 		profileFirstNameToPrint() {
 			return this.profile.real_first_name === this.profile.first_name ? null : this.profile.first_name
 		},
@@ -298,19 +297,16 @@ export default {
 			return this.profile.real_last_name === this.profile.last_name ? null : this.profile.last_name
 		},
 		howManyComments() {
-			return this.commentsCompetency.data.length
+			return this.allComments.length
 		},
 		howManyQuestions() {
-			return Object.values(this.qnaQuestionsComputed).length
-		},
-		ifAnyQuestions() {
-			return this.howManyQuestions !== 0
-		},
-		fullName() {
-			return this.profile.full_name
+			return Object.values(this.allQuestions).length
 		},
 		howManyAnswers() {
 			return Object.values(this.qnaAnswersCompetency).length
+		},
+		ifAnyQuestions() {
+			return this.howManyQuestions !== 0
 		},
 		ifAnyAnswers() {
 			return this.howManyAnswers !== 0
@@ -320,14 +316,6 @@ export default {
 		},
 		isAnswersPanelVisible() {
 			return this.isPanelActive('answers')
-		},
-		qnaQuestionsComputed() {
-			if (!this.responseCondition) return {}
-			const {
-				included,
-				...questions
-			} = this.qnaQuestionsCompetency.data;
-			return questions;
 		},
 		qnaQuestionsForAnswersComputed() {
 			if (!this.responseCondition) return {}
@@ -354,9 +342,12 @@ export default {
 				return b.upvote.count - a.upvote.count
 			})
 		},
-		convertSortedQuestionsToObject() {
-			const x = this.qnaQuestionsComputed
-			return this.getSortedQuestions('votes', x)
+		sortedQuestions() {
+			const sortedQuestions = Object.values(this.allQuestions).sort((a, b) => {
+				return b.upvote.count - a.upvote.count
+			})
+			const bestQuestions = sortedQuestions.slice(0,2)
+			return this.getSortedQuestions('votes', bestQuestions)
 		},
 		convertSortedQuestionsForAnswers() {
 			if (this.sortQuestionsForAnswersCompetency.length > 1) {
@@ -432,16 +423,19 @@ export default {
 				include: 'reactions'
 			}
 			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-			const promisedCommentsCompetency = axios.post(getApiUrl(`comments/.count`), dataForComments)
+			const promisedAllComments = axios.post(getApiUrl(`comments/.count`), dataForComments)
 			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
 			const promisedQnaAnswersCompetency = axios.post(getApiUrl(`qna_answers/.search`), dataForQnaAnswers)
 			this.isLoading = true
-			return Promise.all([promisedProfile, promisedCommentsCompetency, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
-			.then(([profile, commentsCompetency, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
+			return Promise.all([promisedProfile, promisedAllComments, promisedQnaQuestionsCompetency, promisedQnaAnswersCompetency])
+			.then(([profile, allComments, qnaQuestionsCompetency, qnaAnswersCompetency]) => {
 				this.profile = profile.data
-				this.commentsCompetency = commentsCompetency
+				this.allComments = allComments.data
 				this.qnaQuestionsCompetency = qnaQuestionsCompetency
 				this.qnaAnswersCompetency = qnaAnswersCompetency
+
+				const {included, ...allQuestions} = qnaQuestionsCompetency.data
+				this.allQuestions = allQuestions
 
 				this.setUserQnaQuestions(qnaQuestionsCompetency.data)
 			})

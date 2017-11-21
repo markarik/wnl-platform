@@ -406,19 +406,32 @@ export default {
 			this.isLoading = true
 
 			return Promise.all([promisedProfile, promisedAllComments, promisedQnaQuestionsCompetency, promisedAllAnswers])
-			.then(([profile, allComments, qnaQuestionsCompetency, allAnswers]) => {
+			.then(([profile, allComments, questionsWithIncludes, allAnswers]) => {
 				this.profile = profile.data
 				this.allComments = allComments.data
 				this.allAnswers = allAnswers.data
 
-				const {included, ...allQuestions} = qnaQuestionsCompetency.data
+				const {included, ...allQuestions} = questionsWithIncludes.data
 				this.allQuestions = allQuestions
 
-				this.setUserQnaQuestions(qnaQuestionsCompetency.data)
+				this.setUserQnaQuestions(questionsWithIncludes.data)
+
+				const questionsIds = this.sortedAnswers.map((element) => {return element.qna_questions})
+
+				return this.loadQuestionsForAnswers(questionsIds)
+			}).then((questionsForAnswersWithIncludes) => {
+				const {included, ...allQuestionsForAnswers} = questionsForAnswersWithIncludes.data
+				this.allQuestionsForAnswers = allQuestionsForAnswers
+
+				this.setUserQnaQuestions(questionsForAnswersWithIncludes.data)
+				this.$emit('userDataLoaded', {
+					profile: this.profile
+				})
+				this.isLoading = false
 			})
-			.catch(exception => $wnl.logger.error(exception))
+			.catch(exception => console.log(exception))
 		},
-		loadQuestionsForAnswersCompetency(questionsIds) {
+		loadQuestionsForAnswers(questionsIds) {
 			const userId = this.$route.params.userId
 			const data = {
 				query: {
@@ -428,26 +441,10 @@ export default {
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			}
 			axios.post(getApiUrl(`qna_questions/.search`), data)
-			.then((questionsForAnswers) => {
-
-				const {included, ...allQuestionsForAnswers} = questionsForAnswers.data
-				this.allQuestionsForAnswers = allQuestionsForAnswers
-
-				this.setUserQnaQuestions(questionsForAnswers.data)
-				this.$emit('userDataLoaded', {
-					profile: this.profile
-				})
-				this.isLoading = false
-			})
-			.catch(exception => $wnl.logger.error(exception))
 		},
 	},
 	mounted() {
-		this.loadData().then(() => {
-			return this.loadQuestionsForAnswersCompetency(this.sortedAnswers.map(function(element) {
-				return element.qna_questions
-			}))
-		})
+		this.loadData()
 	},
 	watch: {
 		'$route' (newRoute, oldRoute) {

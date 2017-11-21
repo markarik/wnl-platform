@@ -24,14 +24,11 @@
 				@show="showAutocomplete = true"
 				@clear="search"
 			/>
-			<div class="filter-title full-width">
-				<span class="text">Filtrowanie Po Przedmiocie</span>
-			</div>
 			<wnl-accordion
 					:dataSource="subjectFilters"
-					:config="accordionConfig"
+					:config="accordionConfigSubjects"
 					:loading="false"
-					@itemToggled="onItemToggled"
+					@itemToggled="onTagSelect"
 					class="full-width"
 				/>
 		</wnl-sidenav-slot>
@@ -166,7 +163,8 @@
 				quickFilters: this.initialQuickFilters(),
 				sorting: this.initialSorting(),
 				filters: this.initialFilters(),
-				selectedFilters: this.buildFiltering(),
+				selectedByTypeFilters: this.buildByTypeFiltering(),
+				selectedBySubjectFilters: {},
 				subjectFilters: {},
 				moderators: [],
 				showAutocomplete: false,
@@ -204,21 +202,36 @@
 				return {
 					disableEmpty: false,
 					isMobile: false,
-					itemsNameSource: 'questions.filters.items',
 					expanded: ['task-subject_type'],
-					selectedElements: this.activeFilters
+					selectedElements: this.activeFiltersByType
 				}
 			},
-			activeFilters() {
-				return Object.keys(this.selectedFilters).filter(key => this.selectedFilters[key])
+			accordionConfigSubjects() {
+				return {
+					disableEmpty: false,
+					isMobile: false,
+					showCounts: false,
+					expanded: ['by_taxonomy-subjects'],
+					selectedElements: this.activeFiltersBySubject,
+					itemsNamesSource: 'tasks.filters.bySubject'
+				}
+			},
+			activeFiltersByType() {
+				return Object.keys(this.selectedByTypeFilters).filter(key => this.selectedByTypeFilters[key])
+			},
+			activeFiltersBySubject() {
+				return Object.keys(this.selectedBySubjectFilters).filter(key => this.selectedBySubjectFilters[key])
 			}
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('tasks', ['pullTasks']),
 			onItemToggled({path, selected}) {
-				this.selectedFilters[path] = selected
+				this.selectedByTypeFilters[path] = selected
 				this.onRefresh()
+			},
+			onTagSelect({path, selected}) {
+				this.selectedBySubjectFilters[path] = selected
 			},
 			buildRequestParams() {
 				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
@@ -228,7 +241,7 @@
 						[filter.group]: filter.value()
 					})
 				})
-				parsedFilters.push(...parseFilters(this.activeFilters, this.filters, this.currentUserId))
+				parsedFilters.push(...parseFilters(this.activeFiltersByType, this.filters, this.currentUserId))
 
 				if (this.autocompleteUser.user_id) {
 					parsedFilters.push({
@@ -322,8 +335,11 @@
 					},
 				}
 			},
-			buildFiltering() {
+			buildByTypeFiltering() {
 				return buildFiltersByPath(this.initialFilters())
+			},
+			buildBySubjectFiltering() {
+				return buildFiltersByPath(this.subjectFilters)
 			},
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
@@ -380,6 +396,7 @@
 					this.moderators = Object.values(users)
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					this.subjectFilters = filters.data
+					this.selectedBySubjectFilters = this.buildBySubjectFiltering()
 				});
 		},
 		beforeDestroy() {

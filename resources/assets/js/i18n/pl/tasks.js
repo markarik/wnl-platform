@@ -14,6 +14,9 @@ export const tasks = {
 			slide: 'Slajdy',
 			qna: 'Dyskujse (QnA)',
 			quiz_question: 'Pytania Kontrolne',
+		},
+		bySubject: {
+			subjects: 'Filtrowanie Po Przedmiocie',
 		}
 	},
 	sorting: {

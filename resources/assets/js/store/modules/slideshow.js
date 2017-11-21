@@ -14,8 +14,7 @@ function _fetchReactables(presentables) {
 			where: [
 				['reactable_type', 'App\\Models\\Slide']
 			],
-			whereIn: ['reactable_id', slideIds],
-			whereIn: ['reaction_id', [4,5]]
+			whereInMulti: [['reactable_id', slideIds], ['reaction_id', [4,5]]],
 		},
 	}
 

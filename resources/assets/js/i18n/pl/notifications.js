@@ -18,7 +18,8 @@ export const notifications = {
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		qnaAnswerDeleted: 'Twoje odpowiedź została usunięta przez moderatora',
 		reactionAdded: 'polubił/-a',
-		mentioned: 'wspomniał/-a Cię'
+		mentioned: 'wspomniał/-a Cię',
+		assignedToTask: 'przypisał/-a Cię'
 	},
 	messages: {
 		deleted: 'Treść usunięta przez autora',
@@ -30,7 +31,8 @@ export const notifications = {
 		qnaQuestion: 'pytanie | Twoje pytanie',
 		quizQuestion: 'pytanie kontrolne',
 		slide: 'slajd',
-		chatChannel: 'na kanale chatu'
+		chatChannel: 'na kanale chatu',
+		task: 'do zadania'
 	},
 	personal: {
 		heading: 'Powiadomienia',

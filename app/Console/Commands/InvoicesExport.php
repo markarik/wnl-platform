@@ -11,6 +11,7 @@ class InvoicesExport extends Command
 {
 	const ADVANCE_SERIES_NAME = 'F-ZAL';
 	const FINAL_SERIES_NAME = 'FK';
+	const VAT_SERIES_NAME = 'FV';
 	const DELIMITER = ';';
 
 	/**
@@ -48,6 +49,7 @@ class InvoicesExport extends Command
 			->whereHas('invoices', function ($query) {
 				$query->where('series', self::ADVANCE_SERIES_NAME);
 				$query->orWhere('series', self::FINAL_SERIES_NAME);
+				$query->orWhere('series', self::VAT_SERIES_NAME);
 			})->get();
 
 		$schema = $this->getSchema();

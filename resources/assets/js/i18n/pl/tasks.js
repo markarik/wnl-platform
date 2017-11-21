@@ -8,6 +8,14 @@ export const tasks = {
 			notDone: 'Niezrobione'
 		}
 	},
+	filters: {
+		byType: {
+			title: 'Filtrowanie Po Typie',
+			slide: 'Slajdy',
+			qna: 'Dyskujse (QnA)',
+			quiz_question: 'Pytania Kontrolne',
+		}
+	},
 	sorting: {
 		title: 'Sortowanie',
 		options: {

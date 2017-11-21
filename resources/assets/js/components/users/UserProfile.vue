@@ -405,8 +405,7 @@ export default {
 
 			this.isLoading = true
 
-			return Promise.all([promisedProfile, promisedAllComments, promisedQnaQuestionsCompetency, promisedAllAnswers])
-			.then(([profile, allComments, questionsWithIncludes, allAnswers]) => {
+			return Promise.all([promisedProfile, promisedAllComments, promisedQnaQuestionsCompetency, promisedAllAnswers]).then(([profile, allComments, questionsWithIncludes, allAnswers]) => {
 				this.profile = profile.data
 				this.allComments = allComments.data
 				this.allAnswers = allAnswers.data
@@ -428,8 +427,7 @@ export default {
 					profile: this.profile
 				})
 				this.isLoading = false
-			})
-			.catch(exception => console.log(exception))
+			}).catch(exception => console.log(exception))
 		},
 		loadQuestionsForAnswers(questionsIds) {
 			const userId = this.$route.params.userId
@@ -440,7 +438,7 @@ export default {
 				},
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			}
-			axios.post(getApiUrl(`qna_questions/.search`), data)
+			return axios.post(getApiUrl(`qna_questions/.search`), data)
 		},
 	},
 	mounted() {

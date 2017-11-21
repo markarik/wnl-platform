@@ -132,7 +132,7 @@
 		props: {
 			tags: Array,
 			readOnly: Boolean,
-			title: String,
+			title: [String, Boolean],
 			icon: String,
 			reactionsDisabled: Boolean,
 			passedQuestions: Array,

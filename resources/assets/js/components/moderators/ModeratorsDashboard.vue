@@ -5,6 +5,7 @@
 			:isVisible="isSidenavVisible"
 			:isDetached="!isSidenavMounted"
 		>
+			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-accordion
 					:dataSource="filters"
 					:config="accordionConfig"

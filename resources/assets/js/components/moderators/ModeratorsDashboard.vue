@@ -380,7 +380,13 @@
 						items: filters.map(filter => {
 							return {
 								name: filter.name,
-								value: filter.id
+								value: filter.name,
+								items: filter.categories.map(childFilter => {
+									return {
+										name: childFilter.name,
+										value: childFilter.name
+									}
+								})
 							}
 						})
 					}
@@ -411,6 +417,13 @@
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					this.subjectFilters = this.parseSubjectFilters(filters.data)
 					this.selectedBySubjectFilters = this.buildByLessonFiltering()
+				}).catch(error => {
+					this.toggleOverlay({source: 'moderatorsFeed', display: false})
+					this.$store.dispatch('addAlert', {
+						text: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :(',
+						type: 'error'
+					});
+					$wnl.logger.error(error);
 				});
 		},
 		beforeDestroy() {

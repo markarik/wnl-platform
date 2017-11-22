@@ -46,16 +46,25 @@ class TasksApiController extends ApiController
 
 	public function filterList(Request $request)
 	{
-		$allCategories = Category::select('name')->get();
-		$tags = Tag::select('id', 'name')
-			->where(function($query) use ($allCategories) {
-				$query->whereIn('name', $allCategories->pluck('name'));
-			})
-			// those tags represent Pomoc* views
-			// Something better desperately needed
-			->orWhereIn('id', [1,2,3,4,5])
-			->orderBy('name')->get();
+		$rootCategories = Category::where('parent_id', null)->get(['id', 'name']);
 
-		return $this->respondOk($tags);
+		foreach($rootCategories as $rootCategory) {
+			$rootCategory['categories'] = Category::where('parent_id', $rootCategory->id)->get(['id', 'name']);
+		}
+
+		// Be smarter and think how to not hardcode it
+		$rootCategories[] = [
+			'id' => -1,
+			'name' => 'Pomoc',
+			'categories' => [
+				['name' => 'Pomoc techniczna'],
+				['name' => 'Błędy'],
+				['name' => 'Pomoc w nauce'],
+				['name' => 'Nowe funkcje'],
+				['name' => 'Sugestie'],
+			]
+		];
+
+		return $this->json($rootCategories);
 	}
 }

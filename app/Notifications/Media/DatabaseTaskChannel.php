@@ -28,6 +28,12 @@ class DatabaseTaskChannel
 			'id'   => $event->data['objects']['id'] ?? $event->data['subject']['id'],
 		];
 
+		$tagNames = \DB::table('tags')
+			->join('taggables', 'tags.id', '=', 'taggables.tag_id')
+			->select('tags.name')
+			->where([['taggables.taggable_id', $taskSubject['id']], ['taggables.taggable_type', 'App\\Models\\'.studly_case($taskSubject['type'])]])
+			->get()->pluck('name')->toArray();
+
 		$task = Task::firstOrNew(
 			[
 				'subject_type' => $taskSubject['type'],
@@ -41,6 +47,7 @@ class DatabaseTaskChannel
 				'notifiable_type' => get_class($notifiable),
 				'team'            => $notification->team,
 				'text'            => $notification->text,
+				'labels'		  => ['tags' => $tagNames]
 			]);
 
 		if ($task->status == Task::STATUS_DONE) {

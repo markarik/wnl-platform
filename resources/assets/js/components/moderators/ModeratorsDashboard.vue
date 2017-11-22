@@ -26,7 +26,7 @@
 			/>
 			<wnl-accordion
 					:dataSource="subjectFilters"
-					:config="accordionConfigSubjects"
+					:config="accordionConfigByLesson"
 					:loading="false"
 					@itemToggled="onTagSelect"
 					class="full-width"
@@ -206,20 +206,18 @@
 					selectedElements: this.activeFiltersByType
 				}
 			},
-			accordionConfigSubjects() {
+			accordionConfigByLesson() {
 				return {
 					disableEmpty: false,
 					isMobile: false,
 					showCounts: false,
-					expanded: ['by_taxonomy-subjects'],
-					selectedElements: this.activeFiltersBySubject,
-					itemsNamesSource: 'tasks.filters.bySubject'
+					selectedElements: this.activeFiltersByLesson
 				}
 			},
 			activeFiltersByType() {
 				return Object.keys(this.selectedByTypeFilters).filter(key => this.selectedByTypeFilters[key])
 			},
-			activeFiltersBySubject() {
+			activeFiltersByLesson() {
 				return Object.keys(this.selectedBySubjectFilters).filter(key => this.selectedBySubjectFilters[key])
 			}
 		},
@@ -232,6 +230,7 @@
 			},
 			onTagSelect({path, selected}) {
 				this.selectedBySubjectFilters[path] = selected
+				this.onRefresh()
 			},
 			buildRequestParams() {
 				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
@@ -242,6 +241,7 @@
 					})
 				})
 				parsedFilters.push(...parseFilters(this.activeFiltersByType, this.filters, this.currentUserId))
+				parsedFilters.push(...parseFilters(this.activeFiltersByLesson, this.subjectFilters, this.currentUserId))
 
 				if (this.autocompleteUser.user_id) {
 					parsedFilters.push({
@@ -338,7 +338,7 @@
 			buildByTypeFiltering() {
 				return buildFiltersByPath(this.initialFilters())
 			},
-			buildBySubjectFiltering() {
+			buildByLessonFiltering() {
 				return buildFiltersByPath(this.subjectFilters)
 			},
 			onQuickFilterChange(quickFilter) {
@@ -371,6 +371,20 @@
 				nextTick(() => {
 					this.bodyClicked = false
 				})
+			},
+			parseSubjectFilters(filters) {
+				return {
+					'task-lesson': {
+						name: this.$t('tasks.filters.byLesson.title'),
+						type: FILTER_TYPES.LIST,
+						items: filters.map(filter => {
+							return {
+								name: filter.name,
+								value: filter.id
+							}
+						})
+					}
+				}
 			}
 		},
 		mounted() {
@@ -388,15 +402,15 @@
 				}
 			})
 			const promisedTasks = this.pullTasks(this.buildRequestParams())
-			const promisedFilters = axios.post(getApiUrl('tasks/.filterList', {filters: []}))
+			const promisedFilters = axios.post(getApiUrl('tasks/.filterList'))
 
 			Promise.all([promisedModerators, promisedTasks, promisedFilters])
 				.then(([moderatorsResponse, tasks, filters]) => {
 					const {data: {...users}} = moderatorsResponse
 					this.moderators = Object.values(users)
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
-					this.subjectFilters = filters.data
-					this.selectedBySubjectFilters = this.buildBySubjectFiltering()
+					this.subjectFilters = this.parseSubjectFilters(filters.data)
+					this.selectedBySubjectFilters = this.buildByLessonFiltering()
 				});
 		},
 		beforeDestroy() {

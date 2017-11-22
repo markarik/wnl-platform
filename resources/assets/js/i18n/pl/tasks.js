@@ -15,8 +15,8 @@ export const tasks = {
 			qna: 'Dyskujse (QnA)',
 			quiz_question: 'Pytania Kontrolne',
 		},
-		bySubject: {
-			subjects: 'Filtrowanie Po Przedmiocie',
+		byLesson: {
+			title: 'Filtrowanie Po Przedmiocie',
 		}
 	},
 	sorting: {

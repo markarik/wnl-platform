@@ -2,14 +2,13 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Task;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Models\Category;
+
 
 class TasksApiController extends ApiController
 {
-	const AVAILABLE_FILTERS = [
-		'by_taxonomy-subjects'
-	];
-
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
@@ -43,5 +42,20 @@ class TasksApiController extends ApiController
 		$data = $this->transform($task);
 
 		return $this->respondOk($data);
+	}
+
+	public function filterList(Request $request)
+	{
+		$allCategories = Category::select('name')->get();
+		$tags = Tag::select('id', 'name')
+			->where(function($query) use ($allCategories) {
+				$query->whereIn('name', $allCategories->pluck('name'));
+			})
+			// those tags represent Pomoc* views
+			// Something better desperately needed
+			->orWhereIn('id', [1,2,3,4,5])
+			->orderBy('name')->get();
+
+		return $this->respondOk($tags);
 	}
 }

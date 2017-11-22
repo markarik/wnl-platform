@@ -4,8 +4,9 @@ use App\Http\Controllers\Api\Filters\ApiFilter;
 use App\Models\Task;
 use App\Http\Controllers\Api\Filters\ByTaxonomy;
 use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
+use Illuminate\Http\Request;
 
-class TagsFilter extends ByTaxonomyFilter
+class LessonFilter extends ByTaxonomyFilter
 {
 	public function handle($model)
     {
@@ -15,9 +16,4 @@ class TagsFilter extends ByTaxonomyFilter
             });
         });
     }
-
-    public function count($builder)
-	{
-		return parent::taxonomyCounters($builder, 'subjects');
-	}
 }

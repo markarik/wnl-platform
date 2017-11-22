@@ -374,7 +374,7 @@
 			},
 			parseSubjectFilters(filters) {
 				return {
-					'task-lesson': {
+					'task-labels': {
 						name: this.$t('tasks.filters.byLesson.title'),
 						type: FILTER_TYPES.LIST,
 						items: filters.map(filter => {

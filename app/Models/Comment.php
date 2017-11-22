@@ -27,10 +27,6 @@ class Comment extends Model
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
 	}
 
-	public function tags()
-	{
-		return $this->commentable->tags;
-	}
 	/**
 	 * Get all of the owning commentable models.
 	 */

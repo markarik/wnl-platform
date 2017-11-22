@@ -63,7 +63,7 @@
 				<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
 					<div class="notification-container">
 						<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
-						<button @click="fetchLatest" class="button" v-t="'ui.action.refresh'"/>
+						<button @click="onRefresh" class="button" v-t="'ui.action.refresh'"/>
 					</div>
 				</wnl-alert>
 
@@ -71,7 +71,7 @@
 					v-if="moderators.length > 0"
 					:moderators="moderators"
 					:closeDropdowns="bodyClicked"
-					@refresh="onRefresh"
+					@changePage="fetchTasks"
 				/>
 			</div>
 		</div>
@@ -226,11 +226,11 @@
 			...mapActions('tasks', ['pullTasks']),
 			onItemToggled({path, selected}) {
 				this.selectedByTypeFilters[path] = selected
-				this.onRefresh()
+				this.fetchTasks()
 			},
 			onTagSelect({path, selected}) {
 				this.selectedBySubjectFilters[path] = selected
-				this.onRefresh()
+				this.fetchTasks()
 			},
 			buildRequestParams() {
 				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
@@ -259,7 +259,7 @@
 					order
 				}
 			},
-			onRefresh({...params}) {
+			fetchTasks({...params}) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
 				this.pullTasks({...this.buildRequestParams(), ...params})
 					.then(() => {
@@ -267,10 +267,12 @@
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
-			fetchLatest() {
+			onRefresh() {
 				this.quickFilters = this.initialQuickFilters()
 				this.sorting = this.initialSorting()
-				this.onRefresh()
+				this.selectedBySubjectFilters = this.buildByLessonFiltering()
+				this.selectedByTypeFilters = this.buildByTypeFiltering()
+				this.fetchTasks()
 			},
 			initialSorting() {
 				return [
@@ -420,7 +422,7 @@
 				}).catch(error => {
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					this.$store.dispatch('addAlert', {
-						text: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :(',
+						text: this.$t('ui.error.somethingWentWrongUnofficial'),
 						type: 'error'
 					});
 					$wnl.logger.error(error);

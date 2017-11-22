@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use ScoutEngines\Elasticsearch\Searchable;
 
 class Task extends Model
 {
-	use Searchable;
-
 	protected $fillable = [
 		'id',
 		'notifiable_id',

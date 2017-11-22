@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Task;
-use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Models\Category;
 

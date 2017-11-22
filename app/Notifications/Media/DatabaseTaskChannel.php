@@ -47,7 +47,7 @@ class DatabaseTaskChannel
 				'notifiable_type' => get_class($notifiable),
 				'team'            => $notification->team,
 				'text'            => $notification->text,
-				'labels'		  => ['tags' => $tagNames]
+				'labels'          => ['tags' => $tagNames]
 			]);
 
 		if ($task->status == Task::STATUS_DONE) {

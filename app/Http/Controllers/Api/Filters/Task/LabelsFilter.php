@@ -4,7 +4,9 @@ use App\Http\Controllers\Api\Filters\ApiFilter;
 
 class LabelsFilter extends ApiFilter
 {
-	public function handle($model)
+    protected $expected = ['list'];
+
+    public function handle($model)
     {
         return $model->where(function ($query) {
             foreach($this->params['list'] as $label) {

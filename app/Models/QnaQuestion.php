@@ -20,10 +20,6 @@ class QnaQuestion extends Model
 
 	protected $dates = ['deleted_at'];
 
-	protected $dispatchesEvents = [
-		'created' => QnaQuestionPosted::class,
-	];
-
 	public function answers()
 	{
 		return $this->hasMany('App\Models\QnaAnswer', 'question_id');

@@ -1,16 +1,28 @@
 import moment from 'moment'
 
 export const buildFiltersByPath = (filters = {}) => {
-    const filterGroups = Object.keys(filters)
     const filtersByPath = {}
+    const filterGroups = Object.keys(filters)
 
     filterGroups.forEach(filterGroup => {
-        filters[filterGroup].items.forEach((item, index) => {
-            filtersByPath[`${filterGroup}.items[${index}]`] = false
-        })
+        buildPathForItems(filters[filterGroup], filterGroup, filtersByPath)
     })
 
     return filtersByPath
+}
+
+const buildPathForItems = (filters, prefix, result) => {
+    if (!filters.items  || filters.items.length === 0) {
+        return result;
+    }
+
+        filters.items.forEach((item, index) => {
+            const newPrefix = `${prefix}.items[${index}]`
+            result[`${prefix}.items[${index}]`] = false
+            buildPathForItems(item, newPrefix, result);
+        })
+
+        return
 }
 
 export const parseFilters = (activeFilters, filters, userId) => {

@@ -6,7 +6,7 @@ use Auth;
 
 class SubjectTypeFilter extends ApiFilter
 {
-	protected $expected = ['user_id', 'list'];
+	protected $expected = ['list'];
 
 	public function handle($builder)
 	{
@@ -28,7 +28,7 @@ class SubjectTypeFilter extends ApiFilter
 
 	public function count($builder)
 	{
-		return 0;
+		return ['slide', 'qna', 'quiz_question'];
 	}
 
 	protected function slide($query)

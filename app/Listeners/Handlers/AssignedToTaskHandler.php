@@ -14,6 +14,8 @@ class AssignedToTaskHandler
 	public function handle(AssignedToTask $event, UserNotificationsGate $gate)
 	{
 		$user = $event->task->assignee;
-		$gate->notifyPrivate($user, $event);
+		if (!empty($user)) {
+			$gate->notifyPrivate($user, $event);
+		}
 	}
 }

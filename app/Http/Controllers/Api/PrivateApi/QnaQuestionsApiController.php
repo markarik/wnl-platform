@@ -12,6 +12,7 @@ use Auth;
 use League\Fractal\Resource\Item;
 use App\Events\QnaQuestionRemoved;
 use App\Events\QnaQuestionRestored;
+use App\Events\QnaQuestionPosted;
 
 class QnaQuestionsApiController extends ApiController
 {
@@ -39,6 +40,8 @@ class QnaQuestionsApiController extends ApiController
 				Tag::firstOrCreate(['id' => $tag])
 			);
 		}
+
+		event(new QnaQuestionPosted($question, $tags));
 
 		$resource = new Item($question, new QnaQuestionTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();

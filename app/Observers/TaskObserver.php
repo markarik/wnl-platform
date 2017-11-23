@@ -16,7 +16,7 @@ class TaskObserver
 
 	public function updated(Task $task)
 	{
-		if ($task->isDirty(['assignee_id'])) {
+		if ($task->isDirty(['assignee_id']) && !empty($task->assignee_id)) {
 			event(new AssignedToTask($task));
 		}
 	}

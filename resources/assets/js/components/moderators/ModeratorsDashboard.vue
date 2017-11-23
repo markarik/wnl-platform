@@ -7,7 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside dashboard-sidenav">
 				<wnl-accordion
-						:dataSource="filters"
+						:dataSource="subjectTypeFilters"
 						:config="accordionConfig"
 						:loading="false"
 						@itemToggled="onItemToggled"
@@ -23,6 +23,12 @@
 					@close="showAutocomplete = false"
 					@show="showAutocomplete = true"
 					@clear="search"
+				/>
+				<wnl-accordion
+					:dataSource="labelFilters"
+					:config="accordionConfigByLesson"
+					:loading="false"
+					@itemToggled="onTagSelect"
 				/>
 			</aside>
 		</wnl-sidenav-slot>
@@ -57,7 +63,7 @@
 				<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
 					<div class="notification-container">
 						<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
-						<button @click="fetchLatest" class="button" v-t="'ui.action.refresh'"/>
+						<button @click="onRefresh" class="button" v-t="'ui.action.refresh'"/>
 					</div>
 				</wnl-alert>
 
@@ -65,7 +71,7 @@
 					v-if="moderators.length > 0"
 					:moderators="moderators"
 					:closeDropdowns="bodyClicked"
-					@refresh="onRefresh"
+					@changePage="fetchTasks"
 				/>
 			</div>
 		</div>
@@ -164,8 +170,10 @@
 			return {
 				quickFilters: this.initialQuickFilters(),
 				sorting: this.initialSorting(),
-				filters: this.initialFilters(),
-				selectedFilters: this.buildFiltering(),
+				subjectTypeFilters: {},
+				selectedByTypeFilters: {},
+				labelFilters: {},
+				selectedByLabelFilters: {},
 				moderators: [],
 				showAutocomplete: false,
 				autocompleteUser: {},
@@ -200,23 +208,37 @@
 			},
 			accordionConfig() {
 				return {
-					disableEmpty: true,
+					disableEmpty: false,
 					isMobile: false,
-					itemsNameSource: 'questions.filters.items',
 					expanded: ['task-subject_type'],
-					selectedElements: this.activeFilters
+					selectedElements: this.activeFiltersByType
 				}
 			},
-			activeFilters() {
-				return Object.keys(this.selectedFilters).filter(key => this.selectedFilters[key])
+			accordionConfigByLesson() {
+				return {
+					disableEmpty: false,
+					isMobile: false,
+					showCounts: false,
+					selectedElements: this.activeFiltersByLesson
+				}
+			},
+			activeFiltersByType() {
+				return Object.keys(this.selectedByTypeFilters).filter(key => this.selectedByTypeFilters[key])
+			},
+			activeFiltersByLesson() {
+				return Object.keys(this.selectedByLabelFilters).filter(key => this.selectedByLabelFilters[key])
 			}
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('tasks', ['pullTasks']),
 			onItemToggled({path, selected}) {
-				this.selectedFilters[path] = selected
-				this.onRefresh()
+				this.selectedByTypeFilters[path] = selected
+				this.fetchTasks()
+			},
+			onTagSelect({path, selected}) {
+				this.selectedByLabelFilters[path] = selected
+				this.fetchTasks()
 			},
 			buildRequestParams() {
 				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
@@ -226,7 +248,8 @@
 						[filter.group]: filter.value()
 					})
 				})
-				parsedFilters.push(...parseFilters(this.activeFilters, this.filters, this.currentUserId))
+				parsedFilters.push(...parseFilters(this.activeFiltersByType, this.subjectTypeFilters, this.currentUserId))
+				parsedFilters.push(...parseFilters(this.activeFiltersByLesson, this.labelFilters, this.currentUserId))
 
 				if (this.autocompleteUser.user_id) {
 					parsedFilters.push({
@@ -244,7 +267,7 @@
 					order
 				}
 			},
-			onRefresh({...params}) {
+			fetchTasks({...params}) {
 				this.toggleOverlay({source: 'moderatorsFeed', display: true})
 				this.pullTasks({...this.buildRequestParams(), ...params})
 					.then(() => {
@@ -252,10 +275,12 @@
 						this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					})
 			},
-			fetchLatest() {
+			onRefresh() {
 				this.quickFilters = this.initialQuickFilters()
 				this.sorting = this.initialSorting()
-				this.onRefresh()
+				this.selectedByLabelFilters = this.buildByLessonFiltering()
+				this.selectedByTypeFilters = this.buildByTypeFiltering()
+				this.fetchTasks()
 			},
 			initialSorting() {
 				return [
@@ -302,26 +327,11 @@
 					}
 				]
 			},
-			initialFilters() {
-				return {
-					'task-subject_type': {
-						name: this.$t('tasks.filters.byType.title'),
-						type: FILTER_TYPES.LIST,
-						items: [{
-							name: this.$t('tasks.filters.byType.slide'),
-							value: "slide",
-						}, {
-							name: this.$t('tasks.filters.byType.quiz_question'),
-							value: "quiz_question"
-						}, {
-							name: this.$t('tasks.filters.byType.qna'),
-							value: "qna"
-						}],
-					},
-				}
+			buildByTypeFiltering() {
+				return buildFiltersByPath(this.subjectTypeFilters)
 			},
-			buildFiltering() {
-				return buildFiltersByPath(this.initialFilters())
+			buildByLessonFiltering() {
+				return buildFiltersByPath(this.labelFilters)
 			},
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
@@ -353,6 +363,40 @@
 				nextTick(() => {
 					this.bodyClicked = false
 				})
+			},
+			parseSubjectFilters(filters) {
+				return {
+					'task-labels': {
+						name: this.$t('tasks.filters.byLesson.title'),
+						type: FILTER_TYPES.LIST,
+						items: filters.map(filter => {
+							return {
+								name: filter.name,
+								value: filter.name,
+								items: filter.categories.map(childFilter => {
+									return {
+										name: childFilter.name,
+										value: childFilter.name
+									}
+								})
+							}
+						})
+					}
+				}
+			},
+			parseSubjectTypeFilters(filters) {
+				return {
+					'task-subject_type': {
+						name: this.$t('tasks.filters.byType.title'),
+						type: FILTER_TYPES.LIST,
+						items: filters.map(filter => {
+							return {
+								name: this.$t(`tasks.filters.byType.${filter}`),
+								value: filter
+							}
+						})
+					}
+				}
 			}
 		},
 		mounted() {
@@ -360,22 +404,29 @@
 
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})
 
-			const promisedModerators = axios.post(getApiUrl('user_profiles/.search'), {
-				query: {
-					whereHas: {
-						roles: {
-							whereIn: ['roles.name', ['moderator', 'admin']]
-						}
-					},
-				}
-			})
 			const promisedTasks = this.pullTasks(this.buildRequestParams())
+			const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
+				filters: []
+			})
 
-			Promise.all([promisedModerators, promisedTasks])
-				.then(([moderatorsResponse, tasks]) => {
-					const {data: {...users}} = moderatorsResponse
-					this.moderators = Object.values(users)
+			Promise.all([promisedTasks, promisedFilters])
+				.then(([tasks, filtersList]) => {
+					this.moderators = filtersList.data['task-assignee']
+
+					this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels'])
+					this.selectedByLabelFilters = this.buildByLessonFiltering()
+
+					this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type'])
+					this.selectedByTypeFilters = this.buildByTypeFiltering()
+
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
+				}).catch(error => {
+					this.toggleOverlay({source: 'moderatorsFeed', display: false})
+					this.$store.dispatch('addAlert', {
+						text: this.$t('ui.error.somethingWentWrongUnofficial'),
+						type: 'error'
+					});
+					$wnl.logger.error(error);
 				});
 		},
 		beforeDestroy() {

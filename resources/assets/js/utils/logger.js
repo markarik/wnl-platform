@@ -55,7 +55,7 @@ export default class Logger {
 			}
 
 			if (isDebug()) {
-				this.consolePrint(level, message)
+				this.consolePrint(level, [message])
 			}
 		}
 	}

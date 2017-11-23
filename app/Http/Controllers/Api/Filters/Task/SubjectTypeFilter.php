@@ -28,7 +28,7 @@ class SubjectTypeFilter extends ApiFilter
 
 	public function count($builder)
 	{
-		return 0;
+		return ['slide', 'qna', 'quiz_question'];
 	}
 
 	protected function slide($query)

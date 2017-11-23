@@ -7,7 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside dashboard-sidenav">
 				<wnl-accordion
-						:dataSource="filters"
+						:dataSource="subjectTypeFilters"
 						:config="accordionConfig"
 						:loading="false"
 						@itemToggled="onItemToggled"
@@ -25,7 +25,7 @@
 					@clear="search"
 				/>
 				<wnl-accordion
-					:dataSource="subjectFilters"
+					:dataSource="labelFilters"
 					:config="accordionConfigByLesson"
 					:loading="false"
 					@itemToggled="onTagSelect"
@@ -170,10 +170,10 @@
 			return {
 				quickFilters: this.initialQuickFilters(),
 				sorting: this.initialSorting(),
-				filters: this.initialFilters(),
-				selectedByTypeFilters: this.buildByTypeFiltering(),
-				selectedBySubjectFilters: {},
-				subjectFilters: {},
+				subjectTypeFilters: {},
+				selectedByTypeFilters: {},
+				labelFilters: {},
+				selectedByLabelFilters: {},
 				moderators: [],
 				showAutocomplete: false,
 				autocompleteUser: {},
@@ -226,7 +226,7 @@
 				return Object.keys(this.selectedByTypeFilters).filter(key => this.selectedByTypeFilters[key])
 			},
 			activeFiltersByLesson() {
-				return Object.keys(this.selectedBySubjectFilters).filter(key => this.selectedBySubjectFilters[key])
+				return Object.keys(this.selectedByLabelFilters).filter(key => this.selectedByLabelFilters[key])
 			}
 		},
 		methods: {
@@ -237,7 +237,7 @@
 				this.fetchTasks()
 			},
 			onTagSelect({path, selected}) {
-				this.selectedBySubjectFilters[path] = selected
+				this.selectedByLabelFilters[path] = selected
 				this.fetchTasks()
 			},
 			buildRequestParams() {
@@ -248,8 +248,8 @@
 						[filter.group]: filter.value()
 					})
 				})
-				parsedFilters.push(...parseFilters(this.activeFiltersByType, this.filters, this.currentUserId))
-				parsedFilters.push(...parseFilters(this.activeFiltersByLesson, this.subjectFilters, this.currentUserId))
+				parsedFilters.push(...parseFilters(this.activeFiltersByType, this.subjectTypeFilters, this.currentUserId))
+				parsedFilters.push(...parseFilters(this.activeFiltersByLesson, this.labelFilters, this.currentUserId))
 
 				if (this.autocompleteUser.user_id) {
 					parsedFilters.push({
@@ -278,7 +278,7 @@
 			onRefresh() {
 				this.quickFilters = this.initialQuickFilters()
 				this.sorting = this.initialSorting()
-				this.selectedBySubjectFilters = this.buildByLessonFiltering()
+				this.selectedByLabelFilters = this.buildByLessonFiltering()
 				this.selectedByTypeFilters = this.buildByTypeFiltering()
 				this.fetchTasks()
 			},
@@ -327,29 +327,11 @@
 					}
 				]
 			},
-			initialFilters() {
-				return {
-					'task-subject_type': {
-						name: this.$t('tasks.filters.byType.title'),
-						type: FILTER_TYPES.LIST,
-						items: [{
-							name: this.$t('tasks.filters.byType.slide'),
-							value: "slide",
-						}, {
-							name: this.$t('tasks.filters.byType.quiz_question'),
-							value: "quiz_question"
-						}, {
-							name: this.$t('tasks.filters.byType.qna'),
-							value: "qna"
-						}],
-					},
-				}
-			},
 			buildByTypeFiltering() {
-				return buildFiltersByPath(this.initialFilters())
+				return buildFiltersByPath(this.subjectTypeFilters)
 			},
 			buildByLessonFiltering() {
-				return buildFiltersByPath(this.subjectFilters)
+				return buildFiltersByPath(this.labelFilters)
 			},
 			onQuickFilterChange(quickFilter) {
 				quickFilter.isActive = !quickFilter.isActive
@@ -401,6 +383,20 @@
 						})
 					}
 				}
+			},
+			parseSubjectTypeFilters(filters) {
+				return {
+					'task-subject_type': {
+						name: this.$t('tasks.filters.byType.title'),
+						type: FILTER_TYPES.LIST,
+						items: filters.map(filter => {
+							return {
+								name: this.$t(`tasks.filters.byType.${filter}`),
+								value: filter
+							}
+						})
+					}
+				}
 			}
 		},
 		mounted() {
@@ -408,27 +404,22 @@
 
 			this.toggleOverlay({source: 'moderatorsFeed', display: true})
 
-			const promisedModerators = axios.post(getApiUrl('user_profiles/.search'), {
-				query: {
-					whereHas: {
-						roles: {
-							whereIn: ['roles.name', ['moderator', 'admin']]
-						}
-					},
-				}
-			})
 			const promisedTasks = this.pullTasks(this.buildRequestParams())
 			const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
 				filters: []
 			})
 
-			Promise.all([promisedModerators, promisedTasks, promisedFilters])
-				.then(([moderatorsResponse, tasks, filters]) => {
-					const {data: {...users}} = moderatorsResponse
-					this.moderators = Object.values(users)
+			Promise.all([promisedTasks, promisedFilters])
+				.then(([tasks, filtersList]) => {
+					this.moderators = filtersList.data['task-assignee']
+
+					this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels'])
+					this.selectedByLabelFilters = this.buildByLessonFiltering()
+
+					this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type'])
+					this.selectedByTypeFilters = this.buildByTypeFiltering()
+
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
-					this.subjectFilters = this.parseSubjectFilters(filters.data)
-					this.selectedBySubjectFilters = this.buildByLessonFiltering()
 				}).catch(error => {
 					this.toggleOverlay({source: 'moderatorsFeed', display: false})
 					this.$store.dispatch('addAlert', {

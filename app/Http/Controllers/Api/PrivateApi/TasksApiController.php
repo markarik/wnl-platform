@@ -8,6 +8,12 @@ use App\Models\Category;
 
 class TasksApiController extends ApiController
 {
+	const AVAILABLE_FILTERS = [
+		'task-labels',
+		'task-assignee',
+		'task-subject_type'
+	];
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
@@ -41,29 +47,5 @@ class TasksApiController extends ApiController
 		$data = $this->transform($task);
 
 		return $this->respondOk($data);
-	}
-
-	public function filterList(Request $request)
-	{
-		$rootCategories = Category::where('parent_id', null)->get(['id', 'name']);
-
-		foreach($rootCategories as $rootCategory) {
-			$rootCategory['categories'] = Category::where('parent_id', $rootCategory->id)->get(['id', 'name']);
-		}
-
-		// Be smarter and think how to not hardcode it
-		$rootCategories[] = [
-			'id' => -1,
-			'name' => 'Pomoc',
-			'categories' => [
-				['name' => 'Pomoc techniczna'],
-				['name' => 'Błędy'],
-				['name' => 'Pomoc w nauce'],
-				['name' => 'Nowe funkcje'],
-				['name' => 'Sugestie'],
-			]
-		];
-
-		return $this->json($rootCategories);
 	}
 }

@@ -69,7 +69,7 @@
 		data() {
 			return {
 				testMode: false,
-				profile: {},
+				profile: null,
 				filterByHelp: '',
 				filterByLocation: ''
 			}

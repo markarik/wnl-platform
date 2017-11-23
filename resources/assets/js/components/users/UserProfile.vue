@@ -62,7 +62,6 @@
 						:readOnly="true"
 						:reactionsDisabled="true"
 						:passedQuestions="sortedQuestions"
-
 						:showContext="true"
 					></wnl-qna>
 					<wnl-qna
@@ -267,9 +266,6 @@ export default {
 		avatarClass() {
 			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
 		},
-		checkUrlUserId() {
-			return this.$route.params.userId == null ? this.$route.params.userId = this.currentUserId : this.id
-		},
 		currentUserProfile() {
 			return this.id == this.currentUserId
 		},
@@ -427,7 +423,7 @@ export default {
 					profile: this.profile
 				})
 				this.isLoading = false
-			}).catch(exception => console.log(exception))
+			}).catch(exception => $wnl.logger.capture(exception))
 		},
 		loadQuestionsForAnswers(questionsIds) {
 			const userId = this.$route.params.userId

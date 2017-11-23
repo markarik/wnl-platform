@@ -10,7 +10,7 @@
 		<p class="strong">Hej {{currentUserName}}!</p>
 		<p>Nieustająco staramy się ulepszać naszą platformę i czynić ją bogatszą w przydatne funkcje!</p>
 		<p>Jeśli macie pomysł co jeszcze moglibyśmy wziąć na warsztat - tu jest doskonałe miejsce na Wasze sugestie!</p>
-		<wnl-qna :sortingEnabled="true" :tags="tags" reactionsDisabled="true"></wnl-qna>
+		<wnl-qna :sortingEnabled="true" :tags="tags" :reactionsDisabled="true"></wnl-qna>
 	</div>
 </template>
 

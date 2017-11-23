@@ -11,7 +11,7 @@
 							<span v-if="icon" class="icon is-big user-profile-icon">
 								<i :class="icon"></i>
 							</span>
-							<p v-if="title !== false" class="wnl-qna-header-title" >
+							<p v-if="!hideTitle" class="wnl-qna-header-title" >
 								{{displayedTitle}}&nbsp;
 							</p>
 							<p class="wnl-qna-header-title" v-if="!numbersDisabled">
@@ -133,6 +133,10 @@
 			tags: Array,
 			readOnly: Boolean,
 			title: [String, Boolean],
+			hideTitle: {
+				type: Boolean,
+				default: false,
+			},
 			icon: String,
 			reactionsDisabled: Boolean,
 			passedQuestions: Array,
@@ -164,14 +168,14 @@
 				return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1)
 			},
 			displayedTitle() {
-				return this.title || 'Pytania i odpowiedzi'
+				return this.title || this.$t('qna.title.titleToDisplay')
 			},
 		},
 		methods: {
 			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			if (!this.sortingEnabled) {
+			if (!this.sortingEnabled && this.passedQuestions) {
 				this.questionsList = this.passedQuestions
 			} else {
 				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions)

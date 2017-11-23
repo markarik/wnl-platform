@@ -152,8 +152,9 @@
 						margin-left: $margin-small
 				.user-info-help
 					display: inline-block
-					max-width: 100%
+					max-width: calc(100% - 138px - 1vw)
 					word-wrap: break-all
+					overflow-wrap: break-word
 					.help-title
 						font-size: $font-size-minus-1
 						text-transform: uppercase

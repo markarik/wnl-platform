@@ -25,6 +25,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+
 	.full-width-sidenav-slot
 		flex-basis: auto
 

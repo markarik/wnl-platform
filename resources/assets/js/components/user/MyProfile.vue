@@ -6,7 +6,7 @@
 					{{ $t('user.myProfile.publicProfile') }}
 				</div>
 			</div>
-			<div class="level-right">
+			<div class="level-right preview-button" :class="{mobile: isMobileProfile}">
 				<span>
 					<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}" :event="handleLink">
 						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">{{buttonNameToDisplay}}</a>
@@ -57,6 +57,12 @@
 		&.mobile
 			h1
 				text-align: center
+
+			.preview-button
+				&.mobile
+					display: flex
+					flex-direction: column
+					padding-left: $margin-base
 
 			.wnl-upload,
 			.wnl-user-profile-avatar

@@ -146,15 +146,15 @@
 					color: $color-gray-dimmed
 					display: flex
 					margin-bottom: $margin-base
+					word-break: break-all
 					.city-title
 						font-size: $font-size-plus-1
 						font-weight: $font-weight-regular
 						margin-left: $margin-small
 				.user-info-help
 					display: inline-block
-					max-width: calc(100% - 138px - 1vw)
 					word-wrap: break-all
-					overflow-wrap: break-word
+					word-break: break-all
 					.help-title
 						font-size: $font-size-minus-1
 						text-transform: uppercase
@@ -166,8 +166,8 @@
 							font-size: $font-size-plus-1
 							font-weight: $font-weight-regular
 							display: inline-block
-							max-width: 100%
 							word-wrap: break-all
+							overflow-wrap: break-word
 
 		.user-activity-content
 			align-items: center

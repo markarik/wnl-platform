@@ -20,6 +20,7 @@ export default {
         margin-bottom: $margin-base
         padding-bottom: $margin-base
         width: 100%
+        word-break: break-all
         .label
             color: $color-gray-dimmed
             font-size: $font-size-plus-1
@@ -28,6 +29,5 @@ export default {
         .info
             display: inline-block
             max-width: 100%
-            word-wrap: break-all
 
 </style>

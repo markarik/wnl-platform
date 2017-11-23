@@ -28,6 +28,7 @@
 		isMobile: false,
 		itemsNamesSource: '',
 		selectedElements: [],
+		showCounts: true
 	}
 
 	export default {

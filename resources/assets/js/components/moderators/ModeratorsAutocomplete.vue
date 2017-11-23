@@ -11,7 +11,7 @@
 		<wnl-autocomplete
 			v-if="show"
 			:items="usersListFiltered"
-			:onItemChosen="onItemChosen"
+			:onItemChosen="onItemChosenProxy"
 			:itemComponent="'wnl-user-autocomplete-item'"
 			@close="onClose"
 			class="wnl-autocomplete-dropdown"
@@ -137,6 +137,10 @@ export default {
 		onInput(event) {
 			this.textInputValue = event.target.value
 		},
+		onItemChosenProxy(...args) {
+			this.textInputValue = ''
+			this.onItemChosen(...args)
+		}
 	},
 	watch: {
 		show(newValue) {

@@ -2,8 +2,12 @@
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
 use App\Models\Task;
-use Carbon\Carbon;
-use Auth;
+use App\Models\UserProfile;
+use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
+use League\Fractal\Resource\Collection;
+use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
+use League\Fractal\Manager;
+
 
 class AssigneeFilter extends ApiFilter
 {
@@ -15,8 +19,18 @@ class AssigneeFilter extends ApiFilter
         return $builder->where('assignee_id', $userId);
 	}
 
-	public function count($builder)
-	{
-		return null;
-	}
+	public function count($builder) {
+        $profiles = UserProfile::whereHas('roles', function($query) {
+			$query->whereIn('roles.name', ['admin', 'moderator']);
+		})->get();
+
+		$resource = new Collection($profiles, new UserProfileTransformer, 'user_profiles');
+
+		$fractal = new Manager();
+		$fractal->setSerializer(new ApiJsonSerializer());
+
+		$data = $fractal->createData($resource)->toArray();
+
+		return $data;
+    }
 }

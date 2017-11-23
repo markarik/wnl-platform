@@ -3,9 +3,17 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use App\Models\Category;
+
 
 class TasksApiController extends ApiController
 {
+	const AVAILABLE_FILTERS = [
+		'task-labels',
+		'task-assignee',
+		'task-subject_type'
+	];
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);

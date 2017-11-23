@@ -13,7 +13,7 @@
 			<wnl-pagination v-if="paginationMeta.lastPage > 1"
 				:currentPage="paginationMeta.currentPage"
 				:lastPage="paginationMeta.lastPage"
-				@changePage="(page) => $emit('refresh', {page})"
+				@changePage="(page) => $emit('changePage', {page})"
 			/>
 		</div>
 	</div>

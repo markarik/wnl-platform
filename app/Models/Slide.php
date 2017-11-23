@@ -85,16 +85,9 @@ class Slide extends Model
 				// a parent lesson or screen.
 				return [];
 			}
-
-			// psay ay ay...
-			if (!$lesson->isAvailable(1)) {
-				\Log::debug('lesson not available ' . $lesson->id);
-				$this->unsearchable();
-				return [];
-			}
-
-			$orderNumber = (int) Presentable::where([
-				['presentable_type', '=', 'App\\Models\\Section'],
+			$orderNumber = (int)Presentable::where([
+				['presentable_type', '=', 'App\\Models\\Slideshow'],
+				['presentable_id', '=', $screen->slideshow->id],
 				['slide_id', '=', $this->id],
 			])->first()->order_number;
 
@@ -102,11 +95,13 @@ class Slide extends Model
 			$model['context']['section']['id'] = $section->id;
 			$model['context']['screen']['id'] = $screen->id;
 			$model['context']['lesson']['id'] = $lesson->id;
+			$model['context']['lesson']['isAvailable'] = $lesson->isAvailable(1);
 			$model['context']['group']['id'] = $lesson->group->id;
 			$model['context']['course']['id'] = $lesson->group->course->id;
 			$model['context']['orderNumber'] = $orderNumber;
 		} else {
 			$this->unsearchable();
+
 			return [];
 		}
 

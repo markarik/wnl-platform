@@ -6,7 +6,7 @@
 		ref="slot"
 		@click="onClick"
 	>
-		<div class="sidenav-content" :class="direction">
+		<div class="sidenav-content">
 			<slot></slot>
 		</div>
 	</div>
@@ -32,9 +32,6 @@
 			display: flex
 			height: $main-height
 			width: 100%
-
-			&.column
-				flex-direction: column
 
 	.wnl-sidenav-detached
 		background: rgba(0, 0, 0, 0.8)

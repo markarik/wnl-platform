@@ -1,37 +1,36 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-			direction="column"
 			:isVisible="isSidenavVisible"
 			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<wnl-accordion
-					:dataSource="filters"
-					:config="accordionConfig"
-					:loading="false"
-					@itemToggled="onItemToggled"
-					class="full-width"
+			<aside class="sidenav-aside dashboard-sidenav">
+				<wnl-accordion
+						:dataSource="filters"
+						:config="accordionConfig"
+						:loading="false"
+						@itemToggled="onItemToggled"
+					/>
+				<div class="filter-title">
+					<span class="text">Filtrowanie Po Ogarniaczu</span>
+				</div>
+				<wnl-moderators-autocomplete
+					:show="showAutocomplete"
+					:usersList="moderators"
+					:onItemChosen="search"
+					:initialValue="autocompleteUser.full_name"
+					@close="showAutocomplete = false"
+					@show="showAutocomplete = true"
+					@clear="search"
 				/>
-			<div class="filter-title full-width">
-				<span class="text">Filtrowanie Po Ogarniaczu</span>
-			</div>
-			<wnl-moderators-autocomplete
-				:show="showAutocomplete"
-				:usersList="moderators"
-				:onItemChosen="search"
-				:initialValue="autocompleteUser.full_name"
-				@close="showAutocomplete = false"
-				@show="showAutocomplete = true"
-				@clear="search"
-			/>
-			<wnl-accordion
+				<wnl-accordion
 					:dataSource="subjectFilters"
 					:config="accordionConfigByLesson"
 					:loading="false"
 					@itemToggled="onTagSelect"
-					class="full-width"
 				/>
+			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
@@ -136,6 +135,14 @@
 
 		.quick-action
 			margin-bottom: $margin-base
+
+	.dashboard-sidenav
+		flex: 1
+		min-width: $sidenav-min-width
+		overflow: auto
+		padding: $margin-small 0
+		width: $sidenav-width
+
 </style>
 
 <script>
@@ -411,7 +418,9 @@
 				}
 			})
 			const promisedTasks = this.pullTasks(this.buildRequestParams())
-			const promisedFilters = axios.post(getApiUrl('tasks/.filterList'))
+			const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
+				filters: []
+			})
 
 			Promise.all([promisedModerators, promisedTasks, promisedFilters])
 				.then(([moderatorsResponse, tasks, filters]) => {

@@ -24,13 +24,13 @@
 								<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
 							</span>
 						</div>
-						<span v-if="profile.city || currentUserProfile" class="user-info-city">
+						<span v-if="cityToDisplay" class="user-info-city">
 							<span class="icon is-small">
 								<i class="fa fa-map-marker"></i>
 							</span>
 							<span class="city-title">{{ cityToDisplay }}</span>
 						</span>
-						<span v-if="profile.help || currentUserProfile" class="user-info-help">
+						<span v-if="helpToDisplay" class="user-info-help">
 							<span class="help-title">W czym mogę pomóc?</span>
 							<div class="notification">
 								<span class="user-help">{{ helpToDisplay }}</span>
@@ -279,10 +279,10 @@ export default {
 			return this.profile.real_last_name === this.profile.last_name ? null : this.profile.last_name
 		},
 		helpToDisplay() {
-			return this.profile.help || this.$t('user.userProfile.helpDefaultDescription')
+			return this.currentUserProfile ? this.profile.help || this.$t('user.userProfile.helpDefaultDescription') : this.profile.help || false
 		},
 		cityToDisplay() {
-			return this.profile.city || this.$t('user.userProfile.cityDefaultDescription')
+			return this.currentUserProfile ? this.profile.city || this.$t('user.userProfile.cityDefaultDescription') : this.profile.city || false
 		},
 		howManyComments() {
 			return this.allComments.length
@@ -329,9 +329,12 @@ export default {
 			const sortedQuestionsForAnswers = []
 
 			questionsIds.forEach((id, index) => {
-				sortedQuestionsForAnswers.push(Object.values(this.allQuestionsForAnswers).find((question) => {
+				const value = Object.values(this.allQuestionsForAnswers).find((question) => {
 					return question.id === id
-				}))
+				})
+				if (sortedQuestionsForAnswers.indexOf(value) === -1) {
+					sortedQuestionsForAnswers.push(value)
+				}
 			})
 			return sortedQuestionsForAnswers
 		},
@@ -350,7 +353,7 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('qna', ['setUserQnaQuestions']),
+		...mapActions('qna', ['setUserQnaQuestions', 'setConfig']),
 		togglePanel(panel) {
 			return this.activePanels = [panel]
 		},
@@ -419,6 +422,17 @@ export default {
 				this.allQuestionsForAnswers = allQuestionsForAnswers
 
 				this.setUserQnaQuestions(questionsForAnswersWithIncludes.data)
+
+				const config = {
+					highlighted: {}
+				}
+
+				this.sortedAnswers.reverse().forEach((answer) => {
+					config.highlighted[answer.qna_questions] = answer.id
+				})
+
+				this.setConfig(config)
+
 				this.$emit('userDataLoaded', {
 					profile: this.profile
 				})

@@ -117,6 +117,9 @@ function getInitialState() {
 		comments: {},
 		profiles: {},
 		tags: {},
+        config: {
+            highlighted: {}
+        },
 	}
 }
 
@@ -177,6 +180,7 @@ const getters = {
 	loading: state => state.loading.length > 0,
 	currentSorting: state => state.sorting,
 	questions: state => state.qna_questions,
+    config: state => state.config,
 	getSortedQuestions: (state, getters, rootState, rootGetters) => (sorting, list) => {
 		switch (sorting) {
 			case 'latest':
@@ -230,6 +234,9 @@ const getters = {
 const mutations = {
 	...reactionsMutations,
 	...commentsMutations,
+    [types.QNA_SET_CONFIG] (state, config) {
+        set(state, 'config', config)
+    },
 	[types.IS_LOADING] (state, isLoading) {
 		const loadingStatus = state.loading
 		if (isLoading) {
@@ -326,6 +333,9 @@ const mutations = {
 const actions = {
 	...reactionsActions,
 	...commentsActions,
+    setConfig({commit}, config) {
+        commit(types.QNA_SET_CONFIG, config)
+    },
 	changeSorting({commit, dispatch}, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting)
 	},

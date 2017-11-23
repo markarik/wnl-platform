@@ -147,14 +147,15 @@
 					display: flex
 					margin-bottom: $margin-base
 					word-break: break-all
+					word-break: break-word
 					.city-title
 						font-size: $font-size-plus-1
 						font-weight: $font-weight-regular
 						margin-left: $margin-small
 				.user-info-help
 					display: inline-block
-					word-wrap: break-all
 					word-break: break-all
+					word-break: break-word
 					.help-title
 						font-size: $font-size-minus-1
 						text-transform: uppercase
@@ -166,8 +167,6 @@
 							font-size: $font-size-plus-1
 							font-weight: $font-weight-regular
 							display: inline-block
-							word-wrap: break-all
-							overflow-wrap: break-word
 
 		.user-activity-content
 			align-items: center

@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Screen;
-use App\Models\Section;
-use App\Models\Subsection;
 use Illuminate\Console\Command;
 
 class ScreensCountSlides extends Command
@@ -40,45 +38,82 @@ class ScreensCountSlides extends Command
 	 */
 	public function handle()
 	{
-		foreach (Screen::all() as $screen) {
-			if (!empty($screen->slideshow)) {
-				$slidesCount = \DB::table('presentables')
-					->where('presentable_type', 'App\Models\Slideshow')
-					->where('presentable_id', $screen->slideshow->id)
-					->count();
-
-				$screen->meta = array_merge($screen->meta, ['slides_count' => $slidesCount]);
-				$screen->save();
+		$screens = Screen::where('type', 'slideshow')->get();
+		foreach ($screens as $screen) {
+			if (empty($screen->slideshow)) {
+				\Log::error("This is weird, screen {$screen->id} of type " .
+					"slideshow has not slideshow id in its meta o_O");
+				continue;
 			}
+
+			$screenPresentables = \DB::table('presentables')
+				->where('presentable_type', 'App\Models\Slideshow')
+				->where('presentable_id', $screen->slideshow->id)
+				->get();
+
+			$screen->meta = array_merge($screen->meta, [
+				'slides_count' => $screenPresentables->count(),
+			]);
+			$screen->save();
+
+			$this->countForSections($screen, $screenPresentables);
+
 		}
 
-		foreach (Section::all() as $section) {
+		return;
+	}
+
+	protected function countForSections($screen, $screenPresentables)
+	{
+		foreach ($screen->sections as $section) {
 			$sectionSlides = \DB::table('presentables')
-				->select('order_number')
+				->select('slide_id')
 				->where('presentable_type', 'App\Models\Section')
 				->where('presentable_id', $section->id)
 				->orderBy('order_number')
-				->get(['order_number']);
+				->get(['slide_id']);
 
-			$section->first_slide = $sectionSlides->first()->order_number;
+			$firstSlideId = $sectionSlides->first()->slide_id;
+			$orderNo = $screenPresentables
+				->where('slide_id', $firstSlideId)
+				->first()
+				->order_number;
+			$section->first_slide = $orderNo;
 			$section->slides_count = $sectionSlides->count();
 			$section->save();
-		}
 
-		foreach (Subsection::all() as $subsection) {
+			$this->countForSubsections($section, $screenPresentables);
+		}
+	}
+
+	protected function countForSubsections($section, $screenPresentables)
+	{
+		foreach ($section->subsections as $subsection) {
 			$subsectionSlides = \DB::table('presentables')
-				->select('order_number')
+				->select('slide_id')
 				->where('presentable_type', 'App\Models\Subsection')
 				->where('presentable_id', $subsection->id)
 				->orderBy('order_number', 'asc')
 				->orderBy('order_number')
-				->get(['order_number']);
+				->get(['slide_id']);
 
-			$subsection->first_slide = $subsectionSlides->first()->order_number;
+			$firstSlideId = $subsectionSlides->first()->slide_id;
+			try {
+				$orderNo = $screenPresentables
+					->where('slide_id', $firstSlideId)
+					->first()
+					->order_number;
+			}
+			catch (\Exception $e) {
+				\Log::error("Whooops, subsection {$subsection->id} has slide" .
+					"{$firstSlideId}, but it is not present in the section's" .
+					" parent slideshow... that may be an issue.");
+				continue;
+			}
+
+			$subsection->first_slide = $orderNo;
 			$subsection->slides_count = $subsectionSlides->count();
 			$subsection->save();
 		}
-
-		return;
 	}
 }

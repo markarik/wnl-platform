@@ -1,5 +1,6 @@
 <template>
 	<div class="content">
+		<wnl-page slug="coming-soon-help"></wnl-page>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -24,12 +25,14 @@
 	import {mapGetters, mapActions} from 'vuex'
 
 	import Qna from 'js/components/qna/Qna'
+	import Page from 'js/components/global/Page'
 	import {getApiUrl} from 'js/utils/env'
 
 	export default {
 		name: 'ComingSoonHelp',
 		components: {
 			'wnl-qna': Qna,
+			'wnl-page': Page
 		},
 		data() {
 			return {

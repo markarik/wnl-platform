@@ -20,7 +20,7 @@
 			:isDetached="!isChatMounted"
 			:hasChat="true"
 		>
-		<wnl-public-chat :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">

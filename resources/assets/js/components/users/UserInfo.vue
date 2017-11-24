@@ -18,6 +18,7 @@ export default {
     .user-info
         border-bottom: $border-light-gray
         margin-bottom: $margin-base
+        overflow-wrap: break-word
         padding-bottom: $margin-base
         width: 100%
         word-break: break-all

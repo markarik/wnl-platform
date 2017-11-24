@@ -130,20 +130,20 @@
 			'wnl-qna-sorting': QnaSorting
 		},
 		props: {
-			tags: Array,
-			readOnly: Boolean,
-			title: [String, Boolean],
 			hideTitle: {
 				type: Boolean,
 				default: false,
 			},
 			icon: String,
-			reactionsDisabled: Boolean,
-			passedQuestions: Array,
-			sortingEnabled: Boolean,
-			numbersDisabled: Boolean,
 			isUserProfileClass: String,
+			tags: Array,
+			numbersDisabled: Boolean,
+			passedQuestions: Array,
+			reactionsDisabled: Boolean,
+			readOnly: Boolean,
+			title: [String, Boolean],
 			showContext: Boolean,
+			sortingEnabled: Boolean,
 		},
 		data() {
 			return {

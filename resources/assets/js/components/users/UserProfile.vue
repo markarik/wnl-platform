@@ -146,6 +146,7 @@
 					color: $color-gray-dimmed
 					display: flex
 					margin-bottom: $margin-base
+					overflow-wrap: break-word
 					word-break: break-all
 					.city-title
 						font-size: $font-size-plus-1
@@ -153,7 +154,7 @@
 						margin-left: $margin-small
 				.user-info-help
 					display: inline-block
-					word-wrap: break-all
+					overflow-wrap: break-word
 					word-break: break-all
 					.help-title
 						font-size: $font-size-minus-1

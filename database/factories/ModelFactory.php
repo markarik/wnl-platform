@@ -178,6 +178,7 @@ $factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
 	return [
 		'slug'    => $faker->uuid,
+		'name'    => $faker->text,
 		'content' => $faker->text,
 	];
 });

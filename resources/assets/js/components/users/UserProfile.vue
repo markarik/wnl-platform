@@ -430,7 +430,9 @@ export default {
 					highlighted: {}
 				}
 
-				this.sortedAnswers.reverse().forEach((answer) => {
+				const sortedAnswersCopy = [...this.sortedAnswers]
+
+				sortedAnswersCopy.reverse().forEach((answer) => {
 					config.highlighted[answer.qna_questions] = answer.id
 				})
 

@@ -57,7 +57,7 @@
 						:numbersDisabled="true"
 						:title="$t('user.userProfile.bestQuestions')"
 						:icon="iconForQuestions"
-						v-if="ifAnyQuestions"
+						v-if="!isLoading && ifAnyQuestions"
 						:sortingEnabled="false"
 						:readOnly="true"
 						:reactionsDisabled="true"
@@ -69,12 +69,13 @@
 						:numbersDisabled="true"
 						:icon="iconForAnswers"
 						:title="$t('user.userProfile.bestAnswers')"
-						v-if="ifAnyAnswers"
+						v-if="!isLoading && ifAnyAnswers"
 						:sortingEnabled="false"
 						:readOnly="true"
 						:reactionsDisabled="true"
 						:passedQuestions="sortedQuestionsForAnswers"
 						:showContext="true"
+						:config="qnaConfig"
 					></wnl-qna>
 				</div>
 			</div>
@@ -249,6 +250,7 @@ export default {
 			allAnswers: {},
 			allQuestions: {},
 			allQuestionsForAnswers: {},
+			qnaConfig: {}
 		}
 	},
 	computed: {
@@ -432,7 +434,7 @@ export default {
 					config.highlighted[answer.qna_questions] = answer.id
 				})
 
-				this.setConfig(config)
+				this.qnaConfig = config
 
 				this.$emit('userDataLoaded', {
 					profile: this.profile

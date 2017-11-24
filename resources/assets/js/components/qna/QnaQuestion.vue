@@ -211,7 +211,7 @@
 			'wnl-bookmark': Bookmark,
 			'wnl-watch': Watch
 		},
-		props: ['questionId', 'readOnly', 'reactionsDisabled'],
+		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
 			return {
 				showAllAnswers: false,
@@ -229,7 +229,6 @@
 				'questionTags',
 				'getReaction',
 				'questionAnswers',
-				'config',
 				'answer'
 			]),
 			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),

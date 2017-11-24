@@ -46,8 +46,9 @@
 				:questionId="question.id"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
+				:config="config"
 			>
-				<router-link v-if="showContext && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
+				<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
 			</wnl-qna-question>
 		</div>
 	</div>
@@ -144,6 +145,12 @@
 			title: [String, Boolean],
 			showContext: Boolean,
 			sortingEnabled: Boolean,
+			config: {
+				type: Object,
+				default: () => { return {
+					highlighted: {}
+				}}
+			},
 		},
 		data() {
 			return {

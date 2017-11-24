@@ -18,6 +18,7 @@
 							 :avatar="message.avatar"
 							 :time="message.time"
 							 :content="message.content"
+							 :userId="message.user_id"
 						 ></wnl-message>
 					</div>
 					<div class="metadata aligncenter margin vertical" v-else>

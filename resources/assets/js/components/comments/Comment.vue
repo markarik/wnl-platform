@@ -3,7 +3,10 @@
 		<div class="wnl-comment-side">
 			<figure class="media-left">
 				<p class="image is-32x32">
-					<wnl-avatar size="medium" :fullName="profile.full_name" :url="profile.avatar">
+					<wnl-avatar size="medium"
+						:fullName="profile.full_name"
+						:url="profile.avatar"
+						:userId="profile.user_id">
 					</wnl-avatar>
 				</p>
 			</figure>
@@ -18,7 +21,6 @@
 				<wnl-delete :requestRoute="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
 			</span>
 			<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
-			</div>
 		</div>
 	</article>
 </template>

@@ -17,7 +17,7 @@ const state = {
 const layouts = {
 	mobile: 'mobile',
 	tablet: 'tablet',
-	smallDesktop: 'small_screen',
+	smallDesktop: 'small_desktop',
 	largeDesktop: 'large_desktop'
 }
 
@@ -25,6 +25,7 @@ const layouts = {
 const getters = {
 	currentLayout: state => state.currentLayout,
 	isMobile: state => state.currentLayout === layouts.mobile,
+	isSmallDesktop: state => state.currentLayout === layouts.smallDesktop,
 	isLargeDesktop: state => state.currentLayout === layouts.largeDesktop,
 	isTouchScreen: state =>
 		[layouts.mobile, layouts.tablet].indexOf(state.currentLayout) !== -1,

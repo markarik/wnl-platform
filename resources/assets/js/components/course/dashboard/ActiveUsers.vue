@@ -9,6 +9,8 @@
 						<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
+								:userId="user.id"
+								:user="user"
 								size="medium">
 						</wnl-avatar>
 					</li>
@@ -62,8 +64,7 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
-
+import { mapGetters } from 'vuex'
 	export default {
 		name: 'ActiveUsers',
 		props: {
@@ -77,9 +78,10 @@
 			},
 		},
 		computed: {
-			...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
+			...mapGetters(['currentUserId', 'currentUserName']),
+			...mapGetters('users', ['activeUsers']),
 			activeUsersCount() {
-				return this.usersToCount.length || 0
+				return this.usersToCount.length
 			},
 			usersToCount() {
 				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)

@@ -154,6 +154,7 @@
 				defaults,
 				resourceUrl: getApiUrl(this.resourceRoute),
 			})
+			this.$emit('formIsLoaded')
 
 			if (this.populate) {
 				this.action('populateForm').then(() => {

@@ -204,6 +204,20 @@ let routes = [
 		}
 	},
 	{
+		path: '/app/users',
+		name: 'all-users',
+		component: require('js/components/users/MainUsers.vue'),
+		props: true,
+		redirect: {name: 'user'},
+		children: [
+			{
+				name: 'user',
+				path: ':userId',
+				component: require('js/components/users/UserProfile.vue'),
+			},
+		]
+	},
+	{
 		path: '*',
 		redirect: '/app/'
 	}

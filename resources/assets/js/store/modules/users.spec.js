@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {mutations, actions} from './activeUsers'
+import {mutations, actions} from './users'
 import * as types from '../mutations-types'
 import {testAction} from '../../tests/helpers'
 

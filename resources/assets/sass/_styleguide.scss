@@ -213,6 +213,12 @@ button.button {
 	margin: 2em 0;
 }
 
+.form-input-group {
+	border-bottom: $border-light-gray;
+	margin-bottom: $margin-big;
+	padding-bottom: $margin-big
+}
+
 .form-end {
 	margin-bottom: 3em;
 }

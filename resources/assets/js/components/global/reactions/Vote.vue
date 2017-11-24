@@ -55,25 +55,27 @@
 </style>
 
 <script>
-	import { reaction } from 'js/mixins/reaction'
+import {
+	reaction
+} from 'js/mixins/reaction'
 
-	export default {
-		name: 'Vote',
-		mixins: [reaction],
-		props: ['type'],
-		data() {
-			return {
-				isLoading: false,
-				name: 'upvote',
-			}
+export default {
+	name: 'Vote',
+	mixins: [reaction],
+	props: ['type'],
+	data() {
+		return {
+			isLoading: false,
+			name: 'upvote',
+		}
+	},
+	computed: {
+		iconClass() {
+			return `vote-${this.type}`
 		},
-		computed: {
-			iconClass() {
-				return `vote-${this.type}`
-			},
-			hasReactedClass() {
-				return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
-			},
+		hasReactedClass() {
+			return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
 		},
-	}
+	},
+}
 </script>

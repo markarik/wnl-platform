@@ -33,6 +33,10 @@ class PageTransformer extends ApiTransformer
 			$data = array_merge($data, $this->parent);
 		}
 
+		if(self::shouldInclude('tags')) {
+			$data = array_merge($data, ['tags' => $page->tags->toArray()]);
+		}
+
 		return $data;
 	}
 }

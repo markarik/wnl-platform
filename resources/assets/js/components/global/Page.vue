@@ -1,6 +1,7 @@
 <template lang="html">
 	<div class="content">
-		{{ name }}
+		<div class="page content" v-html="content"></div>
+		<wnl-qna :tags="tags" reactionsDisabled="true" v-if="qna"></wnl-qna>
 	</div>
 </template>
 
@@ -11,6 +12,8 @@
 	import Qna from 'js/components/qna/Qna'
 	import axios from 'axios'
 	import {getApiUrl} from 'js/utils/env'
+
+	const PLACEHOLDER_RGX = /{{(.*)}}/g;
 
 	export default {
 		name: 'Page',
@@ -23,8 +26,8 @@
 				type: String,
 			},
 			arguments: {
-				default: () => [], // women's toilet is on the right
-				type: Array,
+				default: () => {},
+				type: Object,
 			},
 			qna: {
 				default: false,
@@ -38,16 +41,43 @@
 				name: null,
 				created_at: null,
 				updated_at: null,
+				tags: null,
+			}
+		},
+		methods: {
+			injectArguments(content) {
+				const matches = content.match(PLACEHOLDER_RGX)
+				let missing = []
+
+				if (!matches) return content
+
+				matches.forEach(match => {
+					const argName = match.replace(/{{|}}/g, '')
+					const value = this.arguments[argName] || ''
+					if (!value) missing.push(argName)
+					content = content.replace(match, value)
+				})
+				if (missing.length > 0) {
+					$wnl.logger.warning('Missing page template arguments: '
+						+ missing.join(','))
+				}
+
+				return content
 			}
 		},
 		mounted() {
-			const url = getApiUrl(`pages/${this.slug}`)
+			const url = getApiUrl(`pages/${this.slug}?include=tags`)
 
 			axios.get(url).then(res => {
 				Object.entries(res.data).forEach(([key, value]) => {
 					this[key] = value
 				})
 			}).catch.bind($wnl.logger.capture)
+		},
+		watch:{
+			content(newValue) {
+				this.content = this.injectArguments(newValue)
+			}
 		}
 	}
 </script>

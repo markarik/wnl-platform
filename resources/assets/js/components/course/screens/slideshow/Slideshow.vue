@@ -132,7 +132,7 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
-				destroyed: false
+				destroyed: false,
 			}
 		},
 		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
@@ -146,6 +146,7 @@
 				'isFunctional',
 				'findRegularSlide',
 				'bookmarkedSlideNumbers',
+				'getSlidePositionById',
 				'getReaction'
 			]),
 			currentSlideIndex() {
@@ -276,7 +277,16 @@
 
 					this.setEventListeners()
 
+					if (this.$route.query.slide) {
+						this.currentSlideIndex = this.getSlidePositionById(this.$route.query.slide)
+
+						if (!this.preserveRoute) {
+							this.$router.replace(this.buildRouteFromSlideParam())
+						}
+					}
+
 					this.goToSlide(this.currentSlideIndex)
+
 					this.focusSlideshow()
 
 					this.onAnnotationsUpdated(this.comments({
@@ -390,6 +400,20 @@
 				this.focusSlideshow()
 				scrollToTop()
 			},
+			buildRouteFromSlideParam() {
+				const index = this.getSlidePositionById(this.$route.query.slide)
+				return {
+					...this.$route,
+					params: {
+						...this.$route.params,
+						slide: this.slideNumberFromIndex(index)
+					},
+					query: {
+						...this.$route.query
+					}
+				}
+			}
+
 		},
 		mounted() {
 			Postmate.debug = isDebug()
@@ -423,11 +447,11 @@
 		watch: {
 			'$route' (to, from) {
 				if (to.params.screenId != from.params.screenId) {
-					this.destroySlideshow()
+					return this.destroySlideshow()
 				}
 
 				if (to.params.categoryName != from.params.categoryName) {
-					this.destroySlideshow()
+					return this.destroySlideshow()
 				}
 
 				let fromSlide = from.params.slide || 0,

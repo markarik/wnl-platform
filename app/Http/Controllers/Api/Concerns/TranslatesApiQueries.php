@@ -25,7 +25,9 @@ trait TranslatesApiQueries
 			if ($request->limit && !is_array($request->limit)) {
 				$data = $this->paginatedResponse($model, $request->limit, $request->page ?? 1);
 			} else {
-				$data = $this->transform($model);
+				$data = array_filter($this->transform($model), function($value) {
+					return !empty($value);
+				});
 			}
 		}
 		catch (QueryException $e) {

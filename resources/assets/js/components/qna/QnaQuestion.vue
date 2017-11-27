@@ -4,15 +4,13 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div class="qna-question" ref="highlight">
-			<div class="votes">
-				<wnl-vote
-					type="up"
-					:reactableId="questionId"
-					:reactableResource="reactableResource"
-					:state="voteState"
-					module="qna"
-				></wnl-vote>
-			</div>
+			<wnl-vote
+				type="up"
+				:reactableId="questionId"
+				:reactableResource="reactableResource"
+				:state="voteState"
+				module="qna"
+			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-question-content content" v-html="content"></div>
@@ -34,6 +32,7 @@
 					<wnl-avatar
 							:fullName="author.full_name"
 							:url="author.avatar"
+							:userId="author.user_id"
 							size="medium">
 					</wnl-avatar>
 					<span class="qna-meta-info">
@@ -51,6 +50,7 @@
 					</span>
 					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
 				</div>
+				<slot name="context"></slot>
 			</div>
 		</div>
 		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
@@ -84,9 +84,9 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
-			<wnl-qna-answer v-if="allAnswers"
-				v-for="answer in otherAnswers"
+			<wnl-qna-answer v-if="hasAnswers && !showAllAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
+			<wnl-qna-answer v-else-if="showAllAnswers"
+				v-for="answer in allAnswers"
 				:answer="answer"
 				:questionId="questionId"
 				:key="answer.id"
@@ -94,8 +94,8 @@
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
 			<a class="qna-answers-show-all"
-				v-if="!allAnswers && otherAnswers.length > 0"
-				@click="allAnswers = true">
+				v-if="!showAllAnswers && otherAnswers.length > 0"
+				@click="showAllAnswers = true">
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
@@ -211,10 +211,10 @@
 			'wnl-bookmark': Bookmark,
 			'wnl-watch': Watch
 		},
-		props: ['questionId', 'readOnly', 'reactionsDisabled'],
+		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
 			return {
-				allAnswers: false,
+				showAllAnswers: false,
 				loading: false,
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
@@ -228,7 +228,8 @@
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
 				'getReaction',
-				'questionAnswers'
+				'questionAnswers',
+				'answer'
 			]),
 			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
 			question() {
@@ -270,10 +271,18 @@
 				return this.answersFromHighestUpvoteCount.length > 0
 			},
 			latestAnswer() {
-				return _.head(this.answersFromHighestUpvoteCount) || {}
+				if (this.config.highlighted[this.id]) {
+					const answerId = this.config.highlighted[this.id]
+					return this.answer(answerId)
+				} else {
+					return _.head(this.answersFromHighestUpvoteCount) || {}
+				}
 			},
 			otherAnswers() {
 				return _.tail(this.answersFromHighestUpvoteCount) || []
+			},
+			allAnswers() {
+				return this.answersFromHighestUpvoteCount
 			},
 			tags() {
 				return this.questionTags(this.questionId).map((tag) => tag.name) || []
@@ -331,13 +340,13 @@
 			},
 			refreshQuestionAndShowAnswers() {
 				return this.dispatchFetchQuestion(() => {
-					this.allAnswers = true
+					this.showAllAnswers = true
 				})
 			}
 		},
 		mounted() {
 			if (this.isQuestionAnswerInUrl) {
-				this.allAnswers = true
+				this.showAllAnswers = true
 			}
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
@@ -353,7 +362,7 @@
 
 				if (this.isQuestionAnswerInUrl) {
 					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
-					this.allAnswers = true
+					this.showAllAnswers = true
 				}
 			},
 			'isOverlayVisible' () {

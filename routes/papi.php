@@ -171,6 +171,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
 	Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
 	Route::post("{$r['comments']}/.search", 'CommentsApiController@query');
+	Route::post("{$r['comments']}/.count", 'CommentsApiController@query');
 
 	// Chat Messages
 	Route::post(

@@ -16,6 +16,7 @@ const state = {
 		username: '',
 		avatar: '',
 		roles: [],
+		user_id: 0,
 	},
 	settings: getDefaultSettings(),
 }

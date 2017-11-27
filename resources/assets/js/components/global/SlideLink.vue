@@ -34,6 +34,9 @@
 						lessonId: this.context.lesson.id,
 						screenId: this.context.screen.id,
 						slide: this.slideNumber,
+					},
+					query: {
+						slide: this.context.id
 					}
 				}
 			},

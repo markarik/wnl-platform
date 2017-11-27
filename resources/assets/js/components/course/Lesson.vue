@@ -184,10 +184,10 @@
 			]),
 			...mapActions([
 				'updateLessonNav',
-				'setActiveUsers',
 				'userJoined',
 				'userLeft'
 			]),
+			...mapActions('users', ['setActiveUsers']),
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
 					this.goToDefaultScreenIfNone()

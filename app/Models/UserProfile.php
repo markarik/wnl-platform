@@ -21,6 +21,13 @@ class UserProfile extends Model
 		'public_email',
 		'public_phone',
 		'username',
+		'city',
+		'university',
+		'specialization',
+		'help',
+		'interests',
+		'about',
+		'learning_location',
 	];
 
 	public function user()

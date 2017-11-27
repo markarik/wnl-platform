@@ -3,7 +3,7 @@
 		:fullName="message.actors.full_name"
 		:size="size"
 		:url="message.actors.avatar"
-		:userId="message.actors.id"/>
+	/>
 </template>
 
 <script>

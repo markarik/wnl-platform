@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Events\QnaQuestionPosted;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class QnaQuestion extends Model
 {
@@ -51,5 +50,18 @@ class QnaQuestion extends Model
 		}
 
 		return $screen->first();
+	}
+
+	public function getPageAttribute()
+	{
+		$page = Page::select();
+
+		foreach ($this->tags as $tag) {
+			$page->whereHas('tags', function ($query) use ($tag) {
+				$query->where('tags.id', $tag->id);
+			});
+		}
+
+		return $page->first();
 	}
 }

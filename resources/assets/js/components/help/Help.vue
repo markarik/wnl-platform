@@ -1,12 +1,13 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
+				:isVisible="isSidenavVisible"
+				:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside help-sidenav">
-				<wnl-sidenav :items="sidenavItems" itemsHeading="Pomoc"></wnl-sidenav>
+				<wnl-sidenav :items="sidenavItems"
+							 itemsHeading="Pomoc"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
@@ -16,13 +17,15 @@
 			</div>
 		</div>
 		<wnl-sidenav-slot
-			:isVisible="isChatVisible"
-			:isDetached="!isChatMounted"
-			:hasChat="true"
+				:isVisible="isChatVisible"
+				:isDetached="!isChatMounted"
+				:hasChat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms"
+							 title="W czym możemy Ci pomóc?"></wnl-public-chat>
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<div v-if="isChatToggleVisible" class="wnl-chat-toggle"
+			 @click="toggleChat">
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -143,7 +146,7 @@
 			...mapActions(['toggleChat'])
 		},
 		watch: {
-			'$route.query.chatChannel' (newVal) {
+			'$route.query.chatChannel'(newVal) {
 				newVal && !this.isChatVisible && this.toggleChat();
 			}
 		}

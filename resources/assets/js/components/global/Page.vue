@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="content">
 		<div class="page content" v-html="content"></div>
-		<wnl-qna :tags="tags" reactionsDisabled="true" v-if="qna"></wnl-qna>
+		<wnl-qna :tags="tags" :reactionsDisabled="true" v-if="qna"></wnl-qna>
 	</div>
 </template>
 
@@ -65,24 +65,26 @@
 
 				return content
 			},
+			fetch() {
+				const url = getApiUrl(`pages/${this.slug}?include=tags`)
+
+				axios.get(url).then(res => {
+					Object.entries(res.data).forEach(([key, value]) => {
+						this[key] = value
+					})
+				}).catch.bind($wnl.logger.capture)
+			},
 			...mapActions('qna', ['fetchQuestionsByTags']),
 		},
-		mounted() {
-			const url = getApiUrl(`pages/${this.slug}?include=tags`)
-
-			axios.get(url).then(res => {
-				Object.entries(res.data).forEach(([key, value]) => {
-					this[key] = value
-				})
-			}).catch.bind($wnl.logger.capture)
-		},
+		mounted() {this.fetch()},
 		watch:{
 			content(newValue) {
 				this.content = this.injectArguments(newValue)
 			},
 			tags(newValue) {
 				this.fetchQuestionsByTags({tags: newValue})
-			}
+			},
+			slug() {this.fetch()}
 		}
 	}
 </script>

@@ -12,8 +12,11 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
-				<router-view v-if="!isMainRoute"></router-view>
-				<wnl-coming-soon-help v-else></wnl-coming-soon-help>
+				<router-view
+						:arguments="{currentUserName}"
+						:slug="$route.name"
+						:qna="true"
+				></router-view>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -64,7 +67,6 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import ComingSoonHelp from 'js/components/help/ComingSoonHelp'
 	import MainNav from 'js/components/MainNav'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
@@ -74,23 +76,20 @@
 	export default {
 		name: 'Help',
 		components: {
-			'wnl-coming-soon-help': ComingSoonHelp,
 			'wnl-main-nav': MainNav,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
 		mixins: [withChat],
-		methods: {
-			...mapActions(['toggleChat']),
-		},
 		computed: {
 			...mapGetters([
 				'isSidenavVisible',
 				'isSidenavMounted',
 				'isChatMounted',
 				'isChatVisible',
-				'isChatToggleVisible'
+				'isChatToggleVisible',
+				'currentUserName'
 			]),
 			...mapGetters('course', ['ready']),
 			sidenavItems() {
@@ -137,9 +136,6 @@
 				return [
 					{name: '#pomoc', channel: 'help-tech'},
 				]
-			},
-			isMainRoute() {
-				return this.$route.name === 'help'
 			},
 		},
 		methods: {

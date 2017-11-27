@@ -256,10 +256,6 @@
 				this.isFocused = this.iframe === document.activeElement
 			},
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
-				if (this.destroyed) {
-					return;
-				}
-
 				this.toggleOverlay({source: 'slideshow', display: true})
 
 				handshake = new Postmate({
@@ -282,10 +278,9 @@
 						this.goToSlide(newOrderNumber);
 						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 						this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
-						return
+					} else {
+						this.goToSlide(this.currentSlideIndex)
 					}
-
-					this.goToSlide(this.currentSlideIndex)
 
 					this.focusSlideshow()
 
@@ -458,7 +453,6 @@
 					this.goToSlide(newOrderNumber);
 					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
-					return
 				}
 
 				if (to.query.slide === this.currentSlideId) {

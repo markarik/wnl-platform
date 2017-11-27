@@ -99,6 +99,7 @@ class Slide extends Model
 			$model['context']['group']['id'] = $lesson->group->id;
 			$model['context']['course']['id'] = $lesson->group->course->id;
 			$model['context']['orderNumber'] = $orderNumber;
+			$model['context']['id'] = $this->id;
 		} else {
 			$this->unsearchable();
 

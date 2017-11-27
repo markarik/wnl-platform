@@ -48,7 +48,7 @@ trait EventContextTrait {
 							'courseId' => $lesson->group->course->id,
 							'lessonId' => $lesson->id,
 							'screenId' => $screen->id,
-							'slide'  => $orderNumber + 1,
+							'slide'  => $orderNumber + 1
 						],
 					];
 				}

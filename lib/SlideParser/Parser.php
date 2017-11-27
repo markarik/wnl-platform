@@ -89,7 +89,7 @@ class Parser
 	 *
 	 * @throws ParseErrorException
 	 */
-	public function parse($fileContents)
+	public function parse($fileContents, $screenId = null)
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
@@ -157,7 +157,7 @@ class Parser
 					$orderNumber = 0;
 					$this->courseModels['slideshow'] = $slideshow;
 
-					$this->courseModels['screen'] = $lesson->screens()->create([
+					$screenData = [
 						'type' => 'slideshow',
 						'name' => 'Prezentacja',
 						'meta' => [
@@ -168,7 +168,13 @@ class Parser
 								],
 							],
 						],
-					]);
+					];
+
+					if ($screenId) {
+						$screenData['id'] = intval($screenId);
+					}
+
+					$this->courseModels['screen'] = $lesson->screens()->create($screenData);
 					$this->courseModels['screen']->tags()->attach($slideshowTag);
 					$this->courseModels['screen']->tags()->attach($this->lessonTag);
 					$this->courseModels['screen']->tags()->attach($this->groupTag);

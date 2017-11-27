@@ -278,11 +278,11 @@
 					this.setEventListeners()
 
 					if (this.$route.query.slide) {
-						this.currentSlideIndex = this.getSlidePositionById(this.$route.query.slide)
-
-						if (!this.preserveRoute) {
-							this.$router.replace(this.buildRouteFromSlideParam())
-						}
+						const newOrderNumber = this.getSlidePositionById(this.$route.query.slide)
+						this.goToSlide(newOrderNumber);
+						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+						this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+						return
 					}
 
 					this.goToSlide(this.currentSlideIndex)
@@ -400,8 +400,7 @@
 				this.focusSlideshow()
 				scrollToTop()
 			},
-			buildRouteFromSlideParam() {
-				const index = this.getSlidePositionById(this.$route.query.slide)
+			buildRouteFromSlideParam(index) {
 				return {
 					...this.$route,
 					params: {
@@ -452,6 +451,19 @@
 
 				if (to.params.categoryName != from.params.categoryName) {
 					return this.destroySlideshow()
+				}
+
+				if (to.query.slide && to.query.slide !== this.currentSlideId) {
+					const newOrderNumber = this.getSlidePositionById(to.query.slide)
+					this.goToSlide(newOrderNumber);
+					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+					return
+				}
+
+				if (to.query.slide === this.currentSlideId) {
+					const newOrderNumber = this.getSlidePositionById(to.query.slide)
+					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
 				}
 
 				let fromSlide = from.params.slide || 0,

@@ -2,7 +2,7 @@
 	<div class="notification-wrapper">
 		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
 			<div class="actor">
-				<wnl-event-actor :message="message"/>
+				<wnl-event-actor :message="message" :disableLink="true"/>
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">

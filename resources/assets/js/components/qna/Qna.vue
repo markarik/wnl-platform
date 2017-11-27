@@ -193,7 +193,9 @@
 				this.questionsList = this.getSortedQuestions(newValue, this.questions);
 			},
 			'questions' (newValue) {
-				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
+				if (this.sortingEnabled && !this.passedQuestions) {
+					this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+				}
 			}
 		},
 		beforeDestroy() {

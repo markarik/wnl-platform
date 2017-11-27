@@ -12,6 +12,7 @@
 	import Qna from 'js/components/qna/Qna'
 	import axios from 'axios'
 	import {getApiUrl} from 'js/utils/env'
+	import {mapActions} from 'vuex'
 
 	const PLACEHOLDER_RGX = /{{(.*)}}/g;
 
@@ -63,7 +64,8 @@
 				}
 
 				return content
-			}
+			},
+			...mapActions('qna', ['fetchQuestionsByTags']),
 		},
 		mounted() {
 			const url = getApiUrl(`pages/${this.slug}?include=tags`)
@@ -77,6 +79,9 @@
 		watch:{
 			content(newValue) {
 				this.content = this.injectArguments(newValue)
+			},
+			tags(newValue) {
+				this.fetchQuestionsByTags({tags: newValue})
 			}
 		}
 	}

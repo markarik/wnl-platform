@@ -40,6 +40,7 @@
 				commentableResource="qna_answers"
 				urlParam="qna_answer"
 				module="qna"
+				:readOnly="readOnly"
 				:commentableId="this.id"
 				:hideWatchlist="true"
 				:isUnique="false"

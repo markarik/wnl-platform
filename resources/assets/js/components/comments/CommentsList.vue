@@ -6,7 +6,7 @@
 			<span v-if="comments.length > 0 || this.showComments"> ·
 				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 			</span> ·
-			<span>
+			<span v-if="!readOnly">
 				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 			</span>
 			<wnl-watch
@@ -31,7 +31,7 @@
 		/>
 		<div class="form-container" v-if="showComments">
 			<transition name="fade">
-				<wnl-new-comment-form
+				<wnl-new-comment-form v-if="!readOnly"
 					:commentableResource="commentableResource"
 					:commentableId="commentableId"
 					:isUnique="isUnique"
@@ -73,7 +73,7 @@
 			'wnl-watch': Watch
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly'],
 		data() {
 			return {
 				formElement: {},

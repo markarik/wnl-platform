@@ -144,7 +144,10 @@
 			readOnly: Boolean,
 			title: [String, Boolean],
 			showContext: Boolean,
-			sortingEnabled: Boolean,
+			sortingEnabled: {
+				type: Boolean,
+				default: true
+			},
 			config: {
 				type: Object,
 				default: () => { return {

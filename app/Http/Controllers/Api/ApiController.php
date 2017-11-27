@@ -3,20 +3,20 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
+use App\Http\Controllers\Api\Concerns\PaginatesResponses;
+use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
+use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
+use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
+use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
+use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use League\Fractal\Manager;
 use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
-use App\Http\Controllers\Controller;
+use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
-use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
-use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
-use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
-use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
-use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
-use App\Http\Controllers\Api\Concerns\PaginatesResponses;
+use League\Fractal\Resource\Item;
 
 class ApiController extends Controller
 {
@@ -55,7 +55,6 @@ class ApiController extends Controller
 		$modelName = self::getResourceModel($this->resourceName);
 
 		$models = $this->eagerLoadIncludes($modelName);
-		$transformerName = self::getResourceTransformer($this->resourceName);
 
 		if ($id !== 'all') {
 			$models = $modelName::find($id);

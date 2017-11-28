@@ -7,6 +7,7 @@ import { isEmpty, isObject, truncate, get } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 import { timeFromS } from 'js/utils/time'
+import { getApiUrl } from 'js/utils/env'
 
 export const notification = {
 	props: {
@@ -27,6 +28,7 @@ export const notification = {
 			loading: false,
 			objectTextLength: 75,
 			subjectTextLength: 150,
+			dynamicRouteContext: ''
 		}
 	},
 	computed: {
@@ -34,11 +36,11 @@ export const notification = {
 		contextInfo() {
 			if (!isObject(this.routeContext)) return ''
 
-			const route = this.routeContext.name
+			const route = this.routeContext.dynamic ? this.routeContext.route : this.routeContext
 
-			if (route === 'screens') {
-				const lessonId = this.routeContext.params.lessonId
-				const slide = this.routeContext.params.slide
+			if (route.name === 'screens') {
+				const lessonId = route.params.lessonId
+				const slide = route.params.slide
 
 				let contextInfo = this.$t('notifications.context.lesson', {
 					lesson: truncate(this.getLesson(lessonId).name, {length: 30}),
@@ -49,13 +51,13 @@ export const notification = {
 				}
 
 				return contextInfo
-			} else if (route === 'quizQuestion') {
+			} else if (route.name === 'quizQuestion') {
 				return this.$t('notifications.context.quizQuestion', {
 					id: this.routeContext.params.id,
 				})
-			} else if (route.indexOf('help') > -1) {
+			} else if (route.name.indexOf('help') > -1) {
 				return this.$t('notifications.context.page', {
-					page: this.$t(`routes.help.${route}`),
+					page: this.$t(`routes.help.${route.name}`),
 				})
 			}
 
@@ -99,7 +101,10 @@ export const notification = {
 			}
 
 			return decode(this.message.subject.text)
-		}
+		},
+		hasDynamicContext() {
+			return !!this.message.context.dynamic
+		},
 	},
 	methods: {
 		...mapActions('notifications', ['markAsRead', 'markAsSeen']),
@@ -107,11 +112,26 @@ export const notification = {
 			if (this.message.deleted) return
 
 			this.$emit('goingToContext')
+
 			if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)
 			} else if (typeof this.routeContext === 'string') {
 				window.location.href=this.routeContext
 			}
 		},
+		fetchContext() {
+			this.loading = true
+			const {dynamic, query} = this.routeContext
+
+			axios.post(getApiUrl(`${dynamic.resource}/.context`), {
+				context: dynamic.value
+			}).then(({data}) => {
+				this.loading = false
+				this.$router.push({
+					...data,
+					query
+				})
+			})
+		}
 	},
 }

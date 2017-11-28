@@ -79,8 +79,14 @@ class EventTaskNotification extends Notification
 			]);
 		}
 
-		$context = __('tasks.descriptions.context.' . $event['context']['name']) ?? null;
-		if ($context) {
+		$contextSuffix = '';
+
+		if ($event['context']) {
+			$contextSuffix = $event['context']['route'] ? $event['context']['route']['name'] : $event['context']['name'];
+		}
+
+		if ($contextSuffix) {
+			$context = __('tasks.descriptions.context.' . $contextSuffix);
 			return __('tasks.descriptions.qna_question', ['lessonName' => $context]);
 		};
 

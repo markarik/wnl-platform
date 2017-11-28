@@ -96,7 +96,7 @@ class QuestionsTest extends ApiTestCase
 		$screen->tags()->attach($tags);
 
 		$data = [
-			'question_id' => $question->id,
+			'context' => $question->id,
 		];
 
 		$response = $this
@@ -126,7 +126,7 @@ class QuestionsTest extends ApiTestCase
 		$page->tags()->attach($tags);
 
 		$data = [
-			'question_id' => $question->id,
+			'context' => $question->id,
 		];
 
 		$response = $this

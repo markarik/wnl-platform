@@ -33,6 +33,9 @@
 
 		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
 			<div class="form-input-group">
+				<wnl-form-text name="display_name" :placeholder="$t('user.myProfile.displayNamePlaceholder')">{{ $t('user.myProfile.displayName') }}</wnl-form-text>
+			</div>
+			<div class="form-input-group">
 				<wnl-form-text name="help" :placeholder="$t('user.myProfile.helpPlaceholder')">{{ $t('user.myProfile.help') }}</wnl-form-text>
 				<wnl-form-text name="specialization">{{ $t('user.myProfile.specialization') }}</wnl-form-text>
 			</div>

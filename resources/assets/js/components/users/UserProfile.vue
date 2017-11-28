@@ -20,8 +20,8 @@
 								</router-link>
 							</span>
 							<span class="user-info-header-names">
-								<p class="fullname-title">{{ profile.real_first_name }} {{ profile.real_last_name }}</p>
-								<p class="chosen-fullname-title">{{ profileFirstNameToPrint }} {{ profileLastNameToPrint }}</p>
+								<p class="fullname-title">{{ profile.first_name }} {{ profile.last_name }}</p>
+								<p class="display-name-title">{{ profile.display_name }}</p>
 							</span>
 						</div>
 						<span v-if="cityToDisplay" class="user-info-city">
@@ -137,7 +137,7 @@
 						font-weight: $font-weight-bold
 						margin-bottom: $margin-small
 						line-height: $line-height-none
-					.chosen-fullname-title
+					.display-name-title
 						color: $color-ocean-blue-opacity
 						font-size: $font-size-plus-2
 						font-weight: $font-weight-regular
@@ -275,12 +275,6 @@ export default {
 		fullName() {
 			return this.profile.full_name
 		},
-		profileFirstNameToPrint() {
-			return this.profile.real_first_name === this.profile.first_name ? null : this.profile.first_name
-		},
-		profileLastNameToPrint() {
-			return this.profile.real_last_name === this.profile.last_name ? null : this.profile.last_name
-		},
 		helpToDisplay() {
 			return this.currentUserProfile ? this.profile.help || this.$t('user.userProfile.helpDefaultDescription') : this.profile.help || false
 		},
@@ -342,6 +336,7 @@ export default {
 			return sortedQuestionsForAnswers
 		},
 		sortedAnswers() {
+			console.log(this.profile);
 			const sortedAnswers =  Object.values(this.allAnswers).sort((a, b) => {
 				return b.upvote.count - a.upvote.count
 			})

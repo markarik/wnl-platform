@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
 use App\Models\Category;
 use App\Models\Screen;
 use App\Models\Slide;
@@ -9,6 +10,8 @@ use Illuminate\Http\Request;
 
 class SlideshowBuilderApiController extends ApiController
 {
+	use TranslatesApiQueries;
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
@@ -97,6 +100,16 @@ class SlideshowBuilderApiController extends ApiController
 			->first();
 
 		$background = $screen->slideshow->background_url ?? '';
+
+		return $this->renderView($slides, $background);
+	}
+
+	public function query(Request $request)
+	{
+		$builder = $this->applyFilters(new Slide, $request);
+		$slides = $builder ->get();
+		$firstSection = $slides->first()->sections->first();
+		$background = $firstSection->screen->slideshow->background_url;
 
 		return $this->renderView($slides, $background);
 	}

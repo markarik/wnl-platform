@@ -24,7 +24,7 @@ if (!function_exists('api_action')) {
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api-cache']], function () {
 	$r = config('papi.resources');
 
-	// Search
+	// Search (using search engine)
 	api_action('get', 'search');
 
 	// Count
@@ -36,8 +36,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Faceted search available filters
 	api_action('post', 'filterList');
 
-	// Query
+	// Query (using main database)
 	api_action('post', 'query');
+
+	// Fetch additional routing data basing on various input
+	api_action('post', 'context');
+
 
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
@@ -207,4 +211,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Tasks
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
 	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
+
+	// Pages
+	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
 });

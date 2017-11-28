@@ -1,28 +1,34 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
+				:isVisible="isSidenavVisible"
+				:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside help-sidenav">
-				<wnl-sidenav :items="sidenavItems" itemsHeading="Pomoc"></wnl-sidenav>
+				<wnl-sidenav :items="sidenavItems"
+							 itemsHeading="Pomoc"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
-				<router-view v-if="!isMainRoute"></router-view>
-				<wnl-coming-soon-help v-else></wnl-coming-soon-help>
+				<router-view
+						:arguments="{currentUserName}"
+						:slug="$route.name"
+						:qna="true"
+				></router-view>
 			</div>
 		</div>
 		<wnl-sidenav-slot
-			:isVisible="isChatVisible"
-			:isDetached="!isChatMounted"
-			:hasChat="true"
+				:isVisible="isChatVisible"
+				:isDetached="!isChatMounted"
+				:hasChat="true"
 		>
-		<wnl-public-chat :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms"
+							 title="W czym możemy Ci pomóc?"></wnl-public-chat>
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<div v-if="isChatToggleVisible" class="wnl-chat-toggle"
+			 @click="toggleChat">
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -61,7 +67,6 @@
 <script>
 	import {mapActions, mapGetters} from 'vuex'
 
-	import ComingSoonHelp from 'js/components/help/ComingSoonHelp'
 	import MainNav from 'js/components/MainNav'
 	import PublicChat from 'js/components/chat/PublicChat'
 	import Sidenav from 'js/components/global/Sidenav'
@@ -71,23 +76,20 @@
 	export default {
 		name: 'Help',
 		components: {
-			'wnl-coming-soon-help': ComingSoonHelp,
 			'wnl-main-nav': MainNav,
 			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 		},
 		mixins: [withChat],
-		methods: {
-			...mapActions(['toggleChat']),
-		},
 		computed: {
 			...mapGetters([
 				'isSidenavVisible',
 				'isSidenavMounted',
 				'isChatMounted',
 				'isChatVisible',
-				'isChatToggleVisible'
+				'isChatToggleVisible',
+				'currentUserName'
 			]),
 			...mapGetters('course', ['ready']),
 			sidenavItems() {
@@ -135,15 +137,12 @@
 					{name: '#pomoc', channel: 'help-tech'},
 				]
 			},
-			isMainRoute() {
-				return this.$route.name === 'help'
-			},
 		},
 		methods: {
 			...mapActions(['toggleChat'])
 		},
 		watch: {
-			'$route.query.chatChannel' (newVal) {
+			'$route.query.chatChannel'(newVal) {
 				newVal && !this.isChatVisible && this.toggleChat();
 			}
 		}

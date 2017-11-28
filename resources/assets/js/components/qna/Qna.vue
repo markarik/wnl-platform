@@ -69,6 +69,7 @@
 
 	.wnl-qna-header
 		display: flex
+		margin-bottom: $margin-small
 		&.is-user-profile
 			.icon
 				color: $color-dark-blue-opacity

@@ -7,7 +7,6 @@ import { isEmpty, isObject, truncate, get } from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 import { timeFromS } from 'js/utils/time'
-import { getApiUrl } from 'js/utils/env'
 
 export const notification = {
 	props: {
@@ -28,7 +27,6 @@ export const notification = {
 			loading: false,
 			objectTextLength: 75,
 			subjectTextLength: 150,
-			dynamicRouteContext: ''
 		}
 	},
 	computed: {
@@ -105,6 +103,18 @@ export const notification = {
 		hasDynamicContext() {
 			return !!this.message.context.dynamic
 		},
+		dynamicRoute() {
+			const {query, dynamic} = this.routeContext
+
+			return {
+				name: 'dynamicContextMiddleRoute',
+				params: {
+					resource: dynamic.resource,
+					context: dynamic.value
+				},
+				query
+			}
+		}
 	},
 	methods: {
 		...mapActions('notifications', ['markAsRead', 'markAsSeen']),
@@ -114,29 +124,12 @@ export const notification = {
 			this.$emit('goingToContext')
 
 			if (this.hasDynamicContext) {
-				this.fetchContextAndGo()
+				this.$router.push(this.dynamicRoute())
 			} else if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)
 			} else if (typeof this.routeContext === 'string') {
 				window.location.href=this.routeContext
 			}
 		},
-		fetchContextAndGo() {
-			this.loading = true
-			const {dynamic, query} = this.routeContext
-
-			axios.post(getApiUrl(`${dynamic.resource}/.context`), {
-				context: dynamic.value
-			}).then(({data}) => {
-				this.loading = false
-				this.$router.push({
-					...data,
-					query
-				})
-			}).catch(err => {
-				this.loading = false
-				$wnl.logger.error(err)
-			})
-		}
 	},
 }

@@ -70,7 +70,8 @@ class EventTaskNotification extends Notification
 
 	protected function qnaQuestionPostedDescription($event)
 	{
-		$lessonId = $event['context']['params']['lessonId'] ?? null;
+		$route = $this->getRouteFromEvent($event);
+		$lessonId = $route['params']['lessonId'] ?? null;
 		if ($lessonId) {
 			$lesson = Lesson::find($lessonId);
 
@@ -79,14 +80,8 @@ class EventTaskNotification extends Notification
 			]);
 		}
 
-		$contextSuffix = '';
-
-		if ($event['context']) {
-			$contextSuffix = $event['context']['route'] ? $event['context']['route']['name'] : $event['context']['name'];
-		}
-
-		if ($contextSuffix) {
-			$context = __('tasks.descriptions.context.' . $contextSuffix);
+		if ($route) {
+			$context = __('tasks.descriptions.context.' . $route['name']);
 			return __('tasks.descriptions.qna_question', ['lessonName' => $context]);
 		};
 
@@ -95,7 +90,9 @@ class EventTaskNotification extends Notification
 
 	protected function qnaAnswerPostedDescription($event)
 	{
-		$lessonId = $event['context']['params']['lessonId'] ?? null;
+		$route = $this->getRouteFromEvent($event);
+
+		$lessonId = $route['params']['lessonId'] ?? null;
 		if ($lessonId) {
 			$lesson = Lesson::find($lessonId);
 
@@ -104,7 +101,7 @@ class EventTaskNotification extends Notification
 			]);
 		};
 
-		$context = __('tasks.descriptions.context.' . $event['context']['name']);
+		$context = __('tasks.descriptions.context.' . $route['name']);
 		if ($context) {
 			return __('tasks.descriptions.qna_answer', ['lessonName' => $context]);
 		}
@@ -115,10 +112,11 @@ class EventTaskNotification extends Notification
 	protected function commentPostedDescription($event)
 	{
 		$objectType = $event['objects']['type'];
+		$route = $this->getRouteFromEvent($event);
 
 		if ($objectType === 'slide') {
-			$lessonId = $event['context']['params']['lessonId'] ?? null;
-			$slideNumber = $event['context']['params']['slide'] ?? null;
+			$lessonId = $route['params']['lessonId'] ?? null;
+			$slideNumber = $route['params']['slide'] ?? null;
 			if (!$lessonId || !$slideNumber) return '';
 			$lesson = Lesson::find($lessonId);
 
@@ -129,7 +127,7 @@ class EventTaskNotification extends Notification
 		}
 
 		if ($objectType === 'qna_answer') {
-			$lessonId = $event['context']['params']['lessonId'] ?? null;
+			$lessonId = $route['params']['lessonId'] ?? null;
 			if (!$lessonId) {
 				$lesson = Lesson::find($lessonId);
 
@@ -138,7 +136,7 @@ class EventTaskNotification extends Notification
 				]);
 			};
 
-			$context = __('tasks.descriptions.context.' . $event['context']['name']);
+			$context = __('tasks.descriptions.context.' . $route['name']);
 			if ($context) {
 				return __('tasks.descriptions.qna_answer_comment', ['lessonName' => $context]);
 			}
@@ -155,5 +153,17 @@ class EventTaskNotification extends Notification
 		}
 
 		return '';
+	}
+
+	protected function getRouteFromEvent($event) {
+		if (!$event['context']) {
+			return [];
+		}
+
+		if (isset($event['context']['route'])) {
+			return $event['context']['route'];
+		}
+
+		return $event['context'];
 	}
 }

@@ -32,12 +32,14 @@
 					<wnl-avatar
 							:fullName="author.full_name"
 							:url="author.avatar"
-							:userId="author.user_id"
+							:userId="userId"
 							size="medium">
 					</wnl-avatar>
-					<span class="qna-meta-info">
-						{{authorNameToDisplay}} ·
-					</span>
+					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+						<span class="qna-meta-info">
+							{{authorNameToDisplay}} ·
+						</span>
+					</router-link>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -237,6 +239,9 @@
 			},
 			id() {
 				return this.questionId
+			},
+			userId() {
+				return this.author.user_id
 			},
 			content() {
 				return this.question.text

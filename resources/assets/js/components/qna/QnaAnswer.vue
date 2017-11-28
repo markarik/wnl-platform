@@ -16,12 +16,14 @@
 					<wnl-avatar
 							:fullName="author.full_name"
 							:url="author.avatar"
-							:userId="author.user_id"
+							:userId="userId"
 							size="medium">
 					</wnl-avatar>
-					<span class="qna-meta-info">
-						{{authorNameToDisplay}} ·
-					</span>
+					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+						<span class="qna-meta-info">
+							{{authorNameToDisplay}} ·
+						</span>
+					</router-link>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -122,6 +124,9 @@
 			...mapGetters(['currentUserId', 'isOverlayVisible']),
 			id() {
 				return this.answer.id
+			},
+			userId() {
+				return this.author.user_id
 			},
 			resourceRoute() {
 				return `qna_answers/${this.id}`

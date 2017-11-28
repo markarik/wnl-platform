@@ -20,8 +20,8 @@
 								</router-link>
 							</span>
 							<span class="user-info-header-names">
-								<p class="fullname-title">{{ profile.first_name }} {{ profile.last_name }}</p>
-								<p class="display-name-title">{{ profile.display_name }}</p>
+								<p class="fullname-title">{{ profile.full_name }}</p>
+								<p class="display-name-title">{{ displayNameToPrint }}</p>
 							</span>
 						</div>
 						<span v-if="cityToDisplay" class="user-info-city">
@@ -275,6 +275,9 @@ export default {
 		fullName() {
 			return this.profile.full_name
 		},
+		displayNameToPrint() {
+			return this.profile.full_name === this.profile.display_name ? null : this.profile.display_name
+		},
 		helpToDisplay() {
 			return this.currentUserProfile ? this.profile.help || this.$t('user.userProfile.helpDefaultDescription') : this.profile.help || false
 		},
@@ -336,7 +339,6 @@ export default {
 			return sortedQuestionsForAnswers
 		},
 		sortedAnswers() {
-			console.log(this.profile);
 			const sortedAnswers =  Object.values(this.allAnswers).sort((a, b) => {
 				return b.upvote.count - a.upvote.count
 			})

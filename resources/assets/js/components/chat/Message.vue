@@ -7,7 +7,9 @@
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<strong>{{ fullName }}</strong>
+					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+						<strong>{{ nameToDisplay }}</strong>
+					</router-link>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -55,10 +57,13 @@
 	import { timeFromMs } from 'js/utils/time'
 
 	export default{
-		props: ['fullName', 'avatar', 'time', 'showAuthor', 'content', 'id', 'userId'],
+		props: ['fullName', 'avatar', 'time', 'showAuthor', 'content', 'id', 'userId', 'displayName'],
 		computed: {
 			formattedTime () {
 				return timeFromMs(this.time)
+			},
+			nameToDisplay() {
+				return this.displayName || this.fullName
 			}
 		}
 	}

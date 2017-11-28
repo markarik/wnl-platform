@@ -25,7 +25,7 @@
 					endpoint="users/current/avatar"
 			>
 				<wnl-avatar size="extralarge" class="clickable-avatar"></wnl-avatar>
-				<a class="button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
+				<a class="change-avatar-button button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
 					Zmień avatar
 				</a>
 			</wnl-upload>
@@ -65,6 +65,7 @@
 				&.mobile
 					display: flex
 					flex-direction: column
+					margin-bottom: $margin-big
 					padding-left: $margin-base
 
 			.wnl-upload,

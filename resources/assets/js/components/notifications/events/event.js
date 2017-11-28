@@ -27,7 +27,6 @@ export const baseProps = {
 export const mapMessageToRoute = (message, query) => {
 
 	if (message.context.dynamic) {
-		console.log(query, '....query')
 		return {
 			dynamic: {
 				resource: message.context.dynamic.resource,

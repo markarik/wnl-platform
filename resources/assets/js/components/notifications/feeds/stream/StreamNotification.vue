@@ -21,13 +21,11 @@
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
 				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-					<div v-if="hasDynamicContext" @click="fetchContext">
-						<a href="#">
-							<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
-								<span v-if="loading" class="loader"></span>
-								<i v-else class="fa fa-angle-right"></i>
-							</span>
-						</a>
+					<div v-if="hasDynamicContext" @click="fetchContextAndGo">
+						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+							<span v-if="loading" class="loader"></span>
+							<i v-else class="fa fa-angle-right"></i>
+						</span>
 					</div>
 					<router-link v-else-if="hasFullContext" :to="routeContext">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">

@@ -113,13 +113,15 @@ export const notification = {
 
 			this.$emit('goingToContext')
 
-			if (typeof this.routeContext === 'object') {
+			if (this.hasDynamicContext) {
+				this.fetchContextAndGo()
+			} else if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)
 			} else if (typeof this.routeContext === 'string') {
 				window.location.href=this.routeContext
 			}
 		},
-		fetchContext() {
+		fetchContextAndGo() {
 			this.loading = true
 			const {dynamic, query} = this.routeContext
 
@@ -131,6 +133,9 @@ export const notification = {
 					...data,
 					query
 				})
+			}).catch(err => {
+				this.loading = false
+				$wnl.logger.error(err)
 			})
 		}
 	},

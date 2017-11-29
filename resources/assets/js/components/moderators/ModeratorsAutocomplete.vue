@@ -95,7 +95,8 @@ export default {
 		},
 		usersListFiltered() {
 			return this.usersList.filter(moderator => (
-				moderator.full_name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1)
+				moderator.full_name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1
+				|| moderator.display_name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1)
 			)
 		},
 	},

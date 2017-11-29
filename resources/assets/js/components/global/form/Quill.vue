@@ -147,7 +147,7 @@
 			  	const position = range.index - lastMentionQueryLength
 
 			  	this.quill.insertEmbed(position, 'mention', {
-					name: `${autocompleteChar}${data.full_name}`,
+					name: `${autocompleteChar}${data.display_name}`,
 					id: data.user_id
 				}, Quill.sources.API)
 			  	this.quill.insertText(position + 1, ' ', Quill.sources.API)

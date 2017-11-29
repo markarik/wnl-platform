@@ -100,7 +100,7 @@
 
 					let previous     = index - 1,
 						halfHourInMs = 1000 * 60 * 30
-					return message.full_name !== this.messages[previous].full_name ||
+					return message.display_name !== this.messages[previous].display_name ||
 							message.time - this.messages[previous].time > halfHourInMs
 				})
 			},

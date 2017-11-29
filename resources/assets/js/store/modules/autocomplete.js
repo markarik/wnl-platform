@@ -25,8 +25,10 @@ function getUserSearchConditions(data) {
 	data.lastName && where.push(
 		['last_name', 'like', `%${data.lastName}%`]
 	)
-
-	return { query: { where }, limit: [5, 0] }
+	const orWhere = [
+		['display_name', 'like', `%${data.firstName}%`]
+	]
+	return { query: { where, orWhere }, limit: [5, 0] }
 }
 
 function getTagSearchConditions(name, tags = []) {

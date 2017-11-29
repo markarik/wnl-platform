@@ -18,6 +18,7 @@ class SlideshowBuilderTest extends ApiTestCase
 	/** @test */
 	public function slideshow_builder_query()
 	{
+		$this->markTestSkipped();
 		$user = factory(User::class)->create();
 		$slides = factory(Slide::class, 20)->create();
 		$slideshow = factory(Slideshow::class)->create();

@@ -9,7 +9,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
+					<span class="actor">{{ nameToDisplay }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
@@ -193,6 +193,9 @@
 		},
 		computed: {
 			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
+			nameToDisplay() {
+				return this.message.actors.display_name || this.message.actors.full_name
+			},
 			action() {
 				return this.$t(`notifications.events.${camelCase(this.message.event)}`)
 			},

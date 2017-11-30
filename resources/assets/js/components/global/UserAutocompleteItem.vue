@@ -9,7 +9,7 @@
 			<div v-else class="autocomplete-box__text">
 				{{ nameToDisplay.displayName }}
 				<div class="autocomplete-box__text__fullName">
-					({{ nameToDisplay.fullName }})
+					{{ nameToDisplay.fullName }}
 				</div>
 			</div>
 		</div>

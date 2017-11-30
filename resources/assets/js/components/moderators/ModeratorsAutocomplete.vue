@@ -94,10 +94,10 @@ export default {
 			return this.focused ? this.textInputValue : this.initialValue
 		},
 		usersListFiltered() {
-			return this.usersList.filter(moderator => (
-				moderator.full_name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1
-				|| moderator.display_name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1)
-			)
+			return this.usersList.filter(moderator => {
+				const name = moderator.display_name ? moderator.display_name : moderator.full_name
+				return name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1
+			})
 		},
 	},
 	methods: {

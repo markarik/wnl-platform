@@ -32,10 +32,10 @@
 		props: ['item'],
 		computed: {
 			checkForDisplayName() {
-				return this.item.full_name === this.item.display_name ? true : false
+				return this.item.full_name === this.item.display_name
 			},
 			nameToDisplay() {
-				if (this.item.full_name === this.item.display_name) {
+				if (this.checkForDisplayName) {
 					return this.item.full_name
 				} else {
 					return {

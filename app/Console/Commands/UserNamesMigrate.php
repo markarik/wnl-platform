@@ -39,36 +39,36 @@ class UserNamesMigrate extends Command
 	 */
 	public function handle()
 	{
-        $this->migrateDisplayName();
-        $this->migrateRealName();
-    }
+		$this->migrateDisplayName();
+		$this->migrateRealName();
+	}
 
-    public function migrateRealName()
-    {
-        $this->info('migrating real names...');
-        $users = User::with(['profile'])->get();
-        $bar = $this->output->createProgressBar(count($users));
+	public function migrateRealName()
+	{
+		$this->info('migrating real names...');
+		$users = User::with(['profile'])->get();
+		$bar = $this->output->createProgressBar(count($users));
 		foreach ($users as $user)  {
-            $user->profile->first_name = $user->first_name;
-            $user->profile->last_name = $user->last_name;
-            $user->profile->save();
-            $bar->advance();
+			$user->profile->first_name = $user->first_name;
+			$user->profile->last_name = $user->last_name;
+			$user->profile->save();
+			$bar->advance();
 		}
-        $bar->finish();
-        print PHP_EOL;
-    }
+		$bar->finish();
+		print PHP_EOL;
+	}
 
-    public function migrateDisplayName()
-    {
-        $this->info('migrating display names...');
-        $userProfiles = UserProfile::all();
-        $bar = $this->output->createProgressBar(count($userProfiles));
+	public function migrateDisplayName()
+	{
+		$this->info('migrating display names...');
+		$userProfiles = UserProfile::all();
+		$bar = $this->output->createProgressBar(count($userProfiles));
 		foreach ($userProfiles as $userProfile)  {
-            $userProfile->display_name = $userProfile->full_name;
-            $userProfile->save();
-            $bar->advance();
+			$userProfile->display_name = $userProfile->full_name;
+			$userProfile->save();
+			$bar->advance();
 		}
-        $bar->finish();
-        print PHP_EOL;
+		$bar->finish();
+		print PHP_EOL;
 	}
 }

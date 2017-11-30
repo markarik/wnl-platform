@@ -25,13 +25,16 @@
 					endpoint="users/current/avatar"
 			>
 				<wnl-avatar size="extralarge" class="clickable-avatar"></wnl-avatar>
-				<a class="button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
+				<a class="change-avatar-button button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
 					Zmień avatar
 				</a>
 			</wnl-upload>
 		</div>
 
 		<wnl-form class="margin vertical" name="MyProfile" method="put" resourceRoute="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
+			<div class="form-input-group">
+				<wnl-form-text name="display_name" :placeholder="$t('user.myProfile.displayNamePlaceholder')">{{ $t('user.myProfile.displayName') }}</wnl-form-text>
+			</div>
 			<div class="form-input-group">
 				<wnl-form-text name="help" :placeholder="$t('user.myProfile.helpPlaceholder')">{{ $t('user.myProfile.help') }}</wnl-form-text>
 				<wnl-form-text name="specialization">{{ $t('user.myProfile.specialization') }}</wnl-form-text>
@@ -62,6 +65,7 @@
 				&.mobile
 					display: flex
 					flex-direction: column
+					margin-bottom: $margin-big
 					padding-left: $margin-base
 
 			.wnl-upload,

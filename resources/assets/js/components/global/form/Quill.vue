@@ -146,8 +146,10 @@
 			  	if (!range || range.length != 0) return
 			  	const position = range.index - lastMentionQueryLength
 
+				const name = data.display_name ? data.display_name : data.full_name
+
 			  	this.quill.insertEmbed(position, 'mention', {
-					name: `${autocompleteChar}${data.full_name}`,
+					name: `${autocompleteChar}${name}`,
 					id: data.user_id
 				}, Quill.sources.API)
 			  	this.quill.insertText(position + 1, ' ', Quill.sources.API)

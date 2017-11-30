@@ -18,6 +18,17 @@ class SlideshowBuilderApiController extends ApiController
 		$this->resourceName = config('papi.resources.slides');
 	}
 
+	public function getEmpty() {
+		$view = view('course.slideshow', [
+			'slides'         => '',
+			'background_url' => '',
+		]);
+
+		$view->render();
+
+		return response($view);
+	}
+
 	public function get($slideshowId)
 	{
 		$slideshow = Slideshow::find($slideshowId);

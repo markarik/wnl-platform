@@ -258,16 +258,29 @@
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
 				this.toggleOverlay({source: 'slideshow', display: true})
 
-				handshake = new Postmate({
+				return new Postmate({
 					container: this.container,
-					url: slideshowUrl,
+					url: getApiUrl('slideshow_builder'),
 				})
-
-				return handshake.then(child => {
+				.then(child => {
+					return new Promise((resolve, reject) => {
+						axios.post(getApiUrl(`slideshow_builder/.query`), {
+							query: {
+								whereIn: ['id', [578,579,580]]
+							}
+						}).then(({data}) => {
+							child.frame.setAttribute('srcdoc', data)
+							resolve(child)
+						})
+						.catch(reject)
+					})
+				})
+				.then((child) => {
 					this.child = child
-					this.loaded = true
 					child.frame.setAttribute('mozallowfullscreen', '');
 					child.frame.setAttribute('allowfullscreen', '');
+
+					this.loaded = true
 
 					this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
 
@@ -288,7 +301,8 @@
 						resource: 'slides',
 						id: this.getSlideId(this.currentSlideIndex),
 					}))
-				}).catch(error => {
+				})
+				.catch(error => {
 					this.toggleOverlay({source: 'slideshow', display: false})
 					$wnl.logger.capture(error)
 				})

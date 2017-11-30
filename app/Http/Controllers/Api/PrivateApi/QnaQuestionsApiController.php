@@ -76,19 +76,19 @@ class QnaQuestionsApiController extends ApiController
 
 	public function context(Request $request)
 	{
-		$id = $request->get('question_id');
+		$id = $request->get('context');
 		$question = QnaQuestion::find($id);
 		$data = [];
 		$screen = $question->screen;
 
 		if ($screen) {
 			$data = [
-				'screen' => [
-					'id' => $screen->id,
-				],
-				'lesson' => [
-					'id' => $screen->lesson->id,
-				],
+				'name' => 'screens',
+				'params' => [
+					'screenId' => $screen->id,
+					'lessonId' => $screen->lesson->id,
+					'courseId' => $screen->lesson->group->course->id
+				]
 			];
 		}
 
@@ -96,9 +96,7 @@ class QnaQuestionsApiController extends ApiController
 
 		if ($page) {
 			$data = [
-				'page' => [
-					'slug' => $page->slug,
-				],
+				'name' => $page->slug,
 			];
 		}
 

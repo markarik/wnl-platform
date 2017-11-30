@@ -25,12 +25,13 @@
 		</div>
 		<wnl-slideshow
 			ref="slideshow"
-			v-if="!!savedSlidesCount"
+			v-if="!!savedSlidesCount && savedSlidesIds.length > 0"
 			:screenData="screenData"
 			:presentableId="categoryId"
 			:presentableType="presentableType"
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
+			:preloadSlides="savedSlidesIds"
 			@slideBookmarked="onSlideBookmarked"
 		></wnl-slideshow>
 	</div>
@@ -185,6 +186,9 @@
 				})
 
 				return filteredSlides
+			},
+			savedSlidesIds() {
+				return this.slides.map(slide => slide.id)
 			},
 			presentableLoaded() {
 				return Object.keys(this.currentPresentableSlides).length > 0

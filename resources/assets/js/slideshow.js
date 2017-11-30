@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import {template} from 'lodash'
-import Postmate from 'postmate-fork'
+import Postmate from 'postmate'
 import Reveal from 'vendor/reveal/reveal'
 import {imageviewer} from 'vendor/imageviewer/imageviewer'
 

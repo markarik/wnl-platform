@@ -27,6 +27,8 @@
 					@annotationsUpdated="onAnnotationsUpdated"
 				></wnl-annotations>
 			</div>
+			<button @click="showContent('full')">Show Full</button>
+			<button @click="showContent('bookmarked')">Show Bookmarked</button>
 		</div>
 	</div>
 </template>
@@ -103,7 +105,7 @@
 
 <script>
 	import _ from 'lodash'
-	import Postmate from 'postmate-fork'
+	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
@@ -133,9 +135,18 @@
 				slideChanged: false,
 				slideshowElement: {},
 				destroyed: false,
+				slideshowContent: {},
+				currentSlideshowContent: {}
 			}
 		},
-		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
+		props: {
+			screenData: Object,
+			presentableId: Number,
+			presentableType: String,
+			preserveRoute: Boolean,
+			slideOrderNumber: Number,
+			preloadSlides: Array
+		},
 		computed: {
 			...mapGetters(['getSetting', 'currentUserId']),
 			...mapGetters('slideshow', [
@@ -258,54 +269,77 @@
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
 				this.toggleOverlay({source: 'slideshow', display: true})
 
-				return new Postmate({
+				const postmateOptions = {
 					container: this.container,
-					url: getApiUrl('slideshow_builder'),
-				})
-				.then(child => {
-					return new Promise((resolve, reject) => {
-						axios.post(getApiUrl(`slideshow_builder/.query`), {
-							query: {
-								whereIn: ['id', [578,579,580]]
-							}
-						}).then(({data}) => {
-							child.frame.setAttribute('srcdoc', data)
-							resolve(child)
-						})
-						.catch(reject)
+					url: slideshowUrl,
+				}
+
+				return this.postmateHandshake(postmateOptions)
+					.then(child => {
+						if (this.$route.query.slide) {
+							const newOrderNumber = this.getSlidePositionById(this.$route.query.slide)
+							this.goToSlide(newOrderNumber);
+							this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+							this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+						} else {
+							this.goToSlide(this.currentSlideIndex)
+						}
+						this.focusSlideshow()
+						this.loaded = true
+
 					})
-				})
-				.then((child) => {
-					this.child = child
-					child.frame.setAttribute('mozallowfullscreen', '');
-					child.frame.setAttribute('allowfullscreen', '');
+					.catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
+					})
+			},
 
-					this.loaded = true
+			initSlideshowPreloadedContent(htmlContent) {
+				this.toggleOverlay({source: 'slideshow', display: true})
 
-					this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
+				const postmateOptions = {
+					container: this.container,
+					targetOrigin: window.location.href,
+					srcdoc: htmlContent
+				}
 
-					this.setEventListeners()
-
-					if (this.$route.query.slide) {
-						const newOrderNumber = this.getSlidePositionById(this.$route.query.slide)
-						this.goToSlide(newOrderNumber);
-						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-						this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
-					} else {
+				return this.postmateHandshake(postmateOptions)
+					.then(() => {
 						this.goToSlide(this.currentSlideIndex)
-					}
+						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 
-					this.focusSlideshow()
+						this.focusSlideshow()
+						this.loaded = true
+					})
+					.catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
+					})
 
-					this.onAnnotationsUpdated(this.comments({
-						resource: 'slides',
-						id: this.getSlideId(this.currentSlideIndex),
-					}))
+			},
+
+			postmateHandshake(options) {
+				return new Promise((resolve, reject) => {
+					new Postmate(options)
+					.then(child => {
+							this.child = child
+							this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
+							this.setEventListeners()
+							this.onAnnotationsUpdated(this.comments({
+								resource: 'slides',
+								id: this.getSlideId(this.currentSlideIndex),
+							}))
+
+							child.frame.setAttribute('mozallowfullscreen', '');
+							child.frame.setAttribute('allowfullscreen', '');
+
+							return resolve()
+					})
+					.catch(reject)
 				})
-				.catch(error => {
-					this.toggleOverlay({source: 'slideshow', display: false})
-					$wnl.logger.capture(error)
-				})
+			},
+			showContent(key) {
+				this.child.frame.setAttribute('srcdoc', this.slideshowContent[key])
 			},
 			updateRoute(slideNumber) {
 				!this.preserveRoute && this.$router.replace({
@@ -420,6 +454,31 @@
 						...this.$route.query
 					}
 				}
+			},
+			setupCollection() {
+				if (this.preloadSlides.length > 0) {
+					const slideshowContentPromised = axios.post(getApiUrl(`slideshow_builder/.query`), {
+						query: {whereIn: ['id', this.preloadSlides]}
+					});
+					const presentablesPromised = this.setup({id: this.presentableId, type: this.presentableType})
+					const fullSlideshowPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
+
+					fullSlideshowPromised.then(({data}) => {
+						this.slideshowContent['full'] = data
+					})
+
+					return Promise.all([slideshowContentPromised, presentablesPromised])
+						.then(([contentResponse, presentablesResponse]) => {
+							this.slideshowContent['bookmarked'] = contentResponse.data
+							this.currentSlideshowContent = contentResponse.data
+
+							return this.initSlideshowPreloadedContent(contentResponse.data)
+						}).catch(error => {
+							debugger
+							this.toggleOverlay({source: 'slideshow', display: false})
+							$wnl.logger.capture(error)
+						})
+				}
 			}
 
 		},
@@ -427,18 +486,10 @@
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
 			if (this.presentableId) {
-				this.setup({id: this.presentableId, type: this.presentableType})
-					.then(() => {
-						this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
-							.then(() => {
-								this.goToSlide(this.slideOrderNumber)
-								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-							})
-					}).catch(error => {
-						this.toggleOverlay({source: 'slideshow', display: false})
-						$wnl.logger.capture(error)
-					})
+				// logic related with category / collection
+				this.setupCollection()
 			} else {
+				// logic related with lesson
 				this.setup({id: this.slideshowId})
 					.then(() => {
 						this.initSlideshow()
@@ -448,9 +499,6 @@
 						$wnl.logger.capture(error)
 					})
 			}
-		},
-		beforeDestroy() {
-			this.destroySlideshow()
 		},
 		watch: {
 			'$route' (to, from) {

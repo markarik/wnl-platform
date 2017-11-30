@@ -6,6 +6,7 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import {createSandbox} from 'vue-kindergarten';
 import {getCurrentUser} from 'js/services/user';
+import { getApiUrl } from 'js/utils/env'
 
 Vue.use(Router)
 
@@ -214,6 +215,23 @@ let routes = [
 				component: require('js/components/users/UserProfile.vue'),
 			},
 		]
+	},
+	{
+		name: 'dynamicContextMiddleRoute',
+		path: '/app/dynamic/:resource/:context',
+		beforeEnter: (to, from, next) => {
+			axios.post(getApiUrl(`${to.params.resource}/.context`), {
+				context: to.params.context
+			}).then(({data}) => {
+				return next({
+					...data,
+					query: to.query
+				})
+			}).catch(err => {
+				return next(from)
+			})
+		}
+
 	},
 	{
 		path: '*',

@@ -41,7 +41,6 @@
         flex: 1
         flex-direction: column
         justify-content: flex-start
-        overflow-x: scroll
         padding: $margin-base
         position: relative
 

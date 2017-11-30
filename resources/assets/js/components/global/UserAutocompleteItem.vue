@@ -35,7 +35,7 @@
 				return this.item.full_name === this.item.display_name
 			},
 			nameToDisplay() {
-				if (this.checkForDisplayName) {
+				if (this.checkForDisplayName()) {
 					return this.item.full_name
 				} else {
 					return {

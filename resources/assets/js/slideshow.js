@@ -35,6 +35,7 @@ const handshake = new Postmate.Model({
 		}
 	},
 	goToSlide: (slideNumber) => {
+		console.log('.,...go to slide')
 		Reveal.slide(slideNumber)
 	},
 	toggleFullscreen: (isFullscreen) => {
@@ -85,6 +86,7 @@ const handshake = new Postmate.Model({
 		isSavingBookmark = false
 	},
 	setBookmarkedState(data) {
+		console.log('.,...set bookmark state')
 		const bookmarkedClassname = 'is-bookmarked'
 
 		if (data.hasReacted) {
@@ -108,11 +110,13 @@ let parent = {},
 	fullScreenViewer = {}
 
 handshake.then(parentWindow => {
+	console.log(parentWindow, '...handshake completed...')
 	parent = parentWindow
 	parent.emit('loaded', true)
 	setMenuListeners(parent)
 	setBookmarks(parent)
 }).catch(exception => {
+	console.log(exception, '...handshake error...')
 	parent.emit('error')
 	console.error(exception)
 
@@ -240,6 +244,7 @@ function setBookmarks(parent) {
 	$('.bookmark').click(function (event) {
 		if (isSavingBookmark) return
 
+		console.log('setBookmark', parent)
 		isSavingBookmark = true;
 		parent.emit('bookmark', {
 			index: Reveal.getState().indexh,

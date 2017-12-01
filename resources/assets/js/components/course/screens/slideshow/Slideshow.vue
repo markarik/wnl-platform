@@ -294,7 +294,7 @@
 					})
 			},
 
-			initSlideshowPreloadedContent(htmlContent) {
+			setSlideshowHtmlContent(htmlContent) {
 				this.toggleOverlay({source: 'slideshow', display: true})
 
 				const postmateOptions = {
@@ -310,6 +310,7 @@
 
 						this.focusSlideshow()
 						this.loaded = true
+						this.toggleOverlay({source: 'slideshow', display: false})
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
@@ -339,7 +340,22 @@
 				})
 			},
 			showContent(key) {
-				this.child.frame.setAttribute('srcdoc', this.slideshowContent[key])
+				const html = this.slideshowContent[key]
+
+				if (typeof this.child.destroy === 'function') {
+					this.child.destroy()
+				}
+
+				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+
+				removeEventListener('blur', this.checkFocus)
+				removeEventListener('focus', this.checkFocus)
+				removeEventListener('focusout', this.checkFocus)
+				removeEventListener('message', debounced)
+
+				this.setSlideshowHtmlContent(html)
 			},
 			updateRoute(slideNumber) {
 				!this.preserveRoute && this.$router.replace({
@@ -407,7 +423,6 @@
 			},
 			destroySlideshow() {
 				this.toggleOverlay({source: 'slideshow', display: false})
-				this.destroyed = true
 				if (typeof this.child.destroy === 'function') {
 					this.child.destroy()
 				}
@@ -472,9 +487,8 @@
 							this.slideshowContent['bookmarked'] = contentResponse.data
 							this.currentSlideshowContent = contentResponse.data
 
-							return this.initSlideshowPreloadedContent(contentResponse.data)
+							return this.setSlideshowHtmlContent(contentResponse.data)
 						}).catch(error => {
-							debugger
 							this.toggleOverlay({source: 'slideshow', display: false})
 							$wnl.logger.capture(error)
 						})
@@ -492,7 +506,9 @@
 				// logic related with lesson
 				this.setup({id: this.slideshowId})
 					.then(() => {
-						this.initSlideshow()
+						return this.initSlideshow()
+					}).then(() => {
+						this.toggleOverlay({source: 'slideshow', display: false})
 						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})

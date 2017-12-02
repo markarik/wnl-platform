@@ -14,38 +14,47 @@ class EventServiceProvider extends ServiceProvider
 	protected $listen = [
 		'App\Events\QnaQuestionPosted' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\QnaQuestionRemoved' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\QnaQuestionRestored' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\QnaAnswerPosted' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\QnaAnswerRemoved' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\CommentPosted' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\CommentRemoved' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\CommentRestored' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\ReactionAdded' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\Chat\PrivateMessageSent' => [
@@ -58,7 +67,7 @@ class EventServiceProvider extends ServiceProvider
 
 		// 'App\Events\QuizQuestionEdited' => [
 		// 	'App\Listeners\UserNotificationsGate',
-        // ],
+		// ],
 
 		'App\Events\UserDataUpdated' => [
 			'App\Listeners\BustUserCache',
@@ -66,6 +75,18 @@ class EventServiceProvider extends ServiceProvider
 
 		'App\Events\Tasks\AssignedToTask' => [
 			'App\Listeners\UserNotificationsGate',
+		],
+
+		'App\Events\Slides\SlideAdded' => [
+			'App\Listeners\ContentUpdatesGate',
+		],
+
+		'App\Events\Slides\SlideRemoved' => [
+			'App\Listeners\ContentUpdatesGate',
+		],
+
+		'App\Events\Slides\SlideUpdated' => [
+			'App\Listeners\ContentUpdatesGate',
 		],
 	];
 

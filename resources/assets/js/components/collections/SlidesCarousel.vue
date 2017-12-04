@@ -3,7 +3,7 @@
 		<p class="title is-4">Zapisane slajdy <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span></p>
 		<div class="slides-carousel-container" v-if="!!savedSlidesCount">
 			<div class="slides-carousel">
-				<div class="slide-thumb" :class="" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
+				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
 					<div class="thumb-meta">
 						<span class="thumb-slide-number">{{getSlideDisplayNumberFromIndex(index)}}</span>
 						<span class="icon is-tiny" v-if="slide.media"><i class="fa" :class="slide.media.icon"></i></span>
@@ -25,15 +25,17 @@
 		</div>
 		<wnl-slideshow
 			ref="slideshow"
-			v-if="!!savedSlidesCount && savedSlidesIds.length > 0"
+			v-if="htmlContent"
 			:screenData="screenData"
 			:presentableId="categoryId"
 			:presentableType="presentableType"
+			:htmlContent="htmlContent"
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
-			:preloadSlides="savedSlidesIds"
 			@slideBookmarked="onSlideBookmarked"
 		></wnl-slideshow>
+		<button @click="showContent('full')">Show Full</button>
+		<button @click="showContent('bookmarked')">Show Bookmarked</button>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -132,6 +134,7 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
+	import {getApiUrl} from 'js/utils/env'
 
 	const mediaMap = {
 		chart: {
@@ -150,7 +153,7 @@
 
 	export default {
 		name: 'SlidesCarousel',
-		props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
+		props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount', 'slidesIds'],
 		data() {
 			return {
 				presentableType: 'App\\Models\\Category',
@@ -158,6 +161,8 @@
 					type: 'slideshow'
 				},
 				selectedSlideIndex: 0,
+				htmlContent: '',
+				loadedHtmlContents: {}
 			}
 		},
 		components: {
@@ -186,9 +191,6 @@
 				})
 
 				return filteredSlides
-			},
-			savedSlidesIds() {
-				return this.slides.map(slide => slide.id)
 			},
 			presentableLoaded() {
 				return Object.keys(this.currentPresentableSlides).length > 0
@@ -225,12 +227,36 @@
 			},
 			getSlideDisplayNumberFromIndex(index) {
 				return this.getSlideOrderNumberFromIndex(index) + 1
-			}
+			},
+			showContent(htmlContentKey) {
+				this.htmlContent = this.loadedHtmlContents[htmlContentKey];
+			},
 		},
 		watch: {
 			'categoryId'() {
 				this.selectedSlideIndex = 0
 			}
+		},
+		mounted() {
+			const bookmarkedSlideshowContentPromised = axios.post(getApiUrl(`slideshow_builder/.query`), {
+				query: {
+					whereIn: ['slides.id', this.slidesIds],
+					where: [['presentables.presentable_type', 'App\\Models\\Category']],
+				},
+					join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+					order: {'presentables.order_number': 'asc'}
+				});
+
+			const fullSlideshowContentPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
+
+			bookmarkedSlideshowContentPromised.then(({data}) => {
+				this.loadedHtmlContents['bookmarked'] = data
+				this.htmlContent = data
+			})
+
+			fullSlideshowContentPromised.then(({data}) => {
+				this.loadedHtmlContents['full'] = data
+			})
 		}
 	}
 </script>

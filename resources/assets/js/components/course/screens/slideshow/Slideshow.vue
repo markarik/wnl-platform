@@ -27,8 +27,6 @@
 					@annotationsUpdated="onAnnotationsUpdated"
 				></wnl-annotations>
 			</div>
-			<button @click="showContent('full')">Show Full</button>
-			<button @click="showContent('bookmarked')">Show Bookmarked</button>
 		</div>
 	</div>
 </template>
@@ -134,9 +132,6 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
-				destroyed: false,
-				slideshowContent: {},
-				currentSlideshowContent: {}
 			}
 		},
 		props: {
@@ -145,7 +140,8 @@
 			presentableType: String,
 			preserveRoute: Boolean,
 			slideOrderNumber: Number,
-			preloadSlides: Array
+			preloadSlides: Array,
+			htmlContent: String
 		},
 		computed: {
 			...mapGetters(['getSetting', 'currentUserId']),
@@ -339,24 +335,6 @@
 					.catch(reject)
 				})
 			},
-			showContent(key) {
-				const html = this.slideshowContent[key]
-
-				if (typeof this.child.destroy === 'function') {
-					this.child.destroy()
-				}
-
-				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
-				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
-				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
-
-				removeEventListener('blur', this.checkFocus)
-				removeEventListener('focus', this.checkFocus)
-				removeEventListener('focusout', this.checkFocus)
-				removeEventListener('message', debounced)
-
-				this.setSlideshowHtmlContent(html)
-			},
 			updateRoute(slideNumber) {
 				!this.preserveRoute && this.$router.replace({
 					name: 'screens',
@@ -471,40 +449,19 @@
 				}
 			},
 			setupCollection() {
-				if (this.preloadSlides.length > 0) {
-					const slideshowContentPromised = axios.post(getApiUrl(`slideshow_builder/.query`), {
-						query: {
-							whereIn: ['slides.id', this.preloadSlides],
-							where: [['presentables.presentable_type', 'App\\Models\\Category']],
-						},
-						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-						order: {'presentables.order_number': 'asc'}
-					});
-					const presentablesPromised = this.setup({id: this.presentableId, type: this.presentableType})
-					const fullSlideshowPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
-
-					fullSlideshowPromised.then(({data}) => {
-						this.slideshowContent['full'] = data
+				return this.setup({id: this.presentableId, type: this.presentableType})
+					.then(() => {
+						return this.setSlideshowHtmlContent(this.htmlContent)
+					}).catch((error) => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
-
-					return Promise.all([slideshowContentPromised, presentablesPromised])
-						.then(([contentResponse, presentablesResponse]) => {
-							this.slideshowContent['bookmarked'] = contentResponse.data
-							this.currentSlideshowContent = contentResponse.data
-
-							return this.setSlideshowHtmlContent(contentResponse.data)
-						}).catch(error => {
-							this.toggleOverlay({source: 'slideshow', display: false})
-							$wnl.logger.capture(error)
-						})
-				}
 			}
-
 		},
 		mounted() {
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
-			if (this.presentableId) {
+			if (this.htmlContent) {
 				// logic related with category / collection
 				this.setupCollection()
 			} else {
@@ -555,6 +512,22 @@
 						this.goToSlide(toSlide - 1)
 					}
 				}
+			},
+			'htmlContent'(newContent) {
+				if (typeof this.child.destroy === 'function') {
+					this.child.destroy()
+				}
+
+				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+
+				removeEventListener('blur', this.checkFocus)
+				removeEventListener('focus', this.checkFocus)
+				removeEventListener('focusout', this.checkFocus)
+				removeEventListener('message', debounced)
+
+				this.setSlideshowHtmlContent(newContent)
 			},
 			'screenData' (newValue, oldValue) {
 				if (newValue.type === 'slideshow') {

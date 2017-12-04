@@ -105,19 +105,36 @@ export const commentsMutations = {
 		set(state, 'profiles', payload.included.profiles)
 		destroy(payload, 'included')
 
+		const commentsState = {}
+		const commentsResourceObj = {};
+
 		_.each(payload, (comment, index) => {
 			let resource = modelToResourceMap[comment.commentable_type],
 				resourceId = comment.commentable_id
 
-			set(state.comments, comment.id, comment)
+			commentsState[comment.id] = comment;
 
-			if (!state[resource][resourceId].comments) {
-				state[resource][resourceId].comments = [];
+			if (!commentsResourceObj[resource]) {
+				commentsResourceObj[resource] = {}
 			}
 
-			!state[resource][resourceId].comments.includes(comment.id)
-				&& state[resource][resourceId].comments.push(comment.id)
+			if (!state[resource][resourceId].comments) {
+				state[resource][resourceId].comments = []
+			}
+
+			if (!commentsResourceObj[resource][resourceId]) {
+				commentsResourceObj[resource][resourceId] = {}
+			}
+
+			commentsResourceObj[resource][resourceId][comment.id] = true
 		})
+
+		Object.keys(commentsResourceObj).forEach(resource => {
+			Object.keys(commentsResourceObj[resource]).forEach(resourceId => {
+				state[resource][resourceId].comments = Object.keys(commentsResourceObj[resource][resourceId])
+			})
+		})
+		set(state, 'comments', commentsState);
 	},
 	[types.SET_COMMENTS_RAW] (state, payload) {
 		set(state, 'comments', {

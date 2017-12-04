@@ -473,7 +473,12 @@
 			setupCollection() {
 				if (this.preloadSlides.length > 0) {
 					const slideshowContentPromised = axios.post(getApiUrl(`slideshow_builder/.query`), {
-						query: {whereIn: ['id', this.preloadSlides]}
+						query: {
+							whereIn: ['slides.id', this.preloadSlides],
+							where: [['presentables.presentable_type', 'App\\Models\\Category']],
+						},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+						order: {'presentables.order_number': 'asc'}
 					});
 					const presentablesPromised = this.setup({id: this.presentableId, type: this.presentableType})
 					const fullSlideshowPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.presentableId}`))

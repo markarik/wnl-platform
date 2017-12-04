@@ -119,7 +119,8 @@ class SlideshowBuilderApiController extends ApiController
 	{
 		$builder = $this->applyFilters(new Slide, $request);
 		$slides = $builder ->get();
-		$firstSection = $slides->first()->sections->first();
+		$firstSlide = Slide::find($slides->first()->slide_id);
+		$firstSection = $firstSlide->sections->first();
 		$background = $firstSection->screen->slideshow->background_url;
 
 		return $this->renderView($slides, $background);

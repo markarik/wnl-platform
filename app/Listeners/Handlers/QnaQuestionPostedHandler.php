@@ -1,7 +1,7 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\QnaQuestionPosted;
+use App\Events\Qna\QnaQuestionPosted;
 use App\Listeners\UserNotificationsGate;
 
 class QnaQuestionPostedHandler

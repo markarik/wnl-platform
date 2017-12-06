@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Live;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Notifications\Events\BroadcastNotificationCreated;

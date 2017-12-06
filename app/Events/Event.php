@@ -1,7 +1,7 @@
 <?php namespace App\Events;
 
-use Request;
 use Ramsey\Uuid\Uuid;
+use Request;
 
 abstract class Event
 {
@@ -11,9 +11,31 @@ abstract class Event
 
 	public $data;
 
+	const EVENT_RESOURCE_MAP = [
+		'removed' => [
+			'qna_questions' => 'App\Events\Qna\QnaQuestionRemoved',
+			'qna_answers'   => 'App\Events\Qna\QnaAnswerRemoved',
+			'comments'      => 'App\Events\Comments\CommentRemoved',
+			'slides'        => 'App\Events\Slides\SlideRemoved',
+		],
+	];
+
 	public function __construct()
 	{
 		$this->referer = Request::header('X-BETHINK-LOCATION');
 		$this->id = Uuid::uuid4()->toString();
+	}
+
+	/**
+	 * Get event class name basing on action and resource name.
+	 *
+	 * @param $resourceName
+	 * @param $action
+	 *
+	 * @return string
+	 */
+	public static function getResourceEvent($resourceName, $action)
+	{
+		return self::EVENT_RESOURCE_MAP[$action][$resourceName] ?? null;
 	}
 }

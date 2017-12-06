@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Reactions;
 
-use Request;
-use App\Models\User;
+use App\Events\Event;
+use App\Events\SanitizesUserContent;
 use App\Models\Reaction;
+use App\Models\User;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class ReactionAdded extends Event
 {

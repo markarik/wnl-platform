@@ -1,10 +1,9 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use App\Models\User;
-use App\Events\Mentioned;
-use App\Http\Requests\PostMention;
+use App\Events\Mentions\Mentioned;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\PostMention;
+use Auth;
 
 class MentionsApiController extends ApiController
 {

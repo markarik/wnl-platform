@@ -2,7 +2,7 @@
 
 namespace App\Notifications\Media;
 
-use App\Events\LiveNotificationCreated;
+use App\Events\Live\LiveNotificationCreated;
 use App\Notifications\EventNotification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 

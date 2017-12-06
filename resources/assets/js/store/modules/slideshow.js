@@ -90,6 +90,7 @@ function getInitialState() {
 			 * }
 			 */
 		},
+		sortedSlidesIds: []
 	}
 }
 
@@ -140,7 +141,12 @@ const getters = {
 				return length
 			}
 		}
-	}
+	},
+	slideshowSortedSlideIds: state => state.sortedSlidesIds,
+	getSlideIdFromIndex: state => index => {
+		return state.sortedSlidesIds[index]
+	},
+	getSlideById: state => id => state.slides[id]
 }
 
 const mutations = {
@@ -158,7 +164,8 @@ const mutations = {
 				order_number: element.order_number,
 				comments: [],
 				bookmark: element.bookmark,
-				watch: element.watch
+				watch: element.watch,
+				id: element.slide_id
 			})
 		})
 	},
@@ -168,6 +175,9 @@ const mutations = {
 			set(state, field, initialState[field])
 		})
 	},
+	[types.SLIDESHOW_SET_SORTED_SLIDES_IDS] (state, ids) {
+		set(state, 'sortedSlidesIds', ids)
+	}
 }
 
 const actions = {
@@ -181,12 +191,15 @@ const actions = {
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupPresentables({commit}, {id, type}) {
+	setupPresentables({commit, dispatch}, {id, type}) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
 				.then((presentables) => {
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
+					const idsMap = presentables.map(presentable => presentable.slide_id);
+					dispatch('setSortedSlidesIds', idsMap)
+
 					resolve()
 				})
 				.catch((error) => {
@@ -202,6 +215,9 @@ const actions = {
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)
+	},
+	setSortedSlidesIds({commit}, ids) {
+		commit(types.SLIDESHOW_SET_SORTED_SLIDES_IDS, ids)
 	}
 }
 

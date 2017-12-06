@@ -154,7 +154,9 @@
 				'findRegularSlide',
 				'bookmarkedSlideNumbers',
 				'getSlidePositionById',
-				'getReaction'
+				'getReaction',
+				'getSlideIdFromIndex',
+				'getSlideById'
 			]),
 			currentSlideIndex() {
 				 return this.currentSlideNumber - 1
@@ -304,6 +306,9 @@
 						this.goToSlide(this.currentSlideIndex)
 						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 
+						const slide = this.getSlideById(this.currentSlideId)
+						this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+
 						this.focusSlideshow()
 						this.loaded = true
 						this.toggleOverlay({source: 'slideshow', display: false})
@@ -353,9 +358,13 @@
 							this.slideChanged === false
 						) {
 							let currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
+							const slideId = this.getSlideIdFromIndex(data.state.indexh)
+							const slide = this.getSlideById(slideId)
+
 							this.currentSlideNumber = currentSlideNumber
 							this.updateRoute(currentSlideNumber)
 							this.focusSlideshow()
+							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						}
 
 						this.slideChanged = false

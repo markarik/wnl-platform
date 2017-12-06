@@ -162,7 +162,8 @@
 				},
 				selectedSlideIndex: 0,
 				htmlContent: '',
-				loadedHtmlContents: {}
+				loadedHtmlContents: {},
+				mode: 'bookmarked'
 			}
 		},
 		components: {
@@ -199,6 +200,9 @@
 				return (this.presentableLoaded && this.slides.filter((slide) => this.currentPresentableSlides[slide.id])) || []
 			},
 			currentSlideOrderNumber() {
+				if (this.mode === 'bookmarked') {
+					return this.selectedSlideIndex
+				}
 				return this.getSlideOrderNumberFromIndex(this.selectedSlideIndex)
 			},
 		},
@@ -230,6 +234,7 @@
 			},
 			showContent(htmlContentKey) {
 				this.htmlContent = this.loadedHtmlContents[htmlContentKey];
+				this.mode = htmlContentKey
 			},
 		},
 		watch: {
@@ -251,6 +256,7 @@
 
 			bookmarkedSlideshowContentPromised.then(({data}) => {
 				this.loadedHtmlContents['bookmarked'] = data
+				this.mode = 'bookmarked'
 				this.htmlContent = data
 			})
 

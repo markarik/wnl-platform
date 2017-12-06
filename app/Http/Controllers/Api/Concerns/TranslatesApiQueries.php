@@ -219,6 +219,10 @@ trait TranslatesApiQueries
 			$model = $model->where($query['where']);
 		}
 
+		if (!empty ($query['orWhere'])) {
+			$model = $model->orWhere($query['orWhere']);
+		}
+
 		if (!empty ($query['whereHas'])) {
 			$model = $this->parseWhereHas($model, $query['whereHas']);
 		}

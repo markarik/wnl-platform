@@ -57,11 +57,12 @@ class QnaQuestionPosted extends Event
 				'text' => $this->sanitize($this->qnaQuestion->text),
 			],
 			'actors'  => [
-				'id'         => $this->qnaQuestion->user->id,
-				'first_name' => $this->qnaQuestion->user->profile->first_name,
-				'last_name'  => $this->qnaQuestion->user->profile->last_name,
-				'full_name'  => $this->qnaQuestion->user->profile->full_name,
-				'avatar'     => $this->qnaQuestion->user->profile->avatar_url,
+				'id'           => $this->qnaQuestion->user->id,
+				'first_name'   => $this->qnaQuestion->user->profile->first_name,
+				'last_name'    => $this->qnaQuestion->user->profile->last_name,
+				'full_name'    => $this->qnaQuestion->user->profile->full_name,
+				'display_name' => $this->qnaQuestion->user->profile->display_name,
+				'avatar'       => $this->qnaQuestion->user->profile->avatar_url,
 			],
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($this->qnaQuestion)

@@ -9,7 +9,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
+					<span class="actor">{{ nameToDisplay }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
@@ -21,7 +21,13 @@
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
 				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-					<router-link v-if="hasFullContext" :to="routeContext">
+					<router-link v-if="hasDynamicContext" :to="dynamicRoute">
+						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+							<span v-if="loading" class="loader"></span>
+							<i v-else class="fa fa-angle-right"></i>
+						</span>
+					</router-link>
+					<router-link v-else-if="hasFullContext" :to="routeContext">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
@@ -193,6 +199,9 @@
 		},
 		computed: {
 			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
+			nameToDisplay() {
+				return this.message.actors.display_name || this.message.actors.full_name
+			},
 			action() {
 				return this.$t(`notifications.events.${camelCase(this.message.event)}`)
 			},

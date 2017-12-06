@@ -44,11 +44,23 @@ export const reactionsActions = {
 					'reactable_id'       : payload.reactableId,
 					'reaction_type'      : payload.reaction,
 				},
+				// hasReacted should represent new state
 	 			method = payload.hasReacted ? 'delete' : 'post',
 				params = payload.hasReacted ? { params: data } : [data]
 
 			return axios[method](getApiUrl(`reactions`), params)
 				.then((response) => {
+					const hasReacted = !payload.hasReacted
+					const count = hasReacted ? payload.count + 1 : payload.count - 1;
+
+					commit(types.SET_REACTION, {
+						count,
+						hasReacted,
+						reactableResource: payload.reactableResource,
+						reactableId: payload.reactableId,
+						reaction: payload.reaction,
+					})
+
 					resolve(response)
 				})
 				.catch(error => {

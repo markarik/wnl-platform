@@ -230,32 +230,9 @@ function setBookmarkEventListener(parent) {
 		isSavingBookmark = true;
 		parent.emit('bookmark', {
 			index: Reveal.getState().indexh,
-			slideId: this.configuration.sortedSlides[Reveal.getState().indexh],
 			isBookmarked: this.classList.contains('is-bookmarked')
 		});
 	});
-}
-
-function setBookmarkedState(currentSlideNumber) {
-	const bookmarkedClassname = 'is-bookmarked';
-
-	if (bookmarkedSlideNumbers.indexOf(currentSlideNumber) > -1) {
-		bookmarkElement.classList.add(bookmarkedClassname);
-	} else {
-		bookmarkElement.classList.remove(bookmarkedClassname);
-	}
-}
-
-function toggleBookmark(slideId) {
-	const bookmarkedClassname = 'is-bookmarked'
-
-	if (configuration.bookmarkedSlides[slideId]) {
-		bookmarkElement.classList.add(bookmarkedClassname)
-	} else {
-		bookmarkElement.classList.remove(bookmarkedClassname);
-	}
-
-	isSavingBookmark = false
 }
 
 function emitToggleFullscreen(state = true) {

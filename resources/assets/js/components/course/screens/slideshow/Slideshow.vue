@@ -181,19 +181,19 @@
 					return this.$el.getElementsByTagName('iframe')[0]
 				}
 			},
-			bookmarkState() {
-				return this.getReaction('slides', this.currentSlideId, 'bookmark')
-			},
 		},
 		methods: {
 			...mapActions('slideshow', ['setup', 'resetModule']),
 			...mapActions(['toggleOverlay']),
-			toggleBookmarkedState(slideIndex, hasReacted) {
+			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
-				const slideId = this.getSlideId(slideIndex)
+
+				const slideId = this.getSlideIdFromIndex(slideIndex)
+				const slide = this.getSlideById(slideId)
+				const currentBookmarkState = slide.bookmark.hasReacted
 
 				const vuexState = {
-					hasReacted,
+					hasReacted: currentBookmarkState,
 					userId: this.currentUserId,
 					slide: {
 						slideId,
@@ -206,21 +206,18 @@
 				}
 
 				return this.$store.dispatch(`slideshow/setReaction`, {
-					hasReacted,
+					hasReacted: currentBookmarkState,
 					reactableResource: 'slides',
 					reactableId: slideId,
 					reaction: 'bookmark',
-					count: this.bookmarkState.count,
+					count: slide.bookmark.count,
 					vuexState
 				}).then(() => {
-					return Promise.resolve({
-						hasReacted: !hasReacted,
-						slideIndex,
-					})
-				}).then((data) => {
-					this.child.call('setBookmarkedState', data)
-					this.$emit('slideBookmarked', {slideId, hasReacted: data.hasReacted})
+					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+					this.$emit('slideBookmarked', {slideId, hasReacted: slide.bookmark.hasReacted})
 				}).then(() => {
+					this.bookmarkLoading = false
+				}).catch(() => {
 					this.bookmarkLoading = false
 				})
 			},
@@ -242,7 +239,12 @@
 			goToSlide(slideIndex) {
 				if(slideIndex || slideIndex === 0) {
 					this.slideChanged = true
+
+					const newSlideId = this.getSlideIdFromIndex(slideIndex)
+					const slide = this.getSlideById(newSlideId)
+
 					this.child.call('goToSlide', slideIndex)
+					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 					this.setCurrentSlideFromIndex(slideIndex)
 					this.focusSlideshow()
 				}
@@ -304,10 +306,7 @@
 				return this.postmateHandshake(postmateOptions)
 					.then(() => {
 						this.goToSlide(this.currentSlideIndex)
-						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-
-						const slide = this.getSlideById(this.currentSlideId)
-						this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 
 						this.focusSlideshow()
 						this.loaded = true
@@ -377,9 +376,9 @@
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
 					} else if (event.data.value.name === 'bookmark') {
-						const slideData = event.data.value.data
+						const {index, isBookmarked} = event.data.value.data
 
-						!this.bookmarkLoading && this.toggleBookmarkedState(slideData.index, slideData.isBookmarked)
+						!this.bookmarkLoading && this.toggleBookmarkedState(index, isBookmarked)
 					} else if (event.data.value.name === 'error') {
 						this.toggleOverlay({source: 'slideshow', display: false})
 					}
@@ -457,10 +456,7 @@
 				}
 			},
 			setupCollection() {
-				return this.setup({id: this.presentableId, type: this.presentableType})
-					.then(() => {
-						return this.setSlideshowHtmlContent(this.htmlContent)
-					}).catch((error) => {
+				return this.setSlideshowHtmlContent(this.htmlContent).catch((error) => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
 					})
@@ -469,7 +465,7 @@
 		mounted() {
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
-			if (this.htmlContent) {
+			if (this.presentableId) {
 				// logic related with category / collection
 				this.setupCollection()
 			} else {

@@ -153,7 +153,7 @@
 
 	export default {
 		name: 'SlidesCarousel',
-		props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount', 'slidesIds'],
+		props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
 		data() {
 			return {
 				presentableType: 'App\\Models\\Category',
@@ -172,7 +172,7 @@
 		computed: {
 			...mapGetters('collections', ['slidesContent']),
 			...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
-			...mapGetters('slideshow', ['presentableSortedSlidesIds']),
+			...mapGetters('slideshow', ['presentableSortedSlidesIds', 'getSlidePositionById']),
 			slides() {
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,
@@ -183,16 +183,12 @@
 				}))
 			},
 			sortedSlides() {
-				const filteredSlides = [...this.currentSlideshowSlides]
-
-				filteredSlides.sort(({id: id1}, {id: id2}) => {
+				return this.currentSlideshowSlides.sort(({id: id1}, {id: id2}) => {
 					const slideOne = this.currentPresentableSlides[id1]
 					const slideTwo = this.currentPresentableSlides[id2]
 
 					return slideOne.order_number - slideTwo.order_number
 				})
-
-				return filteredSlides
 			},
 			presentableLoaded() {
 				return Object.keys(this.currentPresentableSlides).length > 0
@@ -209,7 +205,7 @@
 		},
 		methods: {
 			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
-			...mapActions('slideshow', ['setSortedSlidesIds']),
+			...mapActions('slideshow', ['setSortedSlidesIds','setup']),
 			showSlide(index) {
 				if (this.selectedSlideIndex === index) {
 					this.$refs.slideshow.goToSlide(this.currentSlideOrderNumber)
@@ -229,20 +225,45 @@
 			getSlideOrderNumberFromIndex(index) {
 				const selectedSlide = this.sortedSlides[index]
 
-				return selectedSlide && this.currentPresentableSlides[selectedSlide.id].order_number || 0
+				return (selectedSlide
+					&& this.currentPresentableSlides[selectedSlide.id]
+					&& this.currentPresentableSlides[selectedSlide.id].order_number)
+					|| 0
 			},
 			getSlideDisplayNumberFromIndex(index) {
 				return this.getSlideOrderNumberFromIndex(index) + 1
 			},
 			showContent(htmlContentKey) {
-				this.htmlContent = this.loadedHtmlContents[htmlContentKey];
-				this.mode = htmlContentKey
-				if (this.mode === 'bookmarked') {
-					this.setSortedSlidesIds(this.slidesIds)
+				if (htmlContentKey === 'bookmarked') {
+					const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
+					axios.post(getApiUrl(`slideshow_builder/.query`), {
+						query: {
+							whereIn: ['slides.id', slidesIds],
+							where: [['presentables.presentable_type', 'App\\Models\\Category']],
+						},
+							join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+							order: {'presentables.order_number': 'asc'}
+					}).then(({data}) => {
+						this.loadedHtmlContents['bookmarked'] = data
+						const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
+						this.setSortedSlidesIds(sortedSlides)
+						this.mode = htmlContentKey
+						this.htmlContent = this.loadedHtmlContents[htmlContentKey];
+					})
 				} else {
 					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+					this.mode = htmlContentKey
+					this.htmlContent = this.loadedHtmlContents[htmlContentKey];
 				}
 			},
+			sortSlidesByOrderNumber(ids) {
+				return ids.sort((id1, id2) => {
+					const slideOne = this.currentPresentableSlides[id1]
+					const slideTwo = this.currentPresentableSlides[id2]
+
+					return slideOne.order_number - slideTwo.order_number
+				})
+			}
 		},
 		watch: {
 			'categoryId'() {
@@ -250,21 +271,10 @@
 			}
 		},
 		mounted() {
-			const bookmarkedSlideshowContentPromised = axios.post(getApiUrl(`slideshow_builder/.query`), {
-				query: {
-					whereIn: ['slides.id', this.slidesIds],
-					where: [['presentables.presentable_type', 'App\\Models\\Category']],
-				},
-					join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-					order: {'presentables.order_number': 'asc'}
-				});
-
 			const fullSlideshowContentPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
+			const presentablePromised = this.setup({id: this.categoryId, type: this.presentableType})
 
-			bookmarkedSlideshowContentPromised.then(({data}) => {
-				this.loadedHtmlContents['bookmarked'] = data
-				this.showContent('bookmarked')
-			})
+			presentablePromised.then(() => this.showContent('bookmarked'))			;
 
 			fullSlideshowContentPromised.then(({data}) => {
 				this.loadedHtmlContents['full'] = data

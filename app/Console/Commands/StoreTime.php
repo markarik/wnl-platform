@@ -95,20 +95,9 @@ class StoreTime extends Command
 		if (!empty($timeRaw)) {
 			$todays = json_decode($timeRaw);
 
-			$yesterdays = UserTime::select('time')
-				->where('user_id', $userId)
-				->where('created_at', Carbon::yesterday())
-				->first();
-
-			if (!empty($yesterdays)) {
-				$todaysComputed = $todays - $yesterdays->time;
-			} else {
-				$todaysComputed = $todays;
-			}
-
 			UserTime::updateOrCreate(
 				['user_id' => $userId, 'created_at' => Carbon::today()],
-				['time' => $todaysComputed, 'created_at' => Carbon::today(), 'updated_at' => Carbon::now()]
+				['time' => $todays, 'created_at' => Carbon::today(), 'updated_at' => Carbon::now()]
 			);
 		}
 	}

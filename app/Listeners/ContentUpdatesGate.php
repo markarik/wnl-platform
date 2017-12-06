@@ -24,8 +24,6 @@ class ContentUpdatesGate implements ShouldQueue
 	 */
 	public function handle($event)
 	{
-		broadcast($event);
-
-		return true;
+		
 	}
 }

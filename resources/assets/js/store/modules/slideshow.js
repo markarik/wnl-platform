@@ -142,10 +142,11 @@ const getters = {
 			}
 		}
 	},
-	slideshowSortedSlideIds: state => state.sortedSlidesIds,
-	getSlideIdFromIndex: state => index => {
-		return state.sortedSlidesIds[index]
+	presentableSortedSlidesIds: state => {
+		return state.presentables.map(presentable => presentable.slide_id)
 	},
+	slideshowSortedSlideIds: state => state.sortedSlidesIds,
+	getSlideIdFromIndex: state => index => state.sortedSlidesIds[index],
 	getSlideById: state => id => state.slides[id]
 }
 
@@ -197,9 +198,6 @@ const actions = {
 				.then((presentables) => {
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
-					const idsMap = presentables.map(presentable => presentable.slide_id);
-					dispatch('setSortedSlidesIds', idsMap)
-
 					resolve()
 				})
 				.catch((error) => {

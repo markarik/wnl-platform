@@ -376,7 +376,6 @@
 						this.toggleFullscreen()
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
-						this.child.call('setupBookmarks', this.bookmarkedSlideNumbers)
 					} else if (event.data.value.name === 'bookmark') {
 						const slideData = event.data.value.data
 

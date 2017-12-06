@@ -171,7 +171,8 @@
 		},
 		computed: {
 			...mapGetters('collections', ['slidesContent']),
-			...mapGetters('slideshow', {'currentPresentableSlides': 'slides'}),
+			...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
+			...mapGetters('slideshow', ['presentableSortedSlidesIds']),
 			slides() {
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,
@@ -208,6 +209,7 @@
 		},
 		methods: {
 			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
+			...mapActions('slideshow', ['setSortedSlidesIds']),
 			showSlide(index) {
 				if (this.selectedSlideIndex === index) {
 					this.$refs.slideshow.goToSlide(this.currentSlideOrderNumber)
@@ -235,6 +237,11 @@
 			showContent(htmlContentKey) {
 				this.htmlContent = this.loadedHtmlContents[htmlContentKey];
 				this.mode = htmlContentKey
+				if (this.mode === 'bookmarked') {
+					this.setSortedSlidesIds(this.slidesIds)
+				} else {
+					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+				}
 			},
 		},
 		watch: {
@@ -256,8 +263,7 @@
 
 			bookmarkedSlideshowContentPromised.then(({data}) => {
 				this.loadedHtmlContents['bookmarked'] = data
-				this.mode = 'bookmarked'
-				this.htmlContent = data
+				this.showContent('bookmarked')
 			})
 
 			fullSlideshowContentPromised.then(({data}) => {

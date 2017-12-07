@@ -273,7 +273,7 @@
 				}
 
 				if (this.qnaQuestionsIds.length) {
-					contentToFetch.push(this.fetchQna({tagName: this.categocategoryNameryName, ids: this.qnaQuestionsIds}))
+					contentToFetch.push(this.fetchQna({tagName: this.categoryName, ids: this.qnaQuestionsIds}))
 				} else {
 					this.resetQna()
 				}

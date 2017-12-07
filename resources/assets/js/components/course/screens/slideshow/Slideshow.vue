@@ -173,9 +173,6 @@
 			slideshowUrl() {
 				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
 			},
-			slideshowSizeClass() {
-				return this.isFauxFullscreen ? 'is-faux-fullscreen' : 'wnl-ratio-16-9'
-			},
 			iframe() {
 				if (this.loaded) {
 					return this.$el.getElementsByTagName('iframe')[0]
@@ -472,6 +469,9 @@
 						$wnl.logger.capture(error)
 					})
 			}
+		},
+		beforeDestroy() {
+			this.destroySlideshow()
 		},
 		watch: {
 			'$route' (to, from) {

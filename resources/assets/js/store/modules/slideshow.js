@@ -181,7 +181,7 @@ const actions = {
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupPresentables({commit, dispatch}, {id, type}) {
+	setupPresentables({commit}, {id, type}) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
 				.then((presentables) => {

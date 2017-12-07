@@ -307,6 +307,7 @@
 				this.htmlContent = ''
 				this.loadedHtmlContents = {}
 				this.selectedSlideIndex = 0
+				this.mode = ''
 
 				this.loadSlideshow()
 			}

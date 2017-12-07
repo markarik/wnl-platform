@@ -27,8 +27,6 @@
 			ref="slideshow"
 			v-if="htmlContent"
 			:screenData="screenData"
-			:presentableId="categoryId"
-			:presentableType="presentableType"
 			:htmlContent="htmlContent"
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
@@ -206,6 +204,7 @@
 		methods: {
 			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
 			...mapActions('slideshow', ['setSortedSlidesIds','setup']),
+			...mapActions(['toggleOverlay']),
 			showSlide(index) {
 				if (this.selectedSlideIndex === index) {
 					this.$refs.slideshow.goToSlide(this.currentSlideOrderNumber)
@@ -263,22 +262,35 @@
 
 					return slideOne.order_number - slideTwo.order_number
 				})
+			},
+			loadSlideshow() {
+				if (!this.savedSlidesCount) {
+					return;
+				}
+
+				this.toggleOverlay({source: 'collection-slideshow', display: true})
+
+				const fullSlideshowContentPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
+
+				this.setup({id: this.categoryId, type: this.presentableType})
+					.then(() => this.showContent('bookmarked'))
+					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+
+				fullSlideshowContentPromised.then(({data}) => this.loadedHtmlContents['full'] = data)
 			}
 		},
 		watch: {
 			'categoryId'() {
+				this.htmlContent = ''
+				this.loadedHtmlContents = {}
 				this.selectedSlideIndex = 0
+
+				this.loadSlideshow()
 			}
 		},
 		mounted() {
-			const fullSlideshowContentPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
-			const presentablePromised = this.setup({id: this.categoryId, type: this.presentableType})
-
-			presentablePromised.then(() => this.showContent('bookmarked'))			;
-
-			fullSlideshowContentPromised.then(({data}) => {
-				this.loadedHtmlContents['full'] = data
-			})
+			this.loadSlideshow()
 		}
 	}
 </script>

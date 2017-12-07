@@ -136,11 +136,8 @@
 		},
 		props: {
 			screenData: Object,
-			presentableId: Number,
-			presentableType: String,
 			preserveRoute: Boolean,
 			slideOrderNumber: Number,
-			preloadSlides: Array,
 			htmlContent: String
 		},
 		computed: {
@@ -230,9 +227,6 @@
 				}
 				this.focusSlideshow()
 			},
-			setCurrentSlideFromIndex(index) {
-				this.currentSlideNumber = this.slideNumberFromIndex(index)
-			},
 			slideNumberFromIndex(index) {
 				return index + 1
 			},
@@ -245,7 +239,10 @@
 
 					this.child.call('goToSlide', slideIndex)
 					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
-					this.setCurrentSlideFromIndex(slideIndex)
+
+					this.currentSlideId = this.getSlideIdFromIndex(slideIndex)
+					this.currentSlideNumber = this.slideNumberFromIndex(slideIndex)
+
 					this.focusSlideshow()
 				}
 			},
@@ -279,7 +276,6 @@
 						if (this.$route.query.slide) {
 							const newOrderNumber = this.getSlidePositionById(this.$route.query.slide)
 							this.goToSlide(newOrderNumber);
-							this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 							this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
 						} else {
 							this.goToSlide(this.currentSlideIndex)
@@ -306,7 +302,6 @@
 				return this.postmateHandshake(postmateOptions)
 					.then(() => {
 						this.goToSlide(this.currentSlideIndex)
-						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 
 						this.focusSlideshow()
 						this.loaded = true
@@ -356,13 +351,15 @@
 							data.eventName === 'slidechanged' &&
 							this.slideChanged === false
 						) {
-							let currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
+							const currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
 							const slideId = this.getSlideIdFromIndex(data.state.indexh)
 							const slide = this.getSlideById(slideId)
 
 							this.currentSlideNumber = currentSlideNumber
+							this.currentSlideId = slideId
 							this.updateRoute(currentSlideNumber)
 							this.focusSlideshow()
+
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						}
 
@@ -465,7 +462,7 @@
 		mounted() {
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
-			if (this.presentableId) {
+			if (this.htmlContent) {
 				// logic related with category / collection
 				this.setupCollection()
 			} else {
@@ -475,7 +472,6 @@
 						return this.initSlideshow()
 					}).then(() => {
 						this.toggleOverlay({source: 'slideshow', display: false})
-						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
@@ -495,7 +491,6 @@
 				if (to.query.slide && to.query.slide !== this.currentSlideId) {
 					const newOrderNumber = this.getSlidePositionById(to.query.slide)
 					this.goToSlide(newOrderNumber);
-					this.currentSlideId = this.getSlideId(this.currentSlideIndex)
 					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
 				}
 
@@ -551,28 +546,6 @@
 						$wnl.logger.capture(error)
 					})
 				}
-			},
-			'presentableId' (presentableId, oldValue) {
-				if (presentableId) {
-					this.toggleOverlay({source: 'slideshow', display: true})
-					this.setup({id: presentableId, type: this.presentableType})
-						.then(() => {
-							this.initSlideshow(getApiUrl(`slideshow_builder/category/${presentableId}`))
-							.then(() => {
-								this.goToSlide(this.slideOrderNumber)
-								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-							}).catch(error => {
-								this.toggleOverlay({source: 'slideshow', display: false})
-								$wnl.logger.capture(error)
-							})
-						}).catch(error => {
-							this.toggleOverlay({source: 'slideshow', display: false})
-							$wnl.logger.capture(error)
-					})
-				}
-			},
-			'currentSlideIndex' (slideIndex, oldValue) {
-				this.currentSlideId = this.getSlideId(slideIndex)
 			},
 			'slideOrderNumber' (slideOrderNumber, oldValue) {
 				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)

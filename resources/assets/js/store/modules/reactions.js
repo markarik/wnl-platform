@@ -70,23 +70,6 @@ export const reactionsActions = {
 						text: 'Niestety, nie udało nam się dokonać zapisu. :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił, możesz odświeżyć stronę. :)'
 					}, {root: true})
 				})
-		}).then(() => {
-			const hasReacted = !payload.hasReacted
-			const count = hasReacted ? payload.count + 1 : payload.count - 1;
-
-			commit(types.SET_REACTION, {
-				count,
-				hasReacted,
-				reactableResource: payload.reactableResource,
-				reactableId: payload.reactableId,
-				reaction: payload.reaction,
-			})
-		}).catch((error) => {
-			$wnl.logger.error(error, {extra: {vuexState}})
-			dispatch('addAlert', {
-				type: 'error',
-				text: 'Niestety, nie udało nam się dokonać zapisu. :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił, możesz odświeżyć stronę. :)'
-			}, {root: true})
 		})
 	},
 

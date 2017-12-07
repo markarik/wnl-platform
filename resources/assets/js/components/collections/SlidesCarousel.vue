@@ -1,10 +1,10 @@
 <template>
 	<div class="wnl-slides-collection">
 		<p class="title is-4">Zapisane slajdy <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span>
-			<a class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === 'bookmarked'}" @click="toggleBookmarked()">
+			<a class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === contentModes.bookmark}" @click="toggleBookmarked()">
 					Pokaż tylko zapisane slajdy
 					<span class="icon is-small">
-						<i class="fa" :class="[mode === 'bookmarked' ? 'fa-check-circle' : 'fa-circle-o']"></i>
+						<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
 					</span>
 			</a>
 		</p>
@@ -166,7 +166,11 @@
 				selectedSlideIndex: 0,
 				htmlContent: '',
 				loadedHtmlContents: {},
-				mode: ''
+				mode: '',
+				contentModes: {
+					bookmark: 'bookmark',
+					full: 'full'
+				}
 			}
 		},
 		components: {
@@ -200,7 +204,7 @@
 				return (this.presentableLoaded && this.slides.filter((slide) => this.currentPresentableSlides[slide.id])) || []
 			},
 			currentSlideOrderNumber() {
-				if (this.mode === 'bookmarked') {
+				if (this.mode === this.contentModes.bookmark) {
 					return this.selectedSlideIndex
 				}
 				return this.getSlideOrderNumberFromIndex(this.selectedSlideIndex)
@@ -238,10 +242,10 @@
 				return this.getSlideOrderNumberFromIndex(index) + 1
 			},
 			toggleBookmarked() {
-				if (this.mode === 'bookmarked') {
-					this.showContent('full')
+				if (this.mode === this.contentModes.bookmark) {
+					this.showContent(this.contentModes.full)
 				} else {
-					this.showContent('bookmarked')
+					this.showContent(this.contentModes.bookmark)
 				}
 			},
 			showContent(htmlContentKey) {
@@ -251,7 +255,7 @@
 
 				this.selectedSlideIndex = 0
 
-				if (htmlContentKey === 'bookmarked') {
+				if (htmlContentKey === this.contentModes.bookmark) {
 					const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
 					axios.post(getApiUrl(`slideshow_builder/.query`), {
 						query: {
@@ -261,7 +265,7 @@
 							join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
 							order: {'presentables.order_number': 'asc'}
 					}).then(({data}) => {
-						this.loadedHtmlContents['bookmarked'] = data
+						this.loadedHtmlContents[this.contentModes.bookmark] = data
 						const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
 						this.setSortedSlidesIds(sortedSlides)
 						this.mode = htmlContentKey
@@ -291,11 +295,11 @@
 				const fullSlideshowContentPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
 
 				this.setup({id: this.categoryId, type: this.presentableType})
-					.then(() => this.showContent('bookmarked'))
+					.then(() => this.showContent(this.contentModes.bookmark))
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 
-				fullSlideshowContentPromised.then(({data}) => this.loadedHtmlContents['full'] = data)
+				fullSlideshowContentPromised.then(({data}) => this.loadedHtmlContents[this.contentModes.full] = data)
 			}
 		},
 		watch: {

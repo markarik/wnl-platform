@@ -59,7 +59,9 @@ class SlidesFromCategory extends Command
 				})->orderBy('order_number')->get();
 
 
-				$this->attachLessonsSlidesToCategory($lessonsWithTag, $category);
+				$categoryCollection = collect();
+				$this->attachLessonsSlidesToCategory($lessonsWithTag, $category, $categoryCollection);
+				$category->slides()->attach($categoryCollection->pluck('id')->toArray());
 			}
 
 			$bar->advance();
@@ -68,7 +70,7 @@ class SlidesFromCategory extends Command
 		print PHP_EOL;
 	}
 
-	private function attachLessonsSlidesToCategory($lessonsWithTag, $category) {
+	private function attachLessonsSlidesToCategory($lessonsWithTag, $category, $categoryCollection) {
 		$orderNumber = 0;
 
 		foreach($lessonsWithTag as $lesson) {
@@ -86,8 +88,17 @@ class SlidesFromCategory extends Command
 
 			foreach($slidesIds as $slideId) {
 				$slide = Slide::find($slideId);
-				$category->slides()->attach($slide, ['order_number' => $orderNumber]);
-				$orderNumber++;
+				// if (!$category->slides->contains($slide)) {
+				// 	$category->slides()->attach($slide, ['order_number' => $orderNumber]);
+				// 	$orderNumber++;
+				// } else {
+				// 	dump('CHECK...');
+				// }
+				if (!$categoryCollection->has($slide->id)) {
+					$categoryCollection->put($slide->id, $slide);
+				} else {
+					dump('already set');
+				}
 			}
 		}
 	}

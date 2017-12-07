@@ -37,7 +37,7 @@ export const reactionsMutations = {
 }
 
 export const reactionsActions = {
-	setReaction({commit, dispatch}, {vuexState, ...payload}) {
+	setReaction({commit, dispatch}, payload) {
 		return new Promise((resolve, reject) => {
 			let data = {
 					'reactable_resource' : payload.reactableResource,
@@ -64,7 +64,7 @@ export const reactionsActions = {
 					resolve(response)
 				})
 				.catch(error => {
-					$wnl.logger.error(error, {extra: {vuexState}})
+					$wnl.logger.error(error)
 					dispatch('addAlert', {
 						type: 'error',
 						text: 'Niestety, nie udało nam się dokonać zapisu. :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił, możesz odświeżyć stronę. :)'

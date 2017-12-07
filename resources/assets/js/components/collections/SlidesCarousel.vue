@@ -1,6 +1,13 @@
 <template>
 	<div class="wnl-slides-collection">
-		<p class="title is-4">Zapisane slajdy <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span></p>
+		<p class="title is-4">Zapisane slajdy <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span>
+			<a class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === 'bookmarked'}" @click="toggleBookmarked()">
+					Pokaż tylko zapisane slajdy
+					<span class="icon is-small">
+						<i class="fa" :class="[mode === 'bookmarked' ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					</span>
+			</a>
+		</p>
 		<div class="slides-carousel-container" v-if="!!savedSlidesCount">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
@@ -26,14 +33,11 @@
 		<wnl-slideshow
 			ref="slideshow"
 			v-if="htmlContent"
-			:screenData="screenData"
 			:htmlContent="htmlContent"
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
 		></wnl-slideshow>
-		<button @click="showContent('full')">Show Full</button>
-		<button @click="showContent('bookmarked')">Show Bookmarked</button>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -64,6 +68,10 @@
 		height: $carousel-height
 		margin-bottom: $margin-base
 		position: relative
+
+	.saved-slides-toggle
+		float: right
+		margin: 0
 
 	.slides-carousel
 		background: $color-background-lighter-gray
@@ -155,9 +163,6 @@
 		data() {
 			return {
 				presentableType: 'App\\Models\\Category',
-				screenData: {
-					type: 'slideshow'
-				},
 				selectedSlideIndex: 0,
 				htmlContent: '',
 				loadedHtmlContents: {},
@@ -231,6 +236,13 @@
 			},
 			getSlideDisplayNumberFromIndex(index) {
 				return this.getSlideOrderNumberFromIndex(index) + 1
+			},
+			toggleBookmarked() {
+				if (this.mode === 'bookmarked') {
+					this.showContent('full')
+				} else {
+					this.showContent('bookmarked')
+				}
 			},
 			showContent(htmlContentKey) {
 				if (htmlContentKey === 'bookmarked') {

@@ -125,6 +125,9 @@ const setupHandshake = () => {
 
 			isSavingBookmark = false
 		},
+		setDebug(isDebug) {
+			Postmate.debug = isDebug
+		}
 	})
 }
 
@@ -230,7 +233,6 @@ function setBookmarkEventListener(parent) {
 		isSavingBookmark = true;
 		parent.emit('bookmark', {
 			index: Reveal.getState().indexh,
-			isBookmarked: this.classList.contains('is-bookmarked')
 		});
 	});
 }

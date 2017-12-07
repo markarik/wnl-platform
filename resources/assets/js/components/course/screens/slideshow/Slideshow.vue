@@ -112,8 +112,6 @@
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getApiUrl} from 'js/utils/env'
 
-	let debounced, handshake
-
 	export default {
 		name: 'Slideshow',
 		components: {
@@ -135,7 +133,14 @@
 			}
 		},
 		props: {
-			screenData: Object,
+			screenData: {
+				type: Object,
+				default: () => {
+					return {
+						type: 'slideshow'
+					}
+				}
+			},
 			preserveRoute: Boolean,
 			slideOrderNumber: Number,
 			htmlContent: String
@@ -145,15 +150,13 @@
 			...mapGetters('slideshow', [
 				'comments',
 				'commentProfile',
-				'getSlideId',
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
-				'bookmarkedSlideNumbers',
 				'getSlidePositionById',
-				'getReaction',
 				'getSlideIdFromIndex',
-				'getSlideById'
+				'getSlideById',
+				'presentableSortedSlidesIds'
 			]),
 			currentSlideIndex() {
 				 return this.currentSlideNumber - 1
@@ -180,7 +183,7 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds']),
 			...mapActions(['toggleOverlay']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
@@ -189,26 +192,12 @@
 				const slide = this.getSlideById(slideId)
 				const currentBookmarkState = slide.bookmark.hasReacted
 
-				const vuexState = {
-					hasReacted: currentBookmarkState,
-					userId: this.currentUserId,
-					slide: {
-						slideId,
-						...this.getReaction('slides', slideId, 'bookmark')
-					},
-					currentSlide: {
-						slideId: this.currentSlideId,
-						...this.bookmarkState
-					}
-				}
-
 				return this.$store.dispatch(`slideshow/setReaction`, {
 					hasReacted: currentBookmarkState,
 					reactableResource: 'slides',
 					reactableId: slideId,
 					reaction: 'bookmark',
 					count: slide.bookmark.count,
-					vuexState
 				}).then(() => {
 					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 					this.$emit('slideBookmarked', {slideId, hasReacted: slide.bookmark.hasReacted})
@@ -266,6 +255,8 @@
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
 				this.toggleOverlay({source: 'slideshow', display: true})
 
+				this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+
 				const postmateOptions = {
 					container: this.container,
 					url: slideshowUrl,
@@ -303,7 +294,7 @@
 					.then(() => {
 						this.goToSlide(this.currentSlideIndex)
 
-						this.focusSlideshow()
+						this.slideChanged = false
 						this.loaded = true
 						this.toggleOverlay({source: 'slideshow', display: false})
 					})
@@ -323,11 +314,13 @@
 							this.setEventListeners()
 							this.onAnnotationsUpdated(this.comments({
 								resource: 'slides',
-								id: this.getSlideId(this.currentSlideIndex),
+								id: this.getSlideIdFromIndex(this.currentSlideIndex),
 							}))
 
 							child.frame.setAttribute('mozallowfullscreen', '');
 							child.frame.setAttribute('allowfullscreen', '');
+
+							child.call('setDebug', isDebug())
 
 							return resolve()
 					})
@@ -373,9 +366,9 @@
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
 					} else if (event.data.value.name === 'bookmark') {
-						const {index, isBookmarked} = event.data.value.data
+						const {index} = event.data.value.data
 
-						!this.bookmarkLoading && this.toggleBookmarkedState(index, isBookmarked)
+						!this.bookmarkLoading && this.toggleBookmarkedState(index)
 					} else if (event.data.value.name === 'error') {
 						this.toggleOverlay({source: 'slideshow', display: false})
 					}
@@ -384,31 +377,20 @@
 			fullscreenChangeHandler(event) {
 				this.child.call('toggleFullscreen', screenfull.isFullscreen)
 			},
+			debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event)}, {
+				trailing: true,
+			}),
 			setEventListeners() {
-				debounced = _.debounce(
-					this.messageEventListener.bind(this),
-					100,
-					{
-						leading: true,
-						trailing: true,
-					}
-				)
-
 				addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 				addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 				addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
 
-				addEventListener('message', debounced)
+				addEventListener('message', this.debouncedMessageListener)
 				addEventListener('blur', this.checkFocus)
 				addEventListener('focus', this.checkFocus)
 				addEventListener('focusout', this.checkFocus)
 			},
-			destroySlideshow() {
-				this.toggleOverlay({source: 'slideshow', display: false})
-				if (typeof this.child.destroy === 'function') {
-					this.child.destroy()
-				}
-
+			removeEventListeners() {
 				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
@@ -416,8 +398,16 @@
 				removeEventListener('blur', this.checkFocus)
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
-				removeEventListener('message', debounced)
+				removeEventListener('message', this.debouncedMessageListener)
 
+			},
+			destroySlideshow() {
+				this.toggleOverlay({source: 'slideshow', display: false})
+				if (typeof this.child.destroy === 'function') {
+					this.child.destroy()
+				}
+
+				this.removeEventListeners()
 				this.resetModule()
 				this.loaded = false
 			},
@@ -517,15 +507,7 @@
 					this.child.destroy()
 				}
 
-				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
-				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
-				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
-
-				removeEventListener('blur', this.checkFocus)
-				removeEventListener('focus', this.checkFocus)
-				removeEventListener('focusout', this.checkFocus)
-				removeEventListener('message', debounced)
-
+				this.removeEventListeners()
 				this.setSlideshowHtmlContent(newContent)
 			},
 			'screenData' (newValue, oldValue) {

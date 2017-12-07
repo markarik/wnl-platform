@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\Live\LiveContentUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ContentUpdatesGate implements ShouldQueue
@@ -24,6 +25,8 @@ class ContentUpdatesGate implements ShouldQueue
 	 */
 	public function handle($event)
 	{
-		
+		$liveEvent = new LiveContentUpdated([], $event->broadcastOn());
+
+		broadcast($liveEvent);
 	}
 }

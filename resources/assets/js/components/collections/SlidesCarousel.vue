@@ -166,7 +166,7 @@
 				selectedSlideIndex: 0,
 				htmlContent: '',
 				loadedHtmlContents: {},
-				mode: 'bookmarked'
+				mode: ''
 			}
 		},
 		components: {
@@ -245,6 +245,12 @@
 				}
 			},
 			showContent(htmlContentKey) {
+				if (htmlContentKey === this.mode) {
+					return Promise.resolve()
+				}
+
+				this.selectedSlideIndex = 0
+
 				if (htmlContentKey === 'bookmarked') {
 					const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
 					axios.post(getApiUrl(`slideshow_builder/.query`), {

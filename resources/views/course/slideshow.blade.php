@@ -27,6 +27,7 @@
 	</style>
 </head>
 	<body>
+		<span id="orderNumberContainer" class="order-number-container"></span>
 		<a class="bookmark rounded-button">
 			<img class="bookmark-image bookmark-image-add" src="{{ asset('images/star-o.svg') }}" alt="Dodaj do zakładek">
 			<img class="bookmark-image bookmark-image-remove" src="{{ asset('images/star.svg') }}" alt="Usuń z zakładek">

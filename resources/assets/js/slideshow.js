@@ -16,16 +16,10 @@ const $slideAnnotations = $slideshowAnnotations.find('.annotations-to-slide')
 const $annotationsCounters = $('.annotations-count')
 const $toggleAnnotations = $('.toggle-annotations')
 const $toggleFullscreen = $('.toggle-fullscreen')
+const $orderNumberContainer = $('#orderNumberContainer')
 const bookmarkElement = document.querySelector('.bookmark')
-const bookmarkImageAdd = bookmarkElement.querySelector('.bookmark-image-add')
-const bookmarkImageRemove = bookmarkElement.querySelector('.bookmark-image-remove')
 
 let isSavingBookmark = false
-let bookmarkedSlideNumbers = [];
-let configuration = {
-	sortedSlides: [],
-	bookmarkedSlides: {}
-};
 
 const setupReveal = () => {
 	Reveal.initialize({
@@ -33,7 +27,7 @@ const setupReveal = () => {
 		center: false,
 		controls: false,
 		embedded: true,
-		slideNumber: true,
+		slideNumber: false,
 		overview: false,
 		transition: 'none',
 		postMessage: true,
@@ -127,6 +121,9 @@ const setupHandshake = () => {
 		},
 		setDebug(isDebug) {
 			Postmate.debug = isDebug
+		},
+		setSlideOrderNumber(orderNumber) {
+			$orderNumberContainer.text(orderNumber)
 		}
 	})
 }

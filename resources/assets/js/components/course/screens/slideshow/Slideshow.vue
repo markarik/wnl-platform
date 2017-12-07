@@ -225,9 +225,11 @@
 
 					const newSlideId = this.getSlideIdFromIndex(slideIndex)
 					const slide = this.getSlideById(newSlideId)
+					const orderNumber = this.getSlidePositionById(newSlideId)
 
 					this.child.call('goToSlide', slideIndex)
 					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+					this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
 
 					this.currentSlideId = this.getSlideIdFromIndex(slideIndex)
 					this.currentSlideNumber = this.slideNumberFromIndex(slideIndex)
@@ -347,6 +349,8 @@
 							const currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
 							const slideId = this.getSlideIdFromIndex(data.state.indexh)
 							const slide = this.getSlideById(slideId)
+							const orderNumber = this.getSlidePositionById(slideId)
+
 
 							this.currentSlideNumber = currentSlideNumber
 							this.currentSlideId = slideId
@@ -354,6 +358,7 @@
 							this.focusSlideshow()
 
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+							this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
 						}
 
 						this.slideChanged = false

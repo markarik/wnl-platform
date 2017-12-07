@@ -115,17 +115,6 @@ const getters = {
 	slides: (state) => state.slides,
 	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
 	slidesIds: (state) => Object.keys(state.slides),
-	bookmarkedSlideNumbers: (state) => {
-		const slides = state.slides;
-
-		return Object.keys(slides)
-			.filter((slideIndex) => {
-				return slides[slideIndex].bookmark.hasReacted === true
-			})
-			.map((slideIndex) => {
-				return slides[slideIndex].order_number
-			})
-	},
 	findRegularSlide: (state, getters) => (slideNumber, direction) => {
 		let step   = direction === 'previous' ? -1 : 1,
 			length = state.presentables.length

@@ -32,12 +32,14 @@
 					<wnl-avatar
 							:fullName="author.full_name"
 							:url="author.avatar"
-							:userId="author.user_id"
+							:userId="userId"
 							size="medium">
 					</wnl-avatar>
-					<span class="qna-meta-info">
-						{{author.full_name}} ·
-					</span>
+					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+						<span class="qna-meta-info">
+							{{authorNameToDisplay}} ·
+						</span>
+					</router-link>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -238,6 +240,9 @@
 			id() {
 				return this.questionId
 			},
+			userId() {
+				return this.author.user_id
+			},
 			content() {
 				return this.question.text
 			},
@@ -251,6 +256,9 @@
 							return this.profile(this.question.profiles[0])
 						})
 				}
+			},
+			authorNameToDisplay() {
+				return this.author.display_name || this.author.full_name
 			},
 			isCurrentUserAuthor() {
 				return this.currentUserId === this.author.user_id
@@ -373,3 +381,4 @@
 		},
 	}
 </script>
+	this.author.display_name ? this.author.display_name : this.author.full_name

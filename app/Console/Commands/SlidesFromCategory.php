@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Category;
-use App\Models\Tag;
-use App\Models\Slide;
 use App\Models\Lesson;
+use App\Models\Slide;
+use App\Models\Tag;
+use Illuminate\Console\Command;
 
 class SlidesFromCategory extends Command
 {
@@ -86,8 +86,16 @@ class SlidesFromCategory extends Command
 
 			foreach($slidesIds as $slideId) {
 				$slide = Slide::find($slideId);
-				$category->slides()->attach($slide, ['order_number' => $orderNumber]);
-				$orderNumber++;
+				try {
+					$category->slides()->attach($slide, ['order_number' => $orderNumber]);
+					$orderNumber++;
+				} catch (\Illuminate\Database\QueryException $e) {
+					if ($e->errorInfo[1] === 1062) {
+						// Means entry is duplicated.
+					} else {
+						throw $e;
+					}
+				}
 			}
 		}
 	}

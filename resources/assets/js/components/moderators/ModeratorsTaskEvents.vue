@@ -116,9 +116,6 @@ export default {
 			type: Array,
 			required: true
 		},
-		routeContext: {
-			type: String|Object
-		}
 	},
 	data() {
 		return {

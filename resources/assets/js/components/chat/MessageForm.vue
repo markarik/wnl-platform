@@ -77,6 +77,7 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
+				'currentUserDisplayName',
 				'currentUserAvatar',
 				'currentUserId',
 				'currentUser'
@@ -113,6 +114,7 @@
 						user: this.currentUser,
 						content: this.content,
 						full_name: this.currentUserFullName,
+						display_name: this.currentUserDisplayName,
 					}
 				})
 			},

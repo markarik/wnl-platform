@@ -20,6 +20,7 @@ class UserProfile extends Model
 		'last_name',
 		'public_email',
 		'public_phone',
+		'display_name',
 		'username',
 		'city',
 		'university',

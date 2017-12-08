@@ -96,7 +96,7 @@ class QuestionsTest extends ApiTestCase
 		$screen->tags()->attach($tags);
 
 		$data = [
-			'question_id' => $question->id,
+			'context' => $question->id,
 		];
 
 		$response = $this
@@ -106,12 +106,12 @@ class QuestionsTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'screen' => [
-					'id' => $screen->id,
-				],
-				'lesson' => [
-					'id' => $lesson->id,
-				],
+				'name' => 'screens',
+				'params' => [
+					'screenId' => $screen->id,
+					'lessonId' => $screen->lesson->id,
+					'courseId' => $screen->lesson->group->course->id
+				]
 			]);
 	}
 
@@ -126,7 +126,7 @@ class QuestionsTest extends ApiTestCase
 		$page->tags()->attach($tags);
 
 		$data = [
-			'question_id' => $question->id,
+			'context' => $question->id,
 		];
 
 		$response = $this
@@ -136,9 +136,7 @@ class QuestionsTest extends ApiTestCase
 		$response
 			->assertStatus(200)
 			->assertJson([
-				'page' => [
-					'slug' => $page->slug,
-				],
+				'name' => $page->slug,
 			]);
 	}
 }

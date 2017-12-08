@@ -25,7 +25,26 @@ export const baseProps = {
 }
 
 export const mapMessageToRoute = (message, query) => {
+
+	if (message.context.dynamic) {
+		return {
+			dynamic: {
+				resource: message.context.dynamic.resource,
+				value: message.context.dynamic.value,
+			},
+			route: {
+				...message.context.route
+			},
+			query: {
+				...query,
+				notification: message.id,
+				noScroll: true
+			}
+		}
+	}
+
 	if (!message.context.name) {
+
 		const url = message.referer.split('?')[0];
 
 		return appendQuery(url, queryString.stringify({

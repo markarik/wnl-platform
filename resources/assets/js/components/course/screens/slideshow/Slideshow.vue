@@ -272,6 +272,7 @@
 						}
 						this.focusSlideshow()
 						this.loaded = true
+						this.toggleOverlay({source: 'slideshow', display: false})
 
 					})
 					.catch(error => {
@@ -462,8 +463,6 @@
 				this.setup({id: this.slideshowId})
 					.then(() => {
 						return this.initSlideshow()
-					}).then(() => {
-						this.toggleOverlay({source: 'slideshow', display: false})
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)

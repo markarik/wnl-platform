@@ -129,7 +129,11 @@ class UserStateApiController extends ApiController
 		}
 
 		$userTime = UserTime::where('user_id', $user)->orderBy('created_at', 'desc')->first();
-		$userCourseProgress = UserCourseProgress::where('user_id', $userObject->profile->id)->get();
+		$userCourseProgress = UserCourseProgress
+			::where('user_id', $userObject->profile->id)
+			->whereNull('section_id')
+			->whereNull('screen_id')
+			->get();
 		$userComments = Comment::where('user_id', $user)->count();
 		$qnaQuestionsPosted = QnaQuestion::where('user_id', $user)->count();
 		$qnaAnswersPosted = QnaAnswer::where('user_id', $user)->count();

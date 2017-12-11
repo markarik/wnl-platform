@@ -21,7 +21,7 @@
 			<div class="slideshow-menu">
 				<wnl-annotations
 					v-if="!isLoading"
-					:currentSlide="currentSlideNumber"
+					:currentSlideId="currentSlideId"
 					:slideshowId="slideshowId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"

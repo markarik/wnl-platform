@@ -179,7 +179,7 @@
 		computed: {
 			...mapGetters('collections', ['slidesContent']),
 			...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
-			...mapGetters('slideshow', ['presentableSortedSlidesIds', 'getSlidePositionById']),
+			...mapGetters('slideshow', ['presentableSortedSlidesIds']),
 			slides() {
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,

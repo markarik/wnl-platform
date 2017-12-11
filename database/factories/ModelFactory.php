@@ -182,3 +182,13 @@ $factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
 		'content' => $faker->text,
 	];
 });
+
+$factory->define(App\Models\Section::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->text,
+	];
+});
+
+$factory->define(App\Models\Slideshow::class, function (Faker\Generator $faker) {
+	return [];
+});

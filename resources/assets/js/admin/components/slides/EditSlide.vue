@@ -5,7 +5,6 @@
 		:resourceUrl="resourceUrl"
 		:excluded="['snippet']"
 		:remove="true"
-		@reset="resetEditor"
 	>
 		<wnl-slides-search
 			@resourceUrlFetched="onResourceUrlFetched"

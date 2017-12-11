@@ -90,6 +90,7 @@ function getInitialState() {
 			 * }
 			 */
 		},
+		sortedSlidesIds: []
 	}
 }
 
@@ -108,23 +109,9 @@ const getters = {
 		return state.presentables[slideNumber - 1].is_functional
 	},
 	isLoading: (state) => state.loading,
-	getSlideId: (state) => (slideOrderNumber) => {
-		return state.presentables.length === 0 ? -1 : _.get(state, `presentables[${slideOrderNumber}]`, {}).id
-	},
 	slides: (state) => state.slides,
 	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
 	slidesIds: (state) => Object.keys(state.slides),
-	bookmarkedSlideNumbers: (state) => {
-		const slides = state.slides;
-
-		return Object.keys(slides)
-			.filter((slideIndex) => {
-				return slides[slideIndex].bookmark.hasReacted === true
-			})
-			.map((slideIndex) => {
-				return slides[slideIndex].order_number
-			})
-	},
 	findRegularSlide: (state, getters) => (slideNumber, direction) => {
 		let step   = direction === 'previous' ? -1 : 1,
 			length = state.presentables.length
@@ -140,7 +127,13 @@ const getters = {
 				return length
 			}
 		}
-	}
+	},
+	presentableSortedSlidesIds: state => {
+		return state.presentables.map(presentable => presentable.slide_id)
+	},
+	slideshowSortedSlideIds: state => state.sortedSlidesIds,
+	getSlideIdFromIndex: state => index => state.sortedSlidesIds[index],
+	getSlideById: state => id => state.slides[id]
 }
 
 const mutations = {
@@ -158,7 +151,8 @@ const mutations = {
 				order_number: element.order_number,
 				comments: [],
 				bookmark: element.bookmark,
-				watch: element.watch
+				watch: element.watch,
+				id: element.slide_id
 			})
 		})
 	},
@@ -168,6 +162,9 @@ const mutations = {
 			set(state, field, initialState[field])
 		})
 	},
+	[types.SLIDESHOW_SET_SORTED_SLIDES_IDS] (state, ids) {
+		set(state, 'sortedSlidesIds', ids)
+	}
 }
 
 const actions = {
@@ -202,6 +199,9 @@ const actions = {
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)
+	},
+	setSortedSlidesIds({commit}, ids) {
+		commit(types.SLIDESHOW_SET_SORTED_SLIDES_IDS, ids)
 	}
 }
 

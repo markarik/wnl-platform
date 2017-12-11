@@ -1,8 +1,8 @@
 <template>
 	<div class="wnl-slides-collection">
-		<p class="title is-4">Zapisane slajdy <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span>
+		<p class="title is-4">{{$t('collections.slides.savedSlidesTitle')}} <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span>
 			<a class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === contentModes.bookmark}" @click="toggleBookmarked()">
-					Pokaż tylko zapisane slajdy
+					{{$t('collections.slides.showOnlySaved')}}
 					<span class="icon is-small">
 						<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
 					</span>

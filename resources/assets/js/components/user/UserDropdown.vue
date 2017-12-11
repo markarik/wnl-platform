@@ -13,7 +13,7 @@
 					<div class="user-links">
 						<p class="metadata">
 							{{ currentUserFullName }}
-							<span v-if="currentUserEmail" class="user-email">{{currentUserEmail}}</span>
+							<span v-if="currentUserEmail" class="toggleActiveuser-email">({{currentUserEmail}})</span>
 						</p>
 						<ul>
 							<li v-for="(item, index) in items"

@@ -29,17 +29,13 @@
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<wnl-avatar
+					<wnl-avatar class="avatar"
 							:fullName="author.full_name"
 							:url="author.avatar"
 							:userId="userId"
 							size="medium">
 					</wnl-avatar>
-					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-						<span class="qna-meta-info">
-							{{authorNameToDisplay}} ·
-						</span>
-					</router-link>
+					<wnl-user-profile-popover :author="author" :userId="userId"/>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -124,6 +120,7 @@
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
 		padding: $margin-base
+		height: 300px
 
 	.qna-question-content
 		font-size: $font-size-plus-1
@@ -135,6 +132,9 @@
 
 		strong
 			font-weight: $font-weight-black
+
+	.avatar
+		margin-right: $margin-small
 
 	.qna-answers-heading
 		color: $color-gray-dimmed
@@ -199,6 +199,7 @@
 	import Watch from 'js/components/global/reactions/Watch'
 	import moderatorFeatures from 'js/perimeters/moderator'
 	import { timeFromS } from 'js/utils/time'
+	import UserProfilePopover from 'js/components/users/UserProfilePopover'
 
 	export default {
 		name: 'QnaQuestion',
@@ -211,7 +212,8 @@
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
-			'wnl-watch': Watch
+			'wnl-watch': Watch,
+			'wnl-user-profile-popover': UserProfilePopover,
 		},
 		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {

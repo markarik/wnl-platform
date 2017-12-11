@@ -7,6 +7,12 @@
 				Wróć do auli
 			</router-link>
 		</p>
+		<div class="image-gallery-wrapper" :class="{ isVisible: isVisible }">
+			<div class="image-container"></div>
+			<span class="prev" @click="goToImage(previousImageIndex)"><i class="fa fa-angle-left"></i></span>
+			<span class="next" @click="goToImage(nextImageIndex)"><i class="fa fa-angle-right"></i></span>
+			<span class="iv-close" @click="isVisible = false"></span>
+		</div>
 	</div>
 </template>
 
@@ -15,6 +21,32 @@
 
 	.wnl-screen-html
 		margin: $margin-big 0
+
+		.image-gallery-wrapper
+			display: none
+			position: absolute
+			z-index: 9999
+			&.isVisible
+				display: block
+			.image-container
+				display: block
+				width: 100%
+				height: 100%
+				position: fixed
+				background-color: blue
+				top: 0
+				left: 0
+			.prev,.next
+				position: absolute
+				color: red
+				height: 100%
+				width: 25%
+				display: inline-block
+				top: 0
+				z-index: 1
+			.next
+				right: 0
+				text-align: right
 
 		img:hover
 			opacity: 0.7
@@ -57,30 +89,44 @@
 	import {imageviewer} from 'vendor/imageviewer/imageviewer'
 
 	imageviewer($, window, document)
-	function showImage() {
+	function showImage(src) {
 		// this is not Vue component, it's "event triggered" this
-		ImageViewer({snapViewPersist: false}).show(this.src);
+		ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
 	}
 
 
 	export default {
 		name: 'Html',
 		props: ['screenData', 'showBacklink'],
+		data() {
+			return {
+				imagesLoaded: false,
+				imagesSelector: '.wnl-screen-html img',
+				isVisible: false,
+				images: [],
+				currentImageIndex: -1,
+			}
+		},
 		computed: {
 			content() {
 				return this.screenData.content
 			},
 			isRepetitions() {
 				return this.screenData.name.indexOf('Powtórki') > -1
-			}
-		},
-		data() {
-			return {
-				imagesLoaded: false,
-				imagesSelector: '.wnl-screen-html img',
-			}
+			},
+			previousImageIndex() {
+				return this.currentImageIndex > 0 ? this.currentImageIndex - 1 : this.images.length -1
+			},
+			nextImageIndex() {
+				return this.currentImageIndex === this.images.length -1 ? 0 : this.currentImageIndex + 1
+			},
 		},
 		methods: {
+			goToImage(index) {
+				if (index < 0) return
+				showImage(this.images[index].src)
+				this.currentImageIndex = index
+			},
 			wrapEmbedded() {
 				let iframes = this.$el.getElementsByClassName('ql-video'),
 					wrapperClass = 'ratio-16-9-wrapper'
@@ -97,25 +143,34 @@
 				}
 			},
 			addFullscreen() {
-				const images = document.querySelectorAll(this.imagesSelector)
+				this.images = document.querySelectorAll(this.imagesSelector)
 
-				if (images.length) {
+				if (this.images.length) {
 					this.imagesLoaded = true
 				}
 
-				images.forEach((image) => {
-					image.addEventListener('click', showImage);
+				this.images.forEach((image, index) => {
+					image.addEventListener('click', (event) => {
+						this.isVisible = true
+						this.goToImage(index)
+					});
 				})
 			},
 			onClick(event) {
 				if (!this.imagesLoaded) {
-					document.querySelectorAll(this.imagesSelector).forEach((image) => {
-						image.addEventListener('click', showImage);
+					this.images = document.querySelectorAll(this.imagesSelector)
+					this.images.forEach((image, index) => {
+						image.addEventListener('click', (event) => {
+							this.isVisible = true
+							this.goToImage(index)
+						});
 					})
 
 					if (event.target.matches(this.imagesSelector)) {
-						ImageViewer().show(event.target.src);
+						const index = this.images.findIndex((image) => image.src === event.target.src)
+						this.goToImage(index)
 						this.imagesLoaded = true
+						this.isVisible = true
 					}
 				}
 			}
@@ -126,6 +181,9 @@
 		mounted() {
 			this.wrapEmbedded();
 			this.addFullscreen();
+			$('body').on('click', '#iv-container .iv-close', () => {
+				this.isVisible = false
+			})
 		},
 		updated() {
 			this.wrapEmbedded()

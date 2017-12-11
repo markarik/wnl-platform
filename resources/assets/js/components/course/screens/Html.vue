@@ -89,12 +89,11 @@
 <script>
 	import _ from 'lodash'
 	import {imageviewer} from 'vendor/imageviewer/imageviewer'
+	import { nextTick } from 'vue'
 
 	imageviewer($, window, document)
 	function showImage(src) {
-		// ?reload is needed to correctly calculate images dimension in imageViewer.
-		// It triggers reload and images width and height is calculated correctly
-		ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(`${src}?reload`);
+		ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
 	}
 
 
@@ -127,7 +126,11 @@
 		methods: {
 			goToImage(index) {
 				if (index < 0) return
-				showImage(this.images[index].src)
+
+				nextTick(() => {
+					showImage(this.images[index].src)
+				})
+
 				this.currentImageIndex = index
 			},
 			wrapEmbedded() {

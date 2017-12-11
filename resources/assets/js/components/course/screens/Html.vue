@@ -26,16 +26,19 @@
 			display: none
 			position: absolute
 			z-index: 9999
+			position: fixed
+			background-color: blue
+			top: 0
+			left: 0
+			right: 0
+			width: 100%
+			height: 100%
 			&.isVisible
 				display: block
 			.image-container
 				display: block
 				width: 100%
 				height: 100%
-				position: fixed
-				background-color: blue
-				top: 0
-				left: 0
 			.prev,.next
 				position: absolute
 				color: red
@@ -43,7 +46,6 @@
 				width: 25%
 				display: inline-block
 				top: 0
-				z-index: 1
 			.next
 				right: 0
 				text-align: right
@@ -90,8 +92,9 @@
 
 	imageviewer($, window, document)
 	function showImage(src) {
-		// this is not Vue component, it's "event triggered" this
-		ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
+		// ?reload is needed to correctly calculate images dimension in imageViewer.
+		// It triggers reload and images width and height is calculated correctly
+		ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(`${src}?reload`);
 	}
 
 

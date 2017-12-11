@@ -124,7 +124,7 @@ export const notification = {
 			this.$emit('goingToContext')
 
 			if (this.hasDynamicContext) {
-				this.$router.push(this.dynamicRoute())
+				this.$router.push(this.dynamicRoute)
 			} else if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)
 			} else if (typeof this.routeContext === 'string') {

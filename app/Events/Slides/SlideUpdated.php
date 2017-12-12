@@ -15,6 +15,8 @@ class SlideUpdated implements ShouldBroadcast
 
 	public $slide;
 
+	public $channels;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -23,6 +25,7 @@ class SlideUpdated implements ShouldBroadcast
 	public function __construct(Slide $slide)
 	{
 		$this->slide = $slide;
+		$this->channels = collect();
 	}
 
 	/**
@@ -32,6 +35,20 @@ class SlideUpdated implements ShouldBroadcast
 	 */
 	public function broadcastOn()
 	{
-		return [new Channel('slides')];
+		$this->channels->push(new Channel('slides'));
+
+		return $this->channels->toArray();
+	}
+
+	public function transform()
+	{
+		$this->data = [
+			'event'   => 'slide-updated',
+			'subject' => [
+				'type' => 'slide',
+				'id'   => $this->slide->id,
+			],
+			'context' => $this->addEventContext($this->slide),
+		];
 	}
 }

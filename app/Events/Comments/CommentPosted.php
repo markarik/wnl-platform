@@ -64,4 +64,9 @@ class CommentPosted extends Event
 			'context' => $this->addEventContext($commentable),
 		];
 	}
+
+	public function broadcastOn()
+	{
+		return [];
+	}
 }

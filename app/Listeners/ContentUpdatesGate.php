@@ -25,7 +25,8 @@ class ContentUpdatesGate implements ShouldQueue
 	 */
 	public function handle($event)
 	{
-		$liveEvent = new LiveContentUpdated([], $event->broadcastOn());
+		$event->transform();
+		$liveEvent = new LiveContentUpdated($event->data, $event->broadcastOn());
 
 		broadcast($liveEvent);
 	}

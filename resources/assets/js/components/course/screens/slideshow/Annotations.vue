@@ -1,6 +1,6 @@
 <template>
 	<div class="slideshow-annotations" :class="{'is-mobile': isMobile}">
-		<p class="metadata">Komentarze do slajdu {{currentSlide}}</p>
+		<p class="metadata">Komentarze do slajdu {{currentSlideOrderNumber}}</p>
 		<wnl-comments-list
 			v-if="currentSlideId > 0"
 			module="slideshow"
@@ -40,14 +40,14 @@
 		},
 		props: {
 			slideshowId: Number,
-			currentSlide: Number,
+			currentSlideId: Number,
 		},
 		computed: {
 			...mapGetters(['isMobile']),
-			...mapGetters('slideshow', ['getSlideId']),
-			currentSlideId() {
-				return this.getSlideId(this.currentSlide - 1)
-			},
+			...mapGetters('slideshow', ['getSlidePositionById']),
+			currentSlideOrderNumber() {
+				return this.getSlidePositionById(this.currentSlideId) + 1
+			}
 		},
 		methods: {
 			onCommentsUpdated(comments) {

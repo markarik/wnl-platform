@@ -13,7 +13,7 @@
 			<span class="next" @click="goToImage(nextImageIndex)"><i class="fa fa-angle-right"></i></span>
 			<span class="iv-close" @click="isVisible = false"></span>
 			<div class="footer-info">
-				<span class="current"></span>/<span class="total"></span>
+				<span class="current">{{this.currentImageIndex + 1}}</span>/<span class="total">{{this.images.length}}</span>
 			</div>
 		</div>
 	</div>
@@ -30,12 +30,11 @@
 			display: none
 			height: 100%
 			left: 0
-			position: absolute
 			position: fixed
 			right: 0
 			top: 0
 			width: 100%
-			z-index: 9999
+			z-index: $z-index-fullscren
 			&.isVisible
 				display: block
 			.image-container
@@ -44,10 +43,10 @@
 				width: 100%
 			.prev,.next
 				text-align: center
-				bottom: calc(50% - 6vw)
+				bottom: calc(50% - 3rem)
 				color: #929AA8
 				display: inline-block
-				font-size: 12vw
+				font-size: $font-size-plus-8
 				height: 20vh
 				position: absolute
 				top: calc(50% - 4.5rem)
@@ -146,26 +145,23 @@
 				return this.screenData.name.indexOf('Powtórki') > -1
 			},
 			previousImageIndex() {
-				console.log($('.footer-info .current').html(this.currentImageIndex -1));
 				return this.currentImageIndex > 0 ? this.currentImageIndex - 1 : this.images.length -1
 			},
 			nextImageIndex() {
-				$('.footer-info .current').html(this.currentImageIndex +1)
 				return this.currentImageIndex === this.images.length -1 ? 0 : this.currentImageIndex + 1
 			},
 		},
 		methods: {
 			goToImage(index) {
-				if (index < 0) return
-
-				$('.footer-info .total').html(this.images.length)
+				if (index < 0 || !this.images.length) return
 
 				nextTick(() => {
-					showImage(this.images[index].src, 1)
+					const image = this.images[index]
+					const idx = image ? index : 0
+					showImage(this.images[idx].src)
 				})
 
 				this.currentImageIndex = index
-				$('.footer-info .current').html(this.currentImageIndex +1)
 			},
 			wrapEmbedded() {
 				let iframes = this.$el.getElementsByClassName('ql-video'),
@@ -213,19 +209,18 @@
 						this.isVisible = true
 					}
 				}
-			}
+			},
+			onClose() {
+				this.isVisible = false
+			},
 		},
 		beforeDestroy() {
-			document.removeEventListener('click', showImage);
+			$('body').off('click', '#iv-container .iv-close', this.onClose);
 		},
 		mounted() {
 			this.wrapEmbedded();
 			this.addFullscreen();
-			$('body').on('click', '#iv-container .iv-close', () => {
-				this.isVisible = false
-			})
-			console.log(document.querySelectorAll('.wnl-screen-html img').length);
-			console.log($('.wnl-screen-html img').length);
+			$('body').on('click', '#iv-container .iv-close', this.onClose)
 		},
 		updated() {
 			this.wrapEmbedded()

@@ -19,6 +19,12 @@
 	</div>
 </template>
 
+<style lang="sass" rel="stylesheet/sass">
+	.wnl-screen-html .content img:hover
+		opacity: 0.7
+		cursor: pointer
+</style>
+
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
@@ -81,10 +87,6 @@
 		.content
 			font-size: $font-size-plus-1
 			line-height: $line-height-plus
-			img:hover
-				opacity: 0.7
-				cursor: pointer
-
 
 	.wnl-repetitions
 		ol

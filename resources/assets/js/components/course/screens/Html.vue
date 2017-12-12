@@ -55,6 +55,7 @@
 				height: 20vh
 				position: absolute
 				top: calc(50% - 4.5rem)
+				z-index: 101
 			.next
 				padding-right: 5%
 				right: 0

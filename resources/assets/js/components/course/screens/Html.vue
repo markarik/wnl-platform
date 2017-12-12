@@ -12,6 +12,9 @@
 			<span class="prev" @click="goToImage(previousImageIndex)"><i class="fa fa-angle-left"></i></span>
 			<span class="next" @click="goToImage(nextImageIndex)"><i class="fa fa-angle-right"></i></span>
 			<span class="iv-close" @click="isVisible = false"></span>
+			<div class="footer-info">
+				<span class="current"></span>/<span class="total"></span>
+			</div>
 		</div>
 	</div>
 </template>
@@ -23,39 +26,65 @@
 		margin: $margin-big 0
 
 		.image-gallery-wrapper
+			background-color: black
 			display: none
-			position: absolute
-			z-index: 9999
-			position: fixed
-			background-color: blue
-			top: 0
-			left: 0
-			right: 0
-			width: 100%
 			height: 100%
+			left: 0
+			position: absolute
+			position: fixed
+			right: 0
+			top: 0
+			width: 100%
+			z-index: 9999
 			&.isVisible
 				display: block
 			.image-container
 				display: block
+				height: 100%
 				width: 100%
-				height: 100%
 			.prev,.next
-				position: absolute
-				color: red
-				height: 100%
-				width: 25%
+				text-align: center
+				bottom: calc(50% - 6vw)
+				color: #929AA8
 				display: inline-block
-				top: 0
+				font-size: 12vw
+				height: 20vh
+				position: absolute
+				top: calc(50% - 4.5rem)
 			.next
+				padding-right: 5%
 				right: 0
 				text-align: right
-
-		img:hover
-			opacity: 0.7
+			.prev
+				padding-left: 5%
+			.footer-info
+				bottom: 0
+				color: white
+				font-size: 24px
+				height: 50px
+				position: absolute
+				text-shadow: 2px 2px #5F5A5A
+				left: 0
+				line-height: 50px
+				text-align: center
+				width: 100%
+				.current
+					color: white
+					font-size: 24px
+					line-height: 50px
+					text-align: center
+				.total
+					color: white
+					font-size: 24px
+					line-height: 50px
+					text-align: center
 
 		.content
 			font-size: $font-size-plus-1
 			line-height: $line-height-plus
+			img:hover
+				opacity: 0.7
+				cursor: pointer
 
 
 	.wnl-repetitions
@@ -117,9 +146,11 @@
 				return this.screenData.name.indexOf('Powtórki') > -1
 			},
 			previousImageIndex() {
+				console.log($('.footer-info .current').html(this.currentImageIndex -1));
 				return this.currentImageIndex > 0 ? this.currentImageIndex - 1 : this.images.length -1
 			},
 			nextImageIndex() {
+				$('.footer-info .current').html(this.currentImageIndex +1)
 				return this.currentImageIndex === this.images.length -1 ? 0 : this.currentImageIndex + 1
 			},
 		},
@@ -127,11 +158,14 @@
 			goToImage(index) {
 				if (index < 0) return
 
+				$('.footer-info .total').html(this.images.length)
+
 				nextTick(() => {
-					showImage(this.images[index].src)
+					showImage(this.images[index].src, 1)
 				})
 
 				this.currentImageIndex = index
+				$('.footer-info .current').html(this.currentImageIndex +1)
 			},
 			wrapEmbedded() {
 				let iframes = this.$el.getElementsByClassName('ql-video'),
@@ -190,6 +224,8 @@
 			$('body').on('click', '#iv-container .iv-close', () => {
 				this.isVisible = false
 			})
+			console.log(document.querySelectorAll('.wnl-screen-html img').length);
+			console.log($('.wnl-screen-html img').length);
 		},
 		updated() {
 			this.wrapEmbedded()

@@ -49,7 +49,6 @@
 				width: 100%
 			.prev,.next
 				text-align: center
-				bottom: calc(50% - 3rem)
 				color: #929AA8
 				display: inline-block
 				font-size: $font-size-plus-8
@@ -73,16 +72,6 @@
 				line-height: 50px
 				text-align: center
 				width: 100%
-				.current
-					color: white
-					font-size: 24px
-					line-height: 50px
-					text-align: center
-				.total
-					color: white
-					font-size: 24px
-					line-height: 50px
-					text-align: center
 
 		.content
 			font-size: $font-size-plus-1

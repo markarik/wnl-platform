@@ -3,6 +3,7 @@
 namespace App\Events\Slides;
 
 use App\Models\Slide;
+use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -11,7 +12,10 @@ use Illuminate\Queue\SerializesModels;
 
 class SlideUpdated implements ShouldBroadcast
 {
-	use Dispatchable, InteractsWithSockets, SerializesModels;
+	use Dispatchable,
+		InteractsWithSockets,
+		SerializesModels,
+		EventContextTrait;
 
 	public $slide;
 

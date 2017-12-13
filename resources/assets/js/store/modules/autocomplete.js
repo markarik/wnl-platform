@@ -25,8 +25,10 @@ function getUserSearchConditions(data) {
 	data.lastName && where.push(
 		['last_name', 'like', `%${data.lastName}%`]
 	)
+	let displayName = data.firstName
+	if(data.lastName) displayName += ` ${data.lastName}`
 	const orWhere = [
-		['display_name', 'like', `%${data.firstName}%`]
+		['display_name', 'like', `%${displayName}%`]
 	]
 	return { query: { where, orWhere }, limit: [5, 0] }
 }

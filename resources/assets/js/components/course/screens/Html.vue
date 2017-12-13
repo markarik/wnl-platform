@@ -145,6 +145,7 @@
 		},
 		methods: {
 			goToImage(index) {
+				console.log('weszł');
 				if (index < 0 || !this.images.length) return
 
 				nextTick(() => {
@@ -210,9 +211,20 @@
 			$('body').off('click', '#iv-container .iv-close', this.onClose);
 		},
 		mounted() {
-			this.wrapEmbedded();
-			this.addFullscreen();
+			this.wrapEmbedded()
+			this.addFullscreen()
 			$('body').on('click', '#iv-container .iv-close', this.onClose)
+			$('body').keydown(function(e) {
+				if (e.keyCode == 37) {
+					this.goToImage(this.previousImageIndex)
+				} else if (e.keyCode == 39) {
+					this.goToImage(this.nextImageIndex)
+				} else if (e.keyCode == 27) {
+					this.isVisible = false
+				} else {
+					return
+				}
+			})
 		},
 		updated() {
 			this.wrapEmbedded()

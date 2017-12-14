@@ -215,14 +215,18 @@
 			this.addFullscreen()
 			$('body').on('click', '#iv-container .iv-close', this.onClose)
 			$('body').keydown(function(e) {
-				if (e.keyCode == 37) {
-					this.goToImage(this.previousImageIndex)
-				} else if (e.keyCode == 39) {
-					this.goToImage(this.nextImageIndex)
-				} else if (e.keyCode == 27) {
-					this.isVisible = false
-				} else {
-					return
+				switch(e.keyCode) {
+					case 37:
+						this.goToImage(this.previousImageIndex)
+						console.log('left');
+						break
+					case 39:
+						this.goToImage(this.nextImageIndex)
+						console.log('right');
+						break
+					case 27:
+						console.log('esc');
+						// this.isVisible = false
 				}
 			})
 		},

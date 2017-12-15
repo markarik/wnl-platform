@@ -214,8 +214,11 @@
 			this.addFullscreen();
 			$('body').on('click', '#iv-container .iv-close', this.onClose)
 		},
-		updated() {
-			this.wrapEmbedded()
-		},
+		watch: {
+			screenData() {
+				nextTick(() => this.wrapEmbedded());
+			}
+		}
+
 	}
 </script>

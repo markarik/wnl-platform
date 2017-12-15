@@ -1,6 +1,10 @@
 <template>
 	<div>
 		<div class="wnl-slideshow-container">
+			<div class="notification-container" v-if="showAlert">
+				<span class="notification-text">Pojawiły się zmiany w prezentacji.</span>
+				<button @click="onRefreshSlideshow" class="button" v-t="'ui.action.refresh'"/>
+			</div>
 			<div class="wnl-slideshow-background-control">
 				<div class="controls-left">
 					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
@@ -103,6 +107,7 @@
 
 <script>
 	import _ from 'lodash'
+	import axios from 'axios'
 	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions} from 'vuex'
@@ -130,6 +135,7 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
+				showAlert: false
 			}
 		},
 		props: {
@@ -181,7 +187,7 @@
 		},
 		methods: {
 			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds']),
-			...mapActions(['toggleOverlay']),
+			...mapActions(['toggleOverlay', 'showNotification']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
 
@@ -450,9 +456,33 @@
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
 					})
+			},
+			onRefreshSlideshow() {
+				axios.get(this.slideshowUrl).then(({data}) => {
+					if (typeof this.child.destroy === 'function') {
+						this.child.destroy()
+					}
+
+					this.removeEventListeners()
+					this.setSlideshowHtmlContent(data)
+
+					this.showAlert = false
+				})
 			}
 		},
 		mounted() {
+			//TODO this should be more specific to preesentable - presentable id for instance should be in channel name
+			// slide can have orderd number in given presentable
+			Echo.channel('slides')
+				.listen('.App.Events.Slides.SlideUpdated', (notification) => {
+					const slide = notification.slide
+					if (this.getSlideById(slide.id)) {
+						// it means slide is inside currently used presentable
+						this.showAlert = true
+					}
+				});
+
+
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
 			if (this.htmlContent) {
@@ -471,6 +501,7 @@
 		},
 		beforeDestroy() {
 			this.destroySlideshow()
+
 		},
 		watch: {
 			'$route' (to, from) {

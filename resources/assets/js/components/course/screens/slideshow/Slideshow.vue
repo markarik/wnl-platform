@@ -135,7 +135,8 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
-				showAlert: false
+				showAlert: false,
+				modifiedSlides: []
 			}
 		},
 		props: {
@@ -458,26 +459,32 @@
 					})
 			},
 			onRefreshSlideshow() {
-				axios.get(this.slideshowUrl).then(({data}) => {
-					if (typeof this.child.destroy === 'function') {
-						this.child.destroy()
-					}
+				// we are in collection
+				if (this.htmlContent) {
+					this.$emit('refreshHtmlContent', this.modifiedSlides)
+				} else {
+					axios.get(this.slideshowUrl).then(({data}) => {
+						if (typeof this.child.destroy === 'function') {
+							this.child.destroy()
+						}
 
-					this.removeEventListeners()
-					this.setSlideshowHtmlContent(data)
+						this.removeEventListeners()
+						this.setSlideshowHtmlContent(data)
+					})
+				}
 
-					this.showAlert = false
-				})
+				this.showAlert = false
 			}
 		},
 		mounted() {
 			//TODO this should be more specific to preesentable - presentable id for instance should be in channel name
-			// slide can have orderd number in given presentable
+			// slide can have order number in given presentable
 			Echo.channel('slides')
 				.listen('.App.Events.Slides.SlideUpdated', (notification) => {
 					const slide = notification.slide
 					if (this.getSlideById(slide.id)) {
 						// it means slide is inside currently used presentable
+						this.modifiedSlides.push(slide.id)
 						this.showAlert = true
 					}
 				});

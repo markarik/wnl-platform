@@ -37,6 +37,7 @@
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
+			@refreshHtmlContent="onRefreshHtmlContent"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -179,7 +180,7 @@
 		computed: {
 			...mapGetters('collections', ['slidesContent']),
 			...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
-			...mapGetters('slideshow', ['presentableSortedSlidesIds']),
+			...mapGetters('slideshow', ['presentableSortedSlidesIds', 'slideshowSortedSlideIds']),
 			slides() {
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,
@@ -256,21 +257,15 @@
 				this.selectedSlideIndex = 0
 
 				if (htmlContentKey === this.contentModes.bookmark) {
-					const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
-					axios.post(getApiUrl(`slideshow_builder/.query`), {
-						query: {
-							whereIn: ['slides.id', slidesIds],
-							where: [['presentables.presentable_type', 'App\\Models\\Category']],
-						},
-							join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-							order: {'presentables.order_number': 'asc'}
-					}).then(({data}) => {
-						this.loadedHtmlContents[this.contentModes.bookmark] = data
-						const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
-						this.setSortedSlidesIds(sortedSlides)
-						this.mode = htmlContentKey
-						this.htmlContent = this.loadedHtmlContents[htmlContentKey];
-					})
+					this._fetchBookmarkedSlideshow()
+						.then(({data}) => {
+							const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
+							this.loadedHtmlContents[this.contentModes.bookmark] = data
+							const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
+							this.setSortedSlidesIds(sortedSlides)
+							this.mode = htmlContentKey
+							this.htmlContent = this.loadedHtmlContents[htmlContentKey];
+						})
 				} else {
 					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
 					this.mode = htmlContentKey
@@ -300,6 +295,30 @@
 					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 
 				fullSlideshowContentPromised.then(({data}) => this.loadedHtmlContents[this.contentModes.full] = data)
+			},
+			onRefreshHtmlContent(modifiedSlidesIds) {
+				// TODO:
+				// all modified slides are in bookmarked slideshow - update only bookmarked
+				// part of modified slides is in bookmarked slideshow - update both
+				// none of modified slides is in bookmarked slideshow - update only full
+				if (this.mode === this.contentModes.bookmark && this.slideshowSortedSlideIds.indexOf(modifiedSlidesIds[0]) > -1) {
+					this._fetchBookmarkedSlideshow().then(({data}) => this.loadedHtmlContents[this.contentModes.bookmark] = data)
+				} else {
+					axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
+						.then(({data}) => this.loadedHtmlContents[this.contentModes.full] = data)
+				}
+			},
+			_fetchBookmarkedSlideshow() {
+				const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
+
+				return axios.post(getApiUrl(`slideshow_builder/.query`), {
+					query: {
+						whereIn: ['slides.id', slidesIds],
+						where: [['presentables.presentable_type', 'App\\Models\\Category']],
+					},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+						order: {'presentables.order_number': 'asc'}
+				})
 			}
 		},
 		watch: {

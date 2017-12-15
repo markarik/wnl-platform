@@ -206,6 +206,19 @@
 			onClose() {
 				this.isVisible = false
 			},
+			onKeydown(e) {
+				switch(e.keyCode) {
+					case 37:
+						this.goToImage(this.previousImageIndex)
+						break
+					case 39:
+						this.goToImage(this.nextImageIndex)
+						break
+					case 27:
+						this.isVisible = false
+						break
+				}
+			}
 		},
 		beforeDestroy() {
 			$('body').off('click', '#iv-container .iv-close', this.onClose);
@@ -214,21 +227,7 @@
 			this.wrapEmbedded()
 			this.addFullscreen()
 			$('body').on('click', '#iv-container .iv-close', this.onClose)
-			$('body').keydown(function(e) {
-				switch(e.keyCode) {
-					case 37:
-						this.goToImage(this.previousImageIndex)
-						console.log('left');
-						break
-					case 39:
-						this.goToImage(this.nextImageIndex)
-						console.log('right');
-						break
-					case 27:
-						console.log('esc');
-						// this.isVisible = false
-				}
-			})
+			$('body').keydown(this.onKeydown)
 		},
 		watch: {
 			screenData() {

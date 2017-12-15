@@ -297,6 +297,7 @@
 						this.slideChanged = false
 						this.loaded = true
 						this.toggleOverlay({source: 'slideshow', display: false})
+						this.child.call('refreshChart', this.currentSlideIndex)
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})

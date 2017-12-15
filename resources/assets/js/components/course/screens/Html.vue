@@ -145,7 +145,6 @@
 		},
 		methods: {
 			goToImage(index) {
-				console.log('weszł');
 				if (index < 0 || !this.images.length) return
 
 				nextTick(() => {

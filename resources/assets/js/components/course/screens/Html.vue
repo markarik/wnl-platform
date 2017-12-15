@@ -230,8 +230,11 @@
 				}
 			})
 		},
-		updated() {
-			this.wrapEmbedded()
-		},
+		watch: {
+			screenData() {
+				nextTick(() => this.wrapEmbedded());
+			}
+		}
+
 	}
 </script>

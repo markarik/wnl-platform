@@ -9,7 +9,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SlideAdded
+class SlideDetached
 {
 	use Dispatchable,
 		InteractsWithSockets,
@@ -24,7 +24,6 @@ class SlideAdded
 	 * Create a new event instance.
 	 *
 	 * @param Slide $slide
-	 * @param $presentables
 	 */
 	public function __construct(Slide $slide, $presentables)
 	{
@@ -50,7 +49,6 @@ class SlideAdded
 				'type' => 'slide',
 				'id'   => $this->slide->id,
 			],
-			'context'      => $this->addEventContext($this->slide),
 			'presentables' => $this->presentables->pluck('id', 'type')->toArray(),
 		];
 	}

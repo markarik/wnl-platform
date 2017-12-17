@@ -81,7 +81,10 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\Slides\SlideRemoved' => [
+//		'App\Events\Slides\SlideRemoved' => [
+//		],
+
+		'App\Events\Slides\SlideDetached' => [
 			'App\Listeners\ContentUpdatesGate',
 		],
 

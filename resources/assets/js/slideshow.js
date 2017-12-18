@@ -124,6 +124,9 @@ const setupHandshake = () => {
 		},
 		setSlideOrderNumber(orderNumber) {
 			$orderNumberContainer.text(orderNumber)
+		},
+		refreshChart(index) {
+			viewers[index].refresh()
 		}
 	})
 }

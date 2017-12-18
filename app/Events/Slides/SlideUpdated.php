@@ -2,6 +2,7 @@
 
 namespace App\Events\Slides;
 
+use App\Models\Presentable;
 use App\Models\Slide;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
@@ -46,13 +47,20 @@ class SlideUpdated implements ShouldBroadcast
 
 	public function transform()
 	{
+		$presentables = Presentable::select()
+			->where('slide_id', $this->slide->id)
+			->get()
+			->pluck('id', 'presentable_type')
+			->toArray();
+
 		$this->data = [
-			'event'   => 'slide-updated',
-			'subject' => [
+			'event'        => 'slide-updated',
+			'subject'      => [
 				'type' => 'slide',
 				'id'   => $this->slide->id,
 			],
-			'context' => $this->addEventContext($this->slide),
+			'context'      => $this->addEventContext($this->slide),
+			'presentables' => $presentables,
 		];
 	}
 }

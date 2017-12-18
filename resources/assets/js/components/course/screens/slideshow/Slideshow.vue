@@ -136,7 +136,7 @@
 				slideChanged: false,
 				slideshowElement: {},
 				showAlert: false,
-				modifiedSlides: []
+				modifiedSlides: {}
 			}
 		},
 		props: {
@@ -459,21 +459,17 @@
 					})
 			},
 			onRefreshSlideshow() {
-				// we are in collection
-				if (this.htmlContent) {
-					this.$emit('refreshHtmlContent', this.modifiedSlides)
-				} else {
-					axios.get(this.slideshowUrl).then(({data}) => {
-						if (typeof this.child.destroy === 'function') {
-							this.child.destroy()
-						}
+				axios.get(this.slideshowUrl).then(({data}) => {
+					if (typeof this.child.destroy === 'function') {
+						this.child.destroy()
+					}
 
-						this.removeEventListeners()
-						this.setSlideshowHtmlContent(data)
-					})
-				}
+					this.removeEventListeners()
+					this.setSlideshowHtmlContent(data)
+				})
 
 				this.showAlert = false
+				this.modifiedSlides = {}
 			}
 		},
 		mounted() {
@@ -484,8 +480,11 @@
 					const slide = notification.slide
 					if (this.getSlideById(slide.id)) {
 						// it means slide is inside currently used presentable
-						this.modifiedSlides.push(slide.id)
-						this.showAlert = true
+						this.modifiedSlides[slide.id] = true
+						this.$emit('slideshowModified', this.modifiedSlides)
+
+						// TODO this should be handled component higher - Screen.vue perhaps
+						if (!this.htmlContent) this.showAlert = true
 					}
 				});
 
@@ -551,6 +550,7 @@
 
 				this.removeEventListeners()
 				this.setSlideshowHtmlContent(newContent)
+				this.modifiedSlides = {}
 			},
 			'screenData' (newValue, oldValue) {
 				if (newValue.type === 'slideshow') {

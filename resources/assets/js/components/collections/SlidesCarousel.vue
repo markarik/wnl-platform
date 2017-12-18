@@ -8,6 +8,10 @@
 					</span>
 			</a>
 		</p>
+		<div class="notification-container" v-if="showAlert">
+			<span class="notification-text">Pojawiły się zmiany w prezentacji.</span>
+			<button @click="showContent(mode, true)" class="button" v-t="'ui.action.refresh'"/>
+		</div>
 		<div class="slides-carousel-container" v-if="!!savedSlidesCount">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
@@ -37,7 +41,7 @@
 			:preserveRoute="true"
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
-			@refreshHtmlContent="onRefreshHtmlContent"
+			@slideshowModified="onSlideshowModified"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -171,7 +175,8 @@
 				contentModes: {
 					bookmark: 'bookmark',
 					full: 'full'
-				}
+				},
+				showAlert: false
 			}
 		},
 		components: {
@@ -249,27 +254,31 @@
 					this.showContent(this.contentModes.bookmark)
 				}
 			},
-			showContent(htmlContentKey) {
-				if (htmlContentKey === this.mode) {
+			showContent(htmlContentKey, force) {
+				if (htmlContentKey === this.mode && !force) {
 					return Promise.resolve()
 				}
 
-				this.selectedSlideIndex = 0
-
 				if (htmlContentKey === this.contentModes.bookmark) {
-					this._fetchBookmarkedSlideshow()
+					return this._fetchBookmarkedSlideshow()
 						.then(({data}) => {
 							const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
 							this.loadedHtmlContents[this.contentModes.bookmark] = data
 							const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
 							this.setSortedSlidesIds(sortedSlides)
 							this.mode = htmlContentKey
-							this.htmlContent = this.loadedHtmlContents[htmlContentKey];
+							this.htmlContent = this.loadedHtmlContents[htmlContentKey]
+							this.showAlert = false
 						})
 				} else {
-					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
-					this.mode = htmlContentKey
-					this.htmlContent = this.loadedHtmlContents[htmlContentKey];
+					return this._fetchAllSlideshow()
+						.then(({data}) => {
+							this.loadedHtmlContents[this.contentModes.full] = data
+							this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+							this.mode = htmlContentKey
+							this.htmlContent = this.loadedHtmlContents[htmlContentKey]
+							this.showAlert = false
+						})
 				}
 			},
 			sortSlidesByOrderNumber(ids) {
@@ -287,25 +296,18 @@
 
 				this.toggleOverlay({source: 'collection-slideshow', display: true})
 
-				const fullSlideshowContentPromised = axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
-
 				this.setup({id: this.categoryId, type: this.presentableType})
 					.then(() => this.showContent(this.contentModes.bookmark))
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
-
-				fullSlideshowContentPromised.then(({data}) => this.loadedHtmlContents[this.contentModes.full] = data)
 			},
-			onRefreshHtmlContent(modifiedSlidesIds) {
-				// TODO:
-				// all modified slides are in bookmarked slideshow - update only bookmarked
-				// part of modified slides is in bookmarked slideshow - update both
-				// none of modified slides is in bookmarked slideshow - update only full
-				if (this.mode === this.contentModes.bookmark && this.slideshowSortedSlideIds.indexOf(modifiedSlidesIds[0]) > -1) {
-					this._fetchBookmarkedSlideshow().then(({data}) => this.loadedHtmlContents[this.contentModes.bookmark] = data)
-				} else {
-					axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
-						.then(({data}) => this.loadedHtmlContents[this.contentModes.full] = data)
+			onSlideshowModified(modifiedSlides) {
+				const slidesIds = Object.keys(modifiedSlides)
+				const diff = _.difference(slidesIds.map(Number), this.slideshowSortedSlideIds)
+
+				// if there is difference - show alert
+				if (diff.length !== slidesIds.length) {
+					this.showAlert = true
 				}
 			},
 			_fetchBookmarkedSlideshow() {
@@ -319,6 +321,9 @@
 						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
 						order: {'presentables.order_number': 'asc'}
 				})
+			},
+			_fetchAllSlideshow() {
+				return axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))
 			}
 		},
 		watch: {

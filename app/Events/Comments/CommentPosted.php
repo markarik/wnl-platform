@@ -6,6 +6,7 @@ use App\Events\Event;
 use App\Events\SanitizesUserContent;
 use App\Models\Comment;
 use App\Traits\EventContextTrait;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -20,6 +21,8 @@ class CommentPosted extends Event
 
 	public $comment;
 
+	public $channels;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -29,6 +32,7 @@ class CommentPosted extends Event
 	{
 		parent::__construct();
 		$this->comment = $comment;
+		$this->channels = collect();
 	}
 
 	public function transform()
@@ -67,6 +71,13 @@ class CommentPosted extends Event
 
 	public function broadcastOn()
 	{
-		return [];
+		$commentable = $this->comment->commentable;
+		$commentableType = snake_case(class_basename($commentable));
+		$this->channels->push(new Channel('comments'));
+		$this->channels->push(new Channel(
+			"commentable-{$commentableType}-{$commentable->id}"
+		));
+
+		return $this->channels->toArray();
 	}
 }

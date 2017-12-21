@@ -364,7 +364,23 @@ if (Mix.inProduction) {
 		}),
 		new UglifyJSPlugin({
 			ecma: 6,
-			cache: true
+			cache: true,
+			compress: {
+				sequences: true,
+				properties: true,
+				dead_code: true,
+				conditionals: true,
+				evaluate: true,
+				booleans: true,
+				loops: true,
+				unused: false, // setting this to true hangs uglify
+				hoist_funs: true,
+				if_return: true,
+				join_vars: true,
+				cascade: true,
+				warnings: true,
+				negate_iife: true
+			  }
 		})
 	);
 }

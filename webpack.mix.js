@@ -27,7 +27,7 @@ mix.sass('resources/assets/sass/app.scss', 'public/css/app.css')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
 	.js('resources/assets/js/notSupportedBrowserModal.js', 'public/js/notSupportedBrowserModal.js')
 	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js')
-	.extract(['jquery', 'quill', 'moment', 'lodash'])
+	.extract(['jquery', 'quill', 'moment'])
 
 if (mix.config.inProduction) {
 	mix.version()

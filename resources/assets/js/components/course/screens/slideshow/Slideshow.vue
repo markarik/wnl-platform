@@ -477,15 +477,26 @@
 			//TODO this should be more specific to preesentable - presentable id for instance should be in channel name
 			// slide can have order number in given presentable
 			Echo.channel('slides')
-				.listen('.App.Events.Slides.SlideUpdated', (notification) => {
-					const slide = notification.slide
-					if (this.getSlideById(slide.id)) {
-						// it means slide is inside currently used presentable
-						this.modifiedSlides[slide.id] = true
-						this.$emit('slideshowModified', this.modifiedSlides)
+				.listen('.App.Events.Live.LiveContentUpdated', ({event, subject, presentables}) => {
+					switch (event) {
+						case 'slide-added':
+							if (!this.htmlContent) this.showAlert = true
+							// fetch slideshow once again
+							// update presentables
+							break
+						case 'slide-updated':
+							if (this.getSlideById(subject.id)) {
+								// it means slide is inside currently used presentable
+								this.modifiedSlides[slide.id] = true
+								this.$emit('slideshowModified', this.modifiedSlides)
 
-						// TODO this should be handled component higher - Screen.vue perhaps
-						if (!this.htmlContent) this.showAlert = true
+								// TODO this should be handled component higher - Screen.vue perhaps
+								// TODO in notification we can show what is the order number of modified slide
+								if (!this.htmlContent) this.showAlert = true
+							}
+							break
+						case 'slide-removed':
+							break
 					}
 				});
 
@@ -508,7 +519,6 @@
 		},
 		beforeDestroy() {
 			this.destroySlideshow()
-
 		},
 		watch: {
 			'$route' (to, from) {

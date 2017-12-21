@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const Mix     = require('laravel-mix').config;
 const plugins = require('laravel-mix').plugins;
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 
 /*
@@ -75,6 +77,10 @@ if (Mix.options.extractVueStyles) {
 	vueExtractTextPlugin = Mix.vueExtractTextPlugin();
 
 	module.exports.plugins = (module.exports.plugins || []).concat(vueExtractTextPlugin);
+}
+
+if (process.env.NODE_ENV === 'anal') {
+	module.exports.plugins = (module.exports.plugins || []).concat(new BundleAnalyzerPlugin());
 }
 
 

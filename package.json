@@ -6,7 +6,8 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js",
     "sync": "cross-env NODE_ENV=development SYNC=on node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=webpack.config.js",
     "setup": "yarn install --pure-lockfile",
-    "test": "cross-env BABEL_ENV=test karma start resources/assets/js/tests/karma.conf.js --single-run"
+    "test": "cross-env BABEL_ENV=test karma start resources/assets/js/tests/karma.conf.js --single-run",
+    "anal": "cross-env NODE_ENV=anal webpack --config=webpack.config.js"
   },
   "dependencies": {
     "append-query": "^2.0.1",
@@ -71,6 +72,7 @@
     "sinon-chai": "^2.8.0",
     "uglifyjs-webpack-plugin": "1.0.0-beta.1",
     "vue-loader": "^12.2.1",
+    "webpack-bundle-analyzer": "^2.9.1",
     "webpack-merge": "^4.1.1"
   }
 }

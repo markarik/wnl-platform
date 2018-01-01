@@ -5,12 +5,14 @@
 				:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
-			<aside class="sidenav-aside help-sidenav">
-				siema
+			<aside class="sidenav-aside rooms-sidenav">
+			    <div class="rooms-header">
+					Prywatne wiadomości
+				</div>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<div class="scrollable-main-container">
+			<div class="scrollable-main-container chat-container">
 				<wnl-private-chat :users="chatUsers"></wnl-private-chat>
 			</div>
 		</div>
@@ -18,6 +20,28 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
+
+	.wnl-course-content
+		flex: $course-content-flex auto
+		position: relative
+
+	.chat-container
+		display: flex
+		flex-direction: column
+
+	.rooms-sidenav
+		display: flex
+		flex: 1
+		flex-direction: column
+		justify-content: space-between
+		padding: $margin-base
+		position: relative
+
+		.rooms-header
+			color: $color-gray-dimmed
+			font-size: $font-size-minus-1
+			text-align: center
 </style>
 
 <script>

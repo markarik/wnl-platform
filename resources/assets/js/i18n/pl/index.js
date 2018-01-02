@@ -10,6 +10,7 @@ import { ui } from './ui'
 import { units } from './units'
 import { tasks } from './tasks'
 import { user } from './user'
+import { collections } from './collections'
 
 export {
 	dashboard,
@@ -23,5 +24,6 @@ export {
 	ui,
 	units,
 	user,
-	tasks
+	tasks,
+	collections
 }

@@ -184,6 +184,9 @@
 			}
 		},
 		methods: {
+			reset() {
+				this.submissionFailed = false
+			},
 			onSubmit() {
 				this.loading = true
 				this.reset()
@@ -215,9 +218,6 @@
 
 				return SECTION_OPEN_TAG_REGEX.test(contentSplited[0])
 						&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1])
-			},
-			reset() {
-				this.submissionFailed = false
 			},
 			updateChart() {
 				this.updatingChart = true

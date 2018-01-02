@@ -41,6 +41,7 @@
 							:categoryName="categoryName"
 							:rootCategoryName="rootCategoryName"
 							:savedSlidesCount="slidesIds.length"
+							:slidesIds="slidesIds"
 						></wnl-slides-carousel>
 						<wnl-qna-collection
 							:categoryName="categoryName"

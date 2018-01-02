@@ -4,6 +4,7 @@ namespace App\Events\Slides;
 
 use App\Models\Slide;
 use App\Traits\EventContextTrait;
+use Facades\Lib\Bethink\Bethink;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -20,6 +21,8 @@ class SlideDetached
 
 	public $presentables;
 
+	public $channels;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -27,6 +30,7 @@ class SlideDetached
 	 */
 	public function __construct(Slide $slide, $presentables)
 	{
+		$this->channels = collect();
 		$this->slide = $slide;
 		$this->presentables = $presentables;
 	}
@@ -38,13 +42,22 @@ class SlideDetached
 	 */
 	public function broadcastOn()
 	{
-		return new Channel('slides');
+		$this->channels->push(new Channel('slides'));
+		foreach ($this->presentables as $presentable) {
+			$resource = Bethink::getTypeByClassInstance($presentable);
+
+			$this->channels->push(
+				new Channel("presentable-{$resource}-{$presentable->id}")
+			);
+		}
+
+		return $this->channels->toArray();
 	}
 
 	public function transform()
 	{
 		$this->data = [
-			'event'        => 'slide-added',
+			'event'        => 'slide-detached',
 			'subject'      => [
 				'type' => 'slide',
 				'id'   => $this->slide->id,

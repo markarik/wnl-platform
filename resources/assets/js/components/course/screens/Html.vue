@@ -207,26 +207,34 @@
 			},
 			onKeydown(e) {
 				switch(e.keyCode) {
-					case 37:
+					case 37: // left arrow
 						this.goToImage(this.previousImageIndex)
 						break
-					case 39:
+					case 39: // right arrow
 						this.goToImage(this.nextImageIndex)
 						break
-					case 27:
+					case 27: // esc
 						this.isVisible = false
 						break
 				}
 			}
 		},
 		beforeDestroy() {
-			$('body').off('click', '#iv-container .iv-close', this.onClose);
+			document.body.removeEventListener('click', function(e) {
+				if (e.target.className == 'iv-close') {
+					this.onClose
+				}
+			})
 		},
 		mounted() {
 			this.wrapEmbedded()
 			this.addFullscreen()
-			$('body').on('click', '#iv-container .iv-close', this.onClose)
-			$('body').keydown(this.onKeydown)
+			document.body.addEventListener('click', function(e) {
+				if (e.target.className == 'iv-close') {
+					this.onClose
+				}
+			})
+			document.body.addEventListener('keydown', this.onKeydown)
 		},
 		watch: {
 			screenData() {

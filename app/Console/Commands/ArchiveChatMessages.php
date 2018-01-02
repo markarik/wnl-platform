@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use DB;
-use Closure;
-use Exception;
 use App\Models\ChatRoom;
+use Closure;
+use DB;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
@@ -66,7 +66,11 @@ class ArchiveChatMessages extends Command
 	{
 		$room = ChatRoom::firstOrCreate(['name' => $room]);
 
-		$rawMessages = $this->getMessages($room->name);
+		if ($room->is_private) {
+			$rawMessages = $this->getMessages($room->name, $leave = 0);
+		} else {
+			$rawMessages = $this->getMessages($room->name);
+		}
 		$messages = $this->decodeMessages($rawMessages);
 
 		$this->transaction(function () use ($messages, $room, $rawMessages) {

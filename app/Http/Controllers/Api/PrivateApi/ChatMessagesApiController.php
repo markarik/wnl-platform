@@ -1,10 +1,10 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use App\Models\ChatRoom;
-use App\Models\ChatMessage;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
+use App\Models\ChatMessage;
+use App\Models\ChatRoom;
+use Auth;
+use Illuminate\Http\Request;
 
 class ChatMessagesApiController extends ApiController
 {
@@ -36,5 +36,14 @@ class ChatMessagesApiController extends ApiController
 		}
 
 		return $this->respondUnauthorized();
+	}
+
+	public function getPrivateRooms()
+	{
+		$user = Auth::user();
+		$messages = ChatMessage::select()
+			->whereHas('chatRoom', function($query) use ($user) {
+				$query->where('name', 'like', "private%-{$user->id}-%");
+			});
 	}
 }

@@ -32,7 +32,7 @@ class ChatMessagesTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('POST', $this->url('/chat_rooms/not_existing_room/chat_messages/.search?include=profiles'), $data);
+			->json('POST', $this->url('/chat_rooms/nonexistent_room/chat_messages/.search?include=profiles'), $data);
 
 		$response
 			->assertStatus(404);

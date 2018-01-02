@@ -26,7 +26,7 @@
 				<wnl-annotations
 					v-if="!isLoading"
 					:currentSlideId="currentSlideId"
-					:slideshowId="slideshowId"
+					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
 				></wnl-annotations>
@@ -144,7 +144,12 @@
 				type: Object,
 				default: () => {
 					return {
-						type: 'slideshow'
+						type: 'slideshow',
+						meta: {
+							resources: [{
+								id: -1
+							}]
+						}
 					}
 				}
 			},
@@ -174,11 +179,14 @@
 			screenId() {
 				return this.$route.params.screenId
 			},
-			slideshowId() {
+			presentableId() {
 				return this.screenData.meta && this.screenData.meta.resources[0].id
 			},
+			presentableType() {
+				return this.screenData.type
+			},
 			slideshowUrl() {
-				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
+				return getApiUrl(`slideshow_builder/${this.presentableId}`)
 			},
 			iframe() {
 				if (this.loaded) {
@@ -474,26 +482,21 @@
 			}
 		},
 		mounted() {
-			//TODO this should be more specific to preesentable - presentable id for instance should be in channel name
-			// slide can have order number in given presentable
-			Echo.channel('slides')
+			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
 				.listen('.App.Events.Live.LiveContentUpdated', ({event, subject, presentables}) => {
+					console.log(event, '....event')
+					console.log(arguments[0], '....passed arguments')
 					switch (event) {
 						case 'slide-added':
 							if (!this.htmlContent) this.showAlert = true
-							// fetch slideshow once again
-							// update presentables
+							this.$emit('slideAdded')
 							break
 						case 'slide-updated':
-							if (this.getSlideById(subject.id)) {
-								// it means slide is inside currently used presentable
-								this.modifiedSlides[slide.id] = true
-								this.$emit('slideshowModified', this.modifiedSlides)
+							if (!this.htmlContent) this.showAlert = true
 
-								// TODO this should be handled component higher - Screen.vue perhaps
-								// TODO in notification we can show what is the order number of modified slide
-								if (!this.htmlContent) this.showAlert = true
-							}
+							this.modifiedSlides[slide.id] = true
+							this.$emit('slideModified', this.modifiedSlides)
+
 							break
 						case 'slide-removed':
 							break
@@ -508,7 +511,7 @@
 				this.setupCollection()
 			} else {
 				// logic related with lesson
-				this.setup({id: this.slideshowId})
+				this.setup({id: this.presentableId})
 					.then(() => {
 						return this.initSlideshow()
 					}).catch(error => {
@@ -567,7 +570,7 @@
 				if (newValue.type === 'slideshow') {
 					this.toggleOverlay({source: 'slideshow', display: true})
 
-					this.setup({id: this.slideshowId})
+					this.setup({id: this.presentableId})
 					.then(() => {
 						this.initSlideshow()
 							.then(() => {

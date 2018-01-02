@@ -39,9 +39,11 @@
 			v-if="htmlContent"
 			:htmlContent="htmlContent"
 			:preserveRoute="true"
+			:screenData="screenData"
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
-			@slideshowModified="onSlideshowModified"
+			@slideModified="onSlideshowModified"
+			@slideAdded="onSlideshowModified"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -176,7 +178,16 @@
 					bookmark: 'bookmark',
 					full: 'full'
 				},
-				showAlert: false
+				showAlert: false,
+				// artificial screenData to make it consistent with regular slideshow API
+				screenData: {
+					type: 'category',
+					meta: {
+						resources: [{
+							id: this.categoryId
+						}]
+					}
+				}
 			}
 		},
 		components: {

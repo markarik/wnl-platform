@@ -43,7 +43,7 @@
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
 			@slideModified="onSlideshowModified"
-			@slideAdded="onSlideshowModified"
+			@slideAdded="onSlideAdded"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -318,6 +318,11 @@
 
 				// if there is difference - show alert
 				if (diff.length !== slidesIds.length) {
+					this.showAlert = true
+				}
+			},
+			onSlideAdded() {
+				if (this.mode === this.contentModes.full) {
 					this.showAlert = true
 				}
 			},

@@ -483,18 +483,18 @@
 		},
 		mounted() {
 			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
-				.listen('.App.Events.Live.LiveContentUpdated', ({event, subject, presentables}) => {
-					console.log(event, '....event')
-					console.log(arguments[0], '....passed arguments')
+				.listen('.App.Events.Live.LiveContentUpdated', ({data: {event, subject}}) => {
 					switch (event) {
 						case 'slide-added':
 							if (!this.htmlContent) this.showAlert = true
+
 							this.$emit('slideAdded')
+
 							break
 						case 'slide-updated':
 							if (!this.htmlContent) this.showAlert = true
 
-							this.modifiedSlides[slide.id] = true
+							this.modifiedSlides[subject.id] = true
 							this.$emit('slideModified', this.modifiedSlides)
 
 							break

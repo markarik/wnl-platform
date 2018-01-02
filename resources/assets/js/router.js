@@ -2,12 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
-import {isProduction} from 'js/utils/env'
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
-import { createSandbox } from 'vue-kindergarten';
-import store from 'js/store/store'
-import { getCurrentUser } from 'js/services/user';
+import {createSandbox} from 'vue-kindergarten';
+import {getCurrentUser} from 'js/services/user';
+import { getApiUrl } from 'js/utils/env'
 
 Vue.use(Router)
 
@@ -113,22 +112,22 @@ let routes = [
 		name: 'help',
 		path: '/app/help',
 		component: require('js/components/help/Help.vue'),
-		props: true,
+		redirect: {name: 'help-new'},
 		children: [
 			{
 				name: 'help-learning',
 				path: 'learning',
-				component: require('js/components/help/LearningHelp.vue'),
+				component: require('js/components/global/Page.vue'),
 			},
 			{
 				name: 'help-tech',
 				path: 'tech',
-				component: require('js/components/help/TechnicalHelp.vue'),
+				component: require('js/components/global/Page.vue'),
 			},
 			{
 				name: 'help-new',
 				path: 'new',
-				component: require('js/components/help/ComingSoonHelp.vue'),
+				component: require('js/components/global/Page.vue'),
 			},
 		]
 	},
@@ -216,6 +215,23 @@ let routes = [
 				component: require('js/components/users/UserProfile.vue'),
 			},
 		]
+	},
+	{
+		name: 'dynamicContextMiddleRoute',
+		path: '/app/dynamic/:resource/:context',
+		beforeEnter: (to, from, next) => {
+			axios.post(getApiUrl(`${to.params.resource}/.context`), {
+				context: to.params.context
+			}).then(({data}) => {
+				return next({
+					...data,
+					query: to.query
+				})
+			}).catch(err => {
+				return next(from)
+			})
+		}
+
 	},
 	{
 		path: '*',

@@ -97,8 +97,9 @@
 				return this.showComments ? this.$t('ui.action.hide') : this.$t('ui.action.show')
 			},
 			isCommentableInUrl() {
-				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
-					|| _.get(this.$route, 'query.commentable') == this.commentableId;
+				return (_.get(this.$route, `query.${this.urlParam}`) == this.commentableId
+					|| _.get(this.$route, 'query.commentable') == this.commentableId)
+					&& (_.get(this.$route, 'query.comment'));
 			},
 			watchState() {
 				return this.$store.getters[`${this.module}/getReaction`](

@@ -46,7 +46,7 @@
 			</div>
 		</div>
 		<div class="card-content">
-			<wnl-task-events :events="task.events" :routeContext="taskContext"/>
+			<wnl-task-events :events="task.events"/>
 		</div>
 		<footer class="card-footer">
 			<router-link target="_blank" :to="taskContext" class="card-footer-item">{{$t('tasks.task.action.go')}}</router-link>
@@ -169,6 +169,16 @@ export default {
 			return this.task.events[this.eventsCount - 1]
 		},
 		taskContext() {
+			if (_.get(this.lastEvent, 'data.context.dynamic')) {
+				const dynamic = _.get(this.lastEvent, 'data.context.dynamic')
+				return {
+					name: 'dynamicContextMiddleRoute',
+					params: {
+						resource: dynamic.resource,
+						context: dynamic.value
+					}
+				}
+			}
 			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer)
 		},
 		formatedCreatedAt() {

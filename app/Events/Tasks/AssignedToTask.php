@@ -43,11 +43,12 @@ class AssignedToTask extends Event
 			],
 			'subject' => [],
 			'actors'  => [
-				'id'         => $this->actor->id,
-				'first_name' => $this->actor->profile->first_name,
-				'last_name'  => $this->actor->profile->last_name,
-				'full_name'  => $this->actor->profile->full_name,
-				'avatar'     => $this->actor->profile->avatar_url,
+				'id'           => $this->actor->id,
+				'first_name'   => $this->actor->profile->first_name,
+				'last_name'    => $this->actor->profile->last_name,
+				'full_name'    => $this->actor->profile->full_name,
+				'display_name' => $this->actor->profile->display_name,
+				'avatar'       => $this->actor->profile->avatar_url,
 			],
 			'referer' => $this->referer,
 		];

@@ -44,13 +44,14 @@
 
 	export default {
 		name: 'Avatar',
-		props: ['fullName', 'size', 'url', 'userId', 'user'],
+		props: ['fullName', 'size', 'url', 'userId', 'user', 'disableLink'],
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
 				'currentUserAvatar',
 			]),
 			routerLinkRender() {
+				if (this.disableLink) return false
 				return this.userId
 			},
 			isCurrentUser() {

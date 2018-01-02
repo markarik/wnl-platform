@@ -15,6 +15,7 @@
 							 :showAuthor="isAuthorUnique[index]"
 							 :id="getMessageId(message)"
 							 :fullName="message.full_name"
+							 :displayName="message.display_name"
 							 :avatar="message.avatar"
 							 :time="message.time"
 							 :content="message.content"
@@ -99,7 +100,8 @@
 
 					let previous     = index - 1,
 						halfHourInMs = 1000 * 60 * 30
-					return message.full_name !== this.messages[previous].full_name ||
+
+					return message.user_id !== this.messages[previous].user_id ||
 							message.time - this.messages[previous].time > halfHourInMs
 				})
 			},

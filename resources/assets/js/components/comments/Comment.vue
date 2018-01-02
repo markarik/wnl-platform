@@ -6,14 +6,16 @@
 					<wnl-avatar size="medium"
 						:fullName="profile.full_name"
 						:url="profile.avatar"
-						:userId="profile.user_id">
+						:userId="userId">
 					</wnl-avatar>
 				</p>
 			</figure>
 			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<span class="author">{{profile.full_name}}</span>
+			<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+				<span class="author">{{ nameToDisplay }}</span>
+			</router-link>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
@@ -79,6 +81,12 @@ export default {
 		...mapGetters('comments', ['getReaction']),
 		id() {
 			return this.comment.id
+		},
+		userId() {
+			return this.profile.user_id
+		},
+		nameToDisplay() {
+			return this.profile.display_name || this.profile.full_name
 		},
 		time() {
 			return timeFromS(this.comment.created_at)

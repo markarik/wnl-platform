@@ -4958,9 +4958,9 @@ postcss@^5.0.10, postcss@^5.0.21, postcss@^5.2.15, postcss@^5.2.16:
     source-map "^0.5.6"
     supports-color "^3.2.3"
 
-postmate-fork@^1.1.10:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/postmate-fork/-/postmate-fork-1.1.10.tgz#80530d41ca8da189ef6a76813f94dfbf67abf821"
+"postmate@github:bethinkpl/postmate":
+  version "1.1.8"
+  resolved "https://codeload.github.com/bethinkpl/postmate/tar.gz/d4783c64aedbda14340f61c226657b300288ecdd"
 
 preserve@^0.2.0:
   version "0.2.0"
@@ -6671,9 +6671,9 @@ webpack-md5-hash@0.0.5:
   dependencies:
     md5 "^2.0.0"
 
-webpack-merge@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-4.1.0.tgz#6ad72223b3e0b837e531e4597c199f909361511e"
+webpack-merge@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-4.1.1.tgz#f1197a0a973e69c6fbeeb6d658219aa8c0c13555"
   dependencies:
     lodash "^4.17.4"
 

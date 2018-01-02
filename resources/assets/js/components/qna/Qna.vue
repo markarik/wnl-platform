@@ -69,6 +69,7 @@
 
 	.wnl-qna-header
 		display: flex
+		margin-bottom: $margin-small
 		&.is-user-profile
 			.icon
 				color: $color-dark-blue-opacity
@@ -144,7 +145,10 @@
 			readOnly: Boolean,
 			title: [String, Boolean],
 			showContext: Boolean,
-			sortingEnabled: Boolean,
+			sortingEnabled: {
+				type: Boolean,
+				default: true
+			},
 			config: {
 				type: Object,
 				default: () => { return {
@@ -193,7 +197,9 @@
 				this.questionsList = this.getSortedQuestions(newValue, this.questions);
 			},
 			'questions' (newValue) {
-				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
+				if (this.sortingEnabled && !this.passedQuestions) {
+					this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+				}
 			}
 		},
 		beforeDestroy() {

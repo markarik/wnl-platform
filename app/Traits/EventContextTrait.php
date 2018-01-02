@@ -11,13 +11,18 @@ trait EventContextTrait {
 		switch (get_class($model)) {
 			case 'App\Models\QnaQuestion':
 				if (!empty($model->meta)) {
-					return $model->meta['context'];
+					return [
+						'dynamic' => [
+							'resource' => 'qna_questions',
+							'value' => $model->id,
+						],
+						'route' => $model->meta['context']
+					];
 				}
-				return [];
 
 			case 'App\Models\QnaAnswer':
-				if (!empty($model->question->meta)) {
-					return $model->question->meta['context'];
+				if (!empty($model->question)) {
+					return $this->addEventContext($model->question);
 				}
 				return [];
 
@@ -48,7 +53,7 @@ trait EventContextTrait {
 							'courseId' => $lesson->group->course->id,
 							'lessonId' => $lesson->id,
 							'screenId' => $screen->id,
-							'slide'  => $orderNumber + 1,
+							'slide'  => $orderNumber + 1
 						],
 					];
 				}

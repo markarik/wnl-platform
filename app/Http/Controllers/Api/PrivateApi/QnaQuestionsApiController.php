@@ -1,18 +1,17 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Events\QnaQuestionPosted;
+use App\Events\QnaQuestionRemoved;
+use App\Events\QnaQuestionRestored;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\QnaQuestionTransformer;
 use App\Http\Requests\Qna\PostQuestion;
 use App\Http\Requests\Qna\UpdateQuestion;
-use App\Models\Lesson;
 use App\Models\QnaQuestion;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
-use App\Events\QnaQuestionRemoved;
-use App\Events\QnaQuestionRestored;
-use App\Events\QnaQuestionPosted;
 
 class QnaQuestionsApiController extends ApiController
 {
@@ -32,7 +31,7 @@ class QnaQuestionsApiController extends ApiController
 		$question = QnaQuestion::create([
 			'text'    => $text,
 			'user_id' => $user->id,
-			'meta' => ['context' => $context]
+			'meta'    => ['context' => $context],
 		]);
 
 		foreach ($tags as $tag) {
@@ -73,5 +72,38 @@ class QnaQuestionsApiController extends ApiController
 		}
 
 		return $this->respondOk();
+	}
+
+	public function context(Request $request)
+	{
+		$id = $request->get('context');
+		$question = QnaQuestion::find($id);
+		$data = [];
+		$screen = $question->screen;
+
+		if ($screen) {
+			$data = [
+				'name' => 'screens',
+				'params' => [
+					'screenId' => $screen->id,
+					'lessonId' => $screen->lesson->id,
+					'courseId' => $screen->lesson->group->course->id
+				]
+			];
+		}
+
+		$page = $question->page;
+
+		if ($page) {
+			$data = [
+				'name' => $page->slug,
+			];
+		}
+
+		if (!$data) {
+			return $this->respondNotFound();
+		}
+
+		return $this->respondOk($data);
 	}
 }

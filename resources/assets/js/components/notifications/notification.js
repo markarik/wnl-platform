@@ -34,11 +34,11 @@ export const notification = {
 		contextInfo() {
 			if (!isObject(this.routeContext)) return ''
 
-			const route = this.routeContext.name
+			const route = this.routeContext.dynamic ? this.routeContext.route : this.routeContext
 
-			if (route === 'screens') {
-				const lessonId = this.routeContext.params.lessonId
-				const slide = this.routeContext.params.slide
+			if (route.name === 'screens') {
+				const lessonId = route.params.lessonId
+				const slide = route.params.slide
 
 				let contextInfo = this.$t('notifications.context.lesson', {
 					lesson: truncate(this.getLesson(lessonId).name, {length: 30}),
@@ -49,13 +49,13 @@ export const notification = {
 				}
 
 				return contextInfo
-			} else if (route === 'quizQuestion') {
+			} else if (route.name === 'quizQuestion') {
 				return this.$t('notifications.context.quizQuestion', {
 					id: this.routeContext.params.id,
 				})
-			} else if (route.indexOf('help') > -1) {
+			} else if (route.name.indexOf('help') > -1) {
 				return this.$t('notifications.context.page', {
-					page: this.$t(`routes.help.${route}`),
+					page: this.$t(`routes.help.${route.name}`),
 				})
 			}
 
@@ -99,6 +99,21 @@ export const notification = {
 			}
 
 			return decode(this.message.subject.text)
+		},
+		hasDynamicContext() {
+			return !!this.message.context.dynamic
+		},
+		dynamicRoute() {
+			const {query, dynamic} = this.routeContext
+
+			return {
+				name: 'dynamicContextMiddleRoute',
+				params: {
+					resource: dynamic.resource,
+					context: dynamic.value
+				},
+				query
+			}
 		}
 	},
 	methods: {
@@ -107,7 +122,10 @@ export const notification = {
 			if (this.message.deleted) return
 
 			this.$emit('goingToContext')
-			if (typeof this.routeContext === 'object') {
+
+			if (this.hasDynamicContext) {
+				this.$router.push(this.dynamicRoute)
+			} else if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)
 			} else if (typeof this.routeContext === 'string') {
 				window.location.href=this.routeContext

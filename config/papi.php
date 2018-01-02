@@ -41,5 +41,6 @@ return [
 		'profiles'            => 'user_profiles',
 		'user-plan'           => 'user_plan',
 		'tasks'               => 'tasks',
+		'pages'               => 'pages',
 	],
 ];

@@ -174,3 +174,21 @@ $factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
 		'labels'   => ['siema', 'pozdro'],
 	];
 });
+
+$factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
+	return [
+		'slug'    => $faker->uuid,
+		'name'    => $faker->text,
+		'content' => $faker->text,
+	];
+});
+
+$factory->define(App\Models\Section::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->text,
+	];
+});
+
+$factory->define(App\Models\Slideshow::class, function (Faker\Generator $faker) {
+	return [];
+});

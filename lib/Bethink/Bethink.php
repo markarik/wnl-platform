@@ -22,4 +22,14 @@ class Bethink
 	{
 		return snake_case(str_plural(class_basename($class)));
 	}
+
+	public function getTypeByNamespace($namespace)
+	{
+		return snake_case(str_replace('App\\Models\\', '', $namespace));
+	}
+
+	public function getTypeByClassInstance($class)
+	{
+		return snake_case(class_basename($class));
+	}
 }

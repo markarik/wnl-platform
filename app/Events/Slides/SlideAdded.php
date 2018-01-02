@@ -45,7 +45,7 @@ class SlideAdded
 	{
 		$this->channels->push(new Channel('slides'));
 		foreach ($this->presentables as $presentable) {
-			$resource = Bethink::getResourceByClassInstance($presentable);
+			$resource = Bethink::getTypeByClassInstance($presentable);
 
 			$this->channels->push(
 				new Channel("presentable-{$resource}-{$presentable->id}")

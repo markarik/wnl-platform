@@ -5,6 +5,7 @@ namespace App\Events\Slides;
 use App\Models\Presentable;
 use App\Models\Slide;
 use App\Traits\EventContextTrait;
+use Facades\Lib\Bethink\Bethink;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -22,6 +23,8 @@ class SlideUpdated implements ShouldBroadcast
 
 	public $channels;
 
+	public $presentables;
+
 	/**
 	 * Create a new event instance.
 	 *
@@ -31,6 +34,9 @@ class SlideUpdated implements ShouldBroadcast
 	{
 		$this->slide = $slide;
 		$this->channels = collect();
+		$this->presentables = Presentable::select()
+			->where('slide_id', $this->slide->id)
+			->get();
 	}
 
 	/**
@@ -41,15 +47,22 @@ class SlideUpdated implements ShouldBroadcast
 	public function broadcastOn()
 	{
 		$this->channels->push(new Channel('slides'));
+		foreach ($this->presentables as $presentable) {
+			$resource = Bethink::getTypeByNamespace(
+				$presentable->presentable_type
+			);
+
+			$this->channels->push(
+				new Channel("presentable-{$resource}-{$presentable->id}")
+			);
+		}
 
 		return $this->channels->toArray();
 	}
 
 	public function transform()
 	{
-		$presentables = Presentable::select()
-			->where('slide_id', $this->slide->id)
-			->get()
+		$presentables = $this->presentables
 			->pluck('id', 'presentable_type')
 			->toArray();
 

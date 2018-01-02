@@ -53,7 +53,7 @@ class SlideUpdated implements ShouldBroadcast
 			);
 
 			$this->channels->push(
-				new Channel("presentable-{$resource}-{$presentable->id}")
+				new Channel("presentable-{$resource}-{$presentable->presentable_id}")
 			);
 		}
 

@@ -41,28 +41,28 @@ $border-color: $color-inactive-gray
 .toggle-annotations
 	left: $fixed-elements-padding
 
-	.annotations-count
-		background-color: $color-ocean-blue
-		border-radius: 50px
-		color: $color-white
-		font-size: 0
-		font-weight: $font-weight-black
-		height: 0
-		line-height: 0
-		position: absolute
-		right: -1em
-		text-align: center
-		top: -1em
-		transition: all $transition-length-base
-		width: 0
+.badge
+	background-color: $color-ocean-blue
+	border-radius: 50px
+	color: $color-white
+	font-size: 0
+	font-weight: $font-weight-black
+	height: 0
+	line-height: 0
+	position: absolute
+	right: -1em
+	text-align: center
+	top: -1em
+	transition: all $transition-length-base
+	width: 0
 
-		&.has-some
-			display: initial
-			font-size: $font-size-base
-			height: 1.8em
-			line-height: 1.8em
-			transition: all $transition-length-base
-			width: 1.8em
+	&.has-some
+		display: initial
+		font-size: $font-size-base
+		height: 1.8em
+		line-height: 1.8em
+		transition: all $transition-length-base
+		width: 1.8em
 
 .order-number-container
 	position: absolute
@@ -176,6 +176,10 @@ $border-color: $color-inactive-gray
 
 	&.hidden
 		display: none
+
+	.badge
+		right: 0
+		left: -1em
 
 .modified-slides-list
 	display: none

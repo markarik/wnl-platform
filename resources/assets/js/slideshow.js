@@ -21,6 +21,7 @@ const bookmarkElement = document.querySelector('.bookmark')
 const refreshIcon = document.getElementById('refreshIcon')
 const refreshButton = document.getElementById('refreshButton')
 const modifiedSlidesList = document.getElementById('modifiedSlidesList')
+const modifiedSlidesCounter = document.getElementById('modifiedSlidesCounter')
 
 let isSavingBookmark = false
 let modifiedSlides = {};
@@ -95,11 +96,14 @@ const setupHandshake = () => {
 				&& modifiedSlidesList.removeChild(modifiedSlidesList.getElementsByTagName('ul')[0])
 
 			modifiedSlidesList.insertBefore(listElement, refreshButton)
+			modifiedSlidesCounter.innerText = modifiedSlides.length
 
 			if (modifiedSlides.length > 0) {
 				refreshIcon.classList.remove('hidden')
+				modifiedSlidesCounter.classList.add('has-some')
 			} else if (modifiedSlides.length < 1) {
 				refreshIcon.classList.add('hidden')
+				modifiedSlidesCounter.classList.remove('has-some')
 			}
 		},
 		updateAnnotations: (annotationsData) => {

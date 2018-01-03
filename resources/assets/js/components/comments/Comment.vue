@@ -13,9 +13,10 @@
 			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+			<!-- <router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
 				<span class="author">{{ nameToDisplay }}</span>
-			</router-link>
+			</router-link> -->
+			<wnl-user-profile-modal :author="profile" :userId="userId"/>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
@@ -66,6 +67,7 @@ import Resolve from 'js/components/global/form/Resolve'
 import { timeFromS } from 'js/utils/time'
 import moderatorFeatures from 'js/perimeters/moderator'
 import Vote from 'js/components/global/reactions/Vote'
+import UserProfileModal from 'js/components/users/UserProfileModal'
 
 export default {
 	name: 'Comment',
@@ -73,6 +75,7 @@ export default {
 		'wnl-delete': Delete,
 		'wnl-resolve': Resolve,
 		'wnl-vote': Vote,
+		'wnl-user-profile-modal': UserProfileModal,
 	},
 	perimeters: [moderatorFeatures],
 	props: ['comment', 'profile'],

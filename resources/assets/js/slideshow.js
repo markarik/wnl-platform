@@ -198,6 +198,10 @@ $(() => {
 	refreshIcon.addEventListener('click', () => {
 		toggleModifiedSlidesList()
 	})
+
+	refreshButton.addEventListener('click', () => {
+		parent.emit('refresh-slideshow')
+	})
 });
 
 function toggleModifiedSlidesList() {

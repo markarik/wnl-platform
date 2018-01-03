@@ -8,10 +8,6 @@
 					</span>
 			</a>
 		</p>
-		<div class="notification-container" v-if="showAlert">
-			<span class="notification-text">Pojawiły się zmiany w prezentacji.</span>
-			<button @click="showContent(mode, true)" class="button" v-t="'ui.action.refresh'"/>
-		</div>
 		<div class="slides-carousel-container" v-if="!!savedSlidesCount">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
@@ -42,8 +38,7 @@
 			:screenData="screenData"
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
-			@slideModified="onSlideshowModified"
-			@slideAdded="onSlideAdded"
+			@refreshSlideshow="onRefreshSlideshow"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -312,18 +307,12 @@
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 			},
-			onSlideshowModified(modifiedSlides) {
+			onRefreshSlideshow(modifiedSlides) {
 				const slidesIds = Object.keys(modifiedSlides)
 				const diff = _.difference(slidesIds.map(Number), this.slideshowSortedSlideIds)
 
-				// if there is difference - show alert
 				if (diff.length !== slidesIds.length) {
-					this.showAlert = true
-				}
-			},
-			onSlideAdded() {
-				if (this.mode === this.contentModes.full) {
-					this.showAlert = true
+					this.showContent(this.mode, true)
 				}
 			},
 			_fetchBookmarkedSlideshow() {

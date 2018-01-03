@@ -1,10 +1,6 @@
 <template>
 	<div>
 		<div class="wnl-slideshow-container">
-			<div class="notification-container" v-if="showAlert">
-				<span class="notification-text">Pojawiły się zmiany w prezentacji.</span>
-				<button @click="onRefreshSlideshow" class="button" v-t="'ui.action.refresh'"/>
-			</div>
 			<div class="wnl-slideshow-background-control">
 				<div class="controls-left">
 					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
@@ -135,7 +131,6 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
-				showAlert: false,
 				modifiedSlides: {}
 			}
 		},
@@ -390,6 +385,12 @@
 						!this.bookmarkLoading && this.toggleBookmarkedState(index)
 					} else if (event.data.value.name === 'error') {
 						this.toggleOverlay({source: 'slideshow', display: false})
+					} else if (event.data.value.name === 'refresh-slideshow') {
+						if (this.presentableType === 'collection') {
+							this.$emit('refreshSlideshow')
+						} else {
+							this.onRefreshSlideshow()
+						}
 					}
 				}
 			},
@@ -492,7 +493,6 @@
 
 							break
 						case 'slide-updated':
-							console.log(subject)
 							this.modifiedSlides[subject.id] = this.getSlideById(subject.id)
 							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
 							break

@@ -88,7 +88,7 @@ const setupHandshake = () => {
 
 			modifiedSlides.forEach(slide => {
 				const el = document.createElement('li')
-				let prefix = 'zmodyfikowany'
+				let prefix = 'zmieniony'
 
 				if (slide.action === 'add') {
 					prefix = 'dodany'
@@ -96,7 +96,7 @@ const setupHandshake = () => {
 					prefix = 'usunięty'
 				}
 
-				el.innerText = `Slajd o numerze ${slide.order_number + 1} został ${prefix}`
+				el.innerText = `Slajd numer ${slide.order_number + 1} został ${prefix}`
 				listElement.appendChild(el)
 			})
 

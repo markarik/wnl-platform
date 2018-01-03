@@ -1,15 +1,15 @@
 <template>
 	<div class="wnl-user-profile-modal">
 		<div class="activator">
-			<span class="qna-author-name" @click="activateModal">
+			<a class="qna-author-name" @click="activateModal">
 				{{authorNameToDisplay}} ·
-			</span>
+			</a>
 		</div>
 		<div class="modal" :class="{'is-active': showModal}">
 			<div class="modal-background" @click="deactivateModal"></div>
 			<div class="modal-content">
 				<div class="box">
-					<article class="media">
+					<div class="media">
 						<div class="media-left">
 							<wnl-avatar class="avatar"
 								:fullName="author.full_name"
@@ -35,15 +35,15 @@
 									</div>
 								</div>
 							</div>
-							<nav class="level">
-								<div class="level-left">
+							<div class="navigation">
+								<div class="redirect">
 									<router-link :to="{ name: 'user', params: {userId: userId} }">
 										<a class="button is-primary is-outlined is-small">Zobacz pełen profil</a>
 									</router-link>
 								</div>
-							</nav>
+							</div>
 						</div>
-					</article>
+					</div>
 				</div>
 			</div>
 			<button class="modal-close is-large" aria-label="close" @click="deactivateModal"></button>
@@ -72,6 +72,7 @@
 		.help-title
 			font-size: $font-size-minus-2
 			text-transform: uppercase
+
 </style>
 
 <script>

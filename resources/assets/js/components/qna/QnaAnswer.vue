@@ -13,17 +13,13 @@
 					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<wnl-avatar
+					<wnl-avatar class="avatar"
 							:fullName="author.full_name"
 							:url="author.avatar"
 							:userId="userId"
 							size="medium">
 					</wnl-avatar>
-					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-						<span class="qna-meta-info">
-							{{authorNameToDisplay}} ·
-						</span>
-					</router-link>
+					<wnl-user-profile-modal :author="author" :userId="userId"/>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -85,6 +81,9 @@
 
 	.qna-bookmark
 		justify-content: flex-end
+
+	.avatar
+		margin-right: $margin-small
 </style>
 
 <script>
@@ -96,6 +95,7 @@
 	import highlight from 'js/mixins/highlight'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import moderatorFeatures from 'js/perimeters/moderator'
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -104,7 +104,8 @@
 		components: {
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
-			'wnl-comments-list': CommentsList
+			'wnl-comments-list': CommentsList,
+			'wnl-user-profile-modal': UserProfileModal,
 		},
 		perimeters: [moderatorFeatures],
 		mixins: [ highlight ],

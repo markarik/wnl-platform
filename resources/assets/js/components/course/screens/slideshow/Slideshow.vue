@@ -492,11 +492,9 @@
 
 							break
 						case 'slide-updated':
-							if (!this.htmlContent) this.showAlert = true
-
-							this.modifiedSlides[subject.id] = true
-							this.$emit('slideModified', this.modifiedSlides)
-
+							console.log(subject)
+							this.modifiedSlides[subject.id] = this.getSlideById(subject.id)
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
 							break
 						case 'slide-removed':
 							break

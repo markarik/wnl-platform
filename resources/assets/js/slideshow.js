@@ -18,8 +18,12 @@ const $toggleAnnotations = $('.toggle-annotations')
 const $toggleFullscreen = $('.toggle-fullscreen')
 const $orderNumberContainer = $('#orderNumberContainer')
 const bookmarkElement = document.querySelector('.bookmark')
+const refreshIcon = document.getElementById('refreshIcon')
+const refreshButton = document.getElementById('refreshButton')
+const modifiedSlidesList = document.getElementById('modifiedSlidesList')
 
 let isSavingBookmark = false
+let modifiedSlides = {};
 
 const setupReveal = () => {
 	Reveal.initialize({
@@ -74,6 +78,28 @@ const setupHandshake = () => {
 				$toggleAnnotations.hide()
 				$slideshowAnnotations.hide()
 				$toggleFullscreen.removeClass('is-fullscreen')
+			}
+		},
+		updateModifiedSlides: (newModifiedSlides) => {
+			modifiedSlides = newModifiedSlides
+
+			const listElement = document.createElement('ul')
+
+			modifiedSlides.forEach(slide => {
+				const el = document.createElement('li')
+				el.innerText = `Slajd o numerze ${slide.order_number + 1} został zmodyfikowany`
+				listElement.appendChild(el)
+			})
+
+			modifiedSlidesList.getElementsByTagName('ul')[0]
+				&& modifiedSlidesList.removeChild(modifiedSlidesList.getElementsByTagName('ul')[0])
+
+			modifiedSlidesList.insertBefore(listElement, refreshButton)
+
+			if (modifiedSlides.length > 0) {
+				refreshIcon.classList.remove('hidden')
+			} else if (modifiedSlides.length < 1) {
+				refreshIcon.classList.add('hidden')
 			}
 		},
 		updateAnnotations: (annotationsData) => {
@@ -168,7 +194,15 @@ $(() => {
 	}
 
 	setupReveal()
+
+	refreshIcon.addEventListener('click', () => {
+		toggleModifiedSlidesList()
+	})
 });
+
+function toggleModifiedSlidesList() {
+	modifiedSlidesList.classList.toggle('visible')
+}
 
 function animateControl(event) {
 	let target = event.target

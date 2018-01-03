@@ -56,6 +56,12 @@
 			<img class="fs-close" src="{{ asset('images/close-fullscreen.svg') }}" alt="Zamknij pełen ekran">
 			<img class="fs-open" src="{{ asset('images/fullscreen-arrows.svg') }}" alt="Pełen ekran">
 		</a>
+		<div id="modifiedSlidesList" class="modified-slides-list">
+			<button id="refreshButton">Odśwież</button>
+		</div>
+		<a id="refreshIcon" class="refresh-icon rounded-button without-image hidden">
+			<img src="{{ asset('images/refresh.svg') }}" alt="Odśwież prezentację">
+		</a>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>
 	</body>
 </html>

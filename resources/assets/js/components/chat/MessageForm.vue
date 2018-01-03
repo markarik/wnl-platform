@@ -113,8 +113,6 @@
 					message: {
 						user: this.currentUser,
 						content: this.content,
-						full_name: this.currentUserFullName,
-						display_name: this.currentUserDisplayName,
 					}
 				})
 			},

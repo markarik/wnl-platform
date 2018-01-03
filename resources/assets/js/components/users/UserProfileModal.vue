@@ -2,22 +2,22 @@
 	<div class="wnl-user-profile-modal">
 		<div class="activator">
 			<a class="qna-author-name" @click="activateModal">
-				{{authorNameToDisplay}} ·
+				{{authorNameToDisplay}}
 			</a>
 		</div>
 		<div class="modal" :class="{'is-active': showModal}">
 			<div class="modal-background" @click="deactivateModal"></div>
 			<div class="modal-content">
 				<div class="box">
-					<div class="media">
-						<div class="media-left">
+					<div class="media-container">
+						<div class="left">
 							<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"
 								:userId="userId"
 								size="extralarge"/>
 						</div>
-						<div class="media-content">
+						<div class="right">
 							<div class="content">
 								<div class="user-info-name">
 									<span>{{this.author.display_name}}</span>
@@ -54,10 +54,25 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.wnl-user-profile-modal
+		line-height: $line-height-base
+		font-size: $font-size-base
+
 	.modal
 		z-index: $z-index-alerts
 
+	.media-container
+		display: flex
+		flex-direction: row
+		justify-content: flex-start
+		margin-bottom: $margin-base
+		.content
+			margin-bottom: $margin-base
+			.left
+				border-right: $margin-base
+
 	.user-info-name
+		margin-top: $margin-tiny
 		color: $color-ocean-blue-opacity
 		font-size: $font-size-plus-2
 		font-weight: $font-weight-bold
@@ -69,6 +84,9 @@
 		font-weight: $font-weight-light
 
 	.user-info-help
+		font-size: $font-size-base
+	.notification
+		width: 100%
 		.help-title
 			font-size: $font-size-minus-2
 			text-transform: uppercase

@@ -7,9 +7,7 @@
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-						<strong>{{ nameToDisplay }}</strong>
-					</router-link>
+					<wnl-user-profile-modal :author="author.user" :userId="userId"/>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -56,14 +54,16 @@
 <script>
 	import { timeFromMs } from 'js/utils/time'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
+
 	export default{
-		props: ['fullName', 'avatar', 'time', 'showAuthor', 'content', 'id', 'userId', 'displayName'],
+		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'userId', 'fullName'],
+		components: {
+			'wnl-user-profile-modal': UserProfileModal,
+		},
 		computed: {
 			formattedTime () {
 				return timeFromMs(this.time)
-			},
-			nameToDisplay() {
-				return this.displayName || this.fullName
 			}
 		}
 	}

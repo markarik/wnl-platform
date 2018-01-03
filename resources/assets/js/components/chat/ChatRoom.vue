@@ -14,12 +14,13 @@
 							 :key="index"
 							 :showAuthor="isAuthorUnique[index]"
 							 :id="getMessageId(message)"
-							 :fullName="message.full_name"
-							 :displayName="message.display_name"
-							 :avatar="message.avatar"
+							 :author="message"
+							 :fullName="message.user.full_name"
+							 :displayName="message.user.display_name"
+							 :avatar="message.user.avatar"
 							 :time="message.time"
 							 :content="message.content"
-							 :userId="message.user_id"
+							 :userId="message.user.user_id"
 						 ></wnl-message>
 					</div>
 					<div class="metadata aligncenter margin vertical" v-else>

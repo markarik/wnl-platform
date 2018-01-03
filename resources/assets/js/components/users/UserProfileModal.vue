@@ -1,0 +1,79 @@
+<template>
+	<div class="wnl-user-profile-modal">
+		<div class="activator">
+			<span class="qna-author-name" @click="activateModal">
+				{{authorNameToDisplay}} ·
+			</span>
+		</div>
+		<div class="modal" :class="{'is-active': showModal}">
+			<div class="modal-background" @click="deactivateModal"></div>
+			<div class="modal-content">
+				<div class="box">
+				    <article class="media">
+				        <div class="media-left">
+				            <wnl-avatar class="avatar"
+        						:fullName="author.full_name"
+        						:url="author.avatar"
+        						:userId="userId"
+        						size="large"/>
+				        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <div class="user-info-name">
+                                    <span>{{this.author.display_name}} · </span>
+                                </div>
+                                <div  v-if="cityToDisplay" class="user-info-city">
+									<span class="icon is-small">
+										<i class="fa fa-map-marker"></i>
+									</span>
+									<span class="city-title">{{ this.author.city }}</span>
+                                </div>
+                            </div>
+                            <nav class="level">
+                                <div class="level-left">
+                                    <router-link :to="{ name: 'user', params: {userId: userId} }">
+                                        <span>Przejdź do profilu tego użytkownika</span>
+                                    </router-link>
+                                </div>
+                            </nav>
+                        </div>
+				    </article>
+				</div>
+			</div>
+			<button class="modal-close is-large" aria-label="close" @click="deactivateModal"></button>
+		</div>
+	</div>
+</template>
+
+<style lang="sass">
+</style>
+
+<script>
+import Avatar from 'js/components/global/Avatar'
+
+export default {
+	name: 'UserProfileModal',
+	props: ['author', 'userId'],
+    data() {
+        return {
+            showModal: false,
+        }
+    },
+	computed: {
+		authorNameToDisplay() {
+			return this.author.display_name || this.author.full_name
+		},
+		cityToDisplay() {
+			return this.author.city ? true : false
+		},
+	},
+    methods: {
+        activateModal() {
+            this.showModal = true
+        },
+        deactivateModal() {
+            this.showModal = false
+        },
+    },
+}
+</script>

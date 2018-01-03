@@ -35,7 +35,7 @@
 							:userId="userId"
 							size="medium">
 					</wnl-avatar>
-					<wnl-user-profile-popover :author="author" :userId="userId"/>
+					<wnl-user-profile-modal :author="author" :userId="userId"/>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -120,7 +120,6 @@
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
 		padding: $margin-base
-		height: 300px
 
 	.qna-question-content
 		font-size: $font-size-plus-1
@@ -199,7 +198,7 @@
 	import Watch from 'js/components/global/reactions/Watch'
 	import moderatorFeatures from 'js/perimeters/moderator'
 	import { timeFromS } from 'js/utils/time'
-	import UserProfilePopover from 'js/components/users/UserProfilePopover'
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 
 	export default {
 		name: 'QnaQuestion',
@@ -213,7 +212,7 @@
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
 			'wnl-watch': Watch,
-			'wnl-user-profile-popover': UserProfilePopover,
+			'wnl-user-profile-modal': UserProfileModal,
 		},
 		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
@@ -258,9 +257,6 @@
 							return this.profile(this.question.profiles[0])
 						})
 				}
-			},
-			authorNameToDisplay() {
-				return this.author.display_name || this.author.full_name
 			},
 			isCurrentUserAuthor() {
 				return this.currentUserId === this.author.user_id

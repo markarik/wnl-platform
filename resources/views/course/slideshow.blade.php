@@ -57,7 +57,7 @@
 			<img class="fs-open" src="{{ asset('images/fullscreen-arrows.svg') }}" alt="Pełen ekran">
 		</a>
 		<div id="modifiedSlidesList" class="modified-slides-list">
-			<button id="refreshButton">Odśwież prezentację</button>
+			<button id="refreshButton" class="refresh-button">Odśwież prezentację</button>
 		</div>
 		<a id="refreshIcon" class="refresh-icon rounded-button without-image hidden">
 			<img src="{{ asset('images/refresh.svg') }}" alt="Odśwież prezentację">

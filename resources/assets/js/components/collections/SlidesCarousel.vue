@@ -173,7 +173,6 @@
 					bookmark: 'bookmark',
 					full: 'full'
 				},
-				showAlert: false,
 				// artificial screenData to make it consistent with regular slideshow API
 				screenData: {
 					type: 'category',
@@ -274,7 +273,6 @@
 							this.setSortedSlidesIds(sortedSlides)
 							this.mode = htmlContentKey
 							this.htmlContent = this.loadedHtmlContents[htmlContentKey]
-							this.showAlert = false
 						})
 				} else {
 					return this._fetchAllSlideshow()
@@ -283,7 +281,6 @@
 							this.setSortedSlidesIds(this.presentableSortedSlidesIds)
 							this.mode = htmlContentKey
 							this.htmlContent = this.loadedHtmlContents[htmlContentKey]
-							this.showAlert = false
 						})
 				}
 			},

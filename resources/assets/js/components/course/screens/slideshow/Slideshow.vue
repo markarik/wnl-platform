@@ -484,19 +484,20 @@
 		},
 		mounted() {
 			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
-				.listen('.App.Events.Live.LiveContentUpdated', ({data: {event, subject}}) => {
+				.listen('.App.Events.Live.LiveContentUpdated', ({data: {event, subject, context}}) => {
 					switch (event) {
 						case 'slide-added':
-							if (!this.htmlContent) this.showAlert = true
-
-							this.$emit('slideAdded')
-
-							break
-						case 'slide-updated':
-							this.modifiedSlides[subject.id] = this.getSlideById(subject.id)
+							// TODO consider passing order_number in given presentable from event
+							this.modifiedSlides[subject.id] = {order_number: context.params.slide - 1, action: 'add'}
 							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
 							break
-						case 'slide-removed':
+						case 'slide-updated':
+							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'edit'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
+							break
+						case 'slide-detached':
+							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'delete'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
 							break
 					}
 				});

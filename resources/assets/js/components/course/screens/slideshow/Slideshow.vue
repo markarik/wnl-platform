@@ -471,6 +471,7 @@
 					})
 			},
 			onRefreshSlideshow() {
+				this.toggleOverlay({source: 'slideshow', display: true})
 				this.removeEventListeners()
 
 				Promise.all([

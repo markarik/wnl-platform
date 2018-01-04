@@ -164,7 +164,7 @@ const setupHandshake = () => {
 			$orderNumberContainer.text(orderNumber)
 		},
 		refreshChart(index) {
-			viewers[index].refresh()
+			viewers[index] && viewers[index].refresh()
 		}
 	})
 }

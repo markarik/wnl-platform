@@ -181,7 +181,7 @@
 				return this.screenData.type
 			},
 			slideshowUrl() {
-				return getApiUrl(`slideshow_builder/${this.presentableId}`)
+				return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`)
 			},
 			iframe() {
 				if (this.loaded) {
@@ -190,7 +190,7 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupPresentablesWithReactions']),
 			...mapActions(['toggleOverlay', 'showNotification']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
@@ -238,7 +238,7 @@
 					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 					this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
 
-					this.currentSlideId = this.getSlideIdFromIndex(slideIndex)
+					this.currentSlideId = newSlideId
 					this.currentSlideNumber = this.slideNumberFromIndex(slideIndex)
 
 					this.focusSlideshow()
@@ -386,7 +386,7 @@
 					} else if (event.data.value.name === 'error') {
 						this.toggleOverlay({source: 'slideshow', display: false})
 					} else if (event.data.value.name === 'refresh-slideshow') {
-						if (this.presentableType === 'collection') {
+						if (this.presentableType === 'category') {
 							this.$emit('refreshSlideshow')
 						} else {
 							this.onRefreshSlideshow()
@@ -469,16 +469,25 @@
 					})
 			},
 			onRefreshSlideshow() {
-				axios.get(this.slideshowUrl).then(({data}) => {
+				this.removeEventListeners()
+
+				Promise.all([
+					axios.get(this.slideshowUrl),
+					this.setupPresentablesWithReactions({id: this.presentableId})
+				]).then(([{data}]) => {
 					if (typeof this.child.destroy === 'function') {
 						this.child.destroy()
 					}
+					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
 
-					this.removeEventListeners()
 					this.setSlideshowHtmlContent(data)
+						.then(() => {
+							const slide = this.getSlideById(this.currentSlideId)
+							const currentBookmarkState = slide.bookmark.hasReacted
+							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+						})
 				})
 
-				this.showAlert = false
 				this.modifiedSlides = {}
 			}
 		},

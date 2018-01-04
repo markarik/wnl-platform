@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-slides-collection">
-		<p class="title is-4">{{$t('collections.slides.savedSlidesTitle')}} <span v-if="!!savedSlidesCount">({{savedSlidesCount}})</span>
-			<a class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === contentModes.bookmark}" @click="toggleBookmarked()">
+		<p class="title is-4">{{$t('collections.slides.savedSlidesTitle')}} <span>({{savedSlidesCount}})</span>
+			<a v-if="!!savedSlidesCount" class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === contentModes.bookmark}" @click="toggleBookmarked()">
 					{{$t('collections.slides.showOnlySaved')}}
 					<span class="icon is-small">
 						<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -304,13 +304,13 @@
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 			},
-			onRefreshSlideshow(modifiedSlides) {
-				const slidesIds = Object.keys(modifiedSlides)
-				const diff = _.difference(slidesIds.map(Number), this.slideshowSortedSlideIds)
+			onRefreshSlideshow() {
+				this.toggleOverlay({source: 'collection-slideshow', display: true})
 
-				if (diff.length !== slidesIds.length) {
-					this.showContent(this.mode, true)
-				}
+				this.setup({id: this.categoryId, type: this.presentableType})
+					.then(() => this.showContent(this.mode, true))
+					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 			},
 			_fetchBookmarkedSlideshow() {
 				const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)

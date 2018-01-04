@@ -175,7 +175,7 @@ const actions = {
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupPresentablesWithReactions({commit}, {id, type}) {
+	setupPresentablesWithReactions({commit}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
 				.then((response) => _fetchReactables(response.data))

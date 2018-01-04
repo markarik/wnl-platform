@@ -24,6 +24,12 @@
 			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
+		<div
+				v-if="$currentEditionParticipant.isAllowed('access')"
+				class="wnl-navbar-item wnl-navbar-messages"
+		>
+			<wnl-messages/>
+		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown/>
 		</div>
@@ -124,6 +130,7 @@
 	import Search from 'js/components/global/search/Search'
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
+	import Messages from 'js/components/messages/Messages'
 	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -135,6 +142,7 @@
 			'wnl-user-dropdown': UserDropdown,
 			'wnl-personal-feed': PersonalFeed,
 			'wnl-search': Search,
+			'wnl-messages': Messages,
 		},
 		computed: {
 			...mapGetters([

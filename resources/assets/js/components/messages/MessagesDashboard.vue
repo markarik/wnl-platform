@@ -9,6 +9,7 @@
 			    <div class="rooms-header">
 					Prywatne wiadomości
 				</div>
+				<wnl-conversations-list></wnl-conversations-list>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
@@ -34,14 +35,13 @@
 		display: flex
 		flex: 1
 		flex-direction: column
-		justify-content: space-between
-		padding: $margin-base
 		position: relative
 
 		.rooms-header
 			color: $color-gray-dimmed
 			font-size: $font-size-minus-1
 			text-align: center
+			padding: $margin-base
 </style>
 
 <script>
@@ -52,6 +52,7 @@
 	import PrivateChat from 'js/components/chat/PrivateChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
+	import ConversationsList from 'js/components/messages/ConversationsList'
 	import withChat from 'js/mixins/with-chat'
 
 	export default {
@@ -62,6 +63,7 @@
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-private-chat': PrivateChat,
+			'wnl-conversations-list': ConversationsList,
 		},
 		computed: {
 			...mapGetters([

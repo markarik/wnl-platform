@@ -15,6 +15,11 @@ class ChatRoom extends Model
 		return $this->hasMany('App\Models\ChatMessage');
 	}
 
+	public function users()
+	{
+		return $this->belongsToMany('App\Models\User');
+	}
+
 	public function getIsPrivateAttribute()
 	{
 		return str_is('private-*', $this->name);

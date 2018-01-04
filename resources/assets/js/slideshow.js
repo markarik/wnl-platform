@@ -213,6 +213,10 @@ $(() => {
 
 	refreshButton.addEventListener('click', () => {
 		parent.emit('refresh-slideshow')
+		modifiedSlidesList.classList.remove('visible')
+		modifiedSlidesCounter.classList.remove('has-some')
+		refreshIcon.classList.add('hidden')
+		modifiedSlides = {}
 	})
 });
 

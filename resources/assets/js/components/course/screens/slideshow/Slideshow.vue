@@ -388,9 +388,11 @@
 					} else if (event.data.value.name === 'refresh-slideshow') {
 						if (this.presentableType === 'category') {
 							this.$emit('refreshSlideshow')
+							screenfull.exit(this.slideshowElement)
 						} else {
 							this.onRefreshSlideshow()
 						}
+						this.modifiedSlides = {}
 					}
 				}
 			},
@@ -487,8 +489,6 @@
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						})
 				})
-
-				this.modifiedSlides = {}
 			}
 		},
 		mounted() {

@@ -37,13 +37,4 @@ class ChatMessagesApiController extends ApiController
 
 		return $this->respondUnauthorized();
 	}
-
-	public function getPrivateRooms()
-	{
-		$user = Auth::user();
-		$messages = ChatMessage::select()
-			->whereHas('chatRoom', function($query) use ($user) {
-				$query->where('name', 'like', "private%-{$user->id}-%");
-			});
-	}
 }

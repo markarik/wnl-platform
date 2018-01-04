@@ -47,7 +47,7 @@
 		},
 		computed: {
 			room() {
-				return {channel: 'private-1-2'}
+				return {channel: 'private-1-7'}
 			}
 		}
 	}

@@ -83,6 +83,7 @@ class SlidesApiController extends ApiController
 		]);
 
 		$this->attachSlide($slide, $presentables);
+		$slide->tags()->attach($screen->tags);
 
 		dispatch(new SearchImportAll('App\\Models\\Slide'));
 		\Artisan::queue('screens:countSlides');
@@ -126,6 +127,7 @@ class SlidesApiController extends ApiController
 
 		$this->decrementOrderNumber($presentables);
 		$this->detachSlide($slide, $presentables);
+		$slide->reactions()->detach();
 
 		dispatch(new SearchImportAll('App\\Models\\Slide'));
 		\Artisan::queue('screens:countSlides');

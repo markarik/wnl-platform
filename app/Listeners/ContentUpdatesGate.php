@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ContentUpdatesGate implements ShouldQueue
 {
+	public $queue = 'notifications';
 	/**
 	 * Handle the event.
 	 *

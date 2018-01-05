@@ -41,6 +41,7 @@
         flex: 1
         flex-direction: column
         justify-content: flex-start
+        overflow: auto
         padding: $margin-base
         position: relative
 

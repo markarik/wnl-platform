@@ -86,6 +86,7 @@ class SlidesApiController extends ApiController
 		]);
 
 		$this->attachSlide($slide, $presentables);
+		$slide->tags()->attach($screen->tags);
 
 		if (!App::environment('dev')) {
 			dispatch(new SearchImportAll('App\\Models\\Slide'));
@@ -132,6 +133,7 @@ class SlidesApiController extends ApiController
 
 		$this->decrementOrderNumber($presentables);
 		$this->detachSlide($slide, $presentables);
+		$slide->reactions()->detach();
 
 		if (!App::environment('dev')) {
 			dispatch(new SearchImportAll('App\\Models\\Slide'));

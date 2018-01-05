@@ -11,6 +11,8 @@ class LiveContentUpdated implements ShouldBroadcast
 {
 	use InteractsWithSockets;
 
+	public $broadcastQueue = 'notifications';
+
 	public $data;
 
 	public $channels;

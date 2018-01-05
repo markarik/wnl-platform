@@ -8,4 +8,6 @@ use Illuminate\Notifications\Events\BroadcastNotificationCreated;
 class LiveNotificationCreated extends BroadcastNotificationCreated
 {
 	use InteractsWithSockets;
+
+	public $broadcastQueue = 'notifications';
 }

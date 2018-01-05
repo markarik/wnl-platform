@@ -235,7 +235,7 @@ let routes = [
 	},
 	{
 		name: 'messages',
-		path: '/app/messages',
+		path: '/app/messages/:interlocutors?',
 		component: require('js/components/messages/MessagesDashboard.vue'),
 	},
 	{

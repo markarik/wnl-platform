@@ -2,7 +2,8 @@
 	<div class="conversation-list">
 		<wnl-conversation-snippet
 			v-for="(room, index) in rooms"
-			:key="index">
+			:key="index"
+			:room="room">
 
 		</wnl-conversation-snippet>
 	</div>
@@ -18,6 +19,7 @@
 	import axios from 'axios'
 	import ConversationSnippet from 'js/components/messages/ConversationSnippet'
 	import {getApiUrl} from 'js/utils/env'
+	import {mapGetters} from 'vuex'
 
 	export default {
 		name: 'ConversationsList',
@@ -26,25 +28,71 @@
 		},
 		data() {
 			return  {
-				rooms: []
+				rooms: [],
+				currentRoom: ''
 			}
+		},
+		computed: {
+			...mapGetters(['currentUserId'])
 		},
 		methods: {
 			getPrivateRooms() {
-				axios.get(getApiUrl('chat_rooms/.getPrivateRooms'))
+				return axios.get(getApiUrl('chat_rooms/.getPrivateRooms'))
 					.then(response => {
 						this.rooms = response.data
+						return response
 					})
 			},
 			getMessages() {
 
+			},
+			getRoomName(interlocutors) {
+				if (!Array.isArray(interlocutors)){
+					interlocutors = interlocutors.split('-')
+				}
+				interlocutors.push(this.currentUserId)
+				interlocutors = interlocutors.sort()
+				interlocutors = interlocutors.join('-')
+
+				return `private-${interlocutors}`
+			},
+			openRoom() {
+				let newRoom,
+					interlocutors = this.$route.params.interlocutors
+
+				if (interlocutors) {
+					newRoom = this.getRoomName(interlocutors)
+					if (this.rooms.find(room => room.channel === newRoom)) {
+						this.switchToRoom(newRoom)
+					} else {
+						this.startNewRoom(newRoom)
+					}
+				} else {
+					// open last conversation
+				}
+			},
+			switchToRoom(roomName) {
+				this.currentRoom = {channel: roomName}
+				this.$emit('roomSwitch', {channel: roomName})
+			},
+			startNewRoom(roomName) {
+				this.rooms.unshift({channel: roomName})
+				this.$emit('roomSwitch', {channel: roomName})
 			}
 		},
 		mounted(){
-			Promise.all([
-				this.getPrivateRooms(),
-				this.getMessages()
-			])
+			this.getPrivateRooms()
+				.then(() => this.openRoom())
+//			Promise.all([
+//				this.getPrivateRooms(),
+//				this.getMessages(),
+//				this.openRoom()
+//			])
+		},
+		watch: {
+			'$route' (to, from) {
+
+			}
 		}
 	}
 </script>

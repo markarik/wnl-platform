@@ -23,7 +23,7 @@ class ChatRoomTransformer extends ApiTransformer
 	{
 		$data = [
 			'id'      => $chatRoom->id,
-			'content' => $chatRoom->name,
+			'channel' => $chatRoom->name,
 		];
 
 		if ($this->parent) {

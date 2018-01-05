@@ -1,7 +1,7 @@
 <template lang="html">
-	<div class="wnl-private-chat">
+	<div class="wnl-private-chat" v-if="loadRoom">
 		<div class="chat-title">
-			Adam Karmiński
+			{{room.channel}}
 		</div>
 		<wnl-chat :room="room"></wnl-chat>
 	</div>
@@ -31,10 +31,8 @@
 	export default {
 		name: 'wnl-private-chat',
 		props: {
-			users: {
+			room: {
 				required: true,
-				type: Array,
-				default: () => [],
 			},
 			title: {
 				required: false,
@@ -46,9 +44,17 @@
 			'wnl-chat': ChatRoom
 		},
 		computed: {
-			room() {
-				return {channel: 'private-1-7'}
+			loadRoom() {
+				return this.room !== undefined
 			}
+		},
+		watch: {
+			'room' (oldVal, newVal) {
+				console.log(newVal)
+			}
+		},
+		mounted() {
+			console.log(this.room)
 		}
 	}
 </script>

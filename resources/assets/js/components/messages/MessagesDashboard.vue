@@ -9,12 +9,14 @@
 			    <div class="rooms-header">
 					Prywatne wiadomości
 				</div>
-				<wnl-conversations-list></wnl-conversations-list>
+				<wnl-conversations-list
+					@roomSwitch="switchRoom">
+				</wnl-conversations-list>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container chat-container">
-				<wnl-private-chat :users="chatUsers"></wnl-private-chat>
+				<wnl-private-chat :room="currentRoom"></wnl-private-chat>
 			</div>
 		</div>
 	</div>
@@ -57,6 +59,11 @@
 
 	export default {
 		name: 'MessagesDashboard',
+		data() {
+			return {
+				currentRoom: ''
+			}
+		},
 		components: {
 			'wnl-main-nav': MainNav,
 			'wnl-public-chat': PublicChat,
@@ -75,9 +82,11 @@
 				'currentUserName'
 			]),
 			...mapGetters('course', ['ready']),
-			chatUsers() {
-				return [1,2]
-			},
+		},
+		methods: {
+			switchRoom(roomName){
+				this.currentRoom = roomName
+			}
 		}
 	}
 </script>

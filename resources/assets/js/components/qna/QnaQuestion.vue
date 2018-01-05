@@ -33,6 +33,7 @@
 							:fullName="author.full_name"
 							:url="author.avatar"
 							:userId="userId"
+							:author="user"
 							size="medium">
 					</wnl-avatar>
 					<wnl-user-profile-modal :author="author" :userId="userId"/>

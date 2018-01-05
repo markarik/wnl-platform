@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-user-profile-modal">
 		<div class="activator">
-			<a class="qna-author-name" @click="activateModal">
+			<a class="author-name" @click="activateModal">
 				{{authorNameToDisplay}}
 			</a>
 		</div>
@@ -58,6 +58,15 @@
 		line-height: $line-height-base
 		font-size: $font-size-base
 
+	.activator
+		display: flex
+		flex-direction: row
+		align-items: center
+		.author-name
+			margin-left: $margin-small
+			padding: auto
+
+
 	.modal
 		z-index: $z-index-alerts
 
@@ -66,10 +75,10 @@
 		flex-direction: row
 		justify-content: flex-start
 		margin-bottom: $margin-base
-		.content
-			margin-bottom: $margin-base
-			.left
-				border-right: $margin-base
+		.left
+			margin-right: $margin-base
+		.right
+			width: 100%
 
 	.user-info-name
 		margin-top: $margin-tiny

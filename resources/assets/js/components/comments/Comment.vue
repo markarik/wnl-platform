@@ -13,9 +13,6 @@
 			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<!-- <router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-				<span class="author">{{ nameToDisplay }}</span>
-			</router-link> -->
 			<wnl-user-profile-modal :author="profile" :userId="userId"/>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>

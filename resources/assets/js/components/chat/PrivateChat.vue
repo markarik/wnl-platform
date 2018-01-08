@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="wnl-private-chat" v-if="loadRoom">
 		<div class="chat-title">
-			{{room.channel}}
+			{{users[0].display_name}}
 		</div>
 		<wnl-chat
 			:room="room"
@@ -43,6 +43,9 @@
 				required: false,
 				type: String,
 				default: '',
+			},
+			users: {
+				required: true,
 			}
 		},
 		data() {

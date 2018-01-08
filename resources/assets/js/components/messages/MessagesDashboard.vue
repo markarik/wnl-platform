@@ -18,6 +18,7 @@
 			<div class="scrollable-main-container chat-container">
 				<wnl-private-chat
 					:room="currentRoom"
+					:users="currentRoomUsers"
 					v-if="showChatRoom"
 				></wnl-private-chat>
 			</div>
@@ -40,7 +41,6 @@
 		display: flex
 		flex: 1
 		flex-direction: column
-		position: relative
 
 		.rooms-header
 			color: $color-gray-dimmed
@@ -64,7 +64,8 @@
 		name: 'MessagesDashboard',
 		data() {
 			return {
-				currentRoom: null
+				currentRoom: null,
+				currentRoomUsers: null,
 			}
 		},
 		components: {
@@ -90,8 +91,9 @@
 			}
 		},
 		methods: {
-			switchRoom(roomName){
-				this.currentRoom = roomName
+			switchRoom({room, users}){
+				this.currentRoom = room
+				this.currentRoomUsers = users
 			}
 		}
 	}

@@ -1,13 +1,17 @@
 <template>
 	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
 		<figure class="media-left">
-			<wnl-avatar :fullName="fullName" :url="avatar" :userId="userId" v-if="showAuthor"></wnl-avatar>
+			<wnl-avatar
+				:fullName="fullName"
+				:url="avatar"
+				:userId="userId"
+				v-if="showAuthor"></wnl-avatar>
 			<div class="media-left-placeholder" v-else></div>
 		</figure>
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<wnl-user-profile-modal :author="author.user" :userId="userId"/>
+					<strong>{{ nameToDisplay }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -54,16 +58,19 @@
 <script>
 	import { timeFromMs } from 'js/utils/time'
 
-	import UserProfileModal from 'js/components/users/UserProfileModal'
+	import Avatar from 'js/components/global/Avatar'
 
 	export default{
 		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'userId', 'fullName'],
 		components: {
-			'wnl-user-profile-modal': UserProfileModal,
+			'wnl-avatar': Avatar,
 		},
 		computed: {
 			formattedTime () {
 				return timeFromMs(this.time)
+			},
+			nameToDisplay() {
+				return this.displayName || this.fullName
 			}
 		}
 	}

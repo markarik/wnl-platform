@@ -33,12 +33,10 @@
 							:fullName="author.full_name"
 							:url="author.avatar"
 							:userId="userId"
-							:author="user"
 							size="medium">
 					</wnl-avatar>
-					<wnl-user-profile-modal :author="author" :userId="userId"/>
 					<span class="qna-meta-info">
-						· {{time}}
+						{{ authorNameToDisplay }} · {{time}}
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
@@ -199,7 +197,6 @@
 	import Watch from 'js/components/global/reactions/Watch'
 	import moderatorFeatures from 'js/perimeters/moderator'
 	import { timeFromS } from 'js/utils/time'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
 
 	export default {
 		name: 'QnaQuestion',
@@ -213,7 +210,6 @@
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
 			'wnl-watch': Watch,
-			'wnl-user-profile-modal': UserProfileModal,
 		},
 		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
@@ -258,6 +254,9 @@
 							return this.profile(this.question.profiles[0])
 						})
 				}
+			},
+			authorNameToDisplay() {
+				return this.author.display_name || this.author.full_name
 			},
 			isCurrentUserAuthor() {
 				return this.currentUserId === this.author.user_id
@@ -318,6 +317,9 @@
 				const questionId = _.get(this.$route, 'query.qna_question')
 
 				if (questionId == this.questionId && this.answerInUrl) return true
+			},
+			showModal() {
+				console.log('showModal');
 			}
 		},
 		methods: {

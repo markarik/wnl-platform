@@ -1,70 +1,45 @@
 <template>
-	<div class="wnl-user-profile-modal">
-		<div class="activator">
-			<a class="author-name" @click="activateModal">
-				{{authorNameToDisplay}}
-			</a>
-		</div>
-		<div class="modal" :class="{'is-active': showModal}">
-			<div class="modal-background" @click="deactivateModal"></div>
-			<div class="modal-content">
-				<div class="box">
-					<div class="media-container">
-						<div class="left">
-							<wnl-avatar class="avatar"
-								:fullName="author.full_name"
-								:url="author.avatar"
-								:userId="userId"
-								size="extralarge"/>
-						</div>
-						<div class="right">
-							<div class="content">
-								<div class="user-info-name">
-									<span>{{this.author.display_name}}</span>
-								</div>
-								<div  v-if="cityToDisplay" class="user-info-city">
-									<span class="icon is-small">
-										<i class="fa fa-map-marker"></i>
-									</span>
-									<span class="city-title">{{ this.author.city }}</span>
-								</div>
-								<div v-if="helpToDisplay" class="user-info-help">
-									<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
-									<div class="notification">
-										<span class="user-help">{{ helpToDisplay }}</span>
-									</div>
-								</div>
-							</div>
-							<div class="navigation">
-								<div class="redirect">
-									<router-link :to="{ name: 'user', params: {userId: userId} }">
-										<a class="button is-primary is-outlined is-small">Zobacz pełen profil</a>
-									</router-link>
-								</div>
-							</div>
+	<div class="box">
+		<div class="media-container">
+			<div class="left">
+				<wnl-avatar class="avatar"
+					:fullName="author.full_name"
+					:url="author.avatar"
+					:userId="userId"
+					size="extralarge"/>
+			</div>
+			<div class="right">
+				<div class="content">
+					<div class="user-info-name">
+						<span>{{this.author.display_name}}</span>
+					</div>
+					<div  v-if="cityToDisplay" class="user-info-city">
+						<span class="icon is-small">
+							<i class="fa fa-map-marker"></i>
+						</span>
+						<span class="city-title">{{ this.author.city }}</span>
+					</div>
+					<div v-if="helpToDisplay" class="user-info-help">
+						<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
+						<div class="notification">
+							<span class="user-help">{{ helpToDisplay }}</span>
 						</div>
 					</div>
 				</div>
+				<div class="navigation">
+					<div class="redirect">
+						<router-link :to="{ name: 'user', params: {userId: userId} }">
+							<a class="button is-primary is-outlined is-small">Zobacz pełen profil</a>
+						</router-link>
+					</div>
+				</div>
 			</div>
-			<button class="modal-close is-large" aria-label="close" @click="deactivateModal"></button>
 		</div>
 	</div>
 </template>
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
-
-	.wnl-user-profile-modal
-		line-height: $line-height-base
-		font-size: $font-size-base
-
-	.activator
-		display: flex
-		flex-direction: row
-		align-items: center
-
-	.modal
-		z-index: $z-index-alerts
 
 	.media-container
 		display: flex

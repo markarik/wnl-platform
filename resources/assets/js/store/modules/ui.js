@@ -4,6 +4,7 @@ import { isString, pickBy, values } from 'lodash'
 
 // Initial state
 const state = {
+	modalVisible: false,
 	canShowChat: false,
 	currentLayout: '',
 	isSidenavOpen: false,
@@ -23,6 +24,7 @@ const layouts = {
 
 // Getters
 const getters = {
+	isModalVisible: state => state.modalVisible,
 	currentLayout: state => state.currentLayout,
 	isMobile: state => state.currentLayout === layouts.mobile,
 	isSmallDesktop: state => state.currentLayout === layouts.smallDesktop,
@@ -58,6 +60,9 @@ const getters = {
 
 // Mutations
 const mutations = {
+	[types.UI_TOGGLE_MODAL] (state, payload) {
+		set(state, 'modalVisible', payload)
+	},
 	[types.UI_CHANGE_LAYOUT] (state, layout) {
 		set(state, 'currentLayout', layout)
 	},
@@ -115,11 +120,14 @@ const mutations = {
 
 // Actions
 const actions = {
+	showModal({ commit, getters }, payload) {
+		commit(types.UI_TOGGLE_MODAL, payload)
+	},
 	setLayout({ commit, getters }, layout) {
 		commit(types.UI_CHANGE_LAYOUT, layout)
 	},
 	toggleSidenav({ commit }) {
-		commit(types.UI_TOGGLE_SIDENAV)
+	commit(types.UI_TOGGLE_SIDENAV)
 	},
 	resetLayout({ commit, getters }) {
 		commit(types.UI_RESET_LAYOUT)

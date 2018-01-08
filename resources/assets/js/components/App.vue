@@ -9,6 +9,7 @@
 			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
 		</div>
+		<wnl-modal v-show="isModalVisible"/>
 	</div>
 </template>
 
@@ -43,6 +44,7 @@
 	import { mapGetters, mapActions } from 'vuex'
 	import { isEmpty } from 'lodash'
 
+	import Modal from 'js/components/global/Modal.vue'
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
@@ -53,7 +55,8 @@
 		name: 'App',
 		components: {
 			'wnl-navbar': Navbar,
-			'wnl-alerts': Alerts
+			'wnl-alerts': Alerts,
+			'wnl-modal': Modal,
 		},
 		computed: {
 			...mapGetters([
@@ -62,7 +65,8 @@
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
-				'alerts'
+				'alerts',
+				'isModalVisible',
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
@@ -73,7 +77,8 @@
 				'resetLayout',
 				'setLayout',
 				'setupCurrentUser',
-				'toggleOverlay'
+				'toggleOverlay',
+				'showModal',
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),

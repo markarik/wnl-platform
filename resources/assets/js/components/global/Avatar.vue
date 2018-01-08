@@ -1,12 +1,6 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
-		<div class="wnl-avatar-prop" v-if="routerLinkRender">
-			<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-				<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
-				<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
-			</router-link>
-		</div>
-		<div class="wnl-avatar-no-prop" v-if="!routerLinkRender">
+		<div class="wnl-avatar-no-prop">
 			<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
 			<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 		</div>
@@ -50,10 +44,6 @@
 				'currentUserFullName',
 				'currentUserAvatar',
 			]),
-			routerLinkRender() {
-				if (this.disableLink) return false
-				return this.userId
-			},
 			isCurrentUser() {
 				return _.isEmpty(this.fullName)
 			},

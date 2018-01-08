@@ -19,9 +19,8 @@
 							:userId="userId"
 							size="medium">
 					</wnl-avatar>
-					<wnl-user-profile-modal :author="author" :userId="userId"/>
 					<span class="qna-meta-info">
-						· {{time}}
+						{{ authorNameToDisplay }} · {{time}}
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
@@ -90,22 +89,22 @@
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import Avatar from 'js/components/global/Avatar'
 	import Delete from 'js/components/global/form/Delete'
 	import Vote from 'js/components/global/reactions/Vote'
 	import highlight from 'js/mixins/highlight'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import moderatorFeatures from 'js/perimeters/moderator'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
 
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaAnswer',
 		components: {
+			'wnl-avatar': Avatar,
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
 			'wnl-comments-list': CommentsList,
-			'wnl-user-profile-modal': UserProfileModal,
 		},
 		perimeters: [moderatorFeatures],
 		mixins: [ highlight ],

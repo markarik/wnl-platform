@@ -13,7 +13,7 @@
 			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<wnl-user-profile-modal :author="profile" :userId="userId"/>
+			<span class="author">{{ nameToDisplay }}</span>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
@@ -59,20 +59,20 @@
 <script>
 import { mapGetters } from 'vuex'
 
+import Avatar from 'js/components/global/Avatar'
 import Delete from 'js/components/global/form/Delete'
 import Resolve from 'js/components/global/form/Resolve'
 import { timeFromS } from 'js/utils/time'
 import moderatorFeatures from 'js/perimeters/moderator'
 import Vote from 'js/components/global/reactions/Vote'
-import UserProfileModal from 'js/components/users/UserProfileModal'
 
 export default {
 	name: 'Comment',
 	components: {
+		'wnl-avatar': Avatar,
 		'wnl-delete': Delete,
 		'wnl-resolve': Resolve,
 		'wnl-vote': Vote,
-		'wnl-user-profile-modal': UserProfileModal,
 	},
 	perimeters: [moderatorFeatures],
 	props: ['comment', 'profile'],

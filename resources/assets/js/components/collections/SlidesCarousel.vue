@@ -8,7 +8,7 @@
 					</span>
 			</a>
 		</p>
-		<div class="slides-carousel-container" v-if="!!savedSlidesCount">
+		<div class="slides-carousel-container" v-if="bookmarkedSlidesIds.length > 0">
 			<div class="slides-carousel">
 				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
 					<div class="thumb-meta">
@@ -27,7 +27,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-else-if="!savedSlidesCount" class="notification has-text-centered">
+		<div v-else class="notification has-text-centered">
 			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
@@ -188,7 +188,7 @@
 			'wnl-slideshow': Slideshow,
 		},
 		computed: {
-			...mapGetters('collections', ['slidesContent']),
+			...mapGetters('collections', ['slidesContent', 'getSlidesIdsForCategory']),
 			...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
 			...mapGetters('slideshow', ['presentableSortedSlidesIds', 'slideshowSortedSlideIds']),
 			slides() {
@@ -220,9 +220,12 @@
 				}
 				return this.getSlideOrderNumberFromIndex(this.selectedSlideIndex)
 			},
+			bookmarkedSlidesIds() {
+				return this.getSlidesIdsForCategory(this.categoryName)
+			}
 		},
 		methods: {
-			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection']),
+			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection', 'fetchReactions', 'fetchSlidesByTagName']),
 			...mapActions('slideshow', ['setSortedSlidesIds','setup']),
 			...mapActions(['toggleOverlay']),
 			showSlide(index) {
@@ -265,15 +268,32 @@
 				}
 
 				if (htmlContentKey === this.contentModes.bookmark) {
-					return this._fetchBookmarkedSlideshow()
-						.then(({data}) => {
-							const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
-							this.loadedHtmlContents[this.contentModes.bookmark] = data
-							const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
-							this.setSortedSlidesIds(sortedSlides)
-							this.mode = htmlContentKey
-							this.htmlContent = this.loadedHtmlContents[htmlContentKey]
-						})
+					if (force) {
+						return this.fetchReactions()
+							.then(() => {
+								return this.fetchSlidesByTagName({
+									tagName: this.categoryName, ids: this.bookmarkedSlidesIds
+								})
+							}).then(() => {
+								return this._fetchBookmarkedSlideshow()
+							}).then( () => {
+								const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
+								this.loadedHtmlContents[this.contentModes.bookmark] = data
+								const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
+								this.setSortedSlidesIds(sortedSlides)
+								this.mode = htmlContentKey
+								this.htmlContent = this.loadedHtmlContents[htmlContentKey]
+							})
+					}
+
+					this._fetchBookmarkedSlideshow().then(({data}) => {
+						const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
+						this.loadedHtmlContents[this.contentModes.bookmark] = data
+						const sortedSlides = this.sortSlidesByOrderNumber(slidesIds)
+						this.setSortedSlidesIds(sortedSlides)
+						this.mode = htmlContentKey
+						this.htmlContent = this.loadedHtmlContents[htmlContentKey]
+					})
 				} else {
 					return this._fetchAllSlideshow()
 						.then(({data}) => {
@@ -310,7 +330,11 @@
 				this.setup({id: this.categoryId, type: this.presentableType})
 					.then(() => this.showContent(this.mode, true))
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
-					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+					.catch(() => {
+						this.loadedHtmlContents[this.mode] = ''
+						this.htmlContent = this.loadedHtmlContents[this.mode]
+						this.toggleOverlay({source: 'collection-slideshow', display: false})
+				})
 			},
 			_fetchBookmarkedSlideshow() {
 				const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)

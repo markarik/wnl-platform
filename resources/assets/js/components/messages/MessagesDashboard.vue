@@ -16,7 +16,10 @@
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container chat-container">
-				<wnl-private-chat :room="currentRoom"></wnl-private-chat>
+				<wnl-private-chat
+					:room="currentRoom"
+					v-if="showChatRoom"
+				></wnl-private-chat>
 			</div>
 		</div>
 	</div>
@@ -61,7 +64,7 @@
 		name: 'MessagesDashboard',
 		data() {
 			return {
-				currentRoom: ''
+				currentRoom: null
 			}
 		},
 		components: {
@@ -82,6 +85,9 @@
 				'currentUserName'
 			]),
 			...mapGetters('course', ['ready']),
+			showChatRoom() {
+				return !!this.currentRoom
+			}
 		},
 		methods: {
 			switchRoom(roomName){

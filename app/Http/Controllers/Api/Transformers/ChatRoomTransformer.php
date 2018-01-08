@@ -22,8 +22,9 @@ class ChatRoomTransformer extends ApiTransformer
 	public function transform(ChatRoom $chatRoom)
 	{
 		$data = [
-			'id'      => $chatRoom->id,
-			'channel' => $chatRoom->name,
+			'id'                => $chatRoom->id,
+			'channel'           => $chatRoom->name,
+			'last_message_time' => $chatRoom->last_message_time ?? null,
 		];
 
 		if ($this->parent) {
@@ -35,11 +36,14 @@ class ChatRoomTransformer extends ApiTransformer
 
 	public function includeProfiles(ChatRoom $chatRoom)
 	{
-		$profiles = $chatRoom->profiles;
+		$profiles = collect();
+		foreach ($chatRoom->users as $user) {
+			$profiles->push($user->profile);
+		}
 
 		return $this->collection(
 			$profiles,
-			new UserProfileTransformer(['chat_room' => $chatRoom->id]),
+			new UserProfileTransformer(['chat_rooms' => $chatRoom->id]),
 			'profiles'
 		);
 	}

@@ -3,7 +3,8 @@
 		<wnl-conversation-snippet
 			v-for="(room, index) in rooms"
 			:key="index"
-			:room="room">
+			:room="room"
+			:users="getRoomProfiles(room.profiles)">
 
 		</wnl-conversation-snippet>
 	</div>
@@ -29,16 +30,21 @@
 		data() {
 			return  {
 				rooms: [],
+				profiles: [],
+				messages: [],
 				currentRoom: ''
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserId'])
+			...mapGetters(['currentUserId']),
 		},
 		methods: {
 			getPrivateRooms() {
-				return axios.get(getApiUrl('chat_rooms/.getPrivateRooms'))
+				const path = 'chat_rooms/.getPrivateRooms?include=profiles'
+				return axios.get(getApiUrl(path))
 					.then(response => {
+						this.profiles = response.data.included.profiles
+						delete response.data.included
 						this.rooms = response.data
 						return response
 					})
@@ -78,6 +84,18 @@
 			startNewRoom(roomName) {
 				this.rooms.unshift({channel: roomName})
 				this.$emit('roomSwitch', {channel: roomName})
+			},
+			getRoomProfiles(profileIds) {
+				let profiles = [];
+
+				profileIds.forEach((profileId) => {
+					let profile = this.profiles[profileId]
+					if (profile.user_id !== this.currentUserId) {
+						profiles.push(profile)
+					}
+				})
+
+				return profiles
 			}
 		},
 		mounted(){

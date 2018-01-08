@@ -3,7 +3,7 @@
 		<figure class="media-left">
 
 			<wnl-avatar
-				:fullName="users[0].fullName"
+				:fullName="users[0].full_name"
 				:url="users[0].avatar"
 				size="large">
 
@@ -75,15 +75,19 @@
 			room: {
 				required: true,
 			},
+			users: {
+				required: true,
+				type: Array,
+			}
 		},
 		data() {
 			return {
-				users: [
-					{
-						fullName: 'Adam Karmiński',
-						avatar: 'https://api.adorable.io/avatars/50/' + Math.random()
-					}
-				],
+//				users: [
+//					{
+//						fullName: 'Adam Karmiński',
+//						avatar: 'https://api.adorable.io/avatars/50/' + Math.random()
+//					}
+//				],
 				message: {
 					content: 'no siema',
 					time: timeFromMs(1509983162118)

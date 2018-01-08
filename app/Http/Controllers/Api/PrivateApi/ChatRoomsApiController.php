@@ -16,9 +16,23 @@ class ChatRoomsApiController extends ApiController
 	public function getPrivateRooms()
 	{
 		$user = Auth::user();
-		$rooms = ChatRoom::select()
-			->where('name', 'like', "private%-{$user->id}-%");
+		$select = [
+			'chat_rooms.id',
+			'chat_rooms.name',
+			'max(chat_messages.time) as last_message_time',
+		];
+		$rooms = ChatRoom::with('users.profile')
+			->select(\DB::raw(implode(',', $select)))
+			->where('name', 'like', "private%-{$user->id}-%")
+			->join(
+				'chat_messages',
+				'chat_messages.chat_room_id', '=', 'chat_rooms.id'
+			)
+			->orderBy('last_message_time', 'desc')
+			->groupBy('chat_rooms.id');
 
-		return $this->transformAndRespond($rooms);
+		$data = $this->transform($rooms);
+
+		return $this->respondOk($data);
 	}
 }

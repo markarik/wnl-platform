@@ -1,6 +1,6 @@
 <?php namespace App\Listeners\Handlers;
 
-use App\Events\Mentioned;
+use App\Events\Mentions\Mentioned;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 

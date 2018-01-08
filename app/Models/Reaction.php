@@ -1,8 +1,7 @@
 <?php namespace App\Models;
 
-use DB;
 use Auth;
-use App\Events\ReactionAdded;
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Reaction extends Model

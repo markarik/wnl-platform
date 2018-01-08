@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Notification;
 
 class UserNotificationsGate implements ShouldQueue
 {
+	public $queue = 'notifications';
+
 	const CHANNELS = [
 		'role'           => 'private-group.%s',
 		'private'        => 'private-%d',

@@ -1,14 +1,13 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use DB;
+use App\Events\Reactions\ReactionAdded;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Reactions\DeleteReaction;
+use App\Models\Reaction;
 use Auth;
 use Carbon\Carbon;
-use App\Models\Reaction;
+use DB;
 use Illuminate\Http\Request;
-use App\Events\ReactionAdded;
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\Reactions\CreateReaction;
-use App\Http\Requests\Reactions\DeleteReaction;
 
 class ReactionsApiController extends ApiController
 {

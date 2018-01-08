@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Events\QnaQuestionPosted;
-use App\Events\QnaQuestionRemoved;
-use App\Events\QnaQuestionRestored;
+use App\Events\Qna\QnaQuestionPosted;
+use App\Events\Qna\QnaQuestionRemoved;
+use App\Events\Qna\QnaQuestionRestoredEvent;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\QnaQuestionTransformer;
 use App\Http\Requests\Qna\PostQuestion;
@@ -63,7 +63,7 @@ class QnaQuestionsApiController extends ApiController
 				event(new QnaQuestionRemoved($qnaQuestion, Auth::user()->id, 'resolved'));
 			} else {
 				$qnaQuestion->restore();
-				event(new QnaQuestionRestored($qnaQuestion, Auth::user()->id));
+				event(new QnaQuestionRestoredEvent($qnaQuestion, Auth::user()->id));
 			}
 		} else {
 			$qnaQuestion->update([

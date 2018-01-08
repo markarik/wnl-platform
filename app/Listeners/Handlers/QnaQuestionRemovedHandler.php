@@ -1,9 +1,8 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\QnaQuestionRemoved;
+use App\Events\Qna\QnaQuestionRemoved;
 use App\Listeners\UserNotificationsGate;
-use App\Models\User;
 
 class QnaQuestionRemovedHandler
 {

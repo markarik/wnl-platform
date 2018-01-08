@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Users;
 
-use Cache;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class UserDataUpdated
 {

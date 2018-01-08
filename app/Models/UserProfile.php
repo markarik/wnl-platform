@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Events\UserDataUpdated;
-use Laravel\Scout\Searchable;
+use App\Events\Users\UserDataUpdated;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class UserProfile extends Model
 {

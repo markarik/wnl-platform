@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Event;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 use App\Http\Controllers\Api\Concerns\PaginatesResponses;
 use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
@@ -123,29 +124,14 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * Get resource event class name.
-	 *
-	 * @param $resourceName
-	 * @param string $eventName
-	 *
-	 * @return string
-	 */
-	protected static function getRemovedResourceEvent($resourceName)
-	{
-		return 'App\Events\\' . $resourceName . 'Removed';
-	}
-
-	/**
 	 * Dispatch event.
 	 *
+	 * @param $model
 	 * @param $resourceName
-	 * @param string $eventName
-	 *
-	 * @return string
 	 */
 	protected static function dispatchRemovedEvent($model, $resourceName)
 	{
-		$eventClass = self::getRemovedResourceEvent($resourceName);
+		$eventClass = Event::getResourceEvent($resourceName, 'removed');
 
 		if (class_exists($eventClass)) {
 			event(new $eventClass($model, Auth::user()->id, 'deleted'));
@@ -250,12 +236,14 @@ class ApiController extends Controller
 			if ($i === 0) {
 				if (!$this->modelHasMethod($parentModel, $resources[$i])) {
 					\Log::debug("Relationship {$resources[$i]} does not exist in model {$parentModel}");
+
 					return false;
 				}
 			} else {
-				$model = self::getResourceModel($resources[$i-1]);
+				$model = self::getResourceModel($resources[$i - 1]);
 				if (!$this->modelHasMethod($model, $resources[$i])) {
 					\Log::debug("Relationship {$resources[$i]} does not exist in model {$model}");
+
 					return false;
 				}
 			}

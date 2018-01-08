@@ -1,43 +1,52 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Qna;
 
-use Request;
+use App\Events\Event;
+use App\Events\SanitizesUserContent;
 use App\Models\QnaAnswer;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
-use App\Events\SanitizesUserContent;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Queue\SerializesModels;
 
-class QnaAnswerRemoved extends Event
+class QnaAnswerPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
+		SerializesModels,
 		SanitizesUserContent,
 		EventContextTrait;
 
 	public $qnaAnswer;
-
-	public $userId;
 
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param QnaAnswer $qnaAnswer
 	 */
-	public function __construct(QnaAnswer $qnaAnswer, $userId)
+	public function __construct(QnaAnswer $qnaAnswer)
 	{
 		parent::__construct();
 		$this->qnaAnswer = $qnaAnswer;
-		$this->userId = $userId;
+	}
+
+	/**
+	 * Get the channels the event should broadcast on.
+	 *
+	 * @return Channel|array
+	 */
+	public function broadcastOn()
+	{
+		return new PrivateChannel('channel-name');
 	}
 
 	public function transform()
 	{
 		$this->data = [
-			'event'   => 'qna-answer-deleted',
+			'event'   => 'qna-answer-posted',
 			'objects' => [
 				'author' => $this->qnaAnswer->question->user->id,
 				'type' => 'qna_question',
@@ -50,7 +59,12 @@ class QnaAnswerRemoved extends Event
 				'text' => $this->sanitize($this->qnaAnswer->text),
 			],
 			'actors'  => [
-				'id' => $this->userId
+				'id'           => $this->qnaAnswer->user->id,
+				'first_name'   => $this->qnaAnswer->user->profile->first_name,
+				'last_name'    => $this->qnaAnswer->user->profile->last_name,
+				'full_name'    => $this->qnaAnswer->user->profile->full_name,
+				'display_name' => $this->qnaAnswer->user->profile->display_name,
+				'avatar'       => $this->qnaAnswer->user->profile->avatar_url,
 			],
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($this->qnaAnswer)

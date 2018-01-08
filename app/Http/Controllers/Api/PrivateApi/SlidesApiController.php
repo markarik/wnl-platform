@@ -1,6 +1,9 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 
+use App;
+use App\Events\Slides\SlideAdded;
+use App\Events\Slides\SlideDetached;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Concerns\Slides\AddsSlides;
 use App\Http\Controllers\Api\Concerns\Slides\RemovesSlides;
@@ -85,10 +88,13 @@ class SlidesApiController extends ApiController
 		$this->attachSlide($slide, $presentables);
 		$slide->tags()->attach($screen->tags);
 
-		dispatch(new SearchImportAll('App\\Models\\Slide'));
-		\Artisan::queue('screens:countSlides');
-		\Artisan::queue('slides:fromCategory');
-		\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
+		if (!App::environment('dev')) {
+			dispatch(new SearchImportAll('App\\Models\\Slide'));
+			\Artisan::queue('screens:countSlides');
+			\Artisan::queue('slides:fromCategory');
+			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
+		}
+		event(new SlideAdded($slide, $presentables));
 
 		return $this->respondOk();
 	}
@@ -129,9 +135,12 @@ class SlidesApiController extends ApiController
 		$this->detachSlide($slide, $presentables);
 		$slide->reactions()->detach();
 
-		dispatch(new SearchImportAll('App\\Models\\Slide'));
-		\Artisan::queue('screens:countSlides');
-		\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
+		if (!App::environment('dev')) {
+			dispatch(new SearchImportAll('App\\Models\\Slide'));
+			\Artisan::queue('screens:countSlides');
+			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
+		}
+		event(new SlideDetached($slide, $presentables));
 
 		return $this->respondOk();
 	}

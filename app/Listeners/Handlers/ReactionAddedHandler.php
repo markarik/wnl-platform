@@ -1,8 +1,8 @@
 <?php namespace App\Listeners\Handlers;
 
-use DB;
-use App\Events\ReactionAdded;
+use App\Events\Reactions\ReactionAdded;
 use App\Listeners\UserNotificationsGate;
+use DB;
 
 class ReactionAddedHandler
 {

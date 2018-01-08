@@ -1,7 +1,7 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\CommentPosted;
+use App\Events\Comments\CommentPosted;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 

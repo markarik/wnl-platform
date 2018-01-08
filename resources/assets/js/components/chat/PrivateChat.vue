@@ -3,7 +3,12 @@
 		<div class="chat-title">
 			{{room.channel}}
 		</div>
-		<wnl-chat :room="room"></wnl-chat>
+		<wnl-chat
+			:room="room"
+			:initialPull="initialPull"
+			:pullLimit="pullLimit"
+		>
+		</wnl-chat>
 	</div>
 </template>
 
@@ -38,6 +43,12 @@
 				required: false,
 				type: String,
 				default: '',
+			}
+		},
+		data() {
+			return {
+				initialPull: true,
+				pullLimit: 30,
 			}
 		},
 		components: {

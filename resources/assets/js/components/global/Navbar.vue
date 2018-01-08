@@ -24,10 +24,7 @@
 			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
-		<div
-				v-if="$currentEditionParticipant.isAllowed('access')"
-				class="wnl-navbar-item wnl-navbar-messages"
-		>
+		<div class="wnl-navbar-item wnl-navbar-messages">
 			<wnl-messages/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">

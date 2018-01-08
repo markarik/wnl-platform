@@ -81,7 +81,7 @@
 				users: [
 					{
 						fullName: 'Adam Karmiński',
-						avatar: 'http://platforma.wnl/storage/avatars/2V4LLROhJi3ie1nuKFGaeZONk8KQHdQyF1Q8edm6.jpeg'
+						avatar: 'https://api.adorable.io/avatars/50/' + Math.random()
 					}
 				],
 				message: {

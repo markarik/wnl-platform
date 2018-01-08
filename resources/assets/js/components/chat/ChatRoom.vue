@@ -80,7 +80,24 @@
 	import { mapGetters } from 'vuex'
 
 	export default {
-		props: ['room', 'switchRoom'],
+		props: {
+			room:{
+				required: true,
+			},
+			switchRoom:{
+				required: false,
+			},
+			pullLimit:{
+				required: false,
+				type: Number,
+				default: 100
+			},
+			initialPull: {
+				required: false,
+				type: Boolean,
+				default: false,
+			}
+		},
 		data() {
 			return {
 				loaded: false,
@@ -198,24 +215,26 @@
 							// cold storage has some more messages we can pull.
 							this.thereIsMore
 
-				if (shouldPull) this.pull(target, height)
+				if (shouldPull) this.pull(height)
 			},
 			onScroll (event) {
 				this.pullDebouncer.call(this, event)
 			},
-			pull (target, originalHeight){
+			pull (originalHeight){
 				this.isPulling = true
 				let data       = {
-					query: {
-						where: [
-							['time', '<', this.messages[0].time],
-						],
-					},
+					query: {},
 					order: {
 						time: 'desc',
 					},
 					include: 'profiles',
-					limit: [100, 0]
+					limit: [this.pullLimit, 0]
+				}
+
+				if (this.messages.length > 0) {
+					data.query.where = [
+						['time', '<', this.messages[0].time],
+					];
 				}
 
 				axios.post(getApiUrl(`chat_rooms/${this.room}/chat_messages/.search`), data)
@@ -284,6 +303,9 @@
 			}).catch(exception => $wnl.logger.capture(exception))
 
 			this.pullDebouncer = _.debounce(this.pullDebouncer, 50)
+			if (this.initialPull) {
+				this.pull(0)
+			}
 		},
 		beforeDestroy() {
 			socket.disconnect().then(() => {

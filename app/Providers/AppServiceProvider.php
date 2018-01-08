@@ -92,6 +92,7 @@ class AppServiceProvider extends ServiceProvider
 		Models\QuizQuestion::observe(Observers\QuizQuestionObserver::class);
 		Models\Slide::observe(Observers\SlideObserver::class);
 		Models\Task::observe(Observers\TaskObserver::class);
+		Models\ChatRoom::observe(Observers\ChatRoomObserver::class);
 	}
 
 	protected function registerCustomValidators()

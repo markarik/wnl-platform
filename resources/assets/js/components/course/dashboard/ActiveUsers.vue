@@ -10,7 +10,6 @@
 								:fullName="user.fullName"
 								:url="user.avatar"
 								:userId="user.id"
-								:user="user"
 								size="medium">
 						</wnl-avatar>
 					</li>
@@ -78,7 +77,7 @@ import { mapGetters } from 'vuex'
 			},
 		},
 		computed: {
-			...mapGetters(['currentUserId', 'currentUserName']),
+			...mapGetters(['currentUserId']),
 			...mapGetters('users', ['activeUsers']),
 			activeUsersCount() {
 				return this.usersToCount.length

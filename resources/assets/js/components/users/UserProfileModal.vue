@@ -62,10 +62,6 @@
 		display: flex
 		flex-direction: row
 		align-items: center
-		.author-name
-			margin-left: $margin-small
-			padding: auto
-
 
 	.modal
 		z-index: $z-index-alerts

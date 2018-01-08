@@ -47,7 +47,7 @@ const actions = {
 	},
 	setupLiveListener({commit}, channel) {
 		Echo.channel(channel)
-			.listen('.App.Events.LiveNotificationCreated', (task) => {
+			.listen('.App.Events.Live.LiveNotificationCreated', (task) => {
 				commit(types.ADD_TASK, task)
 			});
 	},

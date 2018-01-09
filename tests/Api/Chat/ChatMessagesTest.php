@@ -70,17 +70,17 @@ class ChatMessagesTest extends ApiTestCase
 	{
 		$user = User::find(1);
 		$room = factory(ChatRoom::class)->create([
-			'name' => 'private-room'
+			'name' => 'private-3-7'
 		]);
 
 		$data = [
 			'query' => [
 				'where' => [
-					['created_at', '>', '1495033700'],
+					['time', '>', '1495033700'],
 				],
 			],
 			'order' => [
-				'created_at' => 'asc',
+				'time' => 'asc',
 			],
 			'limit' => [100, 0],
 		];

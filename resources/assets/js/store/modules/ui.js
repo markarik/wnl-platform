@@ -30,7 +30,7 @@ const layouts = {
 const getters = {
 	isModalVisible: state => state.modal.visible,
 	getModalContent: state => state.modal.content,
-	getModalComponent: state => modal.state.component,
+	getModalComponent: state => state.modal.component,
 	currentLayout: state => state.currentLayout,
 	isMobile: state => state.currentLayout === layouts.mobile,
 	isSmallDesktop: state => state.currentLayout === layouts.smallDesktop,

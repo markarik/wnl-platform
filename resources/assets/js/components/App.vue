@@ -10,7 +10,7 @@
 			<router-view></router-view>
 		</div>
 		<wnl-modal v-show="isModalVisible">
-			<component :is="'wnl-user-profile-modal'"/>
+			<component :is="getModalComponent" v-bind:author="getModalContent"/>
 		</wnl-modal>
 	</div>
 </template>

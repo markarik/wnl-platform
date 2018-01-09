@@ -334,8 +334,8 @@
 			showModal() {
 				this.toggleModal({
 					visible: true,
-					content: {},
-					component: ''
+					content: this.author,
+					component: 'wnl-user-profile-modal',
 				})
 			},
 			dispatchFetchQuestion() {

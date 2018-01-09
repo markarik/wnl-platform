@@ -6,12 +6,14 @@
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
-						<wnl-avatar
+						<div class="activator" @click="showModal">
+							<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
 								:userId="user.id"
 								size="medium">
-						</wnl-avatar>
+							</wnl-avatar>
+						</div>
 					</li>
 				</ul>
 			</div>
@@ -63,7 +65,7 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 	export default {
 		name: 'ActiveUsers',
 		props: {
@@ -86,5 +88,16 @@ import { mapGetters } from 'vuex'
 				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
 			},
 		},
+		methods: {
+			...mapActions(['toggleModal']),
+			showModal() {
+				// console.log('klikł');
+				this.toggleModal({
+					visible: true,
+					content: this.user.profile,
+					component: 'wnl-user-profile-modal',
+				})
+			}
+		}
 	}
 </script>

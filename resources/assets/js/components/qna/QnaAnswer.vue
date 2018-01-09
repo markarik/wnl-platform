@@ -13,14 +13,19 @@
 					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<wnl-avatar class="avatar"
-							:fullName="author.full_name"
-							:url="author.avatar"
-							:userId="userId"
-							size="medium">
-					</wnl-avatar>
+					<div class="modal-activator" @click="showModal">
+						<wnl-avatar class="avatar"
+								:fullName="author.full_name"
+								:url="author.avatar"
+								:userId="userId"
+								size="medium">
+						</wnl-avatar>
+						<span class="qna-meta-info">
+							{{ authorNameToDisplay }}
+						</span>
+					</div>
 					<span class="qna-meta-info">
-						{{ authorNameToDisplay }} · {{time}}
+						· {{time}}
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
@@ -64,6 +69,13 @@
 		padding: 0 $margin-base
 		margin-top: $margin-base
 
+	.modal-activator
+		display: flex
+		flex-direction: row
+		cursor: pointer
+		align-items: center
+		color: $color-sky-blue
+
 	.qna-answer-comments
 		margin-left: 60px
 
@@ -81,8 +93,6 @@
 	.qna-bookmark
 		justify-content: flex-end
 
-	.avatar
-		margin-right: $margin-small
 </style>
 
 <script>
@@ -166,6 +176,14 @@
 		},
 		methods: {
 			...mapActions('qna', ['removeAnswer']),
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: this.author,
+					component: 'wnl-user-profile-modal',
+				})
+			},
 			onDeleteSuccess() {
 				this.removeAnswer({
 					questionId: this.questionId,

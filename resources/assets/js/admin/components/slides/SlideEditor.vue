@@ -272,7 +272,7 @@
 				}).catch(error => {
 					this.errorFading('Ups... Coś poszło nie tak.', 4000)
 					$wnl.logger.capture(error)
-					this.detachingSlide = true;
+					this.detachingSlide = false;
 				})
 			}
 		},

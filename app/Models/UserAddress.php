@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\UserDataUpdated;
+use App\Events\Users\UserDataUpdated;
 use Illuminate\Database\Eloquent\Model;
 
 class UserAddress extends Model

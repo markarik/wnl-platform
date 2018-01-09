@@ -4,8 +4,8 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\ChatMessage;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\ChatMessage;
 
 
 class ChatMessageTransformer extends ApiTransformer
@@ -23,9 +23,10 @@ class ChatMessageTransformer extends ApiTransformer
 	public function transform(ChatMessage $chatMessage)
 	{
 		$data = [
-			'id'      => $chatMessage->id,
-			'content' => $chatMessage->content,
-			'time'    => $chatMessage->time,
+			'id'           => $chatMessage->id,
+			'content'      => $chatMessage->content,
+			'time'         => $chatMessage->time,
+			'chat_room_id' => $chatMessage->chat_room_id,
 		];
 
 		if ($this->parent) {

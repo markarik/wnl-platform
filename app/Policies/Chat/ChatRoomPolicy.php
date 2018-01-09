@@ -2,8 +2,8 @@
 
 namespace App\Policies\Chat;
 
-use App\Models\User;
 use App\Models\ChatRoom;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ChatRoomPolicy
@@ -19,7 +19,9 @@ class ChatRoomPolicy
 	 */
 	public function view(User $user, ChatRoom $chatRoom)
 	{
-		return $chatRoom->is_public;
+		return
+			$chatRoom->is_public ||
+			str_contains($chatRoom->name, "-{$user->id}-");
 	}
 
 	/**

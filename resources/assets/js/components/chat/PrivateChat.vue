@@ -24,8 +24,6 @@
 		width: 100%
 
 	.chat-title
-		color: $color-gray-dimmed
-		font-size: $font-size-minus-1
 		text-align: center
 
 </style>
@@ -64,11 +62,11 @@
 		},
 		watch: {
 			'room' (oldVal, newVal) {
-				console.log(newVal)
+
 			}
 		},
 		mounted() {
-			console.log(this.room)
+
 		}
 	}
 </script>

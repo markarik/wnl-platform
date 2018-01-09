@@ -5,6 +5,7 @@
 			:key="index"
 			:room="room"
 			:users="getRoomProfiles(room.profiles)"
+			:messages="getRoomMessages(room)"
 			:currentRoom="currentRoom">
 
 		</wnl-conversation-snippet>
@@ -50,6 +51,15 @@
 					})
 			},
 			getMessages() {
+				const path = 'chat_messages/.getByRooms'
+				const data = {
+					rooms: this.rooms.map(val => val.id)
+				}
+				return axios.post(getApiUrl(path), data)
+					.then(res => {
+						this.messages = res.data
+						return res
+					})
 
 			},
 			getRoomName(interlocutors) {
@@ -67,35 +77,53 @@
 				return `private-${interlocutors}`
 			},
 			openRoom(interlocutors) {
-				let newRoom
+				return new Promise((resolve, reject) => {
+					let newRoom
 
-				if (interlocutors) {
-					newRoom = this.getRoomName(interlocutors)
-					let existingRoom = this.rooms.find(room => {
-						return room.channel === newRoom
-					})
+					if (interlocutors) {
+						newRoom = this.getRoomName(interlocutors)
+						let existingRoom = this.rooms.find(room => {
+							return room.channel === newRoom
+						})
 
-					if (existingRoom) {
-						this.switchToRoom(existingRoom)
-					} else {
-						this.startNewRoom(newRoom)
+						if (existingRoom) {
+							this.switchToRoom(existingRoom)
+						} else {
+							this.startNewRoom(newRoom)
+						}
+					} else if (this.rooms.length > 0) {
+						this.switchToRoom(this.rooms[0])
 					}
-				} else if (this.rooms.length > 0){
-					this.switchToRoom(this.rooms[0])
-				}
+
+					resolve()
+				})
 			},
 			switchToRoom(room) {
 				this.currentRoom = room
 				this.emitRoomChange(room)
 			},
 			startNewRoom(roomName) {
-				// create room & request profiles
-//				this.rooms.unshift({channel: roomName})
-//				this.$emit('roomSwitch', {channel: roomName})
+				const path = 'chat_rooms/.createPrivateRoom?include=profiles'
+				const data = {
+					name: roomName
+				}
+				axios.post(getApiUrl(path), data)
+					.then(res => {
+						let profiles = res.data.included.profiles
+						this.profiles = {...this.profiles, ...profiles}
+						delete res.data.included
+						let room = res.data
+						this.rooms.unshift(room)
+						this.switchToRoom(room)
+					})
 			},
 			emitRoomChange(room) {
 				let users = this.getRoomProfiles(room.profiles)
-				this.$emit('roomSwitch', {room, users})
+				let messages = this.getRoomMessages(room)
+				this.$emit('roomSwitch', {room, users, messages})
+			},
+			getRoomMessages(room) {
+					return this.messages.filter(m => m.chat_room_id === room.id)
 			},
 			getRoomProfiles(profileIds) {
 				let profiles = [];
@@ -112,8 +140,8 @@
 		},
 		mounted(){
 			this.getPrivateRooms()
-				.then(() => this.openRoom(this.$route.params.interlocutors))
 				.then(() => this.getMessages())
+				.then(() => this.openRoom(this.$route.params.interlocutors))
 		},
 		watch: {
 			'$route' (to, from) {

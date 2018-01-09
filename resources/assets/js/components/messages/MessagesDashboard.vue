@@ -39,6 +39,7 @@
 
 	.rooms-sidenav
 		display: flex
+		overflow: hidden
 		flex: 1
 		flex-direction: column
 

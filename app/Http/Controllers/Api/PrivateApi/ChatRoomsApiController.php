@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Chat\PostPrivateRoom;
 use App\Models\ChatRoom;
 use Auth;
 use Illuminate\Http\Request;
@@ -32,6 +33,14 @@ class ChatRoomsApiController extends ApiController
 			->groupBy('chat_rooms.id');
 
 		$data = $this->transform($rooms);
+
+		return $this->respondOk($data);
+	}
+
+	public function createPrivateRoom(PostPrivateRoom $request)
+	{
+		$room = ChatRoom::firstOrCreate(['name' => $request->name]);
+		$data = $this->transform($room);
 
 		return $this->respondOk($data);
 	}

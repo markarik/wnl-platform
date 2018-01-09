@@ -14,15 +14,16 @@
 		</figure>
 		<div class="media-content">
 			<div class="content">
-				<div class="wnl-message-meta">
-					<div class="names">
+				<div class="conversation-meta">
+					<div class="conversation-names">
 						<strong>{{ users[0].display_name }}</strong>
 					</div>
-					<div class="time">
+					<div class="conversation-time" v-if="room.last_message_time">
 						<small>{{ time(room.last_message_time) }}</small>
 					</div>
 				</div>
-				<p class="wnl-message-content" v-html="message.content"></p>
+				<div class="conversation-message" v-html="messages[0].content">
+				</div>
 			</div>
 		</div>
 	</router-link>
@@ -33,6 +34,8 @@
 
 	.conversation-snippet
 		display: flex
+		min-width: 0
+		overflow: hidden
 		padding: $margin-medium
 
 		&:hover
@@ -42,31 +45,33 @@
 		&.is-active
 			background-color: $color-background-lighter-gray
 
+
 		.media-content
-			.content
-				color: $color-gray-lighter
-				word-wrap: break-word
-				word-break: break-word
+			min-width: 0
+			overflow: hidden
 
-				.wnl-message-meta
-					color: $color-inactive-gray
-					line-height: 1em
-					margin-bottom: $margin-tiny
+			.conversation-meta
+				display: flex
+				overflow: hidden
+				justify-content: space-between
+
+				.conversation-names
+					min-width: 0
+					flex: 1 1 0%
+					overflow: hidden
+					white-space: nowrap
+					text-overflow: ellipsis
+
+				.conversation-time
 					display: flex
-					justify-content: space-between
+					min-width: 0
 
-					.names
-						overflow: hidden
-						white-space: nowrap
-						text-overflow: ellipsis
-						display: flex
-						flex: 1 1 0%
-						
-					.time
-						display: inline-block
-
-				p
-					margin: 0
+			.conversation-message
+				min-width: 0
+				flex: 1 1 0%
+				overflow: hidden
+				white-space: nowrap
+				text-overflow: ellipsis
 
 </style>
 
@@ -85,13 +90,15 @@
 			users: {
 				required: true,
 				type: Array,
+			},
+			messages: {
+				required: true,
+				type: Array
 			}
 		},
 		data() {
 			return {
-				message: {
-					content: '...',
-				}
+
 			}
 		},
 		computed: {
@@ -102,9 +109,6 @@
 						interlocutors: this.room.channel.replace('private-', ''),
 					},
 				}
-			},
-			isActive() {
-				return this.room === this.currentRoom
 			}
 		},
 		methods: {

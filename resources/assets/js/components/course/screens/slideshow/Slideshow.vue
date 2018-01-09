@@ -227,7 +227,7 @@
 				return index + 1
 			},
 			goToSlide(slideIndex) {
-				if(slideIndex || slideIndex === 0) {
+				if(slideIndex && slideIndex > -1) {
 					this.slideChanged = true
 
 					const newSlideId = this.getSlideIdFromIndex(slideIndex)
@@ -274,9 +274,9 @@
 				return this.postmateHandshake(postmateOptions)
 					.then(child => {
 						if (this.$route.query.slide) {
-							const newOrderNumber = this.getSlidePositionById(this.$route.query.slide)
-							this.goToSlide(newOrderNumber);
-							this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+							const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+							this.goToSlide(newSlideIndex);
+							this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
 						} else {
 							this.goToSlide(this.currentSlideIndex)
 						}
@@ -543,14 +543,14 @@
 				}
 
 				if (to.query.slide && to.query.slide !== this.currentSlideId) {
-					const newOrderNumber = this.getSlidePositionById(to.query.slide)
-					this.goToSlide(newOrderNumber);
-					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+					this.goToSlide(newSlideIndex);
+					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
 				}
 
 				if (to.query.slide === this.currentSlideId) {
-					const newOrderNumber = this.getSlidePositionById(to.query.slide)
-					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
 				}
 
 				let fromSlide = from.params.slide || 0,

@@ -26,6 +26,16 @@ export const baseProps = {
 
 export const mapMessageToRoute = (message, query) => {
 
+	if (!message.context) {
+		const url = message.referer.split('?')[0];
+
+		return appendQuery(url, queryString.stringify({
+			...query,
+			notification: message.id,
+			noScroll: true
+		}));
+	}
+
 	if (message.context.dynamic) {
 		return {
 			dynamic: {

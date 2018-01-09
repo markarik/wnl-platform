@@ -37,7 +37,7 @@
 					</wnl-avatar>
 					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
 						<span class="qna-meta-info">
-							{{authorNameToDisplay}} ·
+							{{ author.display_name }} ·
 						</span>
 					</router-link>
 					<span class="qna-meta-info">
@@ -256,9 +256,6 @@
 							return this.profile(this.question.profiles[0])
 						})
 				}
-			},
-			authorNameToDisplay() {
-				return this.author.display_name || this.author.full_name
 			},
 			isCurrentUserAuthor() {
 				return this.currentUserId === this.author.user_id

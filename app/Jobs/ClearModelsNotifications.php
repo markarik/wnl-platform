@@ -23,8 +23,6 @@ class ClearModelsNotifications implements ShouldQueue
 	 */
 	private $model;
 
-	public $queue = 'notifications';
-
 	/**
 	 * Create a new job instance.
 	 *

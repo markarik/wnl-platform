@@ -64,6 +64,11 @@ class LessonTags extends Command
 			$lessonScreens = $lesson->screens;
 			$tag = Tag::firstOrCreate(['name' => $lesson->name]);
 
+			if (!$lesson->tags->contains($tag)) {
+				echo("Adding $tag->name to lesson $lesson->id \n");
+				$lesson->tags()->attach($tag);
+			}
+
 			foreach ($lessonScreens as $screen) {
 				if ($screen->type == 'slideshow') {
 					if (empty($screen->slideshow)) {
@@ -112,7 +117,11 @@ class LessonTags extends Command
 			'Chirurgia 2 - Sheet1.tsv' => 'Chirurgia naczyniowa / Torakochirurgia',
 			'Chirurgia 3 - Sheet1.tsv' => 'Kardio. / Uro. / Neuroch. / Plast. / Sutek / Endokryn. / Transpl.',
 			'Chirurgia 4 - Sheet1.tsv' => 'Chirurgia układu pokarmowego 1',
-			'Chirurgia 5 - Sheet1.tsv' => 'Chirurgia układu pokarmowego 2 / Dziecięca'
+			'Chirurgia 5 - Sheet1.tsv' => 'Chirurgia układu pokarmowego 2 / Dziecięca',
+			'G2 Endokrynologia ginekologiczna - Arkusz1.tsv' => 'Ginekologia 2',
+			'G3 Położnictwo - ciąża o przebiegu prawidłowym, nieprawidłowym, ciąża mnoga, choroby wspolistniejace z ciaza - Arkusz1.tsv' => 'Ginekologia 3',
+			'G4 Położnictow 2 -poród, połóg, diagnostyka - Arkusz1.tsv' => 'Ginekologia 4',
+			'G5 Onkologia ginekologiczna - Arkusz1.tsv' => 'Ginekologia 5'
 		];
 	}
 }

@@ -32,17 +32,15 @@ import Avatar from 'js/components/global/Avatar'
 export default {
 	name: 'Modal',
 	props: ['author', 'userId'],
-	data() {
-		return {
-			showModal: false,
-		}
-	},
     computed: {
         ...mapGetters(['isModalVisible']),
     },
 	methods: {
+		...mapActions(['toggleModal']),
 		deactivateModal() {
-			this.showModal = false
+			this.toggleModal({
+				visible: false,
+			})
 		},
 	},
 }

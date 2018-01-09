@@ -1,6 +1,6 @@
 <template>
-	<div class="box">
-		<!-- <div class="media-container">
+	<div>
+		<div class="media-container">
 			<div class="left">
 				<wnl-avatar class="avatar"
 					:fullName="author.full_name"
@@ -34,8 +34,8 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
-		<span>halko</span>
+		</div>
+		<!-- <span>halko</span> -->
 	</div>
 </template>
 

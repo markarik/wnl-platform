@@ -29,14 +29,19 @@
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<wnl-avatar class="avatar"
-							:fullName="author.full_name"
-							:url="author.avatar"
-							:userId="userId"
-							size="medium">
-					</wnl-avatar>
+					<div class="modal-activator" @click="showModal">
+						<wnl-avatar class="avatar"
+								:fullName="author.full_name"
+								:url="author.avatar"
+								:userId="userId"
+								size="medium">
+						</wnl-avatar>
+						<span class="qna-meta-info">
+							{{ authorNameToDisplay }}
+						</span>
+					</div>
 					<span class="qna-meta-info">
-						{{ authorNameToDisplay }} · {{time}}
+						· {{time}}
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
@@ -120,6 +125,13 @@
 		border-bottom: $border-light-gray
 		padding: $margin-base
 
+	.modal-activator
+		display: flex
+		flex-direction: row
+		cursor: pointer
+		align-items: center
+		color: $color-sky-blue
+
 	.qna-question-content
 		font-size: $font-size-plus-1
 		justify-content: flex-start
@@ -130,9 +142,6 @@
 
 		strong
 			font-weight: $font-weight-black
-
-	.avatar
-		margin-right: $margin-small
 
 	.qna-answers-heading
 		color: $color-gray-dimmed
@@ -318,12 +327,17 @@
 
 				if (questionId == this.questionId && this.answerInUrl) return true
 			},
-			showModal() {
-				console.log('showModal');
-			}
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: {},
+					component: ''
+				})
+			},
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {

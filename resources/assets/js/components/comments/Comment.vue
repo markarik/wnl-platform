@@ -2,18 +2,20 @@
 	<article class="wnl-comment media">
 		<div class="wnl-comment-side">
 			<figure class="media-left">
-				<p class="image is-32x32">
-					<wnl-avatar size="medium"
-						:fullName="profile.full_name"
-						:url="profile.avatar"
-						:userId="userId">
-					</wnl-avatar>
-				</p>
+				<div class="avatar-activator" @click="showModal">
+					<p class="image is-32x32">
+						<wnl-avatar size="medium"
+							:fullName="profile.full_name"
+							:url="profile.avatar"
+							:userId="userId">
+						</wnl-avatar>
+					</p>
+				</div>
 			</figure>
 			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<span class="author">{{ nameToDisplay }}</span>
+			<span class="author" @click="showModal">{{ nameToDisplay }}</span>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
@@ -30,6 +32,9 @@
 
 	.media-left
 		margin-bottom: $margin-small
+
+	.author
+		color: $color-sky-blue
 
 	.comment-content
 		margin-top: -$margin-small
@@ -57,7 +62,7 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import Avatar from 'js/components/global/Avatar'
 import Delete from 'js/components/global/form/Delete'
@@ -105,6 +110,14 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions(['toggleModal']),
+		showModal() {
+			this.toggleModal({
+				visible: true,
+				content: this.profile,
+				component: 'wnl-user-profile-modal',
+			})
+		},
 		onDeleteSuccess() {
 			this.$emit('removeComment', this.id)
 		}

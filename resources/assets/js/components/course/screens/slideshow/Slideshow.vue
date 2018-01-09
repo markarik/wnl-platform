@@ -275,8 +275,12 @@
 					.then(child => {
 						if (this.$route.query.slide) {
 							const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
-							this.goToSlide(newSlideIndex);
-							this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+							if (newSlideIndex > -1) {
+								this.goToSlide(newSlideIndex);
+								this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+							} else {
+								this.goToSlide(this.currentSlideIndex)
+							}
 						} else {
 							this.goToSlide(this.currentSlideIndex)
 						}
@@ -544,13 +548,17 @@
 
 				if (to.query.slide && to.query.slide !== this.currentSlideId) {
 					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
-					this.goToSlide(newSlideIndex);
-					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					if (newSlideIndex > -1) {
+						this.goToSlide(newSlideIndex);
+						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					}
 				}
 
 				if (to.query.slide === this.currentSlideId) {
 					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
-					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					if (newSlideIndex > -1) {
+						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					}
 				}
 
 				let fromSlide = from.params.slide || 0,

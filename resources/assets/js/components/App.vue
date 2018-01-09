@@ -9,7 +9,9 @@
 			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
 		</div>
-		<wnl-modal v-show="isModalVisible"/>
+		<wnl-modal v-show="isModalVisible">
+			<component :is="'wnl-user-profile-modal'"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -45,6 +47,7 @@
 	import { isEmpty } from 'lodash'
 
 	import Modal from 'js/components/global/Modal.vue'
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
@@ -55,6 +58,7 @@
 		name: 'App',
 		components: {
 			'wnl-navbar': Navbar,
+			'wnl-user-profile-modal': UserProfileModal,
 			'wnl-alerts': Alerts,
 			'wnl-modal': Modal,
 		},

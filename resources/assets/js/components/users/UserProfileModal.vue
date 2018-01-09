@@ -1,6 +1,6 @@
 <template>
 	<div class="box">
-		<div class="media-container">
+		<!-- <div class="media-container">
 			<div class="left">
 				<wnl-avatar class="avatar"
 					:fullName="author.full_name"
@@ -34,7 +34,8 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
+		<span>halko</span>
 	</div>
 </template>
 
@@ -94,14 +95,6 @@ export default {
 		helpToDisplay() {
 			return this.author.help
 		}
-	},
-	methods: {
-		activateModal() {
-			this.showModal = true
-		},
-		deactivateModal() {
-			this.showModal = false
-		},
-	},
+	}
 }
 </script>

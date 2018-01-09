@@ -1,10 +1,10 @@
 <template>
 	<div class="wnl-modal">
-		<div class="modal">
+		<div class="modal" :class="{ 'is-active': isModalVisible }">
 			<div class="modal-background" @click="deactivateModal"></div>
 			<div class="modal-content">
 				<div class="box">
-					<component :is="props.component" v-bind="props.props"/>
+					<slot></slot>
 				</div>
 			</div>
 			<button class="modal-close is-large" aria-label="close" @click="deactivateModal"></button>
@@ -25,16 +25,21 @@
 </style>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 import Avatar from 'js/components/global/Avatar'
 
 export default {
-	name: 'UserProfileModal',
+	name: 'Modal',
 	props: ['author', 'userId'],
 	data() {
 		return {
 			showModal: false,
 		}
 	},
+    computed: {
+        ...mapGetters(['isModalVisible']),
+    },
 	methods: {
 		deactivateModal() {
 			this.showModal = false

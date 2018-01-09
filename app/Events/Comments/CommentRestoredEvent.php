@@ -2,7 +2,7 @@
 
 namespace App\Events\Comments;
 
-use App\Events\Live\ResourceRestoredEvent;
+use App\Events\ResourceRestoredEvent;
 
 class CommentRestoredEvent extends ResourceRestoredEvent
 {

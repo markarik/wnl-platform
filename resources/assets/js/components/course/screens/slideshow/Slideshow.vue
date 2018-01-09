@@ -439,7 +439,7 @@
 			},
 			onAnnotationsUpdated(comments) {
 				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
-					let annotations = _.cloneDeep(comments)
+					const annotations = _.cloneDeep(comments)
 
 					if (annotations.length > 0) {
 						annotations.forEach((annotation) => {

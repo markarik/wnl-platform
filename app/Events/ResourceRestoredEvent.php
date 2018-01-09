@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events\Live;
+namespace App\Events;
 
 use App\Events\Event;
 use App\Events\SanitizesUserContent;

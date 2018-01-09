@@ -76,7 +76,7 @@ export const commentsMutations = {
 		let id = payload.id,
 			resource = payload.commentableResource,
 			resourceId = payload.commentableId,
-			comments = _.pull(state[resource][resourceId].comments, id)
+			comments = _.pull(state[resource][resourceId].comments, String(id))
 
 		destroy(state.comments, payload.id)
 		set(state[resource][resourceId], 'comments', comments)

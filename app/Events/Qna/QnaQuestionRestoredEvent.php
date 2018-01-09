@@ -2,7 +2,7 @@
 
 namespace App\Events\Qna;
 
-use App\Events\Live\ResourceRestoredEvent;
+use App\Events\ResourceRestoredEvent;
 
 class QnaQuestionRestoredEvent extends ResourceRestoredEvent
 {

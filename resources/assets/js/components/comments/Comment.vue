@@ -35,6 +35,7 @@
 
 	.author
 		color: $color-sky-blue
+		cursor: pointer
 
 	.comment-content
 		margin-top: -$margin-small

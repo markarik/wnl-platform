@@ -9,7 +9,8 @@ Broadcast::channel('active-users', function ($user) {
 		'id' => $user->id,
 		'email' => $user->email,
 		'avatar' => $user->profile->avatar_url,
-		'fullName' => $user->profile->full_name
+		'fullName' => $user->profile->full_name,
+		'profile' => $user->profile,
 	];
 });
 

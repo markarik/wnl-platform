@@ -14,7 +14,7 @@
 							 :key="index"
 							 :showAuthor="isAuthorUnique[index]"
 							 :id="getMessageId(message)"
-							 :author="message"
+							 :author="message.user"
 							 :fullName="message.user.full_name"
 							 :displayName="message.user.display_name"
 							 :avatar="message.user.avatar"

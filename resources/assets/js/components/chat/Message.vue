@@ -1,6 +1,6 @@
 <template>
 	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
-		<figure class="media-left">
+		<figure class="media-left" @click="showModal">
 			<wnl-avatar
 				:fullName="fullName"
 				:url="avatar"
@@ -11,7 +11,7 @@
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<strong>{{ nameToDisplay }}</strong>
+					<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -48,6 +48,9 @@
 					color: $color-inactive-gray
 					line-height: 1em
 					margin-bottom: $margin-tiny
+					.author
+						cursor: pointer
+						color: $color-sky-blue
 
 				.wnl-message-time
 					margin-left: $margin-small
@@ -56,8 +59,8 @@
 					margin: 0
 </style>
 <script>
+	import { mapActions } from 'vuex'
 	import { timeFromMs } from 'js/utils/time'
-
 	import Avatar from 'js/components/global/Avatar'
 
 	export default{
@@ -71,6 +74,16 @@
 			},
 			nameToDisplay() {
 				return this.displayName || this.fullName
+			}
+		},
+		methods: {
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: this.author,
+					component: 'wnl-user-profile-modal',
+				})
 			}
 		}
 	}

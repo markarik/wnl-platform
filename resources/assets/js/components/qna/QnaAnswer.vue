@@ -17,7 +17,6 @@
 						<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"
-								:userId="userId"
 								size="medium">
 						</wnl-avatar>
 						<span class="qna-meta-info">
@@ -134,9 +133,6 @@
 			...mapGetters(['currentUserId', 'isOverlayVisible']),
 			id() {
 				return this.answer.id
-			},
-			userId() {
-				return this.author.user_id
 			},
 			resourceRoute() {
 				return `qna_answers/${this.id}`

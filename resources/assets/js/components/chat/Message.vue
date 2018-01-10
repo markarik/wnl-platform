@@ -4,7 +4,6 @@
 			<wnl-avatar
 				:fullName="fullName"
 				:url="avatar"
-				:userId="userId"
 				v-if="showAuthor"></wnl-avatar>
 			<div class="media-left-placeholder" v-else></div>
 		</figure>

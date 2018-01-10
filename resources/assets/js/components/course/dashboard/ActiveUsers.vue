@@ -10,7 +10,6 @@
 							<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
-								:userId="user.id"
 								size="medium">
 							</wnl-avatar>
 						</div>

@@ -38,7 +38,7 @@
 
 	export default {
 		name: 'Avatar',
-		props: ['fullName', 'size', 'url', 'userId'],
+		props: ['fullName', 'size', 'url'],
 		computed: {
 			...mapGetters([
 				'currentUserFullName',

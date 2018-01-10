@@ -33,7 +33,6 @@
 						<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"
-								:userId="userId"
 								size="medium">
 						</wnl-avatar>
 						<span class="qna-meta-info">
@@ -246,9 +245,6 @@
 			},
 			id() {
 				return this.questionId
-			},
-			userId() {
-				return this.author.user_id
 			},
 			content() {
 				return this.question.text

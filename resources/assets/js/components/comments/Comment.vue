@@ -6,8 +6,7 @@
 					<p class="image is-32x32">
 						<wnl-avatar size="medium"
 							:fullName="profile.full_name"
-							:url="profile.avatar"
-							:userId="userId">
+							:url="profile.avatar">
 						</wnl-avatar>
 					</p>
 				</div>
@@ -87,9 +86,6 @@ export default {
 		...mapGetters('comments', ['getReaction']),
 		id() {
 			return this.comment.id
-		},
-		userId() {
-			return this.profile.user_id
 		},
 		time() {
 			return timeFromS(this.comment.created_at)

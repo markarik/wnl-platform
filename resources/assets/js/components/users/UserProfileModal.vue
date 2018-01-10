@@ -5,7 +5,6 @@
 				<wnl-avatar class="avatar"
 					:fullName="author.full_name"
 					:url="author.avatar"
-					:userId="userId"
 					size="extralarge"/>
 			</div>
 			<div class="right">

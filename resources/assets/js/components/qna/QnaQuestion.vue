@@ -392,4 +392,3 @@
 		},
 	}
 </script>
-	this.author.display_name ? this.author.display_name : this.author.full_name

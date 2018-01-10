@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
-use App\Models\UserCourseProgress;
+use App\Models\User;
 use App\Models\Screen;
 use App\Models\QuizQuestion;
 use App\Models\Lesson;
+use App\Models\UserQuizResults;
 use Closure;
 use Exception;
 use Illuminate\Console\Command;
@@ -76,7 +76,20 @@ class UserIdProfileIdMessUp extends Command
 				->groupBy('quiz_question_id')
 				->get();
 
-			dd($quizQuestions->count());
+			$users = User::get();
+
+			$bar = $this->output->createProgressBar($users->count());
+
+			foreach ($users as $user) {
+				UserQuizResults
+					::where('user_id', $user->profile->id)
+					->update(['user_id' => $user->id]);
+
+				$bar->advance();
+			}
+
+			$bar->finish();
+			print PHP_EOL;
 		});
 		return;
 	}

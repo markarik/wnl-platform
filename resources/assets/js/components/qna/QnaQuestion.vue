@@ -327,7 +327,9 @@
 			showModal() {
 				this.toggleModal({
 					visible: true,
-					content: this.author,
+					content: {
+						author: this.author
+					},
 					component: 'wnl-user-profile-modal',
 				})
 			},

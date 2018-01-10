@@ -90,10 +90,11 @@ import { mapGetters, mapActions } from 'vuex'
 		methods: {
 			...mapActions(['toggleModal']),
 			showModal(user) {
-				console.log(user.profile);
 				this.toggleModal({
 					visible: true,
-					content: user.profile,
+					content: {
+						author: user.profile
+					},
 					component: 'wnl-user-profile-modal',
 				})
 			}

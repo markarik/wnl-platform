@@ -21,7 +21,7 @@
 					<div v-if="author.help" class="user-info-help">
 						<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
 						<div class="notification">
-							<span class="user-help">{{ helpToDisplay }}</span>
+							<span class="user-help">{{ author.help }}</span>
 						</div>
 					</div>
 				</div>

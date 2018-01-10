@@ -10,7 +10,7 @@
 			<router-view></router-view>
 		</div>
 		<wnl-modal v-show="isModalVisible">
-			<component :is="getModalComponent" v-bind:author="getModalContent"/>
+			<component :is="getModalComponent" v-bind="getModalContent"/>
 		</wnl-modal>
 	</div>
 </template>

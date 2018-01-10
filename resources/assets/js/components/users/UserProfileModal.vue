@@ -28,7 +28,7 @@
 				</div>
 				<div class="navigation">
 					<div class="redirect">
-						<router-link :to="{ name: 'user', params: {userId: userId} }">
+						<router-link v-on:click.native="deactivateModal" :to="{ name: 'user', params: {userId: userId} }">
 							<a class="button is-primary is-outlined is-small">Zobacz pełen profil</a>
 						</router-link>
 					</div>
@@ -74,14 +74,17 @@
 </style>
 
 <script>
+import { mapActions } from 'vuex'
+
 import Avatar from 'js/components/global/Avatar'
 
 export default {
 	name: 'UserProfileModal',
-	props: ['author', 'userId'],
+	props: ['author'],
 	data() {
 		return {
 			showModal: false,
+			userId: this.author.user_id,
 		}
 	},
 	computed: {
@@ -90,6 +93,14 @@ export default {
 		},
 		helpToDisplay() {
 			return this.author.help
+		},
+	},
+	methods: {
+		...mapActions(['toggleModal']),
+		deactivateModal() {
+			this.toggleModal({
+				visible: false,
+			})
 		}
 	}
 }

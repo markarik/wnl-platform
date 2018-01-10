@@ -31,7 +31,6 @@ import Avatar from 'js/components/global/Avatar'
 
 export default {
 	name: 'Modal',
-	props: ['author', 'userId'],
     computed: {
         ...mapGetters(['isModalVisible']),
     },

@@ -27,8 +27,8 @@
 				</div>
 				<div class="navigation">
 					<div class="redirect">
-						<router-link v-on:click.native="deactivateModal" :to="{ name: 'user', params: {userId: userId} }">
-							<a class="button is-primary is-outlined is-small">Zobacz pełen profil</a>
+						<router-link @click.native="deactivateModal" :to="{ name: 'user', params: {userId: userId} }">
+							<a class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.redirectToProfile') }}</a>
 						</router-link>
 					</div>
 				</div>
@@ -82,7 +82,6 @@ export default {
 	props: ['author'],
 	data() {
 		return {
-			showModal: false,
 			userId: this.author.user_id,
 		}
 	},

@@ -36,7 +36,7 @@
 								size="medium">
 						</wnl-avatar>
 						<span class="qna-meta-info">
-							{{ author.display_name }} ·
+							{{ author.display_name }}
 						</span>
 					</div>
 					<span class="qna-meta-info">
@@ -195,6 +195,7 @@
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Delete from 'js/components/global/form/Delete'
 	import Resolve from 'js/components/global/form/Resolve'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
@@ -330,7 +331,7 @@
 					content: {
 						author: this.author
 					},
-					component: 'wnl-user-profile-modal',
+					component: UserProfileModal,
 				})
 			},
 			dispatchFetchQuestion() {

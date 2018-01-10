@@ -98,6 +98,7 @@
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Avatar from 'js/components/global/Avatar'
 	import Delete from 'js/components/global/form/Delete'
 	import Vote from 'js/components/global/reactions/Vote'
@@ -176,7 +177,7 @@
 					content: {
 						author: this.author
 					},
-					component: 'wnl-user-profile-modal',
+					component: UserProfileModal,
 				})
 			},
 			onDeleteSuccess() {

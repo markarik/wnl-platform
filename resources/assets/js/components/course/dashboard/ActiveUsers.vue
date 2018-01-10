@@ -65,6 +65,9 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+
+import UserProfileModal from 'js/components/users/UserProfileModal'
+
 	export default {
 		name: 'ActiveUsers',
 		props: {
@@ -95,7 +98,7 @@ import { mapGetters, mapActions } from 'vuex'
 					content: {
 						author: user.profile
 					},
-					component: 'wnl-user-profile-modal',
+					component: UserProfileModal,
 				})
 			}
 		}

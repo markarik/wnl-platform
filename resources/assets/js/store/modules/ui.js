@@ -7,7 +7,7 @@ const state = {
 	modal: {
 		visible: false,
 		content: {},
-		component: ''
+		component: {}
 	},
 	canShowChat: false,
 	currentLayout: '',

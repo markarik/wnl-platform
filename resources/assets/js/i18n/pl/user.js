@@ -35,5 +35,8 @@ export const user = {
         interests: 'Moje zainteresowania',
         about: 'Parę słów o mnie',
         learning_location: 'Miasto, w którym obecnie się uczę'
+    },
+    userProfileModal: {
+        redirectToProfile: 'Zobacz pełen profil',
     }
 }

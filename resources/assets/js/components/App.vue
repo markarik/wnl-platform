@@ -58,7 +58,6 @@
 		name: 'App',
 		components: {
 			'wnl-navbar': Navbar,
-			'wnl-user-profile-modal': UserProfileModal,
 			'wnl-alerts': Alerts,
 			'wnl-modal': Modal,
 		},

@@ -61,6 +61,8 @@
 <script>
 	import { mapActions } from 'vuex'
 	import { timeFromMs } from 'js/utils/time'
+
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Avatar from 'js/components/global/Avatar'
 
 	export default{
@@ -81,7 +83,7 @@
 					content: {
 						author: this.author
 					},
-					component: 'wnl-user-profile-modal',
+					component: UserProfileModal,
 				})
 			}
 		}

@@ -133,7 +133,7 @@ const actions = {
 		commit(types.UI_CHANGE_LAYOUT, layout)
 	},
 	toggleSidenav({ commit }) {
-	commit(types.UI_TOGGLE_SIDENAV)
+		commit(types.UI_TOGGLE_SIDENAV)
 	},
 	resetLayout({ commit, getters }) {
 		commit(types.UI_RESET_LAYOUT)

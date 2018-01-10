@@ -1,9 +1,7 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
-		<div class="wnl-avatar-no-prop">
-			<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
-			<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
-		</div>
+		<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
+		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">

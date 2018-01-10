@@ -4,7 +4,8 @@
 			<wnl-avatar
 				:fullName="fullName"
 				:url="avatar"
-				v-if="showAuthor"></wnl-avatar>
+				v-if="showAuthor">
+			</wnl-avatar>
 			<div class="media-left-placeholder" v-else></div>
 		</figure>
 		<div class="media-content">
@@ -63,7 +64,7 @@
 	import Avatar from 'js/components/global/Avatar'
 
 	export default{
-		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'userId', 'fullName'],
+		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 		components: {
 			'wnl-avatar': Avatar,
 		},

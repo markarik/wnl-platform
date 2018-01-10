@@ -12,13 +12,13 @@
 					<div class="user-info-name">
 						<span>{{ author.display_name }}</span>
 					</div>
-					<div  v-if="cityToDisplay" class="user-info-city">
+					<div  v-if="author.city" class="user-info-city">
 						<span class="icon is-small">
 							<i class="fa fa-map-marker"></i>
 						</span>
 						<span class="city-title">{{ author.city }}</span>
 					</div>
-					<div v-if="helpToDisplay" class="user-info-help">
+					<div v-if="author.help" class="user-info-help">
 						<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
 						<div class="notification">
 							<span class="user-help">{{ helpToDisplay }}</span>
@@ -85,14 +85,6 @@ export default {
 			showModal: false,
 			userId: this.author.user_id,
 		}
-	},
-	computed: {
-		cityToDisplay() {
-			return this.author.city
-		},
-		helpToDisplay() {
-			return this.author.help
-		},
 	},
 	methods: {
 		...mapActions(['toggleModal']),

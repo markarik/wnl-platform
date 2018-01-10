@@ -27,8 +27,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import Avatar from 'js/components/global/Avatar'
-
 export default {
 	name: 'Modal',
     computed: {

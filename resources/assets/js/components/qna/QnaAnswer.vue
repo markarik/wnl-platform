@@ -24,7 +24,7 @@
 						</span>
 					</div>
 					<span class="qna-meta-info">
-						· {{time}}
+						{{time}}
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete

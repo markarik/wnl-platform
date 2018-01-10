@@ -64,6 +64,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
+import UserProfileModal from 'js/components/users/UserProfileModal'
 import Avatar from 'js/components/global/Avatar'
 import Delete from 'js/components/global/form/Delete'
 import Resolve from 'js/components/global/form/Resolve'
@@ -108,8 +109,10 @@ export default {
 		showModal() {
 			this.toggleModal({
 				visible: true,
-				content: this.profile,
-				component: 'wnl-user-profile-modal',
+				content: {
+					author: this.profile
+				},
+				component: UserProfileModal,
 			})
 		},
 		onDeleteSuccess() {

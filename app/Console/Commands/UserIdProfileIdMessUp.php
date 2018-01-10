@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\UserCourseProgress;
 use App\Models\Screen;
 use App\Models\QuizQuestion;
+use App\Models\Lesson;
 use Closure;
 use Exception;
 use Illuminate\Console\Command;
@@ -50,10 +51,20 @@ class UserIdProfileIdMessUp extends Command
 		$passedUserId = $this->argument('user');
 
 		$this->transaction(function () use ($passedUserId) {
+			$lessons = Lesson
+				::select('id')
+				// 11 - Próbny Lek
+				// 14 - Dodatki
+				// 15 - Powtórki
+				->whereNotIn('group_id', [11,14,15])
+				->get()
+				->pluck('id')
+				->toArray();
+
 			$quizScreens = Screen
 				::selectRaw('meta->"$.resources[0].id"')
 				->where('type', 'quiz')
-				->whereNotNull('lesson_id')
+				->whereIn('lesson_id', $lessons)
 				->get()
 				->pluck('meta->"$.resources[0].id"')
 				->toArray();

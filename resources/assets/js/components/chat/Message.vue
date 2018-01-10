@@ -11,7 +11,7 @@
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
+					<strong class="author" @click="showModal">{{ author.display_name }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -72,9 +72,6 @@
 			formattedTime () {
 				return timeFromMs(this.time)
 			},
-			nameToDisplay() {
-				return this.displayName || this.fullName
-			}
 		},
 		methods: {
 			...mapActions(['toggleModal']),

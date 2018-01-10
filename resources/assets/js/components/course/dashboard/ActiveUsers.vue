@@ -6,7 +6,7 @@
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
-						<div class="activator" @click="showModal">
+						<div class="activator" @click="showModal(user)">
 							<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
@@ -90,11 +90,11 @@ import { mapGetters, mapActions } from 'vuex'
 		},
 		methods: {
 			...mapActions(['toggleModal']),
-			showModal() {
-				// console.log('klikł');
+			showModal(user) {
+				console.log(user.profile);
 				this.toggleModal({
 					visible: true,
-					content: this.user.profile,
+					content: user.profile,
 					component: 'wnl-user-profile-modal',
 				})
 			}

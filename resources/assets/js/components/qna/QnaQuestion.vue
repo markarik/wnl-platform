@@ -37,7 +37,7 @@
 								size="medium">
 						</wnl-avatar>
 						<span class="qna-meta-info">
-							{{ authorNameToDisplay }}
+							{{ author.display_name }} ·
 						</span>
 					</div>
 					<span class="qna-meta-info">
@@ -263,9 +263,6 @@
 							return this.profile(this.question.profiles[0])
 						})
 				}
-			},
-			authorNameToDisplay() {
-				return this.author.display_name || this.author.full_name
 			},
 			isCurrentUserAuthor() {
 				return this.currentUserId === this.author.user_id

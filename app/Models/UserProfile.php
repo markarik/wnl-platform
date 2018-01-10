@@ -58,4 +58,13 @@ class UserProfile extends Model
 	{
 		$this->attributes['username'] = $value === '' ? null : $value;
 	}
+
+	public function getDisplayNameAttribute()
+	{
+		if ($this->attributes['display_name']) {
+			return $this->attributes['display_name'];
+		} else {
+			return $this->full_name;
+		}
+	}
 }

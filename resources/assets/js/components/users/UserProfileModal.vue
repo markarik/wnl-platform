@@ -11,13 +11,13 @@
 			<div class="right">
 				<div class="content">
 					<div class="user-info-name">
-						<span>{{this.author.display_name}}</span>
+						<span>{{ author.display_name }}</span>
 					</div>
 					<div  v-if="cityToDisplay" class="user-info-city">
 						<span class="icon is-small">
 							<i class="fa fa-map-marker"></i>
 						</span>
-						<span class="city-title">{{ this.author.city }}</span>
+						<span class="city-title">{{ author.city }}</span>
 					</div>
 					<div v-if="helpToDisplay" class="user-info-help">
 						<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
@@ -35,7 +35,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- <span>halko</span> -->
 	</div>
 </template>
 
@@ -86,9 +85,6 @@ export default {
 		}
 	},
 	computed: {
-		authorNameToDisplay() {
-			return this.author.display_name || this.author.full_name
-		},
 		cityToDisplay() {
 			return this.author.city
 		},

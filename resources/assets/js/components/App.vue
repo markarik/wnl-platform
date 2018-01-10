@@ -9,7 +9,7 @@
 			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
 		</div>
-		<wnl-modal v-show="isModalVisible">
+		<wnl-modal v-if="isModalVisible">
 			<component :is="getModalComponent" v-bind="getModalContent"/>
 		</wnl-modal>
 	</div>

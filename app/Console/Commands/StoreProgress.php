@@ -62,7 +62,7 @@ class StoreProgress extends Command
 				}
 			} else {
 				$key = UserStateApiController::getCourseRedisKey($passedUserId, 1);
-				$bar = $this->output->createProgressBar(count($key));
+				$bar = $this->output->createProgressBar(1);
 				$this->storeProgress($key, $passedUserId, $bar);
 			}
 			$bar->finish();

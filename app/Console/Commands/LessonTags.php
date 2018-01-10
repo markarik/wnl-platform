@@ -119,9 +119,9 @@ class LessonTags extends Command
 			'Chirurgia 4 - Sheet1.tsv' => 'Chirurgia układu pokarmowego 1',
 			'Chirurgia 5 - Sheet1.tsv' => 'Chirurgia układu pokarmowego 2 / Dziecięca',
 			'G2 Endokrynologia ginekologiczna - Arkusz1.tsv' => 'Ginekologia 2',
-			'G3 Położnictwo - ciąża o przebiegu prawidłowym, nieprawidłowym, ciąża mnoga, choroby wspolistniejace z ciaza - Arkusz1.tsv' => 'Ginekologia 3',
-			'G4 Położnictow 2 -poród, połóg, diagnostyka - Arkusz1.tsv' => 'Ginekologia 4',
-			'G5 Onkologia ginekologiczna - Arkusz1.tsv' => 'Ginekologia 5'
+			'G3 - styczeń 2018' => 'Ginekologia 3',
+			'G4 - styczeń 2018' => 'Ginekologia 4',
+			'G5 - styczeń 2018' => 'Ginekologia 5'
 		];
 	}
 }

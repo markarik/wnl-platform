@@ -13,17 +13,16 @@
 					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<wnl-avatar
-							:fullName="author.full_name"
-							:url="author.avatar"
-							:userId="userId"
-							size="medium">
-					</wnl-avatar>
-					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+					<div class="modal-activator" @click="showModal">
+						<wnl-avatar class="avatar"
+								:fullName="author.full_name"
+								:url="author.avatar"
+								size="medium">
+						</wnl-avatar>
 						<span class="qna-meta-info">
 							{{ author.display_name }} ·
 						</span>
-					</router-link>
+					</div>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -69,6 +68,13 @@
 		padding: 0 $margin-base
 		margin-top: $margin-base
 
+	.modal-activator
+		display: flex
+		flex-direction: row
+		cursor: pointer
+		align-items: center
+		color: $color-sky-blue
+
 	.qna-answer-comments
 		margin-left: 60px
 
@@ -85,12 +91,15 @@
 
 	.qna-bookmark
 		justify-content: flex-end
+
 </style>
 
 <script>
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
+	import Avatar from 'js/components/global/Avatar'
 	import Delete from 'js/components/global/form/Delete'
 	import Vote from 'js/components/global/reactions/Vote'
 	import highlight from 'js/mixins/highlight'
@@ -102,9 +111,10 @@
 	export default {
 		name: 'QnaAnswer',
 		components: {
+			'wnl-avatar': Avatar,
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
-			'wnl-comments-list': CommentsList
+			'wnl-comments-list': CommentsList,
 		},
 		perimeters: [moderatorFeatures],
 		mixins: [ highlight ],
@@ -124,9 +134,6 @@
 			...mapGetters(['currentUserId', 'isOverlayVisible']),
 			id() {
 				return this.answer.id
-			},
-			userId() {
-				return this.author.user_id
 			},
 			resourceRoute() {
 				return `qna_answers/${this.id}`
@@ -163,6 +170,16 @@
 		},
 		methods: {
 			...mapActions('qna', ['removeAnswer']),
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: {
+						author: this.author
+					},
+					component: UserProfileModal,
+				})
+			},
 			onDeleteSuccess() {
 				this.removeAnswer({
 					questionId: this.questionId,

@@ -1,15 +1,7 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
-		<div class="wnl-avatar-prop" v-if="routerLinkRender">
-			<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-				<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
-				<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
-			</router-link>
-		</div>
-		<div class="wnl-avatar-no-prop" v-if="!routerLinkRender">
-			<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
-			<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
-		</div>
+		<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
+		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -33,9 +25,7 @@
 	.wnl-avatar
 		overflow: hidden
 		user-select: none
-
-	.wnl-avatar-custom, .wnl-avatar-automatic
-		cursor: pointer
+		
 </style>
 <script>
 	import _ from 'lodash'
@@ -44,16 +34,12 @@
 
 	export default {
 		name: 'Avatar',
-		props: ['fullName', 'size', 'url', 'userId', 'user', 'disableLink'],
+		props: ['fullName', 'size', 'url'],
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
 				'currentUserAvatar',
 			]),
-			routerLinkRender() {
-				if (this.disableLink) return false
-				return this.userId
-			},
 			isCurrentUser() {
 				return _.isEmpty(this.fullName)
 			},

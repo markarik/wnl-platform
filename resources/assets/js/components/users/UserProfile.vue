@@ -8,7 +8,7 @@
 
 			<div class="user-profile" :class="isMobile"  v-if="!isLoading && responseCondition">
 				<div class="user-content" :class="avatarClass">
-					<wnl-avatar class="user-avatar image" size="extralarge"
+					<wnl-avatar class="user-avatar image" size="extraextralarge"
 						:fullName="fullName"
 						:url="profile.avatar"
 					></wnl-avatar>
@@ -31,7 +31,7 @@
 							<span class="city-title">{{ cityToDisplay }}</span>
 						</span>
 						<span v-if="helpToDisplay" class="user-info-help">
-							<span class="help-title">W czym mogę pomóc?</span>
+							<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
 							<div class="notification">
 								<span class="user-help">{{ helpToDisplay }}</span>
 							</div>

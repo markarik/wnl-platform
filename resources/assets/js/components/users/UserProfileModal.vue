@@ -9,7 +9,10 @@
 			</div>
 			<div class="right">
 				<div class="content">
-					<div class="user-info-name">
+					<div class="user-info-full-name">
+						<span>{{ author.full_name }}</span>
+					</div>
+					<div class="user-info-display-name">
 						<span>{{ author.display_name }}</span>
 					</div>
 					<div  v-if="author.city" class="user-info-city">
@@ -50,7 +53,7 @@
 		.right
 			width: 100%
 
-	.user-info-name
+	.user-info-display-name
 		margin-top: $margin-tiny
 		color: $color-ocean-blue-opacity
 		font-size: $font-size-plus-2

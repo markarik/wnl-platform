@@ -38,7 +38,6 @@ class UserIdProfileIdMessUp extends Command
 	public function __construct()
 	{
 		parent::__construct();
-		$this->redis = Redis::connection();
 	}
 
 	/**
@@ -48,6 +47,7 @@ class UserIdProfileIdMessUp extends Command
 	*/
 	public function handle()
 	{
+		$this->redis = Redis::connection();
 		$passedUserId = $this->argument('user');
 
 		$this->transaction(function () use ($passedUserId) {
@@ -62,17 +62,17 @@ class UserIdProfileIdMessUp extends Command
 				->toArray();
 
 			$quizScreens = Screen
-				::selectRaw('meta->"$.resources[0].id"')
+				::selectRaw('meta->"$.resources[0].id" as quiz_set_id')
 				->where('type', 'quiz')
 				->whereIn('lesson_id', $lessons)
 				->get()
-				->pluck('meta->"$.resources[0].id"')
+				->pluck('quiz_set_id')
 				->toArray();
 
 			$quizQuestions = \DB
 				::table('quiz_question_quiz_set')
 				->select('quiz_question_id')
-				->whereIn('quiz_set_id', array_keys($quizScreens))
+				->whereIn('quiz_set_id', $quizScreens)
 				->groupBy('quiz_question_id')
 				->get()
 				->pluck('quiz_question_id')
@@ -81,13 +81,45 @@ class UserIdProfileIdMessUp extends Command
 			$users = User::all();
 			$resultsGrouped = [];
 
+			if ($passedUserId) {
+				print '*****RUNNING IN TEST MODE****';
+				print PHP_EOL;
+
+				$user = User::find($passedUserId);
+
+				$ids = UserQuizResults
+					::select('id')
+					->where('user_id', $user->profile->id)
+					->whereIn('quiz_question_id', $quizQuestions)
+					->get()
+					->pluck('id')
+					->toArray();
+
+				$outsideLesson = UserQuizResults
+					::select('id')
+					->where('user_id', $user->id)
+					->whereNotIn('quiz_question_id', $quizQuestions)
+					->get()
+					->pluck('id')
+					->toArray();
+
+				print count($outsideLesson);
+				print '  - Solved Questions inside lessons';
+				print PHP_EOL;
+				print count($ids);
+				print ' - Solved Questions outside lessons';
+				print PHP_EOL;
+
+				return;
+			}
+
 			$bar = $this->output->createProgressBar($users->count() * 2);
 
 			foreach ($users as $user) {
 				$resultsGrouped[$user->id] = UserQuizResults
 					::select('id')
 					->where('user_id', $user->profile->id)
-					->whereIn('quiz_question_id', array_values($quizQuestions))
+					->whereIn('quiz_question_id', $quizQuestions)
 					->get()
 					->pluck('id');
 

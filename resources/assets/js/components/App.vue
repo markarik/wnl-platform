@@ -47,7 +47,6 @@
 	import { isEmpty } from 'lodash'
 
 	import Modal from 'js/components/global/Modal.vue'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';

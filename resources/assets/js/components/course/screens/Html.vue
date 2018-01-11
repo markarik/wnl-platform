@@ -202,9 +202,6 @@
 					}
 				}
 			},
-			onClose() {
-				this.isVisible = false
-			},
 			onKeydown(e) {
 				switch(e.keyCode) {
 					case 37: // left arrow
@@ -219,21 +216,9 @@
 				}
 			}
 		},
-		beforeDestroy() {
-			document.body.removeEventListener('click', function(e) {
-				if (e.target.className == 'iv-close') {
-					this.onClose
-				}
-			})
-		},
 		mounted() {
 			this.wrapEmbedded()
 			this.addFullscreen()
-			document.body.addEventListener('click', function(e) {
-				if (e.target.className == 'iv-close') {
-					this.onClose
-				}
-			})
 			document.body.addEventListener('keydown', this.onKeydown)
 		},
 		watch: {

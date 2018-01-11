@@ -143,7 +143,7 @@ class UserStateApiController extends ApiController
 		$userComments = Comment::where('user_id', $userId)->count();
 		$qnaQuestionsPosted = QnaQuestion::where('user_id', $userId)->count();
 		$qnaAnswersPosted = QnaAnswer::where('user_id', $userId)->count();
-		$quizQuestionsSolved = UserQuizResults::where('user_id', $profileId)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
+		$quizQuestionsSolved = UserQuizResults::where('user_id', $userId)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
 		$numberOfQuizQuestions = QuizQuestion::count();
 		$numberOfLessons = Lesson::count();
 

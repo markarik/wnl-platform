@@ -62,7 +62,7 @@
 	.avatars-list .avatar
 		margin-right: $margin-small
 		cursor: pointer
-		
+
 </style>
 
 <script>
@@ -103,12 +103,6 @@ import UserProfileModal from 'js/components/users/UserProfileModal'
 					component: UserProfileModal,
 				})
 			}
-		},
-		mounted() {
-			console.log('------>> active users');
-			console.log(this.usersToCount);
-			console.log(this.channel);
-			console.log(this.activeUsersCount);
 		}
 	}
 </script>

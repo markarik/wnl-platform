@@ -9,11 +9,18 @@
 			</div>
 			<div class="right">
 				<div class="content">
-					<div class="user-info-full-name">
-						<span>{{ author.full_name }}</span>
-					</div>
-					<div class="user-info-display-name">
-						<span>{{ author.display_name }}</span>
+					<div class="user-info-name-content">
+						<div class="user-info-full-name" v-if="checkForNameDisplay">
+							<span>{{ author.full_name }}</span>
+						</div>
+						<div class="user-info-both-names" v-if="!checkForNameDisplay">
+							<div class="user-info-full-name">
+								<span>{{ author.full_name }}</span>
+							</div>
+							<div class="user-info-display-name">
+								<span>{{ author.display_name }}</span>
+							</div>
+						</div>
 					</div>
 					<div  v-if="author.city" class="user-info-city">
 						<span class="icon is-small">
@@ -96,6 +103,11 @@ export default {
 			userId: this.author.user_id,
 		}
 	},
+	computed: {
+		checkForNameDisplay() {
+			return this.author.full_name === this.author.display_name
+		}
+	},
 	methods: {
 		...mapActions(['toggleModal']),
 		deactivateModal() {
@@ -103,6 +115,9 @@ export default {
 				visible: false,
 			})
 		}
+	},
+	mounted() {
+		console.log(this.checkForNameDisplay);
 	}
 }
 </script>

@@ -39,8 +39,15 @@
 
 <script>
 	export default {
-		debounceInput: _.debounce(function({target: {value}}) {
-			this.$emit('search', value)
-		}, 500),
+		data() {
+			return {
+				loading: false
+			}
+		},
+		methods: {
+			debounceInput: _.debounce(function({target: {value}}) {
+				this.$emit('search', value)
+			}, 500),
+		}
 	}
 </script>

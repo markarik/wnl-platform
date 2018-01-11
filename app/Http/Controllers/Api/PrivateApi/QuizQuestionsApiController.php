@@ -27,7 +27,7 @@ class QuizQuestionsApiController extends ApiController
 		'quiz-collection',
 		'by_taxonomy-subjects',
 		'by_taxonomy-exams',
-//		'by_taxonomy-tags',
+		'search'
 	];
 
 	public function __construct(Request $request)

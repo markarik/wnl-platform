@@ -6,8 +6,8 @@ import { isString, pickBy, values } from 'lodash'
 const state = {
 	modal: {
 		visible: false,
-		content: {},
-		component: {}
+		content: null,
+		component: null
 	},
 	canShowChat: false,
 	currentLayout: '',
@@ -67,7 +67,13 @@ const getters = {
 // Mutations
 const mutations = {
 	[types.UI_TOGGLE_MODAL] (state, payload) {
-		set(state, 'modal', payload)
+		const serializedPayload = {
+			...payload,
+			component: {
+				...payload.component
+			}
+		}
+		set(state, 'modal', serializedPayload)
 	},
 	[types.UI_CHANGE_LAYOUT] (state, layout) {
 		set(state, 'currentLayout', layout)

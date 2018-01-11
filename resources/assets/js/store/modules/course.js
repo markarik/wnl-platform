@@ -56,13 +56,13 @@ const getters = {
 		}
 		return lessons
 	},
-	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId] || {},
+	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
 	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
 	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
 		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
-	getSection: state => (sectionId) => state.structure['sections'][sectionId] || {},
+	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
 	getSections: state => (sections) => sections.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {})) || [],
 	getSubsections: state => (subsections) => subsections.map((subsectionId) => _.get(state.structure, `subsections.${subsectionId}`, {})) || [],
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {

@@ -3,17 +3,16 @@
 		<button class="delete" @click="seenCurrentNews"></button>
 
 		<p class="strong">Cześć! <wnl-emoji name="mega"/></p>
-		<p>Większość z Was zakończyła już pierwszy tydzień nauki z kursem "Więcej niż LEK"! <wnl-emoji name="raised_hands"/></p>
+		<p>Za nami już ponad połowa kursu i jesteśmy bardzo ciekawi Waszych opinii! <wnl-emoji name="raised_hands"/></p>
 
-		<p>Usłyszeliśmy od Was wiele dobrych słów na temat kursu, oraz wiele fantastycznych, krytycznych uwag. Wszystkie bardzo pomagają nam każdego dnia poprawiać jakość kursu i podnosić jego wartość dla Was. Jednak im więcej będziemy mieli wskazówek, tym większa szansa, że kurs będzie ewoluował w dobrym kierunku. <wnl-emoji name="wink"/></p>
+		<p>Wasze odpowiedzi w pierwszej ankiecie były dla nas niezwykle pomocne. Pozwoliły nam między innymi na poprawienie nawigacji w prezentacjach, formatowania slajdów, czy zaplanowanie rozwoju platformy. <wnl-emoji name="wink"/></p>
 
-		<p>Dlatego prosimy, odpowiedz na <strong>15 krótkich pytań</strong>, które pozwolą nam trafniej ocenić, jak możemy odpowiedzieć na Wasze potrzeby. <wnl-emoji name="+1"/></p>
+		<p>Dziś ponownie prosimy Was o pomoc. Do końca kursu zostało jeszcze sporo czasu i chcielibyśmy jak najwięcej zrobić, aby odpowiedzieć na Wasze potrzeby i problemy! Będziemy wdzięczni, jeżeli poświęcisz kilka minut na odpowiedzenie na 15 krótkich pytań.
+ <wnl-emoji name="+1"/></p>
 
 		<p class="has-text-centered">
-			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/Ym8opY88cu3QT31M2">Wypełnij krótką ankietę</a>
+			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/WYm96EmCTYDGImjB2">Wypełnij ankietę</a>
 		</p>
-
-		<p></p>
 	</div>
 </template>
 
@@ -21,7 +20,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-2-first-survey'
+	const CURRENT_NEWS = 'edition-2-second-survey'
 	const REQUIRED_ROLE = ''
 
 	export default {

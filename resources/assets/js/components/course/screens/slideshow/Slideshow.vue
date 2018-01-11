@@ -22,7 +22,7 @@
 				<wnl-annotations
 					v-if="!isLoading"
 					:currentSlideId="currentSlideId"
-					:slideshowId="slideshowId"
+					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
 				></wnl-annotations>
@@ -103,6 +103,7 @@
 
 <script>
 	import _ from 'lodash'
+	import axios from 'axios'
 	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions} from 'vuex'
@@ -130,6 +131,7 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
+				modifiedSlides: {}
 			}
 		},
 		props: {
@@ -137,7 +139,12 @@
 				type: Object,
 				default: () => {
 					return {
-						type: 'slideshow'
+						type: 'slideshow',
+						meta: {
+							resources: [{
+								id: -1
+							}]
+						}
 					}
 				}
 			},
@@ -167,11 +174,14 @@
 			screenId() {
 				return this.$route.params.screenId
 			},
-			slideshowId() {
+			presentableId() {
 				return this.screenData.meta && this.screenData.meta.resources[0].id
 			},
+			presentableType() {
+				return this.screenData.type
+			},
 			slideshowUrl() {
-				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
+				return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`)
 			},
 			iframe() {
 				if (this.loaded) {
@@ -180,8 +190,8 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds']),
-			...mapActions(['toggleOverlay']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupPresentablesWithReactions']),
+			...mapActions(['toggleOverlay', 'showNotification']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
 
@@ -217,7 +227,7 @@
 				return index + 1
 			},
 			goToSlide(slideIndex) {
-				if(slideIndex || slideIndex === 0) {
+				if(slideIndex && slideIndex > -1) {
 					this.slideChanged = true
 
 					const newSlideId = this.getSlideIdFromIndex(slideIndex)
@@ -228,7 +238,7 @@
 					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 					this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
 
-					this.currentSlideId = this.getSlideIdFromIndex(slideIndex)
+					this.currentSlideId = newSlideId
 					this.currentSlideNumber = this.slideNumberFromIndex(slideIndex)
 
 					this.focusSlideshow()
@@ -264,9 +274,13 @@
 				return this.postmateHandshake(postmateOptions)
 					.then(child => {
 						if (this.$route.query.slide) {
-							const newOrderNumber = this.getSlidePositionById(this.$route.query.slide)
-							this.goToSlide(newOrderNumber);
-							this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+							const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+							if (newSlideIndex > -1) {
+								this.goToSlide(newSlideIndex);
+								this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+							} else {
+								this.goToSlide(this.currentSlideIndex)
+							}
 						} else {
 							this.goToSlide(this.currentSlideIndex)
 						}
@@ -375,6 +389,14 @@
 						!this.bookmarkLoading && this.toggleBookmarkedState(index)
 					} else if (event.data.value.name === 'error') {
 						this.toggleOverlay({source: 'slideshow', display: false})
+					} else if (event.data.value.name === 'refresh-slideshow') {
+						if (this.presentableType === 'category') {
+							this.$emit('refreshSlideshow')
+							screenfull.exit(this.slideshowElement)
+						} else {
+							this.onRefreshSlideshow()
+						}
+						this.modifiedSlides = {}
 					}
 				}
 			},
@@ -417,7 +439,7 @@
 			},
 			onAnnotationsUpdated(comments) {
 				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
-					let annotations = _.cloneDeep(comments)
+					const annotations = _.cloneDeep(comments)
 
 					if (annotations.length > 0) {
 						annotations.forEach((annotation) => {
@@ -451,9 +473,50 @@
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
 					})
+			},
+			onRefreshSlideshow() {
+				this.toggleOverlay({source: 'slideshow', display: true})
+				this.removeEventListeners()
+
+				Promise.all([
+					axios.get(this.slideshowUrl),
+					this.setupPresentablesWithReactions({id: this.presentableId})
+				]).then(([{data}]) => {
+					if (typeof this.child.destroy === 'function') {
+						this.child.destroy()
+					}
+					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+
+					this.setSlideshowHtmlContent(data)
+						.then(() => {
+							const slide = this.getSlideById(this.currentSlideId)
+							const currentBookmarkState = slide.bookmark.hasReacted
+							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+						})
+				})
 			}
 		},
 		mounted() {
+			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
+				.listen('.App.Events.Live.LiveContentUpdated', ({data: {event, subject, context}}) => {
+					switch (event) {
+						case 'slide-added':
+							// TODO consider passing order_number in given presentable from event
+							this.modifiedSlides[subject.id] = {order_number: context.params.slide - 1, action: 'add'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
+							break
+						case 'slide-updated':
+							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'edit'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
+							break
+						case 'slide-detached':
+							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'delete'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
+							break
+					}
+				});
+
+
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
 			if (this.htmlContent) {
@@ -461,7 +524,7 @@
 				this.setupCollection()
 			} else {
 				// logic related with lesson
-				this.setup({id: this.slideshowId})
+				this.setup({id: this.presentableId})
 					.then(() => {
 						return this.initSlideshow()
 					}).catch(error => {
@@ -484,14 +547,18 @@
 				}
 
 				if (to.query.slide && to.query.slide !== this.currentSlideId) {
-					const newOrderNumber = this.getSlidePositionById(to.query.slide)
-					this.goToSlide(newOrderNumber);
-					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+					if (newSlideIndex > -1) {
+						this.goToSlide(newSlideIndex);
+						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					}
 				}
 
 				if (to.query.slide === this.currentSlideId) {
-					const newOrderNumber = this.getSlidePositionById(to.query.slide)
-					this.$router.push(this.buildRouteFromSlideParam(newOrderNumber))
+					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+					if (newSlideIndex > -1) {
+						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					}
 				}
 
 				let fromSlide = from.params.slide || 0,
@@ -514,12 +581,13 @@
 
 				this.removeEventListeners()
 				this.setSlideshowHtmlContent(newContent)
+				this.modifiedSlides = {}
 			},
 			'screenData' (newValue, oldValue) {
 				if (newValue.type === 'slideshow') {
 					this.toggleOverlay({source: 'slideshow', display: true})
 
-					this.setup({id: this.slideshowId})
+					this.setup({id: this.presentableId})
 					.then(() => {
 						this.initSlideshow()
 							.then(() => {

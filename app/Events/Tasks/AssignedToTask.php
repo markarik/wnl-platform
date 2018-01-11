@@ -51,6 +51,7 @@ class AssignedToTask extends Event
 				'avatar'       => $this->actor->profile->avatar_url,
 			],
 			'referer' => $this->referer,
+			'context' => []
 		];
 	}
 }

@@ -14,7 +14,7 @@
 		</div>
 		<div class="media-content comment-content">
 			<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-				<span class="author">{{ nameToDisplay }}</span>
+				<span class="author">{{ profile.display_name }}</span>
 			</router-link>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
@@ -84,9 +84,6 @@ export default {
 		},
 		userId() {
 			return this.profile.user_id
-		},
-		nameToDisplay() {
-			return this.profile.display_name || this.profile.full_name
 		},
 		time() {
 			return timeFromS(this.comment.created_at)

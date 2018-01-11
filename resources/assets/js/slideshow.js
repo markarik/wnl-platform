@@ -18,8 +18,13 @@ const $toggleAnnotations = $('.toggle-annotations')
 const $toggleFullscreen = $('.toggle-fullscreen')
 const $orderNumberContainer = $('#orderNumberContainer')
 const bookmarkElement = document.querySelector('.bookmark')
+const refreshIcon = document.getElementById('refreshIcon')
+const refreshButton = document.getElementById('refreshButton')
+const modifiedSlidesList = document.getElementById('modifiedSlidesList')
+const modifiedSlidesCounter = document.getElementById('modifiedSlidesCounter')
 
 let isSavingBookmark = false
+let modifiedSlides = {};
 
 const setupReveal = () => {
 	Reveal.initialize({
@@ -76,6 +81,39 @@ const setupHandshake = () => {
 				$toggleFullscreen.removeClass('is-fullscreen')
 			}
 		},
+		updateModifiedSlides: (newModifiedSlides) => {
+			modifiedSlides = newModifiedSlides
+
+			const listElement = document.createElement('ul')
+
+			modifiedSlides.forEach(slide => {
+				const el = document.createElement('li')
+				let prefix = 'zmieniony'
+
+				if (slide.action === 'add') {
+					prefix = 'dodany'
+				} else if (slide.action === 'delete') {
+					prefix = 'usunięty'
+				}
+
+				el.innerText = `Slajd numer ${slide.order_number + 1} został ${prefix}`
+				listElement.appendChild(el)
+			})
+
+			modifiedSlidesList.getElementsByTagName('ul')[0]
+				&& modifiedSlidesList.removeChild(modifiedSlidesList.getElementsByTagName('ul')[0])
+
+			modifiedSlidesList.insertBefore(listElement, refreshButton)
+			modifiedSlidesCounter.innerText = modifiedSlides.length
+
+			if (modifiedSlides.length > 0) {
+				refreshIcon.classList.remove('hidden')
+				modifiedSlidesCounter.classList.add('has-some')
+			} else if (modifiedSlides.length < 1) {
+				refreshIcon.classList.add('hidden')
+				modifiedSlidesCounter.classList.remove('has-some')
+			}
+		},
 		updateAnnotations: (annotationsData) => {
 			let annotationsLength = annotationsData.length
 
@@ -126,7 +164,7 @@ const setupHandshake = () => {
 			$orderNumberContainer.text(orderNumber)
 		},
 		refreshChart(index) {
-			viewers[index].refresh()
+			viewers[index] && viewers[index].refresh()
 		}
 	})
 }
@@ -168,7 +206,23 @@ $(() => {
 	}
 
 	setupReveal()
+
+	refreshIcon.addEventListener('click', () => {
+		toggleModifiedSlidesList()
+	})
+
+	refreshButton.addEventListener('click', () => {
+		parent.emit('refresh-slideshow')
+		modifiedSlidesList.classList.remove('visible')
+		modifiedSlidesCounter.classList.remove('has-some')
+		refreshIcon.classList.add('hidden')
+		modifiedSlides = {}
+	})
 });
+
+function toggleModifiedSlidesList() {
+	modifiedSlidesList.classList.toggle('visible')
+}
 
 function animateControl(event) {
 	let target = event.target

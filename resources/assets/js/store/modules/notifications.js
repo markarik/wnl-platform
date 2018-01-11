@@ -113,7 +113,7 @@ const actions = {
 	},
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
-			.listen('.App.Events.LiveNotificationCreated', (notification) => {
+			.listen('.App.Events.Live.LiveNotificationCreated', (notification) => {
 				commit(types.ADD_NOTIFICATION, {...notification, channel})
 			});
 	},

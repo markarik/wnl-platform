@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Quiz;
 
-use Request;
+use App\Events\Event;
+use App\Events\SanitizesUserContent;
 use App\Models\QuizQuestion;
 use App\Models\User;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
-use App\Events\SanitizesUserContent;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Queue\SerializesModels;
 
 class QuizQuestionEdited extends Event
 {
@@ -27,7 +27,9 @@ class QuizQuestionEdited extends Event
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param QnaQuestion $qnaQuestion
+	 * @param QuizQuestion $quizQuestion
+	 * @param User $user
+	 *
 	 */
 	public function __construct(QuizQuestion $quizQuestion, User $user)
 	{

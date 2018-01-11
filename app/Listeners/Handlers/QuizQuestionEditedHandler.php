@@ -1,7 +1,7 @@
 <?php namespace App\Listeners\Handlers;
 
+use App\Events\Quiz\QuizQuestionEdited;
 use App\Listeners\UserNotificationsGate;
-use App\Events\QuizQuestionEdited;
 
 class QuizQuestionEditedHandler
 {

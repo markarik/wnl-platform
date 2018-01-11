@@ -30,7 +30,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.media-left
-		margin-bottom: $margin-small
+
 
 	.author
 		color: $color-sky-blue
@@ -51,6 +51,9 @@
 
 		.media-left
 			margin-right: 0
+			margin-bottom: $margin-small
+			.avatar-activator
+				cursor: pointer
 
 	.author
 		font-weight: $font-weight-bold

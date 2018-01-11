@@ -25,9 +25,7 @@
 	.wnl-avatar
 		overflow: hidden
 		user-select: none
-
-	.wnl-avatar-custom, .wnl-avatar-automatic
-		cursor: pointer
+		
 </style>
 <script>
 	import _ from 'lodash'

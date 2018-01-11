@@ -33,6 +33,7 @@
 
 		.media-left
 			margin: 0 $margin-small 0 0
+			cursor: pointer
 
 		.media-left-placeholder
 			height: 1px

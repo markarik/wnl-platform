@@ -74,17 +74,31 @@ class UserIdProfileIdMessUp extends Command
 				->select('quiz_question_id')
 				->whereIn('quiz_set_id', array_keys($quizScreens))
 				->groupBy('quiz_question_id')
-				->get();
+				->get()
+				->pluck('quiz_question_id')
+				->toArray();
 
-			$users = User::get();
+			$users = User::all();
+			$resultsGrouped = [];
 
-			$bar = $this->output->createProgressBar($users->count());
+			$bar = $this->output->createProgressBar($users->count() * 2);
 
 			foreach ($users as $user) {
-				UserQuizResults
-					::where('user_id', $user->profile->id)
-					->update(['user_id' => $user->id]);
+				$resultsGrouped[$user->id] = UserQuizResults
+					::select('id')
+					->where('user_id', $user->profile->id)
+					->whereIn('quiz_question_id', array_values($quizQuestions))
+					->get()
+					->pluck('id');
 
+					$bar->advance();
+				}
+
+			foreach ($resultsGrouped as $userId => $ids) {
+				$userObject = User::find($userId);
+				UserQuizResults
+					::whereIn('id', $ids)
+					->update(['user_id' => $userId]);
 				$bar->advance();
 			}
 

@@ -202,17 +202,24 @@
 					}
 				}
 			},
-			onClose() {
-				this.isVisible = false
-			},
-		},
-		beforeDestroy() {
-			$('body').off('click', '#iv-container .iv-close', this.onClose);
+			onKeydown(e) {
+				switch(e.keyCode) {
+					case 37: // left arrow
+						this.goToImage(this.previousImageIndex)
+						break
+					case 39: // right arrow
+						this.goToImage(this.nextImageIndex)
+						break
+					case 27: // esc
+						this.isVisible = false
+						break
+				}
+			}
 		},
 		mounted() {
-			this.wrapEmbedded();
-			this.addFullscreen();
-			$('body').on('click', '#iv-container .iv-close', this.onClose)
+			this.wrapEmbedded()
+			this.addFullscreen()
+			document.body.addEventListener('keydown', this.onKeydown)
 		},
 		watch: {
 			screenData() {

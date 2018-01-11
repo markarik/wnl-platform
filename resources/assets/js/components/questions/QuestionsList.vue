@@ -3,6 +3,7 @@
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
+				<wnl-questions-search @search="onSearch" />
 				<div class="questions-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
@@ -114,6 +115,7 @@
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
 	import QuestionsSolving from 'js/components/questions/QuestionsSolving'
 	import QuestionsTest from 'js/components/questions/QuestionsTest'
+	import QuestionsSearch from 'js/components/questions/QuestionsSearch'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
 	import { scrollToTop } from 'js/utils/animations'
@@ -139,6 +141,7 @@
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-questions-test': QuestionsTest,
 			'wnl-questions-solving': QuestionsSolving,
+			'wnl-questions-search': QuestionsSearch
 		},
 		data() {
 			return {
@@ -150,7 +153,8 @@
 				testProcessing: false,
 				testResults: {},
 				reactionsFetched: false,
-				presetOptionsToPass: isEmpty(this.presetOptions) ? {} : this.presetOptions
+				presetOptionsToPass: isEmpty(this.presetOptions) ? {} : this.presetOptions,
+				searchPhrase: ''
 			}
 		},
 		computed: {
@@ -399,6 +403,9 @@
 					this.endQuiz()
 				}
 			},
+			onSearch(phrase) {
+//				this.activeFiltersToggle()
+			}
 		},
 		mounted() {
 			const hasPresetFilters = !isEmpty(this.presetFilters)

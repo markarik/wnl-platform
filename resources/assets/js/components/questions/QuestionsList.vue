@@ -404,7 +404,7 @@
 				}
 			},
 			onSearch(phrase) {
-//				this.activeFiltersToggle()
+//				this.activeFiltersToggle('', true)
 			}
 		},
 		mounted() {

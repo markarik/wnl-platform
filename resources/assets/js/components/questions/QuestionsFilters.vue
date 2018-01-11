@@ -3,35 +3,37 @@
 		<div class="questions-filters-content">
 			<div class="wnl-active-filters-container">
 				<wnl-active-filters
-				:activeFilters="activeFilters"
-				:loading="fetchingData"
-				:filters="filters"
-				:itemsNamesSource="itemsNamesSource"
-				:matchedCount="matchedQuestionsCount"
-				:totalCount="allQuestionsCount"
-				@activeFiltersChanged="onActiveFiltersChanged"
-				@autorefreshChange="onAutorefreshChange"
-				@elementHeight="setActiveFiltersHeight"
-				@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
-				@refresh="onRefresh"
+						:activeFilters="activeFilters"
+						:loading="fetchingData"
+						:filters="filters"
+						:itemsNamesSource="itemsNamesSource"
+						:matchedCount="matchedQuestionsCount"
+						:totalCount="allQuestionsCount"
+						@activeFiltersChanged="onActiveFiltersChanged"
+						@autorefreshChange="onAutorefreshChange"
+						@elementHeight="setActiveFiltersHeight"
+						@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
+						@refresh="onRefresh"
 				/>
 			</div>
-			<div class="wnl-questions-filters" :style="{paddingTop: activeFiltersHeight + 'px'}">
+			<div class="wnl-questions-filters"
+				 :style="{paddingTop: activeFiltersHeight + 'px'}">
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
 						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
 						{{$t('questions.filters.heading')}}
 					</span>
-					<a v-if="!isChatMounted && isChatVisible" class="hide-filters" @click="toggleChat">
+					<a v-if="!isChatMounted && isChatVisible"
+					   class="hide-filters" @click="toggleChat">
 						{{$t('questions.filters.hide')}}
 						<span class="icon is-small"><i class="fa fa-close"></i></span>
 					</a>
 				</div>
 				<wnl-accordion
-					:dataSource="filters"
-					:config="accordionConfig"
-					:loading="fetchingData"
-					@itemToggled="onItemToggled"
+						:dataSource="listableFilters"
+						:config="accordionConfig"
+						:loading="fetchingData"
+						@itemToggled="onItemToggled"
 				/>
 			</div>
 		</div>
@@ -144,6 +146,9 @@
 			itemsNamesSource() {
 				return 'questions.filters.items'
 			},
+			listableFilters() {
+				return _.filter(this.filters, f => f.type.match(/list|tags/))
+			}
 		},
 		methods: {
 			...mapActions(['toggleChat']),

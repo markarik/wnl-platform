@@ -43,7 +43,7 @@
 			},
 			dataSource: {
 				required: true,
-				type: Object,
+				type: Object | Array,
 			},
 			loading: {
 				default: false,

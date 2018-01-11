@@ -22,4 +22,13 @@ class SearchFilter extends ApiFilter
 
 		throw new ApiFilterException('Requested data model is not searchable.');
 	}
+
+	public function count($builder)
+	{
+		return [
+			'items'   => null,
+			'message' => 'search',
+			'type'    => 'search',
+		];
+	}
 }

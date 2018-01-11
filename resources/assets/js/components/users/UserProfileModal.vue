@@ -53,17 +53,25 @@
 		.right
 			width: 100%
 
+	.user-info-full-name
+		color: $color-ocean-blue
+		font-size: $font-size-plus-5
+		font-weight: $font-weight-bold
+		margin-bottom: $margin-small
+		line-height: $line-height-none
+
 	.user-info-display-name
 		margin-top: $margin-tiny
 		color: $color-ocean-blue-opacity
 		font-size: $font-size-plus-2
 		font-weight: $font-weight-bold
-		margin-bottom: $margin-tiny
+		margin-bottom: $margin-small
 
 	.user-info-city
 		color: $color-gray-dimmed
 		font-size: $font-size-base
 		font-weight: $font-weight-light
+		margin-bottom: $margin-small
 
 	.user-info-help
 		font-size: $font-size-base

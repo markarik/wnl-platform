@@ -1,5 +1,5 @@
 <template>
-	<router-link :to="to">
+	<router-link :to="to" target="_blank">
         <slot></slot>
 	</router-link>
 </template>

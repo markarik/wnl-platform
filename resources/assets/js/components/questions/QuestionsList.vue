@@ -3,18 +3,21 @@
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
-				<wnl-questions-search @search="onSearch" />
+				<wnl-questions-search @search="onSearch"/>
 				<div class="questions-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+							<span class="icon is-small"><i
+									class="fa fa-check-square-o"></i></span>
 						</div>
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i
+									class="fa fa-angle-right"></i></span>
 							<span>{{$t('questions.nav.solving')}}</span>
 						</div>
 					</div>
-					<a v-if="isMobile" slot="heading" class="mobile-show-active-filters" @click="toggleChat">
+					<a v-if="isMobile" slot="heading"
+					   class="mobile-show-active-filters" @click="toggleChat">
 						<span>{{$t('questions.filters.show')}}</span>
 						<span class="icon is-tiny">
 							<i class="fa fa-sliders"></i>
@@ -22,46 +25,49 @@
 					</a>
 				</div>
 				<wnl-questions-solving
-					v-if="computedQuestionsList.length > 0 || !fetchingQuestions"
-					:activeFilters="activeFiltersNames"
-					:currentQuestion="currentQuestion"
-					:loading="fetchingQuestions || fetchingFilters"
-					:getReaction="computedGetReaction"
-					:isMobile="isMobile"
-					:meta="meta"
-					:questionsListCount="matchedQuestionsCount"
-					:questionsCurrentPage="questionsCurrentPage"
-					:presetOptions="presetOptionsToPass"
-					:testMode="testMode"
-					:testQuestions="testQuestions"
-					:testProcessing="testProcessing"
-					:testResults="testResults"
-					@buildTest="buildTest"
-					@changeQuestion="onChangeQuestion"
-					@changePage="onChangePage"
-					@checkQuiz="verifyCheckQuestions"
-					@endQuiz="verifyEndQuiz"
-					@selectAnswer="onSelectAnswer"
-					@setQuestion="setQuestion"
-					@verify="onVerify"
+						v-if="computedQuestionsList.length > 0 || !fetchingQuestions"
+						:activeFilters="activeFiltersNames"
+						:currentQuestion="currentQuestion"
+						:loading="fetchingQuestions || fetchingFilters"
+						:getReaction="computedGetReaction"
+						:isMobile="isMobile"
+						:meta="meta"
+						:questionsListCount="matchedQuestionsCount"
+						:questionsCurrentPage="questionsCurrentPage"
+						:presetOptions="presetOptionsToPass"
+						:testMode="testMode"
+						:testQuestions="testQuestions"
+						:testProcessing="testProcessing"
+						:testResults="testResults"
+						@buildTest="buildTest"
+						@changeQuestion="onChangeQuestion"
+						@changePage="onChangePage"
+						@checkQuiz="verifyCheckQuestions"
+						@endQuiz="verifyEndQuiz"
+						@selectAnswer="onSelectAnswer"
+						@setQuestion="setQuestion"
+						@verify="onVerify"
 				/>
-				<div v-else class="text-loader"><wnl-text-loader/></div>
+				<div v-else class="text-loader">
+					<wnl-text-loader/>
+				</div>
 			</div>
 		</div>
 		<wnl-sidenav-slot
-			:isDetached="!isChatMounted"
-			:isVisible="isLargeDesktop || isChatVisible"
-			:hasChat="true"
+				:isDetached="!isChatMounted"
+				:isVisible="isLargeDesktop || isChatVisible"
+				:hasChat="true"
 		>
 			<wnl-questions-filters
-				v-show="!testMode"
-				:activeFilters="activeFilters"
-				:fetchingData="fetchingQuestions || fetchingFilters"
-				:filters="filters"
-				@activeFiltersChanged="onActiveFiltersChanged"
+					v-show="!testMode"
+					:activeFilters="activeFilters"
+					:fetchingData="fetchingQuestions || fetchingFilters"
+					:filters="filters"
+					@activeFiltersChanged="onActiveFiltersChanged"
 			/>
 		</wnl-sidenav-slot>
-		<div v-if="!testMode && !isLargeDesktop && isChatToggleVisible" class="wnl-chat-toggle">
+		<div v-if="!testMode && !isLargeDesktop && isChatToggleVisible"
+			 class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
 				<i class="fa fa-sliders"></i>
 				<span>{{$t('questions.filters.show')}}</span>
@@ -118,8 +124,8 @@
 	import QuestionsSearch from 'js/components/questions/QuestionsSearch'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 
-	import { scrollToTop } from 'js/utils/animations'
-	import { swalConfig } from 'js/utils/swal'
+	import {scrollToTop} from 'js/utils/animations'
+	import {swalConfig} from 'js/utils/swal'
 
 	export default {
 		name: 'QuestionsList',
@@ -129,7 +135,8 @@
 				type: Array,
 			},
 			presetOptions: {
-				default: () => {},
+				default: () => {
+				},
 				type: Object,
 			}
 		},
@@ -193,7 +200,8 @@
 				})
 			},
 			computedGetReaction() {
-				return this.reactionsFetched ? this.getReaction : () => {}
+				return this.reactionsFetched ? this.getReaction : () => {
+				}
 			},
 			computedQuestionsList() {
 				return this.orderedQuestionsList.length ? this.orderedQuestionsList : this.questionsList
@@ -289,6 +297,7 @@
 					.catch(error => $wnl.logger.error(error))
 			},
 			onActiveFiltersChanged(payload) {
+				console.log(payload)
 				this.fetchingFilters = true
 				this.activeFiltersToggle(payload)
 					.then(() => {
@@ -308,21 +317,21 @@
 			},
 			onChangeQuestion(step) {
 				const currentIndex = this.currentQuestion.index
-				const currentPage = this.currentQuestion.page
-				const perPage = this.meta.perPage
-				const pageStep = Math.sign(step) * Math.ceil(Math.abs(step/perPage))
+				const currentPage  = this.currentQuestion.page
+				const perPage      = this.meta.perPage
+				const pageStep     = Math.sign(step) * Math.ceil(Math.abs(step / perPage))
 
 				let newIndex, newPage
 
 				if (step > 0 && currentIndex + step >= this.questionsCurrentPage.length) {
 					newIndex = 0
-					newPage = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep
+					newPage  = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep
 				}
 				else if (step < 0 && currentIndex === 0) {
 					newIndex = currentPage === 1 ? -1 : perPage - 1
-					newPage = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep
+					newPage  = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep
 				} else {
-					newPage = currentPage
+					newPage  = currentPage
 					newIndex = currentIndex + step
 				}
 
@@ -338,7 +347,7 @@
 			},
 			onSelectAnswer(payload) {
 				payload.answer === this.getQuestion(payload.id).selectedAnswer
-					&& !this.testMode
+				&& !this.testMode
 					? this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}))
 					: this.selectAnswer(payload)
 			},
@@ -350,22 +359,30 @@
 				scrollToTop()
 				this.testProcessing = true
 				this.checkQuestions({examMode: this.examMode}).then(results => {
-					this.testResults = results
-					this.testProcessing = false
-					this.testMode = false
+					this.testResults         = results
+					this.testProcessing      = false
+					this.testMode            = false
 					this.presetOptionsToPass = {}
 				})
 			},
 			setQuestion({page, index}) {
 				this.switchOverlay(true, 'currentQuestion')
 				this.changePage(page)
-					// last page may change after fetching the page
-					// when "nierozwiązane pytania" filter is active
-					.then(() => this.changeCurrentQuestion({page: this.getSafePage(page), index}))
+				// last page may change after fetching the page
+				// when "nierozwiązane pytania" filter is active
+					.then(() => this.changeCurrentQuestion({
+						page: this.getSafePage(page),
+						index
+					}))
 					.then(question => {
 						this.switchOverlay(false, 'currentQuestion')
 						this.fetchQuestionData(question.id)
-						this.savePosition({position: {page: this.getSafePage(page), index}})
+						this.savePosition({
+							position: {
+								page: this.getSafePage(page),
+								index
+							}
+						})
 					})
 			},
 			setupFilters(activeFilters = []) {
@@ -379,7 +396,11 @@
 			},
 			switchOverlay(display, source = 'filters', message = 'questions') {
 				this.fetchingQuestions = display
-				this.toggleOverlay({source, display, text: this.$t(`ui.loading.${message}`)})
+				this.toggleOverlay({
+					source,
+					display,
+					text: this.$t(`ui.loading.${message}`)
+				})
 			},
 			toggleBuilder() {
 				this.showBuilder = !this.showBuilder
@@ -404,7 +425,26 @@
 				}
 			},
 			onSearch(phrase) {
-//				this.activeFiltersToggle('', true)
+				if (phrase !== '') {
+					this.activeFiltersToggle({
+						filter: `search`,
+						active: true,
+						value: phrase
+					})
+					.then(() => {
+						this.fetchingFilters = true
+
+						this.resetCurrentQuestion()
+						this.resetPages()
+						this.fetchDynamicFilters()
+						return this.fetchMatchingQuestions()
+					})
+					.then(() => {
+						this.fetchingFilters = false
+
+						this.fetchQuestionsReactions(this.getPage(1))
+					})
+				}
 			}
 		},
 		mounted() {
@@ -423,7 +463,7 @@
 					.then(this.getPosition)
 					.then(({data = {}}) => {
 						return new Promise((resolve, reject) => {
-								this.fetchQuestions({
+							this.fetchQuestions({
 								saveFilters: false,
 								useSavedFilters: !hasPresetFilters,
 								filters: this.presetFilters,
@@ -458,7 +498,7 @@
 			testQuestionsCount() {
 				this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount)
 			},
-			'$route.query.chatChannel' (newVal) {
+			'$route.query.chatChannel'(newVal) {
 				newVal && !this.isChatVisible && this.toggleChat();
 			}
 		}

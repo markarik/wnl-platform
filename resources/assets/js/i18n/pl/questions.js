@@ -34,6 +34,7 @@ export const questions = {
 		activeFiltersReview: 'Aktywne filtry: {filters}',
 		activeHeading: 'Aktywne filtry',
 		allQuestions: 'Wszystkie pytania',
+		search: 'Wyszukiwanie',
 		autorefresh: 'Odświeżaj automatycznie',
 		filteringResult: 'Pasujące pytania:',
 		filteringResultFrom: 'z {totalCount} w bazie',

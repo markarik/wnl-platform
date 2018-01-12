@@ -147,7 +147,14 @@
 				return 'questions.filters.items'
 			},
 			listableFilters() {
-				return _.filter(this.filters, f => f.type.match(/list|tags/))
+				let listable = {}
+				Object.entries(this.filters).forEach(([key, val]) => {
+					if (val.type.match(/list|tags/)) {
+						listable[key] = val
+					}
+				})
+
+				return listable
 			}
 		},
 		methods: {

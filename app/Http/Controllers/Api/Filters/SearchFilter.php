@@ -6,11 +6,11 @@ use ScoutEngines\Elasticsearch\Searchable;
 
 class SearchFilter extends ApiFilter
 {
-	protected $expected = ['phrase', 'mode'];
+	protected $expected = ['phrase'/*, 'mode'*/];
 
 	public function handle($builder)
 	{
-		$this->checkIsSearchable($builder);
+//		$this->checkIsSearchable($builder);
 
 
 
@@ -18,6 +18,7 @@ class SearchFilter extends ApiFilter
 	}
 
 	private function checkIsSearchable($model) {
+
 		if (array_key_exists(Searchable::class, class_uses($model))) return;
 
 		throw new ApiFilterException('Requested data model is not searchable.');

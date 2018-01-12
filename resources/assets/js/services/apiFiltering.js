@@ -49,6 +49,13 @@ export const parseFilters = (activeFilters, filters, userId) => {
                     list: groupedFilters[group]
                 }
             })
+        } else if (filters[group].type === FILTER_TYPES.SEARCH) {
+			parsedFilters.push({
+				[group]: {
+					phrase: 'siema',
+                    mode: 'siema',
+				}
+			})
         }
     })
 
@@ -59,5 +66,6 @@ export const FILTER_TYPES = {
     BOOLEAN: 'boolean',
     LIST: 'list',
     TAGS: 'tags',
+    SEARCH: 'search',
 }
 

@@ -3,8 +3,8 @@
 namespace Tests\Api\Quiz;
 
 use App\Models\User;
-use Tests\Api\ApiTestCase;
 use Carbon\Carbon;
+use Tests\Api\ApiTestCase;
 
 
 class QuizQuestionsTest extends ApiTestCase
@@ -60,32 +60,32 @@ class QuizQuestionsTest extends ApiTestCase
 		$data = [
 			// 'fields'  => ['id', 'text', 'created_at'],
 			'filters' => [
+				[
+					'search' => [
+						'phrase' => 'Diagnostyka prenatalna',
+						'mode'   => 'phrase_match',
+					],
+				],
 //				[
-//					'search' => [
-//						'phrase' => 'Gastropareza',
-//						'mode'   => 'phrase_match',
+//					'tags' => ['łatwe'],
+//				],
+//				[
+//					'query' => [
+//						'doesntHave' => 'sets',
 //					],
 //				],
-				[
-					'tags' => ['łatwe'],
-				],
-				[
-					'query' => [
-						'doesntHave' => 'sets',
-					],
-				],
-				[
-					'quiz-resolution' => [
-						'user_id' => 255,
-						'list'    => ['correct', 'incorrect', 'unresolved'],
-					],
-				],
-				[
-					'quiz-planned' => [
-						'user_id' => 2,
-						'list'    => ['all'],
-					],
-				],
+//				[
+//					'quiz-resolution' => [
+//						'user_id' => 255,
+//						'list'    => ['correct', 'incorrect', 'unresolved'],
+//					],
+//				],
+//				[
+//					'quiz-planned' => [
+//						'user_id' => 2,
+//						'list'    => ['all'],
+//					],
+//				],
 
 			],
 //			'include' => 'comments,comments.profiles,reactions',
@@ -95,7 +95,7 @@ class QuizQuestionsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filter'), $data);
-
+$response->dump();
 		$response
 			->assertStatus(200);
 	}

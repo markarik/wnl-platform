@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Events\Common;
+namespace App\Events;
 
+use App\Events\Event;
+use App\Events\SanitizesUserContent;
 use App\Traits\EventContextTrait;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Database\Eloquent\Model;
-use App\Events\SanitizesUserContent;
-use App\Events\Event;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
-abstract class ResourceRestored extends Event
+abstract class ResourceRestoredEvent extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,

@@ -18,10 +18,11 @@ export const user = {
         public_email: 'Adres e-mail',
     },
     userProfile: {
-        editProfileButton: 'edytuj profil',
+        editProfileButton: 'Edytuj profil',
         textLoader: 'Szukamy człowieka...',
         helpDefaultDescription: 'Wyedytuj profil i dziel się wiedzą z innymi :)',
         cityDefaultDescription: 'Wyedytuj profil, powiedz nam skąd jesteś :)',
+        helpTitle: 'W czym mogę pomóc?',
         bestQuestions: 'Najlepsze Pytania',
         bestAnswers: 'Najlepsze Odpowiedzi',
         about: 'Informacje o uczestniku',
@@ -34,5 +35,8 @@ export const user = {
         interests: 'Moje zainteresowania',
         about: 'Parę słów o mnie',
         learning_location: 'Miasto, w którym obecnie się uczę'
+    },
+    userProfileModal: {
+        redirectToProfile: 'Zobacz pełen profil',
     }
 }

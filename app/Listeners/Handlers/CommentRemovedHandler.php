@@ -1,9 +1,8 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\CommentRemoved;
+use App\Events\Comments\CommentRemoved;
 use App\Listeners\UserNotificationsGate;
-use App\Models\User;
 
 class CommentRemovedHandler
 {

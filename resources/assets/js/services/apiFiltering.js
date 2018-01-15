@@ -52,7 +52,7 @@ export const parseFilters = (activeFilters, filters, userId) => {
         } else if (filters[group].type === FILTER_TYPES.SEARCH) {
 			parsedFilters.push({
 				[group]: {
-					phrase: 'siema',
+					phrase: 'Diagnostyka prenatalna',
                     mode: 'siema',
 				}
 			})

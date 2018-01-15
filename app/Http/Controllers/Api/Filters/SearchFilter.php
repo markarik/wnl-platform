@@ -11,13 +11,29 @@ class SearchFilter extends ApiFilter
 	public function handle($builder)
 	{
 //		$this->checkIsSearchable($builder);
+		$model = $builder->getModel();
+		$results = $model::searchRaw([
+				'body' => [
+					'_source' => ['id'],
+					'query'   => [
+						'query_string' => [
+							'query'      => $this->params['phrase'],
+							'all_fields' => true,
+						],
+					],
+				],
+			]) ['hits']['hits'] ?? [];
 
+		$siema = [];
+		foreach ($results as $result) {
+			array_push($siema, $result['_source']['id']);
+		}
 
-
-		return $builder;
+		return $builder->whereIn('id', $siema);
 	}
 
-	private function checkIsSearchable($model) {
+	private function checkIsSearchable($model)
+	{
 
 		if (array_key_exists(Searchable::class, class_uses($model))) return;
 

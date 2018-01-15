@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\PrivateApi\UserQuizResultsApiController;
 use App\Models\Lesson;
 use App\Models\Screen;
 use App\Models\User;
+use App\Models\UserProfile;
 use App\Models\UserQuizResults;
 use Closure;
 use Exception;
@@ -27,7 +29,10 @@ class UserIdProfileIdMessUp extends Command
 	 * @var string
 	 */
 	protected $description = 'Fix wrong user_id stored in UserQuizResults';
-	private $redis;
+
+	protected $redis;
+
+	protected $cache;
 
 	/**
 	 * Create a new command instance.
@@ -47,11 +52,12 @@ class UserIdProfileIdMessUp extends Command
 	public function handle()
 	{
 		$this->redis = Redis::connection();
+		$this->cache = Redis::connection('cache');
 		$passedUserId = $this->argument('user');
 
+		$this->repairRedis();
 		$this->transaction(function () use ($passedUserId) {
 //			$this->repairMysql($passedUserId);
-			$this->repairRedis();
 		});
 
 		return;
@@ -77,8 +83,40 @@ class UserIdProfileIdMessUp extends Command
 
 	protected function repairRedis()
 	{
+		$keyTemplate = UserQuizResultsApiController::KEY_QUIZ_TEMPLATE;;
+		$profiles = UserProfile::all()->keyBy('id');
 		$this->info('[Redis] Retrieving keys');
+		$keys = collect($this->redis->keys('UserState:Quiz:*'));
 
+		$this->info('[Redis] Moving keys to temp. database');
+		$total = count($keys);
+		foreach ($keys as $i => $key) {
+			$this->cache->set($key, $this->redis->get($key));
+			$this->redis->del($key);
+			if ($i%500 === 0) print "$i/$total";
+			print '.';
+		}
+
+		print PHP_EOL;
+		$this->info('[Redis] Repairing and saving keys back to original db');
+		$total = count($profiles);
+		foreach ($profiles as $i => $profile) {
+			$userKeys = $keys->filter(function($k) use ($profile){
+				return str_is("*:{$profile->id}:*", $k);
+			});
+			foreach ($userKeys as $oldKey) {
+				$keyComponents = explode(':', $oldKey);
+				$newKey = sprintf($keyTemplate,
+					$keyComponents[2],
+					$profile->user_id,
+					$keyComponents[4]
+				);
+				$this->redis->set($newKey, $this->cache->get($oldKey));
+				$this->cache->del($oldKey);
+			}
+			if ($i%100 === 0) print "$i/$total";
+			print '.';
+		}
 	}
 
 	protected function repairMysql($passedUserId)

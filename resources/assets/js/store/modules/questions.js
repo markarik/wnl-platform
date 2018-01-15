@@ -110,6 +110,9 @@ const getters = {
 const mutations = {
 	...commentsMutations,
 	...reactionsMutations,
+	[types.ADD_FILTER] (state, phrase) {
+		set(state.filters.search, 'items', [{value: phrase}])
+	},
 	[types.ACTIVE_FILTERS_ADD] (state, filter) {
 		if (state.activeFilters.indexOf(filter) === -1) {
 			state.activeFilters.push(filter)
@@ -224,6 +227,10 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
+	addFilter({commit}, filter) {
+		console.log(filter + ' state.filter');
+		commit(types.ADD_FILTER, filter)
+	},
 	activeFiltersSet({commit}, filters) {
 		commit(types.ACTIVE_FILTERS_SET, filters)
 	},

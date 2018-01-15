@@ -43,7 +43,7 @@ class SearchFilter extends ApiFilter
 	public function count($builder)
 	{
 		return [
-			'items'   => null,
+			'items'   => [],
 			'message' => 'search',
 			'type'    => 'search',
 		];

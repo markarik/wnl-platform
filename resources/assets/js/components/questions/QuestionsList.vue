@@ -213,6 +213,7 @@
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', [
+				'addFilter',
 				'activeFiltersSet',
 				'activeFiltersToggle',
 				'changeCurrentQuestion',
@@ -426,10 +427,10 @@
 			},
 			onSearch(phrase) {
 				if (phrase !== '') {
+					this.addFilter(phrase)
 					this.activeFiltersToggle({
 						filter: `search`,
 						active: true,
-						value: phrase
 					})
 					.then(() => {
 						this.fetchingFilters = true

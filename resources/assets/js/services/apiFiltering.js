@@ -50,10 +50,11 @@ export const parseFilters = (activeFilters, filters, userId) => {
                 }
             })
         } else if (filters[group].type === FILTER_TYPES.SEARCH) {
+            console.log(filters);
 			parsedFilters.push({
 				[group]: {
-					phrase: 'Diagnostyka prenatalna',
-                    mode: 'siema',
+					phrase: filters.search.items[0].value,
+                    mode: '',
 				}
 			})
         }
@@ -68,4 +69,3 @@ export const FILTER_TYPES = {
     TAGS: 'tags',
     SEARCH: 'search',
 }
-

@@ -288,7 +288,7 @@ const actions = {
 		return Promise.resolve(results)
 	},
 	fetchDynamicFilters({commit, getters, rootGetters}) {
-		const parsedFilters = parseFilters(getters.activeFilters, state.filters,rootGetters.currentUserId)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 		return _fetchDynamicFilters({filters: parsedFilters})
 			.then(({data}) => {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)

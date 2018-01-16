@@ -228,8 +228,10 @@ const actions = {
 	...commentsActions,
 	...reactionsActions,
 	addFilter({commit}, filter) {
-		console.log(filter + ' state.filter');
-		commit(types.ADD_FILTER, filter)
+		return new Promise(resolve => {
+			commit(types.ADD_FILTER, filter)
+			resolve()
+		})
 	},
 	activeFiltersSet({commit}, filters) {
 		commit(types.ACTIVE_FILTERS_SET, filters)

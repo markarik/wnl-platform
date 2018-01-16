@@ -44,7 +44,6 @@ class SearchFilter extends ApiFilter
 	{
 		return [
 			'items'   => [],
-			'message' => 'search',
 			'type'    => 'search',
 		];
 	}

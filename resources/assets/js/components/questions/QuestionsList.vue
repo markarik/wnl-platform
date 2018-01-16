@@ -428,9 +428,11 @@
 			onSearch(phrase) {
 				if (phrase !== '') {
 					this.addFilter(phrase)
-					this.activeFiltersToggle({
-						filter: `search`,
-						active: true,
+					.then(() => {
+						return this.activeFiltersToggle({
+							filter: `search`,
+							active: true,
+						})
 					})
 					.then(() => {
 						this.fetchingFilters = true

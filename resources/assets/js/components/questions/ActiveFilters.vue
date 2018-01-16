@@ -157,6 +157,10 @@
 		},
 		methods: {
 			filterDisplayName(filter) {
+				if(filter.type === 'search'){
+					return `Szukaj: ${filter.items[0].value}`
+					console.log(filter.items[0].value);
+				}
 				if (filter.hasOwnProperty('name')) return filter.name
 
 				const messageKey = filter.hasOwnProperty('message') ? filter.message : filter.value

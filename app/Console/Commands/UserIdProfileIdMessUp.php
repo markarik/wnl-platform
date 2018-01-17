@@ -55,10 +55,10 @@ class UserIdProfileIdMessUp extends Command
 		$this->cache = Redis::connection('cache');
 		$passedUserId = $this->argument('user');
 
-		$this->repairRedis();
-		$this->transaction(function () use ($passedUserId) {
-//			$this->repairMysql($passedUserId);
-		});
+		if (!$passedUserId) {
+			$this->repairRedis();
+		}
+		$this->repairMysql($passedUserId);
 
 		return;
 	}
@@ -84,7 +84,7 @@ class UserIdProfileIdMessUp extends Command
 	protected function repairRedis()
 	{
 		$keyTemplate = UserQuizResultsApiController::KEY_QUIZ_TEMPLATE;;
-		$profiles = UserProfile::all()->keyBy('id');
+		$profiles = UserProfile::all();
 		$this->info('[Redis] Retrieving keys');
 		$keys = collect($this->redis->keys('UserState:Quiz:*'));
 
@@ -102,7 +102,7 @@ class UserIdProfileIdMessUp extends Command
 		$total = count($profiles);
 		foreach ($profiles as $i => $profile) {
 			$userKeys = $keys->filter(function($k) use ($profile){
-				return str_is("*:{$profile->id}:*", $k);
+				return str_is("UserState:Quiz:*:{$profile->id}:*", $k);
 			});
 			foreach ($userKeys as $oldKey) {
 				$keyComponents = explode(':', $oldKey);

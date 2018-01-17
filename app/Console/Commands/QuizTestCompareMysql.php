@@ -4,14 +4,14 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class QuizTestCompareRedis extends Command
+class QuizTestCompareMysql extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'quizTest:compareRedis';
+    protected $signature = 'quizTest:compareMysql';
 
     /**
      * The console command description.
@@ -37,17 +37,11 @@ class QuizTestCompareRedis extends Command
      */
     public function handle()
     {
-		$byProfile = json_decode(\Storage::get("quiz_test_dump_before.json"));
-		$byUser = collect(json_decode(\Storage::get("quiz_test_dump_after.json")));
+		$byProfile = json_decode(\Storage::get("quiz_test_dump_mysql_before.json"), true);
+		$byUser = json_decode(\Storage::get("quiz_test_dump_mysql_after.json"), true);
 
-		foreach ($byProfile as $record) {
-			list ($userId, $quizId, $score) = $record;
-			$dupa = $byUser->filter(function($e) use ($userId, $quizId) {
-				return $e[0] === $userId && $e[1] === $quizId;
-			})->first();
-
-			print "$userId $quizId $score {$dupa[2]} ";
-			if ($score !== $dupa[2]) {
+		foreach ($byProfile as $id => $count) {
+			if ($count !== $byUser[$id]) {
 				print 'Whoooooops';
 			} else {
 				print 'OK';

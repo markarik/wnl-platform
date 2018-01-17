@@ -1,16 +1,19 @@
 <template lang="html">
 	<div class="wnl-questions-search">
 		<div class="search-input">
-					<div class="control" :class="{'is-loading': loading}">
-						<input
-							class="input"
-							placeholder="Szukaj pytań..."
-							ref="input"
-							type="text"
-							@input="debounceInput"
-						>
-					</div>
-				</div>
+			<div class="control" :class="{'is-loading': loading}">
+				<input
+					class="input"
+					placeholder="Wpisz frazę..."
+					ref="input"
+					type="text"
+					@input="debounceInput"
+				>
+			</div>
+		</div>
+		<a class="search-button button is-primary is-outlined is-small">
+			{{$t('questions.filters.searchButton')}}
+		</a>
 	</div>
 </template>
 
@@ -35,10 +38,17 @@
 
 			&:focus
 				outline: none
+
+	.search-button
+		position: relative
+		top: -5px
+
+
 </style>
 
 <script>
 	export default {
+		name: 'QuestionsSearch',
 		data() {
 			return {
 				loading: false
@@ -46,7 +56,7 @@
 		},
 		methods: {
 			debounceInput: _.debounce(function({target: {value}}) {
-				this.$emit('search', value)
+				this.$emit('emitValueToFilter', value)
 			}, 500),
 		}
 	}

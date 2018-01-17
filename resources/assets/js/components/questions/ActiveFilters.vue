@@ -157,9 +157,8 @@
 		},
 		methods: {
 			filterDisplayName(filter) {
-				if(filter.type === 'search'){
-					return `Szukaj: ${filter.items[0].value}`
-					console.log(filter.items[0].value);
+				if (filter.type === 'search' && filter.items[0].value){
+					return `Fraza: ${filter.items[0].value}`
 				}
 				if (filter.hasOwnProperty('name')) return filter.name
 

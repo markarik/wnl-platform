@@ -49,6 +49,8 @@ export const questions = {
 			'unresolved': 'Nierozwiązane',
 			'collection': 'Zapisane w Kolekcjach',
 		},
+		searchHeading: 'Wyszukaj po frazie',
+		searchButton: 'Szukaj',
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',
 		refresh: 'Odśwież',

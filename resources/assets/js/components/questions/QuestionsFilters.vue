@@ -18,6 +18,13 @@
 			</div>
 			<div class="wnl-questions-filters"
 				 :style="{paddingTop: activeFiltersHeight + 'px'}">
+				 <div class="filters-heading">
+				 	<span class="metadata margin vertical">
+				 		<span class="icon is-tiny"><i class="fa fa-search"></i></span>
+						{{$t('questions.filters.searchHeading')}}
+				 	</span>
+				 </div>
+				 <wnl-questions-search class="search-input" @emitValueToFilter="emitValueToList"/>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
 						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
@@ -58,6 +65,9 @@
 	.wnl-questions-filters
 		width: 100%
 
+	.search-input
+		width: 100%
+
 	.wnl-active-filters-container
 		background-color: $color-background-light-gray
 		left: 0
@@ -85,6 +95,7 @@
 
 	import Accordion from 'js/components/global/accordion/Accordion'
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
+	import QuestionsSearch from 'js/components/questions/QuestionsSearch'
 
 	const config = {
 		flattened: ['resolution'],
@@ -96,6 +107,7 @@
 		components: {
 			'wnl-accordion': Accordion,
 			'wnl-active-filters': ActiveFilters,
+			'wnl-questions-search': QuestionsSearch,
 		},
 		props: {
 			activeFilters: {
@@ -163,6 +175,9 @@
 				return filter.split('.').map((item, index, splitted) => {
 					return splitted.slice(0, index).join('.')
 				})
+			},
+			emitValueToList(value) {
+				this.$emit('search', value)
 			},
 			onActiveFiltersChanged(payload) {
 				this.$emit('activeFiltersChanged', {

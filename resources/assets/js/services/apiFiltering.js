@@ -50,7 +50,6 @@ export const parseFilters = (activeFilters, filters, userId) => {
                 }
             })
         } else if (filters[group].type === FILTER_TYPES.SEARCH) {
-            console.log(filters);
 			parsedFilters.push({
 				[group]: {
 					phrase: filters.search.items[0].value,

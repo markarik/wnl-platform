@@ -3,7 +3,6 @@
 		<wnl-questions-navigation/>
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
-				<wnl-questions-search @search="onSearch"/>
 				<div class="questions-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
@@ -64,6 +63,7 @@
 					:fetchingData="fetchingQuestions || fetchingFilters"
 					:filters="filters"
 					@activeFiltersChanged="onActiveFiltersChanged"
+					@search="onSearch"
 			/>
 		</wnl-sidenav-slot>
 		<div v-if="!testMode && !isLargeDesktop && isChatToggleVisible"
@@ -298,7 +298,6 @@
 					.catch(error => $wnl.logger.error(error))
 			},
 			onActiveFiltersChanged(payload) {
-				console.log(payload)
 				this.fetchingFilters = true
 				this.activeFiltersToggle(payload)
 					.then(() => {

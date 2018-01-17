@@ -50,7 +50,7 @@ class QuizTestDumpRedis extends Command
 		foreach ($keys as $i => $key) {
 			list ($a, $b, $quizId, $userOrProfileId, $c) = explode(':', $key);
 
-			if ($mode === 'profile') {
+			if ($mode === 'before') {
 				$user = User::whereHas('profile', function ($query)
 				use ($userOrProfileId) {
 					$query->where('id', $userOrProfileId);

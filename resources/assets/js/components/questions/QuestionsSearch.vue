@@ -21,6 +21,11 @@
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
 
+	.wnl-questions-search
+		padding-left: $margin-base
+		padding-right: $margin-base
+		padding-top: $margin-base
+
 	.search-input
 		align-items: center
 		background: $color-white
@@ -44,6 +49,7 @@
 	.search-button
 		position: relative
 		top: -$margin-small-minus
+		height: $search-input-height
 
 
 </style>
@@ -59,7 +65,16 @@
 		methods: {
 			search() {
 				this.$emit('emitValueToFilter', this.$refs.input.value)
+			},
+			onEnter(e) {
+				// if (e.keyCode === 13) {
+				// 	this.$emit('emitValueToFilter', this.$refs.input.value)
+				// }
+				e.keyCode === 13 ? this.$emit('emitValueToFilter', this.$refs.input.value) : null
 			}
 		},
+		mounted() {
+			document.body.addEventListener('keydown', this.onEnter)
+		}
 	}
 </script>

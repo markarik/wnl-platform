@@ -7,11 +7,12 @@
 					placeholder="Wpisz frazę..."
 					ref="input"
 					type="text"
-					@input="debounceInput"
 				>
 			</div>
 		</div>
-		<a class="search-button button is-primary is-outlined is-small">
+		<a class="search-button button is-primary is-outlined is-small"
+			@click="search"
+			>
 			{{$t('questions.filters.searchButton')}}
 		</a>
 	</div>
@@ -51,13 +52,13 @@
 		name: 'QuestionsSearch',
 		data() {
 			return {
-				loading: false
+				loading: false,
 			}
 		},
 		methods: {
-			debounceInput: _.debounce(function({target: {value}}) {
-				this.$emit('emitValueToFilter', value)
-			}, 500),
-		}
+			search() {
+				this.$emit('emitValueToFilter', this.$refs.input.value)
+			}
+		},
 	}
 </script>

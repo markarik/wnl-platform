@@ -3,7 +3,7 @@
 		<div class="search-input">
 			<div class="control" :class="{'is-loading': loading}">
 				<input
-					class="input"
+					class="input is-hovered"
 					placeholder="Wpisz frazę..."
 					ref="input"
 					type="text"
@@ -35,14 +35,15 @@
 		.input
 			background: $color-white
 			box-shadow: none
-			width: 100%
+			width: 98%
+			height: $search-input-height
 
 			&:focus
 				outline: none
 
 	.search-button
 		position: relative
-		top: -5px
+		top: -$margin-small-minus
 
 
 </style>

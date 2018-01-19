@@ -101,6 +101,10 @@ class StoreProgress extends Command
 				if ($lessonId !== 'undefined') {
 					$lessonKey = UserStateApiController::getLessonRedisKey($userId, 1, $lessonId);
 					$lessonProgressRaw = $this->redis->get($lessonKey);
+					if (!$lessonProgressRaw) {
+						\Log::warning("Problem while copying user progress - {$lessonKey} key is empty.");
+						continue;
+					}
 					$lessonProgress = json_decode($lessonProgressRaw);
 
 					$model = UserCourseProgress::firstOrNew([

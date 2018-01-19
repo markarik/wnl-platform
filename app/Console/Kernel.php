@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('progress:store')
-			->dailyAt('02:30');
+			->hourly();
 
 		$schedule
 			->command('quiz:slackDaysDecrement')

@@ -306,8 +306,14 @@ const actions = {
 			filters: parsedFilters,
 			include: 'quiz_answers',
 			page,
-			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
-			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
+
+			// TODO: Make the search work with caching active filters to unlock
+			// the 2 lines below!
+
+			// saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
+			// useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
+			saveFilters: true,
+			useSavedFilters: false,
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 

@@ -145,15 +145,22 @@ class UserStateApiController extends ApiController
 		$qnaAnswersPosted = QnaAnswer::where('user_id', $userId)->count();
 		$quizQuestionsSolved = UserQuizResults::where('user_id', $userId)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
 		$numberOfQuizQuestions = QuizQuestion::count();
-		$numberOfLessons = Lesson::count();
+		$numberOfLessons = Lesson::whereNotIn('group_id', [3])->count();
+		$completedCount = (clone $userCourseProgress)
+			->where('status', 'complete')
+			->count();
+
+		$startedCount = (clone $userCourseProgress)
+			->whereIn('status', ['in-progress', 'complete'])
+			->count();
 
 		$stats = [
 			'time'           => [
 				'minutes' => !empty($userTime) ? $userTime->time : 0,
 			],
 			'lessons'        => [
-				'completed' => 0,
-				'started'   => 0,
+				'completed' => $completedCount,
+				'started'   => $startedCount,
 				'total'     => $numberOfLessons,
 			],
 			'social'         => [
@@ -166,17 +173,6 @@ class UserStateApiController extends ApiController
 				'total'  => $numberOfQuizQuestions,
 			],
 		];
-
-		$completedCount = $userCourseProgress
-			->where('status', 'complete')
-			->count();
-
-		$startedCount = $userCourseProgress
-			->where('status', 'in-progress')
-			->count();
-
-		$stats['lessons']['completed'] = $completedCount;
-		$stats['lessons']['started'] = $startedCount;
 
 		return $this->json($stats);
 	}

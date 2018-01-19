@@ -5,6 +5,7 @@
 /.vscode
 .env
 .env.backup
+composer.lock
 env*/
 public/css/*
 public/js/*

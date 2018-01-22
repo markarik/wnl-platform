@@ -1,5 +1,5 @@
 <template>
-	<wnl-stream-feed :channel="channel" />	
+	<wnl-stream-feed :channel="channel" />
 </template>
 
 <script>
@@ -9,7 +9,7 @@
 	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
 
 	export default {
-		name: 'PublicFeed',
+		name: 'PrivateFeed',
 		components: {
 			'wnl-stream-feed': StreamFeed
 		},

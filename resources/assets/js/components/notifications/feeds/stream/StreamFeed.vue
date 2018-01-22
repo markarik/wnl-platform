@@ -3,7 +3,7 @@
 		<div v-if="!loading">
 			<div>
 				<wnl-stream-filtering
-						v-if=!shouldUseExternalFilters"
+						v-if="!shouldUseExternalFilters"
 						:showRead="showRead"
 						@changeFiltering="changeFiltering"
 						@toggleShowRead="toggleShowRead"

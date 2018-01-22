@@ -43,7 +43,6 @@
 				module="qna"
 				:readOnly="readOnly"
 				:commentableId="this.id"
-				:hideWatchlist="true"
 				:isUnique="false"
 			>
 			</wnl-comments-list>

@@ -10,7 +10,6 @@
 				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 			</span>
 			<wnl-watch
-				v-if="!hideWatchlist"
 				:reactableId="commentableId"
 				:reactableResource="commentableResource"
 				:state="watchState"
@@ -73,7 +72,7 @@
 			'wnl-watch': Watch
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'readOnly'],
 		data() {
 			return {
 				formElement: {},

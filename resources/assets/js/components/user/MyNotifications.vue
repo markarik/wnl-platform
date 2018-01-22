@@ -2,31 +2,16 @@
 	<div class="scrollable-main-container">
 		<h1>Notyfikacje</h1>
 		<wnl-private-feed />
-
 	</div>
 </template>
 
 <script>
 	import PrivateFeed from 'js/components/notifications/feeds/stream/PrivateFeed'
-	import ActiveFilters from 'js/components/questions/ActiveFilters'
-	import QuizWidget from 'js/components/quiz/QuizWidget'
-	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
-	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
-	import QuestionsSolving from 'js/components/questions/QuestionsSolving'
-	import QuestionsTest from 'js/components/questions/QuestionsTest'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
     import { mapGetters } from 'vuex';
 
 	export default {
 		components: {
 			'wnl-private-feed': PrivateFeed,
-			'wnl-active-filters': ActiveFilters,
-			'wnl-questions-navigation': QuestionsNavigation,
-			'wnl-quiz-widget': QuizWidget,
-			'wnl-questions-filters': QuestionsFilters,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-questions-test': QuestionsTest,
-			'wnl-questions-solving': QuestionsSolving,
 		},
         data: function () {
 		    return {

@@ -40,10 +40,31 @@ class SearchFilter extends ApiFilter
 		throw new ApiFilterException('Requested data model is not searchable.');
 	}
 
+	private function getSearchFilter($filters) {
+		if (empty($filters)) return false;
+
+		$filtered = collect($filters)
+			->filter(function ($val, $key) {
+				return array_key_exists('search', $val);
+			});
+
+		$filtered = $filtered->toArray();
+
+		return array_shift($filtered);
+	}
+
 	public function count($builder)
 	{
+		$items =  [];
+
+		$filter = $this->getSearchFilter($this->request->filters);
+
+		if (!empty($filter)) {
+			$items = [['value' => $filter['search']['phrase']]];
+		}
+
 		return [
-			'items'   => [],
+			'items'   => $items,
 			'type'    => 'search',
 		];
 	}

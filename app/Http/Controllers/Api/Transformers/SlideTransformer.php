@@ -27,7 +27,7 @@ class SlideTransformer extends ApiTransformer
 			'id'            => $slide->id
 		];
 
-		if (!empty($this->withContext)) {
+		if (!empty($this->withContext) || self::shouldInclude('context')) {
 			$searchable = $slide->toSearchableArray();
 			$data['context'] = !empty($searchable) ? $searchable['context'] : [];
 		}

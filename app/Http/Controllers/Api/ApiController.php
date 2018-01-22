@@ -3,24 +3,29 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
-use League\Fractal\Manager;
-use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
-use App\Http\Controllers\Controller;
-use League\Fractal\Resource\Collection;
+use App\Events\Event;
+use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
+use App\Http\Controllers\Api\Concerns\PaginatesResponses;
+use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
+use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
 use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
-use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
-use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
-use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
+use App\Http\Controllers\Controller;
+use Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 
 class ApiController extends Controller
 {
 	use GeneratesApiResponses,
 		TranslatesApiQueries,
 		PerformsApiSearches,
-		ProvidesApiFiltering;
+		ProvidesApiFiltering,
+		PaginatesResponses;
 
 	protected $fractal;
 	protected $request;
@@ -47,22 +52,22 @@ class ApiController extends Controller
 	 */
 	public function get($id)
 	{
+		$request = $this->request;
 		$modelName = self::getResourceModel($this->resourceName);
-//		$model = $modelName::select();
-		$model = $this->eagerLoadIncludes($modelName);
-		$transformerName = self::getResourceTransformer($this->resourceName);
-		if ($id === 'all') {
-			$results = $model->get();
-			$resource = new Collection($results, new $transformerName, $this->resourceName);
-		} else {
-			$results = $model->find($id);
-			$resource = new Item($results, new $transformerName, $this->resourceName);
+
+		$models = $this->eagerLoadIncludes($modelName);
+
+		if ($id !== 'all') {
+			$models = $modelName::find($id);
 		}
-		$data = $this->fractal->createData($resource)->toArray();
 
+		if ($id === 'all' && $request->limit) {
+			$data = $this->paginatedResponse($models, $request->limit, $request->page ?? 1);
+		} else {
+			$data = $this->transform($models);
+		}
 
-//		return view('layouts.app');
-		return response()->json($data);
+		return $this->respondOk($data);
 	}
 
 	/**
@@ -86,7 +91,7 @@ class ApiController extends Controller
 		if (Auth::user()->can('delete', $model)) {
 			$model->forceDelete();
 
-			// self::dispatchRemovedEvent($model, $modelName);
+			self::dispatchRemovedEvent($model, $modelName);
 
 			return $this->respondOk();
 		}
@@ -119,29 +124,14 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * Get resource event class name.
-	 *
-	 * @param $resourceName
-	 * @param string $eventName
-	 *
-	 * @return string
-	 */
-	protected static function getRemovedResourceEvent($resourceName)
-	{
-		return 'App\Events\\' . $resourceName . 'Removed';
-	}
-
-	/**
 	 * Dispatch event.
 	 *
+	 * @param $model
 	 * @param $resourceName
-	 * @param string $eventName
-	 *
-	 * @return string
 	 */
 	protected static function dispatchRemovedEvent($model, $resourceName)
 	{
-		$eventClass = self::getRemovedResourceEvent($resourceName);
+		$eventClass = Event::getResourceEvent($resourceName, 'removed');
 
 		if (class_exists($eventClass)) {
 			event(new $eventClass($model, Auth::user()->id, 'deleted'));
@@ -197,44 +187,25 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * @param $results
+	 * @param $data
 	 *
 	 * @return array
 	 */
-	protected function transform($results)
+	protected function transform($data)
 	{
 		$transformerName = self::getResourceTransformer($this->resourceName);
-		$resource = new Collection($results, new $transformerName, $this->resourceName);
+		if ($data instanceof Model) {
+			$resource = new Item($data, new $transformerName, $this->resourceName);
+		} else {
+			if ($data instanceof Builder) {
+				$data = $data->get();
+			}
+			$resource = new Collection($data, new $transformerName, $this->resourceName);
+		}
 
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $data;
-	}
-
-	/**
-	 * @param $model
-	 * @param $limit
-	 *
-	 * @return array
-	 */
-	protected function paginatedResponse($model, $limit, $page = 1)
-	{
-		$paginator = $model->paginate($limit, ['*'], 'page', $page);
-
-		if ($paginator->lastPage() < $page) {
-			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
-		}
-
-		$response = [
-			'data'         => $this->transform($paginator->getCollection()),
-			'total'        => $paginator->total(),
-			'has_more'     => $paginator->hasMorePages(),
-			'last_page'    => $paginator->lastPage(),
-			'per_page'     => $paginator->perPage(),
-			'current_page' => $paginator->currentPage(),
-		];
-
-		return $response;
 	}
 
 	protected function eagerLoadIncludes(string $model)
@@ -265,12 +236,14 @@ class ApiController extends Controller
 			if ($i === 0) {
 				if (!$this->modelHasMethod($parentModel, $resources[$i])) {
 					\Log::debug("Relationship {$resources[$i]} does not exist in model {$parentModel}");
+
 					return false;
 				}
 			} else {
-				$model = self::getResourceModel($resources[$i-1]);
+				$model = self::getResourceModel($resources[$i - 1]);
 				if (!$this->modelHasMethod($model, $resources[$i])) {
 					\Log::debug("Relationship {$resources[$i]} does not exist in model {$model}");
+
 					return false;
 				}
 			}

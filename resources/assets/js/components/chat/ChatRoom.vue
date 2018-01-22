@@ -14,8 +14,10 @@
 							 :key="index"
 							 :showAuthor="isAuthorUnique[index]"
 							 :id="getMessageId(message)"
-							 :fullName="message.full_name"
-							 :avatar="message.avatar"
+							 :author="message.user"
+							 :fullName="message.user.full_name"
+							 :displayName="message.user.display_name"
+							 :avatar="message.user.avatar"
 							 :time="message.time"
 							 :content="message.content"
 						 ></wnl-message>
@@ -98,7 +100,8 @@
 
 					let previous     = index - 1,
 						halfHourInMs = 1000 * 60 * 30
-					return message.full_name !== this.messages[previous].full_name ||
+
+					return message.user_id !== this.messages[previous].user_id ||
 							message.time - this.messages[previous].time > halfHourInMs
 				})
 			},

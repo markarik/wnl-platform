@@ -104,10 +104,9 @@
 				'isChatToggleVisible',
 			]),
 			canAccess() {
-				return (this.currentUser.roles.includes('moderator') ||
-						this.currentUser.roles.includes('admin')) ||
-					(this.currentUser.roles.includes('edition-1-participant') &&
-						this.currentUser.roles.includes('edition-2-participant'))
+				return this.currentUser.roles.includes('moderator') ||
+						this.currentUser.roles.includes('admin') ||
+						this.currentUser.roles.includes('edition-2-participant')
 			},
 			context() {
 				return {
@@ -121,17 +120,17 @@
 				return typeof this.lessonId !== 'undefined' && this.isLessonAvailable(this.lessonId)
 			},
 			chatRooms() {
-				let chatRoom = `courses-${this.courseId}`
+				let courseChatRoom = `courses-${this.courseId}`,
+				lessonChatRoom = courseChatRoom + `-lessons-${this.lessonId}`
 				if (this.isLesson) {
-					chatRoom += `-lessons-${this.lessonId}`
 					return [
-						{name: '#nauka', channel: chatRoom},
-						{name: '#ploteczki', channel: chatRoom + '-ploteczki'}
+						{name: '#lekcja', channel: lessonChatRoom},
+						{name: '#aula', channel: courseChatRoom}
 					]
 				}
 
 				return [
-					{name: '#aula', channel: chatRoom},
+					{name: '#aula', channel: courseChatRoom},
 				]
 			},
 			canRenderSidenav() {

@@ -19,6 +19,10 @@ class CommentsTest extends ApiTestCase
 	/** @test */
 	public function post_comment()
 	{
+		QnaAnswer::flushEventListeners();
+		QnaQuestion::flushEventListeners();
+		Comment::flushEventListeners();
+
 		$user = User::find(1);
 
 		$tag = factory(Tag::class)->create();
@@ -73,6 +77,8 @@ class CommentsTest extends ApiTestCase
 	/** @test */
 	public function delete_comment()
 	{
+		Comment::flushEventListeners();
+
 		$user = User::find(1);
 		$comment = factory(Comment::class)->create([
 			'user_id' => $user->id

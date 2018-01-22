@@ -8,6 +8,9 @@ import { search } from './search'
 import { routes } from './routes'
 import { ui } from './ui'
 import { units } from './units'
+import { tasks } from './tasks'
+import { user } from './user'
+import { collections } from './collections'
 
 export {
 	dashboard,
@@ -20,4 +23,7 @@ export {
 	routes,
 	ui,
 	units,
+	user,
+	tasks,
+	collections
 }

@@ -2,7 +2,7 @@
 	<ul
 		class="autocomplete-box"
 		v-bind:class="{'is-down': isDown}"
-		v-if="hasItems"
+		v-show="hasItems"
 		tabindex="-1"
 		@keydown="onKeyDown"
 	>
@@ -91,6 +91,9 @@
 					case 13:
 						this.onEnter(evt)
 						break
+					case 27:
+						this.$emit('close')
+						break
 				}
 			},
 			onArrowUp() {
@@ -140,7 +143,7 @@
 
 			getActiveItem() {
 				return this.items.findIndex((item) => item.active)
-			}
+			},
 		}
 	}
 </script>

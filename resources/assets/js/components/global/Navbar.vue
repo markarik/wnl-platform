@@ -14,13 +14,13 @@
 			</router-link>
 		</div>
 		<div
-			v-if="$firstEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access')"
 			class="wnl-navbar-item wnl-navbar-search"
 		>
 			<wnl-search/>
 		</div>
 		<div
-			v-if="$firstEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access')"
 			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
@@ -118,7 +118,7 @@
 </style>
 
 <script>
-	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
+	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
 
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Search from 'js/components/global/search/Search'
@@ -129,7 +129,7 @@
 
 	export default {
 		name: 'Navbar',
-		perimeters: [firstEditionParticipant],
+		perimeters: [currentEditionParticipant],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-user-dropdown': UserDropdown,

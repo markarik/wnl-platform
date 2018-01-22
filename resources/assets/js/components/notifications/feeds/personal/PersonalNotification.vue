@@ -2,11 +2,11 @@
 	<div class="notification-wrapper">
 		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
 			<div class="actor">
-				<wnl-event-actor :message="message"/>
+				<wnl-event-actor :message="message" :disableLink="true"/>
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
+					<span class="actor">{{ message.actors.display_name }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object" v-if="object">{{ object }}</span>
 					<span class="context" v-if="contextInfo">{{ contextInfo }}</span>

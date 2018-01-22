@@ -5,10 +5,13 @@
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
-		<wnl-global-notification/>
 		<div class="wnl-main">
+			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
 		</div>
+		<wnl-modal v-if="isModalVisible">
+			<component :is="getModalComponent" v-bind="getModalContent"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -43,8 +46,9 @@
 	import { mapGetters, mapActions } from 'vuex'
 	import { isEmpty } from 'lodash'
 
+	import Modal from 'js/components/global/Modal.vue'
 	import Navbar from 'js/components/global/Navbar.vue'
-	import GlobalNotification from 'js/components/global/GlobalNotification.vue'
+	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
@@ -53,7 +57,8 @@
 		name: 'App',
 		components: {
 			'wnl-navbar': Navbar,
-			'wnl-global-notification': GlobalNotification
+			'wnl-alerts': Alerts,
+			'wnl-modal': Modal,
 		},
 		computed: {
 			...mapGetters([
@@ -62,6 +67,10 @@
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
+				'alerts',
+				'isModalVisible',
+				'getModalContent',
+				'getModalComponent',
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
@@ -70,14 +79,14 @@
 		methods: {
 			...mapActions([
 				'resetLayout',
-				'setActiveUsers',
 				'setLayout',
 				'setupCurrentUser',
 				'toggleOverlay',
-				'userJoined',
-				'userLeft'
+				'showModal',
 			]),
+			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
+			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
 				checkUserRoles: 'checkUserRoles',
@@ -90,6 +99,7 @@
 			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
 					this.initNotifications()
+					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
 
 					startTracking(this.currentUserId);
 

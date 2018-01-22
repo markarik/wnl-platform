@@ -13,6 +13,7 @@ trait PerformsApiSearches
 		$model = static::getResourceModel($resource);
 		$phrase = $request->q;
 		$user = Auth::user();
+		$onlyAvailable = !$user->hasRole('moderator') && !$user->hasRole('admin');
 
 		if (empty($phrase)) {
 			return $this->respondOk([]);
@@ -24,19 +25,22 @@ trait PerformsApiSearches
 
 		$model::savePhrase(['phrase' => $phrase, 'user_id' => $user->id]);
 
-		$query = $this->buildQuery($this->escapeQuery($phrase));
+		$query = $this->buildQuery(
+			$this->escapeQuery($phrase),
+			$onlyAvailable
+		);
 		$raw = $model::searchRaw($query);
 
 		return $this->respondOk($raw);
 	}
 
 
-	protected function buildQuery($query)
+	protected function buildQuery($query, $onlyAvailable)
 	{
 		// Right now it's tightly coupled with slides
 		// next step - decouple
 		$params = [
-			'body'    => [
+			'body' => [
 				'from'      => 0,
 				'size'      => 32,
 				'query'     => [
@@ -116,7 +120,13 @@ trait PerformsApiSearches
 					'query'            => "{$query}~",
 					'analyze_wildcard' => true,
 					'fields'           => ['snippet.header^5', 'snippet.content'],
-				]
+				],
+			];
+		}
+
+		if ($onlyAvailable) {
+			$params['body']['query']['bool']['filter'][] = [
+				'term' => ['context.lesson.isAvailable' => true],
 			];
 		}
 
@@ -125,10 +135,13 @@ trait PerformsApiSearches
 
 	/**
 	 * :facepalm:
+	 *
 	 * @param  String $query
+	 *
 	 * @return String
 	 */
-	private function escapeQuery($query) {
+	private function escapeQuery($query)
+	{
 		return preg_replace('/(\+|\-|\=|\&|\||\!|\(|\)|\{|\}|\[|\]|\^|\"|\~|\*|\<|\>|\?|\:|\\\\|\/)/', ' ', $query);
 	}
 }

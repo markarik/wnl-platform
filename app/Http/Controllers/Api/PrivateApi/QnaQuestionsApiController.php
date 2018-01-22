@@ -1,17 +1,17 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Events\Qna\QnaQuestionPosted;
+use App\Events\Qna\QnaQuestionRemoved;
+use App\Events\Qna\QnaQuestionRestoredEvent;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\QnaQuestionTransformer;
 use App\Http\Requests\Qna\PostQuestion;
 use App\Http\Requests\Qna\UpdateQuestion;
-use App\Models\Lesson;
 use App\Models\QnaQuestion;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
-use App\Events\QnaQuestionRemoved;
-use App\Events\QnaQuestionRestored;
 
 class QnaQuestionsApiController extends ApiController
 {
@@ -31,7 +31,7 @@ class QnaQuestionsApiController extends ApiController
 		$question = QnaQuestion::create([
 			'text'    => $text,
 			'user_id' => $user->id,
-			'meta' => ['context' => $context]
+			'meta'    => ['context' => $context],
 		]);
 
 		foreach ($tags as $tag) {
@@ -39,6 +39,8 @@ class QnaQuestionsApiController extends ApiController
 				Tag::firstOrCreate(['id' => $tag])
 			);
 		}
+
+		event(new QnaQuestionPosted($question, $tags));
 
 		$resource = new Item($question, new QnaQuestionTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
@@ -58,10 +60,10 @@ class QnaQuestionsApiController extends ApiController
 		if (isset($statusResolved)) {
 			if ($statusResolved) {
 				$qnaQuestion->delete();
-				// event(new QnaQuestionRemoved($qnaQuestion, Auth::user()->id, 'resolved'));
+				event(new QnaQuestionRemoved($qnaQuestion, Auth::user()->id, 'resolved'));
 			} else {
 				$qnaQuestion->restore();
-				// event(new QnaQuestionRestored($qnaQuestion, Auth::user()->id));
+				event(new QnaQuestionRestoredEvent($qnaQuestion, Auth::user()->id));
 			}
 		} else {
 			$qnaQuestion->update([
@@ -70,5 +72,38 @@ class QnaQuestionsApiController extends ApiController
 		}
 
 		return $this->respondOk();
+	}
+
+	public function context(Request $request)
+	{
+		$id = $request->get('context');
+		$question = QnaQuestion::find($id);
+		$data = [];
+		$screen = $question->screen;
+
+		if ($screen) {
+			$data = [
+				'name' => 'screens',
+				'params' => [
+					'screenId' => $screen->id,
+					'lessonId' => $screen->lesson->id,
+					'courseId' => $screen->lesson->group->course->id
+				]
+			];
+		}
+
+		$page = $question->page;
+
+		if ($page) {
+			$data = [
+				'name' => $page->slug,
+			];
+		}
+
+		if (!$data) {
+			return $this->respondNotFound();
+		}
+
+		return $this->respondOk($data);
 	}
 }

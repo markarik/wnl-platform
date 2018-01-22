@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Order;
-use Lib\Invoice\Invoice;
-use Illuminate\Console\Command;
 use App\Jobs\IssueFinalInvoice as IssueFinalAndSend;
+use App\Models\Order;
+use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Lib\Invoice\Invoice;
 
 class IssueFinalInvoice extends Command
 {
@@ -50,20 +50,23 @@ class IssueFinalInvoice extends Command
 
 			if (!$order) {
 				$this->error("Order {$orderId} not found.");
+
 				return;
 			}
 
 			$this->dispatch(new IssueFinalAndSend($order));
 		} else {
 			$orders = Order::with(['product'])
-			->whereDoesntHave('invoices', function ($query) {
-				$query->where('series', Invoice::FINAL_SERIES_NAME);
-			})
-			->where('paid', 1)
-			->get();
+				->whereDoesntHave('invoices', function ($query) {
+					$query
+						->where('series', Invoice::FINAL_SERIES_NAME)
+						->orWhere('series', Invoice::VAT_SERIES_NAME);
+				})
+				->where('paid', 1)
+				->get();
 
 			foreach ($orders as $order) {
-				if ($order->paid_amount === $order->total_with_coupon) {
+				if (!$order->canceled){
 					$this->dispatch(new IssueFinalAndSend($order));
 				}
 			}

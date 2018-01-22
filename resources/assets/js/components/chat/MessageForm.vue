@@ -15,7 +15,7 @@
 				<wnl-quill
 					ref="editor"
 					name="text"
-					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
+					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
 					:keyboard="keyboard"
 					:toolbar="toolbar"
 					:allowMentions=true
@@ -77,11 +77,15 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
+				'currentUserDisplayName',
 				'currentUserAvatar',
 				'currentUserId',
 				'currentUser'
 			]),
 			...mapGetters('course', ['courseId']),
+			formats() {
+				return ['bold', 'italic', 'underline', 'link', 'mention']
+			},
 			sendingDisabled() {
 				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0)
 			},
@@ -109,7 +113,6 @@
 					message: {
 						user: this.currentUser,
 						content: this.content,
-						full_name: this.currentUserFullName,
 					}
 				})
 			},

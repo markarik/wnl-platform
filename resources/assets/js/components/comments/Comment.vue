@@ -1,24 +1,27 @@
 <template>
 	<article class="wnl-comment media">
 		<div class="wnl-comment-side">
-			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 			<figure class="media-left">
-				<p class="image is-32x32">
-					<wnl-avatar size="medium" :fullName="profile.full_name" :url="profile.avatar">
-					</wnl-avatar>
-				</p>
+				<div class="avatar-activator" @click="showModal">
+					<p class="image is-32x32">
+						<wnl-avatar size="medium"
+							:fullName="profile.full_name"
+							:url="profile.avatar">
+						</wnl-avatar>
+					</p>
+				</div>
 			</figure>
+			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<span class="author">{{profile.full_name}}</span>
-			<div class="comment-text wrap" v-html="comment.text"></div>
+			<span class="author" @click="showModal">{{ profile.display_name }}</span>
+			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 				&nbsp;·
 				<wnl-delete :requestRoute="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
 			</span>
 			<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
-			</div>
 		</div>
 	</article>
 </template>
@@ -27,24 +30,33 @@
 	@import 'resources/assets/sass/variables'
 
 	.media-left
-		margin-bottom: 5px
+
+
+	.author
+		color: $color-sky-blue
+		cursor: pointer
 
 	.comment-content
-		margin-top: -5px
+		margin-top: -$margin-small
+
+		.comment-text
+			margin: $margin-small 0
+			padding: 0
 
 	.wnl-comment-side
+		align-items: center
 		display: flex
-		flex-direction: column-reverse
+		flex-direction: column
+		margin-right: $margin-small
+
+		.media-left
+			margin-right: 0
+			margin-bottom: $margin-small
+			.avatar-activator
+				cursor: pointer
 
 	.author
 		font-weight: $font-weight-bold
-
-	.comment-text
-		margin: $margin-small 0
-		padding: 0
-
-		p
-			margin: 0
 
 	.comment-icon-link
 		.icon
@@ -53,8 +65,10 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
+import UserProfileModal from 'js/components/users/UserProfileModal'
+import Avatar from 'js/components/global/Avatar'
 import Delete from 'js/components/global/form/Delete'
 import Resolve from 'js/components/global/form/Resolve'
 import { timeFromS } from 'js/utils/time'
@@ -64,6 +78,7 @@ import Vote from 'js/components/global/reactions/Vote'
 export default {
 	name: 'Comment',
 	components: {
+		'wnl-avatar': Avatar,
 		'wnl-delete': Delete,
 		'wnl-resolve': Resolve,
 		'wnl-vote': Vote,
@@ -86,13 +101,23 @@ export default {
 			return 'ten komentarz'
 		},
 		isCurrentUserAuthor() {
-			return this.profile.id === this.currentUserId
+			return this.profile.user_id === this.currentUserId
 		},
 		voteState() {
 			return this.getReaction('comments', this.id, "upvote")
 		},
 	},
 	methods: {
+		...mapActions(['toggleModal']),
+		showModal() {
+			this.toggleModal({
+				visible: true,
+				content: {
+					author: this.profile
+				},
+				component: UserProfileModal,
+			})
+		},
 		onDeleteSuccess() {
 			this.$emit('removeComment', this.id)
 		}

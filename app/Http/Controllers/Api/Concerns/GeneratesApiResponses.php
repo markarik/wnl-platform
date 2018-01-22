@@ -26,7 +26,7 @@ trait GeneratesApiResponses
 	protected function json($data = [])
 	{
 		if (empty($data)) {
-			$data = $this->message;
+			$data = [];
 		}
 
 		return response()->json($data, $this->statusCode, $this->headers);

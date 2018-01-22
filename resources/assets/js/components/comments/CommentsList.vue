@@ -6,7 +6,7 @@
 			<span v-if="comments.length > 0 || this.showComments"> ·
 				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 			</span> ·
-			<span>
+			<span v-if="!readOnly">
 				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 			</span>
 			<wnl-watch
@@ -28,12 +28,10 @@
 			@removeComment="onRemoveComment"
 			@resolveComment="onResolveComment"
 			@unresolveComment="onUnresolveComment"
-		>
-			{{comment.text}}
-		</wnl-comment>
+		/>
 		<div class="form-container" v-if="showComments">
 			<transition name="fade">
-				<wnl-new-comment-form
+				<wnl-new-comment-form v-if="!readOnly"
 					:commentableResource="commentableResource"
 					:commentableId="commentableId"
 					:isUnique="isUnique"
@@ -75,7 +73,7 @@
 			'wnl-watch': Watch
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly'],
 		data() {
 			return {
 				formElement: {},
@@ -99,8 +97,9 @@
 				return this.showComments ? this.$t('ui.action.hide') : this.$t('ui.action.show')
 			},
 			isCommentableInUrl() {
-				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
-					|| _.get(this.$route, 'query.commentable') == this.commentableId;
+				return (_.get(this.$route, `query.${this.urlParam}`) == this.commentableId
+					|| _.get(this.$route, 'query.commentable') == this.commentableId)
+					&& (_.get(this.$route, 'query.comment'));
 			},
 			watchState() {
 				return this.$store.getters[`${this.module}/getReaction`](

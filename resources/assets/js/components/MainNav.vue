@@ -9,7 +9,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
-			v-if="$firstEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
@@ -19,7 +19,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
-			v-if="$firstEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
@@ -44,7 +44,7 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
-		<a v-if="!$firstEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
+		<a v-if="!$currentEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
 			<span class="icon is-medium">
 				<i class="fa fa-thumbs-o-up"></i>
 			</span>
@@ -121,13 +121,13 @@
 <script>
 	import {mapGetters} from 'vuex'
 	import moderatorFeatures from 'js/perimeters/moderator'
-	import firstEditionParticipant from 'js/perimeters/firstEditionParticipant'
+	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
 	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'MainNav',
 		props: ['isHorizontal'],
-		perimeters: [moderatorFeatures, firstEditionParticipant],
+		perimeters: [moderatorFeatures, currentEditionParticipant],
 		computed: {
 			...mapGetters(['currentUser']),
 			signUpLink() {

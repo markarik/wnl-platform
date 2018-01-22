@@ -4,6 +4,7 @@
 		:screenId="Number(screenId)"
 		:resourceUrl="resourceUrl"
 		:excluded="['snippet']"
+		:remove="true"
 	>
 		<wnl-slides-search
 			@resourceUrlFetched="onResourceUrlFetched"
@@ -34,6 +35,6 @@
 				this.resourceUrl = url;
 				this.screenId = screenId
 			}
-		}
+		},
 	}
 </script>

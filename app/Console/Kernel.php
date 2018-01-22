@@ -2,10 +2,9 @@
 
 namespace App\Console;
 
-use App\Models\Comment;
+use Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Artisan;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,7 +15,7 @@ class Kernel extends ConsoleKernel
 	 */
 	protected function commands()
 	{
-		$this->load(__DIR__.'/Commands');
+		$this->load(__DIR__ . '/Commands');
 	}
 
 	/**
@@ -54,10 +53,17 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('progress:store')
-			->dailyAt('02:30');
+			->hourly();
 
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
+
+		$schedule
+			->command('role:assignFromProducts edition-2-participant 5,6')
+			->everyFiveMinutes()
+			->after(function () use ($schedule) {
+				Artisan::call('cache:tag', ['tag' => 'user_profiles']);
+			});
 	}
 }

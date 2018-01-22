@@ -1,7 +1,6 @@
 <template>
 	<div class="qna-answer-container" ref="highlight">
 		<div class="qna-answer">
-			<div class="votes">
 				<wnl-vote
 					type="up"
 					:reactableId="id"
@@ -9,20 +8,21 @@
 					:state="upvoteState"
 					module="qna"
 				></wnl-vote>
-			</div>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-answer-content" v-html="content"></div>
+					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<wnl-avatar
-							:fullName="author.full_name"
-							:url="author.avatar"
-							size="medium">
-					</wnl-avatar>
-					<span class="qna-meta-info">
-						{{author.full_name}} ·
-					</span>
+					<div class="modal-activator" @click="showModal">
+						<wnl-avatar class="avatar"
+								:fullName="author.full_name"
+								:url="author.avatar"
+								size="medium">
+						</wnl-avatar>
+						<span class="qna-meta-info">
+							{{ author.display_name }} ·
+						</span>
+					</div>
 					<span class="qna-meta-info">
 						{{time}}
 					</span>
@@ -41,6 +41,7 @@
 				commentableResource="qna_answers"
 				urlParam="qna_answer"
 				module="qna"
+				:readOnly="readOnly"
 				:commentableId="this.id"
 				:hideWatchlist="true"
 				:isUnique="false"
@@ -67,6 +68,13 @@
 		padding: 0 $margin-base
 		margin-top: $margin-base
 
+	.modal-activator
+		display: flex
+		flex-direction: row
+		cursor: pointer
+		align-items: center
+		color: $color-sky-blue
+
 	.qna-answer-comments
 		margin-left: 60px
 
@@ -83,12 +91,15 @@
 
 	.qna-bookmark
 		justify-content: flex-end
+
 </style>
 
 <script>
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
+	import Avatar from 'js/components/global/Avatar'
 	import Delete from 'js/components/global/form/Delete'
 	import Vote from 'js/components/global/reactions/Vote'
 	import highlight from 'js/mixins/highlight'
@@ -100,9 +111,10 @@
 	export default {
 		name: 'QnaAnswer',
 		components: {
+			'wnl-avatar': Avatar,
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
-			'wnl-comments-list': CommentsList
+			'wnl-comments-list': CommentsList,
 		},
 		perimeters: [moderatorFeatures],
 		mixins: [ highlight ],
@@ -136,7 +148,7 @@
 				return this.profile(this.answer.profiles[0])
 			},
 			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.id
+				return this.currentUserId === this.author.user_id
 			},
 			deleteTarget() {
 				return 'tę odpowiedź'
@@ -158,6 +170,16 @@
 		},
 		methods: {
 			...mapActions('qna', ['removeAnswer']),
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: {
+						author: this.author
+					},
+					component: UserProfileModal,
+				})
+			},
 			onDeleteSuccess() {
 				this.removeAnswer({
 					questionId: this.questionId,

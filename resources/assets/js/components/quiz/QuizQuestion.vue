@@ -82,7 +82,7 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context">
+					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context" :blankPage="blankPage">
 						{{slideLink(slide)}}
 					</wnl-slide-link>
 				</div>
@@ -268,6 +268,7 @@
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
 			return {
+				blankPage: '_blank',
 				reactableResource: "quiz_questions",
 				slidesExpanded: false,
 				showExplanation: false
@@ -337,6 +338,6 @@
 				}
 				return linkText || this.$t('quiz.annotations.slides.defaultLink')
 			}
-		}
+		},
 	}
 </script>

@@ -2,7 +2,7 @@
 
 namespace App\Notifications\Media;
 
-use App\Events\LiveNotificationCreated;
+use App\Events\Live\LiveNotificationCreated;
 use App\Notifications\EventNotification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
@@ -14,7 +14,7 @@ class LiveChannel
 	 * @param  mixed $notifiable
 	 * @param EventNotification $notification
 	 */
-	public function send($notifiable, EventNotification $notification)
+	public function send($notifiable, $notification)
 	{
 		if ($notifiable->id === $notification->event->data['actors']['id']){
 			return;

@@ -18,7 +18,8 @@ export const notifications = {
 		qnaAnswerPosted: 'odpowiedział/-a na',
 		qnaAnswerDeleted: 'Twoje odpowiedź została usunięta przez moderatora',
 		reactionAdded: 'polubił/-a',
-		mentioned: 'wspomniał/-a Cię'
+		mentioned: 'wspomniał/-a Cię',
+		assignedToTask: 'przypisał/-a Cię'
 	},
 	filters: {
 		items: {
@@ -30,22 +31,14 @@ export const notifications = {
 		deleted: 'Treść usunięta przez autora',
 		resolved: 'Treść została rozwiązana przez moderatora'
 	},
-	moderators: {
-		cta: 'Jedziesz szwagier',
-		done: 'Zrobione!',
-		fromOldest: 'Od najstarszych',
-		fromNewest: 'Od najnowszych',
-		inProgress: 'Ktoś już to ogarnia',
-		isEmpty: 'Gratulacje! Wszystkie powiadomienia sprawdzone!',
-		takeIt: 'Biere to!',
-	},
 	objects: {
 		comment: 'komentarz',
 		qnaAnswer: 'odpowiedź | Twoją odpowiedź',
 		qnaQuestion: 'pytanie | Twoje pytanie',
 		quizQuestion: 'pytanie kontrolne',
 		slide: 'slajd',
-		chatChannel: 'na kanale chatu'
+		chatChannel: 'na kanale chatu',
+		task: 'do zadania'
 	},
 	personal: {
 		heading: 'Powiadomienia',

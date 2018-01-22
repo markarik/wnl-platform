@@ -1,15 +1,18 @@
 <template>
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
-		<p>Kiedy to się stało?! 12 tygodni pierwszej edycji kursu już za nami! Chcielibyśmy niezwykle podziękować Ci za zaangażowanie i pogratulować tak długiej i systematycznej nauki! Jesteśmy naprawdę pod wrażeniem! <wnl-emoji name="tada"/></p>
 
-		<p>Na zakończenie kursu, prosimy Cię o wypełnienie ostatniej ankiety ewaluacyjnej. Część pytań na pewno rozpoznasz z poprzednich kwestionariuszy, ale tym razem skupimy się też na ocenie poszczególnych przedmiotów, w końcu możecie je porównać już między sobą. <wnl-emoji name="bar_chart"/></p>
+		<p class="strong">Cześć! <wnl-emoji name="mega"/></p>
+		<p>Za nami już ponad połowa kursu i jesteśmy bardzo ciekawi Waszych opinii! <wnl-emoji name="raised_hands"/></p>
 
-		<p>Ankieta jest tym razem nieco dłuższa, ale wciąż nie powinna zająć więcej, niż 15 minut. <wnl-emoji name="wink"/></p>
+		<p>Wasze odpowiedzi w pierwszej ankiecie były dla nas niezwykle pomocne. Pozwoliły nam między innymi na poprawienie nawigacji w prezentacjach, formatowania slajdów, czy zaplanowanie rozwoju platformy. <wnl-emoji name="wink"/></p>
 
-		<p class="has-text-centered"><a class="button is-primary is-outlined is-small" target="_blank" href="https://goo.gl/forms/C1mQ0MUwUzZBJyTO2">Przejdź do ostatniej ankiety</a></p>
+		<p>Dziś ponownie prosimy Was o pomoc. Do końca kursu zostało jeszcze sporo czasu i chcielibyśmy jak najwięcej zrobić, aby odpowiedzieć na Wasze potrzeby i problemy! Będziemy wdzięczni, jeżeli poświęcisz kilka minut na odpowiedzenie na 15 krótkich pytań.
+ <wnl-emoji name="+1"/></p>
 
-		<p>Dziękujemy i trzymamy za Ciebie kciuki!</p>
+		<p class="has-text-centered">
+			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/WYm96EmCTYDGImjB2">Wypełnij ankietę</a>
+		</p>
 	</div>
 </template>
 
@@ -17,7 +20,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'survey-end'
+	const CURRENT_NEWS = 'edition-2-second-survey'
 	const REQUIRED_ROLE = ''
 
 	export default {

@@ -44,7 +44,7 @@ class UserStateApiController extends ApiController
 		}
 
 		return $this->json([
-			'lessons' => $lessons
+			'lessons' => $lessons,
 		]);
 	}
 
@@ -66,8 +66,9 @@ class UserStateApiController extends ApiController
 		} else {
 			$lesson = [];
 		}
+
 		return $this->json([
-			'lesson' => $lesson
+			'lesson' => $lesson,
 		]);
 	}
 
@@ -97,68 +98,81 @@ class UserStateApiController extends ApiController
 		Redis::set(self::getUserTimeRedisKey($user), $incrementedTime);
 
 		return $this->json([
-			'time' => $incrementedTime
+			'time' => $incrementedTime,
 		]);
 	}
 
-	public function saveQuizPosition(Request $request, $user) {
+	public function saveQuizPosition(Request $request, $user)
+	{
 		$cacheKey = $this->hashedFilters($request->filters);
 		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
 		Cache::tags($cacheTags)->put($cacheKey, $request->position, 60 * 24);
 
 		return $this->json([
-			'position' => $request->position
+			'position' => $request->position,
 		]);
 	}
 
-	public function getQuizPosition(Request $request, $user) {
+	public function getQuizPosition(Request $request, $user)
+	{
 		$cacheKey = $this->hashedFilters($request->filters);
 		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
 		$cachedPosition = Cache::tags($cacheTags)->get($cacheKey, $request->position);
 
 		return $this->json([
-			'position' => $cachedPosition
+			'position' => $cachedPosition,
 		]);
 	}
 
-	public function getStats(Request $request, $user) {
-		$userTime = UserTime::where('user_id', $user)->first();
-		$userCourseProgress = UserCourseProgress::where('user_id', $user)->get();
-		$userComments = Comment::where('user_id', $user)->count();
-		$qnaQuestionsPosted = QnaQuestion::where('user_id', $user)->count();
-		$qnaAnswersPosted = QnaAnswer::where('user_id', $user)->count();
-		$quizQuestionsSolved = UserQuizResults::where('user_id', $user)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
+	public function getStats(Request $request, $user)
+	{
+		$userObject = User::find($user);
+
+		if (!$userObject) {
+			return $this->respondNotFound();
+		}
+
+		// Ay Ay Ay Profile Id not User Id
+		$profileId = $userObject->profile->id;
+		$userId = $userObject->id;
+
+		$userTime = UserTime::where('user_id', $userId)->orderBy('created_at', 'desc')->first();
+		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)
+			->whereNull('section_id')
+			->whereNull('screen_id');
+		$userComments = Comment::where('user_id', $userId)->count();
+		$qnaQuestionsPosted = QnaQuestion::where('user_id', $userId)->count();
+		$qnaAnswersPosted = QnaAnswer::where('user_id', $userId)->count();
+		$quizQuestionsSolved = UserQuizResults::where('user_id', $userId)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
 		$numberOfQuizQuestions = QuizQuestion::count();
-		$numberOfLessons = Lesson::count();
+		$numberOfLessons = Lesson::whereNotIn('group_id', [3])->count();
+		$completedCount = (clone $userCourseProgress)
+			->where('status', 'complete')
+			->count();
+
+		$startedCount = (clone $userCourseProgress)
+			->whereIn('status', ['in-progress', 'complete'])
+			->count();
 
 		$stats = [
-			'time' => [
-				'minutes' => !empty($userTime) ? $userTime->time : 0
+			'time'           => [
+				'minutes' => !empty($userTime) ? $userTime->time : 0,
 			],
-			'lessons' => [
-				'completed' => 0,
-				'started' => 0,
-				'total' => $numberOfLessons
+			'lessons'        => [
+				'completed' => $completedCount,
+				'started'   => $startedCount,
+				'total'     => $numberOfLessons,
 			],
-			'social' => [
-				'comments' => $userComments,
+			'social'         => [
+				'comments'      => $userComments,
 				'qna_questions' => $qnaQuestionsPosted,
-				'qna_answers' => $qnaAnswersPosted
+				'qna_answers'   => $qnaAnswersPosted,
 			],
 			'quiz_questions' => [
 				'solved' => $quizQuestionsSolved,
-				'total' => $numberOfQuizQuestions
-			]
+				'total'  => $numberOfQuizQuestions,
+			],
 		];
-
-		if (!empty($userCourseProgress)) {
-			$grouped = $userCourseProgress->groupBy('status');
-			$completedCount = isset($grouped['complete']) ? count($grouped['complete']) : 0;
-			$startedCount  = isset($grouped['in-progress']) ? count($grouped['in-progress']) : 0;
-
-			$stats['lessons']['completed'] = $completedCount;
-			$stats['lessons']['started'] = $startedCount;
-		}
 
 		return $this->json($stats);
 	}

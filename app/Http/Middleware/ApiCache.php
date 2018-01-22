@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 use Cache;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
 class ApiCache
 {
@@ -27,7 +27,10 @@ class ApiCache
 		$tags = $this->getTags($request);
 		$key = $request->getRequestUri();
 
+		\Log::debug('Api cache tags: ' . implode(',', $tags));
+
 		if ($this->excluded($request)) {
+			\Log::debug('Request excluded from api cache ' . $key);
 			return $next($request);
 		}
 
@@ -35,10 +38,11 @@ class ApiCache
 
 		if ($cached !== null) {
 			\Log::debug('Loading response from cache ' . $key);
+
 			return $this->handleResponse($request, $cached);
 		}
 
-		\Log::debug('Request excluded from api cache ' . $key);
+		\Log::debug('Cache has no response for ' . $key);
 		$response = $next($request);
 
 		if ($this->responseValid($response)) {
@@ -78,7 +82,8 @@ class ApiCache
 	protected function excluded($request)
 	{
 		$excludedTags = ['users', 'profiles', 'reactions', 'orders',
-			'state', 'quiz_stats', 'notifications', 'user_plan', 'quiz_results'];
+			'state', 'quiz_stats', 'notifications', 'user_plan',
+			'quiz_results', 'tasks', 'reactables', 'search', 'user_profiles'];
 
 		$methodExcluded = !in_array($request->method(), ['GET', 'POST']);
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));
@@ -104,7 +109,10 @@ class ApiCache
 			$this->tags = array_merge($this->tags, preg_split('/[.,]+/', $request->get('include')));
 		}
 
-		if ($request->method() === 'GET' && str_is('*.search*', $request->getRequestUri()) && $request->has('q')) {
+		if ($request->method() === 'GET' &&
+			str_is('*.search*', $request->getRequestUri()) &&
+			$request->has('q')
+		) {
 			$this->tags[] = 'search';
 		}
 

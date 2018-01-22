@@ -9,9 +9,11 @@ export const ui = {
 		undo: 'Cofnij',
 		hide: 'Ukryj',
 		show: 'Pokaż',
+		showAll: 'Pokaż wszystkie',
 		watch: 'Obserwuj',
 		watching: 'Obserwujesz',
-		unwatch: 'Nie obserwuj'
+		unwatch: 'Nie obserwuj',
+		refresh: 'Odśwież'
 	},
 	loading: {
 		default: 'Uwaga, nadjeżdża wiedza...',
@@ -26,6 +28,7 @@ export const ui = {
 	error: {
 		notFound: `Ups, zapisywanie nie powiodło się.
 			Najprawdopodobniej treść do której się odwołujesz została usunięta.
-			W przypadku dalszych problemów odśwież stronę.`
+			W przypadku dalszych problemów odśwież stronę.`,
+		somethingWentWrongUnofficial: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :('
 	},
 }

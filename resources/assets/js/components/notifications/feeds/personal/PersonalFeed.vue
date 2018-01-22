@@ -69,6 +69,9 @@
 		justify-content: center
 		width: 100%
 
+		.wnl-dropdown
+			width: 100%
+
 	.notifications-toggle
 		align-items: center
 		color: $color-gray-dimmed
@@ -186,7 +189,9 @@
 	import Dropdown from 'js/components/global/Dropdown'
 	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
-	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned, CommentRemoved, QnaQuestionRemoved, QnaAnswerRemoved } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned,
+			CommentRemoved, QnaQuestionRemoved, QnaAnswerRemoved, AssignedToTask }
+			from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -206,6 +211,7 @@
 			'wnl-event-qna-question-deleted': QnaQuestionRemoved,
 			'wnl-event-reaction-added': ReactionAdded,
 			'wnl-event-mentioned': Mentioned,
+			'wnl-event-assigned-to-task': AssignedToTask,
 			'wnl-notifications-toggle': NotificationsToggle,
 		},
 		data() {

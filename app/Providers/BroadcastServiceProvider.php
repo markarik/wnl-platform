@@ -30,10 +30,10 @@ class BroadcastServiceProvider extends ServiceProvider
 		});
 
 		/*
-		 * Authenticate the mederators channel...
+		 * Authenticate the moderators channel...
 		 */
-		Broadcast::channel('role.{roleName}.{userId}', function ($user, $roleName, $userId) {
-			return $user->hasRole($roleName);
+		Broadcast::channel('group.moderators', function ($user) {
+			return $user->hasRole('moderator');
 		});
 
 		/*

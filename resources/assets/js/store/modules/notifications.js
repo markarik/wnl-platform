@@ -113,7 +113,7 @@ const actions = {
 	},
 	setupLiveNotifications({commit}, channel) {
 		Echo.channel(channel)
-			.listen('.App.Events.LiveNotificationCreated', (notification) => {
+			.listen('.App.Events.Live.LiveNotificationCreated', (notification) => {
 				commit(types.ADD_NOTIFICATION, {...notification, channel})
 			});
 	},
@@ -173,11 +173,6 @@ const actions = {
 
 		dispatch('pullNotifications', [getters.streamChannel, {limit: 100, unread: true}])
 		dispatch('setupLiveNotifications', getters.streamChannel)
-
-		if (getters.moderatorsChannel) {
-			dispatch('pullNotifications', [getters.moderatorsChannel, {unread: true}])
-			dispatch('setupLiveNotifications', getters.moderatorsChannel)
-		}
 	}
 }
 

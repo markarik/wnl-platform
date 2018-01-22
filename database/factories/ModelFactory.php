@@ -77,7 +77,6 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Screen::class, function (Faker\Generator $faker) {
 	return [
-		'id'        => $faker->numberBetween(500, 1000),
 		'name'      => $faker->name,
 		'type'      => 'slideshow',
 		'lesson_id' => function () {
@@ -163,4 +162,33 @@ $factory->define(App\Models\Coupon::class, function (Faker\Generator $faker) {
 		'expires_at'   => \Carbon\Carbon::now()->addMinutes(1),
 		'times_usable' => 1,
 	];
+});
+
+$factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
+	return [
+		'id'       => $faker->uuid,
+		'priority' => 1,
+		'order'    => 1,
+		'status'   => 'open',
+		'text'     => $faker->text,
+		'labels'   => ['siema', 'pozdro'],
+	];
+});
+
+$factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
+	return [
+		'slug'    => $faker->uuid,
+		'name'    => $faker->text,
+		'content' => $faker->text,
+	];
+});
+
+$factory->define(App\Models\Section::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->text,
+	];
+});
+
+$factory->define(App\Models\Slideshow::class, function (Faker\Generator $faker) {
+	return [];
 });

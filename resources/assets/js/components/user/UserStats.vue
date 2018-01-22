@@ -9,10 +9,10 @@
 		<div class="strong">Ogólne</div>
 		<div>Liczba spędzonych minut: {{timeSpent}}</div>
 		<div class="strong margin top">Lekcje</div>
-		<div>Procent przerobionych lekcji: {{lessonsCompleted}}</div>
-		<div>Procent rozpoczętych lekcji: {{lessonsStarted}}</div>
+		<div>Przerobionych lekcji: {{lessonsCompletedPerc}}% ({{lessonsCompleted}}/{{lessonsTotal}})</div>
+		<div>Rozpoczętych lekcji: {{lessonsStartedPerc}}% ({{lessonsStarted}}/{{lessonsTotal}})</div>
 		<div class="strong margin top">Baza Pytań</div>
-		<div>Procent rozwiązanych pytań: {{questionsSolved}}</div>
+		<div>Rozwiązanych pytań: {{questionsSolvedPerc}}% ({{questionsSolved}}/{{questionsTotal}})</div>
 		<div class="strong margin top">Społeczność</div>
 		<div>Liczba wątków: {{totalSocial}}</div>
 	</div>
@@ -28,17 +28,32 @@
 			timeSpent() {
 				return moment.duration({...this.currentUserStats.time}).asMinutes()
 			},
-			lessonsStarted() {
+			lessonsStartedPerc() {
 				const {started, total} = this.currentUserStats.lessons
 				return Math.floor(started / total * 100)
 			},
-			lessonsCompleted() {
+			lessonsCompletedPerc() {
 				const {total, completed} = this.currentUserStats.lessons
 				return Math.floor(completed / total * 100)
 			},
-			questionsSolved() {
+			lessonsTotal(){
+				return this.currentUserStats.lessons.total
+			},
+			lessonsCompleted() {
+				return this.currentUserStats.lessons.completed
+			},
+			lessonsStarted() {
+				return this.currentUserStats.lessons.started
+			},
+			questionsSolvedPerc() {
 				const {total, solved} = this.currentUserStats.quiz_questions
 				return Math.floor(solved / total * 100)
+			},
+			questionsTotal() {
+				return this.currentUserStats.quiz_questions.total
+			},
+			questionsSolved() {
+				return this.currentUserStats.quiz_questions.solved
 			},
 			totalSocial() {
 				return Object.values(this.currentUserStats.social).reduce((a,b) => a + b, 0)

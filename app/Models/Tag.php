@@ -8,6 +8,8 @@ class Tag extends Model
 {
 	protected $fillable = ['name'];
 
+	protected $touches = ['questions'];
+
 	public function questions()
 	{
 		return $this->morphedByMany('App\Models\QnaQuestion', 'taggable');

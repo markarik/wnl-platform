@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -13,47 +12,56 @@ class EventServiceProvider extends ServiceProvider
 	 * @var array
 	 */
 	protected $listen = [
-		'App\Events\QnaQuestionPosted' => [
+		'App\Events\Qna\QnaQuestionPosted' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\QnaQuestionRemoved' => [
+		'App\Events\Qna\QnaQuestionRemoved' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\QnaQuestionRestored' => [
+		'App\Events\Qna\QnaQuestionRestoredEvent' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\QnaAnswerPosted' => [
+		'App\Events\Qna\QnaAnswerPosted' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\QnaAnswerRemoved' => [
+		'App\Events\Qna\QnaAnswerRemoved' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\CommentPosted' => [
+		'App\Events\Comments\CommentPosted' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\CommentRemoved' => [
+		'App\Events\Comments\CommentRemoved' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\CommentRestored' => [
+		'App\Events\Comments\CommentRestoredEvent' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\ReactionAdded' => [
+		'App\Events\Reactions\ReactionAdded' => [
 			'App\Listeners\UserNotificationsGate',
+			'App\Listeners\ContentUpdatesGate',
 		],
 
 		'App\Events\Chat\PrivateMessageSent' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 
-		'App\Events\Mentioned' => [
+		'App\Events\Mentions\Mentioned' => [
 			'App\Listeners\UserNotificationsGate',
 		],
 
@@ -61,12 +69,31 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\UserNotificationsGate',
 		],
 
-		// 'App\Events\QuizQuestionEdited' => [
+		// 'App\Events\Quiz\QuizQuestionEdited' => [
 		// 	'App\Listeners\UserNotificationsGate',
-        // ],
+		// ],
 
-		'App\Events\UserDataUpdated' => [
+		'App\Events\Users\UserDataUpdated' => [
 			'App\Listeners\BustUserCache',
+		],
+
+		'App\Events\Tasks\AssignedToTask' => [
+			'App\Listeners\UserNotificationsGate',
+		],
+
+		'App\Events\Slides\SlideAdded' => [
+			'App\Listeners\ContentUpdatesGate',
+		],
+
+//		'App\Events\Slides\SlideRemoved' => [
+//		],
+
+		'App\Events\Slides\SlideDetached' => [
+			'App\Listeners\ContentUpdatesGate',
+		],
+
+		'App\Events\Slides\SlideUpdated' => [
+			'App\Listeners\ContentUpdatesGate',
 		],
 	];
 

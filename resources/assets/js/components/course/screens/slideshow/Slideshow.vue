@@ -21,8 +21,8 @@
 			<div class="slideshow-menu">
 				<wnl-annotations
 					v-if="!isLoading"
-					:currentSlide="currentSlideNumber"
-					:slideshowId="slideshowId"
+					:currentSlideId="currentSlideId"
+					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
 				></wnl-annotations>
@@ -103,7 +103,8 @@
 
 <script>
 	import _ from 'lodash'
-	import Postmate from 'postmate-fork'
+	import axios from 'axios'
+	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
@@ -111,8 +112,6 @@
 	import Annotations from './Annotations'
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getApiUrl} from 'js/utils/env'
-
-	let debounced, handshake
 
 	export default {
 		name: 'Slideshow',
@@ -132,20 +131,39 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
+				modifiedSlides: {}
 			}
 		},
-		props: ['screenData', 'presentableId', 'presentableType', 'preserveRoute', 'slideOrderNumber'],
+		props: {
+			screenData: {
+				type: Object,
+				default: () => {
+					return {
+						type: 'slideshow',
+						meta: {
+							resources: [{
+								id: -1
+							}]
+						}
+					}
+				}
+			},
+			preserveRoute: Boolean,
+			slideOrderNumber: Number,
+			htmlContent: String
+		},
 		computed: {
-			...mapGetters(['getSetting']),
+			...mapGetters(['getSetting', 'currentUserId']),
 			...mapGetters('slideshow', [
 				'comments',
 				'commentProfile',
-				'getSlideId',
 				'isLoading',
 				'isFunctional',
 				'findRegularSlide',
-				'bookmarkedSlideNumbers',
-				'getReaction'
+				'getSlidePositionById',
+				'getSlideIdFromIndex',
+				'getSlideById',
+				'presentableSortedSlidesIds'
 			]),
 			currentSlideIndex() {
 				 return this.currentSlideNumber - 1
@@ -156,46 +174,43 @@
 			screenId() {
 				return this.$route.params.screenId
 			},
-			slideshowId() {
+			presentableId() {
 				return this.screenData.meta && this.screenData.meta.resources[0].id
 			},
-			slideshowUrl() {
-				return getApiUrl(`slideshow_builder/${this.slideshowId}`)
+			presentableType() {
+				return this.screenData.type
 			},
-			slideshowSizeClass() {
-				return this.isFauxFullscreen ? 'is-faux-fullscreen' : 'wnl-ratio-16-9'
+			slideshowUrl() {
+				return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`)
 			},
 			iframe() {
 				if (this.loaded) {
 					return this.$el.getElementsByTagName('iframe')[0]
 				}
 			},
-			bookmarkState() {
-				return this.getReaction('slides', this.currentSlideId, 'bookmark')
-			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule']),
-			...mapActions(['toggleOverlay']),
-			toggleBookmarkedState(slideIndex, hasReacted) {
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupPresentablesWithReactions']),
+			...mapActions(['toggleOverlay', 'showNotification']),
+			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
-				const slideId = this.getSlideId(slideIndex)
+
+				const slideId = this.getSlideIdFromIndex(slideIndex)
+				const slide = this.getSlideById(slideId)
+				const currentBookmarkState = slide.bookmark.hasReacted
 
 				return this.$store.dispatch(`slideshow/setReaction`, {
-					hasReacted,
+					hasReacted: currentBookmarkState,
 					reactableResource: 'slides',
 					reactableId: slideId,
 					reaction: 'bookmark',
-					count: this.bookmarkState.count
+					count: slide.bookmark.count,
 				}).then(() => {
-					return Promise.resolve({
-						hasReacted: !hasReacted,
-						slideIndex,
-					})
-				}).then((data) => {
-					this.child.call('setBookmarkedState', data)
-					this.$emit('slideBookmarked', {slideId, hasReacted: data.hasReacted})
+					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+					this.$emit('slideBookmarked', {slideId, hasReacted: slide.bookmark.hasReacted})
 				}).then(() => {
+					this.bookmarkLoading = false
+				}).catch(() => {
 					this.bookmarkLoading = false
 				})
 			},
@@ -208,17 +223,24 @@
 				}
 				this.focusSlideshow()
 			},
-			setCurrentSlideFromIndex(index) {
-				this.currentSlideNumber = this.slideNumberFromIndex(index)
-			},
 			slideNumberFromIndex(index) {
 				return index + 1
 			},
 			goToSlide(slideIndex) {
-				if(slideIndex || slideIndex === 0) {
+				if(slideIndex && slideIndex > -1) {
 					this.slideChanged = true
+
+					const newSlideId = this.getSlideIdFromIndex(slideIndex)
+					const slide = this.getSlideById(newSlideId)
+					const orderNumber = this.getSlidePositionById(newSlideId)
+
 					this.child.call('goToSlide', slideIndex)
-					this.setCurrentSlideFromIndex(slideIndex)
+					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+					this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
+
+					this.currentSlideId = newSlideId
+					this.currentSlideNumber = this.slideNumberFromIndex(slideIndex)
+
 					this.focusSlideshow()
 				}
 			},
@@ -241,29 +263,84 @@
 			},
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
 				this.toggleOverlay({source: 'slideshow', display: true})
-				handshake = new Postmate({
+
+				this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+
+				const postmateOptions = {
 					container: this.container,
 					url: slideshowUrl,
+				}
+
+				return this.postmateHandshake(postmateOptions)
+					.then(child => {
+						if (this.$route.query.slide) {
+							const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+							if (newSlideIndex > -1) {
+								this.goToSlide(newSlideIndex);
+								this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+							} else {
+								this.goToSlide(this.currentSlideIndex)
+							}
+						} else {
+							this.goToSlide(this.currentSlideIndex)
+						}
+						this.focusSlideshow()
+						this.loaded = true
+						this.toggleOverlay({source: 'slideshow', display: false})
+
+					})
+					.catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
+					})
+			},
+
+			setSlideshowHtmlContent(htmlContent) {
+				this.toggleOverlay({source: 'slideshow', display: true})
+
+				const postmateOptions = {
+					container: this.container,
+					targetOrigin: window.location.href,
+					srcdoc: htmlContent
+				}
+
+				return this.postmateHandshake(postmateOptions)
+					.then(() => {
+						this.goToSlide(this.currentSlideIndex)
+
+						this.slideChanged = false
+						this.loaded = true
+						this.toggleOverlay({source: 'slideshow', display: false})
+						this.child.call('refreshChart', this.currentSlideIndex)
+					})
+					.catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
+					})
+
+			},
+
+			postmateHandshake(options) {
+				return new Promise((resolve, reject) => {
+					new Postmate(options)
+					.then(child => {
+							this.child = child
+							this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
+							this.setEventListeners()
+							this.onAnnotationsUpdated(this.comments({
+								resource: 'slides',
+								id: this.getSlideIdFromIndex(this.currentSlideIndex),
+							}))
+
+							child.frame.setAttribute('mozallowfullscreen', '');
+							child.frame.setAttribute('allowfullscreen', '');
+
+							child.call('setDebug', isDebug())
+
+							return resolve()
+					})
+					.catch(reject)
 				})
-
-				return handshake.then(child => {
-					this.child = child
-					this.loaded = true
-					child.frame.setAttribute('mozallowfullscreen', '');
-					child.frame.setAttribute('allowfullscreen', '');
-
-					this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
-
-					this.setEventListeners()
-
-					this.goToSlide(this.currentSlideIndex)
-					this.focusSlideshow()
-
-					this.onAnnotationsUpdated(this.comments({
-						resource: 'slides',
-						id: this.getSlideId(this.currentSlideIndex),
-					}))
-				}).catch(exception => $wnl.logger.capture(exception))
 			},
 			updateRoute(slideNumber) {
 				!this.preserveRoute && this.$router.replace({
@@ -282,10 +359,19 @@
 							data.eventName === 'slidechanged' &&
 							this.slideChanged === false
 						) {
-							let currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
+							const currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
+							const slideId = this.getSlideIdFromIndex(data.state.indexh)
+							const slide = this.getSlideById(slideId)
+							const orderNumber = this.getSlidePositionById(slideId)
+
+
 							this.currentSlideNumber = currentSlideNumber
+							this.currentSlideId = slideId
 							this.updateRoute(currentSlideNumber)
 							this.focusSlideshow()
+
+							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+							this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
 						}
 
 						this.slideChanged = false
@@ -297,41 +383,40 @@
 						this.toggleFullscreen()
 					} else if (event.data.value.name === 'loaded') {
 						this.toggleOverlay({source: 'slideshow', display: false})
-						this.child.call('setupBookmarks', this.bookmarkedSlideNumbers)
 					} else if (event.data.value.name === 'bookmark') {
-						const slideData = event.data.value.data
+						const {index} = event.data.value.data
 
-						!this.bookmarkLoading && this.toggleBookmarkedState(slideData.index, slideData.isBookmarked)
+						!this.bookmarkLoading && this.toggleBookmarkedState(index)
+					} else if (event.data.value.name === 'error') {
+						this.toggleOverlay({source: 'slideshow', display: false})
+					} else if (event.data.value.name === 'refresh-slideshow') {
+						if (this.presentableType === 'category') {
+							this.$emit('refreshSlideshow')
+							screenfull.exit(this.slideshowElement)
+						} else {
+							this.onRefreshSlideshow()
+						}
+						this.modifiedSlides = {}
 					}
 				}
 			},
 			fullscreenChangeHandler(event) {
 				this.child.call('toggleFullscreen', screenfull.isFullscreen)
 			},
+			debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event)}, {
+				trailing: true,
+			}),
 			setEventListeners() {
-				debounced = _.debounce(
-					this.messageEventListener.bind(this),
-					100,
-					{
-						leading: true,
-						trailing: true,
-					}
-				)
-
 				addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 				addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 				addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
 
-				addEventListener('message', debounced)
+				addEventListener('message', this.debouncedMessageListener)
 				addEventListener('blur', this.checkFocus)
 				addEventListener('focus', this.checkFocus)
 				addEventListener('focusout', this.checkFocus)
 			},
-			destroySlideshow() {
-				if (typeof this.child.destroy === 'function') {
-					this.child.destroy()
-				}
-
+			removeEventListeners() {
 				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
@@ -339,14 +424,22 @@
 				removeEventListener('blur', this.checkFocus)
 				removeEventListener('focus', this.checkFocus)
 				removeEventListener('focusout', this.checkFocus)
-				removeEventListener('message', debounced)
+				removeEventListener('message', this.debouncedMessageListener)
 
+			},
+			destroySlideshow() {
+				this.toggleOverlay({source: 'slideshow', display: false})
+				if (typeof this.child.destroy === 'function') {
+					this.child.destroy()
+				}
+
+				this.removeEventListeners()
 				this.resetModule()
 				this.loaded = false
 			},
 			onAnnotationsUpdated(comments) {
 				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
-					let annotations = _.cloneDeep(comments)
+					const annotations = _.cloneDeep(comments)
 
 					if (annotations.length > 0) {
 						annotations.forEach((annotation) => {
@@ -363,24 +456,80 @@
 				this.focusSlideshow()
 				scrollToTop()
 			},
+			buildRouteFromSlideParam(index) {
+				return {
+					...this.$route,
+					params: {
+						...this.$route.params,
+						slide: this.slideNumberFromIndex(index)
+					},
+					query: {
+						...this.$route.query
+					}
+				}
+			},
+			setupCollection() {
+				return this.setSlideshowHtmlContent(this.htmlContent).catch((error) => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
+					})
+			},
+			onRefreshSlideshow() {
+				this.toggleOverlay({source: 'slideshow', display: true})
+				this.removeEventListeners()
+
+				Promise.all([
+					axios.get(this.slideshowUrl),
+					this.setupPresentablesWithReactions({id: this.presentableId})
+				]).then(([{data}]) => {
+					if (typeof this.child.destroy === 'function') {
+						this.child.destroy()
+					}
+					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+
+					this.setSlideshowHtmlContent(data)
+						.then(() => {
+							const slide = this.getSlideById(this.currentSlideId)
+							const currentBookmarkState = slide.bookmark.hasReacted
+							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
+						})
+				})
+			}
 		},
 		mounted() {
+			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
+				.listen('.App.Events.Live.LiveContentUpdated', ({data: {event, subject, context}}) => {
+					switch (event) {
+						case 'slide-added':
+							// TODO consider passing order_number in given presentable from event
+							this.modifiedSlides[subject.id] = {order_number: context.params.slide - 1, action: 'add'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
+							break
+						case 'slide-updated':
+							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'edit'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
+							break
+						case 'slide-detached':
+							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'delete'}
+							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
+							break
+					}
+				});
+
+
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
-			if (this.presentableId) {
-				this.setup({id: this.presentableId, type: this.presentableType})
-					.then(() => {
-						this.initSlideshow(getApiUrl(`slideshow_builder/category/${this.presentableId}`))
-							.then(() => {
-								this.goToSlide(this.slideOrderNumber)
-								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-							})
-					})
+			if (this.htmlContent) {
+				// logic related with category / collection
+				this.setupCollection()
 			} else {
-				this.setup({id: this.slideshowId})
+				// logic related with lesson
+				this.setup({id: this.presentableId})
 					.then(() => {
-						this.initSlideshow()
-						this.currentSlideId = this.getSlideId(this.currentSlideIndex)
+						return this.initSlideshow()
+					}).catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 			}
 		},
@@ -390,11 +539,26 @@
 		watch: {
 			'$route' (to, from) {
 				if (to.params.screenId != from.params.screenId) {
-					this.destroySlideshow()
+					return this.destroySlideshow()
 				}
 
 				if (to.params.categoryName != from.params.categoryName) {
-					this.destroySlideshow()
+					return this.destroySlideshow()
+				}
+
+				if (to.query.slide && to.query.slide !== this.currentSlideId) {
+					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+					if (newSlideIndex > -1) {
+						this.goToSlide(newSlideIndex);
+						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					}
+				}
+
+				if (to.query.slide === this.currentSlideId) {
+					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
+					if (newSlideIndex > -1) {
+						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
+					}
 				}
 
 				let fromSlide = from.params.slide || 0,
@@ -410,34 +574,33 @@
 					}
 				}
 			},
+			'htmlContent'(newContent) {
+				if (typeof this.child.destroy === 'function') {
+					this.child.destroy()
+				}
+
+				this.removeEventListeners()
+				this.setSlideshowHtmlContent(newContent)
+				this.modifiedSlides = {}
+			},
 			'screenData' (newValue, oldValue) {
 				if (newValue.type === 'slideshow') {
 					this.toggleOverlay({source: 'slideshow', display: true})
 
-					this.setup({id: this.slideshowId})
+					this.setup({id: this.presentableId})
 					.then(() => {
 						this.initSlideshow()
 							.then(() => {
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
+							}).catch(error => {
+								this.toggleOverlay({source: 'slideshow', display: false})
+								$wnl.logger.capture(error)
 							})
+					}).catch(error => {
+						this.toggleOverlay({source: 'slideshow', display: false})
+						$wnl.logger.capture(error)
 					})
 				}
-			},
-			'presentableId' (presentableId, oldValue) {
-				if (presentableId) {
-					this.toggleOverlay({source: 'slideshow', display: true})
-					this.setup({id: presentableId, type: this.presentableType})
-						.then(() => {
-							this.initSlideshow(getApiUrl(`slideshow_builder/category/${presentableId}`))
-							.then(() => {
-								this.goToSlide(this.slideOrderNumber)
-								this.currentSlideId = this.getSlideId(this.currentSlideIndex)
-							})
-						})
-				}
-			},
-			'currentSlideIndex' (slideIndex, oldValue) {
-				this.currentSlideId = this.getSlideId(slideIndex)
 			},
 			'slideOrderNumber' (slideOrderNumber, oldValue) {
 				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)

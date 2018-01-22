@@ -87,7 +87,4 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admi
 	Route::get('/update-charts', function () {
 		Artisan::queue('charts:update', ['--notify' => true]);
 	});
-	Route::get('/update-charts/{slideId}', function ($id) {
-		Artisan::call('charts:update', ['id' => $id]);
-	});
 });

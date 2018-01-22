@@ -4,8 +4,8 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\QuizQuestion;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\QuizQuestion;
 
 class QuizQuestionTransformer extends ApiTransformer
 {
@@ -24,11 +24,7 @@ class QuizQuestionTransformer extends ApiTransformer
 			'text'           => $quizQuestion->text,
 			'explanation'    => $quizQuestion->explanation,
 			'preserve_order' => $quizQuestion->preserve_order,
-			// Not sure why tags are included here...
-			// let's see what's going to happen if I comment it out :D
 			'tags'           => $quizQuestion->tags,
-			// Looks like the only purpose of 'total_hits' was to slow down the response ¯\_(ツ)_/¯
-			// 'total_hits'     => $quizQuestion->answers->sum('hits'),
 		];
 
 		if ($this->parent) {

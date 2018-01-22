@@ -430,9 +430,9 @@
 			fetchMatchingQuestions(filters = []) {
 				this.fetchingQuestions = true
 				return this.fetchQuestions({
-					doNotSaveFilters: true,
-					filters,
+					saveFilters: false,
 					useSavedFilters: false,
+					filters,
 				})
 					.catch(error => $wnl.logger.error(error))
 					.then(({data: {total}}) => {

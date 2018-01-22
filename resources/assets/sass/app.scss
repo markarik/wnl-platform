@@ -410,6 +410,10 @@ section.voucher {
 	width: 100%;
 }
 
+.is-relative {
+	position: relative
+}
+
 /* Not supported browser modal */
 .not-supported-browser-modal {
 	z-index: $z-index-overlay;

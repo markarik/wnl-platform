@@ -4,18 +4,16 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div class="qna-question" ref="highlight">
-			<div class="votes">
-				<wnl-vote
-					type="up"
-					:reactableId="questionId"
-					:reactableResource="reactableResource"
-					:state="voteState"
-					module="qna"
-				></wnl-vote>
-			</div>
+			<wnl-vote
+				type="up"
+				:reactableId="questionId"
+				:reactableResource="reactableResource"
+				:state="voteState"
+				module="qna"
+			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content" v-html="content"></div>
+					<div class="qna-question-content content" v-html="content"></div>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"
@@ -31,16 +29,18 @@
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<wnl-avatar
-							:fullName="author.full_name"
-							:url="author.avatar"
-							size="medium">
-					</wnl-avatar>
+					<div class="modal-activator" @click="showModal">
+						<wnl-avatar class="avatar"
+								:fullName="author.full_name"
+								:url="author.avatar"
+								size="medium">
+						</wnl-avatar>
+						<span class="qna-meta-info">
+							{{ author.display_name }}
+						</span>
+					</div>
 					<span class="qna-meta-info">
-						{{author.full_name}} ·
-					</span>
-					<span class="qna-meta-info">
-						{{time}}
+						· {{time}}
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
@@ -51,6 +51,7 @@
 					</span>
 					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
 				</div>
+				<slot name="context"></slot>
 			</div>
 		</div>
 		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
@@ -84,9 +85,9 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
-			<wnl-qna-answer v-if="allAnswers"
-				v-for="answer in otherAnswers"
+			<wnl-qna-answer v-if="hasAnswers && !showAllAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
+			<wnl-qna-answer v-else-if="showAllAnswers"
+				v-for="answer in allAnswers"
 				:answer="answer"
 				:questionId="questionId"
 				:key="answer.id"
@@ -94,8 +95,8 @@
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
 			<a class="qna-answers-show-all"
-				v-if="!allAnswers && otherAnswers.length > 0"
-				@click="allAnswers = true">
+				v-if="!showAllAnswers && otherAnswers.length > 0"
+				@click="showAllAnswers = true">
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
@@ -122,6 +123,13 @@
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
 		padding: $margin-base
+
+	.modal-activator
+		display: flex
+		flex-direction: row
+		cursor: pointer
+		align-items: center
+		color: $color-sky-blue
 
 	.qna-question-content
 		font-size: $font-size-plus-1
@@ -187,6 +195,7 @@
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Delete from 'js/components/global/form/Delete'
 	import Resolve from 'js/components/global/form/Resolve'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
@@ -209,12 +218,12 @@
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
-			'wnl-watch': Watch
+			'wnl-watch': Watch,
 		},
-		props: ['questionId', 'readOnly', 'reactionsDisabled'],
+		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
 			return {
-				allAnswers: false,
+				showAllAnswers: false,
 				loading: false,
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
@@ -228,7 +237,8 @@
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
 				'getReaction',
-				'questionAnswers'
+				'questionAnswers',
+				'answer'
 			]),
 			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
 			question() {
@@ -252,7 +262,7 @@
 				}
 			},
 			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.id
+				return this.currentUserId === this.author.user_id
 			},
 			resourceRoute() {
 				return `qna_questions/${this.id}`
@@ -270,10 +280,18 @@
 				return this.answersFromHighestUpvoteCount.length > 0
 			},
 			latestAnswer() {
-				return _.head(this.answersFromHighestUpvoteCount) || {}
+				if (this.config.highlighted[this.id]) {
+					const answerId = this.config.highlighted[this.id]
+					return this.answer(answerId)
+				} else {
+					return _.head(this.answersFromHighestUpvoteCount) || {}
+				}
 			},
 			otherAnswers() {
 				return _.tail(this.answersFromHighestUpvoteCount) || []
+			},
+			allAnswers() {
+				return this.answersFromHighestUpvoteCount
 			},
 			tags() {
 				return this.questionTags(this.questionId).map((tag) => tag.name) || []
@@ -302,10 +320,20 @@
 				const questionId = _.get(this.$route, 'query.qna_question')
 
 				if (questionId == this.questionId && this.answerInUrl) return true
-			}
+			},
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: {
+						author: this.author
+					},
+					component: UserProfileModal,
+				})
+			},
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {
@@ -331,13 +359,13 @@
 			},
 			refreshQuestionAndShowAnswers() {
 				return this.dispatchFetchQuestion(() => {
-					this.allAnswers = true
+					this.showAllAnswers = true
 				})
 			}
 		},
 		mounted() {
 			if (this.isQuestionAnswerInUrl) {
-				this.allAnswers = true
+				this.showAllAnswers = true
 			}
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
@@ -353,7 +381,7 @@
 
 				if (this.isQuestionAnswerInUrl) {
 					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
-					this.allAnswers = true
+					this.showAllAnswers = true
 				}
 			},
 			'isOverlayVisible' () {

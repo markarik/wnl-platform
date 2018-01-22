@@ -13,7 +13,7 @@ class ListOrders extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'orders {id?*} {--refund} {--since=} {--remindable} {--cancelable}';
+	protected $signature = 'orders {id?*} {--refund} {--since=} {--potential} {--remindable} {--cancelable} {--instalments}';
 
 	/**
 	 * The console command description.
@@ -39,6 +39,7 @@ class ListOrders extends Command
 	public function handle()
 	{
 		$orderId = $this->argument('id');
+		$now = new Carbon();
 
 		if (empty ($orderId)) {
 			$orders = Order::with(['user', 'product'])->get();
@@ -75,10 +76,33 @@ class ListOrders extends Command
 		}
 
 		if ($this->option('remindable')) {
-			$now = new Carbon();
 			$orders = $orders->filter(function ($order) use ($now) {
 				return $order->method && !$order->paid && !$order->canceled &&
 					Carbon::parse($order->created_at)->diffInDays($now) > 7;
+			});
+		}
+
+		if ($this->option('potential')) {
+			$orders = $orders->filter(function ($order) use ($now) {
+				return $order->method && !$order->paid && !$order->canceled &&
+					Carbon::parse($order->created_at)->diffInDays($now) <= 7;
+			});
+		}
+
+		if ($this->option('instalments')) {
+			$orders = $orders->filter(function ($order) use ($now) {
+				if ($order->paid &&
+					$order->method === 'instalments' &&
+					$order->instalments['allPaid'] === false
+				) {
+					$firstNotPaid = array_first($order->instalments['instalments'], function ($value, $key) use ($now) {
+						return $value['left'] > 0 && $now->gt($value['date']);
+					}, false);
+
+					return (bool) $firstNotPaid;
+				}
+
+				return false;
 			});
 		}
 

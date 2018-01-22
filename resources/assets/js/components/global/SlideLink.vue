@@ -1,5 +1,5 @@
 <template>
-	<router-link :to="to">
+	<router-link :to="to" :target="blankPage">
         <slot></slot>
 	</router-link>
 </template>
@@ -21,6 +21,9 @@
                         && _.get(value, 'orderNumber')
                 }
 			},
+			blankPage: {
+				type: String,
+			},
 		},
 		computed: {
 			slideNumber() {
@@ -34,6 +37,9 @@
 						lessonId: this.context.lesson.id,
 						screenId: this.context.screen.id,
 						slide: this.slideNumber,
+					},
+					query: {
+						slide: this.context.id
 					}
 				}
 			},

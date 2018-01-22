@@ -101,6 +101,11 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\Comment');
 	}
 
+	public function tasks()
+	{
+		return $this->hasMany('App\Models\Task', 'assignee_id');
+	}
+
 	public function qnaAnswers()
 	{
 		return $this->hasMany('App\Models\QnaAnswer');
@@ -111,6 +116,9 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\Models\Lesson', 'lesson_user_access');
 	}
 
+	public function reactables() {
+		return $this->hasMany('App\Models\Reactable');
+	}
 	/**
 	 * Dynamic attributes
 	 */

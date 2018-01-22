@@ -74,7 +74,7 @@ import { mapActions } from 'vuex';
 	import SidenavItem from 'js/components/global/SidenavItem'
 
 	export default {
-		props: ['isVisible', 'isDetached', 'hasChat'],
+		props: ['isVisible', 'isDetached', 'hasChat', 'direction'],
 		methods: {
 			...mapActions(['closeSidenavs']),
 			onClick(event) {

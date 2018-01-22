@@ -1,20 +1,18 @@
 <template>
 	<div class="slides-editor">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
-			:alert="alert"
-			cssClass="fixed"
-			:key="timestamp"
-			:timestamp="timestamp"
-			@delete="onDelete"
+				   :alert="alert"
+				   cssClass="fixed"
+				   :key="timestamp"
+				   :timestamp="timestamp"
+				   @delete="onDelete"
 		/>
 		<p class="title is-3">{{title}}</p>
 
 		<slot/>
 
-		<div class="notification is-success has-text-centered" v-show="saved">
-			Zapisano
-		</div>
-		<div class="notification is-danger has-text-centered" v-show="submissionFailed">
+		<div class="notification is-danger has-text-centered"
+			 v-show="submissionFailed">
 			Coś poszło nie tak...
 		</div>
 
@@ -22,34 +20,64 @@
 			  @keydown="form.errors.clear($event.target.name)">
 
 			<div class="slide-content-editor">
-				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
+				<wnl-form-code type="text" name="content" :form="form"
+							   v-model="form.content"/>
 			</div>
 			<div class="level">
 				<div class="level-left">
 					<div class="level-item">
 						<p class="control">
-							<wnl-form-checkbox type="text" name="is_functional" :form="form"
-											   v-model="form.is_functional">
+							<wnl-form-checkbox
+									type="text" name="is_functional"
+									:form="form"
+									v-model="form.is_functional">
 								Slajd funkcjonalny?
 							</wnl-form-checkbox>
 						</p>
 					</div>
 				</div>
+				<div class="level-center" v-if="remove">
+					<div class="level-item confirm-detach" v-if="confirmDetach">
+						<div>Na pewno?</div>
+						<a class="button" @click="confirmDetach=false">Nie</a>
+						<a class="button is-danger"
+						   @click="detachSlide">
+							Tak
+						</a>
+					</div>
+					<div class="level-item" v-else="">
+						<a class="button is-danger"
+						   :class="{'is-loading': detachingSlide}"
+						   :disabled="!this.slideId && !this.screenId"
+						   @click="confirmDetach=true">Usuń slajd z
+							prezentacji</a>
+					</div>
+				</div>
 				<div class="level-right">
 					<div class="level-item">
-						<a class="button is-primary" :class="{'is-loading': updatingChart}" v-if="chartReady" @click="updateChart">Aktualizuj diagram</a>
+						<a class="button is-primary"
+						   :class="{'is-loading': updatingChart}"
+						   v-if="chartReady" @click="updateChart">
+							Aktualizuj diagram</a>
 					</div>
 					<slot name="action"/>
 					<div class="level-item">
-						<a class="button" :disabled="!this.slideId && !this.screenId" @click="preview">Podgląd</a>
+						<a class="button"
+						   :disabled="!this.slideId && !this.screenId"
+						   @click="preview">Podgląd</a>
 					</div>
 					<div class="level-item">
-						<a class="button is-primary" :class="{'is-loading': loading}" :disabled="form.errors.any() || !form.content" @click="onSubmit">Zapisz slajd</a>
+						<a class="button is-primary"
+						   :class="{'is-loading': loading}"
+						   :disabled="form.errors.any() || !form.content"
+						   @click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
 			</div>
 		</form>
-		<wnl-slide-preview :showModal="showPreviewModal" :content="previewModalContent" @closeModal="showPreviewModal=false"/>
+		<wnl-slide-preview :showModal="showPreviewModal"
+						   :content="previewModalContent"
+						   @closeModal="showPreviewModal=false"/>
 	</div>
 </template>
 
@@ -63,6 +91,10 @@
 		border: $border-light-gray
 		height: 500px
 		margin: $margin-big 0
+
+	.confirm-detach
+		*
+			margin-right: $margin-small
 </style>
 
 <script>
@@ -73,11 +105,11 @@
 	import Code from 'js/admin/components/forms/Code'
 	import SlidePreview from 'js/admin/components/slides/SlidePreview'
 	import Checkbox from 'js/admin/components/forms/Checkbox'
-	import { alerts } from 'js/mixins/alerts'
+	import {alerts} from 'js/mixins/alerts'
 
-	const SECTION_OPEN_TAG_REGEX = /<section.*>$/
-	const SECTION_CLOSE_TAG_REGEX = /<\/section>$/
-	const COURSE_TAG_REGEX = /[#!]+\(.*\)/
+	const SECTION_OPEN_TAG_REGEX     = /<section.*>$/
+	const SECTION_CLOSE_TAG_REGEX    = /<\/section>$/
+	const COURSE_TAG_REGEX           = /[#!]+\(.*\)/
 	const FUNCTIONAL_SLIDE_TAG_REGEX = /[#!]+\(functional\)/
 
 	export default {
@@ -106,7 +138,8 @@
 			},
 			requestPayload: {
 				type: Object,
-				default: () => {}
+				default: () => {
+				}
 			},
 			slideId: {
 				type: Number,
@@ -116,9 +149,13 @@
 				type: Number,
 				default: 0,
 				validator: (value) => !isNaN(value)
+			},
+			remove: {
+				type: Boolean,
+				default: false
 			}
 		},
-		mixins: [ alerts ],
+		mixins: [alerts],
 		data() {
 			return {
 				form: new Form({
@@ -127,16 +164,17 @@
 				}),
 				showPreviewModal: false,
 				previewModalContent: '',
-				saved: false,
 				submissionFailed: false,
 				loading: false,
 				updatingChart: false,
+				detachingSlide: false,
+				confirmDetach: false,
 			}
 		},
 		computed: {
 			chartReady() {
 				let match = null
-				if (this.form.content){
+				if (this.form.content) {
 					match = this.form.content.match('class="chart"')
 				}
 				return !!this.slideId && !!match
@@ -146,6 +184,9 @@
 			}
 		},
 		methods: {
+			reset() {
+				this.submissionFailed = false
+			},
 			onSubmit() {
 				this.loading = true
 				this.reset()
@@ -154,37 +195,36 @@
 				if (!isValid) {
 					this.errorFading('Upewnij się że slajd posiada tag section na początku i na końcu treści')
 					this.loading = false;
-					this.submissionFailed = true
 					return;
 				}
 				this.form.submit(this.method, this.resourceUrl, this.requestPayload)
-						.then(response => {
-							this.saved = true
+						.then(data => {
+							this.form.content       = data.content
+							this.form.is_functional = data.is_functional
+							this.successFading('Zapisano', 2000)
 							this.loading = false
 						})
 						.catch(exception => {
-							this.submissionFailed = true
+							this.errorFading('Ups... Coś poszło nie tak.', 4000)
+							$wnl.logger.capture(error)
 							this.loading = false
 						})
 			},
 			validateContent(content) {
 				const contentSplited = content
-					.split('\n')
-					.map(line => line.trim())
-					.filter(line => line);
+						.split('\n')
+						.map(line => line.trim())
+						.filter(line => line);
 
 				return SECTION_OPEN_TAG_REGEX.test(contentSplited[0])
-					&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1])
-			},
-			reset() {
-				this.saved            = false
-				this.submissionFailed = false
+						&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1])
 			},
 			updateChart() {
 				this.updatingChart = true
-				axios.get(getUrl(`admin/update-charts/${this.slideId}`))
+				axios.get(getApiUrl(`slides/.updateCharts/${this.slideId}`))
 						.then(response => {
-							this.getSlide()
+							this.form.content       = response.data.content
+							this.form.is_functional = response.data.is_functional
 							this.successFading('Diagram zaktualizowany!', 2000)
 							this.updatingChart = false
 						})
@@ -204,7 +244,7 @@
 					content: this.form.content,
 					slideId: this.slideId ? this.slideId : null,
 					screenId: this.screenId ? this.screenId : null
-				}).then(({ data }) => {
+				}).then(({data}) => {
 					this.previewModalContent = data
 				})
 			},
@@ -213,6 +253,27 @@
 					this.form.is_functional = true
 				}
 				this.form.content = this.form.content.replace(COURSE_TAG_REGEX, '')
+			},
+			detachSlide() {
+				this.confirmDetach = false
+				if (!this.slideId && !this.screenId) return
+				this.detachingSlide = true;
+
+				axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
+					slideId: this.slideId,
+					screenId: this.screenId,
+				}).then(response => {
+					this.form.content       = null
+					this.form.is_functional = false
+					this.slideId            = 0
+					this.screenId           = 0
+					this.successFading('Slajd usunięty.', 2000)
+					this.detachingSlide = false;
+				}).catch(error => {
+					this.errorFading('Ups... Coś poszło nie tak.', 4000)
+					$wnl.logger.capture(error)
+					this.detachingSlide = false;
+				})
 			}
 		},
 		watch: {

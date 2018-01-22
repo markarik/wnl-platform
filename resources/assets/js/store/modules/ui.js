@@ -4,6 +4,11 @@ import { isString, pickBy, values } from 'lodash'
 
 // Initial state
 const state = {
+	modal: {
+		visible: false,
+		content: null,
+		component: null
+	},
 	canShowChat: false,
 	currentLayout: '',
 	isSidenavOpen: false,
@@ -17,14 +22,18 @@ const state = {
 const layouts = {
 	mobile: 'mobile',
 	tablet: 'tablet',
-	smallDesktop: 'small_screen',
+	smallDesktop: 'small_desktop',
 	largeDesktop: 'large_desktop'
 }
 
 // Getters
 const getters = {
+	isModalVisible: state => state.modal.visible,
+	getModalContent: state => state.modal.content,
+	getModalComponent: state => state.modal.component,
 	currentLayout: state => state.currentLayout,
 	isMobile: state => state.currentLayout === layouts.mobile,
+	isSmallDesktop: state => state.currentLayout === layouts.smallDesktop,
 	isLargeDesktop: state => state.currentLayout === layouts.largeDesktop,
 	isTouchScreen: state =>
 		[layouts.mobile, layouts.tablet].indexOf(state.currentLayout) !== -1,
@@ -57,6 +66,15 @@ const getters = {
 
 // Mutations
 const mutations = {
+	[types.UI_TOGGLE_MODAL] (state, payload) {
+		const serializedPayload = {
+			...payload,
+			component: {
+				...payload.component
+			}
+		}
+		set(state, 'modal', serializedPayload)
+	},
 	[types.UI_CHANGE_LAYOUT] (state, layout) {
 		set(state, 'currentLayout', layout)
 	},
@@ -114,6 +132,9 @@ const mutations = {
 
 // Actions
 const actions = {
+	toggleModal({ commit, getters }, payload) {
+		commit(types.UI_TOGGLE_MODAL, payload)
+	},
 	setLayout({ commit, getters }, layout) {
 		commit(types.UI_CHANGE_LAYOUT, layout)
 	},

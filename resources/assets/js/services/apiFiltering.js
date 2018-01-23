@@ -53,7 +53,6 @@ export const parseFilters = (activeFilters, filters, userId) => {
 			parsedFilters.push({
 				[group]: {
 					phrase: filters.search.items[0].value,
-                    mode: '',
 				}
 			})
         }

@@ -157,7 +157,6 @@
 		},
 		methods: {
 			filterDisplayName(filter) {
-				console.log(filter)
 				if (filter.type === 'search') {
 					return filter.items[0] && filter.items[0].value && `Fraza: ${filter.items[0].value}`
 				}

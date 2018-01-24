@@ -114,6 +114,13 @@ const mutations = {
 		set(state.filters.search, 'items', [{value: phrase}])
 	},
 	[types.ACTIVE_FILTERS_ADD] (state, filter) {
+		const searchFilter = filter.startsWith('search.')
+
+		if (searchFilter) {
+			const hasSearch = state.activeFilters.find(active => active.startsWith('search.'))
+			return !hasSearch && state.activeFilters.push(filter)
+		}
+
 		if (state.activeFilters.indexOf(filter) === -1) {
 			state.activeFilters.push(filter)
 		}
@@ -122,6 +129,13 @@ const mutations = {
 		set(state, 'activeFilters', filters)
 	},
 	[types.ACTIVE_FILTERS_REMOVE] (state, filter) {
+		const searchFilter = filter.startsWith('search.')
+
+		if (searchFilter) {
+			const searchIndex = state.activeFilters.findIndex(active => active.startsWith('search.'))
+			return searchIndex > -1 && state.activeFilters.splice(searchIndex, 1)
+		}
+
 		const index = state.activeFilters.indexOf(filter)
 		if (index > -1) {
 			state.activeFilters.splice(index, 1)
@@ -306,14 +320,8 @@ const actions = {
 			filters: parsedFilters,
 			include: 'quiz_answers',
 			page,
-
-			// TODO: Make the search work with caching active filters to unlock
-			// the 2 lines below!
-
-			// saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
-			// useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
-			saveFilters: true,
-			useSavedFilters: false,
+			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
+			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 
@@ -326,7 +334,14 @@ const actions = {
 			commit(types.UPDATE_INCLUDED, included)
 
 			if (!isEmpty(meta.active)) {
-				commit(types.ACTIVE_FILTERS_SET, meta.active)
+				const searchFilter = meta.active.find(active => active.startsWith('search.'))
+				if (searchFilter) {
+					const mappedActive = meta.active.map(active => active.startsWith('search.') ? 'search' : active)
+					commit(types.ACTIVE_FILTERS_SET, mappedActive)
+					commit(types.ADD_FILTER, searchFilter.substr(searchFilter.indexOf('.') + 1))
+				} else {
+					commit(types.ACTIVE_FILTERS_SET, meta.active)
+				}
 			}
 
 			return response

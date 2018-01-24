@@ -386,13 +386,9 @@
 					})
 			},
 			setupFilters(activeFilters = []) {
-				return new Promise((resolve, reject) => {
-					if (!isEmpty(this.filters)) return resolve()
+				if (!isEmpty(this.filters)) return Promise.resolve(this.filters)
 
-					return this.fetchDynamicFilters()
-						.then(() => resolve())
-						.catch((e) => reject(e))
-				})
+				return this.fetchDynamicFilters()
 			},
 			switchOverlay(display, source = 'filters', message = 'questions') {
 				this.fetchingQuestions = display
@@ -429,7 +425,7 @@
 					this.addFilter(phrase)
 					.then(() => {
 						return this.activeFiltersToggle({
-							filter: 'search',
+							filter: `search.${phrase}`,
 							active: true,
 						})
 					})

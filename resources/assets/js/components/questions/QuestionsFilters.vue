@@ -159,14 +159,12 @@
 				return 'questions.filters.items'
 			},
 			listableFilters() {
-				let listable = {}
-				Object.entries(this.filters).forEach(([key, val]) => {
-					if (val.type.match(/list|tags/)) {
-						listable[key] = val
+				return Object.entries(this.filters).reduce((acc, [key, val]) => {
+					if (['list', 'tags'].includes(val.type)) {
+						acc[key] = val
 					}
-				})
-
-				return listable
+					return acc
+				}, {})
 			}
 		},
 		methods: {

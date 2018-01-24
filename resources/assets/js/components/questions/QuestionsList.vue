@@ -135,8 +135,7 @@
 				type: Array,
 			},
 			presetOptions: {
-				default: () => {
-				},
+				default: () => {},
 				type: Object,
 			}
 		},
@@ -444,7 +443,7 @@
 					.then(() => {
 						this.fetchingFilters = false
 
-						this.fetchQuestionsReactions(this.getPage(1))
+						this.fetchQuestionsReactions(this.meta.current_page)
 					})
 				}
 			}

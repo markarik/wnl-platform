@@ -1,11 +1,19 @@
-import {set, delete as destroy} from 'vue'
-import {get, isEqual, isEmpty, isNumber, merge, size} from 'lodash'
+import {set} from 'vue'
+import {get, isEmpty, isNumber, size} from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {parseFilters} from 'js/services/apiFiltering'
 import axios from 'axios'
-import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
-import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
+import {
+	commentsActions,
+	commentsGetters,
+	commentsMutations
+} from 'js/store/modules/comments'
+import {
+	reactionsActions,
+	reactionsGetters,
+	reactionsMutations
+} from 'js/store/modules/reactions'
 
 
 const namespaced = true
@@ -339,7 +347,7 @@ const actions = {
 				.then(response => resolve(response))
 		})
 	},
-	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
+	fetchTestQuestions({commit, state, dispatch, rootGetters}, {activeFilters, count: limit}) {
 		const filters = parseFilters(activeFilters, state.filters, rootGetters.currentUserId)
 
 		return _fetchQuestions({
@@ -349,6 +357,9 @@ const actions = {
 			include: 'quiz_answers,reactions,comments.profiles,slides'
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit)
+			const comments = _.get(included, 'comments')
+
+			comments && dispatch('comments/setComments', comments, {root:true})
 
 			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides})
 			commit(types.UPDATE_INCLUDED, included)

@@ -37,10 +37,10 @@
 					</a>
 				</div>
 				<wnl-accordion
-						:dataSource="listableFilters"
-						:config="accordionConfig"
-						:loading="fetchingData"
-						@itemToggled="onItemToggled"
+					:dataSource="listableFilters"
+					:config="accordionConfig"
+					:loading="fetchingData"
+					@itemToggled="onItemToggled"
 				/>
 			</div>
 		</div>

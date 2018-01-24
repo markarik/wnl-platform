@@ -1,21 +1,20 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use App\Models\User;
-use App\Models\UserQuizResults;
-use App\Models\UserPlanProgress;
-use App\Models\QuizQuestion;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\UserQuizResultsTransformer;
+use App\Jobs\CalculateExamResults;
 use App\Models\QuizAnswer;
+use App\Models\QuizQuestion;
+use App\Models\User;
+use App\Models\UserPlanProgress;
+use App\Models\UserQuizResults;
+use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use League\Fractal\Resource\Collection;
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserQuizResultsTransformer;
-use Illuminate\Database\QueryException;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use App\Jobs\CalculateExamResults;
-
 
 
 class UserQuizResultsApiController extends ApiController
@@ -145,8 +144,7 @@ class UserQuizResultsApiController extends ApiController
 	}
 
 	public function delete($userId) {
-		$user = User::fetch($userId);
-		if (!Auth::user()->can('view', $user)) {
+		if (Auth::user()->id !== (int) $userId) {
 			return $this->respondUnauthorized();
 		}
 

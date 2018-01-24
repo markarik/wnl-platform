@@ -192,6 +192,7 @@
 			]),
 			activeFiltersNames() {
 				return this.activeFiltersObjects.map(filter => {
+					if (!filter) return
 					return filter.hasOwnProperty('name')
 						? filter.name
 						: filter.hasOwnProperty('message')

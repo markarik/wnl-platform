@@ -114,11 +114,9 @@ const mutations = {
 		set(state.filters.search, 'items', [{value: phrase}])
 	},
 	[types.ACTIVE_FILTERS_ADD] (state, filter) {
-		const searchFilter = filter.startsWith('search.')
-
-		if (searchFilter) {
-			const hasSearch = state.activeFilters.find(active => active.startsWith('search.'))
-			return !hasSearch && state.activeFilters.push(filter)
+		if (filter.startsWith('search.')) {
+			const searchIndex = state.activeFilters.findIndex(active => active.startsWith('search.'))
+			return searchIndex > -1 ? state.activeFilters[searchIndex] = filter : state.activeFilters.push(filter)
 		}
 
 		if (state.activeFilters.indexOf(filter) === -1) {
@@ -129,13 +127,6 @@ const mutations = {
 		set(state, 'activeFilters', filters)
 	},
 	[types.ACTIVE_FILTERS_REMOVE] (state, filter) {
-		const searchFilter = filter.startsWith('search.')
-
-		if (searchFilter) {
-			const searchIndex = state.activeFilters.findIndex(active => active.startsWith('search.'))
-			return searchIndex > -1 && state.activeFilters.splice(searchIndex, 1)
-		}
-
 		const index = state.activeFilters.indexOf(filter)
 		if (index > -1) {
 			state.activeFilters.splice(index, 1)
@@ -336,12 +327,9 @@ const actions = {
 			if (!isEmpty(meta.active)) {
 				const searchFilter = meta.active.find(active => active.startsWith('search.'))
 				if (searchFilter) {
-					const mappedActive = meta.active.map(active => active.startsWith('search.') ? 'search' : active)
-					commit(types.ACTIVE_FILTERS_SET, mappedActive)
 					commit(types.ADD_FILTER, searchFilter.substr(searchFilter.indexOf('.') + 1))
-				} else {
-					commit(types.ACTIVE_FILTERS_SET, meta.active)
 				}
+				commit(types.ACTIVE_FILTERS_SET, meta.active)
 			}
 
 			return response

@@ -71,7 +71,6 @@ export default {
 							this.resourceUrl = `/papi/v1/slides/${slideId}`
 							this.loading = false
 							this.slideId = slideId
-							this.slideIdInput = slideId
 
 							this.$emit('resourceUrlFetched', {
 								url: this.resourceUrl,

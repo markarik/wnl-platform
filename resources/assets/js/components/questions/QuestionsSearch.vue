@@ -7,7 +7,7 @@
 					placeholder="Wpisz frazę..."
 					ref="input"
 					type="text"
-					@keydown="onEnter"
+					@keydown.enter="onEnter"
 				>
 			</div>
 		</div>
@@ -68,7 +68,7 @@
 				this.$emit('emitValueToFilter', this.$refs.input.value)
 			},
 			onEnter(e) {
-				e.keyCode === 13 ? this.$emit('emitValueToFilter', e.target.value) : null
+				this.$emit('emitValueToFilter', e.target.value)
 			}
 		}
 	}

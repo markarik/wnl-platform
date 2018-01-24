@@ -425,11 +425,11 @@
 				}
 			},
 			onSearch(phrase) {
-				if (phrase !== '') {
+				if (phrase.trim() !== '') {
 					this.addFilter(phrase)
 					.then(() => {
 						return this.activeFiltersToggle({
-							filter: `search`,
+							filter: 'search',
 							active: true,
 						})
 					})

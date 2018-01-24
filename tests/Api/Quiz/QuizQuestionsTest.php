@@ -60,15 +60,15 @@ class QuizQuestionsTest extends ApiTestCase
 		$data = [
 			// 'fields'  => ['id', 'text', 'created_at'],
 			'filters' => [
-				[
-					'search' => [
-						'phrase' => 'Diagnostyka prenatalna',
-						'mode'   => 'phrase_match',
-					],
-				],
 //				[
-//					'tags' => ['łatwe'],
+//					'search' => [
+//						'phrase' => 'Diagnostyka prenatalna',
+//						'mode'   => 'phrase_match',
+//					],
 //				],
+				[
+					'tags' => ['łatwe'],
+				],
 //				[
 //					'query' => [
 //						'doesntHave' => 'sets',
@@ -95,7 +95,7 @@ class QuizQuestionsTest extends ApiTestCase
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url('/quiz_questions/.filter'), $data);
-$response->dump();
+
 		$response
 			->assertStatus(200);
 	}

@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\QuizSet;
+use App\Models\QuizQuestion;
+use App\Models\Tag;
 use Illuminate\Console\Command;
 use Storage;
 
@@ -13,7 +15,7 @@ class QuizExport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:export {setId}';
+	protected $signature = 'quiz:export {--S|setId=} {--T|tag=}';
 
 	/**
 	 * The console command description.
@@ -38,22 +40,48 @@ class QuizExport extends Command
 	 */
 	public function handle()
 	{
-		$setId = $this->argument('setId');
+		$setId = $this->option('setId');
+		$tag = trim($this->option('tag'));
+		$name = 'QuizQuestions-';
+
 		$headers = ['Treść pytania', 'A', 'B', 'C', 'D', 'E', 'Prawidłowa odpowiedź',
 			'Rok', 'Stopień Trudność', 'Typ pytania', 'Przedmiot', 'Numer pytania'];
 		$rows = collect([$headers]);
 
-
-		$set = QuizSet::with(['questions.answers', 'questions.tags'])
+		if ($setId) {
+			$set = QuizSet::with(['questions.answers', 'questions.tags'])
 			->where('id', $setId)
 			->first();
 
-		if (!$set) {
-			$this->error('Set not found.');
+			if (!$set) {
+				$this->error('Set not found.');
+				exit;
+			}
+
+			$name .= $set->name;
+			$questions = $set->questions;
+		} elseif ($tag) {
+			$tagId = Tag::where('name', $tag)->pluck('id');
+			if (!$tagId) {
+				$this->error('Tag not found.');
+				exit;
+			}
+
+			$name .= $tag;
+			$questions = QuizQuestion::whereHas('tags', function ($query) use ($tagId) {
+				$query->whereIn('tags.id', $tagId);
+			})->get();
+		} else {
+			$this->error('Either a set ID or tag is required.');
 			exit;
 		}
 
-		foreach ($set->questions as $question) {
+		if (!$questions) {
+			$this->error('No questions found.');
+			exit;
+		}
+
+		foreach ($questions as $question) {
 			$answers = $question->answers;
 			$aAnswers = $answers->toArray();
 			$correct = '-';
@@ -83,7 +111,7 @@ class QuizExport extends Command
 		});
 
 		$contents = $rows->implode("\n");
-		Storage::put('exports/quiz/' . $set->name, $contents);
+		Storage::put('exports/quiz/' . $name . '.tsv', $contents);
 
 		return;
 	}

@@ -12,9 +12,11 @@ class SearchFilter extends ApiFilter
 	{
 //		$this->checkIsSearchable($builder);
 		$model = $builder->getModel();
+		$count = (clone $builder)->count();
 		$results = $model::searchRaw([
 				'body' => [
 					'_source' => ['id'],
+					'size' => $count,
 					'query'   => [
 						'query_string' => [
 							'query'      => $this->params['phrase'],
@@ -24,12 +26,12 @@ class SearchFilter extends ApiFilter
 				],
 			]) ['hits']['hits'] ?? [];
 
-		$siema = [];
+		$ids = [];
 		foreach ($results as $result) {
-			array_push($siema, $result['_source']['id']);
+			array_push($ids, $result['_source']['id']);
 		}
 
-		return $builder->whereIn('id', $siema);
+		return $builder->whereIn('id', $ids);
 	}
 
 	private function checkIsSearchable($model)

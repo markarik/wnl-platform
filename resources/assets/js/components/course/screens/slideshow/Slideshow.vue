@@ -5,6 +5,7 @@
 				<div class="controls-left">
 					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
 				</div>
+				<small v-if="$moderatorFeatures.isAllowed('access')">{{currentSlideId}}</small>
 				<div class="controls-right">
 					<div class="controls-item">
 						Tło
@@ -112,6 +113,7 @@
 	import Annotations from './Annotations'
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getApiUrl} from 'js/utils/env'
+	import moderatorFeatures from 'js/perimeters/moderator'
 
 	export default {
 		name: 'Slideshow',
@@ -119,6 +121,7 @@
 			'wnl-annotations': Annotations,
 			'wnl-slideshow-navigation': SlideshowNavigation,
 		},
+		perimeters: [moderatorFeatures],
 		data() {
 			return {
 				bookmarkLoading: false,

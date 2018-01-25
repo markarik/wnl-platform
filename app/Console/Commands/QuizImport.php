@@ -2,6 +2,7 @@
 
 use App\Models\QuizQuestion;
 use App\Models\QuizSet;
+use App\Models\Slide;
 use App\Models\Tag;
 use App\Models\TagsTaxonomy;
 use Illuminate\Console\Command;
@@ -141,6 +142,7 @@ class QuizImport extends Command
 		}
 
 		$this->attachTags($question, $values);
+		$this->attachSlides($question, $values);
 
 		$this->tryMatchingCollectionTaxonomy($question);
 
@@ -148,7 +150,7 @@ class QuizImport extends Command
 		$question->save();
 	}
 
-	protected function attachTags(&$question, $values)
+	protected function attachTags($question, $values)
 	{
 		if (!empty($values[12])) {
 			$this->globalTags[] = trim($values[12]);
@@ -167,6 +169,22 @@ class QuizImport extends Command
 			$tag = Tag::firstOrCreate(['name' => $tagName]);
 			if (!$question->tags->contains($tag)) {
 				$question->tags()->attach($tag);
+			}
+		}
+	}
+
+	protected function attachSlides($question, $values)
+	{
+		$slideIdsRaw = $values[12];
+
+		if (!$slideIdsRaw) return;
+
+		$ids = explode(',', str_replace(["\n", "\t", ' '], '', $slideIdsRaw));
+
+		$slides = Slide::whereIn('id', $ids)->get();
+		foreach ($slides as $slide) {
+			if (!$question->slides->contains($slide)) {
+				$question->slides()->attach($slide);
 			}
 		}
 	}
@@ -222,7 +240,8 @@ class QuizImport extends Command
 
 	protected function debug($message)
 	{
-		if (!$this->option('debug')) return;
-		$this->info($message);
+		if ($this->option('debug')) {
+			$this->info($message);
+		}
 	}
 }

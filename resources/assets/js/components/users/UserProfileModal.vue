@@ -115,9 +115,6 @@ export default {
 				visible: false,
 			})
 		}
-	},
-	mounted() {
-		console.log(this.checkForNameDisplay);
 	}
 }
 </script>

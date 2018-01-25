@@ -157,6 +157,10 @@
 		},
 		methods: {
 			filterDisplayName(filter) {
+				if (filter.type === 'search') {
+					return filter.items[0] && filter.items[0].value && `Fraza: ${filter.items[0].value}`
+				}
+
 				if (filter.hasOwnProperty('name')) return filter.name
 
 				const messageKey = filter.hasOwnProperty('message') ? filter.message : filter.value
@@ -164,6 +168,9 @@
 				return this.$t(`${this.itemsNamesSource}.${messageKey}`)
 			},
 			getFilter(filter) {
+				if (filter.startsWith('search.')) {
+					return this.filters['search']
+				}
 				return get(this.filters, filter)
 			},
 			emitHeight() {

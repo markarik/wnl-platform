@@ -1,11 +1,19 @@
-import {set, delete as destroy} from 'vue'
-import {get, isEqual, isEmpty, isNumber, merge, size} from 'lodash'
+import {set} from 'vue'
+import {get, isEmpty, isNumber, size} from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {parseFilters} from 'js/services/apiFiltering'
 import axios from 'axios'
-import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
-import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
+import {
+	commentsActions,
+	commentsGetters,
+	commentsMutations
+} from 'js/store/modules/comments'
+import {
+	reactionsActions,
+	reactionsGetters,
+	reactionsMutations
+} from 'js/store/modules/reactions'
 
 
 const namespaced = true
@@ -59,6 +67,7 @@ const getters = {
 			'quiz-resolution',
 			'by_taxonomy-subjects',
 			'by_taxonomy-exams',
+			'search'
 		]
 
 		let filters = {}
@@ -101,7 +110,15 @@ const getters = {
 const mutations = {
 	...commentsMutations,
 	...reactionsMutations,
+	[types.ADD_FILTER] (state, phrase) {
+		set(state.filters.search, 'items', [{value: phrase}])
+	},
 	[types.ACTIVE_FILTERS_ADD] (state, filter) {
+		if (filter.startsWith('search.')) {
+			const searchIndex = state.activeFilters.findIndex(active => active.startsWith('search.'))
+			return searchIndex > -1 ? state.activeFilters[searchIndex] = filter : state.activeFilters.push(filter)
+		}
+
 		if (state.activeFilters.indexOf(filter) === -1) {
 			state.activeFilters.push(filter)
 		}
@@ -215,6 +232,12 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
+	addFilter({commit}, filter) {
+		return new Promise(resolve => {
+			commit(types.ADD_FILTER, filter)
+			resolve()
+		})
+	},
 	activeFiltersSet({commit}, filters) {
 		commit(types.ACTIVE_FILTERS_SET, filters)
 	},
@@ -272,7 +295,7 @@ const actions = {
 		return Promise.resolve(results)
 	},
 	fetchDynamicFilters({commit, getters, rootGetters}) {
-		const parsedFilters = parseFilters(getters.activeFilters, state.filters,rootGetters.currentUserId)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 		return _fetchDynamicFilters({filters: parsedFilters})
 			.then(({data}) => {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
@@ -289,7 +312,7 @@ const actions = {
 			include: 'quiz_answers',
 			page,
 			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
-			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
+			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 
@@ -302,6 +325,10 @@ const actions = {
 			commit(types.UPDATE_INCLUDED, included)
 
 			if (!isEmpty(meta.active)) {
+				const searchFilter = meta.active.find(active => active.startsWith('search.'))
+				if (searchFilter) {
+					commit(types.ADD_FILTER, searchFilter.substr(searchFilter.indexOf('.') + 1))
+				}
 				commit(types.ACTIVE_FILTERS_SET, meta.active)
 			}
 

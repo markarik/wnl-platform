@@ -3,7 +3,12 @@
 		<div class="questions-solving-view" v-if="!testMode">
 			<div class="tabs" v-if="!isMobile">
 				<ul>
-					<li v-for="view in views" :class="{'is-active': view.name === activeView}" @click="activeView = view.name">
+					<li
+						v-for="(view, index) in views"
+						:key="index"
+						:class="{'is-active': view.name === activeView}"
+						@click="activeView = view.name"
+					>
 						<a>
 							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
 							{{$t(`questions.solving.tabs.${view.name}`, {

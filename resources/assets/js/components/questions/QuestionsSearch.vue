@@ -7,6 +7,7 @@
 					:placeholder="$t('questions.filters.searchPlaceholder')"
 					ref="input"
 					type="text"
+					:disabled="loading"
 					@keydown.enter="onEnter"
 					v-model="searchPhrase">
 			</div>
@@ -70,6 +71,6 @@
 			onEnter() {
 				this.$emit('emitValueToFilter', this.searchPhrase)
 			}
-		},
+		}
 	}
 </script>

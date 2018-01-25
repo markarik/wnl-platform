@@ -440,8 +440,7 @@
 					})
 					.then(() => {
 						this.fetchingFilters = false
-
-						this.fetchQuestionsReactions(this.meta.current_page)
+						this.fetchQuestionsReactions(this.getPage(this.meta.currentPage))
 					})
 				}
 			}

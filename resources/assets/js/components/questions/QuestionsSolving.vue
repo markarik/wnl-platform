@@ -348,7 +348,7 @@
 			},
 			questionNumber(index) {
 				return isNumber(index)
-					? (this.currentQuestion.page - 1) * limit + index + 1
+					? (this.meta.currentPage - 1) * limit + index + 1
 					: ''
 			},
 			selectAnswer(payload, position) {

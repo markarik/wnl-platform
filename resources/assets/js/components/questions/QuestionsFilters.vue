@@ -67,9 +67,6 @@
 	.wnl-questions-filters
 		width: 100%
 
-	.search-input
-		width: 100%
-
 	.wnl-active-filters-container
 		background-color: $color-background-light-gray
 		left: 0

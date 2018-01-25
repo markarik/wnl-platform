@@ -50,6 +50,7 @@ export const questions = {
 			'collection': 'Zapisane w Kolekcjach',
 		},
 		searchHeading: 'Wyszukaj po frazie',
+		searchPlaceholder: 'Wpisz frazę...',
 		searchButton: 'Szukaj',
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',

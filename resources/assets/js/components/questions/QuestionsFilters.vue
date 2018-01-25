@@ -24,7 +24,9 @@
 						{{$t('questions.filters.searchHeading')}}
 				 	</span>
 				 </div>
-				 <wnl-questions-search class="search-input" @emitValueToFilter="emitValueToList"/>
+				 <wnl-questions-search class="search-input"
+				 :loading="loading"
+				 @emitValueToFilter="emitValueToList"/>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
 						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
@@ -122,6 +124,10 @@
 				type: Object,
 				required: true,
 			},
+			loading: {
+				default: false,
+				type: Boolean,
+			}
 		},
 		data() {
 			return {

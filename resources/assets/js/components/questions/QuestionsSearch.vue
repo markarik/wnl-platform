@@ -4,16 +4,15 @@
 			<div class="control" :class="{'is-loading': loading}">
 				<input
 					class="input is-hovered"
-					placeholder="Wpisz frazę..."
+					:placeholder="$t('questions.filters.searchPlaceholder')"
 					ref="input"
 					type="text"
 					@keydown.enter="onEnter"
-				>
+					v-model="searchPhrase">
 			</div>
 		</div>
 		<a class="search-button button is-primary is-outlined is-small"
-			@click="search"
-			>
+			@click="search">
 			{{$t('questions.filters.searchButton')}}
 		</a>
 	</div>
@@ -58,18 +57,19 @@
 <script>
 	export default {
 		name: 'QuestionsSearch',
+		props: ['loading'],
 		data() {
 			return {
-				loading: false,
+				searchPhrase: '',
 			}
 		},
 		methods: {
 			search() {
-				this.$emit('emitValueToFilter', this.$refs.input.value)
+				this.$emit('emitValueToFilter', this.searchPhrase)
 			},
-			onEnter(e) {
-				this.$emit('emitValueToFilter', e.target.value)
+			onEnter() {
+				this.$emit('emitValueToFilter', this.searchPhrase)
 			}
-		}
+		},
 	}
 </script>

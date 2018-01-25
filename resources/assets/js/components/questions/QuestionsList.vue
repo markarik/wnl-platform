@@ -59,6 +59,7 @@
 		>
 			<wnl-questions-filters
 					v-show="!testMode"
+					:loading="fetchingQuestions || fetchingFilters"
 					:activeFilters="activeFilters"
 					:fetchingData="fetchingQuestions || fetchingFilters"
 					:filters="filters"

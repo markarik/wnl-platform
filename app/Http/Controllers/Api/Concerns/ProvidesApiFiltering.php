@@ -163,13 +163,8 @@ trait ProvidesApiFiltering
 	{
 		if (!$request->has('filters') || !$request->has('active')) return;
 
-		$activeFilters = $request->active;
-		// Don't save search filter because we don't have a way how to restore it with phrase
-		// $activeFilters = array_filter($request->active, function($element) {
-		// 	return $element != 'search';
-		// });
 		$key = $this->filtersFormatKey($request);
-		$data = json_encode([$request->filters, $activeFilters]);
+		$data = json_encode([$request->filters, $request->active]);
 
 		Redis::set($key, $data);
 	}

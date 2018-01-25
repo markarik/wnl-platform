@@ -342,6 +342,7 @@ const actions = {
 			})
 	},
 	fetchQuestionData({commit, dispatch}, id) {
+		if (!id) return Promise.resolve()
 		return _fetchQuestionsData(id)
 			.then(({data}) => {
 				_.get(data, 'included.comments') && dispatch('comments/setComments', data.included.comments, {root:true})

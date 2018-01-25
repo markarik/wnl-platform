@@ -435,12 +435,15 @@
 
 						this.resetCurrentQuestion()
 						this.resetPages()
-						this.fetchDynamicFilters()
-						return this.fetchMatchingQuestions()
-					})
-					.then(() => {
+						return Promise.all([
+							this.fetchDynamicFilters(),
+							this.fetchMatchingQuestions()
+						])
+					}).then(() => Promise.all([
+						this.fetchQuestionsReactions(this.getPage(this.meta.currentPage)),
+						this.fetchQuestionData(this.currentQuestion.id)
+					])).then(() => {
 						this.fetchingFilters = false
-						this.fetchQuestionsReactions(this.getPage(this.meta.currentPage))
 					})
 				}
 			}

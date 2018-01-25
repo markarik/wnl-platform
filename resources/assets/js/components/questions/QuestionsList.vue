@@ -193,6 +193,9 @@
 			activeFiltersNames() {
 				return this.activeFiltersObjects.map(filter => {
 					if (!filter) return
+					if (filter.type === 'search') {
+						return filter.items[0] && filter.items[0].value && `Fraza: ${filter.items[0].value}`
+					}
 					return filter.hasOwnProperty('name')
 						? filter.name
 						: filter.hasOwnProperty('message')

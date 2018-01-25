@@ -366,7 +366,7 @@ const actions = {
 				.then(response => resolve(response))
 		})
 	},
-	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
+	fetchTestQuestions({commit, state, dispatch, rootGetters}, {activeFilters, count: limit}) {
 		const filters = parseFilters(activeFilters, state.filters, rootGetters.currentUserId)
 
 		return _fetchQuestions({
@@ -376,6 +376,9 @@ const actions = {
 			include: 'quiz_answers,reactions,comments.profiles,slides'
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit)
+			const comments = _.get(included, 'comments')
+
+			comments && dispatch('comments/setComments', comments, {root:true})
 
 			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides})
 			commit(types.UPDATE_INCLUDED, included)

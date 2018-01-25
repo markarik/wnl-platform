@@ -44,9 +44,15 @@ const getters = {
 	...reactionsGetters,
 	activeFilters: state => state.activeFilters,
 	activeFiltersObjects: state => {
-		return isEmpty(state.filters)
-			? []
-			: state.activeFilters.map(path => get(state.filters, path))
+		if (isEmpty(state.filters)) {
+			return []
+		}
+		return state.activeFilters.map(path => {
+			if (path.startsWith('search.')) {
+				return get(state.filters, 'search')
+			}
+			return get(state.filters, path)
+		})
 	},
 	activeFiltersValues: state => {
 		return isEmpty(state.filters)

@@ -179,6 +179,16 @@ export default {
 					}
 				}
 			}
+
+			if (this.lastEvent.data.context) {
+				return {
+					...this.lastEvent.data.context,
+					query: {
+						[this.lastEvent.data.objects.type]: this.lastEvent.data.objects.id
+					}
+				}
+			}
+
 			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer)
 		},
 		formatedCreatedAt() {

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Qna;
 
+use App\Events\Event;
+use App\Events\SanitizesUserContent;
 use App\Models\QnaQuestion;
 use App\Traits\EventContextTrait;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use App\Events\SanitizesUserContent;
-use App\Events\Event;
+use Illuminate\Foundation\Events\Dispatchable;
 
 class QnaQuestionRemoved extends Event
 {

@@ -59,9 +59,6 @@ function _fetchPresentables(slideshowId, type) {
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
-		.then(response => {
-			return _fetchReactables(response.data)
-		})
 }
 
 function getInitialState() {
@@ -172,13 +169,28 @@ const actions = {
 	...reactionsActions,
 	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentables', {id, type})
+			dispatch('setupPresentablesWithReactions', {id, type})
 				.then(() => dispatch('setupComments', getters.slidesIds))
 				.then(() => resolve())
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupPresentables({commit}, {id, type}) {
+	setupPresentablesWithReactions({commit}, {id, type='App\\Models\\Slideshow'}) {
+		return new Promise((resolve, reject) => {
+			_fetchPresentables(id, type)
+				.then((response) => _fetchReactables(response.data))
+				.then((presentables) => {
+					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
+					commit(types.SLIDESHOW_SET_SLIDES)
+					resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					reject()
+				})
+		})
+	},
+	setupPresentables({commit}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
 				.then((presentables) => {

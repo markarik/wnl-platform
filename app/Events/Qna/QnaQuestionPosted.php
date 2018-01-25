@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Qna;
 
-use Request;
+use App\Events\Event;
+use App\Events\SanitizesUserContent;
 use App\Models\QnaQuestion;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
-use App\Events\SanitizesUserContent;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Queue\SerializesModels;
 
 class QnaQuestionPosted extends Event
 {

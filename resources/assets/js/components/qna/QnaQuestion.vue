@@ -29,19 +29,18 @@
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<wnl-avatar
-							:fullName="author.full_name"
-							:url="author.avatar"
-							:userId="userId"
-							size="medium">
-					</wnl-avatar>
-					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
+					<div class="modal-activator" @click="showModal">
+						<wnl-avatar class="avatar"
+								:fullName="author.full_name"
+								:url="author.avatar"
+								size="medium">
+						</wnl-avatar>
 						<span class="qna-meta-info">
-							{{authorNameToDisplay}} ·
+							{{ author.display_name }}
 						</span>
-					</router-link>
+					</div>
 					<span class="qna-meta-info">
-						{{time}}
+						· {{time}}
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
@@ -125,6 +124,13 @@
 		border-bottom: $border-light-gray
 		padding: $margin-base
 
+	.modal-activator
+		display: flex
+		flex-direction: row
+		cursor: pointer
+		align-items: center
+		color: $color-sky-blue
+
 	.qna-question-content
 		font-size: $font-size-plus-1
 		justify-content: flex-start
@@ -189,6 +195,7 @@
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Delete from 'js/components/global/form/Delete'
 	import Resolve from 'js/components/global/form/Resolve'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
@@ -211,7 +218,7 @@
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
-			'wnl-watch': Watch
+			'wnl-watch': Watch,
 		},
 		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
@@ -240,9 +247,6 @@
 			id() {
 				return this.questionId
 			},
-			userId() {
-				return this.author.user_id
-			},
 			content() {
 				return this.question.text
 			},
@@ -256,9 +260,6 @@
 							return this.profile(this.question.profiles[0])
 						})
 				}
-			},
-			authorNameToDisplay() {
-				return this.author.display_name || this.author.full_name
 			},
 			isCurrentUserAuthor() {
 				return this.currentUserId === this.author.user_id
@@ -319,10 +320,20 @@
 				const questionId = _.get(this.$route, 'query.qna_question')
 
 				if (questionId == this.questionId && this.answerInUrl) return true
-			}
+			},
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: {
+						author: this.author
+					},
+					component: UserProfileModal,
+				})
+			},
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {
@@ -381,4 +392,3 @@
 		},
 	}
 </script>
-	this.author.display_name ? this.author.display_name : this.author.full_name

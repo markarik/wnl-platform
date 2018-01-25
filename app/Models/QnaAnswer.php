@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\QnaAnswerPosted;
+use App\Events\Qna\QnaAnswerPosted;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;

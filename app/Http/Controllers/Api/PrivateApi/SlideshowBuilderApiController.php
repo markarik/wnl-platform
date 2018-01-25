@@ -18,7 +18,8 @@ class SlideshowBuilderApiController extends ApiController
 		$this->resourceName = config('papi.resources.slides');
 	}
 
-	public function getEmpty() {
+	public function getEmpty()
+	{
 		$view = view('course.slideshow', [
 			'slides'         => '',
 			'background_url' => '',
@@ -118,7 +119,10 @@ class SlideshowBuilderApiController extends ApiController
 	public function query(Request $request)
 	{
 		$builder = $this->applyFilters(new Slide, $request);
-		$slides = $builder ->get();
+		$slides = $builder->get();
+		if (!$slides->first()) {
+			return $this->respondNotFound();
+		}
 		$firstSlide = Slide::find($slides->first()->slide_id);
 		$firstSection = $firstSlide->sections->first();
 		$background = $firstSection->screen->slideshow->background_url;

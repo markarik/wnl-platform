@@ -1,12 +1,11 @@
 <?php namespace App\Listeners\Handlers\Common;
 
 
-use App\Events\ResourceRestored;
 use App\Listeners\UserNotificationsGate;
 use App\Models\Notification;
-use Illuminate\Support\Facades\Notification as Notify;
 use App\Notifications\EventNotification;
 use App\Notifications\Media\LiveChannel;
+use Illuminate\Support\Facades\Notification as Notify;
 
 abstract class ResourceRestoredHandler
 {

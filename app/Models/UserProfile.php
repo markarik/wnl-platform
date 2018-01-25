@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Events\UserDataUpdated;
-use Laravel\Scout\Searchable;
+use App\Events\Users\UserDataUpdated;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class UserProfile extends Model
 {
@@ -57,5 +57,14 @@ class UserProfile extends Model
 	public function setUsernameAttribute($value)
 	{
 		$this->attributes['username'] = $value === '' ? null : $value;
+	}
+
+	public function getDisplayNameAttribute()
+	{
+		if ($this->attributes['display_name']) {
+			return $this->attributes['display_name'];
+		} else {
+			return $this->full_name;
+		}
 	}
 }

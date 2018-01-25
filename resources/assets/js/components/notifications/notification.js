@@ -101,7 +101,7 @@ export const notification = {
 			return decode(this.message.subject.text)
 		},
 		hasDynamicContext() {
-			return !!this.message.context.dynamic
+			return !!_.get(this.message, 'context.dynamic')
 		},
 		dynamicRoute() {
 			const {query, dynamic} = this.routeContext

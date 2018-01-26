@@ -156,9 +156,10 @@
 						return false
 					}
 					if (this.selectedAnswerIndex < 1) {
-						return this.selectAnswer({id: this.question.id, answer: this.question.answers.length - 1})
+						this.selectAnswer({id: this.question.id, answer: this.question.answers.length - 1})
+					} else {
+						this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex - 1})
 					}
-					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex - 1})
 					return false
 				}
 				// Right arrow
@@ -171,9 +172,10 @@
 						return false
 					}
 					if (this.selectedAnswerIndex > this.question.answers.length - 2) {
-						return this.selectAnswer({id: this.question.id, answer: 0})
+						this.selectAnswer({id: this.question.id, answer: 0})
+					} else {
+						this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex + 1})
 					}
-					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex + 1})
 					return false
 				}
 				if (e.keyCode === 13) {

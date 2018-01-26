@@ -179,7 +179,7 @@
 					return false
 				}
 				if (e.keyCode === 13) {
-					this.$emit('selectAnswer', {id: this.question.id, answer: this.selectedAnswerIndex})
+					this.verify()
 				}
 			},
 		},

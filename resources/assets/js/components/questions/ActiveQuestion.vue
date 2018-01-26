@@ -101,7 +101,6 @@
 				hasErrors: false,
 				allowDoubleclick: true,
 				timeout: 0,
-				selectedAnswerIndex: 0,
 			}
 		},
 		computed: {
@@ -109,6 +108,13 @@
 			...mapGetters('questions', ['getQuestion']),
 			hasAnswer() {
 				return _.isNumber(this.question.selectedAnswer)
+			},
+			selectedAnswerIndex () {
+				if (this.hasAnswer) {
+					return this.question.selectedAnswer
+				} else {
+					return -1
+				}
 			},
 			isSubmitDisabled() {
 				return !this.hasAnswer
@@ -130,7 +136,6 @@
 				scrollToElement(this.$el, 63)
 			},
 			selectAnswer(data) {
-				this.selectedAnswerIndex = data.answer
 				this.allowDoubleclick = false
 				this.$emit('selectAnswer', data)
 				this.timeout = setTimeout(() => {

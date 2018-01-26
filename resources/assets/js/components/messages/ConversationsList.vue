@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="conversation-list">
+	<div class="conversation-list" v-if="rooms.length">
 		<wnl-conversation-snippet
 			v-for="(room, index) in rooms"
 			:key="index"
@@ -7,9 +7,9 @@
 			:users="getRoomProfiles(room.profiles)"
 			:messages="getRoomMessages(room)"
 			:currentRoom="currentRoom">
-
 		</wnl-conversation-snippet>
 	</div>
+	<span v-else>Nie masz żadnych rozmów</span>
 </template>
 
 <style lang="sass">
@@ -23,6 +23,7 @@
 	import ConversationSnippet from 'js/components/messages/ConversationSnippet'
 	import {getApiUrl} from 'js/utils/env'
 	import {mapGetters} from 'vuex'
+	import {isEmpty} from 'lodash'
 
 	export default {
 		name: 'ConversationsList',
@@ -44,10 +45,12 @@
 			getPrivateRooms() {
 				const path = 'chat_rooms/.getPrivateRooms?include=profiles'
 				return axios.get(getApiUrl(path))
-					.then(res => {
-						this.profiles = res.data.included.profiles
-						delete res.data.included
-						this.rooms = Object.values(res.data)
+					.then(({data}) => {
+						if (isEmpty(data)) return
+
+						this.profiles = data.included.profiles
+						delete data.included
+						this.rooms = Object.values(data)
 					})
 			},
 			getMessages() {
@@ -140,7 +143,7 @@
 		},
 		mounted(){
 			this.getPrivateRooms()
-				.then(() => this.getMessages())
+				.then(() => this.rooms.length && this.getMessages(this.rooms))
 				.then(() => this.openRoom(this.$route.params.interlocutors))
 		},
 		watch: {

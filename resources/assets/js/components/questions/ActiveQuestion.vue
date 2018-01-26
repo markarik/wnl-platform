@@ -101,6 +101,7 @@
 				hasErrors: false,
 				allowDoubleclick: true,
 				timeout: 0,
+				selectedAnswerIndex: 0,
 			}
 		},
 		computed: {
@@ -129,6 +130,7 @@
 				scrollToElement(this.$el, 63)
 			},
 			selectAnswer(data) {
+				this.selectedAnswerIndex = data.answer
 				this.allowDoubleclick = false
 				this.$emit('selectAnswer', data)
 				this.timeout = setTimeout(() => {
@@ -139,17 +141,36 @@
 				this.hasAnswer && this.$emit('verify', this.question.id)
 			},
 			keyDown(e) {
-				// Right arrow
-				if (e.keyCode === 39) {
-					this.nextQuestion()
-				}
 				// Left arrow
 				if (e.keyCode === 37) {
 					this.previousQuestion()
 				}
+				// Up arrow
+				if(e.keyCode === 38) {
+					if (this.selectedAnswerIndex < 1) {
+						return this.selectAnswer({id: this.question.id, answer: this.question.answers.length - 1})
+					}
+					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex - 1})
+				}
+				// Right arrow
+				if (e.keyCode === 39) {
+					this.nextQuestion()
+				}
+				// Down arrow
+				if (e.keyCode === 40) {
+					if (this.selectedAnswerIndex > this.question.answers.length - 2) {
+						return this.selectAnswer({id: this.question.id, answer: 0})
+					}
+					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex + 1})
+				}
+				if (e.keyCode === 13) {
+					this.$emit('selectAnswer', {id: this.question.id, answer: this.selectedAnswerIndex})
+				}
 			},
 		},
 		mounted() {
+			console.log(this.question.answers.length);
+			console.log(this.selectedAnswerIndex);
 			window.addEventListener('keydown', this.keyDown)
 		},
 		beforeDestroy() {

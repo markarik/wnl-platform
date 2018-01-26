@@ -1,13 +1,10 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Http\Controllers\Api\Transformers\UserPlanTransformer;
-use App\Models\User;
 use App\Http\Controllers\Api\ApiController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\QuizQuestion;
+use App\Http\Controllers\Api\Transformers\UserPlanTransformer;
 use App\Models\UserPlan;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 
 class UserPlanApiController extends ApiController
@@ -73,6 +70,7 @@ class UserPlanApiController extends ApiController
 		\DB::table('users_plan_progress')->insert($valuesToInsert->toArray());
 
 		$this->deleteProgress($recentPlan);
+		\Cache::tags("user-{$userId}")->flush();
 
 		$resource = new Item($createdPlan, new UserPlanTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();

@@ -147,10 +147,14 @@
 				}
 				// Up arrow
 				if(e.keyCode === 38) {
+					if(this.question.isResolved) {
+						return false
+					}
 					if (this.selectedAnswerIndex < 1) {
 						return this.selectAnswer({id: this.question.id, answer: this.question.answers.length - 1})
 					}
 					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex - 1})
+					return false
 				}
 				// Right arrow
 				if (e.keyCode === 39) {
@@ -158,10 +162,14 @@
 				}
 				// Down arrow
 				if (e.keyCode === 40) {
+					if(this.question.isResolved) {
+						return false
+					}
 					if (this.selectedAnswerIndex > this.question.answers.length - 2) {
 						return this.selectAnswer({id: this.question.id, answer: 0})
 					}
 					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex + 1})
+					return false
 				}
 				if (e.keyCode === 13) {
 					this.$emit('selectAnswer', {id: this.question.id, answer: this.selectedAnswerIndex})

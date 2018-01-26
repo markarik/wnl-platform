@@ -182,7 +182,7 @@ const actions = {
 				.then((presentables) => {
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
-					resolve()
+					return resolve()
 				})
 				.catch((error) => {
 					$wnl.logger.error(error)

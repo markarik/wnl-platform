@@ -193,7 +193,7 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupPresentablesWithReactions']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds']),
 			...mapActions(['toggleOverlay', 'showNotification']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
@@ -483,7 +483,7 @@
 
 				Promise.all([
 					axios.get(this.slideshowUrl),
-					this.setupPresentablesWithReactions({id: this.presentableId})
+					this.setup({id: this.presentableId})
 				]).then(([{data}]) => {
 					if (typeof this.child.destroy === 'function') {
 						this.child.destroy()

@@ -177,8 +177,6 @@
 			},
 		},
 		mounted() {
-			console.log(this.question.answers.length);
-			console.log(this.selectedAnswerIndex);
 			window.addEventListener('keydown', this.keyDown)
 		},
 		beforeDestroy() {

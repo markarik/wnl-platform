@@ -76,6 +76,10 @@ class UserPlan extends Model
 			->whereDate('resolved_at', $date->toDateString())
 			->count();
 
+		if ($questionsPerDay - $todaysSolved <= 0 ) {
+			return collect();
+		}
+
 		$todaysQuestions = $remainingQuestions
 			->sortBy('id')
 			->take($questionsPerDay - $todaysSolved);
@@ -91,7 +95,7 @@ class UserPlan extends Model
 			->count();
 		$done = $total - $remaining;
 		$doneToday = $this->questionsProgress()
-			->where('resolved_at', '>=', Carbon::today())
+			->whereDate('resolved_at', Carbon::today())
 			->count();
 
 		// TODO: Group resolved_at by day

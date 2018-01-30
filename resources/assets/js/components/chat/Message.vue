@@ -7,9 +7,13 @@
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
+<<<<<<< Updated upstream
 					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
 						<strong>{{ nameToDisplay }}</strong>
 					</router-link>
+=======
+					<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
+>>>>>>> Stashed changes
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -63,7 +67,23 @@
 				return timeFromMs(this.time)
 			},
 			nameToDisplay() {
+<<<<<<< Updated upstream
 				return this.displayName || this.fullName
+=======
+				return this.author.display_name ? this.author.display_name : this.fullName
+			},
+		},
+		methods: {
+			...mapActions(['toggleModal']),
+			showModal() {
+				this.toggleModal({
+					visible: true,
+					content: {
+						author: this.author
+					},
+					component: UserProfileModal,
+				})
+>>>>>>> Stashed changes
 			}
 		}
 	}

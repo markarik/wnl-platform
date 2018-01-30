@@ -11,7 +11,7 @@
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<strong class="author" @click="showModal">{{ author.display_name }}</strong>
+					<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -74,6 +74,9 @@
 		computed: {
 			formattedTime () {
 				return timeFromMs(this.time)
+			},
+			nameToDisplay() {
+				return this.author.display_name || this.fullName
 			},
 		},
 		methods: {

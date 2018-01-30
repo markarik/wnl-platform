@@ -21,8 +21,6 @@ export default {
         overflow-wrap: break-word
         padding-bottom: $margin-base
         width: 100%
-        word-break: break-all
-        word-break: break-word
         .label
             color: $color-gray-dimmed
             font-size: $font-size-plus-1

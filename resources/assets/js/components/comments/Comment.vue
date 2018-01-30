@@ -2,20 +2,19 @@
 	<article class="wnl-comment media">
 		<div class="wnl-comment-side">
 			<figure class="media-left">
-				<p class="image is-32x32">
-					<wnl-avatar size="medium"
-						:fullName="profile.full_name"
-						:url="profile.avatar"
-						:userId="userId">
-					</wnl-avatar>
-				</p>
+				<div class="avatar-activator" @click="showModal">
+					<p class="image is-32x32">
+						<wnl-avatar size="medium"
+							:fullName="profile.full_name"
+							:url="profile.avatar">
+						</wnl-avatar>
+					</p>
+				</div>
 			</figure>
 			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-				<span class="author">{{ nameToDisplay }}</span>
-			</router-link>
+			<span class="author" @click="showModal">{{ profile.display_name }}</span>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
@@ -31,7 +30,11 @@
 	@import 'resources/assets/sass/variables'
 
 	.media-left
-		margin-bottom: $margin-small
+
+
+	.author
+		color: $color-sky-blue
+		cursor: pointer
 
 	.comment-content
 		margin-top: -$margin-small
@@ -48,6 +51,9 @@
 
 		.media-left
 			margin-right: 0
+			margin-bottom: $margin-small
+			.avatar-activator
+				cursor: pointer
 
 	.author
 		font-weight: $font-weight-bold
@@ -59,8 +65,10 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
+import UserProfileModal from 'js/components/users/UserProfileModal'
+import Avatar from 'js/components/global/Avatar'
 import Delete from 'js/components/global/form/Delete'
 import Resolve from 'js/components/global/form/Resolve'
 import { timeFromS } from 'js/utils/time'
@@ -70,6 +78,7 @@ import Vote from 'js/components/global/reactions/Vote'
 export default {
 	name: 'Comment',
 	components: {
+		'wnl-avatar': Avatar,
 		'wnl-delete': Delete,
 		'wnl-resolve': Resolve,
 		'wnl-vote': Vote,
@@ -81,12 +90,6 @@ export default {
 		...mapGetters('comments', ['getReaction']),
 		id() {
 			return this.comment.id
-		},
-		userId() {
-			return this.profile.user_id
-		},
-		nameToDisplay() {
-			return this.profile.display_name || this.profile.full_name
 		},
 		time() {
 			return timeFromS(this.comment.created_at)
@@ -105,6 +108,16 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions(['toggleModal']),
+		showModal() {
+			this.toggleModal({
+				visible: true,
+				content: {
+					author: this.profile
+				},
+				component: UserProfileModal,
+			})
+		},
 		onDeleteSuccess() {
 			this.$emit('removeComment', this.id)
 		}

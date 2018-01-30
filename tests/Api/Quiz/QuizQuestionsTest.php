@@ -3,8 +3,8 @@
 namespace Tests\Api\Quiz;
 
 use App\Models\User;
-use Tests\Api\ApiTestCase;
 use Carbon\Carbon;
+use Tests\Api\ApiTestCase;
 
 
 class QuizQuestionsTest extends ApiTestCase
@@ -62,30 +62,30 @@ class QuizQuestionsTest extends ApiTestCase
 			'filters' => [
 //				[
 //					'search' => [
-//						'phrase' => 'Gastropareza',
+//						'phrase' => 'Diagnostyka prenatalna',
 //						'mode'   => 'phrase_match',
 //					],
 //				],
 				[
 					'tags' => ['łatwe'],
 				],
-				[
-					'query' => [
-						'doesntHave' => 'sets',
-					],
-				],
-				[
-					'quiz-resolution' => [
-						'user_id' => 255,
-						'list'    => ['correct', 'incorrect', 'unresolved'],
-					],
-				],
-				[
-					'quiz-planned' => [
-						'user_id' => 2,
-						'list'    => ['all'],
-					],
-				],
+//				[
+//					'query' => [
+//						'doesntHave' => 'sets',
+//					],
+//				],
+//				[
+//					'quiz-resolution' => [
+//						'user_id' => 255,
+//						'list'    => ['correct', 'incorrect', 'unresolved'],
+//					],
+//				],
+//				[
+//					'quiz-planned' => [
+//						'user_id' => 2,
+//						'list'    => ['all'],
+//					],
+//				],
 
 			],
 //			'include' => 'comments,comments.profiles,reactions',

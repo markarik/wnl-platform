@@ -41,28 +41,34 @@ $border-color: $color-inactive-gray
 .toggle-annotations
 	left: $fixed-elements-padding
 
-	.annotations-count
-		background-color: $color-ocean-blue
-		border-radius: 50px
-		color: $color-white
-		font-size: 0
-		font-weight: $font-weight-black
-		height: 0
-		line-height: 0
-		position: absolute
-		right: -1em
-		text-align: center
-		top: -1em
-		transition: all $transition-length-base
-		width: 0
+.badge
+	background-color: $color-ocean-blue
+	border-radius: 50px
+	color: $color-white
+	font-size: 0
+	font-weight: $font-weight-black
+	height: 0
+	line-height: 0
+	position: absolute
+	right: -1em
+	text-align: center
+	top: -1em
+	transition: all $transition-length-base
+	width: 0
 
-		&.has-some
-			display: initial
-			font-size: $font-size-base
-			height: 1.8em
-			line-height: 1.8em
-			transition: all $transition-length-base
-			width: 1.8em
+	&.has-some
+		display: initial
+		font-size: $font-size-base
+		height: 1.8em
+		line-height: 1.8em
+		transition: all $transition-length-base
+		width: 1.8em
+
+.order-number-container
+	position: absolute
+	left: $fixed-elements-padding
+	top: $fixed-elements-padding
+	z-index: 1
 
 .bookmark
 	align-items: center
@@ -162,6 +168,58 @@ $border-color: $color-inactive-gray
 
 		.fs-open
 			display: none
+
+.refresh-icon
+	position: fixed
+	bottom: 10px
+	right: 60px
+	z-index: $menu-z-index
+
+	&.hidden
+		display: none
+
+	.badge
+		right: 0
+		left: -1em
+
+.refresh-button
+	margin: 10px auto
+	font-size: 0.875rem
+	font-weight: 600
+	height: auto
+	line-height: 1.5em
+	max-width: 90%
+	padding: 0.5em 1.25em 0.4em
+	text-align: center
+	text-transform: uppercase
+	color: $color-ocean-blue
+	border: 1px solid $color-ocean-blue
+	border-radius: 2px
+	background-color: transparent
+	diplay: block
+
+.modified-slides-list
+	display: none
+	position: fixed
+	bottom: 60px
+	right: 60px
+	border: 1px solid #efefef
+	box-shadow: 2px 2px 10px 5px rgba(67, 73, 90, 0.3)
+	padding: 0 10px
+	z-index: $menu-z-index
+	max-height: 600px
+	overflow-y: auto
+	background: white
+
+	ul
+		list-style: none
+
+	li
+		border-bottom: 1px solid #efefef
+		padding: 10px
+
+	&.visible
+		display: block
 
 .wnl-slideshow-control
 	background: $controls-background

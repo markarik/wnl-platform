@@ -3,7 +3,12 @@
 		<div class="questions-solving-view" v-if="!testMode">
 			<div class="tabs" v-if="!isMobile">
 				<ul>
-					<li v-for="view in views" :class="{'is-active': view.name === activeView}" @click="activeView = view.name">
+					<li
+						v-for="(view, index) in views"
+						:key="index"
+						:class="{'is-active': view.name === activeView}"
+						@click="activeView = view.name"
+					>
 						<a>
 							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
 							{{$t(`questions.solving.tabs.${view.name}`, {
@@ -305,7 +310,6 @@
 				const filters = isEmpty(this.activeFilters)
 					? this.$t('questions.filters.allQuestions')
 					: this.activeFilters.join(', ')
-
 				return this.$t('questions.filters.activeFiltersReview', {filters})
 			},
 			count() {
@@ -343,7 +347,7 @@
 			},
 			questionNumber(index) {
 				return isNumber(index)
-					? (this.currentQuestion.page - 1) * limit + index + 1
+					? (this.meta.currentPage - 1) * limit + index + 1
 					: ''
 			},
 			selectAnswer(payload, position) {

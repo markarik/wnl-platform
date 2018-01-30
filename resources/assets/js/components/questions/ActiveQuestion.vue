@@ -109,6 +109,13 @@
 			hasAnswer() {
 				return _.isNumber(this.question.selectedAnswer)
 			},
+			selectedAnswerIndex () {
+				if (this.hasAnswer) {
+					return this.question.selectedAnswer
+				} else {
+					return -1
+				}
+			},
 			isSubmitDisabled() {
 				return !this.hasAnswer
 			},
@@ -139,13 +146,40 @@
 				this.hasAnswer && this.$emit('verify', this.question.id)
 			},
 			keyDown(e) {
+				// Left arrow
+				if (e.keyCode === 37) {
+					this.previousQuestion()
+				}
+				// Up arrow
+				if(e.keyCode === 38) {
+					if(this.question.isResolved) {
+						return false
+					}
+					if (this.selectedAnswerIndex < 1) {
+						this.selectAnswer({id: this.question.id, answer: this.question.answers.length - 1})
+					} else {
+						this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex - 1})
+					}
+					return false
+				}
 				// Right arrow
 				if (e.keyCode === 39) {
 					this.nextQuestion()
 				}
-				// Left arrow
-				if (e.keyCode === 37) {
-					this.previousQuestion()
+				// Down arrow
+				if (e.keyCode === 40) {
+					if(this.question.isResolved) {
+						return false
+					}
+					if (this.selectedAnswerIndex > this.question.answers.length - 2) {
+						this.selectAnswer({id: this.question.id, answer: 0})
+					} else {
+						this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex + 1})
+					}
+					return false
+				}
+				if (e.keyCode === 13) {
+					this.verify()
 				}
 			},
 		},

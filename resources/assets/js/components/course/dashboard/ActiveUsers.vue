@@ -6,13 +6,13 @@
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
-						<wnl-avatar
+						<div class="activator" @click="showModal(user)">
+							<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
-								:userId="user.id"
-								:user="user"
 								size="medium">
-						</wnl-avatar>
+							</wnl-avatar>
+						</div>
 					</li>
 				</ul>
 			</div>
@@ -61,10 +61,15 @@
 
 	.avatars-list .avatar
 		margin-right: $margin-small
+		cursor: pointer
+
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+
+import UserProfileModal from 'js/components/users/UserProfileModal'
+
 	export default {
 		name: 'ActiveUsers',
 		props: {
@@ -78,7 +83,7 @@ import { mapGetters } from 'vuex'
 			},
 		},
 		computed: {
-			...mapGetters(['currentUserId', 'currentUserName']),
+			...mapGetters(['currentUserId']),
 			...mapGetters('users', ['activeUsers']),
 			activeUsersCount() {
 				return this.usersToCount.length
@@ -87,5 +92,17 @@ import { mapGetters } from 'vuex'
 				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
 			},
 		},
+		methods: {
+			...mapActions(['toggleModal']),
+			showModal(user) {
+				this.toggleModal({
+					visible: true,
+					content: {
+						author: user.profile
+					},
+					component: UserProfileModal,
+				})
+			}
+		}
 	}
 </script>

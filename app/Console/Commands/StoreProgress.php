@@ -62,7 +62,7 @@ class StoreProgress extends Command
 				}
 			} else {
 				$key = UserStateApiController::getCourseRedisKey($passedUserId, 1);
-				$bar = $this->output->createProgressBar(count($key));
+				$bar = $this->output->createProgressBar(1);
 				$this->storeProgress($key, $passedUserId, $bar);
 			}
 			$bar->finish();
@@ -101,6 +101,10 @@ class StoreProgress extends Command
 				if ($lessonId !== 'undefined') {
 					$lessonKey = UserStateApiController::getLessonRedisKey($userId, 1, $lessonId);
 					$lessonProgressRaw = $this->redis->get($lessonKey);
+					if (!$lessonProgressRaw) {
+						\Log::warning("Problem while copying user progress - {$lessonKey} key is empty.");
+						continue;
+					}
 					$lessonProgress = json_decode($lessonProgressRaw);
 
 					$model = UserCourseProgress::firstOrNew([

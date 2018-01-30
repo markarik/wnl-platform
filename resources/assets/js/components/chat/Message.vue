@@ -1,19 +1,17 @@
 <template>
 	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
-		<figure class="media-left">
-			<wnl-avatar :fullName="fullName" :url="avatar" :userId="userId" v-if="showAuthor"></wnl-avatar>
+		<figure class="media-left" @click="showModal">
+			<wnl-avatar
+				:fullName="fullName"
+				:url="avatar"
+				v-if="showAuthor">
+			</wnl-avatar>
 			<div class="media-left-placeholder" v-else></div>
 		</figure>
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-<<<<<<< Updated upstream
-					<router-link class="link" :to="{ name: 'user', params: { userId: userId }}">
-						<strong>{{ nameToDisplay }}</strong>
-					</router-link>
-=======
 					<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
->>>>>>> Stashed changes
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -35,6 +33,7 @@
 
 		.media-left
 			margin: 0 $margin-small 0 0
+			cursor: pointer
 
 		.media-left-placeholder
 			height: 1px
@@ -50,6 +49,9 @@
 					color: $color-inactive-gray
 					line-height: 1em
 					margin-bottom: $margin-tiny
+					.author
+						cursor: pointer
+						color: $color-sky-blue
 
 				.wnl-message-time
 					margin-left: $margin-small
@@ -58,19 +60,23 @@
 					margin: 0
 </style>
 <script>
+	import { mapActions } from 'vuex'
 	import { timeFromMs } from 'js/utils/time'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
+	import Avatar from 'js/components/global/Avatar'
+
 	export default{
-		props: ['fullName', 'avatar', 'time', 'showAuthor', 'content', 'id', 'userId', 'displayName'],
+		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
+		components: {
+			'wnl-avatar': Avatar,
+		},
 		computed: {
 			formattedTime () {
 				return timeFromMs(this.time)
 			},
 			nameToDisplay() {
-<<<<<<< Updated upstream
-				return this.displayName || this.fullName
-=======
-				return this.author.display_name ? this.author.display_name : this.fullName
+				return this.author.display_name || this.fullName
 			},
 		},
 		methods: {
@@ -83,7 +89,6 @@
 					},
 					component: UserProfileModal,
 				})
->>>>>>> Stashed changes
 			}
 		}
 	}

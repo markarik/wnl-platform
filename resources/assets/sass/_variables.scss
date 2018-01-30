@@ -59,6 +59,7 @@ $font-size-plus-4: 2.25rem;
 $font-size-plus-5: 2.5rem;
 $font-size-plus-6: 3rem;
 $font-size-plus-7: 3.375rem;
+$font-size-plus-8: 6em;
 
 $line-height-none: 1em;
 $line-height-minus: 1.25em;
@@ -86,11 +87,13 @@ $rounded-square-sizes: (
 	small: 20px,
 	medium: 30px,
 	large: 40px,
-	extralarge: 138px
+	extralarge: 90px,
+	extraextralarge: 138px,
 );
 
 // Spacing
 $margin-tiny: 2px;
+$margin-small-minus: 6px;
 $margin-small: 7px;
 $margin-medium: 10px;
 $margin-base: 15px;
@@ -106,6 +109,7 @@ $transition-length-longest: 0.5s;
 // Layout
 $full-height: 100vh;
 $navbar-height: 55px;
+$search-input-height: 27.2px;
 $main-height: calc(#{$full-height} - #{$navbar-height});
 
 $column-padding: $margin-base;

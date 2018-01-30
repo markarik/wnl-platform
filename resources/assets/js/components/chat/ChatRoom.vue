@@ -14,12 +14,12 @@
 							 :key="index"
 							 :showAuthor="isAuthorUnique[index]"
 							 :id="getMessageId(message)"
-							 :fullName="message.full_name"
-							 :displayName="message.display_name"
-							 :avatar="message.avatar"
+							 :author="message.user"
+							 :fullName="message.user.full_name"
+							 :displayName="message.user.display_name"
+							 :avatar="message.user.avatar"
 							 :time="message.time"
 							 :content="message.content"
-							 :userId="message.user_id"
 						 ></wnl-message>
 					</div>
 					<div class="metadata aligncenter margin vertical" v-else>
@@ -100,7 +100,8 @@
 
 					let previous     = index - 1,
 						halfHourInMs = 1000 * 60 * 30
-					return message.display_name !== this.messages[previous].display_name ||
+
+					return message.user_id !== this.messages[previous].user_id ||
 							message.time - this.messages[previous].time > halfHourInMs
 				})
 			},

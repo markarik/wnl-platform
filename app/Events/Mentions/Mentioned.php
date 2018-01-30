@@ -1,10 +1,11 @@
-<?php namespace App\Events;
+<?php namespace App\Events\Mentions;
 
+use App\Events\Event;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\User;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class Mentioned extends Event
 {

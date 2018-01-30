@@ -3,32 +3,43 @@
 		<div class="questions-filters-content">
 			<div class="wnl-active-filters-container">
 				<wnl-active-filters
-				:activeFilters="activeFilters"
-				:loading="fetchingData"
-				:filters="filters"
-				:itemsNamesSource="itemsNamesSource"
-				:matchedCount="matchedQuestionsCount"
-				:totalCount="allQuestionsCount"
-				@activeFiltersChanged="onActiveFiltersChanged"
-				@autorefreshChange="onAutorefreshChange"
-				@elementHeight="setActiveFiltersHeight"
-				@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
-				@refresh="onRefresh"
+						:activeFilters="activeFilters"
+						:loading="fetchingData"
+						:filters="filters"
+						:itemsNamesSource="itemsNamesSource"
+						:matchedCount="matchedQuestionsCount"
+						:totalCount="allQuestionsCount"
+						@activeFiltersChanged="onActiveFiltersChanged"
+						@autorefreshChange="onAutorefreshChange"
+						@elementHeight="setActiveFiltersHeight"
+						@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
+						@refresh="onRefresh"
 				/>
 			</div>
-			<div class="wnl-questions-filters" :style="{paddingTop: activeFiltersHeight + 'px'}">
+			<div class="wnl-questions-filters"
+				 :style="{paddingTop: activeFiltersHeight + 'px'}">
+				 <div class="filters-heading">
+				 	<span class="metadata margin vertical">
+				 		<span class="icon is-tiny"><i class="fa fa-search"></i></span>
+						{{$t('questions.filters.searchHeading')}}
+				 	</span>
+				 </div>
+				 <wnl-questions-search class="search-input"
+				 :loading="loading"
+				 @emitValueToFilter="emitValueToList"/>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
 						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
 						{{$t('questions.filters.heading')}}
 					</span>
-					<a v-if="!isChatMounted && isChatVisible" class="hide-filters" @click="toggleChat">
+					<a v-if="!isChatMounted && isChatVisible"
+					   class="hide-filters" @click="toggleChat">
 						{{$t('questions.filters.hide')}}
 						<span class="icon is-small"><i class="fa fa-close"></i></span>
 					</a>
 				</div>
 				<wnl-accordion
-					:dataSource="filters"
+					:dataSource="listableFilters"
 					:config="accordionConfig"
 					:loading="fetchingData"
 					@itemToggled="onItemToggled"
@@ -83,6 +94,7 @@
 
 	import Accordion from 'js/components/global/accordion/Accordion'
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
+	import QuestionsSearch from 'js/components/questions/QuestionsSearch'
 
 	const config = {
 		flattened: ['resolution'],
@@ -94,6 +106,7 @@
 		components: {
 			'wnl-accordion': Accordion,
 			'wnl-active-filters': ActiveFilters,
+			'wnl-questions-search': QuestionsSearch,
 		},
 		props: {
 			activeFilters: {
@@ -108,6 +121,10 @@
 				type: Object,
 				required: true,
 			},
+			loading: {
+				default: false,
+				type: Boolean,
+			}
 		},
 		data() {
 			return {
@@ -144,6 +161,14 @@
 			itemsNamesSource() {
 				return 'questions.filters.items'
 			},
+			listableFilters() {
+				return Object.entries(this.filters).reduce((acc, [key, val]) => {
+					if (['list', 'tags'].includes(val.type)) {
+						acc[key] = val
+					}
+					return acc
+				}, {})
+			}
 		},
 		methods: {
 			...mapActions(['toggleChat']),
@@ -151,6 +176,9 @@
 				return filter.split('.').map((item, index, splitted) => {
 					return splitted.slice(0, index).join('.')
 				})
+			},
+			emitValueToList(value) {
+				this.$emit('search', value)
 			},
 			onActiveFiltersChanged(payload) {
 				this.$emit('activeFiltersChanged', {

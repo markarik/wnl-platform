@@ -101,7 +101,7 @@ export const notification = {
 			return decode(this.message.subject.text)
 		},
 		hasDynamicContext() {
-			return !!this.message.context.dynamic
+			return !!_.get(this.message, 'context.dynamic')
 		},
 		dynamicRoute() {
 			const {query, dynamic} = this.routeContext
@@ -124,7 +124,7 @@ export const notification = {
 			this.$emit('goingToContext')
 
 			if (this.hasDynamicContext) {
-				this.$router.push(this.dynamicRoute())
+				this.$router.push(this.dynamicRoute)
 			} else if (typeof this.routeContext === 'object') {
 				this.$router.push(this.routeContext)
 			} else if (typeof this.routeContext === 'string') {

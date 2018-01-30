@@ -55,7 +55,7 @@ class UserPlan extends Model
 			->where(function ($query) use ($date) {
 				$query
 					->where('resolved_at', null)
-					->orWhere('resolved_at', '>=', $date->toDateString());
+					->orWhereDate('resolved_at', '>', $date->toDateString());
 			})
 			->get();
 
@@ -72,10 +72,17 @@ class UserPlan extends Model
 		}
 
 		$questionsPerDay = ceil($remainingQuestions->count() / $daysLeft); // 500
+		$todaysSolved = $this->questionsProgress()
+			->whereDate('resolved_at', $date->toDateString())
+			->count();
+
+		if ($questionsPerDay - $todaysSolved <= 0 ) {
+			return collect();
+		}
 
 		$todaysQuestions = $remainingQuestions
 			->sortBy('id')
-			->take($questionsPerDay);
+			->take($questionsPerDay - $todaysSolved);
 
 		return $todaysQuestions;
 	}
@@ -88,7 +95,7 @@ class UserPlan extends Model
 			->count();
 		$done = $total - $remaining;
 		$doneToday = $this->questionsProgress()
-			->where('resolved_at', '>=', Carbon::today())
+			->whereDate('resolved_at', Carbon::today())
 			->count();
 
 		// TODO: Group resolved_at by day

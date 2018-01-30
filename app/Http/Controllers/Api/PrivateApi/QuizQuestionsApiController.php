@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Events\QuizQuestionEdited;
+use App\Events\Quiz\QuizQuestionEdited;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Filters\ByTaxonomy\SubjectsFilter;
 use App\Http\Controllers\Api\Filters\Quiz\ResolutionFilter;
@@ -27,7 +27,7 @@ class QuizQuestionsApiController extends ApiController
 		'quiz-collection',
 		'by_taxonomy-subjects',
 		'by_taxonomy-exams',
-//		'by_taxonomy-tags',
+		'search'
 	];
 
 	public function __construct(Request $request)

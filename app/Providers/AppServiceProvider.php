@@ -5,6 +5,7 @@ use App;
 use App\Models;
 use App\Observers;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
+use Bschmitt\Amqp\AmqpServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
@@ -44,6 +45,9 @@ class AppServiceProvider extends ServiceProvider
 		}
 		if (env('DEBUG_BAR') === true) {
 			$this->app->register(DebugBarServiceProvider::class);
+		}
+		if($this->app->runningInConsole()) {
+			$this->app->register(AmqpServiceProvider::class);
 		}
 	}
 

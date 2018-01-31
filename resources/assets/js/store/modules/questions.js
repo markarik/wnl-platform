@@ -4,6 +4,8 @@ import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {parseFilters} from 'js/services/apiFiltering'
 import axios from 'axios'
+import uuidv1 from 'uuid/v1';
+
 import {
 	commentsActions,
 	commentsGetters,
@@ -17,6 +19,14 @@ import {
 
 
 const namespaced = true
+
+const STATELESS_FILTERS = [
+	'quiz-planned.items[0]',
+	'quiz-resolution.items[0]',
+	'quiz-resolution.items[1]',
+	'quiz-resolution.items[2]',
+	'quiz-collection.items[0]'
+];
 
 const LIMIT = 25
 
@@ -36,6 +46,7 @@ const state = {
 	profiles: {},
 	results: false,
 	testQuestions: [],
+	token: uuidv1()
 }
 
 // Getters
@@ -61,7 +72,9 @@ const getters = {
 	},
 	allQuestionsCount: state => state.allCount,
 	currentQuestion: state => {
-		if (isEmpty(state.questionsPages) || !state.currentQuestion.page) return {}
+		if (isEmpty(state.questionsPages) || !(state.currentQuestion && state.currentQuestion.page)) return {}
+		if (isEmpty(state.questionsPages[state.currentQuestion.page])) return {}
+
 		const {page, index} = state.currentQuestion
 		const computedIndex = index === -1 ? state.questionsPages[page].length - 1 : index
 
@@ -109,7 +122,8 @@ const getters = {
 	testQuestions: state => state.testQuestions.map(id => state.quiz_questions[id]),
 	testQuestionsUnanswered: (state, getters) => getters.testQuestions.filter(question => {
 		return !isNumber(question.selectedAnswer)
-	})
+	}),
+	hasStatelessFilters: state => state.activeFilters.find(active => STATELESS_FILTERS.indexOf(active) > -1)
 }
 
 // Mutations
@@ -318,7 +332,8 @@ const actions = {
 			include: 'quiz_answers',
 			page,
 			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
-			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true
+			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
+			token: getters.hasStatelessFilters ? state.token : ''
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 
@@ -421,7 +436,27 @@ const actions = {
 	getPosition({getters, rootGetters, state}) {
 		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 
+		if (getters.hasStatelessFilters) {
+			return Promise.resolve({
+				page: 1,
+				index: 0
+			})
+		}
 		return axios.post(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`),{filters: parsedFilters})
+	},
+	fetchActiveFilters({commit}) {
+		return new Promise((resolve) => {
+			axios.post(getApiUrl('quiz_questions/.activeFilters'), {
+				useSavedFilters: true
+			}).then(({data}) => {
+				const searchFilter = data.find(active => active.startsWith('search.'))
+				if (searchFilter) {
+					commit(types.ADD_FILTER, searchFilter.substr(searchFilter.indexOf('.') + 1))
+				}
+				commit(types.ACTIVE_FILTERS_SET, data)
+				resolve()
+			}).catch(err => console.error(err))
+		})
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)

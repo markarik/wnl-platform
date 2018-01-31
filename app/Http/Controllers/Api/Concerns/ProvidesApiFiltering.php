@@ -13,11 +13,18 @@ trait ProvidesApiFiltering
 
 	public $limit;
 
+	public function activeFilters(Request $request) {
+		list ($filters, $paths) = $this->getFilters($request);
+
+		return $this->respondOk($paths);
+	}
+
 	public function filter(Request $request)
 	{
 		$resource = $request->route('resource');
 		$order = $request->get('order');
 		$model = app(static::getResourceModel($resource));
+		$token = $request->get('token');
 
 		if (!empty ($order)) {
 			$model = $this->parseOrder($model, $order);
@@ -41,7 +48,7 @@ trait ProvidesApiFiltering
 				return $this->paginatedResponse($model, $this->limit, $this->page);
 			}
 
-			$cacheTags = $this->getFiltersCacheTags($resource);
+			$cacheTags = $this->getFiltersCacheTags($resource, $token);
 			$hashedFilters = $this->hashedFilters($filters);
 
 			$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
@@ -195,9 +202,9 @@ trait ProvidesApiFiltering
 		return hash('md5', json_encode($activeFilters));
 	}
 
-	protected function getFiltersCacheTags($resource) {
+	protected function getFiltersCacheTags($resource, $token) {
 		$userId = Auth::user()->id;
 
-		return [$resource, 'filters', "user-{$userId}"];
+		return [$resource, "filters", "user-{$userId}", $token];
 	}
 }

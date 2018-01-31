@@ -238,6 +238,7 @@
 				'savePosition',
 				'selectAnswer',
 				'setPage',
+				'fetchActiveFilters'
 			]),
 			buildTest({count}) {
 				const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
@@ -458,19 +459,19 @@
 			this.fetchingFilters = true
 			this.setupFilters().then(() => {
 				hasPresetFilters && this.activeFiltersSet(this.presetFilters)
-				this.fetchQuestionsCount()
-					.then(() => this.fetchDynamicFilters())
+				this.fetchDynamicFilters()
 					.then(() => {
 						this.fetchingFilters = false
 						this.resetCurrentQuestion()
 					})
+					.then(this.fetchActiveFilters)
 					.then(this.getPosition)
 					.then(({data = {}}) => {
 						return new Promise((resolve, reject) => {
 							this.fetchQuestions({
 								saveFilters: false,
-								useSavedFilters: !hasPresetFilters,
-								filters: this.presetFilters,
+								useSavedFilters: false,
+								filters: hasPresetFilters ? this.presetFilters : this.activeFilters,
 								page: (data.position && data.position.page) || 1
 							}).then(() => resolve(data))
 						})

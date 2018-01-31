@@ -85,7 +85,7 @@
 					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
 						{{slideLink(slide)}}
 					</a>
-					<wnl-slide-preview :showModal="show" @closeModal="hideSlidePreview"></wnl-slide-preview>
+					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview"></wnl-slide-preview>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
@@ -252,6 +252,8 @@
 <script>
 	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
+	import { getApiUrl } from 'js/utils/env'
+	import _ from 'lodash'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
@@ -276,6 +278,7 @@
 				slidesExpanded: false,
 				showExplanation: false,
 				show: false,
+				slideContent: '',
 			}
 		},
 		computed: {
@@ -319,8 +322,20 @@
 				return this.show = false
 			},
 			showSlidePreview(slide) {
-				console.log('event', slide);
-				return this.show = true
+				return console.log(this._fetchSlide(slide))
+			},
+			_fetchSlide(slide) {
+				const slideId = [slide.id]
+				return axios.post(getApiUrl(`slideshow_builder/.query`), {
+					query: {
+						whereIn: ['slides.id', slideId],
+					},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+				}).then(({data}) => {
+					this.slideContent = data
+				}).then(() => {
+					this.show = true
+				})
 			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}

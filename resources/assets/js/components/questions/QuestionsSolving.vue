@@ -310,7 +310,6 @@
 				const filters = isEmpty(this.activeFilters)
 					? this.$t('questions.filters.allQuestions')
 					: this.activeFilters.join(', ')
-
 				return this.$t('questions.filters.activeFiltersReview', {filters})
 			},
 			count() {

@@ -82,9 +82,10 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context" :blankPage="blankPage">
+					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
 						{{slideLink(slide)}}
-					</wnl-slide-link>
+					</a>
+					<wnl-slide-preview :showModal="show" @closeModal="hideSlidePreview"></wnl-slide-preview>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
@@ -256,10 +257,12 @@
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import SlideLink from 'js/components/global/SlideLink'
+	import SlidePreview from 'js/admin/components/slides/SlidePreview'
 
 	export default {
 		name: 'QuizQuestion',
 		components: {
+			'wnl-slide-preview': SlidePreview,
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
@@ -271,7 +274,8 @@
 				blankPage: '_blank',
 				reactableResource: "quiz_questions",
 				slidesExpanded: false,
-				showExplanation: false
+				showExplanation: false,
+				show: false,
 			}
 		},
 		computed: {
@@ -311,6 +315,13 @@
 			}
 		},
 		methods: {
+			hideSlidePreview() {
+				return this.show = false
+			},
+			showSlidePreview(slide) {
+				console.log('event', slide);
+				return this.show = true
+			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
@@ -321,6 +332,7 @@
 				return trim(text)
 			},
 			toggleSlidesList() {
+				console.log('toggle list');
 				this.slidesExpanded = !this.slidesExpanded
 			},
 			toggleExplanation() {

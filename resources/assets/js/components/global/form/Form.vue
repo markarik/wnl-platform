@@ -166,6 +166,17 @@
 
 			this.cacheAttach()
 
+			this.$el.addEventListener('keydown', (event) => {
+				if (event.keyCode === 37) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+				}
+				if (event.keyCode === 39) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+				}
+			})
+
 			this.$on('submitForm', this.onSubmitForm)
 		},
 		beforeDestroy() {

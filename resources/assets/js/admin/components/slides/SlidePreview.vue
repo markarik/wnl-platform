@@ -12,6 +12,7 @@
 	.modal-content
 		width: 90vw
 		height: 90vh
+		
 		iframe
 			width: 100%
 			height: 100%

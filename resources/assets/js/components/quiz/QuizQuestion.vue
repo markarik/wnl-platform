@@ -322,9 +322,6 @@
 				return this.show = false
 			},
 			showSlidePreview(slide) {
-				return console.log(this._fetchSlide(slide))
-			},
-			_fetchSlide(slide) {
 				const slideId = [slide.id]
 				return axios.post(getApiUrl(`slideshow_builder/.query`), {
 					query: {

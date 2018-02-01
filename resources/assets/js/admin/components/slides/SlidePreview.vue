@@ -8,7 +8,7 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 	.modal
 		z-index: $z-index-alerts
@@ -18,18 +18,18 @@
 		height: 90vh
 
 		frame
-		width: 100%
-		height: 100%
+			width: 100%
+			height: 100%
 </style>
 
 <script>
 	export default {
 		name: 'SlidePreview',
-        data() {
-            return {
-                modal: false,
-            }
-        },
+		data() {
+			return {
+				modal: false,
+			}
+		},
 		props: {
 			content: {
 				type: String,
@@ -40,18 +40,10 @@
 				default: false
 			}
 		},
-        computed: {
-            isModalVisible() {
-                return this.modal
-            },
-            toggleModal() {
-                return this.modal = this.showModal
-            }
-        },
-        methods: {
-            closeModal() {
-                this.modal = false
-            }
-        }
+		methods: {
+			closeModal() {
+				this.modal = false
+			}
+		}
 	}
 </script>

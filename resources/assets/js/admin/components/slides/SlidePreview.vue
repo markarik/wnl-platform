@@ -17,7 +17,7 @@
 		width: 90vw
 		height: 90vh
 
-		frame
+		iframe
 			width: 100%
 			height: 100%
 </style>

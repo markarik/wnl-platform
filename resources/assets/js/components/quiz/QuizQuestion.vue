@@ -82,10 +82,9 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
+					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context" :blankPage="blankPage">
 						{{slideLink(slide)}}
-					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview"></wnl-slide-preview>
+					</wnl-slide-link>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
@@ -104,28 +103,23 @@
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
-
 	.relative
 		position: relative
 	.card-item
 		border-bottom: 1px solid #dbdbdb
 		padding: $margin-small $margin-big $margin-base
 		width: 100%
-
 		header
 			color: $color-gray-dimmed
 			font-size: $font-size-minus-1
 			margin-bottom: $margin-base
 			margin-top: $margin-base
-
 		.slide-list-item
 			font-size: 0.825em
 			padding-left: $margin-base
-
 		.collapsed
 			height: 1em
 			overflow: hidden
-
 		.collapsed:after
 			content: ''
 			position: absolute
@@ -135,39 +129,29 @@
 			left: 0
 			bottom: $margin-base
 			+gradient-vertical(rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 100%)
-
-
 	.card-content ul
 		counter-reset: list
-
 	.card-footer
 		flex-direction: column
-
 	.quiz-question-icon
 		display: block
 		font-size: $font-size-minus-3
 		padding: $margin-tiny 0
 		text-align: center
 		text-transform: uppercase
-
 		.icon
 			display: block
 			margin: 0 auto -0.2em
-
 	.quiz-header
 		align-items: flex-start
 		flex-direction: column
-
 		.card-header-icons
 			display: flex
-
 	.card-header-title.is-short-form
 		font-size: $font-size-minus-1
-
 	.quiz-header-top
 		display: flex
 		width: 100%
-
 	.quiz-question-meta
 		+flex-space-between()
 		align-items: flex-start
@@ -176,95 +160,68 @@
 		line-height: $line-height-minus
 		padding: $margin-base $margin-base 0
 		width: 100%
-
 		.quiz-question-tags
 			margin-right: $margin-base
-
 			.quiz-question-tag
 				display: inline-block
 				padding-right: $margin-tiny * 2
-
 	.wnl-quiz-question
 		margin-bottom: $margin-huge
-
 		&.is-correct
 			box-shadow: 0 2px 3px $color-correct-shadow, 0 0 0 1px $color-correct-shadow
-
 		&.is-incorrect
 			box-shadow: 0 2px 3px $color-incorrect-shadow, 0 0 0 1px $color-incorrect-shadow
-
 		.quiz-header,
 		.quiz-answers
 			padding: $margin-medium
-
 		.card-header-title,
 		.card-header-icons
 			font-weight: $font-weight-bold
 			padding: 0 $margin-medium
-
 		&.is-large-desktop
 			.quiz-header,
 			.quiz-answers
 				padding: $margin-base
-
 				.card-header-title,
 				.card-header-icons
 					padding: 0 $margin-base
-
 			.quiz-header
 				font-size: $font-size-base
-
 			.quiz-answer
 				font-size: $font-size-base
-
 		&.is-mobile
 			.quiz-question-tags
 				margin-right: $margin-small
-
 			.quiz-header,
 			.quiz-answers
 				padding: $margin-small
-
 				.card-header-title,
 				.card-header-icons
 					line-height: $line-height-minus
 					padding: $margin-small
-
 			.quiz-header
 				font-size: $font-size-minus-1
-
 			.quiz-answer
 				font-size: $font-size-minus-1
-
 	.question-edit-link
 		margin: $margin-medium 0
 		text-align: center
 		.button
 			.icon:first-child
 				margin-left: $margin-small
-
-
-
 	.has-errors .is-unanswered
 		color: $color-orange
 </style>
-
 <script>
 	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
-	import _ from 'lodash'
-
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import SlideLink from 'js/components/global/SlideLink'
-	import SlidePreview from 'js/admin/components/slides/SlidePreview'
-
 	export default {
 		name: 'QuizQuestion',
 		components: {
-			'wnl-slide-preview': SlidePreview,
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
@@ -276,9 +233,7 @@
 				blankPage: '_blank',
 				reactableResource: "quiz_questions",
 				slidesExpanded: false,
-				showExplanation: false,
-				show: false,
-				slideContent: '',
+				showExplanation: false
 			}
 		},
 		computed: {
@@ -318,36 +273,15 @@
 			}
 		},
 		methods: {
-			hideSlidePreview() {
-				return this.show = false
-			},
-			showSlidePreview(slide) {
-				return console.log(this._fetchSlide(slide))
-			},
-			_fetchSlide(slide) {
-				const slideId = [slide.id]
-				return axios.post(getApiUrl(`slideshow_builder/.query`), {
-					query: {
-						whereIn: ['slides.id', slideId],
-					},
-						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-				}).then(({data}) => {
-					this.slideContent = data
-				}).then(() => {
-					this.show = true
-				})
-			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
-
 				this.$emit(eventName, data)
 			},
 			trim(text) {
 				return trim(text)
 			},
 			toggleSlidesList() {
-				console.log('toggle list');
 				this.slidesExpanded = !this.slidesExpanded
 			},
 			toggleExplanation() {
@@ -355,10 +289,8 @@
 			},
 			slideLink(slide) {
 				let linkText = ''
-
 				if (_.get(slide, 'context.lesson.id')) {
 					linkText += this.getLesson(slide.context.lesson.id).name
-
 					if (_.get(slide, 'context.section.id')) {
 						linkText += ` / ${this.getSection(slide.context.section.id).name}`
 					}

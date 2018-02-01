@@ -45,13 +45,13 @@ trait ProvidesApiFiltering
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
 			if (!$request->has('active') || empty($filters)) {
-				return $this->paginatedResponse($model, $this->limit, $this->page);
+				$response = $this->paginatedResponse($model, $this->limit, $this->page);
+			} else {
+				$cacheTags = $this->getFiltersCacheTags($resource, $token);
+				$hashedFilters = $this->hashedFilters($filters);
+
+				$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
 			}
-
-			$cacheTags = $this->getFiltersCacheTags($resource, $token);
-			$hashedFilters = $this->hashedFilters($filters);
-
-			$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
 		}
 
 		$response = array_merge($response, ['active' => $paths]);
@@ -195,7 +195,7 @@ trait ProvidesApiFiltering
 		$userId = Auth::user()->id;
 		$resource = $request->route('resource');
 
-		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
+		return self::savedFiltersCacheKey($resource, $userId);
 	}
 
 	protected function hashedFilters($activeFilters) {
@@ -206,5 +206,9 @@ trait ProvidesApiFiltering
 		$userId = Auth::user()->id;
 
 		return [$resource, "filters", "user-{$userId}", $token];
+	}
+
+	public static function savedFiltersCacheKey($resource, $userId) {
+		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
 	}
 }

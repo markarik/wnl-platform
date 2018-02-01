@@ -225,7 +225,6 @@
 				'getPosition',
 				'fetchQuestionData',
 				'fetchQuestions',
-				'fetchQuestionsCount',
 				'fetchPage',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
@@ -459,12 +458,12 @@
 			this.fetchingFilters = true
 			this.setupFilters().then(() => {
 				hasPresetFilters && this.activeFiltersSet(this.presetFilters)
-				this.fetchDynamicFilters()
+				this.fetchActiveFilters()
 					.then(() => {
 						this.fetchingFilters = false
 						this.resetCurrentQuestion()
 					})
-					.then(this.fetchActiveFilters)
+					.then(this.fetchDynamicFilters)
 					.then(this.getPosition)
 					.then(({data = {}}) => {
 						return new Promise((resolve, reject) => {

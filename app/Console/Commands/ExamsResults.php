@@ -2,18 +2,18 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\User;
-use App\Models\UserQuizResults;
-use App\Models\QuizQuestion;
-use App\Models\QuizAnswer;
-use App\Models\Taxonomy;
 use App\Http\Controllers\Api\Filters\ByTaxonomy\SubjectsFilter;
 use App\Models\ExamResults;
+use App\Models\QuizAnswer;
+use App\Models\QuizQuestion;
+use App\Models\Taxonomy;
+use App\Models\User;
+use App\Models\UserQuizResults;
+use Illuminate\Console\Command;
 
 class ExamsResults extends Command
 {
-	const LEK_TAG_ID = 505;
+	const LEK_TAG_ID = 538;
 	const QUESTIONS_IN_EXAM = 200;
 	const MUST_MATCH = 120;
 

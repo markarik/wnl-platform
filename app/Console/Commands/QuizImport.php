@@ -96,12 +96,16 @@ class QuizImport extends Command
 		$values = explode(self::VALUE_DELIMITER, $line);
 		$text = nl2br($values[0]);
 
-		if ($qId = $values[11]) {
+		if ($qId = $values[14]) {
 			$question = QuizQuestion::find($qId);
 			if ($question) {
 				// Line contains question id,
 				// so we're just attaching it to the new set.
 				$quizSet->questions()->attach($question);
+				if ($this->option('addNewTags')) {
+					$this->attachTags($question, $values);
+					$this->tryMatchingCollectionTaxonomy($question);
+				}
 
 				return;
 			}
@@ -132,7 +136,7 @@ class QuizImport extends Command
 
 		for ($i = 1; $i <= 5; $i++) {
 			$hits = 0;
-			$isCorrect = $values[6] === chr(64 + $i);
+			$isCorrect = trim($values[6]) === chr(64 + $i);
 
 			$question->answers()->firstOrCreate([
 				'text'       => $values[$i],
@@ -152,8 +156,8 @@ class QuizImport extends Command
 
 	protected function attachTags($question, $values)
 	{
-		if (!empty($values[12])) {
-			$this->globalTags[] = trim($values[12]);
+		if (!empty($values[13])) {
+			$this->globalTags[] = trim($values[13]);
 		}
 
 		$tagNames = ['LEK-' . $values[8], $values[9]];

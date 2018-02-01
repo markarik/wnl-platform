@@ -373,13 +373,13 @@ const actions = {
 				.then(response => resolve(response))
 		})
 	},
-	fetchTestQuestions({commit, state, dispatch, rootGetters}, {activeFilters, count: limit}) {
+	fetchTestQuestions({commit, state, dispatch, rootGetters}, {activeFilters, count: limit, randomize = true}) {
 		const filters = parseFilters(activeFilters, state.filters, rootGetters.currentUserId)
 
 		return _fetchQuestions({
 			filters,
 			limit,
-			randomize: true,
+			randomize,
 			include: 'quiz_answers,reactions,comments.profiles,slides'
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit)

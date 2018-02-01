@@ -1,5 +1,5 @@
 <template>
-	<form :name="name" @keydown.enter="onEnter" @submit.prevent="onSubmitForm">
+	<form :name="name" @keydown="keyEvent" @submit.prevent="onSubmitForm">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 			cssClass="fixed"
 			:alert="alert"
@@ -64,9 +64,17 @@
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
 			},
-			onEnter() {
-				if (!this.suppressEnter) {
+			keyEvent() {
+				if (event.keyCode === 13 && !this.suppressEnter) {
 					this.onSubmitForm()
+				}
+				if (event.keyCode === 37) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+				}
+				if (event.keyCode === 39) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
 				}
 			},
 			onSubmitForm() {
@@ -119,7 +127,7 @@
 			},
 			canSave(hasFieldChanges, hasAttachChanges) {
 				return !this.anyErrors && (hasFieldChanges || hasAttachChanges)
-			}
+			},
 		},
 		watch: {
 			resourceRoute(val) {
@@ -165,17 +173,6 @@
 			}
 
 			this.cacheAttach()
-
-			this.$el.addEventListener('keydown', (event) => {
-				if (event.keyCode === 37) {
-					event.stopImmediatePropagation();
-					event.stopPropagation();
-				}
-				if (event.keyCode === 39) {
-					event.stopImmediatePropagation();
-					event.stopPropagation();
-				}
-			})
 
 			this.$on('submitForm', this.onSubmitForm)
 		},

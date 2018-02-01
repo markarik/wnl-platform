@@ -330,7 +330,7 @@
 
 				if (_.get(slide, 'context.lesson.id')) {
 					linkText += this.getLesson(slide.context.lesson.id).name
-					
+
 					if (_.get(slide, 'context.section.id')) {
 						linkText += ` / ${this.getSection(slide.context.section.id).name}`
 					}

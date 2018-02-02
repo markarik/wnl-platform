@@ -238,16 +238,16 @@
 	.question-edit-link
 		margin: $margin-medium 0
 		text-align: center
+
 		.button
 			.icon:first-child
 				margin-left: $margin-small
 
 
-
 	.has-errors .is-unanswered
 		color: $color-orange
-</style>
 
+</style>
 <script>
 	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
@@ -256,7 +256,6 @@
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import SlideLink from 'js/components/global/SlideLink'
-
 	export default {
 		name: 'QuizQuestion',
 		components: {

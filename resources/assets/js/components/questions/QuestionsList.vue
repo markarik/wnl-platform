@@ -114,7 +114,8 @@
 
 <script>
 	import {isEmpty, get} from 'lodash'
-	import {mapGetters, mapActions} from 'vuex'
+	import {mapGetters, mapActions, mapMutations} from 'vuex'
+	import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
@@ -239,6 +240,7 @@
 				'setPage',
 				'fetchActiveFilters'
 			]),
+			...mapMutations('questions', {setToken}),
 			buildTest({count}) {
 				const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 					? this.presetOptionsToPass.loadingText
@@ -344,10 +346,6 @@
 			onChangePage(page) {
 				scrollToTop()
 				this.changePage(page)
-			},
-			onFetchMatchingQuestions() {
-				this.resetCurrentQuestion()
-				this.fetchQuestions({filters: this.activeFilters})
 			},
 			onSelectAnswer(payload) {
 				payload.answer === this.getQuestion(payload.id).selectedAnswer
@@ -462,6 +460,7 @@
 					.then(() => {
 						this.fetchingFilters = false
 						this.resetCurrentQuestion()
+						this.setToken()
 					})
 					.then(this.fetchDynamicFilters)
 					.then(this.getPosition)

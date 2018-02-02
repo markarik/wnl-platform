@@ -46,7 +46,7 @@ const state = {
 	profiles: {},
 	results: false,
 	testQuestions: [],
-	token: uuidv1()
+	token: ''
 }
 
 // Getters
@@ -246,6 +246,9 @@ const mutations = {
 			})
 		})
 	},
+	[types.QUESTIONS_SET_TOKEN] (state) {
+		state.token = uuidv1()
+	}
 }
 
 // Actions

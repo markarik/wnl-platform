@@ -24,7 +24,7 @@ trait ProvidesApiFiltering
 		$resource = $request->route('resource');
 		$order = $request->get('order');
 		$model = app(static::getResourceModel($resource));
-		$token = $request->get('token');
+		$userFiltersPersistanceToken = $request->get('token');
 
 		if (!empty ($order)) {
 			$model = $this->parseOrder($model, $order);
@@ -47,7 +47,7 @@ trait ProvidesApiFiltering
 			if (!$request->has('active') || empty($filters)) {
 				$response = $this->paginatedResponse($model, $this->limit, $this->page);
 			} else {
-				$cacheTags = $this->getFiltersCacheTags($resource, $token);
+				$cacheTags = $this->getFiltersCacheTags($resource, $userFiltersPersistanceToken);
 				$hashedFilters = $this->hashedFilters($filters);
 
 				$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
@@ -202,10 +202,10 @@ trait ProvidesApiFiltering
 		return hash('md5', json_encode($activeFilters));
 	}
 
-	protected function getFiltersCacheTags($resource, $token) {
+	protected function getFiltersCacheTags($resource, $userFiltersPersistanceToken) {
 		$userId = Auth::user()->id;
 
-		return [$resource, "filters", "user-{$userId}", $token];
+		return [$resource, "filters", "user-{$userId}", $userFiltersPersistanceToken];
 	}
 
 	public static function savedFiltersCacheKey($resource, $userId) {

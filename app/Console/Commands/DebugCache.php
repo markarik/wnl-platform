@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Cache;
-use Lib\Cache\Ping;
 use App\Models\Slideshow;
 use Illuminate\Console\Command;
 
@@ -40,7 +39,7 @@ class DebugCache extends Command
 	 *
 	 * @return mixed
 	 */
-	public function handle(Ping $pinger)
+	public function handle()
 	{
 		$cacheTags = explode(',', $this->argument('tags'));
 		$key = $this->argument('key');

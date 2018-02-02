@@ -51,6 +51,7 @@ class PlannedFilter extends ApiFilter
 			],
 			'message' => 'planned',
 			'type'    => 'list',
+			'is_user_specific' => true
 		];
 	}
 

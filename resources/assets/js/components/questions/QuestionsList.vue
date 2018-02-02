@@ -310,6 +310,7 @@
 						if (!payload.refresh) return false
 
 						this.resetCurrentQuestion()
+						this.setToken()
 						this.resetPages()
 						this.fetchDynamicFilters()
 						return this.fetchMatchingQuestions()
@@ -435,6 +436,7 @@
 						this.fetchingFilters = true
 
 						this.resetCurrentQuestion()
+						this.setToken()
 						this.resetPages()
 						return Promise.all([
 							this.fetchDynamicFilters(),

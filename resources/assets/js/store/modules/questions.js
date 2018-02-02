@@ -20,14 +20,6 @@ import {
 
 const namespaced = true
 
-const STATELESS_FILTERS = [
-	'quiz-planned.items[0]',
-	'quiz-resolution.items[0]',
-	'quiz-resolution.items[1]',
-	'quiz-resolution.items[2]',
-	'quiz-collection.items[0]'
-];
-
 const LIMIT = 25
 
 // Initial state
@@ -123,7 +115,11 @@ const getters = {
 	testQuestionsUnanswered: (state, getters) => getters.testQuestions.filter(question => {
 		return !isNumber(question.selectedAnswer)
 	}),
-	hasStatelessFilters: state => state.activeFilters.find(active => STATELESS_FILTERS.indexOf(active) > -1)
+	hasStatelessFilters: state => {
+		return state.activeFilters
+			.map(active => active.split('.')[0])
+			.find(active => state.filters[active].is_user_specific)
+	}
 }
 
 // Mutations
@@ -458,7 +454,7 @@ const actions = {
 				}
 				commit(types.ACTIVE_FILTERS_SET, data)
 				resolve()
-			}).catch(err => console.error(err))
+			}).catch(err => $wnl.logger.error(err))
 		})
 	},
 	selectAnswer({commit}, payload) {

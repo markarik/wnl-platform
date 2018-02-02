@@ -1,8 +1,8 @@
 <template>
-	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}">
+	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}" v-show="!isLoading">
 		<div class="modal-background" @click="$emit('closeModal')"></div>
 		<div class="modal-content">
-			<iframe :srcdoc="content"/>
+			<iframe name="slidePreview" :srcdoc="content" @load="onLoad()"/>
 		</div>
 		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
 	</div>
@@ -27,7 +27,7 @@
 		name: 'SlidePreview',
 		data() {
 			return {
-				modal: false,
+				isLoading: false
 			}
 		},
 		props: {
@@ -41,8 +41,17 @@
 			}
 		},
 		methods: {
-			closeModal() {
-				this.modal = false
+			onLoad() {
+				this.isLoading = true
+				this.addClass().then(() => {
+					this.isLoading = false
+				})
+			},
+			addClass() {
+				return new Promise((resolve) => {
+					frames["slidePreview"].document.body.classList.add("is-without-controls")
+					resolve()
+				})
 			}
 		}
 	}

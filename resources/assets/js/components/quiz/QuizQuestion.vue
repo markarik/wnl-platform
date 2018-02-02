@@ -278,7 +278,7 @@
 				slidesExpanded: false,
 				showExplanation: false,
 				show: false,
-				slideContent: '',
+				slideContent: ''
 			}
 		},
 		computed: {
@@ -344,7 +344,6 @@
 				return trim(text)
 			},
 			toggleSlidesList() {
-				console.log('toggle list');
 				this.slidesExpanded = !this.slidesExpanded
 			},
 			toggleExplanation() {

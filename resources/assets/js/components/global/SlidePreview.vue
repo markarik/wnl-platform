@@ -5,7 +5,9 @@
 			<header class="modal-card-header">
 				<slot name="header"></slot>
 			</header>
-				<iframe name="slidePreview" :srcdoc="content" @load="onLoad()" v-show="!isLoading"/>
+			<div class="modal-card-body">
+				<iframe name="slidePreview" :srcdoc="content" @load="onLoad" v-show="!isLoading"/>
+			</div>
 			<footer class="modal-card-footer">
 				<slot name="footer"></slot>
 			</footer>
@@ -24,6 +26,9 @@
 		height: 90vh
 		text-align: center
 		background: white
+
+		.modal-card-body
+			height: 100%
 
 		iframe
 			width: 100%
@@ -56,20 +61,13 @@
 		},
 		methods: {
 			onLoad() {
-				this.addClass().then(() => {
-					this.isLoading = false
-				})
-			},
-			addClass() {
-				return new Promise((resolve) => {
-					frames["slidePreview"].document.body.classList.add("is-without-controls")
-					nextTick(resolve)
-				})
+				frames["slidePreview"].document.body.classList.add("is-without-controls")
+				nextTick(() => this.isLoading = false)
 			}
 		},
 		watch: {
-			'showModal' (newValue, oldValue) {
-				if (newValue) this.isLoading = true
+			'showModal' (newValue) {
+				this.isLoading = newValue
 			}
 		}
 	}

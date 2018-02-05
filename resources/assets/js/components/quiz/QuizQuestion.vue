@@ -87,7 +87,13 @@
 					</a>
 					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" v-if="slideContent && currentModalSlide">
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
-						<wnl-slide-link class="button is-primary is-outlined is-small" slot="footer" :context="currentModalSlide.context" :blankPage="blankPage">{{$t('quiz.slideModal.goToPrezentation')}}</wnl-slide-link>
+						<wnl-slide-link
+							class="button is-primary is-outlined is-small"
+							slot="footer"
+							:context="currentModalSlide.context"
+							:blankPage="blankPage">
+								{{$t('quiz.slideModal.goToPrezentation')}}
+						</wnl-slide-link>
 					</wnl-slide-preview>
 				</div>
 				<div class="card-item">
@@ -321,7 +327,8 @@
 		},
 		methods: {
 			hideSlidePreview() {
-				return this.show = false
+				this.show = false
+				this.slideContent = ''
 			},
 			showSlidePreview(slide) {
 				this.currentModalSlide = slide

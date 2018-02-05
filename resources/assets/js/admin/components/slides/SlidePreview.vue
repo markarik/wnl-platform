@@ -23,11 +23,14 @@
 </style>
 
 <script>
+
+	import {nextTick} from 'vue'
+
 	export default {
 		name: 'SlidePreview',
 		data() {
 			return {
-				isLoading: false
+				isLoading: true
 			}
 		},
 		props: {
@@ -42,16 +45,20 @@
 		},
 		methods: {
 			onLoad() {
-				this.isLoading = true
-				this.addClass().then(() => {
+			this.addClass().then(() => {
 					this.isLoading = false
 				})
 			},
 			addClass() {
 				return new Promise((resolve) => {
 					frames["slidePreview"].document.body.classList.add("is-without-controls")
-					resolve()
+					nextTick(resolve)
 				})
+			}
+		},
+		watch: {
+			'showModal' (newValue, oldValue) {
+				if (newValue) this.isLoading = true
 			}
 		}
 	}

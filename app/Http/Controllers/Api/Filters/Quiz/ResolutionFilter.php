@@ -47,6 +47,7 @@ class ResolutionFilter extends ApiFilter
 			'items'   => $items,
 			'type'    => 'list',
 			'message' => 'resolution',
+			'is_user_specific' => true
 		];
 	}
 

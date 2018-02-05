@@ -30,6 +30,7 @@ class CollectionFilter extends ApiFilter
 			],
 			'message' => 'collection',
 			'type'    => 'list',
+			'is_user_specific' => true
 		];
 	}
 

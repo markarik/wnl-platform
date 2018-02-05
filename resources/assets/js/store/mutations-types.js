@@ -159,6 +159,7 @@ export const QUESTIONS_SET_PAGE                 = 'QUESTIONS_SET_PAGE'
 export const QUESTIONS_SET_TEST                 = 'QUESTIONS_SET_TEST'
 export const QUESTIONS_SET_WITH_ANSWERS         = 'QUESTIONS_SET_WITH_ANSWERS'
 export const QUESTIONS_UPDATE                   = 'QUESTIONS_UPDATE'
+export const QUESTIONS_SET_TOKEN                = 'QUESTIONS_SET_TOKEN'
 
 // Filters
 export const ADD_FILTER = 'ADD_FILTER'

@@ -33,6 +33,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Faceted search / filtering
 	api_action('post', 'filter');
 
+	// Saved active filters
+	api_action('post', 'activeFilters');
+
 	// Faceted search available filters
 	api_action('post', 'filterList');
 

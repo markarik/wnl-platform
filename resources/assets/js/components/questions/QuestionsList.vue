@@ -458,37 +458,43 @@
 			this.switchOverlay(true)
 			this.fetchingFilters = true
 			this.setupFilters().then(() => {
-				hasPresetFilters && this.activeFiltersSet(this.presetFilters)
-				this.fetchActiveFilters()
-					.then(() => {
-						this.fetchingFilters = false
-						this.resetCurrentQuestion()
-						this.setToken()
+				return new Promise(resolve => {
+					if (hasPresetFilters) {
+						this.activeFiltersSet(this.presetFilters)
+						resolve()
+					} else {
+						this.fetchActiveFilters().then(resolve)
+					}
+				})
+				.then(() => {
+					this.fetchingFilters = false
+					this.resetCurrentQuestion()
+					this.setToken()
+				})
+				.then(this.fetchDynamicFilters)
+				.then(this.getPosition)
+				.then(({data = {}}) => {
+					return new Promise((resolve, reject) => {
+						this.fetchQuestions({
+							saveFilters: false,
+							useSavedFilters: false,
+							filters: hasPresetFilters ? this.presetFilters : this.activeFilters,
+							page: (data.position && data.position.page) || 1
+						}).then(() => resolve(data))
 					})
-					.then(this.fetchDynamicFilters)
-					.then(this.getPosition)
-					.then(({data = {}}) => {
-						return new Promise((resolve, reject) => {
-							this.fetchQuestions({
-								saveFilters: false,
-								useSavedFilters: false,
-								filters: hasPresetFilters ? this.presetFilters : this.activeFilters,
-								page: (data.position && data.position.page) || 1
-							}).then(() => resolve(data))
-						})
-					})
-					.then(({position}) => {
-						position && this.changeCurrentQuestion(position)
-						this.switchOverlay(false)
-					})
-					.then(() => this.fetchQuestionsReactions(this.getPage(1)))
-					.then(() => this.reactionsFetched = true)
-					.then(() => this.fetchQuestionData(this.currentQuestion.id))
-					.catch(e => {
-						$wnl.logger.error(e)
-						this.fetchingFilters = false
-						this.switchOverlay(false)
-					})
+				})
+				.then(({position}) => {
+					position && this.changeCurrentQuestion(position)
+					this.switchOverlay(false)
+				})
+				.then(() => this.fetchQuestionsReactions(this.getPage(1)))
+				.then(() => this.reactionsFetched = true)
+				.then(() => this.fetchQuestionData(this.currentQuestion.id))
+				.catch(e => {
+					$wnl.logger.error(e)
+					this.fetchingFilters = false
+					this.switchOverlay(false)
+				})
 			})
 		},
 		beforeRouteLeave(to, from, next) {

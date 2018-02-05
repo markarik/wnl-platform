@@ -270,7 +270,9 @@
 				blankPage: '_blank',
 				reactableResource: "quiz_questions",
 				slidesExpanded: false,
-				showExplanation: false
+				showExplanation: false,
+				show: false,
+				slideContent: ''
 			}
 		},
 		computed: {
@@ -310,6 +312,22 @@
 			}
 		},
 		methods: {
+			hideSlidePreview() {
+				return this.show = false
+			},
+			showSlidePreview(slide) {
+				const slideId = [slide.id]
+				return axios.post(getApiUrl(`slideshow_builder/.query`), {
+					query: {
+						whereIn: ['slides.id', slideId],
+					},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+				}).then(({data}) => {
+					this.slideContent = data
+				}).then(() => {
+					this.show = true
+				})
+			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'

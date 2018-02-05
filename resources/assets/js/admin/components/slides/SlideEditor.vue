@@ -103,7 +103,7 @@
 	import Form from 'js/classes/forms/Form'
 	import {getUrl, getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
-	import SlidePreview from 'js/admin/components/slides/SlidePreview'
+	import SlidePreview from 'js/components/global/SlidePreview'
 	import Checkbox from 'js/admin/components/forms/Checkbox'
 	import {alerts} from 'js/mixins/alerts'
 

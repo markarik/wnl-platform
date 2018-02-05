@@ -13,8 +13,5 @@ export const quiz = {
 		explanation: {
 			header: 'Wyjaśnienie'
 		}
-	},
-	slideModal: {
-		goToPrezentation: 'Przejdź do prezentacji'
 	}
 }

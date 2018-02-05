@@ -1,14 +1,8 @@
 <template>
-	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}">
+	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}" v-show="!isLoading">
 		<div class="modal-background" @click="$emit('closeModal')"></div>
-		<div class="modal-card">
-			<header class="modal-card-header">
-				<slot name="header"></slot>
-			</header>
-				<iframe name="slidePreview" :srcdoc="content" @load="onLoad()" v-show="!isLoading"/>
-			<footer class="modal-card-footer">
-				<slot name="footer"></slot>
-			</footer>
+		<div class="modal-content">
+			<iframe name="slidePreview" :srcdoc="content" @load="onLoad()"/>
 		</div>
 		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
 	</div>
@@ -19,18 +13,13 @@
 	.modal
 		z-index: $z-index-alerts
 
-	.modal-card
+	.modal-content
 		width: 90vw
 		height: 90vh
-		text-align: center
-		background: white
 
 		iframe
 			width: 100%
 			height: 100%
-
-		footer
-			height: 5%
 </style>
 
 <script>

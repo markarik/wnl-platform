@@ -85,10 +85,7 @@
 					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
 						{{slideLink(slide)}}
 					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" v-if="slideContent && currentModalSlide">
-						<span slot="header">{{slideLink(currentModalSlide)}}</span>
-						<wnl-slide-link class="button is-primary is-outlined is-small" slot="footer" :context="currentModalSlide.context" :blankPage="blankPage">{{$t('quiz.slideModal.goToPrezentation')}}</wnl-slide-link>
-					</wnl-slide-preview>
+					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview"></wnl-slide-preview>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
@@ -279,7 +276,6 @@
 				slidesExpanded: false,
 				showExplanation: false,
 				show: false,
-				currentModalSlide: null,
 				slideContent: ''
 			}
 		},
@@ -324,7 +320,6 @@
 				return this.show = false
 			},
 			showSlidePreview(slide) {
-				this.currentModalSlide = slide
 				const slideId = [slide.id]
 				return axios.post(getApiUrl(`slideshow_builder/.query`), {
 					query: {

@@ -6,14 +6,16 @@ use App\Models\User;
 use Tests\Api\ApiTestCase;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Api\PrivateApi\QuizQuestionsApiController;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class QuizQuestionsFilteringTest extends ApiTestCase
 {
+	use DatabaseTransactions;
 
 	/** @test * */
 	public function activeFiltersNotUseSaved()
 	{
-		$user = User::find(1);
+		$user = factory(User::class)->create();
 
 		$response = $this
 			->actingAs($user)
@@ -28,8 +30,8 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	/** @test * */
 	public function activeFiltersUseSaved()
 	{
-		$user = User::find(1);
-		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', 1);
+		$user = factory(User::class)->create();
+		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', $user->id);
 
 		$mockedRedis = Redis::shouldReceive('get')
 			->once()
@@ -50,8 +52,8 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	/** @test * */
 	public function activeFiltersHasSaved()
 	{
-		$user = User::find(1);
-		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', 1);
+		$user = factory(User::class)->create();
+		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', $user->id);
 
 		$mockedRedis = Redis::shouldReceive('get')
 			->once()
@@ -73,8 +75,8 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	/** @test * */
 	public function activeFiltersSave()
 	{
-		$user = User::find(1);
-		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', 1);
+		$user = factory(User::class)->create();
+		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', $user->id);
 
 		$mockedRedis = Redis::shouldReceive('set')
 			->once()
@@ -97,7 +99,7 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	/** @test * */
 	public function filtersPaginatedResponse()
 	{
-		$user = User::find(1);
+		$user = factory(User::class)->create();
 
 		$response = $this
 			->actingAs($user)
@@ -115,7 +117,7 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	/** @test * */
 	public function filtersCachedPaginated()
 	{
-		$user = User::find(1);
+		$user = factory(User::class)->create();
 
 		$response = $this
 			->actingAs($user)

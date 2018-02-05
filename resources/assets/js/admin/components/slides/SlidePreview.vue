@@ -45,7 +45,7 @@
 		},
 		methods: {
 			onLoad() {
-			this.addClass().then(() => {
+				this.addClass().then(() => {
 					this.isLoading = false
 				})
 			},

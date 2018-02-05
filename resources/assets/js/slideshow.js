@@ -54,6 +54,8 @@ const setupReveal = () => {
 			fullScreenViewer.hide()
 		}
 	})
+
+	refreshChart(0)
 }
 
 const setupHandshake = () => {
@@ -164,7 +166,7 @@ const setupHandshake = () => {
 			$orderNumberContainer.text(orderNumber)
 		},
 		refreshChart(index) {
-			viewers[index] && viewers[index].refresh()
+			refreshChart(index)
 		}
 	})
 }
@@ -293,4 +295,8 @@ function setBookmarkEventListener(parent) {
 
 function emitToggleFullscreen(state = true) {
 	parent.emit('toggle-fullscreen', state)
+}
+
+function refreshChart(index) {
+	viewers[index] && viewers[index].refresh()
 }

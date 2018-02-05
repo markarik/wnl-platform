@@ -1,8 +1,16 @@
 <template>
-	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}" v-show="!isLoading">
+	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}">
 		<div class="modal-background" @click="$emit('closeModal')"></div>
-		<div class="modal-content">
-			<iframe name="slidePreview" :srcdoc="content" @load="onLoad()"/>
+		<div class="modal-card">
+			<header class="modal-card-header">
+				<slot name="header"></slot>
+			</header>
+			<div class="modal-card-body">
+				<iframe name="slidePreview" :srcdoc="content" @load="onLoad" v-show="!isLoading"/>
+			</div>
+			<footer class="modal-card-footer">
+				<slot name="footer"></slot>
+			</footer>
 		</div>
 		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
 	</div>
@@ -13,13 +21,21 @@
 	.modal
 		z-index: $z-index-alerts
 
-	.modal-content
+	.modal-card
 		width: 90vw
 		height: 90vh
+		text-align: center
+		background: white
+
+		.modal-card-body
+			height: 100%
 
 		iframe
 			width: 100%
 			height: 100%
+
+		footer
+			height: 5%
 </style>
 
 <script>
@@ -45,20 +61,13 @@
 		},
 		methods: {
 			onLoad() {
-				this.addClass().then(() => {
-					this.isLoading = false
-				})
-			},
-			addClass() {
-				return new Promise((resolve) => {
-					frames["slidePreview"].document.body.classList.add("is-without-controls")
-					nextTick(resolve)
-				})
+				frames["slidePreview"].document.body.classList.add("is-without-controls")
+				nextTick(() => this.isLoading = false)
 			}
 		},
 		watch: {
-			'showModal' (newValue, oldValue) {
-				if (newValue) this.isLoading = true
+			'showModal' (newValue) {
+				this.isLoading = newValue
 			}
 		}
 	}

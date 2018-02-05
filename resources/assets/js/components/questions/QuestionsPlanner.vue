@@ -306,7 +306,7 @@
 		data() {
 			return {
 				customCount: 0,
-				endDate: new Date('September 21, 2017 00:00:00'),
+				endDate: null,
 				fetchingQuestions: false,
 				plan: null,
 				saving: false,

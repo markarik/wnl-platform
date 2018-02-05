@@ -249,7 +249,8 @@
 				this.testMode = true
 				this.fetchTestQuestions({
 					activeFilters: this.activeFilters,
-					count: count
+					count: count,
+					randomize: !this.examMode,
 				}).then(() => this.switchOverlay(false, 'testBuilding'))
 			},
 			changePage(page) {

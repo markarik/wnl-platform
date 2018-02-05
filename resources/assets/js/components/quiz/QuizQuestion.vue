@@ -82,10 +82,9 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
+					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context" :blankPage="blankPage">
 						{{slideLink(slide)}}
-					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview"></wnl-slide-preview>
+					</wnl-slide-link>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
@@ -239,32 +238,27 @@
 	.question-edit-link
 		margin: $margin-medium 0
 		text-align: center
+
 		.button
 			.icon:first-child
 				margin-left: $margin-small
 
 
-
 	.has-errors .is-unanswered
 		color: $color-orange
-</style>
 
+</style>
 <script>
 	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
-	import _ from 'lodash'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import SlideLink from 'js/components/global/SlideLink'
-	import SlidePreview from 'js/admin/components/slides/SlidePreview'
-
 	export default {
 		name: 'QuizQuestion',
 		components: {
-			'wnl-slide-preview': SlidePreview,
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,

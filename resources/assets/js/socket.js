@@ -39,7 +39,7 @@ export function disconnect() {
 }
 
 function _socketError(error) {
-	if (error = 'Authentication error') {
+	if (error === 'Authentication error') {
 		window.location.replace('/login');
 		return
 	}

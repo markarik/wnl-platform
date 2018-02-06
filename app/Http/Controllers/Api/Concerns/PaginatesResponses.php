@@ -39,11 +39,13 @@ trait PaginatesResponses
 		$collection = $model->get();
 		$userId = Auth::user()->id;
 
-		if (Cache::tags($cacheTags)->has($this->cacheKey($cacheKeyPrefix, 1))) {
+		if (Cache::tags($cacheTags)->has($this->cacheKey($cacheKeyPrefix, $page))) {
 			$results = Cache::tags($cacheTags)->get($this->cacheKey($cacheKeyPrefix, $page));
 
 			if (!empty($results)) {
 				$results['data'] = $this->transform($results['raw_data']);
+				$results['cache_hash'] = $cacheKeyPrefix;
+				$results['from_cache'] = true;
 				return $results;
 			}
 
@@ -60,6 +62,7 @@ trait PaginatesResponses
 			'total'        => $paginator->total(),
 			'last_page'    => $paginator->lastPage(),
 			'per_page'     => $paginator->perPage(),
+			'cache_hash'   => $cacheKeyPrefix
 		];
 
 		$chunks = $collection->chunk($limit);
@@ -70,11 +73,11 @@ trait PaginatesResponses
 				'raw_data' => $chunk,
 				'has_more' => $page <= $paginator->lastPage(),
 				'current_page' => $page,
-				'cached' => true
+				'cache_hash' => $cacheKeyPrefix
 			]);
 			$cacheKey = $this->cacheKey($cacheKeyPrefix, $page);
 
-			Cache::tags($cacheTags)->forever($cacheKey, $results);
+			Cache::tags($cacheTags)->put($cacheKey, $results, 60 * 24);
 			$page++;
 		}
 

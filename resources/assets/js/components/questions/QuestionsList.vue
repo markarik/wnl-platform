@@ -114,7 +114,8 @@
 
 <script>
 	import {isEmpty, get} from 'lodash'
-	import {mapGetters, mapActions} from 'vuex'
+	import {mapGetters, mapActions, mapMutations} from 'vuex'
+	import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types'
 
 	import ActiveFilters from 'js/components/questions/ActiveFilters'
 	import QuizWidget from 'js/components/quiz/QuizWidget'
@@ -225,7 +226,6 @@
 				'getPosition',
 				'fetchQuestionData',
 				'fetchQuestions',
-				'fetchQuestionsCount',
 				'fetchPage',
 				'fetchTestQuestions',
 				'fetchDynamicFilters',
@@ -238,7 +238,9 @@
 				'savePosition',
 				'selectAnswer',
 				'setPage',
+				'fetchActiveFilters'
 			]),
+			...mapMutations('questions', {setToken}),
 			buildTest({count}) {
 				const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 					? this.presetOptionsToPass.loadingText
@@ -249,7 +251,8 @@
 				this.testMode = true
 				this.fetchTestQuestions({
 					activeFilters: this.activeFilters,
-					count: count
+					count: count,
+					randomize: !this.examMode,
 				}).then(() => this.switchOverlay(false, 'testBuilding'))
 			},
 			changePage(page) {
@@ -308,6 +311,7 @@
 						if (!payload.refresh) return false
 
 						this.resetCurrentQuestion()
+						this.setToken()
 						this.resetPages()
 						this.fetchDynamicFilters()
 						return this.fetchMatchingQuestions()
@@ -344,10 +348,6 @@
 			onChangePage(page) {
 				scrollToTop()
 				this.changePage(page)
-			},
-			onFetchMatchingQuestions() {
-				this.resetCurrentQuestion()
-				this.fetchQuestions({filters: this.activeFilters})
 			},
 			onSelectAnswer(payload) {
 				payload.answer === this.getQuestion(payload.id).selectedAnswer
@@ -437,6 +437,7 @@
 						this.fetchingFilters = true
 
 						this.resetCurrentQuestion()
+						this.setToken()
 						this.resetPages()
 						return Promise.all([
 							this.fetchDynamicFilters(),
@@ -457,36 +458,43 @@
 			this.switchOverlay(true)
 			this.fetchingFilters = true
 			this.setupFilters().then(() => {
-				hasPresetFilters && this.activeFiltersSet(this.presetFilters)
-				this.fetchQuestionsCount()
-					.then(() => this.fetchDynamicFilters())
-					.then(() => {
-						this.fetchingFilters = false
-						this.resetCurrentQuestion()
+				return new Promise(resolve => {
+					if (hasPresetFilters) {
+						this.activeFiltersSet(this.presetFilters)
+						resolve()
+					} else {
+						this.fetchActiveFilters().then(resolve)
+					}
+				})
+				.then(() => {
+					this.fetchingFilters = false
+					this.resetCurrentQuestion()
+					this.setToken()
+				})
+				.then(this.fetchDynamicFilters)
+				.then(this.getPosition)
+				.then(({data = {}}) => {
+					return new Promise((resolve, reject) => {
+						this.fetchQuestions({
+							saveFilters: false,
+							useSavedFilters: false,
+							filters: hasPresetFilters ? this.presetFilters : this.activeFilters,
+							page: (data.position && data.position.page) || 1
+						}).then(() => resolve(data))
 					})
-					.then(this.getPosition)
-					.then(({data = {}}) => {
-						return new Promise((resolve, reject) => {
-							this.fetchQuestions({
-								saveFilters: false,
-								useSavedFilters: !hasPresetFilters,
-								filters: this.presetFilters,
-								page: (data.position && data.position.page) || 1
-							}).then(() => resolve(data))
-						})
-					})
-					.then(({position}) => {
-						position && this.changeCurrentQuestion(position)
-						this.switchOverlay(false)
-					})
-					.then(() => this.fetchQuestionsReactions(this.getPage(1)))
-					.then(() => this.reactionsFetched = true)
-					.then(() => this.fetchQuestionData(this.currentQuestion.id))
-					.catch(e => {
-						$wnl.logger.error(e)
-						this.fetchingFilters = false
-						this.switchOverlay(false)
-					})
+				})
+				.then(({position}) => {
+					position && this.changeCurrentQuestion(position)
+					this.switchOverlay(false)
+				})
+				.then(() => this.fetchQuestionsReactions(this.getPage(1)))
+				.then(() => this.reactionsFetched = true)
+				.then(() => this.fetchQuestionData(this.currentQuestion.id))
+				.catch(e => {
+					$wnl.logger.error(e)
+					this.fetchingFilters = false
+					this.switchOverlay(false)
+				})
 			})
 		},
 		beforeRouteLeave(to, from, next) {

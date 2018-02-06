@@ -43,7 +43,7 @@
 				<div class="quiz-question-meta">
 					<div class="quiz-question-tags">
 						<span v-if="displayResults && question.tags">{{$t('questions.question.tags')}}:</span>
-						<span v-if="displayResults" v-for="tag, index in question.tags"
+						<span v-if="displayResults" v-for="(tag, index) in question.tags"
 							class="quiz-question-tag"
 							:key="index"
 						>
@@ -82,9 +82,19 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<wnl-slide-link class="slide-list-item" v-show="slidesExpanded" v-for="(slide, index) in slides" :key="index" :context="slide.context" :blankPage="blankPage">
+					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
 						{{slideLink(slide)}}
-					</wnl-slide-link>
+					</a>
+					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" v-if="slideContent && currentModalSlide">
+						<span slot="header">{{slideLink(currentModalSlide)}}</span>
+						<wnl-slide-link
+							class="button is-primary is-outlined is-small"
+							slot="footer"
+							:context="currentModalSlide.context"
+							:blankPage="blankPage">
+								{{$t('quiz.slideModal.goToPrezentation')}}
+						</wnl-slide-link>
+					</wnl-slide-preview>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
@@ -238,32 +248,34 @@
 	.question-edit-link
 		margin: $margin-medium 0
 		text-align: center
+
 		.button
 			.icon:first-child
 				margin-left: $margin-small
 
 
-
 	.has-errors .is-unanswered
 		color: $color-orange
-</style>
 
+</style>
 <script>
 	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
+	import { getApiUrl } from 'js/utils/env'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import SlideLink from 'js/components/global/SlideLink'
-
+	import SlidePreview from 'js/components/global/SlidePreview'
 	export default {
 		name: 'QuizQuestion',
 		components: {
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
-			'wnl-slide-link': SlideLink
+			'wnl-slide-link': SlideLink,
+			'wnl-slide-preview': SlidePreview
 		},
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
@@ -271,7 +283,10 @@
 				blankPage: '_blank',
 				reactableResource: "quiz_questions",
 				slidesExpanded: false,
-				showExplanation: false
+				showExplanation: false,
+				show: false,
+				currentModalSlide: null,
+				slideContent: ''
 			}
 		},
 		computed: {
@@ -311,6 +326,24 @@
 			}
 		},
 		methods: {
+			hideSlidePreview() {
+				this.show = false
+				this.slideContent = ''
+			},
+			showSlidePreview(slide) {
+				this.currentModalSlide = slide
+				const slideId = [slide.id]
+				return axios.post(getApiUrl(`slideshow_builder/.query`), {
+					query: {
+						whereIn: ['slides.id', slideId],
+					},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+				}).then(({data}) => {
+					this.slideContent = data
+				}).then(() => {
+					this.show = true
+				})
+			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'

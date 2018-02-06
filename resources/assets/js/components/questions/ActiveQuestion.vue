@@ -151,7 +151,7 @@
 					this.previousQuestion()
 				}
 				// Up arrow
-				if(e.keyCode === 38) {
+				if (e.keyCode === 38) {
 					if(this.question.isResolved) {
 						return false
 					}

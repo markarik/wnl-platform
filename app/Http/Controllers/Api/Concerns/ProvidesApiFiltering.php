@@ -13,11 +13,18 @@ trait ProvidesApiFiltering
 
 	public $limit;
 
+	public function activeFilters(Request $request) {
+		list ($filters, $paths) = $this->getFilters($request);
+
+		return $this->respondOk($paths);
+	}
+
 	public function filter(Request $request)
 	{
 		$resource = $request->route('resource');
 		$order = $request->get('order');
 		$model = app(static::getResourceModel($resource));
+		$userFiltersPersistanceToken = $request->get('token');
 
 		if (!empty ($order)) {
 			$model = $this->parseOrder($model, $order);
@@ -38,13 +45,13 @@ trait ProvidesApiFiltering
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
 			if (!$request->has('active') || empty($filters)) {
-				return $this->paginatedResponse($model, $this->limit, $this->page);
+				$response = $this->paginatedResponse($model, $this->limit, $this->page);
+			} else {
+				$cacheTags = $this->getFiltersCacheTags($resource, $userFiltersPersistanceToken);
+				$hashedFilters = $this->hashedFilters($filters);
+
+				$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
 			}
-
-			$cacheTags = $this->getFiltersCacheTags($resource);
-			$hashedFilters = $this->hashedFilters($filters);
-
-			$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
 		}
 
 		$response = array_merge($response, ['active' => $paths]);
@@ -188,16 +195,20 @@ trait ProvidesApiFiltering
 		$userId = Auth::user()->id;
 		$resource = $request->route('resource');
 
-		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
+		return self::savedFiltersCacheKey($resource, $userId);
 	}
 
 	protected function hashedFilters($activeFilters) {
 		return hash('md5', json_encode($activeFilters));
 	}
 
-	protected function getFiltersCacheTags($resource) {
+	protected function getFiltersCacheTags($resource, $userFiltersPersistanceToken) {
 		$userId = Auth::user()->id;
 
-		return [$resource, 'filters', "user-{$userId}"];
+		return [$resource, "filters", "user-{$userId}", $userFiltersPersistanceToken];
+	}
+
+	public static function savedFiltersCacheKey($resource, $userId) {
+		return sprintf(self::$ACTIVE_FILTERS_KEY, $userId, $resource);
 	}
 }

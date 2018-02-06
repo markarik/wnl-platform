@@ -63,12 +63,23 @@
 			onLoad() {
 				frames["slidePreview"].document.body.classList.add("is-without-controls")
 				nextTick(() => this.isLoading = false)
+			},
+			onKeydown(e) {
+				if (e.keyCode === 27) {
+					this.$emit('closeModal')
+				}
 			}
 		},
 		watch: {
 			'showModal' (newValue) {
 				this.isLoading = newValue
 			}
+		},
+		mounted() {
+			document.body.addEventListener('keydown', this.onKeydown)
+		},
+		beforeDestroy() {
+			document.body.removeEventListener('keydown', this.onKeydown)
 		}
 	}
 </script>

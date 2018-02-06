@@ -12,7 +12,7 @@
 				<slot name="footer"></slot>
 			</footer>
 		</div>
-		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
+		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')" @keyup.esc="keyEvent"></button>
 	</div>
 </template>
 
@@ -63,12 +63,23 @@
 			onLoad() {
 				frames["slidePreview"].document.body.classList.add("is-without-controls")
 				nextTick(() => this.isLoading = false)
+			},
+			onKeydown(e) {
+				if (e.keyCode === 27) {
+					this.$emit('closeModal')
+				}
 			}
 		},
 		watch: {
 			'showModal' (newValue) {
 				this.isLoading = newValue
 			}
+		},
+		mounted() {
+			document.body.addEventListener('keydown', this.onKeydown)
+		},
+		beforeDestroy() {
+			document.body.removeEventListener('keydown', this.onKeydown)
 		}
 	}
 </script>

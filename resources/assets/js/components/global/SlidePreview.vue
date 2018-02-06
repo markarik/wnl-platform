@@ -12,7 +12,7 @@
 				<slot name="footer"></slot>
 			</footer>
 		</div>
-		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')" @keyup.esc="keyEvent"></button>
+		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
 	</div>
 </template>
 

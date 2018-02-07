@@ -1,8 +1,8 @@
 <template lang="html">
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-				:isVisible="isSidenavVisible"
-				:isDetached="!isSidenavMounted"
+			:isVisible="isSidenavVisible"
+			:isDetached="!isSidenavMounted"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
@@ -10,8 +10,8 @@
 					Prywatne wiadomości
 				</div>
 				<wnl-conversations-list
-					@roomSwitch="switchRoom">
-				</wnl-conversations-list>
+					@roomSwitch="switchRoom"
+				/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">

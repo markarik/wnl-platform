@@ -1,13 +1,12 @@
 <template lang="html">
-	<div class="conversation-list" v-if="rooms.length">
+	<div class="conversation-list" v-if="sortedRooms.length">
 		<wnl-conversation-snippet
-			v-for="(room, index) in rooms"
-			:key="index"
-			:room="room"
-			:users="getRoomProfiles(room.profiles)"
-			:messages="getRoomMessages(room)"
-			:currentRoom="currentRoom">
-		</wnl-conversation-snippet>
+			v-for="roomId in sortedRooms"
+			:key="roomId"
+			:room="getRoomById(roomId)"
+			:users="getRoomProfiles(roomId)"
+			:messages="getRoomMessages(roomId)"
+		/>
 	</div>
 	<span v-else>Nie masz żadnych rozmów</span>
 </template>
@@ -32,39 +31,14 @@
 		},
 		data() {
 			return  {
-				rooms: [],
-				profiles: [],
-				messages: [],
 				currentRoom: ''
 			}
 		},
 		computed: {
 			...mapGetters(['currentUserId']),
+			...mapGetters('chatMessages', ['getRoomById', 'sortedRooms', 'getRoomProfiles', 'getRoomMessages']),
 		},
 		methods: {
-			getPrivateRooms() {
-				const path = 'chat_rooms/.getPrivateRooms?include=profiles'
-				return axios.get(getApiUrl(path))
-					.then(({data}) => {
-						if (isEmpty(data)) return
-
-						this.profiles = data.included.profiles
-						delete data.included
-						this.rooms = Object.values(data)
-					})
-			},
-			getMessages() {
-				const path = 'chat_messages/.getByRooms'
-				const data = {
-					rooms: this.rooms.map(val => val.id)
-				}
-				return axios.post(getApiUrl(path), data)
-					.then(res => {
-						this.messages = res.data
-						return res
-					})
-
-			},
 			getRoomName(interlocutors) {
 				if (!Array.isArray(interlocutors)){
 					interlocutors = interlocutors.split('-')
@@ -124,27 +98,7 @@
 				let users = this.getRoomProfiles(room.profiles)
 				let messages = this.getRoomMessages(room)
 				this.$emit('roomSwitch', {room, users, messages})
-			},
-			getRoomMessages(room) {
-					return this.messages.filter(m => m.chat_room_id === room.id)
-			},
-			getRoomProfiles(profileIds) {
-				let profiles = [];
-
-				profileIds.forEach((profileId) => {
-					let profile = this.profiles[profileId]
-					if (profile.user_id !== this.currentUserId) {
-						profiles.push(profile)
-					}
-				})
-
-				return profiles
 			}
-		},
-		mounted(){
-			this.getPrivateRooms()
-				.then(() => this.rooms.length && this.getMessages(this.rooms))
-				.then(() => this.openRoom(this.$route.params.interlocutors))
 		},
 		watch: {
 			'$route' (to, from) {

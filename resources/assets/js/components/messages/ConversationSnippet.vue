@@ -8,7 +8,6 @@
 				:fullName="users[0].display_name"
 				:url="users[0].avatar"
 				size="large">
-
 			</wnl-avatar>
 
 		</figure>
@@ -84,9 +83,6 @@
 			room: {
 				required: true,
 			},
-			currentRoom: {
-				required: false,
-			},
 			users: {
 				required: true,
 				type: Array,
@@ -115,6 +111,9 @@
 			time(stamp){
 				return shortTimeFromMs(stamp)
 			}
+		},
+		mounted () {
+			console.log('conversation snippet created...')
 		}
 	}
 </script>

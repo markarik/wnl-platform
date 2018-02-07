@@ -86,16 +86,23 @@
 				'isChatToggleVisible',
 				'currentUserName'
 			]),
+			...mapGetters('chatMessages', ['rooms', 'sortedRooms']),
 			...mapGetters('course', ['ready']),
 			showChatRoom() {
 				return !!this.currentRoom
 			}
 		},
 		methods: {
+			...mapActions('chatMessages', ['fetchInitialState']),
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
 			}
+		},
+		beforeRouteEnter(to, from, next) {
+			next(vm => {
+				vm.fetchInitialState()
+			})
 		}
 	}
 </script>

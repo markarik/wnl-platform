@@ -86,9 +86,10 @@
 				'isChatToggleVisible',
 				'currentUserName'
 			]),
-			...mapGetters('chatMessages', ['rooms', 'sortedRooms']),
+			...mapGetters('chatMessages', ['rooms', 'sortedRooms', 'getRoomById', 'getRoomProfiles']),
 			...mapGetters('course', ['ready']),
 			showChatRoom() {
+				console.log(!!this.currentRoom)
 				return !!this.currentRoom
 			}
 		},
@@ -97,6 +98,18 @@
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
+			}
+		},
+		watch: {
+			'$route.query'() {
+				if (this.$route.query.roomId) {
+					// otworz pokoj o id = roomid
+					const roomId = this.$route.query.roomId
+					this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
+				} else if (this.$route.query.roomName) {
+					// otworz pokoj o nazwie = roomName
+					console.log('room name...', this.$route.query.roomName)
+				}
 			}
 		},
 		beforeRouteEnter(to, from, next) {

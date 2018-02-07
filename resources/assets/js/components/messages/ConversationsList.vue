@@ -53,28 +53,6 @@
 
 				return `private-${interlocutors}`
 			},
-			openRoom(interlocutors) {
-				return new Promise((resolve, reject) => {
-					let newRoom
-
-					if (interlocutors) {
-						newRoom = this.getRoomName(interlocutors)
-						let existingRoom = this.rooms.find(room => {
-							return room.channel === newRoom
-						})
-
-						if (existingRoom) {
-							this.switchToRoom(existingRoom)
-						} else {
-							this.startNewRoom(newRoom)
-						}
-					} else if (this.rooms.length > 0) {
-						this.switchToRoom(this.rooms[0])
-					}
-
-					resolve()
-				})
-			},
 			switchToRoom(room) {
 				this.currentRoom = room
 				this.emitRoomChange(room)
@@ -98,11 +76,6 @@
 				let users = this.getRoomProfiles(room.profiles)
 				let messages = this.getRoomMessages(room)
 				this.$emit('roomSwitch', {room, users, messages})
-			}
-		},
-		watch: {
-			'$route' (to, from) {
-				this.openRoom(to.params.interlocutors)
 			}
 		}
 	}

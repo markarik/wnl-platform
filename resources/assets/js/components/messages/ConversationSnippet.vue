@@ -1,7 +1,7 @@
 <template lang="html">
 	<router-link
 		:to="to"
-		class="conversation-snippet">
+		:class="{'conversation-snippet': true, 'is-active-c': $route.query.roomId === room.id}">
 		<figure class="media-left">
 
 			<wnl-avatar
@@ -21,9 +21,7 @@
 						<small>{{ time(room.last_message_time) }}</small>
 					</div>
 				</div>
-				<div class="conversation-message">
-					{{lastMessageContent}}
-				</div>
+				<div class="conversation-message" v-html="lastMessageContent"/>
 			</div>
 		</div>
 	</router-link>
@@ -42,7 +40,7 @@
 			cursor: pointer
 			background-color: $color-background-lightest-gray
 
-		&.is-active
+		&.is-active-c
 			background-color: $color-background-lighter-gray
 
 
@@ -101,14 +99,13 @@
 		computed: {
 			to() {
 				return {
-					name: 'messages'
-					// params: {
-					// 	interlocutors: this.room.channel.replace('private-', ''),
-					// },
+					name: 'messages',
+					query: {
+						roomId: this.room.id,
+					},
 				}
 			},
 			lastMessageContent() {
-				console.log(this.messages.length ? this.messages[0].content : '')
 				return this.messages.length ? this.messages[0].content : ''
 			},
 			lastUser() {

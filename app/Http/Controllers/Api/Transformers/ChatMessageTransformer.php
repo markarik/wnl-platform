@@ -27,6 +27,7 @@ class ChatMessageTransformer extends ApiTransformer
 			'content'      => $chatMessage->content,
 			'time'         => $chatMessage->time,
 			'chat_room_id' => $chatMessage->chat_room_id,
+			'user_id' => $chatMessage->user_id,
 		];
 
 		if ($this->parent) {

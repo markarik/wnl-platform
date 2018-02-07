@@ -3,12 +3,10 @@
 		<div class="chat-title">
 			{{users[0].display_name}}
 		</div>
-		<wnl-chat
-			:room="room"
-			:initialPull="initialPull"
-			:pullLimit="pullLimit"
-		>
-		</wnl-chat>
+		<wnl-private-chat-room
+			:messages="room.messages",
+			:users="room.users"
+		/>
 	</div>
 </template>
 
@@ -29,31 +27,20 @@
 </style>
 
 <script>
-	import ChatRoom from './ChatRoom'
+	import PrivateChatRoom from './PrivateChatRoom'
 
 	export default {
+		components: {
+			'wnl-private-chat-room': PrivateChatRoom
+		},
 		name: 'wnl-private-chat',
 		props: {
 			room: {
-				required: true,
-			},
-			title: {
-				required: false,
-				type: String,
-				default: '',
+				type: Object
 			},
 			users: {
 				required: true,
 			}
-		},
-		data() {
-			return {
-				initialPull: true,
-				pullLimit: 30,
-			}
-		},
-		components: {
-			'wnl-chat': ChatRoom
 		},
 		computed: {
 			loadRoom() {
@@ -62,7 +49,7 @@
 		},
 		watch: {
 			'room' (oldVal, newVal) {
-
+				console.log('room changed...', this.room)
 			}
 		},
 		mounted() {

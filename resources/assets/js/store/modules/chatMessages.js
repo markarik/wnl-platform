@@ -27,6 +27,9 @@ const getters = {
 	},
 	getRoomMessages: (state, getters) => id => {
 		return getters.getRoomById(id).messages || []
+	},
+	getProfileByUserId: state => id => {
+		return Object.values(state.profiles).find(profile => profile.user_id === id)
 	}
 }
 

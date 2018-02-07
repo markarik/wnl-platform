@@ -5,8 +5,8 @@
 		<figure class="media-left">
 
 			<wnl-avatar
-				:fullName="users[0].display_name"
-				:url="users[0].avatar"
+				:fullName="lastUser.display_name"
+				:url="lastUser.avatar"
 				size="large">
 			</wnl-avatar>
 
@@ -15,13 +15,14 @@
 			<div class="content">
 				<div class="conversation-meta">
 					<div class="conversation-names">
-						<strong>{{ users[0].display_name }}</strong>
+						<strong>{{ lastUser.display_name }}</strong>
 					</div>
 					<div class="conversation-time" v-if="room.last_message_time">
 						<small>{{ time(room.last_message_time) }}</small>
 					</div>
 				</div>
-				<div class="conversation-message" v-html="messages[0].content">
+				<div class="conversation-message">
+					{{lastMessageContent}}
 				</div>
 			</div>
 		</div>
@@ -100,20 +101,24 @@
 		computed: {
 			to() {
 				return {
-					name: 'messages',
-					params: {
-						interlocutors: this.room.channel.replace('private-', ''),
-					},
+					name: 'messages'
+					// params: {
+					// 	interlocutors: this.room.channel.replace('private-', ''),
+					// },
 				}
+			},
+			lastMessageContent() {
+				console.log(this.messages.length ? this.messages[0].content : '')
+				return this.messages.length ? this.messages[0].content : ''
+			},
+			lastUser() {
+				return this.users.length ? this.users[0] : {}
 			}
 		},
 		methods: {
 			time(stamp){
 				return shortTimeFromMs(stamp)
 			}
-		},
-		mounted () {
-			console.log('conversation snippet created...')
 		}
 	}
 </script>

@@ -37,14 +37,14 @@ const mutations = {
 		set (state, 'sortedRooms', data.sortedRooms)
 		set (state, 'profiles', data.profiles)
 	},
-	[types.CHAT_MESSAGES_SET_ROOMS_WITH_MESSAGES] (state, data) {
-		set(state, 'rooms', data)
-	}
+	[types.CHAT_MESSAGES_SET_ROOM_MESSAGES] (state, {roomId, messages}) {
+		set(state.rooms[roomId], 'messages', messages)
+	},
 }
 
 //Actions
 const actions = {
-	fetchInitialState({commit, getters}) {
+	fetchInitialState({commit, getters, state}) {
 		axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
 			.then((response) => {
 				const {included, ...rooms} = response.data
@@ -55,7 +55,9 @@ const actions = {
 				}
 
 				Object.values(rooms).forEach((room) => {
-					payload.rooms[room.id] = room
+					payload.rooms[room.id] = {
+						...room, messages: []
+					}
 					payload.sortedRooms.push(room.id)
 				})
 
@@ -64,21 +66,17 @@ const actions = {
 				axios.post(getApiUrl('chat_messages/.getByRooms'), {
 					rooms: getters.sortedRooms
 				}).then(({data}) => {
-					const rooms = getters.rooms
+					const rooms = {}
 
 					data.forEach(message => {
 						if (!rooms[message.chat_room_id]) {
-							rooms[message.chat_room_id] = {}
+							rooms[message.chat_room_id] = []
 						}
 
-						if (!rooms[message.chat_room_id].messages) {
-							rooms[message.chat_room_id].messages = []
-						}
-
-						rooms[message.chat_room_id].messages.push(message)
+						rooms[message.chat_room_id].push(message)
 					})
 
-					commit(types.CHAT_MESSAGES_SET_ROOMS_WITH_MESSAGES, rooms)
+					Object.keys(rooms).forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: rooms[roomId]}))
 				})
 			})
 	},

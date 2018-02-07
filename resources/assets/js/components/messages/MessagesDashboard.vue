@@ -101,7 +101,7 @@
 		},
 		beforeRouteEnter(to, from, next) {
 			next(vm => {
-				vm.fetchInitialState()
+				return vm.fetchInitialState()
 			})
 		}
 	}

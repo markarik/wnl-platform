@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="wnl-private-chat" v-if="room">
+	<div class="wnl-private-chat">
 		<div class="chat-title">
 			{{users[0].display_name}}
 		</div>
@@ -36,19 +36,12 @@
 		name: 'wnl-private-chat',
 		props: {
 			room: {
-				type: Object
+				type: Object,
+				required: true
 			},
 			users: {
 				required: true,
 			}
 		},
-		watch: {
-			'room' (oldVal, newVal) {
-				console.log('room changed...', this.room)
-			}
-		},
-		mounted() {
-
-		}
 	}
 </script>

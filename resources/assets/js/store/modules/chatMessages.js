@@ -48,7 +48,7 @@ const mutations = {
 //Actions
 const actions = {
 	fetchInitialState({commit, getters, state}) {
-		axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
+		return axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
 			.then((response) => {
 				const {included, ...rooms} = response.data
 				const payload = {

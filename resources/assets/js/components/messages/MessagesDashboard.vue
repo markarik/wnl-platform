@@ -19,6 +19,7 @@
 				<wnl-private-chat
 					:room="currentRoom"
 					:users="currentRoomUsers"
+					v-if="currentRoom"
 				></wnl-private-chat>
 			</div>
 		</div>
@@ -53,12 +54,11 @@
 	import {mapActions, mapGetters} from 'vuex'
 
 	import MainNav from 'js/components/MainNav'
-	import PublicChat from 'js/components/chat/PublicChat'
 	import PrivateChat from 'js/components/chat/PrivateChat'
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import ConversationsList from 'js/components/messages/ConversationsList'
-	import withChat from 'js/mixins/with-chat'
+	import * as socket from 'js/socket'
 
 	export default {
 		name: 'MessagesDashboard',
@@ -66,11 +66,11 @@
 			return {
 				currentRoom: null,
 				currentRoomUsers: null,
+				socket: null
 			}
 		},
 		components: {
 			'wnl-main-nav': MainNav,
-			'wnl-public-chat': PublicChat,
 			'wnl-sidenav': Sidenav,
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-private-chat': PrivateChat,
@@ -88,7 +88,6 @@
 			...mapGetters('chatMessages', ['rooms', 'sortedRooms', 'getRoomById', 'getRoomProfiles']),
 			...mapGetters('course', ['ready']),
 			showChatRoom() {
-				console.log(!!this.currentRoom)
 				return !!this.currentRoom
 			}
 		},
@@ -107,14 +106,23 @@
 					this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
 				} else if (this.$route.query.roomName) {
 					// otworz pokoj o nazwie = roomName
-					console.log('room name...', this.$route.query.roomName)
 				}
 			}
 		},
 		beforeRouteEnter(to, from, next) {
 			next(vm => {
-				return vm.fetchInitialState()
+				vm.fetchInitialState()
+					.then(() => {
+						const roomId = to.query.roomId
+						roomId && vm.switchRoom({room: vm.getRoomById(roomId), users: vm.getRoomProfiles(roomId)})
+					})
 			})
+		},
+		mounted() {
+			socket.connect().then((socket) => this.socket = socket)
+		},
+		beforeDestroy() {
+			socket.disconnect()
 		}
 	}
 </script>

@@ -1,7 +1,7 @@
 <template lang="html">
 	<router-link
 		:to="to"
-		:class="{'conversation-snippet': true, 'is-active-c': $route.query.roomId === room.id}">
+		:class="{'conversation-snippet': true, 'active-in-route': isActive}">
 		<figure class="media-left">
 
 			<wnl-avatar
@@ -35,14 +35,10 @@
 		min-width: 0
 		overflow: hidden
 		padding: $margin-medium
+		cursor: pointer
 
-		&:hover
-			cursor: pointer
+		&:hover, &.active-in-route
 			background-color: $color-background-lightest-gray
-
-		&.is-active-c
-			background-color: $color-background-lighter-gray
-
 
 		.media-content
 			min-width: 0
@@ -91,11 +87,6 @@
 				type: Array
 			}
 		},
-		data() {
-			return {
-
-			}
-		},
 		computed: {
 			to() {
 				return {
@@ -110,6 +101,9 @@
 			},
 			lastUser() {
 				return this.users.length ? this.users[0] : {}
+			},
+			isActive() {
+				return this.$route.query.roomId == this.room.id
 			}
 		},
 		methods: {

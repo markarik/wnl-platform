@@ -57,7 +57,7 @@ export const CHAT_IS_LOADED       = 'CHAT_IS_LOADED'
 export const CHAT_SET_USERS       = 'CHAT_IS_LOADED'
 
 // Messages
-export const SET_MESSAGES = 'SET_MESSAGES'
+export const CHAT_MESSAGES_SET_ROOMS = 'CHAT_MESSAGES_SET_ROOMS'
 
 // Progress
 export const PROGRESS_SETUP_COURSE     = 'PROGRESS_SETUP_COURSE'

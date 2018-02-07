@@ -20,7 +20,7 @@ const getters = {
 
 //mutations
 const mutations = {
-	[types.SET_MESSAGES] (state, data) {
+	[types.CHAT_MESSAGES_SET_ROOMS] (state, data) {
 		set (state, 'rooms', data.rooms)
 		set (state, 'sortedRooms', data.sortedRooms)
 	}
@@ -39,7 +39,7 @@ const actions = {
 				formatedRooms.rooms[room.id] = room
 				formatedRooms.sortedRooms.push(room.id)
 			})
-			commit(types.SET_MESSAGES, formatedRooms)
+			commit(types.CHAT_MESSAGES_SET_ROOMS, formatedRooms)
 		})
 
 		axios.post(getApiUrl('chat_messages/.getByRooms')).then((response) => {

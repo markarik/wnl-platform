@@ -19,7 +19,6 @@
 				<wnl-private-chat
 					:room="currentRoom"
 					:users="currentRoomUsers"
-					v-if="showChatRoom"
 				></wnl-private-chat>
 			</div>
 		</div>

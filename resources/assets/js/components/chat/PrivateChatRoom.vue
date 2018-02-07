@@ -1,6 +1,43 @@
 <template>
 	<div class="wnl-chat">
-        Bye
+		<div class="wnl-chat-messages">
+			<div class="wnl-chat-content">
+				<div class="wnl-chat-content-inside">
+					<div class="notification aligncenter">
+						To początek dyskusji na tym kanale!
+					</div>
+					<div v-if="messages.length > 0">
+						<wnl-message v-for="(message, index) in messages"
+							 :key="index"
+							 :showAuthor="isAuthorUnique[index]"
+							 :id="message.id"
+							 :author="getMessageAuthor(message)"
+							 :fullName="getMessageAuthor(message).full_name"
+							 :displayName="getMessageAuthor(message).display_name"
+							 :avatar="getMessageAuthor(message).avatar"
+							 :time="message.time"
+							 :content="message.content"
+						 ></wnl-message>
+					</div>
+					<div class="metadata aligncenter margin vertical" v-else>
+						Napisz pierwszą wiadomość i zacznij rozmowę!
+						<p class="margin vertical">
+							<span class="icon is-big text-dimmed">
+								<i class="fa fa-comments-o"></i>
+							</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wnl-chat-form">
+			<!-- <wnl-message-form
+				:loaded="loaded"
+				:socket="socket"
+				:room="room"
+				ref="messageForm"
+			></wnl-message-form> -->
+		</div>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -38,18 +75,12 @@
 	export default {
 		props: {
 			messages:{
-                type: Array,
-                default: () => ([])
-            },
-            users: {
-                type: Object,
-                default: () => ({})
-            }
-		},
-		data() {
-			return {
-				loaded: false,
-				thereIsMore: true,
+				type: Array,
+				default: () => ([])
+			},
+			users: {
+				type: Object,
+				default: () => ({})
 			}
 		},
 		computed: {
@@ -65,26 +96,18 @@
 					return message.user_id !== this.messages[previous].user_id ||
 							message.time - this.messages[previous].time > halfHourInMs
 				})
-            },
-            getMessageAuthor(message) {
-                return this.getProfileByUserId(message.user_id)
-            },
+			},
 		},
 		methods: {
-		},
-		mounted() {
-
-		},
-		beforeDestroy() {
-
+			getMessageAuthor(message) {
+				return this.getProfileByUserId(message.user_id)
+			},
 		},
 		components: {
 			'wnl-message': Message,
 			'wnl-message-form': MessageForm,
 			'wnl-users-widget': UsersWidget,
 		},
-		watch: {
-		}
 	}
 
 </script>

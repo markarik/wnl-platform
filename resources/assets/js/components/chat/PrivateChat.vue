@@ -1,10 +1,10 @@
 <template lang="html">
-	<div class="wnl-private-chat" v-if="loadRoom">
+	<div class="wnl-private-chat" v-if="room">
 		<div class="chat-title">
 			{{users[0].display_name}}
 		</div>
 		<wnl-private-chat-room
-			:messages="room.messages",
+			:messages="room.messages"
 			:users="room.users"
 		/>
 	</div>
@@ -40,11 +40,6 @@
 			},
 			users: {
 				required: true,
-			}
-		},
-		computed: {
-			loadRoom() {
-				return this.room !== undefined
 			}
 		},
 		watch: {

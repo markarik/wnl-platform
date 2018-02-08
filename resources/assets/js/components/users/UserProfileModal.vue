@@ -35,11 +35,20 @@
 						</div>
 					</div>
 				</div>
-				<div class="navigation">
-					<div class="redirect">
-						<router-link @click.native="deactivateModal" :to="{ name: 'user', params: {userId: userId} }">
-							<a class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.redirectToProfile') }}</a>
-						</router-link>
+				<div class="level">
+					<div class="level-left">
+						<div class="send-message">
+							<wnl-message-link :to="to">
+								<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
+							</wnl-message-link>
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="redirect">
+							<router-link @click.native="deactivateModal" :to="{ name: 'user', params: {userId: userId} }">
+								<a class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.redirectToProfile') }}</a>
+							</router-link>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -94,9 +103,14 @@
 import { mapActions } from 'vuex'
 
 import Avatar from 'js/components/global/Avatar'
+import MessageLink from 'js/components/global/MessageLink'
 
 export default {
 	name: 'UserProfileModal',
+	components: {
+		'wnl-avatar': Avatar,
+		'wnl-message-link': MessageLink,
+	},
 	props: ['author'],
 	data() {
 		return {
@@ -106,6 +120,9 @@ export default {
 	computed: {
 		checkForNameDisplay() {
 			return this.author.full_name === this.author.display_name
+		},
+		computedParams() {
+			return 'private'
 		}
 	},
 	methods: {

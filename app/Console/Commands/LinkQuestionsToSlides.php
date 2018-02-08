@@ -119,8 +119,8 @@ class LinkQuestionsToSlides extends Command
 					rsort($similarities);
 					$topMatch = $possibleMatches->first();
 
-					if (intval($similarities[0]) < 100) {
-						$this->error("There's no slide matching in 100%. The content of the top match is the following:");
+					if (intval($similarities[0]) < 95) {
+						$this->error("There's no slide matching in more than 95%. The content of the top match is the following:");
 						$this->info($topMatch->content);
 						$this->info("ORIGINAL:");
 						$this->info($cleanSlide);
@@ -128,8 +128,6 @@ class LinkQuestionsToSlides extends Command
 							continue;
 						}
 					}
-
-					$this->info("Found a match! Linking questions...");
 
 					$alreadyMatchedQuestions = $topMatch->quizQuestions()->pluck('quiz_questions.id')->toArray();
 
@@ -142,7 +140,7 @@ class LinkQuestionsToSlides extends Command
 
 					$this->info('Linking questions ' . implode(', ', $missingQuestions));
 
-					$topMatch->quizQuestions()->attach();
+					$topMatch->quizQuestions()->attach($missingQuestions);
 				}
 			}
 

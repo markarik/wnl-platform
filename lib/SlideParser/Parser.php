@@ -123,17 +123,20 @@ class Parser
 			$foundCourseTags = [];
 			$foundQuestionsIds = [];
 
-			foreach ($tags as $tagName => $tagValue) {
-				$searchResult = $this->courseTags->search($tagName);
-				if ($searchResult !== false) {
-					$foundCourseTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
-				}
+			foreach ($tags as $tagName => $tagValues) {
+				foreach ($tagValues as $tagValue) {
+					$searchResult = $this->courseTags->search($tagName);
+					if ($searchResult !== false) {
+						$foundCourseTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
+					}
 
-				if ($tagName === $this->questionTag) {
-					$foundQuestionsIds[] = $tagValue;
+					if ($tagName === $this->questionTag) {
+						$foundQuestionsIds[] = $tagValue;
+					}
 				}
 			}
 			ksort($foundCourseTags);
+
 			foreach ($foundCourseTags as $index => $courseTag) {
 				if ($courseTag['name'] == 'group') {
 					$group = Group::firstOrCreate([
@@ -223,7 +226,7 @@ class Parser
 	 *
 	 * @return array
 	 */
-	protected function matchSlides($data):array
+	public function matchSlides($data):array
 	{
 		$matches = [];
 
@@ -279,7 +282,11 @@ class Parser
 		if (!$matches) return [];
 
 		foreach ($matches as $match) {
-			$tags[$match[1]] = $match[2];
+			if (empty($tags[$match[1]])) {
+				$tags[$match[1]] = [];
+			}
+
+			$tags[$match[1]][] = $match[2];
 		}
 
 		return $tags;

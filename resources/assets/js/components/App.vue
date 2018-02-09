@@ -81,8 +81,7 @@
 				'resetLayout',
 				'setLayout',
 				'setupCurrentUser',
-				'toggleOverlay',
-				'showModal',
+				'toggleOverlay'
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),

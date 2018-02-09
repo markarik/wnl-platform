@@ -11,6 +11,7 @@ import { units } from './units'
 import { tasks } from './tasks'
 import { user } from './user'
 import { collections } from './collections'
+import { messages } from './messages'
 
 export {
 	dashboard,
@@ -25,5 +26,6 @@ export {
 	units,
 	user,
 	tasks,
-	collections
+	collections,
+	messages
 }

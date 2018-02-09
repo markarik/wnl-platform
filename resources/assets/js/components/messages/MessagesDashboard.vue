@@ -7,7 +7,7 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
 			    <div class="rooms-header">
-					Prywatne wiadomości
+					{{$t('messages.dashboard.privateMessages')}}
 				</div>
 				<wnl-conversations-list
 					@roomSwitch="switchRoom"

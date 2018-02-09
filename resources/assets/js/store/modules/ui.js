@@ -29,8 +29,12 @@ const layouts = {
 // Getters
 const getters = {
 	isModalVisible: state => state.modal.visible,
-	getModalContent: state => state.modal.content,
-	getModalComponent: state => state.modal.component,
+	getModalContent: state => {
+		return {...state.modal.content}
+	},
+	getModalComponent: state => {
+		return {...state.modal.component}
+	},
 	currentLayout: state => state.currentLayout,
 	isMobile: state => state.currentLayout === layouts.mobile,
 	isSmallDesktop: state => state.currentLayout === layouts.smallDesktop,
@@ -69,9 +73,7 @@ const mutations = {
 	[types.UI_TOGGLE_MODAL] (state, payload) {
 		const serializedPayload = {
 			...payload,
-			component: {
-				...payload.component
-			}
+			component: payload.component
 		}
 		set(state, 'modal', serializedPayload)
 	},

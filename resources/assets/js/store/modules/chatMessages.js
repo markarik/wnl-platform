@@ -31,6 +31,18 @@ const getters = {
 	getProfileByUserId: state => id => {
 		return Object.values(state.profiles).find(profile => profile.user_id === id)
 	},
+	getRoomForPrivateChat: (state, getters, rootState, rootGetters) => userId => {
+		const profile = getters.getProfileByUserId(userId)
+		if (!profile.id) {
+			return {}
+		}
+
+		return Object.values(state.rooms).find(room => {
+			const roomProfiles = room.profiles || []
+
+			roomProfiles.length === 2 && _.difference(roomProfiles, [rootGetters.currentUser.id, profile.id]).length === 0
+		}) || {}
+	},
 	userPrivateChannel: (state, getters, rootState, rootGetters) => `private-channel-${rootGetters.currentUserId}`
 }
 

@@ -1,15 +1,10 @@
 <template>
     <div class="message-link">
-        <router-link :to="{ name: 'messages', query: {roomId: roomId} }">
+        <router-link :to="{ name: 'messages', query: {roomId} }" v-if="roomId">
             <slot></slot>
         </router-link>
     </div>
 </template>
-
-
-<style lang="sass" scoped>
-</style>
-
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
@@ -18,31 +13,27 @@ import {getApiUrl} from 'js/utils/env'
 export default {
     name: 'MessageLink',
     props: {
-        profileId: {
-            // required: true,
+        userId: {
+            required: true,
             type: Number,
         }
     },
     data() {
         return {
-            roomId: '',
+            roomId: 0,
         }
     },
     computed: {
-        ...mapGetters('chatMessages', ['getProfileByUserId', 'rooms', 'sortedRooms']),
+        ...mapGetters('chatMessages', ['getProfileByUserId', 'getRoomForPrivateChat']),
         ...mapGetters(['currentUserId']),
     },
     mounted() {
-        const roomsIds = Object.keys(this.rooms)
-        if (this.getProfileByUserId(this.profileId)) {
-            roomsIds.find((id) => {
-                if (this.rooms[id].profiles.includes(this.profileId)) {
-                    return this.roomId = this.rooms[id].id
-                }
-            })
-        } else if (!this.getProfileByUserId(this.profileId))  {
+        const room = this.getRoomForPrivateChat(this.userId)
+        if (room.id) {
+            this.roomId = room.id
+        } else {
             axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
-                name: `private-${this.currentUserId}-${this.profileId}`
+                name: `private-${this.currentUserId}-${this.userId}`
             }).then((response) => {
                 return this.roomId = response.data.id
             })

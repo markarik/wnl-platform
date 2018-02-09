@@ -1,30 +1,38 @@
+import * as io from 'socket.io-client'
+import {envValue} from 'js/utils/env'
+
 const WnlSocket = {
     install(Vue, options) {
-        const _getSocket = () => {
+        const onSocketError = (error) => {
+            if (error === 'Authentication error') {
+                window.location.replace('/login');
+                return
+            }
+            $wnl.logger.error(`Socket error: ${error}`)
+        }
+
+        const getSocketInstance = () => {
             if (!global.$socket) {
                 global.$socket = io(`${envValue('chatHost')}:${envValue('chatPort')}`)
-                global.$socket.on('error', _socketError);
+                global.$socket.on('error', onSocketError);
             }
             return global.$socket
         }
 
-        const connectSocket = () => {
-            return new Promise((resolve, reject) => {
-                let socket = _getSocket()
-                socket.on('connected', () => {
-                    Vue.$socket = socket
-                })
-                socket.on('connectionError', (data) => {
-                    reject(data)
-                })
+        const socket = getSocketInstance()
+
+        return new Promise((resolve, reject) => {
+            socket.on('connected', () => {
+                resolve()
             })
-        }
+            socket.on('connectionError', (data) => {
+                reject(data)
+            })
 
-        connectSocket()
-
-        Vue.prototype.$socketEmit = (event, payload) => {
-            Vue.socket.emit(event, payload)
-        }
+            Vue.prototype.$socketEmit = (event, payload) => {
+                socket.emit(event, payload)
+            }
+        })
     }
 }
 

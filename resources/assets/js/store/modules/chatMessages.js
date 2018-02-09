@@ -64,6 +64,7 @@ const actions = {
 		return axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
 			.then((response) => {
 				if (response.data.length === 0) return
+
 				const {included, ...rooms} = response.data
 				const payload = {
 					rooms: {},

@@ -127,9 +127,8 @@
 		mounted() {
 			const roomId = this.$route.query.roomId
 			roomId && this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
-			socket.connect().then((socket) => {
-				this.socket = socket
-				this.joinChannels(socket)
+			this.$socketEmit('join-room', {
+				room: roomId
 			})
 		},
 		beforeDestroy() {

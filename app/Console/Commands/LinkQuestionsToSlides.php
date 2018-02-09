@@ -137,7 +137,7 @@ class LinkQuestionsToSlides extends Command
 					rsort($similarities);
 					$topMatch = $possibleMatches->first();
 
-					if (intval($similarities[0]) < 90) {
+					if (intval($similarities[0]) < 80) {
 						$this->error("There's no slide matching in more than 95%. The content of the top match is the following:");
 						$this->info($this->cleanSlideContent($topMatch->content));
 						$this->error("ORIGINAL:");
@@ -168,7 +168,21 @@ class LinkQuestionsToSlides extends Command
 
 		$bar->finish();
 
-		dump($stats);
+		$globalStats = [
+			'all' => 0,
+			'linked' => 0,
+			'skipped' => 0,
+			'uncertain' => 0,
+		];
+
+		foreach ($globalStats as $key => $value) {
+			$globalStats[$key] = array_reduce($stats, function ($res, $arr) use ($key) {
+				return $res + $arr[$key];
+			});
+		}
+
+		$this->info("Done! Global stats: \n\n");
+		dump($globalStats);
 
 		return $stats;
 	}

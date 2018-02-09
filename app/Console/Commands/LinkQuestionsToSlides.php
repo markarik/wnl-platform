@@ -168,21 +168,7 @@ class LinkQuestionsToSlides extends Command
 
 		$bar->finish();
 
-		$globalStats = [
-			'all' => 0,
-			'linked' => 0,
-			'skipped' => 0,
-			'uncertain' => 0,
-		];
-
-		foreach ($globalStats as $key => $value) {
-			$globalStats[$key] = array_reduce($stats, function ($res, $arr) use ($key) {
-				return $res + $arr[$key];
-			});
-		}
-
-		$this->info("Done! Global stats: \n\n");
-		dump($globalStats);
+		dump($stats);
 
 		return $stats;
 	}

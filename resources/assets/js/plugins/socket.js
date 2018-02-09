@@ -32,6 +32,17 @@ const WnlSocket = {
             Vue.prototype.$socketEmit = (event, payload) => {
                 socket.emit(event, payload)
             }
+            Vue.prototype.$socketJoinRoom = (roomId) => {
+                socket.emit('join-room', {
+                    room: roomId
+                })
+            }
+            Vue.prototype.$socketSendMessage = (payload) => {
+                socket.emit('send-message', payload)
+            }
+            Vue.prototype.$socketSetMessagesListener = (listener) => {
+                socket.on('message-processed', listener)
+            }
         })
     }
 }

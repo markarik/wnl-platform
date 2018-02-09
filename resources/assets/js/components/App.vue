@@ -72,6 +72,7 @@
 				'getModalContent',
 				'getModalComponent',
 			]),
+			...mapGetters('chatMessages', ['sortedRooms']),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
 			},
@@ -85,7 +86,7 @@
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
-			...mapActions('chatMessages', ['initChatMessages']),
+			...mapActions('chatMessages', ['initChatMessages', 'onNewMessage']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
@@ -98,9 +99,15 @@
 
 			return Promise.all([this.setupCurrentUser(), this.courseSetup(1), this.initChatMessages()])
 				.then(() => {
+					// Setup Notifications
 					this.initNotifications()
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
 
+					// Setup Chat
+					this.sortedRooms.forEach(id => this.$socketJoinRoom(id))
+					this.$socketSetMessagesListener(this.onNewMessage)
+
+					// Setup time tracking
 					startTracking(this.currentUserId);
 
 					this.$router.afterEach((to) => {
@@ -112,6 +119,7 @@
 						this.setLayout(currentLayout)
 					})
 
+					// Setup active users
 					window.Echo.join('active-users')
 						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
 						.joining(user => this.userJoined({user, channel: 'activeUsers'}))

@@ -38,7 +38,7 @@
 				<div class="level">
 					<div class="level-left">
 						<div class="send-message">
-							<wnl-message-link @click.native="deactivateModal" :userId="author.id">
+							<wnl-message-link @click.native="deactivateModal" :userId="author.user_id">
 								<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
 							</wnl-message-link>
 						</div>

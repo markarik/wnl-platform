@@ -124,15 +124,6 @@
 				}
 			}
 		},
-		// beforeRouteEnter(to, from, next) {
-		// 	next(vm => {
-		// 		vm.fetchInitialState()
-		// 			.then(() => {
-		// 				// console.log(this.profiles);
-        //
-		// 			})
-		// 	})
-		// },
 		mounted() {
 			const roomId = this.$route.query.roomId
 			roomId && this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})

@@ -96,7 +96,7 @@
 			this.toggleOverlay({source: 'course', display: true})
 			sessionStore.clearAll()
 
-			Promise.all([this.setupCurrentUser(), this.courseSetup(1), this.initChatMessages()])
+			return Promise.all([this.setupCurrentUser(), this.courseSetup(1), this.initChatMessages()])
 				.then(() => {
 					this.initNotifications()
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()

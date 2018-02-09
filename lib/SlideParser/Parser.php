@@ -282,11 +282,13 @@ class Parser
 		if (!$matches) return [];
 
 		foreach ($matches as $match) {
-			if (empty($tags[$match[1]])) {
-				$tags[$match[1]] = [];
+			$tagName = $match[1];
+
+			if (!array_key_exists($tagName, $tags)) {
+				$tags[$tagName] = [];
 			}
 
-			$tags[$match[1]][] = $match[2];
+			$tags[$tagName][] = $match[2];
 		}
 
 		return $tags;

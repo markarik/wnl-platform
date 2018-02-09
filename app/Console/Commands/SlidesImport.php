@@ -29,22 +29,22 @@ class SlidesImport extends Command
 	/**
 	 * Create a new command instance.
 	 *
-	 * @param Parser $parser
 	 */
-	public function __construct(Parser $parser)
+	public function __construct()
 	{
 		parent::__construct();
-
-		$this->parser = $parser;
 	}
 
 	/**
 	 * Execute the console command.
+	 * @param Parser $parser
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handle(Parser $parser)
 	{
+		$this->parser = $parser;
+
 		$path = self::BASE_DIRECTORY;
 
 		if ($subDir = $this->argument('dir')) {

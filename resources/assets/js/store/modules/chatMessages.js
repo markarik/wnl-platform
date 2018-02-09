@@ -31,6 +31,7 @@ const getters = {
 	getProfileByUserId: state => id => {
 		return Object.values(state.profiles).find(profile => profile.user_id === id)
 	},
+	userPrivateChannel: (state, getters, rootState, rootGetters) => `private-channel-${rootGetters.currentUserId}`
 }
 
 //mutations
@@ -83,6 +84,17 @@ const actions = {
 				})
 			})
 	},
+	joinChannels({commit, getters}, socket) {
+		getters.sortedRooms.map((roomId) => socket.emit('join-room', {room: `channel-${roomId}`}))
+		socket.emit('join-room', {room: getters.userPrivateChannel})
+
+		socket.on('user-sent-message', (data) => {
+			console.log(data)
+		})
+	},
+	sendMessage({commit}, {socket, event, callback}) {
+		socket.emit('send-message', event)
+	}
 }
 export default {
 	namespaced,

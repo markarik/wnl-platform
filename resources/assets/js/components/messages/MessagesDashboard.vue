@@ -20,6 +20,7 @@
 					:room="currentRoom"
 					:users="currentRoomUsers"
 					v-if="currentRoomUsers"
+					:onSendMessage="onSendMessage"
 				></wnl-private-chat>
 			</div>
 		</div>
@@ -92,15 +93,30 @@
 			}
 		},
 		methods: {
+			...mapActions('chatMessages', ['fetchInitialState', 'joinChannels', 'sendMessage']),
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
+			},
+			onSendMessage(content, callback) {
+				this.sendMessage({
+					event: {
+						room: `channel-${this.currentRoom.id}`,
+						message: {
+							content,
+						}
+					},
+					meta: {
+						private: true
+					},
+					callback,
+					socket: this.socket
+				})
 			}
 		},
 		watch: {
 			'$route.query'() {
 				if (this.$route.query.roomId) {
-					// otworz pokoj o id = roomid
 					const roomId = this.$route.query.roomId
 					this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
 				} else if (this.$route.query.roomName) {
@@ -120,7 +136,10 @@
 		mounted() {
 			const roomId = this.$route.query.roomId
 			roomId && this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
-			socket.connect().then((socket) => this.socket = socket)
+			socket.connect().then((socket) => {
+				this.socket = socket
+				this.joinChannels(socket)
+			})
 		},
 		beforeDestroy() {
 			socket.disconnect()

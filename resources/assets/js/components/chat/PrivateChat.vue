@@ -43,5 +43,8 @@
 				required: true,
 			}
 		},
+		mounted() {
+			console.log(this.users[0].display_name);
+		}
 	}
 </script>

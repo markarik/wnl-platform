@@ -30,7 +30,7 @@ const getters = {
 	},
 	getProfileByUserId: state => id => {
 		return Object.values(state.profiles).find(profile => profile.user_id === id)
-	}
+	},
 }
 
 //mutations
@@ -47,7 +47,7 @@ const mutations = {
 
 //Actions
 const actions = {
-	fetchInitialState({commit, getters, state}) {
+	initChatMessages({commit, getters, state}) {
 		return axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
 			.then((response) => {
 				const {included, ...rooms} = response.data

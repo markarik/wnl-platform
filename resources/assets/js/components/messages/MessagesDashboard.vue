@@ -19,7 +19,7 @@
 				<wnl-private-chat
 					:room="currentRoom"
 					:users="currentRoomUsers"
-					v-if="currentRoom"
+					v-if="currentRoomUsers"
 				></wnl-private-chat>
 			</div>
 		</div>
@@ -85,14 +85,13 @@
 				'isChatToggleVisible',
 				'currentUserName'
 			]),
-			...mapGetters('chatMessages', ['rooms', 'sortedRooms', 'getRoomById', 'getRoomProfiles']),
+			...mapGetters('chatMessages', ['rooms', 'sortedRooms', 'getRoomById', 'getRoomProfiles', 'profiles']),
 			...mapGetters('course', ['ready']),
 			showChatRoom() {
 				return !!this.currentRoom
 			}
 		},
 		methods: {
-			...mapActions('chatMessages', ['fetchInitialState']),
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
@@ -109,16 +108,18 @@
 				}
 			}
 		},
-		beforeRouteEnter(to, from, next) {
-			next(vm => {
-				vm.fetchInitialState()
-					.then(() => {
-						const roomId = to.query.roomId
-						roomId && vm.switchRoom({room: vm.getRoomById(roomId), users: vm.getRoomProfiles(roomId)})
-					})
-			})
-		},
+		// beforeRouteEnter(to, from, next) {
+		// 	next(vm => {
+		// 		vm.fetchInitialState()
+		// 			.then(() => {
+		// 				// console.log(this.profiles);
+        //
+		// 			})
+		// 	})
+		// },
 		mounted() {
+			const roomId = this.$route.query.roomId
+			roomId && this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
 			socket.connect().then((socket) => this.socket = socket)
 		},
 		beforeDestroy() {

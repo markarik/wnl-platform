@@ -86,6 +86,7 @@
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
+			...mapActions('chatMessages', ['initChatMessages']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
@@ -96,7 +97,7 @@
 			this.toggleOverlay({source: 'course', display: true})
 			sessionStore.clearAll()
 
-			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
+			Promise.all([this.setupCurrentUser(), this.courseSetup(1), this.initChatMessages()])
 				.then(() => {
 					this.initNotifications()
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()

@@ -38,7 +38,7 @@
 				<div class="level">
 					<div class="level-left">
 						<div class="send-message">
-							<wnl-message-link :to="to">
+							<wnl-message-link @click.native="deactivateModal" :profileId="author.user_id">
 								<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
 							</wnl-message-link>
 						</div>
@@ -108,7 +108,7 @@ import MessageLink from 'js/components/global/MessageLink'
 export default {
 	name: 'UserProfileModal',
 	components: {
-		'wnl-avatar': Avatar,
+		// 'wnl-avatar': Avatar,
 		'wnl-message-link': MessageLink,
 	},
 	props: ['author'],
@@ -132,6 +132,6 @@ export default {
 				visible: false,
 			})
 		}
-	}
+	},
 }
 </script>

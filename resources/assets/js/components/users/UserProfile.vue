@@ -19,6 +19,9 @@
 									<a class="edit-profile button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
 								</router-link>
 							</span>
+							<wnl-message-link :userId="profile.id">
+								<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
+							</wnl-message-link>
 							<span class="user-info-header-names">
 								<p class="fullname-title">{{ profile.full_name }}</p>
 								<p class="display-name-title">{{ displayNameToPrint }}</p>
@@ -232,12 +235,14 @@ import {
 } from 'js/utils/env'
 import Avatar from 'js/components/global/Avatar'
 import Qna from 'js/components/qna/Qna'
+import MessageLink from 'js/components/global/MessageLink'
 
 export default {
 	name: 'UserProfile',
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-qna': Qna,
+		'wnl-message-link': MessageLink
 	},
 	data() {
 		return {

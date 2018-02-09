@@ -29,11 +29,16 @@ const getters = {
 		return getters.getRoomById(id).messages || []
 	},
 	getProfileByUserId: state => id => {
-		return Object.values(state.profiles).find(profile => profile.user_id === id)
+		// i added this as a quick fix for checking a certain value in getRoomForPrivateChat, if conditional couldn't process !profile.id
+		if (Object.values(state.profiles).find(profile => profile.user_id === id)) {
+			return Object.values(state.profiles).find(profile => profile.user_id === id)
+		} else {
+			return 0
+		}
 	},
 	getRoomForPrivateChat: (state, getters, rootState, rootGetters) => userId => {
 		const profile = getters.getProfileByUserId(userId)
-		if (!profile.id) {
+		if (profile === 0) {
 			return {}
 		}
 
@@ -70,6 +75,7 @@ const actions = {
 					sortedRooms: [],
 					profiles: included.profiles
 				}
+				console.log(payload);
 
 				Object.values(rooms).forEach((room) => {
 					payload.rooms[room.id] = {
@@ -96,6 +102,9 @@ const actions = {
 					Object.keys(rooms).forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: rooms[roomId]}))
 				})
 			})
+	},
+	addNewChannel({commit}, data) {
+		console.log(data);
 	},
 	joinChannels({commit, getters}, socket) {
 		getters.sortedRooms.map((roomId) => socket.emit('join-room', {room: `channel-${roomId}`}))

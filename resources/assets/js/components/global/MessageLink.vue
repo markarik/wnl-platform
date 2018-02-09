@@ -24,18 +24,26 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('chatMessages', ['getProfileByUserId', 'getRoomForPrivateChat']),
+        ...mapGetters('chatMessages', ['getRoomForPrivateChat']),
         ...mapGetters(['currentUserId']),
+    },
+    methods: {
+        ...mapActions('chatMessages', ['addNewChannel'])
     },
     mounted() {
         const room = this.getRoomForPrivateChat(this.userId)
         if (room.id) {
+            console.log('weszłem');
             this.roomId = room.id
         } else {
+            console.log('weszłem');
             axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
                 name: `private-${this.currentUserId}-${this.userId}`
             }).then((response) => {
-                return this.roomId = response.data.id
+                return new Promise ((resolve) => {
+                    // this.addNewChannel(response)
+                    return this.roomId = response.data.id
+                })
             })
         }
     }

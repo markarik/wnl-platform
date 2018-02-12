@@ -42,7 +42,10 @@ class ProcessChatQueue extends Command
 
 			$data = json_decode($message->body);
 			if ($data) {
-				$room = ChatRoom::ofName($data->room)->first();
+				$room = ChatRoom::find($data->room);
+				if (empty($room)) {
+					$room = ChatRoom::ofName($data->room)->first();
+				}
 				$room->messages()->create([
 					'user_id' => $data->message->user_id,
 					'content' => $data->message->content,

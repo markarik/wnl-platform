@@ -65,6 +65,9 @@ const mutations = {
 	},
 	[types.CHAT_MESSAGES_READY] (state, isReady) {
 		set(state, 'ready', isReady)
+	},
+	[types.CHAT_MESSAGES_ADD_MESSAGE] (state, {message, room}) {
+		state.rooms[room].messages.push(message)
 	}
 }
 
@@ -80,11 +83,13 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
-	onNewMessage({commit}, payload) {
-		console.log(payload, '....new message came')
-	},
 	addNewChannel() {
 		console.log('add new channel')
+	},
+	onNewMessage({commit}, {sent, ...payload}) {
+		if (sent) {
+			commit(types.CHAT_MESSAGES_ADD_MESSAGE, payload)
+		}
 	}
 }
 

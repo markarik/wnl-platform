@@ -48,7 +48,7 @@
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
-	import {SOCKET_EVENT_JOIN_ROOM, SOCKET_EVENT_MESSAGE_PROCESSED, SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
+	import {SOCKET_EVENT_MESSAGE_PROCESSED, SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
 
 	export default {
 		name: 'App',
@@ -100,9 +100,7 @@
 					Promise.all(this.sortedRooms.map(room => this.$socketJoinRoom(room)))
 						.then(() => {
 							this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.onNewMessage)
-							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, () => {
-								console.log('calling user sent message listener')
-							})
+							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)
 						})
 
 					// Setup time tracking

@@ -58,7 +58,6 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import ConversationsList from 'js/components/messages/ConversationsList'
-	import * as socket from 'js/socket'
 
 	export default {
 		name: 'MessagesDashboard',
@@ -95,8 +94,8 @@
 				this.currentRoomUsers = users
 			},
 			roomFromRoute() {
-				if (this.$route.query.roomId) {
-					const roomId = this.$route.query.roomId
+				const roomId = this.$route.query.roomId
+				if (roomId) {
 					this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
 				} else if (this.$route.query.roomName) {
 					// otworz pokoj o nazwie = roomName
@@ -106,15 +105,13 @@
 		watch: {
 			'$route.query'() {
 				this.roomFromRoute()
+			},
+			ready(newValue, oldValue) {
+				!oldValue && newValue && this.roomFromRoute()
 			}
 		},
 		mounted() {
 			this.ready && this.roomFromRoute()
-		},
-		watch: {
-			ready(newValue, oldValue) {
-				!oldValue && newValue && this.roomFromRoute()
-			}
 		}
 	}
 </script>

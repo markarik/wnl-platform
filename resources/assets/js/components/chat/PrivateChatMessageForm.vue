@@ -46,9 +46,10 @@
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 	import _ from 'lodash';
+	import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED} from 'js/plugins/socket'
 
 	export default{
-		props: ['loaded', 'room'],
+		props: ['loaded', 'roomId'],
 		data() {
 			return {
 				error: '',
@@ -77,17 +78,15 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
-				'currentUserDisplayName',
 				'currentUserAvatar',
 				'currentUserId',
 				'currentUser'
 			]),
-			...mapGetters('course', ['courseId']),
 			formats() {
 				return ['bold', 'italic', 'underline', 'link', 'mention']
 			},
 			sendingDisabled() {
-				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0)
+				return this.message.length === 0 && this.mentions.length === 0
 			},
 			toolbar() {
 				return [
@@ -107,10 +106,11 @@
 					return false
 				}
 				this.error = ''
-				this.$socketSendMessage({
-					room: 83,
+				this.$socketEmit(SOCKET_EVENT_SEND_MESSAGE, {
+					room: this.roomId,
 					message: {
-						content: 'lorem ipsum'
+						user: this.currentUser,
+						content: this.content
 					}
 				})
 			},
@@ -149,15 +149,31 @@
 				this.message = this.quillEditor.quill.getText().trim();
 				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
+			},
+			processMessage(data) {
+				console.log('process message called.')
+				if (data.sent) {
+					const mentions = this.getMentions()
+
+					if (mentions && mentions.length) {
+						this.saveMentions(
+							this.getMentionsData(mentions, data.message)
+						)
+					}
+
+					this.mentions = []
+					this.quillEditor.clear();
+				} else {
+					this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+				}
+				this.isWaitingToSendMentions = false
 			}
 		},
-		watch: {
-			'loaded' () {
-				if (this.loaded) {
-					this.setListeners()
-				}
-			}
+		mounted () {
+			this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
+		},
+		beforeDestroy () {
+			this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
 		}
 	}
-
 </script>

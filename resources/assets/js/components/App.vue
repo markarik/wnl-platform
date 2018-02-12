@@ -49,6 +49,7 @@
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
+	import {SOCKET_EVENT_JOIN_ROOM, SOCKET_EVENT_MESSAGE_PROCESSED} from 'js/plugins/socket'
 
 	export default {
 		name: 'App',
@@ -97,8 +98,10 @@
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
 
 					// Setup Chat
-					this.sortedRooms.forEach(id => this.$socketJoinRoom(id))
-					this.$socketSetMessagesListener(this.onNewMessage)
+					this.sortedRooms.forEach(id => this.$socketEmit(SOCKET_EVENT_JOIN_ROOM, {
+						roomId: id
+					}))
+					this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.onNewMessage)
 
 					// Setup time tracking
 					startTracking(this.currentUserId);

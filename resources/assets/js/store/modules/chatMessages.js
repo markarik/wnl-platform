@@ -70,51 +70,60 @@ const mutations = {
 
 //Actions
 const actions = {
-	initChatMessages({commit, getters, state}) {
-		return axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
-			.then((response) => {
-				if (response.data.length === 0) return
+	async initChatMessages({commit, getters}) {
+		const payload = await fetchUserRooms()
+		commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
 
-				const {included, ...rooms} = response.data
-				const payload = {
-					rooms: {},
-					sortedRooms: [],
-					profiles: included.profiles
-				}
-				console.log(payload);
+		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
+		Object.keys(roomsWithMessages)
+			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: roomsWithMessages[roomId]}))
 
-				Object.values(rooms).forEach((room) => {
-					payload.rooms[room.id] = {
-						...room, messages: []
-					}
-					payload.sortedRooms.push(room.id)
-				})
-
-				commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
-			}).then(() => axios.post(getApiUrl('chat_messages/.getByRooms'), {
-					rooms: getters.sortedRooms
-				})
-			).then(({data}) => {
-				const rooms = {}
-
-				data.forEach(message => {
-					if (!rooms[message.chat_room_id]) {
-						rooms[message.chat_room_id] = []
-					}
-
-					rooms[message.chat_room_id].push(message)
-				})
-			})
-	},
-	addNewChannel({commit}, data) {
-		console.log(data);
-	},
-	joinChannels({commit, getters}, socket) {
-		getters.sortedRooms.map((roomId) => socket.emit('join-room', {room: `channel-${roomId}`}))
-		socket.emit('join-room', {room: getters.userPrivateChannel})
-		Object.keys(rooms).forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: rooms[roomId]}))
 		commit(types.CHAT_MESSAGES_READY, true)
+	},
+	onNewMessage({commit}, payload) {
+		console.log(payload, '....new message came')
+	},
+	addNewChannel() {
+		console.log('add new channel')
 	}
+}
+
+const fetchUserRooms = async () => {
+	const response = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
+	if (response.data.length === 0) return
+
+	const {included, ...rooms} = response.data
+	const payload = {
+		rooms: {},
+		sortedRooms: [],
+		profiles: included.profiles
+	}
+
+	Object.values(rooms).forEach((room) => {
+		payload.rooms[room.id] = {
+			...room, messages: []
+		}
+		payload.sortedRooms.push(room.id)
+	})
+
+	return payload
+}
+
+const fetchRoomsMessages = async (roomsIds) => {
+	const {data} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
+		rooms: roomsIds
+	})
+	const rooms = {}
+
+	data.forEach(message => {
+		if (!rooms[message.chat_room_id]) {
+			rooms[message.chat_room_id] = []
+		}
+
+		rooms[message.chat_room_id].push(message)
+	})
+
+	return rooms
 }
 
 export default {

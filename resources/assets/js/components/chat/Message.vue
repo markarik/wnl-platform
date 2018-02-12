@@ -17,7 +17,7 @@
 					<p class="wnl-message-content" v-html="content"></p>
 				</div>
 			</div>
-			<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal">
+			<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
 				<wnl-user-profile-modal :author="author"/>
 			</wnl-modal>
 		</article>

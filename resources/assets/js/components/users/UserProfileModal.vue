@@ -38,14 +38,14 @@
 				<div class="level">
 					<div class="level-left">
 						<div class="send-message">
-							<wnl-message-link @click.native="deactivateModal" :userId="author.id">
+							<wnl-message-link :userId="author.id">
 								<a class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.sendMessage')}}</a>
 							</wnl-message-link>
 						</div>
 					</div>
 					<div class="level-right">
 						<div class="redirect">
-							<router-link @click.native="deactivateModal" :to="{ name: 'user', params: {userId: userId} }">
+							<router-link :to="{ name: 'user', params: {userId: userId} }">
 								<a class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.redirectToProfile') }}</a>
 							</router-link>
 						</div>

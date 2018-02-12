@@ -28,20 +28,22 @@ export default {
         ...mapGetters(['currentUserId']),
     },
     methods: {
-        ...mapActions('chatMessages', ['addNewChannel'])
+        ...mapActions('chatMessages', ['createNewRoom'])
     },
     mounted() {
         const room = this.getRoomForPrivateChat(this.userId)
         if (room.id) {
-            console.log('weszłem');
             this.roomId = room.id
         } else {
-            console.log('weszłem');
+            const payload = {
+                currentUserId: this.currentUserId,
+                userId: this.userId
+            }
+            this.createNewRoom(payload)
             axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
                 name: `private-${this.currentUserId}-${this.userId}`
             }).then((response) => {
                 return new Promise ((resolve) => {
-                    // this.addNewChannel(response)
                     return this.roomId = response.data.id
                 })
             })

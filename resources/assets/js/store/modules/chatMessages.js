@@ -83,14 +83,14 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
-	addNewChannel() {
-		console.log('add new channel')
-	},
 	onNewMessage({commit}, {sent, ...payload}) {
 		console.log(payload, sent, '....onNewMessage called')
 		if (sent) {
 			commit(types.CHAT_MESSAGES_ADD_MESSAGE, payload)
 		}
+	},
+	createNewRoom({commit}, payload) {
+		console.log(payload);
 	}
 }
 

@@ -67,7 +67,7 @@
 			},
 			questionsUnaswered() {
 				return _.filter(this.allQuestions, (question) => {
-					return !_.isNumber(question.selectedAnswer)
+					return !_.isNumber(question.selectedAnswer) || !question.isResolved
 				})
 			},
 			displayResults() {

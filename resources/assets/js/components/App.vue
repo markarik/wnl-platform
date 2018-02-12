@@ -44,7 +44,6 @@
 	import { mapGetters, mapActions } from 'vuex'
 	import { isEmpty } from 'lodash'
 
-	import Modal from 'js/components/global/Modal.vue'
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
@@ -56,7 +55,6 @@
 		components: {
 			'wnl-navbar': Navbar,
 			'wnl-alerts': Alerts,
-			'wnl-modal': Modal
 		},
 		computed: {
 			...mapGetters([

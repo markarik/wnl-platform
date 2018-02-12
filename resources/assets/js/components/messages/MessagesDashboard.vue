@@ -7,9 +7,24 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
 			    <div class="rooms-header">
-					{{$t('messages.dashboard.privateMessages')}}
+					<header>{{$t('messages.dashboard.privateMessages')}}</header>
+					<div class="rooms-list-controls">
+						<span
+							class="icon"
+							:class="{'is-active': userSearchVisible}"
+							@click="toggleUserSearch">
+							<i class="fa fa-search" title="Szukaj osób"></i>
+						</span>
+						<span class="icon">
+							<i class="fa fa-plus" title="Dodaj osoby do rozmowy"></i>
+						</span>
+					</div>
 				</div>
+				<wnl-find-user
+					v-if="userSearchVisible"
+				/>
 				<wnl-conversations-list
+					v-else
 					@roomSwitch="switchRoom"
 				/>
 			</aside>
@@ -46,8 +61,24 @@
 		.rooms-header
 			color: $color-gray-dimmed
 			font-size: $font-size-minus-1
-			text-align: center
-			padding: $margin-base
+			display: flex
+			justify-content: space-between
+
+			header
+				margin: $margin-base
+
+			.rooms-list-controls
+				display: flex
+
+				.icon
+					padding: $margin-base
+					display: flex
+					align-content: center
+
+					&:hover, &.is-active
+						background: $color-background-lighter-gray
+
+
 </style>
 
 <script>
@@ -58,13 +89,16 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import ConversationsList from 'js/components/messages/ConversationsList'
+	import FindUsers from 'js/components/messages/FindUsers'
+	import * as socket from 'js/socket'
 
 	export default {
 		name: 'MessagesDashboard',
 		data() {
 			return {
 				currentRoom: {},
-				currentRoomUsers: []
+				currentRoomUsers: [],
+				userSearchVisible: false,
 			}
 		},
 		components: {
@@ -73,6 +107,7 @@
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-private-chat': PrivateChat,
 			'wnl-conversations-list': ConversationsList,
+			'wnl-find-user': FindUsers,
 		},
 		computed: {
 			...mapGetters([
@@ -100,6 +135,9 @@
 				} else if (this.$route.query.roomName) {
 					// otworz pokoj o nazwie = roomName
 				}
+			},
+			toggleUserSearch(){
+				this.userSearchVisible = !this.userSearchVisible
 			}
 		},
 		watch: {

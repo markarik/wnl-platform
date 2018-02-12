@@ -1,13 +1,13 @@
 <template>
 	<div class="wnl-modal">
 		<div class="modal" :class="{ 'is-active': isModalVisible }">
-			<div class="modal-background" @click="deactivateModal"></div>
+			<div class="modal-background" @click="$emit('closeModal')"></div>
 			<div class="modal-content">
 				<div class="box">
 					<slot></slot>
 				</div>
 			</div>
-			<button class="modal-close is-large" aria-label="close" @click="deactivateModal"></button>
+			<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
 		</div>
 	</div>
 </template>
@@ -19,8 +19,8 @@
 		line-height: $line-height-base
 		font-size: $font-size-base
 
-	.modal
-		z-index: $z-index-alerts
+		.modal
+			z-index: $z-index-alerts
 
 </style>
 
@@ -29,16 +29,11 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
 	name: 'Modal',
-    computed: {
-        ...mapGetters(['isModalVisible']),
-    },
-	methods: {
-		...mapActions(['toggleModal']),
-		deactivateModal() {
-			this.toggleModal({
-				visible: false,
-			})
-		},
-	},
+	props: {
+		isModalVisible: {
+			type: Boolean,
+			default: false
+		}
+	}
 }
 </script>

@@ -120,17 +120,6 @@ export default {
 	computed: {
 		checkForNameDisplay() {
 			return this.author.full_name === this.author.display_name
-		},
-		computedParams() {
-			return 'private'
-		}
-	},
-	methods: {
-		...mapActions(['toggleModal']),
-		deactivateModal() {
-			this.toggleModal({
-				visible: false,
-			})
 		}
 	}
 }

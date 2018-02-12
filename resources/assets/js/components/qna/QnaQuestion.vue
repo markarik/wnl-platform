@@ -100,6 +100,9 @@
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal">
+			<wnl-user-profile-modal :author="author"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -204,6 +207,7 @@
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import highlight from 'js/mixins/highlight'
 	import Watch from 'js/components/global/reactions/Watch'
+	import Modal from 'js/components/global/Modal'
 	import moderatorFeatures from 'js/perimeters/moderator'
 	import { timeFromS } from 'js/utils/time'
 
@@ -219,6 +223,8 @@
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
 			'wnl-watch': Watch,
+			'wnl-modal': Modal,
+			'wnl-user-profile-modal': UserProfileModal,
 		},
 		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
@@ -228,6 +234,7 @@
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
 				highlightableResources: ["qna_question", "reaction"],
+				isVisible: false,
 			}
 		},
 		computed: {
@@ -326,13 +333,10 @@
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
 			...mapActions(['toggleModal']),
 			showModal() {
-				this.toggleModal({
-					visible: true,
-					content: {
-						author: this.author
-					},
-					component: UserProfileModal,
-				})
+				this.isVisible = true
+			},
+			closeModal() {
+				this.isVisible = false
 			},
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)

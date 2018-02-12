@@ -1,23 +1,26 @@
 <template>
-	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
-		<figure class="media-left" @click="showModal">
-			<wnl-avatar
-				:fullName="fullName"
-				:url="avatar"
-				v-if="showAuthor">
-			</wnl-avatar>
-			<div class="media-left-placeholder" v-else></div>
-		</figure>
-		<div class="media-content">
-			<div class="content">
-				<p class="wnl-message-meta" v-if="showAuthor">
-					<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
-					<small class="wnl-message-time">{{ formattedTime }}</small>
-				</p>
-				<p class="wnl-message-content" v-html="content"></p>
+		<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
+			<figure class="media-left" @click="showModal">
+				<wnl-avatar
+					:fullName="fullName"
+					:url="avatar"
+					v-if="showAuthor">
+				</wnl-avatar>
+				<div class="media-left-placeholder" v-else></div>
+			</figure>
+			<div class="media-content">
+				<div class="content">
+					<p class="wnl-message-meta" v-if="showAuthor">
+						<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
+						<small class="wnl-message-time">{{ formattedTime }}</small>
+					</p>
+					<p class="wnl-message-content" v-html="content"></p>
+				</div>
 			</div>
-		</div>
-	</article>
+			<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal">
+				<wnl-user-profile-modal :author="author"/>
+			</wnl-modal>
+		</article>
 </template>
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
@@ -63,6 +66,7 @@
 	import { mapActions } from 'vuex'
 	import { timeFromMs } from 'js/utils/time'
 
+	import Modal from 'js/components/global/Modal.vue'
 	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Avatar from 'js/components/global/Avatar'
 
@@ -70,6 +74,13 @@
 		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 		components: {
 			'wnl-avatar': Avatar,
+			'wnl-user-profile-modal': UserProfileModal,
+			'wnl-modal': Modal
+		},
+		data() {
+			return {
+				isVisible: false
+			}
 		},
 		computed: {
 			formattedTime () {
@@ -77,18 +88,16 @@
 			},
 			nameToDisplay() {
 				return this.author.display_name || this.fullName
-			},
+			}
 		},
 		methods: {
-			...mapActions(['toggleModal']),
 			showModal() {
-				this.toggleModal({
-					visible: true,
-					content: {
-						author: this.author
-					},
-					component: UserProfileModal,
-				})
+				this.isVisible = true
+				console.log(this.author);
+			},
+			closeModal() {
+				this.isVisible = false
+				console.log('off klik');
 			}
 		}
 	}

@@ -8,10 +8,8 @@
 		<div class="wnl-main">
 			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
+			<wnl-modal/>
 		</div>
-		<wnl-modal v-if="isModalVisible">
-			<component :is="getModalComponent" v-bind="getModalContent"/>
-		</wnl-modal>
 	</div>
 </template>
 
@@ -58,7 +56,7 @@
 		components: {
 			'wnl-navbar': Navbar,
 			'wnl-alerts': Alerts,
-			'wnl-modal': Modal,
+			'wnl-modal': Modal
 		},
 		computed: {
 			...mapGetters([
@@ -67,10 +65,7 @@
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
-				'alerts',
-				'isModalVisible',
-				'getModalContent',
-				'getModalComponent',
+				'alerts'
 			]),
 			...mapGetters('chatMessages', ['sortedRooms']),
 			currentOverlayText() {

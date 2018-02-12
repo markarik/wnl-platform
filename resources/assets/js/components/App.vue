@@ -8,7 +8,6 @@
 		<div class="wnl-main">
 			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
-			<wnl-modal/>
 		</div>
 	</div>
 </template>
@@ -49,7 +48,7 @@
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
-	import {SOCKET_EVENT_JOIN_ROOM, SOCKET_EVENT_MESSAGE_PROCESSED} from 'js/plugins/socket'
+	import {SOCKET_EVENT_JOIN_ROOM, SOCKET_EVENT_MESSAGE_PROCESSED, SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
 
 	export default {
 		name: 'App',
@@ -98,10 +97,13 @@
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
 
 					// Setup Chat
-					this.sortedRooms.forEach(id => this.$socketEmit(SOCKET_EVENT_JOIN_ROOM, {
-						roomId: id
-					}))
-					this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.onNewMessage)
+					Promise.all(this.sortedRooms.map(room => this.$socketJoinRoom(room)))
+						.then(() => {
+							this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.onNewMessage)
+							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, () => {
+								console.log('calling user sent message listener')
+							})
+						})
 
 					// Setup time tracking
 					startTracking(this.currentUserId);

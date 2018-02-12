@@ -3,6 +3,7 @@ import {envValue} from 'js/utils/env'
 
 export const SOCKET_EVENT_SEND_MESSAGE = 'send-message'
 export const SOCKET_EVENT_MESSAGE_PROCESSED = 'message-processed'
+export const SOCKET_EVENT_USER_SENT_MESSAGE = 'user-sent-message'
 export const SOCKET_EVENT_JOIN_ROOM = 'join-room'
 
 const SOCKET_EVENTS = [SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED]
@@ -35,11 +36,26 @@ const WnlSocket = {
         }
 
         Vue.prototype.$socketRegisterListener = (event, listener) => {
+            console.log('registering event....', event)
             socket.on(event, listener)
         }
 
         Vue.prototype.$socketRemoveListener = (event, listener) => {
             socket.off(event, listener)
+        }
+
+        Vue.prototype.$socketJoinRoom = (room) => {
+            return new Promise((resolve, reject) => {
+                socket.emit(SOCKET_EVENT_JOIN_ROOM, {room})
+                socket.on('join-room-success', (data) => {
+                    console.log('data', data)
+                    const timerId = setTimeout(reject, 5000)
+                    if (room === data.room) {
+                        clearTimeout(timerId)
+                        resolve()
+                    }
+                })
+            })
         }
     }
 }

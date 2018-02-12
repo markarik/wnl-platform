@@ -24,7 +24,7 @@ class ChatRoomsApiController extends ApiController
 		];
 		$rooms = ChatRoom::with('users.profile')
 			->select(\DB::raw(implode(',', $select)))
-			->where('name', 'like', "private%-{$user->id}-%")
+			->where('name', 'like', "private%-{$user->id}%")
 			->join(
 				'chat_messages',
 				'chat_messages.chat_room_id', '=', 'chat_rooms.id'

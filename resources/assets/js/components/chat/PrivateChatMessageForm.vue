@@ -151,7 +151,6 @@
 				this.content = this.quillEditor.editor.innerHTML
 			},
 			processMessage(data) {
-				console.log('process message called.')
 				if (data.sent) {
 					const mentions = this.getMentions()
 

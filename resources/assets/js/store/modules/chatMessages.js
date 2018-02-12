@@ -87,6 +87,7 @@ const actions = {
 		console.log('add new channel')
 	},
 	onNewMessage({commit}, {sent, ...payload}) {
+		console.log(payload, sent, '....onNewMessage called')
 		if (sent) {
 			commit(types.CHAT_MESSAGES_ADD_MESSAGE, payload)
 		}

@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\Payment;
 
+use App\Http\Controllers\Controller;
 use App\Http\Forms\SignUpForm;
-use App\Mail\SignUpConfirmation;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class PersonalDataController extends Controller
 {
@@ -114,7 +112,7 @@ class PersonalDataController extends Controller
 
 	protected function generateStudyBuddy($order)
 	{
-		$expires = Carbon::now()->addYears(20);
+		$expires = Carbon::now()->addYears(1);
 		$coupon = Coupon::create([
 			'name'         => 'Study Buddy',
 			'type'         => 'amount',

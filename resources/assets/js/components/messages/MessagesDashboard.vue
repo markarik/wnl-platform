@@ -19,8 +19,7 @@
 				<wnl-private-chat
 					:room="currentRoom"
 					:users="currentRoomUsers"
-					v-if="currentRoomUsers"
-					:onSendMessage="onSendMessage"
+					v-if="currentRoom.id"
 				></wnl-private-chat>
 			</div>
 		</div>
@@ -65,9 +64,8 @@
 		name: 'MessagesDashboard',
 		data() {
 			return {
-				currentRoom: null,
-				currentRoomUsers: null,
-				socket: null
+				currentRoom: {},
+				currentRoomUsers: []
 			}
 		},
 		components: {
@@ -86,36 +84,17 @@
 				'isChatToggleVisible',
 				'currentUserName'
 			]),
-			...mapGetters('chatMessages', ['rooms', 'sortedRooms', 'getRoomById', 'getRoomProfiles', 'profiles']),
-			...mapGetters('course', ['ready']),
+			...mapGetters('chatMessages', ['getRoomById', 'getRoomProfiles', 'ready']),
 			showChatRoom() {
 				return !!this.currentRoom
 			}
 		},
 		methods: {
-			...mapActions('chatMessages', ['fetchInitialState', 'joinChannels', 'sendMessage']),
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
 			},
-			onSendMessage(content, callback) {
-				this.sendMessage({
-					event: {
-						room: `channel-${this.currentRoom.id}`,
-						message: {
-							content,
-						}
-					},
-					meta: {
-						private: true
-					},
-					callback,
-					socket: this.socket
-				})
-			}
-		},
-		watch: {
-			'$route.query'() {
+			roomFromRoute() {
 				if (this.$route.query.roomId) {
 					const roomId = this.$route.query.roomId
 					this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
@@ -124,16 +103,18 @@
 				}
 			}
 		},
-		mounted() {
-			const roomId = this.$route.query.roomId
-			roomId && this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
-			socket.connect().then((socket) => {
-				this.socket = socket
-				this.joinChannels(socket)
-			})
+		watch: {
+			'$route.query'() {
+				this.roomFromRoute()
+			}
 		},
-		beforeDestroy() {
-			socket.disconnect()
+		mounted() {
+			this.ready && this.roomFromRoute()
+		},
+		watch: {
+			ready(newValue, oldValue) {
+				!oldValue && newValue && this.roomFromRoute()
+			}
 		}
 	}
 </script>

@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="wnl-private-chat">
 		<div class="chat-title">
-			{{users[0].display_name}}
+			{{chatTitle}}
 		</div>
 		<div class="wnl-chat">
 			<div class="wnl-chat-messages">
@@ -10,7 +10,7 @@
 						<div class="notification aligncenter">
 							To początek dyskusji na tym kanale!
 						</div>
-						<div v-if="room.messages.length > 0">
+						<div v-if="room.messages.length">
 							<wnl-message v-for="(message, index) in room.messages"
 								:key="index"
 								:showAuthor="isAuthorUnique[index]"
@@ -37,7 +37,6 @@
 			<div class="wnl-chat-form">
 				<wnl-private-chat-message-form
 					:loaded="true"
-					@sendMessage="onSendMessage"
 					ref="messageForm"
 				></wnl-private-chat-message-form>
 			</div>
@@ -97,10 +96,6 @@
 			'wnl-users-widget': UsersWidget,
 		},
 		props: {
-			messages:{
-				type: Array,
-				default: () => ([])
-			},
 			room: {
 				type: Object,
 				required: true
@@ -108,17 +103,13 @@
 			users: {
 				type: Array,
 				required: true
-			},
-			onSendMessage: {
-				type: Function,
-				required: true
 			}
 		},
 		computed: {
 			...mapGetters(['isOverlayVisible']),
 			...mapGetters('chatMessages', ['getProfileByUserId']),
 			isAuthorUnique() {
-				return this.messages.map((message, index) => {
+				return this.room.messages.map((message, index) => {
 					if (index === 0) return true
 
 					let previous     = index - 1,
@@ -128,14 +119,14 @@
 							message.time - this.messages[previous].time > halfHourInMs
 				})
 			},
+			chatTitle() {
+				return this.users && this.users[0] && this.users[0].display_name
+			}
 		},
 		methods: {
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)
 			}
-		},
-		mounted() {
-			console.log(this.users[0].display_name);
 		}
 	}
 

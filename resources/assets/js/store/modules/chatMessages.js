@@ -9,7 +9,8 @@ const namespaced = true
 const state = {
 	rooms: {},
 	sortedRooms: [],
-	profiles: {}
+	profiles: {},
+	ready: false
 }
 
 //Getters
@@ -48,7 +49,8 @@ const getters = {
 			roomProfiles.length === 2 && _.difference(roomProfiles, [rootGetters.currentUser.id, profile.id]).length === 0
 		}) || {}
 	},
-	userPrivateChannel: (state, getters, rootState, rootGetters) => `private-channel-${rootGetters.currentUserId}`
+	userPrivateChannel: (state, getters, rootState, rootGetters) => `private-channel-${rootGetters.currentUserId}`,
+	ready: state => state.ready
 }
 
 //mutations
@@ -61,6 +63,9 @@ const mutations = {
 	[types.CHAT_MESSAGES_SET_ROOM_MESSAGES] (state, {roomId, messages}) {
 		set(state.rooms[roomId], 'messages', messages)
 	},
+	[types.CHAT_MESSAGES_READY] (state, isReady) {
+		set(state, 'ready', isReady)
+	}
 }
 
 //Actions
@@ -69,6 +74,7 @@ const actions = {
 		return axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
 			.then((response) => {
 				if (response.data.length === 0) return
+
 				const {included, ...rooms} = response.data
 				const payload = {
 					rooms: {},
@@ -85,21 +91,18 @@ const actions = {
 				})
 
 				commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
-			}).then(() => {
-				axios.post(getApiUrl('chat_messages/.getByRooms'), {
+			}).then(() => axios.post(getApiUrl('chat_messages/.getByRooms'), {
 					rooms: getters.sortedRooms
-				}).then(({data}) => {
-					const rooms = {}
+				})
+			).then(({data}) => {
+				const rooms = {}
 
-					data.forEach(message => {
-						if (!rooms[message.chat_room_id]) {
-							rooms[message.chat_room_id] = []
-						}
+				data.forEach(message => {
+					if (!rooms[message.chat_room_id]) {
+						rooms[message.chat_room_id] = []
+					}
 
-						rooms[message.chat_room_id].push(message)
-					})
-
-					Object.keys(rooms).forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: rooms[roomId]}))
+					rooms[message.chat_room_id].push(message)
 				})
 			})
 	},
@@ -109,15 +112,11 @@ const actions = {
 	joinChannels({commit, getters}, socket) {
 		getters.sortedRooms.map((roomId) => socket.emit('join-room', {room: `channel-${roomId}`}))
 		socket.emit('join-room', {room: getters.userPrivateChannel})
-
-		socket.on('user-sent-message', (data) => {
-			console.log(data)
-		})
-	},
-	sendMessage({commit}, {socket, event, callback}) {
-		socket.emit('send-message', event)
+		Object.keys(rooms).forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: rooms[roomId]}))
+		commit(types.CHAT_MESSAGES_READY, true)
 	}
 }
+
 export default {
 	namespaced,
 	state,

@@ -107,20 +107,10 @@
 					return false
 				}
 				this.error = ''
-				this.isWaitingToSendMentions = true
-				this.$emit('sendMessage', {
-					content: this.content,
-					callback: () => {
-						const mentions = this.getMentions()
-						if (mentions && mentions.length) {
-							this.saveMentions(
-								this.getMentionsData(mentions, data.message)
-							)
-						}
-
-						this.mentions = []
-						this.quillEditor.clear();
-						this.isWaitingToSendMentions = false
+				this.$socketSendMessage({
+					room: 83,
+					message: {
+						content: 'lorem ipsum'
 					}
 				})
 			},

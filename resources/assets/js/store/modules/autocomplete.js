@@ -48,7 +48,7 @@ const actions = {
 	requestUsersAutocomplete({}, data) {
 		const conditions = getUserSearchConditions(data)
 
-		return axios.post(getApiUrl('user_profiles/.search'), conditions)
+		return axios.post(getApiUrl('user_profiles/.query'), conditions)
 	},
 	requestTagsAutocomplete({}, { name, tags }) {
 		const conditions = getTagSearchConditions(name, tags)

@@ -112,6 +112,28 @@ class ApiController extends Controller
 	}
 
 	/**
+	 * Generic end-point for simple search queries,
+	 * using search engine.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function search()
+	{
+		$request = $this->request;
+		$modelName = self::getResourceModel($this->resourceName);
+		$query = trim($request->get('q'));
+
+		if (!$query) {
+			return $this->respondUnprocessableEntity([], 'Missing "q" param.');
+		}
+
+		$models = $modelName::search($query)->get();
+		$data = $this->transform($models);
+
+		return $this->respondOk($data);
+	}
+
+	/**
 	 * Get resource model class name.
 	 *
 	 * @param $resource

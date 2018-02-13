@@ -1,6 +1,9 @@
 export const messages = {
     dashboard: {
-        privateMessages: 'Prywatne wiadomości',
+        privateMessages: 'Rozmowy',
         noMessages: 'Nie masz żadnych wiadomości',
+    },
+    search: {
+        placeholder: 'Szukaj...'
     },
 }

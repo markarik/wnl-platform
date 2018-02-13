@@ -86,8 +86,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 	Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 
-	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfileApiController@get');
-	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfileApiController@put');
+	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 
@@ -122,9 +122,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'UserReactionsApiController@getReactionsByCategory');
-
-	// User Profiles
-	Route::post("{$r['profiles']}/.search", 'UserProfileApiController@query');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');

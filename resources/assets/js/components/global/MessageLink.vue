@@ -39,13 +39,8 @@ export default {
                 currentUserId: this.currentUserId,
                 userId: this.userId
             }
-            this.createNewRoom(payload)
-            axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
-                name: `private-${this.currentUserId}-${this.userId}`
-            }).then((response) => {
-                return new Promise ((resolve) => {
-                    return this.roomId = response.data.id
-                })
+            this.createNewRoom(payload).then((response) => {
+                this.roomId = response.data.id
             })
         }
     }

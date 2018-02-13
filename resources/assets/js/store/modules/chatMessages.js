@@ -90,7 +90,9 @@ const actions = {
 		}
 	},
 	createNewRoom({commit}, payload) {
-		console.log(payload);
+		return axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
+			name: `private-${payload.currentUserId}-${payload.userId}`
+		})
 	}
 }
 

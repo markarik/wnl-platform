@@ -93,11 +93,9 @@
 		methods: {
 			showModal() {
 				this.isVisible = true
-				console.log(this.author);
 			},
 			closeModal() {
 				this.isVisible = false
-				console.log('off klik');
 			}
 		}
 	}

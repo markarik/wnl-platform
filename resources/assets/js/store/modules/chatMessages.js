@@ -67,7 +67,7 @@ const mutations = {
 		set(state, 'ready', isReady)
 	},
 	[types.CHAT_MESSAGES_ADD_MESSAGE] (state, {message, room}) {
-		state.rooms[room].messages.push(message)
+		state.rooms[room].messages.splice(0, 0, message)
 	}
 }
 
@@ -84,14 +84,14 @@ const actions = {
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
 	onNewMessage({commit}, {sent, ...payload}) {
-		console.log(payload, sent, '....onNewMessage called')
 		if (sent) {
 			commit(types.CHAT_MESSAGES_ADD_MESSAGE, payload)
 		}
 	},
-	createNewRoom({commit}, payload) {
+	createNewRoom({commit}, {users}) {
 		return axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
-			name: `private-${payload.currentUserId}-${payload.userId}`
+			name: `private-${users.join('-')}`,
+			users
 		})
 	}
 }

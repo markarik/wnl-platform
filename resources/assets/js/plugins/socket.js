@@ -6,6 +6,7 @@ export const SOCKET_EVENT_MESSAGE_PROCESSED = 'message-processed'
 export const SOCKET_EVENT_USER_SENT_MESSAGE = 'user-sent-message'
 export const SOCKET_EVENT_JOIN_ROOM = 'join-room'
 export const SOCKET_EVENT_JOIN_ROOM_SUCCESS = 'join-room-success'
+export const SOCKET_EVENT_LEAVE_ROOM = 'leave-room'
 
 const SOCKET_EVENTS = [SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED]
 
@@ -47,11 +48,15 @@ const WnlSocket = {
         Vue.prototype.$socketJoinRoom = (room) => {
             return new Promise((resolve, reject) => {
                 socket.emit(SOCKET_EVENT_JOIN_ROOM, {room})
+
+                const timerId = setTimeout(() => {
+                    $wnl.logger.error('Failed to connect to room', room)
+                }, 5000)
+
                 socket.on(SOCKET_EVENT_JOIN_ROOM_SUCCESS, (data) => {
-                    const timerId = setTimeout(reject, 5000)
                     if (room === data.room) {
                         clearTimeout(timerId)
-                        resolve()
+                        resolve(data)
                     }
                 })
             })

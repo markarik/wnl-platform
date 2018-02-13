@@ -22,13 +22,17 @@ class ChatRoomsApiController extends ApiController
 			'chat_rooms.name',
 			'max(chat_messages.time) as last_message_time',
 		];
+
 		$rooms = ChatRoom::with('users.profile')
 			->select(\DB::raw(implode(',', $select)))
-			->where('name', 'like', "private%-{$user->id}%")
 			->join(
 				'chat_messages',
 				'chat_messages.chat_room_id', '=', 'chat_rooms.id'
+			)->join(
+				'chat_room_user',
+				'chat_room_user.chat_room_id', '=', 'chat_rooms.id'
 			)
+			->where('chat_room_user.user_id', $user->id)
 			->orderBy('last_message_time', 'desc')
 			->groupBy('chat_rooms.id');
 
@@ -39,9 +43,22 @@ class ChatRoomsApiController extends ApiController
 
 	public function createPrivateRoom(PostPrivateRoom $request)
 	{
-		$room = ChatRoom::firstOrCreate(['name' => $request->name]);
-		$data = $this->transform($room);
+		$users = $request->users;
+		$room = ChatRoom::where('name', $request->name)->first();
 
-		return $this->respondOk($data);
+		if (
+			!empty($room) &&
+			$room->users->count() == count($users) &&
+			$room->users->pluck('id')->diff($users)->count() == 0
+		) {
+			$data =  $this->transform($room);
+			return $this->respondOk($data);
+		} else {
+			$room = ChatRoom::firstOrCreate(['name' => $request->name]);
+			$room->users()->attach($request->users);
+
+			$data = $this->transform($room);
+			return $this->respondOk($data);
+		}
 	}
 }

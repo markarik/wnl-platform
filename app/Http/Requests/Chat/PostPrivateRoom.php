@@ -32,6 +32,7 @@ class PostPrivateRoom extends FormRequest
 	{
 		return [
 			'name' => 'required|string',
+			'users' => 'required|array'
 		];
 	}
 }

@@ -37,7 +37,6 @@
 		<div class="wnl-chat-form">
 			<wnl-message-form
 				:loaded="loaded"
-				:socket="socket"
 				:room="room"
 				ref="messageForm"
 			></wnl-message-form>
@@ -72,10 +71,10 @@
 	import MessageForm from './MessageForm.vue'
 	import UsersWidget from '../global/UsersWidget.vue'
 	import {getApiUrl} from 'js/utils/env'
-	import * as socket from '../../socket'
 	import {nextTick} from 'vue'
 	import _ from 'lodash'
 	import highlight from 'js/mixins/highlight'
+	import { SOCKET_EVENT_USER_SENT_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED, SOCKET_EVENT_LEAVE_ROOM } from 'js/plugins/socket'
 
 	import { mapGetters } from 'vuex'
 
@@ -103,7 +102,6 @@
 				loaded: false,
 				messages: [],
 				users: [],
-				socket: {},
 				isPulling: false,
 				thereIsMore: true,
 			}
@@ -144,10 +142,8 @@
 					})
 				}
 
-				typeof this.socket.emit === 'function' && this.socket.emit('join-room', {
-					room: this.room.channel
-				})
-				typeof this.socket.on === 'function' && this.socket.on('join-room-success', (data) => {
+				console.log(this.room.channel)
+				this.$socketJoinRoom(this.room.channel).then((data) => {
 					if (!this.loaded) {
 						this.messages = data.messages
 						this.users    = data.users
@@ -164,37 +160,38 @@
 						})
 					}
 				})
-
-				return true
+			},
+			leaveRoom (roomId) {
+				this.$socketEmit(SOCKET_EVENT_LEAVE_ROOM, {
+					room: roomId
+				})
 			},
 			changeRoom(oldRoom) {
 				this.loaded = false
-				typeof this.socket.emit === 'function' && this.socket.emit('leave-room', {
+				this.$socketEmit(SOCKET_EVENT_LEAVE_ROOM, {
 					room: oldRoom.channel
 				})
 				this.joinRoom()
 			},
-			setListeners(socket) {
-				socket.on('user-sent-message', (data) => {
-					this.messages.push(data.message)
-				})
-
-				socket.on('message-processed', (data) => {
-					if (data.sent) {
-						this.addMessage(data.message)
-					}
-				})
-
-				socket.on('error', (data) => {
-					$wnl.logger.error(`Socket error: ${data}`)
-				})
+			setListeners() {
+				this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
+				this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.addMessage)
 			},
-			addMessage(message) {
+			removeListeners() {
+				this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
+				this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.addMessage)
+			},
+			pushMessage({message}) {
 				this.messages.push(message)
-				nextTick(() => {
-					this.scrollToBottom()
-					this.$refs.messageForm.quillEditor.quill.focus()
-				})
+			},
+			addMessage(data) {
+				if (data.sent) {
+					this.pushMessage(data)
+					nextTick(() => {
+						this.scrollToBottom()
+						this.$refs.messageForm.quillEditor.quill.focus()
+					})
+				}
 			},
 			scrollToBottom() {
 				this.container.scrollTop = '1000000000'
@@ -296,11 +293,8 @@
 			}
 		},
 		mounted() {
-			socket.connect().then((socket) => {
-				this.socket = socket
-				this.joinRoom()
-				this.setListeners(this.socket)
-			}).catch(exception => $wnl.logger.capture(exception))
+			this.joinRoom()
+			this.setListeners()
 
 			this.pullDebouncer = _.debounce(this.pullDebouncer, 50)
 			if (this.initialPull) {
@@ -308,9 +302,8 @@
 			}
 		},
 		beforeDestroy() {
-			socket.disconnect().then(() => {
-				return true
-			}).catch(exception => $wnl.logger.capture(exception))
+			this.leaveRoom(this.room.channel)
+			this.removeListeners()
 		},
 		components: {
 			'wnl-message': Message,

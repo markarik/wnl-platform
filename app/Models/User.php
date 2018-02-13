@@ -119,6 +119,10 @@ class User extends Authenticatable
 	public function reactables() {
 		return $this->hasMany('App\Models\Reactable');
 	}
+
+	public function chatRooms() {
+		return $this->belongsToMany('App\Models\ChatRoom');
+	}
 	/**
 	 * Dynamic attributes
 	 */

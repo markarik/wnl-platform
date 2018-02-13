@@ -45,10 +45,11 @@
 	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
+	import { SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED } from 'js/plugins/socket'
 	import _ from 'lodash';
 
 	export default{
-		props: ['loaded', 'socket', 'room'],
+		props: ['loaded', 'room'],
 		data() {
 			return {
 				error: '',
@@ -108,11 +109,11 @@
 				}
 				this.error = ''
 				this.isWaitingToSendMentions = true
-				this.socket.emit('send-message', {
+				this.$socketEmit(SOCKET_EVENT_SEND_MESSAGE, {
 					room: this.room.channel,
 					message: {
 						user: this.currentUser,
-						content: this.content,
+						content: this.content
 					}
 				})
 			},
@@ -147,24 +148,22 @@
 			suppressEnter(event) {
 				event.preventDefault()
 			},
-			setListeners() {
-				this.socket.on('message-processed', (data) => {
-					if (data.sent) {
-						const mentions = this.getMentions()
+			processMessage(data) {
+				if (data.sent) {
+					const mentions = this.getMentions()
 
-						if (mentions && mentions.length) {
-							this.saveMentions(
-								this.getMentionsData(mentions, data.message)
-							)
-						}
-
-						this.mentions = []
-						this.quillEditor.clear();
-					} else {
-						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+					if (mentions && mentions.length) {
+						this.saveMentions(
+							this.getMentionsData(mentions, data.message)
+						)
 					}
-					this.isWaitingToSendMentions = false
-				})
+
+					this.mentions = []
+					this.quillEditor.clear();
+				} else {
+					this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+				}
+				this.isWaitingToSendMentions = false
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
@@ -172,12 +171,11 @@
 				this.content = this.quillEditor.editor.innerHTML
 			}
 		},
-		watch: {
-			'loaded' () {
-				if (this.loaded) {
-					this.setListeners()
-				}
-			}
+		mounted () {
+			this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
+		},
+		beforeDestroy () {
+			this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
 		}
 	}
 

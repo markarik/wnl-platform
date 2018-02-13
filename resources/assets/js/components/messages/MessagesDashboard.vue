@@ -118,7 +118,7 @@
 				'isChatToggleVisible',
 				'currentUserName'
 			]),
-			...mapGetters('chatMessages', ['getRoomById', 'getRoomProfiles', 'ready']),
+			...mapGetters('chatMessages', ['getRoomById', 'getRoomProfiles', 'ready', 'rooms', 'sortedRooms', 'profiles']),
 			showChatRoom() {
 				return !!this.currentRoom
 			}
@@ -150,6 +150,7 @@
 		},
 		mounted() {
 			this.ready && this.roomFromRoute()
+			console.log('data na messages dashboard: ', 'rooms', this.rooms, 'sortedRooms', this.sortedRooms, 'profiles', this.profiles);
 		}
 	}
 </script>

@@ -57,8 +57,15 @@ const getters = {
 const mutations = {
 	[types.CHAT_MESSAGES_SET_ROOMS] (state, data) {
 		set (state, 'rooms', data.rooms)
+		console.log('data do state', data);
 		set (state, 'sortedRooms', data.sortedRooms)
 		set (state, 'profiles', data.profiles)
+	},
+	[types.CHAT_ADD_ROOM] (state, payload) {
+		console.log(payload);
+		state.sortedRooms.splice(0, 0, payload.data.id)
+		set (state.rooms, payload.data.id, payload.data)
+		set (state.profiles, payload.profile.id, payload.profile)
 	},
 	[types.CHAT_MESSAGES_SET_ROOM_MESSAGES] (state, {roomId, messages}) {
 		set(state.rooms[roomId], 'messages', messages)
@@ -89,9 +96,27 @@ const actions = {
 			commit(types.CHAT_MESSAGES_ADD_MESSAGE, payload)
 		}
 	},
-	createNewRoom({commit}, payload) {
-		return axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
+	createNewRoom({commit, rootGetters}, payload) {
+		axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
 			name: `private-${payload.currentUserId}-${payload.userId}`
+		}).then((response) => {
+			const {included, ...data} = response.data
+
+			const filteredProfile = Object.entries(included.profiles).reduce((acc, [key, val]) => {
+				if (val.user_id !== rootGetters.currentUserId) {
+					acc[key] = val
+				}
+				return acc
+			}, {})
+
+			console.log('zfitrowany chuj', filteredProfile);
+
+			const payload = {
+				data: data,
+				profile: filteredProfile
+			}
+
+			commit(types.CHAT_ADD_ROOM, payload)
 		})
 	}
 }

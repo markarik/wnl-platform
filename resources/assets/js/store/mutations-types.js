@@ -50,6 +50,7 @@ export const ERRORS_CLEAR              = 'ERRORS_CLEAR'
 export const ERRORS_CLEAR_SINGLE       = 'ERRORS_CLEAR_SINGLE'
 
 // Chat
+export const CHAT_ADD_ROOM        = 'CHAT_ADD_ROOM'
 export const CHAT_ADD_NEW_MESSAGE = 'CHAT_ADD_NEW_MESSAGE'
 export const CHAT_SET_ROOM        = 'CHAT_SET_ROOM'
 export const CHAT_SET_MESSAGES    = 'CHAT_SET_MESSAGES'

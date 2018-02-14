@@ -1,7 +1,7 @@
 <template>
 	<ul
-		class="autocomplete"
-		v-bind:class="{'is-down': isDown, 'autocomplete-box': isBox}"
+		class="autocomplete-box"
+		v-bind:class="{'is-down': isDown}"
 		v-show="hasItems"
 		tabindex="-1"
 		@keydown="onKeyDown"
@@ -67,16 +67,7 @@
 
 	export default {
 		name: 'Autocomplete',
-		props: {
-			items: {},
-			onItemChosen: {},
-			itemComponent: {},
-			isDown: {},
-			isBox: {
-				default: true,
-				type: Boolean
-			}
-		},
+		props: ['items', 'onItemChosen', 'itemComponent', 'isDown'],
 		components: {
 			'wnl-tag-autocomplete-item': TagAutocomplete,
 			'wnl-user-autocomplete-item': UserAutocomplete

@@ -8,9 +8,8 @@
 			:onItemChosen="itemChosen"
 			:itemComponent="'wnl-user-autocomplete-item'"
 			:items="usersList"
-			:isBox="false"
 			@close="onClose"
-			class="wnl-user-search__list"
+			class="wnl-user-search__dropdown"
 			ref="autocomplete"
 		/>
 	</div>
@@ -21,7 +20,7 @@
 		input
 			width: 100%
 
-		&__list
+		.wnl-find-users__dropdown
 			ul
 				width: 100%
 </style>

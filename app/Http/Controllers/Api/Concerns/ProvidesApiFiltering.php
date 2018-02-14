@@ -178,7 +178,7 @@ trait ProvidesApiFiltering
 
 	protected function getFilters($request)
 	{
-		$default = [$request->filters, []];
+		$default = [$request->filters, $request->active];
 
 		if (!$request->useSavedFilters) return $default;
 

@@ -1,5 +1,9 @@
 <template lang="html">
-	<wnl-message-link :userId="profile.user_id" class="conversation-snippet">
+	<wnl-message-link
+		:userId="profile.user_id"
+		:roomId="roomId"
+		class="conversation-snippet"
+	>
 		<figure class="media-left">
 
 			<wnl-avatar
@@ -83,7 +87,6 @@
 			},
 			profiles: {
 				required: false,
-				type: Object,
 			},
 			messages: {
 				required: false,
@@ -93,7 +96,7 @@
 		computed: {
 			...mapGetters(['currentUserId']),
 			lastMessageContent() {
-				if (!this.messages) {
+				if (!this.messages || !this.messages.length) {
 					return ''
 				}
 
@@ -112,6 +115,13 @@
 				}
 
 				return this.profiles
+			},
+			roomId() {
+				if (!this.room) {
+					return 0;
+				}
+
+				return this.room.id
 			}
 		},
 		methods: {

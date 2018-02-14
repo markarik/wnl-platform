@@ -36,47 +36,15 @@
 		},
 		computed: {
 			...mapGetters(['currentUserId']),
-			...mapGetters('chatMessages', ['getRoomById', 'sortedRooms', 'getRoomProfiles', 'getRoomMessages']),
+			...mapGetters('chatMessages', [
+				'getRoomById',
+				'sortedRooms',
+				'getRoomProfiles',
+				'getRoomMessages'
+			]),
 		},
 		methods: {
-			getRoomName(interlocutors) {
-				if (!Array.isArray(interlocutors)){
-					interlocutors = interlocutors.split('-')
-				}
 
-				interlocutors = interlocutors.filter(id => {
-					return parseInt(id) !== this.currentUserId
-				})
-				interlocutors.push(this.currentUserId)
-				interlocutors = interlocutors.sort()
-				interlocutors = interlocutors.join('-')
-
-				return `private-${interlocutors}`
-			},
-			switchToRoom(room) {
-				this.currentRoom = room
-				this.emitRoomChange(room)
-			},
-			startNewRoom(roomName) {
-				const path = 'chat_rooms/.createPrivateRoom?include=profiles'
-				const data = {
-					name: roomName
-				}
-				axios.post(getApiUrl(path), data)
-					.then(res => {
-						let profiles = res.data.included.profiles
-						this.profiles = {...this.profiles, ...profiles}
-						delete res.data.included
-						let room = res.data
-						this.rooms.unshift(room)
-						this.switchToRoom(room)
-					})
-			},
-			emitRoomChange(room) {
-				let users = this.getRoomProfiles(room.profiles)
-				let messages = this.getRoomMessages(room)
-				this.$emit('roomSwitch', {room, users, messages})
-			}
 		}
 	}
 </script>

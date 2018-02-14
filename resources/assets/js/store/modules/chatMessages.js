@@ -99,14 +99,15 @@ const actions = {
 			users
 		})
 
-		const profileId = Object.keys(included.profiles).find(profileId => profileId !== rootGetters.currentUser.id)
+		const profile = Object.values(included.profiles)
+			.find(profile => profile.user_id !== rootGetters.currentUser.id)
 
 		const payload = {
 			data: {
 				...data,
 				messages: []
 			},
-			profile: included.profiles[profileId]
+			profile
 		}
 
 		commit(types.CHAT_ADD_ROOM, payload)

@@ -4,14 +4,20 @@
 			:placeholder="$t('messages.search.placeholder')"
 			@input="onInput"
 		/>
-		<wnl-autocomplete
-			:onItemChosen="itemChosen"
-			:itemComponent="'wnl-user-autocomplete-item'"
-			:items="usersList"
-			@close="onClose"
-			class="wnl-user-search__dropdown"
-			ref="autocomplete"
-		/>
+
+		<div class="wnl-find-users__list">
+
+				<wnl-conversation-snippet
+					v-for="item in results"
+					class="wnl-find-users__item"
+					@click="onItemChosen(item)"
+					:class="{ active: item.active }"
+					:profiles="item"
+					:key="item.id"
+				/>
+
+		</div>
+
 	</div>
 </template>
 
@@ -20,25 +26,30 @@
 		input
 			width: 100%
 
-		.wnl-find-users__dropdown
-			ul
-				width: 100%
+		&__list
+			display: flex
+			flex-direction: column
+
+		&__item
+
 </style>
 
 <script>
 	import _ from 'lodash'
 	import axios from 'axios'
 	import {getApiUrl} from 'js/utils/env'
-	import Autocomplete from 'js/components/global/Autocomplete'
+	import autocomplete from 'js/mixins/autocomplete-nav'
+	import ConversationSnippet from 'js/components/messages/ConversationSnippet'
 
 	export default {
 		name: 'FindUsers',
 		components: {
-			'wnl-autocomplete': Autocomplete
+			'wnl-conversation-snippet': ConversationSnippet
 		},
+		mixins: [autocomplete],
 		data() {
 			return {
-				usersList: [],
+				results: [],
 			}
 		},
 		methods: {
@@ -49,7 +60,7 @@
 				axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
 					.then(res => {
 						if (res.data.length === 0) return
-						this.usersList = res.data
+						this.results = res.data
 					})
 			}, 300),
 			onClose(){},

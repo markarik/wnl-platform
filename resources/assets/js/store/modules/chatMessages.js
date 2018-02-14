@@ -1,6 +1,5 @@
 import {set} from 'vue'
 import * as types from '../mutations-types'
-import * as socket from '../../socket'
 import {getApiUrl} from 'js/utils/env'
 
 const namespaced = true
@@ -30,7 +29,8 @@ const getters = {
 		return getters.getRoomById(id).messages || []
 	},
 	getProfileByUserId: state => id => {
-		// i added this as a quick fix for checking a certain value in getRoomForPrivateChat, if conditional couldn't process !profile.id
+		// i added this as a quick fix for checking a certain value in getRoomForPrivateChat,
+		// if conditional couldn't process !profile.id
 		if (Object.values(state.profiles).find(profile => profile.user_id === id)) {
 			return Object.values(state.profiles).find(profile => profile.user_id === id)
 		} else {

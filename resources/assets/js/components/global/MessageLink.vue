@@ -1,9 +1,7 @@
 <template>
-	<div class="message-link">
-		<router-link :to="{ name: 'messages', query: {roomId} }" v-if="roomId">
-			<slot></slot>
-		</router-link>
-	</div>
+	<router-link :to="{ name: 'messages', query: {roomId} }" v-if="roomId">
+		<slot></slot>
+	</router-link>
 </template>
 
 <script>

@@ -1,12 +1,10 @@
 <template lang="html">
-	<router-link
-		:to="to"
-		:class="{'conversation-snippet': true, 'active-in-route': isActive}">
+	<wnl-message-link :userId="profile.user_id" class="conversation-snippet">
 		<figure class="media-left">
 
 			<wnl-avatar
-				:fullName="lastUser.display_name"
-				:url="lastUser.avatar"
+				:fullName="profile.display_name"
+				:url="profile.avatar"
 				size="large">
 			</wnl-avatar>
 
@@ -15,16 +13,16 @@
 			<div class="content">
 				<div class="conversation-meta">
 					<div class="conversation-names">
-						<strong>{{ lastUser.display_name }}</strong>
+						<strong>{{ profile.display_name }}</strong>
 					</div>
-					<div class="conversation-time" v-if="room.last_message_time">
+					<div class="conversation-time" v-if="room && room.last_message_time">
 						<small>{{ time(room.last_message_time) }}</small>
 					</div>
 				</div>
 				<div class="conversation-message" v-html="lastMessageContent"/>
 			</div>
 		</div>
-	</router-link>
+	</wnl-message-link>
 </template>
 
 <style lang="sass">
@@ -71,39 +69,49 @@
 
 <script>
 	import { shortTimeFromMs } from 'js/utils/time'
+	import { mapGetters } from 'vuex'
+	import MessageLink from "js/components/global/MessageLink";
 
 	export default {
 		name: 'ConversationSnippet',
+		components: {
+			'wnl-message-link': MessageLink
+		},
 		props: {
 			room: {
-				required: true,
+				required: false,
 			},
-			users: {
-				required: true,
-				type: Array,
+			profiles: {
+				required: false,
+				type: Object,
 			},
 			messages: {
-				required: true,
+				required: false,
 				type: Array
 			}
 		},
 		computed: {
-			to() {
-				return {
-					name: 'messages',
-					query: {
-						roomId: this.room.id,
-					},
-				}
-			},
+			...mapGetters(['currentUserId']),
 			lastMessageContent() {
-				return this.messages.length ? this.messages[0].content : ''
-			},
-			lastUser() {
-				return this.users.length ? this.users[0] : {}
+				if (!this.messages) {
+					return ''
+				}
+
+				return this.messages[0].content
 			},
 			isActive() {
-				return this.$route.query.roomId == this.room.id
+				return this.$route.query.roomId === this.room.id
+			},
+			profile() {
+				if (this.profiles instanceof Array) {
+					if (this.profiles.length === 1) {
+						return this.profiles[0]
+					}
+
+					return this.profiles.find(profile => profile.user_id !== this.currentUserId)
+				}
+
+				return this.profiles
 			}
 		},
 		methods: {

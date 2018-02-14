@@ -4,7 +4,7 @@
 			v-for="roomId in sortedRooms"
 			:key="roomId"
 			:room="getRoomById(roomId)"
-			:users="getRoomProfiles(roomId)"
+			:profiles="getRoomProfiles(roomId)"
 			:messages="getRoomMessages(roomId)"
 		/>
 	</div>

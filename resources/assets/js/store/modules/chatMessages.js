@@ -96,6 +96,7 @@ const actions = {
 		}
 	},
 	createNewRoom({commit, rootGetters}, payload) {
+		console.log(payload);
 		axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
 			name: `private-${payload.currentUserId}-${payload.userId}`
 		}).then((response) => {
@@ -107,8 +108,6 @@ const actions = {
 				}
 				return acc
 			}, {})
-
-			console.log('zfitrowany chuj', filteredProfile);
 
 			const payload = {
 				data: data,

@@ -142,7 +142,6 @@
 					})
 				}
 
-				console.log(this.room.channel)
 				this.$socketJoinRoom(this.room.channel).then((data) => {
 					if (!this.loaded) {
 						this.messages = data.messages

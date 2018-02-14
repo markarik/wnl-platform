@@ -57,12 +57,10 @@ const getters = {
 const mutations = {
 	[types.CHAT_MESSAGES_SET_ROOMS] (state, data) {
 		set (state, 'rooms', data.rooms)
-		console.log('data do state', data);
 		set (state, 'sortedRooms', data.sortedRooms)
 		set (state, 'profiles', data.profiles)
 	},
 	[types.CHAT_ADD_ROOM] (state, payload) {
-		console.log(payload);
 		state.sortedRooms.splice(0, 0, payload.data.id)
 		set (state.rooms, payload.data.id, payload.data)
 		set (state.profiles, payload.profile.id, payload.profile)
@@ -95,27 +93,25 @@ const actions = {
 			commit(types.CHAT_MESSAGES_ADD_MESSAGE, payload)
 		}
 	},
-	createNewRoom({commit, rootGetters}, payload) {
-		console.log(payload);
-		axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
-			name: `private-${payload.currentUserId}-${payload.userId}`
-		}).then((response) => {
-			const {included, ...data} = response.data
-
-			const filteredProfile = Object.entries(included.profiles).reduce((acc, [key, val]) => {
-				if (val.user_id !== rootGetters.currentUserId) {
-					acc[key] = val
-				}
-				return acc
-			}, {})
-
-			const payload = {
-				data: data,
-				profile: filteredProfile
-			}
-
-			commit(types.CHAT_ADD_ROOM, payload)
+	async createNewRoom({commit, rootGetters}, {users}) {
+		const {data: {included, ...data}} = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
+			name: `private-${users.join('-')}`,
+			users
 		})
+
+		const profileId = Object.keys(included.profiles).find(profileId => profileId !== rootGetters.currentUser.id)
+
+		const payload = {
+			data: {
+				...data,
+				messages: []
+			},
+			profile: included.profiles[profileId]
+		}
+
+		commit(types.CHAT_ADD_ROOM, payload)
+
+		return data
 	}
 }
 

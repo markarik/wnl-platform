@@ -36,12 +36,11 @@ export default {
 			this.roomId = room.id
 		} else {
 			const payload = {
-				currentUserId: this.currentUserId,
-                userId: this.userId
+				users: [this.currentUserId, this.userId]
 			}
-			this.createNewRoom(payload).then((response) => {
-                console.log(response);
-            })
+			this.createNewRoom(payload).then((data) => {
+				this.roomId = data.id
+			})
 		}
 	}
 }

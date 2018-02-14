@@ -150,7 +150,6 @@
 		},
 		mounted() {
 			this.ready && this.roomFromRoute()
-			console.log('data na messages dashboard: ', 'rooms', this.rooms, 'sortedRooms', this.sortedRooms, 'profiles', this.profiles);
 		}
 	}
 </script>

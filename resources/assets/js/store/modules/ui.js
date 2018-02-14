@@ -11,7 +11,8 @@ const state = {
 	navigationToggleState: {},
 	overlays: {},
 	overviewView: 'stream',
-	globalNotification: false
+	globalNotification: false,
+	modalVisible: false
 }
 
 const layouts = {
@@ -54,6 +55,7 @@ const getters = {
 	globalNotificationMessage: state => state.globalNotification.message,
 	globalNotificationType: state => state.globalNotification.type,
 	overlayTexts: state => values(pickBy(state.overlays, isString)),
+	modalVisible: state => state.modalVisible
 }
 
 // Mutations
@@ -94,6 +96,9 @@ const mutations = {
 	},
 	[types.UI_KILL_CHAT] (state) {
 		set(state, 'canShowChat', false)
+	},
+	[types.UI_TOGGLE_MODAL] (state, payload) {
+		set(state, 'modalVisible', payload)
 	},
 	[types.UI_DISPLAY_OVERLAY] (state, payload) {
 		if (payload.display) {

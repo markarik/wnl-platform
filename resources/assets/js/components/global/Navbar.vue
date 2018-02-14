@@ -43,6 +43,9 @@
 	$logo-width: 50px
 	$logo-text-width: 90px
 
+	.modal-active .wnl-navbar
+		z-index: 0
+
 	.wnl-navbar
 		+small-shadow()
 		display: flex

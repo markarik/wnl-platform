@@ -1,5 +1,5 @@
 <template>
-	<div id="app" v-if="!isCurrentUserLoading">
+	<div id="app" v-if="!isCurrentUserLoading" :class="{'modal-active': modalVisible}">
 		<div class="wnl-overlay" v-if="shouldDisplayOverlay">
 			<span class="loader"></span>
 			<span class="loader-text">{{currentOverlayText}}</span>
@@ -63,7 +63,8 @@
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
-				'alerts'
+				'alerts',
+				'modalVisible'
 			]),
 			...mapGetters('chatMessages', ['sortedRooms']),
 			currentOverlayText() {

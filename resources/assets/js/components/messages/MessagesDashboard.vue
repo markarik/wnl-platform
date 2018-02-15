@@ -24,6 +24,7 @@
 				</div>
 				<wnl-find-user
 					v-if="userSearchVisible"
+					@close="toggleUserSearch"
 				/>
 				<wnl-conversations-list
 					v-else

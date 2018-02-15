@@ -39,7 +39,7 @@
 		padding: $margin-medium
 		cursor: pointer
 
-		&:hover, &.active-in-route
+		&:hover, &.active-in-route, &.active
 			background-color: $color-background-lightest-gray
 
 		.media-content

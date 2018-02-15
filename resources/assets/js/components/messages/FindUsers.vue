@@ -4,23 +4,17 @@
 		<div class="wnl-find-users-input">
 			<input
 				:placeholder="$t('messages.search.placeholder')"
+				v-model="textInputValue"
 				@input="onInput"
+				@keydown="onKeyDown"
 				ref="input"
 			/>
 		</div>
 
-		<div class="wnl-find-users__list">
-
-				<wnl-conversation-snippet
-					v-for="item in results"
-					class="wnl-find-users__item"
-					@click="onItemChosen(item)"
-					:class="{ active: item.active }"
-					:profiles="item"
-					:key="item.id"
-				/>
-
-		</div>
+		<wnl-users-autocomplete
+			:items="results"
+			ref="autocomplete"
+		/>
 
 	</div>
 </template>
@@ -44,30 +38,30 @@
 				&:focus
 					outline: none
 
-		&__list
-			display: flex
-			flex-direction: column
-
-		&__item
-
 </style>
 
 <script>
 	import _ from 'lodash'
 	import axios from 'axios'
 	import {getApiUrl} from 'js/utils/env'
-	import autocomplete from 'js/mixins/autocomplete-nav'
-	import ConversationSnippet from 'js/components/messages/ConversationSnippet'
+	import UsersAutocomplete from 'js/components/messages/UsersAutocomplete'
+
+	const KEYS = {
+		enter: 13,
+		esc: 27,
+		arrowUp: 38,
+		arrowDown: 40,
+	}
 
 	export default {
 		name: 'FindUsers',
 		components: {
-			'wnl-conversation-snippet': ConversationSnippet
+			'wnl-users-autocomplete': UsersAutocomplete
 		},
-		mixins: [autocomplete],
 		data() {
 			return {
-				results: [],
+				results: () => [],
+				textInputValue: ''
 			}
 		},
 		methods: {
@@ -81,8 +75,39 @@
 						this.results = res.data
 					})
 			}, 300),
-			onClose(){},
-			itemChosen(){},
+			onKeyDown(evt) {
+				const { enter, arrowUp, arrowDown, esc } = KEYS
+
+				if (this.results.length === 0) {
+
+					return
+				}
+
+				if (evt.keyCode === esc) {
+					this.onClose()
+					return
+				}
+
+				if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
+//					this.onOpen()
+					return
+				}
+
+				this.$refs.autocomplete.onKeyDown(evt)
+				this.killEvent(evt)
+
+				//for some of the old browsers, returning false
+				// is the true way to kill propagation
+				return false
+			},
+			killEvent(evt) {
+				evt.preventDefault()
+				evt.stopPropagation()
+			},
+			onClose() {
+				this.textInputValue = ''
+				this.$emit('close')
+			},
 		},
 		mounted(){
 			this.$refs.input.focus()

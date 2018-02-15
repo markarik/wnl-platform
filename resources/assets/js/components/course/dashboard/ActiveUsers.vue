@@ -6,7 +6,7 @@
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
-						<div class="activator" @click="showModal(user)">
+						<div class="activator" @click="toggleModal(true, user.profile)">
 							<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
@@ -17,6 +17,9 @@
 				</ul>
 			</div>
 		</div>
+		<wnl-modal :isModalVisible="modalVisible" @closeModal="toggleModal(false)" v-if="modalVisible">
+			<wnl-user-profile-modal :author="modalUser"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -69,9 +72,14 @@
 import { mapGetters, mapActions } from 'vuex'
 
 import UserProfileModal from 'js/components/users/UserProfileModal'
+import Modal from 'js/components/global/Modal'
 
 	export default {
 		name: 'ActiveUsers',
+		components: {
+			'wnl-user-profile-modal': UserProfileModal,
+			'wnl-modal': Modal
+		},
 		props: {
 			channel: {
 				type: String,
@@ -81,6 +89,12 @@ import UserProfileModal from 'js/components/users/UserProfileModal'
 				type: String,
 				default: 'dashboard.activeUsers',
 			},
+		},
+		data() {
+			return {
+				modalVisible: false,
+				modalUser: {}
+			}
 		},
 		computed: {
 			...mapGetters(['currentUserId']),
@@ -93,15 +107,9 @@ import UserProfileModal from 'js/components/users/UserProfileModal'
 			},
 		},
 		methods: {
-			...mapActions(['toggleModal']),
-			showModal(user) {
-				this.toggleModal({
-					visible: true,
-					content: {
-						author: user.profile
-					},
-					component: UserProfileModal,
-				})
+			toggleModal(isVisible, modalUser={}) {
+				this.modalVisible = isVisible
+				this.modalUser = modalUser
 			}
 		}
 	}

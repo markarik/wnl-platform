@@ -118,7 +118,11 @@ const actions = {
 
 const fetchUserRooms = async () => {
 	const response = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
-	if (response.data.length === 0) return
+	if (response.data.length === 0) return {
+		rooms: {},
+		sortedRooms: [],
+		profiles: {}
+	}
 
 	const {included, ...rooms} = response.data
 	const payload = {

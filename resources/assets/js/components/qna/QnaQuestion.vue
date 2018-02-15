@@ -24,7 +24,7 @@
 					></wnl-bookmark>
 				</div>
 				<div class="tags" v-if="tags.length > 0">
-					<span v-for="tag, key in tags" class="tag is-light">
+					<span v-for="(tag, key) in tags" class="tag is-light" :key=key>
 						<span>{{tag}}</span>
 					</span>
 				</div>
@@ -331,7 +331,6 @@
 		},
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
-			...mapActions(['toggleModal']),
 			showModal() {
 				this.isVisible = true
 			},

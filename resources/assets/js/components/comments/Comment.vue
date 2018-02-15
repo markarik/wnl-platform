@@ -68,7 +68,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import UserProfileModal from 'js/components/users/UserProfileModal'
 import Avatar from 'js/components/global/Avatar'
@@ -119,7 +119,6 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions(['toggleModal']),
 		showModal() {
 			this.isVisible = true
 		},

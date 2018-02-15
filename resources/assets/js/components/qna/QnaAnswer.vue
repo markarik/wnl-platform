@@ -177,7 +177,6 @@
 		},
 		methods: {
 			...mapActions('qna', ['removeAnswer']),
-			...mapActions(['toggleModal']),
 			showModal() {
 				this.isVisible = true
 			},

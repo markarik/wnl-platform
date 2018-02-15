@@ -1,9 +1,13 @@
 <template lang="html">
 	<div class="wnl-find-users">
-		<input
-			:placeholder="$t('messages.search.placeholder')"
-			@input="onInput"
-		/>
+
+		<div class="wnl-find-users-input">
+			<input
+				:placeholder="$t('messages.search.placeholder')"
+				@input="onInput"
+				ref="input"
+			/>
+		</div>
 
 		<div class="wnl-find-users__list">
 
@@ -22,9 +26,23 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+
 	.wnl-find-users
-		input
-			width: 100%
+		&-input
+			display: flex
+			align-items: center
+
+			input
+				+simple-input
+				width: 90%
+				margin: auto
+				text-align: left
+
+				&:focus
+					outline: none
 
 		&__list
 			display: flex
@@ -66,5 +84,8 @@
 			onClose(){},
 			itemChosen(){},
 		},
+		mounted(){
+			this.$refs.input.focus()
+		}
 	}
 </script>

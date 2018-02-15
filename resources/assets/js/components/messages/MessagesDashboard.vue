@@ -9,15 +9,17 @@
 			    <div class="rooms-header">
 					<header>{{$t('messages.dashboard.privateMessages')}}</header>
 					<div class="rooms-list-controls">
-						<span
-							class="icon"
-							:class="{'is-active': userSearchVisible}"
-							@click="toggleUserSearch">
-							<i class="fa fa-search" title="Szukaj osób"></i>
-						</span>
-						<span class="icon">
-							<i class="fa fa-plus" title="Dodaj osoby do rozmowy"></i>
-						</span>
+					<span
+						class="rooms-list-controls-item"
+						:class="{'is-active': userSearchVisible}"
+						@click="toggleUserSearch"
+					>
+						<i class="fa fa-search" title="Szukaj osób"></i>
+						<span class="text">{{$t('messages.search.searchButton')}}</span>
+					</span>
+						<!--<span class="icon">-->
+							<!--<i class="fa fa-plus" title="Dodaj osoby do rozmowy"></i>-->
+						<!--</span>-->
 					</div>
 				</div>
 				<wnl-find-user
@@ -69,16 +71,24 @@
 
 			.rooms-list-controls
 				display: flex
+				flex-direction: row
 
-				.icon
-					padding: $margin-base
+				&-item
+					padding: $margin-small
 					display: flex
+					flex-direction: column
 					align-content: center
+					justify-content: center
+					align-items: center
+					height: 100%
+
+					.text
+						text-transform: uppercase
+						font-size: $font-size-minus-3
 
 					&:hover, &.is-active
 						background: $color-background-lighter-gray
-
-
+						cursor: pointer
 </style>
 
 <script>

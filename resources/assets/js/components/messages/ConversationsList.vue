@@ -8,7 +8,7 @@
 			:messages="getRoomMessages(roomId)"
 		/>
 	</div>
-	<span v-else>Nie masz żadnych rozmów</span>
+	<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
 </template>
 
 <style lang="sass">

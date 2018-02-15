@@ -4,6 +4,7 @@ export const messages = {
         noMessages: 'Nie masz żadnych wiadomości',
     },
     search: {
-        placeholder: 'Szukaj...'
+        placeholder: 'Wyszukaj osoby...',
+        searchButton: 'Szukaj',
     },
 }

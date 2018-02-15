@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Chat\PostPrivateRoom;
 use App\Models\ChatRoom;
+use App\Models\ChatRoomUser;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -44,14 +45,18 @@ class ChatRoomsApiController extends ApiController
 	public function createPrivateRoom(PostPrivateRoom $request)
 	{
 		$users = $request->users;
-		$room = ChatRoom::where('name', $request->name)->first();
+		$usersCount = count($users);
+
+		$matchingRoom = ChatRoomUser::select('chat_room_id')
+			->whereIn('user_id', $users)
+			->groupBy('chat_room_id')
+			->havingRaw("COUNT(distinct user_id) = {$usersCount}")
+			->first();
 
 		if (
-			!empty($room) &&
-			$room->users->count() == count($users) &&
-			$room->users->pluck('id')->diff($users)->count() == 0
+			!empty($matchingRoom)
 		) {
-			$data =  $this->transform($room);
+			$data =  $this->transform(ChatRoom::find($matchingRoom->chat_room_id));
 			return $this->respondOk($data);
 		} else {
 			$room = ChatRoom::firstOrCreate(['name' => $request->name]);

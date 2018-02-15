@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-class ChatRoomUser extends Pivot
+class ChatRoomUser extends Model
 {
-    protected $table = 'chat_room_user';
+	protected $table = 'chat_room_user';
+	public $timestamps = false;
 
     public function user()
 	{

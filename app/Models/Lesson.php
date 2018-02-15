@@ -48,8 +48,8 @@ class Lesson extends Model
 		$user = \Auth::user();
 		if ($user) {
 			$lessonAccess = $this->userAccess->where('user_id', $user->id)->first();
-			if ($lessonAccess) {
-				return true;
+			if (!is_null($lessonAccess)) {
+				return $lessonAccess->access;
 			}
 		}
 

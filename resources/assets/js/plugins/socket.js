@@ -8,8 +8,6 @@ export const SOCKET_EVENT_JOIN_ROOM = 'join-room'
 export const SOCKET_EVENT_JOIN_ROOM_SUCCESS = 'join-room-success'
 export const SOCKET_EVENT_LEAVE_ROOM = 'leave-room'
 
-const SOCKET_EVENTS = [SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED]
-
 const WnlSocket = {
     install(Vue, options) {
         const onSocketError = (error) => {

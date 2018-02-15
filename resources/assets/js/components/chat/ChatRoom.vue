@@ -180,8 +180,10 @@
 				this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
 				this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.addMessage)
 			},
-			pushMessage({message}) {
-				this.messages.push(message)
+			pushMessage({message, room}) {
+				if (this.room.channel === room) {
+					this.messages.push(message)
+				}
 			},
 			addMessage(data) {
 				if (data.sent) {

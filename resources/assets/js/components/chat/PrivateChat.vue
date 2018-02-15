@@ -38,6 +38,7 @@
 				<wnl-private-chat-message-form
 					:loaded="true"
 					:roomId="room.id"
+					:users="users"
 					ref="messageForm"
 				></wnl-private-chat-message-form>
 			</div>

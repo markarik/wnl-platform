@@ -18,6 +18,7 @@ const getters = {
 	sortedRooms: state => state.sortedRooms,
 	profiles: state => state.profiles,
 	getRoomById: state => id => state.rooms[id] || {},
+	getProfileById: state => id => state.profiles[id] || {},
 	getRoomProfiles: (state, getters) => id => {
 		const profileIds = getters.getRoomById(id).profiles || []
 
@@ -60,7 +61,7 @@ const mutations = {
 		set (state, 'sortedRooms', data.sortedRooms)
 		set (state, 'profiles', data.profiles)
 	},
-	[types.CHAT_ADD_ROOM] (state, payload) {
+	[types.CHAT_MESSAGES_ADD_ROOM] (state, payload) {
 		state.sortedRooms.splice(0, 0, payload.data.id)
 		set (state.rooms, payload.data.id, payload.data)
 		set (state.profiles, payload.profile.id, payload.profile)
@@ -72,7 +73,7 @@ const mutations = {
 		set(state, 'ready', isReady)
 	},
 	[types.CHAT_MESSAGES_ADD_MESSAGE] (state, {message, room}) {
-		state.rooms[room].messages.splice(0, 0, message)
+		state.rooms[room].messages.push(message)
 	}
 }
 
@@ -88,10 +89,23 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
-	onNewMessage({commit}, {sent, ...payload}) {
-		if (sent) {
-			commit(types.CHAT_MESSAGES_ADD_MESSAGE, payload)
+	onNewMessage({commit, getters, rootGetters}, {room, users: profiles, message}) {
+
+		if (!getters.getRoomById(room).id) {
+			const profile = Object.values(profiles)
+				.find(profile => profile.user_id !== rootGetters.currentUser.id)
+
+			commit(types.CHAT_MESSAGES_ADD_ROOM, {
+				data: {
+					messages: [],
+					profiles: profiles.map(profile => profile.id),
+					id: room
+				},
+				profile
+			})
 		}
+
+		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {room, message})
 	},
 	async createNewRoom({commit, rootGetters}, {users}) {
 		const {data: {included, ...data}} = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
@@ -110,7 +124,7 @@ const actions = {
 			profile
 		}
 
-		commit(types.CHAT_ADD_ROOM, payload)
+		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
 
 		return data
 	}

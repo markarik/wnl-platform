@@ -48,7 +48,7 @@
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
-	import {SOCKET_EVENT_MESSAGE_PROCESSED, SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
 
 	export default {
 		name: 'App',
@@ -66,7 +66,6 @@
 				'alerts',
 				'modalVisible'
 			]),
-			...mapGetters('chatMessages', ['sortedRooms']),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
 			},
@@ -98,9 +97,9 @@
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
 
 					// Setup Chat
-					Promise.all(this.sortedRooms.map(room => this.$socketJoinRoom(room)))
+					const userChannel = `user-${this.currentUserId}`
+					this.$socketJoinRoom(userChannel)
 						.then(() => {
-							this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.onNewMessage)
 							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)
 						})
 

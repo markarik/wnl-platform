@@ -18,7 +18,6 @@
 					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
 					:keyboard="keyboard"
 					:toolbar="toolbar"
-					:allowMentions=true
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
@@ -42,14 +41,27 @@
 		align-items: center
 </style>
 <script>
-	import { mapActions, mapGetters } from 'vuex'
+	import { mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 	import _ from 'lodash';
 	import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED} from 'js/plugins/socket'
 
 	export default{
-		props: ['loaded', 'roomId'],
+		props: {
+			loaded: {
+				type: Boolean,
+				default: true
+			},
+			roomId: {
+				type: Number,
+				required: true
+			},
+			users: {
+				type: Array,
+				required: true
+			}
+		},
 		data() {
 			return {
 				error: '',
@@ -66,9 +78,7 @@
 							}
 						}
 					}
-				},
-				isWaitingToSendMentions: false,
-				mentions: []
+				}
 			}
 		},
 		components: {
@@ -83,10 +93,10 @@
 				'currentUser'
 			]),
 			formats() {
-				return ['bold', 'italic', 'underline', 'link', 'mention']
+				return ['bold', 'italic', 'underline', 'link']
 			},
 			sendingDisabled() {
-				return this.message.length === 0 && this.mentions.length === 0
+				return this.message.length === 0
 			},
 			toolbar() {
 				return [
@@ -100,7 +110,6 @@
 			}
 		},
 		methods: {
-			...mapActions(['saveMentions']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
@@ -111,61 +120,16 @@
 					message: {
 						user: this.currentUser,
 						content: this.content
-					}
+					},
+					users: this.users
 				})
-			},
-			getMentions() {
-				if (!this.quillEditor) return []
-				const mentions = this.quillEditor
-					.$el
-					.querySelectorAll('.quill-mention')
-
-				return _.uniq(Array.prototype.map.call(mentions, el => el.dataset.id))
-			},
-			getMentionsData(userIds, message) {
-				return {
-					mentioned_users: userIds,
-					subject: {
-						type: 'chat_message',
-						id: `${message.time}${this.currentUserId}`,
-						text: message.content,
-						channel: this.room.channel
-					},
-					objects: {
-						type: "chat_channel",
-						text: this.room.name
-					},
-					context: {
-						name: this.$route.name,
-						params: this.$route.params
-					},
-					actors: this.currentUser
-				}
-			},
-			suppressEnter(event) {
-				event.preventDefault()
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
-				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
 			},
 			processMessage(data) {
-				if (data.sent) {
-					const mentions = this.getMentions()
-
-					if (mentions && mentions.length) {
-						this.saveMentions(
-							this.getMentionsData(mentions, data.message)
-						)
-					}
-
-					this.mentions = []
-					this.quillEditor.clear();
-				} else {
-					this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
-				}
-				this.isWaitingToSendMentions = false
+				this.quillEditor.clear();
 			}
 		},
 		mounted () {

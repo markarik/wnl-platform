@@ -32,14 +32,12 @@
 				/>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column">
-			<div class="scrollable-main-container chat-container">
-				<wnl-private-chat
-					:room="currentRoom"
-					:users="currentRoomUsers"
-					v-if="currentRoom.id"
-				></wnl-private-chat>
-			</div>
+		<div class="scrollable-main-container chat-container">
+			<wnl-private-chat
+				:room="currentRoom"
+				:users="currentRoomUsers"
+				v-if="currentRoom.id"
+			></wnl-private-chat>
 		</div>
 	</div>
 </template>

@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="wnl-private-chat">
 		<div class="chat-title">
-			{{chatTitle.display_name}}
+			{{chatTitle}}
 		</div>
 		<div class="wnl-chat">
 			<div class="wnl-chat-messages">
@@ -108,7 +108,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['isOverlayVisible', 'currentUserId']),
+			...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
 			...mapGetters('chatMessages', ['getProfileByUserId']),
 			isAuthorUnique() {
 				return this.room.messages.map((message, index) => {
@@ -122,11 +122,10 @@
 				})
 			},
 			chatTitle() {
-				return this.users.find((key) => {
-					if (key.user_id !== this.currentUserId) {
-						return key
-					}
+				const matchingProfiles = this.users.find((profile) => {
+					return profile.user_id !== this.currentUserId
 				})
+				return matchingProfiles ? matchingProfiles.display_name : this.currentUserDisplayName
 			}
 		},
 		methods: {

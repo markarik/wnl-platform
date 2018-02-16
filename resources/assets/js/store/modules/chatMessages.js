@@ -47,7 +47,7 @@ const getters = {
 		return Object.values(state.rooms).find(room => {
 			const roomProfiles = room.profiles || []
 
-			roomProfiles.length === 2 && _.difference(roomProfiles, [rootGetters.currentUser.id, profile.id]).length === 0
+			return roomProfiles.length === 2 && _.difference(roomProfiles, [rootGetters.currentUser.id, profile.id]).length === 0
 		}) || {}
 	},
 	userPrivateChannel: (state, getters, rootState, rootGetters) => `private-channel-${rootGetters.currentUserId}`,

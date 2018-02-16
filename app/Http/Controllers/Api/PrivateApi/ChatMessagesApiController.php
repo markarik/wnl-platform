@@ -44,7 +44,7 @@ class ChatMessagesApiController extends ApiController
 		$roomIds = $request->get('rooms');
 		$messages = ChatMessage::select()
 			->whereIn('chat_room_id', $roomIds)
-			->orderBy('time', 'desc');
+			->orderBy('time', 'asc');
 
 		return $this->transformAndRespond($messages);
 	}

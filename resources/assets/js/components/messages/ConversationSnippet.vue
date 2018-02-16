@@ -76,6 +76,7 @@
 	import { shortTimeFromMs } from 'js/utils/time'
 	import { mapGetters } from 'vuex'
 	import MessageLink from "js/components/global/MessageLink";
+	import {last} from 'lodash'
 
 	export default {
 		name: 'ConversationSnippet',
@@ -104,7 +105,7 @@
 					return ''
 				}
 
-				return this.messages[0].content
+				return last(this.messages).content
 			},
 			isActive() {
 				return this.$route.query.roomId === this.room.id

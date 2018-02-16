@@ -62,9 +62,13 @@ const mutations = {
 		set (state, 'profiles', data.profiles)
 	},
 	[types.CHAT_MESSAGES_ADD_ROOM] (state, payload) {
-		state.sortedRooms.splice(0, 0, payload.data.id)
-		set (state.rooms, payload.data.id, payload.data)
-		set (state.profiles, payload.profile.id, payload.profile)
+		state.sortedRooms.splice(0, 0, payload.room.id)
+		set (state.rooms, payload.room.id, payload.room)
+	},
+	[types.CHAT_MESSAGES_ADD_PROFILES] (state, profiles) {
+		profiles.forEach(profile => {
+			set(state.profiles, profile.id, profile)
+		})
 	},
 	[types.CHAT_MESSAGES_SET_ROOM_MESSAGES] (state, {roomId, messages}) {
 		set(state.rooms[roomId], 'messages', messages)
@@ -83,6 +87,8 @@ const actions = {
 		const payload = await fetchUserRooms()
 		commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
 
+		if (payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
+
 		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
 		Object.keys(roomsWithMessages)
 			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: roomsWithMessages[roomId]}))
@@ -92,41 +98,35 @@ const actions = {
 	onNewMessage({commit, getters, rootGetters}, {room, users: profiles, message}) {
 
 		if (!getters.getRoomById(room).id) {
-			const profile = Object.values(profiles)
-				.find(profile => profile.user_id !== rootGetters.currentUser.id)
-
 			commit(types.CHAT_MESSAGES_ADD_ROOM, {
-				data: {
+				room: {
 					messages: [],
 					profiles: profiles.map(profile => profile.id),
 					id: room
-				},
-				profile
+				}
 			})
+			commit(types.CHAT_MESSAGES_ADD_PROFILES, profiles)
 		}
 
 		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {room, message})
 	},
-	async createNewRoom({commit, rootGetters}, {users}) {
-		const {data: {included, ...data}} = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
+	async createNewRoom({commit, rootGetters, state}, {users}) {
+		const {data: {included, ...room}} = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
 			name: `private-${users.join('-')}`,
 			users
 		})
 
-		const profile = Object.values(included.profiles)
-			.find(profile => profile.user_id !== rootGetters.currentUser.id)
-
 		const payload = {
-			data: {
-				...data,
+			room: {
+				...room,
 				messages: []
-			},
-			profile
+			}
 		}
 
 		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
+		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
 
-		return data
+		return room
 	}
 }
 

@@ -95,7 +95,8 @@
 			},
 			messages: {
 				required: false,
-				type: Array
+				type: Array,
+				default: () => ([])
 			}
 		},
 		computed: {

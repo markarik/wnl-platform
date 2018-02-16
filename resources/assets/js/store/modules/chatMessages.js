@@ -30,17 +30,11 @@ const getters = {
 		return getters.getRoomById(id).messages || []
 	},
 	getProfileByUserId: state => id => {
-		// i added this as a quick fix for checking a certain value in getRoomForPrivateChat,
-		// if conditional couldn't process !profile.id
-		if (Object.values(state.profiles).find(profile => profile.user_id === id)) {
-			return Object.values(state.profiles).find(profile => profile.user_id === id)
-		} else {
-			return 0
-		}
+		return Object.values(state.profiles).find(profile => profile.user_id === id) || {}
 	},
 	getRoomForPrivateChat: (state, getters, rootState, rootGetters) => userId => {
 		const profile = getters.getProfileByUserId(userId)
-		if (profile === 0) {
+		if (!profile.id) {
 			return {}
 		}
 
@@ -78,6 +72,11 @@ const mutations = {
 	},
 	[types.CHAT_MESSAGES_ADD_MESSAGE] (state, {message, room}) {
 		state.rooms[room].messages.push(message)
+	},
+	[types.CHAT_MESSAGES_CHANGE_ROOM_SORTING] (state, {room, newIndex}) {
+		const currentIndex = state.sortedRooms.indexOf(room)
+		state.sortedRooms.splice(currentIndex, 1)
+		state.sortedRooms.splice(newIndex, 0, room)
 	}
 }
 
@@ -109,6 +108,7 @@ const actions = {
 		}
 
 		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {room, message})
+		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room, newIndex: 0})
 	},
 	async createNewRoom({commit, rootGetters, state}, {users}) {
 		const {data: {included, ...room}} = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {

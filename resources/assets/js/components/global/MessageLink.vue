@@ -1,10 +1,11 @@
 <template>
 	<router-link
-			:to="{ name: 'messages', query: {roomId: roomIdParam} }"
-			v-if="roomIdParam"
+		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
+		v-if="roomIdParam"
 	>
 		<slot></slot>
 	</router-link>
+	<a @click="createNewRoomAndRedirect" v-else><slot></slot></a>
 </template>
 
 <script>
@@ -33,22 +34,25 @@
 			...mapGetters(['currentUserId']),
 		},
 		methods: {
-			...mapActions('chatMessages', ['createNewRoom'])
+			...mapActions('chatMessages', ['createNewRoom']),
+			async createNewRoomAndRedirect() {
+				const payload = {
+					users: [this.currentUserId, this.userId]
+				}
+				const room = await this.createNewRoom(payload)
+				this.$router.push({
+					name: 'messages',
+					query: {roomId: room.id}
+				})
+			}
 		},
-		mounted() {
+		created() {
 			if (this.roomId) {
 				this.roomIdParam = this.roomId
 			} else {
 				const room = this.getRoomForPrivateChat(this.userId)
 				if (room.id) {
 					this.roomIdParam = room.id
-				} else {
-					const payload = {
-						users: [this.currentUserId, this.userId]
-					}
-					this.createNewRoom(payload).then((data) => {
-						this.roomIdParam = data.id
-					})
 				}
 			}
 		}

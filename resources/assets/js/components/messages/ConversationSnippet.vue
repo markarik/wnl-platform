@@ -6,13 +6,11 @@
 		:class="{'active-in-route': isActive}"
 	>
 		<figure class="media-left">
-
 			<wnl-avatar
 				:fullName="profile.display_name"
 				:url="profile.avatar"
 				size="large">
 			</wnl-avatar>
-
 		</figure>
 		<div class="media-content">
 			<div class="content">

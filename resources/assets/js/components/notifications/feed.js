@@ -4,7 +4,7 @@
  */
 
 import _ from 'lodash'
-import { mapActions, mapGetters } from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 export const feed = {
 	computed: {
@@ -46,7 +46,8 @@ export const feed = {
 			return typeof components === 'object' &&
 				Object.keys(components).indexOf(this.getEventComponent(message)) > -1
 		},
-		loadMore() {
+		loadMore(event) {
+			event.stopPropagation()
 			if (this.fetching) return;
 
 			const extraParams = this.notificationsParams || {}

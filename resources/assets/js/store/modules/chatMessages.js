@@ -111,10 +111,11 @@ const actions = {
 		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room, newIndex: 0})
 	},
 	async createNewRoom({commit, rootGetters, state}, {users}) {
-		const {data: {included, ...room}} = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
+		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
 			name: `private-${users.join('-')}`,
 			users
 		})
+		const {included, ...room} = response.data
 
 		const payload = {
 			room: {

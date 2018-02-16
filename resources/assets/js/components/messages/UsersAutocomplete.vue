@@ -10,13 +10,14 @@
 			:ref="item.id"
 		/>
 	</div>
-	
+
 </template>
 
 <style lang="sass">
 	.wnl-users-autocomplete
 		display: flex
 		flex-direction: column
+		overflow-y: auto
 
 </style>
 

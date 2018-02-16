@@ -41,10 +41,5 @@
 				this.$refs[item.id][0].$el.click()
 			}
 		},
-		watch:{
-			items(){
-				this.items[0].active = true
-			}
-		}
 	}
 </script>

@@ -3,6 +3,7 @@
 		:userId="profile.user_id"
 		:roomId="roomId"
 		class="conversation-snippet"
+		:class="{'active-in-route': isActive}"
 	>
 		<figure class="media-left">
 
@@ -84,9 +85,12 @@
 		props: {
 			room: {
 				required: false,
+				default: () => ({})
 			},
 			profiles: {
 				required: false,
+				type: Array|Object,
+				default: () => ([])
 			},
 			messages: {
 				required: false,

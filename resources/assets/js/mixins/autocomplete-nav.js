@@ -60,6 +60,7 @@ export default {
 		},
 
 		onEnter(evt) {
+			this.$emit('close')
 			const activeIndex = this.getActiveItem();
 
 			if (activeIndex < 0) return

@@ -2,6 +2,7 @@
 	<router-link
 		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
 		v-if="roomIdParam"
+		@click="$emit('close')"
 	>
 		<slot></slot>
 	</router-link>
@@ -36,6 +37,7 @@
 		methods: {
 			...mapActions('chatMessages', ['createNewRoom']),
 			async createNewRoomAndRedirect() {
+				this.$emit('close')
 				const payload = {
 					users: [this.currentUserId, this.userId]
 				}

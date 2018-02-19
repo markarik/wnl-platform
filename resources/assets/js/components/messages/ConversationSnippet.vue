@@ -4,6 +4,7 @@
 		:roomId="roomId"
 		class="conversation-snippet"
 		:class="{'active-in-route': isActive}"
+		@close="onClose"
 	>
 		<figure class="media-left">
 			<wnl-avatar
@@ -132,6 +133,9 @@
 		methods: {
 			time(stamp){
 				return shortTimeFromMs(stamp)
+			},
+			onClose() {
+				this.$emit('close')
 			}
 		}
 	}

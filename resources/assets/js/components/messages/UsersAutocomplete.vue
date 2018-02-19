@@ -8,6 +8,7 @@
 			:profiles="[item, currentUser]"
 			:key="item.id"
 			:ref="item.id"
+			@close="onClose"
 		/>
 	</div>
 
@@ -43,8 +44,10 @@
 			...mapGetters(['currentUser'])
 		},
 		methods: {
-			onItemChosen(item) {
+			onClose() {
 				this.$emit('close')
+			},
+			onItemChosen(item) {
 				this.$refs[item.id][0].$el.click()
 			}
 		},

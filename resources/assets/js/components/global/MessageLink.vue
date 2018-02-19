@@ -2,7 +2,7 @@
 	<router-link
 		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
 		v-if="roomIdParam"
-		@click="$emit('close')"
+		@click.native="$emit('close')"
 	>
 		<slot></slot>
 	</router-link>

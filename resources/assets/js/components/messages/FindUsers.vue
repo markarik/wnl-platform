@@ -88,7 +88,6 @@
 				const { enter, arrowUp, arrowDown, esc } = KEYS
 
 				if (this.results.length === 0) {
-
 					return
 				}
 

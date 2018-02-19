@@ -28,12 +28,15 @@
 		&-input
 			display: flex
 			align-items: center
+			width: 100%
 
 			input
 				+simple-input
 				width: 90%
 				margin: auto
 				text-align: left
+				margin-top: $margin-small
+				margin-bottom: $margin-small
 
 				&:focus
 					outline: none

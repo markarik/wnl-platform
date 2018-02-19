@@ -9,20 +9,19 @@
 			    <div class="rooms-header">
 					<header>{{$t('messages.dashboard.privateMessages')}}</header>
 					<div class="rooms-list-controls">
-					<span
-						class="rooms-list-controls-item"
-						:class="{'is-active': userSearchVisible}"
-						@click="toggleUserSearch"
-					>
-						<i class="fa fa-search" title="Szukaj osób"></i>
-						<span class="text">{{$t('messages.search.searchButton')}}</span>
+					<span class="rooms-list-controls-item is-active" @click="toggleUserSearch">
+						<div class="search-icon" v-if="!userSearchVisible">
+							<i class="fa fa-search" :title="$t('messages.search.searchButton')"></i>
+							<span class="text">{{$t('messages.search.searchButton')}}</span>
+						</div>
+						<div class="close-icon" v-else>
+							<i class="fa fa-times" :title="$t('messages.search.closeButton')"></i>
+							<span class="text">{{$t('messages.search.closeButton')}}</span>
+						</div>
 					</span>
-						<!--<span class="icon">-->
-							<!--<i class="fa fa-plus" title="Dodaj osoby do rozmowy"></i>-->
-						<!--</span>-->
 					</div>
 				</div>
-				<wnl-find-user
+				<wnl-find-users
 					v-if="userSearchVisible"
 					@close="toggleUserSearch"
 				/>
@@ -64,30 +63,34 @@
 			font-size: $font-size-minus-1
 			display: flex
 			justify-content: space-between
+			border-bottom: $border-light-gray
 
 			header
 				margin: $margin-base
 
-			.rooms-list-controls
+			.rooms-list-controls-item
+				padding: $margin-small
 				display: flex
-				flex-direction: row
+				align-items: center
+				height: 100%
 
-				&-item
-					padding: $margin-small
+				.text
+					text-transform: uppercase
+					font-size: $font-size-minus-3
+
+				&:hover, &.is-active
+					background: $color-background-lighter-gray
+					cursor: pointer
+
+				.search-icon
 					display: flex
 					flex-direction: column
-					align-content: center
-					justify-content: center
-					align-items: center
-					height: 100%
 
-					.text
-						text-transform: uppercase
-						font-size: $font-size-minus-3
+				.close-icon
+					display: flex
+					flex-direction: column
 
-					&:hover, &.is-active
-						background: $color-background-lighter-gray
-						cursor: pointer
+
 </style>
 
 <script>
@@ -116,7 +119,7 @@
 			'wnl-sidenav-slot': SidenavSlot,
 			'wnl-private-chat': PrivateChat,
 			'wnl-conversations-list': ConversationsList,
-			'wnl-find-user': FindUsers,
+			'wnl-find-users': FindUsers,
 		},
 		computed: {
 			...mapGetters([

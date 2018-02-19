@@ -109,7 +109,7 @@
 		},
 		computed: {
 			...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
-			...mapGetters('chatMessages', ['getProfileByUserId']),
+			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles']),
 			isAuthorUnique() {
 				return this.room.messages.map((message, index) => {
 					if (index === 0) return true

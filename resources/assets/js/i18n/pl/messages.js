@@ -6,5 +6,6 @@ export const messages = {
     search: {
         placeholder: 'Wyszukaj osoby...',
         searchButton: 'Szukaj',
+        closeButton: 'Zamknij',
     },
 }

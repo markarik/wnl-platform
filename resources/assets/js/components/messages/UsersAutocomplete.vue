@@ -5,7 +5,7 @@
 			v-for="item in items"
 			class="wnl-users-autocomplete__item"
 			:class="{ active: item.active }"
-			:profiles="item"
+			:profiles="[item, currentUser]"
 			:key="item.id"
 			:ref="item.id"
 		/>
@@ -24,6 +24,7 @@
 <script>
 	import autocomplete from 'js/mixins/autocomplete-nav'
 	import ConversationSnippet from 'js/components/messages/ConversationSnippet'
+	import {mapGetters} from 'vuex'
 
 	export default {
 		name: 'UsersAutocomplete',
@@ -36,6 +37,9 @@
 			'wnl-conversation-snippet': ConversationSnippet
 		},
 		mixins: [autocomplete],
+		computed: {
+			...mapGetters(['currentUser'])
+		},
 		methods: {
 			onItemChosen(item) {
 				this.$refs[item.id][0].$el.click()

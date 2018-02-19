@@ -56,7 +56,6 @@ const mutations = {
 		set (state, 'profiles', data.profiles)
 	},
 	[types.CHAT_MESSAGES_ADD_ROOM] (state, payload) {
-		state.sortedRooms.splice(0, 0, payload.room.id)
 		set (state.rooms, payload.room.id, payload.room)
 	},
 	[types.CHAT_MESSAGES_ADD_PROFILES] (state, profiles) {
@@ -75,8 +74,12 @@ const mutations = {
 	},
 	[types.CHAT_MESSAGES_CHANGE_ROOM_SORTING] (state, {room, newIndex}) {
 		const currentIndex = state.sortedRooms.indexOf(room)
-		state.sortedRooms.splice(currentIndex, 1)
-		state.sortedRooms.splice(newIndex, 0, room)
+		if (currentIndex < 0) {
+			state.sortedRooms.splice(0,0, room)
+		} else {
+			state.sortedRooms.splice(currentIndex, 1)
+			state.sortedRooms.splice(newIndex, 0, room)
+		}
 	}
 }
 
@@ -125,6 +128,7 @@ const actions = {
 		}
 
 		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
+		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room: room.id, newIndex: 0})
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
 
 		return room

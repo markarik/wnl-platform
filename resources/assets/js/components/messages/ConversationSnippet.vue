@@ -16,7 +16,11 @@
 		<div class="media-content">
 			<div class="content">
 				<div class="conversation-meta">
-					<div class="conversation-names">
+					<div class="conversation-names" v-if="bothNames">
+						<span class="display-name">{{ profile.display_name }}</span>
+						<span class="full-name">{{ profile.full_name }}</span>
+					</div>
+					<div class="display-name-only" v-else>
 						<strong>{{ profile.display_name }}</strong>
 					</div>
 					<div class="conversation-time" v-if="room && room.last_message_time">
@@ -53,11 +57,18 @@
 				justify-content: space-between
 
 				.conversation-names
+					display: flex
 					min-width: 0
 					flex: 1 1 0%
 					overflow: hidden
 					white-space: nowrap
 					text-overflow: ellipsis
+					flex-direction: column
+					.display-name
+						font-size: $font-size-base
+						font-weight: bold
+					.full-name
+						font-size: $font-size-minus-2
 
 				.conversation-time
 					display: flex
@@ -97,6 +108,11 @@
 				required: false,
 				type: Array,
 				default: () => ([])
+			},
+			bothNames: {
+				required: false,
+				type: Boolean,
+				default: false
 			}
 		},
 		computed: {

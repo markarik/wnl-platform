@@ -2,13 +2,14 @@
 
 	<div class="wnl-users-autocomplete">
 		<wnl-conversation-snippet
-			v-for="item in items"
+			v-for="(item, index) in items"
 			class="wnl-users-autocomplete__item"
 			:class="{ active: item.active }"
 			:profiles="[item, currentUser]"
 			:key="item.id"
 			:ref="item.id"
 			@close="onClose"
+			:bothNames="true"
 		/>
 	</div>
 
@@ -20,7 +21,6 @@
 		flex-direction: column
 		overflow-x: hidden
 		overflow-y: auto
-
 
 </style>
 

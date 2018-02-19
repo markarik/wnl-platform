@@ -10,13 +10,14 @@
 			:ref="item.id"
 		/>
 	</div>
-	
+
 </template>
 
 <style lang="sass">
 	.wnl-users-autocomplete
 		display: flex
 		flex-direction: column
+		overflow-y: auto
 
 </style>
 
@@ -40,10 +41,5 @@
 				this.$refs[item.id][0].$el.click()
 			}
 		},
-		watch:{
-			items(){
-				this.items[0].active = true
-			}
-		}
 	}
 </script>

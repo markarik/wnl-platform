@@ -98,7 +98,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserId']),
+			...mapGetters(['currentUserId', 'currentUser']),
 			lastMessageContent() {
 				if (!this.messages || !this.messages.length) {
 					return ''
@@ -115,7 +115,7 @@
 						return this.profiles[0]
 					}
 
-					return this.profiles.find(profile => profile.user_id !== this.currentUserId)
+					return this.profiles.find(profile => profile.user_id !== this.currentUserId) || this.currentUser
 				}
 
 				return this.profiles

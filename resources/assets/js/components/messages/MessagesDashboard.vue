@@ -64,6 +64,8 @@
 			display: flex
 			justify-content: space-between
 			border-bottom: $border-light-gray
+			overflow-y: hidden
+			min-height: $margin-huge
 
 			header
 				margin: $margin-base

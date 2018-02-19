@@ -37,6 +37,7 @@
 		overflow: hidden
 		padding: $margin-medium
 		cursor: pointer
+		min-height: $min-height
 
 		&:hover, &.active-in-route, &.active
 			background-color: $color-background-lightest-gray

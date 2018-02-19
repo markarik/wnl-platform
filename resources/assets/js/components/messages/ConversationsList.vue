@@ -15,6 +15,8 @@
 	.conversation-list
 		display: flex
 		flex-direction: column
+		overflow-x: hidden
+		overflow-y: auto
 </style>
 
 <script>

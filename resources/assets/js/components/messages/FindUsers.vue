@@ -12,6 +12,7 @@
 		</div>
 
 		<wnl-users-autocomplete
+			class="scrollable-list"
 			:items="results"
 			ref="autocomplete"
 		/>
@@ -25,10 +26,13 @@
 
 
 	.wnl-find-users
+		overflow-x: hidden
+		overflow-y: auto
 		&-input
 			display: flex
 			align-items: center
 			width: 100%
+			overflow: hidden
 
 			input
 				+simple-input
@@ -37,6 +41,7 @@
 				text-align: left
 				margin-top: $margin-small
 				margin-bottom: $margin-small
+				min-height: $margin-big
 
 				&:focus
 					outline: none
@@ -92,7 +97,6 @@
 				}
 
 				if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-//					this.onOpen()
 					return
 				}
 

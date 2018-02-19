@@ -17,7 +17,9 @@
 	.wnl-users-autocomplete
 		display: flex
 		flex-direction: column
+		overflow-x: hidden
 		overflow-y: auto
+
 
 </style>
 

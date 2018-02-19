@@ -25,10 +25,7 @@
 					v-if="userSearchVisible"
 					@close="toggleUserSearch"
 				/>
-				<wnl-conversations-list
-					v-else
-					@roomSwitch="switchRoom"
-				/>
+				<wnl-conversations-list v-else/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container chat-container">
@@ -145,9 +142,16 @@
 			roomFromRoute() {
 				const roomId = this.$route.query.roomId
 				if (roomId) {
-					this.switchRoom({room: this.getRoomById(roomId), users: this.getRoomProfiles(roomId)})
-				} else if (this.$route.query.roomName) {
-					// otworz pokoj o nazwie = roomName
+					const room = this.getRoomById(roomId)
+					if (room.id) {
+						this.switchRoom({room, users: this.getRoomProfiles(roomId)})
+					} else {
+						const {roomId, ...query} = this.$route.query
+						this.$router.replace({
+							...this.$route,
+							query
+						})
+					}
 				}
 			},
 			toggleUserSearch(){

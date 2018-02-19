@@ -90,7 +90,7 @@
 			},
 			profiles: {
 				required: false,
-				type: Array|Object,
+				type: Array,
 				default: () => ([])
 			},
 			messages: {
@@ -112,15 +112,11 @@
 				return this.$route.query.roomId === this.room.id
 			},
 			profile() {
-				if (this.profiles instanceof Array) {
-					if (this.profiles.length === 1) {
-						return this.profiles[0]
-					}
-
-					return this.profiles.find(profile => profile.user_id !== this.currentUserId) || this.currentUser
+				if (this.profiles.length === 1) {
+					return this.profiles[0]
 				}
 
-				return this.profiles
+				return this.profiles.find(profile => profile.user_id !== this.currentUserId) || this.currentUser
 			},
 			roomId() {
 				if (!this.room) {

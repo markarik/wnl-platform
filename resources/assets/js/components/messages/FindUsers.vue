@@ -15,6 +15,7 @@
 			class="scrollable-list"
 			:items="results"
 			ref="autocomplete"
+			@close="onClose"
 		/>
 
 	</div>

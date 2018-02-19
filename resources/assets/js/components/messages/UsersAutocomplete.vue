@@ -44,6 +44,7 @@
 		},
 		methods: {
 			onItemChosen(item) {
+				this.$emit('close')
 				this.$refs[item.id][0].$el.click()
 			}
 		},

@@ -81,6 +81,7 @@
 				axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
 					.then(res => {
 						if (res.data.length === 0) return
+						this.$set(res.data[0], 'active', true);
 						this.results = res.data
 					})
 			}, 300),

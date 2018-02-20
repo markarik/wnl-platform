@@ -3,6 +3,7 @@
 		<wnl-sidenav-slot
 			:isVisible="isSidenavVisible"
 			:isDetached="!isSidenavMounted"
+			:isMaxWidth="true"
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
@@ -57,6 +58,7 @@
 		overflow: hidden
 		flex: 1
 		flex-direction: column
+		width: 100%
 
 		.rooms-header
 			color: $color-gray-dimmed

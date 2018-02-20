@@ -66,9 +66,10 @@
 					flex-direction: column
 					.display-name
 						font-size: $font-size-base
-						font-weight: bold
+						font-weight: $font-weight-bold
 					.full-name
-						font-size: $font-size-minus-2
+						font-size: $font-size-minus-1
+						font-weight: $font-weight-bold
 
 				.conversation-time
 					display: flex

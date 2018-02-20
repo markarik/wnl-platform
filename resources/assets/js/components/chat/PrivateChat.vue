@@ -132,6 +132,9 @@
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)
 			}
+		},
+		mounted() {
+			this.$refs.messageForm.quillEditor.quill.focus()
 		}
 	}
 

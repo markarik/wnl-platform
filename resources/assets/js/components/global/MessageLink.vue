@@ -2,7 +2,6 @@
 	<router-link
 		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
 		v-if="roomIdParam"
-		@click.native="$emit('close')"
 	>
 		<slot></slot>
 	</router-link>
@@ -37,7 +36,6 @@
 		methods: {
 			...mapActions('chatMessages', ['createNewRoom']),
 			async createNewRoomAndRedirect() {
-				this.$emit('close')
 				const payload = {
 					users: [this.currentUserId, this.userId]
 				}
@@ -46,6 +44,18 @@
 					name: 'messages',
 					query: {roomId: room.id}
 				})
+				return room
+			},
+			async navigate() {
+				if (this.roomId) {
+					return this.$router.push({name: 'messages', query: {roomId: this.roomIdParam}})
+				} else {
+					const room = this.getRoomForPrivateChat(this.userId)
+					if (room.id) {
+						return this.$router.push({name: 'messages', query: {roomId: room.id}})
+					}
+					await this.createNewRoomAndRedirect()
+				}
 			}
 		},
 		created() {

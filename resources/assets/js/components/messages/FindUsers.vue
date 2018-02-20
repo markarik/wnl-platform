@@ -1,6 +1,5 @@
 <template lang="html">
 	<div class="wnl-find-users">
-
 		<div class="wnl-find-users-input">
 			<input
 				:placeholder="$t('messages.search.placeholder')"
@@ -10,14 +9,6 @@
 				ref="input"
 			/>
 		</div>
-
-		<wnl-users-autocomplete
-			class="scrollable-list"
-			:items="results"
-			ref="autocomplete"
-			@close="onClose"
-		/>
-
 	</div>
 </template>
 
@@ -53,7 +44,6 @@
 	import _ from 'lodash'
 	import axios from 'axios'
 	import {getApiUrl} from 'js/utils/env'
-	import UsersAutocomplete from 'js/components/messages/UsersAutocomplete'
 
 	const KEYS = {
 		enter: 13,
@@ -64,12 +54,8 @@
 
 	export default {
 		name: 'FindUsers',
-		components: {
-			'wnl-users-autocomplete': UsersAutocomplete
-		},
 		data() {
 			return {
-				results: () => [],
 				textInputValue: ''
 			}
 		},
@@ -82,15 +68,11 @@
 					.then(res => {
 						if (res.data.length === 0) return
 						this.$set(res.data[0], 'active', true);
-						this.results = res.data
+						this.$emit('updateItems', res.data)
 					})
 			}, 300),
 			onKeyDown(evt) {
 				const { enter, arrowUp, arrowDown, esc } = KEYS
-
-				if (this.results.length === 0) {
-					return
-				}
 
 				if (evt.keyCode === esc) {
 					this.onClose()
@@ -101,7 +83,7 @@
 					return
 				}
 
-				this.$refs.autocomplete.onKeyDown(evt)
+				this.$emit('onKeyDown', evt)
 				this.killEvent(evt)
 
 				//for some of the old browsers, returning false

@@ -3,6 +3,9 @@ export default {
 		hasItems() {
 			return this.items && this.items.length
 		},
+		activeIndex() {
+			return this.items.findIndex((item) => item.active)
+		}
 	},
 	methods: {
 		onKeyDown(evt) {
@@ -26,7 +29,7 @@ export default {
 		onArrowUp() {
 			if (!this.hasItems) return
 
-			const activeIndex = this.getActiveItem();
+			const activeIndex = this.activeIndex;
 			if (activeIndex <= 0) {
 				this.$set(this.items[this.items.length - 1], 'active', true);
 			} else {
@@ -43,7 +46,7 @@ export default {
 		onArrowDown() {
 			if (!this.hasItems) return
 
-			const activeIndex = this.getActiveItem();
+			const activeIndex = this.activeIndex;
 
 			if (activeIndex < 0 || activeIndex === this.items.length - 1) {
 				this.$set(this.items[0], 'active', true)
@@ -61,20 +64,16 @@ export default {
 
 		onEnter(evt) {
 			this.$emit('close')
-			const activeIndex = this.getActiveItem();
+			const activeIndex = this.activeIndex;
 
 			if (activeIndex < 0) return
 
 			this.$set(this.items[activeIndex], 'active', false)
-			this.onItemChosen(this.items[activeIndex])
+			this.onItemChosen(this.items[activeIndex], activeIndex)
 
 			evt.preventDefault();
 			evt.stopPropagation();
 			return false
-		},
-
-		getActiveItem() {
-			return this.items.findIndex((item) => item.active)
 		},
 	}
 }

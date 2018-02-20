@@ -7,26 +7,7 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
-			    <div class="rooms-header">
-					<header>{{$t('messages.dashboard.privateMessages')}}</header>
-					<div class="rooms-list-controls">
-					<span class="rooms-list-controls-item is-active" @click="toggleUserSearch">
-						<div class="search-icon" v-if="!userSearchVisible">
-							<i class="fa fa-search" :title="$t('messages.search.searchButton')"></i>
-							<span class="text">{{$t('messages.search.searchButton')}}</span>
-						</div>
-						<div class="close-icon" v-else>
-							<i class="fa fa-times" :title="$t('messages.search.closeButton')"></i>
-							<span class="text">{{$t('messages.search.closeButton')}}</span>
-						</div>
-					</span>
-					</div>
-				</div>
-				<wnl-find-users
-					v-if="userSearchVisible"
-					@close="toggleUserSearch"
-				/>
-				<wnl-conversations-list v-else/>
+				<wnl-conversations-list/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container chat-container">
@@ -56,40 +37,6 @@
 		flex: 1
 		flex-direction: column
 		width: 100%
-
-		.rooms-header
-			color: $color-gray-dimmed
-			font-size: $font-size-minus-1
-			display: flex
-			justify-content: space-between
-			border-bottom: $border-light-gray
-			overflow-y: hidden
-			min-height: $margin-huge
-
-			header
-				margin: $margin-base
-
-			.rooms-list-controls-item
-				padding: $margin-small
-				display: flex
-				align-items: center
-				height: 100%
-
-				.text
-					text-transform: uppercase
-					font-size: $font-size-minus-3
-
-				&:hover, &.is-active
-					background: $color-background-lighter-gray
-					cursor: pointer
-
-				.search-icon
-					display: flex
-					flex-direction: column
-
-				.close-icon
-					display: flex
-					flex-direction: column
 
 
 </style>
@@ -155,9 +102,6 @@
 						})
 					}
 				}
-			},
-			toggleUserSearch(){
-				this.userSearchVisible = !this.userSearchVisible
 			}
 		},
 		watch: {

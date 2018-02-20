@@ -6,7 +6,7 @@
 			class="wnl-users-autocomplete__item"
 			:class="{ active: item.active }"
 			:profiles="[item, currentUser]"
-			:key="item.id"
+			:key="index"
 			:ref="item.id"
 			@close="onClose"
 			:bothNames="true"

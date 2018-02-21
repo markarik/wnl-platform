@@ -58,6 +58,14 @@
 			align-items: center
 			height: 100%
 
+			.search-icon, .close-icon
+				display: flex
+				flex-direction: column
+				align-items: center
+				justify-content: center
+				height: 100%
+				min-width: 50px
+
 			.text
 				text-transform: uppercase
 				font-size: $font-size-minus-3
@@ -65,14 +73,6 @@
 			&:hover, &.is-active
 				background: $color-background-lighter-gray
 				cursor: pointer
-
-			.search-icon
-				display: flex
-				flex-direction: column
-
-			.close-icon
-				display: flex
-				flex-direction: column
 
 	.conversation-list
 		width: 100%

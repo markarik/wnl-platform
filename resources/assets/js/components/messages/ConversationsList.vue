@@ -108,15 +108,12 @@
 			...mapGetters('chatMessages', [
 				'sortedRooms',
 				'getProfileById',
-				'getRoomById'
+				'getRoomById',
+				'getInterlocutor'
 			]),
 			roomsToShow() {
 				return this.sortedRooms.map(roomId => {
-					const room = this.getRoomById(roomId)
-					return {
-						...room,
-						profiles: room.profiles.map(profileId => this.getProfileById(profileId))
-					}
+					return this.getRoomById(roomId)
 				})
 			}
 		},
@@ -133,8 +130,8 @@
 				}
 			},
 			getOtherUser(room) {
-				const profile = room.profiles.find(profile => profile.user_id !== this.currentUser.user_id)
-				if (profile) return profile
+				const profile = this.getInterlocutor(room.profiles)
+				if (profile.id) return profile
 				return this.currentUser
 			}
 		}

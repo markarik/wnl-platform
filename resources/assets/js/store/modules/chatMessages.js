@@ -32,6 +32,11 @@ const getters = {
 	getProfileByUserId: state => id => {
 		return Object.values(state.profiles).find(profile => profile.user_id === id) || {}
 	},
+	getInterlocutor: (state, getters, rootState, rootGetters) => profiles => {
+		const profileId = profiles.find(profileId => profileId !== rootGetters.currentUser.id)
+		if (profileId) return getters.getProfileById(profileId)
+		return {}
+	},
 	getRoomForPrivateChat: (state, getters, rootState, rootGetters) => userId => {
 		const profile = getters.getProfileByUserId(userId)
 		if (!profile.id) {
@@ -46,7 +51,6 @@ const getters = {
 				roomProfiles.includes(profile.id)
 		}) || {}
 	},
-	userPrivateChannel: (state, getters, rootState, rootGetters) => `private-channel-${rootGetters.currentUserId}`,
 	ready: state => state.ready
 }
 
@@ -116,9 +120,10 @@ const actions = {
 		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room, newIndex: 0})
 	},
 	async createNewRoom({commit, rootGetters, state}, {users}) {
-		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom?include=profiles'), {
+		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
 			name: `private-${users.join('-')}`,
-			users
+			include: 'profiles',
+			users,
 		})
 		const {included, ...room} = response.data
 
@@ -138,7 +143,11 @@ const actions = {
 }
 
 const fetchUserRooms = async () => {
-	const response = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms?include=profiles'))
+	const response = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
+		params: {
+			include: 'profiles'
+		}
+	})
 	if (response.data.length === 0) return {
 		rooms: {},
 		sortedRooms: [],

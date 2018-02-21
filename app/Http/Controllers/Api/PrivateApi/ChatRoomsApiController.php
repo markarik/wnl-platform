@@ -53,9 +53,7 @@ class ChatRoomsApiController extends ApiController
 			->havingRaw("COUNT(distinct user_id) = {$usersCount}")
 			->first();
 
-		if (
-			!empty($matchingRoom)
-		) {
+		if (!empty($matchingRoom)) {
 			$data =  $this->transform(ChatRoom::find($matchingRoom->chat_room_id));
 			return $this->respondOk($data);
 		} else {

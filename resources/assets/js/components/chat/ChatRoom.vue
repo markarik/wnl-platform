@@ -84,7 +84,8 @@
 				required: true,
 			},
 			switchRoom:{
-				required: false,
+				required: true,
+				type: Function
 			},
 			pullLimit:{
 				required: false,

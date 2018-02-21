@@ -49,10 +49,6 @@
 
 	export default{
 		props: {
-			loaded: {
-				type: Boolean,
-				default: true
-			},
 			roomId: {
 				type: Number,
 				required: true
@@ -134,9 +130,15 @@
 		},
 		mounted () {
 			this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
+			this.quillEditor.quill.focus()
 		},
 		beforeDestroy () {
 			this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
+		},
+		watch: {
+			roomId() {
+				this.roomId && this.quillEditor.quill.focus()
+			}
 		}
 	}
 </script>

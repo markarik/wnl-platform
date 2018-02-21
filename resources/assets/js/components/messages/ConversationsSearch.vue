@@ -8,7 +8,7 @@
 		<wnl-message-link
 				v-for="(room, index) in roomsToShow"
 				:key="index"
-				:userId="getOtherUser(room).user_id"
+				:userId="getInterlocutor(room).user_id"
 				:roomId="room.id"
 				@click="onClose"
 				ref="messageLink"
@@ -17,7 +17,7 @@
 				:key="index"
 				:room="room"
 				:isActive="index === activeIndex"
-				:profile="getOtherUser(room)"
+				:profile="getInterlocutor(room)"
 			/>
 		</wnl-message-link>
 	</div>
@@ -70,9 +70,9 @@
 			onUpdateItems(items) {
 				this.items = items
 			},
-			getOtherUser(room) {
-				const profile = room.profiles.find(profile => profile.user_id !== this.currentUser.user_id)
-				if (profile) return profile
+			getInterlocutor(room) {
+				const profile = room.profiles.find(profile => profile.user_id !== this.currentUser.user_id) || {}
+				if (profile.id) return profile
 				return this.currentUser
 			}
 		}

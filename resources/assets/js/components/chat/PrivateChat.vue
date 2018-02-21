@@ -36,7 +36,6 @@
 			</div>
 			<div class="wnl-chat-form">
 				<wnl-private-chat-message-form
-					:loaded="true"
 					:roomId="room.id"
 					:users="users"
 					ref="messageForm"
@@ -109,7 +108,7 @@
 		},
 		computed: {
 			...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
-			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles']),
+			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor']),
 			isAuthorUnique() {
 				return this.room.messages.map((message, index) => {
 					if (index === 0) return true
@@ -122,10 +121,8 @@
 				})
 			},
 			chatTitle() {
-				const matchingProfiles = this.users.find((profile) => {
-					return profile.user_id !== this.currentUserId
-				})
-				return matchingProfiles ? matchingProfiles.display_name : this.currentUserDisplayName
+				const matchingProfile = this.getInterlocutor(this.room.profiles)
+				return matchingProfile.display_name || this.currentUserDisplayName
 			}
 		},
 		methods: {
@@ -133,9 +130,6 @@
 				return this.getProfileByUserId(message.user_id)
 			}
 		},
-		mounted() {
-			this.$refs.messageForm.quillEditor.quill.focus()
-		}
 	}
 
 </script>

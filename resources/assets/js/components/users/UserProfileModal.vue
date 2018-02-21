@@ -102,13 +102,11 @@
 <script>
 import { mapActions } from 'vuex'
 
-import Avatar from 'js/components/global/Avatar'
 import MessageLink from 'js/components/global/MessageLink'
 
 export default {
 	name: 'UserProfileModal',
 	components: {
-		// 'wnl-avatar': Avatar,
 		'wnl-message-link': MessageLink,
 	},
 	props: ['author'],

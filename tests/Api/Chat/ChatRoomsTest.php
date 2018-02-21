@@ -7,7 +7,6 @@ namespace Tests\Api\Chat;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
 use App\Models\User;
-use App\Models\UserProfile;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 

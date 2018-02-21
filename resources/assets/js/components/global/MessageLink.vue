@@ -25,14 +25,20 @@
 				default: 0
 			}
 		},
-		data() {
-			return {
-				roomIdParam: 0
-			}
-		},
 		computed: {
 			...mapGetters('chatMessages', ['getRoomForPrivateChat']),
 			...mapGetters(['currentUserId']),
+			roomIdParam() {
+				if (this.roomId) {
+					return this.roomId
+				} else {
+					const room = this.getRoomForPrivateChat(this.userId)
+					if (room.id) {
+						return room.id
+					}
+				}
+				return 0
+			}
 		},
 		methods: {
 			...mapActions('chatMessages', ['createNewRoom']),
@@ -60,16 +66,6 @@
 					}
 					await this.createNewRoomAndRedirect()
 					this.$emit('navigate')
-				}
-			}
-		},
-		created() {
-			if (this.roomId) {
-				this.roomIdParam = this.roomId
-			} else {
-				const room = this.getRoomForPrivateChat(this.userId)
-				if (room.id) {
-					this.roomIdParam = room.id
 				}
 			}
 		}

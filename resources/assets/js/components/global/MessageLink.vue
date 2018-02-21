@@ -2,6 +2,7 @@
 	<router-link
 		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
 		v-if="roomIdParam"
+		@click="$emit('navigate')"
 	>
 		<slot></slot>
 	</router-link>
@@ -44,17 +45,21 @@
 					name: 'messages',
 					query: {roomId: room.id}
 				})
+				this.$emit('navigate')
 				return room
 			},
 			async navigate() {
 				if (this.roomId) {
+					this.$emit('navigate')
 					return this.$router.push({name: 'messages', query: {roomId: this.roomIdParam}})
 				} else {
 					const room = this.getRoomForPrivateChat(this.userId)
 					if (room.id) {
+						this.$emit('navigate')
 						return this.$router.push({name: 'messages', query: {roomId: room.id}})
 					}
 					await this.createNewRoomAndRedirect()
+					this.$emit('navigate')
 				}
 			}
 		},

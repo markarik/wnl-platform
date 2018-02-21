@@ -10,7 +10,7 @@
 				:key="index"
 				:userId="getInterlocutor(room).user_id"
 				:roomId="room.id"
-				@click="onClose"
+				@navigate="onClose"
 				ref="messageLink"
 			>
 			<wnl-conversation-snippet
@@ -65,7 +65,6 @@
 			},
 			onItemChosen(item, itemIndex) {
 				this.$refs.messageLink[itemIndex].navigate()
-					.then(this.onClose)
 			},
 			onUpdateItems(items) {
 				this.items = items

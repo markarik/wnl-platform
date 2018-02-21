@@ -16,6 +16,7 @@
 			<wnl-conversation-snippet
 				:key="index"
 				:room="room"
+				bothNames="true"
 				:isActive="index === activeIndex"
 				:profile="getInterlocutor(room)"
 			/>

@@ -46,6 +46,9 @@
 			min-width: 0
 			overflow: hidden
 
+			*
+				font-weight: $font-weight-regular
+
 			.conversation-meta
 				display: flex
 				overflow: hidden

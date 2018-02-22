@@ -132,9 +132,16 @@ class UserStateApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
+		$stats = self::countUserStats($userObject);
+
+		return $this->json($stats);
+	}
+
+	static function countUserStats(User $user)
+	{
 		// Ay Ay Ay Profile Id not User Id
-		$profileId = $userObject->profile->id;
-		$userId = $userObject->id;
+		$profileId = $user->profile->id;
+		$userId = $user->id;
 
 		$userTime = UserTime::where('user_id', $userId)->orderBy('created_at', 'desc')->first();
 		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)
@@ -154,7 +161,7 @@ class UserStateApiController extends ApiController
 			->whereIn('status', ['in-progress', 'complete'])
 			->count();
 
-		$stats = [
+		return [
 			'time'           => [
 				'minutes' => !empty($userTime) ? $userTime->time : 0,
 			],
@@ -173,8 +180,6 @@ class UserStateApiController extends ApiController
 				'total'  => $numberOfQuizQuestions,
 			],
 		];
-
-		return $this->json($stats);
 	}
 
 	static function getCourseRedisKey($userId, $courseId)

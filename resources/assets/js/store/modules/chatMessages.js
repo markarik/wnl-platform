@@ -1,4 +1,6 @@
 import {set} from 'vue'
+import {uniq} from 'lodash'
+
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 
@@ -41,6 +43,14 @@ const getters = {
 		const profile = getters.getProfileByUserId(userId)
 		if (!profile.id) {
 			return {}
+		}
+
+		if (profile.id === rootGetters.currentUser.id) {
+			return Object.values(state.rooms).find(room => {
+				const roomProfiles = room.profiles || []
+
+				return roomProfiles.length === 1 && roomProfiles.includes(profile.id)
+			}) || {}
 		}
 
 		return Object.values(state.rooms).find(room => {
@@ -121,10 +131,11 @@ const actions = {
 		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room, newIndex: 0})
 	},
 	async createNewRoom({commit, rootGetters, state}, {users}) {
+		const uniqUsers = uniq(users)
 		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
-			name: `private-${users.join('-')}`,
+			name: `private-${uniqUsers.join('-')}`,
 			include: 'profiles',
-			users,
+			users: uniqUsers,
 		})
 		const {included, ...room} = response.data
 

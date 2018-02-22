@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\UserCourseProgress;
 use App\Models\Lesson;
+use App\Models\User;
 use Closure;
 use Exception;
 use Illuminate\Console\Command;
@@ -47,12 +48,13 @@ class RemoveProgress extends Command
 	public function handle()
 	{
 		$passedUserId = $this->argument('user');
+		$profileId = User::find($passedUserId)->profile->id;
 
-		$this->transaction(function () use ($passedUserId) {
+		$this->transaction(function () use ($profileId, $passedUserId) {
 
-			$courseKey = UserStateApiController::getCourseRedisKey($passedUserId, 1);
-			$lessonsKeys = Lesson::all()->pluck('id')->map(function($item) use ($passedUserId) {
-				return UserStateApiController::getLessonRedisKey($passedUserId, 1, $item);
+			$courseKey = UserStateApiController::getCourseRedisKey($profileId, 1);
+			$lessonsKeys = Lesson::all()->pluck('id')->map(function($item) use ($profileId) {
+				return UserStateApiController::getLessonRedisKey($profileId, 1, $item);
 			});
 			$bar = $this->output->createProgressBar($lessonsKeys->count());
 

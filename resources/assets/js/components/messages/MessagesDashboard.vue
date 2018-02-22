@@ -81,6 +81,9 @@
 			...mapGetters('chatMessages', ['getRoomById', 'getRoomProfiles', 'ready', 'rooms', 'sortedRooms', 'profiles']),
 			showChatRoom() {
 				return !!this.currentRoom
+			},
+			mostRecentRoomId() {
+				return this.sortedRooms[0]
 			}
 		},
 		methods: {
@@ -88,32 +91,45 @@
 				this.currentRoom = room
 				this.currentRoomUsers = users
 			},
-			roomFromRoute() {
-				const roomId = this.$route.query.roomId
-				if (roomId) {
-					const room = this.getRoomById(roomId)
-					if (room.id) {
-						this.switchRoom({room, users: this.getRoomProfiles(roomId)})
-					} else {
-						const {roomId, ...query} = this.$route.query
-						this.$router.replace({
-							...this.$route,
-							query
-						})
-					}
+			openRoomById(roomId) {
+				const room = this.getRoomById(roomId)
+				if (room.id) {
+					this.switchRoom({room, users: this.getRoomProfiles(roomId)})
+					return true
+				} else {
+					const {roomId, ...query} = this.$route.query
+					this.$router.replace({
+						...this.$route,
+						query
+					})
+					return false
 				}
-			}
+			},
+			openInitialRoom() {
+				const roomId = this.$route.query.roomId
+				const roomExists = this.openRoomById(roomId)
+
+				if (!roomExists) {
+					this.$router.replace({
+						...this.$route,
+						query: {
+							...this.$route.query,
+							roomId: this.mostRecentRoomId
+						}
+					})
+				}
+			},
 		},
 		watch: {
-			'$route.query'() {
-				this.roomFromRoute()
+			'$route.query.roomId'(roomId) {
+				roomId && this.openRoomById(roomId)
 			},
 			ready(newValue, oldValue) {
-				!oldValue && newValue && this.roomFromRoute()
+				!oldValue && newValue && this.openInitialRoom()
 			}
 		},
 		mounted() {
-			this.ready && this.roomFromRoute()
+			this.ready && this.openInitialRoom()
 		}
 	}
 </script>

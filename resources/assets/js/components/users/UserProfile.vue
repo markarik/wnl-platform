@@ -19,7 +19,7 @@
 									<a class="edit-profile button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
 								</router-link>
 							</span>
-							<wnl-message-link :userId="profile.id">
+							<wnl-message-link :userId="profile.user_id">
 								<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
 							</wnl-message-link>
 							<span class="user-info-header-names">

@@ -47,7 +47,8 @@ class ChatRoomsApiController extends ApiController
 		$users = $request->users;
 		$usersCount = count($users);
 
-		$matchingRoom = ChatRoomUser::select('chat_room_id')
+		$matchingRoom = ChatRoomUser::selectRaw('chat_room_id')
+			->whereRaw("chat_room_id in (SELECT chat_room_id FROM chat_room_user GROUP BY chat_room_id HAVING COUNT(chat_room_id) = {$usersCount})")
 			->whereIn('user_id', $users)
 			->groupBy('chat_room_id')
 			->havingRaw("COUNT(distinct user_id) = {$usersCount}")
@@ -58,7 +59,7 @@ class ChatRoomsApiController extends ApiController
 			return $this->respondOk($data);
 		} else {
 			$room = ChatRoom::firstOrCreate(['name' => $request->name]);
-			$room->users()->attach($request->users);
+			$room->users()->syncWithoutDetaching($request->users);
 
 			$data = $this->transform($room);
 			return $this->respondOk($data);

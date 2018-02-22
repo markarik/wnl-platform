@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App;
-use Session;
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use \Illuminate\Http\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
+use Session;
 
 class LoginController extends Controller
 {
@@ -91,6 +89,8 @@ class LoginController extends Controller
 		foreach ($user->sessions as $session) {
 			$redis->del('laravel:' . $session->session_id);
 		}
+
+		$user->sessions()->delete();
 
 		$user->sessions()->create([
 			'session_id' => Session::getId(),

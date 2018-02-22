@@ -66,11 +66,7 @@ class ArchiveChatMessages extends Command
 	{
 		$room = ChatRoom::firstOrCreate(['name' => $room]);
 
-		if ($room->is_private) {
-			$rawMessages = $this->getMessages($room->name, $leave = 0);
-		} else {
-			$rawMessages = $this->getMessages($room->name);
-		}
+		$rawMessages = $this->getMessages($room->name, $leave = 0);
 		$messages = $this->decodeMessages($rawMessages);
 
 		$this->transaction(function () use ($messages, $room, $rawMessages) {

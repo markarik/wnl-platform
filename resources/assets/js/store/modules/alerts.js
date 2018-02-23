@@ -27,10 +27,28 @@ export const mutations = {
 // Actions
 export const actions = {
 	addAlert({commit}, {text, type}) {
-		commit(types.GLOBAL_ALERTS_ADD_ALERT, {text, type, id: uuidv1()})
+		const id = uuidv1()
+		commit(types.GLOBAL_ALERTS_ADD_ALERT, {text, type, id})
+		return id
 	},
 	closeAlert({commit, state}, payload) {
 		commit(types.GLOBAL_ALERTS_CLOSE_ALERT, payload)
+	},
+	[types.SOCKET_CONNECTION_ERROR]({dispatch}) {
+		dispatch('addAlert', {type: 'error', text: 'Nie udało się połączyć z serwerem czata. Próbujemy nawiązać połączenie... :) '})
+			.then(id => {
+				setTimeout(() => {
+					dispatch('closeAlert', {id})
+				}, 5000)
+			})
+	},
+	[types.SOCKET_CONNECTION_RECONNECTED]({dispatch}) {
+		dispatch('addAlert', {type: 'success', text: 'Nawiązaliśmy połączenie z serwerem czata!'})
+			.then(id => {
+				setTimeout(() => {
+					dispatch('closeAlert', {id})
+				}, 5000)
+			})
 	}
 };
 

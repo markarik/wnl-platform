@@ -35,7 +35,7 @@ export const actions = {
 		commit(types.GLOBAL_ALERTS_CLOSE_ALERT, payload)
 	},
 	[types.SOCKET_CONNECTION_ERROR]({dispatch}) {
-		dispatch('addAlert', {type: 'error', text: 'Nie udało się połączyć z serwerem czata :( '})
+		dispatch('addAlert', {type: 'error', text: 'Nie udało się połączyć z serwerem czata. Próbujemy nawiązać połączenie... :) '})
 			.then(id => {
 				setTimeout(() => {
 					dispatch('closeAlert', {id})

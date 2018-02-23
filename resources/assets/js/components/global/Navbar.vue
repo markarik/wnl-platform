@@ -25,7 +25,7 @@
 			<wnl-personal-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-messages">
-			<wnl-messages/>
+			<wnl-chat-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown/>
@@ -130,7 +130,7 @@
 	import Search from 'js/components/global/search/Search'
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
-	import Messages from 'js/components/messages/Messages'
+	import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed'
 	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -142,7 +142,7 @@
 			'wnl-user-dropdown': UserDropdown,
 			'wnl-personal-feed': PersonalFeed,
 			'wnl-search': Search,
-			'wnl-messages': Messages,
+			'wnl-chat-feed': ChatFeed,
 		},
 		computed: {
 			...mapGetters([

@@ -16,6 +16,7 @@
 			<wnl-conversation-snippet
 				:key="index"
 				:room="room"
+				:bothNames="true"
 				:isActive="index === activeIndex"
 				:profile="getInterlocutor(room)"
 			/>
@@ -54,7 +55,7 @@
 					return {
 						messages: [],
 						...room,
-						profiles: [this.currentUser, profile]
+						profiles: this.currentUser.id === profile.id ? [profile] : [this.currentUser, profile]
 					}
 				})
 			}

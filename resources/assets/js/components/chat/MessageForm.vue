@@ -109,7 +109,7 @@
 				}
 				this.error = ''
 				this.isWaitingToSendMentions = true
-				this.$socketEmit(SOCKET_EVENT_SEND_MESSAGE, {
+				this.$sendMessage(SOCKET_EVENT_SEND_MESSAGE, {
 					room: this.room.channel,
 					message: {
 						user: this.currentUser,

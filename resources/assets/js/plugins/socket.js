@@ -9,6 +9,25 @@ export const SOCKET_EVENT_JOIN_ROOM = 'join-room'
 export const SOCKET_EVENT_JOIN_ROOM_SUCCESS = 'join-room-success'
 export const SOCKET_EVENT_LEAVE_ROOM = 'leave-room'
 
+const createEventsQueue = () => {
+    const events = []
+    let started = false
+
+    return {
+        push: (event) => {
+            if (started) event()
+            else events.push(event)
+        },
+        start: () => {
+            started = true
+
+            while (events.length >= 1) {
+                events.shift()()
+            }
+        }
+    }
+}
+
 const WnlSocket = {
     install(Vue, {store}) {
         const onSocketError = (error) => {
@@ -19,15 +38,16 @@ const WnlSocket = {
             $wnl.logger.error(`Socket error: ${error}`)
         }
 
-        const getSocketInstance = () => {
-            if (!global.$socket) {
-                global.$socket = io(`${envValue('chatHost')}:${envValue('chatPort')}`)
-                global.$socket.on('error', onSocketError);
-            }
-            return global.$socket
+        if (!global.$socket) {
+            global.$socket = io(`${envValue('chatHost')}:${envValue('chatPort')}`)
+            global.$socket.on('error', onSocketError);
         }
 
-        const socket = getSocketInstance()
+        const eventsQueue = createEventsQueue()
+        const socket = global.$socket
+        socket.on('connected', () => {
+            eventsQueue.start()
+        })
 
         const onSocketConnectionError = (err) => {
             store.dispatch(SOCKET_CONNECTION_ERROR)
@@ -42,7 +62,7 @@ const WnlSocket = {
         })
 
         Vue.prototype.$socketEmit = (event, payload) => {
-            socket.emit(event, payload)
+            eventsQueue.push(() => socket.emit(event, payload))
         }
 
         Vue.prototype.$socketRegisterListener = (event, listener) => {
@@ -55,35 +75,40 @@ const WnlSocket = {
 
         Vue.prototype.$socketJoinRoom = (room) => {
             return new Promise((resolve, reject) => {
-                socket.emit(SOCKET_EVENT_JOIN_ROOM, {room})
+                eventsQueue.push(() => {
+                    socket.emit(SOCKET_EVENT_JOIN_ROOM, {room})
 
-                const timerId = setTimeout(() => {
-                    $wnl.logger.error('Failed to connect to room', room)
-                }, 5000)
+                    const timerId = setTimeout(() => {
+                        $wnl.logger.error('Failed to connect to room', room)
+                        reject()
+                    }, 5000)
 
-                socket.on(SOCKET_EVENT_JOIN_ROOM_SUCCESS, (data) => {
-                    if (room === data.room) {
-                        clearTimeout(timerId)
-                        resolve(data)
-                    }
+                    socket.on(SOCKET_EVENT_JOIN_ROOM_SUCCESS, (data) => {
+                        if (room === data.room) {
+                            clearTimeout(timerId)
+                            resolve(data)
+                        }
+                    })
                 })
             })
         }
 
         Vue.prototype.$socketSendMessage = (payload) => {
             return new Promise((resolve, reject) => {
-                socket.emit(SOCKET_EVENT_SEND_MESSAGE, payload)
+                eventsQueue.push(() => {
+                    socket.emit(SOCKET_EVENT_SEND_MESSAGE, payload)
 
-                const timerId = setTimeout(() => {
-                    $wnl.logger.error('Unable to send message', payload.message)
-                    reject()
-                }, 5000)
+                    const timerId = setTimeout(() => {
+                        $wnl.logger.error('Unable to send message', payload.message)
+                        reject()
+                    }, 5000)
 
-                socket.on(SOCKET_EVENT_MESSAGE_PROCESSED, (data) => {
-                    if (payload.room === data.room) {
-                        clearTimeout(timerId)
-                        resolve(data)
-                    }
+                    socket.on(SOCKET_EVENT_MESSAGE_PROCESSED, (data) => {
+                        if (payload.room === data.room) {
+                            clearTimeout(timerId)
+                            resolve(data)
+                        }
+                    })
                 })
             })
         }

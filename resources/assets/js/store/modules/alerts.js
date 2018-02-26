@@ -34,21 +34,26 @@ export const actions = {
 	closeAlert({commit, state}, payload) {
 		commit(types.GLOBAL_ALERTS_CLOSE_ALERT, payload)
 	},
-	[types.SOCKET_CONNECTION_ERROR]({dispatch}) {
-		dispatch('addAlert', {type: 'error', text: 'Nie udało się połączyć z serwerem czata. Próbujemy nawiązać połączenie... :) '})
+	addAutoDismissableAlert({commit, dispatch}, {timeout, ...payload}) {
+		const timeoutWithDefault = timeout || 5000
+		dispatch('addAlert', payload)
 			.then(id => {
 				setTimeout(() => {
 					dispatch('closeAlert', {id})
-				}, 5000)
+				}, timeoutWithDefault)
 			})
 	},
+	[types.SOCKET_CONNECTION_ERROR]({dispatch}) {
+		dispatch(
+			'addAutoDismissableAlert',
+			{type: 'error', text: 'Nie udało się połączyć z serwerem czata. Próbujemy nawiązać połączenie... :) '}
+		)
+	},
 	[types.SOCKET_CONNECTION_RECONNECTED]({dispatch}) {
-		dispatch('addAlert', {type: 'success', text: 'Nawiązaliśmy połączenie z serwerem czata!'})
-			.then(id => {
-				setTimeout(() => {
-					dispatch('closeAlert', {id})
-				}, 5000)
-			})
+		dispatch(
+			'addAutoDismissableAlert',
+			{type: 'success', text: 'Nawiązaliśmy połączenie z serwerem czata!'}
+		)
 	}
 };
 

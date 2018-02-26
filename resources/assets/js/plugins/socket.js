@@ -69,6 +69,24 @@ const WnlSocket = {
                 })
             })
         }
+
+        Vue.prototype.$socketSendMessage = (payload) => {
+            return new Promise((resolve, reject) => {
+                socket.emit(SOCKET_EVENT_SEND_MESSAGE, payload)
+
+                const timerId = setTimeout(() => {
+                    $wnl.logger.error('Unable to send message', payload.message)
+                    reject()
+                }, 5000)
+
+                socket.on(SOCKET_EVENT_MESSAGE_PROCESSED, (data) => {
+                    if (payload.room === data.room) {
+                        clearTimeout(timerId)
+                        resolve(data)
+                    }
+                })
+            })
+        }
     }
 }
 

@@ -76,7 +76,7 @@
 	import highlight from 'js/mixins/highlight'
 	import { SOCKET_EVENT_USER_SENT_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED, SOCKET_EVENT_LEAVE_ROOM } from 'js/plugins/socket'
 
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		props: {
@@ -133,8 +133,11 @@
 			},
 		},
 		methods: {
+			...mapActions('chatMessages', ['createPublicRoom']),
 			joinRoom() {
 				const channel = this.$route.query.chatChannel
+
+				this.createPublicRoom({name: this.room.channel})
 
 				if (channel && channel !== this.room.channel) {
 					return this.switchRoom({
@@ -206,7 +209,7 @@
 					height     = target.scrollHeight,
 					shouldPull =
 							// We're always getting first 200 messages from hot storage,
-							this.messages.length >= 200 &&
+							// this.messages.length >= 200 &&
 							// make sure we're not pulling from cold storage at the moment,
 							!this.isPulling &&
 							// we're reaching the top of the messages container,

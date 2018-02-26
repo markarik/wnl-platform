@@ -193,6 +193,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::post(
 		"{$r['chat-rooms']}/.createPrivateRoom",
 		'ChatRoomsApiController@createPrivateRoom');
+	Route::post(
+		"{$r['chat-rooms']}/.createPublicRoom",
+		'ChatRoomsApiController@createPublicRoom');
 
 	// Reactions
 	Route::post($r['reactions'], 'ReactionsApiController@postMany');

@@ -151,6 +151,20 @@ const actions = {
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
 
 		return room
+	},
+	async createPublicRoom({commit}, {name}) {
+		const url = getApiUrl('chat_rooms/.createPublicRoom')
+		const response = await axios.post(url, {name})
+		const {included, ...room} = response.data
+		const payload = {
+			room: {
+				...room,
+				messages: []
+			}
+		}
+		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
+		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room: room.id, newIndex: 0})
+		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
 	}
 }
 

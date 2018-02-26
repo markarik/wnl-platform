@@ -6,11 +6,11 @@
 		<div class="media-content">
 			<wnl-form
 				class="chat-message-form"
-				hideDefaultSubmit="true"
+				:hideDefaultSubmit="true"
 				name="ChatMessage"
 				method="post"
 				suppressEnter="false"
-				resourceRoute="qna_questions"
+				resourceRoute="private_chat"
 			>
 				<wnl-quill
 					ref="editor"
@@ -28,9 +28,10 @@
 		<div class="media-right">
 			<wnl-image-button
 				name="wnl-chat-form-submit"
-				icon="send-message"
+				:icon="sendingMessage ? 'refresh' : 'send-message'"
 				alt="Wyślij wiadomość"
-				:disabled="sendingDisabled"
+				:disabled="sendingDisabled || sendingMessage"
+				:loading="sendingMessage"
 				@buttonclicked="sendMessage">
 			</wnl-image-button>
 		</div>
@@ -41,7 +42,7 @@
 		align-items: center
 </style>
 <script>
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 	import _ from 'lodash';
@@ -74,7 +75,8 @@
 							}
 						}
 					}
-				}
+				},
+				sendingMessage: false
 			}
 		},
 		components: {
@@ -106,34 +108,38 @@
 			}
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
 				}
 				this.error = ''
-				this.$socketEmit(SOCKET_EVENT_SEND_MESSAGE, {
+				this.sendingMessage = true
+				this.$socketSendMessage({
 					room: this.roomId,
 					message: {
 						user: this.currentUser,
 						content: this.content
 					},
 					users: this.users
+				}).then(() => {
+					this.quillEditor.clear();
+					this.sendingMessage = false
+				}).catch(err => {
+					this.addAutoDismissableAlert({
+						text: 'Niestety nie udało Nam się wysłać wiadomości. Spróbuj ponownie',
+						type: 'error'
+					})
+					this.sendingMessage = false
 				})
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
 				this.content = this.quillEditor.editor.innerHTML
 			},
-			processMessage(data) {
-				this.quillEditor.clear();
-			}
 		},
 		mounted () {
-			this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
 			this.quillEditor.quill.focus()
-		},
-		beforeDestroy () {
-			this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
 		},
 		watch: {
 			roomId() {

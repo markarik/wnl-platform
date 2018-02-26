@@ -102,19 +102,26 @@
 			}
 		},
 		methods: {
-			...mapActions(['saveMentions']),
+			...mapActions(['saveMentions', 'addAutoDismissableAlert']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
 				}
 				this.error = ''
 				this.isWaitingToSendMentions = true
-				this.$socketEmit(SOCKET_EVENT_SEND_MESSAGE, {
+				this.$socketSendMessage({
 					room: this.room.channel,
 					message: {
 						user: this.currentUser,
 						content: this.content
 					}
+				}).then(data => {
+					this.processMessage(data)
+				}).catch(() => {
+					this.addAutoDismissableAlert({
+						text: 'Niestety nie udało Nam się wysłać wiadomości. Spróbuj ponownie',
+						type: 'error'
+					})
 				})
 			},
 			getMentions() {
@@ -170,12 +177,6 @@
 				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
 			}
-		},
-		mounted () {
-			this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
-		},
-		beforeDestroy () {
-			this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.processMessage)
 		}
 	}
 

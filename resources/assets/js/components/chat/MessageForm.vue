@@ -102,14 +102,14 @@
 			}
 		},
 		methods: {
-			...mapActions(['saveMentions']),
+			...mapActions(['saveMentions', 'addAutoDismissableAlert']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
 				}
 				this.error = ''
 				this.isWaitingToSendMentions = true
-				this.$sendMessage(SOCKET_EVENT_SEND_MESSAGE, {
+				this.$socketSendMessage({
 					room: this.room.channel,
 					message: {
 						user: this.currentUser,

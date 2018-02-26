@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redis;
 class ArchiveChatMessages extends Command
 {
 	const ROOM_MESSAGES_KEY = 'room-messages-';
+	const MAX_MSG_CONTENT_LEN = 65000;
 
 	/**
 	 * The name and signature of the console command.
@@ -72,6 +73,12 @@ class ArchiveChatMessages extends Command
 		$this->transaction(function () use ($messages, $room, $rawMessages) {
 			foreach ($messages as $key => $message) {
 				$message = $this->formatMessage($message);
+				if (strlen($message['content']) > self::MAX_MSG_CONTENT_LEN) {
+					// Validation has to be done right by client and
+					// live messaging server. If some invalid message
+					// reaches this point, we're just skipping it.
+					continue;
+				}
 				$room->messages()->create($message);
 				$this->removeMessage($room->name, $rawMessages[$key]);
 			}

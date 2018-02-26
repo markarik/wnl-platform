@@ -16,30 +16,30 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
-	const setting = 'notify_live'
+	const setting = 'private_chat_nofitications'
 
 	export default {
 		name: 'NotificationsToggle',
-        data() {
-            return {
-                isOn: false,
-            }
-        },
 		computed: {
+			...mapGetters(['getSetting']),
+			isOn() {
+				return this.getSetting(setting)
+			},
 			toggleText() {
-				return !this.isOn ? this.message('turnOff') : this.message('turnOn')
+				return this.isOn ? this.message('turnOff') : this.message('turnOn')
 			},
 			toggleIcon() {
 				return this.isOn ? 'fa-comment' : 'fa-comment-o'
 			},
 		},
 		methods: {
+			...mapActions(['changeUserSettingAndSync']),
 			message(key) {
 				return this.$t(`notifications.personal.${key}`)
 			},
 			toggleNotifications() {
-				this.isOn = !this.isOn
+				this.changeUserSettingAndSync({setting, value: !this.isOn})
 			},
-		},
+		}
 	}
 </script>

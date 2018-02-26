@@ -1,8 +1,9 @@
 <template lang="html">
 	<div class="dropdown-container">
 	 	<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
-			<div slot="activator" class="notifications-toggle"
-				:class="{ 'is-active': isActive, 'is-desktop': !isTouchScreen }">
+			<div slot="activator" class="chat-notifications-toggle"
+				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
+				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
 				<span class="icon">
 					<i class="fa" :class="iconClass"></i>
 				</span>
@@ -55,7 +56,7 @@
 		.wnl-dropdown
 			width: 100%
 
-	.notifications-toggle
+	.chat-notifications-toggle
 		align-items: center
 		color: $color-gray-dimmed
 		cursor: pointer
@@ -125,12 +126,6 @@
 		.chat-feed-content
 			padding: $body-margin-top 0 $body-margin-bottom
 
-		.show-more
-			align-items: center
-			display: flex
-			justify-content: center
-			margin: $margin-base
-
 	.chat-feed-footer
 		+white-shadow-top()
 
@@ -171,6 +166,8 @@
 	import ChatNotificationsToggle from 'js/components/notifications/feeds/chat/ChatNotificationsToggle'
 	import ConversationsList from 'js/components/messages/ConversationsList'
 
+	const setting = 'private_chat_nofitications'
+
 	export default {
 		name: 'ChatFeed',
 		components: {
@@ -189,6 +186,9 @@
 			iconClass() {
 				return this.isOn ? 'fa-comment' : 'fa-comment-o'
 			},
+			isOn() {
+				return this.getSetting(setting)
+			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')
 			},
@@ -196,6 +196,9 @@
 		methods: {
 			toggle(isActive) {
 				this.isActive = isActive
+			},
+			toggleNotifications(data) {
+				this.isOn = this.data
 			}
 		},
 	}

@@ -126,6 +126,7 @@ const actions = {
 	},
 
 	changeUserSetting({ commit }, payload) {
+		console.log(payload);
 		commit(types.USERS_CHANGE_SETTING, payload)
 	},
 

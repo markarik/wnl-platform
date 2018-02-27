@@ -151,6 +151,9 @@ const actions = {
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
 
 		return room
+	},
+	async markRoomAsRead({commit}, room) {
+		console.log(room)
 	}
 }
 

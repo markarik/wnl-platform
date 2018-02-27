@@ -60,7 +60,10 @@ class ChatRoomsApiController extends ApiController
 
 			return $this->respondOk($data);
 		} else {
-			$room = ChatRoom::firstOrCreate(['name' => $request->name]);
+			$room = ChatRoom::firstOrCreate(
+				['name' => $request->name],
+				['name' => $request->name]
+			);
 			$room->users()->syncWithoutDetaching($request->users);
 
 			$data = $this->transform($room);

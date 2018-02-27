@@ -39,14 +39,14 @@ class ProcessChatQueue extends Command
 				if (empty($room)) {
 					$room = ChatRoom::ofName($data->room)->first();
 				}
-				if ($this->validate($message, $resolver)) {
-					$message = $room->messages()->create([
+				if ($this->validate($data, $message, $resolver)) {
+					$chatMessage = $room->messages()->create([
 						'user_id' => $data->message->user_id,
 						'content' => $data->message->content,
 						'time'    => $data->message->time,
 					]);
 
-					if ($message) {
+					if ($chatMessage) {
 						$this->acceptMessage($message, $resolver);
 					} else {
 						$this->rejectMessage($message, 'Unable to persist.');
@@ -60,9 +60,9 @@ class ProcessChatQueue extends Command
 		return;
 	}
 
-	protected function validate($message, $resolver)
+	protected function validate($data, $message, $resolver)
 	{
-		if (strlen($message->content) > self::MAX_MSG_CONTENT_LEN) {
+		if (strlen($data->message->content) > self::MAX_MSG_CONTENT_LEN) {
 			// Validation has to be done right by client and
 			// live messaging server. If some invalid message
 			// reaches this point, we're just skipping it.

@@ -73,11 +73,16 @@
 		position: relative
 
 		.loader
-			color: green
+			border-bottom-color: $color-ocean-blue
+			border-right-color: $color-ocean-blue
+			border-left-color: $color-ocean-blue
 			position: absolute
 			z-index: 1
 			bottom: ($navbar-height / 4.2)
 			left: ($navbar-height / 27.5)
+
+			.fas.fa-circle-notch
+				color: $color-ocean-blue
 
 		.icon
 			position: absolute

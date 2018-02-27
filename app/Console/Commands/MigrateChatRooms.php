@@ -43,6 +43,7 @@ class MigrateChatRooms extends Command
 		foreach ($rooms as $room) {
 			if (!str_is($room->name, 'private-*')) {
 				$room->type = 'public';
+				$room->slug = $room->name;
 				$room->save();
 			}
         }

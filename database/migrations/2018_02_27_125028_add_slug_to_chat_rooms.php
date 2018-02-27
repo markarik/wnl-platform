@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTypeToChatRooms extends Migration
+class AddSlugToChatRooms extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,11 @@ class AddTypeToChatRooms extends Migration
     public function up()
     {
         Schema::table('chat_rooms', function (Blueprint $table) {
-            $table
-				->enum('type', ['private', 'public'])
-				->default('private')
-				->after('name');
+			$table->dropColumn('slug');
+        });
+
+        Schema::table('chat_rooms', function (Blueprint $table) {
+			$table->string('slug')->unique()->nullable()->after('type');
         });
     }
 
@@ -29,7 +30,7 @@ class AddTypeToChatRooms extends Migration
     public function down()
     {
         Schema::table('chat_rooms', function (Blueprint $table) {
-            $table->dropColumn('type');
+            $table->dropUnique('chat_rooms_slug_unique');
         });
     }
 }

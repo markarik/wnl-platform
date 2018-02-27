@@ -70,6 +70,17 @@
 		height: 100%
 		justify-content: center
 		min-height: 100%
+		position: relative
+
+		.loader
+			color: green
+			position: absolute
+			z-index: 1
+			bottom: ($navbar-height / 4.2)
+			left: ($navbar-height / 27.5)
+
+		.icon
+			position: absolute
 
 		&.is-active
 			background-color: $color-background-light-gray
@@ -142,9 +153,6 @@
 		height: $footer-height
 		justify-content: center
 		padding: $margin-small $margin-medium
-
-		.loader
-			margin-left: $margin-small
 
 	.zero-state
 		align-items: center

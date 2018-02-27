@@ -9,7 +9,8 @@ const state = {
 	rooms: {},
 	sortedRooms: [],
 	profiles: {},
-	ready: false
+	ready: false,
+	connected: false,
 }
 
 //Getters
@@ -17,6 +18,7 @@ const getters = {
 	rooms: state => state.rooms,
 	sortedRooms: state => state.sortedRooms,
 	profiles: state => state.profiles,
+	status: state => state.connected,
 	getRoomById: state => id => state.rooms[id] || {},
 	getProfileById: state => id => state.profiles[id] || {},
 	getRoomProfiles: (state, getters) => id => {
@@ -56,6 +58,9 @@ const getters = {
 
 //mutations
 const mutations = {
+	[types.CHAT_MESSAGES_SET_STATUS] (state, payload) {
+		set (state, 'connected', payload)
+	},
 	[types.CHAT_MESSAGES_SET_ROOMS] (state, data) {
 		set (state, 'rooms', data.rooms)
 		set (state, 'sortedRooms', data.sortedRooms)
@@ -118,6 +123,9 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {room, message})
 		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room, newIndex: 0})
+	},
+	setConnectionStatus({commit}, payload) {
+		commit(types.CHAT_MESSAGES_SET_STATUS, payload)
 	},
 	async createNewRoom({commit, rootGetters, state}, {users}) {
 		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {

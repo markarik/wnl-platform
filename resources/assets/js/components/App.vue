@@ -79,7 +79,7 @@
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
-			...mapActions('chatMessages', ['initChatMessages', 'onNewMessage']),
+			...mapActions('chatMessages', ['initChatMessages', 'onNewMessage', 'setConnectionStatus']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
@@ -100,6 +100,7 @@
 					const userChannel = `user-${this.currentUserId}`
 					this.$socketJoinRoom(userChannel)
 						.then(() => {
+							this.setConnectionStatus(true)
 							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)
 						})
 

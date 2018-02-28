@@ -91,6 +91,7 @@
 				this.currentRoom = room
 				this.currentRoomUsers = users
 				room.id && this.$socketMarkRoomAsRead(room.id)
+					.then(() => this.markRoomAsRead(room.id))
 			},
 			openRoomById(roomId) {
 				const room = this.getRoomById(roomId)

@@ -30,8 +30,10 @@
 					:room="room"
 					:profile="getOtherUser(room)"
 					:isActive="isActive(room)"
+					:class="{'has-unread': room.unread_count > 0}"
 				/>
-        	</wnl-message-link>
+				<span>{{room.unread_count}}</span>
+			</wnl-message-link>
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
 	</div>

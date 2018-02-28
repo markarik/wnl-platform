@@ -24,6 +24,7 @@ class ChatRoomTransformer extends ApiTransformer
 		$data = [
 			'id'                => $chatRoom->id,
 			'channel'           => $chatRoom->name,
+			'unread_count'      => $chatRoom->unread_count,
 			'last_message_time' => $chatRoom->last_message_time ?? null,
 		];
 

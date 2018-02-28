@@ -54,7 +54,7 @@ class ProcessChatQueue extends Command
 
 						$chatRoomUser = ChatRoomUser
 							::where('chat_room_id', $data->room)
-							->where('user_id', $data->message->user_id)
+							->where('user_id', '<>', $data->message->user_id)
 							->increment('unread_count');
 					}
 					break;

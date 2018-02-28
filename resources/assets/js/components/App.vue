@@ -100,7 +100,7 @@
 					const userChannel = `user-${this.currentUserId}`
 					this.$socketJoinRoom(userChannel)
 						.then(() => {
-							// this.setConnectionStatus(true)
+							this.setConnectionStatus(true)
 							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)
 						})
 

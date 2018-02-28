@@ -24,6 +24,7 @@
 				:key="index"
 				:userId="getOtherUser(room).user_id"
 				:roomId="room.id"
+				 class="is-relative is-block"
 			>
 				<wnl-conversation-snippet
 					:key="index"
@@ -32,7 +33,7 @@
 					:isActive="isActive(room)"
 					:class="{'has-unread': room.unread_count > 0}"
 				/>
-				<span>{{room.unread_count}}</span>
+				 <div v-if="room.unread_count" class="counter">{{room.unread_count}}</div>
 			</wnl-message-link>
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
@@ -82,6 +83,24 @@
 		flex-direction: column
 		overflow-x: hidden
 		overflow-y: auto
+
+	.is-block
+		display: block
+
+	.counter
+		align-items: center
+		background: red
+		border-radius: $border-radius-full
+		color: $color-white
+		display: flex
+		font-size: $font-size-minus-3
+		font-weight: $font-weight-black
+		justify-content: center
+		height: 1.7em
+		position: absolute
+		bottom: 10px
+		width: 1.7em
+		right: 10px
 </style>
 
 <script>

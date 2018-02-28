@@ -2,13 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use Illuminate\Console\Command;
 
 class ProcessChatQueue extends Command
 {
-	const MAX_MSG_CONTENT_LEN = 65000;
-
 	/**
 	 * The name and signature of the console command.
 	 *
@@ -62,7 +61,8 @@ class ProcessChatQueue extends Command
 
 	protected function validate($data, $message, $resolver)
 	{
-		if (strlen($data->message->content) > self::MAX_MSG_CONTENT_LEN) {
+		$length = strlen($data->message->content);
+		if ($length > ChatMessage::MAX_MSG_CONTENT_LEN) {
 			// Validation has to be done right by client and
 			// live messaging server. If some invalid message
 			// reaches this point, we're just skipping it.

@@ -21,7 +21,7 @@ class ChatRoomPolicy
 	{
 		return
 			$chatRoom->is_public ||
-			str_contains($chatRoom->name, "-{$user->id}-");
+			$chatRoom->users->contains($user);
 	}
 
 	/**

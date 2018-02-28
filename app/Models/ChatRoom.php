@@ -20,6 +20,11 @@ class ChatRoom extends Model
 		return $this->belongsToMany('App\Models\User');
 	}
 
+	public function lessons()
+	{
+		return $this->morphedByMany('App\Models\Lesson', 'chat_roomable', 'chat_roomables');
+	}
+
 	public function getIsPrivateAttribute()
 	{
 		return $this->type === 'private';
@@ -27,7 +32,7 @@ class ChatRoom extends Model
 
 	public function getIsPublicAttribute()
 	{
-		return !$this->type === 'public';
+		return $this->type === 'public';
 	}
 
 	public function scopeOfName($query, $name)

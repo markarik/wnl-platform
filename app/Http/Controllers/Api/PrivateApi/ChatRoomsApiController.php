@@ -15,7 +15,7 @@ class ChatRoomsApiController extends ApiController
 		$this->resourceName = config('papi.resources.chat-rooms');
 	}
 
-	public function getPrivateRooms()
+	public function getPrivateRooms(Request $request)
 	{
 		$user = Auth::user();
 		$select = [
@@ -37,7 +37,7 @@ class ChatRoomsApiController extends ApiController
 			->orderBy('last_message_time', 'desc')
 			->groupBy('chat_rooms.id');
 
-		$data = $this->transform($rooms);
+		$data = $this->paginatedResponse($rooms, $request->limit, $request->page);
 
 		return $this->respondOk($data);
 	}

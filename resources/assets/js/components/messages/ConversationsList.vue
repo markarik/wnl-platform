@@ -34,6 +34,9 @@
         	</wnl-message-link>
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
+		<div class="load-more-conversations" v-show="hasMoreRooms">
+			<a class="button is-primary is-outlined is-small" @click="pullRooms">Poka wincyj</a>
+		</div>
 	</div>
 </template>
 
@@ -87,7 +90,7 @@
 	import ConversationsSearch from 'js/components/messages/ConversationsSearch'
 	import MessageLink from "js/components/global/MessageLink"
 	import ConversationSnippet from "js/components/messages/ConversationSnippet"
-	import {mapGetters} from 'vuex'
+	import {mapGetters, mapActions} from 'vuex'
 
 	export default {
 		name: 'ConversationsList',
@@ -100,7 +103,8 @@
 			return  {
 				currentRoom: '',
 				userSearchVisible: false,
-				searchResults: []
+				searchResults: [],
+				page: 3,
 			}
 		},
 		computed: {
@@ -109,7 +113,9 @@
 				'sortedRooms',
 				'getProfileById',
 				'getRoomById',
-				'getInterlocutor'
+				'getInterlocutor',
+				'hasMoreRooms',
+				'rooms'
 			]),
 			roomsToShow() {
 				return this.sortedRooms.map(roomId => {
@@ -118,6 +124,10 @@
 			}
 		},
 		methods: {
+			...mapActions('chatMessages', ['pullUserRooms']),
+			nextPage() {
+				return this.page = this.page + 1
+			},
 			closeUserSearch() {
 				this.userSearchVisible = false
 			},
@@ -133,6 +143,10 @@
 				const profile = this.getInterlocutor(room.profiles)
 				if (profile.id) return profile
 				return this.currentUser
+			},
+			pullRooms() {
+				this.nextPage()
+				return this.pullUserRooms({limit: 1, page: this.page})
 			}
 		}
 	}

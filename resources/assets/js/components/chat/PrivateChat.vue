@@ -4,12 +4,15 @@
 			{{chatTitle}}
 		</div>
 		<div class="wnl-chat">
-			<div class="wnl-chat-messages">
+			<div class="wnl-chat-messages" @scroll="onScroll">
 				<div class="wnl-chat-content">
-					<div class="wnl-chat-content-inside">
-						<div class="notification aligncenter">
+					<div class="wnl-chat-content-inside" v-if="true">
+						<!-- <div class="notification aligncenter" v-if="!thereIsMore">
 							To początek dyskusji na tym kanale!
-						</div>
+						</div> -->
+						<!-- <wnl-text-loader v-if="isPulling">
+							Ładuję wiadomości...
+						</wnl-text-loader> -->
 						<div v-if="room.messages.length">
 							<wnl-message v-for="(message, index) in room.messages"
 								:key="index"
@@ -32,6 +35,9 @@
 							</p>
 						</div>
 					</div>
+					<wnl-text-loader v-else>
+						Ładuję wiadomości...
+					</wnl-text-loader>
 				</div>
 			</div>
 			<div class="wnl-chat-form">
@@ -126,6 +132,25 @@
 			}
 		},
 		methods: {
+			onScroll(event) {
+				console.log(event);
+				// this.pullDebouncer.call(this, sevent)
+			},
+			pullDebouncer(event) {
+				let target     = event.target,
+					height     = target.scrollHeight,
+					shouldPull =
+							// We're always getting first 200 messages from hot storage,
+							this.messages.length >= 200 &&
+							// make sure we're not pulling from cold storage at the moment,
+							!this.isPulling &&
+							// we're reaching the top of the messages container,
+							(target.scrollTop / height) < 0.1 &&
+							// cold storage has some more messages we can pull.
+							this.thereIsMore
+
+				if (shouldPull) this.pull(height)
+			},
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)
 			}

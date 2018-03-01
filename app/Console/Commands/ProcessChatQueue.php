@@ -40,11 +40,11 @@ class ProcessChatQueue extends Command
 			$event = $data->event;
 
 			switch ($event) {
-				case 'chatEvents:messageSend':
+				case 'chatEvents:sendMessage':
 					$this->handleMessageSend($data);
 					break;
 
-				case 'chatEvents:roomRead':
+				case 'chatEvents:markRoomAsRead':
 					$this->handleMarkRoomAsRead($data);
 					break;
 			}

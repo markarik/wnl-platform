@@ -8,6 +8,8 @@ export const SOCKET_EVENT_USER_SENT_MESSAGE = 'user-sent-message'
 export const SOCKET_EVENT_JOIN_ROOM = 'join-room'
 export const SOCKET_EVENT_JOIN_ROOM_SUCCESS = 'join-room-success'
 export const SOCKET_EVENT_LEAVE_ROOM = 'leave-room'
+export const SOCKET_EVENT_MARK_ROOM_AS_READ = 'mark-room-as-read'
+export const SOCKET_EVENT_MARK_ROOM_AS_READ_SUCCESS = 'mark-room-as-read-success'
 
 const createEventsQueue = () => {
     const events = []
@@ -105,6 +107,26 @@ const WnlSocket = {
 
                     socket.on(SOCKET_EVENT_MESSAGE_PROCESSED, (data) => {
                         if (payload.room === data.room) {
+                            clearTimeout(timerId)
+                            resolve(data)
+                        }
+                    })
+                })
+            })
+        }
+
+        Vue.prototype.$socketMarkRoomAsRead = (room) => {
+            return new Promise((resolve, reject) => {
+                eventsQueue.push(() => {
+                    socket.emit(SOCKET_EVENT_MARK_ROOM_AS_READ, room)
+
+                    const timerId = setTimeout(() => {
+                        $wnl.logger.error('Unable to mark room as read', room)
+                        reject()
+                    }, 5000)
+
+                    socket.on(SOCKET_EVENT_MARK_ROOM_AS_READ_SUCCESS, (data) => {
+                        if (room === data.room) {
                             clearTimeout(timerId)
                             resolve(data)
                         }

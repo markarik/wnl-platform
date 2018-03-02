@@ -1,6 +1,5 @@
 import {set} from 'vue'
 import * as types from '../mutations-types'
-import * as socket from '../../socket'
 import {getApiUrl} from 'js/utils/env'
 
 // Initial state

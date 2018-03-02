@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\ChatRoom;
+use App\Models\ChatRoomUser;
 use Illuminate\Console\Command;
 
 class ProcessChatQueue extends Command
@@ -28,24 +29,52 @@ class ProcessChatQueue extends Command
 	 */
 	public function handle()
 	{
-		\Rabbit::consume('chat-events', function ($message, $resolver) {
+		\Rabbit::consume('chat-events', function ($payload, $resolver) {
 
-			$data = json_decode($message->body);
-			if ($data) {
-				$room = ChatRoom::find($data->room);
-				if (empty($room)) {
-					$room = ChatRoom::ofName($data->room)->first();
-				}
-				$room->messages()->create([
-					'user_id' => $data->message->user_id,
-					'content' => $data->message->content,
-					'time'    => $data->message->time,
-				]);
+			$data = json_decode($payload->body);
+
+			if (empty($data)) {
+				return $resolver->acknowledge($payload);
+			}
+
+			$event = $data->event;
+
+			switch ($event) {
+				case 'chatEvents:sendMessage':
+					$this->handleMessageSend($data);
+					break;
+
+				case 'chatEvents:markRoomAsRead':
+					$this->handleMarkRoomAsRead($data);
+					break;
 			}
 
 			// TODO: What should be done if message format is invalid ??
-
-			$resolver->acknowledge($message);
+			$resolver->acknowledge($payload);
 		});
+	}
+
+	private function handleMessageSend($messagePayload) {
+		$room = ChatRoom::find($messagePayload->room);
+		if (empty($room)) {
+			$room = ChatRoom::ofName($messagePayload->room)->first();
+		}
+		$room->messages()->create([
+			'user_id' => $messagePayload->message->user_id,
+			'content' => $messagePayload->message->content,
+			'time'    => $messagePayload->message->time,
+		]);
+
+		$chatRoomUser = ChatRoomUser
+			::where('chat_room_id', $messagePayload->room)
+			->where('user_id', '<>', $messagePayload->message->user_id)
+			->increment('unread_count');
+	}
+
+	private function handleMarkRoomAsRead($eventPayload) {
+		$chatRoomUser = ChatRoomUser
+			::where('chat_room_id', $eventPayload->room)
+			->where('user_id', $eventPayload->user_id)
+			->update(['unread_count' => 0]);
 	}
 }

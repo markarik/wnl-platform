@@ -97,6 +97,12 @@ const mutations = {
 			state.sortedRooms.splice(currentIndex, 1)
 			state.sortedRooms.splice(newIndex, 0, room)
 		}
+	},
+	[types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD] (state, roomId) {
+		state.rooms[roomId].unread_count++
+	},
+	[types.CHAT_MESSAGES_MARK_ROOM_AS_READ] (state, roomId) {
+		state.rooms[roomId].unread_count = 0
 	}
 }
 
@@ -129,6 +135,9 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {room, message})
 		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room, newIndex: 0})
+		if (message.user_id !== rootGetters.currentUserId) {
+			commit(types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD, room)
+		}
 	},
 	async createNewRoom({commit, rootGetters, state}, {users}) {
 		const uniqUsers = uniq(users)
@@ -151,6 +160,9 @@ const actions = {
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
 
 		return room
+	},
+	markRoomAsRead({commit}, roomId) {
+		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId)
 	}
 }
 

@@ -1,7 +1,8 @@
 <template lang="html">
 	<div class="wnl-private-chat">
 		<div class="chat-title">
-			{{chatTitle}}
+			<wnl-avatar :fullName="interlocutorProfile.full_name" :url="interlocutorProfile.avatar"/>
+			<span>{{chatTitle}}</span>
 		</div>
 		<div class="wnl-chat">
 			<div class="wnl-chat-messages">
@@ -57,7 +58,12 @@
 		width: 100%
 
 	.chat-title
-		text-align: center
+		display: flex
+		align-items: center
+		flex-direction: column
+		border-bottom: $border-light-gray
+		margin: $margin-base 0 0
+		padding-bottom: $margin-base
 
 	.wnl-chat
 		display: flex
@@ -120,10 +126,12 @@
 							message.time - this.room.messages[previous].time > halfHourInMs
 				})
 			},
+			interlocutorProfile() {
+				return this.getInterlocutor(this.room.profiles)
+			},
 			chatTitle() {
-				const matchingProfile = this.getInterlocutor(this.room.profiles)
-				return matchingProfile.display_name || this.currentUserDisplayName
-			}
+				return this.interlocutorProfile.display_name || this.currentUserDisplayName
+			},
 		},
 		methods: {
 			getMessageAuthor(message) {

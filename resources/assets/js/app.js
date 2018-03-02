@@ -36,7 +36,7 @@ const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages})
 
 // SweetAlert2
 Vue.use(VueSweetAlert)
-Vue.use(WnlSocket)
+Vue.use(WnlSocket, {store})
 
 // Simple Breakpoints
 Vue.use(VueSimpleBreakpoints, {

@@ -72,7 +72,6 @@ const mutations = {
 		set (state, 'hasMoreRooms', data)
 	},
 	[types.CHAT_MESSAGES_SET_ROOMS] (state, data) {
-		console.log(data, '...chat messages set rooms');
 		set (state, 'rooms', data.rooms)
 		set (state, 'sortedRooms', data.sortedRooms)
 		set (state, 'profiles', data.profiles)
@@ -105,18 +104,13 @@ const mutations = {
 		}
 	},
 	[types.CHAT_MESSAGES_ADD_PULLED_ROOM] (state, payload) {
-		console.log(payload.id, '...payload mutacji');
-		console.log(state.rooms, '...state.rooms');
 		set (state.rooms, payload.id, payload)
 	},
 	[types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED] (state, payload) {
-		console.log(payload, '... sorted rooms');
 		state.sortedRooms.push(payload[0])
 	},
 	[types.CHAT_MESSAGES_ADD_PULLED_PROFILE] (state, payload) {
-		console.log(payload, '... profiles');
 		Object.keys(payload).forEach((key) => {
-			console.log(payload[key].user_id);
 			set (state.profiles, payload[key].user_id, payload[key])
 		})
 	}
@@ -124,22 +118,26 @@ const mutations = {
 
 //Actions
 const actions = {
-	async pullUserRooms({commit}, data) {
-		console.log(data);
-		const payload = await fetchUserRooms(data)
-		console.log(payload, '...payload pull user rooms');
-		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM, Object.values(payload.payload.rooms)[0])
-		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, payload.hasMoreRooms)
-		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED, payload.payload.sortedRooms)
-		commit(types.CHAT_MESSAGES_ADD_PULLED_PROFILE, payload.payload.profiles)
+	async pullUserRooms({commit, getters}, data) {
+		const response = await fetchUserRooms(data)
+
+		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM, Object.values(response.payload.rooms)[0])
+		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.hasMoreRooms)
+		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED, response.payload.sortedRooms)
+		commit(types.CHAT_MESSAGES_ADD_PULLED_PROFILE, response.payload.profiles)
+
+		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
+		Object.keys(roomsWithMessages)
+			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: roomsWithMessages[roomId]}))
+
+		commit(types.CHAT_MESSAGES_READY, true)
 	},
 	async initChatMessages({commit, getters}) {
-		const payload = await fetchUserRooms({limit: 3, page: 0})
-		console.log(payload, '.... init rooms');
-		commit(types.CHAT_MESSAGES_SET_ROOMS, payload.payload)
-		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, payload.hasMoreRooms)
+		const response = await fetchUserRooms({limit: 3, page: 0})
+		commit(types.CHAT_MESSAGES_SET_ROOMS, response.payload)
+		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.hasMoreRooms)
 
-		if (payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
+		if (response.payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
 
 		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
 		Object.keys(roomsWithMessages)
@@ -188,7 +186,6 @@ const actions = {
 }
 
 const fetchUserRooms = async (data) => {
-	console.log(data);
 	const response = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
 		params: {
 			include: 'profiles',

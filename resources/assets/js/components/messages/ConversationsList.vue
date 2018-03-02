@@ -115,7 +115,8 @@
 				'getRoomById',
 				'getInterlocutor',
 				'hasMoreRooms',
-				'rooms'
+				'rooms',
+				'profiles'
 			]),
 			roomsToShow() {
 				return this.sortedRooms.map(roomId => {

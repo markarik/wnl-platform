@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class PermissionsSeeder extends Seeder
 {
@@ -16,16 +16,16 @@ class PermissionsSeeder extends Seeder
 
 		DB::table('permissions')->insert([
 			[
-				'slug'        => 'access_lesson',
+				'slug'        => 'lesson_access',
 				'name'        => 'Lesson access',
 				'description' => 'Required to access a lesson.',
 				'created_at'  => $now,
 				'updated_at'  => $now,
 			],
 			[
-				'slug'        => 'access_moderators_feed',
-				'name'        => 'Access moderators feed',
-				'description' => 'Required to access moderators feed and moderators chat room.',
+				'slug'        => 'role_access',
+				'name'        => 'Role access',
+				'description' => 'Requires user to have certain role, to access a resource.',
 				'created_at'  => $now,
 				'updated_at'  => $now,
 			],

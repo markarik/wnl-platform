@@ -69,13 +69,19 @@ class ChatRoomsApiController extends ApiController
 		}
 	}
 
-	public function createPublicRoom(PostPublicRoom $request)
+	public function createPublicRoom(Request $request)
 	{
+		$user = \Auth::user();
 		$name = $request->name;
 		$room = ChatRoom::firstOrCreate([
 			'name' => $name,
 			'type' => 'public',
 		]);
+
+		if (!$user->can('view', $room)) {
+			return $this->respondUnauthorized();
+		}
+
 		$data = $this->transform($room);
 
 		return $this->respondOk($data);

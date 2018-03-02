@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\ChatRoom;
 use App\Models\Lesson;
 use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Console\Command;
 
 class MigrateChatRooms extends Command
@@ -42,6 +43,8 @@ class MigrateChatRooms extends Command
 	{
 		$rooms = ChatRoom::all();
 		$lessonAccess = Permission::slug('lesson_access');
+		$roleAccess = Permission::slug('role_access');
+		$moderatorsRole = Role::byName('moderator');
 
 		foreach ($rooms as $room) {
 			if (!str_is('private-*', $room->name)) {
@@ -59,6 +62,11 @@ class MigrateChatRooms extends Command
 				if ($lesson) {
 					$room->lessons()->syncWithoutDetaching($lesson);
 				}
+			}
+
+			if (str_is('moderatorzy', $room->name)) {
+				$roleAccess->chatRooms()->syncWithoutDetaching($room);
+				$room->roles()->syncWithoutDetaching($moderatorsRole);
 			}
 		}
 

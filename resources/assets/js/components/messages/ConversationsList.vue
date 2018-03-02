@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="conversation-list">
+	<div class="conversation-list" @scroll="pullRooms">
 		<div class="rooms-header">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
 			<div class="rooms-list-controls">
@@ -35,7 +35,7 @@
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
 		<div class="load-more-conversations" v-show="hasMoreRooms">
-			<a class="button is-primary is-outlined is-small" @click="pullRooms">Poka wincyj</a>
+			<a class="button is-primary is-outlined is-small">Poka wincyj</a>
 		</div>
 	</div>
 </template>

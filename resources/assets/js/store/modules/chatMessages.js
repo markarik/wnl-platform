@@ -133,7 +133,7 @@ const actions = {
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
 	async initChatMessages({commit, getters}) {
-		const response = await fetchUserRooms({limit: 3, page: 0})
+		const response = await fetchUserRooms({limit: 15, page: 0})
 		commit(types.CHAT_MESSAGES_SET_ROOMS, response.payload)
 		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.hasMoreRooms)
 

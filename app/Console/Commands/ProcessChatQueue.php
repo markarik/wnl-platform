@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
 use Illuminate\Console\Command;
@@ -33,48 +34,101 @@ class ProcessChatQueue extends Command
 
 			$data = json_decode($payload->body);
 
-			if (empty($data)) {
-				return $resolver->acknowledge($payload);
+			if (!$data) {
+				$this->rejectPayload($payload, 'Invalid payload!');
+
+				return false;
 			}
 
-			$event = $data->event;
-
-			switch ($event) {
+			switch ($data->event) {
 				case 'chatEvents:sendMessage':
-					$this->handleMessageSend($data);
+					$this->handleMessageSend($data, $payload, $resolver);
 					break;
 
 				case 'chatEvents:markRoomAsRead':
-					$this->handleMarkRoomAsRead($data);
+					$this->handleMarkRoomAsRead($data, $payload);
 					break;
-			}
 
-			// TODO: What should be done if message format is invalid ??
-			$resolver->acknowledge($payload);
+				default:
+					$this->dropPayload($payload, $resolver, 'Invalid event!');
+			}
 		});
+
+		$this->info('Exiting.');
+		return;
 	}
 
-	private function handleMessageSend($messagePayload) {
-		$room = ChatRoom::find($messagePayload->room);
-		if (empty($room)) {
-			$room = ChatRoom::ofName($messagePayload->room)->first();
+	private function handleMessageSend($data, $payload, $resolver)
+	{
+		if (!$this->validateMessage($data, $payload, $resolver)) {
+			return false;
 		}
-		$room->messages()->create([
-			'user_id' => $messagePayload->message->user_id,
-			'content' => $messagePayload->message->content,
-			'time'    => $messagePayload->message->time,
+
+		$room = ChatRoom::find($data->room);
+
+		$chatMessage = $room->messages()->create([
+			'user_id' => $data->message->user_id,
+			'content' => $data->message->content,
+			'time'    => $data->message->time,
 		]);
 
+		if (!$chatMessage) {
+			$this->rejectPayload($payload, 'Unable to persist message!');
+
+			return false;
+		}
+
 		$chatRoomUser = ChatRoomUser
-			::where('chat_room_id', $messagePayload->room)
-			->where('user_id', '<>', $messagePayload->message->user_id)
+			::where('chat_room_id', $data->room)
+			->where('user_id', '<>', $data->message->user_id)
 			->increment('unread_count');
+
+		return true;
 	}
 
-	private function handleMarkRoomAsRead($eventPayload) {
+	protected function handleMarkRoomAsRead($eventPayload)
+	{
 		$chatRoomUser = ChatRoomUser
 			::where('chat_room_id', $eventPayload->room)
 			->where('user_id', $eventPayload->user_id)
 			->update(['unread_count' => 0]);
+	}
+
+	protected function validateMessage($data, $payload, $resolver)
+	{
+		$length = strlen($data->message->content);
+		if ($length > ChatMessage::MAX_MSG_CONTENT_LEN) {
+			// Validation has to be done right by client and
+			// live messaging server. If some invalid message
+			// reaches this point, we're just skipping it.
+			$this->dropPayload($payload, $resolver, "Message content too long.");
+
+			return false;
+		}
+
+		return true;
+	}
+
+	protected function dropPayload($payload, $resolver, $reason)
+	{
+		$errorMessage = "Queue message dropped! Reason: {$reason}";
+		\Log::warning($errorMessage);
+		$this->warn($errorMessage);
+
+		$resolver->acknowledge($payload);
+
+		return;
+	}
+
+	protected function acceptPayload($payload, $resolver)
+	{
+		$resolver->acknowledge($payload);
+	}
+
+	protected function rejectPayload($payload, $reason)
+	{
+		$errorMessage = "Queue message rejected! Reason: {$reason}";
+		\Log::error($errorMessage);
+		$this->error($errorMessage);
 	}
 }

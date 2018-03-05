@@ -14,10 +14,6 @@ class AddSlugToChatRooms extends Migration
     public function up()
     {
         Schema::table('chat_rooms', function (Blueprint $table) {
-			$table->dropColumn('slug');
-        });
-
-        Schema::table('chat_rooms', function (Blueprint $table) {
 			$table->string('slug')->unique()->nullable()->after('type');
         });
     }

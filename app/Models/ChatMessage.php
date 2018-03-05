@@ -19,4 +19,12 @@ class ChatMessage extends Model
 	{
 		return $this->belongsTo('App\Models\ChatRoom');
 	}
+
+	public function getContentAttribute($value) {
+		return decrpty($value);
+	}
+
+	public function setContentAttribute($value) {
+		$this->attributes['content'] = encrypt($value);
+	}
 }

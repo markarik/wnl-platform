@@ -50,7 +50,6 @@
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import ConversationsList from 'js/components/messages/ConversationsList'
 	import FindUsers from 'js/components/messages/FindUsers'
-	import * as socket from 'js/socket'
 
 	export default {
 		name: 'MessagesDashboard',
@@ -87,9 +86,12 @@
 			}
 		},
 		methods: {
+			...mapActions('chatMessages', ['markRoomAsRead']),
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
+				room.id && this.$socketMarkRoomAsRead(room.id)
+					.then(() => this.markRoomAsRead(room.id))
 			},
 			openRoomById(roomId) {
 				const room = this.getRoomById(roomId)

@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
+use App\Models\ChatRoomUser;
+use function GuzzleHttp\default_ca_bundle;
 use Illuminate\Console\Command;
 
 class ProcessChatQueue extends Command
@@ -29,44 +31,78 @@ class ProcessChatQueue extends Command
 	 */
 	public function handle()
 	{
-		\Rabbit::consume('chat-events', function ($message, $resolver) {
+		\Rabbit::consume('chat-events', function ($payload, $resolver) {
 
-			$data = json_decode($message->body);
+			$data = json_decode($payload->body);
 
-			if ($data) {
-				$room = ChatRoom::find($data->room);
-				if (empty($room)) {
-					$room = ChatRoom::ofName($data->room)->first();
-				}
-				if ($this->validate($data, $message, $resolver)) {
-					$chatMessage = $room->messages()->create([
-						'user_id' => $data->message->user_id,
-						'content' => $data->message->content,
-						'time'    => $data->message->time,
-					]);
+			if (!$data) {
+				$this->rejectPayload($payload, 'Invalid payload!');
 
-					if ($chatMessage) {
-						$this->acceptMessage($message, $resolver);
-					} else {
-						$this->rejectMessage($message, 'Unable to persist.');
-					}
-				}
-			} else {
-				$this->rejectMessage($message, 'Invalid JSON');
+				return false;
+			}
+
+			switch ($data->event) {
+				case 'chatEvents:sendMessage':
+					$this->handleMessageSend($data, $payload, $resolver);
+					break;
+
+				case 'chatEvents:markRoomAsRead':
+					$this->handleMarkRoomAsRead($data, $payload);
+					break;
+
+				default:
+					$this->dropPayload($payload, $resolver, 'Invalid event!');
 			}
 		});
 
+		$this->info('Exiting.');
 		return;
 	}
 
-	protected function validate($data, $message, $resolver)
+	private function handleMessageSend($data, $payload, $resolver)
+	{
+		if (!$this->validateMessage($data, $payload, $resolver)) {
+			return false;
+		}
+
+		$room = ChatRoom::find($data->room);
+
+		$chatMessage = $room->messages()->create([
+			'user_id' => $data->message->user_id,
+			'content' => $data->message->content,
+			'time'    => $data->message->time,
+		]);
+
+		if (!$chatMessage) {
+			$this->rejectPayload($payload, 'Unable to persist message!');
+
+			return false;
+		}
+
+		$chatRoomUser = ChatRoomUser
+			::where('chat_room_id', $data->room)
+			->where('user_id', '<>', $data->message->user_id)
+			->increment('unread_count');
+
+		return true;
+	}
+
+	protected function handleMarkRoomAsRead($eventPayload)
+	{
+		$chatRoomUser = ChatRoomUser
+			::where('chat_room_id', $eventPayload->room)
+			->where('user_id', $eventPayload->user_id)
+			->update(['unread_count' => 0]);
+	}
+
+	protected function validateMessage($data, $payload, $resolver)
 	{
 		$length = strlen($data->message->content);
 		if ($length > ChatMessage::MAX_MSG_CONTENT_LEN) {
 			// Validation has to be done right by client and
 			// live messaging server. If some invalid message
 			// reaches this point, we're just skipping it.
-			$this->dropMessage($message, $resolver, "Message content too long.");
+			$this->dropPayload($payload, $resolver, "Message content too long.");
 
 			return false;
 		}
@@ -74,20 +110,26 @@ class ProcessChatQueue extends Command
 		return true;
 	}
 
-	protected function dropMessage($message, $resolver, $reason)
+	protected function dropPayload($payload, $resolver, $reason)
 	{
-		\Log::warning("Queue message dropped! Reason: {$reason}");
+		$errorMessage = "Queue message dropped! Reason: {$reason}";
+		\Log::warning($errorMessage);
+		$this->warn($errorMessage);
 
-		$resolver->acknowledge($message);
+		$resolver->acknowledge($payload);
+
+		return;
 	}
 
-	protected function acceptMessage($message, $resolver)
+	protected function acceptPayload($payload, $resolver)
 	{
-		$resolver->acknowledge($message);
+		$resolver->acknowledge($payload);
 	}
 
-	protected function rejectMessage($message, $reason)
+	protected function rejectPayload($payload, $reason)
 	{
-		\Log::error("Queue message rejected! Reason: {$reason}");
+		$errorMessage = "Queue message rejected! Reason: {$reason}";
+		\Log::error($errorMessage);
+		$this->error($errorMessage);
 	}
 }

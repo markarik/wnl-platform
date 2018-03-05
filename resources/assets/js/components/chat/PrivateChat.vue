@@ -94,7 +94,7 @@
 	import {getApiUrl} from 'js/utils/env'
 	import highlight from 'js/mixins/highlight'
 
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		components: {
@@ -134,10 +134,22 @@
 			},
 		},
 		methods: {
+			...mapActions('chatMessages', ['markRoomAsRead']),
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)
 			}
 		},
+		watch: {
+			'room.messages.length' (newValue, oldValue) {
+				if (newValue > oldValue) {
+					const newMessages = this.room.messages.slice(oldValue, newValue)
+					if (newMessages.find(msg => msg.user_id !== this.currentUserId)) {
+						this.$socketMarkRoomAsRead(this.room.id)
+							.then(() => this.markRoomAsRead(this.room.id))
+					}
+				}
+			}
+		}
 	}
 
 </script>

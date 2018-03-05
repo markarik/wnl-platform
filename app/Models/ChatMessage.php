@@ -23,7 +23,7 @@ class ChatMessage extends Model
 	}
 
 	public function getContentAttribute($value) {
-		return decrpty($value);
+		return decrypt($value);
 	}
 
 	public function setContentAttribute($value) {

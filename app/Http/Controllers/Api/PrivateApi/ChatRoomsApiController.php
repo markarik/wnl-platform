@@ -73,9 +73,9 @@ class ChatRoomsApiController extends ApiController
 	public function createPublicRoom(Request $request)
 	{
 		$user = \Auth::user();
-		$name = $request->name;
+		$slug = $request->slug;
 		$room = ChatRoom::firstOrCreate([
-			'name' => $name,
+			'slug' => $slug,
 			'type' => 'public',
 		]);
 

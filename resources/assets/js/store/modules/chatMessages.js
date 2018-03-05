@@ -167,9 +167,9 @@ const actions = {
 
 		return room
 	},
-	async createPublicRoom({commit}, {name}) {
+	async createPublicRoom({commit}, {slug}) {
 		const url                 = getApiUrl('chat_rooms/.createPublicRoom')
-		const response            = await axios.post(url, {name})
+		const response            = await axios.post(url, {slug})
 		const {included, ...room} = response.data
 		const payload             = {
 			room: {

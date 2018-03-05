@@ -9,7 +9,7 @@ class ChatRoom extends Model
 {
 	use Restrictable;
 
-	protected $fillable = ['name', 'type'];
+	protected $fillable = ['name', 'type', 'slug'];
 
 	protected $appends = ['is_private', 'is_public'];
 

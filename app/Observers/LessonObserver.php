@@ -4,9 +4,10 @@
 namespace App\Observers;
 
 
+use App\Models\ChatRoom;
+use App\Models\Permission;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\Lesson;
-use App\Models\Tag;
 
 
 class LessonObserver
@@ -16,7 +17,18 @@ class LessonObserver
 
 	public function created(Lesson $lesson)
 	{
-
+		$this->createLessonChat($lesson);
 	}
 
+	protected function createLessonChat($lesson)
+	{
+		$chatRoom = ChatRoom::create([
+			'type' => 'public',
+			'slug' => "courses-1-lessons-{$lesson->id}",
+			'name' => '',
+		]);
+		$lessonAccess = Permission::slug('lesson_access');
+		$lessonAccess->chatRooms()->syncWithoutDetaching($chatRoom);
+		$chatRoom->lessons()->syncWithoutDetaching($lesson);
+	}
 }

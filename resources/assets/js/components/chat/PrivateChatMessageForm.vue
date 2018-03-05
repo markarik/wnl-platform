@@ -21,6 +21,7 @@
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
+			<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
 			<div class="message is-warning" v-if="error.length > 0">
 				<div class="message-body">{{ error }}</div>
 			</div>
@@ -40,6 +41,14 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	.media
 		align-items: center
+
+	.characters-counter
+		color: #7a7f91
+		display: block
+		font-weight: 400
+		text-transform: none
+		text-align: right
+
 </style>
 <script>
 	import { mapGetters, mapActions } from 'vuex'
@@ -94,7 +103,7 @@
 				return ['bold', 'italic', 'underline', 'link']
 			},
 			sendingDisabled() {
-				return this.message.length === 0
+				return this.message.length === 0 || this.message.length > 5000
 			},
 			toolbar() {
 				return [
@@ -122,8 +131,16 @@
 						content: this.content
 					},
 					users: this.users
-				}).then(() => {
-					this.quillEditor.clear();
+				}).then((data) => {
+					if (Object.keys(data.errors).length > 0) {
+						if (data.errors.tooLong) {
+							this.error = 'Nie udało się wysłać wiadomości. Wiadomość jest za duża'
+						} else {
+							this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+						}
+					} else {
+						this.quillEditor.clear();
+					}
 					this.sendingMessage = false
 				}).catch(err => {
 					this.addAutoDismissableAlert({
@@ -136,6 +153,12 @@
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
 				this.content = this.quillEditor.editor.innerHTML
+
+				if (this.message.length > 5000) {
+					this.error = "Wiadomość nie móże być dłuższa niż 5000 znaków"
+				} else {
+					this.error = ''
+				}
 			},
 		},
 		mounted () {

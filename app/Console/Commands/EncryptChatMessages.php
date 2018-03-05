@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\ChatMessage;
 use Illuminate\Console\Command;
 
-class EncryptMessages extends Command
+class EncryptChatMessages extends Command
 {
 	/**
 	 * The name and signature of the console command.
@@ -41,7 +41,7 @@ class EncryptMessages extends Command
 		$chatMessages = ChatMessage::all();
 
 		foreach ($chatMessages as $chatMessage) {
-			$chatMessage->content = $chatMessage->content;
+			$chatMessage->content = $chatMessage->getOriginal('content');
 			$chatMessage->save();
 		}
 

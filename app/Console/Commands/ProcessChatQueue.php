@@ -61,7 +61,7 @@ class ProcessChatQueue extends Command
 		}
 		$room->messages()->create([
 			'user_id' => $messagePayload->message->user_id,
-			'content' => encrypt($messagePayload->message->content),
+			'content' => $messagePayload->message->content,
 			'time'    => $messagePayload->message->time,
 		]);
 

@@ -41,7 +41,7 @@ class EncryptPasswords extends Command
 		$chatMessages = ChatMessage::all();
 
 		foreach ($chatMessages as $chatMessage) {
-			$chatMessage->content = encrypt($chatMessage->content);
+			$chatMessage->content = $chatMessage;
 			$chatMessage->save();
 		}
 

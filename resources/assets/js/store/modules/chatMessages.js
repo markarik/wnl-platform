@@ -193,8 +193,6 @@ const actions = {
 				messages: roomsWithMessages[roomId]
 			}))
 
-		commit(types.CHAT_MESSAGES_READY, true)
-
 		const userIds  = Object.values(messages).map(message => message.user_id)
 		const query    = {
 			whereIn: ['user_id', userIds]

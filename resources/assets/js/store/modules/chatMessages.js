@@ -186,7 +186,6 @@ const actions = {
 		return room
 	},
 	async initPublicRoom({commit, getters}, room) {
-		// TODO: include profiles when fetching room messages
 		const {roomsWithMessages, messages} = await fetchRoomsMessages([room.id])
 		Object.keys(roomsWithMessages)
 			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {

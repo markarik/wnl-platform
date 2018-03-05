@@ -55,12 +55,12 @@ class MigrateChatRooms extends Command
 
 			if (str_is('*lessons-*', $room->name)) {
 				$lessonAccess->chatRooms()->syncWithoutDetaching($room);
-
-				$elo = explode('-', $room->name);
-				$lessonId = array_pop($elo);
+				$lessonId = array_pop(explode('-', $room->name));
 				$lesson = Lesson::find($lessonId);
 				if ($lesson) {
 					$room->lessons()->syncWithoutDetaching($lesson);
+				} else {
+					$this->warn("Couldn't find lesson of ID {$lessonId}");
 				}
 			}
 

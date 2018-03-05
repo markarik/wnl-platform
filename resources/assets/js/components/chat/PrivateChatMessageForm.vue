@@ -21,6 +21,7 @@
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
+			<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
 			<div class="message is-warning" v-if="error.length > 0">
 				<div class="message-body">{{ error }}</div>
 			</div>
@@ -40,6 +41,14 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	.media
 		align-items: center
+
+	.characters-counter
+		color: #7a7f91
+		display: block
+		font-weight: 400
+		text-transform: none
+		text-align: right
+
 </style>
 <script>
 	import { mapGetters, mapActions } from 'vuex'

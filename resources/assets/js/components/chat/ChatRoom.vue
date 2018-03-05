@@ -202,7 +202,6 @@
 			},
 			addMessage(data) {
 				if (data.sent) {
-					this.pushMessage(data)
 					nextTick(() => {
 						this.scrollToBottom()
 						this.$refs.messageForm.quillEditor.quill.focus()

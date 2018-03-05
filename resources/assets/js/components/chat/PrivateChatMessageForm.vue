@@ -94,7 +94,7 @@
 				return ['bold', 'italic', 'underline', 'link']
 			},
 			sendingDisabled() {
-				return this.message.length === 0
+				return this.message.length === 0 || this.message.length > 5000
 			},
 			toolbar() {
 				return [
@@ -136,6 +136,12 @@
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
 				this.content = this.quillEditor.editor.innerHTML
+
+				if (this.message.length > 5000) {
+					this.error = "Wiadomość nie móże być dłuższa niż 5000 znaków"
+				} else {
+					this.error = ''
+				}
 			},
 		},
 		mounted () {

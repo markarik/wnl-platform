@@ -88,7 +88,7 @@
 				return ['bold', 'italic', 'underline', 'link', 'mention']
 			},
 			sendingDisabled() {
-				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0)
+				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0) || this.message.length > 5000
 			},
 			toolbar() {
 				return [
@@ -176,6 +176,11 @@
 				this.message = this.quillEditor.quill.getText().trim();
 				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
+				if (this.message.length > 5000) {
+					this.error = "Wiadomość nie móże być dłuższa niż 5000 znaków"
+				} else {
+					this.error = ''
+				}
 			}
 		}
 	}

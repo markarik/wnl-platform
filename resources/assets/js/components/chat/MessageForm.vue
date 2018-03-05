@@ -41,6 +41,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	.media
 		align-items: center
+
 	.characters-counter
 		color: #7a7f91
 		display: block
@@ -175,7 +176,11 @@
 					this.mentions = []
 					this.quillEditor.clear();
 				} else {
-					this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+					if (data.errors && data.errors.tooLong) {
+						this.error = 'Nie udało się wysłać wiadomości. Wiadomość jest za duża'
+					} else {
+						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+					}
 				}
 				this.isWaitingToSendMentions = false
 			},

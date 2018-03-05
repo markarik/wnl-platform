@@ -131,8 +131,16 @@
 						content: this.content
 					},
 					users: this.users
-				}).then(() => {
-					this.quillEditor.clear();
+				}).then((data) => {
+					if (Object.keys(data.errors).length > 0) {
+						if (data.errors.tooLong) {
+							this.error = 'Nie udało się wysłać wiadomości. Wiadomość jest za duża'
+						} else {
+							this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+						}
+					} else {
+						this.quillEditor.clear();
+					}
 					this.sendingMessage = false
 				}).catch(err => {
 					this.addAutoDismissableAlert({

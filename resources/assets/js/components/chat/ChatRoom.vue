@@ -155,24 +155,24 @@
 					.then(room => {
 						const {messages} = this.getRoomById(room.id)
 						this.messages = messages
+
+						return this.$socketJoinRoom(room.id)
 					})
+					.then((data) => {
+						if (!this.loaded) {
+							this.loaded = true
 
+							nextTick(() => {
+								const messageId = this.$route.query.messageId
 
-				this.$socketJoinRoom(this.room.channel).then((data) => {
-					if (!this.loaded) {
-						this.loaded = true
-
-						nextTick(() => {
-							const messageId = this.$route.query.messageId
-
-							if (messageId && !this.isOverlayVisible) {
-								this.scrollToMessageById(messageId)
-							} else {
-								this.scrollToBottom()
-							}
-						})
-					}
-				})
+								if (messageId && !this.isOverlayVisible) {
+									this.scrollToMessageById(messageId)
+								} else {
+									this.scrollToBottom()
+								}
+							})
+						}
+					})
 			},
 			leaveRoom(roomId) {
 				this.$socketEmit(SOCKET_EVENT_LEAVE_ROOM, {

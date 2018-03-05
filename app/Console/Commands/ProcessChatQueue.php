@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
-use function GuzzleHttp\default_ca_bundle;
 use Illuminate\Console\Command;
 
 class ProcessChatQueue extends Command

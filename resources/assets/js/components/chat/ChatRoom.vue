@@ -150,6 +150,7 @@
 
 				this.createPublicRoom({name: this.room.channel})
 					.then(room => {
+						this.room.id = room.id
 						return this.initPublicRoom(room)
 					})
 					.then(room => {

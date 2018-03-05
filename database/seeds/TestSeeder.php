@@ -20,5 +20,6 @@ class TestSeeder extends Seeder
 		$this->call(ReactionsSeeder::class);
 		$this->call(TaxonomiesSeeder::class);
 		$this->call(ReactionsSeeder::class);
+		$this->call(PermissionsSeeder::class);
 	}
 }

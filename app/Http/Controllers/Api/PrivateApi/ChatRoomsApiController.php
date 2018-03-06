@@ -77,7 +77,7 @@ class ChatRoomsApiController extends ApiController
 		$room = ChatRoom::firstOrCreate([
 			'slug' => $slug,
 			'type' => 'public',
-		]);
+		], ['name' => $slug]);
 
 		if (!$user->can('view', $room)) {
 			return $this->respondUnauthorized();

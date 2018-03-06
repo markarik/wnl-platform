@@ -22,6 +22,7 @@
 					@input="onInput"
 				></wnl-quill>
 			</wnl-form>
+			<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
 			<div class="message is-warning" v-if="error.length > 0">
 				<div class="message-body">{{ error }}</div>
 			</div>
@@ -40,6 +41,13 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	.media
 		align-items: center
+
+	.characters-counter
+		color: #7a7f91
+		display: block
+		font-weight: 400
+		text-transform: none
+		text-align: right
 </style>
 <script>
 	import { mapActions, mapGetters } from 'vuex'
@@ -88,7 +96,7 @@
 				return ['bold', 'italic', 'underline', 'link', 'mention']
 			},
 			sendingDisabled() {
-				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0)
+				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0) || this.message.length > 5000
 			},
 			toolbar() {
 				return [
@@ -110,7 +118,7 @@
 				this.error = ''
 				this.isWaitingToSendMentions = true
 				this.$socketSendMessage({
-					room: this.room.channel,
+					room: this.room.id,
 					message: {
 						user: this.currentUser,
 						content: this.content
@@ -168,7 +176,11 @@
 					this.mentions = []
 					this.quillEditor.clear();
 				} else {
-					this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+					if (data.errors && data.errors.tooLong) {
+						this.error = 'Nie udało się wysłać wiadomości. Wiadomość jest za duża'
+					} else {
+						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
+					}
 				}
 				this.isWaitingToSendMentions = false
 			},
@@ -176,6 +188,11 @@
 				this.message = this.quillEditor.quill.getText().trim();
 				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
+				if (this.message.length > 5000) {
+					this.error = "Wiadomość nie móże być dłuższa niż 5000 znaków"
+				} else {
+					this.error = ''
+				}
 			}
 		}
 	}

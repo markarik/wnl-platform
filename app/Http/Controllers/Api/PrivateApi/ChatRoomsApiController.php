@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Chat\PostPrivateRoom;
+use App\Http\Requests\Chat\PostPublicRoom;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
 use Auth;
@@ -21,6 +22,7 @@ class ChatRoomsApiController extends ApiController
 		$select = [
 			'chat_rooms.id',
 			'chat_rooms.name',
+			'max(chat_room_user.unread_count) as unread_count',
 			'max(chat_messages.time) as last_message_time',
 		];
 
@@ -55,14 +57,34 @@ class ChatRoomsApiController extends ApiController
 			->first();
 
 		if (!empty($matchingRoom)) {
-			$data =  $this->transform(ChatRoom::find($matchingRoom->chat_room_id));
+			$data = $this->transform(ChatRoom::find($matchingRoom->chat_room_id));
+
 			return $this->respondOk($data);
 		} else {
 			$room = ChatRoom::firstOrCreate(['name' => $request->name]);
 			$room->users()->syncWithoutDetaching($request->users);
 
 			$data = $this->transform($room);
+
 			return $this->respondOk($data);
 		}
+	}
+
+	public function createPublicRoom(Request $request)
+	{
+		$user = \Auth::user();
+		$slug = $request->slug;
+		$room = ChatRoom::firstOrCreate([
+			'slug' => $slug,
+			'type' => 'public',
+		]);
+
+		if (!$user->can('view', $room)) {
+			return $this->respondUnauthorized();
+		}
+
+		$data = $this->transform($room);
+
+		return $this->respondOk($data);
 	}
 }

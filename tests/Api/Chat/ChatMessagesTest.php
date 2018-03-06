@@ -42,7 +42,7 @@ class ChatMessagesTest extends ApiTestCase
 	public function get_public_chat_room_history()
 	{
 		$user = User::find(1);
-		$room = factory(ChatRoom::class)->create();
+		$room = factory(ChatRoom::class)->create(['type' => 'public']);
 
 		$data = [
 			'query'   => [

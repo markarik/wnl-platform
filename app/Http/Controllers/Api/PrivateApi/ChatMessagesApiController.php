@@ -41,7 +41,16 @@ class ChatMessagesApiController extends ApiController
 
 	public function getByMultipleRooms(Request $request)
 	{
+		$user = \Auth::user();
 		$roomIds = $request->get('rooms');
+
+		$rooms = ChatRoom::with('users')->whereIn('id', $roomIds)->get();
+		foreach ($rooms as $room) {
+			if (!$user->can('view', $room)) {
+				return $this->respondUnauthorized();
+			}
+		}
+
 		$messages = ChatMessage::select()
 			->whereIn('chat_room_id', $roomIds)
 			->orderBy('time', 'asc');

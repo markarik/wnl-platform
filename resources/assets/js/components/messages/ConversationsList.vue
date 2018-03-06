@@ -34,9 +34,6 @@
         	</wnl-message-link>
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
-		<div class="load-more-conversations" v-show="hasMoreRooms">
-			<a class="button is-primary is-outlined is-small">Poka wincyj</a>
-		</div>
 	</div>
 </template>
 
@@ -101,34 +98,27 @@
 		},
 		data() {
 			return  {
-				currentRoom: '',
 				userSearchVisible: false,
-				searchResults: [],
-				page: 3,
 			}
 		},
 		computed: {
 			...mapGetters(['currentUser']),
 			...mapGetters('chatMessages', [
 				'sortedRooms',
-				'getProfileById',
 				'getRoomById',
 				'getInterlocutor',
 				'hasMoreRooms',
-				'rooms',
-				'profiles'
+				'currentPage'
 			]),
 			roomsToShow() {
+				console.log('przeładował rooms to show');
 				return this.sortedRooms.map(roomId => {
 					return this.getRoomById(roomId)
 				})
-			}
+			},
 		},
 		methods: {
-			...mapActions('chatMessages', ['pullUserRooms']),
-			nextPage() {
-				return this.page = this.page + 1
-			},
+			...mapActions('chatMessages', ['pullUserRooms', 'incrementPage']),
 			closeUserSearch() {
 				this.userSearchVisible = false
 			},
@@ -145,9 +135,17 @@
 				if (profile.id) return profile
 				return this.currentUser
 			},
-			pullRooms() {
-				this.nextPage()
-				return this.pullUserRooms({limit: 1, page: this.page})
+			pullRooms(event) {
+				if (this.hasMoreRooms) {
+					if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
+						return new Promise((resolve) => {
+							this.incrementPage()
+							resolve()
+						}).then(() => {
+							return this.pullUserRooms({limit: 10, page: this.currentPage})
+						})
+					}
+				}
 			}
 		}
 	}

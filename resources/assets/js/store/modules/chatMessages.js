@@ -13,6 +13,7 @@ const state = {
 	profiles: {},
 	ready: false,
 	hasMoreRooms: false,
+	currentPage: 1,
 }
 
 //Getters
@@ -21,6 +22,7 @@ const getters = {
 	sortedRooms: state => state.sortedRooms,
 	profiles: state => state.profiles,
 	hasMoreRooms: state => state.hasMoreRooms,
+	currentPage: state => state.currentPage,
 	getRoomById: state => id => state.rooms[id] || {},
 	getProfileById: state => id => state.profiles[id] || {},
 	getRoomProfiles: (state, getters) => id => {
@@ -104,15 +106,23 @@ const mutations = {
 		}
 	},
 	[types.CHAT_MESSAGES_ADD_PULLED_ROOM] (state, payload) {
-		set (state.rooms, payload.id, payload)
+		Object.keys(payload).forEach((key) => {
+			console.log(payload[key], 'roomy w mutacji');
+			set (state.rooms, payload[key].id, payload[key])
+		})
 	},
 	[types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED] (state, payload) {
-		state.sortedRooms.push(payload[0])
+		console.log(payload, 'sorted rooms w mutacji');
+		state.sortedRooms = state.sortedRooms.concat(payload)
 	},
 	[types.CHAT_MESSAGES_ADD_PULLED_PROFILE] (state, payload) {
 		Object.keys(payload).forEach((key) => {
+			console.log(payload[key], 'profile w mutacji');
 			set (state.profiles, payload[key].user_id, payload[key])
 		})
+	},
+	[types.CHAT_MESSAGES_INCREMENT_PAGE] (state, payload) {
+		state.currentPage += payload
 	}
 }
 
@@ -120,10 +130,15 @@ const mutations = {
 const actions = {
 	async pullUserRooms({commit, getters}, data) {
 		const response = await fetchUserRooms(data)
-
-		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM, Object.values(response.payload.rooms)[0])
+		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM, response.payload.rooms)
 		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.hasMoreRooms)
+
+		// if (_.includes(getters.sortedRooms, response.payload.sortedRooms)) {
+		// 	return []
+		// } else {
 		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED, response.payload.sortedRooms)
+		// }
+
 		commit(types.CHAT_MESSAGES_ADD_PULLED_PROFILE, response.payload.profiles)
 
 		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
@@ -133,7 +148,7 @@ const actions = {
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
 	async initChatMessages({commit, getters}) {
-		const response = await fetchUserRooms({limit: 15, page: 0})
+		const response = await fetchUserRooms({limit: 10, page: getters.currentPage})
 		commit(types.CHAT_MESSAGES_SET_ROOMS, response.payload)
 		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.hasMoreRooms)
 
@@ -144,6 +159,9 @@ const actions = {
 			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, messages: roomsWithMessages[roomId]}))
 
 		commit(types.CHAT_MESSAGES_READY, true)
+	},
+	incrementPage({commit}) {
+		commit(types.CHAT_MESSAGES_INCREMENT_PAGE, 1)
 	},
 	onNewMessage({commit, getters, rootGetters}, {room, users: profiles, message}) {
 

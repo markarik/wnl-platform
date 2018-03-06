@@ -25,7 +25,6 @@ class LessonObserver
 		$chatRoom = ChatRoom::create([
 			'type' => 'public',
 			'slug' => "courses-1-lessons-{$lesson->id}",
-			'name' => '',
 		]);
 		$lessonAccess = Permission::slug('lesson_access');
 		$lessonAccess->chatRooms()->syncWithoutDetaching($chatRoom);

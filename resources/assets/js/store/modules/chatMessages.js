@@ -200,7 +200,7 @@ const actions = {
 			roomId: room.id,
 			messages
 		})
-		included && included.profiles && commit(types.CHAT_MESSAGES_ADD_PROFILES, included.profiles)
+		included && included.profiles && commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
 
 		return Object.values(messages)
 	},

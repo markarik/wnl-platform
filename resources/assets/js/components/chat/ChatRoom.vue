@@ -12,15 +12,15 @@
 					</wnl-text-loader>
 					<div v-if="messages.length > 0">
 						<wnl-message v-for="(message, index) in messages"
-									 :key="index"
-									 :showAuthor="isAuthorUnique[index]"
-									 :id="getMessageId(message)"
-									 :author="getMessageAuthor(message)"
-									 :fullName="getMessageAuthor(message).full_name"
-									 :displayName="getMessageAuthor(message).display_name"
-									 :avatar="getMessageAuthor(message).avatar"
-									 :time="message.time"
-									 :content="message.content"
+							:key="index"
+							:showAuthor="isAuthorUnique[index]"
+							:id="getMessageId(message)"
+							:author="getMessageAuthor(message)"
+							:fullName="getMessageAuthor(message).full_name"
+							:displayName="getMessageAuthor(message).display_name"
+							:avatar="getMessageAuthor(message).avatar"
+							:time="message.time"
+							:content="message.content"
 						></wnl-message>
 					</div>
 					<div class="metadata aligncenter margin vertical" v-else>
@@ -34,13 +34,6 @@
 				</div>
 				<wnl-text-loader v-else>Ładuję wiadomości...</wnl-text-loader>
 			</div>
-		</div>
-		<div class="wnl-chat-form">
-			<wnl-message-form
-					:loaded="loaded"
-					:room="room"
-					ref="messageForm"
-			></wnl-message-form>
 		</div>
 	</div>
 </template>
@@ -69,27 +62,31 @@
 </style>
 <script>
 	import Message from './Message.vue'
-	import MessageForm from './MessageForm.vue'
 	import {getApiUrl} from 'js/utils/env'
 	import {nextTick} from 'vue'
 	import _ from 'lodash'
 	import highlight from 'js/mixins/highlight'
-	import {
-		SOCKET_EVENT_USER_SENT_MESSAGE,
-		SOCKET_EVENT_MESSAGE_PROCESSED,
-		SOCKET_EVENT_LEAVE_ROOM
-	} from 'js/plugins/socket'
 
 	import {mapGetters, mapActions} from 'vuex'
 
 	export default {
+		components: {
+			'wnl-message': Message,
+		},
 		props: {
 			room: {
 				required: true,
 			},
-			switchRoom: {
+			highlightedMessageId: {
+				required: false
+			},
+			loaded: {
 				required: true,
-				type: Function
+				type: Boolean
+			},
+			messages: {
+				required: true,
+				type: Array
 			},
 			pullLimit: {
 				required: false,
@@ -104,8 +101,6 @@
 		},
 		data() {
 			return {
-				loaded: false,
-				messages: [],
 				isPulling: false,
 				thereIsMore: true,
 			}
@@ -137,77 +132,6 @@
 			},
 		},
 		methods: {
-			...mapActions('chatMessages', ['createPublicRoom', 'initPublicRoom']),
-			joinRoom() {
-				const channel = this.$route.query.chatChannel
-
-				if (channel && channel !== this.room.channel) {
-					return this.switchRoom({
-						channel,
-						name: `#${_.last(channel.split('-'))}`
-					})
-				}
-
-				this.createPublicRoom({slug: this.room.channel})
-					.then(room => {
-						this.room.id = room.id
-						return this.initPublicRoom(room)
-					})
-					.then(room => {
-						const {messages} = this.getRoomById(room.id)
-						this.messages = messages
-
-						return this.$socketJoinRoom(room.id)
-					})
-					.then((data) => {
-						if (!this.loaded) {
-							this.loaded = true
-
-							nextTick(() => {
-								const messageId = this.$route.query.messageId
-
-								if (messageId && !this.isOverlayVisible) {
-									this.scrollToMessageById(messageId)
-								} else {
-									this.scrollToBottom()
-								}
-							})
-						}
-					})
-			},
-			leaveRoom(roomId) {
-				this.$socketEmit(SOCKET_EVENT_LEAVE_ROOM, {
-					room: roomId
-				})
-			},
-			changeRoom(oldRoom) {
-				this.loaded = false
-				this.$socketEmit(SOCKET_EVENT_LEAVE_ROOM, {
-					room: oldRoom.channel
-				})
-				this.joinRoom()
-			},
-			setListeners() {
-				this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
-				this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.addMessage)
-			},
-			removeListeners() {
-				this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
-				this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.addMessage)
-			},
-			pushMessage({message, room}) {
-				if (this.room.id === room) {
-					this.messages.push(message)
-				}
-			},
-			addMessage(data) {
-				if (data.sent) {
-					nextTick(() => {
-						this.scrollToBottom()
-						this.$refs.messageForm.quillEditor.quill.focus()
-					})
-				}
-			},
 			scrollToBottom() {
 				this.container.scrollTop = '1000000000'
 			},
@@ -309,41 +233,15 @@
 			}
 		},
 		mounted() {
-			this.joinRoom()
-			this.setListeners()
-
 			this.pullDebouncer = _.debounce(this.pullDebouncer, 50)
 			if (this.initialPull) {
 				this.pull(0)
 			}
 		},
-		beforeDestroy() {
-			this.leaveRoom(this.room.id)
-			this.removeListeners()
-		},
-		components: {
-			'wnl-message': Message,
-			'wnl-message-form': MessageForm,
-		},
 		watch: {
-			'room'(newRoom, oldRoom) {
-				if (newRoom !== oldRoom) {
-					this.changeRoom(oldRoom)
-				}
-			},
-			'$route'(newRoute, oldRoute) {
-				const messageId = this.$route.query.messageId
-				const channel   = this.$route.query.chatChannel
-
-				if (channel && channel !== this.room.channel) {
-					this.switchRoom({
-						channel,
-						name: `#${_.last(channel.split('-'))}`
-					})
-				} else if (messageId && !this.isOverlayVisible) {
-					this.scrollToMessageById(messageId)
-				}
-			},
+			'messages.length'() {
+				this.scrollToBottom()
+			}
 		}
 	}
 

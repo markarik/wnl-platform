@@ -118,7 +118,7 @@
 				this.error = ''
 				this.isWaitingToSendMentions = true
 				this.$socketSendMessage({
-					room: this.room.id,
+					room: this.room,
 					message: {
 						user: this.currentUser,
 						content: this.content

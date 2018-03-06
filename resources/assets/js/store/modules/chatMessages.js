@@ -61,7 +61,8 @@ const getters = {
 				roomProfiles.includes(profile.id)
 		}) || {}
 	},
-	ready: state => state.ready // :D
+	getRoomBySlug: state => slug => Object.values(state.rooms).find(room => room.slug === slug),
+	ready: state => state.ready
 }
 
 //mutations
@@ -143,8 +144,8 @@ const actions = {
 		}
 	},
 	async createNewRoom({commit, rootGetters, state}, {users}) {
-		const uniqUsers           = uniq(users)
-		const response            = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
+		const uniqUsers = uniq(users)
+		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
 			name: `private-${uniqUsers.join('-')}`,
 			include: 'profiles',
 			users: uniqUsers,
@@ -167,40 +168,41 @@ const actions = {
 
 		return room
 	},
-	async createPublicRoom({commit}, {slug}) {
-		const url                 = getApiUrl('chat_rooms/.createPublicRoom')
-		const response            = await axios.post(url, {slug})
-		const {included, ...room} = response.data
-		const payload             = {
+	async createPublicRoom({commit, getters}, {slug}) {
+		const existingRoom = getters.getRoomBySlug(slug)
+
+		if (existingRoom) {
+			return existingRoom
+		}
+
+		const url = getApiUrl('chat_rooms/.createPublicRoom')
+		const response = await axios.post(url, {slug})
+		const room = response.data
+		const payload = {
 			room: {
 				...room,
 				messages: []
 			}
 		}
 		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
-		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {
-			room: room.id,
-			newIndex: 0
-		})
 
 		return room
 	},
 	async initPublicRoom({commit, getters}, room) {
-		const {roomsWithMessages, messages} = await fetchRoomsMessages([room.id])
-		Object.keys(roomsWithMessages)
-			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
-				roomId,
-				messages: roomsWithMessages[roomId]
-			}))
+		const {data} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
+			rooms: [room.id],
+			include: 'profiles'
+		})
 
-		const userIds  = Object.values(messages).map(message => message.user_id)
-		const query    = {
-			whereIn: ['user_id', userIds]
-		}
-		const response = await axios.post(getApiUrl('user_profiles/.query'), {query})
-		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(response.data))
+		const {included, ...messages} = data
 
-		return room
+		commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
+			roomId: room.id,
+			messages
+		})
+		included && included.profiles && commit(types.CHAT_MESSAGES_ADD_PROFILES, included.profiles)
+
+		return Object.values(messages)
 	},
 	markRoomAsRead({commit}, roomId) {
 		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId)
@@ -220,7 +222,7 @@ const fetchUserRooms = async () => {
 	}
 
 	const {included, ...rooms} = response.data
-	const payload              = {
+	const payload = {
 		rooms: {},
 		sortedRooms: [],
 		profiles: included.profiles

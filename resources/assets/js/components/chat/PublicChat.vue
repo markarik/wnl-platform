@@ -25,6 +25,7 @@
 		<div class="wnl-chat-form">
 			<wnl-message-form
 				:roomId="currentRoom.id"
+				:room="currentRoom"
 				:loaded="loaded"
 			></wnl-message-form>
 		</div>

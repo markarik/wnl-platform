@@ -143,6 +143,7 @@
 					}
 					this.sendingMessage = false
 				}).catch(err => {
+					$wnl.logger.capture(err)
 					this.addAutoDismissableAlert({
 						text: 'Niestety nie udało Nam się wysłać wiadomości. Spróbuj ponownie',
 						type: 'error'

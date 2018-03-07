@@ -55,7 +55,6 @@
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
 	import _ from 'lodash';
-	import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED} from 'js/plugins/socket'
 
 	export default{
 		props: {

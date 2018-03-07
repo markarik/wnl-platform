@@ -20,6 +20,8 @@
 			:room="currentRoom"
 			:messages="messages"
 			:highlightedMessageId="highlightedMessageId"
+			:hasMore="hasMore"
+			:onScrollTop="pullMore"
 			:loaded="loaded"
 		/>
 		<div class="wnl-chat-form">
@@ -93,13 +95,17 @@
 				currentRoom: this.getCurrentRoom(),
 				loaded: false,
 				highlightedMessageId: 0,
-				messages: []
+				messages: [],
+				pagination: {
+					hasMore: false,
+					page: 1
+				}
 			}
 		},
 		computed: {
 			...mapGetters(['canShowCloseIconInChat']),
 			...mapGetters('course', ['getLesson']),
-			...mapGetters('chatMessages', ['getRoomById', 'getProfileByUserId']),
+			...mapGetters('chatMessages', ['getRoomMessagesPagination']),
 			chatTitle() {
 				let lessonId = this.$route.params.lessonId
 
@@ -108,11 +114,17 @@
 				}
 
 				return `Czat lekcji ${this.getLesson(lessonId).name}`
+			},
+			nextPage() {
+				return this.pagination.page + 1 || 1
+			},
+			hasMore() {
+				return this.pagination.hasMore || false
 			}
 		},
 		methods: {
 			...mapActions(['toggleChat']),
-			...mapActions('chatMessages', ['createPublicRoom', 'initPublicRoom']),
+			...mapActions('chatMessages', ['createPublicRoom', 'fetchPublicRoomMessages']),
 			changeRoom(room) {
 				this.joinRoom(room.id)
 				this.leaveRoom(this.currentRoom.id)
@@ -160,15 +172,15 @@
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id
-						return this.initPublicRoom(room)
+						return this.fetchPublicRoomMessages({room})
 					})
 					.then(messages => {
 						this.messages = messages
+						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)
 						return this.$socketJoinRoom(this.currentRoom.id)
 					})
 					.then((data) => {
 						if (!this.loaded) {
-
 							nextTick(() => {
 								const messageId = this.$route.query.messageId
 
@@ -180,11 +192,6 @@
 							})
 						}
 					})
-			},
-			onNewMessage({message, room}) {
-				if (this.room.id === room) {
-					this.messages.push(message)
-				}
 			},
 			setListeners() {
 				this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
@@ -200,14 +207,24 @@
 				})
 			},
 			pushMessage({message, room}) {
-				if (this.room.id === room) {
-					this.messages.push(message)
+				if (this.currentRoom.id === room) {
+					this.messages = [
+						...this.messages,
+						message
+					]
 				}
 			},
-			addMessage(data) {
-				if (data.sent) {
-					this.messages.push(data.message)
+			addMessage({sent, ...data}) {
+				if (sent) {
+					this.pushMessage(data)
 				}
+			},
+			pullMore() {
+				return this.fetchPublicRoomMessages({room: this.currentRoom, page: this.nextPage})
+					.then(messages => {
+						this.messages = messages.concat(this.messages)
+						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)
+					}).catch(error => $wnl.logger.capture(error))
 			}
 		},
 		mounted() {

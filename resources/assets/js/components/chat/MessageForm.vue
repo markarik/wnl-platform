@@ -53,7 +53,6 @@
 	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
-	import { SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED } from 'js/plugins/socket'
 	import _ from 'lodash';
 
 	export default{

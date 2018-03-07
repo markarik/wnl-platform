@@ -4,7 +4,7 @@
 			 ref="messagesContainer">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
-					<div class="notification aligncenter" v-if="!thereIsMore">
+					<div class="notification aligncenter" v-if="!hasMore">
 						To początek dyskusji na tym kanale!
 					</div>
 					<wnl-text-loader v-if="isPulling">
@@ -93,16 +93,18 @@
 				type: Number,
 				default: 100
 			},
-			initialPull: {
-				required: false,
-				type: Boolean,
-				default: false,
+			onScrollTop: {
+				required: true,
+				type: Function
+			},
+			hasMore: {
+				required: true,
+				type: Boolean
 			}
 		},
 		data() {
 			return {
 				isPulling: false,
-				thereIsMore: true,
 			}
 		},
 		mixins: [highlight],
@@ -139,15 +141,14 @@
 				this.container.scrollTop = '0'
 			},
 			pullDebouncer(event) {
-				let target     = event.target,
-					height     = target.scrollHeight,
+				let target = event.target,
+					height = target.scrollHeight,
 					shouldPull =
 						// make sure we're not pulling from cold storage at the moment,
 						!this.isPulling &&
 						// we're reaching the top of the messages container,
 						(target.scrollTop / height) < 0.1 &&
-						// cold storage has some more messages we can pull.
-						this.thereIsMore
+						this.hasMore
 
 				if (shouldPull) this.pull(height)
 			},
@@ -156,60 +157,8 @@
 			},
 			pull(originalHeight) {
 				this.isPulling = true
-				let data       = {
-					query: {},
-					order: {
-						time: 'desc',
-					},
-					include: 'profiles',
-					limit: [this.pullLimit, 0]
-				}
-
-				if (this.messages.length > 0) {
-					data.query.where = [
-						['time', '<', this.messages[0].time],
-					];
-				}
-
-				axios.post(getApiUrl(`chat_rooms/${this.room}/chat_messages/.search`), data)
-					.then(response => {
-						let data = response.data
-
-						if (typeof data[0] !== 'object') {
-							this.isPulling   = false
-							this.thereIsMore = false
-							return
-						}
-
-						let profiles = data.included.profiles
-
-						_.each(data, (element, key) => {
-							if (key !== 'included') {
-								let user    = element.profiles[0],
-									message = _.assign(element, profiles[user])
-								this.messages.unshift(message);
-							}
-						})
-						setTimeout(() => {
-							const messageId = this.$route.query.messageId
-							const channel   = this.$route.query.chatChannel
-
-							if (channel && channel !== this.room.channel) {
-								this.switchRoom({
-									channel,
-									name: `#${_.last(channel.split('-'))}`
-								})
-							} else if (messageId && !this.isOverlayVisible) {
-								this.scrollToMessageById(messageId)
-							} else {
-								this.container.scrollTop = this.container.scrollHeight - originalHeight
-							}
-						}, 0)
-						this.isPulling = false
-					})
-					.catch(error => {
-						$wnl.logger.capture(error)
-					})
+				this.onScrollTop()
+					.then(() => this.isPulling = false)
 			},
 			scrollToMessageById(id) {
 				const matchingMessage = this.$el.querySelector(`[data-id="${id}"]`)
@@ -234,14 +183,6 @@
 		},
 		mounted() {
 			this.pullDebouncer = _.debounce(this.pullDebouncer, 50)
-			if (this.initialPull) {
-				this.pull(0)
-			}
-		},
-		watch: {
-			'messages.length'() {
-				this.scrollToBottom()
-			}
 		}
 	}
 

@@ -6,7 +6,7 @@
 	>
 		<slot></slot>
 	</router-link>
-	<a @click="createNewRoomAndRedirect" v-else><slot></slot></a>
+	<a @click="createPrivateRoomAndRedirect" v-else><slot></slot></a>
 </template>
 
 <script>
@@ -41,12 +41,12 @@
 			}
 		},
 		methods: {
-			...mapActions('chatMessages', ['createNewRoom']),
-			async createNewRoomAndRedirect() {
+			...mapActions('chatMessages', ['createPrivateRoom']),
+			async createPrivateRoomAndRedirect() {
 				const payload = {
 					users: [this.currentUserId, this.userId]
 				}
-				const room = await this.createNewRoom(payload)
+				const room = await this.createPrivateRoom(payload)
 				this.$router.push({
 					name: 'messages',
 					query: {roomId: room.id}
@@ -64,7 +64,7 @@
 						this.$emit('navigate')
 						return this.$router.push({name: 'messages', query: {roomId: room.id}})
 					}
-					await this.createNewRoomAndRedirect()
+					await this.createPrivateRoomAndRedirect()
 					this.$emit('navigate')
 				}
 			}

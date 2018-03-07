@@ -92,7 +92,6 @@
 	import PrivateChatMessageForm from './PrivateChatMessageForm.vue'
 	import UsersWidget from '../global/UsersWidget.vue'
 	import {getApiUrl} from 'js/utils/env'
-	import highlight from 'js/mixins/highlight'
 
 	import { mapGetters, mapActions } from 'vuex'
 

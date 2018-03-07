@@ -1,8 +1,8 @@
 <template lang="html">
 	<div class="wnl-private-chat">
 		<div class="chat-title">
-			<wnl-avatar :fullName="interlocurtor.full_name" :url="interlocurtor.avatar"/>
-			{{chatTitle}}
+			<wnl-avatar :fullName="interlocutorProfile.full_name" :url="interlocutorProfile.avatar"/>
+			<span>{{chatTitle}}</span>
 		</div>
 		<div class="wnl-chat">
 			<div class="wnl-chat-messages">
@@ -95,7 +95,7 @@
 	import {getApiUrl} from 'js/utils/env'
 	import highlight from 'js/mixins/highlight'
 
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		components: {
@@ -127,18 +127,30 @@
 							message.time - this.room.messages[previous].time > halfHourInMs
 				})
 			},
-			interlocurtor() {
+			interlocutorProfile() {
 				return this.getInterlocutor(this.room.profiles)
 			},
 			chatTitle() {
-				return this.interlocurtor.display_name || this.currentUserDisplayName
-			}
+				return this.interlocutorProfile.display_name || this.currentUserDisplayName
+			},
 		},
 		methods: {
+			...mapActions('chatMessages', ['markRoomAsRead']),
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)
 			}
 		},
+		watch: {
+			'room.messages.length' (newValue, oldValue) {
+				if (newValue > oldValue) {
+					const newMessages = this.room.messages.slice(oldValue, newValue)
+					if (newMessages.find(msg => msg.user_id !== this.currentUserId)) {
+						this.$socketMarkRoomAsRead(this.room.id)
+							.then(() => this.markRoomAsRead(this.room.id))
+					}
+				}
+			}
+		}
 	}
 
 </script>

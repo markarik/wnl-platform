@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="wnl-image-button-container" :class="{ 'is-reverse': isReverse }">
+	<div class="wnl-image-button-container" :class="{ 'is-reverse': isReverse, 'loading': loading }">
 		<button class="button wnl-image-button without-image"
 			:class="[iconClass, iconSizeClass]"
 			:name="name"
@@ -18,12 +18,22 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	@keyframes spin
+		to
+			transform: rotate(1turn)
+
 	.is-reverse
 		flex-direction: row-reverse
 
 	.wnl-image-button-container
 		display: flex
 		align-items: center
+		overflow: hidden
+		transition-duration: 0.8s
+		transition-property: transform
+
+		&.loading .wnl-image-button svg
+			animation: spin 1s infinite
 
 	.wnl-image-button
 		+small-shadow()
@@ -46,7 +56,7 @@
 
 <script>
 	export default {
-		props: ['name', 'icon', 'alt', 'modifier', 'size', 'align', 'label', 'disabled', 'title'],
+		props: ['name', 'icon', 'alt', 'modifier', 'size', 'align', 'label', 'disabled', 'title', 'loading'],
 		computed: {
 			iconAlt () {
 				return this.alt || this.icon

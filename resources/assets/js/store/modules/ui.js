@@ -11,7 +11,6 @@ const state = {
 	navigationToggleState: {},
 	overlays: {},
 	overviewView: 'stream',
-	globalNotification: false,
 	modalVisible: false
 }
 
@@ -52,8 +51,6 @@ const getters = {
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
 	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex],
 	overviewView: state => state.overviewView,
-	globalNotificationMessage: state => state.globalNotification.message,
-	globalNotificationType: state => state.globalNotification.type,
 	overlayTexts: state => values(pickBy(state.overlays, isString)),
 	modalVisible: state => state.modalVisible
 }
@@ -112,9 +109,6 @@ const mutations = {
 	},
 	[types.UI_CHANGE_OVERVIEW_VIEW] (state, view) {
 		set(state, 'overviewView', view)
-	},
-	[types.UI_SHOW_GLOBAL_NOTIFICATION] (state, globalNotification) {
-		set(state, 'globalNotification', globalNotification)
 	}
 }
 

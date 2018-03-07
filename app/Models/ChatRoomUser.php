@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class ChatRoomUser extends Model
 {
 	protected $table = 'chat_room_user';
-	public $timestamps = false;
 
-    public function user()
+	public function user()
 	{
 		return $this->belongsTo('App\Models\User');
 	}

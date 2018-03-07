@@ -14,13 +14,9 @@ class PostPrivateRoom extends FormRequest
 	public function authorize()
 	{
 		$user = $this->user();
-		$roomName = $this->request->get('name');
+		$roomUsers = $this->request->get('users');
 
-		if (str_contains($roomName, "-{$user->id}-")) {
-			return true;
-		}
-
-		return false;
+		return in_array($user->id, $roomUsers);
 	}
 
 	/**

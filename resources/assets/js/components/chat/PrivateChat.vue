@@ -147,6 +147,7 @@
 					if (newMessages.find(msg => msg.user_id !== this.currentUserId)) {
 						this.$socketMarkRoomAsRead(this.room.id)
 							.then(() => this.markRoomAsRead(this.room.id))
+							.catch(err => $wnl.logger.capture(err))
 					}
 				}
 			}

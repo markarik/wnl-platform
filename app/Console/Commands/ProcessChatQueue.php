@@ -14,7 +14,7 @@ class ProcessChatQueue extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'chat:process-queue';
+	protected $signature = 'chat:process-queue {--debug}';
 
 	/**
 	 * The console command description.
@@ -30,12 +30,18 @@ class ProcessChatQueue extends Command
 	 */
 	public function handle()
 	{
+		$this->info('Started.');
+
 		\Rabbit::consume('chat-events', function ($payload, $resolver) {
+
+			if ($this->option('debug')) {
+				$this->info('New message.');
+			}
 
 			$data = json_decode($payload->body);
 
 			if (!$data) {
-				$this->rejectPayload($payload, 'Invalid payload!');
+				$this->rejectPayload($payload, $resolver, 'Invalid payload!');
 
 				return false;
 			}
@@ -46,7 +52,7 @@ class ProcessChatQueue extends Command
 					break;
 
 				case 'chatEvents:markRoomAsRead':
-					$this->handleMarkRoomAsRead($data, $payload);
+					$this->handleMarkRoomAsRead($data, $payload, $resolver);
 					break;
 
 				default:
@@ -73,10 +79,12 @@ class ProcessChatQueue extends Command
 		]);
 
 		if (!$chatMessage) {
-			$this->rejectPayload($payload, 'Unable to persist message!');
+			$this->rejectPayload($payload, $resolver, 'Unable to persist message!');
 
 			return false;
 		}
+
+		$this->acceptPayload($payload, $resolver);
 
 		$chatRoomUser = ChatRoomUser
 			::where('chat_room_id', $data->room)
@@ -86,12 +94,14 @@ class ProcessChatQueue extends Command
 		return true;
 	}
 
-	protected function handleMarkRoomAsRead($eventPayload)
+	protected function handleMarkRoomAsRead($data, $payload, $resolver)
 	{
 		$chatRoomUser = ChatRoomUser
-			::where('chat_room_id', $eventPayload->room)
-			->where('user_id', $eventPayload->user_id)
+			::where('chat_room_id', $data->room)
+			->where('user_id', $data->user_id)
 			->update(['unread_count' => 0]);
+
+		$this->acceptPayload($payload, $resolver);
 	}
 
 	protected function validateMessage($data, $payload, $resolver)
@@ -125,10 +135,11 @@ class ProcessChatQueue extends Command
 		$resolver->acknowledge($payload);
 	}
 
-	protected function rejectPayload($payload, $reason)
+	protected function rejectPayload($payload, $resolver, $reason)
 	{
 		$errorMessage = "Queue message rejected! Reason: {$reason}";
 		\Log::error($errorMessage);
 		$this->error($errorMessage);
+		$resolver->reject($payload);
 	}
 }

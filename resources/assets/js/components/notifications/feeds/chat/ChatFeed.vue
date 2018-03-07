@@ -3,6 +3,7 @@
 	 	<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
 			<div slot="activator" class="notifications-toggle"
 				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
+				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
 				<span v-if="!connecting" class="loader"><i class="fas fa-circle-notch fa-pulse"></i></span>
 				<span class="icon">
 					<i class="fa" :class="iconClass"></i>
@@ -72,7 +73,10 @@
 		},
 		computed: {
 			...mapGetters(['isTouchScreen', 'getSetting']),
-			...mapGetters('chatMessages', ['status']),
+			...mapGetters('chatMessages', ['status', 'getUnseenRooms']),
+			unseenCount() {
+				return this.getUnseenRooms
+			},
 			connecting() {
 				return this.status
 			},
@@ -93,6 +97,6 @@
 			toggleNotifications(data) {
 				this.isOn = this.data
 			}
-		},
+		}
 	}
 </script>

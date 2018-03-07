@@ -111,9 +111,10 @@
 		justify-content: center
 		height: 1.7em
 		position: absolute
-		left: ($navbar-height / 2.1)
+		left: ($navbar-height / 20)
 		top: $margin-medium
 		width: 1.7em
+		z-index: 1
 
 	.feed
 		position: relative

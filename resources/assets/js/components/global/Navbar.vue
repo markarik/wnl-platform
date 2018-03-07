@@ -170,6 +170,6 @@
 		},
 		methods: {
 			...mapActions(['toggleSidenav', 'toggleChat'])
-		},
+		}
 	}
 </script>

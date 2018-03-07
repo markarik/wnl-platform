@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import {set} from 'vue'
 import {uniq} from 'lodash'
 
@@ -17,6 +18,16 @@ const state = {
 
 //Getters
 const getters = {
+	getUnseenRooms: (state, getters) => {
+		let unseenRooms = {}
+		Object.keys(getters.rooms).forEach((room) => {
+			if (getters.rooms[room].unread_count > 0) {
+				unseenRooms[room] = room
+			}
+			console.log(Object.values(unseenRooms));
+		})
+		return Object.values(unseenRooms).length
+	},
 	rooms: state => state.rooms,
 	sortedRooms: state => state.sortedRooms,
 	profiles: state => state.profiles,

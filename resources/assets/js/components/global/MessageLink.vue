@@ -54,6 +54,7 @@
 				this.$emit('navigate')
 				return room
 			},
+			// this is used by ConversationsSearch - sorry :(
 			async navigate() {
 				if (this.roomId) {
 					this.$emit('navigate')

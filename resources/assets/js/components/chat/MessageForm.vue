@@ -56,7 +56,20 @@
 	import _ from 'lodash';
 
 	export default{
-		props: ['loaded', 'room'],
+		props: {
+			room: {
+				type: Object,
+				required: true
+			},
+			loaded: {
+				type: Boolean,
+				default: true
+			},
+			messagePayload: {
+				type: Object,
+				default: () => ({})
+			}
+		},
 		data() {
 			return {
 				error: '',
@@ -121,7 +134,8 @@
 					message: {
 						user: this.currentUser,
 						content: this.content
-					}
+					},
+					...this.messagePayload
 				}).then(data => {
 					this.processMessage(data)
 					this.$emit('messageSent', data)

@@ -36,12 +36,11 @@
 				</div>
 			</div>
 			<div class="wnl-chat-form">
-				<wnl-private-chat-message-form
-					:roomId="room.id"
-					:users="users"
-					ref="messageForm"
+				<message-form
+					:room="room"
+					:messagePayload="{users}"
 					@messageSent="onMessageSent"
-				></wnl-private-chat-message-form>
+				></message-form>
 			</div>
 		</div>
 	</div>
@@ -90,8 +89,7 @@
 
 <script>
 	import Message from './Message.vue'
-	import PrivateChatMessageForm from './PrivateChatMessageForm.vue'
-	import UsersWidget from '../global/UsersWidget.vue'
+	import MessageForm from './MessageForm.vue'
 	import {getApiUrl} from 'js/utils/env'
 
 	import { mapGetters, mapActions } from 'vuex'
@@ -99,8 +97,7 @@
 	export default {
 		components: {
 			'wnl-message': Message,
-			'wnl-private-chat-message-form': PrivateChatMessageForm,
-			'wnl-users-widget': UsersWidget,
+			'message-form': MessageForm,
 		},
 		props: {
 			room: {

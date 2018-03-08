@@ -179,10 +179,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	// Chat Messages
 	Route::post(
-		"{$r['chat-rooms']}/{roomName}/{$r['chat-messages']}/.search",
-		'ChatMessagesApiController@searchByRoom'
-	);
-	Route::post(
 		"{$r['chat-messages']}/.getByRooms",
 		'ChatMessagesApiController@getByMultipleRooms'
 	);

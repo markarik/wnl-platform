@@ -132,7 +132,6 @@
 				'currentPage'
 			]),
 			roomsToShow() {
-				console.log('przeładował rooms to show');
 				return this.sortedRooms.map(roomId => {
 					return this.getRoomById(roomId)
 				})
@@ -159,12 +158,7 @@
 			pullRooms(event) {
 				if (this.hasMoreRooms) {
 					if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
-						return new Promise((resolve) => {
-							this.incrementPage()
-							resolve()
-						}).then(() => {
-							return this.pullUserRooms({limit: 10, page: this.currentPage})
-						})
+						return this.pullUserRooms({limit: 20, page: this.currentPage +1})
 					}
 				}
 			}

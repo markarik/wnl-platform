@@ -90,6 +90,6 @@ class ChatMessagesTest extends ApiTestCase
 			->json('POST', $this->url("/chat_rooms/{$room->name}/chat_messages/.search?include=profiles"), $data);
 
 		$response
-			->assertStatus(401);
+			->assertStatus(403);
 	}
 }

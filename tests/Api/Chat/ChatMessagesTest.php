@@ -84,7 +84,7 @@ class ChatMessagesTest extends ApiTestCase
 	{
 		$user = factory(User::class)->create();
 		$room = factory(ChatRoom::class)->create([
-			'type' => 'private',
+			'type' => 'public',
 		]);
 
 		$roleAccess = Permission::slug('role_access');

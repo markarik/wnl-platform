@@ -23,13 +23,13 @@
 			:hasMore="hasMore"
 			:onScrollTop="pullMore"
 			:loaded="loaded"
-			@foundMentions="processMentions"
 		/>
 		<wnl-message-form
 			:roomId="currentRoom.id"
 			:room="currentRoom"
 			:loaded="loaded"
 			@messageSent="onMessageSent"
+			@foundMentions="processMentions"
 		></wnl-message-form>
 	</div>
 </template>
@@ -238,11 +238,11 @@
 						type: 'chat_message',
 						id: `${message.time}${this.currentUserId}`,
 						text: message.content,
-						channel: this.room.channel
+						channel: this.currentRoom.channel
 					},
 					objects: {
 						type: "chat_channel",
-						text: this.room.name
+						text: this.currentRoom.name
 					},
 					context: {
 						name: this.$route.name,

@@ -23,6 +23,7 @@
 			:hasMore="hasMore"
 			:onScrollTop="pullMore"
 			:loaded="loaded"
+			@foundMentions="processMentions"
 		/>
 		<wnl-message-form
 			:roomId="currentRoom.id"
@@ -102,7 +103,11 @@
 			}
 		},
 		computed: {
-			...mapGetters(['canShowCloseIconInChat']),
+			...mapGetters([
+				'canShowCloseIconInChat',
+				'currentUserId',
+				'currentUser'
+			]),
 			...mapGetters('course', ['getLesson']),
 			...mapGetters('chatMessages', ['getRoomMessagesPagination']),
 			chatTitle() {
@@ -122,7 +127,7 @@
 			}
 		},
 		methods: {
-			...mapActions(['toggleChat']),
+			...mapActions(['toggleChat', 'saveMentions']),
 			...mapActions('chatMessages', ['createPublicRoom', 'fetchPublicRoomMessages']),
 			changeRoom(room) {
 				this.joinRoom(room.id)
@@ -222,6 +227,29 @@
 						this.messages = messages.concat(this.messages)
 						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)
 					}).catch(error => $wnl.logger.capture(error))
+			},
+			processMentions({mentions, context}) {
+				this.saveMentions(this.getMentionsData(mentions, context))
+			},
+			getMentionsData(userIds, message) {
+				return {
+					mentioned_users: userIds,
+					subject: {
+						type: 'chat_message',
+						id: `${message.time}${this.currentUserId}`,
+						text: message.content,
+						channel: this.room.channel
+					},
+					objects: {
+						type: "chat_channel",
+						text: this.room.name
+					},
+					context: {
+						name: this.$route.name,
+						params: this.$route.params
+					},
+					actors: this.currentUser
+				}
 			}
 		},
 		mounted() {

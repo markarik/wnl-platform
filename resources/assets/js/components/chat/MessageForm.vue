@@ -108,12 +108,9 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
-				'currentUserDisplayName',
 				'currentUserAvatar',
-				'currentUserId',
 				'currentUser'
 			]),
-			...mapGetters('course', ['courseId']),
 			formats() {
 				return ['bold', 'italic', 'underline', 'link', 'mention']
 			},
@@ -132,7 +129,7 @@
 			}
 		},
 		methods: {
-			...mapActions(['saveMentions', 'addAutoDismissableAlert']),
+			...mapActions(['addAutoDismissableAlert']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
@@ -165,26 +162,6 @@
 
 				return _.uniq(Array.prototype.map.call(mentions, el => el.dataset.id))
 			},
-			getMentionsData(userIds, message) {
-				return {
-					mentioned_users: userIds,
-					subject: {
-						type: 'chat_message',
-						id: `${message.time}${this.currentUserId}`,
-						text: message.content,
-						channel: this.room.channel
-					},
-					objects: {
-						type: "chat_channel",
-						text: this.room.name
-					},
-					context: {
-						name: this.$route.name,
-						params: this.$route.params
-					},
-					actors: this.currentUser
-				}
-			},
 			suppressEnter(event) {
 				event.preventDefault()
 			},
@@ -193,9 +170,7 @@
 					const mentions = this.getMentions()
 
 					if (mentions && mentions.length) {
-						this.saveMentions(
-							this.getMentionsData(mentions, data.message)
-						)
+						this.$emit('foundMentions', {mentions, context: data.message})
 					}
 
 					this.mentions = []
@@ -207,7 +182,6 @@
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
 				}
-				this.isWaitingToSendMentions = false
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();

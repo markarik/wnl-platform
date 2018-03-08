@@ -19,14 +19,10 @@ const state = {
 //Getters
 const getters = {
 	getUnseenRooms: (state, getters) => {
-		let unseenRooms = {}
-		Object.keys(getters.rooms).forEach((room) => {
-			if (getters.rooms[room].unread_count > 0) {
-				unseenRooms[room] = room
-			}
-			console.log(Object.values(unseenRooms));
-		})
-		return Object.values(unseenRooms).length
+		return Object.values(getters.rooms).reduce((sum, room) => {
+			if (room.unread_count) return sum + 1
+			return sum
+		}, 0)
 	},
 	rooms: state => state.rooms,
 	sortedRooms: state => state.sortedRooms,

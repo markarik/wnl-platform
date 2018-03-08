@@ -6,6 +6,8 @@ namespace Tests\Api\Chat;
 
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
@@ -313,5 +315,53 @@ class ChatRoomsTest extends ApiTestCase
             'chat_room_id' => $responseJson['id'],
             'user_id' => $userTwo->id
          ]);
+    }
+
+    /** @test */
+	public function get_private_chat_room_forbidden()
+	{
+		$users = factory(User::class, 3)->create();
+		$room = factory(ChatRoom::class)->create([
+			'type' => 'private',
+			'name' => 'elo'
+		]);
+		$room->users()->attach($users[0]);
+		$room->users()->attach($users[1]);
+		$data = [
+			'name' => $room->name,
+			'users' => [$users[0]->id, $users[1]->id]
+		];
+
+		$response = $this
+			->actingAs($users[2])
+			->json('POST', $this->url('/chat_rooms/.createPrivateRoom'), $data);
+
+		$response
+			->assertStatus(403);
+
+    }
+
+    /** @test */
+	public function get_public_chat_room_forbidden()
+	{
+		$user = factory(User::class)->create();
+		$room = factory(ChatRoom::class)->create([
+			'type' => 'public',
+			'slug' => 'test-public-room'
+		]);
+
+		$roleAccess = Permission::slug('role_access');
+		$moderatorsRole = Role::byName('moderator');
+		$roleAccess->chatRooms()->syncWithoutDetaching($room);
+		$room->roles()->syncWithoutDetaching($moderatorsRole);
+
+		$data = ['slug' => $room->slug];
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url("/chat_rooms/.createPublicRoom"), $data);
+
+		$response
+			->assertStatus(403);
     }
 }

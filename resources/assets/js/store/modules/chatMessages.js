@@ -201,20 +201,20 @@ const actions = {
 
 		return room
 	},
-	async fetchPublicRoomMessages({commit, getters}, {room, page = 1}) {
-		const {messages, profiles, pagination} = await fetchPaginatedRoomMessages(room.id, page)
+	async fetchPublicRoomMessages({commit, getters}, {room, currentCursor, limit}) {
+		const {messages, profiles, cursor} = await fetchPaginatedRoomMessages(room.id, currentCursor, limit)
 
-		if (page === 1) {
+		if (!cursor) {
 			commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
 				roomId: room.id,
 				messages,
-				pagination
+				pagination: cursor
 			})
 		} else {
 			commit(types.CHAT_MESSAGES_ADD_MESSAGES, {
 				roomId: room.id,
 				messages,
-				pagination
+				pagination: cursor
 			})
 		}
 
@@ -256,32 +256,26 @@ const fetchUserRooms = async () => {
 	return payload
 }
 
-const fetchPaginatedRoomMessages = async (roomId, page = 1, limit = 100) =>  {
+const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) =>  {
 	const {data} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
 		rooms: [roomId],
 		include: 'profiles',
 		limit,
-		page
+		currentCursor
 	})
 
-	const {has_more, last_page, per_page, total, current_page, data: response} = data
+	const {cursor, data: response} = data
 	const {included = {}, ...messages} = response
 
 	return {
 		profiles: Object.values(included.profiles || {}),
 		messages: Object.values(messages).reverse(),
-		pagination: {
-			hasMore: has_more,
-			lastPage: last_page,
-			perPage: per_page,
-			page: current_page,
-			total
-		}
+		cursor
 	}
 }
 
 const fetchRoomsMessages = async (roomsIds) => {
-	const {data} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
+	const {data: {data, cursor}} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
 		rooms: roomsIds
 	})
 	const rooms  = {}
@@ -294,7 +288,7 @@ const fetchRoomsMessages = async (roomsIds) => {
 		rooms[message.chat_room_id].push(message)
 	})
 
-	return roomsWithMessages
+	return rooms
 }
 
 export default {

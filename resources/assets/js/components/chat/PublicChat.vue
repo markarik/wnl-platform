@@ -98,7 +98,7 @@
 				messages: [],
 				pagination: {
 					hasMore: false,
-					page: 1
+					next: null
 				}
 			}
 		},
@@ -115,11 +115,12 @@
 
 				return `Czat lekcji ${this.getLesson(lessonId).name}`
 			},
-			nextPage() {
-				return this.pagination.page + 1 || 1
+			cursor() {
+				return this.pagination.next
 			},
 			hasMore() {
-				return this.pagination.hasMore || false
+				console.log(this.pagination, '.....pagination')
+				return this.pagination.has_more || false
 			}
 		},
 		methods: {
@@ -172,7 +173,7 @@
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id
-						return this.fetchPublicRoomMessages({room})
+						return this.fetchPublicRoomMessages({room, limit: 50})
 					})
 					.then(messages => {
 						this.messages = messages
@@ -220,7 +221,7 @@
 				}
 			},
 			pullMore() {
-				return this.fetchPublicRoomMessages({room: this.currentRoom, page: this.nextPage})
+				return this.fetchPublicRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50})
 					.then(messages => {
 						this.messages = messages.concat(this.messages)
 						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)

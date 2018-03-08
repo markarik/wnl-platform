@@ -53,12 +53,13 @@ class ChatMessagesApiController extends ApiController
 
 		$messages = ChatMessage::select()
 			->whereIn('chat_room_id', $roomIds)
-			->orderBy('time', 'desc')
-			->offset(($request->page - 1) * $request->limit)
-			->limit($request->limit);
+			->orderBy('time', 'desc');
 
-		$paginated = $this->paginatedResponse($messages, $request->limit, $request->page);
+		$limit = $request->limit ? $request->limit : 10;
+		$cursor = $request->currentCursor ? $request->currentCursor : null;
 
-		return $paginated;
+		$paginated = $this->cursorPaginatedResponse($messages, $cursor, $limit, 'time', '<');
+
+		return $this->json($paginated);
 	}
 }

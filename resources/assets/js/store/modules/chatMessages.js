@@ -178,10 +178,6 @@ const actions = {
 			}
 		}
 		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
-		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {
-			room: room.id,
-			newIndex: 0
-		})
 
 		return room
 	},

@@ -1,44 +1,48 @@
 <template>
-	<article class="media">
-		<figure class="media-left">
-			<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
-		</figure>
-		<div class="media-content">
-			<wnl-form
-				class="chat-message-form"
-				hideDefaultSubmit="true"
-				name="ChatMessage"
-				method="post"
-				suppressEnter="false"
-				resourceRoute="qna_questions"
-			>
-				<wnl-quill
-					ref="editor"
-					name="text"
-					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
-					:keyboard="keyboard"
-					:toolbar="toolbar"
-					:allowMentions=true
-					@input="onInput"
-				></wnl-quill>
-			</wnl-form>
-			<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
-			<div class="message is-warning" v-if="error.length > 0">
-				<div class="message-body">{{ error }}</div>
+	<div class="wnl-chat-form">
+		<article class="media">
+			<figure class="media-left">
+				<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+			</figure>
+			<div class="media-content">
+				<wnl-form
+					class="chat-message-form"
+					hideDefaultSubmit="true"
+					name="ChatMessage"
+					method="post"
+					suppressEnter="false"
+					resourceRoute="qna_questions"
+				>
+					<wnl-quill
+						ref="editor"
+						name="text"
+						:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
+						:keyboard="keyboard"
+						:toolbar="toolbar"
+						:allowMentions=true
+						@input="onInput"
+					></wnl-quill>
+				</wnl-form>
+				<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
+				<div class="message is-warning" v-if="error.length > 0">
+					<div class="message-body">{{ error }}</div>
+				</div>
 			</div>
-		</div>
-		<div class="media-right">
-			<wnl-image-button
-				name="wnl-chat-form-submit"
-				icon="send-message"
-				alt="Wyślij wiadomość"
-				:disabled="sendingDisabled"
-				@buttonclicked="sendMessage">
-			</wnl-image-button>
-		</div>
-	</article>
+			<div class="media-right">
+				<wnl-image-button
+					name="wnl-chat-form-submit"
+					icon="send-message"
+					alt="Wyślij wiadomość"
+					:disabled="sendingDisabled"
+					@buttonclicked="sendMessage">
+				</wnl-image-button>
+			</div>
+		</article>
+	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.media
 		align-items: center
 
@@ -48,6 +52,12 @@
 		font-weight: 400
 		text-transform: none
 		text-align: right
+
+	.wnl-chat-form
+		border-top: $border-light-gray
+		margin: $margin-base 0 0
+		padding-top: $margin-base
+
 </style>
 <script>
 	import { mapActions, mapGetters } from 'vuex'

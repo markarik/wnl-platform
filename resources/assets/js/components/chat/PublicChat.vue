@@ -24,14 +24,12 @@
 			:onScrollTop="pullMore"
 			:loaded="loaded"
 		/>
-		<div class="wnl-chat-form">
-			<wnl-message-form
-				:roomId="currentRoom.id"
-				:room="currentRoom"
-				:loaded="loaded"
-				@messageSent="onMessageSent"
-			></wnl-message-form>
-		</div>
+		<wnl-message-form
+			:roomId="currentRoom.id"
+			:room="currentRoom"
+			:loaded="loaded"
+			@messageSent="onMessageSent"
+		></wnl-message-form>
 	</div>
 </template>
 

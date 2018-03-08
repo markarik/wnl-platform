@@ -54,11 +54,6 @@
 
 	.wnl-chat-content
 		position: relative
-
-	.wnl-chat-form
-		border-top: $border-light-gray
-		margin: $margin-base 0 0
-		padding-top: $margin-base
 </style>
 <script>
 	import Message from './Message.vue'

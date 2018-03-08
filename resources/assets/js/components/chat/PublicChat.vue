@@ -97,7 +97,7 @@
 				highlightedMessageId: 0,
 				messages: [],
 				pagination: {
-					hasMore: false,
+					has_more: false,
 					next: null
 				}
 			}
@@ -128,7 +128,7 @@
 		},
 		methods: {
 			...mapActions(['toggleChat', 'saveMentions']),
-			...mapActions('chatMessages', ['createPublicRoom', 'fetchPublicRoomMessages']),
+			...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages']),
 			changeRoom(room) {
 				this.joinRoom(room.id)
 				this.leaveRoom(this.currentRoom.id)
@@ -176,7 +176,7 @@
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id
-						return this.fetchPublicRoomMessages({room, limit: 50})
+						return this.fetchRoomMessages({room, limit: 50})
 					})
 					.then(messages => {
 						this.messages = messages
@@ -222,7 +222,7 @@
 				}
 			},
 			pullMore() {
-				return this.fetchPublicRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50})
+				return this.fetchRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50})
 					.then(messages => {
 						this.messages = messages.concat(this.messages)
 						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)

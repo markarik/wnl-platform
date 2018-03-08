@@ -201,7 +201,7 @@ const actions = {
 
 		return room
 	},
-	async fetchPublicRoomMessages({commit, getters}, {room, currentCursor, limit}) {
+	async fetchRoomMessages({commit}, {room, currentCursor, limit}) {
 		const {messages, profiles, cursor} = await fetchPaginatedRoomMessages(room.id, currentCursor, limit)
 
 		if (!cursor) {
@@ -274,9 +274,10 @@ const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) => 
 	}
 }
 
-const fetchRoomsMessages = async (roomsIds) => {
+const fetchRoomsMessages = async (roomsIds, limit = 50) => {
 	const {data: {data, cursor}} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
-		rooms: roomsIds
+		rooms: roomsIds,
+		limit
 	})
 	const rooms  = {}
 

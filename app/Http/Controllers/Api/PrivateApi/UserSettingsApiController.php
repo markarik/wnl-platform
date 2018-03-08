@@ -25,7 +25,7 @@ class UserSettingsApiController extends ApiController
 		}
 
 		if (!Auth::user()->can('view', $settings)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Item($settings, new UserSettingsTransformer, 'user_settings');

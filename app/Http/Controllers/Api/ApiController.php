@@ -96,7 +96,7 @@ class ApiController extends Controller
 			return $this->respondOk();
 		}
 
-		return $this->respondUnauthorized();
+		return $this->respondForbidden();
 	}
 
 	/**

@@ -29,7 +29,7 @@ class ChatMessagesApiController extends ApiController
 		}
 
 		if (!$user->can('view', $room)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$messages = new ChatMessage;
@@ -47,7 +47,7 @@ class ChatMessagesApiController extends ApiController
 		$rooms = ChatRoom::with('users')->whereIn('id', $roomIds)->get();
 		foreach ($rooms as $room) {
 			if (!$user->can('view', $room)) {
-				return $this->respondUnauthorized();
+				return $this->respondForbidden();
 			}
 		}
 

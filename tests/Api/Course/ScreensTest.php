@@ -39,7 +39,7 @@ class ScreensTest extends ApiTestCase
 			->json('DELETE', $this->url("/screens/{$screen->id}"));
 
 		$response
-			->assertStatus(401);
+			->assertStatus(403);
 	}
 
 	/** @test */

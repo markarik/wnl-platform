@@ -40,6 +40,7 @@
 					:roomId="room.id"
 					:users="users"
 					ref="messageForm"
+					@messageSent="onMessageSent"
 				></wnl-private-chat-message-form>
 			</div>
 		</div>
@@ -133,9 +134,12 @@
 			},
 		},
 		methods: {
-			...mapActions('chatMessages', ['markRoomAsRead']),
+			...mapActions('chatMessages', ['markRoomAsRead', 'onNewMessage']),
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)
+			},
+			onMessageSent({sent, ...data}) {
+				this.onNewMessage(data)
 			}
 		},
 		watch: {

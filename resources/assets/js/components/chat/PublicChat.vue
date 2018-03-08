@@ -29,6 +29,7 @@
 				:roomId="currentRoom.id"
 				:room="currentRoom"
 				:loaded="loaded"
+				@messageSent="onMessageSent"
 			></wnl-message-form>
 		</div>
 	</div>
@@ -119,7 +120,6 @@
 				return this.pagination.next
 			},
 			hasMore() {
-				console.log(this.pagination, '.....pagination')
 				return this.pagination.has_more || false
 			}
 		},
@@ -196,11 +196,9 @@
 			},
 			setListeners() {
 				this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
-				this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.addMessage)
 			},
 			removeListeners() {
 				this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
-				this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.addMessage)
 			},
 			leaveRoom(roomId) {
 				this.$socketEmit(SOCKET_EVENT_LEAVE_ROOM, {
@@ -215,7 +213,7 @@
 					]
 				}
 			},
-			addMessage({sent, ...data}) {
+			onMessageSent({sent, ...data}) {
 				if (sent) {
 					this.pushMessage(data)
 				}

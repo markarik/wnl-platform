@@ -99,7 +99,7 @@ const mutations = {
 			set(state.rooms[roomId], 'pagination', pagination)
 		}
 	},
-	[types.CHAT_MESSAGES_ADD_MESSAGE](state, {messages, room}) {
+	[types.CHAT_MESSAGES_ADD_MESSAGE](state, {message, room}) {
 		state.rooms[room].last_message_time = message.time
 		state.rooms[room].messages.push(message)
 	},

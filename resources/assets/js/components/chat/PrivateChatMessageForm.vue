@@ -141,6 +141,7 @@
 						this.quillEditor.clear();
 					}
 					this.sendingMessage = false
+					this.$emit('messageSent', data)
 				}).catch(err => {
 					$wnl.logger.capture(err)
 					this.addAutoDismissableAlert({

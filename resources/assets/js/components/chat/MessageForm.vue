@@ -124,6 +124,7 @@
 					}
 				}).then(data => {
 					this.processMessage(data)
+					this.$emit('messageSent', data)
 				}).catch((err) => {
 					$wnl.logger.capture(err)
 					this.addAutoDismissableAlert({

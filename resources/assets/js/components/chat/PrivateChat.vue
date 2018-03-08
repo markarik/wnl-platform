@@ -59,8 +59,9 @@
 
 	.chat-title
 		display: flex
-		align-items: center
 		flex-direction: column
+		align-items: center
+		text-align: center
 		border-bottom: $border-light-gray
 		margin: $margin-base 0 0
 		padding-bottom: $margin-base
@@ -114,7 +115,7 @@
 		},
 		computed: {
 			...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
-			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor']),
+			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor', 'rooms']),
 			isAuthorUnique() {
 				return this.room.messages.map((message, index) => {
 					if (index === 0) return true

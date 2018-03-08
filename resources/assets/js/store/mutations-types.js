@@ -50,11 +50,12 @@ export const ERRORS_CLEAR              = 'ERRORS_CLEAR'
 export const ERRORS_CLEAR_SINGLE       = 'ERRORS_CLEAR_SINGLE'
 
 // Chat
-export const CHAT_ADD_NEW_MESSAGE = 'CHAT_ADD_NEW_MESSAGE'
-export const CHAT_SET_ROOM        = 'CHAT_SET_ROOM'
-export const CHAT_SET_MESSAGES    = 'CHAT_SET_MESSAGES'
-export const CHAT_IS_LOADED       = 'CHAT_IS_LOADED'
-export const CHAT_SET_USERS       = 'CHAT_IS_LOADED'
+export const CHAT_MESSAGES_SET_STATUS = 'CHAT_MESSAGES_SET_STATUS'
+export const CHAT_ADD_NEW_MESSAGE     = 'CHAT_ADD_NEW_MESSAGE'
+export const CHAT_SET_ROOM            = 'CHAT_SET_ROOM'
+export const CHAT_SET_MESSAGES        = 'CHAT_SET_MESSAGES'
+export const CHAT_IS_LOADED           = 'CHAT_IS_LOADED'
+export const CHAT_SET_USERS           = 'CHAT_IS_LOADED'
 
 // Messages
 export const CHAT_MESSAGES_SET_ROOMS = 'CHAT_MESSAGES_SET_ROOMS'

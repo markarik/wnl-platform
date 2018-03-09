@@ -130,9 +130,9 @@
 			...mapActions(['toggleChat', 'saveMentions']),
 			...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages']),
 			changeRoom(room) {
-				this.joinRoom(room.id)
-				this.leaveRoom(this.currentRoom.id)
 				this.currentRoom = room
+				this.joinRoom()
+				this.leaveRoom(this.currentRoom.id)
 			},
 			isActive(room){
 				return room.channel === this.currentRoom.channel
@@ -173,6 +173,7 @@
 					})
 				}
 
+				this.loaded = false
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id

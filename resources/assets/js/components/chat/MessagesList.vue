@@ -166,12 +166,10 @@
 				if (matchingMessage) {
 					this.$refs.highlight = matchingMessage
 					this.scrollToPositionAndHighlight(
-						["chatChannel", "messageId"],
+						['chatChannel', 'messageId', 'messageTime', 'roomId'],
 						matchingMessage.offsetTop,
 						this.$refs.messagesContainer
 					)
-				} else {
-					this.scrollToTop()
 				}
 			},
 			getMessageClientId(message) {
@@ -183,6 +181,11 @@
 		},
 		mounted() {
 			this.pullDebouncer = _.debounce(this.pullDebouncer, 300)
+		},
+		watch: {
+			highlightedMessageId() {
+				if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId)
+			}
 		}
 	}
 

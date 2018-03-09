@@ -187,17 +187,14 @@
 						return this.$socketJoinRoom(this.currentRoom.id)
 					})
 					.then((data) => {
-						if (!this.loaded) {
-							nextTick(() => {
-								const messageId = this.$route.query.messageId
+						this.loaded = true
+						nextTick(() => {
+							const messageId = this.$route.query.messageId
 
-								if (messageId && !this.isOverlayVisible) {
-									this.highlightedMessageId = messageId
-								}
-
-								this.loaded = true
-							})
-						}
+							if (messageId && !this.isOverlayVisible) {
+								this.highlightedMessageId = messageId
+							}
+						})
 					})
 			},
 			setListeners() {
@@ -269,6 +266,12 @@
 			'rooms' (newValue, oldValue) {
 				if (newValue.length === oldValue.length) return
 				this.changeRoom(newValue[0])
+			},
+			'$route.query.chatChannel'() {
+				this.$route.query.chatChannel && this.joinRoom()
+			},
+			'$route.query.messageId'() {
+				if (!this.$route.query.messageId) this.highlightedMessageId = 0
 			}
 		}
 	}

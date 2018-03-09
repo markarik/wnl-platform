@@ -216,7 +216,7 @@ const actions = {
 
 		return room
 	},
-	async fetchRoomMessages({commit}, {room, currentCursor, limit, context}) {
+	async fetchRoomMessages({commit}, {room, currentCursor, limit, context = {}}) {
 		let response = {}
 		if (context.messageTime && context.roomId) {
 			response = await fetchRoomMessagesWithContext(context)

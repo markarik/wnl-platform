@@ -145,15 +145,20 @@
 						(target.scrollTop / height) < 0.1 &&
 						this.hasMore
 
-				if (shouldPull) this.pull(height)
+				if (shouldPull) this.pull()
 			},
 			onScroll(event) {
 				this.pullDebouncer.call(this, event)
 			},
-			pull(originalHeight) {
+			pull() {
 				this.isPulling = true
+				const heightBefore = this.container.scrollHeight
 				this.onScrollTop()
-					.then(() => this.isPulling = false)
+					.then(() =>  {
+						const heightAfter = this.container.scrollHeight
+						this.container.scrollTop = heightAfter - heightBefore
+						this.isPulling = false
+					})
 			},
 			scrollToMessageById(id) {
 				const matchingMessage = this.$el.querySelector(`[data-id="${id}"]`)
@@ -177,7 +182,7 @@
 			}
 		},
 		mounted() {
-			this.pullDebouncer = _.debounce(this.pullDebouncer, 50)
+			this.pullDebouncer = _.debounce(this.pullDebouncer, 300)
 		}
 	}
 

@@ -71,7 +71,7 @@
 </style>
 
 <script>
-	import ChatRoom from './ChatRoom'
+	import MessagesList from './MessagesList'
 	import MessageForm from './MessageForm.vue'
 	import { mapActions, mapGetters } from 'vuex'
 	import _ from 'lodash'
@@ -86,7 +86,7 @@
 	export default {
 		name: 'wnl-public-chat',
 		components: {
-			'wnl-chat': ChatRoom,
+			'wnl-chat': MessagesList,
 			'wnl-message-form': MessageForm
 		},
 		props: ['title', 'rooms'],

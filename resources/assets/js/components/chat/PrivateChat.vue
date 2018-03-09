@@ -43,7 +43,7 @@
 
 <script>
 	import MessageForm from './MessageForm.vue'
-	import ChatRoom from './ChatRoom.vue'
+	import MessagesList from './MessagesList.vue'
 	import {getApiUrl} from 'js/utils/env'
 
 	import { mapGetters, mapActions } from 'vuex'
@@ -51,7 +51,7 @@
 	export default {
 		components: {
 			'wnl-message-form': MessageForm,
-			'wnl-chat': ChatRoom
+			'wnl-chat': MessagesList
 		},
 		props: {
 			room: {
@@ -68,7 +68,7 @@
 				pagination: {
 					// 50 is original limit -> better way to handle that
 					has_more: this.room.messages.length === 50,
-					next: null
+					next: (_.first(this.room.messages) || {}).time
 				}
 			}
 		},
@@ -114,7 +114,7 @@
 					}
 				}
 			}
-		}
+		},
 	}
 
 </script>

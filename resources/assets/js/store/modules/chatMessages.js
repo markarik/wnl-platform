@@ -216,8 +216,14 @@ const actions = {
 
 		return room
 	},
-	async fetchRoomMessages({commit}, {room, currentCursor, limit}) {
-		const {messages, profiles, cursor} = await fetchPaginatedRoomMessages(room.id, currentCursor, limit)
+	async fetchRoomMessages({commit}, {room, currentCursor, limit, context}) {
+		let response = {}
+		if (context.messageTime && context.roomId) {
+			response = await fetchRoomMessagesWithContext(context)
+		} else {
+			response = await fetchPaginatedRoomMessages(room.id, currentCursor, limit)
+		}
+		const {messages, profiles, cursor} = response
 
 		if (!cursor) {
 			commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
@@ -279,14 +285,7 @@ const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) => 
 		currentCursor
 	})
 
-	const {cursor, data: response} = data
-	const {included = {}, ...messages} = response
-
-	return {
-		profiles: Object.values(included.profiles || {}),
-		messages: Object.values(messages).reverse(),
-		cursor
-	}
+	return serializeResponse(data)
 }
 
 const fetchRoomsMessages = async (roomsIds, limit = 50) => {
@@ -305,6 +304,27 @@ const fetchRoomsMessages = async (roomsIds, limit = 50) => {
 	})
 
 	return rooms
+}
+
+const fetchRoomMessagesWithContext = async ({messageTime, roomId}) => {
+	const {data} = await axios.post(getApiUrl('chat_messages/.getWithContext'), {
+		include: 'profiles',
+		messageTime,
+		roomId
+	})
+
+	return serializeResponse(data)
+}
+
+const serializeResponse = (data) => {
+	const {cursor, data: response} = data
+	const {included = {}, ...messages} = response
+
+	return {
+		profiles: Object.values(included.profiles || {}),
+		messages: Object.values(messages).reverse(),
+		cursor
+	}
 }
 
 export default {

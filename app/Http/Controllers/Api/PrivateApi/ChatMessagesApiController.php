@@ -42,4 +42,34 @@ class ChatMessagesApiController extends ApiController
 
 		return $this->json($paginated);
 	}
+
+	public function getWithContext(Request $request) {
+		$roomId = $request->roomId;
+		$messageTime = $request->messageTime;
+		$messagesBeforeContext = $request->context ? $request->context : 10;
+
+		$messagesAfter = ChatMessage::select()
+			->where('chat_room_id', $roomId)
+			->orderBy('time', 'desc')
+			->where('time', '>=', $messageTime)->get();
+
+		$messagesBefore = ChatMessage::select()
+			->where('chat_room_id', $roomId)
+			->orderBy('time', 'desc')
+			->where('time', '<', $messageTime)->get();
+
+
+		$allMessages = $messagesAfter->concat($messagesBefore);
+		$transformed = $this->transform($messagesAfter->concat($messagesBefore));
+
+		return $this->json([
+			'data' => $transformed,
+			'cursor' => [
+				'current' => $messageTime,
+				'next' => $allMessages->last()->time,
+				'previous' => null,
+				'has_more' => true
+			]
+		]);
+	}
 }

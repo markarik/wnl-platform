@@ -6,7 +6,9 @@
 		render: (createElement, {props: {message, notificationComponent}, data: {on}}) => {
 			const contextRoute = () => mapMessageToRoute(message, {
 				'chatChannel': message.subject.channel,
-				'messageId': message.subject.id
+				'messageId': message.subject.id,
+				'messageTime': message.subject.time,
+				'roomId': message.subject.roomId
 			})
 
 			return createElement(notificationComponent, {

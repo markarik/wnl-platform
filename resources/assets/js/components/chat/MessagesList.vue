@@ -14,7 +14,7 @@
 						<wnl-message v-for="(message, index) in messages"
 							:key="index"
 							:showAuthor="isAuthorUnique[index]"
-							:id="getMessageId(message)"
+							:id="getMessageClientId(message)"
 							:author="getMessageAuthor(message)"
 							:fullName="getMessageAuthor(message).full_name"
 							:displayName="getMessageAuthor(message).display_name"
@@ -160,8 +160,8 @@
 						this.isPulling = false
 					})
 			},
-			scrollToMessageById(id) {
-				const matchingMessage = this.$el.querySelector(`[data-id="${id}"]`)
+			scrollToMessageById(clientId) {
+				const matchingMessage = this.$el.querySelector(`[data-id="${clientId}"]`)
 
 				if (matchingMessage) {
 					this.$refs.highlight = matchingMessage
@@ -174,8 +174,8 @@
 					this.scrollToTop()
 				}
 			},
-			getMessageId(message) {
-				return `${message.time}${message.user && message.user.id}`
+			getMessageClientId(message) {
+				return `${message.time}${message.user_id}`
 			},
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)

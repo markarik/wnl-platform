@@ -174,10 +174,12 @@
 				}
 
 				this.loaded = false
+				const {messageTime, roomId} = this.$route.query
+
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id
-						return this.fetchRoomMessages({room, limit: 50})
+						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId}})
 					})
 					.then(messages => {
 						this.messages = messages
@@ -239,7 +241,9 @@
 						type: 'chat_message',
 						id: `${message.time}${this.currentUserId}`,
 						text: message.content,
-						channel: this.currentRoom.channel
+						channel: this.currentRoom.channel,
+						time: message.time,
+						roomId: this.currentRoom.id
 					},
 					objects: {
 						type: "chat_channel",

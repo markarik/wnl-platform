@@ -97,7 +97,7 @@
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
 
 					// Setup Chat
-					const userChannel = `user-${this.currentUserId}`
+					const userChannel = `authenticated-user`
 					this.$socketJoinRoom(userChannel)
 						.then(() => {
 							this.setConnectionStatus(true)

@@ -32,8 +32,9 @@
 
 	.chat-title
 		display: flex
-		align-items: center
 		flex-direction: column
+		align-items: center
+		text-align: center
 		border-bottom: $border-light-gray
 		margin: $margin-base 0 0
 		padding-bottom: $margin-base

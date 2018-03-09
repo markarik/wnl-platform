@@ -27,7 +27,7 @@ class UserReactionsApiController extends ApiController
 		}
 
 		if (Auth::user()->id !== $user->id) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$reactablesBuilder = Reactable::where(['user_id' => $user->id]);
@@ -53,7 +53,7 @@ class UserReactionsApiController extends ApiController
 		}
 
 		if (Auth::user()->id !== $user->id) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$reactablesBuilder = Reactable::where(['user_id' => $user->id]);

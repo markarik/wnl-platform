@@ -80,7 +80,7 @@ class ChatRoomsApiController extends ApiController
 		], ['name' => $slug]);
 
 		if (!$user->can('view', $room)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$data = $this->transform($room);

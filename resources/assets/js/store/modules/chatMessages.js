@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import {set} from 'vue'
 import {uniq} from 'lodash'
 
@@ -11,14 +12,22 @@ const state = {
 	rooms: {},
 	sortedRooms: [],
 	profiles: {},
-	ready: false
+	ready: false,
+	connected: false,
 }
 
 //Getters
 const getters = {
+	getUnseenRooms: (state, getters) => {
+		return Object.values(getters.rooms).reduce((sum, room) => {
+			if (room.unread_count) return sum + 1
+			return sum
+		}, 0)
+	},
 	rooms: state => state.rooms,
 	sortedRooms: state => state.sortedRooms,
 	profiles: state => state.profiles,
+	status: state => state.connected,
 	getRoomById: state => id => state.rooms[id] || {},
 	getProfileById: state => id => state.profiles[id] || {},
 	getRoomProfiles: (state, getters) => id => {
@@ -71,10 +80,13 @@ const getters = {
 
 //mutations
 const mutations = {
-	[types.CHAT_MESSAGES_SET_ROOMS](state, data) {
-		set(state, 'rooms', data.rooms)
-		set(state, 'sortedRooms', data.sortedRooms)
-		set(state, 'profiles', data.profiles)
+	[types.CHAT_MESSAGES_SET_STATUS] (state, payload) {
+		set (state, 'connected', payload)
+	},
+	[types.CHAT_MESSAGES_SET_ROOMS] (state, data) {
+		set (state, 'rooms', data.rooms)
+		set (state, 'sortedRooms', data.sortedRooms)
+		set (state, 'profiles', data.profiles)
 	},
 	[types.CHAT_MESSAGES_ADD_ROOM](state, payload) {
 		set(state.rooms, payload.room.id, payload.room)
@@ -155,6 +167,9 @@ const actions = {
 		if (message.user_id !== rootGetters.currentUserId) {
 			commit(types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD, room)
 		}
+	},
+	setConnectionStatus({commit}, payload) {
+		commit(types.CHAT_MESSAGES_SET_STATUS, payload)
 	},
 	async createPrivateRoom({commit, rootGetters, state}, {users}) {
 		const uniqUsers = uniq(users)

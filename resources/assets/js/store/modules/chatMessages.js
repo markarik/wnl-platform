@@ -160,7 +160,6 @@ const actions = {
 		if (page === 1) {
 			commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
 		} else {
-			console.log(payload, '.....payload')
 			commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles))
 			commit(types.CHAT_MESSAGES_ADD_ROOMS, Object.values(payload.rooms))
 			commit(types.CHAT_MESSAGES_ADD_ROOMS_TO_SORTED, payload.sortedRooms)
@@ -178,6 +177,8 @@ const actions = {
 				roomId,
 				messages: roomsWithMessages[roomId]
 			}))
+
+		commit(types.CHAT_MESSAGES_READY, true)
 	},
 	onNewMessage({commit, getters, rootGetters}, {room, users: profiles, message}) {
 

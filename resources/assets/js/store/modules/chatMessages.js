@@ -133,18 +133,13 @@ const mutations = {
 			state.sortedRooms.splice(newIndex, 0, room)
 		}
 	},
-	[types.CHAT_MESSAGES_ADD_PULLED_ROOM] (state, payload) {
-		Object.keys(payload).forEach((key) => {
-			set (state.rooms, payload[key].id, payload[key])
+	[types.CHAT_MESSAGES_ADD_ROOMS] (state, rooms) {
+		rooms.forEach((room) => {
+			set (state.rooms, room.id, room)
 		})
 	},
-	[types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED] (state, payload) {
+	[types.CHAT_MESSAGES_ADD_ROOMS_TO_SORTED] (state, payload) {
 		state.sortedRooms = state.sortedRooms.concat(payload)
-	},
-	[types.CHAT_MESSAGES_ADD_PULLED_PROFILES] (state, payload) {
-		Object.keys(payload).forEach((key) => {
-			set (state.profiles, key, payload[key])
-		})
 	},
 	[types.CHAT_MESSAGES_SET_CURRENT_PAGE] (state, payload) {
 		set (state.pagination, 'currentPage', payload)
@@ -160,45 +155,29 @@ const mutations = {
 //Actions
 const actions = {
 	async fetchUserRoomsWithMessages({commit, getters}, {limit=20, page=1}) {
-		const response = await fetchUserRooms({limit, page})
-		// first pull
+		const {payload, pagination} = await fetchUserRooms({limit, page})
+
 		if (page === 1) {
-			commit(types.CHAT_MESSAGES_SET_ROOMS, response.payload)
-			commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.pagination.hasMoreRooms)
+			commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
 		} else {
-			commit(types.CHAT_MESSAGES_ADD_PULLED_PROFILES, response.payload.profiles)
-			commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM, response.payload.rooms)
-			commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED, response.payload.sortedRooms)
+			console.log(payload, '.....payload')
+			commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles))
+			commit(types.CHAT_MESSAGES_ADD_ROOMS, Object.values(payload.rooms))
+			commit(types.CHAT_MESSAGES_ADD_ROOMS_TO_SORTED, payload.sortedRooms)
 		}
 
-		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.pagination.hasMoreRooms)
-		commit(types.CHAT_MESSAGES_SET_CURRENT_PAGE, response.pagination.currentPage)
+		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, pagination.hasMoreRooms)
+		commit(types.CHAT_MESSAGES_SET_CURRENT_PAGE, pagination.currentPage)
 
-		if (response.payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
+		if (payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
 
-		const roomsWithMessages = await fetchRoomsMessages(response.payload.sortedRooms)
+		const roomsWithMessages = await fetchRoomsMessages(payload.sortedRooms)
+
 		Object.keys(roomsWithMessages)
 			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
 				roomId,
 				messages: roomsWithMessages[roomId]
 			}))
-	},
-	async initChatMessages({commit, getters}) {
-		const response = await fetchUserRooms({limit: 20, page: getters.currentPage})
-		commit(types.CHAT_MESSAGES_SET_ROOMS, response.payload)
-		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.pagination.hasMoreRooms)
-
-		console.log(response);
-		if (response.payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
-
-		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
-		Object.keys(roomsWithMessages)
-			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
-				roomId,
-				messages: roomsWithMessages[roomId]
-			}))
-
-		commit(types.CHAT_MESSAGES_READY, true)
 	},
 	onNewMessage({commit, getters, rootGetters}, {room, users: profiles, message}) {
 

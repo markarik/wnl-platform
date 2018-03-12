@@ -35,18 +35,18 @@ class ChatMessagesApiController extends ApiController
 			->whereIn('chat_room_id', $roomIds)
 			->orderBy('time', 'desc');
 
-		$limit = $request->limit ? $request->limit : 10;
-		$cursor = $request->currentCursor ? $request->currentCursor : null;
+		$limit = $request->limit ?? 10;
+		$cursor = $request->currentCursor ?? null;
 
 		$paginated = $this->cursorPaginatedResponse($messages, $cursor, $limit, 'time', '<');
 
-		return $this->json($paginated);
+		return $this->respondOk($paginated);
 	}
 
 	public function getWithContext(Request $request) {
 		$roomId = $request->roomId;
 		$messageTime = $request->messageTime;
-		$messagesBeforeContext = $request->context ? $request->context : 10;
+		$messagesBeforeContext = $request->context ?? 10;
 
 		$messagesAfter = ChatMessage::select()
 			->where('chat_room_id', $roomId)
@@ -60,9 +60,9 @@ class ChatMessagesApiController extends ApiController
 
 
 		$allMessages = $messagesAfter->concat($messagesBefore);
-		$transformed = $this->transform($messagesAfter->concat($messagesBefore));
+		$transformed = $this->transform($allMessages);
 
-		return $this->json([
+		return $this->respondOk([
 			'data' => $transformed,
 			'cursor' => [
 				'current' => $messageTime,

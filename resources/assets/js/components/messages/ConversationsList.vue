@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="conversation-list" @scroll="pullRooms">
-		<div class="rooms-header">
+		<div class="rooms-header" v-if="!withoutHeader">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
 			<div class="rooms-list-controls">
 				<span class="rooms-list-controls-item is-active" @click="toggleUserSearch">
@@ -116,6 +116,12 @@
 			'wnl-conversations-search': ConversationsSearch,
 			'wnl-message-link': MessageLink,
 			'wnl-conversation-snippet': ConversationSnippet
+		},
+		props: {
+			withoutHeader: {
+				required: false,
+				default: false
+			},
 		},
 		data() {
 			return  {

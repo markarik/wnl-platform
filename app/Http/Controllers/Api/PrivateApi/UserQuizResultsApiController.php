@@ -38,7 +38,7 @@ class UserQuizResultsApiController extends ApiController
 		$user = User::fetch($userId);
 
 		if (!Auth::user()->can('view', $user)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Collection(UserQuizResults::where('user_id', $userId)->get(), new UserQuizResultsTransformer, $this->resourceName);
@@ -56,7 +56,7 @@ class UserQuizResultsApiController extends ApiController
 		$meta = $request->get('meta');
 
 		if (!Auth::user()->can('view', $user)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		foreach ($results as $result) {
@@ -145,7 +145,7 @@ class UserQuizResultsApiController extends ApiController
 
 	public function delete($userId) {
 		if (Auth::user()->id !== (int) $userId) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		UserQuizResults::where('user_id', $userId)->delete();

@@ -43,6 +43,11 @@ export const notifications = {
 		zeroState: 'Gdy zaczniesz zadawać pytania, odpowiadać oraz komentować, tu znajdziesz powiadomienia dotyczące swoich wpisów!',
 		zeroStateImage: 'Włącz się do dyskusji',
 	},
+	chat: {
+		heading: 'Wiadomości',
+		zeroState: 'W tym miejscu znajdziesz wszystkie powiadomienia dotyczące prywatnych wiadomości!',
+		footer: 'Przejdź do widoku wiadomości',
+	},
 	stream: {
 		hideNotification: 'Ukryj tę notyfikację',
 		showRead: 'Pokaż ukryte',

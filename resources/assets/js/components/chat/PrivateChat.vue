@@ -4,45 +4,18 @@
 			<wnl-avatar :fullName="interlocutorProfile.full_name" :url="interlocutorProfile.avatar"/>
 			<span>{{chatTitle}}</span>
 		</div>
-		<div class="wnl-chat">
-			<div class="wnl-chat-messages">
-				<div class="wnl-chat-content">
-					<div class="wnl-chat-content-inside">
-						<div class="notification aligncenter">
-							To początek dyskusji na tym kanale!
-						</div>
-						<div v-if="room.messages.length">
-							<wnl-message v-for="(message, index) in room.messages"
-								:key="index"
-								:showAuthor="isAuthorUnique[index]"
-								:id="message.id"
-								:author="getMessageAuthor(message)"
-								:fullName="getMessageAuthor(message).full_name"
-								:displayName="getMessageAuthor(message).display_name"
-								:avatar="getMessageAuthor(message).avatar"
-								:time="message.time"
-								:content="message.content"
-							></wnl-message>
-						</div>
-						<div class="metadata aligncenter margin vertical" v-else>
-							Napisz pierwszą wiadomość i zacznij rozmowę!
-							<p class="margin vertical">
-								<span class="icon is-big text-dimmed">
-									<i class="fa fa-comments-o"></i>
-								</span>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="wnl-chat-form">
-				<wnl-private-chat-message-form
-					:roomId="room.id"
-					:users="users"
-					ref="messageForm"
-				></wnl-private-chat-message-form>
-			</div>
-		</div>
+		<wnl-chat
+			:room="room"
+			:messages="room.messages"
+			:hasMore="hasMore"
+			:onScrollTop="pullMore"
+			:loaded="true"
+		/>
+		<wnl-message-form
+			:room="room"
+			:messagePayload="{users}"
+			@messageSent="onMessageSent"
+		/>
 	</div>
 </template>
 
@@ -59,48 +32,26 @@
 
 	.chat-title
 		display: flex
-		align-items: center
 		flex-direction: column
+		align-items: center
+		text-align: center
 		border-bottom: $border-light-gray
 		margin: $margin-base 0 0
 		padding-bottom: $margin-base
 
-	.wnl-chat
-		display: flex
-		flex: 1
-		flex-direction: column
-		justify-content: space-between
-
-	.wnl-chat-messages
-		display: flex
-		flex: 1 1 0
-		flex-direction: column-reverse
-		overflow-y: auto
-
-	.wnl-chat-content
-		position: relative
-
-	.wnl-chat-form
-		border-top: $border-light-gray
-		margin: $margin-base 0 0
-		padding-top: $margin-base
-
 </style>
 
 <script>
-	import Message from './Message.vue'
-	import PrivateChatMessageForm from './PrivateChatMessageForm.vue'
-	import UsersWidget from '../global/UsersWidget.vue'
+	import MessageForm from './MessageForm.vue'
+	import MessagesList from './MessagesList.vue'
 	import {getApiUrl} from 'js/utils/env'
-	import highlight from 'js/mixins/highlight'
 
 	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		components: {
-			'wnl-message': Message,
-			'wnl-private-chat-message-form': PrivateChatMessageForm,
-			'wnl-users-widget': UsersWidget,
+			'wnl-message-form': MessageForm,
+			'wnl-chat': MessagesList
 		},
 		props: {
 			room: {
@@ -112,31 +63,44 @@
 				required: true
 			}
 		},
+		data() {
+			return {
+				pagination: {
+					// 50 is original limit -> better way to handle that
+					has_more: this.room.messages.length === 50,
+					next: (_.first(this.room.messages) || {}).time
+				}
+			}
+		},
 		computed: {
 			...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
-			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor']),
-			isAuthorUnique() {
-				return this.room.messages.map((message, index) => {
-					if (index === 0) return true
-
-					let previous     = index - 1,
-						halfHourInMs = 1000 * 60 * 30
-
-					return message.user_id !== this.room.messages[previous].user_id ||
-							message.time - this.room.messages[previous].time > halfHourInMs
-				})
-			},
+			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor', 'getRoomMessagesPagination']),
 			interlocutorProfile() {
 				return this.getInterlocutor(this.room.profiles)
 			},
 			chatTitle() {
 				return this.interlocutorProfile.display_name || this.currentUserDisplayName
 			},
+			hasMore() {
+				return this.pagination.has_more || false
+			},
+			cursor() {
+				return this.pagination.next || null
+			}
 		},
 		methods: {
-			...mapActions('chatMessages', ['markRoomAsRead']),
+			...mapActions('chatMessages', ['markRoomAsRead', 'onNewMessage', 'fetchRoomMessages']),
 			getMessageAuthor(message) {
 				return this.getProfileByUserId(message.user_id)
+			},
+			onMessageSent({sent, ...data}) {
+				this.onNewMessage(data)
+			},
+			pullMore() {
+				return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: 50})
+					.then(messages => {
+						this.pagination = this.getRoomMessagesPagination(this.room.id)
+					}).catch(error => $wnl.logger.capture(error))
 			}
 		},
 		watch: {
@@ -150,7 +114,7 @@
 					}
 				}
 			}
-		}
+		},
 	}
 
 </script>

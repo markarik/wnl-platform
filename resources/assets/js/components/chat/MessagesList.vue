@@ -83,11 +83,6 @@
 				required: true,
 				type: Array
 			},
-			pullLimit: {
-				required: false,
-				type: Number,
-				default: 100
-			},
 			onScrollTop: {
 				required: true,
 				type: Function

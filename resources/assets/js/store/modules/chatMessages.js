@@ -13,6 +13,10 @@ const state = {
 	sortedRooms: [],
 	profiles: {},
 	ready: false,
+	pagination: {
+		hasMoreRooms: false,
+		currentPage: 1,
+	},
 	connected: false,
 }
 
@@ -27,6 +31,8 @@ const getters = {
 	rooms: state => state.rooms,
 	sortedRooms: state => state.sortedRooms,
 	profiles: state => state.profiles,
+	hasMoreRooms: state => state.pagination.hasMoreRooms,
+	currentPage: state => state.pagination.currentPage,
 	status: state => state.connected,
 	getRoomById: state => id => state.rooms[id] || {},
 	getProfileById: state => id => state.profiles[id] || {},
@@ -80,6 +86,9 @@ const getters = {
 
 //mutations
 const mutations = {
+	[types.CHAT_MESSAGES_HAS_MORE_ROOMS] (state, data) {
+		set (state.pagination, 'hasMoreRooms', data)
+	},
 	[types.CHAT_MESSAGES_SET_STATUS] (state, payload) {
 		set (state, 'connected', payload)
 	},
@@ -124,6 +133,17 @@ const mutations = {
 			state.sortedRooms.splice(newIndex, 0, room)
 		}
 	},
+	[types.CHAT_MESSAGES_ADD_ROOMS] (state, rooms) {
+		rooms.forEach((room) => {
+			set (state.rooms, room.id, room)
+		})
+	},
+	[types.CHAT_MESSAGES_ADD_ROOMS_TO_SORTED] (state, payload) {
+		state.sortedRooms = state.sortedRooms.concat(payload)
+	},
+	[types.CHAT_MESSAGES_SET_CURRENT_PAGE] (state, payload) {
+		set (state.pagination, 'currentPage', payload)
+	},
 	[types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD] (state, roomId) {
 		state.rooms[roomId].unread_count++
 	},
@@ -134,13 +154,24 @@ const mutations = {
 
 //Actions
 const actions = {
-	async initChatMessages({commit, getters}) {
-		const payload = await fetchUserRooms()
-		commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
+	async fetchUserRoomsWithMessages({commit, getters}, {limit=20, page=1}) {
+		const {payload, pagination} = await fetchUserRooms({limit, page})
+
+		if (page === 1) {
+			commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
+		} else {
+			commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles))
+			commit(types.CHAT_MESSAGES_ADD_ROOMS, Object.values(payload.rooms))
+			commit(types.CHAT_MESSAGES_ADD_ROOMS_TO_SORTED, payload.sortedRooms)
+		}
+
+		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, pagination.hasMoreRooms)
+		commit(types.CHAT_MESSAGES_SET_CURRENT_PAGE, pagination.currentPage)
 
 		if (payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
 
-		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
+		const roomsWithMessages = await fetchRoomsMessages(payload.sortedRooms)
+
 		Object.keys(roomsWithMessages)
 			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
 				roomId,
@@ -248,23 +279,37 @@ const actions = {
 	}
 }
 
-const fetchUserRooms = async () => {
-	const response = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
+const fetchUserRooms = async ({limit, page}) => {
+	const {data: response} = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
 		params: {
-			include: 'profiles'
+			include: 'profiles',
+			limit,
+			page
 		}
 	})
-	if (response.data.length === 0) return {
-		rooms: {},
-		sortedRooms: [],
-		profiles: {}
+	const {has_more, current_page, data} = response;
+
+	if (data.length === 0) return {
+		payload: {
+			rooms: {},
+			sortedRooms: [],
+			profiles: {}
+		},
+		pagination: {
+			hasMoreRooms: false,
+			currentPage: 1
+		}
 	}
 
-	const {included, ...rooms} = response.data
+	const {included = {}, ...rooms} = data
 	const payload = {
 		rooms: {},
 		sortedRooms: [],
 		profiles: included.profiles
+	}
+	const pagination = {
+		hasMoreRooms: has_more,
+		currentPage: current_page
 	}
 
 	Object.values(rooms).forEach((room) => {
@@ -273,8 +318,7 @@ const fetchUserRooms = async () => {
 		}
 		payload.sortedRooms.push(room.id)
 	})
-
-	return payload
+	return {payload, pagination}
 }
 
 const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) =>  {
@@ -306,11 +350,10 @@ const fetchRoomsMessages = async (roomsIds, limit = 50) => {
 	return rooms
 }
 
-const fetchRoomMessagesWithContext = async ({messageTime, roomId}) => {
+const fetchRoomMessagesWithContext = async (requestContext) => {
 	const {data} = await axios.post(getApiUrl('chat_messages/.getWithContext'), {
 		include: 'profiles',
-		messageTime,
-		roomId
+		...requestContext
 	})
 
 	return serializeResponse(data)

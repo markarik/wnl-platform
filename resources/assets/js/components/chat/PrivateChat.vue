@@ -49,6 +49,7 @@
 	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
+		PRIVATE_CHAT_MESSAGES_LIMIT: 50,
 		components: {
 			'wnl-message-form': MessageForm,
 			'wnl-chat': MessagesList
@@ -67,7 +68,7 @@
 			return {
 				pagination: {
 					// 50 is original limit -> better way to handle that
-					has_more: this.room.messages.length === 50,
+					has_more: this.room.messages.length === this.PRIVATE_CHAT_MESSAGES_LIMIT,
 					next: (_.first(this.room.messages) || {}).time
 				}
 			}
@@ -97,7 +98,7 @@
 				this.onNewMessage(data)
 			},
 			pullMore() {
-				return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: 50})
+				return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT})
 					.then(messages => {
 						this.pagination = this.getRoomMessagesPagination(this.room.id)
 					}).catch(error => $wnl.logger.capture(error))

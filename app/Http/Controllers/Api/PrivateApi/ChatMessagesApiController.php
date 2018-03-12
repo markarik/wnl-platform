@@ -45,28 +45,47 @@ class ChatMessagesApiController extends ApiController
 
 	public function getWithContext(Request $request) {
 		$roomId = $request->roomId;
+		$user = \Auth::user();
+
+		if (!$user->can('view', ChatRoom::find($roomId))) {
+			return $this->respondForbidden();
+		}
+
 		$messageTime = $request->messageTime;
-		$messagesBeforeContext = $request->context ?? 10;
+		$afterLimit = $request->afterLimit;
+		$beforeLimit = $request->beforeLimit;
 
-		$messagesAfter = ChatMessage::select()
+		$messagesAfterQuery = ChatMessage::select()
 			->where('chat_room_id', $roomId)
 			->orderBy('time', 'desc')
-			->where('time', '>=', $messageTime)->get();
+			->where('time', '>=', $messageTime);
 
-		$messagesBefore = ChatMessage::select()
+		if (isset($afterLimit)) {
+			$messagesAfterQuery->take($afterLimit);
+		}
+
+		$messagesAfter = $messagesAfterQuery->get();
+
+		$messagesBeforeQuery = ChatMessage::select()
 			->where('chat_room_id', $roomId)
 			->orderBy('time', 'desc')
-			->where('time', '<', $messageTime)->get();
+			->where('time', '<', $messageTime);
 
+		if (isset($beforeLimt)) {
+			$messagesBeforeQuery->take($beforeLimit);
+		}
+
+		$messagesBefore = $messagesBeforeQuery->get();
 
 		$allMessages = $messagesAfter->concat($messagesBefore);
 		$transformed = $this->transform($allMessages);
+		$next = $allMessages->count() > 0 ? $allMessages->last()->time : null;
 
 		return $this->respondOk([
 			'data' => $transformed,
 			'cursor' => [
 				'current' => $messageTime,
-				'next' => $allMessages->last()->time,
+				'next' => $next,
 				'previous' => null,
 				'has_more' => true
 			]

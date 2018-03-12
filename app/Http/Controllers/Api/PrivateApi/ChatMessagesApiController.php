@@ -45,6 +45,12 @@ class ChatMessagesApiController extends ApiController
 
 	public function getWithContext(Request $request) {
 		$roomId = $request->roomId;
+		$user = \Auth::user();
+
+		if (!$user->can('view', ChatRoom::find($roomId))) {
+			return $this->respondForbidden();
+		}
+
 		$messageTime = $request->messageTime;
 		$afterLimit = $request->afterLimit;
 		$beforeLimit = $request->beforeLimit;

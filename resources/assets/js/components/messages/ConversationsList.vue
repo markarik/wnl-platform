@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="scrollable-container" @scroll="pullRooms" >
+	<div class="scrollable-container" @scroll="pullConversations" >
 		<div class="rooms-header" v-if="withSearch">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
 			<div class="rooms-list-controls">
@@ -163,14 +163,13 @@
 				if (profile.id) return profile
 				return this.currentUser
 			},
-			pullRooms(event) {
-				// TODO add debounce
+			pullConversations: _.debounce(function(event) {
 				if (!this.userSearchVisible && this.hasMoreRooms) {
 					if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
 						return this.fetchUserRoomsWithMessages({page: this.currentPage + 1})
 					}
 				}
-			}
+			}),
 		}
 	}
 </script>

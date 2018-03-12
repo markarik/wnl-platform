@@ -179,6 +179,7 @@ const actions = {
 		commit(types.CHAT_MESSAGES_SET_ROOMS, response.payload)
 		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.pagination.hasMoreRooms)
 
+		console.log(response);
 		if (response.payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
 
 		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
@@ -290,7 +291,7 @@ const actions = {
 }
 
 const fetchUserRooms = async ({limit, page}) => {
-	const response = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
+	const {data: {data}} = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
 		params: {
 			include: 'profiles',
 			limit,
@@ -298,13 +299,19 @@ const fetchUserRooms = async ({limit, page}) => {
 		}
 	})
 
-	if (response.data.data.length === 0) return {
-		rooms: {},
-		sortedRooms: [],
-		profiles: {}
+	if (data.length === 0) return {
+		payload: {
+			rooms: {},
+			sortedRooms: [],
+			profiles: {}
+		},
+		pagination: {
+			hasMoreRooms: false,
+			currentPage: 1
+		}
 	}
 
-	const {included, ...rooms} = response.data
+	const {included = {}, ...rooms} = data
 	const payload = {
 		rooms: {},
 		sortedRooms: [],

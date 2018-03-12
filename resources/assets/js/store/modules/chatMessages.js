@@ -350,11 +350,10 @@ const fetchRoomsMessages = async (roomsIds, limit = 50) => {
 	return rooms
 }
 
-const fetchRoomMessagesWithContext = async ({messageTime, roomId}) => {
+const fetchRoomMessagesWithContext = async (requestContext) => {
 	const {data} = await axios.post(getApiUrl('chat_messages/.getWithContext'), {
 		include: 'profiles',
-		messageTime,
-		roomId
+		...requestContext
 	})
 
 	return serializeResponse(data)

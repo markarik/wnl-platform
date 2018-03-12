@@ -86,13 +86,21 @@
 			}
 		},
 		methods: {
-			...mapActions('chatMessages', ['markRoomAsRead']),
+			...mapActions('chatMessages', ['markRoomAsRead', 'fetchRoomMessages']),
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
 				room.id && this.$socketMarkRoomAsRead(room.id)
 					.then(() => this.markRoomAsRead(room.id))
 					.catch(err => $wnl.logger.capture(err))
+
+				if (room.messages && room.messages.length < PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT) {
+					this.fetchRoomMessages({
+						room,
+						limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,
+						context: {messageTime: _.first(room.messages).time, roomId: room.id, afterLimit: 0, beforeLimit: 50}
+					})
+				}
 			},
 			openRoomById(roomId) {
 				const room = this.getRoomById(roomId)

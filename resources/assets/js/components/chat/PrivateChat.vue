@@ -1,8 +1,13 @@
 <template lang="html">
 	<div class="wnl-private-chat">
 		<div class="chat-title">
-			<wnl-avatar :fullName="interlocutorProfile.full_name" :url="interlocutorProfile.avatar"/>
-			<span>{{chatTitle}}</span>
+			<wnl-avatar
+				:fullName="interlocutorProfile.full_name"
+				:url="interlocutorProfile.avatar"
+				size="small"
+				class="chat-title__avatar"
+			/>
+			<span class="chat-title__name">{{chatTitle}}</span>
 		</div>
 		<wnl-chat
 			:room="room"
@@ -32,12 +37,16 @@
 
 	.chat-title
 		display: flex
-		flex-direction: column
+		flex-direction: row
 		align-items: center
 		text-align: center
+		justify-content: center
 		border-bottom: $border-light-gray
-		margin: $margin-base 0 0
 		padding-bottom: $margin-base
+
+		&__name
+			margin-left: $margin-small
+			padding-top: $margin-tiny
 
 </style>
 

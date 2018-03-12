@@ -78,6 +78,9 @@
 				white-space: nowrap
 				text-overflow: ellipsis
 
+	.has-unread .conversation-message *
+		font-weight: $font-weight-bold
+
 </style>
 
 <script>

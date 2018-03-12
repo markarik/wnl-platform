@@ -159,15 +159,24 @@ const mutations = {
 
 //Actions
 const actions = {
-	async pullUserRooms({commit, getters}, data) {
-		const response = await fetchUserRooms(data)
-		commit(types.CHAT_MESSAGES_ADD_PULLED_PROFILES, response.payload.profiles)
-		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM, response.payload.rooms)
+	async fetchUserRoomsWithMessages({commit, getters}, {limit=20, page=1}) {
+		const response = await fetchUserRooms({limit, page})
+		// first pull
+		if (page === 1) {
+			commit(types.CHAT_MESSAGES_SET_ROOMS, response.payload)
+			commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.pagination.hasMoreRooms)
+		} else {
+			commit(types.CHAT_MESSAGES_ADD_PULLED_PROFILES, response.payload.profiles)
+			commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM, response.payload.rooms)
+			commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED, response.payload.sortedRooms)
+		}
+
 		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, response.pagination.hasMoreRooms)
-		commit(types.CHAT_MESSAGES_ADD_PULLED_ROOM_TO_SORTED, response.payload.sortedRooms)
 		commit(types.CHAT_MESSAGES_SET_CURRENT_PAGE, response.pagination.currentPage)
 
-		const {roomsWithMessages} = await fetchRoomsMessages(response.payload.sortedRooms)
+		if (response.payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
+
+		const roomsWithMessages = await fetchRoomsMessages(response.payload.sortedRooms)
 		Object.keys(roomsWithMessages)
 			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
 				roomId,
@@ -291,13 +300,14 @@ const actions = {
 }
 
 const fetchUserRooms = async ({limit, page}) => {
-	const {data: {data}} = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
+	const {data: response} = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
 		params: {
 			include: 'profiles',
 			limit,
 			page
 		}
 	})
+	const {has_more, current_page, data} = response;
 
 	if (data.length === 0) return {
 		payload: {
@@ -318,8 +328,8 @@ const fetchUserRooms = async ({limit, page}) => {
 		profiles: included.profiles
 	}
 	const pagination = {
-		hasMoreRooms: response.data.has_more,
-		currentPage: response.data.current_page
+		hasMoreRooms: has_more,
+		currentPage: current_page
 	}
 
 	Object.values(rooms).forEach((room) => {

@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="conversation-list" @scroll="pullRooms">
+	<div class="scrollable-container" @scroll="pullRooms" >
 		<div class="rooms-header" v-if="withSearch">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
 			<div class="rooms-list-controls">
@@ -18,7 +18,7 @@
 		<div v-if="userSearchVisible">
 			<wnl-conversations-search @close="closeUserSearch"/>
 		</div>
-		<div v-else-if="roomsToShow.length">
+		<div v-else-if="roomsToShow.length" class="conversation-list scrollable-container">
 			<wnl-message-link
 				v-for="(room, index) in roomsToShow"
 				:key="index"
@@ -42,6 +42,9 @@
 
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
+
+	.scrollable-container
+		overflow-y: scroll
 
 	.rooms-header
 		color: $color-gray-dimmed
@@ -82,7 +85,6 @@
 		display: flex
 		flex-direction: column
 		overflow-x: hidden
-		overflow-y: auto
 
 	.is-block
 		display: block
@@ -144,7 +146,7 @@
 			},
 		},
 		methods: {
-			...mapActions('chatMessages', ['pullUserRooms', 'incrementPage']),
+			...mapActions('chatMessages', ['fetchUserRoomsWithMessages']),
 			closeUserSearch() {
 				this.userSearchVisible = false
 			},
@@ -162,9 +164,9 @@
 				return this.currentUser
 			},
 			pullRooms(event) {
-				if (this.hasMoreRooms) {
+				if (!this.userSearchVisible && this.hasMoreRooms) {
 					if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
-						return this.pullUserRooms({limit: 20, page: this.currentPage +1})
+						return this.fetchUserRoomsWithMessages({page: this.currentPage +1})
 					}
 				}
 			}

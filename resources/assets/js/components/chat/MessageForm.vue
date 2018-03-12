@@ -1,44 +1,48 @@
 <template>
-	<article class="media">
-		<figure class="media-left">
-			<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
-		</figure>
-		<div class="media-content">
-			<wnl-form
-				class="chat-message-form"
-				hideDefaultSubmit="true"
-				name="ChatMessage"
-				method="post"
-				suppressEnter="false"
-				resourceRoute="qna_questions"
-			>
-				<wnl-quill
-					ref="editor"
-					name="text"
-					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
-					:keyboard="keyboard"
-					:toolbar="toolbar"
-					:allowMentions=true
-					@input="onInput"
-				></wnl-quill>
-			</wnl-form>
-			<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
-			<div class="message is-warning" v-if="error.length > 0">
-				<div class="message-body">{{ error }}</div>
+	<div class="wnl-chat-form">
+		<article class="media">
+			<figure class="media-left">
+				<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+			</figure>
+			<div class="media-content">
+				<wnl-form
+					class="chat-message-form"
+					hideDefaultSubmit="true"
+					name="ChatMessage"
+					method="post"
+					suppressEnter="false"
+					resourceRoute="qna_questions"
+				>
+					<wnl-quill
+						ref="editor"
+						name="text"
+						:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
+						:keyboard="keyboard"
+						:toolbar="toolbar"
+						:allowMentions=true
+						@input="onInput"
+					></wnl-quill>
+				</wnl-form>
+				<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
+				<div class="message is-warning" v-if="error.length > 0">
+					<div class="message-body">{{ error }}</div>
+				</div>
 			</div>
-		</div>
-		<div class="media-right">
-			<wnl-image-button
-				name="wnl-chat-form-submit"
-				icon="send-message"
-				alt="Wyślij wiadomość"
-				:disabled="sendingDisabled"
-				@buttonclicked="sendMessage">
-			</wnl-image-button>
-		</div>
-	</article>
+			<div class="media-right">
+				<wnl-image-button
+					name="wnl-chat-form-submit"
+					icon="send-message"
+					alt="Wyślij wiadomość"
+					:disabled="sendingDisabled"
+					@buttonclicked="sendMessage">
+				</wnl-image-button>
+			</div>
+		</article>
+	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.media
 		align-items: center
 
@@ -48,16 +52,34 @@
 		font-weight: 400
 		text-transform: none
 		text-align: right
+
+	.wnl-chat-form
+		border-top: $border-light-gray
+		margin: $margin-base 0 0
+		padding-top: $margin-base
+
 </style>
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
-	import { SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MESSAGE_PROCESSED } from 'js/plugins/socket'
 	import _ from 'lodash';
 
 	export default{
-		props: ['loaded', 'room'],
+		props: {
+			room: {
+				type: Object,
+				required: true
+			},
+			loaded: {
+				type: Boolean,
+				default: true
+			},
+			messagePayload: {
+				type: Object,
+				default: () => ({})
+			}
+		},
 		data() {
 			return {
 				error: '',
@@ -86,12 +108,9 @@
 		computed: {
 			...mapGetters([
 				'currentUserFullName',
-				'currentUserDisplayName',
 				'currentUserAvatar',
-				'currentUserId',
 				'currentUser'
 			]),
-			...mapGetters('course', ['courseId']),
 			formats() {
 				return ['bold', 'italic', 'underline', 'link', 'mention']
 			},
@@ -110,7 +129,7 @@
 			}
 		},
 		methods: {
-			...mapActions(['saveMentions', 'addAutoDismissableAlert']),
+			...mapActions(['addAutoDismissableAlert']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
@@ -122,9 +141,11 @@
 					message: {
 						user: this.currentUser,
 						content: this.content
-					}
+					},
+					...this.messagePayload
 				}).then(data => {
 					this.processMessage(data)
+					this.$emit('messageSent', data)
 				}).catch((err) => {
 					$wnl.logger.capture(err)
 					this.addAutoDismissableAlert({
@@ -141,26 +162,6 @@
 
 				return _.uniq(Array.prototype.map.call(mentions, el => el.dataset.id))
 			},
-			getMentionsData(userIds, message) {
-				return {
-					mentioned_users: userIds,
-					subject: {
-						type: 'chat_message',
-						id: `${message.time}${this.currentUserId}`,
-						text: message.content,
-						channel: this.room.channel
-					},
-					objects: {
-						type: "chat_channel",
-						text: this.room.name
-					},
-					context: {
-						name: this.$route.name,
-						params: this.$route.params
-					},
-					actors: this.currentUser
-				}
-			},
 			suppressEnter(event) {
 				event.preventDefault()
 			},
@@ -169,9 +170,7 @@
 					const mentions = this.getMentions()
 
 					if (mentions && mentions.length) {
-						this.saveMentions(
-							this.getMentionsData(mentions, data.message)
-						)
+						this.$emit('foundMentions', {mentions, context: data.message})
 					}
 
 					this.mentions = []
@@ -183,7 +182,6 @@
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
 				}
-				this.isWaitingToSendMentions = false
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();

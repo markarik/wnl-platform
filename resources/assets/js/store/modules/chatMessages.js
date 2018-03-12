@@ -70,7 +70,12 @@ const getters = {
 				roomProfiles.includes(profile.id)
 		}) || {}
 	},
-	ready: state => state.ready // :D
+	getRoomMessagesPagination: (state, getters) => roomId => {
+		const room = getters.getRoomById(roomId)
+		return room.pagination || {}
+	},
+	getRoomBySlug: state => slug => Object.values(state.rooms).find(room => room.slug === slug),
+	ready: state => state.ready
 }
 
 //mutations
@@ -91,11 +96,20 @@ const mutations = {
 			set(state.profiles, profile.id, profile)
 		})
 	},
-	[types.CHAT_MESSAGES_SET_ROOM_MESSAGES](state, {roomId, messages}) {
+	[types.CHAT_MESSAGES_SET_ROOM_MESSAGES](state, {roomId, messages, pagination}) {
 		set(state.rooms[roomId], 'messages', messages)
+		if (pagination) {
+			set(state.rooms[roomId], 'pagination', pagination)
+		}
 	},
 	[types.CHAT_MESSAGES_READY](state, isReady) {
 		set(state, 'ready', isReady)
+	},
+	[types.CHAT_MESSAGES_ADD_MESSAGES](state, {messages, roomId, pagination}) {
+		state.rooms[roomId].messages = messages.concat(state.rooms[roomId].messages)
+		if (pagination) {
+			set(state.rooms[roomId], 'pagination', pagination)
+		}
 	},
 	[types.CHAT_MESSAGES_ADD_MESSAGE](state, {message, room}) {
 		state.rooms[room].last_message_time = message.time
@@ -126,7 +140,7 @@ const actions = {
 
 		if (payload.sortedRooms.length === 0) return commit(types.CHAT_MESSAGES_READY, true)
 
-		const {roomsWithMessages} = await fetchRoomsMessages(getters.sortedRooms)
+		const roomsWithMessages = await fetchRoomsMessages(getters.sortedRooms)
 		Object.keys(roomsWithMessages)
 			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
 				roomId,
@@ -157,9 +171,9 @@ const actions = {
 	setConnectionStatus({commit}, payload) {
 		commit(types.CHAT_MESSAGES_SET_STATUS, payload)
 	},
-	async createNewRoom({commit, rootGetters, state}, {users}) {
-		const uniqUsers           = uniq(users)
-		const response            = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
+	async createPrivateRoom({commit, rootGetters, state}, {users}) {
+		const uniqUsers = uniq(users)
+		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
 			name: `private-${uniqUsers.join('-')}`,
 			include: 'profiles',
 			users: uniqUsers,
@@ -182,11 +196,17 @@ const actions = {
 
 		return room
 	},
-	async createPublicRoom({commit}, {slug}) {
-		const url                 = getApiUrl('chat_rooms/.createPublicRoom')
-		const response            = await axios.post(url, {slug})
-		const {included, ...room} = response.data
-		const payload             = {
+	async createPublicRoom({commit, getters}, {slug}) {
+		const existingRoom = getters.getRoomBySlug(slug)
+
+		if (existingRoom) {
+			return existingRoom
+		}
+
+		const url = getApiUrl('chat_rooms/.createPublicRoom')
+		const response = await axios.post(url, {slug})
+		const room = response.data
+		const payload = {
 			room: {
 				...room,
 				messages: []
@@ -196,22 +216,32 @@ const actions = {
 
 		return room
 	},
-	async initPublicRoom({commit, getters}, room) {
-		const {roomsWithMessages, messages} = await fetchRoomsMessages([room.id])
-		Object.keys(roomsWithMessages)
-			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
-				roomId,
-				messages: roomsWithMessages[roomId]
-			}))
-
-		const userIds  = Object.values(messages).map(message => message.user_id)
-		const query    = {
-			whereIn: ['user_id', userIds]
+	async fetchRoomMessages({commit}, {room, currentCursor, limit, context = {}}) {
+		let response = {}
+		if (context.messageTime && context.roomId) {
+			response = await fetchRoomMessagesWithContext(context)
+		} else {
+			response = await fetchPaginatedRoomMessages(room.id, currentCursor, limit)
 		}
-		const response = await axios.post(getApiUrl('user_profiles/.query'), {query})
-		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(response.data))
+		const {messages, profiles, cursor} = response
 
-		return room
+		if (!cursor) {
+			commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
+				roomId: room.id,
+				messages,
+				pagination: cursor
+			})
+		} else {
+			commit(types.CHAT_MESSAGES_ADD_MESSAGES, {
+				roomId: room.id,
+				messages,
+				pagination: cursor
+			})
+		}
+
+		commit(types.CHAT_MESSAGES_ADD_PROFILES, profiles)
+
+		return messages
 	},
 	markRoomAsRead({commit}, roomId) {
 		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId)
@@ -231,7 +261,7 @@ const fetchUserRooms = async () => {
 	}
 
 	const {included, ...rooms} = response.data
-	const payload              = {
+	const payload = {
 		rooms: {},
 		sortedRooms: [],
 		profiles: included.profiles
@@ -247,13 +277,25 @@ const fetchUserRooms = async () => {
 	return payload
 }
 
-const fetchRoomsMessages = async (roomsIds) => {
+const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) =>  {
 	const {data} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
-		rooms: roomsIds
+		rooms: [roomId],
+		include: 'profiles',
+		limit,
+		currentCursor
+	})
+
+	return serializeResponse(data)
+}
+
+const fetchRoomsMessages = async (roomsIds, limit = 50) => {
+	const {data: {data, cursor}} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
+		rooms: roomsIds,
+		limit
 	})
 	const rooms  = {}
 
-	data.forEach(message => {
+	data.reverse().forEach(message => {
 		if (!rooms[message.chat_room_id]) {
 			rooms[message.chat_room_id] = []
 		}
@@ -261,7 +303,28 @@ const fetchRoomsMessages = async (roomsIds) => {
 		rooms[message.chat_room_id].push(message)
 	})
 
-	return {roomsWithMessages: rooms, messages: data}
+	return rooms
+}
+
+const fetchRoomMessagesWithContext = async ({messageTime, roomId}) => {
+	const {data} = await axios.post(getApiUrl('chat_messages/.getWithContext'), {
+		include: 'profiles',
+		messageTime,
+		roomId
+	})
+
+	return serializeResponse(data)
+}
+
+const serializeResponse = (data) => {
+	const {cursor, data: response} = data
+	const {included = {}, ...messages} = response
+
+	return {
+		profiles: Object.values(included.profiles || {}),
+		messages: Object.values(messages).reverse(),
+		cursor
+	}
 }
 
 export default {

@@ -39,7 +39,7 @@
 					<div class="level-left">
 						<div class="send-message">
 							<wnl-message-link :userId="userId">
-								<a class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.sendMessage')}}</a>
+								<span class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.sendMessage')}}</span>
 							</wnl-message-link>
 						</div>
 					</div>

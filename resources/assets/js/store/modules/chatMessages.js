@@ -145,7 +145,8 @@ const mutations = {
 		set (state.pagination, 'currentPage', payload)
 	},
 	[types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD] (state, roomId) {
-		state.rooms[roomId].unread_count++
+		state.rooms[roomId].unread_count = (state.rooms[roomId].unread_count || 0) + 1
+		console.log(state.rooms[roomId].unread_count, '.....the count')
 	},
 	[types.CHAT_MESSAGES_MARK_ROOM_AS_READ] (state, roomId) {
 		state.rooms[roomId].unread_count = 0

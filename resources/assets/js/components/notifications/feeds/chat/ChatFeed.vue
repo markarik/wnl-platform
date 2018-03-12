@@ -71,9 +71,9 @@
 		},
 		computed: {
 			...mapGetters(['isTouchScreen', 'getSetting']),
-			...mapGetters('chatMessages', ['status', 'getUnseenRooms']),
+			...mapGetters('chatMessages', ['status', 'unreadConversations']),
 			unseenCount() {
-				return this.getUnseenRooms
+				return this.unreadConversations > 9 ? '9+' : this.unreadConversations
 			},
 			connecting() {
 				return this.status

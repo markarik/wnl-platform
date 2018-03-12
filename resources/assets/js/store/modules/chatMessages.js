@@ -22,7 +22,7 @@ const state = {
 
 //Getters
 const getters = {
-	getUnseenRooms: (state, getters) => {
+	unreadConversations: (state, getters) => {
 		return Object.values(getters.rooms).reduce((sum, room) => {
 			if (room.unread_count) return sum + 1
 			return sum

@@ -4,8 +4,9 @@
 			<figure class="media-left">
 				<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
 			</figure>
-			<div class="media-content">
+			<div class="media-content wnl-chat-form-wrapper">
 				<wnl-form
+					:id="formId"
 					class="chat-message-form"
 					hideDefaultSubmit="true"
 					name="ChatMessage"
@@ -16,7 +17,8 @@
 					<wnl-quill
 						ref="editor"
 						name="text"
-						:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
+						id="elo-elo"
+						:options="quillOptions"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
 						:allowMentions="true"
@@ -41,7 +43,7 @@
 		</article>
 	</div>
 </template>
-<style lang="sass" rel="stylesheet/sass" scoped>
+<style lang="sass" rel="stylesheet/sass" >
 	@import 'resources/assets/sass/variables'
 
 	.media
@@ -58,6 +60,9 @@
 		border-top: $border-light-gray
 		margin: $margin-base 0 0
 		padding-top: $margin-base
+
+	.wnl-chat-form-wrapper
+		position: relative
 
 </style>
 <script>
@@ -117,9 +122,6 @@
 				'currentUserAvatar',
 				'currentUser'
 			]),
-			formats() {
-				return ['bold', 'italic', 'underline', 'link', 'mention']
-			},
 			sendingDisabled() {
 				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0) || this.message.length > 5000
 			},
@@ -130,8 +132,19 @@
 					['clean'],
 				]
 			},
+			quillOptions() {
+				return {
+					theme: 'bubble',
+					placeholder: 'Twoja wiadomość...',
+					formats: ['bold', 'italic', 'underline', 'link', 'mention'],
+					bounds: `#${this.formId}`,
+				}
+			},
 			quillEditor() {
 				return this.$refs.editor;
+			},
+			formId() {
+				return `chat-message-form-${this._uid}`
 			}
 		},
 		methods: {

@@ -16,14 +16,12 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
-	const setting = 'private_chat_nofitications'
-
 	export default {
 		name: 'NotificationsToggle',
 		computed: {
 			...mapGetters(['getSetting']),
 			isOn() {
-				return this.getSetting(setting)
+				return this.getSetting(this.SETTING)
 			},
 			toggleText() {
 				return this.isOn ? this.message('turnOff') : this.message('turnOn')
@@ -38,8 +36,9 @@
 				return this.$t(`notifications.personal.${key}`)
 			},
 			toggleNotifications() {
-				this.changeUserSettingAndSync({setting, value: !this.isOn})
+				this.changeUserSettingAndSync({setting: this.SETTING, value: !this.isOn})
 			},
-		}
+		},
+		SETTING: 'private_chat_nofitications'
 	}
 </script>

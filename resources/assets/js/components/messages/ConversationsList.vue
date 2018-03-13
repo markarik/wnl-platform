@@ -1,6 +1,6 @@
 <template lang="html">
-	<div class="conversation-list">
-		<div class="rooms-header" v-if="!withoutHeader">
+	<div class="scrollable-container" @scroll="pullConversations" >
+		<div class="rooms-header" v-if="withSearch">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
 			<div class="rooms-list-controls">
 				<span class="rooms-list-controls-item is-active" @click="toggleUserSearch">
@@ -18,7 +18,7 @@
 		<div v-if="userSearchVisible">
 			<wnl-conversations-search @close="closeUserSearch"/>
 		</div>
-		<div v-else-if="roomsToShow.length">
+		<div v-else-if="roomsToShow.length" class="conversation-list scrollable-container">
 			<wnl-message-link
 				v-for="(room, index) in roomsToShow"
 				:key="index"
@@ -33,7 +33,7 @@
 					:isActive="isActive(room)"
 					:class="{'has-unread': room.unread_count > 0}"
 				/>
-				 <div v-if="room.unread_count" class="counter">{{room.unread_count}}</div>
+				 <div v-if="room.unread_count" class="counter">{{room.unread_count > 9 ? '9+' : room.unread_count}}</div>
 			</wnl-message-link>
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
@@ -42,6 +42,9 @@
 
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
+
+	.scrollable-container
+		overflow-y: scroll
 
 	.rooms-header
 		color: $color-gray-dimmed
@@ -82,7 +85,6 @@
 		display: flex
 		flex-direction: column
 		overflow-x: hidden
-		overflow-y: auto
 
 	.is-block
 		display: block
@@ -108,7 +110,7 @@
 	import ConversationsSearch from 'js/components/messages/ConversationsSearch'
 	import MessageLink from "js/components/global/MessageLink"
 	import ConversationSnippet from "js/components/messages/ConversationSnippet"
-	import {mapGetters} from 'vuex'
+	import {mapGetters, mapActions} from 'vuex'
 
 	export default {
 		name: 'ConversationsList',
@@ -118,33 +120,33 @@
 			'wnl-conversation-snippet': ConversationSnippet
 		},
 		props: {
-			withoutHeader: {
+			withSearch: {
 				required: false,
-				default: false
+				default: true
 			},
 		},
 		data() {
 			return  {
-				currentRoom: '',
 				userSearchVisible: false,
-				searchResults: []
 			}
 		},
 		computed: {
 			...mapGetters(['currentUser']),
 			...mapGetters('chatMessages', [
 				'sortedRooms',
-				'getProfileById',
 				'getRoomById',
-				'getInterlocutor'
+				'getInterlocutor',
+				'hasMoreRooms',
+				'currentPage'
 			]),
 			roomsToShow() {
 				return this.sortedRooms.map(roomId => {
 					return this.getRoomById(roomId)
 				})
-			}
+			},
 		},
 		methods: {
+			...mapActions('chatMessages', ['fetchUserRoomsWithMessages']),
 			closeUserSearch() {
 				this.userSearchVisible = false
 			},
@@ -160,7 +162,14 @@
 				const profile = this.getInterlocutor(room.profiles)
 				if (profile.id) return profile
 				return this.currentUser
-			}
+			},
+			pullConversations: _.debounce(function(event) {
+				if (!this.userSearchVisible && this.hasMoreRooms) {
+					if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
+						return this.fetchUserRoomsWithMessages({page: this.currentPage + 1})
+					}
+				}
+			}),
 		}
 	}
 </script>

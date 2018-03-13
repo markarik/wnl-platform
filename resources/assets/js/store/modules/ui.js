@@ -153,7 +153,10 @@ const actions = {
 	},
 	openChat({ commit }) {
 		commit(types.UI_SET_CHAT_OPEN);
-	}
+	},
+	[types.SOCKET_CONNECTION_ERROR]({commit}) {
+		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, false)
+	},
 }
 
 export default {

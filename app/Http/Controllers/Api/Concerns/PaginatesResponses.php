@@ -2,12 +2,44 @@
 
 use Auth;
 use Cache;
+use League\Fractal\Pagination\Cursor;
+use League\Fractal\Resource\Collection;
+
 
 trait PaginatesResponses
 {
 	public $defaultLimit = 30;
 	public $limit;
 
+	protected function cursorPaginatedResponse($builder, $currentCursor, $limit = 10, $cursorField = 'id', $comparison = '>') {
+		if ($currentCursor) {
+			$items = $builder->where($cursorField, $comparison, $currentCursor)->take($limit)->get();
+		} else {
+			$items = $builder->take($limit)->get();
+		}
+
+		$newCursor = null;
+
+		if ($items->count() > 0) {
+			$newCursor = $items->last()->$cursorField;
+		}
+
+		$cursor = new Cursor($currentCursor, null, $newCursor, $items->count());
+
+		$transformed = $this->transform($items);
+		$collection = new Collection($transformed);
+		$collection->setCursor($cursor);
+
+		return [
+			'data' => $this->transform($items),
+			'cursor' => [
+				'current' => $cursor->getCurrent(),
+				'next' => $cursor->getNext(),
+				'previous' => $cursor->getPrev(),
+				'has_more' => $cursor->getCount() > 0
+			]
+		];
+	}
 	/**
 	 * @param $model
 	 * @param $limit

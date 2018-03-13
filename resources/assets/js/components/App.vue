@@ -79,7 +79,7 @@
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
-			...mapActions('chatMessages', ['initChatMessages', 'onNewMessage', 'setConnectionStatus']),
+			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
@@ -90,7 +90,7 @@
 			this.toggleOverlay({source: 'course', display: true})
 			sessionStore.clearAll()
 
-			return Promise.all([this.setupCurrentUser(), this.courseSetup(1), this.initChatMessages()])
+			return Promise.all([this.setupCurrentUser(), this.courseSetup(1), this.fetchUserRoomsWithMessages({page: 1})])
 				.then(() => {
 					// Setup Notifications
 					this.initNotifications()

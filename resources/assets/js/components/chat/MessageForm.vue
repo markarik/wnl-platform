@@ -31,9 +31,10 @@
 			<div class="media-right">
 				<wnl-image-button
 					name="wnl-chat-form-submit"
-					icon="send-message"
+					:icon="sendingMessage ? 'refresh' : 'send-message'"
 					alt="Wyślij wiadomość"
-					:disabled="sendingDisabled"
+					:disabled="sendingDisabled || sendingMessage"
+					:loading="sendingMessage"
 					@buttonclicked="sendMessage">
 				</wnl-image-button>
 			</div>
@@ -102,7 +103,8 @@
 					}
 				},
 				isWaitingToSendMentions: false,
-				mentions: []
+				mentions: [],
+				sendingMessage: false
 			}
 		},
 		components: {
@@ -138,6 +140,7 @@
 				if (this.sendingDisabled) {
 					return false
 				}
+				this.sendingMessage = true
 				this.error = ''
 				this.isWaitingToSendMentions = true
 				this.$socketSendMessage({
@@ -150,12 +153,14 @@
 				}).then(data => {
 					this.processMessage(data)
 					this.$emit('messageSent', data)
+					this.sendingMessage = false
 				}).catch((err) => {
-					$wnl.logger.capture(err)
+					$wnl.logger.error(err)
 					this.addAutoDismissableAlert({
 						text: 'Niestety nie udało Nam się wysłać wiadomości. Spróbuj ponownie',
 						type: 'error'
 					})
+					this.sendingMessage = false
 				})
 			},
 			getMentions() {

@@ -31,16 +31,20 @@ class ChatMessagesApiController extends ApiController
 			}
 		}
 
-		$messages = ChatMessage::select()
-			->whereIn('chat_room_id', $roomIds)
-			->orderBy('time', 'desc');
+		$roomsMessages = [];
+		foreach ($rooms as $room) {
+			$messages = ChatMessage::select()
+				->where('chat_room_id', $room->id)
+				->orderBy('time', 'desc');
 
-		$limit = $request->limit ?? 10;
-		$cursor = $request->currentCursor ?? null;
+			$limit = $request->limit ?? 10;
+			$cursor = $request->currentCursor ?? null;
 
-		$paginated = $this->cursorPaginatedResponse($messages, $cursor, $limit, 'time', '<');
+			$paginated = $this->cursorPaginatedResponse($messages, $cursor, $limit, 'time', '<');
+			$roomsMessages[$room->id] = $paginated;
+		}
 
-		return $this->respondOk($paginated);
+		return $this->respondOk($roomsMessages);
 	}
 
 	public function getWithContext(Request $request) {

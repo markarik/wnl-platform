@@ -172,11 +172,9 @@ const actions = {
 
 		const roomsWithMessages = await fetchRoomsMessages(payload.sortedRooms)
 
-		Object.keys(roomsWithMessages)
-			.forEach(roomId => commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
-				roomId,
-				messages: roomsWithMessages[roomId]
-			}))
+		Object.keys(roomsWithMessages).forEach(roomId => {
+			commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {roomId, ...roomsWithMessages[roomId]})
+		})
 
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
@@ -329,22 +327,22 @@ const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) => 
 		currentCursor
 	})
 
-	return serializeResponse(data)
+	return serializeResponse(data, roomId)
 }
 
-const fetchRoomsMessages = async (roomsIds, limit = 50) => {
-	const {data: {data, cursor}} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
+const fetchRoomsMessages = async (roomsIds, limit) => {
+	const {data: response} = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
 		rooms: roomsIds,
 		limit
 	})
 	const rooms  = {}
 
-	data.reverse().forEach(message => {
-		if (!rooms[message.chat_room_id]) {
-			rooms[message.chat_room_id] = []
+	const {...roomsWithMessages} = response
+	Object.keys(roomsWithMessages).forEach(roomId => {
+		rooms[roomId] = {
+			messages: roomsWithMessages[roomId].data.reverse().map(el => el),
+			pagination: roomsWithMessages[roomId].cursor
 		}
-
-		rooms[message.chat_room_id].push(message)
 	})
 
 	return rooms

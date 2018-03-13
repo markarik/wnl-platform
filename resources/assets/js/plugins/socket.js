@@ -102,13 +102,13 @@ const WnlSocket = {
 
                     const timerId = setTimeout(() => {
                         $wnl.logger.error('Unable to send message', payload.message)
-                        reject()
+                        return reject()
                     }, 5000)
 
                     socket.on(SOCKET_EVENT_MESSAGE_PROCESSED, (data) => {
                         if (payload.room === data.room) {
                             clearTimeout(timerId)
-                            resolve(data)
+                            return resolve(data)
                         }
                     })
                 })

@@ -276,7 +276,7 @@ const actions = {
 	},
 	markRoomAsRead({commit}, roomId) {
 		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId)
-	}
+	},
 }
 
 const fetchUserRooms = async ({limit, page}) => {

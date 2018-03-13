@@ -19,7 +19,7 @@
 						:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...', formats }"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
-						:allowMentions=true
+						:allowMentions="true"
 						@input="onInput"
 					></wnl-quill>
 				</wnl-form>
@@ -78,6 +78,10 @@
 			messagePayload: {
 				type: Object,
 				default: () => ({})
+			},
+			autofocusOnRoomChange: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -192,6 +196,11 @@
 				} else {
 					this.error = ''
 				}
+			}
+		},
+		watch: {
+			'room.id'() {
+				if (this.autofocusOnRoomChange && this.room.id) this.quillEditor.editor.focus()
 			}
 		}
 	}

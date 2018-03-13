@@ -87,4 +87,22 @@ class ChatRoomsApiController extends ApiController
 
 		return $this->respondOk($data);
 	}
+
+	public function get($id)
+	{
+		$user = \Auth::user();
+		$room = ChatRoom::find($id);
+
+		if (!$room) {
+			return $this->respondNotFound();
+		}
+
+		if (!$user->can('view', $room)) {
+			return $this->respondForbidden();
+		}
+
+		$data = $this->transform($room);
+
+		return $this->respondOk($data);
+	}
 }

@@ -14,6 +14,7 @@
 		<wnl-message-form
 			:room="room"
 			:messagePayload="{users}"
+			:autofocusOnRoomChange="true"
 			@messageSent="onMessageSent"
 		/>
 	</div>

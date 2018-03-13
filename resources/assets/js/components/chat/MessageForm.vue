@@ -4,10 +4,10 @@
 			<figure class="media-left">
 				<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
 			</figure>
-			<div class="media-content">
+			<div class="media-content wnl-chat-form-wrapper">
 				<wnl-form
-					class="chat-message-form"
 					:id="formId"
+					class="chat-message-form"
 					hideDefaultSubmit="true"
 					name="ChatMessage"
 					method="post"
@@ -17,6 +17,7 @@
 					<wnl-quill
 						ref="editor"
 						name="text"
+						id="elo-elo"
 						:options="quillOptions"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
@@ -59,14 +60,14 @@
 		margin: $margin-base 0 0
 		padding-top: $margin-base
 
-	.media-content
+	.wnl-chat-form-wrapper
 		position: relative
 
 	.chat-message-form
 		overflow-y: scroll
 		max-height: 400px
 
-		.ql-container
+		.ql-container, .quill-container
 			position: static
 
 

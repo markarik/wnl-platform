@@ -63,15 +63,6 @@
 	.wnl-chat-form-wrapper
 		position: relative
 
-	.chat-message-form
-		overflow-y: scroll
-		max-height: 400px
-
-		.ql-container, .quill-container
-			position: static
-
-
-
 </style>
 <script>
 	import { mapActions, mapGetters } from 'vuex'
@@ -140,7 +131,6 @@
 					theme: 'bubble',
 					placeholder: 'Twoja wiadomość...',
 					formats: ['bold', 'italic', 'underline', 'link', 'mention'],
-					scrollingContainer: `#${this.formId}`,
 					bounds: `#${this.formId}`,
 				}
 			},

@@ -155,7 +155,7 @@
 			},
 			isActive(room) {
 				if (!this.userSearchVisible) {
-					return this.$route.query.roomId === room.id
+					return this.$route.query.roomId == room.id
 				}
 			},
 			getOtherUser(room) {

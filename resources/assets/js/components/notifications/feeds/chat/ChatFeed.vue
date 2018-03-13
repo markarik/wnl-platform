@@ -56,8 +56,6 @@
 	import ChatNotificationsToggle from 'js/components/notifications/feeds/chat/ChatNotificationsToggle'
 	import ConversationsList from 'js/components/messages/ConversationsList'
 
-	const setting = 'private_chat_nofitications'
-
 	export default {
 		name: 'ChatFeed',
 		components: {
@@ -73,9 +71,9 @@
 		},
 		computed: {
 			...mapGetters(['isTouchScreen', 'getSetting']),
-			...mapGetters('chatMessages', ['status', 'getUnseenRooms']),
+			...mapGetters('chatMessages', ['status', 'unreadConversations']),
 			unseenCount() {
-				return this.getUnseenRooms
+				return this.unreadConversations > 9 ? '9+' : this.unreadConversations
 			},
 			connecting() {
 				return this.status
@@ -84,7 +82,7 @@
 				return this.isOn ? 'fa-comment' : 'fa-comment-o'
 			},
 			isOn() {
-				return this.getSetting(setting)
+				return this.getSetting(ChatNotificationsToggle.SETTING)
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

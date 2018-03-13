@@ -22,7 +22,7 @@ const state = {
 
 //Getters
 const getters = {
-	getUnseenRooms: (state, getters) => {
+	unreadConversations: (state, getters) => {
 		return Object.values(getters.rooms).reduce((sum, room) => {
 			if (room.unread_count) return sum + 1
 			return sum
@@ -145,7 +145,7 @@ const mutations = {
 		set (state.pagination, 'currentPage', payload)
 	},
 	[types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD] (state, roomId) {
-		state.rooms[roomId].unread_count++
+		state.rooms[roomId].unread_count = (state.rooms[roomId].unread_count || 0) + 1
 	},
 	[types.CHAT_MESSAGES_MARK_ROOM_AS_READ] (state, roomId) {
 		state.rooms[roomId].unread_count = 0

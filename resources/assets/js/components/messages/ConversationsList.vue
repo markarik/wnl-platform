@@ -33,7 +33,7 @@
 					:isActive="isActive(room)"
 					:class="{'has-unread': room.unread_count > 0}"
 				/>
-				 <div v-if="room.unread_count" class="counter">{{room.unread_count}}</div>
+				 <div v-if="room.unread_count" class="counter">{{room.unread_count > 9 ? '9+' : room.unread_count}}</div>
 			</wnl-message-link>
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>

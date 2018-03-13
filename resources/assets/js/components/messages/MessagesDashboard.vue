@@ -94,7 +94,7 @@
 					.then(() => this.markRoomAsRead(room.id))
 					.catch(err => $wnl.logger.capture(err))
 
-				if (room.messages && room.messages.length < PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT) {
+				if (room.messages && room.messages.length && room.messages.length < PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT) {
 					this.fetchRoomMessages({
 						room,
 						limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,

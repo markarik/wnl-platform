@@ -222,7 +222,7 @@
 				}
 			},
 			pullMore() {
-				return this.fetchRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50})
+				return this.fetchRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50, append: true})
 					.then(messages => {
 						this.messages = messages.concat(this.messages)
 						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)

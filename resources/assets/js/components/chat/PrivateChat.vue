@@ -108,7 +108,7 @@
 				this.onNewMessage(data)
 			},
 			pullMore() {
-				return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT})
+				return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT, append: true})
 					.then(messages => {
 						this.pagination = this.getRoomMessagesPagination(this.room.id)
 					}).catch(error => $wnl.logger.capture(error))

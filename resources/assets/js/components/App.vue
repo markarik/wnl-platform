@@ -90,7 +90,7 @@
 			this.toggleOverlay({source: 'course', display: true})
 			sessionStore.clearAll()
 
-			return Promise.all([this.setupCurrentUser(), this.courseSetup(1), this.fetchUserRoomsWithMessages({page: 1})])
+			return Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
 					// Setup Notifications
 					this.initNotifications()
@@ -98,7 +98,8 @@
 
 					// Setup Chat
 					const userChannel = `authenticated-user`
-					this.$socketJoinRoom(userChannel)
+					this.fetchUserRoomsWithMessages({page: 1})
+						.then(() => this.$socketJoinRoom(userChannel))
 						.then(() => {
 							this.setConnectionStatus(true)
 							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)

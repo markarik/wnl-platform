@@ -157,13 +157,9 @@ const actions = {
 	async fetchUserRoomsWithMessages({commit, getters}, {limit=20, page=1}) {
 		const {payload, pagination} = await fetchUserRooms({limit, page})
 
-		if (page === 1) {
-			commit(types.CHAT_MESSAGES_SET_ROOMS, payload)
-		} else {
-			commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles))
-			commit(types.CHAT_MESSAGES_ADD_ROOMS, Object.values(payload.rooms))
-			commit(types.CHAT_MESSAGES_ADD_ROOMS_TO_SORTED, payload.sortedRooms)
-		}
+		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles))
+		commit(types.CHAT_MESSAGES_ADD_ROOMS, Object.values(payload.rooms))
+		commit(types.CHAT_MESSAGES_ADD_ROOMS_TO_SORTED, payload.sortedRooms)
 
 		commit(types.CHAT_MESSAGES_HAS_MORE_ROOMS, pagination.hasMoreRooms)
 		commit(types.CHAT_MESSAGES_SET_CURRENT_PAGE, pagination.currentPage)
@@ -242,10 +238,9 @@ const actions = {
 			}
 		}
 		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
-
 		return room
 	},
-	async fetchRoomMessages({commit}, {room, currentCursor, limit, context = {}}) {
+	async fetchRoomMessages({commit}, {room, currentCursor, limit, context = {}, append = false}) {
 		let response = {}
 		if (context.messageTime && context.roomId) {
 			response = await fetchRoomMessagesWithContext(context)
@@ -254,7 +249,7 @@ const actions = {
 		}
 		const {messages, profiles, cursor} = response
 
-		if (!cursor) {
+		if (!append) {
 			commit(types.CHAT_MESSAGES_SET_ROOM_MESSAGES, {
 				roomId: room.id,
 				messages,

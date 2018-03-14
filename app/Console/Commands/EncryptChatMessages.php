@@ -42,11 +42,11 @@ class EncryptChatMessages extends Command
 
 		foreach ($chatMessages as $chatMessage) {
 			$content = $chatMessage->getOriginal('content');
-			if ($content < ChatMessage::MAX_MSG_CONTENT_LEN) {
+			if (strlen($content) < ChatMessage::MAX_MSG_CONTENT_LEN) {
 				$chatMessage->content = $content;
 				$chatMessage->save();
 			} else {
-				$this->info('Message skipped because it is too long');
+				$this->info("Message with ID {$message->id} skipped because it is too long");
 			}
 		}
 

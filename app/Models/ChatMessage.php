@@ -27,6 +27,9 @@ class ChatMessage extends Model
 	}
 
 	public function setContentAttribute($value) {
-		$this->attributes['content'] = encrypt($value);
+		$encrypted = encrypt($value);
+		if (strlen($encrypted) < self::MAX_MSG_CONTENT_LEN) {
+			$this->attributes['content'] = $encrypted;
+		}
 	}
 }

@@ -280,6 +280,21 @@ const fetchUserRooms = async ({limit, page}) => {
 			page
 		}
 	})
+
+	if (Array.isArray(response) && response.length === 0) {
+		return {
+			payload: {
+				rooms: {},
+				sortedRooms: [],
+				profiles: {}
+			},
+			pagination: {
+				hasMoreRooms: false,
+				currentPage: 1
+			}
+		}
+	}
+
 	const {has_more, current_page, data} = response;
 
 	if (data.length === 0) return {
@@ -354,6 +369,18 @@ const fetchRoomMessagesWithContext = async (requestContext) => {
 
 const serializeResponse = (data, roomId) => {
 	const roomMessages = data[roomId]
+
+	if (!roomMessages) {
+		return {
+			profiles: [],
+			messages: [],
+			cursor: {
+				next: null,
+				has_more: false
+			}
+		}
+	}
+
 	const {data: {included = {}, ...messages}, cursor} = roomMessages
 
 	return {

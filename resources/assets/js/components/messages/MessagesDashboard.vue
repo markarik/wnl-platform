@@ -98,7 +98,8 @@
 					this.fetchRoomMessages({
 						room,
 						limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,
-						context: {messageTime: room.pagination.next, roomId: room.id, afterLimit: 0, beforeLimit: 50}
+						context: {messageTime: room.pagination.next, roomId: room.id, afterLimit: 0, beforeLimit: 50},
+						append: true
 					})
 				}
 			},

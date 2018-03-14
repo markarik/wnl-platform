@@ -340,7 +340,7 @@ const fetchRoomsMessages = async (roomsIds, limit) => {
 	const {...roomsWithMessages} = response
 	Object.keys(roomsWithMessages).forEach(roomId => {
 		rooms[roomId] = {
-			messages: roomsWithMessages[roomId].data.reverse().map(el => el),
+			messages: roomsWithMessages[roomId].data.reverse(),
 			pagination: roomsWithMessages[roomId].cursor
 		}
 	})
@@ -354,12 +354,12 @@ const fetchRoomMessagesWithContext = async (requestContext) => {
 		...requestContext
 	})
 
-	return serializeResponse(data)
+	return serializeResponse(data, requestContext.roomId)
 }
 
-const serializeResponse = (data) => {
-	const {cursor, data: response} = data
-	const {included = {}, ...messages} = response
+const serializeResponse = (data, roomId) => {
+	const roomMessages = data[roomId]
+	const {data: {included = {}, ...messages}, cursor} = roomMessages
 
 	return {
 		profiles: Object.values(included.profiles || {}),

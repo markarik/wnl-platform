@@ -30,6 +30,8 @@ class ChatMessage extends Model
 		$encrypted = encrypt($value);
 		if (strlen($encrypted) < self::MAX_MSG_CONTENT_LEN) {
 			$this->attributes['content'] = $encrypted;
+		} else {
+			\Log::error("Message with ID {$this->id} is too long for encryption. Skipping");
 		}
 	}
 }

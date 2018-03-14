@@ -46,7 +46,8 @@ class EncryptChatMessages extends Command
 				$chatMessage->content = $content;
 				$chatMessage->save();
 			} else {
-				$this->info("Message with ID {$message->id} skipped because it is too long");
+				$this->info("Message with ID {$chatMessage->id} not encrypted because it is too long. Deleting the message...");
+				$chatMessage->delete();
 			}
 		}
 

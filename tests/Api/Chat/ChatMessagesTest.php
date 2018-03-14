@@ -51,12 +51,12 @@ class ChatMessagesTest extends ApiTestCase
 			->assertStatus(200)
 			->assertJson([
 				$room->id => [
-					'data' => [
+					'data' => [[
 						'content'      => $message->content,
 						'id'           => $message->id,
 						'time'         => $message->time,
 						'chat_room_id' => $room->id,
-					],
+					]],
 					'cursor' => [
 						'current' => null,
 						'next' => $message->time,

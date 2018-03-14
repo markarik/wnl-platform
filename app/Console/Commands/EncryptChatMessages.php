@@ -41,8 +41,13 @@ class EncryptChatMessages extends Command
 		$chatMessages = ChatMessage::all();
 
 		foreach ($chatMessages as $chatMessage) {
-			$chatMessage->content = $chatMessage->getOriginal('content');
-			$chatMessage->save();
+			$content = $chatMessage->getOriginal('content');
+			if ($content < ChatMessage::MAX_MSG_CONTENT_LEN) {
+				$chatMessage->content = $content;
+				$chatMessage->save();
+			} else {
+				$this->info('Message skipped because it is too long');
+			}
 		}
 
 		$this->comment(PHP_EOL . "OK" . PHP_EOL);

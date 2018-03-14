@@ -16,7 +16,7 @@ class ChatMessagesTest extends ApiTestCase
 {
 	use DatabaseTransactions;
 
-	// /** @test */
+	/** @test */
 	public function get_public_chat_room_history_nonexistent_room()
 	{
 		$user = factory(User::class)->create();
@@ -51,12 +51,12 @@ class ChatMessagesTest extends ApiTestCase
 			->assertStatus(200)
 			->assertJson([
 				$room->id => [
-					'data' => [[
+					'data' => [
 						'content'      => $message->content,
 						'id'           => $message->id,
 						'time'         => $message->time,
 						'chat_room_id' => $room->id,
-					]],
+					],
 					'cursor' => [
 						'current' => null,
 						'next' => $message->time,
@@ -67,7 +67,7 @@ class ChatMessagesTest extends ApiTestCase
 			]);
 	}
 
-	// /** @test */
+	/** @test */
 	public function get_private_chat_room_history_forbidden()
 	{
 		$users = factory(User::class, 3)->create();
@@ -89,7 +89,7 @@ class ChatMessagesTest extends ApiTestCase
 			->assertStatus(403);
 	}
 
-	// /** @test */
+	/** @test */
 	public function get_public_chat_room_history_forbidden()
 	{
 		$user = factory(User::class)->create();

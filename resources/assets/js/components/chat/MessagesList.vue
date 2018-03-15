@@ -7,7 +7,7 @@
 					<div class="notification aligncenter" v-if="!hasMore">
 						To początek dyskusji na tym kanale!
 					</div>
-					<wnl-text-loader v-if="isPulling">
+					<wnl-text-loader v-if="isPulling" class="notification aligncenter">
 						Ładuję wiadomości...
 					</wnl-text-loader>
 					<div v-if="messages.length > 0">
@@ -126,9 +126,6 @@
 		methods: {
 			scrollToBottom() {
 				this.container.scrollTop = '1000000000'
-			},
-			scrollToTop() {
-				this.container.scrollTop = '0'
 			},
 			pullDebouncer(event) {
 				let target = event.target,

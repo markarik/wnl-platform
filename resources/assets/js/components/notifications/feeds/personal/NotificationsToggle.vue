@@ -38,7 +38,6 @@
 				return this.$t(`notifications.personal.${key}`)
 			},
 			toggleNotifications() {
-				console.log('toggle notifi', this.changeUserSettingAndSync({setting: this.SETTING, value: !this.isOn}));
 				this.changeUserSettingAndSync({setting, value: !this.isOn})
 			},
 		},

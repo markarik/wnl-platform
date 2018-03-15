@@ -68,6 +68,7 @@
 		cursor: pointer
 		display: flex
 		height: 100%
+		width: $navbar-height
 		justify-content: center
 		min-height: 100%
 		position: relative

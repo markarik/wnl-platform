@@ -56,6 +56,8 @@
 	import ChatNotificationsToggle from 'js/components/notifications/feeds/chat/ChatNotificationsToggle'
 	import ConversationsList from 'js/components/messages/ConversationsList'
 
+	const setting = 'private_chat_nofitications'
+
 	export default {
 		name: 'ChatFeed',
 		components: {
@@ -82,7 +84,7 @@
 				return this.isOn ? 'fa-comment' : 'fa-comment-o'
 			},
 			isOn() {
-				return this.getSetting(ChatNotificationsToggle.SETTING)
+				return this.getSetting(setting)
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

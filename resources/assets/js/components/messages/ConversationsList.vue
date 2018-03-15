@@ -21,13 +21,13 @@
 		<div v-else-if="roomsToShow.length" class="conversation-list scrollable-container">
 			<wnl-message-link
 				v-for="(room, index) in roomsToShow"
-				:key="index"
+				:key="room.id"
 				:userId="getOtherUser(room).user_id"
 				:roomId="room.id"
 				 class="is-relative is-block"
 			>
 				<wnl-conversation-snippet
-					:key="index"
+					:key="room.id"
 					:room="room"
 					:profile="getOtherUser(room)"
 					:isActive="isActive(room)"

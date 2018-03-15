@@ -156,8 +156,9 @@
 				this.sendingMessage = true
 				this.error = ''
 				this.isWaitingToSendMentions = true
+				const {messages, ...room} = this.room
 				this.$socketSendMessage({
-					room: this.room.id,
+					room,
 					message: {
 						user: this.currentUser,
 						content: this.content

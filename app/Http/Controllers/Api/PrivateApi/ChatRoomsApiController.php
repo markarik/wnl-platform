@@ -22,6 +22,7 @@ class ChatRoomsApiController extends ApiController
 		$select = [
 			'chat_rooms.id',
 			'chat_rooms.name',
+			'chat_rooms.type',
 			'max(chat_room_user.unread_count) as unread_count',
 			'max(chat_messages.time) as last_message_time',
 		];

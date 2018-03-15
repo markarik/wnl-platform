@@ -52,6 +52,7 @@
 </style>
 
 <script>
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
 	import MessageForm from './MessageForm.vue'
 	import MessagesList from './MessagesList.vue'
 	import {getApiUrl} from 'js/utils/env'
@@ -112,20 +113,28 @@
 					.then(messages => {
 						this.pagination = this.getRoomMessagesPagination(this.room.id)
 					}).catch(error => $wnl.logger.capture(error))
-			}
-		},
-		watch: {
-			'room.messages.length' (newValue, oldValue) {
-				if (newValue > oldValue) {
-					const newMessages = this.room.messages.slice(oldValue, newValue)
-					if (newMessages.find(msg => msg.user_id !== this.currentUserId)) {
-						this.$socketMarkRoomAsRead(this.room.id)
-							.then(() => this.markRoomAsRead(this.room.id))
-							.catch(err => $wnl.logger.capture(err))
-					}
+			},
+			markAsRead({room}) {
+				if (room.id === this.room.id) {
+					const {messages, ...room} = this.room
+					this.$socketMarkRoomAsRead(room)
+						.then(() => this.markRoomAsRead(this.room.id))
+						.catch(err => $wnl.logger.error(err))
 				}
+			},
+			addEventListeners() {
+				this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.markAsRead)
+			},
+			removeEventListeners() {
+				this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.markAsRead)
 			}
 		},
+		mounted() {
+			this.addEventListeners()
+		},
+		beforeDestroy() {
+			this.removeEventListeners()
+		}
 	}
 
 </script>

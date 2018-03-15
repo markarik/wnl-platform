@@ -106,7 +106,7 @@ const WnlSocket = {
                     }, 5000)
 
                     socket.on(SOCKET_EVENT_MESSAGE_PROCESSED, (data) => {
-                        if (payload.room === data.room) {
+                        if (payload.room.id === data.room.id) {
                             clearTimeout(timerId)
                             return resolve(data)
                         }
@@ -121,12 +121,12 @@ const WnlSocket = {
                     socket.emit(SOCKET_EVENT_MARK_ROOM_AS_READ, room)
 
                     const timerId = setTimeout(() => {
-                        $wnl.logger.error('Unable to mark room as read', room)
+                        $wnl.logger.error('Unable to mark room as read', room.id)
                         reject()
                     }, 5000)
 
                     socket.on(SOCKET_EVENT_MARK_ROOM_AS_READ_SUCCESS, (data) => {
-                        if (room === data.room) {
+                        if (room.id === data.room.id) {
                             clearTimeout(timerId)
                             resolve(data)
                         }

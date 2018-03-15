@@ -120,17 +120,17 @@ const mutations = {
 			set(state.rooms[roomId], 'pagination', pagination)
 		}
 	},
-	[types.CHAT_MESSAGES_ADD_MESSAGE](state, {message, room}) {
-		state.rooms[room].last_message_time = message.time
-		state.rooms[room].messages.push(message)
+	[types.CHAT_MESSAGES_ADD_MESSAGE](state, {message, roomId}) {
+		state.rooms[roomId].last_message_time = message.time
+		state.rooms[roomId].messages.push(message)
 	},
-	[types.CHAT_MESSAGES_CHANGE_ROOM_SORTING](state, {room, newIndex}) {
-		const currentIndex = state.sortedRooms.indexOf(room)
+	[types.CHAT_MESSAGES_CHANGE_ROOM_SORTING](state, {roomId, newIndex}) {
+		const currentIndex = state.sortedRooms.indexOf(roomId)
 		if (currentIndex < 0) {
-			state.sortedRooms.splice(0, 0, room)
+			state.sortedRooms.splice(0, 0, roomId)
 		} else {
 			state.sortedRooms.splice(currentIndex, 1)
-			state.sortedRooms.splice(newIndex, 0, room)
+			state.sortedRooms.splice(newIndex, 0, roomId)
 		}
 	},
 	[types.CHAT_MESSAGES_ADD_ROOMS] (state, rooms) {
@@ -174,23 +174,28 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_READY, true)
 	},
-	onNewMessage({commit, getters, rootGetters}, {room, users: profiles, message}) {
+	onNewMessage({commit, getters, rootGetters}, {room, users: profiles = [], message}) {
+		const isPrivateRoom = room.type === 'private'
+		const roomId = room.id
 
-		if (!getters.getRoomById(room).id) {
+		if (!getters.getRoomById(roomId).id) {
 			commit(types.CHAT_MESSAGES_ADD_ROOM, {
 				room: {
 					messages: [],
 					profiles: profiles.map(profile => profile.id),
-					id: room
+					id: roomId,
+					unread_count: 0
 				}
 			})
 			commit(types.CHAT_MESSAGES_ADD_PROFILES, profiles)
 		}
 
-		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {room, message})
-		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {room, newIndex: 0})
-		if (message.user_id !== rootGetters.currentUserId) {
-			commit(types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD, room)
+		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {roomId, message})
+
+		if (isPrivateRoom) commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {roomId, newIndex: 0})
+
+		if (isPrivateRoom && message.user_id !== rootGetters.currentUserId) {
+			commit(types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD, roomId)
 		}
 	},
 	setConnectionStatus({commit}, payload) {
@@ -214,7 +219,7 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_ADD_ROOM, payload)
 		commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {
-			room: room.id,
+			roomId: room.id,
 			newIndex: 0
 		})
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(included.profiles))
@@ -281,23 +286,7 @@ const fetchUserRooms = async ({limit, page}) => {
 		}
 	})
 
-	if (Array.isArray(response) && response.length === 0) {
-		return {
-			payload: {
-				rooms: {},
-				sortedRooms: [],
-				profiles: {}
-			},
-			pagination: {
-				hasMoreRooms: false,
-				currentPage: 1
-			}
-		}
-	}
-
-	const {has_more, current_page, data} = response;
-
-	if (data.length === 0) return {
+	const defaultEmptyResponse = {
 		payload: {
 			rooms: {},
 			sortedRooms: [],
@@ -308,6 +297,12 @@ const fetchUserRooms = async ({limit, page}) => {
 			currentPage: 1
 		}
 	}
+
+	if (_.isEmpty(response)) return defaultEmptyResponse
+
+	const {has_more, current_page, data} = response;
+
+	if (_.isEmpty(data)) return defaultEmptyResponse
 
 	const {included = {}, ...rooms} = data
 	const payload = {

@@ -94,14 +94,26 @@
 					.then(() => this.markRoomAsRead(room.id))
 					.catch(err => $wnl.logger.capture(err))
 
-				if (room.messages && room.messages.length && room.messages.length < PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT) {
-					this.fetchRoomMessages({
-						room,
-						limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,
-						context: {messageTime: room.pagination.next, roomId: room.id, afterLimit: 0, beforeLimit: 50},
-						append: true
-					})
+				const context = {
+					roomId: room.id
 				}
+
+				if (room.pagination && room.pagination.next) {
+					context.messageTime =  room.pagination.next
+					context.afterLimit = 0
+					context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT
+				} else if (room.messages && room.messages.length) {
+					context.messageTime = _.first(room.messages).time
+					context.afterLimit = 0
+					context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT
+				}
+
+				this.fetchRoomMessages({
+					room,
+					limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,
+					context,
+					append: true
+				})
 			},
 			openRoomById(roomId) {
 				const room = this.getRoomById(roomId)

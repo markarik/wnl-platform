@@ -116,7 +116,8 @@
 			},
 			markAsRead({room}) {
 				if (room.id === this.room.id) {
-					this.$socketMarkRoomAsRead(this.room)
+					const {messages, ...room} = this.room
+					this.$socketMarkRoomAsRead(room)
 						.then(() => this.markRoomAsRead(this.room.id))
 						.catch(err => $wnl.logger.error(err))
 				}

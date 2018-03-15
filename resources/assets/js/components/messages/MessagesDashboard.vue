@@ -90,7 +90,8 @@
 			switchRoom({room, users}){
 				this.currentRoom = room
 				this.currentRoomUsers = users
-				room.id && this.$socketMarkRoomAsRead(room)
+				const {messages, ...roomNoMessages} = room
+				room.id && this.$socketMarkRoomAsRead(roomNoMessages)
 					.then(() => this.markRoomAsRead(room.id))
 					.catch(err => $wnl.logger.capture(err))
 

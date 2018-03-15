@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="wnl-find-users">
-		<div class="wnl-find-users-input">
+		<div class="wnl-find-users-input control" :class="{'is-loading': loading}">
 			<input
 				:placeholder="$t('messages.search.placeholder')"
 				v-model="textInputValue"
@@ -23,16 +23,23 @@
 		&-input
 			display: flex
 			align-items: center
-			width: 100%
+			width: 90%
+			margin: auto
 			overflow: hidden
+
+			&.control::after
+				top: 38%
+				height: 2vh
+				right: 0
+				width: 2vh
 
 			input
 				+simple-input
-				width: 90%
-				margin: auto
 				text-align: left
+				width: 100%
 				margin-top: $margin-small
 				margin-bottom: $margin-small
+				padding-right: $margin-base
 				min-height: $margin-big
 
 				&:focus
@@ -56,19 +63,22 @@
 		name: 'FindUsers',
 		data() {
 			return {
-				textInputValue: ''
+				textInputValue: '',
+				loading: false,
 			}
 		},
 		methods: {
 			onInput: _.debounce(function ({target: {value}}) {
 				if (value.length === 0) return
 
+				this.loading = true
 				const query = encodeURIComponent(value)
 				axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
 					.then(res => {
 						if (res.data.length === 0) return
 						this.$set(res.data[0], 'active', true);
 						this.$emit('updateItems', res.data)
+						this.loading = false
 					})
 			}, 300),
 			onKeyDown(evt) {

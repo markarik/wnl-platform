@@ -85,7 +85,7 @@
 				return this.interlocutorProfile.display_name || this.currentUserDisplayName
 			},
 			hasMore() {
-				return this.room.pagination.has_more
+				return !!this.room.pagination && this.room.pagination.has_more
 			},
 			cursor() {
 				return this.room.pagination.next

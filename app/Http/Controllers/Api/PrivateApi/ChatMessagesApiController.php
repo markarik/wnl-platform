@@ -84,6 +84,10 @@ class ChatMessagesApiController extends ApiController
 		$allMessages = $messagesAfter->concat($messagesBefore);
 		$transformed = $this->transform($allMessages);
 		$next = $allMessages->count() > 0 ? $allMessages->last()->time : null;
+		$afterCount = ChatMessage::where('chat_room_id', $roomId)
+			->orderBy('time', 'desc')
+			->where('time', '<', $messageTime)
+			->count();
 
 		return $this->respondOk([
 			'data' => $transformed,
@@ -91,7 +95,7 @@ class ChatMessagesApiController extends ApiController
 				'current' => $messageTime,
 				'next' => $next,
 				'previous' => null,
-				'has_more' => true
+				'has_more' => $afterCount > 0
 			]
 		]);
 	}

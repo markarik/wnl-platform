@@ -178,7 +178,7 @@
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id
-						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId}})
+						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId, beforeLimit: 10}})
 					})
 					.then(({messages, pagination}) => {
 						this.messages = messages
@@ -208,7 +208,7 @@
 				})
 			},
 			pushMessage({message, room}) {
-				if (this.currentRoom.id === room) {
+				if (this.currentRoom.id === room.id) {
 					this.messages = [
 						...this.messages,
 						message

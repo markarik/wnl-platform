@@ -75,7 +75,7 @@ class ChatMessagesApiController extends ApiController
 			->orderBy('time', 'desc')
 			->where('time', '<', $messageTime);
 
-		if (isset($beforeLimt)) {
+		if (isset($beforeLimit)) {
 			$messagesBeforeQuery->take($beforeLimit);
 		}
 

@@ -75,18 +75,9 @@
 				required: true
 			}
 		},
-		data() {
-			return {
-				pagination: {
-					// 50 is original limit -> better way to handle that
-					has_more: this.room.messages.length === this.PRIVATE_CHAT_MESSAGES_LIMIT,
-					next: (_.first(this.room.messages) || {}).time
-				}
-			}
-		},
 		computed: {
 			...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
-			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor', 'getRoomMessagesPagination']),
+			...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor']),
 			interlocutorProfile() {
 				return this.getInterlocutor(this.room.profiles)
 			},
@@ -94,10 +85,10 @@
 				return this.interlocutorProfile.display_name || this.currentUserDisplayName
 			},
 			hasMore() {
-				return this.pagination.has_more || false
+				return this.room.pagination.has_more
 			},
 			cursor() {
-				return this.pagination.next || null
+				return this.room.pagination.next
 			}
 		},
 		methods: {
@@ -110,9 +101,7 @@
 			},
 			pullMore() {
 				return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT, append: true})
-					.then(messages => {
-						this.pagination = this.getRoomMessagesPagination(this.room.id)
-					}).catch(error => $wnl.logger.capture(error))
+					.catch(error => $wnl.logger.error(error))
 			},
 			markAsRead({room}) {
 				if (room.id === this.room.id) {

@@ -76,10 +76,6 @@ const getters = {
 				roomProfiles.includes(profile.id)
 		}) || {}
 	},
-	getRoomMessagesPagination: (state, getters) => roomId => {
-		const room = getters.getRoomById(roomId)
-		return room.pagination || {}
-	},
 	getRoomBySlug: state => slug => Object.values(state.rooms).find(room => room.slug === slug),
 	ready: state => state.ready
 }
@@ -270,7 +266,7 @@ const actions = {
 
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, profiles)
 
-		return messages
+		return {messages, pagination: cursor}
 	},
 	markRoomAsRead({commit}, roomId) {
 		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId)
@@ -354,12 +350,18 @@ const fetchRoomsMessages = async (roomsIds, limit) => {
 }
 
 const fetchRoomMessagesWithContext = async (requestContext) => {
-	const {data} = await axios.post(getApiUrl('chat_messages/.getWithContext'), {
+	const {data: response} = await axios.post(getApiUrl('chat_messages/.getWithContext'), {
 		include: 'profiles',
 		...requestContext
 	})
 
-	return serializeResponse(data, requestContext.roomId)
+	const {cursor, data: {included = {}, ...messages = {}} = {}} = response;
+
+	return {
+		profiles: Object.values(included.profiles || {}),
+		messages: Object.values(messages).reverse(),
+		cursor
+	}
 }
 
 const serializeResponse = (data, roomId) => {

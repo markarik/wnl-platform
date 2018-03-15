@@ -109,7 +109,6 @@
 				'currentUser'
 			]),
 			...mapGetters('course', ['getLesson']),
-			...mapGetters('chatMessages', ['getRoomMessagesPagination']),
 			chatTitle() {
 				let lessonId = this.$route.params.lessonId
 
@@ -123,7 +122,7 @@
 				return this.pagination.next
 			},
 			hasMore() {
-				return this.pagination.has_more || false
+				return !!this.pagination.has_more
 			}
 		},
 		methods: {
@@ -181,9 +180,9 @@
 						this.currentRoom.id = room.id
 						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId}})
 					})
-					.then(messages => {
+					.then(({messages, pagination}) => {
 						this.messages = messages
-						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)
+						this.pagination = pagination
 						return this.$socketJoinRoom(this.currentRoom.id)
 					})
 					.then((data) => {
@@ -223,9 +222,9 @@
 			},
 			pullMore() {
 				return this.fetchRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50, append: true})
-					.then(messages => {
+					.then(({messages, pagination}) => {
 						this.messages = messages.concat(this.messages)
-						this.pagination = this.getRoomMessagesPagination(this.currentRoom.id)
+						this.pagination = pagination
 					}).catch(error => $wnl.logger.capture(error))
 			},
 			processMentions({mentions, context}) {

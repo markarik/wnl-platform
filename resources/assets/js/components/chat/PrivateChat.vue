@@ -14,7 +14,7 @@
 			:messages="room.messages"
 			:hasMore="hasMore"
 			:onScrollTop="pullMore"
-			:loaded="true"
+			:loaded="messagesLoaded"
 		/>
 		<wnl-message-form
 			:room="room"
@@ -73,6 +73,10 @@
 			users: {
 				type: Array,
 				required: true
+			},
+			messagesLoaded: {
+				type: Boolean,
+				default: true
 			}
 		},
 		computed: {

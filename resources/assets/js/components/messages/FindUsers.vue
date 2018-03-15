@@ -82,10 +82,12 @@
 					.then(res => {
 						if (res.data.length === 0) {
 							this.info = this.$t('messages.search.emptyResults')
-							return
+							this.$emit('updateItems', [])
+						} else {
+							this.$set(res.data[0], 'active', true);
+							this.$emit('updateItems', res.data)
+							this.info = ''
 						}
-						this.$set(res.data[0], 'active', true);
-						this.$emit('updateItems', res.data)
 						this.loadingStop();
 					}).catch(err => {
 						$wnl.logger.capture(err)

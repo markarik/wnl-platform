@@ -9,6 +9,9 @@
 				ref="input"
 			/>
 		</div>
+		<div class="wnl-find-users-info notification aligncenter" v-if="info">
+			{{ info }}
+		</div>
 	</div>
 </template>
 
@@ -29,9 +32,9 @@
 
 			&.control::after
 				top: 38%
-				height: 2vh
+				height: 1em
 				right: 0
-				width: 2vh
+				width: 1em
 
 			input
 				+simple-input
@@ -65,22 +68,41 @@
 			return {
 				textInputValue: '',
 				loading: false,
+				timeout: 0,
+				info: '',
 			}
 		},
 		methods: {
 			onInput: _.debounce(function ({target: {value}}) {
 				if (value.length === 0) return
 
-				this.loading = true
+				this.loadingStart()
 				const query = encodeURIComponent(value)
 				axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
 					.then(res => {
-						if (res.data.length === 0) return
+						if (res.data.length === 0) {
+							this.info = this.$t('messages.search.emptyResults')
+							return
+						}
 						this.$set(res.data[0], 'active', true);
 						this.$emit('updateItems', res.data)
-						this.loading = false
+						this.loadingStop();
+					}).catch(err => {
+						$wnl.logger.capture(err)
+						this.info = this.$t('messages.search.searchFailure')
+						this.loadingStop();
 					})
 			}, 300),
+			loadingStart() {
+				this.loading = true
+				this.timeout = setTimeout(() => {
+					this.info = this.$t('messages.search.searchTakingTooLong')
+				}, 5000)
+			},
+			loadingStop() {
+				this.loading = false
+				clearTimeout(this.timeout)
+			},
 			onKeyDown(evt) {
 				const { enter, arrowUp, arrowDown, esc } = KEYS
 

@@ -115,8 +115,8 @@
 					}).catch(error => $wnl.logger.capture(error))
 			},
 			markAsRead({room}) {
-				if (room === this.room.id) {
-					this.$socketMarkRoomAsRead(this.room.id)
+				if (room.id === this.room.id) {
+					this.$socketMarkRoomAsRead(this.room)
 						.then(() => this.markRoomAsRead(this.room.id))
 						.catch(err => $wnl.logger.error(err))
 				}

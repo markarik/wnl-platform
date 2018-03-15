@@ -70,7 +70,8 @@ class ProcessChatQueue extends Command
 			return false;
 		}
 
-		$room = ChatRoom::find($data->room);
+		$roomId = $data->room->id;
+		$room = ChatRoom::find($roomId);
 
 		$chatMessage = $room->messages()->create([
 			'user_id' => $data->message->user_id,
@@ -87,7 +88,7 @@ class ProcessChatQueue extends Command
 		$this->acceptPayload($payload, $resolver);
 
 		$chatRoomUser = ChatRoomUser
-			::where('chat_room_id', $data->room)
+			::where('chat_room_id', $roomId)
 			->where('user_id', '<>', $data->message->user_id)
 			->increment('unread_count');
 
@@ -96,8 +97,9 @@ class ProcessChatQueue extends Command
 
 	protected function handleMarkRoomAsRead($data, $payload, $resolver)
 	{
+		$roomId = $data->room->id;
 		$chatRoomUser = ChatRoomUser
-			::where('chat_room_id', $data->room)
+			::where('chat_room_id', $roomId)
 			->where('user_id', $data->user_id)
 			->update(['unread_count' => 0]);
 

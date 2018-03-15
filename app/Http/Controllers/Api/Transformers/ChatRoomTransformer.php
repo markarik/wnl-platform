@@ -26,6 +26,7 @@ class ChatRoomTransformer extends ApiTransformer
 			'channel'           => $chatRoom->name,
 			'unread_count'      => $chatRoom->unread_count,
 			'last_message_time' => $chatRoom->last_message_time ?? null,
+			'type'              => $chatRoom->type,
 		];
 
 		if ($this->parent) {

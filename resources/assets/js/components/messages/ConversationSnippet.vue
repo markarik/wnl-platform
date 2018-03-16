@@ -77,6 +77,7 @@
 				overflow: hidden
 				white-space: nowrap
 				text-overflow: ellipsis
+				max-height: 1.5em
 
 	.has-unread .conversation-message p
 		font-weight: $font-weight-bold

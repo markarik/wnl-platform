@@ -126,7 +126,7 @@
 		},
 		methods: {
 			scrollToBottom() {
-				this.container.scrollTop = this.container.scrollHeight
+				this.container.scrollTop = this.container.scrollHeight + 100
 			},
 			pullDebouncer(event) {
 				let target = event.target,

@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use DB;
-use Closure;
-use Exception;
+use App\Models\ChatMessage;
 use App\Models\ChatRoom;
+use Closure;
+use DB;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
@@ -66,12 +67,19 @@ class ArchiveChatMessages extends Command
 	{
 		$room = ChatRoom::firstOrCreate(['name' => $room]);
 
-		$rawMessages = $this->getMessages($room->name);
+		$rawMessages = $this->getMessages($room->name, $leave = 0);
 		$messages = $this->decodeMessages($rawMessages);
 
 		$this->transaction(function () use ($messages, $room, $rawMessages) {
 			foreach ($messages as $key => $message) {
 				$message = $this->formatMessage($message);
+				$length = strlen($message['content']);
+				if ($length > ChatMessage::MAX_MSG_CONTENT_LEN) {
+					// Validation has to be done right by client and
+					// live messaging server. If some invalid message
+					// reaches this point, we're just skipping it.
+					continue;
+				}
 				$room->messages()->create($message);
 				$this->removeMessage($room->name, $rawMessages[$key]);
 			}

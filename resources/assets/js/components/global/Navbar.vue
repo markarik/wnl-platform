@@ -24,6 +24,9 @@
 			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
+		<div class="wnl-navbar-item wnl-navbar-messages">
+			<wnl-chat-feed/>
+		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown/>
 		</div>
@@ -39,6 +42,9 @@
 
 	$logo-width: 50px
 	$logo-text-width: 90px
+
+	.modal-active .wnl-navbar
+		z-index: 0
 
 	.wnl-navbar
 		+small-shadow()
@@ -124,6 +130,7 @@
 	import Search from 'js/components/global/search/Search'
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
+	import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed'
 	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl } from 'js/utils/env'
 
@@ -135,6 +142,7 @@
 			'wnl-user-dropdown': UserDropdown,
 			'wnl-personal-feed': PersonalFeed,
 			'wnl-search': Search,
+			'wnl-chat-feed': ChatFeed,
 		},
 		computed: {
 			...mapGetters([
@@ -162,6 +170,6 @@
 		},
 		methods: {
 			...mapActions(['toggleSidenav', 'toggleChat'])
-		},
+		}
 	}
 </script>

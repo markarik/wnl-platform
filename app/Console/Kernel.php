@@ -28,10 +28,6 @@ class Kernel extends ConsoleKernel
 	protected function schedule(Schedule $schedule)
 	{
 		$schedule
-			->command('chat:archive-messages')
-			->hourly();
-
-		$schedule
 			->command('orders:statsExport')
 			->hourly();
 

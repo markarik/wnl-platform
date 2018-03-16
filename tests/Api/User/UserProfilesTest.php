@@ -24,7 +24,7 @@ class UserProfilesTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('POST', $this->url('/user_profiles/.search'), $data);
+			->json('POST', $this->url('/user_profiles/.query'), $data);
 
 		$response
 			->assertStatus(200);

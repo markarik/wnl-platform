@@ -1,0 +1,138 @@
+<template lang="html">
+	<div :class="{'active-in-route': isActive, 'conversation-snippet': true}">
+		<figure class="media-left">
+			<wnl-avatar
+				:fullName="profile.display_name"
+				:url="profile.avatar"
+				size="large">
+			</wnl-avatar>
+		</figure>
+		<div class="media-content">
+			<div class="content">
+				<div class="conversation-meta">
+					<div class="conversation-names">
+						<span class="display-name">{{ profile.display_name }}</span>
+					</div>
+
+					<div class="conversation-time" v-if="room && room.last_message_time">
+						<small>{{ time(room.last_message_time) }}</small>
+					</div>
+				</div>
+				<div v-if="bothNames">
+					<span class="full-name">{{ profile.full_name }}</span>
+				</div>
+
+				<div class="conversation-message" v-html="lastMessageContent"/>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style lang="sass">
+	@import 'resources/assets/sass/variables'
+
+	.conversation-snippet
+		display: flex
+		min-width: 0
+		overflow: hidden
+		padding: $margin-medium
+		cursor: pointer
+		min-height: $min-height
+
+		&:hover, &.active-in-route
+			background-color: $color-background-lightest-gray
+
+		.media-content
+			min-width: 0
+			overflow: hidden
+
+			*
+				font-weight: $font-weight-regular
+
+			.conversation-meta
+				display: flex
+				overflow: hidden
+				justify-content: space-between
+
+				.conversation-names
+					min-width: 0
+					flex: 1 1 0%
+					overflow: hidden
+					white-space: nowrap
+					text-overflow: ellipsis
+
+					.display-name
+						font-size: $font-size-base
+
+				.conversation-time
+					display: flex
+					min-width: 0
+
+			.full-name
+				font-size: $font-size-minus-1
+
+			.conversation-message
+				min-width: 0
+				flex: 1 1 0%
+				overflow: hidden
+				white-space: nowrap
+				text-overflow: ellipsis
+				max-height: 1.5em
+
+	.has-unread .conversation-message p
+		font-weight: $font-weight-bold
+
+</style>
+
+<script>
+	import { shortTimeFromMs } from 'js/utils/time'
+	import { mapGetters } from 'vuex'
+	import {last} from 'lodash'
+
+	export default {
+		name: 'ConversationSnippet',
+		props: {
+			room: {
+				required: false,
+				default: () => ({})
+			},
+			profile: {
+				required: false,
+				type: Object,
+				default: () => ({})
+			},
+			bothNames: {
+				type: Boolean,
+				default: false
+			},
+			isActive: {
+				type: Boolean,
+				default: false
+			}
+		},
+		computed: {
+			messages() {
+				return this.room.messages || []
+			},
+			lastMessageContent() {
+				if (!this.messages || !this.messages.length) {
+					return ''
+				}
+
+				return last(this.messages).content
+			},
+			roomId() {
+				if (!this.room) {
+					return 0;
+				}
+
+				return this.room.id
+			}
+		},
+		methods: {
+			time(stamp){
+				return shortTimeFromMs(stamp)
+			}
+		}
+	}
+</script>

@@ -16,7 +16,21 @@
 				<span>Ukryj czat</span>
 			</span>
 		</a>
-		<wnl-chat :room="currentRoom" :switchRoom="changeRoom"></wnl-chat>
+		<wnl-chat
+			:room="currentRoom"
+			:messages="messages"
+			:highlightedMessageId="highlightedMessageId"
+			:hasMore="hasMore"
+			:onScrollTop="pullMore"
+			:loaded="loaded"
+		/>
+		<wnl-message-form
+			:roomId="currentRoom.id"
+			:room="currentRoom"
+			:loaded="loaded"
+			@messageSent="onMessageSent"
+			@foundMentions="processMentions"
+		></wnl-message-form>
 	</div>
 </template>
 
@@ -57,23 +71,43 @@
 </style>
 
 <script>
-	import ChatRoom from './ChatRoom'
+	import MessagesList from './MessagesList'
+	import MessageForm from './MessageForm.vue'
 	import { mapActions, mapGetters } from 'vuex'
 	import _ from 'lodash'
+	import {nextTick} from 'vue'
+	import {
+		SOCKET_EVENT_USER_SENT_MESSAGE,
+		SOCKET_EVENT_MESSAGE_PROCESSED,
+		SOCKET_EVENT_LEAVE_ROOM
+	} from 'js/plugins/socket'
+
 
 	export default {
 		name: 'wnl-public-chat',
 		components: {
-			'wnl-chat': ChatRoom
+			'wnl-chat': MessagesList,
+			'wnl-message-form': MessageForm
 		},
 		props: ['title', 'rooms'],
 		data () {
 			return {
-				currentRoom: this.getCurrentRoom()
+				currentRoom: this.getCurrentRoom(),
+				loaded: false,
+				highlightedMessageId: 0,
+				messages: [],
+				pagination: {
+					has_more: false,
+					next: null
+				}
 			}
 		},
 		computed: {
-			...mapGetters(['canShowCloseIconInChat']),
+			...mapGetters([
+				'canShowCloseIconInChat',
+				'currentUserId',
+				'currentUser'
+			]),
 			...mapGetters('course', ['getLesson']),
 			chatTitle() {
 				let lessonId = this.$route.params.lessonId
@@ -83,12 +117,21 @@
 				}
 
 				return `Czat lekcji ${this.getLesson(lessonId).name}`
+			},
+			cursor() {
+				return this.pagination.next
+			},
+			hasMore() {
+				return !!this.pagination.has_more
 			}
 		},
 		methods: {
-			...mapActions(['toggleChat']),
+			...mapActions(['toggleChat', 'saveMentions']),
+			...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages']),
 			changeRoom(room) {
 				this.currentRoom = room
+				this.joinRoom()
+				this.leaveRoom(this.currentRoom.id)
 			},
 			isActive(room){
 				return room.channel === this.currentRoom.channel
@@ -118,13 +161,117 @@
 					...this.$route,
 					query
 				})
+			},
+			joinRoom() {
+				const channel = this.$route.query.chatChannel
+
+				if (channel && channel !== this.currentRoom.channel) {
+					return this.changeRoom({
+						channel,
+						name: `#${_.last(channel.split('-'))}`
+					})
+				}
+
+				this.loaded = false
+				const {messageTime, roomId} = this.$route.query
+
+				this.createPublicRoom({slug: this.currentRoom.channel})
+					.then(room => {
+						this.currentRoom.id = room.id
+						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId, beforeLimit: 10}})
+					})
+					.then(({messages, pagination}) => {
+						this.messages = messages
+						this.pagination = pagination
+						return this.$socketJoinRoom(this.currentRoom.id)
+					})
+					.then((data) => {
+						this.loaded = true
+						nextTick(() => {
+							const messageId = this.$route.query.messageId
+
+							if (messageId && !this.isOverlayVisible) {
+								this.highlightedMessageId = messageId
+							}
+						})
+					})
+			},
+			setListeners() {
+				this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
+			},
+			removeListeners() {
+				this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.pushMessage)
+			},
+			leaveRoom(roomId) {
+				this.$socketEmit(SOCKET_EVENT_LEAVE_ROOM, {
+					room: roomId
+				})
+			},
+			pushMessage({message, room}) {
+				if (this.currentRoom.id === room.id) {
+					this.messages = [
+						...this.messages,
+						message
+					]
+				}
+			},
+			onMessageSent({sent, ...data}) {
+				if (sent) {
+					this.pushMessage(data)
+				}
+			},
+			pullMore() {
+				return this.fetchRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50, append: true})
+					.then(({messages, pagination}) => {
+						this.messages = messages.concat(this.messages)
+						this.pagination = pagination
+					}).catch(error => $wnl.logger.capture(error))
+			},
+			processMentions({mentions, context}) {
+				this.saveMentions(this.getMentionsData(mentions, context))
+			},
+			getMentionsData(userIds, message) {
+				return {
+					mentioned_users: userIds,
+					subject: {
+						type: 'chat_message',
+						id: `${message.time}${this.currentUserId}`,
+						text: message.content,
+						channel: this.currentRoom.channel,
+						time: message.time,
+						roomId: this.currentRoom.id
+					},
+					objects: {
+						type: "chat_channel",
+						text: this.currentRoom.name
+					},
+					context: {
+						name: this.$route.name,
+						params: this.$route.params
+					},
+					actors: this.currentUser
+				}
 			}
+		},
+		mounted() {
+			this.joinRoom()
+			this.setListeners()
+		},
+		beforeDestroy() {
+			this.leaveRoom(this.currentRoom.id)
+			this.removeListeners()
 		},
 		watch: {
 			'rooms' (newValue, oldValue) {
 				if (newValue.length === oldValue.length) return
 				this.changeRoom(newValue[0])
 			},
+			'$route.query.chatChannel'() {
+				this.$route.query.chatChannel && this.joinRoom()
+			},
+			'$route.query.messageId'() {
+				if (!this.$route.query.messageId) this.highlightedMessageId = 0
+			}
 		}
 	}
 </script>

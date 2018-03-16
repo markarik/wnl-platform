@@ -7,6 +7,7 @@ import * as actions from 'js/store/actions'
 
 // Modules
 import chat from 'js/store/modules/chat'
+import chatMessages from 'js/store/modules/chatMessages'
 import course from 'js/store/modules/course'
 import collections from 'js/store/modules/collections'
 import notifications from 'js/store/modules/notifications'
@@ -34,6 +35,7 @@ export default new Vuex.Store({
 	actions,
 	modules: {
 		chat,
+		chatMessages,
 		course,
 		collections,
 		notifications,

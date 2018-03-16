@@ -4,11 +4,6 @@ import { isString, pickBy, values } from 'lodash'
 
 // Initial state
 const state = {
-	modal: {
-		visible: false,
-		content: null,
-		component: null
-	},
 	canShowChat: false,
 	currentLayout: '',
 	isSidenavOpen: false,
@@ -16,7 +11,7 @@ const state = {
 	navigationToggleState: {},
 	overlays: {},
 	overviewView: 'stream',
-	globalNotification: false
+	modalVisible: false
 }
 
 const layouts = {
@@ -28,9 +23,6 @@ const layouts = {
 
 // Getters
 const getters = {
-	isModalVisible: state => state.modal.visible,
-	getModalContent: state => state.modal.content,
-	getModalComponent: state => state.modal.component,
 	currentLayout: state => state.currentLayout,
 	isMobile: state => state.currentLayout === layouts.mobile,
 	isSmallDesktop: state => state.currentLayout === layouts.smallDesktop,
@@ -59,22 +51,12 @@ const getters = {
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
 	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex],
 	overviewView: state => state.overviewView,
-	globalNotificationMessage: state => state.globalNotification.message,
-	globalNotificationType: state => state.globalNotification.type,
 	overlayTexts: state => values(pickBy(state.overlays, isString)),
+	modalVisible: state => state.modalVisible
 }
 
 // Mutations
 const mutations = {
-	[types.UI_TOGGLE_MODAL] (state, payload) {
-		const serializedPayload = {
-			...payload,
-			component: {
-				...payload.component
-			}
-		}
-		set(state, 'modal', serializedPayload)
-	},
 	[types.UI_CHANGE_LAYOUT] (state, layout) {
 		set(state, 'currentLayout', layout)
 	},
@@ -112,6 +94,9 @@ const mutations = {
 	[types.UI_KILL_CHAT] (state) {
 		set(state, 'canShowChat', false)
 	},
+	[types.UI_TOGGLE_MODAL] (state, payload) {
+		set(state, 'modalVisible', payload)
+	},
 	[types.UI_DISPLAY_OVERLAY] (state, payload) {
 		if (payload.display) {
 			set(state.overlays, payload.source, payload.text || true)
@@ -124,17 +109,11 @@ const mutations = {
 	},
 	[types.UI_CHANGE_OVERVIEW_VIEW] (state, view) {
 		set(state, 'overviewView', view)
-	},
-	[types.UI_SHOW_GLOBAL_NOTIFICATION] (state, globalNotification) {
-		set(state, 'globalNotification', globalNotification)
 	}
 }
 
 // Actions
 const actions = {
-	toggleModal({ commit, getters }, payload) {
-		commit(types.UI_TOGGLE_MODAL, payload)
-	},
 	setLayout({ commit, getters }, layout) {
 		commit(types.UI_CHANGE_LAYOUT, layout)
 	},
@@ -174,7 +153,10 @@ const actions = {
 	},
 	openChat({ commit }) {
 		commit(types.UI_SET_CHAT_OPEN);
-	}
+	},
+	[types.SOCKET_CONNECTION_ERROR]({commit}) {
+		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, false)
+	},
 }
 
 export default {

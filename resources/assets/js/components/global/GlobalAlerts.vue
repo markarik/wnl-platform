@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<wnl-alert class="wnl-global-notification"
-			v-for="(alert, index) in alerts"
+			v-for="alert in alerts"
 			:key="alert.id"
 			:type="alert.type"
 			:id="alert.id"

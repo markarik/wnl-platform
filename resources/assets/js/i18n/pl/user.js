@@ -38,5 +38,6 @@ export const user = {
     },
     userProfileModal: {
         redirectToProfile: 'Zobacz pełen profil',
+        sendMessage: 'Wyślij wiadomość',
     }
 }

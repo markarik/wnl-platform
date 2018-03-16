@@ -134,6 +134,13 @@ $factory->define(App\Models\ChatRoom::class, function (Faker\Generator $faker) {
 	];
 });
 
+$factory->define(App\Models\ChatMessage::class, function (Faker\Generator $faker) {
+	return [
+		'content' => $faker->text,
+		'time' => \Carbon\Carbon::now()->timestamp
+	];
+});
+
 $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
 	return [
 		'text'             => $faker->text,

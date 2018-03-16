@@ -43,7 +43,7 @@ class Lesson extends Model
 		})->get();
 	}
 
-	public function isAvailable($editionId)
+	public function isAvailable($editionId = 1)
 	{
 		$user = \Auth::user();
 		if ($user) {

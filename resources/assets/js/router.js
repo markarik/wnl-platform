@@ -6,7 +6,7 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import {createSandbox} from 'vue-kindergarten';
 import {getCurrentUser} from 'js/services/user';
-import { getApiUrl } from 'js/utils/env'
+import {getApiUrl} from 'js/utils/env'
 
 Vue.use(Router)
 
@@ -232,6 +232,11 @@ let routes = [
 			})
 		}
 
+	},
+	{
+		name: 'messages',
+		path: '/app/messages',
+		component: require('js/components/messages/MessagesDashboard.vue'),
 	},
 	{
 		path: '*',

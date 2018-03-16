@@ -43,6 +43,7 @@
 		height: 100%
 		min-height: 100%
 		position: relative
+		width: 100%
 
 	.drawer
 		border: $border-light-gray
@@ -68,6 +69,7 @@
 		cursor: pointer
 		display: flex
 		height: 100%
+		width: 100%
 		justify-content: center
 		min-height: 100%
 		position: relative
@@ -79,13 +81,10 @@
 			position: absolute
 			z-index: 1
 			bottom: ($navbar-height / 4.2)
-			left: ($navbar-height / 27.5)
+			left: ($navbar-height / 2)
 
 			.fas.fa-circle-notch
 				color: $color-ocean-blue
-
-		.icon
-			position: absolute
 
 		&.is-active
 			background-color: $color-background-light-gray
@@ -111,7 +110,7 @@
 		justify-content: center
 		height: 1.7em
 		position: absolute
-		left: ($navbar-height / 20)
+		left: ($navbar-height / 2)
 		top: $margin-medium
 		width: 1.7em
 		z-index: 1

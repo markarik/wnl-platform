@@ -12,7 +12,7 @@
 			<div slot="content">
 				<div class="feed-header">
 					<span class="feed-heading"v-t="'notifications.chat.heading'"/>
-					<wnl-chat-notifications-toggle/>
+					<wnl-notifications-toggle :setting="setting" :icons="icons"/>
 				</div>
 
 				<div class="feed-body">
@@ -53,20 +53,22 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import Dropdown from 'js/components/global/Dropdown'
-	import ChatNotificationsToggle from 'js/components/notifications/feeds/chat/ChatNotificationsToggle'
+	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import ConversationsList from 'js/components/messages/ConversationsList'
 
 	export default {
 		name: 'ChatFeed',
 		components: {
 			'wnl-dropdown': Dropdown,
-			'wnl-chat-notifications-toggle': ChatNotificationsToggle,
+			'wnl-notifications-toggle': NotificationsToggle,
 			'wnl-conversations-list': ConversationsList,
 		},
 		data() {
 			return {
 				isActive: false,
 				isEmpty: false,
+				setting: 'private_chat_nofitications',
+				icons: ['fa-comment-o', 'fa-comment'],
 			}
 		},
 		computed: {
@@ -79,10 +81,10 @@
 				return this.status
 			},
 			iconClass() {
-				return this.isOn ? 'fa-comment' : 'fa-comment-o'
+				return this.isOn ? this.icons[1] : this.icons[0]
 			},
 			isOn() {
-				return this.getSetting(ChatNotificationsToggle.SETTING)
+				return this.getSetting(this.setting)
 			},
 			zeroStateImage() {
 				return getImageUrl('notifications-zero.png')

@@ -177,9 +177,9 @@ const actions = {
 		if (!getters.getRoomById(roomId).id) {
 			commit(types.CHAT_MESSAGES_ADD_ROOM, {
 				room: {
+					...room,
 					messages: [],
 					profiles: profiles.map(profile => profile.id),
-					id: roomId,
 					unread_count: 0
 				}
 			})

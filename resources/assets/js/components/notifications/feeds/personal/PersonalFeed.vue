@@ -1,5 +1,5 @@
 <template>
-	<div class="dropdown-container" @click="clickOnDropdown">
+	<div class="dropdown-container">
 		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
 			<div slot="activator" class="notifications-toggle"
 				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
@@ -133,9 +133,6 @@
 				'markAllAsSeen',
 				'markAllAsRead',
 			]),
-			clickOnDropdown() {
-				console.log('hi');
-			},
 			allRead() {
 				this.allReadLoading = true
 				this.markAllAsRead(this.channel)

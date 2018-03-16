@@ -11,7 +11,7 @@
 			<div slot="content">
 				<div class="feed-header">
 					<span class="feed-heading" v-t="'notifications.personal.heading'"/>
-					<wnl-notifications-toggle/>
+					<wnl-notifications-toggle :setting="setting" :icons="icons"/>
 				</div>
 
 				<div class="feed-body">
@@ -78,8 +78,6 @@
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
 
-	const setting = 'notify_live'
-
 	export default {
 		name: 'PersonalFeed',
 		mixins: [feed],
@@ -103,6 +101,8 @@
 				isActive: false,
 				limit: 15,
 				PersonalNotification,
+				setting: 'notify_live',
+				icons: ['fa-bell-slash', 'fa-bell'],
 			}
 		},
 		computed: {
@@ -113,10 +113,10 @@
 				getUnread: 'getUnread',
 			}),
 			iconClass() {
-				return this.isOn ? 'fa-bell' : 'fa-bell-slash'
+				return this.isOn ? this.icons[1] : this.icons[0]
 			},
 			isOn() {
-				return this.getSetting(setting)
+				return this.getSetting(this.setting)
 			},
 			unseenCount() {
 				return _.size(_.filter(this.getUnseen(this.channel), (notification) => !notification.deleted))

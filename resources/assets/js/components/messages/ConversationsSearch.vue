@@ -15,7 +15,7 @@
 					:userId="getInterlocutor(room).user_id"
 					:roomId="room.id"
 					@navigate="onClose"
-					@click="onClick"
+					@beforeNavigte="onClick"
 					ref="messageLink"
 				>
 				<wnl-conversation-snippet

@@ -43,6 +43,7 @@
 		methods: {
 			...mapActions('chatMessages', ['createPrivateRoom']),
 			async createPrivateRoomAndRedirect() {
+				this.$emit('beforeNavigate')
 				const payload = {
 					users: [this.currentUserId, this.userId]
 				}
@@ -56,6 +57,7 @@
 			},
 			// this is used by ConversationsSearch - sorry :(
 			async navigate() {
+				this.$emit('beforeNavigate')
 				if (this.roomId) {
 					this.$emit('navigate')
 					return this.$router.push({name: 'messages', query: {roomId: this.roomIdParam}})

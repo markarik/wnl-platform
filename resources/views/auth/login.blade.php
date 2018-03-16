@@ -4,7 +4,7 @@
 
 	<div class="wnl-login-view">
 		<div class="wnl-login-container">
-			<div class="notification is-success has-text-centered">
+			{{-- <div class="notification is-success has-text-centered">
 				<p class="strong">Odkryj naukę na nowo!</p>
 				<p>Zapisy na unikalny kurs do LEK-u już trwają!</p>
 				<p>
@@ -13,7 +13,7 @@
 						<span class="icon is-small"><i class="fa fa-thumbs-o-up"></i></span>
 					</a>
 				</p>
-			</div>
+			</div> --}}
 			@if(session('logout'))
 				<div class="notification has-text-centered">Wylogowano, do zobaczenia!</div>
 			@elseif(session('suspended'))

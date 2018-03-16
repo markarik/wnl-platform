@@ -219,7 +219,7 @@
 		},
 		watch: {
 			'room.id'() {
-				if (this.autofocusOnRoomChange && this.room.id) this.quillEditor.editor.focus()
+				if (this.autofocusOnRoomChange && this.room.id) this.quillEditor.quill.focus()
 			}
 		}
 	}

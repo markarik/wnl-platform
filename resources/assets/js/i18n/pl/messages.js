@@ -7,5 +7,8 @@ export const messages = {
         placeholder: 'Wyszukaj osoby...',
         searchButton: 'Szukaj',
         closeButton: 'Zamknij',
+        searchTakingTooLong: 'Przyznajemy, to trwa odrobinę zbyt długo. Może spróbujesz jeszcze raz?',
+        emptyResults: 'Nikogo nie znalazłem.',
+        searchFailure: 'Ups! Coś poszło nie tak. Spróbujesz jeszcze raz?',
     },
 }

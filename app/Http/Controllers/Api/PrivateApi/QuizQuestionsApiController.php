@@ -211,7 +211,9 @@ class QuizQuestionsApiController extends ApiController
 
 	protected function getMockExam($model, $userId)
 	{
-		$userExamResults = ExamResults::where('user_id', $userId)->whereNotIn('exam_tag_id', [538])
+		$userExamResults = ExamResults::where('user_id', $userId)
+			->where('exam_tag_id', 538)
+			->where('resolved', '>', 0)
 			->get()
 			->sortByDesc('created_at')
 			->first();

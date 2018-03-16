@@ -11,6 +11,7 @@ class SlideTransformer extends ApiTransformer
 {
 	protected $parent;
 	protected $withContext;
+	protected $availableIncludes = ['quiz_questions'];
 
 	public function __construct($parent = null, $withContext = false)
 	{
@@ -37,5 +38,18 @@ class SlideTransformer extends ApiTransformer
 		}
 
 		return $data;
+	}
+
+	public function includeQuizQuestions(Slide $slide)
+	{
+		$questions = $slide->quizQuestions;
+
+		return $this->collection(
+			$questions,
+			new QuizQuestionTransformer([
+				'slides' => $slide->id,
+			]),
+			'quiz_questions'
+		);
 	}
 }

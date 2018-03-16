@@ -49,42 +49,32 @@ class UserPlan extends Model
 		return $this->end_date->diff($startDate)->days - $this->slack_days_left + 1; // 2
 	}
 
-	public function remainingQuestionsFromDate($date)
-	{
-		$result = $this->questionsProgress()
+	public function questionsFromDate($date) {
+		return $this->questionsProgress()
 			->where(function ($query) use ($date) {
 				$query
 					->where('resolved_at', null)
-					->orWhereDate('resolved_at', '>', $date->toDateString());
-			})
-			->get();
-
-		return $result;
+					->orWhereDate('resolved_at', '>=', $date->toDateString());
+			})->get();
 	}
 
 	public function questionsForDay($date)
 	{
-		$remainingQuestions = $this->remainingQuestionsFromDate($date);
+		$remaining = $this->questionsFromDate($date);
 		$daysLeft = $this->daysLeftFromDate($date);
 
-		if (empty($remainingQuestions) || $daysLeft <= 0) {
+		if (empty($remaining) || $daysLeft <= 0) {
 			return collect();
 		}
 
-		$questionsPerDay = ceil($remainingQuestions->count() / $daysLeft); // 500
-		$todaysSolved = $this->questionsProgress()
-			->whereDate('resolved_at', $date->toDateString())
-			->count();
+		$perDayCount = ceil($remaining->count() / $daysLeft);
+		$questionsForToday = $remaining
+			->slice(0, $perDayCount)
+			->filter(function($value) use ($date) {
+				return Carbon::parse($value->resolved_at)->ne($date);
+			});
 
-		if ($questionsPerDay - $todaysSolved <= 0 ) {
-			return collect();
-		}
-
-		$todaysQuestions = $remainingQuestions
-			->sortBy('id')
-			->take($questionsPerDay - $todaysSolved);
-
-		return $todaysQuestions;
+		return $questionsForToday;
 	}
 
 	public function getStatsAttribute()

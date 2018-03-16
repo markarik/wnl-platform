@@ -56,6 +56,7 @@
 		position: relative
 </style>
 <script>
+	import {SOCKET_EVENT_MESSAGE_PROCESSED} from 'js/plugins/socket'
 	import Message from './Message.vue'
 	import {getApiUrl} from 'js/utils/env'
 	import {nextTick} from 'vue'
@@ -125,7 +126,7 @@
 		},
 		methods: {
 			scrollToBottom() {
-				this.container.scrollTop = '1000000000'
+				this.container.scrollTop = this.container.scrollHeight + 100
 			},
 			pullDebouncer(event) {
 				let target = event.target,
@@ -173,6 +174,10 @@
 		},
 		mounted() {
 			this.pullDebouncer = _.debounce(this.pullDebouncer, 300)
+			this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.scrollToBottom)
+		},
+		beforeDestroy() {
+			this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.scrollToBottom)
 		},
 		watch: {
 			highlightedMessageId() {

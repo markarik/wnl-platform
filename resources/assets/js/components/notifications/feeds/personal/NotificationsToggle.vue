@@ -16,20 +16,28 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 
-	const setting = 'notify_live'
-
 	export default {
 		name: 'NotificationsToggle',
+		props: {
+			setting: {
+				required: true,
+				type: String,
+			},
+			icons: {
+				required: true,
+				type: Array,
+			}
+		},
 		computed: {
 			...mapGetters(['getSetting']),
 			isOn() {
-				return this.getSetting(setting)
+				return this.getSetting(this.setting)
 			},
 			toggleText() {
 				return this.isOn ? this.message('turnOff') : this.message('turnOn')
 			},
 			toggleIcon() {
-				return this.isOn ? 'fa-bell-slash' : 'fa-bell'
+				return this.isOn ? this.icons[0] : this.icons[1]
 			},
 		},
 		methods: {
@@ -38,7 +46,7 @@
 				return this.$t(`notifications.personal.${key}`)
 			},
 			toggleNotifications() {
-				this.changeUserSettingAndSync({setting, value: !this.isOn})
+				this.changeUserSettingAndSync({setting: this.setting, value: !this.isOn})
 			},
 		},
 	}

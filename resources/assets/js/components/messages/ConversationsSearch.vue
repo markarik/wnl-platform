@@ -5,22 +5,28 @@
 			@updateItems="onUpdateItems"
 			@onKeyDown="onKeyDown"
 		/>
-		<wnl-message-link
-				v-for="(room, index) in roomsToShow"
-				:key="index"
-				:userId="getInterlocutor(room).user_id"
-				:roomId="room.id"
-				@navigate="onClose"
-				ref="messageLink"
-			>
-			<wnl-conversation-snippet
-				:key="index"
-				:room="room"
-				:bothNames="true"
-				:isActive="index === activeIndex"
-				:profile="getInterlocutor(room)"
-			/>
-		</wnl-message-link>
+		<div v-if="loadingConversation">
+			Ładuję....
+		</div>
+		<div v-else>
+			<wnl-message-link
+					v-for="(room, index) in roomsToShow"
+					:key="index"
+					:userId="getInterlocutor(room).user_id"
+					:roomId="room.id"
+					@navigate="onClose"
+					@click="onClick"
+					ref="messageLink"
+				>
+				<wnl-conversation-snippet
+					:key="index"
+					:room="room"
+					:bothNames="true"
+					:isActive="index === activeIndex"
+					:profile="getInterlocutor(room)"
+				/>
+			</wnl-message-link>
+		</div>
 	</div>
 
 </template>
@@ -42,7 +48,8 @@
 		mixins: [autocomplete],
 		data() {
 			return {
-				items: []
+				items: [],
+				loadingConversation: false
 			}
 		},
 		computed: {
@@ -62,10 +69,17 @@
 		},
 		methods: {
 			onClose() {
+				this.loadingConversation = false
 				this.$emit('close')
 			},
+			onClick() {
+				console.log('on click called.....')
+				this.loadingConversation = true
+			},
 			onItemChosen(item, itemIndex) {
+				this.loadingConversation = true
 				this.$refs.messageLink[itemIndex].navigate()
+					.then(this.onClose)
 			},
 			onUpdateItems(items) {
 				this.items = items

@@ -148,7 +148,6 @@
 		methods: {
 			...mapActions('chatMessages', ['fetchUserRoomsWithMessages']),
 			closeUserSearch() {
-				console.log('....closing user search....')
 				this.userSearchVisible = false
 			},
 			toggleUserSearch() {

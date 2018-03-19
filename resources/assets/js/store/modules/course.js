@@ -157,6 +157,7 @@ const mutations = {
 		set(state, 'ready', true)
 	},
 	[types.SET_STRUCTURE] (state, data) {
+		console.log(data, 'data z set structure');
 		set(state, 'id', data.id)
 		set(state, 'name', data.name)
 		set(state, resource('groups'), data[resource('groups')])

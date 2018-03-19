@@ -279,6 +279,9 @@
 		},
 		components: {
 			'wnl-sidenav': Sidenav,
+		},
+		mounted() {
+			console.log(this.items)
 		}
 	}
 </script>

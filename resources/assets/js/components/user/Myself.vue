@@ -133,6 +133,17 @@
 						iconClass: 'fa-line-chart',
 						iconTitle: 'Statystyki',
 					},
+					{
+						text: 'Dostępność lekcji',
+						itemClass: 'has-icon',
+						to: {
+							name: 'lessons-availabilites'
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa fa-tasks',
+						iconTitle: 'Dostępność lekcji',
+					},
 					// {
 					// 	text: 'Zmiana hasła',
 					// 	itemClass: 'has-icon',

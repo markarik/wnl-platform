@@ -78,7 +78,12 @@ let routes = [
 			{
 				name: 'stats',
 				path: 'stats',
-				component: require('js/components/user/UserStats'),
+				component: require('js/components/user/UserStats.vue'),
+			},
+			{
+				name: 'lessons-availabilites',
+				path: 'availabilites',
+				component: require('js/components/user/LessonsAvailabilities.vue'),
 			},
 		]
 	},

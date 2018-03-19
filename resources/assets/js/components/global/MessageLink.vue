@@ -43,6 +43,7 @@
 		methods: {
 			...mapActions('chatMessages', ['createPrivateRoom']),
 			async createPrivateRoomAndRedirect() {
+				console.log('create private room and redirect.....')
 				this.$emit('beforeNavigate')
 				const payload = {
 					users: [this.currentUserId, this.userId]
@@ -52,6 +53,7 @@
 					name: 'messages',
 					query: {roomId: room.id}
 				})
+				console.log('emiting navigate.....')
 				this.$emit('navigate')
 				return room
 			},

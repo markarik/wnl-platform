@@ -5,8 +5,12 @@
 			@updateItems="onUpdateItems"
 			@onKeyDown="onKeyDown"
 		/>
-		<div v-if="loadingConversation">
-			Ładuję....
+		<wnl-text-loader v-if="loadingConversation">
+			Rozpoczynam rozmowę...
+		</wnl-text-loader>
+		<div class="metadata aligncenter margin vertical" v-else-if="loadingConversationFailure">
+			Nie udało się rozpocząć rozmowy.
+			Spróbuj jeszcze raz.
 		</div>
 		<div v-else>
 			<wnl-message-link
@@ -14,8 +18,8 @@
 					:key="index"
 					:userId="getInterlocutor(room).user_id"
 					:roomId="room.id"
-					@navigate="onClose"
-					@beforeNavigte="onClick"
+					@navigate="onNavigate"
+					@beforeNavigate="onNavigateStart"
 					ref="messageLink"
 				>
 				<wnl-conversation-snippet
@@ -28,7 +32,6 @@
 			</wnl-message-link>
 		</div>
 	</div>
-
 </template>
 
 <script>
@@ -49,7 +52,9 @@
 		data() {
 			return {
 				items: [],
-				loadingConversation: false
+				loadingConversation: false,
+				loadingConversationTimer: null,
+				loadingConversationFailure: false
 			}
 		},
 		computed: {
@@ -68,27 +73,49 @@
 			}
 		},
 		methods: {
-			onClose() {
+			onNavigate() {
 				this.loadingConversation = false
+				clearTimeout(this.loadingConversationTimer)
 				this.$emit('close')
 			},
-			onClick() {
-				console.log('on click called.....')
+			onNavigateStart() {
+				clearTimeout(this.loadingConversationTimer)
 				this.loadingConversation = true
+				this.loadingConversationTimer = setTimeout(() => {
+					this.onLoadingConversationFailure()
+				}, 10000)
+			},
+			onLoadingConversationFailure() {
+				this.loadingConversation = false
+				this.loadingConversationFailure = true
 			},
 			onItemChosen(item, itemIndex) {
-				this.loadingConversation = true
+				this.onNavigateStart()
 				this.$refs.messageLink[itemIndex].navigate()
-					.then(this.onClose)
+					.then(this.onNavigate)
 			},
 			onUpdateItems(items) {
+				clearTimeout(this.loadingConversationTimer)
 				this.items = items
 			},
 			getInterlocutor(room) {
 				const profile = room.profiles.find(profile => profile.user_id !== this.currentUser.user_id) || {}
 				if (profile.id) return profile
 				return this.currentUser
-			}
+			},
+			// override method from mixin - don't emit close event until room is created
+			onEnter(evt) {
+				const activeIndex = this.activeIndex;
+
+				if (activeIndex < 0) return
+
+				this.$set(this.items[activeIndex], 'active', false)
+				this.onItemChosen(this.items[activeIndex], activeIndex)
+
+				evt.preventDefault();
+				evt.stopPropagation();
+				return false
+			},
 		}
 	}
 </script>

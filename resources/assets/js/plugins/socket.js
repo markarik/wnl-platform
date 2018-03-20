@@ -75,10 +75,10 @@ const WnlSocket = {
             socket.off(event, listener)
         }
 
-        Vue.prototype.$socketJoinRoom = (room) => {
+        Vue.prototype.$socketJoinRoom = (room, pointer = null) => {
             return new Promise((resolve, reject) => {
                 eventsQueue.push(() => {
-                    socket.emit(SOCKET_EVENT_JOIN_ROOM, {room})
+                    socket.emit(SOCKET_EVENT_JOIN_ROOM, {room, pointer})
 
                     const timerId = setTimeout(() => {
                         $wnl.logger.error('Failed to connect to room', room)

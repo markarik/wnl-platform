@@ -151,7 +151,7 @@ const mutations = {
 //Actions
 const actions = {
 	async fetchUserRoomsWithMessages({commit, getters}, {limit=20, page=1}) {
-		const {payload, pagination} = await fetchUserRooms({limit, page})
+		const {payload, pagination, log_pointer} = await fetchUserRooms({limit, page})
 
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles))
 		commit(types.CHAT_MESSAGES_ADD_ROOMS, Object.values(payload.rooms))
@@ -169,6 +169,8 @@ const actions = {
 		})
 
 		commit(types.CHAT_MESSAGES_READY, true)
+
+		return log_pointer
 	},
 	onNewMessage({commit, getters, rootGetters}, {room, users: profiles = [], message}) {
 		const isPrivateRoom = room.type === 'private'
@@ -296,7 +298,7 @@ const fetchUserRooms = async ({limit, page}) => {
 
 	if (_.isEmpty(response)) return defaultEmptyResponse
 
-	const {has_more, current_page, data} = response;
+	const {has_more, current_page, data, log_pointer} = response;
 
 	if (_.isEmpty(data)) return defaultEmptyResponse
 
@@ -317,7 +319,7 @@ const fetchUserRooms = async ({limit, page}) => {
 		}
 		payload.sortedRooms.push(room.id)
 	})
-	return {payload, pagination}
+	return {payload, pagination, log_pointer}
 }
 
 const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) =>  {

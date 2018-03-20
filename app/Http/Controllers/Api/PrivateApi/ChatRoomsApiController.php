@@ -41,6 +41,7 @@ class ChatRoomsApiController extends ApiController
 			->groupBy('chat_rooms.id');
 
 		$data = $this->paginatedResponse($rooms, $request->limit, $request->page);
+		$data['log_pointer'] = \Cache::get('event-log-pointer');
 
 		return $this->respondOk($data);
 	}

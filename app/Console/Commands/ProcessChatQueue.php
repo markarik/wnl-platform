@@ -85,6 +85,8 @@ class ProcessChatQueue extends Command
 			return false;
 		}
 
+		\Cache::put('event-log-pointer', $data->message->time, 60);
+
 		$this->acceptPayload($payload, $resolver);
 
 		$chatRoomUser = ChatRoomUser

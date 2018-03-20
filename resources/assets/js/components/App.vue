@@ -99,7 +99,7 @@
 					// Setup Chat
 					const userChannel = `authenticated-user`
 					this.fetchUserRoomsWithMessages({page: 1})
-						.then(() => this.$socketJoinRoom(userChannel))
+						.then((pointer) => this.$socketJoinRoom(userChannel, pointer))
 						.then(() => {
 							this.setConnectionStatus(true)
 							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)

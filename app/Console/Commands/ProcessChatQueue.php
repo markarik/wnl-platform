@@ -105,6 +105,8 @@ class ProcessChatQueue extends Command
 			->where('user_id', $data->user_id)
 			->update(['unread_count' => 0]);
 
+		\Cache::put('event-log-pointer', $data->time, 60);
+
 		$this->acceptPayload($payload, $resolver);
 	}
 

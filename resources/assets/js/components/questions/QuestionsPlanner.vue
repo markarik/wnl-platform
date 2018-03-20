@@ -43,7 +43,7 @@
 									<i class="fa fa-hourglass-1"></i>
 								</span>
 							</label>
-							<wnl-datepicker v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+							<wnl-datepicker :class="withBorder" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>

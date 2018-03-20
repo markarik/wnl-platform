@@ -8,22 +8,22 @@
 			</div>
 		</div>
 		<div class="groups">
-			<ul class="items" v-if="structure">
-				<li class="item" v-for="(item, index) in groupsAreOpen">
-					<span class="item-name" @click="openItem(item)">
+			<ul class="groups-list" v-if="structure">
+				<li class="group" v-for="(item, index) in groupsAreOpen">
+					<span class="item-toggle" @click="toggleItem(item)">
 						<span class="icon is-small">
-							<i class="toggle fa fa-angle-down"></i>
+							<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen(item)}"></i>
 						</span>
-						{{item.name}}
+						<span class="item-name">{{item.name}}</span>
 						<span class="subitems-count">
 							({{item.lessons.length}})
 						</span>
 					</span>
-					<ul class="subitems" v-if="openGroups.indexOf(item.id) > -1">
-						<li class="subitem" v-for="(subitem, index) in item.lessons">
-							<span class="subitem-name">{{subitem.name}}</span>
+					<ul class="subitems" v-if="isOpen(item)">
+						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}">
+							<span class="subitem-name label">{{subitem.name}}</span>
 							<div class="datepicker">
-								<wnl-datepicker v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+								<wnl-datepicker :class="{'hasColorBackground': isEven(index)}" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
 							</div>
 						</li>
 					</ul>
@@ -38,30 +38,41 @@
 
 	.scrollable-main-container
 		.groups
-			.items
-				.item
+			.groups-list
+				.group
 					margin-bottom: $margin-base
-					.item-name
+					.item-toggle
+						cursor: pointer
 						text-align: center
 						width: 100%
 						margin-bottom: $margin-small
 						text-transform: uppercase
+						color: $color-sky-blue
+						.icon
+							color: $color-gray
+						.item-name
 						.subitems-count
 							color: $color-background-gray
-							font-size: $font-size-minus-3
+							font-size: $font-size-minus-2
 
 					.subitems
 						display: flex
 						flex-direction: column
 						margin-bottom: $margin-small
 						.subitem
+							margin-bottom: $margin-small
+							margin-top: $margin-small
 							display: flex
-							flex-direction: row
+							flex-direction: row-reverse
 							justify-content: space-between
+							&.isEven
+								background-color: $color-background-lighter-gray
 							.subitem-name
+								align-self: flex-end
 								width: 65%
-								color: blue
+								color: $color-gray
 							.datepicker
+								margin-right: $margin-small
 
 </style>
 
@@ -95,7 +106,6 @@ export default {
 				const group = this.structure[resource('groups')][groupId]
 				return Object.assign({}, {
 					...group,
-					isOpen: false,
 					lessons: group[resource('lessons')].map(lessonId => {
 						return this.structure[resource('lessons')][lessonId]
 					})
@@ -112,11 +122,17 @@ export default {
 		},
 	},
 	methods: {
+		isOpen(item) {
+			return this.openGroups.indexOf(item.id) > -1 ? true : false
+		},
+		isEven(index) {
+			return index % 2 === 0 ? true : false
+		},
 		onStartDateChange(payload) {
 			if (isEmpty(payload)) this.startDate = null
 		},
-		openItem(item) {
-			if (this.openGroups.indexOf(item.id)) {
+		toggleItem(item) {
+			if (this.openGroups.indexOf(item.id) === -1) {
 				this.openGroups.push(item.id)
 			} else {
 				var index = this.openGroups.indexOf(item.id)

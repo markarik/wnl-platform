@@ -4,6 +4,7 @@ import {uniq} from 'lodash'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MARK_ROOM_AS_READ} from 'js/plugins/socket'
 
 const namespaced = true
 
@@ -151,7 +152,7 @@ const mutations = {
 //Actions
 const actions = {
 	async fetchUserRoomsWithMessages({commit, getters}, {limit=20, page=1}) {
-		const {payload, pagination} = await fetchUserRooms({limit, page})
+		const {payload, pagination, log_pointer} = await fetchUserRooms({limit, page})
 
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles))
 		commit(types.CHAT_MESSAGES_ADD_ROOMS, Object.values(payload.rooms))
@@ -169,6 +170,8 @@ const actions = {
 		})
 
 		commit(types.CHAT_MESSAGES_READY, true)
+
+		return log_pointer
 	},
 	onNewMessage({commit, getters, rootGetters}, {room, users: profiles = [], message}) {
 		const isPrivateRoom = room.type === 'private'
@@ -271,6 +274,20 @@ const actions = {
 	markRoomAsRead({commit}, roomId) {
 		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId)
 	},
+
+	updateFromEventLog({commit, dispatch}, events) {
+		events.forEach(event => {
+			switch (event.name) {
+				case SOCKET_EVENT_SEND_MESSAGE:
+					dispatch('onNewMessage', event)
+					break;
+				case SOCKET_EVENT_MARK_ROOM_AS_READ:
+					const roomId = _.get(event, 'room.id')
+					roomId && dispatch('markRoomAsRead', roomId)
+					break;
+			}
+		})
+	}
 }
 
 const fetchUserRooms = async ({limit, page}) => {
@@ -296,7 +313,7 @@ const fetchUserRooms = async ({limit, page}) => {
 
 	if (_.isEmpty(response)) return defaultEmptyResponse
 
-	const {has_more, current_page, data} = response;
+	const {has_more, current_page, data, log_pointer} = response;
 
 	if (_.isEmpty(data)) return defaultEmptyResponse
 
@@ -317,7 +334,7 @@ const fetchUserRooms = async ({limit, page}) => {
 		}
 		payload.sortedRooms.push(room.id)
 	})
-	return {payload, pagination}
+	return {payload, pagination, log_pointer}
 }
 
 const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) =>  {

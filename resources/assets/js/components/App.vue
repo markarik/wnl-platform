@@ -79,7 +79,7 @@
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
-			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus']),
+			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
@@ -99,8 +99,9 @@
 					// Setup Chat
 					const userChannel = `authenticated-user`
 					this.fetchUserRoomsWithMessages({page: 1})
-						.then(() => this.$socketJoinRoom(userChannel))
-						.then(() => {
+						.then((pointer) => this.$socketJoinRoom(userChannel, pointer))
+						.then((data) => {
+							this.updateFromEventLog(data.events)
 							this.setConnectionStatus(true)
 							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)
 						})

@@ -61,6 +61,7 @@ class ProcessChatQueue extends Command
 		});
 
 		$this->info('Exiting.');
+
 		return;
 	}
 
@@ -87,10 +88,11 @@ class ProcessChatQueue extends Command
 
 		$this->acceptPayload($payload, $resolver);
 
-		$chatRoomUser = ChatRoomUser
+		$builder = ChatRoomUser
 			::where('chat_room_id', $roomId)
-			->where('user_id', '<>', $data->message->user_id)
-			->increment('unread_count');
+			->where('user_id', '<>', $data->message->user_id);
+		(clone $builder)->increment('unread_count');
+		(clone $builder)->update(['log_pointer' => $data->message->time]);
 
 		return true;
 	}
@@ -101,7 +103,10 @@ class ProcessChatQueue extends Command
 		$chatRoomUser = ChatRoomUser
 			::where('chat_room_id', $roomId)
 			->where('user_id', $data->user_id)
-			->update(['unread_count' => 0]);
+			->update([
+				'unread_count' => 0,
+				'log_pointer'  => $data->time,
+			]);
 
 		$this->acceptPayload($payload, $resolver);
 	}

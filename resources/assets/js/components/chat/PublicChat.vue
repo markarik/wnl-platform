@@ -174,16 +174,18 @@
 
 				this.loaded = false
 				const {messageTime, roomId} = this.$route.query
+				let pointer
 
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id
+						pointer = room.log_pointer
 						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId, beforeLimit: 10}})
 					})
 					.then(({messages, pagination}) => {
 						this.messages = messages
 						this.pagination = pagination
-						return this.$socketJoinRoom(this.currentRoom.id)
+						return this.$socketJoinRoom(this.currentRoom.id, pointer)
 					})
 					.then((data) => {
 						this.loaded = true

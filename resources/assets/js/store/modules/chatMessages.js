@@ -4,6 +4,7 @@ import {uniq} from 'lodash'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MARK_ROOM_AS_READ} from 'js/plugins/socket'
 
 const namespaced = true
 
@@ -273,6 +274,20 @@ const actions = {
 	markRoomAsRead({commit}, roomId) {
 		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId)
 	},
+
+	updateFromEventLog({commit, dispatch}, events) {
+		events.forEach(event => {
+			switch (event.name) {
+				case SOCKET_EVENT_SEND_MESSAGE:
+					dispatch('onNewMessage', event)
+					break;
+				case SOCKET_EVENT_MARK_ROOM_AS_READ:
+					const roomId = _.get(event, 'room.id')
+					roomId && dispatch('markRoomAsRead', roomId)
+					break;
+			}
+		})
+	}
 }
 
 const fetchUserRooms = async ({limit, page}) => {

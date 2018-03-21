@@ -56,6 +56,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 	Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 
+	// LessonsAvailabilities
+	Route::get("{$r['user-lesson-availabilities']}", 'UserLessonAvailabilitiesApiController@getUserAvailabileLessons');
+	// Route::put("{$r['lessons-availabilities']}/{userId}", 'UserLessonAvailabilitiesApiController@put');
+
 	// Screens
 	Route::post("{$r['screens']}", 'ScreensApiController@post');
 	Route::get("{$r['screens']}/{id}", 'ScreensApiController@get');

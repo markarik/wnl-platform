@@ -2,6 +2,15 @@
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}" v-if="currentUserStats">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
+				<div class="level-item big strong">
+					Twój Postęp
+				</div>
+			</div>
+		</div>
+		<button @click="resetProgress" class="button is-danger to-right">Wyczyść postęp w nauce</button>
+
+		<div class="level wnl-screen-title">
+			<div class="level-left">
 				<div class="level-item big strong">Statystyki</div>
 			</div>
 		</div>
@@ -21,6 +30,8 @@
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import moment from 'moment'
+	import { swalConfig } from 'js/utils/swal'
+
 	export default {
 		name: 'UserStats',
 		computed: {
@@ -60,7 +71,25 @@
 			}
 		},
 		methods: {
-			...mapActions(['fetchCurrentUserStats'])
+			...mapActions(['fetchCurrentUserStats']),
+			resetProgress() {
+				this.$swal(swalConfig({
+					title: this.$t('progress.reset.title'),
+					text: this.$t('progress.reset.text'),
+					showCancelButton: true,
+					confirmButtonText: this.$t('ui.confirm.confirm'),
+					cancelButtonText: this.$t('ui.confirm.cancel'),
+					type: 'error',
+					confirmButtonClass: 'button is-danger',
+					reverseButtons: true
+				})).then(() => {
+					this.toggleOverlay({source: 'lessonsAvailabilities', display: true})
+					this.deleteCourseProgress()
+					.then(() => {
+						this.toggleOverlay({source: 'lessonAvailabilities', display: false})
+					})
+				}).catch(e => false)
+			}
 		},
 		mounted() {
 			this.fetchCurrentUserStats();

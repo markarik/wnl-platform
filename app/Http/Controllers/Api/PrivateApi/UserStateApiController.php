@@ -177,6 +177,31 @@ class UserStateApiController extends ApiController
 		return $this->json($stats);
 	}
 
+	public function deleteCourse($userId, $courseId) {
+		$user = User::find($user);
+		$profileId = $user->profile->id;
+		$userCourseProgress = UserCourseProgress::where('user_id', $passedUserId)->get();
+
+		if (!$user->can('delete', $userCourseProgress)) {
+			return $this->respondForbidden();
+		}
+
+		$lessonsKeys = Lesson::all()->pluck('id')->map(function($item) use ($profileId) {
+			return self::getLessonRedisKey($profileId, $courseId, $item);
+		});
+
+		$lessonsKeys->each(function($lessonKey) use ($bar) {
+			Redis::del($lessonKey);
+		});
+
+		$courseKey = self::getCourseRedisKey($profileId, $courseId);
+		Redis::del($courseKey);
+
+		$userCourseProgress->delete();
+
+		$this->respondOk();
+	}
+
 	static function getCourseRedisKey($userId, $courseId)
 	{
 		return sprintf(self::KEY_COURSE_TEMPLATE, $courseId, $userId, self::CACHE_VERSION);

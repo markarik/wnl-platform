@@ -24,7 +24,7 @@
 							<span>{{subitem.id}}</span>
 							<span class="subitem-name label">{{subitem.name}}</span>
 							<div class="datepicker">
-								<wnl-datepicker :class="{'hasColorBackground': isEven(index)}" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+								<wnl-lesson-availability :class="{'hasColorBackground': isEven(index)}" :startDate="findStartDate(subitem.id)"/>
 							</div>
 						</li>
 					</ul>
@@ -80,15 +80,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import { resource } from 'js/utils/config'
-import Datepicker from 'js/components/global/Datepicker'
-import { isEmpty, merge } from 'lodash'
-import { pl } from 'flatpickr/dist/l10n/pl.js'
 import { getApiUrl } from 'js/utils/env'
+import LessonAvailability from 'js/components/user/LessonAvailability'
 
 export default {
 	name: 'LessonsAvailabilities',
 	components: {
-		'wnl-datepicker': Datepicker,
+		'wnl-lesson-availability': LessonAvailability,
 	},
 	data() {
 		return {
@@ -115,25 +113,20 @@ export default {
 				})
 			})
 		},
-		startDateConfig() {
-			return {
-				altInput: true,
-				disableMobile: true,
-				locale: pl,
-				minDate: 'today',
-			}
-		},
 	},
 	methods: {
+		findStartDate(id) {
+			return new Date (this.lessonAvailabilities.find((lesson) => {
+				return lesson.lesson_id === id
+			}).start_date*1000)
+		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1 ? true : false
 		},
 		isEven(index) {
 			return index % 2 === 0 ? true : false
 		},
-		onStartDateChange(payload) {
-			if (isEmpty(payload)) this.startDate = null
-		},
+
 		toggleItem(item) {
 			if (this.openGroups.indexOf(item.id) === -1) {
 				this.openGroups.push(item.id)

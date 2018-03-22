@@ -21,7 +21,7 @@ class UserLessonAvailabilityTransformer extends ApiTransformer
 			'id'         => $userLessonAvailability->id,
 			'user_id'    => $userLessonAvailability->user_id,
 			'lesson_id'  => $userLessonAvailability->lesson_id,
-			'start_date' => $userLessonAvailability->start_date,
+			'start_date' => $userLessonAvailability->start_date->timestamp ?? null,
 		];
 
 		if ($this->parent) {

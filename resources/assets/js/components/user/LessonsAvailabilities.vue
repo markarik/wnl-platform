@@ -21,6 +21,7 @@
 					</span>
 					<ul class="subitems" v-if="isOpen(item)">
 						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}">
+							<span>{{subitem.id}}</span>
 							<span class="subitem-name label">{{subitem.name}}</span>
 							<div class="datepicker">
 								<wnl-datepicker :class="{'hasColorBackground': isEven(index)}" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
@@ -82,6 +83,7 @@ import { resource } from 'js/utils/config'
 import Datepicker from 'js/components/global/Datepicker'
 import { isEmpty, merge } from 'lodash'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
+import { getApiUrl } from 'js/utils/env'
 
 export default {
 	name: 'LessonsAvailabilities',
@@ -91,7 +93,8 @@ export default {
 	data() {
 		return {
 			startDate: new Date(),
-			openGroups: []
+			openGroups: [],
+			lessonAvailabilities: {},
 		}
 	},
 	computed: {
@@ -141,6 +144,11 @@ export default {
 				}
 			}
 		},
+	},
+	mounted() {
+		axios.get(getApiUrl('user_lesson_availabilities')).then((response) => {
+			this.lessonAvailabilities = response.data
+		})
 	}
 }
 </script>

@@ -127,7 +127,7 @@
 		},
 		methods: {
 			...mapActions(['toggleChat', 'saveMentions']),
-			...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages']),
+			...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages', 'updateFromEventLog']),
 			changeRoom(room) {
 				this.currentRoom = room
 				this.joinRoom()
@@ -188,6 +188,7 @@
 						return this.$socketJoinRoom(this.currentRoom.id, pointer)
 					})
 					.then((data) => {
+						this.updateFromEventLog(data.events)
 						this.loaded = true
 						nextTick(() => {
 							const messageId = this.$route.query.messageId

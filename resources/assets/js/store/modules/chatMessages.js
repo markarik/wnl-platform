@@ -145,7 +145,7 @@ const mutations = {
 		state.rooms[roomId].unread_count = (state.rooms[roomId].unread_count || 0) + 1
 	},
 	[types.CHAT_MESSAGES_MARK_ROOM_AS_READ] (state, roomId) {
-		state.rooms[roomId].unread_count = 0
+		if(state.rooms[roomId]) state.rooms[roomId].unread_count = 0
 	}
 }
 

@@ -7,7 +7,10 @@
 				</div>
 			</div>
 		</div>
-		<button @click="resetProgress" class="button is-danger to-right">Wyczyść postęp w nauce</button>
+		<div class="reset-progress">
+			<p v-t="'progress.reset.info'"/>
+			<button @click="resetProgress" class="button is-danger to-right">Wyczyść postęp w nauce</button>
+		</div>
 
 		<div class="level wnl-screen-title">
 			<div class="level-left">
@@ -26,6 +29,21 @@
 		<div>Liczba wątków: {{totalSocial}}</div>
 	</div>
 </template>
+<style lang="sass" scoped>
+.reset-progress
+	color: #4a4a4a
+	line-height: 1.8em
+	max-width: 80%
+	margin: 0 auto
+	text-align: center
+
+	p
+		text-align: left
+		margin-bottom: 1em
+	button
+		margin-bottom: 2em
+
+</style>
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
@@ -72,7 +90,7 @@
 		},
 		methods: {
 			...mapActions(['fetchCurrentUserStats', 'toggleOverlay']),
-			...mapActions('progress', ['deleteProgress']),
+			...mapActions('progress', ['deleteProgress', 'setupCourse']),
 			resetProgress() {
 				this.$swal(swalConfig({
 					title: this.$t('progress.reset.title'),
@@ -88,7 +106,7 @@
 					this.toggleOverlay({source: 'userStats', display: true})
 					return this.deleteProgress()
 				})
-				.then(this.fetchCurrentUserStats)
+				.then(() => Promise.all([this.fetchCurrentUserStats(), this.setupCourse()]))
 				.then(() => {
 					this.toggleOverlay({source: 'userStats', display: false})
 				})

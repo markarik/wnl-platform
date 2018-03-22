@@ -128,7 +128,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	setupCourse({commit}, courseId) {
+	setupCourse({commit}, courseId = 1) {
 		return new Promise((resolve) => {
 			progressStore.getCourseProgress({courseId})
 				.then(data => {
@@ -177,7 +177,7 @@ const actions = {
 	},
 	deleteProgress({rootGetters}, payload) {
 		const userId = rootGetters.currentUserId
-		axios.delete(getApiUrl(`users/${userId}/state/course/1`));
+		return axios.delete(getApiUrl(`users/${userId}/state/course/1`));
 	}
 };
 

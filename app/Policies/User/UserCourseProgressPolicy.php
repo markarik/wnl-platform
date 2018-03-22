@@ -23,7 +23,7 @@ class UserCourseProgressPolicy
 	}
 
 	/**
-	 * Determine whether the user can delete the userSettings.
+	 * Determine whether the user can delete the userCourseProgress.
 	 *
 	 * @param  \App\Models\User $user
 	 * @param  \App\Models\UserCourseProgress $userCourseProgress

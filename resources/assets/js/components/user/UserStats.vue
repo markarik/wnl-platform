@@ -71,7 +71,8 @@
 			}
 		},
 		methods: {
-			...mapActions(['fetchCurrentUserStats']),
+			...mapActions(['fetchCurrentUserStats', 'toggleOverlay']),
+			...mapActions('progress', ['deleteProgress']),
 			resetProgress() {
 				this.$swal(swalConfig({
 					title: this.$t('progress.reset.title'),
@@ -82,13 +83,16 @@
 					type: 'error',
 					confirmButtonClass: 'button is-danger',
 					reverseButtons: true
-				})).then(() => {
-					this.toggleOverlay({source: 'lessonsAvailabilities', display: true})
-					this.deleteCourseProgress()
-					.then(() => {
-						this.toggleOverlay({source: 'lessonAvailabilities', display: false})
-					})
-				}).catch(e => false)
+				}))
+				.then(() => {
+					this.toggleOverlay({source: 'userStats', display: true})
+					return this.deleteProgress()
+				})
+				.then(this.fetchCurrentUserStats)
+				.then(() => {
+					this.toggleOverlay({source: 'userStats', display: false})
+				})
+				.catch($wnl.logger.errorF)
 			}
 		},
 		mounted() {

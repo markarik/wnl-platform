@@ -1,7 +1,8 @@
 import _ from 'lodash'
 import * as types from '../mutations-types'
-import progressStore, {STATUS_COMPLETE, STATUS_IN_PROGRESS} from '../../services/progressStore'
+import progressStore, {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore'
 import {set} from 'vue'
+import { getApiUrl } from 'js/utils/env';
 
 // Namespace
 const namespaced = true
@@ -174,6 +175,10 @@ const actions = {
 	completeSubsection({commit}, payload) {
 		commit(types.PROGRESS_COMPLETE_SUBSECTION, payload)
 	},
+	deleteProgress({rootGetters}, payload) {
+		const userId = rootGetters.currentUserId
+		axios.delete(getApiUrl(`users/${userId}/state/course/1`));
+	}
 };
 
 export default {

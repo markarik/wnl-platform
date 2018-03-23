@@ -84,7 +84,7 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
 import Datepicker from 'js/components/global/Datepicker'
@@ -128,6 +128,7 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		findLessonAvailabilityId(id) {
 			return this.lessonAvailabilities.find((lesson) => {
 				return lesson.lesson_id === id
@@ -156,10 +157,15 @@ export default {
 			}
 		},
 		onStartDateChange(payload) {
-			console.log('.....change', payload)
 			axios.put(getApiUrl(`user_lesson_availabilities/${payload.lessonAvailabilityId}`), {
 				date: payload.newDate
 			}).then(() => {
+				let payload = {
+					text: 'Udalo się zmienić datę! :)',
+					type: 'success',
+					timeout: 1000,
+				}
+				this.addAutoDismissableAlert(payload)
 			})
 		}
 	},

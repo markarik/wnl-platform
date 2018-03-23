@@ -75,7 +75,6 @@
 				this.date = dateStr
 			},
 			onChange(payload) {
-				console.log(payload[0], '....................payload');
 				this.$emit('onChange', {newDate: payload[0], lessonAvailabilityId: this.lessonAvailabilityId})
 			},
 			redraw(newConfig) {

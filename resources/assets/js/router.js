@@ -82,7 +82,7 @@ let routes = [
 			},
 			{
 				name: 'lessons-availabilites',
-				path: 'availabilites',
+				path: 'availabilities',
 				component: require('js/components/user/LessonsAvailabilities.vue'),
 			},
 		]

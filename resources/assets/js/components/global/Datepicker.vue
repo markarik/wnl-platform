@@ -43,6 +43,10 @@
 			},
 			value: String|Date,
 			withBorder: Boolean,
+			lessonAvailabilityId: {
+				required: false,
+				type: Number,
+			},
 		},
 		data() {
 			return {
@@ -71,7 +75,8 @@
 				this.date = dateStr
 			},
 			onChange(payload) {
-				this.$emit('onChange', payload)
+				console.log(payload[0], '....................payload');
+				this.$emit('onChange', {newDate: payload[0], lessonAvailabilityId: this.lessonAvailabilityId})
 			},
 			redraw(newConfig) {
 				this.datepicker.config = Object.assign(this.datepicker.config, newConfig)

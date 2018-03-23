@@ -14,6 +14,7 @@ use App\Models\UserAddress;
 use App\Models\UserBillingData;
 use App\Models\UserProfile;
 use App\Models\UserSettings;
+use App\Models\UserLessonAvailability;
 use App\Policies\Chat\ChatRoomPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\Course\ScreensPolicy;
@@ -26,6 +27,7 @@ use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
 use App\Policies\User\UserSettingsPolicy;
 use App\Policies\User\UserPolicy;
+use App\Policies\Course\UserLessonAvailabilityPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -41,6 +43,7 @@ class AuthServiceProvider extends ServiceProvider
 		UserAddress::class     => UserAddressPolicy::class,
 		UserBillingData::class => UserBillingPolicy::class,
 		UserSettings::class    => UserSettingsPolicy::class,
+		UserLessonAvailability::class => UserLessonAvailabilityPolicy::class,
 		QnaAnswer::class       => QnaAnswerPolicy::class,
 		QnaQuestion::class     => QnaQuestionPolicy::class,
 		Comment::class         => CommentPolicy::class,

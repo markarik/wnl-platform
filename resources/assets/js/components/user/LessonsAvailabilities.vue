@@ -21,12 +21,13 @@
 					</span>
 					<ul class="subitems" v-if="isOpen(item)">
 						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}">
-							<span>{{subitem.id}}</span>
 							<span class="subitem-name label">{{subitem.name}}</span>
 							<div class="datepicker">
 								<wnl-datepicker
 									:class="{'hasColorBackground': isEven(index)}"
 									:value="findStartDate(subitem.id)"
+									:lessonAvailabilityId="findLessonAvailabilityId(subitem.id)"
+									:subitemId="subitem.id"
 									:config="startDateConfig"
 									@onChange="onStartDateChange"
 								/>
@@ -127,6 +128,11 @@ export default {
 		},
 	},
 	methods: {
+		findLessonAvailabilityId(id) {
+			return this.lessonAvailabilities.find((lesson) => {
+				return lesson.lesson_id === id
+			}).id
+		},
 		findStartDate(id) {
 			return new Date (this.lessonAvailabilities.find((lesson) => {
 				return lesson.lesson_id === id
@@ -149,8 +155,12 @@ export default {
 				}
 			}
 		},
-		onStartDateChange(date) {
-			console.log('.....change', date)
+		onStartDateChange(payload) {
+			console.log('.....change', payload)
+			axios.put(getApiUrl(`user_lesson_availabilities/${payload.lessonAvailabilityId}`), {
+				date: payload.newDate
+			}).then(() => {
+			})
 		}
 	},
 	mounted() {

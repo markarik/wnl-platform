@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ApiController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use App\Http\Requests\Course\UpdateUserLessonAvailability;
 use App\Models\UserLessonAvailability;
 
 class UserLessonAvailabilitiesApiController extends ApiController
@@ -22,5 +23,20 @@ class UserLessonAvailabilitiesApiController extends ApiController
 		$data = $this->transform($lessons);
 
 		return $this->respondOk($data);
+	}
+
+	public function put(UpdateUserLessonAvailability $request)
+	{
+		$userLessonAvailability = UserLessonAvailability::find($request->route('id'));
+
+		if (!$userLessonAvailability) {
+			return $this->respondNotFound();
+		}
+
+		$userLessonAvailability->update([
+			'start_date' => Carbon::parse($request->input('date')),
+		]);
+
+		return $this->respondOk();
 	}
 }

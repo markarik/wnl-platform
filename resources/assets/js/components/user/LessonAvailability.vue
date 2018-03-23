@@ -1,5 +1,5 @@
 <template>
-	<wnl-datepicker v-model="dupa" :config="startDateConfig" @onChange="onStartDateChange"/>
+	<wnl-datepicker v-model="date" :config="startDateConfig" @onChange="onStartDateChange"/>
 </template>
 
 <style lang="sass">
@@ -44,7 +44,9 @@ export default {
 		},
 	},
 	mounted() {
+		console.log(this.startDate);
 		this.date = this.startDate
+		console.log(this.date);
 	}
 }
 </script>

@@ -24,7 +24,12 @@
 							<span>{{subitem.id}}</span>
 							<span class="subitem-name label">{{subitem.name}}</span>
 							<div class="datepicker">
-								<wnl-lesson-availability :class="{'hasColorBackground': isEven(index)}" :startDate="findStartDate(subitem.id)"/>
+								<wnl-datepicker
+									:class="{'hasColorBackground': isEven(index)}"
+									:value="findStartDate(subitem.id)"
+									:config="startDateConfig"
+									@onChange="onStartDateChange"
+								/>
 							</div>
 						</li>
 					</ul>
@@ -81,18 +86,25 @@
 import { mapGetters } from 'vuex'
 import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
-import LessonAvailability from 'js/components/user/LessonAvailability'
+import Datepicker from 'js/components/global/Datepicker'
+import { pl } from 'flatpickr/dist/l10n/pl.js'
+import { isEmpty } from 'lodash'
 
 export default {
 	name: 'LessonsAvailabilities',
 	components: {
-		'wnl-lesson-availability': LessonAvailability,
+		'wnl-datepicker': Datepicker,
 	},
 	data() {
 		return {
 			startDate: new Date(),
 			openGroups: [],
 			lessonAvailabilities: {},
+			startDateConfig: {
+				altInput: true,
+				disableMobile: true,
+				locale: pl
+			}
 		}
 	},
 	computed: {
@@ -137,6 +149,9 @@ export default {
 				}
 			}
 		},
+		onStartDateChange(date) {
+			console.log('.....change', date)
+		}
 	},
 	mounted() {
 		axios.get(getApiUrl('user_lesson_availabilities')).then((response) => {

@@ -14,7 +14,7 @@ class MarkLessonsAsRequired extends Migration
 	public function up()
 	{
 		Schema::table('lessons', function (Blueprint $table) {
-			$table->boolean('is_required')->nullable()->after('order_number');
+			$table->boolean('is_required')->default(0)->after('order_number');
         });
 	}
 
@@ -26,7 +26,7 @@ class MarkLessonsAsRequired extends Migration
 	public function down()
 	{
 		Schema::table('lessons', function (Blueprint $table) {
-            $table->dropColumn(['is_required']);
-        });
+			$table->dropColumn(['is_required']);
+		});
 	}
 }

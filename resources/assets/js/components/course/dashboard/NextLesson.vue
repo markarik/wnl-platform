@@ -1,12 +1,12 @@
 <template>
-	<div class="next-lesson">
+	<div class="next-lesson" v-if="nextLessonAvailable || nextLessonDate">
 		<div class="next">{{ next }}</div>
 		<div>
 			<span class="group">{{ groupName }} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> </span>
 			<span class="lesson">{{ lessonName }}</span>
 		</div>
 		<div class="cta">
-			<router-link v-if="hasNextLesson"
+			<router-link v-if="nextLessonAvailable"
 				class="button is-primary"
 				:class="{'is-outlined': status === 'in-progress'}"
 				:to="to"
@@ -92,7 +92,7 @@
 			groupName() {
 				return this.getGroup(this.nextLesson.groups).name
 			},
-			hasNextLesson() {
+			nextLessonAvailable() {
 				return this.nextLesson && this.status !== STATUS_NONE
 			},
 			lessonName() {
@@ -102,7 +102,10 @@
 				return this.$t(`dashboard.progress.${this.status}`)
 			},
 			nextLessonDate() {
-				return timeFromDate(this.nextLesson.startDate.date)
+				if (this.nextLesson.startDate) {
+					return timeFromDate(this.nextLesson.startDate.date)
+				}
+				return false
 			},
 			status() {
 				return this.nextLesson.status

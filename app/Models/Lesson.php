@@ -51,6 +51,17 @@ class Lesson extends Model
 		return false;
 	}
 
+	public function isAccessible($editionId = 1)
+	{
+		$user = \Auth::user();
+		if ($user) {
+			$lessonAccess = $this->userAvailability->where('user_id', $user->id)->first();
+			return !is_null($lessonAccess);
+		}
+
+		return false;
+	}
+
 	public function startDate($editionId)
 	{
 		$user = \Auth::user();

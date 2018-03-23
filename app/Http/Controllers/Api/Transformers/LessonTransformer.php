@@ -32,6 +32,7 @@ class LessonTransformer extends ApiTransformer
 		];
 
 		if ($editionId !== null) {
+			$data['isAccessible'] = $lesson->isAccessible($editionId);
 			$data['isAvailable'] = $lesson->isAvailable($editionId);
 			$data['startDate'] = $lesson->startDate($editionId);
 		}

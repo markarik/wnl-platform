@@ -57,6 +57,9 @@ const getters = {
 	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
 		return state.structure[resource('lessons')][lessonId].isAvailable
 	},
+	isLessonAccessible: (state, getters, rootState, rootGetters) => (lessonId) => {
+		return state.structure[resource('lessons')][lessonId].isAccessible
+	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
 	getSections: state => (sections) => sections.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {})) || [],
@@ -109,41 +112,49 @@ const getters = {
 	},
 	nextLesson: (state, getters, rootState, rootGetters) => {
 		if (typeof getters.getLessons === 'undefined' || !rootGetters['progress/getCourse'](state.id)) {
-			return false
+			return {}
 		}
 
-		let lesson = { status: STATUS_NONE },
-			inProgressId = rootGetters['progress/getFirstLessonIdInProgress'](state.id)
+		const inProgressId = rootGetters['progress/getFirstLessonIdInProgress'](state.id)
 
 		if (inProgressId > 0) {
-			lesson = getters.getLesson(inProgressId)
+			const lesson = getters.getLesson(inProgressId)
 			lesson.status = STATUS_IN_PROGRESS
+
+			return lesson;
 		} else {
 			const sortedLessonsIds = Object.keys(getters.getLessons).sort((keyA, keyB) => {
 				const lessonA = getters.getLessons[keyA]
 				const lessonB = getters.getLessons[keyB]
 
-				return lessonA.order_number - lessonB.order_number
+				const byOrderNumber = lessonA.order_number - lessonB.order_number
+				if (byOrderNumber === 0) {
+					return lessonA.id - lessonB.id
+				}
+				return byOrderNumber
 			}).map(Number)
 
 			for (let i = 0; i < sortedLessonsIds.length; i++) {
-				let lessonId = sortedLessonsIds[i];
-				let isAvailable = getters.isLessonAvailable(lessonId)
+				const lessonId = sortedLessonsIds[i];
+				const isAvailable = getters.isLessonAvailable(lessonId)
+				const isAccessible = getters.isLessonAccessible(lessonId)
 				if (isAvailable &&
 					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
 				) {
-					lesson = getters.getLesson(lessonId)
+					const lesson = getters.getLesson(lessonId)
 					lesson.status = STATUS_AVAILABLE
 					return lesson
-				} else if (!isAvailable) {
-					lesson = getters.getLesson(lessonId)
+				} else if (!isAvailable && isAccessible) {
+					const lesson = getters.getLesson(lessonId)
 					lesson.status = STATUS_NONE
 					return lesson
 				}
 			}
 		}
 
-		return lesson
+		return {
+			status: STATUS_NONE
+		}
 	}
 }
 

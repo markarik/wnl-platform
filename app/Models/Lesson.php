@@ -21,14 +21,9 @@ class Lesson extends Model
 		return $this->belongsTo('\App\Models\Group');
 	}
 
-	public function availability()
+	public function userAvailability()
 	{
-		return $this->hasMany('App\Models\LessonAvailability');
-	}
-
-	public function userAccess()
-	{
-		return $this->hasMany('App\Models\LessonUserAccess');
+		return $this->hasMany('App\Models\UserLessonAvailability');
 	}
 
 	public function tags()
@@ -47,15 +42,10 @@ class Lesson extends Model
 	{
 		$user = \Auth::user();
 		if ($user) {
-			$lessonAccess = $this->userAccess->where('user_id', $user->id)->first();
+			$lessonAccess = $this->userAvailability->where('user_id', $user->id)->first();
 			if (!is_null($lessonAccess)) {
-				return $lessonAccess->access;
+				return $lessonAccess->start_date->isPast();
 			}
-		}
-
-		$availability = $this->availability->where('edition_id', $editionId)->first();
-		if (!is_null($availability)) {
-			return $availability->start_date->isPast();
 		}
 
 		return false;
@@ -63,10 +53,12 @@ class Lesson extends Model
 
 	public function startDate($editionId)
 	{
-		$availability = $this->availability->where('edition_id', $editionId)->first();
-
-		if (!is_null($availability)) {
-			return $availability->start_date;
+		$user = \Auth::user();
+		if ($user) {
+			$lessonAccess = $this->userAvailability->where('user_id', $user->id)->first();
+			if (!is_null($lessonAccess)) {
+				return $lessonAccess->start_date;
+			}
 		}
 
 		return null;

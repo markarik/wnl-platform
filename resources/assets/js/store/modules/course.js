@@ -11,7 +11,7 @@ function getCourseApiUrl(courseId, userId) {
 		`${resource('editions')}/${courseId}
 		?include=groups.lessons.screens.sections.subsections,
 		course.groups.lessons.screens.sections.subsections,
-		course.groups.lessons.userAccess,course.groups.lessons.availability,
+		course.groups.lessons.userAvailability,
 		course.groups.lessons.screens.tags
 		&user=current`
 	)
@@ -43,10 +43,6 @@ const getters = {
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
 	getLessons: state => state.structure[resource('lessons')],
 	getAvailableLessons: (state, getters, rootState, rootGetters) => {
-		if (rootGetters.isAdmin) {
-			return _.values(getters.getLessons)
-		}
-
 		let lesson, lessons = []
 		for (var lessonId in getters.getLessons) {
 			lesson = getters.getLessons[lessonId]
@@ -59,7 +55,7 @@ const getters = {
 	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
 	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
 	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
-		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable
+		return state.structure[resource('lessons')][lessonId].isAvailable
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
@@ -202,28 +198,7 @@ const actions = {
 					}
 				)
 		})
-	},
-	checkUserRoles({commit, dispatch, getters}, roles) {
-		return new Promise((resolve, reject) => {
-			let toRemove = []
-
-			Object.keys(getters.groups).forEach((index) => {
-				let id = getters.groups[index],
-					group = getters.getGroup(id)
-				if (!group.required_role) {
-					return
-				}
-
-				if (roles.indexOf(group.required_role) === -1) {
-					toRemove.push({index, id, lessons: group.lessons})
-				}
-			})
-
-			toRemove.forEach((payload) => {
-				commit(types.COURSE_REMOVE_GROUP, payload)
-			})
-		})
-	},
+	}
 }
 
 export default {

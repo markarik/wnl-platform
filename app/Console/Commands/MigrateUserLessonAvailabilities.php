@@ -41,6 +41,7 @@ class MigrateUserLessonAvailabilities extends Command
 	{
 		$users = User::all();
 		$lessonAvalabilities = LessonAvailability::all();
+		$bar = $this->output->createProgressBar($users->count());
 
 		foreach($users as $user) {
 			foreach($lessonAvalabilities as $lesson) {
@@ -51,7 +52,10 @@ class MigrateUserLessonAvailabilities extends Command
 						'start_date' => $lesson->start_date
 					]);
 				} else if ($user->hasRole('edition-2-participant')) {
-					$lessonAccess = Lesson::find($lesson->lesson_id)->userAccess->where('user_id', $user->id)->first();
+					$lessonAccess = \DB::table('lesson_user_access')
+						->where('lesson_id', $lesson->lesson_id)
+						->where('user_id', $user->id)
+						->first();
 					if (is_null($lessonAccess)) {
 						if ($lesson->lesson_id === 17 && !$user->hasRole('workshop-participant')) {
 							continue;
@@ -62,7 +66,7 @@ class MigrateUserLessonAvailabilities extends Command
 								'start_date' => $lesson->start_date
 							]);
 						}
-					} else if ($lessonAccess->access) {
+					} else if (!empty($lessonAccess->access)) {
 						\DB::table('user_lesson_availabilities')->insert([
 							'user_id' => $user->id,
 							'lesson_id' => $lesson->lesson_id,
@@ -71,7 +75,10 @@ class MigrateUserLessonAvailabilities extends Command
 					}
 				}
 			}
+			$bar->advance();
 		}
+		$bar->finish();
+		print "\n";
 		return true;
 	}
 }

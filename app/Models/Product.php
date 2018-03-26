@@ -23,6 +23,14 @@ class Product extends Model
 		'access_end',
 	];
 
+	public function lessons()
+	{
+		return
+			$this->belongsToMany('App\Models\Lesson')
+				->withPivot('start_date')
+				->using('App\Models\LessonProduct');
+	}
+
 	public function scopeSlug($query, $slug)
 	{
 		return $query

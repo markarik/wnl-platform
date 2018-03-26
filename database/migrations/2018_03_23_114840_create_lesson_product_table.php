@@ -16,6 +16,7 @@ class CreateLessonProductTable extends Migration
         Schema::create('lesson_product', function (Blueprint $table) {
             $table->unsignedInteger('lesson_id')->index();
             $table->unsignedInteger('product_id')->index();
+            $table->timestamp('start_date')->nullable();
             $table->unique(['lesson_id', 'product_id']);
         });
     }

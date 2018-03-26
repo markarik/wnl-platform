@@ -41,5 +41,7 @@ class ArchiveCoursePlan
 			'user_id' => $this->user->id,
 			'data'    => $plan->toJson(),
 		]);
+
+		UserLessonAvailability::where('user_id', $this->user->id)->delete();
 	}
 }

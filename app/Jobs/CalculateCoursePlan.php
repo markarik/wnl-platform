@@ -44,6 +44,7 @@ class CalculateCoursePlan implements ShouldQueue
 	 */
 	public function handle()
 	{
+		dispatch_now(new ArchiveCoursePlan($this->user->id));
 
 	}
 }

@@ -62,7 +62,7 @@ class Lesson extends Model
 		return false;
 	}
 
-	public function startDate($editionId)
+	public function startDate($editionId = 1)
 	{
 		$user = \Auth::user();
 		if ($user) {

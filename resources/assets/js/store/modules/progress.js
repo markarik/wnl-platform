@@ -71,7 +71,7 @@ const getters = {
 		let lesson, lessons = []
 		for (var lessonId in state.courses[courseId].lessons) {
 			lesson = rootGetters['course/getLesson'](lessonId)
-			if (state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE) {
+			if (state.courses[courseId].lessons[lessonId].status === STATUS_COMPLETE && lesson.is_required) {
 				lessons.push(lesson)
 			}
 		}

@@ -29,13 +29,12 @@ class LessonTransformer extends ApiTransformer
 			'groups'       => $lesson->group_id,
 			'order_number' => $lesson->order_number,
 			'editions'     => $editionId,
+			'is_required'  => $lesson->is_required,
 		];
 
-		if ($editionId !== null) {
-			$data['isAccessible'] = $lesson->isAccessible($editionId);
-			$data['isAvailable'] = $lesson->isAvailable($editionId);
-			$data['startDate'] = $lesson->startDate($editionId);
-		}
+		$data['isAccessible'] = $lesson->isAccessible();
+		$data['isAvailable'] = $lesson->isAvailable();
+		$data['startDate'] = $lesson->startDate()->timestamp ?? null;
 
 		return $data;
 	}

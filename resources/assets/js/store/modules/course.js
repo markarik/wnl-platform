@@ -41,16 +41,10 @@ const getters = {
 	groups: state => state[resource('groups')],
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
-	getLessons: state => state.structure[resource('lessons')],
-	getAvailableLessons: (state, getters, rootState, rootGetters) => {
-		let lesson, lessons = []
-		for (var lessonId in getters.getLessons) {
-			lesson = getters.getLessons[lessonId]
-			if (lesson.isAvailable) {
-				lessons.push(lesson)
-			}
-		}
-		return lessons
+	getLessons: state => state.structure[resource('lessons')] || {},
+	userLessons: (state, getters, rootState, rootGetters) => {
+		return Object.values(getters.getLessons)
+			.filter(lesson => lesson.isAccessible);
 	},
 	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
 	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),

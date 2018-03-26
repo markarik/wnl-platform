@@ -9,7 +9,7 @@
 		</div>
 		<div class="groups">
 			<ul class="groups-list" v-if="structure">
-				<li class="group" v-for="(item, index) in groupsAreOpen">
+				<li class="group" v-for="(item, index) in groupsAreOpen" :key="index">
 					<span class="item-toggle" @click="toggleItem(item)">
 						<span class="icon is-small">
 							<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen(item)}"></i>
@@ -20,16 +20,15 @@
 						</span>
 					</span>
 					<ul class="subitems" v-if="isOpen(item)">
-						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}">
+						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}" :key="index">
 							<span class="subitem-name label">{{subitem.name}}</span>
 							<div class="datepicker">
 								<wnl-datepicker
 									:class="{'hasColorBackground': isEven(index)}"
-									:value="findStartDate(subitem.id)"
-									:lessonAvailabilityId="findLessonAvailabilityId(subitem.id)"
+									:value="getStartDate(subitem)"
 									:subitemId="subitem.id"
 									:config="startDateConfig"
-									@onChange="onStartDateChange"
+									@onChange="(payload) => onStartDateChange(payload, subitem.id)"
 								/>
 							</div>
 						</li>
@@ -100,7 +99,6 @@ export default {
 		return {
 			startDate: new Date(),
 			openGroups: [],
-			lessonAvailabilities: {},
 			startDateConfig: {
 				altInput: true,
 				disableMobile: true,
@@ -124,6 +122,7 @@ export default {
 		...mapGetters('course', [
 			'name',
 			'groups',
+			'getLessons',
 			'structure',
 		]),
 		groupsAreOpen() {
@@ -137,19 +136,15 @@ export default {
 				})
 			})
 		},
+		lessonAvailabilities() {
+			return Object.values(this.getLessons);
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('progress', ['setupCourse']),
-		findLessonAvailabilityId(id) {
-			return this.lessonAvailabilities.find((lesson) => {
-				return lesson.lesson_id === id
-			}).id
-		},
-		findStartDate(id) {
-			return new Date (this.lessonAvailabilities.find((lesson) => {
-				return lesson.lesson_id === id
-			}).start_date*1000)
+		getStartDate(item) {
+			return new Date (item.startDate*1000)
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1 ? true : false
@@ -168,10 +163,10 @@ export default {
 				}
 			}
 		},
-		onStartDateChange(payload) {
-			axios.put(getApiUrl(`user_lesson_availabilities/${payload.lessonAvailabilityId}`), {
-				date: payload.newDate
-			}).then((response) => {
+		onStartDateChange(newDate, lessonId) {
+			axios.put(getApiUrl(`user_lesson_availabilities/${lessonId}`), {
+				date: newDate
+			}).then(() => {
 				this.addAutoDismissableAlert(this.alertSuccess)
 				this.setupCourse()
 			}).catch((error) => {
@@ -180,10 +175,5 @@ export default {
 			})
 		}
 	},
-	mounted() {
-		axios.get(getApiUrl('user_lesson_availabilities')).then((response) => {
-			this.lessonAvailabilities = response.data
-		})
-	}
 }
 </script>

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
+use App\Models\UserLessonAvailability;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -15,6 +16,7 @@ class CalculateCoursePlan implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+	protected $user;
 	protected $lessons;
 	protected $startDate;
 	protected $endDate;
@@ -29,6 +31,7 @@ class CalculateCoursePlan implements ShouldQueue
 	 */
 	public function __construct($user, $lessons, $startDate, $endDate)
 	{
+		$this->user = $user;
 		$this->lessons = $lessons;
 		$this->startDate = $startDate;
 		$this->endDate = $endDate;
@@ -42,8 +45,10 @@ class CalculateCoursePlan implements ShouldQueue
 	public function handle()
 	{
 		// archive existing plan
-
-		
-
+		$plan = UserLessonAvailability::where('user_id', $this->user->id)->get();
+		\DB::table('archived_user_course_plans')->insert([
+			'user_id' => $this->user->id,
+			'data' => $plan->toJson(),
+		]);
 	}
 }

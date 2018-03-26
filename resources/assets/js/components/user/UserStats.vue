@@ -2,6 +2,18 @@
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}" v-if="currentUserStats">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
+				<div class="level-item big strong">
+					Twój Postęp
+				</div>
+			</div>
+		</div>
+		<div class="reset-progress">
+			<p v-t="'progress.reset.info'"/>
+			<button @click="resetProgress" class="button is-danger to-right">Wyczyść postęp w nauce</button>
+		</div>
+
+		<div class="level wnl-screen-title">
+			<div class="level-left">
 				<div class="level-item big strong">Statystyki</div>
 			</div>
 		</div>
@@ -17,10 +29,27 @@
 		<div>Liczba wątków: {{totalSocial}}</div>
 	</div>
 </template>
+<style lang="sass" scoped>
+.reset-progress
+	color: #4a4a4a
+	line-height: 1.8em
+	max-width: 80%
+	margin: 0 auto
+	text-align: center
+
+	p
+		text-align: left
+		margin-bottom: 1em
+	button
+		margin-bottom: 2em
+
+</style>
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import moment from 'moment'
+	import { swalConfig } from 'js/utils/swal'
+
 	export default {
 		name: 'UserStats',
 		computed: {
@@ -60,7 +89,29 @@
 			}
 		},
 		methods: {
-			...mapActions(['fetchCurrentUserStats'])
+			...mapActions(['fetchCurrentUserStats', 'toggleOverlay']),
+			...mapActions('progress', ['deleteProgress', 'setupCourse']),
+			resetProgress() {
+				this.$swal(swalConfig({
+					title: this.$t('progress.reset.title'),
+					text: this.$t('progress.reset.text'),
+					showCancelButton: true,
+					confirmButtonText: this.$t('ui.confirm.confirm'),
+					cancelButtonText: this.$t('ui.confirm.cancel'),
+					type: 'error',
+					confirmButtonClass: 'button is-danger',
+					reverseButtons: true
+				}))
+				.then(() => {
+					this.toggleOverlay({source: 'userStats', display: true})
+					return this.deleteProgress()
+				})
+				.then(() => Promise.all([this.fetchCurrentUserStats(), this.setupCourse()]))
+				.then(() => {
+					this.toggleOverlay({source: 'userStats', display: false})
+				})
+				.catch($wnl.logger.errorF)
+			}
 		},
 		mounted() {
 			this.fetchCurrentUserStats();

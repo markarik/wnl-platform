@@ -12,6 +12,7 @@ import { tasks } from './tasks'
 import { user } from './user'
 import { collections } from './collections'
 import { messages } from './messages'
+import { progress } from './progress'
 
 export {
 	dashboard,
@@ -27,5 +28,6 @@ export {
 	user,
 	tasks,
 	collections,
-	messages
+	messages,
+	progress
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Chat\PostPrivateRoom;
 use App\Http\Requests\Chat\PostPublicRoom;
+use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
 use Auth;
@@ -41,6 +42,7 @@ class ChatRoomsApiController extends ApiController
 			->groupBy('chat_rooms.id');
 
 		$data = $this->paginatedResponse($rooms, $request->limit, $request->page);
+		$data['log_pointer'] = ChatRoomUser::max('log_pointer');
 
 		return $this->respondOk($data);
 	}
@@ -85,6 +87,8 @@ class ChatRoomsApiController extends ApiController
 		}
 
 		$data = $this->transform($room);
+
+		$data['log_pointer'] = ChatMessage::max('time');
 
 		return $this->respondOk($data);
 	}

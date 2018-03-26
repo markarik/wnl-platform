@@ -4,7 +4,7 @@
 			<wnl-avatar
 				:fullName="profile.display_name"
 				:url="profile.avatar"
-				size="large">
+				size="medium">
 			</wnl-avatar>
 		</figure>
 		<div class="media-content">
@@ -42,14 +42,24 @@
 		&:hover, &.active-in-route
 			background-color: $color-background-lightest-gray
 
+		.media-left
+			display: flex
+			align-items: center
+
 		.media-content
 			min-width: 0
 			overflow: hidden
+			display: flex
+			align-items: center
+
+			.content
+				flex: 1
 
 			*
 				font-weight: $font-weight-regular
 
 			.conversation-meta
+				line-height: $line-height-minus
 				display: flex
 				overflow: hidden
 				justify-content: space-between
@@ -72,6 +82,7 @@
 				font-size: $font-size-minus-1
 
 			.conversation-message
+				line-height: $line-height-minus
 				min-width: 0
 				flex: 1 1 0%
 				overflow: hidden

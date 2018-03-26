@@ -107,12 +107,13 @@ export default {
 				locale: pl
 			},
 			alertSuccess: {
-				text: $t('user.lessonsAvailabilities.alertSuccess'),
+
+				text: this.$t('user.lessonAvailabilities.alertSuccess'),
 				type: 'success',
 				timeout: 1000,
 			},
 			alertError: {
-				text: $t('user.lessonsAvailabilities.alertError'),
+				text: this.$t('user.lessonAvailabilities.alertError'),
 				type: 'error',
 				timeout: 1000,
 			}

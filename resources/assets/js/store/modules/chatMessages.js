@@ -287,6 +287,9 @@ const actions = {
 					break;
 			}
 		})
+	},
+	[types.SOCKET_CONNECTION_RECONNECTED]({dispatch}) {
+		dispatch('setConnectionStatus', true)
 	}
 }
 

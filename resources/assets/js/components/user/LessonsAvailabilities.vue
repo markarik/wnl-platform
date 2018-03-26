@@ -3,7 +3,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Dostępność lekcji
+					{{ $t('user.lessonAvailabilities.header')}}
 				</div>
 			</div>
 		</div>
@@ -105,6 +105,16 @@ export default {
 				altInput: true,
 				disableMobile: true,
 				locale: pl
+			},
+			alertSuccess: {
+				text: $t('user.lessonAvailabilities.alertSuccess'),
+				type: 'success',
+				timeout: 1000,
+			},
+			alertError: {
+				text: $t('user.lessonAvailabilities.alertError'),
+				type: 'error',
+				timeout: 1000,
 			}
 		}
 	},
@@ -160,12 +170,10 @@ export default {
 			axios.put(getApiUrl(`user_lesson_availabilities/${payload.lessonAvailabilityId}`), {
 				date: payload.newDate
 			}).then(() => {
-				let payload = {
-					text: 'Udalo się zmienić datę! :)',
-					type: 'success',
-					timeout: 1000,
-				}
-				this.addAutoDismissableAlert(payload)
+				this.addAutoDismissableAlert(this.alertSuccess)
+			}).catch((error) => {
+				$wnl.logger.error(error)
+				this.addAutoDismissableAlert(this.alertError)
 			})
 		}
 	},

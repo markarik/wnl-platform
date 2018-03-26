@@ -106,16 +106,15 @@ export default {
 				locale: pl
 			},
 			alertSuccess: {
-
 				text: this.$t('user.lessonsAvailabilities.alertSuccess'),
 				type: 'success',
-				timeout: 1000,
+				timeout: 2000,
 			},
 			alertError: {
 				text: this.$t('user.lessonsAvailabilities.alertError'),
 				type: 'error',
-				timeout: 1000,
-			}
+				timeout: 2000,
+			},
 		}
 	},
 	computed: {

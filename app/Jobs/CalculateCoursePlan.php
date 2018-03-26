@@ -44,11 +44,6 @@ class CalculateCoursePlan implements ShouldQueue
 	 */
 	public function handle()
 	{
-		// archive existing plan
-		$plan = UserLessonAvailability::where('user_id', $this->user->id)->get();
-		\DB::table('archived_user_course_plans')->insert([
-			'user_id' => $this->user->id,
-			'data' => $plan->toJson(),
-		]);
+
 	}
 }

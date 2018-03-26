@@ -3,7 +3,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.lessonAvailabilities.header')}}
+					{{ $t('user.lessonsAvailabilities.header')}}
 				</div>
 			</div>
 		</div>
@@ -107,12 +107,12 @@ export default {
 				locale: pl
 			},
 			alertSuccess: {
-				text: $t('user.lessonAvailabilities.alertSuccess'),
+				text: $t('user.lessonsAvailabilities.alertSuccess'),
 				type: 'success',
 				timeout: 1000,
 			},
 			alertError: {
-				text: $t('user.lessonAvailabilities.alertError'),
+				text: $t('user.lessonsAvailabilities.alertError'),
 				type: 'error',
 				timeout: 1000,
 			}

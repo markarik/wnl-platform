@@ -16,18 +16,13 @@ class UserLessonAvailabilitiesApiController extends ApiController
 		$this->resourceName = config('papi.resources.user-lesson-availabilities');
 	}
 
-	public function getUserAvailabileLessons(Request $request)
-	{
-		$user = \Auth::user();
-		$lessons = UserLessonAvailability::where('user_id', $user->id)->get();
-		$data = $this->transform($lessons);
-
-		return $this->respondOk($data);
-	}
-
 	public function put(UpdateUserLessonAvailability $request)
 	{
-		$userLessonAvailability = UserLessonAvailability::find($request->route('id'));
+		$user = \Auth::user();
+		$userLessonAvailability = UserLessonAvailability::where([
+			'lesson_id' => $request->id,
+			'user_id' => $user->id
+		])->first();
 
 		if (!$userLessonAvailability) {
 			return $this->respondNotFound();

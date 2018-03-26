@@ -71,7 +71,7 @@
 				this.date = dateStr
 			},
 			onChange(payload) {
-				this.$emit('onChange', {newDate: payload[0]})
+				this.$emit('onChange', payload)
 			},
 			redraw(newConfig) {
 				this.datepicker.config = Object.assign(this.datepicker.config, newConfig)

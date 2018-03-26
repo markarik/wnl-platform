@@ -190,7 +190,7 @@ const actions = {
 			})
 		})
 	},
-	setStructure({commit, rootGetters}, courseId) {
+	setStructure({commit, rootGetters}, courseId = 1) {
 		return new Promise((resolve, reject) => {
 			axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
 				.then(response => {

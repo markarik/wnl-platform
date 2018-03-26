@@ -127,7 +127,7 @@
 		},
 		methods: {
 			...mapActions(['toggleChat', 'saveMentions']),
-			...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages']),
+			...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages', 'updateFromEventLog']),
 			changeRoom(room) {
 				this.currentRoom = room
 				this.joinRoom()
@@ -174,18 +174,21 @@
 
 				this.loaded = false
 				const {messageTime, roomId} = this.$route.query
+				let pointer
 
 				this.createPublicRoom({slug: this.currentRoom.channel})
 					.then(room => {
 						this.currentRoom.id = room.id
+						pointer = room.log_pointer
 						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId, beforeLimit: 10}})
 					})
 					.then(({messages, pagination}) => {
 						this.messages = messages
 						this.pagination = pagination
-						return this.$socketJoinRoom(this.currentRoom.id)
+						return this.$socketJoinRoom(this.currentRoom.id, pointer)
 					})
 					.then((data) => {
+						this.updateFromEventLog(data.events)
 						this.loaded = true
 						nextTick(() => {
 							const messageId = this.$route.query.messageId

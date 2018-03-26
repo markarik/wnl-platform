@@ -14,6 +14,7 @@
 			<wnl-private-chat
 				:room="currentRoom"
 				:users="currentRoomUsers"
+				:messagesLoaded="messagesLoaded"
 				v-if="currentRoom.id"
 			></wnl-private-chat>
 		</div>
@@ -57,7 +58,7 @@
 			return {
 				currentRoom: {},
 				currentRoomUsers: [],
-				userSearchVisible: false,
+				messagesLoaded: true,
 			}
 		},
 		components: {
@@ -86,6 +87,7 @@
 			}
 		},
 		methods: {
+			...mapActions(['toggleOverlay']),
 			...mapActions('chatMessages', ['markRoomAsRead', 'fetchRoomMessages']),
 			switchRoom({room, users}){
 				this.currentRoom = room
@@ -109,12 +111,13 @@
 					context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT
 				}
 
+				this.messagesLoaded = false
 				this.fetchRoomMessages({
 					room,
 					limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,
 					context,
 					append: true
-				})
+				}).then(() => this.messagesLoaded = true)
 			},
 			openRoomById(roomId) {
 				const room = this.getRoomById(roomId)
@@ -151,9 +154,11 @@
 			},
 			ready(newValue, oldValue) {
 				!oldValue && newValue && this.openInitialRoom()
+				newValue && this.toggleOverlay({source: 'messagesDashboard', display: false})
 			}
 		},
 		mounted() {
+			!this.ready && this.toggleOverlay({source: 'messagesDashboard', display: true})
 			this.ready && this.openInitialRoom()
 		}
 	}

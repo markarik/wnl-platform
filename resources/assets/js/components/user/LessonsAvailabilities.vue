@@ -3,13 +3,13 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Dostępność lekcji
+					{{ $t('user.lessonsAvailabilities.header')}}
 				</div>
 			</div>
 		</div>
 		<div class="groups">
 			<ul class="groups-list" v-if="structure">
-				<li class="group" v-for="(item, index) in groupsAreOpen">
+				<li class="group" v-for="(item, index) in groupsAreOpen" :key="index">
 					<span class="item-toggle" @click="toggleItem(item)">
 						<span class="icon is-small">
 							<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen(item)}"></i>
@@ -20,11 +20,16 @@
 						</span>
 					</span>
 					<ul class="subitems" v-if="isOpen(item)">
-						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}">
-							<span>{{subitem.id}}</span>
+						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}" :key="index">
 							<span class="subitem-name label">{{subitem.name}}</span>
 							<div class="datepicker">
-								<wnl-lesson-availability :class="{'hasColorBackground': isEven(index)}" :startDate="findStartDate(subitem.id)"/>
+								<wnl-datepicker
+									:class="{'hasColorBackground': isEven(index)}"
+									:value="getStartDate(subitem)"
+									:subitemId="subitem.id"
+									:config="startDateConfig"
+									@onChange="(payload) => onStartDateChange(payload, subitem.id)"
+								/>
 							</div>
 						</li>
 					</ul>
@@ -78,21 +83,38 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
-import LessonAvailability from 'js/components/user/LessonAvailability'
+import Datepicker from 'js/components/global/Datepicker'
+import { pl } from 'flatpickr/dist/l10n/pl.js'
+import { isEmpty } from 'lodash'
+import moment from 'moment'
 
 export default {
 	name: 'LessonsAvailabilities',
 	components: {
-		'wnl-lesson-availability': LessonAvailability,
+		'wnl-datepicker': Datepicker,
 	},
 	data() {
 		return {
 			startDate: new Date(),
 			openGroups: [],
-			lessonAvailabilities: {},
+			startDateConfig: {
+				altInput: true,
+				disableMobile: true,
+				locale: pl
+			},
+			alertSuccess: {
+				text: this.$t('user.lessonsAvailabilities.alertSuccess'),
+				type: 'success',
+				timeout: 2000,
+			},
+			alertError: {
+				text: this.$t('user.lessonsAvailabilities.alertError'),
+				type: 'error',
+				timeout: 2000,
+			},
 		}
 	},
 	computed: {
@@ -100,6 +122,7 @@ export default {
 		...mapGetters('course', [
 			'name',
 			'groups',
+			'getLessons',
 			'structure',
 		]),
 		groupsAreOpen() {
@@ -112,13 +135,14 @@ export default {
 					})
 				})
 			})
-		},
+		}
 	},
 	methods: {
-		findStartDate(id) {
-			return new Date (this.lessonAvailabilities.find((lesson) => {
-				return lesson.lesson_id === id
-			}).start_date*1000)
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('course', ['setLessonAvailabilityStatus']),
+		...mapActions(['toggleOverlay']),
+		getStartDate(item) {
+			return new Date (item.startDate*1000)
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1 ? true : false
@@ -137,11 +161,24 @@ export default {
 				}
 			}
 		},
+		onStartDateChange(payload, lessonId) {
+			const diff = moment().startOf('day').diff(payload[0], 'days')
+
+			if (diff < 0) {
+				this.setLessonAvailabilityStatus({lessonId: lessonId, status: false})
+			} else {
+				this.setLessonAvailabilityStatus({lessonId: lessonId, status: true})
+			}
+
+			axios.put(getApiUrl(`user_lesson_availabilities/${lessonId}`), {
+				date: payload[0]
+			}).then(() => {
+				this.addAutoDismissableAlert(this.alertSuccess)
+			}).catch((error) => {
+				$wnl.logger.error(error)
+				this.addAutoDismissableAlert(this.alertError)
+			})
+		}
 	},
-	mounted() {
-		axios.get(getApiUrl('user_lesson_availabilities')).then((response) => {
-			this.lessonAvailabilities = response.data
-		})
-	}
 }
 </script>

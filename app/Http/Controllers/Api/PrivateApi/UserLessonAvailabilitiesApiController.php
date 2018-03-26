@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Api\ApiController;
 use Carbon\Carbon;
+use Cache;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use App\Http\Requests\Course\UpdateUserLessonAvailability;
 use App\Models\UserLessonAvailability;
 
 class UserLessonAvailabilitiesApiController extends ApiController
@@ -15,12 +17,25 @@ class UserLessonAvailabilitiesApiController extends ApiController
 		$this->resourceName = config('papi.resources.user-lesson-availabilities');
 	}
 
-	public function getUserAvailabileLessons(Request $request)
+	public function put(UpdateUserLessonAvailability $request)
 	{
 		$user = \Auth::user();
-		$lessons = UserLessonAvailability::where('user_id', $user->id)->get();
-		$data = $this->transform($lessons);
+		$userLessonAvailability = UserLessonAvailability::where([
+			'lesson_id' => $request->id,
+			'user_id' => $user->id
+		])->first();
 
-		return $this->respondOk($data);
+
+		if (!$userLessonAvailability) {
+			return $this->respondNotFound();
+		}
+
+		$userLessonAvailability->update([
+			'start_date' => Carbon::parse($request->input('date')),
+			]);
+
+		Cache::tags("user-$user->id")->flush();
+
+		return $this->respondOk();
 	}
 }

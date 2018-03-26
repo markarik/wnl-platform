@@ -2,14 +2,14 @@ import * as io from 'socket.io-client'
 import {envValue} from 'js/utils/env'
 import { SOCKET_CONNECTION_ERROR, SOCKET_CONNECTION_RECONNECTED } from '../store/mutations-types';
 
-export const SOCKET_EVENT_SEND_MESSAGE = 'send-message'
-export const SOCKET_EVENT_MESSAGE_PROCESSED = 'message-processed'
-export const SOCKET_EVENT_USER_SENT_MESSAGE = 'user-sent-message'
-export const SOCKET_EVENT_JOIN_ROOM = 'join-room'
-export const SOCKET_EVENT_JOIN_ROOM_SUCCESS = 'join-room-success'
-export const SOCKET_EVENT_LEAVE_ROOM = 'leave-room'
-export const SOCKET_EVENT_MARK_ROOM_AS_READ = 'mark-room-as-read'
-export const SOCKET_EVENT_MARK_ROOM_AS_READ_SUCCESS = 'mark-room-as-read-success'
+export const SOCKET_EVENT_SEND_MESSAGE = 'sendMessage'
+export const SOCKET_EVENT_MESSAGE_PROCESSED = 'messageProcessed'
+export const SOCKET_EVENT_USER_SENT_MESSAGE = 'userSentMessage'
+export const SOCKET_EVENT_JOIN_ROOM = 'joinRoom'
+export const SOCKET_EVENT_JOIN_ROOM_SUCCESS = 'joinRoomSuccess'
+export const SOCKET_EVENT_LEAVE_ROOM = 'leaveRoom'
+export const SOCKET_EVENT_MARK_ROOM_AS_READ = 'markRoomAsRead'
+export const SOCKET_EVENT_MARK_ROOM_AS_READ_SUCCESS = 'markRoomAsReadSuccess'
 
 const createEventsQueue = () => {
     const events = []
@@ -75,10 +75,10 @@ const WnlSocket = {
             socket.off(event, listener)
         }
 
-        Vue.prototype.$socketJoinRoom = (room) => {
+        Vue.prototype.$socketJoinRoom = (room, pointer = null) => {
             return new Promise((resolve, reject) => {
                 eventsQueue.push(() => {
-                    socket.emit(SOCKET_EVENT_JOIN_ROOM, {room})
+                    socket.emit(SOCKET_EVENT_JOIN_ROOM, {room, pointer})
 
                     const timerId = setTimeout(() => {
                         $wnl.logger.error('Failed to connect to room', room)

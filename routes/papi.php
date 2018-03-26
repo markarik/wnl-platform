@@ -58,7 +58,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	// LessonsAvailabilities
 	Route::get("{$r['user-lesson-availabilities']}", 'UserLessonAvailabilitiesApiController@getUserAvailabileLessons');
-	// Route::put("{$r['lessons-availabilities']}/{userId}", 'UserLessonAvailabilitiesApiController@put');
+	Route::put("{$r['user-lesson-availabilities']}/{id}", 'UserLessonAvailabilitiesApiController@put');
 
 	// Screens
 	Route::post("{$r['screens']}", 'ScreensApiController@post');
@@ -113,6 +113,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@getCourse');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@putCourse');
+	Route::delete("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@deleteCourse');
 
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@getLesson');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@putLesson');

@@ -18,7 +18,7 @@
 			</p>
 		</div> --}}
 		<div class="columns is-hidden-mobile has-text-centered">
-			<div class="column">
+			{{-- <div class="column">
 				@if(!$onsite->available)
 					<div class="notification has-text-centered strong">Brak miejsc :(</div>
 				@else
@@ -37,6 +37,11 @@
 					</a>
 					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
 				@endif
+			</div> --}}
+			<div class="column">
+				<div class="notification has-text-centered strong">
+					Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+				</div>
 			</div>
 		</div>
 		<div class="columns">
@@ -86,7 +91,7 @@
 			</div>
 		</div>
 		<div class="columns is-hidden-mobile has-text-centered">
-			<div class="column">
+			{{-- <div class="column">
 				@if(!$onsite->available)
 					<div class="notification has-text-centered strong">Brak miejsc :(</div>
 				@else
@@ -105,6 +110,11 @@
 				</a>
 				<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
 				@endif
+			</div> --}}
+			<div class="column">
+				<div class="notification has-text-centered strong">
+					Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+				</div>
 			</div>
 		</div>
 	</div>

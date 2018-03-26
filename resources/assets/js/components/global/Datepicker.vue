@@ -42,7 +42,7 @@
 				type: Object,
 			},
 			value: String|Date,
-			withBorder: Boolean,
+			withBorder: Boolean
 		},
 		data() {
 			return {

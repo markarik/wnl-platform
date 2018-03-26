@@ -111,9 +111,9 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\QnaAnswer');
 	}
 
-	public function lessonsAccess()
+	public function lessonsAvailability()
 	{
-		return $this->belongsToMany('App\Models\Lesson', 'lesson_user_access');
+		return $this->belongsToMany('App\Models\Lesson', 'user_lesson_availabilities');
 	}
 
 	public function reactables() {

@@ -43,7 +43,7 @@
 		</article>
 	</div>
 </template>
-<style lang="sass" rel="stylesheet/sass" >
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.media
@@ -69,6 +69,7 @@
 	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
+	import { nextTick } from 'vue'
 	import _ from 'lodash';
 
 	export default{
@@ -219,7 +220,9 @@
 		},
 		watch: {
 			'room.id'() {
-				if (this.autofocusOnRoomChange && this.room.id) this.quillEditor.quill.focus()
+				if (this.autofocusOnRoomChange && this.room.id) {
+					nextTick(() => this.quillEditor.quill.focus())
+				}
 			}
 		}
 	}

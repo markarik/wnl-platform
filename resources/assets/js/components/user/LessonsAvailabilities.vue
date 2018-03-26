@@ -108,12 +108,12 @@ export default {
 			},
 			alertSuccess: {
 
-				text: this.$t('user.lessonAvailabilities.alertSuccess'),
+				text: this.$t('user.lessonsAvailabilities.alertSuccess'),
 				type: 'success',
 				timeout: 1000,
 			},
 			alertError: {
-				text: this.$t('user.lessonAvailabilities.alertError'),
+				text: this.$t('user.lessonsAvailabilities.alertError'),
 				type: 'error',
 				timeout: 1000,
 			}

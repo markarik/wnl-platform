@@ -89,6 +89,7 @@ import { getApiUrl } from 'js/utils/env'
 import Datepicker from 'js/components/global/Datepicker'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
 import { isEmpty } from 'lodash'
+import moment from 'moment'
 
 export default {
 	name: 'LessonsAvailabilities',
@@ -135,14 +136,12 @@ export default {
 					})
 				})
 			})
-		},
-		lessonAvailabilities() {
-			return Object.values(this.getLessons);
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('course', ['setStructure']),
+		...mapActions('course', ['setLessonAvailabilityStatus']),
+		...mapActions(['toggleOverlay']),
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
 		},
@@ -164,11 +163,18 @@ export default {
 			}
 		},
 		onStartDateChange(payload, lessonId) {
+			const diff = moment().startOf('day').diff(payload[0], 'days')
+
+			if (diff < 0) {
+				this.setLessonAvailabilityStatus({lessonId: lessonId, status: false})
+			} else {
+				this.setLessonAvailabilityStatus({lessonId: lessonId, status: true})
+			}
+
 			axios.put(getApiUrl(`user_lesson_availabilities/${lessonId}`), {
 				date: payload[0]
 			}).then(() => {
 				this.addAutoDismissableAlert(this.alertSuccess)
-				this.setStructure()
 			}).catch((error) => {
 				$wnl.logger.error(error)
 				this.addAutoDismissableAlert(this.alertError)

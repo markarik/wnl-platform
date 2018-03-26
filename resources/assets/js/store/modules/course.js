@@ -170,6 +170,9 @@ const mutations = {
 			destroy(state.structure.lessons, lesson)
 		})
 	},
+	[types.COURSE_SET_LESSON_AVAILABILITY] (state, payload) {
+		set(state.structure.lessons[payload.lessonId], 'isAvailable', payload.status)
+	}
 }
 
 // Actions
@@ -203,7 +206,10 @@ const actions = {
 					}
 				)
 		})
-	}
+	},
+	setLessonAvailabilityStatus({commit}, payload) {
+		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload)
+	},
 }
 
 export default {

@@ -171,7 +171,8 @@ class SlidesApiController extends ApiController
 
 		$query = $this->buildQuery(
 			$escapedQuery,
-			$onlyAvailable
+			$onlyAvailable,
+			$user
 		);
 
 		$raw = Slide::searchRaw($query);
@@ -179,7 +180,7 @@ class SlidesApiController extends ApiController
 		return $this->respondOk($raw);
 	}
 
-	protected function buildQuery($query, $onlyAvailable)
+	protected function buildQuery($query, $onlyAvailable, $user)
 	{
 		// Right now it's tightly coupled with slides
 		// next step - decouple
@@ -269,9 +270,15 @@ class SlidesApiController extends ApiController
 		}
 
 		if ($onlyAvailable) {
-			$params['body']['query']['bool']['filter'][] = [
-				'term' => ['context.lesson.isAvailable' => true],
-			];
+			$usersLessons = $user->lessonsAvailability->filter(function($lesson) {
+				return $lesson->isAvailable();
+			});
+
+			foreach($usersLessons as $lesson) {
+				$params['body']['query']['bool']['filter'][] = [
+					'term' => ['context.lesson.id' => $lesson->id],
+				];
+			}
 		}
 
 		return $params;

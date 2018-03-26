@@ -272,13 +272,11 @@ class SlidesApiController extends ApiController
 		if ($onlyAvailable) {
 			$usersLessons = $user->lessonsAvailability->filter(function($lesson) {
 				return $lesson->isAvailable();
-			});
+			})->pluck('id')->toArray();
 
-			foreach($usersLessons as $lesson) {
-				$params['body']['query']['bool']['filter'][] = [
-					'term' => ['context.lesson.id' => $lesson->id],
-				];
-			}
+			$params['body']['query']['bool']['must'] = [
+				['terms' => ['context.lesson.id' => $usersLessons]]
+			];
 		}
 
 		return $params;

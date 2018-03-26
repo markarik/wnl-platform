@@ -140,6 +140,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('progress', ['setupCourse']),
 		findLessonAvailabilityId(id) {
 			return this.lessonAvailabilities.find((lesson) => {
 				return lesson.lesson_id === id
@@ -170,8 +171,9 @@ export default {
 		onStartDateChange(payload) {
 			axios.put(getApiUrl(`user_lesson_availabilities/${payload.lessonAvailabilityId}`), {
 				date: payload.newDate
-			}).then(() => {
+			}).then((response) => {
 				this.addAutoDismissableAlert(this.alertSuccess)
+				this.setupCourse()
 			}).catch((error) => {
 				$wnl.logger.error(error)
 				this.addAutoDismissableAlert(this.alertError)

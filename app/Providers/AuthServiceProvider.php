@@ -25,6 +25,7 @@ use App\Policies\Qna\QnaQuestionPolicy;
 use App\Policies\Task\TaskPolicy;
 use App\Policies\User\UserAddressPolicy;
 use App\Policies\User\UserCourseProgressPolicy;
+use App\Policies\User\UserLessonPolicy;
 use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
 use App\Policies\User\UserSettingsPolicy;
@@ -51,6 +52,7 @@ class AuthServiceProvider extends ServiceProvider
 		ChatRoom::class        => ChatRoomPolicy::class,
 		Notification::class    => NotificationPolicy::class,
 		Task::class            => TaskPolicy::class,
+		UserLesson::class      => UserLessonPolicy::class,
 		UserCourseProgress::class => UserCourseProgressPolicy::class
 	];
 

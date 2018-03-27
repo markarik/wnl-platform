@@ -16,9 +16,17 @@ class CreateUserLesson extends Migration
 		Schema::create('user_lesson', function (Blueprint $table) {
 			$table->increments('id');
 			$table->unsignedInteger('user_id')->index();
-			$table->unsignedInteger('lesson_id');
+			$table->unsignedInteger('lesson_id')->index();
 			$table->timestamp('start_date')->nullable();
 			$table->timestamps();
+
+			$table->unique(
+				[
+					'user_id',
+					'lesson_id',
+				],
+				'user_lesson'
+			);
 		});
 	}
 

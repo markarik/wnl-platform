@@ -23,7 +23,7 @@ class Lesson extends Model
 
 	public function userAvailability()
 	{
-		return $this->hasMany('App\Models\UserLessonAvailability');
+		return $this->hasMany('App\Models\UserLesson');
 	}
 
 	public function tags()

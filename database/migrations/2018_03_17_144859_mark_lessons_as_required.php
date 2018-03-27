@@ -7,26 +7,26 @@ use Illuminate\Database\Migrations\Migration;
 class MarkLessonsAsRequired extends Migration
 {
 	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
+	* Run the migrations.
+	*
+	* @return void
+	*/
 	public function up()
 	{
 		Schema::table('lessons', function (Blueprint $table) {
 			$table->boolean('is_required')->nullable()->after('order_number');
-        });
+		});
 	}
 
 	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
+	* Reverse the migrations.
+	*
+	* @return void
+	*/
 	public function down()
 	{
 		Schema::table('lessons', function (Blueprint $table) {
-            $table->dropColumn(['is_required']);
-        });
+			$table->dropColumn(['is_required']);
+		});
 	}
 }

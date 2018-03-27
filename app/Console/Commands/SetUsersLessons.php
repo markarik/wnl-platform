@@ -7,21 +7,21 @@ use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-class MigrateUserLessonAvailabilities extends Command
+class SetUsersLessons extends Command
 {
 	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'users:set-lessons-availabilities';
+	protected $signature = 'user:set-user-lessons';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Migrate data from lessons_availabilities table and attach the avalability with user';
+	protected $description = 'Migrate data from lessons_availabilities table and attach the lesson\'s avalability with a user';
 
 	/**
 	 * Create a new command instance.
@@ -46,7 +46,7 @@ class MigrateUserLessonAvailabilities extends Command
 		foreach($users as $user) {
 			foreach($lessonAvalabilities as $lesson) {
 				if ($user->isAdmin() || $user->hasRole('moderator')) {
-					\DB::table('user_lesson_availabilities')->insert([
+					\DB::table('user_lesson')->insert([
 						'user_id' => $user->id,
 						'lesson_id' => $lesson->lesson_id,
 						'start_date' => $lesson->start_date
@@ -60,14 +60,14 @@ class MigrateUserLessonAvailabilities extends Command
 						if ($lesson->lesson_id === 17 && !$user->hasRole('workshop-participant')) {
 							continue;
 						} else {
-							\DB::table('user_lesson_availabilities')->insert([
+							\DB::table('user_lesson')->insert([
 								'user_id' => $user->id,
 								'lesson_id' => $lesson->lesson_id,
 								'start_date' => $lesson->start_date
 							]);
 						}
 					} else if (!empty($lessonAccess->access)) {
-						\DB::table('user_lesson_availabilities')->insert([
+						\DB::table('user_lesson')->insert([
 							'user_id' => $user->id,
 							'lesson_id' => $lesson->lesson_id,
 							'start_date' => $lesson->start_date

@@ -94,8 +94,9 @@
 									color: $color-gray-dimmed
 									font-size: $font-size-plus-1
 									text-align: center
-									font-weight: 900
+									cursor: not-allowed
 									min-width: 260px
+									// font-style: italic
 
 </style>
 

@@ -9,7 +9,7 @@
 		</div>
 		<div class="groups">
 			<ul class="groups-list" v-if="structure">
-				<li class="group" v-for="(item, index) in groupsAreOpen" :key="index">
+				<li class="group" v-for="(item, index) in groupsWithLessons" :key="index">
 					<span class="item-toggle" @click="toggleItem(item)">
 						<span class="icon is-small">
 							<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen(item)}"></i>
@@ -118,22 +118,22 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['currentUserRoles']),
+		...mapGetters(['currentUserId']),
 		...mapGetters('course', [
 			'name',
 			'groups',
 			'getLessons',
 			'structure',
 		]),
-		groupsAreOpen() {
+		groupsWithLessons() {
 			return this.groups.map(groupId => {
 				const group = this.structure[resource('groups')][groupId]
-				return Object.assign({}, {
+				return {
 					...group,
 					lessons: group[resource('lessons')].map(lessonId => {
 						return this.structure[resource('lessons')][lessonId]
 					})
-				})
+				}
 			})
 		}
 	},
@@ -145,32 +145,29 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		isOpen(item) {
-			return this.openGroups.indexOf(item.id) > -1 ? true : false
+			return this.openGroups.indexOf(item.id) > -1
 		},
 		isEven(index) {
-			return index % 2 === 0 ? true : false
+			return index % 2 === 0
 		},
 
 		toggleItem(item) {
 			if (this.openGroups.indexOf(item.id) === -1) {
 				this.openGroups.push(item.id)
 			} else {
-				var index = this.openGroups.indexOf(item.id)
+				const index = this.openGroups.indexOf(item.id)
 				if (index > -1) {
 					this.openGroups.splice(index, 1)
 				}
 			}
 		},
 		onStartDateChange(payload, lessonId) {
-			const diff = moment().startOf('day').diff(payload[0], 'days')
+			const date = payload[0]
+			const diff = moment().startOf('day').diff(date, 'days')
 
-			if (diff < 0) {
-				this.setLessonAvailabilityStatus({lessonId: lessonId, status: false})
-			} else {
-				this.setLessonAvailabilityStatus({lessonId: lessonId, status: true})
-			}
+			this.setLessonAvailabilityStatus({lessonId, status: diff >= 0})
 
-			axios.put(getApiUrl(`user_lesson_availabilities/${lessonId}`), {
+			axios.put(getApiUrl(`user_lesson/${this.currentUserId}/${lessonId}`), {
 				date: payload[0]
 			}).then(() => {
 				this.addAutoDismissableAlert(this.alertSuccess)

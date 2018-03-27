@@ -21,15 +21,21 @@
 					</span>
 					<ul class="subitems" v-if="isOpen(item)">
 						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}" :key="index">
-							<span class="subitem-name label">{{subitem.name}}</span>
-							<div class="datepicker">
-								<wnl-datepicker
-									:class="{'hasColorBackground': isEven(index)}"
-									:value="getStartDate(subitem)"
-									:subitemId="subitem.id"
-									:config="startDateConfig"
-									@onChange="(payload) => onStartDateChange(payload, subitem.id)"
-								/>
+							<span class="subitem-name label" :class="{'is-grayed-out': !subitem.isAccessible}">{{subitem.name}}</span>
+							<div class="subitem-left-side">
+								<div class="not-accesible" v-if="!subitem.isAccessible">
+									Lekcja niedostępna
+								</div>
+								<div class="datepicker" v-else>
+									<wnl-datepicker
+										:class="{'hasColorBackground': isEven(index)}"
+										:value="getStartDate(subitem)"
+										:subitemId="subitem.id"
+										:config="startDateConfig"
+										@onChange="(payload) => onStartDateChange(payload, subitem.id)"
+									/>
+								</div>
+
 							</div>
 						</li>
 					</ul>
@@ -71,14 +77,25 @@
 							display: flex
 							flex-direction: row-reverse
 							justify-content: space-between
+							min-height: 35px
 							&.isEven
-								background-color: $color-background-lighter-gray
+								background-color: $color-background-lightest-gray
 							.subitem-name
 								align-self: flex-end
 								width: 65%
 								color: $color-gray
-							.datepicker
+								&.is-grayed-out
+									color: $color-gray-dimmed
+							.subitem-left-side
 								margin-right: $margin-small
+								display: flex
+								align-items: center
+								.not-accesible
+									color: $color-gray-dimmed
+									font-size: $font-size-plus-1
+									text-align: center
+									font-weight: 900
+									min-width: 260px
 
 </style>
 

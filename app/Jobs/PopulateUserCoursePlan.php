@@ -48,6 +48,6 @@ class PopulateUserCoursePlan implements ShouldQueue
 			];
 		}
 
-		\DB::table('user_lesson_availabilities')->insert($availabilities);
+		\DB::table('user_lesson')->insert($availabilities);
 	}
 }

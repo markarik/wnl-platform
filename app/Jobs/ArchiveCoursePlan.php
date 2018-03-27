@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
-use App\Models\UserLessonAvailability;
+use App\Models\UserLesson;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
 
@@ -31,7 +31,7 @@ class ArchiveCoursePlan
 	 */
 	public function handle()
 	{
-		$plan = UserLessonAvailability::where('user_id', $this->user->id)
+		$plan = UserLesson::where('user_id', $this->user->id)
 			->get()
 			->map(function ($model) {
 				return array_except($model->toArray(), ['id', 'updated_at']);
@@ -42,6 +42,6 @@ class ArchiveCoursePlan
 			'data'    => $plan->toJson(),
 		]);
 
-		UserLessonAvailability::where('user_id', $this->user->id)->delete();
+		UserLesson::where('user_id', $this->user->id)->delete();
 	}
 }

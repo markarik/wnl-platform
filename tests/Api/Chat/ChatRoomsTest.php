@@ -4,6 +4,7 @@
 namespace Tests\Api\Chat;
 
 
+use App\Http\Middleware\Subscription;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
 use App\Models\Permission;
@@ -31,6 +32,7 @@ class ChatRoomsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($userOne)
+			->withoutMiddleware(Subscription::class)
 			->json('POST', $this->url('/chat_rooms/.createPrivateRoom'), $data);
 
 		$response
@@ -74,6 +76,7 @@ class ChatRoomsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($userOne)
+			->withoutMiddleware(Subscription::class)
 			->json('POST', $this->url('/chat_rooms/.createPrivateRoom'), $data);
 
 		$response
@@ -123,6 +126,7 @@ class ChatRoomsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($userOne)
+			->withoutMiddleware(Subscription::class)
 			->json('POST', $this->url('/chat_rooms/.createPrivateRoom'), $data);
 
 		$response
@@ -175,6 +179,7 @@ class ChatRoomsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($userOne)
+			->withoutMiddleware(Subscription::class)
 			->json('POST', $this->url('/chat_rooms/.createPrivateRoom'), $data);
 
 		$response
@@ -233,6 +238,7 @@ class ChatRoomsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($userOne)
+			->withoutMiddleware(Subscription::class)
 			->json('POST', $this->url('/chat_rooms/.createPrivateRoom'), $data);
 
 		$response
@@ -290,6 +296,7 @@ class ChatRoomsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($userOne)
+			->withoutMiddleware(Subscription::class)
 			->json('POST', $this->url('/chat_rooms/.createPrivateRoom'), $data);
 
 		$response

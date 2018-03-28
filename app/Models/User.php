@@ -172,8 +172,7 @@ class User extends Authenticatable
 
 		return \Cache::remember($key, 60 * 24, function () {
 			return $this->getSubscriptionStatus();
-		}
-		);
+		});
 	}
 
 	protected function getSubscriptionStatus()

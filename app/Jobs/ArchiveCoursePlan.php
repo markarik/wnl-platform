@@ -13,15 +13,18 @@ class ArchiveCoursePlan
 	use Dispatchable, SerializesModels;
 
 	protected $user;
+	protected $shouldClear;
 
 	/**
 	 * Create a new job instance.
 	 *
 	 * @param User $user
+	 * @param bool $shouldClear
 	 */
-	public function __construct($user)
+	public function __construct($user, $shouldClear = true)
 	{
 		$this->user = $user;
+		$this->shouldClear = $shouldClear;
 	}
 
 	/**
@@ -42,6 +45,8 @@ class ArchiveCoursePlan
 			'data'    => $plan->toJson(),
 		]);
 
-		UserLesson::where('user_id', $this->user->id)->delete();
+		if ($this->shouldClear) {
+			UserLesson::where('user_id', $this->user->id)->delete();
+		}
 	}
 }

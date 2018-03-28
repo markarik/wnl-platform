@@ -14,7 +14,7 @@ class UpdateUserLesson extends FormRequest
 			return true;
 		}
 
-		return $user->id == $this->request->get('userId');
+		return $user->id === (int) \Request::route('userId');
 	}
 
 	/**

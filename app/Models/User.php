@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -10,6 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
 	use Notifiable;
+
+	const SUBSCRIPTION_CACHE_KEY = '%s-%s-subscription-status';
+	const CACHE_VER = '1';
 
 	protected $casts = [
 		'invoice'            => 'boolean',
@@ -41,6 +45,8 @@ class User extends Authenticatable
 	];
 
 	protected $guarded = ['suspended'];
+
+	protected $appends = ['subscription_status'];
 
 	/**
 	 * Relationships
@@ -116,13 +122,16 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\Models\Lesson', 'user_lesson_availabilities');
 	}
 
-	public function reactables() {
+	public function reactables()
+	{
 		return $this->hasMany('App\Models\Reactable');
 	}
 
-	public function chatRooms() {
+	public function chatRooms()
+	{
 		return $this->belongsToMany('App\Models\ChatRoom');
 	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -155,6 +164,31 @@ class User extends Authenticatable
 	public function getIsSubscriberAttribute()
 	{
 		return !is_null(Subscriber::where('email', $this->email)->first());
+	}
+
+	public function getSubscriptionStatusAttribute()
+	{
+		$key = sprintf(self::SUBSCRIPTION_CACHE_KEY, self::CACHE_VER, $this->id);
+
+		return \Cache::remember($key, 60 * 24, function () {
+			return $this->getSubscriptionStatus();
+		}
+		);
+	}
+
+	protected function getSubscriptionStatus()
+	{
+		$dates = \DB::table('orders')
+			->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
+			->join('products', 'orders.product_id', '=', 'products.id')
+			->where('orders.user_id', $this->id)
+			->first();
+		$min = Carbon::parse($dates->min);
+		$max = Carbon::parse($dates->max);
+		if ($min->isPast() && $max->isFuture()) return 'active';
+		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
+
+		return 'inactive';
 	}
 
 	/**

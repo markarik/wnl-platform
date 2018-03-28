@@ -16,10 +16,12 @@ class AddStartEndDatesToProducts extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('start_date');
             $table->dropColumn('end_date');
-            $table->timestamp('course_start')->nullable()->after('delivery_date');
-            $table->timestamp('course_end')->nullable()->after('delivery_date');
-            $table->timestamp('access_start')->nullable()->after('delivery_date');
-            $table->timestamp('access_end')->nullable()->after('delivery_date');
+            $table->timestamp('course_start')->nullable();
+            $table->timestamp('course_end')->nullable();
+            $table->timestamp('access_start')->nullable();
+            $table->timestamp('access_end')->nullable();
+            $table->timestamp('signups_start')->nullable();
+            $table->timestamp('signups_end')->nullable();
         });
     }
 
@@ -37,6 +39,8 @@ class AddStartEndDatesToProducts extends Migration
 			$table->dropColumn('course_end');
 			$table->dropColumn('access_start');
 			$table->dropColumn('access_end');
+			$table->dropColumn('signups_start');
+			$table->dropColumn('signups_end');
         });
     }
 }

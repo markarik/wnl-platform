@@ -4,15 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
 class Subscription
 {
 	use GeneratesApiResponses;
-
-	const CACHE_KEY = '%s-%s-subscription-status';
-	const CACHE_VER = '1';
 
 	/**
 	 * Handle an incoming request.
@@ -25,22 +21,13 @@ class Subscription
 	public function handle($request, Closure $next)
 	{
 		$user = Auth::user();
+		$status = $user->subscription_status;
 
-		$products = Cache::remember($this->key($user), 60 * 24, function () {
-			return \DB::table('products')->get();
-		});
-
-		dd($user->products);
-
-		if ('elo') {
-			return $this->respondForbidden();
+		if ($status === 'active' || $user->hasRole(['admin', 'moderator'])) {
+			return $next($request);
 		}
 
-		return $next($request);
+		return $this->respondForbidden(['subscription_status' => $status]);
 	}
 
-	protected function key($user)
-	{
-		return sprintf(self::CACHE_KEY, self::CACHE_VER, $user->id);
-	}
 }

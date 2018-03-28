@@ -1,9 +1,9 @@
 <template>
 	<div class="splash-screen scrollable-main-container">
+		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<div class="splash-screen-countdown" v-if="$upcomingEditionParticipant.isAllowed('access')">
 			<p class="title is-4">Odliczamy dni do początku kursu!</p>
 			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
-			<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		</div>
 		<div v-else>
 			<p class="title is-4">Druga edycja kursu "Więcej niż LEK" oficjalnie wystartowała! </p>

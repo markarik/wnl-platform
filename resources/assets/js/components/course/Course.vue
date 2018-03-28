@@ -15,9 +15,7 @@
 		<div class="wnl-course-content wnl-column" v-if="$currentEditionParticipant.isAllowed('access')">
 			<router-view :presenceChannel="presenceChannel"/>
 		</div>
-		<div v-else class="wnl-course-content wnl-column">
-			<wnl-splash-screen/>
-		</div>
+		<wnl-splash-screen v-else/>
 		<wnl-sidenav-slot
 			class="course-chat"
 			:isVisible="isChatVisible"

@@ -21,6 +21,8 @@ class Product extends Model
 		'course_end',
 		'access_start',
 		'access_end',
+		'signups_start',
+		'signups_end',
 	];
 
 	public function lessons()

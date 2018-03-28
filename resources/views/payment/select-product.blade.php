@@ -10,40 +10,50 @@
 
 <section class="section">
 	<div class="container">
-		 <div class="has-text-centered">
-			<p class="margin bottom">
-				<a href="{{route('payment-personal-data', 'wnl-album')}}">
-					Zamów tylko nowe materiały
-				</a>
-			</p>
-		</div> 
-		<div class="columns is-hidden-mobile has-text-centered">
-			 <div class="column">
-				@if(!$onsite->available)
-					<div class="notification has-text-centered strong">Brak miejsc :(</div>
-				@else
-					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
-						@lang('payment.select-product-onsite-button-label')
+		@if($online->signups_start->isPast())
+			<div class="has-text-centered">
+				<p class="margin bottom">
+					<a href="{{route('payment-personal-data', 'wnl-album')}}">
+						Zamów tylko nowe materiały
 					</a>
-					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
-				@endif
+				</p>
 			</div>
-			<div class="column">
-				@if(!$online->available)
-					<div class="notification has-text-centered strong">Brak miejsc :(</div>
-				@else
-					<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
-						@lang('payment.select-product-online-button-label')
-					</a>
-					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
-				@endif
-			</div>
-			{{--<div class="column">
-				<div class="notification has-text-centered strong">
-					Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+			<div class="columns is-hidden-mobile has-text-centered">
+				 <div class="column">
+					@if(!$onsite->available)
+						<div class="notification has-text-centered strong">Brak miejsc :(</div>
+					@else
+						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
+							@lang('payment.select-product-onsite-button-label')
+						</a>
+						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
+					@endif
 				</div>
-			</div>--}}
-		</div>
+				<div class="column">
+					@if(!$online->available)
+						<div class="notification has-text-centered strong">Brak miejsc :(</div>
+					@else
+						<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
+							@lang('payment.select-product-online-button-label')
+						</a>
+						<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
+					@endif
+				</div>
+				{{--<div class="column">
+					<div class="notification has-text-centered strong">
+						Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+					</div>
+				</div>--}}
+			</div>
+		@endif
+		@if($online->signups_start->isFuture())
+			<div class="notification has-text-centered strong">
+				Do otwarcia zapisów pozostało:
+				<div class="signups-countdown" data-start="{{ $online->signups_start }}">
+					sprawdzam zegarek...
+				</div>
+			</div>
+		@endif
 		<div class="columns">
 			<div class="column">
 				<div class="box">
@@ -90,33 +100,35 @@
 				</div>
 			</div>
 		</div>
-		<div class="columns is-hidden-mobile has-text-centered">
-			 <div class="column">
-				@if(!$onsite->available)
-					<div class="notification has-text-centered strong">Brak miejsc :(</div>
-				@else
-					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
-						@lang('payment.select-product-onsite-button-label')
-					</a>
-					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
-				@endif
-			</div>
-			<div class="column">
-				@if(!$online->available)
-					<div class="notification has-text-centered strong">Brak miejsc :(</div>
-				@else
-				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
-					@lang('payment.select-product-online-button-label')
-				</a>
-				<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
-				@endif
-			</div>
-			{{--<div class="column">
-				<div class="notification has-text-centered strong">
-					Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+		@if($online->signups_start->isPast())
+			<div class="columns is-hidden-mobile has-text-centered">
+				 <div class="column">
+					@if(!$onsite->available)
+						<div class="notification has-text-centered strong">Brak miejsc :(</div>
+					@else
+						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
+							@lang('payment.select-product-onsite-button-label')
+						</a>
+						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
+					@endif
 				</div>
-			</div>--}}
-		</div>
+				<div class="column">
+					@if(!$online->available)
+						<div class="notification has-text-centered strong">Brak miejsc :(</div>
+					@else
+					<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
+						@lang('payment.select-product-online-button-label')
+					</a>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
+					@endif
+				</div>
+				{{--<div class="column">
+					<div class="notification has-text-centered strong">
+						Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+					</div>
+				</div>--}}
+			</div>
+		@endif
 	</div>
 </section>
 <section class="section">

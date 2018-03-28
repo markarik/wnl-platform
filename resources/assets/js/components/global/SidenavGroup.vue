@@ -8,7 +8,8 @@
 					:toggleIcon="toggleIcon"
 					:isOpen="isOpen"
 				>
-					{{item.text}} <span class="subitems-count">({{item.subitems.length}})</span>
+					{{item.text}}
+					<span class="subitems-count" v-if="showSubitemsCount && hasSubitems">({{item.subitems.length}})</span>
 				</wnl-sidenav-item>
 			</div>
 			<ul class="wnl-sidenav-subitems" v-if="canRenderSubitems">

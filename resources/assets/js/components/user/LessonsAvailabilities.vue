@@ -96,7 +96,6 @@
 									text-align: center
 									cursor: not-allowed
 									min-width: 260px
-									// font-style: italic
 
 </style>
 

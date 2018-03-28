@@ -14,7 +14,6 @@ class UpdateUserLesson extends FormRequest
 			return true;
 		}
 
-		// dd($this->request->get('userId'));
 		return $user->id == $this->request->get('userId');
 	}
 

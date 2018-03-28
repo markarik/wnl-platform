@@ -14,7 +14,7 @@ class MarkLessonsAsRequired extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'lessons:mark-as-required';
+	protected $signature = 'lesson:mark-as-required';
 
 	/**
 	 * The console command description.

@@ -119,7 +119,7 @@ class User extends Authenticatable
 
 	public function lessonsAvailability()
 	{
-		return $this->belongsToMany('App\Models\Lesson', 'user_lesson_availabilities');
+		return $this->belongsToMany('App\Models\Lesson', 'user_lesson');
 	}
 
 	public function reactables()

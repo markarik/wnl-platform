@@ -150,9 +150,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
 	});
 
-	// LessonsAvailabilities
-	Route::get("{$r['user-lesson-availabilities']}", 'UserLessonAvailabilitiesApiController@getUserAvailabileLessons');
-	Route::put("{$r['user-lesson-availabilities']}/{id}", 'UserLessonAvailabilitiesApiController@put');
+	// User Lessons
+	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 
 	// Users
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');

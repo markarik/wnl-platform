@@ -23,7 +23,7 @@ class Subscription
 		$user = Auth::user();
 		$status = $user->subscription_status;
 
-		if ($status === 'active' || $user->hasRole('moderator') || $user->hasRole('admin')) {
+		if ($status === 'active') {
 			return $next($request);
 		}
 

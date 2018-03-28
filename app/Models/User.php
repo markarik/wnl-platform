@@ -178,6 +178,10 @@ class User extends Authenticatable
 
 	protected function getSubscriptionStatus()
 	{
+		if ($this->hasRole('admin') || $this->hasRole('moderator')) {
+			return 'active';
+		}
+
 		$dates = \DB::table('orders')
 			->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
 			->join('products', 'orders.product_id', '=', 'products.id')

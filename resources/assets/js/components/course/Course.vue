@@ -6,13 +6,13 @@
 		>
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
-				v-if="canAccess"
+				v-if="$currentEditionParticipant.isAllowed('access')"
 				:context="context"
 				:isLesson="isLesson"
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column" v-if="canAccess">
+		<div class="wnl-course-content wnl-column" v-if="$currentEditionParticipant.isAllowed('access')">
 			<router-view :presenceChannel="presenceChannel"/>
 		</div>
 		<div v-else class="wnl-course-content wnl-column">
@@ -27,9 +27,9 @@
 			<div v-if="isLesson" class="lesson-active-users-container">
 				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>
 			</div>
-			<wnl-public-chat :rooms="chatRooms" v-if="canAccess"/>
+			<wnl-public-chat :rooms="chatRooms" v-if="$currentEditionParticipant.isAllowed('access')"/>
 		</wnl-sidenav-slot>
-		<div v-if="canAccess && isChatToggleVisible" class="wnl-chat-toggle">
+		<div v-if="$currentEditionParticipant.isAllowed('access') && isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -79,9 +79,11 @@
 	import { breadcrumb } from 'js/mixins/breadcrumb'
 	import { getApiUrl } from 'js/utils/env'
 	import withChat from 'js/mixins/with-chat'
+	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
 
 	export default {
 		name: 'Course',
+		perimeters: [currentEditionParticipant],
 		components: {
 			'wnl-active-users': ActiveUsers,
 			'wnl-course-navigation': Navigation,
@@ -103,11 +105,6 @@
 				'isChatVisible',
 				'isChatToggleVisible',
 			]),
-			canAccess() {
-				return this.currentUser.roles.includes('moderator') ||
-						this.currentUser.roles.includes('admin') ||
-						this.currentUser.roles.includes('edition-2-participant')
-			},
 			context() {
 				return {
 					courseId: this.courseId,

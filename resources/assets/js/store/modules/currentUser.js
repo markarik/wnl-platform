@@ -39,7 +39,9 @@ const getters = {
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
-	currentUserStats: state => state.stats
+	currentUserStats: state => state.stats,
+	hasInactiveSubscription: state => state.profile.subscription_status === 'inactive',
+	hasAwaitingSubscription: state => state.profile.subscription_status === 'awaiting',
 }
 
 // Mutations

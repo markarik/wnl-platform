@@ -38,7 +38,8 @@ class UserProfileTransformer extends ApiTransformer
 			'about'             => $profile->about,
 			'learning_location' => $profile->learning_location,
 			'roles'             => $profile->user->roles->pluck('name')->toArray() ?? [],
-			'subscription_status' => $profile->user->subscriptionStatus
+			// 'subscription_status' => $profile->user->subscriptionStatus
+			'subscription_status' => 'awaiting'
 		];
 
 		if ($this->parent) {

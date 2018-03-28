@@ -35,7 +35,19 @@ let routes = [
 						component: require('js/components/course/Screen.vue'),
 						props: true,
 					}
-				]
+				],
+				beforeEnter: (to, from, next) => {
+					getCurrentUser().then(({data: currentUser}) => {
+						const sandbox = createSandbox(currentUser, {
+							perimeters: [currentEditionParticipant],
+						});
+
+						if (!sandbox.isAllowed('access')) {
+							return next('/');
+						}
+						return next();
+					})
+				},
 			}
 		]
 	},

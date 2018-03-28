@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\Jobs\OrderConfirmed;
 use App\Jobs\OrderPaid;
+use App\Jobs\PopulateUserCoursePlan;
 use App\Models\Order;
 use App\Notifications\OrderCreated;
 use Carbon\Carbon;
@@ -44,7 +45,9 @@ class OrderObserver
 
 	public function created(Order $order)
 	{
-
+		if ($order->product->lessons->count() > 0) {
+			dispatch(new PopulateUserCoursePlan($order->user, $order->product));
+		}
 	}
 
 	public function routeNotificationForSlack()

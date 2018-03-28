@@ -103,7 +103,7 @@
 			},
 			nextLessonDate() {
 				if (this.nextLesson.startDate) {
-					return timeFromDate(this.nextLesson.startDate.date)
+					return timeFromDate(new Date(this.nextLesson.startDate * 1000))
 				}
 				return false
 			},

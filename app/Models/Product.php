@@ -17,9 +17,19 @@ class Product extends Model
 
 	protected $dates = [
 		'delivery_date',
-		'start_date',
-		'end_date',
+		'course_start',
+		'course_end',
+		'access_start',
+		'access_end',
 	];
+
+	public function lessons()
+	{
+		return
+			$this->belongsToMany('App\Models\Lesson')
+				->withPivot('start_date')
+				->using('App\Models\LessonProduct');
+	}
 
 	public function scopeSlug($query, $slug)
 	{

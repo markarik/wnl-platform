@@ -44,6 +44,10 @@ class Kernel extends ConsoleKernel
 			});
 
 		$schedule
+			->command('coursePlans:archive')
+			->dailyAt('01:20');
+
+		$schedule
 			->command('time:store')
 			->dailyAt('01:30');
 

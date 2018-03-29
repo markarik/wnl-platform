@@ -5,9 +5,9 @@
 			<p class="title is-4">Odliczamy dni do początku kursu!</p>
 			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
 		</div>
-		<div v-else>
+		<div class="has-text-centered" v-else>
 			<p class="title is-4">Kurs "Więcej niż LEK" oficjalnie wystartował! </p>
-			<p class="has-text-centered">Widzisz ten ekran, ponieważ nie posiadasz dostępu do obecnej edycji.<br>
+			<p>Widzisz ten ekran, ponieważ nie posiadasz dostępu do obecnej edycji.<br>
 			W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
 				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.</p>
 		</div>

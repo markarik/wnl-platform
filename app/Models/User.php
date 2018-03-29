@@ -195,7 +195,7 @@ class User extends Authenticatable
 
 		return \Cache::remember($key, 60 * 24, function() {
 			if ($this->hasRole('admin') || $this->hasRole('moderator')) {
-				return [Carbon::now()->subCentury()->timestamp, Carbon::now()->addCentury()->timestamp];
+				return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
 			}
 
 			$dates = \DB::table('orders')

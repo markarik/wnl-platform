@@ -10,7 +10,13 @@
 
 <section class="section">
 	<div class="container">
-		@if($online->signups_start->isPast())
+		@if($online->signups_close->isPast() && $onsite->signups_close->isPast())
+			<div class="column">
+				<div class="notification has-text-centered strong">
+					Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o kolejnych!
+				</div>
+			</div>
+		@elseif($online->signups_start->isPast() && $onsite->signups_start->isPast())
 			<div class="has-text-centered">
 				<p class="margin bottom">
 					<a href="{{route('payment-personal-data', 'wnl-album')}}">
@@ -46,7 +52,7 @@
 				</div>--}}
 			</div>
 		@endif
-		@if($online->signups_start->isFuture())
+		@if($online->signups_start->isFuture() && $onsite->signups_start->isFuture())
 			<div class="notification has-text-centered strong">
 				Do otwarcia zapisów pozostało:
 				<div class="signups-countdown" data-start="{{ $online->signups_start }}">
@@ -100,7 +106,13 @@
 				</div>
 			</div>
 		</div>
-		@if($online->signups_start->isPast())
+		@if($online->signups_close->isPast() && $onsite->signups_close->isPast())
+			<div class="column">
+				<div class="notification has-text-centered strong">
+					Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o kolejnych!
+				</div>
+			</div>
+		@elseif($online->signups_start->isPast() && $onsite->signups_start->isPast())
 			<div class="columns is-hidden-mobile has-text-centered">
 				 <div class="column">
 					@if(!$onsite->available)

@@ -22,6 +22,7 @@ class AddStartEndDatesToProducts extends Migration
             $table->timestamp('access_end')->nullable();
             $table->timestamp('signups_start')->nullable();
             $table->timestamp('signups_end')->nullable();
+            $table->timestamp('signups_close')->nullable();
         });
     }
 
@@ -41,6 +42,7 @@ class AddStartEndDatesToProducts extends Migration
 			$table->dropColumn('access_end');
 			$table->dropColumn('signups_start');
 			$table->dropColumn('signups_end');
+			$table->dropColumn('signups_close');
         });
     }
 }

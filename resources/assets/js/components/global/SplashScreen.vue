@@ -70,7 +70,7 @@
 		},
 		methods: {
 			getTimeLeft() {
-				const theDate = new Date(this.currentUserSubscriptionDates.min.date)
+				const theDate = new Date(this.currentUserSubscriptionDates.min * 1000)
 				return moment.duration(moment(theDate).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
 			},
 			setTimeLeft() {

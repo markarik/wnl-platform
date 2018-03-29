@@ -175,8 +175,8 @@ class User extends Authenticatable
 	public function getSubscriptionDatesAttribute() {
 		list ($min, $max) = $this->getSubscriptionDates();
 		return [
-			'min' => $min,
-			'max' => $max
+			'min' => $min->timestamp,
+			'max' => $max->timestamp
 		];
 	}
 
@@ -195,7 +195,7 @@ class User extends Authenticatable
 
 		return \Cache::remember($key, 60 * 24, function() {
 			if ($this->hasRole('admin') || $this->hasRole('moderator')) {
-				return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
+				return [Carbon::now()->subCentury()->timestamp, Carbon::now()->addCentury()->timestamp];
 			}
 
 			$dates = \DB::table('orders')
@@ -204,10 +204,8 @@ class User extends Authenticatable
 				->where('orders.user_id', $this->id)
 				->where('orders.paid', 1)
 				->first();
-			$min = Carbon::parse($dates->min);
-			$max = Carbon::parse($dates->max);
 
-			return [$min, $max];
+			return [Carbon::parse($dates->min), Carbon::parse($dates->max)];
 		});
 	}
 

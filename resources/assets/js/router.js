@@ -176,6 +176,12 @@ let routes = [
 				path: 'plan',
 				component: require('js/components/questions/QuestionsPlanner.vue'),
 			},
+			{
+				name: 'messages',
+				path: '/app/messages',
+				component: require('js/components/messages/MessagesDashboard.vue'),
+			},
+
 		],
 		beforeEnter: (to, from, next) => {
 			getCurrentUser().then(({data: currentUser}) => {
@@ -249,11 +255,6 @@ let routes = [
 			})
 		}
 
-	},
-	{
-		name: 'messages',
-		path: '/app/messages',
-		component: require('js/components/messages/MessagesDashboard.vue'),
 	},
 	{
 		path: '*',

@@ -11,6 +11,6 @@ export default createPerimeter({
 
 	isUpcomingEditionParticipant() {
 		return this.child &&
-			this.child.subscription_status === 'awaiting'
+			this.child.subscription.status === 'awaiting'
 	},
 });

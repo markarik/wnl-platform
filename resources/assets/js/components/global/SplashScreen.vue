@@ -51,12 +51,11 @@
 
 	require('moment-duration-format')
 
-	const theDate = "2018-06-06"
-
 	export default {
 		name: 'SplashScreen',
 		perimeters: [upcomingEditionParticipant],
 		computed: {
+			...mapGetters(['currentUserSubscriptionDates']),
 			countdownImageUrl() {
 				return getImageUrl('countdown.png')
 			}
@@ -71,6 +70,7 @@
 		},
 		methods: {
 			getTimeLeft() {
+				const theDate = new Date(this.currentUserSubscriptionDates.min.date)
 				return moment.duration(moment(theDate).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
 			},
 			setTimeLeft() {
@@ -79,7 +79,7 @@
 			},
 		},
 		mounted() {
-			window.setInterval(this.setTimeLeft, 1000)
+			this.$upcomingEditionParticipant.isAllowed('access') && window.setInterval(this.setTimeLeft, 1000)
 		}
 	}
 </script>

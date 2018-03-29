@@ -24,7 +24,10 @@ const state = {
 
 // Getters
 const getters = {
-	currentUser: state => state.profile,
+	currentUser: state => ({
+		...state.profile,
+		subscription: state.subscription
+	}),
 	currentUserId: state => state.profile.user_id,
 	currentUserAvatar: state => state.profile.avatar,
 	currentUserEmail: state => state.profile.public_email,
@@ -40,8 +43,7 @@ const getters = {
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
 	currentUserStats: state => state.stats,
-	hasInactiveSubscription: state => state.subscription.status === 'inactive',
-	hasAwaitingSubscription: state => state.subscription.status === 'awaiting',
+	currentUserSubscriptionDates: state => state.subscription.dates,
 }
 
 // Mutations

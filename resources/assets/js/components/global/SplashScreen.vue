@@ -6,8 +6,8 @@
 			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
 		</div>
 		<div v-else>
-			<p class="title is-4">Druga edycja kursu "Więcej niż LEK" oficjalnie wystartowała! </p>
-			<p class="has-text-centered">Widzisz ten ekran, ponieważ nie posiadasz dostępu do drugiej edycji.<br>
+			<p class="title is-4">Kurs "Więcej niż LEK" oficjalnie wystartował! </p>
+			<p class="has-text-centered">Widzisz ten ekran, ponieważ nie posiadasz dostępu do obecnej edycji.<br>
 			W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
 				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.</p>
 		</div>

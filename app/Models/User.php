@@ -173,7 +173,11 @@ class User extends Authenticatable
 	}
 
 	public function getSubscriptionDatesAttribute() {
-		return $this->getSubscriptionDates();
+		list ($min, $max) = $this->getSubscriptionDates();
+		return [
+			'min' => $min,
+			'max' => $max
+		];
 	}
 
 	protected function getSubscriptionStatus($dates)

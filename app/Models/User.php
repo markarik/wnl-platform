@@ -203,6 +203,7 @@ class User extends Authenticatable
 				->join('products', 'orders.product_id', '=', 'products.id')
 				->where('orders.user_id', $this->id)
 				->where('orders.paid', 1)
+				->where('orders.canceled', '<>', 1)
 				->first();
 
 			return [Carbon::parse($dates->min), Carbon::parse($dates->max)];

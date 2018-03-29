@@ -191,7 +191,7 @@ class User extends Authenticatable
 	}
 
 	protected function getSubscriptionDates() {
-		$key = sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $this->id);
+		$key = self::getSubscriptionKey($this->id);
 
 		return \Cache::remember($key, 60 * 24, function() {
 			if ($this->hasRole('admin') || $this->hasRole('moderator')) {
@@ -202,12 +202,17 @@ class User extends Authenticatable
 				->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
 				->join('products', 'orders.product_id', '=', 'products.id')
 				->where('orders.user_id', $this->id)
+				->where('orders.paid', 1)
 				->first();
 			$min = Carbon::parse($dates->min);
 			$max = Carbon::parse($dates->max);
 
 			return [$min, $max];
 		});
+	}
+
+	public static function getSubscriptionKey($id) {
+		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 
 	/**

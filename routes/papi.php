@@ -182,6 +182,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@putCourse');
 	Route::delete("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@deleteCourse');
 
+	Route::get("user_subscription/current", 'UserSubscriptionApiController@getSubscription');
+
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@getLesson');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@putLesson');
 

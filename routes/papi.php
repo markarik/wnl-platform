@@ -45,45 +45,113 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Fetch additional routing data basing on various input
 	api_action('post', 'context');
 
+	Route::group(['middleware' => 'subscription'], function () use ($r) {
+		// Courses
+		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 
-	// Courses
-	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
+		// Groups
+		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
-	// Groups
-	Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
+		// Lessons
+		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
+		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 
-	// Lessons
-	Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
-	Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
+		// Screens
+		Route::post("{$r['screens']}", 'ScreensApiController@post');
+		Route::get("{$r['screens']}/{id}", 'ScreensApiController@get');
+		Route::put("{$r['screens']}/{id}", 'ScreensApiController@put');
+		Route::patch("{$r['screens']}/{id}", 'ScreensApiController@patch');
+		Route::delete("{$r['screens']}/{id}", 'ScreensApiController@delete');
+		Route::post("{$r['screens']}/.search", 'ScreensApiController@query');
+
+		// Editions
+		Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
+
+		// Slides
+		Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
+		Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
+		Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
+		Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
+		Route::post("{$r['slides']}", 'SlidesApiController@post');
+		Route::post("{$r['slides']}/.search", 'SlidesApiController@query');
+
+		// Presentables
+		Route::post("{$r['presentables']}/.search", 'PresentablesApiController@query');
+		Route::get("{$r['presentables']}/{id}", 'PresentablesApiController@get');
+
+		// Slideshows
+		Route::get("{$r['slideshows']}/{id}", 'SlideshowsApiController@get');
+
+		// Q&A Questions
+		Route::post($r['qna-questions'], 'QnaQuestionsApiController@post');
+		Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
+		Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
+		Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');
+		Route::post("{$r['qna-questions']}/.search", 'QnaQuestionsApiController@query');
+
+		// Q&A Answers
+		Route::post($r['qna-answers'], 'QnaAnswersApiController@post');
+		Route::get("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@get');
+		Route::put("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@put');
+		Route::delete("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@delete');
+		Route::post("{$r['qna-answers']}/.search", 'QnaAnswersApiController@query');
+
+		// Quiz Sets
+		Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
+		Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
+		Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
+
+		// Comments
+		Route::post($r['comments'], 'CommentsApiController@post');
+		Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
+		Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
+		Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
+		Route::post("{$r['comments']}/.search", 'CommentsApiController@query');
+		Route::post("{$r['comments']}/.count", 'CommentsApiController@query');
+
+		// Chat Messages
+		Route::post(
+			"{$r['chat-messages']}/.getByRooms",
+			'ChatMessagesApiController@getByMultipleRooms'
+		);
+		Route::post(
+			"{$r['chat-messages']}/.getWithContext",
+			'ChatMessagesApiController@getWithContext'
+		);
+		// Chat rooms
+		Route::get(
+			"{$r['chat-rooms']}/.getPrivateRooms",
+			'ChatRoomsApiController@getPrivateRooms');
+		Route::post(
+			"{$r['chat-rooms']}/.createPrivateRoom",
+			'ChatRoomsApiController@createPrivateRoom');
+		Route::post(
+			"{$r['chat-rooms']}/.createPublicRoom",
+			'ChatRoomsApiController@createPublicRoom');
+		Route::get("{$r['chat-rooms']}/{id}", 'ChatRoomsApiController@get');
+
+		// Slideshow builder
+		Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'SlideshowBuilderApiController@byCategory');
+		Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
+		Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
+		Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
+		Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
+
+		// Quiz Stats
+		Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
+
+		// Quiz Questions Stats
+		Route::get("{$r['quiz-questions']}/stats", 'QuizQuestionsApiController@stats');
+
+		// Quiz Questions
+		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
+		Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
+		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
+		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
+	});
 
 	// User Lessons
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
-
-	// Screens
-	Route::post("{$r['screens']}", 'ScreensApiController@post');
-	Route::get("{$r['screens']}/{id}", 'ScreensApiController@get');
-	Route::put("{$r['screens']}/{id}", 'ScreensApiController@put');
-	Route::patch("{$r['screens']}/{id}", 'ScreensApiController@patch');
-	Route::delete("{$r['screens']}/{id}", 'ScreensApiController@delete');
-	Route::post("{$r['screens']}/.search", 'ScreensApiController@query');
-
-	// Editions
-	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
-
-	// Slides
-	Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
-	Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
-	Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
-	Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
-	Route::post("{$r['slides']}", 'SlidesApiController@post');
-	Route::post("{$r['slides']}/.search", 'SlidesApiController@query');
-
-	// Presentables
-	Route::post("{$r['presentables']}/.search", 'PresentablesApiController@query');
-	Route::get("{$r['presentables']}/{id}", 'PresentablesApiController@get');
-
-	// Slideshows
-	Route::get("{$r['slideshows']}/{id}", 'SlideshowsApiController@get');
 
 	// Users
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
@@ -114,6 +182,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@putCourse');
 	Route::delete("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@deleteCourse');
 
+	Route::get("user_subscription/current", 'UserSubscriptionApiController@getSubscription');
+
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@getLesson');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@putLesson');
 
@@ -135,72 +205,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
 	Route::post("{$r['tags']}/.search", 'TagsApiController@query');
 
-	// Q&A Questions
-	Route::post($r['qna-questions'], 'QnaQuestionsApiController@post');
-	Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
-	Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
-	Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');
-	Route::post("{$r['qna-questions']}/.search", 'QnaQuestionsApiController@query');
-
-	// Q&A Answers
-	Route::post($r['qna-answers'], 'QnaAnswersApiController@post');
-	Route::get("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@get');
-	Route::put("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@put');
-	Route::delete("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@delete');
-	Route::post("{$r['qna-answers']}/.search", 'QnaAnswersApiController@query');
-
-	// Quiz Sets
-	Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
-	Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
-	Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
-
-	// Quiz Stats
-	Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
-
-	// Quiz Questions Stats
-	Route::get("{$r['quiz-questions']}/stats", 'QuizQuestionsApiController@stats');
-
-	// Quiz Questions
-	Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
-	Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
-	Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
-	Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
-
 	// User Quiz Results
 	Route::get("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@get');
 	Route::post("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@post');
 	Route::get("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
 	Route::put("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
 	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
-
-	// Comments
-	Route::post($r['comments'], 'CommentsApiController@post');
-	Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
-	Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
-	Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
-	Route::post("{$r['comments']}/.search", 'CommentsApiController@query');
-	Route::post("{$r['comments']}/.count", 'CommentsApiController@query');
-
-	// Chat Messages
-	Route::post(
-		"{$r['chat-messages']}/.getByRooms",
-		'ChatMessagesApiController@getByMultipleRooms'
-	);
-	Route::post(
-		"{$r['chat-messages']}/.getWithContext",
-		'ChatMessagesApiController@getWithContext'
-	);
-	// Chat rooms
-	Route::get(
-		"{$r['chat-rooms']}/.getPrivateRooms",
-		'ChatRoomsApiController@getPrivateRooms');
-	Route::post(
-		"{$r['chat-rooms']}/.createPrivateRoom",
-		'ChatRoomsApiController@createPrivateRoom');
-	Route::post(
-		"{$r['chat-rooms']}/.createPublicRoom",
-		'ChatRoomsApiController@createPublicRoom');
-	Route::get("{$r['chat-rooms']}/{id}",'ChatRoomsApiController@get');
 
 	// Reactions
 	Route::post($r['reactions'], 'ReactionsApiController@postMany');
@@ -214,13 +224,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	// Categories
 	Route::get("{$r['categories']}/{id}", 'CategoriesApiController@get');
-
-	// Slideshow builder
-	Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'SlideshowBuilderApiController@byCategory');
-	Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
-	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
-	Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
-	Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
 
 	// Events
 	Route::post("events/mentions", 'MentionsApiController@post');

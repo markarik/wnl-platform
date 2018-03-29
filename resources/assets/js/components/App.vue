@@ -89,6 +89,7 @@
 
 			return Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
+					this.setConnectionStatus(false)
 					// Setup Notifications
 					this.initNotifications()
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()

@@ -58,12 +58,5 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
-
-		$schedule
-			->command('role:assignFromProducts edition-2-participant 5,6')
-			->everyFiveMinutes()
-			->after(function () use ($schedule) {
-				Artisan::call('cache:tag', ['tag' => 'user_profiles']);
-			});
 	}
 }

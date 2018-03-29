@@ -37,7 +37,7 @@ class PopulateUserCoursePlan implements ShouldQueue
 	public function handle()
 	{
 		dispatch_now(new ArchiveCoursePlan($this->user));
-		
+
 		$availabilities = [];
 
 		foreach ($this->product->lessons as $lesson) {

@@ -18,7 +18,7 @@ const state = {
 		hasMoreRooms: false,
 		currentPage: 1,
 	},
-	connected: false,
+	connected: true,
 }
 
 //Getters

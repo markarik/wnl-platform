@@ -1,17 +1,17 @@
 import { createPerimeter } from 'vue-kindergarten';
 
 export default createPerimeter({
-	purpose: 'currentEditionParticipant',
+	purpose: 'upcomingEditionParticipant',
 
 	can: {
 		access() {
-			return this.isCurrentEditionParticipant()
+			return this.isUpcomingEditionParticipant()
 		}
 	},
 
-	isCurrentEditionParticipant() {
+	isUpcomingEditionParticipant() {
 		return this.child &&
 			this.child.subscription &&
-			this.child.subscription.status === 'active'
+			this.child.subscription.status === 'awaiting'
 	},
 });

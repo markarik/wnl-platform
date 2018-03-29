@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
 	use Notifiable;
 
-	const SUBSCRIPTION_CACHE_KEY = '%s-%s-subscription-status';
+	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
 	const CACHE_VER = '1';
 
 	protected $casts = [
@@ -168,30 +168,50 @@ class User extends Authenticatable
 
 	public function getSubscriptionStatusAttribute()
 	{
-		$key = sprintf(self::SUBSCRIPTION_CACHE_KEY, self::CACHE_VER, $this->id);
-
-		return \Cache::remember($key, 60 * 24, function () {
-			return $this->getSubscriptionStatus();
-		});
+		$dates = $this->getSubscriptionDates();
+		return $this->getSubscriptionStatus($dates);
 	}
 
-	protected function getSubscriptionStatus()
-	{
-		if ($this->hasRole('admin') || $this->hasRole('moderator')) {
-			return 'active';
-		}
+	public function getSubscriptionDatesAttribute() {
+		list ($min, $max) = $this->getSubscriptionDates();
+		return [
+			'min' => $min->timestamp,
+			'max' => $max->timestamp
+		];
+	}
 
-		$dates = \DB::table('orders')
-			->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
-			->join('products', 'orders.product_id', '=', 'products.id')
-			->where('orders.user_id', $this->id)
-			->first();
-		$min = Carbon::parse($dates->min);
-		$max = Carbon::parse($dates->max);
+	protected function getSubscriptionStatus($dates)
+	{
+		list ($min, $max) = $dates;
+
 		if ($min->isPast() && $max->isFuture()) return 'active';
 		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
 
 		return 'inactive';
+	}
+
+	protected function getSubscriptionDates() {
+		$key = self::getSubscriptionKey($this->id);
+
+		return \Cache::remember($key, 60 * 24, function() {
+			if ($this->hasRole('admin') || $this->hasRole('moderator')) {
+				return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
+			}
+
+			$dates = \DB::table('orders')
+				->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
+				->join('products', 'orders.product_id', '=', 'products.id')
+				->where('orders.user_id', $this->id)
+				->where('orders.paid', 1)
+				->where('orders.canceled', '<>', 1)
+				->first();
+
+			return [Carbon::parse($dates->min), Carbon::parse($dates->max)];
+		});
+	}
+
+	public static function getSubscriptionKey($id) {
+		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 
 	/**

@@ -5,9 +5,9 @@
 			<p class="title is-4">Odliczamy dni do początku kursu!</p>
 			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
 		</div>
-		<div v-else>
-			<p class="title is-4">Druga edycja kursu "Więcej niż LEK" oficjalnie wystartowała! </p>
-			<p class="has-text-centered">Widzisz ten ekran, ponieważ nie posiadasz dostępu do drugiej edycji.<br>
+		<div class="has-text-centered" v-else>
+			<p class="title is-4">Kurs "Więcej niż LEK" oficjalnie wystartował! </p>
+			<p>Widzisz ten ekran, ponieważ nie posiadasz dostępu do obecnej edycji.<br>
 			W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
 				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.</p>
 		</div>
@@ -51,12 +51,11 @@
 
 	require('moment-duration-format')
 
-	const theDate = "2018-06-06"
-
 	export default {
 		name: 'SplashScreen',
 		perimeters: [upcomingEditionParticipant],
 		computed: {
+			...mapGetters(['currentUserSubscriptionDates']),
 			countdownImageUrl() {
 				return getImageUrl('countdown.png')
 			}
@@ -71,6 +70,7 @@
 		},
 		methods: {
 			getTimeLeft() {
+				const theDate = new Date(this.currentUserSubscriptionDates.min * 1000)
 				return moment.duration(moment(theDate).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
 			},
 			setTimeLeft() {
@@ -79,7 +79,7 @@
 			},
 		},
 		mounted() {
-			window.setInterval(this.setTimeLeft, 1000)
+			this.$upcomingEditionParticipant.isAllowed('access') && window.setInterval(this.setTimeLeft, 1000)
 		}
 	}
 </script>

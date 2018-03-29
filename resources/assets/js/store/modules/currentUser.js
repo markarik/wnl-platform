@@ -24,7 +24,10 @@ const state = {
 
 // Getters
 const getters = {
-	currentUser: state => state.profile,
+	currentUser: state => ({
+		...state.profile,
+		subscription: state.subscription
+	}),
 	currentUserId: state => state.profile.user_id,
 	currentUserAvatar: state => state.profile.avatar,
 	currentUserEmail: state => state.profile.public_email,
@@ -40,8 +43,7 @@ const getters = {
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
 	currentUserStats: state => state.stats,
-	hasInactiveSubscription: state => state.profile.subscription_status === 'inactive',
-	hasAwaitingSubscription: state => state.profile.subscription_status === 'awaiting',
+	currentUserSubscriptionDates: state => state.subscription.dates,
 }
 
 // Mutations
@@ -65,6 +67,9 @@ const mutations = {
 	},
 	[types.USERS_SET_STATS] (state, payload) {
 		set(state, 'stats', payload)
+	},
+	[types.USERS_SET_SUBSCRIPTION] (state, payload) {
+		set(state, 'subscription', payload)
 	}
 }
 
@@ -75,6 +80,7 @@ const actions = {
 			.all([
 				dispatch('fetchCurrentUserProfile'),
 				dispatch('fetchUserSettings'),
+				dispatch('fetchUserSubscription')
 			])
 			.then(() => commit(types.IS_LOADING, false))
 			.catch((error) => {
@@ -108,6 +114,16 @@ const actions = {
 				reject()
 			})
 		})
+	},
+
+	fetchUserSubscription({commit}) {
+		return _fetchUserSubscription()
+			.then(({data}) => {
+				commit(types.USERS_SET_SUBSCRIPTION, data)
+			})
+			.catch((error) => {
+				$wnl.logger.error(error)
+			})
 	},
 
 	fetchUserSettings({ commit }) {
@@ -149,6 +165,10 @@ const actions = {
 
 const _fetchUserStats = (userId) => {
 	return axios.get(getApiUrl(`users/${userId}/state/stats`));
+}
+
+const _fetchUserSubscription = () => {
+	return axios.get(getApiUrl('user_subscription/current'));
 }
 
 export default {

@@ -37,10 +37,16 @@
 			</div>
 		</div>
 	</section>
-	{{-- <section class="notification is-danger has-text-centered">
-		Pamiętaj! W tym momencie otwarta jest dodatkowa pula zapisów, dla której nie możemy już niestety zagwarantować terminowego dostarczenia materiałów. :(<br>
-		Zrobimy jednak co w naszej mocy, żeby trafiły do Ciebie jak najszybciej! :)
-	</section> --}}
+	@if(
+		(isset($online) && $online->signups_end->isPast() && $online->signups_close->isFuture())
+		|| (Session::has('product') && Session::get('product')->signups_end->isPast() && Session::get('product')->signups_close->isFuture())
+	)
+		<section class="notification is-danger has-text-centered">
+			Pamiętaj! W tym momencie otwarta jest dodatkowa pula zapisów, dla której nie możemy już niestety zagwarantować terminowego dostarczenia materiałów. :(<br>
+			Zrobimy jednak co w naszej mocy, żeby trafiły do Ciebie jak najszybciej! :)
+		</section>
+	@endif
+
 	@if (Session::has('coupon'))
 		<section class="voucher notification is-info has-text-centered">
 			@lang('payment.voucher-current', [

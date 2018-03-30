@@ -19,10 +19,11 @@ class Certificate extends Mailable
 	 *
 	 * @param $file
 	 */
-	public function __construct($file, $user)
+	public function __construct($file, $user, $type)
 	{
 		$this->file = Storage::disk('s3')->get($file);
 		$this->user = $user;
+		$this->type = $type;
 	}
 
 	/**
@@ -36,9 +37,14 @@ class Certificate extends Mailable
 		$lastName = title_case(trim($this->user->last_name));
 		$fileName = "Certyfikat_{$firstName}_{$lastName}.pdf";
 
+		$subjects = [
+			'final' => 'Certyfikat ukończenia kursu - Więcej niż LEK',
+			'initial' => 'Certyfikat uczestnictwa - Więcej niż LEK',
+		];
+
 		return $this
-			->view('mail.certificate')
-			->subject('Certyfikat uczestnictwa - Więcej niż LEK')
+			->view('mail.certificate-' . $this->type)
+			->subject($subjects[$this->type])
 			->attachData($this->file, $fileName, [
 				'mime' => 'application/pdf',
 			])

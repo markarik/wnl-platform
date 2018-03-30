@@ -17,7 +17,7 @@ class SendCertificates extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'certificates:send';
+	protected $signature = 'certificates:send {type}';
 
 	/**
 	 * The console command description.
@@ -45,6 +45,13 @@ class SendCertificates extends Command
 	 */
 	public function handle()
 	{
+		$type = $this->argument('type');
+
+		if (!in_array($type, ['initial', 'final'])) {
+			$this->error('Unknown type of a certificate - ' . $type);
+			exit;
+		}
+
 		$files = Storage::disk('s3')->files(self::BASE_DIRECTORY);
 
 		foreach ($files as $file) {
@@ -54,7 +61,7 @@ class SendCertificates extends Command
 				$this->warning('User not found ' . $id);
 				continue;
 			}
-			$this->dispatch(new SendCertificate($user, $file));
+			$this->dispatch(new SendCertificate($user, $file, $type));
 			print '.';
 		}
 	}

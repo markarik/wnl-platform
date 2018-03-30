@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Events\Comments\CommentRemoved;
+use App\Events\Comments\CommentRestoredEvent;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\CommentTransformer;
 use App\Http\Requests\PostComment;
@@ -41,15 +43,26 @@ class CommentsApiController extends ApiController
 
 	public function put(UpdateComment $request)
 	{
-		$comment = Comment::find($request->route('id'));
+		$comment = Comment::withTrashed()->find($request->route('id'));
 
 		if (!$comment) {
 			return $this->respondNotFound();
 		}
 
-		$comment->update([
-			'text' => $request->input('text'),
-		]);
+		$statusResolved = $request->input('resolved');
+		if (isset($statusResolved)) {
+			if ($statusResolved) {
+				$comment->delete();
+				event(new CommentRemoved($comment, Auth::user()->id, 'resolved'));
+			} else {
+				$comment->restore();
+				event(new CommentRestoredEvent($comment, Auth::user()->id));
+			}
+		} else {
+			$comment->update([
+				'text' => $request->input('text'),
+			]);
+		}
 
 		return $this->respondOk();
 	}

@@ -11,13 +11,13 @@ const state = {
 	navigationToggleState: {},
 	overlays: {},
 	overviewView: 'stream',
-	globalNotification: false
+	modalVisible: false
 }
 
 const layouts = {
 	mobile: 'mobile',
 	tablet: 'tablet',
-	smallDesktop: 'small_screen',
+	smallDesktop: 'small_desktop',
 	largeDesktop: 'large_desktop'
 }
 
@@ -25,6 +25,7 @@ const layouts = {
 const getters = {
 	currentLayout: state => state.currentLayout,
 	isMobile: state => state.currentLayout === layouts.mobile,
+	isSmallDesktop: state => state.currentLayout === layouts.smallDesktop,
 	isLargeDesktop: state => state.currentLayout === layouts.largeDesktop,
 	isTouchScreen: state =>
 		[layouts.mobile, layouts.tablet].indexOf(state.currentLayout) !== -1,
@@ -50,9 +51,8 @@ const getters = {
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
 	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex],
 	overviewView: state => state.overviewView,
-	globalNotificationMessage: state => state.globalNotification.message,
-	globalNotificationType: state => state.globalNotification.type,
 	overlayTexts: state => values(pickBy(state.overlays, isString)),
+	modalVisible: state => state.modalVisible
 }
 
 // Mutations
@@ -94,6 +94,9 @@ const mutations = {
 	[types.UI_KILL_CHAT] (state) {
 		set(state, 'canShowChat', false)
 	},
+	[types.UI_TOGGLE_MODAL] (state, payload) {
+		set(state, 'modalVisible', payload)
+	},
 	[types.UI_DISPLAY_OVERLAY] (state, payload) {
 		if (payload.display) {
 			set(state.overlays, payload.source, payload.text || true)
@@ -106,9 +109,6 @@ const mutations = {
 	},
 	[types.UI_CHANGE_OVERVIEW_VIEW] (state, view) {
 		set(state, 'overviewView', view)
-	},
-	[types.UI_SHOW_GLOBAL_NOTIFICATION] (state, globalNotification) {
-		set(state, 'globalNotification', globalNotification)
 	}
 }
 
@@ -150,7 +150,13 @@ const actions = {
 		setTimeout(() => {
 			commit(types.UI_SHOW_GLOBAL_NOTIFICATION, false)
 		}, timeout)
-	}
+	},
+	openChat({ commit }) {
+		commit(types.UI_SET_CHAT_OPEN);
+	},
+	[types.SOCKET_CONNECTION_ERROR]({commit}) {
+		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, false)
+	},
 }
 
 export default {

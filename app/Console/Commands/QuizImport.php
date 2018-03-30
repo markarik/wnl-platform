@@ -1,11 +1,12 @@
 <?php namespace App\Console\Commands;
 
 use App\Models\QuizQuestion;
+use App\Models\QuizSet;
+use App\Models\Slide;
 use App\Models\Tag;
 use App\Models\TagsTaxonomy;
-use Storage;
-use App\Models\QuizSet;
 use Illuminate\Console\Command;
+use Storage;
 
 class QuizImport extends Command
 {
@@ -95,6 +96,21 @@ class QuizImport extends Command
 		$values = explode(self::VALUE_DELIMITER, $line);
 		$text = nl2br($values[0]);
 
+		if ($qId = $values[14]) {
+			$question = QuizQuestion::find($qId);
+			if ($question) {
+				// Line contains question id,
+				// so we're just attaching it to the new set.
+				$quizSet->questions()->attach($question);
+				if ($this->option('addNewTags')) {
+					$this->attachTags($question, $values);
+					$this->tryMatchingCollectionTaxonomy($question);
+				}
+
+				return;
+			}
+		}
+
 		$similarQuestion = $this->checkSimilarity($text, $values);
 		if ($similarQuestion !== false) {
 			if (!$quizSet->questions->contains($similarQuestion)) {
@@ -120,7 +136,7 @@ class QuizImport extends Command
 
 		for ($i = 1; $i <= 5; $i++) {
 			$hits = 0;
-			$isCorrect = $values[6] === chr(64 + $i);
+			$isCorrect = trim($values[6]) === chr(64 + $i);
 
 			$question->answers()->firstOrCreate([
 				'text'       => $values[$i],
@@ -130,6 +146,7 @@ class QuizImport extends Command
 		}
 
 		$this->attachTags($question, $values);
+		$this->attachSlides($question, $values);
 
 		$this->tryMatchingCollectionTaxonomy($question);
 
@@ -137,10 +154,10 @@ class QuizImport extends Command
 		$question->save();
 	}
 
-	protected function attachTags(&$question, $values)
+	protected function attachTags($question, $values)
 	{
-		if (!empty($values[12])) {
-			$this->globalTags[] = trim($values[12]);
+		if (!empty($values[13])) {
+			$this->globalTags[] = trim($values[13]);
 		}
 
 		$tagNames = ['LEK-' . $values[8], $values[9]];
@@ -156,6 +173,22 @@ class QuizImport extends Command
 			$tag = Tag::firstOrCreate(['name' => $tagName]);
 			if (!$question->tags->contains($tag)) {
 				$question->tags()->attach($tag);
+			}
+		}
+	}
+
+	protected function attachSlides($question, $values)
+	{
+		$slideIdsRaw = $values[12];
+
+		if (!$slideIdsRaw) return;
+
+		$ids = explode(',', str_replace(["\n", "\t", ' '], '', $slideIdsRaw));
+
+		$slides = Slide::whereIn('id', $ids)->get();
+		foreach ($slides as $slide) {
+			if (!$question->slides->contains($slide)) {
+				$question->slides()->attach($slide);
 			}
 		}
 	}
@@ -211,7 +244,8 @@ class QuizImport extends Command
 
 	protected function debug($message)
 	{
-		if (!$this->option('debug')) return;
-		$this->info($message);
+		if ($this->option('debug')) {
+			$this->info($message);
+		}
 	}
 }

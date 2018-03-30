@@ -1,21 +1,20 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use App\Models\User;
-use App\Models\UserQuizResults;
-use App\Models\UserPlanProgress;
-use App\Models\QuizQuestion;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\UserQuizResultsTransformer;
+use App\Jobs\CalculateExamResults;
 use App\Models\QuizAnswer;
+use App\Models\QuizQuestion;
+use App\Models\User;
+use App\Models\UserPlanProgress;
+use App\Models\UserQuizResults;
+use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use League\Fractal\Resource\Collection;
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserQuizResultsTransformer;
-use Illuminate\Database\QueryException;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use App\Jobs\CalculateExamResults;
-
 
 
 class UserQuizResultsApiController extends ApiController
@@ -25,13 +24,13 @@ class UserQuizResultsApiController extends ApiController
 	// quizSetId - userId - cacheVersion
 	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s';
 	const CACHE_VERSION = 1;
-	const EXAM_TAG_ID = 505;
+	const EXAM_TAG_ID = 538;
 	const EXAM_FILTER = 'by_taxonomy-exams';
 
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->resourceName = config('papi.resources.quiz_results');
+		$this->resourceName = config('papi.resources.user-quiz-results');
 	}
 
 	public function get($userId)
@@ -39,7 +38,7 @@ class UserQuizResultsApiController extends ApiController
 		$user = User::fetch($userId);
 
 		if (!Auth::user()->can('view', $user)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Collection(UserQuizResults::where('user_id', $userId)->get(), new UserQuizResultsTransformer, $this->resourceName);
@@ -57,7 +56,7 @@ class UserQuizResultsApiController extends ApiController
 		$meta = $request->get('meta');
 
 		if (!Auth::user()->can('view', $user)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		foreach ($results as $result) {
@@ -99,9 +98,9 @@ class UserQuizResultsApiController extends ApiController
 		$this->respondOk();
 	}
 
-	public function getQuiz($id, $quizId)
+	public function getQuiz($userId, $quizId)
 	{
-		$values = Redis::get(self::getQuizRedisKey($id, $quizId));
+		$values = Redis::get(self::getQuizRedisKey($userId, $quizId));
 
 		if (!empty($values)) {
 			$quiz = json_decode($values);
@@ -113,7 +112,7 @@ class UserQuizResultsApiController extends ApiController
 		]);
 	}
 
-	public function putQuiz(Request $request, $id, $quizId)
+	public function putQuiz(Request $request, $userId, $quizId)
 	{
 		$quiz = $request->quiz;
 		$recordedAnswers = $request->recordedAnswers;
@@ -128,7 +127,7 @@ class UserQuizResultsApiController extends ApiController
 				UserQuizResults::insert($recordedAnswersWithTimestamps);
 
 				UserPlanProgress
-					::where('user_id', $id)
+					::where('user_id', $userId)
 					->whereIn('question_id', collect($recordedAnswers)->pluck('quiz_question_id')->toArray())
 					->where('resolved_at', null)
 					->update(['resolved_at' => Carbon::today()]);
@@ -138,7 +137,23 @@ class UserQuizResultsApiController extends ApiController
 		(QueryException $e) {
 			throw $e;
 		} finally {
-			Redis::set(self::getQuizRedisKey($id, $quizId), json_encode($quiz));
+			Redis::set(self::getQuizRedisKey($userId, $quizId), json_encode($quiz));
+		}
+
+		return $this->respondOk();
+	}
+
+	public function delete($userId) {
+		if (Auth::user()->id !== (int) $userId) {
+			return $this->respondForbidden();
+		}
+
+		UserQuizResults::where('user_id', $userId)->delete();
+		UserPlanProgress::where('user_id', $userId)->delete();
+		$keyPattern = self::getQuizRedisKey($userId, '*');
+		$allKeys = Redis::keys($keyPattern);
+		foreach ($allKeys as $key) {
+			Redis::del($key);
 		}
 
 		return $this->respondOk();

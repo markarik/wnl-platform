@@ -43,7 +43,7 @@
 				<div class="quiz-question-meta">
 					<div class="quiz-question-tags">
 						<span v-if="displayResults && question.tags">{{$t('questions.question.tags')}}:</span>
-						<span v-if="displayResults" v-for="tag, index in question.tags"
+						<span v-if="displayResults" v-for="(tag, index) in question.tags"
 							class="quiz-question-tag"
 							:key="index"
 						>
@@ -68,7 +68,35 @@
 				</div>
 			</div>
 			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
-				<div class="quiz-question-comments">
+				<div v-if="question.explanation" class="card-item relative">
+					<header>
+						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
+						<span v-t="'quiz.annotations.explanation.header'"/>&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+					</header>
+					<div :class="{'collapsed': !showExplanation}" v-html="explanation"></div>
+				</div>
+				<div v-if="hasSlides" class="card-item">
+					<header @click="toggleSlidesList">
+						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
+						{{$t('quiz.annotations.slides.header')}} ({{slides.length}})
+						&nbsp;·&nbsp;
+						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+					</header>
+					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
+						{{slideLink(slide)}}
+					</a>
+					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" v-if="slideContent && currentModalSlide">
+						<span slot="header">{{slideLink(currentModalSlide)}}</span>
+						<wnl-slide-link
+							class="button is-primary is-outlined is-small"
+							slot="footer"
+							:context="currentModalSlide.context"
+							:blankPage="blankPage">
+								{{$t('quiz.slideModal.goToPrezentation')}}
+						</wnl-slide-link>
+					</wnl-slide-preview>
+				</div>
+				<div class="card-item">
 					<wnl-comments-list
 						commentableResource="quiz_questions"
 						urlParam="quiz_question"
@@ -86,8 +114,43 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+	.relative
+		position: relative
+	.card-item
+		border-bottom: 1px solid #dbdbdb
+		padding: $margin-small $margin-big $margin-base
+		width: 100%
+
+		header
+			color: $color-gray-dimmed
+			font-size: $font-size-minus-1
+			margin-bottom: $margin-base
+			margin-top: $margin-base
+
+		.slide-list-item
+			font-size: 0.825em
+			padding-left: $margin-base
+
+		.collapsed
+			height: 1em
+			overflow: hidden
+
+		.collapsed:after
+			content: ''
+			position: absolute
+			width: 100%
+			height: 2em
+			display: block
+			left: 0
+			bottom: $margin-base
+			+gradient-vertical(rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 100%)
+
+
 	.card-content ul
 		counter-reset: list
+
+	.card-footer
+		flex-direction: column
 
 	.quiz-question-icon
 		display: block
@@ -185,50 +248,50 @@
 	.question-edit-link
 		margin: $margin-medium 0
 		text-align: center
+
 		.button
 			.icon:first-child
 				margin-left: $margin-small
 
-	.quiz-question-comments
-		padding: $margin-small $margin-big $margin-base
-		width: 100%
 
 	.has-errors .is-unanswered
 		color: $color-orange
-</style>
 
+</style>
 <script>
 	import { isNumber, trim } from 'lodash'
 	import { mapGetters } from 'vuex'
+	import { getApiUrl } from 'js/utils/env'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
-
+	import SlideLink from 'js/components/global/SlideLink'
+	import SlidePreview from 'js/components/global/SlidePreview'
 	export default {
 		name: 'QuizQuestion',
 		components: {
 			'wnl-quiz-answer': QuizAnswer,
 			'wnl-comments-list': CommentsList,
 			'wnl-bookmark': Bookmark,
+			'wnl-slide-link': SlideLink,
+			'wnl-slide-preview': SlidePreview
 		},
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
 			return {
-				reactableResource: "quiz_questions"
+				blankPage: '_blank',
+				reactableResource: "quiz_questions",
+				slidesExpanded: false,
+				showExplanation: false,
+				show: false,
+				currentModalSlide: null,
+				slideContent: ''
 			}
 		},
 		computed: {
 			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
-			...mapGetters('quiz', [
-				'getAnswers',
-				'isComplete',
-				'isResolved',
-				'getSelectedAnswer',
-			]),
-			displayResults() {
-				return this.readOnly || this.isComplete || this.isResolved(this.id)
-			},
+			...mapGetters('course', ['getLesson', 'getSection']),
 			answers() {
 				return this.question.answers
 			},
@@ -247,8 +310,40 @@
 					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
 				}
 			},
+			watchState() {
+				if (typeof this.getReaction === 'function') {
+					return this.getReaction(this.reactableResource, this.question.id, "watch")
+				}
+			},
+			slides() {
+				return this.question.slides
+			},
+			hasSlides() {
+				return (this.question.slides || []).length
+			},
+			explanation() {
+				return this.question.explanation
+			}
 		},
 		methods: {
+			hideSlidePreview() {
+				this.show = false
+				this.slideContent = ''
+			},
+			showSlidePreview(slide) {
+				this.currentModalSlide = slide
+				const slideId = [slide.id]
+				return axios.post(getApiUrl(`slideshow_builder/.query`), {
+					query: {
+						whereIn: ['slides.id', slideId],
+					},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+				}).then(({data}) => {
+					this.slideContent = data
+				}).then(() => {
+					this.show = true
+				})
+			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
@@ -258,6 +353,24 @@
 			trim(text) {
 				return trim(text)
 			},
-		}
+			toggleSlidesList() {
+				this.slidesExpanded = !this.slidesExpanded
+			},
+			toggleExplanation() {
+				this.showExplanation = !this.showExplanation
+			},
+			slideLink(slide) {
+				let linkText = ''
+
+				if (_.get(slide, 'context.lesson.id')) {
+					linkText += this.getLesson(slide.context.lesson.id).name
+
+					if (_.get(slide, 'context.section.id')) {
+						linkText += ` / ${this.getSection(slide.context.section.id).name}`
+					}
+				}
+				return linkText || this.$t('quiz.annotations.slides.defaultLink')
+			}
+		},
 	}
 </script>

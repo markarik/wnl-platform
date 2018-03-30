@@ -1,12 +1,19 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use App\Models\User;
 use App\Http\Controllers\Api\ApiController;
-use Illuminate\Database\QueryException;
+use App\Models\Comment;
+use App\Models\Lesson;
+use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
+use App\Models\QuizQuestion;
+use App\Models\User;
+use App\Models\UserCourseProgress;
+use App\Models\UserQuizResults;
+use App\Models\UserTime;
+use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
-use Cache;
 
 class UserStateApiController extends ApiController
 {
@@ -24,7 +31,7 @@ class UserStateApiController extends ApiController
 	// userId - cacheVersion
 	const KEY_USER_TIME_TEMPLATE = 'UserState:Time:%s:%s';
 	const CACHE_VERSION = 1;
-	const INCREMENT_BY_MINUTES = 3;
+	const INCREMENT_BY_MINUTES = 10;
 
 	public function getCourse($id, $courseId)
 	{
@@ -37,7 +44,7 @@ class UserStateApiController extends ApiController
 		}
 
 		return $this->json([
-			'lessons' => $lessons
+			'lessons' => $lessons,
 		]);
 	}
 
@@ -59,8 +66,9 @@ class UserStateApiController extends ApiController
 		} else {
 			$lesson = [];
 		}
+
 		return $this->json([
-			'lesson' => $lesson
+			'lesson' => $lesson,
 		]);
 	}
 
@@ -69,23 +77,12 @@ class UserStateApiController extends ApiController
 		$lesson = $request->lesson;
 
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
+		UserCourseProgress::firstOrCreate([
+			'user_id'   => $id,
+			'lesson_id' => $lessonId,
+		]);
 
 		return $this->respondOk();
-	}
-
-	public function getTime($user)
-	{
-		$userInstance = User::find($user);
-
-		if (!Auth::user()->can('view', $userInstance)) {
-			return $this->respondForbidden();
-		}
-
-		$time = Redis::get(self::getUserTimeRedisKey($user));
-
-		return $this->json([
-			'time' => empty($time) ? 0 : $time
-		]);
 	}
 
 	public function incrementTime(Request $request, $user)
@@ -101,28 +98,112 @@ class UserStateApiController extends ApiController
 		Redis::set(self::getUserTimeRedisKey($user), $incrementedTime);
 
 		return $this->json([
-			'time' => $incrementedTime
+			'time' => $incrementedTime,
 		]);
 	}
 
-	public function saveQuizPosition(Request $request, $user) {
+	public function saveQuizPosition(Request $request, $user)
+	{
 		$cacheKey = $this->hashedFilters($request->filters);
 		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
 		Cache::tags($cacheTags)->put($cacheKey, $request->position, 60 * 24);
 
 		return $this->json([
-			'position' => $request->position
+			'position' => $request->position,
 		]);
 	}
 
-	public function getQuizPosition(Request $request, $user) {
+	public function getQuizPosition(Request $request, $user)
+	{
 		$cacheKey = $this->hashedFilters($request->filters);
 		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
 		$cachedPosition = Cache::tags($cacheTags)->get($cacheKey, $request->position);
 
 		return $this->json([
-			'position' => $cachedPosition
+			'position' => $cachedPosition,
 		]);
+	}
+
+	public function getStats(Request $request, $user)
+	{
+		$userObject = User::find($user);
+
+		if (!$userObject) {
+			return $this->respondNotFound();
+		}
+
+		// Ay Ay Ay Profile Id not User Id
+		$profileId = $userObject->profile->id;
+		$userId = $userObject->id;
+
+		$userTime = UserTime::where('user_id', $userId)->orderBy('created_at', 'desc')->first();
+		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)
+			->whereNull('section_id')
+			->whereNull('screen_id');
+		$userComments = Comment::where('user_id', $userId)->count();
+		$qnaQuestionsPosted = QnaQuestion::where('user_id', $userId)->count();
+		$qnaAnswersPosted = QnaAnswer::where('user_id', $userId)->count();
+		$quizQuestionsSolved = UserQuizResults::where('user_id', $userId)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
+		$numberOfQuizQuestions = QuizQuestion::count();
+		$numberOfLessons = Lesson::whereNotIn('group_id', [3])->count();
+		$completedCount = (clone $userCourseProgress)
+			->where('status', 'complete')
+			->count();
+
+		$startedCount = (clone $userCourseProgress)
+			->whereIn('status', ['in-progress', 'complete'])
+			->count();
+
+		$stats = [
+			'time'           => [
+				'minutes' => !empty($userTime) ? $userTime->time : 0,
+			],
+			'lessons'        => [
+				'completed' => $completedCount,
+				'started'   => $startedCount,
+				'total'     => $numberOfLessons,
+			],
+			'social'         => [
+				'comments'      => $userComments,
+				'qna_questions' => $qnaQuestionsPosted,
+				'qna_answers'   => $qnaAnswersPosted,
+			],
+			'quiz_questions' => [
+				'solved' => $quizQuestionsSolved,
+				'total'  => $numberOfQuizQuestions,
+			],
+		];
+
+		return $this->json($stats);
+	}
+
+	public function deleteCourse($userId, $courseId) {
+		$user = \Auth::user();
+		$profileId = $user->profile->id;
+		$userCourseProgress = UserCourseProgress::where('user_id', $userId)->first();
+
+		if (is_null($userCourseProgress)) {
+			return $this->respondOk();
+		}
+
+		if (!$user->can('delete', $userCourseProgress)) {
+			return $this->respondForbidden();
+		}
+
+		$lessonsKeys = Lesson::all()->pluck('id')->map(function($item) use ($profileId, $courseId) {
+			return self::getLessonRedisKey($profileId, $courseId, $item);
+		});
+
+		$lessonsKeys->each(function($lessonKey) {
+			Redis::del($lessonKey);
+		});
+
+		$courseKey = self::getCourseRedisKey($profileId, $courseId);
+		Redis::del($courseKey);
+
+		UserCourseProgress::where('user_id', $userId)->delete();
+
+		$this->respondOk();
 	}
 
 	static function getCourseRedisKey($userId, $courseId)

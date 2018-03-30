@@ -4,12 +4,12 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\QuizQuestion;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\QuizQuestion;
 
 class QuizQuestionTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['quiz_answers', 'comments'];
+	protected $availableIncludes = ['quiz_answers', 'comments', 'slides'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -24,11 +24,7 @@ class QuizQuestionTransformer extends ApiTransformer
 			'text'           => $quizQuestion->text,
 			'explanation'    => $quizQuestion->explanation,
 			'preserve_order' => $quizQuestion->preserve_order,
-			// Not sure why tags are included here...
-			// let's see what's going to happen if I comment it out :D
 			'tags'           => $quizQuestion->tags,
-			// Looks like the only purpose of 'total_hits' was to slow down the response ¯\_(ツ)_/¯
-			// 'total_hits'     => $quizQuestion->answers->sum('hits'),
 		];
 
 		if ($this->parent) {
@@ -53,6 +49,15 @@ class QuizQuestionTransformer extends ApiTransformer
 			]),
 			'quiz_answers'
 		);
+	}
+
+	public function includeSlides(QuizQuestion $quizQuestion)
+	{
+		$slides = $quizQuestion->slides;
+
+		return $this->collection($slides, new SlideTransformer([
+			'quiz_questions' => $quizQuestion->id
+		], true), 'slides');
 	}
 
 	public function includeComments(QuizQuestion $quizQuestion)

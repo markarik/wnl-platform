@@ -12,24 +12,29 @@ function _fetchReactables(presentables) {
 	let data     = {
 		query: {
 			where: [
-				['reactable_type', 'App\\Models\\Slide'],
-				['reaction_id', 4],
+				['reactable_type', 'App\\Models\\Slide']
 			],
-			whereIn: ['reactable_id', slideIds]
+			whereInMulti: [['reactable_id', slideIds], ['reaction_id', [4,5]]],
 		},
 	}
 
 	return axios.post(getApiUrl('reactables/.search'), data)
 		.then(response => {
-			let reactables = {}
+			let bookmarked = {}
+			let watched = {}
 			response.data.forEach(reactable => {
-				reactables[reactable.reactable_id] = reactable
+				if (reactable.reaction_id === 4) bookmarked[reactable.reactable_id] = reactable
+				if (reactable.reaction_id === 5) watched[reactable.reactable_id] = reactable
 			})
 
 			return presentables.map(presentable => {
 				let slideId = presentable.slide_id
 				presentable.bookmark = {
-					hasReacted: reactables.hasOwnProperty(slideId)
+					hasReacted: bookmarked.hasOwnProperty(slideId)
+				}
+
+				presentable.watch = {
+					hasReacted: watched.hasOwnProperty(slideId)
 				}
 
 				return presentable
@@ -54,9 +59,6 @@ function _fetchPresentables(slideshowId, type) {
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
-		.then(response => {
-			return _fetchReactables(response.data)
-		})
 }
 
 function getInitialState() {
@@ -85,6 +87,7 @@ function getInitialState() {
 			 * }
 			 */
 		},
+		sortedSlidesIds: []
 	}
 }
 
@@ -103,23 +106,9 @@ const getters = {
 		return state.presentables[slideNumber - 1].is_functional
 	},
 	isLoading: (state) => state.loading,
-	getSlideId: (state) => (slideOrderNumber) => {
-		return state.presentables.length === 0 ? -1 : state.presentables[slideOrderNumber].id
-	},
 	slides: (state) => state.slides,
 	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
 	slidesIds: (state) => Object.keys(state.slides),
-	bookmarkedSlideNumbers: (state) => {
-		const slides = state.slides;
-
-		return Object.keys(slides)
-			.filter((slideIndex) => {
-				return slides[slideIndex].bookmark.hasReacted === true
-			})
-			.map((slideIndex) => {
-				return slides[slideIndex].order_number
-			})
-	},
 	findRegularSlide: (state, getters) => (slideNumber, direction) => {
 		let step   = direction === 'previous' ? -1 : 1,
 			length = state.presentables.length
@@ -135,7 +124,13 @@ const getters = {
 				return length
 			}
 		}
-	}
+	},
+	presentableSortedSlidesIds: state => {
+		return state.presentables.map(presentable => presentable.slide_id)
+	},
+	slideshowSortedSlideIds: state => state.sortedSlidesIds,
+	getSlideIdFromIndex: state => index => state.sortedSlidesIds[index],
+	getSlideById: state => id => state.slides[id]
 }
 
 const mutations = {
@@ -153,6 +148,8 @@ const mutations = {
 				order_number: element.order_number,
 				comments: [],
 				bookmark: element.bookmark,
+				watch: element.watch,
+				id: element.slide_id
 			})
 		})
 	},
@@ -162,6 +159,9 @@ const mutations = {
 			set(state, field, initialState[field])
 		})
 	},
+	[types.SLIDESHOW_SET_SORTED_SLIDES_IDS] (state, ids) {
+		set(state, 'sortedSlidesIds', ids)
+	}
 }
 
 const actions = {
@@ -169,13 +169,28 @@ const actions = {
 	...reactionsActions,
 	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentables', {id, type})
+			dispatch('setupPresentablesWithReactions', {id, type})
 				.then(() => dispatch('setupComments', getters.slidesIds))
 				.then(() => resolve())
 				.catch((reason) => reject(reason))
 		})
 	},
-	setupPresentables({commit}, {id, type}) {
+	setupPresentablesWithReactions({commit}, {id, type='App\\Models\\Slideshow'}) {
+		return new Promise((resolve, reject) => {
+			_fetchPresentables(id, type)
+				.then((response) => _fetchReactables(response.data))
+				.then((presentables) => {
+					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
+					commit(types.SLIDESHOW_SET_SLIDES)
+					return resolve()
+				})
+				.catch((error) => {
+					$wnl.logger.error(error)
+					reject()
+				})
+		})
+	},
+	setupPresentables({commit}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
 				.then((presentables) => {
@@ -196,6 +211,9 @@ const actions = {
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)
+	},
+	setSortedSlidesIds({commit}, ids) {
+		commit(types.SLIDESHOW_SET_SORTED_SLIDES_IDS, ids)
 	}
 }
 

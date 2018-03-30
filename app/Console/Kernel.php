@@ -2,60 +2,21 @@
 
 namespace App\Console;
 
-use App\Models\Comment;
+use Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Artisan;
 
 class Kernel extends ConsoleKernel
 {
 	/**
-	 * The Artisan commands provided by your application.
+	 * Register the commands for the application.
 	 *
-	 * @var array
+	 * @return void
 	 */
-	protected $commands = [
-		Commands\AddressesExport::class,
-		Commands\AddContext::class,
-		Commands\AnonymizeUsers::class,
-		Commands\ArchiveChatMessages::class,
-		Commands\CancelOrder::class,
-		Commands\CategoriesTags::class,
-		Commands\ChangeOrderPaymentMethod::class,
-		Commands\CheckQuizQuestions::class,
-		Commands\CreateTaxonomy::class,
-		Commands\DropTables::class,
-		Commands\DumpCourseStructure::class,
-		Commands\EncryptPasswords::class,
-		Commands\ExamsResults::class,
-		Commands\FlushCacheByTag::class,
-		Commands\ImportTaxonomies::class,
-		Commands\IssueFinalInvoice::class,
-		Commands\ImportQuizTagsFromMap::class,
-		Commands\InvoicesExport::class,
-		Commands\LessonTags::class,
-		Commands\ListOrders::class,
-		Commands\MigrateUserData::class,
-		Commands\MarkOrderAsPaid::class,
-		Commands\MarkWrongQuestionsAsBookmarked::class,
-		Commands\MegaUltraSuperDuperChartUpdateScript::class,
-		Commands\OptimaExport::class,
-		Commands\OrdersExport::class,
-		Commands\QuizImport::class,
-		Commands\PopulateAmountColumns::class,
-		Commands\SlackDaysCron::class,
-		Commands\SectionsUpdate::class,
-		Commands\SlideshowsRemove::class,
-		Commands\SlidesFromCategory::class,
-		Commands\SlidesImport::class,
-		Commands\SlidesSnippets::class,
-		Commands\StoreProgress::class,
-		Commands\StoreTime::class,
-		Commands\TagsCleanup::class,
-		Commands\TagsFromTaxonomies::class,
-		Commands\TaxonomizeTags::class,
-		Commands\WarmUpCache::class,
-	];
+	protected function commands()
+	{
+		$this->load(__DIR__ . '/Commands');
+	}
 
 	/**
 	 * Define the application's command schedule.
@@ -67,7 +28,7 @@ class Kernel extends ConsoleKernel
 	protected function schedule(Schedule $schedule)
 	{
 		$schedule
-			->command('chat:archive-messages')
+			->command('orders:statsExport')
 			->hourly();
 
 		$schedule
@@ -88,20 +49,17 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('progress:store')
-			->dailyAt('02:30');
+			->hourly();
 
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
-	}
 
-	/**
-	 * Register the Closure based commands for the application.
-	 *
-	 * @return void
-	 */
-	protected function commands()
-	{
-		require base_path('routes/console.php');
+		$schedule
+			->command('role:assignFromProducts edition-2-participant 5,6')
+			->everyFiveMinutes()
+			->after(function () use ($schedule) {
+				Artisan::call('cache:tag', ['tag' => 'user_profiles']);
+			});
 	}
 }

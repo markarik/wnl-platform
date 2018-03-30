@@ -2,7 +2,6 @@
 
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
-use App\Models\QuizQuestion;
 use App\Models\UserPlan;
 use Carbon\Carbon;
 use Auth;
@@ -52,6 +51,7 @@ class PlannedFilter extends ApiFilter
 			],
 			'message' => 'planned',
 			'type'    => 'list',
+			'is_user_specific' => true
 		];
 	}
 

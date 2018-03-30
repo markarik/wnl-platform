@@ -1,7 +1,7 @@
 <?php namespace App\Listeners\Handlers;
 
 
-use App\Events\CommentPosted;
+use App\Events\Comments\CommentPosted;
 use App\Listeners\UserNotificationsGate;
 use App\Models\User;
 
@@ -15,7 +15,8 @@ class CommentPostedHandler
 	 */
 	public function handle(CommentPosted $event, UserNotificationsGate $gate)
 	{
-		$commentable = $event->comment->commentable;
+		$comment = $event->comment;
+		$commentable = $comment->commentable;
 
 		$gate->notifyModerators($event);
 
@@ -25,7 +26,14 @@ class CommentPostedHandler
 			$gate->notifyPrivate($commentableAuthor, $event);
 		}
 
-		$excluded = $this->notifyCoCommentators($commentable, $gate, $event);
+		$watchers = $this->getWatchers($comment);
+		$coComentators = $this->getCoComentators($commentable, $event);
+
+		$excluded = $watchers->merge($coComentators)->unique('id');
+
+		foreach ($excluded as $user) {
+			$gate->notifyPrivate($user, $event);
+		}
 
 		$excluded->push($commentableAuthor);
 
@@ -35,7 +43,7 @@ class CommentPostedHandler
 		}
 	}
 
-	protected function notifyCoCommentators($commentable, $gate, $event)
+	protected function getCoComentators($commentable, $event)
 	{
 		$query = User::select()
 			->whereHas('comments', function ($query) use ($commentable) {
@@ -47,12 +55,19 @@ class CommentPostedHandler
 			$query->where('id', '!=', $commentable->user->id);
 		}
 
-		$users = $query->get();
+		return $query->get();
+	}
 
-		foreach ($users as $user) {
-			$gate->notifyPrivate($user, $event);
-		}
+	protected function getWatchers($comment)
+	{
+		$reaction = \App\Models\Reaction::type('watch');
+		$reactables = \App\Models\Reactable::select()
+			->where('reaction_id', $reaction->id)
+			->where('reactable_type', $comment->commentable_type)
+			->where('reactable_id', $comment->commentable_id)
+			->get();
 
-		return $users;
+		$userIds = $reactables->pluck('user_id')->toArray();
+		return User::whereIn('id', $userIds)->get();
 	}
 }

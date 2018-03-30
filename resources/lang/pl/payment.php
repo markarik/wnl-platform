@@ -5,6 +5,25 @@ return [
 	'back-to-website' => 'Strona o kursie',
 
 	/**
+	 * Voucher
+	 */
+	'voucher-current' => 'Super! Korzystasz ze zniżki <strong>:name</strong>, która obniży ostateczną kwotę zamówienia o :value!',
+	'voucher-percentage' => ':value%',
+	'voucher-amount' => ':valuezł',
+	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
+	'voucher-tries-limit-reached' => 'Dozwolona liczba prób wpisania kuponu została przekroczona.',
+	'voucher-product-incompatible' => 'Kupon nie obowiązuje dla zamówionego przez Ciebie produktu.',
+	'study-buddy-self-application' => 'Niestety nie możesz wykorzystać własnego kuponu Study Buddy. Przekaż go znajomej osobie, a oboje otrzymacie zniżkę :)',
+	'voucher-already-has' => 'Wygląda na to, że do Twojego konta jest już przypisana zniżka <strong>:name</strong>.<br>Przypominamy, że promocje nie łączą się, więc użycie kodu ZASTĄPI 50% zniżkę. ;)',
+	'voucher-title' => 'Masz kod? Super!',
+	'voucher-subtitle' => 'Wpisz go poniżej, aby wykorzystać zniżkę!',
+	'voucher-skip' => 'Pomiń ten krok i przejdź do wyboru kursu',
+	'voucher-label' => 'Wpisz kod:',
+	'voucher-submit' => 'Wykorzystaj kod',
+	'voucher-existing-user' => 'Chcesz skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzednich edycji? Zaloguj się i kontynuuj zamówienie!',
+	'voucher-existing-user-button' => 'Zaloguj się',
+
+	/**
 	 * Payment Steps Menu
 	 */
 	'payment-steps-select-product' => 'Wybór wariantu kursu',
@@ -39,6 +58,9 @@ return [
 			Baza 3500 pytań do LEK-u w cenie! System ułatwiający powtarzanie najtrudniejszych pytań i łatwe przerobienie wszystkich!
 		</li>
 		<li class="list-group-item">
+			2500 otwartych pytań pomagających na bieżąco weryfikować wiedzę!
+		</li>
+		<li class="list-group-item">
 			Codzienna porcja wiedzy o efektywnym procesie nauki, która przyda się nie tylko podczas przygotowań do egzaminu!
 		</li>
 		<li class="list-group-item">
@@ -70,7 +92,7 @@ return [
 	'select-product-online-button-label' => 'Wybieram kurs internetowy',
 	'select-product-features-bonus-knowledge' => 'Indywidualne spotkania z prowadzącymi kurs',
 	'select-product-workshops-heading' => 'O warsztatach',
-	'select-product-workshops-description' => '<a href="https://wiecejnizlek.pl/o-warsztatach" target="_blank">Warsztaty</a> w ramach naszego kursu do LEK-u, to nie tylko okazja do uzyskania odpowiedzi na najtrudniejsze pytania! Pozwalają również skorzystać z doświadczenia wyjątkowych dydaktyków i specjalistów w dziedzinach chorób wewnętrznych, pediatrii, medycyny ratunkowej oraz prawa medycznego.',
+	'select-product-workshops-description' => '<a href="https://wiecejnizlek.pl/o-warsztatach" target="_blank">Warsztaty</a> w ramach naszego kursu, to doskonała okazja do lepszego przygotowania się do pierwszych kroków w praktyce zawodowej! Poruszane tematy mają w zamyśle przygotować Was lepiej do pracy oraz nauki w trakcie specjalizacji.',
 	'select-product-q-and-a-heading' => 'Masz wątpliwości?',
 	'select-product-q-and-a-description' => 'Na podstronie <a href="https://wiecejnizlek.pl/o-kursie" target="_blank">O kursie</a> odpowiadamy na wszystkie pytania dotyczące kursu. Od dat i planu zajęć, przez opis metodyki i materiałów, po misję, która motywuje nas do działania - wszystko w jednym miejscu. :) Jeżeli nie rozwiejemy Twoich wątpliwości, napisz do nas, a na pewno dodamy odpowiedź do strony!',
 	'select-product-read-more' => 'Przeczytaj więcej',
@@ -126,6 +148,7 @@ return [
 	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',
 
 	'personal-data-submit' => 'Załóż konto i przejdź dalej',
+	'personal-data-edit' => 'Zapisz i przejdź dalej',
 
 	/**
 	 * Personal data verification step
@@ -134,19 +157,22 @@ return [
 	'confirm-order-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
 	'confirm-order-heading' => 'Twoje zamówienie',
 	'confirm-order-price' => ':pricezł brutto',
-	'confirm-order-coupon' => 'Korzystasz z kuponu <strong>:name</strong> o wartości <strong>:value</strong>.',
+	'confirm-order-coupon' => 'Korzystasz ze zniżki <strong>:name</strong> o wartości <strong>:value</strong>.',
 
 	'confirm-personal-data-heading' => 'Twoje dane',
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie, dokonaj płatności przez system Przelewy24',
+	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie wybierz metodę płatności',
 	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
 	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
 	'confirm-method-instalments-button'    => 'Kupuję i płacę na raty',
 	'confirm-method-online-payment-button' => 'Kupuję i płacę przez Przelewy24',
+	'confirm-method-free-button' => 'Kupuję korzystając ze 100% zniżki',
+
+	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',
-
+	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu innych produktów. Cena nie obejmuje nowych materiałów.',
 ];

@@ -10,15 +10,22 @@
 
 <section class="section">
 	<div class="container">
+		{{-- <div class="has-text-centered">
+			<p class="margin bottom">
+				<a href="{{route('payment-personal-data', 'wnl-album')}}">
+					Zamów tylko nowe materiały
+				</a>
+			</p>
+		</div> --}}
 		<div class="columns is-hidden-mobile has-text-centered">
-			<div class="column">
+			{{-- <div class="column">
 				@if(!$onsite->available)
 					<div class="notification has-text-centered strong">Brak miejsc :(</div>
 				@else
 					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
 						@lang('payment.select-product-onsite-button-label')
 					</a>
-					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/50</p>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
 				@endif
 			</div>
 			<div class="column">
@@ -28,8 +35,13 @@
 					<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 						@lang('payment.select-product-online-button-label')
 					</a>
-					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/250</p>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
 				@endif
+			</div> --}}
+			<div class="column">
+				<div class="notification has-text-centered strong">
+					Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+				</div>
 			</div>
 		</div>
 		<div class="columns">
@@ -53,14 +65,14 @@
 						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
 							@lang('payment.select-product-onsite-button-label')
 						</a>
-						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/50</p>
+						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
 					@endif
 				</div>
 			</div>
 			<div class="column">
 				<div class="box">
 					<p class="title">@lang('payment.select-product-online-heading')</p>
-					<p class="subtitle">@lang('common.currency', ['value' => '1500'])</p>
+					<p class="subtitle">@lang('common.currency', ['value' => 1500])</p>
 					{{-- <p class="caption">@lang('payment.select-product-coupon', ['value' => 1300])</p> --}}
 					<ul class="list-group">
 						@lang('payment.select-product-online-description')
@@ -73,20 +85,20 @@
 					<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 						@lang('payment.select-product-online-button-label')
 					</a>
-					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/250</p>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
 					@endif
 				</div>
 			</div>
 		</div>
 		<div class="columns is-hidden-mobile has-text-centered">
-			<div class="column">
+			{{-- <div class="column">
 				@if(!$onsite->available)
 					<div class="notification has-text-centered strong">Brak miejsc :(</div>
 				@else
 					<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary">
 						@lang('payment.select-product-onsite-button-label')
 					</a>
-					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/50</p>
+					<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
 				@endif
 			</div>
 			<div class="column">
@@ -96,8 +108,13 @@
 				<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary is-outlined">
 					@lang('payment.select-product-online-button-label')
 				</a>
-				<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/250</p>
+				<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
 				@endif
+			</div> --}}
+			<div class="column">
+				<div class="notification has-text-centered strong">
+					Zapisy ruszają 3 kwietnia o godz. 12:00! <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o nich!
+				</div>
 			</div>
 		</div>
 	</div>

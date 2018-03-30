@@ -4,18 +4,16 @@
 			<wnl-text-loader></wnl-text-loader>
 		</div>
 		<div class="qna-question" ref="highlight">
-			<div class="votes">
-				<wnl-vote
-					type="up"
-					:reactableId="questionId"
-					:reactableResource="reactableResource"
-					:state="voteState"
-					module="qna"
-				></wnl-vote>
-			</div>
+			<wnl-vote
+				type="up"
+				:reactableId="questionId"
+				:reactableResource="reactableResource"
+				:state="voteState"
+				module="qna"
+			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content" v-html="content"></div>
+					<div class="qna-question-content content" v-html="content"></div>
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactableId="questionId"
@@ -26,36 +24,48 @@
 					></wnl-bookmark>
 				</div>
 				<div class="tags" v-if="tags.length > 0">
-					<span v-for="tag, key in tags" class="tag is-light">
+					<span v-for="(tag, key) in tags" class="tag is-light" :key=key>
 						<span>{{tag}}</span>
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<wnl-avatar
-							:fullName="author.full_name"
-							:url="author.avatar"
-							size="medium">
-					</wnl-avatar>
+					<div class="modal-activator" @click="showModal">
+						<wnl-avatar class="avatar"
+								:fullName="author.full_name"
+								:url="author.avatar"
+								size="medium">
+						</wnl-avatar>
+						<span class="qna-meta-info">
+							{{ author.display_name }}
+						</span>
+					</div>
 					<span class="qna-meta-info">
-						{{author.full_name}} ·
+						· {{time}}
 					</span>
-					<span class="qna-meta-info">
-						{{time}}
-					</span>
-					<span v-if="isCurrentUserAuthor && !readOnly">
+					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
 							:requestRoute="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
+					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
 				</div>
+				<slot name="context"></slot>
 			</div>
 		</div>
-		 <div class="qna-answers">
+		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<div class="level">
-				<div class="level-left">
-					<p class="text-dimmed">Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
+				<div class="level-left qna-answers-heading">
+					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
+					<wnl-watch
+						:reactableId="questionId"
+						:reactableResource="reactableResource"
+						:state="watchState"
+						:reactionsDisabled="reactionsDisabled"
+						module="qna"
+					>
+					</wnl-watch>
 				</div>
 				<div class="level-right" v-if="!readOnly">
 					<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
@@ -75,9 +85,9 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
-			<wnl-qna-answer v-if="allAnswers"
-				v-for="answer in otherAnswers"
+			<wnl-qna-answer v-if="hasAnswers && !showAllAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
+			<wnl-qna-answer v-else-if="showAllAnswers"
+				v-for="answer in allAnswers"
 				:answer="answer"
 				:questionId="questionId"
 				:key="answer.id"
@@ -85,11 +95,14 @@
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
 			<a class="qna-answers-show-all"
-				v-if="!allAnswers && otherAnswers.length > 0"
-				@click="allAnswers = true">
+				v-if="!showAllAnswers && otherAnswers.length > 0"
+				@click="showAllAnswers = true">
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+			<wnl-user-profile-modal :author="author"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -114,6 +127,13 @@
 		border-bottom: $border-light-gray
 		padding: $margin-base
 
+	.modal-activator
+		display: flex
+		flex-direction: row
+		cursor: pointer
+		align-items: center
+		color: $color-sky-blue
+
 	.qna-question-content
 		font-size: $font-size-plus-1
 		justify-content: flex-start
@@ -125,10 +145,23 @@
 		strong
 			font-weight: $font-weight-black
 
+	.qna-answers-heading
+		color: $color-gray-dimmed
+
 	.qna-answers
-		margin-left: $margin-huge
-		margin-top: $margin-base
 		margin: $margin-base $margin-huge $margin-huge $margin-huge
+		position: relative
+
+		&.disabled:before
+			background: $color-white-transparent
+			position: absolute
+			content: ' '
+			cursor: not-allowed
+			height: calc(100% + #{$margin-base} + #{$margin-huge})
+			left: -$margin-huge
+			top: -$margin-base
+			width: calc(100% + #{$margin-huge} + #{$margin-huge})
+			z-index: $z-index-overlay
 
 	.qna-thread.is-mobile
 		.qna-answers
@@ -165,33 +198,43 @@
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
 
+	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Delete from 'js/components/global/form/Delete'
+	import Resolve from 'js/components/global/form/Resolve'
 	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
 	import QnaAnswer from 'js/components/qna/QnaAnswer'
 	import Vote from 'js/components/global/reactions/Vote'
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import highlight from 'js/mixins/highlight'
-
+	import Watch from 'js/components/global/reactions/Watch'
+	import Modal from 'js/components/global/Modal'
+	import moderatorFeatures from 'js/perimeters/moderator'
 	import { timeFromS } from 'js/utils/time'
 
 	export default {
 		name: 'QnaQuestion',
 		mixins: [ highlight ],
+		perimeters: [moderatorFeatures],
 		components: {
 			'wnl-delete': Delete,
+			'wnl-resolve': Resolve,
 			'wnl-vote': Vote,
 			'wnl-qna-answer': QnaAnswer,
 			'wnl-qna-new-answer-form': NewAnswerForm,
 			'wnl-bookmark': Bookmark,
+			'wnl-watch': Watch,
+			'wnl-modal': Modal,
+			'wnl-user-profile-modal': UserProfileModal,
 		},
-		props: ['questionId', 'readOnly', 'reactionsDisabled'],
+		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 		data() {
 			return {
-				allAnswers: false,
+				showAllAnswers: false,
 				loading: false,
 				showAnswerForm: false,
 				reactableResource: "qna_questions",
 				highlightableResources: ["qna_question", "reaction"],
+				isVisible: false,
 			}
 		},
 		computed: {
@@ -201,7 +244,8 @@
 				'questionAnswersFromHighestUpvoteCount',
 				'questionTags',
 				'getReaction',
-				'questionAnswers'
+				'questionAnswers',
+				'answer'
 			]),
 			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
 			question() {
@@ -225,7 +269,7 @@
 				}
 			},
 			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.id
+				return this.currentUserId === this.author.user_id
 			},
 			resourceRoute() {
 				return `qna_questions/${this.id}`
@@ -243,16 +287,27 @@
 				return this.answersFromHighestUpvoteCount.length > 0
 			},
 			latestAnswer() {
-				return _.head(this.answersFromHighestUpvoteCount) || {}
+				if (this.config.highlighted[this.id]) {
+					const answerId = this.config.highlighted[this.id]
+					return this.answer(answerId)
+				} else {
+					return _.head(this.answersFromHighestUpvoteCount) || {}
+				}
 			},
 			otherAnswers() {
 				return _.tail(this.answersFromHighestUpvoteCount) || []
+			},
+			allAnswers() {
+				return this.answersFromHighestUpvoteCount
 			},
 			tags() {
 				return this.questionTags(this.questionId).map((tag) => tag.name) || []
 			},
 			bookmarkState() {
 				return this.getReaction(this.reactableResource, this.questionId, "bookmark")
+			},
+			watchState() {
+				return this.getReaction(this.reactableResource, this.questionId, "watch")
 			},
 			voteState() {
 				return this.getReaction(this.reactableResource, this.questionId, "upvote")
@@ -272,10 +327,16 @@
 				const questionId = _.get(this.$route, 'query.qna_question')
 
 				if (questionId == this.questionId && this.answerInUrl) return true
-			}
+			},
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestion', 'removeQuestion']),
+			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
+			showModal() {
+				this.isVisible = true
+			},
+			closeModal() {
+				this.isVisible = false
+			},
 			dispatchFetchQuestion() {
 				return this.fetchQuestion(this.id)
 					.then(() => {
@@ -301,13 +362,13 @@
 			},
 			refreshQuestionAndShowAnswers() {
 				return this.dispatchFetchQuestion(() => {
-					this.allAnswers = true
+					this.showAllAnswers = true
 				})
 			}
 		},
 		mounted() {
 			if (this.isQuestionAnswerInUrl) {
-				this.allAnswers = true
+				this.showAllAnswers = true
 			}
 
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
@@ -323,7 +384,7 @@
 
 				if (this.isQuestionAnswerInUrl) {
 					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
-					this.allAnswers = true
+					this.showAllAnswers = true
 				}
 			},
 			'isOverlayVisible' () {

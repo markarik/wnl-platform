@@ -1,12 +1,12 @@
 <template>
-	<div id="app" v-if="!isCurrentUserLoading">
+	<div id="app" v-if="!isCurrentUserLoading" :class="{'modal-active': modalVisible}">
 		<div class="wnl-overlay" v-if="shouldDisplayOverlay">
 			<span class="loader"></span>
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
-		<wnl-global-notification/>
 		<div class="wnl-main">
+			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>
 		</div>
 	</div>
@@ -44,15 +44,17 @@
 	import { isEmpty } from 'lodash'
 
 	import Navbar from 'js/components/global/Navbar.vue'
-	import GlobalNotification from 'js/components/global/GlobalNotification.vue'
+	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
 	import {getApiUrl} from 'js/utils/env';
+	import {startTracking} from 'js/services/activityMonitor';
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
 
 	export default {
 		name: 'App',
 		components: {
 			'wnl-navbar': Navbar,
-			'wnl-global-notification': GlobalNotification
+			'wnl-alerts': Alerts,
 		},
 		computed: {
 			...mapGetters([
@@ -61,6 +63,8 @@
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
+				'alerts',
+				'modalVisible'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
@@ -69,14 +73,14 @@
 		methods: {
 			...mapActions([
 				'resetLayout',
-				'setActiveUsers',
 				'setLayout',
 				'setupCurrentUser',
-				'toggleOverlay',
-				'userJoined',
-				'userLeft'
+				'toggleOverlay'
 			]),
+			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
+			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
+			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', {
 				courseSetup: 'setup',
 				checkUserRoles: 'checkUserRoles',
@@ -86,13 +90,24 @@
 			this.toggleOverlay({source: 'course', display: true})
 			sessionStore.clearAll()
 
-			Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
+			return Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
-					window.setInterval(() => {
-						axios.put(getApiUrl(`users/${this.currentUserId}/state/time`))
-					}, 1000 * 60 * 3)
-
+					// Setup Notifications
 					this.initNotifications()
+					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
+
+					// Setup Chat
+					const userChannel = `authenticated-user`
+					this.fetchUserRoomsWithMessages({page: 1})
+						.then((pointer) => this.$socketJoinRoom(userChannel, pointer))
+						.then((data) => {
+							this.updateFromEventLog(data.events)
+							this.setConnectionStatus(true)
+							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)
+						})
+
+					// Setup time tracking
+					startTracking(this.currentUserId);
 
 					this.$router.afterEach((to) => {
 						!to.params.keepsNavOpen && this.resetLayout()
@@ -103,10 +118,11 @@
 						this.setLayout(currentLayout)
 					})
 
+					// Setup active users
 					window.Echo.join('active-users')
-						.here(users => this.setActiveUsers(users))
-						.joining(user => this.userJoined(user))
-						.leaving(user => this.userLeft(user))
+						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
+						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
+						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
 
 					this.checkUserRoles(this.currentUserRoles)
 					this.toggleOverlay({source: 'course', display: false})

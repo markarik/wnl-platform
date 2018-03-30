@@ -4,36 +4,104 @@
 namespace Lib\Invoice;
 
 
+use App\Models\Invoice as InvoiceModel;
 use App\Models\Order;
 use App\Models\User;
 use Barryvdh\DomPDF\PDF;
 use Dompdf\Dompdf;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Exception;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Illuminate\Http\Response;
-
 
 class Invoice
 {
 	const PROFORMA_SERIES_NAME = 'PROFORMA';
 	const ADVANCE_SERIES_NAME = 'F-ZAL';
 	const FINAL_SERIES_NAME = 'FK';
+	const VAT_SERIES_NAME = 'FV';
+	const CORRECTIVE_SERIES_NAME = 'KOR';
 	const VAT_THRESHOLD = 159452.00;
 	const VAT_ZERO = 0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
 
-	public function issueFromOrder(Order $order, $proforma = false)
+	public function vatInvoice(Order $order)
 	{
-		if ($proforma) {
-			return $this->proforma($order);
-		} else {
-			return $this->advance($order);
+		$vatValue = $this->getVatValue($order->paid_amount);
+		$vatString = $this->getVatString($vatValue);
+		$invoice = $order->invoices()->create([
+			'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
+			'series' => self::VAT_SERIES_NAME,
+			'amount' => $order->paid_amount,
+			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+		]);
+
+		$data = [
+			'notes'       => [],
+			'invoiceData' => [
+				'id'             => $invoice->id,
+				'full_number'    => $invoice->full_number,
+				'date'           => $invoice->created_at->format('d.m.Y'),
+				'payment_date'   => $invoice->created_at->format('d.m.Y'),
+				'payment_method' => 'przelew',
+			],
+		];
+
+		$data['buyer'] = $this->getBuyerData($order->user);
+
+		$data['ordersList'] = [
+			[
+				'product_name' => $order->product->invoice_name,
+				'unit'         => 'szt.',
+				'amount'       => 1,
+			],
+		];
+		$totalPrice = $order->product->price;
+
+		if ($coupon = $order->coupon) {
+			$data['coupon'] = [
+				'value'             => $order->coupon_amount,
+				'total_with_coupon' => $order->total_with_coupon,
+			];
+			$totalPrice = $order->total_with_coupon;
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
+
+		// Calculate netto, brutto, VAT
+		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
+		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
+		$data['ordersList'][0]['vat'] = $vatString;
+
+		$data['settlement'] = [
+			'priceNet'   => $this->price($order->paid_amount / (1 + $vatValue)),
+			'vatValue'   => $this->price($order->paid_amount - $order->paid_amount / (1 + $vatValue)),
+			'priceGross' => $this->price($order->paid_amount),
+		];
+
+		$data['remainingAmount'] = $this->price($totalPrice - $order->paid_amount);
+
+		$data['recentSettlement'] = $order->paid_amount;
+
+		if ($vatValue === self::VAT_ZERO) {
+			$data['ordersList'][0]['vatValue'] = '-';
+		} else {
+			$data['ordersList'][0]['vatValue'] = $this->price($vatValue * $totalPrice / (1 + $vatValue)) . 'zł';
+		}
+
+		$data['summary'] = [
+			'total' => $this->price($totalPrice),
+		];
+
+		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
+		if ($vatValue === self::VAT_ZERO) {
+			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+		}
+
+		$this->renderAndSave('payment.invoices.vat', $data);
+
+		return $invoice;
 	}
 
 	public function proforma(Order $order)
@@ -48,12 +116,12 @@ class Invoice
 		]);
 
 		$data = [
-			'notes' => [],
+			'notes'       => [],
 			'invoiceData' => [
-				'id' => $invoice->id,
-				'full_number' => $invoice->full_number,
-				'date' => $invoice->created_at->format('d.m.Y'),
-				'payment_date' => $invoice->created_at->addDays(self::DAYS_FOR_PAYMENT)->format('d.m.Y'),
+				'id'             => $invoice->id,
+				'full_number'    => $invoice->full_number,
+				'date'           => $invoice->created_at->format('d.m.Y'),
+				'payment_date'   => $invoice->created_at->addDays(self::DAYS_FOR_PAYMENT)->format('d.m.Y'),
 				'payment_method' => 'przelew',
 			],
 		];
@@ -63,19 +131,19 @@ class Invoice
 		$data['ordersList'] = [
 			[
 				'product_name' => $order->product->invoice_name,
-				'unit' => 'szt.',
-				'amount' => 1,
+				'unit'         => 'szt.',
+				'amount'       => 1,
 			],
 		];
 		$totalPrice = $order->product->price;
 
-		if ($order->coupon) {
+		if ($coupon = $order->coupon) {
 			$data['coupon'] = [
-				'value' => $order->coupon_amount,
+				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
-			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 
 		// Calculate netto, brutto, VAT
@@ -116,12 +184,12 @@ class Invoice
 		]);
 
 		$data = [
-			'notes' => [],
+			'notes'       => [],
 			'invoiceData' => [
-				'id' => $invoice->id,
-				'full_number' => $invoice->full_number,
-				'date' => $invoice->created_at->format('d.m.Y'),
-				'payment_date' => $invoice->created_at->format('d.m.Y'),
+				'id'             => $invoice->id,
+				'full_number'    => $invoice->full_number,
+				'date'           => $invoice->created_at->format('d.m.Y'),
+				'payment_date'   => $invoice->created_at->format('d.m.Y'),
 				'payment_method' => 'przelew',
 			],
 		];
@@ -131,19 +199,19 @@ class Invoice
 		$data['ordersList'] = [
 			[
 				'product_name' => $order->product->invoice_name,
-				'unit' => 'szt.',
-				'amount' => 1,
+				'unit'         => 'szt.',
+				'amount'       => 1,
 			],
 		];
 		$totalPrice = $order->product->price;
 
-		if ($order->coupon) {
+		if ($coupon = $order->coupon) {
 			$data['coupon'] = [
-				'value' => $order->coupon_amount,
+				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
-			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 
 		// Calculate netto, brutto, VAT
@@ -184,7 +252,10 @@ class Invoice
 
 	public function finalInvoice(Order $order)
 	{
-		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$previousAdvances = $order->invoices()->whereIn('series', [
+			self::ADVANCE_SERIES_NAME,
+			self::CORRECTIVE_SERIES_NAME,
+		])->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
@@ -201,7 +272,7 @@ class Invoice
 			'invoiceData' => [
 				'id'             => $invoice->id,
 				'full_number'    => $invoice->full_number,
-				'date'           => $invoice->created_at->format('d.m.Y'),
+				'date'           => $order->product->delivery_date->format('d.m.Y'),
 				'payment_date'   => $invoice->created_at->format('d.m.Y'),
 				'payment_method' => 'przelew',
 			],
@@ -218,13 +289,13 @@ class Invoice
 		];
 		$totalPrice = $order->product->price;
 
-		if ($order->coupon) {
+		if ($coupon = $order->coupon) {
 			$data['coupon'] = [
 				'value'             => $order->coupon_amount,
 				'total_with_coupon' => $order->total_with_coupon,
 			];
 			$totalPrice = $order->total_with_coupon;
-			$data['notes'][] = 'Cena obniżona na podstawie kuponu Zniżka 200zł dla subskrybentów.';
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
 		}
 
 		// Calculate netto, brutto, VAT
@@ -251,6 +322,8 @@ class Invoice
 
 		$data['summary'] = [
 			'total' => $this->price($totalPrice),
+			'net' => $this->price($totalPrice / 1.23),
+			'vat' => $this->price($totalPrice - $totalPrice / 1.23),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -280,8 +353,105 @@ class Invoice
 		$data['n'] = function ($price) {
 			return number_format($price, 2, ',', ' ');
 		};
+		$data['invoiceOrder'] = $order;
 
 		$this->renderAndSave('payment.invoices.final', $data);
+
+		return $invoice;
+	}
+
+	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference)
+	{
+		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
+		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
+		$vatString = $this->getVatString($vatValue);
+		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
+		$invoice = $order->invoices()->create([
+			'number' => $this->nextNumberInSeries(self::CORRECTIVE_SERIES_NAME),
+			'series' => self::CORRECTIVE_SERIES_NAME,
+			'amount' => $difference,
+			'vat'    => $corrected->vat,
+		]);
+
+		$data = [
+			'notes'            => [],
+			'invoiceData'      => [
+				'id'             => $invoice->id,
+				'full_number'    => $invoice->full_number,
+				'date'           => $invoice->created_at->format('d.m.Y'),
+				'payment_date'   => $invoice->created_at->format('d.m.Y'),
+				'payment_method' => 'przelew',
+			],
+			'difference'       => $difference,
+			'correctedInvoice' => [
+				'number' => $corrected->full_number,
+			],
+			'reason'           => $reason,
+			'paid'             => $order->paid_amount,
+		];
+
+		$data['buyer'] = $this->getBuyerData($order->user);
+
+		$data['ordersList'] = [
+			[
+				'product_name' => $order->product->invoice_name,
+				'unit'         => 'szt.',
+				'amount'       => 1,
+			],
+		];
+		$data['ordersCorrected'] = [
+			[
+				'product_name' => $order->product->invoice_name,
+				'unit'         => 'szt.',
+				'amount'       => 1,
+			],
+		];
+		$totalPrice = $corrected->amount;
+		$totalCorrected = $corrected->amount + $difference;
+
+		if ($coupon = $order->coupon) {
+			$data['coupon'] = [
+				'value'             => $order->coupon_amount,
+				'total_with_coupon' => $order->total_with_coupon,
+			];
+			$data['notes'][] = "Cena obniżona na podstawie kuponu {$coupon->name}.";
+		}
+
+		// Calculate netto, brutto, VAT
+		$data['ordersList'][0]['priceGross'] = $this->price($totalPrice);
+		$data['ordersList'][0]['priceNet'] = $this->price($totalPrice / (1 + $vatValue));
+		$data['ordersList'][0]['vat'] = $vatString;
+
+		$data['ordersCorrected'][0]['priceGross'] = $this->price($totalCorrected);
+		$data['ordersCorrected'][0]['priceNet'] = $this->price($totalCorrected / (1 + $vatValue));
+		$data['ordersCorrected'][0]['vat'] = $vatString;
+
+		$data['remainingAmount'] = $this->price($totalPrice - $totalPaid);
+
+		$data['previousAdvances'] = $previousAdvances;
+		$data['recentSettlement'] = $recentSettlement;
+
+		if ($vatValue === self::VAT_ZERO) {
+			$data['ordersList'][0]['vatValue'] = '-';
+			$data['ordersCorrected'][0]['vatValue'] = '-';
+		} else {
+			$data['ordersList'][0]['vatValue'] = $this->price($vatValue * $totalPrice / (1 + $vatValue)) . 'zł';
+			$data['ordersCorrected'][0]['vatValue'] = $this->price($vatValue * $totalCorrected / (1 + $vatValue)) . 'zł';
+		}
+
+		$data['taxDifference'] = [
+			'gross' => $difference,
+			'vat'   => $this->price($vatValue * $difference / (1 + $vatValue)),
+			'net'   => $this->price($difference / (1 + $vatValue)),
+		];
+
+		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
+		if ($vatValue === self::VAT_ZERO) {
+			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+		}
+
+		$this->renderAndSave('payment.invoices.corrective', $data);
 
 		return $invoice;
 	}
@@ -290,21 +460,21 @@ class Invoice
 	{
 		if ($user->invoice) {
 			return [
-				'name' => $user->invoice_name,
+				'name'    => $user->invoice_name,
 				'address' => $user->invoice_address,
-				'zip' => $user->invoice_zip,
-				'city' => $user->invoice_city,
+				'zip'     => $user->invoice_zip,
+				'city'    => $user->invoice_city,
 				'country' => $user->invoice_country,
-				'nip' => 'NIP: ' . $user->invoice_nip,
+				'nip'     => 'NIP: ' . $user->invoice_nip,
 			];
 		} else {
 			return [
-				'name' => $user->full_name,
+				'name'    => $user->full_name,
 				'address' => $user->address,
-				'zip' => $user->zip,
-				'city' => $user->city,
+				'zip'     => $user->zip,
+				'city'    => $user->city,
 				'country' => '',
-				'nip' => '',
+				'nip'     => '',
 			];
 		}
 	}
@@ -344,20 +514,24 @@ class Invoice
 		return $dbResult + 1;
 	}
 
-	private function getVatValue($currentSettlement = 0) {
+	private function getVatValue($currentSettlement = 0)
+	{
 		$sumAfterOrder = $this->advanceInvoiceSum() + $currentSettlement;
 		\Log::notice("Advances invoices sum: {$sumAfterOrder}");
 
 		if ($sumAfterOrder < self::VAT_THRESHOLD) {
 			return self::VAT_ZERO;
 		}
+
 		return self::VAT_NORMAL;
 	}
 
-	private function getVatString($value) {
+	private function getVatString($value)
+	{
 		if ($value === self::VAT_ZERO) {
 			return 'zw.';
 		}
+
 		return sprintf('%d%%', $value * 100);
 	}
 
@@ -370,7 +544,8 @@ class Invoice
 		return $orders->sum('paid_amount');
 	}
 
-	private function price($number) {
+	private function price($number)
+	{
 		return number_format($number, 2, ',', ' ');
 	}
 }

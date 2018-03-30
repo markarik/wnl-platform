@@ -1,8 +1,8 @@
 <?php namespace App\Listeners\Handlers;
 
-use DB;
-use App\Events\ReactionAdded;
+use App\Events\Reactions\ReactionAdded;
 use App\Listeners\UserNotificationsGate;
+use DB;
 
 class ReactionAddedHandler
 {
@@ -14,7 +14,9 @@ class ReactionAddedHandler
 	 */
 	public function handle(ReactionAdded $event, UserNotificationsGate $gate)
 	{
-		if ($event->reaction->type === 'bookmark') return;
+		$type = $event->reaction->type;
+		
+		if ($type === 'bookmark' || $type === 'watch') return;
 
 		$notifiable = $event->reactable->user;
 

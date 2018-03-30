@@ -25,8 +25,12 @@ function getUserSearchConditions(data) {
 	data.lastName && where.push(
 		['last_name', 'like', `%${data.lastName}%`]
 	)
-
-	return { query: { where }, limit: [5, 0] }
+	let displayName = data.firstName
+	if(data.lastName) displayName += ` ${data.lastName}`
+	const orWhere = [
+		['display_name', 'like', `%${displayName}%`]
+	]
+	return { query: { where, orWhere }, limit: [5, 0] }
 }
 
 function getTagSearchConditions(name, tags = []) {
@@ -44,7 +48,7 @@ const actions = {
 	requestUsersAutocomplete({}, data) {
 		const conditions = getUserSearchConditions(data)
 
-		return axios.post(getApiUrl('user_profiles/.search'), conditions)
+		return axios.post(getApiUrl('user_profiles/.query'), conditions)
 	},
 	requestTagsAutocomplete({}, { name, tags }) {
 		const conditions = getTagSearchConditions(name, tags)

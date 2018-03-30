@@ -10,7 +10,7 @@ class QuizQuestion extends Model
 {
 	use Cached, Searchable;
 
-	protected $fillable = ['text', 'explanation', 'preserve_order'];
+	protected $fillable = ['text', 'explanation', 'preserve_order', 'updated_at'];
 
 	protected $casts = [
 		'preserve_order' => 'boolean',
@@ -39,6 +39,11 @@ class QuizQuestion extends Model
 	public function reactions()
 	{
 		return $this->morphToMany('App\Models\Reaction', 'reactable');
+	}
+
+	public function slides()
+	{
+		return $this->belongsToMany('App\Models\Slide', 'slide_quiz_question');
 	}
 
 	public function userQuizResults()

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\Qna\AnswerPosted;
+use App\Events\Qna\QnaAnswerPosted;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
@@ -13,8 +13,8 @@ class QnaAnswer extends Model
 
 	protected $fillable = ['text', 'user_id', 'question_id'];
 
-	protected $events = [
-		'created' => AnswerPosted::class,
+	protected $dispatchesEvents = [
+		'created' => QnaAnswerPosted::class,
 	];
 
 	public function question()

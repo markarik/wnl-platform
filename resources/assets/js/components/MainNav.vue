@@ -6,7 +6,11 @@
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'collections', params: { keepsNavOpen: true } }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
+			v-if="$currentEditionParticipant.isAllowed('access')"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
 			</span>
@@ -15,28 +19,41 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
+			v-if="$currentEditionParticipant.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
 			</span>
 		<span class="text">{{$t('nav.sideNav.questions')}}</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'myself', params: { keepsNavOpen: true } }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'myself', params: { keepsNavOpen: true } }"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-user-o"></i>
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
-		<router-link class="wnl-main-nav-item" :to="{ name: 'help', params: { keepsNavOpen: true } }">
+		<router-link
+			class="wnl-main-nav-item"
+			:to="{ name: 'help', params: { keepsNavOpen: true } }"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-heartbeat"></i>
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
+		<a v-if="!$currentEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
+			<span class="icon is-medium">
+				<i class="fa fa-thumbs-o-up"></i>
+			</span>
+			<span class="text">Zapisz się!</span>
+		</a>
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
-			v-if="$moderatorFeed.isAllowed('access')"
+			v-if="$moderatorFeatures.isAllowed('access')"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-list"></i>
@@ -102,13 +119,20 @@
 </style>
 
 <script>
-	import moderatorFeed from 'js/perimeters/moderatorFeed';
+	import {mapGetters} from 'vuex'
+	import moderatorFeatures from 'js/perimeters/moderator'
+	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
+	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'MainNav',
 		props: ['isHorizontal'],
-		perimeters: [
-			moderatorFeed
-		]
+		perimeters: [moderatorFeatures, currentEditionParticipant],
+		computed: {
+			...mapGetters(['currentUser']),
+			signUpLink() {
+				return getUrl('payment/select-product')
+			},
+		},
 	}
 </script>

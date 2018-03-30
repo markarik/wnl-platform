@@ -1,0 +1,41 @@
+<template>
+	<div>
+		<wnl-alert class="wnl-global-notification"
+			v-for="alert in alerts"
+			:key="alert.id"
+			:type="alert.type"
+			:id="alert.id"
+			@onDismiss="closeAlert"
+		>
+			{{alert.text}}
+		</wnl-alert>
+	</div>
+</template>
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+	.wnl-global-notification
+		position: absolute
+		width: 100vw
+		z-index: $z-index-alerts
+		text-align: center
+
+</style>
+<script>
+import Alert from 'js/components/global/GlobalAlert'
+import {mapActions, mapGetters} from 'vuex'
+
+export default {
+	components: {
+		'wnl-alert': Alert
+	},
+	props: {
+		alerts: {
+			type: Array,
+			required: true
+		}
+	},
+	methods: {
+		...mapActions(['closeAlert'])
+	}
+}
+</script>

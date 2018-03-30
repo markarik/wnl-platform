@@ -1,54 +1,96 @@
 <template>
-	<article class="media">
-		<figure class="media-left">
-			<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
-		</figure>
-		<div class="media-content">
-			<wnl-form
-				class="chat-message-form"
-				hideDefaultSubmit="true"
-				name="ChatMessage"
-				method="post"
-				suppressEnter="false"
-				resourceRoute="qna_questions"
-			>
-				<wnl-quill
-					ref="editor"
-					name="text"
-					:options="{ theme: 'bubble', placeholder: 'Twoja wiadomość...' }"
-					:keyboard="keyboard"
-					:toolbar="toolbar"
-					:allowMentions=false
-					@input="onInput"
-				></wnl-quill>
-			</wnl-form>
-			<div class="message is-warning" v-if="error.length > 0">
-				<div class="message-body">{{ error }}</div>
+	<div class="wnl-chat-form">
+		<article class="media">
+			<figure class="media-left">
+				<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+			</figure>
+			<div class="media-content wnl-chat-form-wrapper">
+				<wnl-form
+					:id="formId"
+					class="chat-message-form"
+					hideDefaultSubmit="true"
+					name="ChatMessage"
+					method="post"
+					suppressEnter="false"
+					resourceRoute="qna_questions"
+				>
+					<wnl-quill
+						ref="editor"
+						name="text"
+						id="elo-elo"
+						:options="quillOptions"
+						:keyboard="keyboard"
+						:toolbar="toolbar"
+						:allowMentions="true"
+						@input="onInput"
+					></wnl-quill>
+				</wnl-form>
+				<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
+				<div class="message is-warning" v-if="error.length > 0">
+					<div class="message-body">{{ error }}</div>
+				</div>
 			</div>
-		</div>
-		<div class="media-right">
-			<wnl-image-button
-				name="wnl-chat-form-submit"
-				icon="send-message"
-				alt="Wyślij wiadomość"
-				:disabled="sendingDisabled"
-				@buttonclicked="sendMessage">
-			</wnl-image-button>
-		</div>
-	</article>
+			<div class="media-right">
+				<wnl-image-button
+					name="wnl-chat-form-submit"
+					:icon="sendingMessage ? 'refresh' : 'send-message'"
+					alt="Wyślij wiadomość"
+					:disabled="sendingDisabled || sendingMessage"
+					:loading="sendingMessage"
+					@buttonclicked="sendMessage">
+				</wnl-image-button>
+			</div>
+		</article>
+	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.media
 		align-items: center
+
+	.characters-counter
+		color: #7a7f91
+		display: block
+		font-weight: 400
+		text-transform: none
+		text-align: right
+
+	.wnl-chat-form
+		border-top: $border-light-gray
+		margin: $margin-base 0 0
+		padding-top: $margin-base
+
+	.wnl-chat-form-wrapper
+		position: relative
+
 </style>
 <script>
 	import { mapActions, mapGetters } from 'vuex'
 	import { Quill, Form } from 'js/components/global/form'
 	import { fontColors } from 'js/utils/colors'
+	import { nextTick } from 'vue'
 	import _ from 'lodash';
 
 	export default{
-		props: ['loaded', 'socket', 'room'],
+		props: {
+			room: {
+				type: Object,
+				required: true
+			},
+			loaded: {
+				type: Boolean,
+				default: true
+			},
+			messagePayload: {
+				type: Object,
+				default: () => ({})
+			},
+			autofocusOnRoomChange: {
+				type: Boolean,
+				default: false
+			}
+		},
 		data() {
 			return {
 				error: '',
@@ -67,7 +109,8 @@
 					}
 				},
 				isWaitingToSendMentions: false,
-				mentions: []
+				mentions: [],
+				sendingMessage: false
 			}
 		},
 		components: {
@@ -78,12 +121,10 @@
 			...mapGetters([
 				'currentUserFullName',
 				'currentUserAvatar',
-				'currentUserId',
 				'currentUser'
 			]),
-			...mapGetters('course', ['courseId']),
 			sendingDisabled() {
-				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0)
+				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0) || this.message.length > 5000
 			},
 			toolbar() {
 				return [
@@ -92,25 +133,49 @@
 					['clean'],
 				]
 			},
+			quillOptions() {
+				return {
+					theme: 'bubble',
+					placeholder: 'Twoja wiadomość...',
+					formats: ['bold', 'italic', 'underline', 'link', 'mention'],
+					bounds: `#${this.formId}`,
+				}
+			},
 			quillEditor() {
 				return this.$refs.editor;
+			},
+			formId() {
+				return `chat-message-form-${this._uid}`
 			}
 		},
 		methods: {
-			...mapActions(['saveMentions']),
+			...mapActions(['addAutoDismissableAlert']),
 			sendMessage(event) {
 				if (this.sendingDisabled) {
 					return false
 				}
+				this.sendingMessage = true
 				this.error = ''
 				this.isWaitingToSendMentions = true
-				this.socket.emit('send-message', {
-					room: this.room.channel,
+				const {messages, ...room} = this.room
+				this.$socketSendMessage({
+					room,
 					message: {
 						user: this.currentUser,
-						content: this.content,
-						full_name: this.currentUserFullName,
-					}
+						content: this.content
+					},
+					...this.messagePayload
+				}).then(data => {
+					this.processMessage(data)
+					this.$emit('messageSent', data)
+					this.sendingMessage = false
+				}).catch((err) => {
+					$wnl.logger.error(err)
+					this.addAutoDismissableAlert({
+						text: 'Niestety nie udało Nam się wysłać wiadomości. Spróbuj ponownie',
+						type: 'error'
+					})
+					this.sendingMessage = false
 				})
 			},
 			getMentions() {
@@ -121,59 +186,42 @@
 
 				return _.uniq(Array.prototype.map.call(mentions, el => el.dataset.id))
 			},
-			getMentionsData(userIds, message) {
-				return {
-					mentioned_users: userIds,
-					subject: {
-						type: 'chat_message',
-						id: `${message.time}${this.currentUserId}`,
-						text: message.content,
-						channel: this.room.channel
-					},
-					objects: {
-						type: "chat_channel",
-						text: this.room.name
-					},
-					context: {
-						courseId: this.courseId,
-						lessonId: this.$route.params.lessonId,
-						slideId: this.$route.params.slideId,
-					},
-					actors: this.currentUser
-				}
-			},
 			suppressEnter(event) {
 				event.preventDefault()
 			},
-			setListeners() {
-				this.socket.on('message-processed', (data) => {
-					if (data.sent) {
-						const mentions = this.getMentions()
+			processMessage(data) {
+				if (data.sent) {
+					const mentions = this.getMentions()
 
-						if (mentions && mentions.length) {
-							this.saveMentions(
-								this.getMentionsData(mentions, data.message)
-							)
-						}
+					if (mentions && mentions.length) {
+						this.$emit('foundMentions', {mentions, context: data.message})
+					}
 
-						this.quillEditor.quill.deleteText(0, this.content.length)
-						this.mentions = []
+					this.mentions = []
+					this.quillEditor.clear();
+				} else {
+					if (data.errors && data.errors.tooLong) {
+						this.error = 'Nie udało się wysłać wiadomości. Wiadomość jest za duża'
 					} else {
 						this.error = 'Nie udało się wysłać wiadomości... Proszę, spróbuj jeszcze raz. :)'
 					}
-					this.isWaitingToSendMentions = false
-				})
+				}
 			},
 			onInput(input) {
 				this.message = this.quillEditor.quill.getText().trim();
 				this.mentions = this.getMentions()
 				this.content = this.quillEditor.editor.innerHTML
+				if (this.message.length > 5000) {
+					this.error = "Wiadomość nie móże być dłuższa niż 5000 znaków"
+				} else {
+					this.error = ''
+				}
 			}
 		},
 		watch: {
-			'loaded' () {
-				if (this.loaded) {
-					this.setListeners()
+			'room.id'() {
+				if (this.autofocusOnRoomChange && this.room.id) {
+					nextTick(() => this.quillEditor.quill.focus())
 				}
 			}
 		}

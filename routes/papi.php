@@ -21,10 +21,10 @@ if (!function_exists('api_action')) {
 	}
 }
 
-Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], function () {
+Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api-cache']], function () {
 	$r = config('papi.resources');
 
-	// Search
+	// Search (using search engine)
 	api_action('get', 'search');
 
 	// Count
@@ -33,8 +33,18 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Faceted search / filtering
 	api_action('post', 'filter');
 
+	// Saved active filters
+	api_action('post', 'activeFilters');
+
 	// Faceted search available filters
 	api_action('post', 'filterList');
+
+	// Query (using main database)
+	api_action('post', 'query');
+
+	// Fetch additional routing data basing on various input
+	api_action('post', 'context');
+
 
 	// Courses
 	Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
@@ -58,8 +68,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 
 	// Slides
+	Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
 	Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 	Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
+	Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
+	Route::post("{$r['slides']}", 'SlidesApiController@post');
 	Route::post("{$r['slides']}/.search", 'SlidesApiController@query');
 
 	// Presentables
@@ -73,8 +86,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 	Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 
-	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfileApiController@get');
-	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfileApiController@put');
+	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 
@@ -96,24 +109,24 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@getCourse');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@putCourse');
+	Route::delete("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}", 'UserStateApiController@deleteCourse');
 
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@getLesson');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/course/{courseId}/lesson/{lessonId}", 'UserStateApiController@putLesson');
 
-	Route::get("{$r['users']}/{user}/{$r['user-state']}/time", 'UserStateApiController@getTime');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/time", 'UserStateApiController@incrementTime');
 
 	Route::post("{$r['users']}/{user}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@saveQuizPosition');
 
+	Route::get("{$r['users']}/{id}/{$r['user-state']}/stats", 'UserStateApiController@getStats');
+
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'UserReactionsApiController@getReactionsByCategory');
 
-	// User Profiles
-	Route::post("{$r['profiles']}/.search", 'UserProfileApiController@query');
-
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
+	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
@@ -153,10 +166,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// User Quiz Results
 	Route::get("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@get');
 	Route::post("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@post');
-	// TODO change route here in the future so it's consistant with route above
-	// I didn't change it upfront because it's a quick fix and route change could cause problem between backend and frontend sync
-	Route::get("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
-	Route::put("{$r['users']}/{id}/{$r['user-state']}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
+	Route::get("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
+	Route::put("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
+	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
 
 	// Comments
 	Route::post($r['comments'], 'CommentsApiController@post');
@@ -164,12 +176,28 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
 	Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
 	Route::post("{$r['comments']}/.search", 'CommentsApiController@query');
+	Route::post("{$r['comments']}/.count", 'CommentsApiController@query');
 
 	// Chat Messages
 	Route::post(
-		"{$r['chat-rooms']}/{roomName}/{$r['chat-messages']}/.search",
-		'ChatMessagesApiController@searchByRoom'
+		"{$r['chat-messages']}/.getByRooms",
+		'ChatMessagesApiController@getByMultipleRooms'
 	);
+	Route::post(
+		"{$r['chat-messages']}/.getWithContext",
+		'ChatMessagesApiController@getWithContext'
+	);
+	// Chat rooms
+	Route::get(
+		"{$r['chat-rooms']}/.getPrivateRooms",
+		'ChatRoomsApiController@getPrivateRooms');
+	Route::post(
+		"{$r['chat-rooms']}/.createPrivateRoom",
+		'ChatRoomsApiController@createPrivateRoom');
+	Route::post(
+		"{$r['chat-rooms']}/.createPublicRoom",
+		'ChatRoomsApiController@createPublicRoom');
+	Route::get("{$r['chat-rooms']}/{id}",'ChatRoomsApiController@get');
 
 	// Reactions
 	Route::post($r['reactions'], 'ReactionsApiController@postMany');
@@ -186,7 +214,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 
 	// Slideshow builder
 	Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'SlideshowBuilderApiController@byCategory');
+	Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
 	Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
+	Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
+	Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
 
 	// Events
 	Route::post("events/mentions", 'MentionsApiController@post');
@@ -194,4 +225,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => 'api-auth'], func
 	// Users Plans
 	Route::get("{$r['user-plan']}/{userId}", 'UserPlanApiController@get');
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
+
+	// Tasks
+	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
+	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
+
+	// Pages
+	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
 });

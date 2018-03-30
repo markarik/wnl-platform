@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class Newsletter extends Mailable
 {
 	use Queueable, SerializesModels;
+	protected $email;
 	protected $template;
 
 	/**
@@ -17,11 +18,13 @@ class Newsletter extends Mailable
 	 *
 	 * @param $template
 	 * @param $subject
+	 * @param $email
 	 */
-	public function __construct($template, $subject)
+	public function __construct($template, $subject, $email)
 	{
 		$this->template = $template;
 		$this->subject = $subject;
+		$this->email = $email;
 	}
 
 	/**
@@ -32,7 +35,7 @@ class Newsletter extends Mailable
 	public function build()
 	{
 		return $this
-			->to('warsztaty@mail.wiecejnizlek.pl')
+			->to($this->email)
 			->view('mail.newsletter.' . $this->template)
 			->text('mail.newsletter.' . $this->template . '-plain')
 			->subject($this->subject);

@@ -125,6 +125,17 @@
 						iconClass: 'fa-sliders',
 						iconTitle: 'Profil publiczny',
 					},
+					{
+						text: 'Statystyki',
+						itemClass: 'has-icon',
+						to: {
+							name: 'stats'
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-line-chart',
+						iconTitle: 'Statystyki',
+					},
 					// {
 					// 	text: 'Zmiana hasła',
 					// 	itemClass: 'has-icon',

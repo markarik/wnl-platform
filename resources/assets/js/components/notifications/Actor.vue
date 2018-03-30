@@ -2,7 +2,9 @@
 	<wnl-avatar
 		:fullName="message.actors.full_name"
 		:size="size"
-		:url="message.actors.avatar"/>
+		:url="message.actors.avatar"
+		:disableLink="disableLink"
+	/>
 </template>
 
 <script>
@@ -17,6 +19,10 @@
 				default: 'medium',
 				type: String,
 			},
+			disableLink: {
+				default: false,
+				type: Boolean
+			}
 		},
 	}
 </script>

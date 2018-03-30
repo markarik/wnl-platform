@@ -10,33 +10,52 @@
 			:resourceRoute="formResourceRoute"
 			@submitSuccess="onSubmitSuccess"
 		>
-			<div class="question-form-header">
-				<p class="title is-5">Edycja pytania {{$route.params.quizId}}</p>
+			<header class="question-form-header">
+				<h4 v-if="isEdit">Edycja pytania <strong>{{$route.params.quizId}}</strong></h4>
+				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
 						<button class="button is-primary" @click="onFormSave">Zapisz</button>
 					</div>
 				</div>
-			</div>
-			<div class="field question-field">
-				<div class="control">
-					<span>Pytanie</span>
-					<wnl-quill
-						ref="questionEditor"
-						name="question"
-						:options="{ theme: 'snow', placeholder: 'Pytanie' }"
-						:allowMentions=false
-						@input="onInput"
-					/>
+			</header>
+			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Pytanie</legend>
+				<div class="field question-field">
+					<div class="control">
+						<wnl-quill
+							ref="questionEditor"
+							name="question"
+							:options="{ theme: 'snow', placeholder: 'Pytanie' }"
+							@input="onQuestionInput"
+						/>
+					</div>
 				</div>
-			</div>
+			</fieldset>
+			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Wyjaśnienie</legend>
+				<div class="field question-field">
+					<div class="control">
+						<wnl-quill
+							ref="explanationEditor"
+							name="explanation"
+							:options="{ theme: 'snow', placeholder: 'Wyjaśnienie' }"
+							@input="onExplanationInput"
+						/>
+					</div>
+				</div>
+			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
 				<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
 			</fieldset>
 			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Powiązane slajdy</legend>
+				<wnl-slide-ids :defaultSlides="questionSlides" ref="slides"></wnl-slide-ids>
+			</fieldset>
+			<fieldset class="question-form-fieldset">
 				<label class="label checkbox-label">
-						<span>Czy zagwarantować kolejność pytań?</span>
+						<span>Czy zagwarantować kolejność odpowiedzi ?</span>
 						<input
 							type="checkbox"
 							name="preserveOrder"
@@ -128,19 +147,22 @@
 
 <script>
 	import { mapActions, mapGetters } from 'vuex';
-	import { Quill, Form, Tags } from 'js/components/global/form'
+	import { Quill, Form, Tags, SlideIds } from 'js/components/global/form'
 	import { nextTick } from 'vue'
+	import _ from 'lodash'
 
 	export default {
 		name: 'QuizesEditor',
 		components: {
 			'wnl-form': Form,
 			'wnl-quill': Quill,
-			'wnl-tags': Tags
+			'wnl-tags': Tags,
+			'wnl-slide-ids': SlideIds
 		},
 		data: function () {
 			return {
 				questionQuillContent: '',
+				explanationQuillContent: '',
 				attach: null
 			}
 		},
@@ -148,7 +170,9 @@
 		computed: {
 			...mapGetters([
 				'questionText',
+				'questionExplanation',
 				'questionAnswers',
+				'questionSlides',
 				'questionAnswersMap',
 				'questionId',
 				'questionTags',
@@ -170,8 +194,11 @@
 				'getQuizQuestion',
 				'setupFreshQuestion'
 			]),
-			onInput() {
+			onQuestionInput() {
 				this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML
+			},
+			onExplanationInput() {
+				this.explanationQuillContent = this.$refs.explanationEditor.editor.innerHTML
 			},
 			onRightAnswerChange(evt) {
 				const previouslyChecked = this.$el.querySelectorAll('.answer-correct')
@@ -204,6 +231,10 @@
 					attachedData.tags = this.$refs.tags.tags
 				}
 
+				if (this.$refs.slides.haveSlidesChanged()) {
+					attachedData.slides = _.map(this.$refs.slides.slides, slide => slide.id)
+				}
+
 				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked
 
 				return attachedData
@@ -212,13 +243,19 @@
 				if (this.isEdit) {
 					this.getQuizQuestion(this.$route.params.quizId)
 				} else {
-					this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
+					//Timeout for the user to see the success banner
+					setTimeout(() => {
+						this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
+					}, 2000)
 				}
 			}
 		},
 		watch: {
 			questionText(val) {
 				if (val) this.$refs.questionEditor.editor.innerHTML = val
+			},
+			questionExplanation(val) {
+				if (val) this.$refs.explanationEditor.editor.innerHTML = val
 			},
 			'$route.params.quizId'(quizId) {
 				this.getQuizQuestion(this.$route.params.quizId)

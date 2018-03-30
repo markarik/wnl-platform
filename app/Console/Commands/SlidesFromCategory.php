@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Category;
-use App\Models\Tag;
+use App\Models\Lesson;
 use App\Models\Slide;
+use App\Models\Tag;
+use Illuminate\Console\Command;
 
 class SlidesFromCategory extends Command
 {
@@ -43,24 +44,59 @@ class SlidesFromCategory extends Command
 		$allCategories = Category::all();
 		$bar = $this->output->createProgressBar(count($allCategories));
 
+		// clean up before start
+		\DB::table('presentables')
+			->where('presentable_type', 'App\Models\Category')
+			->delete();
+
+
 		foreach ($allCategories as $category) {
+
 			$categoryTag = Tag::where('name', $category->name)->first();
 			if (!empty($category->parent_id)) {
-				$slidesWithTag = Slide::whereHas('tags', function($tag) use ($categoryTag) {
+				$lessonsWithTag = Lesson::whereHas('tags', function($tag) use ($categoryTag) {
 					$tag->where('name', $categoryTag->name);
-				})->get();
+				})->orderBy('order_number')->get();
 
-				$order_number = 0;
-				foreach($slidesWithTag as $slide) {
-					if (!$category->slides->contains($slide)) {
-						$category->slides()->attach($slide, ['order_number' => $order_number]);
-						$order_number++;
-					}
-				}
+
+				$this->attachLessonsSlidesToCategory($lessonsWithTag, $category);
 			}
+
 			$bar->advance();
 		}
 
 		print PHP_EOL;
+	}
+
+	private function attachLessonsSlidesToCategory($lessonsWithTag, $category) {
+		$orderNumber = 0;
+
+		foreach($lessonsWithTag as $lesson) {
+			$screen = $lesson->screens()->where('type', 'slideshow')->first();
+
+			if (!$screen) {
+				continue;
+			}
+
+			$slidesIds = \DB::table('presentables')
+				->where('presentable_type', 'App\Models\Slideshow')
+				->where('presentable_id', $screen->slideshow->id)
+				->orderBy('order_number')
+				->get(['slide_id'])->pluck('slide_id');
+
+			foreach($slidesIds as $slideId) {
+				$slide = Slide::find($slideId);
+				try {
+					$category->slides()->attach($slide, ['order_number' => $orderNumber]);
+					$orderNumber++;
+				} catch (\Illuminate\Database\QueryException $e) {
+					if ($e->errorInfo[1] === 1062) {
+						// Means entry is duplicated.
+					} else {
+						throw $e;
+					}
+				}
+			}
+		}
 	}
 }

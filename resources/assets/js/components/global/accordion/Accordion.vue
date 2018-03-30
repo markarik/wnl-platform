@@ -2,7 +2,7 @@
 	<div class="wnl-accordion" v-if="hasItems">
 		<wnl-accordion-item
 			v-for="(item, path) in dataSource"
-			:config="config"
+			:config="configWithDefaults"
 			:item="item"
 			:key="path"
 			:level="0"
@@ -21,6 +21,16 @@
 	import {size} from 'lodash'
 	import AccordionItem from 'js/components/global/accordion/AccordionItem'
 
+	const defaultConfig = {
+		disableEmpty: false,
+		expanded: [],
+		flattened: [],
+		isMobile: false,
+		itemsNamesSource: '',
+		selectedElements: [],
+		showCounts: true
+	}
+
 	export default {
 		name: 'Accordion',
 		components: {
@@ -28,14 +38,7 @@
 		},
 		props: {
 			config: {
-				default: {
-					disableEmpty: false,
-					expanded: [],
-					flattened: [],
-					isMobile: false,
-					itemsNamesSource: '',
-					selectedElements: [],
-				},
+				default: defaultConfig,
 				type: Object,
 			},
 			dataSource: {
@@ -50,6 +53,11 @@
 		computed: {
 			hasItems() {
 				return size(this.dataSource) > 0
+			},
+			configWithDefaults() {
+				return {
+					...defaultConfig, ...this.config
+				}
 			}
 		},
 		methods: {

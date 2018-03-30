@@ -13,7 +13,7 @@
 			>
 				{{ callToAction }}
 			</router-link>
-			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {data: nextLessonDate}) }}</span>
+			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {date: nextLessonDate}) }}</span>
 		</div>
 	</div>
 </template>
@@ -93,7 +93,7 @@
 				return this.getGroup(this.nextLesson.groups).name
 			},
 			hasNextLesson() {
-				return this.status !== STATUS_NONE
+				return this.nextLesson && this.status !== STATUS_NONE
 			},
 			lessonName() {
 				return truncate(this.nextLesson.name, {length: 30})

@@ -2,7 +2,9 @@
 /public/storage
 /vendor
 /.idea
+/.vscode
 .env
+.env.backup
 composer.lock
 env*/
 public/css/*
@@ -17,3 +19,5 @@ npm-debug.log
 public/hot
 .env.dusk.*
 phpunit.dusk.xml
+scenario.dusk
+public/report.html

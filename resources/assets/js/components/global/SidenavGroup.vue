@@ -98,12 +98,12 @@
 		},
 		watch: {
 			nextLesson(val) {
-				if (!this.item || !this.item.subitems) {
+				if (!this.item || !this.item.subitems || !val) {
 					return
 				}
 
 				const isCurrentlyInProgress = this.item.subitems.some((subitem) => {
-					return subitem.to.params.lessonId === val.id
+					return subitem.to.params && subitem.to.params.lessonId === val.id
 				})
 
 				if (isCurrentlyInProgress) {

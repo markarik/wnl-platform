@@ -2,15 +2,17 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
-import {isProduction} from 'js/utils/env'
-import moderatorFeed from 'js/perimeters/moderatorFeed';
-import { createSandbox } from 'vue-kindergarten';
-import store from 'js/store/store'
+import moderatorFeatures from 'js/perimeters/moderator';
+import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
+import {createSandbox} from 'vue-kindergarten';
+import {getCurrentUser} from 'js/services/user';
+import {getApiUrl} from 'js/utils/env'
 
 Vue.use(Router)
 
 let routes = [
 	{
+		name: 'course',
 		path: '/app/courses/:courseId',
 		component: require('js/components/course/Course.vue'),
 		props: true,
@@ -73,6 +75,11 @@ let routes = [
 				path: 'password',
 				component: require('js/components/user/MyPassword.vue')
 			},
+			{
+				name: 'stats',
+				path: 'stats',
+				component: require('js/components/user/UserStats'),
+			},
 		]
 	},
 	{
@@ -87,28 +94,40 @@ let routes = [
 				path: ':rootCategoryName/:categoryName',
 				component: require('js/components/collections/Collections.vue')
 			},
-		]
+		],
+		beforeEnter: (to, from, next) => {
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [currentEditionParticipant],
+				});
+
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
+		},
 	},
 	{
 		name: 'help',
 		path: '/app/help',
 		component: require('js/components/help/Help.vue'),
-		props: true,
+		redirect: {name: 'help-new'},
 		children: [
 			{
 				name: 'help-learning',
 				path: 'learning',
-				component: require('js/components/help/LearningHelp.vue'),
+				component: require('js/components/global/Page.vue'),
 			},
 			{
 				name: 'help-tech',
 				path: 'tech',
-				component: require('js/components/help/TechnicalHelp.vue'),
+				component: require('js/components/global/Page.vue'),
 			},
 			{
 				name: 'help-new',
 				path: 'new',
-				component: require('js/components/help/ComingSoonHelp.vue'),
+				component: require('js/components/global/Page.vue'),
 			},
 		]
 	},
@@ -141,20 +160,34 @@ let routes = [
 				component: require('js/components/questions/QuestionsPlanner.vue'),
 			},
 		],
+		beforeEnter: (to, from, next) => {
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [currentEditionParticipant],
+				});
+
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
+		},
 	},
 	{
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			const sandbox = createSandbox(store.getters.currentUser, {
-				perimeters: [moderatorFeed],
-			});
+			getCurrentUser().then(({data: currentUser}) => {
+				const sandbox = createSandbox(currentUser, {
+					perimeters: [moderatorFeatures],
+				});
 
-			if (!sandbox.isAllowed('access')) {
-				return next('/');
-			}
-			return next();
+				if (!sandbox.isAllowed('access')) {
+					return next('/');
+				}
+				return next();
+			})
 		}
 	},
 	{
@@ -168,6 +201,42 @@ let routes = [
 		beforeEnter: () => {
 			document.getElementById('logout-form').submit()
 		}
+	},
+	{
+		path: '/app/users',
+		name: 'all-users',
+		component: require('js/components/users/MainUsers.vue'),
+		props: true,
+		redirect: {name: 'user'},
+		children: [
+			{
+				name: 'user',
+				path: ':userId',
+				component: require('js/components/users/UserProfile.vue'),
+			},
+		]
+	},
+	{
+		name: 'dynamicContextMiddleRoute',
+		path: '/app/dynamic/:resource/:context',
+		beforeEnter: (to, from, next) => {
+			axios.post(getApiUrl(`${to.params.resource}/.context`), {
+				context: to.params.context
+			}).then(({data}) => {
+				return next({
+					...data,
+					query: to.query
+				})
+			}).catch(err => {
+				return next(from)
+			})
+		}
+
+	},
+	{
+		name: 'messages',
+		path: '/app/messages',
+		component: require('js/components/messages/MessagesDashboard.vue'),
 	},
 	{
 		path: '*',

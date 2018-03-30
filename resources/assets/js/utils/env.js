@@ -16,15 +16,16 @@ export function isProduction() {
 	return envValue('appEnv') === 'production'
 }
 
+export function getFirstLessonId() {
+	return envValue('FIRST_LESSON_ID') || 1;
+}
+
 // Debug control
 
 export function isDebug() {
 	return envValue('appDebug')
 }
 
-export function getFirstLessonId() {
-	return envValue('FIRST_LESSON_ID') || 1;
-}
 // URLs
 
 export function getUrl(path) {

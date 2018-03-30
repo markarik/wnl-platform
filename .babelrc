@@ -1,9 +1,18 @@
 {
-  "presets": [
-    ["es2015", {"modules": false}]
-  ],
   "plugins": [
-      "transform-object-rest-spread"
+      "transform-object-rest-spread",
+      "transform-runtime"
+  ],
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["iOS >= 10"]
+      },
+      "modules": false
+    }]
+  ],
+  "ignore": [
+    "resources/vendor/**/*.js"
   ],
   "env": {
     "test": {

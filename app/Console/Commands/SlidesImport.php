@@ -17,7 +17,7 @@ class SlidesImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'slides:import {dir?}';
+	protected $signature = 'slides:import {dir?} {--id=}*';
 
 	/**
 	 * The console command description.
@@ -29,37 +29,42 @@ class SlidesImport extends Command
 	/**
 	 * Create a new command instance.
 	 *
-	 * @param Parser $parser
 	 */
-	public function __construct(Parser $parser)
+	public function __construct()
 	{
 		parent::__construct();
-
-		$this->parser = $parser;
 	}
 
 	/**
 	 * Execute the console command.
+	 * @param Parser $parser
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handle(Parser $parser)
 	{
+		$this->parser = $parser;
+
 		$path = self::BASE_DIRECTORY;
 
 		if ($subDir = $this->argument('dir')) {
 			$path .= '/' . $subDir;
 		}
 
+		$screenId = $this->option('id');
+
 		$files = Storage::disk('s3')->files($path);
 		$this->info('Importing slideshows...');
 		$bar = $this->output->createProgressBar(count($files));
+		if ($files && $screenId) {
+			$this->info('Screen Id option is only supported when path to one file passed. Screen Id will be ignored');
+		}
 		foreach ($files as $file) {
 			$this->importFile($file);
 			$bar->advance();
 			\Log::debug($file . ' processed');
 		}
-		if (!$files) $this->importFile($path);
+		if (!$files) $this->importFile($path, $screenId);
 		print PHP_EOL;
 
 		Artisan::queue('tags:fromCategories');
@@ -74,9 +79,9 @@ class SlidesImport extends Command
 	 *
 	 * @param $file
 	 */
-	public function importFile($file)
+	public function importFile($file, $screenId = null)
 	{
 		$contents = Storage::disk('s3')->get($file);
-		$this->parser->parse($contents);
+		$this->parser->parse($contents, $screenId);
 	}
 }

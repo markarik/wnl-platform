@@ -34,8 +34,8 @@
 				let modeObj = modelist.modesByName[this.mode]
 
 				if (modeObj) {
-//					require('brace/mode/' + modeObj.name)
-//					editor.getSession().setMode(modeObj.mode)
+					require('brace/mode/html')
+					editor.getSession().setMode(modeObj.mode)
 				}
 			},
 			setTheme () {
@@ -61,7 +61,7 @@
 		},
 		watch: {
 			value (newValue) {
-				if (newValue && newValue !== editor.getValue()) {
+				if (newValue !== editor.getValue()) {
 					editor.setValue(newValue, -1)
 				}
 			}

@@ -155,7 +155,7 @@ let imageviewer = function ($, window, document, undefined) {
 
         self.zoomValue = 100;
 
-        if (!container.find('.snap-view').length) {
+        if (!container.find('.iv-snap-view').length) {
             container.prepend(imageViewHtml);
         }
 
@@ -446,13 +446,15 @@ let imageviewer = function ($, window, document, undefined) {
             //display snapView on interaction
             var snapViewTimeout, snapViewVisible;
 
-            function showSnapView(noTimeout) {
+            function showSnapView(noTimeout, forceShow) {
+                var forceShow = forceShow || false;
+
                 if(!options.snapView) return;
 
-                if (snapViewVisible || viewer.zoomValue <= 100 || !viewer.loaded) return;
+                if (!forceShow && (snapViewVisible || viewer.zoomValue <= 100 || !viewer.loaded)) return;
                 clearTimeout(snapViewTimeout);
                 snapViewVisible = true;
-                viewer.snapView.css('opacity', 1);
+                viewer.snapView.css('opacity', 0.5);
                 if (!options.snapViewPersist && !noTimeout) {
                     snapViewTimeout = setTimeout(function () {
                         viewer.snapView.css('opacity', 0);
@@ -461,19 +463,15 @@ let imageviewer = function ($, window, document, undefined) {
                 }
             }
 
-            // imageWrap.on('touchmove' + eventSuffix + ' mousemove' + eventSuffix, function () {
-            //     showSnapView();
-            // });
-
             var snapEventsCallback = {};
             snapEventsCallback['mouseenter' + eventSuffix + ' touchstart' + eventSuffix] = function () {
                 snapViewVisible = false;
-                showSnapView(true);
+                showSnapView(false);
             };
 
             snapEventsCallback['mouseleave' + eventSuffix + ' touchend' + eventSuffix] = function () {
                 snapViewVisible = false;
-                showSnapView();
+                showSnapView(false);
             };
 
             viewer.snapView.on(snapEventsCallback);
@@ -495,6 +493,10 @@ let imageviewer = function ($, window, document, undefined) {
                     viewer.hide();
                 });
             }
+
+            container.on('loaded', function() {
+                showSnapView(false, true)
+            })
         },
 
         //method to zoom images
@@ -666,13 +668,17 @@ let imageviewer = function ($, window, document, undefined) {
         },
         show: function (image, hiResImg) {
             if (this._fullPage) {
-                this.container.show();
+                this.container.fadeIn({
+                    duration: 300
+                });
                 if (image) this.load(image, hiResImg);
             }
         },
         hide: function () {
             if (this._fullPage) {
-                this.container.hide();
+                this.container.fadeOut({
+                    duration: 300
+                });
             }
         },
         options: function (key, value) {
@@ -726,6 +732,7 @@ let imageviewer = function ($, window, document, undefined) {
 
                 //hide loader
                 container.find('.iv-loader').hide();
+                container.trigger('loaded')
             }
 
             if (imageLoaded(currentImg[0])) {

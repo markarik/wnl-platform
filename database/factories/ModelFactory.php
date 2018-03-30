@@ -13,13 +13,14 @@
 
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 	return [
-		'first_name'     => encrypt($faker->firstName),
-		'last_name'      => encrypt($faker->lastName),
-		'email'          => $faker->unique()->safeEmail,
-		'password'       => bcrypt('secret'),
-		'remember_token' => str_random(10),
-		'phone'          => encrypt('000000000'),
-		'address'        => encrypt(''),
+		'first_name' => $faker->firstName,
+		'last_name'  => $faker->lastName,
+		'email'      => $faker->unique()->safeEmail,
+		'password'   => bcrypt('secret'),
+		'phone'      => $faker->phoneNumber,
+		'address'    => $faker->address,
+		'zip'        => $faker->postcode,
+		'city'       => $faker->city,
 	];
 });
 
@@ -76,7 +77,6 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Screen::class, function (Faker\Generator $faker) {
 	return [
-		'id'        => $faker->numberBetween(500, 1000),
 		'name'      => $faker->name,
 		'type'      => 'slideshow',
 		'lesson_id' => function () {
@@ -120,8 +120,8 @@ $factory->define(App\Models\QnaQuestion::class, function (Faker\Generator $faker
 
 $factory->define(App\Models\QnaAnswer::class, function (Faker\Generator $faker) {
 	return [
-		'text'    => $faker->text,
-		'user_id' => 1,
+		'text'        => $faker->text,
+		'user_id'     => 1,
 		'question_id' => function () {
 			return factory(App\Models\QnaQuestion::class)->create()->id;
 		},
@@ -134,16 +134,23 @@ $factory->define(App\Models\ChatRoom::class, function (Faker\Generator $faker) {
 	];
 });
 
+$factory->define(App\Models\ChatMessage::class, function (Faker\Generator $faker) {
+	return [
+		'content' => $faker->text,
+		'time' => \Carbon\Carbon::now()->timestamp
+	];
+});
+
 $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
 	return [
-		'text'    => $faker->text,
-		'user_id' => function () {
+		'text'             => $faker->text,
+		'user_id'          => function () {
 			return factory(App\Models\User::class)->create()->id;
 		},
-		'commentable_id' => function () {
+		'commentable_id'   => function () {
 			return factory(App\Models\QnaAnswer::class)->create()->id;
 		},
-		'commentable_type' => 'App\\Models\\QnaAnswer'
+		'commentable_type' => 'App\\Models\\QnaAnswer',
 	];
 });
 
@@ -151,4 +158,44 @@ $factory->define(App\Models\Slide::class, function (Faker\Generator $faker) {
 	return [
 		'content' => $faker->text,
 	];
+});
+
+$factory->define(App\Models\Coupon::class, function (Faker\Generator $faker) {
+	return [
+		'name'         => 'Testowy kupon',
+		'type'         => 'percentage',
+		'value'        => 10,
+		'code'         => strtoupper(str_random(6)),
+		'expires_at'   => \Carbon\Carbon::now()->addMinutes(1),
+		'times_usable' => 1,
+	];
+});
+
+$factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
+	return [
+		'id'       => $faker->uuid,
+		'priority' => 1,
+		'order'    => 1,
+		'status'   => 'open',
+		'text'     => $faker->text,
+		'labels'   => ['siema', 'pozdro'],
+	];
+});
+
+$factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
+	return [
+		'slug'    => $faker->uuid,
+		'name'    => $faker->text,
+		'content' => $faker->text,
+	];
+});
+
+$factory->define(App\Models\Section::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->text,
+	];
+});
+
+$factory->define(App\Models\Slideshow::class, function (Faker\Generator $faker) {
+	return [];
 });

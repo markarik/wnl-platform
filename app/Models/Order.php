@@ -10,17 +10,22 @@ class Order extends Model
 	protected $casts = [
 		'paid'        => 'boolean',
 		'canceled'    => 'boolean',
+		'invoice'     => 'boolean',
 		'canceled_at' => 'date',
 		'paid_amount' => 'float',
 	];
 
 	protected $fillable = [
 		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id', 'canceled', 'canceled_at',
-		'paid_amount',
+		'paid_amount', 'invoice', 'paid_at',
 	];
 
 	protected $guarded = [
 		'paid',
+	];
+
+	protected $dates = [
+		'paid_at',
 	];
 
 	public function scopeRecent($query)
@@ -39,6 +44,11 @@ class Order extends Model
 	public function coupon()
 	{
 		return $this->belongsTo('App\Models\Coupon');
+	}
+
+	public function studyBuddy()
+	{
+		return $this->hasOne('App\Models\StudyBuddy');
 	}
 
 	public function invoices()
@@ -73,10 +83,63 @@ class Order extends Model
 		if (is_null($coupon)) return 0;
 
 		if ($coupon->is_percentage) {
-			return number_format($coupon->value * $this->product->price / 100, 2);
+			return number_format($coupon->value * $this->product->price / 100, 2, '.', '');
 		}
 
 		return $coupon->value;
+	}
+
+	public function getInstalmentsAttribute()
+	{
+		$instalments = [];
+		$totalLeft = 0;
+		$leftFromPaid = $this->paid_amount;
+		$nextPayment = null;
+		$now = Carbon::now();
+		$paymentDates = [
+			Carbon::createFromDate(2017, 10, 23),
+			Carbon::createFromDate(2017, 11, 20),
+			Carbon::createFromDate(2017, 12, 20),
+		];
+		$toDistribute = $this->total_with_coupon;
+		$allPaid = $this->paid_amount >= $this->total_with_coupon;
+
+		if ($allPaid) {
+			return [
+				'allPaid'     => true,
+				'instalments' => $instalments,
+			];
+		}
+
+		end($paymentDates);
+		$lastKey = key($paymentDates);
+		reset($paymentDates);
+
+		for ($i = 0; $i <= $lastKey; $i++) {
+			$date = $paymentDates[$i];
+
+			$instalment = ['date' => $paymentDates[$i]];
+			$instalment['amount'] = $i === $lastKey ? $toDistribute : 0.5 * $toDistribute;
+			$instalment['left'] = $leftFromPaid > $instalment['amount'] ? 0 : $instalment['amount'] - max($leftFromPaid, 0);
+			$instalments[] = $instalment;
+
+			$toDistribute = $toDistribute - $instalment['amount'];
+			$leftFromPaid = $leftFromPaid - $instalment['amount'];
+			if ($nextPayment === null && $instalment['left'] > 0) {
+				$nextPayment = [
+					'amount' => $instalment['left'],
+					'date'   => $date,
+				];
+			}
+			$totalLeft += $instalment['left'];
+		}
+
+		return [
+			'allPaid'     => false,
+			'instalments' => $instalments,
+			'nextPayment' => $nextPayment,
+			'total'       => $totalLeft,
+		];
 	}
 
 	public function cancel()

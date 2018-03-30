@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 use Cache;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
 
 class ApiCache
 {
@@ -27,16 +27,22 @@ class ApiCache
 		$tags = $this->getTags($request);
 		$key = $request->getRequestUri();
 
+		\Log::debug('Api cache tags: ' . implode(',', $tags));
+
 		if ($this->excluded($request)) {
+			\Log::debug('Request excluded from api cache ' . $key);
 			return $next($request);
 		}
 
 		$cached = Cache::tags($tags)->get($key);
 
 		if ($cached !== null) {
+			\Log::debug('Loading response from cache ' . $key);
+
 			return $this->handleResponse($request, $cached);
 		}
 
+		\Log::debug('Cache has no response for ' . $key);
 		$response = $next($request);
 
 		if ($this->responseValid($response)) {
@@ -49,8 +55,9 @@ class ApiCache
 
 	protected function handleResponse($request, $data)
 	{
-		if ($request->expectsJson()) {
-			return $this->respondOk($data);
+		$decoded = json_decode($data, true);
+		if ($decoded !== null) {
+			return $this->respondOk($decoded);
 		}
 
 		return response($data);
@@ -59,7 +66,7 @@ class ApiCache
 	protected function getData($response)
 	{
 		if ($response instanceof JsonResponse) {
-			return $response->getData();
+			return json_encode($response->getData(), JSON_UNESCAPED_SLASHES);
 		}
 
 		return $response->getContent();
@@ -75,18 +82,17 @@ class ApiCache
 	protected function excluded($request)
 	{
 		$excludedTags = ['users', 'profiles', 'reactions', 'orders',
-			'state', 'quiz_stats', 'notifications', 'user_plan'];
+			'state', 'quiz_stats', 'notifications', 'user_plan',
+			'quiz_results', 'tasks', 'reactables', 'search', 'user_profiles'];
 
 		$methodExcluded = !in_array($request->method(), ['GET', 'POST']);
 		$queryExcluded = (bool)array_intersect($excludedTags, $this->getTags($request));
-		$urlExcluded = str_is('*current*', $request->getRequestUri());
 		$postExcluded = $request->method() === 'POST' && !str_is('*.search*', $request->getRequestUri());
 		$quizStats = str_is('*quiz_questions/stats*', $request->getRequestUri());
 
 		return
 			$methodExcluded ||
 			$queryExcluded ||
-			$urlExcluded ||
 			$postExcluded ||
 			$quizStats;
 	}
@@ -103,7 +109,10 @@ class ApiCache
 			$this->tags = array_merge($this->tags, preg_split('/[.,]+/', $request->get('include')));
 		}
 
-		if ($request->method() === 'GET' && str_is('*.search*', $request->getRequestUri()) && $request->has('q')) {
+		if ($request->method() === 'GET' &&
+			str_is('*.search*', $request->getRequestUri()) &&
+			$request->has('q')
+		) {
 			$this->tags[] = 'search';
 		}
 
@@ -112,6 +121,10 @@ class ApiCache
 			if ($request->has($searchParam)) {
 				array_push($this->tags, json_encode($request->get($searchParam)));
 			}
+		}
+
+		if (str_is('*current*', $request->getRequestUri())) {
+			array_push($this->tags, 'user-' . \Auth::user()->id);
 		}
 
 		return $this->tags;

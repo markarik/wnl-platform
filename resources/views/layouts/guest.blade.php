@@ -49,12 +49,15 @@
 						<form method="post" action="/logout" id="logout-form">
 							{{ csrf_field() }}
 						</form>
+						<a href="{{ url('payment/select-product') }}" class="nav-item">
+							Zapisz się na kurs
+						</a>
 						<a href="@lang('common.course-website-link')" class="nav-item">
 							@lang('payment.back-to-website')
 						</a>
 						@if (Auth::check())
 							<a href="{{url('app/')}}" class="nav-item">
-								Kurs
+								Platforma
 							</a>
 							<a href="{{url('app/myself/orders')}}" class="nav-item">
 								Twoje zamówienia
@@ -75,12 +78,24 @@
 			<footer class="footer has-text-centered">
 				<p>
 					<small>
-						<a class="tou-open-modal-link">
+						{{-- <a class="tou-open-modal-link"> --}}
+						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf">
 							@lang('payment.personal-data-tou-link-content')
 						</a>
 						&nbsp;|&nbsp;
 						<a class="privacy-policy-open-modal-link">
 							@lang('payment.personal-data-privacy-link-content')
+						</a>
+					</small>
+				</p>
+				<p>
+					<small>
+						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminPromocjiStudyBuddy.pdf">
+							Regulamin Promocji "Study Buddy"
+						</a>
+						&nbsp;|&nbsp;
+						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminPromocjiUczestnikPoprzedniejEdycji.pdf">
+							Regulamin Promocji "Uczestnik poprzedniej edycji"
 						</a>
 					</small>
 				</p>
@@ -112,6 +127,20 @@
 					</section>
 				</div>
 			</div>
+			@if(request()->route())
+			<div id="login-modal" class="modal">
+				<div class="modal-background"></div>
+				<div class="modal-card">
+					<header class="modal-card-head">
+						<p class="modal-card-title"></p>
+						<button class="delete"></button>
+					</header>
+					<section class="modal-card-body content">
+						@include('auth.login-modal')
+					</section>
+				</div>
+			</div>
+			@endif
 		</div>
 		<!-- Scripts -->
 		<script src="{{ mix('js/guest.js') }}"></script>

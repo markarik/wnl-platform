@@ -83,7 +83,6 @@
 				this.setDate(this.value)
 			}
 			this.$watch('config', this.redraw)
-			this.$watch('value', this.setDate)
 		},
 		beforeDestroy () {
 			if (this.datepicker) {

@@ -1,7 +1,5 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -29,7 +27,7 @@ class UserNotificationApiController extends ApiController
 		}
 
 		if (!$user->can('viewMultiple', Notification::class)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Collection($notifications, new NotificationTransformer, 'user_notifications');
@@ -50,7 +48,7 @@ class UserNotificationApiController extends ApiController
 		}
 
 		if (!$user->can('viewMultiple', Notification::class)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Collection($notifications, new NotificationTransformer, 'user_notifications');
@@ -78,7 +76,7 @@ class UserNotificationApiController extends ApiController
 		}
 
 		if (!$user->can('update', $notification)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$notification->update($request->all());
@@ -98,7 +96,7 @@ class UserNotificationApiController extends ApiController
 		$notifications = $notificationsQuery->get();
 
 		if (!$user->can('updateMultiple', [ Notification::class, $notifications ])){
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		foreach ($notifications as $notification) {

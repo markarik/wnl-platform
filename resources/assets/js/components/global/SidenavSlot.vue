@@ -2,7 +2,7 @@
 	<div
 		class="wnl-sidenav-slot"
 		v-if="isVisible"
-		v-bind:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat }"
+		v-bind:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth }"
 		ref="slot"
 		@click="onClick"
 	>
@@ -19,6 +19,8 @@
 		border-right: $border-light-gray
 		display: flex
 		width: $sidenav-width
+		&.is-max-width
+			min-width: $sidenav-for-messages
 
 		&.has-chat
 			border-left: $border-light-gray
@@ -74,7 +76,7 @@ import { mapActions } from 'vuex';
 	import SidenavItem from 'js/components/global/SidenavItem'
 
 	export default {
-		props: ['isVisible', 'isDetached', 'hasChat'],
+		props: ['isVisible', 'isDetached', 'hasChat', 'direction', 'isMaxWidth'],
 		methods: {
 			...mapActions(['closeSidenavs']),
 			onClick(event) {

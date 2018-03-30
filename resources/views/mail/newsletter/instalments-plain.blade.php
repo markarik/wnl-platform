@@ -30,7 +30,7 @@ Jak można skorzystać z nowego sposobu płatności?
 Opcja ta dostępna jest w ostatnim kroku procesu rejestracji - "Potwierdzenie zamówienia" - podczas wyboru metody płatności. Dokładną instrukcję również znajdziecie w Cenniku (https://wiecejnizlek.pl/cennik).
 
 Czy można zmienić metodę płatności?
-Jak najbardziej! Jeżeli Twoje zamówienie nie zostało jeszcze opłacone, możesz zmienić metodę płatności poprzez stronę Twoje zamówienia (https://platforma.wiecejnizlek.pl/app/myself/orders).
+Jak najbardziej! Jeżeli Twoje zamówienie nie zostało jeszcze opłacone, możesz zmienić metodę płatności poprzez stronę Konto > Twoje zamówienia (https://platforma.wiecejnizlek.pl/app/myself/orders).
 
 Dziękujemy Wam raz jeszcze za wsparcie! Jeśli chcecie podzielić się wątpliwościami, uwagami, czy po prostu pogadać - piszcie śmiało na facebooku (https://facebook.com/wiecejnizlek) lub na info@wiecejnizlek.pl
 

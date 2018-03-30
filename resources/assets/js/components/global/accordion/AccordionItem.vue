@@ -203,6 +203,7 @@
 				return this.$t(`${this.config.itemsNamesSource}.${messageKey}`)
 			},
 			count() {
+				if (!this.config.showCounts) return false
 				if (!this.item.hasOwnProperty('count')) return false
 
 				return this.item.count || 0

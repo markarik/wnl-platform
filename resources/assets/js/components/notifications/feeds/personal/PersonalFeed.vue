@@ -9,22 +9,20 @@
 				</span>
 			</div>
 			<div slot="content">
-				<div class="personal-feed-header">
-					<span class="feed-heading">{{$t('notifications.personal.heading')}}</span>
-					<wnl-notifications-toggle/>
+				<div class="feed-header">
+					<span class="feed-heading" v-t="'notifications.personal.heading'"/>
+					<wnl-notifications-toggle :setting="setting" :icons="icons"/>
 				</div>
 
-				<div class="personal-feed-body">
+				<div class="feed-body">
 					<div class="zero-state" v-if="isEmpty">
 						<img class="zero-state-image"
 							:alt="$t('notifications.personal.zeroStateImage')"
 							:src="zeroStateImage"
 							:title="$t('notifications.personal.zeroStateImage')">
-						<p class="zero-state-text">
-							{{$t('notifications.personal.zeroState')}}
-						</p>
+						<p class="zero-state-text" v-t='"notifications.personal.zeroState"'/>
 					</div>
-					<div v-else class="personal-feed-content">
+					<div v-else class="feed-content">
 						<component :is="getEventComponent(message)"
 							:message="message"
 							:key="id"
@@ -37,9 +35,8 @@
 							<a v-if="canShowMore" class="button is-small is-outlined"
 								:class="{'is-loading': fetching}"
 								@click="loadMore"
-							>
-								{{$t('notifications.personal.showMore')}}
-							</a>
+								v-t="'notifications.personal.showMore'"
+							/>
 							<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
 								{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
 							</span>
@@ -47,8 +44,8 @@
 					</div>
 				</div>
 
-				<div class="personal-feed-footer" v-if="unreadCount > 0">
-					<a class="link" @click="allRead">{{$t('notifications.markAllAsRead')}}</a>
+				<div class="feed-footer" v-if="unreadCount > 0">
+					<a class="link" @click="allRead" v-t="notifications.markAllAsRead"/>
 					<span v-if="allReadLoading" class="loader"></span>
 				</div>
 			</div>
@@ -58,12 +55,6 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-	@import 'resources/assets/sass/mixins'
-
-	$header-height: 40px
-	$footer-height: 40px
-	$body-margin-top: $header-height
-	$body-margin-bottom: $footer-height
 
 	.dropdown-container
 		align-items: center
@@ -72,114 +63,6 @@
 		justify-content: center
 		width: 100%
 
-	.notifications-toggle
-		align-items: center
-		color: $color-gray-dimmed
-		cursor: pointer
-		display: flex
-		height: 100%
-		justify-content: center
-		min-height: 100%
-
-		&.is-active
-			background-color: $color-background-light-gray
-			color: $color-gray
-
-		&.is-off
-			color: $color-inactive-gray
-
-			&.is-active
-				color: $color-white
-
-		.icon
-			margin: 0 $margin-tiny
-
-	.counter
-		align-items: center
-		background: $color-ocean-blue
-		border-radius: $border-radius-full
-		color: $color-white
-		display: flex
-		font-size: $font-size-minus-3
-		font-weight: $font-weight-black
-		justify-content: center
-		height: 1.7em
-		position: absolute
-		left: ($navbar-height / 2.1)
-		top: $margin-medium
-		width: 1.7em
-
-	.personal-feed
-		position: relative
-
-	.personal-feed-header,
-	.personal-feed-footer
-		align-items: center
-		background: $color-white
-		display: flex
-		position: absolute
-		width: 100%
-		z-index: $z-index-overlay
-
-	.personal-feed-header
-		border-radius: $border-radius-small $border-radius-small 0 0
-		border-bottom: $border-light-gray
-		height: $header-height
-		justify-content: space-between
-		padding: $margin-small $margin-medium
-		top: 0
-
-		.feed-heading
-			font-size: $font-size-minus-2
-			font-weight: $font-weight-bold
-			text-transform: uppercase
-
-	.personal-feed-body
-		height: 70vh
-		max-height: 390px
-		overflow-y: auto
-
-		.personal-feed-content
-			padding: $body-margin-top 0 $body-margin-bottom
-
-		.show-more
-			align-items: center
-			display: flex
-			justify-content: center
-			margin: $margin-base
-
-	.personal-feed-footer
-		+white-shadow-top()
-
-		align-items: center
-		bottom: 0
-		border-radius: 0 0 $border-radius-small $border-radius-small
-		border-top: $border-light-gray
-		height: $footer-height
-		justify-content: center
-		padding: $margin-small $margin-medium
-
-		.loader
-			margin-left: $margin-small
-
-	.zero-state
-		align-items: center
-		display: flex
-		flex-direction: column
-		justify-content: center
-		height: 100%
-		padding: $margin-big
-		width: 100%
-
-		.zero-state-image
-			min-width: 150px
-			width: 50%
-
-		.zero-state-text
-			color: $color-gray-dimmed
-			font-size: $font-size-minus-1
-			margin-top: $margin-big
-			text-align: center
 </style>
 
 <script>
@@ -189,11 +72,11 @@
 	import Dropdown from 'js/components/global/Dropdown'
 	import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle'
 	import PersonalNotification from 'js/components/notifications/feeds/personal/PersonalNotification'
-	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned } from 'js/components/notifications/events'
+	import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned,
+			CommentRemoved, QnaQuestionRemoved, QnaAnswerRemoved, AssignedToTask }
+			from 'js/components/notifications/events'
 	import { feed } from 'js/components/notifications/feed'
 	import { getImageUrl } from 'js/utils/env'
-
-	const setting = 'notify_live'
 
 	export default {
 		name: 'PersonalFeed',
@@ -201,9 +84,15 @@
 		components: {
 			'wnl-dropdown': Dropdown,
 			'wnl-event-comment-posted': CommentPosted,
+			'wnl-event-comment-resolved': CommentRemoved,
+			'wnl-event-comment-deleted': CommentRemoved,
 			'wnl-event-qna-answer-posted': QnaAnswerPosted,
+			'wnl-event-qna-answer-deleted': QnaAnswerRemoved,
+			'wnl-event-qna-question-resolved': QnaQuestionRemoved,
+			'wnl-event-qna-question-deleted': QnaQuestionRemoved,
 			'wnl-event-reaction-added': ReactionAdded,
 			'wnl-event-mentioned': Mentioned,
+			'wnl-event-assigned-to-task': AssignedToTask,
 			'wnl-notifications-toggle': NotificationsToggle,
 		},
 		data() {
@@ -212,6 +101,8 @@
 				isActive: false,
 				limit: 15,
 				PersonalNotification,
+				setting: 'notify_live',
+				icons: ['fa-bell-slash', 'fa-bell'],
 			}
 		},
 		computed: {
@@ -222,10 +113,10 @@
 				getUnread: 'getUnread',
 			}),
 			iconClass() {
-				return this.isOn ? 'fa-bell' : 'fa-bell-slash'
+				return this.isOn ? this.icons[1] : this.icons[0]
 			},
 			isOn() {
-				return this.getSetting(setting)
+				return this.getSetting(this.setting)
 			},
 			unseenCount() {
 				return _.size(_.filter(this.getUnseen(this.channel), (notification) => !notification.deleted))

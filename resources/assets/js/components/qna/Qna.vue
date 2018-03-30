@@ -7,9 +7,17 @@
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
-						<p class="title is-4" v-if="title !== false">
-							{{displayedTitle}} ({{howManyQuestions}})
-						</p>
+						<div class="wnl-qna-header" :class="isUserProfileClass">
+							<span v-if="icon" class="icon is-big user-profile-icon">
+								<i :class="icon"></i>
+							</span>
+							<p v-if="!hideTitle" class="wnl-qna-header-title" >
+								{{displayedTitle}}&nbsp;
+							</p>
+							<p class="wnl-qna-header-title" v-if="!numbersDisabled">
+								({{howManyQuestions}})
+							</p>
+						</div>
 						<div class="tags" v-if="tags">
 							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
 						</div>
@@ -19,7 +27,7 @@
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
-					<a class="button is-small is-primary is-outlined" @click="showForm = true" v-if="!showForm">
+					<a class="button is-small is-primary" @click="showForm = true" v-if="!showForm">
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
 							<i class="fa fa-question-circle-o"></i>
@@ -32,13 +40,16 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="howManyQuestions > 0"/>
+			<wnl-qna-sorting v-if="sortingEnabled && howManyQuestions > 0"/>
 			<wnl-qna-question v-for="question in questionsList"
 				:key="question.id"
 				:questionId="question.id"
 				:readOnly="readOnly"
 				:reactionsDisabled="reactionsDisabled"
-			/>
+				:config="config"
+			>
+				<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
+			</wnl-qna-question>
 		</div>
 	</div>
 </template>
@@ -48,7 +59,7 @@
 
 	.wnl-qna
 		#question-icon
-			margin: $margin-tiny $margin-tiny 0 $margin-small
+			margin: 0 $margin-tiny 0 $margin-small
 
 		.title
 			margin-bottom: $margin-small
@@ -56,9 +67,19 @@
 		.tag
 			margin-right: $margin-small
 
-	.votes
-		flex: 0 auto
-		margin-right: $margin-base
+	.wnl-qna-header
+		display: flex
+		margin-bottom: $margin-small
+		&.is-user-profile
+			.icon
+				color: $color-dark-blue-opacity
+			.wnl-qna-header-title
+				color: $color-dark-blue
+		.wnl-qna-header-title
+			font-size: $font-size-plus-2
+
+		.user-profile-icon
+			margin-right: $margin-small
 
 	.qna-container
 		flex: 1 auto
@@ -108,14 +129,39 @@
 		components: {
 			'wnl-qna-question': QnaQuestion,
 			'wnl-new-question': NewQuestionForm,
-			'wnl-qna-sorting': QnaSorting,
+			'wnl-qna-sorting': QnaSorting
 		},
-		props: ['tags', 'ids', 'readOnly', 'title', 'reactionsDisabled'],
+		props: {
+			hideTitle: {
+				type: Boolean,
+				default: false,
+			},
+			icon: String,
+			isUserProfileClass: String,
+			tags: Array,
+			numbersDisabled: Boolean,
+			passedQuestions: Array,
+			reactionsDisabled: Boolean,
+			readOnly: Boolean,
+			title: [String, Boolean],
+			showContext: Boolean,
+			sortingEnabled: {
+				type: Boolean,
+				default: true
+			},
+			config: {
+				type: Object,
+				default: () => { return {
+					highlighted: {}
+				}}
+			},
+		},
 		data() {
 			return {
 				ready: false,
 				showForm: false,
-				questionsList: []
+				questionsList: [],
+				name: 'watch',
 			}
 		},
 		computed: {
@@ -126,28 +172,34 @@
 				'getSortedQuestions'
 			]),
 			howManyQuestions() {
-				return Object.keys(this.questions).length || 0
+				return Object.keys(this.questionsList).length || 0
 			},
 			tagsFiltered() {
 				if (!this.tags) return [];
 				return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1)
 			},
 			displayedTitle() {
-				return this.title || 'Pytania i odpowiedzi'
+				return this.title || this.$t('qna.title.titleToDisplay')
 			},
 		},
 		methods: {
 			...mapActions('qna', ['destroyQna']),
 		},
 		mounted() {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+			if (!this.sortingEnabled && this.passedQuestions) {
+				this.questionsList = this.passedQuestions
+			} else {
+				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions)
+			}
 		},
 		watch: {
 			'currentSorting' (newValue) {
 				this.questionsList = this.getSortedQuestions(newValue, this.questions);
 			},
 			'questions' (newValue) {
-				this.questionsList = this.getSortedQuestions(this.currentSorting, newValue);
+				if (this.sortingEnabled && !this.passedQuestions) {
+					this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+				}
 			}
 		},
 		beforeDestroy() {

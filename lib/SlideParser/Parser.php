@@ -1,16 +1,17 @@
 <?php namespace Lib\SlideParser;
 
-use App\Models\Tag;
-use Storage;
+use App\Exceptions\ParseErrorException;
 use App\Models\Group;
-use App\Models\Slide;
 use App\Models\Lesson;
 use App\Models\Section;
+use App\Models\Slide;
 use App\Models\Slideshow;
-use Illuminate\Support\Str;
+use App\Models\Subsection;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use App\Exceptions\ParseErrorException;
+use Storage;
 
 class Parser
 {
@@ -30,14 +31,33 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
+	const IMAGE_PATTERN = '/<img.*data-.*src="(.*)".*>/';
+
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
 		'movie' => '/<iframe.*youtube\.com.*>/',
 		'audio' => '/<iframe.*clyp.it.*>/',
 	];
 
+	const IMAGE_TEMPLATE = '<img src="%s">';
+
+	const IMAGE_VIEWER_TEMPLATE = '
+		<div class="iv-image-container">
+			<img src="%s" class="chart">
+			<a class="iv-image-fullscreen" title="Pełen ekran">
+				<span class="fullscreen-icon">
+					<span class="inner"></span>
+					<span class="horizontal"></span>
+					<span class="vertical"></span>
+				</span>
+			</a>
+		</div>';
+
+	const GIF_TEMPLATE = '<img src="%s" class="gif">';
+
 	protected $categoryTags;
 	protected $courseTags;
+	protected $questionTag = 'question';
 	protected $categoryModels = [];
 	protected $courseModels = [];
 	protected $lessonTag;
@@ -60,6 +80,7 @@ class Parser
 			0 => 'group',
 			1 => 'lesson',
 			2 => 'section',
+			3 => 'subsection',
 		]);
 	}
 
@@ -68,7 +89,7 @@ class Parser
 	 *
 	 * @throws ParseErrorException
 	 */
-	public function parse($fileContents)
+	public function parse($fileContents, $screenId = null)
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
@@ -77,6 +98,7 @@ class Parser
 		Log::debug('Parsing...');
 		$names = [];
 		$slideshowTag = Tag::firstOrCreate(['name' => 'Prezentacja']);
+		$lastSectionFound = null;
 
 		foreach ($slides as $currentSlide => $slideHtml) {
 			$iteration++;
@@ -88,23 +110,34 @@ class Parser
 				}
 			}
 
-			$slide = Slide::create([
-				'content'       => $this->cleanSlide($slideHtml),
-				'is_functional' => $this->isFunctional($slideHtml),
-			]);
+			$content = $this->cleanSlide($slideHtml);
+			$slide = Slide::firstOrCreate(
+				['content' => $content],
+				[
+					'content'       => $this->cleanSlide($slideHtml),
+					'is_functional' => $this->isFunctional($slideHtml),
+				]);
 
 			$tags = $this->getTags($slideHtml);
 
 			$foundCourseTags = [];
-			foreach ($tags as $tagName => $tagValue) {
-				$searchResult = $this->courseTags->search($tagName);
-				if ($searchResult !== false) {
-					$foundCourseTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
+			$foundQuestionsIds = [];
+
+			foreach ($tags as $tagName => $tagValues) {
+				foreach ($tagValues as $tagValue) {
+					$searchResult = $this->courseTags->search($tagName);
+					if ($searchResult !== false) {
+						$foundCourseTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
+					}
+
+					if ($tagName === $this->questionTag) {
+						$foundQuestionsIds[] = $tagValue;
+					}
 				}
 			}
 			ksort($foundCourseTags);
-			foreach ($foundCourseTags as $index => $courseTag) {
 
+			foreach ($foundCourseTags as $index => $courseTag) {
 				if ($courseTag['name'] == 'group') {
 					$group = Group::firstOrCreate([
 						'name'      => $courseTag['value'],
@@ -127,7 +160,7 @@ class Parser
 					$orderNumber = 0;
 					$this->courseModels['slideshow'] = $slideshow;
 
-					$this->courseModels['screen'] = $lesson->screens()->create([
+					$screenData = [
 						'type' => 'slideshow',
 						'name' => 'Prezentacja',
 						'meta' => [
@@ -138,7 +171,13 @@ class Parser
 								],
 							],
 						],
-					]);
+					];
+
+					if ($screenId) {
+						$screenData['id'] = intval($screenId);
+					}
+
+					$this->courseModels['screen'] = $lesson->screens()->create($screenData);
 					$this->courseModels['screen']->tags()->attach($slideshowTag);
 					$this->courseModels['screen']->tags()->attach($this->lessonTag);
 					$this->courseModels['screen']->tags()->attach($this->groupTag);
@@ -150,65 +189,36 @@ class Parser
 						'screen_id' => $this->courseModels['screen']->id,
 					]);
 					$this->courseModels['section'] = $section;
+
+					$lastSectionFound = $this->courseModels['section'];
+					unset($this->courseModels['subsection']);
+				}
+
+				if ($courseTag['name'] == 'subsection') {
+					$subsection = Subsection::firstOrCreate([
+						'name'       => $this->cleanName($courseTag['value']),
+						'section_id' => $this->courseModels['section']->id,
+					]);
+					$this->courseModels['subsection'] = $subsection;
 				}
 			}
 
-			if ($this->lessonTag) {
+			if ($this->lessonTag && !$slide->tags->contains($this->lessonTag)) {
 				$slide->tags()->attach($this->lessonTag);
 			}
-			if ($this->groupTag) {
+			if ($this->groupTag && !$slide->tags->contains($this->groupTag)) {
 				$slide->tags()->attach($this->groupTag);
 			}
-			if (array_key_exists('slideshow', $this->courseModels)) {
-				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);
-			}
-			if (array_key_exists('section', $this->courseModels)) {
-				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
+			$lastSectionFound = $this->attachToPresentables($slide, $orderNumber, $lastSectionFound);
+
+			if (!empty($foundQuestionsIds)) {
+				$slide->quizQuestions()->attach($foundQuestionsIds);
 			}
 
 			$orderNumber++;
-			if ($slide->is_functional) continue; /* jump to next iteration */
-
-//			$foundCategoryTags = [];
-//			foreach ($tags as $tagName => $tagValue) {
-//				$searchResult = $this->categoryTags->search($tagName);
-//				if ($searchResult !== false) {
-//					$foundCategoryTags[$searchResult] = ['name' => $tagName, 'value' => $tagValue];
-//				}
-//			}
-//			if ($currentSlide === 0 && !array_key_exists(0, $foundCategoryTags)) {
-//				Log::warning('Highest level category tag not found!');
-//				continue;
-//			}
-//			ksort($foundCategoryTags);
-//			foreach ($foundCategoryTags as $index => $categoryTag) {
-//				if ($index === 0) {
-//					$parentId = null;
-//				} else {
-//					$parentId = $this->categoryModels[$index - 1]->id;
-//				}
-//
-//				$this->categoryModels = array_filter($this->categoryModels, function ($key) use ($index) {
-//					return $key < $index;
-//				}, ARRAY_FILTER_USE_KEY);
-//
-//				$this->categoryModels[] = Category::firstOrCreate([
-//					'name'      => $categoryTag['value'],
-//					'parent_id' => $parentId,
-//				]);
-//
-//				if ($index === 0) {
-//					$this->categoryModels[0]->slides()->detach();
-//					Category::where('parent_id', $this->categoryModels[0]->id)->delete();
-//				}
-//			}
-//
-//			foreach ($this->categoryModels as $model) {
-//				$model->slides()->attach($slide);
-//			}
-
 		}
-		// die('kuniec');
+
+		\Artisan::queue('screens:countSlides');
 	}
 
 	/**
@@ -216,7 +226,7 @@ class Parser
 	 *
 	 * @return array
 	 */
-	protected function matchSlides($data):array
+	public function matchSlides($data):array
 	{
 		$matches = [];
 
@@ -272,7 +282,13 @@ class Parser
 		if (!$matches) return [];
 
 		foreach ($matches as $match) {
-			$tags[$match[1]] = $match[2];
+			$tagName = $match[1];
+
+			if (!array_key_exists($tagName, $tags)) {
+				$tags[$tagName] = [];
+			}
+
+			$tags[$tagName][] = $match[2];
 		}
 
 		return $tags;
@@ -316,6 +332,7 @@ class Parser
 		$html = preg_replace($regexSearch, '', $html);
 		$html = str_replace($textSearch, '', $html);
 		$html = $this->handleCharts($html);
+		$html = $this->handleImages($html);
 
 		return $html;
 	}
@@ -344,34 +361,23 @@ class Parser
 	public function chartViewer($chartId)
 	{
 		$lucidUrl = 'https://www.lucidchart.com/documents/thumb/%s/0/0/NULL/%d';
-		$viewerHtml = '
-			<div class="iv-image-container">
-				<img src="%s" class="chart">
-				<a class="iv-image-fullscreen" title="Pełen ekran">
-					<span class="fullscreen-icon">
-						<span class="inner"></span>
-						<span class="horizontal"></span>
-						<span class="vertical"></span>
-					</span>
-				</a>
-			</div>';
 		$imageSizePx = 2000;
 		$urlFormatted = sprintf($lucidUrl, $chartId, $imageSizePx);
 		$image = Image::make($urlFormatted)->stream('png');
 		$path = "charts/{$chartId}.png";
 		Storage::put('public/' . $path, $image);
 
-		return sprintf($viewerHtml, asset('storage/' . $path));
+		return sprintf(self::IMAGE_VIEWER_TEMPLATE, asset('storage/' . $path));
 	}
 
 	public function createSnippet($slideHtml)
 	{
 		$snippet = [
-			'header'     => '',
-			'subheader'  => '',
-			'content'    => '',
-			'media'      => null,
-			'page' => '',
+			'header'    => '',
+			'subheader' => '',
+			'content'   => '',
+			'media'     => null,
+			'page'      => '',
 		];
 
 		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
@@ -412,6 +418,7 @@ class Parser
 
 		if (!$this->match('/\w/', $slideHtml)) {
 			$snippet['content'] = '';
+
 			return $snippet;
 		}
 
@@ -424,5 +431,100 @@ class Parser
 		$snippet['content'] = trim($slideHtml);
 
 		return $snippet;
+	}
+
+	public function handleImages($html)
+	{
+		$match = $this->match(self::IMAGE_PATTERN, $html);
+
+		if ($match === false) {
+			return $html;
+		}
+
+		$imgTag = $match[0][0];
+		$imageUrl = $match[0][1];
+
+		try {
+			$image = Image::make($imageUrl);
+		}
+		catch (\Exception $e) {
+			\Log::error("Fetching image from {$imageUrl} failed.");
+
+			return $html;
+		}
+
+		$mime = $image->mime;
+		$supported = ['image/jpeg', 'image/gif', 'image/png'];
+		if (!in_array($mime, $supported)) {
+			\Log::error("Unsupported image type: {$mime}");
+
+			return $html;
+		}
+
+		if ($mime === 'image/gif') {
+			$data = @file_get_contents($imageUrl);
+			$ext = 'gif';
+			$template = self::GIF_TEMPLATE;
+		} else {
+			$background = $image->resize(1920, 1080, function ($constraint) {
+				$constraint->aspectRatio();
+				$constraint->upsize();
+			});
+			$canvas = Image::canvas($image->width(), $image->height(), '#fff');
+			$data = $canvas->insert($background)->stream('jpg', 80);
+			$ext = 'jpg';
+			$template = self::IMAGE_TEMPLATE;
+		}
+
+		if (!$data) {
+			\Log::error("Fetching image from {$imageUrl} failed.");
+
+			return $html;
+		}
+
+		$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
+		Storage::put('public/' . $path, $data);
+
+		$viewerHtml = sprintf($template, asset('storage/' . $path));
+		$html = str_replace($imgTag, $viewerHtml, $html);
+
+		return $html;
+	}
+
+	/**
+	 * @param $slide
+	 * @param $orderNumber
+	 * @param $lastSectionFound
+	 */
+	protected function attachToPresentables($slide, $orderNumber, $lastSectionFound)
+	{
+		try {
+			if (array_key_exists('slideshow', $this->courseModels)) {
+
+				$this->courseModels['slideshow']->slides()->attach($slide, ['order_number' => $orderNumber]);
+			}
+			if (array_key_exists('section', $this->courseModels)) {
+				$this->courseModels['section']->slides()->attach($slide, ['order_number' => $orderNumber]);
+
+				if ($lastSectionFound === null) {
+					$lastSectionFound = $this->courseModels['section'];
+				} else if ($lastSectionFound->name !== $this->courseModels['section']->name) {
+					$lastSectionFound = $this->courseModels['section'];
+				}
+			}
+
+			if (array_key_exists('subsection', $this->courseModels)) {
+				$this->courseModels['subsection']->slides()->attach($slide, ['order_number' => $orderNumber]);
+			}
+		}
+		catch (\Illuminate\Database\QueryException $e) {
+			if ($e->errorInfo[1] === 1062) {
+				// Means slide is duplicated.
+			} else {
+				throw $e;
+			}
+		} finally {
+			return $lastSectionFound;
+		}
 	}
 }

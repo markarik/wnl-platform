@@ -1,9 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Filters\Quiz;
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
-use App\Models\QuizQuestion;
 use App\Models\Reactable;
-use App\Models\UserPlan;
 use Carbon\Carbon;
 use Auth;
 
@@ -32,6 +30,7 @@ class CollectionFilter extends ApiFilter
 			],
 			'message' => 'collection',
 			'type'    => 'list',
+			'is_user_specific' => true
 		];
 	}
 

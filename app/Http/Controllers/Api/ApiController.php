@@ -3,24 +3,29 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
-use League\Fractal\Manager;
-use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
-use App\Http\Controllers\Controller;
-use League\Fractal\Resource\Collection;
+use App\Events\Event;
+use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
+use App\Http\Controllers\Api\Concerns\PaginatesResponses;
+use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
+use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
 use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
 use App\Http\Controllers\Api\Serializer\ApiJsonSerializer;
-use App\Http\Controllers\Api\Concerns\PerformsApiSearches;
-use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
-use App\Http\Controllers\Api\Concerns\ProvidesApiFiltering;
+use App\Http\Controllers\Controller;
+use Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
 
 class ApiController extends Controller
 {
 	use GeneratesApiResponses,
 		TranslatesApiQueries,
 		PerformsApiSearches,
-		ProvidesApiFiltering;
+		ProvidesApiFiltering,
+		PaginatesResponses;
 
 	protected $fractal;
 	protected $request;
@@ -34,6 +39,7 @@ class ApiController extends Controller
 		$this->fractal->setSerializer(new ApiJsonSerializer());
 		if ($this->request->has('include')) {
 			$this->fractal->parseIncludes($this->request->get('include'));
+			$this->include = $this->request->get('include');
 		}
 	}
 
@@ -46,18 +52,22 @@ class ApiController extends Controller
 	 */
 	public function get($id)
 	{
+		$request = $this->request;
 		$modelName = self::getResourceModel($this->resourceName);
-		$transformerName = self::getResourceTransformer($this->resourceName);
-		if ($id === 'all') {
-			$models = $modelName::all();
-			$resource = new Collection($models, new $transformerName, $this->resourceName);
-		} else {
-			$models = $modelName::find($id);
-			$resource = new Item($models, new $transformerName, $this->resourceName);
-		}
-		$data = $this->fractal->createData($resource)->toArray();
 
-		return response()->json($data);
+		$models = $this->eagerLoadIncludes($modelName);
+
+		if ($id !== 'all') {
+			$models = $modelName::find($id);
+		}
+
+		if ($id === 'all' && $request->limit) {
+			$data = $this->paginatedResponse($models, $request->limit, $request->page ?? 1);
+		} else {
+			$data = $this->transform($models);
+		}
+
+		return $this->respondOk($data);
 	}
 
 	/**
@@ -69,21 +79,24 @@ class ApiController extends Controller
 	 */
 	public function delete($id)
 	{
-		$modelName = self::getResourceModel($this->resourceName);
+		$modelFullName = self::getResourceModel($this->resourceName);
+		$modelName = self::getResourcesStudly($this->resourceName);
 
-		$model = $modelName::find($id);
+		$model = $modelFullName::find($id);
 
 		if (!$model) {
 			return $this->respondNotFound();
 		}
 
 		if (Auth::user()->can('delete', $model)) {
-			$model::destroy($id);
+			$model->forceDelete();
+
+			self::dispatchRemovedEvent($model, $modelName);
 
 			return $this->respondOk();
 		}
 
-		return $this->respondUnauthorized();
+		return $this->respondForbidden();
 	}
 
 	/**
@@ -91,7 +104,8 @@ class ApiController extends Controller
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function count() {
+	public function count()
+	{
 		return $this->respondOk([
 			'count' => (self::getResourceModel($this->resourceName))::count(),
 		]);
@@ -107,6 +121,21 @@ class ApiController extends Controller
 	public static function getResourceModel($resource)
 	{
 		return 'App\Models\\' . self::getResourcesStudly($resource);
+	}
+
+	/**
+	 * Dispatch event.
+	 *
+	 * @param $model
+	 * @param $resourceName
+	 */
+	protected static function dispatchRemovedEvent($model, $resourceName)
+	{
+		$eventClass = Event::getResourceEvent($resourceName, 'removed');
+
+		if (class_exists($eventClass)) {
+			event(new $eventClass($model, Auth::user()->id, 'deleted'));
+		}
 	}
 
 	/**
@@ -158,43 +187,68 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * @param $results
+	 * @param $data
 	 *
 	 * @return array
 	 */
-	protected function transform($results)
+	protected function transform($data)
 	{
 		$transformerName = self::getResourceTransformer($this->resourceName);
-		$resource = new Collection($results, new $transformerName, $this->resourceName);
+		if ($data instanceof Model) {
+			$resource = new Item($data, new $transformerName, $this->resourceName);
+		} else {
+			if ($data instanceof Builder) {
+				$data = $data->get();
+			}
+			$resource = new Collection($data, new $transformerName, $this->resourceName);
+		}
 
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $data;
 	}
 
-	/**
-	 * @param $model
-	 * @param $limit
-	 *
-	 * @return array
-	 */
-	protected function paginatedResponse($model, $limit, $page = 1)
+	protected function eagerLoadIncludes(string $model)
 	{
-		$paginator = $model->paginate($limit, ['*'], 'page', $page);
+		if (empty($this->include)) return $model::select();
+		$relationships = [];
 
-		if ($paginator->lastPage() < $page) {
-			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
+		foreach (explode(',', $this->include) as $chain) {
+			$confirmedChain = $this->processChain($chain, $model);
+			if ($confirmedChain) {
+				array_push($relationships, $confirmedChain);
+			}
 		}
 
-		$response = [
-			'data'         => $this->transform($paginator->getCollection()),
-			'total'        => $paginator->total(),
-			'has_more'     => $paginator->hasMorePages(),
-			'last_page'    => $paginator->lastPage(),
-			'per_page'     => $paginator->perPage(),
-			'current_page' => $paginator->currentPage(),
-		];
+		return $model::with($relationships);
+	}
 
-		return $response;
+	protected function modelHasMethod(string $model, string $method)
+	{
+		return method_exists((new $model), $method);
+	}
+
+	protected function processChain(string $chain, string $parentModel)
+	{
+		$resources = explode('.', $chain);
+		$depth = count($resources);
+		for ($i = 0; $i < $depth; $i++) {
+			if ($i === 0) {
+				if (!$this->modelHasMethod($parentModel, $resources[$i])) {
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$parentModel}");
+
+					return false;
+				}
+			} else {
+				$model = self::getResourceModel($resources[$i - 1]);
+				if (!$this->modelHasMethod($model, $resources[$i])) {
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$model}");
+
+					return false;
+				}
+			}
+		}
+
+		return $chain;
 	}
 }

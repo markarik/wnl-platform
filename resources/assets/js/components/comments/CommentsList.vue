@@ -6,23 +6,32 @@
 			<span v-if="comments.length > 0 || this.showComments"> ·
 				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 			</span> ·
-			<span>
+			<span v-if="!readOnly">
 				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 			</span>
+			<wnl-watch
+				v-if="!hideWatchlist"
+				:reactableId="commentableId"
+				:reactableResource="commentableResource"
+				:state="watchState"
+				:reactionsDisabled="false"
+				:module="module"
+			>
+			</wnl-watch>
 		</div>
 		<wnl-comment
-			v-show="showComments"
+			v-if="showComments"
 			v-for="comment in comments"
 			:key="comment.id"
 			:comment="comment"
 			:profile="commentProfile(comment.profiles[0])"
 			@removeComment="onRemoveComment"
-			>
-			{{comment.text}}
-		</wnl-comment>
-		<div class="form-container" v-show="showComments">
+			@resolveComment="onResolveComment"
+			@unresolveComment="onUnresolveComment"
+		/>
+		<div class="form-container" v-if="showComments">
 			<transition name="fade">
-				<wnl-new-comment-form
+				<wnl-new-comment-form v-if="!readOnly"
 					:commentableResource="commentableResource"
 					:commentableId="commentableId"
 					:isUnique="isUnique"
@@ -45,12 +54,14 @@
 
 <script>
 	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+	import { mapGetters } from 'vuex'
 	import { nextTick } from 'vue'
 
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
 	import highlight from 'js/mixins/highlight'
+	import Watch from 'js/components/global/reactions/Watch'
+
 
 	import { scrollWithMargin } from 'js/utils/animations'
 
@@ -59,9 +70,10 @@
 		components: {
 			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
+			'wnl-watch': Watch
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly'],
 		data() {
 			return {
 				formElement: {},
@@ -82,11 +94,20 @@
 				return !_.isEmpty(this.comments)
 			},
 			toggleCommentsText() {
-				return this.showComments ? 'Schowaj' : 'Pokaż'
+				return this.showComments ? this.$t('ui.action.hide') : this.$t('ui.action.show')
 			},
 			isCommentableInUrl() {
-				return _.get(this.$route, `query.${this.urlParam}`) == this.commentableId
-			}
+				return (_.get(this.$route, `query.${this.urlParam}`) == this.commentableId
+					|| _.get(this.$route, 'query.commentable') == this.commentableId)
+					&& (_.get(this.$route, 'query.comment'));
+			},
+			watchState() {
+				return this.$store.getters[`${this.module}/getReaction`](
+					this.commentableResource,
+					this.commentableId,
+					'watch'
+				)
+			},
 		},
 		methods: {
 			action(action, payload = {}) {
@@ -146,6 +167,20 @@
 					id,
 				})
 			},
+			onResolveComment(id) {
+				this.action('resolveComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
+			onUnresolveComment(id) {
+				this.action('unresolveComment', {
+					commentableResource: this.commentableResource,
+					commentableId: this.commentableId,
+					id,
+				})
+			},
 			refresh() {
 				return this.action('fetchComments', {
 					resource: this.commentableResource,
@@ -183,7 +218,6 @@
 						.then(() => {
 							this.scrollAndHighlight()
 							this.showComments = true
-
 						})
 				}
 			},

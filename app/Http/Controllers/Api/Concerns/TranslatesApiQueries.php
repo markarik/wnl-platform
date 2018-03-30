@@ -22,7 +22,13 @@ trait TranslatesApiQueries
 		$model = $this->applyFilters($model, $request);
 
 		try {
-			$results = $model->get();
+			if ($request->limit && !is_array($request->limit)) {
+				$data = $this->paginatedResponse($model, $request->limit, $request->page ?? 1);
+			} else {
+				$data = array_filter($this->transform($model), function($value) {
+					return !empty($value);
+				});
+			}
 		}
 		catch (QueryException $e) {
 			\Log::error($e);
@@ -30,7 +36,7 @@ trait TranslatesApiQueries
 			return $this->respondInvalidInput();
 		}
 
-		return $this->transformAndRespond($results);
+		return $this->respondOk($data);
 	}
 
 	/**
@@ -195,12 +201,26 @@ trait TranslatesApiQueries
 			$model = $model->whereIn($query['whereIn'][0], $query['whereIn'][1]);
 		}
 
+		if (!empty($query['whereInMulti'])) {
+			foreach($query['whereInMulti'] as $whereIn) {
+				$model = $model->whereIn($whereIn[0], $whereIn[1]);
+			}
+		}
+
 		if (!empty($query['whereNotIn'])) {
 			$model = $model->whereNotIn($query['whereNotIn'][0], $query['whereNotIn'][1]);
 		}
 
+		if (!empty($query['whereNull'])) {
+			$model = $model->whereNull($query['whereNull'][0]);
+		}
+
 		if (!empty ($query['where'])) {
 			$model = $model->where($query['where']);
+		}
+
+		if (!empty ($query['orWhere'])) {
+			$model = $model->orWhere($query['orWhere']);
 		}
 
 		if (!empty ($query['whereHas'])) {

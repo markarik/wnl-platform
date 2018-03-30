@@ -22,11 +22,19 @@
 				</span>
 			</a>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-search">
+		<div
+			v-if="$currentEditionParticipant.isAllowed('access')"
+			class="wnl-navbar-item wnl-navbar-search"
+		>
 			<wnl-search/>
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-feed">
+		<div
+			v-if="$currentEditionParticipant.isAllowed('access')"
+			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
+		</div>
+		<div class="wnl-navbar-item wnl-navbar-messages">
+			<wnl-chat-feed/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown/>
@@ -43,6 +51,9 @@
 
 	$logo-width: 50px
 	$logo-text-width: 90px
+
+	.modal-active .wnl-navbar
+		z-index: 0
 
 	.wnl-navbar
 		+small-shadow()
@@ -138,20 +149,25 @@
 </style>
 
 <script>
+	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
+
 	import Breadcrumbs from 'js/components/global/Breadcrumbs'
 	import Search from 'js/components/global/search/Search'
 	import UserDropdown from 'js/components/user/UserDropdown.vue'
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
+	import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed'
 	import { mapGetters, mapActions } from 'vuex'
 	import { getImageUrl, getSignupsUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Navbar',
+		perimeters: [currentEditionParticipant],
 		components: {
 			'wnl-breadcrumbs': Breadcrumbs,
 			'wnl-user-dropdown': UserDropdown,
 			'wnl-personal-feed': PersonalFeed,
 			'wnl-search': Search,
+			'wnl-chat-feed': ChatFeed,
 		},
 		computed: {
 			...mapGetters([
@@ -182,6 +198,6 @@
 		},
 		methods: {
 			...mapActions(['toggleSidenav', 'toggleChat'])
-		},
+		}
 	}
 </script>

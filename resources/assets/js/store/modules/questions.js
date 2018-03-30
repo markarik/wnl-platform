@@ -1,20 +1,24 @@
-import {set, delete as destroy} from 'vue'
-import {get, isEqual, isEmpty, isNumber, merge, size} from 'lodash'
+import {set} from 'vue'
+import {get, isEmpty, isNumber, size} from 'lodash'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {parseFilters} from 'js/services/apiFiltering'
 import axios from 'axios'
-import moment from 'moment'
-import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
-import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
+import uuidv1 from 'uuid/v1';
+
+import {
+	commentsActions,
+	commentsGetters,
+	commentsMutations
+} from 'js/store/modules/comments'
+import {
+	reactionsActions,
+	reactionsGetters,
+	reactionsMutations
+} from 'js/store/modules/reactions'
 
 
 const namespaced = true
-
-const FILTER_TYPES = {
-	BOOLEAN: 'boolean',
-	LIST: 'list',
-	TAGS: 'tags',
-}
 
 const LIMIT = 25
 
@@ -34,6 +38,7 @@ const state = {
 	profiles: {},
 	results: false,
 	testQuestions: [],
+	token: ''
 }
 
 // Getters
@@ -42,9 +47,15 @@ const getters = {
 	...reactionsGetters,
 	activeFilters: state => state.activeFilters,
 	activeFiltersObjects: state => {
-		return isEmpty(state.filters)
-			? []
-			: state.activeFilters.map(path => get(state.filters, path))
+		if (isEmpty(state.filters)) {
+			return []
+		}
+		return state.activeFilters.map(path => {
+			if (path.startsWith('search.')) {
+				return get(state.filters, 'search')
+			}
+			return get(state.filters, path)
+		})
 	},
 	activeFiltersValues: state => {
 		return isEmpty(state.filters)
@@ -53,11 +64,11 @@ const getters = {
 	},
 	allQuestionsCount: state => state.allCount,
 	currentQuestion: state => {
-		if (isEmpty(state.questionsPages) || !state.currentQuestion.page) return {}
-		const {page, index} = state.currentQuestion
-		let computedIndex = index
+		if (isEmpty(state.questionsPages) || !(state.currentQuestion && state.currentQuestion.page)) return {}
+		if (isEmpty(state.questionsPages[state.currentQuestion.page])) return {}
 
-		if (index === -1) computedIndex = state.questionsPages[page].length - 1
+		const {page, index} = state.currentQuestion
+		const computedIndex = index === -1 ? state.questionsPages[page].length - 1 : index
 
 		return {page, index: computedIndex, ...state.quiz_questions[state.questionsPages[page][computedIndex]]}
 	},
@@ -67,6 +78,7 @@ const getters = {
 			'quiz-resolution',
 			'by_taxonomy-subjects',
 			'by_taxonomy-exams',
+			'search'
 		]
 
 		let filters = {}
@@ -102,14 +114,27 @@ const getters = {
 	testQuestions: state => state.testQuestions.map(id => state.quiz_questions[id]),
 	testQuestionsUnanswered: (state, getters) => getters.testQuestions.filter(question => {
 		return !isNumber(question.selectedAnswer)
-	})
+	}),
+	hasStatelessFilters: state => {
+		return state.activeFilters
+			.map(active => active.split('.')[0])
+			.find(active => state.filters[active].is_user_specific)
+	}
 }
 
 // Mutations
 const mutations = {
 	...commentsMutations,
 	...reactionsMutations,
+	[types.ADD_FILTER] (state, phrase) {
+		set(state.filters.search, 'items', [{value: phrase}])
+	},
 	[types.ACTIVE_FILTERS_ADD] (state, filter) {
+		if (filter.startsWith('search.')) {
+			const searchIndex = state.activeFilters.findIndex(active => active.startsWith('search.'))
+			return searchIndex > -1 ? state.activeFilters[searchIndex] = filter : state.activeFilters.push(filter)
+		}
+
 		if (state.activeFilters.indexOf(filter) === -1) {
 			state.activeFilters.push(filter)
 		}
@@ -149,14 +174,19 @@ const mutations = {
 			set(state, key, meta[key])
 		})
 	},
-	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments}) {
+	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments, slides}) {
 		if (_.size(included) === 0) return
 
 		comments && set(state.quiz_questions[id], 'comments', comments)
 
-		let {included: quiz_answers, ...resources} = included
+		let {quiz_answers, slides: includedSlides, ...resources} = included
+
+		if (includedSlides) {
+			set(state.quiz_questions[id], 'slides', slides.map((slideId) => includedSlides[slideId]))
+		}
+
 		_.each(resources, (items, resource) => {
-			let resourceObject = state[resource]
+				let resourceObject = state[resource]
 			_.each(items, (item, index) => {
 				set(resourceObject, item.id, item)
 			})
@@ -165,7 +195,7 @@ const mutations = {
 	[types.QUESTIONS_SET_PAGE] (state, page) {
 		set(state, 'current_page', page)
 	},
-	[types.QUESTIONS_SET_TEST] (state, {questions, answers}) {
+	[types.QUESTIONS_SET_TEST] (state, {questions, answers, slides}) {
 		let testQuestions = []
 
 		questions.forEach(question => {
@@ -174,6 +204,7 @@ const mutations = {
 			set(state.quiz_questions, question.id, {
 				...question,
 				answers: question.quiz_answers.map(id => answers[id]),
+				slides: (question.slides || []).map((slideId) => slides[slideId]),
 				selectedAnswer: false,
 				isResolved: false,
 			})
@@ -211,12 +242,21 @@ const mutations = {
 			})
 		})
 	},
+	[types.QUESTIONS_SET_TOKEN] (state) {
+		state.token = uuidv1()
+	}
 }
 
 // Actions
 const actions = {
 	...commentsActions,
 	...reactionsActions,
+	addFilter({commit}, filter) {
+		return new Promise(resolve => {
+			commit(types.ADD_FILTER, filter)
+			resolve()
+		})
+	},
 	activeFiltersSet({commit}, filters) {
 		commit(types.ACTIVE_FILTERS_SET, filters)
 	},
@@ -235,8 +275,8 @@ const actions = {
 	activeFiltersReset({commit}) {
 		commit(types.ACTIVE_FILTERS_RESET)
 	},
-	buildPlan({state, getters, rootGetters, commit}, data) {
-		data.filters = _parseFilters(data.activeFilters, state, getters, rootGetters);
+	buildPlan({state, rootGetters}, data) {
+		data.filters = parseFilters(data.activeFilters, state.filters, rootGetters.currentUserId);
 		return axios.post(getApiUrl(`user_plan/${rootGetters.currentUserId}`), data)
 	},
 	changeCurrentQuestion({state, getters, commit}, {page, index}) {
@@ -274,24 +314,25 @@ const actions = {
 		return Promise.resolve(results)
 	},
 	fetchDynamicFilters({commit, getters, rootGetters}) {
-		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 		return _fetchDynamicFilters({filters: parsedFilters})
 			.then(({data}) => {
 				commit(types.QUESTIONS_DYNAMIC_FILTERS_SET, data)
 			})
 	},
 	fetchQuestions({commit, state, getters, rootGetters},
-		{filters, page, useSavedFilters, doNotSaveFilters}
+		{filters, page, saveFilters, useSavedFilters}
 	) {
-		const parsedFilters = _parseFilters(filters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(filters, state.filters, rootGetters.currentUserId)
 
 		return _fetchQuestions({
 			active: filters,
-			doNotSaveFilters,
 			filters: parsedFilters,
 			include: 'quiz_answers',
 			page,
-			useSavedFilters,
+			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
+			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
+			token: getters.hasStatelessFilters ? state.token : ''
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 
@@ -304,6 +345,10 @@ const actions = {
 			commit(types.UPDATE_INCLUDED, included)
 
 			if (!isEmpty(meta.active)) {
+				const searchFilter = meta.active.find(active => active.startsWith('search.'))
+				if (searchFilter) {
+					commit(types.ADD_FILTER, searchFilter.substr(searchFilter.indexOf('.') + 1))
+				}
 				commit(types.ACTIVE_FILTERS_SET, meta.active)
 			}
 
@@ -316,9 +361,11 @@ const actions = {
 				commit(types.QUESTIONS_SET_META, {allCount: data.count})
 			})
 	},
-	fetchQuestionData({commit}, id) {
-		return _fetchQuestionsComments(id)
+	fetchQuestionData({commit, dispatch}, id) {
+		if (!id) return Promise.resolve()
+		return _fetchQuestionsData(id)
 			.then(({data}) => {
+				_.get(data, 'included.comments') && dispatch('comments/setComments', data.included.comments, {root:true})
 				commit(types.QUESTIONS_SET_QUESTION_DATA, data)
 			})
 	},
@@ -340,18 +387,21 @@ const actions = {
 				.then(response => resolve(response))
 		})
 	},
-	fetchTestQuestions({commit, state, getters, rootGetters}, {activeFilters, count: limit}) {
-		const filters = _parseFilters(activeFilters, state, getters, rootGetters)
+	fetchTestQuestions({commit, state, dispatch, rootGetters}, {activeFilters, count: limit, randomize = true}) {
+		const filters = parseFilters(activeFilters, state.filters, rootGetters.currentUserId)
 
 		return _fetchQuestions({
 			filters,
 			limit,
-			randomize: true,
-			include: 'quiz_answers,reactions,comments.profiles'
+			randomize,
+			include: 'quiz_answers,reactions,comments.profiles,slides'
 		}).then(response => {
-			const {answers, questions, included} = _handleResponse(response, commit)
+			const {answers, questions, slides, included} = _handleResponse(response, commit)
+			const comments = _.get(included, 'comments')
 
-			commit(types.QUESTIONS_SET_TEST, {answers, questions})
+			comments && dispatch('comments/setComments', comments, {root:true})
+
+			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides})
 			commit(types.UPDATE_INCLUDED, included)
 
 			return response
@@ -370,12 +420,12 @@ const actions = {
 				}
 			}).filter((result) => result)
 
-		const filters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const filters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results, meta: {...meta, filters}})
 	},
 	savePosition({getters, rootGetters, state}, payload) {
-		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 
 		axios.put(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`), {
 			...payload,
@@ -383,9 +433,29 @@ const actions = {
 		})
 	},
 	getPosition({getters, rootGetters, state}) {
-		const parsedFilters = _parseFilters(getters.activeFilters, state, getters, rootGetters)
+		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId)
 
+		if (getters.hasStatelessFilters) {
+			return Promise.resolve({
+				page: 1,
+				index: 0
+			})
+		}
 		return axios.post(getApiUrl(`users/${rootGetters.currentUserId}/state/quizPosition`),{filters: parsedFilters})
+	},
+	fetchActiveFilters({commit}) {
+		return new Promise((resolve) => {
+			axios.post(getApiUrl('quiz_questions/.activeFilters'), {
+				useSavedFilters: true
+			}).then(({data}) => {
+				const searchFilter = data.find(active => active.startsWith('search.'))
+				if (searchFilter) {
+					commit(types.ADD_FILTER, searchFilter.substr(searchFilter.indexOf('.') + 1))
+				}
+				commit(types.ACTIVE_FILTERS_SET, data)
+				resolve()
+			}).catch(err => $wnl.logger.error(err))
+		})
 	},
 	selectAnswer({commit}, payload) {
 		commit(types.QUESTIONS_SELECT_ANSWER, payload)
@@ -405,6 +475,9 @@ const actions = {
 	resetTest({commit}) {
 		commit(types.QUESTIONS_RESET_TEST)
 	},
+	deleteProgress({commit, rootGetters}) {
+		return axios.delete(getApiUrl(`quiz_results/${rootGetters.currentUserId}`))
+	}
 }
 
 
@@ -412,57 +485,29 @@ const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
 }
 
-const _fetchQuestionsComments = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles`))
+const _fetchQuestionsData = (id) => {
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,slides,comments.reactions,reactions`))
 }
 
 const _fetchDynamicFilters = (activeFilters) => {
 	return axios.post(getApiUrl('quiz_questions/.filterList'), activeFilters)
 }
 
-const _parseFilters = (activeFilters, state, getters, rootGetters) => {
-	const filters        = []
-	const groupedFilters = {}
-
-	activeFilters.forEach((path, index) => {
-		const [filterGroup, ...tail] = path.split('.')
-		const filterValue            = get(state.filters, path).value
-		const filterType             = state.filters[filterGroup].type
-
-		groupedFilters[filterGroup] = groupedFilters[filterGroup] || []
-		groupedFilters[filterGroup].push(filterValue)
-	})
-
-	Object.keys(groupedFilters).forEach((group) => {
-		if (state.filters[group].type === FILTER_TYPES.TAGS) {
-			filters.push({[group]: groupedFilters[group]})
-		} else if (state.filters[group].type === FILTER_TYPES.LIST) {
-			filters.push({
-				[group]: {
-					user_id: rootGetters.currentUserId,
-					date: moment().subtract(3, 'hours').format('YYYY-MM-DD'),
-					list: groupedFilters[group]
-				}
-			})
-		}
-	})
-
-	return filters;
-}
-
 const _handleResponse = (response) => {
 	var {data: {data, ...meta}} = response,
 		quizQuestions           = {},
 		quiz_answers            = {},
+		slides                  = {},
 		included                = {}
 
 	if (size(data) > 0) {
 		// this var is here on purpose due to error in babel and problems with spread operator :(
-		var {included: {quiz_answers, ...included}, ...quizQuestions} = data
+		var {included: {quiz_answers, slides, ...included}, ...quizQuestions} = data
 	}
 
 	return {
 		answers: quiz_answers,
+		slides,
 		included,
 		meta,
 		questions: Object.values(quizQuestions),

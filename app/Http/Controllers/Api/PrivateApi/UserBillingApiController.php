@@ -19,7 +19,7 @@ class UserBillingApiController extends ApiController
 		}
 
 		if (!Auth::user()->can('view', $billingData)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Item($billingData, new UserBillingTransformer, 'user_billing');

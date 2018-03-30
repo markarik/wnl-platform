@@ -150,6 +150,7 @@
 					.catch((error) => {
 						$wnl.logger.error(error)
 						this.errorFading('Nie wyszło, sorry. :()', 2000)
+						this.loading = false
 					})
 			},
 			deleteScreen(id) {

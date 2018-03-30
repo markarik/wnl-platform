@@ -13,9 +13,11 @@ const state = {
 		full_name: '',
 		public_email: '',
 		public_phone: '',
+		display_name: '',
 		username: '',
 		avatar: '',
 		roles: [],
+		user_id: 0,
 	},
 	settings: getDefaultSettings(),
 }
@@ -28,6 +30,7 @@ const getters = {
 	currentUserEmail: state => state.profile.public_email,
 	currentUserName: state => state.profile.first_name,
 	currentUserFullName: state => state.profile.full_name,
+	currentUserDisplayName: state => state.profile.display_name,
 	currentUserRoles: state => state.profile.roles,
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
 	getSetting: state => setting => state.settings[setting],
@@ -36,6 +39,7 @@ const getters = {
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
+	currentUserStats: state => state.stats
 }
 
 // Mutations
@@ -57,6 +61,9 @@ const mutations = {
 	[types.USERS_CHANGE_SETTING] (state, payload) {
 		set(state.settings, payload.setting, payload.value)
 	},
+	[types.USERS_SET_STATS] (state, payload) {
+		set(state, 'stats', payload)
+	}
 }
 
 // Actions
@@ -78,6 +85,20 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			getCurrentUser().then((response) => {
 				commit(types.USERS_SETUP_CURRENT, response.data)
+				resolve()
+			})
+			.catch((error) => {
+				$wnl.logger.error(error)
+				reject()
+			})
+		})
+	},
+
+	fetchCurrentUserStats({commit, getters}) {
+		return new Promise((resolve, reject) => {
+			_fetchUserStats(getters.currentUserId)
+			.then(({data}) => {
+				commit(types.USERS_SET_STATS, data)
 				resolve()
 			})
 			.catch((error) => {
@@ -122,6 +143,10 @@ const actions = {
 	syncSettings({ commit, getters }) {
 		setUserSettings(getters.getAllSettings)
 	}
+}
+
+const _fetchUserStats = (userId) => {
+	return axios.get(getApiUrl(`users/${userId}/state/stats`));
 }
 
 export default {

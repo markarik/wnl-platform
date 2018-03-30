@@ -4,7 +4,7 @@ namespace Tests\Browser\Pages\Payment;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert;
 
 class PersonalDataPage extends BasePage
 {
@@ -25,7 +25,7 @@ class PersonalDataPage extends BasePage
 	 */
 	public function assert(Browser $browser)
 	{
-		PHPUnit::assertStringStartsWith($this->url(), parse_url(
+		Assert::assertStringStartsWith($this->url(), parse_url(
 			$browser->driver->getCurrentURL()
 		)['path']);
 	}
@@ -38,7 +38,7 @@ class PersonalDataPage extends BasePage
 	public function elements()
 	{
 		return [
-			'@element' => '#selector',
+			'@login' => '.has-account a',
 		];
 	}
 }

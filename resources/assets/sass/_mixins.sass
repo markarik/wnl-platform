@@ -39,6 +39,9 @@
 =gradient-horizontal($left, $right)
 	background: linear-gradient(to right, $left, $right)
 
+=gradient-vertical($bottom, $top)
+	background: linear-gradient(to top, $bottom, $top)
+
 =rounded-square($baseSize)
 	align-items: center
 	border-radius: $baseSize * 0.1
@@ -69,7 +72,7 @@
 			width: $baseSize
 
 =rounded-square-standard-sizes($element)
-	$sizes: ('small', 'medium', 'large')
+	$sizes: ('small', 'medium', 'large', 'extralarge', 'extraextralarge')
 
 	@each $size in $sizes
 		.wnl-#{$element}-#{$size}
@@ -88,3 +91,10 @@
 =clickable()
 	cursor: pointer
 	user-select: none
+
+=simple-input()
+	border: 0
+	border-bottom: 1px solid $color-ocean-blue
+	border-radius: 0
+	box-shadow: none
+	text-align: center

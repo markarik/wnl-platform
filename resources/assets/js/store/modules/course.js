@@ -6,9 +6,14 @@ import {resource} from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
 // Helper functions
-function getCourseApiUrl(courseId) {
+function getCourseApiUrl(courseId, userId) {
 	return getApiUrl(
-		`${resource('editions')}/${courseId}?include=${resource('groups')}.${resource('lessons')}.${resource('screens')}.${resource('sections')}`
+		`${resource('editions')}/${courseId}
+		?include=groups.lessons.screens.sections.subsections,
+		course.groups.lessons.screens.sections.subsections,
+		course.groups.lessons.userAccess,course.groups.lessons.availability,
+		course.groups.lessons.screens.tags
+		&user=current`
 	)
 }
 
@@ -35,7 +40,7 @@ const getters = {
 	name: state => state.name,
 	groups: state => state[resource('groups')],
 	structure: state => state.structure,
-	getGroup: state => (groupId) => state.structure[resource('groups')][groupId],
+	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
 	getLessons: state => state.structure[resource('lessons')],
 	getAvailableLessons: (state, getters, rootState, rootGetters) => {
 		if (rootGetters.isAdmin) {
@@ -51,19 +56,26 @@ const getters = {
 		}
 		return lessons
 	},
-	getLesson: state => (lessonId) => state.structure[resource('lessons')][lessonId],
+	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
 	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
 	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
 		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
-	getSection: state => (sectionId) => state.structure['sections'][sectionId],
-	getSections: state => (sections) => sections.map((sectionId) => state.structure[resource('sections')][sectionId]),
+	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
+	getSections: state => (sections) => sections.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {})) || [],
+	getSubsections: state => (subsections) => subsections.map((subsectionId) => _.get(state.structure, `subsections.${subsectionId}`, {})) || [],
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
 		const sectionsIds = getters.getScreen(screenId).sections;
 		const sections = getters.getSections(sectionsIds);
 
 		return sections.map((section) => section.slide);
+	},
+	getSectionSubsectionsCheckpoints: (state, getters) => (sectionId) => {
+		const subsectionsIds = getters.getSection(sectionId).subsections;
+		const subsections = getters.getSubsections(subsectionsIds);
+
+		return subsections.map((subsections) => subsections.slide);
 	},
 	getScreens: state => (lessonId) => {
 		let screensIds = state.structure[resource('lessons')][lessonId][resource('screens')]
@@ -111,7 +123,15 @@ const getters = {
 			lesson = getters.getLesson(inProgressId)
 			lesson.status = STATUS_IN_PROGRESS
 		} else {
-			for (let lessonId in getters.getLessons) {
+			const sortedLessonsIds = Object.keys(getters.getLessons).sort((keyA, keyB) => {
+				const lessonA = getters.getLessons[keyA]
+				const lessonB = getters.getLessons[keyB]
+
+				return lessonA.order_number - lessonB.order_number
+			}).map(Number)
+
+			for (let i = 0; i < sortedLessonsIds.length; i++) {
+				let lessonId = sortedLessonsIds[i];
 				let isAvailable = getters.isLessonAvailable(lessonId)
 				if (isAvailable &&
 					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
@@ -169,9 +189,9 @@ const actions = {
 			})
 		})
 	},
-	setStructure({commit}, courseId) {
+	setStructure({commit, rootGetters}, courseId) {
 		return new Promise((resolve, reject) => {
-			axios.get(getCourseApiUrl(courseId))
+			axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
 				.then(response => {
 					commit(types.SET_STRUCTURE, response.data)
 					resolve()

@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
-use App\Events\CommentPosted;
+use App\Events\Comments\CommentPosted;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
-	protected $fillable = ['text', 'user_id'];
+	use SoftDeletes;
 
-	protected $events = [
+	protected $fillable = ['text', 'user_id'];
+	protected $dates = ['deleted_at'];
+
+	protected $dispatchesEvents = [
 		'created' => CommentPosted::class,
 	];
 

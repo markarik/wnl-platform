@@ -27,7 +27,7 @@ class QnaAnswersApiController extends ApiController
 		$question = QnaQuestion::find($questionId);
 
 		if (!$question) {
-			return $this->respondInvalidInput('Question does not exist.');
+			return $this->respondNotFound('Question does not exist.');
 		}
 
 		$answer = $question->answers()->create([

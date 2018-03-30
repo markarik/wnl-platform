@@ -119,7 +119,7 @@
 		</td>
 	</tr>
 </table>
-
+@yield('instalments', '')
 <div class="columns">
 	{{-- Payment details --}}
 	<div class="column">

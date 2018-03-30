@@ -7,6 +7,7 @@ use App\Models\Screen;
 use App\Models\Section;
 use App\Models\Slide;
 use App\Models\Slideshow;
+use App\Models\Subsection;
 use App\Models\Presentable;
 use Cache;
 
@@ -40,7 +41,7 @@ class SlideshowsRemove extends Command
 	{
 		$screensIds = explode(self::SCREENS_DELIMITER, $this->argument('screensIds'));
 
-		if (count($screensIds) === 0) die("Screen with ID $screenId does not exist.\n");
+		if (count($screensIds) === 0) die("Screen with ID $screensIds does not exist.\n");
 
 		$confirm = "You are about to remove screens " . $this->argument('screensIds') . ", with all slides, tags etc. Are you absolutely sure?";
 
@@ -78,7 +79,10 @@ class SlideshowsRemove extends Command
 				Slide::whereIn('id', $slidesIds)->delete();
 				Presentable::whereIn('slide_id', $slidesIds)->delete();
 				Slideshow::find($slideshowId)->delete();
-				Section::where('screen_id', $screenId)->delete();
+				$screenSections = Section::where('screen_id', $screenId);
+				$subsections = Subsection::whereIn('section_id', $screenSections->pluck('id'));
+				$screenSections->delete();
+				$subsections->delete();
 				\DB::table('taggables')->where([['taggable_id', $screenId], ['taggable_type', 'App\\Models\\Screen']])->delete();
 				$screen->delete();
 

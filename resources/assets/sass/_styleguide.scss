@@ -213,6 +213,12 @@ button.button {
 	margin: 2em 0;
 }
 
+.form-input-group {
+	border-bottom: $border-light-gray;
+	margin-bottom: $margin-big;
+	padding-bottom: $margin-big
+}
+
 .form-end {
 	margin-bottom: 3em;
 }
@@ -264,6 +270,103 @@ button.button {
 	.ql-editor {
 		border: $border-light-gray;
 	}
+}
+
+.wnl-screen-html {
+	$resets: (
+		'list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9',
+		'list-3 list-4 list-5 list-6 list-7 list-8 list-9',
+		'list-4 list-5 list-6 list-7 list-8 list-9',
+		'list-5 list-6 list-7 list-8 list-9',
+		'list-6 list-7 list-8 list-9',
+		'list-7 list-8 list-9',
+		'list-8 list-9',
+		'list-9'
+	);
+	$list-styles: decimal lower-alpha lower-roman;
+
+	ol li {
+		counter-increment: list-num;
+		counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+		list-style-type: none;
+	}
+
+	ol li:before {
+		content: counter(list-num, decimal) ". ";
+	}
+
+	@for $i from 1 through 8 {
+		$j: $i + 1;
+
+		ol li.ql-indent-#{$i} {
+			counter-increment: list-#{$i};
+			counter-reset: unquote(nth($resets, $i));
+			padding-left: 2 * $margin-base * $i;
+		}
+
+		ol li.ql-indent-#{$i}:before {
+			content: counter(unquote('list-#{$i}'), nth($list-styles, ($i%3+1))) ". ";
+		}
+	}
+}
+
+.ql-indent-1 {
+	margin-left: $margin-base * 1;
+}
+
+.ql-indent-2 {
+	margin-left: $margin-base * 2;
+}
+
+.ql-indent-3 {
+	margin-left: $margin-base * 3;
+}
+
+.ql-indent-4 {
+	margin-left: $margin-base * 4;
+}
+
+ul {
+	.ql-indent-1 {
+		list-style-type: circle;
+	}
+
+	.ql-indent-2 {
+		list-style-type: square;
+	}
+
+	.ql-indent-3 {
+		list-style-type: disc;
+	}
+}
+
+ol {
+	.ql-indent-1 {
+		list-style-type: lower-roman;
+	}
+
+	.ql-indent-2 {
+		list-style-type: upper-alpha;
+	}
+
+	.ql-indent-3 {
+		list-style-type: lower-alpha;
+	}
+}
+
+.comment-text.content,
+.qna-question-content.content,
+.qna-answer-content, {
+	p,
+	p:not(:last-child) {
+		margin-bottom: 0;
+	}
+}
+
+.comment-text.content:not(:last-child),
+.qna-question-content.content:not(:last-child),
+.qna-answer-content.content:not(:last-child) {
+	margin-bottom: 0;
 }
 
 // Datepicker

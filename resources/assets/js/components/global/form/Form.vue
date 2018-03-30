@@ -1,5 +1,5 @@
 <template>
-	<form :name="name" @keydown.enter="onEnter" @submit.prevent="onSubmitForm">
+	<form :name="name" @keydown="keyEvent" @submit.prevent="onSubmitForm">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 			cssClass="fixed"
 			:alert="alert"
@@ -39,6 +39,7 @@
 			'hideDefaultSubmit',
 			'suppressEnter',
 			'resetAfterSubmit',
+			'loading'
 		],
 		computed: {
 			anyErrors() {
@@ -64,13 +65,23 @@
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
 			},
-			onEnter() {
-				if (!this.suppressEnter) {
+			keyEvent() {
+				if (event.keyCode === 13 && !this.suppressEnter) {
 					this.onSubmitForm()
+				}
+				if (event.keyCode === 37) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+				}
+				if (event.keyCode === 39) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
 				}
 			},
 			onSubmitForm() {
-				if (this.anyErrors || !this.hasChanges) {
+				const hasAttachChanged = this.hasAttachChanged();
+
+				if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 					return false
 				}
 
@@ -91,9 +102,15 @@
 							}
 
 							this.$emit('submitSuccess', response, this.getter('getData'))
+
+							hasAttachChanged && this.cacheAttach()
 						},
 						reason => {
-							this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+							if (reason.response.status === 404) {
+								this.errorFading(this.$t('ui.error.notFound'))
+							} else {
+								this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+							}
 							this.$emit('submitError')
 						},
 					)
@@ -102,7 +119,16 @@
 						this.errorFading('Nie udało się.')
 						this.$emit('submitError')
 					})
-			}
+			},
+			cacheAttach() {
+				this.cachedAttach = _.cloneDeep(this.attach);
+			},
+			hasAttachChanged() {
+				return !_.isEqual(this.attach, this.cachedAttach)
+			},
+			canSave(hasFieldChanges, hasAttachChanges) {
+				return !this.anyErrors && (hasFieldChanges || hasAttachChanges)
+			},
 		},
 		watch: {
 			resourceRoute(val) {
@@ -137,6 +163,7 @@
 				defaults,
 				resourceUrl: getApiUrl(this.resourceRoute),
 			})
+			this.$emit('formIsLoaded')
 
 			if (this.populate) {
 				this.action('populateForm').then(() => {
@@ -145,6 +172,8 @@
 			} else {
 				this.mutation(types.FORM_IS_LOADED)
 			}
+
+			this.cacheAttach()
 
 			this.$on('submitForm', this.onSubmitForm)
 		},

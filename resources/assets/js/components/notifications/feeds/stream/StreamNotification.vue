@@ -1,6 +1,6 @@
 <template>
 	<div class="notification-wrapper">
-		<div class="stream-notification" :class="{'is-read': isRead, deleted}">
+		<div class="stream-notification" :class="{'is-read': isRead, 'deleted': deleted || resolved}">
 			<div class="meta">
 				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
 				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
@@ -9,7 +9,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
+					<span class="actor">{{ message.actors.display_name }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
@@ -21,7 +21,13 @@
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
 				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-					<router-link v-if="hasFullContext" :to="routeContext">
+					<router-link v-if="hasDynamicContext" :to="dynamicRoute">
+						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+							<span v-if="loading" class="loader"></span>
+							<i v-else class="fa fa-angle-right"></i>
+						</span>
+					</router-link>
+					<router-link v-else-if="hasFullContext" :to="routeContext">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
@@ -40,7 +46,8 @@
 				</span>
 			</div>
 		</div>
-		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
+		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
+		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
 	</div>
 </template>
 
@@ -165,7 +172,7 @@
 </style>
 
 <script>
-	import { truncate } from 'lodash'
+	import { truncate, camelCase, get } from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
 	import Actor from 'js/components/notifications/Actor'
@@ -193,7 +200,7 @@
 		computed: {
 			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
 			action() {
-				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
+				return this.$t(`notifications.events.${camelCase(this.message.event)}`)
 			},
 			justDate() {
 				return justMonthAndDayFromS(this.message.timestamp)
@@ -207,7 +214,7 @@
 				const type = !!objects ? objects.type : subject.type
 				const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1
 
-				return this.$tc(`notifications.objects.${_.camelCase(type)}`, choice)
+				return this.$tc(`notifications.objects.${camelCase(type)}`, choice)
 			},
 		},
 		methods: {

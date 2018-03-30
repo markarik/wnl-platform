@@ -1,5 +1,5 @@
 <template>
-	<div class="quill-container">
+	<div class="quill-container" @keydown="onKeyDown">
 		<wnl-autocomplete
 			:items="autocompleteItems"
 			:onItemChosen="insertMention"
@@ -7,8 +7,7 @@
 			ref="autocomplete"
 		>
 		</wnl-autocomplete>
-
-		<div ref="quill" @keydown="onKeyDown">
+		<div ref="quill">
 			<slot></slot>
 		</div>
 	</div>
@@ -21,9 +20,7 @@
 		position: relative
 
 	.quill-mention
-		background: #eee
-		border: 1px solid #ddd
-		padding: 3px
+		color: $mention-text-color
 </style>
 
 <script>
@@ -35,7 +32,7 @@
 	import { formInput } from 'js/mixins/form-input'
 	import { fontColors } from 'js/utils/colors'
 	import { mentionBlot } from 'js/classes/mentionblot'
-	import Autocomplete from 'js/components/global/autocomplete'
+	import Autocomplete from 'js/components/global/Autocomplete'
 
 	const defaults = {
 		theme: 'snow',
@@ -149,9 +146,11 @@
 			  	if (!range || range.length != 0) return
 			  	const position = range.index - lastMentionQueryLength
 
+				const name = data.display_name ? data.display_name : data.full_name
+
 			  	this.quill.insertEmbed(position, 'mention', {
-					name: `${autocompleteChar}${data.full_name}`,
-					id: data.id
+					name: `${autocompleteChar}${name}`,
+					id: data.user_id
 				}, Quill.sources.API)
 			  	this.quill.insertText(position + 1, ' ', Quill.sources.API)
 			  	this.quill.setSelection(position + 2, Quill.sources.API)
@@ -215,10 +214,6 @@
 					return
 				}
 
-				if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
-					return
-				}
-
 				this.$refs.autocomplete.onKeyDown(evt)
 				this.killEvent(evt)
 
@@ -228,11 +223,23 @@
 
 			onEsc(evt) {
 				this.autocompleteItems = []
+				this.editor.focus()
 			},
 
 			killEvent(evt) {
 				evt.preventDefault()
 				evt.stopPropagation()
+			},
+
+			clickHandler({ target }) {
+				if (this.$el !== target && !this.$el.contains(target)) {
+					this.autocompleteItems = []
+				}
+			},
+
+			clear() {
+				this.autocompleteItems = []
+				this.quill.deleteText(0, this.editor.innerHTML.length)
 			}
 		},
 		mounted () {
@@ -240,6 +247,10 @@
 			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
+			document.addEventListener('click', this.clickHandler)
+		},
+		beforeDestroy() {
+			document.removeEventListener('click', this.clickHandler)
 		},
 		watch: {
 			focused (val) {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\UserTime;
 use Closure;
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
@@ -92,14 +93,12 @@ class StoreTime extends Command
 		$timeRaw = $this->redis->get($key);
 
 		if (!empty($timeRaw)) {
-			$time = json_decode($timeRaw);
+			$todays = json_decode($timeRaw);
 
-			$userTime = UserTime::firstOrNew([
-				'user_id' => $userId
-			]);
-
-			$userTime->time = $time;
-			$userTime->save();
+			UserTime::updateOrCreate(
+				['user_id' => $userId, 'created_at' => Carbon::today()],
+				['time' => $todays, 'created_at' => Carbon::today(), 'updated_at' => Carbon::now()]
+			);
 		}
 	}
 }

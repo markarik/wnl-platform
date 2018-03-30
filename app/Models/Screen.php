@@ -10,10 +10,10 @@ class Screen extends Model
 	use Cached;
 
 	protected $casts = [
-		'meta' => 'json',
+		'meta' => 'array',
 	];
 
-	protected $fillable = ['content', 'type', 'name', 'meta', 'lesson_id', 'order_number'];
+	protected $fillable = ['content', 'type', 'name', 'meta', 'lesson_id', 'order_number', 'id'];
 
 	public function lesson()
 	{
@@ -32,9 +32,13 @@ class Screen extends Model
 
 	public function getSlideshowAttribute()
 	{
-		$metaResources = collect($this->meta['resources'])->keyBy('name');
-		$slideshowResource = $metaResources->get('slideshows');
+		if (!empty($this->meta)) {
+			$metaResources = collect($this->meta['resources'])->keyBy('name');
+			$slideshowResource = $metaResources->get('slideshows');
 
-		return Slideshow::find($slideshowResource['id']);
+			return Slideshow::find($slideshowResource['id']);
+		}
+
+		return null;
 	}
 }

@@ -1,21 +1,25 @@
 <template>
-	<div>
-		<div class="metadata">
-			{{ $t('dashboard.activeUsers', {count: activeUsersCount}) }}
+	<div class="active-users" v-if="activeUsersCount">
+		<div class="metadata" v-t="{ path: message, args: { count: activeUsersCount } }">
 		</div>
-		<div class="active-users-container" v-if="activeUsersCount">
+		<div class="active-users-container">
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
-					<li v-for="user in usersToCount" class="avatar">
-						<wnl-avatar
+					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
+						<div class="activator" @click="toggleModal(true, user.profile)">
+							<wnl-avatar
 								:fullName="user.fullName"
 								:url="user.avatar"
 								size="medium">
-						</wnl-avatar>
+							</wnl-avatar>
+						</div>
 					</li>
 				</ul>
 			</div>
 		</div>
+		<wnl-modal :isModalVisible="modalVisible" @closeModal="toggleModal(false)" v-if="modalVisible">
+			<wnl-user-profile-modal :author="modalUser"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -60,21 +64,53 @@
 
 	.avatars-list .avatar
 		margin-right: $margin-small
+		cursor: pointer
+
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+
+import UserProfileModal from 'js/components/users/UserProfileModal'
+import Modal from 'js/components/global/Modal'
 
 	export default {
 		name: 'ActiveUsers',
-		computed: {
-			...mapGetters(['activeUsers', 'currentUserId', 'currentUserName']),
-			usersToCount() {
-				return this.activeUsers.filter((user) => this.currentUserId !== user.id)
+		components: {
+			'wnl-user-profile-modal': UserProfileModal,
+			'wnl-modal': Modal
+		},
+		props: {
+			channel: {
+				type: String,
+				default: 'activeUsers'
 			},
-			activeUsersCount() {
-				return this.usersToCount.length || 0
+			message: {
+				type: String,
+				default: 'dashboard.activeUsers',
 			},
 		},
+		data() {
+			return {
+				modalVisible: false,
+				modalUser: {}
+			}
+		},
+		computed: {
+			...mapGetters(['currentUserId']),
+			...mapGetters('users', ['activeUsers']),
+			activeUsersCount() {
+				return this.usersToCount.length
+			},
+			usersToCount() {
+				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
+			},
+		},
+		methods: {
+			toggleModal(isVisible, modalUser={}) {
+				this.modalVisible = isVisible
+				this.modalUser = modalUser
+			}
+		}
 	}
 </script>

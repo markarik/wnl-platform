@@ -51,7 +51,7 @@
 
 <script>
 	import { formInput } from 'js/mixins/form-input'
-	import Autocomplete from 'js/components/global/autocomplete'
+	import Autocomplete from 'js/components/global/Autocomplete'
 	import _ from 'lodash'
 	import { mapActions } from 'vuex'
 
@@ -119,7 +119,10 @@
 			},
 
 			insertTag(tag) {
-				this.tags.push(tag);
+				if (_.map(this.tags, (tag) => tag.id).indexOf(tag.id) === -1) {
+					this.tags.push(tag)
+				}
+
 				this.autocompleteItems = []
 				this.tagInput = ''
 				this.$refs.input.focus()

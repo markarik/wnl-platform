@@ -17,14 +17,24 @@ export const questions = {
 		stats: {
 			error: 'Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!',
 			heading: 'Twoje statystyki',
-			mockExam: 'Wyniki próbnego egzaminu - poprawne/wszystkie i procent poprawnych',
+			mockExam: 'Twój ostatni wynik z próbnego egzaminu - poprawne/wszystkie i procent poprawnych',
 			scores: 'Ilość rozwiązanych pytań i procent prawidłowych odpowiedzi',
 		},
+		ui: {
+			deleteModal: {
+				title: 'Czy aby na pewno?',
+				text: `Po zatwierdzeniu, usuniemy wszystkie wyniki Twoich dotychczasowych podejść do pytań kontrolnych.
+					Dotyczy to zarówno pytań rozwiązywanych w ramach lekcji, jak i pozostałych dostępnych w bazie pytań.
+					Jedyne wyniki, które nie zostaną wyczyszczone, to wyniki próbnych egzaminów.`
+			}
+
+		}
 	},
 	filters: {
 		activeFiltersReview: 'Aktywne filtry: {filters}',
 		activeHeading: 'Aktywne filtry',
 		allQuestions: 'Wszystkie pytania',
+		search: 'Wyszukiwanie',
 		autorefresh: 'Odświeżaj automatycznie',
 		filteringResult: 'Pasujące pytania:',
 		filteringResultFrom: 'z {totalCount} w bazie',
@@ -39,6 +49,9 @@ export const questions = {
 			'unresolved': 'Nierozwiązane',
 			'collection': 'Zapisane w Kolekcjach',
 		},
+		searchHeading: 'Wyszukaj po frazie',
+		searchPlaceholder: 'Wpisz frazę...',
+		searchButton: 'Szukaj',
 		heading: 'Wybierz filtry',
 		hide: 'Schowaj filtry',
 		refresh: 'Odśwież',

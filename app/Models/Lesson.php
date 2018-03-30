@@ -26,6 +26,11 @@ class Lesson extends Model
 		return $this->hasMany('App\Models\LessonAvailability');
 	}
 
+	public function userAccess()
+	{
+		return $this->hasMany('App\Models\LessonUserAccess');
+	}
+
 	public function tags()
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
@@ -38,10 +43,17 @@ class Lesson extends Model
 		})->get();
 	}
 
-	public function isAvailable($editionId)
+	public function isAvailable($editionId = 1)
 	{
-		$availability = $this->availability->where('edition_id', $editionId)->first();
+		$user = \Auth::user();
+		if ($user) {
+			$lessonAccess = $this->userAccess->where('user_id', $user->id)->first();
+			if (!is_null($lessonAccess)) {
+				return $lessonAccess->access;
+			}
+		}
 
+		$availability = $this->availability->where('edition_id', $editionId)->first();
 		if (!is_null($availability)) {
 			return $availability->start_date->isPast();
 		}

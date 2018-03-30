@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use Illuminate\Database\Eloquent\Model;
 use Facades\Lib\SlideParser\Parser;
+use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
-use App\Models\Presentable;
 
 class Slide extends Model
 {
@@ -29,6 +28,16 @@ class Slide extends Model
 		return $this->morphedByMany('\App\Models\Section', 'presentable');
 	}
 
+	public function subsections()
+	{
+		return $this->morphedByMany('\App\Models\Subsection', 'presentable');
+	}
+
+	public function slideshow()
+	{
+		return $this->morphedByMany('\App\Models\Slideshow', 'presentable');
+	}
+
 	public function comments()
 	{
 		return $this->morphMany('\App\Models\Comment', 'commentable');
@@ -42,6 +51,11 @@ class Slide extends Model
 	public function tags()
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
+
+	public function quizQuestions()
+	{
+		return $this->belongsToMany('App\Models\QuizQuestion', 'slide_quiz_question');
 	}
 
 	public function setContentAttribute($value)
@@ -62,19 +76,18 @@ class Slide extends Model
 
 		if (!empty($this->sections) && !empty($this->sections->first())) {
 			$section = $this->sections->first();
-			$screen = $section->screen;
-			$lesson = $screen->lesson;
-			$group = $lesson->group;
+			$screen = $section->screen ?? null;
+			$lesson = $screen->lesson ?? null;
+			$group = $lesson->group ?? null;
 
-			// psay ay ay...
-			if (!$lesson->isAvailable(1)) {
-				dump('lesson not available', $lesson->id);
-				$this->unsearchable();
+			if (!$screen || !$lesson || !$group) {
+				// Don't index slide if it doesn't have
+				// a parent lesson or screen.
 				return [];
 			}
-
-			$orderNumber = (int) Presentable::where([
-				['presentable_type', '=', 'App\\Models\\Section'],
+			$orderNumber = (int)Presentable::where([
+				['presentable_type', '=', 'App\\Models\\Slideshow'],
+				['presentable_id', '=', $screen->slideshow->id],
 				['slide_id', '=', $this->id],
 			])->first()->order_number;
 
@@ -82,11 +95,14 @@ class Slide extends Model
 			$model['context']['section']['id'] = $section->id;
 			$model['context']['screen']['id'] = $screen->id;
 			$model['context']['lesson']['id'] = $lesson->id;
+			$model['context']['lesson']['isAvailable'] = $lesson->isAvailable(1);
 			$model['context']['group']['id'] = $lesson->group->id;
 			$model['context']['course']['id'] = $lesson->group->course->id;
 			$model['context']['orderNumber'] = $orderNumber;
+			$model['context']['id'] = $this->id;
 		} else {
 			$this->unsearchable();
+
 			return [];
 		}
 

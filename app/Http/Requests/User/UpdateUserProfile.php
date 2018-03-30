@@ -28,11 +28,19 @@ class UpdateUserProfile extends FormRequest
 	public function rules()
 	{
 		return [
-			'first_name'   => 'required|alpha_spaces|max:20',
-			'last_name'    => 'required|alpha_spaces|max:20',
-			'public_email' => 'email|nullable|max:50',
-			'public_phone' => 'nullable|max:20',
-			'username'     => 'max:30|alpha_num',
+			'first_name'        => 'required|alpha_spaces|max:20',
+			'last_name'         => 'required|alpha_spaces|max:20',
+			'public_email'      => 'email|nullable|max:50',
+			'public_phone'      => 'nullable|max:20',
+			'username'          => 'nullable|max:30|alpha_num',
+			'display_name'      => 'nullable|alpha_comas|max:100',
+			'city'              => 'nullable|max:50|alpha_comas',
+			'university'        => 'nullable|max:200|alpha_comas',
+			'specialization'    => 'nullable|max:400|alpha_comas',
+			'help'              => 'nullable|max:400|alpha_comas',
+			'interests'         => 'nullable|max:400|alpha_comas',
+			'about'             => 'nullable|max:400|alpha_comas',
+			'learning_location' => 'nullable|max:50|alpha_comas',
 		];
 	}
 

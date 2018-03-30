@@ -1,10 +1,10 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use App\Models\ChatRoom;
-use App\Models\ChatMessage;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
+use App\Models\ChatMessage;
+use App\Models\ChatRoom;
+use Auth;
+use Illuminate\Http\Request;
 
 class ChatMessagesApiController extends ApiController
 {
@@ -14,27 +14,89 @@ class ChatMessagesApiController extends ApiController
 		$this->resourceName = config('papi.resources.chat-messages');
 	}
 
-	public function searchByRoom(Request $request)
+	public function getByMultipleRooms(Request $request)
 	{
-		// I've decided to implement custom search method for this specific scenario,
-		// in which we're wanting to query messages, but we're actually granting access to chat room.
-		// Standard implementation would require us to query and authorize the same resource.
-		$roomName = $request->route('roomName');
-		$room = ChatRoom::ofName($roomName)->first();
-		$user = Auth::user();
+		$user = \Auth::user();
+		$roomIds = $request->get('rooms');
 
-		if (empty($room)) {
+		$rooms = ChatRoom::with('users')->whereIn('id', $roomIds)->get();
+
+		if ($rooms->count() === 0) {
 			return $this->respondNotFound();
 		}
 
-		if ($user->can('view', $room)) {
-			$messages = new ChatMessage;
-			$messages = $messages->where('chat_room_id', $room->id);
-			$messages = $this->applyFilters($messages, $request);
-
-			return $this->transformAndRespond($messages->get());
+		foreach ($rooms as $room) {
+			if (!$user->can('view', $room)) {
+				return $this->respondForbidden();
+			}
 		}
 
-		return $this->respondUnauthorized();
+		$roomsMessages = [];
+		$limit = $request->limit ?? 10;
+		$cursor = $request->currentCursor ?? null;
+
+		foreach ($rooms as $room) {
+			$messages = ChatMessage::select()
+				->where('chat_room_id', $room->id)
+				->orderBy('time', 'desc');
+
+			$paginated = $this->cursorPaginatedResponse($messages, $cursor, $limit, 'time', '<');
+			$roomsMessages[$room->id] = $paginated;
+		}
+
+		return $this->respondOk($roomsMessages);
+	}
+
+	public function getWithContext(Request $request) {
+		$roomId = $request->roomId;
+		$user = \Auth::user();
+
+		if (!$user->can('view', ChatRoom::find($roomId))) {
+			return $this->respondForbidden();
+		}
+
+		$messageTime = $request->messageTime;
+		$afterLimit = $request->afterLimit;
+		$beforeLimit = $request->beforeLimit;
+
+		$messagesAfterQuery = ChatMessage::select()
+			->where('chat_room_id', $roomId)
+			->orderBy('time', 'desc')
+			->where('time', '>=', $messageTime);
+
+		if (isset($afterLimit)) {
+			$messagesAfterQuery->take($afterLimit);
+		}
+
+		$messagesAfter = $messagesAfterQuery->get();
+
+		$messagesBeforeQuery = ChatMessage::select()
+			->where('chat_room_id', $roomId)
+			->orderBy('time', 'desc')
+			->where('time', '<', $messageTime);
+
+		if (isset($beforeLimit)) {
+			$messagesBeforeQuery->take($beforeLimit);
+		}
+
+		$messagesBefore = $messagesBeforeQuery->get();
+
+		$allMessages = $messagesAfter->concat($messagesBefore);
+		$transformed = $this->transform($allMessages);
+		$next = $allMessages->count() > 0 ? $allMessages->last()->time : null;
+		$afterCount = ChatMessage::where('chat_room_id', $roomId)
+			->orderBy('time', 'desc')
+			->where('time', '<', $messageTime)
+			->count();
+
+		return $this->respondOk([
+			'data' => $transformed,
+			'cursor' => [
+				'current' => $messageTime,
+				'next' => $next,
+				'previous' => null,
+				'has_more' => $afterCount > 0
+			]
+		]);
 	}
 }

@@ -306,7 +306,7 @@
 		data() {
 			return {
 				customCount: 0,
-				endDate: new Date('September 21, 2017 00:00:00'),
+				endDate: null,
 				fetchingQuestions: false,
 				plan: null,
 				saving: false,
@@ -427,9 +427,9 @@
 			fetchMatchingQuestions(filters = []) {
 				this.fetchingQuestions = true
 				return this.fetchQuestions({
-					doNotSaveFilters: true,
-					filters,
+					saveFilters: false,
 					useSavedFilters: false,
+					filters,
 				})
 					.catch(error => $wnl.logger.error(error))
 					.then(({data: {total}}) => {

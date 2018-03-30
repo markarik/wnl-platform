@@ -56,12 +56,12 @@ trait GeneratesApiResponses
 			->json();
 	}
 
-	protected function respondInvalidInput($data = [], $message = '')
+	protected function respondInvalidInput($message = '', $data = [])
 	{
 		return $this
 			->setMessage($message ?? 'Invalid input')
 			->setStatusCode(400)
-			->json($data);
+			->json(array_merge($data, ['message' => $message]));
 	}
 
 	protected function respondUnauthorized()
@@ -86,6 +86,14 @@ trait GeneratesApiResponses
 			->setMessage($message ?? 'Not Found')
 			->setStatusCode(404)
 			->json();
+	}
+
+	protected function respondUnprocessableEntity($data = [], $message = '')
+	{
+		return $this
+			->setMessage($message ?? 'Unprocessable Entity')
+			->setStatusCode(422)
+			->json($data);
 	}
 
 	protected function respondNotImplemented($message = null)

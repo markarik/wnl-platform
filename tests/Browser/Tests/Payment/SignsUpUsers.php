@@ -21,6 +21,7 @@ trait SignsUpUsers
 	 * Generate user data needed for filling in the sign-up form
 	 *
 	 * @param Factory $faker
+	 *
 	 * @return array
 	 */
 	protected function generateFormData($faker)
@@ -51,15 +52,17 @@ trait SignsUpUsers
 	 * @param $user
 	 * @param $browser
 	 * @param bool $invoice
+	 * @param bool $password
 	 */
-	protected function fillInForm($user, $browser, $invoice = false)
+	protected function fillInForm($user, $browser, $invoice = false, $password = true)
 	{
-		$browser
-			->type('email', $user['email'])
-			->type('password', $user['password'])
-			->type('password_confirmation', $user['password'])
-			->type('phone', $user['phoneNumber'])
-			->pageDown()
+		$browser->type('email', $user['email']);
+		if ($password) {
+			$browser
+				->type('password', $user['password'])
+				->type('password_confirmation', $user['password']);
+		}
+		$browser->type('phone', $user['phoneNumber'])
 			->type('first_name', $user['firstName'])
 			->type('last_name', $user['lastName'])
 			->type('address', $user['address'])
@@ -77,10 +80,9 @@ trait SignsUpUsers
 				->type('invoice_country', $user['invoice_country']);
 		}
 
-		$browser->check('consent_account')
-			->check('consent_order')
-			->check('consent_newsletter')
-			->check('consent_terms')
-			->pageDown();
+		$browser->check('consent_account');
+		$browser->check('consent_order');
+		$browser->check('consent_newsletter');
+		$browser->check('consent_terms');
 	}
 }

@@ -14,8 +14,7 @@ use Mail;
 class SendCertificate implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-	public $user;
-	public $file;
+	public $user, $file, $type;
 
 	/**
 	 * Create a new job instance.
@@ -23,10 +22,11 @@ class SendCertificate implements ShouldQueue
 	 * @param User $user
 	 * @param string $file
 	 */
-	public function __construct(User $user, string $file)
+	public function __construct(User $user, string $file, string $type)
 	{
 		$this->user = $user;
 		$this->file = $file;
+		$this->type = $type;
 	}
 
 	/**
@@ -37,7 +37,7 @@ class SendCertificate implements ShouldQueue
 	public function handle()
 	{
 		Mail::to($this->user)->send(
-			new Certificate($this->file, $this->user)
+			new Certificate($this->file, $this->user, $this->type)
 		);
 	}
 }

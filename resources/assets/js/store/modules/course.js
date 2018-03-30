@@ -11,7 +11,7 @@ function getCourseApiUrl(courseId, userId) {
 		`${resource('editions')}/${courseId}
 		?include=groups.lessons.screens.sections.subsections,
 		course.groups.lessons.screens.sections.subsections,
-		course.groups.lessons.userAccess,course.groups.lessons.availability,
+		course.groups.lessons.userAvailability,
 		course.groups.lessons.screens.tags
 		&user=current`
 	)
@@ -41,25 +41,18 @@ const getters = {
 	groups: state => state[resource('groups')],
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
-	getLessons: state => state.structure[resource('lessons')],
-	getAvailableLessons: (state, getters, rootState, rootGetters) => {
-		if (rootGetters.isAdmin) {
-			return _.values(getters.getLessons)
-		}
-
-		let lesson, lessons = []
-		for (var lessonId in getters.getLessons) {
-			lesson = getters.getLessons[lessonId]
-			if (lesson.isAvailable) {
-				lessons.push(lesson)
-			}
-		}
-		return lessons
+	getLessons: state => state.structure[resource('lessons')] || {},
+	userLessons: (state, getters, rootState, rootGetters) => {
+		return Object.values(getters.getLessons)
+			.filter(lesson => lesson.isAccessible);
 	},
 	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
 	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
 	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
-		return rootGetters.isAdmin || state.structure[resource('lessons')][lessonId].isAvailable
+		return state.structure[resource('lessons')][lessonId].isAvailable
+	},
+	isLessonAccessible: (state, getters, rootState, rootGetters) => (lessonId) => {
+		return state.structure[resource('lessons')][lessonId].isAccessible
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
@@ -113,41 +106,49 @@ const getters = {
 	},
 	nextLesson: (state, getters, rootState, rootGetters) => {
 		if (typeof getters.getLessons === 'undefined' || !rootGetters['progress/getCourse'](state.id)) {
-			return false
+			return {}
 		}
 
-		let lesson = { status: STATUS_NONE },
-			inProgressId = rootGetters['progress/getFirstLessonIdInProgress'](state.id)
+		const inProgressId = rootGetters['progress/getFirstLessonIdInProgress'](state.id)
 
 		if (inProgressId > 0) {
-			lesson = getters.getLesson(inProgressId)
+			const lesson = getters.getLesson(inProgressId)
 			lesson.status = STATUS_IN_PROGRESS
+
+			return lesson;
 		} else {
 			const sortedLessonsIds = Object.keys(getters.getLessons).sort((keyA, keyB) => {
 				const lessonA = getters.getLessons[keyA]
 				const lessonB = getters.getLessons[keyB]
 
-				return lessonA.order_number - lessonB.order_number
+				const byOrderNumber = lessonA.order_number - lessonB.order_number
+				if (byOrderNumber === 0) {
+					return lessonA.id - lessonB.id
+				}
+				return byOrderNumber
 			}).map(Number)
 
 			for (let i = 0; i < sortedLessonsIds.length; i++) {
-				let lessonId = sortedLessonsIds[i];
-				let isAvailable = getters.isLessonAvailable(lessonId)
+				const lessonId = sortedLessonsIds[i];
+				const isAvailable = getters.isLessonAvailable(lessonId)
+				const isAccessible = getters.isLessonAccessible(lessonId)
 				if (isAvailable &&
 					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
 				) {
-					lesson = getters.getLesson(lessonId)
+					const lesson = getters.getLesson(lessonId)
 					lesson.status = STATUS_AVAILABLE
 					return lesson
-				} else if (!isAvailable) {
-					lesson = getters.getLesson(lessonId)
+				} else if (!isAvailable && isAccessible) {
+					const lesson = getters.getLesson(lessonId)
 					lesson.status = STATUS_NONE
 					return lesson
 				}
 			}
 		}
 
-		return lesson
+		return {
+			status: STATUS_NONE
+		}
 	}
 }
 
@@ -169,11 +170,14 @@ const mutations = {
 			destroy(state.structure.lessons, lesson)
 		})
 	},
+	[types.COURSE_SET_LESSON_AVAILABILITY] (state, payload) {
+		set(state.structure.lessons[payload.lessonId], 'isAvailable', payload.status)
+	}
 }
 
 // Actions
 const actions = {
-	setup({commit, dispatch}, courseId) {
+	setup({commit, dispatch, rootGetters}, courseId) {
 		return new Promise((resolve, reject) => {
 			Promise.all([
 				dispatch('setStructure', courseId),
@@ -182,14 +186,15 @@ const actions = {
 			.then(resolutions => {
 				$wnl.logger.debug('Course ready, yay!')
 				commit(types.COURSE_READY)
-				resolve()
+				return resolve()
 			}, reason => {
+				commit(types.COURSE_READY)
 				$wnl.logger.error(reason)
-				reject()
-			})
+				return reject()
+			}).catch(reject)
 		})
 	},
-	setStructure({commit, rootGetters}, courseId) {
+	setStructure({commit, rootGetters}, courseId = 1) {
 		return new Promise((resolve, reject) => {
 			axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
 				.then(response => {
@@ -203,26 +208,8 @@ const actions = {
 				)
 		})
 	},
-	checkUserRoles({commit, dispatch, getters}, roles) {
-		return new Promise((resolve, reject) => {
-			let toRemove = []
-
-			Object.keys(getters.groups).forEach((index) => {
-				let id = getters.groups[index],
-					group = getters.getGroup(id)
-				if (!group.required_role) {
-					return
-				}
-
-				if (roles.indexOf(group.required_role) === -1) {
-					toRemove.push({index, id, lessons: group.lessons})
-				}
-			})
-
-			toRemove.forEach((payload) => {
-				commit(types.COURSE_REMOVE_GROUP, payload)
-			})
-		})
+	setLessonAvailabilityStatus({commit}, payload) {
+		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload)
 	},
 }
 

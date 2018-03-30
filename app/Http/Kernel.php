@@ -57,15 +57,16 @@ class Kernel extends HttpKernel
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth'       => \Illuminate\Auth\Middleware\Authenticate::class,
-		'admin'      => \App\Http\Middleware\Admin::class,
-		'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-		'bindings'   => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-		'can'        => \Illuminate\Auth\Middleware\Authorize::class,
-		'guest'      => \App\Http\Middleware\RedirectIfAuthenticated::class,
-		'throttle'   => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-		'payment'    => \App\Http\Middleware\RedirectIfPaid::class,
-		'api-auth'   => \App\Http\Middleware\ApiAuth::class,
-		'api-cache'  => \App\Http\Middleware\ApiCache::class,
+		'auth'         => \Illuminate\Auth\Middleware\Authenticate::class,
+		'admin'        => \App\Http\Middleware\Admin::class,
+		'auth.basic'   => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+		'bindings'     => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+		'can'          => \Illuminate\Auth\Middleware\Authorize::class,
+		'guest'        => \App\Http\Middleware\RedirectIfAuthenticated::class,
+		'throttle'     => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+		'payment'      => \App\Http\Middleware\RedirectIfPaid::class,
+		'api-auth'     => \App\Http\Middleware\ApiAuth::class,
+		'api-cache'    => \App\Http\Middleware\ApiCache::class,
+		'subscription' => \App\Http\Middleware\Subscription::class,
 	];
 }

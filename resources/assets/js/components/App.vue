@@ -81,10 +81,7 @@
 			...mapActions('notifications', ['initNotifications']),
 			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
-			...mapActions('course', {
-				courseSetup: 'setup',
-				checkUserRoles: 'checkUserRoles',
-			}),
+			...mapActions('course', { courseSetup: 'setup' }),
 		},
 		mounted() {
 			this.toggleOverlay({source: 'course', display: true})
@@ -92,6 +89,7 @@
 
 			return Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
 				.then(() => {
+					this.setConnectionStatus(false)
 					// Setup Notifications
 					this.initNotifications()
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
@@ -124,7 +122,6 @@
 						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
 						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
 
-					this.checkUserRoles(this.currentUserRoles)
 					this.toggleOverlay({source: 'course', display: false})
 				})
 				.catch(error => {

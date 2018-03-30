@@ -95,7 +95,6 @@ class Slide extends Model
 			$model['context']['section']['id'] = $section->id;
 			$model['context']['screen']['id'] = $screen->id;
 			$model['context']['lesson']['id'] = $lesson->id;
-			$model['context']['lesson']['isAvailable'] = $lesson->isAvailable(1);
 			$model['context']['group']['id'] = $lesson->group->id;
 			$model['context']['course']['id'] = $lesson->group->course->id;
 			$model['context']['orderNumber'] = $orderNumber;

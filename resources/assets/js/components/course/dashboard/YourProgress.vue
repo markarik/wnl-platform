@@ -60,11 +60,14 @@
 	export default {
 		computed: {
 			...mapGetters('course', [
-				'getAvailableLessons',
+				'userLessons',
 			]),
 			...mapGetters('progress', [
 				'getCompleteLessons'
 			]),
+			progressLessons() {
+				return this.userLessons.filter(lesson => lesson.is_required)
+			},
 			courseId() {
 				return this.$route.params.courseId
 			},
@@ -75,7 +78,7 @@
 				return this.getCompleteLessons(this.courseId).length
 			},
 			progressMax() {
-				return this.getAvailableLessons.length
+				return this.progressLessons.length
 			},
 			progressState() {
 				const incompleteLessons = this.progressMax - this.progressValue

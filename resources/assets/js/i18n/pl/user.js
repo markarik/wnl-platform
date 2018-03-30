@@ -39,5 +39,10 @@ export const user = {
     userProfileModal: {
         redirectToProfile: 'Zobacz pełen profil',
         sendMessage: 'Wyślij wiadomość',
-    }
+    },
+	lessonsAvailabilities: {
+		header: 'Dostępność lekcji',
+		alertSuccess: 'Udalo się zmienić datę! :)',
+		alertError: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
+	}
 }

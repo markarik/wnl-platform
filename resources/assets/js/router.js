@@ -35,7 +35,19 @@ let routes = [
 						component: require('js/components/course/Screen.vue'),
 						props: true,
 					}
-				]
+				],
+				beforeEnter: (to, from, next) => {
+					getCurrentUser().then(({data: currentUser}) => {
+						const sandbox = createSandbox(currentUser, {
+							perimeters: [currentEditionParticipant],
+						});
+
+						if (!sandbox.isAllowed('access')) {
+							return next('/');
+						}
+						return next();
+					})
+				},
 			}
 		]
 	},
@@ -78,7 +90,12 @@ let routes = [
 			{
 				name: 'stats',
 				path: 'stats',
-				component: require('js/components/user/UserStats'),
+				component: require('js/components/user/UserStats.vue'),
+			},
+			{
+				name: 'lessons-availabilites',
+				path: 'availabilities',
+				component: require('js/components/user/LessonsAvailabilities.vue'),
 			},
 		]
 	},
@@ -159,6 +176,12 @@ let routes = [
 				path: 'plan',
 				component: require('js/components/questions/QuestionsPlanner.vue'),
 			},
+			{
+				name: 'messages',
+				path: '/app/messages',
+				component: require('js/components/messages/MessagesDashboard.vue'),
+			},
+
 		],
 		beforeEnter: (to, from, next) => {
 			getCurrentUser().then(({data: currentUser}) => {
@@ -232,11 +255,6 @@ let routes = [
 			})
 		}
 
-	},
-	{
-		name: 'messages',
-		path: '/app/messages',
-		component: require('js/components/messages/MessagesDashboard.vue'),
 	},
 	{
 		path: '*',

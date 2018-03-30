@@ -23,8 +23,7 @@ class GroupTransformer extends ApiTransformer
 		return [
 			'id'            => $group->id,
 			'name'          => $group->name,
-			'editions'      => $group->course_id,
-			'required_role' => $group->required_role,
+			'editions'      => $group->course_id
 		];
 	}
 

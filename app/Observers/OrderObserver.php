@@ -6,7 +6,9 @@ namespace App\Observers;
 
 use App\Jobs\OrderConfirmed;
 use App\Jobs\OrderPaid;
+use App\Jobs\PopulateUserCoursePlan;
 use App\Models\Order;
+use App\Models\User;
 use App\Notifications\OrderCreated;
 use Carbon\Carbon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -20,6 +22,8 @@ class OrderObserver
 
 	public function updated(Order $order)
 	{
+		\Cache::forget(User::getSubscriptionKey($order->user->id));
+		
 		if ($order->isDirty(['paid_amount']) && $order->paid_amount > $order->getOriginal('paid_amount')) {
 			\Log::notice('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));
@@ -44,7 +48,9 @@ class OrderObserver
 
 	public function created(Order $order)
 	{
-
+		if ($order->product->lessons->count() > 0) {
+			dispatch(new PopulateUserCoursePlan($order->user, $order->product));
+		}
 	}
 
 	public function routeNotificationForSlack()

@@ -1,5 +1,5 @@
 <template>
-	<input class="input datepicker"
+	<input class="input datepicker" :class="{'withBorder': withBorder}"
 		:placeholder="placeholder"
 		:value="date"
 	/>
@@ -13,7 +13,6 @@
 
 	.datepicker
 		border: 0
-		border-bottom: 1px solid $color-ocean-blue
 		border-radius: 0
 		box-shadow: none
 		font-size: $font-size-plus-1
@@ -21,8 +20,15 @@
 		outline: 0
 		text-align: center
 
+		&.withBorder
+			border-bottom: 1px solid $color-ocean-blue
+
+		&.hasColorBackground
+			background-color: $color-background-lighter-gray
+
 		&.active
 			background: $color-background-light-gray
+
 </style>
 
 <script>
@@ -36,6 +42,7 @@
 				type: Object,
 			},
 			value: String|Date,
+			withBorder: Boolean
 		},
 		data() {
 			return {

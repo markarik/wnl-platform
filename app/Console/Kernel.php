@@ -44,6 +44,10 @@ class Kernel extends ConsoleKernel
 			});
 
 		$schedule
+			->command('coursePlans:archive')
+			->dailyAt('01:20');
+
+		$schedule
 			->command('time:store')
 			->dailyAt('01:30');
 
@@ -54,12 +58,5 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
-
-		$schedule
-			->command('role:assignFromProducts edition-2-participant 5,6')
-			->everyFiveMinutes()
-			->after(function () use ($schedule) {
-				Artisan::call('cache:tag', ['tag' => 'user_profiles']);
-			});
 	}
 }

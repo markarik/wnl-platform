@@ -110,7 +110,7 @@
 				.then(() => {
 					this.toggleOverlay({source: 'userStats', display: false})
 				})
-				.catch($wnl.logger.errorF)
+				.catch($wnl.logger.error)
 			}
 		},
 		mounted() {

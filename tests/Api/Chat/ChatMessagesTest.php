@@ -4,6 +4,7 @@
 namespace Tests\Api\Chat;
 
 
+use App\Http\Middleware\Subscription;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\Permission;
@@ -25,6 +26,7 @@ class ChatMessagesTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
+			->withoutMiddleware(Subscription::class)
 			->json('POST', $this->url('/chat_messages/.getByRooms'), $data);
 
 		$response

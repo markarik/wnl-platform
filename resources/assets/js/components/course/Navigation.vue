@@ -92,14 +92,8 @@
 				}
 				for (let i = 0, groupsLen = this.groups.length; i < groupsLen; i++) {
 					let groupId = this.groups[i],
-						group = this.structure[resource('groups')][groupId],
-						requiredRole = group.required_role
+						group = this.structure[resource('groups')][groupId]
 
-					if (requiredRole !== null &&
-						this.currentUserRoles.indexOf(requiredRole) === -1
-					) {
-						continue
-					}
 					const groupItem = this.getGroupItem(group);
 					navigation.push(groupItem);
 

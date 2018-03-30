@@ -9,13 +9,13 @@ export const STATUS_COMPLETE = 'complete';
 const CACHE_VERSION = 1;
 
 const setCourseProgress = ({courseId, lessonId, ...props}, value) => {
-	getCurrentUser().then(({data: {id}}) => {
+	getCurrentUser().then(({id}) => {
 		axios.put(getApiUrl(`users/${id}/state/course/${courseId}`), value);
 	})
 };
 
 const setLessonProgress = ({courseId, lessonId}, value) => {
-	getCurrentUser().then(({data: {id}}) => {
+	getCurrentUser().then(({id}) => {
 		axios.put(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
 			lesson: value
 		});
@@ -123,7 +123,7 @@ const startLesson = (courseState, payload) => {
 const getCourseProgress = ({courseId}) => {
 	return new Promise((resolve) => {
 		getCurrentUser()
-			.then(({data: {id}}) => {
+			.then(({id}) => {
 				return axios.get(getApiUrl(`users/${id}/state/course/${courseId}`));
 			})
 			.then(({data: {lessons} = {}}) => {
@@ -137,7 +137,7 @@ const getCourseProgress = ({courseId}) => {
 const getLessonProgress = ({courseId, lessonId}) => {
 	return new Promise((resolve) => {
 		getCurrentUser()
-			.then(({data: {id}}) => {
+			.then(({id}) => {
 				return axios.get(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
 			})
 			.then(({data: {lesson}} = {}) => {

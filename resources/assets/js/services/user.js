@@ -8,12 +8,15 @@ export function getCurrentUser() {
 		return Promise.resolve(currentUser)
 	}
 
-	const promisedUser = axios.get(getApiUrl('users/current/profile'))
-
-	return promisedUser.then((result) => {
-		currentUser = result
-
-		return result
+	return Promise.all([
+		axios.get(getApiUrl('users/current/profile')),
+		axios.get(getApiUrl('user_subscription/current'))
+	]).then(([userResponse, subscriptionResponse]) => {
+		currentUser = {
+			...userResponse.data,
+			subscription: subscriptionResponse.data
+		}
+		return currentUser;
 	})
 }
 

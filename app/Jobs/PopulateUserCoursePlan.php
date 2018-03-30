@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -36,17 +37,23 @@ class PopulateUserCoursePlan implements ShouldQueue
 	 */
 	public function handle()
 	{
-		dispatch_now(new ArchiveCoursePlan($this->user));
-
 		$availabilities = [];
 
 		foreach ($this->product->lessons as $lesson) {
+			if ($lesson->isAccessible($this->user)) {
+				$startDate = $lesson->startDate($this->user);
+			} else {
+				$startDate = $lesson->pivot->start_date;
+			}
 			$availabilities[] = [
 				'user_id' => $this->user->id,
 				'lesson_id' => $lesson->id,
-				'start_date' => $lesson->pivot->start_date,
+				'start_date' => $startDate,
+				'created_at' => Carbon::now()
 			];
 		}
+
+		dispatch_now(new ArchiveCoursePlan($this->user));
 
 		\DB::table('user_lesson')->insert($availabilities);
 	}

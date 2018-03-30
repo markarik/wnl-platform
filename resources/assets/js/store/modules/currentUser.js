@@ -24,10 +24,7 @@ const state = {
 
 // Getters
 const getters = {
-	currentUser: state => ({
-		...state.profile,
-		subscription: state.subscription
-	}),
+	currentUser: state => state.profile,
 	currentUserId: state => state.profile.user_id,
 	currentUserAvatar: state => state.profile.avatar,
 	currentUserEmail: state => state.profile.public_email,
@@ -43,7 +40,7 @@ const getters = {
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
 	currentUserStats: state => state.stats,
-	currentUserSubscriptionDates: state => state.subscription.dates,
+	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 }
 
 // Mutations
@@ -80,7 +77,6 @@ const actions = {
 			.all([
 				dispatch('fetchCurrentUserProfile'),
 				dispatch('fetchUserSettings'),
-				dispatch('fetchUserSubscription')
 			])
 			.then(() => commit(types.IS_LOADING, false))
 			.catch((error) => {
@@ -91,8 +87,8 @@ const actions = {
 
 	fetchCurrentUserProfile({ commit }) {
 		return new Promise((resolve, reject) => {
-			getCurrentUser().then((response) => {
-				commit(types.USERS_SETUP_CURRENT, response.data)
+			getCurrentUser().then((user) => {
+				commit(types.USERS_SETUP_CURRENT, user)
 				resolve()
 			})
 			.catch((error) => {

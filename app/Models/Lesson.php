@@ -38,9 +38,9 @@ class Lesson extends Model
 		})->get();
 	}
 
-	public function isAvailable($editionId = 1)
+	public function isAvailable($user = null, $editionId = 1)
 	{
-		$user = \Auth::user();
+		$user = $user ?? \Auth::user();
 		if ($user) {
 			$lessonAccess = $this->userAvailability->where('user_id', $user->id)->first();
 			if (!is_null($lessonAccess)) {
@@ -51,9 +51,9 @@ class Lesson extends Model
 		return false;
 	}
 
-	public function isAccessible($editionId = 1)
+	public function isAccessible($user = null, $editionId = 1)
 	{
-		$user = \Auth::user();
+		$user = $user ?? \Auth::user();
 		if ($user) {
 			$lessonAccess = $this->userAvailability->where('user_id', $user->id)->first();
 			return !is_null($lessonAccess);
@@ -62,9 +62,9 @@ class Lesson extends Model
 		return false;
 	}
 
-	public function startDate($editionId = 1)
+	public function startDate($user = null, $editionId = 1)
 	{
-		$user = \Auth::user();
+		$user = $user ?? \Auth::user();
 		if ($user) {
 			$lessonAccess = $this->userAvailability->where('user_id', $user->id)->first();
 			if (!is_null($lessonAccess)) {

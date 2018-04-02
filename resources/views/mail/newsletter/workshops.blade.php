@@ -9,9 +9,9 @@
 	<p>Spotykamy się już dokładnie za dwa tygodnie! W związku z tym chcielibyśmy przekazać Ci wszystkie przydatne informacje organizacyjne.</p>
 
 	<h3>Gdzie i kiedy?</h3>
-	<p>Warsztaty rozpoczną się w sobotę 17 czerwca, <strong>o godzinie 11:00</strong> w <a href="https://goo.gl/maps/f78fwrAzh322">Collegium da Vinci</a>, przy ul. Tadeusza Kutrzeby 10 w Poznaniu. Spotykamy się w sali <strong>N205</strong>, do której będą prowadziły Was od wejścia wskazówki umieszczone na monitorach widocznych w korytarzach Collegium.</p>
+	<p>Warsztaty rozpoczną się w sobotę 9 czerwca, <strong>o godzinie 11:00</strong> w <a href="https://goo.gl/maps/f78fwrAzh322">Collegium da Vinci</a>, przy ul. Tadeusza Kutrzeby 10 w Poznaniu. Spotykamy się w sali <strong>N205</strong>, do której będą prowadziły Was od wejścia wskazówki umieszczone na monitorach widocznych w korytarzach Collegium.</p>
 
-	<p>Warsztaty zaplanowane są na 8 godzin, od 11:00 do 19:00, z uwzględnieniem przerw - dwóch 5-minutowych, dwóch 15-minutowych oraz jednej godzinnej w porze obiadowej.</p>
+	<p>Warsztaty zaplanowane są na 7 godzin, od 11:00 do 18:00, z uwzględnieniem przerw - dwóch 5-minutowych, dwóch 15-minutowych oraz jednej godzinnej w porze obiadowej.</p>
 
 	<h3>Jak dojadę?</h3>
 	<p>
@@ -26,7 +26,7 @@
 
 	<p>
 		<strong>Autobus</strong><br>
-		Z Dworca PKP, <a href="https://jakdojade.pl/poznan/trasa/z--Dworzec-PKP-Pozna%C5%84-G%C5%82%C3%B3wny--do--Kutrzeby-10?fn=Dworzec%20PKP%20Pozna%C5%84%20G%C5%82%C3%B3wny&tn=Kutrzeby%2010&tc=52.415821:16.931465&fc=52.40221:16.91171&ft=LOCATION_TYPE_POI&tt=LOCATION_TYPE_ADDRESS&d=17.06.17&h=10:45&ia=true&aro=0&t=1&rc=3&ri=2&r=1">co 20 minut kursuje autobus 68</a>, który dowiezie Cię na przystanek “Urząd Marszałkowski” 400m od Collegium da Vinci.
+		Z Dworca PKP, <a href="https://jakdojade.pl/poznan/trasa/z--Dworzec-PKP-Pozna%C5%84-G%C5%82%C3%B3wny--do--Kutrzeby-10?fn=Dworzec%20PKP%20Pozna%C5%84%20G%C5%82%C3%B3wny&tn=Kutrzeby%2010&tc=52.415821:16.931465&fc=52.40221:16.91171&ft=LOCATION_TYPE_POI&tt=LOCATION_TYPE_ADDRESS&d=17.06.17&h=10:45&ia=true&aro=0&t=1&rc=3&ri=2&r=1">co 20 minut kursuje autobus 68</a>, który dowiezie Cię na przystanek “Urząd Marszałkowski” 400m od Collegium da Vinci. Przystanek znajduje się na przy placu na wprost starego dworca, na który można przejść bezpośrednio z peronu 1.
 	</p>
 
 	<p>

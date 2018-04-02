@@ -43,6 +43,8 @@ class Product extends Model
 
 	public function getAvailableAttribute()
 	{
-		return $this->quantity > 0;
+		return
+			$this->quantity > 0 &&
+			$this->signups_start->isPast();
 	}
 }

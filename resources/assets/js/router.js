@@ -37,7 +37,7 @@ let routes = [
 					}
 				],
 				beforeEnter: (to, from, next) => {
-					getCurrentUser().then(({data: currentUser}) => {
+					getCurrentUser().then((currentUser) => {
 						const sandbox = createSandbox(currentUser, {
 							perimeters: [currentEditionParticipant],
 						});
@@ -113,7 +113,7 @@ let routes = [
 			},
 		],
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then(({data: currentUser}) => {
+			getCurrentUser().then((currentUser) => {
 				const sandbox = createSandbox(currentUser, {
 					perimeters: [currentEditionParticipant],
 				});
@@ -184,7 +184,7 @@ let routes = [
 
 		],
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then(({data: currentUser}) => {
+			getCurrentUser().then((currentUser) => {
 				const sandbox = createSandbox(currentUser, {
 					perimeters: [currentEditionParticipant],
 				});
@@ -201,7 +201,7 @@ let routes = [
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then(({data: currentUser}) => {
+			getCurrentUser().then((currentUser) => {
 				const sandbox = createSandbox(currentUser, {
 					perimeters: [moderatorFeatures],
 				});

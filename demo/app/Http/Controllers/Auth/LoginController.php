@@ -2,6 +2,7 @@
 
 namespace Demo\App\Http\Controllers\Auth;
 
+use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -73,6 +74,16 @@ class LoginController extends Controller
 			'consent_terms'      => true,
 
 		]);
+
+		$demo = Product::slug('wnl-online-demo');
+
+		$order = $user->orders()->create([
+			'product_id' => $demo->id,
+			'canceled' => 0,
+		]);
+
+		$order->paid = true;
+		$order->save();
 
 		Auth::login($user);
 

@@ -22,6 +22,11 @@
 					name="name"
 					v-model="form.name"
 				></wnl-input>
+				<wnl-form-checkbox
+					:form="form"
+					name="is_required"
+					v-model="form.is_required"
+				></wnl-form-checkbox>
 				<div class="control">
 					<a class="button is-small is-success"
 						:class="{'is-loading': loading}"
@@ -53,6 +58,7 @@
 	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue'
 	import Input from 'js/admin/components/forms/Input.vue'
 	import Select from 'js/admin/components/forms/Select.vue'
+	import Checkbox from 'js/admin/components/forms/Checkbox.vue'
 
 	export default {
 		name: 'LessonEditor',
@@ -60,6 +66,7 @@
 			'wnl-screens-editor': ScreensEditor,
 			'wnl-input': Input,
 			'wnl-select': Select,
+			'wnl-checkbox': Checkbox,
 		},
 		mixins: [ alerts ],
 		data() {

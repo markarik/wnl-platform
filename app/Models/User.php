@@ -132,6 +132,10 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\Models\ChatRoom');
 	}
 
+	public function subscription() {
+		return $this->hasOne('App\Models\UserSubscription');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -191,27 +195,11 @@ class User extends Authenticatable
 	}
 
 	protected function getSubscriptionDates() {
-		$key = self::getSubscriptionKey($this->id);
+		if ($this->hasRole('admin') || $this->hasRole('moderator')) {
+			return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
+		}
 
-		return \Cache::remember($key, 60 * 24, function() {
-			if ($this->hasRole('admin') || $this->hasRole('moderator')) {
-				return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
-			}
-
-			$dates = \DB::table('orders')
-				->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
-				->join('products', 'orders.product_id', '=', 'products.id')
-				->where('orders.user_id', $this->id)
-				->where('orders.paid', 1)
-				->where('orders.canceled', '<>', 1)
-				->first();
-
-			return [Carbon::parse($dates->min), Carbon::parse($dates->max)];
-		});
-	}
-
-	public static function getSubscriptionKey($id) {
-		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
+		return [Carbon::parse($this->subscription->access_start), Carbon::parse($this->subscription->access_end)];
 	}
 
 	/**

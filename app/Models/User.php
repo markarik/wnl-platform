@@ -179,14 +179,18 @@ class User extends Authenticatable
 	public function getSubscriptionDatesAttribute() {
 		list ($min, $max) = $this->getSubscriptionDates();
 		return [
-			'min' => $min->timestamp,
-			'max' => $max->timestamp
+			'min' => $min ? $min->timestamp : null,
+			'max' => $max ? $max->timestamp : null
 		];
 	}
 
 	protected function getSubscriptionStatus($dates)
 	{
 		list ($min, $max) = $dates;
+
+		if (!$min || !$max) {
+			return 'inactive';
+		}
 
 		if ($min->isPast() && $max->isFuture()) return 'active';
 		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
@@ -199,7 +203,10 @@ class User extends Authenticatable
 			return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
 		}
 
-		return [Carbon::parse($this->subscription->access_start), Carbon::parse($this->subscription->access_end)];
+		$min = $this->subscription ? Carbon::parse($this->subscription->access_start) : null;
+		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
+
+		return [$min, $max];
 	}
 
 	/**

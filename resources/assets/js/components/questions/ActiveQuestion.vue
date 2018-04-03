@@ -179,7 +179,11 @@
 					return false
 				}
 				if (e.keyCode === 13) {
-					this.verify()
+					if (this.question.isResolved) {
+						this.nextQuestion()
+					} else {
+						this.verify()
+					}
 				}
 			},
 		},

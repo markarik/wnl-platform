@@ -23,10 +23,11 @@
 					v-model="form.name"
 				></wnl-input>
 				<wnl-form-checkbox
+					class="checkbox button"
 					:form="form"
 					name="is_required"
 					v-model="form.is_required"
-				></wnl-form-checkbox>
+				>Lekcja obowiązkowa</wnl-form-checkbox>
 				<div class="control">
 					<a class="button is-small is-success"
 						:class="{'is-loading': loading}"
@@ -45,7 +46,13 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
 
+	.checkbox
+		margin-right: 10px
+		display: flex
+		justify-content: space-between
+		width: 170px
 </style>
 
 <script>
@@ -66,7 +73,7 @@
 			'wnl-screens-editor': ScreensEditor,
 			'wnl-input': Input,
 			'wnl-select': Select,
-			'wnl-checkbox': Checkbox,
+			'wnl-form-checkbox': Checkbox,
 		},
 		mixins: [ alerts ],
 		data() {
@@ -75,6 +82,7 @@
 					group_id: null,
 					groups: null,
 					name: null,
+					is_required: null,
 				}),
 				groups: [],
 				loading: false,
@@ -125,6 +133,7 @@
 				.then(() => {
 					this.form.populate(this.lessonResourceUrl)
 				})
+			console.log(this.form);
 		}
 	}
 </script>

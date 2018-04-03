@@ -52,7 +52,7 @@
 		margin-right: 10px
 		display: flex
 		justify-content: space-between
-		width: 170px
+		
 </style>
 
 <script>
@@ -115,6 +115,7 @@
 
 				this.loading = true
 				this.form.group_id = this.form.groups
+				console.log(this.form);
 				this.form.put(this.lessonResourceUrl)
 					.then(response => {
 						this.loading = false
@@ -133,7 +134,6 @@
 				.then(() => {
 					this.form.populate(this.lessonResourceUrl)
 				})
-			console.log(this.form);
 		}
 	}
 </script>

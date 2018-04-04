@@ -123,8 +123,7 @@
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do końca zapisów</strong> i kolejnych do <strong>15 czerwca</strong> i <strong>15 lipca</strong>.</p>
-
+							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do końca zapisów</strong> i kolejnych do <strong>20 maja</strong> i <strong>20 czerwca</strong>.</p>
 							<table class="table is-bordered margin vertical">
 								<tr>
 									<th>Twój wariant kursu</th>

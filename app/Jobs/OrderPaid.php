@@ -84,23 +84,15 @@ class OrderPaid implements ShouldQueue
 	protected function handleUserSubscription() {
 		$product = $this->order->product;
 		$user = $this->order->user;
+		$subscriptionAccessStart = $user->subscription ? $user->subscription->access_start : null;
+		$subscriptionAccessEnd = $user->subscription ? $user->subscription->access_end : null;
 
-		if ($user->subscription) {
-			$accessStart = min([$user->subscription->access_start, $product->access_start]);
-			$accessEnd = max([$user->subscription->access_end, $product->access_end]);
+		$accessStart = $subscriptionAccessStart ? min([$subscriptionAccessStart, $product->access_start]) : $product->access_start;
+		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
 
-			$user->subscription->update([
-				'access_start' => $accessStart,
-				'access_end' => $accessEnd
-			]);
-		} else {
-			$subscription = new UserSubscription();
-
-			$subscription->access_start = $product->access_start;
-			$subscription->access_end = $product->access_end;
-			$subscription->user_id = $user->id;
-
-			$subscription->save();
-		}
+		$subscription = UserSubscription::updateOrCreate(
+			['user_id' => $user->id],
+			['access_start' => $accessStart, 'access_end' => $accessEnd]
+		);
 	}
 }

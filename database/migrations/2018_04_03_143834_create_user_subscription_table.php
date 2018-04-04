@@ -15,7 +15,7 @@ class CreateUserSubscriptionTable extends Migration
 	{
 		Schema::create('user_subscription', function (Blueprint $table) {
 			$table->increments('id');
-			$table->unsignedInteger('user_id')->index();
+			$table->unsignedInteger('user_id')->unique();
 			$table->timestamp('access_start')->nullable();
 			$table->timestamp('access_end')->nullable();
 			$table->timestamps();

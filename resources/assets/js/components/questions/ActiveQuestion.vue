@@ -69,6 +69,14 @@
 	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 
+	const KEYS = {
+		leftArrow: 37,
+		upArrow: 38,
+		rightArrow: 39,
+		downArrow: 40,
+		enter: 13
+	}
+
 	export default {
 		name: 'ActiveQuestion',
 		components: {
@@ -146,12 +154,12 @@
 				this.hasAnswer && this.$emit('verify', this.question.id)
 			},
 			keyDown(e) {
-				// Left arrow
-				if (e.keyCode === 37) {
+				const { leftArrow, upArrow, rightArrow, downArrow, enter } = KEYS
+				if (e.keyCode === leftArrow) {
 					this.previousQuestion()
 				}
-				// Up arrow
-				if (e.keyCode === 38) {
+
+				if (e.keyCode === upArrow) {
 					if(this.question.isResolved) {
 						return false
 					}
@@ -162,12 +170,12 @@
 					}
 					return false
 				}
-				// Right arrow
-				if (e.keyCode === 39) {
+
+				if (e.keyCode === rightArrow) {
 					this.nextQuestion()
 				}
-				// Down arrow
-				if (e.keyCode === 40) {
+
+				if (e.keyCode === downArrow) {
 					if(this.question.isResolved) {
 						return false
 					}
@@ -178,7 +186,8 @@
 					}
 					return false
 				}
-				if (e.keyCode === 13) {
+
+				if (e.keyCode === enter) {
 					if (this.question.isResolved) {
 						this.nextQuestion()
 					} else {

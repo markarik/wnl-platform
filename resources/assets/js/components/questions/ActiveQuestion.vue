@@ -154,12 +154,11 @@
 				this.hasAnswer && this.$emit('verify', this.question.id)
 			},
 			keyDown(e) {
-				const { leftArrow, upArrow, rightArrow, downArrow, enter } = KEYS
-				if (e.keyCode === leftArrow) {
+				if (e.keyCode === KEYS.leftArrow) {
 					this.previousQuestion()
 				}
 
-				if (e.keyCode === upArrow) {
+				if (e.keyCode === KEYS.upArrow) {
 					if(this.question.isResolved) {
 						return false
 					}
@@ -171,11 +170,11 @@
 					return false
 				}
 
-				if (e.keyCode === rightArrow) {
+				if (e.keyCode === KEYS.rightArrow) {
 					this.nextQuestion()
 				}
 
-				if (e.keyCode === downArrow) {
+				if (e.keyCode === KEYS.downArrow) {
 					if(this.question.isResolved) {
 						return false
 					}
@@ -187,7 +186,7 @@
 					return false
 				}
 
-				if (e.keyCode === enter) {
+				if (e.keyCode === KEYS.enter) {
 					if (this.question.isResolved) {
 						this.nextQuestion()
 					} else {

@@ -9,7 +9,7 @@ class Lesson extends Model
 {
 	use Cached;
 
-	protected $fillable = ['name', 'group_id'];
+	protected $fillable = ['name', 'group_id', 'is_required'];
 
 	public function screens()
 	{

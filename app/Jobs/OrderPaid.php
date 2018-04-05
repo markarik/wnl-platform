@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Order;
+use App\Models\User;
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
@@ -89,8 +90,8 @@ class OrderPaid implements ShouldQueue
 			return;
 		}
 
-		$subscriptionAccessStart = $user->subscription ?? $user->subscription->access_start;
-		$subscriptionAccessEnd = $user->subscription ?? $user->subscription->access_end;
+		$subscriptionAccessStart = $user->subscription->access_start ?? null;
+		$subscriptionAccessEnd = $user->subscription->access_end ?? null;
 
 		$accessStart = $subscriptionAccessStart ? min([$subscriptionAccessStart, $product->access_start]) : $product->access_start;
 		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
@@ -99,5 +100,7 @@ class OrderPaid implements ShouldQueue
 			['user_id' => $user->id],
 			['access_start' => $accessStart, 'access_end' => $accessEnd]
 		);
+
+		\Cache::tags("user-$user->id")->flush();
 	}
 }

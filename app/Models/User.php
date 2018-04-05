@@ -285,4 +285,8 @@ class User extends Authenticatable
 				return $query->where('name', $role);
 			})->get();
 	}
+
+	public static function getSubscriptionKey($id) {
+		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
+	}
 }

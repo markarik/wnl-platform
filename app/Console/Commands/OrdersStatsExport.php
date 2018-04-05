@@ -39,10 +39,10 @@ class OrdersStatsExport extends Command
 	 */
 	public function handle()
 	{
-		$setOne = $this->stats(Carbon::parse('2017-03-31 23:59'), Carbon::parse('2017-09-24 23:59'),
+		$setOne = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::parse('2018-04-02 23:59'),
 			['date', 'orders_count', 'value', 'paid', 'coupons', '']);
 
-		$setTwo = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::now(),
+		$setTwo = $this->stats(Carbon::parse('2018-04-02 23:59'), Carbon::now(),
 			['date', 'orders_count', 'value', 'paid', 'coupons', 'albums', '50%']);
 
 		$rows = collect();
@@ -62,7 +62,11 @@ class OrdersStatsExport extends Command
 		$orders = (new Order)
 			->with(['coupon', 'product'])
 			->where('method', '!=', null)
-			->where('canceled', null)
+			->where(function($query){
+				$query
+					->where('canceled', null)
+					->orWhere('canceled', 0);
+			})
 			->whereBetween('created_at', [$startDate, $endDate])
 			->get()
 			->unique('user_id');

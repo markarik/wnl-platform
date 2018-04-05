@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserSubscription extends Model
 {
-	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
-	const CACHE_VER = '1';
 	protected $table = 'user_subscription';
 
 	/**
@@ -25,6 +23,6 @@ class UserSubscription extends Model
 	 */
 	public function user()
 	{
-		return $this->hasOne('App\Models\User');
+		return $this->belongsTo('App\Models\User');
 	}
 }

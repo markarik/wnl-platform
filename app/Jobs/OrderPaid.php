@@ -35,10 +35,10 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
+		$this->handleUserSubscription();
 		$this->handleCoupon();
 		$this->sendConfirmation();
 		$this->handleStudyBuddy();
-		$this->handleUserSubscription();
 
 	}
 
@@ -85,7 +85,7 @@ class OrderPaid implements ShouldQueue
 		$product = $this->order->product;
 		$user = $this->order->user;
 
-		if (empty($product->access_start && empty($product->access_end))) {
+		if (empty($product->access_start) && empty($product->access_end)) {
 			return;
 		}
 

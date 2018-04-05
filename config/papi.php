@@ -24,7 +24,6 @@ return [
 		'tags'                   => 'tags',
 		'qna-questions'          => 'qna_questions',
 		'qna-answers'            => 'qna_answers',
-		'lesson-availability'    => 'lesson_availability',
 		'user-progress'          => 'user_progress',
 		'slideshows'             => 'slideshows',
 		'quiz-questions'         => 'quiz_questions',

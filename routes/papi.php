@@ -151,6 +151,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	});
 
 	// User Lessons
+	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 
 	// Users

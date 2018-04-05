@@ -3,6 +3,18 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
+					Plany nauki
+				</div>
+			</div>
+		</div>
+		<div class="presets">
+			<div class="each-day-preset">
+				<button @click="presetLessonAvailabilities" class="button is-info to-right">Jedna lekcja na dzień</button>
+			</div>
+		</div>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
 					{{ $t('user.lessonsAvailabilities.header')}}
 				</div>
 			</div>
@@ -49,6 +61,9 @@
 	@import 'resources/assets/sass/variables'
 
 	.scrollable-main-container
+		.presets
+			margin-bottom: $margin-big
+
 		.groups
 			.groups-list
 				.group
@@ -115,7 +130,6 @@ export default {
 	},
 	data() {
 		return {
-			startDate: new Date(),
 			openGroups: [],
 			startDateConfig: {
 				altInput: true,
@@ -160,6 +174,14 @@ export default {
 		...mapActions(['toggleOverlay']),
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
+		},
+		presetLessonAvailabilities() {
+			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`, {
+				start: new Date(),
+				end: new Date(moment("2018-09-20").format()),
+				user: this.currentUserId,
+				days: 1,
+			}))
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1

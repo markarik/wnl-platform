@@ -6,6 +6,7 @@ use Cache;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Requests\User\UpdateUserLesson;
+use App\Http\Requests\User\UpdateLessonsPreset;
 use App\Models\UserLesson;
 
 class UserLessonApiController extends ApiController
@@ -39,5 +40,10 @@ class UserLessonApiController extends ApiController
 		Cache::tags("user-$userId")->flush();
 
 		return $this->respondOk();
+	}
+
+	public function putPlan(UpdateLessonsPreset $request)
+	{
+		dd($request);
 	}
 }

@@ -84,6 +84,11 @@ class OrderPaid implements ShouldQueue
 	protected function handleUserSubscription() {
 		$product = $this->order->product;
 		$user = $this->order->user;
+
+		if (empty($product->access_start && empty($product->access_end))) {
+			return;
+		}
+
 		$subscriptionAccessStart = $user->subscription ? $user->subscription->access_start : null;
 		$subscriptionAccessEnd = $user->subscription ? $user->subscription->access_end : null;
 

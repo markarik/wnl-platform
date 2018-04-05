@@ -22,6 +22,8 @@ class OrderObserver
 
 	public function updated(Order $order)
 	{
+		\Cache::forget(User::getSubscriptionKey($order->user->id));
+
 		if ($order->isDirty(['paid_amount']) && $order->paid_amount > $order->getOriginal('paid_amount')) {
 			\Log::notice('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));

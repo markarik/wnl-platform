@@ -172,15 +172,19 @@ class User extends Authenticatable
 
 	public function getSubscriptionStatusAttribute()
 	{
-		$dates = $this->getSubscriptionDates();
-		return $this->getSubscriptionStatus($dates);
+		$key = self::getSubscriptionKey($this->id);
+
+		return \Cache::remember($key, 60 * 24, function() {
+			$dates = $this->getSubscriptionDates();
+			return $this->getSubscriptionStatus($dates);
+		});
 	}
 
 	public function getSubscriptionDatesAttribute() {
 		list ($min, $max) = $this->getSubscriptionDates();
 		return [
-			'min' => $min ? $min->timestamp : null,
-			'max' => $max ? $max->timestamp : null
+			'min' => $min ?? $min->timestamp,
+			'max' => $max ?? $max->timestamp
 		];
 	}
 

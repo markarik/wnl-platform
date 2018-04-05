@@ -89,8 +89,8 @@ class OrderPaid implements ShouldQueue
 			return;
 		}
 
-		$subscriptionAccessStart = $user->subscription ? $user->subscription->access_start : null;
-		$subscriptionAccessEnd = $user->subscription ? $user->subscription->access_end : null;
+		$subscriptionAccessStart = $user->subscription ?? $user->subscription->access_start;
+		$subscriptionAccessEnd = $user->subscription ?? $user->subscription->access_end;
 
 		$accessStart = $subscriptionAccessStart ? min([$subscriptionAccessStart, $product->access_start]) : $product->access_start;
 		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);

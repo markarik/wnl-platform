@@ -79,9 +79,14 @@
 								<th>Termin płatności</th>
 								<th>Zapłacone / Do&nbsp;zapłaty</th>
 							</tr>
-							<tr v-for="instalment, index in order.instalments.instalments">
+							<tr v-for="(instalment, index) in order.instalments.instalments">
 								<td>{{index + 1}}</td>
-								<td>{{ instalmentDate(instalment.date) }}</td>
+								<td v-if="index === 0">
+									{{ `Do 7 dni po złożeniu zamówienia, ale nie później niż ${instalmentDate(instalment.date)}` }}
+								</td>
+								<td v-else>
+									{{ instalmentDate(instalment.date) }}
+								</td>
 								<td>
 									{{instalment.amount - instalment.left}}zł / {{instalment.amount}}zł
 								</td>

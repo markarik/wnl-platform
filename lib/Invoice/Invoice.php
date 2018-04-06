@@ -27,16 +27,18 @@ class Invoice
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
 
-	public function vatInvoice(Order $order)
+	public function vatInvoice(Order $order, $invoice = null)
 	{
 		$vatValue = $this->getVatValue($order->paid_amount);
 		$vatString = $this->getVatString($vatValue);
-		$invoice = $order->invoices()->create([
-			'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
-			'series' => self::VAT_SERIES_NAME,
-			'amount' => $order->paid_amount,
-			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
-		]);
+		if (!$invoice) {
+			$invoice = $order->invoices()->create([
+				'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
+				'series' => self::VAT_SERIES_NAME,
+				'amount' => $order->paid_amount,
+				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+			]);
+		}
 
 		$data = [
 			'notes'       => [],
@@ -104,16 +106,18 @@ class Invoice
 		return $invoice;
 	}
 
-	public function proforma(Order $order)
+	public function proforma(Order $order, $invoice = null)
 	{
 		$vatValue = $this->getVatValue();
 		$vatString = $this->getVatString($vatValue);
-		$invoice = $order->invoices()->create([
-			'number' => $this->nextNumberInSeries(self::PROFORMA_SERIES_NAME),
-			'series' => self::PROFORMA_SERIES_NAME,
-			'amount' => $order->total_with_coupon,
-			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
-		]);
+		if (!$invoice) {
+			$invoice = $order->invoices()->create([
+				'number' => $this->nextNumberInSeries(self::PROFORMA_SERIES_NAME),
+				'series' => self::PROFORMA_SERIES_NAME,
+				'amount' => $order->total_with_coupon,
+				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+			]);
+		}
 
 		$data = [
 			'notes'       => [],
@@ -169,19 +173,23 @@ class Invoice
 		return $invoice;
 	}
 
-	public function advance(Order $order)
+	public function advance(Order $order, $invoice = null)
 	{
-		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$previousAdvances = collect();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
-		$invoice = $order->invoices()->create([
-			'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
-			'series' => self::ADVANCE_SERIES_NAME,
-			'amount' => $recentSettlement,
-			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
-		]);
+		if (!$invoice) {
+			$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+
+			$invoice = $order->invoices()->create([
+				'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
+				'series' => self::ADVANCE_SERIES_NAME,
+				'amount' => $recentSettlement,
+				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+			]);
+		}
 
 		$data = [
 			'notes'       => [],
@@ -250,7 +258,7 @@ class Invoice
 		return $invoice;
 	}
 
-	public function finalInvoice(Order $order)
+	public function finalInvoice(Order $order, $invoice = null)
 	{
 		$previousAdvances = $order->invoices()->whereIn('series', [
 			self::ADVANCE_SERIES_NAME,
@@ -260,12 +268,14 @@ class Invoice
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
-		$invoice = $order->invoices()->create([
-			'number' => $this->nextNumberInSeries(self::FINAL_SERIES_NAME),
-			'series' => self::FINAL_SERIES_NAME,
-			'amount' => $recentSettlement,
-			'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
-		]);
+		if (!$invoice) {
+			$invoice = $order->invoices()->create([
+				'number' => $this->nextNumberInSeries(self::FINAL_SERIES_NAME),
+				'series' => self::FINAL_SERIES_NAME,
+				'amount' => $recentSettlement,
+				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+			]);
+		}
 
 		$data = [
 			'notes'       => [],

@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Order;
+use App\Models\User;
+use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
 use App\Mail\PaymentConfirmation;
@@ -34,6 +36,7 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
+		$this->handleUserSubscription();
 		$this->handleCoupon();
 		$this->sendConfirmation();
 		$this->handleStudyBuddy();
@@ -77,5 +80,27 @@ class OrderPaid implements ShouldQueue
 		}
 
 		return (new Invoice)->advance($order);
+	}
+
+	protected function handleUserSubscription() {
+		$product = $this->order->product;
+		$user = $this->order->user;
+
+		if (empty($product->access_start) && empty($product->access_end)) {
+			return;
+		}
+
+		$subscriptionAccessStart = $user->subscription->access_start ?? null;
+		$subscriptionAccessEnd = $user->subscription->access_end ?? null;
+
+		$accessStart = $subscriptionAccessStart ? min([$subscriptionAccessStart, $product->access_start]) : $product->access_start;
+		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
+
+		$subscription = UserSubscription::updateOrCreate(
+			['user_id' => $user->id],
+			['access_start' => $accessStart, 'access_end' => $accessEnd]
+		);
+
+		\Cache::tags("user-$user->id")->flush();
 	}
 }

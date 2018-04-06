@@ -175,12 +175,14 @@ class Invoice
 
 	public function advance(Order $order, $invoice = null)
 	{
-		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$previousAdvances = collect();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
 		if (!$invoice) {
+			$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
 				'series' => self::ADVANCE_SERIES_NAME,

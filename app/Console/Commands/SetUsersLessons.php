@@ -2,8 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\LessonAvailability;
-use App\Models\Lesson;
+use App\Models\UserLesson;
 use App\Models\User;
 use Illuminate\Console\Command;
 
@@ -21,7 +20,7 @@ class SetUsersLessons extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Migrate data from lessons_availabilities table and attach the lesson\'s avalability with a user';
+	protected $description = 'Set user lesson dates based on bought product';
 
 	/**
 	 * Create a new command instance.
@@ -40,40 +39,32 @@ class SetUsersLessons extends Command
 	public function handle()
 	{
 		$users = User::all();
-		$lessonAvalabilities = LessonAvailability::all();
 		$bar = $this->output->createProgressBar($users->count());
 
 		foreach($users as $user) {
-			foreach($lessonAvalabilities as $lesson) {
-				if ($user->isAdmin() || $user->hasRole('moderator')) {
-					\DB::table('user_lesson')->insert([
-						'user_id' => $user->id,
-						'lesson_id' => $lesson->lesson_id,
-						'start_date' => $lesson->start_date
-					]);
-				} else if ($user->hasRole('edition-2-participant')) {
-					$lessonAccess = \DB::table('lesson_user_access')
-						->where('lesson_id', $lesson->lesson_id)
-						->where('user_id', $user->id)
-						->first();
-					if (is_null($lessonAccess)) {
-						if ($lesson->lesson_id === 17 && !$user->hasRole('workshop-participant')) {
-							continue;
-						} else {
-							\DB::table('user_lesson')->insert([
-								'user_id' => $user->id,
-								'lesson_id' => $lesson->lesson_id,
-								'start_date' => $lesson->start_date
-							]);
-						}
-					} else if (!empty($lessonAccess->access)) {
-						\DB::table('user_lesson')->insert([
-							'user_id' => $user->id,
-							'lesson_id' => $lesson->lesson_id,
-							'start_date' => $lesson->start_date
-						]);
+			$userOrders = $user
+				->orders()
+				->where('paid', 1)
+				->whereIn('product_id', [9,10])
+				->where('orders.canceled', '<>', 1)
+				->get();
+
+			foreach($userOrders as $order) {
+				$lessons = $order->product->lessons;
+
+				$lessonsWithStartDate = $lessons->map(function($item) use ($user) {
+					if ($item->isAccessible($user)) {
+						return null;
 					}
-				}
+
+					return [
+						'lesson_id' => $item->id,
+						'start_date' => $item->pivot->start_date,
+						'user_id' => $user->id
+					];
+				})->filter()->toArray();
+
+				UserLesson::insert($lessonsWithStartDate);
 			}
 			$bar->advance();
 		}

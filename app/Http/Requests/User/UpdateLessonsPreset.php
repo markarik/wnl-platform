@@ -9,7 +9,7 @@ class UpdateLessonsPreset extends FormRequest
 {
 	public function authorize()
 	{
-		return true
+		return true;
 	}
 
 	/**
@@ -20,10 +20,9 @@ class UpdateLessonsPreset extends FormRequest
 	public function rules()
 	{
 		return [
-			'start' => 'required|string',
-			'end' => 'required|string',
-			'user' => 'required|max:255',
-			'days' => 'required|max:255',
+			'end_date' => 'required|string',
+			'user_id' => 'required|max:255',
+			'days_per_lesson' => 'required|max:255',
 		];
 	}
 }

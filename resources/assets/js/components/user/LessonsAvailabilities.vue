@@ -8,8 +8,17 @@
 			</div>
 		</div>
 		<div class="presets">
+			<div class="three-per-day-preset">
+				<button @click="presetLessonAvailabilities(0.4)" class="button is-info to-right">Trzy lekcje na dzień</button>
+			</div>
+			<div class="two-per-day-preset">
+				<button @click="presetLessonAvailabilities(0.5)" class="button is-info to-right">Dwie lekcje dziennie</button>
+			</div>
 			<div class="each-day-preset">
-				<button @click="presetLessonAvailabilities" class="button is-info to-right">Jedna lekcja na dzień</button>
+				<button @click="presetLessonAvailabilities(1)" class="button is-info to-right">Jedna lekcja na dzień</button>
+			</div>
+			<div class="every-second-day-preset">
+				<button @click="presetLessonAvailabilities(2)" class="button is-info to-right">Jedna lekcja na dwa dni</button>
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
@@ -175,13 +184,12 @@ export default {
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
 		},
-		presetLessonAvailabilities() {
-			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`, {
-				start: new Date(),
-				end: new Date(moment("2018-09-20").format()),
-				user: this.currentUserId,
-				days: 1,
-			}))
+		presetLessonAvailabilities(daysPerLesson) {
+			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+				end_date: new Date(moment("2018-09-20").format()),
+				user_id: this.currentUserId,
+				days_per_lesson: daysPerLesson,
+			})
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1

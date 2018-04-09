@@ -72,24 +72,13 @@ class UserLessonApiController extends ApiController
 			} else if ($lesson->order_number == 1) {
 				$queriedLesson->update(['start_date' => $startDate]);
 			} else {
-				if ($workdays >= 1) {
-					$startDateVariable = $startDate->addDays($workdays);
+				$startDateVariable = $startDate->addHours($workdays * 24);
 
-					if ($startDateVariable->isWeekend()) {
-						$startDateVariable->next(Carbon::MONDAY);
-					}
-
-					$queriedLesson->update(['start_date' => $startDateVariable]);
-
-				} else {
-					$startDateVariable = $startDate->addHours($workdays * 24);
-
-					if ($startDateVariable->isWeekend()) {
-						$startDateVariable->next(Carbon::MONDAY);
-					}
-
-					$queriedLesson->update(['start_date' => $startDateVariable]);
+				if ($startDateVariable->isWeekend()) {
+					$startDateVariable->next(Carbon::MONDAY);
 				}
+
+				$queriedLesson->update(['start_date' => $startDateVariable]);
 			}
 		}
 	}

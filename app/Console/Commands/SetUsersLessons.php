@@ -65,7 +65,6 @@ class SetUsersLessons extends Command
 			->where('orders.canceled', '<>', 1)
 			->get();
 
-		DB::beginTransaction();
 		foreach($userOrders as $order) {
 			$lessons = $order->product->lessons;
 
@@ -88,7 +87,7 @@ class SetUsersLessons extends Command
 				print PHP_EOL;
 				$this->error("Failed to save lessons for user $user->id");
 				throw $e;
-			} catch (Exception $ex) {
+			} catch (\Exception $ex) {
 				print PHP_EOL;
 				DB::rollback();
 				$this->error("Failed to save lessons for user $user->id");

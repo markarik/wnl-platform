@@ -62,6 +62,11 @@ class Order extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
+	public function orderInstalments()
+	{
+		return $this->hasMany('App\Models\OrderInstalment');
+	}
+
 	public function attachCoupon($coupon)
 	{
 		$this->coupon_id = $coupon->id;

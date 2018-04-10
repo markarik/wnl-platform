@@ -19,6 +19,7 @@ class CreateOrderInstalmentsTable extends Migration
             $table->timestamp('due_date')->nullable();
             $table->boolean('paid');
             $table->float('amount');
+            $table->float('paid_amount')->default(0);
             $table->integer('order_number');
             $table->timestamps();
         });

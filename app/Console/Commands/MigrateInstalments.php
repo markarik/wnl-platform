@@ -62,6 +62,7 @@ class MigrateInstalments extends Command
 				'due_date'     => $paymentSchedule[$num]['due_date'],
 				'paid'         => $this->isPaid($order, $i),
 				'amount'       => $paymentSchedule[$num]['amount'],
+				'paid_amount'  => $this->getPaidAmount($order, $i, $paymentSchedule[$num]['amount']),
 				'order_number' => $num,
 			]);
 		}
@@ -75,7 +76,17 @@ class MigrateInstalments extends Command
 
 		$instalments = $order->instalments['instalments'];
 
-		return $instalments[$index]['left'] === 0;
+		return (int)$instalments[$index]['left'] === 0;
+	}
+
+	protected function getPaidAmount($order, $index, $fullAmount) {
+		if ($order->instalments['allPaid']) {
+			return $fullAmount;
+		}
+
+		$instalments = $order->instalments['instalments'];
+
+		return $instalments[$index]['amount'] - $instalments[$index]['left'];
 	}
 
 	protected function generatePaymentSchedule($order)

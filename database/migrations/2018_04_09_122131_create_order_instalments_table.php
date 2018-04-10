@@ -18,6 +18,8 @@ class CreateOrderInstalmentsTable extends Migration
             $table->unsignedInteger('order_id')->index();
             $table->timestamp('due_date')->nullable();
             $table->boolean('paid');
+            $table->float('amount');
+            $table->integer('order_number');
             $table->timestamps();
         });
     }

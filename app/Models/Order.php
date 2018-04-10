@@ -16,7 +16,8 @@ class Order extends Model
 	];
 
 	protected $fillable = [
-		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id', 'canceled', 'canceled_at',
+		'user_id', 'session_id', 'product_id', 'method', 'transfer_title',
+		'external_id', 'canceled', 'canceled_at',
 		'paid_amount', 'invoice', 'paid_at',
 	];
 

@@ -74,7 +74,7 @@ class ChatRoomPolicy
 	protected function checkLessonAccess($user, $chatRoom)
 	{
 		foreach ($chatRoom->lessons as $lesson) {
-			if ($lesson->isAvailable()) {
+			if ($lesson->isAvailable($user)) {
 				return true;
 			}
 		}

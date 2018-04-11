@@ -11,7 +11,6 @@ function getCourseApiUrl(courseId, userId) {
 		`${resource('editions')}/${courseId}
 		?include=groups.lessons.screens.sections.subsections,
 		course.groups.lessons.screens.sections.subsections,
-		course.groups.lessons.userAvailability,
 		course.groups.lessons.screens.tags
 		&user=current`
 	)

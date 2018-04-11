@@ -51,10 +51,15 @@ class UserLessonApiController extends ApiController
 		$user = User::find($userId);
 		$profileId = $user->profile->id;
 		$workdays = $request->workdays;
+		$startDate = Carbon::parse($request->start_date);
+		$endDate = Carbon::parse($request->end_date);
 		$userCourseProgress = UserCourseProgress::where('user_id', $profileId);
-		$subscriptionDates = $user->getSubscriptionDatesAttribute();
-		$endDate = Carbon::createFromTimestamp($subscriptionDates["max"]);
-		$daysLeft = Carbon::now()->diffInDays($endDate);
+		$subscriptionDateTimestamp = $user->getSubscriptionDatesAttribute();
+		$subscriptionEndDate = Carbon::createFromTimestamp($subscriptionDateTimestamp["max"]);
+		// echo($startDate).PHP_EOL;
+		// echo($endDate).PHP_EOL;
+		$daysLeft = $startDate->diffInDays($endDate);
+		dd($daysLeft);
 		$sortedLessons = $user->lessonsAvailability()
 			->orderBy('group_id')
 			->orderBy('order_number')
@@ -74,6 +79,7 @@ class UserLessonApiController extends ApiController
 
 		UserLessonApiController::insertPlan($lessons, $workdays);
 	}
+
 	static function insertPlan($lessons, $workdays)
 	{
 		$startDate = Carbon::now();

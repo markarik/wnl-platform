@@ -17,5 +17,4 @@ class UserLesson extends Pivot
 	public function getUpdatedAtColumn() {
 		return 'updated_at';
 	}
-	
 }

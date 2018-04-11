@@ -20,9 +20,8 @@ class UpdateLessonsPreset extends FormRequest
 	public function rules()
 	{
 		return [
-			'end_date' => 'required|string',
-			'user_id' => 'required|max:255',
-			'days_per_lesson' => 'required|max:255',
+			'user_id' => 'integer|required',
+			'workdays' => 'numeric|required',
 		];
 	}
 }

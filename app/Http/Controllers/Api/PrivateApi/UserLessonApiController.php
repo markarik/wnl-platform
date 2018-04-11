@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Requests\User\UpdateUserLesson;
 use App\Http\Requests\User\UpdateLessonsPreset;
+use App\Models\UserCourseProgress;
 use App\Models\UserLesson;
 use App\Models\User;
 
@@ -47,30 +48,43 @@ class UserLessonApiController extends ApiController
 	public function putPlan(UpdateLessonsPreset $request)
 	{
 		$userId = $request->userId;
-		$endDate = $request->end_date;
-		$daysPerLesson = $request->days_per_lesson;
 		$user = User::find($userId);
-
+		$profileId = $user->profile->id;
+		$workdays = $request->workdays;
+		$userCourseProgress = UserCourseProgress::where('user_id', $profileId);
+		$subscriptionDates = $user->getSubscriptionDatesAttribute();
+		$endDate = Carbon::createFromTimestamp($subscriptionDates["max"]);
 		$daysLeft = Carbon::now()->diffInDays($endDate);
+		$sortedLessons = $user->lessonsAvailability()
+			->orderBy('group_id')
+			->orderBy('order_number')
+			->get();
 
-		$lessons = $user->lessonsAvailability()->orderBy('order_number')->get();
+		$completeLessons = (clone $userCourseProgress)
+			->whereNull('section_id')
+			->whereNull('screen_id')
+			->where('status', 'complete')
+			->get()
+			->pluck('lesson_id')
+			->toArray();
 
-		echo($lessons->count()).PHP_EOL;
+		$lessons = $sortedLessons->filter(function($sortedLesson) use ($completeLessons) {
+			return !in_array($sortedLesson->id, $completeLessons);
+		});
 
-		UserLessonApiController::insertPlan($lessons, $daysPerLesson);
+		UserLessonApiController::insertPlan($lessons, $workdays);
 	}
 	static function insertPlan($lessons, $workdays)
 	{
 		$startDate = Carbon::now();
+		foreach ($lessons as $lesson) {
 
-		foreach ($lessons as $key => $lesson) {
 			$lessonId = $lesson->id;
 			$queriedLesson = DB::table('user_lesson')->where('lesson_id', $lessonId);
-			if ($lesson->order_number == 0) {
-				// kejs, gdzie jest order_number=1 trzeba lepiej obsłużyć, n. 0||1 - acz to rozwiązanie nie działa :( stąd ponowne sprawdzenie - to be done
-				$queriedLesson->update(['start_date' => $startDate]);
-			} else if ($lesson->order_number == 1) {
-				$queriedLesson->update(['start_date' => $startDate]);
+			$groupId = $lesson->group_id;
+
+			if ($groupId === 2 || $groupId === 3 || $groupId === 15) {
+				$queriedLesson->update(['start_date' => Carbon::now()]);
 			} else {
 				$startDateVariable = $startDate->addHours($workdays * 24);
 

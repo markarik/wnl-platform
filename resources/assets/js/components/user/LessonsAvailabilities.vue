@@ -3,22 +3,77 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Plany nauki
+					Na co się uczę?
+				</div>
+			</div>
+		</div>
+		<div class="scopes-control">
+			<a v-for="name, scope in scopes" class="panel-toggle" :class="{'is-active': isScopeActive(scope)}"  :key="scope" @click="toggleScope(scope)">
+				{{name}}
+				<span class="icon is-small">
+					<i class="fa" :class="[isScopeActive(scope) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+				</span>
+			</a>
+		</div>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Ile mam czasu?
+				</div>
+			</div>
+		</div>
+		<div class="dates columns">
+			<div class="column">
+				<label class="date-label" for="startDate">
+					{{$t('questions.plan.headings.startDate')}}
+					<span class="icon is-small">
+						<i class="fa fa-hourglass-1"></i>
+					</span>
+				</label>
+				<wnl-datepicker :withBorder="true" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+				<p class="tip">
+					{{$t('questions.plan.tips.startDate')}}
+				</p>
+			</div>
+			<div class="column">
+				<label class="date-label" for="endDate">
+					{{$t('questions.plan.headings.endDate')}}
+					<span class="icon is-small">
+						<i class="fa fa-hourglass-3"></i>
+					</span>
+				</label>
+				<wnl-datepicker :withBorder="true" v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
+				<p class="tip">
+					{{$t('questions.plan.tips.endDate')}}
+				</p>
+			</div>
+		</div>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Dni, w które moge pracować?
+				</div>
+			</div>
+		</div>
+		<div class="days">
+
+		</div>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Dostępne plany nauki
 				</div>
 			</div>
 		</div>
 		<div class="presets">
-			<div class="three-per-day-preset">
-				<button @click="presetLessonAvailabilities(0.4)" class="button is-info to-right">Trzy lekcje na dzień</button>
-			</div>
-			<div class="two-per-day-preset">
-				<button @click="presetLessonAvailabilities(0.5)" class="button is-info to-right">Dwie lekcje dziennie</button>
-			</div>
 			<div class="each-day-preset">
-				<button @click="presetLessonAvailabilities(1)" class="button is-info to-right">Jedna lekcja na dzień</button>
+				<button @click="presetLessonAvailabilities(1)" class="button to-right">Jedna lekcja na dzień</button>
 			</div>
 			<div class="every-second-day-preset">
-				<button @click="presetLessonAvailabilities(2)" class="button is-info to-right">Jedna lekcja na dwa dni</button>
+				<button @click="presetLessonAvailabilities(2)" class="button to-right">Jedna lekcja na dwa dni</button>
+			</div>
+			<div class="every-three-days-preset">
+				<button @click="presetLessonAvailabilities(3)" class="button to-right">Jedna lekcja na trzy dni</button>
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
@@ -124,12 +179,13 @@
 </style>
 
 <script>
+import { pull } from 'lodash'
 import { mapGetters, mapActions } from 'vuex'
 import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
 import Datepicker from 'js/components/global/Datepicker'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
-import { isEmpty } from 'lodash'
+import { isEmpty, merge } from 'lodash'
 import moment from 'moment'
 
 export default {
@@ -140,11 +196,6 @@ export default {
 	data() {
 		return {
 			openGroups: [],
-			startDateConfig: {
-				altInput: true,
-				disableMobile: true,
-				locale: pl
-			},
 			alertSuccess: {
 				text: this.$t('user.lessonsAvailabilities.alertSuccess'),
 				type: 'success',
@@ -155,6 +206,9 @@ export default {
 				type: 'error',
 				timeout: 2000,
 			},
+			activeScopes: ['thisExam', 'nextExam'],
+			startDate: new Date(),
+			endDate: null,
 		}
 	},
 	computed: {
@@ -165,6 +219,16 @@ export default {
 			'getLessons',
 			'structure',
 		]),
+		startDateConfig() {
+			return merge(this.defaultDateConfig(), {
+				minDate: 'today',
+			})
+		},
+		endDateConfig() {
+			return merge(this.defaultDateConfig(), {
+				minDate: this.startDate,
+			})
+		},
 		groupsWithLessons() {
 			return this.groups.map(groupId => {
 				const group = this.structure[resource('groups')][groupId]
@@ -175,20 +239,58 @@ export default {
 					})
 				}
 			})
+		},
+		scopes() {
+			return {
+				thisExam: 'Na ten LEK',
+				nextExam: 'Na następny LEK',
+			}
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setLessonAvailabilityStatus']),
 		...mapActions(['toggleOverlay']),
+		isScopeActive(scope) {
+			// console.log(this.activeScopes.includes(scope), scope);
+			return this.activeScopes[1] === scope
+		},
+		defaultDateConfig() {
+			return {
+				altInput: true,
+				disableMobile: true,
+				locale: pl,
+			}
+		},
+		onEndDateChange(payload) {
+			if (isEmpty(payload)) this.endDate = null
+		},
+		onStartDateChange(payload) {
+			if (isEmpty(payload)) this.startDate = null
+		},
+		toggleScope(scope) {
+			let index = this.activeScopes.indexOf(scope)
+
+			if (index > -1 && this.activeScopes.length > 1) {
+				this.activeScopes.splice(index, 1)
+			} else if (index === -1) {
+				this.activeScopes.push(scope)
+			} else {
+				let other = pull(Object.keys(this.scopes), scope)
+				if (other.length > 0) {
+					this.activeScopes = [other[0]]
+				}
+			}
+		},
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
 		},
-		presetLessonAvailabilities(daysPerLesson) {
+		presetLessonAvailabilities(workdays) {
 			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-				end_date: new Date(moment("2018-09-20").format()),
 				user_id: this.currentUserId,
-				days_per_lesson: daysPerLesson,
+				workdays: workdays,
+				start_date: this.startDate,
+				end_date: this.endDate,
 			})
 		},
 		isOpen(item) {
@@ -197,7 +299,6 @@ export default {
 		isEven(index) {
 			return index % 2 === 0
 		},
-
 		toggleItem(item) {
 			if (this.openGroups.indexOf(item.id) === -1) {
 				this.openGroups.push(item.id)

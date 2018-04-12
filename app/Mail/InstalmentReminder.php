@@ -37,7 +37,7 @@ class InstalmentReminder extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-			->subject("Zbliża się termin kolejnej raty (Zamówienie {$this->order->id})")
+			->subject("Zbliża się termin płatności kolejnej raty (Zamówienie {$this->order->id})")
 			->view('mail.payment-reminder-instalment');
     }
 }

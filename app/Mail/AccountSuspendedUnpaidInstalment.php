@@ -37,7 +37,7 @@ class AccountSuspendedUnpaidInstalment extends Mailable implements ShouldQueue
     public function build()
     {
 		return $this
-			->subject("Dostęp do platformy został zawieszony :(")
+			->subject("Dostęp do platformy został zawieszony 😔")
 			->view('mail.account-suspended-unpaid-instalment');
     }
 }

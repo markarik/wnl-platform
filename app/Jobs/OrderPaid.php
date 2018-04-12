@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Order;
 use App\Models\User;
+use App\Models\UserLesson;
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
@@ -42,7 +43,7 @@ class OrderPaid implements ShouldQueue
 		$this->sendConfirmation();
 		$this->handleStudyBuddy();
 
-		\Cache::tags("user-$order->user->id")->flush();
+		\Cache::tags("user-{$this->order->user->id}")->flush();
 	}
 
 	protected function handleCoupon()
@@ -105,7 +106,7 @@ class OrderPaid implements ShouldQueue
 	}
 
 	protected function handleUserLessons() {
-		$product = $this->order->product->lessons;
+		$lessons = $this->order->product->lessons;
 		$user = $this->order->user;
 
 		$lessonsWithStartDate = $lessons->map(function($item) use ($user) {

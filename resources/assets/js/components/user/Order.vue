@@ -265,7 +265,7 @@
 				} else if (this.order.canceled) {
 					return 'Anulowano'
 				} else {
-					return 'Oczekuje na zaksięgowanie'
+					return 'Oczekuje na zaksięgowanie (do 3 dni roboczych)'
 				}
 			},
 			paymentStatusClass() {

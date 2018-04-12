@@ -69,7 +69,7 @@ class Order extends Model
 
 	public function paymentReminders()
 	{
-		return $this->hasMany('App\Model\PaymentReminder');
+		return $this->hasMany('App\Models\PaymentReminder');
 	}
 
 	public function attachCoupon($coupon)

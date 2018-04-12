@@ -15,4 +15,11 @@ class OrderInstalment extends Model
 	];
 
     protected $dates = ['due_date'];
+
+    protected $appends = ['left_amount'];
+
+	public function getLeftAmountAttribute()
+	{
+		return (float) $this->amount - $this->paid_amount;
+    }
 }

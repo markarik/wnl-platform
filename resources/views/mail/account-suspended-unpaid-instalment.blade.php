@@ -1,11 +1,13 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Witaj ponownie {{ $order->user->first_name or '{first_name}' }}!</h3>
+	<h3>Cześć {{ $order->user->first_name or '{first_name}' }}!</h3>
 
-	<p>Piszemy do Ciebie, ponieważ zbliża się termin płatności {{ $instalment->order_number }}. raty za <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
+	<p>Musieliśmy chwilowo wstrzymać Twój dostęp do platformy, ponieważ nie otrzymaliśmy {{ $instalment->order_number }}. raty za <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
 
-	<p>Pozostała kwota raty wynosi: <strong>{{ $instalment->left_amount }}zł</strong></p>
+	<p>Jeśli coś Ci tu nie gra, prosimy napisz do nas na info@wiecejnizlek.pl!</p>
+
+	<p>Twoje konto <strong>zostanie automatycznie odblokowane po zaksięgowaniu wpłaty.</strong></p>
 
 	<h4>Dane do przelewu</h4>
 	<table style="font-size: 0.9em; line-height: 2em;">
@@ -31,11 +33,7 @@
 		</tr>
 	</table>
 
-	<p>Pamiętaj, że brak opłacenia raty w terminie będzie się wiązał z <strong>zawieszeniem dostępu do platformy</strong>, ale zostanie on przywrócony zaraz po zaksięgowaniu wpłaty.</p>
-
 	<p><strong>Status swojego zamówienia możesz śledzić na stronie <a href="{{url('app/myself/orders')}}">Konto > Twoje zamówienia</a>.</strong> Tam znajdziesz też wszystkie szczegóły dotyczące płatności oraz informacje o terminach i kwotach rat.</p>
-
-	<p>W razie pytań pisz śmiało na info@wiecejnizlek.pl!</p>
 
 	<p>Do zobaczenia!</p>
 @endsection

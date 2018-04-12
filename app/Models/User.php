@@ -132,7 +132,8 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\Models\ChatRoom');
 	}
 
-	public function subscription() {
+	public function subscription()
+	{
 		return $this->hasOne('App\Models\UserSubscription');
 	}
 
@@ -174,17 +175,20 @@ class User extends Authenticatable
 	{
 		$key = self::getSubscriptionKey($this->id);
 
-		return \Cache::tags("user-$this->id")->remember($key, 60 * 24, function() {
+		return \Cache::tags("user-$this->id")->remember($key, 60 * 24, function () {
 			$dates = $this->getSubscriptionDates();
+
 			return $this->getSubscriptionStatus($dates);
 		});
 	}
 
-	public function getSubscriptionDatesAttribute() {
+	public function getSubscriptionDatesAttribute()
+	{
 		list ($min, $max) = $this->getSubscriptionDates();
+
 		return [
 			'min' => $min->timestamp ?? null,
-			'max' => $max->timestamp ?? null
+			'max' => $max->timestamp ?? null,
 		];
 	}
 
@@ -202,7 +206,8 @@ class User extends Authenticatable
 		return 'inactive';
 	}
 
-	protected function getSubscriptionDates() {
+	protected function getSubscriptionDates()
+	{
 		if ($this->hasRole('admin') || $this->hasRole('moderator')) {
 			return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
 		}
@@ -286,7 +291,14 @@ class User extends Authenticatable
 			})->get();
 	}
 
-	public static function getSubscriptionKey($id) {
+	public function suspend()
+	{
+		$this->suspended = true;
+		$this->save();
+	}
+
+	public static function getSubscriptionKey($id)
+	{
 		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 }

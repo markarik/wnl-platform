@@ -16,6 +16,7 @@ class CreatePaymentRemindersTable extends Migration
         Schema::create('payment_reminders', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('order_id')->index();
+            $table->integer('instalment_number')->nullable();
             $table->timestamps();
         });
     }

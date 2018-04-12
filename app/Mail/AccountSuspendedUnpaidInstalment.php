@@ -9,13 +9,13 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class InstalmentReminder extends Mailable implements ShouldQueue
+class AccountSuspendedUnpaidInstalment extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $order;
+	public $order;
 
-    public $instalment;
+	public $instalment;
 
 	/**
 	 * Create a new message instance.
@@ -25,8 +25,8 @@ class InstalmentReminder extends Mailable implements ShouldQueue
 	 */
     public function __construct(Order $order, OrderInstalment $instalment)
     {
-        $this->order = $order;
-        $this->instalment = $instalment;
+		$this->order = $order;
+		$this->instalment = $instalment;
     }
 
     /**
@@ -36,8 +36,8 @@ class InstalmentReminder extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this
-			->subject("Zbliża się termin kolejnej raty (Zamówienie {$this->order->id})")
-			->view('mail.payment-reminder-instalment');
+		return $this
+			->subject("Dostęp do platformy został zawieszony :(")
+			->view('mail.account-suspended-unpaid-instalment');
     }
 }

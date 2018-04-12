@@ -81,10 +81,7 @@
 							</tr>
 							<tr v-for="(instalment, index) in order.instalments.instalments">
 								<td>{{index + 1}}</td>
-								<td v-if="index === 0">
-									{{ `Do 7 dni po złożeniu zamówienia, ale nie później niż ${instalmentDate(instalment.date)}` }}
-								</td>
-								<td v-else>
+								<td>
 									{{ instalmentDate(instalment.date) }}
 								</td>
 								<td>
@@ -268,7 +265,7 @@
 				} else if (this.order.canceled) {
 					return 'Anulowano'
 				} else {
-					return 'Oczekuje na zaksięgowanie'
+					return 'Oczekuje na zaksięgowanie (do 3 dni roboczych)'
 				}
 			},
 			paymentStatusClass() {

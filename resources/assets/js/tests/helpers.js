@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-export const testAction = (action, payload, state, expectedMutations, done) => {
+export const testAction = (action, payload, ctx = {}, expectedMutations, done) => {
 	let count = 0
 
 	// mock commit
@@ -23,7 +23,7 @@ export const testAction = (action, payload, state, expectedMutations, done) => {
 	}
 
 	// call the action with mocked store and arguments
-	action({ commit, state }, payload)
+	action({ commit, ...ctx }, payload)
 
 	// check if no mutations should have been dispatched
 	if (expectedMutations.length === 0) {

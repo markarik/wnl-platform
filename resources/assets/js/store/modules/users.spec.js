@@ -24,7 +24,7 @@ describe('activeUsers module', () => {
 		it('user joined', done => {
 			const payload = {user: 'John', channel: 'active'}
 			// action, payload, state, expected mutations, done callback
-			testAction(actions.userJoined, payload, getInitialState(), [
+			testAction(actions.userJoined, payload, {state: getInitialState()}, [
 				{type: types.ACTIVE_USERS_SET, payload: {users: [payload.user], channel: payload.channel}}
 			], done);
 		})

@@ -189,23 +189,15 @@ const actions = {
 			}, reason => {
 				commit(types.COURSE_READY)
 				$wnl.logger.error(reason)
-				return reject()
-			}).catch(reject)
+				return reject(reason)
+			})
 		})
 	},
 	setStructure({commit, rootGetters}, courseId = 1) {
-		return new Promise((resolve, reject) => {
-			axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
-				.then(response => {
-					commit(types.SET_STRUCTURE, response.data)
-					resolve()
-				})
-				.catch(exception => {
-						$wnl.logger.capture(exception)
-						reject()
-					}
-				)
-		})
+		return axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
+			.then(response => {
+				commit(types.SET_STRUCTURE, response.data)
+			})
 	},
 	setLessonAvailabilityStatus({commit}, payload) {
 		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload)

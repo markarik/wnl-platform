@@ -76,8 +76,6 @@ class UserLessonApiController extends ApiController
 			return !in_array($sortedLesson->id, $completeLessons);
 		});
 
-		// dd($lessons);
-
 		UserLessonApiController::insertPlan($lessons, $workdays);
 	}
 

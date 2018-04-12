@@ -1,6 +1,6 @@
 <template>
 	<div class="scrollable-main-container">
-		<div class="level wnl-screen-title">
+		<!-- <div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
 					Na co się uczę?
@@ -14,6 +14,35 @@
 					<i class="fa" :class="[isScopeActive(scope) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 				</span>
 			</a>
+		</div> -->
+
+		<!-- <div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Dni, w które moge pracować?
+				</div>
+			</div>
+		</div>
+		<div class="days">
+
+		</div> -->
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Dostępne plany nauki
+				</div>
+			</div>
+		</div>
+		<div class="presets">
+			<div class="each-day-preset">
+				<button @click="chooseWorkload(1)" class="button to-right" :class="{'is-active': this.workLoad === 1}">Jedna lekcja na dzień</button>
+			</div>
+			<div class="every-second-day-preset">
+				<button @click="chooseWorkload(2)" class="button to-right" :class="{'is-active': this.workLoad === 2}">Jedna lekcja na dwa dni</button>
+			</div>
+			<div class="every-three-days-preset">
+				<button @click="chooseWorkload(3)" class="button to-right" :class="{'is-active': this.workLoad === 3}">Jedna lekcja na trzy dni</button>
+			</div>
 		</div>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
@@ -51,29 +80,13 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Dni, w które moge pracować?
+					Zatwierdź plan
 				</div>
 			</div>
 		</div>
-		<div class="days">
-
-		</div>
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					Dostępne plany nauki
-				</div>
-			</div>
-		</div>
-		<div class="presets">
-			<div class="each-day-preset">
-				<button @click="presetLessonAvailabilities(1)" class="button to-right">Jedna lekcja na dzień</button>
-			</div>
-			<div class="every-second-day-preset">
-				<button @click="presetLessonAvailabilities(2)" class="button to-right">Jedna lekcja na dwa dni</button>
-			</div>
-			<div class="every-three-days-preset">
-				<button @click="presetLessonAvailabilities(3)" class="button to-right">Jedna lekcja na trzy dni</button>
+		<div class="accept-plan">
+			<div class="accept-plan-button">
+				<button @click="acceptPlan" class="button to-right is-info">Jedziesz szwagier!</button>
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
@@ -201,6 +214,7 @@ export default {
 				type: 'success',
 				timeout: 2000,
 			},
+			workLoad: 0,
 			alertError: {
 				text: this.$t('user.lessonsAvailabilities.alertError'),
 				type: 'error',
@@ -223,24 +237,17 @@ export default {
 			'getCompleteLessons',
 		]),
 		inProgressLessonsLength() {
-			// tutaj wykorzystac filter + includes
-
 			return Object.keys(this.getRequiredLessons).filter(requiredQuestion => {
 				console.log(requiredQuestion);
 				console.log(this.completedLessons);
 				return !this.completedLessons.includes(Number(requiredQuestion))
 			}).length
-			// let completedLessonsIds = this.completedLessons.forEach(completedLesson => {
-			// 	console.log(completeLesson);
-			// })
-
 		},
 		minimumEndDate() {
-			return moment(new Date()).add(this.inProgressLessonsLength, 'days').toDate()
+			return moment(new Date()).add(this.inProgressLessonsLength * this.workLoad, 'days').toDate()
 		},
 		completedLessons() {
 			return this.getCompleteLessons(1).map(lesson => lesson.id)
-			// return this.getCompleteLessons(1)
 		},
 		startDateConfig() {
 			return merge(this.defaultDateConfig(), {
@@ -275,8 +282,10 @@ export default {
 		...mapActions('course', ['setLessonAvailabilityStatus']),
 		...mapActions(['toggleOverlay']),
 		isScopeActive(scope) {
-			// console.log(this.activeScopes.includes(scope), scope);
 			return this.activeScopes[1] === scope
+		},
+		chooseWorkload(daysPerLesson) {
+			this.workLoad = daysPerLesson
 		},
 		defaultDateConfig() {
 			return {
@@ -308,10 +317,10 @@ export default {
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
 		},
-		presetLessonAvailabilities(workdays) {
+		acceptPlan() {
 			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
 				user_id: this.currentUserId,
-				workdays: workdays,
+				workdays: this.workLoad,
 				start_date: this.startDate,
 				end_date: this.endDate,
 			})

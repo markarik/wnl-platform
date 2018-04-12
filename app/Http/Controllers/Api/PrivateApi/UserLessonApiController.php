@@ -59,7 +59,6 @@ class UserLessonApiController extends ApiController
 		// echo($startDate).PHP_EOL;
 		// echo($endDate).PHP_EOL;
 		$daysLeft = $startDate->diffInDays($endDate);
-		dd($daysLeft);
 		$sortedLessons = $user->lessonsAvailability()
 			->orderBy('group_id')
 			->orderBy('order_number')
@@ -76,6 +75,8 @@ class UserLessonApiController extends ApiController
 		$lessons = $sortedLessons->filter(function($sortedLesson) use ($completeLessons) {
 			return !in_array($sortedLesson->id, $completeLessons);
 		});
+
+		// dd($lessons);
 
 		UserLessonApiController::insertPlan($lessons, $workdays);
 	}

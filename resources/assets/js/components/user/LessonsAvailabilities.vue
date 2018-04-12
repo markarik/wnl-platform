@@ -216,9 +216,32 @@ export default {
 		...mapGetters('course', [
 			'name',
 			'groups',
-			'getLessons',
+			'getRequiredLessons',
 			'structure',
 		]),
+		...mapGetters('progress', [
+			'getCompleteLessons',
+		]),
+		inProgressLessonsLength() {
+			// tutaj wykorzystac filter + includes
+
+			return Object.keys(this.getRequiredLessons).filter(requiredQuestion => {
+				console.log(requiredQuestion);
+				console.log(this.completedLessons);
+				return !this.completedLessons.includes(Number(requiredQuestion))
+			}).length
+			// let completedLessonsIds = this.completedLessons.forEach(completedLesson => {
+			// 	console.log(completeLesson);
+			// })
+
+		},
+		minimumEndDate() {
+			return moment(new Date()).add(this.inProgressLessonsLength, 'days').toDate()
+		},
+		completedLessons() {
+			return this.getCompleteLessons(1).map(lesson => lesson.id)
+			// return this.getCompleteLessons(1)
+		},
 		startDateConfig() {
 			return merge(this.defaultDateConfig(), {
 				minDate: 'today',
@@ -226,7 +249,7 @@ export default {
 		},
 		endDateConfig() {
 			return merge(this.defaultDateConfig(), {
-				minDate: this.startDate,
+				minDate: this.minimumEndDate,
 			})
 		},
 		groupsWithLessons() {
@@ -324,6 +347,6 @@ export default {
 				this.addAutoDismissableAlert(this.alertError)
 			})
 		}
-	},
+	}
 }
 </script>

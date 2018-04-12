@@ -42,6 +42,10 @@ const getters = {
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
 	getLessons: state => state.structure[resource('lessons')] || {},
+	getRequiredLessons: (state, getters, rootState, rootGetters) => {
+		return Object.values(getters.getLessons)
+			.filter(lesson => lesson.is_required);
+	},
 	userLessons: (state, getters, rootState, rootGetters) => {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.isAccessible);

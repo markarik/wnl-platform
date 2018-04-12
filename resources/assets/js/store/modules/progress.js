@@ -76,7 +76,7 @@ const getters = {
 			}
 		}
 		return lessons
-	}
+	},
 }
 
 // Mutations

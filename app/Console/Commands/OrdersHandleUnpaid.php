@@ -87,7 +87,7 @@ class OrdersHandleUnpaid extends Command
 			$reminder = $order->paymentReminders->last();
 
 			if ($now->diffInWeekdays($reminder->created_at) >= 2) {
-				$this->mail($order, 'canceled');
+				if ($this->mailDebug) $this->mail($order, 'canceled');
 				$order->cancel();
 			}
 		}

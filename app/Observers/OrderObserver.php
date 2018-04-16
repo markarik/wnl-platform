@@ -79,6 +79,10 @@ class OrderObserver
 			$this->dispatch(new OrderPaid($order));
 		}
 
+		if ($order->method === 'instalments') {
+			$this->generatePaymentSchedule($order);
+		}
+
 		$this->notify(new OrderCreated($order));
 	}
 
@@ -87,6 +91,31 @@ class OrderObserver
 		\Log::notice('Order coupon changed.');
 		if ($order->studyBuddy) {
 			$order->studyBuddy->delete();
+		}
+	}
+
+	protected function generatePaymentSchedule($order)
+	{
+		$toDistribute = $order->total_with_coupon;
+
+		foreach ($order->product->instalments as $instalment) {
+			$num = $instalment->order_number;
+
+			if ($instalment->value_type === 'percentage') {
+				$amount = $instalment->value * $toDistribute / 100;
+			} else {
+				$amount = $instalment->value;
+			}
+
+			$toDistribute -= $amount;
+
+			$order->orderInstalments()->create([
+				'due_date'     => $instalment->getDueDate($order),
+				'paid'         => 0,
+				'amount'       => $amount,
+				'paid_amount'  => 0,
+				'order_number' => $num,
+			]);
 		}
 	}
 }

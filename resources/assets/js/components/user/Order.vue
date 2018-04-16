@@ -349,10 +349,10 @@
 					type: 'error',
 					confirmButtonClass: 'button is-danger',
 					reverseButtons: true
-				})).then(() => {
-					axios.get(getApiUrl(`orders/${this.order.id}/.cancel`))
-						.then(response => this.order = response.data)
-				}).catch(error => {
+				}))
+				.then(() => axios.get(getApiUrl(`orders/${this.order.id}/.cancel`)))
+				.then(response => this.order = response.data)
+				.catch(error => {
 					if (error !== 'cancel') {
 						$wnl.logger.capture(error)
 					}

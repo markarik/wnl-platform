@@ -16,16 +16,26 @@
 			</a>
 		</div> -->
 
-		<!-- <div class="level wnl-screen-title">
+		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
 					Dni, w które moge pracować?
 				</div>
 			</div>
 		</div>
+		<div class="days-info">
+			<span>Wybierz minimum 5. dni</span>
+		</div>
 		<div class="days">
-
-		</div> -->
+			<div class="day">
+				<a v-for="day in days" class="panel-toggle" :class="{'is-active': isDayActive(day.dayNumber)}"  :key="day.dayNumber" @click="toggleDay(day.dayNumber)">
+					{{ day.dayName }}
+					<span class="icon is-small">
+						<i class="fa" :class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					</span>
+				</a>
+			</div>
+		</div>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -42,6 +52,9 @@
 			</div>
 			<div class="every-three-days-preset">
 				<button @click="chooseWorkload(3)" class="button to-right" :class="{'is-active': this.workLoad === 3}">Jedna lekcja na trzy dni</button>
+			</div>
+			<div class="every-three-days-preset">
+				<button @click="chooseWorkload(0)" class="button to-right" :class="{'is-active': this.workLoad === 0}">Otwórz wszystkie lekcje</button>
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
@@ -124,7 +137,6 @@
 										@onChange="(payload) => onStartDateChange(payload, subitem.id)"
 									/>
 								</div>
-
 							</div>
 						</li>
 					</ul>
@@ -138,7 +150,17 @@
 	@import 'resources/assets/sass/variables'
 
 	.scrollable-main-container
+		.days-info
+			margin-bottom: $margin-small
+		.days
+			margin-bottom: $margin-big
+			.day
+				// padding: 15px
+				border: 10px
 		.presets
+			display: flex
+			justify-content: space-between
+			flex-wrap: wrap
 			margin-bottom: $margin-big
 
 		.groups
@@ -220,9 +242,20 @@ export default {
 				type: 'error',
 				timeout: 2000,
 			},
+			workDaysAlert: {
+				text: 'Wybierz co najmniej 5 dni pracy',
+				type: 'error',
+				timeout: 2000,
+			},
+			endDateAlert: {
+				text: 'Wybierz datę końcową',
+				type: 'error',
+				timeout: 2000,
+			},
 			activeScopes: ['thisExam', 'nextExam'],
 			startDate: new Date(),
-			endDate: null,
+			endDate: this.computedEndDate,
+			workDays: [],
 		}
 	},
 	computed: {
@@ -238,13 +271,18 @@ export default {
 		]),
 		inProgressLessonsLength() {
 			return Object.keys(this.getRequiredLessons).filter(requiredQuestion => {
-				console.log(requiredQuestion);
-				console.log(this.completedLessons);
 				return !this.completedLessons.includes(Number(requiredQuestion))
 			}).length
 		},
+		computedEndDate() {
+			if (this.workLoad === 0) {
+				return this.endDate = this.startDate
+			} else {
+				return this.endDate
+			}
+		},
 		minimumEndDate() {
-			return moment(new Date()).add(this.inProgressLessonsLength * this.workLoad, 'days').toDate()
+			return moment(this.startDate).add(this.inProgressLessonsLength * this.workLoad, 'days').toDate()
 		},
 		completedLessons() {
 			return this.getCompleteLessons(1).map(lesson => lesson.id)
@@ -275,6 +313,39 @@ export default {
 				thisExam: 'Na ten LEK',
 				nextExam: 'Na następny LEK',
 			}
+		},
+		days() {
+			let days = [
+				{
+					dayName: 'Ponedziałek',
+					dayNumber: 1
+				},
+				{
+					dayName: 'Wtorek',
+					dayNumber: 2
+				},
+				{
+					dayName: 'Środa',
+					dayNumber: 3
+				},
+				{
+					dayName: 'Czwartek',
+					dayNumber: 4
+				},
+				{
+					dayName: 'Piątek',
+					dayNumber: 5
+				},
+				{
+					dayName: 'Sobota',
+					dayNumber: 6
+				},
+				{
+					dayName: 'Niedziela',
+					dayNumber: 7
+				},
+			]
+			return days
 		}
 	},
 	methods: {
@@ -284,8 +355,8 @@ export default {
 		isScopeActive(scope) {
 			return this.activeScopes[1] === scope
 		},
-		chooseWorkload(daysPerLesson) {
-			this.workLoad = daysPerLesson
+		chooseWorkload(workLoad) {
+			this.workLoad = workLoad
 		},
 		defaultDateConfig() {
 			return {
@@ -314,13 +385,41 @@ export default {
 				}
 			}
 		},
+		isDayActive(dayNumber) {
+			let index = this.workDays.indexOf(dayNumber)
+			if (index === -1) {
+				return false
+			} else {
+				return true
+			}
+		},
+		toggleDay(dayNumber) {
+			// console.log(dayNumber, 'dayNumber');
+			// this.workDays.push(dayNumber)
+			// console.log(this.workDays, 'workdays');
+
+			let index = this.workDays.indexOf(dayNumber)
+			if (index === -1) {
+				return this.workDays.push(dayNumber)
+			} else {
+				return this.workDays.splice(index, 1)
+			}
+		},
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
+			console.log(this.workLoad !== 0 && this.workDays.length < 5);
+			if (this.workLoad !== 0 && this.workDays.length < 5) {
+				this.addAutoDismissableAlert(this.workDaysAlert)
+			}
+			if (this.endDate === null) {
+				this.addAutoDismissableAlert(this.endDateAlert)
+			}
 			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
 				user_id: this.currentUserId,
-				workdays: this.workLoad,
+				work_load: this.workLoad,
+				work_days: this.workDays,
 				start_date: this.startDate,
 				end_date: this.endDate,
 			})

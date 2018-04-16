@@ -2,22 +2,33 @@
 	<div class="splash-screen scrollable-main-container">
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<div class="splash-screen-countdown" v-if="$upcomingEditionParticipant.isAllowed('access')">
-			<p class="title is-4">Odliczamy dni do początku kursu!</p>
+			<p class="title is-4">Najbliższa edycja kursu startuje za:</p>
 			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
+			<p class="info">
+				Jeśli chcesz zadeklarować chęć wcześniejszej nauki (od 15 maja) i poprosić o wcześniejszą wysyłkę materiałów - <a href="https://goo.gl/forms/wvzKZbIrpWqqbyYB2" target="_blank">wypełnij ankietę</a> do 25 kwietnia.
+			</p>
+			<p class="info">
+				Twoje zamówienia znajdziesz w zakładce - <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.
+			</p>
 		</div>
 		<div class="has-text-centered" v-else>
-			<p class="title is-4">Kurs "Więcej niż LEK" oficjalnie wystartował! </p>
-			<p>Widzisz ten ekran, ponieważ nie posiadasz dostępu do obecnej edycji.<br>
+			<p class="title is-4">Dziękujemy za wspólną naukę!</p>
+			<p>Widzisz ten ekran, ponieważ nie posiadasz już dostępu do kursu. 🙂<br>
 			W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
-				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.</p>
+				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.
+			</p>
+			<p class="margin vertical">
+				<a href="http://wiecejnizlek.pl/zapisy" class="button is-primary is-outlined">
+					Sprawdź zapisy na kolejną edycję
+				</a>
+			</p>
 		</div>
-		<a href="http://demo.wiecejnizlek.pl" class="button is-primary is-outlined">
-			Zobacz wersję demonstracyjną platformy
-		</a>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.splash-screen
 		align-items: center
 		display: flex
@@ -33,13 +44,16 @@
 		padding: 0 20px
 
 	.splash-screen-countdown
-		font-size: 4em
-		font-weight: 900
-		line-height: 2em
+		font-size: $font-size-plus-7
+		font-weight: $font-weight-black
+		line-height: $line-height-plus
 		text-align: center
 
-	.button
-		display: block
+		.info
+			font-size: $font-size-base
+			font-weight: $font-weight-regular
+			line-height: $line-height-base
+			margin: $margin-base
 </style>
 
 <script>

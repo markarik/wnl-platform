@@ -3,6 +3,7 @@
 use App\Http\Requests\Payment\UseCoupon;
 use App\Jobs\OrderStudyBuddy;
 use App\Models\Coupon;
+use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
@@ -88,5 +89,22 @@ class OrdersApiController extends ApiController
 		}
 
 		return $errors;
+	}
+
+	public function cancel($id)
+	{
+		$order = Order::find($id);
+
+		if (!$order) {
+			return $this->respondNotFound();
+		}
+
+		if (!\Auth::user()->can('cancel', $order)) {
+			return $this->respondForbidden();
+		}
+
+		$order->cancel();
+
+		return $this->respondOk($this->transform($order));
 	}
 }

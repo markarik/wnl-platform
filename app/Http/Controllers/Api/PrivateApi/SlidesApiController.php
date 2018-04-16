@@ -270,8 +270,8 @@ class SlidesApiController extends ApiController
 		}
 
 		if ($onlyAvailable) {
-			$usersLessons = $user->lessonsAvailability->filter(function($lesson) {
-				return $lesson->isAvailable();
+			$usersLessons = $user->lessonsAvailability->filter(function($lesson) use ($user) {
+				return $lesson->isAvailable($user);
 			})->pluck('id')->toArray();
 
 			$params['body']['query']['bool']['must'] = [

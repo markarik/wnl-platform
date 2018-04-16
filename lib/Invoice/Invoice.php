@@ -175,14 +175,14 @@ class Invoice
 
 	public function advance(Order $order, $invoice = null)
 	{
-		$previousAdvances = collect();
+		$builder = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME);
+		if ($invoice) $builder->where('id', '<', $invoice->id);
+		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
 		if (!$invoice) {
-			$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
-
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
 				'series' => self::ADVANCE_SERIES_NAME,
@@ -373,6 +373,7 @@ class Invoice
 	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference)
 	{
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
+		$previousCorrectives = $order->invoices()->where('series', self::CORRECTIVE_SERIES_NAME)->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
 		$vatString = $this->getVatString($vatValue);
@@ -417,8 +418,8 @@ class Invoice
 				'amount'       => 1,
 			],
 		];
-		$totalPrice = $corrected->amount;
-		$totalCorrected = $corrected->amount + $difference;
+		$totalPrice = $corrected->amount + $previousCorrectives->sum('amount');
+		$totalCorrected = $totalPrice + $difference;
 
 		if ($coupon = $order->coupon) {
 			$data['coupon'] = [

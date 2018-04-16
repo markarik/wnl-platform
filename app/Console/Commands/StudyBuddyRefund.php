@@ -85,7 +85,7 @@ class StudyBuddyRefund extends Command
 
 		$recentInvoice = $order
 			->invoices()
-			->where('series', Invoice::ADVANCE_SERIES_NAME)
+			->whereIn('series', [Invoice::ADVANCE_SERIES_NAME, Invoice::VAT_SERIES_NAME])
 			->get()
 			->last();
 		$reason = 'Zniżka przydzielona po dokonaniu zapłaty (Study Buddy).';

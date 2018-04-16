@@ -108,7 +108,7 @@ class Order extends Model
 		$nextPayment = null;
 		$now = Carbon::now();
 		$paymentDates = [
-			Carbon::createFromDate(2018, 05, 22),
+			$this->created_at->addDays(7),
 			Carbon::createFromDate(2018, 06, 20),
 			Carbon::createFromDate(2018, 07, 20),
 		];

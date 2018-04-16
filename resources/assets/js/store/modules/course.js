@@ -11,7 +11,6 @@ function getCourseApiUrl(courseId, userId) {
 		`${resource('editions')}/${courseId}
 		?include=groups.lessons.screens.sections.subsections,
 		course.groups.lessons.screens.sections.subsections,
-		course.groups.lessons.userAvailability,
 		course.groups.lessons.screens.tags
 		&user=current`
 	)
@@ -190,23 +189,15 @@ const actions = {
 			}, reason => {
 				commit(types.COURSE_READY)
 				$wnl.logger.error(reason)
-				return reject()
-			}).catch(reject)
+				return reject(reason)
+			})
 		})
 	},
 	setStructure({commit, rootGetters}, courseId = 1) {
-		return new Promise((resolve, reject) => {
-			axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
-				.then(response => {
-					commit(types.SET_STRUCTURE, response.data)
-					resolve()
-				})
-				.catch(exception => {
-						$wnl.logger.capture(exception)
-						reject()
-					}
-				)
-		})
+		return axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
+			.then(response => {
+				commit(types.SET_STRUCTURE, response.data)
+			})
 	},
 	setLessonAvailabilityStatus({commit}, payload) {
 		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload)

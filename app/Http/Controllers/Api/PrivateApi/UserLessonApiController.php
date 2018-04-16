@@ -106,13 +106,17 @@ class UserLessonApiController extends ApiController
 			} else {
 				$startDateVariable = $lessonStartDate->addHours($workLoad * 24);
 				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
-				$isStartDateVariableAvilable = !in_array($dayOfWeekIso, $workDays);
+				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
 
 				if ($isStartDateVariableAvilable) {
-					$startDateVariable->addDays(1);
+					$queriedLesson->update(['start_date' => $startDateVariable]);
+				} else {
+					foreach ($workDays as $workDay) {
+						if ($workDay === $dayOfWeekIso) {
+							
+						}
+					}
 				}
-
-				$queriedLesson->update(['start_date' => $startDateVariable]);
 			}
 		}
 	}

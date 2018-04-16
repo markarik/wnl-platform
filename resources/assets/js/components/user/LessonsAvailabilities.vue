@@ -19,7 +19,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Dni, w które moge pracować?
+					1. Dni, w które moge pracować?
 				</div>
 			</div>
 		</div>
@@ -39,7 +39,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Dostępne plany nauki
+					2. Dostępne plany nauki
 				</div>
 			</div>
 		</div>
@@ -60,7 +60,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Ile mam czasu?
+					3. Ile mam czasu?
 				</div>
 			</div>
 		</div>
@@ -93,7 +93,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Zatwierdź plan
+					4. Zatwierdź plan!
 				</div>
 			</div>
 		</div>
@@ -409,7 +409,6 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
-			console.log(this.workLoad !== 0 && this.workDays.length < 5);
 			if (this.workLoad !== 0 && this.workDays.length < 5) {
 				this.addAutoDismissableAlert(this.workDaysAlert)
 			}

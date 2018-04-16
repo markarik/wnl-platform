@@ -50,7 +50,8 @@ class UserLessonApiController extends ApiController
 		$userId = $request->userId;
 		$user = User::find($userId);
 		$profileId = $user->profile->id;
-		$workLoad = $request->workdays;
+		$workLoad = $request->work_load;
+		$workDays= $request->work_days;
 		$startDate = Carbon::parse($request->start_date);
 		$endDate = Carbon::parse($request->end_date);
 		$subscriptionDateTimestamp = $user->getSubscriptionDatesAttribute();
@@ -61,16 +62,15 @@ class UserLessonApiController extends ApiController
 			->orderBy('order_number')
 			->get();
 
-		// echo($startDate).PHP_EOL;
-		// echo($endDate).PHP_EOL;
+		// dump($workLoad).PHP_EOL;
 		// echo($workLoad).PHP_EOL;
 		// echo($userId).PHP_EOL;
 		// echo($daysLeft).PHP_EOL;
 
-		UserLessonApiController::insertPlan($sortedLessons, $workLoad, $profileId);
+		UserLessonApiController::insertPlan($sortedLessons, $profileId, $workDays, $workLoad);
 	}
 
-	static function insertPlan($sortedLessons, $workLoad, $profileId)
+	static function insertPlan($sortedLessons, $profileId, $workDays, $workLoad)
 	{
 		$userCourseProgress = UserCourseProgress::where('user_id', $profileId);
 		$completeLessons = (clone $userCourseProgress)
@@ -97,7 +97,6 @@ class UserLessonApiController extends ApiController
 		}
 
 		foreach ($sortedInProgressLessons as $lesson) {
-
 			$lessonId = $lesson->id;
 			$queriedLesson = DB::table('user_lesson')->where('lesson_id', $lessonId);
 			$groupId = $lesson->group_id;
@@ -106,9 +105,11 @@ class UserLessonApiController extends ApiController
 				$queriedLesson->update(['start_date' => Carbon::now()]);
 			} else {
 				$startDateVariable = $lessonStartDate->addHours($workLoad * 24);
+				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
+				$isStartDateVariableAvilable = !in_array($dayOfWeekIso, $workDays);
 
-				if ($startDateVariable->isWeekend()) {
-					$startDateVariable->next(Carbon::MONDAY);
+				if ($isStartDateVariableAvilable) {
+					$startDateVariable->addDays(1);
 				}
 
 				$queriedLesson->update(['start_date' => $startDateVariable]);

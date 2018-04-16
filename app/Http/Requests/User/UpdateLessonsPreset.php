@@ -21,9 +21,10 @@ class UpdateLessonsPreset extends FormRequest
 	{
 		return [
 			'user_id' => 'integer|required',
-			'workdays' => 'numeric|required',
+			'work_load' => 'numeric|required',
 			'start_date' => 'date|required',
 			'end_date' => 'date|required',
+			'work_days' => 'array',
 		];
 	}
 }

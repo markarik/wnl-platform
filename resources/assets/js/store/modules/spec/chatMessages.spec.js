@@ -1,7 +1,7 @@
 import chai from 'chai'
-import chatMessagesModule from './chatMessages'
-import * as types from '../mutations-types'
-import {testAction} from '../../tests/helpers'
+import chatMessagesModule from 'js/store/modules/chatMessages'
+import * as types from 'js/store/mutations-types'
+import {testAction} from 'js/tests/helpers'
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 

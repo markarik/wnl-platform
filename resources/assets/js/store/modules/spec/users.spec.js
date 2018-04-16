@@ -1,7 +1,7 @@
 import {expect} from 'chai'
-import {mutations, actions} from './users'
-import * as types from '../mutations-types'
-import {testAction} from '../../tests/helpers'
+import {mutations, actions} from 'js/store/modules/users'
+import * as types from 'js/store/mutations-types'
+import {testAction} from 'js/tests/helpers'
 
 const getInitialState = () => {
 	return {}

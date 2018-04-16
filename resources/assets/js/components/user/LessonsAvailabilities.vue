@@ -282,7 +282,13 @@ export default {
 			}
 		},
 		minimumEndDate() {
-			return moment(this.startDate).add(this.inProgressLessonsLength * this.workLoad, 'days').toDate()
+				if (this.workDays.length > 4) {
+					// let multiplicatedLessons = this.inProgressLessonsLength * this.workLoad
+					return moment(this.startDate).add(Math.ceil((7/this.workDays.length) * (this.inProgressLessonsLength * this.workLoad)), 'days').toDate()
+					// console.log((7/this.workDays.length));
+					// console.log((this.inProgressLessonsLength * this.workLoad));
+					// console.log(Math.ceil((7/this.workDays.length) * (this.inProgressLessonsLength * this.workLoad)));
+				}
 		},
 		completedLessons() {
 			return this.getCompleteLessons(1).map(lesson => lesson.id)
@@ -313,6 +319,11 @@ export default {
 				thisExam: 'Na ten LEK',
 				nextExam: 'Na następny LEK',
 			}
+		},
+		computedWorkDays() {
+			this.workDays.sort((a, b) => {
+				return a - b
+			})
 		},
 		days() {
 			let days = [

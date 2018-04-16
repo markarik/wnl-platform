@@ -28,6 +28,7 @@
 			:roomId="currentRoom.id"
 			:room="currentRoom"
 			:loaded="loaded"
+			:messagePayload="{users: [currentUser]}"
 			@messageSent="onMessageSent"
 			@foundMentions="processMentions"
 		></wnl-message-form>

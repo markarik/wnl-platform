@@ -4958,9 +4958,9 @@ postcss@^5.0.10, postcss@^5.0.21, postcss@^5.2.15, postcss@^5.2.16:
     source-map "^0.5.6"
     supports-color "^3.2.3"
 
-"postmate@github:bethinkpl/postmate":
+"postmate@github:bethinkpl/postmate#master":
   version "1.1.8"
-  resolved "https://codeload.github.com/bethinkpl/postmate/tar.gz/d4783c64aedbda14340f61c226657b300288ecdd"
+  resolved "https://codeload.github.com/bethinkpl/postmate/tar.gz/df793dbbec75ce742bf9b79bcdbea7a929f8cd1e"
 
 preserve@^0.2.0:
   version "0.2.0"
@@ -5706,9 +5706,9 @@ simple-breakpoints@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/simple-breakpoints/-/simple-breakpoints-1.1.0.tgz#2630ffa2a4d6a8cb8cf7c461b65ed68d79456c30"
 
-sinon-chai@^2.8.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-2.10.0.tgz#6ab3008bb8cae9929e744d766574b4cf35f34b5b"
+sinon-chai@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-3.0.0.tgz#d5cbd70fa71031edd96b528e0eed4038fcc99f29"
 
 sinon@^2.1.0:
   version "2.3.2"

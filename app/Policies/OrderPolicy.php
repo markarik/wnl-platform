@@ -21,6 +21,6 @@ class OrderPolicy
 
 	public function cancel(User $user, Order $order)
 	{
-		return $user->id === $order->user_id && !$order->canceled;
+		return $user->id === $order->user_id && !$order->paid;
 	}
 }

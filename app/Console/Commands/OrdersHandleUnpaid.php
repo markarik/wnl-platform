@@ -18,7 +18,7 @@ class OrdersHandleUnpaid extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'orders:handleUnpaid';
+	protected $signature = 'orders:handleUnpaid {--time-shift=} {--mail-debug}';
 
 	/**
 	 * The console command description.
@@ -31,6 +31,9 @@ class OrdersHandleUnpaid extends Command
 	 * Create a new command instance.
 	 *
 	 */
+
+	protected $mailDebug;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -43,7 +46,13 @@ class OrdersHandleUnpaid extends Command
 	 */
 	public function handle()
 	{
-		\Carbon\Carbon::setTestNow(\Carbon\Carbon::now()->addDays(5));
+		$this->mailDebug = $this->option('mail-debug');
+		$timeShift = $this->option('time-shift');
+
+		if ($timeShift) {
+			Carbon::setTestNow(Carbon::now()->addDays($timeShift));
+		}
+
 		$expired = Carbon::today()->subDays(30);
 
 		$this->handleTransfer();
@@ -122,13 +131,23 @@ class OrdersHandleUnpaid extends Command
 
 	protected function mail($order, $mail, $instalment = null)
 	{
+
 		if ($instalment) {
-//			Mail::to($order->user)->send(new $mail($order, $instalment));
-			$this->info("{$mail} -> order {$order->id} from {$order->created_at}, instalment num. {$instalment->order_number}");
-		} else {
-//			Mail::to($order->user)->send(new $mail($order));
-			$this->info("{$mail} -> order {$order->id} from {$order->created_at}");
+			if ($this->mailDebug) {
+				$this->info("{$mail} -> order {$order->id} from {$order->created_at}, instalment num. {$instalment->order_number}");
+			} else {
+				Mail::to($order->user)->send(new $mail($order, $instalment));
+			}
+			return;
 		}
+
+		if ($this->mailDebug) {
+			$this->info("{$mail} -> order {$order->id} from {$order->created_at}");
+		} else {
+			Mail::to($order->user)->send(new $mail($order));
+		}
+
+		return;
 	}
 
 	protected function shouldSuspend($order, $instalment)

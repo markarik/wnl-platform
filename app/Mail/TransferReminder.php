@@ -33,6 +33,7 @@ class TransferReminder extends Mailable implements ShouldQueue
     {
         return $this
 			->subject("Zbliża się termin płatności (Zamówienie {$this->order->id})")
-			->view('mail.payment-reminder-transfer');
+			->view('mail.payment-reminder-transfer')
+			->bcc('zamowienia@wiecejnizlek.pl');
     }
 }

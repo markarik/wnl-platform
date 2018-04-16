@@ -43,110 +43,103 @@ class OrdersHandleUnpaid extends Command
 	 */
 	public function handle()
 	{
-		$beforeDue = Carbon::today()->subDays(6);
-		$pastDue = Carbon::today()->subDays(9);
+		\Carbon\Carbon::setTestNow(\Carbon\Carbon::now()->addDays(5));
 		$expired = Carbon::today()->subDays(30);
 
-//		$this->handleTransfer($pastDue, $beforeDue);
-		$this->handleInstalments($pastDue, $beforeDue);
+		$this->handleTransfer();
+		$this->handleInstalments();
 
 		PaymentReminder::where('created_at', '<', $expired)->delete();
 
 		return;
 	}
 
-	protected function handleInstalments($pastDue, $beforeDue)
+	protected function handleTransfer()
 	{
-		\DB::listen(function ($query) {
-			$format = str_replace('?', '%s', $query->sql);
-			$queryFormatted = vsprintf($format, $query->bindings);
-			dump($queryFormatted, $query->time);
-		});
-		$remind = Order::whereHas('orderInstalments',
-			function ($query) use ($pastDue, $beforeDue) {
-				$query
-					->whereRaw('order_instalments.paid_amount < order_instalments.amount');
-//					->whereBetween('due_date', [$pastDue, $beforeDue]);
-			})
-			->where('method', 'instalments')
+		$now = Carbon::now();
+		$sixDaysAgo = Carbon::today()->subDays(6);
+
+		$orders = Order::with('paymentReminders')
+			->where('paid', 0)
+			->where('created_at', '<=', $sixDaysAgo)
+			->where('method', 'transfer')
 			->where('canceled', '!=', 1)
-			->limit(1)
 			->get();
 
-		foreach ($remind as $order) {
-			$instalment = $order->orderInstalments->where('left_amount', '>', 0)->first();
-			$reminders = $order->paymentReminders->where('instalment_number', $instalment->order_number);
+		if ($orders->count() === 0) return;
 
-			if ($reminders->count() === 0) {
-				Mail::to($order->user)->send(new InstalmentReminder($order, $instalment));
-				$order->paymentReminders()->create([
-					'instalment_number' => $instalment->order_number,
-				]);
+		foreach ($orders as $order) {
+			if ($order->paymentReminders->count() === 0) {
+				$this->mail($order, TransferReminder::class);
+				$order->paymentReminders()->create();
+				continue;
+			}
+
+			$reminder = $order->paymentReminders->last();
+
+			if ($now->diffInWeekdays($reminder->created_at) >= 2) {
+				$this->mail($order, 'canceled');
+				$order->cancel();
 			}
 		}
+	}
 
-		$suspend = Order::whereHas('orderInstalments',
-			function ($query) use ($pastDue, $beforeDue) {
+	protected function handleInstalments()
+	{
+		$beforeDue = Carbon::today()->subDays(1);
+		$orders = Order::whereHas('orderInstalments',
+			function ($query) use ($beforeDue) {
 				$query
-					->whereRaw('order_instalments.paid_amount < order_instalments.amount');
-//					->where('due_date', '<',$pastDue);
+					->whereRaw('order_instalments.paid_amount < order_instalments.amount')
+					->where('due_date', '<=', $beforeDue);
 			})
 			->where('method', 'instalments')
 			->where('canceled', '!=', 1)
-			->limit(1)
 			->get();
 
-		$now = Carbon::now();
-		foreach ($suspend as $order) {
-			$reminder = $order->paymentReminders->last();
+		foreach ($orders as $order) {
 			$instalment = $order->orderInstalments
 				->where('left_amount', '>', 0)
 				->first();
 
-			if ($now->diffInDays($reminder->created_at) >= 2 &&
-				$reminder->instalment_number === $instalment->order_number
-			) {
-				$order->user->suspend();
+			$reminders = $order->paymentReminders
+				->where('instalment_number', $instalment->order_number);
 
-				Mail::to($order->user)
-					->send(new AccountSuspendedUnpaidInstalment($order, $instalment));
+			if ($reminders->count() === 0) {
+				$this->mail($order, InstalmentReminder::class, $instalment);
+				$order->paymentReminders()->create([
+					'instalment_number' => $instalment->order_number,
+				]);
+				continue;
+			}
+
+			if ($this->shouldSuspend($order, $instalment)) {
+				$order->user->suspend();
+				$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
 			}
 		}
-
 	}
 
-	protected function handleTransfer($pastDue, $beforeDue)
+	protected function mail($order, $mail, $instalment = null)
 	{
-		$remind = Order::with('paymentReminders')
-			->where('paid', 0)
-			->whereBetween('created_at', [$pastDue, $beforeDue])
-			->where('method', 'transfer')
-			->where('canceled', '!=', 1)
-			->limit(1)
-			->get();
-
-		foreach ($remind as $order) {
-			if ($order->paymentReminders->count() === 0) {
-				Mail::to($order->user)->send(new TransferReminder($order));
-				$order->paymentReminders()->create();
-			}
+		if ($instalment) {
+//			Mail::to($order->user)->send(new $mail($order, $instalment));
+			$this->info("{$mail} -> order {$order->id} from {$order->created_at}, instalment num. {$instalment->order_number}");
+		} else {
+//			Mail::to($order->user)->send(new $mail($order));
+			$this->info("{$mail} -> order {$order->id} from {$order->created_at}");
 		}
+	}
 
-		$cancel = Order::with('paymentReminders')
-			->whereHas('paymentReminders')
-			->where('paid', 0)
-			->where('created_at', '<', $pastDue)
-			->where('method', 'transfer')
-			->where('canceled', '!=', 1)
-			->get();
-
+	protected function shouldSuspend($order, $instalment)
+	{
 		$now = Carbon::now();
-		foreach ($cancel as $order) {
-			$reminder = $order->paymentReminders->last();
+		$reminder = $order->paymentReminders->last();
 
-			if ($now->diffInDays($reminder->created_at) >= 2) {
-				$order->cancel();
-			}
-		}
+		return
+			!$order->user->suspended &&
+			$now->diffInWeekdays($reminder->created_at) >= 2 &&
+			$reminder->instalment_number === $instalment->order_number;
+
 	}
 }

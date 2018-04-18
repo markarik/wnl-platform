@@ -78,7 +78,7 @@ class Lesson extends Model
 
 	public function userLessonAccess($user) {
 		$key = sprintf(self::USER_LESSON_CACHE_KEY, self::CACHE_VERSION, $user->id);
-		return \Cache::tags("user-$this->id")->remember($key, 60 * 24, function() use ($user) {
+		return \Cache::tags("user-$user->id")->remember($key, 60 * 24, function() use ($user) {
 			return DB::table('user_lesson')
 				->where('lesson_id', $this->id)
 				->where('user_id', $user->id)

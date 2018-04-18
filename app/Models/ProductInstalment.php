@@ -20,12 +20,4 @@ class ProductInstalment extends Model
 
 		return $this->due_date ?? $order->created_at->addDays($this->due_days);
     }
-
-	public function getTheShit($order)
-	{
-		$toDistribute = $order->total_with_coupon;
-		$allPaid = $order->paid_amount >= $order->total_with_coupon;
-
-		if ($this->value_type === 'percentage');
-    }
 }

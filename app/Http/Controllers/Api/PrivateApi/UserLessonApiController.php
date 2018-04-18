@@ -52,6 +52,7 @@ class UserLessonApiController extends ApiController
 		$profileId = $user->profile->id;
 		$workLoad = $request->work_load;
 		$workDays= $request->work_days;
+		$daysQuantity = $request->days_quantity;
 		$startDate = Carbon::parse($request->start_date);
 		$endDate = Carbon::parse($request->end_date);
 		$subscriptionDateTimestamp = $user->getSubscriptionDatesAttribute();
@@ -62,15 +63,18 @@ class UserLessonApiController extends ApiController
 			->orderBy('order_number')
 			->get();
 
-		// dump($workLoad).PHP_EOL;
-		// echo($workLoad).PHP_EOL;
-		// echo($userId).PHP_EOL;
-		// echo($daysLeft).PHP_EOL;
+		if ($workLoad === 0) {
+			foreach ($sortedLessons as $lesson) {
+				$lessonId = $lesson->id;
+				DB::table('user_lesson')->where('lesson_id', $lessonId)->update(['start_date' => Carbon::now()]);
+			}
+		} else {
+			UserLessonApiController::insertPlan($sortedLessons, $profileId, $workDays, $workLoad, $daysQuantity);
+		}
 
-		UserLessonApiController::insertPlan($sortedLessons, $profileId, $workDays, $workLoad);
 	}
 
-	static function insertPlan($sortedLessons, $profileId, $workDays, $workLoad)
+	static function insertPlan($sortedLessons, $profileId, $workDays, $workLoad, $daysQuantity)
 	{
 		$userCourseProgress = UserCourseProgress::where('user_id', $profileId);
 		$completeLessons = (clone $userCourseProgress)
@@ -81,6 +85,7 @@ class UserLessonApiController extends ApiController
 			->pluck('lesson_id')
 			->toArray();
 
+
 		$sortedCompletedLessons = $sortedLessons->filter(function($sortedLesson) use ($completeLessons) {
 			return in_array($sortedLesson->id, $completeLessons);
 		});
@@ -88,6 +93,11 @@ class UserLessonApiController extends ApiController
 		$sortedInProgressLessons = $sortedLessons->filter(function($sortedLesson) use ($completeLessons) {
 			return !in_array($sortedLesson->id, $completeLessons);
 		});
+
+		$requiredInProgressLessons = $sortedInProgressLessons->filter(function($lesson) {
+			return $lesson->is_required === 1;
+		})->count();
+
 
 		$lessonStartDate = Carbon::now();
 
@@ -97,6 +107,8 @@ class UserLessonApiController extends ApiController
 		}
 
 		foreach ($sortedInProgressLessons as $lesson) {
+			$daysExcess = $daysQuantity%$requiredInProgressLessons;
+			dd($daysExcess);
 			$lessonId = $lesson->id;
 			$queriedLesson = DB::table('user_lesson')->where('lesson_id', $lessonId);
 			$groupId = $lesson->group_id;
@@ -111,11 +123,12 @@ class UserLessonApiController extends ApiController
 				if ($isStartDateVariableAvilable) {
 					$queriedLesson->update(['start_date' => $startDateVariable]);
 				} else {
-					foreach ($workDays as $workDay) {
-						if ($workDay === $dayOfWeekIso) {
-							
-						}
+					while (!$isStartDateVariableAvilable) {
+						$startDateVariable = $lessonStartDate->addDays(1);
+						$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
+						$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
 					}
+					$queriedLesson->update(['start_date' => $startDateVariable]);
 				}
 			}
 		}

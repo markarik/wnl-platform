@@ -283,11 +283,7 @@ export default {
 		},
 		minimumEndDate() {
 				if (this.workDays.length > 4) {
-					// let multiplicatedLessons = this.inProgressLessonsLength * this.workLoad
 					return moment(this.startDate).add(Math.ceil((7/this.workDays.length) * (this.inProgressLessonsLength * this.workLoad)), 'days').toDate()
-					// console.log((7/this.workDays.length));
-					// console.log((this.inProgressLessonsLength * this.workLoad));
-					// console.log(Math.ceil((7/this.workDays.length) * (this.inProgressLessonsLength * this.workLoad)));
 				}
 		},
 		completedLessons() {
@@ -357,6 +353,11 @@ export default {
 				},
 			]
 			return days
+		},
+		daysQuantity() {
+			let startDate = moment(this.startDate);
+			let endDate = moment(this.endDate);
+			return endDate.diff(startDate, 'days')
 		}
 	},
 	methods: {
@@ -405,10 +406,6 @@ export default {
 			}
 		},
 		toggleDay(dayNumber) {
-			// console.log(dayNumber, 'dayNumber');
-			// this.workDays.push(dayNumber)
-			// console.log(this.workDays, 'workdays');
-
 			let index = this.workDays.indexOf(dayNumber)
 			if (index === -1) {
 				return this.workDays.push(dayNumber)
@@ -426,12 +423,14 @@ export default {
 			if (this.endDate === null) {
 				this.addAutoDismissableAlert(this.endDateAlert)
 			}
+			if (this.inProgressLessonsLength)
 			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
 				user_id: this.currentUserId,
 				work_load: this.workLoad,
 				work_days: this.workDays,
 				start_date: this.startDate,
 				end_date: this.endDate,
+				days_quantity: this.daysQuantity,
 			})
 		},
 		isOpen(item) {

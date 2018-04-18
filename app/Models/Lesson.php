@@ -13,7 +13,7 @@ class Lesson extends Model
 
 	protected $fillable = ['name', 'group_id', 'is_required'];
 
-	const USER_LESSON_CACHE_KEY = '%s-%s-user-lesson-access';
+	const USER_LESSON_CACHE_KEY = '%s-%s-%s-user-lesson-access';
 	const CACHE_VERSION = 1;
 
 	public function screens()
@@ -77,7 +77,7 @@ class Lesson extends Model
 	}
 
 	public function userLessonAccess($user) {
-		$key = sprintf(self::USER_LESSON_CACHE_KEY, self::CACHE_VERSION, $user->id);
+		$key = sprintf(self::USER_LESSON_CACHE_KEY, self::CACHE_VERSION, $this->id, $user->id);
 		return \Cache::tags("user-$user->id")->remember($key, 60 * 24, function() use ($user) {
 			return DB::table('user_lesson')
 				->where('lesson_id', $this->id)

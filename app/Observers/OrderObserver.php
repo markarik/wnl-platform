@@ -22,7 +22,8 @@ class OrderObserver
 
 	public function updated(Order $order)
 	{
-		if ($order->isDirty(['paid_amount']) && $order->paid_amount > $order->getOriginal('paid_amount')) {
+		$settlement = $order->paid_amount - $order->getOriginal('paid_amount');
+		if ($order->isDirty(['paid_amount']) && $settlement > 0) {
 			\Log::notice('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));
 
@@ -80,7 +81,7 @@ class OrderObserver
 		}
 
 		if ($order->method === 'instalments') {
-			$this->generatePaymentSchedule($order);
+			$order->generatePaymentSchedule();
 		}
 
 		$this->notify(new OrderCreated($order));
@@ -92,30 +93,9 @@ class OrderObserver
 		if ($order->studyBuddy) {
 			$order->studyBuddy->delete();
 		}
-	}
 
-	protected function generatePaymentSchedule($order)
-	{
-		$toDistribute = $order->total_with_coupon;
-
-		foreach ($order->product->instalments as $instalment) {
-			$num = $instalment->order_number;
-
-			if ($instalment->value_type === 'percentage') {
-				$amount = $instalment->value * $toDistribute / 100;
-			} else {
-				$amount = $instalment->value;
-			}
-
-			$toDistribute -= $amount;
-
-			$order->orderInstalments()->create([
-				'due_date'     => $instalment->getDueDate($order),
-				'paid'         => 0,
-				'amount'       => $amount,
-				'paid_amount'  => 0,
-				'order_number' => $num,
-			]);
+		if ($order->method === 'instalments') {
+			$order->generatePaymentSchedule();
 		}
 	}
 }

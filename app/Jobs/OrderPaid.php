@@ -42,6 +42,7 @@ class OrderPaid implements ShouldQueue
 		$this->handleCoupon();
 		$this->sendConfirmation();
 		$this->handleStudyBuddy();
+		$this->handleInstalments();
 
 		\Cache::tags("user-{$this->order->user->id}")->flush();
 	}
@@ -85,7 +86,8 @@ class OrderPaid implements ShouldQueue
 		return (new Invoice)->advance($order);
 	}
 
-	protected function handleUserSubscription() {
+	protected function handleUserSubscription()
+	{
 		$product = $this->order->product;
 		$user = $this->order->user;
 
@@ -96,7 +98,9 @@ class OrderPaid implements ShouldQueue
 		$subscriptionAccessStart = $user->subscription->access_start ?? null;
 		$subscriptionAccessEnd = $user->subscription->access_end ?? null;
 
-		$accessStart = $subscriptionAccessStart ? min([$subscriptionAccessStart, $product->access_start]) : $product->access_start;
+		$accessStart = $subscriptionAccessStart
+			? min([$subscriptionAccessStart, $product->access_start])
+			: $product->access_start;
 		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
 
 		$subscription = UserSubscription::updateOrCreate(
@@ -105,22 +109,35 @@ class OrderPaid implements ShouldQueue
 		);
 	}
 
-	protected function handleUserLessons() {
+	protected function handleUserLessons()
+	{
 		$lessons = $this->order->product->lessons;
 		$user = $this->order->user;
 
-		$lessonsWithStartDate = $lessons->map(function($item) use ($user) {
+		$lessonsWithStartDate = $lessons->map(function ($item) use ($user) {
 			if ($item->isAccessible($user)) {
 				return null;
 			}
 
 			return [
-				'lesson_id' => $item->id,
+				'lesson_id'  => $item->id,
 				'start_date' => $item->pivot->start_date,
-				'user_id' => $user->id
+				'user_id'    => $user->id,
 			];
 		})->filter()->toArray();
 
 		UserLesson::insert($lessonsWithStartDate);
+	}
+
+	protected function handleInstalments()
+	{
+		if ($this->method !== 'instalments') return;
+
+		$this->order->generatePaymentSchedule();
+
+		if ($this->order->user->suspended && !$this->order->is_overdue) {
+			$this->order->user->suspended = false;
+			$this->order->user->save();
+		}
 	}
 }

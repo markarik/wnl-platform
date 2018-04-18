@@ -153,6 +153,52 @@ class Order extends Model
 		];
 	}
 
+	public function generatePaymentSchedule()
+	{
+		$valueToDistribute = $this->total_with_coupon;
+		$paidToDistribute = $this->paid_amount;
+
+		foreach ($this->product->instalments as $instalment) {
+			$num = $instalment->order_number;
+			$amount = $instalment->value;
+
+			if ($instalment->value_type === 'percentage') {
+				$amount = $instalment->value * $valueToDistribute / 100;
+			}
+
+			$valueToDistribute -= $amount;
+
+			if ($paidToDistribute >= $amount) {
+				$paidAmount = $amount;
+				$paidToDistribute -= $amount;
+			} else {
+				$paidAmount = $paidToDistribute;
+				$paidToDistribute = 0;
+			}
+
+			$this->orderInstalments()->updateOrCreate(
+				['order_number' => $num],
+				['due_date'     => $instalment->getDueDate($this),
+				 'amount'       => $amount,
+				 'paid_amount'  => $paidAmount,
+				 'order_number' => $num,]
+			);
+		}
+	}
+
+	public function getIsOverdueAttribute()
+	{
+		$now = Carbon::now();
+		if ($this->method->instalments) {
+			return (bool) $this->orderInstalments()
+				->whereRaw('paid_amount < amount')
+				->where('due_date', '<', $now)
+				->get();
+		}
+
+		return $this->created_at->diffInDays($now) > 7;
+	}
+
 	public function cancel()
 	{
 		$this->canceled = true;

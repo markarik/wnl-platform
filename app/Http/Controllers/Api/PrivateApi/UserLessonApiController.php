@@ -51,7 +51,8 @@ class UserLessonApiController extends ApiController
 		$user = User::find($userId);
 		$profileId = $user->profile->id;
 		$workLoad = $request->work_load;
-		$workDays= $request->work_days;
+		$workDays = $request->work_days;
+		$presetStartDate = Carbon::parse($request->preset_start_date);
 		$daysQuantity = $request->days_quantity;
 		$startDate = Carbon::parse($request->start_date);
 		$endDate = Carbon::parse($request->end_date);
@@ -63,18 +64,26 @@ class UserLessonApiController extends ApiController
 			->orderBy('order_number')
 			->get();
 
-		if ($workLoad === 0) {
-			foreach ($sortedLessons as $lesson) {
-				$lessonId = $lesson->id;
-				DB::table('user_lesson')->where('lesson_id', $lessonId)->update(['start_date' => Carbon::now()]);
+		if ($workLoad) {
+			if ($workLoad === 0) {
+				foreach ($sortedLessons as $lesson) {
+					$lessonId = $lesson->id;
+					DB::table('user_lesson')->where('lesson_id', $lessonId)->update(['start_date' => Carbon::now()]);
+				}
+			} else {
+				UserLessonApiController::insertPlan($sortedLessons, $profileId, $workDays, $workLoad, $presetStartDate);
 			}
 		} else {
-			UserLessonApiController::insertPlan($sortedLessons, $profileId, $workDays, $workLoad, $daysQuantity);
+			UserLessonApiController::calculatePlan($startDate, $endDate, $daysQuantity, $workDays);
 		}
-
 	}
 
-	static function insertPlan($sortedLessons, $profileId, $workDays, $workLoad, $daysQuantity)
+	static function calculatePlan()
+	{
+		echo('calculatePlan');
+	}
+
+	static function insertPlan($sortedLessons, $profileId, $workDays, $workLoad, $presetStartDate)
 	{
 		$userCourseProgress = UserCourseProgress::where('user_id', $profileId);
 		$completeLessons = (clone $userCourseProgress)
@@ -84,7 +93,6 @@ class UserLessonApiController extends ApiController
 			->get()
 			->pluck('lesson_id')
 			->toArray();
-
 
 		$sortedCompletedLessons = $sortedLessons->filter(function($sortedLesson) use ($completeLessons) {
 			return in_array($sortedLesson->id, $completeLessons);
@@ -98,17 +106,14 @@ class UserLessonApiController extends ApiController
 			return $lesson->is_required === 1;
 		})->count();
 
-
-		$lessonStartDate = Carbon::now();
-
 		foreach ($sortedCompletedLessons as $lesson) {
 			$lessonId = $lesson->id;
-			DB::table('user_lesson')->where('lesson_id', $lessonId)->update(['start_date' => $lessonStartDate]);
+			DB::table('user_lesson')->where('lesson_id', $lessonId)->update(['start_date' => $presetStartDate]);
 		}
 
 		foreach ($sortedInProgressLessons as $lesson) {
-			$daysExcess = $daysQuantity%$requiredInProgressLessons;
-			dd($daysExcess);
+			// $daysExcess = $daysQuantity%$requiredInProgressLessons;
+			// dd($daysExcess);
 			$lessonId = $lesson->id;
 			$queriedLesson = DB::table('user_lesson')->where('lesson_id', $lessonId);
 			$groupId = $lesson->group_id;
@@ -116,7 +121,7 @@ class UserLessonApiController extends ApiController
 			if ($groupId === 2 || $groupId === 3 || $groupId === 15) {
 				$queriedLesson->update(['start_date' => Carbon::now()]);
 			} else {
-				$startDateVariable = $lessonStartDate->addHours($workLoad * 24);
+				$startDateVariable = $presetStartDate->addHours($workLoad * 24);
 				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
 				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
 
@@ -124,7 +129,7 @@ class UserLessonApiController extends ApiController
 					$queriedLesson->update(['start_date' => $startDateVariable]);
 				} else {
 					while (!$isStartDateVariableAvilable) {
-						$startDateVariable = $lessonStartDate->addDays(1);
+						$startDateVariable = $presetStartDate->addDays(1);
 						$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
 						$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
 					}

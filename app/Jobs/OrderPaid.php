@@ -131,7 +131,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleInstalments()
 	{
-		if ($this->method !== 'instalments') return;
+		if ($this->order->method !== 'instalments') return;
 
 		$this->order->generatePaymentSchedule();
 

@@ -1,25 +1,9 @@
 <template>
 	<div class="scrollable-main-container">
-		<!-- <div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					Na co się uczę?
-				</div>
-			</div>
-		</div>
-		<div class="scopes-control">
-			<a v-for="name, scope in scopes" class="panel-toggle" :class="{'is-active': isScopeActive(scope)}"  :key="scope" @click="toggleScope(scope)">
-				{{name}}
-				<span class="icon is-small">
-					<i class="fa" :class="[isScopeActive(scope) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-				</span>
-			</a>
-		</div> -->
-
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					1. Dni, w które moge pracować?
+					1. Dni, w które mogżesz pracować?
 				</div>
 			</div>
 		</div>
@@ -43,57 +27,97 @@
 				</div>
 			</div>
 		</div>
-		<div class="presets">
-			<div class="each-day-preset">
-				<button @click="chooseWorkload(1)" class="button to-right" :class="{'is-active': this.workLoad === 1}">Jedna lekcja na dzień</button>
-			</div>
-			<div class="every-second-day-preset">
-				<button @click="chooseWorkload(2)" class="button to-right" :class="{'is-active': this.workLoad === 2}">Jedna lekcja na dwa dni</button>
-			</div>
-			<div class="every-three-days-preset">
-				<button @click="chooseWorkload(3)" class="button to-right" :class="{'is-active': this.workLoad === 3}">Jedna lekcja na trzy dni</button>
-			</div>
-			<div class="every-three-days-preset">
-				<button @click="chooseWorkload(0)" class="button to-right" :class="{'is-active': this.workLoad === 0}">Otwórz wszystkie lekcje</button>
-			</div>
+		<div class="presets-control">
+			<a v-for="name, preset in presets" class="panel-toggle" :class="{'is-active': isPresetActive(preset)}"  :key="preset" @click="togglePreset(preset)">
+				{{name}}
+				<span class="icon is-small">
+					<i class="fa" :class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+				</span>
+			</a>
 		</div>
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					3. Ile mam czasu?
+		<div class="presets-toggle" v-if="isPresetActive('daysPerLesson')">
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item">
+						Jaki nakład pracy?
+					</div>
+				</div>
+			</div>
+			<div class="presets">
+				<div class="each-day-preset">
+					<button @click="chooseWorkload(1)" class="button to-right" :class="{'is-active': this.workLoad === 1}">Jedna lekcja na dzień</button>
+				</div>
+				<div class="every-second-day-preset">
+					<button @click="chooseWorkload(2)" class="button to-right" :class="{'is-active': this.workLoad === 2}">Jedna lekcja na dwa dni</button>
+				</div>
+				<div class="every-three-days-preset">
+					<button @click="chooseWorkload(3)" class="button to-right" :class="{'is-active': this.workLoad === 3}">Jedna lekcja na trzy dni</button>
+				</div>
+				<div class="every-three-days-preset">
+					<button @click="chooseWorkload(0)" class="button to-right" :class="{'is-active': this.workLoad === 0}">Otwórz wszystkie lekcje</button>
+				</div>
+			</div>
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item">
+						Kiedy chcesz zacząć?
+					</div>
+				</div>
+			</div>
+			<div class="dates">
+				<div class="start-date-picker">
+					<label class="date-label" for="startDate">
+						{{$t('questions.plan.headings.startDate')}}
+						<span class="icon is-small">
+							<i class="fa fa-hourglass-1"></i>
+						</span>
+					</label>
+					<wnl-datepicker :withBorder="true" v-model="presetStartDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+					<p class="tip">
+						{{$t('questions.plan.tips.startDate')}}
+					</p>
 				</div>
 			</div>
 		</div>
-		<div class="dates columns">
-			<div class="column">
-				<label class="date-label" for="startDate">
-					{{$t('questions.plan.headings.startDate')}}
-					<span class="icon is-small">
-						<i class="fa fa-hourglass-1"></i>
-					</span>
-				</label>
-				<wnl-datepicker :withBorder="true" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
-				<p class="tip">
-					{{$t('questions.plan.tips.startDate')}}
-				</p>
+		<div class="" v-if="isPresetActive('dateToDate')">
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item">
+						Wybierz zakres dat, w których chcesz pracować a my dostosujemy do nich Twój plan lekcji?
+					</div>
+				</div>
 			</div>
-			<div class="column">
-				<label class="date-label" for="endDate">
-					{{$t('questions.plan.headings.endDate')}}
-					<span class="icon is-small">
-						<i class="fa fa-hourglass-3"></i>
-					</span>
-				</label>
-				<wnl-datepicker :withBorder="true" v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
-				<p class="tip">
-					{{$t('questions.plan.tips.endDate')}}
-				</p>
+			<div class="dates">
+				<div class="start-date-picker">
+					<label class="date-label" for="startDate">
+						{{$t('questions.plan.headings.startDate')}}
+						<span class="icon is-small">
+							<i class="fa fa-hourglass-1"></i>
+						</span>
+					</label>
+					<wnl-datepicker :withBorder="true" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+					<p class="tip">
+						{{$t('questions.plan.tips.startDate')}}
+					</p>
+				</div>
+				<div class="end-date-picker">
+					<label class="date-label" for="endDate">
+						{{$t('questions.plan.headings.endDate')}}
+						<span class="icon is-small">
+							<i class="fa fa-hourglass-1"></i>
+						</span>
+					</label>
+					<wnl-datepicker :withBorder="true" v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
+					<p class="tip">
+						{{$t('questions.plan.tips.endDate')}}
+					</p>
+				</div>
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					4. Zatwierdź plan!
+					3. Zatwierdź plan!
 				</div>
 			</div>
 		</div>
@@ -155,13 +179,15 @@
 		.days
 			margin-bottom: $margin-big
 			.day
-				// padding: 15px
 				border: 10px
-		.presets
-			display: flex
-			justify-content: space-between
-			flex-wrap: wrap
+
+		.presets-control
 			margin-bottom: $margin-big
+			.presets
+				display: flex
+				justify-content: space-between
+				flex-wrap: wrap
+				margin-bottom: $margin-big
 
 		.groups
 			.groups-list
@@ -236,7 +262,7 @@ export default {
 				type: 'success',
 				timeout: 2000,
 			},
-			workLoad: 0,
+			workLoad: null,
 			alertError: {
 				text: this.$t('user.lessonsAvailabilities.alertError'),
 				type: 'error',
@@ -252,7 +278,8 @@ export default {
 				type: 'error',
 				timeout: 2000,
 			},
-			activeScopes: ['thisExam', 'nextExam'],
+			activePresets: ['daysPerLesson', 'dateToDate'],
+			presetStartDate: new Date(),
 			startDate: new Date(),
 			endDate: this.computedEndDate,
 			workDays: [],
@@ -310,10 +337,10 @@ export default {
 				}
 			})
 		},
-		scopes() {
+		presets() {
 			return {
-				thisExam: 'Na ten LEK',
-				nextExam: 'Na następny LEK',
+				daysPerLesson: 'Ile dnia na lekcję?',
+				dateToDate: 'Od daty do daty',
 			}
 		},
 		computedWorkDays() {
@@ -364,8 +391,8 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setLessonAvailabilityStatus']),
 		...mapActions(['toggleOverlay']),
-		isScopeActive(scope) {
-			return this.activeScopes[1] === scope
+		isPresetActive(preset) {
+			return this.activePresets[0] === preset
 		},
 		chooseWorkload(workLoad) {
 			this.workLoad = workLoad
@@ -383,17 +410,17 @@ export default {
 		onStartDateChange(payload) {
 			if (isEmpty(payload)) this.startDate = null
 		},
-		toggleScope(scope) {
-			let index = this.activeScopes.indexOf(scope)
+		togglePreset(preset) {
+			let index = this.activePresets.indexOf(preset)
 
-			if (index > -1 && this.activeScopes.length > 1) {
-				this.activeScopes.splice(index, 1)
+			if (index > -1) {
+				this.activePresets.splice(index, 1)
 			} else if (index === -1) {
-				this.activeScopes.push(scope)
+				this.activePresets.push(preset)
 			} else {
-				let other = pull(Object.keys(this.scopes), scope)
+				let other = pull(Object.keys(this.presets), preset)
 				if (other.length > 0) {
-					this.activeScopes = [other[0]]
+					this.activePresets = [other[0]]
 				}
 			}
 		},
@@ -420,18 +447,26 @@ export default {
 			if (this.workLoad !== 0 && this.workDays.length < 5) {
 				this.addAutoDismissableAlert(this.workDaysAlert)
 			}
-			if (this.endDate === null) {
-				this.addAutoDismissableAlert(this.endDateAlert)
+
+
+			if (this.isPresetActive('daysPerLesson')) {
+				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+					user_id: this.currentUserId,
+					work_load: this.workLoad,
+					work_days: this.workDays,
+					preset_start_date: this.presetStartDate,
+				})
+			} else if (this.isPresetActive('dateToDate')) {
+				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+					user_id: this.currentUserId,
+					work_days: this.workDays,
+					start_date: this.startDate,
+					end_date: this.endDate,
+					days_quantity: this.daysQuantity,
+				})
 			}
-			if (this.inProgressLessonsLength)
-			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-				user_id: this.currentUserId,
-				work_load: this.workLoad,
-				work_days: this.workDays,
-				start_date: this.startDate,
-				end_date: this.endDate,
-				days_quantity: this.daysQuantity,
-			})
+			// if (this.inProgressLessonsLength)
+
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1

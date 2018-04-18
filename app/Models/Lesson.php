@@ -76,7 +76,7 @@ class Lesson extends Model
 		return null;
 	}
 
-	public function userLessonAccess($user) {
+	public function userLessonAccess(User $user) {
 		$key = sprintf(self::USER_LESSON_CACHE_KEY, self::CACHE_VERSION, $this->id, $user->id);
 		return \Cache::tags("user-$user->id")->remember($key, 60 * 24, function() use ($user) {
 			return DB::table('user_lesson')

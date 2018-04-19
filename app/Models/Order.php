@@ -193,7 +193,7 @@ class Order extends Model
 			return (bool) $this->orderInstalments()
 				->whereRaw('paid_amount < amount')
 				->where('due_date', '<', $now)
-				->get();
+				->first();
 		}
 
 		return $this->created_at->diffInDays($now) > 7;

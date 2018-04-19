@@ -21,7 +21,7 @@ class InstalmentsSeeder extends Seeder
 				'value_type' => 'percentage',
 				'value' => 50,
 				'due_days' => 7,
-				'due_date' => '2018-05-22',
+				'due_date' => null,
 				'order_number' => 1,
 				'created_at' => $now,
 				'updated_at' => $now,

@@ -47,9 +47,11 @@ class StudyBuddyCancel extends Command
 			});
 		}
 
-		$orders->whereHas('studyBuddy');
+		$orders = $orders->whereHas('studyBuddy', function($query){
+			$query->where('status', '<>', 'expired');
+		})->get();
 
-		foreach ($orders->get() as $order) {
+		foreach ($orders as $order) {
 			$order->studyBuddy->status = 'expired';
 			$order->studyBuddy->save();
 			$order->studyBuddy->coupon->times_usable = 0;

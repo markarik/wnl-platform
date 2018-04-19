@@ -3,19 +3,21 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					1. Dni, w które mogżesz pracować?
+					{{ $t('lessonsAvailability.sections.workDays') }}
 				</div>
 			</div>
 		</div>
-		<div class="days-info">
-			<span>Wybierz minimum 5. dni</span>
-		</div>
 		<div class="days">
 			<div class="day">
-				<a v-for="day in days" class="panel-toggle" :class="{'is-active': isDayActive(day.dayNumber)}"  :key="day.dayNumber" @click="toggleDay(day.dayNumber)">
-					{{ day.dayName }}
+				<a v-for="day in days"
+					class="panel-toggle"
+					:class="{'is-active': isDayActive(day.dayNumber)}"
+					:key="day.dayNumber"
+					@click="toggleDay(day.dayNumber)"
+				>{{ day.dayName }}
 					<span class="icon is-small">
-						<i class="fa" :class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+						<i class="fa"
+							:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 					</span>
 				</a>
 			</div>
@@ -23,15 +25,20 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					2. Dostępne plany nauki
+					{{ $t('lessonsAvailability.sections.availablePresets') }}
 				</div>
 			</div>
 		</div>
 		<div class="presets-control">
-			<a v-for="name, preset in presets" class="panel-toggle" :class="{'is-active': isPresetActive(preset)}"  :key="preset" @click="togglePreset(preset)">
-				{{name}}
+			<a v-for="name, preset in presets"
+				class="panel-toggle"
+				:class="{'is-active': isPresetActive(preset)}"
+				:key="preset"
+				@click="togglePreset(preset)"
+				>{{name}}
 				<span class="icon is-small">
-					<i class="fa" :class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					<i class="fa"
+						:class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 				</span>
 			</a>
 		</div>
@@ -39,28 +46,48 @@
 			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item">
-						Jaki nakład pracy?
+						{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
 					</div>
 				</div>
 			</div>
 			<div class="presets">
 				<div class="each-day-preset">
-					<button @click="chooseWorkload(1)" class="button to-right" :class="{'is-active': this.workLoad === 1}">Jedna lekcja na dzień</button>
+					<button
+						@click="chooseWorkload(1)"
+						class="button to-right"
+						:class="{'is-active': this.workLoad === 1}"
+						>{{ $t('lessonsAvailability.buttons.oneDayPerLesson') }}
+					</button>
 				</div>
 				<div class="every-second-day-preset">
-					<button @click="chooseWorkload(2)" class="button to-right" :class="{'is-active': this.workLoad === 2}">Jedna lekcja na dwa dni</button>
+					<button
+						@click="chooseWorkload(2)"
+						class="button to-right"
+						:class="{'is-active': this.workLoad === 2}"
+						>{{ $t('lessonsAvailability.buttons.twoDaysPerLesson') }}
+					</button>
 				</div>
 				<div class="every-three-days-preset">
-					<button @click="chooseWorkload(3)" class="button to-right" :class="{'is-active': this.workLoad === 3}">Jedna lekcja na trzy dni</button>
+					<button
+						@click="chooseWorkload(3)"
+						class="button to-right"
+						:class="{'is-active': this.workLoad === 3}"
+						>{{ $t('lessonsAvailability.buttons.threeDaysPerLesson') }}
+					</button>
 				</div>
 				<div class="every-three-days-preset">
-					<button @click="chooseWorkload(0)" class="button to-right" :class="{'is-active': this.workLoad === 0}">Otwórz wszystkie lekcje</button>
+					<button
+						@click="chooseWorkload(0)"
+						class="button to-right"
+						:class="{'is-active': this.workLoad === 0}"
+						>{{ $t('lessonsAvailability.buttons.openAll')}}
+					</button>
 				</div>
 			</div>
 			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item">
-						Kiedy chcesz zacząć?
+						{{ $t('lessonsAvailability.secondSection.startDate') }}
 					</div>
 				</div>
 			</div>
@@ -72,7 +99,11 @@
 							<i class="fa fa-hourglass-1"></i>
 						</span>
 					</label>
-					<wnl-datepicker :withBorder="true" v-model="presetStartDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+					<wnl-datepicker
+						:withBorder="true"
+						v-model="startDate"
+						:config="startDateConfig"
+						@onChange="onStartDateChange"/>
 					<p class="tip">
 						{{$t('questions.plan.tips.startDate')}}
 					</p>
@@ -83,7 +114,7 @@
 			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item">
-						Wybierz zakres dat, w których chcesz pracować a my dostosujemy do nich Twój plan lekcji?
+						{{ $t('lessonsAvailability.secondSection.dateToDate') }}
 					</div>
 				</div>
 			</div>
@@ -95,7 +126,11 @@
 							<i class="fa fa-hourglass-1"></i>
 						</span>
 					</label>
-					<wnl-datepicker :withBorder="true" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+					<wnl-datepicker
+						:withBorder="true"
+						v-model="startDate"
+						:config="startDateConfig"
+						@onChange="onStartDateChange"/>
 					<p class="tip">
 						{{$t('questions.plan.tips.startDate')}}
 					</p>
@@ -107,7 +142,11 @@
 							<i class="fa fa-hourglass-1"></i>
 						</span>
 					</label>
-					<wnl-datepicker :withBorder="true" v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
+					<wnl-datepicker
+						:withBorder="true"
+						v-model="endDate"
+						:config="endDateConfig"
+						@onChange="onEndDateChange"/>
 					<p class="tip">
 						{{$t('questions.plan.tips.endDate')}}
 					</p>
@@ -117,13 +156,17 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					3. Zatwierdź plan!
+					{{ $t('lessonsAvailability.sections.acceptPlan') }}
 				</div>
 			</div>
 		</div>
 		<div class="accept-plan">
 			<div class="accept-plan-button">
-				<button @click="acceptPlan" class="button to-right is-info">Jedziesz szwagier!</button>
+				<button
+					@click="acceptPlan"
+					class="button to-right is-info"
+					>{{ $t('lessonsAvailability.buttons.acceptPlanButton') }}
+				</button>
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
@@ -135,10 +178,12 @@
 		</div>
 		<div class="groups">
 			<ul class="groups-list" v-if="structure">
-				<li class="group" v-for="(item, index) in groupsWithLessons" :key="index">
+				<li class="group" v-for="(item, index) in groupsWithLessons"
+					:key="index">
 					<span class="item-toggle" @click="toggleItem(item)">
 						<span class="icon is-small">
-							<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen(item)}"></i>
+							<i class="toggle fa fa-angle-down"
+								:class="{'fa-rotate-180': isOpen(item)}"></i>
 						</span>
 						<span class="item-name">{{item.name}}</span>
 						<span class="subitems-count">
@@ -146,11 +191,15 @@
 						</span>
 					</span>
 					<ul class="subitems" v-if="isOpen(item)">
-						<li class="subitem" v-for="(subitem, index) in item.lessons" :class="{'isEven': isEven(index)}" :key="index">
-							<span class="subitem-name label" :class="{'is-grayed-out': !subitem.isAccessible}">{{subitem.name}}</span>
+						<li class="subitem" v-for="(subitem, index) in item.lessons"
+							:class="{'isEven': isEven(index)}"
+							:key="index">
+							<span class="subitem-name label"
+								:class="{'is-grayed-out': !subitem.isAccessible}"
+								>{{subitem.name}}</span>
 							<div class="subitem-left-side">
 								<div class="not-accesible" v-if="!subitem.isAccessible">
-									Lekcja niedostępna
+									{{ $t('lessonsAvailability.lessonNotAvilable') }}
 								</div>
 								<div class="datepicker" v-else>
 									<wnl-datepicker
@@ -257,29 +306,12 @@ export default {
 	data() {
 		return {
 			openGroups: [],
-			alertSuccess: {
-				text: this.$t('user.lessonsAvailabilities.alertSuccess'),
-				type: 'success',
-				timeout: 2000,
-			},
-			workLoad: null,
-			alertError: {
-				text: this.$t('user.lessonsAvailabilities.alertError'),
-				type: 'error',
-				timeout: 2000,
-			},
-			workDaysAlert: {
-				text: 'Wybierz co najmniej 5 dni pracy',
-				type: 'error',
-				timeout: 2000,
-			},
 			endDateAlert: {
 				text: 'Wybierz datę końcową',
 				type: 'error',
 				timeout: 2000,
 			},
 			activePresets: ['daysPerLesson', 'dateToDate'],
-			presetStartDate: new Date(),
 			startDate: new Date(),
 			endDate: this.computedEndDate,
 			workDays: [],
@@ -310,7 +342,7 @@ export default {
 		},
 		minimumEndDate() {
 				if (this.workDays.length > 4) {
-					return moment(this.startDate).add(Math.ceil((7/this.workDays.length) * (this.inProgressLessonsLength * this.workLoad)), 'days').toDate()
+					return moment(this.startDate).add(this.inProgressLessonsLength, 'days').toDate()
 				}
 		},
 		completedLessons() {
@@ -411,18 +443,7 @@ export default {
 			if (isEmpty(payload)) this.startDate = null
 		},
 		togglePreset(preset) {
-			let index = this.activePresets.indexOf(preset)
-
-			if (index > -1) {
-				this.activePresets.splice(index, 1)
-			} else if (index === -1) {
-				this.activePresets.push(preset)
-			} else {
-				let other = pull(Object.keys(this.presets), preset)
-				if (other.length > 0) {
-					this.activePresets = [other[0]]
-				}
-			}
+			return this.activePresets = [preset]
 		},
 		isDayActive(dayNumber) {
 			let index = this.workDays.indexOf(dayNumber)
@@ -444,29 +465,15 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
-			if (this.workLoad !== 0 && this.workDays.length < 5) {
-				this.addAutoDismissableAlert(this.workDaysAlert)
-			}
-
-
-			if (this.isPresetActive('daysPerLesson')) {
-				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-					user_id: this.currentUserId,
-					work_load: this.workLoad,
-					work_days: this.workDays,
-					preset_start_date: this.presetStartDate,
-				})
-			} else if (this.isPresetActive('dateToDate')) {
-				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-					user_id: this.currentUserId,
-					work_days: this.workDays,
-					start_date: this.startDate,
-					end_date: this.endDate,
-					days_quantity: this.daysQuantity,
-				})
-			}
-			// if (this.inProgressLessonsLength)
-
+			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+				user_id: this.currentUserId,
+				work_days: this.workDays,
+				work_load: this.workLoad,
+				start_date: this.startDate,
+				end_date: this.endDate,
+				days_quantity: this.daysQuantity,
+				preset_active: this.activePresets,
+			})
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1

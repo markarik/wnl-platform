@@ -300,7 +300,9 @@
 				return `Zamówienie numer ${this.order.id}`
 			},
 			studyBuddy() {
-				return this.order.hasOwnProperty('studyBuddy')
+				return
+					this.order.hasOwnProperty('studyBuddy')
+					&& this.order.studyBuddy.status !== 'expired'
 			},
 			couponUrl() {
 				return `orders/${this.order.id}/coupon`;

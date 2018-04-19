@@ -16,7 +16,7 @@
 		</li>
 		<li>
 			<a href="https://platforma.wiecejnizlek.pl/app/myself/orders">
-				Kontro > Twoje zamówienia
+				Konto > Twoje zamówienia
 			</a>
 		</li>
 		<li>

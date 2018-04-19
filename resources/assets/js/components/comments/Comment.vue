@@ -23,6 +23,9 @@
 			</span>
 			<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
 		</div>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+			<wnl-user-profile-modal :author="profile"/>
+		</wnl-modal>
 	</article>
 </template>
 
@@ -65,7 +68,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import UserProfileModal from 'js/components/users/UserProfileModal'
 import Avatar from 'js/components/global/Avatar'
@@ -74,6 +77,7 @@ import Resolve from 'js/components/global/form/Resolve'
 import { timeFromS } from 'js/utils/time'
 import moderatorFeatures from 'js/perimeters/moderator'
 import Vote from 'js/components/global/reactions/Vote'
+import Modal from 'js/components/global/Modal.vue'
 
 export default {
 	name: 'Comment',
@@ -82,9 +86,16 @@ export default {
 		'wnl-delete': Delete,
 		'wnl-resolve': Resolve,
 		'wnl-vote': Vote,
+		'wnl-modal': Modal,
+		'wnl-user-profile-modal': UserProfileModal
 	},
 	perimeters: [moderatorFeatures],
 	props: ['comment', 'profile'],
+	data() {
+		return {
+			isVisible: false
+		}
+	},
 	computed: {
 		...mapGetters(['currentUserId']),
 		...mapGetters('comments', ['getReaction']),
@@ -108,15 +119,11 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions(['toggleModal']),
 		showModal() {
-			this.toggleModal({
-				visible: true,
-				content: {
-					author: this.profile
-				},
-				component: UserProfileModal,
-			})
+			this.isVisible = true
+		},
+		closeModal() {
+			this.isVisible = false
 		},
 		onDeleteSuccess() {
 			this.$emit('removeComment', this.id)

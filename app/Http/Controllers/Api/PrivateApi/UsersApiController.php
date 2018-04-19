@@ -21,7 +21,7 @@ class UsersApiController extends ApiController
 		$user = User::fetch($id);
 
 		if (!Auth::user()->can('view', $user)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Item($user, new UserTransformer, $this->resourceName);

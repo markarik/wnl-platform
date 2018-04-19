@@ -4,12 +4,17 @@ namespace App\Models;
 
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use DB;
 
 class Lesson extends Model
 {
 	use Cached;
 
-	protected $fillable = ['name', 'group_id'];
+	protected $fillable = ['name', 'group_id', 'is_required'];
+
+	const USER_LESSON_CACHE_KEY = '%s-%s-%s-user-lesson-access';
+	const CACHE_VERSION = 1;
 
 	public function screens()
 	{
@@ -19,16 +24,6 @@ class Lesson extends Model
 	public function group()
 	{
 		return $this->belongsTo('\App\Models\Group');
-	}
-
-	public function availability()
-	{
-		return $this->hasMany('App\Models\LessonAvailability');
-	}
-
-	public function userAccess()
-	{
-		return $this->hasMany('App\Models\LessonUserAccess');
 	}
 
 	public function tags()
@@ -43,32 +38,51 @@ class Lesson extends Model
 		})->get();
 	}
 
-	public function isAvailable($editionId)
+	public function isAvailable($user = null, $editionId = 1)
 	{
-		$user = \Auth::user();
+		$user = $user ?? \Auth::user();
 		if ($user) {
-			$lessonAccess = $this->userAccess->where('user_id', $user->id)->first();
-			if (!is_null($lessonAccess)) {
-				return $lessonAccess->access;
+			$lessonAccess = $this->userLessonAccess($user);
+			if (!is_null($lessonAccess) && !is_null($lessonAccess->start_date)) {
+				return Carbon::parse($lessonAccess->start_date)->isPast();
 			}
-		}
-
-		$availability = $this->availability->where('edition_id', $editionId)->first();
-		if (!is_null($availability)) {
-			return $availability->start_date->isPast();
 		}
 
 		return false;
 	}
 
-	public function startDate($editionId)
+	public function isAccessible($user = null, $editionId = 1)
 	{
-		$availability = $this->availability->where('edition_id', $editionId)->first();
+		$user = $user ?? \Auth::user();
+		if ($user) {
+			$lessonAccess = $this->userLessonAccess($user);
+			return !is_null($lessonAccess);
+		}
 
-		if (!is_null($availability)) {
-			return $availability->start_date;
+		return false;
+	}
+
+	public function startDate($user = null, $editionId = 1)
+	{
+		$user = $user ?? \Auth::user();
+		if ($user) {
+			$lessonAccess = $this->userLessonAccess($user);
+
+			if (!is_null($lessonAccess)) {
+				return Carbon::parse($lessonAccess->start_date);
+			}
 		}
 
 		return null;
+	}
+
+	public function userLessonAccess(User $user) {
+		$key = sprintf(self::USER_LESSON_CACHE_KEY, self::CACHE_VERSION, $this->id, $user->id);
+		return \Cache::tags("user-$user->id")->remember($key, 60 * 24, function() use ($user) {
+			return DB::table('user_lesson')
+				->where('lesson_id', $this->id)
+				->where('user_id', $user->id)
+				->first();
+		});
 	}
 }

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserCourseProgress;
 use App\Models\UserQuizResults;
 use App\Models\UserTime;
+use App\Jobs\ArchiveCourseProgress;
 use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -180,6 +181,39 @@ class UserStateApiController extends ApiController
 				'total'  => $numberOfQuizQuestions,
 			],
 		];
+	}
+
+	public function deleteCourse($userId, $courseId) {
+		$user = \Auth::user();
+		$profileId = $user->profile->id;
+		$userCourseProgress = UserCourseProgress::where('user_id', $userId)->first();
+
+		if (is_null($userCourseProgress)) {
+			return $this->respondOk();
+		}
+
+		if (!$user->can('delete', $userCourseProgress)) {
+			return $this->respondForbidden();
+		}
+
+		$lessonsKeys = Lesson::all()->pluck('id')->map(function($item) use ($profileId, $courseId) {
+			return self::getLessonRedisKey($profileId, $courseId, $item);
+		});
+
+		$lessonsKeys->each(function($lessonKey) {
+			Redis::del($lessonKey);
+		});
+
+		$courseKey = self::getCourseRedisKey($profileId, $courseId);
+		Redis::del($courseKey);
+
+		$userCourseProgress = UserCourseProgress::where('user_id', $userId)->get();
+
+		dispatch_now(new ArchiveCourseProgress($user, $userCourseProgress));
+
+		UserCourseProgress::where('user_id', $userId)->delete();
+
+		$this->respondOk();
 	}
 
 	static function getCourseRedisKey($userId, $courseId)

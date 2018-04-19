@@ -19,7 +19,7 @@ class UserAddressApiController extends ApiController
 		}
 
 		if (!Auth::user()->can('view', $address)) {
-			return $this->respondUnauthorized();
+			return $this->respondForbidden();
 		}
 
 		$resource = new Item($address, new UserAddressTransformer, 'user_address');

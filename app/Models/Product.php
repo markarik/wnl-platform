@@ -17,9 +17,35 @@ class Product extends Model
 
 	protected $dates = [
 		'delivery_date',
-		'start_date',
-		'end_date',
+		'course_start',
+		'course_end',
+		'access_start',
+		'access_end',
+		'signups_start',
+		'signups_end',
+		'signups_close',
 	];
+
+	public function lessons()
+	{
+		return
+			$this->belongsToMany('App\Models\Lesson')
+				->withPivot('start_date')
+				->using('App\Models\LessonProduct');
+	}
+
+	public function instalments()
+	{
+		return $this->hasMany('App\Models\ProductInstalment');
+	}
+
+	public function paymentMethods()
+	{
+		return $this
+			->belongsToMany('App\Models\PaymentMethod')
+			->withPivot('start_date', 'end_date')
+			->using('App\Models\PaymentMethodProduct');
+	}
 
 	public function scopeSlug($query, $slug)
 	{
@@ -30,6 +56,8 @@ class Product extends Model
 
 	public function getAvailableAttribute()
 	{
-		return $this->quantity > 0;
+		return
+			$this->quantity > 0 &&
+			$this->signups_start->isPast();
 	}
 }

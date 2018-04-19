@@ -2,7 +2,7 @@
 
 return [
 
-	'version' => '1.16.8',
+	'version' => '1.19.0',
 	/*
 	|--------------------------------------------------------------------------
 	| Application Name
@@ -184,7 +184,7 @@ return [
 		App\Providers\AuthServiceProvider::class,
 		App\Providers\BroadcastServiceProvider::class,
 		App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+		App\Providers\RouteServiceProvider::class,
 		App\Providers\GoogleDriveServiceProvider::class,
 
 	],
@@ -238,6 +238,7 @@ return [
 		'Sentry'       => Sentry\SentryLaravel\SentryFacade::class,
 		'Image'        => Intervention\Image\Facades\Image::class,
 		'Throttle'     => GrahamCampbell\Throttle\Facades\Throttle::class,
+		'Rabbit'       => Bschmitt\Amqp\Facades\Amqp::class,
 
 	],
 

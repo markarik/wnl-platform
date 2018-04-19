@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -10,6 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
 	use Notifiable;
+
+	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
+	const CACHE_VER = '1';
 
 	protected $casts = [
 		'invoice'            => 'boolean',
@@ -41,6 +45,8 @@ class User extends Authenticatable
 	];
 
 	protected $guarded = ['suspended'];
+
+	protected $appends = ['subscription_status'];
 
 	/**
 	 * Relationships
@@ -111,14 +117,26 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\QnaAnswer');
 	}
 
-	public function lessonsAccess()
+	public function lessonsAvailability()
 	{
-		return $this->belongsToMany('App\Models\Lesson', 'lesson_user_access');
+		return $this->belongsToMany('App\Models\Lesson', 'user_lesson');
 	}
 
-	public function reactables() {
+	public function reactables()
+	{
 		return $this->hasMany('App\Models\Reactable');
 	}
+
+	public function chatRooms()
+	{
+		return $this->belongsToMany('App\Models\ChatRoom');
+	}
+
+	public function subscription()
+	{
+		return $this->hasOne('App\Models\UserSubscription');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -151,6 +169,53 @@ class User extends Authenticatable
 	public function getIsSubscriberAttribute()
 	{
 		return !is_null(Subscriber::where('email', $this->email)->first());
+	}
+
+	public function getSubscriptionStatusAttribute()
+	{
+		$key = self::getSubscriptionKey($this->id);
+
+		return \Cache::tags("user-$this->id")->remember($key, 60 * 24, function () {
+			$dates = $this->getSubscriptionDates();
+
+			return $this->getSubscriptionStatus($dates);
+		});
+	}
+
+	public function getSubscriptionDatesAttribute()
+	{
+		list ($min, $max) = $this->getSubscriptionDates();
+
+		return [
+			'min' => $min->timestamp ?? null,
+			'max' => $max->timestamp ?? null,
+		];
+	}
+
+	protected function getSubscriptionStatus($dates)
+	{
+		list ($min, $max) = $dates;
+
+		if (!$min || !$max) {
+			return 'inactive';
+		}
+
+		if ($min->isPast() && $max->isFuture()) return 'active';
+		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
+
+		return 'inactive';
+	}
+
+	protected function getSubscriptionDates()
+	{
+		if ($this->hasRole('admin') || $this->hasRole('moderator')) {
+			return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
+		}
+
+		$min = $this->subscription ? Carbon::parse($this->subscription->access_start) : null;
+		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
+
+		return [$min, $max];
 	}
 
 	/**
@@ -224,5 +289,16 @@ class User extends Authenticatable
 			->whereHas('roles', function ($query) use ($role) {
 				return $query->where('name', $role);
 			})->get();
+	}
+
+	public function suspend()
+	{
+		$this->suspended = true;
+		$this->save();
+	}
+
+	public static function getSubscriptionKey($id)
+	{
+		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 }

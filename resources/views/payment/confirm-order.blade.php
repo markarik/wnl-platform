@@ -115,7 +115,7 @@
 				</div>
 			</section>
 			@if($instalments)
-				 {{-- <section class="has-text-centered">
+				 <section class="has-text-centered">
 					<div class="expandable">
 						<div class="margin vertical">
 							<a class="link expand" id="expand-instalments">Płatność na raty</a>
@@ -123,16 +123,20 @@
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do końca zapisów</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
+							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 czerwca</strong> i <strong>20 lipca</strong>.</p>
 
 							<table class="table is-bordered margin vertical">
 								<tr>
 									<th>Twój wariant kursu</th>
-									@for ($i = 0; $i < count($instalments); $i++)
+									@foreach ($instalments as $instalment)
 										<th>
-											{{ $i + 1 }}. rata (do&nbsp;{{ $instalments[$i]['date']->format('d.m.Y') }})
+											@if($loop->first)
+												1. rata (do 7 dni po złożeniu zamówienia)
+											@else
+												{{$loop->index + 1}}. rata (do&nbsp;{{$instalment['date']->format('d.m.Y')}})
+											@endif
 										</th>
-									@endfor
+									@endforeach
 									<th>Razem</th>
 								</tr>
 								<tr>
@@ -159,7 +163,7 @@
 							</form>
 						</div>
 					</div>
-				</section> --}}
+				</section>
 			@endif
 		@endif
 	</div>

@@ -101,6 +101,9 @@ $margin-big: 30px;
 $margin-huge: 45px;
 $margin-humongous: 80px;
 
+// ConversationSnippet
+$min-height: 62px;
+
 // Animations
 $transition-length-base: 0.15s;
 $transition-length-long: 0.35s;
@@ -120,6 +123,7 @@ $main-nav-min-size: 55px;
 
 $sidenav-min-width: 150px;
 $sidenav-max-width: 250px;
+$sidenav-for-messages: 300px;
 $sidenav-width: 23%;
 
 $course-content-max-width: 900px;

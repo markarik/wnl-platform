@@ -27,11 +27,22 @@ export const mutations = {
 // Actions
 export const actions = {
 	addAlert({commit}, {text, type}) {
-		commit(types.GLOBAL_ALERTS_ADD_ALERT, {text, type, id: uuidv1()})
+		const id = uuidv1()
+		commit(types.GLOBAL_ALERTS_ADD_ALERT, {text, type, id})
+		return id
 	},
 	closeAlert({commit, state}, payload) {
 		commit(types.GLOBAL_ALERTS_CLOSE_ALERT, payload)
-	}
+	},
+	addAutoDismissableAlert({commit, dispatch}, {timeout, ...payload}) {
+		const timeoutWithDefault = timeout || 5000
+		dispatch('addAlert', payload)
+			.then(id => {
+				setTimeout(() => {
+					dispatch('closeAlert', {id})
+				}, timeoutWithDefault)
+			})
+	},
 };
 
 export default {

@@ -16,7 +16,7 @@ const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) =
 	if (!state.retry) {
 		store.set(storeKey, state);
 
-		getCurrentUser().then(({data: {user_id}}) => {
+		getCurrentUser().then(({user_id}) => {
 			axios.put(getApiUrl(`quiz_results/${user_id}/quiz/${setId}`), {
 				quiz: state,
 				recordedAnswers
@@ -27,7 +27,7 @@ const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) =
 
 const getQuizProgress = (setId, currentUserSlug) => {
 	return new Promise((resolve) => {
-			getCurrentUser().then(({data: {user_id}}) => {
+			getCurrentUser().then(({user_id}) => {
 				axios.get(getApiUrl(`quiz_results/${user_id}/quiz/${setId}`)).then(({data: {quiz}}) => {
 					resolve(quiz)
 				});

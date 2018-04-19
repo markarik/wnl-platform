@@ -12,9 +12,11 @@ use App\Http\Requests\Course\DetachSlide;
 use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
 use App\Http\Requests\Course\UpdateSlideChart;
+use ScoutEngines\Elasticsearch\Searchable;
 use App\Jobs\SearchImportAll;
 use App\Models\Screen;
 use App\Models\Slide;
+use Auth;
 use Artisan;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
@@ -143,5 +145,140 @@ class SlidesApiController extends ApiController
 		event(new SlideDetached($slide, $presentables));
 
 		return $this->respondOk();
+	}
+
+	public function search(Request $request) {
+		$resource = $request->route('resource');
+
+		if (!$this->canSearch(Slide::class)) {
+			return $this->respondNotImplemented();
+		}
+
+		if (empty($request->q)) {
+			return $this->respondInvalidInput('query not set');
+		}
+
+		$escapedQuery = $this->escapeQuery($request->q);
+
+		if (empty(trim($escapedQuery))) {
+			return $this->respondInvalidInput('query value not supported');
+		}
+
+		$user = Auth::user();
+		$onlyAvailable = !$user->hasRole('moderator') && !$user->hasRole('admin');
+
+		Slide::savePhrase(['phrase' => $request->q, 'user_id' => $user->id]);
+
+		$query = $this->buildQuery(
+			$escapedQuery,
+			$onlyAvailable,
+			$user
+		);
+
+		$raw = Slide::searchRaw($query);
+
+		return $this->respondOk($raw);
+	}
+
+	protected function buildQuery($query, $onlyAvailable, $user)
+	{
+		// Right now it's tightly coupled with slides
+		// next step - decouple
+		$params = [
+			'body' => [
+				'from'      => 0,
+				'size'      => 32,
+				'query'     => [
+					'bool' => [
+						'should' => [
+							["constant_score" => [
+								'query' => ['match_phrase' => [
+									'snippet.header' => [
+										"query" => $query,
+									],
+								],
+								],
+								'boost' => 100,
+							],
+							],
+							["constant_score" => [
+								'query' => ['match_phrase' => [
+									'snippet.content' => [
+										"query" => $query,
+									],
+								]],
+								'boost' => 90,
+							],
+							],
+							["constant_score" => [
+								'query' => ['match_phrase_prefix' => [
+									'snippet.header' => [
+										"query" => $query,
+									],
+								]],
+								'boost' => 10,
+							],
+							],
+							["constant_score" => [
+								'query' => ['match_phrase_prefix' => [
+									'snippet.content' => [
+										"query" => $query,
+									],
+								]],
+								'boost' => 9,
+							],
+							],
+							['multi_match' => [
+								"query"  => $query,
+								'fields' => ['snippet.content', 'snippet.header^5'],
+								"type"   => "cross_fields",
+							]],
+							['query_string' => [
+								"query"            => $query,
+								'fields'           => ['snippet.content'],
+								"default_operator" => "and",
+							]],
+							['query_string' => [
+								'query'            => "*{$query}*",
+								'analyze_wildcard' => true,
+								'fields'           => ['snippet.header', 'snippet.content'],
+							]],
+						],
+					],
+				],
+				'highlight' => [
+					'fields' => [
+						'snippet.content' => [
+							'fragment_size' => 5000,
+						],
+						'snippet.header'  => [
+							'fragment_size' => 5000,
+						],
+					],
+				],
+			],
+		];
+
+		if (!preg_match('/\s/', $query)) {
+			$params['body']['query']['bool']['should'][] = [
+				'query_string' => [
+					'query'            => "{$query}~",
+					'analyze_wildcard' => true,
+					'fields'           => ['snippet.header^5', 'snippet.content'],
+				],
+			];
+		}
+
+		if ($onlyAvailable) {
+			$usersLessons = $user->lessonsAvailability->filter(function($lesson) use ($user) {
+				return $lesson->isAvailable($user);
+			})->pluck('id')->toArray();
+
+			$params['body']['query']['bool']['must'] = [
+				['terms' => ['context.lesson.id' => $usersLessons]]
+			];
+		}
+
+		return $params;
 	}
 }

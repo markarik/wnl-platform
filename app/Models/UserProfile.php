@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Events\Users\UserDataUpdated;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class UserProfile extends Model
 {

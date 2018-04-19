@@ -44,7 +44,11 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
-		<a v-if="!$currentEditionParticipant.isAllowed('access')" class="wnl-main-nav-item" :href="signUpLink">
+		<a
+			v-if="!$currentEditionParticipant.isAllowed('access') && !$upcomingEditionParticipant.isAllowed('access')"
+			class="wnl-main-nav-item"
+			:href="signUpLink"
+		>
 			<span class="icon is-medium">
 				<i class="fa fa-thumbs-o-up"></i>
 			</span>
@@ -122,12 +126,13 @@
 	import {mapGetters} from 'vuex'
 	import moderatorFeatures from 'js/perimeters/moderator'
 	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
+	import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant'
 	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'MainNav',
 		props: ['isHorizontal'],
-		perimeters: [moderatorFeatures, currentEditionParticipant],
+		perimeters: [moderatorFeatures, currentEditionParticipant, upcomingEditionParticipant],
 		computed: {
 			...mapGetters(['currentUser']),
 			signUpLink() {

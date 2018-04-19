@@ -11,8 +11,7 @@ export default createPerimeter({
 
 	isCurrentEditionParticipant() {
 		return this.child &&
-			this.child.roles.includes('moderator')
-				|| this.child.roles.includes('admin')
-				|| this.child.roles.includes('edition-2-participant')
-	}
+			this.child.subscription &&
+			this.child.subscription.status === 'active'
+	},
 });

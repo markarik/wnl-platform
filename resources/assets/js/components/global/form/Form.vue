@@ -39,6 +39,7 @@
 			'hideDefaultSubmit',
 			'suppressEnter',
 			'resetAfterSubmit',
+			'loading'
 		],
 		computed: {
 			anyErrors() {

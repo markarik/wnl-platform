@@ -39,15 +39,22 @@ class OrdersStatsExport extends Command
 	 */
 	public function handle()
 	{
-		$setOne = $this->stats(Carbon::parse('2017-03-31 23:59'), Carbon::parse('2017-09-24 23:59'),
-			['date', 'orders_count', 'value', 'paid', 'coupons', '']);
+		$setOne = $this->stats(Carbon::parse('2018-04-02 23:59'), Carbon::now(),
+			['date', 'orders_count', 'value', 'paid', 'albums', '50%', '']);
 
-		$setTwo = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::now(),
-			['date', 'orders_count', 'value', 'paid', 'coupons', 'albums', '50%']);
+		$setTwo = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::parse('2018-04-02 23:59'),
+			['date', 'orders_count', 'value', 'paid', '']);
+
+		$setThree = $this->stats(Carbon::parse('2017-03-31 23:59'), Carbon::parse('2017-09-23 23:59'),
+			['date', 'orders_count', 'value', 'paid', '']);
 
 		$rows = collect();
-		foreach ($setOne as $setOneRow) {
-			$rows->push(array_merge($setOneRow, $setTwo->shift() ?? []));
+		for ($i=1; $i<190; $i++) {
+			$rows->push(array_merge(
+				$setOne->shift() ?? ['', '', '', '', '', '', ''],
+				$setTwo->shift() ?? [],
+				$setThree->shift() ?? []
+			));
 		}
 
 		$this->writeRange($rows->toArray());
@@ -62,7 +69,11 @@ class OrdersStatsExport extends Command
 		$orders = (new Order)
 			->with(['coupon', 'product'])
 			->where('method', '!=', null)
-			->where('canceled', null)
+			->where(function($query){
+				$query
+					->where('canceled', null)
+					->orWhere('canceled', 0);
+			})
 			->whereBetween('created_at', [$startDate, $endDate])
 			->get()
 			->unique('user_id');
@@ -94,7 +105,7 @@ class OrdersStatsExport extends Command
 		$service = new \Google_Service_Sheets($client);
 
 		$file = env('GOOGLE_SHEETS_ORDERS_STATS');
-		$range = 'A:N';
+		$range = 'A:Z';
 		$body = new Google_Service_Sheets_ValueRange([
 			'values' => $rows,
 		]);

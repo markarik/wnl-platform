@@ -17,6 +17,9 @@
 				<p class="wnl-message-content" v-html="content"></p>
 			</div>
 		</div>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+			<wnl-user-profile-modal :author="author"/>
+		</wnl-modal>
 	</article>
 </template>
 <style lang="sass">
@@ -63,6 +66,7 @@
 	import { mapActions } from 'vuex'
 	import { timeFromMs } from 'js/utils/time'
 
+	import Modal from 'js/components/global/Modal.vue'
 	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Avatar from 'js/components/global/Avatar'
 
@@ -70,6 +74,13 @@
 		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 		components: {
 			'wnl-avatar': Avatar,
+			'wnl-user-profile-modal': UserProfileModal,
+			'wnl-modal': Modal
+		},
+		data() {
+			return {
+				isVisible: false
+			}
 		},
 		computed: {
 			formattedTime () {
@@ -77,18 +88,14 @@
 			},
 			nameToDisplay() {
 				return this.author.display_name || this.fullName
-			},
+			}
 		},
 		methods: {
-			...mapActions(['toggleModal']),
 			showModal() {
-				this.toggleModal({
-					visible: true,
-					content: {
-						author: this.author
-					},
-					component: UserProfileModal,
-				})
+				this.isVisible = true
+			},
+			closeModal() {
+				this.isVisible = false
 			}
 		}
 	}

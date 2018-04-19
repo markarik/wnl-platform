@@ -48,6 +48,9 @@
 			>
 			</wnl-comments-list>
 		</div>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+			<wnl-user-profile-modal :author="author"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -105,6 +108,7 @@
 	import highlight from 'js/mixins/highlight'
 	import CommentsList from 'js/components/comments/CommentsList'
 	import moderatorFeatures from 'js/perimeters/moderator'
+	import Modal from 'js/components/global/Modal'
 
 	import { timeFromS } from 'js/utils/time'
 
@@ -115,6 +119,8 @@
 			'wnl-delete': Delete,
 			'wnl-vote': Vote,
 			'wnl-comments-list': CommentsList,
+			'wnl-modal': Modal,
+			'wnl-user-profile-modal': UserProfileModal
 		},
 		perimeters: [moderatorFeatures],
 		mixins: [ highlight ],
@@ -123,7 +129,8 @@
 			return {
 				loading: false,
 				reactableResource: "qna_answers",
-				highlightableResources: ["qna_answer", "qna_question", "reaction"]
+				highlightableResources: ["qna_answer", "qna_question", "reaction"],
+				isVisible: false
 			}
 		},
 		computed: {
@@ -170,15 +177,11 @@
 		},
 		methods: {
 			...mapActions('qna', ['removeAnswer']),
-			...mapActions(['toggleModal']),
 			showModal() {
-				this.toggleModal({
-					visible: true,
-					content: {
-						author: this.author
-					},
-					component: UserProfileModal,
-				})
+				this.isVisible = true
+			},
+			closeModal() {
+				this.isVisible = false
 			},
 			onDeleteSuccess() {
 				this.removeAnswer({

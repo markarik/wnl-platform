@@ -5,7 +5,10 @@
 				<div class="controls-left">
 					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
 				</div>
-				<small v-if="$moderatorFeatures.isAllowed('access')">{{currentSlideId}}</small>
+				<small class="slide-meta" v-if="$moderatorFeatures.isAllowed('access')">
+					{{currentSlideId}}
+					<wnl-linked-questions :slideId="currentSlideId"/>
+				</small>
 				<div class="controls-right">
 					<div class="controls-item">
 						Tło
@@ -100,6 +103,9 @@
 		display: flex
 		margin-top: -3px
 		padding-top: $margin-base
+
+	.slide-meta
+		text-align: center
 </style>
 
 <script>
@@ -111,6 +117,7 @@
 	import {scrollToTop} from 'js/utils/animations'
 
 	import Annotations from './Annotations'
+	import LinkedQuestions from './LinkedQuestions.vue'
 	import SlideshowNavigation from './SlideshowNavigation'
 	import {isDebug, getApiUrl} from 'js/utils/env'
 	import moderatorFeatures from 'js/perimeters/moderator'
@@ -119,6 +126,7 @@
 		name: 'Slideshow',
 		components: {
 			'wnl-annotations': Annotations,
+			'wnl-linked-questions': LinkedQuestions,
 			'wnl-slideshow-navigation': SlideshowNavigation,
 		},
 		perimeters: [moderatorFeatures],

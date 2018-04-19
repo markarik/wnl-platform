@@ -55,7 +55,7 @@ export default class Logger {
 			}
 
 			if (isDebug()) {
-				this.consolePrint(level, [message])
+				this.consolePrint(level, message, extra)
 			}
 		}
 	}
@@ -78,36 +78,22 @@ export default class Logger {
 	 * as a header of a group.
 	 * @return {void}
 	 */
-	consolePrint(level, messages = []) {
-		const len = messages.length
-
-		if (len < 1) {
-			return undefined
-		}
-
+	consolePrint(level, message, extra = {}) {
 		if (!Logger.LEVELS.hasOwnProperty(level)) {
 			level = 'debug'
 		}
 
 		let levelCode = Logger.LEVELS[level],
-			header = `${_.upperCase(level)}: ${messages[0]}`
+			header = `${_.upperCase(level)}: ${message}`
 
 		if (levelCode <= Logger.LEVELS.error) {
-			console.error(header)
+			console.error(header, extra)
 		} else if (levelCode <= Logger.LEVELS.warning) {
-			console.warn(header)
+			console.warn(header, extra)
 		} else if (levelCode <= Logger.LEVELS.info) {
-			console.info(header)
+			console.info(header, extra)
 		} else {
-			console.debug(header)
-		}
-
-		if (len > 1) {
-			console.groupCollapsed(`Context for ${header}`)
-			for (let i = 1; i < len; i++) {
-				console.log(messages[i])
-			}
-			console.groupEnd()
+			console.debug(header, extra)
 		}
 	}
 

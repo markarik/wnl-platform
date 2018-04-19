@@ -79,9 +79,11 @@
 								<th>Termin płatności</th>
 								<th>Zapłacone / Do&nbsp;zapłaty</th>
 							</tr>
-							<tr v-for="instalment, index in order.instalments.instalments">
+							<tr v-for="(instalment, index) in order.instalments.instalments">
 								<td>{{index + 1}}</td>
-								<td>{{ instalmentDate(instalment.date) }}</td>
+								<td>
+									{{ instalmentDate(instalment.date) }}
+								</td>
 								<td>
 									{{instalment.amount - instalment.left}}zł / {{instalment.amount}}zł
 								</td>
@@ -111,24 +113,28 @@
 					</small>
 				</div>
 
-				<div v-if="order.status !== 'closed'">
-					<a title="Dodaj lub zmień kod rabatowy" @click="toggleCouponInput">
-						<!--<span class="icon is-small status-icon">
-							<i class="fa fa-pencil-square-o"></i>
-						</span>-->
+				<div class="order-actions">
+					<a title="Dodaj lub zmień kod rabatowy"
+						@click="toggleCouponInput"
+						v-if="order.status !== 'closed'">
 						Dodaj lub zmień kod rabatowy
 					</a>
-					<div class="voucher-code" v-if="couponInputVisible">
-						<wnl-form class="margin vertical"
-								  name="CouponCode"
-								  method="put"
-								  :resourceRoute="couponUrl"
-								  hideDefaultSubmit="true"
-								  @submitSuccess="couponSubmitSuccess">
-							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
-							<wnl-submit>Wykorzystaj kod</wnl-submit>
-						</wnl-form>
-					</div>
+					<a title="Anuluj zamówienie"
+						@click="cancelOrder"
+						v-if="!order.paid">
+						{{ $t('orders.cancel.button') }}
+					</a>
+				</div>
+				<div class="voucher-code" v-if="couponInputVisible">
+					<wnl-form class="margin vertical"
+							  name="CouponCode"
+							  method="put"
+							  :resourceRoute="couponUrl"
+							  hideDefaultSubmit="true"
+							  @submitSuccess="couponSubmitSuccess">
+						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
+						<wnl-submit>Wykorzystaj kod</wnl-submit>
+					</wnl-form>
 				</div>
 			</div>
 		</div>
@@ -185,6 +191,11 @@
 		margin: $margin-medium 0
 		padding: $margin-small
 		text-align: center
+
+	.order-actions
+		display: flex
+		flex-direction: row
+		justify-content: space-between
 </style>
 
 <script>
@@ -194,6 +205,7 @@
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 	import {Form, Text, Submit} from 'js/components/global/form'
+	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'Order',
@@ -263,7 +275,7 @@
 				} else if (this.order.canceled) {
 					return 'Anulowano'
 				} else {
-					return 'Oczekuje na zaksięgowanie'
+					return 'Oczekuje na zaksięgowanie (do 3 dni roboczych)'
 				}
 			},
 			paymentStatusClass() {
@@ -288,7 +300,9 @@
 				return `Zamówienie numer ${this.order.id}`
 			},
 			studyBuddy() {
-				return this.order.hasOwnProperty('studyBuddy')
+				return
+					this.order.hasOwnProperty('studyBuddy')
+					&& this.order.studyBuddy.status !== 'expired'
 			},
 			couponUrl() {
 				return `orders/${this.order.id}/coupon`;
@@ -326,6 +340,25 @@
 			},
 			toggleCouponInput(){
 				this.couponInputVisible = !this.couponInputVisible
+			},
+			cancelOrder(){
+				this.$swal(swalConfig({
+					title: this.$t('orders.cancel.title'),
+					text: this.$t('orders.cancel.text', {id: this.order.id}),
+					showCancelButton: true,
+					confirmButtonText: this.$t('ui.confirm.confirm'),
+					cancelButtonText: this.$t('ui.confirm.cancel'),
+					type: 'error',
+					confirmButtonClass: 'button is-danger',
+					reverseButtons: true
+				}))
+				.then(() => axios.get(getApiUrl(`orders/${this.order.id}/.cancel`)))
+				.then(response => this.order = response.data)
+				.catch(error => {
+					if (error !== 'cancel') {
+						$wnl.logger.capture(error)
+					}
+				})
 			}
 		},
 		mounted() {

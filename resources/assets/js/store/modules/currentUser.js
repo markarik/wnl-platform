@@ -39,7 +39,8 @@ const getters = {
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
-	currentUserStats: state => state.stats
+	currentUserStats: state => state.stats,
+	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 }
 
 // Mutations
@@ -63,6 +64,9 @@ const mutations = {
 	},
 	[types.USERS_SET_STATS] (state, payload) {
 		set(state, 'stats', payload)
+	},
+	[types.USERS_SET_SUBSCRIPTION] (state, payload) {
+		set(state, 'subscription', payload)
 	}
 }
 
@@ -83,8 +87,8 @@ const actions = {
 
 	fetchCurrentUserProfile({ commit }) {
 		return new Promise((resolve, reject) => {
-			getCurrentUser().then((response) => {
-				commit(types.USERS_SETUP_CURRENT, response.data)
+			getCurrentUser().then((user) => {
+				commit(types.USERS_SETUP_CURRENT, user)
 				resolve()
 			})
 			.catch((error) => {
@@ -106,6 +110,16 @@ const actions = {
 				reject()
 			})
 		})
+	},
+
+	fetchUserSubscription({commit}) {
+		return _fetchUserSubscription()
+			.then(({data}) => {
+				commit(types.USERS_SET_SUBSCRIPTION, data)
+			})
+			.catch((error) => {
+				$wnl.logger.error(error)
+			})
 	},
 
 	fetchUserSettings({ commit }) {
@@ -147,6 +161,10 @@ const actions = {
 
 const _fetchUserStats = (userId) => {
 	return axios.get(getApiUrl(`users/${userId}/state/stats`));
+}
+
+const _fetchUserSubscription = () => {
+	return axios.get(getApiUrl('user_subscription/current'));
 }
 
 export default {

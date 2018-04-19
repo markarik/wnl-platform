@@ -40,7 +40,6 @@ const getters = {
 	isSidenavVisible: (state, getters) => getters.isSidenavMounted || getters.isSidenavOpen,
 	isMobileNavigation: (state, getters) => getters.isTouchScreen,
 	isMobileProfile: (state, getters) => getters.isTouchScreen,
-	isMobileCollections: (state, getters) => getters.isTouchScreen,
 	isChatMounted: (state, getters) => getters.isLargeDesktop,
 	isChatVisible: (state, getters, rootState) => state.canShowChat && getters.isChatMounted ?
 		rootState.currentUser.settings["chat_on"] : state.isChatOpen,
@@ -156,6 +155,9 @@ const actions = {
 	},
 	[types.SOCKET_CONNECTION_ERROR]({commit}) {
 		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, false)
+	},
+	[types.SOCKET_CONNECTION_RECONNECTED]({commit}) {
+		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, true)
 	},
 }
 

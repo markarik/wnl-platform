@@ -58,5 +58,9 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
+
+		$schedule
+			->command('orders:handleUnpaid')
+			->twiceDaily(8, 20);
 	}
 }

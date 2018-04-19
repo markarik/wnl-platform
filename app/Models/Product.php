@@ -34,6 +34,19 @@ class Product extends Model
 				->using('App\Models\LessonProduct');
 	}
 
+	public function instalments()
+	{
+		return $this->hasMany('App\Models\ProductInstalment');
+	}
+
+	public function paymentMethods()
+	{
+		return $this
+			->belongsToMany('App\Models\PaymentMethod')
+			->withPivot('start_date', 'end_date')
+			->using('App\Models\PaymentMethodProduct');
+	}
+
 	public function scopeSlug($query, $slug)
 	{
 		return $query

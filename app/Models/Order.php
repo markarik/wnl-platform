@@ -16,7 +16,8 @@ class Order extends Model
 	];
 
 	protected $fillable = [
-		'user_id', 'session_id', 'product_id', 'method', 'transfer_title', 'external_id', 'canceled', 'canceled_at',
+		'user_id', 'session_id', 'product_id', 'method', 'transfer_title',
+		'external_id', 'canceled', 'canceled_at',
 		'paid_amount', 'invoice', 'paid_at',
 	];
 
@@ -59,6 +60,16 @@ class Order extends Model
 	public function user()
 	{
 		return $this->belongsTo('App\Models\User');
+	}
+
+	public function orderInstalments()
+	{
+		return $this->hasMany('App\Models\OrderInstalment');
+	}
+
+	public function paymentReminders()
+	{
+		return $this->hasMany('App\Models\PaymentReminder');
 	}
 
 	public function attachCoupon($coupon)
@@ -140,6 +151,52 @@ class Order extends Model
 			'nextPayment' => $nextPayment,
 			'total'       => $totalLeft,
 		];
+	}
+
+	public function generatePaymentSchedule()
+	{
+		$valueToDistribute = $this->total_with_coupon;
+		$paidToDistribute = $this->paid_amount;
+
+		foreach ($this->product->instalments as $instalment) {
+			$num = $instalment->order_number;
+			$amount = $instalment->value;
+
+			if ($instalment->value_type === 'percentage') {
+				$amount = $instalment->value * $valueToDistribute / 100;
+			}
+
+			$valueToDistribute -= $amount;
+
+			if ($paidToDistribute >= $amount) {
+				$paidAmount = $amount;
+				$paidToDistribute -= $amount;
+			} else {
+				$paidAmount = $paidToDistribute;
+				$paidToDistribute = 0;
+			}
+
+			$this->orderInstalments()->updateOrCreate(
+				['order_number' => $num],
+				['due_date'     => $instalment->getDueDate($this),
+				 'amount'       => $amount,
+				 'paid_amount'  => $paidAmount,
+				 'order_number' => $num,]
+			);
+		}
+	}
+
+	public function getIsOverdueAttribute()
+	{
+		$now = Carbon::now();
+		if ($this->method === 'instalments') {
+			return (bool) $this->orderInstalments()
+				->whereRaw('paid_amount < amount')
+				->where('due_date', '<', $now)
+				->first();
+		}
+
+		return $this->created_at->diffInDays($now) > 7;
 	}
 
 	public function cancel()

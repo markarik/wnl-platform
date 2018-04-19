@@ -189,7 +189,7 @@ class Order extends Model
 	public function getIsOverdueAttribute()
 	{
 		$now = Carbon::now();
-		if ($this->method->instalments) {
+		if ($this->method === 'instalments') {
 			return (bool) $this->orderInstalments()
 				->whereRaw('paid_amount < amount')
 				->where('due_date', '<', $now)

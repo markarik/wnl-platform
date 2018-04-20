@@ -52,8 +52,10 @@ class UserLessonApiController extends ApiController
 		$profileId = $user->profile->id;
 		$workLoad = $request->work_load;
 		$workDays = $request->work_days;
-		$daysQuantity = $request->days_quantity;
 		$startDate = Carbon::parse($request->start_date);
+		$endDate = Carbon::parse($request->end_date);
+		$daysQuantity = $endDate->diffinDays($startDate);
+		// dd($daysQuantity);
 		$presetActive = $request->preset_active;
 		$subscriptionDates = $user->getSubscriptionDatesAttribute();
 		$subscriptionEndDate = now()->setTimestamp($subscriptionDates["max"]);
@@ -130,8 +132,12 @@ class UserLessonApiController extends ApiController
 			$daysExcess = $daysQuantity%$requiredInProgressLessonsCount;
 			$workLoad = floor($daysQuantity/$requiredInProgressLessonsCount);
 			$lessonWithExtraDay = 0;
+			echo($daysQuantity);
+			echo($requiredInProgressLessonsCount);
+			echo($daysExcess);
+			echo($workLoad);
 		}
-
+		// dd($sortedInProgressLessons);
 		foreach ($sortedInProgressLessons as $lesson) {
 			$lessonId = $lesson->id;
 			$queriedLesson = DB::table('user_lesson')
@@ -142,28 +148,28 @@ class UserLessonApiController extends ApiController
 				$queriedLesson->update(['start_date' => Carbon::now()]);
 			} else if ($presetActive[0] === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
 				$excessWorkload = $workLoad + 1;
+				$startDateVariable = $startDate;
+				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
+				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
+
+				if ($isStartDateVariableAvilable) {
+					$lessonWithExtraDay++;
+					$queriedLesson
+						->update(['start_date' => $startDateVariable]);
+				} else {
+					while (!$isStartDateVariableAvilable) {
+						$startDateVariable = $startDate
+							->addDays(1);
+						$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
+						$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
+					}
+					$lessonWithExtraDay++;
+					$queriedLesson
+						->update(['start_date' => $startDateVariable]);
+				}
 				$startDateVariable = $startDate->addHours($excessWorkload * 24);
-				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
-				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
-
-				if ($isStartDateVariableAvilable) {
-					$lessonWithExtraDay++;
-					$queriedLesson
-						->update(['start_date' => $startDateVariable]);
-				} else {
-					while (!$isStartDateVariableAvilable) {
-						$startDateVariable = $startDate
-							->addDays(1);
-						$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
-						$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
-					}
-					$lessonWithExtraDay++;
-					$queriedLesson
-						->update(['start_date' => $startDateVariable]);
-				}
 			} else {
-				$startDateVariable = $startDate
-					->addHours($workLoad * 24);
+				$startDateVariable = $startDate;
 				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
 				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
 
@@ -180,6 +186,7 @@ class UserLessonApiController extends ApiController
 					$queriedLesson
 						->update(['start_date' => $startDateVariable]);
 				}
+				$startDateVariable = $startDate->addHours($workLoad * 24);
 			}
 		}
 	}

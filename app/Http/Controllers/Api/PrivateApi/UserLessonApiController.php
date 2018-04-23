@@ -180,7 +180,7 @@ class UserLessonApiController extends ApiController
 					$queriedLesson
 						->update(['start_date' => $startDateVariable]);
 				}
-				$startDateVariable = $startDate->addHours($workLoad * 24);
+				$startDate->addHours($workLoad * 24);
 			}
 		}
 	}

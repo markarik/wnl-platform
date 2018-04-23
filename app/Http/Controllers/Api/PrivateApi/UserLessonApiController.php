@@ -14,6 +14,10 @@ use App\Models\User;
 
 class UserLessonApiController extends ApiController
 {
+	const GROUP_ID_WIECEJ_NIZ_LEK = 2;
+	const GROUP_ID_WARSZTATY = 3;
+	const GROUP_ID_POWTORKI = 11;
+	const GROUP_ID_DODATKI = 15;
 
 	public function __construct(Request $request)
 	{
@@ -45,9 +49,8 @@ class UserLessonApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function putPlan(UpdateLessonsPreset $request)
+	public function putPlan(UpdateLessonsPreset $request, $userId)
 	{
-		$userId = $request->userId;
 		$user = User::find($userId);
 		$profileId = $user->profile->id;
 		$workLoad = $request->work_load;
@@ -72,29 +75,19 @@ class UserLessonApiController extends ApiController
 			->pluck('lesson_id')
 			->toArray();
 
-		$sortedCompletedLessons = $sortedLessons->filter(
-			function($sortedLesson) use ($completeLessons) {
-				return in_array($sortedLesson->id, $completeLessons);
-			}
-		);
+		$sortedCompletedLessons = [];
+		$sortedInProgressLessons = [];
+		$requiredInProgressLessonsCount = 0;
 
-		$sortedInProgressLessons = $sortedLessons->filter(
-			function($sortedLesson) use ($completeLessons) {
-				return !in_array($sortedLesson->id, $completeLessons);
+		foreach ($sortedLessons as $lesson) {
+			if (in_array($lesson->id, $completeLessons)) {
+				array_push($sortedCompletedLessons, $lesson);
+			} else {
+				array_push($sortedInProgressLessons, $lesson);
+				if ($lesson->is_required === 1) {
+					$requiredInProgressLessonsCount++;
+				}
 			}
-		);
-
-		$requiredInProgressLessonsCount = $sortedInProgressLessons->filter(
-			function($lesson) {
-				return $lesson->is_required === 1;
-			}
-		)->count();
-
-		foreach ($sortedCompletedLessons as $lesson) {
-			$lessonId = $lesson->id;
-			DB::table('user_lesson')
-				->where('lesson_id', $lessonId)
-				->update(['start_date' => $startDate]);
 		};
 
 		if ($workLoad === 0) {
@@ -103,8 +96,15 @@ class UserLessonApiController extends ApiController
 				DB::table('user_lesson')
 					->where('lesson_id', $lessonId)
 					->update(['start_date' => Carbon::now()]);
-			}
+			};
 		} else {
+			foreach ($sortedCompletedLessons as $lesson) {
+				$lessonId = $lesson->id;
+				DB::table('user_lesson')
+					->where('lesson_id', $lessonId)
+					->update(['start_date' => Carbon::now()]);
+			};
+
 			UserLessonApiController::calculatePlan(
 				$requiredInProgressLessonsCount,
 				$sortedInProgressLessons,
@@ -117,9 +117,9 @@ class UserLessonApiController extends ApiController
 		}
 	}
 
-	static function calculatePlan(
+	private function calculatePlan(
 		$requiredInProgressLessonsCount,
-		$sortedInProgressLessons,
+		$lessons,
 		$startDate,
 		$daysQuantity,
 		$workDays,
@@ -127,60 +127,55 @@ class UserLessonApiController extends ApiController
 		$presetActive
 	)
 	{
-		if ($presetActive[0] === 'dateToDate') {
-			$daysExcess = $daysQuantity%$requiredInProgressLessonsCount;
-			$workLoad = floor($daysQuantity/$requiredInProgressLessonsCount);
+		if ($presetActive === 'dateToDate') {
+			$daysExcess = $daysQuantity % $requiredInProgressLessonsCount;
+			$computedWorkLoad = floor($daysQuantity / $requiredInProgressLessonsCount);
 			$lessonWithExtraDay = 0;
 		}
-		foreach ($sortedInProgressLessons as $lesson) {
+
+		foreach ($lessons as $lesson) {
 			$lessonId = $lesson->id;
 			$queriedLesson = DB::table('user_lesson')
 				->where('lesson_id', $lessonId);
 			$groupId = $lesson->group_id;
 
-			if ($groupId === 2 || $groupId === 3 || $groupId === 15) {
+			if ($groupId === self::GROUP_ID_WIECEJ_NIZ_LEK ||
+				$groupId === self::GROUP_ID_WARSZTATY ||
+				$groupId === self::GROUP_ID_DODATKI) {
 				$queriedLesson->update(['start_date' => Carbon::now()]);
-			} else if ($presetActive[0] === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
-				$excessWorkload = $workLoad + 1;
-				$startDateVariable = $startDate;
-				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
-				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
-
-				if ($isStartDateVariableAvilable) {
-					$lessonWithExtraDay++;
-					$queriedLesson
-						->update(['start_date' => $startDateVariable]);
-				} else {
-					while (!$isStartDateVariableAvilable) {
-						$startDateVariable = $startDate
-							->addDays(1);
-						$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
-						$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
-					}
-					$lessonWithExtraDay++;
-					$queriedLesson
-						->update(['start_date' => $startDateVariable]);
-				}
-				$startDate->addHours($excessWorkload * 24);
 			} else {
-				$startDateVariable = $startDate;
-				$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
+				if ($presetActive === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
+					$workLoad = $computedWorkLoad + 1;
+					echo('if');
+					$lessonWithExtraDay++;
+				} else if ($presetActive === 'dateToDate' && $lessonWithExtraDay >= $daysExcess) {
+					echo('else if');
+					$workLoad = $computedWorkLoad;
+				}
+				$dayOfWeekIso = $startDate->dayOfWeekIso;
 				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
 
 				if ($isStartDateVariableAvilable) {
 					$queriedLesson
-						->update(['start_date' => $startDateVariable]);
+						->update(['start_date' => $startDate]);
 				} else {
 					while (!$isStartDateVariableAvilable) {
-						$startDateVariable = $startDate
-							->addDays(1);
-						$dayOfWeekIso = $startDateVariable->dayOfWeekIso;
+						$startDate->addDays(1);
+						$dayOfWeekIso = $startDate->dayOfWeekIso;
 						$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
 					}
 					$queriedLesson
-						->update(['start_date' => $startDateVariable]);
+						->update(['start_date' => $startDate]);
 				}
 				$startDate->addHours($workLoad * 24);
+			}
+		}
+		// dodaje sie jeden dzień do startDate - nie jest taki sam jak próbny lek
+		foreach ($lessons as $lesson) {
+			if ($lesson->group_id === self::GROUP_ID_POWTORKI) {
+				DB::table('user_lesson')
+					->where('lesson_id', $lesson->id)
+					->update(['start_date' => $startDate]);
 			}
 		}
 	}

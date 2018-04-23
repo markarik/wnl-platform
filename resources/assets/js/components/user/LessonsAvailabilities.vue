@@ -371,7 +371,7 @@ export default {
 		},
 		presets() {
 			return {
-				daysPerLesson: 'Ile dnia na lekcję?',
+				daysPerLesson: 'Ile dni na lekcję?',
 				dateToDate: 'Od daty do daty',
 			}
 		},
@@ -424,7 +424,7 @@ export default {
 		...mapActions('course', ['setLessonAvailabilityStatus']),
 		...mapActions(['toggleOverlay']),
 		isPresetActive(preset) {
-			return this.activePresets[0] === preset
+			return this.activePresets === preset
 		},
 		chooseWorkload(workLoad) {
 			this.workLoad = workLoad
@@ -443,7 +443,7 @@ export default {
 			if (isEmpty(payload)) this.startDate = null
 		},
 		togglePreset(preset) {
-			return this.activePresets = [preset]
+			return this.activePresets = preset
 		},
 		isDayActive(dayNumber) {
 			let index = this.workDays.indexOf(dayNumber)
@@ -466,7 +466,6 @@ export default {
 		},
 		acceptPlan() {
 			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-				user_id: this.currentUserId,
 				work_days: this.workDays,
 				work_load: this.workLoad,
 				start_date: this.startDate,

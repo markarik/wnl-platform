@@ -74,7 +74,7 @@ class UserLessonTest extends ApiTestCase
 				'end_date' => $endDate->toDateString(),
 				'user_id' => $user->id,
 				'work_days' => [1,2,3,7],
-				'preset_active' => ['dateToDate'],
+				'preset_active' => 'dateToDate',
 			]);
 
 		$response->assertStatus(200);
@@ -133,7 +133,7 @@ class UserLessonTest extends ApiTestCase
 			]);
 		}
 
-		$startDate = Carbon::now();
+		$startDate = Carbon::parse('next monday');
 
 		$response = $this
 			->actingAs($user)

@@ -1,12 +1,11 @@
 import _ from 'lodash'
-import store from 'store'
 import {set, delete as destroy} from 'vue'
 import {getApiUrl} from 'js/utils/env'
 import {resource} from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
 // Helper functions
-function getCourseApiUrl(courseId, userId) {
+function getCourseApiUrl(courseId) {
 	return getApiUrl(
 		`${resource('editions')}/${courseId}
 		?include=groups.lessons.screens.sections.subsections,
@@ -41,16 +40,15 @@ const getters = {
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
 	getLessons: state => state.structure[resource('lessons')] || {},
-	userLessons: (state, getters, rootState, rootGetters) => {
+	userLessons: (state, getters) => {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.isAccessible);
 	},
 	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
-	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
-	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
+	isLessonAvailable: (state) => (lessonId) => {
 		return state.structure[resource('lessons')][lessonId].isAvailable
 	},
-	isLessonAccessible: (state, getters, rootState, rootGetters) => (lessonId) => {
+	isLessonAccessible: (state) => (lessonId) => {
 		return state.structure[resource('lessons')][lessonId].isAccessible
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
@@ -182,7 +180,7 @@ const actions = {
 				dispatch('setStructure', courseId),
 				dispatch('progress/setupCourse', courseId, {root: true}),
 			])
-			.then(resolutions => {
+			.then(() => {
 				$wnl.logger.debug('Course ready, yay!')
 				commit(types.COURSE_READY)
 				return resolve()

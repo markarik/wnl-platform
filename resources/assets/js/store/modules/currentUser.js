@@ -40,7 +40,10 @@ const getters = {
 	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
 	isCurrentUserLoading: state => state.loading,
 	currentUserStats: state => state.stats,
-	currentUserSubscriptionDates: state => state.profile.subscription.dates,
+	currentUserSubscriptionDates: state => {
+		console.log(state.profile)
+		return state.profile.subscription.dates
+	},
 }
 
 // Mutations

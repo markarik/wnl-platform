@@ -38,6 +38,10 @@ Route::group(['middleware' => 'auth'], function () {
 		return redirect('/app');
 	})->name('home');
 
+	Route::get('/terms', function() {
+		return view('auth.terms-change');
+	})->name('terms');
+
 	// Using front-end routing for the main application
 	Route::get('/app/{path?}', 'AppController@index')->name('app')->where('path', '(.*)');
 

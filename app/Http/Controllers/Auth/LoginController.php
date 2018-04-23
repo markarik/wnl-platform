@@ -78,6 +78,10 @@ class LoginController extends Controller
 			return redirect('/login');
 		}
 
+		if (!$user->consent_terms) {
+			return redirect('/terms');
+		}
+
 		$this->singleSessionCheck($user);
 	}
 

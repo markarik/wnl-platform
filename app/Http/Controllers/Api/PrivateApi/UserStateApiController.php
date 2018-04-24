@@ -186,13 +186,9 @@ class UserStateApiController extends ApiController
 	public function deleteCourse($userId, $courseId) {
 		$user = \Auth::user();
 		$profileId = $user->profile->id;
-		$userCourseProgress = UserCourseProgress::where('user_id', $userId)->first();
+		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)->first();
 
-		if (is_null($userCourseProgress)) {
-			return $this->respondOk();
-		}
-
-		if (!$user->can('delete', $userCourseProgress)) {
+		if (!is_null($userCourseProgress) && !$user->can('delete', $userCourseProgress)) {
 			return $this->respondForbidden();
 		}
 

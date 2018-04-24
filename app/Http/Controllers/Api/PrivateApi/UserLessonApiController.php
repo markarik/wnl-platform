@@ -18,6 +18,7 @@ class UserLessonApiController extends ApiController
 	const GROUP_ID_WARSZTATY = 3;
 	const GROUP_ID_POWTORKI = 11;
 	const GROUP_ID_DODATKI = 15;
+	const GROUP_ID_PROBNY_LEK = 14;
 
 	public function __construct(Request $request)
 	{
@@ -146,10 +147,8 @@ class UserLessonApiController extends ApiController
 			} else {
 				if ($presetActive === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
 					$workLoad = $computedWorkLoad + 1;
-					echo('if');
 					$lessonWithExtraDay++;
 				} else if ($presetActive === 'dateToDate' && $lessonWithExtraDay >= $daysExcess) {
-					echo('else if');
 					$workLoad = $computedWorkLoad;
 				}
 				$dayOfWeekIso = $startDate->dayOfWeekIso;
@@ -167,15 +166,16 @@ class UserLessonApiController extends ApiController
 					$queriedLesson
 						->update(['start_date' => $startDate]);
 				}
-				$startDate->addHours($workLoad * 24);
+				$startDate->addDays($workLoad);
 			}
 		}
-		// dodaje sie jeden dzień do startDate - nie jest taki sam jak próbny lek
+
+		$lastLessonStartdate = $startDate->subDays($workLoad);
 		foreach ($lessons as $lesson) {
 			if ($lesson->group_id === self::GROUP_ID_POWTORKI) {
 				DB::table('user_lesson')
 					->where('lesson_id', $lesson->id)
-					->update(['start_date' => $startDate]);
+					->update(['start_date' => $lastLessonStartdate]);
 			}
 		}
 	}

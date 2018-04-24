@@ -18,6 +18,11 @@ const state = {
 		avatar: '',
 		roles: [],
 		user_id: 0,
+		subscription: {
+			dates: {
+				min: 0, max: 0
+			}
+		}
 	},
 	settings: getDefaultSettings(),
 }
@@ -112,16 +117,6 @@ const actions = {
 		})
 	},
 
-	fetchUserSubscription({commit}) {
-		return _fetchUserSubscription()
-			.then(({data}) => {
-				commit(types.USERS_SET_SUBSCRIPTION, data)
-			})
-			.catch((error) => {
-				$wnl.logger.error(error)
-			})
-	},
-
 	fetchUserSettings({ commit }) {
 		return new Promise((resolve, reject) => {
 			getUserSettings().then((response) => {
@@ -161,10 +156,6 @@ const actions = {
 
 const _fetchUserStats = (userId) => {
 	return axios.get(getApiUrl(`users/${userId}/state/stats`));
-}
-
-const _fetchUserSubscription = () => {
-	return axios.get(getApiUrl('user_subscription/current'));
 }
 
 export default {

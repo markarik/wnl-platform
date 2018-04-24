@@ -119,7 +119,7 @@ const actions = {
 	toggleSidenav({ commit }) {
 		commit(types.UI_TOGGLE_SIDENAV)
 	},
-	resetLayout({ commit, getters }) {
+	resetLayout({ commit }) {
 		commit(types.UI_RESET_LAYOUT)
 	},
 	toggleChat({ commit }) {
@@ -150,9 +150,6 @@ const actions = {
 			commit(types.UI_SHOW_GLOBAL_NOTIFICATION, false)
 		}, timeout)
 	},
-	openChat({ commit }) {
-		commit(types.UI_SET_CHAT_OPEN);
-	},
 	[types.SOCKET_CONNECTION_ERROR]({commit}) {
 		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, false)
 	},
@@ -166,8 +163,4 @@ export default {
 	getters,
 	mutations,
 	actions
-}
-
-export const GLOBAL_NOTIFICATION_TYPES = {
-	INFO: 'info'
 }

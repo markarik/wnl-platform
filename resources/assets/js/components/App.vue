@@ -87,7 +87,7 @@
 			this.toggleOverlay({source: 'course', display: true})
 			sessionStore.clearAll()
 
-			return Promise.all([this.setupCurrentUser(), this.courseSetup(1)])
+			return this.setupCurrentUser()
 				.then(() => {
 					this.setConnectionStatus(false)
 					// Setup Notifications
@@ -111,17 +111,20 @@
 						!to.params.keepsNavOpen && this.resetLayout()
 					})
 
-					this.setLayout(this.$breakpoints.currentBreakpoint())
-					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
-						this.setLayout(currentLayout)
-					})
-
 					// Setup active users
 					window.Echo.join('active-users')
 						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
 						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
 						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
 
+					this.setLayout(this.$breakpoints.currentBreakpoint())
+					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
+						this.setLayout(currentLayout)
+					})
+
+					return this.courseSetup(1)
+				})
+				.then(() => {
 					this.toggleOverlay({source: 'course', display: false})
 				})
 				.catch(error => {

@@ -1,4 +1,5 @@
 export const lessonsAvailability = {
+	header: 'Dostępność lekcji',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',
 		availablePresets: '2. Dostępne plany nauki.',
@@ -17,4 +18,5 @@ export const lessonsAvailability = {
 		acceptPlanButton: 'Jedziesz szwagier',
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
+	allLessons: 'Wszystkie lekcje',
 }

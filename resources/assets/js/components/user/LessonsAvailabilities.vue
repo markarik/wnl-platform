@@ -3,6 +3,13 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
+					{{ $t('lessonsAvailability.header') }}
+				</div>
+			</div>
+		</div>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
 					{{ $t('lessonsAvailability.sections.workDays') }}
 				</div>
 			</div>
@@ -30,19 +37,21 @@
 			</div>
 		</div>
 		<div class="presets-control">
-			<a v-for="name, preset in presets"
-				class="panel-toggle"
-				:class="{'is-active': isPresetActive(preset)}"
-				:key="preset"
-				@click="togglePreset(preset)"
-				>{{name}}
-				<span class="icon is-small">
-					<i class="fa"
+			<div class="preset">
+				<a v-for="name, preset in presets"
+					class="panel-toggle preset"
+					:class="{'is-active': isPresetActive(preset)}"
+					:key="preset"
+					@click="togglePreset(preset)"
+					>{{name}}
+					<span class="icon is-small">
+						<i class="fa"
 						:class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-				</span>
-			</a>
+					</span>
+				</a>
+			</div>
 		</div>
-		<div class="presets-toggle" v-if="isPresetActive('daysPerLesson')">
+		<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
 			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item">
@@ -50,7 +59,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="presets">
+			<div class="work-load-buttons">
 				<div class="each-day-preset">
 					<button
 						@click="chooseWorkload(1)"
@@ -92,21 +101,23 @@
 				</div>
 			</div>
 			<div class="dates">
-				<div class="start-date-picker">
-					<label class="date-label" for="startDate">
-						{{$t('questions.plan.headings.startDate')}}
-						<span class="icon is-small">
-							<i class="fa fa-hourglass-1"></i>
-						</span>
-					</label>
-					<wnl-datepicker
-						:withBorder="true"
-						v-model="startDate"
-						:config="startDateConfig"
-						@onChange="onStartDateChange"/>
-					<p class="tip">
-						{{$t('questions.plan.tips.startDate')}}
-					</p>
+				<div class="date">
+					<div class="start-date-picker">
+						<label class="date-label" for="startDate">
+							{{$t('questions.plan.headings.startDate')}}
+							<span class="icon is-small">
+								<i class="fa fa-hourglass-1"></i>
+							</span>
+						</label>
+						<wnl-datepicker
+							:withBorder="true"
+							v-model="startDate"
+							:config="startDateConfig"
+							@onChange="onStartDateChange"/>
+						<p class="tip">
+							{{$t('questions.plan.tips.startDate')}}
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -119,37 +130,41 @@
 				</div>
 			</div>
 			<div class="dates">
-				<div class="start-date-picker">
-					<label class="date-label" for="startDate">
-						{{$t('questions.plan.headings.startDate')}}
-						<span class="icon is-small">
-							<i class="fa fa-hourglass-1"></i>
-						</span>
-					</label>
-					<wnl-datepicker
-						:withBorder="true"
-						v-model="startDate"
-						:config="startDateConfig"
-						@onChange="onStartDateChange"/>
-					<p class="tip">
-						{{$t('questions.plan.tips.startDate')}}
-					</p>
+				<div class="date">
+					<div class="start-date-picker">
+						<label class="date-label" for="startDate">
+							{{$t('questions.plan.headings.startDate')}}
+							<span class="icon is-small">
+								<i class="fa fa-hourglass-1"></i>
+							</span>
+						</label>
+						<wnl-datepicker
+							:withBorder="true"
+							v-model="startDate"
+							:config="startDateConfig"
+							@onChange="onStartDateChange"/>
+						<p class="tip">
+							{{$t('questions.plan.tips.startDate')}}
+						</p>
+					</div>
 				</div>
-				<div class="end-date-picker">
-					<label class="date-label" for="endDate">
-						{{$t('questions.plan.headings.endDate')}}
-						<span class="icon is-small">
-							<i class="fa fa-hourglass-1"></i>
-						</span>
-					</label>
-					<wnl-datepicker
-						:withBorder="true"
-						v-model="endDate"
-						:config="endDateConfig"
-						@onChange="onEndDateChange"/>
-					<p class="tip">
-						{{$t('questions.plan.tips.endDate')}}
-					</p>
+				<div class="date">
+					<div class="end-date-picker">
+						<label class="date-label" for="endDate">
+							{{$t('questions.plan.headings.endDate')}}
+							<span class="icon is-small">
+								<i class="fa fa-hourglass-1"></i>
+							</span>
+						</label>
+						<wnl-datepicker
+							:withBorder="true"
+							v-model="endDate"
+							:config="endDateConfig"
+							@onChange="onEndDateChange"/>
+						<p class="tip">
+							{{$t('questions.plan.tips.endDate')}}
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -172,11 +187,20 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.lessonsAvailabilities.header')}}
+					{{ $t('lessonsAvailability.allLessons')}}
 				</div>
 			</div>
 		</div>
-		<div class="groups">
+		<div class="lessons-view">
+			<a class="lessons-view-toggle panel-toggle"
+				@click="toggleLessonsView"
+			>{{ activeViewName }}
+				<span class="icon is-small">
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': activeView}"></i>
+				</span>
+			</a>
+		</div>
+		<div class="groups" v-if="activeView">
 			<ul class="groups-list" v-if="structure">
 				<li class="group" v-for="(item, index) in groupsWithLessons"
 					:key="index">
@@ -226,17 +250,45 @@
 		.days-info
 			margin-bottom: $margin-small
 		.days
+			display: flex
+			flex-wrap: wrap
+			justify-content: space-around
 			margin-bottom: $margin-big
 			.day
+				display: flex
+				justify-content: space-around
+				flex-wrap: wrap
 				border: 10px
 
 		.presets-control
 			margin-bottom: $margin-big
-			.presets
-				display: flex
-				justify-content: space-between
+			display: flex
+			justify-content: space-around
+			.preset
 				flex-wrap: wrap
+				display: flex
+				justify-content: space-around
+
+		.work-load-buttons
+			display: flex
+			justify-content: space-around
+			margin-bottom: $margin-base
+
+		.dates
+			.date
 				margin-bottom: $margin-big
+				label, .tip
+					width: 100%
+					display: inline-block
+					text-align: center
+
+		.accept-plan
+			margin-bottom: $margin-small
+			display: flex
+			justify-content: space-around
+
+		.lessons-view
+			margin-bottom: $margin-base
 
 		.groups
 			.groups-list
@@ -315,6 +367,11 @@ export default {
 			startDate: new Date(),
 			endDate: this.computedEndDate,
 			workDays: [],
+			activeView: false,
+			activeViewNames: {
+				closed: 'Pokaż lekcje',
+				open: 'Schowaj lekcje'
+			},
 		}
 	},
 	computed: {
@@ -328,6 +385,9 @@ export default {
 		...mapGetters('progress', [
 			'getCompleteLessons',
 		]),
+		activeViewName() {
+			return this.activeView ? this.activeViewNames.open : this.activeViewNames.closed
+		},
 		inProgressLessonsLength() {
 			return Object.keys(this.getRequiredLessons).filter(requiredQuestion => {
 				return !this.completedLessons.includes(Number(requiredQuestion))
@@ -444,6 +504,9 @@ export default {
 		},
 		togglePreset(preset) {
 			return this.activePresets = preset
+		},
+		toggleLessonsView() {
+			return this.activeView = !this.activeView
 		},
 		isDayActive(dayNumber) {
 			let index = this.workDays.indexOf(dayNumber)

@@ -41,7 +41,6 @@ export const user = {
         sendMessage: 'Wyślij wiadomość',
     },
 	lessonsAvailabilities: {
-		header: 'Dostępność lekcji',
 		alertSuccess: 'Udalo się zmienić datę! :)',
 		alertError: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
 	}

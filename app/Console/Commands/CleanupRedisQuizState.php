@@ -40,13 +40,13 @@ class CleanupRedisQuizState extends Command
 	{
 		$keyPattern = UserQuizResultsApiController::getQuizRedisKey('*', '*');
 		$allKeys = Redis::keys($keyPattern);
-		$this->output->createProgressBar(count($allKeys));
+		$bar = $this->output->createProgressBar(count($allKeys));
 
 		foreach ($allKeys as $key) {
 			$dataRaw = Redis::get($key);
 			if (!empty($dataRaw)) {
-				$data = json_decode($dataRaw);
-				return [
+				$data = json_decode($dataRaw, true);
+				$compressedData = [
 					'setId' => $data['setId'],
 					'setName' => $data['setName'],
 					'attempts' => $data['attempts'],
@@ -54,11 +54,14 @@ class CleanupRedisQuizState extends Command
 					'questionsIds' => $data['questionsIds'],
 					'quiz_questions' => array_map(function($question) {
 						return [
-							'isRequired' => $question['isRequired']
+							'isResolved' => $question['isResolved']
 						];
 					}, $data['quiz_questions'])
 				];
+				Redis::set($key, json_encode($compressedData));
+				$bar->advance();
 			}
 		}
+		echo PHP_EOL;
 	}
 }

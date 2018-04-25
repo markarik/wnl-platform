@@ -176,7 +176,10 @@ const mutations = {
 	},
 	[types.COURSE_SET_LESSON_AVAILABILITY] (state, payload) {
 		set(state.structure.lessons[payload.lessonId], 'isAvailable', payload.status)
-	}
+	},
+	[types.COURSE_UPDATE_LESSON_START_DATE] (state, payload) {
+		set(state.structure.lessons[payload.lessonId], 'startDate', payload.start_date)
+	},
 }
 
 // Actions
@@ -215,6 +218,9 @@ const actions = {
 	setLessonAvailabilityStatus({commit}, payload) {
 		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload)
 	},
+	updateLessonStartDate({commit}, payload) {
+		commit(types.COURSE_UPDATE_LESSON_START_DATE, payload)
+	}
 }
 
 export default {

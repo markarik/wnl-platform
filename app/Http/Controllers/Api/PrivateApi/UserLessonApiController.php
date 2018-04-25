@@ -11,6 +11,8 @@ use App\Http\Requests\User\UpdateLessonsPreset;
 use App\Models\UserCourseProgress;
 use App\Models\UserLesson;
 use App\Models\User;
+use App\Http\Controllers\Api\Transformers\LessonTransformer;
+use League\Fractal\Resource\Collection;
 
 class UserLessonApiController extends ApiController
 {
@@ -116,6 +118,16 @@ class UserLessonApiController extends ApiController
 				$presetActive
 			);
 		}
+		$transformedLessons = new Collection ($user->lessonsAvailability, new LessonTransformer, 'lessons');
+		$data = $this->fractal->createData($transformedLessons)->toArray();
+		array_push($data, $startDate);
+
+		dd($data);
+
+		return $this->respondOk([
+			'lessons' => $data,
+			'end_date' => $startDate->timestamp,
+		]);
 	}
 
 	private function calculatePlan(
@@ -178,5 +190,6 @@ class UserLessonApiController extends ApiController
 					->update(['start_date' => $lastLessonStartdate]);
 			}
 		}
+		return $startDate;
 	}
 }

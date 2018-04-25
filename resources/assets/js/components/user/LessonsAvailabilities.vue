@@ -367,11 +367,20 @@ export default {
 			startDate: new Date(),
 			endDate: this.computedEndDate,
 			workDays: [],
+			workLoad: null,
 			activeView: false,
 			activeViewNames: {
 				closed: 'Pokaż lekcje',
 				open: 'Schowaj lekcje'
 			},
+			alertSuccess: {
+				text: 'Udało się zmienić datę! :)',
+				type: 'success',
+			},
+			alertError: {
+				text: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
+				type: 'error',
+			}
 		}
 	},
 	computed: {
@@ -477,11 +486,11 @@ export default {
 			let startDate = moment(this.startDate);
 			let endDate = moment(this.endDate);
 			return endDate.diff(startDate, 'days')
-		}
+		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('course', ['setLessonAvailabilityStatus']),
+		...mapActions('course', ['setLessonAvailabilityStatus', 'updateLessonStartDate']),
 		...mapActions(['toggleOverlay']),
 		isPresetActive(preset) {
 			return this.activePresets === preset
@@ -528,6 +537,9 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
+			if (this.activePresets === 'dateToDate') {
+				this.workLoad = null
+			}
 			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
 				work_days: this.workDays,
 				work_load: this.workLoad,
@@ -535,6 +547,26 @@ export default {
 				end_date: this.endDate,
 				days_quantity: this.daysQuantity,
 				preset_active: this.activePresets,
+			}).then((response) => {
+				if (response.status === 200) {
+					console.log(response);
+					response.data.lessons.forEach((lesson) => {
+						this.updateLessonStartDate({
+							lessonId: lesson.id,
+							start_date: lesson.startDate
+						})
+						this.addAutoDismissableAlert({
+							text: `Udało się zmienić daty. Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}`,
+							type: 'success',
+							timeout: 10000,
+						})
+					})
+				} else {
+					this.addAutoDismissableAlert({
+						text: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
+						type: 'error',
+					})
+				}
 			})
 		},
 		isOpen(item) {

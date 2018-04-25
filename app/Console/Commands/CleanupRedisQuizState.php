@@ -54,7 +54,7 @@ class CleanupRedisQuizState extends Command
 					'questionsIds' => $data['questionsIds'],
 					'quiz_questions' => array_map(function($question) {
 						return [
-							'isResolved' => $question['isResolved']
+							'isResolved' => $question['isResolved'] ?? false
 						];
 					}, $data['quiz_questions'])
 				];

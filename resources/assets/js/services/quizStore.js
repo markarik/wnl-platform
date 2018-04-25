@@ -14,8 +14,7 @@ const saveQuizProgress = (setId, state, recordedAnswers = []) => {
 			})
 			axios.put(getApiUrl(`quiz_results/${user_id}/quiz/${setId}`), {
 				quiz: {
-					quiz_questions: quiz_questions,
-					setId, setName, attempts, isComplete, questionsIds,
+					quiz_questions, setId, setName, attempts, isComplete, questionsIds,
 				},
 				recordedAnswers
 			});

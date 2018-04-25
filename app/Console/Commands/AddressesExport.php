@@ -63,8 +63,8 @@ class AddressesExport extends Command
 
 		$address = $user->userAddress()->first();
 
-		$schema['receiver_name'] = $user->first_name;
-		$schema['receiver_surname'] = $user->last_name;
+		$schema['receiver_name'] = $address->recipient ?? $user->full_name;
+		$schema['receiver_surname'] = '';
 		$schema['receiver_email'] = $user->email;
 		$schema['receiver_street'] = $address->street;
 		$schema['receiver_postcode'] = $address->zip;

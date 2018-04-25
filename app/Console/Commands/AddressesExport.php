@@ -61,7 +61,7 @@ class AddressesExport extends Command
 		$user = User::find($order->user_id);
 		$coupon = Coupon::find($order->coupon_id);
 
-		$address = $user->address()->first();
+		$address = $user->userAddress()->first();
 
 		$schema['receiver_name'] = $user->first_name;
 		$schema['receiver_surname'] = $user->last_name;

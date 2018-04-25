@@ -77,7 +77,7 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\UserSettings');
 	}
 
-	public function address()
+	public function userAddress()
 	{
 		return $this->hasOne('App\Models\UserAddress');
 	}

@@ -13,7 +13,16 @@ $(function () {
 		toggleCheckbox = personalData.find('#personal-data-invoice-toggle'),
 		invoiceForm    = personalData.find('#personal-data-invoice-form'),
 		countdown      = $('.signups-countdown'),
-		theDate        = countdown.data('start'); // ;)
+		theDate        = countdown.data('start'), // ;)
+		firstNameInput = $('#first_name'),
+		lastNameInput = $('#last_name'),
+		recipientInput = $('#recipient')
+
+	lastNameInput.on('change', () => {
+		if (recipientInput.val() === '') {
+			recipientInput.val(`${firstNameInput.val()} ${lastNameInput.val()}`)
+		}
+	})
 
 	window.setInterval(function() {
 		countdown.html(getTimeLeft(theDate));

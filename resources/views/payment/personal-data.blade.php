@@ -81,6 +81,12 @@
 				</div>
 
 				<div class="control">
+					{!! form_label($form->recipient) !!}
+					{!! form_widget($form->recipient) !!}
+					{!! form_errors($form->recipient) !!}
+				</div>
+
+				<div class="control">
 					{!! form_label($form->address) !!}
 					{!! form_widget($form->address) !!}
 					{!! form_errors($form->address) !!}

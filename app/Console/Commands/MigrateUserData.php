@@ -46,7 +46,7 @@ class MigrateUserData extends Command
 				'last_name'  => $user->last_name,
 			]);
 
-			$user->address()->firstOrCreate([
+			$user->userAddress()->firstOrCreate([
 				'street' => $user->address,
 				'zip'    => $user->zip,
 				'city'   => $user->city,

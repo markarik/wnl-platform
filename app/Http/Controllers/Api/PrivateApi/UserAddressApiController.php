@@ -12,7 +12,7 @@ class UserAddressApiController extends ApiController
 	public function get($id)
 	{
 		$user = User::fetch($id);
-		$address = $user->address()->first();
+		$address = $user->userAddress()->first();
 
 		if (!$user || !$address) {
 			return $this->respondNotFound();
@@ -31,7 +31,7 @@ class UserAddressApiController extends ApiController
 	public function put(UpdateUserAddress $request)
 	{
 		$user = User::fetch($request->route('id'));
-		$user->address()->updateOrCreate(['user_id' => $user->id], $request->all());
+		$user->userAddress()->updateOrCreate(['user_id' => $user->id], $request->all());
 
 		return $this->respondOk();
 	}

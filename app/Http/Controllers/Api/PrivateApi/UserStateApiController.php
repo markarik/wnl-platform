@@ -203,11 +203,11 @@ class UserStateApiController extends ApiController
 		$courseKey = self::getCourseRedisKey($profileId, $courseId);
 		Redis::del($courseKey);
 
-		$userCourseProgress = UserCourseProgress::where('user_id', $userId)->get();
+		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)->get();
 
 		dispatch_now(new ArchiveCourseProgress($user, $userCourseProgress));
 
-		UserCourseProgress::where('user_id', $userId)->delete();
+		UserCourseProgress::where('user_id', $profileId)->delete();
 
 		$this->respondOk();
 	}

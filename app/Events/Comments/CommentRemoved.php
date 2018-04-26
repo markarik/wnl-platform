@@ -64,4 +64,16 @@ class CommentRemoved extends Event
 
 		return !empty($serializedModel) ? $serializedModel : $this->comment;
 	}
+
+	public function broadcastOn()
+	{
+		$commentable = $this->comment->commentable;
+		$commentableType = snake_case(class_basename($commentable));
+		$this->channels->push(new Channel('comments'));
+		$this->channels->push(new Channel(
+			"commentable-{$commentableType}-{$commentable->id}"
+		));
+
+		return $this->channels->toArray();
+	}
 }

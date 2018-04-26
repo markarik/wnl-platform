@@ -33,16 +33,6 @@ class QnaAnswerPosted extends Event
 		$this->qnaAnswer = $qnaAnswer;
 	}
 
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
-	}
-
 	public function transform()
 	{
 		$this->data = [

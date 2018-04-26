@@ -26,7 +26,6 @@ class QuizQuestionEdited extends Event
 
 	/**
 	 * Create a new event instance.
-	 *
 	 * @param QuizQuestion $quizQuestion
 	 * @param User $user
 	 *
@@ -36,16 +35,6 @@ class QuizQuestionEdited extends Event
 		parent::__construct();
 		$this->quizQuestion = $quizQuestion;
 		$this->user = $user;
-	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
 	}
 
 	public function transform()

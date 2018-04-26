@@ -44,5 +44,16 @@ export const user = {
 		header: 'Dostępność lekcji',
 		alertSuccess: 'Udalo się zmienić datę! :)',
 		alertError: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
-	}
+	},
+    progressReset: {
+        header: 'Usuwanie postępu',
+        resetQuestionsWarning: `Po zatwierdzeniu, usuniemy wszystkie wyniki 
+        Twoich dotychczasowych podejść do pytań kontrolnych. Dotyczy to zarówno 
+        pytań rozwiązywanych w ramach lekcji, jak i pozostałych dostępnych w 
+        bazie pytań. Jedyne wyniki, które nie zostaną wyczyszczone, to wyniki 
+        próbnych egzaminów.`,
+        resetCollectionsWarning: `Naciśnięcie poniższego przycisku spowoduje
+        usunięcie wszystkich rzeczy, zapisanych w Twojej kolekcji, czyli
+        między innymi zapisane slajdy, pytania kontrolne, pytania i odpowiedzi.`
+    }
 }

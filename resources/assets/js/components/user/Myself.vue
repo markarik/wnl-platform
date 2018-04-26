@@ -144,6 +144,17 @@
 						iconClass: 'fa fa-tasks',
 						iconTitle: 'Dostępność lekcji',
 					},
+					{
+						text: 'Usuwanie postępu',
+						itemClass: 'has-icon',
+						to: {
+							name: 'progress-reset'
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa fa-exclamation-triangle',
+						iconTitle: 'Usuwanie postępu',
+					}
 					// {
 					// 	text: 'Zmiana hasła',
 					// 	itemClass: 'has-icon',

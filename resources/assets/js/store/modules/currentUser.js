@@ -93,12 +93,18 @@ const actions = {
 	fetchCurrentUserProfile({ commit }) {
 		return new Promise((resolve, reject) => {
 			getCurrentUser().then((user) => {
+				if (!user.user_id) {
+					$wnl.logger.error('current user returned user with ID 0', {
+						profile: user
+					})
+					return reject(new Error('current user returned user with ID 0'));
+				}
 				commit(types.USERS_SETUP_CURRENT, user)
 				resolve()
 			})
 			.catch((error) => {
 				$wnl.logger.error(error)
-				reject()
+				reject(error)
 			})
 		})
 	},

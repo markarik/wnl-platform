@@ -66,6 +66,9 @@ export const user = {
         próbnych egzaminów.`,
 		collectionsWarning: `Naciśnięcie poniższego przycisku spowoduje
         usunięcie wszystkiego z Twojej kolekcji, czyli
-        między innymi zapisanych slajdów, pytań kontrolnych, pytań i odpowiedzi.`
+        między innymi zapisanych slajdów, pytań kontrolnych, pytań i odpowiedzi.`,
+		progressConfirmation: 'Czy na pewno chcesz usunąć cały postęp w nauce?',
+		questionsConfirmation: 'Czy na pewno chcesz usunąć wyniki pytań kontrolnych?',
+		collectionsConfirmation: 'Czy na pewno chcesz wyczyścić swoją kolekcję?',
     }
 }

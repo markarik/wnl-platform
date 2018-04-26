@@ -25,7 +25,7 @@
 		  	</div>
 			<div class="message-body" v-t="'user.progressReset.questionsWarning'"/>
 			<button
-				@click="resetProgress"
+				@click="resetQuestions"
 				class="button is-danger to-right"
 				v-t="'user.progressReset.questionsButton'"/>
 		</div>
@@ -36,7 +36,7 @@
 		  	</div>
 			<div class="message-body" v-t="'user.progressReset.collectionsWarning'"/>
 			<button
-				@click="resetProgress"
+				@click="resetCollections"
 				class="button is-danger to-right"
 				v-t="'user.progressReset.questionsButton'"/>
 		</div>
@@ -59,10 +59,51 @@
 </style>
 
 <script>
+	import { swalConfig } from 'js/utils/swal'
+	import { mapActions, mapGetters } from 'vuex'
+
 	export default {
 		methods: {
+			...mapActions(['toggleOverlay']),
+			...mapActions('progress', ['deleteProgress']),
+			...mapActions('questions', {deleteQuestions: 'deleteProgress'}),
+			...mapActions('collections', ['deleteCollection']),
+			confirmAndExecute(title, text, action) {
+				this.$swal(swalConfig({
+					title,
+					text,
+					showCancelButton: true,
+					confirmButtonText: this.$t('ui.confirm.confirm'),
+					cancelButtonText: this.$t('ui.confirm.cancel'),
+					type: 'error',
+					confirmButtonClass: 'button is-danger',
+					reverseButtons: true
+				}))
+				.then(() => {
+					return action()
+				})
+				.catch($wnl.logger.error)
+			},
 			resetProgress() {
-
+				this.confirmAndExecute(
+					this.$t('user.progressReset.progressHeader'),
+					this.$t('user.progressReset.progressConfirmation'),
+					this.deleteProgress
+				)
+			},
+			resetQuestions() {
+				this.confirmAndExecute(
+					this.$t('user.progressReset.questionsHeader'),
+					this.$t('user.progressReset.questionsConfirmation'),
+					this.deleteQuestions
+				)
+			},
+			resetCollections() {
+				this.confirmAndExecute(
+					this.$t('user.progressReset.collectionsHeader'),
+					this.$t('user.progressReset.collectionsConfirmation'),
+					this.deleteCollection
+				)
 			}
 		}
 	}

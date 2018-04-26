@@ -94,11 +94,12 @@ class UserLessonApiController extends ApiController
 		};
 
 		if ($workLoad === 0) {
+			$startDate = Carbon::now();
 			foreach ($sortedLessons as $lesson) {
 				$lessonId = $lesson->id;
 				DB::table('user_lesson')
 					->where('lesson_id', $lessonId)
-					->update(['start_date' => Carbon::now()]);
+					->update(['start_date' => $startDate]);
 			};
 		} else {
 			foreach ($sortedCompletedLessons as $lesson) {
@@ -120,9 +121,6 @@ class UserLessonApiController extends ApiController
 		}
 		$transformedLessons = new Collection ($user->lessonsAvailability, new LessonTransformer, 'lessons');
 		$data = $this->fractal->createData($transformedLessons)->toArray();
-		array_push($data, $startDate);
-
-		dd($data);
 
 		return $this->respondOk([
 			'lessons' => $data,

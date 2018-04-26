@@ -6,9 +6,7 @@ use App\Events\Event;
 use App\Events\SanitizesUserContent;
 use App\Models\QnaAnswer;
 use App\Traits\EventContextTrait;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

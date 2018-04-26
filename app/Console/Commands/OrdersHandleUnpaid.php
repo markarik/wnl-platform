@@ -123,6 +123,8 @@ class OrdersHandleUnpaid extends Command
 			}
 
 			if ($this->shouldSuspend($order, $instalment)) {
+				if (!$order->paid) return $order->cancel();
+				
 				$order->user->suspend();
 				$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
 			}

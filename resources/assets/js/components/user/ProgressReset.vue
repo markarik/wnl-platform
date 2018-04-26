@@ -68,6 +68,7 @@
 			...mapActions('progress', ['deleteProgress']),
 			...mapActions('questions', {deleteQuestions: 'deleteProgress'}),
 			...mapActions('collections', ['deleteCollection']),
+			...mapActions(['addAutoDismissableAlert']),
 			confirmAndExecute(title, text, action) {
 				this.$swal(swalConfig({
 					title,
@@ -82,7 +83,21 @@
 				.then(() => {
 					return action()
 				})
-				.catch($wnl.logger.error)
+				.then(() => {
+					this.addAutoDismissableAlert({
+						text: this.$t('user.progressReset.alertSuccess'),
+						type: 'success',
+						timeout: 10000,
+					})
+				})
+				.catch(error => {
+					$wnl.logger.capture(error)
+					this.addAutoDismissableAlert({
+						text: this.$t('user.progressReset.alertError'),
+						type: 'error',
+						timeout: 4000,
+					})
+				})
 			},
 			resetProgress() {
 				this.confirmAndExecute(

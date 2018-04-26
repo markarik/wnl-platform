@@ -5,6 +5,7 @@ namespace App\Events\Comments;
 use App\Events\Event;
 use App\Events\SanitizesUserContent;
 use App\Models\Comment;
+use Illuminate\Broadcasting\Channel;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -19,6 +20,7 @@ class CommentRemoved extends Event
 	public $comment;
 	public $action;
 	public $userId;
+	public $channels;
 
 	/**
 	 * Create a new event instance.
@@ -32,6 +34,7 @@ class CommentRemoved extends Event
 		$this->comment = $comment;
 		$this->userId = $userId;
 		$this->action = $action;
+		$this->channels = collect();
 	}
 
 	public function transform()

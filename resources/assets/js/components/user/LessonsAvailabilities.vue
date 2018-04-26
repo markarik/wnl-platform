@@ -60,36 +60,12 @@
 				</div>
 			</div>
 			<div class="work-load-buttons">
-				<div class="each-day-preset">
+				<div class="work-load-button" v-for="workLoad in availableWorkLoads">
 					<button
-						@click="chooseWorkload(1)"
+						@click="chooseWorkload(workLoad.workLoad)"
 						class="button to-right"
-						:class="{'is-active': this.workLoad === 1}"
-						>{{ $t('lessonsAvailability.buttons.oneDayPerLesson') }}
-					</button>
-				</div>
-				<div class="every-second-day-preset">
-					<button
-						@click="chooseWorkload(2)"
-						class="button to-right"
-						:class="{'is-active': this.workLoad === 2}"
-						>{{ $t('lessonsAvailability.buttons.twoDaysPerLesson') }}
-					</button>
-				</div>
-				<div class="every-three-days-preset">
-					<button
-						@click="chooseWorkload(3)"
-						class="button to-right"
-						:class="{'is-active': this.workLoad === 3}"
-						>{{ $t('lessonsAvailability.buttons.threeDaysPerLesson') }}
-					</button>
-				</div>
-				<div class="every-three-days-preset">
-					<button
-						@click="chooseWorkload(0)"
-						class="button to-right"
-						:class="{'is-active': this.workLoad === 0}"
-						>{{ $t('lessonsAvailability.buttons.openAll')}}
+						:class="{'is-active': this.workLoad === workLoad.workLoad}"
+						>{{ $t(workLoad.translation) }}
 					</button>
 				</div>
 			</div>
@@ -380,7 +356,7 @@ export default {
 			alertError: {
 				text: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
 				type: 'error',
-			}
+			},
 		}
 	},
 	computed: {
@@ -448,6 +424,27 @@ export default {
 			this.workDays.sort((a, b) => {
 				return a - b
 			})
+		},
+		availableWorkLoads() {
+			let availableWorkLoads = [
+				{
+					workLoad: 1,
+					translation: 'lessonsAvailability.buttons.oneDayPerLesson',
+				},
+				{
+					workLoad: 2,
+					translation: 'lessonsAvailability.buttons.twoDaysPerLesson',
+				},
+				{
+					workLoad: 3,
+					translation: 'lessonsAvailability.buttons.threeDaysPerLesson',
+				},
+				{
+					workLoad: 0,
+					translation: 'lessonsAvailability.buttons.openAll',
+				}
+			]
+			return availableWorkLoads
 		},
 		days() {
 			let days = [

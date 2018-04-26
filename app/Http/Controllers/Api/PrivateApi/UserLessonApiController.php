@@ -109,7 +109,7 @@ class UserLessonApiController extends ApiController
 					->update(['start_date' => Carbon::now()]);
 			};
 
-			UserLessonApiController::calculatePlan(
+			$this->calculatePlan(
 				$requiredInProgressLessonsCount,
 				$sortedInProgressLessons,
 				$startDate,
@@ -188,6 +188,7 @@ class UserLessonApiController extends ApiController
 					->update(['start_date' => $lastLessonStartdate]);
 			}
 		}
+		
 		return $startDate;
 	}
 }

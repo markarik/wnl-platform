@@ -3,42 +3,43 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.progressReset.header')}}
+					{{ $t('user.progressReset.header') }}
 				</div>
 			</div>
 		</div>
 
-		<div class="message is-danger">
-
-			<p v-t="'progress.reset.info'"/>
-			<button @click="resetProgress" class="button is-danger to-right">
-				Wyczyść postęp w nauce
-			</button>
-
+		<div class="message is-danger reset-container">
 			<div class="message-header">
-    			<p>Danger</p>
-   	 			<button class="delete" aria-label="delete"></button>
+    			<strong v-t="'user.progressReset.progressHeader'"></strong>
 		  	</div>
-		  	<div class="message-body"></div>
+		  	<div class="message-body" v-t="'progress.reset.info'"></div>
+			<button
+				@click="resetProgress"
+				class="button is-danger to-right"
+				v-t="'user.progressReset.progressButton'"/>
 		</div>
 
-
-		<div class="reset-questions reset-container">
-
-			<p v-t="'user.progressReset.resetQuestionsWarning'"/>
-			<button @click="resetQuestions" class="button is-danger to-right">
-				Wyczyść wszystkie wyniki
-			</button>
+		<div class="message is-danger reset-container">
+			<div class="message-header">
+    			<strong v-t="'user.progressReset.questionsHeader'"/>
+		  	</div>
+			<div class="message-body" v-t="'user.progressReset.questionsWarning'"/>
+			<button
+				@click="resetProgress"
+				class="button is-danger to-right"
+				v-t="'user.progressReset.questionsButton'"/>
 		</div>
 
-		<div class="reset-collections reset-container">
-			<p v-t="'user.progressReset.resetCollectionsWarning'"/>
-			<button @click="resetCollections" class="button is-danger to-right">
-				Wyczyść kolekcje
-			</button>
+		<div class="message is-danger reset-container">
+			<div class="message-header">
+    			<strong v-t="'user.progressReset.questionsHeader'"></strong>
+		  	</div>
+			<div class="message-body" v-t="'user.progressReset.collectionsWarning'"/>
+			<button
+				@click="resetProgress"
+				class="button is-danger to-right"
+				v-t="'user.progressReset.questionsButton'"/>
 		</div>
-
-
 	</div>
 
 </template>
@@ -49,13 +50,20 @@
 
 	.reset-container
 		text-align: center
-		padding: $margin-big
+		padding-bottom: $margin-base
+
+		.message-body
+			border: none
 
 
 </style>
 
 <script>
 	export default {
-		
+		methods: {
+			resetProgress() {
+
+			}
+		}
 	}
 </script>

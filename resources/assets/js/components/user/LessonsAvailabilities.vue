@@ -1,5 +1,10 @@
 <template>
 	<div class="scrollable-main-container">
+		<div class="text-loader" v-if="isLoading">
+			<wnl-text-loader>
+				Ładuję plan
+			</wnl-text-loader>
+		</div>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -7,214 +12,224 @@
 				</div>
 			</div>
 		</div>
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					{{ $t('lessonsAvailability.sections.workDays') }}
-				</div>
-			</div>
-		</div>
-		<div class="days">
-			<div class="day">
-				<a v-for="day in days"
-					class="panel-toggle"
-					:class="{'is-active': isDayActive(day.dayNumber)}"
-					:key="day.dayNumber"
-					@click="toggleDay(day.dayNumber)"
-				>{{ day.dayName }}
-					<span class="icon is-small">
-						<i class="fa"
-							:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-					</span>
-				</a>
-			</div>
-		</div>
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					{{ $t('lessonsAvailability.sections.availablePresets') }}
-				</div>
-			</div>
-		</div>
-		<div class="presets-control">
-			<div class="preset">
-				<a v-for="name, preset in presets"
+		<div class="views-control">
+			<div class="view">
+				<a v-for="name, view in views"
 					class="panel-toggle preset"
-					:class="{'is-active': isPresetActive(preset)}"
-					:key="preset"
-					@click="togglePreset(preset)"
+					:class="{'is-active': isViewActive(view)}"
+					:key="view"
+					@click="toggleView(view)"
 					>{{name}}
 					<span class="icon is-small">
 						<i class="fa"
-						:class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+						:class="[isViewActive(view) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 					</span>
 				</a>
 			</div>
 		</div>
-		<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
+		<div class="presets-view" v-if="activeView === 'presetsView'">
 			<div class="level wnl-screen-title">
 				<div class="level-left">
-					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
+					<div class="level-item big strong">
+						{{ $t('lessonsAvailability.sections.workDays') }}
 					</div>
 				</div>
 			</div>
-			<div class="work-load-buttons">
-				<div class="work-load-button" v-for="workLoad in availableWorkLoads">
+			<div class="days">
+				<div class="day">
+					<a v-for="day in days"
+						class="panel-toggle"
+						:class="{'is-active': isDayActive(day.dayNumber)}"
+						:key="day.dayNumber"
+						@click="toggleDay(day.dayNumber)"
+					>{{ day.dayName }}
+						<span class="icon is-small">
+							<i class="fa"
+								:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+						</span>
+					</a>
+				</div>
+			</div>
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item big strong">
+						{{ $t('lessonsAvailability.sections.availablePresets') }}
+					</div>
+				</div>
+			</div>
+			<div class="presets-control">
+				<div class="preset">
+					<a v-for="name, preset in presets"
+						class="panel-toggle preset"
+						:class="{'is-active': isPresetActive(preset)}"
+						:key="preset"
+						@click="togglePreset(preset)"
+						>{{name}}
+						<span class="icon is-small">
+							<i class="fa"
+							:class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+						</span>
+					</a>
+				</div>
+			</div>
+			<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item">
+							{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
+						</div>
+					</div>
+				</div>
+				<div class="work-load-buttons">
+					<div class="work-load-button panel-toggle" v-for="workLoad in availableWorkLoads">
+						<button
+							@click="chooseWorkload(workLoad.workLoad)"
+							class="button to-right"
+							:class="{'is-active': this.workLoad === workLoad.workLoad}"
+							>{{ $t(workLoad.translation) }}
+						</button>
+					</div>
+				</div>
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item">
+							{{ $t('lessonsAvailability.secondSection.startDate') }}
+						</div>
+					</div>
+				</div>
+				<div class="dates">
+					<div class="date">
+						<div class="start-date-picker">
+							<label class="date-label" for="startDate">
+								{{$t('questions.plan.headings.startDate')}}
+								<span class="icon is-small">
+									<i class="fa fa-hourglass-1"></i>
+								</span>
+							</label>
+							<wnl-datepicker
+								:withBorder="true"
+								v-model="startDate"
+								:config="startDateConfig"
+								@onChange="onStartDateChange"/>
+							<p class="tip">
+								{{$t('questions.plan.tips.startDate')}}
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="" v-if="isPresetActive('dateToDate')">
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item">
+							{{ $t('lessonsAvailability.secondSection.dateToDate') }}
+						</div>
+					</div>
+				</div>
+				<div class="dates">
+					<div class="date">
+						<div class="start-date-picker">
+							<label class="date-label" for="startDate">
+								{{$t('questions.plan.headings.startDate')}}
+								<span class="icon is-small">
+									<i class="fa fa-hourglass-1"></i>
+								</span>
+							</label>
+							<wnl-datepicker
+								:withBorder="true"
+								v-model="startDate"
+								:config="startDateConfig"
+								@onChange="onStartDateChange"/>
+							<p class="tip">
+								{{$t('questions.plan.tips.startDate')}}
+							</p>
+						</div>
+					</div>
+					<div class="date">
+						<div class="end-date-picker">
+							<label class="date-label" for="endDate">
+								{{$t('questions.plan.headings.endDate')}}
+								<span class="icon is-small">
+									<i class="fa fa-hourglass-1"></i>
+								</span>
+							</label>
+							<wnl-datepicker
+								:withBorder="true"
+								v-model="endDate"
+								:config="endDateConfig"
+								@onChange="onEndDateChange"/>
+							<p class="tip">
+								{{$t('questions.plan.tips.endDate')}}
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item big strong">
+						{{ $t('lessonsAvailability.sections.acceptPlan') }}
+					</div>
+				</div>
+			</div>
+			<div class="accept-plan">
+				<div class="accept-plan-button">
 					<button
-						@click="chooseWorkload(workLoad.workLoad)"
-						class="button to-right"
-						:class="{'is-active': this.workLoad === workLoad.workLoad}"
-						>{{ $t(workLoad.translation) }}
+						@click="acceptPlan"
+						class="button to-right is-info"
+						>{{ $t('lessonsAvailability.buttons.acceptPlanButton') }}
 					</button>
 				</div>
 			</div>
+		</div>
+		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
 			<div class="level wnl-screen-title">
 				<div class="level-left">
-					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.startDate') }}
+					<div class="level-item big strong">
+						{{ $t('lessonsAvailability.allLessons')}}
 					</div>
 				</div>
 			</div>
-			<div class="dates">
-				<div class="date">
-					<div class="start-date-picker">
-						<label class="date-label" for="startDate">
-							{{$t('questions.plan.headings.startDate')}}
+			<div class="groups">
+				<ul class="groups-list" v-if="structure">
+					<li class="group" v-for="(item, index) in groupsWithLessons"
+						:key="index">
+						<span class="item-toggle" @click="toggleItem(item)">
 							<span class="icon is-small">
-								<i class="fa fa-hourglass-1"></i>
-							</span>
-						</label>
-						<wnl-datepicker
-							:withBorder="true"
-							v-model="startDate"
-							:config="startDateConfig"
-							@onChange="onStartDateChange"/>
-						<p class="tip">
-							{{$t('questions.plan.tips.startDate')}}
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="" v-if="isPresetActive('dateToDate')">
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.dateToDate') }}
-					</div>
-				</div>
-			</div>
-			<div class="dates">
-				<div class="date">
-					<div class="start-date-picker">
-						<label class="date-label" for="startDate">
-							{{$t('questions.plan.headings.startDate')}}
-							<span class="icon is-small">
-								<i class="fa fa-hourglass-1"></i>
-							</span>
-						</label>
-						<wnl-datepicker
-							:withBorder="true"
-							v-model="startDate"
-							:config="startDateConfig"
-							@onChange="onStartDateChange"/>
-						<p class="tip">
-							{{$t('questions.plan.tips.startDate')}}
-						</p>
-					</div>
-				</div>
-				<div class="date">
-					<div class="end-date-picker">
-						<label class="date-label" for="endDate">
-							{{$t('questions.plan.headings.endDate')}}
-							<span class="icon is-small">
-								<i class="fa fa-hourglass-1"></i>
-							</span>
-						</label>
-						<wnl-datepicker
-							:withBorder="true"
-							v-model="endDate"
-							:config="endDateConfig"
-							@onChange="onEndDateChange"/>
-						<p class="tip">
-							{{$t('questions.plan.tips.endDate')}}
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					{{ $t('lessonsAvailability.sections.acceptPlan') }}
-				</div>
-			</div>
-		</div>
-		<div class="accept-plan">
-			<div class="accept-plan-button">
-				<button
-					@click="acceptPlan"
-					class="button to-right is-info"
-					>{{ $t('lessonsAvailability.buttons.acceptPlanButton') }}
-				</button>
-			</div>
-		</div>
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					{{ $t('lessonsAvailability.allLessons')}}
-				</div>
-			</div>
-		</div>
-		<div class="lessons-view">
-			<a class="lessons-view-toggle panel-toggle"
-				@click="toggleLessonsView"
-			>{{ activeViewName }}
-				<span class="icon is-small">
-					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': activeView}"></i>
-				</span>
-			</a>
-		</div>
-		<div class="groups" v-if="activeView">
-			<ul class="groups-list" v-if="structure">
-				<li class="group" v-for="(item, index) in groupsWithLessons"
-					:key="index">
-					<span class="item-toggle" @click="toggleItem(item)">
-						<span class="icon is-small">
-							<i class="toggle fa fa-angle-down"
+								<i class="toggle fa fa-angle-down"
 								:class="{'fa-rotate-180': isOpen(item)}"></i>
+							</span>
+							<span class="item-name">{{item.name}}</span>
+							<span class="subitems-count">
+								({{item.lessons.length}})
+							</span>
 						</span>
-						<span class="item-name">{{item.name}}</span>
-						<span class="subitems-count">
-							({{item.lessons.length}})
-						</span>
-					</span>
-					<ul class="subitems" v-if="isOpen(item)">
-						<li class="subitem" v-for="(subitem, index) in item.lessons"
-							:class="{'isEven': isEven(index)}"
-							:key="index">
-							<span class="subitem-name label"
+						<ul class="subitems" v-if="isOpen(item)">
+							<li class="subitem" v-for="(subitem, index) in item.lessons"
+								:class="{'isEven': isEven(index)}"
+								:key="index">
+								<span class="subitem-name label"
 								:class="{'is-grayed-out': !subitem.isAccessible}"
 								>{{subitem.name}}</span>
-							<div class="subitem-left-side">
-								<div class="not-accesible" v-if="!subitem.isAccessible">
+								<div class="subitem-left-side">
+									<div class="not-accesible" v-if="!subitem.isAccessible">
 									{{ $t('lessonsAvailability.lessonNotAvilable') }}
-								</div>
-								<div class="datepicker" v-else>
-									<wnl-datepicker
+									</div>
+									<div class="datepicker" v-else>
+										<wnl-datepicker
 										:class="{'hasColorBackground': isEven(index)}"
 										:value="getStartDate(subitem)"
 										:subitemId="subitem.id"
 										:config="startDateConfig"
 										@onChange="(payload) => onStartDateChange(payload, subitem.id)"
-									/>
+										/>
+									</div>
 								</div>
-							</div>
-						</li>
-					</ul>
-				</li>
-			</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </template>
@@ -223,8 +238,30 @@
 	@import 'resources/assets/sass/variables'
 
 	.scrollable-main-container
+		.text-loader
+			position: absolute
+			z-index: $z-index-navbar
+			width: 100vw
+			height: 100%
+			background-color: $color-white-overlay
+			top: 0
+			left: 0
+			font-size: $font-size-plus-2
+
+		.views-control
+			display: flex
+			flex-wrap: wrap
+			justify-content: space-around
+			margin-bottom: $margin-base
+			.view
+				display: flex
+				justify-content: space-around
+				flex-wrap: wrap
+				border: 10px
+
 		.days-info
 			margin-bottom: $margin-small
+
 		.days
 			display: flex
 			flex-wrap: wrap
@@ -234,21 +271,29 @@
 				display: flex
 				justify-content: space-around
 				flex-wrap: wrap
-				border: 10px
 
 		.presets-control
 			margin-bottom: $margin-big
 			display: flex
+			flex-wrap: wrap
 			justify-content: space-around
 			.preset
 				flex-wrap: wrap
 				display: flex
 				justify-content: space-around
+				.icon
+					vertical-align: baseline
 
 		.work-load-buttons
 			display: flex
+			flex-wrap: wrap
 			justify-content: space-around
 			margin-bottom: $margin-base
+			.work-load-button
+				display: flex
+				justify-content: space-around
+				flex-wrap: wrap
+				border: 10px
 
 		.dates
 			.date
@@ -317,13 +362,12 @@
 </style>
 
 <script>
-import { pull } from 'lodash'
 import { mapGetters, mapActions } from 'vuex'
 import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
 import Datepicker from 'js/components/global/Datepicker'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
-import { isEmpty, merge } from 'lodash'
+import { isEmpty, merge, pull } from 'lodash'
 import moment from 'moment'
 
 export default {
@@ -333,6 +377,7 @@ export default {
 	},
 	data() {
 		return {
+			isLoading: false,
 			openGroups: [],
 			endDateAlert: {
 				text: 'Wybierz datę końcową',
@@ -341,10 +386,10 @@ export default {
 			},
 			activePresets: ['daysPerLesson', 'dateToDate'],
 			startDate: new Date(),
-			endDate: this.computedEndDate,
-			workDays: [],
+			endDate: null,
+			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,
-			activeView: false,
+			activeView: 'presetsView',
 			activeViewNames: {
 				closed: 'Pokaż lekcje',
 				open: 'Schowaj lekcje'
@@ -356,6 +401,12 @@ export default {
 			alertError: {
 				text: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
 				type: 'error',
+			},
+			defaultDateConfig: {
+					altInput: true,
+					disableMobile: true,
+					locale: pl,
+
 			},
 		}
 	},
@@ -370,38 +421,28 @@ export default {
 		...mapGetters('progress', [
 			'getCompleteLessons',
 		]),
-		activeViewName() {
-			return this.activeView ? this.activeViewNames.open : this.activeViewNames.closed
-		},
 		inProgressLessonsLength() {
-			return Object.keys(this.getRequiredLessons).filter(requiredQuestion => {
-				return !this.completedLessons.includes(Number(requiredQuestion))
+			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
+				return !this.completedLessons.includes(Number(requiredLesson))
 			}).length
 		},
-		computedEndDate() {
-			if (this.workLoad === 0) {
-				return this.endDate = this.startDate
-			} else {
-				return this.endDate
-			}
-		},
 		minimumEndDate() {
-				if (this.workDays.length > 4) {
-					return moment(this.startDate).add(this.inProgressLessonsLength, 'days').toDate()
-				}
+			return moment(this.startDate).add(Math.ceil(this.inProgressLessonsLength * 7 / this.workDays.length), 'days').toDate()
 		},
 		completedLessons() {
 			return this.getCompleteLessons(1).map(lesson => lesson.id)
 		},
 		startDateConfig() {
-			return merge(this.defaultDateConfig(), {
+			return {
+				...this.defaultDateConfig,
 				minDate: 'today',
-			})
+			}
 		},
 		endDateConfig() {
-			return merge(this.defaultDateConfig(), {
+			return {
+				...this.defaultDateConfig,
 				minDate: this.minimumEndDate,
-			})
+			}
 		},
 		groupsWithLessons() {
 			return this.groups.map(groupId => {
@@ -418,6 +459,12 @@ export default {
 			return {
 				daysPerLesson: 'Ile dni na lekcję?',
 				dateToDate: 'Od daty do daty',
+			}
+		},
+		views() {
+			return {
+				presetsView: 'Automatyczne plany lekcji',
+				lessonsView: 'Widok zaawansowany',
 			}
 		},
 		computedWorkDays() {
@@ -480,21 +527,17 @@ export default {
 			return days
 		},
 		daysQuantity() {
-			let startDate = moment(this.startDate);
-			let endDate = moment(this.endDate);
-			return endDate.diff(startDate, 'days')
+			if (this.activePresets === 'dateToDate') {
+				const startDate = moment(this.startDate);
+				const endDate = moment(this.endDate);
+				return endDate.diff(startDate, 'days')
+			}
 		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setLessonAvailabilityStatus', 'updateLessonStartDate']),
 		...mapActions(['toggleOverlay']),
-		isPresetActive(preset) {
-			return this.activePresets === preset
-		},
-		chooseWorkload(workLoad) {
-			this.workLoad = workLoad
-		},
 		defaultDateConfig() {
 			return {
 				altInput: true,
@@ -502,11 +545,23 @@ export default {
 				locale: pl,
 			}
 		},
+		isPresetActive(preset) {
+			return this.activePresets === preset
+		},
+		isViewActive(view) {
+			return this.activeView === view
+		},
+		chooseWorkload(workLoad) {
+			this.workLoad = workLoad
+		},
 		onEndDateChange(payload) {
 			if (isEmpty(payload)) this.endDate = null
 		},
 		onStartDateChange(payload) {
 			if (isEmpty(payload)) this.startDate = null
+		},
+		toggleView(view) {
+			return this.activeView = view
 		},
 		togglePreset(preset) {
 			return this.activePresets = preset
@@ -515,12 +570,7 @@ export default {
 			return this.activeView = !this.activeView
 		},
 		isDayActive(dayNumber) {
-			let index = this.workDays.indexOf(dayNumber)
-			if (index === -1) {
-				return false
-			} else {
-				return true
-			}
+			return this.workDays.includes(dayNumber)
 		},
 		toggleDay(dayNumber) {
 			let index = this.workDays.indexOf(dayNumber)
@@ -534,6 +584,7 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
+			this.isLoading = true
 			if (this.activePresets === 'dateToDate') {
 				this.workLoad = null
 			}
@@ -545,8 +596,9 @@ export default {
 				days_quantity: this.daysQuantity,
 				preset_active: this.activePresets,
 			}).then((response) => {
+				this.isLoading = false
 				if (response.status === 200) {
-					console.log(response);
+					console.log(response.data);
 					response.data.lessons.forEach((lesson) => {
 						this.updateLessonStartDate({
 							lessonId: lesson.id,

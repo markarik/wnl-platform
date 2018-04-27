@@ -40,16 +40,17 @@ class UserLessonTest extends ApiTestCase
 			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
 		};
 
+		$endDate = json_decode($response->getContent(), true)['end_date'];
+		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()));
+
 		$response
 			->assertStatus(200)
-			->assertJson([
-				'lessons' => [
-					// foreach($user->lessonsAvailability as $lesson) {
+			->assertJsonFragment([
 						[
 							'id'=> $lesson->id,
 							'name' => $lesson->name,
 							'group_id' => $lesson->group_id,
-							'groups' => $lesson->groups,
+							'groups' => $lesson->group_id,
 							'order_number' => $lesson->order_number,
 							'editions' => $lesson->editions,
 							'is_required' => $lesson->is_required,
@@ -57,9 +58,6 @@ class UserLessonTest extends ApiTestCase
 							'isAvailable' => $lesson->isAvailable(),
 							'startDate' => Carbon::now()->timestamp,
 						]
-					// }
-				],
-				'end_date' => Carbon::now()->timestamp,
 			]);
 	}
 
@@ -129,24 +127,24 @@ class UserLessonTest extends ApiTestCase
 			'start_date' => $startDate->addDays(1)->toDateTimeString(),
 		]);
 
+		$endDate = json_decode($response->getContent(), true)['end_date'];
+		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()->addDays(9)));
+
 		$response
 			->assertStatus(200)
-			->assertJson([
-				'lessons' => [
-					[
-						// 'id'=> $lesson->id,
-						// 'name' => $lesson->name,
-						// 'group_id' => $lesson->group_id,
-						// 'groups' => $lesson->groups,
-						// 'order_number' => $lesson->order_number,
-						// 'editions' => $lesson->editions,
-						// 'is_required' => $lesson->is_required,
-						// 'isAccessible' => $lesson->isAccessible(),
-						// 'isAvailable' => $lesson->isAvailable(),
-						// 'startDate' => Carbon::now()->timestamp,
-					]
-				],
-				'end_date' => Carbon::parse('next monday')->addDays(9)->timestamp,
+			->assertJsonFragment([
+						[
+							'id'=> $lesson->id,
+							'name' => $lesson->name,
+							'group_id' => $lesson->group_id,
+							'groups' => $lesson->group_id,
+							'order_number' => $lesson->order_number,
+							'editions' => $lesson->editions,
+							'is_required' => $lesson->is_required,
+							'isAccessible' => $lesson->isAccessible(),
+							'isAvailable' => $lesson->isAvailable(),
+							'startDate' => Carbon::now()->addDays(8)->timestamp,
+						]
 			]);
 	}
 
@@ -208,7 +206,7 @@ class UserLessonTest extends ApiTestCase
 			'start_date' => $startDate->addDays(2)->toDateTimeString(),
 		]);
 
-        $this->assertDatabaseHas('user_lesson', [
+		$this->assertDatabaseHas('user_lesson', [
 			'user_id' => $user->id,
 			'lesson_id' => $requiredLessons[4]->id,
 			'start_date' => $startDate->addDays(3)->toDateTimeString(),

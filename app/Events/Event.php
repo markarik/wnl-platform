@@ -1,5 +1,6 @@
 <?php namespace App\Events;
 
+use Illuminate\Broadcasting\PrivateChannel;
 use Ramsey\Uuid\Uuid;
 use Request;
 
@@ -37,5 +38,16 @@ abstract class Event
 	public static function getResourceEvent($resourceName, $action)
 	{
 		return self::EVENT_RESOURCE_MAP[$action][$resourceName] ?? null;
+	}
+
+	/**
+	 * Get the channels the event should broadcast on.
+	 * This method should be overridden inside each event
+	 *
+	 * @return \Illuminate\Broadcasting\Channel|array
+	 */
+	public function broadcastOn()
+	{
+		return new PrivateChannel('channel-name');
 	}
 }

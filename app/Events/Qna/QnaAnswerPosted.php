@@ -6,9 +6,7 @@ use App\Events\Event;
 use App\Events\SanitizesUserContent;
 use App\Models\QnaAnswer;
 use App\Traits\EventContextTrait;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -31,16 +29,6 @@ class QnaAnswerPosted extends Event
 	{
 		parent::__construct();
 		$this->qnaAnswer = $qnaAnswer;
-	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
 	}
 
 	public function transform()

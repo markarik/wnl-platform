@@ -90,9 +90,6 @@
 					id: this.commentableId,
 				})
 			},
-			hasComments() {
-				return !_.isEmpty(this.comments)
-			},
 			toggleCommentsText() {
 				return this.showComments ? this.$t('ui.action.hide') : this.$t('ui.action.show')
 			},
@@ -208,11 +205,11 @@
 					this.showComments = true
 				}
 			},
-			'showComments' (newValue, oldValue) {
+			'showComments' (newValue) {
 				let eventName = newValue ? 'commentsShown' : 'commentsHidden'
 				this.$emit(eventName)
 			},
-			'$route' (newRoute, oldRoute) {
+			'$route' () {
 				if (!this.isOverlayVisible && this.isCommentableInUrl) {
 					this.refresh()
 						.then(() => {

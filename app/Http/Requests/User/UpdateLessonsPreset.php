@@ -22,7 +22,7 @@ class UpdateLessonsPreset extends FormRequest
 		return [
 			'work_load' => 'numeric|nullable',
 			'start_date' => 'date|required',
-			'end_date' => 'date',
+			'end_date' => 'date|nullable',
 			'work_days' => 'array|required|between:1,7',
 			'days_quantity' => 'numeric',
 			'preset_active' => 'string',

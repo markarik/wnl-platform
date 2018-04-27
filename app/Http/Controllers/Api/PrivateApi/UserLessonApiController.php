@@ -63,17 +63,14 @@ class UserLessonApiController extends ApiController
 		$daysQuantity = $startDate->diffInDaysFiltered(function(Carbon $date) use ($workDays) {
 			$dayOfWeekIso = $date->dayOfWeekIso;
 			return in_array($dayOfWeekIso, $workDays);
-		}, $endDate);
+		}, $endDate->addDay());
 		$presetActive = $request->preset_active;
-		$subscriptionDates = $user->subscription_dates;
-		$subscriptionEndDate = now()->setTimestamp($subscriptionDates["max"]);
 		$sortedLessons = $user->lessonsAvailability()
 			->orderBy('group_id')
 			->orderBy('order_number')
 			->get();
 
-		$userCourseProgress = UserCourseProgress::where('user_id', $profileId);
-		$completeLessons = (clone $userCourseProgress)
+		$completeLessons = UserCourseProgress::where('user_id', $profileId)
 			->whereNull('section_id')
 			->whereNull('screen_id')
 			->where('status', 'complete')
@@ -98,6 +95,7 @@ class UserLessonApiController extends ApiController
 
 		if ($workLoad === 0) {
 			$startDate = Carbon::now();
+			$lastLessonDate = $startDate;
 			foreach ($sortedLessons as $lesson) {
 				$lessonId = $lesson->id;
 				DB::table('user_lesson')
@@ -112,7 +110,7 @@ class UserLessonApiController extends ApiController
 					->update(['start_date' => Carbon::now()]);
 			};
 
-			$this->calculatePlan(
+			$lastLessonDate = $this->calculatePlan(
 				$requiredInProgressLessonsCount,
 				$sortedInProgressLessons,
 				$startDate,
@@ -127,7 +125,8 @@ class UserLessonApiController extends ApiController
 
 		return $this->respondOk([
 			'lessons' => $data,
-			'end_date' => $startDate->timestamp,
+			'end_date' => $lastLessonDate->timestamp,
+			'end_date_human' => $lastLessonDate
 		]);
 	}
 
@@ -143,7 +142,7 @@ class UserLessonApiController extends ApiController
 	{
 		if ($presetActive === 'dateToDate') {
 			$daysExcess = $daysQuantity % $requiredInProgressLessonsCount;
-			$computedWorkLoad = ceil($daysQuantity / $requiredInProgressLessonsCount);
+			$computedWorkLoad = floor($daysQuantity / $requiredInProgressLessonsCount);
 			$lessonWithExtraDay = 0;
 		}
 
@@ -165,25 +164,36 @@ class UserLessonApiController extends ApiController
 					$workLoad = $computedWorkLoad;
 				}
 				$dayOfWeekIso = $startDate->dayOfWeekIso;
-				$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
+				$isStartDateVariableAvailable = in_array($dayOfWeekIso, $workDays);
 
-				if ($isStartDateVariableAvilable) {
+				if ($isStartDateVariableAvailable) {
 					$queriedLesson
 						->update(['start_date' => $startDate]);
 				} else {
-					while (!$isStartDateVariableAvilable) {
+					while (!$isStartDateVariableAvailable) {
 						$startDate->addDays(1);
 						$dayOfWeekIso = $startDate->dayOfWeekIso;
-						$isStartDateVariableAvilable = in_array($dayOfWeekIso, $workDays);
+						$isStartDateVariableAvailable = in_array($dayOfWeekIso, $workDays);
 					}
 					$queriedLesson
 						->update(['start_date' => $startDate]);
 				}
-				$startDate->addDays($workLoad);
+				$endDate = clone($startDate);
+				$addedDays = 1;
+				$enoughAdded = $addedDays >= $workLoad;
+				$isEndDateAvailable = in_array($endDate->dayOfWeekIso, $workDays);
+				while (!$isEndDateAvailable || !$enoughAdded) {
+					$endDate->addDay();
+					$addedDays++;
+					$dayOfWeekIso = $endDate->dayOfWeekIso;
+					$isEndDateAvailable = in_array($dayOfWeekIso, $workDays);
+					$enoughAdded = $addedDays >= $workLoad;
+				}
+				$startDate = clone($endDate)->addDay();
 			}
 		}
 
-		$lastLessonStartdate = $startDate->subDays($workLoad);
+		$lastLessonStartDate = $startDate->subDay();
 
 		$filteredLessons = array_filter($lessons, (function ($lesson) {
 			return $lesson->group_id === self::GROUP_ID_POWTORKI;
@@ -195,8 +205,8 @@ class UserLessonApiController extends ApiController
 
 		DB::table('user_lesson')
 			->whereIn('lesson_id', $filteredLessonsIds)
-			->update(['start_date' => $lastLessonStartdate]);
+			->update(['start_date' => $lastLessonStartDate]);
 
-		return $startDate;
+		return $lastLessonStartDate;
 	}
 }

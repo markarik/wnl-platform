@@ -40,7 +40,7 @@ class UserLessonTest extends ApiTestCase
 			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
 		};
 
-		$endDate = json_decode($response->getContent(), true)['end_date'];
+		$endDate = $response->json()['end_date'];
 		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()));
 
 		$response
@@ -56,7 +56,7 @@ class UserLessonTest extends ApiTestCase
 							'is_required' => $lesson->is_required,
 							'isAccessible' => $lesson->isAccessible(),
 							'isAvailable' => $lesson->isAvailable(),
-							'startDate' => Carbon::now()->timestamp,
+							'startDate' => $endDate,
 						]
 			]);
 	}
@@ -66,7 +66,6 @@ class UserLessonTest extends ApiTestCase
 	{
 		$user = factory(User::class)->create();
 		$requiredLessons = [];
-		$userLessons = [];
 
 		for ($i = 1; $i < 6; $i++) {
 			$requiredLessons[] = factory(Lesson::class)->create([
@@ -77,7 +76,7 @@ class UserLessonTest extends ApiTestCase
 		}
 
 		foreach ($requiredLessons as $lesson) {
-			$userLessons = factory(UserLesson::class)->create([
+			factory(UserLesson::class)->create([
 				'user_id' => $user->id,
 				'lesson_id' => $lesson->id,
 				'start_date' => Carbon::now()->subDays(100)
@@ -85,7 +84,8 @@ class UserLessonTest extends ApiTestCase
 		}
 
 		$startDate = Carbon::parse('next monday');
-		$endDate = (clone $startDate)->addDays(8);
+		$endDate = (clone $startDate)->addDays(13);
+		$expectedDaysInterval = [0, 2, 5, 2, 4];
 
 		$response = $this
 			->actingAs($user)
@@ -97,55 +97,37 @@ class UserLessonTest extends ApiTestCase
 				'preset_active' => 'dateToDate',
 			]);
 
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[0]->id,
-			'start_date' => $startDate->toDateTimeString(),
-		]);
+		foreach ($requiredLessons as $index => $lesson) {
+			$expectedStartDate = $startDate->addDays($expectedDaysInterval[$index]);
+			$this->assertDatabaseHas('user_lesson', [
+				'user_id' => $user->id,
+				'lesson_id' => $lesson->id,
+				'start_date' => $expectedStartDate,
+			]);
 
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[1]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
+			$response->assertJsonFragment([
+				'id'=> $lesson->id,
+				'name' => $lesson->name,
+				'group_id' => $lesson->group_id,
+				'groups' => $lesson->group_id,
+				'order_number' => $lesson->order_number,
+				'editions' => $lesson->editions,
+				'is_required' => $lesson->is_required,
+				'isAccessible' => $lesson->isAccessible(),
+				'isAvailable' => $lesson->isAvailable(),
+				'startDate' => $expectedStartDate->timestamp
+			]);
+		}
 
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[2]->id,
-			'start_date' => $startDate->addDays(4)->toDateTimeString(),
-		]);
+		$computedEndDate = $response->json()['end_date'];
+		$this->assertTrue(
+			Carbon::createFromTimestamp($computedEndDate)->lte($endDate),
+			"Computed End Date is larger than selected end date"
+		);
 
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[3]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
-
-        $this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[4]->id,
-			'start_date' => $startDate->addDays(1)->toDateTimeString(),
-		]);
-
-		$endDate = json_decode($response->getContent(), true)['end_date'];
-		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()->addDays(9)));
 
 		$response
-			->assertStatus(200)
-			->assertJsonFragment([
-						[
-							'id'=> $lesson->id,
-							'name' => $lesson->name,
-							'group_id' => $lesson->group_id,
-							'groups' => $lesson->group_id,
-							'order_number' => $lesson->order_number,
-							'editions' => $lesson->editions,
-							'is_required' => $lesson->is_required,
-							'isAccessible' => $lesson->isAccessible(),
-							'isAvailable' => $lesson->isAvailable(),
-							'startDate' => Carbon::now()->addDays(8)->timestamp,
-						]
-			]);
+			->assertStatus(200);
 	}
 
 	/** @test */
@@ -155,7 +137,7 @@ class UserLessonTest extends ApiTestCase
 		$requiredLessons = [];
 		$userLessons = [];
 
-		for ($i = 1; $i < 11; $i++) {
+		for ($i = 1; $i < 6; $i++) {
 			$requiredLessons[] = factory(Lesson::class)->create([
 				'is_required' => 1,
 				'group_id' => 5,
@@ -182,84 +164,31 @@ class UserLessonTest extends ApiTestCase
 				'work_days' => [1,2,5,6,7]
 			]);
 
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[0]->id,
-			'start_date' => $startDate->toDateTimeString(),
-		]);
+		$expectedDaysInterval = [0, 4, 2, 2, 4];
 
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[1]->id,
-			'start_date' => $startDate->addDays(4)->toDateTimeString(),
-		]);
+		foreach ($requiredLessons as $index => $lesson) {
+			$expectedStartDate = $startDate->addDays($expectedDaysInterval[$index]);
 
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[2]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
-
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[3]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
-
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[4]->id,
-			'start_date' => $startDate->addDays(3)->toDateTimeString(),
-		]);
-
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[5]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
-
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[6]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
-
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[7]->id,
-			'start_date' => $startDate->addDays(3)->toDateTimeString(),
-		]);
-
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[8]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
-
-		$this->assertDatabaseHas('user_lesson', [
-			'user_id' => $user->id,
-			'lesson_id' => $requiredLessons[9]->id,
-			'start_date' => $startDate->addDays(2)->toDateTimeString(),
-		]);
-
-		$response
-			->assertStatus(200)
-			->assertJson([
-				'lessons' => [
-					[
-						// 'id'=> $lesson->id,
-						// 'name' => $lesson->name,
-						// 'group_id' => $lesson->group_id,
-						// 'groups' => $lesson->groups,
-						// 'order_number' => $lesson->order_number,
-						// 'editions' => $lesson->editions,
-						// 'is_required' => $lesson->is_required,
-						// 'isAccessible' => $lesson->isAccessible(),
-						// 'isAvailable' => $lesson->isAvailable(),
-						// 'startDate' => Carbon::now()->timestamp,
-					]
-				],
-				'end_date' => Carbon::parse('next monday')->addDays(22)->timestamp,
+			$this->assertDatabaseHas('user_lesson', [
+				'user_id' => $user->id,
+				'lesson_id' => $lesson->id,
+				'start_date' => $expectedStartDate,
 			]);
+
+			$response->assertJsonFragment([
+				'id'=> $lesson->id,
+				'name' => $lesson->name,
+				'group_id' => $lesson->group_id,
+				'groups' => $lesson->group_id,
+				'order_number' => $lesson->order_number,
+				'editions' => $lesson->editions,
+				'is_required' => $lesson->is_required,
+				'isAccessible' => $lesson->isAccessible(),
+				'isAvailable' => $lesson->isAvailable(),
+				'startDate' => $expectedStartDate->timestamp
+			]);
+		}
+
+		$response->assertStatus(200);
 	}
 }

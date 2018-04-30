@@ -36,6 +36,11 @@ let routes = [
 		component: require('js/admin/components/slides/Charts.vue'),
 	},
 	{
+		name: 'annotations',
+		path: '/admin/app/annotations',
+		component: require('js/admin/components/slides/Annotations.vue'),
+	},
+	{
 		name: 'quizes',
 		path: '/admin/app/quizes',
 		component: require('js/admin/components/quizes/QuizQuestions.vue'),

@@ -411,7 +411,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['currentUserId']),
+		...mapGetters(['currentUserId', 'currentUserSubscriptionDates']),
 		...mapGetters('course', [
 			'name',
 			'groups',
@@ -604,11 +604,19 @@ export default {
 							lessonId: lesson.id,
 							start_date: lesson.startDate
 						})
-						this.addAutoDismissableAlert({
-							text: `Udało się zmienić daty. Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}`,
-							type: 'success',
-							timeout: 10000,
-						})
+						if (moment(this.currentUserSubscriptionDates).isSameOrAfter(moment(response.data.end_date))) {
+							this.addAutoDismissableAlert({
+								text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
+								type: 'error',
+								timeout: 10000,
+							})
+						} else {
+							this.addAutoDismissableAlert({
+								text: `Udało się zmienić daty. Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}`,
+								type: 'success',
+								timeout: 10000,
+							})
+						}
 					})
 				} else {
 					this.addAutoDismissableAlert({

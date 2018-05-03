@@ -113,6 +113,7 @@ return [
 
 	'first-name' => 'Imię',
 	'last-name' => 'Nazwisko',
+	'recipient' => 'Osoba odbierająca przesyłkę',
 	'address' => 'Ulica i numer domu / mieszkania',
 	'zip' => 'Kod pocztowy',
 	'city' => 'Miasto',

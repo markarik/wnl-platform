@@ -16,7 +16,7 @@ class UpdateUserAddress extends FormRequest
 	{
 		$user = User::fetch($this->route('id'));
 
-		return $this->user()->can('update', $user->address()->first());
+		return $this->user()->can('update', $user->userAddress()->first());
 	}
 
 	/**

@@ -1,4 +1,5 @@
 export const lessonsAvailability = {
+	loader: 'Ładuję plan...',
 	header: 'Dostępność lekcji',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',

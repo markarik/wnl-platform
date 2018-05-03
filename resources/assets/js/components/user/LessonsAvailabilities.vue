@@ -1,9 +1,8 @@
 <template>
 	<div class="scrollable-main-container">
-		<div class="text-loader" v-if="isLoading">
-			<wnl-text-loader>
-				Ładuję plan
-			</wnl-text-loader>
+		<div class="wnl-overlay" v-if="isLoading">
+			<span class="loader"></span>
+			<span class="loader-text">{{ $t('lessonsAvailability.loader') }}</span>
 		</div>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
@@ -110,7 +109,7 @@
 								:withBorder="true"
 								v-model="startDate"
 								:config="startDateConfig"
-								@onChange="onStartDateChange"/>
+								@onChange="onPresetStartDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -139,7 +138,7 @@
 								:withBorder="true"
 								v-model="startDate"
 								:config="startDateConfig"
-								@onChange="onStartDateChange"/>
+								@onChange="onPresetStartDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -238,15 +237,26 @@
 	@import 'resources/assets/sass/variables'
 
 	.scrollable-main-container
-		.text-loader
-			position: absolute
-			z-index: $z-index-navbar
-			width: 100vw
-			height: 100%
-			background-color: $color-white-overlay
-			top: 0
+		.wnl-overlay
+			align-items: center
+			background: rgba(255, 255, 255, 0.9)
+			bottom: 0
+			display: flex
+			flex-direction: column
+			justify-content: center
 			left: 0
-			font-size: $font-size-plus-2
+			position: fixed
+			right: 0
+			top: 0
+			z-index: $z-index-overlay
+
+			.loader
+				height: 40px
+				width: 40px
+
+			.loader-text
+				margin-top: $margin-small
+				color: $color-ocean-blue
 
 		.views-control
 			display: flex
@@ -379,11 +389,6 @@ export default {
 		return {
 			isLoading: false,
 			openGroups: [],
-			endDateAlert: {
-				text: 'Wybierz datę końcową',
-				type: 'error',
-				timeout: 2000,
-			},
 			activePresets: ['daysPerLesson', 'dateToDate'],
 			startDate: new Date(),
 			endDate: null,
@@ -403,10 +408,9 @@ export default {
 				type: 'error',
 			},
 			defaultDateConfig: {
-					altInput: true,
-					disableMobile: true,
-					locale: pl,
-
+				altInput: true,
+				disableMobile: true,
+				locale: pl,
 			},
 		}
 	},
@@ -584,47 +588,67 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
-			this.isLoading = true
 			if (this.activePresets === 'dateToDate') {
 				this.workLoad = null
 			}
-			axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-				work_days: this.workDays,
-				work_load: this.workLoad,
-				start_date: this.startDate,
-				end_date: this.endDate,
-				days_quantity: this.daysQuantity,
-				preset_active: this.activePresets,
-			}).then((response) => {
-				this.isLoading = false
-				if (response.status === 200) {
-					console.log(response.data);
-					response.data.lessons.forEach((lesson) => {
-						this.updateLessonStartDate({
-							lessonId: lesson.id,
-							start_date: lesson.startDate
+			if (isEmpty(this.workDays)) {
+				return this.addAutoDismissableAlert({
+					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+			} else if (this.workLoad === null && this.activePresets === 'daysPerLesson') {
+				return this.addAutoDismissableAlert({
+					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+			} else if (this.endDate === null && this.activePresets === 'dateToDate') {
+				return this.addAutoDismissableAlert({
+					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+			} else {
+				this.isLoading = true
+				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+					work_days: this.workDays,
+					work_load: this.workLoad,
+					start_date: this.startDate,
+					end_date: this.endDate,
+					days_quantity: this.daysQuantity,
+					preset_active: this.activePresets,
+				}).then((response) => {
+					this.isLoading = false
+					if (response.status === 200) {
+						console.log(response.data);
+						response.data.lessons.forEach((lesson) => {
+							this.updateLessonStartDate({
+								lessonId: lesson.id,
+								start_date: lesson.startDate
+							})
+							if (moment(this.currentUserSubscriptionDates).isSameOrAfter(moment(response.data.end_date))) {
+								this.addAutoDismissableAlert({
+									text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
+									type: 'error',
+									timeout: 10000,
+								})
+							} else {
+								this.addAutoDismissableAlert({
+									text: `Udało się zmienić daty. Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}`,
+									type: 'success',
+									timeout: 10000,
+								})
+							}
 						})
-						if (moment(this.currentUserSubscriptionDates).isSameOrAfter(moment(response.data.end_date))) {
-							this.addAutoDismissableAlert({
-								text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
-								type: 'error',
-								timeout: 10000,
-							})
-						} else {
-							this.addAutoDismissableAlert({
-								text: `Udało się zmienić daty. Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}`,
-								type: 'success',
-								timeout: 10000,
-							})
-						}
-					})
-				} else {
-					this.addAutoDismissableAlert({
-						text: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
-						type: 'error',
-					})
-				}
-			})
+					} else {
+						this.addAutoDismissableAlert({
+							text: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
+							type: 'error',
+						})
+					}
+				})
+			}
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1
@@ -641,6 +665,9 @@ export default {
 					this.openGroups.splice(index, 1)
 				}
 			}
+		},
+		onPresetStartDateChange(payload) {
+			return this.startDate = payload[0]
 		},
 		onStartDateChange(payload, lessonId) {
 			const date = payload[0]

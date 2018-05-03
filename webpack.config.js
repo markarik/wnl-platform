@@ -357,10 +357,8 @@ if (Mix.inProduction) {
 			}
 		}),
 		new UglifyJSPlugin({
-			uglifyOptions: {
-				ecma: 6,
-				cache: true
-			}
+			ecma: 6,
+			cache: true
 		})
 	);
 }

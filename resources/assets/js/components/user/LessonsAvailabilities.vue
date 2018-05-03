@@ -613,33 +613,32 @@ export default {
 					preset_active: this.activePresets,
 				}).then((response) => {
 					this.isLoading = false
-					if (response.status === 200) {
-						console.log(response.data);
-						response.data.lessons.forEach((lesson) => {
-							this.updateLessonStartDate({
-								lessonId: lesson.id,
-								start_date: lesson.startDate
-							})
-							if (moment(this.currentUserSubscriptionDates).isSameOrAfter(moment(response.data.end_date))) {
-								this.addAutoDismissableAlert({
-									text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
-									type: 'error',
-									timeout: 10000,
-								})
-							} else {
-								this.addAutoDismissableAlert({
-									text: `Udało się zmienić daty. Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}`,
-									type: 'success',
-									timeout: 10000,
-								})
-							}
+					response.data.lessons.forEach((lesson) => {
+						this.updateLessonStartDate({
+							lessonId: lesson.id,
+							start_date: lesson.startDate
+						})
+					})
+					if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
+						this.addAutoDismissableAlert({
+							text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
+							type: 'error',
+							timeout: 10000,
 						})
 					} else {
 						this.addAutoDismissableAlert({
-							text: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
-							type: 'error',
+							text: `Udało się zmienić daty. Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}`,
+							type: 'success',
+							timeout: 10000,
 						})
 					}
+				})
+				.catch(error => {
+					$wnl.logger.capture(error)
+					this.addAutoDismissableAlert({
+						text: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
+						type: 'error',
+					})
 				})
 			}
 		},

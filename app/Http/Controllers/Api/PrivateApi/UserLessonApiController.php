@@ -142,6 +142,7 @@ class UserLessonApiController extends ApiController
 	{
 		if ($presetActive === 'dateToDate') {
 			$daysExcess = $daysQuantity % $requiredInProgressLessonsCount;
+			// dd($daysExcess, $daysQuantity, $requiredInProgressLessonsCount);
 			$computedWorkLoad = floor($daysQuantity / $requiredInProgressLessonsCount);
 			$lessonWithExtraDay = 0;
 		}
@@ -193,7 +194,7 @@ class UserLessonApiController extends ApiController
 			}
 		}
 
-		$lastLessonStartDate = $startDate->subDay();
+		$lastLessonStartDate = $startDate->subDay($workLoad);
 
 		$filteredLessons = array_filter($lessons, (function ($lesson) {
 			return $lesson->group_id === self::GROUP_ID_POWTORKI;

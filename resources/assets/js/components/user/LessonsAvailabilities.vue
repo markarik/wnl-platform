@@ -12,19 +12,17 @@
 			</div>
 		</div>
 		<div class="views-control">
-			<div class="view">
-				<a v-for="name, view in views"
-					class="panel-toggle preset"
-					:class="{'is-active': isViewActive(view)}"
-					:key="view"
-					@click="toggleView(view)"
-					>{{name}}
-					<span class="icon is-small">
-						<i class="fa"
-						:class="[isViewActive(view) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-					</span>
-				</a>
-			</div>
+			<a v-for="name, view in views"
+				class="panel-toggle view"
+				:class="{'is-active': isViewActive(view)}"
+				:key="view"
+				@click="toggleView(view)"
+				>{{name}}
+				<span class="icon is-small">
+					<i class="fa"
+					:class="[isViewActive(view) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+				</span>
+			</a>
 		</div>
 		<div class="presets-view" v-if="activeView === 'presetsView'">
 			<div class="level wnl-screen-title">
@@ -35,9 +33,8 @@
 				</div>
 			</div>
 			<div class="days">
-				<div class="day">
 					<a v-for="day in days"
-						class="panel-toggle"
+						class="panel-toggle day"
 						:class="{'is-active': isDayActive(day.dayNumber)}"
 						:key="day.dayNumber"
 						@click="toggleDay(day.dayNumber)"
@@ -47,7 +44,6 @@
 								:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 						</span>
 					</a>
-				</div>
 			</div>
 			<div class="level wnl-screen-title">
 				<div class="level-left">
@@ -57,19 +53,17 @@
 				</div>
 			</div>
 			<div class="presets-control">
-				<div class="preset">
-					<a v-for="name, preset in presets"
-						class="panel-toggle preset"
-						:class="{'is-active': isPresetActive(preset)}"
-						:key="preset"
-						@click="togglePreset(preset)"
-						>{{name}}
-						<span class="icon is-small">
-							<i class="fa"
-							:class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-						</span>
-					</a>
-				</div>
+				<a v-for="name, preset in presets"
+					class="panel-toggle preset preset"
+					:class="{'is-active': isPresetActive(preset)}"
+					:key="preset"
+					@click="togglePreset(preset)"
+					>{{name}}
+					<span class="icon is-small">
+						<i class="fa"
+						:class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					</span>
+				</a>
 			</div>
 			<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
 				<div class="level wnl-screen-title">
@@ -80,7 +74,8 @@
 					</div>
 				</div>
 				<div class="work-load-buttons">
-					<div class="work-load-button panel-toggle" v-for="workLoad in availableWorkLoads">
+					<div v-for="workLoad in availableWorkLoads"
+						class="work-load-button panel-toggle">
 						<button
 							@click="chooseWorkload(workLoad.workLoad)"
 							class="button to-right"
@@ -255,19 +250,14 @@
 				width: 40px
 
 			.loader-text
-				margin-top: $margin-small
 				color: $color-ocean-blue
+				margin-top: $margin-small
 
 		.views-control
 			display: flex
 			flex-wrap: wrap
-			justify-content: space-around
+			justify-content: center
 			margin-bottom: $margin-base
-			.view
-				display: flex
-				justify-content: space-around
-				flex-wrap: wrap
-				border: 10px
 
 		.days-info
 			margin-bottom: $margin-small
@@ -275,48 +265,38 @@
 		.days
 			display: flex
 			flex-wrap: wrap
-			justify-content: space-around
+			justify-content: center
 			margin-bottom: $margin-big
-			.day
-				display: flex
-				justify-content: space-around
-				flex-wrap: wrap
 
 		.presets-control
-			margin-bottom: $margin-big
 			display: flex
 			flex-wrap: wrap
-			justify-content: space-around
-			.preset
-				flex-wrap: wrap
-				display: flex
-				justify-content: space-around
-				.icon
-					vertical-align: baseline
+			justify-content: center
+			margin-bottom: $margin-big
 
 		.work-load-buttons
 			display: flex
 			flex-wrap: wrap
-			justify-content: space-around
+			justify-content: center
 			margin-bottom: $margin-base
 			.work-load-button
-				display: flex
-				justify-content: space-around
-				flex-wrap: wrap
 				border: 10px
+				display: flex
+				flex-wrap: wrap
+				justify-content: center
 
 		.dates
 			.date
 				margin-bottom: $margin-big
 				label, .tip
-					width: 100%
 					display: inline-block
 					text-align: center
+					width: 100%
 
 		.accept-plan
-			margin-bottom: $margin-small
 			display: flex
 			justify-content: space-around
+			margin-bottom: $margin-small
 
 		.lessons-view
 			margin-bottom: $margin-base
@@ -326,12 +306,12 @@
 				.group
 					margin-bottom: $margin-base
 					.item-toggle
+						color: $color-sky-blue
 						cursor: pointer
 						text-align: center
-						width: 100%
-						margin-bottom: $margin-small
 						text-transform: uppercase
-						color: $color-sky-blue
+						margin-bottom: $margin-small
+						width: 100%
 						.icon
 							color: $color-gray
 						.item-name
@@ -344,24 +324,24 @@
 						flex-direction: column
 						margin-bottom: $margin-small
 						.subitem
-							margin-bottom: $margin-small
-							margin-top: $margin-small
 							display: flex
 							flex-direction: row-reverse
 							justify-content: space-between
+							margin-bottom: $margin-small
+							margin-top: $margin-small
 							min-height: 35px
 							&.isEven
 								background-color: $color-background-lightest-gray
 							.subitem-name
 								align-self: flex-end
-								width: 65%
 								color: $color-gray
+								width: 65%
 								&.is-grayed-out
 									color: $color-gray-dimmed
 							.subitem-left-side
-								margin-right: $margin-small
-								display: flex
 								align-items: center
+								display: flex
+								margin-right: $margin-small
 								.not-accesible
 									color: $color-gray-dimmed
 									font-size: $font-size-plus-1
@@ -389,7 +369,8 @@ export default {
 		return {
 			isLoading: false,
 			openGroups: [],
-			activePresets: ['daysPerLesson', 'dateToDate'],
+			availablePresets: ['daysPerLesson', 'dateToDate'],
+			activePreset: '',
 			startDate: new Date(),
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
@@ -530,17 +511,13 @@ export default {
 			]
 			return days
 		},
-		daysQuantity() {
-			if (this.activePresets === 'dateToDate') {
-				const startDate = moment(this.startDate);
-				const endDate = moment(this.endDate);
-				return endDate.diff(startDate, 'days')
-			}
-		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('course', ['setLessonAvailabilityStatus', 'updateLessonStartDate']),
+		...mapActions('course', [
+			'setLessonAvailabilityStatus',
+			'updateLessonStartDate'
+		]),
 		...mapActions(['toggleOverlay']),
 		defaultDateConfig() {
 			return {
@@ -550,7 +527,7 @@ export default {
 			}
 		},
 		isPresetActive(preset) {
-			return this.activePresets === preset
+			return this.activePreset === preset
 		},
 		isViewActive(view) {
 			return this.activeView === view
@@ -568,7 +545,7 @@ export default {
 			return this.activeView = view
 		},
 		togglePreset(preset) {
-			return this.activePresets = preset
+			return this.activePreset = preset
 		},
 		toggleLessonsView() {
 			return this.activeView = !this.activeView
@@ -588,7 +565,7 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
-			if (this.activePresets === 'dateToDate') {
+			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null
 			}
 			if (isEmpty(this.workDays)) {
@@ -597,15 +574,21 @@ export default {
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.workLoad === null && this.activePresets === 'daysPerLesson') {
+			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson') {
 				return this.addAutoDismissableAlert({
 					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.endDate === null && this.activePresets === 'dateToDate') {
+			} else if (this.endDate === null && this.activePreset === 'dateToDate') {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+			} else if (this.activePreset === '') {
+				return this.addAutoDismissableAlert({
+					text: `Wybierz któryś z dostępnych planów nauki :)`,
 					type: 'error',
 					timeout: 3000,
 				})
@@ -616,20 +599,18 @@ export default {
 					work_load: this.workLoad,
 					start_date: this.startDate,
 					end_date: this.endDate,
-					days_quantity: this.daysQuantity,
-					preset_active: this.activePresets,
+					preset_active: this.activePreset,
 				}).then((response) => {
 					this.isLoading = false
 					if (response.status === 200) {
-						console.log(response.data);
 						response.data.lessons.forEach((lesson) => {
 							this.updateLessonStartDate({
 								lessonId: lesson.id,
 								start_date: lesson.startDate
 							})
-							if (moment(this.currentUserSubscriptionDates).isSameOrAfter(moment(response.data.end_date))) {
+							if (moment(this.currentUserSubscriptionDates.max).isSameOrAfter(moment(response.data.end_date))) {
 								this.addAutoDismissableAlert({
-									text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
+									text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates.max).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
 									type: 'error',
 									timeout: 10000,
 								})

@@ -542,13 +542,6 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setLessonAvailabilityStatus', 'updateLessonStartDate']),
 		...mapActions(['toggleOverlay']),
-		defaultDateConfig() {
-			return {
-				altInput: true,
-				disableMobile: true,
-				locale: pl,
-			}
-		},
 		isPresetActive(preset) {
 			return this.activePresets === preset
 		},

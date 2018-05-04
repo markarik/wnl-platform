@@ -46,17 +46,20 @@ class UserLessonApiController extends ApiController
 	public function putPlan(UpdateLessonsPreset $request, $userId)
 	{
 		$user = User::find($userId);
-		$startDate = Carbon::parse($request->start_date);
-		$endDate = Carbon::parse($request->end_date);
-		$workLoad = $request->work_load;
-		$workDays = $request->work_days;
-		$preset = $request->preset_active;
+		$options = [
+			'startDate' => Carbon::parse($request->start_date),
+			'endDate'   => Carbon::parse($request->end_date),
+			'workLoad'  => $request->work_load,
+			'workDays'  => $request->work_days,
+			'preset'    => $request->preset_active,
+		];
 
-		$plan = dispatch_now(new CalculateCoursePlan($user, $startDate, $endDate, $workDays, $workLoad, $preset));
-		$data = (new LessonsApiController($request))->transform($user->lessonsAvailability);
+		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
+
+		$lessons = new LessonsApiController($request);
 
 		return $this->respondOk([
-			'lessons'        => $data,
+			'lessons'        => $lessons->transform($user->lessonsAvailability),
 			'end_date'       => $plan->last()['start_date']->timestamp,
 			'end_date_human' => $plan->last()['start_date'],
 		]);

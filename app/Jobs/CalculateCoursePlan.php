@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use DB;
 
 
-
 class CalculateCoursePlan
 {
 	use Dispatchable;
@@ -20,45 +19,37 @@ class CalculateCoursePlan
 	const GROUP_ID_DODATKI = 15;
 	const GROUP_ID_PROBNY_LEK = 14;
 
+	protected $now;
 	protected $user;
-	protected $lessons;
-	protected $startDate;
+	protected $preset;
 	protected $endDate;
+	protected $startDate;
 	protected $workDays;
 	protected $workLoad;
-	protected $preset;
+	protected $sortedLessons;
+	protected $sortedCompletedLessons;
+	protected $sortedInProgressLessons;
+	protected $requiredInProgressLessonsCount;
 
-	public function __construct($user, $startDate, $endDate, $workDays, $workLoad, $preset)
+	public function __construct($user, $options)
 	{
 		$this->user = $user;
-		$this->startDate = $startDate;
-		$this->endDate = $endDate;
-		$this->workLoad = $workLoad;
-		$this->workDays = $workDays;
-		$this->preset = $preset;
+		$this->startDate = $options['startDate'];
+		$this->endDate = $options['endDate'];
+		$this->workLoad = $options['workLoad'];
+		$this->workDays = $options['workDays'];
+		$this->preset = $options['preset'];
+		$this->now = Carbon::now();
+
+		$this->preprocessData();
 	}
 
 	public function handle()
 	{
-		$profileId = $this->user->profile->id;
-
-		list($daysQuantity, $presetActive, $sortedLessons, $sortedCompletedLessons,
-			$sortedInProgressLessons, $requiredInProgressLessonsCount)
-			= $this->preprocessData($this->preset, $this->startDate, $this->workDays, $this->endDate, $this->user, $profileId);
-
-		$plan = $this->calculatePlan(
-			$sortedLessons,
-			$sortedCompletedLessons,
-			$requiredInProgressLessonsCount,
-			$sortedInProgressLessons,
-			$this->startDate,
-			$daysQuantity,
-			$this->workDays,
-			$this->workLoad,
-			$presetActive
-		)->map(function ($el) {
-			return array_set($el, 'user_id', $this->user->id);
-		});
+		$plan = $this->calculatePlan()
+			->map(function ($el) {
+				return array_set($el, 'user_id', $this->user->id);
+			});
 
 		UserLesson::where('user_id', $this->user->id)->delete();
 		DB::table('user_lesson')->insert($plan->toArray());
@@ -66,128 +57,93 @@ class CalculateCoursePlan
 		return $plan;
 	}
 
-	private function calculatePlan(
-		$sortedLessons,
-		$sortedCompletedLessons,
-		$requiredInProgressLessonsCount,
-		$lessons,
-		$startDate,
-		$daysQuantity,
-		$workDays,
-		$workLoad,
-		$presetActive
-	)
+	private function calculatePlan()
 	{
 		$plan = collect();
-		$now = Carbon::now();
+		$startDate = $this->startDate;
+		$workLoad = $this->workLoad;
 
 		if ($workLoad === 0) {
-			foreach ($sortedLessons as $lesson) {
-				$plan->push([
-					'lesson_id'  => $lesson->id,
-					'start_date' => $now,
-				]);
-			}
-
-			return $plan;
+			return $this->handleWorkloadZero($plan);
 		}
 
-		foreach ($sortedCompletedLessons as $lesson) {
-			$plan->push([
-				'lesson_id'  => $lesson->id,
-				'start_date' => $now,
-			]);
+		foreach ($this->sortedCompletedLessons as $lesson) {
+			$plan = $this->addToPlan($plan, $lesson->id, $this->now);
 		}
 
-		if ($presetActive === 'dateToDate') {
-			$daysExcess = $daysQuantity % $requiredInProgressLessonsCount;
-			$computedWorkLoad = floor($daysQuantity / $requiredInProgressLessonsCount);
+		if ($this->preset === 'dateToDate') {
+			$daysExcess = $this->daysQuantity % $this->requiredInProgressLessonsCount;
+			$computedWorkLoad = floor($this->daysQuantity / $this->requiredInProgressLessonsCount);
 			$lessonWithExtraDay = 0;
 		}
 
-		foreach ($lessons as $lesson) {
+		foreach ($this->sortedInProgressLessons as $lesson) {
 			$groupId = $lesson->group_id;
+			// Nieobowiązkowe
 			if (!self::isGroupObligatory($groupId)) {
-				$plan->push([
-					'lesson_id'  => $lesson->id,
-					'start_date' => $now,
-				]);
+				$plan = $this->addToPlan($plan, $lesson->id, $this->now);
 			} elseif ($groupId !== self::GROUP_ID_POWTORKI) {
-				if ($presetActive === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
+				// Obowiązkowe
+				if ($this->preset === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
 					$workLoad = $computedWorkLoad + 1;
 					$lessonWithExtraDay++;
-				} else if ($presetActive === 'dateToDate' && $lessonWithExtraDay >= $daysExcess) {
+				} else if ($this->preset === 'dateToDate' && $lessonWithExtraDay >= $daysExcess) {
 					$workLoad = $computedWorkLoad;
 				}
+
 				$dayOfWeekIso = $startDate->dayOfWeekIso;
-				$isStartDateVariableAvailable = in_array($dayOfWeekIso, $workDays);
+				$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays);
 
 				if ($isStartDateVariableAvailable) {
-					$plan->push([
-						'lesson_id'  => $lesson->id,
-						'start_date' => $startDate,
-					]);
+					$plan = $this->addToPlan($plan, $lesson->id, $startDate);
 				} else {
 					while (!$isStartDateVariableAvailable) {
 						$startDate->addDays(1);
 						$dayOfWeekIso = $startDate->dayOfWeekIso;
-						$isStartDateVariableAvailable = in_array($dayOfWeekIso, $workDays);
+						$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays);
 					}
-					$plan->push([
-						'lesson_id'  => $lesson->id,
-						'start_date' => $startDate,
-					]);
+					$plan = $this->addToPlan($plan, $lesson->id, $startDate);
 				}
 				$endDate = clone($startDate);
 				$addedDays = 1;
 				$enoughAdded = $addedDays >= $workLoad;
-				$isEndDateAvailable = in_array($endDate->dayOfWeekIso, $workDays);
+				$isEndDateAvailable = in_array($endDate->dayOfWeekIso, $this->workDays);
 				while (!$isEndDateAvailable || !$enoughAdded) {
 					$endDate->addDay();
 					$addedDays++;
 					$dayOfWeekIso = $endDate->dayOfWeekIso;
-					$isEndDateAvailable = in_array($dayOfWeekIso, $workDays);
+					$isEndDateAvailable = in_array($dayOfWeekIso, $this->workDays);
 					$enoughAdded = $addedDays >= $workLoad;
 				}
 				$startDate = clone($endDate)->addDay();
 			}
 		}
 
-		$lastLessonStartDate = $startDate->subDay($workLoad);
 
-		$filteredLessons = array_filter($lessons, (function ($lesson) {
-			return $lesson->group_id === self::GROUP_ID_POWTORKI;
-		}));
+		$filteredLessons = $this->sortedInProgressLessons
+			->where('group_id', self::GROUP_ID_POWTORKI);
 
-		$filteredLessonsIds = array_map(function ($lesson) {
-			return $lesson->id;
-		}, $filteredLessons);
-
-		foreach ($filteredLessonsIds as $lessonId) {
-			$plan->push([
-				'lesson_id'  => $lessonId,
-				'start_date' => $lastLessonStartDate,
-			]);
+		foreach ($filteredLessons->pluck('id') as $lessonId) {
+			$plan = $this->addToPlan($plan, $lessonId, $plan->last()->start_date);
 		}
 
 		return $plan;
 	}
 
-	protected function preprocessData($preset, $startDate, $workDays, $endDate, $user, $profileId): array
+	protected function preprocessData()
 	{
-		$daysQuantity = $startDate->diffInDaysFiltered(function (Carbon $date) use ($workDays) {
+		$this->daysQuantity = $this->startDate->diffInDaysFiltered(function (Carbon $date) {
 			$dayOfWeekIso = $date->dayOfWeekIso;
 
-			return in_array($dayOfWeekIso, $workDays);
-		}, $endDate->addDay());
+			return in_array($dayOfWeekIso, $this->workDays);
+		}, $this->endDate->addDay());
 
-		$presetActive = $preset;
-		$sortedLessons = $user->lessonsAvailability()
+		$this->sortedLessons = $this->user->lessonsAvailability()
 			->orderBy('group_id')
 			->orderBy('order_number')
 			->get();
 
-		$completeLessons = UserCourseProgress::where('user_id', $profileId)
+		$completeLessons = UserCourseProgress::where('user_id', $this->user->profile->id)
 			->whereNull('section_id')
 			->whereNull('screen_id')
 			->where('status', 'complete')
@@ -195,22 +151,20 @@ class CalculateCoursePlan
 			->pluck('lesson_id')
 			->toArray();
 
-		$sortedCompletedLessons = [];
-		$sortedInProgressLessons = [];
-		$requiredInProgressLessonsCount = 0;
+		$this->sortedCompletedLessons = collect();
+		$this->sortedInProgressLessons = collect();
+		$this->requiredInProgressLessonsCount = 0;
 
-		foreach ($sortedLessons as $lesson) {
+		foreach ($this->sortedLessons as $lesson) {
 			if (in_array($lesson->id, $completeLessons)) {
-				array_push($sortedCompletedLessons, $lesson);
+				$this->sortedCompletedLessons->push($lesson);
 			} else {
-				array_push($sortedInProgressLessons, $lesson);
+				$this->sortedInProgressLessons->push($lesson);
 				if ($lesson->is_required === 1) {
-					$requiredInProgressLessonsCount++;
+					$this->requiredInProgressLessonsCount++;
 				}
 			}
-		};
-
-		return array($daysQuantity, $presetActive, $sortedLessons, $sortedCompletedLessons, $sortedInProgressLessons, $requiredInProgressLessonsCount);
+		}
 	}
 
 	public static function isGroupObligatory($groupId)
@@ -219,5 +173,29 @@ class CalculateCoursePlan
 			$groupId !== self::GROUP_ID_WIECEJ_NIZ_LEK &&
 			$groupId !== self::GROUP_ID_WARSZTATY &&
 			$groupId !== self::GROUP_ID_DODATKI;
+	}
+
+	protected function handleWorkloadZero($plan)
+	{
+		foreach ($this->sortedLessons as $lesson) {
+			$plan = $this->addToPlan($plan, $lesson->id, $this->now);
+		}
+
+		return $plan;
+	}
+
+	protected function addToPlan($plan, $lessonId, $date)
+	{
+		return $plan->push([
+			'lesson_id'  => $lessonId,
+			'start_date' => $date,
+		]);
+	}
+
+	protected function handleDateToDate() {
+		$startDate = $this->startDate;
+		$workLoad = $this->workLoad;
+
+
 	}
 }

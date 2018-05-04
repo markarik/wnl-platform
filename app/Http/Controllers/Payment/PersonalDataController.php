@@ -171,6 +171,13 @@ class PersonalDataController extends Controller
 	protected function updateAccount($user, $request)
 	{
 		$user->update($request->all());
+		$user->userAddress()->update([
+			'street'    => $request->get('address'),
+			'zip'       => $request->get('zip'),
+			'city'      => $request->get('city'),
+			'phone'     => $request->get('phone'),
+			'recipient' => $request->get('recipient'),
+		]);
 	}
 
 	protected function updateOrder($user, $request)

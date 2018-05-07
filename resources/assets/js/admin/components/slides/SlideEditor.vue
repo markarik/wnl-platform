@@ -101,7 +101,7 @@
 	import _ from 'lodash'
 
 	import Form from 'js/classes/forms/Form'
-	import {getUrl, getApiUrl} from 'js/utils/env'
+	import {getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
 	import SlidePreview from 'js/components/global/SlidePreview'
 	import Checkbox from 'js/admin/components/forms/Checkbox'

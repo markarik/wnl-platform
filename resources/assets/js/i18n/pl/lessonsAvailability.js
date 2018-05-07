@@ -16,7 +16,7 @@ export const lessonsAvailability = {
 		twoDaysPerLesson: 'Jedna lekcje dwa dni',
 		threeDaysPerLesson: 'Jedna lekcja na trzy dni',
 		openAll: 'Otwórz wszystkie lekcje',
-		acceptPlanButton: 'Akceptuję plan!',
+		acceptPlan: 'Akceptuję plan!',
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
@@ -38,11 +38,5 @@ export const lessonsAvailability = {
 		friday: 'Piątek',
 		saturday: 'Sobota',
 		sunday: 'Niedziela',
-	},
-	inputAlerts:{
-		workDays: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
-		workLoad: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
-		endDate: `Wybierz datę, w której ma zakończyć się nauka :)`,
-		choosePreset: `Wybierz któryś z dostępnych planów nauki :)`,
 	},
 }

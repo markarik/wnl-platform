@@ -170,11 +170,11 @@
 			</div>
 			<div class="accept-plan">
 				<div class="accept-plan-button">
-					<button
+					<a
 						@click="acceptPlan"
-						class="button to-right is-info"
-						>{{ $t('lessonsAvailability.buttons.acceptPlanButton') }}
-					</button>
+						class="button button is-primary is-outlined is-big"
+						>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+					</a>
 				</div>
 			</div>
 		</div>
@@ -559,25 +559,25 @@ export default {
 			}
 			if (isEmpty(this.workDays)) {
 				return this.addAutoDismissableAlert({
-					text: $t('lessonsAvailability.inputAlerts.workDays'),
+					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
 					type: 'error',
 					timeout: 3000,
 				})
 			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson') {
 				return this.addAutoDismissableAlert({
-					text: $t('lessonsAvailability.inputAlerts.workLoad'),
+					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
 					type: 'error',
 					timeout: 3000,
 				})
 			} else if (this.endDate === null && this.activePreset === 'dateToDate') {
 				return this.addAutoDismissableAlert({
-					text: $t('lessonsAvailability.inputAlerts.endDate'),
+					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
 					type: 'error',
 					timeout: 3000,
 				})
 			} else if (this.activePreset === '') {
 				return this.addAutoDismissableAlert({
-					text: $t('lessonsAvailability.inputAlerts.choosePreset'),
+					text: `Wybierz któryś z dostępnych planów nauki :)`,
 					type: 'error',
 					timeout: 3000,
 				})

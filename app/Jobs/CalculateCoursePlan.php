@@ -65,8 +65,9 @@ class CalculateCoursePlan
 		$plan = collect();
 		$startDate = $this->startDate;
 		$workLoad = $this->workLoad;
+		$toBeScheduledCount = $this->toBeScheduled->count();
 
-		if ($workLoad === 0) {
+		if ($workLoad === 0 || $toBeScheduledCount === 0) {
 			return $this->handleWorkloadZero($plan);
 		}
 
@@ -77,8 +78,8 @@ class CalculateCoursePlan
 //		$plan = $this->schedule($plan, $this->toBeScheduled);
 
 		if ($this->preset === 'dateToDate') {
-			$daysExcess = $this->daysQuantity % $this->toBeScheduled->count();
-			$computedWorkLoad = floor($this->daysQuantity / $this->toBeScheduled->count());
+			$daysExcess = $this->daysQuantity % $toBeScheduledCount;
+			$computedWorkLoad = floor($this->daysQuantity / $toBeScheduledCount);
 			$lessonWithExtraDay = 0;
 		}
 
@@ -161,7 +162,7 @@ class CalculateCoursePlan
 		$toBeScheduled = (clone $builder)
 			->whereNotIn('lessons.id', $openNow->merge($openLastDay)->pluck('id')->toArray())
 			->get();
-
+		
 		$this->sortedLessons = $builder->get();
 		$this->openNow = $openNow;
 		$this->openLastDay = $openLastDay;

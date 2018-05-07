@@ -1,17 +1,15 @@
 import _ from 'lodash'
-import store from 'store'
 import {set, delete as destroy} from 'vue'
 import {getApiUrl} from 'js/utils/env'
 import {resource} from 'js/utils/config'
 import * as types from 'js/store/mutations-types'
 
 // Helper functions
-function getCourseApiUrl(courseId, userId) {
+function getCourseApiUrl(courseId) {
 	return getApiUrl(
 		`${resource('editions')}/${courseId}
 		?include=groups.lessons.screens.sections.subsections,
 		course.groups.lessons.screens.sections.subsections,
-		course.groups.lessons.userAvailability,
 		course.groups.lessons.screens.tags
 		&user=current`
 	)
@@ -46,16 +44,15 @@ const getters = {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.is_required);
 	},
-	userLessons: (state, getters, rootState, rootGetters) => {
+	userLessons: (state, getters) => {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.isAccessible);
 	},
 	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
-	getLessonByName: state => (name) => _.filter(state.structure[resource('lessons')], (lesson) => lesson.name === name),
-	isLessonAvailable: (state, getters, rootState, rootGetters) => (lessonId) => {
+	isLessonAvailable: (state) => (lessonId) => {
 		return state.structure[resource('lessons')][lessonId].isAvailable
 	},
-	isLessonAccessible: (state, getters, rootState, rootGetters) => (lessonId) => {
+	isLessonAccessible: (state) => (lessonId) => {
 		return state.structure[resource('lessons')][lessonId].isAccessible
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
@@ -190,30 +187,22 @@ const actions = {
 				dispatch('setStructure', courseId),
 				dispatch('progress/setupCourse', courseId, {root: true}),
 			])
-			.then(resolutions => {
+			.then(() => {
 				$wnl.logger.debug('Course ready, yay!')
 				commit(types.COURSE_READY)
 				return resolve()
 			}, reason => {
 				commit(types.COURSE_READY)
 				$wnl.logger.error(reason)
-				return reject()
-			}).catch(reject)
+				return reject(reason)
+			})
 		})
 	},
 	setStructure({commit, rootGetters}, courseId = 1) {
-		return new Promise((resolve, reject) => {
-			axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
-				.then(response => {
-					commit(types.SET_STRUCTURE, response.data)
-					resolve()
-				})
-				.catch(exception => {
-						$wnl.logger.capture(exception)
-						reject()
-					}
-				)
-		})
+		return axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
+			.then(response => {
+				commit(types.SET_STRUCTURE, response.data)
+			})
 	},
 	setLessonAvailabilityStatus({commit}, payload) {
 		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload)

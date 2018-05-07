@@ -1,31 +1,28 @@
-import store from './sessionStore';
 import {getCurrentUser} from './user';
 import {getApiUrl} from 'js/utils/env';
-import _ from 'lodash';
 
-const CACHE_VERSION = 2;
-
-export const getLocalStorageKey = (setId, userSlug) => {
-	return `wnl-quiz-${setId}-u-${userSlug}-${CACHE_VERSION}`
-};
-
-
-const saveQuizProgress = (setId, currentUserSlug, state, recordedAnswers = []) => {
-	const storeKey = getLocalStorageKey(setId, currentUserSlug);
-
+const saveQuizProgress = (setId, state, recordedAnswers = []) => {
 	if (!state.retry) {
-		store.set(storeKey, state);
 
 		getCurrentUser().then(({user_id}) => {
+			const { setId, setName, attempts, isComplete, questionsIds, quiz_questions: quizQuestionsRaw } = state
+			const quiz_questions = {}
+			Object.keys(quizQuestionsRaw).forEach((questionId) => {
+				quiz_questions[questionId] = {
+					isResolved: quizQuestionsRaw[questionId].isResolved
+				}
+			})
 			axios.put(getApiUrl(`quiz_results/${user_id}/quiz/${setId}`), {
-				quiz: state,
+				quiz: {
+					quiz_questions, setId, setName, attempts, isComplete, questionsIds,
+				},
 				recordedAnswers
 			});
 		});
 	}
 };
 
-const getQuizProgress = (setId, currentUserSlug) => {
+const getQuizProgress = (setId) => {
 	return new Promise((resolve) => {
 			getCurrentUser().then(({user_id}) => {
 				axios.get(getApiUrl(`quiz_results/${user_id}/quiz/${setId}`)).then(({data: {quiz}}) => {

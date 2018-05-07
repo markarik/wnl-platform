@@ -288,9 +288,6 @@ const actions = {
 			}
 		})
 	},
-	[types.SOCKET_CONNECTION_RECONNECTED]({dispatch}) {
-		dispatch('setConnectionStatus', true)
-	}
 }
 
 const fetchUserRooms = async ({limit, page}) => {

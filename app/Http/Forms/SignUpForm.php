@@ -59,6 +59,14 @@ class SignUpForm extends Form
 					'placeholder' => trans('payment.last-name'),
 				],
 			])
+			->add('recipient', 'text', [
+				'label' => trans('payment.recipient'),
+				'rules' => 'required',
+				'attr'  => [
+					'class' => 'input',
+					'placeholder' => trans('payment.recipient'),
+				],
+			])
 			->add('address', 'text', [
 				'label' => trans('payment.address'),
 				'rules' => 'required',

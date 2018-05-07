@@ -79,7 +79,7 @@
 				<p>
 					<small>
 						{{-- <a class="tou-open-modal-link"> --}}
-						<a target="_blank" href="https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf">
+						<a target="_blank" href="@lang('payment.tou-link-href')">
 							@lang('payment.personal-data-tou-link-content')
 						</a>
 						&nbsp;|&nbsp;

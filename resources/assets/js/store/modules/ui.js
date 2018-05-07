@@ -40,7 +40,6 @@ const getters = {
 	isSidenavVisible: (state, getters) => getters.isSidenavMounted || getters.isSidenavOpen,
 	isMobileNavigation: (state, getters) => getters.isTouchScreen,
 	isMobileProfile: (state, getters) => getters.isTouchScreen,
-	isMobileCollections: (state, getters) => getters.isTouchScreen,
 	isChatMounted: (state, getters) => getters.isLargeDesktop,
 	isChatVisible: (state, getters, rootState) => state.canShowChat && getters.isChatMounted ?
 		rootState.currentUser.settings["chat_on"] : state.isChatOpen,
@@ -120,7 +119,7 @@ const actions = {
 	toggleSidenav({ commit }) {
 		commit(types.UI_TOGGLE_SIDENAV)
 	},
-	resetLayout({ commit, getters }) {
+	resetLayout({ commit }) {
 		commit(types.UI_RESET_LAYOUT)
 	},
 	toggleChat({ commit }) {
@@ -151,11 +150,11 @@ const actions = {
 			commit(types.UI_SHOW_GLOBAL_NOTIFICATION, false)
 		}, timeout)
 	},
-	openChat({ commit }) {
-		commit(types.UI_SET_CHAT_OPEN);
-	},
 	[types.SOCKET_CONNECTION_ERROR]({commit}) {
 		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, false)
+	},
+	[types.SOCKET_CONNECTION_RECONNECTED]({commit}) {
+		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, true)
 	},
 }
 
@@ -164,8 +163,4 @@ export default {
 	getters,
 	mutations,
 	actions
-}
-
-export const GLOBAL_NOTIFICATION_TYPES = {
-	INFO: 'info'
 }

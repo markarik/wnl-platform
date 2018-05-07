@@ -198,9 +198,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'UserReactionsApiController@getReactionsByCategory');
 
+	Route::delete("{$r['users']}/{userId}/{$r['user-collections']}", 'UserCollectionsApiController@delete');
+
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
+	Route::get("{$r['orders']}/{id}/.cancel", 'OrdersApiController@cancel');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');

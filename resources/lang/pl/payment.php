@@ -113,6 +113,7 @@ return [
 
 	'first-name' => 'Imię',
 	'last-name' => 'Nazwisko',
+	'recipient' => 'Osoba odbierająca przesyłkę',
 	'address' => 'Ulica i numer domu / mieszkania',
 	'zip' => 'Kod pocztowy',
 	'city' => 'Miasto',
@@ -143,6 +144,7 @@ return [
 	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
 	'personal-data-tou-content' => 'Znam i akceptuję treść dokumentów <a class="tou-open-modal-link" href="#">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href="#">:privacy-link-content</a>.',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
+	'tou-link-href' => 'https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf',
 	'personal-data-privacy-link-content' => 'Polityka Prywatności',
 	'personal-data-tou-title' => 'Regulamin Serwisu portalu wiecejnizlek.pl',
 	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',

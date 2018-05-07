@@ -45,6 +45,7 @@ class StoreProgress extends Command
 	*/
 	public function handle()
 	{
+		// IMPORTANT!!!! user id is in fact profile id
 		$passedUserId = $this->argument('user');
 
 		$this->transaction(function () use ($passedUserId) {

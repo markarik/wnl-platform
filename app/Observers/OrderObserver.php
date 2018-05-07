@@ -22,9 +22,8 @@ class OrderObserver
 
 	public function updated(Order $order)
 	{
-		\Cache::forget(User::getSubscriptionKey($order->user->id));
-		
-		if ($order->isDirty(['paid_amount']) && $order->paid_amount > $order->getOriginal('paid_amount')) {
+		$settlement = $order->paid_amount - $order->getOriginal('paid_amount');
+		if ($order->isDirty(['paid_amount']) && $settlement > 0) {
 			\Log::notice('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));
 
@@ -81,6 +80,10 @@ class OrderObserver
 			$this->dispatch(new OrderPaid($order));
 		}
 
+		if ($order->method === 'instalments') {
+			$order->generatePaymentSchedule();
+		}
+
 		$this->notify(new OrderCreated($order));
 	}
 
@@ -89,6 +92,10 @@ class OrderObserver
 		\Log::notice('Order coupon changed.');
 		if ($order->studyBuddy) {
 			$order->studyBuddy->delete();
+		}
+
+		if ($order->method === 'instalments') {
+			$order->generatePaymentSchedule();
 		}
 	}
 }

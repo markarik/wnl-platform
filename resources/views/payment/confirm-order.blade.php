@@ -37,8 +37,8 @@
 				<p><strong>{{ $user->email }}</strong></p>
 				<ul>
 					<li>{{ $user->full_name }}</li>
-					<li>{{ $user->address }}</li>
-					<li>{{ $user->zip }}, {{ $user->city }}</li>
+					<li>{{ $user->userAddress->street }}</li>
+					<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
 				</ul>
 			</div>
 		</section>
@@ -99,9 +99,9 @@
 							<input type="hidden" name="p24_currency" value="PLN"/>
 							<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
 							<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
-							<input type="hidden" name="p24_address" value="{{ $user->address }}"/>
-							<input type="hidden" name="p24_zip" value="{{ $user->zip }}"/>
-							<input type="hidden" name="p24_city" value="{{ $user->city }}"/>
+							<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
+							<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
+							<input type="hidden" name="p24_city" value="{{ $user->userAddress->city }}"/>
 							<input type="hidden" name="p24_country" value="PL"/>
 							<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
 							<input type="hidden" name="p24_language" value="pl"/>
@@ -123,16 +123,20 @@
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>do końca zapisów</strong> i kolejnych do <strong>15 czerwca</strong> i <strong>15 lipca</strong>.</p>
+							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 czerwca</strong> i <strong>20 lipca</strong>.</p>
 
 							<table class="table is-bordered margin vertical">
 								<tr>
 									<th>Twój wariant kursu</th>
-									@for ($i = 0; $i < count($instalments); $i++)
+									@foreach ($instalments as $instalment)
 										<th>
-											{{ $i + 1 }}. rata (do&nbsp;{{ $instalments[$i]['date']->format('d.m.Y') }})
+											@if($loop->first)
+												1. rata (do 7 dni po złożeniu zamówienia)
+											@else
+												{{$loop->index + 1}}. rata (do&nbsp;{{$instalment['date']->format('d.m.Y')}})
+											@endif
 										</th>
-									@endfor
+									@endforeach
 									<th>Razem</th>
 								</tr>
 								<tr>

@@ -97,6 +97,11 @@ let routes = [
 				path: 'availabilities',
 				component: require('js/components/user/LessonsAvailabilities.vue'),
 			},
+			{
+				name: 'progress-reset',
+				path: 'progress-reset',
+				component: require('js/components/user/ProgressReset'),
+			}
 		]
 	},
 	{

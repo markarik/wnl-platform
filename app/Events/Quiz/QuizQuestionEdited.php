@@ -7,9 +7,7 @@ use App\Events\SanitizesUserContent;
 use App\Models\QuizQuestion;
 use App\Models\User;
 use App\Traits\EventContextTrait;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -26,7 +24,6 @@ class QuizQuestionEdited extends Event
 
 	/**
 	 * Create a new event instance.
-	 *
 	 * @param QuizQuestion $quizQuestion
 	 * @param User $user
 	 *
@@ -36,16 +33,6 @@ class QuizQuestionEdited extends Event
 		parent::__construct();
 		$this->quizQuestion = $quizQuestion;
 		$this->user = $user;
-	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
 	}
 
 	public function transform()

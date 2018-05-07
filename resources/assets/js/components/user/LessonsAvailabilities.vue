@@ -17,7 +17,7 @@
 				:class="{'is-active': isViewActive(view)}"
 				:key="view"
 				@click="toggleView(view)"
-				>{{name}}
+				>{{ $t(name) }}
 				<span class="icon is-small">
 					<i class="fa"
 					:class="[isViewActive(view) ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -38,7 +38,7 @@
 						:class="{'is-active': isDayActive(day.dayNumber)}"
 						:key="day.dayNumber"
 						@click="toggleDay(day.dayNumber)"
-					>{{ day.dayName }}
+					>{{ $t(day.dayName) }}
 						<span class="icon is-small">
 							<i class="fa"
 								:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -58,7 +58,7 @@
 					:class="{'is-active': isPresetActive(preset)}"
 					:key="preset"
 					@click="togglePreset(preset)"
-					>{{name}}
+					>{{ $t(name) }}
 					<span class="icon is-small">
 						<i class="fa"
 						:class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -376,16 +376,12 @@ export default {
 			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,
 			activeView: 'presetsView',
-			activeViewNames: {
-				closed: 'Pokaż lekcje',
-				open: 'Schowaj lekcje'
-			},
 			alertSuccess: {
-				text: 'Udało się zmienić datę! :)',
+				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
 				type: 'success',
 			},
 			alertError: {
-				text: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
+				text: this.$i18n.t('lessonsAvailability.alertError'),
 				type: 'error',
 			},
 			defaultDateConfig: {
@@ -442,14 +438,14 @@ export default {
 		},
 		presets() {
 			return {
-				daysPerLesson: 'Ile dni na lekcję?',
-				dateToDate: 'Od daty do daty',
+				daysPerLesson: 'lessonsAvailability.presets.daysPerLesson',
+				dateToDate: 'lessonsAvailability.presets.dateToDate',
 			}
 		},
 		views() {
 			return {
-				presetsView: 'Automatyczne plany lekcji',
-				lessonsView: 'Widok zaawansowany',
+				presetsView: 'lessonsAvailability.views.presetsView',
+				lessonsView: 'lessonsAvailability.views.lessonsView',
 			}
 		},
 		computedWorkDays() {
@@ -481,31 +477,31 @@ export default {
 		days() {
 			let days = [
 				{
-					dayName: 'Ponedziałek',
+					dayName: 'lessonsAvailability.days.monday',
 					dayNumber: 1
 				},
 				{
-					dayName: 'Wtorek',
+					dayName: 'lessonsAvailability.days.tuesday',
 					dayNumber: 2
 				},
 				{
-					dayName: 'Środa',
+					dayName: 'lessonsAvailability.days.wednesday',
 					dayNumber: 3
 				},
 				{
-					dayName: 'Czwartek',
+					dayName: 'lessonsAvailability.days.tuesday',
 					dayNumber: 4
 				},
 				{
-					dayName: 'Piątek',
+					dayName: 'lessonsAvailability.days.friday',
 					dayNumber: 5
 				},
 				{
-					dayName: 'Sobota',
+					dayName: 'lessonsAvailability.days.saturday',
 					dayNumber: 6
 				},
 				{
-					dayName: 'Niedziela',
+					dayName: 'lessonsAvailability.days.sunday',
 					dayNumber: 7
 				},
 			]
@@ -563,25 +559,25 @@ export default {
 			}
 			if (isEmpty(this.workDays)) {
 				return this.addAutoDismissableAlert({
-					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
+					text: $t('lessonsAvailability.inputAlerts.workDays'),
 					type: 'error',
 					timeout: 3000,
 				})
 			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson') {
 				return this.addAutoDismissableAlert({
-					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
+					text: $t('lessonsAvailability.inputAlerts.workLoad'),
 					type: 'error',
 					timeout: 3000,
 				})
 			} else if (this.endDate === null && this.activePreset === 'dateToDate') {
 				return this.addAutoDismissableAlert({
-					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
+					text: $t('lessonsAvailability.inputAlerts.endDate'),
 					type: 'error',
 					timeout: 3000,
 				})
 			} else if (this.activePreset === '') {
 				return this.addAutoDismissableAlert({
-					text: `Wybierz któryś z dostępnych planów nauki :)`,
+					text: $t('lessonsAvailability.inputAlerts.choosePreset'),
 					type: 'error',
 					timeout: 3000,
 				})
@@ -616,9 +612,10 @@ export default {
 					}
 				})
 				.catch(error => {
+					this.isLoading = false
 					$wnl.logger.capture(error)
 					this.addAutoDismissableAlert({
-						text: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
+						text: $t('lessonsAvailability.alertError'),
 						type: 'error',
 					})
 				})

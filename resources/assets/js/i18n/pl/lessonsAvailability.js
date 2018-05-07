@@ -20,4 +20,29 @@ export const lessonsAvailability = {
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
+	alertSuccess: 'Udało się zmienić datę! :)',
+	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
+	presets: {
+		daysPerLesson: 'Ile dni na lekcję?',
+		dateToDate: 'Od daty do daty',
+	},
+	views: {
+		presetsView: 'Automatyczne plany lekcji',
+		lessonsView: 'Widok lekcji',
+	},
+	days: {
+		monday: 'Poniedziałek',
+		tuesday: 'Wtorek',
+		wednesday: 'Środa',
+		tuesday: 'Czwartek',
+		friday: 'Piątek',
+		saturday: 'Sobota',
+		sunday: 'Niedziela',
+	},
+	inputAlerts:{
+		workDays: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
+		workLoad: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
+		endDate: `Wybierz datę, w której ma zakończyć się nauka :)`,
+		choosePreset: `Wybierz któryś z dostępnych planów nauki :)`,
+	},
 }

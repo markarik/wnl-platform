@@ -74,6 +74,8 @@ class CalculateCoursePlan
 			$plan = $this->addToPlan($plan, $lesson->id, $this->now);
 		}
 
+//		$plan = $this->schedule($plan, $this->toBeScheduled);
+
 		if ($this->preset === 'dateToDate') {
 			$daysExcess = $this->daysQuantity % $this->toBeScheduled->count();
 			$computedWorkLoad = floor($this->daysQuantity / $this->toBeScheduled->count());
@@ -117,7 +119,7 @@ class CalculateCoursePlan
 		}
 
 		foreach ($this->openLastDay as $lesson) {
-			$plan = $this->addToPlan($plan, $lesson->id, $plan->last()->start_date);
+			$plan = $this->addToPlan($plan, $lesson->id, $plan->last()['start_date']);
 		}
 
 		return $plan;
@@ -148,6 +150,7 @@ class CalculateCoursePlan
 			->whereNull('section_id')
 			->whereNull('screen_id')
 			->where('status', 'complete')
+			->where('group_id', '!=', self::GROUP_ID_POWTORKI)
 			->get()
 			->merge($notRequired);
 
@@ -159,6 +162,7 @@ class CalculateCoursePlan
 			->whereNotIn('lessons.id', $openNow->merge($openLastDay)->pluck('id')->toArray())
 			->get();
 
+		$this->sortedLessons = $builder->get();
 		$this->openNow = $openNow;
 		$this->openLastDay = $openLastDay;
 		$this->toBeScheduled = $toBeScheduled;

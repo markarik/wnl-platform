@@ -475,7 +475,7 @@ const actions = {
 	resetTest({commit}) {
 		commit(types.QUESTIONS_RESET_TEST)
 	},
-	deleteProgress({commit, rootGetters}) {
+	deleteProgress({rootGetters}) {
 		return axios.delete(getApiUrl(`quiz_results/${rootGetters.currentUserId}`))
 	}
 }

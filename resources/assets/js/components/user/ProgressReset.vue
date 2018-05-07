@@ -32,7 +32,7 @@
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-    			<strong v-t="'user.progressReset.questionsHeader'"></strong>
+    			<strong v-t="'user.progressReset.collectionsHeader'"></strong>
 		  	</div>
 			<div class="message-body" v-t="'user.progressReset.collectionsWarning'"/>
 			<button
@@ -51,6 +51,7 @@
 	.reset-container
 		text-align: center
 		padding-bottom: $margin-base
+		margin-bottom: $margin-huge
 
 		.message-body
 			border: none
@@ -65,7 +66,7 @@
 	export default {
 		methods: {
 			...mapActions(['toggleOverlay']),
-			...mapActions('progress', ['deleteProgress']),
+			...mapActions('progress', ['deleteProgress', 'setupCourse']),
 			...mapActions('questions', {deleteQuestions: 'deleteProgress'}),
 			...mapActions('collections', ['deleteCollection']),
 			...mapActions(['addAutoDismissableAlert']),
@@ -80,9 +81,7 @@
 					confirmButtonClass: 'button is-danger',
 					reverseButtons: true
 				}))
-				.then(() => {
-					return action()
-				})
+				.then(action)
 				.then(() => {
 					this.addAutoDismissableAlert({
 						text: this.$t('user.progressReset.alertSuccess'),
@@ -99,11 +98,14 @@
 					})
 				})
 			},
+			resetAndReloadProgress() {
+        return Promise.all([this.deleteProgress(), this.setupCourse()])
+			},
 			resetProgress() {
 				this.confirmAndExecute(
 					this.$t('user.progressReset.progressHeader'),
 					this.$t('user.progressReset.progressConfirmation'),
-					this.deleteProgress
+					this.resetAndReloadProgress
 				)
 			},
 			resetQuestions() {

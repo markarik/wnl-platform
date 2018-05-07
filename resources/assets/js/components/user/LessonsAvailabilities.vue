@@ -66,11 +66,9 @@
 				</a>
 			</div>
 			<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
-				<div class="level wnl-screen-title">
-					<div class="level-left">
-						<div class="level-item">
-							{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
-						</div>
+				<div class="level">
+					<div class="level-item">
+						{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
 					</div>
 				</div>
 				<div class="work-load-control">
@@ -87,10 +85,8 @@
 					</a>
 				</div>
 				<div class="level wnl-screen-title">
-					<div class="level-left">
-						<div class="level-item">
-							{{ $t('lessonsAvailability.secondSection.startDate') }}
-						</div>
+					<div class="level-item">
+						{{ $t('lessonsAvailability.secondSection.startDate') }}
 					</div>
 				</div>
 				<div class="dates">
@@ -115,11 +111,9 @@
 				</div>
 			</div>
 			<div class="" v-if="isPresetActive('dateToDate')">
-				<div class="level wnl-screen-title">
-					<div class="level-left">
-						<div class="level-item">
-							{{ $t('lessonsAvailability.secondSection.dateToDate') }}
-						</div>
+				<div class="level">
+					<div class="level-item">
+						{{ $t('lessonsAvailability.secondSection.dateToDate') }}
 					</div>
 				</div>
 				<div class="dates">
@@ -169,13 +163,11 @@
 				</div>
 			</div>
 			<div class="annotation">
-				<div class="level wnl-screen-title">
-					<div class="level-left">
-						<div class="level-item">
-							{{ $t('lessonsAvailability.annotation.header') }}
-							{{ this.completedLessonsLength }}
-							{{ $t('lessonsAvailability.annotation.info') }} 
-						</div>
+				<div class="level">
+					<div class="level-item">
+						{{ $t('lessonsAvailability.annotation.header') }}
+						{{ this.completedLessonsLength }}
+						{{ $t('lessonsAvailability.annotation.info') }}
 					</div>
 				</div>
 			</div>

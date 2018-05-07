@@ -73,16 +73,18 @@
 						</div>
 					</div>
 				</div>
-				<div class="work-load-buttons">
-					<div v-for="workLoad in availableWorkLoads"
-						class="work-load-button panel-toggle">
-						<button
-							@click="chooseWorkload(workLoad.workLoad)"
-							class="button to-right"
-							:class="{'is-active': this.workLoad === workLoad.workLoad}"
-							>{{ $t(workLoad.translation) }}
-						</button>
-					</div>
+				<div class="work-load-control">
+					<a v-for="workLoad in availableWorkLoads"
+						@click="chooseWorkload(workLoad.workLoad)"
+						class="panel-toggle work-load-button"
+						:class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
+						>{{ $t(workLoad.translation) }}
+						<span class="icon is-small">
+							<i class="fa"
+							:class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']">
+							</i>
+						</span>
+					</a>
 				</div>
 				<div class="level wnl-screen-title">
 					<div class="level-left">
@@ -274,16 +276,11 @@
 			justify-content: center
 			margin-bottom: $margin-big
 
-		.work-load-buttons
+		.work-load-control
 			display: flex
 			flex-wrap: wrap
 			justify-content: center
 			margin-bottom: $margin-base
-			.work-load-button
-				border: 10px
-				display: flex
-				flex-wrap: wrap
-				justify-content: center
 
 		.dates
 			.date
@@ -392,7 +389,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['currentUserId', 'currentUserSubscriptionDates']),
+		...mapGetters(['currentUserId', 'currentUserSubscriptionDates', 'isMobile']),
 		...mapGetters('course', [
 			'name',
 			'groups',
@@ -515,6 +512,9 @@ export default {
 			'updateLessonStartDate'
 		]),
 		...mapActions(['toggleOverlay']),
+		isWorkLoadActive(workLoad) {
+			return this.workLoad === workLoad
+		},
 		isPresetActive(preset) {
 			return this.activePreset === preset
 		},

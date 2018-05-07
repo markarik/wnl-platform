@@ -16,7 +16,7 @@ export const lessonsAvailability = {
 		twoDaysPerLesson: 'Jedna lekcje dwa dni',
 		threeDaysPerLesson: 'Jedna lekcja na trzy dni',
 		openAll: 'Otwórz wszystkie lekcje',
-		acceptPlanButton: 'Jedziesz szwagier',
+		acceptPlanButton: 'Akceptuję plan!',
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',

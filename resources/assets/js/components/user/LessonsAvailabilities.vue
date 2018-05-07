@@ -168,14 +168,23 @@
 					</div>
 				</div>
 			</div>
-			<div class="accept-plan">
-				<div class="accept-plan-button">
-					<a
-						@click="acceptPlan"
-						class="button button is-primary is-outlined is-big"
-						>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
-					</a>
+			<div class="annotation">
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item">
+							{{ $t('lessonsAvailability.annotation.header') }}
+							{{ this.completedLessonsLength }}
+							{{ $t('lessonsAvailability.annotation.info') }} 
+						</div>
+					</div>
 				</div>
+			</div>
+			<div class="accept-plan">
+				<a
+					@click="acceptPlan"
+					class="button button is-primary is-outlined is-big"
+					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+				</a>
 			</div>
 		</div>
 		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
@@ -290,6 +299,9 @@
 					text-align: center
 					width: 100%
 
+		.annotation
+			margin-bottom: $margin-base
+
 		.accept-plan
 			display: flex
 			justify-content: space-around
@@ -402,6 +414,11 @@ export default {
 		inProgressLessonsLength() {
 			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
 				return !this.completedLessons.includes(Number(requiredLesson))
+			}).length
+		},
+		completedLessonsLength() {
+			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
+				return this.completedLessons.includes(Number(requiredLesson))
 			}).length
 		},
 		minimumEndDate() {

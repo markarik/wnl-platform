@@ -1,6 +1,6 @@
 export const lessonsAvailability = {
 	loader: 'Ładuję plan...',
-	header: 'Dostępność lekcji',
+	header: 'Plan pracy',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',
 		availablePresets: '2. Dostępne plany nauki.',
@@ -39,4 +39,8 @@ export const lessonsAvailability = {
 		saturday: 'Sobota',
 		sunday: 'Niedziela',
 	},
+	annotation: {
+		header: 'Liczba ukończonych przez Ciebie lekcji wynosi: ',
+		info: '. Pozostana one otwarte, a zmiana planu nie wpłynie na Twój postęp.'
+	}
 }

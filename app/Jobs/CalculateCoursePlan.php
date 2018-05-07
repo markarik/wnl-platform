@@ -30,6 +30,9 @@ class CalculateCoursePlan
 	protected $sortedCompletedLessons;
 	protected $sortedInProgressLessons;
 	protected $requiredInProgressLessonsCount;
+	protected $openNow;
+	protected $openLastDay;
+	protected $toBeScheduled;
 
 	public function __construct($user, $options)
 	{
@@ -67,64 +70,54 @@ class CalculateCoursePlan
 			return $this->handleWorkloadZero($plan);
 		}
 
-		foreach ($this->sortedCompletedLessons as $lesson) {
+		foreach ($this->openNow as $lesson) {
 			$plan = $this->addToPlan($plan, $lesson->id, $this->now);
 		}
 
 		if ($this->preset === 'dateToDate') {
-			$daysExcess = $this->daysQuantity % $this->requiredInProgressLessonsCount;
-			$computedWorkLoad = floor($this->daysQuantity / $this->requiredInProgressLessonsCount);
+			$daysExcess = $this->daysQuantity % $this->toBeScheduled->count();
+			$computedWorkLoad = floor($this->daysQuantity / $this->toBeScheduled->count());
 			$lessonWithExtraDay = 0;
 		}
 
-		foreach ($this->sortedInProgressLessons as $lesson) {
-			$groupId = $lesson->group_id;
-			// Nieobowiązkowe
-			if (!self::isGroupObligatory($groupId)) {
-				$plan = $this->addToPlan($plan, $lesson->id, $this->now);
-			} elseif ($groupId !== self::GROUP_ID_POWTORKI) {
-				// Obowiązkowe
-				if ($this->preset === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
-					$workLoad = $computedWorkLoad + 1;
-					$lessonWithExtraDay++;
-				} else if ($this->preset === 'dateToDate' && $lessonWithExtraDay >= $daysExcess) {
-					$workLoad = $computedWorkLoad;
-				}
-
-				$dayOfWeekIso = $startDate->dayOfWeekIso;
-				$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays);
-
-				if ($isStartDateVariableAvailable) {
-					$plan = $this->addToPlan($plan, $lesson->id, $startDate);
-				} else {
-					while (!$isStartDateVariableAvailable) {
-						$startDate->addDays(1);
-						$dayOfWeekIso = $startDate->dayOfWeekIso;
-						$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays);
-					}
-					$plan = $this->addToPlan($plan, $lesson->id, $startDate);
-				}
-				$endDate = clone($startDate);
-				$addedDays = 1;
-				$enoughAdded = $addedDays >= $workLoad;
-				$isEndDateAvailable = in_array($endDate->dayOfWeekIso, $this->workDays);
-				while (!$isEndDateAvailable || !$enoughAdded) {
-					$endDate->addDay();
-					$addedDays++;
-					$dayOfWeekIso = $endDate->dayOfWeekIso;
-					$isEndDateAvailable = in_array($dayOfWeekIso, $this->workDays);
-					$enoughAdded = $addedDays >= $workLoad;
-				}
-				$startDate = clone($endDate)->addDay();
+		// Obowiązkowe
+		foreach ($this->toBeScheduled as $lesson) {
+			if ($this->preset === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
+				$workLoad = $computedWorkLoad + 1;
+				$lessonWithExtraDay++;
+			} else if ($this->preset === 'dateToDate' && $lessonWithExtraDay >= $daysExcess) {
+				$workLoad = $computedWorkLoad;
 			}
+
+			$dayOfWeekIso = $startDate->dayOfWeekIso;
+			$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays);
+
+			if ($isStartDateVariableAvailable) {
+				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
+			} else {
+				while (!$isStartDateVariableAvailable) {
+					$startDate->addDays(1);
+					$dayOfWeekIso = $startDate->dayOfWeekIso;
+					$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays);
+				}
+				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
+			}
+			$endDate = clone($startDate);
+			$addedDays = 1;
+			$enoughAdded = $addedDays >= $workLoad;
+			$isEndDateAvailable = in_array($endDate->dayOfWeekIso, $this->workDays);
+			while (!$isEndDateAvailable || !$enoughAdded) {
+				$endDate->addDay();
+				$addedDays++;
+				$dayOfWeekIso = $endDate->dayOfWeekIso;
+				$isEndDateAvailable = in_array($dayOfWeekIso, $this->workDays);
+				$enoughAdded = $addedDays >= $workLoad;
+			}
+			$startDate = clone($endDate)->addDay();
 		}
 
-
-		$filteredLessons = $this->sortedInProgressLessons
-			->where('group_id', self::GROUP_ID_POWTORKI);
-
-		foreach ($filteredLessons->pluck('id') as $lessonId) {
-			$plan = $this->addToPlan($plan, $lessonId, $plan->last()->start_date);
+		foreach ($this->openLastDay as $lesson) {
+			$plan = $this->addToPlan($plan, $lesson->id, $plan->last()->start_date);
 		}
 
 		return $plan;
@@ -138,41 +131,37 @@ class CalculateCoursePlan
 			return in_array($dayOfWeekIso, $this->workDays);
 		}, $this->endDate->addDay());
 
-		$this->sortedLessons = $this->user->lessonsAvailability()
+		$builder = $this->user->lessonsAvailability()
 			->orderBy('group_id')
-			->orderBy('order_number')
+			->orderBy('order_number');
+
+		$notRequired = (clone $builder)
+			->whereIn('group_id', [
+				self::GROUP_ID_WIECEJ_NIZ_LEK,
+				self::GROUP_ID_WARSZTATY,
+				self::GROUP_ID_DODATKI,
+			])
 			->get();
 
-		$completeLessons = UserCourseProgress::where('user_id', $this->user->profile->id)
+		$openNow = (clone $builder)
+			->join('user_course_progress', 'lessons.id', '=', 'user_course_progress.lesson_id')
 			->whereNull('section_id')
 			->whereNull('screen_id')
 			->where('status', 'complete')
 			->get()
-			->pluck('lesson_id')
-			->toArray();
+			->merge($notRequired);
 
-		$this->sortedCompletedLessons = collect();
-		$this->sortedInProgressLessons = collect();
-		$this->requiredInProgressLessonsCount = 0;
+		$openLastDay = (clone $builder)
+			->where('group_id', self::GROUP_ID_POWTORKI)
+			->get();
 
-		foreach ($this->sortedLessons as $lesson) {
-			if (in_array($lesson->id, $completeLessons)) {
-				$this->sortedCompletedLessons->push($lesson);
-			} else {
-				$this->sortedInProgressLessons->push($lesson);
-				if ($lesson->is_required === 1) {
-					$this->requiredInProgressLessonsCount++;
-				}
-			}
-		}
-	}
+		$toBeScheduled = (clone $builder)
+			->whereNotIn('lessons.id', $openNow->merge($openLastDay)->pluck('id')->toArray())
+			->get();
 
-	public static function isGroupObligatory($groupId)
-	{
-		return
-			$groupId !== self::GROUP_ID_WIECEJ_NIZ_LEK &&
-			$groupId !== self::GROUP_ID_WARSZTATY &&
-			$groupId !== self::GROUP_ID_DODATKI;
+		$this->openNow = $openNow;
+		$this->openLastDay = $openLastDay;
+		$this->toBeScheduled = $toBeScheduled;
 	}
 
 	protected function handleWorkloadZero($plan)
@@ -190,12 +179,5 @@ class CalculateCoursePlan
 			'lesson_id'  => $lessonId,
 			'start_date' => $date,
 		]);
-	}
-
-	protected function handleDateToDate() {
-		$startDate = $this->startDate;
-		$workLoad = $this->workLoad;
-
-
 	}
 }

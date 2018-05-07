@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\UserCourseProgress;
 use App\Models\UserLesson;
 use Carbon\Carbon;
 use DB;
@@ -27,12 +26,10 @@ class CalculateCoursePlan
 	protected $workDays;
 	protected $workLoad;
 	protected $sortedLessons;
-	protected $sortedCompletedLessons;
-	protected $sortedInProgressLessons;
-	protected $requiredInProgressLessonsCount;
 	protected $openNow;
 	protected $openLastDay;
 	protected $toBeScheduled;
+	protected $daysQuantity;
 
 	public function __construct($user, $options)
 	{
@@ -49,13 +46,22 @@ class CalculateCoursePlan
 
 	public function handle()
 	{
-		$plan = $this->calculatePlan()
-			->map(function ($el) {
-				return array_set($el, 'user_id', $this->user->id);
-			});
+		DB::beginTransaction();
 
-		UserLesson::where('user_id', $this->user->id)->delete();
-		DB::table('user_lesson')->insert($plan->toArray());
+		try {
+			$plan = $this->calculatePlan()
+				->map(function ($el) {
+					return array_set($el, 'user_id', $this->user->id);
+				});
+
+			UserLesson::where('user_id', $this->user->id)->delete();
+			DB::table('user_lesson')->insert($plan->toArray());
+		} catch (\Exception $e) {
+			DB::rollBack();
+			throw $e;
+		}
+		
+		DB::commit();
 
 		return $plan;
 	}
@@ -66,6 +72,10 @@ class CalculateCoursePlan
 		$startDate = $this->startDate;
 		$workLoad = $this->workLoad;
 		$toBeScheduledCount = $this->toBeScheduled->count();
+		$lessonWithExtraDay = 0;
+		$computedWorkLoad = 0;
+		$daysExcess = 0;
+
 
 		if ($workLoad === 0 || $toBeScheduledCount === 0) {
 			return $this->handleWorkloadZero($plan);
@@ -78,27 +88,28 @@ class CalculateCoursePlan
 		if ($this->preset === 'dateToDate') {
 			$daysExcess = $this->daysQuantity % $toBeScheduledCount;
 			$computedWorkLoad = floor($this->daysQuantity / $toBeScheduledCount);
-			$lessonWithExtraDay = 0;
 		}
 
 		foreach ($this->toBeScheduled as $lesson) {
-			if ($this->preset === 'dateToDate' && $lessonWithExtraDay < $daysExcess) {
+			if ($this->preset === 'dateToDate' &&
+				$lessonWithExtraDay < $daysExcess
+			) {
 				$workLoad = $computedWorkLoad + 1;
 				$lessonWithExtraDay++;
-			} else if ($this->preset === 'dateToDate' && $lessonWithExtraDay >= $daysExcess) {
+			} else if ($this->preset === 'dateToDate' &&
+				$lessonWithExtraDay >= $daysExcess
+			) {
 				$workLoad = $computedWorkLoad;
 			}
 
-			$dayOfWeekIso = $startDate->dayOfWeekIso;
-			$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays);
+			$startDateAvailable = $this->checkDay($startDate->dayOfWeekIso);
 
-			if ($isStartDateVariableAvailable) {
+			if ($startDateAvailable) {
 				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
 			} else {
-				while (!$isStartDateVariableAvailable) {
+				while (!$startDateAvailable) {
 					$startDate->addDays(1);
-					$dayOfWeekIso = $startDate->dayOfWeekIso;
-					$isStartDateVariableAvailable = in_array($dayOfWeekIso, $this->workDays); // TODO
+					$startDateAvailable = $this->checkDay($startDate->dayOfWeekIso);
 				}
 				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
 			}
@@ -106,12 +117,12 @@ class CalculateCoursePlan
 			$endDate = clone($startDate);
 			$addedDays = 1;
 			$enoughAdded = $addedDays >= $workLoad;
-			$isEndDateAvailable = in_array($endDate->dayOfWeekIso, $this->workDays); // TODO
+			$isEndDateAvailable = $this->checkDay($endDate->dayOfWeekIso);
+
 			while (!$isEndDateAvailable || !$enoughAdded) {
 				$endDate->addDay();
 				if ($isEndDateAvailable) $addedDays++;
-				$dayOfWeekIso = $endDate->dayOfWeekIso;
-				$isEndDateAvailable = in_array($dayOfWeekIso, $this->workDays);
+				$isEndDateAvailable = $this->checkDay($endDate->dayOfWeekIso);
 				$enoughAdded = $addedDays >= $workLoad;
 			}
 
@@ -187,5 +198,10 @@ class CalculateCoursePlan
 			'lesson_id'  => $lessonId,
 			'start_date' => $date,
 		]);
+	}
+
+	protected function checkDay(int $day)
+	{
+		return in_array($day, $this->workDays);
 	}
 }

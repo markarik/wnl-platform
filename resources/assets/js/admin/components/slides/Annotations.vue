@@ -1,73 +1,73 @@
 <template>
-  <div>
-    <p class="title is-3">Dodaj Adnotację</p>
-    <form class="" action="" method="POST" @submit.prevent="onSubmit"
-      @keydown="form.errors.clear($event.target.name)"
-    >
-      <div class="field is-horizontal annotation-input-text">
-        <div class="field-label">
-          <label class="label">Hasło</label>
-        </div>
-        <div class="field-body">
-          <div class="field">
-            <div class="control">
-              <input class="input" type="text" v-model="annotationKey">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="field is-horizontal annotation-input-text">
-        <div class="field-label">
-          <label class="label">ID</label>
-        </div>
-        <div class="field-body">
-          <div class="field">
-            <div class="control">
-              <input class="input" type="text" v-model="annotationId" disabled>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="annotation-input-description">
-        <wnl-form-code type="text" name="content" :form="form"/>
-      </div>
-      <div class="level-item">
-          <a class="button is-primary"
-             :disabled="form.errors.any() || !form.content"
-             @click="onSubmit">Dodaj Adnotacje
-          </a>
-      </div>
-    </form>
-  </div>
+	<div>
+		<p class="title is-3">Dodaj Adnotację</p>
+		<form class="" action="" method="POST" @submit.prevent="onSubmit"
+			@keydown="form.errors.clear($event.target.name)"
+		>
+			<div class="field is-horizontal annotation-input-text">
+				<div class="field-label">
+					<label class="label">Hasło</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input class="input" type="text" v-model="keyword">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="field is-horizontal annotation-input-text">
+				<div class="field-label">
+					<label class="label">ID</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input class="input" type="text" v-model="annotationId" disabled>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="annotation-input-description">
+				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
+			</div>
+			<div class="level-item">
+					<a class="button is-primary"
+						 :disabled="form.errors.any() || !form.content"
+						 @click="onSubmit">Dodaj Adnotacje
+					</a>
+			</div>
+		</form>
+	</div>
 </template>
 
 <style lang="sass" scoped>
-  @import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/variables'
 
-  .field-label
-    flex-basis: 80px
-    flex-grow: 0
+	.field-label
+		flex-basis: 80px
+		flex-grow: 0
 
-  .annotation-input-text
-    display: inline-flex
-    width: 500px
-    align-items: center
+	.annotation-input-text
+		display: inline-flex
+		width: 500px
+		align-items: center
 
-  .annotation-input-description
-    border: $border-light-gray
-    height: 500px
-    margin: $margin-big 0
+	.annotation-input-description
+		border: $border-light-gray
+		height: 500px
+		margin: $margin-big 0
 </style>
 
 <script>
-	import { getApiUrl } from 'js/utils/env'
+	import {getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
 	import Form from 'js/classes/forms/Form'
 
 	export default {
 		name: 'Annotations',
 		components: {
-      'wnl-form-code': Code
+			'wnl-form-code': Code
 		},
 		data() {
 			return {
@@ -75,13 +75,23 @@
 					content: null,
 					is_functional: null,
 				}),
-        annotationKey: '',
-        annotationId: 0
+				keyword: '',
+				annotationId: 0
 			}
 		},
 		computed: {
 			requestPayload() {
 			}
 		},
+		methods: {
+			onSubmit() {
+				axios.post(getApiUrl('annotations'), {
+					keyword: this.keyword,
+					description: this.form.content
+				}).then(({data}) => {
+					this.annotationId = data.id
+				})
+			}
+		}
 	}
 </script>

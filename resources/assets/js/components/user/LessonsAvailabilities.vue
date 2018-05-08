@@ -101,7 +101,7 @@
 							<wnl-datepicker
 								:withBorder="true"
 								v-model="startDate"
-								:config="startDateConfig"
+								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
@@ -128,7 +128,7 @@
 							<wnl-datepicker
 								:withBorder="true"
 								v-model="startDate"
-								:config="startDateConfig"
+								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
@@ -421,8 +421,13 @@ export default {
 		},
 		startDateConfig() {
 			return {
+				...this.defaultDateConfig
+			}
+		},
+		startDateConfigWithMin() {
+			return {
 				...this.defaultDateConfig,
-				minDate: 'today',
+				minDate: 'today'
 			}
 		},
 		endDateConfig() {
@@ -454,13 +459,8 @@ export default {
 				lessonsView: 'lessonsAvailability.views.lessonsView',
 			}
 		},
-		computedWorkDays() {
-			this.workDays.sort((a, b) => {
-				return a - b
-			})
-		},
 		availableWorkLoads() {
-			let availableWorkLoads = [
+			return [
 				{
 					workLoad: 1,
 					translation: 'lessonsAvailability.buttons.oneDayPerLesson',
@@ -478,10 +478,9 @@ export default {
 					translation: 'lessonsAvailability.buttons.openAll',
 				}
 			]
-			return availableWorkLoads
 		},
 		days() {
-			let days = [
+			return [
 				{
 					dayName: 'lessonsAvailability.days.monday',
 					dayNumber: 1
@@ -511,7 +510,6 @@ export default {
 					dayNumber: 7
 				},
 			]
-			return days
 		},
 	},
 	methods: {
@@ -536,17 +534,11 @@ export default {
 		onEndDateChange(payload) {
 			if (isEmpty(payload)) this.endDate = null
 		},
-		onStartDateChange(payload) {
-			if (isEmpty(payload)) this.startDate = null
-		},
 		toggleView(view) {
 			return this.activeView = view
 		},
 		togglePreset(preset) {
 			return this.activePreset = preset
-		},
-		toggleLessonsView() {
-			return this.activeView = !this.activeView
 		},
 		isDayActive(dayNumber) {
 			return this.workDays.includes(dayNumber)
@@ -650,6 +642,8 @@ export default {
 			return this.startDate = payload[0]
 		},
 		onStartDateChange(payload, lessonId) {
+			if (!payload[0]) return
+
 			const date = payload[0]
 			const diff = moment().startOf('day').diff(date, 'days')
 

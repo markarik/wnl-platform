@@ -66,7 +66,7 @@
 				</a>
 			</div>
 			<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
-				<div class="level">
+				<div class="level wnl-screen-title">
 					<div class="level-item">
 						{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
 					</div>

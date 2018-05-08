@@ -41,6 +41,6 @@ export const lessonsAvailability = {
 	},
 	annotation: {
 		header: 'Liczba ukończonych przez Ciebie lekcji wynosi: ',
-		info: '. Pozostana one otwarte, a zmiana planu nie wpłynie na Twój postęp.'
+		info: '. Pozostaną one otwarte, a zmiana planu nie wpłynie na Twój postęp.'
 	}
 }

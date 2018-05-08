@@ -164,7 +164,7 @@
 			</div>
 			<div class="annotation">
 				<div class="level">
-					<div class="level-item">
+					<div class="level-item" v-if="this.completedLessonsLength > 0">
 						{{ $t('lessonsAvailability.annotation.header') }}
 						{{ this.completedLessonsLength }}
 						{{ $t('lessonsAvailability.annotation.info') }}

@@ -56,10 +56,12 @@ class UserLessonApiController extends ApiController
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
 
-		$lessons = new LessonsApiController($request);
+		Cache::tags("user-{$user->id}")->flush();
+		$lessons = $user->lessonsAvailability()->get()
+		$controller = new LessonsApiController($request);
 
 		return $this->respondOk([
-			'lessons'        => $lessons->transform($user->lessonsAvailability),
+			'lessons'        => $controller->transform($lessons),
 			'end_date'       => $plan->last()['start_date']->timestamp,
 			'end_date_human' => $plan->last()['start_date'],
 		]);

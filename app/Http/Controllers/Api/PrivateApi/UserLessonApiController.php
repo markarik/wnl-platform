@@ -57,7 +57,7 @@ class UserLessonApiController extends ApiController
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
 
 		Cache::tags("user-{$user->id}")->flush();
-		$lessons = $user->lessonsAvailability()->get()
+		$lessons = $user->lessonsAvailability()->get();
 		$controller = new LessonsApiController($request);
 
 		return $this->respondOk([

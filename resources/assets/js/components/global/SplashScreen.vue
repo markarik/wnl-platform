@@ -74,8 +74,5 @@
 				return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL')
 			},
 		},
-		mounted() {
-			this.$upcomingEditionParticipant.isAllowed('access')
-		}
 	}
 </script>

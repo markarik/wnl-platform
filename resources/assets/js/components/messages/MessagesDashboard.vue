@@ -1,7 +1,6 @@
 <template lang="html">
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-		class="sidenav"
 			:isVisible="isSidenavVisible"
 			:isDetached="!isSidenavMounted"
 			:isMaxWidth="true"
@@ -22,7 +21,7 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.wnl-app-layout

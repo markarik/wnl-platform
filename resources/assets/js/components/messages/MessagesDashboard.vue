@@ -21,8 +21,11 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.wnl-app-layout
+		width: 100%
 
 	.wnl-course-content
 		flex: $course-content-flex auto

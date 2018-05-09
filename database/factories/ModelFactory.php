@@ -79,6 +79,7 @@ $factory->define(App\Models\Screen::class, function (Faker\Generator $faker) {
 	return [
 		'name'      => $faker->name,
 		'type'      => 'slideshow',
+		'meta'      => ["resources" => ["id" => $faker->randomNumber(), "name" => "slideshows"], "slides_count" => $faker->randomNumber()],
 		'lesson_id' => function () {
 			return factory(App\Models\Lesson::class)->create()->id;
 		},
@@ -193,6 +194,24 @@ $factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Section::class, function (Faker\Generator $faker) {
 	return [
 		'name' => $faker->text,
+		'first_slide' => $faker->randomNumber(),
+		'slides_count' => $faker->randomNumber(),
+		'screen_id' => function () {
+			return factory(App\Models\Screen::class)->create()->id;
+		}
+	];
+});
+
+$factory->define(App\Models\Presentable::class, function (Faker\Generator $faker) {
+	return [
+		'slide_id' => function () {
+			return factory(App\Models\Slide::class)->create()->id;
+		},
+		'presentable_id' => function () {
+			return factory(App\Models\Section::class)->create()->id;
+		},
+		'presentable_type' => 'App\\Models\\Section',
+		'order_number' => $faker->randomNumber()
 	];
 });
 

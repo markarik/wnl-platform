@@ -34,6 +34,7 @@ class ReorderSections extends Command
 		$passedSections = $this->argument('sections');
 
 		$screen = Screen::find($passedScreen);
+		$presentables = $this->getPresentableForScreen($screen);
 
 		$sortedSlides = collect();
 		$sectionsFirstSlides = []; // slideId => sectionId
@@ -44,60 +45,55 @@ class ReorderSections extends Command
 			$sectionSlides = $section->slides;
 
 			$sortedSlides = $sortedSlides->concat($sectionSlides);
-			$firstSlideId = $this->getSlideIdFromOrderNumber($section->first_slide, $section);
+			$firstSlideId = $this->getSlideIdFromOrderNumber($section->first_slide, $presentables);
 			$sectionsFirstSlides[$firstSlideId] = $section;
 
 			foreach($section->subsections as $subsection) {
-				$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $section);
+				$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $presentables);
 				$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
 			}
 		}
 
-		$slideshowId = $screen->slideshow->id;
-		$presentable = $this->setSlidesOrderNumber($slideshowId, $sortedSlides);
-		$this->setFirstSlides($presentable, $sectionsFirstSlides);
-		$this->setFirstSlides($presentable, $subsectionsFirstSlides);
+		$this->setSlidesOrderNumber($presentables, $sortedSlides);
+		$this->setFirstSlides($presentables, $sectionsFirstSlides);
+		$this->setFirstSlides($presentables, $subsectionsFirstSlides);
 	}
 
-	private function getSlideIdFromOrderNumber($orderNumber, $section) {
-		$slideshow = $section->screen->slideshow;
-
-		$firstSlide = Presentable::where([
-			['presentable_type', '=', 'App\\Models\\Slideshow'],
-			['presentable_id', '=', $slideshow->id],
-			['order_number', '=', $orderNumber],
-		])->first();
-
-		return $firstSlide->slide_id;
-	}
-
-	private function setSlidesOrderNumber($slideshowId, $slides) {
+	private function getPresentableForScreen($screen) {
 		$whereClause = [
 			['presentable_type', 'App\\Models\\Slideshow'],
-			['presentable_id', '=', (int) $slideshowId],
+			['presentable_id', '=', (int) $screen->slideshow->id],
 		];
-
-		foreach ($slides as $index => $slide) {
-			$presentable = Presentable::where($whereClause)
-				->where('slide_id', $slide->id)
-				->first();
-
-			$presentable->order_number = $index;
-			$presentable->save();
-		}
-
-		\Cache::tags(json_encode(['where' => $whereClause]))->flush();
 
 		return Presentable::where($whereClause)->get();
 	}
 
-	private function setFirstSlides($presentable, $firstSlides) {
+	private function getSlideIdFromOrderNumber($orderNumber, $presentables) {
+		$firstSlide = $presentables->first(function($presentable) use ($orderNumber) {
+			return $presentable->order_number === $orderNumber;
+		});
+
+		return $firstSlide->slide_id;
+	}
+
+	private function setSlidesOrderNumber($presentables, $slides) {
+		foreach ($slides as $index => $slide) {
+			$presentable = $presentables->first(function($presentable) use ($slide) {
+				return $presentable->slide_id === $slide->id;
+			});
+
+			$presentable->order_number = $index;
+			$presentable->save();
+		}
+	}
+
+	private function setFirstSlides($presentables, $firstSlides) {
 		// item is either section or subsection
 		foreach ($firstSlides as $slideId => $item) {
-			$slideFromPresentable = $presentable->first(function($item) use($slideId) {
+			$presentable = $presentables->first(function($item) use($slideId) {
 				return $item->slide_id === $slideId;
 			});
-			$item->first_slide = $slideFromPresentable->order_number;
+			$item->first_slide = $presentable->order_number;
 			$item->save();
 		}
 	}

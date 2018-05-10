@@ -34,7 +34,7 @@ class ReorderSections extends Command
 		$passedSections = $this->argument('sections');
 
 		$screen = Screen::find($passedScreen);
-		$presentables = $this->getPresentableForScreen($screen);
+		$passedScreenPresentables = $this->getPresentableForScreen($screen);
 
 		$sortedSlides = collect();
 		$sectionsFirstSlides = []; // slideId => sectionId
@@ -42,21 +42,30 @@ class ReorderSections extends Command
 
 		foreach ($passedSections as $sectionId) {
 			$section = Section::find($sectionId);
+			$sectionPresentables = $this->getPresentableForScreen($section->screen);
 			$sectionSlides = $section->slides;
 
 			$sortedSlides = $sortedSlides->concat($sectionSlides);
-			$firstSlideId = $this->getSlideIdFromOrderNumber($section->first_slide, $presentables);
+			$firstSlideId = $this->getSlideIdFromOrderNumber($section->first_slide, $sectionPresentables);
 			$sectionsFirstSlides[$firstSlideId] = $section;
 
 			foreach($section->subsections as $subsection) {
-				$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $presentables);
+				$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $sectionPresentables);
 				$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
 			}
+			$section->screen()->associate($passedScreen);
 		}
 
-		$this->setSlidesOrderNumber($presentables, $sortedSlides);
-		$this->setFirstSlides($presentables, $sectionsFirstSlides);
-		$this->setFirstSlides($presentables, $subsectionsFirstSlides);
+		$passedScreenPresentables = $this->setupScreenSlideshow($screen, $sortedSlides);
+		$this->setSlidesOrderNumber($passedScreenPresentables, $sortedSlides);
+		$this->setFirstSlides($passedScreenPresentables, $sectionsFirstSlides);
+		$this->setFirstSlides($passedScreenPresentables, $subsectionsFirstSlides);
+	}
+
+	private function setupScreenSlideshow($screen, $slides) {
+		$screen->slideshow->slides()->sync($slides->pluck('id'));
+
+		return $this->getPresentableForScreen($screen);
 	}
 
 	private function getPresentableForScreen($screen) {

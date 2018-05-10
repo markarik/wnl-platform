@@ -15,44 +15,11 @@ class ReorderSectionsTest extends TestCase
 {
 	use DatabaseTransactions;
 
-	private function setupDb($slidesCount=30, $sectionsCount=3) {
-		$slideshow = factory(Slideshow::class)->create();
-		$screen = factory(Screen::class)->create([
-			'meta' => ["resources" => [["id" => $slideshow->id, "name" => "slideshows"]], "slides_count" => $slidesCount],
-		]);
-
-		$slides = factory(Slide::class, $slidesCount)
-			->create();
-
-		$slideshow->slides()->attach($slides);
-
-		Presentable::where([
-			['presentable_type', '=', 'App\\Models\\Slideshow'],
-			['presentable_id', '=', $slideshow->id],
-		])->get()->each(function($presentable, $index) {
-			$presentable->order_number = $index;
-			$presentable->save();
-		});
-
-		$slidesInSection = $slidesCount / $sectionsCount;
-
-		$sections = factory(Section::class, $sectionsCount)
-			->create()
-			->each(function($section, $index) use ($screen, $slides, $slidesInSection) {
-				$section->first_slide = $index * $slidesInSection;
-				$sectionSlides = $slides->splice(0, $slidesInSection);
-				$section->screen()->associate($screen)->save();
-				$section->slides()->attach($sectionSlides);
-				$section->save();
-			});
-
-		return [$slideshow, $screen, $sections];
-	}
-
 	public function testSlidesInCorrectOrder()
 	{
-		list ($slideshow, $screen, $sections) = $this->setupDb();
+		list ($screen, $sections) = $this->setupDb();
 
+		$slideshow = $screen->slideshow;
 		$sectionsNewOrder = collect([$sections->get(1), $sections->get(2), $sections->get(0)]);
 		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
 
@@ -90,7 +57,7 @@ class ReorderSectionsTest extends TestCase
 		$slidesInSubsection = $subsectionsCount / 6;
 		$slidesInSection = $slidesCount / $sectionsCount;
 
-		list ($slideshow, $screen, $sections) = $this->setupDb($slidesCount, $sectionsCount);
+		list ($screen, $sections) = $this->setupDb($slidesCount, $sectionsCount);
 
 		factory(Subsection::class, 6)->create()
 			->each(function($subsection, $index) use ($slidesInSubsection, $sections) {
@@ -121,5 +88,94 @@ class ReorderSectionsTest extends TestCase
 				]);
 			}
 		}
+	}
+
+	public function testSectionsFromDifferentScreens()
+	{
+		$slidesInSection = 10;
+
+		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesInSection, 1);
+		list ($screenTwo, $sectionScreenTwo) = $this->setupDb($slidesInSection, 1);
+
+		$sectionsNewOrder = collect([$sectionScreenOne->get(0), $sectionScreenTwo->get(0)]);
+		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
+
+		Artisan::call('sections:reorder', [
+			'--screen' => $screenTwo->id,
+			'sections' => $sectionIds
+		]);
+
+		foreach ($sectionsNewOrder as $index => $section) {
+			$this->assertDatabaseHas('sections', [
+				'id' => $section->id,
+				'first_slide' => $index * $slidesInSection
+			]);
+		}
+
+
+		$slidesNewOrder = $sectionsNewOrder->get(0)->slides
+			->concat($sectionsNewOrder->get(1)->slides);
+
+		foreach ($slidesNewOrder as $index => $slide) {
+			$this->assertDatabaseHas('presentables', [
+				['presentable_type', '=', 'App\\Models\\Slideshow'],
+				['presentable_id', '=', $screenTwo->slideshow->id],
+				['slide_id', '=', $slide->id],
+				['order_number', '=', $index]
+			]);
+		}
+	}
+
+	private function setupSlides($slidesCount) {
+		return factory(Slide::class, $slidesCount)
+			->create();
+	}
+
+	private function setupSlideshow($slides) {
+		$slideshow = factory(Slideshow::class)->create();
+		$slideshow->slides()->attach($slides);
+
+		return $slideshow;
+	}
+
+	private function setupScreen($slideshow) {
+		return factory(Screen::class)->create([
+			'meta' => ["resources" => [["id" => $slideshow->id, "name" => "slideshows"]], "slides_count" => $slideshow->slides->count()],
+		]);
+	}
+
+	private function setupPresentable($slideshow) {
+		Presentable::where([
+			['presentable_type', '=', 'App\\Models\\Slideshow'],
+			['presentable_id', '=', $slideshow->id],
+		])->get()->each(function($presentable, $index) {
+			$presentable->order_number = $index;
+			$presentable->save();
+		});
+	}
+
+	private function setupSections($sectionsCount, $screen, $slides, $slidesInSection) {
+		return factory(Section::class, $sectionsCount)
+			->create()
+			->each(function($section, $index) use ($screen, $slides, $slidesInSection) {
+				$section->first_slide = $index * $slidesInSection;
+				$sectionSlides = $slides->splice(0, $slidesInSection);
+				$section->screen()->associate($screen)->save();
+				$section->slides()->attach($sectionSlides);
+				$section->save();
+			});
+	}
+
+	private function setupDb($slidesCount=30, $sectionsCount=3) {
+		$slides = $this->setupSlides($slidesCount);
+		$slideshow = $this->setupSlideshow($slides);
+		$this->setupPresentable($slideshow);
+
+		$screen = $this->setupScreen($slideshow);
+
+		$slidesInSection = $slidesCount / $sectionsCount;
+		$sections = $this->setupSections($sectionsCount, $screen, $slides, $slidesInSection);
+
+		return [$screen, $sections];
 	}
 }

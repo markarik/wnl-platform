@@ -198,6 +198,17 @@ $factory->define(App\Models\Section::class, function (Faker\Generator $faker) {
 		'slides_count' => $faker->randomNumber(),
 		'screen_id' => function () {
 			return factory(App\Models\Screen::class)->create()->id;
+		},
+	];
+});
+
+$factory->define(App\Models\Subsection::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->text,
+		'first_slide' => $faker->randomNumber(),
+		'slides_count' => $faker->randomNumber(),
+		'section_id' => function () {
+			return factory(App\Models\Section::class)->create()->id;
 		}
 	];
 });

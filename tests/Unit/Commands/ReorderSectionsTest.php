@@ -58,5 +58,18 @@ class ReorderSectionsTest extends TestCase
 				'first_slide' => $index * 10
 			]);
 		}
+
+		$slidesNewOrder = $sectionsNewOrder->get(0)->slides
+			->concat($sectionsNewOrder->get(1)->slides)
+			->concat($sectionsNewOrder->get(2)->slides);
+
+		foreach ($slidesNewOrder as $index => $slide) {
+			$this->assertDatabaseHas('presentables', [
+				['presentable_type', '=', 'App\\Models\\Slideshow'],
+				['presentable_id', '=', $slideshow->id],
+				['slide_id', '=', $slide->id],
+				['order_number', '=', $index]
+			]);
+		}
 	}
 }

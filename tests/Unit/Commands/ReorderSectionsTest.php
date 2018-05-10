@@ -112,7 +112,6 @@ class ReorderSectionsTest extends TestCase
 			]);
 		}
 
-
 		$slidesNewOrder = $sectionsNewOrder->get(0)->slides
 			->concat($sectionsNewOrder->get(1)->slides);
 
@@ -122,6 +121,46 @@ class ReorderSectionsTest extends TestCase
 				['presentable_id', '=', $screenTwo->slideshow->id],
 				['slide_id', '=', $slide->id],
 				['order_number', '=', $index]
+			]);
+		}
+
+		$this->assertDatabaseMissing('sections', [
+			'id' => $sectionScreenOne->get(0)->id,
+			'screen_id' => $screenOne->id
+		]);
+
+		foreach ($sectionScreenOne->get(0)->slides as $slide) {
+			$this->assertDatabaseMissing('presentables', [
+				['presentable_type', '=', 'App\\Models\\Slideshow'],
+				['presentable_id', '=', $screenOne->slideshow->id],
+				'slide_id' => $slide->id,
+			]);
+		}
+	}
+
+	public function testSlideshowsOrderFixed()
+	{
+		$slidesInSection = 10;
+
+		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesInSection, 3);
+		list ($screenTwo, $sectionScreenTwo) = $this->setupDb($slidesInSection, 1);
+
+		$sectionsNewOrder = collect([$sectionScreenOne->get(1), $sectionScreenTwo->get(0)]);
+		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
+
+		Artisan::call('sections:reorder', [
+			'--screen' => $screenTwo->id,
+			'sections' => $sectionIds
+		]);
+
+		$sortedSlides = $screenOne->slideshow->slides()->orderBy('order_number')->get();
+
+		foreach ($sortedSlides as $index => $slide) {
+			$this->assertDatabaseHas('presentables', [
+				'presentable_type' => 'App\\Models\\Slideshow',
+				'presentable_id' => $screenOne->slideshow->id,
+				'slide_id' => $slide->id,
+				'order_number' => $index
 			]);
 		}
 	}

@@ -34,16 +34,17 @@ class ReorderSections extends Command
 		$passedSections = $this->argument('sections');
 
 		$screen = Screen::find($passedScreen);
-		$passedScreenPresentables = $this->getPresentableForScreen($screen);
 
 		$sortedSlides = collect();
 		$sectionsFirstSlides = []; // slideId => sectionId
 		$subsectionsFirstSlides = []; // slideId => subsectionId
+		$slideshowsToReorder = [];
 
 		foreach ($passedSections as $sectionId) {
 			$section = Section::find($sectionId);
-			$sectionPresentables = $this->getPresentableForScreen($section->screen);
+			$sectionScreen = $section->screen;
 			$sectionSlides = $section->slides;
+			$sectionPresentables = $this->getPresentableForScreen($sectionScreen);
 
 			$sortedSlides = $sortedSlides->concat($sectionSlides);
 			$firstSlideId = $this->getSlideIdFromOrderNumber($section->first_slide, $sectionPresentables);
@@ -53,16 +54,28 @@ class ReorderSections extends Command
 				$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $sectionPresentables);
 				$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
 			}
+			if ($sectionScreen->id !== $passedScreen) {
+				$slideshowsToReorder[] = $sectionScreen->slideshow->id;
+				$this->removeSlidesFromScreenSlideshow($sectionScreen, $sectionSlides);
+			}
 			$section->screen()->associate($passedScreen);
 		}
 
-		$passedScreenPresentables = $this->setupScreenSlideshow($screen, $sortedSlides);
+		foreach($slideshowsToReorder as $slideshowId) {
+			$this->call('slideshow:resetOrder', ['slideshowId' => $slideshowId]);
+		}
+
+		$passedScreenPresentables = $this->addSlidesToScreenSlideshow($screen, $sortedSlides);
 		$this->setSlidesOrderNumber($passedScreenPresentables, $sortedSlides);
 		$this->setFirstSlides($passedScreenPresentables, $sectionsFirstSlides);
 		$this->setFirstSlides($passedScreenPresentables, $subsectionsFirstSlides);
 	}
 
-	private function setupScreenSlideshow($screen, $slides) {
+	private function removeSlidesFromScreenSlideshow($screen, $slides) {
+		$screen->slideshow->slides()->detach($slides->pluck('id'));
+	}
+
+	private function addSlidesToScreenSlideshow($screen, $slides) {
 		$screen->slideshow->slides()->sync($slides->pluck('id'));
 
 		return $this->getPresentableForScreen($screen);

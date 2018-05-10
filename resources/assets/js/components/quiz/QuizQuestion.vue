@@ -82,10 +82,10 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
+					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(index)">
 						{{slideLink(slide)}}
 					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" v-if="slideContent && currentModalSlide">
+					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" @nextSlide="nextSlide" v-if="slideContent && currentModalSlide">
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
 							class="button is-primary is-outlined is-small"
@@ -286,7 +286,8 @@
 				showExplanation: false,
 				show: false,
 				currentModalSlide: null,
-				slideContent: ''
+				slideContent: '',
+				currentSliedIndex: null,
 			}
 		},
 		computed: {
@@ -330,15 +331,25 @@
 				this.show = false
 				this.slideContent = ''
 			},
-			showSlidePreview(slide) {
-				this.currentModalSlide = slide
-				const slideId = [slide.id]
+			nextSlide() {
+				return this.showSlidePreview(this.currentSlideIndex+1)
+			},
+			showSlidePreview(index) {
+				this.currentSlideIndex = index
+				this.slides.forEach((slide, index) => {
+					if (index === this.currentSlideIndex) {
+						return this.currentModalSlide = slide
+					}
+				})
+
+				const slideId = [this.currentModalSlide.id]
 				return axios.post(getApiUrl(`slideshow_builder/.query`), {
 					query: {
 						whereIn: ['slides.id', slideId],
 					},
 						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
 				}).then(({data}) => {
+					console.log(data);
 					this.slideContent = data
 				}).then(() => {
 					this.show = true

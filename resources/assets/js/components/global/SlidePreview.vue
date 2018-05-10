@@ -12,6 +12,9 @@
 				<slot name="footer"></slot>
 			</footer>
 		</div>
+		<div class="next-slide" @click="$emit('nextSlide')">
+			następny slajd
+		</div>
 		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
 	</div>
 </template>
@@ -20,6 +23,12 @@
 	@import 'resources/assets/sass/variables'
 	.modal
 		z-index: $z-index-alerts
+
+	.next-slide
+		width: 100px
+		height: 100px
+		background-color: blue
+		z-index: $z-index-alerts+1
 
 	.modal-card
 		width: 90vw

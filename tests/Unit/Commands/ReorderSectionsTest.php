@@ -54,7 +54,7 @@ class ReorderSectionsTest extends TestCase
 		$subsectionsCount = 6;
 		$slidesCount = 30;
 		$sectionsCount = 3;
-		$slidesInSubsection = $subsectionsCount / 6;
+		$slidesInSubsection = $slidesCount / $subsectionsCount;
 		$slidesInSection = $slidesCount / $sectionsCount;
 
 		list ($screen, $sections) = $this->setupDb($slidesCount, $sectionsCount);
@@ -65,6 +65,7 @@ class ReorderSectionsTest extends TestCase
 				$sectionIndex = (int) floor(($index % 6) / 2);
 				$section = $sections->get($sectionIndex);
 				$subsection->section()->associate($section);
+				$section->subsections()->save($subsection);
 			});
 
 		$sectionsNewOrder = collect([$sections->get(1), $sections->get(2), $sections->get(0)]);
@@ -153,9 +154,9 @@ class ReorderSectionsTest extends TestCase
 			'sections' => $sectionIds
 		]);
 
-		$sortedSlides = $screenOne->slideshow->slides()->orderBy('order_number')->get();
+		$sortedSlidesScreenOne = $screenOne->slideshow->slides()->orderBy('order_number')->get();
 
-		foreach ($sortedSlides as $index => $slide) {
+		foreach ($sortedSlidesScreenOne as $index => $slide) {
 			$this->assertDatabaseHas('presentables', [
 				'presentable_type' => 'App\\Models\\Slideshow',
 				'presentable_id' => $screenOne->slideshow->id,
@@ -163,6 +164,47 @@ class ReorderSectionsTest extends TestCase
 				'order_number' => $index
 			]);
 		}
+
+		$sortedSlidesScreenTwo = $screenTwo->slideshow->slides()->orderBy('order_number')->get();
+
+		foreach ($sortedSlidesScreenTwo as $index => $slide) {
+			$this->assertDatabaseHas('presentables', [
+				'presentable_type' => 'App\\Models\\Slideshow',
+				'presentable_id' => $screenTwo->slideshow->id,
+				'slide_id' => $slide->id,
+				'order_number' => $index
+			]);
+		}
+	}
+
+	public function testSectionsFirstSlideFixed()
+	{
+		$slidesCount = 30;
+		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesCount, 3);
+		list ($screenTwo, $sectionScreenTwo) = $this->setupDb($slidesCount, 1);
+
+		$screenOneSlidesInSection = 10;
+		$sectionsNewOrder = collect([$sectionScreenOne->get(1), $sectionScreenTwo->get(0)]);
+		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
+
+		Artisan::call('sections:reorder', [
+			'--screen' => $screenTwo->id,
+			'sections' => $sectionIds
+		]);
+
+		// 1. For each section from screen one check if first_slide is correctly recomputed
+		// - sectionA[0] => first_slide = 0, check slide id as well
+		// - sectionA[2] => first_slide = 10, check slide id as well
+
+		foreach ([$sectionScreenOne->get(0), $sectionScreenOne->get(2)] as $index => $section) {
+			$this->assertDatabaseHas('sections', [
+				'id' => $section->id,
+				'first_slide' => $index * $screenOneSlidesInSection
+			]);
+		}
+		// 2. For each section from screen tow check if first_slide is correctly recomputed
+		// - sectionA[1] => first_slide = 0, check slide id as well
+		// - sectionB[0] => first_slide = 10, check slide id as well
 	}
 
 	private function setupSlides($slidesCount) {

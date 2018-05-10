@@ -38,7 +38,7 @@ class ReorderSections extends Command
 		$sortedSlides = collect();
 		$sectionsFirstSlides = []; // slideId => sectionId
 		$subsectionsFirstSlides = []; // slideId => subsectionId
-		$slideshowsToReorder = [];
+		$screensToReorder = [];
 
 		foreach ($passedSections as $sectionId) {
 			$section = Section::find($sectionId);
@@ -55,20 +55,22 @@ class ReorderSections extends Command
 				$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
 			}
 			if ($sectionScreen->id !== $passedScreen) {
-				$slideshowsToReorder[] = $sectionScreen->slideshow->id;
 				$this->removeSlidesFromScreenSlideshow($sectionScreen, $sectionSlides);
+				$screensToReorder[] = $sectionScreen;
 			}
 			$section->screen()->associate($passedScreen);
 		}
 
-		foreach($slideshowsToReorder as $slideshowId) {
-			$this->call('slideshow:resetOrder', ['slideshowId' => $slideshowId]);
+		foreach($screensToReorder as $screenToReorder) {
+			$this->call('slideshow:resetOrder', ['slideshowId' => $screenToReorder->slideshow->id]);
+			$this->setFirstSlides($screenToReorder, $sectionsFirstSlides);
+			$this->setFirstSlides($screenToReorder, $subsectionsFirstSlides);
 		}
 
 		$passedScreenPresentables = $this->addSlidesToScreenSlideshow($screen, $sortedSlides);
 		$this->setSlidesOrderNumber($passedScreenPresentables, $sortedSlides);
-		$this->setFirstSlides($passedScreenPresentables, $sectionsFirstSlides);
-		$this->setFirstSlides($passedScreenPresentables, $subsectionsFirstSlides);
+		$this->setFirstSlides($screen, $sectionsFirstSlides);
+		$this->setFirstSlides($screen, $subsectionsFirstSlides);
 	}
 
 	private function removeSlidesFromScreenSlideshow($screen, $slides) {
@@ -109,14 +111,19 @@ class ReorderSections extends Command
 		}
 	}
 
-	private function setFirstSlides($presentables, $firstSlides) {
+	private function setFirstSlides($screen, $firstSlides) {
 		// item is either section or subsection
+		$presentables = $this->getPresentableForScreen($screen);
 		foreach ($firstSlides as $slideId => $item) {
-			$presentable = $presentables->first(function($item) use($slideId) {
-				return $item->slide_id === $slideId;
+			$presentable = $presentables->first(function($presentable) use ($slideId) {
+				return $presentable->slide_id === $slideId;
 			});
-			$item->first_slide = $presentable->order_number;
-			$item->save();
+
+			if (!empty($presentable)) {
+				$item->first_slide = $presentable->order_number;
+				$item->save();
+			} else {
+			}
 		}
 	}
 }

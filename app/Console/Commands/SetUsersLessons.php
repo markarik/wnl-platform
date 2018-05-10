@@ -91,7 +91,7 @@ class SetUsersLessons extends Command
 				print PHP_EOL;
 				DB::rollback();
 				$this->error("Failed to save lessons for user $user->id");
-				throw $e;
+				throw $ex;
 			}
 		}
 		DB::commit();

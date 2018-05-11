@@ -137,6 +137,16 @@ class ReorderSectionsTest extends TestCase
 				'slide_id' => $slide->id,
 			]);
 		}
+
+		$this->assertTrue(
+			$screenOne->slideshow->slides()->count() === 0,
+			"Slides not removed from screen one slideshow"
+		);
+
+		$this->assertTrue(
+			$screenTwo->slideshow->slides()->count() === 20,
+			"Slides not added to screen two slideshow"
+		);
 	}
 
 	public function testSlideshowsOrderFixed()
@@ -192,19 +202,19 @@ class ReorderSectionsTest extends TestCase
 			'sections' => $sectionIds
 		]);
 
-		// 1. For each section from screen one check if first_slide is correctly recomputed
-		// - sectionA[0] => first_slide = 0, check slide id as well
-		// - sectionA[2] => first_slide = 10, check slide id as well
-
 		foreach ([$sectionScreenOne->get(0), $sectionScreenOne->get(2)] as $index => $section) {
 			$this->assertDatabaseHas('sections', [
 				'id' => $section->id,
 				'first_slide' => $index * $screenOneSlidesInSection
 			]);
 		}
-		// 2. For each section from screen tow check if first_slide is correctly recomputed
-		// - sectionA[1] => first_slide = 0, check slide id as well
-		// - sectionB[0] => first_slide = 10, check slide id as well
+
+		foreach ([$sectionScreenOne->get(1), $sectionScreenTwo->get(0)] as $index => $section) {
+			$this->assertDatabaseHas('sections', [
+				'id' => $section->id,
+				'first_slide' => $index * $screenOneSlidesInSection
+			]);
+		}
 	}
 
 	private function setupSlides($slidesCount) {

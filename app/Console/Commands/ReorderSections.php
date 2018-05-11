@@ -54,7 +54,14 @@ class ReorderSections extends Command
 				$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $sectionPresentables);
 				$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
 			}
+
 			if ($sectionScreen->id !== $passedScreen) {
+				foreach($sectionScreen->sections as $screenSection) {
+					if ($screenSection->id !== $sectionId) {
+						$firstSlideId = $this->getSlideIdFromOrderNumber($screenSection->first_slide, $sectionPresentables);
+						$sectionsFirstSlides[$firstSlideId] = $screenSection;
+					}
+				}
 				$this->removeSlidesFromScreenSlideshow($sectionScreen, $sectionSlides);
 				$screensToReorder[] = $sectionScreen;
 			}
@@ -122,7 +129,6 @@ class ReorderSections extends Command
 			if (!empty($presentable)) {
 				$item->first_slide = $presentable->order_number;
 				$item->save();
-			} else {
 			}
 		}
 	}

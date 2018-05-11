@@ -61,7 +61,13 @@ class ReorderSections extends Command
 						$firstSlideId = $this->getSlideIdFromOrderNumber($screenSection->first_slide, $sectionPresentables);
 						$sectionsFirstSlides[$firstSlideId] = $screenSection;
 					}
+
+					foreach($screenSection->subsections as $subsection) {
+						$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $sectionPresentables);
+						$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
+					}
 				}
+
 				$this->removeSlidesFromScreenSlideshow($sectionScreen, $sectionSlides);
 				$screensToReorder[] = $sectionScreen;
 			}

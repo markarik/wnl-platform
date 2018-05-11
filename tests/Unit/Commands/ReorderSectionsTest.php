@@ -59,14 +59,7 @@ class ReorderSectionsTest extends TestCase
 
 		list ($screen, $sections) = $this->setupDb($slidesCount, $sectionsCount);
 
-		factory(Subsection::class, 6)->create()
-			->each(function($subsection, $index) use ($slidesInSubsection, $sections) {
-				$subsection->first_slide = $index * $slidesInSubsection;
-				$sectionIndex = (int) floor(($index % 6) / 2);
-				$section = $sections->get($sectionIndex);
-				$subsection->section()->associate($section);
-				$section->subsections()->save($subsection);
-			});
+		$this->setupSubsections(6, $slidesInSubsection, $sections, 2);
 
 		$sectionsNewOrder = collect([$sections->get(1), $sections->get(2), $sections->get(0)]);
 		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
@@ -217,6 +210,53 @@ class ReorderSectionsTest extends TestCase
 		}
 	}
 
+	public function testSubSectionsFirstSlideFixed()
+	{
+		$slidesCount = 30;
+		$slidesInSubsection = 5;
+		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesCount, 3);
+		list ($screenTwo, $sectionScreenTwo) = $this->setupDb($slidesCount, 1);
+
+		$this->setupSubsections(6, $slidesInSubsection, $sectionScreenOne, 2);
+
+		$screenOneSlidesInSection = 10;
+		$sectionsNewOrder = collect([$sectionScreenOne->get(1), $sectionScreenTwo->get(0)]);
+		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
+
+		Artisan::call('sections:reorder', [
+			'--screen' => $screenTwo->id,
+			'sections' => $sectionIds
+		]);
+
+		foreach ([$sectionScreenOne->get(0), $sectionScreenOne->get(2)] as $index => $section) {
+			$this->assertDatabaseHas('sections', [
+				'id' => $section->id,
+				'first_slide' => $index * $screenOneSlidesInSection
+			]);
+
+			foreach ($section->subsections as $subsectionIndex => $subsection) {
+				$this->assertDatabaseHas('subsections', [
+					'id' => $subsection->id,
+					'first_slide' => ($index * $screenOneSlidesInSection) + ($subsectionIndex * $slidesInSubsection)
+				]);
+			}
+		}
+
+		foreach ($sectionsNewOrder as $index => $section) {
+			$this->assertDatabaseHas('sections', [
+				'id' => $section->id,
+				'first_slide' => $index * $screenOneSlidesInSection
+			]);
+
+			foreach ($section->subsections as $subsectionIndex => $subsection) {
+				$this->assertDatabaseHas('subsections', [
+					'id' => $subsection->id,
+					'first_slide' => ($index * $screenOneSlidesInSection) + ($subsectionIndex * $slidesInSubsection)
+				]);
+			}
+		}
+	}
+
 	private function setupSlides($slidesCount) {
 		return factory(Slide::class, $slidesCount)
 			->create();
@@ -255,6 +295,19 @@ class ReorderSectionsTest extends TestCase
 				$section->slides()->attach($sectionSlides);
 				$section->save();
 			});
+	}
+
+	private function setupSubsections($subsectionsCount, $slidesInSubsection, $sections, $subsectionsInSection) {
+		$subsections = factory(Subsection::class, $subsectionsCount)->create()
+			->each(function($subsection, $index) use ($slidesInSubsection, $subsectionsCount, $subsectionsInSection, $sections) {
+				$subsection->first_slide = $index * $slidesInSubsection;
+				$sectionIndex = (int)floor(($index % $subsectionsCount) / $subsectionsInSection);
+				$section = $sections->get($sectionIndex);
+				$subsection->section()->associate($section);
+				$section->subsections()->save($subsection);
+			});
+
+		return $subsections;
 	}
 
 	private function setupDb($slidesCount=30, $sectionsCount=3) {

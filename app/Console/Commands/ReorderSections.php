@@ -88,10 +88,20 @@ class ReorderSections extends Command
 
 	private function removeSlidesFromScreenSlideshow($screen, $slides) {
 		$screen->slideshow->slides()->detach($slides->pluck('id'));
+		$screenTags = $screen->tags->pluck('id')->toArray();
+		\DB::table('taggables')
+			->where('taggable_type', 'App\\Models\\Slide')
+			->whereIn('taggable_id', $slides->pluck('id')->toArray())
+			->whereIn('tag_id', $screenTags)
+			->delete();
 	}
 
 	private function addSlidesToScreenSlideshow($screen, $slides) {
 		$screen->slideshow->slides()->sync($slides->pluck('id'));
+		$screenTags = $screen->tags->pluck('id')->toArray();
+		foreach ($slides as $slide) {
+			$slide->tags()->sync($screenTags);
+		}
 
 		return $this->getPresentableForScreen($screen);
 	}

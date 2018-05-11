@@ -7,6 +7,7 @@ use App\Models\Section;
 use App\Models\Slide;
 use App\Models\Slideshow;
 use App\Models\Subsection;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -253,6 +254,38 @@ class ReorderSectionsTest extends TestCase
 					'id' => $subsection->id,
 					'first_slide' => ($index * $screenOneSlidesInSection) + ($subsectionIndex * $slidesInSubsection)
 				]);
+			}
+		}
+	}
+
+	public function testSlideTagsCorrectlySet()
+	{
+		$slidesCount = 30;
+		$screenOneTags = factory(Tag::class, 2)->create();
+		$screenTwoTags = factory(Tag::class, 2)->create();
+
+		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesCount, 3);
+		list ($screenTwo, $sectionScreenTwo) = $this->setupDb($slidesCount, 1);
+
+		$screenOne->tags()->attach($screenOneTags);
+		$screenTwo->tags()->attach($screenTwoTags);
+
+		$sectionsNewOrder = collect([$sectionScreenOne->get(1), $sectionScreenTwo->get(0)]);
+		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
+
+		Artisan::call('sections:reorder', [
+			'--screen' => $screenTwo->id,
+			'sections' => $sectionIds
+		]);
+
+		$slidesScreenTwo = $screenTwo->slideshow->slides;
+
+		foreach ($slidesScreenTwo as $slide) {
+			$slideTagsIds = $slide->tags->pluck('id')->toArray();
+			$this->assertEquals($slideTagsIds, $screenTwoTags->pluck('id')->toArray());
+
+			foreach ($screenOneTags as $screenOneTag) {
+				$this->assertNotContains($screenOneTag->id, $slideTagsIds);
 			}
 		}
 	}

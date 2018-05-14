@@ -35,7 +35,7 @@ class SectionsTransformer extends ApiTransformer
 	}
 
 	public function includeSubsections(Section $section) {
-		$subsections = $section->subsections;
+		$subsections = $section->subsections->sortBy('order_number');
 
 		$meta = collect([
 			'sectionId' => $section->id,

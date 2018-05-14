@@ -22,6 +22,7 @@ class SectionsTransformer extends ApiTransformer
 		$data = [
 			'id'          => $section->id,
 			'name'        => $section->name,
+			'order_number'=> $section->order_number,
 			'lessons'     => $this->parent->get('lessonId') ?? $section->screen->lesson_id,
 			'groups'      => $this->parent->get('groupId') ?? $section->screen->lesson->group->id,
 			'editions'    => $this->parent->get('editionId'),

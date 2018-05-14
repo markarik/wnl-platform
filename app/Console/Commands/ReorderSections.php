@@ -41,7 +41,7 @@ class ReorderSections extends Command
 		$screensToReorder = [];
 		$slidesToRemove = []; // screenId => slideId
 
-		foreach ($passedSections as $sectionId) {
+		foreach ($passedSections as $index => $sectionId) {
 			$section = Section::find($sectionId);
 			$sectionScreen = $section->screen;
 			$sectionSlides = $section->slides;
@@ -75,6 +75,8 @@ class ReorderSections extends Command
 			}
 			$section->screen()->dissociate();
 			$section->screen()->associate($screen);
+			$section->order_number = $index;
+			$section->save();
 		}
 
 		foreach($screensToReorder as $screenToReorder) {
@@ -84,7 +86,7 @@ class ReorderSections extends Command
 		}
 
 		foreach ($slidesToRemove as $screenId => $slides) {
-			$this->removeSlidesFromScreenSlideshow($screen, $slides);
+			$this->removeSlidesFromScreenSlideshow($screenId, $slides);
 		}
 
 		$passedScreenPresentables = $this->addSlidesToScreenSlideshow($screen, $sortedSlides);

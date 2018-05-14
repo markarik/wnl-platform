@@ -290,6 +290,29 @@ class ReorderSectionsTest extends TestCase
 		}
 	}
 
+	public function testSectionsOrderNumberSet()
+	{
+		$slidesCount = 30;
+
+		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesCount, 3);
+		list ($screenTwo, $sectionScreenTwo) = $this->setupDb($slidesCount, 3);
+
+		$sectionsNewOrder = collect([$sectionScreenOne->get(1), $sectionScreenTwo->get(0)]);
+		$sectionIds = $sectionsNewOrder->pluck('id')->toArray();
+
+		Artisan::call('sections:reorder', [
+			'--screen' => $screenTwo->id,
+			'sections' => $sectionIds
+		]);
+
+		foreach ($sectionsNewOrder as $index => $section) {
+			$this->assertDatabaseHas('sections', [
+				'order_number' => $index,
+				'id' => $section->id
+			]);
+		}
+	}
+
 	private function setupSlides($slidesCount) {
 		return factory(Slide::class, $slidesCount)
 			->create();

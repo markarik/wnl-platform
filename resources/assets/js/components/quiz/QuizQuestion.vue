@@ -82,10 +82,10 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(index)">
+					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
 						{{slideLink(slide)}}
 					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" @nextSlide="nextSlide" v-if="slideContent && currentModalSlide">
+					<wnl-slide-preview :showModal="show" :content="slideContent" :hasSlides="hasSlides" @closeModal="hideSlidePreview" @switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id">
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
 							class="button is-primary is-outlined is-small"
@@ -285,9 +285,8 @@
 				slidesExpanded: false,
 				showExplanation: false,
 				show: false,
-				currentModalSlide: null,
 				slideContent: '',
-				currentSliedIndex: null,
+				currentSlideIndex: -1,
 			}
 		},
 		computed: {
@@ -324,36 +323,32 @@
 			},
 			explanation() {
 				return this.question.explanation
-			}
+			},
+			currentModalSlide() {
+				if (this.currentSlideIndex < 0) {
+					return {id: 0}
+				}
+				// return 0
+				return this.slides[this.currentSlideIndex]
+			},
 		},
 		methods: {
 			hideSlidePreview() {
 				this.show = false
 				this.slideContent = ''
+				this.currentSlideIndex = -1
 			},
-			nextSlide() {
-				return this.showSlidePreview(this.currentSlideIndex+1)
-			},
-			showSlidePreview(index) {
-				this.currentSlideIndex = index
-				this.slides.forEach((slide, index) => {
-					if (index === this.currentSlideIndex) {
-						return this.currentModalSlide = slide
-					}
-				})
-
-				const slideId = [this.currentModalSlide.id]
-				return axios.post(getApiUrl(`slideshow_builder/.query`), {
-					query: {
-						whereIn: ['slides.id', slideId],
-					},
-						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-				}).then(({data}) => {
-					console.log(data);
-					this.slideContent = data
-				}).then(() => {
-					this.show = true
-				})
+			changeSlide(direction) {
+				let nextSlideIndex = this.currentSlideIndex + direction
+				if (nextSlideIndex < 0) {
+					nextSlideIndex = this.slides.length -1
+					return this.currentSlideIndex = nextSlideIndex
+				} else if (nextSlideIndex >= this.slides.length) {
+					nextSlideIndex = 0
+					return this.currentSlideIndex = nextSlideIndex
+				} else {
+					return this.currentSlideIndex = nextSlideIndex
+				}
 			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
@@ -383,5 +378,20 @@
 				return linkText || this.$t('quiz.annotations.slides.defaultLink')
 			}
 		},
+		watch: {
+			'currentModalSlide.id'(slideId) {
+				if (!slideId) return
+				axios.post(getApiUrl(`slideshow_builder/.query`), {
+					query: {
+						whereIn: ['slides.id', [slideId]],
+					},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+				}).then(({data}) => {
+					this.slideContent = data
+				}).then(() => {
+					this.show = true
+				})
+			}
+		}
 	}
 </script>

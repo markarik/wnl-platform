@@ -1,5 +1,10 @@
 <template>
-	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}">
+	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}" v-if="hasManySlides">
+		<div class="previous-slide" @click="$emit('switchSlide', -1)">
+			<span class="icon">
+				<i class="fa fa-angle-left"></i>
+			</span>
+		</div>
 		<div class="modal-background" @click="$emit('closeModal')"></div>
 		<div class="modal-card">
 			<header class="modal-card-header">
@@ -12,8 +17,10 @@
 				<slot name="footer"></slot>
 			</footer>
 		</div>
-		<div class="next-slide" @click="$emit('nextSlide')">
-			następny slajd
+		<div class="next-slide" @click="$emit('switchSlide', 1)" v-if="hasManySlides">
+			<span class="icon">
+				<i class="fa fa-angle-right"></i>
+			</span>
 		</div>
 		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
 	</div>
@@ -24,11 +31,20 @@
 	.modal
 		z-index: $z-index-alerts
 
-	.next-slide
-		width: 100px
-		height: 100px
-		background-color: blue
-		z-index: $z-index-alerts+1
+	.next-slide, .previous-slide
+		z-index: $z-index-alerts + 1
+		text-align: center
+		width: 10vw
+		height: 18vh
+		.icon
+			text-align: center
+			color: #929AA8
+			display: inline-block
+			vertical-align: middle
+			width: 6em
+			height: 6em
+			.fa
+				font-size: $font-size-plus-8
 
 	.modal-card
 		width: 90vw
@@ -66,6 +82,15 @@
 			showModal: {
 				type: Boolean,
 				default: false
+			},
+			hasManySlides: {
+				type: Boolean,
+				default: false
+			}
+		},
+		computed: {
+			hasMultipleSlides() {
+				return this.hasManySlides > 1 ? true : false // jak ma jeden slajd to nei pokazuj nawigacji
 			}
 		},
 		methods: {
@@ -74,8 +99,18 @@
 				nextTick(() => this.isLoading = false)
 			},
 			onKeydown(e) {
-				if (e.keyCode === 27) {
-					this.$emit('closeModal')
+				switch(e.keyCode) {
+					case 37: // left arrow
+						e.stopPropagation()
+						this.$emit('switchSlide', -1)
+						break
+					case 39: // right arrow
+						e.stopPropagation()
+						this.$emit('switchSlide', 1)
+						break
+					case 27: // esc
+						this.$emit('closeModal')
+						break
 				}
 			}
 		},

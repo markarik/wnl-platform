@@ -175,7 +175,10 @@
 		<div class="open-all" v-if="activeView === 'openAll'">
 			<div class="level">
 				<div class="level-item">
-					{{ $t('lessonsAvailability.openAllLessons') }}
+					{{ $t('lessonsAvailability.openAllLessons.annotation') }}
+					{{ this.completedLessonsLength }}/{{ this.availableLength }}.
+					wyświetli się: {{ this.completedLessonsLength }}/{{this.requiredLength}}.
+					{{ $t('lessonsAvailability.openAllLessons.explanation')}}
 				</div>
 			</div>
 		</div>
@@ -242,6 +245,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.scrollable-main-container
+		width: 100%
 		.wnl-overlay
 			align-items: center
 			background: rgba(255, 255, 255, 0.9)
@@ -303,6 +307,11 @@
 
 		.open-all
 			margin-bottom: $margin-base
+			width: 100%
+			text-align: center
+			overflow-wrap: wrap
+			.level-item
+				width: 100%
 
 		.accept-plan
 			display: flex
@@ -409,10 +418,17 @@ export default {
 			'groups',
 			'getRequiredLessons',
 			'structure',
+			'userLessons',
 		]),
 		...mapGetters('progress', [
 			'getCompleteLessons',
 		]),
+		availableLength() {
+			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length
+		},
+		requiredLength() {
+			return this.userLessons.filter(lesson => lesson.is_required).length
+		},
 		inProgressLessonsLength() {
 			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
 				return !this.completedLessons.includes(Number(requiredLesson))

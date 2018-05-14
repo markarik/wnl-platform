@@ -615,10 +615,7 @@ export default {
 				.catch(error => {
 					this.isLoading = false
 					$wnl.logger.capture(error)
-					this.addAutoDismissableAlert({
-						text: $t('lessonsAvailability.alertError'),
-						type: 'error',
-					})
+					this.addAutoDismissableAlert(this.alertError)
 				})
 			}
 		},

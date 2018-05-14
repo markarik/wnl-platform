@@ -16,5 +16,6 @@ export const quiz = {
 	},
 	slideModal: {
 		goToPrezentation: 'Przejdź do prezentacji'
-	}
+	},
+	errorAlert: 'Coś poszło nie tak :( Spróbuj jeszcze raz...'
 }

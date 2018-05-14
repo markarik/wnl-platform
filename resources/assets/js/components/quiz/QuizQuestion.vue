@@ -85,7 +85,7 @@
 					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
 						{{slideLink(slide)}}
 					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" :hasSlides="hasSlides" @closeModal="hideSlidePreview" @switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id">
+					<wnl-slide-preview :showModal="show" :content="slideContent" :slidesCount="hasSlides" @closeModal="hideSlidePreview" @switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id">
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
 							class="button is-primary is-outlined is-small"
@@ -260,7 +260,7 @@
 </style>
 <script>
 	import { isNumber, trim } from 'lodash'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
@@ -287,6 +287,10 @@
 				show: false,
 				slideContent: '',
 				currentSlideIndex: -1,
+				alertError: {
+					text: this.$i18n.t('quiz.errorAlert'),
+					type: 'error',
+				}
 			}
 		},
 		computed: {
@@ -333,6 +337,7 @@
 			},
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
 			hideSlidePreview() {
 				this.show = false
 				this.slideContent = ''
@@ -342,13 +347,10 @@
 				let nextSlideIndex = this.currentSlideIndex + direction
 				if (nextSlideIndex < 0) {
 					nextSlideIndex = this.slides.length -1
-					return this.currentSlideIndex = nextSlideIndex
 				} else if (nextSlideIndex >= this.slides.length) {
 					nextSlideIndex = 0
-					return this.currentSlideIndex = nextSlideIndex
-				} else {
-					return this.currentSlideIndex = nextSlideIndex
 				}
+				this.currentSlideIndex = nextSlideIndex
 			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
@@ -390,6 +392,9 @@
 					this.slideContent = data
 				}).then(() => {
 					this.show = true
+				}).catch(error => {
+					$wnl.logger.capture(error)
+					this.addAutoDismissableAlert(this.alertError)
 				})
 			}
 		}

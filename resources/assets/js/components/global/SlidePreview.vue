@@ -50,7 +50,6 @@
 		z-index: $z-index-alerts + 1
 		text-align: center
 		width: 10vw
-		height: 18vh
 		.icon
 			text-align: center
 			color: #929AA8
@@ -98,14 +97,14 @@
 				type: Boolean,
 				default: false
 			},
-			hasSlides: {
+			slidesCount: {
 				type: Number,
 				default: false
 			}
 		},
 		computed: {
 			hasManySlides() {
-				return this.hasSlides > 1 ? true : false
+				return this.slidesCount > 1
 			}
 		},
 		methods: {

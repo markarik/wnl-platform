@@ -21,7 +21,7 @@ export const lessonsAvailability = {
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
 	alertSuccess: 'Udało się zmienić datę! :)',
-	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
+	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz...',
 	presets: {
 		daysPerLesson: 'Ile dni na lekcję?',
 		dateToDate: 'Od daty do daty',

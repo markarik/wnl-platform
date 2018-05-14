@@ -60,7 +60,7 @@ class CalculateCoursePlan
 			DB::rollBack();
 			throw $e;
 		}
-		
+
 		DB::commit();
 
 		return $plan;
@@ -76,6 +76,9 @@ class CalculateCoursePlan
 		$computedWorkLoad = 0;
 		$daysExcess = 0;
 
+		if ($this->preset === 'default') {
+			return $this->handleDefaultPlan($plan);
+		}
 
 		if ($workLoad === 0 || $toBeScheduledCount === 0) {
 			return $this->handleWorkloadZero($plan);

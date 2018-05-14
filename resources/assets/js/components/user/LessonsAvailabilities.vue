@@ -24,6 +24,20 @@
 				</span>
 			</a>
 		</div>
+		<div class="default-plan" v-if="activeView === 'default'">
+			<div class="level">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.secondSection.defaultPlan')}}
+				</div>
+			</div>
+			<div class="accept-default-plan">
+				<a
+					@click="acceptPlan"
+					class="button button is-primary is-outlined is-big"
+					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+				</a>
+			</div>
+		</div>
 		<div class="presets-view" v-if="activeView === 'presetsView'">
 			<div class="level wnl-screen-title">
 				<div class="level-left">
@@ -34,7 +48,7 @@
 			</div>
 			<div class="days">
 					<a v-for="day in days"
-						class="panel-toggle day"
+						class="panel-toggle day disabled"
 						:class="{'is-active': isDayActive(day.dayNumber)}"
 						:key="day.dayNumber"
 						@click="toggleDay(day.dayNumber)"
@@ -294,7 +308,7 @@
 		.annotation
 			margin-bottom: $margin-base
 
-		.accept-plan
+		.accept-plan, .accept-default-plan
 			display: flex
 			justify-content: space-around
 			margin-bottom: $margin-small
@@ -456,6 +470,7 @@ export default {
 		views() {
 			return {
 				presetsView: 'lessonsAvailability.views.presetsView',
+				default: 'lessonsAvailability.views.default',
 				lessonsView: 'lessonsAvailability.views.lessonsView',
 			}
 		},
@@ -555,6 +570,13 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
+			if (this.activeView === 'default') {
+				this.activePreset = 'default'
+				this.startDate = null
+				this.workLoad = null
+				this.workDays = null
+				this.endDate = null
+			}
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null
 			}

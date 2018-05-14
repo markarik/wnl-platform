@@ -572,27 +572,28 @@ export default {
 		acceptPlan() {
 			if (this.activeView === 'default') {
 				this.activePreset = 'default'
-				this.startDate = null
-				this.workLoad = null
-				this.workDays = null
-				this.endDate = null
 			}
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null
 			}
-			if (isEmpty(this.workDays)) {
+			if (isEmpty(this.workDays) &&
+				!this.activeView === 'default') {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson') {
+			} else if (this.workLoad === null &&
+				this.activePreset === 'daysPerLesson' &&
+				!this.activeView === 'default') {
 				return this.addAutoDismissableAlert({
 					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.endDate === null && this.activePreset === 'dateToDate') {
+			} else if (this.endDate === null &&
+				this.activePreset === 'dateToDate'  &&
+				!this.activeView === 'default') {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
 					type: 'error',
@@ -637,10 +638,10 @@ export default {
 				.catch(error => {
 					this.isLoading = false
 					$wnl.logger.capture(error)
-					this.addAutoDismissableAlert({
-						text: $t('lessonsAvailability.alertError'),
-						type: 'error',
-					})
+					// this.addAutoDismissableAlert({
+					// 	text: $t('lessonsAvailability.alertError'),
+					// 	type: 'error',
+					// })
 				})
 			}
 		},

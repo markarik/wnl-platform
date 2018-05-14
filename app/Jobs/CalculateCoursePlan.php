@@ -186,6 +186,17 @@ class CalculateCoursePlan
 		$this->toBeScheduled = $toBeScheduled;
 	}
 
+	protected function handleDefaultPlan($plan)
+	{
+		$orders = $this->user->orders()->where('paid', 1)->get();
+
+		$products = [];
+		foreach ($orders as $order) {
+			array_push($products, $order->product());
+		}
+		dd($products);
+	}
+
 	protected function handleWorkloadZero($plan)
 	{
 		foreach ($this->sortedLessons as $lesson) {

@@ -140,7 +140,7 @@
 							<label class="date-label" for="endDate">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-3"></i>
 								</span>
 							</label>
 							<wnl-datepicker
@@ -166,8 +166,7 @@
 				<div class="level">
 					<div class="level-item" v-if="this.completedLessonsLength > 0">
 						{{ $t('lessonsAvailability.annotation.header') }}
-						{{ this.completedLessonsLength }}
-						{{ $t('lessonsAvailability.annotation.info') }}
+						{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
 					</div>
 				</div>
 			</div>
@@ -494,7 +493,7 @@ export default {
 					dayNumber: 3
 				},
 				{
-					dayName: 'lessonsAvailability.days.tuesday',
+					dayName: 'lessonsAvailability.days.thursday',
 					dayNumber: 4
 				},
 				{

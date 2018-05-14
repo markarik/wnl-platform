@@ -18,8 +18,9 @@ export const lessonsAvailability = {
 		acceptPlan: 'Akceptuję plan!',
 	},
 	openAllLessons: {
-		annotation: 'Wybierając tę opcję, ustawisz wszystkim lekcjom dzisiejszą datę, jako datę otwarcia. Może być to przydatna opcja, gdy kurs masz już za sobą i chcesz popracować tylko z wybranymi zagadnieniami. Po jej wybraniu wszystkie lekcje zostaną otwarte, zatem przy Twoim pasku postępu zamiast: ',
-		explanation: ' Możesz to później zmienić, ustawiając inny plan pracy.',
+		annotation: 'Wybierając tę opcję, ustawisz wszystkim lekcjom dzisiejszą datę, jako datę otwarcia. Może być to przydatna opcja, gdy kurs masz już za sobą i chcesz popracować tylko z wybranymi zagadnieniami.',
+		paragraphAnnotation: 'Po jej wybraniu wszystkie lekcje zostaną otwarte, zatem przy Twoim pasku postępu zamiast: ',
+		paragraphExplanation: ' Możesz to później zmienić, ustawiając inny plan pracy.',
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',

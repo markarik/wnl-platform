@@ -176,11 +176,14 @@
 			<div class="level">
 				<div class="level-item">
 					{{ $t('lessonsAvailability.openAllLessons.annotation') }}
-					{{ this.completedLessonsLength }}/{{ this.availableLength }}.
-					wyświetli się: {{ this.completedLessonsLength }}/{{this.requiredLength}}.
-					{{ $t('lessonsAvailability.openAllLessons.explanation')}}
 				</div>
 			</div>
+			<div class="level-item">
+				{{ $t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
+				{{ this.completedLessonsLength }}/{{ this.availableLength }}.
+				wyświetli się: {{ this.completedLessonsLength }}/{{this.requiredLength}}.
+			</div>
+			<span>{{ $t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>
 		<div class="accept-plan" v-if="(activeView === 'presetsView' || activeView === 'openAll')">
 			<a

@@ -1,7 +1,12 @@
 <template>
-	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}" v-if="hasManySlides">
-		<div class="previous-slide" @click="$emit('switchSlide', -1)">
-			<span class="icon">
+	<div
+		ref="preview-modal"
+		class="modal"
+		:class="{'is-active': showModal}">
+		<div
+			class="previous-slide"
+			v-show="hasManySlides">
+			<span class="icon" @click="$emit('switchSlide', -1)">
 				<i class="fa fa-angle-left"></i>
 			</span>
 		</div>
@@ -11,18 +16,28 @@
 				<slot name="header"></slot>
 			</header>
 			<div class="modal-card-body">
-				<iframe name="slidePreview" :srcdoc="content" @load="onLoad" v-show="!isLoading"/>
+				<iframe
+					name="slidePreview"
+					:srcdoc="content"
+					@load="onLoad"
+					v-show="!isLoading"/>
 			</div>
 			<footer class="modal-card-footer">
 				<slot name="footer"></slot>
 			</footer>
 		</div>
-		<div class="next-slide" @click="$emit('switchSlide', 1)" v-if="hasManySlides">
-			<span class="icon">
+		<div
+			class="next-slide"
+			v-if="hasManySlides">
+			<span class="icon" @click="$emit('switchSlide', 1)">
 				<i class="fa fa-angle-right"></i>
 			</span>
 		</div>
-		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
+		<button
+			class="modal-close is-large"
+			aria-label="close"
+			@click="$emit('closeModal')"
+		></button>
 	</div>
 </template>
 
@@ -83,14 +98,14 @@
 				type: Boolean,
 				default: false
 			},
-			hasManySlides: {
-				type: Boolean,
+			hasSlides: {
+				type: Number,
 				default: false
 			}
 		},
 		computed: {
-			hasMultipleSlides() {
-				return this.hasManySlides > 1 ? true : false // jak ma jeden slajd to nei pokazuj nawigacji
+			hasManySlides() {
+				return this.hasSlides > 1 ? true : false
 			}
 		},
 		methods: {

@@ -15,9 +15,9 @@ export const lessonsAvailability = {
 		oneDayPerLesson: 'Jedna lekcja na dzień',
 		twoDaysPerLesson: 'Jedna lekcje dwa dni',
 		threeDaysPerLesson: 'Jedna lekcja na trzy dni',
-		openAll: 'Otwórz wszystkie lekcje',
 		acceptPlan: 'Akceptuję plan!',
 	},
+	openAllLessons: 'Wszystkie lekcje zostaną otwarte z dzisiejszą datą...',
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
 	alertSuccess: 'Udało się zmienić datę! :)',
@@ -27,8 +27,9 @@ export const lessonsAvailability = {
 		dateToDate: 'Od daty do daty',
 	},
 	views: {
-		presetsView: 'Automatyczne plany lekcji',
-		lessonsView: 'Widok lekcji',
+		presetsView: 'Wygeneruj plan automatycznie',
+		lessonsView: 'Ustaw plan ręcznie',
+		openAll: 'Otwórz wszystkie lekcje',
 	},
 	days: {
 		monday: 'Poniedziałek',

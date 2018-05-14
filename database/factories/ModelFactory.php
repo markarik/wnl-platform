@@ -38,6 +38,18 @@ $factory->define(App\Models\UserQuizResults::class, function (Faker\Generator $f
 	];
 });
 
+$factory->define(App\Models\UserLesson::class, function (Faker\Generator $faker) {
+	return [
+		'user_id' => function () {
+			return factory(App\Models\User::class)->create()->id;
+		},
+		'lesson_id' => function () {
+			return factory(App\Models\Lesson::class)->create()->id;
+		},
+		'start_date' => $faker->dateTime,
+	];
+});
+
 $factory->define(App\Models\QuizSet::class, function (Faker\Generator $faker) {
 	return [
 		'name'       => $faker->name,
@@ -92,6 +104,8 @@ $factory->define(App\Models\Lesson::class, function (Faker\Generator $faker) {
 		'group_id' => function () {
 			return factory(App\Models\Group::class)->create()->id;
 		},
+        'order_number' => $faker->randomDigitNotNull,
+		'is_required' => (int)$faker->boolean,
 	];
 });
 

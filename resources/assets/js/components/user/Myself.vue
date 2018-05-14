@@ -134,7 +134,7 @@
 						iconTitle: 'Statystyki',
 					},
 					{
-						text: 'Dostępność lekcji',
+						text: 'Plan pracy',
 						itemClass: 'has-icon',
 						to: {
 							name: 'lessons-availabilites'
@@ -142,7 +142,7 @@
 						isDisabled: false,
 						method: 'push',
 						iconClass: 'fa fa-tasks',
-						iconTitle: 'Dostępność lekcji',
+						iconTitle: 'Plan pracy',
 					},
 					{
 						text: 'Usuwanie postępu',

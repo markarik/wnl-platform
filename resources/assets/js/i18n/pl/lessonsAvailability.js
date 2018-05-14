@@ -9,11 +9,11 @@ export const lessonsAvailability = {
 	secondSection: {
 		daysPerLesson: 'Ile dni chcesz poświęcić na jedną lekcję?',
 		startDate: 'Kiedy chcesz zacząć naukę?',
-		dateToDate: 'Wybierz zakres dat, w których chcesz pracować a my dostosujemy do nich Twój plan lekcji!',
+		dateToDate: 'Wybierz zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan lekcji!',
 	},
 	buttons: {
 		oneDayPerLesson: 'Jedna lekcja na dzień',
-		twoDaysPerLesson: 'Jedna lekcje dwa dni',
+		twoDaysPerLesson: 'Jedna lekcja na dwa dni',
 		threeDaysPerLesson: 'Jedna lekcja na trzy dni',
 		openAll: 'Otwórz wszystkie lekcje',
 		acceptPlan: 'Akceptuję plan!',
@@ -34,13 +34,13 @@ export const lessonsAvailability = {
 		monday: 'Poniedziałek',
 		tuesday: 'Wtorek',
 		wednesday: 'Środa',
-		tuesday: 'Czwartek',
+		thursday: 'Czwartek',
 		friday: 'Piątek',
 		saturday: 'Sobota',
 		sunday: 'Niedziela',
 	},
 	annotation: {
-		header: 'Liczba ukończonych przez Ciebie lekcji wynosi: ',
+		header: 'Liczba ukończonych przez Ciebie lekcji wynosi:',
 		info: '. Pozostaną one otwarte, a zmiana planu nie wpłynie na Twój postęp.'
 	}
 }

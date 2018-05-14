@@ -197,6 +197,13 @@ class User extends Authenticatable
 		];
 	}
 
+	public function getFullAddressAttribute()
+	{
+		$addr = $this->userAddress;
+
+		return "{$addr->street}, {$addr->zip} {$addr->city}";
+	}
+
 	protected function getSubscriptionStatus($dates)
 	{
 		list ($min, $max) = $dates;

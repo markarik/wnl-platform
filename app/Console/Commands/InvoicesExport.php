@@ -19,7 +19,7 @@ class InvoicesExport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'invoice:csv';
+	protected $signature = 'invoices:csv';
 
 	/**
 	 * The console command description.

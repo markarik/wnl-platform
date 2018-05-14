@@ -39,6 +39,7 @@ class ReorderSections extends Command
 		$sectionsFirstSlides = []; // slideId => sectionId
 		$subsectionsFirstSlides = []; // slideId => subsectionId
 		$screensToReorder = [];
+		$slidesToRemove = []; // screenId => slideId
 
 		foreach ($passedSections as $sectionId) {
 			$section = Section::find($sectionId);
@@ -63,15 +64,17 @@ class ReorderSections extends Command
 					}
 
 					foreach($screenSection->subsections as $subsection) {
+
 						$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $sectionPresentables);
 						$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
 					}
 				}
 
-				$this->removeSlidesFromScreenSlideshow($sectionScreen, $sectionSlides);
+				$slidesToRemove[$sectionScreen->id] = $sectionSlides;
 				$screensToReorder[] = $sectionScreen;
 			}
-			$section->screen()->associate($passedScreen);
+			$section->screen()->dissociate();
+			$section->screen()->associate($screen);
 		}
 
 		foreach($screensToReorder as $screenToReorder) {
@@ -80,13 +83,18 @@ class ReorderSections extends Command
 			$this->setFirstSlides($screenToReorder, $subsectionsFirstSlides);
 		}
 
+		foreach ($slidesToRemove as $screenId => $slides) {
+			$this->removeSlidesFromScreenSlideshow($screen, $slides);
+		}
+
 		$passedScreenPresentables = $this->addSlidesToScreenSlideshow($screen, $sortedSlides);
 		$this->setSlidesOrderNumber($passedScreenPresentables, $sortedSlides);
 		$this->setFirstSlides($screen, $sectionsFirstSlides);
 		$this->setFirstSlides($screen, $subsectionsFirstSlides);
 	}
 
-	private function removeSlidesFromScreenSlideshow($screen, $slides) {
+	private function removeSlidesFromScreenSlideshow($screenId, $slides) {
+		$screen = Screen::find($screenId);
 		$screen->slideshow->slides()->detach($slides->pluck('id'));
 		$screenTags = $screen->tags->pluck('id')->toArray();
 		\DB::table('taggables')

@@ -60,9 +60,6 @@ const getters = {
 	getSections: state => (sections) => {
 		return sections
 			.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {}))
-			.sort((sectionA, sectionB) => {
-				return sectionA.order_number - sectionB.order_number
-			})
 	},
 	getSubsections: state => (subsections) => subsections.map((subsectionId) => _.get(state.structure, `subsections.${subsectionId}`, {})) || [],
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {

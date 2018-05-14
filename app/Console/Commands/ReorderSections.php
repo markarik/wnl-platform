@@ -58,41 +58,40 @@ class ReorderSections extends Command
 
 			if ($sectionScreen->id !== $passedScreen) {
 				foreach($sectionScreen->sections as $screenSection) {
-					if ($screenSection->id !== $sectionId) {
+					if (!in_array($screenSection->id, $passedSections)) {
 						$firstSlideId = $this->getSlideIdFromOrderNumber($screenSection->first_slide, $sectionPresentables);
 						$sectionsFirstSlides[$firstSlideId] = $screenSection;
-					}
 
-					foreach($screenSection->subsections as $subsection) {
-
-						$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $sectionPresentables);
-						$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
+						foreach($screenSection->subsections as $subsection) {
+							$subsectionFirstSlideId = $this->getSlideIdFromOrderNumber($subsection->first_slide, $sectionPresentables);
+							$subsectionsFirstSlides[$subsectionFirstSlideId] = $subsection;
+						}
 					}
 				}
 
 				$slidesToRemove[$sectionScreen->id] = $sectionSlides;
 				$screensToReorder[] = $sectionScreen;
 			}
+
 			$section->screen()->dissociate();
 			$section->screen()->associate($screen);
 			$section->order_number = $index;
 			$section->save();
 		}
 
-		foreach($screensToReorder as $screenToReorder) {
-			$this->call('slideshow:resetOrder', ['slideshowId' => $screenToReorder->slideshow->id]);
-			$this->setFirstSlides($screenToReorder, $sectionsFirstSlides);
-			$this->setFirstSlides($screenToReorder, $subsectionsFirstSlides);
-		}
 
 		foreach ($slidesToRemove as $screenId => $slides) {
 			$this->removeSlidesFromScreenSlideshow($screenId, $slides);
 		}
 
+		foreach($screensToReorder as $screenToReorder) {
+			$this->call('slideshow:resetOrder', ['slideshowId' => $screenToReorder->slideshow->id]);
+		}
+
 		$passedScreenPresentables = $this->addSlidesToScreenSlideshow($screen, $sortedSlides);
 		$this->setSlidesOrderNumber($passedScreenPresentables, $sortedSlides);
-		$this->setFirstSlides($screen, $sectionsFirstSlides);
-		$this->setFirstSlides($screen, $subsectionsFirstSlides);
+		$this->setSectionsFirstSlides($sectionsFirstSlides);
+		$this->setSubsectionsFirstSlides($subsectionsFirstSlides);
 	}
 
 	private function removeSlidesFromScreenSlideshow($screenId, $slides) {
@@ -144,17 +143,31 @@ class ReorderSections extends Command
 		}
 	}
 
-	private function setFirstSlides($screen, $firstSlides) {
-		// item is either section or subsection
-		$presentables = $this->getPresentableForScreen($screen);
-		foreach ($firstSlides as $slideId => $item) {
+	private function setSectionsFirstSlides($firstSlides) {
+		foreach ($firstSlides as $slideId => $section) {
+			$presentables = $this->getPresentableForScreen($section->screen);
+
 			$presentable = $presentables->first(function($presentable) use ($slideId) {
 				return $presentable->slide_id === $slideId;
 			});
 
 			if (!empty($presentable)) {
-				$item->first_slide = $presentable->order_number;
-				$item->save();
+				$section->first_slide = $presentable->order_number;
+				$section->save();
+			}
+		}
+	}
+	private function setSubsectionsFirstSlides($firstSlides) {
+		// item is either section or subsection
+		foreach ($firstSlides as $slideId => $subsection) {
+			$presentables = $this->getPresentableForScreen($subsection->section->screen);
+			$presentable = $presentables->first(function($presentable) use ($slideId) {
+				return $presentable->slide_id === $slideId;
+			});
+
+			if (!empty($presentable)) {
+				$subsection->first_slide = $presentable->order_number;
+				$subsection->save();
 			}
 		}
 	}

@@ -14,6 +14,8 @@
 
 		<p>Jedną z najważniejszych funkcji jest teraz pewnie dla Ciebie <a href="https://platforma.wiecejnizlek.pl/app/myself/availabilities" target="_blank">Plan pracy</a>. 😉 To tu możesz zdefiniować swój własny harmonogram nauki i zacząć ją... już od dziś! 🎉 Na ekranie <a href="https://platforma.wiecejnizlek.pl/app/courses/1/lessons/16/screens/82" target="_blank">Obsługa platformy</a> znajdziesz również film poświęcony temu narzędziu. 🙂</p>
 
+		<p><strong>Co ważne! Pracujemy wciąż nad nowymi prezentacjami z Pulmonologii oraz Endokrynologii</strong>. Na pewno pojawią się na platformie przed oficjalnym startem kursu. 🙂 Możecie spokojnie jednak korzystać z istniejących prezentacji - są one kompletene i służyły dwóm poprzednim edycjom. Nowe będą po prostu lepiej zorganizowane. 😉</p>
+
 		<p>W razie pytań jesteśmy dostępni cały dzień na platformie i bedzięmy rozwiązywać wszelkie zagwozdki. 🙂</p>
 
 		<p>Życzymy powodzenia i owocnej pracy z kursem!</p>

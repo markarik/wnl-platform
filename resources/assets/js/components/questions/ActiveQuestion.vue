@@ -27,6 +27,7 @@
 			:module="module"
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleclick"
+			@commentsShown="onCommentsShown"
 		/>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
@@ -109,6 +110,7 @@
 				hasErrors: false,
 				allowDoubleclick: true,
 				timeout: 0,
+				commentsShown: false,
 			}
 		},
 		computed: {
@@ -132,6 +134,9 @@
 			},
 		},
 		methods: {
+			onCommentsShown(value) {
+				this.commentsShown = value
+			},
 			nextQuestion() {
 				this.$emit('changeQuestion', 1)
 				scrollToElement(this.$el, 63)
@@ -186,7 +191,7 @@
 					return false
 				}
 
-				if (e.keyCode === KEYS.enter) {
+				if (e.keyCode === KEYS.enter && !this.commentsShown) {
 					if (this.question.isResolved) {
 						this.nextQuestion()
 					} else {

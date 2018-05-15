@@ -101,6 +101,8 @@
 						commentableResource="quiz_questions"
 						urlParam="quiz_question"
 						:module="module"
+						@commentsShown="onCommentsShown"
+						@commentsHidden="onCommentsHidden"
 						:commentableId="question.id"
 						:isUnique="showComments">
 					</wnl-comments-list>
@@ -338,6 +340,12 @@
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
+			onCommentsShown() {
+				this.$emit('commentsShown', true)
+			},
+			onCommentsHidden() {
+				this.$emit('commentsShown', false)
+			},
 			hideSlidePreview() {
 				this.show = false
 				this.slideContent = ''

@@ -52,6 +52,7 @@ class UserLessonApiController extends ApiController
 			'workLoad'  => $request->work_load,
 			'workDays'  => $request->work_days,
 			'preset'    => $request->preset_active,
+			'timezone' => $request->timezone,
 		];
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));

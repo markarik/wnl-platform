@@ -11,6 +11,13 @@
 				</div>
 			</div>
 		</div>
+		<div class="navigation-annotation">
+			<div class="level wnl-screen-title">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.navigationAnnotation') }}
+				</div>
+			</div>
+		</div>
 		<div class="views-control">
 			<a v-for="name, view in views"
 				class="panel-toggle view"
@@ -268,6 +275,14 @@
 			.loader-text
 				color: $color-ocean-blue
 				margin-top: $margin-small
+
+		.navigation-annotation
+			margin-bottom: $margin-base
+			width: 100%
+			text-align: center
+			overflow-wrap: wrap
+			.level-item
+				width: 100%
 
 		.views-control
 			display: flex
@@ -612,12 +627,14 @@ export default {
 					timeout: 3000,
 				})
 			} else {
+				console.log(moment().format('zz'));
 				this.isLoading = true
 				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
 					work_days: this.workDays,
 					work_load: this.workLoad,
 					start_date: this.startDate,
 					end_date: this.endDate,
+					timezone: moment().format('z'),
 					preset_active: this.activePreset,
 				}).then((response) => {
 					this.isLoading = false

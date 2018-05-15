@@ -9,7 +9,7 @@
 		<p>Proponujemy zacząć od lekcji <a href="https://platforma.wiecejnizlek.pl/app/courses/1/lessons/16" target="_blank">Wstęp do kursu</a>, a zwłaszcza ekranu <a href="https://platforma.wiecejnizlek.pl/app/courses/1/lessons/16/screens/82" target="_blank">Obsługa platformy</a>. Tam w kilku krótkich filmach zapoznasz się ze wszystkimi najważniejszymi funkcjami platformy, a przy okazji dowiesz się sporo o konstrukcji kursu. 🙂</p>
 
 		<p class="has-text-centered">
-			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/9GEu3xmj3mWiY0xf2">Odwiedź Wstęp do kursu</a>
+			<a class="button is-primary is-outlined" target="_blank" href="https://platforma.wiecejnizlek.pl/app/courses/1/lessons/16">Odwiedź Wstęp do kursu</a>
 		</p>
 
 		<p>Jedną z najważniejszych funkcji jest teraz pewnie dla Ciebie <a href="https://platforma.wiecejnizlek.pl/app/myself/availabilities" target="_blank">Plan pracy</a>. 😉 To tu możesz zdefiniować swój własny harmonogram nauki i zacząć ją... już od dziś! 🎉 Na ekranie <a href="https://platforma.wiecejnizlek.pl/app/courses/1/lessons/16/screens/82" target="_blank">Obsługa platformy</a> znajdziesz również film poświęcony temu narzędziu. 🙂</p>

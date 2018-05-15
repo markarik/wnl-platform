@@ -11,13 +11,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="navigation-annotation">
-			<div class="level wnl-screen-title">
-				<div class="level-item">
-					{{ $t('lessonsAvailability.navigationAnnotation') }}
-				</div>
-			</div>
-		</div>
 		<div class="views-control">
 			<a v-for="name, view in views"
 				class="panel-toggle view"

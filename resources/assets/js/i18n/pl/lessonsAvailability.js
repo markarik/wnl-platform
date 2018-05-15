@@ -1,7 +1,6 @@
 export const lessonsAvailability = {
 	loader: 'Ładuję plan...',
 	header: 'Plan pracy',
-	navigationAnnotation: 'Aby zmieniony plan pojawił się w nawigacji kursu, prosimy o odświeżenie strony! Przepraszamy za utrudnienia, pracujemy nad rozwiązaniem tej niedogodności :)',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',
 		availablePresets: '2. Dostępne plany nauki.',

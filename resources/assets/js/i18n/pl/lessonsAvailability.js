@@ -1,6 +1,7 @@
 export const lessonsAvailability = {
 	loader: 'Ładuję plan...',
 	header: 'Plan pracy',
+	headerAnnotation: 'W celu ',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',
 		availablePresets: '2. Dostępne plany nauki.',

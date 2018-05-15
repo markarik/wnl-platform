@@ -240,6 +240,11 @@
 				</ul>
 			</div>
 		</div>
+		<div class="level">
+			<div class="level-item">
+				{{ $t('lessonsAvailability.headerAnnotation') }}
+			</div>
+		</div>
 	</div>
 </template>
 

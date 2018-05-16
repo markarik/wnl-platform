@@ -556,7 +556,8 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', [
 			'setLessonAvailabilityStatus',
-			'updateLessonStartDate'
+			'updateLessonStartDate',
+			'setStructure'
 		]),
 		...mapActions(['toggleOverlay']),
 		isWorkLoadActive(workLoad) {
@@ -635,12 +636,8 @@ export default {
 					end_date: this.endDate,
 					preset_active: this.activePreset,
 				}).then((response) => {
-					this.isLoading = false
-					response.data.lessons.forEach((lesson) => {
-						this.updateLessonStartDate({
-							lessonId: lesson.id,
-							start_date: lesson.startDate
-						})
+					this.setStructure().then(() => {
+						this.isLoading = false
 					})
 					if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
 						this.addAutoDismissableAlert({

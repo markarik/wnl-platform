@@ -195,10 +195,11 @@ class SectionsUpdate extends Command
 	{
 		$bar = $this->output->createProgressBar(count($newSections));
 
-		foreach ($newSections as $newSection) {
+		foreach ($newSections as $index => $newSection) {
 			$section = Section::create([
 				'name'      => $newSection['name'],
 				'screen_id' => $this->screenId,
+				'order_number' => $index
 			]);
 
 			$section->slides()->attach(

@@ -79,7 +79,6 @@
 		},
 		methods: {
 			getCourseNavigation() {
-				console.log(this.structure);
 				if (this.isStructureEmpty) {
 					$wnl.logger.debug('Empty structure, WTF?')
 					$wnl.logger.debug(this.structure)

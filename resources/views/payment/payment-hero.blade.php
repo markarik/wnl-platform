@@ -42,8 +42,8 @@
 		|| (Session::has('product') && Session::get('product')->signups_end->isPast() && Session::get('product')->signups_close->isFuture())
 	)
 		<section class="notification is-danger has-text-centered">
-			Pamiętaj! W tym momencie otwarta jest dodatkowa pula zapisów, dla której nie możemy już niestety zagwarantować terminowego dostarczenia materiałów. :(<br>
-			Zrobimy jednak co w naszej mocy, żeby trafiły do Ciebie jak najszybciej! :)
+			Pamiętaj! W tym momencie otwarta jest dodatkowa pula zapisów, dla której nie możemy już niestety zagwarantować terminowego dostarczenia Albumu Map Myśli. :(<br>
+			Zrobimy jednak co w naszej mocy, żeby trafił do Ciebie jak najszybciej! :)
 		</section>
 	@endif
 

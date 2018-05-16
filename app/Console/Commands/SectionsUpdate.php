@@ -206,10 +206,11 @@ class SectionsUpdate extends Command
 				collect($newSection['slides'])->keyBy('slide_id')
 			);
 
-			foreach ($newSection['subsections'] as $newSubsection) {
+			foreach ($newSection['subsections'] as $subsectionIndex => $newSubsection) {
 				$subsection = Subsection::create([
 					'name'       => $newSubsection['name'],
 					'section_id' => $section->id,
+					'order_number' => $subsectionIndex
 				]);
 
 				$subsection->slides()->attach(

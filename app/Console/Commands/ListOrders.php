@@ -121,6 +121,7 @@ class ListOrders extends Command
 				$order->external_id,
 				$order->canceled,
 				$order->created_at,
+				$order->updated_at,
 			];
 		})->toArray();
 
@@ -139,6 +140,7 @@ class ListOrders extends Command
 				'p24 ID',
 				'canceled',
 				'created_at',
+				'updated_at',
 			],
 			$orders
 		);

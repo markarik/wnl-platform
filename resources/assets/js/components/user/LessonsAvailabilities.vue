@@ -269,14 +269,6 @@
 				color: $color-ocean-blue
 				margin-top: $margin-small
 
-		.navigation-annotation
-			margin-bottom: $margin-base
-			width: 100%
-			text-align: center
-			overflow-wrap: wrap
-			.level-item
-				width: 100%
-
 		.views-control
 			display: flex
 			flex-wrap: wrap

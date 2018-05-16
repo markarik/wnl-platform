@@ -39,7 +39,6 @@ class CalculateCoursePlan
 		$this->workLoad = $options['workLoad'];
 		$this->workDays = $options['workDays'];
 		$this->preset = $options['preset'];
-		$this->timezone = $options['timezone'];
 		$this->now = Carbon::now();
 
 		$this->preprocessData();
@@ -71,8 +70,6 @@ class CalculateCoursePlan
 	{
 		$plan = collect();
 		$startDate = $this->startDate;
-		$timezone = $this->timezone;
-		dd($timezone);
 		$workLoad = $this->workLoad;
 		$toBeScheduledCount = $this->toBeScheduled->count();
 		$lessonWithExtraDay = 0;

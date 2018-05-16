@@ -47,12 +47,11 @@ class UserLessonApiController extends ApiController
 	{
 		$user = User::find($userId);
 		$options = [
-			'startDate' => Carbon::parse($request->start_date),
+			'startDate' => Carbon::parse($request->start_date)->timezone($request->timezone),
 			'endDate'   => Carbon::parse($request->end_date),
 			'workLoad'  => $request->work_load,
 			'workDays'  => $request->work_days,
 			'preset'    => $request->preset_active,
-			'timezone' => $request->timezone,
 		];
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));

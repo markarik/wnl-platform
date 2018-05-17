@@ -42,7 +42,7 @@ const getters = {
 	getLessons: state => state.structure[resource('lessons')] || {},
 	getRequiredLessons: (state, getters, rootState, rootGetters) => {
 		return Object.values(getters.getLessons)
-			.filter(lesson => lesson.is_required);
+			.filter(lesson => lesson.is_required && lesson.isAccessible);
 	},
 	userLessons: (state, getters) => {
 		return Object.values(getters.getLessons)

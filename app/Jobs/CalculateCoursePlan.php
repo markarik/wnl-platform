@@ -60,7 +60,7 @@ class CalculateCoursePlan
 			DB::rollBack();
 			throw $e;
 		}
-		
+
 		DB::commit();
 
 		return $plan;

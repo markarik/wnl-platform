@@ -184,13 +184,6 @@
 			</div>
 			<span>{{ $t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>
-		<div class="accept-plan" v-if="(activeView === 'presetsView' || activeView === 'openAll')">
-			<a
-				@click="acceptPlan"
-				class="button button is-primary is-outlined is-big"
-				>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
-			</a>
-		</div>
 		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
 			<div class="level wnl-screen-title">
 				<div class="level-left">
@@ -230,7 +223,7 @@
 										:value="getStartDate(subitem)"
 										:subitemId="subitem.id"
 										:config="startDateConfig"
-										@onChange="(payload) => onStartDateChange(payload, subitem.id)"
+										@onChange="(payload) => onStartDateChange(payload, subitem)"
 										/>
 									</div>
 								</div>
@@ -239,13 +232,27 @@
 					</li>
 				</ul>
 			</div>
-		</div>
-		<div class="navigation-annotation">
-			<div class="level">
+			<div class="level wnl-screen-title" v-if="manualStartDates.length > 0">
 				<div class="level-item">
-					{{ $t('lessonsAvailability.navigationAnnotation') }}
+					{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
 				</div>
 			</div>
+			<div class="level wnl-screen-title manual-start-dates">
+				<div class="level-item">
+					<div class="dates-list">
+						<div class="date" v-for="manualStartDate in manualStartDates">
+							{{ manualStartDate.lessonName }} - {{manualStartDate.formatedStartDate}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accept-plan">
+			<a
+				@click="acceptPlan"
+				class="button button is-primary is-outlined is-big"
+				>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+			</a>
 		</div>
 	</div>
 </template>
@@ -322,6 +329,9 @@
 			.level-item
 				width: 100%
 
+		.manual-start-dates
+			margin-bottom: $margin-small
+
 		.accept-plan
 			display: flex
 			justify-content: space-around
@@ -378,14 +388,6 @@
 									cursor: not-allowed
 									min-width: 260px
 
-		.navigation-annotation
-			margin-bottom: $margin-base
-			width: 100%
-			text-align: center
-			overflow-wrap: wrap
-			.level-item
-				width: 100%
-
 </style>
 
 <script>
@@ -394,7 +396,7 @@ import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
 import Datepicker from 'js/components/global/Datepicker'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
-import { isEmpty, merge, pull } from 'lodash'
+import { isEmpty, merge, pull, find } from 'lodash'
 import moment from 'moment'
 
 export default {
@@ -412,7 +414,8 @@ export default {
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,
-			activeView: 'presetsView',
+			activeView: 'lessonsView',
+			manualStartDates: [],
 			alertSuccess: {
 				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
 				type: 'success',
@@ -596,6 +599,9 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
+			if (this.activeView === 'lessonsView') {
+				this.activePreset = 'lessonsView'
+			}
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null
 			}
@@ -603,19 +609,19 @@ export default {
 				this.workLoad = 0
 				this.activePreset = 'openAll'
 			}
-			if (isEmpty(this.workDays)) {
+			if (isEmpty(this.workDays) && !this.activeView === 'lessonsView') {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson') {
+			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson' && !this.activeView === 'lessonsView') {
 				return this.addAutoDismissableAlert({
 					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.endDate === null && this.activePreset === 'dateToDate') {
+			} else if (this.endDate === null && this.activePreset === 'dateToDate' && !this.activeView === 'lessonsView') {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
 					type: 'error',
@@ -626,6 +632,17 @@ export default {
 					text: `Wybierz któryś z dostępnych planów nauki :)`,
 					type: 'error',
 					timeout: 3000,
+				})
+			} else if (this.activePreset === 'lessonsView' && isEmpty(this.manualStartDates)) {
+				return this.addAutoDismissableAlert({
+					text: `Aby ustawić plan, należy zmienić chociaż jedną datę! :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+			} else if (this.activeView === 'lessonsView') {
+				this.isLoading = true
+				axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
+					manual_start_dates: this.manualStartDates,
 				})
 			} else {
 				this.isLoading = true
@@ -679,22 +696,28 @@ export default {
 		onPresetStartDateChange(payload) {
 			return this.startDate = payload[0]
 		},
-		onStartDateChange(payload, lessonId) {
-			if (!payload[0]) return
+		onStartDateChange(newStartDate, subitem) {
+			if (!newStartDate[0]) return
 
-			const date = payload[0]
-			const diff = moment().startOf('day').diff(date, 'days')
+			const lessonWithStartDate = {
+				lessonId: subitem.id,
+				lessonName: subitem.name,
+				startDate: newStartDate[0],
+				formatedStartDate: moment(newStartDate[0]).format('LL'),
+			}
 
-			this.setLessonAvailabilityStatus({lessonId, status: diff >= 0})
+			let index = this.manualStartDates.indexOf(find(this.manualStartDates, function(el) {
+				return el.lessonId === lessonWithStartDate.lessonId
+			}))
 
-			axios.put(getApiUrl(`user_lesson/${this.currentUserId}/${lessonId}`), {
-				date: payload[0]
-			}).then(() => {
-				this.addAutoDismissableAlert(this.alertSuccess)
-			}).catch((error) => {
-				$wnl.logger.error(error)
-				this.addAutoDismissableAlert(this.alertError)
-			})
+			if (index === -1) {
+				console.log('index -1');
+				this.manualStartDates.push(lessonWithStartDate)
+			} else {
+				this.manualStartDates.splice(index, 1)
+				this.manualStartDates.push(lessonWithStartDate)
+			}
+			return
 		}
 	}
 }

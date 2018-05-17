@@ -5,7 +5,7 @@ namespace App\Http\Requests\User;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\UserLesson;
 
-class UpdateLessonsPreset extends FormRequest
+class UpdateLessonsBatch extends FormRequest
 {
 	public function authorize()
 	{
@@ -20,12 +20,8 @@ class UpdateLessonsPreset extends FormRequest
 	public function rules()
 	{
 		return [
-			'work_load' => 'numeric|nullable',
-			'start_date' => 'date|required',
-			'end_date' => 'date|nullable',
-			'work_days' => 'array|required|between:1,7',
-			'preset_active' => 'string',
-			'manual_start_dates' => 'array|nullable'
+			'timezone' => 'string|required',
+			'manual_start_dates' => 'array|required',
 		];
 	}
 }

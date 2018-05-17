@@ -7,6 +7,7 @@ use Cache;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\UpdateUserLesson;
 use App\Http\Requests\User\UpdateLessonsPreset;
+use App\Http\Requests\User\UpdateLessonsBatch;
 use App\Models\UserLesson;
 use App\Models\User;
 
@@ -47,11 +48,12 @@ class UserLessonApiController extends ApiController
 	{
 		$user = User::find($userId);
 		$options = [
-			'startDate' => Carbon::parse($request->start_date),
-			'endDate'   => Carbon::parse($request->end_date),
-			'workLoad'  => $request->work_load,
-			'workDays'  => $request->work_days,
-			'preset'    => $request->preset_active,
+			'startDate'        => Carbon::parse($request->start_date),
+			'endDate'          => Carbon::parse($request->end_date),
+			'workLoad'         => $request->work_load,
+			'workDays'         => $request->work_days,
+			'preset'           => $request->preset_active,
+			'manualStartDates' => $request->manual_start_dates,
 		];
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
@@ -65,6 +67,12 @@ class UserLessonApiController extends ApiController
 			'end_date'       => $plan->last()['start_date']->timestamp,
 			'end_date_human' => $plan->last()['start_date'],
 		]);
+	}
+
+	public function putBatch(UpdateLessonsBatch $request, $userId)
+	{
+		$user = User::find($userId);
+		dd($request->manual_start_dates);
 	}
 
 

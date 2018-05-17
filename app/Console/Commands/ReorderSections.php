@@ -40,6 +40,8 @@ class ReorderSections extends Command
 		$screensToReorder = [];
 		$slidesToRemove = []; // screenId => slideId
 
+		$this->getConfirmation($passedSections);
+
 		foreach ($passedSections as $index => $sectionId) {
 			$section = Section::find($sectionId);
 			$sectionScreen = $section->screen;
@@ -111,6 +113,30 @@ class ReorderSections extends Command
 
 			$presentable->order_number = $index;
 			$presentable->save();
+		}
+	}
+
+	private function getConfirmation($sections)
+	{
+		$tableHeaders = ['Order Number', 'Section Name', 'From Lesson'];
+		$tableData = [];
+
+		foreach ($sections as $index => $section) {
+			$sectionInstance = Section::find($section);
+			if (empty($sectionInstance)) {
+				$this->info("Section with id: $section not found");
+			}
+			$tableData[] = [
+				$index, $sectionInstance->name, $sectionInstance->screen->lesson->name
+			];
+		}
+
+		$this->table($tableHeaders, $tableData);
+
+		$statement = 'Does this screen look OK?';
+		if (!$this->confirm($statement)) {
+			$this->info("Aborting...");
+			die;
 		}
 	}
 }

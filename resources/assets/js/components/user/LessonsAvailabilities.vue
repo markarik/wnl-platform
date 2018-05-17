@@ -398,6 +398,7 @@ import Datepicker from 'js/components/global/Datepicker'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
 import { isEmpty, merge, pull, find } from 'lodash'
 import moment from 'moment'
+import momentTimezone from 'moment-timezone'
 
 export default {
 	name: 'LessonsAvailabilities',
@@ -651,6 +652,7 @@ export default {
 					work_load: this.workLoad,
 					start_date: this.startDate,
 					end_date: this.endDate,
+					timezone: momentTimezone.tz.guess(),
 					preset_active: this.activePreset,
 				}).then((response) => {
 					this.setStructure().then(() => {

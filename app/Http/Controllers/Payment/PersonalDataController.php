@@ -163,7 +163,7 @@ class PersonalDataController extends Controller
 		]);
 
 		Auth::login($user);
-		Log::notice('User automatically logged in after registration.');
+		Log::debug('User automatically logged in after registration.');
 
 		return $user;
 	}

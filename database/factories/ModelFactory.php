@@ -119,7 +119,6 @@ $factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Course::class, function (Faker\Generator $faker) {
 	return [
-		'id'   => $faker->numberBetween(500, 1000),
 		'name' => $faker->name,
 		'slug' => $faker->name,
 	];

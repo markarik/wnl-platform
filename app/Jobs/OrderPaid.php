@@ -61,7 +61,7 @@ class OrderPaid implements ShouldQueue
 	{
 		$order = $this->order;
 
-		\Log::notice('Issuing invoice and sending order confirmation.');
+		\Log::debug('Issuing invoice and sending order confirmation.');
 
 		$invoice = $this->getInvoice($order);
 

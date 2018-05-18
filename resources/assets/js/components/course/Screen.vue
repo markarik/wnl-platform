@@ -1,3 +1,4 @@
+
 <template>
 	<div>
 		<h4>{{name}}</h4>
@@ -65,16 +66,26 @@
 			},
 			showQna() {
 				return this.tags.length > 0
+			},
+			fetchContent() {
+				this.toggleOverlay({source: 'screens', display: true})
+				this.fetchScreenContent(this.screenId)
+					.then(() => this.toggleOverlay({source: 'screens', display: false}))
+					.catch($wnl.logger.capture)
 			}
 		},
 		methods: {
-			...mapActions('qna', ['fetchQuestionsByTags'])
+			...mapActions('qna', ['fetchQuestionsByTags']),
+			...mapActions('course', ['fetchScreenContent']),
+			...mapActions(['toggleOverlay']),
 		},
 		mounted() {
+			this.fetchContent()
 			this.showQna && this.fetchQuestionsByTags({tags: this.tags})
 		},
 		watch: {
 			'screenId' (newValue) {
+				this.fetchContent()
 				this.showQna && this.fetchQuestionsByTags({tags: this.tags})
 			}
 		}

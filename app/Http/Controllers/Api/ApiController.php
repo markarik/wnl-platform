@@ -175,6 +175,18 @@ class ApiController extends Controller
 	}
 
 	/**
+	 * Determine which fields should be excluded from response.
+	 *
+	 * @param $name
+	 *
+	 * @return bool
+	 */
+	public static function shouldExclude($name)
+	{
+		return str_is("*{$name}*", \Request::get('exclude'));
+	}
+
+	/**
 	 * @param $results
 	 *
 	 * @return \Illuminate\Http\JsonResponse

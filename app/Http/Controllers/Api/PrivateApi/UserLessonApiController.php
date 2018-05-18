@@ -10,6 +10,7 @@ use App\Http\Requests\User\UpdateLessonsPreset;
 use App\Http\Requests\User\UpdateLessonsBatch;
 use App\Models\UserLesson;
 use App\Models\User;
+use DB;
 
 
 class UserLessonApiController extends ApiController
@@ -70,12 +71,15 @@ class UserLessonApiController extends ApiController
 
 	public function putBatch(UpdateLessonsBatch $request, $userId)
 	{
-		$user = User::find($userId);
-		// dd($request->manual_start_dates, $request->timezone);
-
+		$userId = User::find($userId)->id;
 		foreach ($request->manual_start_dates as $lesson) {
-			dump(Carbon::parse($lesson['startDate'])->timezone($request->timezone));
+			$manualStartDate = Carbon::parse($lesson['startDate'])->timezone($request->timezone);
+			DB::table('user_lesson')
+				->where('user_id', $userId)
+				->where('lesson_id', $lesson['lessonId'])
+				->update(['start_date' => $manualStartDate]);
 		}
+		return $this->respondOk();
 	}
 
 

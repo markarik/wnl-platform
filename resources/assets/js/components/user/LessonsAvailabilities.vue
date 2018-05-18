@@ -616,13 +616,17 @@ export default {
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson' && !this.activeView === 'lessonsView') {
+			} else if (this.workLoad === null &&
+				this.activePreset === 'daysPerLesson' &&
+				!this.activeView === 'lessonsView') {
 				return this.addAutoDismissableAlert({
 					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.endDate === null && this.activePreset === 'dateToDate' && !this.activeView === 'lessonsView') {
+			} else if (this.endDate === null &&
+				this.activePreset === 'dateToDate' &&
+				!this.activeView === 'lessonsView') {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
 					type: 'error',
@@ -634,7 +638,8 @@ export default {
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.activePreset === 'lessonsView' && isEmpty(this.manualStartDates)) {
+			} else if (this.activePreset === 'lessonsView' &&
+				isEmpty(this.manualStartDates)) {
 				return this.addAutoDismissableAlert({
 					text: `Aby ustawić plan, należy zmienić chociaż jedną datę! :)`,
 					type: 'error',
@@ -645,6 +650,17 @@ export default {
 				axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
 					manual_start_dates: this.manualStartDates,
 					timezone: momentTimezone.tz.guess(),
+				}).then((response) => {
+					this.setStructure().then(() => {
+						this.isLoading = false
+						this.manualStartDates = []
+						this.addAutoDismissableAlert(this.alertSuccess)
+					})
+				})
+				.catch(error => {
+					this.isLoading = false
+					$wnl.logger.capture(error)
+					this.addAutoDismissableAlert(this.alertError)
 				})
 			} else {
 				this.isLoading = true

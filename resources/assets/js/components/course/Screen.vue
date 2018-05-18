@@ -65,7 +65,12 @@
 			},
 			showQna() {
 				return this.tags.length > 0
-			},
+			}
+		},
+		methods: {
+			...mapActions('qna', ['fetchQuestionsByTags']),
+			...mapActions('course', ['fetchScreenContent']),
+			...mapActions(['toggleOverlay']),
 			fetchContent() {
 				if (this.screenData.hasOwnProperty('content')) return
 
@@ -74,11 +79,6 @@
 					.then(() => this.toggleOverlay({source: 'screens', display: false}))
 					.catch($wnl.logger.capture)
 			}
-		},
-		methods: {
-			...mapActions('qna', ['fetchQuestionsByTags']),
-			...mapActions('course', ['fetchScreenContent']),
-			...mapActions(['toggleOverlay']),
 		},
 		mounted() {
 			this.fetchContent()

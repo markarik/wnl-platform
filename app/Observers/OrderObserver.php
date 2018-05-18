@@ -89,7 +89,7 @@ class OrderObserver
 
 	protected function handleCouponChange($order)
 	{
-		\Log::notice('Order coupon changed.');
+		\Log::debug('Order coupon changed.');
 		if ($order->studyBuddy) {
 			$order->studyBuddy->delete();
 		}

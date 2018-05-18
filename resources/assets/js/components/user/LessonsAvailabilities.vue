@@ -644,6 +644,7 @@ export default {
 				this.isLoading = true
 				axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
 					manual_start_dates: this.manualStartDates,
+					timezone: momentTimezone.tz.guess(),
 				})
 			} else {
 				this.isLoading = true

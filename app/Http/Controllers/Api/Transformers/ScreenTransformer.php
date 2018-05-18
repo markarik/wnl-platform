@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
+use App\Http\Controllers\Api\ApiController;
 use DB;
 use App\Models\Screen;
 use App\Http\Controllers\Api\ApiTransformer;
@@ -23,7 +24,6 @@ class ScreenTransformer extends ApiTransformer
 		$data = [
 			'id'           => $screen->id,
 			'name'         => $screen->name,
-			'content'      => $screen->content,
 			'type'         => $screen->type,
 			'meta'         => $screen->meta,
 			'order_number' => $screen->order_number,
@@ -35,6 +35,10 @@ class ScreenTransformer extends ApiTransformer
 
 		if (!empty($screen->meta['slides_count'])) {
 			$data['slides_count'] = $screen->meta['slides_count'];
+		}
+
+		if (!ApiController::shouldExclude('screens.content')) {
+			$data['content'] = $screen->content;
 		}
 
 		return $data;

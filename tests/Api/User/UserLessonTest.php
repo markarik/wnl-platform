@@ -33,9 +33,11 @@ class UserLessonTest extends ApiTestCase
 				'work_load' => 0,
 				'start_date' => Carbon::now()->toDateString(),
 				'user_id' => $user->id,
-				'work_days' => [1,2,5]
+				'work_days' => [1,2,5],
+				'timezone' => 'UTC'
 			]);
 
+		$response->assertStatus(200);
 		foreach($user->lessonsAvailability as $lesson) {
 			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
 		};
@@ -95,7 +97,10 @@ class UserLessonTest extends ApiTestCase
 				'user_id' => $user->id,
 				'work_days' => [1,2,3,7],
 				'preset_active' => 'dateToDate',
+				'timezone' => 'UTC'
 			]);
+
+		$response->assertStatus(200);
 
 		foreach ($requiredLessons as $index => $lesson) {
 			$expectedStartDate = $startDate->addDays($expectedDaysInterval[$index]);
@@ -161,7 +166,8 @@ class UserLessonTest extends ApiTestCase
 				'work_load' => 2,
 				'start_date' => $startDate->toDateTimeString(),
 				'user_id' => $user->id,
-				'work_days' => [1,2,5,6,7]
+				'work_days' => [1,2,5,6,7],
+				'timezone' => 'UTC'
 			]);
 
 		$expectedDaysInterval = [0, 4, 2, 2, 4];

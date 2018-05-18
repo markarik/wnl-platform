@@ -214,7 +214,6 @@ const actions = {
 		commit(types.COURSE_UPDATE_LESSON_START_DATE, payload)
 	},
 	fetchScreenContent({commit}, screenId) {
-		console.log('co jest kura')
 		return axios.get(getApiUrl(`screens/${screenId}`))
 			.then(({data}) => {
 				commit(types.SET_SCREEN_CONTENT, {data, screenId})

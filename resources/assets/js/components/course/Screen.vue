@@ -1,4 +1,3 @@
-
 <template>
 	<div>
 		<h4>{{name}}</h4>
@@ -68,6 +67,8 @@
 				return this.tags.length > 0
 			},
 			fetchContent() {
+				if (this.screenData.hasOwnProperty('content')) return
+
 				this.toggleOverlay({source: 'screens', display: true})
 				this.fetchScreenContent(this.screenId)
 					.then(() => this.toggleOverlay({source: 'screens', display: false}))

@@ -77,6 +77,7 @@
 					event.stopImmediatePropagation();
 					event.stopPropagation();
 				}
+				event.stopPropagation();
 			},
 			onSubmitForm() {
 				const hasAttachChanged = this.hasAttachChanged();

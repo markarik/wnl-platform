@@ -240,6 +240,13 @@
 				</ul>
 			</div>
 		</div>
+		<div class="navigation-annotation">
+			<div class="level">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.navigationAnnotation') }}
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -370,6 +377,14 @@
 									text-align: center
 									cursor: not-allowed
 									min-width: 260px
+
+		.navigation-annotation
+			margin-bottom: $margin-base
+			width: 100%
+			text-align: center
+			overflow-wrap: wrap
+			.level-item
+				width: 100%
 
 </style>
 

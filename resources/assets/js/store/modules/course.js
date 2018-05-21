@@ -57,7 +57,10 @@ const getters = {
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
-	getSections: state => (sections) => sections.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {})) || [],
+	getSections: state => (sections) => {
+		return sections
+			.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {}))
+	},
 	getSubsections: state => (subsections) => subsections.map((subsectionId) => _.get(state.structure, `subsections.${subsectionId}`, {})) || [],
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
 		const sectionsIds = getters.getScreen(screenId).sections;

@@ -46,7 +46,7 @@ class ScreenTransformer extends ApiTransformer
 
 	public function includeSections(Screen $screen)
 	{
-		$sections = $screen->sections;
+		$sections = $screen->sections->sortBy('order_number');
 
 		$meta = collect([
 			'screenId' => $screen->id,

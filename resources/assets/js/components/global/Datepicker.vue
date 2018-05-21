@@ -86,7 +86,12 @@
 			if (!this.datepicker) {
 				this.config.onChange = this.onChange
 				this.config.onValueUpdate = this.dateUpdated
-				this.datepicker = new Flatpickr(this.$el, this.config)
+				this.datepicker = new Flatpickr(this.$el, {
+					...this.config,
+					locale: {
+						firstDayOfWeek: 1
+					}
+				})
 				this.setDate(this.value)
 			}
 			this.$watch('config', this.redraw)

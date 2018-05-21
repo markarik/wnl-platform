@@ -501,7 +501,6 @@
 					this.setSlideshowHtmlContent(data)
 						.then(() => {
 							const slide = this.getSlideById(this.currentSlideId)
-							const currentBookmarkState = slide.bookmark.hasReacted
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						})
 				})
@@ -595,7 +594,7 @@
 				this.modifiedSlides = {}
 			},
 			'screenData' (newValue, oldValue) {
-				if (newValue.type === 'slideshow') {
+				if (newValue.type === 'slideshow' && newValue.id !== oldValue.id) {
 					this.toggleOverlay({source: 'slideshow', display: true})
 
 					this.setup({id: this.presentableId})
@@ -613,7 +612,7 @@
 					})
 				}
 			},
-			'slideOrderNumber' (slideOrderNumber, oldValue) {
+			'slideOrderNumber' (slideOrderNumber) {
 				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)
 			}
 		}

@@ -48,7 +48,7 @@
 			</div>
 			<div class="days">
 					<a v-for="day in days"
-						class="panel-toggle day disabled"
+						class="panel-toggle day"
 						:class="{'is-active': isDayActive(day.dayNumber)}"
 						:key="day.dayNumber"
 						@click="toggleDay(day.dayNumber)"
@@ -154,7 +154,7 @@
 							<label class="date-label" for="endDate">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-3"></i>
 								</span>
 							</label>
 							<wnl-datepicker
@@ -180,18 +180,30 @@
 				<div class="level">
 					<div class="level-item" v-if="this.completedLessonsLength > 0">
 						{{ $t('lessonsAvailability.annotation.header') }}
-						{{ this.completedLessonsLength }}
-						{{ $t('lessonsAvailability.annotation.info') }}
+						{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
 					</div>
 				</div>
 			</div>
-			<div class="accept-plan">
-				<a
-					@click="acceptPlan"
-					class="button button is-primary is-outlined is-big"
-					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
-				</a>
+		</div>
+		<div class="open-all" v-if="activeView === 'openAll'">
+			<div class="level">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.openAllLessons.annotation') }}
+				</div>
 			</div>
+			<div class="level-item">
+				{{ $t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
+				{{ this.completedLessonsLength }}/{{ this.availableLength }}.
+				wyświetli się: {{ this.completedLessonsLength }}/{{this.requiredLength}}.
+			</div>
+			<span>{{ $t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
+		</div>
+		<div class="accept-plan" v-if="(activeView === 'presetsView' || activeView === 'openAll')">
+			<a
+				@click="acceptPlan"
+				class="button button is-primary is-outlined is-big"
+				>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+			</a>
 		</div>
 		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
 			<div class="level wnl-screen-title">
@@ -242,6 +254,13 @@
 				</ul>
 			</div>
 		</div>
+		<div class="navigation-annotation">
+			<div class="level">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.navigationAnnotation') }}
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -249,6 +268,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.scrollable-main-container
+		width: 100%
 		.wnl-overlay
 			align-items: center
 			background: rgba(255, 255, 255, 0.9)
@@ -308,6 +328,14 @@
 		.annotation
 			margin-bottom: $margin-base
 
+		.open-all
+			margin-bottom: $margin-base
+			width: 100%
+			text-align: center
+			overflow-wrap: wrap
+			.level-item
+				width: 100%
+
 		.accept-plan, .accept-default-plan
 			display: flex
 			justify-content: space-around
@@ -364,6 +392,14 @@
 									cursor: not-allowed
 									min-width: 260px
 
+		.navigation-annotation
+			margin-bottom: $margin-base
+			width: 100%
+			text-align: center
+			overflow-wrap: wrap
+			.level-item
+				width: 100%
+
 </style>
 
 <script>
@@ -385,7 +421,7 @@ export default {
 			isLoading: false,
 			openGroups: [],
 			availablePresets: ['daysPerLesson', 'dateToDate'],
-			activePreset: '',
+			activePreset: 'dateToDate',
 			startDate: new Date(),
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
@@ -413,10 +449,17 @@ export default {
 			'groups',
 			'getRequiredLessons',
 			'structure',
+			'userLessons',
 		]),
 		...mapGetters('progress', [
 			'getCompleteLessons',
 		]),
+		availableLength() {
+			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length
+		},
+		requiredLength() {
+			return this.userLessons.filter(lesson => lesson.is_required).length
+		},
 		inProgressLessonsLength() {
 			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
 				return !this.completedLessons.includes(Number(requiredLesson))
@@ -463,14 +506,15 @@ export default {
 		},
 		presets() {
 			return {
-				daysPerLesson: 'lessonsAvailability.presets.daysPerLesson',
 				dateToDate: 'lessonsAvailability.presets.dateToDate',
+				daysPerLesson: 'lessonsAvailability.presets.daysPerLesson',
 			}
 		},
 		views() {
 			return {
 				presetsView: 'lessonsAvailability.views.presetsView',
 				default: 'lessonsAvailability.views.default',
+				openAll: 'lessonsAvailability.views.openAll',
 				lessonsView: 'lessonsAvailability.views.lessonsView',
 			}
 		},
@@ -487,10 +531,6 @@ export default {
 				{
 					workLoad: 3,
 					translation: 'lessonsAvailability.buttons.threeDaysPerLesson',
-				},
-				{
-					workLoad: 0,
-					translation: 'lessonsAvailability.buttons.openAll',
 				}
 			]
 		},
@@ -509,7 +549,7 @@ export default {
 					dayNumber: 3
 				},
 				{
-					dayName: 'lessonsAvailability.days.tuesday',
+					dayName: 'lessonsAvailability.days.thursday',
 					dayNumber: 4
 				},
 				{
@@ -570,11 +610,12 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
-			if (this.activeView === 'default') {
-				this.activePreset = 'default'
-			}
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null
+			}
+			if (this.activeView === 'openAll') {
+				this.workLoad = 0
+				this.activePreset = 'openAll'
 			}
 			if (isEmpty(this.workDays) &&
 				!this.activeView === 'default') {
@@ -638,10 +679,7 @@ export default {
 				.catch(error => {
 					this.isLoading = false
 					$wnl.logger.capture(error)
-					// this.addAutoDismissableAlert({
-					// 	text: $t('lessonsAvailability.alertError'),
-					// 	type: 'error',
-					// })
+					this.addAutoDismissableAlert(this.alertError)
 				})
 			}
 		},

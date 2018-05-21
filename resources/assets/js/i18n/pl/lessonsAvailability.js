@@ -1,6 +1,7 @@
 export const lessonsAvailability = {
 	loader: 'Ładuję plan...',
 	header: 'Plan pracy',
+	navigationAnnotation: 'Aby zmieniony plan pojawił się w nawigacji kursu, prosimy o odświeżenie strony! Przepraszamy za utrudnienia, pracujemy nad rozwiązaniem tej niedogodności :)',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',
 		availablePresets: '2. Dostępne plany nauki.',
@@ -9,40 +10,45 @@ export const lessonsAvailability = {
 	secondSection: {
 		daysPerLesson: 'Ile dni chcesz poświęcić na jedną lekcję?',
 		startDate: 'Kiedy chcesz zacząć naukę?',
-		dateToDate: 'Wybierz zakres dat, w których chcesz pracować a my dostosujemy do nich Twój plan lekcji!',
 		defaultPlan: 'Ustaw plan zgodny z planem pracy!'
+		dateToDate: 'Wybierz zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan lekcji!',
 	},
 	buttons: {
 		oneDayPerLesson: 'Jedna lekcja na dzień',
-		twoDaysPerLesson: 'Jedna lekcje dwa dni',
+		twoDaysPerLesson: 'Jedna lekcja na dwa dni',
 		threeDaysPerLesson: 'Jedna lekcja na trzy dni',
-		openAll: 'Otwórz wszystkie lekcje',
 		acceptPlan: 'Akceptuję plan!',
+	},
+	openAllLessons: {
+		annotation: 'Wybierając tę opcję, ustawisz wszystkim lekcjom dzisiejszą datę, jako datę otwarcia. Może być to przydatna opcja, gdy kurs masz już za sobą i chcesz popracować tylko z wybranymi zagadnieniami.',
+		paragraphAnnotation: 'Po jej wybraniu wszystkie lekcje zostaną otwarte, zatem przy Twoim pasku postępu zamiast: ',
+		paragraphExplanation: ' Możesz to później zmienić, ustawiając inny plan pracy.',
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
 	alertSuccess: 'Udało się zmienić datę! :)',
-	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz!',
+	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz...',
 	presets: {
 		daysPerLesson: 'Ile dni na lekcję?',
 		dateToDate: 'Od daty do daty',
 	},
 	views: {
 		default: 'Rekomendowany plan',
-		presetsView: 'Automatyczne plany lekcji',
-		lessonsView: 'Widok lekcji',
+		presetsView: 'Wygeneruj plan automatycznie',
+		lessonsView: 'Ustaw plan ręcznie',
+		openAll: 'Otwórz wszystkie lekcje',
 	},
 	days: {
 		monday: 'Poniedziałek',
 		tuesday: 'Wtorek',
 		wednesday: 'Środa',
-		tuesday: 'Czwartek',
+		thursday: 'Czwartek',
 		friday: 'Piątek',
 		saturday: 'Sobota',
 		sunday: 'Niedziela',
 	},
 	annotation: {
-		header: 'Liczba ukończonych przez Ciebie lekcji wynosi: ',
+		header: 'Liczba ukończonych przez Ciebie lekcji wynosi:',
 		info: '. Pozostaną one otwarte, a zmiana planu nie wpłynie na Twój postęp.'
 	}
 }

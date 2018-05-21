@@ -82,10 +82,10 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="showSlidePreview(slide)">
+					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
 						{{slideLink(slide)}}
 					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" @closeModal="hideSlidePreview" v-if="slideContent && currentModalSlide">
+					<wnl-slide-preview :showModal="show" :content="slideContent" :slidesCount="hasSlides" @closeModal="hideSlidePreview" @switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id">
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
 							class="button is-primary is-outlined is-small"
@@ -260,7 +260,7 @@
 </style>
 <script>
 	import { isNumber, trim } from 'lodash'
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
 
 	import QuizAnswer from 'js/components/quiz/QuizAnswer'
@@ -285,8 +285,12 @@
 				slidesExpanded: false,
 				showExplanation: false,
 				show: false,
-				currentModalSlide: null,
-				slideContent: ''
+				slideContent: '',
+				currentSlideIndex: -1,
+				alertError: {
+					text: this.$i18n.t('quiz.errorAlert'),
+					type: 'error',
+				}
 			}
 		},
 		computed: {
@@ -323,26 +327,30 @@
 			},
 			explanation() {
 				return this.question.explanation
-			}
+			},
+			currentModalSlide() {
+				if (this.currentSlideIndex < 0) {
+					return {id: 0}
+				}
+				// return 0
+				return this.slides[this.currentSlideIndex]
+			},
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
 			hideSlidePreview() {
 				this.show = false
 				this.slideContent = ''
+				this.currentSlideIndex = -1
 			},
-			showSlidePreview(slide) {
-				this.currentModalSlide = slide
-				const slideId = [slide.id]
-				return axios.post(getApiUrl(`slideshow_builder/.query`), {
-					query: {
-						whereIn: ['slides.id', slideId],
-					},
-						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-				}).then(({data}) => {
-					this.slideContent = data
-				}).then(() => {
-					this.show = true
-				})
+			changeSlide(direction) {
+				let nextSlideIndex = this.currentSlideIndex + direction
+				if (nextSlideIndex < 0) {
+					nextSlideIndex = this.slides.length -1
+				} else if (nextSlideIndex >= this.slides.length) {
+					nextSlideIndex = 0
+				}
+				this.currentSlideIndex = nextSlideIndex
 			},
 			selectAnswer(answerIndex) {
 				const data = {id: this.question.id, answer: answerIndex}
@@ -372,5 +380,23 @@
 				return linkText || this.$t('quiz.annotations.slides.defaultLink')
 			}
 		},
+		watch: {
+			'currentModalSlide.id'(slideId) {
+				if (!slideId) return
+				axios.post(getApiUrl(`slideshow_builder/.query`), {
+					query: {
+						whereIn: ['slides.id', [slideId]],
+					},
+						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
+				}).then(({data}) => {
+					this.slideContent = data
+				}).then(() => {
+					this.show = true
+				}).catch(error => {
+					$wnl.logger.capture(error)
+					this.addAutoDismissableAlert(this.alertError)
+				})
+			}
+		}
 	}
 </script>

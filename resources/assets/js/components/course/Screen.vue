@@ -71,13 +71,17 @@
 			...mapActions('qna', ['fetchQuestionsByTags']),
 			...mapActions('course', ['fetchScreenContent']),
 			...mapActions(['toggleOverlay']),
+
 			fetchContent() {
 				if (this.screenData.hasOwnProperty('content')) return
 
 				this.toggleOverlay({source: 'screens', display: true})
 				this.fetchScreenContent(this.screenId)
 					.then(() => this.toggleOverlay({source: 'screens', display: false}))
-					.catch($wnl.logger.capture)
+					.catch((error) => {
+						this.toggleOverlay({source: 'screens', display: false})
+						$wnl.logger.capture(error)
+					})
 			}
 		},
 		mounted() {
@@ -85,7 +89,7 @@
 			this.showQna && this.fetchQuestionsByTags({tags: this.tags})
 		},
 		watch: {
-			'screenId' (newValue) {
+			screenId() {
 				this.fetchContent()
 				this.showQna && this.fetchQuestionsByTags({tags: this.tags})
 			}

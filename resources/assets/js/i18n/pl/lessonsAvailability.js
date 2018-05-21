@@ -10,7 +10,7 @@ export const lessonsAvailability = {
 	secondSection: {
 		daysPerLesson: 'Ile dni chcesz poświęcić na jedną lekcję?',
 		startDate: 'Kiedy chcesz zacząć naukę?',
-		defaultPlan: 'Ustaw plan zgodny z planem pracy!'
+		defaultPlan: 'Ustaw plan zgodny z planem pracy!',
 		dateToDate: 'Wybierz zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan lekcji!',
 	},
 	buttons: {

@@ -30,7 +30,7 @@
 					{{ $t('lessonsAvailability.secondSection.defaultPlan')}}
 				</div>
 			</div>
-			<div class="accept-default-plan">
+			<div class="accept-plan">
 				<a
 					@click="acceptPlan"
 					class="button button is-primary is-outlined is-big"
@@ -106,7 +106,7 @@
 				<div class="dates">
 					<div class="date">
 						<div class="start-date-picker">
-							<label class="date-label" for="startDate">
+							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
 									<i class="fa fa-hourglass-1"></i>
@@ -133,7 +133,7 @@
 				<div class="dates">
 					<div class="date">
 						<div class="start-date-picker">
-							<label class="date-label" for="startDate">
+							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
 									<i class="fa fa-hourglass-1"></i>
@@ -151,7 +151,7 @@
 					</div>
 					<div class="date">
 						<div class="end-date-picker">
-							<label class="date-label" for="endDate">
+							<label class="date-label">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
 									<i class="fa fa-hourglass-3"></i>
@@ -336,7 +336,7 @@
 			.level-item
 				width: 100%
 
-		.accept-plan, .accept-default-plan
+		.accept-plan
 			display: flex
 			justify-content: space-around
 			margin-bottom: $margin-small
@@ -617,24 +617,27 @@ export default {
 				this.workLoad = 0
 				this.activePreset = 'openAll'
 			}
-			if (isEmpty(this.workDays) &&
-				!this.activeView === 'default') {
+			if (isEmpty(this.workDays) && !this.activeView === 'default') {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.workLoad === null &&
+			} else if (
+				this.workLoad === null &&
 				this.activePreset === 'daysPerLesson' &&
-				!this.activeView === 'default') {
+				!this.activeView === 'default'
+			) {
 				return this.addAutoDismissableAlert({
 					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
 					type: 'error',
 					timeout: 3000,
 				})
-			} else if (this.endDate === null &&
+			} else if (
+				this.endDate === null &&
 				this.activePreset === 'dateToDate'  &&
-				!this.activeView === 'default') {
+				!this.activeView === 'default'
+			) {
 				return this.addAutoDismissableAlert({
 					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
 					type: 'error',
@@ -655,7 +658,6 @@ export default {
 					end_date: this.endDate,
 					preset_active: this.activePreset,
 				}).then((response) => {
-					this.isLoading = false
 					response.data.lessons.forEach((lesson) => {
 						this.updateLessonStartDate({
 							lessonId: lesson.id,
@@ -675,6 +677,7 @@ export default {
 							timeout: 10000,
 						})
 					}
+					this.isLoading = false
 				})
 				.catch(error => {
 					this.isLoading = false

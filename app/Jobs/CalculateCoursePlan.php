@@ -188,13 +188,18 @@ class CalculateCoursePlan
 
 	protected function handleDefaultPlan($plan)
 	{
-		$orders = $this->user->orders()->where('paid', 1)->get();
+		$productsIds = $this->user->orders()->where('paid', 1)->get(['product_id']);
+		$lessonsWithStartDates = \DB::table('lesson_product')
+			->whereIn('product_id', $productsIds)
+			->orderBy('start_date', 'desc')
+			->get()
+			->unique('lesson_id');
 
-		$products = [];
-		foreach ($orders as $order) {
-			array_push($products, $order->product());
+		foreach ($lessonsWithStartDates as $entry) {
+			$plan = $this->addToPlan($plan, $entry->lesson_id, Carbon::parse($entry->start_date));
 		}
-		dd($products);
+
+		return $plan;
 	}
 
 	protected function handleWorkloadZero($plan)

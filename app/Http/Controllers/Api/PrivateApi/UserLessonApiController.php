@@ -71,13 +71,13 @@ class UserLessonApiController extends ApiController
 
 	public function putBatch(UpdateLessonsBatch $request, $userId)
 	{
+		// dd($request->manual_start_dates);
 		$userId = User::find($userId)->id;
 		foreach ($request->manual_start_dates as $lesson) {
-			$manualStartDate = Carbon::parse($lesson['startDate'])->timezone($request->timezone);
 			DB::table('user_lesson')
 				->where('user_id', $userId)
 				->where('lesson_id', $lesson['lessonId'])
-				->update(['start_date' => $manualStartDate]);
+				->update(['start_date' => Carbon::parse($lesson['startDate'])]);
 		}
 		return $this->respondOk();
 	}

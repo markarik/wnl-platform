@@ -730,7 +730,6 @@ export default {
 			}))
 
 			if (index === -1) {
-				console.log('index -1');
 				this.manualStartDates.push(lessonWithStartDate)
 			} else {
 				this.manualStartDates.splice(index, 1)

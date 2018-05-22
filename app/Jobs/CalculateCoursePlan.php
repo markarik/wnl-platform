@@ -105,13 +105,16 @@ class CalculateCoursePlan
 			$startDateAvailable = $this->checkDay($startDate->dayOfWeekIso);
 
 			if ($startDateAvailable) {
-				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
+				$startDateClone = clone($startDate);
+				$plan = $this->addToPlan($plan, $lesson->id, $startDateClone->setTimezone('UTC'));
 			} else {
 				while (!$startDateAvailable) {
+
 					$startDate->addDays(1);
 					$startDateAvailable = $this->checkDay($startDate->dayOfWeekIso);
 				}
-				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
+				$startDateClone = clone($startDate);
+				$plan = $this->addToPlan($plan, $lesson->id, $startDateClone->setTimezone('UTC'));
 			}
 
 			$endDate = clone($startDate);

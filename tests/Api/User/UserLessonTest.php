@@ -34,7 +34,7 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => Carbon::now()->toDateString(),
 				'user_id' => $user->id,
 				'work_days' => [1,2,5],
-				'timezone' => 'UTC'
+				'timezone' => 'UTC',
 				'preset_active' => 'openAll'
 			]);
 
@@ -163,7 +163,7 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $startDate->toDateTimeString(),
 				'user_id' => $user->id,
 				'work_days' => [1,2,5,6,7],
-				'timezone' => 'UTC'
+				'timezone' => 'UTC',
 				'preset_active' => 'daysPerLesson'
 			]);
 

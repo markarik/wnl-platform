@@ -30,13 +30,6 @@
 					{{ $t('lessonsAvailability.secondSection.defaultPlan')}}
 				</div>
 			</div>
-			<div class="accept-plan">
-				<a
-					@click="acceptPlan"
-					class="button button is-primary is-outlined is-big"
-					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
-				</a>
-			</div>
 		</div>
 		<div class="presets-view" v-if="activeView === 'presetsView'">
 			<div class="level wnl-screen-title">
@@ -313,6 +306,9 @@
 			flex-wrap: wrap
 			justify-content: center
 			margin-bottom: $margin-big
+
+		.default-plan
+			margin-bottom: $margin-base
 
 		.presets-control
 			display: flex

@@ -396,7 +396,7 @@ import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
 import Datepicker from 'js/components/global/Datepicker'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
-import { isEmpty, merge, pull, find } from 'lodash'
+import { isEmpty, merge, pull, find, sortBy } from 'lodash'
 import moment from 'moment'
 import momentTimezone from 'moment-timezone'
 
@@ -715,6 +715,13 @@ export default {
 		onPresetStartDateChange(payload) {
 			return this.startDate = payload[0]
 		},
+		sortedManualStartDates() {
+			return this.manualStartDates.sort((a, b) => {
+				var dateA = new Date(a.startDate)
+				var dateB = new Date(b.startDate)
+				return dateA - dateB
+			})
+		},
 		onStartDateChange(newStartDate, subitem) {
 			if (!newStartDate[0]) return
 
@@ -735,6 +742,7 @@ export default {
 				this.manualStartDates.splice(index, 1)
 				this.manualStartDates.push(lessonWithStartDate)
 			}
+			this.sortedManualStartDates()
 			return
 		}
 	}

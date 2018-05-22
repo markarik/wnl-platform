@@ -243,6 +243,18 @@ class UserLessonTest extends ApiTestCase
 				'timezone' => 'UTC',
 			]);
 
+			$this->assertDatabaseHas('user_lesson', [
+				'user_id' => $user->id,
+				'lesson_id' => $requiredLessonOne->id,
+				'start_date' => '2018-06-05T22:00:00.000Z',
+			]);
+
+			$this->assertDatabaseHas('user_lesson', [
+				'user_id' => $user->id,
+				'lesson_id' => $requiredLessonTwo->id,
+				'start_date' => '2018-05-30T22:00:00.000Z',
+			]);
+
 		$response->assertStatus(200);
 	}
 }

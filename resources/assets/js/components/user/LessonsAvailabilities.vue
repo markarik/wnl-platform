@@ -232,16 +232,18 @@
 					</li>
 				</ul>
 			</div>
-			<div class="level wnl-screen-title" v-if="manualStartDates.length > 0">
-				<div class="level-item">
-					{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
+				<div class="level wnl-screen-title">
+					<div class="level-item">
+						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+					</div>
 				</div>
-			</div>
-			<div class="level wnl-screen-title manual-start-dates">
-				<div class="level-item">
-					<div class="dates-list">
-						<div class="date" v-for="manualStartDate in manualStartDates">
-							{{ manualStartDate.lessonName }} - {{manualStartDate.formatedStartDate}}
+				<div class="level wnl-screen-title">
+					<div class="level-item">
+						<div class="dates-list">
+							<div class="date" v-for="manualStartDate in manualStartDates">
+								{{ manualStartDate.lessonName }} - {{manualStartDate.formatedStartDate}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -600,62 +602,25 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		acceptPlan() {
-			if (this.activeView === 'lessonsView') {
-				this.activePreset = 'lessonsView'
-			}
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null
-			}
-			if (this.activeView === 'openAll') {
+			} else if (this.activeView === 'openAll') {
 				this.workLoad = 0
 				this.activePreset = 'openAll'
 			}
-			if (isEmpty(this.workDays) && !this.activeView === 'lessonsView') {
-				return this.addAutoDismissableAlert({
-					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
-					type: 'error',
-					timeout: 3000,
-				})
-			} else if (this.workLoad === null &&
-				this.activePreset === 'daysPerLesson' &&
-				!this.activeView === 'lessonsView') {
-				return this.addAutoDismissableAlert({
-					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
-					type: 'error',
-					timeout: 3000,
-				})
-			} else if (this.endDate === null &&
-				this.activePreset === 'dateToDate' &&
-				!this.activeView === 'lessonsView') {
-				return this.addAutoDismissableAlert({
-					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
-					type: 'error',
-					timeout: 3000,
-				})
-			} else if (this.activePreset === '') {
-				return this.addAutoDismissableAlert({
-					text: `Wybierz któryś z dostępnych planów nauki :)`,
-					type: 'error',
-					timeout: 3000,
-				})
-			} else if (this.activePreset === 'lessonsView' &&
-				isEmpty(this.manualStartDates)) {
-				return this.addAutoDismissableAlert({
-					text: `Aby ustawić plan, należy zmienić chociaż jedną datę! :)`,
-					type: 'error',
-					timeout: 3000,
-				})
+			if (!this.validate()) {
+				return false
 			} else if (this.activeView === 'lessonsView') {
 				this.isLoading = true
 				axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
 					manual_start_dates: this.manualStartDates,
 					timezone: momentTimezone.tz.guess(),
 				}).then((response) => {
-					this.setStructure().then(() => {
-						this.isLoading = false
-						this.manualStartDates = []
-						this.addAutoDismissableAlert(this.alertSuccess)
-					})
+					this.setStructure()
+				}).then(() => {
+					this.isLoading = false
+					this.manualStartDates = []
+					this.addAutoDismissableAlert(this.alertSuccess)
 				})
 				.catch(error => {
 					this.isLoading = false
@@ -696,6 +661,50 @@ export default {
 				})
 			}
 		},
+		validate() {
+			if (isEmpty(this.workDays) && !this.activeView === 'lessonsView') {
+				this.addAutoDismissableAlert({
+					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.workLoad === null &&
+				this.activePreset === 'daysPerLesson' &&
+				!this.activeView === 'lessonsView') {
+				this.addAutoDismissableAlert({
+					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.endDate === null &&
+				this.activePreset === 'dateToDate' &&
+				!this.activeView === 'lessonsView') {
+				this.addAutoDismissableAlert({
+					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.activePreset === '') {
+				this.addAutoDismissableAlert({
+					text: `Wybierz któryś z dostępnych planów nauki :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.activePreset === 'lessonsView' &&
+				isEmpty(this.manualStartDates)) {
+				this.addAutoDismissableAlert({
+					text: `Aby ustawić plan, należy zmienić chociaż jedną datę! :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			}
+			return true
+		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1
 		},
@@ -732,15 +741,14 @@ export default {
 				formatedStartDate: moment(newStartDate[0]).format('LL'),
 			}
 
-			let index = this.manualStartDates.indexOf(find(this.manualStartDates, function(el) {
-				return el.lessonId === lessonWithStartDate.lessonId
-			}))
+			const index = this.manualStartDates.findIndex(() => {
+			 	return el.lessonId === lessonWithStartDate.lessonId
+			})
 
 			if (index === -1) {
 				this.manualStartDates.push(lessonWithStartDate)
 			} else {
-				this.manualStartDates.splice(index, 1)
-				this.manualStartDates.push(lessonWithStartDate)
+				this.manualStartDates.splice(index, 1, lessonWithStartDate)
 			}
 			this.sortedManualStartDates()
 			return

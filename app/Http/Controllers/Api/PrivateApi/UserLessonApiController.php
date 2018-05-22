@@ -71,7 +71,6 @@ class UserLessonApiController extends ApiController
 
 	public function putBatch(UpdateLessonsBatch $request, $userId)
 	{
-		// dd($request->manual_start_dates);
 		$userId = User::find($userId)->id;
 		foreach ($request->manual_start_dates as $lesson) {
 			DB::table('user_lesson')
@@ -81,6 +80,4 @@ class UserLessonApiController extends ApiController
 		}
 		return $this->respondOk();
 	}
-
-
 }

@@ -51,6 +51,7 @@ class CalculateCoursePlan
 		try {
 			$plan = $this->calculatePlan()
 				->map(function ($el) {
+					$el['start_date']->setTimezone('UTC');
 					return array_set($el, 'user_id', $this->user->id);
 				});
 
@@ -108,16 +109,14 @@ class CalculateCoursePlan
 			$startDateAvailable = $this->checkDay($startDate->dayOfWeekIso);
 
 			if ($startDateAvailable) {
-				$startDateClone = clone($startDate);
-				$plan = $this->addToPlan($plan, $lesson->id, $startDateClone->setTimezone('UTC'));
+				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
 			} else {
 				while (!$startDateAvailable) {
 
 					$startDate->addDays(1);
 					$startDateAvailable = $this->checkDay($startDate->dayOfWeekIso);
 				}
-				$startDateClone = clone($startDate);
-				$plan = $this->addToPlan($plan, $lesson->id, $startDateClone->setTimezone('UTC'));
+				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
 			}
 
 			$endDate = clone($startDate);

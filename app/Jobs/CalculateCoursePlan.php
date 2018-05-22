@@ -76,6 +76,9 @@ class CalculateCoursePlan
 		$computedWorkLoad = 0;
 		$daysExcess = 0;
 
+		if ($this->preset === 'default') {
+			return $this->handleDefaultPlan($plan);
+		}
 
 		if ($workLoad === 0 || $toBeScheduledCount === 0) {
 			return $this->handleWorkloadZero($plan);
@@ -184,6 +187,22 @@ class CalculateCoursePlan
 		$this->openNow = $openNow;
 		$this->openLastDay = $openLastDay;
 		$this->toBeScheduled = $toBeScheduled;
+	}
+
+	protected function handleDefaultPlan($plan)
+	{
+		$productsIds = $this->user->orders()->where('paid', 1)->get(['product_id']);
+		$lessonsWithStartDates = \DB::table('lesson_product')
+			->whereIn('product_id', $productsIds)
+			->orderBy('start_date', 'desc')
+			->get()
+			->unique('lesson_id');
+
+		foreach ($lessonsWithStartDates as $entry) {
+			$plan = $this->addToPlan($plan, $entry->lesson_id, Carbon::parse($entry->start_date));
+		}
+
+		return $plan;
 	}
 
 	protected function handleWorkloadZero($plan)

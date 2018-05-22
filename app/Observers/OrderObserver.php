@@ -24,7 +24,7 @@ class OrderObserver
 	{
 		$settlement = $order->paid_amount - $order->getOriginal('paid_amount');
 		if ($order->isDirty(['paid_amount']) && $settlement > 0) {
-			\Log::notice('Order paid, dispatching OrderPaid job.');
+			\Log::debug('Order paid, dispatching OrderPaid job.');
 			$this->dispatch(new OrderPaid($order));
 
 			if (!$order->paid) {
@@ -63,7 +63,7 @@ class OrderObserver
 
 	protected function handlePaymentMethodSet($order)
 	{
-		\Log::notice('Order payment method set, decrementing product quantity.');
+		\Log::debug('Order payment method set, decrementing product quantity.');
 		$this->dispatch(new OrderConfirmed($order));
 		$order->product->quantity--;
 		$order->product->save();
@@ -89,7 +89,7 @@ class OrderObserver
 
 	protected function handleCouponChange($order)
 	{
-		\Log::notice('Order coupon changed.');
+		\Log::debug('Order coupon changed.');
 		if ($order->studyBuddy) {
 			$order->studyBuddy->delete();
 		}

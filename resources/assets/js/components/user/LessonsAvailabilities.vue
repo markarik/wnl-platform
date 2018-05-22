@@ -24,6 +24,20 @@
 				</span>
 			</a>
 		</div>
+		<div class="default-plan" v-if="activeView === 'default'">
+			<div class="level">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.secondSection.defaultPlan')}}
+				</div>
+			</div>
+			<div class="accept-plan">
+				<a
+					@click="acceptPlan"
+					class="button button is-primary is-outlined is-big"
+					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+				</a>
+			</div>
+		</div>
 		<div class="presets-view" v-if="activeView === 'presetsView'">
 			<div class="level wnl-screen-title">
 				<div class="level-left">
@@ -92,7 +106,7 @@
 				<div class="dates">
 					<div class="date">
 						<div class="start-date-picker">
-							<label class="date-label" for="startDate">
+							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
 									<i class="fa fa-hourglass-1"></i>
@@ -119,7 +133,7 @@
 				<div class="dates">
 					<div class="date">
 						<div class="start-date-picker">
-							<label class="date-label" for="startDate">
+							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
 									<i class="fa fa-hourglass-1"></i>
@@ -137,7 +151,7 @@
 					</div>
 					<div class="date">
 						<div class="end-date-picker">
-							<label class="date-label" for="endDate">
+							<label class="date-label">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
 									<i class="fa fa-hourglass-3"></i>
@@ -505,6 +519,7 @@ export default {
 		views() {
 			return {
 				presetsView: 'lessonsAvailability.views.presetsView',
+				default: 'lessonsAvailability.views.default',
 				openAll: 'lessonsAvailability.views.openAll',
 				lessonsView: 'lessonsAvailability.views.lessonsView',
 			}
@@ -653,6 +668,7 @@ export default {
 							timeout: 10000,
 						})
 					}
+					this.isLoading = false
 				})
 				.catch(error => {
 					this.isLoading = false

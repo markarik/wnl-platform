@@ -35,9 +35,11 @@ class UserLessonTest extends ApiTestCase
 				'user_id' => $user->id,
 				'work_days' => [1,2,5],
 				'timezone' => 'UTC'
+				'preset_active' => 'openAll'
 			]);
 
 		$response->assertStatus(200);
+
 		foreach($user->lessonsAvailability as $lesson) {
 			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
 		};
@@ -45,22 +47,20 @@ class UserLessonTest extends ApiTestCase
 		$endDate = $response->json()['end_date'];
 		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()));
 
-		$response
-			->assertStatus(200)
-			->assertJsonFragment([
-						[
-							'id'=> $lesson->id,
-							'name' => $lesson->name,
-							'group_id' => $lesson->group_id,
-							'groups' => $lesson->group_id,
-							'order_number' => $lesson->order_number,
-							'editions' => $lesson->editions,
-							'is_required' => $lesson->is_required,
-							'isAccessible' => $lesson->isAccessible(),
-							'isAvailable' => $lesson->isAvailable(),
-							'startDate' => $endDate,
-						]
-			]);
+		$response->assertJsonFragment([
+			[
+				'id'=> $lesson->id,
+				'name' => $lesson->name,
+				'group_id' => $lesson->group_id,
+				'groups' => $lesson->group_id,
+				'order_number' => $lesson->order_number,
+				'editions' => $lesson->editions,
+				'is_required' => $lesson->is_required,
+				'isAccessible' => $lesson->isAccessible(),
+				'isAvailable' => $lesson->isAvailable(),
+				'startDate' => $endDate,
+			]
+		]);
 	}
 
 	/** @test */
@@ -129,10 +129,6 @@ class UserLessonTest extends ApiTestCase
 			Carbon::createFromTimestamp($computedEndDate)->lte($endDate),
 			"Computed End Date is larger than selected end date"
 		);
-
-
-		$response
-			->assertStatus(200);
 	}
 
 	/** @test */
@@ -168,7 +164,10 @@ class UserLessonTest extends ApiTestCase
 				'user_id' => $user->id,
 				'work_days' => [1,2,5,6,7],
 				'timezone' => 'UTC'
+				'preset_active' => 'daysPerLesson'
 			]);
+
+		$response->assertStatus(200);
 
 		$expectedDaysInterval = [0, 4, 2, 2, 4];
 
@@ -194,8 +193,6 @@ class UserLessonTest extends ApiTestCase
 				'startDate' => $expectedStartDate->timestamp
 			]);
 		}
-
-		$response->assertStatus(200);
 	}
 
 	/** @test */

@@ -14,7 +14,7 @@ class AddShippingStatusToOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('shipping_status')->default('new');
+            $table->enum('shipping_status', ['new', 'ordered', 'in_progress', 'delivered'])->default('new')->after('shipping');
         });
     }
 

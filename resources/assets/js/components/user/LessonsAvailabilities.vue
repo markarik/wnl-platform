@@ -597,7 +597,6 @@ export default {
 			return this.activePreset === preset
 		},
 		isViewActive(view) {
-			console.log(this.activeView);
 			return this.activeView === view
 		},
 		chooseWorkload(workLoad) {

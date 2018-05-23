@@ -612,7 +612,7 @@ export default {
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
 		},
-		acceptPlan() {
+		async acceptPlan() {
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null
 			} else if (this.activeView === 'openAll') {
@@ -623,32 +623,33 @@ export default {
 				return false
 			} else if (this.activeView === 'lessonsView') {
 				this.isLoading = true
-				axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
-					manual_start_dates: this.manualStartDates,
-					timezone: momentTimezone.tz.guess(),
-				}).then((response) => {
-					return this.setStructure()
-				}).then(() => {
+				try {
+					await axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
+						manual_start_dates: this.manualStartDates,
+						timezone: momentTimezone.tz.guess(),
+					})
+					await this.setStructure()
 					this.isLoading = false
 					this.manualStartDates = []
 					this.addAutoDismissableAlert(this.alertSuccess)
-				})
-				.catch(error => {
+				}
+				catch(error) {
 					this.isLoading = false
 					$wnl.logger.capture(error)
 					this.addAutoDismissableAlert(this.alertError)
-				})
+				}
 			} else {
 				this.isLoading = true
-				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-					work_days: this.workDays,
-					work_load: this.workLoad,
-					start_date: this.startDate,
-					end_date: this.endDate,
-					timezone: momentTimezone.tz.guess(),
-					preset_active: this.activePreset,
-				}).then((response) => {
-					return this.setStructure()
+				try {
+					const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+						work_days: this.workDays,
+						work_load: this.workLoad,
+						start_date: this.startDate,
+						end_date: this.endDate,
+						timezone: momentTimezone.tz.guess(),
+						preset_active: this.activePreset,
+					})
+					await this.setStructure()
 					if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
 						this.addAutoDismissableAlert({
 							text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
@@ -662,14 +663,13 @@ export default {
 							timeout: 10000,
 						})
 					}
-				}).then(() => {
 					this.isLoading = false
-				})
-				.catch(error => {
+				}
+				catch(error) {
 					this.isLoading = false
 					$wnl.logger.capture(error)
 					this.addAutoDismissableAlert(this.alertError)
-				})
+				}
 			}
 		},
 		validate() {

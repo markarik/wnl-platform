@@ -81,7 +81,7 @@ class CalculateCoursePlan
 			return $this->handleDefaultPlan($plan);
 		}
 
-		if ($workLoad === 0 || $toBeScheduledCount === 0) {
+		if ($this->preset === 'openAll' || $toBeScheduledCount === 0) {
 			return $this->handleWorkloadZero($plan);
 		}
 

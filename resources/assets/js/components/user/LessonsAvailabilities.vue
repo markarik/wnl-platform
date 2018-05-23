@@ -427,7 +427,7 @@ export default {
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,
-			activeView: 'lessonsView',
+			activeView: 'presetsView',
 			manualStartDates: [],
 			alertSuccess: {
 				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
@@ -613,15 +613,20 @@ export default {
 			return new Date (item.startDate*1000)
 		},
 		async acceptPlan() {
-			if (this.activePreset === 'dateToDate') {
+			if (this.activeView === 'presetView' && this.activePreset === 'dateToDate') {
 				this.workLoad = null
 			} else if (this.activeView === 'openAll') {
-				this.workLoad = 0
+				this.workLoad = null
 				this.activePreset = 'openAll'
+			} else if (this.activeView === 'default') {
+				this.activePreset = 'default'
 			}
+
 			if (!this.validate()) {
 				return false
-			} else if (this.activeView === 'lessonsView') {
+			}
+
+			if (this.activeView === 'lessonsView') {
 				this.isLoading = true
 				try {
 					await axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
@@ -673,16 +678,14 @@ export default {
 			}
 		},
 		validate() {
-			if (isEmpty(this.workDays) && !this.activeView === 'lessonsView') {
+			if (isEmpty(this.workDays) && !['lessonView', 'default'].includes(this.activeView)) {
 				this.addAutoDismissableAlert({
 					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
 					type: 'error',
 					timeout: 3000,
 				})
 				return false
-			} else if (this.workLoad === null &&
-				this.activePreset === 'daysPerLesson' &&
-				!this.activeView === 'lessonsView') {
+			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson' && !this.activeView === 'lessonsView') {
 				this.addAutoDismissableAlert({
 					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
 					type: 'error',
@@ -737,8 +740,8 @@ export default {
 		},
 		sortedManualStartDates() {
 			return this.manualStartDates.sort((a, b) => {
-				var dateA = new Date(a.startDate)
-				var dateB = new Date(b.startDate)
+				const dateA = new Date(a.startDate)
+				const dateB = new Date(b.startDate)
 				return dateA - dateB
 			})
 		},
@@ -762,7 +765,6 @@ export default {
 				this.manualStartDates.splice(index, 1, lessonWithStartDate)
 			}
 			this.sortedManualStartDates()
-			return
 		}
 	}
 }

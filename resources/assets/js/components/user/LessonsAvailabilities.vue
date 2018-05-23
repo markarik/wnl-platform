@@ -440,7 +440,7 @@ export default {
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,
-			activeView: 'presetsView',
+			activeView: '',
 			manualStartDates: [],
 			alertSuccess: {
 				text: this.$i18n.t('lessonsAvailability.alertSuccess'),

@@ -7,8 +7,10 @@ use Cache;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\UpdateUserLesson;
 use App\Http\Requests\User\UpdateLessonsPreset;
+use App\Http\Requests\User\UpdateLessonsBatch;
 use App\Models\UserLesson;
 use App\Models\User;
+use DB;
 
 
 class UserLessonApiController extends ApiController
@@ -46,9 +48,13 @@ class UserLessonApiController extends ApiController
 	public function putPlan(UpdateLessonsPreset $request, $userId)
 	{
 		$user = User::find($userId);
+		if (empty($userId)) {
+			return $this->respondNotFound();
+		}
+
 		$options = [
-			'startDate' => Carbon::parse($request->start_date),
-			'endDate'   => Carbon::parse($request->end_date),
+			'startDate' => Carbon::parse($request->start_date)->timezone($request->timezone),
+			'endDate'   => Carbon::parse($request->end_date)->timezone($request->timezone),
 			'workLoad'  => $request->work_load,
 			'workDays'  => $request->work_days,
 			'preset'    => $request->preset_active,
@@ -67,5 +73,25 @@ class UserLessonApiController extends ApiController
 		]);
 	}
 
+	public function putBatch(UpdateLessonsBatch $request, $userId)
+	{
+		$userId = User::find($userId)->id;
+		if (empty($userId)) {
+			return $this->respondNotFound();
+		}
 
+		foreach ($request->manual_start_dates as $lesson) {
+			if (empty($lesson['startDate'])) {
+				return $this->respondUnprocessableEntity();
+			}
+			DB::table('user_lesson')
+				->where('user_id', $userId)
+				->where('lesson_id', $lesson['lessonId'])
+				->update(['start_date' => Carbon::parse($lesson['startDate'])]);
+		}
+
+		Cache::tags("user-$userId")->flush();
+
+		return $this->respondOk();
+	}
 }

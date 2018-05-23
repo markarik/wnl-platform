@@ -51,6 +51,7 @@ class CalculateCoursePlan
 		try {
 			$plan = $this->calculatePlan()
 				->map(function ($el) {
+					$el['start_date']->setTimezone('UTC');
 					return array_set($el, 'user_id', $this->user->id);
 				});
 
@@ -80,7 +81,7 @@ class CalculateCoursePlan
 			return $this->handleDefaultPlan($plan);
 		}
 
-		if ($workLoad === 0 || $toBeScheduledCount === 0) {
+		if ($this->preset === 'openAll' || $toBeScheduledCount === 0) {
 			return $this->handleWorkloadZero($plan);
 		}
 
@@ -111,6 +112,7 @@ class CalculateCoursePlan
 				$plan = $this->addToPlan($plan, $lesson->id, $startDate);
 			} else {
 				while (!$startDateAvailable) {
+
 					$startDate->addDays(1);
 					$startDateAvailable = $this->checkDay($startDate->dayOfWeekIso);
 				}

@@ -33,6 +33,7 @@
 
 <script>
 	import Flatpickr from 'flatpickr'
+	import {pl} from 'flatpickr/dist/l10n/pl.js'
 
 	export default {
 		name: 'Datepicker',
@@ -89,6 +90,7 @@
 				this.datepicker = new Flatpickr(this.$el, {
 					...this.config,
 					locale: {
+						...pl,
 						firstDayOfWeek: 1
 					}
 				})

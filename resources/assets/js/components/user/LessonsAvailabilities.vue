@@ -24,18 +24,81 @@
 				</span>
 			</a>
 		</div>
+		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item big strong">
+						{{ $t('lessonsAvailability.allLessons')}}
+					</div>
+				</div>
+			</div>
+			<div class="level all-lessons-annotation">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.allLessonsAnnotation')}}
+				</div>
+			</div>
+			<div class="groups">
+				<ul class="groups-list" v-if="structure">
+					<li class="group" v-for="(item, index) in groupsWithLessons"
+						:key="index">
+						<span class="item-toggle" @click="toggleItem(item)">
+							<span class="icon is-small">
+								<i class="toggle fa fa-angle-down"
+								:class="{'fa-rotate-180': isOpen(item)}"></i>
+							</span>
+							<span class="item-name">{{item.name}}</span>
+							<span class="subitems-count">
+								({{item.lessons.length}})
+							</span>
+						</span>
+						<ul class="subitems" v-if="isOpen(item)">
+							<li class="subitem" v-for="(subitem, index) in item.lessons"
+								:class="{'isEven': isEven(index)}"
+								:key="index">
+								<span class="subitem-name label"
+								:class="{'is-grayed-out': !subitem.isAccessible}"
+								>{{subitem.name}}</span>
+								<div class="subitem-left-side">
+									<div class="not-accesible" v-if="!subitem.isAccessible">
+									{{ $t('lessonsAvailability.lessonNotAvilable') }}
+									</div>
+									<div class="datepicker" v-else>
+										<wnl-datepicker
+										:class="{'hasColorBackground': isEven(index)}"
+										:value="getStartDate(subitem)"
+										:subitemId="subitem.id"
+										:config="startDateConfig"
+										@onChange="(payload) => onStartDateChange(payload, subitem)"
+										/>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
+				<div class="level wnl-screen-title">
+					<div class="level-item">
+						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+					</div>
+				</div>
+				<div class="level wnl-screen-title">
+					<div class="level-item">
+						<div class="dates-list">
+							<div class="date" v-for="manualStartDate in manualStartDates">
+								{{ manualStartDate.lessonName }} - {{manualStartDate.formatedStartDate}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="default-plan" v-if="activeView === 'default'">
 			<div class="level">
 				<div class="level-item">
 					{{ $t('lessonsAvailability.secondSection.defaultPlan')}}
 				</div>
-			</div>
-			<div class="accept-plan">
-				<a
-					@click="acceptPlan"
-					class="button button is-primary is-outlined is-big"
-					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
-				</a>
 			</div>
 		</div>
 		<div class="presets-view" v-if="activeView === 'presetsView'">
@@ -198,68 +261,12 @@
 			</div>
 			<span>{{ $t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>
-		<div class="accept-plan" v-if="(activeView === 'presetsView' || activeView === 'openAll')">
+		<div class="accept-plan">
 			<a
 				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
 				>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
-		</div>
-		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.allLessons')}}
-					</div>
-				</div>
-			</div>
-			<div class="groups">
-				<ul class="groups-list" v-if="structure">
-					<li class="group" v-for="(item, index) in groupsWithLessons"
-						:key="index">
-						<span class="item-toggle" @click="toggleItem(item)">
-							<span class="icon is-small">
-								<i class="toggle fa fa-angle-down"
-								:class="{'fa-rotate-180': isOpen(item)}"></i>
-							</span>
-							<span class="item-name">{{item.name}}</span>
-							<span class="subitems-count">
-								({{item.lessons.length}})
-							</span>
-						</span>
-						<ul class="subitems" v-if="isOpen(item)">
-							<li class="subitem" v-for="(subitem, index) in item.lessons"
-								:class="{'isEven': isEven(index)}"
-								:key="index">
-								<span class="subitem-name label"
-								:class="{'is-grayed-out': !subitem.isAccessible}"
-								>{{subitem.name}}</span>
-								<div class="subitem-left-side">
-									<div class="not-accesible" v-if="!subitem.isAccessible">
-									{{ $t('lessonsAvailability.lessonNotAvilable') }}
-									</div>
-									<div class="datepicker" v-else>
-										<wnl-datepicker
-										:class="{'hasColorBackground': isEven(index)}"
-										:value="getStartDate(subitem)"
-										:subitemId="subitem.id"
-										:config="startDateConfig"
-										@onChange="(payload) => onStartDateChange(payload, subitem.id)"
-										/>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="navigation-annotation">
-			<div class="level">
-				<div class="level-item">
-					{{ $t('lessonsAvailability.navigationAnnotation') }}
-				</div>
-			</div>
 		</div>
 	</div>
 </template>
@@ -305,6 +312,9 @@
 			justify-content: center
 			margin-bottom: $margin-big
 
+		.default-plan
+			margin-bottom: $margin-base
+
 		.presets-control
 			display: flex
 			flex-wrap: wrap
@@ -336,13 +346,24 @@
 			.level-item
 				width: 100%
 
+		.manual-start-dates
+			margin-bottom: $margin-small
+
 		.accept-plan
 			display: flex
 			justify-content: space-around
 			margin-bottom: $margin-small
 
-		.lessons-view
+		.all-lessons-view
 			margin-bottom: $margin-base
+			width: 100%
+			.all-lessons-annotation
+				width: 100%
+				margin-bottom: $margin-base
+				text-align: center
+				overflow-wrap: wrap
+				.level-item
+					width: 100%
 
 		.groups
 			.groups-list
@@ -392,14 +413,6 @@
 									cursor: not-allowed
 									min-width: 260px
 
-		.navigation-annotation
-			margin-bottom: $margin-base
-			width: 100%
-			text-align: center
-			overflow-wrap: wrap
-			.level-item
-				width: 100%
-
 </style>
 
 <script>
@@ -408,8 +421,9 @@ import { resource } from 'js/utils/config'
 import { getApiUrl } from 'js/utils/env'
 import Datepicker from 'js/components/global/Datepicker'
 import { pl } from 'flatpickr/dist/l10n/pl.js'
-import { isEmpty, merge, pull } from 'lodash'
+import { isEmpty, merge, pull, find, sortBy } from 'lodash'
 import moment from 'moment'
+import momentTimezone from 'moment-timezone'
 
 export default {
 	name: 'LessonsAvailabilities',
@@ -426,7 +440,8 @@ export default {
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,
-			activeView: 'presetsView',
+			activeView: 'lessonsView',
+			manualStartDates: [],
 			alertSuccess: {
 				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
 				type: 'success',
@@ -512,10 +527,10 @@ export default {
 		},
 		views() {
 			return {
-				presetsView: 'lessonsAvailability.views.presetsView',
-				default: 'lessonsAvailability.views.default',
-				openAll: 'lessonsAvailability.views.openAll',
 				lessonsView: 'lessonsAvailability.views.lessonsView',
+				default: 'lessonsAvailability.views.default',
+				presetsView: 'lessonsAvailability.views.presetsView',
+				openAll: 'lessonsAvailability.views.openAll',
 			}
 		},
 		availableWorkLoads() {
@@ -571,7 +586,8 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', [
 			'setLessonAvailabilityStatus',
-			'updateLessonStartDate'
+			'updateLessonStartDate',
+			'setStructure'
 		]),
 		...mapActions(['toggleOverlay']),
 		isWorkLoadActive(workLoad) {
@@ -609,61 +625,49 @@ export default {
 		getStartDate(item) {
 			return new Date (item.startDate*1000)
 		},
-		acceptPlan() {
-			if (this.activePreset === 'dateToDate') {
+		async acceptPlan() {
+			if (this.activeView === 'presetView' && this.activePreset === 'dateToDate') {
 				this.workLoad = null
-			}
-			if (this.activeView === 'openAll') {
-				this.workLoad = 0
+			} else if (this.activeView === 'openAll') {
+				this.workLoad = null
 				this.activePreset = 'openAll'
+			} else if (this.activeView === 'default') {
+				this.activePreset = 'default'
 			}
-			if (isEmpty(this.workDays) && !this.activeView === 'default') {
-				return this.addAutoDismissableAlert({
-					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
-					type: 'error',
-					timeout: 3000,
-				})
-			} else if (
-				this.workLoad === null &&
-				this.activePreset === 'daysPerLesson' &&
-				!this.activeView === 'default'
-			) {
-				return this.addAutoDismissableAlert({
-					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
-					type: 'error',
-					timeout: 3000,
-				})
-			} else if (
-				this.endDate === null &&
-				this.activePreset === 'dateToDate'  &&
-				!this.activeView === 'default'
-			) {
-				return this.addAutoDismissableAlert({
-					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
-					type: 'error',
-					timeout: 3000,
-				})
-			} else if (this.activePreset === '') {
-				return this.addAutoDismissableAlert({
-					text: `Wybierz któryś z dostępnych planów nauki :)`,
-					type: 'error',
-					timeout: 3000,
-				})
+
+			if (!this.validate()) {
+				return false
+			}
+
+			if (this.activeView === 'lessonsView') {
+				this.isLoading = true
+				try {
+					await axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
+						manual_start_dates: this.manualStartDates,
+						timezone: momentTimezone.tz.guess(),
+					})
+					await this.setStructure()
+					this.isLoading = false
+					this.manualStartDates = []
+					this.addAutoDismissableAlert(this.alertSuccess)
+				}
+				catch(error) {
+					this.isLoading = false
+					$wnl.logger.capture(error)
+					this.addAutoDismissableAlert(this.alertError)
+				}
 			} else {
 				this.isLoading = true
-				axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-					work_days: this.workDays,
-					work_load: this.workLoad,
-					start_date: this.startDate,
-					end_date: this.endDate,
-					preset_active: this.activePreset,
-				}).then((response) => {
-					response.data.lessons.forEach((lesson) => {
-						this.updateLessonStartDate({
-							lessonId: lesson.id,
-							start_date: lesson.startDate
-						})
+				try {
+					const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+						work_days: this.workDays,
+						work_load: this.workLoad,
+						start_date: this.startDate,
+						end_date: this.endDate,
+						timezone: momentTimezone.tz.guess(),
+						preset_active: this.activePreset,
 					})
+					await this.setStructure()
 					if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
 						this.addAutoDismissableAlert({
 							text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
@@ -678,13 +682,55 @@ export default {
 						})
 					}
 					this.isLoading = false
-				})
-				.catch(error => {
+				}
+				catch(error) {
 					this.isLoading = false
 					$wnl.logger.capture(error)
 					this.addAutoDismissableAlert(this.alertError)
-				})
+				}
 			}
+		},
+		validate() {
+			if (isEmpty(this.workDays) && !['lessonView', 'default'].includes(this.activeView)) {
+				this.addAutoDismissableAlert({
+					text: `Wybierz przynajmniej jeden dzień, w którym chcesz aby otwierały się lekcje :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.workLoad === null && this.activePreset === 'daysPerLesson' && !this.activeView === 'lessonsView') {
+				this.addAutoDismissableAlert({
+					text: `Zaznacz, ile dni chcesz poświęcić na jedną lekcję :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.endDate === null &&
+				this.activePreset === 'dateToDate' &&
+				!this.activeView === 'lessonsView') {
+				this.addAutoDismissableAlert({
+					text: `Wybierz datę, w której ma zakończyć się nauka :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.activePreset === '') {
+				this.addAutoDismissableAlert({
+					text: `Wybierz któryś z dostępnych planów nauki :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			} else if (this.activePreset === 'lessonsView' &&
+				isEmpty(this.manualStartDates)) {
+				this.addAutoDismissableAlert({
+					text: `Aby ustawić plan, należy zmienić chociaż jedną datę! :)`,
+					type: 'error',
+					timeout: 3000,
+				})
+				return false
+			}
+			return true
 		},
 		isOpen(item) {
 			return this.openGroups.indexOf(item.id) > -1
@@ -705,22 +751,33 @@ export default {
 		onPresetStartDateChange(payload) {
 			return this.startDate = payload[0]
 		},
-		onStartDateChange(payload, lessonId) {
-			if (!payload[0]) return
-
-			const date = payload[0]
-			const diff = moment().startOf('day').diff(date, 'days')
-
-			this.setLessonAvailabilityStatus({lessonId, status: diff >= 0})
-
-			axios.put(getApiUrl(`user_lesson/${this.currentUserId}/${lessonId}`), {
-				date: payload[0]
-			}).then(() => {
-				this.addAutoDismissableAlert(this.alertSuccess)
-			}).catch((error) => {
-				$wnl.logger.error(error)
-				this.addAutoDismissableAlert(this.alertError)
+		sortedManualStartDates() {
+			return this.manualStartDates.sort((a, b) => {
+				const dateA = new Date(a.startDate)
+				const dateB = new Date(b.startDate)
+				return dateA - dateB
 			})
+		},
+		onStartDateChange(newStartDate, subitem) {
+			if (!newStartDate[0]) return
+
+			const lessonWithStartDate = {
+				lessonId: subitem.id,
+				lessonName: subitem.name,
+				startDate: newStartDate[0],
+				formatedStartDate: moment(newStartDate[0]).format('LL'),
+			}
+
+			const index = this.manualStartDates.findIndex((el) => {
+			 	return el.lessonId === lessonWithStartDate.lessonId
+			})
+
+			if (index === -1) {
+				this.manualStartDates.push(lessonWithStartDate)
+			} else {
+				this.manualStartDates.splice(index, 1, lessonWithStartDate)
+			}
+			this.sortedManualStartDates()
 		}
 	}
 }

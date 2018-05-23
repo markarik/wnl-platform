@@ -1,7 +1,7 @@
 export const lessonsAvailability = {
 	loader: 'Ładuję plan...',
 	header: 'Plan pracy',
-	navigationAnnotation: 'Aby zmieniony plan pojawił się w nawigacji kursu, prosimy o odświeżenie strony! Przepraszamy za utrudnienia, pracujemy nad rozwiązaniem tej niedogodności :)',
+	lessonsToBeChangedList: 'Lista lekcji, których dni otwarcia zostały zmienione:',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',
 		availablePresets: '2. Dostępne plany nauki.',
@@ -26,6 +26,7 @@ export const lessonsAvailability = {
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
+	allLessonsAnnotation: 'W tym miejscu znajdują się wszystkie daty otwarcia lekcji według Twojego aktualnego planu. Aby zmienić datę rozwiń odpowiednią grupę i wybierz odpowiadający Ci termin. By zastosować dokonane zmiany kliknij "Akceptuję plan".',
 	alertSuccess: 'Udało się zmienić datę! :)',
 	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz...',
 	presets: {

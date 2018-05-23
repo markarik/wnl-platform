@@ -34,6 +34,7 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => Carbon::now()->toDateString(),
 				'user_id' => $user->id,
 				'work_days' => [1,2,5],
+				'timezone' => 'UTC',
 				'preset_active' => 'openAll'
 			]);
 
@@ -96,6 +97,7 @@ class UserLessonTest extends ApiTestCase
 				'user_id' => $user->id,
 				'work_days' => [1,2,3,7],
 				'preset_active' => 'dateToDate',
+				'timezone' => 'UTC'
 			]);
 
 		$response->assertStatus(200);
@@ -161,6 +163,7 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $startDate->toDateTimeString(),
 				'user_id' => $user->id,
 				'work_days' => [1,2,5,6,7],
+				'timezone' => 'UTC',
 				'preset_active' => 'daysPerLesson'
 			]);
 
@@ -190,5 +193,65 @@ class UserLessonTest extends ApiTestCase
 				'startDate' => $expectedStartDate->timestamp
 			]);
 		}
+	}
+
+	/** @test */
+	public function manuallyChangeDates()
+	{
+		$user = factory(User::class)->create();
+
+		$requiredLessonOne = factory(Lesson::class)->create([
+			'is_required' => 1,
+			'group_id' => 5,
+			'order_number' => 1,
+		]);
+
+		$requiredLessonTwo = factory(Lesson::class)->create([
+			'is_required' => 1,
+			'group_id' => 5,
+			'order_number' => 2,
+		]);
+
+		$userLessonOne = factory(UserLesson::class)->create([
+			'user_id' => $user->id,
+			'lesson_id' => $requiredLessonOne->id,
+			'start_date' => Carbon::now()->subDays(100)
+		]);
+
+		$userLessonOne = factory(UserLesson::class)->create([
+			'user_id' => $user->id,
+			'lesson_id' => $requiredLessonTwo->id,
+			'start_date' => Carbon::now()->subDays(100)
+		]);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url("/user_lesson/$user->id/batch"), [
+				'manual_start_dates' => [
+					[
+						'lessonId' => $requiredLessonOne->id,
+						'startDate' => '2018-06-05T22:00:00.000Z',
+					],
+					[
+						'lessonId' => $requiredLessonTwo->id,
+						'startDate' => '2018-05-30T22:00:00.000Z',
+					]
+				],
+				'timezone' => 'UTC',
+			]);
+
+			$this->assertDatabaseHas('user_lesson', [
+				'user_id' => $user->id,
+				'lesson_id' => $requiredLessonOne->id,
+				'start_date' => '2018-06-05T22:00:00.000Z',
+			]);
+
+			$this->assertDatabaseHas('user_lesson', [
+				'user_id' => $user->id,
+				'lesson_id' => $requiredLessonTwo->id,
+				'start_date' => '2018-05-30T22:00:00.000Z',
+			]);
+
+		$response->assertStatus(200);
 	}
 }

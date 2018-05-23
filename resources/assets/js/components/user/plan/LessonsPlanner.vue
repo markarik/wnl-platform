@@ -273,146 +273,148 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
-	@import 'resources/assets/sass/variables'
+<style lang="sass" scoped>
+@import 'resources/assets/sass/variables'
 
-	.scrollable-main-container
-		width: 100%
-		.wnl-overlay
-			align-items: center
-			background: rgba(255, 255, 255, 0.9)
-			bottom: 0
-			display: flex
-			flex-direction: column
-			justify-content: center
-			left: 0
-			position: fixed
-			right: 0
-			top: 0
-			z-index: $z-index-overlay
+.plan-details
+	display: flex
+	flex-direction: column
 
-			.loader
-				height: 40px
-				width: 40px
+.wnl-overlay
+	align-items: center
+	background: rgba(255, 255, 255, 0.9)
+	bottom: 0
+	display: flex
+	flex-direction: column
+	justify-content: center
+	left: 0
+	position: fixed
+	right: 0
+	top: 0
+	z-index: $z-index-overlay
 
-			.loader-text
-				color: $color-ocean-blue
-				margin-top: $margin-small
+	.loader
+		height: 40px
+		width: 40px
 
-		.views-control
-			display: flex
-			flex-wrap: wrap
-			justify-content: center
-			margin-bottom: $margin-base
+	.loader-text
+		color: $color-ocean-blue
+		margin-top: $margin-small
 
-		.days-info
-			margin-bottom: $margin-small
+.views-control
+	display: flex
+	flex-wrap: wrap
+	justify-content: center
+	margin-bottom: $margin-base
 
-		.days
-			display: flex
-			flex-wrap: wrap
-			justify-content: center
-			margin-bottom: $margin-big
+.days-info
+	margin-bottom: $margin-small
 
-		.default-plan
-			margin-bottom: $margin-base
+.days
+	display: flex
+	flex-wrap: wrap
+	justify-content: center
+	margin-bottom: $margin-big
 
-		.presets-control
-			display: flex
-			flex-wrap: wrap
-			justify-content: center
-			margin-bottom: $margin-big
+.default-plan
+	margin-bottom: $margin-base
 
-		.work-load-control
-			display: flex
-			flex-wrap: wrap
-			justify-content: center
-			margin-bottom: $margin-base
+.presets-control
+	display: flex
+	flex-wrap: wrap
+	justify-content: center
+	margin-bottom: $margin-big
 
-		.dates
-			.date
-				margin-bottom: $margin-big
-				label, .tip
-					display: inline-block
-					text-align: center
-					width: 100%
+.work-load-control
+	display: flex
+	flex-wrap: wrap
+	justify-content: center
+	margin-bottom: $margin-base
 
-		.annotation
-			margin-bottom: $margin-base
-
-		.open-all
-			margin-bottom: $margin-base
-			width: 100%
+.dates
+	.date
+		margin-bottom: $margin-big
+		label, .tip
+			display: inline-block
 			text-align: center
-			overflow-wrap: wrap
-			.level-item
-				width: 100%
-
-		.manual-start-dates
-			margin-bottom: $margin-small
-
-		.accept-plan
-			display: flex
-			justify-content: space-around
-			margin-bottom: $margin-small
-
-		.all-lessons-view
-			margin-bottom: $margin-base
 			width: 100%
-			.all-lessons-annotation
-				width: 100%
-				margin-bottom: $margin-base
+
+.annotation
+	margin-bottom: $margin-base
+
+.open-all
+	margin-bottom: $margin-base
+	width: 100%
+	text-align: center
+	overflow-wrap: wrap
+	.level-item
+		width: 100%
+
+.manual-start-dates
+	margin-bottom: $margin-small
+
+.accept-plan
+	display: flex
+	justify-content: space-around
+	margin-bottom: $margin-small
+
+.all-lessons-view
+	margin-bottom: $margin-base
+	width: 100%
+	.all-lessons-annotation
+		width: 100%
+		margin-bottom: $margin-base
+		text-align: center
+		overflow-wrap: wrap
+		.level-item
+			width: 100%
+
+.groups
+	.groups-list
+		.group
+			margin-bottom: $margin-base
+			.item-toggle
+				color: $color-sky-blue
+				cursor: pointer
 				text-align: center
-				overflow-wrap: wrap
-				.level-item
-					width: 100%
+				text-transform: uppercase
+				margin-bottom: $margin-small
+				width: 100%
+				.icon
+					color: $color-gray
+				.subitems-count
+					color: $color-background-gray
+					font-size: $font-size-minus-2
 
-		.groups
-			.groups-list
-				.group
-					margin-bottom: $margin-base
-					.item-toggle
-						color: $color-sky-blue
-						cursor: pointer
-						text-align: center
-						text-transform: uppercase
-						margin-bottom: $margin-small
-						width: 100%
-						.icon
-							color: $color-gray
-						.subitems-count
-							color: $color-background-gray
-							font-size: $font-size-minus-2
-
-					.subitems
+			.subitems
+				display: flex
+				flex-direction: column
+				margin-bottom: $margin-small
+				.subitem
+					display: flex
+					flex-direction: row-reverse
+					justify-content: space-between
+					margin-bottom: $margin-small
+					margin-top: $margin-small
+					min-height: 35px
+					&.isEven
+						background-color: $color-background-lightest-gray
+					.subitem-name
+						align-self: flex-end
+						color: $color-gray
+						width: 65%
+						&.is-grayed-out
+							color: $color-gray-dimmed
+					.subitem-left-side
+						align-items: center
 						display: flex
-						flex-direction: column
-						margin-bottom: $margin-small
-						.subitem
-							display: flex
-							flex-direction: row-reverse
-							justify-content: space-between
-							margin-bottom: $margin-small
-							margin-top: $margin-small
-							min-height: 35px
-							&.isEven
-								background-color: $color-background-lightest-gray
-							.subitem-name
-								align-self: flex-end
-								color: $color-gray
-								width: 65%
-								&.is-grayed-out
-									color: $color-gray-dimmed
-							.subitem-left-side
-								align-items: center
-								display: flex
-								margin-right: $margin-small
-								.not-accesible
-									color: $color-gray-dimmed
-									font-size: $font-size-plus-1
-									text-align: center
-									cursor: not-allowed
-									min-width: 260px
+						margin-right: $margin-small
+						.not-accesible
+							color: $color-gray-dimmed
+							font-size: $font-size-plus-1
+							text-align: center
+							cursor: not-allowed
+							min-width: 260px
 
 </style>
 

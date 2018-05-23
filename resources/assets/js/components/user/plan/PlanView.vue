@@ -16,16 +16,7 @@
 	</div>
 </template>
 
-<style lang="sass" scoped>
-	.plan-details
-		display: flex
-		flex-direction: column
-</style>
-
 <script>
-	import moment from 'moment';
-	import {mapGetters} from 'vuex'
-	import {first, last} from 'lodash';
 	import LessonsPlanner from './LessonsPlanner';
 	import PlannerGuide from './PlannerGuide';
 

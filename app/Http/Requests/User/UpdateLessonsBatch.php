@@ -12,13 +12,7 @@ class UpdateLessonsBatch extends FormRequest
 		$routeUserId = $this->route()->userId;
 		$userId = $this->user()->id;
 
-		if ((int)$routeUserId === $userId) {
-			return true;
-		} else if ($this->user()->isAdmin()) {
-			return true;
-		} else {
-			return false;
-		}
+		return (int)$routeUserId === $userId || $this->user()->isAdmin();
 	}
 
 	/**

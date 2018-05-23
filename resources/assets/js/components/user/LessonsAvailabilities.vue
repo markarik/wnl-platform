@@ -627,7 +627,7 @@ export default {
 					manual_start_dates: this.manualStartDates,
 					timezone: momentTimezone.tz.guess(),
 				}).then((response) => {
-					this.setStructure()
+					return this.setStructure()
 				}).then(() => {
 					this.isLoading = false
 					this.manualStartDates = []
@@ -648,9 +648,7 @@ export default {
 					timezone: momentTimezone.tz.guess(),
 					preset_active: this.activePreset,
 				}).then((response) => {
-					this.setStructure().then(() => {
-						this.isLoading = false
-					})
+					return this.setStructure()
 					if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
 						this.addAutoDismissableAlert({
 							text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
@@ -664,6 +662,7 @@ export default {
 							timeout: 10000,
 						})
 					}
+				}).then(() => {
 					this.isLoading = false
 				})
 				.catch(error => {
@@ -753,7 +752,7 @@ export default {
 				formatedStartDate: moment(newStartDate[0]).format('LL'),
 			}
 
-			const index = this.manualStartDates.findIndex(() => {
+			const index = this.manualStartDates.findIndex((el) => {
 			 	return el.lessonId === lessonWithStartDate.lessonId
 			})
 

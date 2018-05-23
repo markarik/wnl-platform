@@ -89,6 +89,9 @@ class UserLessonApiController extends ApiController
 				->where('lesson_id', $lesson['lessonId'])
 				->update(['start_date' => Carbon::parse($lesson['startDate'])]);
 		}
+
+		Cache::tags("user-$userId")->flush();
+
 		return $this->respondOk();
 	}
 }

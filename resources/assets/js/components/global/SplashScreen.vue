@@ -12,14 +12,14 @@
 			</p>
 		</div>
 		<div class="has-text-centered" v-else>
-			<p class="title is-4">Dziękujemy za wspólną naukę!</p>
-			<p>Widzisz ten ekran, ponieważ nie posiadasz już dostępu do kursu. 🙂<br>
+			<p class="title is-4">W tym momencie nie posiadasz dostępu do kursu</p>
+			<p>Widzisz ten ekran ponieważ Twoje zamówienie oczekuje na zaksięgowanie wpłaty, lub jesteś uczestnikiem poprzedniej edycji, która dobiegła już końca. 🙂<br>
 			W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
 				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.
 			</p>
 			<p class="margin vertical">
 				<a href="http://wiecejnizlek.pl/zapisy" class="button is-primary is-outlined">
-					Sprawdź zapisy na kolejną edycję
+					Zapisz się na najbliższą edycję
 				</a>
 			</p>
 		</div>

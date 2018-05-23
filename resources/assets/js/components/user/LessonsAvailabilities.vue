@@ -24,6 +24,76 @@
 				</span>
 			</a>
 		</div>
+		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
+			<div class="level wnl-screen-title">
+				<div class="level-left">
+					<div class="level-item big strong">
+						{{ $t('lessonsAvailability.allLessons')}}
+					</div>
+				</div>
+			</div>
+			<div class="level all-lessons-annotation">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.allLessonsAnnotation')}}
+				</div>
+			</div>
+			<div class="groups">
+				<ul class="groups-list" v-if="structure">
+					<li class="group" v-for="(item, index) in groupsWithLessons"
+						:key="index">
+						<span class="item-toggle" @click="toggleItem(item)">
+							<span class="icon is-small">
+								<i class="toggle fa fa-angle-down"
+								:class="{'fa-rotate-180': isOpen(item)}"></i>
+							</span>
+							<span class="item-name">{{item.name}}</span>
+							<span class="subitems-count">
+								({{item.lessons.length}})
+							</span>
+						</span>
+						<ul class="subitems" v-if="isOpen(item)">
+							<li class="subitem" v-for="(subitem, index) in item.lessons"
+								:class="{'isEven': isEven(index)}"
+								:key="index">
+								<span class="subitem-name label"
+								:class="{'is-grayed-out': !subitem.isAccessible}"
+								>{{subitem.name}}</span>
+								<div class="subitem-left-side">
+									<div class="not-accesible" v-if="!subitem.isAccessible">
+									{{ $t('lessonsAvailability.lessonNotAvilable') }}
+									</div>
+									<div class="datepicker" v-else>
+										<wnl-datepicker
+										:class="{'hasColorBackground': isEven(index)}"
+										:value="getStartDate(subitem)"
+										:subitemId="subitem.id"
+										:config="startDateConfig"
+										@onChange="(payload) => onStartDateChange(payload, subitem)"
+										/>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
+				<div class="level wnl-screen-title">
+					<div class="level-item">
+						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+					</div>
+				</div>
+				<div class="level wnl-screen-title">
+					<div class="level-item">
+						<div class="dates-list">
+							<div class="date" v-for="manualStartDate in manualStartDates">
+								{{ manualStartDate.lessonName }} - {{manualStartDate.formatedStartDate}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="default-plan" v-if="activeView === 'default'">
 			<div class="level">
 				<div class="level-item">
@@ -191,71 +261,6 @@
 			</div>
 			<span>{{ $t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>
-		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.allLessons')}}
-					</div>
-				</div>
-			</div>
-			<div class="groups">
-				<ul class="groups-list" v-if="structure">
-					<li class="group" v-for="(item, index) in groupsWithLessons"
-						:key="index">
-						<span class="item-toggle" @click="toggleItem(item)">
-							<span class="icon is-small">
-								<i class="toggle fa fa-angle-down"
-								:class="{'fa-rotate-180': isOpen(item)}"></i>
-							</span>
-							<span class="item-name">{{item.name}}</span>
-							<span class="subitems-count">
-								({{item.lessons.length}})
-							</span>
-						</span>
-						<ul class="subitems" v-if="isOpen(item)">
-							<li class="subitem" v-for="(subitem, index) in item.lessons"
-								:class="{'isEven': isEven(index)}"
-								:key="index">
-								<span class="subitem-name label"
-								:class="{'is-grayed-out': !subitem.isAccessible}"
-								>{{subitem.name}}</span>
-								<div class="subitem-left-side">
-									<div class="not-accesible" v-if="!subitem.isAccessible">
-									{{ $t('lessonsAvailability.lessonNotAvilable') }}
-									</div>
-									<div class="datepicker" v-else>
-										<wnl-datepicker
-										:class="{'hasColorBackground': isEven(index)}"
-										:value="getStartDate(subitem)"
-										:subitemId="subitem.id"
-										:config="startDateConfig"
-										@onChange="(payload) => onStartDateChange(payload, subitem)"
-										/>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
-				<div class="level wnl-screen-title">
-					<div class="level-item">
-						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
-					</div>
-				</div>
-				<div class="level wnl-screen-title">
-					<div class="level-item">
-						<div class="dates-list">
-							<div class="date" v-for="manualStartDate in manualStartDates">
-								{{ manualStartDate.lessonName }} - {{manualStartDate.formatedStartDate}}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div class="accept-plan">
 			<a
 				@click="acceptPlan"
@@ -349,8 +354,16 @@
 			justify-content: space-around
 			margin-bottom: $margin-small
 
-		.lessons-view
+		.all-lessons-view
 			margin-bottom: $margin-base
+			width: 100%
+			.all-lessons-annotation
+				width: 100%
+				margin-bottom: $margin-base
+				text-align: center
+				overflow-wrap: wrap
+				.level-item
+					width: 100%
 
 		.groups
 			.groups-list
@@ -514,10 +527,10 @@ export default {
 		},
 		views() {
 			return {
-				presetsView: 'lessonsAvailability.views.presetsView',
-				default: 'lessonsAvailability.views.default',
-				openAll: 'lessonsAvailability.views.openAll',
 				lessonsView: 'lessonsAvailability.views.lessonsView',
+				default: 'lessonsAvailability.views.default',
+				presetsView: 'lessonsAvailability.views.presetsView',
+				openAll: 'lessonsAvailability.views.openAll',
 			}
 		},
 		availableWorkLoads() {

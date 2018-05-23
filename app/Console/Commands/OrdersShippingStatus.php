@@ -13,7 +13,7 @@ class OrdersShippingStatus extends Command
 	 * @var string
 	 */
 	protected $signature = 'orders:shipping
-		{status : A new status for orders shipping (new, exported or delivered)}
+		{status : A new status for orders shipping (new, ordered, in_progress, or delivered)}
 		{ids : Comma separated list of ids of orders to affect}
 	';
 
@@ -53,7 +53,7 @@ class OrdersShippingStatus extends Command
 		$orders = Order::with(['user', 'product'])
 			->whereIn('id', $idsArray);
 
-		if (!$orders) {
+		if (!$orders->count()) {
 			$this->error("Sorry, it seems that there are no orders with given IDs in the database.");
 			exit;
 		}

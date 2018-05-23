@@ -34,7 +34,7 @@ export const lessonsAvailability = {
 		dateToDate: 'Od daty do daty',
 	},
 	views: {
-		default: 'Rekomendowany plan',
+		default: 'Przywróć domyślny plan',
 		presetsView: 'Wygeneruj plan automatycznie',
 		lessonsView: 'Ustaw plan ręcznie',
 		openAll: 'Otwórz wszystkie lekcje',

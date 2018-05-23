@@ -18,6 +18,7 @@
 
 <script>
 	import LessonsPlanner from './LessonsPlanner';
+	import PlannerGuarantee from './PlanGuarantee.vue';
 	import PlannerGuide from './PlannerGuide';
 
 	export default {
@@ -30,9 +31,13 @@
 						isActive: true
 					},
 					{
-						title: 'Jak ustawić plan?',
+						title: 'Jak zmienić plan?',
 						component: PlannerGuide,
-					}
+					},
+					{
+						title: 'Gwarancja Satysfakcji',
+						component: PlannerGuarantee,
+					},
 				]
 			}
 		},
@@ -59,4 +64,3 @@
 		}
 	}
 </script>
-

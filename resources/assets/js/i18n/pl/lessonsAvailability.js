@@ -27,7 +27,7 @@ export const lessonsAvailability = {
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
 	allLessonsAnnotation: 'W tym miejscu znajdują się wszystkie daty otwarcia lekcji według Twojego aktualnego planu. Aby zmienić datę rozwiń odpowiednią grupę i wybierz odpowiadający Ci termin. By zastosować dokonane zmiany kliknij "Akceptuję plan".',
-	alertSuccess: 'Udało się zmienić datę! :)',
+	alertSuccess: 'Udało się zmienić plan! :)',
 	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz...',
 	presets: {
 		daysPerLesson: 'Ile dni na lekcję?',

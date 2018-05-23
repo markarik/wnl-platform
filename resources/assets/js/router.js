@@ -95,7 +95,7 @@ let routes = [
 			{
 				name: 'lessons-availabilites',
 				path: 'availabilities',
-				component: require('js/components/user/LessonsAvailabilities.vue'),
+				component: require('js/components/user/plan/PlanView.vue'),
 			},
 			{
 				name: 'progress-reset',

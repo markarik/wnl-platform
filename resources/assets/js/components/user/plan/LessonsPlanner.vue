@@ -4,6 +4,15 @@
 			<span class="loader"></span>
 			<span class="loader-text">{{ $t('lessonsAvailability.loader') }}</span>
 		</div>
+		<article class="message is-info">
+			<div class="message-header">
+				<p>Twój Plan Pracy</p>
+			</div>
+			<div class="message-body plan-details">
+				<span>Twój obecny plan pracy zakłada naukę od <strong>{{planStartDate}}</strong> do <strong>{{planEndDate}}</strong>.</span>
+				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Twój Plan Pracy > Ustaw plan ręcznie.</span>
+			</div>
+		</article>
 		<div class="views-control">
 			<a v-for="name, view in views"
 				 class="panel-toggle view"
@@ -371,7 +380,6 @@
 						width: 100%
 						.icon
 							color: $color-gray
-						.item-name
 						.subitems-count
 							color: $color-background-gray
 							font-size: $font-size-minus-2
@@ -413,8 +421,7 @@
 	import { resource } from 'js/utils/config'
 	import { getApiUrl } from 'js/utils/env'
 	import Datepicker from 'js/components/global/Datepicker'
-	import { pl } from 'flatpickr/dist/l10n/pl.js'
-	import { isEmpty } from 'lodash'
+	import { isEmpty, first, last } from 'lodash'
 	import moment from 'moment'
 	import momentTimezone from 'moment-timezone'
 
@@ -446,7 +453,6 @@
 				defaultDateConfig: {
 					altInput: true,
 					disableMobile: true,
-					locale: pl,
 				},
 			}
 		},
@@ -477,6 +483,21 @@
 				return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
 					return this.completedLessons.includes(Number(requiredLesson))
 				}).length
+			},
+			sortedUserLessons() {
+				return this.userLessons.sort((lessonA, lessonB) => {
+					return lessonA.startDate - lessonB.startDate
+				})
+			},
+			planStartDate() {
+				if (!first(this.sortedUserLessons)) return
+
+				return moment(first(this.sortedUserLessons).startDate * 1000).format('LL')
+			},
+			planEndDate() {
+				if (!last(this.sortedUserLessons)) return
+
+				return moment(last(this.sortedUserLessons).startDate * 1000).format('LL')
 			},
 			minimumEndDate() {
 				return moment(this.startDate).add(Math.ceil(this.inProgressLessonsLength * 7 / this.workDays.length), 'days').toDate()

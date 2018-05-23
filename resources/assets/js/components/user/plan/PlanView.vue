@@ -1,51 +1,69 @@
 <template>
 	<div class="scrollable-main-container">
-		<div class="level wnl-screen-title">
-			<div class="level-left">
-				<div class="level-item big strong">
-					{{ $t('lessonsAvailability.header') }}
-				</div>
-			</div>
+		<div class="level wnl-screen-title tabs">
+			<ul>
+				<li
+					v-for="tab in tabs"
+					@click="onTabSelect(tab)"
+					:class="[tab.isActive ? 'is-active' : '', 'big', 'strong']"
+					:key="tab.title"
+				>
+					<a>{{tab.title}}</a>
+				</li>
+			</ul>
 		</div>
-		<article class="message is-info">
-			<div class="message-header">
-				<p>Twój Plan Pracy</p>
-			</div>
-			<div class="message-body">
-				<span>Twój obecny plan pracy zakłada naukę od <strong>{{planStartDate}}</strong> do <strong>{{planEndDate}}</strong>.</span>
-				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Ustaw plan ręcznie.</span>
-			</div>
-		</article>
-		<wnl-lessons-planner/>
+		<component :is="activeView"/>
 	</div>
 </template>
+
+<style lang="sass" scoped>
+	.plan-details
+		display: flex
+		flex-direction: column
+</style>
 
 <script>
 	import moment from 'moment';
 	import {mapGetters} from 'vuex'
 	import {first, last} from 'lodash';
 	import LessonsPlanner from './LessonsPlanner';
+	import PlannerGuide from './PlannerGuide';
 
 	export default {
-		components: {
-			'wnl-lessons-planner': LessonsPlanner
+		data() {
+			return {
+				tabs: [
+					{
+						title: 'Twój Plan Pracy',
+						component: LessonsPlanner,
+						isActive: true
+					},
+					{
+						title: 'Jak ustawić plan?',
+						component: PlannerGuide,
+					}
+				]
+			}
 		},
 		computed: {
-			...mapGetters('course', ['userLessons']),
-			sortedUserLessons() {
-				return this.userLessons.sort((lessonA, lessonB) => {
-					return lessonA.startDate - lessonB.startDate
-				})
-			},
-			planStartDate() {
-				if (!first(this.sortedUserLessons)) return
-
-				return moment(first(this.sortedUserLessons).startDate * 1000).format('LL')
-			},
-			planEndDate() {
-				if (!last(this.sortedUserLessons)) return
-
-				return moment(last(this.sortedUserLessons).startDate * 1000).format('LL')
+			activeView() {
+				return this.tabs.find(tab => tab.isActive).component
+			}
+		},
+		methods: {
+			onTabSelect(selectedTab) {
+				this.tabs = this.tabs.map(tab => {
+					if (selectedTab.title === tab.title) {
+						return {
+							...tab,
+							isActive: true
+						}
+					}
+					return {
+						...tab,
+						isActive: false
+					}
+				});
 			}
 		}
 	}

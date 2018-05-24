@@ -52,11 +52,12 @@ const getters = {
 		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_IN_PROGRESS
 	},
-	getFirstLessonIdInProgress: (state) => (courseId) => {
+	getFirstLessonIdInProgress: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lessons = state.courses[courseId].lessons
 
 		for (var lessonId in lessons) {
-			if (lessons[lessonId].status === STATUS_IN_PROGRESS) {
+			var lesson = rootGetters['course/getLesson'](lessonId)
+			if (lessons[lessonId].status === STATUS_IN_PROGRESS && lesson.isAvailable === true) {
 				return lessonId
 			}
 		}

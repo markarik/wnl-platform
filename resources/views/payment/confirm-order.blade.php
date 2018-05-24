@@ -164,6 +164,12 @@
 						</div>
 					</div>
 				</section>
+			@else
+				<section class="has-text-centered">
+					<div class="strong margin top">
+						Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.
+					</div>
+				</section>
 			@endif
 		@endif
 	</div>

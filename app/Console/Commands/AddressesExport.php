@@ -20,6 +20,7 @@ class AddressesExport extends Command
 		{--I|ids= : Comma separated list of ids of orders to export}
 		{--P|products= : Comma separated list of products to export}
 		{--F|from= : A date from which you want the export}
+		{--S|ship= : Should the script mark orders as exported to shipping? Set to 1 to do it.}
 	';
 
 	/**
@@ -49,14 +50,17 @@ class AddressesExport extends Command
 		$products = $this->option('products');
 		$ids = $this->option('ids');
 		$from = $this->option('from');
+		$ship = intval($this->option('ship'));
 
 		if ($ids) {
 			$ids = explode(',', $ids);
 			$orders = Order::where('paid', 1)
+				->where('shipping_status', 'new')
 				->whereIn('id', $ids);
 		} elseif ($products) {
 			$products = explode(',', $products);
 			$orders = Order::where('paid', 1)
+				->where('shipping_status', 'new')
 				->whereIn('product_id', $products);
 		} else {
 			$this->error('Specify IDs or ProductIDs to export orders.');
@@ -65,6 +69,10 @@ class AddressesExport extends Command
 		if ($from) {
 			$from = Carbon::createFromFormat('Y-m-d H:i:s', $from);
 			$orders = $orders->where('created_at', '>', $from);
+		}
+
+		if ($ship===1) {
+			$orders->update(['shipping_status' => 'ordered']);
 		}
 
 		$orders = $orders->get();

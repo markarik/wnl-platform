@@ -1,6 +1,8 @@
 export const lessonsAvailability = {
 	loader: 'Ładuję plan...',
 	header: 'Plan pracy',
+	viewsExplanation: 'Zmień swoj plan pracy',
+	viewsDropdownInfo: 'Rozwiń, aby podejrzeć daty lekcji',
 	lessonsToBeChangedList: 'Lista lekcji, których dni otwarcia zostały zmienione:',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',

@@ -11,6 +11,13 @@
 				</div>
 			</div>
 		</div>
+		<div class="wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					{{ $t('lessonsAvailability.viewsExplanation') }}
+				</div>
+			</div>
+		</div>
 		<div class="views-control">
 			<a v-for="name, view in views"
 				class="panel-toggle view"
@@ -25,16 +32,14 @@
 			</a>
 		</div>
 		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.allLessons')}}
-					</div>
-				</div>
-			</div>
-			<div class="level all-lessons-annotation">
+			<div class="level-left all-lessons-annotation">
 				<div class="level-item">
 					{{ $t('lessonsAvailability.allLessonsAnnotation')}}
+				</div>
+			</div>
+			<div class="level-left">
+				<div class="level-item big strong">
+					{{ $t('lessonsAvailability.viewsDropdownInfo') }}
 				</div>
 			</div>
 			<div class="groups">
@@ -360,7 +365,6 @@
 			.all-lessons-annotation
 				width: 100%
 				margin-bottom: $margin-base
-				text-align: center
 				overflow-wrap: wrap
 				.level-item
 					width: 100%

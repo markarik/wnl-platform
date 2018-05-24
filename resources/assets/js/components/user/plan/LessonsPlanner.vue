@@ -27,9 +27,14 @@
 			</a>
 		</div>
 		<div class="all-lessons-view"  v-if="activeView === 'lessonsView'">
-			<div class="level-left all-lessons-annotation">
-				<div class="level-item">
-					{{ $t('lessonsAvailability.allLessonsAnnotation')}}
+			<div class="level-left all-lessons-annotation-header">
+				<div class="level">
+					{{ $t('lessonsAvailability.allLessonsAnnotation.header')}}
+				</div>
+			</div>
+			<div class="level-left all-lessons-annotation-explanation">
+				<div class="level">
+					{{ $t('lessonsAvailability.allLessonsAnnotation.explanation')}}
 				</div>
 			</div>
 			<div class="level-left">
@@ -359,7 +364,13 @@
 .all-lessons-view
 	margin-bottom: $margin-base
 	width: 100%
-	.all-lessons-annotation
+	.all-lessons-annotation-header
+		width: 100%
+		margin-bottom: $margin-base
+		overflow-wrap: wrap
+		.level-item
+			width: 100%
+	.all-lessons-annotation-explanation
 		width: 100%
 		margin-bottom: $margin-base
 		overflow-wrap: wrap

@@ -26,7 +26,7 @@ export const lessonsAvailability = {
 	},
 	lessonNotAvilable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
-	allLessonsAnnotation: 'W tym miejscu znajdują się wszystkie daty otwarcia lekcji według Twojego aktualnego planu. Aby zmienić datę rozwiń odpowiednią grupę i wybierz odpowiadający Ci termin. By zastosować dokonane zmiany kliknij "Akceptuję plan".',
+	allLessonsAnnotation: 'W tym miejscu znajdują się wszystkie daty otwarcia lekcji, według Twojego aktualnego planu. Jeżeli chcesz zmienić datę: rozwiń odpowiedni przedmiot i wybierz odpowiadający Ci termin. Żeby zapisać zmiany - kliknij "Akceptuję plan" na dole strony.',
 	alertSuccess: 'Udało się zmienić plan! :)',
 	alertError: 'Coś poszło nie tak :( Spróbuj jeszcze raz...',
 	presets: {
@@ -34,7 +34,7 @@ export const lessonsAvailability = {
 		dateToDate: 'Od daty do daty',
 	},
 	views: {
-		default: 'Przywróć domyślny plan',
+		default: 'Rekomendowany plan',
 		presetsView: 'Wygeneruj plan automatycznie',
 		lessonsView: 'Ustaw plan ręcznie',
 		openAll: 'Otwórz wszystkie lekcje',

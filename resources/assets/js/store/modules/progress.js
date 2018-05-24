@@ -55,14 +55,10 @@ const getters = {
 	getFirstLessonIdInProgress: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lessons = state.courses[courseId].lessons
 
-		for (var lessonId in lessons) {
-			var lesson = rootGetters['course/getLesson'](lessonId)
-			if (lessons[lessonId].status === STATUS_IN_PROGRESS && lesson.isAvailable === true) {
-				return lessonId
-			}
-		}
-
-		return 0
+		return Object.keys(lessons).find((lessonId) => {
+			const lesson = rootGetters['course/getLesson'](lessonId)
+			return lessons[lessonId].status === STATUS_IN_PROGRESS && lesson.isAvailable === true
+		}) || 0
 	},
 	isLessonComplete: (state, getters) => (courseId, lessonId) => {
 		return getters.wasLessonStarted(courseId, lessonId) &&

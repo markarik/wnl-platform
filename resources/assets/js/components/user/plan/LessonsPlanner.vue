@@ -15,7 +15,7 @@
 		</article>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
-				<div class="level-item big strong">
+				<div class="big strong">
 					{{ $t('lessonsAvailability.viewsExplanation') }}
 				</div>
 			</div>
@@ -350,7 +350,7 @@
 	display: inline-flex
 	flex-direction: column
 	justify-content: flex-start
-	margin-bottom: $margin-big
+	margin-bottom: $margin-base
 	.panel-toggle:last-child
 		margin-right: $margin-small
 

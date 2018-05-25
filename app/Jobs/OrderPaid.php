@@ -49,7 +49,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleCoupon()
 	{
-		\Log::notice("OrderPaid: handleCoupon called for order #$this->order->id");
+		\Log::notice("OrderPaid: handleCoupon called for order #{$this->order->id}");
 		$order = $this->order;
 
 		if ($order->coupon && $order->coupon->times_usable > 0) {
@@ -60,7 +60,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function sendConfirmation()
 	{
-		\Log::notice("OrderPaid: sendConfirmation called for order #$this->order->id");
+		\Log::notice("OrderPaid: sendConfirmation called for order #{$this->order->id}");
 		$order = $this->order;
 
 		\Log::debug('Issuing invoice and sending order confirmation.');
@@ -72,7 +72,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleStudyBuddy()
 	{
-		\Log::notice("OrderPaid: handleStudyBuddy called for order #$this->order->id");
+		\Log::notice("OrderPaid: handleStudyBuddy called for order #{$this->order->id}");
 		dispatch(new OrderStudyBuddy($this->order));
 	}
 
@@ -91,7 +91,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleUserSubscription()
 	{
-		\Log::notice("OrderPaid: handleUserSubscription called for order #$this->order->id");
+		\Log::notice("OrderPaid: handleUserSubscription called for order #{$this->order->id}");
 		$product = $this->order->product;
 		$user = $this->order->user;
 
@@ -115,7 +115,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleUserLessons()
 	{
-		\Log::notice("OrderPaid: handleUserLessons called for order #$this->order->id");
+		\Log::notice("OrderPaid: handleUserLessons called for order #{$this->order->id}");
 		$lessons = $this->order->product->lessons;
 		$user = $this->order->user;
 
@@ -136,7 +136,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleInstalments()
 	{
-		\Log::notice("OrderPaid: handleInstalments called for order #$this->order->id");
+		\Log::notice("OrderPaid: handleInstalments called for order #{$this->order->id}");
 		if ($this->order->method !== 'instalments') return;
 
 		$this->order->generatePaymentSchedule();

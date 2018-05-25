@@ -184,7 +184,7 @@
 						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId, beforeLimit: 10}})
 					})
 					.then(({messages, pagination}) => {
-						this.messages = messages
+						this.messages = [...messages]
 						this.pagination = pagination
 						return this.$socketJoinRoom(this.currentRoom.id, pointer)
 					})

@@ -30,6 +30,8 @@ export default {
 					return 'is-success'
 				case 'info':
 					return 'is-info'
+					case 'warning':
+					return 'is-warning'
 				default:
 					return 'is-primary'
 			}

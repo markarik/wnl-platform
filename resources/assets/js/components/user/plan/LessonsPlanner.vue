@@ -13,6 +13,13 @@
 				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Twój Plan Pracy > Ustaw plan ręcznie.</span>
 			</div>
 		</article>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					{{ $t('lessonsAvailability.viewsExplanation') }}
+				</div>
+			</div>
+		</div>
 		<div class="views-control">
 			<a v-for="(name, view) in views"
 				 class="panel-toggle view"
@@ -35,6 +42,32 @@
 			<div class="level-left all-lessons-annotation-explanation">
 				<div class="level">
 					{{ $t('lessonsAvailability.allLessonsAnnotation.explanation')}}
+				</div>
+			</div>
+			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
+				<div class="level-left">
+					<div class="level-item">
+						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+					</div>
+				</div>
+				<table class="table is-fullwidth">
+					<tr>
+						<th><abbr title="Lesson name">Lekcja</abbr></th>
+						<th><abbr title="Old date">Stara data</abbr></th>
+						<th><abbr title="New date">Nowa data</abbr></th>
+					</tr>
+					<tr v-for="manualStartDate in manualStartDates">
+						<th title="Lesson name">{{ manualStartDate.lessonName }}</th>
+						<th title="Old date">{{ manualStartDate.oldDate }}</th>
+						<th title="New date">{{ manualStartDate.formatedStartDate }}</th>
+					</tr>
+				</table>
+				<div class="accept-plan">
+					<a
+						@click="acceptPlan"
+						class="button button is-primary is-outlined is-big"
+					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+					</a>
 				</div>
 			</div>
 			<div class="level-left">
@@ -83,26 +116,35 @@
 				</ul>
 			</div>
 			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
-				<div class="level wnl-screen-title">
+				<div class="level-left">
 					<div class="level-item">
 						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
 					</div>
 				</div>
-				<div class="level wnl-screen-title">
-					<div class="level-item">
-						<div class="dates-list">
-							<div class="date" v-for="manualStartDate in manualStartDates">
-								{{ manualStartDate.lessonName }} - {{manualStartDate.formatedStartDate}}
-							</div>
-						</div>
-					</div>
-				</div>
+				<table class="table is-fullwidth">
+					<tr>
+						<th>Lekcja</th>
+						<th>Stara data</th>
+						<th>Nowa data</th>
+					</tr>
+					<tr v-for="manualStartDate in manualStartDates">
+						<th>{{ manualStartDate.lessonName }}</th>
+						<th>{{ manualStartDate.oldDate }}</th>
+						<th>{{ manualStartDate.formatedStartDate }}</th>
+					</tr>
+				</table>
+
 			</div>
 		</div>
 		<div class="default-plan" v-if="activeView === 'default'">
 			<div class="level">
 				<div class="level-item">
-					{{ $t('lessonsAvailability.secondSection.defaultPlan')}}
+					{{ $t('lessonsAvailability.defaultPlan.header')}}
+				</div>
+			</div>
+			<div class="level">
+				<div class="level-item">
+					{{ $t('lessonsAvailability.defaultPlan.annotation')}}
 				</div>
 			</div>
 		</div>
@@ -305,10 +347,13 @@
 		margin-top: $margin-small
 
 .views-control
-	display: flex
-	flex-wrap: wrap
-	justify-content: center
-	margin-bottom: $margin-base
+	display: inline-flex
+	flex-direction: column
+	justify-content: flex-start
+	margin-bottom: $margin-big
+	.panel-toggle:last-child
+		margin-right: $margin-small
+
 
 .days-info
 	margin-bottom: $margin-small
@@ -321,6 +366,8 @@
 
 .default-plan
 	margin-bottom: $margin-base
+	.level-item
+		width: 100%
 
 .presets-control
 	display: flex
@@ -443,7 +490,7 @@
 		data() {
 			return {
 				isLoading: false,
-				openGroups: [],
+				openGroups: [1],
 				availablePresets: ['daysPerLesson', 'dateToDate'],
 				activePreset: 'dateToDate',
 				startDate: new Date(),
@@ -696,7 +743,7 @@
 						if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
 							this.addAutoDismissableAlert({
 								text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
-								type: 'error',
+								type: 'warning',
 								timeout: 10000,
 							})
 						} else {
@@ -781,10 +828,12 @@
 			},
 			onStartDateChange(newStartDate, subitem) {
 				if (!newStartDate[0]) return
+				console.log(subitem);
 
 				const lessonWithStartDate = {
 					lessonId: subitem.id,
 					lessonName: subitem.name,
+					oldDate: moment(subitem.startDate * 1000).format('LL'),
 					startDate: newStartDate[0],
 					formatedStartDate: moment(newStartDate[0]).format('LL'),
 				}

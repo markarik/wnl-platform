@@ -13,7 +13,7 @@
 				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Twój Plan Pracy > Ustaw plan ręcznie.</span>
 			</div>
 		</article>
-		<div class="level wnl-screen-title">
+		<div class="wnl-screen-title">
 			<div class="level-left">
 				<div class="big strong">
 					{{ $t('lessonsAvailability.viewsExplanation') }}
@@ -56,7 +56,7 @@
 						<th><abbr title="Old date">Stara data</abbr></th>
 						<th><abbr title="New date">Nowa data</abbr></th>
 					</tr>
-					<tr v-for="manualStartDate in manualStartDates">
+					<tr v-for="manualStartDate, index in manualStartDates" :key="index">
 						<th title="Lesson name">{{ manualStartDate.lessonName }}</th>
 						<th title="Old date">{{ manualStartDate.oldDate }}</th>
 						<th title="New date">{{ manualStartDate.formatedStartDate }}</th>
@@ -297,11 +297,9 @@
 		</div>
 		<div class="open-all" v-if="activeView === 'openAll'">
 			<div class="level">
-				<div class="level-item">
-					{{ $t('lessonsAvailability.openAllLessons.annotation') }}
-				</div>
+				{{ $t('lessonsAvailability.openAllLessons.annotation') }}
 			</div>
-			<div class="level-item">
+			<div class="level">
 				{{ $t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
 				{{ this.completedLessonsLength }}/{{ this.availableLength }}.
 				wyświetli się: {{ this.completedLessonsLength }}/{{this.requiredLength}}.
@@ -348,7 +346,7 @@
 
 .views-control
 	display: inline-flex
-	flex-direction: column
+	flex-direction: row
 	justify-content: flex-start
 	margin-bottom: $margin-base
 	.panel-toggle:last-child
@@ -395,7 +393,6 @@
 .open-all
 	margin-bottom: $margin-base
 	width: 100%
-	text-align: center
 	overflow-wrap: wrap
 	.level-item
 		width: 100%
@@ -828,7 +825,6 @@
 			},
 			onStartDateChange(newStartDate, subitem) {
 				if (!newStartDate[0]) return
-				console.log(subitem);
 
 				const lessonWithStartDate = {
 					lessonId: subitem.id,

@@ -2,8 +2,8 @@ export const lessonsAvailability = {
 	loader: 'Ładuję plan...',
 	header: 'Plan pracy',
 	viewsExplanation: 'Zmień swoj plan pracy',
-	viewsDropdownInfo: 'Rozwiń, aby podejrzeć daty lekcji',
-	lessonsToBeChangedList: 'Lista lekcji, których dni otwarcia zostały zmienione:',
+	viewsDropdownInfo: 'Rozwiń, aby podejrzeć daty otwarcia lekcji',
+	lessonsToBeChangedList: 'Lista zmienionych dat:',
 	sections: {
 		workDays: '1. Dni tygodnia, w których chcesz pracować.',
 		availablePresets: '2. Dostępne plany nauki.',
@@ -12,8 +12,11 @@ export const lessonsAvailability = {
 	secondSection: {
 		daysPerLesson: 'Ile dni chcesz poświęcić na jedną lekcję?',
 		startDate: 'Kiedy chcesz zacząć naukę?',
-		defaultPlan: 'Ustaw plan zgodny z planem pracy!',
 		dateToDate: 'Wybierz zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan lekcji!',
+	},
+	defaultPlan: {
+		header: 'Kliknij AKCEPTUJ PLAN!, aby przywrócić domyślny plan dla obecnej edycji kursu. Domyślny plan to ten, który wydrukowany dotarł do Ciebie w przesyłce. :)',
+		annotation: 'Przywrócenie domyślnego planu pracy w pierwszym dniu kursu lub wcześniej zapewnia zachowanie Gwarancji Satysfakcji, niezależnie od wcześniejszych działań na platformie.'
 	},
 	buttons: {
 		oneDayPerLesson: 'Jedna lekcja na dzień',
@@ -39,7 +42,7 @@ export const lessonsAvailability = {
 		dateToDate: 'Od daty do daty',
 	},
 	views: {
-		default: 'Rekomendowany plan',
+		default: 'Przywróć domyślny plan',
 		presetsView: 'Wygeneruj plan automatycznie',
 		lessonsView: 'Ustaw plan ręcznie',
 		openAll: 'Otwórz wszystkie lekcje',

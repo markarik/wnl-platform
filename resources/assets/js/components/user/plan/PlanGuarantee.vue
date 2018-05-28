@@ -43,7 +43,7 @@
 
 		<ul>
 			<li>Plan rozłożony od 15 maja do 2 września, zamiast od 11 czerwca do 2 września (lub od 15 października do 7 lutego, zamiast od 4 listopada do 7 lutego), bez zmiany kolejności lekcji,</li>
-			<li>Plan zakładający 2 dnia na każdą lekcję,</li>
+			<li>Plan zakładający 2 dni na każdą lekcję,</li>
 			<li>Plan, w którym najpierw przerabiamy Ginekologię, a później resztę kursu.</li>
 		</ul>
 

@@ -56,7 +56,7 @@
 						<th><abbr title="Old date">Stara data</abbr></th>
 						<th><abbr title="New date">Nowa data</abbr></th>
 					</tr>
-					<tr v-for="manualStartDate, index in manualStartDates" :key="index">
+					<tr v-for="(manualStartDate, index) in manualStartDates" :key="index">
 						<th title="Lesson name">{{ manualStartDate.lessonName }}</th>
 						<th title="Old date">{{ manualStartDate.oldDate }}</th>
 						<th title="New date">{{ manualStartDate.formatedStartDate }}</th>
@@ -127,7 +127,7 @@
 						<th>Stara data</th>
 						<th>Nowa data</th>
 					</tr>
-					<tr v-for="manualStartDate in manualStartDates">
+					<tr v-for="(manualStartDate, index) in manualStartDates" :key="index">
 						<th>{{ manualStartDate.lessonName }}</th>
 						<th>{{ manualStartDate.oldDate }}</th>
 						<th>{{ manualStartDate.formatedStartDate }}</th>
@@ -346,7 +346,6 @@
 
 .views-control
 	display: inline-flex
-	flex-direction: row
 	justify-content: flex-start
 	margin-bottom: $margin-base
 	.panel-toggle:last-child

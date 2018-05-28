@@ -79,7 +79,6 @@
 	import {nextTick} from 'vue'
 	import {
 		SOCKET_EVENT_USER_SENT_MESSAGE,
-		SOCKET_EVENT_MESSAGE_PROCESSED,
 		SOCKET_EVENT_LEAVE_ROOM
 	} from 'js/plugins/socket'
 

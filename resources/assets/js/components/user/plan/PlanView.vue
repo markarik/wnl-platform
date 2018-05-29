@@ -71,6 +71,7 @@
 	import Dropdown from 'js/components/global/Dropdown'
 
 	export default {
+		name: 'PlanView',
 		components: { 'wnl-dropdown': Dropdown },
 		data() {
 			return {

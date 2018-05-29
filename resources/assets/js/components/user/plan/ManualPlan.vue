@@ -1,9 +1,6 @@
 <template>
 	<div>
-		<div class="wnl-overlay" v-if="isLoading">
-			<span class="loader"></span>
-			<span class="loader-text">{{ $t('lessonsAvailability.loader') }}</span>
-		</div>
+		<wnl-text-overlay :isLoading="isLoading" :text="$t('lessonsAvailability.loader')"/>
 		<div class="all-lessons-view">
 			<div class="level-left all-lessons-annotation-header">
 				<div class="level">
@@ -119,27 +116,6 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-overlay
-		align-items: center
-		background: rgba(255, 255, 255, 0.9)
-		bottom: 0
-		display: flex
-		flex-direction: column
-		justify-content: center
-		left: 0
-		position: fixed
-		right: 0
-		top: 0
-		z-index: $z-index-overlay
-
-		.loader
-			height: 40px
-			width: 40px
-
-		.loader-text
-			color: $color-ocean-blue
-			margin-top: $margin-small
-
 	.manual-start-dates
 		margin-bottom: $margin-small
 
@@ -219,6 +195,7 @@
 </style>
 
 <script>
+	import TextOverlay from 'js/components/global/TextOverlay.vue'
 	import Datepicker from 'js/components/global/Datepicker'
 	import { mapGetters, mapActions } from 'vuex'
 	import { resource } from 'js/utils/config'
@@ -230,6 +207,7 @@
 	export default {
 		name: 'ManualPlan',
 		components: {
+			'wnl-text-overlay': TextOverlay,
 			'wnl-datepicker': Datepicker,
 		},
 		data() {
@@ -244,6 +222,10 @@
 				alertError: {
 					text: this.$i18n.t('lessonsAvailability.alertError'),
 					type: 'error',
+				},
+				defaultDateConfig: {
+					altInput: true,
+					disableMobile: true,
 				},
 			}
 		},
@@ -270,6 +252,13 @@
 					}
 				})
 			},
+			sortedManualStartDates() {
+				return this.manualStartDates.sort((a, b) => {
+					const dateA = new Date(a.startDate)
+					const dateB = new Date(b.startDate)
+					return dateA - dateB
+				})
+			},
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
@@ -292,13 +281,6 @@
 			},
 			isOpen(item) {
 				return this.openGroups.indexOf(item.id) > -1
-			},
-			sortedManualStartDates() {
-				return this.manualStartDates.sort((a, b) => {
-					const dateA = new Date(a.startDate)
-					const dateB = new Date(b.startDate)
-					return dateA - dateB
-				})
 			},
 			onStartDateChange(newStartDate, subitem) {
 				if (!newStartDate[0]) return

@@ -1,9 +1,6 @@
 <template>
 	<div>
-		<div class="wnl-overlay" v-if="isLoading">
-			<span class="loader"></span>
-			<span class="loader-text">{{ $t('lessonsAvailability.loader') }}</span>
-		</div>
+		<wnl-text-overlay :isLoading="isLoading" :text="$t('lessonsAvailability.loader')"/>
 		<div class="open-all">
 			<div class="level">
 				{{ $t('lessonsAvailability.openAllLessons.annotation') }}
@@ -28,27 +25,6 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-overlay
-		align-items: center
-		background: rgba(255, 255, 255, 0.9)
-		bottom: 0
-		display: flex
-		flex-direction: column
-		justify-content: center
-		left: 0
-		position: fixed
-		right: 0
-		top: 0
-		z-index: $z-index-overlay
-
-		.loader
-			height: 40px
-			width: 40px
-
-		.loader-text
-			color: $color-ocean-blue
-			margin-top: $margin-small
-
 	.open-all
 		margin-bottom: $margin-base
 		width: 100%
@@ -63,12 +39,16 @@
 </style>
 
 <script>
+	import TextOverlay from 'js/components/global/TextOverlay.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
 	import momentTimezone from 'moment-timezone'
 
 	export default {
 		name: 'OpenAllPlan',
+		components: {
+			'wnl-text-overlay': TextOverlay,
+		},
 		data() {
 			return {
 				isLoading: false,

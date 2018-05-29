@@ -1,9 +1,6 @@
 <template>
 	<div>
-		<div class="wnl-overlay" v-if="isLoading">
-			<span class="loader"></span>
-			<span class="loader-text">{{ $t('lessonsAvailability.loader') }}</span>
-		</div>
+		<wnl-text-overlay :isLoading="isLoading" :text="$t('lessonsAvailability.loader')"/>
 		<div class="presets-view">
 			<div class="wnl-screen-title">
 				<div class="level-left">
@@ -164,27 +161,6 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-overlay
-		align-items: center
-		background: rgba(255, 255, 255, 0.9)
-		bottom: 0
-		display: flex
-		flex-direction: column
-		justify-content: center
-		left: 0
-		position: fixed
-		right: 0
-		top: 0
-		z-index: $z-index-overlay
-
-		.loader
-			height: 40px
-			width: 40px
-
-		.loader-text
-			color: $color-ocean-blue
-			margin-top: $margin-small
-
 	.days-info
 		margin-bottom: $margin-small
 
@@ -194,21 +170,15 @@
 		justify-content: center
 		margin-bottom: $margin-big
 
-	.default-plan
-		margin-bottom: $margin-base
-		.level-item
-			width: 100%
-
-	.presets-control
+	.presets-control, .work-load-control
 		display: flex
 		flex-wrap: wrap
 		justify-content: center
+
+	.presets-control
 		margin-bottom: $margin-big
 
 	.work-load-control
-		display: flex
-		flex-wrap: wrap
-		justify-content: center
 		margin-bottom: $margin-base
 
 	.dates
@@ -230,6 +200,7 @@
 </style>
 
 <script>
+	import TextOverlay from 'js/components/global/TextOverlay.vue'
 	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
 	import { isEmpty, first, last } from 'lodash'
@@ -240,12 +211,12 @@
 	export default {
 		name: 'AutomaticPlan',
 		components: {
-			'wnl-datepicker': Datepicker
+			'wnl-text-overlay': TextOverlay,
+			'wnl-datepicker': Datepicker,
 		},
 		data() {
 			return {
 				isLoading: false,
-				availablePresets: ['daysPerLesson', 'dateToDate'],
 				activePreset: 'dateToDate',
 				startDate: new Date(),
 				endDate: null,
@@ -255,6 +226,50 @@
 					altInput: true,
 					disableMobile: true,
 				},
+				presets: [
+					{
+						dateToDate: 'lessonsAvailability.presets.dateToDate',
+						daysPerLesson: 'lessonsAvailability.presets.daysPerLesson',
+					}
+				],
+				days: [
+					{
+						dayName: 'lessonsAvailability.days.monday',
+						dayNumber: 1
+					},
+					{
+						dayName: 'lessonsAvailability.days.tuesday',
+						dayNumber: 2
+					},
+					{
+						dayName: 'lessonsAvailability.days.wednesday',
+						dayNumber: 3
+					},
+					{
+						dayName: 'lessonsAvailability.days.thursday',
+						dayNumber: 4
+					},
+					{
+						dayName: 'lessonsAvailability.days.friday',
+						dayNumber: 5
+					},
+					{
+						dayName: 'lessonsAvailability.days.saturday',
+						dayNumber: 6
+					},
+					{
+						dayName: 'lessonsAvailability.days.sunday',
+						dayNumber: 7
+					},
+				],
+				alertSuccess: {
+					text: this.$i18n.t('lessonsAvailability.alertSuccess'),
+					type: 'success',
+				},
+				alertError: {
+					text: this.$i18n.t('lessonsAvailability.alertError'),
+					type: 'error',
+				},
 			}
 		},
 		computed: {
@@ -262,7 +277,6 @@
 			...mapGetters('course', [
 				'name',
 				'getRequiredLessons',
-				'userLessons',
 			]),
 			...mapGetters('progress', [
 				'getCompleteLessons',
@@ -310,44 +324,6 @@
 						workLoad: 3,
 						translation: 'lessonsAvailability.buttons.threeDaysPerLesson',
 					}
-				]
-			},
-			presets() {
-				return {
-					dateToDate: 'lessonsAvailability.presets.dateToDate',
-					daysPerLesson: 'lessonsAvailability.presets.daysPerLesson',
-				}
-			},
-			days() {
-				return [
-					{
-						dayName: 'lessonsAvailability.days.monday',
-						dayNumber: 1
-					},
-					{
-						dayName: 'lessonsAvailability.days.tuesday',
-						dayNumber: 2
-					},
-					{
-						dayName: 'lessonsAvailability.days.wednesday',
-						dayNumber: 3
-					},
-					{
-						dayName: 'lessonsAvailability.days.thursday',
-						dayNumber: 4
-					},
-					{
-						dayName: 'lessonsAvailability.days.friday',
-						dayNumber: 5
-					},
-					{
-						dayName: 'lessonsAvailability.days.saturday',
-						dayNumber: 6
-					},
-					{
-						dayName: 'lessonsAvailability.days.sunday',
-						dayNumber: 7
-					},
 				]
 			},
 		},

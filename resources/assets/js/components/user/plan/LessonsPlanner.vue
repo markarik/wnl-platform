@@ -19,7 +19,7 @@
 		<div class="views-control">
 			<a v-for="view in views"
 				 class="panel-toggle view"
-				 :class="[view.isActive ? 'is-active' : '']"
+				 :class="{'is-active': view.isActive}"
 				 :key="view.title"
 				 @click="toggleView(view)"
 			>{{ view.title }}

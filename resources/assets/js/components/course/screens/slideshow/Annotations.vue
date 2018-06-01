@@ -1,14 +1,12 @@
 <template>
 	<div class="slideshow-annotations" :class="{'is-mobile': isMobile}">
-		<div
-			class="slideshow-annotations__header"
-			:class="{canEdit: 'can-edit'}"
-			v-if="canEdit">
+		<wnl-edit-slide-button
+			:currentSlideId="currentSlideId"
+			class="slideshow-annotations__edit-button"
+			v-if="isAdmin"/>
+		<div class="slideshow-annotations__comments">
 			<p class="metadata">Komentarze do slajdu {{currentSlideOrderNumber}}</p>
-			<wnl-edit-slide-button :currentSlideId="currentSlideId"/>
-		</div>
-		<p v-else class="metadata">Komentarze do slajdu {{currentSlideOrderNumber}}</p>
-		<wnl-comments-list
+			<wnl-comments-list
 			v-if="currentSlideId > 0"
 			module="slideshow"
 			urlParam="slide"
@@ -17,7 +15,8 @@
 			:commentableId="currentSlideId"
 			@commentsHidden="$emit('commentsHidden')"
 			@commentsUpdated="onCommentsUpdated"
-		></wnl-comments-list>
+			></wnl-comments-list>
+		</div>
 	</div>
 </template>
 
@@ -27,11 +26,9 @@
 	.slideshow-annotations
 		flex: 1 auto
 		margin: 0 $margin-base
-
-		.slideshow-annotations__header
-			display: flex
-			flex-direction: row
-			justify-content: space-between
+		display: flex
+		flex-direction: row-reverse
+		justify-content: space-between
 
 		&.is-mobile
 			margin: 0 $margin-small
@@ -57,11 +54,8 @@
 			currentSlideId: Number,
 		},
 		computed: {
-			...mapGetters(['isMobile', 'isAdmin', 'isModerator']),
+			...mapGetters(['isMobile', 'isAdmin']),
 			...mapGetters('slideshow', ['getSlidePositionById']),
-			canEdit() {
-				return this.isModerator || this.isAdmin
-			},
 			currentSlideOrderNumber() {
 				return this.getSlidePositionById(this.currentSlideId) + 1
 			}

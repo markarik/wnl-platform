@@ -154,19 +154,19 @@
 						method: 'push',
 						iconClass: 'fa fa-exclamation-triangle',
 						iconTitle: 'Usuwanie postępu',
-					}
-					// {
-					// 	text: 'Zmiana hasła',
-					// 	itemClass: 'has-icon',
-					// 	to: {
-					// 		name: 'my-password',
-					// 		params: {},
-					// 	},
-					// 	isDisabled: false,
-					// 	method: 'push',
-					// 	iconClass: 'fa-key',
-					// 	iconTitle: 'Profil publiczny',
-					// },
+					},
+					{
+						text: 'Zmiana hasła',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-password',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-key',
+						iconTitle: 'Zmiana hasła',
+					},
 				]
 
 				return items

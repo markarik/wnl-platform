@@ -128,7 +128,7 @@ export default {
 			},
 	},
 	mounted() {
-		const slideId = Object.keys(this.$route.query)[0]
+		const slideId = this.$route.query.slideId
 		if (slideId) {
 			this.slideIdInput = slideId
 		}

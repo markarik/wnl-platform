@@ -3,7 +3,7 @@
 		<a
 			class="small"
 			target="_blank"
-			:href="`/admin/app/slides/edit?${currentSlideId}`"
+			:href="`/admin/app/slides/edit?slideId=${currentSlideId}`"
 		>
 			Edytuj tego slajda
 			<span class="icon is-small">

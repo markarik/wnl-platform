@@ -1,6 +1,12 @@
 <template lang="html">
 	<div class="scrollable-main-container">
-		<h1>Zmiana hasła</h1>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					{{ $t('user.password.header')}}
+				</div>
+			</div>
+		</div>
 
 		<wnl-form class="margin vertical" name="MyPassword" method="put" resourceRoute="users/current/password">
 			<wnl-form-text name="old_password">Stare hasło</wnl-form-text>

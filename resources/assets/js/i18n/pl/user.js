@@ -73,8 +73,5 @@ export const user = {
 		alertSuccess: `OK, wszystko poszło zgodnie z planem. Jeśli to była
 		spektakularna pomyłka, daj nam znać. Jest szansa, że uda się odzyskać
 		usunięte informacje ;)`,
-    },
-	password: {
-		header: 'Zmiana hasła',
-	}
+    }
 }

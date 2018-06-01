@@ -32,18 +32,18 @@ class UpdateUserPassword extends FormRequest
 		];
 	}
 
-	/**
-	 * Configure the validator instance.
-	 *
-	 * @param  \Illuminate\Validation\Validator  $validator
-	 * @return void
-	 */
-	public function withValidator($validator)
-	{
-		$validator->after(function ($validator) {
-			if ($this->somethingElseIsInvalid()) {
-				$validator->errors()->add('old_password', '');
-			}
-		});
-	}
+	// /**
+	//  * Configure the validator instance.
+	//  *
+	//  * @param  \Illuminate\Validation\Validator  $validator
+	//  * @return void
+	//  */
+	// public function withValidator($validator)
+	// {
+	// 	$validator->after(function ($validator) {
+	// 		if ($this->somethingElseIsInvalid()) {
+	// 			$validator->errors()->add('old_password', '');
+	// 		}
+	// 	});
+	// }
 }

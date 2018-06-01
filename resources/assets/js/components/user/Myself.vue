@@ -165,7 +165,7 @@
 					// 	isDisabled: false,
 					// 	method: 'push',
 					// 	iconClass: 'fa-key',
-					// 	iconTitle: 'Zmiana hasła',
+					// 	iconTitle: 'Profil publiczny',
 					// },
 				]
 

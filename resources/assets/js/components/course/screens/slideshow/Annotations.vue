@@ -5,7 +5,7 @@
 			:class="{canEdit: 'can-edit'}"
 			v-if="canEdit">
 			<p class="metadata">Komentarze do slajdu {{currentSlideOrderNumber}}</p>
-			<wnl-edit-slide-button/>
+			<wnl-edit-slide-button :currentSlideId="currentSlideId"/>
 		</div>
 		<p v-else class="metadata">Komentarze do slajdu {{currentSlideOrderNumber}}</p>
 		<wnl-comments-list

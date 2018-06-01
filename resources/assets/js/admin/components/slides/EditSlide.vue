@@ -36,5 +36,14 @@
 				this.screenId = screenId
 			}
 		},
+		mounted() {
+			const slideId = Object.keys(this.$route.query)[0]
+			if (slideId) {
+				this.onResourceUrlFetched({
+					slideId: slideId,
+					url: `/papi/v1/slides/${slideId}`
+				})
+			}
+		}
 	}
 </script>

@@ -1,7 +1,16 @@
 <template>
-	<a class="button is-small is-info" @click="editSlide">
-		<span>Edytuj tego slajda</span>
-	</a>
+	<div class="slide-edit-link">
+		<a
+			class="small"
+			target="_blank"
+			:href="`/admin/app/slides/edit?${currentSlideId}`"
+		>
+			Edytuj tego slajda
+			<span class="icon is-small">
+				<i class="fa fa-pencil"></i>
+			</span>
+		</a>
+	</div>
 </template>
 
 <style lang="sass">
@@ -11,10 +20,8 @@
 <script>
 	export default {
 		name: 'EditSlideButton',
-		methods: {
-			editSlide() {
-				console.log('klikl');
-			}
+		props: {
+			currentSlideId: Number,
 		}
 	}
 </script>

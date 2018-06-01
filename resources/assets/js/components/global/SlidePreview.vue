@@ -99,7 +99,6 @@
 			},
 			slidesCount: {
 				type: Number,
-				default: false
 			}
 		},
 		computed: {

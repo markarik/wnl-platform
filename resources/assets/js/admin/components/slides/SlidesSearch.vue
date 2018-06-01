@@ -126,7 +126,12 @@ export default {
 							return response.data[0].slide_id
 						})
 			},
+	},
+	mounted() {
+		const slideId = Object.keys(this.$route.query)[0]
+		if (slideId) {
+			this.slideIdInput = slideId
+		}
 	}
 }
 </script>
-

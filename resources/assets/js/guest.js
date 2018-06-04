@@ -10,9 +10,6 @@ $(function() {
 		form = $('form'),
 		buttons = $('.button'),
 		modalsContainer = $('.modals'),
-		touModal = modalsContainer.find('#tou-modal'),
-		touOpenModalLinks = $('.tou-open-modal-link'),
-		touCloseModalButton = touModal.find('.delete'),
 		loginModalButton = $('.opens-login-modal'),
 		loginModal = modalsContainer.find('#login-modal'),
 		loginCloseModalButton = loginModal.find('.delete'),
@@ -28,16 +25,6 @@ $(function() {
 	loginModalButton.on('mousedown touchstart', function (event) {
 		event.preventDefault();
 		loginModal.addClass('is-active');
-	})
-
-	touOpenModalLinks.on('mousedown touchstart', function (event) {
-		event.preventDefault();
-		touModal.addClass('is-active');
-	})
-
-	touCloseModalButton.on('mousedown touchstart', function (event) {
-		event.preventDefault();
-		touModal.removeClass('is-active');
 	})
 
 	loginCloseModalButton.on('mousedown touchstart', function (event) {

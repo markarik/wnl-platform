@@ -53,6 +53,11 @@ export default {
 			error: false
 		}
 	},
+	props: {
+		slideId: {
+			type: String || Number,
+		},
+	},
 	computed: {
 		slideNumber() {
 			return String(this.slideOrderNo - 1)
@@ -127,10 +132,9 @@ export default {
 						})
 			},
 	},
-	mounted() {
-		const slideId = this.$route.query.slideId
-		if (slideId) {
-			this.slideIdInput = slideId
+	watch: {
+		'slideId' (newVal) {
+			this.slideIdInput = newVal
 		}
 	}
 }

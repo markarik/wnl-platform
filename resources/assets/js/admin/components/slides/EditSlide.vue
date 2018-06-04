@@ -8,6 +8,7 @@
 	>
 		<wnl-slides-search
 			@resourceUrlFetched="onResourceUrlFetched"
+			:slideId="slideId"
 		/>
 	</wnl-slides-editor>
 </template>
@@ -38,6 +39,7 @@
 		},
 		mounted() {
 			const slideId = this.$route.query.slideId
+			this.slideId = slideId
 			if (slideId) {
 				this.onResourceUrlFetched({
 					slideId: slideId,

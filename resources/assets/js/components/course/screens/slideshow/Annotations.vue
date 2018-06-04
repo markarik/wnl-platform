@@ -1,5 +1,5 @@
 <template>
-	<div class="slideshow-annotations" :class="{'is-mobile': isMobile}">
+	<div class="slideshow-annotations" :class="{'is-mobile': isMobile, 'can-edit': isAdmin}">
 		<wnl-edit-slide-button
 			:currentSlideId="currentSlideId"
 			class="slideshow-annotations__edit-button"
@@ -27,11 +27,13 @@
 		flex: 1 auto
 		margin: 0 $margin-base
 		display: flex
-		flex-direction: row-reverse
-		justify-content: space-between
 
 		&.is-mobile
 			margin: 0 $margin-small
+
+		&.can-edit
+			flex-direction: row-reverse
+			justify-content: space-between
 
 	.metadata
 		margin-bottom: -$margin-base

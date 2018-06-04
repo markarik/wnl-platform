@@ -5,7 +5,7 @@
 			target="_blank"
 			:href="`/admin/app/slides/edit?slideId=${currentSlideId}`"
 		>
-			Edytuj tego slajda
+			{{ $t('admin.editSlide') }}
 			<span class="icon is-small">
 				<i class="fa fa-pencil"></i>
 			</span>

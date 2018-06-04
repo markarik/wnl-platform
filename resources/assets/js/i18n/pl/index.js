@@ -15,8 +15,10 @@ import { messages } from './messages'
 import { progress } from './progress'
 import { lessonsAvailability } from './lessonsAvailability'
 import { orders } from './orders'
+import { admin } from './admin'
 
 export {
+	admin,
 	lessonsAvailability,
 	dashboard,
 	nav,

@@ -24,7 +24,7 @@
 						<th><abbr title="Old date">Stara data</abbr></th>
 						<th><abbr title="New date">Nowa data</abbr></th>
 					</tr>
-					<tr v-for="(manualStartDate, index) in manualStartDates" :key="index">
+					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
 						<th title="Lesson name">{{ manualStartDate.lessonName }}</th>
 						<th title="Old date">{{ manualStartDate.oldDate }}</th>
 						<th title="New date">{{ manualStartDate.formatedStartDate }}</th>
@@ -302,7 +302,6 @@
 				} else {
 					this.manualStartDates.splice(index, 1, lessonWithStartDate)
 				}
-				this.sortedManualStartDates()
 			},
 			async acceptPlan() {
 				if (!this.validate()) {

@@ -11,17 +11,13 @@ class UserPasswordApiController extends ApiController
 	public function put(UpdateUserPassword $request)
 	{
 		$user = User::fetch($request->id);
-		$hashedOldPassword = bcrypt($request->old_password);
-		// dd($hashedOldPassword, $user->password);
-		$hashedNewPassword = bcrypt($request->new_password);
-		// dd($hashedOldPassword, $user->password, $request->old_password);
 		if (Hash::check($request->old_password, $user->password)) {
-			dd('dobre stare hasło');
-			DB::table('users')->where('id', $user->id)->update(['password' => $hashedPassword]);
+			DB::table('users')
+				->where('id', $user->id)
+				->update(['password' => bcrypt($request->new_password)]);
 			return $this->respondOK();
 		} else {
-			// return respondInvalidInput('zuy inpud');
-			dd('złe stare hasło');
+			return $this->respondInvalidInput('wrong old_password');
 		}
 	}
 }

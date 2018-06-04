@@ -109,6 +109,8 @@
 						reason => {
 							if (reason.response.status === 404) {
 								this.errorFading(this.$t('ui.error.notFound'))
+							} else if (reason.response.data.message === 'wrong old_password') {
+								this.errorFading('Ups! Stare hasło jest niepoprawne :(')
 							} else {
 								this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 							}

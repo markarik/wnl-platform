@@ -31,19 +31,4 @@ class UpdateUserPassword extends FormRequest
 			'new_password' => 'required|confirmed|min:6',
 		];
 	}
-
-	// /**
-	//  * Configure the validator instance.
-	//  *
-	//  * @param  \Illuminate\Validation\Validator  $validator
-	//  * @return void
-	//  */
-	// public function withValidator($validator)
-	// {
-	// 	$validator->after(function ($validator) {
-	// 		if ($this->somethingElseIsInvalid()) {
-	// 			$validator->errors()->add('old_password', '');
-	// 		}
-	// 	});
-	// }
 }

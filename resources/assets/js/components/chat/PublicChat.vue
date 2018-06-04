@@ -79,7 +79,6 @@
 	import {nextTick} from 'vue'
 	import {
 		SOCKET_EVENT_USER_SENT_MESSAGE,
-		SOCKET_EVENT_MESSAGE_PROCESSED,
 		SOCKET_EVENT_LEAVE_ROOM
 	} from 'js/plugins/socket'
 
@@ -184,7 +183,7 @@
 						return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId, beforeLimit: 10}})
 					})
 					.then(({messages, pagination}) => {
-						this.messages = messages
+						this.messages = [...messages]
 						this.pagination = pagination
 						return this.$socketJoinRoom(this.currentRoom.id, pointer)
 					})

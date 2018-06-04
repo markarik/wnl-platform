@@ -143,11 +143,13 @@ class CalculateCoursePlan
 
 	protected function preprocessData()
 	{
-		$this->daysQuantity = $this->startDate->diffInDaysFiltered(
-			function ($date) {
-				return in_array($date->dayOfWeekIso, $this->workDays);
-			},
-			(clone $this->endDate)->addDay());
+		if ($this->workDays) {
+			$this->daysQuantity = $this->startDate->diffInDaysFiltered(
+				function ($date) {
+					return in_array($date->dayOfWeekIso, $this->workDays);
+				},
+				(clone $this->endDate)->addDay());			
+		}
 
 		$builder = $this->user->lessonsAvailability()
 			->orderBy('group_id')

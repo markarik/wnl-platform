@@ -30,15 +30,15 @@
 				</div>
 			</div>
 			<div class="presets-control">
-				<a v-for="name, preset in presets"
+				<a v-for="preset in presets"
 					 class="panel-toggle preset preset"
-					 :class="{'is-active': isPresetActive(preset)}"
+					 :class="{'is-active': isPresetActive(preset.preset)}"
 					 :key="preset"
-					 @click="togglePreset(preset)"
-				>{{ $t(name) }}
+					 @click="togglePreset(preset.preset)"
+				>{{ $t(preset.title) }}
 					<span class="icon is-small">
 						<i class="fa"
-							 :class="[isPresetActive(preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+							 :class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 					</span>
 				</a>
 			</div>
@@ -228,8 +228,12 @@
 				},
 				presets: [
 					{
-						dateToDate: 'lessonsAvailability.presets.dateToDate',
-						daysPerLesson: 'lessonsAvailability.presets.daysPerLesson',
+						title: 'lessonsAvailability.presets.dateToDate',
+						preset: 'dateToDate',
+					},
+					{
+						title: 'lessonsAvailability.presets.daysPerLesson',
+						preset: 'daysPerLesson',
 					}
 				],
 				days: [

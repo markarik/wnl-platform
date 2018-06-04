@@ -55,6 +55,8 @@
 	import DefaultPlan from './DefaultPlan'
 	import ManualPlan from './ManualPlan'
 	import { first,last } from 'lodash'
+	import { mapGetters } from 'vuex'
+	import moment from 'moment'
 
 	export default {
 		name: 'LessonsAvailabilities',
@@ -82,6 +84,12 @@
 			}
 		},
 		computed: {
+			...mapGetters('course', ['userLessons']),
+			sortedUserLessons() {
+				return this.userLessons.sort((lessonA, lessonB) => {
+					return lessonA.startDate - lessonB.startDate
+				})
+			},
 			planStartDate() {
 				if (!first(this.sortedUserLessons)) return
 

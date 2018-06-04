@@ -83,7 +83,7 @@
 					</li>
 				</ul>
 			</div>
-			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
+			<div class="manual-start-dates" v-show="manualStartDates.length > 0">
 				<div class="level-left">
 					<div class="level-item">
 						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
@@ -95,7 +95,7 @@
 						<th>Stara data</th>
 						<th>Nowa data</th>
 					</tr>
-					<tr v-for="(manualStartDate, index) in manualStartDates" :key="index">
+					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
 						<th>{{ manualStartDate.lessonName }}</th>
 						<th>{{ manualStartDate.oldDate }}</th>
 						<th>{{ manualStartDate.formatedStartDate }}</th>
@@ -267,6 +267,7 @@
 				return index % 2 === 0
 			},
 			getStartDate(item) {
+				console.log('get start date called.....', item.startDate, item.name);
 				return new Date (item.startDate*1000)
 			},
 			toggleItem(item) {

@@ -57,6 +57,7 @@
 					return this.selectedDates || this.value
 				},
 				set(newValue) {
+					console.log('new value....', newValue)
 					if (this.selectedDates !== newValue) {
 						this.selectedDates = newValue
 						this.$emit('input', new Date(newValue))

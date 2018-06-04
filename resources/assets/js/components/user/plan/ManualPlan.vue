@@ -267,7 +267,6 @@
 				return index % 2 === 0
 			},
 			getStartDate(item) {
-				console.log('get start date called.....', item.startDate, item.name);
 				return new Date (item.startDate*1000)
 			},
 			toggleItem(item) {

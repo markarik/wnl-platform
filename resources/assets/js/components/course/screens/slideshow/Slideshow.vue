@@ -297,6 +297,7 @@
 						}
 						this.focusSlideshow()
 						this.loaded = true
+						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 						this.toggleOverlay({source: 'slideshow', display: false})
 
 					})

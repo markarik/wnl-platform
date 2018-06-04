@@ -83,7 +83,7 @@
 							@lang('payment.personal-data-tou-link-content')
 						</a>
 						&nbsp;|&nbsp;
-						<a class="privacy-policy-open-modal-link">
+						<a target="_blank" href="@lang('payment.privacy-policy-link-href')">
 							@lang('payment.personal-data-privacy-link-content')
 						</a>
 					</small>
@@ -103,30 +103,6 @@
 			</footer>
 		</div>
 		<div class="modals">
-			<div id="tou-modal" class="modal">
-				<div class="modal-background"></div>
-				<div class="modal-card">
-					<header class="modal-card-head">
-						<p class="modal-card-title">@lang('payment.personal-data-tou-title')</p>
-						<button class="delete"></button>
-					</header>
-					<section class="modal-card-body content">
-						@include('payment.documents.tou')
-					</section>
-				</div>
-			</div>
-			<div id="privacy-policy-modal" class="modal">
-				<div class="modal-background"></div>
-				<div class="modal-card">
-					<header class="modal-card-head">
-						<p class="modal-card-title">@lang('payment.personal-data-privacy-title')</p>
-						<button class="delete"></button>
-					</header>
-					<section class="modal-card-body content">
-						@include('payment.documents.privacy-policy')
-					</section>
-				</div>
-			</div>
 			@if(request()->route())
 			<div id="login-modal" class="modal">
 				<div class="modal-background"></div>

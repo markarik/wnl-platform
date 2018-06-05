@@ -167,16 +167,11 @@ class SignUpForm extends Form
 				],
 			])
 			// Consents
-
-			->add('consent_order', 'checkbox', [
-				'label' => trans('payment.personal-data-consent-order'),
-				'rules' => 'required',
-				'attr' => [
-					'class' => 'checkbox',
-				]
-			])
-			->add('consent_account', 'checkbox', [
-				'label' => trans('payment.personal-data-consent-account'),
+			->add('consent_terms', 'checkbox', [
+				'label' => trans('payment.personal-data-tou-content', [
+					'tou-link-content' => trans('payment.personal-data-tou-link-content'),
+					'privacy-link-content' => trans('payment.personal-data-privacy-link-content'),
+				]),
 				'rules' => 'required',
 				'attr' => [
 					'class' => 'checkbox',
@@ -184,16 +179,6 @@ class SignUpForm extends Form
 			])
 			->add('consent_newsletter', 'checkbox', [
 				'label' => trans('payment.personal-data-consent-newsletter'),
-				'attr' => [
-					'class' => 'checkbox',
-				]
-			])
-			->add('consent_terms', 'checkbox', [
-				'label' => trans('payment.personal-data-tou-content', [
-					'tou-link-content' => trans('payment.personal-data-tou-link-content'),
-					'privacy-link-content' => trans('payment.personal-data-privacy-link-content'),
-				]),
-				'rules' => 'required',
 				'attr' => [
 					'class' => 'checkbox',
 				]

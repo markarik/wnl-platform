@@ -213,8 +213,8 @@ class QuizQuestionsApiController extends ApiController
 	{
 		$userExamResults = ExamResults::where('user_id', $userId)
 			->where('resolved', '>', 0)
+			->orderBy('created_at', 'desc')
 			->get()
-			->sortByDesc('created_at')
 			->map(function ($examResults) {
 
 				$subjects = array_map(function($subject) {

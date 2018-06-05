@@ -122,14 +122,14 @@
 				<td>{{ $index + 1 }}</td>
 				<td>{{ $invoice->full_number }}</td>
 				<td>{{ $invoice->created_at->format('d-m-Y') }}</td>
-				<td>{{ $invoice->amount }}zł</td>
+				<td>{{ $invoice->corrected_amount }}zł</td>
 			</tr>
 		@endforeach
 		<tr>
 			<td class="no-border">&nbsp;</td>
 			<td class="no-border">&nbsp;</td>
 			<td><strong>Razem:</strong></td>
-			<td>{{ $previousAdvances->sum('amount') }}zł</td>
+			<td>{{ $previousAdvances->sum('corrected_amount') }}zł</td>
 		</tr>
 	</table>
 @endsection

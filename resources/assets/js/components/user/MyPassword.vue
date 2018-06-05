@@ -39,7 +39,6 @@
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
 			submitError(payload) {
-				console.log(payload);
 				this.addAutoDismissableAlert({
 					text: payload.data.message,
 					type: 'error',

@@ -1,23 +1,28 @@
 <template>
 	<div class="wnl-comments" ref="highlight">
-		<div class="comments-controls">
-			<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
-			Komentarze ({{comments.length}})
-			<span v-if="comments.length > 0 || this.showComments"> ·
-				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
-			</span> ·
-			<span v-if="!readOnly">
-				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
-			</span>
-			<wnl-watch
+		<div class="separate-controls">
+			<div class="comments-controls">
+				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
+				Komentarze ({{comments.length}})
+				<span v-if="comments.length > 0 || this.showComments"> ·
+					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				</span> ·
+				<span v-if="!readOnly">
+					<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
+				</span>
+				<wnl-watch
 				v-if="!hideWatchlist"
 				:reactableId="commentableId"
 				:reactableResource="commentableResource"
 				:state="watchState"
 				:reactionsDisabled="false"
 				:module="module"
-			>
-			</wnl-watch>
+				/>
+			</div>
+			<wnl-edit-slide-button
+			:currentSlideId="currentSlideId"
+			v-if="isAdmin"
+			/>
 		</div>
 		<wnl-comment
 			v-if="showComments"
@@ -45,11 +50,16 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.separate-controls
+		display: flex
+		justify-content: space-between
+
 	.comments-controls
 		color: $color-gray-dimmed
 		font-size: $font-size-minus-1
 		margin-bottom: $margin-base
 		margin-top: $margin-base
+
 </style>
 
 <script>
@@ -57,6 +67,7 @@
 	import { mapGetters } from 'vuex'
 	import { nextTick } from 'vue'
 
+	import EditSlideButton from 'js/admin/components/slides/EditSlideButton'
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
 	import highlight from 'js/mixins/highlight'
@@ -70,10 +81,11 @@
 		components: {
 			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
-			'wnl-watch': Watch
+			'wnl-watch': Watch,
+			'wnl-edit-slide-button': EditSlideButton,
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly'],
+		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly', 'currentSlideId'],
 		data() {
 			return {
 				formElement: {},
@@ -83,7 +95,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUser', 'isOverlayVisible']),
+			...mapGetters(['currentUser', 'isOverlayVisible', 'isAdmin']),
 			comments() {
 				return this.getterFunction('comments', {
 					resource: this.commentableResource,

@@ -420,7 +420,7 @@ class Invoice
 				'amount'       => 1,
 			],
 		];
-		$totalPrice = $corrected->amount + $previousCorrectives->sum('amount');
+		$totalPrice = $order->total_with_coupon;
 		$totalCorrected = $totalPrice + $difference;
 
 		if ($coupon = $order->coupon) {
@@ -441,7 +441,7 @@ class Invoice
 		$data['ordersCorrected'][0]['vat'] = $vatString;
 
 		$data['remainingAmountBefore'] = $this->price($order->total_with_coupon - $order->paid_amount);
-		$data['remainingAmount'] = $this->price($order->total_with_coupon - $totalCorrected);
+		$data['remainingAmount'] = $this->price($order->total_with_coupon - $order->paid_amount - $difference);
 
 		$data['previousAdvances'] = $previousAdvances;
 		$data['recentSettlement'] = $recentSettlement;

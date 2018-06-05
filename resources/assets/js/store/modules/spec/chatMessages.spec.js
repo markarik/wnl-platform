@@ -74,7 +74,7 @@ describe('chatMessages module', () => {
 					},
 					message: {
 						content: 'hello'
-					}
+					},
 				}
 
 				const context = {
@@ -84,6 +84,7 @@ describe('chatMessages module', () => {
 				}
 				// action, payload, state, expected mutations, done callback
 				testAction(actions.onNewMessage, payload, context, [
+					{type: types.CHAT_MESSAGES_ADD_PROFILES, payload: []},
 					{type: types.CHAT_MESSAGES_ADD_MESSAGE, payload: {roomId: payload.room.id, message: payload.message}}
 				], done);
 			}),
@@ -109,6 +110,7 @@ describe('chatMessages module', () => {
 				}
 				// action, payload, state, expected mutations, done callback
 				testAction(actions.onNewMessage, payload, context, [
+					{type: types.CHAT_MESSAGES_ADD_PROFILES, payload: []},
 					{type: types.CHAT_MESSAGES_ADD_MESSAGE, payload: {roomId: payload.room.id, message: payload.message}},
 					{type: types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, payload: {roomId: payload.room.id, newIndex: 0}}
 				], done);
@@ -134,6 +136,7 @@ describe('chatMessages module', () => {
 					}
 				}
 				testAction(actions.onNewMessage, payload, context, [
+					{type: types.CHAT_MESSAGES_ADD_PROFILES, payload: []},
 					{type: types.CHAT_MESSAGES_ADD_MESSAGE, payload: {roomId: payload.room.id, message: payload.message}},
 					{type: types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, payload: {roomId: payload.room.id, newIndex: 0}},
 					{type: types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD, payload: payload.room.id}

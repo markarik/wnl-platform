@@ -7,10 +7,8 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class QueueJobFailed extends Notification implements ShouldQueue
+class QueueJobFailed extends Notification
 {
-	use Queueable;
-
 	private $jobName;
 	private $message;
 	private $file;

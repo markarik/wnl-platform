@@ -332,8 +332,8 @@ class Invoice
 
 		$data['summary'] = [
 			'total' => $this->price($totalPrice),
-			'net' => $this->price($totalPrice / 1.23),
-			'vat' => $this->price($totalPrice - $totalPrice / 1.23),
+			'net'   => $this->price($totalPrice / 1.23),
+			'vat'   => $this->price($totalPrice - $totalPrice / 1.23),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);

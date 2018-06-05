@@ -82,20 +82,28 @@
 						</div>
 
 						<!-- Mock exam -->
-						<div v-if="stats.mock_exam">
+						<div v-if="stats.mock_exams">
 							<div class="questions-dashboard-subheading margin top">
 								<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
-							<div class="questions-stats stats-exam">
-								<div v-for="(stats, index) in parseStats(stats.mock_exam)"
-									:key="index"
-									class="stats-item stats-exam"
-									:class="{'is-first': index === 0}"
-								>
-									<span class="stats-title">{{stats.title}}</span>
-									<span class="progress-number" :class="scoreClass(stats.scoreTotal)">{{stats.scoreNumber}}</span>
-									<div class="score" :class="scoreClass(stats.scoreTotal)">{{stats.scoreTotal}}%</div>
+							<div class="questions-stats stats-exam" v-for="(mockExam, index) in stats.mock_exams" :key="index">
+								<div @click="toggleExamExpand(index)" class="exam-name">
+									{{mockExam.exam_name}} - {{parseDate(mockExam.created_at)}}
+									<span class="icon is-small">
+										<i :class="['fa', expandedExams.includes(index) ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
+									</span>
+								</div>
+								<div v-show="expandedExams.includes(index)">
+									<div v-for="(stats, index) in parseStats(mockExam)"
+										:key="index"
+										class="stats-item stats-exam"
+										:class="{'is-first': index === 0}"
+									>
+										<span class="stats-title">{{stats.title}}</span>
+										<span class="progress-number" :class="scoreClass(stats.scoreTotal)">{{stats.scoreNumber}}</span>
+										<div class="score" :class="scoreClass(stats.scoreTotal)">{{stats.scoreTotal}}%</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -279,11 +287,16 @@
 		.icon
 			color: $color-background-gray
 			margin-right: $margin-small
+
+	.exam-name
+		cursor: pointer
+		line-height: 32px
 </style>
 
 <script>
 	import {isEmpty} from 'lodash'
 	import {mapActions, mapGetters} from 'vuex'
+	import moment from 'moment';
 
 	import QuestionsFeed from 'js/components/notifications/feeds/questions/QuestionsFeed'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
@@ -313,6 +326,7 @@
 				plan: null,
 				planRoute: {},
 				stats: {},
+        expandedExams: []
 			}
 		},
 		computed: {
@@ -335,6 +349,17 @@
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
+      toggleExamExpand(index) {
+				const indexOf = this.expandedExams.indexOf(index)
+        if (indexOf > -1) {
+					this.expandedExams.splice(indexOf, 1);
+        } else {
+					this.expandedExams.push(index)
+        }
+      },
+      parseDate(date) {
+				return moment(date.date).format('LL')
+      },
 			setPlanRoute() {
 				this.planRoute = {
 					name: 'questions-list',
@@ -375,7 +400,7 @@
 					score: Math.round(source.correct_perc),
 					scoreNumber: `${source.correct}/${source.total}`,
 					scoreTotal: Math.round(source.correct_perc_total),
-					title: 'Cała baza',
+					title: 'Całkowity wynik',
 					total: source.total,
 				}]
 

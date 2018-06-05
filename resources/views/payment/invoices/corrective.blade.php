@@ -40,7 +40,7 @@
 @endsection
 
 @section('before-orders-title')
-	Zamówienie przed korektą
+	Przed korektą
 @endsection
 
 @section('before-orders-list')
@@ -67,7 +67,7 @@
 @endsection
 
 @section('after-orders-title')
-	Zamówienie po korekcie
+	Po korekcie
 @endsection
 
 @section('after-orders-list')
@@ -182,12 +182,17 @@
 
 @section('summary')
 	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
-	<p>Wpłacono: <strong>{{ $paid }}zł</strong></p>
-	<p style="font-size: small">
-		@if($difference < 0)
-			<strong>Do zwrotu: {{ $difference * -1 }}zł</strong>
-		@else
-			<strong>Do zapłaty: {{ $difference }}zł</strong>
-		@endif
-	</p>
+	@if (!$refund)
+		<p>Wpłacono: <strong>{{ $paid + $difference }}zł</strong></p>
+		<p>Pozostało z zamówienia: <strong>{{ $remainingAmount }}zł</strong></p>
+	@else
+		<p>Wpłacono: <strong>{{ $paid }}zł</strong></p>
+		<p style="font-size: small">
+			@if($difference < 0)
+				<strong>Do zwrotu: {{ $difference * -1 }}zł</strong>
+			@else
+				<strong>Do zapłaty: {{ $difference }}zł</strong>
+			@endif
+		</p>
+	@endif
 @endsection

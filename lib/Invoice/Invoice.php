@@ -370,7 +370,7 @@ class Invoice
 		return $invoice;
 	}
 
-	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference)
+	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund)
 	{
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
 		$previousCorrectives = $order->invoices()->where('series', self::CORRECTIVE_SERIES_NAME)->get();
@@ -383,6 +383,7 @@ class Invoice
 			'series' => self::CORRECTIVE_SERIES_NAME,
 			'amount' => $difference,
 			'vat'    => $corrected->vat,
+			'corrected_invoice_id' => $corrected->id,
 		]);
 
 		$data = [
@@ -400,6 +401,7 @@ class Invoice
 			],
 			'reason'           => $reason,
 			'paid'             => $order->paid_amount,
+			'refund'           => $refund,
 		];
 
 		$data['buyer'] = $this->getBuyerData($order->user);
@@ -438,7 +440,7 @@ class Invoice
 		$data['ordersCorrected'][0]['priceNet'] = $this->price($totalCorrected / (1 + $vatValue));
 		$data['ordersCorrected'][0]['vat'] = $vatString;
 
-		$data['remainingAmount'] = $this->price($totalPrice - $totalPaid);
+		$data['remainingAmount'] = $this->price($order->total_with_coupon - $totalCorrected);
 
 		$data['previousAdvances'] = $previousAdvances;
 		$data['recentSettlement'] = $recentSettlement;

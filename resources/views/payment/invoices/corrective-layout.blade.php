@@ -35,6 +35,10 @@
 			text-align: right;
 		}
 
+		.has-text-centered {
+			text-align: center;
+		}
+
 		table {
 			border-spacing: 0;
 			border-collapse: collapse;
@@ -91,6 +95,12 @@
 		</div>
 	</div>
 
+	<div class="columns">
+		<div class="columns has-text-centered">
+			<h2>PRZED KOREKTĄ</h2>
+		</div>
+	</div>
+
 	{{-- Orders --}}
 	<div class="columns">
 		<h3>@yield('before-orders-title', '')</h3>
@@ -107,6 +117,36 @@
 			</tr>
 			@yield('before-orders-list')
 		</table>
+	</div>
+
+	<table>
+		<tr class="no-border">
+			<td style="width: 50%;" class="no-border">
+				{{-- Orders summary --}}
+				@yield('settlement', '')
+			</td>
+			<td style="width: 50%;" class="no-border">
+				<div class="has-text-right">
+					@yield('summary')
+				</div>
+			</td>
+		</tr>
+		{{--<tr class="no-border">
+			<td style="width: 50%; vertical-align: top;" class="no-border">
+				 Advances
+				@yield('advances', '')
+			</td>
+			<td style="width: 50%; vertical-align: top;" class="no-border">
+				 Settlement
+				@yield('settlement', '')
+			</td>
+		</tr>--}}
+	</table>
+	<div style="page-break-after: always;"></div>
+	<div class="columns">
+		<div class="columns has-text-centered">
+			<h2>PO KOREKCIE</h2>
+		</div>
 	</div>
 
 	<div class="columns">
@@ -126,30 +166,32 @@
 		</table>
 	</div>
 
+	<table>
+		<tr class="no-border">
+			<td style="width: 50%;" class="no-border">
+				@yield('afterCorrectionSettlement')
+			</td>
+			<td style="width: 50%;" class="no-border">
+				<div class="has-text-right">
+					@yield('afterCorrectionSummary')
+				</div>
+			</td>
+		</tr>
+	</table>
 
 	<table>
 		<tr class="no-border">
 			<td style="width: 50%;" class="no-border">
-				{{-- Orders summary --}}
-				@yield('orders-summary', '')
+				@yield('taxDifference')
 			</td>
 			<td style="width: 50%;" class="no-border">
 				<div class="has-text-right">
-				@yield('summary')
+
 				</div>
 			</td>
 		</tr>
-		{{--<tr class="no-border">
-			<td style="width: 50%; vertical-align: top;" class="no-border">
-				--}}{{-- Advances --}}{{--
-				@yield('advances', '')
-			</td>
-			<td style="width: 50%; vertical-align: top;" class="no-border">
-				--}}{{-- Settlement --}}{{--
-				@yield('settlement', '')
-			</td>
-		</tr>--}}
 	</table>
+
 	@yield('final', '')
 	<div class="column">
 		<p><strong>Uwagi:</strong></p>

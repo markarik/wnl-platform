@@ -40,7 +40,7 @@
 @endsection
 
 @section('before-orders-title')
-	Przed korektą
+	Zamówienie
 @endsection
 
 @section('before-orders-list')
@@ -67,34 +67,80 @@
 @endsection
 
 @section('after-orders-title')
-	Po korekcie
+	Zamówienie
 @endsection
-
 @section('after-orders-list')
-	@foreach ($ordersCorrected as $index => $order)
+	@foreach ($refund ? $ordersCorrected : $ordersList as $index => $order)
 		<tr>
-			{{-- L.p. --}}
+			 L.p.
 			<td>{{ $index + 1 }}</td>
-			{{-- Nazwa produktu --}}
+			 Nazwa produktu
 			<td>{{ $order['product_name'] }}</td>
-			{{-- Jednostka --}}
+			 Jednostka
 			<td>{{ $order['unit'] }}</td>
-			{{-- Ilość --}}
+			 Ilość
 			<td>{{ $order['amount'] }}</td>
-			{{-- Cena brutto --}}
+			 Cena brutto
 			<td>{{ $order['priceGross'] }}zł</td>
-			{{-- VAT --}}
+			 VAT
 			<td>{{ $order['vat'] }}</td>
-			{{-- Wartość netto --}}
+			 Wartość netto
 			<td>{{ $order['priceNet'] }}zł</td>
-			{{-- Wartość brutto --}}
+			 Wartość brutto
 			<td>{{ $order['priceGross'] }}zł</td>
 		</tr>
 	@endforeach
 @endsection
 
+@section('settlement')
+	<h4>Rozliczenie wg stawek</h4>
+	<table>
+		<tr>
+			<th>Stawka VAT</th>
+			<th>Wartość netto</th>
+			<th>Kwota VAT</th>
+			<th>Wartość brutto</th>
+		</tr>
+		<tr>
+			<td>{{ $order['vat'] }}</td>
+			<td>{{ $summaryBefore['net'] }}zł</td>
+			<td>{{ $summaryBefore['vat'] }}zł</td>
+			<td>{{ $summaryBefore['gross'] }}zł</td>
+		</tr>
+		<tr>
+			<td><strong>Razem:</strong></td>
+			<td>{{ $summaryBefore['net'] }}zł</td>
+			<td>{{ $summaryBefore['vat'] }}zł</td>
+			<td>{{ $summaryBefore['gross'] }}zł</td>
+		</tr>
+	</table>
+@endsection
 
-@section('orders-summary')
+@section('afterCorrectionSettlement')
+	<h4>Rozliczenie wg stawek</h4>
+	<table>
+		<tr>
+			<th>Stawka VAT</th>
+			<th>Wartość netto</th>
+			<th>Kwota VAT</th>
+			<th>Wartość brutto</th>
+		</tr>
+		<tr>
+			<td>{{ $order['vat'] }}</td>
+			<td>{{ $summaryAfter['net'] }}zł</td>
+			<td>{{ $summaryAfter['vat'] }}zł</td>
+			<td>{{ $summaryAfter['gross'] }}zł</td>
+		</tr>
+		<tr>
+			<td><strong>Razem:</strong></td>
+			<td>{{ $summaryAfter['net'] }}zł</td>
+			<td>{{ $summaryAfter['vat'] }}zł</td>
+			<td>{{ $summaryAfter['gross'] }}zł</td>
+		</tr>
+	</table>
+@endsection
+
+@section('taxDifference')
 	@if($taxDifference['vat'] < 0)
 		<h4>Zmniejszenie podatku należnego</h4>
 	@else
@@ -122,31 +168,9 @@
 	</table>
 @endsection
 
-{{--@section('settlement')
-	<h4>Rozliczenie wg stawek</h4>
-	<table>
-		<tr>
-			<th>Stawka VAT</th>
-			<th>Wartość netto</th>
-			<th>Kwota VAT</th>
-			<th>Wartość brutto</th>
-		</tr>
-		<tr>
-			<td>{{ $order['vat'] }}</td>
-			<td>{{ $settlement['priceNet'] }}zł</td>
-			<td>{{ $settlement['vatValue'] }}zł</td>
-			<td>{{ $settlement['priceGross'] }}zł</td>
-		</tr>
-		<tr>
-			<td><strong>Razem:</strong></td>
-			<td>{{ $settlement['priceNet'] }}zł</td>
-			<td>{{ $settlement['vatValue'] }}zł</td>
-			<td>{{ $settlement['priceGross'] }}zł</td>
-		</tr>
-	</table>
-@endsection--}}
 
-{{--@section('advances')
+{{--
+@section('advances')
 	<h4>Poprzednie zaliczki</h4>
 	<table>
 		<tr>
@@ -170,7 +194,8 @@
 			<td>{{ $previousAdvances->sum('amount') }}zł</td>
 		</tr>
 	</table>
-@endsection--}}
+@endsection
+--}}
 
 @section('notes')
 	<ul>
@@ -181,6 +206,12 @@
 @endsection
 
 @section('summary')
+	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
+	<p>Wpłacono: <strong>{{ $paid }}zł</strong></p>
+	<p>Pozostało z zamówienia: <strong>{{ $remainingAmountBefore }}zł</strong></p>
+@endsection
+
+@section('afterCorrectionSummary')
 	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong></p>
 	@if (!$refund)
 		<p>Wpłacono: <strong>{{ $paid + $difference }}zł</strong></p>

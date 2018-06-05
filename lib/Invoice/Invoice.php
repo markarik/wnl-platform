@@ -370,7 +370,7 @@ class Invoice
 		return $invoice;
 	}
 
-	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund)
+	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund = true)
 	{
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
 		$previousCorrectives = $order->invoices()->where('series', self::CORRECTIVE_SERIES_NAME)->get();
@@ -440,6 +440,7 @@ class Invoice
 		$data['ordersCorrected'][0]['priceNet'] = $this->price($totalCorrected / (1 + $vatValue));
 		$data['ordersCorrected'][0]['vat'] = $vatString;
 
+		$data['remainingAmountBefore'] = $this->price($order->total_with_coupon - $order->paid_amount);
 		$data['remainingAmount'] = $this->price($order->total_with_coupon - $totalCorrected);
 
 		$data['previousAdvances'] = $previousAdvances;
@@ -457,6 +458,19 @@ class Invoice
 			'gross' => $difference,
 			'vat'   => $this->price($vatValue * $difference / (1 + $vatValue)),
 			'net'   => $this->price($difference / (1 + $vatValue)),
+		];
+
+		$data['summaryBefore'] = [
+			'gross' => $order->paid_amount,
+			'vat'   => $this->price($vatValue * $order->paid_amount / (1 + $vatValue)),
+			'net'   => $this->price($order->paid_amount / (1 + $vatValue)),
+		];
+
+		$paidAfterCorrection = $order->paid_amount + $difference;
+		$data['summaryAfter'] = [
+			'gross' => $paidAfterCorrection,
+			'vat'   => $this->price($vatValue * $paidAfterCorrection / (1 + $vatValue)),
+			'net'   => $this->price($paidAfterCorrection / (1 + $vatValue)),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -511,6 +525,7 @@ class Invoice
 		$pdf->setPaper('a4');
 
 		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->output());
+
 	}
 
 	protected function nextNumberInSeries($series)

@@ -178,10 +178,10 @@ class Invoice
 		$builder = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME);
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
-		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
-		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
+		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),

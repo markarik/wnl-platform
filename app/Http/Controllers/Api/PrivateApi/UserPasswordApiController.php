@@ -17,7 +17,7 @@ class UserPasswordApiController extends ApiController
 				->update(['password' => bcrypt($request->new_password)]);
 			return $this->respondOK();
 		} else {
-			return $this->respondInvalidInput('wrong old_password');
+			return $this->respondInvalidInput('Ups! Stare hasło jest nieprawidłowe :(');
 		}
 	}
 }

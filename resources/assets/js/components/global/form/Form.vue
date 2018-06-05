@@ -39,7 +39,8 @@
 			'hideDefaultSubmit',
 			'suppressEnter',
 			'resetAfterSubmit',
-			'loading'
+			'loading',
+			'handleError'
 		],
 		computed: {
 			anyErrors() {
@@ -107,10 +108,10 @@
 							hasAttachChanged && this.cacheAttach()
 						},
 						reason => {
-							if (reason.response.status === 404) {
+							if (this.handleError) {
+								return this.$emit('submitError', reason.response)
+							} else if (reason.response.status === 404) {
 								this.errorFading(this.$t('ui.error.notFound'))
-							} else if (reason.response.data.message === 'wrong old_password') {
-								this.errorFading('Ups! Stare hasło jest niepoprawne :(')
 							} else {
 								this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 							}

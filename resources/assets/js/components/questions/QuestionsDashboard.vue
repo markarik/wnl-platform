@@ -82,7 +82,7 @@
 						</div>
 
 						<!-- Mock exam -->
-						<div v-if="stats.mock_exams">
+						<div v-if="stats.mock_exams.length">
 							<div class="questions-dashboard-subheading margin top">
 								<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
 								{{$t('questions.dashboard.stats.mockExam')}}

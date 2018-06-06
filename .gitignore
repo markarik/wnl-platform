@@ -20,3 +20,4 @@ public/hot
 phpunit.dusk.xml
 scenario.dusk
 public/report.html
+*.sql

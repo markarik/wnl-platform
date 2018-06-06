@@ -40,7 +40,7 @@
 			'suppressEnter',
 			'resetAfterSubmit',
 			'loading',
-			'handleError'
+			'submitError'
 		],
 		computed: {
 			anyErrors() {
@@ -108,21 +108,24 @@
 							hasAttachChanged && this.cacheAttach()
 						},
 						reason => {
-							if (this.handleError) {
-								return this.$emit('submitError', reason.response)
-							} else if (reason.response.status === 404) {
-								this.errorFading(this.$t('ui.error.notFound'))
+							if (this.submitError) {
+								this.$emit('submitError', reason.response)
 							} else {
-								this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+								this.handleError(reason)
 							}
-							this.$emit('submitError')
 						},
 					)
 					.catch((error) => {
 						$wnl.logger.error(error, error.stack)
 						this.errorFading('Nie udało się.')
-						this.$emit('submitError')
 					})
+			},
+			handleError(reason) {
+				if (reason.response.status === 404) {
+					this.errorFading(this.$t('ui.error.notFound'))
+				} else {
+					this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+				}
 			},
 			cacheAttach() {
 				this.cachedAttach = _.cloneDeep(this.attach);

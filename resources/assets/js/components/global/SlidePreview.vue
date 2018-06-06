@@ -98,7 +98,7 @@
 				default: false
 			},
 			slidesCount: {
-				type: Number,
+				type: Number | String,
 			}
 		},
 		computed: {

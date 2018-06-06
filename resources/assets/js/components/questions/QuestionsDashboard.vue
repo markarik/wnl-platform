@@ -88,9 +88,16 @@
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
 							<div class="questions-stats stats-exam" v-for="(mockExam, index) in stats.mock_exams" :key="index">
-								<div @click="toggleExamExpand(index)" class="exam-name">
-									{{mockExam.exam_name}} - {{parseDate(mockExam.created_at)}}
-									<span class="icon is-small">
+								<div @click="toggleExamExpand(index)" :class="{'exam-header': true, 'is-expanded': expandedExams.includes(index)}">
+									<span class="exam-header__name">
+										{{mockExam.exam_name}}
+									</span>
+									<span class="exam-header__meta">
+										<span :class="scoreClass(mockExam.correct_perc_total)">{{Math.round(mockExam.correct_perc_total)}}%</span>
+										&nbsp;·&nbsp;
+										<span class="exam-header__date">{{parseDate(mockExam.created_at)}}</span>
+									</span>
+									<span class="exam-header__expand icon is-small">
 										<i :class="['fa', expandedExams.includes(index) ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
 									</span>
 								</div>
@@ -220,6 +227,10 @@
 		margin: $margin-medium 0 $margin-huge
 
 	.questions-stats
+		&.stats-exam
+			border: $border-light-gray
+			margin-bottom: 12px
+
 		.stats-item
 			+flex-space-between()
 			flex-wrap: wrap
@@ -263,14 +274,6 @@
 				text-align: center
 				width: 60px
 
-			.score,
-			.progress-number
-				&.is-danger
-					color: $color-red
-
-				&.is-success
-					color: $color-green
-
 	.questions-feed-container
 		width: 100%
 		overflow-y: auto
@@ -288,9 +291,33 @@
 			color: $color-background-gray
 			margin-right: $margin-small
 
-	.exam-name
+	.exam-header
 		cursor: pointer
-		line-height: 32px
+		display: flex
+		flex-direction: column
+		flex-wrap: wrap
+		height: 60px
+		padding: $margin-small $margin-base
+		align-content: space-between
+		justify-content: center
+		margin-bottom: $margin-small
+
+		&.is-expanded
+			border-bottom: $border-light-gray
+
+		&__name
+			font-weight: bold
+
+		&__date
+			font-size: $font-size-minus-1
+			color: $color-gray-dimmed
+
+	.is-danger
+		color: $color-red
+
+	.is-success
+		color: $color-green
+
 </style>
 
 <script>

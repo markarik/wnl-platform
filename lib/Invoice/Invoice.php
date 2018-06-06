@@ -178,10 +178,10 @@ class Invoice
 		$builder = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME);
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
-		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
-		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
+		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
@@ -370,7 +370,7 @@ class Invoice
 		return $invoice;
 	}
 
-	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference)
+	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund = true)
 	{
 		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
 		$previousCorrectives = $order->invoices()->where('series', self::CORRECTIVE_SERIES_NAME)->get();
@@ -383,6 +383,7 @@ class Invoice
 			'series' => self::CORRECTIVE_SERIES_NAME,
 			'amount' => $difference,
 			'vat'    => $corrected->vat,
+			'corrected_invoice_id' => $corrected->id,
 		]);
 
 		$data = [
@@ -400,6 +401,7 @@ class Invoice
 			],
 			'reason'           => $reason,
 			'paid'             => $order->paid_amount,
+			'refund'           => $refund,
 		];
 
 		$data['buyer'] = $this->getBuyerData($order->user);
@@ -418,7 +420,7 @@ class Invoice
 				'amount'       => 1,
 			],
 		];
-		$totalPrice = $corrected->amount + $previousCorrectives->sum('amount');
+		$totalPrice = $order->total_with_coupon;
 		$totalCorrected = $totalPrice + $difference;
 
 		if ($coupon = $order->coupon) {
@@ -438,7 +440,8 @@ class Invoice
 		$data['ordersCorrected'][0]['priceNet'] = $this->price($totalCorrected / (1 + $vatValue));
 		$data['ordersCorrected'][0]['vat'] = $vatString;
 
-		$data['remainingAmount'] = $this->price($totalPrice - $totalPaid);
+		$data['remainingAmountBefore'] = $this->price($order->total_with_coupon - $order->paid_amount);
+		$data['remainingAmount'] = $this->price($order->total_with_coupon - $order->paid_amount - $difference);
 
 		$data['previousAdvances'] = $previousAdvances;
 		$data['recentSettlement'] = $recentSettlement;
@@ -455,6 +458,19 @@ class Invoice
 			'gross' => $difference,
 			'vat'   => $this->price($vatValue * $difference / (1 + $vatValue)),
 			'net'   => $this->price($difference / (1 + $vatValue)),
+		];
+
+		$data['summaryBefore'] = [
+			'gross' => $order->paid_amount,
+			'vat'   => $this->price($vatValue * $order->paid_amount / (1 + $vatValue)),
+			'net'   => $this->price($order->paid_amount / (1 + $vatValue)),
+		];
+
+		$paidAfterCorrection = $order->paid_amount + $difference;
+		$data['summaryAfter'] = [
+			'gross' => $paidAfterCorrection,
+			'vat'   => $this->price($vatValue * $paidAfterCorrection / (1 + $vatValue)),
+			'net'   => $this->price($paidAfterCorrection / (1 + $vatValue)),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
@@ -509,6 +525,7 @@ class Invoice
 		$pdf->setPaper('a4');
 
 		Storage::put("invoices/{$data['invoiceData']['id']}.pdf", $pdf->output());
+
 	}
 
 	protected function nextNumberInSeries($series)

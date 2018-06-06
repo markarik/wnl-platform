@@ -34,7 +34,6 @@
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
 			submitError(payload) {
-				console.log(payload);
 				if (payload.data.message === 'wrong_old_password') {
 					this.addAutoDismissableAlert({
 						text: this.$t('ui.error.wrongOldPassword'),

@@ -214,6 +214,19 @@
 			examMode() {
 				return !!this.presetOptionsToPass.examMode && this.testMode
 			},
+			initialFilters() {
+				let filters = !isEmpty(this.presetFilters) ? this.presetFilters : this.activeFilters
+
+				if (this.presetOptions.examMode && this.presetOptions.examTagId) {
+					const filterName = 'by_taxonomy-exams';
+					const filterIndex = this.filters[filterName].items.findIndex(item => {
+						return item.value === this.presetOptions.examTagId
+					})
+					filters = filterIndex > -1 ? [`${filterName}.items[${filterIndex}]`] : filters
+				}
+
+				return filters
+			}
 		},
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
@@ -478,8 +491,8 @@
 						this.fetchQuestions({
 							saveFilters: false,
 							useSavedFilters: false,
-							filters: hasPresetFilters ? this.presetFilters : this.activeFilters,
-							page: (data.position && data.position.page) || 1
+							page: (data.position && data.position.page) || 1,
+							filters: this.initialFilters,
 						}).then(() => resolve(data))
 					})
 				})

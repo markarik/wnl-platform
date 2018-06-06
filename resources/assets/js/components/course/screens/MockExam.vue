@@ -26,13 +26,16 @@
 			content() {
 				return this.screenData.content
 			},
+			examTagId() {
+				const exam = this.screenData.meta.resources && this.screenData.meta.resources.find(resource => {
+					return resource.name === 'exam_tag_id'
+				}) || {}
+				return exam.id
+			},
 			routeParams() {
 				return {
 					name: 'questions-list',
 					params: {
-						presetFilters: [
-							'by_taxonomy-exams.items[0]',
-						],
 						presetOptions: {
 							activeView: 'test',
 							canChangeTime: false,
@@ -40,7 +43,8 @@
 							sizesToChoose: [200],
 							testQuestionsCount: 200,
 							time: 240,
-							examMode: true
+							examMode: true,
+							examTagId: this.examTagId
 						},
 					},
 				}

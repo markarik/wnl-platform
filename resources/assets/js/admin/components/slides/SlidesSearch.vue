@@ -53,6 +53,11 @@ export default {
 			error: false
 		}
 	},
+	props: {
+		slideId: {
+			type: String || Number,
+		},
+	},
 	computed: {
 		slideNumber() {
 			return String(this.slideOrderNo - 1)
@@ -126,7 +131,11 @@ export default {
 							return response.data[0].slide_id
 						})
 			},
+	},
+	watch: {
+		'slideId' (newVal) {
+			this.slideIdInput = newVal
+		}
 	}
 }
 </script>
-

@@ -8,6 +8,7 @@
 	>
 		<wnl-slides-search
 			@resourceUrlFetched="onResourceUrlFetched"
+			:slideId="slideId"
 		/>
 	</wnl-slides-editor>
 </template>
@@ -36,5 +37,15 @@
 				this.screenId = screenId
 			}
 		},
+		mounted() {
+			const slideId = this.$route.query.slideId
+			this.slideId = slideId
+			if (slideId) {
+				this.onResourceUrlFetched({
+					slideId: slideId,
+					url: `/papi/v1/slides/${slideId}`
+				})
+			}
+		}
 	}
 </script>

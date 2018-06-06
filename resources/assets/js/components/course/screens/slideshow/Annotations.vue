@@ -2,14 +2,15 @@
 	<div class="slideshow-annotations" :class="{'is-mobile': isMobile}">
 		<p class="metadata">Komentarze do slajdu {{currentSlideOrderNumber}}</p>
 		<wnl-comments-list
-			v-if="currentSlideId > 0"
-			module="slideshow"
-			urlParam="slide"
-			commentableResource="slides"
-			isUnique="true"
-			:commentableId="currentSlideId"
-			@commentsHidden="$emit('commentsHidden')"
-			@commentsUpdated="onCommentsUpdated"
+		v-if="currentSlideId > 0"
+		module="slideshow"
+		urlParam="slide"
+		commentableResource="slides"
+		isUnique="true"
+		:commentableId="currentSlideId"
+		@commentsHidden="$emit('commentsHidden')"
+		@commentsUpdated="onCommentsUpdated"
+		:currentSlideId="currentSlideId"
 		></wnl-comments-list>
 	</div>
 </template>
@@ -20,6 +21,8 @@
 	.slideshow-annotations
 		flex: 1 auto
 		margin: 0 $margin-base
+		display: flex
+		flex-direction: column
 
 		&.is-mobile
 			margin: 0 $margin-small
@@ -53,6 +56,6 @@
 			onCommentsUpdated(comments) {
 				this.$emit('annotationsUpdated', comments)
 			},
-		},
+		}
 	}
 </script>

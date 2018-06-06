@@ -67,7 +67,7 @@
 			this.setLinkedQuestions()
 		},
 		watch: {
-			'slideId' (to, from) {
+			'slideId' () {
 				this.debouncedGetLinkedQuestions()
 			}
 		}

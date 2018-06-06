@@ -353,7 +353,7 @@
 				plan: null,
 				planRoute: {},
 				stats: {},
-        expandedExams: []
+				expandedExams: []
 			}
 		},
 		computed: {
@@ -376,17 +376,17 @@
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
-      toggleExamExpand(index) {
+			toggleExamExpand(index) {
 				const indexOf = this.expandedExams.indexOf(index)
-        if (indexOf > -1) {
+				if (indexOf > -1) {
 					this.expandedExams.splice(indexOf, 1);
-        } else {
+				} else {
 					this.expandedExams.push(index)
-        }
-      },
-      parseDate(date) {
+				}
+			},
+			parseDate(date) {
 				return moment(date.date).format('LL')
-      },
+			},
 			setPlanRoute() {
 				this.planRoute = {
 					name: 'questions-list',

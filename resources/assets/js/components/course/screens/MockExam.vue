@@ -27,10 +27,13 @@
 				return this.screenData.content
 			},
 			examTagId() {
-				const exam = this.screenData.meta.resources && this.screenData.meta.resources.find(resource => {
+				if (!this.screenData.meta.resources) return 0
+
+				const exam = this.screenData.meta.resources.find(resource => {
 					return resource.name === 'exam_tag_id'
 				}) || {}
-				return exam.id
+
+				return exam.id || 0
 			},
 			routeParams() {
 				return {

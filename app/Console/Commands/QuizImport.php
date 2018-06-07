@@ -65,6 +65,8 @@ class QuizImport extends Command
 		}
 		print PHP_EOL;
 
+		if (!$files) $this->importFile($this->path);
+
 		return;
 	}
 
@@ -159,6 +161,7 @@ class QuizImport extends Command
 		if (!empty($values[13])) {
 			$this->globalTags[] = trim($values[13]);
 		}
+
 
 		$tagNames = ['LEK-' . $values[8], $values[9]];
 		$tagNames = array_merge($tagNames, array_map('trim', explode('/', $values[11])));

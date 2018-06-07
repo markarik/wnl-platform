@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Product;
 use App\Models\UserLesson;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -65,35 +66,45 @@ class SetUsersLessons extends Command
 			->where('orders.canceled', '<>', 1)
 			->get();
 
-		foreach($userOrders as $order) {
-			$lessons = $order->product->lessons;
-
-			$lessonsWithStartDate = $lessons->map(function($item) use ($user) {
-				if ($user->lessonsAvailability->contains($item)) {
-					return null;
-				}
-
-				return [
-					'lesson_id' => $item->id,
-					'start_date' => $item->pivot->start_date,
-					'user_id' => $user->id
-				];
-			})->filter()->toArray();
-
-			try {
-				UserLesson::insert($lessonsWithStartDate);
-			} catch (\PDOException $e) {
-				DB::rollback();
-				print PHP_EOL;
-				$this->error("Failed to save lessons for user $user->id");
-				throw $e;
-			} catch (\Exception $ex) {
-				print PHP_EOL;
-				DB::rollback();
-				$this->error("Failed to save lessons for user $user->id");
-				throw $ex;
-			}
+		if ($user->isAdmin()) {
+			$lessons = Product::find(9)->lessons;
+			$this->setLessonsDates($lessons, $user);
 		}
-		DB::commit();
+
+		foreach($userOrders as $order) {
+			if ($user->isAdmin()) {
+				$lessons = Product::find(9)->lessons;
+			} else {
+				$lessons = $order->product->lessons;
+			}
+
+			$this->setLessonsDates($lessons, $user);
+		}
+	}
+
+	private function setLessonsDates($lessons, $user) {
+		$lessonsWithStartDate = $lessons->map(function($item) use ($user) {
+			if ($user->lessonsAvailability->contains($item)) {
+				return null;
+			}
+
+			return [
+				'lesson_id' => $item->id,
+				'start_date' => $item->pivot->start_date,
+				'user_id' => $user->id
+			];
+		})->filter()->toArray();
+
+		try {
+			UserLesson::insert($lessonsWithStartDate);
+		} catch (\PDOException $e) {
+			print PHP_EOL;
+			$this->error("Failed to save lessons for user $user->id");
+			throw $e;
+		} catch (\Exception $ex) {
+			print PHP_EOL;
+			$this->error("Failed to save lessons for user $user->id");
+			throw $ex;
+		}
 	}
 }

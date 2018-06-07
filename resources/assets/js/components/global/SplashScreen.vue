@@ -2,11 +2,8 @@
 	<div class="splash-screen scrollable-main-container">
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<div class="splash-screen-countdown" v-if="$upcomingEditionParticipant.isAllowed('access')">
-			<p class="title is-4">Najbliższa edycja kursu startuje za:</p>
-			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
-			<p class="info">
-				Jeśli chcesz zadeklarować chęć wcześniejszej nauki (od 15 maja) i poprosić o wcześniejszą wysyłkę materiałów - <a href="https://goo.gl/forms/wvzKZbIrpWqqbyYB2" target="_blank">wypełnij ankietę</a> do 25 kwietnia.
-			</p>
+			<p class="title is-4">Dostęp do kursu uzyskasz już {{startDate}}!</p>
+			<p class="info"></p>
 			<p class="info">
 				Twoje zamówienia znajdziesz w zakładce - <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.
 			</p>
@@ -72,28 +69,10 @@
 			...mapGetters(['currentUserSubscriptionDates']),
 			countdownImageUrl() {
 				return getImageUrl('countdown.png')
-			}
-		},
-		data: () => {
-			return {
-				loaded: false,
-				timeLeft: {
-					value: 0
-			 	}
-			}
-		},
-		methods: {
-			getTimeLeft() {
-				const theDate = new Date(this.currentUserSubscriptionDates.min * 1000)
-				return moment.duration(moment(theDate).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
 			},
-			setTimeLeft() {
-				set(this.timeLeft, 'value', this.getTimeLeft())
-				this.loaded = true
+			startDate() {
+				return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL')
 			},
 		},
-		mounted() {
-			this.$upcomingEditionParticipant.isAllowed('access') && window.setInterval(this.setTimeLeft, 1000)
-		}
 	}
 </script>

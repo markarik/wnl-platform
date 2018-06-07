@@ -24,7 +24,6 @@ class UserQuizResultsApiController extends ApiController
 	// quizSetId - userId - cacheVersion
 	const KEY_QUIZ_TEMPLATE = 'UserState:Quiz:%s:%s:%s';
 	const CACHE_VERSION = 1;
-	const EXAM_TAG_ID = 538;
 	const EXAM_FILTER = 'by_taxonomy-exams';
 
 	public function __construct(Request $request)

@@ -5,6 +5,7 @@
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
 			<input
+				type="password"
 				class="input"
 				:class="{'is-danger': hasErrors}"
 				:name="name"
@@ -29,7 +30,7 @@
 	import { formInput } from 'js/mixins/form-input'
 
 	export default {
-		name: 'Text',
+		name: 'Password',
 		props: {
 			name: {
 				type: String,

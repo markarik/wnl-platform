@@ -26,6 +26,9 @@ export const ui = {
 		date: 'Wybierz datę',
 	},
 	error: {
+		defaultErrorHandle: 'Ups, coś poszło nie tak :(',
+		wrongOldPassword: 'Ups, stare hasło jest nieprawidłowe.',
+		samePasswords: 'Nowe hasło musi różnić się od starego.',
 		notFound: `Ups, zapisywanie nie powiodło się.
 			Najprawdopodobniej treść do której się odwołujesz została usunięta.
 			W przypadku dalszych problemów odśwież stronę.`,

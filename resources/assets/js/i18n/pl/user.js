@@ -70,8 +70,9 @@ export const user = {
 		questionsConfirmation: 'Czy na pewno chcesz usunąć wyniki pytań kontrolnych?',
 		collectionsConfirmation: 'Czy na pewno chcesz wyczyścić swoją kolekcję?',
 		alertError: 'Ups... Coś poszło nie tak. Spróbujesz jesze raz?',
-		alertSuccess: `OK, wszystko poszło zgodnie z planem. Jeśli to była 
+		alertSuccess: `OK, wszystko poszło zgodnie z planem. Jeśli to była
 		spektakularna pomyłka, daj nam znać. Jest szansa, że uda się odzyskać
 		usunięte informacje ;)`,
-    }
+    },
+	passwordResetHeader: 'Zmiana hasła',
 }

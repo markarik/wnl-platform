@@ -21,7 +21,7 @@ export var formInput = {
 			return this.getter('isLoading')
 		},
 		inputValue: {
-			get () {
+			get() {
 				return this.getterFunction('getField', this.name)
 			},
 			set(value) {

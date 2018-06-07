@@ -16,8 +16,8 @@
 			@submitError="submitError"
 			:submitError="true">
 			<wnl-form-text name="old_password">Stare hasło</wnl-form-text>
-			<wnl-form-text name="new_password">Nowe hasło</wnl-form-text>
-			<wnl-form-text name="new_password_confirmation">Powtórz nowe hasło</wnl-form-text>
+			<wnl-form-text :type="'password'" name="new_password">Nowe hasło</wnl-form-text>
+			<wnl-form-text :type="'password'" name="new_password_confirmation">Powtórz nowe hasło</wnl-form-text>
 		</wnl-form>
 	</div>
 </template>

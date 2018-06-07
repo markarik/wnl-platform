@@ -4,14 +4,16 @@
 			<slot></slot>
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
-			<input
-				type="text"
+			<!-- https://github.com/vuejs/vue/issues/3915#issuecomment-356655537 -->
+			<component is="input"
 				class="input"
 				:class="{'is-danger': hasErrors}"
+				:type="type"
 				:name="name"
 				:placeholder="placeholder || $slots.default[0].text || ''"
 				@input="onInput"
 				v-model="inputValue">
+			</component>
 		</div>
 
 		<span class="help is-danger"
@@ -31,7 +33,18 @@
 
 	export default {
 		name: 'Text',
-		props: ['name', 'placeholder'],
+		props: {
+			name: {
+				type: String,
+			},
+			placeholder: {
+				type: String
+			},
+			type: {
+				type: String,
+				default: 'text',
+			}
+		},
 		mixins: [formInput],
 		computed: {
 			default() {

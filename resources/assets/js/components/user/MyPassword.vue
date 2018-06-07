@@ -16,8 +16,8 @@
 			@submitError="submitError"
 			:submitError="true">
 			<wnl-form-text name="old_password">Stare hasło</wnl-form-text>
-			<wnl-form-text :type="'password'" name="new_password">Nowe hasło</wnl-form-text>
-			<wnl-form-text :type="'password'" name="new_password_confirmation">Powtórz nowe hasło</wnl-form-text>
+			<wnl-form-password name="new_password">Nowe hasło</wnl-form-password>
+			<wnl-form-password name="new_password_confirmation">Powtórz nowe hasło</wnl-form-password>
 		</wnl-form>
 	</div>
 </template>
@@ -25,11 +25,13 @@
 <script>
 	import { mapActions } from 'vuex'
 	import { Form, Text } from 'js/components/global/form'
+	import Password from 'js/components/global/form/Password'
 
 	export default {
 		components: {
 			'wnl-form': Form,
 			'wnl-form-text': Text,
+			'wnl-form-password': Password,
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),

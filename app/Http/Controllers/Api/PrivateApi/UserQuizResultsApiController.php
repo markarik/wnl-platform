@@ -77,14 +77,10 @@ class UserQuizResultsApiController extends ApiController
 			}
 		}
 
-		if (!empty($meta['examMode'])) {
-			$filters = $meta['filters'];
-			$otherFilters = $this->filtersExcept($filters, self::EXAM_FILTER);
-			$isExam = empty($otherFilters)
-				&& count($filters[0][self::EXAM_FILTER]) === 1
-				&& in_array(self::EXAM_TAG_ID, $filters[0][self::EXAM_FILTER]);
+		if (!empty($meta['examMode']) && !empty($meta['examTagId'])) {
+			$examTagId = $meta['examTagId'];
 
-			$this->dispatch(new CalculateExamResults(self::EXAM_TAG_ID, $userId, $recordsToInsert));
+			$this->dispatch(new CalculateExamResults($examTagId, $userId, $recordsToInsert));
 		}
 
 		UserQuizResults::insert($recordsToInsert);

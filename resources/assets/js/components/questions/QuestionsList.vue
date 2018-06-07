@@ -214,13 +214,16 @@
 			examMode() {
 				return !!this.presetOptionsToPass.examMode && this.testMode
 			},
+			examTagId() {
+				return this.presetOptions.examTagId || 0
+			},
 			initialFilters() {
 				let filters = !isEmpty(this.presetFilters) ? this.presetFilters : this.activeFilters
 
-				if (this.presetOptions.examMode && this.presetOptions.examTagId) {
+				if (this.presetOptions.examMode && this.examTagId) {
 					const filterName = 'by_taxonomy-exams';
 					const filterIndex = this.filters[filterName].items.findIndex(item => {
-						return item.value === this.presetOptions.examTagId
+						return item.value === this.examTagId
 					})
 					filters = filterIndex > -1 ? [`${filterName}.items[${filterIndex}]`] : filters
 				}
@@ -375,7 +378,7 @@
 			performCheckQuestions() {
 				scrollToTop()
 				this.testProcessing = true
-				this.checkQuestions({examMode: this.examMode}).then(results => {
+				this.checkQuestions({examMode: this.examMode, examTagId: this.examTagId}).then(results => {
 					this.testResults         = results
 					this.testProcessing      = false
 					this.testMode            = false

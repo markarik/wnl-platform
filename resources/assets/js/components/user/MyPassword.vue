@@ -15,7 +15,7 @@
 			resourceRoute="users/current/password"
 			@submitError="submitError"
 			:submitError="true">
-			<wnl-form-text name="old_password">Stare hasło</wnl-form-text>
+			<wnl-form-password name="old_password">Stare hasło</wnl-form-password>
 			<wnl-form-password name="new_password">Nowe hasło</wnl-form-password>
 			<wnl-form-password name="new_password_confirmation">Powtórz nowe hasło</wnl-form-password>
 		</wnl-form>
@@ -24,7 +24,7 @@
 
 <script>
 	import { mapActions } from 'vuex'
-	import { Form, Text } from 'js/components/global/form'
+	import Form from 'js/components/global/form/Form'
 	import Password from 'js/components/global/form/Password'
 
 	export default {

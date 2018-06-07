@@ -81,7 +81,12 @@ class InvoicesExportToJpk extends Command
 			]);
 		}
 
-		\Storage::put('exports/jpk.xml', $this->toXml($data));
+		$filename = sprintf('jpk-%s-%s.xml',
+			$dateFrom->format('Ymd'),
+			$dateTo->format('Ymd')
+		);
+
+		\Storage::put("exports/{$filename}", $this->toXml($data));
 
 		return;
 	}

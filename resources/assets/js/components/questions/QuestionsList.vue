@@ -215,7 +215,7 @@
 				return !!this.presetOptionsToPass.examMode && this.testMode
 			},
 			examTagId() {
-				return this.presetOptions.examTagId || 0
+				return get(this.presetOptions, 'examTagId', 0)
 			},
 			initialFilters() {
 				let filters = !isEmpty(this.presetFilters) ? this.presetFilters : this.activeFilters

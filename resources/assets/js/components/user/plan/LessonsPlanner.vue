@@ -86,14 +86,13 @@
 		computed: {
 			...mapGetters('course', ['userLessons', 'getRequiredLessons']),
 			sortedRequiredUserLessons() {
-				console.log(this.requiredLessons);
 				return this.requiredLessons.sort((lessonA, lessonB) => {
 					return lessonA.startDate - lessonB.startDate
 				})
 			},
 			requiredLessons() {
 				return Object.values(this.getRequiredLessons).filter(requiredLesson => {
-					if (requiredLesson.is_required === 1 && requiredLesson.isAccessible) {
+					if (requiredLesson.is_required && requiredLesson.isAccessible) {
 						return requiredLesson
 					}
 				})

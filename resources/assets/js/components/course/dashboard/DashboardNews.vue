@@ -30,7 +30,9 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-3-welcome-dude'
+	const CURRENT_NEWS = 'edition-3-course-begins'
+	const DISPLAY_FROM = new Date('2018-06-09 03:00:00')
+	const DISPLAY_UNTIL = ''
 	const REQUIRED_ROLE = ''
 
 	export default {
@@ -42,23 +44,34 @@
 		},
 		computed: {
 			...mapGetters(['currentUserName', 'hasRole']),
+			hasNews() {
+				return CURRENT_NEWS !== ''
+			},
+			hasRequiredRole() {
+				return REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE)
+			},
+			hasSeenNews() {
+				return store.get(this.newsStoreKey)
+			},
+			isNewsTimely() {
+				let now = new Date()
+				return (DISPLAY_FROM === '' || DISPLAY_FROM < now) &&
+				(DISPLAY_UNTIL === '' || DISPLAY_UNTIL > now)
+			},
 			newsStoreKey() {
 				return `seen-dashboard-news-${CURRENT_NEWS}`
-			}
+			},
 		},
 		methods: {
 			seenCurrentNews() {
 				this.showNews = false
 				store.set(this.newsStoreKey, true)
 			},
+
 		},
 		mounted() {
-			if (CURRENT_NEWS !== '' &&
-				!store.get(this.newsStoreKey) &&
-				(REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE))
-			) {
-				this.showNews = true
-			}
+			this.showNews = (this.hasNews && !this.hasSeenNews &&
+				this.hasRequiredRole && this.isNewsTimely)
 		},
 	}
 </script>

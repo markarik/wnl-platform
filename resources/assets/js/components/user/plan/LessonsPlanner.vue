@@ -84,21 +84,29 @@
 			}
 		},
 		computed: {
-			...mapGetters('course', ['userLessons']),
-			sortedUserLessons() {
-				return this.userLessons.sort((lessonA, lessonB) => {
+			...mapGetters('course', ['userLessons', 'getRequiredLessons']),
+			sortedRequiredUserLessons() {
+				console.log(this.requiredLessons);
+				return this.requiredLessons.sort((lessonA, lessonB) => {
 					return lessonA.startDate - lessonB.startDate
 				})
 			},
+			requiredLessons() {
+				return Object.values(this.getRequiredLessons).filter(requiredLesson => {
+					if (requiredLesson.is_required === 1 && requiredLesson.isAccessible) {
+						return requiredLesson
+					}
+				})
+			},
 			planStartDate() {
-				if (!first(this.sortedUserLessons)) return
+				if (!first(this.sortedRequiredUserLessons)) return
 
-				return moment(first(this.sortedUserLessons).startDate * 1000).format('LL')
+				return moment(first(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
 			},
 			planEndDate() {
-				if (!last(this.sortedUserLessons)) return
+				if (!last(this.sortedRequiredUserLessons)) return
 
-				return moment(last(this.sortedUserLessons).startDate * 1000).format('LL')
+				return moment(last(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
 			},
 			activeView() {
 				return this.views.find(view => view.isActive) || {}

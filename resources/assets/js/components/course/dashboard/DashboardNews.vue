@@ -31,9 +31,8 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-3-course-begins'
-	// const DISPLAY_FROM = new Date('2018-06-09 03:00:00') // new Date() or empty string
-	const DISPLAY_FROM = '' // new Date() or empty string
+	const CURRENT_NEWS = 'edition-3-course-beginning'
+	const DISPLAY_FROM = new Date('2018-06-09 03:00:00') // new Date() or empty string
 	const DISPLAY_UNTIL = '' // new Date() or empty string
 	const REQUIRED_ROLE = ''
 
@@ -53,12 +52,12 @@
 				return REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE)
 			},
 			hasSeenNews() {
-				return store.get(this.newsStoreKey)
+				return !!store.get(this.newsStoreKey)
 			},
 			isNewsTimely() {
-				const NOW = new Date()
-				return (!DISPLAY_FROM instanceof Date || DISPLAY_FROM < NOW) &&
-				(!DISPLAY_UNTIL instanceof Date || DISPLAY_UNTIL > NOW)
+				const now = new Date()
+				return (!(DISPLAY_FROM instanceof Date) || DISPLAY_FROM < now) &&
+				(!(DISPLAY_UNTIL instanceof Date) || DISPLAY_UNTIL > now)
 			},
 			newsStoreKey() {
 				return `seen-dashboard-news-${CURRENT_NEWS}`

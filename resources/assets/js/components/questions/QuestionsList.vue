@@ -220,7 +220,7 @@
 			initialFilters() {
 				let filters = !isEmpty(this.presetFilters) ? this.presetFilters : this.activeFilters
 
-				if (this.presetOptions.examMode && this.examTagId) {
+				if (get(this.presetOptions, 'examMode') && this.examTagId) {
 					const filterName = 'by_taxonomy-exams';
 					const filterIndex = this.filters[filterName].items.findIndex(item => {
 						return item.value === this.examTagId

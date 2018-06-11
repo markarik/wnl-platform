@@ -20,9 +20,40 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass">
+	@import 'resources/assets/sass/variables'
+
 	.wnl-screen-html .content img:hover
 		opacity: 0.7
 		cursor: pointer
+
+	.wnl-screen-html
+		&.wnl-repetitions
+			.content
+				ol
+					counter-reset: li
+					margin-left: 0
+					padding-left: $margin-base
+
+				ol li
+					list-style-type: none
+
+					&::before
+						color: $color-ocean-blue
+						content: counter(li) ". "
+						counter-increment: li
+						font-weight: $font-weight-bold
+
+				ol li:nth-child(5n)
+					margin-bottom: $margin-big
+
+				ol li:nth-child(10n-4),
+				ol li:nth-child(10n-3),
+				ol li:nth-child(10n-2),
+				ol li:nth-child(10n-1),
+				ol li:nth-child(10n)
+
+					&::before
+						color: $color-purple
 </style>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -77,33 +108,6 @@
 		.content
 			font-size: $font-size-plus-1
 			line-height: $line-height-plus
-
-	.wnl-repetitions
-		ol
-			counter-reset: li
-			margin-left: 0
-			padding-left: $margin-base
-
-		ol li
-			list-style-type: none
-
-			&::before
-				color: $color-ocean-blue
-				content: counter(li) ". "
-				counter-increment: li
-				font-weight: $font-weight-bold
-
-		ol li:nth-child(5n)
-			margin-bottom: $margin-big
-
-		ol li:nth-child(10n-4),
-		ol li:nth-child(10n-3),
-		ol li:nth-child(10n-2),
-		ol li:nth-child(10n-1),
-		ol li:nth-child(10n)
-
-			&::before
-				color: $color-purple
 </style>
 
 <script>

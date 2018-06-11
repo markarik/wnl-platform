@@ -11,6 +11,7 @@
 		@commentsHidden="$emit('commentsHidden')"
 		@commentsUpdated="onCommentsUpdated"
 		:currentSlideId="currentSlideId"
+		:canEditSlide="canEditSlide"
 		></wnl-comments-list>
 	</div>
 </template>
@@ -44,6 +45,7 @@
 		props: {
 			slideshowId: Number,
 			currentSlideId: Number,
+			canEditSlide: Boolean,
 		},
 		computed: {
 			...mapGetters(['isMobile']),

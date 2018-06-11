@@ -21,7 +21,7 @@
 			</div>
 			<wnl-edit-slide-button
 			:currentSlideId="currentSlideId"
-			v-if="isAdmin"
+			v-if="isAdmin && canEditSlide"
 			/>
 		</div>
 		<wnl-comment
@@ -85,7 +85,17 @@
 			'wnl-edit-slide-button': EditSlideButton,
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly', 'currentSlideId'],
+		props: [
+			'module',
+			'commentableResource',
+			'commentableId',
+			'isUnique',
+			'urlParam',
+			'hideWatchlist',
+			'readOnly',
+			'currentSlideId',
+			'canEditSlide'
+		],
 		data() {
 			return {
 				formElement: {},

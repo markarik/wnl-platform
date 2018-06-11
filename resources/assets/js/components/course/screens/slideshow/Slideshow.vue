@@ -29,6 +29,7 @@
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
+					can-edit-slide
 				></wnl-annotations>
 			</div>
 		</div>

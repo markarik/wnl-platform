@@ -129,9 +129,7 @@ function _handleResponse({commit, dispatch}, response, resolve) {
 	dataArray.forEach(task => {
 		serializedTasks[task.id] = _parseIncludes(included, task)
 		serializedTasks[task.id].assignee = Object.values(assigneeProfiles).find(assigneeProfile => {
-			if (assigneeProfile.user_id === task.assignee_id) {
-				return assigneeProfile
-			}
+			return assigneeProfile.user_id === task.assignee_id
 		}) || {}
 	});
 

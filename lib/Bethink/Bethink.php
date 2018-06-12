@@ -18,6 +18,15 @@ class Bethink
 		return env('APP_URL') . "/{$assetPath}";
 	}
 
+	public function getAssetPublicUrl($assetPath)
+	{
+		if(config('filesystems.default') === 's3') {
+			return \Storage::url('public/' . $assetPath);
+		}
+
+		return env('APP_URL') . "/storage/{$assetPath}";
+	}
+
 	public function getResourceByClassInstance($class)
 	{
 		return snake_case(str_plural(class_basename($class)));

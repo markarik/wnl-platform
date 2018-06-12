@@ -59,10 +59,16 @@ class SetUsersLessons extends Command
 	}
 
 	protected function setUserLessonBasedOnOrders($user) {
+		$productIds = DB::table('lesson_product')->select('product_id')
+			->distinct()
+			->get()
+			->pluck('product_id')
+			->toArray();
+
 		$userOrders = $user
 			->orders()
 			->where('paid', 1)
-			->whereIn('product_id', [9,10])
+			->whereIn('product_id', $productIds)
 			->where('orders.canceled', '<>', 1)
 			->get();
 

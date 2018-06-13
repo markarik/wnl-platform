@@ -25,11 +25,11 @@
 			<div class="slideshow-menu">
 				<wnl-annotations
 					v-if="!isLoading"
-					:currentSlideId="currentSlideId"
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
-					can-edit-slide
+					:screenId="screenId"
+					:currentSlideId="currentSlideId"
 				></wnl-annotations>
 			</div>
 		</div>

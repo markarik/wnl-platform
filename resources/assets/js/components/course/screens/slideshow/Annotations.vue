@@ -11,10 +11,10 @@
 		@commentsHidden="$emit('commentsHidden')"
 		@commentsUpdated="onCommentsUpdated"
 		:currentSlideId="currentSlideId"
-		:canEditSlide="canEditSlide"
 		>
 		<wnl-edit-slide-button
 			:currentSlideId="currentSlideId"
+			:screenId="screenId"
 			v-if="isAdmin"
 		/>
 	</wnl-comments-list>
@@ -51,8 +51,8 @@
 		},
 		props: {
 			slideshowId: Number,
+			screenId: Number,
 			currentSlideId: Number,
-			canEditSlide: Boolean,
 		},
 		computed: {
 			...mapGetters(['isMobile', 'isAdmin']),

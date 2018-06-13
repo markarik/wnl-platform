@@ -3,7 +3,7 @@
 		<a
 			class="small"
 			target="_blank"
-			:href="`/admin/app/slides/edit?slideId=${currentSlideId}`"
+			:href="`/admin/app/slides/edit?screenId=${screenId}&slideId=${currentSlideId}`"
 		>
 			{{ $t('admin.editSlide') }}
 			<span class="icon is-small">
@@ -22,6 +22,7 @@
 		name: 'EditSlideButton',
 		props: {
 			currentSlideId: Number,
+			screenId: Number,
 		}
 	}
 </script>

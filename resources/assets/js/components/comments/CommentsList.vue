@@ -19,10 +19,7 @@
 				:module="module"
 				/>
 			</div>
-			<wnl-edit-slide-button
-			:currentSlideId="currentSlideId"
-			v-if="isAdmin && canEditSlide"
-			/>
+			<slot/>
 		</div>
 		<wnl-comment
 			v-if="showComments"
@@ -67,7 +64,6 @@
 	import { mapGetters } from 'vuex'
 	import { nextTick } from 'vue'
 
-	import EditSlideButton from 'js/admin/components/slides/EditSlideButton'
 	import NewCommentForm from 'js/components/comments/NewCommentForm'
 	import Comment from 'js/components/comments/Comment'
 	import highlight from 'js/mixins/highlight'
@@ -82,7 +78,6 @@
 			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
 			'wnl-watch': Watch,
-			'wnl-edit-slide-button': EditSlideButton,
 		},
 		mixins: [highlight],
 		props: [
@@ -93,8 +88,6 @@
 			'urlParam',
 			'hideWatchlist',
 			'readOnly',
-			'currentSlideId',
-			'canEditSlide'
 		],
 		data() {
 			return {
@@ -105,7 +98,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUser', 'isOverlayVisible', 'isAdmin']),
+			...mapGetters(['currentUser', 'isOverlayVisible']),
 			comments() {
 				return this.getterFunction('comments', {
 					resource: this.commentableResource,

@@ -1,11 +1,11 @@
 <template>
 	<div class="slides-editor">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
-				   :alert="alert"
-				   cssClass="fixed"
-				   :key="timestamp"
-				   :timestamp="timestamp"
-				   @delete="onDelete"
+		   :alert="alert"
+		   cssClass="fixed"
+		   :key="timestamp"
+		   :timestamp="timestamp"
+		   @delete="onDelete"
 		/>
 		<p class="title is-3">{{title}}</p>
 

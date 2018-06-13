@@ -10,7 +10,7 @@
 					<div class="field is-grouped">
 						<div class="control">
 							<label class="label">Numer screena</label>
-							<input @keyup.enter="getSlide" type="text" class="input" v-model="screenId">
+							<input @keyup.enter="getSlide" type="text" class="input" v-model="screenIdInput">
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
@@ -45,7 +45,7 @@ export default {
 	name: 'SlidesSearch',
 	data() {
 		return {
-			screenId: null,
+			screenIdInput: null,
 			slideOrderNo: null,
 			slideIdInput: null,
 			loading: false,
@@ -55,8 +55,11 @@ export default {
 	},
 	props: {
 		slideId: {
-			type: String || Number,
+			type: Number,
 		},
+		screenId: {
+			tyoe: Number,
+		}
 	},
 	computed: {
 		slideNumber() {
@@ -135,6 +138,9 @@ export default {
 	watch: {
 		'slideId' (newVal) {
 			this.slideIdInput = newVal
+		},
+		'screenId' (newVal) {
+			this.screenIdInput = newVal
 		}
 	}
 }

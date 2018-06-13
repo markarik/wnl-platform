@@ -1,6 +1,6 @@
 <template>
 	<wnl-slides-editor
-		:slideId="slideId"
+		:slideId="Number(slideId)"
 		:screenId="Number(screenId)"
 		:resourceUrl="resourceUrl"
 		:excluded="['snippet']"
@@ -8,7 +8,8 @@
 	>
 		<wnl-slides-search
 			@resourceUrlFetched="onResourceUrlFetched"
-			:slideId="slideId"
+			:slideId="Number(slideId)"
+			:screenId="Number(screenId)"
 		/>
 	</wnl-slides-editor>
 </template>
@@ -39,9 +40,12 @@
 		},
 		mounted() {
 			const slideId = this.$route.query.slideId
+			const screenId = this.$route.query.screenId
+			this.screenId = screenId
 			this.slideId = slideId
-			if (slideId) {
+			if (slideId && screenId) {
 				this.onResourceUrlFetched({
+					screenId: screenId,
 					slideId: slideId,
 					url: `/papi/v1/slides/${slideId}`
 				})

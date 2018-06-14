@@ -41,9 +41,13 @@ class MigrateFilesToS3 extends Command
 		$s3 = \Storage::disk('s3');
 
 		$this->scan($local, '/', function ($path) use ($s3, $local) {
-			$s3->put($path, $local->get($path));
-			$this->line('Copied ' . $path);
+			$this->info('Copying ' . $path);
+			if (!$s3->exists($path)) {
+				$s3->put($path, $local->get($path));
+				$this->line('Copied ' . $path);
+			}
 		});
+
 
 		$this->scan($s3, '/public', function ($path) use ($s3) {
 			$s3->setVisibility($path, 'public');

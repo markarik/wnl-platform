@@ -61,7 +61,7 @@
 								this.orders = []
 							}
 
-							const {included, ...orders} = response.data
+							const {included = {}, ...orders} = response.data
 							const {invoices} = included
 
 							this.orders = _.reverse(Object.values(orders)
@@ -69,7 +69,7 @@
 								.map(order => {
 									return {
 										...order,
-										invoices: order.invoices.map(invoiceId => invoices[invoiceId])
+										invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId])
 									}
 								})
 

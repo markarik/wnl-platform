@@ -275,9 +275,14 @@
 						this.detachingSlide = false;
 						this.$emit('resetSearchInputs')
 					}).catch(error => {
-						this.errorFading('Ups... Coś poszło nie tak.', 4000)
-						$wnl.logger.capture(error)
-						this.detachingSlide = false;
+						if (error.response.data.status === 400
+							|| error.response.data.status === 404) {
+							this.errorFading('Nie można znaleźć takiego slajdu.', 4000)
+						} else {
+							this.errorFading('Ups... Coś poszło nie tak.', 4000)
+							$wnl.logger.capture(error)
+							this.detachingSlide = false;
+						}
 					})
 				}
 			}

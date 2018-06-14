@@ -10,7 +10,7 @@
 					<div class="field is-grouped">
 						<div class="control">
 							<label class="label">Numer screena</label>
-							<input @keyup.enter="getSlide" type="text" class="input" v-model="screenIdInput">
+							<input @keyup.enter="getSlide" type="text" class="input" v-model="screenIdInput" @change="$emit('emitScreenId', screenIdInput)">
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
@@ -22,7 +22,7 @@
 					<div class="field is-grouped">
 						<div class="control">
 							<label class="label">lub ID slajdu</label>
-							<input @keyup.enter="getSlide" type="text" class="input" v-model="slideIdInput">
+							<input @keyup.enter="getSlide" type="text" class="input" v-model="slideIdInput" @change="$emit('emitSlideId', slideIdInput)">
 						</div>
 					</div>
 				</div>
@@ -145,12 +145,6 @@ export default {
 			} else {
 				this.screenIdInput = newVal
 			}
-		},
-		'screenIdInput' (newVal) {
-			this.$emit('emitScreenId', newVal)
-		},
-		'slideIdInput' (newVal) {
-			this.$emit('emitSlideId', newVal)
 		}
 	}
 }

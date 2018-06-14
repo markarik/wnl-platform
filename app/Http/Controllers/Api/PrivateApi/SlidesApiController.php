@@ -127,6 +127,9 @@ class SlidesApiController extends ApiController
 		}
 
 		$orderNumber = $this->getSlideOrderNumber($slide, $slideshow);
+		if (is_null($orderNumber)) {
+			return $this->respondNotFound();
+		}
 		$currentSlide = $this->getCurrentFromPresentables($slideshow->id, $orderNumber);
 		$presentables = $this->getSlidePresentables($currentSlide, $screen);
 

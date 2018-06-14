@@ -13,8 +13,8 @@
 		:currentSlideId="currentSlideId"
 		>
 		<wnl-edit-slide-button
-			:currentSlideId="currentSlideId"
-			:screenId="screenId"
+			:currentSlideId="Number(currentSlideId)"
+			:screenId="Number(screenId)"
 			v-if="isAdmin"
 		/>
 	</wnl-comments-list>

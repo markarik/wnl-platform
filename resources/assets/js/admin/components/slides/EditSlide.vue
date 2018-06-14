@@ -1,12 +1,15 @@
 <template>
 	<wnl-slides-editor
 		:slideId="Number(slideId)"
-		:screenId="Number(screenId)"
+		:screenIdProps="Number(screenId)"
 		:resourceUrl="resourceUrl"
 		:excluded="['snippet']"
 		:remove="true"
+		@resetSearchInputs="resetSearchInputs"
 	>
 		<wnl-slides-search
+			@emitScreenId="saveScreenId"
+			@emitSlideId="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
 			:slideId="Number(slideId)"
 			:screenId="Number(screenId)"
@@ -32,10 +35,19 @@
 			}
 		},
 		methods: {
-			onResourceUrlFetched({url, slideId, screenId}) {
+			resetSearchInputs() {
+				this.slideId = 0
+				this.screenId = 0
+			},
+			saveScreenId(newVal) {
+				this.screenId = newVal
+			},
+			saveSlideId(newVal) {
+				this.slideId = newVal
+			},
+			onResourceUrlFetched({url, slideId}) {
 				this.slideId = slideId;
 				this.resourceUrl = url;
-				this.screenId = screenId
 			}
 		},
 		mounted() {

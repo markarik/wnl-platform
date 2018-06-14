@@ -28,7 +28,7 @@
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
-					:screenId="screenId"
+					:screenId="Number(screenId)"
 					:currentSlideId="currentSlideId"
 				></wnl-annotations>
 			</div>

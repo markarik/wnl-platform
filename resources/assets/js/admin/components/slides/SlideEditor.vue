@@ -145,10 +145,9 @@
 				type: Number,
 				default: 0
 			},
-			screenId: {
+			screenIdProps: {
 				type: Number,
 				default: 0,
-				validator: (value) => !isNaN(value)
 			},
 			remove: {
 				type: Boolean,
@@ -162,6 +161,7 @@
 					content: null,
 					is_functional: null,
 				}),
+				screenId: null,
 				showPreviewModal: false,
 				previewModalContent: '',
 				submissionFailed: false,
@@ -259,21 +259,27 @@
 				if (!this.slideId && !this.screenId) return
 				this.detachingSlide = true;
 
-				axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
-					slideId: this.slideId,
-					screenId: this.screenId,
-				}).then(response => {
-					this.form.content       = null
-					this.form.is_functional = false
-					this.slideId            = 0
-					this.screenId           = 0
-					this.successFading('Slajd usunięty.', 2000)
-					this.detachingSlide = false;
-				}).catch(error => {
-					this.errorFading('Ups... Coś poszło nie tak.', 4000)
-					$wnl.logger.capture(error)
-					this.detachingSlide = false;
-				})
+				if (!this.screenId) {
+					this.errorFading('Wpisz z jakiego screena chcesz usunąć slajd.', 4000)
+					this.detachingSlide = false
+				} else {
+					axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
+						slideId: this.slideId,
+						screenId: this.screenId,
+					}).then(response => {
+						this.form.content       = null
+						this.form.is_functional = false
+						this.slideId            = 0
+						this.screenId           = 0
+						this.successFading('Slajd usunięty.', 2000)
+						this.detachingSlide = false;
+						this.$emit('resetSearchInputs')
+					}).catch(error => {
+						this.errorFading('Ups... Coś poszło nie tak.', 4000)
+						$wnl.logger.capture(error)
+						this.detachingSlide = false;
+					})
+				}
 			}
 		},
 		watch: {
@@ -282,6 +288,9 @@
 			},
 			content(newValue, oldValue) {
 				this.removeCourseTags()
+			},
+			'screenIdProps' (newVal) {
+				this.screenId = newVal
 			}
 		}
 	}

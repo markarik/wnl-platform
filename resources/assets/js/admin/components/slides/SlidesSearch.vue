@@ -94,8 +94,8 @@ export default {
 						})
 				} else {
 					this.resourceUrl = `/papi/v1/slides/${this.slideIdInput}`
-					this.slideId = parseInt(this.slideIdInput)
-					this.screenId = null
+					this.slideIdInput = parseInt(this.slideIdInput)
+					this.screenIdInput = ''
 					this.slideOrderNo = null
 					this.loading = false
 
@@ -140,7 +140,17 @@ export default {
 			this.slideIdInput = newVal
 		},
 		'screenId' (newVal) {
-			this.screenIdInput = newVal
+			if (newVal === false) {
+				this.screenIdInput = ''
+			} else {
+				this.screenIdInput = newVal
+			}
+		},
+		'screenIdInput' (newVal) {
+			this.$emit('emitScreenId', newVal)
+		},
+		'slideIdInput' (newVal) {
+			this.$emit('emitSlideId', newVal)
 		}
 	}
 }

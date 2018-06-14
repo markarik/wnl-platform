@@ -8,8 +8,8 @@
 		@resetSearchInputs="resetSearchInputs"
 	>
 		<wnl-slides-search
-			@emitScreenId="saveScreenId"
-			@emitSlideId="saveSlideId"
+			@screenIdChange="saveScreenId"
+			@slideIdChange="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
 			:slideId="Number(slideId)"
 			:screenId="Number(screenId)"
@@ -39,11 +39,11 @@
 				this.slideId = 0
 				this.screenId = 0
 			},
-			saveScreenId(newVal) {
-				this.screenId = newVal
+			saveScreenId(event) {
+				this.screenId = event.target.value
 			},
-			saveSlideId(newVal) {
-				this.slideId = newVal
+			saveSlideId(event) {
+				this.slideId = event.target.value
 			},
 			onResourceUrlFetched({url, slideId}) {
 				this.slideId = slideId;

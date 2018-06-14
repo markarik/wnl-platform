@@ -45,9 +45,10 @@
 			saveSlideId(newVal) {
 				this.slideId = newVal
 			},
-			onResourceUrlFetched({url, slideId}) {
+			onResourceUrlFetched({url, slideId, screenId}) {
 				this.slideId = slideId;
 				this.resourceUrl = url;
+				this.screenId = screenId;
 			}
 		},
 		mounted() {
@@ -57,9 +58,9 @@
 			this.slideId = slideId
 			if (slideId && screenId) {
 				this.onResourceUrlFetched({
-					screenId: screenId,
+					url: `/papi/v1/slides/${slideId}`,
 					slideId: slideId,
-					url: `/papi/v1/slides/${slideId}`
+					screenId: screenId
 				})
 			}
 		}

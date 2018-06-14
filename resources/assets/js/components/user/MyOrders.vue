@@ -55,13 +55,24 @@
 		},
 		methods: {
 			getOrders() {
-				axios.get(getApiUrl(`orders/all`))
+				axios.get(getApiUrl(`orders/all?include=invoices`))
 						.then((response) => {
 							if (_.isEmpty(response.data)) {
 								this.orders = []
 							}
 
-							this.orders = _.reverse(response.data.filter(this.isConfirmed))
+							const {included, ...orders} = response.data
+							const {invoices} = included
+
+							this.orders = _.reverse(Object.values(orders)
+								.filter(this.isConfirmed))
+								.map(order => {
+									return {
+										...order,
+										invoices: order.invoices.map(invoiceId => invoices[invoiceId])
+									}
+								})
+
 							this.loaded = true
 						})
 						.catch(exception => $wnl.logger.capture(exception))

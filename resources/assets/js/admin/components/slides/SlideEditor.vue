@@ -145,7 +145,7 @@
 				type: Number,
 				default: 0
 			},
-			screenIdProps: {
+			screenId: {
 				type: Number,
 				default: 0,
 			},
@@ -161,7 +161,6 @@
 					content: null,
 					is_functional: null,
 				}),
-				screenId: null,
 				showPreviewModal: false,
 				previewModalContent: '',
 				submissionFailed: false,
@@ -269,15 +268,14 @@
 					}).then(response => {
 						this.form.content       = null
 						this.form.is_functional = false
-						this.slideId            = 0
-						this.screenId           = 0
 						this.successFading('Slajd usunięty.', 2000)
 						this.detachingSlide = false;
 						this.$emit('resetSearchInputs')
 					}).catch(error => {
-						if (error.response.data.status === 400
-							|| error.response.data.status === 404) {
+						if (error.response.status === 400
+							|| error.response.status === 404) {
 							this.errorFading('Nie można znaleźć takiego slajdu.', 4000)
+							this.detachingSlide = false;
 						} else {
 							this.errorFading('Ups... Coś poszło nie tak.', 4000)
 							$wnl.logger.capture(error)
@@ -293,9 +291,6 @@
 			},
 			content(newValue, oldValue) {
 				this.removeCourseTags()
-			},
-			'screenIdProps' (newVal) {
-				this.screenId = newVal
 			}
 		}
 	}

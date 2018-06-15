@@ -20,6 +20,10 @@ class Bethink
 
 	public function getAssetPublicUrl($assetPath)
 	{
+		if (!$assetPath) {
+			return null;
+		}
+
 		if(config('filesystems.default') === 's3') {
 			return \Storage::url('public/' . $assetPath);
 		}

@@ -8,13 +8,14 @@ use App\Models\QnaQuestion;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 class QnaQuestionPosted extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels,
+		InteractsWithQueue,
 		SanitizesUserContent,
 		EventContextTrait;
 
@@ -37,6 +38,13 @@ class QnaQuestionPosted extends Event
 
 	public function transform()
 	{
+		if (empty($this->qnaQuestion::query()->find($this->qnaQuestion->id))) {
+			\Log::debug("REMOVING JOB FROM QUEUE.... MODEL DOES NOT EXIST");
+			$this->delete();
+		} else {
+			\Log::debug("QNA QUESTION STILL EXISTS");
+		}
+
 		$this->data = [
 			'event'   => 'qna-question-posted',
 			'subject' => [

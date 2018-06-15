@@ -21,6 +21,7 @@ class AddressesExport extends Command
 		{--P|products= : Comma separated list of products to export}
 		{--F|from= : A date from which you want the export}
 		{--S|ship= : Should the script mark orders as exported to shipping? Set to 1 to do it.}
+		{--A|all : Script will export addresses with all shipping statuses}
 	';
 
 	/**
@@ -51,19 +52,22 @@ class AddressesExport extends Command
 		$ids = $this->option('ids');
 		$from = $this->option('from');
 		$ship = intval($this->option('ship'));
+		$all = $this->option('all');
 
 		if ($ids) {
 			$ids = explode(',', $ids);
 			$orders = Order::where('paid', 1)
-				->where('shipping_status', 'new')
 				->whereIn('id', $ids);
 		} elseif ($products) {
 			$products = explode(',', $products);
 			$orders = Order::where('paid', 1)
-				->where('shipping_status', 'new')
 				->whereIn('product_id', $products);
 		} else {
 			$this->error('Specify IDs or ProductIDs to export orders.');
+		}
+
+		if (!$all) {
+			$orders = $orders->where('shipping_status', 'new');
 		}
 
 		if ($from) {

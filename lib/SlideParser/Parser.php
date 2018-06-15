@@ -11,6 +11,7 @@ use App\Models\Tag;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Facades\Lib\Bethink\Bethink;
 use Storage;
 
 class Parser
@@ -312,7 +313,7 @@ class Parser
 
 		$path = 'public/backgrounds/' . $fileName;
 
-		Storage::put($path, $image, 'public');
+		Storage::put($path, $image->__toString(), 'public');
 
 		return $fileName;
 	}
@@ -365,9 +366,12 @@ class Parser
 		$urlFormatted = sprintf($lucidUrl, $chartId, $imageSizePx);
 		$image = Image::make($urlFormatted)->stream('png');
 		$path = "charts/{$chartId}.png";
-		Storage::put('public/' . $path, $image);
+		Storage::put('public/' . $path, $image->__toString(), 'public');
 
-		return sprintf(self::IMAGE_VIEWER_TEMPLATE, asset('storage/' . $path));
+		return sprintf(
+			self::IMAGE_VIEWER_TEMPLATE,
+			Bethink::getAssetPublicUrl($path)
+		);
 	}
 
 	public function createSnippet($slideHtml)
@@ -483,9 +487,9 @@ class Parser
 		}
 
 		$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
-		Storage::put('public/' . $path, $data);
+		Storage::put('public/' . $path, $data->__toString(), 'public');
 
-		$viewerHtml = sprintf($template, asset('storage/' . $path));
+		$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
 		$html = str_replace($imgTag, $viewerHtml, $html);
 
 		return $html;

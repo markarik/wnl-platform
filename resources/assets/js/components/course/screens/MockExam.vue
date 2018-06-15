@@ -6,6 +6,9 @@
 				{{this.$t('questions.nav.mockExam')}}!
 			</router-link>
 		</p>
+		<div class="margin vertical has-text-centered">
+			{{ $t('annotations.mockExamAnnotation')}}
+		</div>
 	</div>
 </template>
 

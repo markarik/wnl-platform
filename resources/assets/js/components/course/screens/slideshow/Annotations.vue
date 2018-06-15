@@ -11,8 +11,13 @@
 		@commentsHidden="$emit('commentsHidden')"
 		@commentsUpdated="onCommentsUpdated"
 		:currentSlideId="currentSlideId"
-		:canEditSlide="canEditSlide"
-		></wnl-comments-list>
+		>
+		<wnl-edit-slide-button
+			:currentSlideId="Number(currentSlideId)"
+			:screenId="Number(screenId)"
+			v-if="isAdmin"
+		/>
+	</wnl-comments-list>
 	</div>
 </template>
 
@@ -35,20 +40,22 @@
 <script>
 	import {mapGetters} from 'vuex'
 
+	import EditSlideButton from 'js/admin/components/slides/EditSlideButton'
 	import CommentsList from 'js/components/comments/CommentsList'
 
 	export default {
 		name: 'Annotations',
 		components: {
 			'wnl-comments-list': CommentsList,
+			'wnl-edit-slide-button': EditSlideButton,
 		},
 		props: {
 			slideshowId: Number,
+			screenId: Number,
 			currentSlideId: Number,
-			canEditSlide: Boolean,
 		},
 		computed: {
-			...mapGetters(['isMobile']),
+			...mapGetters(['isMobile', 'isAdmin']),
 			...mapGetters('slideshow', ['getSlidePositionById']),
 			currentSlideOrderNumber() {
 				return this.getSlidePositionById(this.currentSlideId) + 1

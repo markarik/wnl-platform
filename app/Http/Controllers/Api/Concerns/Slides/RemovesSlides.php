@@ -53,9 +53,11 @@ trait RemovesSlides
 			->where('slide_id', $slide->id)
 			->where('presentable_type', get_class($presentable))
 			->where('presentable_id', $presentable->id)
-			->first()
-			->order_number;
+			->first();
 
-		return $orderNumber;
+		if (is_null($orderNumber)) {
+			return null;
+		}
+		return $orderNumber->order_number;
 	}
 }

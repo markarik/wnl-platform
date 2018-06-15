@@ -1,11 +1,11 @@
 <template>
 	<div class="slides-editor">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
-				   :alert="alert"
-				   cssClass="fixed"
-				   :key="timestamp"
-				   :timestamp="timestamp"
-				   @delete="onDelete"
+		   :alert="alert"
+		   cssClass="fixed"
+		   :key="timestamp"
+		   :timestamp="timestamp"
+		   @delete="onDelete"
 		/>
 		<p class="title is-3">{{title}}</p>
 
@@ -148,7 +148,6 @@
 			screenId: {
 				type: Number,
 				default: 0,
-				validator: (value) => !isNaN(value)
 			},
 			remove: {
 				type: Boolean,
@@ -259,21 +258,31 @@
 				if (!this.slideId && !this.screenId) return
 				this.detachingSlide = true;
 
-				axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
-					slideId: this.slideId,
-					screenId: this.screenId,
-				}).then(response => {
-					this.form.content       = null
-					this.form.is_functional = false
-					this.slideId            = 0
-					this.screenId           = 0
-					this.successFading('Slajd usunięty.', 2000)
-					this.detachingSlide = false;
-				}).catch(error => {
-					this.errorFading('Ups... Coś poszło nie tak.', 4000)
-					$wnl.logger.capture(error)
-					this.detachingSlide = false;
-				})
+				if (!this.screenId) {
+					this.errorFading('Wpisz z jakiego screena chcesz usunąć slajd.', 4000)
+					this.detachingSlide = false
+				} else {
+					axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
+						slideId: this.slideId,
+						screenId: this.screenId,
+					}).then(response => {
+						this.form.content       = null
+						this.form.is_functional = false
+						this.successFading('Slajd usunięty.', 2000)
+						this.detachingSlide = false;
+						this.$emit('resetSearchInputs')
+					}).catch(error => {
+						if (error.response.status === 400
+							|| error.response.status === 404) {
+							this.errorFading('Nie można znaleźć takiego slajdu.', 4000)
+							this.detachingSlide = false;
+						} else {
+							this.errorFading('Ups... Coś poszło nie tak.', 4000)
+							$wnl.logger.capture(error)
+							this.detachingSlide = false;
+						}
+					})
+				}
 			}
 		},
 		watch: {

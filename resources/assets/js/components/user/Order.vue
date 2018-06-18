@@ -136,7 +136,7 @@
 						<wnl-submit>Wykorzystaj kod</wnl-submit>
 					</wnl-form>
 				</div>
-				<div v-if="order.invoices.length" class="invoices">
+				<div v-if="order.invoices.length && isAdmin" class="invoices">
 					<span class="invoices__title">Dokumenty do pobrania</span>
 					<ul>
 						<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">
@@ -215,7 +215,7 @@
 <script>
 	import moment from 'moment'
 	import axios from 'axios'
-	import {mapActions} from 'vuex'
+	import {mapActions, mapGetters} from 'vuex'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 	import {Form, Text, Submit} from 'js/components/global/form'
@@ -243,6 +243,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isAdmin']),
 			coupon() {
 				return this.order.coupon
 			},

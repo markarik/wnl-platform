@@ -7,13 +7,18 @@
 				</div>
 			</div>
 		</div>
-		<ul>
+		<ul v-if="orders.length">
 			<li v-for="order in orders" :key="order.id">
 				<a @click="downloadParticipationCertificate(order.id)">
 					Certyfikat Uczestnictwa: {{order.product.name}} - {{formatDate(order.product.course_start)}} - {{formatDate(order.product.course_end)}}
 				</a>
 			</li>
 		</ul>
+		<div v-else>
+			<div class="box has-text-centered">
+				<p class="title is-5">Brak certyfikatów do pobrania</p>
+			</div>
+		</div>
 
 	</div>
 </template>
@@ -52,14 +57,14 @@
 				} catch (err) {
 					if (err.response.status === 404) {
 						return this.addAutoDismissableAlert({
-							text: 'Nie udało się znaleźć faktury. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
+							text: 'Nie udało się znaleźć certyfikatu. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
 							type: 'error'
 						})
 					}
 
 					if (err.response.status === 403) {
 						return this.addAutoDismissableAlert({
-							text: 'Nie masz uprawnień do pobrania tej faktury.',
+							text: 'Nie masz uprawnień do pobrania certyfikatu.',
 							type: 'error'
 						})
 					}

@@ -37,13 +37,6 @@ class QnaQuestionPosted extends Event
 
 	public function transform()
 	{
-		if (empty($this->model::query()->find($this->model->id))) {
-			\Log::debug("REMOVING JOB FROM QUEUE.... MODEL DOES NOT EXIST");
-			$this->delete();
-		} else {
-			\Log::debug("QNA QUESTION STILL EXISTS");
-		}
-
 		$this->data = [
 			'event'   => 'qna-question-posted',
 			'subject' => [

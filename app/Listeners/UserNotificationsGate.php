@@ -41,8 +41,12 @@ class UserNotificationsGate implements ShouldQueue
 
 		foreach ($users as $user) {
 			$channelFormatted = sprintf(self::CHANNELS['private-stream'], $user->id);
-			$this->stopNotification($event);
-			$user->notify(new EventNotification($event, $channelFormatted));
+			if ($this->shouldStopNotification($event)) {
+				$this->delete();
+				\Log::notice('STOPPING NOTIFICATION FOR EVENT');
+			} else {
+				$user->notify(new EventNotification($event, $channelFormatted));
+			}
 		}
 	}
 
@@ -96,6 +100,7 @@ class UserNotificationsGate implements ShouldQueue
 	 * @param $event
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function handle($event)
 	{
@@ -107,14 +112,11 @@ class UserNotificationsGate implements ShouldQueue
 		$handler->handle($event, $this);
 	}
 
-	private function stopNotification($event) {
-		$modelExists = !empty($event->model::query()->find($event->data['subject']['id']));
-
-		\Log::debug('***************');
-		if (!$modelExists) {
-			\Log::debug('KILLING NOTIFICATION');
-			$this->delete();
+	private function shouldStopNotification($event) {
+		if (!$event->data['subject']['id']) {
+			return false;
 		}
-		\Log::debug('***************');
+
+		return empty($event->model::query()->find($event->data['subject']['id']));
 	}
 }

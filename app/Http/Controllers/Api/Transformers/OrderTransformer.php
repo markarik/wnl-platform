@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\ApiTransformer;
 class OrderTransformer extends ApiTransformer
 {
 
-	protected $availableIncludes = ['invoices'];
+	protected $availableIncludes = ['invoices', 'products'];
 
 	public function transform(Order $order)
 	{
@@ -66,6 +66,16 @@ class OrderTransformer extends ApiTransformer
 			'order_id' => $order->id
 		];
 
-		return $this->collection($invoices, new InvoiceTransformer($meta), 'lessons');
+		return $this->collection($invoices, new InvoiceTransformer($meta), 'invoices');
+	}
+
+	public function includeProducts(Order $order)
+	{
+		$products = $order->product;
+		$meta = [
+			'order_id' => $order->id
+		];
+
+		return $this->collection($products, new ProductsTransformer($meta), 'products');
 	}
 }

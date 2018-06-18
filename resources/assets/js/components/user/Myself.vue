@@ -167,6 +167,18 @@
 						iconClass: 'fa-key',
 						iconTitle: 'Zmiana hasła',
 					},
+					{
+						text: 'Certyfikaty',
+						itemClass: 'has-icon',
+						to: {
+							name: 'certificates',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-trophy',
+						iconTitle: 'Zmiana hasła',
+					},
 				]
 
 				return items

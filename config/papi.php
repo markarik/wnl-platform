@@ -44,5 +44,6 @@ return [
 		'tasks'              => 'tasks',
 		'pages'              => 'pages',
 		'invoices'           => 'invoices',
+		'certificates'       => 'certificates',
 	],
 ];

@@ -1,17 +1,14 @@
 <template>
 	<div class="wnl-screen-html">
 		<div class="content" v-html="content"></div>
-		<p class="margin vertical has-text-centered">
+		<div class="margin vertical has-text-centered">
 			{{this.$t('annotations.mockExamResults')}}
-		</p>
+		</div>
 		<p class="margin vertical has-text-centered">
 			<router-link :to="routeParams" class="button is-primary">
 				{{this.$t('questions.nav.mockExam')}}!
 			</router-link>
 		</p>
-		<div class="margin vertical has-text-centered">
-			{{ $t('annotations.mockExamAnnotation')}}
-		</div>
 	</div>
 </template>
 

@@ -4,9 +4,11 @@ use App\Events\Qna\QnaAnswerPosted;
 use App\Listeners\UserNotificationsGate;
 use App\Models\QnaAnswer;
 use App\Models\User;
+use Illuminate\Queue\InteractsWithQueue;
 
 class QnaAnswerPostedHandler
 {
+	use InteractsWithQueue;
 	/**
 	 * Notification rules for QnaAnswerPosted event.
 	 *
@@ -17,8 +19,14 @@ class QnaAnswerPostedHandler
 	{
 		$gate->notifyModerators($event);
 
-		$user = $event->qnaAnswer->question->user;
-		$answer = QnaAnswer::find($event->qnaAnswer->id);
+		$user = $event->model->question->user;
+		$answer = QnaAnswer::find($event->model->id);
+
+		if (empty($answer)) {
+			$this->delete();
+			return;
+		}
+
 		$gate->notifyPrivate($user, $event);
 
 		$watchers = $this->getWatchers($answer);

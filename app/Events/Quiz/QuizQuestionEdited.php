@@ -9,17 +9,15 @@ use App\Models\User;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
 class QuizQuestionEdited extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels,
 		SanitizesUserContent,
 		EventContextTrait;
 
-	public $quizQuestion;
+	public $model;
 	public $user;
 
 	/**
@@ -31,7 +29,7 @@ class QuizQuestionEdited extends Event
 	public function __construct(QuizQuestion $quizQuestion, User $user)
 	{
 		parent::__construct();
-		$this->quizQuestion = $quizQuestion;
+		$this->model = $quizQuestion;
 		$this->user = $user;
 	}
 
@@ -41,8 +39,8 @@ class QuizQuestionEdited extends Event
 			'event'   => 'quiz-question-posted',
 			'subject' => [
 				'type' => 'quiz_question',
-				'id'   => $this->quizQuestion->id,
-				'text' => $this->sanitize($this->quizQuestion->text),
+				'id'   => $this->model->id,
+				'text' => $this->sanitize($this->model->text),
 			],
 			'actors'  => [
 				'id' => $this->user->id

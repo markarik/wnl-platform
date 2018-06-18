@@ -9,7 +9,6 @@ use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class QnaQuestionPosted extends Event
 {
@@ -19,7 +18,7 @@ class QnaQuestionPosted extends Event
 		SanitizesUserContent,
 		EventContextTrait;
 
-	public $qnaQuestion;
+	public $model;
 	public $tags;
 
 	const TEXT_LIMIT = 160;
@@ -32,13 +31,13 @@ class QnaQuestionPosted extends Event
 	public function __construct(QnaQuestion $qnaQuestion, $tags)
 	{
 		parent::__construct();
-		$this->qnaQuestion = $qnaQuestion;
+		$this->model = $qnaQuestion;
 		$this->tags = $tags;
 	}
 
 	public function transform()
 	{
-		if (empty($this->qnaQuestion::query()->find($this->qnaQuestion->id))) {
+		if (empty($this->model::query()->find($this->model->id))) {
 			\Log::debug("REMOVING JOB FROM QUEUE.... MODEL DOES NOT EXIST");
 			$this->delete();
 		} else {
@@ -49,19 +48,19 @@ class QnaQuestionPosted extends Event
 			'event'   => 'qna-question-posted',
 			'subject' => [
 				'type' => 'qna_question',
-				'id'   => $this->qnaQuestion->id,
-				'text' => $this->sanitize($this->qnaQuestion->text),
+				'id'   => $this->model->id,
+				'text' => $this->sanitize($this->model->text),
 			],
 			'actors'  => [
-				'id'           => $this->qnaQuestion->user->id,
-				'first_name'   => $this->qnaQuestion->user->profile->first_name,
-				'last_name'    => $this->qnaQuestion->user->profile->last_name,
-				'full_name'    => $this->qnaQuestion->user->profile->full_name,
-				'display_name' => $this->qnaQuestion->user->profile->display_name,
-				'avatar'       => $this->qnaQuestion->user->profile->avatar_url,
+				'id'           => $this->model->user->id,
+				'first_name'   => $this->model->user->profile->first_name,
+				'last_name'    => $this->model->user->profile->last_name,
+				'full_name'    => $this->model->user->profile->full_name,
+				'display_name' => $this->model->user->profile->display_name,
+				'avatar'       => $this->model->user->profile->avatar_url,
 			],
 			'referer' => $this->referer,
-			'context' => $this->addEventContext($this->qnaQuestion)
+			'context' => $this->addEventContext($this->model)
 		];
 	}
 }

@@ -6,10 +6,13 @@ use App\Models\UserCourseProgress;
 use App\Notifications\EventNotification;
 use App\Notifications\EventTaskNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
 class UserNotificationsGate implements ShouldQueue
 {
+	use InteractsWithQueue;
+
 	public $queue = 'notifications';
 
 	const CHANNELS = [
@@ -38,6 +41,7 @@ class UserNotificationsGate implements ShouldQueue
 
 		foreach ($users as $user) {
 			$channelFormatted = sprintf(self::CHANNELS['private-stream'], $user->id);
+			$this->stopNotification($event);
 			$user->notify(new EventNotification($event, $channelFormatted));
 		}
 	}
@@ -101,5 +105,16 @@ class UserNotificationsGate implements ShouldQueue
 
 		$handler = app('App\Listeners\Handlers\\' . class_basename($event) . 'Handler');
 		$handler->handle($event, $this);
+	}
+
+	private function stopNotification($event) {
+		$modelExists = !empty($event->model::query()->find($event->data['subject']['id']));
+
+		\Log::debug('***************');
+		if (!$modelExists) {
+			\Log::debug('KILLING NOTIFICATION');
+			$this->delete();
+		}
+		\Log::debug('***************');
 	}
 }

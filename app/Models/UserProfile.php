@@ -46,7 +46,7 @@ class UserProfile extends Model
 
 	public function getAvatarUrlAttribute()
 	{
-		return $this->avatar ? Bethink::appUrlAsset("storage/{$this->avatar}") : null;
+		return Bethink::getAssetPublicUrl($this->avatar) ?? null;
 	}
 
 	public function getFullNameAttribute()

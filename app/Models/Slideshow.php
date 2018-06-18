@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
+use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
 
 class Slideshow extends Model
@@ -20,6 +21,6 @@ class Slideshow extends Model
 
 	public function getBackgroundUrlAttribute()
 	{
-		return asset("storage/backgrounds/{$this->background}");
+		return Bethink::getAssetPublicUrl("backgrounds/{$this->background}") ?? null;
 	}
 }

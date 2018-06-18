@@ -55,8 +55,7 @@ class UserAvatarApiController extends ApiController
 	{
 		$image = Image::make($file)->fit(self::AVATAR_MAX_SIZE_PX)->stream('png');
 		$path = 'avatars/' . str_random(32) . '.png';
-		Storage::put('public/' . $path, $image);
-
+		Storage::put('public/' . $path, $image->__toString(), 'public');
 		return $path;
 	}
 }

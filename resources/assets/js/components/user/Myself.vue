@@ -177,7 +177,7 @@
 						isDisabled: false,
 						method: 'push',
 						iconClass: 'fa-trophy',
-						iconTitle: 'Zmiana hasła',
+						iconTitle: 'Certyfikaty',
 					},
 				]
 

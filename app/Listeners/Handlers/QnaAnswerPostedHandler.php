@@ -10,7 +10,7 @@ class QnaAnswerPostedHandler
 	/**
 	 * Notification rules for QnaAnswerPosted event.
 	 *
-	 * @param AnswerPosted $event
+	 * @param QnaAnswerPosted $event
 	 * @param UserNotificationsGate $gate
 	 */
 	public function handle(QnaAnswerPosted $event, UserNotificationsGate $gate)

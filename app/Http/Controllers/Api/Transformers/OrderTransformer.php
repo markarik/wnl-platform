@@ -66,6 +66,6 @@ class OrderTransformer extends ApiTransformer
 			'order_id' => $order->id
 		];
 
-		return $this->collection($invoices, new InvoiceTransformer($meta), 'lessons');
+		return $this->collection($invoices, new InvoiceTransformer($meta), 'invoices');
 	}
 }

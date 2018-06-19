@@ -45,11 +45,11 @@ class CertificatesApiController extends ApiController
 			return $this->respondForbidden("User not allowed to view order details");
 		}
 
-		$file = Storage::get('public/participation_certificate.jpg');
+		$file = Storage::get('participation_certificate.jpg');
 		$img = Image::make($file);
 
 		$img->text($order->id, 1740, 915, function($font) {
-			$fontFile = Storage::path('public/fonts/Roboto_Mono/RobotoMono-Light.ttf');
+			$fontFile = Storage::path('fonts/Roboto_Mono/RobotoMono-Light.ttf');
 			$font->file($fontFile);
 			$font->size(48);
 		});
@@ -59,26 +59,26 @@ class CertificatesApiController extends ApiController
 				$order->product->course_start->format('j.m.Y'),
 				$order->product->course_end->format('j.m.Y')
 			), 1794, 1372, function($font) {
-			$fontFile = Storage::path('public/fonts/Rubik/Rubik-Light.ttf');
+			$fontFile = Storage::path('fonts/Rubik/Rubik-Light.ttf');
 			$font->file($fontFile);
 			$font->size(54);
 		});
 
 		$img->text($order->user->profile->fullName, 1754, 1150, function($font) {
-			$fontFile = Storage::path('public/fonts/Rubik/Rubik-Medium.ttf');
+			$fontFile = Storage::path('fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(86);
 			$font->align('center');
 		});
 
 		$img->text($order->product->course_start->format('j / m / Y') . ' r., Poznań', 2365, 1650, function($font) {
-			$fontFile = Storage::path('public/fonts/Rubik/Rubik-Medium.ttf');
+			$fontFile = Storage::path('fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(61);
 			$font->align('center');
 		});
 
-		$img->save(Storage::path("public/{$order->id}.jpg"));
-		return response()->download(Storage::path("public/{$order->id}.jpg"))->deleteFileAfterSend(true);
+		$img->save(Storage::path("{$order->id}.jpg"));
+		return response()->download(Storage::path("{$order->id}.jpg"))->deleteFileAfterSend(true);
 	}
 }

@@ -77,7 +77,8 @@ class CertificatesApiController extends ApiController
 			$font->align('center');
 		});
 
-		$img->save(Storage::path("{$order->id}.jpg"));
-		return response()->download(Storage::path("{$order->id}.jpg"))->deleteFileAfterSend(true);
+		$imgPath = "{$order->id}.jpg";
+		Storage::put($imgPath, $img->encode('jpg')->__toString());
+		return response()->download(Storage::path($imgPath)->deleteFileAfterSend(true);
 	}
 }

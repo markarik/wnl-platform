@@ -12,8 +12,15 @@
 					<strong v-t="'user.deleteAccount.warningHeader'"/>
 				</div>
 			<div class="message-body" v-t="'user.deleteAccount.warning'"/>
+			<div class="control">
+				<input
+					autocomplete="new-password"
+					type="password"
+					class="input"
+					v-model="inputValue"/>
+			</div>
 			<button
-				@click="removeAccount"
+				@click="confirmAndDelete"
 				class="button is-danger to-right"
 				v-t="'user.deleteAccount.header'"/>
 		</div>
@@ -36,31 +43,40 @@
 <script>
 	import { swalConfig } from 'js/utils/swal'
 	import { mapActions } from 'vuex'
+	import Password from 'js/components/global/form/Password'
 
 	export default {
 		name: 'DeleteAccount',
+		components: {
+			'wnl-form-password': Password,
+		},
+		data() {
+			return {
+				inputValue: '',
+			}
+		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert', 'deleteAccount']),
-			confirmAndExecute(title, text, action) {
-				this.$swal(swalConfig({
-					title,
-					text,
-					showCancelButton: true,
-					confirmButtonText: this.$t('ui.confirm.confirm'),
-					cancelButtonText: this.$t('ui.confirm.cancel'),
-					type: 'error',
-					confirmButtonClass: 'button is-danger',
-					reverseButtons: true
-				}))
-				.then(action)
-				.then(() => {
-					this.addAutoDismissableAlert({
+			async confirmAndDelete() {
+				try {
+					await this.$swal(swalConfig({
+						title: this.$t('user.deleteAccount.confirmationHeader'),
+						text: this.$t('user.deleteAccount.confirmationWarning'),
+						showCancelButton: true,
+						confirmButtonText: this.$t('ui.confirm.confirm'),
+						cancelButtonText: this.$t('ui.confirm.cancel'),
+						type: 'error',
+						confirmButtonClass: 'button is-danger',
+						reverseButtons: true
+					}))
+					await this.deleteAccount(this.inputValue)
+					await this.addAutoDismissableAlert({
 						text: this.$t('user.progressReset.alertSuccess'),
 						type: 'success',
 						timeout: 10000,
 					})
-				})
-				.catch(error => {
+				}
+				catch (error) {
 					if (error === 'cancel') {
 						return
 					}
@@ -70,14 +86,7 @@
 						type: 'error',
 						timeout: 4000,
 					})
-				})
-			},
-			removeAccount() {
-				this.confirmAndExecute(
-					this.$t('user.deleteAccount.confirmationHeader'),
-					this.$t('user.deleteAccount.confirmationWarning'),
-					this.deleteAccount
-				)
+				}
 			}
 		}
 	}

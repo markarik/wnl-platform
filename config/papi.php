@@ -43,5 +43,6 @@ return [
 		'user-plan'          => 'user_plan',
 		'tasks'              => 'tasks',
 		'pages'              => 'pages',
+		'user-delete'       => 'user_delete',
 	],
 ];

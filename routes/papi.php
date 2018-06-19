@@ -46,6 +46,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	api_action('post', 'context');
 
 	Route::group(['middleware' => 'subscription'], function () use ($r) {
+		// User
+		Route::patch("{$r['user-delete']}/{userId}", 'DeleteAccountApiController@patch');
+
 		// Courses
 		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 

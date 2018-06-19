@@ -81,7 +81,7 @@
 		async mounted() {
 			const {data} = await axios.get(getApiUrl('certificates/participation'));
 
-			this.orders = data.orders;
+			this.orders = Object.values(data.orders);
 		}
 	}
 </script>

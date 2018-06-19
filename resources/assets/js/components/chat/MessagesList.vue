@@ -182,6 +182,13 @@
 		watch: {
 			highlightedMessageId() {
 				if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId)
+			},
+			'loaded' (newVal) {
+				if (newVal === true) {
+					setTimeout(() => {
+						this.container.scrollTop = this.container.scrollHeight
+					}, 2000)
+				}
 			}
 		}
 	}

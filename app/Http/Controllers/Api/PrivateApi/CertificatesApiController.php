@@ -54,6 +54,16 @@ class CertificatesApiController extends ApiController
 			$font->size(48);
 		});
 
+		$img->text(
+			sprintf("%s - %s r.",
+				$order->product->course_start->format('j.m.Y'),
+				$order->product->course_end->format('j.m.Y')
+			), 1794, 1372, function($font) {
+			$fontFile = Storage::path('public/fonts/Rubik/Rubik-Light.ttf');
+			$font->file($fontFile);
+			$font->size(54);
+		});
+
 		$img->text($order->user->profile->fullName, 1754, 1150, function($font) {
 			$fontFile = Storage::path('public/fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
@@ -61,7 +71,7 @@ class CertificatesApiController extends ApiController
 			$font->align('center');
 		});
 
-		$img->text($order->product->course_start->format('j / n / Y'), 2365, 1650, function($font) {
+		$img->text($order->product->course_start->format('j / m / Y') . ' r., Poznań', 2365, 1650, function($font) {
 			$fontFile = Storage::path('public/fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(61);

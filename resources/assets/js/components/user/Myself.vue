@@ -167,6 +167,17 @@
 						iconClass: 'fa-key',
 						iconTitle: 'Zmiana hasła',
 					},
+					{
+						text: 'Usuń konto',
+						itemClass: 'has-icon',
+						to: {
+							name: 'delete-account',
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-ban',
+						iconTitle: 'Usuń konto',
+					}
 				]
 
 				return items

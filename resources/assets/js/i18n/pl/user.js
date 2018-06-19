@@ -75,4 +75,11 @@ export const user = {
 		usunięte informacje ;)`,
     },
 	passwordResetHeader: 'Zmiana hasła',
+	deleteAccount: {
+		header: 'Usuń konto',
+		warningHeader: 'Usunięcie konta',
+		warning: 'Copy by Ola',
+		confirmationHeader: 'Usuń konto',
+		confirmationWarning: 'Czy na pewno chcesz usunąć swoje konto?',
+	}
 }

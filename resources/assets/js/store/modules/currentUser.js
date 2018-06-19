@@ -157,6 +157,10 @@ const actions = {
 
 	syncSettings({ commit, getters }) {
 		setUserSettings(getters.getAllSettings)
+	},
+
+	deleteAccount({getters}, payload) {
+		return console.log(getters.currentUserId);
 	}
 }
 

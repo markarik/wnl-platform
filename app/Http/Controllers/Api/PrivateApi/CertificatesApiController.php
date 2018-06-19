@@ -78,7 +78,10 @@ class CertificatesApiController extends ApiController
 		});
 
 		$imgPath = "{$order->id}.jpg";
-		Storage::put($imgPath, $img->encode('jpg')->__toString());
-		return response()->download(Storage::path($imgPath))->deleteFileAfterSend(true);
+
+		return response($img->encode('jpg')->__toString(), 200)
+			->header('Content-type', "image/jpg")
+			->header("Cache-Control", 'no-store, no-cache')
+			->header('Content-Disposition', sprintf('attachment; filename="%s"', $imgPath));
 	}
 }

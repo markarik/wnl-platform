@@ -136,7 +136,7 @@
 						<wnl-submit>Wykorzystaj kod</wnl-submit>
 					</wnl-form>
 				</div>
-				<div v-if="order.invoices.length && isAdmin" class="invoices">
+				<div v-if="order.invoices.length" class="invoices">
 					<span class="invoices__title">Dokumenty do pobrania</span>
 					<ul>
 						<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">

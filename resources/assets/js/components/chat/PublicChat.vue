@@ -23,6 +23,7 @@
 			:hasMore="hasMore"
 			:onScrollTop="pullMore"
 			:loaded="loaded"
+			ref="messagesList"
 		/>
 		<wnl-message-form
 			:roomId="currentRoom.id"
@@ -220,6 +221,7 @@
 			},
 			onMessageSent({sent, ...data}) {
 				if (sent) {
+					this.$refs.messagesList.scrollToBottom();
 					this.pushMessage(data)
 				}
 			},

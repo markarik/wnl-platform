@@ -123,7 +123,7 @@
 			scrollToBottom() {
 				nextTick(() => {
 					this.container.scroll({
-						top: this.container.scrollHeight + 100,
+						top: this.container.scrollHeight + 10000,
 						behavior: 'smooth'
 					})
 				})
@@ -184,11 +184,8 @@
 				if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId)
 			},
 			'loaded' (newVal) {
-				if (newVal === true) {
-					setTimeout(() => {
-						this.container.scrollTop = this.container.scrollHeight
-					}, 2000)
-				}
+				// required by firefox
+				this.scrollToBottom()
 			}
 		}
 	}

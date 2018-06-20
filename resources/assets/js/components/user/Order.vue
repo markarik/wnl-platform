@@ -327,7 +327,7 @@
 			async downloadInvoice(invoice) {
 				try {
 					const response = await axios.request({
-						url: getApiUrl(getApiUrl(`invoices/${invoice.id}`)),
+						url: getApiUrl(`invoices/${invoice.id}`),
 						responseType: 'blob',
 					})
 

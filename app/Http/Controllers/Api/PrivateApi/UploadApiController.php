@@ -2,12 +2,10 @@
 
 use Auth;
 use Storage;
-use App\Models\User;
+use Facades\Lib\Bethink\Bethink;
 use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
 use Intervention\Image\Facades\Image;
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
 
 class UploadApiController extends ApiController
 {
@@ -37,17 +35,19 @@ class UploadApiController extends ApiController
 		}
 
 		if ($file->getClientMimeType() === 'image/gif') {
-			$path = $file->store('uploads', 'public');
+			$path = 'uploads/' . str_random(32) . '.gif';
+			$contents = file_get_contents($file->getPathname());
+			Storage::put('public/' . $path, $contents, 'public');
 
-			return $this->respondOk(asset('storage/' . $path));
+			return $this->respondOk(Bethink::getAssetPublicUrl($path));
 		}
 
 		$image = Image::make($file)->resize(2000, 2000, function ($constraint) {
 			$constraint->aspectRatio();
 		})->stream('jpg', 80);
 		$path = 'uploads/' . str_random(32) . '.jpg';
-		Storage::put('public/' . $path, $image);
+		Storage::put('public/' . $path, $image->__toString(), 'public');
 
-		return $this->respondOk(asset('storage/' . $path));
+		return $this->respondOk(Bethink::getAssetPublicUrl($path));
 	}
 }

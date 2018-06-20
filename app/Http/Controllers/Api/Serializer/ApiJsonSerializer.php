@@ -70,10 +70,6 @@ class ApiJsonSerializer extends SerializerAbstract
 	public function includedData(ResourceInterface $resource, array $data)
 	{
 		$resourceKey = $resource->getResourceKey();
-//		var_dump(__METHOD__, $resourceKey);
-//		echo '<pre>';
-//		print_r($data);
-//		echo '</pre>';
 
 		$this->currentlyProcessedResource = $resourceKey;
 

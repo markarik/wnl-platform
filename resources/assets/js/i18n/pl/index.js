@@ -16,8 +16,10 @@ import { progress } from './progress'
 import { lessonsAvailability } from './lessonsAvailability'
 import { orders } from './orders'
 import { admin } from './admin'
+import { annotations } from './annotations'
 
 export {
+	annotations,
 	admin,
 	lessonsAvailability,
 	dashboard,

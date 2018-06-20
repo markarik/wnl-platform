@@ -45,15 +45,25 @@
 			},
 			async downloadParticipationCertificate(orderId) {
 				try {
-					const response = await axios.get(getApiUrl(`certificates/participation/${orderId}`), {
-						responseType: 'arraybuffer'
+					const response = await axios.request({
+						url: getApiUrl(`certificates/participation/${orderId}`),
+						responseType: 'blob',
 					})
 
-					const blob = new Blob([response.data], { type: 'application/jpg' } )
+					const data = window.URL.createObjectURL(response.data);
 					const link = document.createElement('a')
-					link.href = window.URL.createObjectURL(blob)
-					link.download = `${orderId}.jpg`
+					link.style.display = 'none';
+					// For Firefox it is necessary to insert the link into body
+					document.body.appendChild(link);
+					link.href = data
+					link.setAttribute('download', `${orderId}.jpg`)
 					link.click()
+
+					setTimeout(function() {
+						// For Firefox it is necessary to delay revoking the ObjectURL
+						window.URL.revokeObjectURL(link.href)
+						document.removeChild(link);
+					}, 100)
 				} catch (err) {
 					if (err.response.status === 404) {
 						return this.addAutoDismissableAlert({

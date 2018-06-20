@@ -324,16 +324,28 @@
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
 
-			downloadInvoice(invoice) {
-				axios.get(getApiUrl(`invoices/${invoice.id}`), {
-					responseType: 'arraybuffer'
-				}).then(response => {
-					const blob = new Blob([response.data], { type: 'application/pdf' } )
+			async downloadInvoice(invoice) {
+				try {
+					const response = await axios.request({
+						url: getApiUrl(getApiUrl(`invoices/${invoice.id}`)),
+						responseType: 'blob',
+					})
+
+					const data = window.URL.createObjectURL(response.data);
 					const link = document.createElement('a')
-					link.href = window.URL.createObjectURL(blob)
-					link.download = invoice.number
+					link.style.display = 'none';
+					// For Firefox it is necessary to insert the link into body
+					document.body.appendChild(link);
+					link.href = data
+					link.setAttribute('download', `${orderId}.jpg`)
 					link.click()
-				}).catch(err => {
+
+					setTimeout(function() {
+						// For Firefox it is necessary to delay revoking the ObjectURL
+						window.URL.revokeObjectURL(link.href)
+						document.removeChild(link);
+					}, 100)
+				} catch(err) {
 					if (err.response.status === 404) {
 						return this.addAutoDismissableAlert({
 							text: 'Nie udało się znaleźć faktury. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
@@ -354,7 +366,7 @@
 					})
 
 					$wnl.logger.capture(err)
-				});
+				}
 			},
 			checkStatus() {
 				axios.get(getApiUrl(`orders/${this.order.id}`))

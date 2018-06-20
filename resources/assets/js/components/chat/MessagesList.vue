@@ -123,7 +123,7 @@
 			scrollToBottom() {
 				nextTick(() => {
 					this.container.scroll({
-						top: this.container.scrollHeight + 10000,
+						top: this.container.scrollHeight + 100,
 						behavior: 'smooth'
 					})
 				})

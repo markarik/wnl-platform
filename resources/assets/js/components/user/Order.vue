@@ -337,7 +337,7 @@
 					// For Firefox it is necessary to insert the link into body
 					document.body.appendChild(link);
 					link.href = data
-					link.setAttribute('download', `${orderId}.jpg`)
+					link.setAttribute('download', `${invoice.id}.pdf`)
 					link.click()
 
 					setTimeout(function() {

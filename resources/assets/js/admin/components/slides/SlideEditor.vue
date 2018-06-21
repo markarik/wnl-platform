@@ -19,9 +19,17 @@
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
 			  @keydown="form.errors.clear($event.target.name)">
 
+			<template v-if="form.quiz_questions && form.quiz_questions.length">
+				<span class="subtitle is-5">Pytania powiązane ze slajdem #{{slideId}}:</span>
+				<ul>
+					<li v-for="qq in form.quiz_questions" :key="qq">
+						<router-link :to="{name: 'quiz-editor', params: {quizId: qq}}">#{{qq}}</router-link>
+					</li>
+				</ul>
+			</template>
+
 			<div class="slide-content-editor">
-				<wnl-form-code type="text" name="content" :form="form"
-							   v-model="form.content"/>
+				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
 			</div>
 			<div class="level">
 				<div class="level-left">
@@ -98,11 +106,10 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-
 	import Form from 'js/classes/forms/Form'
-	import {getUrl, getApiUrl} from 'js/utils/env'
+	import {getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
+	import Input from 'js/admin/components/forms/Input.vue'
 	import SlidePreview from 'js/components/global/SlidePreview'
 	import Checkbox from 'js/admin/components/forms/Checkbox'
 	import {alerts} from 'js/mixins/alerts'
@@ -116,6 +123,7 @@
 		name: 'SlideEditor',
 		components: {
 			'wnl-form-code': Code,
+			'wnl-form-input': Input,
 			'wnl-form-checkbox': Checkbox,
 			'wnl-slide-preview': SlidePreview,
 		},
@@ -287,7 +295,7 @@
 		},
 		watch: {
 			resourceUrl(newValue, oldValue) {
-				newValue !== '' && this.form.populate(this.resourceUrl, this.excluded)
+				newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
 			},
 			content(newValue, oldValue) {
 				this.removeCourseTags()

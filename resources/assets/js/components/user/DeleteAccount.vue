@@ -61,10 +61,10 @@
 						title: this.$t('user.deleteAccount.confirmationHeader'),
 						text: this.$t('user.deleteAccount.confirmationWarning'),
 						input: 'password',
-						inputPlaceholder: 'Wprowadź hasło, aby usunąć konto',
 						inputAttributes: {
 							autocomplete: 'off',
 						},
+						inputPlaceholder: 'Wprowadź hasło, aby usunąć konto',
 						showCancelButton: true,
 						confirmButtonText: this.$t('ui.confirm.confirm'),
 						cancelButtonText: this.$t('ui.confirm.cancel'),

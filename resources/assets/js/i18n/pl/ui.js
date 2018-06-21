@@ -36,4 +36,5 @@ export const ui = {
 		somethingWentWrongUnofficial: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :(',
 		unauthorized: 'Nie masz uprawnień do tego działania.',
 	},
+	accountDeleted: 'Konto usunięte'
 }

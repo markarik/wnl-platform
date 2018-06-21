@@ -19,11 +19,32 @@ class UserForgetAccountApiController extends ApiController
     public function patch(Request $request)
     {
         $user = Auth::user();
+		$currentUserId = $request->userId;
 		$password = $request->password;
 
-		if ($user->id == $request->userId) {
-			if (Hash::check($password, $user->password)) {
-				echo('autoryzacja i dobre hasło');
+		if ($user->id == $currentUserId) {
+			// if (Hash::check($password, $user->password)) {
+			if (true) {
+				$toBeUpdated = array(
+					'first_name' => null,
+					'last_name' => null,
+					'public_email' => null,
+					'public_phone' => null,
+					'username' => null,
+					'avatar' => null,
+					'city' => null,
+					'university' => null,
+					'specialization' => null,
+					'help' => null,
+					'interests' => null,
+					'about' => null,
+					'learning_location' => null,
+					'display_name' => null
+				);
+
+				DB::table('user_profiles')
+					->where('user_id', $currentUserId)
+					->update($toBeUpdated);
 			} else {
 				return $this->respondInvalidInput('wrong_password');
 			}

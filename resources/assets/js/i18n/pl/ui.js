@@ -27,11 +27,13 @@ export const ui = {
 	},
 	error: {
 		defaultErrorHandle: 'Ups, coś poszło nie tak :(',
+		wrongPassword: 'Ups, hasło nieprawidłowe.',
 		wrongOldPassword: 'Ups, stare hasło jest nieprawidłowe.',
 		samePasswords: 'Nowe hasło musi różnić się od starego.',
 		notFound: `Ups, zapisywanie nie powiodło się.
 			Najprawdopodobniej treść do której się odwołujesz została usunięta.
 			W przypadku dalszych problemów odśwież stronę.`,
-		somethingWentWrongUnofficial: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :('
+		somethingWentWrongUnofficial: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :(',
+		unauthorized: 'Nie masz uprawnień do tego działania.',
 	},
 }

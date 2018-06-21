@@ -11,18 +11,13 @@
 			<div class="message-header">
 					<strong v-t="'user.deleteAccount.warningHeader'"/>
 				</div>
-			<div class="message-body" v-t="'user.deleteAccount.warning'"/>
-			<div class="control">
-				<input
-					autocomplete="new-password"
-					type="password"
-					class="input"
-					v-model="inputValue"/>
+			<div class="message-body" v-html="htmlWarning"/>
+			<div class="reset-button">
+				<button
+					@click="confirmAndDelete"
+					class="button is-danger to-right"
+					v-t="'user.deleteAccount.header'"/>
 			</div>
-			<button
-				@click="confirmAndDelete"
-				class="button is-danger to-right"
-				v-t="'user.deleteAccount.header'"/>
 		</div>
 	</div>
 </template>
@@ -32,12 +27,14 @@
 	@import 'resources/assets/sass/mixins'
 
 	.reset-container
-		text-align: center
 		padding-bottom: $margin-base
 		margin-bottom: $margin-huge
 
 		.message-body
 			border: none
+
+		.reset-button
+			text-align: center
 </style>
 
 <script>
@@ -53,6 +50,7 @@
 		data() {
 			return {
 				inputValue: '',
+				htmlWarning: this.$t('user.deleteAccount.warning'),
 			}
 		},
 		methods: {
@@ -62,13 +60,20 @@
 					await this.$swal(swalConfig({
 						title: this.$t('user.deleteAccount.confirmationHeader'),
 						text: this.$t('user.deleteAccount.confirmationWarning'),
+						input: 'password',
+						inputPlaceholder: 'Wprowadź hasło, aby usunąć konto',
+						inputAttributes: {
+							autocomplete: 'off',
+						},
 						showCancelButton: true,
 						confirmButtonText: this.$t('ui.confirm.confirm'),
 						cancelButtonText: this.$t('ui.confirm.cancel'),
 						type: 'error',
 						confirmButtonClass: 'button is-danger',
 						reverseButtons: true
-					}))
+					})).then(() => {
+						this.inputValue = this.$swal.getInput().value
+					})
 					await this.deleteAccount(this.inputValue)
 					await this.addAutoDismissableAlert({
 						text: this.$t('user.progressReset.alertSuccess'),
@@ -77,11 +82,26 @@
 					})
 				}
 				catch (error) {
-					if (error === 'cancel') {
-						return
-					}
 					$wnl.logger.capture(error)
-					this.addAutoDismissableAlert({
+					this.handleError(error)
+				}
+			},
+			handleError(error) {
+				if (error === 'cancel' || error === 'overlay') {
+					return
+				}
+				if (error.response.data.message === 'wrong_password') {
+					return this.addAutoDismissableAlert({
+						text: this.$t('ui.error.wrongPassword'),
+						type: 'error'
+					})
+				} else if (error.response.data.message === 'unauthorized') {
+					return this.addAutoDismissableAlert({
+						text: this.$t('ui.error.unauthorized'),
+						type: 'error'
+					})
+				} else {
+					return this.addAutoDismissableAlert({
 						text: this.$t('user.progressReset.alertError'),
 						type: 'error',
 						timeout: 4000,

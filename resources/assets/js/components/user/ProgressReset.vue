@@ -90,7 +90,7 @@
 					})
 				})
 				.catch(error => {
-					if (error === 'cancel') {
+					if (error === 'cancel'  || error === 'overlay') {
 						return
 					}
 					$wnl.logger.capture(error)

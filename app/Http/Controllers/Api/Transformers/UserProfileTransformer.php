@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\Transformers;
 
 use App\Models\UserProfile;
 use App\Http\Controllers\Api\ApiTransformer;
+use DB;
 
 
 class UserProfileTransformer extends ApiTransformer
@@ -38,6 +39,7 @@ class UserProfileTransformer extends ApiTransformer
 			'about'             => $profile->about,
 			'learning_location' => $profile->learning_location,
 			'roles'             => $profile->user->roles->pluck('name')->toArray() ?? [],
+			'forgotten'         => $profile->user->forgotten,  
 		];
 
 		if ($this->parent) {

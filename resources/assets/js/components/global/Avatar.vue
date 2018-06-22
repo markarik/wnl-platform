@@ -1,5 +1,6 @@
 <template>
-	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
+	<div class="wnl-avatar"
+		:class="[sizeClass, colorClass, imageClass]">
 		<img :title="usernameToUse" :src="urlToUse" class="wnl-avatar-custom" v-if="isCustom">
 		<div :title="usernameToUse" class="wnl-avatar-automatic" v-else>{{ initials }}</div>
 	</div>
@@ -13,6 +14,10 @@
 	// Variables
 	$avatars-colors-list: #1abc9c, #2ecc71, #3498db, #9b59b6, #34495e, #16a085, #27ae60, #2980b9, #8e44ad, #2c3e50, #f1c40f, #e67e22, #e74c3c, #f39c12, #d35400, #c0392b
 
+	.wnl-account-deleted
+		.icon
+			color: $color-gray-dimmed
+
 	@for $i from 1 to 16
 		.wnl-avatar-color-#{$i}
 			background-color: nth($avatars-colors-list, $i)
@@ -25,7 +30,7 @@
 	.wnl-avatar
 		overflow: hidden
 		user-select: none
-		
+
 </style>
 <script>
 	import _ from 'lodash'

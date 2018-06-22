@@ -70,8 +70,12 @@
 						cancelButtonText: this.$t('ui.confirm.cancel'),
 						type: 'error',
 						confirmButtonClass: 'button is-danger',
-						reverseButtons: true
+						reverseButtons: true,
+						// onOpen: () => {
+						// 	this.$swal.getInput().createAttribule("autocomplete", "off")
+						// }
 					})).then(() => {
+						console.log(this.$swal.getInput());
 						this.inputValue = this.$swal.getInput().value
 					})
 					await this.deleteAccount(this.inputValue)

@@ -44,7 +44,7 @@ class User extends Authenticatable
 		'password', 'remember_token',
 	];
 
-	protected $guarded = ['suspended'];
+	protected $guarded = ['suspended', 'forgotten'];
 
 	protected $appends = ['subscription_status'];
 

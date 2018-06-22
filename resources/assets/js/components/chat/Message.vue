@@ -1,6 +1,6 @@
 <template>
 	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
-		<figure class="media-left" @click="showModal">
+		<figure class="media-left" @click="showModal" :class="{'author-forgotten': author.forgotten}">
 			<wnl-avatar
 				:fullName="fullName"
 				:url="avatar"
@@ -11,7 +11,10 @@
 		<div class="media-content">
 			<div class="content">
 				<p class="wnl-message-meta" v-if="showAuthor">
-					<strong class="author" @click="showModal">{{ nameToDisplay }}</strong>
+					<strong
+						class="author"
+						:class="{'author-forgotten': author.forgotten}"
+						@click="showModal">{{ nameToDisplay }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -37,6 +40,9 @@
 		.media-left
 			margin: 0 $margin-small 0 0
 			cursor: pointer
+			&.author-forgotten
+				cursor: default
+				color: $color-gray-dimmed
 
 		.media-left-placeholder
 			height: 1px
@@ -55,6 +61,9 @@
 					.author
 						cursor: pointer
 						color: $color-sky-blue
+						&.author-forgotten
+							cursor: default
+							color: $color-gray-dimmed
 
 				.wnl-message-time
 					margin-left: $margin-small
@@ -92,7 +101,9 @@
 		},
 		methods: {
 			showModal() {
-				this.isVisible = true
+				if (!this.author.forgotten) {
+					this.isVisible = true
+				}
 			},
 			closeModal() {
 				this.isVisible = false

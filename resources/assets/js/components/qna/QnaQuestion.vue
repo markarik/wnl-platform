@@ -24,12 +24,12 @@
 					></wnl-bookmark>
 				</div>
 				<div class="tags" v-if="tags.length > 0">
-					<span v-for="(tag, key) in tags" class="tag is-light" :key=key>
+					<span v-for="(tag, key) in tags" class="tag is-light" :key="key">
 						<span>{{tag}}</span>
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<div class="modal-activator" @click="showModal">
+					<div class="modal-activator"  :class="{'author-forgotten': author.forgotten}" @click="showModal">
 						<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"
@@ -133,6 +133,9 @@
 		cursor: pointer
 		align-items: center
 		color: $color-sky-blue
+		&.author-forgotten
+			color: $color-gray-dimmed
+			cursor: default
 
 	.qna-question-content
 		font-size: $font-size-plus-1
@@ -332,7 +335,9 @@
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
 			showModal() {
-				this.isVisible = true
+				if (!this.author.forgotten) {
+					this.isVisible = true
+				}
 			},
 			closeModal() {
 				this.isVisible = false

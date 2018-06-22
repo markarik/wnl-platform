@@ -6,7 +6,7 @@
 				</wnl-text-loader>
 			</div>
 
-			<div class="profile-deleted notification" v-if="profile.first_name === null">
+			<div class="profile-deleted notification" v-if="profile.forgotten">
 				<span class="icon is-big">
 					<i class="fa fa-ban"></i>
 				</span>
@@ -114,7 +114,7 @@
 		.profile-deleted
 			text-align: center
 			.icon
-				color: red
+				color: $color-red
 			.profile-deleted__annotation
 				text-transform: uppercase
 				font-weight: 900

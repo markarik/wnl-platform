@@ -256,6 +256,8 @@
 				})
 			},
 			removeCourseTags() {
+				if (!this.form.content) return;
+
 				if (FUNCTIONAL_SLIDE_TAG_REGEX.test(this.form.content)) {
 					this.form.is_functional = true
 				}

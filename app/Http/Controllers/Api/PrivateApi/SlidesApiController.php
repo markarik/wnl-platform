@@ -135,7 +135,7 @@ class SlidesApiController extends ApiController
 
 		// Detach Related Models
 		$slide->quizQuestions()->detach();
-		$slide->comments()->detach();
+		$slide->comments()->delete();
 		$slide->reactions()->detach();
 
 		// Decrement order numbers

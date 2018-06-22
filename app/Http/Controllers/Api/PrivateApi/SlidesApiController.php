@@ -133,11 +133,10 @@ class SlidesApiController extends ApiController
 		// Detach from each presentable
 		$this->detachSlide($slide, $presentablesInstances);
 
-		// Detach reactions
-		$slide->reactions()->detach();
-
-		// Detach Quiz Questions
+		// Detach Related Models
 		$slide->quizQuestions()->detach();
+		$slide->comments()->detach();
+		$slide->reactions()->detach();
 
 		// Decrement order numbers
 		$this->decrementOrderNumber($presentables);
@@ -151,9 +150,9 @@ class SlidesApiController extends ApiController
 			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
 		}
 
-		$presentablesInstances->forEach(function($presentable) use ($slide) {
+		foreach ($presentablesInstances as $presentable) {
 			event(new SlideDetached($slide, $presentable));
-		});
+		}
 
 		return $this->respondOk();
 	}

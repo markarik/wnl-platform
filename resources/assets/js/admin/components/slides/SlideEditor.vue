@@ -271,6 +271,7 @@
 				}).then(() => {
 					this.form.content       = null
 					this.form.is_functional = false
+					this.form.quiz_questions = []
 					this.successFading('Slajd usunięty.', 2000)
 					this.detachingSlide = false;
 					this.$emit('resetSearchInputs')

@@ -151,7 +151,9 @@ class SlidesApiController extends ApiController
 			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
 		}
 
-		event(new SlideDetached($slide, $presentablesInstances));
+		$presentablesInstances->forEach(function($presentable) use ($slide) {
+			event(new SlideDetached($slide, $presentable));
+		});
 
 		return $this->respondOk();
 	}

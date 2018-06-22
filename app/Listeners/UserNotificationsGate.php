@@ -39,14 +39,15 @@ class UserNotificationsGate implements ShouldQueue
 			});
 		}
 
+		if ($this->shouldStopNotification($event)) {
+			$this->delete();
+			\Log::notice('KILL JOB - MODEL DOESNT EXIST');
+			return;
+		}
+
 		foreach ($users as $user) {
 			$channelFormatted = sprintf(self::CHANNELS['private-stream'], $user->id);
-			if ($this->shouldStopNotification($event)) {
-				$this->delete();
-				\Log::notice('STOPPING NOTIFICATION FOR EVENT');
-			} else {
-				$user->notify(new EventNotification($event, $channelFormatted));
-			}
+			$user->notify(new EventNotification($event, $channelFormatted));
 		}
 	}
 

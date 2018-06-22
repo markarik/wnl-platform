@@ -8,13 +8,11 @@ use Facades\Lib\Bethink\Bethink;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
 class SlideDetached
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels,
 		EventContextTrait;
 
 	public $slide;

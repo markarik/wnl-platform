@@ -87,11 +87,6 @@ class UserNotificationsGate implements ShouldQueue
 		$notification = new EventTaskNotification($event, $channelFormatted, $team);
 		Notification::send($group, $notification);
 
-		// For some reason event is not deserialized here by default
-		// calling __wakeup() forces an event to deserialize, hence we can access question and user property
-		// ...looks like it's being serialized after calling 'notifyModerators', so I moved the wakeup here.
-		$event->__wakeup();
-
 		return true;
 	}
 

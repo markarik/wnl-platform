@@ -151,8 +151,7 @@ class SlidesApiController extends ApiController
 		}
 
 		foreach ($presentablesInstances as $presentable) {
-			// Presentable here is an instance of QueryBuilder
-			event(new SlideDetached($slide, $presentable->get()));
+			event(new SlideDetached($slide, $presentable));
 		}
 
 		return $this->respondOk();

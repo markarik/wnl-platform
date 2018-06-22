@@ -61,7 +61,7 @@ class SlideDetached
 				'id'   => $this->slide->id,
 			],
 			'presentables' => $this->presentables->filter(function($presentable) {
-				return $presentable->has('type');
+				return !empty($presentable->type);
 			})->pluck('id', 'type')->toArray()
 		];
 	}

@@ -17,7 +17,7 @@ class SlideDetached
 
 	public $slide;
 
-	public $presentables;
+	public $presentable;
 
 	public $channels;
 
@@ -26,11 +26,11 @@ class SlideDetached
 	 *
 	 * @param Slide $slide
 	 */
-	public function __construct(Slide $slide, $presentables)
+	public function __construct(Slide $slide, $presentable)
 	{
 		$this->channels = collect();
 		$this->slide = $slide;
-		$this->presentables = $presentables;
+		$this->presentable = $presentable;
 	}
 
 	/**
@@ -41,13 +41,11 @@ class SlideDetached
 	public function broadcastOn()
 	{
 		$this->channels->push(new Channel('slides'));
-		foreach ($this->presentables as $presentable) {
-			$resource = Bethink::getTypeByClassInstance($presentable);
+		$resource = Bethink::getTypeByClassInstance($this->presentable);
 
-			$this->channels->push(
-				new Channel("presentable-{$resource}-{$presentable->id}")
-			);
-		}
+		$this->channels->push(
+			new Channel("presentable-{$resource}-{$this->presentable->id}")
+		);
 
 		return $this->channels->toArray();
 	}
@@ -60,9 +58,7 @@ class SlideDetached
 				'type' => 'slide',
 				'id'   => $this->slide->id,
 			],
-			'presentables' => $this->presentables->filter(function($presentable) {
-				return !empty($presentable->type);
-			})->pluck('id', 'type')->toArray()
+			'presentables' => !empty($this->presentable->type) ? $this->presentable->pluck('id', 'type')->toArray() : ''
 		];
 	}
 }

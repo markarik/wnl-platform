@@ -43,7 +43,6 @@ class UserNotificationsGate implements ShouldQueue
 		foreach ($users as $user) {
 			if ($this->shouldStopNotification($event)) {
 				$this->delete();
-				\Log::notice('KILL JOB - MODEL DOESNT EXIST');
 				break;
 			}
 

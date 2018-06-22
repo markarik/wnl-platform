@@ -120,6 +120,8 @@ class AppServiceProvider extends ServiceProvider
 	protected function registerQueueLogger()
 	{
 		Queue::failing(function (JobFailed $event) {
+			\Log::notice("JOB FAILED.......");
+
 			Notification::route(
 				'slack',
 				env('SLACK_QUEUE_MONITORING')

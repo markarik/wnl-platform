@@ -60,7 +60,9 @@ class SlideDetached
 				'type' => 'slide',
 				'id'   => $this->slide->id,
 			],
-			'presentables' => $this->presentables->pluck('id', 'type')->toArray(),
+			'presentables' => $this->presentables->filter(function($presentable) {
+				return $presentable->has('type');
+			})->pluck('id', 'type')->toArray()
 		];
 	}
 }

@@ -7,6 +7,12 @@
 
 	<p>Faktura może Ci się przydać, aby uzyskać refundację z Izby Lekarskiej lub jeżeli prowadzisz działalność gospodarczą.</p>
 
+	<p><strong>Uwaga! Przy płatności ratalnej, jeżeli w dniu wystawienia faktury nie masz w pełni opłaconego zamówienia, na fakturze końcowej będzie widniała zapłacona dotychczas kwota, a nie pełna. Do kolejnych wpłat nie możemy już wystawiać nowych faktur, dlatego składając dokumenty w Izbie dołącz potwierdzenia przelewów wykonanych po pierwszym dniu kursu. :)</strong></p>
+
+	<p>Wszystie faktury dotyczące Twoich zamówień znajdziesz w zakładce KONTO > Twoje zamówienia.</p>
+
+	<p>Jeżeli szukasz certyfikatu uczestnictwa, znajdziesz go w zakładce KONTO > Certyfikaty. :)</p>
+
 	<p>Dziękujemy za uczestnictwo i życzymy powodzenia w nauce!</p>
 
 	<p class="text-align: center;">

@@ -71,19 +71,11 @@
 						type: 'error',
 						confirmButtonClass: 'button is-danger',
 						reverseButtons: true,
-						// onOpen: () => {
-						// 	this.$swal.getInput().createAttribule("autocomplete", "off")
-						// }
 					})).then(() => {
-						console.log(this.$swal.getInput());
 						this.inputValue = this.$swal.getInput().value
 					})
 					await this.deleteAccount(this.inputValue)
-					await this.addAutoDismissableAlert({
-						text: this.$t('user.progressReset.alertSuccess'),
-						type: 'success',
-						timeout: 10000,
-					})
+					await this.$router.push({name: 'logout'})
 				}
 				catch (error) {
 					$wnl.logger.capture(error)

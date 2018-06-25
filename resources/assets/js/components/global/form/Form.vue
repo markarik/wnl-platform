@@ -66,7 +66,7 @@
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
 			},
-			keyEvent() {
+			keyEvent(event) {
 				if (event.keyCode === 13 && !this.suppressEnter) {
 					this.onSubmitForm()
 				}

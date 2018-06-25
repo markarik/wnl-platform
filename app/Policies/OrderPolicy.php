@@ -19,6 +19,11 @@ class OrderPolicy
 		return null;
 	}
 
+	public function view(User $user, Order $order)
+	{
+		return $user->id === $order->user_id;
+	}
+
 	public function cancel(User $user, Order $order)
 	{
 		return $user->id === $order->user_id && !$order->paid;

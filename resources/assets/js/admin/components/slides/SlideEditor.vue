@@ -19,9 +19,17 @@
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
 			  @keydown="form.errors.clear($event.target.name)">
 
+			<template v-if="form.quiz_questions && form.quiz_questions.length">
+				<span class="subtitle is-5">Pytania powiązane ze slajdem #{{slideId}}:</span>
+				<ul>
+					<li v-for="qq in form.quiz_questions" :key="qq">
+						<router-link :to="{name: 'quiz-editor', params: {quizId: qq}}">#{{qq}}</router-link>
+					</li>
+				</ul>
+			</template>
+
 			<div class="slide-content-editor">
-				<wnl-form-code type="text" name="content" :form="form"
-							   v-model="form.content"/>
+				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
 			</div>
 			<div class="level">
 				<div class="level-left">
@@ -98,11 +106,10 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-
 	import Form from 'js/classes/forms/Form'
-	import {getUrl, getApiUrl} from 'js/utils/env'
+	import {getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
+	import Input from 'js/admin/components/forms/Input.vue'
 	import SlidePreview from 'js/components/global/SlidePreview'
 	import Checkbox from 'js/admin/components/forms/Checkbox'
 	import {alerts} from 'js/mixins/alerts'
@@ -116,6 +123,7 @@
 		name: 'SlideEditor',
 		components: {
 			'wnl-form-code': Code,
+			'wnl-form-input': Input,
 			'wnl-form-checkbox': Checkbox,
 			'wnl-slide-preview': SlidePreview,
 		},
@@ -248,6 +256,8 @@
 				})
 			},
 			removeCourseTags() {
+				if (!this.form.content) return;
+
 				if (FUNCTIONAL_SLIDE_TAG_REGEX.test(this.form.content)) {
 					this.form.is_functional = true
 				}
@@ -255,39 +265,34 @@
 			},
 			detachSlide() {
 				this.confirmDetach = false
-				if (!this.slideId && !this.screenId) return
+				if (!this.slideId) return
 				this.detachingSlide = true;
 
-				if (!this.screenId) {
-					this.errorFading('Wpisz z jakiego screena chcesz usunąć slajd.', 4000)
-					this.detachingSlide = false
-				} else {
-					axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
-						slideId: this.slideId,
-						screenId: this.screenId,
-					}).then(response => {
-						this.form.content       = null
-						this.form.is_functional = false
-						this.successFading('Slajd usunięty.', 2000)
+				axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
+					slideId: this.slideId,
+				}).then(() => {
+					this.form.content       = null
+					this.form.is_functional = false
+					this.form.quiz_questions = []
+					this.successFading('Slajd usunięty.', 2000)
+					this.detachingSlide = false;
+					this.$emit('resetSearchInputs')
+				}).catch(error => {
+					if (error.response.status === 400
+						|| error.response.status === 404) {
+						this.errorFading('Nie można znaleźć takiego slajdu.', 4000)
 						this.detachingSlide = false;
-						this.$emit('resetSearchInputs')
-					}).catch(error => {
-						if (error.response.status === 400
-							|| error.response.status === 404) {
-							this.errorFading('Nie można znaleźć takiego slajdu.', 4000)
-							this.detachingSlide = false;
-						} else {
-							this.errorFading('Ups... Coś poszło nie tak.', 4000)
-							$wnl.logger.capture(error)
-							this.detachingSlide = false;
-						}
-					})
-				}
+					} else {
+						this.errorFading('Ups... Coś poszło nie tak.', 4000)
+						$wnl.logger.capture(error)
+						this.detachingSlide = false;
+					}
+				})
 			}
 		},
 		watch: {
 			resourceUrl(newValue, oldValue) {
-				newValue !== '' && this.form.populate(this.resourceUrl, this.excluded)
+				newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
 			},
 			content(newValue, oldValue) {
 				this.removeCourseTags()

@@ -64,6 +64,8 @@ class CalculateCoursePlan
 
 		DB::commit();
 
+		\Cache::tags("user-{$this->user->id}")->flush();
+
 		return $plan;
 	}
 
@@ -148,7 +150,7 @@ class CalculateCoursePlan
 				function ($date) {
 					return in_array($date->dayOfWeekIso, $this->workDays);
 				},
-				(clone $this->endDate)->addDay());			
+				(clone $this->endDate)->addDay());
 		}
 
 		$builder = $this->user->lessonsAvailability()

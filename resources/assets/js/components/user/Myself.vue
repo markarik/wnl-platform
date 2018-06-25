@@ -144,6 +144,18 @@
 						iconClass: 'fa fa-tasks',
 						iconTitle: 'Plan pracy',
 					},
+					}
+						text: 'Certyfikaty',
+						itemClass: 'has-icon',
+						to: {
+							name: 'certificates',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-trophy',
+						iconTitle: 'Certyfikaty',
+					},
 					{
 						text: 'Usuwanie postępu',
 						itemClass: 'has-icon',
@@ -177,7 +189,7 @@
 						method: 'push',
 						iconClass: 'fa-ban',
 						iconTitle: 'Usuń konto',
-					}
+					},
 				]
 
 				return items

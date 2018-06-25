@@ -12,6 +12,7 @@ use App\Http\Requests\Course\DetachSlide;
 use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
 use App\Http\Requests\Course\UpdateSlideChart;
+use App\Models\Presentable;
 use ScoutEngines\Elasticsearch\Searchable;
 use App\Jobs\SearchImportAll;
 use App\Models\Screen;
@@ -119,33 +120,39 @@ class SlidesApiController extends ApiController
 
 	public function detach(DetachSlide $request)
 	{
-		$slide = Slide::find($request->get('slideId'));
-		$screen = Screen::find($request->get('screenId'));
-		$slideshow = $screen->slideshow ?? null;
-		if (!$slide || !$screen || !$slideshow) {
-			return $this->respondInvalidInput();
-		}
+		$slideId = $request->get('slideId');
+		$slide = Slide::find($slideId);
 
-		$orderNumber = $this->getSlideOrderNumber($slide, $slideshow);
-		if (is_null($orderNumber)) {
-			return $this->respondNotFound();
-		}
-		$currentSlide = $this->getCurrentFromPresentables($slideshow->id, $orderNumber);
-		$presentables = $this->getSlidePresentables($currentSlide, $screen);
+		// Get all presentables
+		$presentables = Presentable::where('slide_id', $slideId)->get();
 
-		$presentables->push($slideshow);
-		$presentables = $this->getPresentablesOrder($currentSlide, $presentables);
+		$presentablesInstances = $presentables->map(function($presentable) {
+			return $presentable->presentable_type::find($presentable->presentable_id);
+		});
 
-		$this->decrementOrderNumber($presentables);
-		$this->detachSlide($slide, $presentables);
+		// Detach from each presentable
+		$this->detachSlide($slide, $presentablesInstances);
+
+		// Detach Related Models
+		$slide->quizQuestions()->detach();
+		$slide->comments()->delete();
 		$slide->reactions()->detach();
+
+		// Decrement order numbers
+		$this->decrementOrderNumber($presentables);
+
+		$slide->delete();
 
 		if (!App::environment('dev')) {
 			dispatch(new SearchImportAll('App\\Models\\Slide'));
 			\Artisan::queue('screens:countSlides');
+			\Artisan::queue('slides:fromCategory');
 			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
 		}
-		event(new SlideDetached($slide, $presentables));
+
+		foreach ($presentablesInstances as $presentable) {
+			event(new SlideDetached($slide, $presentable));
+		}
 
 		return $this->respondOk();
 	}

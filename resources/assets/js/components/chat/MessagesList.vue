@@ -182,6 +182,10 @@
 		watch: {
 			highlightedMessageId() {
 				if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId)
+			},
+			'loaded' (newVal) {
+				// required by firefox
+				this.scrollToBottom()
 			}
 		}
 	}

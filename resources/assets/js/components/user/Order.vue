@@ -136,6 +136,14 @@
 						<wnl-submit>Wykorzystaj kod</wnl-submit>
 					</wnl-form>
 				</div>
+				<div v-if="order.invoices.length" class="invoices">
+					<span class="invoices__title">Dokumenty do pobrania</span>
+					<ul>
+						<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">
+							<a @click="downloadInvoice(invoice)">{{invoice.number}}</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 		<div class="card-footer">
@@ -196,12 +204,18 @@
 		display: flex
 		flex-direction: row
 		justify-content: space-between
+
+	.invoices
+		margin-top: $margin-base
+
+		&__link
+			cursor: pointer
 </style>
 
 <script>
 	import moment from 'moment'
 	import axios from 'axios'
-	import {configValue} from 'js/utils/config'
+	import {mapActions, mapGetters} from 'vuex'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 	import {Form, Text, Submit} from 'js/components/global/form'
@@ -229,6 +243,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['isAdmin']),
 			coupon() {
 				return this.order.coupon
 			},
@@ -307,6 +322,52 @@
 			}
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
+
+			async downloadInvoice(invoice) {
+				try {
+					const response = await axios.request({
+						url: getApiUrl(`invoices/${invoice.id}`),
+						responseType: 'blob',
+					})
+
+					const data = window.URL.createObjectURL(response.data);
+					const link = document.createElement('a')
+					link.style.display = 'none';
+					// For Firefox it is necessary to insert the link into body
+					document.body.appendChild(link);
+					link.href = data
+					link.setAttribute('download', `${invoice.id}.pdf`)
+					link.click()
+
+					setTimeout(function() {
+						// For Firefox it is necessary to delay revoking the ObjectURL
+						window.URL.revokeObjectURL(link.href)
+						document.removeChild(link);
+					}, 100)
+				} catch(err) {
+					if (err.response.status === 404) {
+						return this.addAutoDismissableAlert({
+							text: 'Nie udało się znaleźć faktury. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
+							type: 'error'
+						})
+					}
+
+					if (err.response.status === 403) {
+						return this.addAutoDismissableAlert({
+							text: 'Nie masz uprawnień do pobrania tej faktury.',
+							type: 'error'
+						})
+					}
+
+					this.addAutoDismissableAlert({
+						text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+						type: 'error'
+					})
+
+					$wnl.logger.capture(err)
+				}
+			},
 			checkStatus() {
 				axios.get(getApiUrl(`orders/${this.order.id}`))
 						.then((response) => {

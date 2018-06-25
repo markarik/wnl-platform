@@ -16,7 +16,7 @@ class QnaQuestionRemoved extends Event
 		SanitizesUserContent,
 		EventContextTrait;
 
-	public $qnaQuestion;
+	public $model;
 	public $action;
 	public $userId;
 
@@ -29,7 +29,7 @@ class QnaQuestionRemoved extends Event
 	public function __construct(QnaQuestion $qnaQuestion, $userId, $action)
 	{
 		parent::__construct();
-		$this->qnaQuestion = $qnaQuestion;
+		$this->model = $qnaQuestion;
 		$this->userId = $userId;
 		$this->action = $action;
 	}
@@ -42,7 +42,7 @@ class QnaQuestionRemoved extends Event
 			'event'   => 'qna-question-' . $this->action,
 			'subject' => [
 				'type' => 'qna_question',
-				'id'   => $this->qnaQuestion->id,
+				'id'   => $this->model->id,
 				'text' => $this->sanitize($qnaQuestion->text),
 			],
 			'actors'  => [
@@ -54,8 +54,8 @@ class QnaQuestionRemoved extends Event
 	}
 
 	private function serializedModel() {
-		$serializedModel = QnaQuestion::find($this->qnaQuestion->id);
+		$serializedModel = QnaQuestion::find($this->model->id);
 
-		return !empty($serializedModel) ? $serializedModel : $this->qnaQuestion;
+		return !empty($serializedModel) ? $serializedModel : $this->model;
 	}
 }

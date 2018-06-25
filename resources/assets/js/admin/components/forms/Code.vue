@@ -61,7 +61,9 @@
 		},
 		watch: {
 			value (newValue) {
-				if (newValue !== editor.getValue()) {
+				if (!newValue) editor.setValue('', -1);
+
+				if (newValue && newValue !== editor.getValue()) {
 					editor.setValue(newValue, -1)
 				}
 			}

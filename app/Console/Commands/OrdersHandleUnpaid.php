@@ -95,7 +95,7 @@ class OrdersHandleUnpaid extends Command
 
 	protected function handleInstalments()
 	{
-		$beforeDue = Carbon::today()->subDays(1);
+		$beforeDue = Carbon::today()->addDays(1);
 		$orders = Order::whereHas('orderInstalments',
 			function ($query) use ($beforeDue) {
 				$query

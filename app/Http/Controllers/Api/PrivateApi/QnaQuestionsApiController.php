@@ -78,6 +78,11 @@ class QnaQuestionsApiController extends ApiController
 	{
 		$id = $request->get('context');
 		$question = QnaQuestion::find($id);
+
+		if (empty($question)) {
+			return $this->respondNotFound();
+		}
+
 		$data = [];
 		$screen = $question->screen;
 

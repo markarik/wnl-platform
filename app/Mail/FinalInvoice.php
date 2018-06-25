@@ -41,7 +41,7 @@ class FinalInvoice extends Mailable implements ShouldQueue
 			->subject("Wystawiliśmy fakturę końcową do Twojego zamówienia numer {$this->order->id}")
 			->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
-			]);
+			])
 			->bcc('zamowienia@wiecejnizlek.pl');
 	}
 }

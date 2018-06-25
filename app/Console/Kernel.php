@@ -60,6 +60,10 @@ class Kernel extends ConsoleKernel
 			->dailyAt('02:30');
 
 		$schedule
+			->command('notifications:cleanup-old')
+			->dailyAt('02:45');
+
+		$schedule
 			->command('orders:handleUnpaid')
 			->twiceDaily(8, 20);
 

@@ -58,13 +58,13 @@
 			.avatar-activator
 				cursor: pointer
 				&.author-forgotten
-					cursor: default
+					pointer-events: none
 
 	.author
 		font-weight: $font-weight-bold
 		&.author-forgotten
 			color: $color-gray-dimmed
-			cursor: default
+			pointer-events: none
 
 	.comment-icon-link
 		.icon
@@ -125,9 +125,7 @@ export default {
 	},
 	methods: {
 		showModal() {
-			if (!this.profile.forgotten) {
-				this.isVisible = true
-			}
+			this.isVisible = true
 		},
 		closeModal() {
 			this.isVisible = false

@@ -8,5 +8,8 @@ return [
 	'payment-pending'              => 'Oczekiwanie na potwierdzenie płatności online.',
 	'contact-us-if-payment-failed' => 'Jeżeli oczekiwanie trwa podejrzanie długo możliwe, że transakcja się nie powiodła. Prosimy wtedy o kontakt na platnosci@wiecejnizlek.pl i zajmiemy się sprawą! :)',
 	'change-payment-method'        => 'Zmień metodę płatności',
+	'account'                      => 'Konto',
+	'deleted'                      => 'Usunięte',
+	'account-deleted'              => 'Konto usunięte',
 
 ];

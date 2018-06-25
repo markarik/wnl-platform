@@ -80,6 +80,7 @@
 		&.author-forgotten
 			color: $color-gray-dimmed
 			cursor: default
+			pointer-events: none
 
 	.qna-answer-comments
 		margin-left: 60px
@@ -181,9 +182,7 @@
 		methods: {
 			...mapActions('qna', ['removeAnswer']),
 			showModal() {
-				if (!this.author.forgotten) {
-					this.isVisible = true
-				}
+				this.isVisible = true
 			},
 			closeModal() {
 				this.isVisible = false

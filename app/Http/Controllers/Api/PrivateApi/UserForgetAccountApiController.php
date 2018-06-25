@@ -26,8 +26,8 @@ class UserForgetAccountApiController extends ApiController
 		if ($user->id == $currentUserId) {
 			if (true) {
 				$userProfileUpdates = array(
-					'first_name' => 'Konto',
-					'last_name' => 'usunięte',
+					'first_name' => 'account',
+					'last_name' => 'deleted',
 					'public_email' => null,
 					'public_phone' => null,
 					'username' => null,
@@ -39,7 +39,7 @@ class UserForgetAccountApiController extends ApiController
 					'interests' => null,
 					'about' => null,
 					'learning_location' => null,
-					'display_name' => 'Konto usunięte'
+					'display_name' => null
 				);
 
 				$userUpdates = array(

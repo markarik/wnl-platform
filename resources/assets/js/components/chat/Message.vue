@@ -41,8 +41,8 @@
 			margin: 0 $margin-small 0 0
 			cursor: pointer
 			&.author-forgotten
-				cursor: default
 				color: $color-gray-dimmed
+				pointer-events: none
 
 		.media-left-placeholder
 			height: 1px
@@ -62,8 +62,8 @@
 						cursor: pointer
 						color: $color-sky-blue
 						&.author-forgotten
-							cursor: default
 							color: $color-gray-dimmed
+							pointer-events: none
 
 				.wnl-message-time
 					margin-left: $margin-small
@@ -101,9 +101,7 @@
 		},
 		methods: {
 			showModal() {
-				if (!this.author.forgotten) {
-					this.isVisible = true
-				}
+				this.isVisible = true
 			},
 			closeModal() {
 				this.isVisible = false

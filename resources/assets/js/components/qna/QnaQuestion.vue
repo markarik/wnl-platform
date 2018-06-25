@@ -136,6 +136,7 @@
 		&.author-forgotten
 			color: $color-gray-dimmed
 			cursor: default
+			pointer-events: none
 
 	.qna-question-content
 		font-size: $font-size-plus-1
@@ -335,9 +336,7 @@
 		methods: {
 			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
 			showModal() {
-				if (!this.author.forgotten) {
-					this.isVisible = true
-				}
+				this.isVisible = true
 			},
 			closeModal() {
 				this.isVisible = false

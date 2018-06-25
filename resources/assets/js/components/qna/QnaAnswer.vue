@@ -79,7 +79,6 @@
 		color: $color-sky-blue
 		&.author-forgotten
 			color: $color-gray-dimmed
-			cursor: default
 			pointer-events: none
 
 	.qna-answer-comments

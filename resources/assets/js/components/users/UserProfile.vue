@@ -7,9 +7,6 @@
 			</div>
 
 			<div class="profile-deleted notification" v-if="profile.forgotten">
-				<span class="icon is-big">
-					<i class="fa fa-ban"></i>
-				</span>
 				<div class="profile-deleted__annotation">
 					{{ $t('ui.accountDeleted') }}
 				</div>
@@ -113,8 +110,6 @@
 
 		.profile-deleted
 			text-align: center
-			.icon
-				color: $color-red
 			.profile-deleted__annotation
 				text-transform: uppercase
 				font-weight: 900

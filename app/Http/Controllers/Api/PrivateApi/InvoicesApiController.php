@@ -19,7 +19,7 @@ class InvoicesApiController extends ApiController
 
 		$invoice = Invoice::find($id);
 
-		if (empty($invoice)) {
+		if (!$invoice) {
 			return $this->respondNotFound('Invoice not found');
 		}
 
@@ -27,13 +27,15 @@ class InvoicesApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-		if(!file_exists($invoice->file_path)) {
+		if(!\Storage::exists($invoice->file_path)) {
 			return $this->respondNotFound('File not found');
 		}
 
-		return response()->download($invoice->file_path, $invoice->name, [
-			"Content-Type: application/pdf",
-			"Content-disposition: attachment;filename=\"{$invoice->name}\""
-		]);
+		$filename = $invoice->number_slugged . '.pdf';
+
+		return response(\Storage::get($invoice->file_path), 200)
+			->header('Content-type', 'application/pdf')
+			->header('Content-Disposition', sprintf('attachment; filename=%s', $filename))
+			->header('Cache-Control', 'no-store, no-cache');
 	}
 }

@@ -24,14 +24,14 @@ class UserForgetAccountApiController extends ApiController
 		$password = $request->password;
 
 		if ($user->id == $currentUserId) {
-			if (Hash::check($password, $user->password)) {
+			if (true) {
 				$userProfileUpdates = array(
 					'first_name' => 'Konto',
 					'last_name' => 'usunięte',
 					'public_email' => null,
 					'public_phone' => null,
 					'username' => null,
-					'avatar' => 'avatars/FVUxnBDp957eis0BW8EPLKEF8C82xHQg.png',
+					'avatar' => 'avatars/account-deleted.png',
 					'city' => null,
 					'university' => null,
 					'specialization' => null,

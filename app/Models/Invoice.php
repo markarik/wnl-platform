@@ -30,7 +30,7 @@ class Invoice extends Model
 
 	public function getFilePathAttribute()
 	{
-		return storage_path('app/invoices/' . $this->file_name);
+		return 'invoices/' . $this->file_name;
 	}
 
 	public function getNumberSluggedAttribute()

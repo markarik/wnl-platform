@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Refund extends Mailable
+class Refund extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 	public $order, $user, $invoice, $value;
@@ -36,11 +36,12 @@ class Refund extends Mailable
 	 */
 	public function build()
 	{
+		$invoiceData = \Storage::get($this->invoice->file_path);
+
 		return $this
 			->view('mail.refund')
 			->subject("Wykonaliśmy zwrot na Twoje konto! (Zamówienie {$this->order->id})")
-			->attach($this->invoice->file_path, [
-				'as'   => $this->invoice->number_slugged . '.pdf',
+			->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
 			])
 			->bcc('zamowienia@wiecejnizlek.pl');

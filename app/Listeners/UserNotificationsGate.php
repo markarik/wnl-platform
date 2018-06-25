@@ -6,10 +6,13 @@ use App\Models\UserCourseProgress;
 use App\Notifications\EventNotification;
 use App\Notifications\EventTaskNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
 class UserNotificationsGate implements ShouldQueue
 {
+	use InteractsWithQueue;
+
 	public $queue = 'notifications';
 
 	const CHANNELS = [
@@ -36,7 +39,13 @@ class UserNotificationsGate implements ShouldQueue
 			});
 		}
 
+
 		foreach ($users as $user) {
+			if ($this->shouldStopNotification($event)) {
+				$this->delete();
+				break;
+			}
+
 			$channelFormatted = sprintf(self::CHANNELS['private-stream'], $user->id);
 			$user->notify(new EventNotification($event, $channelFormatted));
 		}
@@ -78,11 +87,6 @@ class UserNotificationsGate implements ShouldQueue
 		$notification = new EventTaskNotification($event, $channelFormatted, $team);
 		Notification::send($group, $notification);
 
-		// For some reason event is not deserialized here by default
-		// calling __wakeup() forces an event to deserialize, hence we can access question and user property
-		// ...looks like it's being serialized after calling 'notifyModerators', so I moved the wakeup here.
-		$event->__wakeup();
-
 		return true;
 	}
 
@@ -92,6 +96,7 @@ class UserNotificationsGate implements ShouldQueue
 	 * @param $event
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function handle($event)
 	{
@@ -101,5 +106,13 @@ class UserNotificationsGate implements ShouldQueue
 
 		$handler = app('App\Listeners\Handlers\\' . class_basename($event) . 'Handler');
 		$handler->handle($event, $this);
+	}
+
+	private function shouldStopNotification($event) {
+		if (!$event->data['subject']['id']) {
+			return false;
+		}
+
+		return empty($event->model::query()->find($event->data['subject']['id']));
 	}
 }

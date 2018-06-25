@@ -13,7 +13,7 @@ class QnaAnswerRemovedHandler
 	 */
 	public function handle(QnaAnswerRemoved $event, UserNotificationsGate $gate)
 	{
-		$answerAuthor = $event->qnaAnswer->user;
+		$answerAuthor = $event->model->user;
 		$answerRemover = $event->data['actors']['id'] ?? 0;
 
 		if ($answerAuthor->id !== $answerRemover) {

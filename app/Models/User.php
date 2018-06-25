@@ -220,10 +220,6 @@ class User extends Authenticatable
 
 	protected function getSubscriptionDates()
 	{
-		if ($this->hasRole('admin') || $this->hasRole('moderator')) {
-			return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
-		}
-
 		$min = $this->subscription ? Carbon::parse($this->subscription->access_start) : null;
 		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
 

@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\UserCourseProgress;
 use App\Notifications\EventNotification;
 use App\Notifications\EventTaskNotification;
+use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
@@ -30,9 +31,14 @@ class UserNotificationsGate implements ShouldQueue
 	public function notifyPrivateStream(array $excluded, $event)
 	{
 		$progress = $this->usersLessonProgress($event);
-		$users = User::all()->filter(function ($user) use ($excluded) {
-			return !in_array($user->id, $excluded);
-		});
+
+		$users = User::select()
+			->whereNotIn('id', $excluded)
+			->join('user_subscription', 'users.id', '=', 'user_subscription.user_id')
+			->whereDate('user_subscription.access_start', '<=', Carbon::now())
+			->whereDate('user_subscription.access_end', '>=', Carbon::now())
+			->get();
+
 		if ($progress) {
 			$users = $users->filter(function ($user) use ($progress) {
 				return in_array($user->id, $progress);

@@ -60,7 +60,7 @@ class Kernel extends ConsoleKernel
 			->dailyAt('02:30');
 
 		$schedule
-			->command('notifications:cleanup-old')
+			->command('notifications:cleanup-old --force')
 			->dailyAt('02:45');
 
 		$schedule

@@ -13,7 +13,7 @@ class NotificationsCleanupOld extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'notifications:cleanup-old';
+	protected $signature = 'notifications:cleanup-old {--force}';
 
 	/**
 	 * The console command description.
@@ -41,7 +41,10 @@ class NotificationsCleanupOld extends Command
 	{
 		$notifications = Notification::whereDate('created_at', '<', Carbon::now()->subWeeks(3));
 
-		if (!$this->confirm("About to remove {$notifications->count()} notifications. Are you sure?")) {
+		if (
+			!$this->option('force') &&
+			!$this->confirm("About to remove {$notifications->count()} notifications. Are you sure?")
+		) {
 			$this->info("Aborting...");
 			die;
 		}

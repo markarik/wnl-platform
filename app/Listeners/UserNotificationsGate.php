@@ -33,8 +33,8 @@ class UserNotificationsGate implements ShouldQueue
 		$progress = $this->usersLessonProgress($event);
 
 		$users = User::select()
-			->whereNotIn('id', $excluded)
 			->join('user_subscription', 'users.id', '=', 'user_subscription.user_id')
+			->whereNotIn('users.id', $excluded)
 			->whereDate('user_subscription.access_start', '<=', Carbon::now())
 			->whereDate('user_subscription.access_end', '>=', Carbon::now())
 			->get();

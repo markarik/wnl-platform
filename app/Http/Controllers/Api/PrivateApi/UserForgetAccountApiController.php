@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 use App\Models\User;
 use Auth;
 use DB;
@@ -25,13 +26,13 @@ class UserForgetAccountApiController extends ApiController
 		if ($user->id == $currentUserId) {
 			// if (Hash::check($password, $user->password)) {
 			if (true) {
-				$toBeUpdated = array(
+				$userProfileUpdates = array(
 					'first_name' => 'Konto',
 					'last_name' => 'usunięte',
 					'public_email' => null,
 					'public_phone' => null,
 					'username' => null,
-					'avatar' => null,
+					'avatar' => 'avatars/FVUxnBDp957eis0BW8EPLKEF8C82xHQg.png',
 					'city' => null,
 					'university' => null,
 					'specialization' => null,
@@ -42,13 +43,20 @@ class UserForgetAccountApiController extends ApiController
 					'display_name' => 'Konto usunięte'
 				);
 
+				$userUpdates = array(
+					'forgotten' => 1,
+					'consent_newsletter' => null,
+					'email' => 'KontoUsunięte'.Uuid::uuid4()->toString().'@bethink.pl'
+				);
+
 				DB::table('user_profiles')
 					->where('user_id', $currentUserId)
-					->update($toBeUpdated);
+					->update($userProfileUpdates);
 
 				DB::table('users')
 				 	->where('id', $currentUserId)
-					->update(['forgotten' => 1]);
+					->update($userUpdates);
+
 			} else {
 				return $this->respondInvalidInput('wrong_password');
 			}

@@ -11,7 +11,7 @@
 		body {
 			color: #242d47;
 			font-family: 'DejaVu Sans', sans-serif;
-			font-size: 8pt;
+			font-size: 7pt;
 		}
 
 		.columns {

@@ -264,10 +264,10 @@ class Invoice
 			self::ADVANCE_SERIES_NAME,
 			self::CORRECTIVE_SERIES_NAME,
 		])->get();
-		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
 		$vatValue = $this->getVatValue($recentSettlement);
 		$vatString = $this->getVatString($vatValue);
-		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
+		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::FINAL_SERIES_NAME),
@@ -319,7 +319,7 @@ class Invoice
 			'priceGross' => $this->price($recentSettlement),
 		];
 
-		$data['remainingAmount'] = $this->price($totalPrice - $totalPaid);
+		$data['remainingAmount'] = $this->price($totalPrice - $previousAdvances->sum('corrected_amount'));
 
 		$data['previousAdvances'] = $previousAdvances;
 		$data['recentSettlement'] = $recentSettlement;

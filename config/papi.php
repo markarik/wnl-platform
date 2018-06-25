@@ -43,7 +43,7 @@ return [
 		'user-plan'          => 'user_plan',
 		'tasks'              => 'tasks',
 		'pages'              => 'pages',
-		'user-delete'        => 'user_delete',
+		'user-forget'        => 'user_forget',
 		'invoices'           => 'invoices',
 		'certificates'       => 'certificates',
 	],

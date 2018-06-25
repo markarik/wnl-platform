@@ -144,7 +144,7 @@
 						iconClass: 'fa fa-tasks',
 						iconTitle: 'Plan pracy',
 					},
-					}
+					{
 						text: 'Certyfikaty',
 						itemClass: 'has-icon',
 						to: {

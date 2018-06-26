@@ -22,7 +22,6 @@ before_script:
   - php artisan key:generate
   - php artisan migrate
   - php artisan db:seed --class=TestSeeder
-  - php artisan user:migrate-subscription --admins
 
 script:
   - phpunit --filter=Api

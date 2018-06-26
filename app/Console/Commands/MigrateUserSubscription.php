@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use App\Models\UserSubscription;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Cache;
 
 class MigrateUserSubscription extends Command
 {
@@ -13,7 +15,7 @@ class MigrateUserSubscription extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'user:migrate-subscription';
+	protected $signature = 'user:migrate-subscription {--admins}';
 
 	/**
 	 * The console command description.
@@ -40,10 +42,19 @@ class MigrateUserSubscription extends Command
 	public function handle()
 	{
 
-		$users = User::all();
+		if ($this->option('admins')) {
+			$users = User::all()->filter(function ($user) {
+				return $user->isAdmin();
+			});
+			$dates = new \stdClass();
+			$dates->min = Carbon::now()->subYear();
+			$dates->max = Carbon::now()->addYears(10);
+		} else {
+			$users = User::all();
+		}
 
 		foreach($users as $user) {
-			$dates = \DB::table('orders')
+			$dates = $dates ?? \DB::table('orders')
 				->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
 				->join('products', 'orders.product_id', '=', 'products.id')
 				->where('orders.user_id', $user->id)
@@ -52,11 +63,13 @@ class MigrateUserSubscription extends Command
 				->first();
 
 			if ($dates->min && $dates->max) {
-				$subscription = UserSubscription::updateOrCreate(
+				UserSubscription::updateOrCreate(
 					['user_id' => $user->id],
 					['access_start' => $dates->min, 'access_end' => $dates->max]
 				);
 			}
+
+			Cache::tags("user-{$user->id}")->flush();
 		}
 	}
 }

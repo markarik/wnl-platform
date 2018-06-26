@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
@@ -81,6 +82,12 @@ class UsersTableSeeder extends Seeder
 			['user_id' => 2, 'role_id' => 1],
 			['user_id' => 3, 'role_id' => 1],
 			['user_id' => 3, 'role_id' => 2],
+		]);
+
+		DB::table('user_subscription')->insert([
+			['user_id' => 1, 'access_start' => Carbon::now()->subDays(5), 'access_end' => Carbon::now()->addDays(5)],
+			['user_id' => 2, 'access_start' => Carbon::now()->subDays(5), 'access_end' => Carbon::now()->addDays(5)],
+			['user_id' => 3, 'access_start' => Carbon::now()->subDays(5), 'access_end' => Carbon::now()->addDays(5)],
 		]);
 	}
 }

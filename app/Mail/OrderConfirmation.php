@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderConfirmation extends Mailable
+class OrderConfirmation extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 	public $order;
@@ -34,11 +34,12 @@ class OrderConfirmation extends Mailable
 	 */
 	public function build()
 	{
+		$invoiceData = \Storage::get($this->invoice->file_path);
+
 		return $this
 			->view('mail.order-confirmation')
 			->subject("Dziękujemy za zamówienie! (zamówienie numer {$this->order->id})")
-			->attach($this->invoice->file_path, [
-				'as'   => $this->invoice->number_slugged . '.pdf',
+			->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
 			])
 			->bcc('zamowienia@wiecejnizlek.pl');

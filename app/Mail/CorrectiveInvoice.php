@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CorrectiveInvoice extends Mailable
+class CorrectiveInvoice extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 	public $order, $user, $invoice, $value;
@@ -36,13 +36,14 @@ class CorrectiveInvoice extends Mailable
 	 */
 	public function build()
 	{
+		$invoiceData = \Storage::get($this->invoice->file_path);
+
 		return $this
 			->view('mail.corrective-invoice')
 			->subject("Wystawiliśmy fakturę korygującą (Zamówienie {$this->order->id})")
-			->attach($this->invoice->file_path, [
-				'as'   => $this->invoice->number_slugged . '.pdf',
+			->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
-			])
+			]);
 			->bcc('zamowienia@wiecejnizlek.pl');
 	}
 }

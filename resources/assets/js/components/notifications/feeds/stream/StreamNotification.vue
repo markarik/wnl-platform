@@ -178,6 +178,7 @@
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
 	import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time'
+	import { sanitizeDisplayName } from 'js/store/modules/users'
 
 	export default {
 		name: 'StreamNotification',
@@ -199,11 +200,11 @@
 		},
 		computed: {
 			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
+			displayName() {
+				return sanitizeDisplayName(this.message.actors.display_name)
+			},
 			action() {
 				return this.$t(`notifications.events.${camelCase(this.message.event)}`)
-			},
-			displayName() {
-				return this.message.actors.display_name === 'account deleted' ? 'Konto usunięte' : this.message.actors.display_name
 			},
 			justDate() {
 				return justMonthAndDayFromS(this.message.timestamp)

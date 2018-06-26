@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ResendInvoice extends Mailable
+class ResendInvoice extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 	public $order;
@@ -34,11 +34,12 @@ class ResendInvoice extends Mailable
 	 */
 	public function build()
 	{
+		$invoiceData = \Storage::get($this->invoice->file_path);
+
 		return $this
 			->view('mail.resend-invoice-notification')
 			->subject("Poprawiona faktura {$this->invoice->full_number} do zamówienia numer {$this->order->id}")
-			->attach($this->invoice->file_path, [
-				'as'   => $this->invoice->number_slugged . '.pdf',
+			->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
 			])
 			->bcc('zamowienia@wiecejnizlek.pl');

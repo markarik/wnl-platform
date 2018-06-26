@@ -9,7 +9,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.display_name }}</span>
+					<span class="actor">{{ displayName }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
@@ -201,6 +201,9 @@
 			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
 			action() {
 				return this.$t(`notifications.events.${camelCase(this.message.event)}`)
+			},
+			displayName() {
+				return this.message.actors.display_name === 'account deleted' ? 'Konto usunięte' : this.message.actors.display_name
 			},
 			justDate() {
 				return justMonthAndDayFromS(this.message.timestamp)

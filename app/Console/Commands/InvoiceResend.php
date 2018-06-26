@@ -57,8 +57,12 @@ class InvoiceResend extends Command
 				case 'proforma' :
 					(new InvoiceGenerator)->proforma($invoice->order, $invoice);
 					break;
+				case 'final' :
+					(new InvoiceGenerator)->finalInvoice($invoice->order, $invoice);
+					break;
 				default:
 					$this->warn('Invalid invoice type.');
+					die();
 			}
 
 			Mail::to($invoice->order->user)->send(new ResendInvoice($invoice->order, $invoice));

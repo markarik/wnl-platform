@@ -19,9 +19,9 @@ class UserProfileTransformer extends ApiTransformer
 
 	public function transform(UserProfile $profile)
 	{
-		$firstName = $profile->user->forgotten ? __('profile.account') : $profile->first_name;
-		$lastName = $profile->user->forgotten ? __('profile.deleted') : $profile->last_name;
-		$displayName = $profile->user->forgotten ? __('profile.account-deleted') : $profile->display_name;
+		$firstName = $profile->user->forgotten ? 'Konto' : $profile->first_name;
+		$lastName = $profile->user->forgotten ? 'usunięte' : $profile->last_name;
+		$displayName = $profile->user->forgotten ? 'Konto usinięte' : $profile->display_name;
 
 		$data = [
 			'id'                => $profile->id,

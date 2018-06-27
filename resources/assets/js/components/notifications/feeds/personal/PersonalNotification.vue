@@ -6,7 +6,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.display_name }}</span>
+					<span class="actor">{{ displayName }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object" v-if="object">{{ object }}</span>
 					<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
@@ -105,6 +105,7 @@
 
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
+	import { sanitizeDisplayName } from 'js/store/modules/users'
 
 	export default {
 		name: 'PersonalNotification',
@@ -120,6 +121,9 @@
 		},
 		computed: {
 			...mapGetters(['currentUserId']),
+			displayName() {
+				return sanitizeDisplayName(this.message.actors.display_name)
+			},
 			action() {
 				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
 			},

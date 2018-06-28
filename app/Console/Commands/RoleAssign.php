@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Cache;
 
 class RoleAssign extends Command
 {
@@ -61,7 +62,10 @@ class RoleAssign extends Command
 
 		foreach ($users as $user) {
 			$user->roles()->attach($role);
+			Cache::tags("user-{$user->id}")->flush();
 		}
+
+		$this->call('user:migrate-subscription', ['--admins' => true]);
 
 		$this->info('OK.');
 

@@ -32,13 +32,6 @@ class UserObserver
 			'last_name'  => $user->last_name,
 		]);
 
-		$user->address()->firstOrCreate([
-			'street' => $user->address,
-			'zip'    => $user->zip,
-			'city'   => $user->city,
-			'phone'  => $user->phone,
-		]);
-
 		$user->billing()->firstOrCreate([
 			'company_name' => $user->invoice_name,
 			'vat_id'       => $user->invoice_nip,

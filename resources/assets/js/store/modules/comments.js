@@ -73,10 +73,11 @@ export const commentsMutations = {
 		state[resource][resourceId].comments.push(comment.id)
 	},
 	[types.REMOVE_COMMENT] (state, payload) {
-		let id = payload.id,
-			resource = payload.commentableResource,
+		let resource = payload.commentableResource,
 			resourceId = payload.commentableId,
-			comments = _.pull(state[resource][resourceId].comments, String(id))
+			comments = state[resource][resourceId].comments.filter(commentId => {
+				return Number(commentId) !== Number(payload.id)
+			})
 
 		destroy(state.comments, payload.id)
 		set(state[resource][resourceId], 'comments', comments)

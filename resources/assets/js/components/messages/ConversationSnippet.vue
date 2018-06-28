@@ -54,6 +54,7 @@
 
 			.content
 				flex: 1
+				max-width: 100%
 
 			*
 				font-weight: $font-weight-regular
@@ -81,7 +82,7 @@
 			.full-name
 				font-size: $font-size-minus-1
 
-			.conversation-message
+			.conversation-message p
 				line-height: $line-height-minus
 				min-width: 0
 				flex: 1 1 0%

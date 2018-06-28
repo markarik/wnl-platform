@@ -41,8 +41,38 @@ export const user = {
         sendMessage: 'Wyślij wiadomość',
     },
 	lessonsAvailabilities: {
-		header: 'Dostępność lekcji',
 		alertSuccess: 'Udalo się zmienić datę! :)',
 		alertError: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
-	}
+	},
+    progressReset: {
+        header: 'Usuwanie postępu',
+        progressHeader: 'Postęp w nauce',
+        questionsHeader: 'Wyniki pytań kontrolnych',
+        collectionsHeader: 'Kolekcje',
+        progressButton: 'Wyczyść postęp w nauce',
+        questionsButton: 'Wyczyść wszystkie wyniki',
+        collectionsButton: 'Wyczyść kolekcje',
+		progressWarning: `Poniższy przycisk pozwoli Ci na usunięcie
+        dotychczasowego postępu we wszystkich lekcjach na kursie. Po usunięciu
+        postępu WSZYSTKIE lekcje będą oznaczone jako niezrobione, a Twój
+        dotychczasowy postęp zostanie utracony. Twój czas na platformie NIE
+        zostanie zresetowany, podobnie jak postęp w obrębie bazy pytań i pytań
+        kontrolnych w lekcjach.`,
+		questionsWarning: `Po zatwierdzeniu, usuniemy wszystkie wyniki
+        Twoich dotychczasowych podejść do pytań kontrolnych. Dotyczy to zarówno
+        pytań rozwiązywanych w ramach lekcji, jak i pozostałych dostępnych w
+        bazie pytań. Jedyne wyniki, które nie zostaną wyczyszczone, to wyniki
+        próbnych egzaminów.`,
+		collectionsWarning: `Naciśnięcie poniższego przycisku spowoduje
+        usunięcie wszystkiego z Twojej kolekcji, czyli
+        między innymi zapisanych slajdów, pytań kontrolnych, pytań i odpowiedzi.`,
+		progressConfirmation: 'Czy na pewno chcesz usunąć cały postęp w nauce?',
+		questionsConfirmation: 'Czy na pewno chcesz usunąć wyniki pytań kontrolnych?',
+		collectionsConfirmation: 'Czy na pewno chcesz wyczyścić swoją kolekcję?',
+		alertError: 'Ups... Coś poszło nie tak. Spróbujesz jesze raz?',
+		alertSuccess: `OK, wszystko poszło zgodnie z planem. Jeśli to była
+		spektakularna pomyłka, daj nam znać. Jest szansa, że uda się odzyskać
+		usunięte informacje ;)`,
+    },
+	passwordResetHeader: 'Zmiana hasła',
 }

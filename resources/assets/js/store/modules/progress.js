@@ -52,16 +52,13 @@ const getters = {
 		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_IN_PROGRESS
 	},
-	getFirstLessonIdInProgress: (state) => (courseId) => {
+	getFirstLessonIdInProgress: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lessons = state.courses[courseId].lessons
 
-		for (var lessonId in lessons) {
-			if (lessons[lessonId].status === STATUS_IN_PROGRESS) {
-				return lessonId
-			}
-		}
-
-		return 0
+		return Object.keys(lessons).find((lessonId) => {
+			const lesson = rootGetters['course/getLesson'](lessonId)
+			return lessons[lessonId].status === STATUS_IN_PROGRESS && lesson.isAvailable === true
+		}) || 0
 	},
 	isLessonComplete: (state, getters) => (courseId, lessonId) => {
 		return getters.wasLessonStarted(courseId, lessonId) &&
@@ -76,7 +73,7 @@ const getters = {
 			}
 		}
 		return lessons
-	}
+	},
 }
 
 // Mutations

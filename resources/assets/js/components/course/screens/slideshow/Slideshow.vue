@@ -25,10 +25,11 @@
 			<div class="slideshow-menu">
 				<wnl-annotations
 					v-if="!isLoading"
-					:currentSlideId="currentSlideId"
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
+					:screenId="Number(screenId)"
+					:currentSlideId="currentSlideId"
 				></wnl-annotations>
 			</div>
 		</div>
@@ -297,6 +298,7 @@
 						}
 						this.focusSlideshow()
 						this.loaded = true
+						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 						this.toggleOverlay({source: 'slideshow', display: false})
 
 					})
@@ -501,7 +503,6 @@
 					this.setSlideshowHtmlContent(data)
 						.then(() => {
 							const slide = this.getSlideById(this.currentSlideId)
-							const currentBookmarkState = slide.bookmark.hasReacted
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						})
 				})
@@ -595,7 +596,7 @@
 				this.modifiedSlides = {}
 			},
 			'screenData' (newValue, oldValue) {
-				if (newValue.type === 'slideshow') {
+				if (newValue.type === 'slideshow' && newValue.id !== oldValue.id) {
 					this.toggleOverlay({source: 'slideshow', display: true})
 
 					this.setup({id: this.presentableId})
@@ -613,7 +614,7 @@
 					})
 				}
 			},
-			'slideOrderNumber' (slideOrderNumber, oldValue) {
+			'slideOrderNumber' (slideOrderNumber) {
 				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)
 			}
 		}

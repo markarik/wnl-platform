@@ -113,6 +113,7 @@ return [
 
 	'first-name' => 'Imię',
 	'last-name' => 'Nazwisko',
+	'recipient' => 'Osoba odbierająca przesyłkę',
 	'address' => 'Ulica i numer domu / mieszkania',
 	'zip' => 'Kod pocztowy',
 	'city' => 'Miasto',
@@ -133,16 +134,18 @@ return [
 	'personal-data-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
 
 	'personal-data-consents-heading' => 'Wszystko zgodnie z prawem',
-	'personal-data-consents-lead' => 'Do legalnej realizacji zamówienia potrzebujemy Twojej zgody na przetwarzanie danych osobowych.',
+	'personal-data-consents-lead' => 'Do legalnej realizacji zamówienia potrzebujemy Twojej akceptacji regulaminu oraz zgody na przetwarzanie danych osobowych.',
 
 	'personal-data-consent-order' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink sp. z o.o. z siedzibą w Poznaniu, <strong>w celu realizacji zamówienia na kurs internetowy</strong>, czyli wystawienie rachunku, wysyłkę materiałów oraz wydruk identyfikatora.',
 	'personal-data-consent-account' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink sp. z o.o. z siedzibą w Poznaniu, <strong>w celu obsługi konta na platformie internetowej</strong>, z uwzględnieniem wysyłania powiadomień drogą e-mailową oraz kontaktu z administratorami.',
-	'personal-data-consent-newsletter-heading' => 'Ostatnia zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
-	'personal-data-consent-newsletter' => 'Wyrażam zgodę na przetwarzanie moich danych osobowych przez bethink sp. z o.o. z siedzibą w Poznaniu, <strong>w celu dostarczania informacji handlowych</strong>, z uwzględnieniem aktualnej oferty, nowych treści na stronie oraz aktualności dotyczących kursów.',
+	'personal-data-consent-newsletter-heading' => 'Druga zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
+	'personal-data-consent-newsletter' => 'Wyrażam zgodę na otrzymywanie za pomocą środków komunikacji elektronicznej, w szczególności poczty elektronicznej oraz SMS, na podany przeze mnie adres email oraz numer telefonu informacji handlowych od  BETHINK SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ (ul. Henryka Sienkiewicza 8/1, 60-817 Poznań) zgodnie z ustawą z dnia 18 lipca 2002 r. o  świadczeniu usług drogą elektroniczną (Dz.U. Nr 144, poz. 1204 ze zm.)',
 
 	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
 	'personal-data-tou-content' => 'Znam i akceptuję treść dokumentów <a class="tou-open-modal-link" href="#">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href="#">:privacy-link-content</a>.',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
+	'tou-link-href' => 'https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf',
+	'privacy-policy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
 	'personal-data-privacy-link-content' => 'Polityka Prywatności',
 	'personal-data-tou-title' => 'Regulamin Serwisu portalu wiecejnizlek.pl',
 	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',

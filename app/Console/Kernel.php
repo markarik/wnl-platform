@@ -64,6 +64,10 @@ class Kernel extends ConsoleKernel
 			->twiceDaily(8, 20);
 
 		$schedule
+			->command('notifications:cleanup-old --force')
+			->dailyAt('02:45');
+
+		$schedule
 			->command('sb:cancel')
 			->weekly();
 	}

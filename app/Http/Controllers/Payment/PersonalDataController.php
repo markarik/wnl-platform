@@ -138,11 +138,7 @@ class PersonalDataController extends Controller
 			[
 				'first_name'         => $request->get('first_name'),
 				'last_name'          => $request->get('last_name'),
-				'address'            => $request->get('address'),
-				'zip'                => $request->get('zip'),
-				'city'               => $request->get('city'),
 				'email'              => $request->get('email'),
-				'phone'              => $request->get('phone'),
 				'password'           => bcrypt($request->get('password')),
 				'invoice'            => $request->get('invoice') ?? 0,
 				'invoice_name'       => $request->get('invoice_name'),
@@ -158,8 +154,16 @@ class PersonalDataController extends Controller
 			]
 		);
 
+		$user->userAddress()->firstOrCreate([
+			'street'    => $request->get('address'),
+			'zip'       => $request->get('zip'),
+			'city'      => $request->get('city'),
+			'phone'     => $request->get('phone'),
+			'recipient' => $request->get('recipient'),
+		]);
+
 		Auth::login($user);
-		Log::notice('User automatically logged in after registration.');
+		Log::debug('User automatically logged in after registration.');
 
 		return $user;
 	}
@@ -167,6 +171,13 @@ class PersonalDataController extends Controller
 	protected function updateAccount($user, $request)
 	{
 		$user->update($request->all());
+		$user->userAddress()->update([
+			'street'    => $request->get('address'),
+			'zip'       => $request->get('zip'),
+			'city'      => $request->get('city'),
+			'phone'     => $request->get('phone'),
+			'recipient' => $request->get('recipient'),
+		]);
 	}
 
 	protected function updateOrder($user, $request)

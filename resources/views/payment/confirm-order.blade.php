@@ -37,8 +37,8 @@
 				<p><strong>{{ $user->email }}</strong></p>
 				<ul>
 					<li>{{ $user->full_name }}</li>
-					<li>{{ $user->address }}</li>
-					<li>{{ $user->zip }}, {{ $user->city }}</li>
+					<li>{{ $user->userAddress->street }}</li>
+					<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
 				</ul>
 			</div>
 		</section>
@@ -99,9 +99,9 @@
 							<input type="hidden" name="p24_currency" value="PLN"/>
 							<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
 							<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
-							<input type="hidden" name="p24_address" value="{{ $user->address }}"/>
-							<input type="hidden" name="p24_zip" value="{{ $user->zip }}"/>
-							<input type="hidden" name="p24_city" value="{{ $user->city }}"/>
+							<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
+							<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
+							<input type="hidden" name="p24_city" value="{{ $user->userAddress->city }}"/>
 							<input type="hidden" name="p24_country" value="PL"/>
 							<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
 							<input type="hidden" name="p24_language" value="pl"/>
@@ -162,6 +162,12 @@
 								</button>
 							</form>
 						</div>
+					</div>
+				</section>
+			@else
+				<section class="has-text-centered">
+					<div class="strong margin top">
+						Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.
 					</div>
 				</section>
 			@endif

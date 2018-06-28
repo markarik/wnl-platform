@@ -13,9 +13,15 @@ import { user } from './user'
 import { collections } from './collections'
 import { messages } from './messages'
 import { progress } from './progress'
+import { lessonsAvailability } from './lessonsAvailability'
 import { orders } from './orders'
+import { admin } from './admin'
+import { annotations } from './annotations'
 
 export {
+	annotations,
+	admin,
+	lessonsAvailability,
 	dashboard,
 	nav,
 	notifications,

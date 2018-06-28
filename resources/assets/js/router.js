@@ -93,10 +93,20 @@ let routes = [
 				component: require('js/components/user/UserStats.vue'),
 			},
 			{
+				name: 'certificates',
+				path: 'certificates',
+				component: require('js/components/user/UserCertificates.vue'),
+			},
+			{
 				name: 'lessons-availabilites',
 				path: 'availabilities',
-				component: require('js/components/user/LessonsAvailabilities.vue'),
+				component: require('js/components/user/plan/PlanView.vue'),
 			},
+			{
+				name: 'progress-reset',
+				path: 'progress-reset',
+				component: require('js/components/user/ProgressReset'),
+			}
 		]
 	},
 	{

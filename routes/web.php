@@ -34,12 +34,18 @@ Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' =>
 
 Route::group(['middleware' => 'auth'], function () {
 
+	Route::get('/terms', 'TermsOfUseController@index')->name('terms');
+	Route::post('/terms', 'TermsOfUseController@accept')->name('terms-accept');
+
 	Route::get('/', function () {
 		return redirect('/app');
-	})->name('home');
+	})->name('home')->middleware('terms');
 
 	// Using front-end routing for the main application
-	Route::get('/app/{path?}', 'AppController@index')->name('app')->where('path', '(.*)');
+	Route::get('/app/{path?}', 'AppController@index')
+		->name('app')
+		->where('path', '(.*)')
+		->middleware('terms');
 
 	//Ajax common route
 	Route::match(['get', 'post'], '/ax', function () {

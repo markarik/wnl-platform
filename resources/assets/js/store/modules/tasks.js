@@ -128,7 +128,9 @@ function _handleResponse({commit, dispatch}, response, resolve) {
 	const serializedTasks = {}
 	dataArray.forEach(task => {
 		serializedTasks[task.id] = _parseIncludes(included, task)
-		serializedTasks[task.id].assignee = assigneeProfiles[task.assignee_id] || {}
+		serializedTasks[task.id].assignee = Object.values(assigneeProfiles).find(assigneeProfile => {
+			return assigneeProfile.user_id === task.assignee_id
+		}) || {}
 	});
 
 	commit(types.SET_TASKS, serializedTasks)

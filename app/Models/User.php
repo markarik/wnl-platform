@@ -77,7 +77,7 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\UserSettings');
 	}
 
-	public function address()
+	public function userAddress()
 	{
 		return $this->hasOne('App\Models\UserAddress');
 	}
@@ -148,22 +148,27 @@ class User extends Authenticatable
 
 	public function getAddressAttribute($value)
 	{
-		return decrypt($value);
-	}
-
-	public function setAddressAttribute($value)
-	{
-		$this->attributes['address'] = encrypt($value);
+		return $this->userAddress->street;
 	}
 
 	public function getPhoneAttribute($value)
 	{
-		return decrypt($value);
+		return $this->userAddress->phone;
 	}
 
-	public function setPhoneAttribute($value)
+	public function getRecipientAttribute()
 	{
-		$this->attributes['phone'] = encrypt($value);
+		return $this->userAddress->recipient;
+	}
+
+	public function getZipAttribute()
+	{
+		return $this->userAddress->zip;
+	}
+
+	public function getCityAttribute()
+	{
+		return $this->userAddress->city;
 	}
 
 	public function getIsSubscriberAttribute()
@@ -192,6 +197,13 @@ class User extends Authenticatable
 		];
 	}
 
+	public function getFullAddressAttribute()
+	{
+		$addr = $this->userAddress;
+
+		return "{$addr->street}, {$addr->zip} {$addr->city}";
+	}
+
 	protected function getSubscriptionStatus($dates)
 	{
 		list ($min, $max) = $dates;
@@ -208,10 +220,6 @@ class User extends Authenticatable
 
 	protected function getSubscriptionDates()
 	{
-		if ($this->hasRole('admin') || $this->hasRole('moderator')) {
-			return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
-		}
-
 		$min = $this->subscription ? Carbon::parse($this->subscription->access_start) : null;
 		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
 

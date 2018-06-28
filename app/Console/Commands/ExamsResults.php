@@ -13,7 +13,6 @@ use Illuminate\Console\Command;
 
 class ExamsResults extends Command
 {
-	const LEK_TAG_ID = 538;
 	const QUESTIONS_IN_EXAM = 200;
 	const MUST_MATCH = 120;
 
@@ -22,7 +21,7 @@ class ExamsResults extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'exams:results {user?}';
+	protected $signature = 'exams:results {examTagId} {user?}';
 
 	/**
 	 * The console command description.
@@ -49,9 +48,10 @@ class ExamsResults extends Command
 	public function handle()
 	{
 		$userId = $this->argument('user');
+		$examTagId = $this->argument('examTagId');
 
 		if (!empty($userId)) {
-			$results = $this->getUserResults($userId);
+			$results = $this->getUserResults($examTagId, $userId);
 			$user = User::find($userId);
 
 			if (!empty($results)) {
@@ -65,10 +65,10 @@ class ExamsResults extends Command
 			$bar = $this->output->createProgressBar($allUsers->count());
 
 			foreach($allUsers as $user) {
-				$results = $this->getUserResults($user->id);
+				$results = $this->getUserResults($examTagId, $user->id);
 
 				if (!empty($results)) {
-					$this->saveInDB($user->id, $results);
+					$this->saveInDB($examTagId, $user->id, $results);
 					$rows[] = [$user->id, $user->fullName, $results['correct_perc'], $results['resolved_perc']];
 				}
 
@@ -81,9 +81,9 @@ class ExamsResults extends Command
 		}
 	}
 
-	protected function getUserResults($userId) {
-		$lekQuestions = QuizQuestion::whereHas('tags', function($tag) {
-			$tag->where('tags.id', self::LEK_TAG_ID);
+	protected function getUserResults($examTagId, $userId) {
+		$lekQuestions = QuizQuestion::whereHas('tags', function($tag) use ($examTagId) {
+			$tag->where('tags.id', $examTagId);
 		})->get()->pluck('id')->toArray();
 		$userQuizResults = UserQuizResults::where('user_id', $userId)->get();
 
@@ -181,13 +181,14 @@ class ExamsResults extends Command
 		);
 	}
 
-	protected function saveInDB($userId, $results) {
-		ExamResults::firstOrCreate(['user_id' => $userId, 'exam_tag_id' => self::LEK_TAG_ID], [
+	protected function saveInDB($examTagId, $userId, $results) {
+		ExamResults::create([
+			'user_id' => $userId,
+			'exam_tag_id' => $examTagId,
 			'correct' => $results['correct'],
 			'correct_percentage' => $results['correct_perc'],
 			'resolved' => $results['resolved'],
 			'resolved_percentage' => $results['resolved_perc'],
-			'exam_tag_id' => self::LEK_TAG_ID,
 			'details' => json_encode([
 				'subjects' => $results['subjects']
 			]),

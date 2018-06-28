@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Storage;
+use Carbon\Carbon;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
@@ -15,7 +16,12 @@ class AddressesExport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'addresses:export';
+	protected $signature = 'addresses:export
+		{--I|ids= : Comma separated list of ids of orders to export}
+		{--P|products= : Comma separated list of products to export}
+		{--F|from= : A date from which you want the export}
+		{--S|ship= : Should the script mark orders as exported to shipping? Set to 1 to do it.}
+	';
 
 	/**
 	 * The console command description.
@@ -41,8 +47,35 @@ class AddressesExport extends Command
 	 */
 	public function handle()
 	{
-		$orders = Order::where('paid', 1)
-			->where('product_id', '>', 4)->get();
+		$products = $this->option('products');
+		$ids = $this->option('ids');
+		$from = $this->option('from');
+		$ship = intval($this->option('ship'));
+
+		if ($ids) {
+			$ids = explode(',', $ids);
+			$orders = Order::where('paid', 1)
+				->where('shipping_status', 'new')
+				->whereIn('id', $ids);
+		} elseif ($products) {
+			$products = explode(',', $products);
+			$orders = Order::where('paid', 1)
+				->where('shipping_status', 'new')
+				->whereIn('product_id', $products);
+		} else {
+			$this->error('Specify IDs or ProductIDs to export orders.');
+		}
+
+		if ($from) {
+			$from = Carbon::createFromFormat('Y-m-d H:i:s', $from);
+			$orders = $orders->where('created_at', '>', $from);
+		}
+
+		if ($ship===1) {
+			$orders->update(['shipping_status' => 'ordered']);
+		}
+
+		$orders = $orders->get();
 		$schema = $this->getSchema();
 
 		$data = '';
@@ -51,7 +84,7 @@ class AddressesExport extends Command
 			$data .= $this->printLine($order, $schema);
 		}
 
-		Storage::put('exports/inpost.csv', $data);
+		Storage::put('exports/inpost_' . time() . '.csv', $data);
 
 		return;
 	}
@@ -61,16 +94,16 @@ class AddressesExport extends Command
 		$user = User::find($order->user_id);
 		$coupon = Coupon::find($order->coupon_id);
 
-		$address = $user->address()->first();
+		$address = $user->userAddress()->first();
 
-		$schema['receiver_name'] = $user->first_name;
-		$schema['receiver_surname'] = $user->last_name;
+		$schema['receiver_name'] = $address->recipient ?? $user->full_name;
+		$schema['receiver_surname'] = '';
 		$schema['receiver_email'] = $user->email;
 		$schema['receiver_street'] = $address->street;
 		$schema['receiver_postcode'] = $address->zip;
 		$schema['receiver_city'] = $address->city;
 		$schema['receiver_phone'] = $address->phone;
-		$schema['user_reference_number'] = $user->id;
+		$schema['user_reference_number'] = $order->id;
 		$schema['description'] = $order->product_id;
 
 		if ($coupon) {

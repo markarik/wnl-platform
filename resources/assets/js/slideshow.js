@@ -260,6 +260,7 @@ function createAnnotations(annotations) {
 
 function toggleAnnotations() {
 	$slideshowAnnotations.toggle()
+	return false
 }
 
 function setMenuListeners(parent) {
@@ -274,6 +275,8 @@ function setMenuListeners(parent) {
 	});
 	$toggleAnnotations.on('click', toggleAnnotations)
 	document.addEventListener('keydown', closeFullscreenWithEsc)
+	$slideshowAnnotations.click(() => false)
+	$(document).on('click', () => $slideshowAnnotations.hide())
 }
 
 function closeFullscreenWithEsc(e) {

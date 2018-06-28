@@ -52,6 +52,13 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
+		// Invoices
+		Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
+
+		// Certificates
+		Route::get("{$r['certificates']}/participation", 'CertificatesApiController@getAvailableCertificates');
+		Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
+
 		// Lessons
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
@@ -151,6 +158,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	});
 
 	// User Lessons
+	Route::put("{$r['user-lesson']}/{userId}/batch", 'UserLessonApiController@putBatch');
+	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 
 	// Users
@@ -196,6 +205,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'UserReactionsApiController@getReactionsByCategory');
+
+	Route::delete("{$r['users']}/{userId}/{$r['user-collections']}", 'UserCollectionsApiController@delete');
 
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');

@@ -33,6 +33,7 @@
 
 <script>
 	import Flatpickr from 'flatpickr'
+	import {pl} from 'flatpickr/dist/l10n/pl.js'
 
 	export default {
 		name: 'Datepicker',
@@ -86,7 +87,13 @@
 			if (!this.datepicker) {
 				this.config.onChange = this.onChange
 				this.config.onValueUpdate = this.dateUpdated
-				this.datepicker = new Flatpickr(this.$el, this.config)
+				this.datepicker = new Flatpickr(this.$el, {
+					...this.config,
+					locale: {
+						...pl,
+						firstDayOfWeek: 1
+					}
+				})
 				this.setDate(this.value)
 			}
 			this.$watch('config', this.redraw)

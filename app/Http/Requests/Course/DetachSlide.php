@@ -25,7 +25,6 @@ class DetachSlide extends FormRequest
 	{
 		return [
 			'slideId'  => 'required|numeric',
-			'screenId' => 'required|numeric'	,
 		];
 	}
 }

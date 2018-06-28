@@ -4,7 +4,7 @@ namespace App\Events\Comments;
 
 use App\Events\ResourceRestoredEvent;
 
-class CommentRestoredEvent extends ResourceRestoredEvent
+class CommentRestored extends ResourceRestoredEvent
 {
 	public $eventName = 'comment-resolved';
 	public $subject = 'comment';

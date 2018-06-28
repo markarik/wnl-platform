@@ -11,7 +11,7 @@ function getCourseApiUrl(courseId) {
 		?include=groups.lessons.screens.sections.subsections,
 		course.groups.lessons.screens.sections.subsections,
 		course.groups.lessons.screens.tags
-		&user=current`
+		&user=current&exclude=screens.content`
 	)
 }
 
@@ -40,6 +40,10 @@ const getters = {
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
 	getLessons: state => state.structure[resource('lessons')] || {},
+	getRequiredLessons: (state, getters, rootState, rootGetters) => {
+		return Object.values(getters.getLessons)
+			.filter(lesson => lesson.is_required && lesson.isAccessible);
+	},
 	userLessons: (state, getters) => {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.isAccessible);
@@ -53,7 +57,10 @@ const getters = {
 	},
 	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
 	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
-	getSections: state => (sections) => sections.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {})) || [],
+	getSections: state => (sections) => {
+		return sections
+			.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {}))
+	},
 	getSubsections: state => (subsections) => subsections.map((subsectionId) => _.get(state.structure, `subsections.${subsectionId}`, {})) || [],
 	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
 		const sectionsIds = getters.getScreen(screenId).sections;
@@ -169,7 +176,13 @@ const mutations = {
 	},
 	[types.COURSE_SET_LESSON_AVAILABILITY] (state, payload) {
 		set(state.structure.lessons[payload.lessonId], 'isAvailable', payload.status)
-	}
+	},
+	[types.COURSE_UPDATE_LESSON_START_DATE] (state, payload) {
+		set(state.structure.lessons[payload.lessonId], 'startDate', payload.start_date)
+	},
+	[types.SET_SCREEN_CONTENT] (state, {data, screenId}) {
+		set(state.structure.screens[screenId], 'content', data.content)
+	},
 }
 
 // Actions
@@ -200,6 +213,15 @@ const actions = {
 	setLessonAvailabilityStatus({commit}, payload) {
 		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload)
 	},
+	updateLessonStartDate({commit}, payload) {
+		commit(types.COURSE_UPDATE_LESSON_START_DATE, payload)
+	},
+	fetchScreenContent({commit}, screenId) {
+		return axios.get(getApiUrl(`screens/${screenId}`))
+			.then(({data}) => {
+				commit(types.SET_SCREEN_CONTENT, {data, screenId})
+			})
+	}
 }
 
 export default {

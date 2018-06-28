@@ -16,5 +16,6 @@ class UserAddress extends Model
 		'zip',
 		'city',
 		'phone',
+		'recipient',
 	];
 }

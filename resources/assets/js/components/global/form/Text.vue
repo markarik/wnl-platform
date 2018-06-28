@@ -5,7 +5,6 @@
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
 			<input
-				type="text"
 				class="input"
 				:class="{'is-danger': hasErrors}"
 				:name="name"
@@ -31,7 +30,14 @@
 
 	export default {
 		name: 'Text',
-		props: ['name', 'placeholder'],
+		props: {
+			name: {
+				type: String,
+			},
+			placeholder: {
+				type: String
+			}
+		},
 		mixins: [formInput],
 		computed: {
 			default() {

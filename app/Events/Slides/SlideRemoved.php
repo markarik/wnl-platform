@@ -23,7 +23,7 @@ class SlideRemoved
 
     /**
      * Get the channels the event should broadcast on.
-     *
+     * @TODO figure out if it should trigger real event on real channel like remaining Slides events
      * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn()

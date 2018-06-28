@@ -7,18 +7,14 @@ use App\Events\SanitizesUserContent;
 use App\Models\Reaction;
 use App\Models\User;
 use App\Traits\EventContextTrait;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
 class ReactionAdded extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels,
 		SanitizesUserContent,
 		EventContextTrait;
 
@@ -40,16 +36,6 @@ class ReactionAdded extends Event
 		$this->reaction = $reaction;
 		$this->reactable = $reactable;
 		$this->userId = $userId;
-	}
-
-	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
-	 */
-	public function broadcastOn()
-	{
-		return new PrivateChannel('channel-name');
 	}
 
 	public function transform()

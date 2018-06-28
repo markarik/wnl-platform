@@ -1,18 +1,43 @@
 <template>
-	<div ref="preview-modal" class="modal" :class="{'is-active': showModal}">
+	<div
+		ref="preview-modal"
+		class="modal"
+		:class="{'is-active': showModal}">
+		<div
+			class="previous-slide"
+			v-show="hasManySlides">
+			<span class="icon" @click="$emit('switchSlide', -1)">
+				<i class="fa fa-angle-left"></i>
+			</span>
+		</div>
 		<div class="modal-background" @click="$emit('closeModal')"></div>
 		<div class="modal-card">
 			<header class="modal-card-header">
 				<slot name="header"></slot>
 			</header>
 			<div class="modal-card-body">
-				<iframe name="slidePreview" :srcdoc="content" @load="onLoad" v-show="!isLoading"/>
+				<iframe
+					name="slidePreview"
+					:srcdoc="content"
+					@load="onLoad"
+					v-show="!isLoading"/>
 			</div>
 			<footer class="modal-card-footer">
 				<slot name="footer"></slot>
 			</footer>
 		</div>
-		<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
+		<div
+			class="next-slide"
+			v-if="hasManySlides">
+			<span class="icon" @click="$emit('switchSlide', 1)">
+				<i class="fa fa-angle-right"></i>
+			</span>
+		</div>
+		<button
+			class="modal-close is-large"
+			aria-label="close"
+			@click="$emit('closeModal')"
+		></button>
 	</div>
 </template>
 
@@ -20,6 +45,20 @@
 	@import 'resources/assets/sass/variables'
 	.modal
 		z-index: $z-index-alerts
+
+	.next-slide, .previous-slide
+		z-index: $z-index-alerts + 1
+		text-align: center
+		width: 10vw
+		.icon
+			text-align: center
+			color: #929AA8
+			display: inline-block
+			vertical-align: middle
+			width: 6em
+			height: 6em
+			.fa
+				font-size: $font-size-plus-8
 
 	.modal-card
 		width: 90vw
@@ -57,6 +96,14 @@
 			showModal: {
 				type: Boolean,
 				default: false
+			},
+			slidesCount: {
+				type: Number | String,
+			}
+		},
+		computed: {
+			hasManySlides() {
+				return this.slidesCount > 1
 			}
 		},
 		methods: {
@@ -65,8 +112,18 @@
 				nextTick(() => this.isLoading = false)
 			},
 			onKeydown(e) {
-				if (e.keyCode === 27) {
-					this.$emit('closeModal')
+				switch(e.keyCode) {
+					case 37: // left arrow
+						e.stopPropagation()
+						this.$emit('switchSlide', -1)
+						break
+					case 39: // right arrow
+						e.stopPropagation()
+						this.$emit('switchSlide', 1)
+						break
+					case 27: // esc
+						this.$emit('closeModal')
+						break
 				}
 			}
 		},

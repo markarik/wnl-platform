@@ -142,6 +142,10 @@ const actions = {
 	},
 	removeSlideFromCollection({commit, state}, slideId) {
 		commit(types.COLLECTIONS_REMOVE_SLIDE, slideId)
+	},
+	deleteCollection({rootGetters}) {
+		const url = getApiUrl(`users/${rootGetters.currentUserId}/user_collections`)
+		return axios.delete(url)
 	}
 }
 

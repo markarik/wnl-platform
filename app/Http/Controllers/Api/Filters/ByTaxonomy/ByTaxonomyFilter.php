@@ -52,7 +52,6 @@ abstract class ByTaxonomyFilter extends ApiFilter
 		$root = $this->getChildItems($tagId, $groupedTags);
 
 		foreach ($root as $rootItem) {
-			$entry = [];
 			$entry = [
 				'name'  => $rootItem->tag->name,
 				'value' => $rootItem->tag->id,

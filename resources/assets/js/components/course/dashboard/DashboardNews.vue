@@ -2,20 +2,27 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p class="strong">Cześć!</p>
-		<p>Nieuchronnie nastał oficjalny koniec 2. edycji kursu "Więcej niż LEK"! Oczywiście zostajemy z Tobą do samego egzaminu i mocno trzymamy za Ciebie kciuki! <wnl-emoji name="+1"/></p>
+		<p class="has-text-centered"><strong>OGŁOSZENIE</strong></p>
 
-		<p>Jak wiesz, robienie przerw jest ważne z punktu widzenia higieny umysłowej. Zachęcamy zatem do tego, aby jedną z nich wykorzystać na podzielenie się z nami, już po raz ostatni, refleksjami na temat kursu. <wnl-emoji name="wink"/></p>
+		<p class="strong">Cześć {{currentUserName}}! 👋</p>
 
-		<p>W ostatniej ankiecie ewaluacyjnej możesz ocenić wszystkie grupy prezentacji, finalnie odnieść się do poszczególnych aspektów kursu oraz standardowo podzielić się z nami własnymi uwagami. <wnl-emoji name="mega"/></p>
+		<p>Pierwsze tygodnie kursu już za nami! 🎉</p>
 
-		<p>Każda ocena jest dla nas niezwykle cenna, ponieważ pokazuje nam pełniejszy obraz Waszej oceny kursu, który tworzymy dla Waszej satysfakcji. <wnl-emoji name="raised_hands"/></p>
+		<p>Usłyszeliśmy od Was wiele dobrych słów na temat kursu, oraz wiele fantastycznych, krytycznych uwag. Wszystkie bardzo pomagają nam każdego dnia poprawiać jakość kursu i podnosić jego wartość dla Was. 🙂</p>
 
-		<p class="has-text-centered">Możemy na Ciebie liczyć, prawda? <wnl-emoji name="wink"/></p>
+		<p>Jednak im więcej będziemy mieli wskazówek, tym większa szansa, że kurs będzie ewoluował w dobrym kierunku. Dlatego prosimy Cię bardzo o odpowiedzenie na kilka krótkich pytań, które pozwolą nam trafniej ocenić, jak możemy odpowiedzieć na Wasze potrzeby. 😉</p>
 
-		<p class="has-text-centered">
-			<a class="button is-primary is-outlined" target="_blank" href="https://goo.gl/forms/9GEu3xmj3mWiY0xf2">Wypełnij ostatnią ankietę</a>
+		<p class="has-text-centered margin bottom">
+			<a class="button is-primary" href="https://goo.gl/forms/fO8WQC5szHDSWFa13">
+				Wypełnij ankietę
+			</a>
 		</p>
+
+		<p class="strong">Ważna informacja! W zakładce KONTO > Twoje zamówienia znajdziesz wszystkie faktury wystawione do Twoich zamówień, a w zakładce KONTO > Certyfikaty - certyfikat uczestnictwa w kursie.</p>
+
+		<p>Życzymy powodzenia i owocnej pracy z kursem!</p>
+
+		<p style="font-style: italic;">Ekipa Więcej niż LEK</p>
 	</div>
 </template>
 
@@ -23,7 +30,9 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-2-last-survey'
+	const CURRENT_NEWS = 'edition-3-survey-1'
+	const DISPLAY_FROM = '' // new Date() or empty string
+	const DISPLAY_UNTIL = '' // new Date() or empty string
 	const REQUIRED_ROLE = ''
 
 	export default {
@@ -35,23 +44,34 @@
 		},
 		computed: {
 			...mapGetters(['currentUserName', 'hasRole']),
+			hasNews() {
+				return CURRENT_NEWS !== ''
+			},
+			hasRequiredRole() {
+				return REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE)
+			},
+			hasSeenNews() {
+				return !!store.get(this.newsStoreKey)
+			},
+			isNewsTimely() {
+				const now = new Date()
+				return (!(DISPLAY_FROM instanceof Date) || DISPLAY_FROM < now) &&
+				(!(DISPLAY_UNTIL instanceof Date) || DISPLAY_UNTIL > now)
+			},
 			newsStoreKey() {
 				return `seen-dashboard-news-${CURRENT_NEWS}`
-			}
+			},
 		},
 		methods: {
 			seenCurrentNews() {
 				this.showNews = false
 				store.set(this.newsStoreKey, true)
 			},
+
 		},
 		mounted() {
-			if (CURRENT_NEWS !== '' &&
-				!store.get(this.newsStoreKey) &&
-				(REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE))
-			) {
-				this.showNews = true
-			}
+			this.showNews = (this.hasNews && !this.hasSeenNews &&
+				this.hasRequiredRole && this.isNewsTimely)
 		},
 	}
 </script>

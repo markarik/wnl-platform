@@ -212,38 +212,42 @@ class QuizQuestionsApiController extends ApiController
 	protected function getMockExam($model, $userId)
 	{
 		$userExamResults = ExamResults::where('user_id', $userId)
-			->where('exam_tag_id', 538)
 			->where('resolved', '>', 0)
+			->orderBy('created_at', 'desc')
 			->get()
-			->sortByDesc('created_at')
-			->first();
+			->map(function ($examResults) {
+
+				$subjects = array_map(function($subject) {
+					return [
+						'name'               => $subject->name,
+						'total'              => $subject->total ?? 0,
+						'resolved'           => $subject->resolved,
+						'resolved_perc'      => $subject->resolved_perc,
+						'correct'            => $subject->correct,
+						'correct_perc'       => $subject->correct == 0 ? 0 : $subject->correct / $subject->resolved * 100,
+						'correct_perc_total' => $subject->correct_perc,
+					];
+				}, json_decode($examResults->details)->subjects);
+
+				return [
+					'total'              => $examResults->total,
+					'resolved'           => $examResults->resolved,
+					'resolved_perc'      => $examResults->resolved_percentage,
+					'correct'            => $examResults->correct,
+					'correct_perc'       => $examResults->resolved == 0 ? 0 : $examResults->correct / $examResults->resolved * 100,
+					'correct_perc_total' => $examResults->correct_percentage,
+					'subjects'           => $subjects,
+					'exam_name'          => Tag::find($examResults->exam_tag_id)->name,
+					'created_at'         => $examResults->created_at
+				];
+			});
 
 		if (empty($userExamResults)) {
 			return [];
 		}
 
-		$subjects = array_map(function($subject) {
-			return [
-				'name'               => $subject->name,
-				'total'              => $subject->total ?? 0,
-				'resolved'           => $subject->resolved,
-				'resolved_perc'      => $subject->resolved_perc,
-				'correct'            => $subject->correct,
-				'correct_perc'       => $subject->correct == 0 ? 0 : $subject->correct / $subject->resolved * 100,
-				'correct_perc_total' => $subject->correct_perc,
-			];
-		}, json_decode($userExamResults->details)->subjects);
-
 		return [
-			'mock_exam' => [
-				'total'              => $userExamResults->total,
-				'resolved'           => $userExamResults->resolved,
-				'resolved_perc'      => $userExamResults->resolved_percentage,
-				'correct'            => $userExamResults->correct,
-				'correct_perc'       => $userExamResults->resolved == 0 ? 0 : $userExamResults->correct / $userExamResults->resolved * 100,
-				'correct_perc_total' => $userExamResults->correct_percentage,
-				'subjects'           => $subjects
-			]
+			'mock_exams' => $userExamResults->toArray()
 		];
 	}
 

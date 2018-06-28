@@ -1,23 +1,25 @@
 <template>
 	<div class="wnl-comments" ref="highlight">
-		<div class="comments-controls">
-			<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
-			Komentarze ({{comments.length}})
-			<span v-if="comments.length > 0 || this.showComments"> ·
-				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
-			</span> ·
-			<span v-if="!readOnly">
-				<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
-			</span>
-			<wnl-watch
+		<div class="separate-controls">
+			<div class="comments-controls">
+				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
+				Komentarze ({{comments.length}})
+				<span v-if="comments.length > 0 || this.showComments"> ·
+					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				</span> ·
+				<span v-if="!readOnly">
+					<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
+				</span>
+				<wnl-watch
 				v-if="!hideWatchlist"
 				:reactableId="commentableId"
 				:reactableResource="commentableResource"
 				:state="watchState"
 				:reactionsDisabled="false"
 				:module="module"
-			>
-			</wnl-watch>
+				/>
+			</div>
+			<slot/>
 		</div>
 		<wnl-comment
 			v-if="showComments"
@@ -45,11 +47,16 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.separate-controls
+		display: flex
+		justify-content: space-between
+
 	.comments-controls
 		color: $color-gray-dimmed
 		font-size: $font-size-minus-1
 		margin-bottom: $margin-base
 		margin-top: $margin-base
+
 </style>
 
 <script>
@@ -70,10 +77,18 @@
 		components: {
 			'wnl-new-comment-form': NewCommentForm,
 			'wnl-comment': Comment,
-			'wnl-watch': Watch
+			'wnl-watch': Watch,
 		},
 		mixins: [highlight],
-		props: ['module', 'commentableResource', 'commentableId', 'isUnique', 'urlParam', 'hideWatchlist', 'readOnly'],
+		props: [
+			'module',
+			'commentableResource',
+			'commentableId',
+			'isUnique',
+			'urlParam',
+			'hideWatchlist',
+			'readOnly',
+		],
 		data() {
 			return {
 				formElement: {},
@@ -89,9 +104,6 @@
 					resource: this.commentableResource,
 					id: this.commentableId,
 				})
-			},
-			hasComments() {
-				return !_.isEmpty(this.comments)
 			},
 			toggleCommentsText() {
 				return this.showComments ? this.$t('ui.action.hide') : this.$t('ui.action.show')
@@ -208,11 +220,11 @@
 					this.showComments = true
 				}
 			},
-			'showComments' (newValue, oldValue) {
+			'showComments' (newValue) {
 				let eventName = newValue ? 'commentsShown' : 'commentsHidden'
 				this.$emit(eventName)
 			},
-			'$route' (newRoute, oldRoute) {
+			'$route' () {
 				if (!this.isOverlayVisible && this.isCommentableInUrl) {
 					this.refresh()
 						.then(() => {

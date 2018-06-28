@@ -14,6 +14,7 @@
 			resourceRoute="users/current/address"
 			populate="true"
 		>
+			<wnl-form-text name="recipient">Osoba odbierająca przesyłkę</wnl-form-text>
 			<wnl-form-text name="street">Ulica</wnl-form-text>
 			<wnl-form-text name="zip">Kod pocztowy</wnl-form-text>
 			<wnl-form-text name="city">Miasto</wnl-form-text>

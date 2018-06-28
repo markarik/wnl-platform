@@ -30,6 +30,9 @@ function getUserSearchConditions(data) {
 	const orWhere = [
 		['display_name', 'like', `%${displayName}%`]
 	]
+	where.push(
+        ['last_name', '!=', 'deleted']
+	)
 	return { query: { where, orWhere }, limit: [5, 0] }
 }
 

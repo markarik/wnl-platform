@@ -78,7 +78,6 @@
 					await this.$router.push({name: 'logout'})
 				}
 				catch (error) {
-					$wnl.logger.capture(error)
 					this.handleError(error)
 				}
 			},
@@ -97,6 +96,7 @@
 						type: 'error'
 					})
 				} else {
+                    $wnl.logger.capture(error)
 					return this.addAutoDismissableAlert({
 						text: this.$t('user.progressReset.alertError'),
 						type: 'error',

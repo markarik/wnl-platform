@@ -124,8 +124,7 @@ class SlideshowBuilderApiController extends ApiController
 			return $this->respondNotFound();
 		}
 		$firstSlide = Slide::find($slides->first()->slide_id);
-		$firstSection = $firstSlide->sections->first();
-		$background = $firstSection->screen->slideshow->background_url;
+		$background = $firstSlide->slideshow->first()->background_url;
 
 		return $this->renderView($slides, $background);
 	}

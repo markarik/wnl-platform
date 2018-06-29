@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {scrollToTop} from 'js/utils/animations'
-import {resource} from 'js/utils/config'
-import {isProduction} from 'js/utils/env'
 
 Vue.use(Router)
 

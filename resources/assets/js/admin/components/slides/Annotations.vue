@@ -45,6 +45,10 @@
 			<div class="annotation-input-description">
 				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
 			</div>
+			<fieldset class="question-form-fieldset">
+				<legend class="question-form-legend">Tagi</legend>
+				<wnl-tags :defaultTags="tags" ref="tags"></wnl-tags>
+			</fieldset>
 			<div class="level-item">
 					<a class="button is-primary"
 						 :disabled="form.errors.any() || !form.content"
@@ -77,6 +81,14 @@
 
 		&--success
 			color: $color-green;
+
+	.question-form-fieldset
+		border: $border-light-gray
+		padding: 10px 15px
+		margin: 15px 0
+
+	.question-form-legend
+		font-size: 1.25rem
 </style>
 
 <script>
@@ -84,11 +96,13 @@
 	import {getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
 	import Form from 'js/classes/forms/Form'
+	import { Tags } from 'js/components/global/form'
 
 	export default {
 		name: 'Annotations',
 		components: {
-			'wnl-form-code': Code
+			'wnl-form-code': Code,
+			'wnl-tags': Tags
 		},
 		data() {
 			return {
@@ -98,12 +112,15 @@
 				}),
 				keyword: '',
 				annotationId: 0,
-				copied: false
+				copied: false,
+				tags: []
 			}
 		},
 		computed: {
 			requestPayload() {},
 			annotationTag() {
+				if (!this.annotationId) return ''
+
 				return `{a:${this.annotationId}}${this.keyword}{a}`
 			},
 		},
@@ -118,6 +135,8 @@
 				}, 5000)
 			},
 			onSubmit() {
+				const tags = this.$refs.tags.tags;
+
 				axios.post(getApiUrl('annotations'), {
 					keyword: this.keyword,
 					description: this.form.content

@@ -109,7 +109,7 @@ import { decode } from 'he'
 import { isObject, get, truncate, camelCase } from 'lodash'
 import {mapGetters} from 'vuex'
 import { timeFromS } from 'js/utils/time'
-import { sanitizeDisplayName } from 'js/store/modules/users'
+import { sanitizeName } from 'js/store/modules/users'
 
 export default {
 	props: {
@@ -151,7 +151,7 @@ export default {
 	},
 	methods: {
 		displayName(name) {
-			return sanitizeDisplayName(name)
+			return sanitizeName(name)
 		},
 		toggleEvents() {
 			this.expanded = !this.expanded

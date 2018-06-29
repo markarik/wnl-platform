@@ -105,7 +105,7 @@
 
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
-	import { sanitizeDisplayName } from 'js/store/modules/users'
+	import { sanitizeName } from 'js/store/modules/users'
 
 	export default {
 		name: 'PersonalNotification',
@@ -122,7 +122,7 @@
 		computed: {
 			...mapGetters(['currentUserId']),
 			displayName() {
-				return sanitizeDisplayName(this.message.actors.display_name)
+				return sanitizeName(this.message.actors.display_name)
 			},
 			action() {
 				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)

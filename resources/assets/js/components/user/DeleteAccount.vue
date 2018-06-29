@@ -96,7 +96,7 @@
 						type: 'error'
 					})
 				} else {
-                    $wnl.logger.capture(error)
+					$wnl.logger.capture(error)
 					return this.addAutoDismissableAlert({
 						text: this.$t('user.progressReset.alertError'),
 						type: 'error',

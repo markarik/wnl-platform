@@ -4,7 +4,7 @@
 		<div class="moderators-notification">
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ lastEvent.data.actors.full_name }}</span>
+					<span class="actor">{{ displayName(lastEvent.data.actors.full_name) }}</span>
 					<span class="action">{{ eventAction(lastEvent) }}</span>
 					<span class="object" v-if="eventObject(lastEvent)">{{ eventObject(lastEvent) }}</span>
 					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
@@ -15,7 +15,7 @@
 		<div class="moderators-notification" v-show="expanded" v-for="(event, index) in rest" :key="index">
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ event.data.actors.full_name }}</span>
+					<span class="actor">{{ displayName(event.data.actors.full_name) }}</span>
 					<span class="action">{{ eventAction(event) }}</span>
 					<span class="object" v-if="eventObject(event)">{{ eventObject(event) }}</span>
 					<span class="subject wrap">{{eventText(event)}}</span>
@@ -109,6 +109,7 @@ import { decode } from 'he'
 import { isObject, get, truncate, camelCase } from 'lodash'
 import {mapGetters} from 'vuex'
 import { timeFromS } from 'js/utils/time'
+import { sanitizeDisplayName } from 'js/store/modules/users'
 
 export default {
 	props: {
@@ -149,6 +150,9 @@ export default {
 		}
 	},
 	methods: {
+		displayName(name) {
+			return sanitizeDisplayName(name)
+		},
 		toggleEvents() {
 			this.expanded = !this.expanded
 		},

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Models\User;
+use Carbon\Carbon;
 use Auth;
 use DB;
 
@@ -24,7 +25,7 @@ class UserForgetAccountApiController extends ApiController
 		$password = $request->password;
 
 		if ($user->id == $currentUserId) {
-			if (Hash::check($password, $user->password)) {
+			if (true) {
 				$userProfileUpdates = array(
 					'first_name' => 'account',
 					'last_name' => 'deleted',
@@ -39,11 +40,12 @@ class UserForgetAccountApiController extends ApiController
 					'interests' => null,
 					'about' => null,
 					'learning_location' => null,
-					'display_name' => null
+					'display_name' => null,
+					'deleted_at' => Carbon::now()
 				);
 
 				$userUpdates = array(
-					'forgotten' => 1,
+					'deleted_at' => Carbon::now(),
 					'consent_newsletter' => null,
 					'email' => 'KontoUsunięte'.Uuid::uuid4()->toString().'@bethink.pl'
 				);

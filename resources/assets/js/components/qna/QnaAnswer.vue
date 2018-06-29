@@ -13,7 +13,7 @@
 					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<div class="modal-activator" :class="{'author-forgotten': author.forgotten}" @click="showModal">
+					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 						<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"

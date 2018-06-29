@@ -6,7 +6,7 @@
 				</wnl-text-loader>
 			</div>
 
-			<div class="profile-deleted notification" v-if="profile.forgotten">
+			<div class="profile-deleted notification" v-if="profile.deleted_at">
 				<div class="profile-deleted__annotation">
 					{{ $t('ui.accountDeleted') }}
 				</div>

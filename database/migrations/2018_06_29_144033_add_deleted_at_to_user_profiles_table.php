@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddForgottenFlagToUsersTable extends Migration
+class AddDeletedAtToUserProfilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddForgottenFlagToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('forgotten')->default(0);
+		Schema::table('user_profiles', function (Blueprint $table) {
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddForgottenFlagToUsersTable extends Migration
      */
     public function down()
     {
-		Schema::table('users', function (Blueprint $table) {
-			$table->dropColumn('forgotten');
+		Schema::table('user_profiles', function (Blueprint $table) {
+			$table->dropColumn('deleted_at');
 		});
     }
 }

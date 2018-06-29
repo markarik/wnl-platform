@@ -2,7 +2,7 @@
 	<article class="wnl-comment media">
 		<div class="wnl-comment-side">
 			<figure class="media-left">
-				<div class="avatar-activator" @click="showModal" :class="{'author-forgotten': profile.forgotten}">
+				<div class="avatar-activator" @click="showModal" :class="{'author-forgotten': profile.deleted_at}">
 					<p class="image is-32x32">
 						<wnl-avatar size="medium"
 							:fullName="profile.full_name"
@@ -14,7 +14,7 @@
 			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<span class="author" :class="{'author-forgotten': profile.forgotten}" @click="showModal">{{ profile.display_name }}</span>
+			<span class="author" :class="{'author-forgotten': profile.deleted_at}" @click="showModal">{{ profile.display_name }}</span>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">

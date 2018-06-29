@@ -139,7 +139,8 @@
 
 				axios.post(getApiUrl('annotations'), {
 					keyword: this.keyword,
-					description: this.form.content
+					description: this.form.content,
+					tags
 				}).then(({data}) => {
 					this.annotationId = data.id
 					this.addAutoDismissableAlert({

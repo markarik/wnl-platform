@@ -71,20 +71,22 @@ class AddressesExport extends Command
 			$orders = $orders->where('created_at', '>', $from);
 		}
 
-		if ($ship===1) {
-			$orders->update(['shipping_status' => 'ordered']);
-		}
-
-		$orders = $orders->get();
+		$ordersList = clone($orders)->get(); // Preserve the original builder for update
 		$schema = $this->getSchema();
-
 		$data = '';
 		$data .= $this->printHeaders($schema);
-		foreach ($orders as $order) {
+
+		foreach ($ordersList as $order) {
 			$data .= $this->printLine($order, $schema);
 		}
 
 		Storage::put('exports/inpost_' . time() . '.csv', $data);
+
+		// Update if ship parameter is specified
+
+		if ($ship===1) {
+			$orders->update(['shipping_status' => 'ordered']);
+		}
 
 		return;
 	}

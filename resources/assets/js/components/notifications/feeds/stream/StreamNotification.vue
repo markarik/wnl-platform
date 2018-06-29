@@ -9,7 +9,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.display_name }}</span>
+					<span class="actor">{{ displayName }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
@@ -178,6 +178,7 @@
 	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
 	import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time'
+	import { sanitizeName } from 'js/store/modules/users'
 
 	export default {
 		name: 'StreamNotification',
@@ -199,6 +200,9 @@
 		},
 		computed: {
 			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
+			displayName() {
+				return sanitizeName(this.message.actors.display_name)
+			},
 			action() {
 				return this.$t(`notifications.events.${camelCase(this.message.event)}`)
 			},

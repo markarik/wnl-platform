@@ -106,6 +106,11 @@ let routes = [
 				name: 'progress-reset',
 				path: 'progress-reset',
 				component: require('js/components/user/ProgressReset'),
+			},
+			{
+				name: 'delete-account',
+				path: 'delete-account',
+				component: require('js/components/user/DeleteAccount'),
 			}
 		]
 	},

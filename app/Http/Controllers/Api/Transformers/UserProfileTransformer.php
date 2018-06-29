@@ -19,15 +19,19 @@ class UserProfileTransformer extends ApiTransformer
 
 	public function transform(UserProfile $profile)
 	{
+		$firstName = $profile->user->forgotten ? 'Konto' : $profile->first_name;
+		$lastName = $profile->user->forgotten ? 'usunięte' : $profile->last_name;
+		$displayName = $profile->user->forgotten ? 'Konto usinięte' : $profile->display_name;
+
 		$data = [
 			'id'                => $profile->id,
 			'user_id'           => $profile->user_id,
-			'first_name'        => $profile->first_name,
-			'last_name'         => $profile->last_name,
+			'first_name'        => $firstName,
+			'last_name'         => $lastName,
 			'public_email'      => $profile->public_email,
 			'public_phone'      => $profile->public_phone,
 			'username'          => $profile->username,
-			'display_name'      => $profile->display_name,
+			'display_name'      => $displayName,
 			'full_name'         => $profile->full_name,
 			'avatar'            => $profile->avatar_url,
 			'city'              => $profile->city,
@@ -38,6 +42,7 @@ class UserProfileTransformer extends ApiTransformer
 			'about'             => $profile->about,
 			'learning_location' => $profile->learning_location,
 			'roles'             => $profile->user->roles->pluck('name')->toArray() ?? [],
+			'forgotten'         => $profile->user->forgotten,
 		];
 
 		if ($this->parent) {

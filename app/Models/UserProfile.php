@@ -66,5 +66,6 @@ class UserProfile extends Model
 		} else {
 			return $this->full_name;
 		}
+
 	}
 }

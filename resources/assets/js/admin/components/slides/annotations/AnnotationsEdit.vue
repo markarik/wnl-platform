@@ -52,8 +52,13 @@
 			<div class="level-item">
 					<a class="button is-primary"
 						 :disabled="form.errors.any() || !form.content"
-						 @click="onSubmit">Dodaj Adnotacje
+						 @click="onSubmit">Dodaj Adnotację
 					</a>
+			</div>
+			<div class="level-item">
+				<a class="button is-danger"
+					 @click="onDelete">Usuń Adnotację
+				</a>
 			</div>
 		</form>
 	</div>
@@ -147,7 +152,14 @@
 						type: 'success'
 					})
 				})
-			}
+			},
+			async onDelete() {
+				await axios.delete(getApiUrl(`annotations/${this.annotationId}`));
+				this.addAutoDismissableAlert({
+					text: "Usunięto Adnotacje!",
+					type: 'success'
+				})
+			},
 		},
 		async mounted() {
 			const {data} = await axios.get(getApiUrl(`annotations/${this.$route.params.annotationId}?include=tags`));

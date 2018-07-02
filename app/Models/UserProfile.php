@@ -31,6 +31,8 @@ class UserProfile extends Model
 		'learning_location',
 	];
 
+	protected $guarded = ['deleted_at'];
+
 	public function user()
 	{
 		return $this->belongsTo('App\Models\User');

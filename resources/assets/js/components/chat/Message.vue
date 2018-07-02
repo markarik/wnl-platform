@@ -1,6 +1,6 @@
 <template>
 	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
-		<figure class="media-left" @click="showModal" :class="{'author-forgotten': author.forgotten}">
+		<figure class="media-left" @click="showModal" :class="{'author-forgotten': author.deleted_at}">
 			<wnl-avatar
 				:fullName="fullName"
 				:url="avatar"
@@ -13,7 +13,7 @@
 				<p class="wnl-message-meta" v-if="showAuthor">
 					<strong
 						class="author"
-						:class="{'author-forgotten': author.forgotten}"
+						:class="{'author-forgotten': author.deleted_at}"
 						@click="showModal">{{ nameToDisplay }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>

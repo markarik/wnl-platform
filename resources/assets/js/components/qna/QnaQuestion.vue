@@ -29,7 +29,7 @@
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<div class="modal-activator"  :class="{'author-forgotten': author.forgotten}" @click="showModal">
+					<div class="modal-activator"  :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 						<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"

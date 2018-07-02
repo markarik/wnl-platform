@@ -31,7 +31,7 @@ function getUserSearchConditions(data) {
 		['display_name', 'like', `%${displayName}%`]
 	]
 	where.push(
-        ['last_name', '!=', 'deleted']
+		['deleted_at', '!=', 'null']
 	)
 	return { query: { where, orWhere }, limit: [5, 0] }
 }

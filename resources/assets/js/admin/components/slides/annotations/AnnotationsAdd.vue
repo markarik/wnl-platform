@@ -96,7 +96,7 @@
 	import {getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
 	import Form from 'js/classes/forms/Form'
-	import { Tags } from 'js/components/global/form'
+	import { Tags } from 'js/components/global/form/index'
 
 	export default {
 		name: 'Annotations',

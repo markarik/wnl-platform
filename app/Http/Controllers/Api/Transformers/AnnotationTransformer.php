@@ -7,6 +7,14 @@ use App\Models\Annotation;
 
 class AnnotationTransformer extends ApiTransformer
 {
+	protected $availableIncludes = ['tags'];
+	protected $parent;
+
+	public function __construct($parent = [])
+	{
+		$this->parent = collect($parent);
+	}
+
 	public function transform(Annotation $annotation)
 	{
 		$data = [
@@ -16,5 +24,12 @@ class AnnotationTransformer extends ApiTransformer
 		];
 
 		return $data;
+	}
+
+	public function includeTags(Annotation $annotation)
+	{
+		$tags = $annotation->tags;
+
+		return $this->collection($tags, new TagTransformer(['annotations' => $annotation->id]), 'tags');
 	}
 }

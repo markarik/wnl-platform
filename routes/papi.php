@@ -227,6 +227,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Annotations
 	Route::get("{$r['annotations']}/{id}", 'AnnotationsApiController@get');
 	Route::post("{$r['annotations']}", 'AnnotationsApiController@post');
+	Route::put("{$r['annotations']}/{id}", 'AnnotationsApiController@put');
 
 	// Reactions
 	Route::post($r['reactions'], 'ReactionsApiController@postMany');

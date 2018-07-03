@@ -10,7 +10,7 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="keyword">
+							<input class="input" type="text" v-model="title">
 						</div>
 					</div>
 				</div>
@@ -108,16 +108,12 @@
 				form: new Form({
 					content: ''
 				}),
-				keyword: '',
+				title: '',
 				annotationId: 0,
 				copied: false,
 			}
 		},
 		props: {
-			title: {
-				type: String,
-				default: 'Edytor'
-			},
 			annotation: {
 				type: Object,
 				default: () => ({})
@@ -127,7 +123,7 @@
 			annotationTag() {
 				if (!this.annotation.id) return ''
 
-				return `{a:${this.annotation.id}}${this.keyword}{a}`
+				return `{a:${this.annotation.id}}${this.title}{a}`
 			},
 		},
 		methods: {
@@ -142,23 +138,23 @@
 			},
 			async onSubmit() {
 				const tags = this.$refs.tags.tags;
-				let data = {};
+				let event = 'addSuccess'
 
-				if (this.annotation.id) {
-					data = await axios.put(getApiUrl(`annotations/${this.annotation.id}`), {
-						keyword: this.keyword.trim(),
-						description: this.form.content,
-						tags: tags.map(tag => tag.id)
-					})
-				} else {
-					data = await axios.post(getApiUrl('annotations'), {
-						keyword: this.keyword,
-						description: this.form.content,
-						tags
-					})
+				const annotation = {
+					id: this.annotation.id,
+					title: this.title.trim(),
+					description: this.form.content,
+					tags
 				}
 
-				this.$emit('submitSuccess', data)
+				if (this.annotation.id) {
+					event = 'editSuccess'
+					await axios.put(getApiUrl(`annotations/${this.annotation.id}`), annotation)
+				} else {
+					await axios.post(getApiUrl('annotations'), annotation)
+				}
+
+				this.$emit(event, annotation)
 				this.addAutoDismissableAlert({
 					text: "Zapisano!",
 					type: 'success'
@@ -167,11 +163,11 @@
 		},
 		mounted() {
 			this.form.content = this.annotation.description
-			this.keyword = this.annotation.keyword;
+			this.title = this.annotation.title;
 		},
 		watch: {
 			'annotation.id'() {
-				this.keyword = this.annotation.keyword;
+				this.title = this.annotation.title;
 				this.form.content = this.annotation.description
 			}
 		}

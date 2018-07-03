@@ -20,7 +20,7 @@ class AnnotationTransformer extends ApiTransformer
 		$data = [
 			'description' => $annotation->description,
 			'id' => $annotation->id,
-			'keyword' => $annotation->keyword,
+			'title' => $annotation->title,
 		];
 
 		return $data;

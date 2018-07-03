@@ -18,7 +18,7 @@
 							{{annotation.id}}
 						</div>
 						<div class="annotation-item__essentials__name" @click="onAnnotationClick(annotation)">
-							{{annotation.keyword}}
+							{{annotation.title}}
 						</div>
 					</div>
 			</li>

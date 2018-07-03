@@ -13,7 +13,8 @@
 			:list="annotations"
 			:annotation="activeAnnotation"
 			@annotationSelect="onAnnotationSelect"
-			@submitSuccess="onSubmitSuccess"
+			@addSuccess="onAddSuccess"
+			@editSuccess="onEditSuccess"
 		/>
 	</div>
 </template>
@@ -66,11 +67,19 @@
 				this.tabs.editor.active = true;
 				this.activeAnnotation = annotation;
 			},
-			onSubmitSuccess(data) {
-				this.activeAnnotation = {
-					...this.activeAnnotation,
-					...data.data
-				}
+			onAddSuccess(annotation) {
+				this.activeAnnotation = annotation
+				this.annotations.splice(0,0, annotation);
+			},
+			onEditSuccess(annotation) {
+				this.activeAnnotation = annotation
+
+				this.annotations = this.annotations.map(item => {
+					if (item.id === annotation.id) {
+						return annotation
+					}
+					return item;
+				})
 			}
 		},
 		async mounted() {

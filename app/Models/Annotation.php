@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Annotation extends Model
 {
-	protected $fillable = ['keyword', 'description'];
+	protected $fillable = ['title', 'description'];
+
+	public function keywords()
+	{
+		return $this->hasMany('\App\Models\Keyword');
+	}
 
 	public function tags()
 	{

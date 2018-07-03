@@ -178,13 +178,13 @@
 		mounted() {
 			this.form.content = this.annotation.description
 			this.title = this.annotation.title;
-			this.keywords = (this.annotation.keywords || []).join(', ')
+			this.keywords = this.annotation.keywords;
 		},
 		watch: {
 			'annotation.id'() {
 				this.title = this.annotation.title;
 				this.form.content = this.annotation.description
-				this.keywords = (this.annotation.keywords || []).join(', ')
+				this.keywords = this.annotation.keywords;
 			}
 		}
 	}

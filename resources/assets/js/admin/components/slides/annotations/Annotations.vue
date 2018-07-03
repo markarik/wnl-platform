@@ -85,18 +85,20 @@
 		async mounted() {
 			const {data} = await axios.get(getApiUrl('annotations/all'), {
 				params: {
-					include: 'tags'
+					include: 'tags,keywords'
 				}
 			});
 			const {included, ...annotations} = data;
+			const {tags, keywords} = included;
 
 			this.annotations = Object.values(annotations).map(annotation => {
 				return {
 					...annotation,
 					tags: (annotation.tags || []).map(tagId => ({
-						id: included.tags[tagId].id,
-						name: included.tags[tagId].name,
-					}))
+						id: tags[tagId].id,
+						name: tags[tagId].name,
+					})),
+					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
 				}
 			})
 		},

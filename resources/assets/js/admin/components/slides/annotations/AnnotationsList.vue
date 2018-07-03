@@ -1,6 +1,7 @@
 <template>
 	<div class="annotations-list">
-		<ul>
+		<ul
+			v-if="list">
 			<li
 				v-for="(annotation, index) in list"
 				:key="annotation.id"
@@ -30,7 +31,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.annotation-item
-		height: 35px
+		min-height: 35px
 		display: flex
 		.annotation-item__essentials
 			display: flex
@@ -39,6 +40,9 @@
 			width: 40%
 			.annotation-item__essentials__id
 				width: 40%
+
+		.annotation-item__tags
+			max-width: 60%
 
 	.isEven
 		background-color: $color-background-lightest-gray
@@ -59,6 +63,13 @@
 			}
 		},
 		methods: {
+			parseTag(tag) {
+				return Object.values(this.annotations.included.tags).find(includedTag => {
+					if (includedTag.id === tag) {
+						return includedTag.name
+					}
+				})
+			},
 			isEven(index) {
 				return index % 2 === 0
 			},
@@ -78,6 +89,6 @@
 			onAnnotationClick(annotation) {
 				this.$emit('annotationSelect', annotation);
 			}
-		},
+		}
 	}
 </script>

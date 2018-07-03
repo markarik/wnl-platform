@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\UpdateAnnotation;
 use App\Models\Annotation;
+use App\Models\Keyword;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,13 @@ class AnnotationsApiController extends ApiController
 			}
 		}
 
+		$keywords = array_map(function($keyword) {
+			return new Keyword(['text' => $keyword]);
+		}, $request->keywords);
+
+		$annotation->keywords()->delete();
+		$annotation->keywords()->saveMany($keywords);
+
 		return $this->transformAndRespond($annotation);
 	}
 
@@ -50,7 +58,13 @@ class AnnotationsApiController extends ApiController
 			return $tag['id'];
 		}, $request->tags);
 
+		$keywords = array_map(function($keyword) {
+			return new Keyword(['text' => $keyword]);
+		}, $request->keywords);
+
 		$annotation->tags()->sync($tagIds);
+		$annotation->keywords()->delete();
+		$annotation->keywords()->saveMany($keywords);
 
 		$annotation->save();
 

@@ -10,6 +10,6 @@ class Keyword extends Model
 
 	public function annotation()
 	{
-		return $this->belognsTo('\App\Models\Annotation');
+		return $this->belognsTo('App\Models\Annotation');
 	}
 }

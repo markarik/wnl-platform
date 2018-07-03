@@ -17,6 +17,18 @@
 			</div>
 			<div class="field is-horizontal annotation-input-text">
 				<div class="field-label">
+					<label class="label">Słowa kluczowe</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input class="input" type="text" v-model="keywords">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="field is-horizontal annotation-input-text">
+				<div class="field-label">
 					<label class="label">ID</label>
 				</div>
 				<div class="field-body">
@@ -111,6 +123,7 @@
 				title: '',
 				annotationId: 0,
 				copied: false,
+				keywords: ''
 			}
 		},
 		props: {
@@ -144,7 +157,8 @@
 					id: this.annotation.id,
 					title: this.title.trim(),
 					description: this.form.content,
-					tags
+					keywords: this.keywords.split(',').map(keyword => keyword.trim()),
+					tags,
 				}
 
 				if (this.annotation.id) {
@@ -164,11 +178,13 @@
 		mounted() {
 			this.form.content = this.annotation.description
 			this.title = this.annotation.title;
+			this.keywords = (this.annotation.keywords || []).join(', ')
 		},
 		watch: {
 			'annotation.id'() {
 				this.title = this.annotation.title;
 				this.form.content = this.annotation.description
+				this.keywords = (this.annotation.keywords || []).join(', ')
 			}
 		}
 	}

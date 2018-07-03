@@ -26,7 +26,8 @@ class UpdateAnnotation extends FormRequest
 	{
 		return [
 			'description' => 'string|nullable',
-			'keyword' => 'string|nullable',
+			'title' => 'string|nullable',
+			'keywords' => 'array|nullable',
 			'tags' => 'array|nullable'
 		];
 	}

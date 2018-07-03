@@ -10,7 +10,7 @@ class Annotation extends Model
 
 	public function keywords()
 	{
-		return $this->hasMany('\App\Models\Keyword');
+		return $this->hasMany('App\Models\Keyword');
 	}
 
 	public function tags()

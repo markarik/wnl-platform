@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<button @click="addAnnotation">Dodaj Przypis</button>
 		<div class="tabs">
 			<ul>
 				<li :class="{'is-active': tab.active}" @click="changeTab(name)" v-for="(tab, name) in tabs" :key=name>
@@ -7,15 +8,24 @@
 				</li>
 			</ul>
 		</div>
-		<component :is="activeComponent" @annotationSelect="onAnnotationSelect"/>
+		<component
+			:is="activeComponent"
+			:list="annotations"
+			:annotation="activeAnnotation"
+			@annotationSelect="onAnnotationSelect"
+			@submitSuccess="onSubmitSuccess"
+		/>
 	</div>
 </template>
 <script>
+	import axios from 'axios';
+
+	import { getApiUrl } from 'js/utils/env'
 	import AnnotationsList from "./AnnotationsList";
-	import AnnotationsAdd from "./AnnotationsAdd";
+	import AnnotationsEditor from "./AnnotationsEditor";
 
 	export default {
-		components: {AnnotationsList, AnnotationsAdd},
+		components: {AnnotationsList, AnnotationsEditor},
 		data() {
 			return {
 				tabs: {
@@ -25,12 +35,13 @@
 						text: 'Lista'
 					},
 					editor: {
-						component: AnnotationsAdd,
+						component: AnnotationsEditor,
 						active: false,
 						text: 'Edytor'
 					}
 				},
-				activeAnnotation: {}
+				activeAnnotation: {},
+				annotations: []
 			}
 		},
 		computed: {
@@ -46,11 +57,39 @@
 				this.activeTab.active = false;
 				this.tabs[name].active = true;
 			},
+			addAnnotation() {
+				this.changeTab('editor');
+				this.activeAnnotation = {};
+			},
 			onAnnotationSelect(annotation) {
 				this.activeTab.active = false;
 				this.tabs.editor.active = true;
 				this.activeAnnotation = annotation;
+			},
+			onSubmitSuccess(data) {
+				this.activeAnnotation = {
+					...this.activeAnnotation,
+					...data.data
+				}
 			}
-		}
+		},
+		async mounted() {
+			const {data} = await axios.get(getApiUrl('annotations/all'), {
+				params: {
+					include: 'tags'
+				}
+			});
+			const {included, ...annotations} = data;
+
+			this.annotations = Object.values(annotations).map(annotation => {
+				return {
+					...annotation,
+					tags: (annotation.tags || []).map(tagId => ({
+						id: included.tags[tagId].id,
+						name: included.tags[tagId].name,
+					}))
+				}
+			})
+		},
 	}
 </script>

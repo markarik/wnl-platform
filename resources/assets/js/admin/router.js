@@ -36,23 +36,6 @@ let routes = [
 		name: 'annotations',
 		path: '/admin/app/annotations',
 		component: require('js/admin/components/slides/annotations/Annotations.vue'),
-		children: [
-			{
-				name: 'annotations-list',
-				path: '',
-				component: require('js/admin/components/slides/annotations/AnnotationsList.vue')
-			},
-			{
-				name: 'annotations-add',
-				path: 'add',
-				component: require('js/admin/components/slides/annotations/AnnotationsAdd.vue')
-			},
-			{
-				name: 'annotations-edit',
-				path: ':annotationId/edit',
-				component: require('js/admin/components/slides/annotations/AnnotationsEdit.vue')
-			},
-		]
 	},
 	{
 		name: 'quizes',

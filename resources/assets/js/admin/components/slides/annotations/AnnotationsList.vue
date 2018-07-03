@@ -2,12 +2,12 @@
 	<div class="annotations-list">
 		<ul>
 			<li
-				v-for="(annotation, index) in annotations"
+				v-for="(annotation, index) in list"
 				:key="annotation.id"
 				class="annotation-item"
 				:class="{'isEven': isEven(index)}"
-				@click="toggleAnnotation(annotation)">
-				<!-- <router-link :to="{name: 'annotations-edit', params: {annotationId: annotation.id}}"> -->
+				@click="toggleAnnotation(annotation)"
+			>
 					<div class="annotation-item__essentials">
 						<div class="annotation-item__essentials__id">
 							<span class="icon is-small">
@@ -17,11 +17,10 @@
 							</span>
 							{{annotation.id}}
 						</div>
-						<div class="annotation-item__essentials__name">
+						<div class="annotation-item__essentials__name" @click="onAnnotationClick(annotation)">
 							{{annotation.keyword}}
 						</div>
 					</div>
-				<!-- </router-link> -->
 			</li>
 		</ul>
 	</div>
@@ -46,16 +45,17 @@
 </style>
 
 <script>
-	import axios from 'axios';
-
-	import { getApiUrl } from 'js/utils/env'
-
 	export default {
 		name: 'AnnotationsList',
 		data() {
 			return {
-				annotations: [],
 				openAnnotations: []
+			}
+		},
+		props: {
+			list: {
+				type: Array,
+				required: true
 			}
 		},
 		methods: {
@@ -74,17 +74,10 @@
 			},
 			isOpen(annotation) {
 				return this.openAnnotations.indexOf(annotation.id) > -1
-			}
-		},
-		methods: {
+			},
 			onAnnotationClick(annotation) {
 				this.$emit('annotationSelect', annotation);
 			}
-		},
-		async mounted() {
-			console.log('mounted called.....');
-			const {data: annotations} = await axios.get(getApiUrl('annotations/all'));
-			this.annotations = annotations;
 		},
 	}
 </script>

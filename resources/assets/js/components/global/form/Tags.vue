@@ -50,10 +50,9 @@
 </style>
 
 <script>
-	import { formInput } from 'js/mixins/form-input'
 	import Autocomplete from 'js/components/global/Autocomplete'
 	import _ from 'lodash'
-	import { mapActions } from 'vuex'
+	import {mapActions} from 'vuex'
 
 	const keys = {
 		enter: 13,
@@ -67,7 +66,12 @@
 		components: {
 			'wnl-autocomplete': Autocomplete
 		},
-		props: ['defaultTags'],
+		props: {
+			defaultTags: {
+				type: Array,
+				default: () => ([])
+			}
+		},
 		data: function () {
 			return {
 				autocompleteItems: [],
@@ -155,6 +159,9 @@
 
 				return !!this.tags.some(tag => !_.find(this.defaultTags, defTag => defTag.id === tag.id))
 			}
+		},
+		created() {
+			this.tags = this.defaultTags.slice();
 		},
 		watch: {
 			defaultTags() {

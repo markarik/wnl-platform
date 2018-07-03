@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<p class="title is-3">Dodaj Adnotację</p>
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
 			@keydown="form.errors.clear($event.target.name)"
 		>
@@ -23,7 +22,7 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="annotationId" readonly tabindex="-1">
+							<input class="input" type="text" v-model="annotation.id" readonly tabindex="-1">
 						</div>
 					</div>
 				</div>
@@ -47,18 +46,13 @@
 			</div>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
-				<wnl-tags :defaultTags="tags" ref="tags"></wnl-tags>
+				<wnl-tags :defaultTags="annotation.tags || []" ref="tags"></wnl-tags>
 			</fieldset>
 			<div class="level-item">
 					<a class="button is-primary"
 						 :disabled="form.errors.any() || !form.content"
-						 @click="onSubmit">Dodaj Adnotację
+						 @click="onSubmit">Zapisz
 					</a>
-			</div>
-			<div class="level-item">
-				<a class="button is-danger"
-					 @click="onDelete">Usuń Adnotację
-				</a>
 			</div>
 		</form>
 	</div>
@@ -104,7 +98,7 @@
 	import { Tags } from 'js/components/global/form/index'
 
 	export default {
-		name: 'Annotations',
+		name: 'AnnotationsEditor',
 		components: {
 			'wnl-form-code': Code,
 			'wnl-tags': Tags
@@ -112,20 +106,28 @@
 		data() {
 			return {
 				form: new Form({
-					content: null,
+					content: ''
 				}),
 				keyword: '',
 				annotationId: 0,
 				copied: false,
-				tags: []
+			}
+		},
+		props: {
+			title: {
+				type: String,
+				default: 'Edytor'
+			},
+			annotation: {
+				type: Object,
+				default: () => ({})
 			}
 		},
 		computed: {
-			requestPayload() {},
 			annotationTag() {
-				if (!this.annotationId) return ''
+				if (!this.annotation.id) return ''
 
-				return `{a:${this.annotationId}}${this.keyword}{a}`
+				return `{a:${this.annotation.id}}${this.keyword}{a}`
 			},
 		},
 		methods: {
@@ -138,41 +140,40 @@
 					this.copied = false;
 				}, 5000)
 			},
-			onSubmit() {
+			async onSubmit() {
 				const tags = this.$refs.tags.tags;
+				let data = {};
 
-				axios.put(getApiUrl(`annotations/${this.annotationId}`), {
-					keyword: this.keyword,
-					description: this.form.content,
-					tags: tags.map(tag => tag.id)
-				}).then(({data}) => {
-					this.annotationId = data.id
-					this.addAutoDismissableAlert({
-						text: "Dodano Adnotacje!",
-						type: 'success'
+				if (this.annotation.id) {
+					data = await axios.put(getApiUrl(`annotations/${this.annotation.id}`), {
+						keyword: this.keyword.trim(),
+						description: this.form.content,
+						tags: tags.map(tag => tag.id)
 					})
-				})
-			},
-			async onDelete() {
-				await axios.delete(getApiUrl(`annotations/${this.annotationId}`));
+				} else {
+					data = await axios.post(getApiUrl('annotations'), {
+						keyword: this.keyword,
+						description: this.form.content,
+						tags
+					})
+				}
+
+				this.$emit('submitSuccess', data)
 				this.addAutoDismissableAlert({
-					text: "Usunięto Adnotacje!",
+					text: "Zapisano!",
 					type: 'success'
 				})
-			},
+			}
 		},
-		async mounted() {
-			const {data} = await axios.get(getApiUrl(`annotations/${this.$route.params.annotationId}?include=tags`));
-
-			const {tags: tagIds, included, ...annotation} = data;
-			const tags = tagIds.map(id => {
-				return included.tags[id];
-			})
-
-			this.form.content = annotation.description
-			this.keyword = annotation.keyword
-			this.annotationId = annotation.id
-			this.tags = tags;
+		mounted() {
+			this.form.content = this.annotation.description
+			this.keyword = this.annotation.keyword;
+		},
+		watch: {
+			'annotation.id'() {
+				this.keyword = this.annotation.keyword;
+				this.form.content = this.annotation.description
+			}
 		}
 	}
 </script>

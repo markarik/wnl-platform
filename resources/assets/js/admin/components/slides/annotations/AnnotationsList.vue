@@ -9,19 +9,38 @@
 				:class="{'isEven': isEven(index)}"
 				@click="toggleAnnotation(annotation)"
 			>
-					<div class="annotation-item__essentials">
-						<div class="annotation-item__essentials__id">
-							<span class="icon is-small">
-								<i class="toggle fa fa-angle-right"
-								:class="{'fa-rotate-90': isOpen(annotation)}">
-							</i>
-							</span>
-							{{annotation.id}}
+				<div class="meta">
+					<div class="annotation-item__header">
+						<div class="annotation-item__essentials">
+							<div class="annotation-item__essentials__id">
+								<span class="icon is-small">
+									<i class="toggle fa fa-angle-right"
+										:class="{'fa-rotate-90': isOpen(annotation)}">
+									</i>
+								</span>
+								{{annotation.id}}
+							</div>
+							<div
+								class="annotation-item__essentials__name"
+								@click="onAnnotationClick(annotation)">
+								{{annotation.title}}
+							</div>
 						</div>
-						<div class="annotation-item__essentials__name" @click="onAnnotationClick(annotation)">
-							{{annotation.title}}
+						<div class="annotation-item__tags">
+							<ul>
+								<li
+									v-for="tag in annotation.tags">
+									{{tag.name}}
+								</li>
+							</ul>
 						</div>
 					</div>
+					<div
+						class="annotation-item__description"
+						v-if="isOpen(annotation)">
+						{{annotation.description}}
+					</div>
+				</div>
 			</li>
 		</ul>
 	</div>
@@ -33,16 +52,33 @@
 	.annotation-item
 		min-height: 35px
 		display: flex
-		.annotation-item__essentials
+		margin: 10px 0 10px 0
+		.meta
+			width: 100%
 			display: flex
-			align-items: center
-			justify-content: space-between
-			width: 40%
-			.annotation-item__essentials__id
-				width: 40%
-
-		.annotation-item__tags
-			max-width: 60%
+			flex-direction: column
+			.annotation-item__header
+				display: flex
+				.annotation-item__essentials
+					display: flex
+					align-items: center
+					justify-content: flex-start
+					width: 60%
+					.annotation-item__essentials__id
+						display: flex
+						align-items: center
+						justify-content: flex-start
+						min-width: 40%
+					.annotation-item__essentials__name
+						color: $color-ocean-blue
+						cursor: pointer
+				.annotation-item__tags
+					display: flex
+					justify-content: flex-start
+					margin-left: $margin-big
+					align-items: center
+			.annotation-item__description
+				margin: $margin-medium
 
 	.isEven
 		background-color: $color-background-lightest-gray

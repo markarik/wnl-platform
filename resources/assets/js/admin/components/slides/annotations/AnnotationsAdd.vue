@@ -99,7 +99,7 @@
 	import { Tags } from 'js/components/global/form/index'
 
 	export default {
-		name: 'Annotations',
+		name: 'AnnotationsAdd',
 		components: {
 			'wnl-form-code': Code,
 			'wnl-tags': Tags

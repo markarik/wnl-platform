@@ -1,11 +1,10 @@
 <template>
 	<div>
-		SIEMKI
 		<ul>
 			<li v-for="annotation in annotations" :key="annotation.id">
-				<router-link :to="{name: 'annotations-edit', params: {annotationId: annotation.id}}">
+				<a @click="onAnnotationClick(annotation)">
 					{{annotation.keyword}}
-				</router-link>
+				</a>
 			</li>
 		</ul>
 	</div>
@@ -26,9 +25,15 @@
 				annotations: []
 			}
 		},
+		methods: {
+			onAnnotationClick(annotation) {
+				this.$emit('annotationSelect', annotation);
+			}
+		},
 		async mounted() {
+			console.log('mounted called.....');
 			const {data: annotations} = await axios.get(getApiUrl('annotations/all'));
 			this.annotations = annotations;
-		}
+		},
 	}
 </script>

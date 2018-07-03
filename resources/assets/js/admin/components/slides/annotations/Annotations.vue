@@ -60,7 +60,10 @@
 			},
 			addAnnotation() {
 				this.changeTab('editor');
-				this.activeAnnotation = {};
+				this.activeAnnotation = {
+					tags: [],
+					keywords: ''
+				};
 			},
 			onAnnotationSelect(annotation) {
 				this.activeTab.active = false;

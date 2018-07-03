@@ -165,7 +165,8 @@
 					event = 'editSuccess'
 					await axios.put(getApiUrl(`annotations/${this.annotation.id}`), annotation)
 				} else {
-					await axios.post(getApiUrl('annotations'), annotation)
+					const {data} = await axios.post(getApiUrl('annotations'), annotation)
+					annotation.id = data.id
 				}
 
 				this.$emit(event, annotation)

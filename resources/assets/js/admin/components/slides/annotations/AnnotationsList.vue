@@ -25,7 +25,6 @@
 			</li>
 		</ul>
 	</div>
-	<!-- <router-link :to="{name: 'annotations-edit', params: {annotationId: annotation.id}}"> -->
 </template>
 
 <style lang="sass" scoped>
@@ -77,9 +76,15 @@
 				return this.openAnnotations.indexOf(annotation.id) > -1
 			}
 		},
+		methods: {
+			onAnnotationClick(annotation) {
+				this.$emit('annotationSelect', annotation);
+			}
+		},
 		async mounted() {
+			console.log('mounted called.....');
 			const {data: annotations} = await axios.get(getApiUrl('annotations/all'));
 			this.annotations = annotations;
-		}
+		},
 	}
 </script>

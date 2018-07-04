@@ -19,9 +19,12 @@
 								</span>
 								{{annotation.id}}
 							</div>
-							<div
-								class="annotation-item__essentials__name"
-								@click="onAnnotationClick(annotation)">
+							<span class="icon is-small annotation-item__icon">
+								<i class="fa fa-pencil"
+									@click="onAnnotationClick(annotation)">
+								</i>
+							</span>
+							<div>
 								{{annotation.title}}
 							</div>
 						</div>
@@ -69,8 +72,9 @@
 						display: flex
 						align-items: center
 						justify-content: flex-start
-					.annotation-item__essentials__name
+					.annotation-item__icon
 						color: $color-ocean-blue
+						margin-right: $margin-medium
 						cursor: pointer
 				.annotation-item__tags
 					display: flex
@@ -80,9 +84,10 @@
 					flex: 1 0 auto
 					flex-wrap: wrap
 					align-items: center
+					max-width: 60%
 					.tag
 						color: black
-						font-size: 1rem
+						font-size: 0.8rem
 						height: auto
 						margin: 0 10px 10px 0
 						padding: 5px 10px

@@ -41,14 +41,12 @@
 			</div>
 			<div class="field is-horizontal annotation-input-text">
 				<div class="field-label">
-					<label class="label">Tag do slides.com</label>
+					<label class="label">Tagi do slides.com</label>
 				</div>
-				<div class="field-body">
+				<div class="field-body" v-for="keyword in keywordsList" :key="keyword">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" ref="annotationTag" v-model="annotationTag" readonly tabindex="-1">
-							<span class="copy-tag" v-if="annotation.id && !copied" @click="copyTag">Kopiuj tag</span>
-							<span class="copy-tag--success" v-if="copied">Skopiowano do schowka!</span>
+							<wnl-keyword-field :tag-id="annotation.id" :tag-content="keyword" :show="annotation.id"/>
 						</div>
 					</div>
 				</div>
@@ -109,17 +107,20 @@
 	import Code from 'js/admin/components/forms/Code'
 	import Form from 'js/classes/forms/Form'
 	import { Tags } from 'js/components/global/form/index'
+	import KeywordField from "./KeywordField";
+	import WnlKeywordField from "js/admin/components/slides/annotations/KeywordField"
 
 	export default {
 		name: 'AnnotationsEditor',
 		components: {
+			WnlKeywordField,
 			'wnl-form-code': Code,
-			'wnl-tags': Tags
+			'wnl-tags': Tags,
+			'wnl-keyword-field': KeywordField
 		},
 		data() {
 			return {
 				form: new Form({}),
-				copied: false,
 			}
 		},
 		props: {
@@ -132,23 +133,9 @@
 			keywordsList() {
 				return (this.annotation.keywords || '').split(',')
 			},
-			annotationTag() {
-				console.log('annotation tag computed called.....');
-				if (!this.annotation.id) return ''
-
-				return `{a:${this.annotation.id}}${this.keywordsList[0]}{a}`
-			},
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
-			copyTag() {
-				this.$refs.annotationTag.select();
-				document.execCommand("copy");
-				this.copied = true;
-				window.setTimeout(() => {
-					this.copied = false;
-				}, 5000)
-			},
 			async onSubmit() {
 				const tags = this.$refs.tags.tags;
 				let event = 'addSuccess'

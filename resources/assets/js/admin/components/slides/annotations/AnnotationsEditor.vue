@@ -3,8 +3,8 @@
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
 			@keydown="form.errors.clear($event.target.name)"
 		>
-			<div class="field is-horizontal annotation-input-text">
-				<div class="field-label">
+			<div class="field annotation-input-text">
+				<div class="field-label is-normal">
 					<label class="label">Tytuł</label>
 				</div>
 				<div class="field-body">
@@ -52,7 +52,13 @@
 				</div>
 			</div>
 			<div class="annotation-input-description">
-				<wnl-form-code type="text" name="content" :form="form" v-model="annotation.description"/>
+				<div class="screen-content-editor">
+					<quill
+						:form="form"
+						name="content"
+						v-model="annotation.description">
+					</quill>
+				</div>
 			</div>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
@@ -108,15 +114,15 @@
 	import Form from 'js/classes/forms/Form'
 	import { Tags } from 'js/components/global/form/index'
 	import KeywordField from "./KeywordField";
-	import WnlKeywordField from "js/admin/components/slides/annotations/KeywordField"
+	import Quill from 'js/admin/components/forms/Quill.vue'
 
 	export default {
 		name: 'AnnotationsEditor',
 		components: {
-			WnlKeywordField,
 			'wnl-form-code': Code,
 			'wnl-tags': Tags,
-			'wnl-keyword-field': KeywordField
+			'wnl-keyword-field': KeywordField,
+			'quill': Quill,
 		},
 		data() {
 			return {

@@ -5,12 +5,12 @@
 		>
 			<div class="field is-horizontal annotation-input-text">
 				<div class="field-label">
-					<label class="label">Hasło</label>
+					<label class="label">Tytuł</label>
 				</div>
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="title">
+							<input class="input" type="text" v-model="annotation.title">
 						</div>
 					</div>
 				</div>
@@ -22,7 +22,7 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="keywords">
+							<input class="input" type="text" v-model="annotation.keywords">
 						</div>
 					</div>
 				</div>
@@ -47,14 +47,14 @@
 					<div class="field">
 						<div class="control">
 							<input class="input" type="text" ref="annotationTag" v-model="annotationTag" readonly tabindex="-1">
-							<span class="copy-tag" v-if="annotationId && !copied" @click="copyTag">Kopiuj tag</span>
+							<span class="copy-tag" v-if="annotation.id && !copied" @click="copyTag">Kopiuj tag</span>
 							<span class="copy-tag--success" v-if="copied">Skopiowano do schowka!</span>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="annotation-input-description">
-				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
+				<wnl-form-code type="text" name="content" :form="form" v-model="annotation.description"/>
 			</div>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
@@ -62,7 +62,7 @@
 			</fieldset>
 			<div class="level-item">
 					<a class="button is-primary"
-						 :disabled="form.errors.any() || !form.content"
+						 :disabled="form.errors.any() || !annotation.description"
 						 @click="onSubmit">Zapisz
 					</a>
 			</div>
@@ -104,6 +104,7 @@
 
 <script>
 	import {mapActions} from 'vuex';
+	import {set} from 'vue';
 	import {getApiUrl} from 'js/utils/env'
 	import Code from 'js/admin/components/forms/Code'
 	import Form from 'js/classes/forms/Form'
@@ -117,13 +118,8 @@
 		},
 		data() {
 			return {
-				form: new Form({
-					content: ''
-				}),
-				title: '',
-				annotationId: 0,
+				form: new Form({}),
 				copied: false,
-				keywords: ''
 			}
 		},
 		props: {
@@ -133,10 +129,14 @@
 			}
 		},
 		computed: {
+			keywordsList() {
+				return (this.annotation.keywords || '').split(',')
+			},
 			annotationTag() {
+				console.log('annotation tag computed called.....');
 				if (!this.annotation.id) return ''
 
-				return `{a:${this.annotation.id}}${this.title}{a}`
+				return `{a:${this.annotation.id}}${this.keywordsList[0]}{a}`
 			},
 		},
 		methods: {
@@ -154,10 +154,8 @@
 				let event = 'addSuccess'
 
 				const annotation = {
-					id: this.annotation.id,
-					title: this.title.trim(),
-					description: this.form.content,
-					keywords: this.keywords.split(',').map(keyword => keyword.trim()),
+					...this.annotation,
+					keywords: this.annotation.keywords.split(',').map(keyword => keyword.trim()),
 					tags,
 				}
 
@@ -176,17 +174,5 @@
 				})
 			}
 		},
-		mounted() {
-			this.form.content = this.annotation.description
-			this.title = this.annotation.title;
-			this.keywords = this.annotation.keywords;
-		},
-		watch: {
-			'annotation.id'() {
-				this.title = this.annotation.title;
-				this.form.content = this.annotation.description
-				this.keywords = this.annotation.keywords;
-			}
-		}
 	}
 </script>

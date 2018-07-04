@@ -62,7 +62,7 @@
 				this.changeTab('editor');
 				this.activeAnnotation = {
 					tags: [],
-					keywords: ''
+					keywords: '',
 				};
 			},
 			onAnnotationSelect(annotation) {
@@ -71,7 +71,10 @@
 				this.activeAnnotation = annotation;
 			},
 			onAddSuccess(annotation) {
-				this.activeAnnotation = annotation
+				this.activeAnnotation = {
+					...annotation,
+					keywords: (annotation.keywords || []).join(',')
+				}
 				this.annotations.splice(0,0, annotation);
 			},
 			onEditSuccess(annotation) {
@@ -79,7 +82,10 @@
 
 				this.annotations = this.annotations.map(item => {
 					if (item.id === annotation.id) {
-						return annotation
+						return {
+							...annotation,
+							keywords: (annotation.keywords || []).join(',')
+						}
 					}
 					return item;
 				})

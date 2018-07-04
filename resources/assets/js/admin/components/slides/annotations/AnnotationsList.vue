@@ -28,7 +28,8 @@
 						<div class="annotation-item__tags">
 							<span
 								class="tag"
-								v-for="tag in annotation.tags">
+								v-for="tag in annotation.tags"
+								:style="{backgroundColor: getColourForStr(tag.name)}">
 								{{tag.name}}
 							</span>
 						</div>
@@ -62,23 +63,25 @@
 					display: flex
 					align-items: center
 					justify-content: flex-start
-					width: 60%
+					flex: 0 1 auto
 					.annotation-item__essentials__id
+						margin-right: $margin-medium
 						display: flex
 						align-items: center
 						justify-content: flex-start
-						min-width: 40%
 					.annotation-item__essentials__name
 						color: $color-ocean-blue
 						cursor: pointer
 				.annotation-item__tags
 					display: flex
-					flex-direction: column
+					flex-direction: row
 					justify-content: flex-start
 					margin-left: $margin-big
+					flex: 1 0 auto
+					flex-wrap: wrap
+					align-items: center
 					.tag
-						background-color: $color-background-lighter-gray
-						color: $color-gray-lighter
+						color: black
 						font-size: 1rem
 						height: auto
 						margin: 0 10px 10px 0
@@ -107,6 +110,27 @@
 			}
 		},
 		methods: {
+			getColourForStr(str) {
+				console.log(str);
+				let hash = 0;
+				for (let i = 0; i < str.length; i++) {
+					hash = str.charCodeAt(i) + ((hash << 5) - hash);
+				}
+
+				let hex =
+				((hash >> 24) & 0xff).toString(16) +
+				  ((hash >> 16) & 0xff).toString(16) +
+				  ((hash >> 8) & 0xff).toString(16) +
+				  (hash & 0xff).toString(16);
+
+				hex += "000000";
+				hex = hex.substring(0, 6)
+				const r = parseInt(hex.substring(0,2), 16);
+				const g = parseInt(hex.substring(2,4), 16);
+				const b = parseInt(hex.substring(4,6), 16);
+
+				return `rgba(${r}, ${g}, ${b}, 0.2)`
+			},
 			parseTag(tag) {
 				return Object.values(this.annotations.included.tags).find(includedTag => {
 					if (includedTag.id === tag) {

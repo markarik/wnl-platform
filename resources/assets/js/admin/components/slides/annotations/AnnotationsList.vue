@@ -36,8 +36,8 @@
 					</div>
 					<div
 						class="annotation-item__description"
-						v-if="isOpen(annotation)">
-						{{annotation.description}}
+						v-if="isOpen(annotation)"
+						v-html="annotation.description">
 					</div>
 				</div>
 			</li>

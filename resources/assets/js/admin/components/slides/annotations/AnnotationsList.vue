@@ -1,7 +1,6 @@
 <template>
 	<div class="annotations-list">
-		<ul
-			v-if="list">
+		<ul v-if="list">
 			<li
 				v-for="(annotation, index) in list"
 				:key="annotation.id"
@@ -27,12 +26,11 @@
 							</div>
 						</div>
 						<div class="annotation-item__tags">
-							<ul>
-								<li
-									v-for="tag in annotation.tags">
-									{{tag.name}}
-								</li>
-							</ul>
+							<span
+								class="tag"
+								v-for="tag in annotation.tags">
+								{{tag.name}}
+							</span>
 						</div>
 					</div>
 					<div
@@ -54,6 +52,7 @@
 		display: flex
 		margin: 10px 0 10px 0
 		.meta
+			margin: 5px
 			width: 100%
 			display: flex
 			flex-direction: column
@@ -74,14 +73,23 @@
 						cursor: pointer
 				.annotation-item__tags
 					display: flex
+					flex-direction: column
 					justify-content: flex-start
 					margin-left: $margin-big
-					align-items: center
+					.tag
+						background-color: $color-background-lighter-gray
+						color: $color-gray-lighter
+						font-size: 1rem
+						height: auto
+						margin: 0 10px 10px 0
+						padding: 5px 10px
+						max-width: 100%
 			.annotation-item__description
 				margin: $margin-medium
 
 	.isEven
-		background-color: $color-background-lightest-gray
+		background-color: $color-background-light-gray
+
 </style>
 
 <script>

@@ -5,25 +5,17 @@
 				v-for="(annotation, index) in list"
 				:key="annotation.id"
 				class="annotation-item"
-				:class="{'isEven': isEven(index)}"
+				:class="{'annotation-item--is-even': isEven(index)}"
 				@click="toggleAnnotation(annotation)"
 			>
-				<div class="meta">
 					<div class="annotation-item__header">
-						<div class="annotation-item__essentials">
-							<div class="annotation-item__essentials__id">
-								{{annotation.id}}
-							</div>
-							<span class="icon is-small annotation-item__icon">
-								<i class="fa fa-pencil"
-									@click="onAnnotationClick(annotation)">
-								</i>
-							</span>
-							<div>
-								{{annotation.title}}
-							</div>
-						</div>
-						<div class="annotation-item__tags">
+						<span class="annotation-item__header__item">
+							{{annotation.id}}
+						</span>
+						<span class="annotation-item__header__item">
+							{{annotation.title}}
+						</span>
+						<div class="annotation-item__header__tags annotation-item__header__item">
 							<span
 								class="tag"
 								v-for="tag in annotation.tags"
@@ -31,7 +23,12 @@
 								{{tag.name}}
 							</span>
 						</div>
-						<span class="icon is-small annotation-item__chevron">
+						<span class="icon is-small annotation-item__header__item annotation-item__header__item--edit">
+							<i class="fa fa-pencil"
+								 @click="onAnnotationClick(annotation)">
+							</i>
+						</span>
+						<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
 							<i class="toggle fa fa-angle-down"
 								 :class="{'fa-rotate-180': isOpen(annotation)}">
 							</i>
@@ -42,7 +39,6 @@
 						v-if="isOpen(annotation)"
 						v-html="annotation.description">
 					</div>
-				</div>
 			</li>
 		</ul>
 	</div>
@@ -54,48 +50,40 @@
 	.annotation-item
 		min-height: 35px
 		display: flex
-		margin: 10px 0 10px 0
+		margin: 10px 0
 		cursor: pointer
-		.meta
-			margin: 5px
-			width: 100%
+		width: 100%
+		flex-direction: column
+		padding: 5px
+		&__header
 			display: flex
-			flex-direction: column
-			.annotation-item__header
+			&__item
+				margin-right: $margin-base
+				&:last-child
+					margin-right: 0
+				&--edit
+					padding: $margin-base 0 $margin-base
+					color: $color-ocean-blue
+				&--chevron
+					padding: $margin-base
+			&__tags
 				display: flex
-				.annotation-item__essentials
-					display: flex
-					justify-content: flex-start
-					flex: 0 1 auto
-					&__id
-						margin-right: $margin-medium
-					.annotation-item__icon
-						color: $color-ocean-blue
-						margin-right: $margin-medium
-						cursor: pointer
-				.annotation-item__tags
-					display: flex
-					flex-direction: row
-					justify-content: flex-start
-					margin-left: $margin-big
-					flex: 1 0 auto
-					flex-wrap: wrap
-					align-items: center
-					.tag
-						color: black
-						font-size: 0.8rem
-						height: auto
-						margin: 0 10px 10px 0
-						padding: 5px 10px
-						max-width: 100%
-			.annotation-item__description
-				margin: $margin-medium
-			.annotation-item__chevron
-				align-self: flex-start
-
-	.isEven
-		background-color: $color-background-light-gray
-
+				justify-content: flex-start
+				margin-left: $margin-big
+				flex: 1 0 auto
+				flex-wrap: wrap
+				align-items: center
+				&:last-child
+					margin-right: 0
+				.tag
+					color: black
+					font-size: 0.75rem
+					margin-right: 10px
+					padding: 5px 10px
+		&__description
+			margin: $margin-medium
+		&--is-even
+			background-color: $color-background-light-gray
 </style>
 
 <script>

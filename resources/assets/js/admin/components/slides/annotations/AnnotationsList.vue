@@ -23,9 +23,12 @@
 								{{tag.name}}
 							</span>
 						</div>
+						<span class="annotation-item__header__item  annotation-item__header__item--small" v-if="modifiedAnnotationId === annotation.id">
+							...niezapisany
+						</span>
 						<span
 							class="icon is-small annotation-item__header__item annotation-item__header__item--edit"
-							@click="onAnnotationClick(annotation)"
+							@click="(event) => onAnnotationClick({annotation, event})"
 						>
 							<i class="fa fa-pencil"></i>
 						</span>
@@ -68,6 +71,10 @@
 					color: $color-ocean-blue
 				&--chevron
 					padding: $margin-base
+				&--small
+					font-size: 0.8rem
+					font-style: italic
+					color: $color-background-gray
 			&__tags
 				display: flex
 				justify-content: flex-start
@@ -98,6 +105,10 @@
 			list: {
 				type: Array,
 				required: true
+			},
+			modifiedAnnotationId: {
+				type: Number,
+				default: 0
 			}
 		},
 		methods: {
@@ -121,13 +132,6 @@
 
 				return `rgba(${r}, ${g}, ${b}, 0.2)`
 			},
-			parseTag(tag) {
-				return Object.values(this.annotations.included.tags).find(includedTag => {
-					if (includedTag.id === tag) {
-						return includedTag.name
-					}
-				})
-			},
 			isEven(index) {
 				return index % 2 === 0
 			},
@@ -144,8 +148,9 @@
 			isOpen(annotation) {
 				return this.openAnnotations.indexOf(annotation.id) > -1
 			},
-			onAnnotationClick(annotation) {
+			onAnnotationClick({annotation, event}) {
 				this.$emit('annotationSelect', annotation);
+				event.stopImmediatePropagation();
 			}
 		}
 	}

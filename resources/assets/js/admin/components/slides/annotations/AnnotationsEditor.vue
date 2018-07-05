@@ -12,7 +12,7 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="annotation.title">
+							<input class="input" type="text" v-model="annotation.title" @input="onFieldChange">
 						</div>
 					</div>
 				</div>
@@ -24,7 +24,7 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="annotation.keywords">
+							<input class="input" type="text" v-model="annotation.keywords" @input="onFieldChange">
 						</div>
 						<p class="help">Lista słów kluczowych oddzielonych przecinkami</p>
 					</div>
@@ -35,13 +35,15 @@
 					<quill
 						:form="form"
 						name="content"
-						v-model="annotation.description">
+						v-model="annotation.description"
+						@input="onFieldChange"
+					>
 					</quill>
 				</div>
 			</div>
 			<fieldset class="annotation-tags">
 				<legend class="annotation-tags__legend">Tagi</legend>
-				<wnl-tags :defaultTags="annotation.tags || []" ref="tags"></wnl-tags>
+				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
 			<div class="level-item">
 					<a class="button is-danger"
@@ -120,6 +122,8 @@
 		.field--keyword
 			margin-bottom: $margin-base
 			flex: 0 0 300px
+		.field-body
+			flex-wrap: wrap
 </style>
 
 <style lang="sass">
@@ -148,6 +152,7 @@
 		data() {
 			return {
 				form: new Form({}),
+				isDirty: false
 			}
 		},
 		props: {
@@ -167,6 +172,9 @@
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
+			onFieldChange() {
+				this.$emit('hasChanges', this.annotation.id)
+			},
 			async onSubmit() {
 				const tags = this.$refs.tags.tags;
 				let event = 'addSuccess'
@@ -190,6 +198,8 @@
 					text: "Zapisano!",
 					type: 'success'
 				})
+
+				this.$emit('hasChanges', 0)
 			},
 			async onDelete() {
 				await axios.delete(getApiUrl(`annotations/${this.annotation.id}`))
@@ -198,6 +208,7 @@
 					type: 'success'
 				})
 				this.$emit('deleteSuccess', this.annotation)
+				this.$emit('hasChanges', 0)
 			}
 		},
 	}

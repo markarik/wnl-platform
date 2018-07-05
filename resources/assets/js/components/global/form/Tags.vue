@@ -130,6 +130,7 @@
 				this.autocompleteItems = []
 				this.tagInput = ''
 				this.$refs.input.focus()
+				this.$emit('insertTag', tag)
 			},
 
 			removeTag(tag) {

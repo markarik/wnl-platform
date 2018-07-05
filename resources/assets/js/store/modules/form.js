@@ -12,7 +12,7 @@ const form = {
 			data: {},
 			defaults: {},
 			errors: {},
-			hasChanges: false,
+			modifiedAnnotationId: false,
 			loading: true,
 			method: '',
 			original: {},
@@ -25,7 +25,7 @@ const form = {
 		getOriginal: (state) => state.original,
 		getErrors:   (state) => (name) => state.errors[name],
 		getField:    (state) => (name) => state.data[name],
-		hasChanges:  (state) => state.hasChanges,
+		modifiedAnnotationId:  (state) => state.modifiedAnnotationId,
 		hasErrors:   (state) => (name) => !_.isEmpty(state.errors[name]),
 		isLoading:   (state) => state.loading,
 	},
@@ -37,7 +37,7 @@ const form = {
 		},
 		[types.FORM_UPDATE_ORIGINAL_DATA] (state) {
 			set(state, 'original', _.cloneDeep(state.data))
-			set(state, 'hasChanges', false)
+			set(state, 'modifiedAnnotationId', false)
 		},
 		[types.FORM_UPDATE_URL] (state, newUrl) {
 			set(state, 'resourceUrl', newUrl)
@@ -55,14 +55,14 @@ const form = {
 		},
 		[types.FORM_INPUT] (state, payload) {
 			set(state.data, payload.name, payload.value)
-			set(state, 'hasChanges', true)
+			set(state, 'modifiedAnnotationId', true)
 		},
 		[types.FORM_RESET] (state) {
 			destroy(state.data)
 			_.each(state.defaults, (value, field) => {
 				set(state.data, field, state.defaults[field])
 			})
-			set(state, 'hasChanges', false)
+			set(state, 'modifiedAnnotationId', false)
 		},
 		[types.ERRORS_RECORD] (state, payload) {
 			set(state, 'errors', payload)

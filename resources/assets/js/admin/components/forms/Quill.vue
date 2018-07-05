@@ -79,8 +79,12 @@
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.options)
 			this.editor = this.$refs.quill.firstElementChild
-			if (this.value) this.editor.innerHTML = this.value
-			this.quill.on('text-change', this.onTextChange)
+			if (this.value) {
+				this.editor.innerHTML = this.value
+			}
+			this.$nextTick(() => {
+			  this.quill.on('text-change', this.onTextChange)
+      })
 		},
 		watch: {
 			focused (val) {

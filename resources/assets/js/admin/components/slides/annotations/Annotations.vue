@@ -12,10 +12,12 @@
 			:is="activeComponent"
 			:list="annotations"
 			:annotation="activeAnnotation"
+			:modifiedAnnotationId="modifiedAnnotationId"
 			@annotationSelect="onAnnotationSelect"
 			@addSuccess="onAddSuccess"
 			@editSuccess="onEditSuccess"
 			@deleteSuccess="onDeleteSuccess"
+			@hasChanges="onEditorChange"
 		/>
 	</div>
 </template>
@@ -43,7 +45,8 @@
 					}
 				},
 				activeAnnotation: {},
-				annotations: []
+				annotations: [],
+				modifiedAnnotationId: 0
 			}
 		},
 		computed: {
@@ -66,26 +69,46 @@
 					keywords: '',
 				};
 			},
+			onEditorChange(changedAnnotation) {
+				this.modifiedAnnotationId = changedAnnotation
+			},
 			onAnnotationSelect(annotation) {
+				if (this.modifiedAnnotationId && annotation.id !== this.modifiedAnnotationId) {
+					const result = window.confirm(
+						`Masz niezapisane zmiany w przypisie ${this.modifiedAnnotationId}. Czy na pewno chcesz zmienić edytowany przypis?`
+					)
+					if (result) {
+						this.onEditorActivate(annotation)
+					}
+				} else {
+					this.onEditorActivate(annotation)
+				}
+			},
+			onEditorActivate(annotation) {
+				this.activeAnnotation = annotation;
 				this.activeTab.active = false;
 				this.tabs.editor.active = true;
-				this.activeAnnotation = annotation;
+				if (annotation.id !== this.modifiedAnnotationId) {
+					this.modifiedAnnotationId = 0
+				}
 			},
 			onAddSuccess(annotation) {
 				this.activeAnnotation = {
 					...annotation,
 					keywords: (annotation.keywords || []).join(',')
 				}
-				this.annotations.splice(0,0, annotation);
+				this.annotations.splice(0,0, this.activeAnnotation);
 			},
 			onEditSuccess(annotation) {
-				this.activeAnnotation = annotation
+				this.activeAnnotation = {
+					...annotation,
+						keywords: (annotation.keywords || []).join(',')
+				}
 
 				this.annotations = this.annotations.map(item => {
 					if (item.id === annotation.id) {
 						return {
-							...annotation,
-							keywords: (annotation.keywords || []).join(',')
+							...this.activeAnnotation
 						}
 					}
 					return item;
@@ -118,5 +141,15 @@
 				}
 			})
 		},
+		beforeRouteLeave(to, from, next) {
+			if (this.modifiedAnnotationId) {
+				const result = window.confirm(
+					`Masz niezapisane zmiany w przypisie ${this.modifiedAnnotationId}. Czy na pewno chcesz wyjść?`
+				)
+				result && next()
+			} else {
+				next()
+			}
+		}
 	}
 </script>

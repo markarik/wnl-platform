@@ -115,13 +115,13 @@
 				return isProduction()
 			},
 			buttonNameToDisplay() {
-				return this.formLoaded && this.getter('hasChanges') ? this.$t('user.myProfile.previewYourProfileButtonDisabled') : this.$t('user.myProfile.previewYourProfileButtonEnabled')
+				return this.formLoaded && this.getter('modifiedAnnotationId') ? this.$t('user.myProfile.previewYourProfileButtonDisabled') : this.$t('user.myProfile.previewYourProfileButtonEnabled')
 			},
-			hasChanges() {
-				return this.formLoaded && this.getter('hasChanges')
+			modifiedAnnotationId() {
+				return this.formLoaded && this.getter('modifiedAnnotationId')
 			},
 			handleLink() {
-				return this.hasChanges ? '' : 'click'
+				return this.modifiedAnnotationId ? '' : 'click'
 			},
 		},
 		methods: {

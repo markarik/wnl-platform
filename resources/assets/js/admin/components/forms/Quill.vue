@@ -83,8 +83,8 @@
 				this.editor.innerHTML = this.value
 			}
 			this.$nextTick(() => {
-			  this.quill.on('text-change', this.onTextChange)
-      })
+				this.quill.on('text-change', this.onTextChange)
+			})
 		},
 		watch: {
 			focused (val) {

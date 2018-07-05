@@ -4,6 +4,10 @@ import {getApiUrl} from 'js/utils/env'
 
 const namespaced = true;
 
+export const sanitizeName = (name) => {
+	return name === 'account deleted' ? 'Konto usunięte' : name
+};
+
 export const state = {
 	activeUsers: [],
 	activeFilters: [],

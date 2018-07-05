@@ -130,6 +130,7 @@
 				const currentMention = this.getCurrentMention()
 
 				if (currentMention) {
+
 					this.requestUsersAutocomplete(currentMention).then(this.onMentionsFetched.bind(this))
 				}
 			},

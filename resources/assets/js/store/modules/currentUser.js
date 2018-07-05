@@ -157,6 +157,12 @@ const actions = {
 
 	syncSettings({ commit, getters }) {
 		setUserSettings(getters.getAllSettings)
+	},
+
+	deleteAccount({getters}, payload) {
+		return axios.patch(getApiUrl(`user_forget/${getters.currentUserId}`), {
+			password: payload
+		})
 	}
 }
 

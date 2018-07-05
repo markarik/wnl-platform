@@ -145,6 +145,18 @@
 						iconTitle: 'Plan pracy',
 					},
 					{
+						text: 'Certyfikaty',
+						itemClass: 'has-icon',
+						to: {
+							name: 'certificates',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-trophy',
+						iconTitle: 'Certyfikaty',
+					},
+					{
 						text: 'Usuwanie postępu',
 						itemClass: 'has-icon',
 						to: {
@@ -168,16 +180,15 @@
 						iconTitle: 'Zmiana hasła',
 					},
 					{
-						text: 'Certyfikaty',
+						text: 'Usuń konto',
 						itemClass: 'has-icon',
 						to: {
-							name: 'certificates',
-							params: {},
+							name: 'delete-account',
 						},
 						isDisabled: false,
 						method: 'push',
-						iconClass: 'fa-trophy',
-						iconTitle: 'Certyfikaty',
+						iconClass: 'fa-ban',
+						iconTitle: 'Usuń konto',
 					},
 				]
 

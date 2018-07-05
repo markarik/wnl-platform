@@ -1,8 +1,6 @@
 import axios from 'axios'
 import _ from 'lodash'
-import { set, delete as destroy } from 'vue'
-import { getApiUrl } from 'js/utils/env'
-import { resource } from 'js/utils/config'
+import {delete as destroy, set} from 'vue'
 import * as types from 'js/store/mutations-types'
 
 const form = {
@@ -12,7 +10,7 @@ const form = {
 			data: {},
 			defaults: {},
 			errors: {},
-			modifiedAnnotationId: false,
+			hasChanges: false,
 			loading: true,
 			method: '',
 			original: {},

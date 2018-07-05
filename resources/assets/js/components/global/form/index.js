@@ -13,5 +13,5 @@ export {
 	Submit,
 	Check,
 	Tags,
-	SlideIds
+	SlideIds,
 }

@@ -46,5 +46,6 @@ return [
 		'user-forget'        => 'user_forget',
 		'invoices'           => 'invoices',
 		'certificates'       => 'certificates',
+		'annotations'        => 'annotations'
 	],
 ];

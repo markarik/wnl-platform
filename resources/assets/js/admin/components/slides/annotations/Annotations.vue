@@ -15,6 +15,7 @@
 			@annotationSelect="onAnnotationSelect"
 			@addSuccess="onAddSuccess"
 			@editSuccess="onEditSuccess"
+			@deleteSuccess="onDeleteSuccess"
 		/>
 	</div>
 </template>
@@ -89,6 +90,12 @@
 					}
 					return item;
 				})
+			},
+			onDeleteSuccess({id}) {
+				this.activeAnnotation = {}
+
+				const annotationIndex = this.annotations.findIndex(annotation => annotation.id === id)
+				this.annotations.splice(annotationIndex, 1)
 			}
 		},
 		async mounted() {

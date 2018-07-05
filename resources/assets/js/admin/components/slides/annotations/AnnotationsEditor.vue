@@ -192,7 +192,12 @@
 				})
 			},
 			async onDelete() {
-
+				await axios.delete(getApiUrl(`annotations/${this.annotation.id}`))
+				this.addAutoDismissableAlert({
+					text: "Usunięto!",
+					type: 'success'
+				})
+				this.$emit('deleteSuccess', this.annotation)
 			}
 		},
 	}

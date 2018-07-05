@@ -2,7 +2,7 @@
 	<div>
 		<input class="input" type="text" ref="annotationTag" v-model="annotationTag" readonly tabindex="-1">
 		<span class="copy-tag" v-if="show && !copied" @click="copyTag">Kopiuj tag</span>
-		<span class="copy-tag--success" v-if="show && copied">Skopiowano do schowka!</span>
+		<span class="copy-tag copy-tag--success" v-if="show && copied">Skopiowano do schowka!</span>
 	</div>
 </template>
 
@@ -11,6 +11,7 @@
 
 	.copy-tag
 		cursor: pointer
+		font-size: 0.8rem
 
 		&--success
 			color: $color-green;

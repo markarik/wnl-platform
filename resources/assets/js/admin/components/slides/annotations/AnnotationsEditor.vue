@@ -72,8 +72,8 @@
 					<div class="field-label">
 						<label class="label">Tagi do slides.com</label>
 					</div>
-					<div class="field-body" v-for="keyword in keywordsList" :key="keyword">
-						<div class="field">
+					<div class="field-body">
+						<div class="field field--keyword"  v-for="keyword in keywordsList" :key="keyword">
 							<div class="control">
 								<wnl-keyword-field :tag-id="annotation.id" :tag-content="keyword" :show="annotation.id"/>
 							</div>
@@ -115,6 +115,11 @@
 
 		.button
 				margin-right: $margin-base
+
+	.annotation-input-text
+		.field--keyword
+			margin-bottom: $margin-base
+			flex: 0 0 300px
 </style>
 
 <style lang="sass">

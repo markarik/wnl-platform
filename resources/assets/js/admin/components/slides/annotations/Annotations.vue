@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<button @click="addAnnotation">Nowy Przypis</button>
+		<button class="button is-primary" @click="addAnnotation">+ Nowy Przypis</button>
 		<div class="tabs">
 			<ul>
 				<li :class="{'is-active': tab.active}" @click="changeTab(name)" v-for="(tab, name) in tabs" :key="name">

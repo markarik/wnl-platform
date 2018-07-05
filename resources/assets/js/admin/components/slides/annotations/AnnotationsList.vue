@@ -23,10 +23,11 @@
 								{{tag.name}}
 							</span>
 						</div>
-						<span class="icon is-small annotation-item__header__item annotation-item__header__item--edit">
-							<i class="fa fa-pencil"
-								 @click="onAnnotationClick(annotation)">
-							</i>
+						<span
+							class="icon is-small annotation-item__header__item annotation-item__header__item--edit"
+							@click="onAnnotationClick(annotation)"
+						>
+							<i class="fa fa-pencil"></i>
 						</span>
 						<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
 							<i class="toggle fa fa-angle-down"
@@ -62,7 +63,8 @@
 				&:last-child
 					margin-right: 0
 				&--edit
-					padding: $margin-base 0 $margin-base
+					padding: $margin-base
+					margin-right: 0
 					color: $color-ocean-blue
 				&--chevron
 					padding: $margin-base
@@ -73,8 +75,6 @@
 				flex: 1 0 auto
 				flex-wrap: wrap
 				align-items: center
-				&:last-child
-					margin-right: 0
 				.tag
 					color: black
 					font-size: 0.75rem
@@ -102,7 +102,6 @@
 		},
 		methods: {
 			getColourForStr(str) {
-				console.log(str);
 				let hash = 0;
 				for (let i = 0; i < str.length; i++) {
 					hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -110,9 +109,9 @@
 
 				let hex =
 				((hash >> 24) & 0xff).toString(16) +
-				  ((hash >> 16) & 0xff).toString(16) +
-				  ((hash >> 8) & 0xff).toString(16) +
-				  (hash & 0xff).toString(16);
+					((hash >> 16) & 0xff).toString(16) +
+					((hash >> 8) & 0xff).toString(16) +
+					(hash & 0xff).toString(16);
 
 				hex += "000000";
 				hex = hex.substring(0, 6)

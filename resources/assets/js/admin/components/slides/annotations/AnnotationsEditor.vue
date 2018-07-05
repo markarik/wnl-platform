@@ -2,7 +2,7 @@
 	<div class="annotations-editor">
 		<span class="title is-5">{{title}}</span>
 		<hr/>
-		<form class="" action="" method="POST" @submit.prevent="onSubmit"
+		<form action="" method="POST" @submit.prevent="onSubmit"
 			@keydown="form.errors.clear($event.target.name)"
 		>
 			<div class="field annotation-input-text is-horizontal">
@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<div class="annotation-input-description">
-				<div class="screen-content-editor">
+				<div>
 					<quill
 						:form="form"
 						name="content"
@@ -124,13 +124,12 @@
 			flex: 0 0 300px
 		.field-body
 			flex-wrap: wrap
-</style>
 
-<style lang="sass">
 	.annotations-editor
 		.quill-container
 			height: 500px
 </style>
+
 <script>
 	import {mapActions} from 'vuex';
 	import {set} from 'vue';
@@ -185,30 +184,43 @@
 					tags,
 				}
 
-				if (this.annotation.id) {
-					event = 'editSuccess'
-					await axios.put(getApiUrl(`annotations/${this.annotation.id}`), annotation)
-				} else {
-					const {data} = await axios.post(getApiUrl('annotations'), annotation)
-					annotation.id = data.id
+				try {
+					if (this.annotation.id) {
+						event = 'editSuccess'
+						await axios.put(getApiUrl(`annotations/${this.annotation.id}`), annotation)
+					} else {
+						const {data} = await axios.post(getApiUrl('annotations'), annotation)
+						annotation.id = data.id
+					}
+
+					this.$emit(event, annotation)
+					this.$emit('hasChanges', 0)
+					this.addAutoDismissableAlert({
+						text: "Zapisano!",
+						type: 'success'
+					})
+				} catch (e) {
+					this.addAutoDismissableAlert({
+						text: "Nie udało się zapisać przypisu :( Spróbuj jeszcze raz.!",
+						type: 'error'
+					})
 				}
-
-				this.$emit(event, annotation)
-				this.addAutoDismissableAlert({
-					text: "Zapisano!",
-					type: 'success'
-				})
-
-				this.$emit('hasChanges', 0)
 			},
 			async onDelete() {
-				await axios.delete(getApiUrl(`annotations/${this.annotation.id}`))
-				this.addAutoDismissableAlert({
-					text: "Usunięto!",
-					type: 'success'
-				})
-				this.$emit('deleteSuccess', this.annotation)
-				this.$emit('hasChanges', 0)
+				try {
+					await axios.delete(getApiUrl(`annotations/${this.annotation.id}`))
+					this.addAutoDismissableAlert({
+						text: "Usunięto!",
+						type: 'success'
+					})
+					this.$emit('deleteSuccess', this.annotation)
+					this.$emit('hasChanges', 0)
+				} catch (e) {
+					this.addAutoDismissableAlert({
+						text: "Nie udało się usunąć przypisu :( Spróbuj jeszcze raz.!",
+						type: 'error'
+					})
+				}
 			}
 		},
 	}

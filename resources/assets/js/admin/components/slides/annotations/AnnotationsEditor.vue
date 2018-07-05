@@ -1,10 +1,12 @@
 <template>
-	<div>
+	<div class="annotations-editor">
+		<span class="title is-5">{{title}}</span>
+		<hr/>
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
 			@keydown="form.errors.clear($event.target.name)"
 		>
-			<div class="field annotation-input-text">
-				<div class="field-label is-normal">
+			<div class="field annotation-input-text is-horizontal">
+				<div class="field-label">
 					<label class="label">Tytuł</label>
 				</div>
 				<div class="field-body">
@@ -24,30 +26,7 @@
 						<div class="control">
 							<input class="input" type="text" v-model="annotation.keywords">
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="field is-horizontal annotation-input-text">
-				<div class="field-label">
-					<label class="label">ID</label>
-				</div>
-				<div class="field-body">
-					<div class="field">
-						<div class="control">
-							<input class="input" type="text" v-model="annotation.id" readonly tabindex="-1">
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="field is-horizontal annotation-input-text">
-				<div class="field-label">
-					<label class="label">Tagi do slides.com</label>
-				</div>
-				<div class="field-body" v-for="keyword in keywordsList" :key="keyword">
-					<div class="field">
-						<div class="control">
-							<wnl-keyword-field :tag-id="annotation.id" :tag-content="keyword" :show="annotation.id"/>
-						</div>
+						<p class="help">Lista słów kluczowych oddzielonych przecinkami</p>
 					</div>
 				</div>
 			</div>
@@ -60,16 +39,48 @@
 					</quill>
 				</div>
 			</div>
-			<fieldset class="question-form-fieldset">
-				<legend class="question-form-legend">Tagi</legend>
+			<fieldset class="annotation-tags">
+				<legend class="annotation-tags__legend">Tagi</legend>
 				<wnl-tags :defaultTags="annotation.tags || []" ref="tags"></wnl-tags>
 			</fieldset>
 			<div class="level-item">
+					<a class="button is-danger"
+						 :disabled="!annotation.id"
+						 @click="onDelete">Usuń
+					</a>
 					<a class="button is-primary"
 						 :disabled="form.errors.any() || !annotation.description"
 						 @click="onSubmit">Zapisz
 					</a>
 			</div>
+			<template v-if="annotation.id">
+				<span class="title is-5">Dane do slides.com</span>
+				<hr/>
+				<div class="field is-horizontal annotation-input-text">
+					<div class="field-label">
+						<label class="label">ID</label>
+					</div>
+					<div class="field-body">
+						<div class="field">
+							<div class="control">
+								<input class="input" type="text" v-model="annotation.id" readonly tabindex="-1">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="field is-horizontal annotation-input-text">
+					<div class="field-label">
+						<label class="label">Tagi do slides.com</label>
+					</div>
+					<div class="field-body" v-for="keyword in keywordsList" :key="keyword">
+						<div class="field">
+							<div class="control">
+								<wnl-keyword-field :tag-id="annotation.id" :tag-content="keyword" :show="annotation.id"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
 		</form>
 	</div>
 </template>
@@ -81,14 +92,7 @@
 		flex-basis: 80px
 		flex-grow: 0
 
-	.annotation-input-text
-		display: inline-flex
-		width: 500px
-		align-items: center
-
 	.annotation-input-description
-		border: $border-light-gray
-		height: 500px
 		margin: $margin-big 0
 
 	.copy-tag
@@ -97,15 +101,27 @@
 		&--success
 			color: $color-green;
 
-	.question-form-fieldset
+	.annotation-tags
 		border: $border-light-gray
 		padding: 10px 15px
 		margin: 15px 0
 
-	.question-form-legend
-		font-size: 1.25rem
+		&__legend
+			font-size: 1.25rem
+
+	.level-item
+		justify-content: flex-start
+		margin: $margin-big 0
+
+		.button
+				margin-right: $margin-base
 </style>
 
+<style lang="sass">
+	.annotations-editor
+		.quill-container
+			height: 500px
+</style>
 <script>
 	import {mapActions} from 'vuex';
 	import {set} from 'vue';
@@ -136,6 +152,10 @@
 			}
 		},
 		computed: {
+			title() {
+				return this.annotation.id ?
+					`Edycja Przypisu #${this.annotation.id}` : 'Nowy Przypis'
+			},
 			keywordsList() {
 				return (this.annotation.keywords || '').split(',')
 			},
@@ -165,6 +185,9 @@
 					text: "Zapisano!",
 					type: 'success'
 				})
+			},
+			async onDelete() {
+
 			}
 		},
 	}

@@ -12,11 +12,6 @@
 					<div class="annotation-item__header">
 						<div class="annotation-item__essentials">
 							<div class="annotation-item__essentials__id">
-								<span class="icon is-small">
-									<i class="toggle fa fa-angle-right"
-										:class="{'fa-rotate-90': isOpen(annotation)}">
-									</i>
-								</span>
 								{{annotation.id}}
 							</div>
 							<span class="icon is-small annotation-item__icon">
@@ -36,6 +31,11 @@
 								{{tag.name}}
 							</span>
 						</div>
+						<span class="icon is-small annotation-item__chevron">
+							<i class="toggle fa fa-angle-down"
+								 :class="{'fa-rotate-180': isOpen(annotation)}">
+							</i>
+						</span>
 					</div>
 					<div
 						class="annotation-item__description"
@@ -55,6 +55,7 @@
 		min-height: 35px
 		display: flex
 		margin: 10px 0 10px 0
+		cursor: pointer
 		.meta
 			margin: 5px
 			width: 100%
@@ -64,14 +65,10 @@
 				display: flex
 				.annotation-item__essentials
 					display: flex
-					align-items: center
 					justify-content: flex-start
 					flex: 0 1 auto
-					.annotation-item__essentials__id
+					&__id
 						margin-right: $margin-medium
-						display: flex
-						align-items: center
-						justify-content: flex-start
 					.annotation-item__icon
 						color: $color-ocean-blue
 						margin-right: $margin-medium
@@ -84,7 +81,6 @@
 					flex: 1 0 auto
 					flex-wrap: wrap
 					align-items: center
-					max-width: 60%
 					.tag
 						color: black
 						font-size: 0.8rem
@@ -94,6 +90,8 @@
 						max-width: 100%
 			.annotation-item__description
 				margin: $margin-medium
+			.annotation-item__chevron
+				align-self: flex-start
 
 	.isEven
 		background-color: $color-background-light-gray

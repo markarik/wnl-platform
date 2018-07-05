@@ -1,11 +1,14 @@
 <template>
-	<div class="quill-container">
-		<div ref="quill">
-			<slot></slot>
+	<div>
+		<div class="quill-container">
+			<div ref="quill">
+				<slot></slot>
+			</div>
 		</div>
 		<wnl-upload
-				@success="onUploadSuccess"
-				endpoint="upload"
+			@success="onUploadSuccess"
+			endpoint="upload"
+			class="upload"
 		>
 			<a class="button is-small is-outlined is-primary margin top">
 				Wstaff obraz
@@ -20,9 +23,9 @@
 
 	.quill-container
 		height: 50vh
+		margin-bottom: $margin-huge
 
 	.ql-editor
-
 		p
 			margin: $margin-base 0
 </style>
@@ -76,6 +79,7 @@
 		mounted () {
 			this.quill = new Quill(this.$refs.quill, this.options)
 			this.editor = this.$refs.quill.firstElementChild
+			if (this.value) this.editor.innerHTML = this.value
 			this.quill.on('text-change', this.onTextChange)
 		},
 		watch: {
@@ -84,7 +88,7 @@
 			},
 			value (newValue) {
 				if (newValue !== this.editor.innerHTML) {
-					this.editor.innerHTML = newValue
+					this.editor.innerHTML = newValue || ''
 				}
 			}
 		}

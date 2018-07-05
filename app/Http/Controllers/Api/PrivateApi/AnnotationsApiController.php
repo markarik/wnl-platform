@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AnnotationsApiController extends ApiController
 {
+	const AVAILABLE_FILTERS = [
+		'search'
+	];
+
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);

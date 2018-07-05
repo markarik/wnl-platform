@@ -25,7 +25,6 @@ class SearchFilter extends ApiFilter
 					],
 				],
 			]) ['hits']['hits'] ?? [];
-
 		$ids = [];
 		foreach ($results as $result) {
 			array_push($ids, $result['_source']['id']);

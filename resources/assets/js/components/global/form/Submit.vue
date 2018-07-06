@@ -23,8 +23,8 @@
 			 * properties. However, when it renders them - everything is in
 			 * place. That's why I used them in the template.
 			 */
-			modifiedAnnotationId() {
-				return this.getter('modifiedAnnotationId')
+			hasChanges() {
+				return this.getter('hasChanges')
 			},
 			anyErrors() {
 				return this.getter('anyErrors')

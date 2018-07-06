@@ -46,8 +46,8 @@
 			anyErrors() {
 				return this.getter('anyErrors')
 			},
-			modifiedAnnotationId() {
-				return this.getter('modifiedAnnotationId')
+			hasChanges() {
+				return this.getter('hasChanges')
 			},
 			submitEvent() {
 				return `submitForm-${this.name}`
@@ -83,7 +83,7 @@
 			onSubmitForm() {
 				const hasAttachChanged = this.hasAttachChanged();
 
-				if (!this.canSave(this.modifiedAnnotationId, hasAttachChanged)) {
+				if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 					return false
 				}
 

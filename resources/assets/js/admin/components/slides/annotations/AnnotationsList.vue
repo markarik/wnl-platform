@@ -1,5 +1,6 @@
 <template>
 	<div class="annotations-list">
+		<slot name="search"></slot>
 		<ul v-if="list">
 			<li
 				v-for="(annotation, index) in list"

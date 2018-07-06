@@ -13,6 +13,7 @@
     "axios": "^0.15.3",
     "brace": "^0.10.0",
     "bulma": "^0.4.1",
+    "bulma-checkradio": "^2.1.0",
     "emoji": "^0.3.2",
     "es6-tween": "^2.4.0",
     "flatpickr": "^3.0.7",

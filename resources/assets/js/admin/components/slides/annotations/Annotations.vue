@@ -18,7 +18,18 @@
 			@editSuccess="onEditSuccess"
 			@deleteSuccess="onDeleteSuccess"
 			@hasChanges="onEditorChange"
-		/>
+		>
+			<div class="search" slot="search">
+				<search @search="search"/>
+				<template v-if="searchPhrase">
+					<span>Aktualne wyszukiwanie:</span>
+					<span class="tag is-success">
+						{{searchPhrase}}
+						<button class="delete is-small" @click="clearSearch"></button>
+					</span>
+				</template>
+			</div>
+		</component>
 	</div>
 </template>
 <script>
@@ -27,9 +38,10 @@
 	import { getApiUrl } from 'js/utils/env'
 	import AnnotationsList from "./AnnotationsList";
 	import AnnotationsEditor from "./AnnotationsEditor";
+	import Search from "./Search";
 
 	export default {
-		components: {AnnotationsList, AnnotationsEditor},
+		components: {AnnotationsList, AnnotationsEditor, Search},
 		data() {
 			return {
 				tabs: {
@@ -46,7 +58,8 @@
 				},
 				activeAnnotation: {},
 				annotations: [],
-				modifiedAnnotationId: 0
+				modifiedAnnotationId: 0,
+				searchPhrase: '',
 			}
 		},
 		computed: {
@@ -58,6 +71,29 @@
 			},
 		},
 		methods: {
+			async search({phrase, fields}) {
+				this.searchPhrase = phrase
+
+				const annotationsResponse = await axios.post(getApiUrl('annotations/.filter'), {
+					active: [`search.${this.searchPhrase}`],
+					filters: [
+						{search: {phrase, fields}}
+					],
+					include: 'keywords,tags'
+				})
+
+				if (!annotationsResponse.data.total) {
+					this.annotations = [];
+					return;
+				}
+
+				this.annotations = this.serializeResponse(annotationsResponse.data)
+			},
+			async clearSearch() {
+				const annotationsResponse = await axios.get(getApiUrl('annotations/all'), {params: {include: 'tags,keywords'}})
+				this.searchPhrase = ''
+				this.annotations = this.serializeResponse(annotationsResponse);
+			},
 			changeTab(name) {
 				this.activeTab.active = false;
 				this.tabs[name].active = true;
@@ -119,27 +155,30 @@
 
 				const annotationIndex = this.annotations.findIndex(annotation => annotation.id === id)
 				this.annotations.splice(annotationIndex, 1)
+			},
+			serializeResponse({data}) {
+				const {included, ...annotations} = data;
+				const {tags, keywords} = included;
+
+				return Object.values(annotations).map(annotation => {
+					return {
+						...annotation,
+						tags: (annotation.tags || []).map(tagId => ({
+							id: tags[tagId].id,
+							name: tags[tagId].name,
+						})),
+						keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
+					}
+				})
 			}
 		},
 		async mounted() {
-			const {data} = await axios.get(getApiUrl('annotations/all'), {
-				params: {
-					include: 'tags,keywords'
-				}
-			});
-			const {included, ...annotations} = data;
-			const {tags, keywords} = included;
+			const [annotationsResponse, filtersListResponse] = await Promise.all([
+				axios.get(getApiUrl('annotations/all'), {params: {include: 'tags,keywords'}}),
+				axios.post(getApiUrl('annotations/.filterList'))
+			]);
 
-			this.annotations = Object.values(annotations).map(annotation => {
-				return {
-					...annotation,
-					tags: (annotation.tags || []).map(tagId => ({
-						id: tags[tagId].id,
-						name: tags[tagId].name,
-					})),
-					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
-				}
-			})
+			this.annotations = this.serializeResponse(annotationsResponse);
 		},
 		beforeRouteLeave(to, from, next) {
 			if (this.modifiedAnnotationId) {

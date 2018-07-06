@@ -12,8 +12,8 @@ class SearchFilter extends ApiFilter
 	{
 //		$this->checkIsSearchable($builder);
 		$model = $builder->getModel();
+		if (empty($this->params['fields'])) {
 		$count = (clone $builder)->count();
-		if (in_array('all', $this->params['fields']) || empty($this->params['fields'])) {
 			$fields = ['all_fields' => true];
 		} else {
 			$fields = ['fields' => $this->params['fields']];

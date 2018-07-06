@@ -29,19 +29,27 @@
 					</span>
 				</template>
 			</div>
+			<pagination v-if="paginationMeta.last_page > 1"
+				:currentPage="page"
+				:lastPage="paginationMeta.last_page"
+				@changePage="onPageChange"
+				slot="pagination"
+			/>
 		</component>
 	</div>
 </template>
 <script>
 	import axios from 'axios';
+	import {mapActions} from 'vuex'
 
 	import { getApiUrl } from 'js/utils/env'
 	import AnnotationsList from "./AnnotationsList";
 	import AnnotationsEditor from "./AnnotationsEditor";
+	import Pagination from "js/components/global/Pagination";
 	import Search from "./Search";
 
 	export default {
-		components: {AnnotationsList, AnnotationsEditor, Search},
+		components: {AnnotationsList, AnnotationsEditor, Search, Pagination},
 		data() {
 			return {
 				tabs: {
@@ -60,6 +68,11 @@
 				annotations: [],
 				modifiedAnnotationId: 0,
 				searchPhrase: '',
+				searchFields: [],
+				perPage: 24,
+				page: 1,
+				includes: 'keywords,tags',
+				paginationMeta: {}
 			}
 		},
 		computed: {
@@ -71,28 +84,19 @@
 			},
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
 			async search({phrase, fields}) {
+				this.page = 1
 				this.searchPhrase = phrase
+				this.searchFields = fields
 
-				const annotationsResponse = await axios.post(getApiUrl('annotations/.filter'), {
-					active: [`search.${this.searchPhrase}`],
-					filters: [
-						{search: {phrase, fields}}
-					],
-					include: 'keywords,tags'
-				})
-
-				if (!annotationsResponse.data.total) {
-					this.annotations = [];
-					return;
-				}
-
-				this.annotations = this.serializeResponse(annotationsResponse.data)
+				await this.fetchAnnotations('annotations/.filter', 'post')
 			},
 			async clearSearch() {
-				const annotationsResponse = await axios.get(getApiUrl('annotations/all'), {params: {include: 'tags,keywords'}})
 				this.searchPhrase = ''
-				this.annotations = this.serializeResponse(annotationsResponse);
+				this.searchFields = []
+				this.page = 1
+				await this.fetchAnnotations()
 			},
 			changeTab(name) {
 				this.activeTab.active = false;
@@ -107,6 +111,10 @@
 			},
 			onEditorChange(changedAnnotation) {
 				this.modifiedAnnotationId = changedAnnotation
+			},
+			async onPageChange(page) {
+				this.page = page
+				await this.fetchAnnotations()
 			},
 			onAnnotationSelect(annotation) {
 				if (this.modifiedAnnotationId && annotation.id !== this.modifiedAnnotationId) {
@@ -170,15 +178,45 @@
 						keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
 					}
 				})
-			}
+			},
+			getRequestParams() {
+				const params = {
+					include: this.includes,
+					limit: this.perPage,
+					page: this.page
+				}
+
+				if (this.searchPhrase) {
+					params.active = [`search.${this.searchPhrase}`]
+					params.filters = [{search: {phrase: this.searchPhrase, fields: this.searchFields}}]
+				}
+				return params
+			},
+			async fetchAnnotations(url = 'annotations/all', method = 'get') {
+				try {
+					const params = method === 'get' ? {
+						params: this.getRequestParams()
+					} : this.getRequestParams()
+					const annotationsResponse = await axios[method](getApiUrl(url), params)
+
+					const {data: response} = annotationsResponse
+					const {data, ...paginationMeta} = response
+					this.paginationMeta = paginationMeta
+					if (paginationMeta.total === 0) {
+						this.annotations = []
+					} else {
+						this.annotations = this.serializeResponse(response);
+					}
+				} catch (e) {
+					this.addAutoDismissableAlert({
+						text: "Ops, nie udało się pobrać przypisów. Odśwież stronę i spróbuj jeszcze raz",
+						type: 'error'
+					})
+				}
+			},
 		},
 		async mounted() {
-			const [annotationsResponse, filtersListResponse] = await Promise.all([
-				axios.get(getApiUrl('annotations/all'), {params: {include: 'tags,keywords'}}),
-				axios.post(getApiUrl('annotations/.filterList'))
-			]);
-
-			this.annotations = this.serializeResponse(annotationsResponse);
+			await this.fetchAnnotations()
 		},
 		beforeRouteLeave(to, from, next) {
 			if (this.modifiedAnnotationId) {

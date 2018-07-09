@@ -34,10 +34,17 @@
 				:lastPage="paginationMeta.last_page"
 				@changePage="onPageChange"
 				slot="pagination"
+				class="annotations__pagination"
 			/>
 		</component>
 	</div>
 </template>
+
+<style lang="sass">
+	.annotations__pagination .pagination-list
+		justify-content: flex-end
+</style>
+
 <script>
 	import axios from 'axios';
 	import {mapActions} from 'vuex'

@@ -2,7 +2,7 @@
 	<div class="annotations-list">
 		<slot name="search"></slot>
 		<slot name="pagination"/>
-		<ul v-if="list">
+		<ul v-if="list.length">
 			<li
 				v-for="(annotation, index) in list"
 				:key="annotation.id"
@@ -47,6 +47,9 @@
 					</div>
 			</li>
 		</ul>
+		<div v-else>
+			<span class="title is-6">Nic tu nie ma...</span>
+		</div>
 	</div>
 </template>
 

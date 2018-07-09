@@ -67,6 +67,7 @@ class AnnotationsApiController extends ApiController
 		}, $request->keywords);
 
 		$annotation->tags()->sync($tagIds);
+		$annotation->tags()->searchable();
 		$annotation->keywords()->delete();
 		$annotation->keywords()->saveMany($keywords);
 

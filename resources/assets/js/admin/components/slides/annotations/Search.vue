@@ -52,7 +52,7 @@
 					{value: 'id', title: 'ID'},
 					{value: 'title', title: 'Tytuł'},
 					{value: 'description', title: 'Treść'},
-					{value: 'tag', title: 'Nazwa Taga'},
+					{value: 'tags.name', title: 'Nazwa Taga'},
 				]
 			}
 		},

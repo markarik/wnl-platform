@@ -190,7 +190,9 @@
 				const params = {
 					include: this.includes,
 					limit: this.perPage,
-					page: this.page
+					page: this.page,
+					active: [],
+					filters: []
 				}
 
 				if (this.searchPhrase) {

@@ -14,7 +14,7 @@
 						<span class="annotation-item__header__item">
 							{{annotation.id}}
 						</span>
-						<span class="annotation-item__header__item">
+						<span class="annotation-item__header__item annotation-item__header__item--grow">
 							{{annotation.title}}
 						</span>
 						<div class="annotation-item__header__tags annotation-item__header__item">
@@ -68,6 +68,9 @@
 			display: flex
 			&__item
 				margin-right: $margin-base
+				flex: 0 1 auto
+				&--grow
+					flex-grow: 1
 				&:last-child
 					margin-right: 0
 				&--edit
@@ -84,13 +87,15 @@
 				display: flex
 				justify-content: flex-start
 				margin-left: $margin-big
-				flex: 1 0 auto
 				flex-wrap: wrap
 				align-items: center
+				max-width: 60%
 				.tag
 					color: black
 					font-size: 0.75rem
 					margin-right: 10px
+					margin-top: 5px
+					margin-bottom: 5px
 					padding: 5px 10px
 		&__description
 			margin: $margin-medium

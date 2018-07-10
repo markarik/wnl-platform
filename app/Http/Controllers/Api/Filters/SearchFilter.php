@@ -13,19 +13,22 @@ class SearchFilter extends ApiFilter
 //		$this->checkIsSearchable($builder);
 		$model = $builder->getModel();
 		$count = (clone $builder)->count();
+		if (empty($this->params['fields'])) {
+			$fields = ['all_fields' => true];
+		} else {
+			$fields = ['fields' => $this->params['fields']];
+		}
+		$query = array_merge(['query' => $this->params['phrase']], $fields);
+
 		$results = $model::searchRaw([
 				'body' => [
 					'_source' => ['id'],
 					'size' => $count,
 					'query'   => [
-						'query_string' => [
-							'query'      => $this->params['phrase'],
-							'all_fields' => true,
-						],
+						'query_string' => $query
 					],
 				],
 			]) ['hits']['hits'] ?? [];
-
 		$ids = [];
 		foreach ($results as $result) {
 			array_push($ids, $result['_source']['id']);

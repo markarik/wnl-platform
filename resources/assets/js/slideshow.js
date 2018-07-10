@@ -147,6 +147,12 @@ const setupHandshake = () => {
 
 			$annotationsContainer.append(createAnnotations(annotationsData))
 			$annotationsContainer.show()
+
+			$annotationsContainer.on('click', 'a', function(event) {
+				if (event.target.href) {
+					parent.emit('navigate', event.target.href)
+				}
+			})
 		},
 		setBookmarkState(isBookmarked) {
 			const bookmarkedClassname = 'is-bookmarked'

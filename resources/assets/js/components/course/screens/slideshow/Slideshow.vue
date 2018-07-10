@@ -410,6 +410,8 @@
 							this.onRefreshSlideshow()
 						}
 						this.modifiedSlides = {}
+					} else if (event.data.value.name === 'navigate') {
+						window.open(event.data.value.data)
 					}
 				}
 			},

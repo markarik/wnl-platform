@@ -2,7 +2,7 @@
 	<div>
 		<div class="field has-addons">
 			<div class="control">
-				<input class="input" v-model="searchPhrase" placeholder="szukaj przypisu..."/>
+				<input class="input" v-model="searchPhrase" placeholder="szukaj przypisu..." @keyup.enter="search"/>
 			</div>
 			<div class="control">
 				<a class="button is-primary" @click="search">

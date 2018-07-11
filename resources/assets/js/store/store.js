@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import vuexPerformance from 'js/plugins/vuex_performance'
+
 // Global mutations, actions and getters
 import mutations from 'js/store/mutations'
 import * as actions from 'js/store/actions'
@@ -33,6 +35,7 @@ export default new Vuex.Store({
 	state: {},
 	mutations,
 	actions,
+	plugins: [vuexPerformance],
 	modules: {
 		chat,
 		chatMessages,

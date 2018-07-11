@@ -168,10 +168,22 @@ const actions = {
 	...commentsActions,
 	...reactionsActions,
 	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
+		console.time('wnl/action/slideshow/setup');
 		return new Promise((resolve, reject) => {
+			console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions');
 			dispatch('setupPresentablesWithReactions', {id, type})
-				.then(() => dispatch('setupComments', getters.slidesIds))
-				.then(() => resolve())
+				.then(() => {
+					console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions');
+					console.time('wnl/action/slideshow/setup/setupComments');
+					return dispatch('setupComments', getters.slidesIds)
+				})
+				.then(() => {
+					console.timeEnd('wnl/action/slideshow/setup/setupComments');
+					return resolve()
+				})
+				.then(() => {
+					console.timeEnd('wnl/action/slideshow/setup');
+				})
 				.catch((reason) => reject(reason))
 		})
 	},

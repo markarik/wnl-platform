@@ -274,6 +274,7 @@
 				this.isFocused = this.iframe === document.activeElement
 			},
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
+				console.time('wnl/slideshow/initSlideshow');
 				this.toggleOverlay({source: 'slideshow', display: true})
 
 				this.setSortedSlidesIds(this.presentableSortedSlidesIds)
@@ -300,7 +301,7 @@
 						this.loaded = true
 						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 						this.toggleOverlay({source: 'slideshow', display: false})
-
+						console.timeEnd('wnl/slideshow/initSlideshow');
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
@@ -501,7 +502,6 @@
 						this.child.destroy()
 					}
 					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
-
 					this.setSlideshowHtmlContent(data)
 						.then(() => {
 							const slide = this.getSlideById(this.currentSlideId)

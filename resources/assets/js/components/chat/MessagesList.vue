@@ -129,14 +129,21 @@
 				})
 			},
 			pullDebouncer(event) {
-				let target = event.target,
-					height = target.scrollHeight,
-					shouldPull =
+				const scrollPosition = event.target.scrollTop < 0 ? event.target.scrollHeight + event.target.scrollTop : event.target.scrollTop
+				const target = event.target
+				const height = target.scrollHeight
+				const shouldPull =
 						// make sure we're not pulling from cold storage at the moment,
 						!this.isPulling &&
 						// we're reaching the top of the messages container,
-						(target.scrollTop / height) < 0.1 &&
+
+						(scrollPosition / height) < 0.1 &&
 						this.hasMore
+
+					console.log(scrollPosition, 'scrollPosition');
+					console.log(target.scrollTop, 'target.scrollTop');
+					console.log(height, 'height');
+					console.log(this.isPulling, 'isPulling');
 
 				if (shouldPull) this.pull()
 			},

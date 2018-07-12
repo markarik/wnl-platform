@@ -18,8 +18,11 @@ function _fetchReactables(presentables) {
 		},
 	}
 
+	console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/request')
 	return axios.post(getApiUrl('reactables/.search'), data)
 		.then(response => {
+			console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/request')
+			console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/process')
 			let bookmarked = {}
 			let watched = {}
 			response.data.forEach(reactable => {
@@ -27,7 +30,7 @@ function _fetchReactables(presentables) {
 				if (reactable.reaction_id === 5) watched[reactable.reactable_id] = reactable
 			})
 
-			return presentables.map(presentable => {
+			const mapped = presentables.map(presentable => {
 				let slideId = presentable.slide_id
 				presentable.bookmark = {
 					hasReacted: bookmarked.hasOwnProperty(slideId)
@@ -39,6 +42,9 @@ function _fetchReactables(presentables) {
 
 				return presentable
 			})
+
+			console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/process')
+			return mapped;
 		})
 }
 
@@ -58,7 +64,12 @@ function _fetchPresentables(slideshowId, type) {
 		},
 	}
 
+	console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchPresentables/request')
 	return axios.post(getApiUrl('presentables/.search'), data)
+		.then((data) => {
+			console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchPresentables/request')
+			return data
+		})
 }
 
 function getInitialState() {
@@ -143,15 +154,28 @@ const mutations = {
 		set(state, 'presentables', payload)
 	},
 	[types.SLIDESHOW_SET_SLIDES] (state, payload) {
-		_.each(state.presentables, (element, index) => {
-			set(state.slides, element.slide_id, {
-				order_number: element.order_number,
+		console.time(`wnl/mutation/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
+		const slides = {};
+		state.presentables.forEach(presentable => {
+			slides[presentable.slide_id] = {
+				order_number: presentable.order_number,
 				comments: [],
-				bookmark: element.bookmark,
-				watch: element.watch,
-				id: element.slide_id
-			})
-		})
+				bookmark: presentable.bookmark,
+				watch: presentable.watch,
+				id: presentable.slide_id
+			}
+		});
+		set(state, 'slides', slides)
+		// _.each(state.presentables, (element, index) => {
+		// 	set(state.slides, element.slide_id, {
+		// 		order_number: element.order_number,
+		// 		comments: [],
+		// 		bookmark: element.bookmark,
+		// 		watch: element.watch,
+		// 		id: element.slide_id
+		// 	})
+		// })
+		console.timeEnd(`wnl/mutation/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
 	},
 	[types.RESET_MODULE] (state) {
 		let initialState = getInitialState()
@@ -190,10 +214,14 @@ const actions = {
 	setupPresentablesWithReactions({commit}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
-				.then((response) => _fetchReactables(response.data))
+				.then((response) => {
+					return _fetchReactables(response.data)
+				})
 				.then((presentables) => {
+					console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/mutations');
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
+					console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/mutations');
 					return resolve()
 				})
 				.catch((error) => {

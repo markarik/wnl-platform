@@ -8,6 +8,7 @@ import { getModelByResource, modelToResourceMap } from 'js/utils/config'
 import {reactionsGetters, reactionsMutations, reactionsActions, convertToReactable} from 'js/store/modules/reactions'
 
 function _fetchComments(ids, model) {
+	console.time(`wnl/action/${model}/fetchComments/request`)
 	if (!model) {
 		return Promise.reject('Model not defined')
 	}
@@ -26,6 +27,10 @@ function _fetchComments(ids, model) {
 	}
 
 	return axios.post(getApiUrl('comments/.search'), data)
+		.then((data) => {
+			console.timeEnd(`wnl/action/${model}/fetchComments/request`)
+			return data;
+		})
 }
 
 function _resolveComment(id, status = true) {
@@ -172,6 +177,7 @@ export const commentsActions = {
 
 			_fetchComments(ids, model)
 				.then((response) => {
+					console.time(`wnl/action/${model}/fetchComments/process`)
 					if (!response.data.hasOwnProperty('included')) {
 						return resolve()
 					}
@@ -185,6 +191,7 @@ export const commentsActions = {
 					})
 					dispatch('comments/setComments', serializedComments, {root:true})
 
+					console.timeEnd(`wnl/action/${model}/fetchComments/process`)
 					resolve(response.data)
 				})
 				.catch((error) => {

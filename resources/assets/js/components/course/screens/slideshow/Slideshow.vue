@@ -277,15 +277,20 @@
 				console.time('wnl/slideshow/initSlideshow');
 				this.toggleOverlay({source: 'slideshow', display: true})
 
+				console.time('wnl/slideshow/initSlideshow/setSortedSlidesIds');
 				this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+				console.timeEnd('wnl/slideshow/initSlideshow/setSortedSlidesIds');
 
 				const postmateOptions = {
 					container: this.container,
 					url: slideshowUrl,
 				}
 
+				console.time('wnl/slideshow/initSlideshow/postmateHandshake');
 				return this.postmateHandshake(postmateOptions)
 					.then(child => {
+						console.timeEnd('wnl/slideshow/initSlideshow/postmateHandshake');
+						console.time('wnl/slideshow/initSlideshow/postmateHandshake/process');
 						if (this.$route.query.slide) {
 							const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
 							if (newSlideIndex > -1) {
@@ -301,6 +306,7 @@
 						this.loaded = true
 						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 						this.toggleOverlay({source: 'slideshow', display: false})
+						console.timeEnd('wnl/slideshow/initSlideshow/postmateHandshake/process');
 						console.timeEnd('wnl/slideshow/initSlideshow');
 					})
 					.catch(error => {

@@ -280,14 +280,26 @@ function setMenuListeners(parent) {
 		emitToggleFullscreen();
 	});
 	$toggleAnnotations.on('click', toggleAnnotations)
-	document.addEventListener('keydown', closeFullscreenWithEsc)
+	document.addEventListener('keydown', keyDown)
 	$slideshowAnnotations.click(() => false)
 	$(document).on('click', () => $slideshowAnnotations.hide())
 }
 
-function closeFullscreenWithEsc(e) {
+function keyDown(e) {
 	if (e.keyCode === 27) {
 		emitToggleFullscreen(false)
+	}
+	switch(e.keyCode) {
+		case 27: // esc
+			emitToggleFullscreen(false)
+			break
+		case 67: // c
+			toggleAnnotations()
+			break
+		case 83: // s
+			console.log('s');
+			setBookmarkState()
+			break
 	}
 }
 

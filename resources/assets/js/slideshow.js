@@ -9,6 +9,7 @@ import { timeFromS } from 'js/utils/time'
 imageviewer($, window, document)
 
 const container = document.getElementsByClassName('reveal')[0]
+const $revealContainer = $('.reveal')
 const $controls = $('.wnl-slideshow-control')
 const $chartsContainers = $('.slides').find('.iv-image-container')
 const $slideshowAnnotations = $('.slideshow-annotations')
@@ -182,7 +183,8 @@ const promisedChild = setupHandshake()
 		parent = parentWindow
 		parent.emit('loaded', true)
 		setMenuListeners(parent)
-		setBookmarkEventListener(parent)
+		setbookmarkClickListener(parent)
+		setBookmarkKeyListener(parent)
 	}).catch(exception => {
 		console.error(exception)
 		parent.emit('error')
@@ -286,9 +288,6 @@ function setMenuListeners(parent) {
 }
 
 function keyDown(e) {
-	if (e.keyCode === 27) {
-		emitToggleFullscreen(false)
-	}
 	switch(e.keyCode) {
 		case 27: // esc
 			emitToggleFullscreen(false)
@@ -296,14 +295,23 @@ function keyDown(e) {
 		case 67: // c
 			toggleAnnotations()
 			break
-		case 83: // s
-			console.log('s');
-			setBookmarkState()
-			break
-	}
+	};
 }
 
-function setBookmarkEventListener(parent) {
+function setBookmarkKeyListener(parent) {
+	document.addEventListener('keydown', function(event) {
+		if (event.keyCode === 83) {
+			if (isSavingBookmark) return
+
+			isSavingBookmark = true;
+			parent.emit('bookmark', {
+				index: Reveal.getState().indexh,
+			});
+		};
+	});
+}
+
+function setbookmarkClickListener(parent) {
 	$('.bookmark').click(function (event) {
 		if (isSavingBookmark) return
 

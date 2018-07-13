@@ -22,7 +22,6 @@ function _fetchReactables(presentables) {
 	return axios.post(getApiUrl('reactables/.search'), data)
 		.then(response => {
 			console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/request')
-			console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/process')
 			let bookmarked = {}
 			let watched = {}
 			response.data.forEach(reactable => {
@@ -30,7 +29,7 @@ function _fetchReactables(presentables) {
 				if (reactable.reaction_id === 5) watched[reactable.reactable_id] = reactable
 			})
 
-			const mapped = presentables.map(presentable => {
+			return presentables.map(presentable => {
 				let slideId = presentable.slide_id
 				presentable.bookmark = {
 					hasReacted: bookmarked.hasOwnProperty(slideId)
@@ -41,10 +40,7 @@ function _fetchReactables(presentables) {
 				}
 
 				return presentable
-			})
-
-			console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/process')
-			return mapped;
+			});
 		})
 }
 
@@ -153,29 +149,20 @@ const mutations = {
 	[types.SLIDESHOW_SET_PRESENTABLES] (state, payload) {
 		set(state, 'presentables', payload)
 	},
-	[types.SLIDESHOW_SET_SLIDES] (state, payload) {
-		console.time(`wnl/mutation/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
+	[types.SLIDESHOW_SET_SLIDES] (state) {
+		console.time(`wnl/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
 		const slides = {};
 		state.presentables.forEach(presentable => {
 			slides[presentable.slide_id] = {
 				order_number: presentable.order_number,
-				comments: [],
 				bookmark: presentable.bookmark,
 				watch: presentable.watch,
 				id: presentable.slide_id
 			}
 		});
-		set(state, 'slides', slides)
-		// _.each(state.presentables, (element, index) => {
-		// 	set(state.slides, element.slide_id, {
-		// 		order_number: element.order_number,
-		// 		comments: [],
-		// 		bookmark: element.bookmark,
-		// 		watch: element.watch,
-		// 		id: element.slide_id
-		// 	})
-		// })
-		console.timeEnd(`wnl/mutation/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
+
+		setSlidesV2(state, slides);
+		console.timeEnd(`wnl/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
 	},
 	[types.RESET_MODULE] (state) {
 		let initialState = getInitialState()
@@ -185,6 +172,27 @@ const mutations = {
 	},
 	[types.SLIDESHOW_SET_SORTED_SLIDES_IDS] (state, ids) {
 		set(state, 'sortedSlidesIds', ids)
+	},
+	[types.SLIDESHOW_SET_COMMENTS](state, comments) {
+		console.time(`wnl/mutations/setComments/v2`)
+		const slides = {...state.slides};
+
+		const commentsBySlides = {};
+
+		Object.values(comments).forEach((comment) => {
+			if(commentsBySlides[comment.commentable_id]) {
+				commentsBySlides[comment.commentable_id].push(comment.id)
+			} else {
+				commentsBySlides[comment.commentable_id] = [comment.id]
+			}
+		})
+
+		Object.keys(commentsBySlides).forEach(slideId => {
+			slides[slideId].comments = commentsBySlides[slideId]
+		})
+
+		set(state, 'slides', slides);
+		console.timeEnd(`wnl/mutations/setComments/v2`)
 	}
 }
 
@@ -194,19 +202,14 @@ const actions = {
 	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
 		console.time('wnl/action/slideshow/setup');
 		return new Promise((resolve, reject) => {
-			console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions');
 			dispatch('setupPresentablesWithReactions', {id, type})
 				.then(() => {
-					console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions');
-					console.time('wnl/action/slideshow/setup/setupComments');
-					return dispatch('setupComments', getters.slidesIds)
-				})
-				.then(() => {
-					console.timeEnd('wnl/action/slideshow/setup/setupComments');
-					return resolve()
+					return dispatch('setupSlideshowCommentsV2', getters.slidesIds)
+					// return dispatch('setupSlideshowComments', getters.slidesIds)
 				})
 				.then(() => {
 					console.timeEnd('wnl/action/slideshow/setup');
+					return resolve()
 				})
 				.catch((reason) => reject(reason))
 		})
@@ -218,10 +221,8 @@ const actions = {
 					return _fetchReactables(response.data)
 				})
 				.then((presentables) => {
-					console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/mutations');
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
-					console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/mutations');
 					return resolve()
 				})
 				.catch((error) => {
@@ -244,10 +245,25 @@ const actions = {
 				})
 		})
 	},
-	setupComments({commit, dispatch}, slidesIds) {
-		return dispatch('fetchComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
-			.then(() => commit(types.IS_LOADING, false))
+	setupSlideshowComments({commit, dispatch}, slidesIds) {
+		console.time('wnl/slideshow/setupSlideshowComments')
+		return dispatch('setupComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
+			.then(() => {
+				console.timeEnd('wnl/slideshow/setupSlideshowComments')
+				return commit(types.IS_LOADING, false)
+			})
 			.catch(() => commit(types.IS_LOADING, false))
+	},
+	async setupSlideshowCommentsV2({commit, dispatch}, slidesIds) {
+		console.time('wnl/slideshow/setupSlideshowComments/v2')
+		try {
+			const commentables = await dispatch('fetchComments', {ids: slidesIds, model: "App\\Models\\Slide"})
+			commit(types.SLIDESHOW_SET_COMMENTS, commentables);
+			commit(types.IS_LOADING, false)
+		} catch (e) {
+			commit(types.IS_LOADING, false)
+		}
+		console.timeEnd('wnl/slideshow/setupSlideshowComments/v2')
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)
@@ -255,6 +271,26 @@ const actions = {
 	setSortedSlidesIds({commit}, ids) {
 		commit(types.SLIDESHOW_SET_SORTED_SLIDES_IDS, ids)
 	}
+}
+
+const setSlidesV1 = (state) => {
+	console.time('wnl/MUTATIONS/SET_SLIDES/v1')
+	_.each(state.presentables, (element) => {
+		set(state.slides, element.slide_id, {
+			order_number: element.order_number,
+			comments: [],
+			bookmark: element.bookmark,
+			watch: element.watch,
+			id: element.slide_id
+		})
+	})
+	console.timeEnd('wnl/MUTATIONS/SET_SLIDES/v1')
+};
+
+const setSlidesV2 = (state, slides) => {
+	console.time('wnl/MUTATIONS/SET_SLIDES/v2')
+	set(state, 'slides', slides)
+	console.timeEnd('wnl/MUTATIONS/SET_SLIDES/v2')
 }
 
 export default {

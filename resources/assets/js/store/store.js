@@ -35,7 +35,6 @@ export default new Vuex.Store({
 	state: {},
 	mutations,
 	actions,
-	plugins: [vuexPerformance],
 	modules: {
 		chat,
 		chatMessages,

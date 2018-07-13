@@ -107,18 +107,13 @@ export const commentsMutations = {
 		set(state.comments, payload.id, {...comment, resolved: false})
 		set(state[resource][resourceId], 'comments', comments)
 	},
-	[types.SET_COMMENTS] (state, payload) {
-		set(state, 'profiles', payload.included.profiles)
-		destroy(payload, 'included')
-
-		const commentsState = {}
+	[types.SET_COMMENTABLE_COMMENTS] (state, comments) {
+		console.time(`wnl/mutations/setComments/v1`)
 		const commentsResourceObj = {};
 
-		_.each(payload, (comment, index) => {
+		_.each(comments, (comment) => {
 			let resource = modelToResourceMap[comment.commentable_type],
 				resourceId = comment.commentable_id
-
-			commentsState[comment.id] = comment;
 
 			if (!commentsResourceObj[resource]) {
 				commentsResourceObj[resource] = {}
@@ -140,11 +135,16 @@ export const commentsMutations = {
 				state[resource][resourceId].comments = Object.keys(commentsResourceObj[resource][resourceId])
 			})
 		})
-		set(state, 'comments', commentsState);
+		console.timeEnd(`wnl/mutations/setComments/v1`)
 	},
-	[types.SET_COMMENTS_RAW] (state, payload) {
+	[types.SET_COMMENTS] (state, payload) {
 		set(state, 'comments', {
 			...state.comments, ...payload
+		})
+	},
+	[types.SET_COMMENTS_PROFILES] (state, payload) {
+		set(state, 'profiles', {
+			...state.profiles, ...payload
 		})
 	}
 }
@@ -169,36 +169,39 @@ export const commentsActions = {
 			.then(() => commit(types.UNRESOLVE_COMMENT, payload))
 	},
 	setComments({commit}, {included, ...comments}) {
-		commit(types.SET_COMMENTS_RAW, comments)
+		commit(types.SET_COMMENTS, comments)
 	},
-	fetchComments({commit, dispatch}, {ids, resource}) {
-		return new Promise((resolve, reject) => {
-			const model = getModelByResource(resource)
+	setProfiles({commit}, payload) {
+		commit(types.SET_COMMENTS_PROFILES, payload)
+	},
+	async setupComments({commit, dispatch}, {ids, resource}) {
+		const model = getModelByResource(resource)
+		try {
+			const comments = await dispatch('fetchComments', {ids, model})
+			commit(types.SET_COMMENTABLE_COMMENTS, comments)
+		} catch (e) {
+			$wnl.logger.error(error)
+		}
+	},
+	async fetchComments({commit, dispatch}, {ids, model}) {
+		const response = await _fetchComments(ids, model)
+		if (!response.data.hasOwnProperty('included')) {
+			return
+		}
 
-			_fetchComments(ids, model)
-				.then((response) => {
-					console.time(`wnl/action/${model}/fetchComments/process`)
-					if (!response.data.hasOwnProperty('included')) {
-						return resolve()
-					}
-
-					commit(types.SET_COMMENTS, response.data)
-
-					const {included, ...comments} = response.data
-					const serializedComments = {};
-					Object.values(comments).map(comment => {
-						serializedComments[comment.id] = comment
-					})
-					dispatch('comments/setComments', serializedComments, {root:true})
-
-					console.timeEnd(`wnl/action/${model}/fetchComments/process`)
-					resolve(response.data)
-				})
-				.catch((error) => {
-					$wnl.logger.error(error)
-					reject()
-				})
+		const {included, ...comments} = response.data
+		const serializedComments = {};
+		Object.values(comments).map(comment => {
+			serializedComments[comment.id] = comment
 		})
+
+		commit(types.SET_COMMENTS_PROFILES, included.profiles)
+		commit(types.SET_COMMENTS, serializedComments)
+		dispatch('comments/setComments', serializedComments, {
+			root: true
+		})
+
+		return comments
 	}
 }
 

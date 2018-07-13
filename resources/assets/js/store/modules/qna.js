@@ -117,9 +117,9 @@ function getInitialState() {
 		comments: {},
 		profiles: {},
 		tags: {},
-        config: {
-            highlighted: {}
-        },
+				config: {
+						highlighted: {}
+				},
 	}
 }
 
@@ -440,12 +440,12 @@ const actions = {
 	},
 	destroyQna({commit, dispatch}) {
 		commit(types.QNA_DESTROY)
-    },
-    setUserQnaQuestions({commit, dispatch}, {included, ...qnaQuestions}) {
+	},
+	setUserQnaQuestions({commit, dispatch}, {included, ...qnaQuestions}) {
 		commit(types.QNA_SET_QUESTIONS, qnaQuestions)
 		commit(types.UPDATE_INCLUDED, included)
 		included && included.comments && dispatch('comments/setComments', included.comments, {root:true})
-    },
+	},
 }
 
 export default {

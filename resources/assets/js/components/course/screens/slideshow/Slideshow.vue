@@ -24,13 +24,19 @@
 			</div>
 			<div class="slideshow-menu">
 				<wnl-annotations
-					v-if="!isLoading"
+					v-if="!isLoadingComments"
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
 					:screenId="Number(screenId)"
 					:currentSlideId="currentSlideId"
 				></wnl-annotations>
+				<div v-else class="loading-comments">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-circle-o-notch fa-spin"></i>
+					</span>
+					Ładuję komentarze
+				</div>
 			</div>
 		</div>
 	</div>
@@ -107,6 +113,9 @@
 
 	.slide-meta
 		text-align: center
+
+	.loading-comments
+		color: $color-gray-dimmed
 </style>
 
 <script>
@@ -143,7 +152,7 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
-				modifiedSlides: {}
+				modifiedSlides: {},
 			}
 		},
 		props: {
@@ -175,7 +184,8 @@
 				'getSlidePositionById',
 				'getSlideIdFromIndex',
 				'getSlideById',
-				'presentableSortedSlidesIds'
+				'presentableSortedSlidesIds',
+				'isLoadingComments'
 			]),
 			currentSlideIndex() {
 				 return this.currentSlideNumber - 1
@@ -202,7 +212,7 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideshowComments']),
 			...mapActions(['toggleOverlay', 'showNotification']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
@@ -277,20 +287,15 @@
 				console.time('wnl/slideshow/initSlideshow');
 				this.toggleOverlay({source: 'slideshow', display: true})
 
-				console.time('wnl/slideshow/initSlideshow/setSortedSlidesIds');
 				this.setSortedSlidesIds(this.presentableSortedSlidesIds)
-				console.timeEnd('wnl/slideshow/initSlideshow/setSortedSlidesIds');
 
 				const postmateOptions = {
 					container: this.container,
 					url: slideshowUrl,
 				}
 
-				console.time('wnl/slideshow/initSlideshow/postmateHandshake');
 				return this.postmateHandshake(postmateOptions)
 					.then(child => {
-						console.timeEnd('wnl/slideshow/initSlideshow/postmateHandshake');
-						console.time('wnl/slideshow/initSlideshow/postmateHandshake/process');
 						if (this.$route.query.slide) {
 							const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
 							if (newSlideIndex > -1) {
@@ -306,8 +311,6 @@
 						this.loaded = true
 						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 						this.toggleOverlay({source: 'slideshow', display: false})
-						console.timeEnd('wnl/slideshow/initSlideshow/postmateHandshake/process');
-						console.timeEnd('wnl/slideshow/initSlideshow');
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
@@ -347,11 +350,6 @@
 							this.child = child
 							this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
 							this.setEventListeners()
-							this.onAnnotationsUpdated(this.comments({
-								resource: 'slides',
-								id: this.getSlideIdFromIndex(this.currentSlideIndex),
-							}))
-
 							child.frame.setAttribute('mozallowfullscreen', '');
 							child.frame.setAttribute('allowfullscreen', '');
 
@@ -547,6 +545,8 @@
 				this.setup({id: this.presentableId})
 					.then(() => {
 						return this.initSlideshow()
+					}).then(() => {
+						this.setupSlideshowComments(this.presentableSortedSlidesIds);
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
@@ -612,10 +612,17 @@
 						this.initSlideshow()
 							.then(() => {
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
-							}).catch(error => {
-								this.toggleOverlay({source: 'slideshow', display: false})
-								$wnl.logger.capture(error)
-							})
+							}).then(() => {
+								this.setupSlideshowComments(this.presentableSortedSlidesIds);
+							}).then(() => {
+							this.onAnnotationsUpdated(this.comments({
+								resource: 'slides',
+								id: this.getSlideIdFromIndex(this.currentSlideIndex),
+							}))
+						}).catch(error => {
+							this.toggleOverlay({source: 'slideshow', display: false})
+							$wnl.logger.capture(error)
+						})
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
@@ -624,6 +631,14 @@
 			},
 			'slideOrderNumber' (slideOrderNumber) {
 				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)
+			},
+			isLoadingComments(isLoadingComments) {
+				if (!isLoadingComments) {
+					this.onAnnotationsUpdated(this.comments({
+						resource: 'slides',
+						id: this.getSlideIdFromIndex(this.currentSlideIndex),
+					}))
+				}
 			}
 		}
 	}

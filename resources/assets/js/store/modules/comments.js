@@ -108,7 +108,6 @@ export const commentsMutations = {
 		set(state[resource][resourceId], 'comments', comments)
 	},
 	[types.SET_COMMENTABLE_COMMENTS] (state, comments) {
-		console.time(`wnl/mutations/setComments/v1`)
 		const commentsResourceObj = {};
 
 		_.each(comments, (comment) => {
@@ -135,7 +134,6 @@ export const commentsMutations = {
 				state[resource][resourceId].comments = Object.keys(commentsResourceObj[resource][resourceId])
 			})
 		})
-		console.timeEnd(`wnl/mutations/setComments/v1`)
 	},
 	[types.SET_COMMENTS] (state, payload) {
 		set(state, 'comments', {

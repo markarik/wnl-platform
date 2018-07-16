@@ -60,10 +60,8 @@ function _fetchPresentables(slideshowId, type) {
 		},
 	}
 
-	console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchPresentables/request')
 	return axios.post(getApiUrl('presentables/.search'), data)
 		.then((data) => {
-			console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchPresentables/request')
 			return data
 		})
 }
@@ -94,7 +92,8 @@ function getInitialState() {
 			 * }
 			 */
 		},
-		sortedSlidesIds: []
+		sortedSlidesIds: [],
+		loadingComments: true
 	}
 }
 
@@ -113,6 +112,7 @@ const getters = {
 		return state.presentables[slideNumber - 1].is_functional
 	},
 	isLoading: (state) => state.loading,
+	isLoadingComments: state => state.loadingComments,
 	slides: (state) => state.slides,
 	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
 	slidesIds: (state) => Object.keys(state.slides),
@@ -173,26 +173,8 @@ const mutations = {
 	[types.SLIDESHOW_SET_SORTED_SLIDES_IDS] (state, ids) {
 		set(state, 'sortedSlidesIds', ids)
 	},
-	[types.SLIDESHOW_SET_COMMENTS](state, comments) {
-		console.time(`wnl/mutations/setComments/v2`)
-		const slides = {...state.slides};
-
-		const commentsBySlides = {};
-
-		Object.values(comments).forEach((comment) => {
-			if(commentsBySlides[comment.commentable_id]) {
-				commentsBySlides[comment.commentable_id].push(comment.id)
-			} else {
-				commentsBySlides[comment.commentable_id] = [comment.id]
-			}
-		})
-
-		Object.keys(commentsBySlides).forEach(slideId => {
-			slides[slideId].comments = commentsBySlides[slideId]
-		})
-
-		set(state, 'slides', slides);
-		console.timeEnd(`wnl/mutations/setComments/v2`)
+	[types.SLIDESHOW_LOADING_COMMENTS] (state, status) {
+		set(state, 'loadingComments', status)
 	}
 }
 
@@ -203,10 +185,9 @@ const actions = {
 		console.time('wnl/action/slideshow/setup');
 		return new Promise((resolve, reject) => {
 			dispatch('setupPresentablesWithReactions', {id, type})
-				.then(() => {
-					return dispatch('setupSlideshowCommentsV2', getters.slidesIds)
-					// return dispatch('setupSlideshowComments', getters.slidesIds)
-				})
+				// .then(() => {
+				// 	return dispatch('setupSlideshowComments', getters.slidesIds)
+				// })
 				.then(() => {
 					console.timeEnd('wnl/action/slideshow/setup');
 					return resolve()
@@ -246,24 +227,13 @@ const actions = {
 		})
 	},
 	setupSlideshowComments({commit, dispatch}, slidesIds) {
-		console.time('wnl/slideshow/setupSlideshowComments')
+		commit(types.SLIDESHOW_LOADING_COMMENTS, true)
+		console.log(slidesIds, '********************8');
 		return dispatch('setupComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
 			.then(() => {
-				console.timeEnd('wnl/slideshow/setupSlideshowComments')
-				return commit(types.IS_LOADING, false)
+				commit(types.SLIDESHOW_LOADING_COMMENTS, false)
 			})
-			.catch(() => commit(types.IS_LOADING, false))
-	},
-	async setupSlideshowCommentsV2({commit, dispatch}, slidesIds) {
-		console.time('wnl/slideshow/setupSlideshowComments/v2')
-		try {
-			const commentables = await dispatch('fetchComments', {ids: slidesIds, model: "App\\Models\\Slide"})
-			commit(types.SLIDESHOW_SET_COMMENTS, commentables);
-			commit(types.IS_LOADING, false)
-		} catch (e) {
-			commit(types.IS_LOADING, false)
-		}
-		console.timeEnd('wnl/slideshow/setupSlideshowComments/v2')
+			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false))
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)
@@ -272,20 +242,6 @@ const actions = {
 		commit(types.SLIDESHOW_SET_SORTED_SLIDES_IDS, ids)
 	}
 }
-
-const setSlidesV1 = (state) => {
-	console.time('wnl/MUTATIONS/SET_SLIDES/v1')
-	_.each(state.presentables, (element) => {
-		set(state.slides, element.slide_id, {
-			order_number: element.order_number,
-			comments: [],
-			bookmark: element.bookmark,
-			watch: element.watch,
-			id: element.slide_id
-		})
-	})
-	console.timeEnd('wnl/MUTATIONS/SET_SLIDES/v1')
-};
 
 const setSlidesV2 = (state, slides) => {
 	console.time('wnl/MUTATIONS/SET_SLIDES/v2')

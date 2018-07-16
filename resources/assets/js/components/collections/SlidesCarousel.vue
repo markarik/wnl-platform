@@ -190,7 +190,7 @@
 		computed: {
 			...mapGetters('collections', ['slidesContent', 'getSlidesIdsForCategory']),
 			...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
-			...mapGetters('slideshow', ['presentableSortedSlidesIds', 'slideshowSortedSlideIds']),
+			...mapGetters('slideshow', ['presentableSortedSlidesIds']),
 			slides() {
 				return this.slidesContent.map((slide) => ({
 					header: slide.snippet.header,
@@ -226,7 +226,7 @@
 		},
 		methods: {
 			...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection', 'fetchReactions', 'fetchSlidesByTagName']),
-			...mapActions('slideshow', ['setSortedSlidesIds','setup']),
+			...mapActions('slideshow', ['setSortedSlidesIds','setup', 'setupSlideshowComments']),
 			...mapActions(['toggleOverlay']),
 			showSlide(index) {
 				if (this.selectedSlideIndex === index) {
@@ -322,7 +322,8 @@
 				this.setup({id: this.categoryId, type: this.presentableType})
 					.then(() => this.showContent(this.contentModes.bookmark))
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
-					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+					.then(() => this.setupSlideshowComments(this.presentableSortedSlidesIds))
+          .catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 			},
 			onRefreshSlideshow() {
 				this.toggleOverlay({source: 'collection-slideshow', display: true})
@@ -330,6 +331,7 @@
 				this.setup({id: this.categoryId, type: this.presentableType})
 					.then(() => this.showContent(this.mode, true))
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+					.then(() => this.setupSlideshowComments(this.presentableSortedSlidesIds))
 					.catch(() => {
 						this.loadedHtmlContents[this.mode] = ''
 						this.htmlContent = this.loadedHtmlContents[this.mode]

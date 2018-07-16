@@ -9,7 +9,6 @@ import { timeFromS } from 'js/utils/time'
 imageviewer($, window, document)
 
 const container = document.getElementsByClassName('reveal')[0]
-const $revealContainer = $('.reveal')
 const $controls = $('.wnl-slideshow-control')
 const $chartsContainers = $('.slides').find('.iv-image-container')
 const $slideshowAnnotations = $('.slideshow-annotations')
@@ -301,24 +300,23 @@ function keyDown(e) {
 function setBookmarkKeyListener(parent) {
 	document.addEventListener('keydown', function(event) {
 		if (event.keyCode === 83) {
-			if (isSavingBookmark) return
-
-			isSavingBookmark = true;
-			parent.emit('bookmark', {
-				index: Reveal.getState().indexh,
-			});
+			toggleBookmark(parent)
 		};
 	});
 }
 
 function setbookmarkClickListener(parent) {
 	$('.bookmark').click(function (event) {
-		if (isSavingBookmark) return
+		toggleBookmark(parent)
+	});
+}
 
-		isSavingBookmark = true;
-		parent.emit('bookmark', {
-			index: Reveal.getState().indexh,
-		});
+function toggleBookmark(parent) {
+	if (isSavingBookmark) return
+
+	isSavingBookmark = true;
+	parent.emit('bookmark', {
+		index: Reveal.getState().indexh,
 	});
 }
 

@@ -284,7 +284,6 @@
 				this.isFocused = this.iframe === document.activeElement
 			},
 			initSlideshow(slideshowUrl = this.slideshowUrl) {
-				console.time('wnl/slideshow/initSlideshow');
 				this.toggleOverlay({source: 'slideshow', display: true})
 
 				this.setSortedSlidesIds(this.presentableSortedSlidesIds)
@@ -614,15 +613,10 @@
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
 							}).then(() => {
 								this.setupSlideshowComments(this.presentableSortedSlidesIds);
-							}).then(() => {
-							this.onAnnotationsUpdated(this.comments({
-								resource: 'slides',
-								id: this.getSlideIdFromIndex(this.currentSlideIndex),
-							}))
-						}).catch(error => {
-							this.toggleOverlay({source: 'slideshow', display: false})
-							$wnl.logger.capture(error)
-						})
+							}).catch(error => {
+								this.toggleOverlay({source: 'slideshow', display: false})
+								$wnl.logger.capture(error)
+							})
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)

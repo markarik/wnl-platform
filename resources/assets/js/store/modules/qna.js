@@ -117,9 +117,9 @@ function getInitialState() {
 		comments: {},
 		profiles: {},
 		tags: {},
-				config: {
-						highlighted: {}
-				},
+		config: {
+			highlighted: {}
+		},
 	}
 }
 

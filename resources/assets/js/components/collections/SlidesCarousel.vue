@@ -241,9 +241,6 @@
 					this.removeSlideFromCollection(slideId)
 				}
 			},
-			mediaIcon(mediaType) {
-				return this.mediaMap[mediaType].icon
-			},
 			getSlideOrderNumberFromIndex(index) {
 				const selectedSlide = this.sortedSlides[index]
 
@@ -323,7 +320,7 @@
 					.then(() => this.showContent(this.contentModes.bookmark))
 					.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 					.then(() => this.setupSlideshowComments(this.presentableSortedSlidesIds))
-          .catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+					.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
 			},
 			onRefreshSlideshow() {
 				this.toggleOverlay({source: 'collection-slideshow', display: true})

@@ -18,10 +18,8 @@ function _fetchReactables(presentables) {
 		},
 	}
 
-	console.time('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/request')
 	return axios.post(getApiUrl('reactables/.search'), data)
 		.then(response => {
-			console.timeEnd('wnl/action/slideshow/setup/setupPresentablesWithReactions/fetchReactables/request')
 			let bookmarked = {}
 			let watched = {}
 			response.data.forEach(reactable => {
@@ -61,9 +59,6 @@ function _fetchPresentables(slideshowId, type) {
 	}
 
 	return axios.post(getApiUrl('presentables/.search'), data)
-		.then((data) => {
-			return data
-		})
 }
 
 function getInitialState() {
@@ -150,7 +145,6 @@ const mutations = {
 		set(state, 'presentables', payload)
 	},
 	[types.SLIDESHOW_SET_SLIDES] (state) {
-		console.time(`wnl/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
 		const slides = {};
 		state.presentables.forEach(presentable => {
 			slides[presentable.slide_id] = {
@@ -161,8 +155,7 @@ const mutations = {
 			}
 		});
 
-		setSlidesV2(state, slides);
-		console.timeEnd(`wnl/slideshow/${types.SLIDESHOW_SET_SLIDES}`);
+		set(state, 'slides', slides)
 	},
 	[types.RESET_MODULE] (state) {
 		let initialState = getInitialState()
@@ -182,25 +175,16 @@ const actions = {
 	...commentsActions,
 	...reactionsActions,
 	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
-		console.time('wnl/action/slideshow/setup');
 		return new Promise((resolve, reject) => {
 			dispatch('setupPresentablesWithReactions', {id, type})
-				// .then(() => {
-				// 	return dispatch('setupSlideshowComments', getters.slidesIds)
-				// })
-				.then(() => {
-					console.timeEnd('wnl/action/slideshow/setup');
-					return resolve()
-				})
+				.then(resolve)
 				.catch((reason) => reject(reason))
 		})
 	},
 	setupPresentablesWithReactions({commit}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
-				.then((response) => {
-					return _fetchReactables(response.data)
-				})
+				.then((response) => _fetchReactables(response.data))
 				.then((presentables) => {
 					commit(types.SLIDESHOW_SET_PRESENTABLES, presentables)
 					commit(types.SLIDESHOW_SET_SLIDES)
@@ -228,7 +212,6 @@ const actions = {
 	},
 	setupSlideshowComments({commit, dispatch}, slidesIds) {
 		commit(types.SLIDESHOW_LOADING_COMMENTS, true)
-		console.log(slidesIds, '********************8');
 		return dispatch('setupComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
 			.then(() => {
 				commit(types.SLIDESHOW_LOADING_COMMENTS, false)
@@ -241,12 +224,6 @@ const actions = {
 	setSortedSlidesIds({commit}, ids) {
 		commit(types.SLIDESHOW_SET_SORTED_SLIDES_IDS, ids)
 	}
-}
-
-const setSlidesV2 = (state, slides) => {
-	console.time('wnl/MUTATIONS/SET_SLIDES/v2')
-	set(state, 'slides', slides)
-	console.timeEnd('wnl/MUTATIONS/SET_SLIDES/v2')
 }
 
 export default {

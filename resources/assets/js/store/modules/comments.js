@@ -176,7 +176,7 @@ export const commentsActions = {
 			const comments = await dispatch('fetchComments', {ids, model})
 			commit(types.SET_COMMENTABLE_COMMENTS, comments)
 		} catch (e) {
-			$wnl.logger.error(error)
+			$wnl.logger.error(e)
 		}
 	},
 	async fetchComments({commit, dispatch}, {ids, model}) {

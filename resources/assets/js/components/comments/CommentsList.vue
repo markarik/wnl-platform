@@ -194,7 +194,7 @@
 				})
 			},
 			refresh() {
-				return this.action('fetchComments', {
+				return this.action('setupComments', {
 					resource: this.commentableResource,
 					ids: [this.commentableId]
 				})

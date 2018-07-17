@@ -36,7 +36,7 @@ html, body {
 
 html {
 	// Scrollbars
-	@include scrollbar(20px, $color-light-gray);
+	@include scrollbar(10px, $color-light-gray);
 	@include scrollbar-body($color-light-gray);
 }
 

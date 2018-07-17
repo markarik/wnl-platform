@@ -182,7 +182,7 @@ const promisedChild = setupHandshake()
 		parent = parentWindow
 		parent.emit('loaded', true)
 		setMenuListeners(parent)
-		setbookmarkClickListener(parent)
+		setBookmarkClickListener(parent)
 	}).catch(exception => {
 		console.error(exception)
 		parent.emit('error')
@@ -280,15 +280,11 @@ function setMenuListeners(parent) {
 		emitToggleFullscreen();
 	});
 	$toggleAnnotations.on('click', toggleAnnotations)
-	document.addEventListener('keydown', handleListenerEvent(parent))
+	document.addEventListener('keydown', function (e) {
+		keyDown(e, parent)
+	});
 	$slideshowAnnotations.click(() => false)
 	$(document).on('click', () => $slideshowAnnotations.hide())
-}
-
-function handleListenerEvent(parent) {
-	return function (e) {
-		keyDown(e, parent)
-	}
 }
 
 function keyDown(e, parent) {
@@ -305,7 +301,7 @@ function keyDown(e, parent) {
 	};
 }
 
-function setbookmarkClickListener(parent) {
+function setBookmarkClickListener(parent) {
 	$('.bookmark').click(function (event) {
 		toggleBookmark(parent)
 	});

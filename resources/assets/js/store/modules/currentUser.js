@@ -62,11 +62,9 @@ const mutations = {
 		})
 	},
 	[types.USERS_SETUP_SETTINGS] (state, settings) {
-		console.log(settings, '~~~~~~~~~~~~~~~~~~~~~settings');
 		set(state, 'settings', settings)
 	},
 	[types.USERS_CHANGE_SETTING] (state, payload) {
-		console.log(payload, '££££££££££££££££££££££££££££££USERS_CHANGE_SETTING');
 		set(state.settings, payload.setting, payload.value)
 	},
 	[types.USERS_SET_STATS] (state, payload) {

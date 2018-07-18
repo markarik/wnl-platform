@@ -91,7 +91,7 @@
 			return this.setupCurrentUser()
 				.then(() => {
 					if (this.getSetting('thick_scrollbar')) {
-						console.log(document.documentElement.style);
+						console.log(document.documentElement);
 					}
 					this.setConnectionStatus(false)
 					// Setup Notifications

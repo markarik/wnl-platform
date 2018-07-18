@@ -43,10 +43,6 @@
 		},
 		methods: {
 			...mapActions(['changeUserSetting']),
-			handleInput(e) {
-				console.log(e.target.value);
-
-			},
 			onSubmitSuccess(response, newData) {
 				Object.keys(newData).forEach(setting => {
 					let value = newData[setting]

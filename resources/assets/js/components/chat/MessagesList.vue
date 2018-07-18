@@ -140,11 +140,6 @@
 						(scrollPosition / height) < 0.1 &&
 						this.hasMore
 
-					console.log(scrollPosition, 'scrollPosition');
-					console.log(target.scrollTop, 'target.scrollTop');
-					console.log(height, 'height');
-					console.log(this.isPulling, 'isPulling');
-
 				if (shouldPull) this.pull()
 			},
 			onScroll(event) {

@@ -64,7 +64,8 @@
 				'overlayTexts',
 				'shouldDisplayOverlay',
 				'alerts',
-				'modalVisible'
+				'modalVisible',
+				'getSetting'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
@@ -89,6 +90,9 @@
 
 			return this.setupCurrentUser()
 				.then(() => {
+					if (this.getSetting('thick_scrollbar')) {
+						console.log(document.documentElement.style);
+					}
 					this.setConnectionStatus(false)
 					// Setup Notifications
 					this.initNotifications()

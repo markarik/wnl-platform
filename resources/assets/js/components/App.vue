@@ -65,17 +65,10 @@
 				'shouldDisplayOverlay',
 				'alerts',
 				'modalVisible',
-				'getSetting'
+				'thickScrollbar'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
-			},
-			thickScrollbar() {
-				if (this.getSetting('thick_scrollbar')) {
-					document.documentElement.classList.add('thickScrollbar')
-				} else {
-					document.documentElement.classList.remove('thickScrollbar')
-				}
 			}
 		},
 		methods: {
@@ -97,7 +90,6 @@
 
 			return this.setupCurrentUser()
 				.then(() => {
-					this.thickScrollbar
 					this.setConnectionStatus(false)
 					// Setup Notifications
 					this.initNotifications()
@@ -145,9 +137,11 @@
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
 			},
-			'thickScrollbar' (oldVal, newVal) {
+			'thickScrollbar' (newVal) {
 				if (newVal) {
-					this.setupCurrentUser()
+					document.documentElement.classList.add('thick-scrollbar')
+				} else {
+					document.documentElement.classList.remove('thick-scrollbar')
 				}
 			}
 		},

@@ -70,6 +70,13 @@
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
 			},
+			thickScrollbar() {
+				if (this.getSetting('thick_scrollbar')) {
+					document.documentElement.classList.add('thickScrollbar')
+				} else {
+					document.documentElement.classList.remove('thickScrollbar')
+				}
+			}
 		},
 		methods: {
 			...mapActions([
@@ -90,9 +97,7 @@
 
 			return this.setupCurrentUser()
 				.then(() => {
-					if (this.getSetting('thick_scrollbar')) {
-						console.log(document.documentElement);
-					}
+					this.thickScrollbar
 					this.setConnectionStatus(false)
 					// Setup Notifications
 					this.initNotifications()
@@ -139,6 +144,11 @@
 		watch: {
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+			},
+			'thickScrollbar' (oldVal, newVal) {
+				if (newVal) {
+					this.setupCurrentUser()
+				}
 			}
 		},
 	}

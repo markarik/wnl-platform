@@ -212,7 +212,7 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideshowComments']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideComments']),
 			...mapActions(['toggleOverlay', 'showNotification']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
@@ -533,7 +533,6 @@
 					}
 				});
 
-
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
 			if (this.htmlContent) {
@@ -544,8 +543,6 @@
 				this.setup({id: this.presentableId})
 					.then(() => {
 						return this.initSlideshow()
-					}).then(() => {
-						this.setupSlideshowComments(this.presentableSortedSlidesIds);
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
@@ -611,8 +608,6 @@
 						this.initSlideshow()
 							.then(() => {
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
-							}).then(() => {
-								this.setupSlideshowComments(this.presentableSortedSlidesIds);
 							}).catch(error => {
 								this.toggleOverlay({source: 'slideshow', display: false})
 								$wnl.logger.capture(error)
@@ -632,6 +627,24 @@
 						resource: 'slides',
 						id: this.getSlideIdFromIndex(this.currentSlideIndex),
 					}))
+				}
+			},
+			async currentSlideId(currentSlideId, previousSlideId) {
+				await this.setupSlideComments({id: currentSlideId})
+
+				Echo.channel(`commentable-slide-${currentSlideId}`)
+					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
+						switch (event) {
+							case 'comment-posted':
+								await this.setupSlideComments({id: currentSlideId, query: {
+									where: [['id', subject.id]]
+								}})
+								break
+						}
+					});
+
+				if (typeof Echo.channel(`commentable-slide-${previousSlideId}`).leave === 'function') {
+					Echo.channel(`commentable-slide-${previousSlideId}`).leave()
 				}
 			}
 		}

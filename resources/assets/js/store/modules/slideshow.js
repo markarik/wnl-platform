@@ -210,13 +210,16 @@ const actions = {
 				})
 		})
 	},
-	setupSlideshowComments({commit, dispatch}, slidesIds) {
+	setupSlideshowComments({commit, dispatch}, args) {
 		commit(types.SLIDESHOW_LOADING_COMMENTS, true)
-		return dispatch('setupComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
+		return dispatch('setupComments', {resource: modelToResourceMap['App\\Models\\Slide'], ...args})
 			.then(() => {
 				commit(types.SLIDESHOW_LOADING_COMMENTS, false)
 			})
 			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false))
+	},
+	setupSlideComments({commit, dispatch}, {id, ...args}) {
+		return dispatch('setupSlideshowComments', {ids: [id], ...args})
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)

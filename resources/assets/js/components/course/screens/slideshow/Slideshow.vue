@@ -201,7 +201,6 @@
 				return this.screenData.meta && this.screenData.meta.resources[0].id
 			},
 			presentableType() {
-				return this.screenData.type
 			},
 			slideshowUrl() {
 				return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`)
@@ -216,8 +215,8 @@
 			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideComments']),
 			...mapActions(['toggleOverlay', 'showNotification']),
 			...mapMutations('slideshow', {
-					loadingComments: types.SLIDESHOW_LOADING_COMMENTS
-				}),
+				loadingComments: types.SLIDESHOW_LOADING_COMMENTS
+			}),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
 
@@ -338,6 +337,7 @@
 						this.loaded = true
 						this.toggleOverlay({source: 'slideshow', display: false})
 						this.child.call('refreshChart', this.currentSlideIndex)
+						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})

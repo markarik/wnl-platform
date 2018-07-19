@@ -123,9 +123,10 @@
 	import axios from 'axios'
 	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
-	import {mapGetters, mapActions} from 'vuex'
+	import {mapGetters, mapActions, mapMutations} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
 
+	import * as types from 'js/store/mutations-types'
 	import Annotations from './Annotations'
 	import LinkedQuestions from './LinkedQuestions.vue'
 	import SlideshowNavigation from './SlideshowNavigation'
@@ -214,6 +215,9 @@
 		methods: {
 			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideComments']),
 			...mapActions(['toggleOverlay', 'showNotification']),
+			...mapMutations('slideshow', {
+					loadingComments: types.SLIDESHOW_LOADING_COMMENTS
+				}),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
 
@@ -511,7 +515,28 @@
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						})
 				})
-			}
+			},
+			changeSlideWatcher(currentSlideId, previousSlideId) {
+				this.setupSlideComments({id: currentSlideId})
+
+				Echo.channel(`commentable-slide-${currentSlideId}`)
+					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
+						switch (event) {
+							case 'comment-posted':
+								await this.setupSlideComments({id: currentSlideId, query: {
+										where: [['id', subject.id]]
+									}})
+								break
+						}
+					});
+
+				if (typeof Echo.channel(`commentable-slide-${previousSlideId}`).leave === 'function') {
+					Echo.channel(`commentable-slide-${previousSlideId}`).leave()
+				}
+			},
+			debouncedChangeSlideWatcher: _.debounce(function(...args) {
+				this.changeSlideWatcher(...args)
+				}, 300, {leading: false, trailing: true})
 		},
 		mounted() {
 			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
@@ -629,24 +654,10 @@
 					}))
 				}
 			},
-			async currentSlideId(currentSlideId, previousSlideId) {
-				await this.setupSlideComments({id: currentSlideId})
-
-				Echo.channel(`commentable-slide-${currentSlideId}`)
-					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
-						switch (event) {
-							case 'comment-posted':
-								await this.setupSlideComments({id: currentSlideId, query: {
-									where: [['id', subject.id]]
-								}})
-								break
-						}
-					});
-
-				if (typeof Echo.channel(`commentable-slide-${previousSlideId}`).leave === 'function') {
-					Echo.channel(`commentable-slide-${previousSlideId}`).leave()
-				}
-			}
+			currentSlideId(...args) {
+				this.loadingComments(true);
+				this.debouncedChangeSlideWatcher(...args)
+			},
 		}
 	}
 </script>

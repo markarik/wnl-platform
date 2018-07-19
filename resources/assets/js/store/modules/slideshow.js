@@ -1,5 +1,4 @@
-import _ from 'lodash'
-import {set, delete as destroy} from 'vue'
+import {set} from 'vue'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'

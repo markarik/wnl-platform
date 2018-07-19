@@ -64,11 +64,12 @@
 				'overlayTexts',
 				'shouldDisplayOverlay',
 				'alerts',
-				'modalVisible'
+				'modalVisible',
+				'thickScrollbar'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
-			},
+			}
 		},
 		methods: {
 			...mapActions([
@@ -135,6 +136,13 @@
 		watch: {
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+			},
+			'thickScrollbar' (newVal) {
+				if (newVal) {
+					document.documentElement.classList.add('thick-scrollbar')
+				} else {
+					document.documentElement.classList.remove('thick-scrollbar')
+				}
 			}
 		},
 	}

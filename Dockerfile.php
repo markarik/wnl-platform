@@ -19,7 +19,7 @@ WORKDIR /src
 COPY --from=php-build /src/. .
 RUN yarn run setup
 RUN node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js
-RUN rm -rf node_modules && rm -rf resources/assets && rm storage/logs/*.log && rm -rf storage/app/public
+RUN rm -rf node_modules && rm -rf resources/assets && rm -f storage/logs/*.log && rm -rf storage/app/public
 
 #
 # Build final image

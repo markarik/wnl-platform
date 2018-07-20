@@ -201,6 +201,7 @@
 				return this.screenData.meta && this.screenData.meta.resources[0].id
 			},
 			presentableType() {
+				return this.screenData.type
 			},
 			slideshowUrl() {
 				return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`)

@@ -129,8 +129,10 @@
 				})
 			},
 			pullDebouncer(event) {
-				const scrollPosition = event.target.scrollTop < 0 ? event.target.scrollHeight + event.target.scrollTop : event.target.scrollTop
 				const target = event.target
+				const scrollPosition = target.scrollTop < 0 ?
+					target.scrollHeight + target.scrollTop
+					: target.scrollTop
 				const height = target.scrollHeight
 				const shouldPull =
 						// make sure we're not pulling from cold storage at the moment,

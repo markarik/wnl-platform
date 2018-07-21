@@ -113,10 +113,10 @@
 					})
 
 					// Setup active users
-					window.Echo.join('active-users')
-						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
-						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
-						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
+					// window.Echo.join('active-users')
+					// 	.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
+					// 	.joining(user => this.userJoined({user, channel: 'activeUsers'}))
+					// 	.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
 
 					this.setLayout(this.$breakpoints.currentBreakpoint())
 					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {

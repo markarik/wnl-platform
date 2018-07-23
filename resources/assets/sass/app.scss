@@ -34,6 +34,10 @@ html, body {
 	min-height: 100%;
 }
 
+html.thick-scrollbar {
+	@include scrollbar(15px, $color-light-gray);
+}
+
 html {
 	// Scrollbars
 	@include scrollbar(2px, $color-light-gray);

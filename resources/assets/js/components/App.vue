@@ -64,11 +64,12 @@
 				'overlayTexts',
 				'shouldDisplayOverlay',
 				'alerts',
-				'modalVisible'
+				'modalVisible',
+				'thickScrollbar'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
-			},
+			}
 		},
 		methods: {
 			...mapActions([
@@ -112,10 +113,10 @@
 					})
 
 					// Setup active users
-					window.Echo.join('active-users')
-						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
-						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
-						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
+					// window.Echo.join('active-users')
+					// 	.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
+					// 	.joining(user => this.userJoined({user, channel: 'activeUsers'}))
+					// 	.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
 
 					this.setLayout(this.$breakpoints.currentBreakpoint())
 					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
@@ -135,6 +136,13 @@
 		watch: {
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+			},
+			'thickScrollbar' (newVal) {
+				if (newVal) {
+					document.documentElement.classList.add('thick-scrollbar')
+				} else {
+					document.documentElement.classList.remove('thick-scrollbar')
+				}
 			}
 		},
 	}

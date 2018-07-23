@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
+use App\Models\UserQuizResults;
 use Auth;
 
 class ResolutionFilter extends ApiFilter
@@ -62,23 +63,30 @@ class ResolutionFilter extends ApiFilter
 //					$query->where('is_correct', false);
 //				});
 //		});
-
-		return $query->whereRaw("id in (select user_quiz_results.quiz_question_id from user_quiz_results inner join quiz_answers on user_quiz_results.quiz_answer_id = quiz_answers.id where user_id = {$userId} and is_correct = 0 group by user_quiz_results.quiz_question_id)");
+		return $query->whereRaw(
+			"id in (select user_quiz_results.quiz_question_id from user_quiz_results inner join quiz_answers on user_quiz_results.quiz_answer_id = quiz_answers.id where user_id = {$userId} and is_correct = 0 group by user_quiz_results.quiz_question_id)"
+		);
 	}
 
 	protected function correct($query)
 	{
 		$userId = $this->params['user_id'];
 
-//		return $query->whereHas('userQuizResults', function ($query) {
-//			$query
-//				->where('user_id', $this->params['user_id'])
-//				->whereHas('quizAnswer', function ($query) {
-//					$query->where('is_correct', true);
-//				});
-//		});
+		$res = \DB::table('user_quiz_results')
+			->selectRaw('user_quiz_results.quiz_question_id as qq, quiz_answers.is_correct')
+			->join("quiz_answers", "user_quiz_results.quiz_answer_id", "=", "quiz_answers.id")
+			->whereRaw("user_quiz_results.user_id = $userId order by user_quiz_results.quiz_question_id")
+			->get();
 
-		return $query->whereRaw("id in (select user_quiz_results.quiz_question_id from user_quiz_results inner join quiz_answers on user_quiz_results.quiz_answer_id = quiz_answers.id where user_id = {$userId} group by user_quiz_results.quiz_question_id) and 1 = all (select is_correct from user_quiz_results inner join quiz_answers on user_quiz_results.quiz_answer_id = quiz_answers.id where user_id = {$userId} and user_quiz_results.quiz_question_id = quiz_questions.id)");
+		$grouped = $res->groupBy('qq');
+		$filtered = $grouped->filter(function($question) {
+			foreach ($question as $entry) {
+				if ($entry->is_correct === 0) return false;
+			}
+			return true;
+		});
+
+		return $query->whereIn('id', $filtered->keys());
 	}
 
 	protected function unresolved($query)

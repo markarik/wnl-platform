@@ -191,10 +191,10 @@
 					this.goToDefaultScreenIfNone()
 				});
 
-				// window.Echo.join(this.presenceChannel)
-				// 	.here(users => this.setActiveUsers({users, channel: this.presenceChannel}))
-				// 	.joining(user => this.userJoined({user, channel: this.presenceChannel}))
-				// 	.leaving(user => this.userLeft({user, channel: this.presenceChannel}))
+				window.Echo.join(this.presenceChannel)
+					.here(users => this.setActiveUsers({users, channel: this.presenceChannel}))
+					.joining(user => this.userJoined({user, channel: this.presenceChannel}))
+					.leaving(user => this.userLeft({user, channel: this.presenceChannel}))
 			},
 			goToDefaultScreenIfNone() {
 				const query = this.$route.query || {}

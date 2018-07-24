@@ -72,21 +72,20 @@ class ResolutionFilter extends ApiFilter
 	{
 		$userId = $this->params['user_id'];
 
-		$res = \DB::table('user_quiz_results')
-			->selectRaw('user_quiz_results.quiz_question_id as qq, quiz_answers.is_correct')
+		$questions = \DB::table('user_quiz_results')
+			->selectRaw('user_quiz_results.quiz_question_id as question_id, quiz_answers.is_correct')
 			->join("quiz_answers", "user_quiz_results.quiz_answer_id", "=", "quiz_answers.id")
 			->whereRaw("user_quiz_results.user_id = $userId order by user_quiz_results.quiz_question_id")
-			->get();
+			->get()
+			->groupBy('question_id')
+			->filter(function($question) {
+				foreach ($question as $entry) {
+					if ($entry->is_correct === 0) return false;
+				}
+				return true;
+			});
 
-		$grouped = $res->groupBy('qq');
-		$filtered = $grouped->filter(function($question) {
-			foreach ($question as $entry) {
-				if ($entry->is_correct === 0) return false;
-			}
-			return true;
-		});
-
-		return $query->whereIn('id', $filtered->keys());
+		return $query->whereIn('id', $questions->keys());
 	}
 
 	protected function unresolved($query)

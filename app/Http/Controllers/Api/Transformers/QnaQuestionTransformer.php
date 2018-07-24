@@ -1,9 +1,8 @@
 <?php namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\QnaQuestion;
-use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\QnaQuestion;
 
 
 class QnaQuestionTransformer extends ApiTransformer

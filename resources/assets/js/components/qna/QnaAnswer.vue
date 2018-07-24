@@ -13,7 +13,7 @@
 					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<div class="modal-activator" @click="showModal">
+					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 						<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"
@@ -77,6 +77,9 @@
 		cursor: pointer
 		align-items: center
 		color: $color-sky-blue
+		&.author-forgotten
+			color: $color-gray-dimmed
+			pointer-events: none
 
 	.qna-answer-comments
 		margin-left: 60px

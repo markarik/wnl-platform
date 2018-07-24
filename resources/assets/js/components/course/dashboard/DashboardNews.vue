@@ -2,23 +2,15 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p class="has-text-centered"><strong>OGŁOSZENIE</strong></p>
+		<p class="has-text-centered"><strong>PRZYPOMNIENIE</strong></p>
 
 		<p class="strong">Cześć {{currentUserName}}! 👋</p>
 
-		<p>Pierwsze tygodnie kursu już za nami! 🎉</p>
+		<p>Piszemy z krótkim przypomnieniem o tym, że upłynął termin płatności 3. raty za kurs. 😨 Jeżeli został już on przez Ciebie opłacony w całości - możesz zignorować i zamknąć tę wiadomość.</p>
 
-		<p>Usłyszeliśmy od Was wiele dobrych słów na temat kursu, oraz wiele fantastycznych, krytycznych uwag. Wszystkie bardzo pomagają nam każdego dnia poprawiać jakość kursu i podnosić jego wartość dla Was. 🙂</p>
+		<p>Jeśli jednak jesteś jedną z osób, którym omsknęła się 3. wpłata - tymczasowo odblokowaliśmy dostęp do Twojego konta, aby nie hamować postępu w nauce. Prosimy jednak o wpłatę do 25 lipca. Po tej dacie niestety ponownie włączymy skrypt automatycznie zamykający dostępy do kont. 😔 Masz jednak sporo czasu na dokonanie wpłaty - ne pewno się wyrobisz. 😉</p>
 
-		<p>Jednak im więcej będziemy mieli wskazówek, tym większa szansa, że kurs będzie ewoluował w dobrym kierunku. Dlatego prosimy Cię bardzo o odpowiedzenie na kilka krótkich pytań, które pozwolą nam trafniej ocenić, jak możemy odpowiedzieć na Wasze potrzeby. 😉</p>
-
-		<p class="has-text-centered margin bottom">
-			<a class="button is-primary" href="https://goo.gl/forms/fO8WQC5szHDSWFa13">
-				Wypełnij ankietę
-			</a>
-		</p>
-
-		<p class="strong">Ważna informacja! W zakładce KONTO > Twoje zamówienia znajdziesz wszystkie faktury wystawione do Twoich zamówień, a w zakładce KONTO > Certyfikaty - certyfikat uczestnictwa w kursie.</p>
+		<p>Wszystkie szczegóły dotyczące płatności znajdziesz w zakładce <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.</p>
 
 		<p>Życzymy powodzenia i owocnej pracy z kursem!</p>
 
@@ -30,9 +22,9 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-3-survey-1'
+	const CURRENT_NEWS = 'edition-3-instalments-announcement'
 	const DISPLAY_FROM = '' // new Date() or empty string
-	const DISPLAY_UNTIL = '' // new Date() or empty string
+	const DISPLAY_UNTIL = new Date('2018-07-26') // new Date() or empty string
 	const REQUIRED_ROLE = ''
 
 	export default {

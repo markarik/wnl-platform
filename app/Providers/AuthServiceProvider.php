@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Annotation;
 use App\Models\ChatRoom;
 use App\Models\Comment;
 use App\Models\Invoice;
@@ -18,6 +19,7 @@ use App\Models\UserCourseProgress;
 use App\Models\UserProfile;
 use App\Models\UserSettings;
 use App\Policies\Chat\ChatRoomPolicy;
+use App\Policies\AnnotationPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\Course\ScreensPolicy;
 use App\Policies\NotificationPolicy;
@@ -56,7 +58,8 @@ class AuthServiceProvider extends ServiceProvider
 		Task::class               => TaskPolicy::class,
 		UserCourseProgress::class => UserCourseProgressPolicy::class,
 		Order::class              => OrderPolicy::class,
-		Invoice::class            => InvoicePolicy::class
+		Invoice::class            => InvoicePolicy::class,
+		Annotation::class         => AnnotationPolicy::class
 	];
 
 	/**

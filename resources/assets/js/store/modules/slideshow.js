@@ -38,7 +38,7 @@ function _fetchReactables(presentables) {
 				}
 
 				return presentable
-			})
+			});
 		})
 }
 
@@ -87,7 +87,8 @@ function getInitialState() {
 			 * }
 			 */
 		},
-		sortedSlidesIds: []
+		sortedSlidesIds: [],
+		loadingComments: true
 	}
 }
 
@@ -106,6 +107,7 @@ const getters = {
 		return state.presentables[slideNumber - 1].is_functional
 	},
 	isLoading: (state) => state.loading,
+	isLoadingComments: state => state.loadingComments,
 	slides: (state) => state.slides,
 	getSlidePositionById: (state) => (slideId) => state.slides[slideId] ? state.slides[slideId].order_number : -1,
 	slidesIds: (state) => Object.keys(state.slides),
@@ -142,16 +144,18 @@ const mutations = {
 	[types.SLIDESHOW_SET_PRESENTABLES] (state, payload) {
 		set(state, 'presentables', payload)
 	},
-	[types.SLIDESHOW_SET_SLIDES] (state, payload) {
-		_.each(state.presentables, (element, index) => {
-			set(state.slides, element.slide_id, {
-				order_number: element.order_number,
-				comments: [],
-				bookmark: element.bookmark,
-				watch: element.watch,
-				id: element.slide_id
-			})
-		})
+	[types.SLIDESHOW_SET_SLIDES] (state) {
+		const slides = {};
+		state.presentables.forEach(presentable => {
+			slides[presentable.slide_id] = {
+				order_number: presentable.order_number,
+				bookmark: presentable.bookmark,
+				watch: presentable.watch,
+				id: presentable.slide_id
+			}
+		});
+
+		set(state, 'slides', slides)
 	},
 	[types.RESET_MODULE] (state) {
 		let initialState = getInitialState()
@@ -161,6 +165,9 @@ const mutations = {
 	},
 	[types.SLIDESHOW_SET_SORTED_SLIDES_IDS] (state, ids) {
 		set(state, 'sortedSlidesIds', ids)
+	},
+	[types.SLIDESHOW_LOADING_COMMENTS] (state, status) {
+		set(state, 'loadingComments', status)
 	}
 }
 
@@ -170,8 +177,7 @@ const actions = {
 	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
 			dispatch('setupPresentablesWithReactions', {id, type})
-				.then(() => dispatch('setupComments', getters.slidesIds))
-				.then(() => resolve())
+				.then(resolve)
 				.catch((reason) => reject(reason))
 		})
 	},
@@ -204,10 +210,13 @@ const actions = {
 				})
 		})
 	},
-	setupComments({commit, dispatch}, slidesIds) {
-		return dispatch('fetchComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
-			.then(() => commit(types.IS_LOADING, false))
-			.catch(() => commit(types.IS_LOADING, false))
+	setupSlideshowComments({commit, dispatch}, slidesIds) {
+		commit(types.SLIDESHOW_LOADING_COMMENTS, true)
+		return dispatch('setupComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
+			.then(() => {
+				commit(types.SLIDESHOW_LOADING_COMMENTS, false)
+			})
+			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false))
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)

@@ -29,7 +29,7 @@
 	import { formInput } from 'js/mixins/form-input'
 
 	export default {
-		name: 'Text',
+		name: 'TextInput',
 		props: {
 			name: {
 				type: String,

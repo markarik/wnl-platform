@@ -19,6 +19,9 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'charts' }">Diagramy</router-link></li>
 		</ul>
+		<ul class="menu-list">
+			<li><router-link to="/admin/app/annotations">Przypisy</router-link></li>
+		</ul>
 
 		<p class="menu-label">
 			Pytania

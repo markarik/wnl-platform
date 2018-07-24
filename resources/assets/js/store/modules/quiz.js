@@ -84,21 +84,29 @@ const getters = {
 		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
 	getAttempts: (state) => state.attempts,
-	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestions: (state) => {
+		return state.questionsIds.map((id) => {
+			const quizQuestion = state.quiz_questions[id]
+			if (!quizQuestion) return
+			return quizQuestion
+		}).filter(question => question)
+	},
 	getQuestion: state => id => state.quiz_questions[id] || {},
 	getQuestionsWithAnswers: (state) => {
 		return state.questionsIds.map((id) => {
-			const quizQuestion = state.quiz_questions[id];
+			const quizQuestion = state.quiz_questions[id]
+			if (!quizQuestion) return
 			return {
 				...quizQuestion,
 				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId]),
 				slides: (quizQuestion.slides || []).map(slideId => state.slides[slideId])
 			}
-		})
+		}).filter(question => question)
 	},
 	getQuestionsWithAnswersAndStats: (state) => {
 		return state.questionsIds.map((id) => {
 			const quizQuestion = state.quiz_questions[id]
+			if (!quizQuestion) return
 			const questionStats = state.quiz_stats[id] || {}
 			const allHits = Object.values(questionStats).reduce((count, current) => {
 				return count + current
@@ -115,7 +123,7 @@ const getters = {
 				}),
 				slides: (quizQuestion.slides || []).map(slideId => state.slides[slideId])
 			}
-		})
+		}).filter(question => question)
 	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
 	getUnresolved: (state, getters) => getters.getQuestions.filter(question => !question.isResolved),

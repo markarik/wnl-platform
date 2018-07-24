@@ -39,6 +39,7 @@ const getters = {
 	currentUserRoles: state => state.profile.roles,
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
 	getSetting: state => setting => state.settings[setting],
+	thickScrollbar: state => state.settings.thick_scrollbar,
 	getAllSettings: state => state.settings,
 	hasRole: state => role => state.profile.roles.indexOf(role) > -1,
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
@@ -157,6 +158,12 @@ const actions = {
 
 	syncSettings({ commit, getters }) {
 		setUserSettings(getters.getAllSettings)
+	},
+
+	deleteAccount({getters}, payload) {
+		return axios.patch(getApiUrl(`user_forget/${getters.currentUserId}`), {
+			password: payload
+		})
 	}
 }
 

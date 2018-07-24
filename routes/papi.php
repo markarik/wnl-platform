@@ -180,6 +180,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@put');
 
+	Route::patch("{$r['user-forget']}/{userId}", 'UserForgetAccountApiController@patch');
+
 	Route::put("{$r['users']}/{id}/{$r['user-password']}", 'UserPasswordApiController@put');
 
 	Route::get("{$r['users']}/{id}/{$r['user-notifications']}", 'UserNotificationApiController@get');
@@ -223,6 +225,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
 	Route::put("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
 	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
+
+	// Annotations
+	Route::get("{$r['annotations']}/{id}", 'AnnotationsApiController@get');
+	Route::post("{$r['annotations']}", 'AnnotationsApiController@post');
+	Route::put("{$r['annotations']}/{id}", 'AnnotationsApiController@put');
+	Route::delete("{$r['annotations']}/{id}", 'AnnotationsApiController@delete');
 
 	// Reactions
 	Route::post($r['reactions'], 'ReactionsApiController@postMany');

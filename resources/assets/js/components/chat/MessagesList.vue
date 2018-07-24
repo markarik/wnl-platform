@@ -129,13 +129,17 @@
 				})
 			},
 			pullDebouncer(event) {
-				let target = event.target,
-					height = target.scrollHeight,
-					shouldPull =
+				const target = event.target
+				const scrollPosition = target.scrollTop < 0 ?
+					target.scrollHeight + target.scrollTop
+					: target.scrollTop
+				const height = target.scrollHeight
+				const shouldPull =
 						// make sure we're not pulling from cold storage at the moment,
 						!this.isPulling &&
 						// we're reaching the top of the messages container,
-						(target.scrollTop / height) < 0.1 &&
+
+						(scrollPosition / height) < 0.1 &&
 						this.hasMore
 
 				if (shouldPull) this.pull()

@@ -90,6 +90,9 @@
 					})
 				})
 				.catch(error => {
+					if (error === 'cancel'  || error === 'overlay') {
+						return
+					}
 					$wnl.logger.capture(error)
 					this.addAutoDismissableAlert({
 						text: this.$t('user.progressReset.alertError'),

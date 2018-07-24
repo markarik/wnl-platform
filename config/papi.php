@@ -43,7 +43,9 @@ return [
 		'user-plan'          => 'user_plan',
 		'tasks'              => 'tasks',
 		'pages'              => 'pages',
+		'user-forget'        => 'user_forget',
 		'invoices'           => 'invoices',
 		'certificates'       => 'certificates',
+		'annotations'        => 'annotations'
 	],
 ];

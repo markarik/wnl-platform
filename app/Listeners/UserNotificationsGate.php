@@ -3,6 +3,7 @@
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserCourseProgress;
+use App\Models\UserSubscription;
 use App\Notifications\EventNotification;
 use App\Notifications\EventTaskNotification;
 use Carbon\Carbon;
@@ -33,11 +34,12 @@ class UserNotificationsGate implements ShouldQueue
 		$progress = $this->usersLessonProgress($event);
 
 		$users = User::select()
-			->join('user_subscription', 'users.id', '=', 'user_subscription.user_id')
-			->whereNotIn('users.id', $excluded)
-			->whereDate('user_subscription.access_start', '<=', Carbon::now())
-			->whereDate('user_subscription.access_end', '>=', Carbon::now())
+			->whereNotIn('id', $excluded)
 			->get();
+
+		$users = $users->filter(function($user) {
+			return $user->subscription_status === 'active';
+		});
 
 		if ($progress) {
 			$users = $users->filter(function ($user) use ($progress) {

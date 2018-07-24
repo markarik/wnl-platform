@@ -80,7 +80,7 @@ class ResolutionFilter extends ApiFilter
 			->groupBy('question_id')
 			->filter(function($question) {
 				foreach ($question as $entry) {
-					if ($entry->is_correct === 0) return false;
+					if (empty($entry->is_correct)) return false;
 				}
 				return true;
 			});

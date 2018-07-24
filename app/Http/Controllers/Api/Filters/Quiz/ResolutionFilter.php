@@ -75,7 +75,7 @@ class ResolutionFilter extends ApiFilter
 		$questions = \DB::table('user_quiz_results')
 			->selectRaw('user_quiz_results.quiz_question_id as question_id, quiz_answers.is_correct')
 			->join("quiz_answers", "user_quiz_results.quiz_answer_id", "=", "quiz_answers.id")
-			->whereRaw("user_quiz_results.user_id = $userId order by user_quiz_results.quiz_question_id")
+			->whereRaw("user_quiz_results.user_id = {$userId} order by user_quiz_results.quiz_question_id")
 			->get()
 			->groupBy('question_id')
 			->filter(function($question) {

@@ -125,6 +125,7 @@ export const commentsMutations = {
 
 		Object.keys(commentsResourceObj).forEach(resource => {
 			Object.keys(commentsResourceObj[resource]).forEach(resourceId => {
+				state[resource][resourceId] = state[resource][resourceId] || {}
 				state[resource][resourceId].comments = Object.keys(commentsResourceObj[resource][resourceId])
 			})
 		})

@@ -531,9 +531,7 @@
 						}
 					});
 
-				if (typeof Echo.channel(`commentable-slide-${previousSlideId}`).leave === 'function') {
-					Echo.channel(`commentable-slide-${previousSlideId}`).leave()
-				}
+				Echo.leave(`commentable-slide-${previousSlideId}`)
 			},
 			debouncedChangeSlideWatcher: _.debounce(function(...args) {
 				this.changeSlideWatcher(...args)

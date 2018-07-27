@@ -15,7 +15,10 @@
   "host": null,
   "port": "8755",
   "protocol": "http",
-  "socketio": {},
+  "socketio": {
+    "pingInterval": 30000,
+    "pingTimeout": 120000
+  },
   "sslCertPath": "",
   "sslKeyPath": ""
 }

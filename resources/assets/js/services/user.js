@@ -14,8 +14,13 @@ export function getCurrentUser() {
 	]).then(([userResponse, subscriptionResponse]) => {
 
 		const {included, ...profile} = userResponse.data;
-		profile.roles = Object.values(included.roles)
-			.map(role => role.name)
+		if (!included) {
+			profile.roles = [];
+		} else {
+			const roles = included.roles || {}
+			profile.roles = Object.values(roles)
+				.map(role => role.name)
+		}
 
 		currentUser = {
 			...profile,

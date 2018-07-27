@@ -33,5 +33,5 @@ window.Echo = new Echo({
 	host: `${env('ECHO_HOST')}:${env('ECHO_PORT')}`,
 	reconnectionDelay: 60000,
 	randomizationFactor: 0.15,
-	reconnectionDelayMax: 60000
+	reconnectionDelayMax: 120000
 });

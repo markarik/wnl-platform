@@ -1,6 +1,11 @@
 <template>
 	<div>
-		<h4>{{name}}</h4>
+		<div class="header">
+			<h4>{{name}}</h4>
+			<span v-if="showExplanation" class="icon">
+				<i class="fa fa-question-circle-o"></i>
+			</span>
+		</div>
 		<component :is="component" :screenData="screenData"></component>
 		<wnl-qna :sortingEnabled="true" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
 	</div>
@@ -8,6 +13,13 @@
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.header
+		display: flex
+		align-items: center
+		.icon
+			margin-left: $margin-medium
+			color: $color-ocean-blue
 
 	.wnl-screen-qna
 		margin: $margin-huge 0
@@ -65,6 +77,9 @@
 			},
 			showQna() {
 				return this.tags.length > 0
+			},
+			showExplanation() {
+				return this.name === 'Prezentacja'
 			}
 		},
 		methods: {

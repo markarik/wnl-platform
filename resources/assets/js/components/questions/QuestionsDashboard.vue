@@ -312,10 +312,10 @@
 			font-size: $font-size-minus-1
 			color: $color-gray-dimmed
 
-	.is-danger
+	.score.is-danger
 		color: $color-red
 
-	.is-success
+	.score.is-success
 		color: $color-green
 
 </style>

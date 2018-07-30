@@ -43,7 +43,7 @@ class CommentTransformer extends ApiTransformer
 
 	public function includeProfiles(Comment $comment)
 	{
-		$profile = $comment->user->profile;
+		$profile = $comment->profiles;
 
 		return $this->item($profile, new UserProfileTransformer(['comments' => $comment->id]), 'profiles');
 	}

@@ -8,8 +8,8 @@
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
 						<div class="activator" @click="toggleModal(true, user.profile)">
 							<wnl-avatar
-								:fullName="user.fullName"
-								:url="user.avatar"
+								:fullName="user.profile.full_name"
+								:url="user.profile.avatar"
 								size="medium">
 							</wnl-avatar>
 						</div>
@@ -69,7 +69,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import UserProfileModal from 'js/components/users/UserProfileModal'
 import Modal from 'js/components/global/Modal'

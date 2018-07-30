@@ -25,10 +25,7 @@ class UserProfilesApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$resource = new Item($profile, new UserProfileTransformer, 'user_profile');
-		$data = $this->fractal->createData($resource)->toArray();
-
-		return $this->respondOk($data);
+		return $this->transformAndRespond($profile);
 	}
 
 	public function put(UpdateUserProfile $request)

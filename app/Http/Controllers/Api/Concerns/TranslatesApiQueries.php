@@ -17,7 +17,7 @@ trait TranslatesApiQueries
 	public function query(Request $request)
 	{
 		$modelName = self::getResourceModel($this->resourceName);
-		$model = new $modelName;
+		$model = $this->eagerLoadIncludes($modelName);
 
 		$model = $this->applyFilters($model, $request);
 

@@ -42,6 +42,7 @@
 		},
 		methods: {
 			onClick() {
+				// console.log('submitForm');
 				this.$parent.$emit('submitForm')
 			}
 		},

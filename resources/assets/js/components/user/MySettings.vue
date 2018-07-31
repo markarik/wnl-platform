@@ -46,6 +46,8 @@
 			onSubmitSuccess(response, newData) {
 				Object.keys(newData).forEach(setting => {
 					let value = newData[setting]
+					console.log(newData[setting], setting, 'newData[setting] and setting');
+					console.log(this.getAllSettings[setting], setting, 'this.getAllSettings[setting] and setting');
 					if (newData[setting] !== this.getAllSettings[setting]) {
 						this.changeUserSetting({setting, value})
 					}

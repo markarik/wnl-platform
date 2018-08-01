@@ -102,7 +102,6 @@ const form = {
 			}
 
 			return new Promise((resolve, reject) => {
-				console.log(data, 'data from submit form');
 				axios[method](state.resourceUrl, data)
 					.then(response => {
 						commit(types.FORM_UPDATE_ORIGINAL_DATA)

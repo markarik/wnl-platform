@@ -81,7 +81,8 @@
 				event.stopPropagation();
 			},
 			onSubmitForm() {
-				const hasAttachChanged = this.hasAttachChanged();
+				const hasAttachChanged = this.hasAttachChanged()
+
 
 				if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 					return false

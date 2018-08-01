@@ -1,6 +1,6 @@
 <template lang="html">
-	<div class="switch" :class="classObject" @click="$emit('click')">
-		<input type="checkbox" :name="name" :disabled="disabled" v-model="checked">
+	<div class="switch" :class="classObject">
+		<input type="checkbox" :name="name" :disabled="disabled" :value="value" @input="$emit('toggle')">
 	</div>
 </template>
 
@@ -82,28 +82,15 @@
 			'name',
 			'value',
 		],
-		data() {
-			return {
-				checked: false
-			}
-		},
 		computed: {
 			classObject () {
-				const {type, size, checked} = this
+				const {type, size} = this
 				return {
 					[`is-${type}`]: type,
 					[`is-${size}`]: size,
-					checked: checked
+					checked: !!this.value
 				}
 			}
 		},
-		watch: {
-			value (val) {
-				this.checked = val
-			},
-			checked (val){
-				this.$emit('input', !!val)
-			}
-		}
 	}
 </script>

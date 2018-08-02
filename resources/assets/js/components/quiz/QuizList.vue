@@ -39,8 +39,7 @@
 <script>
 	import _ from 'lodash'
 	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
-	import { mapGetters, mapActions } from 'vuex'
-	import { scrollToTop, scrollToElement } from 'js/utils/animations'
+	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 
 	export default {
@@ -75,28 +74,6 @@
 			},
 			howManyLeft() {
 				return `${_.size(this.questionsUnresolved)}/${_.size(this.allQuestions)}`
-			},
-			unansweredAlert() {
-				return {
-					text: 'Aby zakończyć test, musisz rozwiązać poprawnie na wszystkie pytania, więc spróbuj odpowiedzieć na każde.',
-					timer: 5000,
-					title: 'Brakuje odpowiedzi',
-					type: 'warning',
-				}
-			},
-			tryAgainAlert() {
-				return {
-					text: `Pozostałe pytania do rozwiązania: ${this.questionsUnresolved.length}`,
-					title: 'Spróbuj jeszcze raz!',
-					type: 'info',
-				}
-			},
-			successAlert() {
-				return {
-					text: 'Wszystkie pytania rozwiązane poprawnie!',
-					title: 'Gratulacje!',
-					type: 'success',
-				}
 			},
 		},
 		methods: {
@@ -139,26 +116,6 @@
 
 				this.hasErrors = false
 				this.$emit('checkQuiz')
-			},
-			showAlert() {
-				let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert,
-					firstElement = this.isComplete ? _.head(this.allQuestions) : _.head(this.questionsUnresolved)
-
-				this.$swal(this.getAlertConfig(alertOptions))
-					.catch(e => false)
-
-				scrollToElement(this.getQuestionElement(firstElement))
-			},
-			getAlertConfig(options = {}) {
-				const defaults = {
-					showConfirmButton: false,
-					timer: 3500,
-				}
-
-				return swalConfig(_.merge(defaults, options))
-			},
-			getQuestionElement(resource) {
-				return this.$el.getElementsByClassName(`quiz-question-${resource.id}`)[0]
 			},
 			onSelectAnswer(data) {
 				this.$emit('selectAnswer', data)

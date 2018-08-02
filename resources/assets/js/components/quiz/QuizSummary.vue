@@ -7,7 +7,6 @@
 			:isProcessing="isProcessing"
 			:isComplete="isComplete"
 			module="quiz"
-			ref="quizList"
 			@resetState="resetState"
 		/>
 	</div>
@@ -27,7 +26,6 @@
 
 	export default {
 		name: 'QuizSummary',
-		props: ['showAlert'],
 		components: {
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-stats': QuizStats,
@@ -45,9 +43,6 @@
 				'resetState',
 				'checkQuiz'
 			]),
-		},
-		mounted() {
-			this.showAlert && this.$refs.quizList.showAlert()
 		},
 	}
 </script>

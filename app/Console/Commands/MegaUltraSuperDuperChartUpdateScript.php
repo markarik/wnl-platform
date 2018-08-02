@@ -6,6 +6,7 @@ use App;
 use Storage;
 use App\Models\Slide;
 use Illuminate\Console\Command;
+use Facades\Lib\Bethink\Bethink;
 use Facades\Lib\SlideParser\Parser;
 use Intervention\Image\Facades\Image;
 use App\Notifications\ChartsUpdatingDone;
@@ -88,7 +89,8 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 
 		$originalPath = $this->match(self::CHART_URL_PATTERN, $slide->content);
 		$cb = str_random(32);
-		$slide->content = str_replace($originalPath[0][1], "{$newPath}?cb={$cb}", $slide->content);
+		$newAbsolutePath = Bethink::getAssetPublicUrl($newPath);
+		$slide->content = str_replace($originalPath[0][1], "{$newAbsolutePath}?cb={$cb}", $slide->content);
 		$slide->save();
 		$this->info('OK.');
 	}

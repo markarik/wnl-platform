@@ -5,7 +5,7 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary :showAlert="showAlert"></wnl-quiz-summary>
+			<wnl-quiz-summary :showAlert="alertVisible"></wnl-quiz-summary>
 		</div>
 		<div v-else-if="emptyQuizSet" class="has-text-centered">
 			Oho, wygląda że nie ma pytań kontrolnych dla tej lekcji.
@@ -52,7 +52,8 @@
 
 	import QuizList from 'js/components/quiz/QuizList'
 	import QuizSummary from 'js/components/quiz/QuizSummary'
-	import {scrollToTop} from 'js/utils/animations'
+	import {scrollToTop, scrollToElement} from 'js/utils/animations'
+	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'Quiz',
@@ -62,7 +63,7 @@
 		},
 		data() {
 			return {
-				showAlert: false,
+				alertVisible: false,
 				emptyQuizSet: false
 			}
 		},
@@ -71,6 +72,7 @@
 			...mapGetters('quiz', [
 				'getAttempts',
 				'getQuestionsWithAnswers',
+				'getUnresolved',
 				'getReaction',
 				'isComplete',
 				'isLoaded',
@@ -82,6 +84,20 @@
 			},
 			displayResults() {
 				return this.readOnly || this.isComplete
+			},
+			tryAgainAlert() {
+				return {
+					text: `Pozostałe pytania do rozwiązania: ${this.getUnresolved.length}`,
+					title: 'Spróbuj jeszcze raz!',
+					type: 'info',
+				}
+			},
+			successAlert() {
+				return {
+					text: 'Wszystkie pytania rozwiązane poprawnie!',
+					title: 'Gratulacje!',
+					type: 'success',
+				}
 			},
 		},
 		methods: {
@@ -107,14 +123,27 @@
 				this.checkQuiz(force).then(() => {
 					if (this.isComplete) {
 						if (!force) {
-							this.showAlert = true
+							this.showAlert()
 						}
 						scrollToTop()
 					} else {
-						this.$refs.quizList.showAlert()
+						this.showAlert()
+						scrollToElement(this.$el.querySelector(`[class*='quiz-question-']`))
 					}
 				})
-			}
+			},
+			showAlert() {
+				let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert;
+				this.$swal(this.getAlertConfig(alertOptions)).catch(_.noop)
+			},
+			getAlertConfig(options = {}) {
+				const defaults = {
+					showConfirmButton: false,
+					timer: 3500,
+				}
+
+				return swalConfig(_.merge(defaults, options))
+			},
 		},
 		mounted() {
 			this.setup()
@@ -130,7 +159,7 @@
 							this.setup()
 						})
 				}
-			}
+			},
 		}
 	}
 </script>

@@ -85,15 +85,15 @@
 			},
 			tryAgainAlert() {
 				return {
-					text: `Pozostałe pytania do rozwiązania: ${this.getUnresolved.length}`,
-					title: 'Spróbuj jeszcze raz!',
+					text: this.$t('quiz.alert.tryAgain.text', {count: this.getUnresolved.length}),
+					title: this.$t('quiz.alert.tryAgain.title'),
 					type: 'info',
 				}
 			},
 			successAlert() {
 				return {
-					text: 'Wszystkie pytania rozwiązane poprawnie!',
-					title: 'Gratulacje!',
+					text: this.$t('quiz.alert.success.text'),
+					title: this.$t('quiz.alert.success.title'),
 					type: 'success',
 				}
 			},

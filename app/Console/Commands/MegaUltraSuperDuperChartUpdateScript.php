@@ -109,7 +109,7 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 			$urlFormatted = sprintf($lucidUrl, $chartId, $imageSizePx);
 			$image = Image::make($urlFormatted)->stream('png');
 			$path = "charts/{$chartId}.png";
-			Storage::put('public/' . $path, $image, 'public');
+			Storage::put('public/' . $path, $image->__toString(), 'public');
 		}
 		catch (NotReadableException $e) {
 			$this->warn($e->getMessage());

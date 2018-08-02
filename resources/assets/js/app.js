@@ -10,6 +10,7 @@ import {pl} from "js/i18n";
 import VueSweetAlert from "vue-sweetalert";
 import VueSimpleBreakpoints from "vue-simple-breakpoints";
 import VueKindergarten from "vue-kindergarten";
+import Tooltip from "tooltip.js"
 import Alert from "js/components/global/Alert.vue";
 import Avatar from "js/components/global/Avatar.vue";
 import Emoji from "js/components/global/Emoji.vue";
@@ -52,6 +53,9 @@ Vue.use(VueKindergarten, {
 		return store && store.getters.currentUser
 	}
 })
+
+// Tooltip
+Vue.use(Tooltip)
 
 // Import and register global components
 

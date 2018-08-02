@@ -11,9 +11,6 @@ sync(store, router)
 import VueSweetAlert from 'vue-sweetalert'
 Vue.use(VueSweetAlert)
 
-import Tooltip from 'tooltip.js'
-Vue.use(Tooltip)
-
 // Import and register global components
 import Alert from 'js/components/global/Alert.vue'
 import Avatar from 'js/components/global/Avatar.vue'

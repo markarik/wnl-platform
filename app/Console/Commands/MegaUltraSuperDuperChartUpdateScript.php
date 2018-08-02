@@ -16,7 +16,7 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 {
 	use Notifiable;
 
-	const CHART_PATH_PATTERN = '/storage\/charts\/([^"]*)"/';
+	const CHART_PATH_PATTERN = '/public\/charts\/([^"]*)"/';
 
 	const CHART_URL_PATTERN = '/src="([^"]*)".*class="chart"/';
 

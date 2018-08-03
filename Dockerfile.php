@@ -25,7 +25,7 @@ RUN yarn run setup \
 # Build final image
 #
 
-FROM bethink/php:7.2.7-fpm-alpine3.7
+FROM registry.bethink.tech/php:7.2.7-fpm-alpine3.7
 
 WORKDIR /www/current
 

@@ -1,3 +1,7 @@
 FROM nginx:1.14.0-alpine
+ARG TAG
+ENV SOURCE_IMAGE=registry.bethink.tech/platform-app-php:${TAG}
 
-COPY --from=registry.bethink.tech/platform-app-php /www/current/public /www/current/public/
+FROM $SOURCE_IMAGE as source_image
+
+COPY --from=source_image /www/current/public /www/current/public/

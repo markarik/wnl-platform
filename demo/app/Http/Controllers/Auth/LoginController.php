@@ -2,9 +2,11 @@
 
 namespace Demo\App\Http\Controllers\Auth;
 
+use App\Jobs\OrderPaid;
 use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use \Illuminate\Http\Request;
@@ -84,6 +86,11 @@ class LoginController extends Controller
 
 		$order->paid = true;
 		$order->save();
+
+        UserSubscription::updateOrCreate(
+            ['user_id' => $user->id],
+            ['access_start' => $demo->access_start, 'access_end' => $demo->access_end]
+        );
 
 		Auth::login($user);
 

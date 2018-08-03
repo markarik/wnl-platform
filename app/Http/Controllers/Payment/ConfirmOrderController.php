@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Models\Order;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -24,20 +25,25 @@ class ConfirmOrderController extends Controller
 		$order = $user->orders()->recent();
 
 		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
-		Log::notice('Order confirmation');
+		Log::debug('Order confirmation');
+
+		$instalments = $order->product->paymentMethods
+			->where('slug', 'instalments')
+			->first()
+			->isAvailable() ? $order->instalments['instalments'] : false;
 
 		return view('payment.confirm-order', [
 			'order'       => $order,
 			'user'        => $user,
 			'checksum'    => $checksum,
-			'instalments' => $order->instalments['instalments'],
+			'instalments' => $instalments,
 		]);
 	}
 
 	public function handle(Request $request)
 	{
 		$user = Auth::user();
-		Log::notice('Saving payment method and redirecting to dashboard.');
+		Log::debug('Saving payment method and redirecting to dashboard.');
 		$order = $user->orders()->recent();
 		$order->method = $request->input('method');
 		$order->save();
@@ -49,7 +55,6 @@ class ConfirmOrderController extends Controller
 
 	public function status(Request $request, Payment $payment)
 	{
-		//TODO: IP filtering
 		Log::debug('request:' . json_encode($request->request->all(), JSON_PRETTY_PRINT));
 		Log::debug('headers:' . json_encode($request->headers->all(), JSON_PRETTY_PRINT));
 

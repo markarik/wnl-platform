@@ -186,9 +186,9 @@ const actions = {
 					unread_count: 0
 				}
 			})
-			commit(types.CHAT_MESSAGES_ADD_PROFILES, profiles)
 		}
 
+		commit(types.CHAT_MESSAGES_ADD_PROFILES, profiles)
 		commit(types.CHAT_MESSAGES_ADD_MESSAGE, {roomId, message})
 
 		if (isPrivateRoom) commit(types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, {roomId, newIndex: 0})
@@ -288,9 +288,6 @@ const actions = {
 			}
 		})
 	},
-	[types.SOCKET_CONNECTION_RECONNECTED]({dispatch}) {
-		dispatch('setConnectionStatus', true)
-	}
 }
 
 const fetchUserRooms = async ({limit, page}) => {

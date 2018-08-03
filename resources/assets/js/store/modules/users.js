@@ -1,8 +1,11 @@
 import {set} from 'vue'
 import * as types from '../mutations-types'
-import {getApiUrl} from 'js/utils/env'
 
 const namespaced = true;
+
+export const sanitizeName = (name) => {
+	return name === 'account deleted' ? 'Konto usunięte' : name
+};
 
 export const state = {
 	activeUsers: [],

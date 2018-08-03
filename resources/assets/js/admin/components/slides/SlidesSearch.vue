@@ -10,7 +10,11 @@
 					<div class="field is-grouped">
 						<div class="control">
 							<label class="label">Numer screena</label>
-							<input @keyup.enter="getSlide" type="text" class="input" v-model="screenId">
+							<input
+								type="text" class="input"
+								@keyup.enter="getSlide"
+								:value="screenId" @input="(event) => $emit('screenIdChange', event)"
+							>
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
@@ -22,7 +26,10 @@
 					<div class="field is-grouped">
 						<div class="control">
 							<label class="label">lub ID slajdu</label>
-							<input @keyup.enter="getSlide" type="text" class="input" v-model="slideIdInput">
+							<input
+								type="text" class="input"
+								@keyup.enter="getSlide"
+								:value="slideId" @input="(event) => $emit('slideIdChange', event)">
 						</div>
 					</div>
 				</div>
@@ -45,12 +52,18 @@ export default {
 	name: 'SlidesSearch',
 	data() {
 		return {
-			screenId: null,
 			slideOrderNo: null,
-			slideIdInput: null,
 			loading: false,
 			resourceUrl: '',
 			error: false
+		}
+	},
+	props: {
+		slideId: {
+			type: Number,
+		},
+		screenId: {
+			tyoe: Number,
 		}
 	},
 	computed: {
@@ -62,7 +75,7 @@ export default {
 		getSlide() {
 				this.loading = true
 
-				if (!this.slideIdInput) {
+				if (!this.slideId) {
 					this.getSlideshowId()
 						.then(slideshowId => {
 							return this.getSlideId(slideshowId)
@@ -85,9 +98,7 @@ export default {
 							this.error = true
 						})
 				} else {
-					this.resourceUrl = `/papi/v1/slides/${this.slideIdInput}`
-					this.slideId = parseInt(this.slideIdInput)
-					this.screenId = null
+					this.resourceUrl = `/papi/v1/slides/${this.slideId}`
 					this.slideOrderNo = null
 					this.loading = false
 
@@ -126,7 +137,6 @@ export default {
 							return response.data[0].slide_id
 						})
 			},
-	}
+	},
 }
 </script>
-

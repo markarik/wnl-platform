@@ -1,5 +1,6 @@
 <template>
 	<div id="app">
+		<wnl-alerts :alerts="alerts"/>
 		<div class="admin-main">
 			<div class="admin-left">
 				<wnl-sidenav></wnl-sidenav>
@@ -37,6 +38,7 @@
 <script>
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Sidenav from 'js/admin/components/Sidenav.vue'
+	import Alerts from "js/components/global/GlobalAlerts";
 	import {mapActions, mapGetters} from 'vuex'
 
 	export default {
@@ -44,9 +46,10 @@
 		components: {
 			'wnl-navbar': Navbar,
 			'wnl-sidenav': Sidenav,
+			'wnl-alerts': Alerts
 		},
 		computed: {
-			...mapGetters(['currentUserId',])
+			...mapGetters(['currentUserId', 'alerts'])
 		},
 		methods: {
 			...mapActions(['setupCurrentUser']),

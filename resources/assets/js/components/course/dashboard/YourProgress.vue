@@ -66,7 +66,7 @@
 				'getCompleteLessons'
 			]),
 			progressLessons() {
-				return this.userLessons.filter(lesson => lesson.is_required)
+				return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required)
 			},
 			courseId() {
 				return this.$route.params.courseId

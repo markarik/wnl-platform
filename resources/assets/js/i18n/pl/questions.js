@@ -17,7 +17,7 @@ export const questions = {
 		stats: {
 			error: 'Ups... Niestety, nie udało nam się załadować Twoich statystyk... Spróbujesz jeszcze raz? Jeśli problem będzie się powtarzał, daj nam znać w zakładce Pomoc > Pomoc techniczna. Przepraszamy!',
 			heading: 'Twoje statystyki',
-			mockExam: 'Twój ostatni wynik z próbnego egzaminu - poprawne/wszystkie i procent poprawnych',
+			mockExam: 'Poniżej znajduje się lista Twoich wyników z próbnych egzaminów.',
 			scores: 'Ilość rozwiązanych pytań i procent prawidłowych odpowiedzi',
 		},
 		ui: {

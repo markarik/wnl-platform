@@ -45,6 +45,7 @@ class StoreProgress extends Command
 	*/
 	public function handle()
 	{
+		// IMPORTANT!!!! user id is in fact profile id
 		$passedUserId = $this->argument('user');
 
 		$this->transaction(function () use ($passedUserId) {
@@ -101,10 +102,9 @@ class StoreProgress extends Command
 				if ($lessonId !== 'undefined') {
 					$lessonKey = UserStateApiController::getLessonRedisKey($userId, 1, $lessonId);
 					$lessonProgressRaw = $this->redis->get($lessonKey);
-					if (!$lessonProgressRaw) {
-						\Log::warning("Problem while copying user progress - {$lessonKey} key is empty.");
-						continue;
-					}
+
+					if (!$lessonProgressRaw) continue;
+
 					$lessonProgress = json_decode($lessonProgressRaw);
 
 					$model = UserCourseProgress::firstOrNew([

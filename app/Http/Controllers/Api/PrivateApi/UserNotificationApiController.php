@@ -40,10 +40,14 @@ class UserNotificationApiController extends ApiController
 	{
 		$user = User::fetch($request->route('id'));
 
+		if (!$user) {
+			return $this->respondNotFound();
+		}
+
 		$notifications = $user->notifications();
 		$notifications = $this->applyFilters($notifications, $request)->get();
 
-		if (!$user || !$notifications) {
+		if (!$notifications) {
 			return $this->respondNotFound();
 		}
 

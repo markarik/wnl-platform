@@ -66,14 +66,11 @@
 				this.showNews = false
 				store.set(this.newsStoreKey, true)
 			},
+
 		},
 		mounted() {
-			if (CURRENT_NEWS !== '' &&
-				!store.get(this.newsStoreKey) &&
-				(REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE))
-			) {
-				this.showNews = true
-			}
+			this.showNews = (this.hasNews && !this.hasSeenNews &&
+				this.hasRequiredRole && this.isNewsTimely)
 		},
 	}
 </script>

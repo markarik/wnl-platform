@@ -178,8 +178,17 @@
 @endsection
 
 @section('summary')
-	<p>Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong>
+	<p>
+	Metoda płatności: <strong>{{ $invoiceData['payment_method'] }}</strong>
+	<br/>
+	Wpłacono: <strong>{{ $previousAdvances->sum('amount') }}zł</strong>
+	<br/>
+	Pozostało do zapłaty: <strong>{{ $remainingAmount }}zł</strong>
 	</p>
-	<p>Wpłacono: <strong>{{ $previousAdvances->sum('amount') }}zł</strong></p>
-	<p>Pozostało do zapłaty: <strong>{{ $remainingAmount }}zł</strong></p>
+	@if($remainingAmount > 0)
+		<p>
+		<small><strong>Uwaga!</strong> Dla wpłat dokonanych po {{ $invoiceData['date'] }} nie możemy wystawiać już kolejnych faktur i uwzględniać ich na fakturze końcowej. Co nie znaczy, że do nas nie dotarły. ;) Ubiegając się o refundację załącz do tej faktury potwierdzenia przelewów pokrywających brakującą kwotę. :) Stan swoich zamówień znajdziesz w zakładce KONTO > Twoje zamówienia.</small>
+		</p>
+	@endif
+		
 @endsection

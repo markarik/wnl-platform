@@ -12,6 +12,8 @@ class UserProfileTransformer extends ApiTransformer
 {
 	protected $parent;
 
+	protected $availableIncludes = ['roles'];
+
 	public function __construct($parent = null)
 	{
 		$this->parent = $parent;
@@ -19,15 +21,19 @@ class UserProfileTransformer extends ApiTransformer
 
 	public function transform(UserProfile $profile)
 	{
+		$firstName = is_null($profile->deleted_at) ? $profile->first_name : 'Konto';
+		$lastName = is_null($profile->deleted_at) ? $profile->last_name : 'usunięte';
+		$displayName = is_null($profile->deleted_at) ? $profile->display_name : 'Konto usinięte';
+
 		$data = [
 			'id'                => $profile->id,
 			'user_id'           => $profile->user_id,
-			'first_name'        => $profile->first_name,
-			'last_name'         => $profile->last_name,
+			'first_name'        => $firstName,
+			'last_name'         => $lastName,
 			'public_email'      => $profile->public_email,
 			'public_phone'      => $profile->public_phone,
 			'username'          => $profile->username,
-			'display_name'      => $profile->display_name,
+			'display_name'      => $displayName,
 			'full_name'         => $profile->full_name,
 			'avatar'            => $profile->avatar_url,
 			'city'              => $profile->city,
@@ -37,7 +43,7 @@ class UserProfileTransformer extends ApiTransformer
 			'interests'         => $profile->interests,
 			'about'             => $profile->about,
 			'learning_location' => $profile->learning_location,
-			'roles'             => $profile->user->roles->pluck('name')->toArray() ?? [],
+			'deleted_at'        => $profile->deleted_at,
 		];
 
 		if ($this->parent) {
@@ -45,5 +51,16 @@ class UserProfileTransformer extends ApiTransformer
 		}
 
 		return $data;
+	}
+
+	public function includeRoles(UserProfile $profile)
+	{
+		$roles = $profile->roles;
+
+		return $this->collection(
+			$roles,
+			new RoleTransformer(['user_profiles' => $profile->id]),
+			'roles'
+		);
 	}
 }

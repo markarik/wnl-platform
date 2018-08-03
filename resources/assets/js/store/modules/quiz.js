@@ -2,11 +2,10 @@ import axios from 'axios'
 import _ from 'lodash'
 import {set, delete as destroy} from 'vue'
 import {getApiUrl} from 'js/utils/env'
-import {resource} from 'js/utils/config'
 import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
 import * as types from 'js/store/mutations-types'
-import quizStore, {getLocalStorageKey} from 'js/services/quizStore'
+import quizStore from 'js/services/quizStore'
 
 const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams)
@@ -85,21 +84,29 @@ const getters = {
 		return _.round(getters.getResolved.length * 100 / getters.questionsLength, 0)
 	},
 	getAttempts: (state) => state.attempts,
-	getQuestions: (state) => state.questionsIds.map((id) => state.quiz_questions[id]),
+	getQuestions: (state) => {
+		return state.questionsIds.map((id) => {
+			const quizQuestion = state.quiz_questions[id]
+			if (!quizQuestion) return
+			return quizQuestion
+		}).filter(question => question)
+	},
 	getQuestion: state => id => state.quiz_questions[id] || {},
 	getQuestionsWithAnswers: (state) => {
 		return state.questionsIds.map((id) => {
-			const quizQuestion = state.quiz_questions[id];
+			const quizQuestion = state.quiz_questions[id]
+			if (!quizQuestion) return
 			return {
 				...quizQuestion,
 				answers: quizQuestion.quiz_answers.map(answerId => state.quiz_answers[answerId]),
 				slides: (quizQuestion.slides || []).map(slideId => state.slides[slideId])
 			}
-		})
+		}).filter(question => question)
 	},
-	getQuestionsWithAnswersAndStats: (state, getters) => {
+	getQuestionsWithAnswersAndStats: (state) => {
 		return state.questionsIds.map((id) => {
 			const quizQuestion = state.quiz_questions[id]
+			if (!quizQuestion) return
 			const questionStats = state.quiz_stats[id] || {}
 			const allHits = Object.values(questionStats).reduce((count, current) => {
 				return count + current
@@ -116,15 +123,10 @@ const getters = {
 				}),
 				slides: (quizQuestion.slides || []).map(slideId => state.slides[slideId])
 			}
-		})
+		}).filter(question => question)
 	},
 	getResolved: (state, getters) => _.filter(getters.getQuestions, {'isResolved': true}),
 	getUnresolved: (state, getters) => getters.getQuestions.filter(question => !question.isResolved),
-	getUnresolvedWithAnswers: (state, getters) => _.filter(getters.getQuestionsWithAnswers, {'isResolved': false}),
-	getUnresolvedWithAnswersAndStats: (state, getters) => _.filter(getters.getQuestionsWithAnswersAndStats, {'isResolved': false}),
-	getUnanswered: (state, getters) => _.filter(
-		getters.getQuestions, (question) => !_.isNumber(question.selectedAnswer)
-	),
 	isComplete: (state, getters) => state.isComplete || getters.getUnresolved.length === 0 && getters.hasQuestions,
 	isLoaded: (state) => state.loaded,
 	isProcessing: (state) => state.processing,
@@ -200,7 +202,7 @@ const mutations = {
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
 			let resourceObject = state[resource]
-			_.each(items, (item, index) => {
+			_.each(items, (item) => {
 				set(resourceObject, item.id, item)
 			})
 		})
@@ -424,7 +426,7 @@ const actions = {
 	},
 
 	saveQuiz({state, rootGetters}, recordedAnswers){
-		quizStore.saveQuizProgress(state.setId, rootGetters.currentUserSlug, state, recordedAnswers);
+		quizStore.saveQuizProgress(state.setId, state, recordedAnswers);
 	},
 
 	autoResolve({state, commit}) {
@@ -437,11 +439,9 @@ const actions = {
 	},
 
 	destroyQuiz({commit}){
-		return new Promise((resolve, reject) => {
-			commit(types.QUIZ_IS_LOADED, false)
-			commit(types.QUIZ_DESTROY)
-			resolve()
-		})
+		commit(types.QUIZ_IS_LOADED, false)
+		commit(types.QUIZ_DESTROY)
+		return Promise.resolve();
 	},
 
 	commitSelectAnswer({commit}, payload){

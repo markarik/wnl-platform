@@ -16,7 +16,7 @@ class QnaAnswerRemoved extends Event
 		SanitizesUserContent,
 		EventContextTrait;
 
-	public $qnaAnswer;
+	public $model;
 
 	public $userId;
 
@@ -28,7 +28,7 @@ class QnaAnswerRemoved extends Event
 	public function __construct(QnaAnswer $qnaAnswer, $userId)
 	{
 		parent::__construct();
-		$this->qnaAnswer = $qnaAnswer;
+		$this->model = $qnaAnswer;
 		$this->userId = $userId;
 	}
 
@@ -37,21 +37,21 @@ class QnaAnswerRemoved extends Event
 		$this->data = [
 			'event'   => 'qna-answer-deleted',
 			'objects' => [
-				'author' => $this->qnaAnswer->question->user->id,
+				'author' => $this->model->question->user->id,
 				'type' => 'qna_question',
-				'id'   => $this->qnaAnswer->question->id,
-				'text' => $this->sanitize($this->qnaAnswer->question->text),
+				'id'   => $this->model->question->id,
+				'text' => $this->sanitize($this->model->question->text),
 			],
 			'subject' => [
 				'type' => 'qna_answer',
-				'id'   => $this->qnaAnswer->id,
-				'text' => $this->sanitize($this->qnaAnswer->text),
+				'id'   => $this->model->id,
+				'text' => $this->sanitize($this->model->text),
 			],
 			'actors'  => [
 				'id' => $this->userId
 			],
 			'referer' => $this->referer,
-			'context' => $this->addEventContext($this->qnaAnswer)
+			'context' => $this->addEventContext($this->model)
 		];
 	}
 }

@@ -31,6 +31,8 @@ class UserProfile extends Model
 		'learning_location',
 	];
 
+	protected $guarded = ['deleted_at'];
+
 	public function user()
 	{
 		return $this->belongsTo('App\Models\User');
@@ -46,7 +48,7 @@ class UserProfile extends Model
 
 	public function getAvatarUrlAttribute()
 	{
-		return $this->avatar ? Bethink::appUrlAsset("storage/{$this->avatar}") : null;
+		return Bethink::getAssetPublicUrl($this->avatar) ?? null;
 	}
 
 	public function getFullNameAttribute()
@@ -66,5 +68,6 @@ class UserProfile extends Model
 		} else {
 			return $this->full_name;
 		}
+
 	}
 }

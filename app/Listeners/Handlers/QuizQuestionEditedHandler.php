@@ -13,7 +13,7 @@ class QuizQuestionEditedHandler
 	 */
 	public function handle(QuizQuestionEdited $event, UserNotificationsGate $gate)
 	{
-		$watchers = $this->notifyWatchers($event->quizQuestion, $event, $gate);
+		$watchers = $this->notifyWatchers($event->model, $event, $gate);
 
 		if (count($watchers) === 0) {
 			return;

@@ -2,22 +2,30 @@
 	<div class="splash-screen scrollable-main-container">
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<div class="splash-screen-countdown" v-if="$upcomingEditionParticipant.isAllowed('access')">
-			<p class="title is-4">Odliczamy dni do początku kursu!</p>
-			&nbsp;<span v-if="loaded">{{ timeLeft.value }}</span>
+			<p class="title is-4">Dostęp do kursu uzyskasz już {{startDate}}!</p>
+			<p class="info"></p>
+			<p class="info">
+				Twoje zamówienia znajdziesz w zakładce - <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.
+			</p>
 		</div>
 		<div class="has-text-centered" v-else>
-			<p class="title is-4">Kurs "Więcej niż LEK" oficjalnie wystartował! </p>
-			<p>Widzisz ten ekran, ponieważ nie posiadasz dostępu do obecnej edycji.<br>
+			<p class="title is-4">W tym momencie nie posiadasz dostępu do kursu</p>
+			<p>Widzisz ten ekran ponieważ Twoje zamówienie oczekuje na zaksięgowanie wpłaty, lub jesteś uczestnikiem poprzedniej edycji, która dobiegła już końca. 🙂<br>
 			W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
-				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.</p>
+				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.
+			</p>
+			<p class="margin vertical">
+				<a href="http://wiecejnizlek.pl/zapisy" class="button is-primary is-outlined">
+					Zapisz się na najbliższą edycję
+				</a>
+			</p>
 		</div>
-		<a href="http://demo.wiecejnizlek.pl" class="button is-primary is-outlined">
-			Zobacz wersję demonstracyjną platformy
-		</a>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.splash-screen
 		align-items: center
 		display: flex
@@ -33,13 +41,16 @@
 		padding: 0 20px
 
 	.splash-screen-countdown
-		font-size: 4em
-		font-weight: 900
-		line-height: 2em
+		font-size: $font-size-plus-7
+		font-weight: $font-weight-black
+		line-height: $line-height-plus
 		text-align: center
 
-	.button
-		display: block
+		.info
+			font-size: $font-size-base
+			font-weight: $font-weight-regular
+			line-height: $line-height-base
+			margin: $margin-base
 </style>
 
 <script>
@@ -58,28 +69,10 @@
 			...mapGetters(['currentUserSubscriptionDates']),
 			countdownImageUrl() {
 				return getImageUrl('countdown.png')
-			}
-		},
-		data: () => {
-			return {
-				loaded: false,
-				timeLeft: {
-					value: 0
-			 	}
-			}
-		},
-		methods: {
-			getTimeLeft() {
-				const theDate = new Date(this.currentUserSubscriptionDates.min * 1000)
-				return moment.duration(moment(theDate).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
 			},
-			setTimeLeft() {
-				set(this.timeLeft, 'value', this.getTimeLeft())
-				this.loaded = true
+			startDate() {
+				return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL')
 			},
 		},
-		mounted() {
-			this.$upcomingEditionParticipant.isAllowed('access') && window.setInterval(this.setTimeLeft, 1000)
-		}
 	}
 </script>

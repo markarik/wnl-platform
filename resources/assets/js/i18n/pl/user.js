@@ -41,8 +41,45 @@ export const user = {
         sendMessage: 'Wyślij wiadomość',
     },
 	lessonsAvailabilities: {
-		header: 'Dostępność lekcji',
 		alertSuccess: 'Udalo się zmienić datę! :)',
 		alertError: 'Nie udało się zmienić daty, spróbuj jeszcze raz!',
+	},
+    progressReset: {
+        header: 'Usuwanie postępu',
+        progressHeader: 'Postęp w nauce',
+        questionsHeader: 'Wyniki pytań kontrolnych',
+        collectionsHeader: 'Kolekcje',
+        progressButton: 'Wyczyść postęp w nauce',
+        questionsButton: 'Wyczyść wszystkie wyniki',
+        collectionsButton: 'Wyczyść kolekcje',
+		progressWarning: `Poniższy przycisk pozwoli Ci na usunięcie
+        dotychczasowego postępu we wszystkich lekcjach na kursie. Po usunięciu
+        postępu WSZYSTKIE lekcje będą oznaczone jako niezrobione, a Twój
+        dotychczasowy postęp zostanie utracony. Twój czas na platformie NIE
+        zostanie zresetowany, podobnie jak postęp w obrębie bazy pytań i pytań
+        kontrolnych w lekcjach.`,
+		questionsWarning: `Po zatwierdzeniu, usuniemy wszystkie wyniki
+        Twoich dotychczasowych podejść do pytań kontrolnych. Dotyczy to zarówno
+        pytań rozwiązywanych w ramach lekcji, jak i pozostałych dostępnych w
+        bazie pytań. Jedyne wyniki, które nie zostaną wyczyszczone, to wyniki
+        próbnych egzaminów.`,
+		collectionsWarning: `Naciśnięcie poniższego przycisku spowoduje
+        usunięcie wszystkiego z Twojej kolekcji, czyli
+        między innymi zapisanych slajdów, pytań kontrolnych, pytań i odpowiedzi.`,
+		progressConfirmation: 'Czy na pewno chcesz usunąć cały postęp w nauce?',
+		questionsConfirmation: 'Czy na pewno chcesz usunąć wyniki pytań kontrolnych?',
+		collectionsConfirmation: 'Czy na pewno chcesz wyczyścić swoją kolekcję?',
+		alertError: 'Ups... Coś poszło nie tak. Spróbujesz jesze raz?',
+		alertSuccess: `OK, wszystko poszło zgodnie z planem. Jeśli to była
+		spektakularna pomyłka, daj nam znać. Jest szansa, że uda się odzyskać
+		usunięte informacje ;)`,
+    },
+	passwordResetHeader: 'Zmiana hasła',
+	deleteAccount: {
+		header: 'Usuń konto',
+		warningHeader: 'Usunięcie konta',
+		warning: `<strong>Po wybraniu tej opcji Twoje konto zostanie usunięte. Jeżeli chcesz to zrobić, po kliknięciu pojawi się dymek “Czy na pewno chcesz usunąć swoje konto?”. </strong><br><br> <strong>Twoje konto zostanie usunięte</strong>, oznacza to, że Twoje dane na platformie nie będą widoczne - zamiast imienia i nazwiska pojawi się informacja “Konto usunięte”. Zostanie zachowana treść dodanych przez Ciebie komentarzy i pytań, natomiast Twoje dane nie będą widoczne dla innych użytkowników. <br><br><strong>Uwaga! Twoje dane pozostaną w naszej bazie oraz w dokumentach księgowych przez 5 lat, ze względu na obowiązek przechowywania dokumentacji podatkowej.</strong> W razie roszczeń z Twojej strony lub kontroli podatkowej musimy mieć możliwość ponownego wygenerowania dokumentów sprzedażowych. Natomiast wszystkie dane, które nie są potrzebne do zrealizowania powyższego obowiązku (w tym e-mail, telefon) zostaną usunięte z naszej bazy oraz wszystkich list mailingowych.<br><br> <strong>Po zatwierdzeniu usunięcia nastąpi wylogowanie.</strong>`,
+		confirmationHeader: 'Usuń konto',
+		confirmationWarning: 'Aby potwierdzić usunięcie konta - wprowadź swoje hasło. Po zatwierdzeniu nastąpi wylogowanie.',
 	}
 }

@@ -16,5 +16,16 @@ export const quiz = {
 	},
 	slideModal: {
 		goToPrezentation: 'Przejdź do prezentacji'
+	},
+	errorAlert: 'Coś poszło nie tak :( Spróbuj jeszcze raz...',
+	alert: {
+		success: {
+			text: 'Wszystkie pytania rozwiązane poprawnie!',
+			title: 'Gratulacje!'
+		},
+		tryAgain: {
+			text: 'Pozostałe pytania do rozwiązania: #{count}',
+			title: 'Spróbuj jeszcze raz!'
+		}
 	}
 }

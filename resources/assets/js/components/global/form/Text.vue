@@ -5,7 +5,6 @@
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
 			<input
-				type="text"
 				class="input"
 				:class="{'is-danger': hasErrors}"
 				:name="name"
@@ -30,8 +29,15 @@
 	import { formInput } from 'js/mixins/form-input'
 
 	export default {
-		name: 'Text',
-		props: ['name', 'placeholder'],
+		name: 'TextInput',
+		props: {
+			name: {
+				type: String,
+			},
+			placeholder: {
+				type: String
+			}
+		},
 		mixins: [formInput],
 		computed: {
 			default() {

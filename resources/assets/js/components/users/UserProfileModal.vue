@@ -97,6 +97,9 @@
 			font-size: $font-size-minus-2
 			text-transform: uppercase
 
+	.send-message
+		text-transform: uppercase
+
 </style>
 
 <script>

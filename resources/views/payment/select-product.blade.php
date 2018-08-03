@@ -17,13 +17,15 @@
 				</div>
 			</div>
 		@elseif($online->signups_start->isPast() && $onsite->signups_start->isPast())
-			<div class="has-text-centered">
-				<p class="margin bottom">
-					<a href="{{route('payment-personal-data', 'wnl-album')}}">
-						Zamów tylko nowe materiały
-					</a>
-				</p>
-			</div>
+			@if ($participantCoupon)
+				<div class="has-text-centered">
+					<p class="margin bottom">
+						<a href="{{route('payment-personal-data', 'wnl-album')}}">
+							Zamów tylko nowe materiały
+						</a>
+					</p>
+				</div>
+			@endif
 			<div class="columns is-hidden-mobile has-text-centered">
 				 <div class="column">
 					@if(!$onsite->available)

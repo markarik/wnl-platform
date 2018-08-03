@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Events\Comments\CommentRemoved;
-use App\Events\Comments\CommentRestoredEvent;
+use App\Events\Comments\CommentRestored;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\CommentTransformer;
 use App\Http\Requests\PostComment;
@@ -56,7 +56,7 @@ class CommentsApiController extends ApiController
 				event(new CommentRemoved($comment, Auth::user()->id, 'resolved'));
 			} else {
 				$comment->restore();
-				event(new CommentRestoredEvent($comment, Auth::user()->id));
+				event(new CommentRestored($comment, Auth::user()->id));
 			}
 		} else {
 			$comment->update([

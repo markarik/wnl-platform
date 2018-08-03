@@ -6,6 +6,7 @@ use App;
 use Storage;
 use App\Models\Slide;
 use Illuminate\Console\Command;
+use Facades\Lib\Bethink\Bethink;
 use Facades\Lib\SlideParser\Parser;
 use Intervention\Image\Facades\Image;
 use App\Notifications\ChartsUpdatingDone;
@@ -16,7 +17,7 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 {
 	use Notifiable;
 
-	const CHART_PATH_PATTERN = '/storage\/charts\/([^"]*)"/';
+	const CHART_PATH_PATTERN = '/public\/charts\/([^"]*)"/';
 
 	const CHART_URL_PATTERN = '/src="([^"]*)".*class="chart"/';
 
@@ -83,11 +84,13 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 		$this->info('Found chart! Updating image...');
 		$originalFileName = $match[0][1];
 		$chartHash = preg_replace('/.png(.*)/', '', $originalFileName);
-		if (!$this->updateFile($chartHash)) return;
+		$newPath = $this->updateFile($chartHash);
+		if (!$newPath) return;
 
 		$originalPath = $this->match(self::CHART_URL_PATTERN, $slide->content);
-		$newPath = env('APP_URL') . '/storage/charts/' . $chartHash . '.png?cb=' . str_random(32);
-		$slide->content = str_replace($originalPath[0][1], $newPath, $slide->content);
+		$cb = str_random(32);
+		$newAbsolutePath = Bethink::getAssetPublicUrl($newPath);
+		$slide->content = str_replace($originalPath[0][1], "{$newAbsolutePath}?cb={$cb}", $slide->content);
 		$slide->save();
 		$this->info('OK.');
 	}
@@ -108,7 +111,7 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 			$urlFormatted = sprintf($lucidUrl, $chartId, $imageSizePx);
 			$image = Image::make($urlFormatted)->stream('png');
 			$path = "charts/{$chartId}.png";
-			Storage::put('public/' . $path, $image);
+			Storage::put('public/' . $path, $image->__toString(), 'public');
 		}
 		catch (NotReadableException $e) {
 			$this->warn($e->getMessage());
@@ -116,7 +119,7 @@ class MegaUltraSuperDuperChartUpdateScript extends Command
 			return false;
 		}
 
-		return true;
+		return $path;
 	}
 
 	public function routeNotificationForSlack()

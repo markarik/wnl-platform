@@ -15,7 +15,7 @@ class CommentPostedHandler
 	 */
 	public function handle(CommentPosted $event, UserNotificationsGate $gate)
 	{
-		$comment = $event->comment;
+		$comment = $event->model;
 		$commentable = $comment->commentable;
 
 		$gate->notifyModerators($event);

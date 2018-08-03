@@ -5,7 +5,10 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary :showAlert="showAlert"></wnl-quiz-summary>
+			<wnl-quiz-summary/>
+		</div>
+		<div v-else-if="emptyQuizSet" class="has-text-centered">
+			Oho, wygląda że nie ma pytań kontrolnych dla tej lekcji.
 		</div>
 		<div v-else>
 			<p class="title is-5">
@@ -21,7 +24,6 @@
 			</p>
 			<wnl-quiz-list v-if="isLoaded"
 				module="quiz"
-				ref="quizList"
 				:allQuestions="getQuestionsWithAnswers"
 				:canEndQuiz="canEndQuiz"
 				:getReaction="getReaction"
@@ -49,7 +51,8 @@
 
 	import QuizList from 'js/components/quiz/QuizList'
 	import QuizSummary from 'js/components/quiz/QuizSummary'
-	import {scrollToTop} from 'js/utils/animations'
+	import {scrollToTop, scrollToElement} from 'js/utils/animations'
+	import { swalConfig } from 'js/utils/swal'
 
 	export default {
 		name: 'Quiz',
@@ -59,7 +62,7 @@
 		},
 		data() {
 			return {
-				showAlert: false
+				emptyQuizSet: false
 			}
 		},
 		props: ['screenData', 'readOnly'],
@@ -67,6 +70,7 @@
 			...mapGetters('quiz', [
 				'getAttempts',
 				'getQuestionsWithAnswers',
+				'getUnresolved',
 				'getReaction',
 				'isComplete',
 				'isLoaded',
@@ -79,6 +83,20 @@
 			displayResults() {
 				return this.readOnly || this.isComplete
 			},
+			tryAgainAlert() {
+				return {
+					text: this.$t('quiz.alert.tryAgain.text', {count: this.getUnresolved.length}),
+					title: this.$t('quiz.alert.tryAgain.title'),
+					type: 'info',
+				}
+			},
+			successAlert() {
+				return {
+					text: this.$t('quiz.alert.success.text'),
+					title: this.$t('quiz.alert.success.title'),
+					type: 'success',
+				}
+			},
 		},
 		methods: {
 			...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'commitSelectAnswer', 'resetState', 'checkQuiz']),
@@ -88,7 +106,11 @@
 					meta = JSON.parse(meta)
 				}
 
-				this.setupQuestions(meta.resources[0])
+				if (!meta.resources) {
+					this.emptyQuizSet = true;
+				} else {
+					this.setupQuestions(meta.resources[0])
+				}
 			},
 			onAnswerSelect(data) {
 				if (!this.isComplete) {
@@ -99,14 +121,27 @@
 				this.checkQuiz(force).then(() => {
 					if (this.isComplete) {
 						if (!force) {
-							this.showAlert = true
+							this.showAlert()
 						}
 						scrollToTop()
 					} else {
-						this.$refs.quizList.showAlert()
+						this.showAlert()
+						scrollToElement(this.$el.querySelector(`[class*='quiz-question-']`))
 					}
 				})
-			}
+			},
+			showAlert() {
+				let alertOptions = this.isComplete ? this.successAlert : this.tryAgainAlert;
+				this.$swal(this.getAlertConfig(alertOptions)).catch(_.noop)
+			},
+			getAlertConfig(options = {}) {
+				const defaults = {
+					showConfirmButton: false,
+					timer: 3500,
+				}
+
+				return swalConfig(_.merge(defaults, options))
+			},
 		},
 		mounted() {
 			this.setup()
@@ -122,7 +157,7 @@
 							this.setup()
 						})
 				}
-			}
+			},
 		}
 	}
 </script>

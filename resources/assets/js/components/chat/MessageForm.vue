@@ -121,7 +121,6 @@
 			...mapGetters([
 				'currentUserFullName',
 				'currentUserAvatar',
-				'currentUser'
 			]),
 			sendingDisabled() {
 				return !this.loaded || (this.message.length === 0 && this.mentions.length === 0) || this.message.length > 5000
@@ -161,7 +160,6 @@
 				this.$socketSendMessage({
 					room,
 					message: {
-						user: this.currentUser,
 						content: this.content
 					},
 					...this.messagePayload

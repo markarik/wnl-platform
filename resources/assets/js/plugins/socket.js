@@ -33,7 +33,7 @@ const createEventsQueue = () => {
 const WnlSocket = {
     install(Vue, {store}) {
         const onSocketError = (error) => {
-            if (error === 'Authentication error') {
+            if (error === 'Unauthorized') {
                 window.location.replace('/login');
                 return
             }

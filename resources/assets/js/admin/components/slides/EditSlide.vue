@@ -1,13 +1,18 @@
 <template>
 	<wnl-slides-editor
-		:slideId="slideId"
-		:screenId="Number(screenId)"
+		:slideId="Number(slideId) || 0"
+		:screenId="Number(screenId) || 0"
 		:resourceUrl="resourceUrl"
 		:excluded="['snippet']"
 		:remove="true"
+		@resetSearchInputs="resetSearchInputs"
 	>
 		<wnl-slides-search
+			@screenIdChange="saveScreenId"
+			@slideIdChange="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
+			:slideId="Number(slideId) || 0"
+			:screenId="Number(screenId) || 0"
 		/>
 	</wnl-slides-editor>
 </template>
@@ -30,11 +35,31 @@
 			}
 		},
 		methods: {
-			onResourceUrlFetched({url, slideId, screenId}) {
+			resetSearchInputs() {
+				this.slideId = 0
+				this.screenId = 0
+			},
+			saveScreenId(event) {
+				this.screenId = event.target.value
+			},
+			saveSlideId(event) {
+				this.slideId = event.target.value
+			},
+			onResourceUrlFetched({url, slideId}) {
 				this.slideId = slideId;
 				this.resourceUrl = url;
-				this.screenId = screenId
 			}
 		},
+		mounted() {
+			const slideId = this.$route.query.slideId
+			this.screenId = this.$route.query.screenId
+			this.slideId = slideId
+			if (slideId) {
+				this.onResourceUrlFetched({
+					url: `/papi/v1/slides/${slideId}`,
+					slideId: slideId,
+				})
+			}
+		}
 	}
 </script>

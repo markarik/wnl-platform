@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class FinalInvoice extends Mailable
+class FinalInvoice extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 	public $order;
@@ -34,11 +34,12 @@ class FinalInvoice extends Mailable
 	 */
 	public function build()
 	{
+		$invoiceData = \Storage::get($this->invoice->file_path);
+
 		return $this
 			->view('mail.final-invoice-notification')
 			->subject("Wystawiliśmy fakturę końcową do Twojego zamówienia numer {$this->order->id}")
-			->attach($this->invoice->file_path, [
-				'as'   => $this->invoice->number_slugged . '.pdf',
+			->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
 			])
 			->bcc('zamowienia@wiecejnizlek.pl');

@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Order;
+use App\Models\UserLesson;
+use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
 use App\Mail\PaymentConfirmation;
@@ -34,14 +36,19 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
+		$this->handleUserSubscription();
+		$this->handleUserLessons();
 		$this->handleCoupon();
 		$this->sendConfirmation();
 		$this->handleStudyBuddy();
+		$this->handleInstalments();
 
+		\Cache::tags("user-{$this->order->user->id}")->flush();
 	}
 
 	protected function handleCoupon()
 	{
+		\Log::notice("OrderPaid: handleCoupon called for order #{$this->order->id}");
 		$order = $this->order;
 
 		if ($order->coupon && $order->coupon->times_usable > 0) {
@@ -52,9 +59,10 @@ class OrderPaid implements ShouldQueue
 
 	protected function sendConfirmation()
 	{
+		\Log::notice("OrderPaid: sendConfirmation called for order #{$this->order->id}");
 		$order = $this->order;
 
-		\Log::notice('Issuing invoice and sending order confirmation.');
+		\Log::debug('Issuing invoice and sending order confirmation.');
 
 		$invoice = $this->getInvoice($order);
 
@@ -63,6 +71,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleStudyBuddy()
 	{
+		\Log::notice("OrderPaid: handleStudyBuddy called for order #{$this->order->id}");
 		dispatch(new OrderStudyBuddy($this->order));
 	}
 
@@ -77,5 +86,63 @@ class OrderPaid implements ShouldQueue
 		}
 
 		return (new Invoice)->advance($order);
+	}
+
+	protected function handleUserSubscription()
+	{
+		\Log::notice("OrderPaid: handleUserSubscription called for order #{$this->order->id}");
+		$product = $this->order->product;
+		$user = $this->order->user;
+
+		if (empty($product->access_start) && empty($product->access_end)) {
+			return;
+		}
+
+		$subscriptionAccessStart = $user->subscription->access_start ?? null;
+		$subscriptionAccessEnd = $user->subscription->access_end ?? null;
+
+		$accessStart = $subscriptionAccessStart
+			? min([$subscriptionAccessStart, $product->access_start])
+			: $product->access_start;
+		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
+
+		$subscription = UserSubscription::updateOrCreate(
+			['user_id' => $user->id],
+			['access_start' => $accessStart, 'access_end' => $accessEnd]
+		);
+	}
+
+	protected function handleUserLessons()
+	{
+		\Log::notice("OrderPaid: handleUserLessons called for order #{$this->order->id}");
+		$lessons = $this->order->product->lessons;
+		$user = $this->order->user;
+
+		$lessonsWithStartDate = $lessons->map(function ($item) use ($user) {
+			if ($item->isAccessible($user)) {
+				return null;
+			}
+
+			return [
+				'lesson_id'  => $item->id,
+				'start_date' => $item->pivot->start_date,
+				'user_id'    => $user->id,
+			];
+		})->filter()->toArray();
+
+		UserLesson::insert($lessonsWithStartDate);
+	}
+
+	protected function handleInstalments()
+	{
+		\Log::notice("OrderPaid: handleInstalments called for order #{$this->order->id}");
+		if ($this->order->method !== 'instalments') return;
+
+		$this->order->generatePaymentSchedule();
+
+		if ($this->order->user->suspended && !$this->order->is_overdue) {
+			$this->order->user->suspended = false;
+			$this->order->user->save();
+		}
 	}
 }

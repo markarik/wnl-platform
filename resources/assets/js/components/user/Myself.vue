@@ -137,7 +137,7 @@
 						iconTitle: 'Statystyki',
 					},
 					{
-						text: 'Dostępność lekcji',
+						text: 'Plan pracy',
 						itemClass: 'has-icon',
 						to: {
 							name: 'lessons-availabilites'
@@ -145,20 +145,54 @@
 						isDisabled: false,
 						method: 'push',
 						iconClass: 'fa fa-tasks',
-						iconTitle: 'Dostępność lekcji',
+						iconTitle: 'Plan pracy',
 					},
-					// {
-					// 	text: 'Zmiana hasła',
-					// 	itemClass: 'has-icon',
-					// 	to: {
-					// 		name: 'my-password',
-					// 		params: {},
-					// 	},
-					// 	isDisabled: false,
-					// 	method: 'push',
-					// 	iconClass: 'fa-key',
-					// 	iconTitle: 'Profil publiczny',
-					// },
+					{
+						text: 'Certyfikaty',
+						itemClass: 'has-icon',
+						to: {
+							name: 'certificates',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-trophy',
+						iconTitle: 'Certyfikaty',
+					},
+					{
+						text: 'Usuwanie postępu',
+						itemClass: 'has-icon',
+						to: {
+							name: 'progress-reset'
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa fa-exclamation-triangle',
+						iconTitle: 'Usuwanie postępu',
+					},
+					{
+						text: 'Zmiana hasła',
+						itemClass: 'has-icon',
+						to: {
+							name: 'my-password',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-key',
+						iconTitle: 'Zmiana hasła',
+					},
+					{
+						text: 'Usuń konto',
+						itemClass: 'has-icon',
+						to: {
+							name: 'delete-account',
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-ban',
+						iconTitle: 'Usuń konto',
+					},
 				]
 
 				return items

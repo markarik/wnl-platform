@@ -11,8 +11,6 @@
 
 	<p>Spieszymy z informacją, że Twój unikalny kod promocyjny został wykorzystany! Dzięki temu obdarowana przez Ciebie osoba i Ty, otrzymujecie 100zł zniżki na kurs! Dziękujemy Ci za podzielenie się informacją o Więcej niż LEK! :)</p>
 
-	<p style="font-size: 1.25em;">Prosimy Cię o przesłanie w odpowiedzi danych, na które mamy wykonać przelew ze zwrotem. :)</p>
-
 	<p>W razie pytań pozostajemy do dyspozycji!</p>
 
 	<p>Z pozdrowieniami,</p>

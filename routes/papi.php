@@ -52,6 +52,13 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
+		// Invoices
+		Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
+
+		// Certificates
+		Route::get("{$r['certificates']}/participation", 'CertificatesApiController@getAvailableCertificates');
+		Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
+
 		// Lessons
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
@@ -151,6 +158,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	});
 
 	// User Lessons
+	Route::put("{$r['user-lesson']}/{userId}/batch", 'UserLessonApiController@putBatch');
+	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 
 	// Users
@@ -170,6 +179,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	Route::get("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@put');
+
+	Route::patch("{$r['user-forget']}/{userId}", 'UserForgetAccountApiController@patch');
 
 	Route::put("{$r['users']}/{id}/{$r['user-password']}", 'UserPasswordApiController@put');
 
@@ -197,9 +208,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'UserReactionsApiController@getReactions');
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'UserReactionsApiController@getReactionsByCategory');
 
+	Route::delete("{$r['users']}/{userId}/{$r['user-collections']}", 'UserCollectionsApiController@delete');
+
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
+	Route::get("{$r['orders']}/{id}/.cancel", 'OrdersApiController@cancel');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
@@ -211,6 +225,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@getQuiz');
 	Route::put("{$r['user-quiz-results']}/{userId}/quiz/{quizId}", 'UserQuizResultsApiController@putQuiz');
 	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
+
+	// Annotations
+	Route::get("{$r['annotations']}/{id}", 'AnnotationsApiController@get');
+	Route::post("{$r['annotations']}", 'AnnotationsApiController@post');
+	Route::put("{$r['annotations']}/{id}", 'AnnotationsApiController@put');
+	Route::delete("{$r['annotations']}/{id}", 'AnnotationsApiController@delete');
 
 	// Reactions
 	Route::post($r['reactions'], 'ReactionsApiController@postMany');

@@ -44,7 +44,7 @@ class User extends Authenticatable
 		'password', 'remember_token',
 	];
 
-	protected $guarded = ['suspended'];
+	protected $guarded = ['suspended', 'deleted_at'];
 
 	protected $appends = ['subscription_status'];
 
@@ -77,7 +77,7 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\UserSettings');
 	}
 
-	public function address()
+	public function userAddress()
 	{
 		return $this->hasOne('App\Models\UserAddress');
 	}
@@ -132,6 +132,11 @@ class User extends Authenticatable
 		return $this->belongsToMany('App\Models\ChatRoom');
 	}
 
+	public function subscription()
+	{
+		return $this->hasOne('App\Models\UserSubscription');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -143,22 +148,27 @@ class User extends Authenticatable
 
 	public function getAddressAttribute($value)
 	{
-		return decrypt($value);
-	}
-
-	public function setAddressAttribute($value)
-	{
-		$this->attributes['address'] = encrypt($value);
+		return $this->userAddress->street;
 	}
 
 	public function getPhoneAttribute($value)
 	{
-		return decrypt($value);
+		return $this->userAddress->phone;
 	}
 
-	public function setPhoneAttribute($value)
+	public function getRecipientAttribute()
 	{
-		$this->attributes['phone'] = encrypt($value);
+		return $this->userAddress->recipient;
+	}
+
+	public function getZipAttribute()
+	{
+		return $this->userAddress->zip;
+	}
+
+	public function getCityAttribute()
+	{
+		return $this->userAddress->city;
 	}
 
 	public function getIsSubscriberAttribute()
@@ -168,21 +178,39 @@ class User extends Authenticatable
 
 	public function getSubscriptionStatusAttribute()
 	{
-		$dates = $this->getSubscriptionDates();
-		return $this->getSubscriptionStatus($dates);
+		$key = self::getSubscriptionKey($this->id);
+
+		return \Cache::tags("user-$this->id")->remember($key, 60 * 24, function () {
+			$dates = $this->getSubscriptionDates();
+
+			return $this->getSubscriptionStatus($dates);
+		});
 	}
 
-	public function getSubscriptionDatesAttribute() {
+	public function getSubscriptionDatesAttribute()
+	{
 		list ($min, $max) = $this->getSubscriptionDates();
+
 		return [
-			'min' => $min->timestamp,
-			'max' => $max->timestamp
+			'min' => $min->timestamp ?? null,
+			'max' => $max->timestamp ?? null,
 		];
+	}
+
+	public function getFullAddressAttribute()
+	{
+		$addr = $this->userAddress;
+
+		return "{$addr->street}, {$addr->zip} {$addr->city}";
 	}
 
 	protected function getSubscriptionStatus($dates)
 	{
 		list ($min, $max) = $dates;
+
+		if (!$min || !$max) {
+			return 'inactive';
+		}
 
 		if ($min->isPast() && $max->isFuture()) return 'active';
 		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
@@ -190,28 +218,12 @@ class User extends Authenticatable
 		return 'inactive';
 	}
 
-	protected function getSubscriptionDates() {
-		$key = self::getSubscriptionKey($this->id);
+	protected function getSubscriptionDates()
+	{
+		$min = $this->subscription ? Carbon::parse($this->subscription->access_start) : null;
+		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
 
-		return \Cache::remember($key, 60 * 24, function() {
-			if ($this->hasRole('admin') || $this->hasRole('moderator')) {
-				return [Carbon::now()->subCentury(), Carbon::now()->addCentury()];
-			}
-
-			$dates = \DB::table('orders')
-				->selectRaw('max(products.access_end) as max, min(products.access_start) as min')
-				->join('products', 'orders.product_id', '=', 'products.id')
-				->where('orders.user_id', $this->id)
-				->where('orders.paid', 1)
-				->where('orders.canceled', '<>', 1)
-				->first();
-
-			return [Carbon::parse($dates->min), Carbon::parse($dates->max)];
-		});
-	}
-
-	public static function getSubscriptionKey($id) {
-		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
+		return [$min, $max];
 	}
 
 	/**
@@ -285,5 +297,16 @@ class User extends Authenticatable
 			->whereHas('roles', function ($query) use ($role) {
 				return $query->where('name', $role);
 			})->get();
+	}
+
+	public function suspend()
+	{
+		$this->suspended = true;
+		$this->save();
+	}
+
+	public static function getSubscriptionKey($id)
+	{
+		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 }

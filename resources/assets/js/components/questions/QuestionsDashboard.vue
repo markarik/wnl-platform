@@ -82,20 +82,35 @@
 						</div>
 
 						<!-- Mock exam -->
-						<div v-if="stats.mock_exam">
+						<div v-if="stats.mock_exams.length">
 							<div class="questions-dashboard-subheading margin top">
 								<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
-							<div class="questions-stats stats-exam">
-								<div v-for="(stats, index) in parseStats(stats.mock_exam)"
-									:key="index"
-									class="stats-item stats-exam"
-									:class="{'is-first': index === 0}"
-								>
-									<span class="stats-title">{{stats.title}}</span>
-									<span class="progress-number" :class="scoreClass(stats.scoreTotal)">{{stats.scoreNumber}}</span>
-									<div class="score" :class="scoreClass(stats.scoreTotal)">{{stats.scoreTotal}}%</div>
+							<div class="questions-stats stats-exam" v-for="(mockExam, index) in stats.mock_exams" :key="index">
+								<div @click="toggleExamExpand(index)" :class="{'exam-header': true, 'is-expanded': expandedExams.includes(index)}">
+									<span class="exam-header__name">
+										{{mockExam.exam_name}}
+									</span>
+									<span class="exam-header__meta">
+										<span :class="scoreClass(mockExam.correct_perc_total)">{{Math.round(mockExam.correct_perc_total)}}%</span>
+										&nbsp;·&nbsp;
+										<span class="exam-header__date">{{parseDate(mockExam.created_at)}}</span>
+									</span>
+									<span class="exam-header__expand icon is-small">
+										<i :class="['fa', expandedExams.includes(index) ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
+									</span>
+								</div>
+								<div v-show="expandedExams.includes(index)">
+									<div v-for="(stats, index) in parseStats(mockExam)"
+										:key="index"
+										class="stats-item stats-exam"
+										:class="{'is-first': index === 0}"
+									>
+										<span class="stats-title">{{stats.title}}</span>
+										<span class="progress-number" :class="scoreClass(stats.scoreTotal)">{{stats.scoreNumber}}</span>
+										<div class="score" :class="scoreClass(stats.scoreTotal)">{{stats.scoreTotal}}%</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -212,6 +227,10 @@
 		margin: $margin-medium 0 $margin-huge
 
 	.questions-stats
+		&.stats-exam
+			border: $border-light-gray
+			margin-bottom: 12px
+
 		.stats-item
 			+flex-space-between()
 			flex-wrap: wrap
@@ -255,14 +274,6 @@
 				text-align: center
 				width: 60px
 
-			.score,
-			.progress-number
-				&.is-danger
-					color: $color-red
-
-				&.is-success
-					color: $color-green
-
 	.questions-feed-container
 		width: 100%
 		overflow-y: auto
@@ -279,11 +290,40 @@
 		.icon
 			color: $color-background-gray
 			margin-right: $margin-small
+
+	.exam-header
+		cursor: pointer
+		display: flex
+		flex-direction: column
+		flex-wrap: wrap
+		height: 60px
+		padding: $margin-small $margin-base
+		align-content: space-between
+		justify-content: center
+		margin-bottom: $margin-small
+
+		&.is-expanded
+			border-bottom: $border-light-gray
+
+		&__name
+			font-weight: bold
+
+		&__date
+			font-size: $font-size-minus-1
+			color: $color-gray-dimmed
+
+	.score.is-danger
+		color: $color-red
+
+	.score.is-success
+		color: $color-green
+
 </style>
 
 <script>
 	import {isEmpty} from 'lodash'
 	import {mapActions, mapGetters} from 'vuex'
+	import moment from 'moment';
 
 	import QuestionsFeed from 'js/components/notifications/feeds/questions/QuestionsFeed'
 	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
@@ -313,6 +353,7 @@
 				plan: null,
 				planRoute: {},
 				stats: {},
+				expandedExams: []
 			}
 		},
 		computed: {
@@ -335,6 +376,17 @@
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
+			toggleExamExpand(index) {
+				const indexOf = this.expandedExams.indexOf(index)
+				if (indexOf > -1) {
+					this.expandedExams.splice(indexOf, 1);
+				} else {
+					this.expandedExams.push(index)
+				}
+			},
+			parseDate(date) {
+				return moment(date.date).format('LL')
+			},
 			setPlanRoute() {
 				this.planRoute = {
 					name: 'questions-list',
@@ -375,7 +427,7 @@
 					score: Math.round(source.correct_perc),
 					scoreNumber: `${source.correct}/${source.total}`,
 					scoreTotal: Math.round(source.correct_perc_total),
-					title: 'Cała baza',
+					title: 'Całkowity wynik',
 					total: source.total,
 				}]
 

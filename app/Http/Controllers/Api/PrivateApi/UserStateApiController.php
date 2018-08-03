@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserCourseProgress;
 use App\Models\UserQuizResults;
 use App\Models\UserTime;
+use App\Jobs\ArchiveCourseProgress;
 use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,10 +78,6 @@ class UserStateApiController extends ApiController
 		$lesson = $request->lesson;
 
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
-		UserCourseProgress::firstOrCreate([
-			'user_id'   => $id,
-			'lesson_id' => $lessonId,
-		]);
 
 		return $this->respondOk();
 	}
@@ -132,9 +129,16 @@ class UserStateApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
+		$stats = self::countUserStats($userObject);
+
+		return $this->json($stats);
+	}
+
+	static function countUserStats(User $user)
+	{
 		// Ay Ay Ay Profile Id not User Id
-		$profileId = $userObject->profile->id;
-		$userId = $userObject->id;
+		$profileId = $user->profile->id;
+		$userId = $user->id;
 
 		$userTime = UserTime::where('user_id', $userId)->orderBy('created_at', 'desc')->first();
 		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)
@@ -154,7 +158,7 @@ class UserStateApiController extends ApiController
 			->whereIn('status', ['in-progress', 'complete'])
 			->count();
 
-		$stats = [
+		return [
 			'time'           => [
 				'minutes' => !empty($userTime) ? $userTime->time : 0,
 			],
@@ -173,20 +177,14 @@ class UserStateApiController extends ApiController
 				'total'  => $numberOfQuizQuestions,
 			],
 		];
-
-		return $this->json($stats);
 	}
 
 	public function deleteCourse($userId, $courseId) {
 		$user = \Auth::user();
 		$profileId = $user->profile->id;
-		$userCourseProgress = UserCourseProgress::where('user_id', $userId)->first();
+		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)->first();
 
-		if (is_null($userCourseProgress)) {
-			return $this->respondOk();
-		}
-
-		if (!$user->can('delete', $userCourseProgress)) {
+		if (!is_null($userCourseProgress) && !$user->can('delete', $userCourseProgress)) {
 			return $this->respondForbidden();
 		}
 
@@ -201,7 +199,11 @@ class UserStateApiController extends ApiController
 		$courseKey = self::getCourseRedisKey($profileId, $courseId);
 		Redis::del($courseKey);
 
-		UserCourseProgress::where('user_id', $userId)->delete();
+		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)->get();
+
+		dispatch_now(new ArchiveCourseProgress($user, $userCourseProgress));
+
+		UserCourseProgress::where('user_id', $profileId)->delete();
 
 		$this->respondOk();
 	}

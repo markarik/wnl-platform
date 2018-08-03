@@ -6,8 +6,6 @@
 				<slot name="content"></slot>
 			</div>
 		</div>
-		<transition name="fade">
-		</transition>
 	</div>
 </template>
 

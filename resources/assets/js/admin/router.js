@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {scrollToTop} from 'js/utils/animations'
-import {resource} from 'js/utils/config'
-import {isProduction} from 'js/utils/env'
 
 Vue.use(Router)
 
@@ -34,6 +31,11 @@ let routes = [
 		name: 'charts',
 		path: '/admin/app/charts',
 		component: require('js/admin/components/slides/Charts.vue'),
+	},
+	{
+		name: 'annotations',
+		path: '/admin/app/annotations',
+		component: require('js/admin/components/slides/annotations/Annotations.vue'),
 	},
 	{
 		name: 'quizes',

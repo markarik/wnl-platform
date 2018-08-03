@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PaymentConfirmation extends Mailable
+class PaymentConfirmation extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 	public $order;
@@ -40,8 +40,9 @@ class PaymentConfirmation extends Mailable
 			->bcc('zamowienia@wiecejnizlek.pl');
 
 		if ($this->invoice) {
-			$this->attach($this->invoice->file_path, [
-				'as'   => $this->invoice->number_slugged . '.pdf',
+			$invoiceData = \Storage::get($this->invoice->file_path);
+
+			$this->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
 			]);
 		}

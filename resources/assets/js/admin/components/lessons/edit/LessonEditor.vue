@@ -22,6 +22,12 @@
 					name="name"
 					v-model="form.name"
 				></wnl-input>
+				<wnl-form-checkbox
+					class="checkbox button"
+					:form="form"
+					name="is_required"
+					v-model="form.is_required"
+				>Lekcja obowiązkowa</wnl-form-checkbox>
 				<div class="control">
 					<a class="button is-small is-success"
 						:class="{'is-loading': loading}"
@@ -40,6 +46,12 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.checkbox
+		margin-right: 10px
+		display: flex
+		justify-content: space-between
 
 </style>
 
@@ -53,6 +65,7 @@
 	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue'
 	import Input from 'js/admin/components/forms/Input.vue'
 	import Select from 'js/admin/components/forms/Select.vue'
+	import Checkbox from 'js/admin/components/forms/Checkbox.vue'
 
 	export default {
 		name: 'LessonEditor',
@@ -60,6 +73,7 @@
 			'wnl-screens-editor': ScreensEditor,
 			'wnl-input': Input,
 			'wnl-select': Select,
+			'wnl-form-checkbox': Checkbox,
 		},
 		mixins: [ alerts ],
 		data() {
@@ -68,6 +82,7 @@
 					group_id: null,
 					groups: null,
 					name: null,
+					is_required: null,
 				}),
 				groups: [],
 				loading: false,

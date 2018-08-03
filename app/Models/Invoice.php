@@ -10,11 +10,17 @@ class Invoice extends Model
 		'amount' => 'float',
 	];
 
-	protected $fillable = ['order_id', 'number', 'series', 'external_id', 'amount', 'vat'];
+	protected $fillable = ['order_id', 'number', 'series', 'external_id',
+		'amount', 'vat', 'corrected_invoice_id'];
 
 	public function order()
 	{
 		return $this->belongsTo('App\Models\Order');
+	}
+
+	public function correctives()
+	{
+		return $this->hasMany('App\Models\Invoice', 'corrected_invoice_id');
 	}
 
 	public function getFileNameAttribute()
@@ -24,7 +30,7 @@ class Invoice extends Model
 
 	public function getFilePathAttribute()
 	{
-		return storage_path('app/invoices/' . $this->file_name);
+		return 'invoices/' . $this->file_name;
 	}
 
 	public function getNumberSluggedAttribute()
@@ -54,6 +60,11 @@ class Invoice extends Model
 	public function getNetValueAttribute()
 	{
 		return $this->amount / (1 + $this->vatRate);
+	}
+
+	public function getCorrectedAmountAttribute()
+	{
+		return $this->amount + $this->correctives->sum('amount');
 	}
 
 	public function scopeRecent($query)

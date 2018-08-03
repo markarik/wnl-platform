@@ -1,6 +1,9 @@
 <template>
 	<div class="wnl-screen-html">
 		<div class="content" v-html="content"></div>
+		<div class="margin vertical has-text-centered">
+			{{this.$t('annotations.mockExamResults')}}
+		</div>
 		<p class="margin vertical has-text-centered">
 			<router-link :to="routeParams" class="button is-primary">
 				{{this.$t('questions.nav.mockExam')}}!
@@ -26,13 +29,19 @@
 			content() {
 				return this.screenData.content
 			},
+			examTagId() {
+				if (!this.screenData.meta.resources) return 0
+
+				const exam = this.screenData.meta.resources.find(resource => {
+					return resource.name === 'exam_tag_id'
+				}) || {}
+
+				return exam.id || 0
+			},
 			routeParams() {
 				return {
 					name: 'questions-list',
 					params: {
-						presetFilters: [
-							'by_taxonomy-exams.items[0]',
-						],
 						presetOptions: {
 							activeView: 'test',
 							canChangeTime: false,
@@ -40,7 +49,8 @@
 							sizesToChoose: [200],
 							testQuestionsCount: 200,
 							time: 240,
-							examMode: true
+							examMode: true,
+							examTagId: this.examTagId
 						},
 					},
 				}

@@ -21,7 +21,7 @@ class LessonTags extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Attach lesson tags to quiz questions';
+	protected $description = 'Attach lesson tags to quiz questions and slides';
 
 	/**
 	 * Create a new command instance.

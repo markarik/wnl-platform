@@ -19,10 +19,11 @@ class UserAddressTransformer extends ApiTransformer
 	public function transform(UserAddress $address)
 	{
 		$data = [
-			'street' => $address->street,
-			'zip'    => $address->zip,
-			'city'   => $address->city,
-			'phone'  => $address->phone,
+			'street'    => $address->street,
+			'zip'       => $address->zip,
+			'city'      => $address->city,
+			'phone'     => $address->phone,
+			'recipient' => $address->recipient,
 		];
 
 		if ($this->parent) {

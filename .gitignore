@@ -5,7 +5,6 @@
 /.vscode
 .env
 .env.backup
-composer.lock
 env*/
 public/css/*
 public/js/*
@@ -21,3 +20,4 @@ public/hot
 phpunit.dusk.xml
 scenario.dusk
 public/report.html
+*.sql

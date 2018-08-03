@@ -56,14 +56,13 @@
 		position: relative
 </style>
 <script>
-	import {SOCKET_EVENT_MESSAGE_PROCESSED} from 'js/plugins/socket'
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
 	import Message from './Message.vue'
-	import {getApiUrl} from 'js/utils/env'
 	import {nextTick} from 'vue'
 	import _ from 'lodash'
 	import highlight from 'js/mixins/highlight'
 
-	import {mapGetters, mapActions} from 'vuex'
+	import {mapGetters} from 'vuex'
 
 	export default {
 		components: {
@@ -119,25 +118,28 @@
 			content() {
 				return this.$el.getElementsByClassName('wnl-chat-content')[0]
 			},
-			contentInside() {
-				// In case you wonder - thank Firefox :/
-				return this.$el.getElementsByClassName('wnl-chat-content-inside')[0]
-			},
 		},
 		methods: {
 			scrollToBottom() {
 				nextTick(() => {
-					this.container.scrollTop = this.container.scrollHeight + 100
+					this.container.scroll({
+						top: this.container.scrollHeight + 100,
+						behavior: 'smooth'
+					})
 				})
 			},
 			pullDebouncer(event) {
-				let target = event.target,
-					height = target.scrollHeight,
-					shouldPull =
+				const target = event.target
+				const scrollPosition = target.scrollTop < 0 ?
+					target.scrollHeight + target.scrollTop
+					: target.scrollTop
+				const height = target.scrollHeight
+				const shouldPull =
 						// make sure we're not pulling from cold storage at the moment,
 						!this.isPulling &&
 						// we're reaching the top of the messages container,
-						(target.scrollTop / height) < 0.1 &&
+
+						(scrollPosition / height) < 0.1 &&
 						this.hasMore
 
 				if (shouldPull) this.pull()
@@ -176,14 +178,18 @@
 		},
 		mounted() {
 			this.pullDebouncer = _.debounce(this.pullDebouncer, 300)
-			this.$socketRegisterListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.scrollToBottom)
+			this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom)
 		},
 		beforeDestroy() {
-			this.$socketRemoveListener(SOCKET_EVENT_MESSAGE_PROCESSED, this.scrollToBottom)
+			this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom)
 		},
 		watch: {
 			highlightedMessageId() {
 				if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId)
+			},
+			'loaded' (newVal) {
+				// required by firefox
+				this.scrollToBottom()
 			}
 		}
 	}

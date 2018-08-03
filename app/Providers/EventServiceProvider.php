@@ -47,7 +47,7 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\Comments\CommentRestoredEvent' => [
+		'App\Events\Comments\CommentRestored' => [
 			'App\Listeners\UserNotificationsGate',
 			'App\Listeners\ContentUpdatesGate',
 		],

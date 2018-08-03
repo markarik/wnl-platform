@@ -18,6 +18,11 @@ const state = {
 		avatar: '',
 		roles: [],
 		user_id: 0,
+		subscription: {
+			dates: {
+				min: 0, max: 0
+			}
+		}
 	},
 	settings: getDefaultSettings(),
 }
@@ -34,6 +39,7 @@ const getters = {
 	currentUserRoles: state => state.profile.roles,
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
 	getSetting: state => setting => state.settings[setting],
+	thickScrollbar: state => state.settings.thick_scrollbar,
 	getAllSettings: state => state.settings,
 	hasRole: state => role => state.profile.roles.indexOf(role) > -1,
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
@@ -88,12 +94,18 @@ const actions = {
 	fetchCurrentUserProfile({ commit }) {
 		return new Promise((resolve, reject) => {
 			getCurrentUser().then((user) => {
+				if (!user.user_id) {
+					$wnl.logger.error('current user returned user with ID 0', {
+						profile: user
+					})
+					return reject(new Error('current user returned user with ID 0'));
+				}
 				commit(types.USERS_SETUP_CURRENT, user)
 				resolve()
 			})
 			.catch((error) => {
 				$wnl.logger.error(error)
-				reject()
+				reject(error)
 			})
 		})
 	},
@@ -110,16 +122,6 @@ const actions = {
 				reject()
 			})
 		})
-	},
-
-	fetchUserSubscription({commit}) {
-		return _fetchUserSubscription()
-			.then(({data}) => {
-				commit(types.USERS_SET_SUBSCRIPTION, data)
-			})
-			.catch((error) => {
-				$wnl.logger.error(error)
-			})
 	},
 
 	fetchUserSettings({ commit }) {
@@ -156,15 +158,17 @@ const actions = {
 
 	syncSettings({ commit, getters }) {
 		setUserSettings(getters.getAllSettings)
+	},
+
+	deleteAccount({getters}, payload) {
+		return axios.patch(getApiUrl(`user_forget/${getters.currentUserId}`), {
+			password: payload
+		})
 	}
 }
 
 const _fetchUserStats = (userId) => {
 	return axios.get(getApiUrl(`users/${userId}/state/stats`));
-}
-
-const _fetchUserSubscription = () => {
-	return axios.get(getApiUrl('user_subscription/current'));
 }
 
 export default {

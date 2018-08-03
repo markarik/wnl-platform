@@ -31,6 +31,6 @@ class UserCourseProgressPolicy
 	 */
 	public function delete(User $user, UserCourseProgress $userCourseProgress)
 	{
-		return $user->id === $userCourseProgress->user_id;
+		return $user->profile->id === $userCourseProgress->user_id;
 	}
 }

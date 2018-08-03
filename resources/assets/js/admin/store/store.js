@@ -12,6 +12,7 @@ import lessons from 'js/admin/store/modules/lessons'
 import notifications from 'js/store/modules/notifications'
 import quiz from 'js/admin/store/modules/quiz'
 import autocomplete from 'js/store/modules/autocomplete'
+import alerts from 'js/store/modules/alerts'
 
 Vue.use(Vuex)
 
@@ -27,7 +28,8 @@ export default new Vuex.Store({
 		notifications,
 		lessons,
 		quiz,
-		autocomplete
+		autocomplete,
+		alerts
 	},
 	strict: debug
 })

@@ -44,10 +44,13 @@ class GenerateCouponsForUsers extends Command
 			->whereHas('orders', function ($query) {
 				$query->where('paid', 1);
 			})
+			->whereHas('roles', function ($query) {
+				$query->where('name', 'edition-2-participant');
+			})
 			->where('suspended', 0)
 			->get();
 
-		$expires = Carbon::now()->addYears(20);
+		$expires = Carbon::now()->addYears(10);
 		foreach ($users as $user) {
 			Coupon::create([
 				'user_id'    => $user->id,

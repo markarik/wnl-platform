@@ -3,10 +3,13 @@ namespace App\Providers;
 
 use App;
 use App\Models;
+use App\Notifications\QueueJobFailed;
 use App\Observers;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Bschmitt\Amqp\AmqpServiceProvider;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
 use Laravel\Tinker\TinkerServiceProvider;
@@ -15,6 +18,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
 use Monolog\Logger;
 use Validator;
+use Illuminate\Support\Facades\Queue;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
 		$this->registerModelObservers();
 		$this->registerSentryLogger();
 		$this->registerCustomValidators();
+		$this->registerQueueLogger();
 	}
 
 	/**
@@ -109,6 +114,16 @@ class AppServiceProvider extends ServiceProvider
 		Validator::extend('alpha_comas', function ($attribute, $value) {
 			// Useful for textareas - accepts letters, comas, dots, spaces and hyphens
 			return preg_match('/^[\pL\s\d-,.:;()""]+$/u', $value);
+		});
+	}
+
+	protected function registerQueueLogger()
+	{
+		Queue::failing(function (JobFailed $event) {
+			app('sentry')->captureException($event->exception, [
+				'extra' => ['app_version' => config('app.version')],
+				'job' => $event->job->resolveName(),
+			]);
 		});
 	}
 }

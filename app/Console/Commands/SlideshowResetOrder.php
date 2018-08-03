@@ -39,11 +39,13 @@ class SlideshowResetOrder extends Command
 	public function handle()
 	{
 		$slideshowId = $this->argument('slideshowId');
+		$whereClause = [
+			['presentable_type', 'App\\Models\\Slideshow'],
+			['presentable_id', '=', (int) $slideshowId],
+		];
+
 		$presentables = Presentable::select()
-			->where([
-				['presentable_type', '=', 'App\\Models\\Slideshow'],
-				['presentable_id', '=', $slideshowId],
-			])
+			->where($whereClause)
 			->orderBy('order_number', 'asc')
 			->get();
 
@@ -51,6 +53,8 @@ class SlideshowResetOrder extends Command
 			$presentable->order_number = $index;
 			$presentable->save();
 		}
+
+		\Cache::tags(json_encode(['where' => $whereClause]))->flush();
 
 		return;
 	}

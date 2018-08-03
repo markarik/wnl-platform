@@ -43,18 +43,6 @@ export const actions = {
 				}, timeoutWithDefault)
 			})
 	},
-	[types.SOCKET_CONNECTION_ERROR]({dispatch}) {
-		dispatch(
-			'addAutoDismissableAlert',
-			{type: 'error', text: 'Nie udało się połączyć z serwerem czata. Próbujemy nawiązać połączenie... :) '}
-		)
-	},
-	[types.SOCKET_CONNECTION_RECONNECTED]({dispatch}) {
-		dispatch(
-			'addAutoDismissableAlert',
-			{type: 'success', text: 'Nawiązaliśmy połączenie z serwerem czata!'}
-		)
-	}
 };
 
 export default {

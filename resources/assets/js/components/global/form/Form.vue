@@ -39,7 +39,8 @@
 			'hideDefaultSubmit',
 			'suppressEnter',
 			'resetAfterSubmit',
-			'loading'
+			'loading',
+			'submitError'
 		],
 		computed: {
 			anyErrors() {
@@ -65,7 +66,7 @@
 			mutation(mutation, payload = {}) {
 				return this.$store.commit(`${this.name}/${mutation}`, payload)
 			},
-			keyEvent() {
+			keyEvent(event) {
 				if (event.keyCode === 13 && !this.suppressEnter) {
 					this.onSubmitForm()
 				}
@@ -77,9 +78,11 @@
 					event.stopImmediatePropagation();
 					event.stopPropagation();
 				}
+				event.stopPropagation();
 			},
 			onSubmitForm() {
-				const hasAttachChanged = this.hasAttachChanged();
+				const hasAttachChanged = this.hasAttachChanged()
+
 
 				if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 					return false
@@ -106,19 +109,24 @@
 							hasAttachChanged && this.cacheAttach()
 						},
 						reason => {
-							if (reason.response.status === 404) {
-								this.errorFading(this.$t('ui.error.notFound'))
+							if (this.submitError) {
+								this.$emit('submitError', reason.response)
 							} else {
-								this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+								this.handleError(reason)
 							}
-							this.$emit('submitError')
 						},
 					)
 					.catch((error) => {
 						$wnl.logger.error(error, error.stack)
 						this.errorFading('Nie udało się.')
-						this.$emit('submitError')
 					})
+			},
+			handleError(reason) {
+				if (reason.response.status === 404) {
+					this.errorFading(this.$t('ui.error.notFound'))
+				} else {
+					this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
+				}
 			},
 			cacheAttach() {
 				this.cachedAttach = _.cloneDeep(this.attach);

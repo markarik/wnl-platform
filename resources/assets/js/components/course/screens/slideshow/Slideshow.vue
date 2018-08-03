@@ -24,12 +24,19 @@
 			</div>
 			<div class="slideshow-menu">
 				<wnl-annotations
-					v-if="!isLoading"
-					:currentSlideId="currentSlideId"
+					v-if="!isLoadingComments"
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
+					:screenId="Number(screenId)"
+					:currentSlideId="currentSlideId"
 				></wnl-annotations>
+				<div v-else class="loading-comments">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-circle-o-notch fa-spin"></i>
+					</span>
+					Ładuję komentarze
+				</div>
 			</div>
 		</div>
 	</div>
@@ -106,6 +113,9 @@
 
 	.slide-meta
 		text-align: center
+
+	.loading-comments
+		color: $color-gray-dimmed
 </style>
 
 <script>
@@ -142,7 +152,7 @@
 				loaded: false,
 				slideChanged: false,
 				slideshowElement: {},
-				modifiedSlides: {}
+				modifiedSlides: {},
 			}
 		},
 		props: {
@@ -174,7 +184,8 @@
 				'getSlidePositionById',
 				'getSlideIdFromIndex',
 				'getSlideById',
-				'presentableSortedSlidesIds'
+				'presentableSortedSlidesIds',
+				'isLoadingComments'
 			]),
 			currentSlideIndex() {
 				 return this.currentSlideNumber - 1
@@ -201,7 +212,7 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideshowComments']),
 			...mapActions(['toggleOverlay', 'showNotification']),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
@@ -297,8 +308,8 @@
 						}
 						this.focusSlideshow()
 						this.loaded = true
+						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 						this.toggleOverlay({source: 'slideshow', display: false})
-
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
@@ -338,11 +349,6 @@
 							this.child = child
 							this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
 							this.setEventListeners()
-							this.onAnnotationsUpdated(this.comments({
-								resource: 'slides',
-								id: this.getSlideIdFromIndex(this.currentSlideIndex),
-							}))
-
 							child.frame.setAttribute('mozallowfullscreen', '');
 							child.frame.setAttribute('allowfullscreen', '');
 
@@ -408,6 +414,8 @@
 							this.onRefreshSlideshow()
 						}
 						this.modifiedSlides = {}
+					} else if (event.data.value.name === 'navigate') {
+						window.open(event.data.value.data)
 					}
 				}
 			},
@@ -497,11 +505,9 @@
 						this.child.destroy()
 					}
 					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
-
 					this.setSlideshowHtmlContent(data)
 						.then(() => {
 							const slide = this.getSlideById(this.currentSlideId)
-							const currentBookmarkState = slide.bookmark.hasReacted
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						})
 				})
@@ -538,6 +544,8 @@
 				this.setup({id: this.presentableId})
 					.then(() => {
 						return this.initSlideshow()
+					}).then(() => {
+						this.setupSlideshowComments(this.presentableSortedSlidesIds);
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
@@ -595,7 +603,7 @@
 				this.modifiedSlides = {}
 			},
 			'screenData' (newValue, oldValue) {
-				if (newValue.type === 'slideshow') {
+				if (newValue.type === 'slideshow' && newValue.id !== oldValue.id) {
 					this.toggleOverlay({source: 'slideshow', display: true})
 
 					this.setup({id: this.presentableId})
@@ -603,6 +611,8 @@
 						this.initSlideshow()
 							.then(() => {
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
+							}).then(() => {
+								this.setupSlideshowComments(this.presentableSortedSlidesIds);
 							}).catch(error => {
 								this.toggleOverlay({source: 'slideshow', display: false})
 								$wnl.logger.capture(error)
@@ -613,8 +623,16 @@
 					})
 				}
 			},
-			'slideOrderNumber' (slideOrderNumber, oldValue) {
+			'slideOrderNumber' (slideOrderNumber) {
 				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)
+			},
+			isLoadingComments(isLoadingComments) {
+				if (!isLoadingComments) {
+					this.onAnnotationsUpdated(this.comments({
+						resource: 'slides',
+						id: this.getSlideIdFromIndex(this.currentSlideIndex),
+					}))
+				}
 			}
 		}
 	}

@@ -81,6 +81,12 @@
 				</div>
 
 				<div class="control">
+					{!! form_label($form->recipient) !!}
+					{!! form_widget($form->recipient) !!}
+					{!! form_errors($form->recipient) !!}
+				</div>
+
+				<div class="control">
 					{!! form_label($form->address) !!}
 					{!! form_widget($form->address) !!}
 					{!! form_errors($form->address) !!}
@@ -147,17 +153,12 @@
 				<p class="subtitle">@lang('payment.personal-data-consents-lead')</p>
 			</div>
 
-			<div class="form-group small">
+			<div class="tou form-group small">
 				<div class="box">
-					<div class="control margin bottom">
-						{!! form_widget($form->consent_account) !!}
-						{!! html_entity_decode(form_label($form->consent_account)) !!}
-						{!! form_errors($form->consent_account) !!}
-					</div>
 					<div class="control">
-						{!! form_widget($form->consent_order) !!}
-						{!! html_entity_decode(form_label($form->consent_order)) !!}
-						{!! form_errors($form->consent_order) !!}
+						{!! form_widget($form->consent_terms) !!}
+						{!! html_entity_decode(form_label($form->consent_terms)) !!}
+						{!! form_errors($form->consent_terms) !!}
 					</div>
 				</div>
 			</div>
@@ -169,17 +170,6 @@
 						{!! form_widget($form->consent_newsletter) !!}
 						{!! html_entity_decode(form_label($form->consent_newsletter)) !!}
 						{!! form_errors($form->consent_newsletter) !!}
-					</div>
-				</div>
-			</div>
-
-			<div class="tou form-group small">
-				<p class="form-header">@lang('payment.personal-data-tou-heading')</p>
-				<div class="box">
-					<div class="control">
-						{!! form_widget($form->consent_terms) !!}
-						{!! html_entity_decode(form_label($form->consent_terms)) !!}
-						{!! form_errors($form->consent_terms) !!}
 					</div>
 				</div>
 			</div>

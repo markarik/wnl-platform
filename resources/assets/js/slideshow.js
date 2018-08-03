@@ -147,6 +147,12 @@ const setupHandshake = () => {
 
 			$annotationsContainer.append(createAnnotations(annotationsData))
 			$annotationsContainer.show()
+
+			$annotationsContainer.on('click', 'a', function(event) {
+				if (event.target.href) {
+					parent.emit('navigate', event.target.href)
+				}
+			})
 		},
 		setBookmarkState(isBookmarked) {
 			const bookmarkedClassname = 'is-bookmarked'
@@ -176,7 +182,7 @@ const promisedChild = setupHandshake()
 		parent = parentWindow
 		parent.emit('loaded', true)
 		setMenuListeners(parent)
-		setBookmarkEventListener(parent)
+		setBookmarkClickListener(parent)
 	}).catch(exception => {
 		console.error(exception)
 		parent.emit('error')
@@ -260,6 +266,7 @@ function createAnnotations(annotations) {
 
 function toggleAnnotations() {
 	$slideshowAnnotations.toggle()
+	return false
 }
 
 function setMenuListeners(parent) {
@@ -273,23 +280,39 @@ function setMenuListeners(parent) {
 		emitToggleFullscreen();
 	});
 	$toggleAnnotations.on('click', toggleAnnotations)
-	document.addEventListener('keydown', closeFullscreenWithEsc)
+	document.addEventListener('keydown', function (e) {
+		keyDown(e, parent)
+	});
+	$slideshowAnnotations.click(() => false)
+	$(document).on('click', () => $slideshowAnnotations.hide())
 }
 
-function closeFullscreenWithEsc(e) {
-	if (e.keyCode === 27) {
-		emitToggleFullscreen(false)
-	}
+function keyDown(e, parent) {
+	switch(e.keyCode) {
+		case 27: // esc
+			emitToggleFullscreen(false)
+			break
+		case 67: // c
+			toggleAnnotations()
+			break
+		case 83: // s
+			toggleBookmark(parent)
+			break
+	};
 }
 
-function setBookmarkEventListener(parent) {
+function setBookmarkClickListener(parent) {
 	$('.bookmark').click(function (event) {
-		if (isSavingBookmark) return
+		toggleBookmark(parent)
+	});
+}
 
-		isSavingBookmark = true;
-		parent.emit('bookmark', {
-			index: Reveal.getState().indexh,
-		});
+function toggleBookmark(parent) {
+	if (isSavingBookmark) return
+
+	isSavingBookmark = true;
+	parent.emit('bookmark', {
+		index: Reveal.getState().indexh,
 	});
 }
 

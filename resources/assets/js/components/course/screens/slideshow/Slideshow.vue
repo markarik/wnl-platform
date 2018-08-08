@@ -123,9 +123,10 @@
 	import axios from 'axios'
 	import Postmate from 'postmate'
 	import screenfull from 'screenfull'
-	import {mapGetters, mapActions} from 'vuex'
+	import {mapGetters, mapActions, mapMutations} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
 
+	import * as types from 'js/store/mutations-types'
 	import Annotations from './Annotations'
 	import LinkedQuestions from './LinkedQuestions.vue'
 	import SlideshowNavigation from './SlideshowNavigation'
@@ -212,8 +213,11 @@
 			},
 		},
 		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideshowComments']),
+			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideComments']),
 			...mapActions(['toggleOverlay', 'showNotification']),
+			...mapMutations('slideshow', {
+				loadingComments: types.SLIDESHOW_LOADING_COMMENTS
+			}),
 			toggleBookmarkedState(slideIndex) {
 				this.bookmarkLoading = true
 
@@ -334,6 +338,7 @@
 						this.loaded = true
 						this.toggleOverlay({source: 'slideshow', display: false})
 						this.child.call('refreshChart', this.currentSlideIndex)
+						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
@@ -511,7 +516,26 @@
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 						})
 				})
-			}
+			},
+			changeSlideWatcher(currentSlideId, previousSlideId) {
+				this.setupSlideComments({id: currentSlideId})
+
+				Echo.channel(`commentable-slide-${currentSlideId}`)
+					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
+						switch (event) {
+							case 'comment-posted':
+								await this.setupSlideComments({id: currentSlideId, query: {
+										where: [['id', subject.id]]
+									}})
+								break
+						}
+					});
+
+				Echo.leave(`commentable-slide-${previousSlideId}`)
+			},
+			debouncedChangeSlideWatcher: _.debounce(function(...args) {
+				this.changeSlideWatcher(...args)
+				}, 300, {leading: false, trailing: true})
 		},
 		mounted() {
 			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
@@ -533,7 +557,6 @@
 					}
 				});
 
-
 			Postmate.debug = isDebug()
 			this.toggleOverlay({source: 'slideshow', display: true})
 			if (this.htmlContent) {
@@ -544,8 +567,6 @@
 				this.setup({id: this.presentableId})
 					.then(() => {
 						return this.initSlideshow()
-					}).then(() => {
-						this.setupSlideshowComments(this.presentableSortedSlidesIds);
 					}).catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
 						$wnl.logger.capture(error)
@@ -611,8 +632,6 @@
 						this.initSlideshow()
 							.then(() => {
 								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
-							}).then(() => {
-								this.setupSlideshowComments(this.presentableSortedSlidesIds);
 							}).catch(error => {
 								this.toggleOverlay({source: 'slideshow', display: false})
 								$wnl.logger.capture(error)
@@ -633,7 +652,11 @@
 						id: this.getSlideIdFromIndex(this.currentSlideIndex),
 					}))
 				}
-			}
+			},
+			currentSlideId(...args) {
+				this.loadingComments(true);
+				this.debouncedChangeSlideWatcher(...args)
+			},
 		}
 	}
 </script>

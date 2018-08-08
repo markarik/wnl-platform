@@ -7,15 +7,17 @@ import { getApiUrl } from 'js/utils/env'
 import { getModelByResource, modelToResourceMap } from 'js/utils/config'
 import {reactionsGetters, reactionsMutations, reactionsActions, convertToReactable} from 'js/store/modules/reactions'
 
-function _fetchComments(ids, model) {
+function _fetchComments(ids, model, query = {where: []}) {
 	if (!model) {
 		return Promise.reject('Model not defined')
 	}
 
 	let data = {
 		query: {
+			...query,
 			where: [
 				['commentable_type', model],
+				...query.where
 			],
 			whereIn: ['commentable_id', ids],
 		},
@@ -125,8 +127,9 @@ export const commentsMutations = {
 
 		Object.keys(commentsResourceObj).forEach(resource => {
 			Object.keys(commentsResourceObj[resource]).forEach(resourceId => {
-				state[resource][resourceId] = state[resource][resourceId] || {}
-				state[resource][resourceId].comments = Object.keys(commentsResourceObj[resource][resourceId])
+				const oldComments = state[resource][resourceId].comments || []
+				const commentsIds = _.uniq(oldComments.concat(Object.keys(commentsResourceObj[resource][resourceId])))
+				set(state[resource][resourceId], 'comments', commentsIds)
 			})
 		})
 	},
@@ -167,17 +170,16 @@ export const commentsActions = {
 	setProfiles({commit}, payload) {
 		commit(types.SET_COMMENTS_PROFILES, payload)
 	},
-	async setupComments({commit, dispatch}, {ids, resource}) {
+	async setupComments({commit, dispatch}, {resource, ...args}) {
 		const model = getModelByResource(resource)
 		try {
-			const comments = await dispatch('fetchComments', {ids, model})
-			commit(types.SET_COMMENTABLE_COMMENTS, comments)
+			await dispatch('fetchComments', {model, ...args})
 		} catch (e) {
 			$wnl.logger.error(e)
 		}
 	},
-	async fetchComments({commit, dispatch}, {ids, model}) {
-		const response = await _fetchComments(ids, model)
+	async fetchComments({commit, dispatch}, {ids, model, query}) {
+		const response = await _fetchComments(ids, model, query)
 		if (!response.data.hasOwnProperty('included')) {
 			return
 		}
@@ -193,6 +195,7 @@ export const commentsActions = {
 		dispatch('comments/setComments', serializedComments, {
 			root: true
 		})
+		commit(types.SET_COMMENTABLE_COMMENTS, comments)
 
 		return comments
 	}

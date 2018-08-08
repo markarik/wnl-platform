@@ -1,0 +1,6 @@
+ARG TAG
+
+FROM registry.bethink.tech/platform-app-php:${TAG} as source_image
+
+FROM nginx:1.14.0-alpine
+COPY --from=source_image /www/current/public /www/current/public/

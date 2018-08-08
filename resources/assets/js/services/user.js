@@ -9,11 +9,21 @@ export function getCurrentUser() {
 	}
 
 	return Promise.all([
-		axios.get(getApiUrl('users/current/profile')),
+		axios.get(getApiUrl('users/current/profile?include=roles')),
 		axios.get(getApiUrl('user_subscription/current'))
 	]).then(([userResponse, subscriptionResponse]) => {
+
+		const {included, ...profile} = userResponse.data;
+		if (!included) {
+			profile.roles = [];
+		} else {
+			const roles = included.roles || {}
+			profile.roles = Object.values(roles)
+				.map(role => role.name)
+		}
+
 		currentUser = {
-			...userResponse.data,
+			...profile,
 			subscription: subscriptionResponse.data
 		}
 		return currentUser;

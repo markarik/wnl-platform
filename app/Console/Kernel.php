@@ -29,7 +29,8 @@ class Kernel extends ConsoleKernel
 	{
 		$schedule
 			->command('orders:statsExport')
-			->hourly();
+			->hourly()
+			->withoutOverlapping();
 
 		$schedule
 			->command("scout:import 'App\\Models\\Slide'")
@@ -53,15 +54,16 @@ class Kernel extends ConsoleKernel
 
 		$schedule
 			->command('progress:store')
-			->hourly();
+			->hourly()
+			->withoutOverlapping();
 
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
 
-		// $schedule
-		// 	->command('orders:handleUnpaid')
-		// 	->twiceDaily(8, 20);
+		$schedule
+			->command('orders:handleUnpaid')
+			->twiceDaily(8, 20);
 
 		$schedule
 			->command('notifications:cleanup-old --force')

@@ -78,10 +78,6 @@ class UserStateApiController extends ApiController
 		$lesson = $request->lesson;
 
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
-		UserCourseProgress::firstOrCreate([
-			'user_id'   => $id,
-			'lesson_id' => $lessonId,
-		]);
 
 		return $this->respondOk();
 	}

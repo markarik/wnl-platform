@@ -61,8 +61,8 @@ class UserReactionsApiController extends ApiController
 		$reaction = Reaction::type($type);
 		$reactablesBuilder->where('reaction_id', $reaction->id);
 
-		$reactables = $reactablesBuilder->get();
-		$categories = Category::all();
+		$reactables = $reactablesBuilder->get(['reactable_id', 'reactable_type', 'id', 'reaction_id']);
+		$categories = Category::whereNotNull('parent_id')->get();
 		$categorizedReactables = [];
 
 		$grouped = $reactables->groupBy('reactable_type');
@@ -72,7 +72,7 @@ class UserReactionsApiController extends ApiController
 
 			$models = $key::with(['tags'])
 				->whereIn('id', $item->pluck('reactable_id'))
-				->get();
+				->get(['id']);
 
 			foreach ($models as $model) {
 				$tags = $model->tags->pluck('name')->map(function ($el) {

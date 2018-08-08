@@ -118,10 +118,6 @@ export const commentsMutations = {
 				commentsResourceObj[resource] = {}
 			}
 
-			if (!state[resource][resourceId].comments) {
-				state[resource][resourceId].comments = []
-			}
-
 			if (!commentsResourceObj[resource][resourceId]) {
 				commentsResourceObj[resource][resourceId] = {}
 			}

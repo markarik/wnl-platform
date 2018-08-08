@@ -1,9 +1,8 @@
 <template lang="html">
 	<div class="field">
 		<wnl-toggler
-				@input="onInput"
-				@click="onClick"
-				v-model="value"
+				@toggle="onToggle"
+				:value="inputValue"
 				:name="name"
 		>
 		</wnl-toggler>
@@ -30,30 +29,16 @@
 		components: {
 			'wnl-toggler': Toggler,
 		},
-		data () {
-			return {
-				value: null
-			}
-		},
 		computed: {
 			default() {
 				return ''
 			}
 		},
 		methods: {
-			onClick() {
+			onToggle() {
+				this.inputValue = !this.inputValue;
 				this.$parent.$emit('submitForm')
 			}
 		},
-		watch: {
-			inputValue (newValue) {
-				if (newValue !== this.value) {
-					this.value = newValue
-				}
-			},
-			value (value){
-				this.setValue(value)
-			}
-		}
 	}
 </script>

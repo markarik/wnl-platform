@@ -22,6 +22,11 @@ class Comment extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
+	public function profiles()
+	{
+		return $this->belongsTo('App\Models\UserProfile', 'user_id', 'user_id');
+	}
+
 	public function reactions()
 	{
 		return $this->morphToMany('App\Models\Reaction', 'reactable');

@@ -22,6 +22,8 @@ class Parser
 
 	const TAG_PATTERN = '/#!\(([\w]*):([^\)]*)\)/';
 
+	const ANNOTATION_PATTERN = '/\{\a:[\d]\}[\S]\{\a\}/';
+
 	const BACKGROUND_PATTERN = '/data-background-image="([^"]*)"/';
 
 	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
@@ -63,6 +65,7 @@ class Parser
 	protected $courseModels = [];
 	protected $lessonTag;
 	protected $groupTag;
+	protected $annotationTag;
 
 	/**
 	 * Parser constructor.

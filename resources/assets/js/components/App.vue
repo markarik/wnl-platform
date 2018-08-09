@@ -1,5 +1,7 @@
 <template>
-	<div id="app" v-if="!isCurrentUserLoading" :class="{'modal-active': modalVisible}">
+	<div id="app"
+		v-if="!isCurrentUserLoading"
+		:class="{'modal-active': modalVisible}">
 		<div class="wnl-overlay" v-if="shouldDisplayOverlay">
 			<span class="loader"></span>
 			<span class="loader-text">{{currentOverlayText}}</span>
@@ -65,7 +67,8 @@
 				'shouldDisplayOverlay',
 				'alerts',
 				'modalVisible',
-				'thickScrollbar'
+				'thickScrollbar',
+				'isMobile'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
@@ -142,6 +145,13 @@
 					document.documentElement.classList.add('thick-scrollbar')
 				} else {
 					document.documentElement.classList.remove('thick-scrollbar')
+				}
+			},
+			'isMobile' (newVal) {
+				if (newVal) {
+					document.documentElement.classList.add('is-mobile')
+				} else {
+					document.documentElement.classList.remove('is-mobile')
 				}
 			}
 		},

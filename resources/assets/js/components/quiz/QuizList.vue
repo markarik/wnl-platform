@@ -5,17 +5,22 @@
 		</p>
 
 		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
-		<wnl-quiz-question v-for="(question, index) in questions"
-			:module="module"
-			:class="`quiz-question-${question.id}`"
-			:question="question"
-			:index="index"
-			:isQuizComplete="isComplete"
-			:key="question.id"
-			:readOnly="readOnly"
-			:getReaction="getReaction"
-			@selectAnswer="onSelectAnswer"
-		></wnl-quiz-question>
+		<div class="question" v-for="(question, index) in questions">
+			<span class="question-number">
+				{{index+1}}/{{questions.length}}
+			</span>
+			<wnl-quiz-question
+				:module="module"
+				:class="`quiz-question-${question.id}`"
+				:question="question"
+				:index="index"
+				:isQuizComplete="isComplete"
+				:key="question.id"
+				:readOnly="readOnly"
+				:getReaction="getReaction"
+				@selectAnswer="onSelectAnswer"
+			></wnl-quiz-question>
+		</div>
 		<p class="has-text-centered" v-if="!plainList && !displayResults">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
 				Sprawdź wyniki
@@ -34,6 +39,13 @@
 		border-top: $border-light-gray
 		margin: $margin-big 0
 		padding-top: $margin-base
+
+		.question
+			display: flex
+			flex-direction: column
+			.question-number
+				text-align: center
+
 </style>
 
 <script>

@@ -27,15 +27,17 @@ RUN yarn run setup \
 
 FROM php:7.2.7-fpm-alpine3.7
 
+# Install dependencies
 RUN apk --no-cache add libpng-dev
 RUN docker-php-ext-install opcache bcmath gd zip mysqli pdo_mysql
+
+# Install New Relic Agent
 RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-8.1.0.209-linux.tar.gz | tar -C /tmp -zx && \
 NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 /tmp/newrelic-php5-*/newrelic-install install && \
 rm -rf /tmp/newrelic-php5-* /tmp/nrinstall*
 
+# Update PHP config
 RUN sed -i 's/^;pm.status_path.*/pm.status_path = \/php_status/' /usr/local/etc/php-fpm.d/www.conf
-
-USER www-data:www-data
 
 WORKDIR /www/current
 

@@ -29,13 +29,15 @@ $three-column-left-flex: 4;
 $three-column-main-flex: 7;
 $three-column-right-flex: 3;
 
+html {
+	@media (max-width: 759px) {
+		font-size: 16px;
+	}
+}
+
 html, body {
 	height: 100%;
 	min-height: 100%;
-}
-
-html.is-mobile {
-	font-size: 16px;
 }
 
 html.thick-scrollbar {

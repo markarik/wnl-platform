@@ -235,7 +235,7 @@
 					attachedData.slides = _.map(this.$refs.slides.slides, slide => slide.id)
 				}
 
-				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked
+				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked || false
 
 				return attachedData
 			},

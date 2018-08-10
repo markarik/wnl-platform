@@ -1,5 +1,13 @@
 <template lang="html">
 	<div class="scrollable-main-container">
+		<div class="message is-primary">
+			<div class="message-header">
+				Twoje wrażliwe dane
+			</div>
+			<div class="message-body">
+				copy
+			</div>
+		</div>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -20,6 +28,16 @@
 			<wnl-form-text name="city">Miasto</wnl-form-text>
 			<wnl-form-text name="phone">Telefon</wnl-form-text>
 		</wnl-form>
+		<div class="level wnl-screen-title">
+			<div class="level-left">
+				<div class="level-item big strong">
+					Numer PESEL
+				</div>
+			</div>
+		</div>
+		<div class="identity-number">
+
+		</div>
 	</div>
 </template>
 

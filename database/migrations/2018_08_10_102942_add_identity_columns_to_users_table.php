@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPersonalIdentityNumberToUsersTable extends Migration
+class AddIdentityColumnsToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddPersonalIdentityNumberToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->bigInteger('personal_identity_number')->nullable();
+            $table->string('optional_identity')->nullable();
         });
     }
 
@@ -26,7 +27,10 @@ class AddPersonalIdentityNumberToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn([
+                'personal_identity_number',
+                'optional_identity'
+            ]);
         });
     }
 }

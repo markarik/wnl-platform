@@ -90,7 +90,7 @@
 						text: 'Twoje prywatne dane',
 						itemClass: 'has-icon',
 						to: {
-							name: 'my-address',
+							name: 'personal-data',
 							params: {},
 						},
 						isDisabled: false,

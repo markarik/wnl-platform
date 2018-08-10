@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers\Api\Transformers;
 
-
+use App\Models\User;
 use App\Models\UserProfile;
 use App\Http\Controllers\Api\ApiTransformer;
 
@@ -25,25 +25,31 @@ class UserProfileTransformer extends ApiTransformer
 		$lastName = is_null($profile->deleted_at) ? $profile->last_name : 'usunięte';
 		$displayName = is_null($profile->deleted_at) ? $profile->display_name : 'Konto usinięte';
 
+		$user = User::find($profile->user_id);
+
 		$data = [
-			'id'                => $profile->id,
-			'user_id'           => $profile->user_id,
-			'first_name'        => $firstName,
-			'last_name'         => $lastName,
-			'public_email'      => $profile->public_email,
-			'public_phone'      => $profile->public_phone,
-			'username'          => $profile->username,
-			'display_name'      => $displayName,
-			'full_name'         => $profile->full_name,
-			'avatar'            => $profile->avatar_url,
-			'city'              => $profile->city,
-			'university'        => $profile->university,
-			'specialization'    => $profile->specialization,
-			'help'              => $profile->help,
-			'interests'         => $profile->interests,
-			'about'             => $profile->about,
-			'learning_location' => $profile->learning_location,
-			'deleted_at'        => $profile->deleted_at,
+			'id'                       => $profile->id,
+			'user_id'                  => $profile->user_id,
+			'first_name'               => $firstName,
+			'last_name'                => $lastName,
+			'public_email'             => $profile->public_email,
+			'public_phone'             => $profile->public_phone,
+			'username'                 => $profile->username,
+			'display_name'             => $displayName,
+			'full_name'                => $profile->full_name,
+			'avatar'                   => $profile->avatar_url,
+			'city'                     => $profile->city,
+			'university'               => $profile->university,
+			'specialization'           => $profile->specialization,
+			'help'                     => $profile->help,
+			'interests'                => $profile->interests,
+			'about'                    => $profile->about,
+			'learning_location'        => $profile->learning_location,
+			'deleted_at'               => $profile->deleted_at,
+			'identity' => [
+				'personal_identity_number' => $user->personal_identity_number,
+				'optional_identity'        => $user->optional_identity
+			],
 		];
 
 		if ($this->parent) {

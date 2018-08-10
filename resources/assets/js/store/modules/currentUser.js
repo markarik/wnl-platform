@@ -22,6 +22,10 @@ const state = {
 			dates: {
 				min: 0, max: 0
 			}
+		},
+		identity: {
+			personal_identity_number: '',
+			optional_identity: ''
 		}
 	},
 	settings: getDefaultSettings(),
@@ -38,6 +42,7 @@ const getters = {
 	currentUserDisplayName: state => state.profile.display_name,
 	currentUserRoles: state => state.profile.roles,
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
+	currentUserIdentity: state => state.profile.identity,
 	getSetting: state => setting => state.settings[setting],
 	thickScrollbar: state => state.settings.thick_scrollbar,
 	getAllSettings: state => state.settings,
@@ -55,6 +60,7 @@ const mutations = {
 		set(state, 'loading', isLoading)
 	},
 	[types.USERS_SETUP_CURRENT] (state, userData) {
+		console.log(userData, `~~~~~~~~~~~~~userData`);
 		set(state, 'profile', userData)
 	},
 	[types.USERS_UPDATE_CURRENT] (state, userData) {

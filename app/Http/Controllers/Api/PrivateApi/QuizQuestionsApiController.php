@@ -38,16 +38,11 @@ class QuizQuestionsApiController extends ApiController
 
 	public function post(UpdateQuizQuestion $request)
 	{
-		$question = [
+		$question = QuizQuestion::create([
 			'text' => $request->input('question'),
 			'explanation' => $request->input('explanation'),
-		];
-
-		$question['preserve_order'] = $request->has('preserve_order')
-			? $request->input('preserve_order')
-			: 0;
-
-		$question = QuizQuestion::create($question);
+			'preserve_order' => $request->input('preserve_order')
+		]);
 		$questionId = $question['id'];
 
 		if ($request->has('answers')) {

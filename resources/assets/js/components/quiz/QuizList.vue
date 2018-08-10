@@ -5,7 +5,7 @@
 		</p>
 
 		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
-		<div class="question" v-for="(question, index) in questions">
+		<div class="question" v-for="(question, index) in questions" :key="index">
 			<span class="question-number">
 				{{index+1}}/{{questions.length}}
 			</span>

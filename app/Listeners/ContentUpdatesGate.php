@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\Live\LiveContentUpdated;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class ContentUpdatesGate
 {

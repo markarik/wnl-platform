@@ -2,12 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Media\DatabaseChannel;
+use App\Notifications\Media\LiveChannel;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Bus\Queueable;
-use App\Notifications\Media\LiveChannel;
 use Illuminate\Notifications\Notification;
-use Illuminate\Broadcasting\PrivateChannel;
-use App\Notifications\Media\DatabaseChannel;
 
 class EventNotification extends Notification
 {

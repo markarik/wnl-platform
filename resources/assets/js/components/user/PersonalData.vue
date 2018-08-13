@@ -40,14 +40,12 @@
 				ma identity
 			</div>
 			<div class="identity-number__no-personal-id-number" v-else>
-				<wnl-form
-					class="margin-vertical"
-					method="post"
-					name="MyIdentity"
-					resourceRoute="users/current/identity"
-					populate="true">
-					<wnl-form-text name="personal_identity_number">Numer PESEL</wnl-form-text>
-				</wnl-form>
+				<input name="personal_identity_number"
+					class="margin vertical input"
+					placeholder="Numer PESEL"
+					v-model="personalIdentityInput">
+				</input>
+				<a class="button is-primary is-wide" :disabled="!hasChanges" @click="saveChanges">Zapisz</a>
 			</div>
 		</div>
 	</div>
@@ -58,21 +56,34 @@
 </style>
 
 <script>
-	import { Form, Text } from 'js/components/global/form'
+	import { Form, Text, Submit } from 'js/components/global/form'
 	import { mapGetters } from 'vuex'
+	import { getApiUrl } from 'js/utils/env'
 
 	export default {
 		components: {
 			'wnl-form': Form,
 			'wnl-form-text': Text,
+			'wnl-submit': Submit,
 		},
-		computed: {
-			...mapGetters(['currentUserIdentity']),
-			hasIdentity() {
-				return Boolean(this.currentUserIdentity.optional_identity || this.currentUserIdentity.personal_identity_number)
+		data() {
+			return {
+				personalIdentityInput: '',
 			}
 		},
-		mounted() {
+		computed: {
+			...mapGetters(['currentUserIdentity', 'currentUserId']),
+			hasIdentity() {
+				return Boolean(this.currentUserIdentity.optional_identity || this.currentUserIdentity.personal_identity_number)
+			},
+			hasChanges() {
+				return Boolean(this.personalIdentityInput)
+			},
+		},
+		methods: {
+			saveChanges() {
+				axios.post(getApiUrl(`users/${this.currentUserId}/identity`))
+			}
 		}
 	}
 </script>

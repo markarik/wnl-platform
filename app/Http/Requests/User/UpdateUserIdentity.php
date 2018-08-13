@@ -14,7 +14,9 @@ class UpdateUserIdentity extends FormRequest
 	 */
 	public function authorize()
 	{
-		return true;
+		$user = User::fetch($this->route('id'));
+
+		return $this->user()->can('update', $user);
 	}
 
 	/**
@@ -25,7 +27,7 @@ class UpdateUserIdentity extends FormRequest
 	public function rules()
 	{
 		return [
-			'personal_identity_number' => 'string'
+			'personal_identity_number' => 'digits:11'
 		];
 	}
 }

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use DB;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
@@ -9,6 +10,12 @@ class UserIdentityApiController extends ApiController
 {
     public function post(UpdateUserIdentity $request)
     {
-        dd('dieeeee');
+        $user = User::fetch($request->id);
+
+        if ($request->personal_identity_number) {
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update(['personal_identity_number' => ($request->personal_identity_number)]);
+        }
     }
 }

@@ -521,8 +521,7 @@
 				this.setupSlideComments({id: currentSlideId})
 
 				Echo.channel(`commentable-slide-${currentSlideId}`)
-					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject, actors}}) => {
-						if (actors.id === this.currentUserId) return;
+					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
 						switch (event) {
 							case 'comment-posted':
 								await this.setupSlideComments({id: currentSlideId, query: {

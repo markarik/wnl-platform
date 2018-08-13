@@ -3,11 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\Live\LiveContentUpdated;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class ContentUpdatesGate implements ShouldQueue
+class ContentUpdatesGate
 {
-	public $queue = 'notifications';
 	/**
 	 * Handle the event.
 	 *
@@ -20,6 +19,6 @@ class ContentUpdatesGate implements ShouldQueue
 		$event->transform();
 		$liveEvent = new LiveContentUpdated($event->data, $event->broadcastOn());
 
-		broadcast($liveEvent);
+		broadcast($liveEvent)->toOthers();
 	}
 }

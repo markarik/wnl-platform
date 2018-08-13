@@ -170,7 +170,9 @@ class SignUpForm extends Form
 			->add('consent_terms', 'checkbox', [
 				'label' => trans('payment.personal-data-tou-content', [
 					'tou-link-content' => trans('payment.personal-data-tou-link-content'),
+					'tou-link-href' => trans('payment.tou-link-href'),
 					'privacy-link-content' => trans('payment.personal-data-privacy-link-content'),
+					'privacy-link-href' => trans('payment.privacy-link-href'),
 				]),
 				'rules' => 'required',
 				'attr' => [

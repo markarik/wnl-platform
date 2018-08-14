@@ -3,6 +3,7 @@
 namespace Demo\App\Http\Controllers\Auth;
 
 use App\Jobs\OrderPaid;
+use App\Jobs\PopulateUserCoursePlan;
 use App\Models\Product;
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -91,6 +92,10 @@ class LoginController extends Controller
             ['user_id' => $user->id],
             ['access_start' => $demo->access_start, 'access_end' => $demo->access_end]
         );
+
+        if ($order->product->lessons->count() > 0) {
+            dispatch_now(new PopulateUserCoursePlan($order->user, $order->product));
+        }
 
 		Auth::login($user);
 

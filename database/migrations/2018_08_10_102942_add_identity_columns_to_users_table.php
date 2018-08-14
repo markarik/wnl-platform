@@ -14,8 +14,12 @@ class AddIdentityColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('personal_identity_number')->nullable();
-            $table->string('optional_identity')->nullable();
+            $table->string('personal_identity_number')->nullable();
+            $table->enum('identity_type', [
+                'personal_identity_number',
+                'passport',
+                'identity_card'
+                ])->nullable()->default('personal_identity_number');
         });
     }
 
@@ -29,7 +33,7 @@ class AddIdentityColumnsToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
                 'personal_identity_number',
-                'optional_identity'
+                'identity_type'
             ]);
         });
     }

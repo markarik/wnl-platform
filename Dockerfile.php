@@ -37,7 +37,7 @@ NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 /tmp/newrelic-php5-*/newrelic-ins
 rm -rf /tmp/newrelic-php5-* /tmp/nrinstall*
 
 # Update PHP config
-RUN sed -i 's/^;pm.status_path.*/pm.status_path = \/php_status/' /usr/local/etc/php-fpm.d/www.conf
+COPY www.conf /usr/local/etc/php-fpm.d/zz-www.conf
 
 WORKDIR /www/current
 

@@ -4,6 +4,12 @@ use Illuminate\Database\Seeder;
 
 class RolesTableSeeder extends Seeder
 {
+    const ROLES = [
+        'admin',
+        'moderator',
+        'workshop-participant',
+    ];
+
 	/**
 	 * Run the database seeds.
 	 *
@@ -11,16 +17,10 @@ class RolesTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('roles')->insert([
-			[
-				'name' => 'admin',
-			],
-			[
-				'name' => 'moderator',
-			],
-			[
-				'name' => 'workshop-participant',
-			],
-		]);
+		\DB::table('roles')->insert(
+            array_map(function($roleName) {
+                return ['name' => $roleName];
+            }, self::ROLES)
+        );
 	}
 }

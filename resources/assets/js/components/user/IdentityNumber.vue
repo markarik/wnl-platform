@@ -31,55 +31,48 @@
                         placeholder="Numer identyfikacyjny"
                         v-model="personal_identity_number"
                     />
-                    <div
-                        class="id-number__personal-identity-number-input__change"
-                        @click="changeIdentityType"
-                        v-if="!otherIdentity">
-                        Nie chcę podawać numeru PESEL
-                    </div>
+                </div>
+                <div
+                    class="id-number__personal-identity-number-input__change"
+                    @click="changeIdentityType"
+                    v-if="!otherIdentity">
+                    Nie chcę podawać numeru PESEL
                 </div>
                 <div
                     class="id-number__other-identitification"
                     v-if="otherIdentity">
-                    <div class="id_number__radio control">
-                        <label class="radio">
+                    <div class="id_number__radio field">
                             <input
-                                class="radio"
+                                class="is-checkradio"
                                 type="radio"
+                                id="personal_identity_number"
                                 name="identity_type"
                                 value="personal_identity_number"
-                                v-model="identity_type"
-                            >
-                            PESEL
-                        </label>
-                        <label class="radio">
+                                v-model="identity_type">
+                            <label for="personal_identity_number">PESEL</label>
                             <input
-                                class="radio"
+                                class="is-checkradio"
                                 type="radio"
+                                id="identity_card"
                                 name="identity_type"
                                 value="identity_card"
-                                v-model="identity_type"
-                            >
-                            Dowód osobisty
-                        </label>
-                        <label class="radio">
+                                v-model="identity_type">
+                            <label for="identity_card">Dowód osobisty</label>
                             <input
-                                class="radio"
+                                class="is-checkradio"
                                 type="radio"
+                                id="passport"
                                 name="identity_type"
                                 value="passport"
-                                v-model="identity_type"
-                            >
-                            Paszport
-                        </label>
+                                v-model="identity_type">
+                            <label for="passport">Paszport</label>
                     </div>
                 </div>
                 <div class="level-item">
                     <a class="button is-primary is-wide"
                        @click="onSubmit"
                        :disabled="hasChanges"
-                    >Zapisz
-                    </a>
+                    >Zapisz</a>
                 </div>
             </div>
         </div>
@@ -87,6 +80,18 @@
 </template>
 
 <style lang="sass">
+    @import 'resources/assets/sass/variables'
+
+    .id-number__personal-identity-number-input
+        margin-bottom: $margin-base
+
+    .id-number__personal-identity-number-input__change
+        margin-bottom: $margin-small
+        cursor: pointer
+        text-decoration: underline
+
+    .id-number__other-identitification
+        margin-bottom: $margin-small
 
 </style>
 

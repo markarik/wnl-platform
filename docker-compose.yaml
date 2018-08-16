@@ -12,6 +12,8 @@ services:
       - MYSQL_DATABASE=wnl
       - MYSQL_USER=wnl
       - MYSQL_PASSWORD=Spoko200!
+    volumes:
+      - ~/dev/mysql:/var/lib/mysql
 
   redis:
     container_name: redis

@@ -38,8 +38,6 @@
 
 <script>
 	import { Form, Text } from 'js/components/global/form'
-	import { mapGetters } from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
 	import IdentityNumber from 'js/components/user/IdentityNumber'
 
 	export default {

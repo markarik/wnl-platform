@@ -27,7 +27,8 @@ class UpdateUserIdentity extends FormRequest
 	public function rules()
 	{
 		return [
-			'personal_identity_number' => 'digits:11'
+			'personal_identity_number' => 'digits:11',
+			'identity_type' => 'string|required'
 		];
 	}
 }

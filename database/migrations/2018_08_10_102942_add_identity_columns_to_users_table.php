@@ -19,7 +19,7 @@ class AddIdentityColumnsToUsersTable extends Migration
                 'personal_identity_number',
                 'passport',
                 'identity_card'
-                ])->nullable()->default('personal_identity_number');
+                ])->default('personal_identity_number');
         });
     }
 

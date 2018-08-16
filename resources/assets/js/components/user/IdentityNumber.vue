@@ -100,7 +100,7 @@
             }
         },
         computed: {
-			...mapGetters(['currentUserIdentity']),
+			...mapGetters(['currentUserIdentity', 'currentUserId']),
 			personalIdentityNumber() {
 				return this.currentUserIdentity.personal_identity_number
 			},
@@ -113,7 +113,10 @@
 		},
         methods: {
             onSubmit() {
-                console.log('submit');
+                axios.post(getApiUrl(`users/${this.currentUserId}/identity`), {
+                    personal_identity_number: this.personal_identity_number,
+                    identity_type: this.identity_type
+                })
             },
             changeIdentityType() {
                 return this.otherIdentity = true

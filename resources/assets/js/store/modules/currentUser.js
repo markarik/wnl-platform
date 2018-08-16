@@ -60,7 +60,6 @@ const mutations = {
 		set(state, 'loading', isLoading)
 	},
 	[types.USERS_SETUP_CURRENT] (state, userData) {
-		console.log(userData, `~~~~~~~~~~~~~userData`);
 		set(state, 'profile', userData)
 	},
 	[types.USERS_UPDATE_CURRENT] (state, userData) {

@@ -65,8 +65,7 @@
 				'shouldDisplayOverlay',
 				'alerts',
 				'modalVisible',
-				'thickScrollbar',
-				'currentUserIdentity'
+				'thickScrollbar'
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')

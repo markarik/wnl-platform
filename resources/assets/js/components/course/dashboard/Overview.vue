@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
 		<div class="notification is-info">
-			<span class="strong">Cześć!</span> We wtorek, 21 sierpnia, od godziny 10:00, kontynuujemy próby przełączenia się na nową infrastrukturę. 🚀 Ponownie prosimy o wyrozumiałość i zaplanowanie nauki od godziny 13:00. Dziękujemy! ❤️ Więcej informacji <a href="https://platforma.wiecejnizlek.pl/app/help/new?qna_question=888&notification=9ab1a570-7c2f-4984-a427-ab97d1750cf9&noScroll=true" target="_blank">znajdziesz tutaj</a>.
+			<span class="strong">Cześć!</span> W środę, 22 sierpnia, od godziny 10:00, kontynuujemy próby przełączenia się na nową infrastrukturę. 🚀 Ponownie prosimy o wyrozumiałość i zaplanowanie nauki od godziny 13:00. Dziękujemy! ❤️ Więcej informacji <a href="https://platforma.wiecejnizlek.pl/app/help/new?qna_question=888&notification=9ab1a570-7c2f-4984-a427-ab97d1750cf9&noScroll=true" target="_blank">znajdziesz tutaj</a>.
 		</div>
 
 		<!-- Dashboard news -->

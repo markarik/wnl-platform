@@ -26,9 +26,14 @@ class UpdateUserIdentity extends FormRequest
 	 */
 	public function rules()
 	{
-		return [
-			'personal_identity_number' => 'digits:11',
-			'identity_type' => 'string|required'
-		];
+		if ($this->request->get('identity_type') == 'personal_identity_number') {
+			return [
+				'personal_identity_number' => 'required|digits:11'
+			];
+		} else if ($this->request->get('identity_type') == 'identity_card' || $this->request->get('identity_type') == 'passport') {
+			return [
+				'personal_identity_number' => 'required|string'
+			];
+		}
 	}
 }

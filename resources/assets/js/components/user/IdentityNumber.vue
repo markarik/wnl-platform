@@ -7,15 +7,23 @@
                 </div>
             </div>
         </div>
-        <div class="identity-number">
-            <div class="identity-number__has-personal-id" v-if="personalIdentityNumber">
-                <div class="identity-number__has-personal-identity_number">
-                    Podany przez Ciebie numer {{ identityNumberType }} to: {{ personalIdentityNumber }}
+        <div class="message is-primary">
+			<div class="message-header">
+				Numer identyfikacyjny
+			</div>
+			<div class="message-body">
+				copy
+			</div>
+		</div>
+        <div class="id-number">
+            <div class="id-number__has-personal-id" v-if="personalIdentityNumber">
+                <div class="id-number__has-personal-identity_number">
+                    Podany przez Ciebie numer {{ identityType }} to: {{ personalIdentityNumber }}
                     Jeśli chcesz dokonać zmiany, napisz na info@bethink.pl.
                 </div>
             </div>
-            <div class="identity-number__no-personal-id" v-else>
-                <div class="identity-number__personal-identity-number-input">
+            <div class="id-number__no-personal-id" v-else>
+                <div class="id-number__personal-identity-number-input">
                     <input
                         name="personal_identity_number"
                         class="input"
@@ -24,16 +32,16 @@
                         v-model="personal_identity_number"
                     />
                     <div
-                        class="identity-number__personal-identity-number-input__change"
+                        class="id-number__personal-identity-number-input__change"
                         @click="changeIdentityType"
                         v-if="!otherIdentity">
                         Nie chcę podawać numeru PESEL
                     </div>
                 </div>
                 <div
-                    class="identity-number__other-identitification"
+                    class="id-number__other-identitification"
                     v-if="otherIdentity">
-                    <div class="identity_number__radio control">
+                    <div class="id_number__radio control">
                         <label class="radio">
                             <input
                                 class="radio"
@@ -104,7 +112,7 @@
 			personalIdentityNumber() {
 				return this.currentUserIdentity.personal_identity_number
 			},
-			identityNumberType() {
+			identityType() {
 				return this.currentUserIdentity.identity_type
 			},
             hasChanges() {

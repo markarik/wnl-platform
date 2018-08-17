@@ -166,10 +166,9 @@
                             return false
                         }
                     }
-                } else if (this.identity.identity_type === 'identity_card') {
-                    console.log('walidacja dowodu osobistego');
+                } else {
                     if (this.identity.personal_identity_number.length != 9) {
-                        this.errors.push('Numer dowodu osobistego powinien być złożony z dziewięciu znaków.')
+                        this.errors.push('Numer powinien być złożony z dziewięciu znaków.')
                         return false
                     }
 
@@ -180,34 +179,68 @@
                         return letterValues.indexOf(letter)
                     }
 
-                    for (i = 0; i < 3; i++) {
-                        if (getLetterValue(this.identity.personal_identity_number[i]) < 10 || this.identity.personal_identity_number[i] == 'O' || this.identity.personal_identity_number == 'Q') {
-                            this.errors.push('Seria dodowodu osobistego jest niepoprawna.')
-                            return false
+                    if (this.identity.identity_type === 'identity_card') {
+                        for (i = 0; i < 3; i++) {
+                            if (getLetterValue(this.identity.personal_identity_number[i]) < 10 || this.identity.personal_identity_number[i] == 'O' || this.identity.personal_identity_number == 'Q') {
+                                this.errors.push('Seria podanego numeru jest niepoprawna.')
+                                return false
+                            }
                         }
-                    }
 
-                    for (i = 3; i < 9; i++) {
-                        if (getLetterValue(this.identity.personal_identity_number[i]) < 0 || getLetterValue(this.identity.personal_identity_number[i]) > 9) {
-                            this.errors.push('Numer dowodu osobistego jest niepoprawny.')
-                            return false
+                        for (i = 3; i < 9; i++) {
+                            if (getLetterValue(this.identity.personal_identity_number[i]) < 0 || getLetterValue(this.identity.personal_identity_number[i]) > 9) {
+                                this.errors.push('Numer podanego identyfikatora jest niepoprawny.')
+                                return false
+                            }
+                        }
+                        let sum = 7 * getLetterValue(this.identity.personal_identity_number[0]) +
+                            3 * getLetterValue(this.identity.personal_identity_number[1]) +
+                            1 * getLetterValue(this.identity.personal_identity_number[2]) +
+                            7 * getLetterValue(this.identity.personal_identity_number[4]) +
+                            3 * getLetterValue(this.identity.personal_identity_number[5]) +
+                            1 * getLetterValue(this.identity.personal_identity_number[6]) +
+                            7 * getLetterValue(this.identity.personal_identity_number[7]) +
+                            3 * getLetterValue(this.identity.personal_identity_number[8])
+
+                        sum %= 10
+
+                        if (sum != getLetterValue(this.identity.personal_identity_number[3])) {
+                            this.errors.push('Numer jest nieprawidłowy')
+                            return false;
+                        }
+
+                    } else {
+                        for (i = 0; i < 2; i++) {
+                            if (getLetterValue(this.identity.personal_identity_number[i]) < 10 || this.identity.personal_identity_number[i] == 'O' || this.identity.personal_identity_number == 'Q') {
+                                this.errors.push('Seria podanego numeru jest niepoprawna.')
+                                return false
+                            }
+                        }
+
+                        for (i = 2; i < 9; i++) {
+                            if (getLetterValue(this.identity.personal_identity_number[i]) < 0 || getLetterValue(this.identity.personal_identity_number[i]) > 9) {
+                                this.errors.push('Numer podanego identyfikatora jest niepoprawny.')
+                                return false
+                            }
+                        }
+
+                        let sum = 7 * getLetterValue(this.identity.personal_identity_number[0]) +
+                            3 * getLetterValue(this.identity.personal_identity_number[1]) +
+                            1 * getLetterValue(this.identity.personal_identity_number[3]) +
+                            7 * getLetterValue(this.identity.personal_identity_number[4]) +
+                            3 * getLetterValue(this.identity.personal_identity_number[5]) +
+                            1 * getLetterValue(this.identity.personal_identity_number[6]) +
+                            7 * getLetterValue(this.identity.personal_identity_number[7]) +
+                            3 * getLetterValue(this.identity.personal_identity_number[8])
+
+                        sum %= 10
+                        console.log(sum);
+
+                        if (sum != getLetterValue(this.identity.personal_identity_number[2])) {
+                            this.errors.push('Numer jest nieprawidłowy')
+                            return false;
                         }
                     }
-                    let sum = 7 * getLetterValue(this.identity.personal_identity_number[0]) +
-                        3 * getLetterValue(this.identity.personal_identity_number[1]) +
-                        1 * getLetterValue(this.identity.personal_identity_number[2]) +
-                        7 * getLetterValue(this.identity.personal_identity_number[4]) +
-                        3 * getLetterValue(this.identity.personal_identity_number[5]) +
-                        1 * getLetterValue(this.identity.personal_identity_number[6]) +
-                        7 * getLetterValue(this.identity.personal_identity_number[7]) +
-                        3 * getLetterValue(this.identity.personal_identity_number[8]);
-                    sum %= 10;
-                    if (sum != getLetterValue(this.identity.personal_identity_number[3])) {
-                        this.errors.push('Numer dowodu osobistego jest nieprawidłowy')
-                        return false;
-                    }
-                } else if (this.identity.identity_type === 'passport') {
-                    console.log('walidacja paszportu');
                 }
             }
 		},

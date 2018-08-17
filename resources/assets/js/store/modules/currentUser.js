@@ -25,7 +25,7 @@ const state = {
 		},
 		identity: {
 			personal_identity_number: '',
-			optional_identity: ''
+			identity_type: ''
 		}
 	},
 	settings: getDefaultSettings(),
@@ -78,6 +78,11 @@ const mutations = {
 	},
 	[types.USERS_SET_SUBSCRIPTION] (state, payload) {
 		set(state, 'subscription', payload)
+	},
+	[types.USERS_SET_IDENTIY] (state, payload) {
+		Object.keys(payload).forEach((key) => {
+			set(state.profile.identity, key, payload[key])
+		})
 	}
 }
 
@@ -148,6 +153,10 @@ const actions = {
 
 	changeUserSetting({ commit }, payload) {
 		commit(types.USERS_CHANGE_SETTING, payload)
+	},
+
+	setUserIdentity({ commit }, payload) {
+		commit(types.USERS_SET_IDENTIY, payload)
 	},
 
 	changeUserSettingAndSync({ commit, dispatch }, payload) {

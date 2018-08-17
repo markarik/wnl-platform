@@ -5,7 +5,7 @@
 				Twoje wrażliwe dane
 			</div>
 			<div class="message-body">
-				copy
+				Informacje, które tu zostawisz będą wykorzystane przez nas do obsługi Twojego zamówienia. Dane nie będą widoczne publicznie. Więcej informacji na ten temat znajdziesz tutaj: link do polityki prywatności
 			</div>
 		</div>
 		<div class="level wnl-screen-title">

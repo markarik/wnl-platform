@@ -48,7 +48,7 @@ class UserProfileTransformer extends ApiTransformer
 			'deleted_at'               => $profile->deleted_at,
 			'identity' => [
 				'personal_identity_number' => $user->personal_identity_number,
-				'optional_identity'        => $user->optional_identity
+				'identity_type'            => $user->identity_type
 			],
 		];
 

@@ -175,10 +175,16 @@
 			'quill': Quill,
 		},
 		data() {
+			const ANNOTATIONS_TYPES = {
+				NEUTRAL: '1',
+				BASIC: '2',
+				EMPTY: '3'
+			}
 			return {
 				form: new Form({}),
 				isDirty: false,
-				keywordType: this.hasKeywords ? '1' : '3'
+				keywordType: this.hasKeywords ? ANNOTATIONS_TYPES.NEUTRAL : ANNOTATIONS_TYPES.EMPTY,
+				ANNOTATIONS_TYPES
 			}
 		},
 		props: {
@@ -201,7 +207,7 @@
 				return this.keywordsList.length
 			},
 			parserTags() {
-				if (this.keywordType === '3') {
+				if (this.keywordType === this.ANNOTATIONS_TYPES.EMPTY) {
 					return [`{a:${this.keywordType}:${this.annotation.id}}{a}`]
 				}
 
@@ -212,7 +218,7 @@
 				})
 			},
 			htmlTags() {
-				if (this.keywordType === '3') {
+				if (this.keywordType === this.ANNOTATIONS_TYPES.EMPTY) {
 					return [
 						`<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}"/>`
 					]

@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class UsersTableSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     const USERS = [
         [

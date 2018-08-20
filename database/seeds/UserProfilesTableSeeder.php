@@ -11,74 +11,17 @@ class UserProfilesTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('user_profiles')->insert([
-			'user_id'      => 1,
-			'first_name'   => 'Kuba',
-			'last_name'    => 'Karmiński',
-			'public_email' => 'jlkarminski@gmail.com',
-			'public_phone' => null,
-			'username'     => 'kuba',
-			'avatar'       => null,
-		]);
-
-		DB::table('user_profiles')->insert([
-			'user_id'      => 2,
-			'first_name'   => 'Adam',
-			'last_name'    => 'Karmiński',
-			'public_email' => 'adamkarminski@gmail.com',
-			'public_phone' => null,
-			'username'     => 'troophel',
-			'avatar'       => null,
-		]);
-
-		DB::table('user_profiles')->insert([
-			'user_id'      => 3,
-			'first_name'   => 'Prezes',
-			'last_name'    => 'Chrupek',
-			'public_email' => 'prezeschrupek@bethink.pl',
-			'public_phone' => null,
-			'username'     => 'chrupek',
-			'avatar'       => null,
-		]);
-
-		DB::table('user_profiles')->insert([
-			'user_id'      => 4,
-			'first_name'   => 'Roman',
-			'last_name'    => 'Zwyczajny',
-			'public_email' => 'prezeschrupek@bethink.pl',
-			'public_phone' => null,
-			'username'     => 'bolek',
-			'avatar'       => null,
-		]);
-
-		DB::table('user_profiles')->insert([
-			'user_id'      => 5,
-			'first_name'   => 'Robert',
-			'last_name'    => 'Kardiowaskularny',
-			'public_email' => 'prezeschrupek@bethink.pl',
-			'public_phone' => null,
-			'username'     => 'kardiobert',
-			'avatar'       => null,
-		]);
-
-		DB::table('user_profiles')->insert([
-			'user_id'      => 6,
-			'first_name'   => 'Asia',
-			'last_name'    => 'Nereczka',
-			'public_email' => 'prezeschrupek@bethink.pl',
-			'public_phone' => null,
-			'username'     => 'nerasia',
-			'avatar'       => null,
-		]);
-
-		DB::table('user_profiles')->insert([
-			'user_id'      => 7,
-			'first_name'   => 'Jakub',
-			'last_name'    => 'Mochol',
-			'public_email' => 'jakub.mochol@wiecejnizlek.pl',
-			'public_phone' => null,
-			'username'     => 'jamochol',
-			'avatar'       => null,
-		]);
+        foreach (UserSeeder::USERS as $user) {
+            $userId = \DB::table('users')->select(['id'])->where('email', $user['email'])->first()->id;
+            \DB::table('user_profiles')->insert([
+                'user_id'      => $userId,
+                'first_name'   => $user['first_name'],
+                'last_name'    => $user['last_name'],
+                'public_email' => $user['email'],
+                'public_phone' => null,
+                'username'     => $user['email'],
+                'avatar'       => null,
+            ]);
+	    }
 	}
 }

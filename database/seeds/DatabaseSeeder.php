@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesTableSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(UserProfilesTableSeeder::class);
+        $this->call(UserSubscriptionSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(PaymentMethodSeeder::class);
         $this->call(CoursesTableSeeder::class);
@@ -23,7 +24,6 @@ class DatabaseSeeder extends Seeder
 //        $this->call(EditionsTableSeeder::class);
 //		$this->call(GroupsTableSeeder::class);
 //		$this->call(LessonsTableSeeder::class);
-//        $this->call(SubscribersTableSeeder::class);
 //        $this->call(CouponsTableSeeder::class);
 //        $this->call(TagsTableSeeder::class);
 //        $this->call(QnaQuestionsTableSeeder::class);

@@ -11,10 +11,17 @@ class UserSubscriptionSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('user_subscription')->insert([
-            ['user_id' => 1, 'access_start' => Carbon::now()->subDays(5), 'access_end' => Carbon::now()->addDays(5)],
-            ['user_id' => 2, 'access_start' => Carbon::now()->subDays(5), 'access_end' => Carbon::now()->addDays(5)],
-            ['user_id' => 3, 'access_start' => Carbon::now()->subDays(5), 'access_end' => Carbon::now()->addDays(5)],
-        ]);
+        $admins = \App\Models\User::ofRole('admin');
+
+        $aFewDaysAgo = \Carbon\Carbon::now()->subDays(5);
+        $someday = \Carbon\Carbon::now()->addYears(5);
+
+        foreach ($admins as $admin) {
+            DB::table('user_subscription')->insert([
+                'user_id' => $admin->id,
+                'access_start' => $aFewDaysAgo,
+                'access_end' => $someday,
+            ]);
+        }
     }
 }

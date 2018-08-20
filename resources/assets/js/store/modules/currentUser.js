@@ -24,8 +24,8 @@ const state = {
 			}
 		},
 		identity: {
-			personal_identity_number: '',
-			identity_type: ''
+			personalIdentityNumber: '',
+			identityType: ''
 		}
 	},
 	settings: getDefaultSettings(),

@@ -157,6 +157,7 @@
                 return this.identity.personalIdentityNumber === ''
             },
             validateIdNumber() {
+                return true
                 let idNumber = this.identity.personalIdentityNumber
                 if (this.identity.identityType === 'personal_identity_number') {
                     let reg = /^[0-9]{11}$/
@@ -170,6 +171,7 @@
                         for (var i = 0; i < weight.length; i++) {
                             sum += (parseInt(idNumber.substring(i, i+1), 10)*weight[i])
                         }
+
                         if (sum % 10 === 0) {
                             return true
                         } else {
@@ -264,10 +266,10 @@
                 if (this.validateIdNumber) {
                     this.errors = []
                     try {
-                        // await axios.post(getApiUrl(`users/${this.currentUserId}/identity`), {
-                        //     personal_identity_number: this.identity.personalIdentityNumber,
-                        //     identity_type: this.identity.identityType
-                        // })
+                        await axios.post(getApiUrl(`users/${this.currentUserId}/identity`), {
+                            personal_identity_number: this.identity.personalIdentityNumber,
+                            identity_type: this.identity.identityType
+                        })
                         this.addAutoDismissableAlert(this.alertSuccess)
                         await this.setUserIdentity(this.identity)
                     }

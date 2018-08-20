@@ -1,7 +1,6 @@
 <template>
 	<div class="annotations-editor">
-		<span class="title is-5">{{title}}</span>
-		<hr/>
+		<span class="title is-5 annotations-editor__title">{{title}}</span>
 		<form action="" method="POST" @submit.prevent="onSubmit"
 			@keydown="form.errors.clear($event.target.name)"
 		>
@@ -56,28 +55,44 @@
 					</a>
 			</div>
 			<template v-if="annotation.id">
-				<span class="title is-5">Dane do slides.com</span>
-				<hr/>
-				<div class="field is-horizontal annotation-input-text">
-					<div class="field-label">
-						<label class="label">ID</label>
-					</div>
-					<div class="field-body">
-						<div class="field">
-							<div class="control">
-								<input class="input" type="text" v-model="annotation.id" readonly tabindex="-1">
-							</div>
-						</div>
-					</div>
+				<div class="title is-4">Dane do edytora</div>
+				<div class="title is-5 annotations-editor__title">Typ przypisu</div>
+				<div class="control annotation-type__form">
+					<label class="radio">
+						<input type="radio" name="keywordType" value="1" v-model="keywordType" :disabled="!hasKeywords">
+						Neutralny
+					</label>
+					<label class="radio">
+						<input type="radio" name="keywordType" value="2" v-model="keywordType" :disabled="!hasKeywords">
+						Wiedza Podstawowa
+					</label>
+					<label class="radio">
+						<input type="radio" name="keywordType" value="3" v-model="keywordType">
+						Bez Słowa Kluczowego
+					</label>
 				</div>
+				<span class="title is-5 annotations-editor__title">Dane do slides.com</span>
 				<div class="field is-horizontal annotation-input-text">
 					<div class="field-label">
 						<label class="label">Tagi do slides.com</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword"  v-for="keyword in keywordsList" :key="keyword">
+						<div class="field field--keyword"  v-for="tag in parserTags" :key="tag">
 							<div class="control">
-								<wnl-keyword-field :tag-id="annotation.id" :tag-content="keyword" :show="annotation.id"/>
+								<wnl-keyword-field :content="tag" :show="annotation.id"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<span class="title is-5 annotations-editor__title">Dane do edytora na platformie</span>
+				<div class="field is-horizontal annotation-input-text annotation-input-text--full-width">
+					<div class="field-label">
+						<label class="label">Tagi do edytora</label>
+					</div>
+					<div class="field-body">
+						<div class="field field--keyword"  v-for="tag in htmlTags" :key="tag">
+							<div class="control">
+								<wnl-keyword-field :content="tag" :show="annotation.id"/>
 							</div>
 						</div>
 					</div>
@@ -122,12 +137,23 @@
 		.field--keyword
 			margin-bottom: $margin-base
 			flex: 0 0 300px
+
+		&--full-width .field--keyword
+			flex: 0 0 100%
+
 		.field-body
 			flex-wrap: wrap
 
 	.annotations-editor
 		.quill-container
 			height: 500px
+
+		&__title
+			margin-bottom: $margin-base
+			display: inline-block
+
+	.annotation-type__form
+		margin-bottom: $margin-big
 </style>
 
 <script>
@@ -151,7 +177,8 @@
 		data() {
 			return {
 				form: new Form({}),
-				isDirty: false
+				isDirty: false,
+				keywordType: this.hasKeywords ? '1' : '3'
 			}
 		},
 		props: {
@@ -166,8 +193,37 @@
 					`Edycja Przypisu #${this.annotation.id}` : 'Nowy Przypis'
 			},
 			keywordsList() {
-				return (this.annotation.keywords || '').split(',')
+				if (!this.annotation.keywords) return []
+
+				return this.annotation.keywords.split(',')
 			},
+			hasKeywords() {
+				return this.keywordsList.length
+			},
+			parserTags() {
+				if (this.keywordType === '3') {
+					return [`{a:${this.keywordType}:${this.annotation.id}}{a}`]
+				}
+
+				if (!this.hasKeywords) return [];
+
+				return this.keywordsList.map(keyword => {
+					return `{a:${this.keywordType}:${this.annotation.id}}${keyword}{a}`
+				})
+			},
+			htmlTags() {
+				if (this.keywordType === '3') {
+					return [
+						`<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}"/>`
+					]
+				}
+
+				if (!this.hasKeywords) return [];
+
+				return this.keywordsList.map(keyword => {
+					return `<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}">${keyword}</span>`
+				})
+			}
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
@@ -223,5 +279,10 @@
 				}
 			}
 		},
+		watch: {
+			hasKeywords() {
+				if (!this.hasKeywords) this.keywordType = '3'
+			}
+		}
 	}
 </script>

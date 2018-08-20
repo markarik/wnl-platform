@@ -81,5 +81,23 @@ export const user = {
 		warning: `<strong>Po wybraniu tej opcji Twoje konto zostanie usunięte. Jeżeli chcesz to zrobić, po kliknięciu pojawi się dymek “Czy na pewno chcesz usunąć swoje konto?”. </strong><br><br> <strong>Twoje konto zostanie usunięte</strong>, oznacza to, że Twoje dane na platformie nie będą widoczne - zamiast imienia i nazwiska pojawi się informacja “Konto usunięte”. Zostanie zachowana treść dodanych przez Ciebie komentarzy i pytań, natomiast Twoje dane nie będą widoczne dla innych użytkowników. <br><br><strong>Uwaga! Twoje dane pozostaną w naszej bazie oraz w dokumentach księgowych przez 5 lat, ze względu na obowiązek przechowywania dokumentacji podatkowej.</strong> W razie roszczeń z Twojej strony lub kontroli podatkowej musimy mieć możliwość ponownego wygenerowania dokumentów sprzedażowych. Natomiast wszystkie dane, które nie są potrzebne do zrealizowania powyższego obowiązku (w tym e-mail, telefon) zostaną usunięte z naszej bazy oraz wszystkich list mailingowych.<br><br> <strong>Po zatwierdzeniu usunięcia nastąpi wylogowanie.</strong>`,
 		confirmationHeader: 'Usuń konto',
 		confirmationWarning: 'Aby potwierdzić usunięcie konta - wprowadź swoje hasło. Po zatwierdzeniu nastąpi wylogowanie.',
-	}
+	},
+    address: {
+        address: 'Adres',
+        recipient: 'Osoba odbierjąca przesyłkę',
+        street: 'Ulica',
+        zip: 'Kod pocztowy',
+        city: 'Miasto',
+        phone: 'Telefon'
+    },
+    personalData: {
+        header: {
+            explanationHeader: 'Twoje wrażliwe dane',
+            explanation: 'Informacje, które tu zostawisz będą wykorzystane przez nas do obsługi Twojego zamówienia. Dane nie będą widoczne publicznie. Więcej informacji na ten temat znajdziesz tutaj: link do polityki prywatności.'
+        },
+        identityNumber: {
+            header: 'Numer identyfikacyjny',
+            explanation: 'W związku z podjęciem współpracy z CEM, prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu! Te dane nie będą widoczne publicznie, a posłużą nam do celów statystycznych. Twoja pomoc pozwoli nam rozwijać i doskonalić kurs!',
+        }
+    }
 }

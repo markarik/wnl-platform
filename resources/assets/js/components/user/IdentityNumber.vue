@@ -3,16 +3,16 @@
         <div class="level wnl-screen-title">
             <div class="level-left">
                 <div class="level-item big strong">
-                    Numer identyfikacyjny
+                    {{ $t('user.personalData.identityNumber.header') }}
                 </div>
             </div>
         </div>
         <div class="message is-primary">
 			<div class="message-header">
-				Numer identyfikacyjny
+				{{ $t('user.personalData.identityNumber.header') }}
 			</div>
 			<div class="message-body">
-				W związku z podjęciem współpracy z CEM, prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu! Te dane nie będą widoczne publicznie, a posłużą nam do celów statystycznych. Twoja pomoc pozwoli nam rozwijać i doskonalić kurs!
+				{{ $t('user.personalData.identityNumber.explanation') }}
 			</div>
 		</div>
         <div class="id-number">

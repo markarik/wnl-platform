@@ -2,16 +2,16 @@
 	<div class="scrollable-main-container">
 		<div class="message is-primary">
 			<div class="message-header">
-				Twoje wrażliwe dane
+				{{ $t('user.personalData.header.explanationHeader') }}
 			</div>
 			<div class="message-body">
-				Informacje, które tu zostawisz będą wykorzystane przez nas do obsługi Twojego zamówienia. Dane nie będą widoczne publicznie. Więcej informacji na ten temat znajdziesz tutaj: link do polityki prywatności
+				{{ $t('user.personalData.header.explanation') }}
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					Adres
+					{{ $t('user.address.address') }}
 				</div>
 			</div>
 		</div>
@@ -22,11 +22,11 @@
 			resourceRoute="users/current/address"
 			populate="true"
 		>
-			<wnl-form-text name="recipient">Osoba odbierająca przesyłkę</wnl-form-text>
-			<wnl-form-text name="street">Ulica</wnl-form-text>
-			<wnl-form-text name="zip">Kod pocztowy</wnl-form-text>
-			<wnl-form-text name="city">Miasto</wnl-form-text>
-			<wnl-form-text name="phone">Telefon</wnl-form-text>
+			<wnl-form-text name="recipient">{{ $t('user.address.recipient') }}</wnl-form-text>
+			<wnl-form-text name="street">{{ $t('user.address.street') }}</wnl-form-text>
+			<wnl-form-text name="zip">{{ $t('user.address.zip') }}</wnl-form-text>
+			<wnl-form-text name="city">{{ $t('user.address.city') }}</wnl-form-text>
+			<wnl-form-text name="phone">{{ $t('user.address.phone') }}</wnl-form-text>
 		</wnl-form>
 		<wnl-identity-number></wnl-identity-number>
 	</div>

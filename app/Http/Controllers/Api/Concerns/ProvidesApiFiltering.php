@@ -205,7 +205,7 @@ trait ProvidesApiFiltering
 	protected function getFiltersCacheTags($resource, $userFiltersPersistanceToken) {
 		$userId = Auth::user()->id;
 
-		return [$resource, "filters", "user-{$userId}", $userFiltersPersistanceToken];
+		return ["user-{$userId}-paginated-{$resource}", $userFiltersPersistanceToken];
 	}
 
 	public static function savedFiltersCacheKey($resource, $userId) {

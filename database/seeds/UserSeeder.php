@@ -5,39 +5,6 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-    const USERS = [
-        [
-            'first_name' => 'Kuba',
-            'last_name' => 'Karmiński',
-            'email' => 'kuba.karminski@bethink.pl',
-            'roles' => RolesTableSeeder::ROLES,
-        ],
-        [
-            'first_name' => 'Adam',
-            'last_name' => 'Karmiński',
-            'email' => 'adam.karminski@bethink.pl',
-            'roles' => RolesTableSeeder::ROLES,
-        ],
-        [
-            'first_name' => 'Przemysław',
-            'last_name' => 'Ferkaluk',
-            'email' => 'przemyslaw.ferkaluk@bethink.pl',
-            'roles' => RolesTableSeeder::ROLES,
-        ],
-        [
-            'first_name' => 'Bogna',
-            'last_name' => 'Knychała',
-            'email' => 'bogna.knychala@bethink.pl',
-            'roles' => RolesTableSeeder::ROLES,
-        ],
-        [
-            'first_name' => 'Pierwszy',
-            'last_name' => 'Człowiek',
-            'email' => 'pierwszy.czlowiek@bethink.pl',
-            'roles' => [],
-        ],
-    ];
-
     /**
      * Run the database seeds.
      *
@@ -45,7 +12,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        foreach (self::USERS as $user) {
+        foreach (ExampleData::USERS as $user) {
             $pass = str_random();
 
             \DB::table('users')->insert([

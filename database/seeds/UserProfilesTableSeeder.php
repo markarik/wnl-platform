@@ -11,7 +11,7 @@ class UserProfilesTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-        foreach (UserSeeder::USERS as $user) {
+        foreach (ExampleData::USERS as $user) {
             $userId = \DB::table('users')->select(['id'])->where('email', $user['email'])->first()->id;
             \DB::table('user_profiles')->insert([
                 'user_id'      => $userId,

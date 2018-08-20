@@ -12,8 +12,8 @@ class CoursesTableSeeder extends Seeder
 	public function run()
 	{
 		DB::table('courses')->insert([
-			'name' => 'Więcej niż LEK',
-			'slug' => 'wiecej-niz-lek',
+			'name' => 'Example Course',
+			'slug' => 'example-course',
 		]);
 	}
 }

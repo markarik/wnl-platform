@@ -58,18 +58,38 @@
 				<div class="title is-4">Dane do edytora</div>
 				<div class="title is-5 annotations-editor__title">Typ przypisu</div>
 				<div class="control annotation-type__form">
-					<label class="radio">
-						<input type="radio" name="keywordType" value="1" v-model="keywordType" :disabled="!hasKeywords">
-						Neutralny
-					</label>
-					<label class="radio">
-						<input type="radio" name="keywordType" value="2" v-model="keywordType" :disabled="!hasKeywords">
-						Wiedza Podstawowa
-					</label>
-					<label class="radio">
-						<input type="radio" name="keywordType" value="3" v-model="keywordType">
-						Bez Słowa Kluczowego
-					</label>
+					<div class="field">
+						<input
+							class="is-checkradio"
+							type="radio"
+							name="keywordType"
+							:value="ANNOTATIONS_TYPES.NEUTRAL"
+							v-model="keywordType"
+							:disabled="!hasKeywords"
+							id="typeNeutral"
+						>
+						<label for="typeNeutral">Neutralny</label>
+						<input
+							class="is-checkradio"
+							type="radio"
+							name="keywordType"
+							:value="ANNOTATIONS_TYPES.BASIC"
+							v-model="keywordType"
+							:disabled="!hasKeywords"
+							id="typeBasic"
+						>
+						<label for="typeBasic">Wiedza Podstawowa</label>
+						<input
+							class="is-checkradio"
+							type="radio"
+							name="keywordType"
+							:value="ANNOTATIONS_TYPES.EMPTY"
+							v-model="keywordType"
+							:disabled="!hasKeywords"
+							id="typeEmpty"
+						>
+						<label for="typeEmpty">Bez Słowa Kluczowego</label>
+					</div>
 				</div>
 				<span class="title is-5 annotations-editor__title">Dane do slides.com</span>
 				<div class="field is-horizontal annotation-input-text">

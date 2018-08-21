@@ -25,9 +25,18 @@ services:
 
   php:
     container_name: php
-    image: bethink/php:7.2.5-fpm-alpine3.7
+    image: bethink/php:7.2.7-fpm-alpine3.7
     ports:
       - "9000:9000"
+    volumes:
+      - ~/Code:/code
+
+  composer:
+    container_name: composer
+    image: bethink/composer:1.6.5
+    entrypoint: docker-php-entrypoint
+    command: php -a
+    tty: true
     volumes:
       - ~/Code:/code
 
@@ -51,10 +60,10 @@ services:
   chat:
     container_name: chat
     image: node:8.11.1-alpine
-    volumes: 
+    volumes:
       - ~/Code:/code
     command: node /code/bethink/wnl-chat/server.js
-    ports: 
+    ports:
       - "9663:9663"
 
   rabbit:

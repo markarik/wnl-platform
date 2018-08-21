@@ -13,7 +13,7 @@ class LessonsTableSeeder extends Seeder
 	{
 		DB::table('lessons')->insert([
 			[
-				'name'     => 'zvooj yeebany',
+				'name'     => 'Przykładowa lekcja',
 				'group_id' => 1,
 			],
 		]);

@@ -12,48 +12,34 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        /** User accounts & checkout */
         $this->call(RolesTableSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(UserProfilesTableSeeder::class);
         $this->call(UserSubscriptionSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(PaymentMethodSeeder::class);
-        $this->call(CoursesTableSeeder::class);
 
+        /** Learning features */
+
+        /** Course structure */
+        $this->call(CourseSeeder::class);
+        $this->call(EditionSeeder::class);
+        $this->call(SlideshowSeeder::class);
+//        $this->call(GroupsTableSeeder::class);
+//        $this->call(LessonsTableSeeder::class);
+        $this->call(ScreensTableSeeder::class);
+
+        /** Social features */
 //        $this->call(CategoriesTableSeeder::class);
-//        $this->call(EditionsTableSeeder::class);
-//		$this->call(GroupsTableSeeder::class);
-//		$this->call(LessonsTableSeeder::class);
-//        $this->call(CouponsTableSeeder::class);
 //        $this->call(TagsTableSeeder::class);
 //        $this->call(QnaQuestionsTableSeeder::class);
 //        $this->call(QnaAnswersTableSeeder::class);
 //        $this->call(TaggablesTableSeeder::class);
-//		$this->call(ScreensTableSeeder::class);
 //        $this->call(CommentsSeeder::class);
+
 //        $this->call(ReactionsSeeder::class);
-//        $this->call(SlideshowSeeder::class);
-//        $this->call(ChatRoomsSeeder::class);
 //        $this->call(QuizSeeder::class);
         Cache::flush();
-    }
-
-    /**
-     * Get contents of a seeder source file.
-     *
-     * @param $path
-     *
-     * @return string
-     */
-    public static function file($path)
-    {
-        if (Storage::exists($path)) {
-            return Storage::get($path);
-        }
-
-        $fileContents = Storage::disk('s3')->get($path);
-        Storage::put($path, $fileContents);
-
-        return $fileContents;
     }
 }

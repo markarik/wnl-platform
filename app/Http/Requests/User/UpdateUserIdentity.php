@@ -72,9 +72,9 @@ class UpdateUserIdentity extends FormRequest
 		if ($idType == 'personal_identity_number') {
 			$this->validatePersonalIdNumber($idNumber);
 		} else if ($idType === 'identity_card') {
-			$this->validateIdCardNumber($idNumber, self::TOKEN_VALUE);
+			$this->validateIdCardNumber($idNumber);
 		} else if ($idType === 'passport') {
-			$this->validatePassportNumber($idNumber, self::TOKEN_VALUE);
+			$this->validatePassportNumber($idNumber);
 		}
 
 		return true;

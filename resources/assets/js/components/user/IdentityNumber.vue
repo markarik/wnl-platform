@@ -157,104 +157,23 @@
                 return this.identity.personalIdentityNumber === ''
             },
             validateIdNumber() {
-                return true
                 let idNumber = this.identity.personalIdentityNumber
-                if (this.identity.identityType === 'personal_identity_number') {
-                    let reg = /^[0-9]{11}$/
-                    if (reg.test(idNumber) == false) {
-                        this.errors.push('PESEL powinien składać się tylko z 11 cyfr.')
-                        return false
-                    } else {
-                        let weight = [1,3,7,9,1,3,7,9,1,3,1]
-                        let sum = 0
+                let idType = this.identity.identityType
 
-                        for (var i = 0; i < weight.length; i++) {
-                            sum += (parseInt(idNumber.substring(i, i+1), 10)*weight[i])
-                        }
-
-                        if (sum % 10 === 0) {
-                            return true
-                        } else {
-                            this.errors.push('PESEL jest niepoprawny.')
-                            return false
-                        }
-                    }
+                if (idType === 'personal_identity_number') {
+                    this.validatePersonalIdNumber(idNumber)
+                    return true
                 } else {
                     if (idNumber.length != 9) {
                         this.errors.push('Numer powinien być złożony z dziewięciu znaków.')
                         return false
                     }
 
-                    idNumber = idNumber.toUpperCase()
-                    let letterValues = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-                    function getLetterValue(letter){
-                        return letterValues.indexOf(letter)
-                    }
-
-                    if (this.identity.identityType === 'identity_card') {
-                        for (i = 0; i < 3; i++) {
-                            if (getLetterValue(idNumber[i]) < 10 || idNumber[i] == 'O' || idNumber == 'Q') {
-                                this.errors.push('Seria podanego numeru jest niepoprawna.')
-                                return false
-                            }
-                        }
-
-                        for (i = 3; i < 9; i++) {
-                            if (getLetterValue(idNumber[i]) < 0 || getLetterValue(idNumber[i]) > 9) {
-                                this.errors.push('Numer podanego identyfikatora jest niepoprawny.')
-                                return false
-                            }
-                        }
-                        let sum = 7 * getLetterValue(idNumber[0]) +
-                            3 * getLetterValue(idNumber[1]) +
-                            1 * getLetterValue(idNumber[2]) +
-                            7 * getLetterValue(idNumber[4]) +
-                            3 * getLetterValue(idNumber[5]) +
-                            1 * getLetterValue(idNumber[6]) +
-                            7 * getLetterValue(idNumber[7]) +
-                            3 * getLetterValue(idNumber[8])
-
-                        sum %= 10
-
-                        if (sum != getLetterValue(idNumber[3])) {
-                            this.errors.push('Numer jest nieprawidłowy')
-                            return false;
-                        }
-
+                    if (idType === 'identity_card') {
+                        this.validateIdCardNumber(idNumber)
                         return true
-
-                    } else {
-                        for (i = 0; i < 2; i++) {
-                            if (getLetterValue(idNumber[i]) < 10 || idNumber[i] == 'O' || idNumber == 'Q') {
-                                this.errors.push('Seria podanego numeru jest niepoprawna.')
-                                return false
-                            }
-                        }
-
-                        for (i = 2; i < 9; i++) {
-                            if (getLetterValue(idNumber[i]) < 0 || getLetterValue(idNumber[i]) > 9) {
-                                this.errors.push('Numer podanego identyfikatora jest niepoprawny.')
-                                return false
-                            }
-                        }
-
-                        let sum = 7 * getLetterValue(idNumber[0]) +
-                            3 * getLetterValue(idNumber[1]) +
-                            1 * getLetterValue(idNumber[3]) +
-                            7 * getLetterValue(idNumber[4]) +
-                            3 * getLetterValue(idNumber[5]) +
-                            1 * getLetterValue(idNumber[6]) +
-                            7 * getLetterValue(idNumber[7]) +
-                            3 * getLetterValue(idNumber[8])
-
-                        sum %= 10
-
-                        if (sum != getLetterValue(idNumber[2])) {
-                            this.errors.push('Numer jest nieprawidłowy')
-                            return false;
-                        }
-
+                    } else if (idType === 'passport') {
+                        this.validatePassportNumber(idNumber)
                         return true
                     }
                 }
@@ -274,6 +193,7 @@
                         await this.setUserIdentity(this.identity)
                     }
                     catch (error) {
+                        this.errors.push(Object.values(error.response.data.errors).toString())
                         $wnl.logger.capture(error)
                         this.addAutoDismissableAlert(this.alertError)
                     }
@@ -284,7 +204,118 @@
             },
             selectRadio() {
                 this.errors = []
-            }
+            },
+            validatePersonalIdNumber(idNumber) {
+                let reg = /^[0-9]{11}$/
+                if (reg.test(idNumber) == false) {
+                    this.errors.push('PESEL powinien składać się tylko z 11 cyfr.')
+                    return false
+                } else {
+                    let weight = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 1]
+                    let sum = 0
+
+                    for (var i = 0; i < weight.length; i++) {
+                        sum += (parseInt(idNumber.substring(i, i+1), 10)*weight[i])
+                    }
+
+                    if (sum % 10 === 0) {
+                        return true
+                    } else {
+                        this.errors.push('PESEL jest niepoprawny.')
+                        return false
+                    }
+                }
+
+                return true
+            },
+            validateIdCardNumber(idNumber) {
+                idNumber = idNumber.toUpperCase()
+
+                for (var i = 0; i < 3; i++) {
+                    if (
+                        this.getLetterValue(idNumber[i]) < 10
+                        || idNumber[i] === 'O'
+                        || idNumber === 'Q'
+                    ) {
+                        this.errors.push('Seria podanego numeru jest niepoprawna.')
+                        return false
+                    }
+                }
+
+                for (var i = 3; i < 9; i++) {
+                    if (
+                        this.getLetterValue(idNumber[i]) < 0
+                        || this.getLetterValue(idNumber[i]) > 9
+                    ) {
+                        this.errors.push('Numer podanego identyfikatora jest niepoprawny.')
+                        return false
+                    }
+                }
+
+                let sum = 7 * this.getLetterValue(idNumber[0]) +
+                    3 * this.getLetterValue(idNumber[1]) +
+                    1 * this.getLetterValue(idNumber[2]) +
+                    7 * this.getLetterValue(idNumber[4]) +
+                    3 * this.getLetterValue(idNumber[5]) +
+                    1 * this.getLetterValue(idNumber[6]) +
+                    7 * this.getLetterValue(idNumber[7]) +
+                    3 * this.getLetterValue(idNumber[8])
+
+                sum %= 10
+
+                if (sum != this.getLetterValue(idNumber[3])) {
+                    this.errors.push('Numer jest nieprawidłowy')
+                    return false
+                }
+
+                return true
+            },
+            validatePassportNumber(idNumber) {
+                idNumber = idNumber.toUpperCase()
+
+                for (var i = 0; i < 2; i++) {
+                    if (
+                        this.getLetterValue(idNumber[i]) < 10
+                        || idNumber[i] === 'O'
+                        || idNumber === 'Q'
+                    ) {
+                        this.errors.push('Seria podanego numeru jest niepoprawna.')
+                        return false
+                    }
+                }
+
+                for (var i = 2; i < 9; i++) {
+                    if (
+                        this.getLetterValue(idNumber[i]) < 0
+                        || this.getLetterValue(idNumber[i]) > 9
+                    ) {
+                        this.errors.push('Numer podanego identyfikatora jest niepoprawny.')
+                        return false
+                    }
+                }
+
+                let sum = 7 * this.getLetterValue(idNumber[0]) +
+                    3 * this.getLetterValue(idNumber[1]) +
+                    1 * this.getLetterValue(idNumber[3]) +
+                    7 * this.getLetterValue(idNumber[4]) +
+                    3 * this.getLetterValue(idNumber[5]) +
+                    1 * this.getLetterValue(idNumber[6]) +
+                    7 * this.getLetterValue(idNumber[7]) +
+                    3 * this.getLetterValue(idNumber[8])
+
+                sum %= 10
+
+                if (sum != this.getLetterValue(idNumber[2])) {
+                    this.errors.push('Numer jest nieprawidłowy')
+                    return false
+                }
+
+                return true
+            },
+            getLetterValue(letter) {
+                let letterValues = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                return letterValues.indexOf(letter)
+            },
         }
     }
 </script>

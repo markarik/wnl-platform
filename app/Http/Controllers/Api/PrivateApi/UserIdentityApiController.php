@@ -9,7 +9,7 @@ class UserIdentityApiController extends ApiController
 {
     public function post(UpdateUserIdentity $request)
     {
-        $user = User::fetch($request->id);
+        $user = User::fetch($request->userId);
 
         if ($request->personal_identity_number) {
             DB::table('users')

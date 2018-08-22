@@ -185,6 +185,7 @@
                 if (this.validateIdNumber) {
                     this.errors = []
                     try {
+                        console.log('axios');
                         await axios.post(getApiUrl(`users/${this.currentUserId}/identity`), {
                             personal_identity_number: this.identity.personalIdentityNumber,
                             identity_type: this.identity.identityType

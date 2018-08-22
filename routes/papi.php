@@ -182,7 +182,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 	Route::patch("{$r['user-forget']}/{userId}", 'UserForgetAccountApiController@patch');
 
-	Route::post("{$r['users']}/{userId}/{$r['user-identity']}", 'UserIdentityApiController@post');
+	Route::post("{$r['users']}/{userId}/{$r['user-identity']}", 'UserConfidentialsApiController@post');
 
 	Route::put("{$r['users']}/{id}/{$r['user-password']}", 'UserPasswordApiController@put');
 

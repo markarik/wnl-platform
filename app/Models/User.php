@@ -67,6 +67,11 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\UserProfile');
 	}
 
+	public function confidentials()
+	{
+		return $this->hasOne('App\Models\UserConfidentials');
+	}
+
 	public function billing()
 	{
 		return $this->hasOne('App\Models\UserBillingData');

@@ -5,7 +5,7 @@ namespace App\Http\Requests\User;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserIdentity extends FormRequest
+class UpdateUserPersonalData extends FormRequest
 {
 	const TOKEN_VALUE = [
 		'0'=>0,'1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5,'6'=>6,'7'=>7,'8'=>8,'9'=>9,
@@ -22,7 +22,7 @@ class UpdateUserIdentity extends FormRequest
 	 */
 	public function authorize()
 	{
-		$user = User::fetch($this->route('id'));
+		$user = User::fetch($this->route('userId'));
 
 		return $this->user()->can('update', $user);
 	}

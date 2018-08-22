@@ -142,10 +142,10 @@ return [
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na otrzymywanie za pomocą środków komunikacji elektronicznej, w szczególności poczty elektronicznej oraz SMS, na podany przeze mnie adres email oraz numer telefonu informacji handlowych od  BETHINK SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ (ul. Henryka Sienkiewicza 8/1, 60-817 Poznań) zgodnie z ustawą z dnia 18 lipca 2002 r. o  świadczeniu usług drogą elektroniczną (Dz.U. Nr 144, poz. 1204 ze zm.)',
 
 	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
-	'personal-data-tou-content' => 'Znam i akceptuję treść dokumentów <a class="tou-open-modal-link" href="#">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href="#">:privacy-link-content</a>.',
+	'personal-data-tou-content' => 'Znam i akceptuję treść dokumentów <a class="tou-open-modal-link" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href=":privacy-link-href" target="_blank">:privacy-link-content</a>.',
 	'personal-data-tou-link-content' => 'Regulamin Serwisu',
 	'tou-link-href' => 'https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf',
-	'privacy-policy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
+	'privacy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
 	'personal-data-privacy-link-content' => 'Polityka Prywatności',
 	'personal-data-tou-title' => 'Regulamin Serwisu portalu wiecejnizlek.pl',
 	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',

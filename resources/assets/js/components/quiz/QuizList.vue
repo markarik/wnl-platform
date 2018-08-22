@@ -133,7 +133,8 @@
 				this.$emit('selectAnswer', data)
 			},
 			scrollToFirstUnanswered() {
-				scrollToElement(this.getQuestionElement(_.head(this.questionsUnaswered)))
+				const id = _.head(this.questionsUnaswered).id
+				scrollToElement(document.querySelector(`.quiz-question-${id}`))
 			},
 		},
 	}

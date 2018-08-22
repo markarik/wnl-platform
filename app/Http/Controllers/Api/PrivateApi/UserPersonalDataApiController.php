@@ -3,11 +3,11 @@
 use DB;
 use App\Models\User;
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\User\UpdateUserPersonalData;
+use App\Http\Requests\User\PostUserPersonalData;
 
-class UserPersonalDApiController extends ApiController
+class UserPersonalDataApiController extends ApiController
 {
-    public function post(UpdateUserPersonalData $request)
+    public function post(PostUserPersonalData $request)
     {
         $user = User::fetch($request->userId);
 

@@ -5,7 +5,7 @@ namespace App\Http\Requests\User;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserPersonalData extends FormRequest
+class PostUserPersonalData extends FormRequest
 {
 	const TOKEN_VALUE = [
 		'0'=>0,'1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5,'6'=>6,'7'=>7,'8'=>8,'9'=>9,

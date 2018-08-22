@@ -9,13 +9,26 @@ use App\Http\Controllers\Api\ApiTransformer;
 
 class UserPersonalDataTransformer extends ApiTransformer
 {
+    protected $parent;
+
+    public function __construct($parent = null)
+	{
+		$this->parent = $parent;
+	}
+
     public function transform(UserPersonalData $personalData)
     {
         $data = [
             'identity' => [
-                'personal_identity_number' => $user->personal_identity_number,
-                'identity_type'            => $user->identity_type
+                'personal_identity_number' => $personalData->personal_identity_number,
+                'identity_type'            => $personalData->identity_type
             ],
         ];
+
+        if ($this->parent) {
+			$data = array_merge($data, $this->parent);
+		}
+
+		return $data;
     }
 }

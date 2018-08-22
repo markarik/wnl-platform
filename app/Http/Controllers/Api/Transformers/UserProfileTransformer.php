@@ -25,8 +25,6 @@ class UserProfileTransformer extends ApiTransformer
 		$lastName = is_null($profile->deleted_at) ? $profile->last_name : 'usunięte';
 		$displayName = is_null($profile->deleted_at) ? $profile->display_name : 'Konto usinięte';
 
-		$user = User::find($profile->user_id);
-
 		$data = [
 			'id'                       => $profile->id,
 			'user_id'                  => $profile->user_id,
@@ -46,10 +44,6 @@ class UserProfileTransformer extends ApiTransformer
 			'about'                    => $profile->about,
 			'learning_location'        => $profile->learning_location,
 			'deleted_at'               => $profile->deleted_at,
-			'identity' => [
-				'personal_identity_number' => $user->personal_identity_number,
-				'identity_type'            => $user->identity_type
-			],
 		];
 
 		if ($this->parent) {

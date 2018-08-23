@@ -45,14 +45,15 @@
 				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
 			<div class="level-item">
-					<a class="button is-danger"
-						 :disabled="!annotation.id"
-						 @click="onDelete">Usuń
-					</a>
-					<a class="button is-primary"
-						 :disabled="form.errors.any() || !annotation.description"
-						 @click="onSubmit">Zapisz
-					</a>
+				<a class="button is-danger"
+					 :disabled="!annotation.id"
+					 @click="onDelete">Usuń
+				</a>
+				<a class="button" @click="isVisible = true">Podgląd</a>
+				<a class="button is-primary"
+					 :disabled="form.errors.any() || !annotation.description"
+					 @click="onSubmit">Zapisz
+				</a>
 			</div>
 			<template v-if="annotation.id">
 				<div class="title is-4">Dane do edytora</div>
@@ -119,6 +120,9 @@
 				</div>
 			</template>
 		</form>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="isVisible = false" v-if="isVisible">
+			<wnl-preview-modal :content="annotation.description"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -184,7 +188,9 @@
 	import Form from 'js/classes/forms/Form'
 	import { Tags } from 'js/components/global/form/index'
 	import KeywordField from "./KeywordField";
+	import PreviewModal from "./PreviewModal";
 	import Quill from 'js/admin/components/forms/Quill.vue'
+	import Modal from 'js/components/global/Modal';
 
 	export default {
 		name: 'AnnotationsEditor',
@@ -193,6 +199,8 @@
 			'wnl-tags': Tags,
 			'wnl-keyword-field': KeywordField,
 			'quill': Quill,
+			'wnl-modal': Modal,
+			'wnl-preview-modal': PreviewModal
 		},
 		data() {
 			const ANNOTATIONS_TYPES = {
@@ -204,7 +212,8 @@
 				form: new Form({}),
 				isDirty: false,
 				keywordType: this.hasKeywords ? ANNOTATIONS_TYPES.NEUTRAL : ANNOTATIONS_TYPES.EMPTY,
-				ANNOTATIONS_TYPES
+				ANNOTATIONS_TYPES,
+				isVisible: false
 			}
 		},
 		props: {
@@ -303,11 +312,11 @@
 						type: 'error'
 					})
 				}
-			}
+			},
 		},
 		watch: {
 			hasKeywords() {
-				if (!this.hasKeywords) this.keywordType = '3'
+				if (!this.hasKeywords) this.keywordType = this.ANNOTATIONS_TYPES.EMPTY
 			}
 		}
 	}

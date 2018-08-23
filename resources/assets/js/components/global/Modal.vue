@@ -25,9 +25,6 @@
 </style>
 
 <script>
-import { mapMutations } from 'vuex'
-import {UI_TOGGLE_MODAL as modalVisible} from 'js/store/mutations-types'
-
 export default {
 	name: 'Modal',
 	props: {
@@ -36,20 +33,5 @@ export default {
 			default: false
 		}
 	},
-	methods: {
-		...mapMutations({modalVisible})
-	},
-	mounted() {
-		if (this.isModalVisible) return this.modalVisible(true)
-	},
-	beforeDestroy() {
-		return this.modalVisible(false)
-	},
-	watch: {
-		isModalVisible() {
-			if (this.isModalVisible) return this.modalVisible(true)
-			return this.modalVisible(false)
-		}
-	}
 }
 </script>

@@ -76,7 +76,7 @@ const form = {
 		setupForm({commit}, payload) {
 			commit(types.FORM_SETUP, payload)
 		},
-		populateForm({state, commit}) {
+		populateFormFromApi({state, commit}) {
 			return axios.get(state.resourceUrl)
 				.then((response) => {
 					commit(types.FORM_POPULATE, response.data)
@@ -85,6 +85,10 @@ const form = {
 				.catch((error) => {
 					$wnl.logger.error(error)
 				})
+		},
+		populateContent({state, commit}, content) {
+			commit(types.FORM_POPULATE, content)
+			commit(types.FORM_UPDATE_ORIGINAL_DATA)
 		},
 		submitForm({state, commit}, payload) {
 			let method = payload.method

@@ -72,6 +72,10 @@
 					]
 				}
 			},
+			value: {
+				type: String,
+				default: ''
+			},
 			autofocus: {
 				type: Boolean,
 				default: true,
@@ -248,6 +252,7 @@
 			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
 			this.quill.on('text-change', this.onTextChange)
+			this.editor.innerHTML = this.value
 			document.addEventListener('click', this.clickHandler)
 		},
 		beforeDestroy() {

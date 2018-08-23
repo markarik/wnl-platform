@@ -8,11 +8,15 @@
 		resourceRoute="comments"
 		:attach="attachedData"
 		:name="name"
+		:initial-content="newCommentDraft"
 		@submitSuccess="onSubmitSuccess">
 		<wnl-quill
 			class="margin bottom"
 			name="text"
-			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'snow' }">
+			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'snow' }"
+			:value="newCommentDraft"
+			@input="updateNewCommentDraft"
+		>
 		</wnl-quill>
 
 		<div class="level">
@@ -33,6 +37,7 @@
 </style>
 
 <script>
+	import {mapActions, mapState} from 'vuex';
 	import { Form, Quill, Submit } from 'js/components/global/form'
 
 	export default {
@@ -44,6 +49,7 @@
 		},
 		props: ['commentableResource', 'commentableId', 'isUnique'],
 		computed: {
+			...mapState('comments', ['drafts']),
 			name() {
 				let name = `NewComment-${this.commentableResource}`
 				if (!this.isUnique) {
@@ -57,10 +63,19 @@
 					commentable_id: this.commentableId,
 				}
 			},
+			newCommentDraft() {
+				return this.drafts && this.drafts[this.commentableResource]
+			}
 		},
 		methods: {
+			...mapActions('comments', ['updateCommentableCommentDraft']),
 			onSubmitSuccess(data) {
 				this.$emit('submitSuccess', data)
+			},
+			updateNewCommentDraft(data) {
+				_.debounce(() => {
+					this.updateCommentableCommentDraft({commentableResource: this.commentableResource, content: data});
+				}, 300);
 			}
 		},
 	}

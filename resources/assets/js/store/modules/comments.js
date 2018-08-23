@@ -39,7 +39,9 @@ function _resolveComment(id, status = true) {
 	})
 }
 
-const state = {};
+export const commentsState = {
+	drafts: {}
+};
 
 export const commentsGetters = {
 	...reactionsGetters,
@@ -142,6 +144,9 @@ export const commentsMutations = {
 		set(state, 'profiles', {
 			...state.profiles, ...payload
 		})
+	},
+	[types.SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT] (state, {commentableResource, content}) {
+		set(state.drafts, commentableResource, content)
 	}
 }
 
@@ -198,6 +203,9 @@ export const commentsActions = {
 		commit(types.SET_COMMENTABLE_COMMENTS, comments)
 
 		return comments
+	},
+	updateCommentableCommentDraft({commit}, payload) {
+		commit(types.SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT, payload)
 	}
 }
 
@@ -205,6 +213,6 @@ export default {
 	actions: commentsActions,
 	mutations: commentsMutations,
 	getters: commentsGetters,
-	state,
+	state: commentsState,
 	namespaced: true
 }

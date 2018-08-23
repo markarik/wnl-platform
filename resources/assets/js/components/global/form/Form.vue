@@ -40,7 +40,8 @@
 			'suppressEnter',
 			'resetAfterSubmit',
 			'loading',
-			'submitError'
+			'submitError',
+			'initialContent'
 		],
 		computed: {
 			anyErrors() {
@@ -174,9 +175,11 @@
 			this.$emit('formIsLoaded')
 
 			if (this.populate) {
-				this.action('populateForm').then(() => {
+				this.action('populateFormFromApi').then(() => {
 					this.mutation(types.FORM_IS_LOADED)
 				})
+			} else if (this.initialContent) {
+				this.action('populateContent', this.initialContent)
 			} else {
 				this.mutation(types.FORM_IS_LOADED)
 			}

@@ -138,7 +138,7 @@
         computed: {
 			...mapGetters(['currentUserIdentity', 'currentUserId']),
             idNumberAvilable() {
-                return Boolean(this.currentUserIdentity.personalIdentityNumber)
+                return this.currentUserIdentity.personalIdentityNumber
             },
 			idNumber() {
 				return this.currentUserIdentity.personalIdentityNumber
@@ -157,6 +157,7 @@
                 return this.identity.personalIdentityNumber === ''
             },
             validateIdNumber() {
+                return true
                 let idNumber = this.identity.personalIdentityNumber
                 let idType = this.identity.identityType
 
@@ -185,8 +186,7 @@
                 if (this.validateIdNumber) {
                     this.errors = []
                     try {
-                        console.log('axios');
-                        await axios.post(getApiUrl(`users/${this.currentUserId}/identity`), {
+                        await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), {
                             personal_identity_number: this.identity.personalIdentityNumber,
                             identity_type: this.identity.identityType
                         })
@@ -317,6 +317,11 @@
                 let letterValues = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                 return letterValues.indexOf(letter)
             },
+        },
+        mounted() {
+            axios.get(getApiUrl(`users/${this.currentUserId}/personal_data`)).then((response) => {
+                console.log(response);
+            })
         }
     }
 </script>

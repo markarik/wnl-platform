@@ -58,6 +58,7 @@ class PostUserPersonalData extends FormRequest
 	public function withValidator($validator)
 	{
 		$validator->after(function ($validator) {
+			echo('walidator');
 			if (!$this->checksum()) {
 				$validator->errors()->add('personal_identity_number', 'Numer jest nipoprawny!');
 			}

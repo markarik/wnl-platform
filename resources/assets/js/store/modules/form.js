@@ -86,8 +86,8 @@ const form = {
 					$wnl.logger.error(error)
 				})
 		},
-		populateContent({state, commit}, content) {
-			commit(types.FORM_POPULATE, content)
+		populateFormFromValue({state, commit}, value) {
+			commit(types.FORM_POPULATE, value)
 			commit(types.FORM_UPDATE_ORIGINAL_DATA)
 		},
 		submitForm({state, commit}, payload) {

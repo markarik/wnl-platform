@@ -9,7 +9,8 @@ import uuidv1 from 'uuid/v1';
 import {
 	commentsActions,
 	commentsGetters,
-	commentsMutations
+	commentsMutations,
+	commentsState
 } from 'js/store/modules/comments'
 import {
 	reactionsActions,
@@ -24,6 +25,7 @@ const LIMIT = 25
 
 // Initial state
 const state = {
+	...commentsState,
 	activeFilters: [],
 	comments: {},
 	currentQuestion: {

@@ -204,9 +204,6 @@ export const commentsActions = {
 
 		return comments
 	},
-	updateCommentableCommentDraft({commit}, payload) {
-		commit(types.SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT, payload)
-	}
 }
 
 export default {

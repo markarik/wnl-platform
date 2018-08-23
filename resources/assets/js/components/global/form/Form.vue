@@ -41,7 +41,7 @@
 			'resetAfterSubmit',
 			'loading',
 			'submitError',
-			'initialContent'
+			'value'
 		],
 		computed: {
 			anyErrors() {
@@ -178,8 +178,9 @@
 				this.action('populateFormFromApi').then(() => {
 					this.mutation(types.FORM_IS_LOADED)
 				})
-			} else if (this.initialContent) {
-				this.action('populateContent', this.initialContent)
+			} else if (this.value) {
+				this.action('populateFormFromValue', this.value)
+				this.mutation(types.FORM_IS_LOADED)
 			} else {
 				this.mutation(types.FORM_IS_LOADED)
 			}

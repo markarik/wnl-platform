@@ -8,14 +8,14 @@
 		resourceRoute="comments"
 		:attach="attachedData"
 		:name="name"
-		:initial-content="newCommentDraft"
+		:value="newCommentDraft"
 		@submitSuccess="onSubmitSuccess">
 		<wnl-quill
 			class="margin bottom"
 			name="text"
 			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'snow' }"
 			:value="newCommentDraft"
-			@input="updateNewCommentDraft"
+			@input="setNewCommentDraft"
 		>
 		</wnl-quill>
 
@@ -37,8 +37,9 @@
 </style>
 
 <script>
-	import {mapActions, mapState} from 'vuex';
+	import {mapActions, mapState, mapMutations} from 'vuex';
 	import { Form, Quill, Submit } from 'js/components/global/form'
+	import {SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT} from "js/store/mutations-types"
 
 	export default {
 		name: 'NewCommentForm',
@@ -69,12 +70,17 @@
 		},
 		methods: {
 			...mapActions('comments', ['updateCommentableCommentDraft']),
+			...mapMutations('comments', {
+				commitNewCommentDraft: SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT
+			}),
 			onSubmitSuccess(data) {
 				this.$emit('submitSuccess', data)
 			},
-			updateNewCommentDraft(data) {
+			setNewCommentDraft(data) {
 				_.debounce(() => {
-					this.updateCommentableCommentDraft({commentableResource: this.commentableResource, content: data});
+					this.commitNewCommentDraft(
+						{ commentableResource: this.commentableResource, content: data }
+					);
 				}, 300);
 			}
 		},

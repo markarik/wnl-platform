@@ -31,10 +31,9 @@ class UserPersonalDataApiController extends ApiController
 
     public function post(PostUserPersonalData $request)
     {
-        $user = User::fetch($request->userId);
+        $idNumber = $request->personal_identity_number;
+        $idType = $request->identity_type;
 
-        if ($request->personal_identity_number) {
-            dd();
-        }
+        dd($idNumber. $idType);
     }
 }

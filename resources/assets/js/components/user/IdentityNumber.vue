@@ -15,7 +15,7 @@
 				{{ $t('user.personalData.identityNumber.explanation') }}
 			</div>
 		</div>
-        <div class="id-number">
+        <div class="id-number" v-if="isLoaded">
             <div class="id-number__has-personal-id" v-if="idNumberAvilable">
                 <div class="id-number__has-personal-identity_number">
                     Podany przez Ciebie numer {{ idType }} to: {{ idNumber }}
@@ -133,12 +133,13 @@
                     text: 'Ups, coś poszło nie tak :(',
                     type: 'error',
                 },
+                isLoaded: false,
             }
         },
         computed: {
 			...mapGetters(['currentUserIdentity', 'currentUserId']),
             idNumberAvilable() {
-                return this.currentUserIdentity.personalIdentityNumber
+                return Boolean(this.currentUserIdentity.personalIdentityNumber)
             },
 			idNumber() {
 				return this.currentUserIdentity.personalIdentityNumber
@@ -181,7 +182,7 @@
             }
 		},
         methods: {
-            ...mapActions(['addAutoDismissableAlert', 'setUserIdentity']),
+            ...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
             async onSubmit() {
                 if (this.validateIdNumber) {
                     this.errors = []
@@ -191,7 +192,7 @@
                             identity_type: this.identity.identityType
                         })
                         this.addAutoDismissableAlert(this.alertSuccess)
-                        await this.setUserIdentity(this.identity)
+                        this.setUserIdentity(this.identity)
                     }
                     catch (error) {
                         this.errors.push(Object.values(error.response.data.errors).toString())
@@ -319,8 +320,11 @@
             },
         },
         mounted() {
-            axios.get(getApiUrl(`users/${this.currentUserId}/personal_data`)).then((response) => {
-                console.log(response);
+            this.fetchUserPersonalData()
+            .then(() => {
+                this.isLoaded = true
+            }).catch((e) => {
+                this.isLoaded = true
             })
         }
     }

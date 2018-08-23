@@ -80,9 +80,7 @@ const mutations = {
 		set(state, 'subscription', payload)
 	},
 	[types.USERS_SET_IDENTIY] (state, payload) {
-		Object.keys(payload).forEach((key) => {
-			set(state.profile.identity, key, payload[key])
-		})
+		set(state.profile, 'identity', payload)
 	}
 }
 
@@ -141,6 +139,25 @@ const actions = {
 				resolve()
 			})
 			.catch((error) => {
+				$wnl.logger.error(error)
+				reject()
+			})
+		})
+	},
+
+	fetchUserPersonalData({ commit }) {
+		return new Promise((resolve, reject) => {
+			axios.get(getApiUrl(`users/current/personal_data`)).then((response) => {
+				commit(types.USERS_SET_IDENTIY, response.data)
+				resolve()
+			})
+			.catch((error) => {
+				if (error.response.data.length === 0) {
+					commit(types.USERS_SET_IDENTIY, {
+						personalIdentityNumber: '',
+						identityType: 'personal_identity_number'
+					})
+				}
 				$wnl.logger.error(error)
 				reject()
 			})

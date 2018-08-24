@@ -31,8 +31,9 @@ class UserPersonalDataApiController extends ApiController
 
     public function post(PostUserPersonalData $request)
     {
-        dd('walidacja się powiodła');
-        $idNumber = $request->personal_identity_number;
-        $idType = $request->identity_type;
+        $user = User::fetch($request->route('userId'));
+        $user->personalData()->updateOrCreate(['user_id' => $user->id], $request->all());
+
+        return $this->respondOk();
     }
 }

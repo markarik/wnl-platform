@@ -8,9 +8,10 @@ class UserPersonalData extends Model
 {
     protected $table = 'user_personal_data';
 
-    protected $hidden = [
+    protected $fillable = [
+        'user_id',
         'personal_identity_number',
-        'identity_type',
+        'identity_type'
     ];
 
     public function user()

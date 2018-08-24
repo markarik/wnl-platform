@@ -187,7 +187,7 @@
                 if (this.validateIdNumber) {
                     this.errors = []
                     try {
-                        await axios.post(getApiUrl(`users/current/personal_data`), {
+                        await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), {
                             personal_identity_number: this.identity.personalIdentityNumber,
                             identity_type: this.identity.identityType
                         })

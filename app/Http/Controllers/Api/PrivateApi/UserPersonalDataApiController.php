@@ -19,7 +19,7 @@ class UserPersonalDataApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-        if (!Auth::user()->can('view', $personalData)) {
+        if (Auth::user()->id !== $user->id) {
 			return $this->respondForbidden();
 		}
 

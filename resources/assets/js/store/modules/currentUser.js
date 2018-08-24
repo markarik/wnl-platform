@@ -148,16 +148,17 @@ const actions = {
 	fetchUserPersonalData({ commit }) {
 		return new Promise((resolve, reject) => {
 			axios.get(getApiUrl(`users/current/personal_data`)).then((response) => {
-				commit(types.USERS_SET_IDENTIY, response.data)
+				commit(types.USERS_SET_IDENTIY, response.data.identity)
 				resolve()
 			})
 			.catch((error) => {
-				if (error.response.data.length === 0) {
+				// przypadek, w którym request się nie powiódł a jest jakieś data.length?
+				// if (error.response.data.length === 0) {
 					commit(types.USERS_SET_IDENTIY, {
 						personalIdentityNumber: '',
 						identityType: 'personal_identity_number'
 					})
-				}
+				// }
 				$wnl.logger.error(error)
 				reject()
 			})

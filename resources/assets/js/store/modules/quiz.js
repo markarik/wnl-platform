@@ -204,11 +204,10 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let resources = state[resource];
+			let resourceObject = state[resource]
 			_.each(items, (item) => {
-				resources[item.id] = item;
+				set(resourceObject, item.id, item)
 			})
-			set(state, resource, resources)
 		})
 	},
 	[types.QUIZ_DESTROY] (state) {

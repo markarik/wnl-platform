@@ -29,7 +29,11 @@ class PostUserPersonalData extends FormRequest
 	 */
 	public function rules()
 	{
-		if ($this->request->get('identity_type') == 'personal_identity_number') {
+		$identityType = $this->request->get('identity_type');
+
+		if (!$identityType) return false;
+		
+		if ($identityType === 'personal_identity_number') {
 			return [
 				'personal_identity_number' => [
 					'required',
@@ -38,7 +42,7 @@ class PostUserPersonalData extends FormRequest
 					new ValidatePersonalIdentityNumber
 				]
 			];
-		} else if ($this->request->get('identity_type') == 'identity_card') {
+		} else if ($identityType === 'identity_card') {
 			return [
 				'personal_identity_number' => [
 					'required',
@@ -47,7 +51,7 @@ class PostUserPersonalData extends FormRequest
 					new ValidateIdentityCardNumber
 				]
 			];
-		} else if ($this->request->get('identity_type') == 'passport') {
+		} else if ($identityType === 'passport') {
 			return [
 				'personal_identity_number' => [
 					'required',

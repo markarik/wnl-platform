@@ -13,7 +13,7 @@
 		@if($online->signups_close->isPast() && $onsite->signups_close->isPast())
 			<div class="column">
 				<div class="notification has-text-centered strong">
-					Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, a przypomnimy Ci o kolejnych!
+					Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!
 				</div>
 			</div>
 		@elseif($online->signups_start->isPast() && $onsite->signups_start->isPast())

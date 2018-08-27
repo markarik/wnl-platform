@@ -2,6 +2,13 @@
 	<div class="collections-quiz">
 		<p class="title is-4">Zapisane pytania kontrolne ({{howManyQuestions}})</p>
 		<div v-if="isLoaded || howManyQuestions === 0">
+			<div class="pagination-container">
+				<wnl-pagination v-if="lastPage && lastPage > 1"
+					:currentPage="currentPage"
+					:lastPage="lastPage"
+					@changePage="changePage"
+				/>
+			</div>
 			<wnl-quiz-widget
 				v-if="howManyQuestions > 0"
 				:questions="getQuestionsWithAnswers"
@@ -25,22 +32,36 @@
 		padding: $margin-base 0
 </style>
 
+<style lang="sass">
+	.collections-quiz .pagination-list
+		justify-content: center
+</style>
+
 <script>
-	import {mapActions, mapGetters} from 'vuex'
+	import {mapActions, mapGetters, mapState} from 'vuex'
 
 	import QuizWidget from 'js/components/quiz/QuizWidget'
+	import Pagination from 'js/components/global/Pagination'
 
 	export default {
 		name: 'QuizCollection',
 		components: {
 			'wnl-quiz-widget': QuizWidget,
+			'wnl-pagination': Pagination
 		},
 		props: ['categoryName', 'rootCategoryName', 'quizQuestionsIds'],
 		computed: {
+			...mapState('quiz', ['pagination']),
 			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction', 'isComplete', 'getQuestion']),
 			howManyQuestions() {
 				return this.quizQuestionsIds.length
 			},
+			lastPage() {
+				return this.pagination.last_page;
+			},
+			currentPage() {
+				return this.pagination.current_page;
+			}
 		},
 		methods: {
 			...mapActions('quiz', ['shuffleAnswers', 'changeQuestion', 'resolveQuestion', 'commitSelectAnswer']),
@@ -53,6 +74,9 @@
 					? this.resolveQuestion(id)
 					: !this.isComplete && this.commitSelectAnswer({id, answer})
 			},
+			changePage(page) {
+				this.$emit('changeQuizQuestionsPage', page)
+			}
 		}
 	}
 </script>

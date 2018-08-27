@@ -1,15 +1,17 @@
 {
-  "authHost": "https://localhost",
+  "authHost": "http://172.18.0.1",
   "authEndpoint": "/broadcasting/auth",
   "clients": [],
   "database": "redis",
   "databaseConfig": {
-	"redis": {
-	  "database": 1
-	},
-	"sqlite": {
-	  "databasePath": "/database/laravel-echo-server.sqlite"
-	}
+    "redis": {
+      "database": 1,
+      "host": "172.18.0.1",
+      "port": "6379"
+    },
+    "sqlite": {
+      "databasePath": "/database/laravel-echo-server.sqlite"
+    }
   },
   "devMode": true,
   "host": null,

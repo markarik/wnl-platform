@@ -28,6 +28,8 @@
 	{{-- <h3>Co teraz?</h3>
 	<p>Wszystkie lekcje udostępniane będą na naszej <a href="{{url('/')}}" title="Platforma e-learningowa">platformie e-learningowej</a>. Na razie znajdziesz tam odliczanie do Kursu, dostęp do swojego Konta oraz Pomoc, ale wszystkie funkcje platformy możesz przetestować już na <a href="https://demo.wiecejnizlek.pl" title="Wersja demo platformy">wersji demonstracyjnej</a>. O wszystkich ważnych kwestiach będziemy informować na <a href="https://facebook.com/wiecejnizlek" title="Fanpage Więcej niż LEK">naszym fanpage'u</a>.</p> --}}
 
+	<p>Wszystie faktury dotyczące Twoich zamówień znajdziesz w zakładce KONTO > Twoje zamówienia.</p>
+
 	<p style="text-align: center;">
 		<a class="button is-primary is-outlined" href="https://platforma.wiecejnizlek.pl">Przejdź na platformę</a>
 	</p>

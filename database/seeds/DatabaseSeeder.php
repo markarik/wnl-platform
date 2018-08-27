@@ -27,9 +27,8 @@ class DatabaseSeeder extends Seeder
         $this->call(EditionSeeder::class);
         $this->call(SlideshowSeeder::class);
         $this->call(CoursePlanSeeder::class);
-//        $this->call(GroupsTableSeeder::class);
-//        $this->call(LessonsTableSeeder::class);
         $this->call(ScreensTableSeeder::class);
+        $this->call(ReactionsSeeder::class);
 
         /** Social features */
 //        $this->call(CategoriesTableSeeder::class);
@@ -39,7 +38,6 @@ class DatabaseSeeder extends Seeder
 //        $this->call(TaggablesTableSeeder::class);
 //        $this->call(CommentsSeeder::class);
 
-//        $this->call(ReactionsSeeder::class);
 //        $this->call(QuizSeeder::class);
         Cache::flush();
     }

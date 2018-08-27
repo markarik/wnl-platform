@@ -272,9 +272,6 @@ const actions = {
 			resolve()
 		})
 	},
-	activeFiltersReset({commit}) {
-		commit(types.ACTIVE_FILTERS_RESET)
-	},
 	buildPlan({state, rootGetters}, data) {
 		data.filters = parseFilters(data.activeFilters, state.filters, rootGetters.currentUserId);
 		return axios.post(getApiUrl(`user_plan/${rootGetters.currentUserId}`), data)

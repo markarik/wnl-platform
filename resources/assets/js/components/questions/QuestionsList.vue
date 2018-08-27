@@ -485,6 +485,7 @@
 				.then(() => {
 					this.fetchingFilters = false
 					this.resetCurrentQuestion()
+					this.resetPages()
 					this.setToken()
 				})
 				.then(this.fetchDynamicFilters)

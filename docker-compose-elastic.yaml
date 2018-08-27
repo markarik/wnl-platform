@@ -23,7 +23,7 @@ services:
         limits:
           memory: 1G
     volumes:
-      - /usr/share/elasticsearch/data
+      - ${LOCAL_DEV_PATH}/elasticsearch:/usr/share/elasticsearch/data
 
   kibana:
     container_name: kibana

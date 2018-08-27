@@ -20,25 +20,18 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductSeeder::class);
         $this->call(PaymentMethodSeeder::class);
 
-        /** Learning features */
 
         /** Course structure */
+//        $this->call(QuizSeeder::class);
         $this->call(CourseSeeder::class);
         $this->call(EditionSeeder::class);
         $this->call(SlideshowSeeder::class);
         $this->call(CoursePlanSeeder::class);
         $this->call(ScreensTableSeeder::class);
         $this->call(ReactionsSeeder::class);
+        $this->call(CategoriesTableSeeder::class);
 
-        /** Social features */
-//        $this->call(CategoriesTableSeeder::class);
-//        $this->call(TagsTableSeeder::class);
-//        $this->call(QnaQuestionsTableSeeder::class);
-//        $this->call(QnaAnswersTableSeeder::class);
-//        $this->call(TaggablesTableSeeder::class);
-//        $this->call(CommentsSeeder::class);
 
-//        $this->call(QuizSeeder::class);
         Cache::flush();
     }
 }

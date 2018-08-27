@@ -53,6 +53,7 @@
 							:categoryName="categoryName"
 							:rootCategoryName="rootCategoryName"
 							:quizQuestionsIds="quizQuestionsIds"
+							@changeQuizQuestionsPage="onChangeQuizQuestionsPage"
 						></wnl-quiz-collection>
 					</div>
 				</div>
@@ -308,6 +309,9 @@
 
 				return this.activePanels.includes(panel)
 			},
+			onChangeQuizQuestionsPage(page) {
+				this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds, page})
+			}
 		},
 		mounted() {
 			this.toggleOverlay({source: 'collections', display: true})

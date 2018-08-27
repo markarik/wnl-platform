@@ -24,7 +24,7 @@ class UserForgetAccountApiController extends ApiController
 		$currentUserId = $request->userId;
 		$password = $request->password;
 
-		if ($user->id === $currentUserId) {
+		if ($user->id == $currentUserId) {
 			if (Hash::check($password, $user->password)) {
 				$userProfileUpdates = array(
 					'first_name' => 'account',

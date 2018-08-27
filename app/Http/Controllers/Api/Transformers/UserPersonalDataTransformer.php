@@ -29,6 +29,6 @@ class UserPersonalDataTransformer extends ApiTransformer
 			$data = array_merge($data, $this->parent);
 		}
 
-		return $data;
+        return $data;
     }
 }

@@ -17,7 +17,7 @@ class LessonObserver
 
 	public function created(Lesson $lesson)
 	{
-//		$this->createLessonChat($lesson);
+
 	}
 
 	protected function createLessonChat($lesson)

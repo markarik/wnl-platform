@@ -17,6 +17,7 @@ class PostUserPersonalData extends FormRequest
 	 */
 	public function authorize()
 	{
+		return false;
 		$user = User::fetch($this->route('userId'));
 
 		return $this->user()->can('update', $user);
@@ -32,7 +33,7 @@ class PostUserPersonalData extends FormRequest
 		$identityType = $this->request->get('identity_type');
 
 		if (!$identityType) return false;
-		
+
 		if ($identityType === 'personal_identity_number') {
 			return [
 				'personal_identity_number' => [

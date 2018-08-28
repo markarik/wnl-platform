@@ -50,7 +50,7 @@
                     v-if="otherIdentity">
                     <div class="id_number__radio field">
                             <input
-                                @click="selectRadio"
+                                @click="errors=[]"
                                 class="is-checkradio"
                                 type="radio"
                                 id="personal_identity_number"
@@ -59,7 +59,7 @@
                                 v-model="identity.identityType">
                             <label for="personal_identity_number">PESEL</label>
                             <input
-                                @click="selectRadio"
+                                @click="errors=[]"
                                 class="is-checkradio"
                                 type="radio"
                                 id="identity_card"
@@ -68,7 +68,7 @@
                                 v-model="identity.identityType">
                             <label :for="this.identityTypes.idCard">Dowód osobisty</label>
                             <input
-                                @click="selectRadio"
+                                @click="errors=[]"
                                 class="is-checkradio"
                                 type="radio"
                                 id="passport"
@@ -113,9 +113,7 @@
 <script>
     import { mapGetters, mapActions } from 'vuex'
     import { getApiUrl } from 'js/utils/env'
-
-    const ID_CARD_CONTROL_NUMBER = 3
-    const PASSPORT_CONTROL_NUMBER = 2
+    import { get } from 'lodash'
 
     export default {
         name: 'IdentityNumber',
@@ -127,6 +125,10 @@
                 identity: {
                     personalIdentityNumber: '',
                     identityType: 'personal_identity_number'
+                },
+                controlNumbers: {
+                    identity_card: 3,
+                    passport: 2
                 },
                 otherIdentity: false,
                 errors: [],
@@ -202,7 +204,7 @@
                         this.setUserIdentity(this.identity)
                     }
                     catch (error) {
-                        this.errors.push(Object.values(error.response.data.errors).toString())
+                        this.errors = _.get(error, 'response.data.errors.personal_identity_number', ['Coś poszło nie tak :('])
                         $wnl.logger.capture(error)
                         this.addAutoDismissableAlert(this.alertError)
                     }
@@ -237,9 +239,9 @@
                 let controlNumber = 0
 
                 if (idType === this.identityTypes.idCard) {
-                    controlNumber = ID_CARD_CONTROL_NUMBER
+                    controlNumber = this.controlNumbers.identity_card
                 } else if (idType === this.identityTypes.passport) {
-                    controlNumber = PASSPORT_CONTROL_NUMBER
+                    controlNumber = this.controlNumbers.passport
                 }
 
                 idNumber = idNumber.toUpperCase()

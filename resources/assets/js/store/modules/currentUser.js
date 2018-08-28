@@ -152,13 +152,10 @@ const actions = {
 				resolve()
 			})
 			.catch((error) => {
-				// przypadek, w którym request się nie powiódł a jest jakieś data.length?
-				// if (error.response.data.length === 0) {
-					commit(types.USERS_SET_IDENTIY, {
-						personalIdentityNumber: '',
-						identityType: 'personal_identity_number'
-					})
-				// }
+				commit(types.USERS_SET_IDENTIY, {
+					personalIdentityNumber: '',
+					identityType: 'personal_identity_number'
+				})
 				$wnl.logger.error(error)
 				reject()
 			})

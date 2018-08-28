@@ -30,6 +30,7 @@
                         type="text"
                         placeholder="Numer identyfikacyjny"
                         v-model="identity.personalIdentityNumber"
+                        @keyup.enter="onSubmit"
                     />
                 </div>
                 <div class="id-number__errors" v-if="errors.length">
@@ -177,7 +178,7 @@
                     return this.validatePersonalIdNumber(idNumber)
                 } else {
                     if (idNumber.length !== 9) {
-                        this.errors.push('Numer powinien być złożony z dziewięciu znaków.')
+                        this.errorsContain('Numer powinien być złożony z dziewięciu znaków.')
                         return false
                     }
 
@@ -192,7 +193,8 @@
 		},
         methods: {
             ...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
-            async onSubmit() {
+            async onSubmit(event) {
+                event.preventDefault()
                 if (this.validateIdNumber) {
                     this.errors = []
                     try {
@@ -210,13 +212,18 @@
                     }
                 }
             },
+            errorsContain(needle) {
+                if (this.errors.indexOf(needle) === -1) {
+                    return this.errors.push(needle)
+                }
+            },
             selectRadio() {
                 this.errors = []
             },
             validatePersonalIdNumber(idNumber) {
                 const reg = /^[0-9]{11}$/
                 if (reg.test(idNumber) === false) {
-                    this.errors.push('PESEL powinien składać się tylko z 11 cyfr.')
+                    this.errorsContain('PESEL powinien składać się tylko z 11 cyfr.')
                     return false
                 } else {
                     const weight = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 1]
@@ -229,7 +236,7 @@
                     if (sum % 10 === 0) {
                         return true
                     } else {
-                        this.errors.push('PESEL jest niepoprawny.')
+                        this.errorsContain('PESEL jest niepoprawny.')
                         return false
                     }
                 }
@@ -252,7 +259,7 @@
                         || idNumber[i] === 'O'
                         || idNumber === 'Q'
                     ) {
-                        this.errors.push('Seria podanego numeru jest niepoprawna.')
+                        this.errorsContain('Seria podanego numeru jest niepoprawna.')
                         return false
                     }
                 }
@@ -262,7 +269,7 @@
                         this.getLetterValue(idNumber[i]) < 0
                         || this.getLetterValue(idNumber[i]) > 9
                     ) {
-                        this.errors.push('Numer podanego identyfikatora jest niepoprawny.')
+                        this.errorsContain('Numer podanego identyfikatora jest niepoprawny.')
                         return false
                     }
                 }
@@ -279,7 +286,7 @@
                 sum %= 10
 
                 if (sum !== this.getLetterValue(idNumber[controlNumber])) {
-                    this.errors.push('Numer jest nieprawidłowy')
+                    this.errorsContain('Numer jest nieprawidłowy')
                     return false
                 }
             },

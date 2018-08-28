@@ -17,11 +17,8 @@ class CreateUserPersonalDataTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id')->unique();
             $table->string('personal_identity_number')->nullable();
-            $table->enum('identity_type', [
-                'personal_identity_number',
-                'passport',
-                'identity_card'
-                ])->default('personal_identity_number');
+            $table->string('identity_card_number')->nullable();
+            $table->string('passport_number')->nullable();
             $table->timestamps();
         });
     }

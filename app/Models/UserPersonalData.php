@@ -11,7 +11,8 @@ class UserPersonalData extends Model
     protected $fillable = [
         'user_id',
         'personal_identity_number',
-        'identity_type'
+        'identity_card_number',
+        'passport_number'
     ];
 
     public function user()

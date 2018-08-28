@@ -21,7 +21,8 @@ class UserPersonalDataTransformer extends ApiTransformer
         $data = [
             'identity' => [
                 'personalIdentityNumber' => $personalData->personal_identity_number,
-                'identityType'           => $personalData->identity_type
+                'identityCardNumber'     => $personalData->identity_card_number,
+                'passportNumber'         => $personalData->passport_number
             ],
         ];
 

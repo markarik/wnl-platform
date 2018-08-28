@@ -17,7 +17,6 @@ class PostUserPersonalData extends FormRequest
 	 */
 	public function authorize()
 	{
-		return false;
 		$user = User::fetch($this->route('userId'));
 
 		return $this->user()->can('update', $user);
@@ -30,37 +29,25 @@ class PostUserPersonalData extends FormRequest
 	 */
 	public function rules()
 	{
-		$identityType = $this->request->get('identity_type');
-
-		if (!$identityType) return false;
-
-		if ($identityType === 'personal_identity_number') {
-			return [
-				'personal_identity_number' => [
-					'required',
-					'digits:11',
-					'string',
-					new ValidatePersonalIdentityNumber
-				]
-			];
-		} else if ($identityType === 'identity_card') {
-			return [
-				'personal_identity_number' => [
-					'required',
-					'string',
-					'size:9',
-					new ValidateIdentityCardNumber
-				]
-			];
-		} else if ($identityType === 'passport') {
-			return [
-				'personal_identity_number' => [
-					'required',
-					'string',
-					'size:9',
-					new ValidatePassportNumber
-				]
-			];
-		}
+		return [
+			'personal_identity_number' => [
+				'nullable',
+				'digits:11',
+				'string',
+				new ValidatePersonalIdentityNumber
+			],
+			'identity_card_number' => [
+				'nullable',
+				'string',
+				'size:9',
+				new ValidateIdentityCardNumber
+			],
+			'passport_number' => [
+				'nullable',
+				'string',
+				'size:9',
+				new ValidatePassportNumber
+			]
+		];
 	}
 }

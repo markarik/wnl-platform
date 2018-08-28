@@ -16,16 +16,14 @@
 			</div>
 		</div>
         <div class="id-number" v-if="isLoaded">
-            <div class="id-number__has-personal-id" v-if="idNumberAvailable">
-                <div class="id-number__has-personal-identity_number">
-                    Podany przez Ciebie numer {{ idType }} to: {{ idNumber }}
-                    Jeśli chcesz dokonać zmiany, napisz na info@bethink.pl.
-                </div>
+            <div class="id-number--has-personal-id" v-if="idNumberAvailable">
+                Podany przez Ciebie numer to: {{ idNumber }}
+                Jeśli chcesz dokonać zmiany, napisz na info@bethink.pl.
             </div>
-            <div class="id-number__no-personal-id" v-else>
+            <div class="id-number--no-personal-id" v-else>
                 <div class="id-number__personal-identity-number-input">
                     <input
-                        :name="this.identityTypes.personalIdNumber"
+                        :name="this.identityTypes.personalId"
                         class="input"
                         type="text"
                         placeholder="Numer identyfikacyjny"
@@ -47,7 +45,7 @@
                     Nie chcę podawać numeru PESEL
                 </div>
                 <div
-                    class="id-number__other-identitification"
+                    class="id-number--other-identitification"
                     v-if="otherIdentity">
                     <div class="id_number__radio field">
                             <input
@@ -55,7 +53,7 @@
                                 class="is-checkradio"
                                 type="radio"
                                 id="personal_identity_number"
-                                :name="this.identityTypes.personalIdNumber"
+                                :name="this.identityTypes.personalId"
                                 value="personal_identity_number"
                                 v-model="identity.identityType">
                             <label for="personal_identity_number">PESEL</label>
@@ -65,16 +63,16 @@
                                 type="radio"
                                 id="identity_card"
                                 :name="this.identityTypes.idCard"
-                                value="identity_card"
+                                value="identity_card_number"
                                 v-model="identity.identityType">
-                            <label :for="this.identityTypes.idCard">Dowód osobisty</label>
+                            <label for="identity_card">Dowód osobisty</label>
                             <input
                                 @click="errors=[]"
                                 class="is-checkradio"
                                 type="radio"
                                 id="passport"
                                 :name="this.identityTypes.passport"
-                                value="passport"
+                                value="passport_number"
                                 v-model="identity.identityType">
                             <label for="passport">Paszport</label>
                     </div>
@@ -128,7 +126,7 @@
                     identityType: 'personal_identity_number'
                 },
                 controlNumbers: {
-                    identity_card: 3,
+                    identityCard: 3,
                     passport: 2
                 },
                 otherIdentity: false,
@@ -143,30 +141,28 @@
                 },
                 isLoaded: false,
                 identityTypes: {
-                    personalIdNumber: 'personal_identity_number',
-                    idCard: 'identity_card',
-                    passport: 'passport'
+                    personalId: 'personal_identity_number',
+                    idCard: 'identity_card_number',
+                    passport: 'passport_number'
                 }
             }
         },
         computed: {
             ...mapGetters(['currentUserIdentity', 'currentUserId']),
             idNumberAvailable() {
-                return Boolean(this.currentUserIdentity.personalIdentityNumber)
+                return Boolean (
+                    this.currentUserIdentity.personalIdentityNumber ||
+                    this.currentUserIdentity.identityCardNumber ||
+                    this.currentUserIdentity.passportNumber
+                )
             },
             idNumber() {
-                return this.currentUserIdentity.personalIdentityNumber
+                return (
+                    this.currentUserIdentity.personalIdentityNumber ||
+                    this.currentUserIdentity.identityCardNumber ||
+                    this.currentUserIdentity.passportNumber
+                )
             },
-			idType() {
-                const idType = this.currentUserIdentity.identityType
-				if (idType === this.identityTypes.personalIdNumber) {
-                    return 'PESEL'
-                } else if (idType === this.identityTypes.idCard) {
-                    return 'dowodu osobistego'
-                } else if (idType === this.identityTypes.passport) {
-                    return 'paszportu'
-                }
-			},
             hasNoChanges() {
                 return this.identity.personalIdentityNumber === ''
             },
@@ -174,7 +170,7 @@
                 const idNumber = this.identity.personalIdentityNumber
                 const idType = this.identity.identityType
 
-                if (idType === this.identityTypes.personalIdNumber) {
+                if (idType === this.identityTypes.personalId) {
                     return this.validatePersonalIdNumber(idNumber)
                 } else {
                     if (idNumber.length !== 9) {
@@ -196,12 +192,11 @@
             async onSubmit(event) {
                 event.preventDefault()
                 if (this.validateIdNumber) {
+                    let query = {}
+                    query[this.identity.identityType] = this.identity.personalIdentityNumber
                     this.errors = []
                     try {
-                        await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), {
-                            personal_identity_number: this.identity.personalIdentityNumber,
-                            identity_type: this.identity.identityType
-                        })
+                        await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), query)
                         this.addAutoDismissableAlert(this.alertSuccess)
                         this.setUserIdentity(this.identity)
                     }
@@ -246,7 +241,7 @@
                 let controlNumber = 0
 
                 if (idType === this.identityTypes.idCard) {
-                    controlNumber = this.controlNumbers.identity_card
+                    controlNumber = this.controlNumbers.identityCard
                 } else if (idType === this.identityTypes.passport) {
                     controlNumber = this.controlNumbers.passport
                 }
@@ -275,7 +270,8 @@
                 }
 
                 const weight = [7, 3, 1, 7, 3, 1, 7, 3, 1]
-                weight[controlNumber] = 0
+                weight.splice(controlNumber, 0, 0)
+                weight.pop()
 
                 let sum = 0
 
@@ -289,6 +285,7 @@
                     this.errorsContain('Numer jest nieprawidłowy')
                     return false
                 }
+                return true
             },
             getLetterValue(letter) {
                 const letterValues = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'

@@ -25,7 +25,8 @@ const state = {
 		},
 		identity: {
 			personalIdentityNumber: '',
-			identityType: ''
+			identityCardNumber: '',
+			passportNumber: ''
 		}
 	},
 	settings: getDefaultSettings(),
@@ -154,7 +155,8 @@ const actions = {
 			.catch((error) => {
 				commit(types.USERS_SET_IDENTIY, {
 					personalIdentityNumber: '',
-					identityType: 'personal_identity_number'
+					identityCardNumber: '',
+					passportNumber: ''
 				})
 				$wnl.logger.error(error)
 				reject()

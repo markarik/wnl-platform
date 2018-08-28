@@ -34,7 +34,7 @@ function fetchQuizSetStats(id) {
 	)
 }
 
-function _fetchQuestionsCollectionByTagName(tagName, ids) {
+function _fetchQuestionsCollectionByTagName(tagName, ids, page = 1) {
 	return axios.post(getApiUrl('quiz_questions/.search'), {
 		query: {
 			whereHas: {
@@ -45,6 +45,8 @@ function _fetchQuestionsCollectionByTagName(tagName, ids) {
 			whereIn: ['id', ids],
 		},
 		include: DEFAULT_INCLUDE,
+		page,
+		limit: 30
 	})
 }
 
@@ -68,6 +70,7 @@ function getInitialState() {
 		setName: '',
 		quiz_stats: {},
 		retry: false,
+		pagination: {}
 	}
 }
 
@@ -236,6 +239,9 @@ const mutations = {
 			spliced = state.questionsIds.splice(0, deleteCount)
 		state.questionsIds.push(...spliced)
 	},
+	[types.QUIZ_SET_PAGINATION] (state, pagination) {
+		set(state, 'pagination', pagination)
+	}
 }
 
 const actions = {
@@ -278,17 +284,18 @@ const actions = {
 		});
 	},
 
-	fetchQuestionsCollectionByTagName({commit, dispatch}, {tagName, ids}) {
+	fetchQuestionsCollectionByTagName({commit, dispatch}, {tagName, ids, page}) {
 		commit(types.QUIZ_IS_LOADED, false)
 
-		return _fetchQuestionsCollectionByTagName(tagName, ids).then(response => {
-			if (response.data.included) {
-				let included = _.clone(response.data.included)
+		return _fetchQuestionsCollectionByTagName(tagName, ids, page).then(({data: responseData = {}}) => {
+			const {data, ...pagination} = responseData
 
-				destroy(response.data, 'included')
-				included['quiz_questions'] = response.data
+			if (data.included) {
+				let included = _.clone(data.included)
+				destroy(data, 'included')
+				included['quiz_questions'] = data
 
-				let questionsIds = _.map(response.data, (question) => question.id),
+				let questionsIds = _.map(data, (question) => question.id),
 					len = questionsIds.length
 
 				included.comments && dispatch('comments/setComments', {...included.comments}, {root:true})
@@ -299,6 +306,7 @@ const actions = {
 					len,
 					questionsIds,
 				})
+				commit(types.QUIZ_SET_PAGINATION, pagination)
 				commit(types.QUIZ_RESET_PROGRESS)
 				commit(types.QUIZ_TOGGLE_PROCESSING, false)
 			} else {

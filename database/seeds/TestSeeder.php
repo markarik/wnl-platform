@@ -25,7 +25,6 @@ class TestSeeder extends Seeder
         $this->call(CourseSeeder::class);
         $this->call(EditionSeeder::class);
         $this->call(CoursePlanSeeder::class);
-        $this->call(ScreensTableSeeder::class);
         $this->call(ReactionsSeeder::class);
         $this->call(CategoriesTableSeeder::class);
         $this->call(GroupsTableSeeder::class);

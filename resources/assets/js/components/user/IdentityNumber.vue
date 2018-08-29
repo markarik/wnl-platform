@@ -173,11 +173,6 @@
                 if (idType === this.identityTypes.personalId) {
                     return this.validatePersonalIdNumber(idNumber)
                 } else {
-                    if (idNumber.length !== 9) {
-                        this.errorsContain('Numer powinien być złożony z dziewięciu znaków.')
-                        return false
-                    }
-
                     if (
                         idType === this.identityTypes.idCard ||
                         idType === this.identityTypes.passport
@@ -228,17 +223,21 @@
                         sum += (Number(idNumber[i]) * weight[i])
                     }
 
-                    if (sum % 10 === 0) {
-                        return true
-                    } else {
+                    if (sum % 10 !== 0) {
                         this.errorsContain('PESEL jest niepoprawny.')
                         return false
                     }
                 }
+                return true
             },
             validateIdCardAndPassportNumbers(idNumber) {
                 const idType = this.identity.identityType
                 let controlNumber = 0
+
+                if (idNumber.length !== 9) {
+                    this.errorsContain('Numer powinien być złożony z dziewięciu znaków.')
+                    return false
+                }
 
                 if (idType === this.identityTypes.idCard) {
                     controlNumber = this.controlNumbers.identityCard

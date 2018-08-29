@@ -6,16 +6,17 @@
 			hideDefaultSubmit="true"
 			name="QuizQuestionEditor"
 			:method="formMethod"
-			suppressEnter="false"
+			suppress-enter
 			:resourceRoute="formResourceRoute"
 			@submitSuccess="onSubmitSuccess"
+			ref="quizQuestionForm"
 		>
 			<header class="question-form-header">
 				<h4 v-if="isEdit">Edycja pytania <strong>{{$route.params.quizId}}</strong></h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
-						<button class="button is-primary" @click="onFormSave">Zapisz</button>
+						<button class="button is-primary" @click.stop.prevent="onFormSave">Zapisz</button>
 					</div>
 				</div>
 			</header>
@@ -212,6 +213,7 @@
 			onFormSave() {
 				// This way we can attach answers and tags
 				this.attach = this.getAttachedData()
+				this.$nextTick(() => this.$refs.quizQuestionForm.onSubmitForm());
 			},
 			getAttachedData() {
 				const attachedData = {};

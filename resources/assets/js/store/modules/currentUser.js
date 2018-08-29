@@ -149,7 +149,7 @@ const actions = {
 	fetchUserPersonalData({ commit }) {
 		return new Promise((resolve, reject) => {
 			axios.get(getApiUrl(`users/current/personal_data`)).then((response) => {
-				commit(types.USERS_SET_IDENTIY, response.data.identity)
+				commit(types.USERS_SET_IDENTIY, response.data)
 				resolve()
 			})
 			.catch((error) => {

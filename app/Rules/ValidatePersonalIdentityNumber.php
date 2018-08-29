@@ -6,9 +6,9 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ValidatePersonalIdentityNumber implements Rule
 {
-    public function passes($attribute, $value)
-    {
-        $sum = 0;
+	public function passes($attribute, $value)
+	{
+		$sum = 0;
 
 		if (!preg_match('/^[0-9]{11}$/', $value)) {
 			return false;
@@ -23,12 +23,12 @@ class ValidatePersonalIdentityNumber implements Rule
 		if (!($sum % 10 === 0)) {
 			return false;
 		}
-        
-        return true;
-    }
 
-    public function message()
-    {
-        return 'PESEL jest nieprawidłowy :(';
-    }
+		return true;
+	}
+
+	public function message()
+	{
+		return 'PESEL jest nieprawidłowy :(';
+	}
 }

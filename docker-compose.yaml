@@ -40,7 +40,7 @@ services:
     command: php -a
     tty: true
     volumes:
-      - ~/Code:/code
+      - ${LOCAL_CODE_PATH}:/code
 
   echo:
     container_name: echo

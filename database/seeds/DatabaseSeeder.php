@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSubscriptionSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(PaymentMethodSeeder::class);
-
-
+        $this->call(PermissionsSeeder::class);
+        
         /** Course structure */
         $this->call(QuizSeeder::class);
         $this->call(CourseSeeder::class);
@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ScreensTableSeeder::class);
         $this->call(ReactionsSeeder::class);
         $this->call(CategoriesTableSeeder::class);
-
 
         Cache::flush();
     }

@@ -3,7 +3,7 @@ language: php
 dist: trusty
 
 php:
-  - 7.0
+  - 7.2
 
 services:
   - mysql
@@ -20,8 +20,7 @@ install:
 before_script:
   - mv .env.travis .env
   - php artisan key:generate
-  - php artisan migrate
-  - php artisan db:seed --class=TestSeeder
+  - php artisan migrate --seed
 
 script:
   - phpunit --filter=Api

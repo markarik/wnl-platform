@@ -21,10 +21,15 @@ class RemoveDuplicatedSlideRelation extends Command {
 			->get()
 			->pluck('slide_id');
 
+		$bar = $this->output->createProgressBar(count($slideIds));
+
 		foreach($slideIds as $key => $slideId) {
 			$slide = Slide::find($slideId);
 			if (!$slide) {
-				$this->info("Slide with id: {$slideId} not found");
+				DB::table('slide_quiz_question')
+					->where('slide_id', $slideId)
+					->delete();
+				$this->info("Slide with id: {$slideId} not found, DELETED");
 			} else {
 				$uniqueQuestions = $slide->quizQuestions->unique();
 				if ($uniqueQuestions->count() !== $slide->quizQuestions->count()) {
@@ -33,6 +38,10 @@ class RemoveDuplicatedSlideRelation extends Command {
 					$slide->quizQuestions()->sync($uniqueQuestions->pluck('id'));
 				}
 			}
+			$bar->advance();
 		}
+
+		$bar->finish();
+		$this->info("\n OK!");
 	}
 }

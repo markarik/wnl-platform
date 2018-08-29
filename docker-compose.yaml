@@ -33,6 +33,15 @@ services:
     volumes:
       - ${LOCAL_CODE_PATH}:/code
 
+  composer:
+    container_name: composer
+    image: bethink/composer:1.6.5
+    entrypoint: docker-php-entrypoint
+    command: php -a
+    tty: true
+    volumes:
+      - ${LOCAL_CODE_PATH}:/code
+
   echo:
     container_name: echo
     image: bethink/echo-server:1.2.8-build2

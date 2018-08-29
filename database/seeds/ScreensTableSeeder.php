@@ -15,7 +15,7 @@ class ScreensTableSeeder extends Seeder
             'type' => 'quiz',
             'content' => null,
             'name' => 'Pytania kontrolne',
-            'lesson_id' => 1,
+            'lesson_id' => \DB::table('lessons')->first()->id,
             'meta' => '{"resources": [{"id": 1, "name": "quiz_sets"}]}',
             'order_number' => 1
         ]);

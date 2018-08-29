@@ -26,12 +26,14 @@ class ChangeNameColumnInChatRooms extends Migration
      */
     public function down()
     {
-        // Below statement makes the migration irreversible once there's data in the table.
-        // Dropping table in order to restore it's original state does't sound like an alternative,
-        // so i'll just leave it commented out.
-//		Schema::table('chat_rooms', function(Blueprint $table)
-//		{
-//			DB::statement('ALTER TABLE chat_rooms MODIFY name VARCHAR(200) NOT NULL');
-//		});
+
+		Schema::table('chat_rooms', function(Blueprint $table)
+		{
+		    if (DB::table('chat_rooms')->count() === 0) {
+                // Below statement makes the migration irreversible once there's data in the table.
+                // Dropping table in order to restore it's original state does't sound like an alternative.
+                DB::statement('ALTER TABLE chat_rooms MODIFY name VARCHAR(200) NOT NULL');
+            }
+		});
     }
 }

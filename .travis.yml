@@ -20,7 +20,8 @@ install:
 before_script:
   - mv .env.travis .env
   - php artisan key:generate
-  - php artisan migrate --seed
+  - php artisan migrate
+  - php artisan db:seed --class=TestSeeder
 
 script:
   - phpunit --filter=Api

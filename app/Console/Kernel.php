@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel
 			->weekly();
 
 		$schedule
-            ->command('invoices:jpk-send')
-            ->monthlyOn(1, '06:00');
+			->command('invoices:jpk-send')
+			->monthlyOn(1, '06:00');
 	}
 }

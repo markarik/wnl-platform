@@ -45,7 +45,7 @@ class JpkReport extends Mailable
             ]);
 
         foreach ($this->users as $user) {
-            $message->to($user->email);
+            $message->cc($user->email);
         }
 
         return $message;

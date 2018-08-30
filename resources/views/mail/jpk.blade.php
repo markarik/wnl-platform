@@ -5,9 +5,7 @@
 
 	<p>W załączniku przesyłamy JPK.</p>
 
-	<p class="text-align: center;">
-		<img src="https://media.giphy.com/media/11UzbTpybT6Ypy/giphy.gif" alt="" style="display: block; margin: 0 auto;">
-	</p>
+	<p></p>
 
 	<p>Z pozdrowieniami,</p>
 @endsection

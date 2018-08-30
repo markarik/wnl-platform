@@ -6,7 +6,7 @@
 			hideDefaultSubmit="true"
 			name="QuizQuestionEditor"
 			:method="formMethod"
-			suppress-enter
+			:suppress-enter="true"
 			:resourceRoute="formResourceRoute"
 			@submitSuccess="onSubmitSuccess"
 			ref="quizQuestionForm"

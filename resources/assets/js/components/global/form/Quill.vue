@@ -251,9 +251,11 @@
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)
 			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
-			this.quill.on('text-change', this.onTextChange)
-			this.editor.innerHTML = this.value
-			document.addEventListener('click', this.clickHandler)
+			this.$nextTick(() => {
+				this.editor.innerHTML = this.value
+				this.quill.on('text-change', this.onTextChange)
+				document.addEventListener('click', this.clickHandler)
+			})
 		},
 		beforeDestroy() {
 			document.removeEventListener('click', this.clickHandler)

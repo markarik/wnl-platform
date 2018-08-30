@@ -76,13 +76,11 @@
 			onSubmitSuccess(data) {
 				this.$emit('submitSuccess', data)
 			},
-			setNewCommentDraft(data) {
-				_.debounce(() => {
-					this.commitNewCommentDraft(
-						{ commentableResource: this.commentableResource, content: data }
-					);
-				}, 300);
-			}
+			setNewCommentDraft: _.debounce(function(data) {
+				this.commitNewCommentDraft(
+					{ commentableResource: this.commentableResource, content: data }
+				);
+			}, 300)
 		},
 	}
 </script>

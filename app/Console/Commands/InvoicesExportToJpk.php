@@ -14,7 +14,7 @@ class InvoicesExportToJpk extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'invoices:jpk {from} {to}';
+	protected $signature = 'invoices:jpk {from} {to} {--filename=}';
 
 	/**
 	 * The console command description.
@@ -81,10 +81,11 @@ class InvoicesExportToJpk extends Command
 			]);
 		}
 
-		$filename = sprintf('jpk-%s-%s.xml',
-			$dateFrom->format('Ymd'),
-			$dateTo->format('Ymd')
-		);
+		$filename = $this->option('filename')
+			?? sprintf('jpk-%s-%s.xml',
+				$dateFrom->format('Ymd'),
+				$dateTo->format('Ymd')
+			);
 
 		\Storage::put("exports/{$filename}", $this->toXml($data));
 

@@ -2,7 +2,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import {set, delete as destroy} from 'vue'
 import {getApiUrl} from 'js/utils/env'
-import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions'
 import * as types from 'js/store/mutations-types'
 import quizStore from 'js/services/quizStore'
@@ -56,6 +56,7 @@ function _fetchSingleQuestion(id) {
 
 function getInitialState() {
 	return {
+		...commentsState,
 		attempts: [],
 		comments: {},
 		isComplete: false,

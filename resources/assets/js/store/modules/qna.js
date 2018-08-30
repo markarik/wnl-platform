@@ -311,11 +311,11 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let resourceObject = state[resource]
-
+			let resources = state[resource]
 			_.each(items, (item, index) => {
-				set(resourceObject, index, item)
+				resources[index] = item
 			})
+			set(state, resource, resources)
 		})
 	},
 	[types.QNA_DESTROY] (state) {

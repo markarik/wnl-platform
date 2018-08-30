@@ -30,10 +30,7 @@ function getUserSearchConditions(data) {
 	const orWhere = [
 		['display_name', 'like', `%${displayName}%`]
 	]
-	where.push(
-		['deleted_at', '!=', 'null']
-	)
-	return { query: { where, orWhere }, limit: [5, 0] }
+	return { query: { where, orWhere, whereNull: ['deleted_at'] }, limit: [5, 0] }
 }
 
 function getTagSearchConditions(name, tags = []) {

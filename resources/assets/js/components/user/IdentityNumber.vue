@@ -191,21 +191,6 @@
 			hasNoChanges() {
 				return this.identity.personalIdentityNumber === ''
 			},
-			validateIdNumber() {
-				const idNumber = this.identity.personalIdentityNumber
-				const idType = this.identity.identityType
-
-				if (idType === this.identityTypes.personalId) {
-					return this.validatePersonalIdNumber(idNumber)
-				} else {
-					if (
-						idType === this.identityTypes.idCard ||
-						idType === this.identityTypes.passport
-					) {
-						return this.validateIdCardAndPassportNumbers(idNumber)
-					}
-				}
-			},
 			activeErrors() {
 				return this.errors.filter((error) => {
 					return error.active
@@ -216,7 +201,8 @@
 			...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
 			async onSubmit(event) {
 				event.preventDefault()
-				if (this.validateIdNumber) {
+				if (this.validateIdNumber()) {
+					console.log('po validateIdNumber');
 					let query = {}
 					query[this.identity.identityType] = this.identity.personalIdentityNumber
 					this.disableErrors()
@@ -234,12 +220,29 @@
 					}
 				}
 			},
+			validateIdNumber() {
+				console.log('validateIdNumber');
+				const idNumber = this.identity.personalIdentityNumber
+				const idType = this.identity.identityType
+
+				if (idType === this.identityTypes.personalId) {
+					return this.validatePersonalIdNumber(idNumber)
+				} else {
+					if (
+						idType === this.identityTypes.idCard ||
+						idType === this.identityTypes.passport
+					) {
+						return this.validateIdCardAndPassportNumbers(idNumber)
+					}
+				}
+			},
 			disableErrors() {
 				this.errors.forEach((error) => {
 					error.active = false
 				})
 			},
 			setErrorStatus(error) {
+				console.log('setErrorStatus');
 				this.errors.find((e) => {
 					return e.errorCode === error
 				}).active = true

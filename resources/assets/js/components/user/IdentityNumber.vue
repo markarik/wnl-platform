@@ -32,9 +32,9 @@
 					/>
 				</div>
 				<div class="id-number__errors" v-if="errors.length">
-					<ul v-for="(error, index) in errors" :key="index">
+					<ul v-for="(error, index) in activeErrors" :key="index">
 						<li>
-							{{ error }}
+							{{ $t(`user.personalData.errors.${error.errorCode}`) }}
 						</li>
 					</ul>
 				</div>
@@ -49,7 +49,7 @@
 					v-if="otherIdentity">
 					<div class="id_number__radio field">
 							<input
-								@click="errors=[]"
+								@click="disableErrors"
 								class="is-checkradio"
 								type="radio"
 								id="personal_identity_number"
@@ -58,7 +58,7 @@
 								v-model="identity.identityType">
 							<label for="personal_identity_number">PESEL</label>
 							<input
-								@click="errors=[]"
+								@click="disableErrors"
 								class="is-checkradio"
 								type="radio"
 								id="identity_card"
@@ -67,7 +67,7 @@
 								v-model="identity.identityType">
 							<label for="identity_card">Dowód osobisty</label>
 							<input
-								@click="errors=[]"
+								@click="disableErrors"
 								class="is-checkradio"
 								type="radio"
 								id="passport"
@@ -130,7 +130,32 @@
 					passport: 2
 				},
 				otherIdentity: false,
-				errors: [],
+				errors: [
+					{
+						errorCode: 'incorrectIdStructure',
+						active: false
+					},
+					{
+						errorCode: 'incorrectIdNumber',
+						active: false
+					},
+					{
+						errorCode: 'incorrectNumberLength',
+						active: false
+					},
+					{
+						errorCode: 'incorrectNumberSeries',
+						active: false
+					},
+					{
+						errorCode: 'incorrectSerialNumber',
+						active: false
+					},
+					{
+						errorCode: 'incorrectNumber',
+						active: false
+					}
+				],
 				alertSuccess: {
 					text: 'Udało się! :)',
 					type: 'success',
@@ -165,29 +190,6 @@
 			},
 			hasNoChanges() {
 				return this.identity.personalIdentityNumber === ''
-			}
-		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
-			async onSubmit(event) {
-				event.preventDefault()
-				if (this.validateIdNumber) {
-					let query = {}
-					query[this.identity.identityType] = this.identity.personalIdentityNumber
-					this.errors = []
-					try {
-						await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), query)
-						this.addAutoDismissableAlert(this.alertSuccess)
-						this.setUserIdentity(this.identity)
-					}
-					catch (error) {
-						this.errors = _.get(error, 'response.data.errors.personal_identity_number')
-						if (isEmpty(this.errors)) {
-							$wnl.logger.capture(error)
-							this.addAutoDismissableAlert(this.alertError)
-						}
-					}
-				}
 			},
 			validateIdNumber() {
 				const idNumber = this.identity.personalIdentityNumber
@@ -204,18 +206,48 @@
 					}
 				}
 			},
-			errorsContain(needle) {
-				if (this.errors.indexOf(needle) === -1) {
-					return this.errors.push(needle)
+			activeErrors() {
+				return this.errors.filter((error) => {
+					return error.active
+				})
+			}
+		},
+		methods: {
+			...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
+			async onSubmit(event) {
+				event.preventDefault()
+				if (this.validateIdNumber) {
+					let query = {}
+					query[this.identity.identityType] = this.identity.personalIdentityNumber
+					this.disableErrors()
+					try {
+						await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), query)
+						this.addAutoDismissableAlert(this.alertSuccess)
+						this.setUserIdentity(this.identity)
+					}
+					catch (error) {
+						this.errors = _.get(error, 'response.data.errors.personal_identity_number')
+						if (isEmpty(this.errors)) {
+							$wnl.logger.capture(error)
+							this.addAutoDismissableAlert(this.alertError)
+						}
+					}
 				}
 			},
-			selectRadio() {
-				this.errors = []
+			disableErrors() {
+				this.errors.forEach((error) => {
+					error.active = false
+				})
+			},
+			setErrorStatus(error) {
+				this.errors.find((e) => {
+					return e.errorCode === error
+				}).active = true
 			},
 			validatePersonalIdNumber(idNumber) {
 				const reg = /^[0-9]{11}$/
 				if (reg.test(idNumber) === false) {
-					this.errorsContain('PESEL powinien składać się tylko z 11 cyfr.')
+					this.setErrorStatus('incorrectIdStructure')
 					return false
 				} else {
 					const weight = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 1]
@@ -226,7 +258,7 @@
 					}
 
 					if (sum % 10 !== 0) {
-						this.errorsContain('PESEL jest niepoprawny.')
+						this.setErrorStatus('incorrectIdNumber')
 						return false
 					}
 				}
@@ -237,7 +269,7 @@
 				let controlNumber = 0
 
 				if (idNumber.length !== 9) {
-					this.errorsContain('Numer powinien być złożony z dziewięciu znaków.')
+					this.setErrorStatus('incorrectNumberLength')
 					return false
 				}
 
@@ -255,7 +287,7 @@
 						|| idNumber[i] === 'O'
 						|| idNumber === 'Q'
 					) {
-						this.errorsContain('Seria podanego numeru jest niepoprawna.')
+						this.setErrorStatus('incorrectNumberSeries')
 						return false
 					}
 				}
@@ -265,7 +297,7 @@
 						this.getLetterValue(idNumber[i]) < 0
 						|| this.getLetterValue(idNumber[i]) > 9
 					) {
-						this.errorsContain('Numer podanego identyfikatora jest niepoprawny.')
+						this.setErrorStatus('incorrectSerialNumber')
 						return false
 					}
 				}
@@ -283,7 +315,7 @@
 				sum %= 10
 
 				if (sum !== this.getLetterValue(idNumber[controlNumber])) {
-					this.errorsContain('Numer jest nieprawidłowy')
+					this.setErrorStatus('incorrectNumber')
 					return false
 				}
 				return true
@@ -293,13 +325,9 @@
 				return letterValues.indexOf(letter)
 			},
 		},
-		mounted() {
-			this.fetchUserPersonalData()
-			.then(() => {
-				this.isLoaded = true
-			}).catch((e) => {
-				this.isLoaded = true
-			})
+		async mounted() {
+			await this.fetchUserPersonalData()
+			this.isLoaded = true
 		}
 	}
 </script>

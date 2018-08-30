@@ -98,6 +98,14 @@ export const user = {
 		identityNumber: {
 			header: 'Numer identyfikacyjny',
 			explanation: 'W związku z podjęciem współpracy z CEM, prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu! Te dane nie będą widoczne publicznie, a posłużą nam do celów statystycznych. Twoja pomoc pozwoli nam rozwijać i doskonalić kurs!',
+		},
+		errors: {
+			incorrectIdStructure: 'PESEL powinien składać się tylko z 11 cyfr.',
+			incorrectIdNumber: 'PESEL jest niepoprawny.',
+			incorrectNumberLength: 'Numer powinien być złożony z dziewięciu znaków.',
+			incorrectNumberSeries: 'Seria podanego numeru jest niepoprawna.',
+			incorrectSerialNumber: 'Numer podanego identyfikatora jest niepoprawny.',
+			incorrectNumber: 'Numer jest nieprawidłowy'
 		}
 	}
 }

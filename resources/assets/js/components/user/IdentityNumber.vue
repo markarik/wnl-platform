@@ -202,7 +202,6 @@
 			async onSubmit(event) {
 				event.preventDefault()
 				if (this.validateIdNumber()) {
-					console.log('po validateIdNumber');
 					let query = {}
 					query[this.identity.identityType] = this.identity.personalIdentityNumber
 					this.disableErrors()
@@ -221,7 +220,6 @@
 				}
 			},
 			validateIdNumber() {
-				console.log('validateIdNumber');
 				const idNumber = this.identity.personalIdentityNumber
 				const idType = this.identity.identityType
 
@@ -242,7 +240,6 @@
 				})
 			},
 			setErrorStatus(error) {
-				console.log('setErrorStatus');
 				this.errors.find((e) => {
 					return e.errorCode === error
 				}).active = true

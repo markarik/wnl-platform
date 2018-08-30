@@ -100,7 +100,7 @@
 		cursor: pointer
 		text-decoration: underline
 
-	.id-number__other-identitification
+	.id-number--other-identitification
 		margin-bottom: $margin-small
 
 	.id-number__errors
@@ -112,7 +112,7 @@
 <script>
 	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
-	import { get } from 'lodash'
+	import { get, isEmpty } from 'lodash'
 
 	export default {
 		name: 'IdentityNumber',
@@ -165,21 +165,6 @@
 			},
 			hasNoChanges() {
 				return this.identity.personalIdentityNumber === ''
-			},
-			validateIdNumber() {
-				const idNumber = this.identity.personalIdentityNumber
-				const idType = this.identity.identityType
-
-				if (idType === this.identityTypes.personalId) {
-					return this.validatePersonalIdNumber(idNumber)
-				} else {
-					if (
-						idType === this.identityTypes.idCard ||
-						idType === this.identityTypes.passport
-					) {
-						return this.validateIdCardAndPassportNumbers(idNumber)
-					}
-				}
 			}
 		},
 		methods: {
@@ -196,9 +181,26 @@
 						this.setUserIdentity(this.identity)
 					}
 					catch (error) {
-						this.errors = _.get(error, 'response.data.errors.personal_identity_number', ['Coś poszło nie tak :('])
-						$wnl.logger.capture(error)
-						this.addAutoDismissableAlert(this.alertError)
+						this.errors = _.get(error, 'response.data.errors.personal_identity_number')
+						if (isEmpty(this.errors)) {
+							$wnl.logger.capture(error)
+							this.addAutoDismissableAlert(this.alertError)
+						}
+					}
+				}
+			},
+			validateIdNumber() {
+				const idNumber = this.identity.personalIdentityNumber
+				const idType = this.identity.identityType
+
+				if (idType === this.identityTypes.personalId) {
+					return this.validatePersonalIdNumber(idNumber)
+				} else {
+					if (
+						idType === this.identityTypes.idCard ||
+						idType === this.identityTypes.passport
+					) {
+						return this.validateIdCardAndPassportNumbers(idNumber)
 					}
 				}
 			},

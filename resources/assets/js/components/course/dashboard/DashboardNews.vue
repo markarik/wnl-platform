@@ -2,15 +2,19 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p class="has-text-centered"><strong>PRZYPOMNIENIE</strong></p>
+		<p class="has-text-centered"><strong>PROŚBA!</strong></p>
 
 		<p class="strong">Cześć {{currentUserName}}! 👋</p>
 
-		<p>Piszemy z krótkim przypomnieniem o tym, że upłynął termin płatności 3. raty za kurs. 😨 Jeżeli został już on przez Ciebie opłacony w całości - możesz zignorować i zamknąć tę wiadomość.</p>
+		<p>Od pierwszej ankiety minęło już trochę czasu! Zgodnie z najlepszymi praktykami, oceniamy naszą pracę 3 razy w ciągu każdej edycji. To pozwala nam stwierdzić, czy dobrze planujemy pracę i rozwiązujemy najważniejsze z Waszych problemów. 🙂</p>
 
-		<p>Jeśli jednak jesteś jedną z osób, którym omsknęła się 3. wpłata - tymczasowo odblokowaliśmy dostęp do Twojego konta, aby nie hamować postępu w nauce. Prosimy jednak o wpłatę do 25 lipca. Po tej dacie niestety ponownie włączymy skrypt automatycznie zamykający dostępy do kont. 😔 Masz jednak sporo czasu na dokonanie wpłaty - ne pewno się wyrobisz. 😉</p>
+		<p>Dziś mamy prośbę o wypełnienie 2. ankiety, składającej się z 15 pytań. 😉 Pomóż nam uczynić kurs "Więcej niż LEK" lepszym!</p>
 
-		<p>Wszystkie szczegóły dotyczące płatności znajdziesz w zakładce <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.</p>
+		<p class="has-text-centered margin vertical">
+			<a class="button is-primary" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSf3NZDU7tbqPGMIIVLRFaVhDLBuC2lk-WSZdZmIkaticYYjSw/viewform">
+				Wypełnij ankietę!
+			</a>
+		</p>
 
 		<p>Życzymy powodzenia i owocnej pracy z kursem!</p>
 
@@ -22,9 +26,9 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-3-instalments-announcement'
+	const CURRENT_NEWS = 'edition-3-survey-2-announcement'
 	const DISPLAY_FROM = '' // new Date() or empty string
-	const DISPLAY_UNTIL = new Date('2018-07-26') // new Date() or empty string
+	const DISPLAY_UNTIL = '' // new Date() or empty string
 	const REQUIRED_ROLE = ''
 
 	export default {

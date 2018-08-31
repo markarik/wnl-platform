@@ -16,6 +16,10 @@ class QuizQuestion extends Model
 		'preserve_order' => 'boolean',
 	];
 
+	public function setPreserveOrderAttribute($value) {
+		$this->preserve_order = (bool) $value;
+	}
+
 	public function answers()
 	{
 		return $this->hasMany('App\Models\QuizAnswer');

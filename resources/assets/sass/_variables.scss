@@ -52,6 +52,7 @@ $font-size-minus-3: 0.675rem;
 $font-size-minus-2: 0.75rem;
 $font-size-minus-1: 0.875rem;
 $font-size-base: 14px;
+$font-size-base-mobile: 16px;
 $font-size-plus-1: 1.125rem;
 $font-size-plus-2: 1.5rem;
 $font-size-plus-3: 1.75rem;
@@ -151,3 +152,6 @@ $z-index-autocomplete: $z-index-overlay;
 $z-index-alerts: 16777271; // The highest possible value in Safari
 $z-index-fullscren-close: 16777270; // Almost the highest possible value in Safari
 $z-index-fullscren: 16777269;
+
+//media queries
+$mobile: 759px;

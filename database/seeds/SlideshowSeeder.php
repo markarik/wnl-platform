@@ -10,6 +10,10 @@ class SlideshowSeeder extends Seeder
 	 */
 	public function run()
 	{
-		Artisan::queue('slides:import');
+		\Illuminate\Support\Facades\Storage::disk('s3')->getAdapter()->setBucket('wnl-platform-storage');
+        $storage = \Illuminate\Support\Facades\Storage::disk('s3');
+        $htmlContents = $storage->get('slideshows_test/demo/Okursie.html');
+
+        (new \Lib\SlideParser\Parser)->parse($htmlContents);
 	}
 }

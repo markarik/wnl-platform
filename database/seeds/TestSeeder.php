@@ -11,15 +11,23 @@ class TestSeeder extends Seeder
 	 */
 	public function run()
 	{
-		$this->call(RolesTableSeeder::class);
-		$this->call(UsersTableSeeder::class);
-		$this->call(UserProfilesTableSeeder::class);
-		$this->call(CoursesTableSeeder::class);
-		$this->call(EditionsTableSeeder::class);
-		$this->call(GroupsTableSeeder::class);
-		$this->call(ReactionsSeeder::class);
-		$this->call(TaxonomiesSeeder::class);
-		$this->call(ReactionsSeeder::class);
-		$this->call(PermissionsSeeder::class);
+        /** User accounts & checkout */
+        $this->call(RolesTableSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(UserProfilesTableSeeder::class);
+        $this->call(UserSubscriptionSeeder::class);
+        $this->call(ProductSeeder::class);
+        $this->call(PaymentMethodSeeder::class);
+        $this->call(PermissionsSeeder::class);
+
+        /** Course structure */
+        $this->call(QuizSeeder::class);
+        $this->call(CourseSeeder::class);
+        $this->call(EditionSeeder::class);
+        $this->call(CoursePlanSeeder::class);
+        $this->call(ReactionsSeeder::class);
+        $this->call(CategoriesTableSeeder::class);
+        $this->call(GroupsTableSeeder::class);
+        $this->call(TaxonomiesSeeder::class);
 	}
 }

@@ -93,9 +93,6 @@ const mutations = {
 	[types.UI_KILL_CHAT] (state) {
 		set(state, 'canShowChat', false)
 	},
-	[types.UI_TOGGLE_MODAL] (state, payload) {
-		set(state, 'modalVisible', payload)
-	},
 	[types.UI_DISPLAY_OVERLAY] (state, payload) {
 		if (payload.display) {
 			set(state.overlays, payload.source, payload.text || true)

@@ -43,7 +43,7 @@ class CorrectiveInvoice extends Mailable implements ShouldQueue
 			->subject("Wystawiliśmy fakturę korygującą (Zamówienie {$this->order->id})")
 			->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',
-			]);
+			])
 			->bcc('zamowienia@wiecejnizlek.pl');
 	}
 }

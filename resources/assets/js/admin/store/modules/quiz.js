@@ -91,7 +91,7 @@ const getters = {
 	preserveOrder: state => state.question && state.question.preserve_order
 }
 
-function getSlidesArray(included) {
+function getSlidesArray(included = {}) {
 	if (!included.slides) {
 		return []
 	} else {
@@ -102,8 +102,8 @@ function getSlidesArray(included) {
 // Mutations
 const mutations = {
 	[types.SETUP_QUIZ_QUESTION] (state, data) {
-		const answersObject = data.included['quiz_answers'] || {}
-		const answersArray = data['quiz_answers'].map(id => answersObject[id])
+		const answersObject = data.included && data.included.quiz_answers || {}
+		const answersArray = data.quiz_answers && data.quiz_answers.map(id => answersObject[id])
 
 		set(state, 'question', data)
 		set(state, 'answers', answersArray)

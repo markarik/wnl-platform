@@ -55,6 +55,21 @@
 			</div>
 		</section>
 
+		<section class="section">
+			<div class="form-header has-text-centered">
+				<h2 class="title">@lang('payment.personal-data-id-heading')</h2>
+				<p class="subtitle">@lang('payment.personal-data-id-lead')</p>
+			</div>
+
+			<div class="form-group">
+				<div class="control">
+					{!! form_label($form->identity_number) !!}
+					{!! form_widget($form->identity_number) !!}
+					{!! form_errors($form->identity_number) !!}
+				</div>
+			</div>
+		</section>
+
 		<section id="personal-data" class="section">
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-heading')</h2>

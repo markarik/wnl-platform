@@ -3,7 +3,7 @@ import {set} from 'vue'
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {modelToResourceMap} from 'js/utils/config'
-import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions'
 
 function _fetchReactables(presentables) {
@@ -62,6 +62,7 @@ function _fetchPresentables(slideshowId, type) {
 
 function getInitialState() {
 	return {
+		...commentsState,
 		comments: {},
 		loading: true,
 		presentables: [

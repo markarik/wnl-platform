@@ -24,14 +24,14 @@
 			</div>
 			<div class="slideshow-menu">
 				<wnl-annotations
-					v-if="!isLoadingComments"
+					v-show="!isLoadingComments"
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
 					:screenId="Number(screenId)"
 					:currentSlideId="currentSlideId"
 				></wnl-annotations>
-				<div v-else class="loading-comments">
+				<div v-if="isLoadingComments" class="loading-comments">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-circle-o-notch fa-spin"></i>
 					</span>

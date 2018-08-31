@@ -55,6 +55,10 @@ class SlidesRemoveUnused extends Command
 			->whereIn('reactable_id', $ids)
 			->delete();
 
+		\DB::table('slide_quiz_question')
+			->whereIn('slide_id', $ids)
+			->delete();
+
 		Slide::whereDoesntHave('slideshow')->delete();
 
 		return;

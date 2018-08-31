@@ -57,6 +57,8 @@ class UserForgetAccountApiController extends ApiController
 				DB::table('users')
 				 	->where('id', $currentUserId)
 					->update($userUpdates);
+				
+				$user->profile->unsearchable();
 
 			} else {
 				return $this->respondInvalidInput('wrong_password');

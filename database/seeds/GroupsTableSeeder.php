@@ -13,8 +13,8 @@ class GroupsTableSeeder extends Seeder
 	{
 		DB::table('groups')->insert([
 			[
-				'name'          => 'Patch yak froova',
-				'course_id'     => 1,
+				'name'          => 'Przykładowa grupa lekcji',
+				'course_id'     => DB::table('courses')->first()->id,
 				'order_number'  => 1001,
 			],
 		]);

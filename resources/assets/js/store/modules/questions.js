@@ -9,7 +9,8 @@ import uuidv1 from 'uuid/v1';
 import {
 	commentsActions,
 	commentsGetters,
-	commentsMutations
+	commentsMutations,
+	commentsState
 } from 'js/store/modules/comments'
 import {
 	reactionsActions,
@@ -24,6 +25,7 @@ const LIMIT = 25
 
 // Initial state
 const state = {
+	...commentsState,
 	activeFilters: [],
 	comments: {},
 	currentQuestion: {
@@ -271,9 +273,6 @@ const actions = {
 			}
 			resolve()
 		})
-	},
-	activeFiltersReset({commit}) {
-		commit(types.ACTIVE_FILTERS_RESET)
 	},
 	buildPlan({state, rootGetters}, data) {
 		data.filters = parseFilters(data.activeFilters, state.filters, rootGetters.currentUserId);

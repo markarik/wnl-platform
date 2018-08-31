@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<input class="input" type="text" ref="annotationTag" v-model="annotationTag" readonly tabindex="-1">
+		<input class="input" type="text" ref="annotationTag" :value="content" readonly tabindex="-1">
 		<span class="copy-tag" v-if="show && !copied" @click="copyTag">Kopiuj tag</span>
 		<span class="copy-tag copy-tag--success" v-if="show && copied">Skopiowano do schowka!</span>
 	</div>
@@ -23,30 +23,15 @@
 			show: {
 				default: false
 			},
-			tagId: {
+			content: {
 				type: String|Number,
-				required: true
-			},
-			tagContent: {
-				type: String|Number,
-				required: true
-			},
-			tag: {
-				type: String,
-				default: 'a'
+				default: ''
 			}
 		},
 		data() {
 			return {
 				copied: false,
 			}
-		},
-		computed: {
-			annotationTag() {
-				if (!this.show) return ''
-
-				return `{${this.tag}:${this.tagId}}${this.tagContent}{${this.tag}}`
-			},
 		},
 		methods: {
 			copyTag() {

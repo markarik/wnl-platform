@@ -72,6 +72,10 @@
 					]
 				}
 			},
+			value: {
+				type: String,
+				default: ''
+			},
 			autofocus: {
 				type: Boolean,
 				default: true,
@@ -144,31 +148,31 @@
 				// cursor position
 				const range = this.lastRange
 
-			  	if (!range || range.length != 0) return
-			  	const position = range.index - lastMentionQueryLength
+					if (!range || range.length != 0) return
+					const position = range.index - lastMentionQueryLength
 
 				const name = data.display_name ? data.display_name : data.full_name
 
-			  	this.quill.insertEmbed(position, 'mention', {
+					this.quill.insertEmbed(position, 'mention', {
 					name: `${autocompleteChar}${name}`,
 					id: data.user_id
 				}, Quill.sources.API)
-			  	this.quill.insertText(position + 1, ' ', Quill.sources.API)
-			  	this.quill.setSelection(position + 2, Quill.sources.API)
+					this.quill.insertText(position + 1, ' ', Quill.sources.API)
+					this.quill.setSelection(position + 2, Quill.sources.API)
 			},
 			getCurrentMention() {
 				this.lastRange = this.quill.getSelection()
 
-			    if (!this.lastRange) {
+					if (!this.lastRange) {
 					return
 				}
 
-			    var cursor = this.lastRange.index,
-			        contents = this.quill.getText(0, cursor)
+					var cursor = this.lastRange.index,
+							contents = this.quill.getText(0, cursor)
 
 				let currentMentionMatch = null
 
-			    const bothNamesMatch = firstAndLastNameMatcher.exec(contents)
+					const bothNamesMatch = firstAndLastNameMatcher.exec(contents)
 
 				if (bothNamesMatch) {
 					currentMentionMatch = {
@@ -247,8 +251,11 @@
 			this.quill = new Quill(this.$refs.quill, this.quillOptions)
 			this.QuillEmbed = Quill.import('blots/embed')
 			this.editor = this.$refs.quill.firstElementChild
-			this.quill.on('text-change', this.onTextChange)
-			document.addEventListener('click', this.clickHandler)
+			this.$nextTick(() => {
+				this.editor.innerHTML = this.value
+				this.quill.on('text-change', this.onTextChange)
+				document.addEventListener('click', this.clickHandler)
+			})
 		},
 		beforeDestroy() {
 			document.removeEventListener('click', this.clickHandler)

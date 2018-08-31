@@ -61,9 +61,9 @@ class Kernel extends ConsoleKernel
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30');
 
-		// $schedule
-		// 	->command('orders:handleUnpaid')
-		// 	->twiceDaily(8, 20);
+		$schedule
+			->command('orders:handleUnpaid')
+			->twiceDaily(8, 20);
 
 		$schedule
 			->command('notifications:cleanup-old --force')
@@ -72,5 +72,9 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('sb:cancel')
 			->weekly();
+
+		$schedule
+			->command('invoices:jpk-send')
+			->monthlyOn(1, '06:00');
 	}
 }

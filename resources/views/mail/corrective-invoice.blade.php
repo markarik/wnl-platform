@@ -3,7 +3,9 @@
 @section('content')
 	<h3>Cześć {{ $order->user->first_name or '{first_name}' }}!</h3>
 
-	<p>W załączniku przesyłamy fakturę korygującą do Twojego zamówienia.</p>
+	<p>W załączniku przesyłamy fakturę korygującą do Twojego zamówienia. :)</p>
+
+	<p>Wszystie faktury dotyczące Twoich zamówień znajdziesz w zakładce KONTO > Twoje zamówienia.</p>
 
 	<p>W razie pytań napisz do nas na info@wiecejnizlek.pl</p>
 

@@ -1,10 +1,9 @@
-import _ from 'lodash'
-import {set, delete as destroy} from 'vue'
+import {set} from 'vue'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
 import {modelToResourceMap} from 'js/utils/config'
-import {commentsGetters, commentsMutations, commentsActions} from 'js/store/modules/comments'
+import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments'
 import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions'
 
 function _fetchReactables(presentables) {
@@ -63,6 +62,7 @@ function _fetchPresentables(slideshowId, type) {
 
 function getInitialState() {
 	return {
+		...commentsState,
 		comments: {},
 		loading: true,
 		presentables: [
@@ -210,13 +210,16 @@ const actions = {
 				})
 		})
 	},
-	setupSlideshowComments({commit, dispatch}, slidesIds) {
+	setupSlideshowComments({commit, dispatch}, args) {
 		commit(types.SLIDESHOW_LOADING_COMMENTS, true)
-		return dispatch('setupComments', {ids: slidesIds, resource: modelToResourceMap['App\\Models\\Slide']})
+		return dispatch('setupComments', {resource: modelToResourceMap['App\\Models\\Slide'], ...args})
 			.then(() => {
 				commit(types.SLIDESHOW_LOADING_COMMENTS, false)
 			})
 			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false))
+	},
+	setupSlideComments({commit, dispatch}, {id, ...args}) {
+		return dispatch('setupSlideshowComments', {ids: [id], ...args})
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)

@@ -24,7 +24,7 @@ export const quiz = {
 			title: 'Gratulacje!'
 		},
 		tryAgain: {
-			text: 'Pozostałe pytania do rozwiązania: #{count}',
+			text: 'Pozostałe pytania do rozwiązania: {count}',
 			title: 'Spróbuj jeszcze raz!'
 		}
 	}

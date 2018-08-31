@@ -69,7 +69,6 @@ trait PaginatesResponses
 
 	protected function cachedPaginatedResponse($cacheTags, $cacheKeyPrefix, $model, $limit, $page = 1) {
 		$collection = $model->get();
-		$userId = Auth::user()->id;
 
 		if (Cache::tags($cacheTags)->has($this->cacheKey($cacheKeyPrefix, $page))) {
 			$results = Cache::tags($cacheTags)->get($this->cacheKey($cacheKeyPrefix, $page));
@@ -78,6 +77,7 @@ trait PaginatesResponses
 				$results['data'] = $this->transform($results['raw_data']);
 				$results['cache_hash'] = $cacheKeyPrefix;
 				$results['from_cache'] = true;
+
 				return $results;
 			}
 

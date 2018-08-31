@@ -74,10 +74,6 @@ class AddKeys extends Migration
 			$table->index('screen_id');
 		});
 
-		Schema::table('screens', function (Blueprint $table) {
-			$table->index('lesson_id');
-		});
-
 		Schema::table('role_user', function (Blueprint $table) {
 			$table->index('role_id');
 			$table->index('user_id');
@@ -181,10 +177,6 @@ class AddKeys extends Migration
 
 		Schema::table('sections', function (Blueprint $table) {
 			$table->dropIndex(['screen_id']);
-		});
-
-		Schema::table('screens', function (Blueprint $table) {
-			$table->dropIndex(['lesson_id']);
 		});
 
 		Schema::table('role_user', function (Blueprint $table) {

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
+use App\Rules\ValidatePersonalIdentityNumber;
 
 class PersonalDataController extends Controller
 {
@@ -70,6 +71,7 @@ class PersonalDataController extends Controller
 				'email'                 => 'email',
 				'password'              => '',
 				'password_confirmation' => '',
+				'identity_number'       => new ValidatePersonalIdentityNumber
 			]);
 		}
 

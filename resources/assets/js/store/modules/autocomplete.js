@@ -18,21 +18,6 @@ const mutations = {
 	},
 }
 
-function getUserSearchConditions(data) {
-	const where = [
-		['first_name', 'like', `%${data.firstName}%`]
-	]
-	data.lastName && where.push(
-		['last_name', 'like', `%${data.lastName}%`]
-	)
-	let displayName = data.firstName
-	if(data.lastName) displayName += ` ${data.lastName}`
-	const orWhere = [
-		['display_name', 'like', `%${displayName}%`]
-	]
-	return { query: { where, orWhere, whereNull: ['deleted_at'] }, limit: [5, 0] }
-}
-
 function getTagSearchConditions(name, tags = []) {
 	const where = [
 		['name', 'like', `%${name}%`]
@@ -46,9 +31,8 @@ function getTagSearchConditions(name, tags = []) {
 // Actions
 const actions = {
 	requestUsersAutocomplete({}, data) {
-		const conditions = getUserSearchConditions(data)
-
-		return axios.post(getApiUrl('user_profiles/.query'), conditions)
+		let query = Object.values(data).join(' ')
+		return axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
 	},
 	requestTagsAutocomplete({}, { name, tags }) {
 		const conditions = getTagSearchConditions(name, tags)

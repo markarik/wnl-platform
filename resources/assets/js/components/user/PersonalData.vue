@@ -4,8 +4,7 @@
 			<div class="message-header">
 				{{ $t('user.personalData.header.explanationHeader') }}
 			</div>
-			<div class="message-body">
-				{{ $t('user.personalData.header.explanation') }}
+			<div class="message-body" v-html="personalDataExplanation">
 			</div>
 		</div>
 		<div class="level wnl-screen-title">
@@ -41,6 +40,11 @@
 	import IdentityNumber from 'js/components/user/IdentityNumber'
 
 	export default {
+		data() {
+			return {
+				personalDataExplanation: this.$t('user.personalData.header.explanation')
+			}
+		},
 		components: {
 			'wnl-form': Form,
 			'wnl-form-text': Text,

@@ -93,11 +93,11 @@ export const user = {
 	personalData: {
 		header: {
 			explanationHeader: 'Twoje wrażliwe dane',
-			explanation: 'Informacje, które tu zostawisz będą wykorzystane przez nas do obsługi Twojego zamówienia. Dane nie będą widoczne publicznie. Więcej informacji na ten temat znajdziesz tutaj: link do polityki prywatności.'
+			explanation: 'Informacje, które tu zostawisz będą wykorzystane przez nas do obsługi Twojego zamówienia. Dane nie będą widoczne publicznie. Więcej informacji na ten temat znajdziesz tutaj: <a href="https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf" target="_blank">Polityka Prywatności</a>'
 		},
 		identityNumber: {
 			header: 'Numer identyfikacyjny',
-			explanation: 'W związku z podjęciem współpracy z CEM, prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu! Te dane nie będą widoczne publicznie, a posłużą nam do celów statystycznych. Twoja pomoc pozwoli nam rozwijać i doskonalić kurs!',
+			explanation: 'W związku z podjęciem współpracy z CEM, prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu! Zebrane numery PESEL posłużą tylko i wyłącznie do opracowania statystyk przez CEM dla grup uczestników, dzięki czemu będziemy w stanie doskonalić kurs. Natomiast nie będziemy ich wykorzystywać do poznania indywidualnych wyników uczestników. Te dane nie będą widoczne publicznie, a posłużą nam do celów statystycznych. Twoja pomoc pozwoli nam rozwijać i doskonalić kurs!',
 		},
 		errors: {
 			incorrectIdStructure: 'PESEL powinien składać się tylko z 11 cyfr.',

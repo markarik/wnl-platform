@@ -59,6 +59,9 @@ class ApiController extends Controller
 
 		if ($id !== 'all') {
 			$models = $modelName::find($id);
+			if (!$models) {
+				return $this->respondNotFound();
+			}
 		}
 
 		if ($id === 'all' && $request->limit) {

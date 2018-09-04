@@ -149,7 +149,7 @@ const actions = {
 	async fetchUserPersonalData({ commit }) {
 		try {
 			const response = await axios.get(getApiUrl(`users/current/personal_data`))
-			commit(types.USERS_SET_IDENTIY, response)
+			commit(types.USERS_SET_IDENTIY, response.data)
 		}
 		catch (error) {
 			const emptyResponse = {

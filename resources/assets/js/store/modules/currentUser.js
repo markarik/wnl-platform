@@ -146,22 +146,23 @@ const actions = {
 		})
 	},
 
-	fetchUserPersonalData({ commit }) {
-		return new Promise((resolve, reject) => {
-			axios.get(getApiUrl(`users/current/personal_data`)).then((response) => {
-				commit(types.USERS_SET_IDENTIY, response.data)
-				resolve()
-			})
-			.catch((error) => {
-				commit(types.USERS_SET_IDENTIY, {
-					personalIdentityNumber: null,
-					identityCardNumber: null,
-					passportNumber: null
-				})
-				$wnl.logger.error(error)
-				reject()
-			})
-		})
+	async fetchUserPersonalData({ commit }) {
+		try {
+			const response = await axios.get(getApiUrl(`users/current/personal_data`))
+			commit(types.USERS_SET_IDENTIY, response)
+		}
+		catch (error) {
+			const emptyResponse = {
+				personalIdentityNumber: null,
+				identityCardNumber: null,
+				passportNumber: null
+			}
+			if (error.response.status === 404) {
+				commit(types.USERS_SET_IDENTIY, emptyResponse)
+			}
+			commit(types.USERS_SET_IDENTIY, emptyResponse)
+			$wnl.logger.error(error)
+		}
 	},
 
 	updateCurrentUser({commit}, userData) {

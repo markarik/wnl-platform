@@ -1,11 +1,16 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $user->first_name or '{first_name}' }}!</h3>
+	<h3>Cześć!</h3>
 
 	<p style="font-size: 1.25em;">
-		Elo elo, dostałeś koda!
-		{{ $coupon->code }}
+		Przesyłamy Ci kupon zniżkowy na kurs Więcej Niż LEK o wartości {{ $coupon->value_with_unit }},
+		ważny do {{ $coupon->expires_at }}
+	</p>
+
+	<p>
+		Możesz go wykorzystać przechodząc pod adres:
+		<br>
 		<a href="{{ url( 'payment/voucher?code=' . $coupon->code ) }}" >
 			{{ url( 'payment/voucher?code=' . $coupon->code ) }}
 		</a>

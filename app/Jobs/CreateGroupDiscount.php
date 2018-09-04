@@ -45,7 +45,7 @@ class CreateGroupDiscount implements ShouldQueue
 	public function handle()
 	{
 		$now = Carbon::now();
-		$groupSign = str_random(5);
+		$groupSign = strtoupper(str_random(4));
 		$slug = sprintf(self::SLUG_PATTERN, $groupSign);
 
 		foreach ($this->mailCollection as $email) {
@@ -69,6 +69,6 @@ class CreateGroupDiscount implements ShouldQueue
 
 	private function code($groupSign)
 	{
-		return sprintf(self::CODE_PATTERN, $groupSign, str_random(5));
+		return sprintf(self::CODE_PATTERN, $groupSign, strtoupper(str_random(4)));
 	}
 }

@@ -21,7 +21,7 @@ if (!function_exists('api_action')) {
 	}
 }
 
-Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api-cache']], function () {
+Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], function () {
 	$r = config('papi.resources');
 
 	// Search (using search engine)

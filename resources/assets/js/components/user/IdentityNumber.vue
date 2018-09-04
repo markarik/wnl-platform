@@ -326,8 +326,11 @@
 			},
 		},
 		async mounted() {
-			await this.fetchUserPersonalData()
-			this.isLoaded = true
+			await this.fetchUserPersonalData().then(() => {
+				this.isLoaded = true
+			}).catch(() => {
+				this.isLoaded = true
+			})
 		}
 	}
 </script>

@@ -11,14 +11,16 @@ class Voucher extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct()
+	public $coupon;
+
+	/**
+	 * Create a new message instance.
+	 *
+	 * @param $coupon
+	 */
+    public function __construct($coupon)
     {
-        //
+	    $this->coupon = $coupon;
     }
 
     /**
@@ -28,6 +30,8 @@ class Voucher extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this
+	        ->subject('Zajechał kupon')
+	        ->view('mail.voucher');
     }
 }

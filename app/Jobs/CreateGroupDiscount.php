@@ -2,33 +2,73 @@
 
 namespace App\Jobs;
 
+use App\Mail\Voucher;
+use App\Models\Coupon;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Mail;
 
 class CreateGroupDiscount implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
+	const SLUG_PATTERN = 'group-%s';
+	const CODE_PATTERN = '%s-%s';
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        //
-    }
+	private $mailCollection;
+	private $couponAttributes;
+	private $emailIsCode;
+
+	/**
+	 * Create a new job instance.
+	 *
+	 * @param $mailCollection
+	 * @param $couponAttributes
+	 * @param bool $emailIsCode
+	 */
+	public function __construct($mailCollection, $couponAttributes, $emailIsCode = true)
+	{
+		$this->mailCollection = $mailCollection;
+		$this->couponAttributes = $couponAttributes;
+		$this->emailIsCode = $emailIsCode;
+	}
+
+	/**
+	 * Execute the job.
+	 *
+	 * @return void
+	 */
+	public function handle()
+	{
+		$now = Carbon::now();
+		$groupSign = str_random(5);
+		$slug = sprintf(self::SLUG_PATTERN, $groupSign);
+
+		foreach ($this->mailCollection as $email) {
+			$code = $this->emailIsCode ? $email : $this->code($groupSign);
+
+			$coupon = Coupon::create([
+				'name' => $this->couponAttributes['name'],
+				'type' => $this->couponAttributes['type'],
+				'value' => $this->couponAttributes['value'],
+				'code' => $code,
+				'slug' => $slug,
+				'created_at' => $now,
+				'updated_at' => $now,
+				'times_usable' => 1,
+				'expires_at' => $this->couponAttributes['expires'],
+			]);
+
+			Mail::to($email)->send(new Voucher($coupon));
+		}
+	}
+
+	private function code($groupSign)
+	{
+		return sprintf(self::CODE_PATTERN, $groupSign, str_random(5));
+	}
 }

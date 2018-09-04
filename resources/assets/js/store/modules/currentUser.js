@@ -154,9 +154,9 @@ const actions = {
 			})
 			.catch((error) => {
 				commit(types.USERS_SET_IDENTIY, {
-					personalIdentityNumber: '',
-					identityCardNumber: '',
-					passportNumber: ''
+					personalIdentityNumber: null,
+					identityCardNumber: null,
+					passportNumber: null
 				})
 				$wnl.logger.error(error)
 				reject()

@@ -7,10 +7,15 @@ use App\Models\Screen;
 use App\Models\Slide;
 use App\Models\Slideshow;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SlideshowBuilderApiController extends ApiController
 {
 	use TranslatesApiQueries;
+
+	const CACHE_VERSION = '1';
+	const CACHE_KEY_PATTERN = 'slideshow-builder-%s-%s';
+	const CACHE_TTL = 60 * 24 * 7;
 
 	public function __construct(Request $request)
 	{
@@ -32,6 +37,11 @@ class SlideshowBuilderApiController extends ApiController
 
 	public function get($slideshowId)
 	{
+		$key = $this->key($slideshowId);
+		if (Cache::has($key)) {
+			return $this->respondFromCache($key);
+		}
+
 		$slideshow = Slideshow::find($slideshowId);
 
 		if (!$slideshow) {
@@ -43,7 +53,7 @@ class SlideshowBuilderApiController extends ApiController
 			->orderBy('order_number')
 			->get();
 
-		return $this->renderView($slides, $slideshow->background_url);
+		return $this->renderView($slides, $slideshow->background_url, $key);
 	}
 
 	public function preview(Request $request)
@@ -93,6 +103,11 @@ class SlideshowBuilderApiController extends ApiController
 
 	public function byCategory($categoryId)
 	{
+		$key = $this->key($categoryId);
+		if (Cache::has($key)) {
+			return $this->respondFromCache($key);
+		}
+
 		$category = Category::find($categoryId);
 
 		if (!$category) {
@@ -113,11 +128,16 @@ class SlideshowBuilderApiController extends ApiController
 
 		$background = $screen->slideshow->background_url ?? '';
 
-		return $this->renderView($slides, $background);
+		return $this->renderView($slides, $background, $key);
 	}
 
 	public function query(Request $request)
 	{
+		$key = $this->key(md5(json_encode($request->all())));
+		if (Cache::has($key)) {
+			return $this->respondFromCache($key);
+		}
+
 		$builder = $this->applyFilters(new Slide, $request);
 		$slides = $builder->get();
 		if (!$slides->first()) {
@@ -126,10 +146,10 @@ class SlideshowBuilderApiController extends ApiController
 		$firstSlide = Slide::find($slides->first()->slide_id);
 		$background = $firstSlide->slideshow->first()->background_url;
 
-		return $this->renderView($slides, $background);
+		return $this->renderView($slides, $background, $key);
 	}
 
-	protected function renderView($slides, $background)
+	protected function renderView($slides, $background, $cacheKey = false)
 	{
 		$search = [
 			'<p>&nbsp;</p>',
@@ -150,18 +170,28 @@ class SlideshowBuilderApiController extends ApiController
 			"\n",
 		];
 
-		$replace = [
-			'<br>',
-			'',
+		$replace = ['<br>',''];
+
+		$slidesContent = str_replace($search, $replace, $slides->implode('content', ' '));
+		$viewData = [
+			'slides' => $slidesContent,
+			'background_url' => $background,
 		];
 
-		$view = view('course.slideshow', [
-			'slides'         => str_replace($search, $replace, $slides->implode('content', ' ')),
-			'background_url' => $background,
-		]);
+		if ($cacheKey) Cache::put($cacheKey, $viewData, self::CACHE_TTL);
+		
+		$view = view('course.slideshow', $viewData);
 
-		$view->render();
+		return response($view->render());
+	}
 
-		return response($view);
+	private function respondFromCache($key) {
+		$view = view('course.slideshow', Cache::get($key));
+
+		return response($view->render());
+	}
+
+	private function key($identifier) {
+		return sprintf(self::CACHE_KEY_PATTERN, self::CACHE_VERSION, $identifier);
 	}
 }

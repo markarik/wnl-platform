@@ -101,7 +101,7 @@ class Invoice
 			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
 		}
 
-		$this->renderAndSave('payment.invoices.vat', $data);
+		$this->renderAndSave('payment.invoices.vat', $data, $invoice);
 
 		return $invoice;
 	}
@@ -168,7 +168,7 @@ class Invoice
 			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
 		}
 
-		$this->renderAndSave('payment.invoices.pro-forma', $data);
+		$this->renderAndSave('payment.invoices.pro-forma', $data, $invoice);
 
 		return $invoice;
 	}
@@ -253,7 +253,7 @@ class Invoice
 			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
 		}
 
-		$this->renderAndSave('payment.invoices.advance', $data);
+		$this->renderAndSave('payment.invoices.advance', $data, $invoice);
 
 		return $invoice;
 	}
@@ -365,7 +365,7 @@ class Invoice
 		};
 		$data['invoiceOrder'] = $order;
 
-		$this->renderAndSave('payment.invoices.final', $data);
+		$this->renderAndSave('payment.invoices.final', $data, $invoice);
 
 		return $invoice;
 	}
@@ -478,7 +478,7 @@ class Invoice
 			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
 		}
 
-		$this->renderAndSave('payment.invoices.corrective', $data);
+		$this->renderAndSave('payment.invoices.corrective', $data, $invoice);
 
 		return $invoice;
 	}
@@ -506,8 +506,9 @@ class Invoice
 		}
 	}
 
-	protected function renderAndSave($viewName, $data)
+	protected function renderAndSave($viewName, $data, $invoice)
 	{
+		$invoice->update(['meta' => $data]);
 		$view = view($viewName, $data);
 
 		// Best hack ever! xD

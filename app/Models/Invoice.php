@@ -8,10 +8,11 @@ class Invoice extends Model
 {
 	protected $casts = [
 		'amount' => 'float',
+		'meta' => 'array',
 	];
 
 	protected $fillable = ['order_id', 'number', 'series', 'external_id',
-		'amount', 'vat', 'corrected_invoice_id'];
+		'amount', 'vat', 'corrected_invoice_id', 'meta'];
 
 	public function order()
 	{

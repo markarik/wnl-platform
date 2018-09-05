@@ -22,7 +22,8 @@ const state = {
 			dates: {
 				min: 0, max: 0
 			}
-		}
+		},
+		accountSuspended: false
 	},
 	settings: getDefaultSettings(),
 }
@@ -73,6 +74,9 @@ const mutations = {
 	},
 	[types.USERS_SET_SUBSCRIPTION] (state, payload) {
 		set(state, 'subscription', payload)
+	},
+	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
+		set(state.profile, 'accountSuspended', payload)
 	}
 }
 

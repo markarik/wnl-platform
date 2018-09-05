@@ -39,9 +39,6 @@ class Kernel extends ConsoleKernel
 				Artisan::call('cache:clear', [
 					'--tags' => 'api,slides,search',
 				]);
-			})
-			->after(function () use ($schedule) {
-				Artisan::call('cache:warmup');
 			});
 
 		$schedule

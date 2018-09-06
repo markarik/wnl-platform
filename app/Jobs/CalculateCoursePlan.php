@@ -64,7 +64,7 @@ class CalculateCoursePlan
 
 		DB::commit();
 
-		\Cache::tags("user-{$this->user->id}")->flush();
+		\Cache::forget(EditionsApiController::key($this->user->id));
 
 		return $plan;
 	}

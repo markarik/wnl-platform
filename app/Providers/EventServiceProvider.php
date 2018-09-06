@@ -69,10 +69,6 @@ class EventServiceProvider extends ServiceProvider
 		// 	'App\Listeners\UserNotificationsGate',
 		// ],
 
-		'App\Events\Users\UserDataUpdated' => [
-			'App\Listeners\BustUserCache',
-		],
-
 		'App\Events\Tasks\AssignedToTask' => [
 			'App\Listeners\UserNotificationsGate',
 		],

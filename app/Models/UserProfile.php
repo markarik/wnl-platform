@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\Users\UserDataUpdated;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
@@ -10,10 +9,6 @@ use ScoutEngines\Elasticsearch\Searchable;
 class UserProfile extends Model
 {
 	use Searchable;
-
-	protected $dispatchesEvents = [
-		'updated' => UserDataUpdated::class,
-	];
 
 	protected $fillable = [
 		'first_name',

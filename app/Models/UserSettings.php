@@ -2,15 +2,10 @@
 
 namespace App\Models;
 
-use App\Events\Users\UserDataUpdated;
 use Illuminate\Database\Eloquent\Model;
 
 class UserSettings extends Model
 {
-	protected $dispatchesEvents = [
-		'updated' => UserDataUpdated::class,
-	];
-
 	protected $fillable = [
 		'settings',
 	];

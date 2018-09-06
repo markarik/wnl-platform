@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 class EditionsApiController extends ApiController
 {
 	const CACHE_VERSION = '1';
-	const CACHE_KEY_PATTERN = 'editions-%s-%s-%s';
+	const CACHE_KEY_PATTERN = 'editions-%s-%s';
 	const CACHE_TTL = 60 * 24;
 
 	public function __construct(Request $request)
@@ -20,7 +20,7 @@ class EditionsApiController extends ApiController
 	public function get($id)
 	{
 		$user = Auth::user();
-		$key = $this->key($user->id, __METHOD__);
+		$key = self::key($user->id, __METHOD__);
 
 		if(Cache::has($key)) {
 			return $this->respondOk(Cache::get($key));
@@ -28,12 +28,12 @@ class EditionsApiController extends ApiController
 
 		$data = parent::get($id)->getData();
 
-		Cache::put($key, $data, self::CACHE_TTL);
+		Cache::tags('editions')->put($key, $data, self::CACHE_TTL);
 
 		return $this->respondOk($data);
 	}
 
-	private function key($userId, $method) {
-		return sprintf(self::CACHE_KEY_PATTERN, self::CACHE_VERSION, $userId, $method);
+	public static function key($userId) {
+		return sprintf(self::CACHE_KEY_PATTERN, self::CACHE_VERSION, $userId);
 	}
 }

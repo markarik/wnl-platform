@@ -46,7 +46,7 @@ class AnnotationsApiController extends ApiController
 
 		$annotation->keywords()->delete();
 		$annotation->keywords()->saveMany($keywords);
-		
+
 		return $this->transformAndRespond($annotation);
 	}
 

@@ -14,7 +14,7 @@ class SlideshowBuilderApiController extends ApiController
 	use TranslatesApiQueries;
 
 	const CACHE_VERSION = '1';
-	const CACHE_KEY_PATTERN = 'slideshow-builder-%s-%s';
+	const CACHE_KEY_PATTERN = 'slideshow_builder-%s-%s';
 	const CACHE_TTL = 60 * 24 * 7;
 
 	public function __construct(Request $request)

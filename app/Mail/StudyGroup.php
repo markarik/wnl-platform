@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Voucher extends Mailable
+class StudyGroup extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,7 +31,7 @@ class Voucher extends Mailable
     public function build()
     {
         return $this
-	        ->subject('Zajechał kupon')
-	        ->view('mail.voucher');
+	        ->subject('Twój kod Study Group właśnie zajechał')
+	        ->view('mail.study-group');
     }
 }

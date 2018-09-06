@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\Voucher;
+use App\Mail\StudyGroup;
 use App\Models\Coupon;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -63,7 +63,7 @@ class CreateGroupDiscount implements ShouldQueue
 				'expires_at' => $this->couponAttributes['expires'],
 			]);
 
-			Mail::to($email)->send(new Voucher($coupon));
+			Mail::to($email)->send(new StudyGroup($coupon));
 		}
 	}
 

@@ -11,7 +11,7 @@
 		<div class="has-text-centered" v-else-if="currentUser.accountSuspended">
 			<p class="title is-4">Twoje konto zostało zablokowane</p>
 			<p>
-				Niestety, Twoje konto zostało zablokowane. :( <br/>
+				Niestety, Twoje konto zostało zablokowane. 🙁 <br/>
 				Sprawdź w zakładce <router-link :to="{name: 'my-orders'}">KONTO > Moje zamówienia</router-link>, czy Twoje zamówienie jest opłacone. <br/>
 				W razie pytań pisz do nas na <a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl.</a> 🙂
 			</p>

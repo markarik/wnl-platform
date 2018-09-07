@@ -16,13 +16,6 @@
 			</div> --}}
 			@if(session('logout'))
 				<div class="notification has-text-centered">Wylogowano, do zobaczenia!</div>
-			@elseif(session('suspended'))
-				<div class="notification has-text-centered">
-					Niestety, Twoje konto zostało zawieszone... :(<br>
-					Jeśli chcesz odblokować konto, <br>
-					napisz do nas na
-					<a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl</a>.
-				</div>
 			@endif
 			<p class="title is-3 is-hidden-touch">@lang('auth.title')</p>
 			<p class="title is-5 is-hidden-desktop">@lang('auth.title')</p>

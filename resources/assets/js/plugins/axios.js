@@ -24,7 +24,6 @@ export default (Vue, {store, router}) => {
 				const isSuspended = !!get(error, 'response.data.account_suspended');
 
 				if (isSuspended) {
-					// To be decided
 					router.push('/');
 					return store.commit(types.USERS_SET_ACCOUNT_SUSPENDED, true)
 				}

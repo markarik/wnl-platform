@@ -15,6 +15,9 @@ class SlideshowBuilderApiController extends ApiController
 
 	const CACHE_VERSION = '1';
 	const CACHE_KEY_PATTERN = 'slideshow_builder-%s-%s';
+	const SLIDESHOW_SUBKEY = 'slideshow:%s';
+	const CATEGORY_SUBKEY = 'category:%s';
+	const SLIDE_SUBKEY = 'slide:%s';
 	const CACHE_TTL = 60 * 24 * 7;
 
 	public function __construct(Request $request)
@@ -26,7 +29,7 @@ class SlideshowBuilderApiController extends ApiController
 	public function getEmpty()
 	{
 		$view = view('course.slideshow', [
-			'slides'         => '',
+			'slides' => '',
 			'background_url' => '',
 		]);
 
@@ -37,9 +40,9 @@ class SlideshowBuilderApiController extends ApiController
 
 	public function get($slideshowId)
 	{
-		$key = $this->key($slideshowId);
+		$key = self::key(sprintf(self::SLIDESHOW_SUBKEY, $slideshowId));
 		if (Cache::has($key)) {
-			return $this->respondFromCache($key);
+			return $this->respond(Cache::get($key));
 		}
 
 		$slideshow = Slideshow::find($slideshowId);
@@ -53,7 +56,10 @@ class SlideshowBuilderApiController extends ApiController
 			->orderBy('order_number')
 			->get();
 
-		return $this->renderView($slides, $slideshow->background_url, $key);
+		$viewData = $this->getViewData($slides, $slideshow->background_url);
+		Cache::put($key, $viewData, self::CACHE_TTL);
+
+		return $this->respond($viewData);
 	}
 
 	public function preview(Request $request)
@@ -92,7 +98,7 @@ class SlideshowBuilderApiController extends ApiController
 		}
 
 		$view = view('course.slideshow', [
-			'slides'         => $content,
+			'slides' => $content,
 			'background_url' => $backgroundUrl,
 		]);
 
@@ -103,9 +109,9 @@ class SlideshowBuilderApiController extends ApiController
 
 	public function byCategory($categoryId)
 	{
-		$key = $this->key($categoryId);
+		$key = self::key("category-{$categoryId}");
 		if (Cache::has($key)) {
-			return $this->respondFromCache($key);
+			return $this->respond(Cache::get($key));
 		}
 
 		$category = Category::find($categoryId);
@@ -128,28 +134,53 @@ class SlideshowBuilderApiController extends ApiController
 
 		$background = $screen->slideshow->background_url ?? '';
 
-		return $this->renderView($slides, $background, $key);
+		$viewData = $this->getViewData($slides, $background);
+		Cache::put($key, $viewData, self::CACHE_TTL);
+
+		return $this->respond($viewData);
 	}
 
-	public function query(Request $request)
+	public function bySlideId(Request $request)
 	{
-		$key = $this->key(md5(json_encode($request->all())));
+		$slideId = $request->route('slideId');
+		$key = self::key(sprintf(self::SLIDE_SUBKEY, $slideId));
 		if (Cache::has($key)) {
-			return $this->respondFromCache($key);
+			return $this->respond(Cache::get($key));
 		}
 
-		$builder = $this->applyFilters(new Slide, $request);
-		$slides = $builder->get();
-		if (!$slides->first()) {
-			return $this->respondNotFound();
-		}
-		$firstSlide = Slide::find($slides->first()->slide_id);
-		$background = $firstSlide->slideshow->first()->background_url;
+		$slides = Slide::where('id', $slideId)->get();
 
-		return $this->renderView($slides, $background, $key);
+		$background = $slides->first()->slideshow->first()->background_url;
+
+		$viewData = $this->getViewData($slides, $background);
+		Cache::put($key, $viewData, self::CACHE_TTL);
+
+		return $this->respond($viewData);
 	}
 
-	protected function renderView($slides, $background, $cacheKey = false)
+	public function byCategorySlides(Request $request)
+	{
+		$categoryId = $request->route('categoryId');
+		$slidesIds = $request->get('slidesIds');
+		$key = self::key(md5(json_encode($request->all())));
+
+		$slides = Slide::select('slides.*')
+			->where('presentables.presentable_type', 'App\\Models\\Category')
+			->where('presentables.presentable_id', $categoryId)
+			->whereIn('slides.id', $slidesIds)
+			->join('presentables', 'slides.id', '=', 'presentables.slide_id')
+			->orderBy('presentables.order_number', 'asc')
+			->get();
+
+		$background = $slides->first()->slideshow->first()->background_url;
+
+		$viewData = $this->getViewData($slides, $background);
+		Cache::tags("slideshow_builder-category-{$categoryId}")->put($key, $viewData, self::CACHE_TTL);
+
+		return $this->respond($viewData);
+	}
+
+	protected function getViewData($slides, $background)
 	{
 		$search = [
 			'<p>&nbsp;</p>',
@@ -170,28 +201,24 @@ class SlideshowBuilderApiController extends ApiController
 			"\n",
 		];
 
-		$replace = ['<br>',''];
+		$replace = ['<br>', ''];
 
 		$slidesContent = str_replace($search, $replace, $slides->implode('content', ' '));
-		$viewData = [
+		return [
 			'slides' => $slidesContent,
 			'background_url' => $background,
 		];
+	}
 
-		if ($cacheKey) Cache::put($cacheKey, $viewData, self::CACHE_TTL);
-		
+	private function respond($viewData)
+	{
 		$view = view('course.slideshow', $viewData);
 
 		return response($view->render());
 	}
 
-	private function respondFromCache($key) {
-		$view = view('course.slideshow', Cache::get($key));
-
-		return response($view->render());
-	}
-
-	private function key($identifier) {
+	public static function key($identifier)
+	{
 		return sprintf(self::CACHE_KEY_PATTERN, self::CACHE_VERSION, $identifier);
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\UserLesson;
 use Carbon\Carbon;

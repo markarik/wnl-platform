@@ -72,12 +72,12 @@ trait GeneratesApiResponses
 			->json();
 	}
 
-	protected function respondForbidden($message = 'Forbidden')
+	protected function respondForbidden($message = 'Forbidden', $data = [])
 	{
 		return $this
 			->setMessage($message)
 			->setStatusCode(403)
-			->json();
+			->json(array_merge($data, ['message' => $message]));
 	}
 
 	protected function respondNotFound($message = null)

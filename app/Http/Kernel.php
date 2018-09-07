@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
 		'api-cache'    => \App\Http\Middleware\ApiCache::class,
 		'subscription' => \App\Http\Middleware\Subscription::class,
 		'terms'        => \App\Http\Middleware\TermsOfUse::class,
+		'account-status' => \App\Http\Middleware\AccountStatus::class,
 	];
 }

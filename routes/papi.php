@@ -143,8 +143,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['slideshow-builder']}/slide/{slideId}/", 'SlideshowBuilderApiController@bySlideId');
 		Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
 		Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
-		Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
 		Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
+
+		// Route preserved for backward compatibility. To be removed in next release.
+		Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
 
 		// Quiz Stats
 		Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');

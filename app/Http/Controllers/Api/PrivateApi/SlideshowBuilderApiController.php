@@ -180,6 +180,19 @@ class SlideshowBuilderApiController extends ApiController
 		return $this->respond($viewData);
 	}
 
+	// Method preserved for backward compatibility. To be removed in next release.
+	public function query(Request $request)
+	{
+		$builder = $this->applyFilters(new Slide, $request);
+		$slides = $builder->get();
+		if (!$slides->first()) {
+			return $this->respondNotFound();
+		}
+		$firstSlide = Slide::find($slides->first()->slide_id);
+		$background = $firstSlide->slideshow->first()->background_url;
+		return $this->renderView($slides, $background);
+	}
+
 	protected function getViewData($slides, $background)
 	{
 		$search = [

@@ -8,6 +8,14 @@
 				Twoje zamówienia znajdziesz w zakładce - <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.
 			</p>
 		</div>
+		<div class="has-text-centered" v-else-if="currentUser.accountSuspended">
+			<p class="title is-4">Twoje konto zostało zablokowane</p>
+			<p>
+				Niestety, Twoje konto zostało zablokowane. 🙁 <br/>
+				Sprawdź w zakładce <router-link :to="{name: 'my-orders'}">KONTO > Moje zamówienia</router-link>, czy Twoje zamówienie jest opłacone. <br/>
+				W razie pytań pisz do nas na <a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl.</a> 🙂
+			</p>
+		</div>
 		<div class="has-text-centered" v-else>
 			<p class="title is-4">W tym momencie nie posiadasz dostępu do kursu</p>
 			<p>Widzisz ten ekran ponieważ Twoje zamówienie oczekuje na zaksięgowanie wpłaty, lub jesteś uczestnikiem poprzedniej edycji, która dobiegła już końca. 🙂<br>
@@ -66,7 +74,7 @@
 		name: 'SplashScreen',
 		perimeters: [upcomingEditionParticipant],
 		computed: {
-			...mapGetters(['currentUserSubscriptionDates']),
+			...mapGetters(['currentUserSubscriptionDates', 'currentUser']),
 			countdownImageUrl() {
 				return getImageUrl('countdown.png')
 			},

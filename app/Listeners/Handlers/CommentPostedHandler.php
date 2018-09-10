@@ -35,9 +35,11 @@ class CommentPostedHandler
 			$gate->notifyPrivate($user, $event);
 		}
 
-		$excluded->push($commentableAuthor);
+		if ($commentableAuthor) {
+			$excluded->push($commentableAuthor);
+		}
 
-		if ($commentable->comments->count() === 1){
+		if ($commentable->comments->count() === 1) {
 			// Notify only about the first comment
 			$gate->notifyPrivateStream($excluded->pluck('id')->toArray(), $event);
 		}

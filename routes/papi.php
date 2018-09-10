@@ -45,7 +45,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	// Fetch additional routing data basing on various input
 	api_action('post', 'context');
 
-	Route::group(['middleware' => 'subscription'], function () use ($r) {
+	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
 		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 

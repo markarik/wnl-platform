@@ -109,7 +109,7 @@ class SlideshowBuilderApiController extends ApiController
 
 	public function byCategory($categoryId)
 	{
-		$key = self::key("category-{$categoryId}");
+		$key = self::key(sprintf(self::CATEGORY_SUBKEY, $categoryId));
 		if (Cache::has($key)) {
 			return $this->respond(Cache::get($key));
 		}

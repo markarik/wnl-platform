@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
 use App\Models\Screen;
 use Illuminate\Console\Command;
 
@@ -57,8 +58,10 @@ class ScreensCountSlides extends Command
 			$screen->save();
 
 			$this->countForSections($screen, $screenPresentables);
-
 		}
+
+		// TODO: https://bethink.atlassian.net/browse/PLAT-506 !!
+		\Cache::tags('editions')->flush();
 
 		return;
 	}

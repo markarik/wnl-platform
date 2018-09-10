@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
+use Lib\Bethink\Bethink;
 use ScoutEngines\Elasticsearch\Searchable;
 
 class UserProfile extends Model
@@ -43,7 +43,7 @@ class UserProfile extends Model
 
 	public function getAvatarUrlAttribute()
 	{
-		return Bethink::getAssetPublicUrl($this->avatar) ?? null;
+		return (new Bethink)->getAssetPublicUrl($this->avatar) ?? null;
 	}
 
 	public function getFullNameAttribute()

@@ -94,10 +94,11 @@ class SlidesApiController extends ApiController
 		$slide->tags()->attach($screen->tags);
 
 		if (!App::environment('dev')) {
-			dispatch(new SearchImportAll('App\\Models\\Slide'));
 			\Artisan::queue('screens:countSlides');
-			\Artisan::queue('slides:fromCategory');
+			dispatch(new SearchImportAll('App\\Models\\Slide'));
 		}
+
+		$this->slideCacheForget($slide);
 		event(new SlideAdded($slide, $presentables));
 
 		return $this->respondOk();
@@ -147,10 +148,9 @@ class SlidesApiController extends ApiController
 		if (!App::environment('dev')) {
 			dispatch(new SearchImportAll('App\\Models\\Slide'));
 			\Artisan::queue('screens:countSlides');
-			\Artisan::queue('slides:fromCategory');
-			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
 		}
 
+		$this->slideCacheForget($slide);
 		foreach ($presentablesInstances as $presentable) {
 			event(new SlideDetached($slide, $presentable));
 		}
@@ -194,7 +194,7 @@ class SlidesApiController extends ApiController
 	public static function slideCacheForget($slide) {
 		foreach ($slide->categories as $category) {
 			\Cache::forget(SlideshowBuilderApiController::key(
-				sprintf(SlideshowBuilderApiController::CATEGORY_SUBKEY, $category->id)
+					sprintf(SlideshowBuilderApiController::CATEGORY_SUBKEY, $category->id)
 			));
 		}
 

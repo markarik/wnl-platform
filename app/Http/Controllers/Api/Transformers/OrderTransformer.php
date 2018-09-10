@@ -68,4 +68,14 @@ class OrderTransformer extends ApiTransformer
 
 		return $this->collection($invoices, new InvoiceTransformer($meta), 'invoices');
 	}
+
+	public function includePayments(Order $order)
+	{
+		$payments = $order->payments;
+		$meta = [
+			'order_id' => $order->id
+		];
+
+		return $this->collection($payments, new PaymentTransformer($meta), 'payments');
+	}
 }

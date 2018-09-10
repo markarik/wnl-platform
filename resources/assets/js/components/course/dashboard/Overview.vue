@@ -1,5 +1,21 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
+		<!-- Sticky news -->
+		<div class="notification is-info aligncenter">
+			<span class="strong">
+				Pomóż w spisywaniu pytań z LEK-u!
+			</span>
+
+			Kilknij w link, wylosuj numer pytania i spisz je dla potomności!
+
+			<div class="margin top">
+				<a href="https://goo.gl/forms/aLv3eRJRNKpya8ey1" target="_blank">
+					DOŁĄCZ DO SPISYWANIA PYTAŃ
+				</a>
+				❤️
+			</div>
+		</div>
+
 		<!-- Dashboard news -->
 		<wnl-dashboard-news/>
 

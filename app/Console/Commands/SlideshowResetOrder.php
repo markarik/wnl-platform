@@ -54,8 +54,6 @@ class SlideshowResetOrder extends Command
 			$presentable->save();
 		}
 
-		\Cache::tags(json_encode(['where' => $whereClause]))->flush();
-
 		return;
 	}
 }

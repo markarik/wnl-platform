@@ -69,7 +69,7 @@ class MigrateUserSubscription extends Command
 				);
 			}
 
-			Cache::tags("user-{$user->id}")->flush();
+			\Cache::forget(EditionsApiController::key($user->id));
 		}
 	}
 }

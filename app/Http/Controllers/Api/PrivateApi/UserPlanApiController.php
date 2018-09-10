@@ -70,7 +70,6 @@ class UserPlanApiController extends ApiController
 		\DB::table('users_plan_progress')->insert($valuesToInsert->toArray());
 
 		$this->deleteProgress($recentPlan);
-		\Cache::tags("user-{$userId}")->flush();
 
 		$resource = new Item($createdPlan, new UserPlanTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();

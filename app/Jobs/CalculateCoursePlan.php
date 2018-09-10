@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\UserLesson;
 use Carbon\Carbon;
@@ -64,7 +65,7 @@ class CalculateCoursePlan
 
 		DB::commit();
 
-		\Cache::tags("user-{$this->user->id}")->flush();
+		\Cache::forget(EditionsApiController::key($this->user->id));
 
 		return $plan;
 	}

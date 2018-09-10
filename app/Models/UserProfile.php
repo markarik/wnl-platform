@@ -2,18 +2,13 @@
 
 namespace App\Models;
 
-use App\Events\Users\UserDataUpdated;
-use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
+use Lib\Bethink\Bethink;
 use ScoutEngines\Elasticsearch\Searchable;
 
 class UserProfile extends Model
 {
 	use Searchable;
-
-	protected $dispatchesEvents = [
-		'updated' => UserDataUpdated::class,
-	];
 
 	protected $fillable = [
 		'first_name',
@@ -48,7 +43,7 @@ class UserProfile extends Model
 
 	public function getAvatarUrlAttribute()
 	{
-		return Bethink::getAssetPublicUrl($this->avatar) ?? null;
+		return (new Bethink)->getAssetPublicUrl($this->avatar) ?? null;
 	}
 
 	public function getFullNameAttribute()

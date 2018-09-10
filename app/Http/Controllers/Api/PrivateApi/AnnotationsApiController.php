@@ -47,8 +47,6 @@ class AnnotationsApiController extends ApiController
 		$annotation->keywords()->delete();
 		$annotation->keywords()->saveMany($keywords);
 
-		Cache::tags($this->resourceName)->flush();
-
 		return $this->transformAndRespond($annotation);
 	}
 
@@ -75,8 +73,6 @@ class AnnotationsApiController extends ApiController
 
 		$annotation->save();
 		$annotation->searchable();
-
-		Cache::tags($this->resourceName)->flush();
 
 		return $this->transformAndRespond($annotation);
 	}

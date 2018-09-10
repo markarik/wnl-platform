@@ -37,11 +37,8 @@ class Kernel extends ConsoleKernel
 			->dailyAt('00:30')
 			->after(function () use ($schedule) {
 				Artisan::call('cache:clear', [
-					'--tags' => 'api,slides,search',
+					'--tags' => 'editions',
 				]);
-			})
-			->after(function () use ($schedule) {
-				Artisan::call('cache:warmup');
 			});
 
 		$schedule

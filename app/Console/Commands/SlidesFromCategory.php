@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\PrivateApi\SlideshowBuilderApiController;
 use App\Models\Category;
 use App\Models\Lesson;
 use App\Models\Slide;
 use App\Models\Tag;
+use Cache;
 use Illuminate\Console\Command;
 
 class SlidesFromCategory extends Command
@@ -108,5 +110,11 @@ class SlidesFromCategory extends Command
 				}
 			}
 		}
+
+		$cacheKey = SlideshowBuilderApiController::key(
+			sprintf(SlideshowBuilderApiController::CATEGORY_SUBKEY, $category->id)
+		);
+
+		Cache::forget($cacheKey);
 	}
 }

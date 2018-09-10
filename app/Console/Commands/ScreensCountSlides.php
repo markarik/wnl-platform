@@ -77,10 +77,20 @@ class ScreensCountSlides extends Command
 				->get(['slide_id']);
 
 			$firstSlideId = $sectionSlides->first()->slide_id;
-			$orderNo = $screenPresentables
-				->where('slide_id', $firstSlideId)
-				->first()
-				->order_number;
+
+			try {
+				$orderNo = $screenPresentables
+					->where('slide_id', $firstSlideId)
+					->first()
+					->order_number;
+			}
+			catch (\Exception $e) {
+				\Log::error("Whooops, section {$section->id} has slide" .
+					"{$firstSlideId}, but it is not present in the section's" .
+					" parent slideshow... that may be an issue.");
+				continue;
+			}
+
 			$section->first_slide = $orderNo;
 			$section->slides_count = $sectionSlides->count();
 			$section->save();

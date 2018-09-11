@@ -52,7 +52,7 @@
 						<wnl-emoji name="wink"/>
 						<p class="small margin vertical has-text-centered">
 							Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)"
-																		   target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
+																			 target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
 						</p>
 					</div>
 					<!-- <a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a> -->
@@ -127,11 +127,11 @@
 				</div>
 				<div class="voucher-code" v-if="couponInputVisible">
 					<wnl-form class="margin vertical"
-							  name="CouponCode"
-							  method="put"
-							  :resourceRoute="couponUrl"
-							  hideDefaultSubmit="true"
-							  @submitSuccess="couponSubmitSuccess">
+								name="CouponCode"
+								method="put"
+								:resourceRoute="couponUrl"
+								hideDefaultSubmit="true"
+								@submitSuccess="couponSubmitSuccess">
 						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 						<wnl-submit>Wykorzystaj kod</wnl-submit>
 					</wnl-form>
@@ -147,6 +147,13 @@
 				<div v-if="order.payments.length" class="payments">
 					<span class="invoices__title">Historia Płatności</span>
 					<button class="button" @click="retryPayment">Powtórz płatność</button>
+					<wnl-p24-form
+						:user-data="userData"
+						:payment-data="paymentData"
+						:productName="order.product.name"
+						ref="p24Form"
+					>
+					</wnl-p24-form>
 					<ul>
 						<li v-for="payment in order.payments" :key="payment.id" class="invoices__link">
 							<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
@@ -236,7 +243,9 @@
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 	import {Form, Text, Submit} from 'js/components/global/form'
+	import P24Form from 'js/components/user/P24Form'
 	import { swalConfig } from 'js/utils/swal'
+	import {nextTick} from 'vue'
 
 	export default {
 		name: 'Order',
@@ -245,6 +254,7 @@
 			'wnl-form': Form,
 			'wnl-form-text': Text,
 			'wnl-submit': Submit,
+			'wnl-p24-form': P24Form
 		},
 		data() {
 			return {
@@ -256,7 +266,9 @@
 				},
 				code: '',
 				couponInputVisible: false,
-				order: this.orderInstance
+				order: this.orderInstance,
+				paymentData: {},
+				userData: {},
 			}
 		},
 		computed: {
@@ -441,50 +453,12 @@
 					axios.post(getApiUrl('payments'), {order_id: this.order.id}),
 					axios.get(getApiUrl('users/current/address'))
 				]);
+				this.paymentData = paymentData;
+				this.userData = userData;
 
-				console.log(this.currentUser);
-				console.log(userData);
-				const formData = new FormData()
-				/**
-				 * <input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
-				 <input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
-				 <input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
-				 <input type="hidden" name="p24_amount" value="{{ (int)$order->total_with_coupon * 100 }}"/>
-				 <input type="hidden" name="p24_currency" value="PLN"/>
-				 <input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
-				 <input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
-				 <input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
-				 <input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
-				 <input type="hidden" name="p24_city" value="{{ $user->userAddress->city }}"/>
-				 <input type="hidden" name="p24_country" value="PL"/>
-				 <input type="hidden" name="p24_email" value="{{ $user->email }}"/>
-				 <input type="hidden" name="p24_language" value="pl"/>
-				 <input type="hidden" name="p24_url_return" value="{{ url('app/myself/orders?payment') }}"/>
-				 <input type="hidden" name="p24_url_status" value="{{ route('payment-status-hook')  }} "/>
-				 <input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
-				 <input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
-				 */
-				formData.set('p24_session_id', paymentData.session_id)
-				formData.set('p24_pos_id', paymentData.merchant_id)
-				formData.set('p24_merchant_id', paymentData.merchant_id)
-				formData.set('p24_amount', paymentData.amount)
-				formData.set('p24_currency', 'PLN')
-				formData.set('p24_description', this.order.product.name)
-				formData.set('p24_client', this.currentUser.full_name)
-
-				/**
-					<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
-					<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
-					<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
-					<input type="hidden" name="p24_city" value="{{ $user->userAddress->city }}"/>
-					<input type="hidden" name="p24_country" value="PL"/>
-					<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
-					<input type="hidden" name="p24_language" value="pl"/>
-					<input type="hidden" name="p24_url_return" value="{{ url('app/myself/orders?payment') }}"/>
-					<input type="hidden" name="p24_url_status" value="{{ route('payment-status-hook')  }} "/>
-					<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
-					<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
-				 */
+				nextTick(() => {
+					this.$refs.p24Form.$el.submit();
+				})
 			}
 		},
 		mounted() {

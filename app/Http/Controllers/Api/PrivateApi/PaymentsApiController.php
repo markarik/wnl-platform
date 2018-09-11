@@ -5,6 +5,7 @@ use App\Http\Requests\Payment\PostPayment;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Auth;
 use Lib\Przelewy24\Client as P24Client;
 
 class PaymentsApiController extends ApiController
@@ -17,6 +18,7 @@ class PaymentsApiController extends ApiController
 
 	public function post(PostPayment $paymentRequest)
 	{
+		$user = Auth::user();
 		$orderId = $paymentRequest->order_id;
 		$order = Order::find($orderId);
 		if (empty($order)) {
@@ -45,7 +47,9 @@ class PaymentsApiController extends ApiController
 				(int)$order->total_with_coupon * 100
 			),
 			'session_id' => $paymentSessionId,
-			'amount' => $amount
+			'amount' => $amount,
+			'user_email' => $user->email,
+			'transaction_url' => config('przelewy24.transaction_url'),
 		]);
 	}
 }

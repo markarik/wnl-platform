@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Models\Order;
-use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -66,9 +65,9 @@ class ConfirmOrderController extends Controller
 
 		$externalId = $request->get('p24_order_id');
 
-		$paymentLog = \App\Models\Payment::create();
 		$order = Order::where(['session_id' => $request->get('p24_session_id')])->first();
-		$order->associate($paymentLog);
+		$paymentLog = $order->payments()->recent();
+		$paymentLog->external_id = $externalId;
 
 		if ($transactionValid) {
 			$order->paid = true;
@@ -77,7 +76,6 @@ class ConfirmOrderController extends Controller
 			$order->transfer_title = $request->get('p24_statement');
 			$order->save();
 
-			$paymentLog->external_id = $externalId;
 			$paymentLog->status = 'success';
 		} else {
 			$paymentLog->status = 'error';

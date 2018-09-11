@@ -66,6 +66,10 @@ class Kernel extends ConsoleKernel
 			->twiceDaily(8, 20);
 
 		$schedule
+			->command('payments:markFailed')
+			->hourly();
+
+		$schedule
 			->command('notifications:cleanup-old --force')
 			->dailyAt('02:45');
 

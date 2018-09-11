@@ -20,8 +20,9 @@ class CreatePaymentsTable extends Migration
 				'success',
 				'error'
 			]);
-			$table->unsignedInteger('external_id');
+			$table->unsignedInteger('external_id')->nullable();
 			$table->unsignedInteger('order_id')->index();
+			$table->string('session_id')->unique()->nullable();
 			$table->timestamps();
 		});
 	}

@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\ApiTransformer;
 class OrderTransformer extends ApiTransformer
 {
 
-	protected $availableIncludes = ['invoices'];
+	protected $availableIncludes = ['invoices', 'payments'];
 
 	public function transform(Order $order)
 	{

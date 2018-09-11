@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ajax;
 
 use App\Models\Order;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -28,6 +29,12 @@ class PaymentAjaxController extends Controller
 
 		$order->method = $method;
 		$order->save();
+
+		Payment::create([
+			'order_id' => $order->id,
+			'status' => 'in-progress',
+			'session_id' => $sessionId
+		]);
 
 		return response()->json(['status' => 'success']);
 	}

@@ -52,9 +52,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
-		// Invoices
-		Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
-
 		// Certificates
 		Route::get("{$r['certificates']}/participation", 'CertificatesApiController@getAvailableCertificates');
 		Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
@@ -214,6 +211,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
 	Route::get("{$r['orders']}/{id}/.cancel", 'OrdersApiController@cancel');
+
+	// Invoices
+	Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
+
+	// Payments
+	Route::post("{$r['payments']}", 'PaymentsApiController@post');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');

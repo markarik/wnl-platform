@@ -61,6 +61,9 @@
 					sprawdzam zegarek...
 				</div>
 			</div>
+			<div class="notification has-text-centered strong">
+				<a href="https://wiecejnizlek.pl/zostaw-e-mail">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!
+			</div>
 		@endif
 		<div class="columns">
 			<div class="column">

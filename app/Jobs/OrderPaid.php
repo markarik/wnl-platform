@@ -42,7 +42,6 @@ class OrderPaid implements ShouldQueue
 		$this->handleUserLessons();
 		$this->handleCoupon();
 		$this->sendConfirmation();
-		$this->handleStudyBuddy();
 		$this->handleInstalments();
 
 
@@ -71,12 +70,6 @@ class OrderPaid implements ShouldQueue
 		$invoice = $this->getInvoice($order);
 
 		Mail::to($order->user)->send(new PaymentConfirmation($order, $invoice));
-	}
-
-	protected function handleStudyBuddy()
-	{
-		\Log::notice("OrderPaid: handleStudyBuddy called for order #{$this->order->id}");
-		dispatch(new OrderStudyBuddy($this->order));
 	}
 
 	protected function getInvoice($order)

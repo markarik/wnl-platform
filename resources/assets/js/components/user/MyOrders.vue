@@ -63,7 +63,6 @@
 
 							const {included = {}, ...orders} = response.data
 							const {invoices, payments} = included
-							console.log(payments)
 
 							this.orders = _.reverse(Object.values(orders)
 								.filter(this.isConfirmed))

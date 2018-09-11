@@ -146,14 +146,15 @@
 				</div>
 				<div v-if="order.payments.length" class="payments">
 					<span class="invoices__title">Historia Płatności</span>
-					<button class="button" @click="retryPayment">Powtórz płatność</button>
-					<wnl-p24-form
-						:user-data="userData"
-						:payment-data="paymentData"
-						:productName="order.product.name"
-						ref="p24Form"
-					>
-					</wnl-p24-form>
+					<template>
+						<button class="button" @click="retryPayment" v-if="canRetryPayment">Powtórz płatność</button>
+						<wnl-p24-form
+							:user-data="userData"
+							:payment-data="paymentData"
+							:productName="order.product.name"
+							ref="p24Form"
+						/>
+					</template>
 					<ul>
 						<li v-for="payment in order.payments" :key="payment.id" class="invoices__link">
 							<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
@@ -273,18 +274,15 @@
 		},
 		computed: {
 			...mapGetters(['isAdmin', 'currentUser']),
+			canRetryPayment() {
+				return !this.order.payments.find(payment => ['status', 'in-progress'].includes(payment.status))
+			},
 			coupon() {
 				return this.order.coupon
-			},
-			loaderSrc() {
-				return getImageUrl('loader.svg')
 			},
 			logoUrl() {
 				// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
 				return getImageUrl('wnl-logo-square@2x.png')
-			},
-			isPaid() {
-				return this.order.paid
 			},
 			isFullyPaid() {
 				return this.order.paid_amount >= this.order.total

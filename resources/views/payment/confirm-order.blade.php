@@ -106,7 +106,7 @@
 							<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
 							<input type="hidden" name="p24_language" value="pl"/>
 							<input type="hidden" name="p24_url_return" value="{{ url('app/myself/orders?payment') }}"/>
-							<input type="hidden" name="p24_url_status" value="{{ route('payment-status-hook')  }} "/>
+							<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url')  }} "/>
 							<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
 							<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
 						</form>

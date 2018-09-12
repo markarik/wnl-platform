@@ -30,12 +30,15 @@ class PaymentAjaxController extends Controller
 		$order->method = $method;
 		$order->save();
 
-		// TODO this payment probably should have some amount - from where should I fetch it?
-		Payment::create([
-			'order_id' => $order->id,
-			'status' => 'in-progress',
-			'session_id' => $sessionId
-		]);
+		// user can click submit button more than once, the new payment shouldn't be created in such case
+		if (!Payment::where('session_id', $sessionId)->count()) {
+			// TODO this payment probably should have some amount - from where should I fetch it?
+			Payment::create([
+				'order_id' => $order->id,
+				'status' => 'in-progress',
+				'session_id' => $sessionId
+			]);
+		}
 
 		return response()->json(['status' => 'success']);
 	}

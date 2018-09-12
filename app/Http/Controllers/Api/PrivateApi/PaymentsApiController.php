@@ -27,13 +27,14 @@ class PaymentsApiController extends ApiController
 
 		$paymentSessionId = str_random(32);
 		//TODO this should handled differently to support instalments
-		$amount = (int)$order->total_with_coupon * 100;
+		$amountFromOrder = $order->total_with_coupon;
+		$amount = $amountFromOrder * 100;
 
 		Payment::create([
 			'order_id' => $orderId,
 			'status' => 'in-progress',
 			'session_id' => $paymentSessionId,
-			'amount' => $amount
+			'amount' => $amountFromOrder
 		]);
 
 		return $this->json([

@@ -37,6 +37,7 @@ $(function () {
 	});
 
 	$('button.p24-submit').click(function () {
+		$('button.p24-submit').addClass('is-loading');
 		$.ajax({
 			data: {
 				controller: 'PaymentAjaxController',
@@ -45,7 +46,8 @@ $(function () {
 				sess_id: $('[name="p24_session_id"]').val()
 			},
 			success: function (response) {
-				if (response.status == 'success') {
+				$('button.p24-submit').removeClass('is-loading');
+				if (response.status === 'success') {
 					$('.p24_form').submit();
 				}
 			}

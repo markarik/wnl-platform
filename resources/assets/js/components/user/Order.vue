@@ -145,9 +145,9 @@
 					</ul>
 				</div>
 				<div v-if="order.payments.length" class="payments">
-					<span class="invoices__title">Historia Płatności</span>
-					<template>
-						<button class="button" @click="retryPayment" v-if="canRetryPayment">Powtórz płatność</button>
+					<span class="payments__title">Historia Płatności</span>
+					<template v-if="canRetryPayment">
+						<a class="payments__retry-link" @click="retryPayment">Powtórz Płatność</a>
 						<wnl-p24-form
 							:user-data="userData"
 							:payment-data="paymentData"
@@ -155,8 +155,8 @@
 							ref="p24Form"
 						/>
 					</template>
-					<ul>
-						<li v-for="payment in order.payments" :key="payment.id" class="invoices__link">
+					<ul class="payments__list">
+						<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
 							<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
 						</li>
 					</ul>
@@ -228,6 +228,15 @@
 		&__link
 			cursor: pointer
 
+	.payments
+		display: flex
+		flex-wrap: wrap
+
+		&__list
+			flex-basis: 100%
+
+		&__title
+			flex: 1 0 auto
 	.payment
 		&--in-progress
 			color: $warning
@@ -278,7 +287,7 @@
 				if (!_.get(this.order, 'payments.length', 0)) {
 					return !this.order.paid;
 				}
-				return !this.order.payments.find(payment => ['success', 'in-progress'].includes(payment.status))
+				return !this.order.payments.find(payment => payment.status === 'success')
 			},
 			coupon() {
 				return this.order.coupon
@@ -292,6 +301,9 @@
 			},
 			isPending() {
 				// show loader only if there is an online payment waiting for confirmation
+
+				if (this.order.canceled) return false;
+
 				const payments = _.get(this.order, 'payments', [])
 				if (payments.find(payment => payment.status === 'in-progress')) return true;
 

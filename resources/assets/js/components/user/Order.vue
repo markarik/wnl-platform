@@ -275,6 +275,9 @@
 		computed: {
 			...mapGetters(['isAdmin', 'currentUser']),
 			canRetryPayment() {
+				if (!_.get(this.order, 'payments.length', 0)) {
+					return !this.order.paid;
+				}
 				return !this.order.payments.find(payment => ['success', 'in-progress'].includes(payment.status))
 			},
 			coupon() {
@@ -289,7 +292,8 @@
 			},
 			isPending() {
 				// show loader only if there is an online payment waiting for confirmation
-				if (this.order.payments.find(payment => payment.status === 'in-progress')) return true;
+				const payments = _.get(this.order, 'payments', [])
+				if (payments.find(payment => payment.status === 'in-progress')) return true;
 
 				return !this.order.paid && this.order.method === 'online';
 			},

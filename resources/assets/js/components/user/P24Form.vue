@@ -17,6 +17,7 @@
 		<input type="hidden" name="p24_url_status" :value="paymentData.url_status"/>
 		<input type="hidden" name="p24_api_version" :value="paymentData.api_version"/>
 		<input type="hidden" name="p24_sign" :value="paymentData.checksum"/>
+		<input type="hidden" name="p24_encoding" value="UTF-8"/>
 		<slot></slot>
 	</form>
 </template>

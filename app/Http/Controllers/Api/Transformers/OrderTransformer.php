@@ -71,7 +71,7 @@ class OrderTransformer extends ApiTransformer
 
 	public function includePayments(Order $order)
 	{
-		$payments = $order->payments;
+		$payments = $order->payments()->orderBy('created_at', 'desc')->get();
 		$meta = [
 			'order_id' => $order->id
 		];

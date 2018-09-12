@@ -18,6 +18,7 @@ class PaymentAjaxController extends Controller
 
 	public function setPaymentMethod()
 	{
+		\Log::debug('CALLING SET PAYMENT METHOD.....');
 		$sessionId = $this->request->get('sess_id');
 		$method = $this->request->get('payment');
 

@@ -64,14 +64,17 @@ class ConfirmOrderController extends Controller
 		);
 
 		$externalId = $request->get('p24_order_id');
+		$paidAmount = $request->get('p24_amount') / 100;
 
-		$paymentLog = \App\Models\Payment::where(['session_id', $request->get('p24_session_id')])->first();
-		$order = $paymentLog->order;
+		$paymentLog = \App\Models\Payment::where('session_id', $request->get('p24_session_id'))->first();
 		$paymentLog->external_id = $externalId;
+		$paymentLog->amount = $paidAmount;
+		$order = $paymentLog->order;
 
 		if ($transactionValid) {
 			$order->paid = true;
-			$order->paid_amount = $request->get('p24_amount') / 100;
+			// TODO this has to be changed to handle partial order payment via instalments
+			$order->paid_amount = $paidAmount;
 			$order->external_id = $externalId;
 			$order->transfer_title = $request->get('p24_statement');
 			$order->save();

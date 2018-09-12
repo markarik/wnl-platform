@@ -275,7 +275,7 @@
 		computed: {
 			...mapGetters(['isAdmin', 'currentUser']),
 			canRetryPayment() {
-				return !this.order.payments.find(payment => ['status', 'in-progress'].includes(payment.status))
+				return !this.order.payments.find(payment => ['success', 'in-progress'].includes(payment.status))
 			},
 			coupon() {
 				return this.order.coupon
@@ -289,10 +289,12 @@
 			},
 			isPending() {
 				// show loader only if there is an online payment waiting for confirmation
+				if (this.order.payments.find(payment => payment.status === 'in-progress')) return true;
+
 				return !this.order.paid && this.order.method === 'online';
 			},
 			iconClass() {
-				if (!this.order.paid && this.order.method === 'online') {
+				if (this.isPending) {
 					// Loader
 					return 'fa-circle-o-notch fa-spin'
 				} else if (this.order.paid) {
@@ -306,7 +308,7 @@
 						this.order.method === 'instalments')
 			},
 			paymentStatus() {
-				if (this.order.paid) {
+				if (this.order.paid && !this.isPending) {
 					if (this.order.total == this.order.paid_amount) {
 						return `Zapłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
 					} else if (this.order.paid_amount > this.order.total) {
@@ -396,11 +398,18 @@
 				}
 			},
 			checkStatus() {
-				axios.get(getApiUrl(`orders/${this.order.id}`))
+				axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
 						.then((response) => {
-							if (response.data.paid) {
+							const {included = {}, ...order} = response.data
+							const {payments = {}} = included;
+							const paymentsList = Object.values(payments);
+							const hasInProgressPayment = _.isEmpty(paymentsList) || paymentsList.find(
+								payment => payment.status === 'in-progress'
+							);
+							if (order.paid && !hasInProgressPayment) {
 								this.order.paid        = true
-								this.order.paid_amount = response.data.paid_amount
+								this.order.paid_amount = order.paid_amount
+								this.order.payments = (order.payments || []).map(paymentId => payments[paymentId])
 							} else {
 								setTimeout(this.checkStatus, 5000)
 							}

@@ -22,7 +22,7 @@ $(function () {
 		if (recipientInput.val() === '') {
 			recipientInput.val(`${firstNameInput.val()} ${lastNameInput.val()}`)
 		}
-	})
+	});
 
 	window.setInterval(function() {
 		countdown.html(getTimeLeft(theDate));
@@ -37,6 +37,10 @@ $(function () {
 	});
 
 	$('button.p24-submit').click(function () {
+        let formId = $(this).data('id');
+
+        $(this).addClass('is-loading');
+
 		$.ajax({
 			data: {
 				controller: 'PaymentAjaxController',
@@ -45,8 +49,8 @@ $(function () {
 				sess_id: $('[name="p24_session_id"]').val()
 			},
 			success: function (response) {
-				if (response.status == 'success') {
-					$('.p24_form').submit();
+				if (response.status === 'success') {
+					$(`#${formId}`).submit();
 				}
 			}
 		});

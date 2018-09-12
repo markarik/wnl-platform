@@ -65,8 +65,8 @@ class ConfirmOrderController extends Controller
 
 		$externalId = $request->get('p24_order_id');
 
-		$order = Order::where(['session_id' => $request->get('p24_session_id')])->first();
-		$paymentLog = $order->payments()->recent();
+		$paymentLog = \App\Models\Payment::where(['session_id', $request->get('p24_session_id')])->first();
+		$order = $paymentLog->order;
 		$paymentLog->external_id = $externalId;
 
 		if ($transactionValid) {

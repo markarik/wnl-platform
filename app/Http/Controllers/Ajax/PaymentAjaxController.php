@@ -30,6 +30,7 @@ class PaymentAjaxController extends Controller
 		$order->method = $method;
 		$order->save();
 
+		// TODO this payment probably should have some amount - from where should I fetch it?
 		Payment::create([
 			'order_id' => $order->id,
 			'status' => 'in-progress',

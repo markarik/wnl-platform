@@ -27,23 +27,21 @@ class PaymentsApiController extends ApiController
 
 		$paymentSessionId = str_random(32);
 		//TODO this should handled differently to support instalments
-		// TODO each payment should have it's own amount
 		$amount = (int)$order->total_with_coupon * 100;
 
 		Payment::create([
 			'order_id' => $orderId,
 			'status' => 'in-progress',
-			'session_id' => $paymentSessionId
+			'session_id' => $paymentSessionId,
+			'amount' => $amount
 		]);
 
-		// TODO consider returning payment object along with p24 data
 		return $this->json([
 			'merchant_id' => config('przelewy24.merchant_id'),
 			'url_status' => config('przelewy24.status_url'),
 			'api_version' => config('przelewy24.api_version'),
 			'checksum' => P24Client::generateChecksum(
 				$paymentSessionId,
-				//TODO this should handled differently to support instalments
 				$amount
 			),
 			'session_id' => $paymentSessionId,

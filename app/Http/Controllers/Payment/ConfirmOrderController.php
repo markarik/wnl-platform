@@ -31,11 +31,16 @@ class ConfirmOrderController extends Controller
 			->first()
 			->isAvailable() ? $order->instalments['instalments'] : false;
 
+		$instalmentsChecksum = $payment::generateChecksum(
+			$order->session_id, (int)$instalments[0]['amount'] * 100
+		);
+
 		return view('payment.confirm-order', [
-			'order'       => $order,
-			'user'        => $user,
-			'checksum'    => $checksum,
+			'order' => $order,
+			'user' => $user,
+			'checksum' => $checksum,
 			'instalments' => $instalments,
+			'instalmentsChecksum' => $instalmentsChecksum,
 		]);
 	}
 
@@ -83,5 +88,4 @@ class ConfirmOrderController extends Controller
 		}
 		$paymentLog->save();
 	}
-
 }

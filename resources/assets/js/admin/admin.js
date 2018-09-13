@@ -5,11 +5,14 @@ import Vue from 'vue'
 import {sync} from 'vuex-router-sync'
 import store from 'js/admin/store/store'
 import router from 'js/admin/router'
+import WnlAxios from "js/plugins/axios";
+
 sync(store, router)
 
 // Import plugins
 import VueSweetAlert from 'vue-sweetalert'
 Vue.use(VueSweetAlert)
+Vue.use(WnlAxios, {store, router})
 
 // Import and register global components
 import Alert from 'js/components/global/Alert.vue'

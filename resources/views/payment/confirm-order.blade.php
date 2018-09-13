@@ -176,5 +176,5 @@
 @endsection
 
 @section('scripts')
-	<script>fbq('track', 'InitiateCheckout')</script>
+	<script>typeof fbq === 'function' && fbq('track', 'InitiateCheckout')</script>
 @endsection

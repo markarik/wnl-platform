@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
 use App\Models\Order;
+use App\Models\User;
 use App\Models\UserLesson;
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
@@ -40,10 +42,11 @@ class OrderPaid implements ShouldQueue
 		$this->handleUserLessons();
 		$this->handleCoupon();
 		$this->sendConfirmation();
-		$this->handleStudyBuddy();
 		$this->handleInstalments();
 
-		\Cache::tags("user-{$this->order->user->id}")->flush();
+
+		\Cache::forget(EditionsApiController::key($this->order->user->id));
+		\Cache::forget(User::getSubscriptionKey($this->order->user->id));
 	}
 
 	protected function handleCoupon()
@@ -67,12 +70,6 @@ class OrderPaid implements ShouldQueue
 		$invoice = $this->getInvoice($order);
 
 		Mail::to($order->user)->send(new PaymentConfirmation($order, $invoice));
-	}
-
-	protected function handleStudyBuddy()
-	{
-		\Log::notice("OrderPaid: handleStudyBuddy called for order #{$this->order->id}");
-		dispatch(new OrderStudyBuddy($this->order));
 	}
 
 	protected function getInvoice($order)

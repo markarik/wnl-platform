@@ -66,7 +66,6 @@ class Kernel extends HttpKernel
 		'throttle'     => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 		'payment'      => \App\Http\Middleware\RedirectIfPaid::class,
 		'api-auth'     => \App\Http\Middleware\ApiAuth::class,
-		'api-cache'    => \App\Http\Middleware\ApiCache::class,
 		'subscription' => \App\Http\Middleware\Subscription::class,
 		'terms'        => \App\Http\Middleware\TermsOfUse::class,
 		'account-status' => \App\Http\Middleware\AccountStatus::class,

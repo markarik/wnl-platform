@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\PrivateApi\SlideshowBuilderApiController;
 use App\Models\Presentable;
 use App\Models\Screen;
 use App\Models\Section;
@@ -60,7 +61,6 @@ class ReorderSections extends Command
 			$section->save();
 		}
 
-
 		foreach ($slidesToRemove as $screenId => $slides) {
 			$this->removeSlidesFromScreenSlideshow($screenId, $slides);
 		}
@@ -73,6 +73,10 @@ class ReorderSections extends Command
 		$this->setSlidesOrderNumber($passedScreenPresentables, $sortedSlides);
 
 		$this->call('screens:countSlides');
+
+		\Cache::forget(SlideshowBuilderApiController::key(
+			sprintf(SlideshowBuilderApiController::SLIDESHOW_SUBKEY, $screen->slideshow->id)
+		));
 	}
 
 	private function removeSlidesFromScreenSlideshow($screenId, $slides) {
@@ -84,6 +88,10 @@ class ReorderSections extends Command
 			->whereIn('taggable_id', $slides->pluck('id')->toArray())
 			->whereIn('tag_id', $screenTags)
 			->delete();
+
+		\Cache::forget(SlideshowBuilderApiController::key(
+			sprintf(SlideshowBuilderApiController::SLIDESHOW_SUBKEY, $screen->slideshow->id)
+		));
 	}
 
 	private function addSlidesToScreenSlideshow($screen, $slides) {

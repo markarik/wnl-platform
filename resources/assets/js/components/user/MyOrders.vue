@@ -57,7 +57,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserSubscriptionDates', 'currentUser']),
+			...mapGetters(['currentUserSubscriptionDates']),
 			paymentUrl() {
 				return getUrl('payment/select-product')
 			},

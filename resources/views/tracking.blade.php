@@ -1,4 +1,4 @@
-@if (app()->environment('dev'))
+@if (app()->environment('production'))
 	<script>
 		(function (i, s, o, g, r, a, m) {
 			i['GoogleAnalyticsObject'] = r;

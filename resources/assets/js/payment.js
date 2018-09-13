@@ -38,14 +38,14 @@ $(function () {
 
 	$('button.p24-submit').click(function () {
         let formId = $(this).data('id');
-
+        let payment = $(this).data('payment');
         $(this).addClass('is-loading');
 
 		$.ajax({
 			data: {
 				controller: 'PaymentAjaxController',
 				method: 'setPaymentMethod',
-				payment: 'online',
+				payment: payment,
 				sess_id: $('[name="p24_session_id"]').val()
 			},
 			success: function (response) {

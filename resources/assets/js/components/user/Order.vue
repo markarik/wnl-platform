@@ -94,10 +94,11 @@
 								<td>{{ order.total }}zł</td>
 							</tr>
 						</table>
-						<p class="next-payment margin bottom">
-							Kolejna wpłata: <strong>{{ order.instalments.nextPayment.amount }}zł do
-							{{ instalmentDate(order.instalments.nextPayment.date) }}</strong>
-						</p>
+						<div class="next-payment margin bottom">
+							<p>Kolejna wpłata: <strong>{{ order.instalments.nextPayment.amount }}zł do
+								{{ instalmentDate(order.instalments.nextPayment.date) }}</strong></p>
+							<button class="button pay-next-instalment is-inline">Zapłać kolejną ratę</button>
+						</div>
 					</div>
 				</div>
 
@@ -244,6 +245,12 @@
 			color: $danger
 		&--success
 			color: $success
+
+	.next-payment
+		display: flex
+		flex-direction: row
+		justify-content: space-between
+
 </style>
 
 <script>

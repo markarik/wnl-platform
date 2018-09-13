@@ -63,7 +63,7 @@
 			</p>
 		</section>
 
-		@if($order->coupon && $order->total_with_coupon == 0)
+		@if($order->coupon && $order->total_with_coupon === 0)
 			<section class="subsection has-text-centered margin top">
 				<p class="subtitle">
 					@lang('payment.confirm-order-free')
@@ -85,7 +85,7 @@
 					 <div class="column">
 						<form action="{{route('payment-confirm-order-post')}}" method="post">
 							{!! csrf_field() !!}
-							<input type="hidden" name="method" value="transfer"/>
+							<input type="hidden" name="method" value="online"/>
 
 							<button type="submit" class="button">@lang('payment.confirm-method-bank-transfer-button')</button>
 						</form>
@@ -110,7 +110,8 @@
 							<input type="hidden" name="p24_api_version" value="{{ config('przelewy24.api_version') }}"/>
 							<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
 						</form>
-						<button class="button is-primary p24-submit" data-id="full_payment_p24_form">@lang('payment.confirm-method-online-payment-button')</button>
+						<button class="button is-primary p24-submit" data-id="full_payment_p24_form"
+						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
 					</div>
 				</div>
 			</section>
@@ -174,7 +175,8 @@
 									<input type="hidden" name="p24_api_version" value="{{ config('przelewy24.api_version') }}"/>
 									<input type="hidden" name="p24_sign" value="{{ $instalmentsChecksum }}"/>
 								</form>
-								<button class="button is-primary p24-submit" data-id="instalments_p24_form">@lang('payment.confirm-method-instalments-online-button')</button>
+								<button class="button is-primary p24-submit" data-id="instalments_p24_form"
+								 data-payment="instalments">@lang('payment.confirm-method-instalments-online-button')</button>
 							</div>
 
 							<form action="{{route('payment-confirm-order-post')}}" method="post">

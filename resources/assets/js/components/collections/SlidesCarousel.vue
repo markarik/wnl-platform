@@ -335,8 +335,7 @@
 			},
 			_fetchBookmarkedSlideshow() {
 				const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
-
-                return axios.post(getApiUrl(`slideshow_builder/category/${this.categoryId}/.searchBySlides`), { slidesIds })
+				return axios.post(getApiUrl(`slideshow_builder/category/${this.categoryId}/.searchBySlides`), { slidesIds })
 			},
 			_fetchAllSlideshow() {
 				return axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))

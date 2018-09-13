@@ -82,7 +82,17 @@
 			},
 		},
 		mounted() {
-			this.getOrders()
+			this.getOrders();
+		},
+		created() {
+			if (this.$route.query.hasOwnProperty('payment')) {
+				const {payment, ...query} = this.$route.query;
+				fbq('track', 'Purchase', {value: '0.00', currency: 'PLN'});
+				this.$router.push({
+					...this.$route,
+					query
+				})
+			}
 		},
 		components: {
 			'wnl-order': Order,

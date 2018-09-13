@@ -172,5 +172,8 @@
 		</div>
 	</div>
 </section>
+@endsection
 
+@section('scripts')
+	<script>fbq('track', 'AddToCart')</script>
 @endsection

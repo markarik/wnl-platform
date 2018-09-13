@@ -174,3 +174,7 @@
 		@endif
 	</div>
 @endsection
+
+@section('scripts')
+	<script>fbq('track', 'InitiateCheckout')</script>
+@endsection

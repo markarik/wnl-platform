@@ -256,13 +256,14 @@
 <script>
 	import moment from 'moment'
 	import axios from 'axios'
-	import {mapActions, mapGetters} from 'vuex'
+	import {mapActions, mapGetters, mapMutations} from 'vuex'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 	import {Form, Text, Submit} from 'js/components/global/form'
 	import P24Form from 'js/components/user/P24Form'
 	import { swalConfig } from 'js/utils/swal'
 	import {nextTick} from 'vue'
+	import * as types from 'js/store/mutations-types'
 
 	export default {
 		name: 'Order',
@@ -375,6 +376,9 @@
 			}
 		},
 		methods: {
+			...mapMutations({
+					'setSubscription': types.USERS_SET_SUBSCRIPTION
+			}),
 			...mapActions(['addAutoDismissableAlert']),
 
 			async downloadInvoice(invoice) {
@@ -434,6 +438,11 @@
 								this.order.paid        = true
 								this.order.paid_amount = order.paid_amount
 								this.order.payments = (order.payments || []).map(paymentId => payments[paymentId])
+
+								axios.get(getApiUrl('user_subscription/current'))
+									.then(response => {
+											this.setSubscription(response.data)
+									});
 							} else {
 								setTimeout(this.checkStatus, 5000)
 							}

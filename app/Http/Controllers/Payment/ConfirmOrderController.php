@@ -32,11 +32,15 @@ class ConfirmOrderController extends Controller
 			->first()
 			->isAvailable() ? $order->instalments['instalments'] : false;
 
+		$amount = (int)$order->total_with_coupon * 100;
+
 		return view('payment.confirm-order', [
 			'order'       => $order,
 			'user'        => $user,
 			'checksum'    => $checksum,
 			'instalments' => $instalments,
+			'amount'      => $amount,
+			'returnUrl'  => $this->getReturnUrl($amount)
 		]);
 	}
 
@@ -50,7 +54,8 @@ class ConfirmOrderController extends Controller
 
 		session()->forget(['coupon', 'product']);
 
-		return redirect(url('/app/myself/orders?payment'));
+		$amount = (int)$order->total_with_coupon * 100;
+		return redirect($this->getReturnUrl($amount));
 	}
 
 	public function status(Request $request, Payment $payment)
@@ -74,7 +79,8 @@ class ConfirmOrderController extends Controller
 		} else {
 			Log::warning('P24 transaction validation failed');
 		}
-
 	}
-
+	private function getReturnUrl($amount) {
+		return sprintf('%s&%s', url('app/myself/orders?payment'), "amount={$amount}");
+	}
 }

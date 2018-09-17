@@ -66,7 +66,6 @@
 		s.parentNode.insertBefore(t,s)}(window, document,'script',
 		'https://connect.facebook.net/en_US/fbevents.js');
 	fbq('init', {{ env('FACEBOOK_PIXEL_APP_ID') }});
-	fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
 	src={{ "https://www.facebook.com/tr?id=" . env('FACEBOOK_PIXEL_APP_ID') . "&ev=PageView&noscript=1" }}

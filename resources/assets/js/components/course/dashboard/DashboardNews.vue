@@ -6,11 +6,11 @@
 
 		<p>Cześć! 👋</p>
 
-		<p>Zakończyliśmy już oficjalnie 3. educję kursu! Dziękujemy Ci baaardzo za zaufanie oraz zaangażowanie - bez Ciebie ten kurs nie działałby tak skutecznie!</p>
+		<p>Zakończyliśmy już oficjalnie 3. edycję kursu! Dziękujemy Ci baaardzo za zaufanie oraz zaangażowanie - bez Ciebie ten kurs nie działałby tak skutecznie!</p>
 
 		<p>Prosimy przy tej okazji o pozostawienie <a href="https://www.facebook.com/wiecejnizlek/reviews" target="_blank">recenzji na facebooku</a> - wiele osób czeka na Twoją opinię. 🙂</p>
 
-		<p>Na koniec kursu przeprowadzamy też zawsze ostatnią ankietę ewaluacyjną. Jest ona dla nas najważniejsza z wszystkich trzech, ponieważ wypełniając ją posiadasz już pełen obraz działania kursu. Prosimy, poświęć 15 minut na udzielenie nam informacji zwrotnej.</p>
+		<p>Na koniec kursu przeprowadzamy też zawsze ostatnią ankietę ewaluacyjną. Jest ona dla nas najważniejsza z wszystkich trzech, ponieważ wypełniając ją posiadasz już pełen obraz działania kursu. Prosimy, poświęć chwilę na udzielenie nam informacji zwrotnej.</p>
 
 		<p class="aligncenter">
 			<a href="https://goo.gl/forms/PBLnL8WkQqtPKKYI3" target="_blank" class="button is-primary">
@@ -18,7 +18,7 @@
 			</a>
 		</p>
 
-		<p>Przypominamy też, że wciąż możesz <strong>bez konsekwencji</strong> zarezerwować miejsce na 4. edycji kursu. 🙂 Co oznacza bez konsekwencji? Nie musisz tej rezerwacji wykorzystać, po prostu masz pewność, że miejsce będzie na Ciebie czekać do 15 października, czyli 3 tygodnie od początku zapisów. 🙂</p>
+		<p>Na koniec przypominamy, że jeśli planujesz uczestnictwo w kolejnej edycji kursu, możesz wciąż zarezerwować sobie miejsce. 🙂 Dzięki temu możesz spokojnie zapisać się do 15 października, a miejsce będzie na Ciebie czekać. Rezerwacja natomiast nie jest zobowiązująca. 🙂</p>
 
 		<p class="aligncenter">
 			<a href="https://wiecejnizlek.pl/zostaw-e-mail" target="_blank" class="button is-primary is-outlined">

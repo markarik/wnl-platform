@@ -7,18 +7,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="level">
-			<div class="level-left">
-				<div class="level-item">
-					<div>
-						Twoja subskrypcja kończy się:&nbsp;
-					</div>
-					<div class="big strong">
-						{{ userFriendlySubscriptionDate }}
-					</div>
-				</div>
-			</div>
-		</div>
 		<div class="notification is-success strong has-text-centered" v-if="orderSuccess">
 			Dziękujemy za złożenie zamówienia!<br>Potwierdzenie znajdziesz na podanym przez siebie adresie e-mail.
 		</div>
@@ -45,8 +33,6 @@
 	import _ from 'lodash'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import Order from './Order'
-	import { mapGetters } from 'vuex'
-	import moment from 'moment'
 
 	export default {
 		name: 'MyOrders',
@@ -57,7 +43,6 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserSubscriptionDates']),
 			paymentUrl() {
 				return getUrl('payment/select-product')
 			},
@@ -67,9 +52,6 @@
 			orderSuccess() {
 				return this.$route.query.hasOwnProperty('payment')
 			},
-			userFriendlySubscriptionDate() {
-				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
-			}
 		},
 		methods: {
 			getOrders() {

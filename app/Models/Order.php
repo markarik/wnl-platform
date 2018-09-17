@@ -215,4 +215,13 @@ class Order extends Model
 
 		$this->save();
 	}
+
+	public function paidAmountSufficient()
+	{
+		if ($this->method === 'instalments') {
+			return $this->instalments['nextPayment']['amount'];
+		}
+
+		return $this->paid_amount >= $this->total_with_coupon;
+	}
 }

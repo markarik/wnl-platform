@@ -3,7 +3,7 @@
 		<input type="hidden" name="p24_session_id" :value="paymentData.session_id"/>
 		<input type="hidden" name="p24_pos_id" :value="paymentData.merchant_id"/>
 		<input type="hidden" name="p24_merchant_id" :value="paymentData.merchant_id"/>
-		<input type="hidden" name="p24_amount" :value="paymentData.amount"/>
+		<input type="hidden" name="p24_amount" :value="amount"/>
 		<input type="hidden" name="p24_currency" value="PLN"/>
 		<input type="hidden" name="p24_description" :value="productName"/>
 		<input type="hidden" name="p24_client" :value="this.currentUser.full_name"/>
@@ -50,6 +50,9 @@
 			...mapGetters(['currentUser']),
 			returnUrl() {
 				return window.location.href
+			},
+			amount() {
+			    return this.paymentData.amount * 100
 			}
 		}
 	}

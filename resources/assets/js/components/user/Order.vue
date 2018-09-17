@@ -67,6 +67,10 @@
 
 				<p>Metoda płatności: {{ paymentMethod }}</p>
 
+				<div class="margin bottom" v-if="!isPending && !order.paid && order.method === 'online'">
+					<button class="button pay-next-instalment is-inline is-centered" @click="pay">Zapłać teraz</button>
+				</div>
+
 				<!-- Instalments -->
 				<div class="payment-details" v-if="!isFullyPaid">
 					<p class="big strong" v-if="order.method === 'transfer'">
@@ -94,13 +98,15 @@
 								<td>{{ order.total }}zł</td>
 							</tr>
 						</table>
-						<div class="next-payment margin bottom">
+						<div class="next-payment margin bottom" v-if="!isPending">
 							<p>Kolejna wpłata: <strong>{{ order.instalments.nextPayment.amount }}zł do
 								{{ instalmentDate(order.instalments.nextPayment.date) }}</strong></p>
-							<button class="button pay-next-instalment is-inline">Zapłać kolejną ratę</button>
+							<button class="button pay-next-instalment is-inline" @click="pay">Zapłać kolejną ratę</button>
 						</div>
 					</div>
 				</div>
+
+
 
 				<!-- Transfer details -->
 				<div class="transfer-details notification" v-if="transferDetails">
@@ -148,13 +154,7 @@
 				<div v-if="order.payments.length" class="payments">
 					<span class="payments__title">Historia Płatności</span>
 					<template v-if="canRetryPayment">
-						<a class="payments__retry-link" @click="retryPayment">Powtórz Płatność</a>
-						<wnl-p24-form
-							:user-data="userData"
-							:payment-data="paymentData"
-							:productName="order.product.name"
-							ref="p24Form"
-						/>
+						<a class="payments__retry-link" @click="pay">Powtórz Płatność</a>
 					</template>
 					<ul class="payments__list">
 						<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
@@ -179,6 +179,13 @@
 				</a>
 			</div>
 		</div>
+
+		<wnl-p24-form
+				:user-data="userData"
+				:payment-data="paymentData"
+				:productName="order.product.name"
+				ref="p24Form"
+		/>
 	</div>
 </template>
 
@@ -316,7 +323,7 @@
 
 				if (payments.find(payment => payment.status === 'in-progress')) return true;
 
-				return !this.order.paid && this.order.method === 'online';
+				return false;
 			},
 			iconClass() {
 				if (this.isPending) {
@@ -373,6 +380,13 @@
 			},
 			couponUrl() {
 				return `orders/${this.order.id}/coupon`;
+			},
+            amountToBePaidNext() {
+				if (this.order.method === 'instalments') {
+					return this.order.instalments.nextPayment.amount
+				}
+
+				return this.order.total
 			}
 		},
 		methods: {
@@ -488,9 +502,12 @@
 					}
 				})
 			},
-			async retryPayment() {
+			async pay() {
 				const [{data: paymentData}, {data: userData}] = await Promise.all([
-					axios.post(getApiUrl('payments'), {order_id: this.order.id}),
+					axios.post(getApiUrl('payments'), {
+					    order_id: this.order.id,
+						amount: this.amountToBePaidNext
+					}),
 					axios.get(getApiUrl('users/current/address'))
 				]);
 				this.paymentData = paymentData;

@@ -458,7 +458,7 @@
 											this.setSubscription(response.data)
 									});
 							} else {
-								setTimeout(this.checkStatus, 5000)
+								setTimeout(this.checkStatus, 10000)
 							}
 						})
 						.catch(exception => $wnl.logger.capture(exception))

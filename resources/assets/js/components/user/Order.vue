@@ -341,7 +341,7 @@
 			},
 			paymentStatus() {
 				if (this.order.paid && !this.isPending) {
-					if (this.order.total == this.order.paid_amount) {
+					if (this.order.total === this.order.paid_amount) {
 						return `Zapłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
 					} else if (this.order.paid_amount > this.order.total) {
 						return `Wpłacono ${this.order.paid_amount}zł, do zwrotu ${this.order.paid_amount - this.order.total}zł`
@@ -444,11 +444,7 @@
 						.then((response) => {
 							const {included = {}, ...order} = response.data
 							const {payments = {}} = included;
-							const paymentsList = Object.values(payments);
-							const hasInProgressPayment = _.isEmpty(paymentsList) || paymentsList.find(
-								payment => payment.status === 'in-progress'
-							);
-							if (order.paid && !hasInProgressPayment) {
+							if (order.paid) {
 								this.order.paid        = true
 								this.order.paid_amount = order.paid_amount
 								this.order.payments = (order.payments || []).map(paymentId => payments[paymentId])

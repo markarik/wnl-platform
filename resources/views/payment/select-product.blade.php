@@ -174,6 +174,6 @@
 </section>
 @endsection
 
-@section('scripts')
+@section('payment-scripts')
 	<script>typeof fbq === 'function' && fbq('track', 'AddToCart')</script>
 @endsection

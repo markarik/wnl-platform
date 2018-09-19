@@ -32,9 +32,9 @@
 					<span class="average">{{average}}</span>
 					{{$t(`questions.plan.progress.average.${averageStatus}`)}}
 					<span class="average-planned">{{averagePlanned}}</span>
-					<div v-if="hasMoreQuestionsThenPlanned">
+					<div v-if="hasMoreQuestionsThanPlanned">
 						<span>{{$t('questions.plan.progress.average.newAverage.header')}}</span>
-						<span class="new-average">{{hasMoreQuestionsThenPlanned}}</span>
+						<span class="new-average">{{hasMoreQuestionsThanPlanned}}</span>
 						<span>{{$t('questions.plan.progress.average.newAverage.closure')}}</span>
 					</div>
 					<span v-if="averageStatus === 'greater'">
@@ -157,7 +157,7 @@
 			averagePlanned() {
 				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
 			},
-			hasMoreQuestionsThenPlanned() {
+			hasMoreQuestionsThanPlanned() {
 				const questionsLeft = this.plan.stats.total - this.plan.stats.done
 				const daysLeft = this.plannedDaysCount - this.daysSoFar + 1
 				const questionsLeftPerDay =  Math.ceil(questionsLeft / daysLeft)

@@ -97,8 +97,8 @@ export const questions = {
 				is: 'Twoja dzienna średnia wynosi ',
 				less: ' i jest mniejsza, niż planowana ',
 				newAverage: {
-					header: 'Aby zrealizować plan rozwiązuj ',
-					closure: 'dziennie'
+					header: 'Aby zrealizować plan, będziesz otrzymywać ',
+					closure: 'pytań dziennie.'
 				}
 			},
 			currentPlan: 'Obecny plan',

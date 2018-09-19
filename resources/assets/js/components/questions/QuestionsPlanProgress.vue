@@ -33,9 +33,9 @@
 					{{$t(`questions.plan.progress.average.${averageStatus}`)}}
 					<span class="average-planned">{{averagePlanned}}</span>
 					<div v-if="hasMoreQuestionsThenPlanned">
-						<span>{{$t('questions.plan.progress.average.newAverage')}}</span>
+						<span>{{$t('questions.plan.progress.average.newAverage.header')}}</span>
 						<span class="new-average">{{hasMoreQuestionsThenPlanned}}</span>
-						<span>dziennie</span>
+						<span>{{$t('questions.plan.progress.average.newAverage.closure')}}</span>
 					</div>
 					<span v-if="averageStatus === 'greater'">
 						{{$t('questions.plan.progress.average.congrats')}}

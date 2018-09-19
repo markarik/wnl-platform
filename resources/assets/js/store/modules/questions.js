@@ -323,6 +323,7 @@ const actions = {
 		{filters, page, saveFilters, useSavedFilters}
 	) {
 		const parsedFilters = parseFilters(filters, state.filters, rootGetters.currentUserId)
+		
 		return _fetchQuestions({
 			active: filters,
 			filters: parsedFilters,

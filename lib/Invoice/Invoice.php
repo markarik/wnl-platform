@@ -29,13 +29,17 @@ class Invoice
 
 	public function vatInvoice(Order $order, $invoice = null)
 	{
+		$builder = $order->invoices()->where('series', self::VAT_SERIES_NAME);
+		if ($invoice) $builder->where('id', '<', $invoice->id);
+		$previousAdvances = $builder->get();
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
 		$vatValue = $order->product->vat_rate / 100;
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
 				'series' => self::VAT_SERIES_NAME,
-				'amount' => $order->paid_amount,
+				'amount' => $recentSettlement,
 			]);
 		}
 
@@ -76,14 +80,14 @@ class Invoice
 		$data['ordersList'][0]['vat'] = $vatString;
 
 		$data['settlement'] = [
-			'priceNet'   => $this->price($order->paid_amount / (1 + $vatValue)),
-			'vatValue'   => $this->price($order->paid_amount - $order->paid_amount / (1 + $vatValue)),
-			'priceGross' => $this->price($order->paid_amount),
+			'priceNet'   => $this->price($recentSettlement / (1 + $vatValue)),
+			'vatValue'   => $this->price($recentSettlement - $recentSettlement / (1 + $vatValue)),
+			'priceGross' => $this->price($recentSettlement),
 		];
 
 		$data['remainingAmount'] = $this->price($totalPrice - $order->paid_amount);
 
-		$data['recentSettlement'] = $order->paid_amount;
+		$data['recentSettlement'] = $recentSettlement;
 
 		if ($vatValue === self::VAT_ZERO) {
 			$data['ordersList'][0]['vatValue'] = '-';

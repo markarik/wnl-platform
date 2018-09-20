@@ -41,8 +41,8 @@ class OrderPaid implements ShouldQueue
 		$this->handleUserSubscription();
 		$this->handleUserLessons();
 		$this->handleCoupon();
-		$this->sendConfirmation();
 		$this->handleInstalments();
+		$this->sendConfirmation();
 
 
 		\Cache::forget(EditionsApiController::key($this->order->user->id));
@@ -75,10 +75,6 @@ class OrderPaid implements ShouldQueue
 	protected function getInvoice($order)
 	{
 		if ($order->product->delivery_date->isPast()) {
-			if ($order->method === 'instalments') {
-				return false;
-			}
-
 			return (new Invoice)->vatInvoice($order);
 		}
 

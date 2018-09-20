@@ -96,7 +96,11 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		
+
+		if ($order->method === 'instalments') {
+			$data['notes'][] = $this->getInstalmentsNote($order);
+		}
+
 		if ($order->product->vat_note) {
 			$data['notes'][] = $order->product->vat_note;
 		}
@@ -575,5 +579,32 @@ class Invoice
 	private function price($number)
 	{
 		return number_format($number, 2, ',', ' ');
+	}
+
+	private function getInstalmentsNote($order)
+	{
+		$instalmentsCount = $order->orderInstalments->count();
+		$unpaidInstalments = $order->orderInstalments->where('paid', false);
+
+		if ($unpaidInstalments->count() === 0) {
+			$instalmentNumber = $instalmentsCount;
+		} else {
+			$instalmentNumber = $unpaidInstalments->sortBy('order_number')->first()->order_number - 1;
+		}
+
+		$instalments = $order->orderInstalments->keyBy('order_number');
+
+		if($instalmentNumber === $instalmentsCount) {
+			$from = $instalments->get($instalmentNumber)->due_date->format('d-m-Y');
+			$to = $order->product->access_end->format('d-m-Y');
+		} elseif ($instalmentNumber === 1) {
+			$from = $order->product->access_start->format('d-m-Y');
+			$to = $instalments->get($instalmentNumber + 1)->due_date->format('d-m-Y');
+		} else {
+			$from = $instalments->get($instalmentNumber)->due_date->format('d-m-Y');
+			$to = $instalments->get($instalmentNumber + 1)->due_date->format('d-m-Y');
+		}
+
+		return trans('invoices.instalments-note', compact('instalmentNumber', 'from', 'to'));
 	}
 }

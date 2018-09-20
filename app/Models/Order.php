@@ -219,7 +219,9 @@ class Order extends Model
 	public function paidAmountSufficient()
 	{
 		if ($this->method === 'instalments') {
-			return $this->instalments['allPaid'] || !$this->instalments['instalments'][0]['left'];
+			return
+				$this->instalments['allPaid'] ||
+				$this->instalments['instalments'][0]['amount'] <= $this->paid_amount;
 		}
 
 		return $this->paid_amount >= $this->total_with_coupon;

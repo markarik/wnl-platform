@@ -80,8 +80,8 @@ trait SignsUpUsers
 				->type('invoice_country', $user['invoice_country']);
 		}
 
-		$browser->check('consent_account');
-		$browser->check('consent_order');
+//		$browser->check('consent_account');
+//		$browser->check('consent_order');
 		$browser->check('consent_newsletter');
 		$browser->check('consent_terms');
 	}

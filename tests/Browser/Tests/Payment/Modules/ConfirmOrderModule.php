@@ -66,8 +66,8 @@ class ConfirmOrderModule
 
 		if ($method === 'online') {
 			$browser
-				->press('button.p24-submit')
-				->waitForText('Wybierz formę płatności', 30);
+				->press('#p24-submit-full-payment')
+				->waitForText('Wybierz formę płatności', 300);
 		}
 	}
 

@@ -51,13 +51,13 @@ class MyOrdersModule
 
 		$browser->waitForText('Twoje zamówienia', 60);
 		$browser->pause(1000);
-		$browser->assertSee($order->id);
+		$browser->waitForText('Zamówienie numer ' . $order->id);
 
 		if (empty($browser->coupon)) {
-			$browser->assertSee('Study Buddy');
+			$browser->waitForText('Study Buddy');
 		} else {
 			$coupon = $browser->coupon;
-			$browser->assertSee($coupon->name);
+			$browser->waitForText($coupon->name);
 		}
 
 	}

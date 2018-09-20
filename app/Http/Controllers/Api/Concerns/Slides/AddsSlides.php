@@ -78,9 +78,8 @@ trait AddsSlides
 				$query->where('id', $screen->id);
 			})->first();
 
-		$presentables->push($section);
-
 		if ($section) {
+			$presentables->push($section);
 			$subsection = $slide->subsections()
 				->whereHas('section', function ($query) use ($section) {
 					$query->where('id', $section->id);

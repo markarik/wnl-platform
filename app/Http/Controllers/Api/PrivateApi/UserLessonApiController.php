@@ -40,7 +40,7 @@ class UserLessonApiController extends ApiController
 			'start_date' => Carbon::parse($request->input('date')),
 		]);
 
-		Cache::tags("user-$userId")->flush();
+		\Cache::forget(EditionsApiController::key($userId));
 
 		return $this->respondOk();
 	}
@@ -62,7 +62,7 @@ class UserLessonApiController extends ApiController
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
 
-		Cache::tags("user-{$user->id}")->flush();
+		\Cache::forget(EditionsApiController::key($user->id));
 		$lessons = $user->lessonsAvailability()->get();
 		$controller = new LessonsApiController($request);
 
@@ -90,7 +90,7 @@ class UserLessonApiController extends ApiController
 				->update(['start_date' => Carbon::parse($lesson['startDate'])]);
 		}
 
-		Cache::tags("user-$userId")->flush();
+		\Cache::forget(EditionsApiController::key($userId));
 
 		return $this->respondOk();
 	}

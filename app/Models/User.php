@@ -185,7 +185,7 @@ class User extends Authenticatable
 	{
 		$key = self::getSubscriptionKey($this->id);
 
-		return \Cache::tags("user-$this->id")->remember($key, 60 * 24, function () {
+		return \Cache::remember($key, 60 * 24, function () {
 			$dates = $this->getSubscriptionDates();
 
 			return $this->getSubscriptionStatus($dates);

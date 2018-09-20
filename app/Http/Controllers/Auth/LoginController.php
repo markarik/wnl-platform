@@ -70,12 +70,7 @@ class LoginController extends Controller
 	protected function authenticated(Request $request, $user)
 	{
 		if ($user->suspended) {
-			$this->guard()->logout();
-			$request->session()->flush();
-			$request->session()->regenerate();
-			$request->session()->flash('suspended', true);
-
-			return redirect('/login');
+			$request->session()->put('suspended', true);
 		}
 
 		$this->singleSessionCheck($user);

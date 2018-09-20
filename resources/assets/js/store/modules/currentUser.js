@@ -27,7 +27,8 @@ const state = {
 			personalIdentityNumber: '',
 			identityCardNumber: '',
 			passportNumber: ''
-		}
+		},
+		accountSuspended: false
 	},
 	settings: getDefaultSettings(),
 }
@@ -82,6 +83,9 @@ const mutations = {
 	},
 	[types.USERS_SET_IDENTIY] (state, payload) {
 		set(state.profile, 'identity', payload)
+	},
+	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
+		set(state.profile, 'accountSuspended', payload)
 	}
 }
 

@@ -169,8 +169,10 @@ return [
 	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie wybierz metodę płatności',
 	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
 	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
-	'confirm-method-instalments-button'    => 'Kupuję i płacę na raty',
-	'confirm-method-online-payment-button' => 'Kupuję i płacę przez Przelewy24',
+	'confirm-deferred-payment-button'  => 'Kupuję i płacę w ciągu 7 dni',
+	'confirm-method-instalments-button'    => 'Kupuję i płacę pierwszą ratę w ciągu 7 dni',
+	'confirm-method-instalments-online-button'    => 'Kupuję i płacę pierwszą ratę teraz',
+	'confirm-method-online-payment-button' => 'Kupuję i płacę teraz',
 	'confirm-method-free-button' => 'Kupuję korzystając ze 100% zniżki',
 
 	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',

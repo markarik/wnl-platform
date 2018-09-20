@@ -62,7 +62,6 @@ class RoleAssign extends Command
 
 		foreach ($users as $user) {
 			$user->roles()->attach($role);
-			Cache::tags("user-{$user->id}")->flush();
 		}
 
 		$this->call('user:migrate-subscription', ['--admins' => true]);

@@ -52,7 +52,7 @@
 						<wnl-emoji name="wink"/>
 						<p class="small margin vertical has-text-centered">
 							Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)"
-																		   target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
+																			 target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
 						</p>
 					</div>
 					<!-- <a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a> -->
@@ -66,6 +66,10 @@
 				</p>
 
 				<p>Metoda płatności: {{ paymentMethod }}</p>
+
+				<div class="margin bottom" v-if="!isPending && !order.paid && order.method === 'online'">
+					<button class="button pay-next-instalment is-inline is-centered" @click="pay">Zapłać teraz</button>
+				</div>
 
 				<!-- Instalments -->
 				<div class="payment-details" v-if="!isFullyPaid">
@@ -94,12 +98,15 @@
 								<td>{{ order.total }}zł</td>
 							</tr>
 						</table>
-						<p class="next-payment margin bottom">
-							Kolejna wpłata: <strong>{{ order.instalments.nextPayment.amount }}zł do
-							{{ instalmentDate(order.instalments.nextPayment.date) }}</strong>
-						</p>
+						<div class="next-payment margin bottom" v-if="!isPending">
+							<p>Kolejna wpłata: <strong>{{ order.instalments.nextPayment.amount }}zł do
+								{{ instalmentDate(order.instalments.nextPayment.date) }}</strong></p>
+							<button class="button pay-next-instalment is-inline" @click="pay">Zapłać kolejną ratę</button>
+						</div>
 					</div>
 				</div>
+
+
 
 				<!-- Transfer details -->
 				<div class="transfer-details notification" v-if="transferDetails">
@@ -127,11 +134,11 @@
 				</div>
 				<div class="voucher-code" v-if="couponInputVisible">
 					<wnl-form class="margin vertical"
-							  name="CouponCode"
-							  method="put"
-							  :resourceRoute="couponUrl"
-							  hideDefaultSubmit="true"
-							  @submitSuccess="couponSubmitSuccess">
+								name="CouponCode"
+								method="put"
+								:resourceRoute="couponUrl"
+								hideDefaultSubmit="true"
+								@submitSuccess="couponSubmitSuccess">
 						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 						<wnl-submit>Wykorzystaj kod</wnl-submit>
 					</wnl-form>
@@ -141,6 +148,17 @@
 					<ul>
 						<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">
 							<a @click="downloadInvoice(invoice)">{{invoice.number}}</a>
+						</li>
+					</ul>
+				</div>
+				<div v-if="order.payments.length" class="payments">
+					<span class="payments__title">Historia Płatności</span>
+					<template v-if="canRetryPayment">
+						<a class="payments__retry-link" @click="pay">Powtórz Płatność</a>
+					</template>
+					<ul class="payments__list">
+						<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
+							<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
 						</li>
 					</ul>
 				</div>
@@ -161,6 +179,13 @@
 				</a>
 			</div>
 		</div>
+
+		<wnl-p24-form
+				:user-data="userData"
+				:payment-data="paymentData"
+				:productName="order.product.name"
+				ref="p24Form"
+		/>
 	</div>
 </template>
 
@@ -205,21 +230,47 @@
 		flex-direction: row
 		justify-content: space-between
 
-	.invoices
+	.invoices, .payments
 		margin-top: $margin-base
 
 		&__link
 			cursor: pointer
+
+	.payments
+		display: flex
+		flex-wrap: wrap
+
+		&__list
+			flex-basis: 100%
+
+		&__title
+			flex: 1 0 auto
+	.payment
+		&--in-progress
+			color: $warning
+		&--error
+			color: $danger
+		&--success
+			color: $success
+
+	.next-payment
+		display: flex
+		flex-direction: row
+		justify-content: space-between
+
 </style>
 
 <script>
 	import moment from 'moment'
 	import axios from 'axios'
-	import {mapActions, mapGetters} from 'vuex'
+	import {mapActions, mapGetters, mapMutations} from 'vuex'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import {gaEvent} from 'js/utils/tracking'
 	import {Form, Text, Submit} from 'js/components/global/form'
+	import P24Form from 'js/components/user/P24Form'
 	import { swalConfig } from 'js/utils/swal'
+	import {nextTick} from 'vue'
+	import * as types from 'js/store/mutations-types'
 
 	export default {
 		name: 'Order',
@@ -228,6 +279,7 @@
 			'wnl-form': Form,
 			'wnl-form-text': Text,
 			'wnl-submit': Submit,
+			'wnl-p24-form': P24Form
 		},
 		data() {
 			return {
@@ -239,33 +291,42 @@
 				},
 				code: '',
 				couponInputVisible: false,
-				order: this.orderInstance
+				order: this.orderInstance,
+				paymentData: {},
+				userData: {},
 			}
 		},
 		computed: {
-			...mapGetters(['isAdmin']),
+			...mapGetters(['isAdmin', 'currentUser']),
+			canRetryPayment() {
+				if (!_.get(this.order, 'payments.length', 0)) {
+					return !this.order.paid;
+				}
+				return !this.order.payments.find(payment => payment.status === 'success')
+			},
 			coupon() {
 				return this.order.coupon
-			},
-			loaderSrc() {
-				return getImageUrl('loader.svg')
 			},
 			logoUrl() {
 				// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
 				return getImageUrl('wnl-logo-square@2x.png')
-			},
-			isPaid() {
-				return this.order.paid
 			},
 			isFullyPaid() {
 				return this.order.paid_amount >= this.order.total
 			},
 			isPending() {
 				// show loader only if there is an online payment waiting for confirmation
-				return !this.order.paid && this.order.method === 'online';
+				const payments = _.get(this.order, 'payments', [])
+
+				if (this.order.canceled) return false;
+				if (payments.find(payment => payment.status === 'success')) return false;
+
+				if (payments.find(payment => payment.status === 'in-progress')) return true;
+
+				return false;
 			},
 			iconClass() {
-				if (!this.order.paid && this.order.method === 'online') {
+				if (this.isPending) {
 					// Loader
 					return 'fa-circle-o-notch fa-spin'
 				} else if (this.order.paid) {
@@ -279,8 +340,8 @@
 						this.order.method === 'instalments')
 			},
 			paymentStatus() {
-				if (this.order.paid) {
-					if (this.order.total == this.order.paid_amount) {
+				if (this.order.paid && !this.isPending) {
+					if (this.order.total === this.order.paid_amount) {
 						return `Zapłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
 					} else if (this.order.paid_amount > this.order.total) {
 						return `Wpłacono ${this.order.paid_amount}zł, do zwrotu ${this.order.paid_amount - this.order.total}zł`
@@ -296,7 +357,7 @@
 			paymentStatusClass() {
 				if (this.order.cancelled) {
 					return 'text-warning'
-				} else if (this.order.paid && this.order.total <= this.order.paid_amount) {
+				} else if (!this.isPending && this.order.paid && this.order.total <= this.order.paid_amount) {
 					return 'text-success'
 				}
 
@@ -319,9 +380,19 @@
 			},
 			couponUrl() {
 				return `orders/${this.order.id}/coupon`;
+			},
+            amountToBePaidNext() {
+				if (this.order.method === 'instalments') {
+					return this.order.instalments.nextPayment.amount
+				}
+
+				return this.order.total
 			}
 		},
 		methods: {
+			...mapMutations({
+					'setSubscription': types.USERS_SET_SUBSCRIPTION
+			}),
 			...mapActions(['addAutoDismissableAlert']),
 
 			async downloadInvoice(invoice) {
@@ -369,13 +440,21 @@
 				}
 			},
 			checkStatus() {
-				axios.get(getApiUrl(`orders/${this.order.id}`))
+				axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
 						.then((response) => {
-							if (response.data.paid) {
+							const {included = {}, ...order} = response.data
+							const {payments = {}} = included;
+							if (order.paid) {
 								this.order.paid        = true
-								this.order.paid_amount = response.data.paid_amount
+								this.order.paid_amount = order.paid_amount
+								this.order.payments = (order.payments || []).map(paymentId => payments[paymentId])
+
+								axios.get(getApiUrl('user_subscription/current'))
+									.then(response => {
+											this.setSubscription(response.data)
+									});
 							} else {
-								setTimeout(this.checkStatus, 5000)
+								setTimeout(this.checkStatus, 10000)
 							}
 						})
 						.catch(exception => $wnl.logger.capture(exception))
@@ -417,6 +496,21 @@
 					if (error !== 'cancel') {
 						$wnl.logger.capture(error)
 					}
+				})
+			},
+			async pay() {
+				const [{data: paymentData}, {data: userData}] = await Promise.all([
+					axios.post(getApiUrl('payments'), {
+					    order_id: this.order.id,
+						amount: this.amountToBePaidNext
+					}),
+					axios.get(getApiUrl('users/current/address'))
+				]);
+				this.paymentData = paymentData;
+				this.userData = userData;
+
+				nextTick(() => {
+					this.$refs.p24Form.$el.submit();
 				})
 			}
 		},

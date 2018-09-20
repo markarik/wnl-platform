@@ -2,21 +2,31 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p class="has-text-centered"><strong>PROŚBA!</strong></p>
+		<p class="has-text-centered"><strong>OSTATNIA ANKIETA</strong></p>
 
-		<p class="strong">Cześć {{currentUserName}}! 👋</p>
+		<p>Cześć! 👋</p>
 
-		<p>Od pierwszej ankiety minęło już trochę czasu! Zgodnie z najlepszymi praktykami, oceniamy naszą pracę 3 razy w ciągu każdej edycji. To pozwala nam stwierdzić, czy dobrze planujemy pracę i rozwiązujemy najważniejsze z Waszych problemów. 🙂</p>
+		<p>Zakończyliśmy już oficjalnie 3. edycję kursu! Dziękujemy Ci baaardzo za zaufanie oraz zaangażowanie - bez Ciebie ten kurs nie działałby tak skutecznie!</p>
 
-		<p>Dziś mamy prośbę o wypełnienie 2. ankiety, składającej się z 15 pytań. 😉 Pomóż nam uczynić kurs "Więcej niż LEK" lepszym!</p>
+		<p>Prosimy przy tej okazji o pozostawienie <a href="https://www.facebook.com/wiecejnizlek/reviews" target="_blank">recenzji na facebooku</a> - wiele osób czeka na Twoją opinię. 🙂</p>
 
-		<p class="has-text-centered margin vertical">
-			<a class="button is-primary" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSf3NZDU7tbqPGMIIVLRFaVhDLBuC2lk-WSZdZmIkaticYYjSw/viewform">
-				Wypełnij ankietę!
+		<p>Na koniec kursu przeprowadzamy też zawsze ostatnią ankietę ewaluacyjną. Jest ona dla nas najważniejsza z wszystkich trzech, ponieważ wypełniając ją posiadasz już pełen obraz działania kursu. Prosimy, poświęć chwilę na udzielenie nam informacji zwrotnej.</p>
+
+		<p class="aligncenter">
+			<a href="https://goo.gl/forms/PBLnL8WkQqtPKKYI3" target="_blank" class="button is-primary">
+				Wypełnij ankietę
 			</a>
 		</p>
 
-		<p>Życzymy powodzenia i owocnej pracy z kursem!</p>
+		<p>Na koniec przypominamy, że jeśli planujesz uczestnictwo w kolejnej edycji kursu, możesz wciąż zarezerwować sobie miejsce. 🙂 Dzięki temu możesz spokojnie zapisać się do 15 października, a miejsce będzie na Ciebie czekać. Rezerwacja natomiast nie jest zobowiązująca. 🙂</p>
+
+		<p class="aligncenter">
+			<a href="https://wiecejnizlek.pl/zostaw-e-mail" target="_blank" class="button is-primary is-outlined">
+				Zarezerwuj miejsce na kursie
+			</a>
+		</p>
+
+		<p>Życzymy powodzenia na ostatniej prostej i pozostajemy do dyspozycji!</p>
 
 		<p style="font-style: italic;">Ekipa Więcej niż LEK</p>
 	</div>
@@ -26,7 +36,7 @@
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
 
-	const CURRENT_NEWS = 'edition-3-survey-2-announcement'
+	const CURRENT_NEWS = 'edition-3-last-survey'
 	const DISPLAY_FROM = '' // new Date() or empty string
 	const DISPLAY_UNTIL = '' // new Date() or empty string
 	const REQUIRED_ROLE = ''

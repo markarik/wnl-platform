@@ -31,6 +31,10 @@ class UserNotificationsGate implements ShouldQueue
 
 	public function notifyPrivateStream(array $excluded, $event)
 	{
+		$excluded = array_filter($excluded, function($item) {
+			return !is_null($item);
+		});
+
 		$progress = $this->usersLessonProgress($event);
 
 		$users = User::select()

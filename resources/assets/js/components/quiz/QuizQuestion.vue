@@ -383,12 +383,8 @@
 		watch: {
 			'currentModalSlide.id'(slideId) {
 				if (!slideId) return
-				axios.post(getApiUrl(`slideshow_builder/.query`), {
-					query: {
-						whereIn: ['slides.id', [slideId]],
-					},
-						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-				}).then(({data}) => {
+				axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
+				.then(({data}) => {
 					this.slideContent = data
 				}).then(() => {
 					this.show = true

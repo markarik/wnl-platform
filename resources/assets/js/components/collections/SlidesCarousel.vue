@@ -335,15 +335,7 @@
 			},
 			_fetchBookmarkedSlideshow() {
 				const slidesIds = this.currentSlideshowSlides.map(slide => slide.id)
-
-				return axios.post(getApiUrl(`slideshow_builder/.query`), {
-					query: {
-						whereIn: ['slides.id', slidesIds],
-						where: [['presentables.presentable_type', 'App\\Models\\Category']],
-					},
-						join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-						order: {'presentables.order_number': 'asc'}
-				})
+				return axios.post(getApiUrl(`slideshow_builder/category/${this.categoryId}/.searchBySlides`), { slidesIds })
 			},
 			_fetchAllSlideshow() {
 				return axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`))

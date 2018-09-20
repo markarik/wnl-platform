@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Models\Order;
-use App\Models\PaymentMethod;
+use App\Models\Payment as PaymentModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -32,11 +32,19 @@ class ConfirmOrderController extends Controller
 			->first()
 			->isAvailable() ? $order->instalments['instalments'] : false;
 
+		$instalmentsChecksum = $payment::generateChecksum(
+			$order->session_id, (int)$instalments[0]['amount'] * 100
+		);
+		$amount = (int)$order->total_with_coupon * 100;
+
 		return view('payment.confirm-order', [
-			'order'       => $order,
-			'user'        => $user,
-			'checksum'    => $checksum,
+			'order' => $order,
+			'user' => $user,
+			'checksum' => $checksum,
 			'instalments' => $instalments,
+			'instalmentsChecksum' => $instalmentsChecksum,
+			'amount'      => $amount,
+			'returnUrl'  => $this->getReturnUrl($amount)
 		]);
 	}
 
@@ -50,7 +58,8 @@ class ConfirmOrderController extends Controller
 
 		session()->forget(['coupon', 'product']);
 
-		return redirect(url('/app/myself/orders?payment'));
+		$amount = (int)$order->total_with_coupon * 100;
+		return redirect($this->getReturnUrl($amount));
 	}
 
 	public function status(Request $request, Payment $payment)
@@ -64,17 +73,29 @@ class ConfirmOrderController extends Controller
 			$request->get('p24_order_id')
 		);
 
+		$externalId = $request->get('p24_order_id');
+		$paidAmount = $request->get('p24_amount') / 100;
+
+		$paymentLog = PaymentModel::where('session_id', $request->get('p24_session_id'))->first();
+		$paymentLog->external_id = $externalId;
+		$paymentLog->amount = $paidAmount;
+		$order = $paymentLog->order;
+
 		if ($transactionValid) {
-			$order = Order::where(['session_id' => $request->get('p24_session_id')])->first();
-			$order->paid = true;
-			$order->paid_amount = $request->get('p24_amount') / 100;
-			$order->external_id = $request->get('p24_order_id');
+			$order->paid_amount += $paidAmount;
+			$order->external_id = $externalId;
 			$order->transfer_title = $request->get('p24_statement');
 			$order->save();
+
+			$paymentLog->status = 'success';
 		} else {
+			$paymentLog->status = 'error';
 			Log::warning('P24 transaction validation failed');
 		}
-
+		$paymentLog->save();
 	}
 
+	private function getReturnUrl($amount) {
+		return sprintf('%s&%s', url('app/myself/orders?payment'), "amount={$amount}");
+	}
 }

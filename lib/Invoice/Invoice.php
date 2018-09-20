@@ -23,20 +23,23 @@ class Invoice
 	const VAT_SERIES_NAME = 'FV';
 	const CORRECTIVE_SERIES_NAME = 'KOR';
 	const VAT_THRESHOLD = 159452.00;
-	const VAT_ZERO = 0;
+	const VAT_ZERO = 0.0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
 
 	public function vatInvoice(Order $order, $invoice = null)
 	{
-		$vatValue = $this->getVatValue($order->paid_amount);
+		$builder = $order->invoices()->where('series', self::VAT_SERIES_NAME);
+		if ($invoice) $builder->where('id', '<', $invoice->id);
+		$previousAdvances = $builder->get();
+		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
+		$vatValue = $order->product->vat_rate / 100;
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
 				'series' => self::VAT_SERIES_NAME,
-				'amount' => $order->paid_amount,
-				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+				'amount' => $recentSettlement,
 			]);
 		}
 
@@ -77,14 +80,14 @@ class Invoice
 		$data['ordersList'][0]['vat'] = $vatString;
 
 		$data['settlement'] = [
-			'priceNet'   => $this->price($order->paid_amount / (1 + $vatValue)),
-			'vatValue'   => $this->price($order->paid_amount - $order->paid_amount / (1 + $vatValue)),
-			'priceGross' => $this->price($order->paid_amount),
+			'priceNet'   => $this->price($recentSettlement / (1 + $vatValue)),
+			'vatValue'   => $this->price($recentSettlement - $recentSettlement / (1 + $vatValue)),
+			'priceGross' => $this->price($recentSettlement),
 		];
 
 		$data['remainingAmount'] = $this->price($totalPrice - $order->paid_amount);
 
-		$data['recentSettlement'] = $order->paid_amount;
+		$data['recentSettlement'] = $recentSettlement;
 
 		if ($vatValue === self::VAT_ZERO) {
 			$data['ordersList'][0]['vatValue'] = '-';
@@ -97,8 +100,13 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->method === 'instalments') {
+			$data['notes'][] = $this->getInstalmentsNote($order);
+		}
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.vat', $data, $invoice);
@@ -575,5 +583,32 @@ class Invoice
 	private function price($number)
 	{
 		return number_format($number, 2, ',', ' ');
+	}
+
+	private function getInstalmentsNote($order)
+	{
+		$instalmentsCount = $order->orderInstalments->count();
+		$unpaidInstalments = $order->orderInstalments->where('paid', false);
+
+		if ($unpaidInstalments->count() === 0) {
+			$instalmentNumber = $instalmentsCount;
+		} else {
+			$instalmentNumber = $unpaidInstalments->sortBy('order_number')->first()->order_number - 1;
+		}
+
+		$instalments = $order->orderInstalments->keyBy('order_number');
+
+		if($instalmentNumber === $instalmentsCount) {
+			$from = $instalments->get($instalmentNumber)->due_date->format('d-m-Y');
+			$to = $order->product->access_end->format('d-m-Y');
+		} elseif ($instalmentNumber === 1) {
+			$from = $order->product->access_start->format('d-m-Y');
+			$to = $instalments->get($instalmentNumber + 1)->due_date->format('d-m-Y');
+		} else {
+			$from = $instalments->get($instalmentNumber)->due_date->format('d-m-Y');
+			$to = $instalments->get($instalmentNumber + 1)->due_date->format('d-m-Y');
+		}
+
+		return trans('invoices.instalments-note', compact('instalmentNumber', 'from', 'to'));
 	}
 }

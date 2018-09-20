@@ -4,7 +4,7 @@
 			<div class="level-left">
 				<div class="level-item">
 					<div>
-						Twoja subskrypcja kończy się:&nbsp;
+						Twój dostęp do kursu jest aktywny do:&nbsp;
 					</div>
 					<div class="big strong">
 						{{ userFriendlySubscriptionDate }}

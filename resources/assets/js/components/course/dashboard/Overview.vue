@@ -25,7 +25,7 @@
 			</div>
 			<div class="access-display">
 				<div>
-					Twoja subskrypcja kończy się:&nbsp;
+					Twój dostęp do kursu jest aktywny do:&nbsp;
 				</div>
 				<div class="access-display__date">
 					{{ userFriendlySubscriptionDate }}

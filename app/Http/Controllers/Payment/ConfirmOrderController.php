@@ -85,9 +85,6 @@ class ConfirmOrderController extends Controller
 			$order->paid_amount += $paidAmount;
 			$order->external_id = $externalId;
 			$order->transfer_title = $request->get('p24_statement');
-			if ($order->paidAmountSufficient()) {
-				$order->paid = true;
-			}
 			$order->save();
 
 			$paymentLog->status = 'success';

@@ -32,7 +32,9 @@ class OrderObserver
 			\Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
 			dispatch_now(new OrderStudyBuddy($order));
 
-			if (!$order->paid) {
+			\Log::debug('well shit: ' . !$order->paid && $order->paidAmountSufficient());
+			if (!$order->paid && $order->paidAmountSufficient()) {
+				$order->paid = true;
 				$order->paid_at = Carbon::now();
 				$order->save();
 			}

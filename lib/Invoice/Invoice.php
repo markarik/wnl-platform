@@ -23,20 +23,19 @@ class Invoice
 	const VAT_SERIES_NAME = 'FV';
 	const CORRECTIVE_SERIES_NAME = 'KOR';
 	const VAT_THRESHOLD = 159452.00;
-	const VAT_ZERO = 0;
+	const VAT_ZERO = 0.0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
 
 	public function vatInvoice(Order $order, $invoice = null)
 	{
-		$vatValue = $this->getVatValue($order->paid_amount);
+		$vatValue = $order->product->vat_rate / 100;
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
 				'series' => self::VAT_SERIES_NAME,
 				'amount' => $order->paid_amount,
-				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
 			]);
 		}
 
@@ -97,8 +96,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+		
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.vat', $data, $invoice);

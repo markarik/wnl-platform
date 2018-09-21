@@ -47,6 +47,7 @@ return [
 		'invoices'           => 'invoices',
 		'certificates'       => 'certificates',
 		'annotations'        => 'annotations',
-		'payments'           => 'payments'
+		'payments'           => 'payments',
+		'user-personal-data' => 'personal_data',
 	],
 ];

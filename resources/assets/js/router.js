@@ -68,9 +68,9 @@ let routes = [
 				component: require('js/components/user/MyProfile.vue')
 			},
 			{
-				name: 'my-address',
-				path: 'address',
-				component: require('js/components/user/MyAddress.vue')
+				name: 'personal-data',
+				path: 'personal-data',
+				component: require('js/components/user/PersonalData.vue')
 			},
 			{
 				name: 'my-billing-data',

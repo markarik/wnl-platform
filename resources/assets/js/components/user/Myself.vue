@@ -87,16 +87,16 @@
 						iconTitle: 'Profil publiczny',
 					},
 					{
-						text: 'Adres',
+						text: 'Twoje prywatne dane',
 						itemClass: 'has-icon',
 						to: {
-							name: 'my-address',
+							name: 'personal-data',
 							params: {},
 						},
 						isDisabled: false,
 						method: 'push',
 						iconClass: 'fa-address-card-o',
-						iconTitle: 'Profil publiczny',
+						iconTitle: 'Twoje prywatne dane',
 					},
 					{
 						text: 'Dane do faktury',

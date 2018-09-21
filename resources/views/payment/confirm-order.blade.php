@@ -106,12 +106,13 @@
 							<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
 							<input type="hidden" name="p24_language" value="pl"/>
 							<input type="hidden" name="p24_url_return" value="{{ $returnUrl }}"/>
-							<input type="hidden" name="p24_url_status" value="{{ route('payment-status-hook')  }} "/>
+							<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url') }}"/>
 							<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
 							<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
 							<input type="hidden" name="p24_encoding" value="UTF-8"/>
 						</form>
 						<button class="button is-primary p24-submit" data-id="full_payment_p24_form"
+						        id="p24-submit-full-payment"
 						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
 					</div>
 				</div>

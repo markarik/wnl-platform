@@ -7,20 +7,21 @@
 				</div>
 			</div>
 		</div>
-		<div class="message is-primary">
-			<div class="message-header">
-				{{ $t('user.personalData.identityNumber.header') }}
-			</div>
-			<div class="message-body">
-				{{ $t('user.personalData.identityNumber.explanation') }}
-			</div>
-		</div>
 		<div class="id-number" v-if="isLoaded">
+			<!-- HEADER -->
 			<div class="id-number--has-personal-id" v-if="idNumberAvailable">
-				Podany przez Ciebie numer to: {{ idNumber }}
-				Jeśli chcesz dokonać zmiany, napisz na info@bethink.pl.
+				{{ $t('user.personalData.identityNumber.yourNumber', {number: idNumber}) }}
+				{{ $t('user.personalData.identityNumber.yourNumberChange') }}
 			</div>
+
+			<!-- INPUT -->
 			<div class="id-number--no-personal-id" v-else>
+				<div class="message is-primary">
+					<div class="message-header">
+						{{ $t('user.personalData.identityNumber.header') }}
+					</div>
+					<div class="message-body" v-html="$t('user.personalData.identityNumber.explanation')"></div>
+				</div>
 				<div class="id-number__personal-identity-number-input">
 					<input
 						:name="this.identityTypes.personalId"
@@ -31,6 +32,8 @@
 						@keyup.enter="onSubmit"
 					/>
 				</div>
+
+				<!-- ERROR MESSAGES -->
 				<div class="id-number__errors" v-if="errors.length">
 					<ul v-for="(error, index) in activeErrors" :key="index">
 						<li>
@@ -38,45 +41,51 @@
 						</li>
 					</ul>
 				</div>
-				<div
-					class="id-number__personal-identity-number-input__change"
-					@click="otherIdentity=true"
-					v-if="!otherIdentity">
-					Nie chcę podawać numeru PESEL
-				</div>
-				<div
-					class="id-number--other-identitification"
-					v-if="otherIdentity">
-					<div class="id_number__radio field">
-							<input
-								@click="disableErrors"
-								class="is-checkradio"
-								type="radio"
-								id="personal_identity_number"
-								:name="this.identityTypes.personalId"
-								value="personal_identity_number"
-								v-model="identity.identityType">
-							<label for="personal_identity_number">PESEL</label>
-							<input
-								@click="disableErrors"
-								class="is-checkradio"
-								type="radio"
-								id="identity_card"
-								:name="this.identityTypes.idCard"
-								value="identity_card_number"
-								v-model="identity.identityType">
-							<label for="identity_card">Dowód osobisty</label>
-							<input
-								@click="disableErrors"
-								class="is-checkradio"
-								type="radio"
-								id="passport"
-								:name="this.identityTypes.passport"
-								value="passport_number"
-								v-model="identity.identityType">
-							<label for="passport">Paszport</label>
+
+				<!-- CHANGE IDENTITY NUMBER TYPE -->
+				<div class="id-number-other-container">
+					<div
+						class="id-number__personal-identity-number-input__change"
+						@click="otherIdentity=true"
+						v-if="!otherIdentity">
+						{{ $t('user.personalData.identityNumber.changeNumberType') }}
+					</div>
+					<div
+						class="id-number--other-identitification"
+						v-if="otherIdentity">
+						<div class="id_number__radio field">
+								<input
+									@click="disableErrors"
+									class="is-checkradio"
+									type="radio"
+									id="personal_identity_number"
+									:name="this.identityTypes.personalId"
+									value="personal_identity_number"
+									v-model="identity.identityType">
+								<label for="personal_identity_number">{{ $t('user.personalData.identityNumber.types.personal') }}</label>
+								<input
+									@click="disableErrors"
+									class="is-checkradio"
+									type="radio"
+									id="identity_card"
+									:name="this.identityTypes.idCard"
+									value="identity_card_number"
+									v-model="identity.identityType">
+								<label for="identity_card">{{ $t('user.personalData.identityNumber.types.id') }}</label>
+								<input
+									@click="disableErrors"
+									class="is-checkradio"
+									type="radio"
+									id="passport"
+									:name="this.identityTypes.passport"
+									value="passport_number"
+									v-model="identity.identityType">
+								<label for="passport">{{ $t('user.personalData.identityNumber.types.passport') }}</label>
+						</div>
 					</div>
 				</div>
+
+				<!-- SUBMIT BUTTON -->
 				<div class="level-item">
 					<a
 						class="button is-primary is-wide"
@@ -92,12 +101,15 @@
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
 
+	.id-number-other-container
+		margin: $margin-big 0
+
 	.id-number__personal-identity-number-input
 		margin-bottom: $margin-base
 
 	.id-number__personal-identity-number-input__change
-		margin-bottom: $margin-small
 		cursor: pointer
+		text-align: center
 		text-decoration: underline
 
 	.id-number--other-identitification
@@ -106,6 +118,11 @@
 	.id-number__errors
 		color: $color-red
 		margin-bottom: $margin-small
+
+	.id_number__radio
+		align-items: center
+		display: flex
+		justify-content: center
 
 </style>
 

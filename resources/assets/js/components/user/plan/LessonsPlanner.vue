@@ -1,5 +1,17 @@
 <template>
 	<div>
+		<div class="level">
+			<div class="level-left">
+				<div class="level-item">
+					<div>
+						Twój dostęp do kursu jest aktywny do:&nbsp;
+					</div>
+					<div class="big strong">
+						{{ userFriendlySubscriptionDate }}
+					</div>
+				</div>
+			</div>
+		</div>
 		<article class="message is-info">
 			<div class="message-header">
 				<p>Twój Plan Pracy</p>
@@ -59,7 +71,7 @@
 	import moment from 'moment'
 
 	export default {
-		name: 'LessonsAvailabilities',
+		name: 'LessonsPlanner',
 		data() {
 			return {
 				views: [
@@ -85,6 +97,7 @@
 		},
 		computed: {
 			...mapGetters('course', ['userLessons', 'getRequiredLessons']),
+			...mapGetters(['currentUserSubscriptionDates']),
 			sortedRequiredUserLessons() {
 				return this.requiredLessons.sort((lessonA, lessonB) => {
 					return lessonA.startDate - lessonB.startDate
@@ -113,6 +126,9 @@
 			activeViewComponent() {
 				return this.activeView.component
 			},
+			userFriendlySubscriptionDate() {
+				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
+			}
 		},
 		methods: {
 			toggleView(selectedView) {

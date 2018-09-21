@@ -7,6 +7,18 @@
 				</div>
 			</div>
 		</div>
+		<div class="level">
+			<div class="level-left">
+				<div class="level-item">
+					<div>
+						Twój dostęp do kursu jest aktywny do:&nbsp;
+					</div>
+					<div class="big strong">
+						{{ userFriendlySubscriptionDate }}
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="notification is-success strong has-text-centered" v-if="orderSuccess">
 			Dziękujemy za złożenie zamówienia!<br>Potwierdzenie znajdziesz na podanym przez siebie adresie e-mail.
 		</div>

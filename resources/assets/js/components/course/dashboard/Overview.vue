@@ -19,10 +19,19 @@
 		<!-- Dashboard news -->
 		<wnl-dashboard-news/>
 
-		<div class="welcome">
-			{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
+		<div class="welcome-container">
+			<div class="welcome">
+				{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
+			</div>
+			<div class="access-display">
+				<div>
+					Twój dostęp do kursu jest aktywny do:&nbsp;
+				</div>
+				<div class="access-display__date">
+					{{ userFriendlySubscriptionDate }}
+				</div>
+			</div>
 		</div>
-
 		<!-- Next lesson -->
 		<div class="overview-progress box">
 			<wnl-next-lesson/>
@@ -59,11 +68,23 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.welcome
-		font-size: $font-size-minus-1
-		font-weight: bold
-		margin-bottom: $margin-base
-		text-transform: uppercase
+	.welcome-container
+		display: flex
+		align-items: center
+		justify-content: space-between
+		.welcome
+			font-size: $font-size-minus-1
+			font-weight: bold
+			margin-bottom: $margin-base
+			text-transform: uppercase
+		.access-display
+			display: flex
+			font-size: $font-size-minus-1
+			align-items: center
+			margin-bottom: $margin-base
+			.access-display__date
+				font-weight: bold
+
 
 	.news-heading
 		border-bottom: $border-light-gray
@@ -100,6 +121,7 @@
 	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
 	import { resource } from 'js/utils/config'
+	import moment from 'moment'
 
 	export default {
 		name: 'Overview',
@@ -121,6 +143,7 @@
 				'currentUserName',
 				'overviewView',
 			]),
+			...mapGetters(['currentUserSubscriptionDates']),
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)
 			},
@@ -138,6 +161,9 @@
 					},
 				]
 			},
+			userFriendlySubscriptionDate() {
+				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
+			}
 		},
 		methods: {
 			...mapActions(['changeOverviewView']),

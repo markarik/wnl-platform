@@ -137,10 +137,13 @@ return [
 	'personal-data-account-login-lead' => 'Zaloguj się, aby skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzedniej edycji!',
 	'personal-data-account-login-button' => 'Zaloguj się',
 
-	'personal-data-id-heading' => 'W tym miejscu chcielibyśmy Cię prosić o pozostawienie numeru PESEL!
-	Dlaczego jest to dla nas ważne?',
-	'personal-data-id-lead' => 'Zebrane numery PESEL posłużą tylko i wyłącznie do opracowania statystyk przez CEM dla grup uczestników, dzięki czemu będziemy w stanie doskonalić kurs. Natomiast nie będziemy ich wykorzystywać do poznania indywidualnych wyników uczestników. Twoje dane będą absolutnie bezpieczne, więcej informacji na ten temat znajdziesz tutaj: <a class="privacy-policy-open-modal-link" href="#">Polityka Prywatności</a>. Te informacje nie będą widoczne na Twoim publicznym profilu na platformie.',
-	'identity_number' => 'Numer PESEL',
+	'personal-data-id-heading' => 'Dane do celów statystycznych',
+	'personal-data-id-lead' => '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o podanie numeru PESEL. Posłużą one tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p><p>Jeżeli nie posiadasz numeru PESEL, możesz podać numer dowodu osobistego lub paszportu.</p>',
+	'identity_number' => 'Numer identyfikacyjny',
+
+	'identity_number_personal_identity_number' => 'PESEL',
+	'identity_number_identity_card_number' => 'Dowód osobisty',
+	'identity_number_passport_number' => 'Paszport',
 
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
@@ -197,6 +200,8 @@ return [
 	'confirm-order-coupon' => 'Korzystasz ze zniżki <strong>:name</strong> o wartości <strong>:value</strong>.',
 
 	'confirm-personal-data-heading' => 'Twoje dane',
+	'confirm-personal-data-private' => 'Dane do celów statystycznych:',
+	'confirm-personal-data-address' => 'Twój adres do wysyłki i osoba do odbioru:',
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 

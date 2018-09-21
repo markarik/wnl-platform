@@ -375,6 +375,16 @@ section.voucher {
 	}
 }
 
+.identity-number-select {
+	align-items: center;
+	display: flex;
+	margin: $margin-base 0;
+
+	label {
+		margin: 0 $margin-big 0 $margin-small;
+	}
+}
+
 // Helper classes
 .show {
 	display: block;

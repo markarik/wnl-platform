@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
+use App\Rules\ValidateIdentityCardNumber;
+use App\Rules\ValidatePassportNumber;
 use App\Rules\ValidatePersonalIdentityNumber;
 
 class PersonalDataController extends Controller
@@ -64,19 +66,26 @@ class PersonalDataController extends Controller
 	{
 		$form = $this->form(SignUpForm::class);
 
-		$form->validate([
-			'identity_number' => new ValidatePersonalIdentityNumber
-		]);
+		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
+		if (!is_object($validator)) {
+			// Very strange situation,
+			// somebody probably tried to do something nasty.
+			return redirect()->back()->withInput();
+		}
+
+		$validations = ['identity_number' => $validator];
 
 		$user = Auth::user();
 		if ($user) {
 			// Don't require email and pass when updating order/account data.
-			$form->validate([
+			$validations = array_merge($validations, [
 				'email'                 => 'email',
 				'password'              => '',
 				'password_confirmation' => ''
 			]);
 		}
+
+		$form->validate($validations);
 
 		if (!$form->isValid()) {
 			Log::notice('Sing up form invalid, redirecting...');
@@ -167,9 +176,9 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		$user->personalData()->firstOrCreate([
-			'personal_identity_number' => $request->get('identity_number')
-		]);
+		$user->personalData()->firstOrCreate(
+			$this->getIdentityNumbersArray($request)
+		);
 
 		Auth::login($user);
 		Log::debug('User automatically logged in after registration.');
@@ -188,9 +197,9 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		$user->personalData()->update([
-			'personal_identity_number' => $request->get('identity_number')
-		]);
+		$user->personalData()->update(
+			$this->getIdentityNumbersArray($request)
+		);
 	}
 
 	protected function updateOrder($user, $request)
@@ -220,5 +229,33 @@ class PersonalDataController extends Controller
 		}
 
 		$order->attachCoupon($coupon);
+	}
+
+	protected function getIdentityNumberValidator($identityNumberType) {
+		$validators = [
+			'identity_card_number' => new ValidateIdentityCardNumber,
+			'passport_number' => new ValidatePassportNumber,
+			'personal_identity_number' => new ValidatePersonalIdentityNumber,
+		];
+
+		if (!array_key_exists($identityNumberType, $validators)) {
+			return false;
+		}
+
+		return $validators[$identityNumberType];
+	}
+
+	protected function getIdentityNumbersArray(Request $request) {
+		$identityNumbers = [
+			'identity_card_number' => null,
+			'passport_number' => null,
+			'personal_identity_number' => null,
+		];
+
+		if (array_key_exists($request->get('identity_number_type'), $identityNumbers)) {
+			$identityNumbers[$request->get('identity_number_type')] = $request->get('identity_number');
+		}
+
+		return $identityNumbers;
 	}
 }

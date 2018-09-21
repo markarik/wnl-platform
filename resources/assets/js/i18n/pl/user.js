@@ -97,7 +97,7 @@ export const user = {
 		},
 		identityNumber: {
 			header: 'Numer identyfikacyjny',
-			explanation: '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu. Posłuży on tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!',
+			explanation: '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu. Posłuży on tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p>',
 			yourNumber: 'Podany przez Ciebie numer to: {number}.',
 			yourNumberChange: 'Jeśli chcesz dokonać zmiany, napisz na info@bethink.pl.',
 			changeNumberType: 'Chcę podać inny numer identyfikacyjny',

@@ -21,7 +21,7 @@ if (!function_exists('api_action')) {
 	}
 }
 
-Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api-cache']], function () {
+Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], function () {
 	$r = config('papi.resources');
 
 	// Search (using search engine)
@@ -45,15 +45,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	// Fetch additional routing data basing on various input
 	api_action('post', 'context');
 
-	Route::group(['middleware' => 'subscription'], function () use ($r) {
+	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
 		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
-
-		// Invoices
-		Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
 
 		// Certificates
 		Route::get("{$r['certificates']}/participation", 'CertificatesApiController@getAvailableCertificates');
@@ -139,10 +136,14 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 
 		// Slideshow builder
 		Route::get("{$r['slideshow-builder']}/category/{categoryId}", 'SlideshowBuilderApiController@byCategory');
+		Route::post("{$r['slideshow-builder']}/category/{categoryId}/.searchBySlides/", 'SlideshowBuilderApiController@byCategorySlides');
+		Route::get("{$r['slideshow-builder']}/slide/{slideId}/", 'SlideshowBuilderApiController@bySlideId');
 		Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
 		Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
-		Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
 		Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
+
+		// Route preserved for backward compatibility. To be removed in next release.
+		Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
 
 		// Quiz Stats
 		Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
@@ -217,6 +218,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth', 'api
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
 	Route::get("{$r['orders']}/{id}/.cancel", 'OrdersApiController@cancel');
+
+	// Invoices
+	Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
+
+	// Payments
+	Route::post("{$r['payments']}", 'PaymentsApiController@post');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');

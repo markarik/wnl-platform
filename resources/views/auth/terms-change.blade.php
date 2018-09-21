@@ -22,7 +22,7 @@
 			<form action="{{ route('terms-accept') }}" method="post">
 				{{ csrf_field() }}
 				<div class="has-text-centered">
-					<button class="button is-primary">
+					<button class="button is-primary" id="btest-accept-privacy-policy-button">
 						Akceptuję nową politykę prywatności
 					</button>
 				</div>

@@ -91,7 +91,6 @@
 			'wnl-main-nav': MainNav,
 			'wnl-splash-screen': SplashScreen,
 		},
-		mixins: [breadcrumb],
 		props: ['courseId', 'lessonId', 'screenId', 'slide'],
 		computed: {
 			...mapGetters('course', ['isLessonAvailable', 'ready']),

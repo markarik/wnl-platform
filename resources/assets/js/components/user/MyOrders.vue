@@ -55,21 +55,22 @@
 		},
 		methods: {
 			getOrders() {
-				axios.get(getApiUrl(`orders/all?include=invoices`))
+				axios.get(getApiUrl(`orders/all?include=invoices,payments`))
 						.then((response) => {
 							if (_.isEmpty(response.data)) {
 								this.orders = []
 							}
 
 							const {included = {}, ...orders} = response.data
-							const {invoices} = included
+							const {invoices, payments} = included
 
 							this.orders = _.reverse(Object.values(orders)
 								.filter(this.isConfirmed))
 								.map(order => {
 									return {
 										...order,
-										invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId])
+										invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
+										payments: (order.payments || []).map(paymentId => payments[paymentId])
 									}
 								})
 
@@ -82,7 +83,17 @@
 			},
 		},
 		mounted() {
-			this.getOrders()
+			this.getOrders();
+		},
+		created() {
+			if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
+				const {payment, amount, ...query} = this.$route.query;
+				typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN'});
+				this.$router.push({
+					...this.$route,
+					query
+				})
+			}
 		},
 		components: {
 			'wnl-order': Order,

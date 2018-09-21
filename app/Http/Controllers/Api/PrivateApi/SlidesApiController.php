@@ -56,6 +56,8 @@ class SlidesApiController extends ApiController
 		$resource = new Item($slide, new SlideTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
 
+		self::slideCacheForget($slide);
+
 		return $this->respondOk($data);
 	}
 
@@ -92,11 +94,11 @@ class SlidesApiController extends ApiController
 		$slide->tags()->attach($screen->tags);
 
 		if (!App::environment('dev')) {
-			dispatch(new SearchImportAll('App\\Models\\Slide'));
 			\Artisan::queue('screens:countSlides');
-			\Artisan::queue('slides:fromCategory');
-			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
+			dispatch(new SearchImportAll('App\\Models\\Slide'));
 		}
+
+		$this->slideCacheForget($slide);
 		event(new SlideAdded($slide, $presentables));
 
 		return $this->respondOk();
@@ -146,10 +148,9 @@ class SlidesApiController extends ApiController
 		if (!App::environment('dev')) {
 			dispatch(new SearchImportAll('App\\Models\\Slide'));
 			\Artisan::queue('screens:countSlides');
-			\Artisan::queue('slides:fromCategory');
-			\Artisan::call('cache:tag', ['tag' => 'presentables,slides']);
 		}
 
+		$this->slideCacheForget($slide);
 		foreach ($presentablesInstances as $presentable) {
 			event(new SlideDetached($slide, $presentable));
 		}
@@ -188,6 +189,24 @@ class SlidesApiController extends ApiController
 		$raw = Slide::searchRaw($query);
 
 		return $this->respondOk($raw);
+	}
+
+	public static function slideCacheForget($slide) {
+		foreach ($slide->categories as $category) {
+			\Cache::forget(SlideshowBuilderApiController::key(
+					sprintf(SlideshowBuilderApiController::CATEGORY_SUBKEY, $category->id)
+			));
+		}
+
+		foreach ($slide->slideshow as $slideshow) {
+			\Cache::forget(SlideshowBuilderApiController::key(
+				sprintf(SlideshowBuilderApiController::SLIDESHOW_SUBKEY, $slideshow->id)
+			));
+		}
+
+		\Cache::forget(SlideshowBuilderApiController::key(
+			sprintf(SlideshowBuilderApiController::SLIDE_SUBKEY, $slide->id)
+		));
 	}
 
 	protected function buildQuery($query, $onlyAvailable, $user)

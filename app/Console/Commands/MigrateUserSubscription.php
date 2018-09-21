@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
 use App\Models\User;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
@@ -69,7 +70,7 @@ class MigrateUserSubscription extends Command
 				);
 			}
 
-			Cache::tags("user-{$user->id}")->flush();
+			\Cache::forget(EditionsApiController::key($user->id));
 		}
 	}
 }

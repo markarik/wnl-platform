@@ -159,10 +159,14 @@ trait TranslatesApiQueries
 	protected function applyFilters($model, $request)
 	{
 		$query = $this->parseTime($request->get('query'));
+		$select = $request->get('select');
 		$order = $request->get('order');
 		$limit = $request->get('limit');
 		$join = $request->get('join');
 
+		if (!empty($select)) {
+			$model->select($select);
+		}
 		$model = $this->parseQuery($model, $query);
 
 		if (!empty ($order)) {

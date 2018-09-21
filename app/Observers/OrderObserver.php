@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\Jobs\OrderConfirmed;
 use App\Jobs\OrderPaid;
+use App\Jobs\OrderStudyBuddy;
 use App\Jobs\PopulateUserCoursePlan;
 use App\Models\Order;
 use App\Notifications\OrderCreated;
@@ -28,7 +29,12 @@ class OrderObserver
 			\Log::notice("OrderObserver: Dispatching OrderPaid for order #$order->id");
 			$this->dispatch(new OrderPaid($order));
 
-			if (!$order->paid) {
+			\Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
+			dispatch_now(new OrderStudyBuddy($order));
+
+			\Log::debug('well shit: ' . !$order->paid && $order->paidAmountSufficient());
+			if (!$order->paid && $order->paidAmountSufficient()) {
+				$order->paid = true;
 				$order->paid_at = Carbon::now();
 				$order->save();
 			}

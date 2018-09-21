@@ -16,7 +16,9 @@ trait EventContextTrait {
 							'resource' => 'qna_questions',
 							'value' => $model->id,
 						],
-						'route' => $model->meta['context']
+						'route' => $model->meta['context'],
+						// params are used to determine if user already started a lesson from QnaQuestion context
+						'params' => $model->meta['context']['params'] ?? []
 					];
 				}
 

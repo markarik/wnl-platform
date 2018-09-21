@@ -5,7 +5,7 @@ export default createPerimeter({
 
 	can: {
 		access() {
-			return this.isCurrentEditionParticipant()
+			return this.isCurrentEditionParticipant() && this.isAccountActive();
 		}
 	},
 
@@ -14,4 +14,8 @@ export default createPerimeter({
 			this.child.subscription &&
 			this.child.subscription.status === 'active'
 	},
+
+	isAccountActive() {
+		return this.child && !this.child.accountSuspended
+	}
 });

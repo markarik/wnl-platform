@@ -41,8 +41,8 @@ class InvoicesJpkSend extends Command
      */
     public function handle()
     {
-        $dateFrom = Carbon::now()->startOfMonth();
-        $dateTo = Carbon::now()->endOfMonth();
+        $dateFrom = Carbon::now()->subMonth()->startOfMonth();
+        $dateTo = Carbon::now()->subMonth()->endOfMonth();
 
         $filename = sprintf('jpk-%s-%s.xml',
             $dateFrom->format('Ymd'),

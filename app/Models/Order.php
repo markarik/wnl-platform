@@ -72,6 +72,10 @@ class Order extends Model
 		return $this->hasMany('App\Models\PaymentReminder');
 	}
 
+	public function payments() {
+		return $this->hasMany('App\Models\Payment');
+	}
+
 	public function attachCoupon($coupon)
 	{
 		$this->coupon_id = $coupon->id;
@@ -210,5 +214,16 @@ class Order extends Model
 		}
 
 		$this->save();
+	}
+
+	public function paidAmountSufficient()
+	{
+		if ($this->method === 'instalments') {
+			return
+				$this->instalments['allPaid'] ||
+				$this->instalments['instalments'][0]['amount'] <= $this->paid_amount;
+		}
+
+		return $this->paid_amount >= $this->total_with_coupon;
 	}
 }

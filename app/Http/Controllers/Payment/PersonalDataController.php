@@ -40,7 +40,7 @@ class PersonalDataController extends Controller
 		if (Auth::check() && !$request->edit) {
 			$this->createOrder(Auth::user(), $request);
 
-			return redirect()->route('payment-confirm-order');
+			return redirect()->route('payment-confirm-order', ['existing_user']);
 		}
 
 		$form = $this->form(SignUpForm::class, [

@@ -31,9 +31,6 @@ class OnlinePaymentModule
 			->on(new P24ChooseBank)
 			->press('@ing-logo');
 
-		$browser->pause(500);
-		$browser->driver->executeScript("$('#reagulation-accept-button').click()");
-
 		$browser
 			->waitFor('@login-button', 40)
 			->press('@login-button');

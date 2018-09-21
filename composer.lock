@@ -144,16 +144,16 @@
         },
         {
             "name": "bethink/elastic-scout",
-            "version": "3.0.6",
+            "version": "3.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bethinkpl/elastic-scout.git",
-                "reference": "2ae4d017ef6886bdcba8880a8aeaffccf58fc123"
+                "reference": "703ebb875b2aa29797b3733d48289afb96cb6ef1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bethinkpl/elastic-scout/zipball/2ae4d017ef6886bdcba8880a8aeaffccf58fc123",
-                "reference": "2ae4d017ef6886bdcba8880a8aeaffccf58fc123",
+                "url": "https://api.github.com/repos/bethinkpl/elastic-scout/zipball/703ebb875b2aa29797b3733d48289afb96cb6ef1",
+                "reference": "703ebb875b2aa29797b3733d48289afb96cb6ef1",
                 "shasum": ""
             },
             "require": {
@@ -183,7 +183,7 @@
                 "laravel-scout",
                 "php"
             ],
-            "time": "2017-08-10T18:49:52+00:00"
+            "time": "2018-08-30T10:01:05+00:00"
         },
         {
             "name": "bschmitt/laravel-amqp",

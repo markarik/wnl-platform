@@ -35,11 +35,11 @@ class JpkReport extends Mailable
     public function build()
     {
         $fileContents = \Storage::get('exports/' . $this->filename);
-        $now = Carbon::now();
+        $lastMonth = Carbon::now()->subMonth();
 
         $message = $this
             ->view('mail.jpk')
-            ->subject("Bethink - JPK - {$now->format('m')}/{$now->format('Y')}")
+            ->subject("Bethink - JPK - {$lastMonth->format('m')}/{$lastMonth->format('Y')}")
             ->attachData($fileContents, $this->filename, [
                 'mime' => 'text/xml',
             ]);

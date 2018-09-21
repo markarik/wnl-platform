@@ -89,7 +89,6 @@ class SectionsUpdate extends Command
 		$this->addNewSections($newSections);
 
 		\Artisan::call('screens:countSlides');
-		\Artisan::call('cache:tag', ['tag' => 'sections,subsections,presentables']);
 
 		$this->info("\n\nThe end! Now go, and see what you broke.\n");
 

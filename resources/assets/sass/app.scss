@@ -278,7 +278,7 @@ section.voucher {
 	@include flex-center;
 
 	form {
-		width: 280px;
+		width: 450px;
 	}
 
 	label {
@@ -363,6 +363,16 @@ section.voucher {
 .sublist-group {
 	list-style-type: disc;
 	margin: 5px 30px 15px 30px;
+}
+
+.box.wnl-album {
+	margin-bottom: 40px;
+}
+
+.section.select-product {
+	.button {
+		white-space: normal;
+	}
 }
 
 // Helper classes

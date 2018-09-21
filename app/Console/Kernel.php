@@ -37,11 +37,8 @@ class Kernel extends ConsoleKernel
 			->dailyAt('00:30')
 			->after(function () use ($schedule) {
 				Artisan::call('cache:clear', [
-					'--tags' => 'api,slides,search',
+					'--tags' => 'editions',
 				]);
-			})
-			->after(function () use ($schedule) {
-				Artisan::call('cache:warmup');
 			});
 
 		$schedule
@@ -64,6 +61,10 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('orders:handleUnpaid')
 			->twiceDaily(8, 20);
+
+		$schedule
+			->command('payments:markFailed')
+			->hourly();
 
 		$schedule
 			->command('notifications:cleanup-old --force')

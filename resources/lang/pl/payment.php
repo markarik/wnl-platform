@@ -137,6 +137,11 @@ return [
 	'personal-data-account-login-lead' => 'Zaloguj się, aby skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzedniej edycji!',
 	'personal-data-account-login-button' => 'Zaloguj się',
 
+	'personal-data-id-heading' => 'W tym miejscu chcielibyśmy Cię prosić o pozostawienie numeru PESEL!
+	Dlaczego jest to dla nas ważne?',
+	'personal-data-id-lead' => 'Zebrane numery PESEL posłużą tylko i wyłącznie do opracowania statystyk przez CEM dla grup uczestników, dzięki czemu będziemy w stanie doskonalić kurs. Natomiast nie będziemy ich wykorzystywać do poznania indywidualnych wyników uczestników. Twoje dane będą absolutnie bezpieczne, więcej informacji na ten temat znajdziesz tutaj: <a class="privacy-policy-open-modal-link" href="#">Polityka Prywatności</a>. Te informacje nie będą widoczne na Twoim publicznym profilu na platformie.',
+	'identity_number' => 'Numer PESEL',
+
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
 

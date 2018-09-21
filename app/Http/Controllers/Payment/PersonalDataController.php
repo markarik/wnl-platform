@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
+use App\Rules\ValidatePersonalIdentityNumber;
 
 class PersonalDataController extends Controller
 {
@@ -63,13 +64,17 @@ class PersonalDataController extends Controller
 	{
 		$form = $this->form(SignUpForm::class);
 
+		$form->validate([
+			'identity_number' => new ValidatePersonalIdentityNumber
+		]);
+
 		$user = Auth::user();
 		if ($user) {
 			// Don't require email and pass when updating order/account data.
 			$form->validate([
 				'email'                 => 'email',
 				'password'              => '',
-				'password_confirmation' => '',
+				'password_confirmation' => ''
 			]);
 		}
 
@@ -162,6 +167,10 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
+		$user->personalData()->firstOrCreate([
+			'personal_identity_number' => $request->get('identity_number')
+		]);
+
 		Auth::login($user);
 		Log::debug('User automatically logged in after registration.');
 
@@ -177,6 +186,10 @@ class PersonalDataController extends Controller
 			'city'      => $request->get('city'),
 			'phone'     => $request->get('phone'),
 			'recipient' => $request->get('recipient'),
+		]);
+
+		$user->personalData()->update([
+			'personal_identity_number' => $request->get('identity_number')
 		]);
 	}
 

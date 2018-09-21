@@ -41,6 +41,16 @@ class SignUpForm extends Form
 					'placeholder' => trans('payment.password-confirm'),
 				],
 			])
+			// Identity number
+
+			->add('identity_number', 'text', [
+				'label' => trans('payment.identity_number'),
+				'rules' => 'required|digits:11',
+				'attr'  => [
+					'class' => 'input',
+					'placeholder' => trans('payment.identity_number'),
+				],
+			])
 			// Personal data
 
 			->add('first_name', 'text', [

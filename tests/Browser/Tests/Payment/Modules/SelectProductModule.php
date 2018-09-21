@@ -12,7 +12,7 @@ class SelectProductModule
 	{
 		$browser
 			->visit(new SelectProductPage)
-			->clickLink('Wybieram kurs internetowy');
+			->click('@online-button');
 
 		if (empty($browser->user)) {
 			return PersonalDataModule::class;
@@ -25,7 +25,7 @@ class SelectProductModule
 	{
 		$browser
 			->visit(new SelectProductPage)
-			->clickLink('Wybieram kurs stacjonarny');
+			->click('@onsite-button');
 
 		if (empty($browser->user)) {
 			return PersonalDataModule::class;

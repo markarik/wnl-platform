@@ -44,7 +44,9 @@
 	import axios from 'axios'
 	import _ from 'lodash'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
+	import {mapGetters} from 'vuex'
 	import Order from './Order'
+	import moment from 'moment'
 
 	export default {
 		name: 'MyOrders',
@@ -55,6 +57,7 @@
 			}
 		},
 		computed: {
+			...mapGetters(['currentUserSubscriptionDates']),
 			paymentUrl() {
 				return getUrl('payment/select-product')
 			},
@@ -64,6 +67,9 @@
 			orderSuccess() {
 				return this.$route.query.hasOwnProperty('payment')
 			},
+			userFriendlySubscriptionDate() {
+				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
+			}
 		},
 		methods: {
 			getOrders() {

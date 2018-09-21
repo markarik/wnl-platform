@@ -59,7 +59,8 @@
 					@if(!$online->available)
 						<div class="notification has-text-centered strong">Brak miejsc :(</div>
 					@else
-						<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary">
+						<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary"
+						   id="btest-wnl-online-button">
 							@lang('payment.select-product-online-button-label')
 						</a>
 						<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
@@ -69,7 +70,8 @@
 					@if(!$onsite->available)
 						<div class="notification has-text-centered strong">Brak miejsc :(</div>
 					@else
-						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary is-outlined">
+						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary is-outlined"
+							id="btest-wnl-online-onsite-button">
 							@lang('payment.select-product-onsite-button-label')
 						</a>
 						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>

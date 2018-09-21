@@ -32,6 +32,11 @@
 					<span class="average">{{average}}</span>
 					{{$t(`questions.plan.progress.average.${averageStatus}`)}}
 					<span class="average-planned">{{averagePlanned}}</span>
+					<div v-if="hasMoreQuestionsThanPlanned">
+						<span>{{$t('questions.plan.progress.average.newAverage.header')}}</span>
+						<span class="new-average">{{hasMoreQuestionsThanPlanned}}</span>
+						<span>{{$t('questions.plan.progress.average.newAverage.closure')}}</span>
+					</div>
 					<span v-if="averageStatus === 'greater'">
 						{{$t('questions.plan.progress.average.congrats')}}
 					</span>
@@ -110,7 +115,8 @@
 		text-align: center
 
 		.average,
-		.average-planned
+		.average-planned,
+		.new-average
 			font-size: $font-size-base
 			font-weight: $font-weight-bold
 
@@ -122,6 +128,9 @@
 
 		.average-planned
 			color: $color-green
+
+		.new-average
+			color: $color-purple
 </style>
 
 <script>
@@ -147,6 +156,17 @@
 			},
 			averagePlanned() {
 				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
+			},
+			hasMoreQuestionsThanPlanned() {
+				const questionsLeft = this.plan.stats.total - this.plan.stats.done
+				const daysLeft = this.plannedDaysCount - this.daysSoFar + 1
+				const questionsLeftPerDay =  Math.ceil(questionsLeft / daysLeft)
+
+				if (questionsLeftPerDay > this.averagePlanned) {
+					return questionsLeftPerDay
+				} else {
+					return false
+				}
 			},
 			averageStatus() {
 				return this.average >= this.averagePlanned ? 'greater' : 'less'
@@ -194,7 +214,6 @@
 
 				return diff < 0 ? 0 : diff + 1
 			}
-
 		},
 	}
 </script>

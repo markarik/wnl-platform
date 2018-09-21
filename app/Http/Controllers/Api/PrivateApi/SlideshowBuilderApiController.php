@@ -172,7 +172,11 @@ class SlideshowBuilderApiController extends ApiController
 			->orderBy('presentables.order_number', 'asc')
 			->get();
 
-		$background = $slides->first()->slideshow->first()->background_url;
+		if (!$slides->count()) {
+			return $this->respondNotFound();
+		}
+
+		$background = $slides->first()->slideshow->first()->background_url ?? null;
 
 		$viewData = $this->getViewData($slides, $background);
 		Cache::tags("slideshow_builder-category-{$categoryId}")->put($key, $viewData, self::CACHE_TTL);

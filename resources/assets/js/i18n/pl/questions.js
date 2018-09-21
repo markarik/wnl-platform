@@ -96,6 +96,10 @@ export const questions = {
 				greater: ' i jest większa lub równa planowanej ',
 				is: 'Twoja dzienna średnia wynosi ',
 				less: ' i jest mniejsza, niż planowana ',
+				newAverage: {
+					header: 'Aby zrealizować plan, będziesz otrzymywać ',
+					closure: 'pytań dziennie.'
+				}
 			},
 			currentPlan: 'Obecny plan',
 			day: 'Dzień {day}',

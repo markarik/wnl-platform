@@ -45,8 +45,6 @@
 	import _ from 'lodash'
 	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
 	import Order from './Order'
-	import { mapGetters } from 'vuex'
-	import moment from 'moment'
 
 	export default {
 		name: 'MyOrders',
@@ -57,7 +55,6 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserSubscriptionDates']),
 			paymentUrl() {
 				return getUrl('payment/select-product')
 			},
@@ -67,9 +64,6 @@
 			orderSuccess() {
 				return this.$route.query.hasOwnProperty('payment')
 			},
-			userFriendlySubscriptionDate() {
-				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
-			}
 		},
 		methods: {
 			getOrders() {
@@ -100,7 +94,17 @@
 			},
 		},
 		mounted() {
-			this.getOrders()
+			this.getOrders();
+		},
+		created() {
+			if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
+				const {payment, amount, ...query} = this.$route.query;
+				typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN'});
+				this.$router.push({
+					...this.$route,
+					query
+				})
+			}
 		},
 		components: {
 			'wnl-order': Order,

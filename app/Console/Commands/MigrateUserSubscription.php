@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
 use App\Models\User;
 use App\Models\UserSubscription;
 use Carbon\Carbon;

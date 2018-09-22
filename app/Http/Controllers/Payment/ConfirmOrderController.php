@@ -22,20 +22,18 @@ class ConfirmOrderController extends Controller
 			return redirect(route('payment-select-product'));
 		}
 
-		$order = $user->orders()->recent();
-
-		$checksum = $payment::generateChecksum($order->session_id, (int)$order->total_with_coupon * 100);
 		Log::debug('Order confirmation');
 
+		$order = $user->orders()->recent();
 		$instalments = $order->product->paymentMethods
 			->where('slug', 'instalments')
 			->first()
 			->isAvailable() ? $order->instalments['instalments'] : false;
 
-		$instalmentsChecksum = $payment::generateChecksum(
-			$order->session_id, (int)$instalments[0]['amount'] * 100
-		);
+		$firstInstalmentAmount = (int) $order->total_with_coupon ?? $instalments[0]['amount'] * 100;
 		$amount = (int)$order->total_with_coupon * 100;
+		$checksum = $payment::generateChecksum($order->session_id, $amount);
+		$instalmentsChecksum = $payment::generateChecksum($order->session_id, $firstInstalmentAmount);
 
 		return view('payment.confirm-order', [
 			'order' => $order,

@@ -19,4 +19,34 @@ class UserPersonalData extends Model
 	{
 		return $this->belongsTo('App\Models\User');
 	}
+
+	public function getPersonalIdentityNumberAttribute($value)
+	{
+		return decrypt($value);
+	}
+
+	public function setPersonalIdentityNumberAttribute($value)
+	{
+		$this->attributes['personal_identity_number'] = encrypt($value);
+	}
+
+	public function getIdentityCardNumberAttribute($value)
+	{
+		return decrypt($value);
+	}
+
+	public function setIdentityCardNumberAttribute($value)
+	{
+		$this->attributes['identity_card_number'] = encrypt($value);
+	}
+
+	public function getPassportNumberAttribute($value)
+	{
+		return decrypt($value);
+	}
+
+	public function setPassportNumberAttribute($value)
+	{
+		$this->attributes['passport_number'] = encrypt($value);
+	}
 }

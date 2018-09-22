@@ -41,18 +41,28 @@ class SignUpForm extends Form
 					'placeholder' => trans('payment.password-confirm'),
 				],
 			])
-			// Identity number
 
+			// Identity number
+			->add('identity_number_type', 'choice', [
+				'choices' => [
+					'personal_identity_number' => trans('payment.identity_number_personal_identity_number'),
+					'identity_card_number' => trans('payment.identity_number_identity_card_number'),
+					'passport_number' => trans('payment.identity_number_passport_number'),
+				],
+				'expanded' => true,
+				'selected' => ['personal_identity_number'],
+				'multiple' => false,
+			])
 			->add('identity_number', 'text', [
 				'label' => trans('payment.identity_number'),
-				'rules' => 'required|digits:11',
+				'rules' => 'required',
 				'attr'  => [
 					'class' => 'input',
 					'placeholder' => trans('payment.identity_number'),
 				],
 			])
-			// Personal data
 
+			// Personal data
 			->add('first_name', 'text', [
 				'label' => trans('payment.first-name'),
 				'rules' => 'required',

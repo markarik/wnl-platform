@@ -176,6 +176,31 @@ class User extends Authenticatable
 		return $this->userAddress->city;
 	}
 
+	/**
+	 * Returns users all identity numbers
+	 * @return array An associate array with types of
+	 */
+	public function getIdentityNumbersAttribute() {
+		$numbers = [
+			[
+				'type' => 'personal_identity_number',
+				'value' => $this->personalData->personal_identity_number,
+			],
+			[
+				'type' => 'identity_card_number',
+				'value' => $this->personalData->identity_card_number,
+			],
+			[
+				'type' => 'passport_number',
+				'value' => $this->personalData->passport_number,
+			],
+		];
+
+		return array_values(array_filter($numbers, function ($number) {
+			return !empty($number['value']);
+		}));
+	}
+
 	public function getIsSubscriberAttribute()
 	{
 		return !is_null(Subscriber::where('email', $this->email)->first());

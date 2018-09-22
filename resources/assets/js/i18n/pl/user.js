@@ -92,12 +92,20 @@ export const user = {
 	},
 	personalData: {
 		header: {
-			explanationHeader: 'Twoje wrażliwe dane',
-			explanation: 'Informacje, które tu zostawisz będą wykorzystane przez nas do obsługi Twojego zamówienia. Dane nie będą widoczne publicznie. Więcej informacji na ten temat znajdziesz tutaj: <a href="https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf" target="_blank">Polityka Prywatności</a>'
+			explanationHeader: 'Twoje prywatne dane',
+			explanation: 'Te informacje będą wykorzystane tylko do obsługi Twojego zamówienia i nie będą widoczne publicznie. Więcej informacji na ten temat znajdziesz tutaj: <a href="https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf" target="_blank">Polityka Prywatności</a>'
 		},
 		identityNumber: {
 			header: 'Numer identyfikacyjny',
-			explanation: 'W związku z podjęciem współpracy z CEM, prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu! Zebrane numery PESEL posłużą tylko i wyłącznie do opracowania statystyk przez CEM dla grup uczestników, dzięki czemu będziemy w stanie doskonalić kurs. Natomiast nie będziemy ich wykorzystywać do poznania indywidualnych wyników uczestników. Te dane nie będą widoczne publicznie, a posłużą nam do celów statystycznych. Twoja pomoc pozwoli nam rozwijać i doskonalić kurs!',
+			explanation: '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu. Posłuży on tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p>',
+			yourNumber: 'Podany przez Ciebie numer to: {number}.',
+			yourNumberChange: 'Jeśli chcesz dokonać zmiany, napisz na info@bethink.pl.',
+			changeNumberType: 'Chcę podać inny numer identyfikacyjny',
+			types: {
+				personal: 'PESEL',
+				id: 'Dowód osobisty',
+				passport: 'Paszport',
+			}
 		},
 		errors: {
 			incorrectIdStructure: 'PESEL powinien składać się tylko z 11 cyfr.',

@@ -73,14 +73,17 @@
 		</section>
 
 		<section class="section">
-			<div class="form-header has-text-centered">
-				<h2 class="title">@lang('payment.personal-data-id-heading')</h2>
-				<p class="subtitle">@lang('payment.personal-data-id-lead')</p>
+			<div class="form-header">
+				<h2 class="title aligncenter">@lang('payment.personal-data-id-heading')</h2>
+				<div class="content">@lang('payment.personal-data-id-lead')</div>
 			</div>
 
 			<div class="form-group">
 				<div class="control">
-					{!! form_label($form->identity_number) !!}
+					<h4>{!! form_label($form->identity_number) !!}</h4>
+					<div class="identity-number-select">
+						{!! form_widget($form->identity_number_type) !!}
+					</div>
 					{!! form_widget($form->identity_number) !!}
 					{!! form_errors($form->identity_number) !!}
 				</div>

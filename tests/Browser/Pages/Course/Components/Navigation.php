@@ -19,9 +19,9 @@ class Navigation extends BasePage
 
 	public function logoutUser($browser)
 	{
-		$browser
-			->click('@dropdown_trigger')
-			->click('@logout');
+		$browser->waitUntilMissing('.wnl-overlay');
+		$browser->click('@dropdown_trigger');
+		$browser->click('@logout');
 	}
 
 	public function url()

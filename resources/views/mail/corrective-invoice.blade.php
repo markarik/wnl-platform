@@ -5,7 +5,7 @@
 
 	<p>W załączniku przesyłamy fakturę korygującą do Twojego zamówienia. :)</p>
 
-	<p>Wszystie faktury dotyczące Twoich zamówień znajdziesz w zakładce KONTO > Twoje zamówienia.</p>
+	<p>Wszystie faktury dotyczące Twoich zamówień znajdziesz w zakładce <a href="{{url('app/myself/orders')}}">KONTO > Twoje zamówienia</a>.</p>
 
 	<p>W razie pytań napisz do nas na info@wiecejnizlek.pl</p>
 

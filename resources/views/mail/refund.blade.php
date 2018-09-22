@@ -11,5 +11,7 @@
 
 	<p>W załączniku znajdziesz fakturę korygującą do Twojego zamówienia. ;)</p>
 
+	<p>Swoje zamówienia znajdziesz w zakładce <a href="{{url('app/myself/orders')}}" target="_blank">KONTO > Twoje zamówienia</a>. :)</p>
+
 	<p>Z pozdrowieniami,</p>
 @endsection

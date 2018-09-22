@@ -16,13 +16,24 @@
 					</p>
 				</div>
 			</div>
-			<div class="content" v-if="!order.canceled">
+			<div class="level">
+				<div class="level-left">
+					<div class="tags">
+						<span :class="{'is-success': order.paid, 'tag': true }">{{ paymentStatus }}</span>
+						<span class="tag">Metoda płatności: {{ paymentMethod }}</span>
+					</div>
+				</div>
+				<div class="level-right"></div>
+			</div>
+			<div v-if="!order.canceled">
+				<!-- COUPONS BEGINS -->
 				<p v-if="coupon">
 					<strong>Naliczona zniżka: "{{ coupon.name }}" o wartości {{ getCouponValue(coupon) }}</strong><br>
 					Cena ze zniżką: {{ order.total }}zł
 				</p>
 
-				<div class="margin bottom" v-else-if="studyBuddy && order.paid">
+				<!-- STUDY BUDDY BEGINS -->
+				<div class="box margin bottom" v-else-if="studyBuddy && order.paid">
 					<div v-if="order.studyBuddy.status === 'awaiting-refund'">
 						<p class="strong has-text-centered">
 							Twój Study Buddy dołączył już do kursu!
@@ -44,124 +55,184 @@
 							Dziękujemy za opłacenie zamówienia! Możesz teraz skorzystać z promocji Study Buddy!
 						</p>
 						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się
-						z Twoim unikalnym kodem:
+						z Twoim unikalnym kodem. <strong>Gdy opłaci zamówienie</strong> - zniżka zostanie naliczona także Tobie, a my wykonamy na konto, z którego opłacony został kurs!&nbsp;😉
+						<p class="metadata aligncenter">Twój unikalny kod:</p>
 						<span class="code">{{order.studyBuddy.code}}</span>
-						Obydwoje otrzymacie 100zł zniżki, <strong>jeżeli jej zamówienie zostanie opłacone</strong>!
-						Przed zwrotem otrzymasz od nas maila o tytule "Twój Study Buddy dołączył właśnie do kursu!
-						(Zamówienie {{order.id}})" z prośbą o przekazanie danych, na który wykonamy przelew ze zwrotem.
-						<wnl-emoji name="wink"/>
 						<p class="small margin vertical has-text-centered">
-							Dla ułatwienia, możesz wysłać jej ten link: <a :href="voucherUrl(order.studyBuddy.code)"
-																			 target="_blank">{{voucherUrl(order.studyBuddy.code)}}</a>
+							Dla ułatwienia, możesz po prostu wysłać jej ten link:
+							<a :href="voucherUrl(order.studyBuddy.code)" target="_blank">
+								{{voucherUrl(order.studyBuddy.code)}}
+							</a>
 						</p>
 					</div>
 					<!-- <a :href="voucherUrl(order.studyBuddy.code)">{{ order.studyBuddy.code }}</a> -->
 				</div>
-				<p v-else-if="!order.coupon && studyBuddy" class="notification has-text-centered">
-					Po opłaceniu zamówienia w tym miejscu pojawi się Twój unikalny kod, który możesz wysłać znajomym i
-					skorzystać z promocji <strong>Study Buddy</strong> - gdy ktoś zapisze się używając Twojego kodu i
-					opłaci zamówienie - obydwoje dostaniecie 100zł zniżki! Przed zwrotem napiszemy do Ciebie, aby
-					uzyskać dane do przelewu.
-					<wnl-emoji name="wink"/>
-				</p>
-
-				<p>Metoda płatności: {{ paymentMethod }}</p>
-
-				<div class="margin bottom" v-if="!isPending && !order.paid && order.method === 'online'">
-					<button class="button pay-next-instalment is-inline is-centered" @click="pay">Zapłać teraz</button>
+				<div v-else-if="!order.coupon && studyBuddy" class="box has-text-centered">
+					<p>Po opłaceniu zamówienia lub pierwszej raty, w tym miejscu pojawi się Twój unikalny kod <strong>Study Buddy</strong>!</p>
+					<p>Przekaż go znajomej osobie, aby zapisała się na kurs ze 100zł zniżką! <strong>Gdy opłaci zamówienie</strong> - zniżka zostanie naliczona także Tobie, a my wykonamy zwrot na konto, z którego opłacony został kurs!&nbsp;😉</p>
 				</div>
 
-				<!-- Instalments -->
-				<div class="payment-details" v-if="!isFullyPaid">
-					<p class="big strong" v-if="order.method === 'transfer'">
-						Kwota: {{ order.total }}zł
-					</p>
-					<div v-if="order.method === 'instalments'">
-						<table class="table is-striped">
-							<tr>
-								<th>Rata</th>
-								<th>Termin płatności</th>
-								<th>Zapłacone / Do&nbsp;zapłaty</th>
-							</tr>
-							<tr v-for="(instalment, index) in order.instalments.instalments">
-								<td>{{index + 1}}</td>
-								<td>
-									{{ instalmentDate(instalment.date) }}
-								</td>
-								<td>
-									{{instalment.amount - instalment.left}}zł / {{instalment.amount}}zł
-								</td>
-							</tr>
-							<tr>
-								<td>Razem</td>
-								<td></td>
-								<td>{{ order.total }}zł</td>
-							</tr>
-						</table>
-						<div class="next-payment margin bottom" v-if="!isPending">
-							<p>Kolejna wpłata: <strong>{{ order.instalments.nextPayment.amount }}zł do
-								{{ instalmentDate(order.instalments.nextPayment.date) }}</strong></p>
-							<button class="button pay-next-instalment is-inline" @click="pay">Zapłać kolejną ratę</button>
+				<!-- STUDY BUDDY ENDS -->
+
+				<div class="current-payment">
+
+					<!-- PAY ORDER BEGINS -->
+					<div class="margin top aligncenter" v-if="!isPending && !order.paid && order.method === 'online'">
+						<p>
+							<button
+								:class="{
+									'button': true,
+									'is-primary': true,
+									'is-loading': this.paymentLoading
+								}"
+								@click="pay">
+								Opłać zamówienie
+							</button>
+						</p>
+						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{this.order.total}}zł</p>
+					</div>
+					<!-- PAY ORDER ENDS -->
+
+					<!-- Instalments -->
+					<div class="payment-details" v-if="!isFullyPaid">
+						<p class="big strong" v-if="order.method === 'transfer'">
+							Kwota: {{ order.total }}zł
+						</p>
+						<div v-if="order.method === 'instalments'">
+
+							<p class="aligncenter margin top">
+								<button
+									:class="{
+									'button': true,
+									'is-primary': true,
+									'is-loading': this.paymentLoading
+									}"
+									@click="pay">
+									Zapłać kolejną ratę
+								</button>
+							</p>
+							<p class="metadata aligncenter margin vertical">
+								Kolejna rata: <strong>{{ order.instalments.nextPayment.amount }}zł do
+								{{ instalmentDate(order.instalments.nextPayment.date) }}</strong>
+							</p>
+
+							<table class="table is-striped">
+								<tr>
+									<th>Rata</th>
+									<th>Termin płatności</th>
+									<th>Zapłacone / Do&nbsp;zapłaty</th>
+								</tr>
+								<tr v-for="(instalment, index) in order.instalments.instalments">
+									<td>{{index + 1}}</td>
+									<td>
+										{{ instalmentDate(instalment.date) }}
+									</td>
+									<td>
+										{{instalment.amount - instalment.left}}zł / {{instalment.amount}}zł
+									</td>
+								</tr>
+								<tr>
+									<td>Razem</td>
+									<td></td>
+									<td>{{ order.total }}zł</td>
+								</tr>
+							</table>
+
+							<!-- Transfer details -->
+							<div class="transfer-details notification" v-if="transferDetails">
+								<p>Dane do przelewu</p>
+								<small>
+									<p class="big">Tytuł przelewu:</p>
+									<strong>Zamówienie numer {{ order.id }}</strong><br>
+									bethink sp. z o.o.<br>
+									ul. Henryka Sienkiewicza 8/1<br>
+									60-817, Poznań<br>
+									82 1020 4027 0000 1102 1400 9197 (PKO BP)
+								</small>
+							</div>
 						</div>
 					</div>
+
 				</div>
 
-
-
-				<!-- Transfer details -->
-				<div class="transfer-details notification" v-if="transferDetails">
-					<p>Dane do przelewu</p>
-					<small>
-						<strong>Zamówienie numer {{ order.id }}</strong><br>
-						bethink sp. z o.o.<br>
-						ul. Henryka Sienkiewicza 8/1<br>
-						60-817, Poznań<br>
-						82 1020 4027 0000 1102 1400 9197 (PKO BP)
-					</small>
-				</div>
-
-				<div class="order-actions">
-					<a title="Dodaj lub zmień kod rabatowy"
-						@click="toggleCouponInput"
-						v-if="order.status !== 'closed'">
-						Dodaj lub zmień kod rabatowy
-					</a>
-					<a title="Anuluj zamówienie"
-						@click="cancelOrder"
-						v-if="!order.paid">
-						{{ $t('orders.cancel.button') }}
-					</a>
-				</div>
-				<div class="voucher-code" v-if="couponInputVisible">
-					<wnl-form class="margin vertical"
-								name="CouponCode"
-								method="put"
-								:resourceRoute="couponUrl"
-								hideDefaultSubmit="true"
-								@submitSuccess="couponSubmitSuccess">
-						<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
-						<wnl-submit>Wykorzystaj kod</wnl-submit>
-					</wnl-form>
-				</div>
-				<div v-if="order.invoices.length" class="invoices">
-					<span class="invoices__title">Dokumenty do pobrania</span>
+				<!-- TABS BEGIN -->
+				<div class="tabs">
 					<ul>
-						<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">
-							<a @click="downloadInvoice(invoice)">{{invoice.number}}</a>
+						<li :class="{'is-active': activeTab === tab}"
+							v-for="tabContent, tab in orderTabs"
+							:key="tab"
+							@click="activeTab = tab"
+						>
+							<a>
+								<span class="icon is-small">
+									<i :class="`fa fa-${tabContent.icon}`"></i>
+								</span>
+								{{ tabContent.text }}
+							</a>
 						</li>
 					</ul>
 				</div>
-				<div v-if="order.payments.length" class="payments">
-					<span class="payments__title">Historia Płatności</span>
-					<template v-if="canRetryPayment">
-						<a class="payments__retry-link" @click="pay">Powtórz Płatność</a>
-					</template>
-					<ul class="payments__list">
-						<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
-							<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
-						</li>
-					</ul>
+
+				<!-- PAYMENTS BEGIN -->
+				<div class="content" v-if="activeTab === 'payments'">
+					<div v-if="!order.payments.length" class="margin vertical">
+						Brak płatności
+					</div>
+					<div v-else class="payments">
+						<span class="payments__title">Historia płatności</span>
+						<template v-if="canRetryPayment">
+							<a class="payments__retry-link" @click="pay">Powtórz płatność</a>
+						</template>
+						<ul class="payments__list">
+							<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
+								<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
+							</li>
+						</ul>
+					</div>
 				</div>
+				<!-- PAYMENTS END -->
+
+				<!-- INVOICES BEGIN -->
+				<div class="content" v-if="activeTab === 'invoices'">
+					<div v-if="!order.invoices.length" class="margin vertical">
+						Brak faktur
+					</div>
+					<div v-else class="invoices">
+						<p class="metadata">Kliknij, aby pobrać faktury:</p>
+						<ul>
+							<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">
+								<a @click="downloadInvoice(invoice)">{{invoice.number}}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- INVOICES END -->
+
+				<!-- COUPONS BEGIN -->
+				<div class="content" v-if="activeTab === 'coupons'">
+					<div class="add-coupon">
+						<a class=""
+							title="Dodaj lub zmień kod rabatowy"
+							@click="toggleCouponInput"
+							v-if="order.status !== 'closed'">
+							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
+							<span>Dodaj lub zmień kod rabatowy</span>
+						</a>
+					</div>
+					<div class="voucher-code" v-if="couponInputVisible">
+						<wnl-form class="margin vertical"
+									name="CouponCode"
+									method="put"
+									:resourceRoute="couponUrl"
+									hideDefaultSubmit="true"
+									@submitSuccess="couponSubmitSuccess">
+							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
+							<wnl-submit>Wykorzystaj kod</wnl-submit>
+						</wnl-form>
+					</div>
+				</div>
+				<!-- COUPONS END -->
+				<!-- TABS END -->
 			</div>
 		</div>
 		<div class="card-footer">
@@ -176,6 +247,13 @@
 					<span class="icon is-small status-icon">
 						<i class="fa fa-pencil-square-o"></i>
 					</span> Zmień metodę płatności
+				</a>
+			</div>
+			<div class="card-footer-item cancel-order" v-if="!order.paid">
+				<a title="Anuluj zamówienie" @click="cancelOrder">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-times"></i>
+					</span> {{ $t('orders.cancel.button') }}
 				</a>
 			</div>
 		</div>
@@ -214,6 +292,17 @@
 
 		&.text-info
 			color: $color-gray-lighter
+
+	.cancel-order
+		a,
+		a:visited
+			color: $color-red
+
+		a:hover
+			color: $color-orange
+
+	.current-payment
+		padding: $margin-base 0 $margin-big
 
 	.code
 		background-color: $color-background-light-gray
@@ -254,6 +343,7 @@
 			color: $success
 
 	.next-payment
+		align-items: center
 		display: flex
 		flex-direction: row
 		justify-content: space-between
@@ -283,16 +373,32 @@
 		},
 		data() {
 			return {
-				paymentMethods: {
-					'free': '100% zniżki',
-					'transfer': 'Przelew bankowy',
-					'online': 'Szybki przelew',
-					'instalments': 'Raty',
-				},
+				activeTab: 'payments',
 				code: '',
 				couponInputVisible: false,
 				order: this.orderInstance,
 				paymentData: {},
+				paymentMethods: {
+					'free': 'Darmowe uczestnictwo',
+					'transfer': 'Tradycyjny przelew',
+					'online': 'Przelewy24 - Pełna kwota',
+					'instalments': 'Przelewy24 - Raty',
+				},
+				paymentLoading: false,
+				orderTabs: {
+					'payments': {
+						icon: 'money',
+						text: 'Płatności',
+					},
+					'invoices': {
+						icon: 'file-o',
+						text: 'Faktury'
+					},
+					'coupons': {
+						icon: 'gift',
+						text: 'Zniżki',
+					},
+				},
 				userData: {},
 			}
 		},
@@ -336,13 +442,16 @@
 				return 'fa-info-circle'
 			},
 			transferDetails() {
-				return !this.isFullyPaid && (this.order.method === 'transfer' ||
-						this.order.method === 'instalments')
+				return !this.isFullyPaid && this.order.method === 'transfer'
+			},
+			paymentDeadline() {
+				console.log('Date', this.order.created_at)
+				return moment(this.order.created_at, 'DD-MM-YYYY').add(7, 'd').format('DD-MM-YYYY')
 			},
 			paymentStatus() {
 				if (this.order.paid && !this.isPending) {
 					if (this.order.total === this.order.paid_amount) {
-						return `Zapłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
+						return `Wpłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
 					} else if (this.order.paid_amount > this.order.total) {
 						return `Wpłacono ${this.order.paid_amount}zł, do zwrotu ${this.order.paid_amount - this.order.total}zł`
 					} else {
@@ -351,7 +460,7 @@
 				} else if (this.order.canceled) {
 					return 'Anulowano'
 				} else {
-					return 'Oczekuje na zaksięgowanie (do 3 dni roboczych)'
+					return `Termin płatności: ${this.paymentDeadline}`
 				}
 			},
 			paymentStatusClass() {
@@ -381,7 +490,7 @@
 			couponUrl() {
 				return `orders/${this.order.id}/coupon`;
 			},
-            amountToBePaidNext() {
+			amountToBePaidNext() {
 				if (this.order.method === 'instalments') {
 					return this.order.instalments.nextPayment.amount
 				}
@@ -499,6 +608,8 @@
 				})
 			},
 			async pay() {
+				this.paymentLoading = true
+
 				const [{data: paymentData}, {data: userData}] = await Promise.all([
 					axios.post(getApiUrl('payments'), {
 					    order_id: this.order.id,

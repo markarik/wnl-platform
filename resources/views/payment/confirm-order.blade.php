@@ -82,14 +82,6 @@
 				{{-- <h2 class="title">@lang('payment.confirm-method-heading')</h2> --}}
 				<p class="subtitle">@lang('payment.confirm-method-heading')</p>
 				<div class="columns margin top">
-					 <div class="column">
-						<form action="{{route('payment-confirm-order-post')}}" method="post">
-							{!! csrf_field() !!}
-							<input type="hidden" name="method" value="online"/>
-
-							<button type="submit" class="button">@lang('payment.confirm-deferred-payment-button')</button>
-						</form>
-					</div>
 					<div class="column">
 						<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form" id="full_payment_p24_form">
 							<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
@@ -112,8 +104,16 @@
 							<input type="hidden" name="p24_encoding" value="UTF-8"/>
 						</form>
 						<button class="button is-primary p24-submit" data-id="full_payment_p24_form"
-						        id="p24-submit-full-payment"
+						id="p24-submit-full-payment"
 						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
+					</div>
+					 <div class="column">
+						<form action="{{route('payment-confirm-order-post')}}" method="post">
+							{!! csrf_field() !!}
+							<input type="hidden" name="method" value="online"/>
+
+							<button type="submit" class="button">@lang('payment.confirm-deferred-payment-button')</button>
+						</form>
 					</div>
 				</div>
 			</section>
@@ -126,7 +126,7 @@
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 czerwca</strong> i <strong>20 lipca</strong>.</p>
+							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
 
 							<table class="table is-bordered margin vertical">
 								<tr>
@@ -160,16 +160,6 @@
 							<div class="columns margin top">
 
 								<div class="column">
-									<form action="{{route('payment-confirm-order-post')}}" method="post">
-										{!! csrf_field() !!}
-										<input type="hidden" name="method" value="instalments"/>
-										<button type="submit" class="button margin top" id="instalments-button">
-											@lang('payment.confirm-method-instalments-button')
-										</button>
-									</form>
-								</div>
-
-								<div class="column">
 									<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form" id="instalments_p24_form">
 										<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
 										<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
@@ -192,6 +182,16 @@
 									</form>
 									<button class="button is-primary p24-submit" data-id="instalments_p24_form"
 									 data-payment="instalments">@lang('payment.confirm-method-instalments-online-button')</button>
+								</div>
+
+								<div class="column">
+									<form action="{{route('payment-confirm-order-post')}}" method="post">
+										{!! csrf_field() !!}
+										<input type="hidden" name="method" value="instalments"/>
+										<button type="submit" class="button margin top" id="instalments-button">
+											@lang('payment.confirm-method-instalments-button')
+										</button>
+									</form>
 								</div>
 
 							</div>

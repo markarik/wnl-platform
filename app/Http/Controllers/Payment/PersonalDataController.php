@@ -39,11 +39,11 @@ class PersonalDataController extends Controller
 			return redirect()->route('payment-select-product');
 		}
 
-		if (Auth::check() && !$request->edit) {
-			$this->createOrder(Auth::user(), $request);
-
-			return redirect()->route('payment-confirm-order', ['existing_user']);
-		}
+//		if (Auth::check() && !$request->edit) {
+//			$this->createOrder(Auth::user(), $request);
+//
+//			return redirect()->route('payment-confirm-order', ['existing_user']);
+//		}
 
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
@@ -197,7 +197,7 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		$user->personalData()->update(
+		$user->personalData()->updateOrCreate(
 			$this->getIdentityNumbersArray($request)
 		);
 	}

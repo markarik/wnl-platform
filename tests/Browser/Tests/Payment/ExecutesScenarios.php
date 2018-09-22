@@ -12,5 +12,6 @@ trait ExecutesScenarios
 				(new $module)->$method($browser);
 			}
 		});
+		$this->closeAll();
 	}
 }

@@ -32,7 +32,6 @@ class OrderObserver
 			\Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
 			dispatch_now(new OrderStudyBuddy($order));
 
-			\Log::debug('well shit: ' . !$order->paid && $order->paidAmountSufficient());
 			if (!$order->paid && $order->paidAmountSufficient()) {
 				$order->paid = true;
 				$order->paid_at = Carbon::now();
@@ -51,7 +50,9 @@ class OrderObserver
 			$this->handlePaymentMethodSet($order);
 		}
 
-		if ($order->getOriginal('coupon_id') !== $order->coupon_id) {
+		if ($order->getOriginal('coupon_id') &&
+			$order->getOriginal('coupon_id') !== $order->coupon_id
+		) {
 			$this->handleCouponChange($order);
 		}
 	}

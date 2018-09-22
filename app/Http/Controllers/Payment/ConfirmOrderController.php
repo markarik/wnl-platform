@@ -30,7 +30,7 @@ class ConfirmOrderController extends Controller
 			->first()
 			->isAvailable() ? $order->instalments['instalments'] : false;
 
-		$firstInstalmentAmount = (int) $order->total_with_coupon ?? $instalments[0]['amount'] * 100;
+		$firstInstalmentAmount = (int) ($order->total_with_coupon === 0 ? 0 : $instalments[0]['amount'] * 100);
 		$amount = (int)$order->total_with_coupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
 		$instalmentsChecksum = $payment::generateChecksum($order->session_id, $firstInstalmentAmount);

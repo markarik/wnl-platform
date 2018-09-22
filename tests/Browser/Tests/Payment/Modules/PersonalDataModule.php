@@ -70,7 +70,7 @@ class PersonalDataModule extends TestModule
 
 	protected function signUp($browser, $invoiceFlag)
 	{
-		$userData = $this->generateFormData(Factory::create());
+		$userData = $this->generateFormData();
 		$this->fillInForm($userData, $browser, $invoiceFlag, !$this->isEdit($browser));
 		$browser->userData = $userData;
 

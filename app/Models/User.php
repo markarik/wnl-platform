@@ -177,6 +177,7 @@ class User extends Authenticatable
 	}
 
 	/**
+	 * TODO: https://bethink.atlassian.net/browse/PLAT-556
 	 * Returns users all identity numbers
 	 * @return array An associate array with types of
 	 */
@@ -199,6 +200,12 @@ class User extends Authenticatable
 		return array_values(array_filter($numbers, function ($number) {
 			return !empty($number['value']);
 		}));
+	}
+
+	// TODO: https://bethink.atlassian.net/browse/PLAT-556
+	public function getIdentityNumberAttribute()
+	{
+		return $this->identity_numbers[0]['value'] ?? null;
 	}
 
 	public function getIsSubscriberAttribute()

@@ -66,7 +66,6 @@ class MyOrdersModule
 	{
 		$browser->order = $browser->order->fresh();
 		if ($browser->order->method === 'instalments') {
-			$browser->order->paid = 1;
 			$browser->order->paid_amount = $browser->order->instalments['instalments'][0]['left'];
 			$browser->order->save();
 		}

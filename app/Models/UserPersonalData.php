@@ -22,7 +22,7 @@ class UserPersonalData extends Model
 
 	public function getPersonalIdentityNumberAttribute($value)
 	{
-		return decrypt($value);
+		return is_null($value) ? null : decrypt($value);
 	}
 
 	public function setPersonalIdentityNumberAttribute($value)
@@ -32,7 +32,7 @@ class UserPersonalData extends Model
 
 	public function getIdentityCardNumberAttribute($value)
 	{
-		return decrypt($value);
+		return is_null($value) ? null : decrypt($value);
 	}
 
 	public function setIdentityCardNumberAttribute($value)
@@ -42,7 +42,7 @@ class UserPersonalData extends Model
 
 	public function getPassportNumberAttribute($value)
 	{
-		return decrypt($value);
+		return is_null($value) ? null : decrypt($value);
 	}
 
 	public function setPassportNumberAttribute($value)

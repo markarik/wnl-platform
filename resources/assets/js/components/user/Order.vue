@@ -249,7 +249,7 @@
 					</span> Zmień metodę płatności
 				</a>
 			</div>
-			<div class="card-footer-item cancel-order" v-if="!order.paid">
+			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-times"></i>

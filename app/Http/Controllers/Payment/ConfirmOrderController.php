@@ -77,20 +77,19 @@ class ConfirmOrderController extends Controller
 		$paymentLog = PaymentModel::where('session_id', $request->get('p24_session_id'))->first();
 		$paymentLog->external_id = $externalId;
 		$paymentLog->amount = $paidAmount;
+		$paymentLog->save();
 		$order = $paymentLog->order;
 
-		if ($transactionValid) {
+		if ($transactionValid && $paymentLog->status !== 'success') {
+			$paymentLog->update(['status' => 'success']);
 			$order->paid_amount += $paidAmount;
 			$order->external_id = $externalId;
 			$order->transfer_title = $request->get('p24_statement');
 			$order->save();
-
-			$paymentLog->status = 'success';
 		} else {
 			$paymentLog->status = 'error';
-			Log::warning('P24 transaction validation failed');
+			Log::warning("P24 transaction validation failed - order #{$order->id}");
 		}
-		$paymentLog->save();
 	}
 
 	private function getReturnUrl($amount) {

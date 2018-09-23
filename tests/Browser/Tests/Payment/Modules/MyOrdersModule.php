@@ -85,7 +85,6 @@ class MyOrdersModule
 
 		$browser->refresh();
 		$browser->waitForText('Wpłacono', 60);
-
 	}
 
 	protected function assertStudyBuddy($browser)

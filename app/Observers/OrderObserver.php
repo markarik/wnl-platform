@@ -22,21 +22,23 @@ class OrderObserver
 
 	public function updated(Order $order)
 	{
-		\Log::notice("OrderObserver: Order #$order->id updated");
+		\Log::notice("OrderObserver: Order #{$order->id} updated");
 		$settlement = $order->paid_amount - $order->getOriginal('paid_amount');
-		if ($order->isDirty(['paid_amount']) && $settlement > 0) {
-			\Log::debug('Order paid, dispatching OrderPaid job.');
+		if (!$order->isDirty(['paid']) && $order->isDirty(['paid_amount']) && $settlement > 0) {
+			\Log::notice(">>> OrderObserver: #{$order->id} paid amount is dirty");
+
+			if ($order->paidAmountSufficient()) {
+				\Log::notice("___ OrderObserver: #{$order->id} marking order as paid");
+				$order->paid = true;
+				$order->paid_at = Carbon::now();
+				$order->save();
+			}
+
 			\Log::notice("OrderObserver: Dispatching OrderPaid for order #$order->id");
 			$this->dispatch(new OrderPaid($order));
 
 			\Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
 			dispatch_now(new OrderStudyBuddy($order));
-
-			if (!$order->paid && $order->paidAmountSufficient()) {
-				$order->paid = true;
-				$order->paid_at = Carbon::now();
-				$order->save();
-			}
 		} else {
 			\Log::notice(
 				"OrderObserver: Order #$order->id NOT updated. Order was not dirty or settlement was smaller than 0"

@@ -84,11 +84,7 @@ class MyOrdersModule
 		}
 
 		$browser->refresh();
-		if ($browser->order->method === 'instalments') {
-			$browser->waitForText('Wpłacono', 60);
-		} else {
-			$browser->waitForText('Zapłacono', 60); // yyhhh
-		}
+		$browser->waitForText('Wpłacono', 60);
 
 	}
 

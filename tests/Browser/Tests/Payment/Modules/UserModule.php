@@ -42,13 +42,12 @@ class UserModule
 			'zip'        => $faker->postcode,
 			'city'       => $faker->city,
 		]);
+		$user->personalData()->create();
 		$browser->user = $user;
 
 		$browser
 			->visit(new Login())
 			->loginAsUser($user->email, 'secret');
-//			->on(new Navigation())
-//			->assertUserLoggedIn($user->first_name);
 
 		return [
 			SelectProductModule::class,

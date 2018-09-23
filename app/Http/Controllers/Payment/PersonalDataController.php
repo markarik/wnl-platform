@@ -39,11 +39,11 @@ class PersonalDataController extends Controller
 			return redirect()->route('payment-select-product');
 		}
 
-//		if (Auth::check() && !$request->edit) {
-//			$this->createOrder(Auth::user(), $request);
-//
-//			return redirect()->route('payment-confirm-order', ['existing_user']);
-//		}
+		if (Auth::check() && !$request->edit) {
+			$this->createOrder(Auth::user(), $request);
+
+			return redirect()->route('payment-personal-data', ['?edit=true']);
+		}
 
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
@@ -168,7 +168,7 @@ class PersonalDataController extends Controller
 			]
 		);
 
-		$user->userAddress()->firstOrCreate([
+		$user->userAddress()->create([
 			'street'    => $request->get('address'),
 			'zip'       => $request->get('zip'),
 			'city'      => $request->get('city'),
@@ -176,7 +176,7 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		$user->personalData()->firstOrCreate(
+		$user->personalData()->create(
 			$this->getIdentityNumbersArray($request)
 		);
 
@@ -189,7 +189,9 @@ class PersonalDataController extends Controller
 	protected function updateAccount($user, $request)
 	{
 		$user->update($request->all());
-		$user->userAddress()->update([
+		$user->userAddress()->updateOrCreate(
+		['user_id' => $user->id],
+		[
 			'street'    => $request->get('address'),
 			'zip'       => $request->get('zip'),
 			'city'      => $request->get('city'),
@@ -198,6 +200,7 @@ class PersonalDataController extends Controller
 		]);
 
 		$user->personalData()->updateOrCreate(
+			['user_id' => $user->id],
 			$this->getIdentityNumbersArray($request)
 		);
 	}

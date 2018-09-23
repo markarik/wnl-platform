@@ -35,9 +35,11 @@ class PaymentTest extends DuskTestCase
 			[UserModule::class          , 'existingUser'],
 			[VoucherModule::class       , 'skip'],
 			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'editData'],
 			[PersonalDataModule::class  , 'signUpCustomInvoice'],
-			[ConfirmOrderModule::class  , 'payByTransfer'],
+			[ConfirmOrderModule::class  , 'payOnline'],
+			[OnlinePaymentModule::class , 'successfulPayment'],
 			[MyOrdersModule::class      , 'end'],
 		]);
 	}

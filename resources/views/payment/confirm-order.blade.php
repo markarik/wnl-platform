@@ -77,7 +77,7 @@
 			</p>
 		</section>
 
-		@if($order->coupon && $order->total_with_coupon === 0)
+		@if($order->coupon && (int) $order->total_with_coupon === 0)
 			<section class="subsection has-text-centered margin top">
 				<p class="subtitle">
 					@lang('payment.confirm-order-free')

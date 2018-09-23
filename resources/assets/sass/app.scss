@@ -365,6 +365,26 @@ section.voucher {
 	margin: 5px 30px 15px 30px;
 }
 
+.box.wnl-album {
+	margin-bottom: 40px;
+}
+
+.section.select-product {
+	.button {
+		white-space: normal;
+	}
+}
+
+.identity-number-select {
+	align-items: center;
+	display: flex;
+	margin: $margin-base 0;
+
+	label {
+		margin: 0 $margin-big 0 $margin-small;
+	}
+}
+
 // Helper classes
 .show {
 	display: block;

@@ -4,6 +4,12 @@ namespace Tests\Browser\Tests\Payment;
 
 
 use Faker\Factory;
+use Faker\Generator;
+use Faker\Provider\pl_PL\Company;
+use Faker\Provider\pl_PL\PhoneNumber;
+use Faker\Provider\pl_PL\Address;
+use Faker\Provider\Internet;
+use Faker\Provider\pl_PL\Person;
 
 /**
  * Trait SignsUpUsers
@@ -24,8 +30,15 @@ trait SignsUpUsers
 	 *
 	 * @return array
 	 */
-	protected function generateFormData($faker)
+	protected function generateFormData()
 	{
+		$faker = new Generator();
+		$faker->addProvider(new Person($faker));
+		$faker->addProvider(new Address($faker));
+		$faker->addProvider(new Internet($faker));
+		$faker->addProvider(new PhoneNumber($faker));
+		$faker->addProvider(new Company($faker));
+
 		$data = [
 			'password'         => $faker->password,
 			'email'            => str_random() . '@bethink.pl',
@@ -36,6 +49,7 @@ trait SignsUpUsers
 			'postcode'         => $faker->postcode,
 			'city'             => $faker->city,
 			'invoice_company'  => $faker->company,
+			'identity_number'  => $faker->pesel,
 			'invoice_nip'      => $faker->randomNumber(9),
 			'invoice_address'  => $faker->streetAddress,
 			'invoice_postcode' => $faker->postcode,
@@ -69,6 +83,8 @@ trait SignsUpUsers
 			->type('zip', $user['postcode'])
 			->type('city', $user['city']);
 
+		$browser->type('identity_number', $user['identity_number']);
+
 		if ($invoice) {
 			$browser
 				->check('invoice')
@@ -80,8 +96,6 @@ trait SignsUpUsers
 				->type('invoice_country', $user['invoice_country']);
 		}
 
-		$browser->check('consent_account');
-		$browser->check('consent_order');
 		$browser->check('consent_newsletter');
 		$browser->check('consent_terms');
 	}

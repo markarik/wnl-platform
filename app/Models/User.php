@@ -67,6 +67,11 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\UserProfile');
 	}
 
+	public function personalData()
+	{
+		return $this->hasOne('App\Models\UserPersonalData');
+	}
+
 	public function billing()
 	{
 		return $this->hasOne('App\Models\UserBillingData');
@@ -169,6 +174,38 @@ class User extends Authenticatable
 	public function getCityAttribute()
 	{
 		return $this->userAddress->city;
+	}
+
+	/**
+	 * TODO: https://bethink.atlassian.net/browse/PLAT-556
+	 * Returns users all identity numbers
+	 * @return array An associate array with types of
+	 */
+	public function getIdentityNumbersAttribute() {
+		$numbers = [
+			[
+				'type' => 'personal_identity_number',
+				'value' => $this->personalData->personal_identity_number,
+			],
+			[
+				'type' => 'identity_card_number',
+				'value' => $this->personalData->identity_card_number,
+			],
+			[
+				'type' => 'passport_number',
+				'value' => $this->personalData->passport_number,
+			],
+		];
+
+		return array_values(array_filter($numbers, function ($number) {
+			return !empty($number['value']);
+		}));
+	}
+
+	// TODO: https://bethink.atlassian.net/browse/PLAT-556
+	public function getIdentityNumberAttribute()
+	{
+		return $this->identity_numbers[0]['value'] ?? null;
 	}
 
 	public function getIsSubscriberAttribute()

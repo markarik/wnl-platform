@@ -51,13 +51,13 @@ class MyOrdersModule
 
 		$browser->waitForText('Twoje zamówienia', 60);
 		$browser->pause(1000);
-		$browser->assertSee($order->id);
+		$browser->waitForText('Zamówienie numer ' . $order->id);
 
 		if (empty($browser->coupon)) {
-			$browser->assertSee('Study Buddy');
+			$browser->waitForText('Study Buddy');
 		} else {
 			$coupon = $browser->coupon;
-			$browser->assertSee($coupon->name);
+			$browser->waitForText($coupon->name);
 		}
 
 	}
@@ -66,7 +66,6 @@ class MyOrdersModule
 	{
 		$browser->order = $browser->order->fresh();
 		if ($browser->order->method === 'instalments') {
-			$browser->order->paid = 1;
 			$browser->order->paid_amount = $browser->order->instalments['instalments'][0]['left'];
 			$browser->order->save();
 		}
@@ -84,12 +83,7 @@ class MyOrdersModule
 		}
 
 		$browser->refresh();
-		if ($browser->order->method === 'instalments') {
-			$browser->waitForText('Wpłacono', 60);
-		} else {
-			$browser->waitForText('Zapłacono', 60); // yyhhh
-		}
-
+		$browser->waitForText('Wpłacono', 60);
 	}
 
 	protected function assertStudyBuddy($browser)

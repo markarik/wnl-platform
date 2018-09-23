@@ -7,7 +7,8 @@ return [
 	/**
 	 * Voucher
 	 */
-	'voucher-current' => 'Super! Korzystasz ze zniżki <strong>:name</strong>, która obniży ostateczną kwotę zamówienia o :value!',
+	'voucher-current' => '<p>Super! Korzystasz ze zniżki <strong>:name</strong></p>',
+	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu innych produktów. Cena nie obejmuje nowych materiałów.',
 	'voucher-percentage' => ':value%',
 	'voucher-amount' => ':valuezł',
 	'voucher-is-invalid' => 'Wprowadzony kod jest niepoprawny lub nieważny.',
@@ -37,34 +38,58 @@ return [
 	 * 1. Select Product step
 	 */
 
+	'select-product-account-heading' => 'Zapisujesz się ponownie?',
+	'select-product-account-lead' => 'Wybierz Kurs internetowy, a w następnym kroku zaloguj się, aby skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzednich edycji!',
+
 	'select-product-title' => 'Witaj!',
 	'select-product-subtitle' => 'Wybierz wariant kursu, na który chcesz się zapisać.',
 	'select-product-coupon' => ':valuezł dla zapisanych na listę mailingową przed 1 kwietnia',
-	'select-product-onsite-heading' => 'Kurs stacjonarny',
+	'select-product-onsite-heading' => 'Kurs internetowy + warsztaty',
 	'select-product-online-description' => '
 		<li class="list-group-item">
-			Uczestnictwo w 14-tygodniowym kursie internetowym - dostęp do jedynego wirtualnego pokoju nauki do LEK-u, wspierającego łatwe dzielenie się wiedzą (czat, system pytań i odpowiedzi, prywatne wiadomości)
+			<strong>14 tygodni codziennej nauki</strong> pod opieką moderatorów, którzy odpowiedzą na każde Twoje pytanie!
 		</li>
 		<li class="list-group-item">
-			Gotowy, zsynchronizowany plan pracy, uwzględniający powtórki i rozwiązywanie pytań - 65 dni lekcyjnych
+			65 obszernych lekcji dostępnych na platformie e-learningowej kiedy chcesz i gdzie chcesz!
 		</li>
 		<li class="list-group-item">
-			Ponad 15 tysięcy slajdów w estetycznych i funkcjonalnych prezentacjach - z nami nie musisz kupować wszystkich podręczników!
+			<strong>Gotowy plan pracy</strong> z powtórkami i rozwiązywaniem pytań, który możesz dostosować do swoich potrzeb!
 		</li>
 		<li class="list-group-item">
-			Autorskie materiały ułatwiające notowanie, powtórki i systematyzację wiedzy (przesyłka kurierska w cenie)
+			<strong>15 tysięcy interaktywnych slajdów</strong> - z nami nie musisz kupować podręczników!
 		</li>
 		<li class="list-group-item">
-			Baza 3500 pytań do LEK-u w cenie! System ułatwiający powtarzanie najtrudniejszych pytań i łatwe przerobienie wszystkich!
+			Tysiące merytorycznych dyskusji w komentarzach do slajdów i pytań!
 		</li>
 		<li class="list-group-item">
-			2500 otwartych pytań pomagających na bieżąco weryfikować wiedzę!
+			Wyszukiwarka treści - koniec wertowania podręczników!
 		</li>
 		<li class="list-group-item">
-			Codzienna porcja wiedzy o efektywnym procesie nauki, która przyda się nie tylko podczas przygotowań do egzaminu!
+			<strong>4500 pytań</strong> z LEK-ów (niepowtarzających się) w cenie!
 		</li>
 		<li class="list-group-item">
-			Wspólne, próbne podejście do LEK-u ostatniego dnia kursu
+			<strong>Pytania połączone ze slajdami!</strong> 1 kliknięcie i rozumiesz poprawną odpowiedź!
+		</li>
+		<li class="list-group-item">
+			Własna aplikacja do bazy pytań przyspieszająca pracę i powtórki!
+		</li>
+		<li class="list-group-item">
+			<strong>2500 pytań otwartych</strong> pomagających na bieżąco weryfikować wiedzę!
+		</li>
+		<li class="list-group-item">
+			Wstępny i końcowy próbny LEK na platformie!
+		</li>
+		<li class="list-group-item">
+			<strong>Album map myśli w cenie</strong> - 150 map myśli, 400 grafik, 300 nagrań audio i 20 stron leksykonu! <a href="https://wiecejnizlek.pl/album" target="_blank">Przeczytaj więcej o albumie</a>.
+		</li>
+		<li class="list-group-item">
+			Do albumu dołączamy wydrukowany plan pracy, pisaki, torba i przesyłka na terenie Polski!
+		</li>
+		<li class="list-group-item">
+			Wbudowany kurs efektywnej nauki w cenie!
+		</li>
+		<li class="list-group-item">
+			<strong>Jesteś na 6. roku?</strong> Kurs pomoże Ci w przygotowaniu do egzaminów!
 		</li>
 	',
 	'select-product-onsite-description' => '
@@ -87,7 +112,7 @@ return [
 		</li>
 		<li>Na warsztatach związanych z zakresem materiału do LEK-u - odpowiedzi na pytania zadawane poprzez platformę, wspólne rozwiązywanie przypadków oraz “godzina z mentorem”</li>
 	',
-	'select-product-onsite-button-label' => 'Wybieram kurs stacjonarny',
+	'select-product-onsite-button-label' => 'Wybieram kurs internetowy + warsztaty',
 	'select-product-online-heading' => 'Kurs internetowy',
 	'select-product-online-button-label' => 'Wybieram kurs internetowy',
 	'select-product-features-bonus-knowledge' => 'Indywidualne spotkania z prowadzącymi kurs',
@@ -106,7 +131,19 @@ return [
 	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, użyj go teraz do rejestracji, aby skorzystać z 200zł zniżki!',
 
 	'personal-data-account-heading' => 'Twoje konto',
-	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie maila i&nbsp;hasła, których będziesz używać do logowania.',
+	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie imienia i&nbsp;nazwiska oraz maila i&nbsp;hasła, których będziesz używać do logowania.',
+
+	'personal-data-account-login-heading' => 'Zapisujesz się ponownie?',
+	'personal-data-account-login-lead' => 'Zaloguj się, aby skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzedniej edycji!',
+	'personal-data-account-login-button' => 'Zaloguj się',
+
+	'personal-data-id-heading' => 'Dane do celów statystycznych',
+	'personal-data-id-lead' => '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o podanie numeru PESEL. Posłużą one tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p><p>Jeżeli nie posiadasz numeru PESEL, możesz podać numer dowodu osobistego lub paszportu.</p>',
+	'identity_number' => 'Numer identyfikacyjny',
+
+	'identity_number_personal_identity_number' => 'PESEL',
+	'identity_number_identity_card_number' => 'Dowód osobisty',
+	'identity_number_passport_number' => 'Paszport',
 
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
@@ -163,19 +200,22 @@ return [
 	'confirm-order-coupon' => 'Korzystasz ze zniżki <strong>:name</strong> o wartości <strong>:value</strong>.',
 
 	'confirm-personal-data-heading' => 'Twoje dane',
+	'confirm-personal-data-private' => 'Dane do celów statystycznych:',
+	'confirm-personal-data-address' => 'Twój adres do wysyłki i osoba do odbioru:',
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
 	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie wybierz metodę płatności',
 	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
 	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
-	'confirm-method-instalments-button'    => 'Kupuję i płacę na raty',
-	'confirm-method-online-payment-button' => 'Kupuję i płacę przez Przelewy24',
+	'confirm-deferred-payment-button'  => 'Kupuję i płacę w ciągu 7 dni',
+	'confirm-method-instalments-button'    => 'Kupuję i płacę pierwszą ratę w ciągu 7 dni',
+	'confirm-method-instalments-online-button'    => 'Kupuję i płacę pierwszą ratę teraz',
+	'confirm-method-online-payment-button' => 'Kupuję i płacę teraz',
 	'confirm-method-free-button' => 'Kupuję korzystając ze 100% zniżki',
 
 	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',
-	'voucher-current-explanation' => 'Pamiętaj, zniżka dotyczy tylko Kursu internetowego i nie zostanie dołączona przy zamówieniu innych produktów. Cena nie obejmuje nowych materiałów.',
 ];

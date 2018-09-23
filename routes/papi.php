@@ -52,9 +52,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
-		// Invoices
-		Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
-
 		// Certificates
 		Route::get("{$r['certificates']}/participation", 'CertificatesApiController@getAvailableCertificates');
 		Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
@@ -186,6 +183,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::patch("{$r['user-forget']}/{userId}", 'UserForgetAccountApiController@patch');
 
+	Route::get("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@get');
+	Route::post("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@post');
+
 	Route::put("{$r['users']}/{id}/{$r['user-password']}", 'UserPasswordApiController@put');
 
 	Route::get("{$r['users']}/{id}/{$r['user-notifications']}", 'UserNotificationApiController@get');
@@ -218,6 +218,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
 	Route::get("{$r['orders']}/{id}/.cancel", 'OrdersApiController@cancel');
+
+	// Invoices
+	Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
+
+	// Payments
+	Route::post("{$r['payments']}", 'PaymentsApiController@post');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');

@@ -22,16 +22,33 @@
 		<section class="section">
 
 			<div class="form-header has-text-centered">
+				@if(!Auth::user())
+					<div class="box aligncenter">
+						<h4>@lang('payment.personal-data-account-login-heading')</h4>
+						<p class="margin bottom">@lang('payment.personal-data-account-login-lead')</p>
+						<p class="has-account">
+							<a class="button opens-login-modal">@lang('payment.personal-data-account-login-button')</a>
+						</p>
+					</div>
+				@endif
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
-				@if(!Auth::user())
-					<p class="has-account">
-						<a class="button opens-login-modal">Mam już konto</a>
-					</p>
-				@endif
 				{{-- <div class="notification is-info">
 					<p class="strong">@lang('payment.personal-data-email-info')</p>
 				</div> --}}
+			</div>
+			<div class="form-group">
+				<div class="control">
+					{!! form_label($form->first_name) !!}
+					{!! form_widget($form->first_name) !!}
+					{!! form_errors($form->first_name) !!}
+				</div>
+
+				<div class="control">
+					{!! form_label($form->last_name) !!}
+					{!! form_widget($form->last_name) !!}
+					{!! form_errors($form->last_name) !!}
+				</div>
 			</div>
 			<div class="form-group">
 				<div class="control">
@@ -55,6 +72,24 @@
 			</div>
 		</section>
 
+		<section class="section">
+			<div class="form-header">
+				<h2 class="title aligncenter">@lang('payment.personal-data-id-heading')</h2>
+				<div class="content">@lang('payment.personal-data-id-lead')</div>
+			</div>
+
+			<div class="form-group">
+				<div class="control">
+					<h4>{!! form_label($form->identity_number) !!}</h4>
+					<div class="identity-number-select">
+						{!! form_widget($form->identity_number_type) !!}
+					</div>
+					{!! form_widget($form->identity_number) !!}
+					{!! form_errors($form->identity_number) !!}
+				</div>
+			</div>
+		</section>
+
 		<section id="personal-data" class="section">
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-heading')</h2>
@@ -63,27 +98,15 @@
 
 			<div class="form-group">
 				<div class="control">
-					{!! form_label($form->phone) !!}
-					{!! form_widget($form->phone) !!}
-					{!! form_errors($form->phone) !!}
-				</div>
-
-				<div class="control">
-					{!! form_label($form->first_name) !!}
-					{!! form_widget($form->first_name) !!}
-					{!! form_errors($form->first_name) !!}
-				</div>
-
-				<div class="control">
-					{!! form_label($form->last_name) !!}
-					{!! form_widget($form->last_name) !!}
-					{!! form_errors($form->last_name) !!}
-				</div>
-
-				<div class="control">
 					{!! form_label($form->recipient) !!}
 					{!! form_widget($form->recipient) !!}
 					{!! form_errors($form->recipient) !!}
+				</div>
+
+				<div class="control">
+					{!! form_label($form->phone) !!}
+					{!! form_widget($form->phone) !!}
+					{!! form_errors($form->phone) !!}
 				</div>
 
 				<div class="control">

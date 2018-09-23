@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
+use App\Rules\ValidateIdentityCardNumber;
+use App\Rules\ValidatePassportNumber;
+use App\Rules\ValidatePersonalIdentityNumber;
 
 class PersonalDataController extends Controller
 {
@@ -39,7 +42,7 @@ class PersonalDataController extends Controller
 		if (Auth::check() && !$request->edit) {
 			$this->createOrder(Auth::user(), $request);
 
-			return redirect()->route('payment-confirm-order', ['existing_user']);
+			return redirect()->route('payment-personal-data', ['?edit=true']);
 		}
 
 		$form = $this->form(SignUpForm::class, [
@@ -63,15 +66,26 @@ class PersonalDataController extends Controller
 	{
 		$form = $this->form(SignUpForm::class);
 
+		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
+		if (!is_object($validator)) {
+			// Very strange situation,
+			// somebody probably tried to do something nasty.
+			return redirect()->back()->withInput();
+		}
+
+		$validations = ['identity_number' => $validator];
+
 		$user = Auth::user();
 		if ($user) {
 			// Don't require email and pass when updating order/account data.
-			$form->validate([
+			$validations = array_merge($validations, [
 				'email'                 => 'email',
 				'password'              => '',
-				'password_confirmation' => '',
+				'password_confirmation' => ''
 			]);
 		}
+
+		$form->validate($validations);
 
 		if (!$form->isValid()) {
 			Log::notice('Sing up form invalid, redirecting...');
@@ -154,13 +168,17 @@ class PersonalDataController extends Controller
 			]
 		);
 
-		$user->userAddress()->firstOrCreate([
+		$user->userAddress()->create([
 			'street'    => $request->get('address'),
 			'zip'       => $request->get('zip'),
 			'city'      => $request->get('city'),
 			'phone'     => $request->get('phone'),
 			'recipient' => $request->get('recipient'),
 		]);
+
+		$user->personalData()->create(
+			$this->getIdentityNumbersArray($request)
+		);
 
 		Auth::login($user);
 		Log::debug('User automatically logged in after registration.');
@@ -171,13 +189,20 @@ class PersonalDataController extends Controller
 	protected function updateAccount($user, $request)
 	{
 		$user->update($request->all());
-		$user->userAddress()->update([
+		$user->userAddress()->updateOrCreate(
+		['user_id' => $user->id],
+		[
 			'street'    => $request->get('address'),
 			'zip'       => $request->get('zip'),
 			'city'      => $request->get('city'),
 			'phone'     => $request->get('phone'),
 			'recipient' => $request->get('recipient'),
 		]);
+
+		$user->personalData()->updateOrCreate(
+			['user_id' => $user->id],
+			$this->getIdentityNumbersArray($request)
+		);
 	}
 
 	protected function updateOrder($user, $request)
@@ -207,5 +232,33 @@ class PersonalDataController extends Controller
 		}
 
 		$order->attachCoupon($coupon);
+	}
+
+	protected function getIdentityNumberValidator($identityNumberType) {
+		$validators = [
+			'identity_card_number' => new ValidateIdentityCardNumber,
+			'passport_number' => new ValidatePassportNumber,
+			'personal_identity_number' => new ValidatePersonalIdentityNumber,
+		];
+
+		if (!array_key_exists($identityNumberType, $validators)) {
+			return false;
+		}
+
+		return $validators[$identityNumberType];
+	}
+
+	protected function getIdentityNumbersArray(Request $request) {
+		$identityNumbers = [
+			'identity_card_number' => null,
+			'passport_number' => null,
+			'personal_identity_number' => null,
+		];
+
+		if (array_key_exists($request->get('identity_number_type'), $identityNumbers)) {
+			$identityNumbers[$request->get('identity_number_type')] = $request->get('identity_number');
+		}
+
+		return $identityNumbers;
 	}
 }

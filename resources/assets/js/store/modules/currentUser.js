@@ -23,6 +23,11 @@ const state = {
 				min: 0, max: 0
 			}
 		},
+		identity: {
+			personalIdentityNumber: '',
+			identityCardNumber: '',
+			passportNumber: ''
+		},
 		accountSuspended: false
 	},
 	settings: getDefaultSettings(),
@@ -39,6 +44,7 @@ const getters = {
 	currentUserDisplayName: state => state.profile.display_name,
 	currentUserRoles: state => state.profile.roles,
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
+	currentUserIdentity: state => state.profile.identity,
 	getSetting: state => setting => state.settings[setting],
 	thickScrollbar: state => state.settings.thick_scrollbar,
 	getAllSettings: state => state.settings,
@@ -74,6 +80,9 @@ const mutations = {
 	},
 	[types.USERS_SET_SUBSCRIPTION] (state, payload) {
 		set(state, 'subscription', payload)
+	},
+	[types.USERS_SET_IDENTIY] (state, payload) {
+		set(state.profile, 'identity', payload)
 	},
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
 		set(state.profile, 'accountSuspended', payload)
@@ -141,12 +150,35 @@ const actions = {
 		})
 	},
 
+	async fetchUserPersonalData({ commit }) {
+		try {
+			const response = await axios.get(getApiUrl(`users/current/personal_data`))
+			commit(types.USERS_SET_IDENTIY, response.data)
+		}
+		catch (error) {
+			const emptyResponse = {
+				personalIdentityNumber: null,
+				identityCardNumber: null,
+				passportNumber: null
+			}
+			if (error.response.status === 404) {
+				commit(types.USERS_SET_IDENTIY, emptyResponse)
+			}
+			commit(types.USERS_SET_IDENTIY, emptyResponse)
+			$wnl.logger.error(error)
+		}
+	},
+
 	updateCurrentUser({commit}, userData) {
 		commit(types.USERS_UPDATE_CURRENT, userData)
 	},
 
 	changeUserSetting({ commit }, payload) {
 		commit(types.USERS_CHANGE_SETTING, payload)
+	},
+
+	setUserIdentity({ commit }, payload) {
+		commit(types.USERS_SET_IDENTIY, payload)
 	},
 
 	changeUserSettingAndSync({ commit, dispatch }, payload) {

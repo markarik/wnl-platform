@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers\Api\Transformers;
 
-
 use App\Models\UserProfile;
 use App\Http\Controllers\Api\ApiTransformer;
 

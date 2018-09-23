@@ -11,6 +11,10 @@
 
 	<p>Spieszymy z informacją, że Twój unikalny kod promocyjny został wykorzystany! Dzięki temu obdarowana przez Ciebie osoba i Ty, otrzymujecie 100zł zniżki na kurs! Dziękujemy Ci za podzielenie się informacją o Więcej niż LEK! :)</p>
 
+	<p>Zwrot zostanie przelany na konto, z którego opłacone było zamówienie.</p>
+
+	<p>Swoje zamówienia znajdziesz w zakładce <a href="{{url('app/myself/orders')}}" target="_blank">KONTO > Twoje zamówienia</a>. :)</p>
+
 	<p>W razie pytań pozostajemy do dyspozycji!</p>
 
 	<p>Z pozdrowieniami,</p>

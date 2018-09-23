@@ -87,7 +87,6 @@
 			<p>&copy; by bethink sp. z o.o., Wszystkie prawa zastrzeżone<br>
 			ul. Henryka Sienkiewicza 8/1, 60-817 Poznań<br>
 			KRS: 0000668811, NIP: 781-194-37-56<br>
-			Kapitał zakładowy 30,000zł</p>
 		</div>
 	</div>
 </body>

@@ -8,6 +8,8 @@
 
 	<p>Przepraszamy za zamieszanie i życzymy miłego dnia :)</p>
 
+	<p>Swoje zamówienia znajdziesz w zakładce <a href="{{url('app/myself/orders')}}" target="_blank">KONTO > Twoje zamówienia</a>. :)</p>
+
 	<p class="text-align: center;">
 		<img src="https://media.giphy.com/media/yUrUb9fYz6x7a/giphy.gif" alt="Tyle papierologii..." style="display: block; margin: 0 auto;">
 	</p>

@@ -34,9 +34,23 @@
 		<section class="subsection">
 			<div class="box">
 				<p class="title">@lang('payment.confirm-personal-data-heading')</p>
+				<p class="big">{{ $user->full_name }}</p>
 				<p><strong>{{ $user->email }}</strong></p>
+
+				<p class="margin top big">@lang('payment.confirm-personal-data-private')</p>
+
+				@if(is_array($user->identityNumbers))
+					<p>
+						<strong>
+							{{ trans('payment.identity_number_' . $user->identityNumbers[0]['type']) }}:
+							{{ $user->identityNumbers[0]['value'] }}
+						</strong>
+					</p>
+				@endif
+
+				<p class="margin top big">@lang('payment.confirm-personal-data-address')</p>
 				<ul>
-					<li>{{ $user->full_name }}</li>
+					<li>{{ $user->userAddress->recipient }}</li>
 					<li>{{ $user->userAddress->street }}</li>
 					<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
 				</ul>
@@ -63,7 +77,7 @@
 			</p>
 		</section>
 
-		@if($order->coupon && $order->total_with_coupon == 0)
+		@if($order->coupon && (int) $order->total_with_coupon === 0)
 			<section class="subsection has-text-centered margin top">
 				<p class="subtitle">
 					@lang('payment.confirm-order-free')
@@ -82,16 +96,8 @@
 				{{-- <h2 class="title">@lang('payment.confirm-method-heading')</h2> --}}
 				<p class="subtitle">@lang('payment.confirm-method-heading')</p>
 				<div class="columns margin top">
-					 <div class="column">
-						<form action="{{route('payment-confirm-order-post')}}" method="post">
-							{!! csrf_field() !!}
-							<input type="hidden" name="method" value="transfer"/>
-
-							<button class="button is-primary is-outlined">@lang('payment.confirm-method-bank-transfer-button')</button>
-						</form>
-					</div>
 					<div class="column">
-						<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form">
+						<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form" id="full_payment_p24_form">
 							<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
 							<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
 							<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
@@ -106,11 +112,22 @@
 							<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
 							<input type="hidden" name="p24_language" value="pl"/>
 							<input type="hidden" name="p24_url_return" value="{{ $returnUrl }}"/>
-							<input type="hidden" name="p24_url_status" value="{{ route('payment-status-hook')  }} "/>
+							<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url') }}"/>
 							<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
 							<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
+							<input type="hidden" name="p24_encoding" value="UTF-8"/>
 						</form>
-						<button class="button is-primary p24-submit">@lang('payment.confirm-method-online-payment-button')</button>
+						<button class="button is-primary p24-submit" data-id="full_payment_p24_form"
+						id="p24-submit-full-payment"
+						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
+					</div>
+					 <div class="column">
+						<form action="{{route('payment-confirm-order-post')}}" method="post">
+							{!! csrf_field() !!}
+							<input type="hidden" name="method" value="online"/>
+
+							<button type="submit" class="button">@lang('payment.confirm-deferred-payment-button')</button>
+						</form>
 					</div>
 				</div>
 			</section>
@@ -123,7 +140,7 @@
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 czerwca</strong> i <strong>20 lipca</strong>.</p>
+							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
 
 							<table class="table is-bordered margin vertical">
 								<tr>
@@ -154,13 +171,45 @@
 								Więcej informacji na temat rat znajdziesz w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a> oraz w <a class="tou-open-modal-link">Regulaminie</a>.
 							</p>
 
-							<form action="{{route('payment-confirm-order-post')}}" method="post">
-								{!! csrf_field() !!}
-								<input type="hidden" name="method" value="instalments"/>
-								<button type="submit" class="button margin top" id="instalments-button">
-									@lang('payment.confirm-method-instalments-button')
-								</button>
-							</form>
+							<div class="columns margin top">
+
+								<div class="column">
+									<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form" id="instalments_p24_form">
+										<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
+										<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
+										<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
+										<input type="hidden" name="p24_amount" value="{{ (int)$instalments[0]['amount'] * 100 }}"/>
+										<input type="hidden" name="p24_currency" value="PLN"/>
+										<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
+										<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
+										<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
+										<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
+										<input type="hidden" name="p24_city" value="{{ $user->userAddress->city }}"/>
+										<input type="hidden" name="p24_country" value="PL"/>
+										<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
+										<input type="hidden" name="p24_language" value="pl"/>
+										<input type="hidden" name="p24_url_return" value="{{ url('app/myself/orders?payment') }}"/>
+										<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url')  }}"/>
+										<input type="hidden" name="p24_api_version" value="{{ config('przelewy24.api_version') }}"/>
+										<input type="hidden" name="p24_sign" value="{{ $instalmentsChecksum }}"/>
+										<input type="hidden" name="p24_encoding" value="UTF-8"/>
+									</form>
+									<button class="button is-primary p24-submit" data-id="instalments_p24_form"
+									 data-payment="instalments">@lang('payment.confirm-method-instalments-online-button')</button>
+								</div>
+
+								<div class="column">
+									<form action="{{route('payment-confirm-order-post')}}" method="post">
+										{!! csrf_field() !!}
+										<input type="hidden" name="method" value="instalments"/>
+										<button type="submit" class="button margin top" id="instalments-button">
+											@lang('payment.confirm-method-instalments-button')
+										</button>
+									</form>
+								</div>
+
+							</div>
+
 						</div>
 					</div>
 				</section>
@@ -175,6 +224,6 @@
 	</div>
 @endsection
 
-@section('scripts')
+@section('payment-scripts')
 	<script>typeof fbq === 'function' && fbq('track', 'InitiateCheckout')</script>
 @endsection

@@ -13,5 +13,5 @@ return [
 	'test_path'        => '/testConnection',
 	'transaction_url'  => env('P24_BASE_URL') . '/trnDirect',
 	'verify_url'       => env('P24_BASE_URL') . '/trnVerify',
-
+	'status_url'       => env('P24_STATUS_URL'),
 ];

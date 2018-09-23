@@ -73,7 +73,6 @@ class MarkOrderAsPaid extends Command
 
 		$amount = $this->ask("Enter amount from transfer (already paid: {$order->paid_amount})", $order->total_with_coupon);
 
-		$order->paid = 1;
 		$order->paid_amount += $amount;
 		$order->save();
 		$this->info('Done.');

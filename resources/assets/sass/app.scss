@@ -367,6 +367,13 @@ section.voucher {
 
 .box.wnl-album {
 	margin-bottom: 40px;
+	.columns {
+		.column:last-child {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+	}
 }
 
 .section.select-product {

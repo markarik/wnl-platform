@@ -13,6 +13,14 @@
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
+		<div class="wnl-navbar-signup" v-if="!isMobile">
+			<a target="_blank" :href="signupsUrl" class="button is-success is-small is-outlined">
+				<span>Zapisz się</span>&nbsp;
+				<span class="icon is-small">
+					<i class="fa fa-thumbs-o-up"></i>
+				</span>
+			</a>
+		</div>
 		<div
 			v-if="$currentEditionParticipant.isAllowed('access')"
 			class="wnl-navbar-item wnl-navbar-search"
@@ -85,6 +93,12 @@
 		justify-content: flex-start
 		flex-grow: 1
 		padding: 0 $margin-small
+
+	.wnl-navbar-signup
+		+flex-center()
+		cursor: pointer
+		height: $navbar-height
+		min-height: $navbar-height
 
 	.wnl-navbar-item
 		align-items: center

@@ -42,7 +42,6 @@ class UserModule
 			'zip'        => $faker->postcode,
 			'city'       => $faker->city,
 		]);
-		$user->personalData()->create();
 		$browser->user = $user;
 
 		$browser

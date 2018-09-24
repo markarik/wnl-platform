@@ -82,7 +82,7 @@
 		@if($online->signups_start->isFuture() && $onsite->signups_start->isFuture())
 			<div class="notification has-text-centered strong">
 				Do otwarcia zapisów pozostało:
-				<div class="signups-countdown" data-start="{{ $online->signups_start }}">
+				<div class="signups-countdown" data-start="{{ $online->signups_start->timestamp }}">
 					sprawdzam zegarek...
 				</div>
 			</div>

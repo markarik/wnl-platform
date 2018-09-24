@@ -4,7 +4,7 @@ let moment = require('moment');
 require('moment-duration-format');
 
 function getTimeLeft(date) {
-	return moment.duration(moment(date).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
+	return moment.duration(moment(date*1000).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
 }
 
 $(function () {

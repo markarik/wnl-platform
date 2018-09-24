@@ -20,7 +20,7 @@
 			<div class="welcome">
 				{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
 			</div>
-			<div class="access-display">
+			<div class="access-display" v-if="currentUserSubscriptionActive">
 				<div>
 					Twój dostęp do kursu jest aktywny do:&nbsp;
 				</div>
@@ -152,7 +152,7 @@
 				'currentUserName',
 				'overviewView',
 			]),
-			...mapGetters(['currentUserSubscriptionDates']),
+			...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 			isBeginning() {
 				return !this.wasCourseStarted(this.courseId)
 			},

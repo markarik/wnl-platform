@@ -7,7 +7,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="level">
+		<div class="level" v-if="currentUserSubscriptionActive">
 			<div class="level-left">
 				<div class="level-item">
 					<div>
@@ -57,7 +57,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['currentUserSubscriptionDates']),
+			...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 			paymentUrl() {
 				return getUrl('payment/select-product')
 			},

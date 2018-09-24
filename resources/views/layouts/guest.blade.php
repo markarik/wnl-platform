@@ -8,7 +8,7 @@
 		<meta property="og:url" content="{{env('APP_URL')}}/login">
 		<meta property="og:type" content="website">
 		<meta property="og:title" content="@lang('common.app-title')">
-		<meta property="og:description" content="Wypróbuj naszą platformę demo! Wejdź na demo.wiecejnizlek.pl i sprawdź, co czeka Cię na kursie!">
+		<meta property="og:description" content="Zapisy otwarte!">
 		<meta property="og:image" content="{{ asset('/images/fbogimage.jpg') }}">
 
 		<!-- CSRF Token -->

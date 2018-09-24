@@ -1,18 +1,15 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
 		<!-- Sticky news -->
-		<div class="notification is-info aligncenter">
-			<span class="strong">
-				Pomóż w spisywaniu pytań z LEK-u!
-			</span>
-
-			Kilknij w link, wylosuj numer pytania i spisz je dla potomności!
-
-			<div class="margin top">
-				<a href="https://goo.gl/forms/aLv3eRJRNKpya8ey1" target="_blank">
-					DOŁĄCZ DO SPISYWANIA PYTAŃ
-				</a>
-				❤️
+		<div class="notification is-info">
+			<div>
+				Od <span class="strong">25 września</span> do <span class="strong">4 listopada</span> na platformie trwają intensywne prace moderatorskie. Uaktualniamy informacje, zmieniamy układy slajdów oraz dodajemy nowy materiał. 🙂
+			</div>
+			<div>
+				Podczas nauki zwróć uwagę na erraty do prezentacji, gdyż w ciągu najbliższego miesiąca będą się one nieznacznie zmieniać! 😉
+			</div>
+			<div>
+				Dziękujemy za wyrozumiałość! Miłej nauki!
 			</div>
 		</div>
 
@@ -67,6 +64,10 @@
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.notification
+		div:nth-child(-n+2)
+			margin-bottom: $margin-base
 
 	.welcome-container
 		display: flex

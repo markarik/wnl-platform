@@ -45,8 +45,7 @@
 			<span class="text">Pomoc</span>
 		</router-link>
 		<a
-			v-if="!$currentEditionParticipant.isAllowed('access') &&
-			!$upcomingEditionParticipant.isAllowed('access') && !currentUser.accountSuspended"
+			v-if="!$upcomingEditionParticipant.isAllowed('access') && !currentUser.accountSuspended"
 			class="wnl-main-nav-item"
 			:href="signUpLink"
 		>

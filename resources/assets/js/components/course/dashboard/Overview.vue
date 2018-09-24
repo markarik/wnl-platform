@@ -35,7 +35,7 @@
 			<wnl-your-progress/>
 			<div class="has-text-centered margin vertical">
 				<a
-					href="https://platforma.wiecejnizlek.pl/payment/select-product"
+					:href="signUpLink"
 					target="_blank"
 					class="button is-small is-success">Zapisz się
 				</a>
@@ -130,6 +130,7 @@
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
 	import { resource } from 'js/utils/config'
 	import moment from 'moment'
+	import {getUrl} from 'js/utils/env'
 
 	export default {
 		name: 'Overview',
@@ -171,7 +172,10 @@
 			},
 			userFriendlySubscriptionDate() {
 				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
-			}
+			},
+			signUpLink() {
+				return getUrl('payment/select-product')
+			},
 		},
 		methods: {
 			...mapActions(['changeOverviewView']),

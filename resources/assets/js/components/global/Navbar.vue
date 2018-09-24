@@ -14,7 +14,7 @@
 			</router-link>
 		</div>
 		<div class="wnl-navbar-signup" v-if="!isMobile">
-			<a target="_blank" href="https://platforma.wiecejnizlek.pl/payment/select-product" class="button is-success is-small is-outlined">
+			<a target="_blank" :href="signUpLink" class="button is-success is-small is-outlined">
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">
 					<i class="fa fa-thumbs-o-up"></i>
@@ -149,7 +149,7 @@
 	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
 	import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed'
 	import { mapGetters, mapActions } from 'vuex'
-	import { getImageUrl } from 'js/utils/env'
+	import { getImageUrl, getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'Navbar',
@@ -183,6 +183,9 @@
 			},
 			sidenavIconClass() {
 				return this.isSidenavOpen ? 'fa-close' : 'fa-bars'
+			},
+			signUpLink() {
+				return getUrl('payment/select-product')
 			},
 		},
 		methods: {

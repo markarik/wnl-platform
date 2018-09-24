@@ -9,7 +9,7 @@
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="@lang('common.app-title')">
 	<meta property="og:description" content="Unikalny kurs przygotowujący do Lekarskiego Egzaminu Końcowego">
-	<meta property="og:image" content="https://wiecejnizlek.pl/wp-content/themes/wiecejnizlek/assets/fb_og_mainpage.png">
+	<meta property="og:image" content="{{ asset('/images/fbogimage.jpg') }}">
 
 	<!-- CSRF Token -->
 	<meta name="csrf-token" content="{{ csrf_token() }}">

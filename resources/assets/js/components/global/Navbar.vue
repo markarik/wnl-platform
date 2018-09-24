@@ -14,7 +14,7 @@
 			</router-link>
 		</div>
 		<div class="wnl-navbar-signup" v-if="!isMobile">
-			<a target="_blank" :href="signupsUrl" class="button is-success is-small is-outlined">
+			<a target="_blank" href="https://platforma.wiecejnizlek.pl/payment/select-product" class="button is-success is-small is-outlined">
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">
 					<i class="fa fa-thumbs-o-up"></i>

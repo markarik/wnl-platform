@@ -65,6 +65,7 @@ class GenerateCouponsForUsers extends Command
 			]);
 		}
 
+		\Artisan::call('coupons:attachProducts');
 		return;
 	}
 }

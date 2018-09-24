@@ -185,15 +185,15 @@ class User extends Authenticatable
 		$numbers = [
 			[
 				'type' => 'personal_identity_number',
-				'value' => $this->personalData->personal_identity_number,
+				'value' => $this->personalData->personal_identity_number ?? null,
 			],
 			[
 				'type' => 'identity_card_number',
-				'value' => $this->personalData->identity_card_number,
+				'value' => $this->personalData->identity_card_number ?? null,
 			],
 			[
 				'type' => 'passport_number',
-				'value' => $this->personalData->passport_number,
+				'value' => $this->personalData->passport_number ?? null,
 			],
 		];
 

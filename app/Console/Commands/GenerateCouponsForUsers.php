@@ -14,7 +14,7 @@ class GenerateCouponsForUsers extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'coupons:generate';
+	protected $signature = 'coupons:generate {productIds*}';
 
 	/**
 	 * The console command description.
@@ -40,17 +40,20 @@ class GenerateCouponsForUsers extends Command
 	 */
 	public function handle()
 	{
+		$productIds = $this->argument('productIds');
+
 		$users = User::select('id')
-			->whereHas('orders', function ($query) {
+			->whereHas('orders', function ($query) use ($productIds){
 				$query->where('paid', 1);
-			})
-			->whereHas('roles', function ($query) {
-				$query->where('name', 'edition-2-participant');
+				$query->whereIn('product_id', $productIds);
 			})
 			->where('suspended', 0)
 			->get();
 
+		if (!$this->confirm($users->count() . ' users will receive a 50% coupon. Continue?')) die;
+
 		$expires = Carbon::now()->addYears(10);
+
 		foreach ($users as $user) {
 			Coupon::create([
 				'user_id'    => $user->id,
@@ -62,6 +65,7 @@ class GenerateCouponsForUsers extends Command
 			]);
 		}
 
+		\Artisan::call('coupons:attachProducts');
 		return;
 	}
 }

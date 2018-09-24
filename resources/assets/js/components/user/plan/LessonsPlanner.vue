@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="level">
+		<div class="level" v-if="currentUserSubscriptionActive">
 			<div class="level-left">
 				<div class="level-item">
 					<div>
@@ -97,7 +97,7 @@
 		},
 		computed: {
 			...mapGetters('course', ['userLessons', 'getRequiredLessons']),
-			...mapGetters(['currentUserSubscriptionDates']),
+			...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 			sortedRequiredUserLessons() {
 				return this.requiredLessons.sort((lessonA, lessonB) => {
 					return lessonA.startDate - lessonB.startDate

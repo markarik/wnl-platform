@@ -54,6 +54,7 @@ const getters = {
 	isCurrentUserLoading: state => state.loading,
 	currentUserStats: state => state.stats,
 	currentUserSubscriptionDates: state => state.profile.subscription.dates,
+	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
 }
 
 // Mutations

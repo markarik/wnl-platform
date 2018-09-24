@@ -42,4 +42,3 @@ WORKDIR /www/current
 COPY --from=js-build /src/. .
 USER root
 RUN chown -R 82:82 /www
-USER 82

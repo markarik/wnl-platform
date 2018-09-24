@@ -113,8 +113,8 @@ class Order extends Model
 		$now = Carbon::now();
 		$paymentDates = [
 			$this->created_at->addDays(7),
-			Carbon::createFromDate(2018, 06, 20),
-			Carbon::createFromDate(2018, 07, 20),
+			Carbon::createFromDate(2018, 11, 20),
+			Carbon::createFromDate(2018, 12, 20),
 		];
 		$toDistribute = $this->total_with_coupon;
 		$allPaid = $this->paid_amount >= $this->total_with_coupon;

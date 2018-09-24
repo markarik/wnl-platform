@@ -269,6 +269,10 @@ html {
 }
 
 section.voucher {
+	display: flex;
+	flex-direction: column;
+	font-size: 1.35rem;
+	justify-content: center;
 	strong {
 		color: $color-white;
 	}

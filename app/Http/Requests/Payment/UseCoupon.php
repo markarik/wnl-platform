@@ -54,12 +54,13 @@ class UseCoupon extends FormRequest
 				);
 			}
 
-			if ($limitReached) {
-				$validator->errors()->add(
-					'code',
-					trans('payment.voucher-tries-limit-reached')
-				);
-			}
+			// Disabled due to load balancer client IP forwarding issue
+//			if ($limitReached) {
+//				$validator->errors()->add(
+//					'code',
+//					trans('payment.voucher-tries-limit-reached')
+//				);
+//			}
 		});
 	}
 

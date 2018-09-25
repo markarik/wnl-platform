@@ -39,13 +39,13 @@ class OrdersStatsExport extends Command
 	 */
 	public function handle()
 	{
-		$setOne = $this->stats(Carbon::parse('2018-04-02 23:59'), Carbon::now(),
+		$setOne = $this->stats(Carbon::parse('2018-09-24 23:59'), Carbon::now(),
 			['date', 'orders_count', 'value', 'paid', 'albums', '50%', '']);
 
-		$setTwo = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::parse('2018-04-02 23:59'),
+		$setTwo = $this->stats(Carbon::parse('2018-04-02 23:59'), Carbon::parse('2018-09-24 23:59'),
 			['date', 'orders_count', 'value', 'paid', '']);
 
-		$setThree = $this->stats(Carbon::parse('2017-03-31 23:59'), Carbon::parse('2017-09-23 23:59'),
+		$setThree = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::parse('2018-04-02 23:59'),
 			['date', 'orders_count', 'value', 'paid', '']);
 
 		$rows = collect();

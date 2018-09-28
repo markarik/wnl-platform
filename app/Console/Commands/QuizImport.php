@@ -19,7 +19,7 @@ class QuizImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:import {dir?} {--check} {--debug} {--addNewTags}',
+	protected $signature = 'quiz:import {dir?} {--check} {--debug} {--addNewTags} {--forceId}',
 
 		/**
 		 * The console command description.
@@ -98,7 +98,9 @@ class QuizImport extends Command
 		$values = explode(self::VALUE_DELIMITER, $line);
 		$text = nl2br($values[0]);
 
-		if ($qId = $values[14]) {
+		$qId = $values[11];
+
+		if ($qId) {
 			$question = QuizQuestion::find($qId);
 			if ($question) {
 				// Line contains question id,
@@ -132,9 +134,16 @@ class QuizImport extends Command
 
 		$this->debug('Creating new question!');
 
-		$question = $quizSet->questions()->firstOrCreate([
-			'text' => $text,
-		]);
+		if ($this->option('forceId')) {
+			$question = $quizSet->questions()->create([
+				'id' => $qId,
+				'text' => $text,
+			]);
+		} else {
+			$question = $quizSet->questions()->firstOrCreate([
+				'text' => $text,
+			]);
+		}
 
 		for ($i = 1; $i <= 5; $i++) {
 			$hits = 0;

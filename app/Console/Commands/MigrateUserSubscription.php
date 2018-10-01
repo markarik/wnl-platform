@@ -45,7 +45,7 @@ class MigrateUserSubscription extends Command
 
 		if ($this->option('admins')) {
 			$users = User::all()->filter(function ($user) {
-				return $user->isAdmin();
+				return $user->isAdmin() || $user->isGuest();
 			});
 			$dates = new \stdClass();
 			$dates->min = Carbon::now()->subYear();

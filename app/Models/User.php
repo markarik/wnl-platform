@@ -321,6 +321,16 @@ class User extends Authenticatable
 	}
 
 	/**
+	 * Determine whether the user is a guest.
+	 *
+	 * @return bool
+	 */
+	public function isGuest()
+	{
+		return $this->hasRole('guest');
+	}
+
+	/**
 	 * Query users of certain role.
 	 *
 	 * @param \Illuminate\Database\Eloquent\Builder $query

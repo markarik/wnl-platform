@@ -72,13 +72,14 @@ class SetUsersLessons extends Command
 			->where('orders.canceled', '<>', 1)
 			->get();
 
-		if ($user->isAdmin()) {
+		if ($user->isAdmin() || $user->isGuest()) {
+			// czy tutaj nie powinno wziąć najnowszego produktu?
 			$lessons = Product::find(9)->lessons;
 			$this->setLessonsDates($lessons, $user);
 		}
 
 		foreach($userOrders as $order) {
-			if ($user->isAdmin()) {
+			if ($user->isAdmin() || $user->isGuest()) {
 				$lessons = Product::find(9)->lessons;
 			} else {
 				$lessons = $order->product->lessons;

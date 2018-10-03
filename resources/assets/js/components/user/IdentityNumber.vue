@@ -67,15 +67,6 @@
 									@click="disableErrors"
 									class="is-checkradio"
 									type="radio"
-									id="identity_card"
-									:name="this.identityTypes.idCard"
-									value="identity_card_number"
-									v-model="identity.identityType">
-								<label for="identity_card">{{ $t('user.personalData.identityNumber.types.id') }}</label>
-								<input
-									@click="disableErrors"
-									class="is-checkradio"
-									type="radio"
 									id="passport"
 									:name="this.identityTypes.passport"
 									value="passport_number"
@@ -143,7 +134,6 @@
 					identityType: 'personal_identity_number'
 				},
 				controlNumbers: {
-					identityCard: 3,
 					passport: 2
 				},
 				otherIdentity: false,
@@ -184,7 +174,6 @@
 				isLoaded: false,
 				identityTypes: {
 					personalId: 'personal_identity_number',
-					idCard: 'identity_card_number',
 					passport: 'passport_number'
 				}
 			}
@@ -194,14 +183,12 @@
 			idNumberAvailable() {
 				return Boolean (
 					this.currentUserIdentity.personalIdentityNumber ||
-					this.currentUserIdentity.identityCardNumber ||
 					this.currentUserIdentity.passportNumber
 				)
 			},
 			idNumber() {
 				return (
 					this.currentUserIdentity.personalIdentityNumber ||
-					this.currentUserIdentity.identityCardNumber ||
 					this.currentUserIdentity.passportNumber
 				)
 			},
@@ -244,10 +231,9 @@
 					return this.validatePersonalIdNumber(idNumber)
 				} else {
 					if (
-						idType === this.identityTypes.idCard ||
 						idType === this.identityTypes.passport
 					) {
-						return this.validateIdCardAndPassportNumbers(idNumber)
+						return this.validatePassportNumber(idNumber)
 					}
 				}
 			},
@@ -281,38 +267,31 @@
 				}
 				return true
 			},
-			validateIdCardAndPassportNumbers(idNumber) {
-				const idType = this.identity.identityType
-				let controlNumber = 0
+			validatePassportNumber(passportNumber) {
+				let controlNumber = this.controlNumbers.passport
 
-				if (idNumber.length !== 9) {
+				if (passportNumber.length !== 9) {
 					this.setErrorStatus('incorrectNumberLength')
 					return false
 				}
 
-				if (idType === this.identityTypes.idCard) {
-					controlNumber = this.controlNumbers.identityCard
-				} else if (idType === this.identityTypes.passport) {
-					controlNumber = this.controlNumbers.passport
-				}
-
-				idNumber = idNumber.toUpperCase()
+				passportNumber = passportNumber.toUpperCase()
 
 				for (let i = 0; i < controlNumber; i++) {
 					if (
-						this.getLetterValue(idNumber[i]) < 10
-						|| idNumber[i] === 'O'
-						|| idNumber === 'Q'
+						this.getLetterValue(passportNumber[i]) < 10
+						|| passportNumber[i] === 'O'
+						|| passportNumber === 'Q'
 					) {
 						this.setErrorStatus('incorrectNumberSeries')
 						return false
 					}
 				}
 
-				for (let i = controlNumber; i < idNumber.length; i++) {
+				for (let i = controlNumber; i < passportNumber.length; i++) {
 					if (
-						this.getLetterValue(idNumber[i]) < 0
-						|| this.getLetterValue(idNumber[i]) > 9
+						this.getLetterValue(passportNumber[i]) < 0
+						|| this.getLetterValue(passportNumber[i]) > 9
 					) {
 						this.setErrorStatus('incorrectSerialNumber')
 						return false
@@ -326,12 +305,12 @@
 				let sum = 0
 
 				for (let i = 0; i < weight.length; i++) {
-					sum += weight[i] * this.getLetterValue(idNumber[i])
+					sum += weight[i] * this.getLetterValue(passportNumber[i])
 				}
 
 				sum %= 10
 
-				if (sum !== this.getLetterValue(idNumber[controlNumber])) {
+				if (sum !== this.getLetterValue(passportNumber[controlNumber])) {
 					this.setErrorStatus('incorrectNumber')
 					return false
 				}

@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
-use App\Rules\ValidateIdentityCardNumber;
 use App\Rules\ValidatePassportNumber;
 use App\Rules\ValidatePersonalIdentityNumber;
 
@@ -236,7 +235,6 @@ class PersonalDataController extends Controller
 
 	protected function getIdentityNumberValidator($identityNumberType) {
 		$validators = [
-			'identity_card_number' => new ValidateIdentityCardNumber,
 			'passport_number' => new ValidatePassportNumber,
 			'personal_identity_number' => new ValidatePersonalIdentityNumber,
 		];
@@ -250,7 +248,6 @@ class PersonalDataController extends Controller
 
 	protected function getIdentityNumbersArray(Request $request) {
 		$identityNumbers = [
-			'identity_card_number' => null,
 			'passport_number' => null,
 			'personal_identity_number' => null,
 		];

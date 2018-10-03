@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidatePersonalIdentityNumber;
 use App\Rules\ValidatePassportNumber;
-use App\Rules\ValidateIdentityCardNumber;
 
 class PostUserPersonalData extends FormRequest
 {
@@ -35,12 +34,6 @@ class PostUserPersonalData extends FormRequest
 				'digits:11',
 				'string',
 				new ValidatePersonalIdentityNumber
-			],
-			'identity_card_number' => [
-				'nullable',
-				'string',
-				'size:9',
-				new ValidateIdentityCardNumber
 			],
 			'passport_number' => [
 				'nullable',

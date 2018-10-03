@@ -103,7 +103,6 @@ export const user = {
 			changeNumberType: 'Chcę podać inny numer identyfikacyjny',
 			types: {
 				personal: 'PESEL',
-				id: 'Dowód osobisty',
 				passport: 'Paszport',
 			}
 		},

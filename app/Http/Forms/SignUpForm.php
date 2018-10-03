@@ -46,7 +46,6 @@ class SignUpForm extends Form
 			->add('identity_number_type', 'choice', [
 				'choices' => [
 					'personal_identity_number' => trans('payment.identity_number_personal_identity_number'),
-					'identity_card_number' => trans('payment.identity_number_identity_card_number'),
 					'passport_number' => trans('payment.identity_number_passport_number'),
 				],
 				'expanded' => true,

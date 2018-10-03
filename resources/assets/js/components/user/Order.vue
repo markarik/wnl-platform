@@ -159,7 +159,7 @@
 				<div class="tabs">
 					<ul>
 						<li :class="{'is-active': activeTab === tab}"
-							v-for="tabContent, tab in orderTabs"
+							v-for="(tabContent, tab) in orderTabs"
 							:key="tab"
 							@click="activeTab = tab"
 						>
@@ -211,7 +211,10 @@
 
 				<!-- COUPONS BEGIN -->
 				<div class="content" v-if="activeTab === 'coupons'">
-					<div class="add-coupon">
+					<template v-if="couponsDisabled">
+						<p>{{$t('orders.messages.product-coupons-disabled')}}</p>
+					</template>
+					<div class="add-coupon" v-else>
 						<a class=""
 							title="Dodaj lub zmień kod rabatowy"
 							@click="toggleCouponInput"
@@ -405,6 +408,12 @@
 		},
 		computed: {
 			...mapGetters(['isAdmin', 'currentUser']),
+			couponsDisabled() {
+				if (this.order.product.signups_end) {
+					return new Date(this.order.product.signups_end * 1000) < new Date();
+				}
+				return false;
+			},
 			canRetryPayment() {
 				if (!_.get(this.order, 'payments.length', 0)) {
 					return !this.order.paid;
@@ -446,7 +455,6 @@
 				return !this.isFullyPaid && this.order.method === 'transfer'
 			},
 			paymentDeadline() {
-				console.log('Date', this.order.created_at)
 				return moment(this.order.created_at, 'DD-MM-YYYY').add(7, 'd').format('DD-MM-YYYY')
 			},
 			paymentStatus() {

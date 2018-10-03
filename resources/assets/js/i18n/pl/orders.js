@@ -8,5 +8,8 @@ export const orders = {
 		'in-progress': 'W trakcie',
 		'error': 'Niepowiodła się',
 		'success': 'Zakończona powodzeniem'
+	},
+	messages: {
+		'product-coupons-disabled': 'Niestety już nie można dodawać kuponów do tego produktu.'
 	}
 }

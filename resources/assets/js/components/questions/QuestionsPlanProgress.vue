@@ -33,9 +33,14 @@
 					{{$t(`questions.plan.progress.average.${averageStatus}`)}}
 					<span class="average-planned">{{averagePlanned}}</span>
 					<div v-if="hasMoreQuestionsThanPlanned">
-						<span>{{$t('questions.plan.progress.average.newAverage.header')}}</span>
-						<span class="new-average">{{hasMoreQuestionsThanPlanned}}</span>
-						<span>{{$t('questions.plan.progress.average.newAverage.closure')}}</span>
+						<div v-if="questionsLeftPerDay">
+							<span>{{$t('questions.plan.progress.average.newAverage.header')}}</span>
+							<span class="new-average">{{questionsLeftPerDay}}</span>
+							<span>{{$t('questions.plan.progress.average.newAverage.closure')}}</span>
+						</div>
+						<div v-if="planHasEnded">
+							<span>{{$t('questions.plan.progress.planHasEnded')}}</span>
+						</div>
 					</div>
 					<span v-if="averageStatus === 'greater'">
 						{{$t('questions.plan.progress.average.congrats')}}
@@ -139,6 +144,12 @@
 
 	export default {
 		name: 'QuestionsPlanProgress',
+		data() {
+			return {
+				questionsLeftPerDay: 0,
+				planHasEnded: false
+			}
+		},
 		props: {
 			allowChange: {
 				default: true,
@@ -163,7 +174,11 @@
 				const questionsLeftPerDay =  Math.ceil(questionsLeft / daysLeft)
 
 				if (questionsLeftPerDay > this.averagePlanned) {
-					return questionsLeftPerDay
+					this.questionsLeftPerDay = questionsLeftPerDay
+					return true
+				} else if (this.daysSoFar > this.plannedDaysCount) {
+					this.planHasEnded = true
+					return true
 				} else {
 					return false
 				}

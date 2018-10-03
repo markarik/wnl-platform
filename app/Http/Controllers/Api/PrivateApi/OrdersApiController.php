@@ -88,6 +88,10 @@ class OrdersApiController extends ApiController
 			array_push($errors, trans('payment.study-buddy-self-application'));
 		}
 
+		if ($order->product->signups_end->isPast()) {
+			array_push($errors, trans('payment.product-coupon-too-late'));
+		}
+
 		return $errors;
 	}
 

@@ -23,6 +23,7 @@ return [
 	'voucher-submit' => 'Wykorzystaj kod',
 	'voucher-existing-user' => 'Chcesz skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzednich edycji? Zaloguj się i kontynuuj zamówienie!',
 	'voucher-existing-user-button' => 'Zaloguj się',
+	'product-coupon-too-late' => 'Niestety już nie można dodawać kuponów do tego produktu.',
 
 	/**
 	 * Payment Steps Menu

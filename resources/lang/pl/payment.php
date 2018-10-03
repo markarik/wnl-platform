@@ -138,11 +138,10 @@ return [
 	'personal-data-account-login-button' => 'Zaloguj się',
 
 	'personal-data-id-heading' => 'Dane do celów statystycznych',
-	'personal-data-id-lead' => '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o podanie numeru PESEL. Posłużą one tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p><p>Jeżeli nie posiadasz numeru PESEL, możesz podać numer dowodu osobistego lub paszportu.</p>',
+	'personal-data-id-lead' => '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o podanie numeru PESEL. Posłużą one tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p><p>Jeżeli nie posiadasz numeru PESEL, możesz podać numer paszportu.</p>',
 	'identity_number' => 'Numer identyfikacyjny',
 
 	'identity_number_personal_identity_number' => 'PESEL',
-	'identity_number_identity_card_number' => 'Dowód osobisty',
 	'identity_number_passport_number' => 'Paszport',
 
 	'personal-data-heading' => 'Adres do wysyłki materiałów',

@@ -31,6 +31,7 @@ const state = {
 		accountSuspended: false
 	},
 	settings: getDefaultSettings(),
+	siteWideMessages: []
 }
 
 // Getters
@@ -55,6 +56,7 @@ const getters = {
 	currentUserStats: state => state.stats,
 	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
+	currentUserSiteWideMessages: state => state.siteWideMessages
 }
 
 // Mutations
@@ -87,6 +89,9 @@ const mutations = {
 	},
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
 		set(state.profile, 'accountSuspended', payload)
+	},
+	[types.USERS_SET_SITE_WIDE_MESSAGES] (state, payload) {
+		set(state, 'siteWideMessages', payload)
 	}
 }
 
@@ -167,6 +172,15 @@ const actions = {
 			}
 			commit(types.USERS_SET_IDENTIY, emptyResponse)
 			$wnl.logger.error(error)
+		}
+	},
+
+	async fetchUserSiteWideMessages({commit, getters}) {
+		try {
+			const response = await axios.get(getApiUrl(`users/${getters.currentUserId}/site_wide_messages`))
+			commit(types.USERS_SET_SITE_WIDE_MESSAGES, response.data)
+		} catch (e) {
+			$wnl.logger.error(e)
 		}
 	},
 

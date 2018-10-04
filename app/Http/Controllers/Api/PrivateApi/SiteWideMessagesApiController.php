@@ -15,6 +15,12 @@ class SiteWideMessagesApiController extends ApiController
 	}
 
 	public function getForUser($userId) {
+		$user = \Auth::user();
+
+		if (!$user->isAdmin() && $user->id != $userId) {
+			return $this->respondForbidden();
+		}
+
 		$data = SiteWideMessage::where('user_id', $userId)
 			->where('start_date', "<=", Carbon::now())
 			->where('end_date', ">=", Carbon::now())

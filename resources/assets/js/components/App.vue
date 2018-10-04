@@ -38,15 +38,12 @@
 </style>
 
 <script>
-	import axios from 'axios';
-	import store from 'store'
 	import { mapGetters, mapActions } from 'vuex'
 	import { isEmpty } from 'lodash'
 
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
-	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
 	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
 
@@ -60,12 +57,13 @@
 			...mapGetters([
 				'currentUserId',
 				'currentUserRoles',
+				'currentUserSiteWideMessages',
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
 				'alerts',
 				'modalVisible',
-				'thickScrollbar'
+				'thickScrollbar',
 			]),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
@@ -76,13 +74,29 @@
 				'resetLayout',
 				'setLayout',
 				'setupCurrentUser',
-				'toggleOverlay'
+				'toggleOverlay',
+				'fetchUserSiteWideMessages',
+				'addAlert'
 			]),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
 			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', { courseSetup: 'setup' }),
+			handleSiteWideMessages() {
+				const alerts = this.currentUserSiteWideMessages.filter(message => {
+					return message.type = 'site-wide-alert'
+				})
+
+				alerts.forEach(alert => {
+					this.addAlert({
+						text: this.$t(alert.message),
+						type: 'info'
+					})
+				})
+
+				console.log(alerts, '...alerty')
+			}
 		},
 		mounted() {
 			this.toggleOverlay({source: 'course', display: true})
@@ -94,6 +108,9 @@
 					// Setup Notifications
 					this.initNotifications()
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
+					this.fetchUserSiteWideMessages().then(() => {
+						this.handleSiteWideMessages()
+					})
 
 					// Setup Chat
 					const userChannel = `authenticated-user`

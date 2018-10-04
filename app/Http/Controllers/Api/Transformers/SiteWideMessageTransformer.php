@@ -15,6 +15,7 @@ class SiteWideMessageTransformer extends ApiTransformer
 			'id'             => $siteWideMessage->id,
 			'slug'           => $siteWideMessage->slug,
 			'message'        => $siteWideMessage->message,
+			'target'         => $siteWideMessage->target,
 			'start_date'     => $siteWideMessage->start_date->timestamp,
 			'end_date'       => $siteWideMessage->end_date->timestamp,
 		];

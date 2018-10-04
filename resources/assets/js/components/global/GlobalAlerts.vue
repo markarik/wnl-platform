@@ -7,7 +7,7 @@
 			:id="alert.id"
 			@onDismiss="closeAlert"
 		>
-			{{alert.text}}
+			<div v-html="alert.text"></div>
 		</wnl-alert>
 	</div>
 </template>
@@ -22,7 +22,7 @@
 </style>
 <script>
 import Alert from 'js/components/global/GlobalAlert'
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions} from 'vuex'
 
 export default {
 	components: {

@@ -18,6 +18,10 @@ class CreateSiteWideMessagesTable extends Migration
 			$table->string('message');
 			$table->dateTime('start_date');
 			$table->dateTime('end_date');
+			$table->enum('target', [
+				'dashboard-news',
+				'site-wide-alert'
+			]);
 			$table->dateTime('read_at')->nullable();
 			$table->integer('user_id')->index();
 			$table->string('slug')->nullable();

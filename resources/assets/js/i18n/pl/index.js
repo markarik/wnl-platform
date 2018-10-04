@@ -17,6 +17,7 @@ import { lessonsAvailability } from './lessonsAvailability'
 import { orders } from './orders'
 import { admin } from './admin'
 import { annotations } from './annotations'
+import { siteWideMessages } from "./siteWideMessages"
 
 export {
 	annotations,
@@ -38,4 +39,5 @@ export {
 	messages,
 	progress,
 	orders,
+	siteWideMessages
 }

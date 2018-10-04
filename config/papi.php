@@ -49,5 +49,6 @@ return [
 		'annotations'        => 'annotations',
 		'payments'           => 'payments',
 		'user-personal-data' => 'personal_data',
+		'site-wide-messages' => 'site-wide-messages'
 	],
 ];

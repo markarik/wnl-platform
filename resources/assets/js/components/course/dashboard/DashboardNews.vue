@@ -2,7 +2,7 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p class="has-text-centered"><strong>WITAJ JA KURSIE!</strong></p>
+		<p class="has-text-centered"><strong>WITAJ NA KURSIE!</strong></p>
 
 		<p>Cześć! 👋</p>
 

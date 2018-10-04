@@ -2,31 +2,24 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p class="has-text-centered"><strong>OSTATNIA ANKIETA</strong></p>
+		<p class="has-text-centered"><strong>WITAJ NA KURSIE!</strong></p>
 
 		<p>Cześć! 👋</p>
 
-		<p>Zakończyliśmy już oficjalnie 3. edycję kursu! Dziękujemy Ci baaardzo za zaufanie oraz zaangażowanie - bez Ciebie ten kurs nie działałby tak skutecznie!</p>
-
-		<p>Prosimy przy tej okazji o pozostawienie <a href="https://www.facebook.com/wiecejnizlek/reviews" target="_blank">recenzji na facebooku</a> - wiele osób czeka na Twoją opinię. 🙂</p>
-
-		<p>Na koniec kursu przeprowadzamy też zawsze ostatnią ankietę ewaluacyjną. Jest ona dla nas najważniejsza z wszystkich trzech, ponieważ wypełniając ją posiadasz już pełen obraz działania kursu. Prosimy, poświęć chwilę na udzielenie nam informacji zwrotnej.</p>
+		<p>Zanim rozpoczniesz wcześniejszą naukę, ustaw swój własny plan pracy!
+		Możesz to zrobić tutaj:</p>
 
 		<p class="aligncenter">
-			<a href="https://goo.gl/forms/PBLnL8WkQqtPKKYI3" target="_blank" class="button is-primary">
-				Wypełnij ankietę
+			<a :href="planLink" target="_blank" class="button is-primary">
+				Plan pracy
 			</a>
 		</p>
 
-		<p>Na koniec przypominamy, że jeśli planujesz uczestnictwo w kolejnej edycji kursu, możesz wciąż zarezerwować sobie miejsce. 🙂 Dzięki temu możesz spokojnie zapisać się do 15 października, a miejsce będzie na Ciebie czekać. Rezerwacja natomiast nie jest zobowiązująca. 🙂</p>
+		<p>W zakładce znajdziesz również film z instrukcją jak to zrobić. 🙂</p>
 
-		<p class="aligncenter">
-			<a href="https://wiecejnizlek.pl/zostaw-e-mail" target="_blank" class="button is-primary is-outlined">
-				Zarezerwuj miejsce na kursie
-			</a>
-		</p>
+		<p>Możesz także poczekać na oficjalny start kursu 5 listopada, wtedy pierwsza lekcja otworzy się automatycznie!</p>
 
-		<p>Życzymy powodzenia na ostatniej prostej i pozostajemy do dyspozycji!</p>
+		<p>Miłej nauki! 🚀</p>
 
 		<p style="font-style: italic;">Ekipa Więcej niż LEK</p>
 	</div>
@@ -35,8 +28,9 @@
 <script>
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
+	import { getUrl } from 'js/utils/env'
 
-	const CURRENT_NEWS = 'edition-3-last-survey'
+	const CURRENT_NEWS = 'edition-4-plan-redirect'
 	const DISPLAY_FROM = '' // new Date() or empty string
 	const DISPLAY_UNTIL = '' // new Date() or empty string
 	const REQUIRED_ROLE = ''
@@ -67,6 +61,9 @@
 			newsStoreKey() {
 				return `seen-dashboard-news-${CURRENT_NEWS}`
 			},
+			planLink() {
+				return getUrl('app/myself/availabilities')
+			}
 		},
 		methods: {
 			seenCurrentNews() {

@@ -7,6 +7,7 @@
 			<div class="message-body" v-html="personalDataExplanation">
 			</div>
 		</div>
+		<wnl-identity-number class="margin bottom"></wnl-identity-number>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -27,7 +28,6 @@
 			<wnl-form-text name="city">{{ $t('user.address.city') }}</wnl-form-text>
 			<wnl-form-text name="phone">{{ $t('user.address.phone') }}</wnl-form-text>
 		</wnl-form>
-		<wnl-identity-number></wnl-identity-number>
 	</div>
 </template>
 

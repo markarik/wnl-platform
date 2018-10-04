@@ -66,10 +66,6 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.notification
-		div:nth-child(-n+2)
-			margin-bottom: $margin-base
-
 	.welcome-container
 		display: flex
 		align-items: center

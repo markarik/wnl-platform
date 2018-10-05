@@ -91,7 +91,6 @@ class StudyBuddyRefund extends Command
 		$reason = 'Zniżka przydzielona po dokonaniu zapłaty (Study Buddy).';
 		$value = $coupon->value;
 		$difference = $value * -1;
-		$invoice = (new Invoice)->corrective($order, $recentInvoice, $reason, $difference);
 
 		$order->attachCoupon($coupon);
 		$order->paid_amount = $order->paid_amount + $difference;
@@ -102,6 +101,8 @@ class StudyBuddyRefund extends Command
 
 		$studyBuddy->status = 'refunded';
 		$studyBuddy->save();
+
+		$invoice = (new Invoice)->corrective($order, $recentInvoice, $reason, $difference);
 
 		Mail::to($order->user)->send(new Refund($order, $invoice, $value));
 

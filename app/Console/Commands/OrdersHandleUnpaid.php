@@ -165,9 +165,11 @@ class OrdersHandleUnpaid extends Command
 			$orders = $this->getUnpaidOrders($dueDate);
 
 			foreach ($orders as $order) {
+				$unpaidInstalment = $this->getFirstUnpaidInstalment($order);
+
 				SiteWideMessage::firstOrCreate([
 					'user_id' => $order->user_id,
-					'slug' => "instalment-reminder-order-{$order->id}",
+					'slug' => "instalment-reminder-{$unpaidInstalment->id}",
 					'start_date' => Carbon::today(),
 					'end_date' => Carbon::tomorrow(),
 					'target' => SiteWideMessage::SITE_WIDE_ALERT_DISPLAY_TARGET,

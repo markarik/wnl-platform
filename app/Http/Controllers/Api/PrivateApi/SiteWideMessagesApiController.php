@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\UpdateSiteWideMessage;
 use App\Models\SiteWideMessage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -24,8 +25,31 @@ class SiteWideMessagesApiController extends ApiController
 		$data = SiteWideMessage::where('user_id', $userId)
 			->where('start_date', "<=", Carbon::now())
 			->where('end_date', ">=", Carbon::now())
+			->whereNull('read_at')
 			->get();
 
 		return $this->transformAndRespond($data);
+	}
+
+	public function put(UpdateSiteWideMessage $request, $messageId) {
+		$user = \Auth::user();
+
+		$siteWideMessage = SiteWideMessage::find($messageId);
+
+		if (empty($siteWideMessage)) {
+			return $this->respondNotFound();
+		}
+
+		if ($siteWideMessage->user_id !== $user->id) {
+			return $this->respondForbidden();
+		}
+
+		if (!empty($request->read_at)) {
+			$siteWideMessage->read_at = Carbon::parse($request->read_at);
+		}
+
+		$siteWideMessage->save();
+
+		return $this->transformAndRespond($siteWideMessage);
 	}
 }

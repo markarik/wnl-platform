@@ -57,7 +57,6 @@
 			...mapGetters([
 				'currentUserId',
 				'currentUserRoles',
-				'currentUserSiteWideMessages',
 				'isCurrentUserLoading',
 				'overlayTexts',
 				'shouldDisplayOverlay',
@@ -65,6 +64,7 @@
 				'modalVisible',
 				'thickScrollbar',
 			]),
+			...mapGetters('siteWideMessages', ['siteWideMessages']),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
 			}
@@ -75,27 +75,28 @@
 				'setLayout',
 				'setupCurrentUser',
 				'toggleOverlay',
-				'fetchUserSiteWideMessages',
 				'addAlert'
 			]),
+			...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
 			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', { courseSetup: 'setup' }),
 			handleSiteWideMessages() {
-				const alerts = this.currentUserSiteWideMessages.filter(message => {
+				const alerts = this.siteWideMessages.filter(message => {
 					return message.type = 'site-wide-alert'
 				})
 
 				alerts.forEach(alert => {
 					this.addAlert({
 						text: this.$t(alert.message),
-						type: 'info'
+						type: 'info',
+						dismissCallback: () => {
+							this.updateSiteWideMessage(alert.id)
+						}
 					})
 				})
-
-				console.log(alerts, '...alerty')
 			}
 		},
 		mounted() {

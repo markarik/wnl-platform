@@ -263,6 +263,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
 
 	Route::get("{$r['users']}/{userId}/{$r['site-wide-messages']}", 'SiteWideMessagesApiController@getForUser');
+	Route::put("{$r['site-wide-messages']}/{messageId}", 'SiteWideMessagesApiController@put');
 
 	// Tasks
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');

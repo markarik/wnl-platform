@@ -5,7 +5,7 @@
 			:key="alert.id"
 			:type="alert.type"
 			:id="alert.id"
-			@onDismiss="closeAlert"
+			@onDismiss="onDismiss(alert)"
 		>
 			<div v-html="alert.text"></div>
 		</wnl-alert>
@@ -35,7 +35,13 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['closeAlert'])
-	}
+		...mapActions(['closeAlert']),
+		onDismiss(alert) {
+			if (typeof alert.dismissCallback === 'function') {
+				alert.dismissCallback();
+			}
+			this.closeAlert(alert);
+		}
+	},
 }
 </script>

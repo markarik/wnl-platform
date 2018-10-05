@@ -26,9 +26,9 @@ export const mutations = {
 
 // Actions
 export const actions = {
-	addAlert({commit}, {text, type}) {
+	addAlert({commit}, {text, type, dismissCallback}) {
 		const id = uuidv1()
-		commit(types.GLOBAL_ALERTS_ADD_ALERT, {text, type, id})
+		commit(types.GLOBAL_ALERTS_ADD_ALERT, {text, type, id, dismissCallback})
 		return id
 	},
 	closeAlert({commit, state}, payload) {

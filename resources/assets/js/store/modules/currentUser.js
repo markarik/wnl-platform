@@ -31,7 +31,6 @@ const state = {
 		accountSuspended: false
 	},
 	settings: getDefaultSettings(),
-	siteWideMessages: []
 }
 
 // Getters
@@ -56,7 +55,6 @@ const getters = {
 	currentUserStats: state => state.stats,
 	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
-	currentUserSiteWideMessages: state => state.siteWideMessages
 }
 
 // Mutations

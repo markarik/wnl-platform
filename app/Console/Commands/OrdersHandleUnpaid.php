@@ -173,10 +173,7 @@ class OrdersHandleUnpaid extends Command
 					'start_date' => Carbon::today(),
 					'end_date' => Carbon::tomorrow(),
 					'target' => SiteWideMessage::SITE_WIDE_ALERT_DISPLAY_TARGET,
-					'message' => "<p>
-						Zbliża się termin płatności raty za zamówienie #{$order->id}.
-						Nie czekaj do ostatniej chwili i opłać zamówienie <a href='/app/myself/orders'>tutaj</a>
-					</p>"
+					'message' => trans('site_wide_messages.unpaid-instalment-reminder', ['orderId' => $order->id])
 				]);
 			}
 		}

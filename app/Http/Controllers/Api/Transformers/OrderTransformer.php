@@ -28,7 +28,7 @@ class OrderTransformer extends ApiTransformer
 				'name'  => $order->product->name,
 				'slug'  => $order->product->slug,
 				'price' => $order->product->price,
-				'signups_end' => $order->product->signups_end->timestamp
+				'signups_end' => $order->product->signups_end->timestamp ?? null
 			],
 		];
 

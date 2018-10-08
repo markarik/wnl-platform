@@ -578,9 +578,12 @@
 						.catch(exception => $wnl.logger.capture(exception))
 			},
 			couponSubmitSuccess() {
-				axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
+				axios.get(getApiUrl(`orders/${this.order.id}`))
 						.then(response => {
-							this.order = response.data
+							this.order = {
+								...this.order,
+								...response.data
+							}
 							this.toggleCouponInput()
 						})
 						.catch(exception => $wnl.logger.capture(exception))

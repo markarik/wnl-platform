@@ -587,6 +587,10 @@ class Invoice
 
 	private function getInstalmentsNote($order)
 	{
+		if (empty($order->product->access_start) || empty($order->product->access_end)) {
+			return '';
+		}
+
 		$instalmentsCount = $order->orderInstalments->count();
 		$unpaidInstalments = $order->orderInstalments->where('paid', false);
 

@@ -163,9 +163,7 @@
 				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
 			},
 			exceededPlanDate() {
-				if (this.daysSoFar > this.plannedDaysCount) {
-					return true
-				}
+				if this.daysSoFar > this.plannedDaysCount
 			},
 			hasMoreQuestionsThanPlanned() {
 				const questionsLeft = this.plan.stats.total - this.plan.stats.done

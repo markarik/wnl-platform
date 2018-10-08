@@ -408,7 +408,7 @@ class Invoice
 				'number' => $corrected->full_number,
 			],
 			'reason'           => $reason,
-			'paid'             => $order->paid_amount,
+			'paid'             => $order->paid_amount - $difference,
 			'refund'           => $refund,
 		];
 
@@ -428,7 +428,7 @@ class Invoice
 				'amount'       => 1,
 			],
 		];
-		$totalPrice = $order->total_with_coupon;
+		$totalPrice = $order->total_with_coupon - $difference;
 		$totalCorrected = $totalPrice + $difference;
 
 		if ($coupon = $order->coupon) {
@@ -468,17 +468,17 @@ class Invoice
 			'net'   => $this->price($difference / (1 + $vatValue)),
 		];
 
+		$paidBeforeCorrection = $order->paid_amount - $difference;
 		$data['summaryBefore'] = [
+			'gross' => $paidBeforeCorrection,
+			'vat'   => $this->price($vatValue * $paidBeforeCorrection / (1 + $vatValue)),
+			'net'   => $this->price($paidBeforeCorrection / (1 + $vatValue)),
+		];
+
+		$data['summaryAfter'] = [
 			'gross' => $order->paid_amount,
 			'vat'   => $this->price($vatValue * $order->paid_amount / (1 + $vatValue)),
 			'net'   => $this->price($order->paid_amount / (1 + $vatValue)),
-		];
-
-		$paidAfterCorrection = $order->paid_amount + $difference;
-		$data['summaryAfter'] = [
-			'gross' => $paidAfterCorrection,
-			'vat'   => $this->price($vatValue * $paidAfterCorrection / (1 + $vatValue)),
-			'net'   => $this->price($paidAfterCorrection / (1 + $vatValue)),
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);

@@ -409,7 +409,6 @@
 		computed: {
 			...mapGetters(['isAdmin', 'currentUser']),
 			couponsDisabled() {
-				console.log(this.order.product.signups_end)
 				if (this.order.product.signups_end) {
 					return new Date(this.order.product.signups_end * 1000) < new Date();
 				}

@@ -32,14 +32,19 @@
 					<span class="average">{{average}}</span>
 					{{$t(`questions.plan.progress.average.${averageStatus}`)}}
 					<span class="average-planned">{{averagePlanned}}</span>
-					<div v-if="hasMoreQuestionsThanPlanned">
-						<span>{{$t('questions.plan.progress.average.newAverage.header')}}</span>
-						<span class="new-average">{{hasMoreQuestionsThanPlanned}}</span>
-						<span>{{$t('questions.plan.progress.average.newAverage.closure')}}</span>
+					<div>
+						<div v-if="hasMoreQuestionsThanPlanned">
+							<span>{{$t('questions.plan.progress.average.newAverage.header')}}</span>
+							<span class="new-average">{{questionsLeftPerDay}}</span>
+							<span>{{$t('questions.plan.progress.average.newAverage.closure')}}</span>
+						</div>
+						<div v-else-if="exceededPlanDate">
+							<span>{{$t('questions.plan.progress.planHasEnded')}}</span>
+						</div>
+						<span v-else-if="averageStatus === 'greater'">
+							{{$t('questions.plan.progress.average.congrats')}}
+						</span>
 					</div>
-					<span v-if="averageStatus === 'greater'">
-						{{$t('questions.plan.progress.average.congrats')}}
-					</span>
 				</div>
 			</div>
 			<div v-else>
@@ -156,6 +161,9 @@
 			},
 			averagePlanned() {
 				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
+			},
+			exceededPlanDate() {
+				return this.daysSoFar > this.plannedDaysCount
 			},
 			hasMoreQuestionsThanPlanned() {
 				const questionsLeft = this.plan.stats.total - this.plan.stats.done

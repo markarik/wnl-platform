@@ -10,4 +10,9 @@ class UserTime extends Model
 
 	protected $table = 'user_time';
 	protected $fillable = ['user_id', 'time', 'created_at', 'updated_at'];
+
+	public function user()
+	{
+		return belongsTo('App\Models\User');
+	}
 }

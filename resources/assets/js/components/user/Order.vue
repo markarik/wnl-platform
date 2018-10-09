@@ -77,7 +77,7 @@
 				<div class="current-payment">
 
 					<!-- PAY ORDER BEGINS -->
-					<div class="margin top aligncenter" v-if="!isPending && !order.paid && order.method === 'online'">
+					<div class="margin top aligncenter" v-if="!isPending && !order.paid && order.method === 'online' && order.total > 0">
 						<p>
 							<button
 								:class="{
@@ -253,7 +253,7 @@
 					</span> Zmień metodę płatności
 				</a>
 			</div>
-			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled">
+			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled && order.total > 0">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-times"></i>
@@ -458,7 +458,7 @@
 				return moment(this.order.created_at, 'DD-MM-YYYY').add(7, 'd').format('DD-MM-YYYY')
 			},
 			paymentStatus() {
-				if (this.order.paid && !this.isPending) {
+				if (this.order.paid && !this.isPending || this.order.total === 0) {
 					if (this.order.total === this.order.paid_amount) {
 						return `Wpłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
 					} else if (this.order.paid_amount > this.order.total) {
@@ -485,7 +485,7 @@
 				return this.paymentMethods[this.order.method]
 			},
 			canChangePaymentMethod() {
-				return !this.order.paid && !this.order.canceled
+				return !this.order.paid && !this.order.canceled && this.order.total > 0;
 			},
 			paymentMethodChangeUrl() {
 				return getUrl('payment/confirm-order')

@@ -147,6 +147,7 @@ return [
 
 	'personal-data-heading' => 'Adres do wysyłki materiałów',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
+	'personal-data-invoice-data-heading' => 'Dane do faktury',
 
 	'first-name' => 'Imię',
 	'last-name' => 'Nazwisko',

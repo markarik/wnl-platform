@@ -2,7 +2,7 @@
 	<div class="wnl-screen-html">
 		<div class="content" v-html="content"></div>
 		<div class="margin vertical has-text-centered">
-			{{this.$t('annotations.mockExamResults')}}
+			{{this.$t('annotations.mockExamAnnotation')}}
 		</div>
 		<p class="margin vertical has-text-centered">
 			<router-link :to="routeParams" class="button is-primary">

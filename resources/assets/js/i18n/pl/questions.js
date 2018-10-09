@@ -91,6 +91,7 @@ export const questions = {
 			count: 'Pytań: {count}',
 		},
 		progress: {
+			planHasEnded: 'Twój plan dobiegł końca.',
 			average: {
 				congrats: ' - gratulacje!',
 				greater: ' i jest większa lub równa planowanej ',

@@ -134,7 +134,7 @@ class OrdersHandleUnpaid extends Command
 
 	protected function handleMailing() {
 		$dueDate = Carbon::today()->addDays(1);
-		$orders = $this->getUnpaidOrders($dueDate);
+		$orders = $this->queryOrders($dueDate)->where('paid', 1)->get();
 
 		foreach ($orders as $order) {
 			$instalment = $this->getFirstUnpaidInstalment($order);
@@ -162,7 +162,7 @@ class OrdersHandleUnpaid extends Command
 	private function handleSiteWideMessages() {
 		for ($i = 1; $i <= 7; $i++) {
 			$dueDate = Carbon::today()->addDays($i);
-			$orders = $this->getUnpaidOrders($dueDate);
+			$orders = $this->queryOrders($dueDate)->get();
 
 			foreach ($orders as $order) {
 				$unpaidInstalment = $this->getFirstUnpaidInstalment($order);
@@ -179,16 +179,15 @@ class OrdersHandleUnpaid extends Command
 		}
 	}
 
-	protected function getUnpaidOrders($dueDate, $compare = "<=") {
+	protected function queryOrders($dueDate) {
 		return Order::whereHas('orderInstalments',
-			function ($query) use ($dueDate, $compare) {
+			function ($query) use ($dueDate) {
 				$query
 					->whereRaw('order_instalments.paid_amount < order_instalments.amount')
-					->whereDate('due_date', $compare, $dueDate);
+					->whereDate('due_date', "<=", $dueDate);
 			})
 			->where('method', 'instalments')
-			->where('canceled', '!=', 1)
-			->get();
+			->where('canceled', '!=', 1);
 	}
 
 	protected function getFirstUnpaidInstalment($order) {

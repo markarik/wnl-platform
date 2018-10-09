@@ -128,6 +128,9 @@
 				</div>
 			</div>
 
+			<div class="form-header has-text-centered">
+				<h2 class="title">@lang('payment.personal-data-invoice-data-heading')</h2>
+			</div>
 			<div class="box">
 				<div id="personal-data-invoice-toggle">
 					{!! form_widget($form->invoice) !!}

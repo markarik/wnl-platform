@@ -104,6 +104,7 @@ class OrdersHandleUnpaid extends Command
 			})
 			->where('method', 'instalments')
 			->where('canceled', '!=', 1)
+			->where('paid', 1)
 			->get();
 
 		foreach ($orders as $order) {
@@ -124,7 +125,7 @@ class OrdersHandleUnpaid extends Command
 
 			if ($this->shouldSuspend($order, $instalment)) {
 				if (!$order->paid) return $order->cancel();
-				
+
 				$order->user->suspend();
 				$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
 			}

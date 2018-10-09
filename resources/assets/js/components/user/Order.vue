@@ -412,7 +412,7 @@
 				if (this.order.product.signups_end) {
 					return new Date(this.order.product.signups_end * 1000) < new Date();
 				}
-				return false;
+				return true;
 			},
 			canRetryPayment() {
 				if (!_.get(this.order, 'payments.length', 0)) {

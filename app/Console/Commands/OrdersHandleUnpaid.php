@@ -96,7 +96,7 @@ class OrdersHandleUnpaid extends Command
 
 	protected function handleInstalments()
 	{
-//		$this->handleMailing();
+		$this->handleMailing();
 		$this->handleSiteWideMessages();
 	}
 

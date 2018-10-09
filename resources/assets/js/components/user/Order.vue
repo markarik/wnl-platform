@@ -218,7 +218,7 @@
 						<a class=""
 							title="Dodaj lub zmień kod rabatowy"
 							@click="toggleCouponInput"
-							v-if="order.status !== 'clogised'">
+							v-if="order.status !== 'closed'">
 							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
 							<span>Dodaj lub zmień kod rabatowy</span>
 						</a>

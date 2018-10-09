@@ -209,7 +209,6 @@ class PersonalDataController extends Controller
 			'city'      => $request->get('city'),
 			'phone'     => $request->get('phone'),
 			'recipient' => $request->get('recipient'),
-
 		]);
 
 		$user->personalData()->updateOrCreate(

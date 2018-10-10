@@ -64,13 +64,6 @@ class Kernel extends ConsoleKernel
 			->twiceDaily(8, 20);
 
 		$schedule
-			->command('orders:cancelAllUnpaid', [
-				'--until' => Carbon::now()->subDays(7)->toDateString(),
-				'--force' => true
-			])
-			->weeklyOn(5, '04:00');
-
-		$schedule
 			->command('notifications:cleanup-old --force')
 			->dailyAt('02:45');
 

@@ -55,15 +55,15 @@ class OrdersHandleUnpaid extends Command
 
 		$expired = Carbon::today()->subDays(30);
 
-		$this->handleTransfer();
-		$this->handleInstalments();
+		$this->handleUnpaidOrders();
+		$this->handleUnpaidInstalment();
 
 		PaymentReminder::where('created_at', '<', $expired)->delete();
 
 		return;
 	}
 
-	protected function handleTransfer()
+	protected function handleUnpaidOrders()
 	{
 		$now = Carbon::now();
 		$sixDaysAgo = Carbon::today()->subDays(6);
@@ -71,7 +71,7 @@ class OrdersHandleUnpaid extends Command
 		$orders = Order::with('paymentReminders')
 			->where('paid', 0)
 			->where('created_at', '<=', $sixDaysAgo)
-			->where('method', 'transfer')
+			->whereIn('method', ['transfer', 'instalments'])
 			->where('canceled', '!=', 1)
 			->get();
 
@@ -93,7 +93,7 @@ class OrdersHandleUnpaid extends Command
 		}
 	}
 
-	protected function handleInstalments()
+	protected function handleUnpaidInstalment()
 	{
 		$beforeDue = Carbon::today()->addDays(1);
 		$orders = Order::whereHas('orderInstalments',
@@ -124,8 +124,6 @@ class OrdersHandleUnpaid extends Command
 			}
 
 			if ($this->shouldSuspend($order, $instalment)) {
-				if (!$order->paid) return $order->cancel();
-
 				$order->user->suspend();
 				$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
 			}
@@ -134,7 +132,6 @@ class OrdersHandleUnpaid extends Command
 
 	protected function mail($order, $mail, $instalment = null)
 	{
-
 		if ($instalment) {
 			if ($this->mailDebug) {
 				$this->info("{$mail} -> order {$order->id} from {$order->created_at}, instalment num. {$instalment->order_number}");
@@ -162,6 +159,5 @@ class OrdersHandleUnpaid extends Command
 			!$order->user->suspended &&
 			$now->diffInWeekdays($reminder->created_at) >= 2 &&
 			$reminder->instalment_number === $instalment->order_number;
-
 	}
 }

@@ -32,16 +32,10 @@ class SiteWideMessagesApiController extends ApiController
 	}
 
 	public function put(UpdateSiteWideMessage $request, $messageId) {
-		$user = \Auth::user();
-
 		$siteWideMessage = SiteWideMessage::find($messageId);
 
 		if (empty($siteWideMessage)) {
 			return $this->respondNotFound();
-		}
-
-		if ($siteWideMessage->user_id !== $user->id) {
-			return $this->respondForbidden();
 		}
 
 		if (!empty($request->read_at)) {

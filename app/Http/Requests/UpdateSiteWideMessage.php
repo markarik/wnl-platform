@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\SiteWideMessage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSiteWideMessage extends FormRequest
@@ -13,7 +14,10 @@ class UpdateSiteWideMessage extends FormRequest
 	 */
 	public function authorize()
 	{
-		return true;
+		$user = \Auth::user();
+		$siteWideMessage = SiteWideMessage::find($this->route('messageId'));
+
+		return $siteWideMessage->user_id === $user->id;
 	}
 
 	/**

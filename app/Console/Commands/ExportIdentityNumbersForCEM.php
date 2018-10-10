@@ -14,6 +14,7 @@ class ExportIdentityNumbersForCEM extends Command
      * @var string
      */
     protected $signature = 'identityNumbers:export {maxDate} {products*}';
+	// example date format: 2018-09-21
 
     /**
      * The console command description.
@@ -44,6 +45,7 @@ class ExportIdentityNumbersForCEM extends Command
 
 		$headers = ['Imię', 'Nazwisko', 'PESEL'];
 		$rows = collect([$headers]);
+		$name = 'Zaszyfrowane numery PESEL';
 
 		$users = User::whereHas('orders', function($query) use ($productIds) {
 			$query->whereIn('product_id', $productIds)
@@ -51,18 +53,30 @@ class ExportIdentityNumbersForCEM extends Command
 		})->whereHas('personalData')->get();
 
 		foreach ($users as $user) {
-			print $user->first_name.' ';
-			print $user->last_name.' ';
+			
+			if($user->roles) {
+				return;
+			}
+
 			print $user->personalData()->get([
 				'personal_identity_number',
 				'identity_card_number',
 				'passport_number'
-			])->values();
-			// użytkownik 1069, który nie ma wpisu w user_time ale ma user_personal_data -> czo wtedy? komenda się wyjebuje.
-			// czy to w ogóle możliwe mieć wpis w user_personal_data a nie mieć w user_time?
-			// czy trzeba if'ować każdy warunek?
-			print PHP_EOL;
+			])->values()."\n";
+
+			// $rows->push([
+			// 	$user->first_name,
+			// 	$user->last_name,
+			//
+			// ]);
 		}
-		print 'Total number of records '.$users->count();
+		// $rows = $rows->map(function ($row) {
+		// 	return implode("\t", $row);
+		// });
+		//
+		// $contents = $rows->implode("\n");
+		// Storage::put('exports/' . $name . '.tsv', $contents);
+
+		return;
     }
 }

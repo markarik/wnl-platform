@@ -187,7 +187,20 @@ class PersonalDataController extends Controller
 
 	protected function updateAccount($user, $request)
 	{
-		$user->update($request->all());
+		$user->update([
+			'first_name' => $request->first_name ?? $user->first_name,
+			'last_name' => $request->last_name ?? $user->last_name,
+			'email' => $request->email ?? $user->email,
+			'invoice_name' => $request->invoice_name ?? $user->invoice_name,
+			'invoice_nip' => $request->invoice_nip ?? $user->invoice_nip,
+			'invoice_address' => $request->invoice_address ?? $user->invoice_address,
+			'invoice_zip' => $request->invoice_zip ?? $user->invoice_zip,
+			'invoice_city' => $request->invoice_city ?? $user->invoice_city,
+			'invoice_country' => $request->invoice_country ?? $user->invoice_country,
+			'consent_terms' => $request->consent_terms ?? $user->consent_terms,
+			'consent_newsletter' => $request->consent_newsletter ?? $user->consent_newsletter,
+		]);
+
 		$user->userAddress()->updateOrCreate(
 		['user_id' => $user->id],
 		[

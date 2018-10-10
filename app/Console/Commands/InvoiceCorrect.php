@@ -90,9 +90,9 @@ class InvoiceCorrect extends Command
 		$reason = $this->ask('Reason', 'Zwrot na podstawie rabatu naliczonego po opłaceniu zamówienia.');
 		$value = $this->ask('Amount');
 		$refund = !$this->option('no-refund');
-		$invoice = (new Invoice)->corrective($order, $corrected, $reason, -$value, $refund);
 		$order->paid_amount -= $value;
 		$order->save();
+		$invoice = (new Invoice)->corrective($order, $corrected, $reason, -$value, $refund);
 
 		if ($refund) {
 			$mail = new Refund($order, $invoice, $value);

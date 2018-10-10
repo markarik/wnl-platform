@@ -412,7 +412,7 @@
 				if (this.order.product.signups_end) {
 					return new Date(this.order.product.signups_end * 1000) < new Date();
 				}
-				return false;
+				return true;
 			},
 			canRetryPayment() {
 				if (!_.get(this.order, 'payments.length', 0)) {
@@ -578,9 +578,12 @@
 						.catch(exception => $wnl.logger.capture(exception))
 			},
 			couponSubmitSuccess() {
-				axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
+				axios.get(getApiUrl(`orders/${this.order.id}`))
 						.then(response => {
-							this.order = response.data
+							this.order = {
+								...this.order,
+								...response.data
+							}
 							this.toggleCouponInput()
 						})
 						.catch(exception => $wnl.logger.capture(exception))

@@ -25,25 +25,32 @@ class ConfirmOrderController extends Controller
 		Log::debug('Order confirmation');
 
 		$order = $user->orders()->recent();
-		$instalments = $order->product->paymentMethods
-			->where('slug', 'instalments')
-			->first()
-			->isAvailable() ? $order->instalments['instalments'] : false;
-
-		$firstInstalmentAmount = (int) ((int) $order->total_with_coupon === 0 ? 0 : $instalments[0]['amount'] * 100);
 		$amount = (int)$order->total_with_coupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
-		$instalmentsChecksum = $payment::generateChecksum($order->session_id, $firstInstalmentAmount);
 
-		return view('payment.confirm-order', [
+		$viewData = [
 			'order' => $order,
 			'user' => $user,
 			'checksum' => $checksum,
-			'instalments' => $instalments,
-			'instalmentsChecksum' => $instalmentsChecksum,
 			'amount'      => $amount,
-			'returnUrl'  => $this->getReturnUrl($amount)
-		]);
+			'returnUrl'  => $this->getReturnUrl($amount),
+			'instalments' => null
+		];
+
+		$productInstalments = $order->product->paymentMethods
+			->where('slug', 'instalments')
+			->first();
+
+		if (!empty($productInstalments)) {
+			$instalments = $productInstalments->isAvailable() ? $order->instalments['instalments'] : false;
+			$firstInstalmentAmount = (int) ((int) $order->total_with_coupon === 0 ? 0 : $instalments[0]['amount'] * 100);
+			$instalmentsChecksum = $payment::generateChecksum($order->session_id, $firstInstalmentAmount);
+
+			$viewData['instalments'] = $instalments;
+			$viewData['instalmentsChecksum'] = $instalmentsChecksum;
+		}
+
+		return view('payment.confirm-order', $viewData);
 	}
 
 	public function handle(Request $request)

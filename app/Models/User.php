@@ -142,6 +142,10 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\UserSubscription');
 	}
 
+	public function userTime() {
+		return $this->hasMany('App\Models\UserTime');
+	}
+
 	/**
 	 * Dynamic attributes
 	 */

@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use Artisan;
-use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -62,13 +61,6 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('orders:handleUnpaid')
 			->twiceDaily(8, 20);
-
-		$schedule
-			->command('orders:cancelAllUnpaid', [
-				'--until' => Carbon::now()->subDays(7)->toDateString(),
-				'--force' => true
-			])
-			->weeklyOn(5, '04:00');
 
 		$schedule
 			->command('notifications:cleanup-old --force')

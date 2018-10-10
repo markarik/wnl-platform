@@ -56,15 +56,15 @@ class OrdersHandleUnpaid extends Command
 
 		$expired = Carbon::today()->subDays(30);
 
-		$this->handleTransfer();
-		$this->handleInstalments();
+		$this->handleUnpaidOrders();
+		$this->handleUnpaidInstalment();
 
 		PaymentReminder::where('created_at', '<', $expired)->delete();
 
 		return;
 	}
 
-	protected function handleTransfer()
+	protected function handleUnpaidOrders()
 	{
 		$now = Carbon::now();
 		$sixDaysAgo = Carbon::today()->subDays(6);
@@ -72,7 +72,7 @@ class OrdersHandleUnpaid extends Command
 		$orders = Order::with('paymentReminders')
 			->where('paid', 0)
 			->where('created_at', '<=', $sixDaysAgo)
-			->where('method', 'transfer')
+			->whereIn('method', ['transfer', 'instalments'])
 			->where('canceled', '!=', 1)
 			->get();
 
@@ -82,27 +82,64 @@ class OrdersHandleUnpaid extends Command
 			if ($order->paymentReminders->count() === 0) {
 				$this->mail($order, TransferReminder::class);
 				$order->paymentReminders()->create();
-				continue;
-			}
+			} else {
+				$reminder = $order->paymentReminders->last();
 
-			$reminder = $order->paymentReminders->last();
-
-			if ($now->diffInWeekdays($reminder->created_at) >= 2) {
-				if ($this->mailDebug) $this->mail($order, 'canceled');
-				$order->cancel();
+				if ($now->diffInWeekdays($reminder->created_at) >= 2) {
+					if ($this->mailDebug) $this->mail($order, 'canceled');
+					$order->cancel();
+				}
 			}
 		}
 	}
 
-	protected function handleInstalments()
+	protected function handleUnpaidInstalment()
 	{
-		$this->handleMailing();
-		$this->handleSiteWideMessages();
+		$beforeDue = Carbon::today()->addDays(7);
+		$orders = Order::whereHas('orderInstalments',
+			function ($query) use ($beforeDue) {
+				$query
+					->whereRaw('order_instalments.paid_amount < order_instalments.amount')
+					->whereDate('due_date', "<=", $beforeDue);
+			})
+			->where('method', 'instalments')
+			->where('canceled', '!=', 1)
+			->where('paid', 1)
+			->get();
+
+		foreach ($orders as $order) {
+			$instalment = $this->getFirstUnpaidInstalment($order);
+
+			$reminders = $order->paymentReminders
+				->where('instalment_number', $instalment->order_number);
+
+			SiteWideMessage::firstOrCreate([
+				'user_id' => $order->user_id,
+				'slug' => "instalment-reminder-{$instalment->id}",
+				'start_date' => Carbon::today(),
+				'end_date' => Carbon::tomorrow(),
+				'target' => SiteWideMessage::SITE_WIDE_ALERT_DISPLAY_TARGET,
+				'message' => trans('site_wide_messages.unpaid-instalment-reminder', ['orderId' => $order->id])
+			]);
+
+			// send email when reminder not send and instalment due date is in one day
+			if ($instalment->due_date <= Carbon::today()->addDays(1) && $reminders->count() === 0) {
+				$this->mail($order, InstalmentReminder::class, $instalment);
+				$order->paymentReminders()->create([
+					'instalment_number' => $instalment->order_number,
+				]);
+				continue;
+			}
+
+			if ($this->shouldSuspend($order, $instalment)) {
+				$order->user->suspend();
+				$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
+			}
+		}
 	}
 
 	protected function mail($order, $mail, $instalment = null)
 	{
-
 		if ($instalment) {
 			if ($this->mailDebug) {
 				$this->info("{$mail} -> order {$order->id} from {$order->created_at}, instalment num. {$instalment->order_number}");
@@ -130,64 +167,6 @@ class OrdersHandleUnpaid extends Command
 			!$order->user->suspended &&
 			$now->diffInWeekdays($reminder->created_at) >= 2 &&
 			$reminder->instalment_number === $instalment->order_number;
-	}
-
-	protected function handleMailing() {
-		$dueDate = Carbon::today()->addDays(1);
-		$orders = $this->queryOrders($dueDate)->where('paid', 1)->get();
-
-		foreach ($orders as $order) {
-			$instalment = $this->getFirstUnpaidInstalment($order);
-
-			$reminders = $order->paymentReminders
-				->where('instalment_number', $instalment->order_number);
-
-			if ($reminders->count() === 0) {
-				$this->mail($order, InstalmentReminder::class, $instalment);
-				$order->paymentReminders()->create([
-					'instalment_number' => $instalment->order_number,
-				]);
-				continue;
-			}
-
-			if ($this->shouldSuspend($order, $instalment)) {
-				if (!$order->paid) return $order->cancel();
-
-				$order->user->suspend();
-				$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
-			}
-		}
-	}
-
-	private function handleSiteWideMessages() {
-		for ($i = 1; $i <= 7; $i++) {
-			$dueDate = Carbon::today()->addDays($i);
-			$orders = $this->queryOrders($dueDate)->get();
-
-			foreach ($orders as $order) {
-				$unpaidInstalment = $this->getFirstUnpaidInstalment($order);
-
-				SiteWideMessage::firstOrCreate([
-					'user_id' => $order->user_id,
-					'slug' => "instalment-reminder-{$unpaidInstalment->id}",
-					'start_date' => Carbon::today(),
-					'end_date' => Carbon::tomorrow(),
-					'target' => SiteWideMessage::SITE_WIDE_ALERT_DISPLAY_TARGET,
-					'message' => trans('site_wide_messages.unpaid-instalment-reminder', ['orderId' => $order->id])
-				]);
-			}
-		}
-	}
-
-	protected function queryOrders($dueDate) {
-		return Order::whereHas('orderInstalments',
-			function ($query) use ($dueDate) {
-				$query
-					->whereRaw('order_instalments.paid_amount < order_instalments.amount')
-					->whereDate('due_date', "<=", $dueDate);
-			})
-			->where('method', 'instalments')
-			->where('canceled', '!=', 1);
 	}
 
 	protected function getFirstUnpaidInstalment($order) {

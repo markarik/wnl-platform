@@ -13,7 +13,7 @@ class OrderCancelAllUnpaid extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'orders:cancelAllUnpaid {--until=} {--force}';
+	protected $signature = 'orders:cancelAllUnpaid {--until=}';
 
 	/**
 	 * The console command description.
@@ -46,18 +46,14 @@ class OrderCancelAllUnpaid extends Command
 
 		$until = Carbon::parse($this->option('until'));
 
-		$force = $this->option('force');
-
 		$orders = Order::where('paid', 0)
 			->where('created_at', '<', $until)
 			->where('canceled', '!=', 1)
 			->get();
 
-		if (empty($force)) {
-			if (!$this->confirm("Cancel {$orders->count()} orders?")) {
-				$this->info('Aborted.');
-				exit;
-			}
+		if (!$this->confirm("Cancel {$orders->count()} orders?")) {
+			$this->info('Aborted.');
+			exit;
 		}
 
 		foreach ($orders as $order) {

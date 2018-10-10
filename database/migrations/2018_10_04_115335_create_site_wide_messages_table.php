@@ -15,7 +15,7 @@ class CreateSiteWideMessagesTable extends Migration
 	{
 		Schema::create('site_wide_messages', function (Blueprint $table) {
 			$table->increments('id');
-			$table->string('message');
+			$table->text('message');
 			$table->dateTime('start_date');
 			$table->dateTime('end_date');
 			$table->enum('target', [

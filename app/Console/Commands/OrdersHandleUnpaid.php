@@ -79,6 +79,15 @@ class OrdersHandleUnpaid extends Command
 		if ($orders->count() === 0) return;
 
 		foreach ($orders as $order) {
+			SiteWideMessage::firstOrCreate([
+				'user_id' => $order->user_id,
+				'slug' => "order-payment-reminder-{$order->id}",
+				'start_date' => Carbon::today(),
+				'end_date' => Carbon::tomorrow(),
+				'target' => SiteWideMessage::SITE_WIDE_ALERT_DISPLAY_TARGET,
+				'message' => trans('site_wide_messages.unpaid-order-reminder', ['orderId' => $order->id])
+			]);
+
 			if ($order->paymentReminders->count() === 0) {
 				$this->mail($order, TransferReminder::class);
 				$order->paymentReminders()->create();
@@ -110,9 +119,6 @@ class OrdersHandleUnpaid extends Command
 		foreach ($orders as $order) {
 			$instalment = $this->getFirstUnpaidInstalment($order);
 
-			$reminders = $order->paymentReminders
-				->where('instalment_number', $instalment->order_number);
-
 			SiteWideMessage::firstOrCreate([
 				'user_id' => $order->user_id,
 				'slug' => "instalment-reminder-{$instalment->id}",
@@ -122,18 +128,23 @@ class OrdersHandleUnpaid extends Command
 				'message' => trans('site_wide_messages.unpaid-instalment-reminder', ['orderId' => $order->id])
 			]);
 
-			// send email when reminder not send and instalment due date is in one day
-			if ($instalment->due_date <= Carbon::today()->addDays(1) && $reminders->count() === 0) {
-				$this->mail($order, InstalmentReminder::class, $instalment);
-				$order->paymentReminders()->create([
-					'instalment_number' => $instalment->order_number,
-				]);
-				continue;
-			}
+			// next instalment due date is in one day
+			if ($instalment->due_date <= Carbon::today()->addDays(1)) {
+				$reminders = $order->paymentReminders
+					->where('instalment_number', $instalment->order_number);
 
-			if ($this->shouldSuspend($order, $instalment)) {
-				$order->user->suspend();
-				$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
+				if ($reminders->count() === 0) {
+					$this->mail($order, InstalmentReminder::class, $instalment);
+					$order->paymentReminders()->create([
+						'instalment_number' => $instalment->order_number,
+					]);
+				} else {
+					if ($this->shouldSuspend($order, $instalment)) {
+						$order->user->suspend();
+						$this->mail($order, AccountSuspendedUnpaidInstalment::class, $instalment);
+					}
+				}
+
 			}
 		}
 	}

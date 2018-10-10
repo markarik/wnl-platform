@@ -14,24 +14,29 @@ const getters = {
 const mutations = {
 	[types.SITE_WIDE_MESSAGES_SET_MESSAGES] (state, payload) {
 		set(state, 'siteWideMessages', payload)
-	}
+	},
 }
 
 const actions = {
 	async fetchUserSiteWideMessages({commit, rootGetters}) {
 		try {
 			const response = await axios.get(getApiUrl(`users/${rootGetters.currentUserId}/site_wide_messages`))
-			commit(types.SITE_WIDE_MESSAGES_SET_MESSAGES, response.data)
+			if (!Array.isArray(response.data)) {
+				$wnl.logger.error(`Incorrect shape of response for siteWideMessages, ${response.data.toString()}`)
+			}
+
+			commit(types.SITE_WIDE_MESSAGES_SET_MESSAGES, response.data.filter(message => {
+				return message.message && message.target && message.id
+			}))
 		} catch (e) {
 			$wnl.logger.error(e)
 		}
 	},
 	async updateSiteWideMessage({commit}, messageId) {
 		try {
-			const response = await axios.put(getApiUrl(`site_wide_messages/${messageId}`), {
+			await axios.put(getApiUrl(`site_wide_messages/${messageId}`), {
 				read_at: new Date()
 			})
-			commit(types.SITE_WIDE_MESSAGES_UPDATE_MESSAGE, response.data)
 		} catch (e) {
 			$wnl.logger.error(e)
 		}

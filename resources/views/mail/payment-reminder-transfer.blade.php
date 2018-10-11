@@ -7,9 +7,15 @@
 
 	<p>W przypadku braku płatności, zamówienie zostanie <strong>automatycznie anulowane po upływie 2 dni roboczych.</strong> 😔</p>
 
-	<p><strong>Swoje zamówienie możesz opłacić na stronie <a href="{{url('app/myself/orders')}}">Konto > Twoje zamówienia</a>.</strong></p>
+	<p><strong>Opłacić zamówienie możesz w zakładce <a href="{{url('app/myself/orders')}}">Konto > Twoje zamówienia</a>.</strong> Tam znajdziesz też wszystkie szczegóły dotyczące płatności. 😔</p>
 
-	<p>W razie pytań pisz śmiało na info@wiecejnizlek.pl!</p>
+	<p class="has-text-centered" style="margin: 20px 0;">
+		<a href="{{url('app/myself/orders')}}" class="button">
+			OPŁAĆ ZAMÓWIENIE
+		</a>
+	</p>
+
+	<p>W razie pytań pisz śmiało na info@wiecejnizlek.pl! 😔</p>
 
 	<p>Do zobaczenia!</p>
 @endsection

@@ -39,9 +39,10 @@ export const questions = {
 		filteringResult: 'Pasujące pytania:',
 		filteringResultFrom: 'z {totalCount} w bazie',
 		items: {
-			'correct': 'Rozwiązane poprawnie',
+			'lastly_correct': 'Ostatnio rozwiązane poprawnie',
+			'lastly_incorrect': 'Ostatnio rozwiązane błędnie',
 			'exams': 'Egzaminy',
-			'incorrect': 'Rozwiązane błędnie',
+			'incorrect': 'Kiedykolwiek rozwiązane błędnie',
 			'subjects': 'Przedmioty i tematy',
 			'planned': 'Zaplanowane na dziś',
 			'all': 'Wszystkie zaplanowane',

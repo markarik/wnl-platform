@@ -24,7 +24,7 @@ class ResolutionFilter extends ApiFilter
 
 	public function values()
 	{
-		return ['unresolved', 'incorrect', 'correct'];
+		return ['unresolved', 'incorrect', 'lastly_correct', 'lastly_incorrect'];
 	}
 
 	public function count($builder)
@@ -68,24 +68,26 @@ class ResolutionFilter extends ApiFilter
 		);
 	}
 
-	protected function correct($query)
+	protected function lastly_correct($query)
 	{
-		$userId = $this->params['user_id'];
+		$mostRecentResults = $this->getMostRecentResultForQuestions();
 
-		$questions = \DB::table('user_quiz_results')
-			->selectRaw('user_quiz_results.quiz_question_id as question_id, quiz_answers.is_correct')
-			->join("quiz_answers", "user_quiz_results.quiz_answer_id", "=", "quiz_answers.id")
-			->whereRaw("user_quiz_results.user_id = {$userId} order by user_quiz_results.quiz_question_id")
-			->get()
-			->groupBy('question_id')
-			->filter(function($question) {
-				foreach ($question as $entry) {
-					if (empty($entry->is_correct)) return false;
-				}
-				return true;
-			});
+		$onlyCorrect = $mostRecentResults->filter(function($question) {
+			return $question;
+		});
 
-		return $query->whereIn('id', $questions->keys());
+		return $query->whereIn('id', $onlyCorrect->keys());
+	}
+
+	protected function lastly_incorrect($query)
+	{
+		$mostRecentResults = $this->getMostRecentResultForQuestions();
+
+		$onlyIncorrect = $mostRecentResults->filter(function($question) {
+			return !$question;
+		});
+
+		return $query->whereIn('id', $onlyIncorrect->keys());
 	}
 
 	protected function unresolved($query)
@@ -104,5 +106,22 @@ class ResolutionFilter extends ApiFilter
 		$userId = $this->params['user_id'];
 
 		return $query->whereRaw("id in (select quiz_question_id from user_quiz_results where user_id = {$userId} group by quiz_question_id)");
+	}
+
+	private function getMostRecentResultForQuestions() {
+		$userId = $this->params['user_id'];
+
+		$questionsList = collect();
+		\DB::table('user_quiz_results')
+			->selectRaw('user_quiz_results.quiz_question_id as question_id, quiz_answers.is_correct, user_quiz_results.created_at as created_at')
+			->join("quiz_answers", "user_quiz_results.quiz_answer_id", "=", "quiz_answers.id")
+			->whereRaw("user_quiz_results.user_id = {$userId}")
+			->orderBy('user_quiz_results.created_at')
+			->get()
+			->each(function($question) use ($questionsList) {
+				$questionsList->put($question->question_id, $question->is_correct);
+			});
+
+		return $questionsList;
 	}
 }

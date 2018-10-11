@@ -37,24 +37,6 @@ class ExportUserStatistics extends Command
         parent::__construct();
     }
 
-	const DEFAULT_GROUPS = [
-		[
-			'lessons_percentage' => ['min' => 80],
-			'quiz_completation' => ['min' => 60],
-			'time_spent' => ['min' => 300],
-		],
-		[
-			'lessons_percentage' => ['min' => 30, 'max' => 80],
-			'quiz_completation' => ['min' => 60],
-			'time_spent' => ['min' => 100, 'max' => 300],
-		],
-		[
-			'lessons_percentage' => ['max' => 30],
-			'quiz_completation' => ['max' => 60],
-			'time_spent' => ['max' => 100],
-		],
-	];
-
     /**
      * Execute the console command.
      *
@@ -63,54 +45,19 @@ class ExportUserStatistics extends Command
     public function handle()
     {
 		$productIds = $this->argument('products');
-		$maxDate = \Carbon\Carbon::parse($this->argument('maxDate'));
-		$headers = ['Id', 'Imię', 'Nazwisko', 'Czas spędzony na platformie',
-		'Procent ukończonych lekcji', 'Procent rozwiązanych pytań'];
+		$maxDate = $this->argument('maxDate');
+		$dateString = strval($maxDate).' 00:00:00';
 
-		foreach (self::DEFAULT_GROUPS as $key => $group) {
-			$contents = $this->generateStats($group);
-			$filename = $key+1;
-			Storage::put("exports/stats/{$filename}.csv", $contents);
-		}
-	}
+		$name = 'Statystyki użytkowników dla daty: '.$maxDate.' i produktów: '.$productIds[0].' '.$productIds[1];
 
-	protected function generateStats($groupCriteria) {
-		// get users matching criteria
-		$users = $this->getMatchingUsers($groupCriteria);
+		$headers = ['Id', 'Imię', 'Nazwisko', 'Czas spędzony na platformie', 'Procent ukończonych lekcji', 'Procent rozwiązanych pytań'];
 
-		// generate list
-	}
-
-	protected function getMatchingUsers ($groupCriteria) {
-		$users = User::whereHas('orders', function($query) {
-			$query->whereIn('product_id', $this->productIds)
-				->where('paid', 1);
-		});
-
-
-
-		$userCourseProgress = UserCourseProgress::select()
-			->where('user_id', $user->profile->id)
-			->whereDate('created_at', '<=', $maxDate)
-			->whereNull('section_id')
-			->whereNull('screen_id')
-			->where('status', 'complete')
-			->count();
-
-		$userQuizQuestionsSolved = UserQuizResults::where('user_id', $userId)
-			->whereDate('created_at', '<=', $maxDate)
-			->groupBy('quiz_question_id')
-			->get(['quiz_question_id'])
-			->count();
-	}
-
-	public function restOfIt () {
 		$firstGroup = collect([$headers]);
 		$secondGroup = collect([$headers]);
 		$thirdGroup = collect([$headers]);
 
-		$allLessons = Lesson::whereDate('created_at', '<=', $maxDate)->count();
-		$allQuestions = QuizQuestion::whereDate('created_at', '<=', $maxDate)->count();
+		$allLessons = Lesson::whereDate('created_at', '<=', $dateString)->count();
+		$allQuestions = QuizQuestion::whereDate('created_at', '<=', $dateString)->count();
 
 		$users = User::whereHas('orders', function($query) use ($productIds) {
 			$query->whereIn('product_id', $productIds)
@@ -128,7 +75,7 @@ class ExportUserStatistics extends Command
 			$userId = $user->id;
 
 			$maxUserTime = $user->userTime()
-				->whereDate('created_at','<=', $maxDate)
+				->whereDate('created_at','<=', $dateString)
 				->orderBy('id', 'desc')
 				->first();
 
@@ -139,7 +86,7 @@ class ExportUserStatistics extends Command
 			}
 
 			$userCourseProgress = UserCourseProgress::where('user_id', $profileId)
-				->whereDate('created_at', '<=', $maxDate)
+				->whereDate('created_at', '<=', $dateString)
 				->whereNull('section_id')
 				->whereNull('screen_id')
 				->where('status', 'complete')
@@ -148,7 +95,7 @@ class ExportUserStatistics extends Command
 			$userCourseProgressPrecentage = round(($userCourseProgress/$allLessons)*100);
 
 			$userQuizQuestionsSolved = UserQuizResults::where('user_id', $userId)
-				->whereDate('created_at', '<=', $maxDate)
+				->whereDate('created_at', '<=', $dateString)
 				->groupBy('quiz_question_id')
 				->get(['quiz_question_id'])
 				->count();
@@ -169,11 +116,11 @@ class ExportUserStatistics extends Command
 					$userQuizQuestionsSolvedPercentage,
 				]);
 			} else if (
-				$userCourseProgressPrecentage < 30 &&
+				($userCourseProgressPrecentage > 30 && $userCourseProgressPrecentage < 80) &&
 				$userQuizQuestionsSolvedPercentage < 60 &&
-				$userTime < 100
+				($userTime >= 100 && $userTime < 300)
 			) {
-				$thirdGroup->push([
+				$secondGroup->push([
 					$userId,
 					$user->first_name,
 					$user->last_name,
@@ -182,7 +129,7 @@ class ExportUserStatistics extends Command
 					$userQuizQuestionsSolvedPercentage,
 				]);
 			} else {
-				$secondGroup->push([
+				$thirdGroup->push([
 					$userId,
 					$user->first_name,
 					$user->last_name,
@@ -196,15 +143,19 @@ class ExportUserStatistics extends Command
 		}
 		$bar->finish();
 
-		dd($firstGroup."\n".$secondGroup."\n".$thirdGroup);
+		$groups = [
+			$firstGroup,
+			$secondGroup,
+			$thirdGroup
+		];
 
-		// $firstGroup = $firstGroup->map(function ($row) {
-		// 	return implode("\t", $row);
-		// });
-		//
-		// $contents = $firstGroup->implode("\n");
-		// Storage::put('exports/' . $name . '.tsv', $contents);
-		//
-		// return;
+		foreach($groups as $key => $group) {
+			$group = $group->map(function ($row) {
+				return implode("\t", $row);
+			});
+			$contents = $group->implode("\n");
+			Storage::put('exports/' . $key . '.tsv', $contents);
+		}
+		return;
     }
 }

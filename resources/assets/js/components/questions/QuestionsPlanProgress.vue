@@ -166,15 +166,17 @@
 				return this.daysSoFar > this.plannedDaysCount
 			},
 			hasMoreQuestionsThanPlanned() {
-				const questionsLeft = this.plan.stats.total - this.plan.stats.done
-				const daysLeft = this.plannedDaysCount - this.daysSoFar + 1
-				const questionsLeftPerDay =  Math.ceil(questionsLeft / daysLeft)
-
-				if (questionsLeftPerDay > this.averagePlanned) {
-					return questionsLeftPerDay
+				if (this.questionsLeftPerDay > this.averagePlanned) {
+					return this.questionsLeftPerDay
 				} else {
 					return false
 				}
+			},
+			questionsLeftPerDay() {
+				const questionsLeft = this.plan.stats.total - this.plan.stats.done
+				const daysLeft = this.plannedDaysCount - this.daysSoFar + 1
+
+				return Math.ceil(questionsLeft / daysLeft)
 			},
 			averageStatus() {
 				return this.average >= this.averagePlanned ? 'greater' : 'less'

@@ -514,9 +514,9 @@ class Invoice
 		}
 	}
 
-	protected function renderAndSave($viewName, $data, $invoice)
+	public function renderAndSave($viewName, $data, $invoice = null)
 	{
-		$invoice->update(['meta' => $data]);
+		if ($invoice) $invoice->update(['meta' => $data]);
 		$view = view($viewName, $data);
 
 		// Best hack ever! xD

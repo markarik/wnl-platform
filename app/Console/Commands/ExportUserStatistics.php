@@ -19,7 +19,6 @@ class ExportUserStatistics extends Command
 	 * @var string
 	 */
 	protected $signature = 'userStatistics:export {products*}';
-	// example date format: 2018-09-22
 
 	/**
 	 * The console command description.
@@ -56,9 +55,40 @@ class ExportUserStatistics extends Command
 		$headers = ['Id', 'Imię', 'Nazwisko', 'Czas spędzony na platformie', 'Procent ukończonych lekcji',
 			'Procent rozwiązanych pytań'];
 
-		$firstGroup = collect([$headers]);
-		$secondGroup = collect([$headers]);
-		$thirdGroup = collect([$headers]);
+		$groups = $this->getUserGroups($minDate, $maxDate, $productIds);
+
+		$total = 0;
+		foreach ($groups as $key => $group) {
+			$recordsCount = $group->count();
+			$total += $recordsCount;
+			$this->info("Group {$key} has {$recordsCount} records.");
+			$group = $group->map(function ($user) {
+				return implode("\t", [
+					$user->id,
+					$user->first_name,
+					$user->last_name,
+					$user->time,
+					$user->userCourseProgressPrecentage,
+					$user->userQuizQuestionsSolvedPercentage,
+				]);
+			});
+			$group->prepend($headers);
+			$contents = $group->implode("\n");
+			$path = 'exports/user-stats/' . $key . '.tsv';
+			Storage::put($path, $contents);
+			$this->info("Saved under {$path}");
+		}
+
+		$this->info("Total records: {$total}");
+
+		return;
+	}
+
+	protected function getUserGroups($minDate, $maxDate, $productIds)
+	{
+		$firstGroup = collect();
+		$secondGroup = collect();
+		$thirdGroup = collect();
 
 		$allLessons = Lesson::select(['id'])
 			->whereDate('created_at', '<=', $maxDate)
@@ -66,19 +96,21 @@ class ExportUserStatistics extends Command
 			->count();
 		$allQuestions = QuizQuestion::whereDate('created_at', '<=', $maxDate)->count();
 
-		$users = User::whereHas('orders', function ($query) use ($productIds) {
-			$query
-				->whereIn('product_id', $productIds)
-				->where('paid', 1);
-		})->get();
+		$users = User::select()
+			->whereHas('orders', function ($query) use ($productIds) {
+				$query
+					->whereIn('product_id', $productIds)
+					->where('paid', 1);
+			})
+			->whereDoesntHave('roles', function($query){
+				$query->whereIn('name', ['admin', 'moderator']);
+			})
+//			->limit(10)
+			->get();
 
 		$bar = $this->output->createProgressBar($users->count());
 
 		foreach ($users as $user) {
-			if ($user->role) {
-				continue;
-			}
-
 			$profileId = $user->profile->id;
 			$userId = $user->id;
 
@@ -107,15 +139,6 @@ class ExportUserStatistics extends Command
 
 			$userQuizQuestionsSolvedPercentage = (int)round(($userQuizQuestionsSolved / $allQuestions) * 100);
 
-			$userRecord = [
-				$userId,
-				$user->first_name,
-				$user->last_name,
-				$userTime,
-				$userCourseProgressPrecentage,
-				$userQuizQuestionsSolvedPercentage,
-			];
-
 			$firstGroupCriteria =
 				$userCourseProgressPrecentage >= 80 &&
 				$userQuizQuestionsSolvedPercentage >= 60 &&
@@ -126,12 +149,16 @@ class ExportUserStatistics extends Command
 				$userQuizQuestionsSolvedPercentage >= 30 &&
 				$userTime >= 100;
 
+			$user->userCourseProgressPrecentage = $userCourseProgressPrecentage;
+			$user->userQuizQuestionsSolvedPercentage = $userQuizQuestionsSolvedPercentage;
+			$user->userTime = $userTime;
+
 			if ($firstGroupCriteria) {
-				$firstGroup->push($userRecord);
+				$firstGroup->push($user);
 			} else if ($secondGroupCriteria) {
-				$secondGroup->push($userRecord);
+				$secondGroup->push($user);
 			} else {
-				$thirdGroup->push($userRecord);
+				$thirdGroup->push($user);
 			}
 
 			$bar->advance();
@@ -140,29 +167,6 @@ class ExportUserStatistics extends Command
 
 		print PHP_EOL;
 
-		$groups = [
-			$firstGroup,
-			$secondGroup,
-			$thirdGroup
-		];
-
-		$total = 0;
-
-		foreach ($groups as $key => $group) {
-			$recordsCount = $group->count();
-			$total += $recordsCount;
-			$this->info("Group {$key} has {$recordsCount} records.");
-			$group = $group->map(function ($row) {
-				return implode("\t", $row);
-			});
-			$contents = $group->implode("\n");
-			$path = 'exports/user-stats/' . $key . '.tsv';
-			Storage::put($path, $contents);
-			$this->info("Saved under {$path}");
-		}
-
-		$this->info("Total records: {$total}");
-
-		return;
+		return [$firstGroup, $secondGroup, $thirdGroup];
 	}
 }

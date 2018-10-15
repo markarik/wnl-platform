@@ -47,6 +47,14 @@ class MigrateFlashcards extends Command
 				return;
 			}
 			$this->migrateFromLesson($lesson);
+		} else {
+			$lessons = Lesson::all();
+			$bar = $this->output->createProgressBar($lessons->count());
+			foreach($lessons as $lesson) {
+				$this->migrateFromLesson($lesson);
+				$bar->advance();
+			}
+			$bar->finish();
 		}
 
 		$this->info("All done!");
@@ -55,7 +63,7 @@ class MigrateFlashcards extends Command
 	private function migrateFromLesson($lesson) {
 		$openEndedQuestionsScreen = $lesson->screens()->where('name', 'Powtórki')->first();
 		if (empty($openEndedQuestionsScreen)) {
-			$this->info("Lesson #{$lesson->id} does not have screen named 'Powtórki'.");
+			$this->info("Lesson #{$lesson->id} does not have screen named 'Powtórki'. \n");
 			return;
 		}
 
@@ -66,6 +74,11 @@ class MigrateFlashcards extends Command
 			. '</body></html>'
 		);
 		$questionsRootElement = $dom->getElementsByTagName('ol')->item(0);
+
+		if (empty($questionsRootElement)) {
+			$this->info("Lesson #{$lesson->id} does not have open-ended questions in HTML. \n");
+			return;
+		}
 
 		$questionsRootElement->parentNode->removeChild($questionsRootElement);
 		$body = $dom->getElementsByTagName('body')->item(0);

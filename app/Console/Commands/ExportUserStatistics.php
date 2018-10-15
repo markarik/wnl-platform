@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Product;
 use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\UserCourseProgress;
@@ -17,7 +18,7 @@ class ExportUserStatistics extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'userStatistics:export {maxDate} {products*}';
+	protected $signature = 'userStatistics:export {products*}';
 	// example date format: 2018-09-22
 
 	/**
@@ -45,7 +46,12 @@ class ExportUserStatistics extends Command
 	public function handle()
 	{
 		$productIds = $this->argument('products');
-		$maxDate = $this->argument('maxDate');
+		$products = Product::whereIn('id', $productIds)->get();
+
+		$minDate = $products->first()->signups_start;
+		$maxDate = $products->first()->course_end;
+
+		$this->info("Exporting user stats for date range from {$minDate} to {$maxDate}.");
 
 		$headers = ['Id', 'Imię', 'Nazwisko', 'Czas spędzony na platformie', 'Procent ukończonych lekcji',
 			'Procent rozwiązanych pytań'];
@@ -76,15 +82,12 @@ class ExportUserStatistics extends Command
 			$profileId = $user->profile->id;
 			$userId = $user->id;
 
-			$maxUserTime = $user->userTime()
-				->whereDate('created_at', '<=', $maxDate)
+			$timeCollection = $user->userTime()
+				->whereBetween('created_at', [$minDate, $maxDate])
 				->orderBy('id', 'desc')
-				->first();
+				->get();
 
-			$userTime = 0;
-			if ($maxUserTime) {
-				$userTime = (int)round($maxUserTime->time / 60);
-			}
+			$userTime = (int)round(($timeCollection->max('time') - $timeCollection->min('time')) / 60);
 
 			$userCourseProgress = UserCourseProgress::where('user_id', $profileId)
 				->whereDate('user_course_progress.created_at', '<=', $maxDate)
@@ -153,10 +156,12 @@ class ExportUserStatistics extends Command
 				return implode("\t", $row);
 			});
 			$contents = $group->implode("\n");
-			Storage::put('exports/user-stats/' . $key . '.tsv', $contents);
+			$path = 'exports/user-stats/' . $key . '.tsv';
+			Storage::put($path, $contents);
+			$this->info("Saved under {$path}");
 		}
 
-		$this->info("Total: {$total}");
+		$this->info("Total records: {$total}");
 
 		return;
 	}

@@ -17,6 +17,7 @@
 	import End from 'js/components/course/screens/End'
 	import Html from 'js/components/course/screens/Html'
 	import MockExam from 'js/components/course/screens/MockExam'
+	import Flashcards from 'js/components/course/screens/Flashcards'
 	import Qna from 'js/components/qna/Qna'
 	import Quiz from 'js/components/quiz/Quiz'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow'
@@ -30,6 +31,7 @@
 		quiz: 'wnl-quiz',
 		widget: 'wnl-widget',
 		mockexam: 'wnl-mock-exam',
+		flashcards: 'wnl-flashcards',
 	}
 
 	export default {
@@ -42,6 +44,7 @@
 			'wnl-quiz': Quiz,
 			'wnl-slideshow': Slideshow,
 			'wnl-widget': Widget,
+			'wnl-flashcards': Flashcards
 		},
 		props: ['screenId'],
 		computed: {
@@ -61,6 +64,7 @@
 				return this.screenData.tags
 			},
 			component() {
+				console.log(typesToComponents[this.type]);
 				return typesToComponents[this.type]
 			},
 			showQna() {

@@ -268,4 +268,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
+
+	// Flashcards
+	Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
+	Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
 });

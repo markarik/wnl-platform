@@ -49,5 +49,7 @@ return [
 		'annotations'        => 'annotations',
 		'payments'           => 'payments',
 		'user-personal-data' => 'personal_data',
+		'flashcards'         => 'flashcards',
+		'flashcards-sets'    => 'flashcards_sets',
 	],
 ];

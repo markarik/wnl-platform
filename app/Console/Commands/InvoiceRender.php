@@ -45,7 +45,7 @@ class InvoiceRender extends Command
 	        die;
         }
 
-        (new \Lib\Invoice\Invoice)->renderAndSave('payment.invoices.vat', $invoice->meta);
+        (new \Lib\Invoice\Invoice)->renderAndSave('payment.invoices.' . $invoice->type, $invoice->meta);
 
         return;
     }

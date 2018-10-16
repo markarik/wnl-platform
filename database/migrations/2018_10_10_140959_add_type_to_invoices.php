@@ -22,7 +22,9 @@ class AddTypeToInvoices extends Migration
 					'pro-forma',
 					'vat',
 				]
-			)->after('series');
+			)
+			->default('vat')
+			->after('series');
 		});
 	}
 

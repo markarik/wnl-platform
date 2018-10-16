@@ -40,6 +40,7 @@ class Invoice
 				'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
 				'series' => self::VAT_SERIES_NAME,
 				'amount' => $recentSettlement,
+				'type'   => 'vat',
 			]);
 		}
 
@@ -124,6 +125,7 @@ class Invoice
 				'series' => self::PROFORMA_SERIES_NAME,
 				'amount' => $order->total_with_coupon,
 				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+				'type'   => 'pro-forma',
 			]);
 		}
 
@@ -196,6 +198,7 @@ class Invoice
 				'series' => self::ADVANCE_SERIES_NAME,
 				'amount' => $recentSettlement,
 				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+				'type'   => 'advance',
 			]);
 		}
 
@@ -282,6 +285,7 @@ class Invoice
 				'series' => self::FINAL_SERIES_NAME,
 				'amount' => $recentSettlement,
 				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
+				'type'   => 'final',
 			]);
 		}
 
@@ -392,6 +396,7 @@ class Invoice
 			'amount' => $difference,
 			'vat'    => $corrected->vat,
 			'corrected_invoice_id' => $corrected->id,
+			'type'   => 'corrective',
 		]);
 
 		$data = [

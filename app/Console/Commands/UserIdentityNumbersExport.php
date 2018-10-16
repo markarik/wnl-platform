@@ -58,9 +58,6 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 
 		$total = 0;
 		foreach ($groups as $key => $group) {
-			$recordsCount = $group->count();
-			$total += $recordsCount;
-			$this->info("Group {$key} has {$recordsCount} records.");
 			$group = $group
 				->filter(function ($user) {
 					if(is_null($user->personalData)) return false;
@@ -68,7 +65,9 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 						$user->personalData->personal_identity_number ||
 						$user->personalData->identity_card_number;
 				});
-
+			$recordsCount = $group->count();
+			$total += $recordsCount;
+			$this->info("Group {$key} has {$recordsCount} records.");
 			$group = $group
 				->map(function ($user) {
 					return implode("\t", [

@@ -55,11 +55,11 @@ class MigrateInvoiceType extends Command
 			$invoice->type = self::TYPE_SERIES_MAP[$invoice->series];
 			$invoice->save();
 			$bar->advance();
-        }
-        $bar->finish();
+		}
+		$bar->finish();
 		print PHP_EOL;
 
-        $this->info('Done.');
+		$this->info('Done.');
 
 		return;
 	}

@@ -19,7 +19,7 @@ class FixMissingInvoiceFiles extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
+	protected $description = 'Find all invoices missing a PDF file and generate it.';
 
 	/**
 	 * Create a new command instance.

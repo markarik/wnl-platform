@@ -19,7 +19,7 @@ class InvoiceRender extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Generate PDF file for given invoice.';
 
     /**
      * Create a new command instance.

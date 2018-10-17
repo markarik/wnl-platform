@@ -61,7 +61,7 @@ class MigrateFlashcards extends Command
 	}
 
 	private function migrateFromLesson($lesson) {
-		$openEndedQuestionsScreen = $lesson->screens()->where('name', 'Powtórki')->first();
+		$openEndedQuestionsScreen = $lesson->screens()->where('name', 'like', 'Powtórki%')->first();
 		if (empty($openEndedQuestionsScreen)) {
 			$this->info("Lesson #{$lesson->id} does not have screen named 'Powtórki'. \n");
 			return;
@@ -73,38 +73,54 @@ class MigrateFlashcards extends Command
 			. $openEndedQuestionsScreen->content
 			. '</body></html>'
 		);
-		$questionsRootElement = $dom->getElementsByTagName('ol')->item(0);
+		$questionsElements = $dom->getElementsByTagName('ol');
 
-		if (empty($questionsRootElement)) {
+		if ($questionsElements->length === 0) {
 			$this->info("Lesson #{$lesson->id} does not have open-ended questions in HTML. \n");
 			return;
 		}
 
-		$questionsRootElement->parentNode->removeChild($questionsRootElement);
-		$body = $dom->getElementsByTagName('body')->item(0);
-		$innerHtml = $this->domNodeInnerHtmlToSection($body);
-		$flashcardsList = $this->flashcardsFromHtml($questionsRootElement);
+		if ($questionsElements->length > 1) {
+			// handle more than one
+			$body = $dom->getElementsByTagName('body')->item(0);
+			$chunkedHtml = [];
+			$quizSetChunk = [];
+			foreach($body->childNodes as $node) {
+				$quizSetChunk[] = $node;
+				if ($node->nodeName === 'ol') {
+					$chunkedHtml[] = $quizSetChunk;
+					$quizSetChunk = [];
+				}
+			}
+			dd($chunkedHtml);
+		} else {
+			$questionsRootElement = $questionsElements->index(0);
+			$questionsRootElement->parentNode->removeChild($questionsRootElement);
+			$body = $dom->getElementsByTagName('body')->item(0);
+			$innerHtml = $this->domNodeInnerHtmlToSection($body);
+			$flashcardsList = $this->flashcardsFromHtml($questionsRootElement);
 
-		$flashcardsSet = FlashcardsSet::create([
-			'description'=> $innerHtml
-		]);
+			$flashcardsSet = FlashcardsSet::create([
+				'description'=> $innerHtml
+			]);
 
-		foreach ($flashcardsList as $index => $flashcardRaw) {
-			$flashcard = Flashcard::create($flashcardRaw);
-			$flashcard->flashcardsSets()->attach($flashcardsSet, ['order_number' => $index]);
-		}
+			foreach ($flashcardsList as $index => $flashcardRaw) {
+				$flashcard = Flashcard::create($flashcardRaw);
+				$flashcard->flashcardsSets()->attach($flashcardsSet, ['order_number' => $index]);
+			}
 
-		$openEndedQuestionsScreen->meta = [
-			'resources' => [
-				[
-					'id' => $flashcardsSet->id,
-					'name' => 'flashcards_sets'
+			$openEndedQuestionsScreen->meta = [
+				'resources' => [
+					[
+						'id' => $flashcardsSet->id,
+						'name' => 'flashcards_sets'
+					]
 				]
-			]
-		];
-		$openEndedQuestionsScreen->type = 'flashcards';
+			];
+			$openEndedQuestionsScreen->type = 'flashcards';
 
-		$openEndedQuestionsScreen->save();
+			$openEndedQuestionsScreen->save();
+		}
 	}
 
 	private function domNodeInnerHtmlToSection($domNode) {

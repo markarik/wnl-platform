@@ -67,7 +67,7 @@ class ExportUserStatistics extends Command
 					$user->id,
 					$user->first_name,
 					$user->last_name,
-					$user->time,
+					$user->userTime,
 					$user->userCourseProgressPrecentage,
 					$user->userQuizQuestionsSolvedPercentage,
 				]);

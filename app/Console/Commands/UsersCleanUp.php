@@ -64,7 +64,7 @@ class UsersCleanUp extends Command
 	}
 
 	private function showTable($users) {
-		$headers = ['id', 'name', 'email', 'time', 'roles'];
+		$headers = ['id', 'name', 'email', 'time'];
 		$rows = [];
 
 		foreach ($users as $user) {
@@ -73,7 +73,6 @@ class UsersCleanUp extends Command
 				$user->full_name,
 				$user->email,
 				$user->time->max('time'),
-				$user->roles,
 			];
 		}
 

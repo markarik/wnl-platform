@@ -24,7 +24,7 @@ class ResolutionFilter extends ApiFilter
 
 	public function values()
 	{
-		return ['unresolved', 'incorrect', 'lastly_correct', 'lastly_incorrect'];
+		return ['unresolved', 'lastly_correct', 'lastly_incorrect', 'incorrect'];
 	}
 
 	public function count($builder)

@@ -70,8 +70,31 @@ class UserPurge extends Command
 		return;
 	}
 
-	private function purge($user)
-	{
+	private function purge($user) {
 
+		$user->orders()->delete();
+		$user->coupons()->delete();
+		$user->profile()->delete();
+		$user->personalData()->delete();
+		$user->billing()->delete();
+		$user->settings()->delete();
+		$user->userAddress()->delete();
+		$user->roles()->delete();
+		$user->chatMessages()->delete();
+		$user->notifications()->delete();
+		$user->sessions()->delete();
+		$user->comments()->delete();
+		$user->tasks()->delete();
+		$user->qnaAnswers()->delete();
+		$user->lessonsAvailability()->delete();
+		$user->reactables()->delete();
+		$user->chatRooms()->delete();
+		$user->subscription()->delete();
+		$user->time()->delete();
+		$user->delete();
+
+		$this->info('User deleted');
+
+		return;
 	}
 }

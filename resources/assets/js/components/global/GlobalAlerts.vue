@@ -5,9 +5,9 @@
 			:key="alert.id"
 			:type="alert.type"
 			:id="alert.id"
-			@onDismiss="closeAlert"
+			@onDismiss="onDismiss(alert)"
 		>
-			{{alert.text}}
+			<div v-html="alert.text"></div>
 		</wnl-alert>
 	</div>
 </template>
@@ -22,7 +22,7 @@
 </style>
 <script>
 import Alert from 'js/components/global/GlobalAlert'
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions} from 'vuex'
 
 export default {
 	components: {
@@ -35,7 +35,13 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['closeAlert'])
-	}
+		...mapActions(['closeAlert']),
+		onDismiss(alert) {
+			if (typeof alert.dismissCallback === 'function') {
+				alert.dismissCallback();
+			}
+			this.closeAlert(alert);
+		}
+	},
 }
 </script>

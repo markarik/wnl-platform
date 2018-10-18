@@ -27,7 +27,7 @@ class OrderObserver
 		if (!$order->isDirty(['paid']) && $order->isDirty(['paid_amount']) && $settlement > 0) {
 			\Log::notice(">>> OrderObserver: #{$order->id} paid amount is dirty");
 
-			if ($order->paidAmountSufficient()) {
+			if ($order->paidAmountSufficient() && !$order->paid) {
 				\Log::notice("___ OrderObserver: #{$order->id} marking order as paid");
 				$order->paid = true;
 				$order->paid_at = Carbon::now();

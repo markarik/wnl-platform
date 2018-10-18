@@ -87,7 +87,7 @@ const mutations = {
 	},
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
 		set(state.profile, 'accountSuspended', payload)
-	}
+	},
 }
 
 // Actions

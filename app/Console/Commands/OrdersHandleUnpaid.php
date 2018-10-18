@@ -72,7 +72,7 @@ class OrdersHandleUnpaid extends Command
 		$orders = Order::with('paymentReminders')
 			->where('paid', 0)
 			->where('created_at', '<=', $sixDaysAgo)
-			->whereIn('method', ['transfer', 'instalments'])
+			->whereIn('method', ['transfer', 'instalments', 'online'])
 			->where('canceled', '!=', 1)
 			->get();
 

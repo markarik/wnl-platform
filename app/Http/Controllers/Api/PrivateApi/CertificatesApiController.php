@@ -150,7 +150,7 @@ class CertificatesApiController extends ApiController
 			$font->align('center');
 		});
 
-			$img->text($order->product->course_start->format('j / m / Y') . ' r., Poznań', 1182, 867, function($font) {
+			$img->text($order->product->course_end->format('j / m / Y') . ' r., Poznań', 1182, 867, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(30);

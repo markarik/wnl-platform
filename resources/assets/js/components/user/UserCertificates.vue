@@ -2,25 +2,34 @@
 	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
-				<div class="level-item big strong">
+				<h3 class="level-item big strong title is-3">
 					Certyfikaty Do Pobrania
-				</div>
+				</h3>
 			</div>
 		</div>
-		<ul v-if="participationCertificates.length">
-			<li v-for="order in participationCertificates" :key="order.id">
-				<a @click="downloadParticipationCertificate(order.id)">
-					Certyfikat Uczestnictwa: {{order.product.name}} - {{formatDate(order.product.course_start)}} - {{formatDate(order.product.course_end)}}
-				</a>
-			</li>
-		</ul>
-		<ul v-if="finalCertificates.length">
-			<li v-for="order in finalCertificates" :key="order.id">
-				<a @click="downloadFinalCertificate(order.id)">
-					Certyfikat Ukończenia: {{order.product.name}} - {{formatDate(order.product.course_start)}} - {{formatDate(order.product.course_end)}}
-				</a>
-			</li>
-		</ul>
+		<template v-if="participationCertificates.length || finalCertificates.length">
+			<div class="level-left big strong">
+				Certyfikaty Uczestnictwa
+			</div>
+			<ul>
+				<li v-for="order in participationCertificates" :key="order.id">
+					<a @click="downloadParticipationCertificate(order.id)">
+						Certyfikat Uczestnictwa: {{order.product.name}} - {{formatDate(order.product.course_start)}} - {{formatDate(order.product.course_end)}}
+					</a>
+				</li>
+			</ul>
+
+			<div class="level-left big strong margin top">
+				Certyfikaty Ukończenia
+			</div>
+			<ul>
+				<li v-for="order in finalCertificates" :key="order.id">
+					<a @click="downloadFinalCertificate(order.id)">
+						Certyfikat Ukończenia: {{order.product.name}} - {{formatDate(order.product.course_start)}} - {{formatDate(order.product.course_end)}}
+					</a>
+				</li>
+			</ul>
+		</template>
 		<div v-else>
 			<div class="box has-text-centered">
 				<p class="title is-5">Brak certyfikatów do pobrania</p>
@@ -58,41 +67,9 @@
 						responseType: 'blob',
 					})
 
-					const data = window.URL.createObjectURL(response.data);
-					const link = document.createElement('a')
-					link.style.display = 'none';
-					// For Firefox it is necessary to insert the link into body
-					document.body.appendChild(link);
-					link.href = data
-					link.setAttribute('download', `${orderId}.jpg`)
-					link.click()
-
-					setTimeout(function() {
-						// For Firefox it is necessary to delay revoking the ObjectURL
-						window.URL.revokeObjectURL(link.href)
-						document.removeChild(link);
-					}, 100)
+					this.downloadFile(response.data, `participation_${orderId}.jpg`)
 				} catch (err) {
-					if (err.response.status === 404) {
-						return this.addAutoDismissableAlert({
-							text: 'Nie udało się znaleźć certyfikatu. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
-							type: 'error'
-						})
-					}
-
-					if (err.response.status === 403) {
-						return this.addAutoDismissableAlert({
-							text: 'Nie masz uprawnień do pobrania certyfikatu.',
-							type: 'error'
-						})
-					}
-
-					this.addAutoDismissableAlert({
-						text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
-						type: 'error'
-					})
-
-					$wnl.logger.capture(err)
+					this.handleDownloadFailure()
 				}
 			},
 			async downloadFinalCertificate(orderId) {
@@ -102,42 +79,47 @@
 						responseType: 'blob',
 					})
 
-					const data = window.URL.createObjectURL(response.data);
-					const link = document.createElement('a')
-					link.style.display = 'none';
-					// For Firefox it is necessary to insert the link into body
-					document.body.appendChild(link);
-					link.href = data
-					link.setAttribute('download', `${orderId}.jpg`)
-					link.click()
-
-					setTimeout(function() {
-						// For Firefox it is necessary to delay revoking the ObjectURL
-						window.URL.revokeObjectURL(link.href)
-						document.removeChild(link);
-					}, 100)
+					this.downloadFile(response.data, `final_${orderId}.jpg`)
 				} catch (err) {
-					if (err.response.status === 404) {
-						return this.addAutoDismissableAlert({
-							text: 'Nie udało się znaleźć certyfikatu. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
-							type: 'error'
-						})
-					}
-
-					if (err.response.status === 403) {
-						return this.addAutoDismissableAlert({
-							text: 'Nie masz uprawnień do pobrania certyfikatu.',
-							type: 'error'
-						})
-					}
-
-					this.addAutoDismissableAlert({
-						text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					this.handleDownloadFailure()
+				}
+			},
+			handleDownloadFailure() {
+				if (err.response.status === 404) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie udało się znaleźć certyfikatu. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
 						type: 'error'
 					})
-
-					$wnl.logger.capture(err)
 				}
+
+				if (err.response.status === 403) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie masz uprawnień do pobrania certyfikatu.',
+						type: 'error'
+					})
+				}
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error'
+				})
+
+				$wnl.logger.capture(err)
+			},
+			downloadFile(responseData, fileName) {
+				const data = window.URL.createObjectURL(responseData);
+				const link = document.createElement('a')
+				link.style.display = 'none';
+				// For Firefox it is necessary to insert the link into body
+				document.body.appendChild(link);
+				link.href = data
+				link.setAttribute('download', fileName)
+				link.click()
+
+				setTimeout(function() {
+					window.URL.revokeObjectURL(link.href)
+					document.removeChild(link);
+				}, 100)
 			}
 		},
 		async mounted() {

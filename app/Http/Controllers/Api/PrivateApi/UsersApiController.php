@@ -4,7 +4,6 @@ use Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
-use App\Http\Requests\User\UpdateUser;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\UserTransformer;
 
@@ -30,11 +29,9 @@ class UsersApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	public function put(UpdateUser $request)
+	public function put()
 	{
-		$user = User::fetch($request->route('id'));
-		$user->update($request->all());
-
-		return $this->respondOk();
+		\Log::notice(">>>UsersApiController::put called, track caller and remove!");
+		return $this->respondForbidden();
 	}
 }

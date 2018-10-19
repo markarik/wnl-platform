@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests;
 
-use App\Models\User;
+use App\Models\SiteWideMessage;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUser extends FormRequest
+class UpdateSiteWideMessage extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -14,9 +14,10 @@ class UpdateUser extends FormRequest
 	 */
 	public function authorize()
 	{
-		$user = User::fetch($this->route('id'));
+		$user = \Auth::user();
+		$siteWideMessage = SiteWideMessage::find($this->route('messageId'));
 
-		return $this->user()->can('update', $user);
+		return $siteWideMessage->user_id === $user->id;
 	}
 
 	/**
@@ -27,7 +28,7 @@ class UpdateUser extends FormRequest
 	public function rules()
 	{
 		return [
-			//
+			'read_at' => 'date|nullable',
 		];
 	}
 }

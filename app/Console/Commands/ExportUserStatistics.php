@@ -18,7 +18,8 @@ class ExportUserStatistics extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'userStatistics:export {products*}';
+	protected $signature =
+		"userStatistics:export {products* : The list of products user has to have access to. The dates are taken for the first product from the list}";
 
 	/**
 	 * The console command description.
@@ -67,7 +68,7 @@ class ExportUserStatistics extends Command
 					$user->id,
 					$user->first_name,
 					$user->last_name,
-					$user->time,
+					$user->userTime,
 					$user->userCourseProgressPrecentage,
 					$user->userQuizQuestionsSolvedPercentage,
 				]);

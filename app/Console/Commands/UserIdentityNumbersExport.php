@@ -19,7 +19,7 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
+	protected $description = 'Export user identity numbers for given products.';
 
 	/**
 	 * Create a new command instance.
@@ -52,7 +52,8 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 
 		$this->info("Exporting user stats for date range from {$minDate} to {$maxDate}.");
 
-		$headers = implode("\t", ['Imię', 'Nazwisko', 'PESEL', 'Numer dowodu osobisgtego']);
+		$headers = implode("\t",
+			['ID', 'PESEL', 'Numer dowodu osobisgtego', 'Numer paszportu', 'czas', 'lekcje', 'baza pytań']);
 
 		$groups = $this->getUserGroups($minDate, $maxDate, $productIds);
 
@@ -63,7 +64,8 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 					if(is_null($user->personalData)) return false;
 					return
 						$user->personalData->personal_identity_number ||
-						$user->personalData->identity_card_number;
+						$user->personalData->identity_card_number ||
+						$user->personalData->passport_number;
 				});
 			$recordsCount = $group->count();
 			$total += $recordsCount;
@@ -71,10 +73,13 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 			$group = $group
 				->map(function ($user) {
 					return implode("\t", [
-						$user->first_name,
-						$user->last_name,
+						$user->id,
 						$user->personalData->personal_identity_number ?? '',
 						$user->personalData->identity_card_number ?? '',
+						$user->personalData->passport_number ?? '',
+						$user->userTime,
+						$user->userCourseProgressPrecentage,
+						$user->userQuizQuestionsSolvedPercentage,
 					]);
 				});
 			$group->prepend($headers);

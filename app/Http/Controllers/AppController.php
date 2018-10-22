@@ -21,7 +21,9 @@ class AppController extends Controller
 				'ECHO_PORT'          => env('ECHO_PORT', 8755),
 				'SENTRY_DSN_VUE_PUB' => env('SENTRY_DSN_VUE_PUB'),
 				'MODERATORS_CHANNEL' => env('MODERATORS_CHANNEL', 3),
-				'appVersion'         => config('app.version')
+				'appVersion'         => config('app.version'),
+				'sadHost'            => env('SAD_HOST'),
+				'sadPort'            => env('SAD_PORT')
 			],
 			'config' => [
 				'papi'    => config('papi'),

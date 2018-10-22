@@ -394,6 +394,8 @@
 
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 							this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
+
+							this.$trackEvent('slide_change', {slideId})
 						}
 
 						this.slideChanged = false

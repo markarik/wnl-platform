@@ -21,6 +21,7 @@ import Logger from "js/utils/logger";
 import App from "js/components/App.vue";
 import WnlSocket from "js/plugins/socket";
 import WnlAxios from "js/plugins/axios";
+import EventsTracker from "js/plugins/events-tracker";
 
 // Sync vue-router and vuex
 sync(store, router)
@@ -39,6 +40,7 @@ const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages})
 Vue.use(VueSweetAlert)
 Vue.use(WnlSocket, {store})
 Vue.use(WnlAxios, {store, router})
+Vue.use(EventsTracker, {store, router})
 
 // Simple Breakpoints
 Vue.use(VueSimpleBreakpoints, {

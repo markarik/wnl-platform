@@ -12,7 +12,7 @@ class Flashcard extends Model
 	{
 		return	$this->belongsToMany(
 			'\App\Models\FlashcardsSet',
-			'flashcards_sets_flashcards',
+			'flashcards_set_flashcard',
 			'flashcard_id',
 			'flashcard_set_id'
 		)->withPivot('order_number');

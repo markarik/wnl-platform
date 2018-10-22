@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFlashcardsSetsFlashcards extends Migration
+class CreateFlashcardSetFlashcard extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,7 +13,7 @@ class CreateFlashcardsSetsFlashcards extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('flashcards_sets_flashcards', function (Blueprint $table) {
+		Schema::create('flashcards_set_flashcard', function (Blueprint $table) {
 			$table->increments('id');
 			$table->integer('flashcard_set_id');
 			$table->integer('flashcard_id');
@@ -29,6 +29,6 @@ class CreateFlashcardsSetsFlashcards extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('flashcards_sets_flashcards');
+		Schema::dropIfExists('flashcards_set_flashcard');
 	}
 }

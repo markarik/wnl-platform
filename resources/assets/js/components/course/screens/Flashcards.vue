@@ -1,11 +1,20 @@
 <template>
 	<div class="flashcards content">
-		<div v-html="content"/>
-		<ol class="flashcards-list">
-			<li v-for="flashcard in flashcards" :key="flashcard.id" class="flashcards-list__item">
-				<span class="flashcards-list__item__text">{{flashcard.content}}</span>
-			</li>
-		</ol>
+		<h2 class="flashcards__title">Zestawy powtórkowe na dziś
+			<ul class="flashcards__title__list">
+				<li v-for="set in flashcardsSets" :key="set.id">{{set.lesson.name}}</li>
+			</ul>
+		</h2>
+		<div v-html="screenData.content"/>
+        <div v-for="set in flashcardsSets" :key="set.id">
+            <h3>{{set.lesson.name}}</h3>
+            <span>Numery map myśli: {{set.mind_maps_text}}</span>
+			<ol class="flashcards-list">
+				<li v-for="flashcard in set.flashcards" :key="flashcard.id" class="flashcards-list__item">
+					<span class="flashcards-list__item__text">{{flashcard.content}}</span>
+				</li>
+			</ol>
+        </div>
 	</div>
 </template>
 
@@ -57,28 +66,41 @@
 		data() {
 			return {
 				content: '',
-				flashcards: []
+				flashcards: [],
+				flashcardsSets: []
 			}
 		},
 		methods: {
 			...mapActions('flashcards', ['fetchFlashcardsSet']),
 		},
 		async mounted() {
-			const setId = get(this.screenData, 'meta.resources[0].id');
+			const resources = get(this.screenData, 'meta.resources', []);
 
-			const flashcardsSetResponse = await this.fetchFlashcardsSet({
-				setId: setId,
-				include: 'flashcards'
-			})
+			const setsResponse = await Promise.all(resources.map(({id}) => {
+				return this.fetchFlashcardsSet({
+					setId: id, include: 'flashcards,lesson'
+				})
+			}))
 
-			this.content = flashcardsSetResponse.description;
-			const flashcards = get(flashcardsSetResponse, 'included.flashcards')
+			const sets = [];
 
-			if (!flashcards) {
-				$wnl.logger.error('flashcards not defined inside the response')
-			} else {
-				this.flashcards = flashcards
-			}
+			setsResponse.forEach(setResponse => {
+				const {included, ...data} = setResponse;
+
+				// it's based on the assumption that there is always only one lesson for a flashcards set
+				data.lesson = data.lesson.map(lessonId => {
+					return included.lesson[lessonId]
+				})[0];
+
+				data.flashcards = data.flashcards.map(flashcardId => {
+					return included.flashcards[flashcardId]
+				});
+
+				sets.push(data)
+			});
+
+			console.log(sets);
+			this.flashcardsSets = sets;
 		}
 	}
 </script>

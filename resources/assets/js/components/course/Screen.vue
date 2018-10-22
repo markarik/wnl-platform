@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h4>{{name}}</h4>
-		<component :is="component" :screenData="screenData"></component>
+		<component :is="component" :screenData="screenData" :key="screenData.id"></component>
 		<wnl-qna :sortingEnabled="true" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
 	</div>
 </template>

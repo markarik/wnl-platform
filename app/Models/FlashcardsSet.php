@@ -6,15 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class FlashcardsSet extends Model
 {
-	protected $fillable = ['description'];
+	protected $fillable = ['description', 'mind_maps_text'];
 
 	public function flashcards()
 	{
 		return	$this->belongsToMany(
 			'\App\Models\Flashcard',
-			'flashcards_sets_flashcards',
+			'flashcards_set_flashcard',
 			'flashcard_set_id',
 			'flashcard_id'
 		)->withPivot('order_number');
+	}
+
+	public function lesson()
+	{
+		return	$this->belongsTo('\App\Models\Lesson');
 	}
 }

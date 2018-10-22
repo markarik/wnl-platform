@@ -15,7 +15,9 @@ class CreateFlashcardsSets extends Migration
 	{
 		Schema::create('flashcards_sets', function (Blueprint $table) {
 			$table->increments('id');
-			$table->text('description');
+			$table->text('description')->nullable();
+			$table->text('mind_maps_text')->nullable();
+			$table->integer('lesson_id');
 			$table->timestamps();
 		});
 	}

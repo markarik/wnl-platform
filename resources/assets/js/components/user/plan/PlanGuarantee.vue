@@ -13,12 +13,14 @@
 
 		<p>Najważniejsze jest to, co dokładnie oznacza <strong>rzetelne ukończenie kursu</strong>?</p>
 
-		<p>Kurs jest zaprojektowany w bardzo dokładny i przemyślany sposób. Znaczenie ma wszystko - kolejność przerabianie lekcji, czas spędzony na platformie, praca z bazą pytań i pytaniami otwartymi. Dlatego kryteria, które należy spełnić <strong>do dnia egzaminu</strong> w ramach jednej edycji kursu, aby skorzystać z Gwarancji Satysfakcji są następujące:</p>
+		<p>Kurs jest zaprojektowany w bardzo dokładny i przemyślany sposób. Znaczenie ma wszystko - kolejność przerabianie lekcji, czas spędzony na platformie, praca z bazą pytań i pytaniami otwartymi oraz przystąpienie do próbnego i końcowego LEK-u na platformie. Dlatego kryteria, które należy spełnić <strong>do dnia egzaminu</strong> w ramach jednej edycji kursu, aby skorzystać z Gwarancji Satysfakcji są następujące:</p>
 
 		<ul>
 			<li>Co najmniej 300h aktywności na platformie w ramach danej edycji kursu,</li>
 			<li>Co najmniej 80% ukończonych lekcji,</li>
-			<li>Co najmniej 60% rozwiązanych pytań w bazie pytań.</li>
+			<li>Co najmniej 60% rozwiązanych pytań w bazie pytań,</li>
+			<li>Przystąpienie do próbnego LEK-u na platformie w ciągu 7 dni od jego publikacji,</li>
+			<li>Przystąpienie do końcowego LEK-u na platformie od momentu jego publikacji, najpóźniej do dnia przed terminem najbliższego egzaminu, wyznaczonym przez CEM.</li>
 		</ul>
 
 		<p>To wystarczy, jeżeli realizujesz domyślny, ogólny plan kursu.</p>

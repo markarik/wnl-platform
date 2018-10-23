@@ -53,8 +53,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
 		// Certificates
-		Route::get("{$r['certificates']}/participation", 'CertificatesApiController@getAvailableCertificates');
+		Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');
 		Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
+		Route::get("{$r['certificates']}/final/{id}", 'CertificatesApiController@getFinalCertificate');
 
 		// Lessons
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
@@ -261,6 +262,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	// Users Plans
 	Route::get("{$r['user-plan']}/{userId}", 'UserPlanApiController@get');
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
+
+	Route::get("{$r['users']}/{userId}/{$r['site-wide-messages']}", 'SiteWideMessagesApiController@getForUser');
+	Route::put("{$r['site-wide-messages']}/{messageId}", 'SiteWideMessagesApiController@put');
 
 	// Tasks
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');

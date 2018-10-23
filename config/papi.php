@@ -51,5 +51,6 @@ return [
 		'user-personal-data' => 'personal_data',
 		'flashcards'         => 'flashcards',
 		'flashcards-sets'    => 'flashcards_sets',
+		'site-wide-messages' => 'site_wide_messages'
 	],
 ];

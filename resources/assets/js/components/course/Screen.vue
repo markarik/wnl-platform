@@ -64,7 +64,6 @@
 				return this.screenData.tags
 			},
 			component() {
-				console.log(typesToComponents[this.type]);
 				return typesToComponents[this.type]
 			},
 			showQna() {

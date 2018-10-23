@@ -1,8 +1,18 @@
 <template>
 	<div class="slideshow-annotations" :class="{'is-mobile': isMobile}">
-		<p class="metadata">Komentarze do slajdu {{currentSlideOrderNumber}}</p>
+		<div>
+			<p class="metadata">
+				Komentarze do slajdu {{currentSlideOrderNumber}}
+			</p>
+			<div v-if="isLoadingComments" class="loading-comments">
+				<span class="icon is-small status-icon">
+					<i class="fa fa-circle-o-notch fa-spin"></i>
+				</span>
+				Ładuję komentarze...
+			</div>
+		</div>
 		<wnl-comments-list
-		v-if="currentSlideId > 0"
+		v-if="currentSlideId > 0 && !isLoadingComments"
 		module="slideshow"
 		urlParam="slide"
 		commentableResource="slides"
@@ -33,6 +43,10 @@
 		&.is-mobile
 			margin: 0 $margin-small
 
+	.loading-comments
+		color: $color-gray-dimmed
+		margin: $margin-base 0
+
 	.metadata
 		margin-bottom: -$margin-base
 </style>
@@ -53,6 +67,7 @@
 			slideshowId: Number,
 			screenId: Number,
 			currentSlideId: Number,
+			isLoadingComments: Boolean,
 		},
 		computed: {
 			...mapGetters(['isMobile', 'isAdmin']),

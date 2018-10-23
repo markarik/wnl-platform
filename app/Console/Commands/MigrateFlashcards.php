@@ -188,13 +188,13 @@ class MigrateFlashcards extends Command
 			$bar->finish();
 		}
 
-		$this->info("All done!");
+		$this->info("\n All done! \n");
 	}
 
 	private function migrateFromLesson($lesson) {
 		$openEndedQuestionsScreens = $lesson->screens()->where('name', 'like', 'Powtórk%')->get();
 		if ($openEndedQuestionsScreens->count() === 0) {
-			$this->info("Lesson #{$lesson->id} does not have screen named 'Powtórki'. \n");
+			$this->info("\n Lesson #{$lesson->id} does not have screen named 'Powtórki'. \n");
 			return;
 		}
 

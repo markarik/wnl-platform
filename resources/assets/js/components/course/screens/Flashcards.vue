@@ -1,60 +1,91 @@
 <template>
 	<div class="flashcards content">
-		<h2 class="flashcards__title">Zestawy powtórkowe na dziś
+		<div class="flashcards__title">
+			<h2 class="flashcards__title__header">Zestawy powtórkowe na dziś</h2>
 			<ul class="flashcards__title__list">
-				<li v-for="set in flashcardsSets" :key="set.id">{{set.lesson.name}}</li>
+				<li class="flashcards__title__list__item" v-for="set in flashcardsSets" :key="set.id" @click="scrollToSet(set.id)">{{set.lesson.name}}</li>
 			</ul>
-		</h2>
-		<div v-html="screenData.content"/>
-        <div v-for="set in flashcardsSets" :key="set.id">
-            <h3>{{set.lesson.name}}</h3>
-            <span>Numery map myśli: {{set.mind_maps_text}}</span>
-			<ol class="flashcards-list">
-				<li v-for="flashcard in set.flashcards" :key="flashcard.id" class="flashcards-list__item">
-					<span class="flashcards-list__item__text">{{flashcard.content}}</span>
+		</div>
+		<div class="flashcards__description" v-html="screenData.content"/>
+		<div class="flashcards-set" v-for="set in flashcardsSets" :key="set.id">
+			<div class="flashcards-set__title" :name="set.lesson.name" :id="`set-${set.id}`">
+				<h3 class="flashcards-set__title__header">
+					{{set.lesson.name}}
+				</h3>
+				<p>Numery map myśli: <span class="text--bold">{{set.mind_maps_text}}</span></p>
+			</div>
+			<ol class="flashcards-set__list">
+				<li v-for="(flashcard, index) in set.flashcards" :key="flashcard.id" class="flashcards-list__item">
+					<span>{{index + 1}}</span>
+					<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 				</li>
 			</ol>
-        </div>
+		</div>
 	</div>
 </template>
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.text--bold
+		font-weight: 600
+
 	.flashcards.content
 		margin: $margin-big 0
-		font-size: $font-size-plus-1
-		line-height: $line-height-plus
+		line-height: $line-height-base
+
+	.flashcards
+		&__title
+			text-align: center
+
+			&__header
+				font-weight: 600
+				text-transform: uppercase
+				font-size: 18px
+
+			&__list
+				font-size: 16px
+				list-style: none
+				line-height: $line-height-plus
+
+				&__item
+					cursor: pointer
+
+		&__description
+			margin-top: $margin-big
+
+		.flashcards-set
+			&__title
+				text-align: center
+				margin-top: $margin-big
+
+				&__header
+					font-size: $font-size-plus-3
+					margin-bottom: 0
+
+				&__sub
+					font-size: $font-size-base
 
 		.flashcards-list
-			counter-reset: li
 			padding-left: 15px
-			margin-left: 0
-			list-style: decimal
 
 			&__item
-				list-style-type: none
+				display: flex
+				align-items: center
 
-				&:nth-child(5n)
-					margin-bottom: $margin-big
-
-				&:nth-child(10n-4),
-				&:nth-child(10n-3),
-				&:nth-child(10n-2),
-				&:nth-child(10n-1),
-				&:nth-child(10n)
-					&:before
-						color: $color-purple
-
-				&:before
-					color: $color-ocean-blue
-					content: counter(li) ". "
-					counter-increment: li
-					font-weight: 700
+				&__text
+					border: $border-light-gray
+					padding: $margin-base
+					flex-grow: 1
+					margin: $margin-small 0 $margin-small $margin-small
+					min-height: 78px
 </style>
+
 <script>
 	import {mapActions} from 'vuex';
+	import {nextTick} from 	'vue'
 	import {get} from 'lodash';
+	import { scrollToElement } from 'js/utils/animations'
 
 	export default {
 		props: {
@@ -72,6 +103,9 @@
 		},
 		methods: {
 			...mapActions('flashcards', ['fetchFlashcardsSet']),
+			scrollToSet(setId) {
+				scrollToElement(document.getElementById(`set-${setId}`));
+			}
 		},
 		async mounted() {
 			const resources = get(this.screenData, 'meta.resources', []);

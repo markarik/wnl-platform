@@ -24,19 +24,13 @@
 			</div>
 			<div class="slideshow-menu">
 				<wnl-annotations
-					v-show="!isLoadingComments"
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
 					:screenId="Number(screenId)"
 					:currentSlideId="currentSlideId"
+					:isLoadingComments="isLoadingComments"
 				></wnl-annotations>
-				<div v-if="isLoadingComments" class="loading-comments">
-					<span class="icon is-small status-icon">
-						<i class="fa fa-circle-o-notch fa-spin"></i>
-					</span>
-					Ładuję komentarze
-				</div>
 			</div>
 		</div>
 	</div>
@@ -107,15 +101,11 @@
 
 	.slideshow-menu
 		border: $border-light-gray
-		display: flex
 		margin-top: -3px
 		padding-top: $margin-base
 
 	.slide-meta
 		text-align: center
-
-	.loading-comments
-		color: $color-gray-dimmed
 </style>
 
 <script>

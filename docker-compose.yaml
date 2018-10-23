@@ -27,7 +27,9 @@ services:
 
   php:
     container_name: php
-    image: bethink/php:7.2.7-fpm-alpine3.7
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.php
     ports:
       - "9000:9000"
     volumes:

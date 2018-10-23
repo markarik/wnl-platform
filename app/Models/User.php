@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\CourseProgressStats;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-	use Notifiable;
+	use Notifiable, CourseProgressStats;
 
 	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
 	const CACHE_VER = '1';

@@ -91,12 +91,6 @@ class ExportUserStatistics extends Command
 		$secondGroup = collect();
 		$thirdGroup = collect();
 
-		$allLessons = Lesson::select(['id'])
-			->whereDate('created_at', '<=', $maxDate)
-			->where('is_required', 1)
-			->count();
-		$allQuestions = QuizQuestion::whereDate('created_at', '<=', $maxDate)->count();
-
 		$users = User::select()
 			->whereHas('orders', function ($query) use ($productIds) {
 				$query
@@ -106,53 +100,23 @@ class ExportUserStatistics extends Command
 			->whereDoesntHave('roles', function($query){
 				$query->whereIn('name', ['admin', 'moderator']);
 			})
-//			->limit(10)
 			->get();
 
 		$bar = $this->output->createProgressBar($users->count());
 
 		foreach ($users as $user) {
-			$profileId = $user->profile->id;
-			$userId = $user->id;
+			$courseProgressStats = $user->getCourseProgressStats($minDate, $maxDate);
+			$user->userCourseProgressPrecentage = $courseProgressStats['course_progress_perc'];
+			$user->userQuizQuestionsSolvedPercentage = $courseProgressStats['quiz_questions_solved_perc'];
+			$user->userTime = $courseProgressStats['time'];
 
-			$timeCollection = $user->userTime()
-				->whereBetween('created_at', [$minDate, $maxDate])
-				->orderBy('id', 'desc')
-				->get();
-
-			$userTime = (int)round(($timeCollection->max('time') - $timeCollection->min('time')) / 60);
-
-			$userCourseProgress = UserCourseProgress::where('user_id', $profileId)
-				->whereDate('user_course_progress.created_at', '<=', $maxDate)
-				->join('lessons', 'lessons.id', '=', 'lesson_id')
-				->where('lessons.is_required', 1)
-				->whereNull('user_course_progress.section_id')
-				->whereNull('user_course_progress.screen_id')
-				->where('user_course_progress.status', 'complete')
-				->count();
-
-			$userCourseProgressPrecentage = (int)round(($userCourseProgress / $allLessons) * 100);
-
-			$userQuizQuestionsSolved = UserQuizResults::where('user_id', $userId)
-				->groupBy('quiz_question_id')
-				->get(['quiz_question_id'])
-				->count();
-
-			$userQuizQuestionsSolvedPercentage = (int)round(($userQuizQuestionsSolved / $allQuestions) * 100);
-
-			$firstGroupCriteria =
-				$userCourseProgressPrecentage >= 80 &&
-				$userQuizQuestionsSolvedPercentage >= 60 &&
-				$userTime >= 300;
+			$firstGroupCriteria = $user->hasFinishedCourse($minDate, $maxDate);
 
 			$secondGroupCriteria =
-				$userCourseProgressPrecentage >= 30 &&
-				$userQuizQuestionsSolvedPercentage >= 30 &&
-				$userTime >= 100;
+				$user->userCourseProgressPercentage >= 30 &&
+				$user->userQuizQuestionsSolvedPercentage >= 30 &&
+				$user->userTime >= 100;
 
-			$user->userCourseProgressPrecentage = $userCourseProgressPrecentage;
-			$user->userQuizQuestionsSolvedPercentage = $userQuizQuestionsSolvedPercentage;
-			$user->userTime = $userTime;
 
 			if ($firstGroupCriteria) {
 				$firstGroup->push($user);

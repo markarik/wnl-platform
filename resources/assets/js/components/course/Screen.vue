@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h4>{{name}}</h4>
-		<component :is="component" :screenData="screenData"></component>
+		<component :is="component" :screenData="screenData" @userEvent="proxyUserEvent"></component>
 		<wnl-qna :sortingEnabled="true" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
 	</div>
 </template>
@@ -21,6 +21,7 @@
 	import Quiz from 'js/components/quiz/Quiz'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow'
 	import Widget from 'js/components/course/screens/Widget'
+	import emits_events from 'js/mixins/emits-events';
 	import {mapGetters, mapActions} from 'vuex';
 
 	const typesToComponents = {
@@ -43,6 +44,7 @@
 			'wnl-slideshow': Slideshow,
 			'wnl-widget': Widget,
 		},
+		mixins: [emits_events],
 		props: ['screenId'],
 		computed: {
 			...mapGetters('course', [

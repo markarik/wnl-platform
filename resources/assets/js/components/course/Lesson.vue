@@ -14,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<router-view/>
+				<router-view @userEvent="onUserEvent"/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
@@ -186,6 +186,12 @@
 				'updateLessonNav',
 			]),
 			...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
+			onUserEvent(payload) {
+				this.$trackEvent({
+					...payload,
+					context: 'lesson'
+				})
+			},
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
 					this.goToDefaultScreenIfNone()

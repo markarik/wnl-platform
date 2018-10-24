@@ -127,6 +127,7 @@
 	import {scrollToTop} from 'js/utils/animations'
 
 	import * as types from 'js/store/mutations-types'
+	import emits_events from 'js/mixins/emits-events';
 	import Annotations from './Annotations'
 	import LinkedQuestions from './LinkedQuestions.vue'
 	import SlideshowNavigation from './SlideshowNavigation'
@@ -141,6 +142,7 @@
 			'wnl-slideshow-navigation': SlideshowNavigation,
 		},
 		perimeters: [moderatorFeatures],
+		mixins: [emits_events],
 		data() {
 			return {
 				bookmarkLoading: false,
@@ -154,6 +156,8 @@
 				slideChanged: false,
 				slideshowElement: {},
 				modifiedSlides: {},
+				feature: 'slideshow',
+				feature_component: 'slide'
 			}
 		},
 		props: {
@@ -395,7 +399,10 @@
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 							this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
 
-							this.$trackEvent('slide_change', {slideId})
+							this.emitUserEvent({
+								action: 'open',
+								target: slideId
+							})
 						}
 
 						this.slideChanged = false

@@ -56,7 +56,7 @@
 		position: relative
 </style>
 <script>
-	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
 	import Message from './Message.vue'
 	import {nextTick} from 'vue'
 	import _ from 'lodash'

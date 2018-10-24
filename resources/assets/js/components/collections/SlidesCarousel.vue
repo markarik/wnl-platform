@@ -39,6 +39,7 @@
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
 			@refreshSlideshow="onRefreshSlideshow"
+			@userEvent="onUserEvent"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -258,6 +259,12 @@
 				} else {
 					this.showContent(this.contentModes.bookmark)
 				}
+			},
+			onUserEvent(payload) {
+				this.$trackEvent({
+					...payload,
+					context: 'collections'
+				})
 			},
 			showContent(htmlContentKey, force) {
 				if (htmlContentKey === this.mode && !force) {

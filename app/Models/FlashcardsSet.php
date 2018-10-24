@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FlashcardsSet extends Model
 {
-	protected $fillable = ['description', 'mind_maps_text'];
+	protected $fillable = ['description', 'mind_maps_text', 'name'];
 
 	public function flashcards()
 	{

@@ -226,6 +226,7 @@ class MigrateFlashcards extends Command
 
 			$relatedLesson = self::SCREEN_TO_LESSONS_MAP[$screen->id][$index];
 			$flashcardsSet->mind_maps_text = self::LESSON_TO_ALBUM[$relatedLesson];
+			$flashcardsSet->name = Lesson::find($relatedLesson)->name;
 
 			$flashcardsSet->lesson()->associate($relatedLesson);
 			$flashcardsSet->save();

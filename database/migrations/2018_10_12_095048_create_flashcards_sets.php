@@ -17,6 +17,7 @@ class CreateFlashcardsSets extends Migration
 			$table->increments('id');
 			$table->text('description')->nullable();
 			$table->text('mind_maps_text')->nullable();
+			$table->text('name');
 			$table->integer('lesson_id');
 			$table->timestamps();
 		});

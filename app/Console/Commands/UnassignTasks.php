@@ -19,7 +19,7 @@ class UnassignTasks extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Unassign moderators tasks';
 
     /**
      * Create a new command instance.
@@ -40,5 +40,7 @@ class UnassignTasks extends Command
 	{
 		$moderatorId = $this->argument('moderatorId');
 		$moderatorTasks = Task::where('assignee_id', $moderatorId)->update(['assignee_id' => null]);
+
+		print 'Unassigned '.$moderatorTasks.' tasks'; 
 	}
 }

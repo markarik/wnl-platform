@@ -66,7 +66,6 @@
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.NEUTRAL"
 							v-model="keywordType"
-							:disabled="!hasKeywords"
 							id="typeNeutral"
 						>
 						<label for="typeNeutral">Neutralny</label>
@@ -76,20 +75,27 @@
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.BASIC"
 							v-model="keywordType"
-							:disabled="!hasKeywords"
 							id="typeBasic"
 						>
-						<label for="typeBasic">Wiedza Podstawowa</label>
+						<label for="typeBasic">Wiedza podstawowa</label>
 						<input
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
-							:value="ANNOTATIONS_TYPES.EMPTY"
+							:value="ANNOTATIONS_TYPES.EXPERT"
 							v-model="keywordType"
-							:disabled="!hasKeywords"
-							id="typeEmpty"
+							id="typeExpert"
 						>
-						<label for="typeEmpty">Bez Słowa Kluczowego</label>
+						<label for="typeExpert">Wiedza specjalistyczna</label>
+						<input
+							class="is-checkradio"
+							type="radio"
+							name="keywordType"
+							:value="ANNOTATIONS_TYPES.IMAGE"
+							v-model="keywordType"
+							id="typeImage"
+						>
+						<label for="typeImage">Zdjęcie</label>
 					</div>
 				</div>
 				<span class="title is-5 annotations-editor__title">Dane do slides.com</span>
@@ -140,7 +146,7 @@
 		cursor: pointer
 
 		&--success
-			color: $color-green;
+			color: $color-green
 
 	.annotation-tags
 		border: $border-light-gray
@@ -206,12 +212,13 @@
 			const ANNOTATIONS_TYPES = {
 				NEUTRAL: '1',
 				BASIC: '2',
-				EMPTY: '3'
+				EXPERT: '3',
+				IMAGE: '4',
 			}
 			return {
 				form: new Form({}),
 				isDirty: false,
-				keywordType: this.hasKeywords ? ANNOTATIONS_TYPES.NEUTRAL : ANNOTATIONS_TYPES.EMPTY,
+				keywordType: ANNOTATIONS_TYPES.NEUTRAL,
 				ANNOTATIONS_TYPES,
 				isVisible: false
 			}
@@ -236,24 +243,16 @@
 				return this.keywordsList.length
 			},
 			parserTags() {
-				if (this.keywordType === this.ANNOTATIONS_TYPES.EMPTY) {
-					return [`{a:${this.keywordType}:${this.annotation.id}}{a}`]
-				}
-
-				if (!this.hasKeywords) return [];
+				if (!this.hasKeywords) return [`{a:${this.keywordType}:${this.annotation.id}}{a}`];
 
 				return this.keywordsList.map(keyword => {
 					return `{a:${this.keywordType}:${this.annotation.id}}${keyword}{a}`
 				})
 			},
 			htmlTags() {
-				if (this.keywordType === this.ANNOTATIONS_TYPES.EMPTY) {
-					return [
-						`<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}"/>`
-					]
-				}
-
-				if (!this.hasKeywords) return [];
+				if (!this.hasKeywords) return [
+					`<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}"/>`
+				];
 
 				return this.keywordsList.map(keyword => {
 					return `<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}">${keyword}</span>`
@@ -314,10 +313,5 @@
 				}
 			},
 		},
-		watch: {
-			hasKeywords() {
-				if (!this.hasKeywords) this.keywordType = this.ANNOTATIONS_TYPES.EMPTY
-			}
-		}
 	}
 </script>

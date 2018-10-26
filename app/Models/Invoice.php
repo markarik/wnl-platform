@@ -12,7 +12,7 @@ class Invoice extends Model
 	];
 
 	protected $fillable = ['order_id', 'number', 'series', 'external_id',
-		'amount', 'vat', 'corrected_invoice_id', 'meta'];
+		'amount', 'vat', 'corrected_invoice_id', 'meta', 'type'];
 
 	public function order()
 	{

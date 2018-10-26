@@ -63,6 +63,7 @@
 	import {resource} from 'js/utils/config'
 	import {breadcrumb} from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
+	import context from 'js/consts/events_map/context.json'
 	import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 
 	export default {
@@ -189,7 +190,7 @@
 			onUserEvent(payload) {
 				this.$trackEvent({
 					...payload,
-					context: 'lesson'
+					context: context.lesson.value
 				})
 			},
 			launchLesson() {

@@ -142,6 +142,7 @@
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
+	import context from 'js/consts/events_map/context.json'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
 	import {getApiUrl} from 'js/utils/env'
 
@@ -263,7 +264,7 @@
 			onUserEvent(payload) {
 				this.$trackEvent({
 					...payload,
-					context: 'collections'
+					context: context.collections.value
 				})
 			},
 			showContent(htmlContentKey, force) {

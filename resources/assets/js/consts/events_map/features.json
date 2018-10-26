@@ -1,0 +1,15 @@
+{
+  "slideshow": {
+    "value": "slideshow",
+    "feature_components": {
+      "slide": {
+        "value": "slide",
+        "actions": {
+          "open": {
+            "value": "open"
+          }
+        }
+      }
+    }
+  }
+}

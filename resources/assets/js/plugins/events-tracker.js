@@ -22,7 +22,7 @@ const createEventsQueue = () => {
 }
 
 const EventsTracker = {
-	install(Vue, {store}) {
+	install(Vue, {store, router}) {
 		const onSocketError = (error) => {
 			$wnl.logger.error(`Socket error: ${error}`)
 		}
@@ -48,8 +48,13 @@ const EventsTracker = {
 
 		const eventsQueue = createEventsQueue()
 
-		Vue.prototype.$trackEvent = (event, payload) => {
-			socket.emit('track', {...payload, time: new Date().getTime()})
+		Vue.prototype.$trackEvent = (payload) => {
+			socket.emit('track', {
+				...payload,
+				user_id: store.getters.currentUserId,
+				context_route: JSON.stringify(router.currentRoute.params),
+				client_time: new Date().getTime() / 1000
+			})
 		}
 	}
 }

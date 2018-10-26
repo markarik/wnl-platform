@@ -125,6 +125,7 @@
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions, mapMutations} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
+	import features from "js/consts/events_map/features.json";
 
 	import * as types from 'js/store/mutations-types'
 	import emits_events from 'js/mixins/emits-events';
@@ -156,8 +157,8 @@
 				slideChanged: false,
 				slideshowElement: {},
 				modifiedSlides: {},
-				feature: 'slideshow',
-				feature_component: 'slide'
+				feature: features.slideshow.value,
+				feature_component: features.slideshow.feature_components.slide.value
 			}
 		},
 		props: {
@@ -317,6 +318,9 @@
 						this.focusSlideshow()
 						this.loaded = true
 						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
+						this.debouncedTrackEvent({
+							target: this.currentSlideId
+						})
 						this.toggleOverlay({source: 'slideshow', display: false})
 					})
 					.catch(error => {
@@ -399,10 +403,9 @@
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 							this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
 
-							this.emitUserEvent({
-								action: 'open',
+							this.debouncedTrackEvent({
 								target: slideId
-							})
+							});
 						}
 
 						this.slideChanged = false
@@ -438,6 +441,12 @@
 			},
 			debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event)}, {
 				trailing: true,
+			}),
+			debouncedTrackEvent: _.debounce(function(payload) {
+				this.emitUserEvent({
+					action: features.slideshow.feature_components.slide.actions.open.value,
+					...payload
+				})
 			}),
 			setEventListeners() {
 				addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);

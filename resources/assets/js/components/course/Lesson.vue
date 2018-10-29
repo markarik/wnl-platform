@@ -188,7 +188,7 @@
 			]),
 			...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
 			onUserEvent(payload) {
-				this.$trackEvent({
+				this.$trackUserEvent({
 					...payload,
 					context: context.lesson.value
 				})

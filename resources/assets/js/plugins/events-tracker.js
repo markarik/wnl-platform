@@ -1,6 +1,9 @@
 import * as io from 'socket.io-client'
 import {envValue} from 'js/utils/env'
-import { SOCKET_CONNECTION_ERROR, SOCKET_CONNECTION_RECONNECTED } from '../store/mutations-types';
+const EVENTS = {
+	USER_EVENT: 'track_user_event',
+	ROUTE_CHANGE_EVENT: 'track_route_change_event'
+}
 
 const createEventsQueue = () => {
 	const events = []
@@ -28,7 +31,6 @@ const EventsTracker = {
 		}
 
 		const onSocketConnectionError = (err) => {
-			store.dispatch(SOCKET_CONNECTION_ERROR)
 			socket.off('connect_error')
 		}
 
@@ -42,19 +44,37 @@ const EventsTracker = {
 		socket.on('connect_error', onSocketConnectionError)
 
 		socket.on('reconnect', () => {
-			store.dispatch(SOCKET_CONNECTION_RECONNECTED)
 			socket.on('connect_error', onSocketConnectionError)
 		})
 
 		const eventsQueue = createEventsQueue()
 
-		Vue.prototype.$trackEvent = (payload) => {
-			socket.emit('track', {
+		const getSharedEventContext = () => ({
+			client_time: new Date().getTime() / 1000,
+			user_id: store.getters.currentUserId
+		})
+
+		Vue.prototype.$trackUserEvent = (payload) => {
+			const contextRoute = {};
+			Object.keys(router.currentRoute.params).forEach(key => {
+				contextRoute[_.snakeCase(key)] = router.currentRoute.params[key];
+			});
+
+			socket.emit(EVENTS.USER_EVENT, {
 				...payload,
-				user_id: store.getters.currentUserId,
-				context_route: JSON.stringify(router.currentRoute.params),
-				client_time: new Date().getTime() / 1000
+				...getSharedEventContext(),
+				context_route: [contextRoute],
 			})
+		}
+
+		Vue.prototype.$trackUrlChange = (payload) => {
+			socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
+				...payload,
+				...getSharedEventContext(),
+				context: 'url_track',
+				feature: 'url_tracking',
+				action: 'open',
+			});
 		}
 	}
 }

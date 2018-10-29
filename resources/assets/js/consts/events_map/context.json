@@ -4,5 +4,8 @@
   },
   "collections": {
     "value": "collections"
+  },
+  "url_track": {
+    "value": "context_route"
   }
 }

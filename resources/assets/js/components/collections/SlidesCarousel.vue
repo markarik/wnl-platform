@@ -262,7 +262,7 @@
 				}
 			},
 			onUserEvent(payload) {
-				this.$trackEvent({
+				this.$trackUserEvent({
 					...payload,
 					context: context.collections.value
 				})

@@ -11,5 +11,13 @@
         }
       }
     }
+  },
+  "url_tracking": {
+    "value": "url_tracking",
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
   }
 }

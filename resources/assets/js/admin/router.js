@@ -18,6 +18,11 @@ let routes = [
 		]
 	},
 	{
+		name: 'users',
+		path: '/admin/app/users',
+		component: require('js/admin/components/users/Users.vue'),
+	},
+	{
 		name: 'slides',
 		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
 		component: require('js/admin/components/slides/EditSlide.vue'),

@@ -155,7 +155,7 @@
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
 				this.$trackUrlChange({
-					value: to.fullPath
+					value: window.location.href
 				});
 			},
 			'thickScrollbar' (newVal) {

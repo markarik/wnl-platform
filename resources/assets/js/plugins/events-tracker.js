@@ -57,13 +57,16 @@ const EventsTracker = {
 		Vue.prototype.$trackUserEvent = (payload) => {
 			const contextRoute = {};
 			Object.keys(router.currentRoute.params).forEach(key => {
-				contextRoute[_.snakeCase(key)] = router.currentRoute.params[key];
+				const param = router.currentRoute.params[key];
+				const column = _.snakeCase(key);
+				const value = isNaN(param) ? param : Number(param);
+				contextRoute[column] = value;
 			});
 
 			socket.emit(EVENTS.USER_EVENT, {
 				...payload,
 				...getSharedEventContext(),
-				context_route: [contextRoute],
+				context_route: contextRoute,
 			})
 		}
 

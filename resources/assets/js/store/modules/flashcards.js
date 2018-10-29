@@ -10,6 +10,19 @@ const actions = {
 		} catch (e) {
 			$wnl.logger.error(e)
 		}
+	},
+	async postAnswer({rootGetters}, {answer, flashcardId}) {
+		try {
+			const response = await axios.post(
+				getApiUrl(`user_flashcards_results/${rootGetters.currentUserId}/${flashcardId}`),
+				{
+					answer
+				}
+			)
+			console.log(response);
+		} catch (e) {
+			$wnl.logger.error(e)
+		}
 	}
 }
 export default {

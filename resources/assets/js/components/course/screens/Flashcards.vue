@@ -18,6 +18,11 @@
 				<li v-for="(flashcard, index) in set.flashcards" :key="flashcard.id" class="flashcards-list__item">
 					<span class="flashcards-list__item__index">{{index + 1}}</span>
 					<p class="flashcards-list__item__text">{{flashcard.content}}</p>
+					<div class="flashcards-list__item__buttons">
+						<button @click="submitAnswer(flashcard.id, 'easy')">łatwe</button>
+						<button @click="submitAnswer(flashcard.id, 'hard')">trudne</button>
+						<button @click="submitAnswer(flashcard.id, 'do not know')">nie wiem</button>
+					</div>
 				</li>
 			</ol>
 		</div>
@@ -53,6 +58,7 @@
 
 				&__item
 					cursor: pointer
+					color: $color-ocean-blue
 
 		&__description
 			margin-top: $margin-big
@@ -99,7 +105,7 @@
 					padding: $margin-base
 					flex-grow: 1
 					margin: $margin-small 0 $margin-small $margin-small
-					min-height: 78px
+					min-height: 54px
 
 		.flashcards-scroll
 			width: 32px
@@ -140,12 +146,17 @@
 			}
 		},
 		methods: {
-			...mapActions('flashcards', ['fetchFlashcardsSet']),
+			...mapActions('flashcards', ['fetchFlashcardsSet', 'postAnswer']),
 			scrollToSet(setId) {
 				scrollToElement(document.getElementById(`set-${setId}`));
 			},
 			scrollTop() {
 				scrollToElement(document.getElementById('flashacardsSetHeader'));
+			},
+			async submitAnswer(flashcardId, answer) {
+				await this.postAnswer({
+					flashcardId, answer
+				})
 			}
 		},
 		async mounted() {

@@ -18,7 +18,7 @@ class CreateUserFlashcardResultsTable extends Migration
 			$table->integer('user_id');
 			$table->integer('flashcard_id');
 			$table->enum('answer', [
-				'easy', 'hard', 'do not know'
+				'easy', 'hard', 'do_not_know'
 			]);
 			$table->timestamps();
 		});

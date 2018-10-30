@@ -147,8 +147,6 @@
 				slideChanged: false,
 				slideshowElement: {},
 				modifiedSlides: {},
-				feature: features.slideshow.value,
-				feature_component: features.slideshow.feature_components.slide.value
 			}
 		},
 		props: {
@@ -438,6 +436,8 @@
 			debouncedTrackEvent: _.debounce(function(payload) {
 				this.emitUserEvent({
 					action: features.slideshow.feature_components.slide.actions.open.value,
+					feature: features.slideshow.value,
+					feature_component: features.slideshow.feature_components.slide.value,
 					...payload
 				})
 			}),

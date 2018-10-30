@@ -150,6 +150,8 @@
 	import { pull } from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
+	import features from "js/consts/events_map/features.json";
+	import context from "js/consts/events_map/context.json";
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
@@ -286,9 +288,9 @@
 				}
 
 				this.categoryId && this.$trackUserEvent({
-					context: 'collections',
-					feature: 'category',
-					action: 'open',
+					context: context.collections.value,
+					feature: features.category.value,
+					action: features.category.actions.open,
 					target: this.categoryId
 				})
 
@@ -296,8 +298,8 @@
 			},
 			onUserEvent(payload) {
 				this.$trackUserEvent({
+					context: context.collections.value,
 					...payload,
-					context: 'collections'
 				})
 			},
 			togglePanel(panel) {

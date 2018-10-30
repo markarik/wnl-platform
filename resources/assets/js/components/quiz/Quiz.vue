@@ -54,6 +54,7 @@
 	import {scrollToTop, scrollToElement} from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
 	import emits_events from 'js/mixins/emits-events';
+	import features from "js/consts/events_map/features.json";
 
 	export default {
 		name: 'Quiz',
@@ -124,8 +125,8 @@
 			},
 			onUserEvent(payload) {
 				this.emitUserEvent({
+					feature: features.quiz_set.value,
 					...payload,
-					feature: 'quiz_set'
 				})
 			},
 			onAnswerSelect(data) {

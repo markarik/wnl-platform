@@ -19,5 +19,50 @@
         "value": "open"
       }
     }
+  },
+  "category": {
+    "value": "category",
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "quiz_questions": {
+    "value": "quiz_questions"
+  },
+  "screen": {
+    "value": "screen",
+    "feature_components": {
+      "bonuses": {
+        "value": "bonuses"
+      },
+      "html": {
+        "value": "html"
+      },
+      "slideshow": {
+        "value": "slideshow"
+      },
+      "quiz_set": {
+        "value": "quiz_set"
+      },
+      "widget": {
+        "value": "widget"
+      },
+      "mockexam": {
+        "value": "mockexam"
+      },
+      "flashcards": {
+        "value": "flashcards"
+      }
+    },
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "quiz_set": {
+    "value": "quiz_set"
   }
 }

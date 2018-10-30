@@ -24,35 +24,36 @@
 	import Widget from 'js/components/course/screens/Widget'
 	import emits_events from 'js/mixins/emits-events';
 	import {mapGetters, mapActions} from 'vuex';
+	import features from "js/consts/events_map/features.json";
 
 	const TYPES_MAP = {
 		end: {
 			component: 'wnl-end',
-			feature_component: 'bonuses'
+			feature_component: features.screen.feature_components.bonuses.value
 		},
 		html: {
 			component: 'wnl-html',
-			feature_component: 'html'
+			feature_component: features.screen.feature_components.html.value
 		},
 		slideshow: {
 			component: 'wnl-slideshow',
-			feature_component: 'slideshow'
+			feature_component: features.screen.feature_components.slideshow.value
 		},
 		quiz: {
 			component: 'wnl-quiz',
-			feature_component: 'quiz_set'
+			feature_component: features.screen.feature_components.quiz_set.value
 		},
 		widget: {
 			component: 'wnl-widget',
-			feature_component: 'widget'
+			feature_component: features.screen.feature_components.widget.value
 		},
 		mockexam: {
 			component: 'wnl-mock-exam',
-			feature_component: 'mockexam'
+			feature_component: features.screen.feature_components.mockexam.value
 		},
 		flashcards: {
 			component: 'wnl-flashcards',
-			feature_component: 'flashcards'
+			feature_component: features.screen.feature_components.flashcards.value
 		},
 	}
 
@@ -69,11 +70,6 @@
 			'wnl-flashcards': Flashcards
 		},
 		mixins: [emits_events],
-		data() {
-			return {
-				feature: 'screen'
-			}
-		},
 		props: ['screenId'],
 		computed: {
 			...mapGetters('course', [
@@ -119,9 +115,9 @@
 			},
 			trackScreenOpen() {
 				this.emitUserEvent({
-					feature: this.feature,
+					feature: features.screen.value,
 					feature_component: this.eventFeatureComponent,
-					action: 'open',
+					action: features.screen.actions.open.value,
 					target: this.screenId
 				})
 			}

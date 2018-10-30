@@ -44,6 +44,7 @@
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import Pagination from 'js/components/global/Pagination'
 	import emits_events from 'js/mixins/emits-events'
+	import features from "js/consts/events_map/features.json";
 
 	export default {
 		name: 'QuizCollection',
@@ -82,8 +83,8 @@
 			},
 			onUserEvent(payload) {
 				this.emitUserEvent({
+					feature: features.quiz_questions.value,
 					...payload,
-					feature: 'quiz_questions'
 				})
 			}
 		}

@@ -130,6 +130,18 @@
 						iconClass: 'fa-magic',
 						iconTitle: 'Pomoc techniczna',
 					},
+					{
+						text: 'Obsługa platformy',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-service',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-cogs',
+						iconTitle: 'Obsługa platformy',
+					}
 				]
 			},
 			chatRooms() {

@@ -16,6 +16,7 @@
 						:arguments="{currentUserName}"
 						:slug="$route.name"
 						:qna="true"
+						@userEvent="onUserEvent"
 				></router-view>
 			</div>
 		</div>
@@ -139,7 +140,14 @@
 			},
 		},
 		methods: {
-			...mapActions(['toggleChat'])
+			...mapActions(['toggleChat']),
+			onUserEvent(payload) {
+				console.log(payload);
+				this.$trackUserEvent({
+					context: 'help',
+					...payload
+				})
+			}
 		},
 		watch: {
 			'$route.query.chatChannel'(newVal) {

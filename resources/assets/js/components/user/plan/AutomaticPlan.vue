@@ -33,7 +33,7 @@
 				<a v-for="preset in presets"
 					 class="panel-toggle preset preset"
 					 :class="{'is-active': isPresetActive(preset.preset)}"
-					 :key="preset"
+					 :key="preset.preset"
 					 @click="togglePreset(preset.preset)"
 				>{{ $t(preset.title) }}
 					<span class="icon is-small">
@@ -207,6 +207,7 @@
 	import moment from 'moment'
 	import momentTimezone from 'moment-timezone'
 	import Datepicker from 'js/components/global/Datepicker'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'AutomaticPlan',
@@ -214,6 +215,7 @@
 			'wnl-text-overlay': TextOverlay,
 			'wnl-datepicker': Datepicker,
 		},
+		mixins: [emits_events],
 		data() {
 			return {
 				isLoading: false,
@@ -393,6 +395,10 @@
 						this.addAutoDismissableAlert(this.alertSuccess)
 					}
 					this.isLoading = false
+					this.emitUserEvent({
+						action: 'save_plan',
+						feature: 'automatic_settings'
+					})
 				}
 				catch(error) {
 					this.isLoading = false

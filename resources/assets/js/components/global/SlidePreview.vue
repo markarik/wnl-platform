@@ -78,8 +78,8 @@
 </style>
 
 <script>
-
 	import {nextTick} from 'vue'
+	import emits_events from 'js/mixins/emits-events';
 
 	export default {
 		name: 'SlidePreview',
@@ -88,6 +88,7 @@
 				isLoading: true
 			}
 		},
+		mixins: [emits_events],
 		props: {
 			content: {
 				type: String,
@@ -110,6 +111,9 @@
 			onLoad() {
 				frames["slidePreview"].document.body.classList.add("is-without-controls")
 				nextTick(() => this.isLoading = false)
+				this.emitUserEvent({
+					action: 'open'
+				})
 			},
 			onKeydown(e) {
 				switch(e.keyCode) {

@@ -43,12 +43,14 @@
 	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
 	import momentTimezone from 'moment-timezone'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'OpenAllPlan',
 		components: {
 			'wnl-text-overlay': TextOverlay,
 		},
+		mixins: [emits_events],
 		data() {
 			return {
 				isLoading: false,
@@ -103,6 +105,10 @@
 					await this.setStructure()
 					this.addAutoDismissableAlert(this.alertSuccess)
 					this.isLoading = false
+					this.emitUserEvent({
+						feature: 'open_all',
+						action: 'save_plan'
+					})
 				}
 				catch(error) {
 					this.isLoading = false

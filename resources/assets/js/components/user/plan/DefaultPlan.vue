@@ -43,12 +43,14 @@
 	import { mapGetters, mapActions } from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
 	import momentTimezone from 'moment-timezone'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'DefaultPlan',
 		components: {
 			'wnl-text-overlay': TextOverlay,
 		},
+		mixins: [emits_events],
 		data() {
 			return {
 				isLoading: false,
@@ -78,6 +80,10 @@
 					await this.setStructure()
 					this.isLoading = false
 					this.addAutoDismissableAlert(this.alertSuccess)
+					this.emitUserEvent({
+						action: 'restore',
+						feature: 'default',
+					})
 				}
 				catch(error) {
 					this.isLoading = false

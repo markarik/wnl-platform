@@ -16,6 +16,7 @@
 				@changeQuestion="performChangeQuestion"
 				@verify="resolveQuestion"
 				@selectAnswer="onSelectAnswer"
+				@userEvent="onUserEvent"
 			></wnl-quiz-widget>
 			<div v-else class="notification has-text-centered">
 				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
@@ -42,6 +43,7 @@
 
 	import QuizWidget from 'js/components/quiz/QuizWidget'
 	import Pagination from 'js/components/global/Pagination'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'QuizCollection',
@@ -49,6 +51,7 @@
 			'wnl-quiz-widget': QuizWidget,
 			'wnl-pagination': Pagination
 		},
+		mixins: [emits_events],
 		props: ['categoryName', 'rootCategoryName', 'quizQuestionsIds'],
 		computed: {
 			...mapState('quiz', ['pagination']),
@@ -76,6 +79,12 @@
 			},
 			changePage(page) {
 				this.$emit('changeQuizQuestionsPage', page)
+			},
+			onUserEvent(payload) {
+				this.emitUserEvent({
+					...payload,
+					feature: 'quiz_questions'
+				})
 			}
 		}
 	}

@@ -13,6 +13,7 @@
 	import axios from 'axios'
 	import {getApiUrl} from 'js/utils/env'
 	import {mapActions} from 'vuex'
+	import emits_events from 'js/mixins/emits-events'
 
 	const PLACEHOLDER_RGX = /{{(.*)}}/g;
 
@@ -21,6 +22,7 @@
 		components: {
 			'wnl-qna': Qna,
 		},
+		mixins: [emits_events],
 		props: {
 			slug: {
 				required: true,
@@ -73,10 +75,18 @@
 						this[key] = value
 					})
 				}).catch.bind($wnl.logger.capture)
+
+				this.emitUserEvent({
+					action: 'open',
+					feature: 'page',
+					subcontext: this.slug
+				})
 			},
 			...mapActions('qna', ['fetchQuestionsByTags']),
 		},
-		mounted() {this.fetch()},
+		mounted() {
+			this.fetch()
+		},
 		watch:{
 			content(newValue) {
 				this.content = this.injectArguments(newValue)

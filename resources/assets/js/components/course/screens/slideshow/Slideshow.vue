@@ -337,6 +337,9 @@
 						this.toggleOverlay({source: 'slideshow', display: false})
 						this.child.call('refreshChart', this.currentSlideIndex)
 						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
+						this.debouncedTrackEvent({
+							target: this.currentSlideId
+						})
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})

@@ -42,6 +42,7 @@
 							:rootCategoryName="rootCategoryName"
 							:savedSlidesCount="slidesIds.length"
 							:slidesIds="slidesIds"
+							@userEvent="onUserEvent"
 						></wnl-slides-carousel>
 						<wnl-qna-collection
 							:categoryName="categoryName"
@@ -54,6 +55,7 @@
 							:rootCategoryName="rootCategoryName"
 							:quizQuestionsIds="quizQuestionsIds"
 							@changeQuizQuestionsPage="onChangeQuizQuestionsPage"
+							@userEvent="onUserEvent"
 						></wnl-quiz-collection>
 					</div>
 				</div>
@@ -283,7 +285,20 @@
 					contentToFetch.push(this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds}))
 				}
 
+				this.categoryId && this.$trackUserEvent({
+					context: 'collections',
+					feature: 'category',
+					action: 'open',
+					target: this.categoryId
+				})
+
 				return this.categoryName && Promise.all(contentToFetch)
+			},
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					...payload,
+					context: 'collections'
+				})
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {

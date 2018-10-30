@@ -415,6 +415,11 @@
 				.then(() => {
 					this.saving = false
 					this.showPlanner = false
+					this.$trackUserEvent({
+						context: 'questions_bank',
+						feature: 'quiz_planner',
+						action: 'save'
+					})
 				})
 			},
 			defaultDateConfig() {

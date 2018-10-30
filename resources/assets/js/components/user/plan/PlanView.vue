@@ -34,7 +34,7 @@
 				</div>
 			</wnl-dropdown>
 		</div>
-		<component :is="activeView"/>
+		<component :is="activeView" @userEvent="onUserEvent"/>
 	</div>
 </template>
 
@@ -69,10 +69,12 @@
 	import PlannerGuarantee from './PlanGuarantee.vue';
 	import PlannerGuide from './PlannerGuide';
 	import Dropdown from 'js/components/global/Dropdown'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'PlanView',
 		components: { 'wnl-dropdown': Dropdown },
+		mixins: [emits_events],
 		data() {
 			return {
 				tabs: [
@@ -115,6 +117,12 @@
 						isActive: false
 					}
 				});
+			},
+			onUserEvent(payload) {
+				this.emitUserEvent({
+					subcontext: 'course_plan',
+					...payload
+				})
 			}
 		}
 	}

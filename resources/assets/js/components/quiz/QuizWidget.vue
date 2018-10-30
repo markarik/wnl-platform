@@ -21,6 +21,7 @@
 			:module="module"
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
+			@userEvent="proxyUserEvent"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
@@ -66,17 +67,18 @@
 
 <script>
 	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+	import { mapGetters } from 'vuex'
 
 	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { scrollToElement } from 'js/utils/animations'
-	import { swalConfig } from 'js/utils/swal'
+	import emits_events from 'js/mixins/emits-events';
 
 	export default {
 		name: 'QuizWidget',
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
+		mixins: [emits_events],
 		props: {
 			isSingle: {
 				default: false,

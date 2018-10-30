@@ -25,14 +25,35 @@
 	import emits_events from 'js/mixins/emits-events';
 	import {mapGetters, mapActions} from 'vuex';
 
-	const typesToComponents = {
-		end: 'wnl-end',
-		html: 'wnl-html',
-		slideshow: 'wnl-slideshow',
-		quiz: 'wnl-quiz',
-		widget: 'wnl-widget',
-		mockexam: 'wnl-mock-exam',
-		flashcards: 'wnl-flashcards',
+	const TYPES_MAP = {
+		end: {
+			component: 'wnl-end',
+			feature_component: 'bonuses'
+		},
+		html: {
+			component: 'wnl-html',
+			feature_component: 'html'
+		},
+		slideshow: {
+			component: 'wnl-slideshow',
+			feature_component: 'slideshow'
+		},
+		quiz: {
+			component: 'wnl-quiz',
+			feature_component: 'quiz_set'
+		},
+		widget: {
+			component: 'wnl-widget',
+			feature_component: 'widget'
+		},
+		mockexam: {
+			component: 'wnl-mock-exam',
+			feature_component: 'mockexam'
+		},
+		flashcards: {
+			component: 'wnl-flashcards',
+			feature_component: 'flashcards'
+		},
 	}
 
 	export default {
@@ -48,6 +69,11 @@
 			'wnl-flashcards': Flashcards
 		},
 		mixins: [emits_events],
+		data() {
+			return {
+				feature: 'screen'
+			}
+		},
 		props: ['screenId'],
 		computed: {
 			...mapGetters('course', [
@@ -66,10 +92,13 @@
 				return this.screenData.tags
 			},
 			component() {
-				return typesToComponents[this.type]
+				return TYPES_MAP[this.type].component
 			},
 			showQna() {
 				return this.tags.length > 0
+			},
+			eventFeatureComponent() {
+				return TYPES_MAP[this.type].feature_component
 			}
 		},
 		methods: {
@@ -87,16 +116,26 @@
 						this.toggleOverlay({source: 'screens', display: false})
 						$wnl.logger.capture(error)
 					})
+			},
+			trackScreenOpen() {
+				this.emitUserEvent({
+					feature: this.feature,
+					feature_component: this.eventFeatureComponent,
+					action: 'open',
+					target: this.screenId
+				})
 			}
 		},
 		mounted() {
 			this.fetchContent()
 			this.showQna && this.fetchQuestionsByTags({tags: this.tags})
+			this.trackScreenOpen()
 		},
 		watch: {
 			screenId() {
 				this.fetchContent()
 				this.showQna && this.fetchQuestionsByTags({tags: this.tags})
+				this.trackScreenOpen()
 			}
 		}
 	}

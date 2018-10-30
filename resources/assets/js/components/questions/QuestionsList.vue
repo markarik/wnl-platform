@@ -46,6 +46,7 @@
 						@selectAnswer="onSelectAnswer"
 						@setQuestion="setQuestion"
 						@verify="onVerify"
+						@userEvent="onUserEvent"
 				/>
 				<div v-else class="text-loader">
 					<wnl-text-loader/>
@@ -128,6 +129,7 @@
 
 	import {scrollToTop} from 'js/utils/animations'
 	import {swalConfig} from 'js/utils/swal'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'QuestionsList',
@@ -141,6 +143,7 @@
 				type: Object,
 			}
 		},
+		mixins: [emits_events],
 		components: {
 			'wnl-active-filters': ActiveFilters,
 			'wnl-questions-navigation': QuestionsNavigation,
@@ -403,6 +406,15 @@
 								index
 							}
 						})
+
+						this.$trackUserEvent({
+							subcontext: 'current',
+							feature: 'quiz_questions',
+							feature_component: 'quiz_question',
+							action: 'open',
+							target: question.id,
+							context: 'questions_bank'
+						})
 					})
 			},
 			setupFilters(activeFilters = []) {
@@ -466,6 +478,15 @@
 						this.fetchingFilters = false
 					})
 				}
+			},
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					subcontext: 'current',
+					feature: 'quiz_questions',
+					feature_component: 'quiz_question',
+					context: 'questions_bank',
+					...payload,
+				})
 			}
 		},
 		mounted() {
@@ -503,6 +524,14 @@
 				.then(({position}) => {
 					position && this.changeCurrentQuestion(position)
 					this.switchOverlay(false)
+					this.$trackUserEvent({
+						subcontext: 'current',
+						feature: 'quiz_questions',
+						feature_component: 'quiz_question',
+						action: 'open',
+						target: this.currentQuestion.id,
+						context: 'questions_bank'
+					})
 				})
 				.then(() => this.fetchQuestionsReactions(this.getPage(1)))
 				.then(() => this.reactionsFetched = true)

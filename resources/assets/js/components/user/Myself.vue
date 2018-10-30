@@ -10,7 +10,7 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<router-view v-if="!isMainRoute"></router-view>
+			<router-view v-if="!isMainRoute" @userEvent="onUserEvent"></router-view>
 			<wnl-my-profile v-else></wnl-my-profile>
 		</div>
 	</div>
@@ -204,6 +204,12 @@
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
 				}
+			},
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					context: 'account',
+					...payload
+				})
 			}
 		},
 	}

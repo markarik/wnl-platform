@@ -33,7 +33,7 @@
 						<div v-if="plan === null" class="margin vertical">
 							<wnl-text-loader/>
 						</div>
-						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan"/>
+						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan" @userEvent="onUserEvent"/>
 						<div class="questions-plan-create" v-else>
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
@@ -118,7 +118,7 @@
 						<button @click="resetQuestionsProgress" class="button is-danger to-right">Wyczyść wszystkie wyniki</button>
 					</div>
 				</div>
-				<router-view v-else :id="id"/>
+				<router-view v-else :id="id" @userEvent="onUserEvent"/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -376,6 +376,13 @@
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					feature: 'dashboard',
+					context: 'questions_bank',
+					...payload,
+				})
+			},
 			toggleExamExpand(index) {
 				const indexOf = this.expandedExams.indexOf(index)
 				if (indexOf > -1) {
@@ -479,6 +486,11 @@
 			isEmpty(this.filters)
 				? this.fetchDynamicFilters().then(this.setPlanRoute)
 				: this.setPlanRoute()
+			this.$trackUserEvent({
+				context: 'questions_bank',
+				feature: 'dashboard',
+				action: 'open'
+			})
 		},
 		watch: {
 			'$route' (to, from) {

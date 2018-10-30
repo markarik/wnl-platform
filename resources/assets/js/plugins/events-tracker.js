@@ -73,10 +73,7 @@ const EventsTracker = {
 		Vue.prototype.$trackUrlChange = (payload) => {
 			socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
 				...payload,
-				...getSharedEventContext(),
-				context: 'url_track',
-				feature: 'url_tracking',
-				action: 'open',
+				...getSharedEventContext()
 			});
 		}
 	}

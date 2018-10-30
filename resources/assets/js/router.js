@@ -176,9 +176,15 @@ let routes = [
 					{
 						name: 'quizQuestion',
 						path: 'single/:id',
-						component: require('js/components/quiz/SingleQuestion.vue'),
+						component: require('js/components/quiz/SingleQuestionRedirect.vue'),
 					},
 				],
+			},
+			{
+				props: true,
+				name: 'quiz-question',
+				path: 'single/:quizQuestionId',
+				component: require('js/components/quiz/SingleQuestion.vue'),
 			},
 			{
 				name: 'questions-list',

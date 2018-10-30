@@ -45,7 +45,7 @@
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
 	import {startTracking} from 'js/services/activityMonitor';
-	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
 
 	export default {
 		name: 'App',
@@ -154,6 +154,9 @@
 		watch: {
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+				this.$trackUrlChange({
+					value: window.location.href
+				});
 			},
 			'thickScrollbar' (newVal) {
 				if (newVal) {

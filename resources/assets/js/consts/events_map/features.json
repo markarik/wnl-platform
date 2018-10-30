@@ -1,0 +1,23 @@
+{
+  "slideshow": {
+    "value": "slideshow",
+    "feature_components": {
+      "slide": {
+        "value": "slide",
+        "actions": {
+          "open": {
+            "value": "open"
+          }
+        }
+      }
+    }
+  },
+  "url_tracking": {
+    "value": "url_tracking",
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  }
+}

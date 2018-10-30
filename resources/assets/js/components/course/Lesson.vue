@@ -14,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<router-view/>
+				<router-view @userEvent="onUserEvent"/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
@@ -63,6 +63,7 @@
 	import {resource} from 'js/utils/config'
 	import {breadcrumb} from 'js/mixins/breadcrumb'
 	import Qna from 'js/components/qna/Qna.vue'
+	import context from 'js/consts/events_map/context.json'
 	import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 
 	export default {
@@ -186,6 +187,12 @@
 				'updateLessonNav',
 			]),
 			...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					...payload,
+					context: context.lesson.value
+				})
+			},
 			launchLesson() {
 				this.startLesson(this.lessonProgressContext).then(() => {
 					this.goToDefaultScreenIfNone()

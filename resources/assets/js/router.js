@@ -165,6 +165,11 @@ let routes = [
 				name: 'help-service',
 				path: 'service',
 				component: require('js/components/global/Page.vue'),
+			},
+			{
+				name: 'satisfaction-guarantee',
+				path: 'guarantee',
+				component: require('js/components/global/Page.vue'),
 			}
 		]
 	},

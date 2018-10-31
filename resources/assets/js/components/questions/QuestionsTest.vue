@@ -350,7 +350,7 @@
 			},
 			onUserEvent(payload) {
 				this.emitUserEvent({
-					feature: feature.quiz_questions.value,
+					feature: features.quiz_questions.value,
 					subcontext: context.questions_bank.subcontext.test_yourself.value,
 					...payload,
 				})

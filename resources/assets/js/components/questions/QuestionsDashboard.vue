@@ -382,7 +382,7 @@
 			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
 			onUserEvent(payload) {
 				this.$trackUserEvent({
-					feature: this.feature,value,
+					feature: this.feature.value,
 					context: this.context.value,
 					...payload,
 				})

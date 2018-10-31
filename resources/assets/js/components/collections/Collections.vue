@@ -290,7 +290,7 @@
 				this.categoryId && this.$trackUserEvent({
 					context: context.collections.value,
 					feature: features.category.value,
-					action: features.category.actions.open,
+					action: features.category.actions.open.value,
 					target: this.categoryId
 				})
 

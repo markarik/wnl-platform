@@ -232,8 +232,8 @@
 		methods: {
 			onPlanClick() {
 				this.emitUserEvent({
-					feature_component: features.dashboard.feature_component.planned_questions.value,
-					action: features.dashboard.feature_component.planned_questions.actions.open.value,
+					feature_component: features.dashboard.feature_components.planned_questions.value,
+					action: features.dashboard.feature_components.planned_questions.actions.open.value,
 					target: this.plan.id
 				})
 

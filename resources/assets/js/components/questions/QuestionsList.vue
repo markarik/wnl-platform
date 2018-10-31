@@ -493,8 +493,8 @@
 			onUserEvent(payload) {
 				this.$trackUserEvent({
 					subcontext: this.subcontext.value,
-					feature: this.feature,
-					feature_component: this.featureComponent,
+					feature: this.feature.value,
+					feature_component: this.featureComponent.value,
 					context: this.context.value,
 					...payload,
 				})
@@ -537,8 +537,8 @@
 					this.switchOverlay(false)
 					this.$trackUserEvent({
 						subcontext: this.subcontext.value,
-						feature: this.feature,
-						feature_component: this.featureComponent,
+						feature: this.feature.value,
+						feature_component: this.featureComponent.value,
 						action: this.featureComponent.actions.open.value,
 						target: this.currentQuestion.id,
 						context: this.context.value

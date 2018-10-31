@@ -27,6 +27,7 @@ class UserPlanTransformer extends ApiTransformer
 			'slack_days_planned'    => $userPlan->slack_days_planned,
 			'slack_days_left'       => $userPlan->slack_days_left,
 			'stats'                 => $userPlan->stats,
+			'id'                    => $userPlan->id
 		];
 
 		if ($this->parent) {

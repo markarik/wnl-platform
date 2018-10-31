@@ -19,6 +19,7 @@
 				:readOnly="readOnly"
 				:getReaction="getReaction"
 				@selectAnswer="onSelectAnswer"
+				@userEvent="proxyUserEvent"
 			></wnl-quiz-question>
 		</div>
 		<p class="has-text-centered" v-if="!plainList && !displayResults">
@@ -53,12 +54,14 @@
 	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
+	import emits_events from 'js/mixins/emits-events';
 
 	export default {
 		name: 'QuizList',
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
+		mixins: [emits_events],
 		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz'],
 		data() {
 			return {

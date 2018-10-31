@@ -42,6 +42,7 @@
 							:rootCategoryName="rootCategoryName"
 							:savedSlidesCount="slidesIds.length"
 							:slidesIds="slidesIds"
+							@userEvent="onUserEvent"
 						></wnl-slides-carousel>
 						<wnl-qna-collection
 							:categoryName="categoryName"
@@ -54,6 +55,7 @@
 							:rootCategoryName="rootCategoryName"
 							:quizQuestionsIds="quizQuestionsIds"
 							@changeQuizQuestionsPage="onChangeQuizQuestionsPage"
+							@userEvent="onUserEvent"
 						></wnl-quiz-collection>
 					</div>
 				</div>
@@ -148,6 +150,8 @@
 	import { pull } from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
+	import features from "js/consts/events_map/features.json";
+	import context from "js/consts/events_map/context.json";
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import MainNav from 'js/components/MainNav'
@@ -283,7 +287,20 @@
 					contentToFetch.push(this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds}))
 				}
 
+				this.categoryId && this.$trackUserEvent({
+					context: context.collections.value,
+					feature: features.category.value,
+					action: features.category.actions.open.value,
+					target: this.categoryId
+				})
+
 				return this.categoryName && Promise.all(contentToFetch)
+			},
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					context: context.collections.value,
+					...payload,
+				})
 			},
 			togglePanel(panel) {
 				if (this.isSinglePanelView) {

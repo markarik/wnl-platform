@@ -41,7 +41,7 @@
 				</span>
 			</a>
 		</div>
-		<component :is="activeViewComponent"/>
+		<component :is="activeViewComponent" @userEvent="proxyUserEvent"/>
 	</div>
 </template>
 
@@ -69,9 +69,11 @@
 	import { first,last } from 'lodash'
 	import { mapGetters } from 'vuex'
 	import moment from 'moment'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'LessonsPlanner',
+		mixins: [emits_events],
 		data() {
 			return {
 				views: [

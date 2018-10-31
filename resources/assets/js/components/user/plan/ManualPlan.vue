@@ -203,6 +203,8 @@
 	import { getApiUrl } from 'js/utils/env'
 	import momentTimezone from 'moment-timezone'
 	import { isEmpty } from 'lodash'
+	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
 
 	export default {
 		name: 'ManualPlan',
@@ -210,6 +212,7 @@
 			'wnl-text-overlay': TextOverlay,
 			'wnl-datepicker': Datepicker,
 		},
+		mixins: [emits_events],
 		data() {
 			return {
 				openGroups: [1],
@@ -318,6 +321,10 @@
 					this.isLoading = false
 					this.manualStartDates = []
 					this.addAutoDismissableAlert(this.alertSuccess)
+					this.emitUserEvent({
+						action: features.manual_settings.actions.save_plan.value,
+						feature: features.manual_settings.value,
+					})
 				}
 				catch(error) {
 					this.isLoading = false

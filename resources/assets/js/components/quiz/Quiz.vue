@@ -5,7 +5,7 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary/>
+			<wnl-quiz-summary @userEvent="onUserEvent"/>
 		</div>
 		<div v-else-if="emptyQuizSet" class="has-text-centered">
 			Oho, wygląda że nie ma pytań kontrolnych dla tej lekcji.
@@ -53,6 +53,8 @@
 	import QuizSummary from 'js/components/quiz/QuizSummary'
 	import {scrollToTop, scrollToElement} from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
+	import emits_events from 'js/mixins/emits-events';
+	import features from "js/consts/events_map/features.json";
 
 	export default {
 		name: 'Quiz',
@@ -60,9 +62,11 @@
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-summary': QuizSummary,
 		},
+		mixins: [emits_events],
 		data() {
 			return {
-				emptyQuizSet: false
+				emptyQuizSet: false,
+				feature: features.quiz_set
 			}
 		},
 		props: ['screenData', 'readOnly'],
@@ -111,6 +115,20 @@
 				} else {
 					this.setupQuestions(meta.resources[0])
 				}
+
+				const quizSetId = meta.resources[0].id
+
+				this.emitUserEvent({
+					feature: this.feature.value,
+					action: this.feature.actions.open.value,
+					target: quizSetId
+				})
+			},
+			onUserEvent(payload) {
+				this.emitUserEvent({
+					feature: this.feature.value,
+					...payload,
+				})
 			},
 			onAnswerSelect(data) {
 				if (!this.isComplete) {

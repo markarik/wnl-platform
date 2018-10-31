@@ -19,5 +19,141 @@
         "value": "open"
       }
     }
+  },
+  "category": {
+    "value": "category",
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "quiz_questions": {
+    "value": "quiz_questions",
+    "feature_components": {
+      "quiz_question": {
+        "value": "quiz_question",
+        "actions": {
+          "open": {
+            "value": "open"
+          }
+        }
+      }
+    }
+  },
+  "screen": {
+    "value": "screen",
+    "feature_components": {
+      "bonuses": {
+        "value": "bonuses"
+      },
+      "html": {
+        "value": "html"
+      },
+      "slideshow": {
+        "value": "slideshow"
+      },
+      "quiz_set": {
+        "value": "quiz_set"
+      },
+      "widget": {
+        "value": "widget"
+      },
+      "mockexam": {
+        "value": "mockexam"
+      },
+      "flashcards": {
+        "value": "flashcards"
+      }
+    },
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "quiz_set": {
+    "value": "quiz_set",
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "page": {
+    "value": "page",
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "slide_preview": {
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "dashboard": {
+    "value": "dashboard",
+    "feature_components": {
+      "planned_questions": {
+        "value": "planned_questions",
+        "actions": {
+          "open": {
+            "value": "open"
+          }
+        }
+      }
+    },
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    }
+  },
+  "quiz_planner": {
+    "value": "quiz_planner",
+    "actions": {
+      "open": {
+        "value": "open"
+      },
+      "save": {
+        "value": "save"
+      }
+    }
+  },
+  "automatic_settings": {
+    "value": "automatic_settings",
+    "actions": {
+      "save_plan": {
+        "value": "save_plan"
+      }
+    }
+  },
+  "default": {
+    "value": "default",
+    "actions": {
+      "restore": {
+        "value": "restore"
+      }
+    }
+  },
+  "manual_settings": {
+    "value": "manual_settings",
+    "actions": {
+      "save_plan": {
+        "value": "save_plan"
+      }
+    }
+  },
+  "open_all": {
+    "value": "open_all",
+    "actions": {
+      "save_plan": {
+        "value": "save_plan"
+      }
+    }
   }
 }

@@ -16,6 +16,7 @@
 						:arguments="{currentUserName}"
 						:slug="$route.name"
 						:qna="true"
+						@userEvent="onUserEvent"
 				></router-view>
 			</div>
 		</div>
@@ -72,6 +73,7 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import withChat from 'js/mixins/with-chat'
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'Help',
@@ -139,7 +141,13 @@
 			},
 		},
 		methods: {
-			...mapActions(['toggleChat'])
+			...mapActions(['toggleChat']),
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					context: context.help.value,
+					...payload
+				})
+			}
 		},
 		watch: {
 			'$route.query.chatChannel'(newVal) {

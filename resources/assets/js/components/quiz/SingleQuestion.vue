@@ -70,12 +70,14 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import QuizWidget from 'js/components/quiz/QuizWidget'
+	import emits_events from 'js/mixins/emits-events';
 
 	export default {
 		name: 'SingleQuestion',
 		components: {
 			'wnl-quiz-widget': QuizWidget,
 		},
+		mixins: [emits_events],
 		props: {
 			quizQuestionId: {
 				required: true,

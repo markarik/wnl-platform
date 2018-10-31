@@ -52,7 +52,7 @@
 </style>
 
 <script>
-	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
 	import MessageForm from './MessageForm.vue'
 	import MessagesList from './MessagesList.vue'
 	import {getApiUrl} from 'js/utils/env'

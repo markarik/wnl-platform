@@ -81,7 +81,7 @@
 	import {
 		SOCKET_EVENT_USER_SENT_MESSAGE,
 		SOCKET_EVENT_LEAVE_ROOM
-	} from 'js/plugins/socket'
+	} from 'js/plugins/chat-connection'
 
 
 	export default {

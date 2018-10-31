@@ -1,11 +1,8 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
 		<!-- Sticky news -->
-		<div class="notification is-info">
-			<div>
-				Od <span class="strong">25 września</span> do <span class="strong">4 listopada</span> na platformie trwają intensywne prace moderatorskie. Podczas nauki zwróć uwagę na erraty do prezentacji, gdyż w ciągu najbliższego miesiąca będą się one nieznacznie zmieniać! 😉
-			</div>
-		</div>
+		<!-- <div class="notification is-info">
+		</div> -->
 
 		<!-- Dashboard news -->
 		<wnl-dashboard-news/>

@@ -6,6 +6,7 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
 </style>
 
 <script>
@@ -49,6 +50,21 @@
 			}
 		},
 		methods: {
+			wrapEmbedded() {
+				let iframes = this.$el.getElementsByClassName('ql-video'),
+					wrapperClass = 'ratio-16-9-wrapper'
+
+				if (iframes.length > 0) {
+					_.each(iframes, (iframe) => {
+						let wrapper = document.createElement('div'),
+							parent = iframe.parentNode
+
+						wrapper.className = wrapperClass
+						parent.replaceChild(wrapper, iframe)
+						wrapper.appendChild(iframe)
+					})
+				}
+			},
 			injectArguments(content) {
 				const matches = content.match(PLACEHOLDER_RGX)
 				let missing = []
@@ -75,6 +91,8 @@
 					Object.entries(res.data).forEach(([key, value]) => {
 						this[key] = value
 					})
+				}).then(() => {
+					this.wrapEmbedded()
 				}).catch.bind($wnl.logger.capture)
 
 				this.emitUserEvent({

@@ -132,6 +132,30 @@
 						iconClass: 'fa-magic',
 						iconTitle: 'Pomoc techniczna',
 					},
+					{
+						text: 'Obsługa platformy',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-service',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-cog',
+						iconTitle: 'Obsługa platformy',
+					},
+					{
+						text: 'Gwarancja satysfakcji',
+						itemClass: 'has-icon',
+						to: {
+							name: 'satisfaction-guarantee',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-diamond',
+						iconTitle: 'Gwarancja satysfakcji',
+					}
 				]
 			},
 			chatRooms() {

@@ -65,7 +65,8 @@
 		mixins: [emits_events],
 		data() {
 			return {
-				emptyQuizSet: false
+				emptyQuizSet: false,
+				feature: features.quiz_set
 			}
 		},
 		props: ['screenData', 'readOnly'],
@@ -118,14 +119,14 @@
 				const quizSetId = meta.resources[0].id
 
 				this.emitUserEvent({
-					feature: 'quiz_set',
-					action: 'open',
+					feature: this.feature.value,
+					action: this.feature.actions.open.value,
 					target: quizSetId
 				})
 			},
 			onUserEvent(payload) {
 				this.emitUserEvent({
-					feature: features.quiz_set.value,
+					feature: this.feature.value,
 					...payload,
 				})
 			},

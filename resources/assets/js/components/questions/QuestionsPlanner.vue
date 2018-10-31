@@ -292,6 +292,8 @@
 	import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import {getApiUrl} from 'js/utils/env'
+	import features from 'js/consts/events_map/features.json';
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'QuestionsPlanner',
@@ -416,9 +418,9 @@
 					this.saving = false
 					this.showPlanner = false
 					this.$trackUserEvent({
-						context: 'questions_bank',
-						feature: 'quiz_planner',
-						action: 'save'
+						context: context.questions_bank.value,
+						feature: features.quiz_planner.value,
+						action: features.quiz_planner.actions.save.value
 					})
 				})
 			},

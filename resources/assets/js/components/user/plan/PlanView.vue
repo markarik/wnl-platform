@@ -70,6 +70,7 @@
 	import PlannerGuide from './PlannerGuide';
 	import Dropdown from 'js/components/global/Dropdown'
 	import emits_events from 'js/mixins/emits-events'
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'PlanView',
@@ -120,7 +121,7 @@
 			},
 			onUserEvent(payload) {
 				this.emitUserEvent({
-					subcontext: 'course_plan',
+					subcontext: context.account.subcontext.course_plan.value,
 					...payload
 				})
 			}

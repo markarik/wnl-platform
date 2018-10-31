@@ -73,6 +73,7 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import withChat from 'js/mixins/with-chat'
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'Help',
@@ -142,9 +143,8 @@
 		methods: {
 			...mapActions(['toggleChat']),
 			onUserEvent(payload) {
-				console.log(payload);
 				this.$trackUserEvent({
-					context: 'help',
+					context: context.help.value,
 					...payload
 				})
 			}

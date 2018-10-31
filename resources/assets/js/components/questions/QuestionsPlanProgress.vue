@@ -143,6 +143,7 @@
 	import {mapGetters} from 'vuex'
 
 	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
 
 	export default {
 		name: 'QuestionsPlanProgress',
@@ -230,10 +231,9 @@
 		},
 		methods: {
 			onPlanClick() {
-				console.log(this.plan);
 				this.emitUserEvent({
-					feature_component: 'planned_questions',
-					action: 'open',
+					feature_component: features.dashboard.feature_component.planned_questions.value,
+					action: features.dashboard.feature_component.planned_questions.actions.open.value,
 					target: this.plan.id
 				})
 

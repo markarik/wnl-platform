@@ -208,6 +208,7 @@
 	import momentTimezone from 'moment-timezone'
 	import Datepicker from 'js/components/global/Datepicker'
 	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
 
 	export default {
 		name: 'AutomaticPlan',
@@ -396,8 +397,8 @@
 					}
 					this.isLoading = false
 					this.emitUserEvent({
-						action: 'save_plan',
-						feature: 'automatic_settings'
+						action: features.automatic_settings.actions.save_plan.value,
+						feature: features.automatic_settings.value
 					})
 				}
 				catch(error) {

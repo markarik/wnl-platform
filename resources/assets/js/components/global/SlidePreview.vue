@@ -80,6 +80,7 @@
 <script>
 	import {nextTick} from 'vue'
 	import emits_events from 'js/mixins/emits-events';
+	import features from 'js/consts/events_map/features.json';
 
 	export default {
 		name: 'SlidePreview',
@@ -112,7 +113,7 @@
 				frames["slidePreview"].document.body.classList.add("is-without-controls")
 				nextTick(() => this.isLoading = false)
 				this.emitUserEvent({
-					action: 'open'
+					action: features.slide_preview.actions.open.value
 				})
 			},
 			onKeydown(e) {

@@ -332,6 +332,8 @@
 	import {getApiUrl} from 'js/utils/env'
 	import { swalConfig } from 'js/utils/swal'
 	import withChat from 'js/mixins/with-chat'
+	import features from 'js/consts/events_map/features.json';
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'QuestionsDashboard',
@@ -353,7 +355,9 @@
 				plan: null,
 				planRoute: {},
 				stats: {},
-				expandedExams: []
+				expandedExams: [],
+				context: context.questions_bank,
+				feature: features.dashboard
 			}
 		},
 		computed: {
@@ -378,8 +382,8 @@
 			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
 			onUserEvent(payload) {
 				this.$trackUserEvent({
-					feature: 'dashboard',
-					context: 'questions_bank',
+					feature: this.feature,value,
+					context: this.context.value,
 					...payload,
 				})
 			},
@@ -487,9 +491,9 @@
 				? this.fetchDynamicFilters().then(this.setPlanRoute)
 				: this.setPlanRoute()
 			this.$trackUserEvent({
-				context: 'questions_bank',
-				feature: 'dashboard',
-				action: 'open'
+				context: this.context.value,
+				feature: this.feature.value,
+				action: this.feature.actions.open.value
 			})
 		},
 		watch: {

@@ -44,6 +44,7 @@
 	import { getApiUrl } from 'js/utils/env'
 	import momentTimezone from 'moment-timezone'
 	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
 
 	export default {
 		name: 'DefaultPlan',
@@ -81,8 +82,8 @@
 					this.isLoading = false
 					this.addAutoDismissableAlert(this.alertSuccess)
 					this.emitUserEvent({
-						action: 'restore',
-						feature: 'default',
+						action: features.default.actions.restore.value,
+						feature: features.default.value,
 					})
 				}
 				catch(error) {

@@ -41,6 +41,7 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import { isProduction } from 'js/utils/env'
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'Myself',
@@ -207,7 +208,7 @@
 			},
 			onUserEvent(payload) {
 				this.$trackUserEvent({
-					context: 'account',
+					context: context.account.value,
 					...payload
 				})
 			}

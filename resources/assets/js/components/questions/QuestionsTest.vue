@@ -231,6 +231,8 @@
 	import QuizTimer from 'js/components/quiz/QuizTimer'
 	import Pagination from 'js/components/global/Pagination'
 	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
+	import context from 'js/consts/events_map/context.json';
 
 	import {scrollToElement} from 'js/utils/animations'
 
@@ -348,9 +350,9 @@
 			},
 			onUserEvent(payload) {
 				this.emitUserEvent({
+					feature: feature.quiz_questions.value,
+					subcontext: context.questions_bank.subcontext.test_yourself.value,
 					...payload,
-					feature: 'quiz_questions',
-					subcontext: 'test_yourself'
 				})
 			}
 		},

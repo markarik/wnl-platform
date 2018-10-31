@@ -276,6 +276,8 @@
 	import SlideLink from 'js/components/global/SlideLink'
 	import SlidePreview from 'js/components/global/SlidePreview'
 	import emits_events from 'js/mixins/emits-events';
+	import feature_components from 'js/consts/events_map/feature_components.json';
+
 	export default {
 		name: 'QuizQuestion',
 		components: {
@@ -390,10 +392,10 @@
 			},
 			onRelatedSlideUserEvent(payload) {
 				this.emitUserEvent({
-					...payload,
 					value: this.question.id,
 					target: this.currentModalSlide.id,
-					feature_component: 'related_slides'
+					feature_component: feature_components.related_slides.value,
+					...payload,
 				})
 			}
 		},

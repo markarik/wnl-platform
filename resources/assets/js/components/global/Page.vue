@@ -14,6 +14,7 @@
 	import {getApiUrl} from 'js/utils/env'
 	import {mapActions} from 'vuex'
 	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
 
 	const PLACEHOLDER_RGX = /{{(.*)}}/g;
 
@@ -77,8 +78,8 @@
 				}).catch.bind($wnl.logger.capture)
 
 				this.emitUserEvent({
-					action: 'open',
-					feature: 'page',
+					action: features.page.actions.open.value,
+					feature: features.page.value,
 					subcontext: this.slug
 				})
 			},

@@ -130,6 +130,8 @@
 	import {scrollToTop} from 'js/utils/animations'
 	import {swalConfig} from 'js/utils/swal'
 	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'QuestionsList',
@@ -155,6 +157,11 @@
 			'wnl-questions-search': QuestionsSearch
 		},
 		data() {
+			const currentContext = context.questions_bank
+			const subcontext = currentContext.subcontext.current
+			const currentFeature = features.quiz_questions
+			const featureComponent = currentFeature.feature_components.quiz_question
+
 			return {
 				fetchingFilters: false,
 				fetchingQuestions: false,
@@ -165,7 +172,11 @@
 				testResults: {},
 				reactionsFetched: false,
 				presetOptionsToPass: isEmpty(this.presetOptions) ? {} : this.presetOptions,
-				searchPhrase: ''
+				searchPhrase: '',
+				context: currentContext,
+				feature: currentFeature,
+				subcontext,
+				featureComponent
 			}
 		},
 		computed: {
@@ -408,12 +419,12 @@
 						})
 
 						this.$trackUserEvent({
-							subcontext: 'current',
-							feature: 'quiz_questions',
-							feature_component: 'quiz_question',
-							action: 'open',
+							subcontext: this.subcontext.value,
+							feature: this.feature.value,
+							feature_component: this.featureComponent.value,
+							action: this.featureComponent.actions.open.value,
 							target: question.id,
-							context: 'questions_bank'
+							context: this.context.value
 						})
 					})
 			},
@@ -481,10 +492,10 @@
 			},
 			onUserEvent(payload) {
 				this.$trackUserEvent({
-					subcontext: 'current',
-					feature: 'quiz_questions',
-					feature_component: 'quiz_question',
-					context: 'questions_bank',
+					subcontext: this.subcontext.value,
+					feature: this.feature,
+					feature_component: this.featureComponent,
+					context: this.context.value,
 					...payload,
 				})
 			}
@@ -525,12 +536,12 @@
 					position && this.changeCurrentQuestion(position)
 					this.switchOverlay(false)
 					this.$trackUserEvent({
-						subcontext: 'current',
-						feature: 'quiz_questions',
-						feature_component: 'quiz_question',
-						action: 'open',
+						subcontext: this.subcontext.value,
+						feature: this.feature,
+						feature_component: this.featureComponent,
+						action: this.featureComponent.actions.open.value,
 						target: this.currentQuestion.id,
-						context: 'questions_bank'
+						context: this.context.value
 					})
 				})
 				.then(() => this.fetchQuestionsReactions(this.getPage(1)))

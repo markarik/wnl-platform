@@ -276,4 +276,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	// Flashcards
 	Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
 	Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
+
+	Route::post("{$r['user-flashcards-results']}/{userId}/{flashcardId}", 'UserFlashcardsResultsApiController@post');
 });

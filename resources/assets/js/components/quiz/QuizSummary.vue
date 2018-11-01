@@ -8,6 +8,7 @@
 			:isComplete="isComplete"
 			module="quiz"
 			@resetState="resetState"
+			@userEvent="proxyUserEvent"
 		/>
 	</div>
 </template>
@@ -22,10 +23,12 @@
 <script>
 	import QuizList from 'js/components/quiz/QuizList.vue'
 	import QuizStats from 'js/components/quiz/QuizStats.vue'
+	import emits_events from 'js/mixins/emits-events';
 	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		name: 'QuizSummary',
+		mixins: [emits_events],
 		components: {
 			'wnl-quiz-list': QuizList,
 			'wnl-quiz-stats': QuizStats,

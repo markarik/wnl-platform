@@ -40,5 +40,6 @@ rm -rf /tmp/newrelic-php5-* /tmp/nrinstall*
 WORKDIR /www/current
 
 COPY --from=js-build /src/. .
+RUN touch storage/logs/laravel.log
 USER root
 RUN chown -R 82:82 /www

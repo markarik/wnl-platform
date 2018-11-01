@@ -27,6 +27,7 @@
 			:module="module"
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleclick"
+			@userEvent="proxyUserEvent"
 		/>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
@@ -68,6 +69,7 @@
 	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
+	import emits_events from 'js/mixins/emits-events'
 
 	const KEYS = {
 		leftArrow: 37,
@@ -82,6 +84,7 @@
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
+		mixins: [emits_events],
 		props: {
 			allQuestionsCount: {
 				default: 0,

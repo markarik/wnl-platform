@@ -10,7 +10,7 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<router-view v-if="!isMainRoute"></router-view>
+			<router-view v-if="!isMainRoute" @userEvent="onUserEvent"></router-view>
 			<wnl-my-profile v-else></wnl-my-profile>
 		</div>
 	</div>
@@ -41,6 +41,7 @@
 	import Sidenav from 'js/components/global/Sidenav'
 	import SidenavSlot from 'js/components/global/SidenavSlot'
 	import { isProduction } from 'js/utils/env'
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'Myself',
@@ -204,6 +205,12 @@
 				if (!this.view) {
 					this.$router.replace({ name: 'my-orders' })
 				}
+			},
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					context: context.account.value,
+					...payload
+				})
 			}
 		},
 	}

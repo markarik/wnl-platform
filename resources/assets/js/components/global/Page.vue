@@ -6,6 +6,7 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
 </style>
 
 <script>
@@ -13,6 +14,8 @@
 	import axios from 'axios'
 	import {getApiUrl} from 'js/utils/env'
 	import {mapActions} from 'vuex'
+	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
 
 	const PLACEHOLDER_RGX = /{{(.*)}}/g;
 
@@ -21,6 +24,7 @@
 		components: {
 			'wnl-qna': Qna,
 		},
+		mixins: [emits_events],
 		props: {
 			slug: {
 				required: true,
@@ -46,6 +50,21 @@
 			}
 		},
 		methods: {
+			wrapEmbedded() {
+				let iframes = this.$el.getElementsByClassName('ql-video'),
+					wrapperClass = 'ratio-16-9-wrapper'
+
+				if (iframes.length > 0) {
+					_.each(iframes, (iframe) => {
+						let wrapper = document.createElement('div'),
+							parent = iframe.parentNode
+
+						wrapper.className = wrapperClass
+						parent.replaceChild(wrapper, iframe)
+						wrapper.appendChild(iframe)
+					})
+				}
+			},
 			injectArguments(content) {
 				const matches = content.match(PLACEHOLDER_RGX)
 				let missing = []
@@ -72,11 +91,21 @@
 					Object.entries(res.data).forEach(([key, value]) => {
 						this[key] = value
 					})
+				}).then(() => {
+					this.wrapEmbedded()
 				}).catch.bind($wnl.logger.capture)
+
+				this.emitUserEvent({
+					action: features.page.actions.open.value,
+					feature: features.page.value,
+					subcontext: this.slug
+				})
 			},
 			...mapActions('qna', ['fetchQuestionsByTags']),
 		},
-		mounted() {this.fetch()},
+		mounted() {
+			this.fetch()
+		},
 		watch:{
 			content(newValue) {
 				this.content = this.injectArguments(newValue)

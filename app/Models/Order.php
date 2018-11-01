@@ -111,6 +111,8 @@ class Order extends Model
 		$leftFromPaid = $this->paid_amount;
 		$nextPayment = null;
 		$now = Carbon::now();
+
+		// TODO: https://bethink.atlassian.net/browse/PLAT-641
 		$paymentDates = [
 			$this->created_at->addDays(7),
 			Carbon::createFromDate(2018, 11, 20),

@@ -85,7 +85,14 @@
 					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
 						{{slideLink(slide)}}
 					</a>
-					<wnl-slide-preview :showModal="show" :content="slideContent" :slidesCount="hasSlides" @closeModal="hideSlidePreview" @switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id">
+					<wnl-slide-preview
+							:showModal="show"
+							:content="slideContent"
+							:slidesCount="hasSlides"
+							@closeModal="hideSlidePreview"
+							@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
+							@userEvent="onRelatedSlideUserEvent"
+					>
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
 							class="button is-primary is-outlined is-small"
@@ -268,6 +275,9 @@
 	import Bookmark from 'js/components/global/reactions/Bookmark'
 	import SlideLink from 'js/components/global/SlideLink'
 	import SlidePreview from 'js/components/global/SlidePreview'
+	import emits_events from 'js/mixins/emits-events';
+	import feature_components from 'js/consts/events_map/feature_components.json';
+
 	export default {
 		name: 'QuizQuestion',
 		components: {
@@ -277,6 +287,7 @@
 			'wnl-slide-link': SlideLink,
 			'wnl-slide-preview': SlidePreview
 		},
+		mixins: [emits_events],
 		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
 		data() {
 			return {
@@ -378,6 +389,14 @@
 					}
 				}
 				return linkText || this.$t('quiz.annotations.slides.defaultLink')
+			},
+			onRelatedSlideUserEvent(payload) {
+				this.emitUserEvent({
+					value: this.question.id,
+					target: this.currentModalSlide.id,
+					feature_component: feature_components.related_slides.value,
+					...payload,
+				})
 			}
 		},
 		watch: {

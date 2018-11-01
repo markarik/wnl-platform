@@ -9,6 +9,7 @@
 			:testResults="testResults"
 			@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 			@endQuiz="$emit('endQuiz')"
+			@userEvent="proxyUserEvent"
 		/>
 		<div v-else>
 			<p class="test-builder-title">
@@ -130,12 +131,14 @@
 	import QuestionsTest from 'js/components/questions/QuestionsTest'
 
 	import {timeBaseOnQuestions} from 'js/services/testBuilder'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'QuestionsTestBuilder',
 		components: {
 			'wnl-questions-test': QuestionsTest,
 		},
+		mixins: [emits_events],
 		props: {
 			getReaction: {
 				default: () => {},

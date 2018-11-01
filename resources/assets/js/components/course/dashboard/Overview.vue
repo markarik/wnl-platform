@@ -1,9 +1,5 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
-		<!-- Sticky news -->
-		<!-- <div class="notification is-info">
-		</div> -->
-
 		<!-- Dashboard news -->
 		<wnl-dashboard-news/>
 

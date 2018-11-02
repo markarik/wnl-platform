@@ -254,11 +254,15 @@
 		data() {
 			return {
 				content: '',
-				ANSWERS_MAP
+				ANSWERS_MAP,
+				applicableSetsIds: []
 			}
 		},
 		computed: {
-			...mapGetters('flashcards', ['sets', 'getSetById']),
+			...mapGetters('flashcards', ['getSetById']),
+			sets() {
+				return this.applicableSetsIds.map(id => this.getSetById(id))
+			},
 			getUnsolvedForSet() {
 				return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'unsolved').length
 			},
@@ -294,6 +298,8 @@
 					setId: id, include: 'flashcards'
 				})
 			}))
+
+			this.applicableSetsIds = resources.map(({id}) => id);
 		}
 	}
 </script>

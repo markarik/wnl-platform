@@ -82,6 +82,7 @@
 			:isComplete="isComplete"
 			:isProcessing="testProcessing"
 			:plainList="true"
+			:hideCount="true"
 			@selectAnswer="onSelectAnswer"
 			@userEvent="onUserEvent"
 		/>

@@ -17,12 +17,12 @@ trait AddsSlides
 	protected function incrementOrderNumber($presentables)
 	{
 		foreach ($presentables as $presentable) {
-			$type = addslashes($presentable->type);
+			$type = addslashes($presentable->presentable_type);
 			DB::statement(implode(' ', [
 				"update presentables set order_number = (order_number + 1)",
 				"where order_number >= {$presentable->order_number}",
 				"and (presentable_type = '{$type}'",
-				"and presentable_id = {$presentable->id})",
+				"and presentable_id = {$presentable->presentable_id})",
 			]));
 		}
 	}

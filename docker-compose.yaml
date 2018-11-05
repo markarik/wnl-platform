@@ -77,6 +77,15 @@ services:
     ports:
       - "9663:9663"
 
+  sad:
+      container_name: sad
+      image: node:8.11.1-alpine
+      volumes:
+        - ${LOCAL_CODE_PATH}:/code
+      command: node /code/bethink/sad-server/server.js
+      ports:
+        - "1199:1199"
+
   rabbit:
     container_name: rabbit
     image: rabbitmq:3.7.6-management-alpine

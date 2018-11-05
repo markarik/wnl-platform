@@ -40,7 +40,7 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="sortingEnabled && howManyQuestions >= 0"/>
+			<wnl-qna-sorting v-if="sortingEnabled"/>
 			<div>
 				<div v-if="howManyQuestions > 0">
 					<wnl-qna-question v-for="question in questionsList"

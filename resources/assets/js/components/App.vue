@@ -154,9 +154,12 @@
 		watch: {
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
-				this.$trackUrlChange({
-					value: window.location.href
-				});
+				this.setupCurrentUser().then(() => {
+					this.$trackUrlChange({
+						value: window.location.href
+					})
+				}
+				);
 			},
 			'thickScrollbar' (newVal) {
 				if (newVal) {

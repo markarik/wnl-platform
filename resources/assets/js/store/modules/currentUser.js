@@ -93,7 +93,8 @@ const mutations = {
 // Actions
 const actions = {
 	setupCurrentUser({ commit, dispatch }) {
-		return Promise
+		if (!this.promise) {
+			this.promise = Promise
 			.all([
 				dispatch('fetchCurrentUserProfile'),
 				dispatch('fetchUserSettings'),
@@ -103,6 +104,9 @@ const actions = {
 				$wnl.logger.error(error)
 				commit(types.IS_LOADING, false)
 			})
+		}
+
+		return this.promise
 	},
 
 	fetchCurrentUserProfile({ commit }) {

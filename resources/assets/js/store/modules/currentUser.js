@@ -93,6 +93,7 @@ const mutations = {
 // Actions
 const actions = {
 	setupCurrentUser({ commit, dispatch }) {
+		// Make sure that setup happens only once
 		if (!this.promise) {
 			this.promise = Promise
 			.all([

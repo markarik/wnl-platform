@@ -54,7 +54,7 @@ const EventsTracker = {
 			user_id: store.getters.currentUserId
 		})
 
-		Vue.prototype.$trackUserEvent = (payload) => {
+		Vue.prototype.$trackUserEvent = async payload => {
 			const contextRoute = {};
 			const available_columns = [
 				'category_name',
@@ -73,6 +73,7 @@ const EventsTracker = {
 				contextRoute[column] = isNaN(param) ? param : Number(param);
 			});
 
+			await store.dispatch('setupCurrentUser')
 			socket.emit(EVENTS.USER_EVENT, {
 				...payload,
 				...getSharedEventContext(),
@@ -80,7 +81,8 @@ const EventsTracker = {
 			})
 		}
 
-		Vue.prototype.$trackUrlChange = (payload) => {
+		Vue.prototype.$trackUrlChange = async payload => {
+			await store.dispatch('setupCurrentUser')
 			socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
 				...payload,
 				...getSharedEventContext()

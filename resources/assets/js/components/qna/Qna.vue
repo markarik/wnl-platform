@@ -53,7 +53,7 @@
 						<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
 					</wnl-qna-question>
 				</div>
-				<div v-else>
+				<div class="qna-no-questions" v-else>
 					Ten filtr nie zawiera żadnych pytań.
 				</div>
 			</div>
@@ -119,6 +119,12 @@
 
 	.qna-new-question
 		margin: $margin-big 0
+
+	.qna-no-questions
+		background: $color-background-lighter-gray
+		border-bottom: $border-light-gray
+		padding: $margin-base
+
 </style>
 
 <script>

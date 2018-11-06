@@ -54,7 +54,11 @@
 								<span class="flashcards-list__item__buttons__button__text">Nie Wiem</span>
 							</a>
 						</div>
-						<div v-else>
+						<div class="flashcards-list__item__buttons flashcards-list__item__buttons--retake" v-else>
+							<span :class="['flashcards-list__item__buttons__button']" @click="onRetake(flashcard)">
+								<span class="icon"><i :class="['fa', 'fa-undo']"></i></span>
+								<span class="flashcards-list__item__buttons__button__text">Ponów</span>
+							</span>
 							<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
 								<span class="icon"><i :class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
 								<span class="flashcards-list__item__buttons__button__text">{{ANSWERS_MAP[flashcard.answer].text}}</span>
@@ -176,12 +180,16 @@
 					@media #{$media-query-tablet}
 						flex: 0 0 78px * 3
 
+					&--retake
+						flex: 0 0 78px * 2
+
 					&__button
 						opacity: 1
 						display: flex
 						flex-direction: column
 						align-items: center
 						margin: 0 $margin-small
+						cursor: pointer
 
 						@media #{$media-query-tablet}
 							flex-basis: 78px
@@ -221,10 +229,11 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters} from 'vuex';
+	import {mapActions, mapGetters, mapMutations} from 'vuex';
 	import {nextTick} from 	'vue'
 	import {get} from 'lodash';
 	import { scrollToElement } from 'js/utils/animations'
+	import * as mutationsTypes from "js/store/mutations-types";
 
 	const ANSWERS_MAP = {
 		easy: {
@@ -278,17 +287,26 @@
 		},
 		methods: {
 			...mapActions('flashcards', ['setFlashcardsSet', 'postAnswer']),
+			...mapMutations('flashcards', {
+				'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
+			}),
 			scrollToSet(setId) {
 				scrollToElement(document.getElementById(`set-${setId}`));
 			},
 			scrollTop() {
 				scrollToElement(document.getElementById('flashacardsSetHeader'));
 			},
+			onRetake(flashcard) {
+				this.updateFlashcard({
+					...flashcard,
+					answer: 'unsolved'
+				})
+			},
 			async submitAnswer(flashcard, answer) {
 				await this.postAnswer({
 					flashcard, answer
 				})
-			}
+			},
 		},
 		async mounted() {
 			const resources = get(this.screenData, 'meta.resources', []);

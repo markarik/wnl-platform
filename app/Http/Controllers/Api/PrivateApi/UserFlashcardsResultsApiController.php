@@ -51,10 +51,15 @@ class UserFlashcardsResultsApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-		$response = UserFlashcardsResults::where('user_id', $userId)
+		$response = UserFlashcardsResults
+			::where('user_id', $userId)
 			->whereIn('flashcard_id', $ids)
+			->orderBy('created_at', 'asc')
 			->get();
 
-		return $this->respondOk($response);
+		return $this->respondOk(
+			$response->groupBy('flashcard_id')->map(function($group) {
+			return $group->last();
+		}));
 	}
 }

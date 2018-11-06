@@ -17,7 +17,9 @@ const mutations = {
 	[mutationsTypes.FLASHCARDS_SET_FLASHCARDS_SET](state, payload) {
 		set(state.sets, payload.id, payload)
 	},
-	[mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD](state, {flashcards_sets: setId, ...updatedFlashcard}) {
+	[mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD](state, updatedFlashcard) {
+		const {flashcards_sets: setId} = updatedFlashcard
+
 		const updatedFlashcards = state.sets[setId].flashcards.map(flashcard => {
 			if (flashcard.id === updatedFlashcard.id) {
 				return updatedFlashcard
@@ -41,16 +43,10 @@ const actions = {
 				flashcards_ids: flashcardSet.flashcards
 			})
 
-			const serializedResponses = {}
-
-			userResponseData.forEach(({flashcard_id, answer}) => {
-				serializedResponses[flashcard_id] = answer
-			})
-
 			flashcardSet.flashcards = flashcardSet.flashcards.map(flashcardId => {
 				return {
 					...included.flashcards[flashcardId],
-					answer: serializedResponses[flashcardId] || 'unsolved'
+					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved')
 				}
 			})
 

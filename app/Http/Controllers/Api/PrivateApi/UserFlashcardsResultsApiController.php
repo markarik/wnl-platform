@@ -41,4 +41,20 @@ class UserFlashcardsResultsApiController extends ApiController
 
 		return $this->respondOk($result);
 	}
+
+	public function fetchMany(Request $request) {
+		$userId = $request->route('userId');
+		$ids = $request->get('flashcards_ids') ?? [];
+		$user = User::fetch($userId);
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
+		}
+
+		$response = UserFlashcardsResults::where('user_id', $userId)
+			->whereIn('flashcard_id', $ids)
+			->get();
+
+		return $this->respondOk($response);
+	}
 }

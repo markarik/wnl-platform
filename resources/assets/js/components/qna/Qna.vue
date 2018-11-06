@@ -40,16 +40,24 @@
 					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="sortingEnabled && howManyQuestions > 0"/>
-			<wnl-qna-question v-for="question in questionsList"
-				:key="question.id"
-				:questionId="question.id"
-				:readOnly="readOnly"
-				:reactionsDisabled="reactionsDisabled"
-				:config="config"
-			>
-				<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
-			</wnl-qna-question>
+			<wnl-qna-sorting v-if="sortingEnabled"/>
+			<div>
+				<div v-if="howManyQuestions > 0">
+					<wnl-qna-question v-for="question in questionsList"
+						:key="question.id"
+						:questionId="question.id"
+						:readOnly="readOnly"
+						:reactionsDisabled="reactionsDisabled"
+						:config="config"
+					>
+						<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
+					</wnl-qna-question>
+				</div>
+				<div class="qna-no-questions" v-else>
+					Ten filtr nie zawiera żadnych pytań.
+				</div>
+			</div>
+
 		</div>
 	</div>
 </template>
@@ -111,6 +119,12 @@
 
 	.qna-new-question
 		margin: $margin-big 0
+
+	.qna-no-questions
+		background: $color-background-lighter-gray
+		border-bottom: $border-light-gray
+		padding: $margin-base
+
 </style>
 
 <script>

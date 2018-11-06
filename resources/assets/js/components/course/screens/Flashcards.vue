@@ -32,6 +32,7 @@
 					<span>Bez odpowiedzi</span>
 				</div>
 			</div>
+			<span @click="onRetakeSet(set)">Powtórz zestaw</span>
 			<ol class="flashcards-set__list">
 				<li v-for="(flashcard, index) in set.flashcards" :key="flashcard.id" class="flashcards-list__item">
 					<span class="flashcards-list__item__index">{{index + 1}}</span>
@@ -55,8 +56,8 @@
 							</a>
 						</div>
 						<div class="flashcards-list__item__buttons flashcards-list__item__buttons--retake" v-else>
-							<span :class="['flashcards-list__item__buttons__button']" @click="onRetake(flashcard)">
-								<span class="icon"><i :class="['fa', 'fa-undo']"></i></span>
+							<span class="flashcards-list__item__buttons__button" @click="onRetakeFlashcard(flashcard)">
+								<span class="icon"><i class="fa fa-undo"></i></span>
 								<span class="flashcards-list__item__buttons__button__text">Ponów</span>
 							</span>
 							<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
@@ -296,11 +297,14 @@
 			scrollTop() {
 				scrollToElement(document.getElementById('flashacardsSetHeader'));
 			},
-			onRetake(flashcard) {
+			onRetakeFlashcard(flashcard) {
 				this.updateFlashcard({
 					...flashcard,
 					answer: 'unsolved'
 				})
+			},
+			onRetakeSet(set) {
+				set.flashcards.forEach(this.onRetakeFlashcard)
 			},
 			async submitAnswer(flashcard, answer) {
 				await this.postAnswer({

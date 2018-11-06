@@ -1,12 +1,12 @@
 <template>
-	<div class="flashcards content">
-		<div class="flashcards__title">
+	<div class="flashcards">
+		<div class="flashcards__title content">
 			<h2 class="flashcards__title__header" id="flashacardsSetHeader">Zestawy powtórkowe na dziś</h2>
 			<ul class="flashcards__title__list">
 				<li class="flashcards__title__list__item" v-for="set in sets" :key="set.id" @click="scrollToSet(set.id)">{{set.name}}</li>
 			</ul>
 		</div>
-		<div class="flashcards__description" v-html="screenData.content"/>
+		<div class="flashcards__description content" v-html="screenData.content"/>
 		<div class="flashcards-set" v-for="set in sets" :key="set.id">
 			<div class="flashcards-set__title" :name="set.name" :id="`set-${set.id}`">
 				<h3 class="flashcards-set__title__header">
@@ -32,9 +32,16 @@
 					<span>Bez odpowiedzi</span>
 				</div>
 			</div>
-			<span @click="onRetakeSet(set)">Powtórz zestaw</span>
+			<div @click="onRetakeSet(set)" class="flashcards-set__retake">
+				<span class="icon"><i class="fa fa-undo"></i></span>
+				ponów cały zestaw
+			</div>
 			<ol class="flashcards-set__list">
-				<li v-for="(flashcard, index) in set.flashcards" :key="flashcard.id" class="flashcards-list__item">
+				<li
+					v-for="(flashcard, index) in set.flashcards"
+					:key="flashcard.id"
+					:class="['flashcards-list__item', flashcard.answer !== 'unsolved' && 'flashcards-list__item--solved']"
+				>
 					<span class="flashcards-list__item__index">{{index + 1}}</span>
 					<div class="flashcards-list__item__container">
 						<p class="flashcards-list__item__text">{{flashcard.content}}</p>
@@ -55,10 +62,13 @@
 								<span class="flashcards-list__item__buttons__button__text">Nie Wiem</span>
 							</a>
 						</div>
-						<div class="flashcards-list__item__buttons flashcards-list__item__buttons--retake" v-else>
-							<span class="flashcards-list__item__buttons__button" @click="onRetakeFlashcard(flashcard)">
+						<div
+							class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
+							@click="onRetakeFlashcard(flashcard)"
+							v-else
+						>
+							<span class="flashcards-list__item__buttons__button">
 								<span class="icon"><i class="fa fa-undo"></i></span>
-								<span class="flashcards-list__item__buttons__button__text">Ponów</span>
 							</span>
 							<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
 								<span class="icon"><i :class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
@@ -77,6 +87,8 @@
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	$buttonWidth: 78px
 
 	.text--bold
 		font-weight: 600
@@ -113,6 +125,20 @@
 			margin-top: $margin-big
 
 		.flashcards-set
+			&__retake
+				display: flex
+				align-items: center
+				justify-content: flex-end
+				text-transform: uppercase
+				font-weight: 600
+				margin: $margin-huge $margin-small $margin-small 0
+				font-size: 12px
+				cursor: pointer
+
+				.fa-undo
+					margin-right: $margin-base
+					font-size: 16px
+
 			&__title
 				text-align: center
 				margin-top: $margin-big
@@ -152,8 +178,13 @@
 				display: flex
 				align-items: center
 
+				&--solved
+					color: $color-gray-dimmed
+
+					.flashcards-list__item__container
+						background: $color-background-lightest-gray
+
 				&__index
-					color: $color-ocean-blue
 					font-weight: $font-weight-bold
 					text-align: right
 
@@ -172,6 +203,7 @@
 
 				&__text
 					flex-grow: 1
+					color: inherit
 
 				&__buttons
 					text-align: right
@@ -179,10 +211,14 @@
 					align-items: center
 
 					@media #{$media-query-tablet}
-						flex: 0 0 78px * 3
+						flex: 0 0 $buttonWidth * 3
 
 					&--retake
-						flex: 0 0 78px * 2
+						flex: 0 0 $buttonWidth * 2
+
+						.flashcards-list__item__buttons__button .icon .fa-undo
+							font-size: 16px
+
 
 					&__button
 						opacity: 1

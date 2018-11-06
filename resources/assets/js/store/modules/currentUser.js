@@ -1,7 +1,8 @@
 import * as types from '../mutations-types'
 import { getApiUrl } from 'js/utils/env'
-import { getCurrentUser, getUserSettings, getDefaultSettings, setUserSettings } from 'js/services/user';
 import { set } from 'vue'
+
+let getCurrentUserPromise;
 
 // Initial state
 const state = {
@@ -30,13 +31,14 @@ const state = {
 		},
 		accountSuspended: false
 	},
-	settings: getDefaultSettings(),
+	settings: $wnl.defaultSettings,
 }
 
 // Getters
 const getters = {
 	currentUser: state => state.profile,
 	currentUserId: state => state.profile.user_id,
+	currentUserProfileId: state => state.profile.id,
 	currentUserAvatar: state => state.profile.avatar,
 	currentUserEmail: state => state.profile.public_email,
 	currentUserName: state => state.profile.first_name,
@@ -94,8 +96,8 @@ const mutations = {
 const actions = {
 	setupCurrentUser({ commit, dispatch }) {
 		// Make sure that setup happens only once
-		if (!this.promise) {
-			this.promise = Promise
+		if (!getCurrentUserPromise) {
+			getCurrentUserPromise = Promise
 			.all([
 				dispatch('fetchCurrentUserProfile'),
 				dispatch('fetchUserSettings'),
@@ -107,26 +109,43 @@ const actions = {
 			})
 		}
 
-		return this.promise
+		return getCurrentUserPromise
 	},
 
-	fetchCurrentUserProfile({ commit }) {
-		return new Promise((resolve, reject) => {
-			getCurrentUser().then((user) => {
-				if (!user.user_id) {
-					$wnl.logger.error('current user returned user with ID 0', {
-						profile: user
-					})
-					return reject(new Error('current user returned user with ID 0'));
-				}
-				commit(types.USERS_SETUP_CURRENT, user)
-				resolve()
+	async fetchCurrentUserProfile({ commit }) {
+		let userResponse, subscriptionResponse;
+
+		try {
+			[userResponse, subscriptionResponse] = await Promise.all([
+				axios.get(getApiUrl('users/current/profile?include=roles')),
+				axios.get(getApiUrl('user_subscription/current'))
+			])
+		} catch (error) {
+			$wnl.logger.error(error)
+			throw error;
+		}
+
+		const {included, ...profile} = userResponse.data;
+		if (!included) {
+			profile.roles = [];
+		} else {
+			const roles = included.roles || {}
+			profile.roles = Object.values(roles)
+				.map(role => role.name)
+		}
+
+		const currentUser = {
+			...profile,
+			subscription: subscriptionResponse.data
+		}
+
+		if (!currentUser.user_id) {
+			$wnl.logger.error('current user returned user with ID 0', {
+				profile: currentUser
 			})
-			.catch((error) => {
-				$wnl.logger.error(error)
-				reject(error)
-			})
-		})
+			throw new Error('current user returned user with ID 0');
+		}
+		commit(types.USERS_SETUP_CURRENT, currentUser)
 	},
 
 	fetchCurrentUserStats({commit, getters}) {
@@ -143,17 +162,14 @@ const actions = {
 		})
 	},
 
-	fetchUserSettings({ commit }) {
-		return new Promise((resolve, reject) => {
-			getUserSettings().then((response) => {
-				commit(types.USERS_SETUP_SETTINGS, response.data)
-				resolve()
-			})
-			.catch((error) => {
-				$wnl.logger.error(error)
-				reject()
-			})
-		})
+	async fetchUserSettings({ commit }) {
+		try {
+			const { data } = await axios.get(getApiUrl('users/current/settings'));
+			commit(types.USERS_SETUP_SETTINGS, data)
+		} catch (error) {
+			$wnl.logger.error(error)
+			throw error
+		}
 	},
 
 	async fetchUserPersonalData({ commit }) {
@@ -199,7 +215,7 @@ const actions = {
 	},
 
 	syncSettings({ commit, getters }) {
-		setUserSettings(getters.getAllSettings)
+		return axios.put(getApiUrl('users/current/settings'), getters.getAllSettings)
 	},
 
 	deleteAccount({getters}, payload) {

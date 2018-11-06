@@ -33,14 +33,14 @@ const getters = {
 	wasCourseStarted: (state, getters) => (courseId) => {
 		return !_.isEmpty(getters.getCourse(courseId).lessons)
 	},
-	getSavedLesson: (state, getters) => (courseId, lessonId) => {
+	getSavedLesson: (state, getters) => (courseId, lessonId, profileId) => {
 		const storeValue = _.get(state.courses[courseId], `lessons[${lessonId}]`);
 
 		if (storeValue) {
 			return Promise.resolve(state.courses[courseId].lessons[lessonId]);
 		}
 
-		return progressStore.getLessonProgress({courseId, lessonId});
+		return progressStore.getLessonProgress({courseId, lessonId, profileId});
 	},
 	wasLessonStarted: (state) => (courseId, lessonId) => {
 		return state.courses.hasOwnProperty(courseId) &&
@@ -88,35 +88,26 @@ const mutations = {
 		};
 		set(state.courses[payload.courseId], 'lessons', updatedState)
 	},
-	[types.PROGRESS_START_LESSON] (state, payload) {
-		const courseState = state.courses[payload.courseId]
-		const updatedLessonState = progressStore.startLesson(courseState, payload);
-
+	[types.PROGRESS_START_LESSON] (state, { payload, updatedLessonState }) {
 		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedLessonState)
 	},
-	[types.PROGRESS_COMPLETE_LESSON] (state, payload) {
-		const courseState = state.courses[payload.courseId];
-		const updatedLessonState = progressStore.completeLesson(courseState, payload);
-
+	[types.PROGRESS_COMPLETE_LESSON] (state, { payload, updatedLessonState }) {
 		set(state.courses[payload.courseId].lessons, payload.lessonId, updatedLessonState)
 	},
-	[types.PROGRESS_COMPLETE_SECTION] (state, payload) {
+	[types.PROGRESS_COMPLETE_SECTION] (state, { updatedState, payload }) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		const updatedState = progressStore.completeSection(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
 		set(lessonState, 'route', payload.route);
 	},
-	[types.PROGRESS_COMPLETE_SUBSECTION] (state, payload) {
+	[types.PROGRESS_COMPLETE_SUBSECTION] (state, { updatedState, payload }) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		const updatedState = progressStore.completeSubsection(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
 		set(lessonState, 'route', payload.route);
 	},
-	[types.PROGRESS_COMPLETE_SCREEN] (state, payload) {
+	[types.PROGRESS_COMPLETE_SCREEN] (state, { updatedState, payload }) {
 		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-		const updatedState = progressStore.completeScreen(lessonState, payload);
 
 		set(lessonState, 'screens', updatedState.screens);
 		set(lessonState, 'route', payload.route);
@@ -125,52 +116,96 @@ const mutations = {
 
 // Actions
 const actions = {
-	setupCourse({commit}, courseId = 1) {
-		return new Promise((resolve) => {
-			progressStore.getCourseProgress({courseId})
-				.then(data => {
-					commit(types.PROGRESS_SETUP_COURSE, {
-						courseId: courseId,
-						progressData: data
-					})
-					resolve()
-				})
-				.catch(exception => $wnl.logger.capture(exception))
-		})
-	},
-	startLesson({commit, getters}, payload) {
-		return progressStore.getLessonProgress(payload)
-			.then(data => {
-				commit(types.PROGRESS_SETUP_LESSON, {
-					courseId: payload.courseId,
-					lessonId: payload.lessonId,
-					progressData: data
-				});
-
-				if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
-					$wnl.logger.debug(`Starting lesson ${payload.lessonId}`, payload)
-					commit(types.PROGRESS_START_LESSON, payload)
-
-					return true;
-				}
-
-				return false;
+	async setupCourse({commit, rootGetters, dispatch}, courseId = 1) {
+		await dispatch('setupCurrentUser', {}, { root: true });
+		try {
+			const data = await progressStore.getCourseProgress({
+				courseId,
+				profileId: rootGetters.currentUserProfileId,
 			});
-	},
-	completeLesson({commit, getters}, payload) {
-		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {
-			$wnl.logger.debug(`Completing lesson ${payload.lessonId}`, payload)
-			commit(types.PROGRESS_COMPLETE_LESSON, payload)
+			commit(types.PROGRESS_SETUP_COURSE, {
+				courseId: courseId,
+				progressData: data,
+			});
+		} catch (error) {
+			$wnl.logger.capture(error);
 		}
 	},
-	completeScreen({commit}, payload) {
-		commit(types.PROGRESS_COMPLETE_SCREEN, payload);
+	async startLesson({commit, getters, dispatch, rootGetters}, payload) {
+		await dispatch('setupCurrentUser', {}, { root: true });
+		const data = await progressStore.getLessonProgress({
+			...payload,
+			profileId: rootGetters.currentUserProfileId,
+		});
+		commit(types.PROGRESS_SETUP_LESSON, {
+			courseId: payload.courseId,
+			lessonId: payload.lessonId,
+			progressData: data
+		});
+
+		if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
+			$wnl.logger.debug(`Starting lesson ${payload.lessonId}`, payload)
+
+			await dispatch('setupCurrentUser', {}, {root: true});
+
+			const courseState = state.courses[payload.courseId]
+			const updatedLessonState = progressStore.startLesson(courseState, {
+				...payload,
+				profileId: rootGetters.currentUserProfileId,
+			});
+			commit(types.PROGRESS_START_LESSON, { payload, updatedLessonState })
+
+			return true;
+		}
+
+		return false;
 	},
-	completeSection({commit}, payload) {
-		commit(types.PROGRESS_COMPLETE_SECTION, payload)
+	async completeLesson({commit, getters, rootGetters, dispatch}, payload) {
+		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {
+			$wnl.logger.debug(`Completing lesson ${payload.lessonId}`, payload)
+
+			await dispatch('setupCurrentUser', {}, {root: true});
+
+			const courseState = state.courses[payload.courseId];
+			const updatedLessonState = progressStore.completeLesson(courseState, {
+				...payload,
+				profileId: rootGetters.currentUserProfileId,
+			});
+
+			commit(types.PROGRESS_COMPLETE_LESSON, {payload, updatedLessonState})
+		}
 	},
-	completeSubsection({commit}, payload) {
-		commit(types.PROGRESS_COMPLETE_SUBSECTION, payload)
+	async completeScreen({commit, rootGetters, dispatch}, payload) {
+		await dispatch('setupCurrentUser', {}, {root: true});
+
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+		const updatedState = progressStore.completeScreen(lessonState, {
+			...payload,
+			profileId: rootGetters.currentUserProfileId,
+		});
+
+		commit(types.PROGRESS_COMPLETE_SCREEN, {updatedState, payload});
+	},
+	async completeSection({commit, rootGetters, dispatch}, payload) {
+		await dispatch('setupCurrentUser', {}, {root: true});
+
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+
+		const updatedState = progressStore.completeSection(lessonState, {
+			...payload,
+			profileId: rootGetters.currentUserProfileId,
+		});
+
+		commit(types.PROGRESS_COMPLETE_SECTION, {updatedState, payload})
+	},
+	async completeSubsection({commit, rootGetters, dispatch}, payload) {
+		await dispatch('setupCurrentUser', {}, {root: true});
+
+		const updatedState = progressStore.completeSubsection(lessonState, {
+			...payload,
+			profileId: rootGetters.currentUserProfileId,
+		});
+		commit(types.PROGRESS_COMPLETE_SUBSECTION, {updatedState, payload})
 	},
 	deleteProgress({rootGetters}, payload) {
 		const userId = rootGetters.currentUserId

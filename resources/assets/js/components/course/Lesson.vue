@@ -102,6 +102,9 @@
 				screenProgress: 'getScreen',
 				lessonProgress: 'getLesson'
 			}),
+			...mapGetters({
+				currentUserProfileId: 'currentUserProfileId',
+			}),
 			breadcrumb() {
 				return {
 					level: 1,
@@ -186,6 +189,7 @@
 			...mapActions([
 				'updateLessonNav',
 			]),
+			...mapActions(['setupCurrentUser']),
 			...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
 			onUserEvent(payload) {
 				this.$trackUserEvent({
@@ -207,22 +211,24 @@
 				const query = this.$route.query || {}
 
 				if (!this.screenId) {
-					this.getSavedLesson(this.courseId, this.lessonId)
-						.then(({route, status}) => {
-							if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
-								const params = {
-									courseId: this.courseId,
-									lessonId: this.lessonId,
-									screenId: this.firstScreenId,
-								};
-								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
-									params.slide = 1;
+					this.setupCurrentUser().then(() => {
+						this.getSavedLesson(this.courseId, this.lessonId, this.currentUserProfileId)
+							.then(({route, status}) => {
+								if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
+									const params = {
+										courseId: this.courseId,
+										lessonId: this.lessonId,
+										screenId: this.firstScreenId,
+									};
+									if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
+										params.slide = 1;
+									}
+									this.$router.replace({name: resource('screens'), params, query})
+								} else if (route && route.hasOwnProperty('name')) {
+									this.$router.replace({...route, query})
 								}
-								this.$router.replace({name: resource('screens'), params, query})
-							} else if (route && route.hasOwnProperty('name')) {
-								this.$router.replace({...route, query})
-							}
-						});
+							});
+					});
 				} else if (this.screenId && !this.slide) {
 					const params = {
 						courseId: this.courseId,

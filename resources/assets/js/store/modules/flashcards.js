@@ -32,14 +32,14 @@ const mutations = {
 }
 
 const actions = {
-	async setFlashcardsSet({commit, rootGetters}, {setId, ...requestParams}) {
+	async setFlashcardsSet({commit}, {setId, ...requestParams}) {
 		try {
 			const {data} = await axios.get(getApiUrl(`flashcards_sets/${setId}`), {
 				params: requestParams
 			})
 			const {included, ...flashcardSet} = data
 
-			const {data: userResponseData} = await axios.post(getApiUrl(`user_flashcards_results/${rootGetters.currentUserId}`), {
+			const {data: userResponseData} = await axios.post(getApiUrl('user_flashcards_results/current'), {
 				flashcards_ids: flashcardSet.flashcards
 			})
 
@@ -51,17 +51,14 @@ const actions = {
 			})
 
 			commit(mutationsTypes.FLASHCARDS_SET_FLASHCARDS_SET, flashcardSet)
-
-			return data
 		} catch (e) {
 			$wnl.logger.error(e)
-			return {}
 		}
 	},
-	async postAnswer({rootGetters, commit}, {answer, flashcard}) {
+	async postAnswer({commit}, {answer, flashcard}) {
 		try {
 			await axios.post(
-				getApiUrl(`user_flashcards_results/${rootGetters.currentUserId}/${flashcard.id}`),
+				getApiUrl(`user_flashcards_results/current/${flashcard.id}`),
 				{ answer }
 			)
 			commit(mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD, {

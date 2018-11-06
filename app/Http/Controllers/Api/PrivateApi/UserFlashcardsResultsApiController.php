@@ -34,7 +34,7 @@ class UserFlashcardsResultsApiController extends ApiController
 		}
 
 		$result = UserFlashcardsResults::create([
-			'user_id' => $userId,
+			'user_id' => $user->id,
 			'flashcard_id' => $flashcardId,
 			'answer' => $answer
 		]);
@@ -52,7 +52,7 @@ class UserFlashcardsResultsApiController extends ApiController
 		}
 
 		$response = UserFlashcardsResults
-			::where('user_id', $userId)
+			::where('user_id', $user->id)
 			->whereIn('flashcard_id', $ids)
 			->orderBy('created_at', 'asc')
 			->get();

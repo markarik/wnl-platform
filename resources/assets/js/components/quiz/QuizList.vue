@@ -6,7 +6,7 @@
 
 		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<div class="question" v-for="(question, index) in questions" :key="index">
-			<span class="question-number">
+			<span v-if="!hideCount" class="question-number">
 				{{index+1}}/{{questions.length}}
 			</span>
 			<wnl-quiz-question
@@ -62,7 +62,7 @@
 			'wnl-quiz-question': QuizQuestion,
 		},
 		mixins: [emits_events],
-		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz'],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz', 'hideCount'],
 		data() {
 			return {
 				hasErrors: false,

@@ -94,7 +94,7 @@ class SlidesApiController extends ApiController
 		$slide->tags()->attach($screen->tags);
 
 		if (!App::environment('dev')) {
-			\Artisan::queue('screens:countSlides');
+			\Artisan::call('screens:countSlides');
 			dispatch(new SearchImportAll('App\\Models\\Slide'));
 		}
 
@@ -132,6 +132,8 @@ class SlidesApiController extends ApiController
 			return $presentable->presentable_type::find($presentable->presentable_id);
 		});
 
+		$this->slideCacheForget($slide);
+
 		// Detach from each presentable
 		$this->detachSlide($slide, $presentablesInstances);
 
@@ -147,10 +149,9 @@ class SlidesApiController extends ApiController
 
 		if (!App::environment('dev')) {
 			dispatch(new SearchImportAll('App\\Models\\Slide'));
-			\Artisan::queue('screens:countSlides');
+			\Artisan::call('screens:countSlides');
 		}
 
-		$this->slideCacheForget($slide);
 		foreach ($presentablesInstances as $presentable) {
 			event(new SlideDetached($slide, $presentable));
 		}

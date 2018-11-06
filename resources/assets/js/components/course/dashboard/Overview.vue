@@ -1,9 +1,5 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
-		<!-- Sticky news -->
-		<!-- <div class="notification is-info">
-		</div> -->
-
 		<!-- Dashboard news -->
 		<wnl-dashboard-news/>
 
@@ -24,13 +20,13 @@
 		<div class="overview-progress box">
 			<wnl-next-lesson/>
 			<wnl-your-progress/>
-			<div class="has-text-centered margin vertical">
+			<!-- <div class="has-text-centered margin vertical">
 				<a
 					:href="signUpLink"
 					target="_blank"
 					class="button is-small is-success">Zapisz się
 				</a>
-			</div>
+			</div> -->
 		</div>
 
 		<div class="active-users">

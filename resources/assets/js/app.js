@@ -93,4 +93,6 @@ $.ajaxSetup({
 		$wnl.logger.error(error)
 	}
 });
-require('./bootstrap');
+
+// this has to be at the very bottom to make sure
+require('./echo');

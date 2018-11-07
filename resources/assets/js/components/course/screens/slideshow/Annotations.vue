@@ -78,7 +78,6 @@
 		},
 		methods: {
 			onCommentsUpdated(comments) {
-				console.log('on comments updated.....')
 				this.$emit('annotationsUpdated', comments)
 			},
 		}

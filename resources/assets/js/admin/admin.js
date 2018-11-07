@@ -1,4 +1,3 @@
-require('js/bootstrap');
 import Vue from 'vue'
 
 // Sync vue-router and vuex
@@ -43,3 +42,5 @@ const admin = new Vue({
 	store,
 	...Admin
 }).$mount('#admin')
+
+require('js/echo');

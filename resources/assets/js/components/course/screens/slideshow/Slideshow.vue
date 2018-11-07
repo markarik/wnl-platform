@@ -657,7 +657,6 @@
 				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)
 			},
 			isLoadingComments(isLoadingComments) {
-				console.log('loading comments...', this.isLoadingComments)
 				if (!isLoadingComments) {
 					this.onAnnotationsUpdated(this.comments({
 						resource: 'slides',

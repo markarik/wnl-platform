@@ -201,6 +201,8 @@ const actions = {
 	async completeSubsection({commit, rootGetters, dispatch}, payload) {
 		await dispatch('setupCurrentUser', {}, {root: true});
 
+		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+
 		const updatedState = progressStore.completeSubsection(lessonState, {
 			...payload,
 			profileId: rootGetters.currentUserProfileId,

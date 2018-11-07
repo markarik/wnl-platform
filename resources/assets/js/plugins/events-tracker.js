@@ -47,12 +47,15 @@ const EventsTracker = {
 			socket.on('connect_error', onSocketConnectionError)
 		})
 
-		const eventsQueue = createEventsQueue()
+		const eventsQueue = createEventsQueue();
 
-		const getSharedEventContext = () => ({
-			client_time: new Date().getTime() / 1000,
-			user_id: store.getters.currentUserId
-		})
+		const getSharedEventContext = async () => {
+			await store.dispatch('setupCurrentUser');
+			return {
+				client_time: new Date().getTime() / 1000,
+				user_id: store.getters.currentUserId,
+			}
+		};
 
 		Vue.prototype.$trackUserEvent = async payload => {
 			const contextRoute = {};
@@ -73,19 +76,17 @@ const EventsTracker = {
 				contextRoute[column] = isNaN(param) ? param : Number(param);
 			});
 
-			await store.dispatch('setupCurrentUser')
 			socket.emit(EVENTS.USER_EVENT, {
 				...payload,
-				...getSharedEventContext(),
+				...(await getSharedEventContext()),
 				context_route: contextRoute,
 			})
-		}
+		};
 
 		Vue.prototype.$trackUrlChange = async payload => {
-			await store.dispatch('setupCurrentUser')
 			socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
 				...payload,
-				...getSharedEventContext()
+				...(await getSharedEventContext()),
 			});
 		}
 	}

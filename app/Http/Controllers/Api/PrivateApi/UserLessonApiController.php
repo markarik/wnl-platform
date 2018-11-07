@@ -68,7 +68,7 @@ class UserLessonApiController extends ApiController
 
 		return $this->respondOk([
 			'lessons'        => $controller->transform($lessons),
-			'end_date'       => $plan->last()['start_date'] ? $plan->last()['start_date']->timestamp : Carbon::now()->timestamp,
+			'end_date'       => $plan->last()['start_date']->timestamp ?? Carbon::now()->timestamp,
 		]);
 	}
 

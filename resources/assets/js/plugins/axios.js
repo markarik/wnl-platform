@@ -1,5 +1,6 @@
 import * as types from 'js/store/mutations-types'
 import { get } from 'lodash';
+import {envValue as env} from 'js/utils/env'
 
 export default (Vue, {store, router}) => {
 	/**

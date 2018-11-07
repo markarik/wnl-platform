@@ -1,4 +1,3 @@
-require('./bootstrap');
 import Vue from "vue";
 import {sync} from "vuex-router-sync";
 import store from "js/store/store";
@@ -94,3 +93,4 @@ $.ajaxSetup({
 		$wnl.logger.error(error)
 	}
 });
+require('./bootstrap');

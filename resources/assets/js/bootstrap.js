@@ -1,3 +1,5 @@
+import {get} from "lodash";
+
 window.io = require('socket.io-client');
 const Echo = require('laravel-echo');
 import {envValue as env} from 'js/utils/env'

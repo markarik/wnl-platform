@@ -165,8 +165,8 @@
 						display: flex
 						flex-direction: row-reverse
 						justify-content: space-between
-						margin-bottom: $margin-small
-						margin-top: $margin-small
+						padding-bottom: $margin-small
+						padding-top: $margin-small
 						min-height: 35px
 						&.isEven
 							background-color: $color-background-lightest-gray

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Filters\Task;
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
+use App\Models\Role;
 use App\Models\Task;
 use App\Models\UserProfile;
 use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
@@ -21,7 +22,7 @@ class AssigneeFilter extends ApiFilter
 
 	public function count($builder) {
         $profiles = UserProfile::whereHas('roles', function($query) {
-			$query->whereIn('roles.name', ['admin', 'moderator']);
+			$query->whereIn('roles.name', [Role::ROLE_ADMIN, Role::ROLE_MODERATOR]);
 		})->get();
 
 		$resource = new Collection($profiles, new UserProfileTransformer, 'user_profiles');

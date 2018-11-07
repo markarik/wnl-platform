@@ -12,15 +12,15 @@
 			</div>
 		</div>
 		<wnl-comments-list
-		v-if="currentSlideId > 0 && !isLoadingComments"
-		module="slideshow"
-		urlParam="slide"
-		commentableResource="slides"
-		isUnique="true"
-		:commentableId="currentSlideId"
-		@commentsHidden="$emit('commentsHidden')"
-		@commentsUpdated="onCommentsUpdated"
-		:currentSlideId="currentSlideId"
+			v-if="currentSlideId > 0 && !isLoadingComments"
+			module="slideshow"
+			urlParam="slide"
+			commentableResource="slides"
+			isUnique="true"
+			:commentableId="currentSlideId"
+			:currentSlideId="currentSlideId"
+			@commentsHidden="$emit('commentsHidden')"
+			@commentsUpdated="onCommentsUpdated"
 		>
 		<wnl-edit-slide-button
 			:currentSlideId="Number(currentSlideId)"
@@ -78,6 +78,7 @@
 		},
 		methods: {
 			onCommentsUpdated(comments) {
+				console.log('on comments updated.....')
 				this.$emit('annotationsUpdated', comments)
 			},
 		}

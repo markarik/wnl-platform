@@ -218,7 +218,8 @@
 			} else {
 				this.testQuestionsCount = this.sizesToChoose[0]
 			}
-
+		},
+		created() {
 			if (this.presetOptions.hasOwnProperty('time')) {
 				this.time = this.presetOptions.time
 			}

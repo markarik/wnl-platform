@@ -118,7 +118,7 @@ const startLesson = (courseState, payload) => {
 const getCourseProgress = async ({courseId, profileId}) => {
     const { data: { lessons } = {} } = await axios.get(getApiUrl(`users/${profileId}/state/course/${courseId}`));
 
-    return lessons;
+    return { lessons };
 };
 
 const getLessonProgress = async ({courseId, lessonId, profileId}) => {

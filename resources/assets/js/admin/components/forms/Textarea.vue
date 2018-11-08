@@ -5,8 +5,7 @@
 			<slot></slot>
 		</label>
 
-		<textarea :type="type"
-				  class="input is-medium"
+		<textarea class="input is-medium"
 				  :name="name"
 				  :value="form[name]"
 				  @input="$emit('input', $event.target.value)"
@@ -25,6 +24,6 @@
 <script>
 	export default {
 		name: 'wnl-form-textarea',
-		props: ['type', 'name', 'form'],
+		props: ['name', 'form'],
 	}
 </script>

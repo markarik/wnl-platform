@@ -29,6 +29,13 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'quizes' }">Edytuj zestaw pytań</router-link></li>
 		</ul>
+
+		<p class="menu-label">
+			Powtórki
+		</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'flashcards' }">Edycja powtórki</router-link></li>
+		</ul>
 	</aside>
 </template>
 

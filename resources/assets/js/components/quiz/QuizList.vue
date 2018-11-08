@@ -7,7 +7,9 @@
 		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<div class="question" v-for="(question, index) in questions" :key="index">
 			<span v-if="!hideCount" class="question-number">
-				{{index+1}}/{{questions.length}}
+				<slot name="question-number" :index="index">
+					{{index+1}}/{{questions.length}}
+				</slot>
 			</span>
 			<wnl-quiz-question
 				:module="module"

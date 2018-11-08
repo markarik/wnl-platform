@@ -68,8 +68,7 @@ class UserLessonApiController extends ApiController
 
 		return $this->respondOk([
 			'lessons'        => $controller->transform($lessons),
-			'end_date'       => $plan->last()['start_date']->timestamp,
-			'end_date_human' => $plan->last()['start_date'],
+			'end_date'       => $plan->last()['start_date']->timestamp ?? Carbon::now()->timestamp,
 		]);
 	}
 
@@ -84,10 +83,14 @@ class UserLessonApiController extends ApiController
 			if (empty($lesson['startDate'])) {
 				return $this->respondUnprocessableEntity();
 			}
-			DB::table('user_lesson')
-				->where('user_id', $userId)
-				->where('lesson_id', $lesson['lessonId'])
-				->update(['start_date' => Carbon::parse($lesson['startDate'])]);
+
+			UserLesson::updateOrCreate(
+				[
+					'user_id' => $userId,
+					'lesson_id' => $lesson['lessonId']
+				],
+				['start_date' => Carbon::parse($lesson['startDate'])]
+			);
 		}
 
 		\Cache::forget(EditionsApiController::key($userId));

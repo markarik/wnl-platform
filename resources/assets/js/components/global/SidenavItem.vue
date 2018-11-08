@@ -115,8 +115,6 @@
 </style>
 
 <script>
-	import progressStore from '../../services/progressStore';
-
 	export default {
 		name: 'SidenavItem',
 		props: ['item', 'onClick', 'hasSubitems', 'isOpen'],

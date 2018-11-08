@@ -89,7 +89,7 @@ class UserNotificationsGate implements ShouldQueue
 	public function notifyModerators($event)
 	{
 		$actor = User::find($event->data['actors']['id']);
-		if ($actor->hasRole('moderator') || $actor->hasRole('admin')) {
+		if ($actor->isModerator() || $actor->isAdmin()) {
 			return false;
 		}
 

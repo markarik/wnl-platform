@@ -248,42 +248,43 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setupQuestions({commit, rootGetters, getters, state, dispatch}, resource) {
-		commit(types.QUIZ_IS_LOADED, false)
+	async setupQuestions({commit, rootGetters, getters, state, dispatch}, resource) {
+        commit(types.QUIZ_IS_LOADED, false)
 
-		Promise.all([
-			quizStore.getQuizProgress(resource.id, rootGetters.currentUserSlug),
-			fetchQuizSet(resource.id),
-			fetchQuizSetStats(resource.id)
-		]).then(([storedState, response, quizStats]) => {
-			const {included, ...quizQuestions} = response.data,
-				quizQuestionsOldWay = {};
+        await dispatch('setupCurrentUser', {}, { root: true });
+        Promise.all([
+            quizStore.getQuizProgress(resource.id, rootGetters.currentUserId),
+            fetchQuizSet(resource.id),
+            fetchQuizSetStats(resource.id)
+        ]).then(([storedState, response, quizStats]) => {
+            const {included, ...quizQuestions} = response.data,
+                quizQuestionsOldWay = {};
 
-			Object.values(quizQuestions).forEach((quizQuestion) => {
-				quizQuestionsOldWay[quizQuestion.id] = quizQuestion
-			})
+            Object.values(quizQuestions).forEach((quizQuestion) => {
+                quizQuestionsOldWay[quizQuestion.id] = quizQuestion
+            })
 
-			const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
-				len = quizQuestionsIds;
+            const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
+                len = quizQuestionsIds;
 
-			included.comments && dispatch('comments/setComments', {...included.comments}, {root:true})
-			commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay})
+            included.comments && dispatch('comments/setComments', {...included.comments}, {root: true})
+            commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay})
 
-			if (!_.isEmpty(storedState)) {
-				commit(types.QUIZ_RESTORE_STATE, storedState)
-			} else {
-				commit(types.QUIZ_SET_QUESTIONS, {
-					setId: resource.id,
-					setName: '',
-					len,
-					questionsIds: quizQuestionsIds,
-				})
-			}
-			commit(types.QUIZ_TOGGLE_PROCESSING, false)
-			commit(types.QUIZ_IS_LOADED, true)
-			commit(types.QUIZ_SET_STATS, quizStats.data)
-		});
-	},
+            if (!_.isEmpty(storedState)) {
+                commit(types.QUIZ_RESTORE_STATE, storedState)
+            } else {
+                commit(types.QUIZ_SET_QUESTIONS, {
+                    setId: resource.id,
+                    setName: '',
+                    len,
+                    questionsIds: quizQuestionsIds,
+                })
+            }
+            commit(types.QUIZ_TOGGLE_PROCESSING, false)
+            commit(types.QUIZ_IS_LOADED, true)
+            commit(types.QUIZ_SET_STATS, quizStats.data)
+        });
+    },
 
 	fetchQuestionsCollectionByTagName({commit, dispatch}, {tagName, ids, page}) {
 		commit(types.QUIZ_IS_LOADED, false)
@@ -435,7 +436,7 @@ const actions = {
 	},
 
 	saveQuiz({state, rootGetters}, recordedAnswers){
-		quizStore.saveQuizProgress(state.setId, state, recordedAnswers);
+		quizStore.saveQuizProgress(rootGetters.currentUserId, state, recordedAnswers);
 	},
 
 	autoResolve({state, commit}) {

@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from 'js/store/store'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import {createSandbox} from 'vue-kindergarten';
-import {getCurrentUser} from 'js/services/user';
 import {getApiUrl} from 'js/utils/env'
 
 Vue.use(Router)
@@ -37,8 +37,8 @@ let routes = [
 					}
 				],
 				beforeEnter: (to, from, next) => {
-					getCurrentUser().then((currentUser) => {
-						const sandbox = createSandbox(currentUser, {
+					store.dispatch('setupCurrentUser').then(() => {
+						const sandbox = createSandbox(store.getters.currentUser, {
 							perimeters: [currentEditionParticipant],
 						});
 
@@ -46,7 +46,7 @@ let routes = [
 							return next('/');
 						}
 						return next();
-					})
+					});
 				},
 			}
 		]
@@ -128,8 +128,8 @@ let routes = [
 			},
 		],
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then((currentUser) => {
-				const sandbox = createSandbox(currentUser, {
+			store.dispatch('setupCurrentUser').then(() => {
+				const sandbox = createSandbox(store.getters.currentUser, {
 					perimeters: [currentEditionParticipant],
 				});
 
@@ -137,7 +137,7 @@ let routes = [
 					return next('/');
 				}
 				return next();
-			})
+			});
 		},
 	},
 	{
@@ -215,8 +215,8 @@ let routes = [
 
 		],
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then((currentUser) => {
-				const sandbox = createSandbox(currentUser, {
+			store.dispatch('setupCurrentUser').then(() => {
+				const sandbox = createSandbox(store.getters.currentUser, {
 					perimeters: [currentEditionParticipant],
 				});
 
@@ -224,7 +224,7 @@ let routes = [
 					return next('/');
 				}
 				return next();
-			})
+			});
 		},
 	},
 	{
@@ -232,8 +232,8 @@ let routes = [
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then((currentUser) => {
-				const sandbox = createSandbox(currentUser, {
+			store.dispatch('setupCurrentUser').then(() => {
+				const sandbox = createSandbox(store.getters.currentUser, {
 					perimeters: [moderatorFeatures],
 				});
 
@@ -241,7 +241,7 @@ let routes = [
 					return next('/');
 				}
 				return next();
-			})
+			});
 		}
 	},
 	{

@@ -1,4 +1,3 @@
-require('./bootstrap');
 import Vue from "vue";
 import {sync} from "vuex-router-sync";
 import store from "js/store/store";
@@ -94,3 +93,7 @@ $.ajaxSetup({
 		$wnl.logger.error(error)
 	}
 });
+
+// this has to be at the very bottom to make sure axios is already loaded
+// axios is loaded by the WnlAxios plugin
+require('./echo');

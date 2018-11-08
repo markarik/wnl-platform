@@ -13,7 +13,7 @@ class NotificationPolicy
 
 	public function before($user, $ability)
 	{
-		if ($user->hasRole('admin') || $user->hasRole('moderator')) {
+		if ($user->isAdmin() || $user->isModerator()) {
 			return true;
 		}
 

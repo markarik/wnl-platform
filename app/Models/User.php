@@ -14,7 +14,7 @@ class User extends Authenticatable
 	use Notifiable, CourseProgressStats;
 
 	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
-	const CACHE_VER = '1';
+	const CACHE_VER = '2';
 
 	protected $casts = [
 		'invoice'            => 'boolean',
@@ -254,7 +254,7 @@ class User extends Authenticatable
 			return 'inactive';
 		}
 
-		if ($min->isPast() && $max->isFuture()) return 'active';
+		if ($this->isAdmin() || $this->isModerator() || ($min->isPast() && $max->isFuture())) return 'active';
 		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
 
 		return 'inactive';
@@ -322,7 +322,17 @@ class User extends Authenticatable
 	 */
 	public function isAdmin()
 	{
-		return $this->hasRole('admin');
+		return $this->hasRole(Role::ROLE_ADMIN);
+	}
+
+	/**
+	 * Determine whether the user is a moderator.
+	 *
+	 * @return bool
+	 */
+	public function isModerator()
+	{
+		return $this->hasRole(Role::ROLE_MODERATOR);
 	}
 
 	/**

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
-import {getCurrentUser} from './user';
 
 // TODO: Mar 9, 2017 - Use config when it's ready
 export const STATUS_IN_PROGRESS = 'in-progress';
@@ -8,18 +7,14 @@ export const STATUS_COMPLETE = 'complete';
 
 const CACHE_VERSION = 1;
 
-const setCourseProgress = ({courseId, lessonId, ...props}, value) => {
-	getCurrentUser().then(({id}) => {
-		axios.put(getApiUrl(`users/${id}/state/course/${courseId}`), value);
-	})
+const setCourseProgress = ({courseId, lessonId, profileId, ...props}, value) => {
+	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}`), value);
 };
 
-const setLessonProgress = ({courseId, lessonId}, value) => {
-	getCurrentUser().then(({id}) => {
-		axios.put(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`), {
-			lesson: value
-		});
-	})
+const setLessonProgress = ({courseId, lessonId, profileId}, value) => {
+	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}/lesson/${lessonId}`), {
+		lesson: value
+	});
 };
 
 const completeSection = (lessonState, payload) => {
@@ -120,30 +115,15 @@ const startLesson = (courseState, payload) => {
 	return updatedLessonState
 };
 
-const getCourseProgress = ({courseId}) => {
-	return new Promise((resolve) => {
-		getCurrentUser()
-			.then(({id}) => {
-				return axios.get(getApiUrl(`users/${id}/state/course/${courseId}`));
-			})
-			.then(({data: {lessons} = {}}) => {
-				return resolve({
-					lessons
-				})
-			});
-	});
+const getCourseProgress = async ({courseId, profileId}) => {
+    const { data: { lessons } = {} } = await axios.get(getApiUrl(`users/${profileId}/state/course/${courseId}`));
+
+    return { lessons };
 };
 
-const getLessonProgress = ({courseId, lessonId}) => {
-	return new Promise((resolve) => {
-		getCurrentUser()
-			.then(({id}) => {
-				return axios.get(getApiUrl(`users/${id}/state/course/${courseId}/lesson/${lessonId}`));
-			})
-			.then(({data: {lesson}} = {}) => {
-				return resolve(lesson)
-			});
-	});
+const getLessonProgress = async ({courseId, lessonId, profileId}) => {
+	const { data: { lesson } = {} } = await axios.get(getApiUrl(`users/${profileId}/state/course/${courseId}/lesson/${lessonId}`));
+	return lesson;
 };
 
 const _getScreenProgress = (lessonState = {}, {route, screenId}) => {

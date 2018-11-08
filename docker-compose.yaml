@@ -42,6 +42,13 @@ services:
       - ${LOCAL_CODE_PATH}:/code
     command: /code/bethink/wnl-platform/artisan queue:work --queue=default --tries=3 --daemon
 
+  laravel-queue-worker:
+      container_name: laravel-queue-worker
+      image: bethink/php:7.2.7-fpm-alpine3.7
+      volumes:
+        - ${LOCAL_CODE_PATH}:/code
+      command: /code/bethink/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
+
   composer:
     container_name: composer
     image: bethink/composer:1.6.5

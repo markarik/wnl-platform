@@ -34,11 +34,32 @@ class UserFlashcardsResultsApiController extends ApiController
 		}
 
 		$result = UserFlashcardsResults::create([
-			'user_id' => $userId,
+			'user_id' => $user->id,
 			'flashcard_id' => $flashcardId,
 			'answer' => $answer
 		]);
 
 		return $this->respondOk($result);
+	}
+
+	public function fetchMany(Request $request) {
+		$userId = $request->route('userId');
+		$ids = $request->get('flashcards_ids') ?? [];
+		$user = User::fetch($userId);
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
+		}
+
+		$response = UserFlashcardsResults
+			::where('user_id', $user->id)
+			->whereIn('flashcard_id', $ids)
+			->orderBy('created_at', 'asc')
+			->get();
+
+		return $this->respondOk(
+			$response->groupBy('flashcard_id')->map(function($group) {
+			return $group->last();
+		}));
 	}
 }

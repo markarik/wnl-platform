@@ -17,7 +17,9 @@ const mutations = {
 	[mutationsTypes.FLASHCARDS_SET_FLASHCARDS_SET](state, payload) {
 		set(state.sets, payload.id, payload)
 	},
-	[mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD](state, {flashcards_sets: setId, ...updatedFlashcard}) {
+	[mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD](state, updatedFlashcard) {
+		const {flashcards_sets: setId} = updatedFlashcard
+
 		const updatedFlashcards = state.sets[setId].flashcards.map(flashcard => {
 			if (flashcard.id === updatedFlashcard.id) {
 				return updatedFlashcard
@@ -35,29 +37,29 @@ const actions = {
 			const {data} = await axios.get(getApiUrl(`flashcards_sets/${setId}`), {
 				params: requestParams
 			})
-			const {included, ...flashcardSet} = data;
+			const {included, ...flashcardSet} = data
+
+			const {data: userResponseData} = await axios.post(getApiUrl('user_flashcards_results/current'), {
+				flashcards_ids: flashcardSet.flashcards
+			})
 
 			flashcardSet.flashcards = flashcardSet.flashcards.map(flashcardId => {
 				return {
 					...included.flashcards[flashcardId],
-					answer: 'unsolved'
+					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved')
 				}
-			});
+			})
 
-			commit(mutationsTypes.FLASHCARDS_SET_FLASHCARDS_SET, flashcardSet);
-
-			return data;
+			commit(mutationsTypes.FLASHCARDS_SET_FLASHCARDS_SET, flashcardSet)
 		} catch (e) {
 			$wnl.logger.error(e)
 		}
 	},
-	async postAnswer({rootGetters, commit}, {answer, flashcard}) {
+	async postAnswer({commit}, {answer, flashcard}) {
 		try {
 			await axios.post(
-				getApiUrl(`user_flashcards_results/${rootGetters.currentUserId}/${flashcard.id}`),
-				{
-					answer
-				}
+				getApiUrl(`user_flashcards_results/current/${flashcard.id}`),
+				{ answer }
 			)
 			commit(mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD, {
 				...flashcard, answer

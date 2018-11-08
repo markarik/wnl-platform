@@ -165,8 +165,8 @@
 						display: flex
 						flex-direction: row-reverse
 						justify-content: space-between
-						margin-bottom: $margin-small
-						margin-top: $margin-small
+						padding-bottom: $margin-small
+						padding-top: $margin-small
 						min-height: 35px
 						&.isEven
 							background-color: $color-background-lightest-gray
@@ -270,7 +270,7 @@
 				return index % 2 === 0
 			},
 			getStartDate(item) {
-				return new Date (item.startDate*1000)
+				return item.startDate ? new Date (item.startDate*1000) : new Date();
 			},
 			toggleItem(item) {
 				if (this.openGroups.indexOf(item.id) === -1) {

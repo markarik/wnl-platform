@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Models\Role;
 use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\UserCourseProgress;
@@ -98,7 +99,7 @@ class ExportUserStatistics extends Command
 					->where('paid', 1);
 			})
 			->whereDoesntHave('roles', function($query){
-				$query->whereIn('name', ['admin', 'moderator']);
+				$query->whereIn('name', [Role::ROLE_ADMIN, Role::ROLE_MODERATOR]);
 			})
 			->get();
 

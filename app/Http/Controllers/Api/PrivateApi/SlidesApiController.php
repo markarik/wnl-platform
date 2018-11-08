@@ -13,7 +13,6 @@ use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
 use App\Http\Requests\Course\UpdateSlideChart;
 use App\Models\Presentable;
-use ScoutEngines\Elasticsearch\Searchable;
 use App\Jobs\SearchImportAll;
 use App\Models\Screen;
 use App\Models\Slide;
@@ -177,7 +176,7 @@ class SlidesApiController extends ApiController
 		}
 
 		$user = Auth::user();
-		$onlyAvailable = !$user->hasRole('moderator') && !$user->hasRole('admin');
+		$onlyAvailable = !$user->isModerator() && !$user->isAdmin();
 
 		Slide::savePhrase(['phrase' => $request->q, 'user_id' => $user->id]);
 

@@ -56,21 +56,11 @@ const EventsTracker = {
 
 		Vue.prototype.$trackUserEvent = (payload) => {
 			const contextRoute = {};
-			const available_columns = [
-				'category_name',
-				'root_category_name',
-				'lesson_id',
-				'screen_id',
-				'course_id',
-				'slide',
-				'quiz_question_id'
-			]
 			Object.keys(router.currentRoute.params).forEach(key => {
 				const param = router.currentRoute.params[key];
 				const column = _.snakeCase(key);
-				if (!available_columns.includes(column)) return;
-
-				contextRoute[column] = isNaN(param) ? param : Number(param);
+				const value = isNaN(param) ? param : Number(param);
+				contextRoute[column] = value;
 			});
 
 			socket.emit(EVENTS.USER_EVENT, {

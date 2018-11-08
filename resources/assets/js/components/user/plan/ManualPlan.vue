@@ -270,7 +270,7 @@
 				return index % 2 === 0
 			},
 			getStartDate(item) {
-				return new Date (item.startDate*1000)
+				return item.startDate ? new Date (item.startDate*1000) : new Date();
 			},
 			toggleItem(item) {
 				if (this.openGroups.indexOf(item.id) === -1) {

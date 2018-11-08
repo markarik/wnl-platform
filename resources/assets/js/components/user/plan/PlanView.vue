@@ -80,7 +80,7 @@
 			return {
 				tabs: [
 					{
-						title: 'Twój Plan Pracy',
+						title: 'Twój plan pracy',
 						component: LessonsPlanner,
 						isActive: true
 					},
@@ -89,7 +89,7 @@
 						component: PlannerGuide,
 					},
 					{
-						title: 'Gwarancja Satysfakcji',
+						title: 'Gwarancja satysfakcji',
 						component: PlannerGuarantee,
 					},
 				]

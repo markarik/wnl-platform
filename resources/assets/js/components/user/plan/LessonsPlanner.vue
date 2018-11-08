@@ -14,11 +14,11 @@
 		</div>
 		<article class="message is-info">
 			<div class="message-header">
-				<p>Twój Plan Pracy</p>
+				<p>Twój plan pracy</p>
 			</div>
 			<div class="message-body plan-details">
 				<span>Twój obecny plan pracy zakłada naukę od <strong>{{planStartDate}}</strong> do <strong>{{planEndDate}}</strong>.</span>
-				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Twój Plan Pracy > Ustaw plan ręcznie.</span>
+				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Twój plan pracy > Ustaw plan ręcznie.</span>
 			</div>
 		</article>
 		<div class="wnl-screen-title">

@@ -82,8 +82,6 @@ class Lesson extends Model
 
 			if (!is_null($lessonAccess)) {
 				return Carbon::parse($lessonAccess->start_date);
-			} else {
-				return Carbon::now();
 			}
 		}
 

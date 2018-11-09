@@ -1,7 +1,7 @@
 <template>
 	<div class="flashcards-list">
-		<router-link :to="{ name: 'flashcards', params: { flashcardId: 'new' } }" class="button is-success">+ Nowe pytanie</router-link>
-		<p class="title is-4">Lista pytań</p>
+		<h3 class="title">Lista pytań</h3>
+		<router-link :to="{ name: 'flashcards', params: { flashcardId: 'new' } }" class="button is-success margin bottom">+ Nowe pytanie</router-link>
 		<wnl-flashcard-list-item v-for="flashcard in allFlashcards"
 							  :key="flashcard.id"
 							  :content="flashcard.content"

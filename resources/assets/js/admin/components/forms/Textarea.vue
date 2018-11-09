@@ -5,7 +5,7 @@
 			<slot></slot>
 		</label>
 
-		<textarea class="input is-medium"
+		<textarea class="textarea is-medium"
 				  :name="name"
 				  :value="form[name]"
 				  @input="$emit('input', $event.target.value)"

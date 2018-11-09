@@ -1,6 +1,5 @@
 <template>
 	<div class="flashcards">
-		<p class="title is-3">Edycja pytań</p>
 		<div class="flashcards-container" v-if="isReady">
 			<wnl-flashcard-editor v-if="flashcardId" />
 			<wnl-flashcards-list v-else />

@@ -1,5 +1,21 @@
 <template>
 	<div class="flashcards-set-editor">
+		<div class="flashcards-set-editor-header">
+			<h3 class="title">
+				Edycja zestawu pytań
+				<span v-if="isEdit">(Id: {{flashcardsSetId}})</span>
+			</h3>
+			<button class="button is-small is-success"
+					:class="{'is-loading': loading}"
+					:disabled="!hasChanged"
+					type="submit"
+			>
+				<span class="margin right">Zapisz</span>
+				<span class="icon is-small">
+					<i class="fa fa-save"></i>
+				</span>
+			</button>
+		</div>
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 				   :alert="alert"
 				   cssClass="fixed"
@@ -36,19 +52,7 @@
 				:value="form.description"
 				@input="onDescriptionInput"
 			/>
-			<div class="control">
-				<button class="button is-small is-success"
-						:class="{'is-loading': loading}"
-						:disabled="!hasChanged"
-						type="submit"
-				>
-					<span class="margin right">Zapisz</span>
-					<span class="icon is-small">
-						<i class="fa fa-save"></i>
-					</span>
-				</button>
-			</div>
-			<h3>Pytania</h3>
+			<h4 class="title">Lista pytań</h4>
 			<div class="flashcards-admin">
 				<draggable v-model="form.flashcards" @start="drag=true" @end="drag=false" v-if="areFlashcardsReady">
 					<div v-for="flashcardId in form.flashcards" :key="flashcardId" class="flashcard">
@@ -71,6 +75,7 @@
 					</wnl-form-input>
 					<button class="button is-small is-success"
 							type="submit"
+							:disabled="!flashcard.flashcardId"
 					>
 						<span class="margin right">+ Dodaj pytanie</span>
 					</button>
@@ -82,7 +87,21 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
+	.flashcards-set-editor
+		max-width: 800px
+	.flashcards-set-editor-header
+		+small-shadow-bottom()
+		align-items: flex-start
+		background: $color-white
+		display: flex
+		justify-content: space-between
+		margin-bottom: $margin-medium
+		padding-top: $margin-small
+		position: sticky
+		top: -$margin-big
+		z-index: 1
 	.flashcards-admin
 		display: flex
 	.flashcard
@@ -152,6 +171,9 @@
 				allFlashcards: 'allFlashcards',
 				areFlashcardsReady: 'isReady'
 			}),
+			flashcardsSetId() {
+				return this.$route.params.flashcardsSetId;
+			},
 			lessons() {
 				return this.allLessons.map(lesson => ({
 					text: lesson.name,
@@ -159,10 +181,10 @@
 				}));
 			},
 			isEdit() {
-				return this.$route.params.flashcardsSetId !== 'new';
+				return this.flashcardsSetId !== 'new';
 			},
 			flashcardsSetResourceUrl() {
-				return getApiUrl(this.isEdit ? `flashcards_sets/${this.$route.params.flashcardsSetId}?include=flashcards` : 'flashcards_sets')
+				return getApiUrl(this.isEdit ? `flashcards_sets/${this.flashcardsSetId}?include=flashcards` : 'flashcards_sets')
 			},
 			hasChanged() {
 				return !_.isEqual(this.form.originalData, this.form.data())

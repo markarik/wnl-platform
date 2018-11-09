@@ -1,6 +1,5 @@
 <template>
 	<div class="flashcards-sets">
-		<p class="title is-3">Edycja zestawu pytań</p>
 		<div class="flashcards-container" v-if="isReady">
 			<wnl-flashcards-set-editor v-if="flashcardsSetId" />
 			<wnl-flashcards-sets-list v-else />

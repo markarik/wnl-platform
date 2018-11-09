@@ -1,5 +1,9 @@
 <template>
 	<div class="flashcard-editor">
+		<h3 class="title">
+			Edycja pytania
+			<span v-if="isEdit">Id: {{flashcardId}}</span>
+		</h3>
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 				   :alert="alert"
 				   cssClass="fixed"
@@ -11,7 +15,6 @@
 				<wnl-form-textarea
 					name="content"
 					:form="form"
-
 					v-model="form.content"
 				>
 					Treść pytania
@@ -33,7 +36,8 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
-
+	.flashcard-editor
+		max-width: 800px
 </style>
 
 <script>
@@ -60,11 +64,14 @@
 			}
 		},
 		computed: {
+			flashcardId() {
+				return this.$route.params.flashcardId;
+			},
 			isEdit() {
-				return this.$route.params.flashcardId !== 'new';
+				return this.flashcardId !== 'new';
 			},
 			flashcardResourceUrl() {
-				return getApiUrl(this.isEdit ? `flashcards/${this.$route.params.flashcardId}` : 'flashcards')
+				return getApiUrl(this.isEdit ? `flashcards/${this.flashcardId}` : 'flashcards')
 			},
 			hasChanged() {
 				return !_.isEqual(this.form.originalData, this.form.data())

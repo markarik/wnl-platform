@@ -54,6 +54,12 @@
 								name="meta"
 								v-model="screenForm.meta"
 							></wnl-select>
+							TODO
+							<wnl-form-textarea
+								:form="screenForm"
+								name="meta"
+								v-model="screenForm.meta"
+							/>
 						</span>
 					</div>
 				</div>
@@ -116,6 +122,7 @@
 
 	import { alerts } from 'js/mixins/alerts'
 	import { getApiUrl } from 'js/utils/env'
+	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 
 	let types = {
 		html: {
@@ -140,11 +147,18 @@
 			value: 'mockexam',
 			hasMeta: false,
 		},
+		flashcards: {
+			text: 'Powtórki',
+			value: 'flashcards',
+			metaTitle: 'Wybierz zestaw powtórek',
+			hasMeta: true,
+		},
 	}
 
 	export default {
 		name: 'ScreensEditor',
 		components: {
+			WnlFormTextarea,
 			'quill': Quill,
 			'wnl-form-input': Input,
 			'wnl-screens-list': ScreensList,

@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Course\UpdateFlashcardsSet;
+use App\Models\FlashcardsSet;
 use Illuminate\Http\Request;
 
 class FlashcardsSetsApiController extends ApiController
@@ -9,5 +11,18 @@ class FlashcardsSetsApiController extends ApiController
 	{
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.flashcards-sets');
+	}
+
+	public function put(UpdateFlashcardsSet $request)
+	{
+		$flashcardsSet = FlashcardsSet::find($request->route('id'));
+
+		if (!$flashcardsSet) {
+			return $this->respondNotFound();
+		}
+
+		$flashcardsSet->update($request->all());
+
+		return $this->respondOk($flashcardsSet);
 	}
 }

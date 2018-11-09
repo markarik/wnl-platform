@@ -1,6 +1,6 @@
 <template>
 	<div class="margin bottom">
-		<router-link :to="to">{{id}}. {{content}}</router-link>
+		<router-link :to="to">{{id}}. {{name}}</router-link>
 	</div>
 </template>
 
@@ -10,14 +10,14 @@
 
 <script>
 	export default {
-		name: 'FlashcardsListItem',
-		props: ['id', 'content'],
+		name: 'FlashcardsSetsListItem',
+		props: ['id', 'name'],
 		computed: {
 			to() {
 				return {
-					name: 'flashcards',
+					name: 'flashcards-sets',
 					params: {
-						flashcardId: this.id,
+						flashcardsSetId: this.id,
 					},
 				}
 			},

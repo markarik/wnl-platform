@@ -34,7 +34,8 @@
 			Powtórki
 		</p>
 		<ul class="menu-list">
-			<li><router-link :to="{ name: 'flashcards' }">Edycja powtórki</router-link></li>
+			<li><router-link :to="{ name: 'flashcards-sets' }">Edycja zestawu pytań</router-link></li>
+			<li><router-link :to="{ name: 'flashcards' }">Edycja pytań</router-link></li>
 		</ul>
 	</aside>
 </template>

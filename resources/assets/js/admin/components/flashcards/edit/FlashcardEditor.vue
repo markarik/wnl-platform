@@ -1,25 +1,28 @@
 <template>
-    <div class="flashcard-editor">
-        <form @submit.prevent="flashcardFormSubmit">
-                <wnl-form-textarea
-                    name="content"
-                    :form="form"
-                    v-model="form.content"
-                />
-                <div class="control">
-                    <button class="button is-small is-success"
-                            :class="{'is-loading': loading}"
-                            :disabled="!hasChanged"
-                            type="submit"
-                    >
-                        <span class="margin right">Zapisz</span>
-                        <span class="icon is-small">
+	<div class="flashcard-editor">
+		<form @submit.prevent="flashcardFormSubmit">
+				<wnl-form-textarea
+					name="content"
+					:form="form"
+
+					v-model="form.content"
+				>
+					Treść pytania
+				</wnl-form-textarea>
+				<div class="control">
+					<button class="button is-small is-success"
+							:class="{'is-loading': loading}"
+							:disabled="!hasChanged"
+							type="submit"
+					>
+						<span class="margin right">Zapisz</span>
+						<span class="icon is-small">
 							<i class="fa fa-save"></i>
 						</span>
-                    </button>
-                </div>
-        </form>
-    </div>
+					</button>
+				</div>
+		</form>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -67,7 +70,7 @@
 				this.form.put(this.flashcardResourceUrl)
 					.then(response => {
 						this.loading = false
-						this.successFading('Powtórka zapisana!', 2000)
+						this.successFading('Pytanie zapisane!', 2000)
 						this.form.originalData = this.form.data()
 					})
 					.catch(exception => {
@@ -78,7 +81,7 @@
 			}
 		},
 		mounted() {
-            this.form.populate(this.flashcardResourceUrl)
+			this.form.populate(this.flashcardResourceUrl)
 		}
 	}
 </script>

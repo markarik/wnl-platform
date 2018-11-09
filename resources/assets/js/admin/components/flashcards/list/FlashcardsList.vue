@@ -1,12 +1,12 @@
 <template>
-    <div class="flashcards-list">
-        <p class="title is-4">Lista powtórek</p>
-        <wnl-flashcard-list-item v-for="flashcard in allFlashcards"
-                              :key="flashcard.id"
-                              :content="flashcard.content"
-                              :id="flashcard.id">
-        </wnl-flashcard-list-item>
-    </div>
+	<div class="flashcards-list">
+		<p class="title is-4">Lista pytań</p>
+		<wnl-flashcard-list-item v-for="flashcard in allFlashcards"
+							  :key="flashcard.id"
+							  :content="flashcard.content"
+							  :id="flashcard.id">
+		</wnl-flashcard-list-item>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -14,12 +14,9 @@
 </style>
 
 <script>
-	import axios from 'axios'
 	import {mapGetters} from 'vuex'
 
 	import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem'
-
-	import { getApiUrl } from 'js/utils/env'
 
 	export default {
 		name: 'FlashcardsList',

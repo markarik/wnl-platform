@@ -55,6 +55,12 @@ let routes = [
 		],
 	},
 	{
+		name: 'flashcards-sets',
+		path: '/admin/app/flashcards-sets/:flashcardsSetId?',
+		component: require('js/admin/components/flashcards/FlashcardsSets.vue'),
+		props: true,
+	},
+	{
 		name: 'flashcards',
 		path: '/admin/app/flashcards/:flashcardId?',
 		component: require('js/admin/components/flashcards/Flashcards.vue'),

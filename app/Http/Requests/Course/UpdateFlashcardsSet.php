@@ -24,9 +24,10 @@ class UpdateFlashcardsSet extends FormRequest
 	public function rules()
 	{
 		return [
-			'name'   => 'string',
+			'name'   => 'required|string',
 			'description'   => 'string',
 			'mind_maps_text'   => 'string',
+			'lesson_id' => 'required|integer'
 		];
 	}
 }

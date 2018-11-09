@@ -53,8 +53,11 @@
 			}
 		},
 		computed: {
+			isEdit() {
+				return this.$route.params.flashcardId !== 'new';
+			},
 			flashcardResourceUrl() {
-				return getApiUrl(`flashcards/${this.$route.params.flashcardId}`)
+				return getApiUrl(this.isEdit ? `flashcards/${this.$route.params.flashcardId}` : 'flashcards')
 			},
 			hasChanged() {
 				return !_.isEqual(this.form.originalData, this.form.data())
@@ -67,7 +70,7 @@
 				}
 
 				this.loading = true
-				this.form.put(this.flashcardResourceUrl)
+				this.form[this.isEdit ? 'put' : 'post'](this.flashcardResourceUrl)
 					.then(response => {
 						this.loading = false
 						this.successFading('Pytanie zapisane!', 2000)

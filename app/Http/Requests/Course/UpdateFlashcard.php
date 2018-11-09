@@ -24,7 +24,7 @@ class UpdateFlashcard extends FormRequest
 	public function rules()
 	{
 		return [
-			'content'   => 'string',
+			'content'   => 'required|string',
 		];
 	}
 }

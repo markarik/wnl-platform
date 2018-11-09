@@ -15,6 +15,12 @@
 			>
 				Mind mapy
 			</wnl-form-input>
+			<label class="label">Lekcja</label>
+			<wnl-select :form="form"
+						 :options="lessons"
+						 name="lesson_id"
+						 v-model="form.lesson_id"
+			/>
 			<label class="label">Opis</label>
 			<wnl-quill
 				ref="descriptionEditor"
@@ -45,6 +51,7 @@
 
 <script>
 	import _ from 'lodash'
+	import { mapGetters, mapActions } from 'vuex'
 
 	import Form from 'js/classes/forms/Form'
 	import {getApiUrl} from 'js/utils/env'
@@ -53,6 +60,7 @@
 	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 	import WnlFormInput from "js/admin/components/forms/Input";
 	import WnlQuill from 'js/admin/components/forms/Quill';
+	import WnlSelect from 'js/admin/components/forms/Select';
 
 	export default {
 		name: 'FlashcardsSetEditor',
@@ -60,6 +68,7 @@
 			WnlFormInput,
 			WnlQuill,
 			WnlFormTextarea,
+			WnlSelect
 		},
 		mixins: [alerts],
 		data() {
@@ -68,19 +77,32 @@
 					name: null,
 					description: null,
 					mind_maps_text: null,
+					lesson_id: null,
 				}),
 				loading: false,
 			}
 		},
 		computed: {
+			...mapGetters('lessons', ['allLessons']),
+			lessons() {
+				return this.allLessons.map(lesson => ({
+					text: lesson.name,
+					value: lesson.id,
+				}));
+			},
+			isEdit() {
+				return this.$route.params.flashcardsSetId !== 'new';
+			},
 			flashcardsSetResourceUrl() {
-				return getApiUrl(`flashcards_sets/${this.$route.params.flashcardsSetId}`)
+				return getApiUrl(this.isEdit ? `flashcards_sets/${this.$route.params.flashcardsSetId}?include=flashcards` : 'flashcards_sets')
 			},
 			hasChanged() {
 				return !_.isEqual(this.form.originalData, this.form.data())
 			}
 		},
 		methods: {
+			...mapActions('lessons', { setupLessons: 'setup' }),
+			...mapActions('flashcards', { setupFlashcards: 'setup' }),
 			onDescriptionInput() {
 				this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 			},
@@ -90,7 +112,7 @@
 				}
 
 				this.loading = true
-				this.form.put(this.flashcardsSetResourceUrl)
+				this.form[this.isEdit ? 'put' : 'post'](this.flashcardsSetResourceUrl)
 					.then(response => {
 						this.loading = false
 						this.successFading('Zestaw pytań zapisany!', 2000)
@@ -104,7 +126,9 @@
 			}
 		},
 		mounted() {
-			this.form.populate(this.flashcardsSetResourceUrl)
+			this.form.populate(this.flashcardsSetResourceUrl);
+			this.setupLessons();
+			this.setupFlashcards();
 		}
 	}
 </script>

@@ -25,4 +25,13 @@ class FlashcardsApiController extends ApiController
 
 		return $this->respondOk($flashcard);
 	}
+
+	public function post(UpdateFlashcard $request)
+	{
+		$flashcard = new Flashcard($request->all());
+
+		$flashcard->save();
+
+		return $this->respondOk($flashcard);
+	}
 }

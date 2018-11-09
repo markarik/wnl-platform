@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Flashcard;
 use App\Models\FlashcardsSet;
-use App\Models\Screen;
 use App\Models\UserFlashcardsResults;
 use Illuminate\Console\Command;
 

@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Flashcard;
 use App\Models\FlashcardsSet;
 use App\Models\Screen;
-use App\Models\UserFlashcardsResults;
 use Illuminate\Console\Command;
 
 class JoinFlashcardsSets extends Command
@@ -41,8 +39,11 @@ class JoinFlashcardsSets extends Command
 	public function handle()
 	{
 		$flashcardsSets = FlashcardsSet::all()->pluck('id')->toArray();
+		$bar = $this->output->createProgressBar(count($flashcardsSets));
 
 		foreach ($flashcardsSets as $setId) {
+			$bar->advance();
+
 			$set = FlashcardsSet::find($setId);
 
 			if (empty($set)) {
@@ -61,7 +62,7 @@ class JoinFlashcardsSets extends Command
 			}
 
 			foreach ($matchingSetByName as $matchingSet) {
-				if ($matchingSet->flashcards->diff($set->flashcards)) {
+				if ($matchingSet->flashcards->diff($set->flashcards)->count() !== 0) {
 					$this->output->text("Set has matching name but flashcards are different...");
 					continue;
 				}
@@ -75,10 +76,30 @@ class JoinFlashcardsSets extends Command
 					continue;
 				}
 
-				$screenId = $screens[0];
-				$screen = Screen::find($screenId);
-//				dd($screen->meta);
+				$screen = $screens[0];
+				$screen = Screen::find($screen->id);
+				$mappedMeta = array_map(function($resource) use ($matchingSet, $set) {
+					if ($resource['id'] == $matchingSet->id) {
+						$resource['id'] = $set->id;
+					}
+
+					return $resource;
+				}, $screen->meta['resources']);
+
+				$screen->meta = array_merge($screen->meta, [
+					'resources' => $mappedMeta
+				]);
+
+				$screen->save();
+
+				\DB::table('flashcards_set_flashcard')
+					->where('flashcard_set_id', $matchingSet->id)
+					->update(['flashcard_set_id' => $set->id]);
+
+				FlashcardsSet::destroy($matchingSet->id);
 			}
 		}
+
+		$bar->finish();
 	}
 }

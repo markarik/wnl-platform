@@ -48,37 +48,69 @@
 					</span>
 				</button>
 			</div>
-			<form @submit.prevent="QuestionFormSubmit">
-				<wnl-form-input
-					name="flashcardId"
-					:form="flashcard"
-					v-model="flashcard.flashcardId"
-				>
-				Id pytania
-				</wnl-form-input>
-				<button class="button is-small is-success"
-						type="submit"
-				>
-					<span class="margin right">+ Dodaj pytanie</span>
-					<span class="icon is-small">
-						<i class="fa fa-save"></i>
-					</span>
-				</button>
-			</form>
-			<div v-for="flashcardId in form.flashcards" v-if="areFlashcardsReady" :key="flashcardId">
-				{{flashcardId}}. {{allFlashcards.find(flashcard => flashcard.id === flashcardId).content}}
+			<h3>Pytania</h3>
+			<div class="flashcards-admin">
+				<draggable v-model="form.flashcards" @start="drag=true" @end="drag=false" v-if="areFlashcardsReady">
+					<div v-for="flashcardId in form.flashcards" :key="flashcardId" class="flashcard">
+						<div class="flashcard-content">{{flashcardId}}. {{allFlashcards.find(flashcard => flashcard.id === flashcardId).content}}</div>
+						<button class="flashcard-remove" type="button" @click="removeFlashcard(flashcardId)">
+							<span class="icon is-small">
+								<i class="fa fa-trash"></i>
+							</span>
+						</button>
+					</div>
+				</draggable>
+
+				<form @submit.prevent="QuestionFormSubmit">
+					<wnl-form-input
+							name="flashcardId"
+							:form="flashcard"
+							v-model="flashcard.flashcardId"
+					>
+						Id pytania
+					</wnl-form-input>
+					<button class="button is-small is-success"
+							type="submit"
+					>
+						<span class="margin right">+ Dodaj pytanie</span>
+					</button>
+				</form>
 			</div>
 		</form>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
 
+	.flashcards-admin
+		display: flex
+	.flashcard
+		border-bottom: $border-light-gray
+		cursor: move
+		display: flex
+		margin-right: $margin-huge
+		padding: $margin-base 0
+	.flashcard-content
+		overflow: hidden
+		text-overflow: ellipsis
+		width: 500px
+		white-space: nowrap
+	.flashcard-remove
+		background: none
+		border: none
+		cursor: pointer
+		margin-left: $margin-big
+		outline: none
+		transition: color ease-in-out .2s
+		&:hover
+			color: red
 </style>
 
 <script>
 	import _ from 'lodash'
 	import { mapGetters, mapActions } from 'vuex'
+	import draggable from 'vuedraggable';
 
 	import Form from 'js/classes/forms/Form'
 	import {getApiUrl} from 'js/utils/env'
@@ -95,7 +127,8 @@
 			WnlFormInput,
 			WnlQuill,
 			WnlFormTextarea,
-			WnlSelect
+			WnlSelect,
+			draggable,
 		},
 		mixins: [alerts],
 		data() {
@@ -140,6 +173,9 @@
 			...mapActions('flashcards', { setupFlashcards: 'setup' }),
 			onDescriptionInput() {
 				this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
+			},
+			removeFlashcard(flashcardId) {
+				this.form.flashcards = this.form.flashcards.filter(id => id !== flashcardId)
 			},
 			flashcardsSetFormSubmit() {
 				if (!this.hasChanged) {

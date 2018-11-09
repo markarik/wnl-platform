@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserFlashcardsResults extends Model
 {
-	protected $fillable = ['user_id', 'flashcard_id', 'answer'];
+	protected $fillable = ['user_id', 'flashcard_id', 'answer', 'context_type', 'context_id'];
 
 	protected $table = 'user_flashcards_results';
 

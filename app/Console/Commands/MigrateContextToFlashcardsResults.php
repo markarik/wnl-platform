@@ -44,11 +44,13 @@ class MigrateContextToFlashcardsResults extends Command
 		$bar = $this->output->createProgressBar($sets->count());
 
 		foreach ($sets as $set) {
-			$screens = \DB::select("select id from (select id, JSON_EXTRACT(meta, '$.resources[*].id') as sets_ids from screens where type = 'flashcards') as meta where JSON_CONTAINS(sets_ids, '{$set->id}')"
+			$screens = \DB::select(
+				"select id from (select id, JSON_EXTRACT(meta, '$.resources[*].id') as sets_ids from screens where type = 'flashcards') as meta where JSON_CONTAINS(sets_ids, '{$set->id}')"
 			);
 
 			if (count($screens) > 1) {
 				$this->output->note("more than one screen found for set $set->id");
+				continue;
 			}
 
 			$screenId = $screens[0];

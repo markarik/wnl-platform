@@ -39,11 +39,13 @@
 				Mind mapy
 			</wnl-form-input>
 			<label class="label">Lekcja</label>
-			<wnl-select :form="form"
-						 :options="lessons"
-						 name="lesson_id"
-						 v-model="form.lesson_id"
-			/>
+			<span class="select">
+				<wnl-select :form="form"
+							 :options="lessons"
+							 name="lesson_id"
+							 v-model="form.lesson_id"
+				/>
+			</span>
 			<label class="label">Opis</label>
 			<wnl-quill
 				ref="descriptionEditor"
@@ -52,7 +54,7 @@
 				:value="form.description"
 				@input="onDescriptionInput"
 			/>
-			<h4 class="title">Lista pytań</h4>
+			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
 				<draggable v-model="form.flashcards" @start="drag=true" @end="drag=false" v-if="areFlashcardsReady">
 					<div v-for="flashcardId in form.flashcards" :key="flashcardId" class="flashcard">
@@ -141,6 +143,8 @@
 	import WnlSelect from 'js/admin/components/forms/Select';
 
 	export default {
+		// TODO decompose
+		// TODO fix disabled after adding flashcard
 		name: 'FlashcardsSetEditor',
 		components: {
 			WnlFormInput,

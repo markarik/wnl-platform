@@ -1,5 +1,12 @@
 <template>
 	<div class="flashcard-editor">
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+				   :alert="alert"
+				   cssClass="fixed"
+				   :key="timestamp"
+				   :timestamp="timestamp"
+				   @delete="onDelete"
+		></wnl-alert>
 		<form @submit.prevent="flashcardFormSubmit">
 				<wnl-form-textarea
 					name="content"

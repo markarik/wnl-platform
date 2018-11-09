@@ -1,5 +1,12 @@
 <template>
 	<div class="flashcards-set-editor">
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+				   :alert="alert"
+				   cssClass="fixed"
+				   :key="timestamp"
+				   :timestamp="timestamp"
+				   @delete="onDelete"
+		></wnl-alert>
 		<form @submit.prevent="flashcardsSetFormSubmit">
 			<wnl-form-input
 					name="name"
@@ -41,6 +48,26 @@
 					</span>
 				</button>
 			</div>
+			<form @submit.prevent="QuestionFormSubmit">
+				<wnl-form-input
+					name="flashcardId"
+					:form="flashcard"
+					v-model="flashcard.flashcardId"
+				>
+				Id pytania
+				</wnl-form-input>
+				<button class="button is-small is-success"
+						type="submit"
+				>
+					<span class="margin right">+ Dodaj pytanie</span>
+					<span class="icon is-small">
+						<i class="fa fa-save"></i>
+					</span>
+				</button>
+			</form>
+			<div v-for="flashcardId in form.flashcards" v-if="areFlashcardsReady" :key="flashcardId">
+				{{flashcardId}}. {{allFlashcards.find(flashcard => flashcard.id === flashcardId).content}}
+			</div>
 		</form>
 	</div>
 </template>
@@ -78,12 +105,20 @@
 					description: null,
 					mind_maps_text: null,
 					lesson_id: null,
+					flashcards: [],
+				}),
+				flashcard: new Form({
+					flashcardId: null,
 				}),
 				loading: false,
 			}
 		},
 		computed: {
 			...mapGetters('lessons', ['allLessons']),
+			...mapGetters('flashcards', {
+				allFlashcards: 'allFlashcards',
+				areFlashcardsReady: 'isReady'
+			}),
 			lessons() {
 				return this.allLessons.map(lesson => ({
 					text: lesson.name,
@@ -123,6 +158,15 @@
 						this.errorFading('Nie udało się :(', 2000)
 						$wnl.logger.capture(exception)
 					})
+			},
+			QuestionFormSubmit() {
+				const flashcardId = parseInt(this.flashcard.flashcardId, 10);
+				if (this.form.flashcards.includes(flashcardId)) {
+					this.errorFading('To pytanie jest już w zestawie', 2000)
+				} else {
+					this.form.flashcards.push(flashcardId);
+				}
+				this.flashcard.flashcardId = null;
 			}
 		},
 		mounted() {

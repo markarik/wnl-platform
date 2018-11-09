@@ -22,4 +22,15 @@ class FlashcardsSet extends Model
 	{
 		return	$this->belongsTo('\App\Models\Lesson');
 	}
+
+	public function syncFlashcards($flashcardIds) {
+		$orderNumber = 0;
+		$flashcardsSync = [];
+		foreach($flashcardIds as $flashcardId) {
+			$flashcardsSync[$flashcardId] = ['order_number' => $orderNumber++];
+		}
+
+		$this->flashcards()->sync($flashcardsSync);
+
+	}
 }

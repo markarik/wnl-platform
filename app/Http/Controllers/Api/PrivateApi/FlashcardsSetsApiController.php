@@ -23,6 +23,10 @@ class FlashcardsSetsApiController extends ApiController
 
 		$flashcardsSet->update($request->all());
 
+		if (is_array($request->flashcards)) {
+			$flashcardsSet->syncFlashcards($request->flashcards);
+		}
+
 		return $this->respondOk($flashcardsSet);
 	}
 
@@ -31,6 +35,10 @@ class FlashcardsSetsApiController extends ApiController
 		$flashcardsSet = new FlashcardsSet($request->all());
 
 		$flashcardsSet->save();
+
+		if (is_array($request->flashcards)) {
+			$flashcardsSet->syncFlashcards($request->flashcards);
+		}
 
 		return $this->respondOk($flashcardsSet);
 	}

@@ -27,7 +27,8 @@ class UpdateFlashcardsSet extends FormRequest
 			'name'   => 'required|string',
 			'description'   => 'string',
 			'mind_maps_text'   => 'string',
-			'lesson_id' => 'required|integer'
+			'lesson_id' => 'required|integer',
+			'flashcards' => 'array',
 		];
 	}
 }

@@ -66,7 +66,7 @@
 					/>
 				</draggable>
 
-				<form @submit.prevent="QuestionFormSubmit">
+				<form @submit.prevent="questionFormSubmit">
 					<wnl-form-input
 							name="flashcardId"
 							:form="flashcard"
@@ -128,7 +128,6 @@
 	import WnlFlashcardsSetListItem from 'js/admin/components/flashcards/edit/FlashcardsSetListItem';
 
 	export default {
-		// TODO fix disabled after adding flashcard
 		name: 'FlashcardsSetEditor',
 		components: {
 			WnlFormInput,
@@ -206,14 +205,14 @@
 						$wnl.logger.capture(exception)
 					})
 			},
-			QuestionFormSubmit() {
+			questionFormSubmit() {
 				const flashcardId = parseInt(this.flashcard.flashcardId, 10);
 				if (this.form.flashcards.includes(flashcardId)) {
 					this.errorFading('To pytanie jest już w zestawie', 2000)
 				} else {
 					this.form.flashcards.push(flashcardId);
 				}
-				this.flashcard.flashcardId = null;
+				this.flashcard.reset();
 			}
 		},
 		mounted() {

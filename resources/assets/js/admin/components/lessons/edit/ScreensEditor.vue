@@ -45,22 +45,8 @@
 							</wnl-select>
 						</span>
 					</div>
-					<div class="control" v-if="currentType && currentType.hasMeta">
-						<label class="label">{{currentType.metaTitle}}</label>
-						<span class="select">
-							<wnl-select
-								:form="screenForm"
-								:options="getMetaResourcesList(screenForm.type)"
-								name="meta"
-								v-model="screenForm.meta"
-							></wnl-select>
-							TODO
-							<wnl-form-textarea
-								:form="screenForm"
-								name="meta"
-								v-model="screenForm.meta"
-							/>
-						</span>
+					<div class="control" v-if="currentType && currentType.metaEditorComponent">
+						<component :is="currentType.metaEditorComponent" v-model="screenForm.meta" />
 					</div>
 				</div>
 
@@ -123,6 +109,8 @@
 	import { alerts } from 'js/mixins/alerts'
 	import { getApiUrl } from 'js/utils/env'
 	import WnlFormTextarea from "js/admin/components/forms/Textarea";
+	import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards'
+	import WnlScreensMetaEditorQuizes from 'js/admin/components/lessons/edit/ScreensMetaEditorQuizes'
 
 	let types = {
 		html: {
@@ -134,8 +122,7 @@
 			text: 'Zestaw pytań',
 			value: 'quiz',
 			hasMeta: true,
-			metaTitle: 'Wybierz zestaw pytań',
-			metaResource: 'quizes',
+			metaEditorComponent: WnlScreensMetaEditorQuizes,
 		},
 		end: {
 			text: 'Zakończenie',
@@ -150,8 +137,8 @@
 		flashcards: {
 			text: 'Powtórki',
 			value: 'flashcards',
-			metaTitle: 'Wybierz zestaw powtórek',
 			hasMeta: true,
+			metaEditorComponent: WnlScreensMetaEditorFlashcards,
 		},
 	}
 
@@ -159,6 +146,8 @@
 		name: 'ScreensEditor',
 		components: {
 			WnlFormTextarea,
+			WnlScreensMetaEditorFlashcards,
+			WnlScreensMetaEditorQuizes,
 			'quill': Quill,
 			'wnl-form-input': Input,
 			'wnl-screens-list': ScreensList,
@@ -186,9 +175,6 @@
 			loaded() {
 				return !!this.$route.params.screenId
 			},
-			selectedTypeData() {
-				return this.types[this.selectedType]
-			},
 			screenFormResourceUrl() {
 				return getApiUrl(`screens/${this.$route.params.screenId}`)
 			},
@@ -206,32 +192,6 @@
 			},
 		},
 		methods: {
-			getMetaResourcesList(type) {
-				return this.quiz_sets
-			},
-			formScreenMeta(resource, id) {
-				let meta = {
-					resources: [
-						{
-							id: id,
-							name: resource
-						}
-					]
-				}
-
-				return JSON.stringify(meta)
-			},
-			fetchQuizSets() {
-				return axios.get(getApiUrl('quiz_sets/all'))
-					.then((response) => {
-						_.forEach(response.data, (quiz) => {
-							this.quiz_sets.push({
-								text: quiz.name,
-								value: this.formScreenMeta('quiz_sets', quiz.id),
-							})
-						})
-					})
-			},
 			populateScreenForm() {
 				axios.get(this.screenFormResourceUrl)
 					.then(response => {
@@ -259,7 +219,7 @@
 				}
 
 				this.screenForm.put(this.screenFormResourceUrl)
-					.then(response => {
+					.then(() => {
 						this.loading = false
 						this.screenForm.originalData = this.screenForm.data()
 						this.successFading('Zapisano!', 2000)
@@ -273,7 +233,6 @@
 			}
 		},
 		mounted() {
-			this.fetchQuizSets()
 			if (this.screenId) {
 				this.populateScreenForm()
 			}

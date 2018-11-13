@@ -1,8 +1,8 @@
 <template>
-	<div>
+	<div class="margin left">
 		<h5 class="title is-5">Zarządzaj zestawami pytań</h5>
 		<div class="meta-flashcards" v-if="areFlashcardsSetsReady">
-			<div>
+			<div class="margin right">
 				<strong>Wybrane zestawy</strong>
 				<ul>
 					<draggable v-model="flashcardsSetIds" @start="drag=true" @end="drag=false">
@@ -19,21 +19,17 @@
 					</draggable>
 				</ul>
 			</div>
-			<form @submit.prevent="addSetFormSubmit">
-				<wnl-form-input
-						name="flashcardsSetId"
-						:form="addSetForm"
-						v-model="addSetForm.flashcardsSetId"
-				>
-					Dodaj zestaw (id zestawu)
-				</wnl-form-input>
-				<button class="button is-small is-success"
-						type="submit"
-						:disabled="!addSetForm.flashcardsSetId"
-				>
-					<span class="margin right">+ Dodaj zestaw</span>
-				</button>
-			</form>
+			<div class="flashcards-set-add">
+				<label class="label">Wybierz zestaw pytań</label>
+				<div class="select">
+					<wnl-select
+							:options="flashcardsSetOptions"
+							name="flashcardsSetId"
+							v-model="addSetForm.flashcardsSetId"
+							@input="addSet"
+					></wnl-select>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -44,18 +40,16 @@
 	.meta-flashcards
 		display: flex
 
-
 	.flashcards-set
 		border-bottom: $border-light-gray
 		cursor: move
 		display: flex
-		margin-right: $margin-huge
 		padding: $margin-base 0
 
 	.flashcards-set-content
 		overflow: hidden
 		text-overflow: ellipsis
-		width: 500px
+		width: 400px
 		white-space: nowrap
 
 	.flashcards-set-remove
@@ -67,6 +61,9 @@
 		transition: color ease-in-out .2s
 		&:hover
 			color: red
+
+	.flashcards-set-add
+		width: 300px
 </style>
 
 <script>
@@ -74,14 +71,14 @@
 	import draggable from 'vuedraggable';
 
 	import Form from 'js/classes/forms/Form';
-	import WnlFormInput from "js/admin/components/forms/Input";
+	import WnlSelect from "js/admin/components/forms/Select";
 
 	export default {
 		name: 'ScreensMetaEditorFlashcards',
 		props: ['value'],
 		components: {
 			draggable,
-			WnlFormInput
+			WnlSelect,
 		},
 		data: function() {
 			return {
@@ -103,6 +100,14 @@
 					this.$emit('input', JSON.stringify({ resources: flashcardsSetIds.map(id => ({id, name: 'flashcards_sets'}))}))
 				}
 			},
+			flashcardsSetOptions: function() {
+				return this.allFlashcardsSets
+					.filter(flashcardsSet => !this.flashcardsSetIds.includes(flashcardsSet.id))
+					.map(flashcardsSet => ({
+						value: flashcardsSet.id,
+						text: `${flashcardsSet.id}. ${flashcardsSet.name}`
+					}));
+			},
 			...mapGetters('flashcardsSets', {
 				areFlashcardsSetsReady: 'isReady',
 				allFlashcardsSets: 'allFlashcardsSets'
@@ -112,10 +117,11 @@
 			...mapActions('flashcardsSets', {
 				flashcardsSetsSetup: 'setup'
 			}),
-			addSetFormSubmit: function() {
-				const flashcardsSetId = parseInt(this.addSetForm.flashcardsSetId, 10);
-				this.flashcardsSetIds = [...this.flashcardsSetIds, flashcardsSetId];
-				this.addSetForm.reset();
+			addSet: function() {
+				if (this.addSetForm.flashcardsSetId) {
+					this.flashcardsSetIds = [...this.flashcardsSetIds, this.addSetForm.flashcardsSetId];
+					this.addSetForm.reset();
+				}
 			},
 			removeFlashcardsSet: function(flashcardsSetId) {
 				this.flashcardsSetIds = this.flashcardsSetIds.filter(id => id !== flashcardsSetId);

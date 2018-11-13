@@ -24,6 +24,8 @@ import users from 'js/store/modules/users'
 import alerts from 'js/store/modules/alerts'
 import autocomplete from 'js/store/modules/autocomplete'
 import tasks from 'js/store/modules/tasks'
+import flashcards from 'js/store/modules/flashcards'
+import siteWideMessages from 'js/store/modules/siteWideMessages'
 
 Vue.use(Vuex)
 
@@ -51,7 +53,9 @@ export default new Vuex.Store({
 		autocomplete,
 		comments,
 		tasks,
-		alerts
+		flashcards,
+		alerts,
+		siteWideMessages,
 	},
 	strict: debug
 })

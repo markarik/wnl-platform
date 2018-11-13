@@ -39,6 +39,7 @@
 			:slideOrderNumber="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"
 			@refreshSlideshow="onRefreshSlideshow"
+			@userEvent="proxyUserEvent"
 		></wnl-slideshow>
 	</div>
 </template>
@@ -141,8 +142,10 @@
 
 <script>
 	import { mapActions, mapGetters } from 'vuex'
+	import context from 'js/consts/events_map/context.json'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue'
 	import {getApiUrl} from 'js/utils/env'
+	import emits_events from 'js/mixins/emits-events';
 
 	const mediaMap = {
 		chart: {
@@ -162,6 +165,7 @@
 	export default {
 		name: 'SlidesCarousel',
 		props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
+		mixins: [emits_events],
 		data() {
 			return {
 				presentableType: 'App\\Models\\Category',

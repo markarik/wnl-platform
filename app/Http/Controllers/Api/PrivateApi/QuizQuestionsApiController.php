@@ -139,7 +139,7 @@ class QuizQuestionsApiController extends ApiController
 
 	protected function correct($model, $userId)
 	{
-		$builder = $this->applyResolution($model, $userId, 'correct');
+		$builder = $this->applyResolution($model, $userId, 'lastly_correct');
 		$correct = $builder->count();
 
 		return $correct;
@@ -166,7 +166,7 @@ class QuizQuestionsApiController extends ApiController
 
 		$correctAggregated = collect(
 			$filter->fetchAggregation(
-				$this->applyResolution($model, $userId, 'correct'),
+				$this->applyResolution($model, $userId, 'lastly_correct'),
 				$tagIds,
 				false
 			)

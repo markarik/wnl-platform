@@ -31,6 +31,10 @@ class Lesson extends Model
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
 
+	public function flashcardsSets() {
+		return $this->hasOne('\App\Models\FlashcardsSet');
+	}
+
 	public function getQuestionsAttribute()
 	{
 		return QnaQuestion::whereHas('tags', function ($query) {
@@ -42,6 +46,10 @@ class Lesson extends Model
 	{
 		$user = $user ?? \Auth::user();
 		if ($user) {
+			if ($user->isAdmin() || $user->isModerator()) {
+				return true;
+			}
+
 			$lessonAccess = $this->userLessonAccess($user);
 			if (!is_null($lessonAccess) && !is_null($lessonAccess->start_date)) {
 				return Carbon::parse($lessonAccess->start_date)->isPast();
@@ -55,6 +63,10 @@ class Lesson extends Model
 	{
 		$user = $user ?? \Auth::user();
 		if ($user) {
+			if ($user->isAdmin() || $user->isModerator()) {
+				return true;
+			}
+
 			$lessonAccess = $this->userLessonAccess($user);
 			return !is_null($lessonAccess);
 		}

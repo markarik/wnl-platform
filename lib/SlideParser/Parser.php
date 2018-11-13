@@ -465,11 +465,20 @@ class Parser
 			return $html;
 		}
 
+		$template = self::IMAGE_TEMPLATE;
+
 		if ($mime === 'image/gif') {
 			$data = @file_get_contents($imageUrl);
 			$ext = 'gif';
 			$template = self::GIF_TEMPLATE;
-		} else {
+		} else if ($mime === 'image/png') {
+			$data = $image->resize(1920, 1080, function ($constraint) {
+				$constraint->aspectRatio();
+				$constraint->upsize();
+			})->stream('png');
+			$ext = 'png';
+		}
+		else {
 			$background = $image->resize(1920, 1080, function ($constraint) {
 				$constraint->aspectRatio();
 				$constraint->upsize();
@@ -477,7 +486,6 @@ class Parser
 			$canvas = Image::canvas($image->width(), $image->height(), '#fff');
 			$data = $canvas->insert($background)->stream('jpg', 80);
 			$ext = 'jpg';
-			$template = self::IMAGE_TEMPLATE;
 		}
 
 		if (!$data) {

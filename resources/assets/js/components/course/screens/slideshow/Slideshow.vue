@@ -24,19 +24,13 @@
 			</div>
 			<div class="slideshow-menu">
 				<wnl-annotations
-					v-show="!isLoadingComments"
 					:slideshowId="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
 					:screenId="Number(screenId)"
 					:currentSlideId="currentSlideId"
+					:isLoadingComments="isLoadingComments"
 				></wnl-annotations>
-				<div v-if="isLoadingComments" class="loading-comments">
-					<span class="icon is-small status-icon">
-						<i class="fa fa-circle-o-notch fa-spin"></i>
-					</span>
-					Ładuję komentarze
-				</div>
 			</div>
 		</div>
 	</div>
@@ -107,15 +101,11 @@
 
 	.slideshow-menu
 		border: $border-light-gray
-		display: flex
 		margin-top: -3px
 		padding-top: $margin-base
 
 	.slide-meta
 		text-align: center
-
-	.loading-comments
-		color: $color-gray-dimmed
 </style>
 
 <script>
@@ -125,8 +115,10 @@
 	import screenfull from 'screenfull'
 	import {mapGetters, mapActions, mapMutations} from 'vuex'
 	import {scrollToTop} from 'js/utils/animations'
+	import features from "js/consts/events_map/features.json";
 
 	import * as types from 'js/store/mutations-types'
+	import emits_events from 'js/mixins/emits-events';
 	import Annotations from './Annotations'
 	import LinkedQuestions from './LinkedQuestions.vue'
 	import SlideshowNavigation from './SlideshowNavigation'
@@ -141,6 +133,7 @@
 			'wnl-slideshow-navigation': SlideshowNavigation,
 		},
 		perimeters: [moderatorFeatures],
+		mixins: [emits_events],
 		data() {
 			return {
 				bookmarkLoading: false,
@@ -313,6 +306,9 @@
 						this.focusSlideshow()
 						this.loaded = true
 						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
+						this.debouncedTrackEvent({
+							target: this.currentSlideId
+						})
 						this.toggleOverlay({source: 'slideshow', display: false})
 					})
 					.catch(error => {
@@ -339,6 +335,9 @@
 						this.toggleOverlay({source: 'slideshow', display: false})
 						this.child.call('refreshChart', this.currentSlideIndex)
 						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
+						this.debouncedTrackEvent({
+							target: this.currentSlideId
+						})
 					})
 					.catch(error => {
 						this.toggleOverlay({source: 'slideshow', display: false})
@@ -394,6 +393,10 @@
 
 							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
 							this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
+
+							this.debouncedTrackEvent({
+								target: slideId
+							});
 						}
 
 						this.slideChanged = false
@@ -429,6 +432,14 @@
 			},
 			debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event)}, {
 				trailing: true,
+			}),
+			debouncedTrackEvent: _.debounce(function(payload) {
+				this.emitUserEvent({
+					action: features.slideshow.feature_components.slide.actions.open.value,
+					feature: features.slideshow.value,
+					feature_component: features.slideshow.feature_components.slide.value,
+					...payload
+				})
 			}),
 			setEventListeners() {
 				addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);

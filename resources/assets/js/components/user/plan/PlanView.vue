@@ -34,7 +34,7 @@
 				</div>
 			</wnl-dropdown>
 		</div>
-		<component :is="activeView"/>
+		<component :is="activeView" @userEvent="onUserEvent"/>
 	</div>
 </template>
 
@@ -69,15 +69,18 @@
 	import PlannerGuarantee from './PlanGuarantee.vue';
 	import PlannerGuide from './PlannerGuide';
 	import Dropdown from 'js/components/global/Dropdown'
+	import emits_events from 'js/mixins/emits-events'
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'PlanView',
 		components: { 'wnl-dropdown': Dropdown },
+		mixins: [emits_events],
 		data() {
 			return {
 				tabs: [
 					{
-						title: 'Twój Plan Pracy',
+						title: 'Twój plan pracy',
 						component: LessonsPlanner,
 						isActive: true
 					},
@@ -86,7 +89,7 @@
 						component: PlannerGuide,
 					},
 					{
-						title: 'Gwarancja Satysfakcji',
+						title: 'Gwarancja satysfakcji',
 						component: PlannerGuarantee,
 					},
 				]
@@ -115,6 +118,12 @@
 						isActive: false
 					}
 				});
+			},
+			onUserEvent(payload) {
+				this.emitUserEvent({
+					subcontext: context.account.subcontext.course_plan.value,
+					...payload
+				})
 			}
 		}
 	}

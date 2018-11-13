@@ -1,0 +1,33 @@
+{
+  "lesson": {
+    "value": "lesson"
+  },
+  "collections": {
+    "value": "collections"
+  },
+  "url_track": {
+    "value": "context_route"
+  },
+  "help": {
+    "value": "help"
+  },
+  "questions_bank": {
+    "value": "questions_bank",
+    "subcontext": {
+      "current": {
+        "value": "current"
+      },
+      "test_yourself": {
+        "value": "test_yourself"
+      }
+    }
+  },
+  "account": {
+    "value": "account",
+    "subcontext": {
+      "course_plan": {
+        "value": "course_plan"
+      }
+    }
+  }
+}

@@ -61,9 +61,9 @@
 			</div>
 		</div>
 		<div v-if="hasStarted && average < averagePlanned" class="margin top has-text-centered">
-			<router-link class="button is-primary" :to="plannedRoute">
+			<a class="button is-primary" @click="onPlanClick">
 				{{$t('questions.plan.solvePlanned')}}
-			</router-link>
+			</a>
 		</div>
 	</div>
 </template>
@@ -140,10 +140,14 @@
 
 <script>
 	import moment from 'moment'
-	import {mapGetters, mapActions} from 'vuex'
+	import {mapGetters} from 'vuex'
+
+	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
 
 	export default {
 		name: 'QuestionsPlanProgress',
+		mixins: [emits_events],
 		props: {
 			allowChange: {
 				default: true,
@@ -166,15 +170,17 @@
 				return this.daysSoFar > this.plannedDaysCount
 			},
 			hasMoreQuestionsThanPlanned() {
-				const questionsLeft = this.plan.stats.total - this.plan.stats.done
-				const daysLeft = this.plannedDaysCount - this.daysSoFar + 1
-				const questionsLeftPerDay =  Math.ceil(questionsLeft / daysLeft)
-
-				if (questionsLeftPerDay > this.averagePlanned) {
-					return questionsLeftPerDay
+				if (this.questionsLeftPerDay > this.averagePlanned) {
+					return this.questionsLeftPerDay
 				} else {
 					return false
 				}
+			},
+			questionsLeftPerDay() {
+				const questionsLeft = this.plan.stats.total - this.plan.stats.done
+				const daysLeft = this.plannedDaysCount - this.daysSoFar + 1
+
+				return Math.ceil(questionsLeft / daysLeft)
 			},
 			averageStatus() {
 				return this.average >= this.averagePlanned ? 'greater' : 'less'
@@ -221,6 +227,17 @@
 				const diff = moment().startOf('day').diff(resolvingStarted, 'days')
 
 				return diff < 0 ? 0 : diff + 1
+			}
+		},
+		methods: {
+			onPlanClick() {
+				this.emitUserEvent({
+					feature_component: features.dashboard.feature_components.planned_questions.value,
+					action: features.dashboard.feature_components.planned_questions.actions.open.value,
+					target: this.plan.id
+				})
+
+				this.$router.push(this.plannedRoute)
 			}
 		},
 	}

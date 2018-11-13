@@ -6,7 +6,7 @@
 
 		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
 		<div class="question" v-for="(question, index) in questions" :key="index">
-			<span class="question-number">
+			<span v-if="!hideCount" class="question-number">
 				{{index+1}}/{{questions.length}}
 			</span>
 			<wnl-quiz-question
@@ -19,6 +19,7 @@
 				:readOnly="readOnly"
 				:getReaction="getReaction"
 				@selectAnswer="onSelectAnswer"
+				@userEvent="proxyUserEvent"
 			></wnl-quiz-question>
 		</div>
 		<p class="has-text-centered" v-if="!plainList && !displayResults">
@@ -53,13 +54,15 @@
 	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { scrollToElement } from 'js/utils/animations'
 	import { swalConfig } from 'js/utils/swal'
+	import emits_events from 'js/mixins/emits-events';
 
 	export default {
 		name: 'QuizList',
 		components: {
 			'wnl-quiz-question': QuizQuestion,
 		},
-		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz'],
+		mixins: [emits_events],
+		props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz', 'hideCount'],
 		data() {
 			return {
 				hasErrors: false,

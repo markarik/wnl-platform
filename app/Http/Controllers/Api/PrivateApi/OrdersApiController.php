@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Requests\Payment\UseCoupon;
+use App\Jobs\OrderPaid;
 use App\Jobs\OrderStudyBuddy;
 use App\Models\Coupon;
 use App\Models\Order;
@@ -60,6 +61,13 @@ class OrdersApiController extends ApiController
 			dispatch(new OrderStudyBuddy($order));
 		}
 		$order->attachCoupon($coupon);
+
+		if (intval($order->total_with_coupon) === 0) {
+			$order->paid = true;
+			$order->save();
+			$this->dispatch(new OrderPaid($order));
+		}
+
 		if ($order->paid && $coupon->times_usable > 0) {
 			$coupon->times_usable--;
 			$coupon->save();

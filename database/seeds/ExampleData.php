@@ -1,11 +1,13 @@
 <?php
 
 
+use App\Models\Role;
+
 class ExampleData
 {
     const ROLES = [
-        'admin',
-        'moderator',
+        Role::ROLE_ADMIN,
+        Role::ROLE_MODERATOR,
         'workshop-participant',
     ];
 

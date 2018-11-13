@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from 'js/store/store'
 import {scrollToTop} from 'js/utils/animations'
 import {resource} from 'js/utils/config'
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import {createSandbox} from 'vue-kindergarten';
-import {getCurrentUser} from 'js/services/user';
 import {getApiUrl} from 'js/utils/env'
 
 Vue.use(Router)
@@ -37,8 +37,8 @@ let routes = [
 					}
 				],
 				beforeEnter: (to, from, next) => {
-					getCurrentUser().then((currentUser) => {
-						const sandbox = createSandbox(currentUser, {
+					store.dispatch('setupCurrentUser').then(() => {
+						const sandbox = createSandbox(store.getters.currentUser, {
 							perimeters: [currentEditionParticipant],
 						});
 
@@ -46,7 +46,7 @@ let routes = [
 							return next('/');
 						}
 						return next();
-					})
+					});
 				},
 			}
 		]
@@ -128,8 +128,8 @@ let routes = [
 			},
 		],
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then((currentUser) => {
-				const sandbox = createSandbox(currentUser, {
+			store.dispatch('setupCurrentUser').then(() => {
+				const sandbox = createSandbox(store.getters.currentUser, {
 					perimeters: [currentEditionParticipant],
 				});
 
@@ -137,7 +137,7 @@ let routes = [
 					return next('/');
 				}
 				return next();
-			})
+			});
 		},
 	},
 	{
@@ -161,6 +161,16 @@ let routes = [
 				path: 'new',
 				component: require('js/components/global/Page.vue'),
 			},
+			{
+				name: 'help-service',
+				path: 'service',
+				component: require('js/components/global/Page.vue'),
+			},
+			{
+				name: 'satisfaction-guarantee',
+				path: 'guarantee',
+				component: require('js/components/global/Page.vue'),
+			}
 		]
 	},
 	{
@@ -176,9 +186,15 @@ let routes = [
 					{
 						name: 'quizQuestion',
 						path: 'single/:id',
-						component: require('js/components/quiz/SingleQuestion.vue'),
+						component: require('js/components/quiz/SingleQuestionRedirect.vue'),
 					},
 				],
+			},
+			{
+				props: true,
+				name: 'quiz-question',
+				path: 'single/:quizQuestionId',
+				component: require('js/components/quiz/SingleQuestion.vue'),
 			},
 			{
 				name: 'questions-list',
@@ -199,8 +215,8 @@ let routes = [
 
 		],
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then((currentUser) => {
-				const sandbox = createSandbox(currentUser, {
+			store.dispatch('setupCurrentUser').then(() => {
+				const sandbox = createSandbox(store.getters.currentUser, {
 					perimeters: [currentEditionParticipant],
 				});
 
@@ -208,7 +224,7 @@ let routes = [
 					return next('/');
 				}
 				return next();
-			})
+			});
 		},
 	},
 	{
@@ -216,8 +232,8 @@ let routes = [
 		path: '/app/moderators/feed',
 		component: require('js/components/moderators/ModeratorsDashboard.vue'),
 		beforeEnter: (to, from, next) => {
-			getCurrentUser().then((currentUser) => {
-				const sandbox = createSandbox(currentUser, {
+			store.dispatch('setupCurrentUser').then(() => {
+				const sandbox = createSandbox(store.getters.currentUser, {
 					perimeters: [moderatorFeatures],
 				});
 
@@ -225,7 +241,7 @@ let routes = [
 					return next('/');
 				}
 				return next();
-			})
+			});
 		}
 	},
 	{

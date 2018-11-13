@@ -38,17 +38,14 @@
 </style>
 
 <script>
-	import axios from 'axios';
-	import store from 'store'
 	import { mapGetters, mapActions } from 'vuex'
 	import { isEmpty } from 'lodash'
 
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
-	import {getApiUrl} from 'js/utils/env';
 	import {startTracking} from 'js/services/activityMonitor';
-	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/socket'
+	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
 
 	export default {
 		name: 'App',
@@ -65,8 +62,9 @@
 				'shouldDisplayOverlay',
 				'alerts',
 				'modalVisible',
-				'thickScrollbar'
+				'thickScrollbar',
 			]),
+			...mapGetters('siteWideMessages', ['siteWideMessages']),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
 			}
@@ -76,13 +74,30 @@
 				'resetLayout',
 				'setLayout',
 				'setupCurrentUser',
-				'toggleOverlay'
+				'toggleOverlay',
+				'addAlert'
 			]),
+			...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
 			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 			...mapActions('notifications', ['initNotifications']),
 			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', { courseSetup: 'setup' }),
+			handleSiteWideMessages() {
+				const alerts = this.siteWideMessages.filter(message => {
+					return message.type = 'site-wide-alert'
+				})
+
+				alerts.forEach(alert => {
+					this.addAlert({
+						text: this.$t(alert.message),
+						type: 'info',
+						dismissCallback: () => {
+							this.updateSiteWideMessage(alert.id)
+						}
+					})
+				})
+			}
 		},
 		mounted() {
 			this.toggleOverlay({source: 'course', display: true})
@@ -94,6 +109,9 @@
 					// Setup Notifications
 					this.initNotifications()
 					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
+					this.fetchUserSiteWideMessages().then(() => {
+						this.handleSiteWideMessages()
+					})
 
 					// Setup Chat
 					const userChannel = `authenticated-user`
@@ -136,6 +154,9 @@
 		watch: {
 			'$route' (to, from) {
 				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+				this.$trackUrlChange({
+					value: window.location.href
+				})
 			},
 			'thickScrollbar' (newVal) {
 				if (newVal) {

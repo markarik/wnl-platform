@@ -70,14 +70,16 @@
 	import { mapActions, mapGetters } from 'vuex'
 
 	import QuizWidget from 'js/components/quiz/QuizWidget'
+	import emits_events from 'js/mixins/emits-events';
 
 	export default {
 		name: 'SingleQuestion',
 		components: {
 			'wnl-quiz-widget': QuizWidget,
 		},
+		mixins: [emits_events],
 		props: {
-			id: {
+			quizQuestionId: {
 				required: true,
 				type: String|Number,
 			}
@@ -91,7 +93,7 @@
 			...mapGetters(['isSidenavVisible', 'isSidenavMounted', 'isMobile']),
 			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction']),
 			title() {
-				return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', {id: this.id})
+				return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', {id: this.quizQuestionId})
 			},
 		},
 		methods: {
@@ -100,11 +102,11 @@
 				this.$router.go(-1)
 			},
 			setupQuestion() {
-				if (!this.id) {
+				if (!this.quizQuestionId) {
 					this.hasError = true
 					return
 				}
-				this.fetchSingleQuestion(this.id)
+				this.fetchSingleQuestion(this.quizQuestionId)
 					.then(response => {
 						if (!response.data) this.hasError = true
 					})
@@ -116,6 +118,9 @@
 		created() {
 			this.destroyQuiz()
 		},
+		beforeRouteEnter(to, from, next) {
+			return next()
+		},
 		mounted() {
 			this.setupQuestion()
 		},
@@ -123,7 +128,7 @@
 			this.destroyQuiz()
 		},
 		watch: {
-			id(to) {
+			quizQuestionId(to) {
 				!!to && this.setupQuestion()
 			}
 		}

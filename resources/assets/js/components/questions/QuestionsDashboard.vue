@@ -33,7 +33,7 @@
 						<div v-if="plan === null" class="margin vertical">
 							<wnl-text-loader/>
 						</div>
-						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan"/>
+						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan" @userEvent="onUserEvent"/>
 						<div class="questions-plan-create" v-else>
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
@@ -118,7 +118,7 @@
 						<button @click="resetQuestionsProgress" class="button is-danger to-right">Wyczyść wszystkie wyniki</button>
 					</div>
 				</div>
-				<router-view v-else :id="id"/>
+				<router-view v-else :id="id" @userEvent="onUserEvent"/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -332,6 +332,8 @@
 	import {getApiUrl} from 'js/utils/env'
 	import { swalConfig } from 'js/utils/swal'
 	import withChat from 'js/mixins/with-chat'
+	import features from 'js/consts/events_map/features.json';
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'QuestionsDashboard',
@@ -353,7 +355,9 @@
 				plan: null,
 				planRoute: {},
 				stats: {},
-				expandedExams: []
+				expandedExams: [],
+				context: context.questions_bank,
+				feature: features.dashboard
 			}
 		},
 		computed: {
@@ -376,6 +380,13 @@
 		methods: {
 			...mapActions(['toggleChat', 'toggleOverlay']),
 			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
+			onUserEvent(payload) {
+				this.$trackUserEvent({
+					feature: this.feature.value,
+					context: this.context.value,
+					...payload,
+				})
+			},
 			toggleExamExpand(index) {
 				const indexOf = this.expandedExams.indexOf(index)
 				if (indexOf > -1) {
@@ -479,6 +490,11 @@
 			isEmpty(this.filters)
 				? this.fetchDynamicFilters().then(this.setPlanRoute)
 				: this.setPlanRoute()
+			this.$trackUserEvent({
+				context: this.context.value,
+				feature: this.feature.value,
+				action: this.feature.actions.open.value
+			})
 		},
 		watch: {
 			'$route' (to, from) {

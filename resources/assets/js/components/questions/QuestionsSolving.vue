@@ -60,6 +60,7 @@
 					@changeQuestion="changeQuestion"
 					@selectAnswer="selectAnswer"
 					@verify="onVerify"
+					@userEvent="proxyUserEvent"
 				/>
 			</div>
 
@@ -96,6 +97,7 @@
 						:readOnly="showListResults"
 						:hideComments="true"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
+						@userEvent="proxyUserEvent"
 					/>
 				</div>
 
@@ -122,6 +124,7 @@
 					@selectAnswer="selectAnswer"
 					@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 					@endQuiz="$emit('endQuiz')"
+					@userEvent="proxyUserEvent"
 				/>
 			</div>
 		</div>
@@ -211,6 +214,7 @@
 	import QuizQuestion from 'js/components/quiz/QuizQuestion'
 	import Pagination from 'js/components/global/Pagination'
 	import { scrollToElement } from 'js/utils/animations'
+	import emits_events from 'js/mixins/emits-events'
 
 	const views = [
 		{
@@ -237,6 +241,7 @@
 			'wnl-quiz-question': QuizQuestion,
 			'wnl-pagination': Pagination,
 		},
+		mixins: [emits_events],
 		props: {
 			activeFilters: {
 				default: () => [],

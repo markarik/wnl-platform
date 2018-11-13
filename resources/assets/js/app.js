@@ -1,4 +1,3 @@
-require('./bootstrap');
 import Vue from "vue";
 import {sync} from "vuex-router-sync";
 import store from "js/store/store";
@@ -19,8 +18,9 @@ import TextLoader from "js/components/global/TextLoader.vue";
 import Upload from "js/components/global/Upload.vue";
 import Logger from "js/utils/logger";
 import App from "js/components/App.vue";
-import WnlSocket from "js/plugins/socket";
+import ChatConnection from "js/plugins/chat-connection";
 import WnlAxios from "js/plugins/axios";
+import EventsTracker from "js/plugins/events-tracker";
 
 // Sync vue-router and vuex
 sync(store, router)
@@ -37,8 +37,9 @@ const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages})
 
 // SweetAlert2
 Vue.use(VueSweetAlert)
-Vue.use(WnlSocket, {store})
+Vue.use(ChatConnection, {store})
 Vue.use(WnlAxios, {store, router})
+Vue.use(EventsTracker, {store, router})
 
 // Simple Breakpoints
 Vue.use(VueSimpleBreakpoints, {
@@ -92,3 +93,7 @@ $.ajaxSetup({
 		$wnl.logger.error(error)
 	}
 });
+
+// this has to be at the very bottom to make sure axios is already loaded
+// axios is loaded by the WnlAxios plugin
+require('./echo');

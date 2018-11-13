@@ -22,7 +22,7 @@ class UserProfileTransformer extends ApiTransformer
 	{
 		$firstName = is_null($profile->deleted_at) ? $profile->first_name : 'Konto';
 		$lastName = is_null($profile->deleted_at) ? $profile->last_name : 'usunięte';
-		$displayName = is_null($profile->deleted_at) ? $profile->display_name : 'Konto usinięte';
+		$displayName = is_null($profile->deleted_at) ? $profile->display_name : 'Konto usunięte';
 
 		$data = [
 			'id'                => $profile->id,

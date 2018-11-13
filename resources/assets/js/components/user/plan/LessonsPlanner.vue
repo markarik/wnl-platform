@@ -14,11 +14,11 @@
 		</div>
 		<article class="message is-info">
 			<div class="message-header">
-				<p>Twój Plan Pracy</p>
+				<p>Twój plan pracy</p>
 			</div>
 			<div class="message-body plan-details">
 				<span>Twój obecny plan pracy zakłada naukę od <strong>{{planStartDate}}</strong> do <strong>{{planEndDate}}</strong>.</span>
-				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Twój Plan Pracy > Ustaw plan ręcznie.</span>
+				<span>Aby podejrzeć daty otwarcia poszczególnych lekcji wejdź w Twój plan pracy > Ustaw plan ręcznie.</span>
 			</div>
 		</article>
 		<div class="wnl-screen-title">
@@ -41,7 +41,7 @@
 				</span>
 			</a>
 		</div>
-		<component :is="activeViewComponent"/>
+		<component :is="activeViewComponent" @userEvent="proxyUserEvent"/>
 	</div>
 </template>
 
@@ -69,9 +69,11 @@
 	import { first,last } from 'lodash'
 	import { mapGetters } from 'vuex'
 	import moment from 'moment'
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
 		name: 'LessonsPlanner',
+		mixins: [emits_events],
 		data() {
 			return {
 				views: [

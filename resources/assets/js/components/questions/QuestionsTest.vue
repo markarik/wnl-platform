@@ -82,7 +82,9 @@
 			:isComplete="isComplete"
 			:isProcessing="testProcessing"
 			:plainList="true"
+			:hideCount="true"
 			@selectAnswer="onSelectAnswer"
+			@userEvent="onUserEvent"
 		/>
 
 		<div v-if="lastPage > 1" class="pagination bottom">
@@ -229,6 +231,9 @@
 	import QuizList from 'js/components/quiz/QuizList'
 	import QuizTimer from 'js/components/quiz/QuizTimer'
 	import Pagination from 'js/components/global/Pagination'
+	import emits_events from 'js/mixins/emits-events'
+	import features from 'js/consts/events_map/features.json';
+	import context from 'js/consts/events_map/context.json';
 
 	import {scrollToElement} from 'js/utils/animations'
 
@@ -239,6 +244,7 @@
 			'wnl-quiz-timer': QuizTimer,
 			'wnl-pagination': Pagination,
 		},
+		mixins: [emits_events],
 		props: [
 			'getReaction',
 			'questions',
@@ -343,6 +349,13 @@
 				this.$refs.timer.stopTimer()
 				this.checkQuiz()
 			},
+			onUserEvent(payload) {
+				this.emitUserEvent({
+					feature: features.quiz_questions.value,
+					subcontext: context.questions_bank.subcontext.test_yourself.value,
+					...payload,
+				})
+			}
 		},
 		mounted() {
 			!this.isComplete && this.$refs.timer.startTimer()

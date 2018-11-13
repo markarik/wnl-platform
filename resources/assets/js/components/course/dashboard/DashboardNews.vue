@@ -2,24 +2,26 @@
 	<div class="notification content" v-if="showNews">
 		<button class="delete" @click="seenCurrentNews"></button>
 
-		<p class="has-text-centered"><strong>WITAJ NA KURSIE!</strong></p>
+		<p class="has-text-centered"><strong>CZAS, START!</strong></p>
 
-		<p>Cześć! 👋</p>
+		<p class="strong">Cześć {{currentUserName}}! 👋</p>
 
-		<p>Zanim rozpoczniesz wcześniejszą naukę, ustaw swój własny plan pracy!
-		Możesz to zrobić tutaj:</p>
+		<p class="strong">4. edycję kursu czas zacząć!</p>
+		<p>W ciągu najbliższych miesięcy spędzisz tu sporo czasu, więc bardzo polecamy zapoznanie się ze <router-link :to="{ name: 'lessons', params: { courseId: 1, lessonId: 16 } }">Wstępem do kursu</router-link>, a zwłaszcza ekranem <router-link :to="{ name: 'screens', params: { courseId: 1, lessonId: 16, screenId: 82 } }">Obsługa platformy</router-link>. 😉</p>
 
-		<p class="aligncenter">
-			<a :href="planLink" target="_blank" class="button is-primary">
-				Plan pracy
-			</a>
+		<p class="has-text-centered margin bottom">
+			<router-link class="button is-primary is-outlined" :to="{ name: 'lessons', params: { courseId: 1, lessonId: 16 } }">Odwiedź Wstęp do kursu</router-link>
 		</p>
 
-		<p>W zakładce znajdziesz również film z instrukcją jak to zrobić. 🙂</p>
+		<p class="margin top">Jeśli czujesz już gotowość do nauki - zacznij od rozwiązania Wstępnego LEK-u. <strong>Rozwiązanie go do 12 listopada jest warunkiem skorzystania z Gwarancji Satysfakcji!</strong> Wszystkie instrukcje znajdziesz w lekcji <router-link :to="{ name: 'lessons', params: { courseId: 1, lessonId: 85 } }">Wstępny LEK</router-link>. 🙂</p>
 
-		<p>Możesz także poczekać na oficjalny start kursu 5 listopada, wtedy pierwsza lekcja otworzy się automatycznie!</p>
+		<p class="has-text-centered margin bottom">
+			<router-link class="button is-primary" :to="{ name: 'lessons', params: { courseId: 1, lessonId: 85 } }">Rozwiąż wstępny LEK!</router-link>
+		</p>
 
-		<p>Miłej nauki! 🚀</p>
+		<p><strong>Ważna informacja!</strong> Jeżeli Twoja praca z kursem rozpoczęła się już wcześniej, a teraz chcesz przywrócić domyślny plan kursu - możesz to zrobić w zakładce <router-link :to="{ name: 'lessons-availabilites' }">KONTO > Plan pracy</router-link>. WAŻNE! Nie musisz usuwać zapisanych w Kolekcjach pytań, postępu w lekcjach, ani rozwiązanych pytań kontrolnych. 🙂</p>
+
+		<p>Życzymy powodzenia i owocnej pracy z kursem! 🚀</p>
 
 		<p style="font-style: italic;">Ekipa Więcej niż LEK</p>
 	</div>
@@ -30,7 +32,7 @@
 	import { mapGetters } from 'vuex'
 	import { getUrl } from 'js/utils/env'
 
-	const CURRENT_NEWS = 'edition-4-plan-redirect'
+	const CURRENT_NEWS = 'edition-4-welcome'
 	const DISPLAY_FROM = '' // new Date() or empty string
 	const DISPLAY_UNTIL = '' // new Date() or empty string
 	const REQUIRED_ROLE = ''

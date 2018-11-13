@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Errors from './Errors'
+import {cloneDeep} from "lodash";
 
 export default class Form {
 	/**
@@ -8,7 +9,7 @@ export default class Form {
 	 * @param {object} data
 	 */
 	constructor(data) {
-		this.originalData = data;
+		this.originalData = cloneDeep(data);
 
 		for (let field in data) {
 			this[field] = data[field];
@@ -122,7 +123,7 @@ export default class Form {
 						return false
 					}
 					this[field] = response.data[field]
-					this.originalData[field] = response.data[field]
+					this.originalData[field] = cloneDeep(response.data[field])
 				})
 			})
 	}

@@ -72,7 +72,7 @@
 							:form="flashcard"
 							v-model="flashcard.flashcardId"
 					>
-						Id pytania
+						Dodaj pytanie (Id pytania)
 					</wnl-form-input>
 					<button class="button is-small is-success"
 							type="submit"

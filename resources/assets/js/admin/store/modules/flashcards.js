@@ -27,8 +27,8 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAllFlashcards({commit, getters}) {
-		if (_.isEmpty(getters.allFlashcards)) {
+	async fetchAllFlashcards({commit, state}) {
+		if (_.isEmpty(state.flashcards)) {
 			const {data} = await axios.get(getApiUrl('flashcards/all'));
 			commit(types.SETUP_FLASHCARDS, data)
 		}

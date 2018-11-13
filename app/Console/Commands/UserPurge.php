@@ -52,7 +52,7 @@ class UserPurge extends Command
 			$data = [
 				$user->id,
 				$user->full_name,
-				ceil($user->time->max('time') / 60) . 'h',
+				ceil($user->userTime->max('time') / 60) . 'h',
 				$user->roles->pluck('name')->implode(','),
 				$user->created_at,
 				$user->sessions->last()->created_at ?? '',
@@ -62,6 +62,7 @@ class UserPurge extends Command
 
 			if ($this->confirm('Confirm deleting above user and all related user data')) {
 				$this->purge($user);
+				$this->info('User deleted');
 			} else {
 				continue;
 			}
@@ -70,7 +71,7 @@ class UserPurge extends Command
 		return;
 	}
 
-	private function purge($user) {
+	public function purge($user) {
 
 		$user->orders()->delete();
 		$user->coupons()->delete();
@@ -90,10 +91,8 @@ class UserPurge extends Command
 		$user->reactables()->delete();
 		$user->chatRooms()->delete();
 		$user->subscription()->delete();
-		$user->time()->delete();
+		$user->userTime()->delete();
 		$user->delete();
-
-		$this->info('User deleted');
 
 		return;
 	}

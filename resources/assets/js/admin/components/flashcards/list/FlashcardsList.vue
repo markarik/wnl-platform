@@ -10,12 +10,8 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
-
 <script>
-	import {mapGetters} from 'vuex'
+	import {mapState} from 'vuex'
 
 	import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem'
 
@@ -25,7 +21,9 @@
 			'wnl-flashcard-list-item': FlashcardsListItem,
 		},
 		computed: {
-			...mapGetters('flashcards', ['allFlashcards'])
+			...mapState('flashcards', {
+				allFlashcards: 'flashcards',
+			})
 		},
 	}
 </script>

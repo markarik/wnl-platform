@@ -43,7 +43,7 @@
 		},
 		methods: {
 			formScreenMeta(resource, id) {
-				let meta = {
+				return {
 					resources: [
 						{
 							id: id,
@@ -51,8 +51,6 @@
 						}
 					]
 				};
-
-				return meta
 			},
 			fetchQuizSets() {
 				return axios.get(getApiUrl('quiz_sets/all'))

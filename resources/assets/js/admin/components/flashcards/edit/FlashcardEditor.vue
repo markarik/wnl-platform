@@ -1,12 +1,5 @@
 <template>
 	<div class="flashcard-editor">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
-				   :alert="alert"
-				   cssClass="fixed"
-				   :key="timestamp"
-				   :timestamp="timestamp"
-				   @delete="onDelete"
-		/>
 		<h3 class="title">
 			Edycja pytania
 			<span v-if="isEdit">Id: {{flashcardId}}</span>
@@ -42,10 +35,10 @@
 
 <script>
 	import {isEqual} from 'lodash'
+	import { mapActions } from 'vuex';
 
 	import Form from 'js/classes/forms/Form'
 	import { getApiUrl } from 'js/utils/env'
-	import { alerts } from 'js/mixins/alerts'
 
 	import Textarea from "js/admin/components/forms/Textarea";
 
@@ -54,7 +47,7 @@
 		components: {
 			'wnl-form-textarea': Textarea,
 		},
-		mixins: [ alerts ],
+		props: ['flashcardId'],
 		data() {
 			return {
 				form: new Form({
@@ -64,9 +57,6 @@
 			}
 		},
 		computed: {
-			flashcardId() {
-				return this.$route.params.flashcardId;
-			},
 			isEdit() {
 				return this.flashcardId !== 'new';
 			},
@@ -78,6 +68,7 @@
 			}
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
 			flashcardFormSubmit() {
 				if (!this.hasChanged) {
 					return false
@@ -87,12 +78,18 @@
 				this.form[this.isEdit ? 'put' : 'post'](this.flashcardResourceUrl)
 					.then(response => {
 						this.loading = false
-						this.successFading('Pytanie zapisane!', 2000)
+						this.addAutoDismissableAlert({
+							text: 'Pytanie zapisane!',
+							type: 'success',
+						});
 						this.form.originalData = this.form.data()
 					})
 					.catch(exception => {
 						this.loading = false
-						this.errorFading('Nie udało się :(', 2000)
+						this.addAutoDismissableAlert({
+							text: 'Nie udało się :(',
+							type: 'error',
+						});
 						$wnl.logger.capture(exception)
 					})
 			}

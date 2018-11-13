@@ -67,7 +67,7 @@
 </style>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex'
+	import { mapState, mapActions } from 'vuex'
 	import draggable from 'vuedraggable';
 
 	import Form from 'js/classes/forms/Form';
@@ -108,9 +108,9 @@
 						text: `${flashcardsSet.id}. ${flashcardsSet.name}`
 					}));
 			},
-			...mapGetters('flashcardsSets', {
-				areFlashcardsSetsReady: 'isReady',
-				allFlashcardsSets: 'allFlashcardsSets'
+			...mapState('flashcardsSets', {
+				areFlashcardsSetsReady: 'ready',
+				allFlashcardsSets: 'flashcardsSets'
 			}),
 		},
 		methods: {

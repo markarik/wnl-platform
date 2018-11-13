@@ -1,12 +1,5 @@
 <template>
 	<div class="screens-editor">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
-			:alert="alert"
-			cssClass="fixed"
-			:key="timestamp"
-			:timestamp="timestamp"
-			@delete="onDelete"
-		></wnl-alert>
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
 			<wnl-screens-list :screens="screens" ref="ScreensList"></wnl-screens-list>
@@ -99,6 +92,7 @@
 <script>
 	import _ from 'lodash'
 	import { set } from 'vue'
+	import { mapActions } from 'vuex';
 
 	import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue'
 	import Form from 'js/classes/forms/Form'
@@ -106,7 +100,6 @@
 	import Quill from 'js/admin/components/forms/Quill.vue'
 	import Select from 'js/admin/components/forms/Select.vue'
 
-	import { alerts } from 'js/mixins/alerts'
 	import { getApiUrl } from 'js/utils/env'
 	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 	import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards'
@@ -153,7 +146,6 @@
 			'wnl-screens-list': ScreensList,
 			'wnl-select': Select,
 		},
-		mixins: [ alerts ],
 		data() {
 			return {
 				ready: false,
@@ -200,6 +192,7 @@
 			},
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
 			populateScreenForm() {
 				axios.get(this.screenFormResourceUrl)
 					.then(response => {
@@ -230,12 +223,18 @@
 					.then(() => {
 						this.loading = false
 						this.screenForm.originalData = this.screenForm.data()
-						this.successFading('Zapisano!', 2000)
+						this.addAutoDismissableAlert({
+							text: 'Zapisano!',
+							type: 'success',
+						});
 						return this.$refs.ScreensList.fetchScreens()
 					})
 					.catch(exception => {
 						this.loading = false
-						this.errorFading('Nie wyszło :(', 2000)
+						this.addAutoDismissableAlert({
+							text: 'Nie wyszło :(',
+							type: 'error',
+						});
 						$wnl.logger.capture(exception)
 					})
 			}

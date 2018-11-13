@@ -15,14 +15,6 @@ const state = {
 	flashcardsSets: [],
 }
 
-// Getters
-const getters = {
-	isReady: state => state.ready,
-	allFlashcardsSets: state => {
-		return state.flashcardsSets
-	}
-}
-
 // Mutations
 const mutations = {
 	[types.FLASHCARDS_SETS_READY] (state) {
@@ -54,7 +46,6 @@ const actions = {
 export default {
 	namespaced,
 	state,
-	getters,
 	mutations,
 	actions
 }

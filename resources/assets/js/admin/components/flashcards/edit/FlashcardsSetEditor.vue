@@ -1,5 +1,12 @@
 <template>
 	<div class="flashcards-set-editor">
+		<wnl-alert v-for="(alert, timestamp) in alerts"
+				   :alert="alert"
+				   cssClass="fixed"
+				   :key="timestamp"
+				   :timestamp="timestamp"
+				   @delete="onDelete"
+		></wnl-alert>
 		<div class="flashcards-set-editor-header">
 			<h3 class="title">
 				Edycja zestawu pytań
@@ -16,13 +23,6 @@
 				</span>
 			</button>
 		</div>
-		<wnl-alert v-for="(alert, timestamp) in alerts"
-				   :alert="alert"
-				   cssClass="fixed"
-				   :key="timestamp"
-				   :timestamp="timestamp"
-				   @delete="onDelete"
-		></wnl-alert>
 		<form @submit.prevent="flashcardsSetFormSubmit">
 			<wnl-form-input
 					name="name"
@@ -39,9 +39,9 @@
 				Mind mapy
 			</wnl-form-input>
 			<label class="label">Lekcja</label>
-			<span class="select">
+			<span class="select flashcards-set-editor-select">
 				<wnl-select :form="form"
-							 :options="lessons"
+							 :options="lessonsOptions"
 							 name="lesson_id"
 							 v-model="form.lesson_id"
 				/>
@@ -57,14 +57,13 @@
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
 				<draggable v-model="form.flashcards" @start="drag=true" @end="drag=false" v-if="areFlashcardsReady">
-					<div v-for="flashcardId in form.flashcards" :key="flashcardId" class="flashcard">
-						<div class="flashcard-content">{{flashcardId}}. {{allFlashcards.find(flashcard => flashcard.id === flashcardId).content}}</div>
-						<button class="flashcard-remove" type="button" @click="removeFlashcard(flashcardId)">
-							<span class="icon is-small">
-								<i class="fa fa-trash"></i>
-							</span>
-						</button>
-					</div>
+					<wnl-flashcards-set-list-item
+							v-for="flashcardId in form.flashcards"
+							:key="flashcardId"
+							:id="flashcardId"
+							:content="allFlashcards.find(flashcard => flashcard.id === flashcardId).content"
+							@remove="removeFlashcard(flashcardId)"
+					/>
 				</draggable>
 
 				<form @submit.prevent="QuestionFormSubmit">
@@ -106,26 +105,11 @@
 		z-index: 1
 	.flashcards-admin
 		display: flex
-	.flashcard
-		border-bottom: $border-light-gray
-		cursor: move
-		display: flex
-		margin-right: $margin-huge
-		padding: $margin-base 0
-	.flashcard-content
-		overflow: hidden
-		text-overflow: ellipsis
-		width: 500px
-		white-space: nowrap
-	.flashcard-remove
-		background: none
-		border: none
-		cursor: pointer
-		margin-left: $margin-big
-		outline: none
-		transition: color ease-in-out .2s
-		&:hover
-			color: red
+	.flashcards-set-editor-select
+		display: block
+		/deep/ select
+			width: 100%
+
 </style>
 
 <script>
@@ -141,9 +125,9 @@
 	import WnlFormInput from "js/admin/components/forms/Input";
 	import WnlQuill from 'js/admin/components/forms/Quill';
 	import WnlSelect from 'js/admin/components/forms/Select';
+	import WnlFlashcardsSetListItem from 'js/admin/components/flashcards/edit/FlashcardsSetListItem';
 
 	export default {
-		// TODO decompose
 		// TODO fix disabled after adding flashcard
 		name: 'FlashcardsSetEditor',
 		components: {
@@ -151,6 +135,7 @@
 			WnlQuill,
 			WnlFormTextarea,
 			WnlSelect,
+			WnlFlashcardsSetListItem,
 			draggable,
 		},
 		mixins: [alerts],
@@ -178,7 +163,7 @@
 			flashcardsSetId() {
 				return this.$route.params.flashcardsSetId;
 			},
-			lessons() {
+			lessonsOptions() {
 				return this.allLessons.map(lesson => ({
 					text: lesson.name,
 					value: lesson.id,
@@ -188,10 +173,10 @@
 				return this.flashcardsSetId !== 'new';
 			},
 			flashcardsSetResourceUrl() {
-				return getApiUrl(this.isEdit ? `flashcards_sets/${this.flashcardsSetId}?include=flashcards` : 'flashcards_sets')
+				return getApiUrl(this.isEdit ? `flashcards_sets/${this.flashcardsSetId}?include=flashcards` : 'flashcards_sets');
 			},
 			hasChanged() {
-				return !_.isEqual(this.form.originalData, this.form.data())
+				return !_.isEqual(this.form.originalData, this.form.data());
 			}
 		},
 		methods: {
@@ -205,19 +190,19 @@
 			},
 			flashcardsSetFormSubmit() {
 				if (!this.hasChanged) {
-					return false
+					return false;
 				}
 
-				this.loading = true
+				this.loading = true;
 				this.form[this.isEdit ? 'put' : 'post'](this.flashcardsSetResourceUrl)
 					.then(response => {
-						this.loading = false
-						this.successFading('Zestaw pytań zapisany!', 2000)
+						this.loading = false;
+						this.successFading('Zestaw pytań zapisany!', 2000);
 						this.form.originalData = this.form.data()
 					})
 					.catch(exception => {
-						this.loading = false
-						this.errorFading('Nie udało się :(', 2000)
+						this.loading = false;
+						this.errorFading('Nie udało się :(', 2000);
 						$wnl.logger.capture(exception)
 					})
 			},

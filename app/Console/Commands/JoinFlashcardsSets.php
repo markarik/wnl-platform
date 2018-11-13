@@ -40,6 +40,7 @@ class JoinFlashcardsSets extends Command
 	{
 		$flashcardsSets = FlashcardsSet::all()->pluck('id')->toArray();
 		$bar = $this->output->createProgressBar(count($flashcardsSets));
+		$differentFlashcards = [];
 
 		foreach ($flashcardsSets as $setId) {
 			$bar->advance();
@@ -47,7 +48,7 @@ class JoinFlashcardsSets extends Command
 			$set = FlashcardsSet::find($setId);
 
 			if (empty($set)) {
-				$this->output->text("Set already merged...");
+				$this->output->text("\n Set already merged... \n");
 				continue;
 			}
 
@@ -57,13 +58,16 @@ class JoinFlashcardsSets extends Command
 				->get();
 
 			if ($matchingSetByName->count() === 0) {
-				$this->output->text("Set does not have matching sets...");
+				$this->output->text("\n Set does not have matching sets... \n");
 				continue;
 			}
 
 			foreach ($matchingSetByName as $matchingSet) {
 				if ($matchingSet->flashcards->diff($set->flashcards)->count() !== 0) {
-					$this->output->text("Set has matching name but flashcards are different...");
+					$this->output->text("\n Set has matching name but flashcards are different...");
+					$differentFlashcards[$matchingSet->name] =
+						$differentFlashcards[$matchingSet->name] ?? ['name' => $matchingSet->name, 'count' => 0];
+					$differentFlashcards[$matchingSet->name]['count']++;
 					continue;
 				}
 
@@ -71,35 +75,36 @@ class JoinFlashcardsSets extends Command
 					"select id from (select id, JSON_EXTRACT(meta, '$.resources[*].id') as sets_ids from screens where type = 'flashcards') as meta where JSON_CONTAINS(sets_ids, '{$matchingSet->id}')"
 				);
 
-				if (count($screens) > 1) {
-					$this->output->note("more than one screen found for set $set->id \n");
-					continue;
+				foreach ($screens as $screen) {
+					$this->updateScreen($screen, $matchingSet->id, $set->id);
 				}
-
-				$screen = $screens[0];
-				$screen = Screen::find($screen->id);
-				$mappedMeta = array_map(function($resource) use ($matchingSet, $set) {
-					if ($resource['id'] == $matchingSet->id) {
-						$resource['id'] = $set->id;
-					}
-
-					return $resource;
-				}, $screen->meta['resources']);
-
-				$screen->meta = array_merge($screen->meta, [
-					'resources' => $mappedMeta
-				]);
-
-				$screen->save();
 
 				\DB::table('flashcards_set_flashcard')
 					->where('flashcard_set_id', $matchingSet->id)
-					->update(['flashcard_set_id' => $set->id]);
+					->delete();
 
 				FlashcardsSet::destroy($matchingSet->id);
 			}
 		}
 
+		$this->table(['set name', 'different sets count'], $differentFlashcards);
 		$bar->finish();
+	}
+
+	protected function updateScreen($screen, $matchingSetId, $setId) {
+		$screen = Screen::find($screen->id);
+		$mappedMeta = array_map(function($resource) use ($matchingSetId, $setId) {
+			if ($resource['id'] == $matchingSetId) {
+				$resource['id'] = $setId;
+			}
+
+			return $resource;
+		}, $screen->meta['resources']);
+
+		$screen->meta = array_merge($screen->meta, [
+			'resources' => $mappedMeta
+		]);
+
+		$screen->save();
 	}
 }

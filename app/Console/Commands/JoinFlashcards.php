@@ -46,7 +46,7 @@ class JoinFlashcards extends Command
 			$flashcard = Flashcard::find($flashcardId);
 
 			if (empty($flashcard)) {
-				$this->output->text("Flashcard already merged.... \n");
+				$this->output->text("\n Flashcard already merged.... \n");
 				continue;
 			}
 
@@ -56,7 +56,7 @@ class JoinFlashcards extends Command
 				->get();
 
 			if ($matchingFlashcards->count() === 0) {
-				$this->output->text("Matching flashcards not found.... \n");
+				$this->output->text("\n Matching flashcards not found.... \n");
 				continue;
 			}
 

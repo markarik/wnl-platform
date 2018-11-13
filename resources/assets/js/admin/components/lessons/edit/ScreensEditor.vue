@@ -46,7 +46,7 @@
 						</span>
 					</div>
 					<div class="control" v-if="currentType && currentType.metaEditorComponent">
-						<component :is="currentType.metaEditorComponent" v-model="screenForm.meta" />
+						<component :is="currentType.metaEditorComponent" v-model="screenMeta" />
 					</div>
 				</div>
 
@@ -171,6 +171,14 @@
 		computed: {
 			screenId() {
 				return this.$route.params.screenId
+			},
+			screenMeta: {
+				get() {
+					return JSON.parse(this.screenForm.meta);
+				},
+				set(screenMeta) {
+					this.screenForm.meta = JSON.stringify(screenMeta);
+				}
 			},
 			loaded() {
 				return !!this.$route.params.screenId

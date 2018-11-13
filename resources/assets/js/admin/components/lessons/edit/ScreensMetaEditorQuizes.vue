@@ -50,7 +50,7 @@
 					]
 				};
 
-				return JSON.stringify(meta)
+				return meta
 			},
 			fetchQuizSets() {
 				return axios.get(getApiUrl('quiz_sets/all'))

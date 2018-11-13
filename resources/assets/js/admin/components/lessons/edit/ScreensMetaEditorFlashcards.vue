@@ -90,14 +90,14 @@
 		computed: {
 			flashcardsSetIds: {
 				get: function () {
-					if (!JSON.parse(this.value).resources) {
+					if (!this.value.resources) {
 						return [];
 					}
 
-					return JSON.parse(this.value).resources.map(flashcardsSet => flashcardsSet.id);
+					return this.value.resources.map(flashcardsSet => flashcardsSet.id);
 				},
 				set: function (flashcardsSetIds) {
-					this.$emit('input', JSON.stringify({ resources: flashcardsSetIds.map(id => ({id, name: 'flashcards_sets'}))}))
+					this.$emit('input', { resources: flashcardsSetIds.map(id => ({id, name: 'flashcards_sets'})) });
 				}
 			},
 			flashcardsSetOptions: function() {

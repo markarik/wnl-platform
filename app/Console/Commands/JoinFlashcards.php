@@ -20,7 +20,7 @@ class JoinFlashcards extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Add context to user flashcards results';
+	protected $description = 'Join flashcards with the same content';
 
 	/**
 	 * Create a new command instance.

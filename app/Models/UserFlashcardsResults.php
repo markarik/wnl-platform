@@ -20,9 +20,4 @@ class UserFlashcardsResults extends Model
 	{
 		return $this->belongsTo('\App\Models\Flashcard');
 	}
-
-	public function context()
-	{
-		return $this->morphTo();
-	}
 }

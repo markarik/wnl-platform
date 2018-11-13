@@ -25,9 +25,9 @@ class AddContextToFlashcardsUserResults extends Migration
 	 */
 	public function down()
 	{
-//		Schema::table('user_flashcards_results', function (Blueprint $table) {
-//			$table->dropColumn('context_type');
-//			$table->dropColumn('context_id');
-//		});
+		Schema::table('user_flashcards_results', function (Blueprint $table) {
+			$table->dropColumn('context_type');
+			$table->dropColumn('context_id');
+		});
 	}
 }

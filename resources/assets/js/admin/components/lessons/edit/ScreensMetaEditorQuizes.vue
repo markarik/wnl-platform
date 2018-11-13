@@ -15,6 +15,8 @@
 </style>
 
 <script>
+	import { forEach } from 'lodash';
+
 	import WnlSelect from "js/admin/components/forms/Select";
 	import {getApiUrl} from 'js/utils/env';
 
@@ -55,7 +57,7 @@
 			fetchQuizSets() {
 				return axios.get(getApiUrl('quiz_sets/all'))
 					.then((response) => {
-						_.forEach(response.data, (quiz) => {
+						forEach(response.data, (quiz) => {
 							this.quiz_sets.push({
 								text: quiz.name,
 								value: this.formScreenMeta('quiz_sets', quiz.id),

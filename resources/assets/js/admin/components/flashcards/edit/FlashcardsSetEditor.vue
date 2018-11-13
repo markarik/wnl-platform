@@ -6,7 +6,7 @@
 				   :key="timestamp"
 				   :timestamp="timestamp"
 				   @delete="onDelete"
-		></wnl-alert>
+		/>
 		<div class="flashcards-set-editor-header">
 			<h3 class="title">
 				Edycja zestawu pytań
@@ -113,8 +113,8 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+	import { isEqual } from 'lodash';
+	import { mapGetters, mapActions } from 'vuex';
 	import draggable from 'vuedraggable';
 
 	import Form from 'js/classes/forms/Form'
@@ -175,7 +175,7 @@
 				return getApiUrl(this.isEdit ? `flashcards_sets/${this.flashcardsSetId}?include=flashcards` : 'flashcards_sets');
 			},
 			hasChanged() {
-				return !_.isEqual(this.form.originalData, this.form.data());
+				return !isEqual(this.form.originalData, this.form.data());
 			}
 		},
 		methods: {

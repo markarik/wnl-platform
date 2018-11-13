@@ -1,16 +1,16 @@
 <template>
 	<div class="flashcard-editor">
-		<h3 class="title">
-			Edycja pytania
-			<span v-if="isEdit">Id: {{flashcardId}}</span>
-		</h3>
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 				   :alert="alert"
 				   cssClass="fixed"
 				   :key="timestamp"
 				   :timestamp="timestamp"
 				   @delete="onDelete"
-		></wnl-alert>
+		/>
+		<h3 class="title">
+			Edycja pytania
+			<span v-if="isEdit">Id: {{flashcardId}}</span>
+		</h3>
 		<form @submit.prevent="flashcardFormSubmit">
 				<wnl-form-textarea
 					name="content"
@@ -41,7 +41,7 @@
 </style>
 
 <script>
-	import _ from 'lodash'
+	import {isEqual} from 'lodash'
 
 	import Form from 'js/classes/forms/Form'
 	import { getApiUrl } from 'js/utils/env'
@@ -74,7 +74,7 @@
 				return getApiUrl(this.isEdit ? `flashcards/${this.flashcardId}` : 'flashcards')
 			},
 			hasChanged() {
-				return !_.isEqual(this.form.originalData, this.form.data())
+				return !isEqual(this.form.originalData, this.form.data())
 			}
 		},
 		methods: {

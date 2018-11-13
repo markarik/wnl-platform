@@ -66,18 +66,22 @@ const EventsTracker = {
 				contextRoute[column] = value;
 			});
 
-			socket.emit(EVENTS.USER_EVENT, {
-				...payload,
-				...(await getSharedEventContext()),
-				context_route: contextRoute,
+			eventsQueue.push(async () => {
+				socket.emit(EVENTS.USER_EVENT, {
+					...payload,
+					...(await getSharedEventContext()),
+					context_route: contextRoute,
+				})
 			})
 		};
 
-		Vue.prototype.$trackUrlChange = async payload => {
-			socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
-				...payload,
-				...(await getSharedEventContext()),
-			});
+		Vue.prototype.$trackUrlChange = (payload) => {
+			eventsQueue.push(async () => {
+				socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
+					...payload,
+					...(await getSharedEventContext()),
+				})
+			})
 		}
 	}
 }

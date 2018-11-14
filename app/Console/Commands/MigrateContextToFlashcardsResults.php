@@ -23,15 +23,6 @@ class MigrateContextToFlashcardsResults extends Command
 	protected $description = 'Add context to user flashcards results';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed

@@ -23,15 +23,6 @@ class JoinFlashcardsSets extends Command
 	protected $description = 'Join flashcards sets with the same flashcards';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed

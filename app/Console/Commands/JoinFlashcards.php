@@ -23,15 +23,6 @@ class JoinFlashcards extends Command
 	protected $description = 'Join flashcards with the same content';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
@@ -62,17 +53,33 @@ class JoinFlashcards extends Command
 
 			$matchingFlashcardsIds = $matchingFlashcards->pluck('id')->toArray();
 
-			\DB::table('flashcards_set_flashcard')
-				->whereIn('flashcard_id', $matchingFlashcardsIds)
-				->update(['flashcard_id' => $flashcardId]);
+			$this->transaction(function () use ($matchingFlashcardsIds, $flashcardId) {
+				\DB::table('flashcards_set_flashcard')
+					->whereIn('flashcard_id', $matchingFlashcardsIds)
+					->update(['flashcard_id' => $flashcardId]);
 
-			UserFlashcardsResults
-				::whereIn('flashcard_id', $matchingFlashcardsIds)
-				->update(['flashcard_id' => $flashcardId]);
+				UserFlashcardsResults
+					::whereIn('flashcard_id', $matchingFlashcardsIds)
+					->update(['flashcard_id' => $flashcardId]);
 
-			Flashcard::destroy($matchingFlashcardsIds);
+				Flashcard::destroy($matchingFlashcardsIds);
+			});
 		}
 
 		$bar->finish();
+	}
+
+	private function transaction(\Closure $callback)
+	{
+		\DB::beginTransaction();
+
+		try {
+			$callback();
+		} catch (Exception $e) {
+			\DB::rollBack();
+			throw $e;
+		}
+
+		\DB::commit();
 	}
 }

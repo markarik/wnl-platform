@@ -208,7 +208,6 @@
 				}
 			},
 			toggleActive() {
-				console.log('toggle active dropdown');
 				this.isActive = !this.isActive
 				this.$emit('toggled', this.isActive)
 			},

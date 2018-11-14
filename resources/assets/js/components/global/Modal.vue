@@ -1,13 +1,17 @@
 <template>
 	<div class="wnl-modal">
 		<div class="modal" :class="{ 'is-active': isModalVisible }">
-			<div class="modal-background" @click="$emit('closeModal')"></div>
+			<div class="modal-background" @click="emitCloseModal"></div>
 			<div class="modal-content">
 				<div class="box">
 					<slot></slot>
 				</div>
 			</div>
-			<button class="modal-close is-large" aria-label="close" @click="$emit('closeModal')"></button>
+			<button
+				class="modal-close is-large"
+				aria-label="close"
+				@click="emitCloseModal"
+			></button>
 		</div>
 	</div>
 </template>
@@ -20,7 +24,7 @@
 		font-size: $font-size-base
 
 		.modal
-			z-index: $z-index-alerts
+			z-index: $z-index-alerts +1
 
 </style>
 
@@ -33,5 +37,10 @@ export default {
 			default: false
 		}
 	},
+	methods: {
+		emitCloseModal(event) {
+			this.$emit('closeModal', event)
+		}
+	}
 }
 </script>

@@ -46,75 +46,75 @@
 		display: flex
 		justify-content: space-between
 
-	.personal-notification
-		align-items: flex-start
-		display: flex
-		font-size: $font-size-minus-1
-		justify-content: space-between
-		padding: $margin-small
-		position: relative
-		transition: background-color $transition-length-base
-
-		&:hover
-			background: $color-background-lighter-gray
-			cursor: pointer
-			transition: background-color $transition-length-base
-
-	.avatar
-		font-weight: $font-weight-bold
-		flex: 1
-		padding: $margin-small
-		transition: background-color $transition-length-base
-
-		&:hover
-			background: $color-background-lighter-gray
-			cursor: pointer
-			transition: background-color $transition-length-base
-
-	.notification-content
-		flex: 1 auto
-
-		.notification-header
-			line-height: $line-height-minus
-
-		.context
+		.avatar
 			font-weight: $font-weight-bold
+			height: 100%
+			padding: $margin-small
+			transition: background-color $transition-length-base
 
-		.object-text,
-		.subject
+			&:hover
+				background: $color-background-lighter-gray
+				cursor: pointer
+				transition: background-color $transition-length-base
 
-			&::before
-				content: '« '
+		.personal-notification
+			align-items: flex-start
+			display: flex
+			font-size: $font-size-minus-1
+			justify-content: space-between
+			padding: $margin-small
+			position: relative
+			transition: background-color $transition-length-base
 
-			&::after
-				content: ' »'
+			&:hover
+				background: $color-background-lighter-gray
+				cursor: pointer
+				transition: background-color $transition-length-base
 
-		.object-text
-			color: $color-gray-dimmed
+			.notification-content
+				flex: 1 auto
 
-		.subject
-			font-size: $font-size-base
-			line-height: $line-height-minus
-			margin-top: $margin-small
+				.notification-header
+					line-height: $line-height-minus
 
-		.time
-			color: $color-background-gray
-			font-size: $font-size-minus-2
-			margin-top: $margin-small
+				.context
+					font-weight: $font-weight-bold
 
-			.icon
-				margin-right: $margin-small
+				.object-text,
+				.subject
 
-	.link-symbol
-		display: flex
-		flex: 0
-		width:
+					&::before
+						content: '« '
 
-		.icon
-			color: $color-inactive-gray
+					&::after
+						content: ' »'
 
-			&.unread
-				color: $color-ocean-blue
+				.object-text
+					color: $color-gray-dimmed
+
+				.subject
+					font-size: $font-size-base
+					line-height: $line-height-minus
+					margin-top: $margin-small
+
+				.time
+					color: $color-background-gray
+					font-size: $font-size-minus-2
+					margin-top: $margin-small
+
+					.icon
+						margin-right: $margin-small
+
+			.link-symbol
+				display: flex
+				flex: 0
+				width:
+
+				.icon
+					color: $color-inactive-gray
+
+					&.unread
+						color: $color-ocean-blue
 </style>
 
 <script>
@@ -169,7 +169,8 @@
 				event.stopPropagation()
 				this.isVisible = true
 			},
-			closeModal() {
+			closeModal(event) {
+				event.stopPropagation()
 				this.isVisible = false
 			},
 			dispatchGoToContext() {

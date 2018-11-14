@@ -54,7 +54,18 @@ class JoinFlashcardsSets extends Command
 			}
 
 			foreach ($matchingSetByName as $matchingSet) {
-				if ($matchingSet->flashcards->diff($set->flashcards)->count() !== 0) {
+				$matchingSetFlashcardsDiff = $matchingSet->flashcards->diff($set->flashcards);
+				if ($matchingSetFlashcardsDiff->count() > 0 && $matchingSetFlashcardsDiff->count() < 6) {
+					$orderNumber = $set->flashcards->count();
+					$flashcardsToMove = [];
+
+					foreach($matchingSetFlashcardsDiff as $flashcardToMove) {
+						$flashcardsToMove[$flashcardToMove->id] = ['order_number' => $orderNumber++];
+					}
+
+					$set->flashcards()->syncWithoutDetaching($flashcardsToMove);
+
+				} else if ($matchingSetFlashcardsDiff->count() > 5) {
 					$this->output->text("\n Set has matching name but flashcards are different...");
 					$differentFlashcards[$matchingSet->name] =
 						$differentFlashcards[$matchingSet->name] ?? ['name' => $matchingSet->name, 'count' => 0];

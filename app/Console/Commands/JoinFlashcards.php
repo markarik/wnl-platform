@@ -29,21 +29,22 @@ class JoinFlashcards extends Command
 	 */
 	public function handle()
 	{
-		$flashcards = Flashcard::all()->pluck('id')->toArray();
+		$flashcards = \DB::select("select min(id) as id, count(1) from flashcards group by content having count(1) > 1");
+
 		$bar = $this->output->createProgressBar(count($flashcards));
 
-		foreach ($flashcards as $flashcardId) {
-			$bar->advance();
-			$flashcard = Flashcard::find($flashcardId);
+		foreach ($flashcards as $flashcardRow) {
+			$flashcard = Flashcard::find($flashcardRow->id);
 
 			if (empty($flashcard)) {
-				$this->output->text("\n Flashcard already merged.... \n");
+				$this->output->warning("Flashcard with {$flashcardRow->id} not found!");
 				continue;
 			}
+			$bar->advance();
 
 			$matchingFlashcards = Flashcard
 				::where('content', $flashcard->content)
-				->where('id', '<>', $flashcardId)
+				->where('id', '<>', $flashcard->id)
 				->get();
 
 			if ($matchingFlashcards->count() === 0) {
@@ -53,14 +54,14 @@ class JoinFlashcards extends Command
 
 			$matchingFlashcardsIds = $matchingFlashcards->pluck('id')->toArray();
 
-			$this->transaction(function () use ($matchingFlashcardsIds, $flashcardId) {
+			$this->transaction(function () use ($matchingFlashcardsIds, $flashcard) {
 				\DB::table('flashcards_set_flashcard')
 					->whereIn('flashcard_id', $matchingFlashcardsIds)
-					->update(['flashcard_id' => $flashcardId]);
+					->update(['flashcard_id' => $flashcard->id]);
 
 				UserFlashcardsResults
 					::whereIn('flashcard_id', $matchingFlashcardsIds)
-					->update(['flashcard_id' => $flashcardId]);
+					->update(['flashcard_id' => $flashcard->id]);
 
 				Flashcard::destroy($matchingFlashcardsIds);
 			});

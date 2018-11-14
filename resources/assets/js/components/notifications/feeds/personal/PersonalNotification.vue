@@ -41,14 +41,12 @@
 	@import 'resources/assets/sass/variables'
 
 	.notification-wrapper
-		align-items: flex-start
 		border-bottom: $border-light-gray
 		display: flex
 		justify-content: space-between
 
 		.avatar
 			font-weight: $font-weight-bold
-			height: 100%
 			padding: $margin-small
 			transition: background-color $transition-length-base
 

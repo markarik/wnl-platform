@@ -20,14 +20,18 @@
 				</ul>
 			</div>
 			<div class="flashcards-set-add">
-				<label class="label">Wybierz zestaw pytań</label>
-				<div class="select">
-					<wnl-select
-							:options="flashcardsSetOptions"
-							name="flashcardsSetId"
-							v-model="addSetForm.flashcardsSetId"
-							@input="addSet"
-					></wnl-select>
+				<div class="control">
+					<label class="label">Wybierz zestaw pytań</label>
+					<input class="input" placeholder="Id lub treść aby wyszukać" v-model="flashcardsSetInput"/>
+				</div>
+				<div class="control">
+					<wnl-autocomplete
+							isDown="true"
+							:items="flashcardsSetsAutocompleteItems"
+							:onItemChosen="addFlashcardsSet"
+							:itemComponent="'wnl-flashcards-set-autocomplete-item'"
+							ref="autocomplete"
+					/>
 				</div>
 			</div>
 		</div>
@@ -70,21 +74,18 @@
 	import { mapState, mapActions } from 'vuex'
 	import draggable from 'vuedraggable';
 
-	import Form from 'js/classes/forms/Form';
-	import WnlSelect from "js/admin/components/forms/Select";
+	import WnlAutocomplete from 'js/components/global/Autocomplete';
 
 	export default {
 		name: 'ScreensMetaEditorFlashcards',
 		props: ['value'],
 		components: {
 			draggable,
-			WnlSelect,
+			WnlAutocomplete,
 		},
 		data: function() {
 			return {
-				addSetForm: new Form({
-					flashcardsSetId: null
-				}),
+				flashcardsSetInput: '',
 			};
 		},
 		computed: {
@@ -100,13 +101,18 @@
 					this.$emit('input', { resources: flashcardsSetIds.map(id => ({id, name: 'flashcards_sets'})) });
 				}
 			},
-			flashcardsSetOptions: function() {
+			flashcardsSetsAutocompleteItems: function() {
+				if (this.flashcardsSetInput === '') {
+					return [];
+				}
+
 				return this.allFlashcardsSets
-					.filter(flashcardsSet => !this.flashcardsSetIds.includes(flashcardsSet.id))
-					.map(flashcardsSet => ({
-						value: flashcardsSet.id,
-						text: `${flashcardsSet.id}. ${flashcardsSet.name}`
-					}));
+					.filter(flashcardsSet => !this.flashcardsSetIds.includes(flashcardsSet.id) &&
+						(
+							flashcardsSet.id === parseInt(this.flashcardsSetInput, 10) ||
+							flashcardsSet.name.toLowerCase().includes(this.flashcardsSetInput.toLowerCase())
+						)
+					)
 			},
 			...mapState('flashcardsSets', {
 				areFlashcardsSetsReady: 'ready',
@@ -117,11 +123,9 @@
 			...mapActions('flashcardsSets', {
 				flashcardsSetsSetup: 'setup'
 			}),
-			addSet: function() {
-				if (this.addSetForm.flashcardsSetId) {
-					this.flashcardsSetIds = [...this.flashcardsSetIds, this.addSetForm.flashcardsSetId];
-					this.addSetForm.reset();
-				}
+			addFlashcardsSet: function(flashcardsSet) {
+				this.flashcardsSetIds = [...this.flashcardsSetIds, flashcardsSet.id];
+				this.flashcardsSetInput = '';
 			},
 			removeFlashcardsSet: function(flashcardsSetId) {
 				this.flashcardsSetIds = this.flashcardsSetIds.filter(id => id !== flashcardsSetId);

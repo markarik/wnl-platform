@@ -38,7 +38,7 @@
 
 		&.is-down
 			bottom: auto
-			top: 44px
+			top: 0
 
 		&:focus
 			outline: none
@@ -64,6 +64,8 @@
 <script>
 	import UserAutocomplete from 'js/components/global/UserAutocompleteItem'
 	import TagAutocomplete from 'js/components/global/TagAutocompleteItem'
+	import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem'
+	import WnlFlashcardsSetAutocompleteItem from 'js/admin/components/lessons/edit/FlashcardsSetAutocompleteItem'
 	import autocompleteNav from 'js/mixins/autocomplete-nav'
 
 	export default {
@@ -71,7 +73,9 @@
 		props: ['items', 'onItemChosen', 'itemComponent', 'isDown'],
 		components: {
 			'wnl-tag-autocomplete-item': TagAutocomplete,
-			'wnl-user-autocomplete-item': UserAutocomplete
+			'wnl-user-autocomplete-item': UserAutocomplete,
+			WnlFlashcardAutocompleteItem,
+			WnlFlashcardsSetAutocompleteItem,
 		},
 		mixins: [autocompleteNav],
 	}

@@ -59,21 +59,21 @@
 					/>
 				</draggable>
 
-				<form @submit.prevent="questionFormSubmit">
-					<wnl-form-input
-							name="flashcardId"
-							:form="flashcard"
-							v-model="flashcard.flashcardId"
-					>
-						Dodaj pytanie (Id pytania)
-					</wnl-form-input>
-					<button class="button is-small is-success"
-							type="submit"
-							:disabled="!flashcard.flashcardId"
-					>
-						<span class="margin right">+ Dodaj pytanie</span>
-					</button>
-				</form>
+				<div>
+					<div class="control">
+						<label class="label">Wybierz pytanie</label>
+						<input class="input" placeholder="Id lub treść aby wyszukać" v-model="flashcardInput"/>
+					</div>
+					<div class="control">
+						<wnl-autocomplete
+								isDown="true"
+								:items="flashcardAutocompleteItems"
+								:onItemChosen="addFlashcard"
+								:itemComponent="'wnl-flashcard-autocomplete-item'"
+								ref="autocomplete"
+						/>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -96,7 +96,7 @@
 		padding-top: $margin-small
 		position: sticky
 		top: -$margin-big
-		z-index: 1
+		z-index: 101
 
 	.flashcards-admin
 		display: flex
@@ -116,6 +116,7 @@
 	import Form from 'js/classes/forms/Form'
 	import {getApiUrl} from 'js/utils/env'
 
+	import WnlAutocomplete from 'js/components/global/Autocomplete';
 	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 	import WnlFormInput from "js/admin/components/forms/Input";
 	import WnlQuill from 'js/admin/components/forms/Quill';
@@ -125,6 +126,7 @@
 	export default {
 		name: 'FlashcardsSetEditor',
 		components: {
+			WnlAutocomplete,
 			WnlFormInput,
 			WnlQuill,
 			WnlFormTextarea,
@@ -142,9 +144,7 @@
 					lesson_id: null,
 					flashcards: [],
 				}),
-				flashcard: new Form({
-					flashcardId: null,
-				}),
+				flashcardInput: '',
 				loading: false,
 			}
 		},
@@ -168,6 +168,20 @@
 			},
 			hasChanged() {
 				return !isEqual(this.form.originalData, this.form.data());
+			},
+			flashcardAutocompleteItems() {
+				if (this.flashcardInput === '') {
+					return [];
+				}
+
+				return this.allFlashcards
+					.filter(flashcard => !this.form.flashcards.includes(flashcard.id) &&
+						(
+							flashcard.id === parseInt(this.flashcardInput, 10) ||
+							flashcard.content.toLowerCase().includes(this.flashcardInput.toLowerCase())
+						)
+					)
+					.slice(0, 10)
 			}
 		},
 		methods: {
@@ -210,19 +224,9 @@
 						$wnl.logger.capture(exception)
 					})
 			},
-			questionFormSubmit() {
-				// TODO flashcard autocomplete
-
-				const flashcardId = parseInt(this.flashcard.flashcardId, 10);
-				if (this.form.flashcards.includes(flashcardId)) {
-					this.addAutoDismissableAlert({
-						text: 'To pytanie jest już w zestawie',
-						type: 'error'
-					});
-				} else {
-					this.form.flashcards.push(flashcardId);
-				}
-				this.flashcard.reset();
+			addFlashcard(flashcard) {
+				this.form.flashcards.push(flashcard.id);
+				this.flashcardInput = '';
 			}
 		},
 		mounted() {
@@ -231,6 +235,6 @@
 			}
 			this.setupLessons();
 			this.setupFlashcards();
-		}
+		},
 	}
 </script>

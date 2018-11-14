@@ -136,9 +136,9 @@
 		data() {
 			return {
 				form: new Form({
-					name: null,
-					description: null,
-					mind_maps_text: null,
+					name: '',
+					description: '',
+					mind_maps_text: '',
 					lesson_id: null,
 					flashcards: [],
 				}),
@@ -226,7 +226,9 @@
 			}
 		},
 		mounted() {
-			this.form.populate(this.flashcardsSetResourceUrl);
+			if (this.isEdit) {
+				this.form.populate(this.flashcardsSetResourceUrl);
+			}
 			this.setupLessons();
 			this.setupFlashcards();
 		}

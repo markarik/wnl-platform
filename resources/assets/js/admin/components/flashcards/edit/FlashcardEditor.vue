@@ -51,7 +51,7 @@
 		data() {
 			return {
 				form: new Form({
-					content: null,
+					content: '',
 				}),
 				loading: false,
 			}
@@ -99,7 +99,9 @@
 			}
 		},
 		mounted() {
-			this.form.populate(this.flashcardResourceUrl)
+			if (this.isEdit) {
+				this.form.populate(this.flashcardResourceUrl)
+			}
 		}
 	}
 </script>

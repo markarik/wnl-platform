@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class UsersCleanUp extends Command
@@ -23,16 +24,6 @@ class UsersCleanUp extends Command
 	protected $description = 'Filter out user accounts';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
@@ -45,7 +36,8 @@ class UsersCleanUp extends Command
 				$query
 					->whereDoesntHave('orders', function ($query) {
 						$query
-							->where('paid', 1);
+							->where('paid', 1)
+							->orWhere('created_at', '>', Carbon::now()->subWeek());
 					})
 					->orWhereHas('orders', function ($query) {
 						$query->whereHas('coupon', function ($query) {
@@ -62,16 +54,25 @@ class UsersCleanUp extends Command
 		$this->showTable($users);
 		$this->info("Found {$usersCount} users");
 
-		for ($i = 0; $i < $usersCount; $i++) {
-			$this->showTable([$users[$i]]);
-			$action = $this->choice('Choose action', [
-				1 => 'assign role',
-				2 => 'remove from db',
-				3 => 'skip',
-				4 => 'back',
-				5 => 'preview changes',
-				6 => 'commit changes'
-			]);
+		for ($i = 0; $i <= $usersCount; $i++) {
+			if ($i < $usersCount) {
+				$this->showTable([$users[$i]]);
+				$action = $this->choice('Choose action', [
+					1 => 'assign role',
+					2 => 'remove from db',
+					3 => 'skip',
+					4 => 'back',
+					5 => 'preview changes',
+					6 => 'commit changes',
+				]);
+			} else {
+				$this->info("No more users.");
+				$action = $this->choice('Choose action', [
+					4 => 'back',
+					5 => 'preview changes',
+					6 => 'commit changes',
+				]);
+			}
 
 			switch ($action) {
 				case 'assign role':
@@ -94,6 +95,7 @@ class UsersCleanUp extends Command
 
 				case 'preview changes' :
 					$this->showTable($users);
+					$i--;
 					break;
 
 				case 'commit changes' :

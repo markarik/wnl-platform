@@ -22,16 +22,6 @@ class UserPurge extends Command
 	protected $description = 'Hard-delete user record and all user-related data for fiven user IDs';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed

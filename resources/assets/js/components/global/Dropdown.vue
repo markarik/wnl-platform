@@ -35,7 +35,7 @@
 			border-style: solid
 			border-width: 0 10px 10px 10px
 			border-color: transparent transparent $color-white transparent
-			z-index: 9999
+			z-index: $z-index-alerts -1
 
 	.wnl-dropdown
 		height: 100%
@@ -208,6 +208,7 @@
 				}
 			},
 			toggleActive() {
+				console.log('toggle active dropdown');
 				this.isActive = !this.isActive
 				this.$emit('toggled', this.isActive)
 			},

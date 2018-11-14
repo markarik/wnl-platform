@@ -34,18 +34,18 @@
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select flashcards-set-editor-select">
 				<wnl-select :form="form"
-							 :options="lessonsOptions"
-							 name="lesson_id"
-							 v-model="form.lesson_id"
+							:options="lessonsOptions"
+							name="lesson_id"
+							v-model="form.lesson_id"
 				/>
 			</span>
 			<label class="label">Opis</label>
 			<wnl-quill
-				ref="descriptionEditor"
-				name="description"
-				:options="{ theme: 'snow', placeholder: 'Opis' }"
-				:value="form.description"
-				@input="onDescriptionInput"
+					ref="descriptionEditor"
+					name="description"
+					:options="{ theme: 'snow', placeholder: 'Opis' }"
+					:value="form.description"
+					@input="onDescriptionInput"
 			/>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
@@ -85,6 +85,7 @@
 
 	.flashcards-set-editor
 		max-width: 800px
+
 	.flashcards-set-editor-header
 		+small-shadow-bottom()
 		align-items: flex-start
@@ -96,8 +97,10 @@
 		position: sticky
 		top: -$margin-big
 		z-index: 1
+
 	.flashcards-admin
 		display: flex
+
 	.flashcards-set-editor-select
 		display: block
 		/deep/ select
@@ -106,8 +109,8 @@
 </style>
 
 <script>
-	import { isEqual } from 'lodash';
-	import { mapGetters, mapActions } from 'vuex';
+	import {isEqual} from 'lodash';
+	import {mapGetters, mapActions, mapState} from 'vuex';
 	import draggable from 'vuedraggable';
 
 	import Form from 'js/classes/forms/Form'
@@ -147,9 +150,9 @@
 		},
 		computed: {
 			...mapGetters('lessons', ['allLessons']),
-			...mapGetters('flashcards', {
-				allFlashcards: 'allFlashcards',
-				areFlashcardsReady: 'isReady'
+			...mapState('flashcards', {
+				allFlashcards: 'flashcards',
+				areFlashcardsReady: 'ready'
 			}),
 			lessonsOptions() {
 				return this.allLessons.map(lesson => ({
@@ -169,8 +172,13 @@
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
-			...mapActions('lessons', { setupLessons: 'setup' }),
-			...mapActions('flashcards', { setupFlashcards: 'setup' }),
+			...mapActions('lessons', {setupLessons: 'setup'}),
+			...mapActions('flashcards', {
+				setupFlashcards: 'setup',
+			}),
+			...mapActions('flashcardsSets', {
+				invalidateFlashcardsSetsCache: 'invalidateCache',
+			}),
 			onDescriptionInput() {
 				this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 			},
@@ -190,6 +198,7 @@
 							text: 'Zestaw pytań zapisany!',
 							type: 'success'
 						});
+						this.invalidateFlashcardsSetsCache();
 						this.form.originalData = this.form.data()
 					})
 					.catch(exception => {

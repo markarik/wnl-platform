@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { isEmpty } from 'lodash'
 import axios from 'axios'
 import { set } from 'vue'
 import { getApiUrl } from 'js/utils/env'
@@ -17,8 +17,8 @@ const state = {
 
 // Mutations
 const mutations = {
-	[types.FLASHCARDS_READY] (state) {
-		set(state, 'ready', true)
+	[types.FLASHCARDS_READY] (state, payload) {
+		set(state, 'ready', payload)
 	},
 	[types.SETUP_FLASHCARDS] (state, payload) {
 		set(state, 'flashcards', payload)
@@ -28,7 +28,7 @@ const mutations = {
 // Actions
 const actions = {
 	async fetchAllFlashcards({commit, state}) {
-		if (_.isEmpty(state.flashcards)) {
+		if (!state.ready) {
 			const {data} = await axios.get(getApiUrl('flashcards/all'));
 			commit(types.SETUP_FLASHCARDS, data)
 		}
@@ -36,10 +36,13 @@ const actions = {
 	async setup({commit, dispatch}) {
 		try {
 			await dispatch('fetchAllFlashcards');
-			commit(types.FLASHCARDS_READY)
+			commit(types.FLASHCARDS_READY, true)
 		} catch (error) {
 			$wnl.logger.error(error)
 		}
+	},
+	invalidateCache({commit}) {
+		commit(types.FLASHCARDS_READY, false);
 	},
 }
 

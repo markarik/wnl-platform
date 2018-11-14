@@ -11,7 +11,7 @@
 		computed: {
 			to() {
 				return {
-					name: 'flashcards-sets',
+					name: 'flashcards-sets-edit',
 					params: {
 						flashcardsSetId: this.id,
 					},

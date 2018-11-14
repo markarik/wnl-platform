@@ -56,14 +56,24 @@ let routes = [
 	},
 	{
 		name: 'flashcards-sets',
-		path: '/admin/app/flashcards-sets/:flashcardsSetId?',
-		component: require('js/admin/components/flashcards/FlashcardsSets.vue'),
+		path: '/admin/app/flashcards-sets',
+		component: require('js/admin/components/flashcards/list/FlashcardsSetsList.vue'),
+	},
+	{
+		name: 'flashcards-sets-edit',
+		path: '/admin/app/flashcards-sets/:flashcardsSetId',
+		component: require('js/admin/components/flashcards/edit/FlashcardsSetEditor'),
 		props: true,
 	},
 	{
 		name: 'flashcards',
-		path: '/admin/app/flashcards/:flashcardId?',
-		component: require('js/admin/components/flashcards/Flashcards.vue'),
+		path: '/admin/app/flashcards',
+		component: require('js/admin/components/flashcards/list/FlashcardsList'),
+	},
+	{
+		name: 'flashcards-edit',
+		path: '/admin/app/flashcards/:flashcardId',
+		component: require('js/admin/components/flashcards/edit/FlashcardEditor'),
 		props: true,
 	},
 	{

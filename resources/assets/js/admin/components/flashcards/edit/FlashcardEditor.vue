@@ -69,6 +69,9 @@
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
+			...mapActions('flashcards', {
+				invalidateFlashcardsCache: 'invalidateCache',
+			}),
 			flashcardFormSubmit() {
 				if (!this.hasChanged) {
 					return false
@@ -82,6 +85,7 @@
 							text: 'Pytanie zapisane!',
 							type: 'success',
 						});
+						this.invalidateFlashcardsCache();
 						this.form.originalData = this.form.data()
 					})
 					.catch(exception => {

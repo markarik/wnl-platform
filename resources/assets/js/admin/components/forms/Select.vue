@@ -1,7 +1,7 @@
 <template>
 	<div class="field">
 		<select v-model="selected">
-			<option v-for="(option, key) in options" key="key"
+			<option v-for="(option, key) in options" :key="key"
 				:value="option.value"
 				v-text="option.text">
 			</option>

@@ -32,6 +32,7 @@ class JoinFlashcardsSets extends Command
 		$flashcardsSets = FlashcardsSet::all()->pluck('id')->toArray();
 		$bar = $this->output->createProgressBar(count($flashcardsSets));
 		$differentFlashcards = [];
+		$mergedFlashcards = [];
 
 		foreach ($flashcardsSets as $setId) {
 			$bar->advance();
@@ -64,12 +65,10 @@ class JoinFlashcardsSets extends Command
 					}
 
 					$set->flashcards()->syncWithoutDetaching($flashcardsToMove);
-
+					$mergedFlashcards[] = [$set->name];
 				} else if ($matchingSetFlashcardsDiff->count() > 5) {
 					$this->output->text("\n Set has matching name but flashcards are different...");
-					$differentFlashcards[$matchingSet->name] =
-						$differentFlashcards[$matchingSet->name] ?? ['name' => $matchingSet->name, 'count' => 0];
-					$differentFlashcards[$matchingSet->name]['count']++;
+					$differentFlashcards[] = [$set->name];
 					continue;
 				}
 
@@ -89,7 +88,12 @@ class JoinFlashcardsSets extends Command
 			}
 		}
 
-		$this->table(['set name', 'different sets count'], $differentFlashcards);
+		echo PHP_EOL;
+		$this->info("Different flashcards - not merged");
+		$this->table(['set name'], $differentFlashcards);
+		echo PHP_EOL;
+		$this->info("Merged flashcards");
+		$this->table(['set name'], $mergedFlashcards);
 		$bar->finish();
 	}
 

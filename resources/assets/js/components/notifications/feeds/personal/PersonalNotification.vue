@@ -124,7 +124,6 @@
 	import Avatar from 'js/components/global/Avatar'
 	import UserProfileModal from 'js/components/users/UserProfileModal'
 	import Modal from 'js/components/global/Modal'
-	import Actor from 'js/components/notifications/Actor'
 	import { notification } from 'js/components/notifications/notification'
 	import { sanitizeName } from 'js/store/modules/users'
 
@@ -134,7 +133,7 @@
 		components: {
 			'wnl-avatar': Avatar,
 			'wnl-modal': Modal,
-			'wnl-user-profile-modal': UserProfileModal,
+			'wnl-user-profile-modal': UserProfileModal
 		},
 		data() {
 			return {

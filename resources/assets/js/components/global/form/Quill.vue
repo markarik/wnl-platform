@@ -3,9 +3,11 @@
 		<wnl-autocomplete
 			:items="autocompleteItems"
 			:onItemChosen="insertMention"
-			:itemComponent="'wnl-user-autocomplete-item'"
 			ref="autocomplete"
 		>
+			<template slot-scope="slotProps">
+				<wnl-user-autocomplete-item :item="slotProps.item" />
+			</template>
 		</wnl-autocomplete>
 		<div ref="quill">
 			<slot></slot>
@@ -24,7 +26,6 @@
 </style>
 
 <script>
-	import _ from 'lodash'
 	import Quill from 'quill'
 	import { set } from 'vue'
 	import { mapActions } from 'vuex'
@@ -33,6 +34,7 @@
 	import { fontColors } from 'js/utils/colors'
 	import { mentionBlot } from 'js/classes/mentionblot'
 	import Autocomplete from 'js/components/global/Autocomplete'
+	import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem'
 
 	const defaults = {
 		theme: 'snow',
@@ -54,7 +56,8 @@
 		name: 'Quill',
 		mixins: [formInput],
 		components: {
-			'wnl-autocomplete': Autocomplete
+			'wnl-autocomplete': Autocomplete,
+			WnlUserAutocompleteItem
 		},
 		props: {
 			options: {

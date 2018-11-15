@@ -17,7 +17,8 @@ class FlashcardsSetTransformer extends ApiTransformer
 			'id' => $set->id,
 			'description' => $set->description,
 			'name' => $set->name,
-			'mind_maps_text' => $set->mind_maps_text
+			'mind_maps_text' => $set->mind_maps_text,
+			'lesson_id' => $set->lesson_id,
 		];
 
 		return $data;

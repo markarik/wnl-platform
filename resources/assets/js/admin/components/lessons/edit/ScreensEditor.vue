@@ -1,12 +1,5 @@
 <template>
 	<div class="screens-editor">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
-			:alert="alert"
-			cssClass="fixed"
-			:key="timestamp"
-			:timestamp="timestamp"
-			@delete="onDelete"
-		></wnl-alert>
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
 			<wnl-screens-list :screens="screens" ref="ScreensList"></wnl-screens-list>
@@ -45,16 +38,8 @@
 							</wnl-select>
 						</span>
 					</div>
-					<div class="control" v-if="currentType && currentType.hasMeta">
-						<label class="label">{{currentType.metaTitle}}</label>
-						<span class="select">
-							<wnl-select
-								:form="screenForm"
-								:options="getMetaResourcesList(screenForm.type)"
-								name="meta"
-								v-model="screenForm.meta"
-							></wnl-select>
-						</span>
+					<div class="control" v-if="currentType && currentType.metaEditorComponent">
+						<component :is="currentType.metaEditorComponent" v-model="screenMeta" />
 					</div>
 				</div>
 
@@ -107,6 +92,7 @@
 <script>
 	import _ from 'lodash'
 	import { set } from 'vue'
+	import { mapActions } from 'vuex';
 
 	import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue'
 	import Form from 'js/classes/forms/Form'
@@ -114,8 +100,10 @@
 	import Quill from 'js/admin/components/forms/Quill.vue'
 	import Select from 'js/admin/components/forms/Select.vue'
 
-	import { alerts } from 'js/mixins/alerts'
 	import { getApiUrl } from 'js/utils/env'
+	import WnlFormTextarea from "js/admin/components/forms/Textarea";
+	import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards'
+	import WnlScreensMetaEditorQuizes from 'js/admin/components/lessons/edit/ScreensMetaEditorQuizes'
 
 	let types = {
 		html: {
@@ -127,8 +115,7 @@
 			text: 'Zestaw pytań',
 			value: 'quiz',
 			hasMeta: true,
-			metaTitle: 'Wybierz zestaw pytań',
-			metaResource: 'quizes',
+			metaEditorComponent: WnlScreensMetaEditorQuizes,
 		},
 		end: {
 			text: 'Zakończenie',
@@ -140,17 +127,25 @@
 			value: 'mockexam',
 			hasMeta: false,
 		},
+		flashcards: {
+			text: 'Powtórki',
+			value: 'flashcards',
+			hasMeta: true,
+			metaEditorComponent: WnlScreensMetaEditorFlashcards,
+		},
 	}
 
 	export default {
 		name: 'ScreensEditor',
 		components: {
+			WnlFormTextarea,
+			WnlScreensMetaEditorFlashcards,
+			WnlScreensMetaEditorQuizes,
 			'quill': Quill,
 			'wnl-form-input': Input,
 			'wnl-screens-list': ScreensList,
 			'wnl-select': Select,
 		},
-		mixins: [ alerts ],
 		data() {
 			return {
 				ready: false,
@@ -169,11 +164,16 @@
 			screenId() {
 				return this.$route.params.screenId
 			},
+			screenMeta: {
+				get() {
+					return JSON.parse(this.screenForm.meta);
+				},
+				set(screenMeta) {
+					this.screenForm.meta = JSON.stringify(screenMeta);
+				}
+			},
 			loaded() {
 				return !!this.$route.params.screenId
-			},
-			selectedTypeData() {
-				return this.types[this.selectedType]
 			},
 			screenFormResourceUrl() {
 				return getApiUrl(`screens/${this.$route.params.screenId}`)
@@ -192,32 +192,7 @@
 			},
 		},
 		methods: {
-			getMetaResourcesList(type) {
-				return this.quiz_sets
-			},
-			formScreenMeta(resource, id) {
-				let meta = {
-					resources: [
-						{
-							id: id,
-							name: resource
-						}
-					]
-				}
-
-				return JSON.stringify(meta)
-			},
-			fetchQuizSets() {
-				return axios.get(getApiUrl('quiz_sets/all'))
-					.then((response) => {
-						_.forEach(response.data, (quiz) => {
-							this.quiz_sets.push({
-								text: quiz.name,
-								value: this.formScreenMeta('quiz_sets', quiz.id),
-							})
-						})
-					})
-			},
+			...mapActions(['addAutoDismissableAlert']),
 			populateScreenForm() {
 				axios.get(this.screenFormResourceUrl)
 					.then(response => {
@@ -245,21 +220,26 @@
 				}
 
 				this.screenForm.put(this.screenFormResourceUrl)
-					.then(response => {
+					.then(() => {
 						this.loading = false
 						this.screenForm.originalData = this.screenForm.data()
-						this.successFading('Zapisano!', 2000)
+						this.addAutoDismissableAlert({
+							text: 'Zapisano!',
+							type: 'success',
+						});
 						return this.$refs.ScreensList.fetchScreens()
 					})
 					.catch(exception => {
 						this.loading = false
-						this.errorFading('Nie wyszło :(', 2000)
+						this.addAutoDismissableAlert({
+							text: 'Nie wyszło :(',
+							type: 'error',
+						});
 						$wnl.logger.capture(exception)
 					})
 			}
 		},
 		mounted() {
-			this.fetchQuizSets()
 			if (this.screenId) {
 				this.populateScreenForm()
 			}

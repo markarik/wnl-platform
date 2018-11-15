@@ -167,8 +167,7 @@
 				event.stopPropagation()
 				this.isVisible = true
 			},
-			closeModal(event) {
-				event.stopPropagation()
+			closeModal() {
 				this.isVisible = false
 			},
 			dispatchGoToContext() {

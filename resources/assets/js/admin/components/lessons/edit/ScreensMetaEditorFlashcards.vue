@@ -29,9 +29,12 @@
 							isDown="true"
 							:items="flashcardsSetsAutocompleteItems"
 							:onItemChosen="addFlashcardsSet"
-							:itemComponent="'wnl-flashcards-set-autocomplete-item'"
 							ref="autocomplete"
-					/>
+					>
+						<template slot-scope="slotProps">
+							<wnl-flashcards-set-autocomplete-item :item="slotProps.item" />
+						</template>
+					</wnl-autocomplete>
 				</div>
 			</div>
 		</div>
@@ -75,6 +78,7 @@
 	import draggable from 'vuedraggable';
 
 	import WnlAutocomplete from 'js/components/global/Autocomplete';
+	import WnlFlashcardsSetAutocompleteItem from 'js/admin/components/lessons/edit/FlashcardsSetAutocompleteItem'
 
 	export default {
 		name: 'ScreensMetaEditorFlashcards',
@@ -82,6 +86,7 @@
 		components: {
 			draggable,
 			WnlAutocomplete,
+			WnlFlashcardsSetAutocompleteItem,
 		},
 		data: function() {
 			return {

@@ -13,7 +13,7 @@
 			v-bind:class="{ active: item.active }"
 			v-bind:key="item.id"
 		>
-			<component :is='itemComponent' :item="item"></component>
+			<slot v-bind:item="item"></slot>
 		</li>
 	</ul>
 </template>
@@ -62,21 +62,11 @@
 </style>
 
 <script>
-	import UserAutocomplete from 'js/components/global/UserAutocompleteItem'
-	import TagAutocomplete from 'js/components/global/TagAutocompleteItem'
-	import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem'
-	import WnlFlashcardsSetAutocompleteItem from 'js/admin/components/lessons/edit/FlashcardsSetAutocompleteItem'
 	import autocompleteNav from 'js/mixins/autocomplete-nav'
 
 	export default {
 		name: 'Autocomplete',
-		props: ['items', 'onItemChosen', 'itemComponent', 'isDown'],
-		components: {
-			'wnl-tag-autocomplete-item': TagAutocomplete,
-			'wnl-user-autocomplete-item': UserAutocomplete,
-			WnlFlashcardAutocompleteItem,
-			WnlFlashcardsSetAutocompleteItem,
-		},
+		props: ['items', 'onItemChosen', 'isDown'],
 		mixins: [autocompleteNav],
 	}
 </script>

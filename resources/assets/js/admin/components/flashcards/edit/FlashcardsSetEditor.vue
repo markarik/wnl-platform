@@ -69,9 +69,12 @@
 								isDown="true"
 								:items="flashcardAutocompleteItems"
 								:onItemChosen="addFlashcard"
-								:itemComponent="'wnl-flashcard-autocomplete-item'"
 								ref="autocomplete"
-						/>
+						>
+							<template slot-scope="slotProps">
+								<wnl-flashcard-autocomplete-item :item="slotProps.item" />
+							</template>
+						</wnl-autocomplete>
 					</div>
 				</div>
 			</div>
@@ -117,6 +120,7 @@
 	import {getApiUrl} from 'js/utils/env'
 
 	import WnlAutocomplete from 'js/components/global/Autocomplete';
+	import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem'
 	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 	import WnlFormInput from "js/admin/components/forms/Input";
 	import WnlQuill from 'js/admin/components/forms/Quill';
@@ -133,6 +137,7 @@
 			WnlSelect,
 			WnlFlashcardsSetListItem,
 			draggable,
+			WnlFlashcardAutocompleteItem,
 		},
 		props: ['flashcardsSetId'],
 		data() {

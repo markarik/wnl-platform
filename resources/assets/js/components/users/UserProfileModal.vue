@@ -115,7 +115,7 @@ export default {
 	props: ['author'],
 	data() {
 		return {
-			userId: this.author.user_id || this.author.id
+			userId: this.author.user_id
 		}
 	},
 	computed: {

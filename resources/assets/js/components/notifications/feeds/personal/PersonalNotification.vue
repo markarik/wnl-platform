@@ -1,6 +1,6 @@
 <template>
 	<div class="notification-wrapper">
-		<div class="avatar" @click="showModal">
+		<div class="avatar" @click.stop="showModal">
 			<wnl-avatar size="medium"
 				:fullName="message.actors.full_name"
 				:url="message.actors.avatar">
@@ -161,10 +161,12 @@
 					this.currentUserId === objects.author ? 2 : 1
 				)
 			},
+			addUserIdKey() {
+				return this.message.actors.user_id = this.message.actors.id
+			}
 		},
 		methods: {
-			showModal(event) {
-				event.stopPropagation()
+			showModal() {
 				this.isVisible = true
 			},
 			closeModal(event) {

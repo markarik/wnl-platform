@@ -353,7 +353,7 @@
 
 			await Promise.all(resources.map(({id}) => {
 				return !this.getSetById(id) && this.setFlashcardsSet({
-					setId: id, include: 'flashcards'
+					setId: id, include: 'flashcards.user_flashcard_notes'
 				})
 			}))
 

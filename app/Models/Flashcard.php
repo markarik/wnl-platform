@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Flashcard extends Model
 {
@@ -16,5 +17,10 @@ class Flashcard extends Model
 			'flashcard_id',
 			'flashcard_set_id'
 		)->withPivot('order_number');
+	}
+
+
+	public function userFlashcardNotes() {
+		return $this->hasMany('\App\Models\UserFlashcardNote')->where('user_id', '=', Auth::user()->id);
 	}
 }

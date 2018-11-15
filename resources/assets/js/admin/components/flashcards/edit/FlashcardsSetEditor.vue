@@ -66,7 +66,7 @@
 					</div>
 					<div class="control">
 						<wnl-autocomplete
-								isDown="true"
+								:isDown="true"
 								:items="flashcardAutocompleteItems"
 								:onItemChosen="addFlashcard"
 								ref="autocomplete"

@@ -26,7 +26,7 @@
 				</div>
 				<div class="control">
 					<wnl-autocomplete
-							isDown="true"
+							:isDown="true"
 							:items="flashcardsSetsAutocompleteItems"
 							:onItemChosen="addFlashcardsSet"
 							ref="autocomplete"

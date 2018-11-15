@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-input>
+		<wnl-form>
 			<wnl-quill
 				ref="editor"
 				name="text"
@@ -11,7 +11,7 @@
 				:allowMentions="true"
 				@input="onInput"
 			></wnl-quill>
-		</wnl-input>
+		</wnl-form>
 	</div>
 </template>
 
@@ -19,12 +19,15 @@
 </style>
 
 <script>
+	import { fontColors } from 'js/utils/colors'
 	import Input from 'js/admin/components/forms/Input'
+	import Form from 'js/components/global/form/Form'
 	import Quill from 'js/components/global/form/Quill'
 
 	export default {
 		name: 'Users',
 		components: {
+			'wnl-form': Form,
 			'wnl-input': Input,
 			'wnl-quill': Quill
 		},

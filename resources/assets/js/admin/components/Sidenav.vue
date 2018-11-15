@@ -29,6 +29,15 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'quizes' }">Edytuj zestaw pytań</router-link></li>
 		</ul>
+		<p class="menu-label">
+			Użytkownicy
+		</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'users' }">Lista użytkowników</router-link></li>
+		</ul>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'orders' }">Zamówienia</router-link></li>
+		</ul>
 	</aside>
 </template>
 

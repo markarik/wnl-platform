@@ -17,16 +17,11 @@ class UsersApiController extends ApiController
 
 	public function get($id)
 	{
-		$user = User::fetch($id);
-
-		if (!Auth::user()->can('view', $user)) {
+		if (!Auth::user()->isAdmin()) {
 			return $this->respondForbidden();
 		}
 
-		$resource = new Item($user, new UserTransformer, $this->resourceName);
-		$data = $this->fractal->createData($resource)->toArray();
-
-		return $this->respondOk($data);
+		return parent::get($id);
 	}
 
 	public function put()

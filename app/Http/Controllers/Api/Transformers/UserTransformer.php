@@ -12,6 +12,8 @@ class UserTransformer extends ApiTransformer
 {
 	protected $parent;
 
+	protected $availableIncludes = ['roles'];
+
 	public function __construct($parent = null)
 	{
 		$this->parent = $parent;
@@ -24,7 +26,6 @@ class UserTransformer extends ApiTransformer
 			'first_name' => $user->first_name,
 			'last_name'  => $user->last_name,
 			'full_name'  => $user->full_name,
-			'avatar'     => $user->profile->avatar_url,
 		];
 
 		if ($this->parent) {
@@ -32,5 +33,16 @@ class UserTransformer extends ApiTransformer
 		}
 
 		return $data;
+	}
+
+	public function includeRoles(User $profile)
+	{
+		$roles = $profile->roles;
+
+		return $this->collection(
+			$roles,
+			new RoleTransformer(['users' => $profile->id]),
+			'roles'
+		);
 	}
 }

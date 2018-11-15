@@ -1,7 +1,7 @@
 <template>
 	<div class="flashcards-list">
 		<h3 class="title">Lista pytań</h3>
-		<router-link :to="{ name: 'flashcards', params: { flashcardId: 'new' } }" class="button is-success margin bottom">+ Nowe pytanie</router-link>
+		<router-link :to="{ name: 'flashcards-edit', params: { flashcardId: 'new' } }" class="button is-success margin bottom">+ Nowe pytanie</router-link>
 		<wnl-flashcard-list-item v-for="flashcard in allFlashcards"
 							  :key="flashcard.id"
 							  :content="flashcard.content"
@@ -10,12 +10,8 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
-
 <script>
-	import {mapGetters} from 'vuex'
+	import {mapState, mapActions} from 'vuex'
 
 	import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem'
 
@@ -25,7 +21,15 @@
 			'wnl-flashcard-list-item': FlashcardsListItem,
 		},
 		computed: {
-			...mapGetters('flashcards', ['allFlashcards'])
+			...mapState('flashcards', {
+				allFlashcards: 'flashcards',
+			})
 		},
+		methods: {
+			...mapActions('flashcards', ['setup']),
+		},
+		mounted() {
+			this.setup()
+		}
 	}
 </script>

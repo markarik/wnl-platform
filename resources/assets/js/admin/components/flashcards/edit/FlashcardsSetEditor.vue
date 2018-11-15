@@ -1,29 +1,22 @@
 <template>
 	<div class="flashcards-set-editor">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
-				   :alert="alert"
-				   cssClass="fixed"
-				   :key="timestamp"
-				   :timestamp="timestamp"
-				   @delete="onDelete"
-		></wnl-alert>
-		<div class="flashcards-set-editor-header">
-			<h3 class="title">
-				Edycja zestawu pytań
-				<span v-if="isEdit">(Id: {{flashcardsSetId}})</span>
-			</h3>
-			<button class="button is-small is-success"
-					:class="{'is-loading': loading}"
-					:disabled="!hasChanged"
-					type="submit"
-			>
-				<span class="margin right">Zapisz</span>
-				<span class="icon is-small">
+		<form @submit.prevent="flashcardsSetFormSubmit">
+			<div class="flashcards-set-editor-header">
+				<h3 class="title">
+					Edycja zestawu pytań
+					<span v-if="isEdit">(Id: {{flashcardsSetId}})</span>
+				</h3>
+				<button class="button is-small is-success"
+						:class="{'is-loading': loading}"
+						:disabled="!hasChanged"
+						type="submit"
+				>
+					<span class="margin right">Zapisz</span>
+					<span class="icon is-small">
 					<i class="fa fa-save"></i>
 				</span>
-			</button>
-		</div>
-		<form @submit.prevent="flashcardsSetFormSubmit">
+				</button>
+			</div>
 			<wnl-form-input
 					name="name"
 					:form="form"
@@ -38,21 +31,21 @@
 			>
 				Mind mapy
 			</wnl-form-input>
-			<label class="label">Lekcja</label>
+			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select flashcards-set-editor-select">
 				<wnl-select :form="form"
-							 :options="lessonsOptions"
-							 name="lesson_id"
-							 v-model="form.lesson_id"
+							:options="lessonsOptions"
+							name="lesson_id"
+							v-model="form.lesson_id"
 				/>
 			</span>
 			<label class="label">Opis</label>
 			<wnl-quill
-				ref="descriptionEditor"
-				name="description"
-				:options="{ theme: 'snow', placeholder: 'Opis' }"
-				:value="form.description"
-				@input="onDescriptionInput"
+					ref="descriptionEditor"
+					name="description"
+					:options="{ theme: 'snow', placeholder: 'Opis' }"
+					:value="form.description"
+					@input="onDescriptionInput"
 			/>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
@@ -66,21 +59,24 @@
 					/>
 				</draggable>
 
-				<form @submit.prevent="QuestionFormSubmit">
-					<wnl-form-input
-							name="flashcardId"
-							:form="flashcard"
-							v-model="flashcard.flashcardId"
-					>
-						Id pytania
-					</wnl-form-input>
-					<button class="button is-small is-success"
-							type="submit"
-							:disabled="!flashcard.flashcardId"
-					>
-						<span class="margin right">+ Dodaj pytanie</span>
-					</button>
-				</form>
+				<div>
+					<div class="control">
+						<label class="label">Wybierz pytanie</label>
+						<input class="input" placeholder="Id lub treść aby wyszukać" v-model="flashcardInput"/>
+					</div>
+					<div class="control">
+						<wnl-autocomplete
+								:isDown="true"
+								:items="flashcardAutocompleteItems"
+								:onItemChosen="addFlashcard"
+								ref="autocomplete"
+						>
+							<template slot-scope="slotProps">
+								<wnl-flashcard-autocomplete-item :item="slotProps.item" />
+							</template>
+						</wnl-autocomplete>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -92,6 +88,7 @@
 
 	.flashcards-set-editor
 		max-width: 800px
+
 	.flashcards-set-editor-header
 		+small-shadow-bottom()
 		align-items: flex-start
@@ -102,9 +99,11 @@
 		padding-top: $margin-small
 		position: sticky
 		top: -$margin-big
-		z-index: 1
+		z-index: 101
+
 	.flashcards-admin
 		display: flex
+
 	.flashcards-set-editor-select
 		display: block
 		/deep/ select
@@ -113,14 +112,15 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+	import {isEqual} from 'lodash';
+	import {mapGetters, mapActions, mapState} from 'vuex';
 	import draggable from 'vuedraggable';
 
 	import Form from 'js/classes/forms/Form'
 	import {getApiUrl} from 'js/utils/env'
-	import {alerts} from 'js/mixins/alerts'
 
+	import WnlAutocomplete from 'js/components/global/Autocomplete';
+	import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem'
 	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 	import WnlFormInput from "js/admin/components/forms/Input";
 	import WnlQuill from 'js/admin/components/forms/Quill';
@@ -128,41 +128,37 @@
 	import WnlFlashcardsSetListItem from 'js/admin/components/flashcards/edit/FlashcardsSetListItem';
 
 	export default {
-		// TODO fix disabled after adding flashcard
 		name: 'FlashcardsSetEditor',
 		components: {
+			WnlAutocomplete,
 			WnlFormInput,
 			WnlQuill,
 			WnlFormTextarea,
 			WnlSelect,
 			WnlFlashcardsSetListItem,
 			draggable,
+			WnlFlashcardAutocompleteItem,
 		},
-		mixins: [alerts],
+		props: ['flashcardsSetId'],
 		data() {
 			return {
 				form: new Form({
-					name: null,
-					description: null,
-					mind_maps_text: null,
+					name: '',
+					description: '',
+					mind_maps_text: '',
 					lesson_id: null,
 					flashcards: [],
 				}),
-				flashcard: new Form({
-					flashcardId: null,
-				}),
+				flashcardInput: '',
 				loading: false,
 			}
 		},
 		computed: {
 			...mapGetters('lessons', ['allLessons']),
-			...mapGetters('flashcards', {
-				allFlashcards: 'allFlashcards',
-				areFlashcardsReady: 'isReady'
+			...mapState('flashcards', {
+				allFlashcards: 'flashcards',
+				areFlashcardsReady: 'ready'
 			}),
-			flashcardsSetId() {
-				return this.$route.params.flashcardsSetId;
-			},
 			lessonsOptions() {
 				return this.allLessons.map(lesson => ({
 					text: lesson.name,
@@ -176,12 +172,32 @@
 				return getApiUrl(this.isEdit ? `flashcards_sets/${this.flashcardsSetId}?include=flashcards` : 'flashcards_sets');
 			},
 			hasChanged() {
-				return !_.isEqual(this.form.originalData, this.form.data());
+				return !isEqual(this.form.originalData, this.form.data());
+			},
+			flashcardAutocompleteItems() {
+				if (this.flashcardInput === '') {
+					return [];
+				}
+
+				return this.allFlashcards
+					.filter(flashcard => !this.form.flashcards.includes(flashcard.id) &&
+						(
+							flashcard.id === parseInt(this.flashcardInput, 10) ||
+							flashcard.content.toLowerCase().includes(this.flashcardInput.toLowerCase())
+						)
+					)
+					.slice(0, 10)
 			}
 		},
 		methods: {
-			...mapActions('lessons', { setupLessons: 'setup' }),
-			...mapActions('flashcards', { setupFlashcards: 'setup' }),
+			...mapActions(['addAutoDismissableAlert']),
+			...mapActions('lessons', {setupLessons: 'setup'}),
+			...mapActions('flashcards', {
+				setupFlashcards: 'setup',
+			}),
+			...mapActions('flashcardsSets', {
+				invalidateFlashcardsSetsCache: 'invalidateCache',
+			}),
 			onDescriptionInput() {
 				this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 			},
@@ -197,29 +213,33 @@
 				this.form[this.isEdit ? 'put' : 'post'](this.flashcardsSetResourceUrl)
 					.then(response => {
 						this.loading = false;
-						this.successFading('Zestaw pytań zapisany!', 2000);
+						this.addAutoDismissableAlert({
+							text: 'Zestaw pytań zapisany!',
+							type: 'success'
+						});
+						this.invalidateFlashcardsSetsCache();
 						this.form.originalData = this.form.data()
 					})
 					.catch(exception => {
 						this.loading = false;
-						this.errorFading('Nie udało się :(', 2000);
+						this.addAutoDismissableAlert({
+							text: 'Nie udało się :(',
+							type: 'error'
+						});
 						$wnl.logger.capture(exception)
 					})
 			},
-			QuestionFormSubmit() {
-				const flashcardId = parseInt(this.flashcard.flashcardId, 10);
-				if (this.form.flashcards.includes(flashcardId)) {
-					this.errorFading('To pytanie jest już w zestawie', 2000)
-				} else {
-					this.form.flashcards.push(flashcardId);
-				}
-				this.flashcard.flashcardId = null;
+			addFlashcard(flashcard) {
+				this.form.flashcards.push(flashcard.id);
+				this.flashcardInput = '';
 			}
 		},
 		mounted() {
-			this.form.populate(this.flashcardsSetResourceUrl);
+			if (this.isEdit) {
+				this.form.populate(this.flashcardsSetResourceUrl);
+			}
 			this.setupLessons();
 			this.setupFlashcards();
-		}
+		},
 	}
 </script>

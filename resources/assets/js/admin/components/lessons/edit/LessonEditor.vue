@@ -89,7 +89,7 @@
 			}
 		},
 		computed: {
-			flashcardResourceUrl() {
+			resourceUrl() {
 				return getApiUrl(`lessons/${this.$route.params.lessonId}`)
 			},
 			hasChanged() {
@@ -115,7 +115,7 @@
 
 				this.loading = true
 				this.form.group_id = this.form.groups
-				this.form.put(this.flashcardResourceUrl)
+				this.form.put(this.resourceUrl)
 					.then(response => {
 						this.loading = false
 						this.successFading('Lekcja zapisana!', 2000)
@@ -131,7 +131,7 @@
 		mounted() {
 			this.fetchGroups()
 				.then(() => {
-					this.form.populate(this.flashcardResourceUrl)
+					this.form.populate(this.resourceUrl)
 				})
 		}
 	}

@@ -25,7 +25,7 @@ class UpdateFlashcardsSet extends FormRequest
 	{
 		return [
 			'name'   => 'required|string',
-			'description'   => 'string',
+			'description'   => 'nullable|string',
 			'mind_maps_text'   => 'string',
 			'lesson_id' => 'required|integer',
 			'flashcards' => 'array',

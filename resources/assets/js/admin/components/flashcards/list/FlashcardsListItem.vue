@@ -4,10 +4,6 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
-
-</style>
-
 <script>
 	export default {
 		name: 'FlashcardsListItem',
@@ -15,7 +11,7 @@
 		computed: {
 			to() {
 				return {
-					name: 'flashcards',
+					name: 'flashcards-edit',
 					params: {
 						flashcardId: this.id,
 					},

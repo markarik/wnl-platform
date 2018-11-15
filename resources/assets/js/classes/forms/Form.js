@@ -103,9 +103,8 @@ export default class Form {
 				.catch(error => {
 					if (error.response.status === 422) {
 						this.errors.record(error.response.data);
-					} else {
-						reject(error);
 					}
+					reject(error);
 				});
 		});
 	}

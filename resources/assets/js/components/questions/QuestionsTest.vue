@@ -82,10 +82,13 @@
 			:isComplete="isComplete"
 			:isProcessing="testProcessing"
 			:plainList="true"
-			:hideCount="true"
 			@selectAnswer="onSelectAnswer"
 			@userEvent="onUserEvent"
-		/>
+		>
+			<div slot="question-number" slot-scope="quizList">
+				{{((currentPage - 1) * perPage) + quizList.index + 1}}/{{questions.length}}
+			</div>
+		</wnl-quiz-list>
 
 		<div v-if="lastPage > 1" class="pagination bottom">
 			<wnl-pagination

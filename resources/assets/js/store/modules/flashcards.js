@@ -40,6 +40,7 @@ const actions = {
 			const {included, ...flashcardSet} = data
 
 			const {data: userResponseData} = await axios.post(getApiUrl('user_flashcards_results/current'), {
+				...requestParams,
 				flashcards_ids: flashcardSet.flashcards
 			})
 
@@ -55,11 +56,14 @@ const actions = {
 			$wnl.logger.error(e)
 		}
 	},
-	async postAnswer({commit}, {answer, flashcard}) {
+	async postAnswer({commit}, {flashcard, answer, ...requestParams}) {
 		try {
 			await axios.post(
 				getApiUrl(`user_flashcards_results/current/${flashcard.id}`),
-				{ answer }
+				{
+					...requestParams,
+					answer
+				}
 			)
 			commit(mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD, {
 				...flashcard, answer

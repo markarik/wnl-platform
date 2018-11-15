@@ -295,6 +295,10 @@
 			screenData: {
 				type: Object,
 				required: true
+			},
+			context: {
+				type: String,
+				required: true
 			}
 		},
 		data() {
@@ -344,7 +348,10 @@
 			},
 			async submitAnswer(flashcard, answer) {
 				await this.postAnswer({
-					flashcard, answer
+					flashcard,
+					answer,
+					context_type: this.context,
+					context_id: this.screenData.id
 				})
 			},
 		},
@@ -353,7 +360,10 @@
 
 			await Promise.all(resources.map(({id}) => {
 				return !this.getSetById(id) && this.setFlashcardsSet({
-					setId: id, include: 'flashcards.user_flashcard_notes'
+					setId: id,
+					include: 'flashcards.user_flashcard_notes',
+					context_type: this.context,
+					context_id: this.screenData.id
 				})
 			}))
 

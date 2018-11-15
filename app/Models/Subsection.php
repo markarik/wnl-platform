@@ -19,4 +19,9 @@ class Subsection extends Model
 	{
 		return $this->belongsTo('App\Models\Section');
 	}
+
+	public function tags()
+	{
+		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
 }

@@ -161,9 +161,6 @@
 					this.currentUserId === objects.author ? 2 : 1
 				)
 			},
-			addUserIdKey() {
-				return this.message.actors.user_id = this.message.actors.id
-			}
 		},
 		methods: {
 			showModal() {
@@ -190,6 +187,12 @@
 					this.dispatchGoToContext()
 				}
 			},
+			addUserIdKey() {
+				this.message.actors.user_id = this.message.actors.id
+			}
 		},
+		created() {
+			this.addUserIdKey()
+		}
 	}
 </script>

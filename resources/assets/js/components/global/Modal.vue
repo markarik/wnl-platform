@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-modal">
 		<div class="modal" :class="{ 'is-active': isModalVisible }">
-			<div class="modal-background" @click="emitCloseModal"></div>
+			<div class="modal-background" @click.stop="$emit('closeModal')"></div>
 			<div class="modal-content">
 				<div class="box">
 					<slot></slot>
@@ -10,7 +10,7 @@
 			<button
 				class="modal-close is-large"
 				aria-label="close"
-				@click="emitCloseModal"
+				@click.stop="$emit('closeModal')"
 			></button>
 		</div>
 	</div>
@@ -38,8 +38,8 @@ export default {
 		}
 	},
 	methods: {
-		emitCloseModal(event) {
-			this.$emit('closeModal', event)
+		emitCloseModal() {
+			this.$emit('closeModal')
 		}
 	}
 }

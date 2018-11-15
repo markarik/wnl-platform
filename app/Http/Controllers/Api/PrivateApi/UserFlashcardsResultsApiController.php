@@ -23,6 +23,8 @@ class UserFlashcardsResultsApiController extends ApiController
 		$userId = $request->route('userId');
 		$flashcardId = $request->route('flashcardId');
 		$user = User::fetch($userId);
+		$contextType = $request->get('context_type');
+		$contextId = $request->get('context_id');
 		$answer = $request->get('answer');
 
 		if (!Auth::user()->can('view', $user)) {
@@ -36,6 +38,8 @@ class UserFlashcardsResultsApiController extends ApiController
 		$result = UserFlashcardsResults::create([
 			'user_id' => $user->id,
 			'flashcard_id' => $flashcardId,
+			'context_type' => $contextType,
+			'context_id' => $contextId,
 			'answer' => $answer
 		]);
 
@@ -45,6 +49,8 @@ class UserFlashcardsResultsApiController extends ApiController
 	public function fetchMany(Request $request) {
 		$userId = $request->route('userId');
 		$ids = $request->get('flashcards_ids') ?? [];
+		$contextType = $request->get('context_type');
+		$contextId = $request->get('context_id');
 		$user = User::fetch($userId);
 
 		if (!Auth::user()->can('view', $user)) {
@@ -53,6 +59,8 @@ class UserFlashcardsResultsApiController extends ApiController
 
 		$response = UserFlashcardsResults
 			::where('user_id', $user->id)
+			->where('context_type', $contextType)
+			->where('context_id', $contextId)
 			->whereIn('flashcard_id', $ids)
 			->orderBy('created_at', 'asc')
 			->get();

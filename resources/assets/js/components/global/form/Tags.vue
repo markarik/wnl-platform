@@ -135,6 +135,7 @@
 				this.tagInput = ''
 				this.$refs.input.focus()
 				this.$emit('insertTag', tag)
+				this.$emit('tagsChanged', this.tags)
 			},
 
 			removeTag(tag) {
@@ -142,6 +143,7 @@
 					this.tags,
 					foundTag => tag.id !== foundTag.id
 				)
+				this.$emit('tagsChanged', this.tags)
 			},
 
 			onInput(evt) {

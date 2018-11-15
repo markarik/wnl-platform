@@ -17,4 +17,9 @@ class Flashcard extends Model
 			'flashcard_set_id'
 		)->withPivot('order_number');
 	}
+
+	public function tags()
+	{
+		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
 }

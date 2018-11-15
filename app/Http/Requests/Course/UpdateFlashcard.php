@@ -25,6 +25,7 @@ class UpdateFlashcard extends FormRequest
 	{
 		return [
 			'content'   => 'required|string',
+			'tags'      => 'array'
 		];
 	}
 }

@@ -54,13 +54,13 @@ class InvoicesExportToJpk extends Command
 
 		$data = [];
 		$data['tns:Podmiot1'] = [
-			'tns:NIP'        => '7811943756',
+			'tns:NIP' => '7811943756',
 			'tns:PelnaNazwa' => 'bethink Sp. z o.o.',
-			'tns:Email'      => 'info@bethink.pl',
+			'tns:Email' => 'info@bethink.pl',
 		];
 		$data['tns:SprzedazCtrl'] = [
 			'tns:LiczbaWierszySprzedazy' => $invoices->count(),
-			'tns:PodatekNalezny'         => number_format($invoices->sum('vat_amount'), 2, '.', ''),
+			'tns:PodatekNalezny' => number_format($invoices->sum('vat_amount'), 2, '.', ''),
 		];
 		$data['tns:SprzedazWiersz'] = [];
 
@@ -68,17 +68,34 @@ class InvoicesExportToJpk extends Command
 			$user = $invoice->order->user;
 			$isCompany = $invoice->order->user->invoice && $user->invoice_nip;
 
-			array_push($data['tns:SprzedazWiersz'], [
-				'tns:LpSprzedazy'      => $invoice->id,
-				'tns:NrKontrahenta'    => $isCompany ? $user->invoice_nip : 'brak',
+			$row = [
+				'tns:LpSprzedazy' => $invoice->id,
+				'tns:NrKontrahenta' => $isCompany ? $user->invoice_nip : 'brak',
 				'tns:NazwaKontrahenta' => $isCompany ? $user->invoice_name : $user->full_name,
 				'tns:AdresKontrahenta' => $isCompany ? $user->invoice_address : $user->full_address,
-				'tns:DowodSprzedazy'   => $invoice->full_number,
-				'tns:DataWystawienia'  => $invoice->created_at->format('Y-m-d'),
-				'tns:DataSprzedazy'    => $invoice->created_at->format('Y-m-d'),
-				'tns:K_19'             => number_format($invoice->net_value, 2, '.', ''),
-				'tns:K_20'             => number_format($invoice->vat_amount, 2, '.', ''),
-			]);
+				'tns:DowodSprzedazy' => $invoice->full_number,
+				'tns:DataWystawienia' => $invoice->created_at->format('Y-m-d'),
+				'tns:DataSprzedazy' => $invoice->created_at->format('Y-m-d'),
+			];
+
+			$net = number_format($invoice->net_value, 2, '.', '');
+			$vat = number_format($invoice->vat_amount, 2, '.', '');
+
+			if ($invoice->order->product->vat_rate === 23.00) {
+				$row['tns:K_19'] = $net;
+				$row['tns:K_20'] = $vat;
+			}
+
+			if ($invoice->order->product->vat_rate === 5.00) {
+				$row['tns:K_15'] = $net;
+				$row['tns:K_16'] = $vat;
+			}
+
+			if ($invoice->order->product->vat_rate === 0.00) {
+				$row['tns:K_10'] = $net;
+			}
+
+			array_push($data['tns:SprzedazWiersz'], $row);
 		}
 
 		$filename = $this->option('filename')

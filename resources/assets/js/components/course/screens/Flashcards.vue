@@ -128,12 +128,16 @@
 			&__retake
 				display: flex
 				align-items: center
-				justify-content: flex-end
 				text-transform: uppercase
 				font-weight: 600
-				margin: $margin-huge $margin-small $margin-small 0
+				margin: $margin-big $margin-small $margin-small 0
 				font-size: 12px
 				cursor: pointer
+				justify-content: center
+
+				@media #{$media-query-tablet}
+					justify-content: flex-end
+					margin-top: $margin-huge
 
 				.fa-undo
 					margin-right: $margin-base
@@ -158,18 +162,31 @@
 				font-weight: $font-weight-bold
 				text-transform: uppercase
 				flex-wrap: wrap
+				flex-direction: column
 
 				@media #{$media-query-tablet}
 					justify-content: center
+					flex-direction: row
 
 				&__single
 					display: flex
-					flex-direction: column
 					align-items: center
+					justify-content: center
 					margin: $margin-small $margin-base
 
+					@media #{$media-query-tablet}
+						justify-content: flex-start
+						flex-direction: column
+
+					span:first-child
+						margin-right: $margin-small
+
+						@media #{$media-query-tablet}
+							margin-right: 0
+
 			&__list
-				margin: $margin-small
+				@media #{$media-query-tablet}
+					margin: $margin-small
 
 		.flashcards-list
 			padding-left: 15px
@@ -177,6 +194,12 @@
 			&__item
 				display: flex
 				align-items: center
+				flex-direction: column
+				margin-top: $margin-base
+
+				@media #{$media-query-tablet}
+					flex-direction: row
+					margin-top: 0
 
 				&--solved
 					color: $color-gray-dimmed
@@ -193,28 +216,33 @@
 					border: $border-light-gray
 					padding: $margin-base
 					flex-grow: 1
-					margin: $margin-small 0 $margin-small $margin-small
+					margin: 0
 					min-height: 54px
 					flex-direction: column
 
 					@media #{$media-query-tablet}
 						flex-direction: row
 						align-items: center
+						margin: $margin-small 0 $margin-small $margin-small
 
 				&__text
 					flex-grow: 1
 					color: inherit
 
 				&__buttons
-					text-align: right
+					justify-content: center
 					display: flex
 					align-items: center
+					margin-top: $margin-base
 
 					@media #{$media-query-tablet}
 						flex: 0 0 $buttonWidth * 3
+						justify-content: flex-end
+						margin-top: 0
 
 					&--retake
-						flex: 0 0 $buttonWidth * 2
+						@media #{$media-query-tablet}
+							flex: 0 0 $buttonWidth * 2
 
 						.flashcards-list__item__buttons__button .icon .fa-undo
 							font-size: 16px

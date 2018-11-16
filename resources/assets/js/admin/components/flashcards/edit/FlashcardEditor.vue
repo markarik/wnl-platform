@@ -76,10 +76,7 @@
 				return this.flashcardId !== 'new';
 			},
 			flashcardResourceUrl() {
-				return getApiUrl(this.isEdit ? `flashcards/${this.flashcardId}` : 'flashcards')
-			},
-			flashcardPopulateResourceUrl() {
-				return `${this.flashcardResourceUrl}?include=tags`
+				return getApiUrl(this.isEdit ? `flashcards/${this.flashcardId}?include=tags` : 'flashcards')
 			},
 			hasChanged() {
 				return !isEqual(this.form.originalData, this.form.data())
@@ -129,13 +126,11 @@
 		},
 		async mounted() {
 			if (this.isEdit) {
-				const response = await this.form.populate(this.flashcardPopulateResourceUrl, ['include'])
+				const response = await this.form.populate(this.flashcardResourceUrl, ['include'])
 				const tags = response.tags;
 				if (!tags) return;
 
-				this.flashcardTags = tags.map(tagId => {
-					return response.included.tags[tagId]
-				})
+				this.flashcardTags = tags.map(tagId => response.included.tags[tagId])
 			}
 		}
 	}

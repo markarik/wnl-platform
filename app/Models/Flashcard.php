@@ -19,7 +19,6 @@ class Flashcard extends Model
 		)->withPivot('order_number');
 	}
 
-
 	public function userFlashcardNotes() {
 		return $this->hasMany('\App\Models\UserFlashcardNote')->where('user_id', '=', Auth::user()->id);
 	}

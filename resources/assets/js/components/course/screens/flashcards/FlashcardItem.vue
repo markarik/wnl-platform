@@ -40,8 +40,8 @@
 			</div>
 		</div>
 		<div v-if="flashcard.answer !== 'unsolved'">
-			<div v-if="flashcard.note && !isNoteEditorOpen"><span v-html="flashcard.note.note" /> <button @click="onOpenNoteEditor">Edytuj notatkę</button></div>
-			<button v-if="!flashcard.note && !isNoteEditorOpen" @click="onOpenNoteEditor">+ Dodaj notatkę</button>
+			<div v-if="flashcard.note && !isNoteEditorOpen"><span v-html="flashcard.note.note" /> <button @click="openNoteEditor">Edytuj notatkę</button></div>
+			<button v-if="!flashcard.note && !isNoteEditorOpen" @click="openNoteEditor">+ Dodaj notatkę</button>
 			<wnl-form
 					v-if="isNoteEditorOpen"
 					:method="noteFormMethod"
@@ -232,7 +232,7 @@
 				});
 				this.isNoteEditorOpen = false;
 			},
-			onOpenNoteEditor() {
+			openNoteEditor() {
 				this.isNoteEditorOpen = true;
 			}
 		},

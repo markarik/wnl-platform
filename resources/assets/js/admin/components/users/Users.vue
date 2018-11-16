@@ -2,7 +2,7 @@
 	<div>
 		<button class="button is-primary" @click="addAnnotation">+ Nowy Przypis</button>
 		<users-list
-				:list="annotations"
+				:list="users"
 				:annotation="activeAnnotation"
 				:modifiedAnnotationId="modifiedAnnotationId"
 				@annotationSelect="onAnnotationSelect"
@@ -33,7 +33,7 @@
 
 <style lang="sass">
 	.annotations__pagination .pagination-list
-		justify-content: flex-end
+		justify-content: center
 </style>
 
 <script>
@@ -51,12 +51,13 @@
 			return {
 				activeAnnotation: {},
 				annotations: [],
+				roles: [],
 				modifiedAnnotationId: 0,
 				searchPhrase: '',
 				searchFields: [],
 				perPage: 24,
 				page: 1,
-				includes: 'keywords,tags',
+				includes: 'roles',
 				paginationMeta: {}
 			}
 		},
@@ -70,13 +71,13 @@
 				this.searchPhrase = phrase
 				this.searchFields = fields
 
-				await this.fetchAnnotations('annotations/.filter', 'post')
+				await this.fetchUsers('users/.filter', 'post')
 			},
 			async clearSearch() {
 				this.searchPhrase = ''
 				this.searchFields = []
 				this.page = 1
-				await this.fetchAnnotations()
+				await this.fetchUsers()
 			},
 			changeTab(name) {
 				this.activeTab.active = false;
@@ -94,7 +95,7 @@
 			},
 			async onPageChange(page) {
 				this.page = page
-				await this.fetchAnnotations()
+				await this.fetchUsers()
 			},
 			onAnnotationSelect(annotation) {
 				if (this.modifiedAnnotationId && annotation.id !== this.modifiedAnnotationId) {
@@ -121,7 +122,7 @@
 					...annotation,
 					keywords: (annotation.keywords || []).join(',')
 				}
-				this.annotations.splice(0,0, this.activeAnnotation);
+				this.users.splice(0,0, this.activeAnnotation);
 			},
 			onEditSuccess(annotation) {
 				this.activeAnnotation = {
@@ -129,7 +130,7 @@
 					keywords: (annotation.keywords || []).join(',')
 				}
 
-				this.annotations = this.annotations.map(item => {
+				this.users = this.users.map(item => {
 					if (item.id === annotation.id) {
 						return {
 							...this.activeAnnotation
@@ -141,23 +142,8 @@
 			onDeleteSuccess({id}) {
 				this.activeAnnotation = {}
 
-				const annotationIndex = this.annotations.findIndex(annotation => annotation.id === id)
-				this.annotations.splice(annotationIndex, 1)
-			},
-			serializeResponse({data}) {
-				const {included, ...annotations} = data;
-				const {tags, keywords} = included;
-
-				return Object.values(annotations).map(annotation => {
-					return {
-						...annotation,
-						tags: (annotation.tags || []).map(tagId => ({
-							id: tags[tagId].id,
-							name: tags[tagId].name,
-						})),
-						keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
-					}
-				})
+				const annotationIndex = this.users.findIndex(annotation => annotation.id === id)
+				this.users.splice(annotationIndex, 1)
 			},
 			getRequestParams() {
 				const params = {
@@ -174,31 +160,33 @@
 				}
 				return params
 			},
-			async fetchAnnotations(url = 'annotations/all', method = 'get') {
+			async fetchUsers(url = 'users/all', method = 'get') {
 				try {
 					const params = method === 'get' ? {
 						params: this.getRequestParams()
 					} : this.getRequestParams()
-					const annotationsResponse = await axios[method](getApiUrl(url), params)
+					const {data: response} = await axios[method](getApiUrl(url), params)
 
-					const {data: response} = annotationsResponse
 					const {data, ...paginationMeta} = response
 					this.paginationMeta = paginationMeta
 					if (paginationMeta.total === 0) {
-						this.annotations = []
+						this.users = []
 					} else {
-						this.annotations = this.serializeResponse(response);
+						const {included, ...users} = data
+						this.users = Object.values(users)
+						this.roles = included.roles
 					}
 				} catch (e) {
 					this.addAutoDismissableAlert({
 						text: "Ops, nie udało się pobrać przypisów. Odśwież stronę i spróbuj jeszcze raz",
 						type: 'error'
 					})
+					console.error(e)
 				}
 			},
 		},
 		async mounted() {
-			await this.fetchAnnotations()
+			await this.fetchUsers()
 		},
 		beforeRouteLeave(to, from, next) {
 			if (this.modifiedAnnotationId) {

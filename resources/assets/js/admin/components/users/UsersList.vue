@@ -1,13 +1,13 @@
 <template>
 	<div class="annotations-list">
 		<slot name="search"></slot>
-		<slot name="pagination"/>
 		<ul v-if="list.length">
 			<table class="users-list">
 				<tbody>
 					<tr v-for="(user, index) in list" class="users-list__item">
 						<td>{{ user.id }}</td>
 						<td>{{ user.full_name }}</td>
+						<td>{{ user.hasOwnProperty('roles') && user.roles.join(',') }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -15,6 +15,7 @@
 		<div v-else>
 			<span class="title is-6">Nic tu nie ma...</span>
 		</div>
+		<slot name="pagination"/>
 	</div>
 </template>
 
@@ -27,6 +28,9 @@
 				background: $color-background-light-gray
 			td
 				padding: 5px
+
+				&:last-child
+					text-align: right
 </style>
 
 <script>

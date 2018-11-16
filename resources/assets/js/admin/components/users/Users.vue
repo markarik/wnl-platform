@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<button class="button is-primary" @click="addAnnotation">+ Nowy Przypis</button>
 		<users-list
 				:list="users"
 				:annotation="activeAnnotation"
@@ -32,8 +31,11 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
+
 	.annotations__pagination .pagination-list
 		justify-content: center
+		margin-top: $margin-medium
 </style>
 
 <script>

@@ -56,7 +56,7 @@ let routes = [
 	},
 	{
 		name: 'users',
-		path: 'admin/app/users',
+		path: '/admin/app/users',
 		component: require('js/admin/components/users/Users.vue'),
 	},
 	{

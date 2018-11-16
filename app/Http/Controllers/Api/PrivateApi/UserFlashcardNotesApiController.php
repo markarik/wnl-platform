@@ -35,4 +35,18 @@ class UserFlashcardNotesApiController extends ApiController
 
 		return $this->respondOk($result);
 	}
+
+	public function put(Request $request) {
+		$userFlashcardNoteId = $request->route('userFlashcardNoteId');
+
+		$userFlashcardNote = UserFlashcardNote::find($userFlashcardNoteId);
+
+		if (!$userFlashcardNote) {
+			return $this->respondNotFound();
+		}
+
+		$userFlashcardNote->update($request->all());
+
+		return $this->respondOk($userFlashcardNote);
+	}
 }

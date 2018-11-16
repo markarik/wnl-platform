@@ -40,20 +40,21 @@
 			</div>
 		</div>
 		<div v-if="flashcard.answer !== 'unsolved'">
-			<div v-if="flashcard.note">{{flashcard.note.note}}</div>
+			<div v-if="flashcard.note && !isNoteEditorOpen"><span v-html="flashcard.note.note" /> <button @click="onOpenNoteEditor">Edytuj notatkę</button></div>
+			<button v-if="!flashcard.note && !isNoteEditorOpen" @click="onOpenNoteEditor">+ Dodaj notatkę</button>
 			<wnl-form
-					v-else
-					method="post"
-					suppressEnter="true"
+					v-if="isNoteEditorOpen"
+					:method="noteFormMethod"
 					resetAfterSubmit="true"
-					:resourceRoute="`user_flashcard_notes/${flashcard.id}`"
+					:resourceRoute="noteFormResourceRoute"
 					:name="`flashcardNote-${flashcard.id}`"
 					@submitSuccess="onSubmitSuccess">
-				<label class="label">Notatka {{flashcard.id}}</label>
+				<label class="label">Notatka</label>
 				<wnl-quill
 						name="note"
 						class="margin bottom"
 						:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
+						:toolbar="[['bold', 'italic', 'underline', 'link', { color: fontColors }, 'clean']]"
 						v-model="note"
 				/>
 			</wnl-form>
@@ -153,13 +154,13 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters, mapMutations} from 'vuex';
+	import {mapActions, mapMutations} from 'vuex';
 	import {nextTick} from 'vue'
 	import {get} from 'lodash';
-	import {scrollToElement} from 'js/utils/animations'
 	import * as mutationsTypes from "js/store/mutations-types";
 	import {Quill as WnlQuill, Form as WnlForm} from 'js/components/global/form/index';
 	import {ANSWERS_MAP} from 'js/consts/flashcard';
+	import { fontColors } from 'js/utils/colors'
 
 	export default {
 		props: {
@@ -183,7 +184,23 @@
 		data() {
 			return {
 				ANSWERS_MAP,
-				note: '',
+				note: this.flashcard.note && this.flashcard.note.note || '',
+				fontColors,
+				isNoteEditorOpen: false,
+			}
+		},
+		computed: {
+			noteFormMethod() {
+				return this.flashcard.note ? 'put' : 'post'
+			},
+			noteFormResourceRoute() {
+				let resourceUrl = `user_flashcard_notes/${this.flashcard.id}`;
+
+				if (this.flashcard.note) {
+					resourceUrl += `/${this.flashcard.note.id}`;
+				}
+
+				return resourceUrl;
 			}
 		},
 		methods: {
@@ -195,7 +212,9 @@
 				this.updateFlashcard({
 					...flashcard,
 					answer: 'unsolved'
-				})
+				});
+
+				this.note = this.flashcard.note && this.flashcard.note.note || '';
 			},
 			async submitAnswer(flashcard, answer) {
 				await this.postAnswer({
@@ -203,10 +222,18 @@
 					answer,
 					context_type: this.context.type,
 					context_id: this.context.id
-				})
+				});
+				this.isNoteEditorOpen = ['hard', 'do_not_know'].includes(answer);
 			},
-			onSubmitSuccess() {
-
+			onSubmitSuccess(updatedNote) {
+				this.updateFlashcard({
+					...this.flashcard,
+					note: updatedNote
+				});
+				this.isNoteEditorOpen = false;
+			},
+			onOpenNoteEditor() {
+				this.isNoteEditorOpen = true;
 			}
 		},
 	}

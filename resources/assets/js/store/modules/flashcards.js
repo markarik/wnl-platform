@@ -71,6 +71,20 @@ const actions = {
 		} catch (e) {
 			$wnl.logger.error(e)
 		}
+	},
+	async postNote({commit}, {note, flashcard}) {
+		try {
+			await axios.post(
+				getApiUrl(`user_flashcard_notes/${flashcard.id}`),
+				{ note }
+			)
+			// TODO check if required
+			commit(mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD, {
+				...flashcard, note
+			})
+		} catch (e) {
+			$wnl.logger.error(e)
+		}
 	}
 }
 export default {

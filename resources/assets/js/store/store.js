@@ -26,6 +26,7 @@ import autocomplete from 'js/store/modules/autocomplete'
 import tasks from 'js/store/modules/tasks'
 import flashcards from 'js/store/modules/flashcards'
 import siteWideMessages from 'js/store/modules/siteWideMessages'
+import form from 'js/store/modules/form';
 
 Vue.use(Vuex)
 
@@ -56,6 +57,7 @@ export default new Vuex.Store({
 		flashcards,
 		alerts,
 		siteWideMessages,
+		form,
 	},
 	strict: debug
 })

@@ -3,7 +3,9 @@
 		<div class="flashcards__title content">
 			<h2 class="flashcards__title__header" id="flashacardsSetHeader">Zestawy powtórkowe na dziś</h2>
 			<ul class="flashcards__title__list">
-				<li class="flashcards__title__list__item" v-for="set in sets" :key="set.id" @click="scrollToSet(set.id)">{{set.name}}</li>
+				<li class="flashcards__title__list__item" v-for="set in sets" :key="set.id"
+					@click="scrollToSet(set.id)">{{set.name}}
+				</li>
 			</ul>
 		</div>
 		<div class="flashcards__description content" v-html="screenData.content"/>
@@ -38,44 +40,62 @@
 			</div>
 			<ol class="flashcards-set__list">
 				<li
-					v-for="(flashcard, index) in set.flashcards"
-					:key="flashcard.id"
-					:class="['flashcards-list__item', flashcard.answer !== 'unsolved' && 'flashcards-list__item--solved']"
+						v-for="(flashcard, index) in set.flashcards"
+						:key="flashcard.id"
+						:class="['flashcards-list__item', flashcard.answer !== 'unsolved' && 'flashcards-list__item--solved']"
 				>
 					<span class="flashcards-list__item__index">{{index + 1}}</span>
 					<div class="flashcards-list__item__container">
 						<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 						<div class="flashcards-list__item__buttons" v-if="flashcard.answer === 'unsolved'">
-							<a class="flashcards-list__item__buttons__button text--easy" @click="submitAnswer(flashcard, 'easy')">
+							<a class="flashcards-list__item__buttons__button text--easy"
+							   @click="submitAnswer(flashcard, 'easy')">
 								<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
 								<span class="flashcards-list__item__buttons__button__text">Łatwe</span>
 							</a>
-							<a class="flashcards-list__item__buttons__button text--hard" @click="submitAnswer(flashcard, 'hard')">
+							<a class="flashcards-list__item__buttons__button text--hard"
+							   @click="submitAnswer(flashcard, 'hard')">
 								<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
 								<span class="flashcards-list__item__buttons__button__text">Trudne</span>
 							</a>
 							<a
-								class="flashcards-list__item__buttons__button text--do-not-know"
-								@click="submitAnswer(flashcard, 'do_not_know')"
+									class="flashcards-list__item__buttons__button text--do-not-know"
+									@click="submitAnswer(flashcard, 'do_not_know')"
 							>
 								<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
 								<span class="flashcards-list__item__buttons__button__text">Nie Wiem</span>
 							</a>
 						</div>
 						<div
-							class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
-							@click="onRetakeFlashcard(flashcard)"
-							v-else
+								class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
+								@click="onRetakeFlashcard(flashcard)"
+								v-else
 						>
 							<span class="flashcards-list__item__buttons__button">
 								<span class="icon"><i class="fa fa-undo"></i></span>
 							</span>
 							<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
-								<span class="icon"><i :class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
+								<span class="icon"><i
+										:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
 								<span class="flashcards-list__item__buttons__button__text">{{ANSWERS_MAP[flashcard.answer].text}}</span>
 							</span>
 						</div>
 					</div>
+					<wnl-form
+							method="post"
+							suppressEnter="true"
+							resetAfterSubmit="true"
+							resourceRoute="test"
+							:name="`flashcardNote-${flashcard.id}`"
+							@submitSuccess="onSubmitSuccess">
+						<label class="label">Notatka {{flashcard.id}}</label>
+						<wnl-quill
+								name="note"
+								class="margin bottom"
+								:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
+								v-model="notes[flashcard.id]"
+						/>
+					</wnl-form>
 				</li>
 			</ol>
 		</div>
@@ -92,10 +112,13 @@
 
 	.text--bold
 		font-weight: 600
+
 	.text--easy
 		color: $color-ocean-blue
+
 	.text--hard
 		color: $color-yellow
+
 	.text--do-not-know
 		color: $color-red
 
@@ -219,7 +242,6 @@
 						.flashcards-list__item__buttons__button .icon .fa-undo
 							font-size: 16px
 
-
 					&__button
 						opacity: 1
 						display: flex
@@ -267,10 +289,11 @@
 
 <script>
 	import {mapActions, mapGetters, mapMutations} from 'vuex';
-	import {nextTick} from 	'vue'
+	import {nextTick} from 'vue'
 	import {get} from 'lodash';
-	import { scrollToElement } from 'js/utils/animations'
+	import {scrollToElement} from 'js/utils/animations'
 	import * as mutationsTypes from "js/store/mutations-types";
+	import { Quill as WnlQuill, Form as WnlForm } from 'js/components/global/form';
 
 	const ANSWERS_MAP = {
 		easy: {
@@ -301,11 +324,16 @@
 				required: true
 			}
 		},
+		components: {
+			WnlQuill,
+			WnlForm,
+		},
 		data() {
 			return {
-				content: '',
 				ANSWERS_MAP,
-				applicableSetsIds: []
+				applicableSetsIds: [],
+				attachedData: {},
+				notes: {},
 			}
 		},
 		computed: {
@@ -354,6 +382,9 @@
 					context_id: this.screenData.id
 				})
 			},
+			onSubmitSuccess() {
+
+			}
 		},
 		async mounted() {
 			const resources = get(this.screenData, 'meta.resources', []);

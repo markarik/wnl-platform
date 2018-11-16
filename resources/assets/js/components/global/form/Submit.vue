@@ -29,13 +29,10 @@
 			anyErrors() {
 				return this.getter('anyErrors')
 			},
-			cssClasses() {
-				return this.css
-			}
 		},
 		methods: {
 			getter(getter) {
-				return this.$store.getters[`${this.parentName}/${getter}`]
+				return this.$store.getters[`form/${getter}`](this.parentName)
 			},
 			submitParent() {
 				this.$parent.$emit('submitForm')

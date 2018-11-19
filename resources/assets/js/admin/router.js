@@ -60,6 +60,11 @@ let routes = [
 		component: require('js/admin/components/users/Users.vue'),
 	},
 	{
+		name: 'users-edit',
+		path: '/admin/app/users/edit',
+		component: require('js/admin/components/users/UserEditForm.vue'),
+	},
+	{
 		name: 'orders',
 		path: 'admin/app/orders',
 		// component: require('js/admin/components/users/Users.vue'),

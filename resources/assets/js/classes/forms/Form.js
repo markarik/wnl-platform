@@ -101,7 +101,7 @@ export default class Form {
 				})
 				.catch(error => {
 					if (error.response.status === 422) {
-						this.errors.record(error.response.data);
+						this.errors.record(_.get(error.response, 'data.errors', error.response.data));
 					} else {
 						reject(error);
 					}

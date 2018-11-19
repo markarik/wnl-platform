@@ -44,7 +44,7 @@
 				<wnl-text-button v-if="!flashcard.note && !isNoteEditorOpen" @click="toggleNoteEditor" type="button">+ DODAJ NOTATKĘ</wnl-text-button>
 				<div v-if="flashcard.note && !isNoteEditorOpen">
 					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="edit">EDYTUJ</wnl-text-button></label>
-					<span v-html="flashcard.note.note" />
+					<span class="content" v-html="flashcard.note.note" />
 				</div>
 				<wnl-form
 						v-if="isNoteEditorOpen"
@@ -52,6 +52,7 @@
 						resetAfterSubmit="true"
 						:resourceRoute="noteFormResourceRoute"
 						:name="`flashcardNote-${flashcard.id}`"
+						:suppressEnter="true"
 						:hideDefaultSubmit="true"
 						@submitSuccess="onSubmitSuccess">
 					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="close">ANULUJ</wnl-text-button></label>

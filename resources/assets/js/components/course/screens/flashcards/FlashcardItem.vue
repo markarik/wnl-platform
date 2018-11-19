@@ -4,60 +4,74 @@
 	>
 		<span class="flashcards-list__item__index">{{index + 1}}</span>
 		<div class="flashcards-list__item__container">
-			<p class="flashcards-list__item__text">{{flashcard.content}}</p>
-			<div class="flashcards-list__item__buttons" v-if="flashcard.answer === 'unsolved'">
-				<a class="flashcards-list__item__buttons__button text--easy"
-				   @click="submitAnswer(flashcard, 'easy')">
-					<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
-					<span class="flashcards-list__item__buttons__button__text">Łatwe</span>
-				</a>
-				<a class="flashcards-list__item__buttons__button text--hard"
-				   @click="submitAnswer(flashcard, 'hard')">
-					<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
-					<span class="flashcards-list__item__buttons__button__text">Trudne</span>
-				</a>
-				<a
-						class="flashcards-list__item__buttons__button text--do-not-know"
-						@click="submitAnswer(flashcard, 'do_not_know')"
+			<div class="flashcards-list__item__text__container">
+				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
+				<div class="flashcards-list__item__buttons" v-if="flashcard.answer === 'unsolved'">
+					<a class="flashcards-list__item__buttons__button text--easy"
+					   @click="submitAnswer(flashcard, 'easy')">
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
+						<span class="flashcards-list__item__buttons__button__text">Łatwe</span>
+					</a>
+					<a class="flashcards-list__item__buttons__button text--hard"
+					   @click="submitAnswer(flashcard, 'hard')">
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
+						<span class="flashcards-list__item__buttons__button__text">Trudne</span>
+					</a>
+					<a
+							class="flashcards-list__item__buttons__button text--do-not-know"
+							@click="submitAnswer(flashcard, 'do_not_know')"
+					>
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
+						<span class="flashcards-list__item__buttons__button__text">Nie Wiem</span>
+					</a>
+				</div>
+				<div
+						class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
+						@click="onRetakeFlashcard(flashcard)"
+						v-else
 				>
-					<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
-					<span class="flashcards-list__item__buttons__button__text">Nie Wiem</span>
-				</a>
+					<span class="flashcards-list__item__buttons__button">
+						<span class="icon"><i class="fa fa-undo"></i></span>
+					</span>
+					<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
+						<span class="icon"><i
+								:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
+						<span class="flashcards-list__item__buttons__button__text">{{ANSWERS_MAP[flashcard.answer].text}}</span>
+					</span>
+				</div>
 			</div>
-			<div
-					class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
-					@click="onRetakeFlashcard(flashcard)"
-					v-else
-			>
-				<span class="flashcards-list__item__buttons__button">
-					<span class="icon"><i class="fa fa-undo"></i></span>
-				</span>
-				<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
-					<span class="icon"><i
-							:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
-					<span class="flashcards-list__item__buttons__button__text">{{ANSWERS_MAP[flashcard.answer].text}}</span>
-				</span>
+			<div v-if="flashcard.answer !== 'unsolved'">
+				<wnl-text-button v-if="!flashcard.note && !isNoteEditorOpen" @click="toggleNoteEditor" type="button">+ DODAJ NOTATKĘ</wnl-text-button>
+				<div v-if="flashcard.note && !isNoteEditorOpen">
+					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="edit">EDYTUJ</wnl-text-button></label>
+					<span v-html="flashcard.note.note" />
+				</div>
+				<wnl-form
+						v-if="isNoteEditorOpen"
+						:method="noteFormMethod"
+						resetAfterSubmit="true"
+						:resourceRoute="noteFormResourceRoute"
+						:name="`flashcardNote-${flashcard.id}`"
+						:hideDefaultSubmit="true"
+						@submitSuccess="onSubmitSuccess">
+					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="close">ANULUJ</wnl-text-button></label>
+					<wnl-quill
+							name="note"
+							class="margin bottom"
+							:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
+							:toolbar="[['bold', 'italic', 'underline', 'link'], [{ color: fontColors }], ['clean']]"
+							v-model="note"
+					/>
+
+					<div class="level">
+						<div class="level-item">
+							<wnl-submit cssClass="button is-small is-primary">
+								Zapisz
+							</wnl-submit>
+						</div>
+					</div>
+				</wnl-form>
 			</div>
-		</div>
-		<div v-if="flashcard.answer !== 'unsolved'">
-			<div v-if="flashcard.note && !isNoteEditorOpen"><span v-html="flashcard.note.note" /> <button @click="openNoteEditor">Edytuj notatkę</button></div>
-			<button v-if="!flashcard.note && !isNoteEditorOpen" @click="openNoteEditor">+ Dodaj notatkę</button>
-			<wnl-form
-					v-if="isNoteEditorOpen"
-					:method="noteFormMethod"
-					resetAfterSubmit="true"
-					:resourceRoute="noteFormResourceRoute"
-					:name="`flashcardNote-${flashcard.id}`"
-					@submitSuccess="onSubmitSuccess">
-				<label class="label">Notatka</label>
-				<wnl-quill
-						name="note"
-						class="margin bottom"
-						:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
-						:toolbar="[['bold', 'italic', 'underline', 'link', { color: fontColors }, 'clean']]"
-						v-model="note"
-				/>
-			</wnl-form>
 		</div>
 	</li>
 </template>
@@ -80,8 +94,9 @@
 		color: $color-red
 
 	.flashcards-list__item
-		display: flex
 		align-items: center
+		display: flex
+		flex-direction: column
 
 		&--solved
 			color: $color-gray-dimmed
@@ -91,14 +106,15 @@
 
 		&__index
 			font-weight: $font-weight-bold
-			text-align: right
 
 		&__container
-			display: flex
 			border: $border-light-gray
-			padding: $margin-base
-			flex-grow: 1
 			margin: $margin-small 0 $margin-small $margin-small
+			padding: $margin-base
+			width: 100%
+
+		&__text__container
+			display: flex
 			min-height: 54px
 			flex-direction: column
 
@@ -158,7 +174,8 @@
 	import {nextTick} from 'vue'
 	import {get} from 'lodash';
 	import * as mutationsTypes from "js/store/mutations-types";
-	import {Quill as WnlQuill, Form as WnlForm} from 'js/components/global/form/index';
+	import {Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit} from 'js/components/global/form/index';
+	import WnlTextButton from 'js/components/global/TextButton';
 	import {ANSWERS_MAP} from 'js/consts/flashcard';
 	import { fontColors } from 'js/utils/colors'
 
@@ -180,6 +197,8 @@
 		components: {
 			WnlQuill,
 			WnlForm,
+			WnlTextButton,
+			WnlSubmit,
 		},
 		data() {
 			return {
@@ -232,8 +251,8 @@
 				});
 				this.isNoteEditorOpen = false;
 			},
-			openNoteEditor() {
-				this.isNoteEditorOpen = true;
+			toggleNoteEditor() {
+				this.isNoteEditorOpen = !this.isNoteEditorOpen;
 			}
 		},
 	}

@@ -35,7 +35,7 @@ class UserFlashcardNotesApiController extends ApiController
 			'note' => $request->get('note')
 		]);
 
-		return $this->respondOk($result);
+		return $this->transformAndRespond($result);
 	}
 
 	public function put(UpdateUserFlashcardNote $request) {
@@ -49,6 +49,6 @@ class UserFlashcardNotesApiController extends ApiController
 
 		$userFlashcardNote->update($request->all());
 
-		return $this->respondOk($userFlashcardNote);
+		return $this->transformAndRespond($userFlashcardNote);
 	}
 }

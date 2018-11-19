@@ -23,7 +23,7 @@ class FlashcardsApiController extends ApiController
 
 		$flashcard->update($request->all());
 
-		return $this->respondOk($flashcard);
+		return $this->transformAndRespond($flashcard);
 	}
 
 	public function post(UpdateFlashcard $request)
@@ -32,6 +32,6 @@ class FlashcardsApiController extends ApiController
 
 		$flashcard->save();
 
-		return $this->respondOk($flashcard);
+		return $this->transformAndRespond($flashcard);
 	}
 }

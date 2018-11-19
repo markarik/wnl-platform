@@ -4,20 +4,20 @@
 		<ul v-if="users.length">
 			<table class="users-users">
 				<thead>
-					<tr>
-						<th>#</th>
-						<th>Imię Nazwisko</th>
-						<th>Rola</th>
-						<th>Data stworzenia</th>
-					</tr>
+				<tr>
+					<th>#</th>
+					<th>Imię Nazwisko</th>
+					<th>Rola</th>
+					<th>Data stworzenia</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(user, index) in users" class="users-users__item">
-						<td>{{ user.id }}</td>
-						<td>{{ user.full_name }}</td>
-						<td>{{ getRoles(user) }}</td>
-						<td>{{ getDateCreated(user) }}</td>
-					</tr>
+				<tr v-for="(user, index) in users" class="users-users__item" @click="goToDetails(user.id)">
+					<td>{{ user.id }}</td>
+					<td>{{ user.full_name }}</td>
+					<td>{{ getRoles(user) }}</td>
+					<td>{{ getDateCreated(user) }}</td>
+				</tr>
 				</tbody>
 			</table>
 		</ul>
@@ -75,6 +75,9 @@
 			},
 			getDateCreated(user) {
 				return moment(user.created_at * 1000).format('D MMM Y')
+			},
+			goToDetails(userId) {
+				this.$router.push({ name: 'user-details', params: { userId } })
 			}
 		}
 	}

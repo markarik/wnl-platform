@@ -35,9 +35,6 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'users' }">Lista użytkowników</router-link></li>
 		</ul>
-		<ul class="menu-list">
-			<li><router-link :to="{ name: 'orders' }">Zamówienia</router-link></li>
-		</ul>
 	</aside>
 </template>
 

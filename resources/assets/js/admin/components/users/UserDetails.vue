@@ -7,8 +7,13 @@
 			<div class="user-details__head">
 				<p>#{{ user.id }}</p>
 				<p class="user-details__head__name">{{ user.full_name }}</p>
-				<p>{{ roles }}</p>
-				<p>Dołączył/-a {{ dateCreated }}</p>
+				<span
+					class="tag"
+					v-for="role in roles"
+					:style="{backgroundColor: getColourForStr(role)}">
+					{{role}}
+				</span>
+				<p>Dołączył/-a: {{ dateCreated }}</p>
 			</div>
 
 			<div class="tabs">
@@ -34,12 +39,16 @@
 				font-size: $font-size-plus-2
 				font-weight: bold
 
+			.tag
+				margin: $margin-small $margin-small $margin-small 0
+
 </style>
 
 <script>
 	import axios from 'axios';
 	import {mapActions} from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
+	import string_color from 'js/admin/mixins/string-color'
 	import moment from 'moment'
 	import UserSummary from './UserSummary'
 	import UserAddress from './UserAddress'
@@ -51,6 +60,7 @@
 	export default {
 		name: "UserDetails",
 		components: {},
+		mixins: [ string_color ],
 		data() {
 			return {
 				isLoading: true,
@@ -101,7 +111,7 @@
 				if (!this.user.hasOwnProperty('roles')) {
 					return '';
 				}
-				return Object.values(this.user.roles).map(roleId => this.roleNames[roleId]).join(', ')
+				return Object.values(this.user.roles).map(roleId => this.roleNames[roleId])
 			},
 		},
 		methods: {

@@ -4,9 +4,8 @@ namespace App\Http\Requests\Course;
 
 use App\Models\UserFlashcardNote;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class UpdateUserFlashcardNote extends FormRequest
+class PostUserFlashcardNote extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -15,9 +14,7 @@ class UpdateUserFlashcardNote extends FormRequest
 	 */
 	public function authorize()
 	{
-		$userFlashcardNote = UserFlashcardNote::find($this->route('userFlashcardNoteId'));
-
-		return $userFlashcardNote->user_id === Auth::user()->id;
+		return true;
 	}
 
 	/**

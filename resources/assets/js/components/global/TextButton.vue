@@ -2,7 +2,7 @@
 	<button class="wnl-text-button"
 			:disabled="disabled"
 			:type="type"
-			@click="emitClick"
+			@click="$emit('click', $event)"
 	>
 		<i v-if="icon" :class="`icon fa fa-${icon}`"></i>
 		<slot />
@@ -30,10 +30,5 @@
 <script>
 	export default {
 		props: ['icon', 'disabled', 'type'],
-		methods: {
-			emitClick() {
-				this.$emit('click')
-			}
-		}
 	}
 </script>

@@ -49,7 +49,7 @@
 				<wnl-form
 						v-if="isNoteEditorOpen"
 						:method="noteFormMethod"
-						resetAfterSubmit="true"
+						:resetAfterSubmit="true"
 						:resourceRoute="noteFormResourceRoute"
 						:name="`flashcardNote-${flashcard.id}`"
 						:suppressEnter="true"
@@ -139,12 +139,12 @@
 			align-items: center
 			display: flex
 			justify-content: center
-			margin-top: $margin-base
+			margin: $margin-base 0
 
 			@media #{$media-query-tablet}
 				flex: 0 0 $buttonWidth * 3
 				justify-content: flex-end
-				margin-top: 0
+				margin: 0
 
 			&--retake
 				@media #{$media-query-tablet}

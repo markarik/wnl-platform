@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Course\PostUserFlashcardNote;
 use App\Http\Requests\Course\UpdateUserFlashcardNote;
 use App\Models\Flashcard;
 use App\Models\User;
@@ -21,7 +22,7 @@ class UserFlashcardNotesApiController extends ApiController
 		$this->resourceName = config('papi.resources.user-flashcard-notes');
 	}
 
-	public function post(UpdateUserFlashcardNote $request) {
+	public function post(PostUserFlashcardNote $request) {
 		$flashcardId = $request->route('flashcardId');
 
 		if (!Flashcard::find($flashcardId)) {
@@ -44,10 +45,6 @@ class UserFlashcardNotesApiController extends ApiController
 
 		if (!$userFlashcardNote) {
 			return $this->respondNotFound();
-		}
-
-		if ($userFlashcardNote->user_id !== Auth::user()->id) {
-			return $this->respondForbidden();
 		}
 
 		$userFlashcardNote->update($request->all());

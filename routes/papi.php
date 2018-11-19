@@ -216,6 +216,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::delete("{$r['users']}/{userId}/{$r['user-collections']}", 'UserCollectionsApiController@delete');
 
+	Route::get("{$r['roles']}/{id}", 'RolesApiController@get');
+
 	// Orders
 	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
 	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');

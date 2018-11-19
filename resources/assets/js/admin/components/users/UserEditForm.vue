@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<span class="title is-5 margin bottom">Dodaj Użytkownika</span>
+		<h2 class="title is-3 margin bottom">Nowy Użytkownik</h2>
 		<form @submit.prevent="onSubmit">
 			<wnl-form-input
 				name="first_name"
@@ -34,6 +34,11 @@
 			>
 				Hasło
 			</wnl-form-input>
+			<h3 class="title is-5 margin vertical">Dodaj Rolę</h3>
+			<div v-for="role in roles" :key="role.id" class="field">
+				<input type="checkbox" :id="role.id" class="is-checkradio" v-model="selectedRoles" :value="role.id"/>
+				<label class="checkbox" :for="role.id">{{role.name}}</label>
+			</div>
 			<button class="button is-small is-success margin top"
 				:class="{'is-loading': isLoading}"
 				:disabled="!hasChanged"
@@ -64,8 +69,11 @@
 					first_name: '',
 					last_name: '',
 					email: '',
-					password: ''
+					password: '',
+					roles: []
 				}),
+				roles: [],
+				selectedRoles: [],
 				isLoading: false,
 				isEdit: false
 			}
@@ -87,6 +95,7 @@
 
 				this.loading = true;
 				try {
+					this.form.roles = this.selectedRoles
 					await this.form[this.isEdit ? 'put' : 'post'](this.apiUrl)
 					this.loading = false;
 					this.addAutoDismissableAlert({
@@ -94,15 +103,26 @@
 						type: 'success'
 					});
 					this.form.originalData = this.form.data()
+					this.$router.push({
+						name: 'users'
+					})
 				} catch (exception) {
 					this.loading = false;
 					this.addAutoDismissableAlert({
 						text: 'Nie udało się utworzyć użytkownika.:(',
 						type: 'error'
 					});
-					console.log(exception);
 					$wnl.logger.capture(exception)
 				}
+			}
+		},
+		async created() {
+			const response = await axios.get(getApiUrl('roles/all'));
+			this.roles = response.data;
+		},
+		watch: {
+			selectedRoles() {
+				this.form.roles = this.selectedRoles;
 			}
 		}
 	}

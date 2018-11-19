@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<router-link class="button is-primary" :to="{'name': 'users-edit'}">Dodaj Użytkownika</router-link>
+		<router-link class="button is-primary margin bottom" :to="{'name': 'users-edit'}">Dodaj Użytkownika</router-link>
 		<users-list
 				:list="users"
 				:annotation="activeAnnotation"

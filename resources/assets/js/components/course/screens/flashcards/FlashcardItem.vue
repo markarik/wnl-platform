@@ -98,6 +98,11 @@
 		align-items: center
 		display: flex
 		flex-direction: column
+		margin-top: $margin-base
+
+		@media #{$media-query-tablet}
+			flex-direction: row
+			margin-top: 0
 
 		&--solved
 			color: $color-gray-dimmed
@@ -110,9 +115,12 @@
 
 		&__container
 			border: $border-light-gray
-			margin: $margin-small 0 $margin-small $margin-small
+			margin: 0
 			padding: $margin-base
 			width: 100%
+
+			@media #{$media-query-tablet}
+				margin: $margin-small 0 $margin-small $margin-small
 
 		&__text__container
 			display: flex
@@ -128,15 +136,19 @@
 			color: inherit
 
 		&__buttons
-			text-align: right
-			display: flex
 			align-items: center
+			display: flex
+			justify-content: center
+			margin-top: $margin-base
 
 			@media #{$media-query-tablet}
 				flex: 0 0 $buttonWidth * 3
+				justify-content: flex-end
+				margin-top: 0
 
 			&--retake
-				flex: 0 0 $buttonWidth * 2
+				@media #{$media-query-tablet}
+					flex: 0 0 $buttonWidth * 2
 
 				.flashcards-list__item__buttons__button .icon .fa-undo
 					font-size: 16px

@@ -100,12 +100,16 @@
 			&__retake
 				display: flex
 				align-items: center
-				justify-content: flex-end
 				text-transform: uppercase
 				font-weight: 600
-				margin: $margin-huge $margin-small $margin-small 0
+				margin: $margin-big $margin-small $margin-small 0
 				font-size: 12px
 				cursor: pointer
+				justify-content: center
+
+				@media #{$media-query-tablet}
+					justify-content: flex-end
+					margin-top: $margin-huge
 
 				.fa-undo
 					margin-right: $margin-base
@@ -130,18 +134,31 @@
 				font-weight: $font-weight-bold
 				text-transform: uppercase
 				flex-wrap: wrap
+				flex-direction: column
 
 				@media #{$media-query-tablet}
 					justify-content: center
+					flex-direction: row
 
 				&__single
 					display: flex
-					flex-direction: column
 					align-items: center
+					justify-content: center
 					margin: $margin-small $margin-base
 
+					@media #{$media-query-tablet}
+						justify-content: flex-start
+						flex-direction: column
+
+					span:first-child
+						margin-right: $margin-small
+
+						@media #{$media-query-tablet}
+							margin-right: 0
+
 			&__list
-				margin: $margin-small
+				@media #{$media-query-tablet}
+					margin: $margin-small
 
 		.flashcards-scroll
 			width: 32px

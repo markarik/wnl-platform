@@ -58,7 +58,7 @@
 					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="close">ANULUJ</wnl-text-button></label>
 					<wnl-quill
 							name="note"
-							class="margin bottom"
+							class="margin bottom flashcards-list__item__note-editor"
 							:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
 							:toolbar="[['bold', 'italic', 'underline', 'link'], [{ color: fontColors }], ['clean']]"
 							v-model="note"
@@ -179,6 +179,9 @@
 					font-weight: $font-weight-bold
 					text-transform: uppercase
 					font-size: 12px
+
+		&__note-editor
+			background: white
 
 </style>
 

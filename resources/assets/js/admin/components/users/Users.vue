@@ -1,13 +1,8 @@
 <template>
 	<div>
 		<users-list
-				:list="users"
-				:annotation="activeAnnotation"
-				:modifiedAnnotationId="modifiedAnnotationId"
-				@annotationSelect="onAnnotationSelect"
-				@addSuccess="onAddSuccess"
-				@editSuccess="onEditSuccess"
-				@deleteSuccess="onDeleteSuccess"
+				:users="users"
+				:roles="roles"
 		>
 			<div class="search" slot="search">
 				<search @search="search"/>
@@ -57,7 +52,7 @@
 				modifiedAnnotationId: 0,
 				searchPhrase: '',
 				searchFields: [],
-				perPage: 24,
+				perPage: 50,
 				page: 1,
 				includes: 'roles',
 				paginationMeta: {}
@@ -176,7 +171,9 @@
 					} else {
 						const {included, ...users} = data
 						this.users = Object.values(users)
-						this.roles = included.roles
+						Object.values(included.roles).forEach(role => {
+							this.roles[role.id] = role.name
+						})
 					}
 				} catch (e) {
 					this.addAutoDismissableAlert({

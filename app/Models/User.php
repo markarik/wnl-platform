@@ -159,27 +159,27 @@ class User extends Authenticatable
 
 	public function getAddressAttribute($value)
 	{
-		return $this->userAddress->street;
+		return $this->userAddress->street ?? '';
 	}
 
 	public function getPhoneAttribute($value)
 	{
-		return $this->userAddress->phone;
+		return $this->userAddress->phone ?? '';
 	}
 
 	public function getRecipientAttribute()
 	{
-		return $this->userAddress->recipient;
+		return $this->userAddress->recipient ?? '';
 	}
 
 	public function getZipAttribute()
 	{
-		return $this->userAddress->zip;
+		return $this->userAddress->zip ?? '';
 	}
 
 	public function getCityAttribute()
 	{
-		return $this->userAddress->city;
+		return $this->userAddress->city ?? '';
 	}
 
 	/**

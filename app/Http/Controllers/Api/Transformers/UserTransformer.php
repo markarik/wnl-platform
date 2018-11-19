@@ -22,10 +22,11 @@ class UserTransformer extends ApiTransformer
 	public function transform(User $user)
 	{
 		$data = [
-			'id'         => $user->id,
+			'id' => $user->id,
 			'first_name' => $user->first_name,
-			'last_name'  => $user->last_name,
-			'full_name'  => $user->full_name,
+			'last_name' => $user->last_name,
+			'full_name' => $user->full_name,
+			'created_at' => $user->created_at->timestamp ?? '',
 		];
 
 		if ($this->parent) {

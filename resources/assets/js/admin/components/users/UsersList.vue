@@ -1,13 +1,22 @@
 <template>
-	<div class="annotations-list">
+	<div class="annotations-users">
 		<slot name="search"></slot>
-		<ul v-if="list.length">
-			<table class="users-list">
+		<ul v-if="users.length">
+			<table class="users-users">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Imię Nazwisko</th>
+						<th>Rola</th>
+						<th>Data stworzenia</th>
+					</tr>
+				</thead>
 				<tbody>
-					<tr v-for="(user, index) in list" class="users-list__item">
+					<tr v-for="(user, index) in users" class="users-users__item">
 						<td>{{ user.id }}</td>
 						<td>{{ user.full_name }}</td>
-						<td>{{ user.hasOwnProperty('roles') && user.roles.join(',') }}</td>
+						<td>{{ getRoles(user) }}</td>
+						<td>{{ getDateCreated(user) }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -22,7 +31,7 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.users-list
+	.users-users
 		&__item
 			&:nth-child(even)
 				background: $color-background-light-gray
@@ -34,15 +43,21 @@
 </style>
 
 <script>
+	import moment from 'moment'
+
 	export default {
-		name: 'AnnotationsList',
+		name: 'UsersList',
 		data() {
 			return {
 				openAnnotations: []
 			}
 		},
 		props: {
-			list: {
+			users: {
+				type: Array,
+				required: true
+			},
+			roles: {
 				type: Array,
 				required: true
 			},
@@ -52,7 +67,15 @@
 			}
 		},
 		methods: {
-
+			getRoles(user) {
+				if (!user.hasOwnProperty('roles')) {
+					return '';
+				}
+				return Object.values(user.roles).map(roleId => this.roles[roleId]).join(', ')
+			},
+			getDateCreated(user) {
+				return moment(user.created_at * 1000).format('D MMM Y')
+			}
 		}
 	}
 </script>

@@ -43,7 +43,7 @@
 						v-for="(flashcard, index) in set.flashcards"
 						:key="flashcard.id"
 						:flashcard="flashcard"
-						:index="index"
+						:index="index + 1"
 						:context="{type: context, id: screenData.id}"
 				/>
 			</ol>

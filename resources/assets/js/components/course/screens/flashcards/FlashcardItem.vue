@@ -2,7 +2,7 @@
 	<li
 			:class="['flashcards-list__item', flashcard.answer !== 'unsolved' && 'flashcards-list__item--solved']"
 	>
-		<span class="flashcards-list__item__index">{{index + 1}}</span>
+		<span class="flashcards-list__item__index">{{index}}</span>
 		<div class="flashcards-list__item__container">
 			<div class="flashcards-list__item__text__container">
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>

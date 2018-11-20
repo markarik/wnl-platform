@@ -33,7 +33,7 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
-	const IMAGE_PATTERN = '/<img.*data-.*src="(.*)".*>/';
+	const IMAGE_PATTERN = '/<img.*src="(.*?)".*>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
@@ -448,6 +448,11 @@ class Parser
 
 		$imgTag = $match[0][0];
 		$imageUrl = $match[0][1];
+
+		if (stripos($imgTag, 'data-') === false) {
+			// Check if img tag contains data attributes - if not we don't need to migrate it
+			return $html;
+		}
 
 		try {
 			$image = Image::make(Url::encodeFullUrl($imageUrl));

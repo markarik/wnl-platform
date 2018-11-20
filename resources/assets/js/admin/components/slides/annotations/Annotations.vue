@@ -68,12 +68,14 @@
 	.tabs
 		margin-bottom: 0
 		.highlighted
-			width: 100%;
+			width: 100%
 			text-align: right
 			a
 				background-color: $color-ocean-blue
 				color: white
 				display: inline-block
+			&.is-active a
+				color: #fff
 	.search
 		position: sticky
 		top: 13px

@@ -219,11 +219,13 @@
 					margin: 0
 					min-height: 54px
 					flex-direction: column
+					width: 100%
 
 					@media #{$media-query-tablet}
 						flex-direction: row
 						align-items: center
 						margin: $margin-small 0 $margin-small $margin-small
+						width: auto
 
 				&__text
 					flex-grow: 1

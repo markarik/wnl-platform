@@ -113,6 +113,7 @@ export default class Form {
 	 * Pre-fill the form with existing data.
 	 *
 	 * @param url
+	 * @param exclude
 	 */
 	populate(url, exclude = []) {
 		return axios.get(url)
@@ -123,7 +124,9 @@ export default class Form {
 					}
 					this[field] = response.data[field]
 					this.originalData[field] = cloneDeep(response.data[field])
+
 				})
+				return response.data
 			})
 	}
 

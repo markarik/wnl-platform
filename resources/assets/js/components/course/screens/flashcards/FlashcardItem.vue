@@ -143,7 +143,7 @@
 			align-items: center
 			display: flex
 			justify-content: center
-			margin: $margin-base 0
+			margin: $margin-small 0
 
 			@media #{$media-query-tablet}
 				flex: 0 0 $buttonWidth * 3
@@ -163,13 +163,13 @@
 				display: flex
 				flex-direction: column
 				align-items: center
-				margin: 0 $margin-small
+				padding: $margin-small
 				cursor: pointer
 				transition: opacity ease-in-out .1s
 
 				@media #{$media-query-tablet}
-					flex-basis: 78px
-					width: 64px
+					flex-basis: 42px
+					width: 42px
 
 				&:hover
 					opacity: 1

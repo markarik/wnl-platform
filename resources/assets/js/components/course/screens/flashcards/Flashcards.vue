@@ -237,7 +237,10 @@
 				scrollToElement(document.getElementById('flashacardsSetHeader'));
 			},
 			onRetakeSet(set) {
-				set.flashcards.forEach(this.onRetakeFlashcard)
+				set.flashcards.forEach(flashcard => this.updateFlashcard({
+					...flashcard,
+					answer: 'unsolved'
+				}))
 			},
 		},
 		async mounted() {

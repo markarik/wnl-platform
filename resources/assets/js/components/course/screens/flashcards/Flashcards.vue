@@ -247,7 +247,7 @@
 			const resources = get(this.screenData, 'meta.resources', []);
 
 			await Promise.all(resources.map(({id}) => {
-				return !this.getSetById(id) && this.setFlashcardsSet({
+				return this.setFlashcardsSet({
 					setId: id,
 					include: 'flashcards.user_flashcard_notes',
 					context_type: this.context,

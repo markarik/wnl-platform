@@ -45,9 +45,11 @@ const actions = {
 			})
 
 			flashcardSet.flashcards = flashcardSet.flashcards.map(flashcardId => {
+				const flashcard = included.flashcards[flashcardId]
 				return {
-					...included.flashcards[flashcardId],
-					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved')
+					...flashcard,
+					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved'),
+					note: flashcard.user_flashcard_notes ? included.user_flashcard_notes[flashcard.user_flashcard_notes[0]] : null
 				}
 			})
 

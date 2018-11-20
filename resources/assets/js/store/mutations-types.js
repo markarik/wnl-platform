@@ -49,6 +49,7 @@ export const SET_REACTION  = 'SET_REACTION'
 
 // Forms
 export const FORM_SETUP                = 'FORM_SETUP'
+export const FORM_INITIAL_SETUP        = 'FORM_INITIAL_SETUP'
 export const FORM_UPDATE_ORIGINAL_DATA = 'FORM_UPDATE_ORIGINAL_DATA'
 export const FORM_UPDATE_URL           = 'FORM_UPDATE_URL'
 export const FORM_POPULATE             = 'FORM_POPULATE'

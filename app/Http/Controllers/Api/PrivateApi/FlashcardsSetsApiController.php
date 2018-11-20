@@ -27,7 +27,7 @@ class FlashcardsSetsApiController extends ApiController
 			$flashcardsSet->syncFlashcards($request->flashcards);
 		}
 
-		return $this->respondOk($flashcardsSet);
+		return $this->transformAndRespond($flashcardsSet);
 	}
 
 	public function post(UpdateFlashcardsSet $request)
@@ -40,6 +40,6 @@ class FlashcardsSetsApiController extends ApiController
 			$flashcardsSet->syncFlashcards($request->flashcards);
 		}
 
-		return $this->respondOk($flashcardsSet);
+		return $this->transformAndRespond($flashcardsSet);
 	}
 }

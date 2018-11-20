@@ -1,12 +1,13 @@
 <template>
 	<div>
-		<button class="button is-primary" @click="addAnnotation">+ Nowy Przypis</button>
-		<div class="tabs">
-			<ul>
-				<li :class="{'is-active': tab.active}" @click="changeTab(name)" v-for="(tab, name) in tabs" :key="name">
-					<a>{{tab.text}}</a>
-				</li>
-			</ul>
+		<div class="header">
+			<div class="tabs">
+				<ul>
+					<li :class="{'is-active': tab.active, [tab.class]: tab.class}" @click="changeTab(name, tab)" v-for="(tab, name) in tabs" :key="name">
+						<a>{{tab.text}}</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<component
 			:is="activeComponent"
@@ -36,13 +37,50 @@
 				slot="pagination"
 				class="annotations__pagination"
 			/>
+			<pagination v-if="paginationMeta.last_page > 1"
+				:currentPage="page"
+				:lastPage="paginationMeta.last_page"
+				@changePage="onPageChange"
+				slot="pagination-bottom"
+				class="annotations__pagination"
+			/>
 		</component>
 	</div>
 </template>
 
 <style lang="sass">
-	.annotations__pagination .pagination-list
-		justify-content: flex-end
+	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
+
+	.annotations__pagination
+		margin-top: $margin-base
+
+		.pagination-list
+			justify-content: center
+
+	.header
+		background: white
+		position: sticky
+		top: -30px
+		z-index: 100
+		padding-bottom: $margin-small
+
+	.tabs
+		margin-bottom: 0
+		.highlighted
+			width: 100%;
+			text-align: right
+			a
+				background-color: $color-ocean-blue
+				color: white
+				display: inline-block
+	.search
+		position: sticky
+		top: 13px
+		background: white
+		padding: $margin-small 0
+		z-index: 100
+		+small-shadow-bottom()
 </style>
 
 <script>
@@ -69,6 +107,18 @@
 						component: AnnotationsEditor,
 						active: false,
 						text: 'Edytor'
+					},
+					new: {
+						component: AnnotationsEditor,
+						active: false,
+						text: '+ Nowy Przypis',
+						clickCallback: () => {
+							this.activeAnnotation = {
+								tags: [],
+								keywords: '',
+							};
+						},
+						class: 'highlighted'
 					}
 				},
 				activeAnnotation: {},
@@ -105,16 +155,10 @@
 				this.page = 1
 				await this.fetchAnnotations()
 			},
-			changeTab(name) {
+			changeTab(name, tab) {
 				this.activeTab.active = false;
 				this.tabs[name].active = true;
-			},
-			addAnnotation() {
-				this.changeTab('editor');
-				this.activeAnnotation = {
-					tags: [],
-					keywords: '',
-				};
+				if (typeof tab.clickCallback === 'function') tab.clickCallback();
 			},
 			onEditorChange(changedAnnotation) {
 				this.modifiedAnnotationId = changedAnnotation

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="search-container">
 		<div class="field has-addons">
 			<div class="control">
 				<input class="input" v-model="searchPhrase" placeholder="szukaj przypisu..." @keyup.enter="search"/>
@@ -10,7 +10,6 @@
 				</a>
 			</div>
 		</div>
-		<p class="title is-6 search-settings-title">Szukaj w:</p>
 		<div class="search-settings">
 			<div class="search-settings__field field">
 				<input
@@ -41,6 +40,10 @@
 			padding: 5px 10px
 			&__input
 				border-radius: 50%
+
+	.search-container
+		display: flex
+		justify-content: space-between
 </style>
 <script>
 	export default {

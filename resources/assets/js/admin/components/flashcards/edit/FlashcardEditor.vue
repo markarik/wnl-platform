@@ -12,6 +12,10 @@
 				>
 					Treść pytania
 				</wnl-form-textarea>
+				<fieldset class="tags-fieldset">
+					<legend>Tagi</legend>
+					<wnl-tags :defaultTags="flashcardTags" @tagsChanged="onTagsChanged"></wnl-tags>
+				</fieldset>
 				<div class="control">
 					<button class="button is-small is-success"
 							:class="{'is-loading': loading}"
@@ -29,8 +33,15 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.flashcard-editor
 		max-width: 800px
+
+		.tags-fieldset
+			border: $border-light-gray
+			padding: 10px 15px
+			margin: 15px 0
 </style>
 
 <script>
@@ -40,20 +51,24 @@
 	import Form from 'js/classes/forms/Form'
 	import { getApiUrl } from 'js/utils/env'
 
+	import { Tags } from 'js/components/global/form'
 	import Textarea from "js/admin/components/forms/Textarea";
 
 	export default {
 		name: 'FlashcardEditor',
 		components: {
 			'wnl-form-textarea': Textarea,
+			'wnl-tags': Tags
 		},
 		props: ['flashcardId'],
 		data() {
 			return {
 				form: new Form({
 					content: '',
+					tags: ''
 				}),
 				loading: false,
+				flashcardTags: [],
 			}
 		},
 		computed: {
@@ -61,11 +76,11 @@
 				return this.flashcardId !== 'new';
 			},
 			flashcardResourceUrl() {
-				return getApiUrl(this.isEdit ? `flashcards/${this.flashcardId}` : 'flashcards')
+				return getApiUrl(this.isEdit ? `flashcards/${this.flashcardId}?include=tags` : 'flashcards')
 			},
 			hasChanged() {
 				return !isEqual(this.form.originalData, this.form.data())
-			}
+			},
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
@@ -85,8 +100,16 @@
 							text: 'Pytanie zapisane!',
 							type: 'success',
 						});
+
 						this.invalidateFlashcardsCache();
 						this.form.originalData = this.form.data()
+
+						this.$router.push({
+							name: 'flashcards-edit',
+							params: {
+								flashcardId: response.id
+							}
+						})
 					})
 					.catch(exception => {
 						this.loading = false
@@ -96,11 +119,18 @@
 						});
 						$wnl.logger.capture(exception)
 					})
+			},
+			onTagsChanged(tags) {
+				this.form.tags = tags.map(({id}) => id);
 			}
 		},
-		mounted() {
+		async mounted() {
 			if (this.isEdit) {
-				this.form.populate(this.flashcardResourceUrl)
+				const response = await this.form.populate(this.flashcardResourceUrl, ['include'])
+				const tags = response.tags;
+				if (!tags) return;
+
+				this.flashcardTags = tags.map(tagId => response.included.tags[tagId])
 			}
 		}
 	}

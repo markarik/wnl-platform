@@ -22,6 +22,7 @@ class FlashcardsApiController extends ApiController
 		}
 
 		$flashcard->update($request->all());
+		$flashcard->tags()->sync($request->get('tags'));
 
 		return $this->respondOk($flashcard);
 	}
@@ -29,8 +30,9 @@ class FlashcardsApiController extends ApiController
 	public function post(UpdateFlashcard $request)
 	{
 		$flashcard = new Flashcard($request->all());
-
 		$flashcard->save();
+
+		$flashcard->tags()->sync($request->get('tags'));
 
 		return $this->respondOk($flashcard);
 	}

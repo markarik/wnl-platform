@@ -1,6 +1,7 @@
 <?php namespace Lib\SlideParser;
 
 use App\Exceptions\ParseErrorException;
+use App\Helpers\Url;
 use App\Models\Group;
 use App\Models\Lesson;
 use App\Models\Section;
@@ -449,11 +450,10 @@ class Parser
 		$imageUrl = $match[0][1];
 
 		try {
-			$image = Image::make($imageUrl);
+			$image = Image::make(Url::encodeFullUrl($imageUrl));
 		}
 		catch (\Exception $e) {
-			\Log::error("Fetching image from {$imageUrl} failed.");
-
+			\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
 			return $html;
 		}
 

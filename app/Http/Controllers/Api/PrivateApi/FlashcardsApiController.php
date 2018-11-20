@@ -24,7 +24,7 @@ class FlashcardsApiController extends ApiController
 		$flashcard->update($request->all());
 		$flashcard->tags()->sync($request->get('tags'));
 
-		return $this->respondOk($flashcard);
+		return $this->transformAndRespond($flashcard);
 	}
 
 	public function post(UpdateFlashcard $request)
@@ -34,6 +34,6 @@ class FlashcardsApiController extends ApiController
 
 		$flashcard->tags()->sync($request->get('tags'));
 
-		return $this->respondOk($flashcard);
+		return $this->transformAndRespond($flashcard);
 	}
 }

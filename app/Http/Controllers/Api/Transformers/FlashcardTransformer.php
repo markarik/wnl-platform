@@ -9,7 +9,7 @@ use App\Models\Flashcard;
 
 class FlashcardTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['tags'];
+	protected $availableIncludes = ['tags', 'user_flashcard_notes'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -29,6 +29,15 @@ class FlashcardTransformer extends ApiTransformer
 		}
 
 		return $data;
+	}
+
+	public function includeUserFlashcardNotes(Flashcard $flashcard)
+	{
+		return $this->collection(
+			$flashcard->userFlashcardNotes,
+			new UserFlashcardNoteTransformer(['flashcards' => $flashcard->id]),
+			'user_flashcard_notes'
+		);
 	}
 
 	public function includeTags(Flashcard $flashcard)

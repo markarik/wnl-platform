@@ -14,12 +14,9 @@
 
 <script>
 	import _ from 'lodash'
-	import axios from 'axios'
-	import { mapActions } from 'vuex'
 
 	import Submit from 'js/components/global/form/Submit'
 	import { alerts } from 'js/mixins/alerts'
-	import { createForm } from 'js/store/modules/form'
 	import { getApiUrl } from 'js/utils/env'
 	import * as types from 'js/store/mutations-types'
 
@@ -50,22 +47,19 @@
 			hasChanges() {
 				return this.getter('hasChanges')
 			},
-			submitEvent() {
-				return `submitForm-${this.name}`
-			},
 		},
 		methods: {
 			action(action, payload = {}) {
-				return this.$store.dispatch(`${this.name}/${action}`, payload)
+				return this.$store.dispatch(`form/${action}`, {payload, formName: this.name})
 			},
 			getter(getter) {
-				return this.$store.getters[`${this.name}/${getter}`]
+				return this.$store.getters[`form/${getter}`](this.name)
 			},
 			getterFunction(getter, payload = {}) {
-				return this.$store.getters[`${this.name}/${getter}`](payload)
+				return this.$store.getters[`form/${getter}`]({payload, formName: this.name})
 			},
 			mutation(mutation, payload = {}) {
-				return this.$store.commit(`${this.name}/${mutation}`, payload)
+				return this.$store.commit(`form/${mutation}`, {payload, formName: this.name})
 			},
 			keyEvent(event) {
 				if (event.keyCode === 13 && !this.suppressEnter) {
@@ -83,7 +77,6 @@
 			},
 			onSubmitForm() {
 				const hasAttachChanged = this.hasAttachChanged()
-
 
 				if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 					return false
@@ -148,9 +141,7 @@
 			}
 		},
 		created() {
-			if (!this.$store.state.hasOwnProperty(this.name)) {
-				this.$store.registerModule(this.name, createForm())
-			}
+			this.mutation(types.FORM_INITIAL_SETUP);
 		},
 		mounted() {
 			let dataModel = {}, defaults = {}

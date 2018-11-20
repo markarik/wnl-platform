@@ -31,13 +31,13 @@ export var formInput = {
 	},
 	methods: {
 		getter(getter) {
-			return this.$store.getters[`${this.parentName}/${getter}`]
+			return this.$store.getters[`form/${getter}`](this.parentName)
 		},
 		getterFunction(getter, payload = {}) {
-			return this.$store.getters[`${this.parentName}/${getter}`](payload)
+			return this.$store.getters[`form/${getter}`](this.parentName)(payload)
 		},
 		mutation(mutation, payload = {}) {
-			return this.$store.commit(`${this.parentName}/${mutation}`, payload)
+			return this.$store.commit(`form/${mutation}`, {payload, formName: this.parentName})
 		},
 		onInput(value) {
 			if (this.hasErrors) {

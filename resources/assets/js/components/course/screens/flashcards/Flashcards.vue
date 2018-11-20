@@ -17,26 +17,33 @@
 				<p>Numery map myśli: <span class="text--bold">{{set.mind_maps_text}}</span></p>
 			</div>
 			<div class="flashcards-set__results">
-				<div class="flashcards-set__results__single text--easy">
-					<span>{{getEasyForSet(set)}}</span>
-					<span>{{ANSWERS_MAP.easy.text}}</span>
-				</div>
-				<div class="flashcards-set__results__single text--hard">
-					<span>{{getHardForSet(set)}}</span>
-					<span>{{ANSWERS_MAP.hard.text}}</span>
-				</div>
-				<div class="flashcards-set__results__single text--do-not-know">
-					<span>{{getDontKnowForSet(set)}}</span>
-					<span>{{ANSWERS_MAP.do_not_know.text}}</span>
-				</div>
-				<div class="flashcards-set__results__single">
-					<span>{{getUnsolvedForSet(set)}}</span>
-					<span>Bez odpowiedzi</span>
-				</div>
-			</div>
-			<div @click="onRetakeSet(set)" class="flashcards-set__retake">
-				<span class="icon"><i class="fa fa-undo"></i></span>
-				ponów cały zestaw
+				<table class="flashcards-set__results__table">
+					<tr class="text--easy">
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span></td>
+						<td>{{ANSWERS_MAP.easy.text}}</td>
+						<td>{{getEasyForSet(set)}}</td>
+					</tr>
+					<tr class="text--hard">
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span></td>
+						<td>{{ANSWERS_MAP.hard.text}}</td>
+						<td>{{getHardForSet(set)}}</td>
+					</tr>
+					<tr class="text--do-not-know">
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span></td>
+						<td>{{ANSWERS_MAP.do_not_know.text}}</td>
+						<td>{{getDontKnowForSet(set)}}</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Bez odpowiedzi</td>
+						<td>{{getUnsolvedForSet(set)}}</td>
+					</tr>
+				</table>
+
+				<button type="button" @click="onRetakeSet(set)" class="flashcards-set__retake button">
+					<span class="icon"><i class="fa fa-undo"></i></span>
+					ponów cały zestaw
+				</button>
 			</div>
 			<ol class="flashcards-set__list">
 				<wnl-flashcard-item
@@ -98,21 +105,22 @@
 
 		.flashcards-set
 			&__retake
-				display: flex
 				align-items: center
-				text-transform: uppercase
-				font-weight: 600
-				margin: $margin-big $margin-small $margin-small 0
-				font-size: 12px
+				border-color: $color-blue
+				color: $color-blue
 				cursor: pointer
+				display: flex
+				font-size: 12px
+				font-weight: 600
 				justify-content: center
+				margin: $margin-base $margin-small $margin-small 0
+				text-transform: uppercase
 
-				@media #{$media-query-tablet}
-					justify-content: flex-end
-					margin-top: $margin-huge
+				.icon
+					margin-left: 0
+					margin-right: $margin-small
 
 				.fa-undo
-					margin-right: $margin-base
 					font-size: 16px
 
 			&__title
@@ -127,38 +135,23 @@
 					font-size: $font-size-base
 
 			&__results
-				display: flex
 				align-items: center
-				justify-content: flex-start
+				border: $border-light-gray
+				border-radius: $border-radius-small
+				display: flex
+				flex-direction: column
 				margin: $margin-base 0
+				padding: $margin-base
 				font-weight: $font-weight-bold
 				text-transform: uppercase
-				flex-wrap: wrap
-				flex-direction: column
 
-				@media #{$media-query-tablet}
-					justify-content: center
-					flex-direction: row
+				&__table
+					color: $color-inactive-gray
+					width: auto
 
-				&__single
-					display: flex
-					align-items: center
-					justify-content: center
-					margin: $margin-small $margin-base
-
-					@media #{$media-query-tablet}
-						justify-content: flex-start
-						flex-direction: column
-
-					span:first-child
-						margin-right: $margin-small
-
-						@media #{$media-query-tablet}
-							margin-right: 0
-
-			&__list
-				@media #{$media-query-tablet}
-					margin: $margin-small
+					td
+						padding: 5px 10px
+						vertical-align: middle
 
 		.flashcards-scroll
 			width: 32px

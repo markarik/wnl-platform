@@ -8,34 +8,42 @@
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 				<div class="flashcards-list__item__buttons" v-if="flashcard.answer === 'unsolved'">
 					<a :class="['flashcards-list__item__buttons__button text--easy', isLoading && 'is-loading']"
-					   @click="submitAnswer(flashcard, 'easy')">
+					   @click="submitAnswer(flashcard, 'easy')"
+					   :title="ANSWERS_MAP.easy.text"
+					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">Łatwe</span>
 					</a>
 					<a :class="['flashcards-list__item__buttons__button text--hard', isLoading && 'is-loading']"
-					   @click="submitAnswer(flashcard, 'hard')">
+					   @click="submitAnswer(flashcard, 'hard')"
+					   :title="ANSWERS_MAP.hard.text"
+					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">Trudne</span>
 					</a>
 					<a
 							:class="['flashcards-list__item__buttons__button text--do-not-know', isLoading && 'is-loading']"
 							@click="submitAnswer(flashcard, 'do_not_know')"
+							:title="ANSWERS_MAP.do_not_know.text"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">Nie Wiem</span>
 					</a>
 				</div>
 				<div
 						class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
 						v-else
 				>
-					<span class="flashcards-list__item__buttons__button" @click="onRetakeFlashcard(flashcard)">
+					<span
+							class="flashcards-list__item__buttons__button"
+							@click="onRetakeFlashcard(flashcard)"
+							title="Ponów"
+					>
 						<span class="icon"><i class="fa fa-undo"></i></span>
 					</span>
-					<span :class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]">
+					<span
+							:class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]"
+							:title="ANSWERS_MAP[flashcard.answer].text"
+					>
 						<span class="icon"><i
 								:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">{{ANSWERS_MAP[flashcard.answer].text}}</span>
 					</span>
 				</div>
 			</div>
@@ -99,10 +107,6 @@
 		flex-direction: column
 		margin-top: $margin-base
 
-		@media #{$media-query-tablet}
-			flex-direction: row
-			margin-top: 0
-
 		&--solved
 			color: $color-gray-dimmed
 
@@ -114,12 +118,13 @@
 
 		&__container
 			border: $border-light-gray
+			border-radius: $border-radius-small
 			margin: 0
 			padding: $margin-base
 			width: 100%
 
 			@media #{$media-query-tablet}
-				margin: $margin-small 0 $margin-small $margin-small
+				margin: $margin-small 0
 
 		&__text__container
 			display: flex
@@ -146,6 +151,7 @@
 				margin: 0
 
 			&--retake
+				color: $color-blue
 				@media #{$media-query-tablet}
 					flex: 0 0 $buttonWidth * 2
 

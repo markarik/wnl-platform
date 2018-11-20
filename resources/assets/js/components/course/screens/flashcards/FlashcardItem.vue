@@ -7,18 +7,18 @@
 			<div class="flashcards-list__item__text__container">
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 				<div class="flashcards-list__item__buttons" v-if="flashcard.answer === 'unsolved'">
-					<a class="flashcards-list__item__buttons__button text--easy"
+					<a :class="['flashcards-list__item__buttons__button text--easy', isLoading && 'is-loading']"
 					   @click="submitAnswer(flashcard, 'easy')">
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
 						<span class="flashcards-list__item__buttons__button__text">Łatwe</span>
 					</a>
-					<a class="flashcards-list__item__buttons__button text--hard"
+					<a :class="['flashcards-list__item__buttons__button text--hard', isLoading && 'is-loading']"
 					   @click="submitAnswer(flashcard, 'hard')">
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
 						<span class="flashcards-list__item__buttons__button__text">Trudne</span>
 					</a>
 					<a
-							class="flashcards-list__item__buttons__button text--do-not-know"
+							:class="['flashcards-list__item__buttons__button text--do-not-know', isLoading && 'is-loading']"
 							@click="submitAnswer(flashcard, 'do_not_know')"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
@@ -27,13 +27,12 @@
 				</div>
 				<div
 						class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
-						@click="onRetakeFlashcard(flashcard)"
 						v-else
 				>
-					<span class="flashcards-list__item__buttons__button">
+					<span class="flashcards-list__item__buttons__button" @click="onRetakeFlashcard(flashcard)">
 						<span class="icon"><i class="fa fa-undo"></i></span>
 					</span>
-					<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
+					<span :class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]">
 						<span class="icon"><i
 								:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
 						<span class="flashcards-list__item__buttons__button__text">{{ANSWERS_MAP[flashcard.answer].text}}</span>
@@ -44,7 +43,7 @@
 				<wnl-text-button v-if="!flashcard.note && !isNoteEditorOpen" @click="toggleNoteEditor" type="button">+ DODAJ NOTATKĘ</wnl-text-button>
 				<div v-if="flashcard.note && !isNoteEditorOpen">
 					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="edit">EDYTUJ</wnl-text-button></label>
-					<span class="content" v-html="flashcard.note.note" />
+					<span class="flashcards-list__item__note-content content" v-html="flashcard.note.note" />
 				</div>
 				<wnl-form
 						v-if="isNoteEditorOpen"
@@ -160,6 +159,7 @@
 				align-items: center
 				margin: 0 $margin-small
 				cursor: pointer
+				transition: opacity ease-in-out .1s
 
 				@media #{$media-query-tablet}
 					flex-basis: 78px
@@ -180,9 +180,15 @@
 					text-transform: uppercase
 					font-size: 12px
 
+				&.is-disabled
+					cursor: auto
+
+				&.is-loading
+					opacity: .2
+					cursor: auto
+
 		&__note-editor
 			background: white
-
 </style>
 
 <script>
@@ -222,6 +228,7 @@
 				note: this.flashcard.note && this.flashcard.note.note || '',
 				fontColors,
 				isNoteEditorOpen: false,
+				isLoading: false,
 			}
 		},
 		computed: {
@@ -252,12 +259,18 @@
 				this.note = this.flashcard.note && this.flashcard.note.note || '';
 			},
 			async submitAnswer(flashcard, answer) {
+				if (this.isLoading) {
+					return;
+				}
+
+				this.isLoading = true;
 				await this.postAnswer({
 					flashcard,
 					answer,
 					context_type: this.context.type,
 					context_id: this.context.id
 				});
+				this.isLoading = false;
 				this.isNoteEditorOpen = ['hard', 'do_not_know'].includes(answer);
 			},
 			onSubmitSuccess(updatedNote) {

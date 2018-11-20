@@ -20,11 +20,12 @@ class UserBillingTransformer extends ApiTransformer
 	{
 		$data = [
 			'company_name' => $billingData->company_name,
-			'vat_id'       => $billingData->vat_id,
-			'address'      => $billingData->address,
-			'zip'          => $billingData->zip,
-			'city'         => $billingData->city,
-			'country'      => $billingData->country,
+			'vat_id' => $billingData->vat_id,
+			'address' => $billingData->address,
+			'zip' => $billingData->zip,
+			'city' => $billingData->city,
+			'country' => $billingData->country,
+			'user_id' => $billingData->user_id,
 		];
 
 		if ($this->parent) {

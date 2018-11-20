@@ -24,7 +24,7 @@
 				</ul>
 			</div>
 
-			<component :is="activeComponent">
+			<component :is="activeComponent" :orders="user.orders">
 
 			</component>
 
@@ -49,6 +49,7 @@
 </style>
 
 <script>
+	import _ from 'lodash'
 	import axios from 'axios';
 	import {mapActions} from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
@@ -126,12 +127,20 @@
 			async setup() {
 				const userId = this.$route.params.userId
 				try {
-					const response = await axios.get(getApiUrl(`users/${userId}?include=roles,profile`))
+					const include = [
+						'roles',
+						'profile',
+						'subscription',
+						'orders',
+						// 'billing',
+						'settings',
+						'coupons',
+						// 'user_address'
+					].join(',')
+					const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`))
 					const {included, ...user} = response.data
 					this.user = user
-					Object.values(included.roles).forEach(role => {
-						this.roleNames[role.id] = role.name
-					})
+					this.parseIncluded(included)
 				} catch (e) {
 					this.addAutoDismissableAlert({
 						text: "Oooops, coś poszło nie tak...",
@@ -141,6 +150,19 @@
 				} finally {
 					this.isLoading = false
 				}
+			},
+			parseIncluded(included){
+				Object.values(included.roles).forEach(role => {
+					this.roleNames[role.id] = role.name
+				})
+				this.user.orders = _.reverse(Object.values(included.orders))
+					.map(order => {
+						return {
+							...order,
+							invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
+							payments: (order.payments || []).map(paymentId => included.payments[paymentId])
+						}
+					})
 			},
 			changeTab(name) {
 				this.activeTab.active = false;

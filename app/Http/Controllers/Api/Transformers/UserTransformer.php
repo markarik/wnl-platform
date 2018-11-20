@@ -18,7 +18,7 @@ class UserTransformer extends ApiTransformer
 		'billing',
 		'settings',
 		'coupons',
-		'userAddress',
+		'user_address',
 	];
 
 	protected $parent;
@@ -63,7 +63,7 @@ class UserTransformer extends ApiTransformer
 	{
 		$subscription = $user->subscription;
 
-		return $this->item($subscription, new UserSubscriptionTransformer(['users' => $user->id]), 'user_subscriptions');
+		return $this->item($subscription, new UserSubscriptionTransformer(['users' => $user->id]), 'subscriptions');
 	}
 
 	public function includeOrders(User $user)
@@ -77,27 +77,27 @@ class UserTransformer extends ApiTransformer
 	{
 		$billingData = $user->billing;
 
-		return $this->item($billingData, new UserBillingTransformer(['user' => $user->id]), 'billings');
+		return $this->item($billingData, new UserBillingTransformer(['users' => $user->id]), 'user_billing_data');
 	}
 
 	public function includeSettings(User $user)
 	{
 		$settings = $user->settings;
 
-		return $this->item($settings, new UserSettingsTransformer(['user' => $user->id]), 'settings');
+		return $this->item($settings, new UserSettingsTransformer(['users' => $user->id]), 'user_settings');
 	}
 
 	public function includeCoupons(User $user)
 	{
 		$coupons = $user->coupons;
 
-		return $this->collection($coupons, new CouponsTransformer(['user' => $user->id]), 'coupons');
+		return $this->collection($coupons, new CouponsTransformer(['users' => $user->id]), 'coupons');
 	}
 
-	public function includeAddress(User $user)
+	public function includeUserAddress(User $user)
 	{
 		$address = $user->userAddress;
 
-		return $this->item($address, new UserAddressTransformer(['user' => $user->id]), 'addresses');
+		return $this->item($address, new UserAddressTransformer(['users' => $user->id]), 'addresses');
 	}
 }

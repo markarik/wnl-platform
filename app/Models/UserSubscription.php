@@ -18,6 +18,8 @@ class UserSubscription extends Model
 		'access_start', 'access_end', 'user_id'
 	];
 
+	protected $dates = ['access_start', 'access_end'];
+
 	/**
 	 * Relationships
 	 */

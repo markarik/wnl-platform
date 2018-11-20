@@ -9,8 +9,21 @@ use App\Models\UserSettings;
 
 class UserSettingsTransformer extends ApiTransformer
 {
+	protected $parent;
+
+	public function __construct($parent = null)
+	{
+		$this->parent = $parent;
+	}
+
 	public function transform(UserSettings $userSettings)
 	{
-		return $userSettings->settings;
+		$data = $userSettings->settings;
+
+		if ($this->parent) {
+			$data = array_merge($data, $this->parent);
+		}
+
+		return $data;
 	}
 }

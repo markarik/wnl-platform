@@ -24,6 +24,10 @@
 				</ul>
 			</div>
 
+			<component :is="activeComponent">
+
+			</component>
+
 		</div>
 	</div>
 </template>
@@ -103,6 +107,9 @@
 		computed: {
 			activeTab() {
 				return Object.values(this.tabs).find(tab => tab.active)
+			},
+			activeComponent() {
+				return this.activeTab.component
 			},
 			dateCreated() {
 				return moment(this.user.created_at * 1000).format('D MMM Y')

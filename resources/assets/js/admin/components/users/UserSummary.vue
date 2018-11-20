@@ -1,5 +1,7 @@
 <template>
-	
+	<div>
+		siemanko
+	</div>
 </template>
 
 <script>

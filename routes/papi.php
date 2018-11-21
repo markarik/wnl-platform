@@ -52,11 +52,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
-		// Certificates
-		Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');
-		Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
-		Route::get("{$r['certificates']}/final/{id}", 'CertificatesApiController@getFinalCertificate');
-
 		// Lessons
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
@@ -158,6 +153,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
 		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
 	});
+
+	// Certificates
+	Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');
+	Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
+	Route::get("{$r['certificates']}/final/{id}", 'CertificatesApiController@getFinalCertificate');
 
 	// User Lessons
 	Route::put("{$r['user-lesson']}/{userId}/batch", 'UserLessonApiController@putBatch');

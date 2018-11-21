@@ -64,7 +64,7 @@ services:
     ports:
       - "8755:8755"
     volumes:
-      - ${LOCAL_CODE_PATH}/bethink/wnl-platform/laravel-echo-server.json:/src/laravel-echo-server.json
+      - ${LOCAL_CODE_PATH}/bethink/wnl-platform/laravel-echo-server.json:/src/laravel-echo-server.json:ro
 
   nginx:
     container_name: nginx

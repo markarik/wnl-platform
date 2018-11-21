@@ -36,7 +36,7 @@
 			</wnl-form-input>
 			<h3 class="title is-5 margin vertical">Dodaj Rolę</h3>
 			<div v-for="role in roles" :key="role.id" class="field">
-				<input type="checkbox" :id="role.id" class="is-checkradio" v-model="selectedRoles" :value="role.id"/>
+				<input type="checkbox" :id="role.name" class="is-checkradio" v-model="selectedRoles" :value="role.id"/>
 				<label class="checkbox" :for="role.id">{{role.name}}</label>
 			</div>
 			<button class="button is-small is-success margin top"
@@ -72,7 +72,7 @@
 					password: '',
 					roles: []
 				}),
-				roles: [],
+				availableRoles: [],
 				selectedRoles: [],
 				isLoading: false,
 				isEdit: false
@@ -97,28 +97,27 @@
 				try {
 					this.form.roles = this.selectedRoles
 					await this.form[this.isEdit ? 'put' : 'post'](this.apiUrl)
-					this.loading = false;
 					this.addAutoDismissableAlert({
 						text: 'Użytkownik utworzony!',
 						type: 'success'
 					});
-					this.form.originalData = this.form.data()
 					this.$router.push({
 						name: 'users'
 					})
 				} catch (exception) {
-					this.loading = false;
 					this.addAutoDismissableAlert({
 						text: 'Nie udało się utworzyć użytkownika.:(',
 						type: 'error'
 					});
 					$wnl.logger.capture(exception)
+				} finally {
+					this.loading = false;
 				}
 			}
 		},
 		async created() {
 			const response = await axios.get(getApiUrl('roles/all'));
-			this.roles = response.data;
+			this.availableRoles = response.data;
 		},
 		watch: {
 			selectedRoles() {

@@ -34,7 +34,7 @@ const WnlSocket = {
     install(Vue, {store}) {
         const onSocketError = (error) => {
             if (error === 'Unauthorized') {
-                // window.location.replace('/login');
+                window.location.replace('/login');
                 return
             }
             $wnl.logger.error(`Socket error: ${error}`)

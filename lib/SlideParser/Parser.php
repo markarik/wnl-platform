@@ -90,7 +90,7 @@ class Parser
 	 *
 	 * @throws ParseErrorException
 	 */
-	public function parse($fileContents, $screenId = null)
+	public function parse($fileContents, $enableSlidesMatching = false)
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
@@ -112,12 +112,20 @@ class Parser
 			}
 
 			$content = $this->cleanSlide($slideHtml);
-			$slide = Slide::firstOrCreate(
-				['content' => $content],
-				[
+
+			if ($enableSlidesMatching) {
+				$slide = Slide::firstOrCreate(
+					['content' => $content],
+					[
+						'content'       => $this->cleanSlide($slideHtml),
+						'is_functional' => $this->isFunctional($slideHtml),
+					]);
+			} else {
+				$slide = Slide::create([
 					'content'       => $this->cleanSlide($slideHtml),
 					'is_functional' => $this->isFunctional($slideHtml),
 				]);
+			}
 
 			$tags = $this->getTags($slideHtml);
 
@@ -173,10 +181,6 @@ class Parser
 							],
 						],
 					];
-
-					if ($screenId) {
-						$screenData['id'] = intval($screenId);
-					}
 
 					$this->courseModels['screen'] = $lesson->screens()->create($screenData);
 					$this->courseModels['screen']->tags()->attach($slideshowTag);

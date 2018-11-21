@@ -90,7 +90,7 @@ class Parser
 	 *
 	 * @throws ParseErrorException
 	 */
-	public function parse($fileContents, $enableSlidesMatching = false)
+	public function parse($fileContents, $screenId = null, $enableSlidesMatching = false)
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
@@ -181,6 +181,10 @@ class Parser
 							],
 						],
 					];
+
+					if ($screenId) {
+						$screenData['id'] = intval($screenId);
+					}
 
 					$this->courseModels['screen'] = $lesson->screens()->create($screenData);
 					$this->courseModels['screen']->tags()->attach($slideshowTag);

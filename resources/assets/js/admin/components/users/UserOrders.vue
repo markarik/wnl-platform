@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<order v-for="(order, index) in orders" :orderInstance="order" :key="index"></order>
+		<order v-for="(order, index) in user.orders" :orderInstance="order" :key="index"></order>
 	</div>
 </template>
 
@@ -15,8 +15,8 @@
 		name: "UserOrders",
 		components: { Order },
 		props: {
-			orders: {
-				type: Array,
+			user: {
+				type: Object,
 				required: true
 			},
 		},

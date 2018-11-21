@@ -9,9 +9,9 @@
 				<p class="user-details__head__name">{{ user.full_name }}</p>
 				<span
 					class="tag"
-					v-for="role in roles"
-					:style="{backgroundColor: getColourForStr(role)}">
-					{{role}}
+					v-for="role in user.roles"
+					:style="{backgroundColor: getColourForStr(role.name)}">
+					{{ role.name }}
 				</span>
 				<p>Dołączył/-a: {{ dateCreated }}</p>
 			</div>
@@ -24,9 +24,7 @@
 				</ul>
 			</div>
 
-			<component :is="activeComponent" :orders="user.orders">
-
-			</component>
+			<component :is="activeComponent" :user="user"></component>
 
 		</div>
 	</div>
@@ -70,7 +68,6 @@
 			return {
 				isLoading: true,
 				user: {},
-				roleNames: [],
 				tabs: {
 					summary: {
 						component: UserSummary,
@@ -114,13 +111,7 @@
 			},
 			dateCreated() {
 				return moment(this.user.created_at * 1000).format('D MMM Y')
-			},
-			roles() {
-				if (!this.user.hasOwnProperty('roles')) {
-					return '';
-				}
-				return Object.values(this.user.roles).map(roleId => this.roleNames[roleId])
-			},
+			}
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
@@ -128,33 +119,23 @@
 				const userId = this.$route.params.userId
 				try {
 					const include = [
-						'roles',
-						'profile',
-						'subscription',
-						'orders',
-						// 'billing',
-						'settings',
-						'coupons',
-						// 'user_address'
+						'roles', 'profile', 'subscription', 'orders', 'billing', 'settings', 'coupons','user_address'
 					].join(',')
 					const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`))
 					const {included, ...user} = response.data
 					this.user = user
 					this.parseIncluded(included)
-				} catch (e) {
+				} catch (error) {
 					this.addAutoDismissableAlert({
 						text: "Oooops, coś poszło nie tak...",
 						type: 'error'
 					})
-					console.error(e)
+					$wnl.logger.capture(error)
 				} finally {
 					this.isLoading = false
 				}
 			},
 			parseIncluded(included){
-				Object.values(included.roles).forEach(role => {
-					this.roleNames[role.id] = role.name
-				})
 				this.user.orders = _.reverse(Object.values(included.orders))
 					.map(order => {
 						return {
@@ -163,6 +144,11 @@
 							payments: (order.payments || []).map(paymentId => included.payments[paymentId])
 						}
 					})
+				this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId])
+				this.user.profile = included.profile[this.user.profile[0]]
+				this.user.user_address = included.user_address[this.user.user_address[0]]
+				this.user.settings = included.settings[this.user.settings[0]]
+				this.user.subscription = included.subscription[this.user.subscription[0]]
 			},
 			changeTab(name) {
 				this.activeTab.active = false;

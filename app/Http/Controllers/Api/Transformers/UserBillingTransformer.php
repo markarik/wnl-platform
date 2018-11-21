@@ -19,6 +19,7 @@ class UserBillingTransformer extends ApiTransformer
 	public function transform(UserBillingData $billingData)
 	{
 		$data = [
+			'id' => $billingData->id,
 			'company_name' => $billingData->company_name,
 			'vat_id' => $billingData->vat_id,
 			'address' => $billingData->address,

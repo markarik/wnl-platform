@@ -50,6 +50,7 @@
 		<div v-else>
 			<span class="title is-6">Nic tu nie ma...</span>
 		</div>
+		<slot name="pagination-bottom"/>
 	</div>
 </template>
 

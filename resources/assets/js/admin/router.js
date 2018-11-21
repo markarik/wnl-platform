@@ -55,7 +55,29 @@ let routes = [
 		],
 	},
 	{
-		name: 'users',
+		name: 'flashcards-sets',
+		path: '/admin/app/flashcards-sets',
+		component: require('js/admin/components/flashcards/list/FlashcardsSetsList.vue'),
+	},
+	{
+		name: 'flashcards-sets-edit',
+		path: '/admin/app/flashcards-sets/:flashcardsSetId',
+		component: require('js/admin/components/flashcards/edit/FlashcardsSetEditor'),
+		props: true,
+	},
+	{
+		name: 'flashcards',
+		path: '/admin/app/flashcards',
+		component: require('js/admin/components/flashcards/list/FlashcardsList'),
+	},
+	{
+		name: 'flashcards-edit',
+		path: '/admin/app/flashcards/:flashcardId',
+		component: require('js/admin/components/flashcards/edit/FlashcardEditor'),
+		props: true,
+	},
+  {
+    name: 'users',
 		path: '/admin/app/users',
 		component: require('js/admin/components/users/Users.vue'),
 	},
@@ -63,7 +85,7 @@ let routes = [
 		name: 'user-details',
 		path: '/admin/app/users/:userId',
 		component: require('js/admin/components/users/UserDetails.vue'),
-	},
+  },
 	{
 		name: 'dashboard',
 		path: '/admin/app'

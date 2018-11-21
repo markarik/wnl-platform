@@ -1,9 +1,12 @@
 <template>
 	<div class="notification-wrapper">
+		<div class="avatar" @click.stop="showModal">
+			<wnl-avatar size="medium"
+				:fullName="message.actors.full_name"
+				:url="message.actors.avatar">
+			</wnl-avatar>
+		</div>
 		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
-			<div class="actor">
-				<wnl-event-actor :message="message" :disableLink="true"/>
-			</div>
 			<div class="notification-content">
 				<div class="notification-header">
 					<span class="actor">{{ displayName }}</span>
@@ -28,82 +31,97 @@
 		</div>
 		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
 		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+			<wnl-user-profile-modal :author="message.actors"/>
+		</wnl-modal>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.personal-notification
-		align-items: flex-start
+	.notification-wrapper
 		border-bottom: $border-light-gray
 		display: flex
-		font-size: $font-size-minus-1
 		justify-content: space-between
-		padding: $margin-medium
-		position: relative
-		transition: background-color $transition-length-base
 
-		&:hover
-			background: $color-background-lighter-gray
-			cursor: pointer
+		.avatar
+			font-weight: $font-weight-bold
+			padding: $margin-small
 			transition: background-color $transition-length-base
 
-	.actor
-		font-weight: $font-weight-bold
+			&:hover
+				background: $color-background-lighter-gray
+				cursor: pointer
+				transition: background-color $transition-length-base
 
-	.notification-content
-		flex: 1 auto
-		padding: 0 $margin-medium
+		.personal-notification
+			align-items: flex-start
+			display: flex
+			font-size: $font-size-minus-1
+			justify-content: space-between
+			padding: $margin-small
+			position: relative
+			transition: background-color $transition-length-base
 
-		.notification-header
-			line-height: $line-height-minus
+			&:hover
+				background: $color-background-lighter-gray
+				cursor: pointer
+				transition: background-color $transition-length-base
 
-		.context
-			font-weight: $font-weight-bold
+			.notification-content
+				flex: 1 auto
 
-		.object-text,
-		.subject
+				.notification-header
+					line-height: $line-height-minus
 
-			&::before
-				content: '« '
+				.context
+					font-weight: $font-weight-bold
 
-			&::after
-				content: ' »'
+				.object-text,
+				.subject
 
-		.object-text
-			color: $color-gray-dimmed
+					&::before
+						content: '« '
 
-		.subject
-			font-size: $font-size-base
-			line-height: $line-height-minus
-			margin-top: $margin-small
+					&::after
+						content: ' »'
 
-		.time
-			color: $color-background-gray
-			font-size: $font-size-minus-2
-			margin-top: $margin-small
+				.object-text
+					color: $color-gray-dimmed
 
-			.icon
-				margin-right: $margin-small
+				.subject
+					font-size: $font-size-base
+					line-height: $line-height-minus
+					margin-top: $margin-small
 
-	.link-symbol
-		display: flex
-		flex: 0
-		width:
+				.time
+					color: $color-background-gray
+					font-size: $font-size-minus-2
+					margin-top: $margin-small
 
-		.icon
-			color: $color-inactive-gray
+					.icon
+						margin-right: $margin-small
 
-			&.unread
-				color: $color-ocean-blue
+			.link-symbol
+				display: flex
+				flex: 0
+				width:
+
+				.icon
+					color: $color-inactive-gray
+
+					&.unread
+						color: $color-ocean-blue
 </style>
 
 <script>
 	import { truncate } from 'lodash'
 	import { mapGetters } from 'vuex'
 
-	import Actor from 'js/components/notifications/Actor'
+	import Avatar from 'js/components/global/Avatar'
+	import UserProfileModal from 'js/components/users/UserProfileModal'
+	import Modal from 'js/components/global/Modal'
 	import { notification } from 'js/components/notifications/notification'
 	import { sanitizeName } from 'js/store/modules/users'
 
@@ -111,7 +129,14 @@
 		name: 'PersonalNotification',
 		mixins: [notification],
 		components: {
-			'wnl-event-actor': Actor,
+			'wnl-avatar': Avatar,
+			'wnl-modal': Modal,
+			'wnl-user-profile-modal': UserProfileModal
+		},
+		data() {
+			return {
+				isVisible: false
+			}
 		},
 		props: {
 			icon: {
@@ -138,6 +163,12 @@
 			},
 		},
 		methods: {
+			showModal() {
+				this.isVisible = true
+			},
+			closeModal() {
+				this.isVisible = false
+			},
 			dispatchGoToContext() {
 				this.goToContext()
 				this.loading = false
@@ -156,6 +187,12 @@
 					this.dispatchGoToContext()
 				}
 			},
+			addUserIdKey() {
+				this.message.actors.user_id = this.message.actors.id
+			}
 		},
+		created() {
+			this.addUserIdKey()
+		}
 	}
 </script>

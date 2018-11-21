@@ -53,5 +53,6 @@ return [
 		'flashcards-sets'    => 'flashcards_sets',
 		'site-wide-messages' => 'site_wide_messages',
 		'user-flashcards-results' => 'user_flashcards_results',
+		'user-flashcard-notes' => 'user_flashcard_notes',
 	],
 ];

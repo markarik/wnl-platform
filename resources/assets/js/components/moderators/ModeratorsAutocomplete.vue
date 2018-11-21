@@ -12,11 +12,14 @@
 			v-if="show"
 			:items="usersListFiltered"
 			:onItemChosen="onItemChosenProxy"
-			:itemComponent="'wnl-user-autocomplete-item'"
 			@close="onClose"
 			class="wnl-autocomplete-dropdown"
 			ref="autocomplete"
-		/>
+		>
+			<template slot-scope="slotProps">
+				<wnl-user-autocomplete-item :item="slotProps.item" />
+			</template>
+		</wnl-autocomplete>
 		 <a class="button is-primary is-outlined" @click="$emit('clear')">
 			<span class="icon is-small">
 			<i class="fa fa-times"></i>
@@ -60,6 +63,7 @@ const keys = {
 }
 
 import Autocomplete from 'js/components/global/Autocomplete'
+import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem'
 
 export default {
 	data() {
@@ -87,7 +91,8 @@ export default {
 		}
 	},
 	components: {
-		'wnl-autocomplete': Autocomplete
+		'wnl-autocomplete': Autocomplete,
+		WnlUserAutocompleteItem,
 	},
 	computed: {
 		valueComputed() {

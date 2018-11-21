@@ -19,9 +19,11 @@
 			<wnl-autocomplete
 				:items="autocompleteItems"
 				:onItemChosen="insertTag"
-				:itemComponent="'wnl-tag-autocomplete-item'"
 				ref="autocomplete"
 			>
+				<template slot-scope="slotProps">
+					<wnl-tag-autocomplete-item :item="slotProps.item" />
+				</template>
 			</wnl-autocomplete>
 		</div>
 	</div>
@@ -51,6 +53,7 @@
 
 <script>
 	import Autocomplete from 'js/components/global/Autocomplete'
+	import WnlTagAutocompleteItem from 'js/components/global/TagAutocompleteItem'
 	import _ from 'lodash'
 	import {mapActions} from 'vuex'
 
@@ -64,7 +67,8 @@
 	export default {
 		name: 'Tags',
 		components: {
-			'wnl-autocomplete': Autocomplete
+			'wnl-autocomplete': Autocomplete,
+			WnlTagAutocompleteItem,
 		},
 		props: {
 			defaultTags: {
@@ -131,6 +135,7 @@
 				this.tagInput = ''
 				this.$refs.input.focus()
 				this.$emit('insertTag', tag)
+				this.$emit('tagsChanged', this.tags)
 			},
 
 			removeTag(tag) {
@@ -138,6 +143,7 @@
 					this.tags,
 					foundTag => tag.id !== foundTag.id
 				)
+				this.$emit('tagsChanged', this.tags)
 			},
 
 			onInput(evt) {

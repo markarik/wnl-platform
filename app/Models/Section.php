@@ -24,4 +24,9 @@ class Section extends Model
 	{
 		return $this->hasMany('App\Models\Subsection');
 	}
+
+	public function tags()
+	{
+		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
 }

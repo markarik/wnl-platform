@@ -46,11 +46,7 @@ class Invoice extends Model
 
 	public function getVatRateAttribute()
 	{
-		if ($this->vat === 'zw') {
-			return 0;
-		}
-
-		return (int) $this->vat / 100;
+		return (int) $this->order->product->vat_rate / 100;
 	}
 
 	public function getVatAmountAttribute()

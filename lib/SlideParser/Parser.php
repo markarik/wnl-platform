@@ -1,6 +1,7 @@
 <?php namespace Lib\SlideParser;
 
 use App\Exceptions\ParseErrorException;
+use App\Helpers\Url;
 use App\Models\Group;
 use App\Models\Lesson;
 use App\Models\Section;
@@ -32,7 +33,7 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
-	const IMAGE_PATTERN = '/<img.*data-.*src="(.*)".*>/';
+	const IMAGE_PATTERN = '/<img.*src="(.*?)".*>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
@@ -448,12 +449,16 @@ class Parser
 		$imgTag = $match[0][0];
 		$imageUrl = $match[0][1];
 
+		if (stripos($imgTag, 'data-') === false) {
+			// Check if img tag contains data attributes - if not we don't need to migrate it
+			return $html;
+		}
+
 		try {
-			$image = Image::make($imageUrl);
+			$image = Image::make(Url::encodeFullUrl($imageUrl));
 		}
 		catch (\Exception $e) {
-			\Log::error("Fetching image from {$imageUrl} failed.");
-
+			\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
 			return $html;
 		}
 

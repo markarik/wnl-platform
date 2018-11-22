@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<table>
+	<div class="subscription">
+		<table class="table is-bordered is-narrow">
 			<thead>
 				<tr>
 					<th>Dostęp Od</th>
@@ -16,7 +16,10 @@
 		</table>
 	</div>
 </template>
-
+<style lang="sass" scoped>
+	.table
+		max-width: 420px
+</style>
 <script>
 	import moment from 'moment';
 

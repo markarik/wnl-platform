@@ -12,11 +12,11 @@
 				</template>
 			</div>
 			<pagination v-if="paginationMeta.last_page > 1"
-			            :currentPage="page"
-			            :lastPage="paginationMeta.last_page"
-			            @changePage="onPageChange"
-			            slot="pagination"
-			            class="annotations__pagination"
+					:currentPage="page"
+					:lastPage="paginationMeta.last_page"
+					@changePage="onPageChange"
+					slot="pagination"
+					class="annotations__pagination"
 			/>
 		</users-list>
 	</div>

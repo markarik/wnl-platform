@@ -153,6 +153,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
 		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
 
+		// Flashcards
+		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
+		Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
+
 		// Flashcard results
 		Route::post("{$r['user-flashcards-results']}/{userId}/{flashcardId}", 'UserFlashcardsResultsApiController@post');
 		Route::post("{$r['user-flashcards-results']}/{userId}", 'UserFlashcardsResultsApiController@fetchMany');
@@ -281,13 +285,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
 
-
 	Route::group(['middleware' => ['admin']], function () use ($r) {
 		// Flashcards admin
-		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
 		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
 		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
-		Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
 		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
 		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
 	});

@@ -52,11 +52,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
-		// Certificates
-		Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');
-		Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
-		Route::get("{$r['certificates']}/final/{id}", 'CertificatesApiController@getFinalCertificate');
-
 		// Lessons
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
@@ -157,7 +152,24 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
 		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
 		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
+
+		// Flashcards
+		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
+		Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
+
+		// Flashcard results
+		Route::post("{$r['user-flashcards-results']}/{userId}/{flashcardId}", 'UserFlashcardsResultsApiController@post');
+		Route::post("{$r['user-flashcards-results']}/{userId}", 'UserFlashcardsResultsApiController@fetchMany');
+
+		// Flashcard notes
+		Route::post("{$r['user-flashcard-notes']}/{flashcardId}", 'UserFlashcardNotesApiController@post');
+		Route::put("{$r['user-flashcard-notes']}/{flashcardId}/{userFlashcardNoteId}", 'UserFlashcardNotesApiController@put');
 	});
+
+	// Certificates
+	Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');
+	Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
+	Route::get("{$r['certificates']}/final/{id}", 'CertificatesApiController@getFinalCertificate');
 
 	// User Lessons
 	Route::put("{$r['user-lesson']}/{userId}/batch", 'UserLessonApiController@putBatch');
@@ -273,17 +285,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
 
-	// Flashcards
-	Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
-	Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
-	Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
-	Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
-	Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
-	Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
-
-	Route::post("{$r['user-flashcards-results']}/{userId}/{flashcardId}", 'UserFlashcardsResultsApiController@post');
-	Route::post("{$r['user-flashcards-results']}/{userId}", 'UserFlashcardsResultsApiController@fetchMany');
-
-	Route::post("{$r['user-flashcard-notes']}/{flashcardId}", 'UserFlashcardNotesApiController@post');
-	Route::put("{$r['user-flashcard-notes']}/{flashcardId}/{userFlashcardNoteId}", 'UserFlashcardNotesApiController@put');
+	Route::group(['middleware' => ['admin']], function () use ($r) {
+		// Flashcards admin
+		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
+		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
+		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
+		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
+	});
 });

@@ -62,8 +62,6 @@ class UserPurge extends Command
 	}
 
 	public function purge($user) {
-		$user->orders()->delete();
-		$user->coupons()->delete();
 		$user->profile()->delete();
 		$user->personalData()->delete();
 		$user->billing()->delete();

@@ -7,36 +7,43 @@
 			<div class="flashcards-list__item__text__container">
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 				<div class="flashcards-list__item__buttons" v-if="flashcard.answer === 'unsolved'">
-					<a class="flashcards-list__item__buttons__button text--easy"
-					   @click="submitAnswer(flashcard, 'easy')">
+					<a :class="['flashcards-list__item__buttons__button text--easy', isLoading && 'is-loading']"
+					   @click="submitAnswer(flashcard, 'easy')"
+					   :title="ANSWERS_MAP.easy.text"
+					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">Łatwe</span>
 					</a>
-					<a class="flashcards-list__item__buttons__button text--hard"
-					   @click="submitAnswer(flashcard, 'hard')">
+					<a :class="['flashcards-list__item__buttons__button text--hard', isLoading && 'is-loading']"
+					   @click="submitAnswer(flashcard, 'hard')"
+					   :title="ANSWERS_MAP.hard.text"
+					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">Trudne</span>
 					</a>
 					<a
-							class="flashcards-list__item__buttons__button text--do-not-know"
+							:class="['flashcards-list__item__buttons__button text--do-not-know', isLoading && 'is-loading']"
 							@click="submitAnswer(flashcard, 'do_not_know')"
+							:title="ANSWERS_MAP.do_not_know.text"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">Nie Wiem</span>
 					</a>
 				</div>
 				<div
 						class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
-						@click="onRetakeFlashcard(flashcard)"
 						v-else
 				>
-					<span class="flashcards-list__item__buttons__button">
+					<span
+							class="flashcards-list__item__buttons__button"
+							@click="onRetakeFlashcard(flashcard)"
+							title="Ponów"
+					>
 						<span class="icon"><i class="fa fa-undo"></i></span>
 					</span>
-					<span :class="['flashcards-list__item__buttons__button', ANSWERS_MAP[flashcard.answer].buttonClass]">
+					<span
+							:class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]"
+							:title="ANSWERS_MAP[flashcard.answer].text"
+					>
 						<span class="icon"><i
 								:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
-						<span class="flashcards-list__item__buttons__button__text">{{ANSWERS_MAP[flashcard.answer].text}}</span>
 					</span>
 				</div>
 			</div>
@@ -44,7 +51,7 @@
 				<wnl-text-button v-if="!flashcard.note && !isNoteEditorOpen" @click="toggleNoteEditor" type="button">+ DODAJ NOTATKĘ</wnl-text-button>
 				<div v-if="flashcard.note && !isNoteEditorOpen">
 					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="edit">EDYTUJ</wnl-text-button></label>
-					<span class="content" v-html="flashcard.note.note" />
+					<span class="flashcards-list__item__note-content content" v-html="flashcard.note.note" />
 				</div>
 				<wnl-form
 						v-if="isNoteEditorOpen"
@@ -100,10 +107,6 @@
 		flex-direction: column
 		margin-top: $margin-base
 
-		@media #{$media-query-tablet}
-			flex-direction: row
-			margin-top: 0
-
 		&--solved
 			color: $color-gray-dimmed
 
@@ -115,12 +118,13 @@
 
 		&__container
 			border: $border-light-gray
+			border-radius: $border-radius-small
 			margin: 0
 			padding: $margin-base
 			width: 100%
 
 			@media #{$media-query-tablet}
-				margin: $margin-small 0 $margin-small $margin-small
+				margin: $margin-small 0
 
 		&__text__container
 			display: flex
@@ -139,7 +143,7 @@
 			align-items: center
 			display: flex
 			justify-content: center
-			margin: $margin-base 0
+			margin: $margin-small 0
 
 			@media #{$media-query-tablet}
 				flex: 0 0 $buttonWidth * 3
@@ -147,6 +151,7 @@
 				margin: 0
 
 			&--retake
+				color: $color-blue
 				@media #{$media-query-tablet}
 					flex: 0 0 $buttonWidth * 2
 
@@ -158,12 +163,13 @@
 				display: flex
 				flex-direction: column
 				align-items: center
-				margin: 0 $margin-small
+				padding: $margin-small
 				cursor: pointer
+				transition: opacity ease-in-out .1s
 
 				@media #{$media-query-tablet}
-					flex-basis: 78px
-					width: 64px
+					flex-basis: 42px
+					width: 42px
 
 				&:hover
 					opacity: 1
@@ -180,9 +186,15 @@
 					text-transform: uppercase
 					font-size: 12px
 
+				&.is-disabled
+					cursor: auto
+
+				&.is-loading
+					opacity: .2
+					cursor: auto
+
 		&__note-editor
 			background: white
-
 </style>
 
 <script>
@@ -222,6 +234,7 @@
 				note: this.flashcard.note && this.flashcard.note.note || '',
 				fontColors,
 				isNoteEditorOpen: false,
+				isLoading: false,
 			}
 		},
 		computed: {
@@ -252,12 +265,18 @@
 				this.note = this.flashcard.note && this.flashcard.note.note || '';
 			},
 			async submitAnswer(flashcard, answer) {
+				if (this.isLoading) {
+					return;
+				}
+
+				this.isLoading = true;
 				await this.postAnswer({
 					flashcard,
 					answer,
 					context_type: this.context.type,
 					context_id: this.context.id
 				});
+				this.isLoading = false;
 				this.isNoteEditorOpen = ['hard', 'do_not_know'].includes(answer);
 			},
 			onSubmitSuccess(updatedNote) {

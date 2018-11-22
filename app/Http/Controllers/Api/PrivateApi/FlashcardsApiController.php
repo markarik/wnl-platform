@@ -22,7 +22,10 @@ class FlashcardsApiController extends ApiController
 		}
 
 		$flashcard->update($request->all());
-		$flashcard->tags()->sync($request->get('tags'));
+
+		if (is_array($request->get('tags'))) {
+			$flashcard->tags()->sync($request->get('tags'));
+		}
 
 		return $this->transformAndRespond($flashcard);
 	}
@@ -32,7 +35,9 @@ class FlashcardsApiController extends ApiController
 		$flashcard = new Flashcard($request->all());
 		$flashcard->save();
 
-		$flashcard->tags()->sync($request->get('tags'));
+		if (is_array($request->get('tags'))) {
+			$flashcard->tags()->sync($request->get('tags'));
+		}
 
 		return $this->transformAndRespond($flashcard);
 	}

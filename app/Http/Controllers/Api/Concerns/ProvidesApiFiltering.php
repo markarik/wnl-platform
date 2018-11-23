@@ -21,9 +21,8 @@ trait ProvidesApiFiltering
 
 	public function filter(Request $request)
 	{
-		$resource = $request->route('resource');
 		$order = $request->get('order');
-		$model = app(static::getResourceModel($resource));
+		$model = app(static::getResourceModel($this->resourceName));
 		$userFiltersPersistanceToken = $request->get('token');
 
 		if (!empty ($order)) {
@@ -47,7 +46,7 @@ trait ProvidesApiFiltering
 			if (!$request->has('active') || empty($filters)) {
 				$response = $this->paginatedResponse($model, $this->limit, $this->page);
 			} else {
-				$cacheTags = $this->getFiltersCacheTags($resource, $userFiltersPersistanceToken);
+				$cacheTags = $this->getFiltersCacheTags($this->resourceName, $userFiltersPersistanceToken);
 				$hashedFilters = $this->hashedFilters($filters);
 
 				$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);

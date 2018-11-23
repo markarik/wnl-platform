@@ -57,9 +57,9 @@
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
-			async fetchUsers(url = 'users/all', method = 'get') {
+			async fetchUsers() {
 				try {
-					const {data: {data, ...paginationMeta}} = await axios[method](getApiUrl(url), this.getRequestParams(method))
+					const {data: {data, ...paginationMeta}} = await axios.post(getApiUrl('users/.filter'), this.getRequestParams())
 
 					this.paginationMeta = paginationMeta
 					if (paginationMeta.total === 0) {
@@ -87,7 +87,7 @@
 				this.searchPhrase = phrase
 				this.searchFields = fields
 
-				await this.fetchUsers('users/.filter', 'post')
+				await this.fetchUsers()
 			},
 			async clearSearch() {
 				this.searchPhrase = ''
@@ -100,7 +100,7 @@
 				this.page = page
 				await this.fetchUsers()
 			},
-			getRequestParams(requestMethod = 'post') {
+			getRequestParams() {
 				const params = {
 					include: this.includes,
 					limit: this.perPage,
@@ -112,10 +112,6 @@
 				if (this.searchPhrase) {
 					params.active = [`search.${this.searchPhrase}`]
 					params.filters = [{search: {phrase: this.searchPhrase, fields: this.searchFields}}]
-				}
-
-				if (requestMethod === 'get') {
-					return { params }
 				}
 
 				return params

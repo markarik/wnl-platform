@@ -25,8 +25,4 @@ class UsersApiController extends ApiController
 		\Log::notice(">>>UsersApiController::put called, track caller and remove!");
 		return $this->respondForbidden();
 	}
-
-	public function filter($request) {
-		return parent::filter($request);
-	}
 }

@@ -32,8 +32,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
 
 		//Users admin
-		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
+		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 	});
 
@@ -42,9 +42,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Count
 	api_action('get', 'count');
-
-	// Faceted search / filtering
-	api_action('post', 'filter');
 
 	// Saved active filters
 	api_action('post', 'activeFilters');
@@ -161,6 +158,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['quiz-questions']}/stats", 'QuizQuestionsApiController@stats');
 
 		// Quiz Questions
+		Route::post("{$r['quiz-questions']}/.filter", 'QuizQuestionsApiController@filter');
 		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
 		Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
 		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
@@ -259,6 +257,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
 
 	// Annotations
+	Route::post("{$r['annotations']}/.filter", 'AnnotationsApiController@filter');
 	Route::get("{$r['annotations']}/{id}", 'AnnotationsApiController@get');
 	Route::post("{$r['annotations']}", 'AnnotationsApiController@post');
 	Route::put("{$r['annotations']}/{id}", 'AnnotationsApiController@put');
@@ -288,6 +287,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['site-wide-messages']}/{messageId}", 'SiteWideMessagesApiController@put');
 
 	// Tasks
+	Route::post("{$r['tasks']}/.filter", 'TasksApiController@filter');
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
 	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 

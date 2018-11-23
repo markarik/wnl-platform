@@ -76,8 +76,8 @@ let routes = [
 		component: require('js/admin/components/flashcards/edit/FlashcardEditor'),
 		props: true,
 	},
-  {
-    name: 'users',
+	{
+		name: 'users',
 		path: '/admin/app/users',
 		component: require('js/admin/components/users/Users.vue'),
 	},
@@ -85,7 +85,7 @@ let routes = [
 		name: 'user-details',
 		path: '/admin/app/users/:userId',
 		component: require('js/admin/components/users/UserDetails.vue'),
-  },
+	},
 	{
 		name: 'dashboard',
 		path: '/admin/app'

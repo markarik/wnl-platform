@@ -24,6 +24,19 @@ if (!function_exists('api_action')) {
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], function () {
 	$r = config('papi.resources');
 
+	Route::group(['middleware' => ['admin']], function () use ($r) {
+		// Flashcards admin
+		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
+		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
+		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
+		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
+
+		//Users admin
+		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
+		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
+		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+	});
+
 	// Search (using search engine)
 	api_action('get', 'search');
 
@@ -280,17 +293,4 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
-
-	Route::group(['middleware' => ['admin']], function () use ($r) {
-		// Flashcards admin
-		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
-		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
-		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
-		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
-
-		//Users admin
-		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
-		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
-		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
-	});
 });

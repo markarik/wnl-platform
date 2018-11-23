@@ -219,7 +219,7 @@ const actions = {
 	},
 
 	deleteAccount({getters}, payload) {
-		return axios.patch(getApiUrl(`user_forget/${getters.currentUserId}`), {
+		return axios.patch(getApiUrl(`users/${getters.currentUserId}/forget`), {
 			password: payload
 		})
 	}

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CourseProgressStats;
 use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -355,6 +356,35 @@ class User extends Authenticatable
 	{
 		$this->suspended = true;
 		$this->save();
+	}
+
+	public function forget()
+	{
+		$this->profile()->update([
+			'first_name' => 'account',
+			'last_name' => 'deleted',
+			'public_email' => null,
+			'public_phone' => null,
+			'username' => null,
+			'avatar' => 'avatars/account-deleted.png',
+			'city' => null,
+			'university' => null,
+			'specialization' => null,
+			'help' => null,
+			'interests' => null,
+			'about' => null,
+			'learning_location' => null,
+			'display_name' => null,
+			'deleted_at' => Carbon::now()
+		]);
+
+		$this->update([
+			'deleted_at' => Carbon::now(),
+			'consent_newsletter' => null,
+			'email' => 'KontoUsunięte'.Uuid::uuid4()->toString().'@bethink.pl'
+		]);
+
+		$this->profile->unsearchable();
 	}
 
 	public static function getSubscriptionKey($id)

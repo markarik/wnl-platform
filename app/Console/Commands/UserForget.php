@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-class UserPurge extends Command
+class UserForget extends Command
 {
 	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'user:purge {ids*}';
+	protected $signature = 'user:forget {ids*}';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Hard-delete user record and all user-related data for fiven user IDs';
+	protected $description = 'Soft-delete user record and anonymize user-related data for fiven user IDs';
 
 	/**
 	 * Execute the console command.
@@ -50,36 +50,13 @@ class UserPurge extends Command
 
 			$this->table($headers, [$data]);
 
-			if ($this->confirm('Confirm deleting above user and all related user data')) {
-				$this->purge($user);
+			if ($this->confirm('Confirm deleting above user')) {
+				$user->forget();
 				$this->info('User deleted');
 			} else {
 				continue;
 			}
 		}
-
-		return;
-	}
-
-	public function purge($user) {
-		$user->profile()->delete();
-		$user->personalData()->delete();
-		$user->billing()->delete();
-		$user->settings()->delete();
-		$user->userAddress()->delete();
-		$user->roles()->detach();
-		$user->chatMessages()->delete();
-		$user->notifications()->delete();
-		$user->sessions()->delete();
-		$user->comments()->delete();
-		$user->tasks()->delete();
-		$user->qnaAnswers()->delete();
-		$user->lessonsAvailability()->detach();
-		$user->reactables()->delete();
-		$user->chatRooms()->delete();
-		$user->subscription()->delete();
-		$user->userTime()->delete();
-		$user->delete();
 
 		return;
 	}

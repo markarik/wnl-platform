@@ -1,16 +1,16 @@
 export const ANSWERS_MAP = {
 	easy: {
-		text: 'Łatwe',
+		text: 'Odpowiadam z łatwością',
 		iconClass: 'fa-smile-o',
 		buttonClass: 'text--easy'
 	},
 	hard: {
-		text: 'Trudne',
+		text: 'Odpowiadam z trudnością',
 		iconClass: 'fa-meh-o',
 		buttonClass: 'text--hard'
 	},
 	do_not_know: {
-		text: 'Nie wiem',
+		text: 'Nie pamiętam (jeszcze!)',
 		iconClass: 'fa-frown-o',
 		buttonClass: 'text--do-not-know'
 	}

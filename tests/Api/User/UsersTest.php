@@ -18,4 +18,16 @@ class UsersTest extends ApiTestCase
 		$response
 			->assertStatus(403);
 	}
+
+	/** @test */
+	public function regular_user_cant_filter_users()
+	{
+		$user = factory(User::class)->create();
+
+		$response = $this->actingAs($user)
+			->json('POST', 'papi/v1/users/.filter');
+
+		$response
+			->assertStatus(403);
+	}
 }

@@ -10,6 +10,7 @@
 				<span
 					class="tag"
 					v-for="role in user.roles"
+					:key="role.name"
 					:style="{backgroundColor: getColourForStr(role.name)}">
 					{{ role.name }}
 				</span>
@@ -51,7 +52,7 @@
 	import axios from 'axios';
 	import {mapActions} from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
-	import string_color from 'js/admin/mixins/string-color'
+	import { getColourForStr } from "js/utils/colors.js"
 	import moment from 'moment'
 	import UserSummary from './UserSummary'
 	import UserAddress from './UserAddress'
@@ -63,9 +64,9 @@
 	export default {
 		name: "UserDetails",
 		components: {},
-		mixins: [ string_color ],
 		data() {
 			return {
+				getColourForStr,
 				isLoading: true,
 				user: {},
 				tabs: {
@@ -110,7 +111,7 @@
 				return this.activeTab.component
 			},
 			dateCreated() {
-				return moment(this.user.created_at * 1000).format('D MMM Y')
+				return moment(this.user.created_at * 1000).format('ll')
 			}
 		},
 		methods: {

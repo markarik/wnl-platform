@@ -176,10 +176,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 
-	// Users
-	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
-	Route::put("{$r['users']}/{id}", 'UsersApiController@put');
-
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
 
@@ -291,5 +287,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
 		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
 		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
+
+		//Users admin
+		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
+		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
+		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 	});
 });

@@ -17,10 +17,6 @@ class UsersApiController extends ApiController
 
 	public function get($id)
 	{
-		if (!Auth::user()->isAdmin()) {
-			return $this->respondForbidden();
-		}
-
 		return parent::get($id);
 	}
 
@@ -28,5 +24,9 @@ class UsersApiController extends ApiController
 	{
 		\Log::notice(">>>UsersApiController::put called, track caller and remove!");
 		return $this->respondForbidden();
+	}
+
+	public function filter($request) {
+		return parent::filter($request);
 	}
 }

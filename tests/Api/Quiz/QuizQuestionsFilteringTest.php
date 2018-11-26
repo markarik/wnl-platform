@@ -30,6 +30,29 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	}
 
 	/** @test * */
+	public function activeFiltersHasSaved()
+	{
+		$user = factory(User::class)->create();
+		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', $user->id);
+
+		$mockedRedis = Redis::shouldReceive('get')
+			->once()
+			->with($redisKey)
+			->andReturn(json_encode([['filter'], 'active-filter-path']));
+
+		$response = $this
+			->actingAs($user)
+			->json('POST', $this->url('/quiz_questions/.activeFilters'), [
+				'useSavedFilters' => true
+			]);
+
+		$response
+			->assertSee('active-filter-path');
+
+		$mockedRedis->verify();
+	}
+
+/** @test * */
 	public function activeFiltersUseSaved()
 	{
 		$user = factory(User::class)->create();

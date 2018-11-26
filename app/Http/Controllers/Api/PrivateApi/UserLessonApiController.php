@@ -9,6 +9,7 @@ use App\Http\Requests\User\UpdateUserLesson;
 use App\Http\Requests\User\UpdateLessonsPreset;
 use App\Http\Requests\User\UpdateLessonsBatch;
 use App\Models\UserLesson;
+use App\Models\Lesson;
 use App\Models\User;
 use DB;
 
@@ -96,5 +97,21 @@ class UserLessonApiController extends ApiController
 		\Cache::forget(EditionsApiController::key($userId));
 
 		return $this->respondOk();
+	}
+
+	public function export(Request $request, $userId)
+	{
+		$userId = User::find($userId)->id;
+		if (empty($userId)) {
+			return $this->respondNotFound();
+		}
+
+		$userLessons = UserLesson::where('user_id', $userId)->get();
+
+		echo(Lesson::where('id', 1)->get());
+
+		// foreach ($userLessons as $userLesson) {
+		// 	echo(Lesson::where('id', $userLesson['lesson_id'])->);
+		// }
 	}
 }

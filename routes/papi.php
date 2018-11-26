@@ -171,6 +171,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['user-lesson']}/{userId}/batch", 'UserLessonApiController@putBatch');
 	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
+	Route::get("{$r['user-lesson']}/{userId}/export", 'UserLessonApiController@export');
 
 	// Users
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');

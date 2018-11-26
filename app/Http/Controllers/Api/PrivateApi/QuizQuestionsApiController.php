@@ -36,6 +36,15 @@ class QuizQuestionsApiController extends ApiController
 		$this->resourceName = config('papi.resources.quiz-questions');
 	}
 
+	public function getWithTrashed($id) {
+		$quizQuestion = QuizQuestion::withTrashed()->find($id);
+		if (!$quizQuestion) {
+			return $this->respondNotFound();
+		}
+
+		return $this->transformAndRespond($quizQuestion);
+	}
+
 	public function post(UpdateQuizQuestion $request)
 	{
 		$question = QuizQuestion::create([
@@ -125,6 +134,23 @@ class QuizQuestionsApiController extends ApiController
 			$quizQuestion->delete();
 
 			return $this->respondOk();
+		}
+
+		return $this->respondForbidden();
+	}
+
+	public function restore($id) {
+		$quizQuestion = QuizQuestion::withTrashed()->find($id);
+
+		if (!$quizQuestion) {
+			return $this->respondNotFound();
+		}
+
+		if (Auth::user()->can('delete', $quizQuestion)) {
+			$quizQuestion->restore();
+			$quizQuestion->answers()->restore();
+
+			return $this->transformAndRespond($quizQuestion);
 		}
 
 		return $this->respondForbidden();

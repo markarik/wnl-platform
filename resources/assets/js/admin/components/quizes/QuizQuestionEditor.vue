@@ -12,18 +12,31 @@
 			ref="quizQuestionForm"
 		>
 			<header class="question-form-header">
-				<h4 v-if="isEdit">Edycja pytania <strong>{{$route.params.quizId}}</strong></h4>
+				<h4 v-if="isEdit">
+					Edycja pytania
+					<strong>{{$route.params.quizId}}</strong>
+					<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
+				</h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
 						<button
-								v-if="isEdit"
+								v-if="isEdit && !questionIsDeleted"
 								class="button is-danger"
 								type="button"
 								@click="onDelete"
 						>
 							<span class="icon"><i class="fa fa-trash"></i></span>
 							<span>Usuń</span>
+						</button>
+						<button
+								v-if="isEdit && questionIsDeleted"
+								class="button is-warning"
+								type="button"
+								@click="onUndelete"
+						>
+							<span class="icon"><i class="fa fa-undo"></i></span>
+							<span>Przywróć</span>
 						</button>
 						<button class="button is-primary" @click.stop.prevent="onFormSave">Zapisz</button>
 					</div>
@@ -186,6 +199,7 @@
 				'questionSlides',
 				'questionAnswersMap',
 				'questionId',
+				'questionIsDeleted',
 				'questionTags',
 				'preserveOrder'
 			]),
@@ -203,6 +217,8 @@
 		methods: {
 			...mapActions([
 				'getQuizQuestion',
+				'deleteQuizQuestion',
+				'undeleteQuizQuestion',
 				'setupFreshQuestion',
 				'addAutoDismissableAlert',
 			]),
@@ -263,16 +279,21 @@
 				}
 			},
 			async onDelete() {
-				await axios.delete(getApiUrl(this.formResourceRoute));
+				await this.deleteQuizQuestion(this.questionId);
+				this.addAutoDismissableAlert({
+					text: 'Poszło!',
+					type: 'success',
+				});
+			},
+			async onUndelete() {
+				await this.undeleteQuizQuestion(this.questionId);
 				this.addAutoDismissableAlert({
 					text: 'Poszło!',
 					type: 'success',
 				});
 
-				this.$router.push({
-					name: 'quizes',
-				})
-			},
+			}
+
 		},
 		watch: {
 			questionText(val) {

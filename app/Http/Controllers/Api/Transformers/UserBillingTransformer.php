@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\ApiTransformer;
 class UserBillingTransformer extends ApiTransformer
 {
 	protected $parent;
-	protected $availableIncludes = ['lessons'];
 
 	public function __construct($parent = null)
 	{

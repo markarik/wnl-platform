@@ -34,6 +34,7 @@
 
 <script>
 	import moment from 'moment'
+	import {nextTick} from 'vue';
 	import {getApiUrl} from 'js/utils/env'
 
 	export default {
@@ -64,7 +65,7 @@
 				return
 			}
 
-			this.userLessons = Object.values(userLessonsList).map(userLesson => {
+			this.userLessons = userLessonsList.map(userLesson => {
 				return {
 					...userLesson,
 					start_date: moment(userLesson.start_date.date).format('ll'),
@@ -72,7 +73,9 @@
 				}
 			})
 
-			this.$refs.filterInput.focus()
+			nextTick(() => {
+				this.$refs.filterInput.focus()
+			})
 		}
 	}
 </script>

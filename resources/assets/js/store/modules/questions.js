@@ -320,7 +320,7 @@ const actions = {
 			})
 	},
 	fetchQuestions({commit, state, getters, rootGetters},
-		{filters, page, saveFilters, useSavedFilters, skipCache}
+		{filters, page, saveFilters, useSavedFilters}
 	) {
 		const parsedFilters = parseFilters(filters, state.filters, rootGetters.currentUserId)
 		
@@ -332,7 +332,6 @@ const actions = {
 			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
 			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
 			token: getters.hasStatelessFilters ? state.token : '',
-			skipCache,
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 

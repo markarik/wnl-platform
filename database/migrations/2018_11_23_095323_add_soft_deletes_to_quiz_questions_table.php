@@ -16,9 +16,6 @@ class AddSoftDeletesToQuizQuestionsTable extends Migration
 		Schema::table('quiz_questions', function (Blueprint $table) {
 			$table->softDeletes();
 		});
-		Schema::table('quiz_answers', function (Blueprint $table) {
-			$table->softDeletes();
-		});
     }
 
     /**
@@ -29,9 +26,6 @@ class AddSoftDeletesToQuizQuestionsTable extends Migration
     public function down()
     {
 		Schema::table('quiz_questions', function (Blueprint $table) {
-			$table->dropSoftDeletes();
-		});
-		Schema::table('quiz_answers', function (Blueprint $table) {
 			$table->dropSoftDeletes();
 		});
     }

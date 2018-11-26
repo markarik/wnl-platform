@@ -148,7 +148,6 @@ class QuizQuestionsApiController extends ApiController
 
 		if (Auth::user()->can('delete', $quizQuestion)) {
 			$quizQuestion->restore();
-			$quizQuestion->answers()->restore();
 
 			return $this->transformAndRespond($quizQuestion);
 		}

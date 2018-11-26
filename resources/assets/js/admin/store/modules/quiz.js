@@ -151,9 +151,9 @@ const actions = {
 		commit(types.UPDATE_QUIZ_QUESTION, {deleted_at: new Date()});
 	},
 	async undeleteQuizQuestion({commit}, id) {
-		const {data} = await axios.put(getApiUrl(`quiz_questions/${id}/restore?include=quiz_answers,slides`));
+		const {data} = await axios.put(getApiUrl(`quiz_questions/${id}/restore`));
 
-		commit(types.SETUP_QUIZ_QUESTION, data);
+		commit(types.UPDATE_QUIZ_QUESTION, {deleted_at: null});
 	}
 }
 

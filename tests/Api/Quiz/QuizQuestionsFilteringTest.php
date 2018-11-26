@@ -3,6 +3,8 @@
 namespace Tests\Api\Quiz;
 
 use App\Models\User;
+use App\Models\UserSubscription;
+use Carbon\Carbon;
 use Tests\Api\ApiTestCase;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Api\PrivateApi\QuizQuestionsApiController;
@@ -76,6 +78,13 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	public function activeFiltersSave()
 	{
 		$user = factory(User::class)->create();
+
+		UserSubscription::create([
+			'user_id' => $user->id,
+			'access_start' => Carbon::now()->subDays(1),
+			'access_end' => Carbon::now()->addDays(1)
+		]);
+
 		$redisKey = QuizQuestionsApiController::savedFiltersCacheKey('quiz_questions', $user->id);
 
 		$mockedRedis = Redis::shouldReceive('set')
@@ -100,6 +109,11 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	public function filtersPaginatedResponse()
 	{
 		$user = factory(User::class)->create();
+		UserSubscription::create([
+			'user_id' => $user->id,
+			'access_start' => Carbon::now()->subDays(1),
+			'access_end' => Carbon::now()->addDays(1)
+		]);
 
 		$response = $this
 			->actingAs($user)
@@ -118,6 +132,11 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 	public function filtersCachedPaginated()
 	{
 		$user = factory(User::class)->create();
+		UserSubscription::create([
+			'user_id' => $user->id,
+			'access_start' => Carbon::now()->subDays(1),
+			'access_end' => Carbon::now()->addDays(1)
+		]);
 
 		$response = $this
 			->actingAs($user)

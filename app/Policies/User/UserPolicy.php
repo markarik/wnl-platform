@@ -21,11 +21,6 @@ class UserPolicy
 		return $user->id === $targetUser->id || $user->isAdmin();
 	}
 
-	public function list(User $user)
-	{
-		return $user->isAdmin();
-	}
-
 	/**
 	 * Determine whether the user can create users.
 	 *

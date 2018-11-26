@@ -15,11 +15,6 @@ class UsersApiController extends ApiController
 		$this->resourceName = config('papi.resources.users');
 	}
 
-	public function get($id)
-	{
-		return parent::get($id);
-	}
-
 	public function put()
 	{
 		\Log::notice(">>>UsersApiController::put called, track caller and remove!");

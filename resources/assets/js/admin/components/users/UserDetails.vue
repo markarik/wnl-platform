@@ -1,9 +1,7 @@
 <template>
 	<div class="user-details">
 		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
-
 		<div v-else>
-
 			<div class="user-details__head">
 				<p>#{{ user.id }}</p>
 				<p class="user-details__head__name">{{ user.full_name }}</p>
@@ -146,10 +144,10 @@
 						}
 					})
 				this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId])
-				this.user.profile = included.profile[this.user.profile[0]]
-				this.user.user_address = included.user_address[this.user.user_address[0]]
-				this.user.settings = included.settings[this.user.settings[0]]
-				this.user.subscription = included.subscription[this.user.subscription[0]]
+				this.user.profile = this.user.profile && included.profile[this.user.profile[0]]
+				this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]]
+				this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]]
+				this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]]
 			},
 			changeTab(name) {
 				this.activeTab.active = false;

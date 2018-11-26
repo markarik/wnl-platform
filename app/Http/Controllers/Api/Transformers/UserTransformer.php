@@ -78,6 +78,10 @@ class UserTransformer extends ApiTransformer
 	{
 		$billingData = $user->billing;
 
+		if (empty($billingData)) {
+			return null;
+		}
+
 		return $this->item($billingData, new UserBillingTransformer(['users' => $user->id]), 'user_billing_data');
 	}
 
@@ -98,6 +102,10 @@ class UserTransformer extends ApiTransformer
 	public function includeUserAddress(User $user)
 	{
 		$address = $user->userAddress;
+
+		if (empty($address)) {
+			return null;
+		}
 
 		return $this->item($address, new UserAddressTransformer(['users' => $user->id]), 'addresses');
 	}

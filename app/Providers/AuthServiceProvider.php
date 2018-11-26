@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\Order;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
+use App\Models\QuizQuestion;
 use App\Models\Screen;
 use App\Models\Task;
 use App\Models\User;
@@ -21,6 +22,7 @@ use App\Models\UserSettings;
 use App\Policies\Chat\ChatRoomPolicy;
 use App\Policies\AnnotationPolicy;
 use App\Policies\CommentPolicy;
+use App\Policies\Course\QuizQuestionPolicy;
 use App\Policies\Course\ScreensPolicy;
 use App\Policies\NotificationPolicy;
 use App\Policies\InvoicePolicy;
@@ -53,6 +55,7 @@ class AuthServiceProvider extends ServiceProvider
 		QnaQuestion::class        => QnaQuestionPolicy::class,
 		Comment::class            => CommentPolicy::class,
 		Screen::class             => ScreensPolicy::class,
+		QuizQuestion::class       => QuizQuestionPolicy::class,
 		ChatRoom::class           => ChatRoomPolicy::class,
 		Notification::class       => NotificationPolicy::class,
 		Task::class               => TaskPolicy::class,

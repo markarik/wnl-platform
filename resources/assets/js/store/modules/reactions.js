@@ -63,13 +63,7 @@ export const reactionsActions = {
 
 					resolve(response)
 				})
-				.catch(error => {
-					$wnl.logger.error(error)
-					dispatch('addAlert', {
-						type: 'error',
-						text: 'Niestety, nie udało nam się dokonać zapisu. :( Problem jest nam znany i cały czas nad nim pracujemy. Tymczasowo, żeby problem ustąpił, możesz odświeżyć stronę. :)'
-					}, {root: true})
-				})
+				.catch(reject)
 		})
 	},
 

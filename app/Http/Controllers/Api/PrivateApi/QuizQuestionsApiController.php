@@ -114,6 +114,22 @@ class QuizQuestionsApiController extends ApiController
 		return $this->respondOk();
 	}
 
+	public function delete($id) {
+		$quizQuestion = QuizQuestion::find($id);
+
+		if (!$quizQuestion) {
+			return $this->respondNotFound();
+		}
+
+		if (Auth::user()->can('delete', $quizQuestion)) {
+			$quizQuestion->delete();
+
+			return $this->respondOk();
+		}
+
+		return $this->respondForbidden();
+	}
+
 	public function stats(Request $request)
 	{
 		$userId = Auth::user()->id;

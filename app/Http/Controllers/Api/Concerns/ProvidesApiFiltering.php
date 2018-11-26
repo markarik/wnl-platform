@@ -44,7 +44,7 @@ trait ProvidesApiFiltering
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);
 		} else {
-			if (!$request->has('active') || empty($filters)) {
+			if ($request->get( 'skipCache') || !$request->has('active') || empty($filters)) {
 				$response = $this->paginatedResponse($model, $this->limit, $this->page);
 			} else {
 				$cacheTags = $this->getFiltersCacheTags($resource, $userFiltersPersistanceToken);

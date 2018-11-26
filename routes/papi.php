@@ -150,8 +150,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Quiz Questions
 		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
 		Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
-		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
-		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
 
 		// Flashcards
 		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
@@ -291,5 +289,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
 		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
 		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
+
+		// Quiz Questions
+		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
+		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
+		Route::delete("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@delete');
 	});
 });

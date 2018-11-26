@@ -529,6 +529,7 @@
 							useSavedFilters: false,
 							page: (data.position && data.position.page) || 1,
 							filters: this.initialFilters,
+							skipCache: true,
 						}).then(() => resolve(data))
 					})
 				})

@@ -16,6 +16,15 @@
 				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
+						<button
+								v-if="isEdit"
+								class="button is-danger"
+								type="button"
+								@click="onDelete"
+						>
+							<span class="icon"><i class="fa fa-trash"></i></span>
+							<span>Usuń</span>
+						</button>
 						<button class="button is-primary" @click.stop.prevent="onFormSave">Zapisz</button>
 					</div>
 				</div>
@@ -151,6 +160,7 @@
 	import { Quill, Form, Tags, SlideIds } from 'js/components/global/form'
 	import { nextTick } from 'vue'
 	import _ from 'lodash'
+	import {getApiUrl} from "js/utils/env";
 
 	export default {
 		name: 'QuizesEditor',
@@ -193,7 +203,8 @@
 		methods: {
 			...mapActions([
 				'getQuizQuestion',
-				'setupFreshQuestion'
+				'setupFreshQuestion',
+				'addAutoDismissableAlert',
 			]),
 			onQuestionInput() {
 				this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML
@@ -250,7 +261,18 @@
 						this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
 					}, 2000)
 				}
-			}
+			},
+			async onDelete() {
+				await axios.delete(getApiUrl(this.formResourceRoute));
+				this.addAutoDismissableAlert({
+					text: 'Poszło!',
+					type: 'success',
+				});
+
+				this.$router.push({
+					name: 'quizes',
+				})
+			},
 		},
 		watch: {
 			questionText(val) {

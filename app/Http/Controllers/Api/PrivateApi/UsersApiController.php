@@ -15,15 +15,6 @@ class UsersApiController extends ApiController
 		$this->resourceName = config('papi.resources.users');
 	}
 
-	public function get($id)
-	{
-		if (!Auth::user()->isAdmin()) {
-			return $this->respondForbidden();
-		}
-
-		return parent::get($id);
-	}
-
 	public function put()
 	{
 		\Log::notice(">>>UsersApiController::put called, track caller and remove!");

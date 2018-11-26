@@ -50,7 +50,7 @@ class UserTransformer extends ApiTransformer
 	{
 		$roles = $profile->roles;
 
-		return $this->collection($roles, new RoleTransformer(['users' => $profile->id]), 'roles'	);
+		return $this->collection($roles, new RoleTransformer(['users' => $profile->id]), 'roles');
 	}
 
 	public function includeProfile(User $user)

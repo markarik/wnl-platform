@@ -24,23 +24,27 @@ if (!function_exists('api_action')) {
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], function () {
 	$r = config('papi.resources');
 
-	// Search (using search engine)
-	api_action('get', 'search');
+	Route::group(['middleware' => ['admin']], function () use ($r) {
+		// Flashcards admin
+		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
+		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
+		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
+		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
+
+		//Users admin
+		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
+		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
+		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+	});
 
 	// Count
 	api_action('get', 'count');
-
-	// Faceted search / filtering
-	api_action('post', 'filter');
 
 	// Saved active filters
 	api_action('post', 'activeFilters');
 
 	// Faceted search available filters
 	api_action('post', 'filterList');
-
-	// Query (using main database)
-	api_action('post', 'query');
 
 	// Fetch additional routing data basing on various input
 	api_action('post', 'context');
@@ -68,12 +72,14 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 
 		// Slides
+		Route::get("{$r['slides']}/.search", 'SlidesApiController@search');
+		Route::post("{$r['slides']}/.search", 'SlidesApiController@search');
+		Route::post("{$r['slides']}/.query", 'SlidesApiController@query');
 		Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
 		Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 		Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
 		Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
 		Route::post("{$r['slides']}", 'SlidesApiController@post');
-		Route::post("{$r['slides']}/.search", 'SlidesApiController@query');
 
 		// Presentables
 		Route::post("{$r['presentables']}/.search", 'PresentablesApiController@query');
@@ -148,6 +154,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['quiz-questions']}/stats", 'QuizQuestionsApiController@stats');
 
 		// Quiz Questions
+		Route::post("{$r['quiz-questions']}/.filter", 'QuizQuestionsApiController@filter');
 		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
 		Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
 		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
@@ -176,12 +183,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 
-	// Users
-	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
-	Route::put("{$r['users']}/{id}", 'UsersApiController@put');
-
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
+
+	Route::get("user_profiles/.search", "UserProfilesApiController@search");
+	Route::post("user_profiles/.query", "UserProfilesApiController@query");
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 
@@ -250,6 +256,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
 
 	// Annotations
+	Route::post("{$r['annotations']}/.filter", 'AnnotationsApiController@filter');
 	Route::get("{$r['annotations']}/{id}", 'AnnotationsApiController@get');
 	Route::post("{$r['annotations']}", 'AnnotationsApiController@post');
 	Route::put("{$r['annotations']}/{id}", 'AnnotationsApiController@put');
@@ -279,17 +286,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['site-wide-messages']}/{messageId}", 'SiteWideMessagesApiController@put');
 
 	// Tasks
+	Route::post("{$r['tasks']}/.filter", 'TasksApiController@filter');
+	Route::post("{$r['tasks']}/.query", 'TasksApiController@query');
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
 	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
-
-	Route::group(['middleware' => ['admin']], function () use ($r) {
-		// Flashcards admin
-		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
-		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
-		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
-		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
-	});
 });

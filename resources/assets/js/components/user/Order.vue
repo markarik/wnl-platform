@@ -21,6 +21,7 @@
 					<div class="tags">
 						<span :class="{'is-success': order.paid, 'tag': true }">{{ paymentStatus }}</span>
 						<span class="tag">Metoda płatności: {{ paymentMethod }}</span>
+						<slot name="order-tags"></slot>
 					</div>
 				</div>
 				<div class="level-right"></div>

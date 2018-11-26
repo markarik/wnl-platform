@@ -135,7 +135,7 @@
 				}
 			},
 			parseIncluded(included){
-				this.user.orders = _.reverse(Object.values(included.orders))
+				this.user.orders = _.reverse(Object.values(_.get(included, 'orders', {})))
 					.map(order => {
 						return {
 							...order,
@@ -146,7 +146,7 @@
 				this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId])
 				this.user.profile = this.user.profile && included.profile[this.user.profile[0]]
 				this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]]
-				this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]]
+				this.user.settings = this.user.settings && included.settings[this.user.settings[0]]
 				this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]]
 			},
 			changeTab(name) {

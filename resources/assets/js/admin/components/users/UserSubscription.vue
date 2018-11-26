@@ -1,6 +1,6 @@
 <template>
 	<div class="subscription">
-		<table class="table is-bordered is-narrow">
+		<table class="table is-bordered is-narrow" v-if="user.subscription">
 			<thead>
 				<tr>
 					<th>Dostęp Od</th>
@@ -14,6 +14,7 @@
 				</tr>
 			</tbody>
 		</table>
+		<p v-else>Ten użytkownik nie posiada subskrypcji do kursu</p>
 	</div>
 </template>
 <style lang="sass" scoped>

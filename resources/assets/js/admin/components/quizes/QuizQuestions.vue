@@ -1,6 +1,6 @@
 <template>
 	<div class="quiz-questions">
-		<form class="quiz-question-search" v-on:submit.prevent>
+		<form class="quiz-question-search" @submit.prevent>
 			<div class="field has-addons">
 				<div class="control">
 					<input class="input" type="text" placeholder="Numer pytania" v-model="questionId">

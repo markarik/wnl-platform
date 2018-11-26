@@ -130,13 +130,8 @@ class QuizQuestionsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		if (Auth::user()->can('delete', $quizQuestion)) {
-			$quizQuestion->delete();
-
-			return $this->respondOk();
-		}
-
-		return $this->respondForbidden();
+		$quizQuestion->delete();
+		return $this->respondOk();
 	}
 
 	public function restore($id) {
@@ -146,13 +141,8 @@ class QuizQuestionsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		if (Auth::user()->can('delete', $quizQuestion)) {
-			$quizQuestion->restore();
-
-			return $this->transformAndRespond($quizQuestion);
-		}
-
-		return $this->respondForbidden();
+		$quizQuestion->restore();
+		return $this->transformAndRespond($quizQuestion);
 	}
 
 	public function stats(Request $request)

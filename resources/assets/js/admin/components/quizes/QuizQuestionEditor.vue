@@ -279,18 +279,35 @@
 				}
 			},
 			async onDelete() {
-				await this.deleteQuizQuestion(this.questionId);
-				this.addAutoDismissableAlert({
-					text: 'Poszło!',
-					type: 'success',
-				});
+				try {
+					await this.deleteQuizQuestion(this.questionId);
+					this.addAutoDismissableAlert({
+						text: 'Poszło!',
+						type: 'success',
+					});
+				} catch (error) {
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert({
+						text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+						type: 'error',
+					});
+				}
 			},
 			async onUndelete() {
-				await this.undeleteQuizQuestion(this.questionId);
-				this.addAutoDismissableAlert({
-					text: 'Poszło!',
-					type: 'success',
-				});
+				try {
+					await this.undeleteQuizQuestion(this.questionId);
+					this.addAutoDismissableAlert({
+						text: 'Poszło!',
+						type: 'success',
+					});
+				} catch (error) {
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert({
+						text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+						type: 'error',
+					});
+				}
+
 
 			}
 

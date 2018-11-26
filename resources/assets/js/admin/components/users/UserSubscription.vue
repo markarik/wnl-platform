@@ -33,7 +33,7 @@
 		},
 		methods: {
 			formatDate(date) {
-				return moment(date * 1000).format('DD/MM/YY')
+				return moment(date * 1000).format('ll')
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 <template>
 	<div class="annotations-users">
 		<slot name="search"></slot>
-		<ul v-if="users.length && !isLoading">
+		<ul v-if="users.length">
 			<table class="users-users">
 				<thead>
 				<tr>
@@ -12,26 +12,24 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="(user, index) in users" class="users-users__item" @click="goToDetails(user.id)">
+				<tr v-for="user in users" class="users-users__item" @click="goToDetails(user.id)" :key="user.id">
 					<td>{{ user.id }}</td>
 					<td>
 						{{ user.full_name }}
 						<span
 							class="tag"
 							v-for="role in user.roles"
+							:key="role.name"
 							:style="{backgroundColor: getColourForStr(role.name)}">
 						{{ role.name }}
 						</span>
 					</td>
 					<td>{{ user.email }}</td>
-					<td>{{ getDateCreated(user) }}</td>
+					<td>{{ getCreatedDate(user) }}</td>
 				</tr>
 				</tbody>
 			</table>
 		</ul>
-		<div v-else-if="isLoading">
-			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
-		</div>
 		<div v-else>
 			<span class="title is-6">Nic tu nie ma...</span>
 		</div>
@@ -62,24 +60,24 @@
 
 <script>
 	import moment from 'moment'
-	import string_color from 'js/admin/mixins/string-color'
+	import { getColourForStr } from "js/utils/colors.js"
 
 	export default {
 		name: 'UsersList',
+		data() {
+			return {
+				getColourForStr
+			}
+		},
 		props: {
 			users: {
 				type: Array,
 				required: true
 			},
-			isLoading: {
-				type: Boolean,
-				required: true,
-			}
 		},
-		mixins: [ string_color ],
 		methods: {
-			getDateCreated(user) {
-				return moment(user.created_at * 1000).format('D MMM Y')
+			getCreatedDate(user) {
+				return moment(user.created_at * 1000).format('ll')
 			},
 			goToDetails(userId) {
 				this.$router.push({ name: 'user-details', params: { userId } })

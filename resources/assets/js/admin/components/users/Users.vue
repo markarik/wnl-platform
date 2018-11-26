@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<users-list :users="users" :isLoading="isLoading">
-			<div class="search" slot="search">
-				<search @search="search"/>
+		<users-list :users="users" v-if="!isLoading">
+			<div slot="search">
+				<wnl-users-search @search="onSearch"/>
 				<template v-if="searchPhrase">
 					<span>Aktualne wyszukiwanie:</span>
 					<span class="tag is-success">
@@ -11,14 +11,17 @@
 					</span>
 				</template>
 			</div>
-			<pagination v-if="paginationMeta.last_page > 1"
-					:currentPage="page"
-					:lastPage="paginationMeta.last_page"
-					@changePage="onPageChange"
-					slot="pagination"
-					class="annotations__pagination"
+			<wnl-pagination v-if="paginationMeta.last_page > 1"
+				:currentPage="page"
+				:lastPage="paginationMeta.last_page"
+				@changePage="onPageChange"
+				slot="pagination"
+				class="annotations__pagination"
 			/>
 		</users-list>
+		<div v-else>
+			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+		</div>
 	</div>
 </template>
 
@@ -35,11 +38,11 @@
 	import {mapActions} from 'vuex'
 	import {getApiUrl} from 'js/utils/env'
 	import UsersList from "./UsersList";
-	import Pagination from "js/components/global/Pagination";
-	import Search from "./Search";
+	import WnlPagination from "js/components/global/Pagination";
+	import WnlUsersSearch from "./Search";
 
 	export default {
-		components: {UsersList, Search, Pagination},
+		components: {UsersList, WnlUsersSearch, WnlPagination},
 		data() {
 			return {
 				users: [],
@@ -54,25 +57,19 @@
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
-			async fetchUsers(url = 'users/all', method = 'get') {
+			async fetchUsers() {
 				try {
-					const params = method === 'get' ? {
-						params: this.getRequestParams()
-					} : this.getRequestParams()
-					const {data: response} = await axios[method](getApiUrl(url), params)
+					const {data: {data, ...paginationMeta}} = await axios.post(getApiUrl('users/.filter'), this.getRequestParams())
 
-					const {data, ...paginationMeta} = response
 					this.paginationMeta = paginationMeta
 					if (paginationMeta.total === 0) {
 						this.users = []
 					} else {
 						const {included, ...users} = data
-						this.users = Object.values(users).map(user => {
-							return {
-								...user,
-								roles: (user.roles || []).map(roleId => included.roles[roleId])
-							}
-						})
+						this.users = Object.values(users).map(user => ({
+							...user,
+							roles: (user.roles || []).map(roleId => included.roles[roleId])
+						}))
 					}
 				} catch (error) {
 					this.addAutoDismissableAlert({
@@ -84,23 +81,19 @@
 					this.isLoading = false
 				}
 			},
-			async search({phrase, fields}) {
+			async onSearch({phrase, fields}) {
 				this.isLoading = true
 				this.page = 1
 				this.searchPhrase = phrase
 				this.searchFields = fields
 
-				await this.fetchUsers('users/.filter', 'post')
+				await this.fetchUsers()
 			},
 			async clearSearch() {
 				this.searchPhrase = ''
 				this.searchFields = []
 				this.page = 1
 				await this.fetchUsers()
-			},
-			changeTab(name) {
-				this.activeTab.active = false;
-				this.tabs[name].active = true;
 			},
 			async onPageChange(page) {
 				this.isLoading = true
@@ -120,6 +113,7 @@
 					params.active = [`search.${this.searchPhrase}`]
 					params.filters = [{search: {phrase: this.searchPhrase, fields: this.searchFields}}]
 				}
+
 				return params
 			},
 		},

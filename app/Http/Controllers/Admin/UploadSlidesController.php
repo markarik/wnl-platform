@@ -13,7 +13,7 @@ class UploadSlidesController extends Controller
 	}
 
 	public function handle(Parser $parser, Request $request) {
-		$parser->parse($request->get('slides'));
+		$parser->parse($request->get('slides'), null, (bool) $request->get('enable_slides_matching'));
 		return view('admin.upload-slides');
 	}
 }

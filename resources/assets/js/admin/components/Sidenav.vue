@@ -34,14 +34,14 @@
 		</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'users' }">Lista użytkowników</router-link></li>
-    </ul>
+		</ul>
 		<p class="menu-label">
 			Powtórki
 		</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'flashcards-sets' }">Edycja zestawu pytań</router-link></li>
 			<li><router-link :to="{ name: 'flashcards' }">Edycja pytań</router-link></li>
-    </ul>
+		</ul>
 	</aside>
 </template>
 

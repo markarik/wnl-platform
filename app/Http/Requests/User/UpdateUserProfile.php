@@ -28,8 +28,6 @@ class UpdateUserProfile extends FormRequest
 	public function rules()
 	{
 		return [
-			'first_name'        => 'required|alpha_spaces|max:20',
-			'last_name'         => 'required|alpha_spaces|max:20',
 			'public_email'      => 'email|nullable|max:50',
 			'public_phone'      => 'nullable|max:20',
 			'username'          => 'nullable|max:30|alpha_num',
@@ -70,7 +68,7 @@ class UpdateUserProfile extends FormRequest
 
 			return (bool)$username->count();
 		}
-
+		
 		return false;
 	}
 }

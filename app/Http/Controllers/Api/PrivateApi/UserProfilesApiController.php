@@ -31,6 +31,7 @@ class UserProfilesApiController extends ApiController
 	public function put(UpdateUserProfile $request)
 	{
 		$user = User::fetch($request->route('id'));
+		// nie zasiada updateOrCreate :(
 		$user->profile()->updateOrCreate(['user_id' => $user->id], $request->all());
 
 		return $this->respondOk();

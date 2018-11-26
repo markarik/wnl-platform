@@ -187,6 +187,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
 
 	Route::get("user_profiles/.search", "UserProfilesApiController@search");
+	Route::post("user_profiles/.query", "UserProfilesApiController@query");
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 
@@ -286,6 +287,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Tasks
 	Route::post("{$r['tasks']}/.filter", 'TasksApiController@filter');
+	Route::post("{$r['tasks']}/.query", 'TasksApiController@query');
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
 	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 

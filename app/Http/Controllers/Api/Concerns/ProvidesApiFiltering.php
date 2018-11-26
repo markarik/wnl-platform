@@ -169,7 +169,7 @@ trait ProvidesApiFiltering
 	{
 		if (!$request->has('filters') || !$request->has('active')) return;
 
-		$key = $this->filtersFormatKey($request);
+		$key = $this->filtersFormatKey();
 		$data = json_encode([$request->filters, $request->active]);
 
 		Redis::set($key, $data);
@@ -181,7 +181,7 @@ trait ProvidesApiFiltering
 
 		if (!$request->useSavedFilters) return $default;
 
-		$key = $this->filtersFormatKey($request);
+		$key = $this->filtersFormatKey();
 		$data = Redis::get($key);
 
 		if (!$data) return $default;
@@ -189,10 +189,10 @@ trait ProvidesApiFiltering
 		return json_decode($data, true);
 	}
 
-	protected function filtersFormatKey($request)
+	protected function filtersFormatKey()
 	{
 		$userId = Auth::user()->id;
-		$resource = $request->route('resource');
+		$resource = $this->resourceName;
 
 		return self::savedFiltersCacheKey($resource, $userId);
 	}

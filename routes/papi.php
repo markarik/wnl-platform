@@ -37,9 +37,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 	});
 
-	// Search (using search engine)
-	api_action('get', 'search');
-
 	// Count
 	api_action('get', 'count');
 
@@ -48,9 +45,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Faceted search available filters
 	api_action('post', 'filterList');
-
-	// Query (using main database)
-	api_action('post', 'query');
 
 	// Fetch additional routing data basing on various input
 	api_action('post', 'context');
@@ -78,12 +72,14 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 
 		// Slides
+		Route::get("{$r['slides']}/.search", 'SlidesApiController@search');
+		Route::post("{$r['slides']}/.search", 'SlidesApiController@search');
+		Route::post("{$r['slides']}/.query", 'SlidesApiController@query');
 		Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
 		Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 		Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
 		Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
 		Route::post("{$r['slides']}", 'SlidesApiController@post');
-		Route::post("{$r['slides']}/.search", 'SlidesApiController@query');
 
 		// Presentables
 		Route::post("{$r['presentables']}/.search", 'PresentablesApiController@query');
@@ -189,6 +185,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
+
+	Route::get("user_profiles/.search", "UserProfilesApiController@search");
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 

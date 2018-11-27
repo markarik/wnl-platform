@@ -35,7 +35,8 @@
 
 <script>
 	import moment from 'moment'
-	import {nextTick} from 'vue';
+	import {nextTick} from 'vue'
+	import {mapActions} from 'vuex'
 	import {getApiUrl} from 'js/utils/env'
 
 	export default {
@@ -60,27 +61,39 @@
 				return this.userLessons.filter(({lesson}) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
 			}
 		},
+		methods: {
+			...mapActions(['addAutoDismissableAlert']),
+		},
 		async mounted() {
 			this.loading = true
-			const { data: {included, ...userLessons}} = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
-			const userLessonsList = Object.values(userLessons);
-			this.loading = false
+			try {
+				const { data: {included, ...userLessons}} = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
+				const userLessonsList = Object.values(userLessons);
 
-			if (!userLessonsList.length) {
-				return
-			}
-
-			this.userLessons = userLessonsList.map(userLesson => {
-				return {
-					...userLesson,
-					start_date: moment(userLesson.start_date.date).format('ll'),
-					lesson: included.lessons[userLesson.lessons[0]].name
+				if (!userLessonsList.length) {
+					return
 				}
-			})
 
-			nextTick(() => {
-				this.$refs.filterInput.focus()
-			})
+				this.userLessons = userLessonsList.map(userLesson => {
+					return {
+						...userLesson,
+						start_date: moment(userLesson.start_date.date).format('ll'),
+						lesson: included.lessons[userLesson.lessons[0]].name
+					}
+				})
+
+				nextTick(() => {
+					this.$refs.filterInput.focus()
+				})
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					text: "Nie udało się pobrać planu dla tego użytkownika",
+					type: 'error'
+				})
+				$wnl.logger.capture(e)
+			} finally {
+				this.loading = false
+			}
 		}
 	}
 </script>

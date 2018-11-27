@@ -64,6 +64,8 @@
 			this.loading = true
 			const { data: {included, ...userLessons}} = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
 			const userLessonsList = Object.values(userLessons);
+			this.loading = false
+
 			if (!userLessonsList.length) {
 				return
 			}
@@ -75,8 +77,6 @@
 					lesson: included.lessons[userLesson.lessons[0]].name
 				}
 			})
-
-			this.loading = false
 
 			nextTick(() => {
 				this.$refs.filterInput.focus()

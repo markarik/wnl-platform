@@ -4,24 +4,30 @@ namespace Tests\Api\User;
 
 use App\Models\User;
 use Tests\Api\ApiTestCase;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UsersTest extends ApiTestCase
 {
 	/** @test */
-	public function api_returns_current_user()
+	public function regular_user_cant_access_other_users_info()
 	{
-		$user = User::find(1);
+		$user = factory(User::class)->create();
 
 		$response = $this->actingAs($user)
-			->json('GET', 'papi/v1/users/current');
+			->json('GET', 'papi/v1/users/all');
 
 		$response
-			->assertStatus(200)
-			->assertJson([
-				'id' => $user->id,
-			]);
+			->assertStatus(403);
+	}
+
+	/** @test */
+	public function regular_user_cant_filter_users()
+	{
+		$user = factory(User::class)->create();
+
+		$response = $this->actingAs($user)
+			->json('POST', 'papi/v1/users/.filter', []);
+
+		$response
+			->assertStatus(403);
 	}
 }

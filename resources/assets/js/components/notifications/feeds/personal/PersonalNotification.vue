@@ -32,7 +32,7 @@
 		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
 		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
 		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="message.actors"/>
+			<wnl-user-profile-modal :author="userForModal"/>
 		</wnl-modal>
 	</div>
 </template>
@@ -146,6 +146,12 @@
 		},
 		computed: {
 			...mapGetters(['currentUserId']),
+			userForModal() {
+				return {
+					...this.message.actors,
+					user_id: this.message.actors.id
+				}
+			},
 			displayName() {
 				return sanitizeName(this.message.actors.display_name)
 			},
@@ -187,12 +193,6 @@
 					this.dispatchGoToContext()
 				}
 			},
-			addUserIdKey() {
-				this.message.actors.user_id = this.message.actors.id
-			}
 		},
-		created() {
-			this.addUserIdKey()
-		}
 	}
 </script>

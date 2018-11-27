@@ -35,6 +35,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
 		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+
+		//Users Plans
+		Route::get("{$r['user-lesson']}/{userId}", 'UserLessonApiController@getForUser');
+
 	});
 
 	// Count

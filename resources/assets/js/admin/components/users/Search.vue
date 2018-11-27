@@ -19,7 +19,7 @@
 		</div>
 		<div v-for="field in availableFields" :key="field.value" class="search-settings__field field">
 			<input
-					type="checkbox" v-model="searchFields" @change="search"
+					type="checkbox" v-model="searchFields"
 					:id="field.value" :value="field.value" class="search-settings__field__input is-checkradio"
 			>
 			<label :for="field.value" class="search-settings__field__label checkbox">{{field.title}}</label>
@@ -59,7 +59,6 @@
 		methods: {
 			onSelectAll() {
 				this.searchFields = [];
-				this.search();
 			},
 			search() {
 				this.$emit('search', {

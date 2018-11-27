@@ -47,6 +47,7 @@ class UsersCleanUp extends Command
 						});
 					});
 			})
+			->whereNull('deleted_at')
 			->doesntHave('roles')
 			->get();
 

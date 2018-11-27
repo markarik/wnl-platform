@@ -360,6 +360,7 @@ class User extends Authenticatable
 
 	public function forget()
 	{
+		$now = Carbon::now();
 		$this->profile()->update([
 			'first_name' => 'account',
 			'last_name' => 'deleted',
@@ -375,16 +376,20 @@ class User extends Authenticatable
 			'about' => null,
 			'learning_location' => null,
 			'display_name' => null,
-			'deleted_at' => Carbon::now()
+			'deleted_at' => $now
 		]);
 
 		$this->update([
-			'deleted_at' => Carbon::now(),
 			'consent_newsletter' => null,
 			'email' => 'KontoUsunięte'.Uuid::uuid4()->toString().'@bethink.pl'
 		]);
 
-		$this->profile->unsearchable();
+		$this->deleted_at = $now;
+		$this->save();
+
+		if ($this->profile) {
+			$this->profile->unsearchable();
+		}
 	}
 
 	public static function getSubscriptionKey($id)

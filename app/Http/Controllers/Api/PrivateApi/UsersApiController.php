@@ -20,4 +20,23 @@ class UsersApiController extends ApiController
 		\Log::notice(">>>UsersApiController::put called, track caller and remove!");
 		return $this->respondForbidden();
 	}
+
+	public function forget(Request $request)
+	{
+		$user = Auth::user();
+		$currentUserId = $request->userId;
+		$password = $request->password;
+
+		if ($user->id !== (int) $currentUserId) {
+			return $this->respondForbidden('unauthorized');
+		}
+
+		if (!\Hash::check($password, $user->password)) {
+			return $this->respondInvalidInput('wrong_password');
+		}
+
+		$user->forget();
+
+		return $this->respondOk();
+	}
 }

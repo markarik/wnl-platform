@@ -47,6 +47,7 @@ class UsersCleanUp extends Command
 						});
 					});
 			})
+			->whereNull('deleted_at')
 			->doesntHave('roles')
 			->get();
 
@@ -59,7 +60,7 @@ class UsersCleanUp extends Command
 				$this->showTable([$users[$i]]);
 				$action = $this->choice('Choose action', [
 					1 => 'assign role',
-					2 => 'remove from db',
+					2 => 'forget',
 					3 => 'skip',
 					4 => 'back',
 					5 => 'preview changes',
@@ -81,7 +82,7 @@ class UsersCleanUp extends Command
 					$users[$i]->roleToAssign = $role;
 					break;
 
-				case 'remove from db':
+				case 'forget':
 					$users[$i]->action = 'remove';
 					break;
 
@@ -132,8 +133,8 @@ class UsersCleanUp extends Command
 			if (empty($user->action)) continue;
 
 			if ($user->action === 'remove') {
-				(new UserPurge())->purge($user);
-				$this->info("Removed user {$user->id} from database.");
+				$user->fresh()->forget();
+				$this->info("User {$user->id} anonymized and marked as deleted.");
 			}
 
 			if ($user->action === 'assign') {

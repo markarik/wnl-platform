@@ -11,6 +11,12 @@ class OrderTransformer extends ApiTransformer
 {
 
 	protected $availableIncludes = ['invoices', 'payments'];
+	protected $parent;
+
+	public function __construct($parent = null)
+	{
+		$this->parent = $parent;
+	}
 
 	public function transform(Order $order)
 	{
@@ -30,6 +36,7 @@ class OrderTransformer extends ApiTransformer
 				'price' => $order->product->price,
 				'signups_end' => $order->product->signups_end->timestamp ?? null
 			],
+			'shipping_status' => $order->shipping_status,
 		];
 
 		if ($order->coupon) {
@@ -55,6 +62,10 @@ class OrderTransformer extends ApiTransformer
 
 		if (is_null($order->method) || $order->method === 'instalments') {
 			$data['instalments'] = $order->instalments;
+		}
+
+		if ($this->parent) {
+			$data = array_merge($data, $this->parent);
 		}
 
 		return $data;

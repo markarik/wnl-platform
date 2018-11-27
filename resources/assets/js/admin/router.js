@@ -77,6 +77,16 @@ let routes = [
 		props: true,
 	},
 	{
+		name: 'users',
+		path: '/admin/app/users',
+		component: require('js/admin/components/users/Users.vue'),
+	},
+	{
+		name: 'user-details',
+		path: '/admin/app/users/:userId',
+		component: require('js/admin/components/users/UserDetails.vue'),
+	},
+	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},

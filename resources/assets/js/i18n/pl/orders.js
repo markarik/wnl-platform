@@ -11,5 +11,13 @@ export const orders = {
 	},
 	messages: {
 		'product-coupons-disabled': 'Niestety już nie można dodawać kuponów do tego produktu.'
+	},
+	tags: {
+		shipping: {
+			'status': 'Status wysyłki',
+			'ordered': 'Zamówiona',
+			'new': 'Nowa',
+			'delivered': 'Dostarczona'
+		}
 	}
 }

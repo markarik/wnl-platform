@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class User extends Authenticatable
 {
-	use Notifiable, CourseProgressStats;
+	use Notifiable, CourseProgressStats, Searchable;
 
 	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
 	const CACHE_VER = '2';
@@ -158,27 +159,27 @@ class User extends Authenticatable
 
 	public function getAddressAttribute($value)
 	{
-		return $this->userAddress->street;
+		return $this->userAddress->street ?? '';
 	}
 
 	public function getPhoneAttribute($value)
 	{
-		return $this->userAddress->phone;
+		return $this->userAddress->phone ?? '';
 	}
 
 	public function getRecipientAttribute()
 	{
-		return $this->userAddress->recipient;
+		return $this->userAddress->recipient ?? '';
 	}
 
 	public function getZipAttribute()
 	{
-		return $this->userAddress->zip;
+		return $this->userAddress->zip ?? '';
 	}
 
 	public function getCityAttribute()
 	{
-		return $this->userAddress->city;
+		return $this->userAddress->city ?? '';
 	}
 
 	/**
@@ -360,5 +361,14 @@ class User extends Authenticatable
 	public static function getSubscriptionKey($id)
 	{
 		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
+	}
+
+	public function toSearchableArray() {
+		return [
+			'id' => $this->id,
+			'email' => $this->email,
+			'full_name' => $this->full_name,
+			'profile' => $this->profile,
+		];
 	}
 }

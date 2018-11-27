@@ -55,6 +55,7 @@
 	import UserSummary from './UserSummary'
 	import UserAddress from './UserAddress'
 	import UserBillingData from './UserBillingData'
+	import UserCoupons from './UserCoupons'
 	import UserSubscription from './UserSubscription'
 	import UserOrders from './UserOrders'
 	import UserPlan from './UserPlan'
@@ -92,6 +93,11 @@
 						component: UserOrders,
 						active: false,
 						text: 'Zamówienia'
+					},
+					coupons: {
+						component: UserCoupons,
+						active: false,
+						text: 'Kupony'
 					},
 					plan: {
 						component: UserPlan,
@@ -144,6 +150,7 @@
 						}
 					})
 				this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId])
+				this.user.coupons = (this.user.coupons || []).map(couponId => included.coupons[couponId])
 				this.user.profile = this.user.profile && included.profile[this.user.profile[0]]
 				this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]]
 				this.user.settings = this.user.settings && included.settings[this.user.settings[0]]

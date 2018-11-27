@@ -124,7 +124,7 @@
 				const userId = this.$route.params.userId
 				try {
 					const include = [
-						'roles', 'profile', 'subscription', 'orders', 'billing', 'settings', 'coupons','user_address'
+						'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments'
 					].join(',')
 					const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`))
 					const {included, ...user} = response.data

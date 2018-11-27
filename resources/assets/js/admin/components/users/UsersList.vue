@@ -18,8 +18,8 @@
 						{{ user.full_name }}
 						<span
 							class="tag"
-							v-for="role in user.roles"
-							:key="role.name"
+							v-for="(role, index) in user.roles"
+							:key="index"
 							:style="{backgroundColor: getColourForStr(role.name)}">
 						{{ role.name }}
 						</span>

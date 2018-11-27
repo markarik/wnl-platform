@@ -51,7 +51,7 @@
 				searchFields: [],
 				availableFields: [
 					{value: 'id', title: 'ID'},
-					{value: 'eamil', title: 'Email'},
+					{value: 'email', title: 'Email'},
 					{value: 'full_name', title: 'Imię i nazwisko'},
 				]
 			}

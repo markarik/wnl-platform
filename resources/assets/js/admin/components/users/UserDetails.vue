@@ -54,11 +54,11 @@
 	import moment from 'moment'
 	import UserSummary from './UserSummary'
 	import UserAddress from './UserAddress'
-	import UserBillingData from './UserBillingData'
 	import UserCoupons from './UserCoupons'
 	import UserSubscription from './UserSubscription'
 	import UserOrders from './UserOrders'
 	import UserPlan from './UserPlan'
+	import UserBilling from './UserBilling'
 
 	export default {
 		name: "UserDetails",
@@ -80,7 +80,7 @@
 						text: 'Dane do wysyłki'
 					},
 					billing: {
-						component: UserBillingData,
+						component: UserBilling,
 						active: false,
 						text: 'Dane do faktury'
 					},
@@ -103,7 +103,7 @@
 						component: UserPlan,
 						active: false,
 						text: 'Plan lekcji'
-					}
+					},
 				},
 			}
 		},
@@ -153,7 +153,8 @@
 				this.user.coupons = (this.user.coupons || []).map(couponId => included.coupons[couponId])
 				this.user.profile = this.user.profile && included.profile[this.user.profile[0]]
 				this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]]
-				this.user.settings = this.user.settings && included.settings[this.user.settings[0]]
+				this.user.billing = this.user.billing && included.billing[this.user.billing[0]]
+				this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]]
 				this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]]
 			},
 			changeTab(name) {

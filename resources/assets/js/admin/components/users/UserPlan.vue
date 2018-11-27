@@ -26,6 +26,7 @@
 				</tbody>
 			</table>
 		</template>
+		<wnl-text-loader v-else-if="loading">Ładuję plan lekcji....</wnl-text-loader>
 		<p v-else>
 			Ten użytkownik nie ma żadynch lekcji
 		</p>
@@ -48,7 +49,8 @@
 		data() {
 			return {
 				userLessons: [],
-				filterPhrase: ''
+				filterPhrase: '',
+				loading: false
 			}
 		},
 		computed: {
@@ -59,8 +61,11 @@
 			}
 		},
 		async mounted() {
+			this.loading = true
 			const { data: {included, ...userLessons}} = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
 			const userLessonsList = Object.values(userLessons);
+			this.loading = false
+
 			if (!userLessonsList.length) {
 				return
 			}

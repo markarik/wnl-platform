@@ -88,7 +88,10 @@ export const user = {
 		street: 'Ulica',
 		zip: 'Kod pocztowy',
 		city: 'Miasto',
-		phone: 'Telefon'
+		phone: 'Telefon',
+		country: "Kraj",
+		vatId: 'NIP',
+		companyName: 'Nazwa firmy'
 	},
 	personalData: {
 		header: {

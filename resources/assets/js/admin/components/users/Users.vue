@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<users-list :users="users" v-if="!isLoading">
+		<users-list :users="users" v-show="!isLoading">
 			<div slot="search">
 				<wnl-users-search @search="onSearch"/>
 				<template v-if="searchPhrase">
@@ -19,9 +19,7 @@
 				class="annotations__pagination"
 			/>
 		</users-list>
-		<div v-else>
-			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
-		</div>
+		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 	</div>
 </template>
 

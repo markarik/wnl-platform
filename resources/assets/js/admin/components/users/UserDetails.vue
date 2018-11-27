@@ -54,6 +54,7 @@
 	import moment from 'moment'
 	import UserSummary from './UserSummary'
 	import UserAddress from './UserAddress'
+	import UserCoupons from './UserCoupons'
 	import UserSubscription from './UserSubscription'
 	import UserOrders from './UserOrders'
 	import UserPlan from './UserPlan'
@@ -93,6 +94,11 @@
 						active: false,
 						text: 'Zamówienia'
 					},
+					coupons: {
+						component: UserCoupons,
+						active: false,
+						text: 'Kupony'
+					},
 					plan: {
 						component: UserPlan,
 						active: false,
@@ -118,7 +124,7 @@
 				const userId = this.$route.params.userId
 				try {
 					const include = [
-						'roles', 'profile', 'subscription', 'orders', 'billing', 'settings', 'coupons','user_address'
+						'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments'
 					].join(',')
 					const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`))
 					const {included, ...user} = response.data
@@ -135,7 +141,7 @@
 				}
 			},
 			parseIncluded(included){
-				this.user.orders = _.reverse(Object.values(included.orders))
+				this.user.orders = _.reverse(Object.values(_.get(included, 'orders', {})))
 					.map(order => {
 						return {
 							...order,
@@ -144,6 +150,7 @@
 						}
 					})
 				this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId])
+				this.user.coupons = (this.user.coupons || []).map(couponId => included.coupons[couponId])
 				this.user.profile = this.user.profile && included.profile[this.user.profile[0]]
 				this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]]
 				this.user.billing = this.user.billing && included.billing[this.user.billing[0]]

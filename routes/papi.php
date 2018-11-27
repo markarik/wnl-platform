@@ -35,6 +35,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
 		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+
+		//Users Plans
+		Route::get("{$r['user-lesson']}/{userId}", 'UserLessonApiController@getForUser');
+
 	});
 
 	// Count
@@ -186,8 +190,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
 
-	Route::get("user_profiles/.search", "UserProfilesApiController@search");
-	Route::post("user_profiles/.query", "UserProfilesApiController@query");
+	Route::get("{$r['profiles']}/.search", "UserProfilesApiController@search");
+	Route::post("{$r['profiles']}/.query", "UserProfilesApiController@query");
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 

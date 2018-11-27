@@ -64,6 +64,10 @@ class UserTransformer extends ApiTransformer
 	{
 		$subscription = $user->subscription;
 
+		if (empty($subscription)) {
+			return null;
+		}
+
 		return $this->item($subscription, new UserSubscriptionTransformer(['users' => $user->id]), 'subscriptions');
 	}
 
@@ -88,6 +92,10 @@ class UserTransformer extends ApiTransformer
 	public function includeSettings(User $user)
 	{
 		$settings = $user->settings;
+
+		if (empty($settings)) {
+			return null;
+		}
 
 		return $this->item($settings, new UserSettingsTransformer(['users' => $user->id]), 'user_settings');
 	}

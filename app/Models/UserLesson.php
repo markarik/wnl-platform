@@ -9,6 +9,10 @@ class UserLesson extends Pivot
 	protected $fillable = ['lesson_id', 'user_id', 'start_date'];
 	protected $dates = ['start_date'];
 
+	public function lesson() {
+		return $this->belongsTo('\App\Models\Lesson');
+	}
+
 	// https://laracasts.com/discuss/channels/laravel/timestamps-error-when-usingpivotmodel
 	public function getCreatedAtColumn() {
 		return 'created_at';

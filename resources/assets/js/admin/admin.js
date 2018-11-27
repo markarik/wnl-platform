@@ -13,6 +13,15 @@ import VueSweetAlert from 'vue-sweetalert'
 Vue.use(VueSweetAlert)
 Vue.use(WnlAxios, {store, router})
 
+// i18n
+import VueI18n from "vue-i18n";
+import {pl} from "js/i18n";
+Vue.use(VueI18n)
+Vue.config.lang = 'pl'
+
+const messages = {pl}
+const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages})
+
 // Import and register global components
 import Alert from 'js/components/global/Alert.vue'
 import Avatar from 'js/components/global/Avatar.vue'
@@ -40,6 +49,7 @@ import Admin from 'js/admin/components/Admin.vue'
 const admin = new Vue({
 	router,
 	store,
+	i18n,
 	...Admin
 }).$mount('#admin')
 

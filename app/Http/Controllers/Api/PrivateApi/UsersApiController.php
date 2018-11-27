@@ -15,20 +15,6 @@ class UsersApiController extends ApiController
 		$this->resourceName = config('papi.resources.users');
 	}
 
-	public function get($id)
-	{
-		$user = User::fetch($id);
-
-		if (!Auth::user()->can('view', $user)) {
-			return $this->respondForbidden();
-		}
-
-		$resource = new Item($user, new UserTransformer, $this->resourceName);
-		$data = $this->fractal->createData($resource)->toArray();
-
-		return $this->respondOk($data);
-	}
-
 	public function put()
 	{
 		\Log::notice(">>>UsersApiController::put called, track caller and remove!");

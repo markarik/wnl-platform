@@ -82,7 +82,7 @@ export default {
 			commit(types.FORM_SETUP, payload)
 		},
 		populateFormFromApi({state, commit}, {formName}) {
-			return axios.get(state.resourceUrl)
+			return axios.get(state[formName].resourceUrl)
 				.then((response) => {
 					commit(types.FORM_POPULATE, {payload: response.data, formName})
 					commit(types.FORM_UPDATE_ORIGINAL_DATA, {formName})

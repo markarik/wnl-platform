@@ -21,6 +21,12 @@ class UserLessonApiController extends ApiController
 		$this->resourceName = config('papi.resources.user-lesson');
 	}
 
+	public function getForUser(Request $request, $userId) {
+		$result = UserLesson::where(['user_id' => $userId])->get();
+
+		return $this->transformAndRespond($result);
+	}
+
 	public function put(UpdateUserLesson $request)
 	{
 		$userId = $request->userId;

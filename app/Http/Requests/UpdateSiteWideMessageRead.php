@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Models\SiteWideMessage;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateSiteWideMessage extends FormRequest
+class UpdateSiteWideMessageRead extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -14,8 +14,12 @@ class UpdateSiteWideMessage extends FormRequest
 	 */
 	public function authorize()
 	{
-		return true;
+		$user = \Auth::user();
+		$siteWideMessage = SiteWideMessage::find($this->route('messageId'));
+
+		return $siteWideMessage->user_id === $user->id;
 	}
+
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
@@ -24,10 +28,7 @@ class UpdateSiteWideMessage extends FormRequest
 	public function rules()
 	{
 		return [
-			'slug' => 'string|nullable',
-			'message' => 'string|nullable',
-			'start_date' => 'integer|nullable',
-			'end_date' => 'integer|nullable',
+			'read_at' => 'date|nullable',
 		];
 	}
 }

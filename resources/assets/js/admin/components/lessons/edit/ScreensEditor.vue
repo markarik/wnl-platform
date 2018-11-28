@@ -101,7 +101,6 @@
 	import Select from 'js/admin/components/forms/Select.vue'
 
 	import { getApiUrl } from 'js/utils/env'
-	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 	import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards'
 	import WnlScreensMetaEditorQuizes from 'js/admin/components/lessons/edit/ScreensMetaEditorQuizes'
 
@@ -138,7 +137,6 @@
 	export default {
 		name: 'ScreensEditor',
 		components: {
-			WnlFormTextarea,
 			WnlScreensMetaEditorFlashcards,
 			WnlScreensMetaEditorQuizes,
 			'quill': Quill,

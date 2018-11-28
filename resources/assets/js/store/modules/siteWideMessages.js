@@ -12,6 +12,7 @@ const getters = {
 	siteWideMessages: state => state.siteWideMessages,
 	// TODO find the most recent news
 	dashboardNews: state => state.siteWideMessages.filter(message => message.target === MESSAGE_TARGETS.DASHBOARD_NEWS)[0],
+	dashboardNewsList: state => state.siteWideMessages.filter(message => message.target === MESSAGE_TARGETS.DASHBOARD_NEWS),
 	siteWideAlerts: state => state.siteWideMessages.filter(message => message.targer === MESSAGE_TARGETS.SITE_WIDE_ALERT),
 }
 
@@ -38,7 +39,7 @@ const actions = {
 	},
 	async updateSiteWideMessage({commit}, messageId) {
 		try {
-			await axios.put(getApiUrl(`site_wide_messages/${messageId}`), {
+			await axios.put(getApiUrl(`site_wide_messages/${messageId}/read`), {
 				read_at: new Date()
 			})
 		} catch (e) {

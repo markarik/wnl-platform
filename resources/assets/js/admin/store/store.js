@@ -16,6 +16,7 @@ import alerts from 'js/store/modules/alerts'
 import flashcards from "js/admin/store/modules/flashcards";
 import flashcardsSets from "js/admin/store/modules/flashcardsSets";
 import form from 'js/store/modules/form';
+import siteWideMessages from "js/store/modules/siteWideMessages";
 
 Vue.use(Vuex)
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
 		flashcards,
 		flashcardsSets,
 		form,
+		siteWideMessages,
 	},
 	strict: debug
 })

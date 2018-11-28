@@ -9,7 +9,9 @@
 				  class="textarea normal"
 				  :name="name"
 				  @input="$emit('input', $event.target.value)"
-				  :placeholder="placeholder">
+				  :placeholder="placeholder"
+				  v-model="inputValue"
+		>
 		</textarea>
 
 		<span class="help is-danger"

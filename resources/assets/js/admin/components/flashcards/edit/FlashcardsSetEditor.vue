@@ -121,7 +121,6 @@
 
 	import WnlAutocomplete from 'js/components/global/Autocomplete';
 	import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem'
-	import WnlFormTextarea from "js/admin/components/forms/Textarea";
 	import WnlFormInput from "js/admin/components/forms/Input";
 	import WnlQuill from 'js/admin/components/forms/Quill';
 	import WnlSelect from 'js/admin/components/forms/Select';
@@ -133,7 +132,6 @@
 			WnlAutocomplete,
 			WnlFormInput,
 			WnlQuill,
-			WnlFormTextarea,
 			WnlSelect,
 			WnlFlashcardsSetListItem,
 			draggable,

@@ -8,21 +8,31 @@
     >
         <wnl-text name="slug">Slug</wnl-text>
         <wnl-textarea name="message">Treść</wnl-textarea>
-        <wnl-text name="start_date">Wyświetlaj od</wnl-text>
-        <wnl-text name="end_date">Zakończ wyświetlanie po</wnl-text>
+        <wnl-datepicker name="start_date" :config="datepickerConfig">Wyświetlaj od</wnl-datepicker>
+        <wnl-datepicker name="end_date" :config="datepickerConfig">Wyświetlaj do</wnl-datepicker>
     </wnl-form>
 </template>
 
 <script>
-    import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea} from 'js/components/global/form'
+    import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form'
 
 	export default {
 		name: 'DashboardNewsEdit',
+        data() {
+			return {
+				datepickerConfig: {
+					altInput: true,
+					enableTime: true,
+					dateFormat: 'U'
+				},
+            }
+        },
         props: ['id'],
 		components: {
 			WnlForm,
 			WnlText,
             WnlTextarea,
+			WnlDatepicker
 		},
 		computed: {
 			formResourceRoute() {

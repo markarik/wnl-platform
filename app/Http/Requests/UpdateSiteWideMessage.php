@@ -30,4 +30,21 @@ class UpdateSiteWideMessage extends FormRequest
 			'end_date' => 'integer|nullable',
 		];
 	}
+
+	protected function getValidatorInstance()
+	{
+		$data = $this->all();
+		if ($data['start_date'] === '') {
+			$data['start_date'] = null;
+		}
+		if ($data['end_date'] === '') {
+			$data['end_date'] = null;
+		}
+
+		$this->getInputSource()->replace($data);
+
+		/*modify data before send to validator*/
+
+		return parent::getValidatorInstance();
+	}
 }

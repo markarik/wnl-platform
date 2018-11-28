@@ -6,6 +6,7 @@ import Submit from './Submit'
 import Check from './Check'
 import Tags from './Tags'
 import SlideIds from './SlideIds'
+import Datepicker from './Datepicker'
 
 export {
 	Form,
@@ -16,4 +17,5 @@ export {
 	Check,
 	Tags,
 	SlideIds,
+	Datepicker,
 }

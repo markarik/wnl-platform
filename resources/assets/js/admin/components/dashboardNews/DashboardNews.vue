@@ -1,6 +1,14 @@
 <template>
     <div >
-        <h3>Newsy <router-link class="button is-primary" :to="{ name: 'dashboard-news-edit', params: { id: 'new' } }">Stwórz nowego newsa</router-link></h3>
+        <h3 class="title is-3">
+            Newsy
+            <router-link
+                    class="button is-primary"
+                    :to="{ name: 'dashboard-news-edit', params: { id: 'new' } }"
+            >
+                Stwórz nowego newsa
+            </router-link>
+        </h3>
         <table class="table dashboard-news">
             <tr>
                 <th>Slug</th>
@@ -16,6 +24,7 @@
                 <td>{{dashboardNewsItem.slug}}</td>
                 <td>{{formatDate(dashboardNewsItem.start_date)}}</td>
                 <td>{{formatDate(dashboardNewsItem.end_date)}}</td>
+
             </tr>
         </table>
     </div>
@@ -41,7 +50,9 @@
 		methods: {
 			...mapActions('siteWideMessages', ['fetchUserSiteWideMessages']),
             formatDate(date) {
-				return moment(date * 1000).format('L LT')
+				if (date) {
+					return moment(date * 1000).format('L LT')
+                }
 			},
 			goToEdit(id) {
 				this.$router.push({ name: 'dashboard-news-edit', params: { id } })

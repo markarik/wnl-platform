@@ -25,6 +25,7 @@ class QuizQuestionTransformer extends ApiTransformer
 			'explanation'    => $quizQuestion->explanation,
 			'preserve_order' => $quizQuestion->preserve_order,
 			'tags'           => $quizQuestion->tags,
+			'deleted_at'     => $quizQuestion->deleted_at,
 		];
 
 		if ($this->parent) {

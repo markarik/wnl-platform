@@ -331,7 +331,7 @@ const actions = {
 			page,
 			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
 			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
-			token: getters.hasStatelessFilters ? state.token : ''
+			token: getters.hasStatelessFilters ? state.token : '',
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit)
 

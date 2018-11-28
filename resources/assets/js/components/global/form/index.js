@@ -5,6 +5,7 @@ import Submit from './Submit'
 import Check from './Check'
 import Tags from './Tags'
 import SlideIds from './SlideIds'
+import Checkbox from './Checkbox'
 
 export {
 	Form,
@@ -14,4 +15,5 @@ export {
 	Check,
 	Tags,
 	SlideIds,
+	Checkbox
 }

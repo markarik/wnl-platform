@@ -8,14 +8,13 @@
 <script>
 	import {mapActions} from 'vuex';
 	import UserEditForm from "./UserEditForm";
-	import { getApiUrl } from 'js/utils/env';
 
 
 	export default {
 		components: {UserEditForm},
 		computed: {
 			resourceUrl() {
-				return getApiUrl('users')
+				return 'users'
 			}
 		},
 		methods: {

@@ -169,7 +169,6 @@
 				this.action('populateFormFromApi').then(() => {
 					this.mutation(types.FORM_IS_LOADED)
 				})
-				this.$emit('populated', this.getter('getData'))
 			} else if (this.value) {
 				this.action('populateFormFromValue', this.value)
 				this.mutation(types.FORM_IS_LOADED)

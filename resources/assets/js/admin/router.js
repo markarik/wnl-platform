@@ -84,7 +84,7 @@ let routes = [
 	{
 		name: 'users-edit',
 		path: '/admin/app/users/edit',
-		component: require('js/admin/components/users/UserEditForm.vue'),
+		component: require('js/admin/components/users/UserAdd.vue'),
 	},
 	{
 		name: 'user-details',

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\User\PostUser;
 use App\Http\Requests\User\UpdateUser;
 use App\Models\User;
 use Auth;
@@ -14,10 +15,24 @@ class UsersApiController extends ApiController
 		$this->resourceName = config('papi.resources.users');
 	}
 
-	public function put()
+	public function put(UpdateUser $request, $userId)
 	{
-		\Log::notice(">>>UsersApiController::put called, track caller and remove!");
-		return $this->respondForbidden();
+		$user = User::find($userId);
+
+		if (empty($user)) {
+			return $this->respondNotFound();
+		}
+
+		$user->update([
+			'first_name' => $request->get('first_name'),
+			'last_name' => $request->get('last_name'),
+			'email' => $request->get('email'),
+			'password' => bcrypt($request->get('passowrd'))
+		]);
+
+		$user->roles()->sync($request->get('roles'));
+
+		return $this->respondOk();
 	}
 
 	public function forget(Request $request)
@@ -39,7 +54,7 @@ class UsersApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function post(UpdateUser $request) {
+	public function post(PostUser $request) {
 		$user = User::create([
 			'first_name' => $request->get('first_name'),
 			'last_name' => $request->get('last_name'),

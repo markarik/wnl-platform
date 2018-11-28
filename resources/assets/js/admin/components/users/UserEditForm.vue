@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<h2 class="title is-3 margin bottom">Nowy Użytkownik</h2>
 		<form @submit.prevent="onSubmit">
 			<wnl-form-input
 				name="first_name"
@@ -35,9 +34,9 @@
 				Hasło
 			</wnl-form-input>
 			<h3 class="title is-5 margin vertical">Dodaj Rolę</h3>
-			<div v-for="role in roles" :key="role.id" class="field">
+			<div v-for="role in availableRoles" :key="role.id" class="field">
 				<input type="checkbox" :id="role.name" class="is-checkradio" v-model="selectedRoles" :value="role.id"/>
-				<label class="checkbox" :for="role.id">{{role.name}}</label>
+				<label class="checkbox" :for="role.name">{{role.name}}</label>
 			</div>
 			<button class="button is-small is-success margin top"
 				:class="{'is-loading': isLoading}"
@@ -63,6 +62,20 @@
 
 	export default {
 		components: {WnlFormInput},
+		props: {
+			resourceUrl: {
+				type: String,
+				required: true
+			},
+			populate: {
+				type: Boolean,
+				default: false
+			},
+			method: {
+				type: String,
+				default: 'post'
+			}
+		},
 		data() {
 			return {
 				form: new Form({
@@ -82,9 +95,6 @@
 			hasChanged() {
 				return !isEqual(this.form.originalData, this.form.data());
 			},
-			apiUrl() {
-				return getApiUrl('users')
-			}
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
@@ -96,32 +106,27 @@
 				this.loading = true;
 				try {
 					this.form.roles = this.selectedRoles
-					await this.form[this.isEdit ? 'put' : 'post'](this.apiUrl)
-					this.addAutoDismissableAlert({
-						text: 'Użytkownik utworzony!',
-						type: 'success'
-					});
-					this.$router.push({
-						name: 'users'
-					})
+					await this.form[this.method](this.resourceUrl)
+					this.$emit('success')
 				} catch (exception) {
-					this.addAutoDismissableAlert({
-						text: 'Nie udało się utworzyć użytkownika.:(',
-						type: 'error'
-					});
 					$wnl.logger.capture(exception)
+					this.$emit('error')
 				} finally {
 					this.loading = false;
 				}
 			}
 		},
 		async created() {
-			const response = await axios.get(getApiUrl('roles/all'));
-			this.availableRoles = response.data;
+			const response = await axios.get(getApiUrl('roles/all'))
+			this.availableRoles = response.data
+			if (this.populate) {
+				await this.form.populate(this.resourceUrl)
+				this.selectedRoles = this.form.roles
+			}
 		},
 		watch: {
 			selectedRoles() {
-				this.form.roles = this.selectedRoles;
+				this.form.roles = this.selectedRoles
 			}
 		}
 	}

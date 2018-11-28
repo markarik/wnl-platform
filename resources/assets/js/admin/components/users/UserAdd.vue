@@ -1,26 +1,21 @@
 <template>
 	<div>
-		<user-edit-form @success="onSuccess" @error="onError" :populate="true" :resource-url="resourceUrl" method="put"/>
+		<h2 class="title is-3 margin bottom">Nowy Użytkownik</h2>
+		<user-edit-form @success="onSuccess" @error="onError" :resource-url="resourceUrl"/>
 	</div>
 </template>
 
 <script>
 	import {mapActions} from 'vuex';
-	import UserEditForm from "./UserEditForm"
+	import UserEditForm from "./UserEditForm";
 	import { getApiUrl } from 'js/utils/env';
 
 
 	export default {
 		components: {UserEditForm},
-		props: {
-			user: {
-				type: Object,
-				required: true
-			}
-		},
 		computed: {
 			resourceUrl() {
-				return getApiUrl(`users/${this.user.id}?include=roles`)
+				return getApiUrl('users')
 			}
 		},
 		methods: {
@@ -30,6 +25,9 @@
 					text: 'Użytkownik utworzony!',
 					type: 'success'
 				});
+				this.$router.push({
+					name: 'users'
+				})
 			},
 			onError() {
 				this.addAutoDismissableAlert({

@@ -27,13 +27,13 @@
 			...mapActions(['addAutoDismissableAlert']),
 			onSuccess() {
 				this.addAutoDismissableAlert({
-					text: 'Użytkownik utworzony!',
+					text: 'Użytkownik zapisany!',
 					type: 'success'
 				});
 			},
 			onError() {
 				this.addAutoDismissableAlert({
-					text: 'Nie udało się utworzyć użytkownika.:(',
+					text: 'Nie udało się zapisać zmian.:(',
 					type: 'error'
 				});
 			}

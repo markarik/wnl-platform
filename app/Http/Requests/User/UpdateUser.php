@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\User;
 
+use App\Models\User;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,10 +26,12 @@ class UpdateUser extends FormRequest
 	 */
 	public function rules()
 	{
+		$user = User::fetch($this->route('id'));
+
 		return [
-			'first_name' => 'string',
-			'last_name' => 'string',
-			'email' => 'email',
+			'first_name' => 'string|required',
+			'last_name' => 'string|required',
+			'email' => ['email',  Rule::unique('users')->ignore($user->id)],
 			'password' => 'min:8',
 			'roles' => 'array'
 		];

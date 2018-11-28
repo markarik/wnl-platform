@@ -2,13 +2,17 @@ import {set} from 'vue'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {MESSAGE_TARGETS} from "js/consts/siteWideMessage";
 
 const state = {
 	siteWideMessages: []
 }
 
 const getters = {
-	siteWideMessages: state => state.siteWideMessages
+	siteWideMessages: state => state.siteWideMessages,
+	// TODO find the most recent news
+	dashboardNews: state => state.siteWideMessages.filter(message => message.target === MESSAGE_TARGETS.DASHBOARD_NEWS)[0],
+	siteWideAlerts: state => state.siteWideMessages.filter(message => message.targer === MESSAGE_TARGETS.SITE_WIDE_ALERT),
 }
 
 const mutations = {

@@ -64,7 +64,7 @@
 				'modalVisible',
 				'thickScrollbar',
 			]),
-			...mapGetters('siteWideMessages', ['siteWideMessages']),
+			...mapGetters('siteWideMessages', ['siteWideAlerts']),
 			currentOverlayText() {
 				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
 			}
@@ -84,11 +84,7 @@
 			...mapActions('tasks', ['initModeratorsFeedListener']),
 			...mapActions('course', { courseSetup: 'setup' }),
 			handleSiteWideMessages() {
-				const alerts = this.siteWideMessages.filter(message => {
-					return message.type = 'site-wide-alert'
-				})
-
-				alerts.forEach(alert => {
+				this.siteWideAlerts.forEach(alert => {
 					this.addAlert({
 						text: this.$t(alert.message),
 						type: 'info',

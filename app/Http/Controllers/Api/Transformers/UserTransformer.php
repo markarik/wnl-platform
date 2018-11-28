@@ -35,6 +35,7 @@ class UserTransformer extends ApiTransformer
 			'first_name' => $user->first_name,
 			'last_name' => $user->last_name,
 			'full_name' => $user->full_name,
+			'email' => $user->email,
 			'created_at' => $user->created_at->timestamp ?? '',
 		];
 
@@ -49,7 +50,7 @@ class UserTransformer extends ApiTransformer
 	{
 		$roles = $profile->roles;
 
-		return $this->collection($roles, new RoleTransformer(['users' => $profile->id]), 'roles'	);
+		return $this->collection($roles, new RoleTransformer(['users' => $profile->id]), 'roles');
 	}
 
 	public function includeProfile(User $user)
@@ -62,6 +63,10 @@ class UserTransformer extends ApiTransformer
 	public function includeSubscription(User $user)
 	{
 		$subscription = $user->subscription;
+
+		if (empty($subscription)) {
+			return null;
+		}
 
 		return $this->item($subscription, new UserSubscriptionTransformer(['users' => $user->id]), 'subscriptions');
 	}
@@ -77,12 +82,20 @@ class UserTransformer extends ApiTransformer
 	{
 		$billingData = $user->billing;
 
+		if (empty($billingData)) {
+			return null;
+		}
+
 		return $this->item($billingData, new UserBillingTransformer(['users' => $user->id]), 'user_billing_data');
 	}
 
 	public function includeSettings(User $user)
 	{
 		$settings = $user->settings;
+
+		if (empty($settings)) {
+			return null;
+		}
 
 		return $this->item($settings, new UserSettingsTransformer(['users' => $user->id]), 'user_settings');
 	}
@@ -97,6 +110,10 @@ class UserTransformer extends ApiTransformer
 	public function includeUserAddress(User $user)
 	{
 		$address = $user->userAddress;
+
+		if (empty($address)) {
+			return null;
+		}
 
 		return $this->item($address, new UserAddressTransformer(['users' => $user->id]), 'addresses');
 	}

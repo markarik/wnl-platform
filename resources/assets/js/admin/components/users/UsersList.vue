@@ -7,16 +7,25 @@
 				<tr>
 					<th>#</th>
 					<th>Imię Nazwisko</th>
-					<th>Rola</th>
+					<th>Login</th>
 					<th>Data stworzenia</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="(user, index) in users" class="users-users__item" @click="goToDetails(user.id)">
+				<tr v-for="user in users" class="users-users__item" @click="goToDetails(user.id)" :key="user.id">
 					<td>{{ user.id }}</td>
-					<td>{{ user.full_name }}</td>
-					<td>{{ getRoles(user) }}</td>
-					<td>{{ getDateCreated(user) }}</td>
+					<td>
+						{{ user.full_name }}
+						<span
+							class="tag"
+							v-for="(role, index) in user.roles"
+							:key="index"
+							:style="{backgroundColor: getColourForStr(role.name)}">
+						{{ role.name }}
+						</span>
+					</td>
+					<td>{{ user.email }}</td>
+					<td>{{ getCreatedDate(user) }}</td>
 				</tr>
 				</tbody>
 			</table>
@@ -32,24 +41,32 @@
 	@import 'resources/assets/sass/variables'
 
 	.users-users
+		th
+			padding: 10px
+
 		&__item
 			&:nth-child(even)
 				background: $color-background-light-gray
 			td
-				padding: 5px
+				padding: 10px
 
-				&:last-child
-					text-align: right
+			&:hover
+				cursor: pointer
+				background: $color-ocean-blue-less-opacity
+
+			.tag
+				margin-left: $margin-small
 </style>
 
 <script>
 	import moment from 'moment'
+	import { getColourForStr } from "js/utils/colors.js"
 
 	export default {
 		name: 'UsersList',
 		data() {
 			return {
-				openAnnotations: []
+				getColourForStr
 			}
 		},
 		props: {
@@ -57,24 +74,10 @@
 				type: Array,
 				required: true
 			},
-			roles: {
-				type: Array,
-				required: true
-			},
-			modifiedAnnotationId: {
-				type: Number,
-				default: 0
-			}
 		},
 		methods: {
-			getRoles(user) {
-				if (!user.hasOwnProperty('roles')) {
-					return '';
-				}
-				return Object.values(user.roles).map(roleId => this.roles[roleId]).join(', ')
-			},
-			getDateCreated(user) {
-				return moment(user.created_at * 1000).format('D MMM Y')
+			getCreatedDate(user) {
+				return moment(user.created_at * 1000).format('ll')
 			},
 			goToDetails(userId) {
 				this.$router.push({ name: 'user-details', params: { userId } })

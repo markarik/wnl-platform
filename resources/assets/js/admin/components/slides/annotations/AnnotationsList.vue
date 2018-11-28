@@ -50,6 +50,7 @@
 		<div v-else>
 			<span class="title is-6">Nic tu nie ma...</span>
 		</div>
+		<slot name="pagination-bottom"/>
 	</div>
 </template>
 
@@ -104,13 +105,14 @@
 </style>
 
 <script>
-	import string_color from 'js/admin/mixins/string-color'
+	import { getColourForStr } from "js/utils/colors.js"
 
 	export default {
 		name: 'AnnotationsList',
 		data() {
 			return {
-				openAnnotations: []
+				openAnnotations: [],
+				getColourForStr
 			}
 		},
 		props: {
@@ -123,7 +125,6 @@
 				default: 0
 			}
 		},
-		mixins: [ string_color ],
 		methods: {
 			isEven(index) {
 				return index % 2 === 0

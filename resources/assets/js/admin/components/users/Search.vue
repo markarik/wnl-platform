@@ -1,30 +1,38 @@
 <template>
-	<div>
+	<div class="users-search">
 		<div class="field has-addons">
 			<div class="control">
-				<input class="input" v-model="searchPhrase" placeholder="Szukaj..." @keyup="search"/>
+				<input class="input" v-model="searchPhrase" placeholder="szukaj użytkownika..." @keyup.enter="search"/>
 			</div>
-			<div class="search-settings__field field">
-				<input
-						type="checkbox" id="all" :checked="!searchFields.length"
-						@change="onSelectAll" class="search-settings__field__input is-checkradio"
-				>
-				<label for="all" class="search-settings__field__label checkbox">Wszystkie Pola</label>
+			<div class="control">
+				<a class="button is-primary" @click="search">
+					Szukaj
+				</a>
 			</div>
-			<div v-for="field in availableFields" :key="field.value" class="search-settings__field field">
-				<input
-						type="checkbox" v-model="searchFields" @change="search"
-						:id="field.value" :value="field.value" class="search-settings__field__input is-checkradio"
-				>
-				<label :for="field.value" class="search-settings__field__label checkbox">{{field.title}}</label>
-			</div>
-
 		</div>
+		<div class="search-settings__field field">
+			<input
+					type="checkbox" id="allFields" :checked="!searchFields.length"
+					@change="onSelectAll" class="search-settings__field__input is-checkradio"
+			>
+			<label for="allFields" class="search-settings__field__label checkbox">Wszystkie Pola</label>
+		</div>
+		<div v-for="field in availableFields" :key="field.value" class="search-settings__field field">
+			<input
+					type="checkbox" v-model="searchFields"
+					:id="field.value" :value="field.value" class="search-settings__field__input is-checkradio"
+			>
+			<label :for="field.value" class="search-settings__field__label checkbox">{{field.title}}</label>
+		</div>
+
 	</div>
 </template>
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
+	.users-search
+		display: flex
+		flex-direction: row
 
 	.search-settings-title
 			margin-bottom: $margin-small
@@ -43,7 +51,7 @@
 				searchFields: [],
 				availableFields: [
 					{value: 'id', title: 'ID'},
-					{value: 'eamil', title: 'Email'},
+					{value: 'email', title: 'Email'},
 					{value: 'full_name', title: 'Imię i nazwisko'},
 				]
 			}
@@ -51,7 +59,6 @@
 		methods: {
 			onSelectAll() {
 				this.searchFields = [];
-				this.search();
 			},
 			search() {
 				this.$emit('search', {

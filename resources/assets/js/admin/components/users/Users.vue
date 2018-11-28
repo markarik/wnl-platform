@@ -1,28 +1,26 @@
 <template>
 	<div>
-		<router-link class="button is-primary margin bottom" :to="{'name': 'users-edit'}">Dodaj Użytkownika</router-link>
-		<users-list
-				:users="users"
-				:roles="roles"
-		>
-			<div class="search" slot="search">
-				<search @search="search"/>
+        <router-link class="button is-primary margin bottom" :to="{'name': 'users-edit'}">Dodaj Użytkownika</router-link>
+		<users-list :users="users" v-show="!isLoading">
+			<div slot="search">
+				<wnl-users-search @search="onSearch"/>
 				<template v-if="searchPhrase">
 					<span>Aktualne wyszukiwanie:</span>
 					<span class="tag is-success">
-						{{searchPhrase}}
+						{{ searchPhrase }}
 						<button class="delete is-small" @click="clearSearch"></button>
 					</span>
 				</template>
 			</div>
-			<pagination v-if="paginationMeta.last_page > 1"
-						:currentPage="page"
-						:lastPage="paginationMeta.last_page"
-						@changePage="onPageChange"
-						slot="pagination"
-						class="annotations__pagination"
+			<wnl-pagination v-if="paginationMeta.last_page > 1"
+				:currentPage="page"
+				:lastPage="paginationMeta.last_page"
+				@changePage="onPageChange"
+				slot="pagination"
+				class="annotations__pagination"
 			/>
 		</users-list>
+		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 	</div>
 </template>
 
@@ -37,20 +35,17 @@
 <script>
 	import axios from 'axios';
 	import {mapActions} from 'vuex'
-
-	import { getApiUrl } from 'js/utils/env'
+	import {getApiUrl} from 'js/utils/env'
 	import UsersList from "./UsersList";
-	import Pagination from "js/components/global/Pagination";
-	import Search from "./Search";
+	import WnlPagination from "js/components/global/Pagination";
+	import WnlUsersSearch from "./Search";
 
 	export default {
-		components: {UsersList, Search, Pagination},
+		components: {UsersList, WnlUsersSearch, WnlPagination},
 		data() {
 			return {
-				activeAnnotation: {},
-				annotations: [],
-				roles: [],
-				modifiedAnnotationId: 0,
+				users: [],
+				isLoading: true,
 				searchPhrase: '',
 				searchFields: [],
 				perPage: 50,
@@ -59,17 +54,39 @@
 				paginationMeta: {}
 			}
 		},
-		computed: {
-
-		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
-			async search({phrase, fields}) {
+			async fetchUsers() {
+				try {
+					const {data: {data, ...paginationMeta}} = await axios.post(getApiUrl('users/.filter'), this.getRequestParams())
+
+					this.paginationMeta = paginationMeta
+					if (paginationMeta.total === 0) {
+						this.users = []
+					} else {
+						const {included, ...users} = data
+						this.users = Object.values(users).map(user => ({
+							...user,
+							roles: (user.roles || []).map(roleId => included.roles[roleId])
+						}))
+					}
+				} catch (error) {
+					this.addAutoDismissableAlert({
+						text: "Ops, nie udało się pobrać użytkowników. Odśwież stronę i spróbuj jeszcze raz",
+						type: 'error'
+					})
+					$wnl.logger.capture(error)
+				} finally {
+					this.isLoading = false
+				}
+			},
+			async onSearch({phrase, fields}) {
+				this.isLoading = true
 				this.page = 1
 				this.searchPhrase = phrase
 				this.searchFields = fields
 
-				await this.fetchUsers('users/.filter', 'post')
+				await this.fetchUsers()
 			},
 			async clearSearch() {
 				this.searchPhrase = ''
@@ -77,71 +94,10 @@
 				this.page = 1
 				await this.fetchUsers()
 			},
-			changeTab(name) {
-				this.activeTab.active = false;
-				this.tabs[name].active = true;
-			},
-			addAnnotation() {
-				this.changeTab('editor');
-				this.activeAnnotation = {
-					tags: [],
-					keywords: '',
-				};
-			},
-			onEditorChange(changedAnnotation) {
-				this.modifiedAnnotationId = changedAnnotation
-			},
 			async onPageChange(page) {
+				this.isLoading = true
 				this.page = page
 				await this.fetchUsers()
-			},
-			onAnnotationSelect(annotation) {
-				if (this.modifiedAnnotationId && annotation.id !== this.modifiedAnnotationId) {
-					const result = window.confirm(
-						`Masz niezapisane zmiany w przypisie ${this.modifiedAnnotationId}. Czy na pewno chcesz zmienić edytowany przypis?`
-					)
-					if (result) {
-						this.onEditorActivate(annotation)
-					}
-				} else {
-					this.onEditorActivate(annotation)
-				}
-			},
-			onEditorActivate(annotation) {
-				this.activeAnnotation = annotation;
-				this.activeTab.active = false;
-				this.tabs.editor.active = true;
-				if (annotation.id !== this.modifiedAnnotationId) {
-					this.modifiedAnnotationId = 0
-				}
-			},
-			onAddSuccess(annotation) {
-				this.activeAnnotation = {
-					...annotation,
-					keywords: (annotation.keywords || []).join(',')
-				}
-				this.users.splice(0,0, this.activeAnnotation);
-			},
-			onEditSuccess(annotation) {
-				this.activeAnnotation = {
-					...annotation,
-					keywords: (annotation.keywords || []).join(',')
-				}
-
-				this.users = this.users.map(item => {
-					if (item.id === annotation.id) {
-						return {
-							...this.activeAnnotation
-						}
-					}
-					return item;
-				})
-			},
-			onDeleteSuccess({id}) {
-				this.activeAnnotation = {}
-
-				const annotationIndex = this.users.findIndex(annotation => annotation.id === id)
-				this.users.splice(annotationIndex, 1)
 			},
 			getRequestParams() {
 				const params = {
@@ -156,47 +112,12 @@
 					params.active = [`search.${this.searchPhrase}`]
 					params.filters = [{search: {phrase: this.searchPhrase, fields: this.searchFields}}]
 				}
-				return params
-			},
-			async fetchUsers(url = 'users/all', method = 'get') {
-				try {
-					const params = method === 'get' ? {
-						params: this.getRequestParams()
-					} : this.getRequestParams()
-					const {data: response} = await axios[method](getApiUrl(url), params)
 
-					const {data, ...paginationMeta} = response
-					this.paginationMeta = paginationMeta
-					if (paginationMeta.total === 0) {
-						this.users = []
-					} else {
-						const {included, ...users} = data
-						this.users = Object.values(users)
-						Object.values(included.roles).forEach(role => {
-							this.roles[role.id] = role.name
-						})
-					}
-				} catch (e) {
-					this.addAutoDismissableAlert({
-						text: "Ops, nie udało się pobrać przypisów. Odśwież stronę i spróbuj jeszcze raz",
-						type: 'error'
-					})
-					console.error(e)
-				}
+				return params
 			},
 		},
 		async mounted() {
-			await this.fetchUsers()
-		},
-		beforeRouteLeave(to, from, next) {
-			if (this.modifiedAnnotationId) {
-				const result = window.confirm(
-					`Masz niezapisane zmiany w przypisie ${this.modifiedAnnotationId}. Czy na pewno chcesz wyjść?`
-				)
-				result && next()
-			} else {
-				next()
-			}
+			this.fetchUsers()
 		}
 	}
 </script>

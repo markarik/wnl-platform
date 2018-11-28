@@ -1,17 +1,16 @@
 <template>
 	<div class="user-details">
 		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
-
 		<div v-else>
-
 			<div class="user-details__head">
 				<p>#{{ user.id }}</p>
 				<p class="user-details__head__name">{{ user.full_name }}</p>
 				<span
 					class="tag"
-					v-for="role in roles"
-					:style="{backgroundColor: getColourForStr(role)}">
-					{{role}}
+					v-for="role in user.roles"
+					:key="role.name"
+					:style="{backgroundColor: getColourForStr(role.name)}">
+					{{ role.name }}
 				</span>
 				<p>Dołączył/-a: {{ dateCreated }}</p>
 			</div>
@@ -24,9 +23,7 @@
 				</ul>
 			</div>
 
-			<component :is="activeComponent" :orders="user.orders">
-
-			</component>
+			<component :is="activeComponent" :user="user"></component>
 
 		</div>
 	</div>
@@ -53,24 +50,24 @@
 	import axios from 'axios';
 	import {mapActions} from 'vuex'
 	import { getApiUrl } from 'js/utils/env'
-	import string_color from 'js/admin/mixins/string-color'
+	import { getColourForStr } from "js/utils/colors.js"
 	import moment from 'moment'
 	import UserSummary from './UserSummary'
 	import UserAddress from './UserAddress'
-	import UserBillingData from './UserBillingData'
+	import UserCoupons from './UserCoupons'
 	import UserSubscription from './UserSubscription'
 	import UserOrders from './UserOrders'
 	import UserPlan from './UserPlan'
+	import UserBilling from './UserBilling'
 
 	export default {
 		name: "UserDetails",
 		components: {},
-		mixins: [ string_color ],
 		data() {
 			return {
+				getColourForStr,
 				isLoading: true,
 				user: {},
-				roleNames: [],
 				tabs: {
 					summary: {
 						component: UserSummary,
@@ -83,7 +80,7 @@
 						text: 'Dane do wysyłki'
 					},
 					billing: {
-						component: UserBillingData,
+						component: UserBilling,
 						active: false,
 						text: 'Dane do faktury'
 					},
@@ -97,11 +94,16 @@
 						active: false,
 						text: 'Zamówienia'
 					},
+					coupons: {
+						component: UserCoupons,
+						active: false,
+						text: 'Kupony'
+					},
 					plan: {
 						component: UserPlan,
 						active: false,
 						text: 'Plan lekcji'
-					}
+					},
 				},
 			}
 		},
@@ -113,14 +115,8 @@
 				return this.activeTab.component
 			},
 			dateCreated() {
-				return moment(this.user.created_at * 1000).format('D MMM Y')
-			},
-			roles() {
-				if (!this.user.hasOwnProperty('roles')) {
-					return '';
-				}
-				return Object.values(this.user.roles).map(roleId => this.roleNames[roleId])
-			},
+				return moment(this.user.created_at * 1000).format('ll')
+			}
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
@@ -128,34 +124,24 @@
 				const userId = this.$route.params.userId
 				try {
 					const include = [
-						'roles',
-						'profile',
-						'subscription',
-						'orders',
-						// 'billing',
-						'settings',
-						'coupons',
-						// 'user_address'
+						'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments'
 					].join(',')
 					const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`))
 					const {included, ...user} = response.data
 					this.user = user
 					this.parseIncluded(included)
-				} catch (e) {
+				} catch (error) {
 					this.addAutoDismissableAlert({
 						text: "Oooops, coś poszło nie tak...",
 						type: 'error'
 					})
-					console.error(e)
+					$wnl.logger.capture(error)
 				} finally {
 					this.isLoading = false
 				}
 			},
 			parseIncluded(included){
-				Object.values(included.roles).forEach(role => {
-					this.roleNames[role.id] = role.name
-				})
-				this.user.orders = _.reverse(Object.values(included.orders))
+				this.user.orders = _.reverse(Object.values(_.get(included, 'orders', {})))
 					.map(order => {
 						return {
 							...order,
@@ -163,6 +149,13 @@
 							payments: (order.payments || []).map(paymentId => included.payments[paymentId])
 						}
 					})
+				this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId])
+				this.user.coupons = (this.user.coupons || []).map(couponId => included.coupons[couponId])
+				this.user.profile = this.user.profile && included.profile[this.user.profile[0]]
+				this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]]
+				this.user.billing = this.user.billing && included.billing[this.user.billing[0]]
+				this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]]
+				this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]]
 			},
 			changeTab(name) {
 				this.activeTab.active = false;

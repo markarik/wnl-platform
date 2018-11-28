@@ -1,7 +1,13 @@
 <template>
 	<div>
 		<h4>{{name}}</h4>
-		<component :is="component" :screenData="screenData" :key="screenData.id" @userEvent="proxyUserEvent"></component>
+		<component
+			:is="component"
+			:screenData="screenData"
+			:context="model"
+			:key="screenData.id"
+			@userEvent="proxyUserEvent"
+		/>
 		<wnl-qna :sortingEnabled="true" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
 	</div>
 </template>
@@ -17,7 +23,7 @@
 	import End from 'js/components/course/screens/End'
 	import Html from 'js/components/course/screens/Html'
 	import MockExam from 'js/components/course/screens/MockExam'
-	import Flashcards from 'js/components/course/screens/Flashcards'
+	import Flashcards from 'js/components/course/screens/flashcards/Flashcards'
 	import Qna from 'js/components/qna/Qna'
 	import Quiz from 'js/components/quiz/Quiz'
 	import Slideshow from 'js/components/course/screens/slideshow/Slideshow'
@@ -71,6 +77,11 @@
 		},
 		mixins: [emits_events],
 		props: ['screenId'],
+		data() {
+			return {
+				model: 'App\\Models\\Screen'
+			}
+		},
 		computed: {
 			...mapGetters('course', [
 				'getScreen',

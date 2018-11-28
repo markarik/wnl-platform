@@ -2,7 +2,12 @@
 	<div class="notification-wrapper">
 		<div class="stream-notification" :class="{'is-read': isRead, 'deleted': deleted || resolved}">
 			<div class="meta">
-				<wnl-event-actor :size="isMobile ? 'medium' : 'large'" class="meta-actor" :message="message"/>
+				<div class="avatar meta-actor" @click="showModal">
+					<wnl-avatar :size="isMobile ? 'medium' : 'large'"
+						:fullName="message.actors.full_name"
+						:url="message.actors.avatar">
+					</wnl-avatar>
+				</div>
 				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
 				<span class="meta-time">{{justDate}}</span>
 				<span class="meta-time">{{justTime}}</span>
@@ -48,6 +53,9 @@
 		</div>
 		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
 		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
+		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+			<wnl-user-profile-modal :author="userForModal"/>
+		</wnl-modal>
 	</div>
 </template>
 
@@ -175,7 +183,9 @@
 	import { truncate, camelCase, get } from 'lodash'
 	import { mapActions, mapGetters } from 'vuex'
 
-	import Actor from 'js/components/notifications/Actor'
+	import Avatar from 'js/components/global/Avatar'
+	import UserProfileModal from 'js/components/users/UserProfileModal'
+	import Modal from 'js/components/global/Modal'
 	import { notification } from 'js/components/notifications/notification'
 	import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time'
 	import { sanitizeName } from 'js/store/modules/users'
@@ -184,7 +194,9 @@
 		name: 'StreamNotification',
 		mixins: [notification],
 		components: {
-			'wnl-event-actor': Actor,
+			'wnl-avatar': Avatar,
+			'wnl-modal': Modal,
+			'wnl-user-profile-modal': UserProfileModal
 		},
 		props: {
 			icon: {
@@ -196,10 +208,17 @@
 			return {
 				objectTextLength: 200,
 				subjectTextLength: 300,
+				isVisible: false
 			}
 		},
 		computed: {
 			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
+			userForModal() {
+				return {
+					...this.message.actors,
+					user_id: this.message.actors.id
+				}
+			},
 			displayName() {
 				return sanitizeName(this.message.actors.display_name)
 			},
@@ -222,6 +241,12 @@
 			},
 		},
 		methods: {
+			showModal() {
+				this.isVisible = true
+			},
+			closeModal() {
+				this.isVisible = false
+			},
 			...mapActions('notifications', ['markAsUnread']),
 			toggleNotification() {
 				this.loading = true

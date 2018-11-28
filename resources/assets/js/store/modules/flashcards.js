@@ -40,13 +40,16 @@ const actions = {
 			const {included, ...flashcardSet} = data
 
 			const {data: userResponseData} = await axios.post(getApiUrl('user_flashcards_results/current'), {
+				...requestParams,
 				flashcards_ids: flashcardSet.flashcards
 			})
 
 			flashcardSet.flashcards = flashcardSet.flashcards.map(flashcardId => {
+				const flashcard = included.flashcards[flashcardId]
 				return {
-					...included.flashcards[flashcardId],
-					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved')
+					...flashcard,
+					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved'),
+					note: flashcard.user_flashcard_notes ? included.user_flashcard_notes[flashcard.user_flashcard_notes[0]] : null
 				}
 			})
 
@@ -55,11 +58,14 @@ const actions = {
 			$wnl.logger.error(e)
 		}
 	},
-	async postAnswer({commit}, {answer, flashcard}) {
+	async postAnswer({commit}, {flashcard, answer, ...requestParams}) {
 		try {
 			await axios.post(
 				getApiUrl(`user_flashcards_results/current/${flashcard.id}`),
-				{ answer }
+				{
+					...requestParams,
+					answer
+				}
 			)
 			commit(mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD, {
 				...flashcard, answer

@@ -14,19 +14,29 @@ class UsersApiController extends ApiController
 		$this->resourceName = config('papi.resources.users');
 	}
 
-	public function get($id)
-	{
-		if (!Auth::user()->isAdmin()) {
-			return $this->respondForbidden();
-		}
-
-		return parent::get($id);
-	}
-
 	public function put()
 	{
 		\Log::notice(">>>UsersApiController::put called, track caller and remove!");
 		return $this->respondForbidden();
+	}
+
+	public function forget(Request $request)
+	{
+		$user = Auth::user();
+		$currentUserId = $request->userId;
+		$password = $request->password;
+
+		if ($user->id !== (int) $currentUserId) {
+			return $this->respondForbidden('unauthorized');
+		}
+
+		if (!\Hash::check($password, $user->password)) {
+			return $this->respondInvalidInput('wrong_password');
+		}
+
+		$user->forget();
+
+		return $this->respondOk();
 	}
 
 	public function post(UpdateUser $request) {

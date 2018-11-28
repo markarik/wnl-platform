@@ -92,11 +92,6 @@ let routes = [
 		component: require('js/admin/components/users/UserDetails.vue'),
 	},
 	{
-		name: 'orders',
-		path: 'admin/app/orders',
-		// component: require('js/admin/components/users/Users.vue'),
-	},
-	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},

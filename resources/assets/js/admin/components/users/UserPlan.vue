@@ -56,6 +56,7 @@
 				<table class="table user-plan__add-lesson">
 					<thead>
 						<tr>
+							<th>ID Lekcji</th>
 							<th>Lekcja</th>
 							<th>Data Startu</th>
 							<th>Akcje</th>
@@ -63,6 +64,7 @@
 					</thead>
 					<tbody>
 						<tr v-for="lesson in selectedLessons" :key="lesson.id">
+							<td>{{lesson.id}}</td>
 							<td>{{lesson.name}}</td>
 							<td>
 								<wnl-datepicker
@@ -172,15 +174,27 @@
 				this.selectedLessons.splice(index, 1)
 			},
 			async addLessons() {
-				await axios.put(getApiUrl(`user_lesson/${this.user.id}/batch`), {
-					manual_start_dates: this.selectedLessons.map(lesson => {
-						return {
-							lessonId: lesson.id,
-							startDate: lesson.startDate
-						}
-					}),
-					timezone: momentTimezone.tz.guess(),
-				})
+				try {
+					await axios.put(getApiUrl(`user_lesson/${this.user.id}/batch`), {
+						manual_start_dates: this.selectedLessons.map(lesson => {
+							return {
+								lessonId: lesson.id,
+								startDate: lesson.startDate
+							}
+						}),
+						timezone: momentTimezone.tz.guess(),
+					})
+					this.addAutoDismissableAlert({
+						type: 'success',
+						text: 'Dodano'
+					})
+				} catch (e) {
+					this.addAutoDismissableAlert({
+						type: 'error',
+						text: 'Oho, coś poszłó nie tak. Lekcje nie zostały dodane'
+					})
+					$wnl.logger.capture(e)
+				}
 			}
 		},
 		async mounted() {

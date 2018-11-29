@@ -84,12 +84,6 @@
 
 				await this.fetchUsers()
 			},
-			async clearSearch() {
-				this.searchPhrase = ''
-				this.searchFields = []
-				this.page = 1
-				await this.fetchUsers()
-			},
 			async onPageChange(page) {
 				this.isLoading = true
 				this.page = page

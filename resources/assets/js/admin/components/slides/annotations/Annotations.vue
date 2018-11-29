@@ -148,12 +148,6 @@
 
 				await this.fetchAnnotations('annotations/.filter', 'post')
 			},
-			async clearSearch() {
-				this.searchPhrase = ''
-				this.searchFields = []
-				this.page = 1
-				await this.fetchAnnotations()
-			},
 			changeTab(name, tab) {
 				this.activeTab.active = false;
 				this.tabs[name].active = true;

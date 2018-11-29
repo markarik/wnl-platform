@@ -92,7 +92,7 @@
 		methods: {
 			changePage(page) {
 				this.$emit('changePage', page)
-				this.$router.push({ query: { page }})
+				this.$router.push({ query: { ...this.$route.query, page }})
 			},
 			isPage(item) {
 				return typeof item === 'number'
@@ -106,7 +106,7 @@
 		watch: {
 			currentPage(newVal) {
 				if (this.routerPage !== newVal) {
-					this.$router.push({ query: { page: newVal }})
+					this.$router.push({ query: { ...this.$route.query, page: newVal }})
 				}
 			}
 		}

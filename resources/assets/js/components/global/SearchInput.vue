@@ -68,6 +68,7 @@
 				this.searchFields = [];
 			},
 			emitSearch() {
+				this.$router.push({ query: { ...this.$route.query, q: this.searchPhrase, fields: this.searchFields }})
 				this.$emit('search', {
 					phrase: this.searchPhrase,
 					fields: this.searchFields
@@ -79,6 +80,13 @@
 			},
 			clearSearch() {
 				this.searchPhrase = '';
+				this.emitSearch();
+			}
+		},
+		mounted() {
+			if (this.$route.query.q !== this.searchPhrase || !isEqual(this.searchFields, this.$route.query.fields)) {
+				this.searchPhrase = this.$route.query.q;
+				this.searchFields = this.$route.query.fields || [];
 				this.emitSearch();
 			}
 		}

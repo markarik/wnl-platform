@@ -72,6 +72,19 @@
       }
     }
   },
+  "flashcards": {
+    "value": "flashcards",
+    "feature_components": {
+      "set": {
+        "value": "set",
+        "actions": {
+          "open": {
+            "value": "open"
+          }
+        }
+      }
+    }
+  },
   "quiz_set": {
     "value": "quiz_set",
     "actions": {

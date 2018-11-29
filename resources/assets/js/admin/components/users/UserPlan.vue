@@ -30,6 +30,23 @@
 		<p v-else>
 			Ten użytkownik nie ma żadynch lekcji
 		</p>
+		<div>
+			<div class="control">
+				<label class="label">Wybierz pytanie</label>
+				<input class="input" placeholder="Id lub treść aby wyszukać" v-model="lessonInput"/>
+			</div>
+			<div class="control">
+				<wnl-autocomplete
+					:isDown="true"
+					:items="autocompleteLessonsItems"
+					:onItemChosen="addLesson"
+				>
+					<template slot-scope="row">
+						<span class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>
+					</template>
+				</wnl-autocomplete>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -39,8 +56,13 @@
 	import {mapActions} from 'vuex'
 	import {getApiUrl} from 'js/utils/env'
 
+	import WnlAutocomplete from 'js/components/global/Autocomplete';
+
 	export default {
 		name: "UserPlan",
+		components: {
+			WnlAutocomplete
+		},
 		props: {
 			user: {
 				type: Object,
@@ -51,7 +73,9 @@
 			return {
 				userLessons: [],
 				filterPhrase: '',
-				loading: false
+				loading: false,
+				lessons: [],
+				selectedLessons: []
 			}
 		},
 		computed: {
@@ -63,11 +87,20 @@
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
+			addLesson(lesson) {
+				this.selectedLessons.push(lesson)
+			}
 		},
 		async mounted() {
 			this.loading = true
 			try {
-				const { data: {included, ...userLessons}} = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
+				const [userPlanResponse, lessonsResponse] = await Promise.all([
+					axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`)),
+					axios.get(getApiUrl(('lessons/all')))
+				])
+				const { data: {included, ...userLessons}} = userPlanResponse
+				this.lessons = lessonsResponse.data
+
 				const userLessonsList = Object.values(userLessons);
 
 				if (!userLessonsList.length) {

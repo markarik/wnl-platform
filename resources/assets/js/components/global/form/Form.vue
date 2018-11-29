@@ -47,6 +47,9 @@
 			hasChanges() {
 				return this.getter('hasChanges')
 			},
+			formData() {
+				return this.getter('getData')
+			}
 		},
 		methods: {
 			action(action, payload = {}) {
@@ -98,7 +101,7 @@
 								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
 							}
 
-							this.$emit('submitSuccess', response, this.getter('getData'))
+							this.$emit('submitSuccess', response, this.formData)
 
 							hasAttachChanged && this.cacheAttach()
 						},
@@ -155,10 +158,6 @@
 
 					dataModel[name] = defaultValue
 					defaults[name] = defaultValue
-
-					child.$on('input', (value) => {
-						this.$emit('change', {name, value, formData: this.getter('getData')});
-					})
 				}
 			})
 
@@ -172,7 +171,6 @@
 			if (this.populate) {
 				this.action('populateFormFromApi').then(() => {
 					this.mutation(types.FORM_IS_LOADED)
-					this.$emit('change', {formData: this.getter('getData')});
 				})
 			} else if (this.value) {
 				this.action('populateFormFromValue', this.value)
@@ -183,7 +181,8 @@
 
 			this.cacheAttach()
 
-			this.$on('submitForm', this.onSubmitForm)
+			this.$on('submitForm', this.onSubmitForm);
+			this.$watch('formData', () => this.$emit('change', {formData: this.formData}));
 		},
 		beforeDestroy() {
 			this.mutation(types.FORM_RESET)

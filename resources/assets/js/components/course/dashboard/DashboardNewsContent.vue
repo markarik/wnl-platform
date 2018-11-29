@@ -7,9 +7,6 @@
 </template>
 
 <script>
-	import store from 'js/services/messagesStore'
-	import { mapGetters } from 'vuex'
-
 	export default {
 		name: 'DashboardNewsContent',
 		props: {

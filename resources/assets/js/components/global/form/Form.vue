@@ -155,6 +155,10 @@
 
 					dataModel[name] = defaultValue
 					defaults[name] = defaultValue
+
+					child.$on('input', (value) => {
+						this.$emit('change', {name, value, formData: this.getter('getData')});
+					})
 				}
 			})
 
@@ -168,6 +172,7 @@
 			if (this.populate) {
 				this.action('populateFormFromApi').then(() => {
 					this.mutation(types.FORM_IS_LOADED)
+					this.$emit('change', {formData: this.getter('getData')});
 				})
 			} else if (this.value) {
 				this.action('populateFormFromValue', this.value)

@@ -85,14 +85,30 @@
 
 				return items
 			},
+			routerPage() {
+				return this.$route.query.page && parseInt(this.$route.query.page, 10) || 1;
+			}
 		},
 		methods: {
 			changePage(page) {
 				this.$emit('changePage', page)
+				this.$router.push({ query: { page }})
 			},
 			isPage(item) {
 				return typeof item === 'number'
 			},
 		},
+		mounted() {
+			if (this.routerPage !== this.currentPage) {
+				this.$emit('changePage', this.routerPage);
+			}
+		},
+		watch: {
+			currentPage(newVal) {
+				if (this.routerPage !== newVal) {
+					this.$router.push({ query: { page: newVal }})
+				}
+			}
+		}
 	}
 </script>

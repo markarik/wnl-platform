@@ -17,7 +17,7 @@
 			</tr>
 			<tr
 					class="dashboard-news__item"
-					:class="{'has-text-success': isActive(dashboardNewsItem)}"
+					:class="{'has-text-success': dashboardNewsItem.id === activeItemId}"
 					v-for="dashboardNewsItem in dashboardNewsList"
 					:key="dashboardNewsItem.id"
 					@click="goToEdit(dashboardNewsItem.id)"
@@ -51,9 +51,16 @@
 				dashboardNewsList: []
 			}
 		},
-		components: {
-		},
 		computed: {
+			activeItemId() {
+				const activeItem = this.dashboardNewsList
+					.filter(item => (item.start_date === null || moment(item.start_date * 1000).isBefore())
+						&& (item.end_date === null || moment(item.end_date * 1000).isAfter())
+					)
+					.sort((a, b) => a.created_at < b.created_at ? 1 : -1)[0];
+
+				return activeItem && activeItem.id;
+			}
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
@@ -65,10 +72,6 @@
 			goToEdit(id) {
 				this.$router.push({ name: 'dashboard-news-edit', params: { id } })
 			},
-			isActive(item) {
-				return (item.start_date === null || moment(item.start_date * 1000).isBefore())
-					&& (item.end_date === null || moment(item.end_date * 1000).isAfter());
-			}
 		},
 		async mounted() {
 			try {

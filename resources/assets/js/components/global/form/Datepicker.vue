@@ -85,8 +85,12 @@
 				});
 				this.setDate(this.inputValue)
 			}
-			this.$watch('config', this.redraw)
-			this.$watch('inputValue', () => this.setDate(this.inputValue * 1000))
+		},
+		watch: {
+			config: this.redraw,
+			inputValue: function(val) {
+				this.setDate(val * 1000);
+			}
 		},
 		beforeDestroy () {
 			if (this.datepicker) {

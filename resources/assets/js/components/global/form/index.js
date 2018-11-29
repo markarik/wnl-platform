@@ -7,6 +7,7 @@ import Check from './Check'
 import Tags from './Tags'
 import SlideIds from './SlideIds'
 import Datepicker from './Datepicker'
+import Checkbox from './Checkbox'
 
 export {
 	Form,
@@ -18,4 +19,5 @@ export {
 	Tags,
 	SlideIds,
 	Datepicker,
+	Checkbox
 }

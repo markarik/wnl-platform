@@ -6,7 +6,7 @@
                     class="button is-primary"
                     :to="{ name: 'dashboard-news-edit', params: { id: 'new' } }"
             >
-                Stwórz nowego newsa
+                + Dodaj nowego newsa
             </router-link>
         </h3>
         <table class="table dashboard-news">

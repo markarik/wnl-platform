@@ -9,7 +9,6 @@
 <script>
 	import store from 'js/services/messagesStore'
 	import { mapGetters } from 'vuex'
-	import { getUrl } from 'js/utils/env'
 
 	export default {
 		name: 'DashboardNews',

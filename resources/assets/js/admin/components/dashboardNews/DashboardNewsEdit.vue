@@ -52,7 +52,5 @@
 				}
 			}
 		},
-		mounted() {
-		}
 	}
 </script>

@@ -48,7 +48,7 @@
 		name: 'DashboardNews',
 		data() {
 			return {
-				dashboardNewsList: {}
+				dashboardNewsList: []
 			}
 		},
 		components: {
@@ -87,15 +87,14 @@
 						created_at: 'desc'
 					}
 				});
-				this.dashboardNewsList = data.data;
-            } catch (error) {
+				this.dashboardNewsList = Object.values(data.data);
+			} catch (error) {
 				$wnl.logger.error(error);
 				this.addAutoDismissableAlert({
 					text: 'Coś poszło nie tak :(',
 					type: ALERT_TYPES.ERROR,
 				});
-            }
-
+			}
 		}
 	}
 </script>

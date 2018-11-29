@@ -27,7 +27,7 @@ class UsersApiController extends ApiController
 			'first_name' => $request->get('first_name'),
 			'last_name' => $request->get('last_name'),
 			'email' => $request->get('email'),
-			'password' => bcrypt($request->get('passowrd'))
+			'password' => bcrypt($request->get('password'))
 		]);
 
 		$user->roles()->sync($request->get('roles'));
@@ -59,7 +59,7 @@ class UsersApiController extends ApiController
 			'first_name' => $request->get('first_name'),
 			'last_name' => $request->get('last_name'),
 			'email' => $request->get('email'),
-			'password' => bcrypt($request->get('passowrd'))
+			'password' => bcrypt($request->get('password'))
 		]);
 
 		$user->roles()->sync($request->get('roles'));

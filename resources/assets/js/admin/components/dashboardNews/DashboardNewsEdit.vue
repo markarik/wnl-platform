@@ -4,6 +4,7 @@
 			:populate="isEdit"
 			:method="formMethod"
 			:resourceRoute="formResourceRoute"
+			:suppressEnter="true"
 			@submitSuccess="onSubmitSucess"
 	>
 		<wnl-text name="slug">Slug</wnl-text>
@@ -23,7 +24,9 @@
 				datepickerConfig: {
 					altInput: true,
 					enableTime: true,
-					dateFormat: 'U'
+					dateFormat: 'U',
+					altFormat: 'Y-m-d H:i',
+					time_24hr: true,
 				},
 			}
 		},

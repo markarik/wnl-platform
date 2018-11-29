@@ -182,7 +182,11 @@
 			this.cacheAttach()
 
 			this.$on('submitForm', this.onSubmitForm);
-			this.$watch('formData', () => this.$emit('change', {formData: this.formData}));
+		},
+		watch: {
+			formData(newVal) {
+				this.$emit('change', {formData: newVal})
+			}
 		},
 		beforeDestroy() {
 			this.mutation(types.FORM_RESET)

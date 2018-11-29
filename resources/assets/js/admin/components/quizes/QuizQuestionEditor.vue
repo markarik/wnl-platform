@@ -12,10 +12,32 @@
 			ref="quizQuestionForm"
 		>
 			<header class="question-form-header">
-				<h4 v-if="isEdit">Edycja pytania <strong>{{$route.params.quizId}}</strong></h4>
+				<h4 v-if="isEdit">
+					Edycja pytania
+					<strong>{{$route.params.quizId}}</strong>
+					<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
+				</h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
+						<button
+								v-if="isEdit && !questionIsDeleted"
+								class="button is-danger"
+								type="button"
+								@click="onDelete"
+						>
+							<span class="icon"><i class="fa fa-trash"></i></span>
+							<span>Usuń</span>
+						</button>
+						<button
+								v-if="isEdit && questionIsDeleted"
+								class="button is-warning"
+								type="button"
+								@click="onUndelete"
+						>
+							<span class="icon"><i class="fa fa-undo"></i></span>
+							<span>Przywróć</span>
+						</button>
 						<button class="button is-primary" @click.stop.prevent="onFormSave">Zapisz</button>
 					</div>
 				</div>
@@ -151,6 +173,7 @@
 	import { Quill, Form, Tags, SlideIds } from 'js/components/global/form'
 	import { nextTick } from 'vue'
 	import _ from 'lodash'
+	import {getApiUrl} from "js/utils/env";
 
 	export default {
 		name: 'QuizesEditor',
@@ -176,6 +199,7 @@
 				'questionSlides',
 				'questionAnswersMap',
 				'questionId',
+				'questionIsDeleted',
 				'questionTags',
 				'preserveOrder'
 			]),
@@ -193,7 +217,10 @@
 		methods: {
 			...mapActions([
 				'getQuizQuestion',
-				'setupFreshQuestion'
+				'deleteQuizQuestion',
+				'undeleteQuizQuestion',
+				'setupFreshQuestion',
+				'addAutoDismissableAlert',
 			]),
 			onQuestionInput() {
 				this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML
@@ -250,7 +277,40 @@
 						this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
 					}, 2000)
 				}
+			},
+			async onDelete() {
+				try {
+					await this.deleteQuizQuestion(this.questionId);
+					this.addAutoDismissableAlert({
+						text: 'Poszło!',
+						type: 'success',
+					});
+				} catch (error) {
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert({
+						text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+						type: 'error',
+					});
+				}
+			},
+			async onUndelete() {
+				try {
+					await this.undeleteQuizQuestion(this.questionId);
+					this.addAutoDismissableAlert({
+						text: 'Poszło!',
+						type: 'success',
+					});
+				} catch (error) {
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert({
+						text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+						type: 'error',
+					});
+				}
+
+
 			}
+
 		},
 		watch: {
 			questionText(val) {

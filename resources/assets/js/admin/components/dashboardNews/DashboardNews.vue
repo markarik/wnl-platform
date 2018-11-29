@@ -1,65 +1,101 @@
 <template>
-    <div >
-        <h3 class="title is-3">
-            Newsy
-            <router-link
-                    class="button is-primary"
-                    :to="{ name: 'dashboard-news-edit', params: { id: 'new' } }"
-            >
-                + Dodaj nowego newsa
-            </router-link>
-        </h3>
-        <table class="table dashboard-news">
-            <tr>
-                <th>Slug</th>
-                <th>Start date</th>
-                <th>End date</th>
-            </tr>
-            <tr
-                    class="dashboard-news__item"
-                    v-for="dashboardNewsItem in dashboardNewsList"
-                    :key="dashboardNewsItem.id"
-                    @click="goToEdit(dashboardNewsItem.id)"
-            >
-                <td>{{dashboardNewsItem.slug}}</td>
-                <td>{{formatDate(dashboardNewsItem.start_date)}}</td>
-                <td>{{formatDate(dashboardNewsItem.end_date)}}</td>
+	<div >
+		<h3 class="title is-3">
+			Newsy
+			<router-link
+					class="button is-primary"
+					:to="{ name: 'dashboard-news-edit', params: { id: 'new' } }"
+			>
+				+ Dodaj nowego newsa
+			</router-link>
+		</h3>
+		<table class="table dashboard-news">
+			<tr>
+				<th>Slug</th>
+				<th>Start date</th>
+				<th>End date</th>
+			</tr>
+			<tr
+					class="dashboard-news__item"
+					:class="{'has-text-success': isActive(dashboardNewsItem)}"
+					v-for="dashboardNewsItem in dashboardNewsList"
+					:key="dashboardNewsItem.id"
+					@click="goToEdit(dashboardNewsItem.id)"
+			>
+				<td>{{dashboardNewsItem.slug}}</td>
+				<td>{{formatDate(dashboardNewsItem.start_date)}}</td>
+				<td>{{formatDate(dashboardNewsItem.end_date)}}</td>
 
-            </tr>
-        </table>
-    </div>
+			</tr>
+		</table>
+	</div>
 </template>
 
 
 <style lang="sass" scoped>
-    .dashboard-news__item
-        cursor: pointer
+	.dashboard-news__item
+		cursor: pointer
 </style>
 
 <script>
-	import {mapGetters, mapActions} from 'vuex'
+	import { mapActions } from 'vuex';
 	import moment from 'moment'
+	import {getApiUrl} from "js/utils/env";
+	import {MESSAGE_TARGETS} from "js/consts/siteWideMessage";
+	import {ALERT_TYPES} from "js/consts/alert";
 
 	export default {
 		name: 'DashboardNews',
+		data() {
+			return {
+				dashboardNewsList: {}
+			}
+		},
 		components: {
 		},
 		computed: {
-			...mapGetters('siteWideMessages', ['dashboardNewsList']),
 		},
 		methods: {
-			...mapActions('siteWideMessages', ['fetchUserSiteWideMessages']),
-            formatDate(date) {
+			...mapActions(['addAutoDismissableAlert']),
+			formatDate(date) {
 				if (date) {
 					return moment(date * 1000).format('L LT')
-                }
+				}
 			},
 			goToEdit(id) {
 				this.$router.push({ name: 'dashboard-news-edit', params: { id } })
+			},
+			isActive(item) {
+				return (item.start_date === null || moment(item.start_date * 1000).isBefore())
+					&& (item.end_date === null || moment(item.end_date * 1000).isAfter());
 			}
 		},
-		mounted() {
-			this.fetchUserSiteWideMessages()
+		async mounted() {
+			try {
+				const {data} = await axios.post(getApiUrl('site_wide_messages/.filter'), {
+					filters: [
+						{
+							query: {
+								where: {
+									target: MESSAGE_TARGETS.DASHBOARD_NEWS,
+								}
+							}
+						}
+					],
+					limit: 100,
+					order: {
+						created_at: 'desc'
+					}
+				});
+				this.dashboardNewsList = data.data;
+            } catch (error) {
+				$wnl.logger.error(error);
+				this.addAutoDismissableAlert({
+					text: 'Coś poszło nie tak :(',
+					type: ALERT_TYPES.ERROR,
+				});
+            }
+
 		}
 	}
 </script>

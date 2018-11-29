@@ -43,6 +43,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@get');
 		Route::put("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@put');
 		Route::post("{$r['site-wide-messages']}", 'SiteWideMessagesApiController@post');
+		Route::post("{$r['site-wide-messages']}/.filter", 'SiteWideMessagesApiController@filter');
 	});
 
 	// Count

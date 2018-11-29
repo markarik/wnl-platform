@@ -33,6 +33,7 @@ class UpdateSiteWideMessage extends FormRequest
 
 	protected function getValidatorInstance()
 	{
+		// Convert empty string into nulls to correctly save in the DB
 		$data = $this->all();
 		if ($data['start_date'] === '') {
 			$data['start_date'] = null;

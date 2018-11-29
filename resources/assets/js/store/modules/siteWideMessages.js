@@ -13,7 +13,6 @@ const getters = {
 	dashboardNews: state => state.siteWideMessages
 		.filter(message => message.target === MESSAGE_TARGETS.DASHBOARD_NEWS)
 		.sort((a, b) => a.created_at < b.created_at ? 1 : -1)[0],
-	dashboardNewsList: state => state.siteWideMessages.filter(message => message.target === MESSAGE_TARGETS.DASHBOARD_NEWS),
 	siteWideAlerts: state => state.siteWideMessages.filter(message => message.targer === MESSAGE_TARGETS.SITE_WIDE_ALERT),
 }
 

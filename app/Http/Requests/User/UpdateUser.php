@@ -31,7 +31,7 @@ class UpdateUser extends FormRequest
 		return [
 			'first_name' => 'string|required',
 			'last_name' => 'string|required',
-			'email' => ['email',  Rule::unique('users')->ignore($user->id)],
+			'email' => ['email',  Rule::unique('users')->ignore($user->id), 'required'],
 			'password' => 'min:8',
 			'roles' => 'array'
 		];

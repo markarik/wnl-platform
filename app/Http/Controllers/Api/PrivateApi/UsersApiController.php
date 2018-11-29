@@ -23,14 +23,17 @@ class UsersApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$user->update([
-			'first_name' => $request->get('first_name'),
-			'last_name' => $request->get('last_name'),
-			'email' => $request->get('email'),
-			'password' => bcrypt($request->get('password'))
-		]);
+		$user->first_name = $request->get('first_name');
+		$user->last_name = $request->get('last_name');
+		$user->email = $request->get('email');
+
+		if ($request->get('password')) {
+			$user->password = bcrypt($request->get('password'));
+		}
 
 		$user->roles()->sync($request->get('roles'));
+
+		$user->save();
 
 		return $this->respondOk();
 	}

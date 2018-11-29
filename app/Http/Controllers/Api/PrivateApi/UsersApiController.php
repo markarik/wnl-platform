@@ -1,11 +1,11 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
-use Auth;
-use App\Models\User;
-use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserTransformer;
+use App\Http\Requests\User\PostUser;
+use App\Http\Requests\User\UpdateUser;
+use App\Models\User;
+use Auth;
+use Illuminate\Http\Request;
 
 class UsersApiController extends ApiController
 {
@@ -15,10 +15,27 @@ class UsersApiController extends ApiController
 		$this->resourceName = config('papi.resources.users');
 	}
 
-	public function put()
+	public function put(UpdateUser $request, $userId)
 	{
-		\Log::notice(">>>UsersApiController::put called, track caller and remove!");
-		return $this->respondForbidden();
+		$user = User::find($userId);
+
+		if (empty($user)) {
+			return $this->respondNotFound();
+		}
+
+		$user->first_name = $request->get('first_name');
+		$user->last_name = $request->get('last_name');
+		$user->email = $request->get('email');
+
+		if ($request->get('password')) {
+			$user->password = bcrypt($request->get('password'));
+		}
+
+		$user->roles()->sync($request->get('roles'));
+
+		$user->save();
+
+		return $this->respondOk();
 	}
 
 	public function forget(Request $request)
@@ -36,6 +53,19 @@ class UsersApiController extends ApiController
 		}
 
 		$user->forget();
+
+		return $this->respondOk();
+	}
+
+	public function post(PostUser $request) {
+		$user = User::create([
+			'first_name' => $request->get('first_name'),
+			'last_name' => $request->get('last_name'),
+			'email' => $request->get('email'),
+			'password' => bcrypt($request->get('password'))
+		]);
+
+		$user->roles()->sync($request->get('roles'));
 
 		return $this->respondOk();
 	}

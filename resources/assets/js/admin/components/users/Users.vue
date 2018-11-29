@@ -1,5 +1,6 @@
 <template>
 	<div>
+        <router-link class="button is-primary margin bottom" :to="{'name': 'users-add'}">Dodaj Użytkownika</router-link>
 		<users-list :users="users" v-show="!isLoading">
 			<div slot="search">
 				<wnl-users-search @search="onSearch"/>

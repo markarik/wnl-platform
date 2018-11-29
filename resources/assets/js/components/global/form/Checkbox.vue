@@ -1,0 +1,39 @@
+<template>
+	<div class="field">
+		<input type="checkbox" :id="checkboxId" class="is-checkradio" v-model="value" :value="checkboxValue"/>
+		<label class="checkbox" :for="checkboxId"><slot/></label>
+	</div>
+</template>
+
+<script>
+	import { formInput } from 'js/mixins/form-input'
+
+	export default {
+		name: 'CheckboxInput',
+		props: {
+			name: {
+				type: String,
+			},
+			checkboxValue: {
+				required: true
+			},
+			checkboxId: {
+				required: true
+			}
+		},
+		mixins: [formInput],
+		computed: {
+			default() {
+				return ''
+			},
+			value: {
+				get() {
+					return this.inputValue || []
+				},
+				set(value) {
+					this.inputValue = value
+				}
+			}
+		}
+	}
+</script>

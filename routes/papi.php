@@ -35,6 +35,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
 		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+		Route::post("{$r['users']}", 'UsersApiController@post');
 
 		//Users Plans
 		Route::get("{$r['user-lesson']}/{userId}", 'UserLessonApiController@getForUser');
@@ -180,6 +181,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['user-flashcard-notes']}/{flashcardId}", 'UserFlashcardNotesApiController@post');
 		Route::put("{$r['user-flashcard-notes']}/{flashcardId}/{userFlashcardNoteId}", 'UserFlashcardNotesApiController@put');
 	});
+
+	Route::get("{$r['roles']}/{id}", 'RolesApiController@get');
 
 	// Certificates
 	Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');

@@ -3,7 +3,7 @@
 @section('content')
 	<h3>Witaj ponownie {{ $order->user->first_name or '{first_name}' }}!</h3>
 
-	<p>Piszemy do Ciebie, ponieważ zbliża się termin płatności {{ $instalment->order_number or '{left_amount}' }}. raty za <strong>{{$order->product->name or '{product_name}'}}</strong>. 🙂</p>
+	<p>Przypominamy, źr zbliża się termin płatności {{ $instalment->order_number or '{left_amount}' }}. raty za <strong>{{$order->product->name or '{product_name}'}}</strong>. 🙂</p>
 
 	<p>Pozostała kwota raty wynosi: <strong>{{ $instalment->left_amount or '{left_amount}' }}zł</strong></p>
 

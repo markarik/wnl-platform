@@ -8,10 +8,6 @@
 		Cieszymy się, że Ty i Twoja grupa dołączacie do nas! :)
 	</p>
 
-	<p class="text-align: center;">
-		<img src="https://media.giphy.com/media/wSNDFkJywdW24/giphy.gif" alt="Dobrze, że jesteście!" style="display: block; margin: 0 auto;">
-	</p>
-
 	<p class="has-text-centered" style="text-transform: uppercase;">Twój kod Study Group o wartości {{ $coupon->value_with_unit or '{value_with_unit}' }}, to:</p>
 
 	<h3 class="has-text-centered" style="text-transform: uppercase;">{{ $coupon->code or '{code}' }}</h3>
@@ -31,13 +27,17 @@
 	</h4>
 
 	<p>
-		Jako grupa pamiętajcie, aby zamówienia użyciem swoich kodów opłaciło co najmniej 10 osób - w przeciwnym wypadku będziemy musieli anulować zniżkę. :(
+		Jako grupa pamiętajcie, aby zamówienia z użyciem swoich kodów opłaciło co najmniej 10 osób - w przeciwnym wypadku będziemy musieli anulować zniżkę. :(
 	</p>
 
-	<p>Swoje zamówienia znajdziesz w zakładce <a href="{{url('app/myself/orders')}}" target="_blank">KONTO > Twoje zamówienia</a>. :)</p>
+	<p>Szczegóły zamówienia znajdziesz w zakładce <a href="{{url('app/myself/orders')}}" target="_blank">KONTO > Twoje zamówienia</a>. :)</p>
 
 	<p>
 		Gdyby nasunęły Ci się jakieś pytania lub wątpliwości, pisz na info@wiecejnizlek.pl! :)
+	</p>
+
+	<p class="text-align: center;">
+		<img src="https://media.giphy.com/media/wSNDFkJywdW24/giphy.gif" alt="Dobrze, że jesteście!" style="display: block; margin: 0 auto;">
 	</p>
 
 	<p>Z pozdrowieniami,</p>

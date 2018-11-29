@@ -20,16 +20,7 @@
 			@deleteSuccess="onDeleteSuccess"
 			@hasChanges="onEditorChange"
 		>
-			<div class="search" slot="search">
-				<search @search="search"/>
-				<template v-if="searchPhrase">
-					<span>Aktualne wyszukiwanie:</span>
-					<span class="tag is-success">
-						{{searchPhrase}}
-						<button class="delete is-small" @click="clearSearch"></button>
-					</span>
-				</template>
-			</div>
+			<wnl-search-input @search="search" :availableFields="searchAvailableFields" slot="search" />
 			<pagination v-if="paginationMeta.last_page > 1"
 				:currentPage="page"
 				:lastPage="paginationMeta.last_page"
@@ -93,10 +84,10 @@
 	import AnnotationsList from "./AnnotationsList";
 	import AnnotationsEditor from "./AnnotationsEditor";
 	import Pagination from "js/components/global/Pagination";
-	import Search from "./Search";
+	import WnlSearchInput from 'js/components/global/SearchInput';
 
 	export default {
-		components: {AnnotationsList, AnnotationsEditor, Search, Pagination},
+		components: {AnnotationsList, AnnotationsEditor, WnlSearchInput, Pagination},
 		data() {
 			return {
 				tabs: {
@@ -131,7 +122,13 @@
 				perPage: 24,
 				page: 1,
 				includes: 'keywords,tags',
-				paginationMeta: {}
+				paginationMeta: {},
+				searchAvailableFields: [
+					{value: 'id', title: 'ID'},
+					{value: 'title', title: 'Tytuł'},
+					{value: 'description', title: 'Treść'},
+					{value: 'tags.name', title: 'Nazwa Taga'},
+				]
 			}
 		},
 		computed: {

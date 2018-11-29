@@ -102,7 +102,7 @@ export default class Form {
 				})
 				.catch(error => {
 					if (error.response.status === 422) {
-						this.errors.record(error.response.data);
+						this.errors.record(_.get(error.response, 'data.errors', error.response.data));
 					}
 					reject(error);
 				});
@@ -124,7 +124,6 @@ export default class Form {
 					}
 					this[field] = response.data[field]
 					this.originalData[field] = cloneDeep(response.data[field])
-
 				})
 				return response.data
 			})

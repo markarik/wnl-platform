@@ -82,6 +82,11 @@ let routes = [
 		component: require('js/admin/components/users/Users.vue'),
 	},
 	{
+		name: 'users-add',
+		path: '/admin/app/users/add',
+		component: require('js/admin/components/users/UserAdd.vue'),
+	},
+	{
 		name: 'user-details',
 		path: '/admin/app/users/:userId',
 		component: require('js/admin/components/users/UserDetails.vue'),

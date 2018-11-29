@@ -64,8 +64,6 @@ class RoleAssign extends Command
 			$user->roles()->attach($role);
 		}
 
-		$this->call('user:migrate-subscription', ['--admins' => true]);
-
 		$this->info('OK.');
 
 		return 42;

@@ -35,9 +35,16 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
 		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+		Route::post("{$r['users']}", 'UsersApiController@post');
 
 		//Users Plans
 		Route::get("{$r['user-lesson']}/{userId}", 'UserLessonApiController@getForUser');
+
+		//Site wide messages
+		Route::get("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@get');
+		Route::put("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@put');
+		Route::post("{$r['site-wide-messages']}", 'SiteWideMessagesApiController@post');
+		Route::post("{$r['site-wide-messages']}/.filter", 'SiteWideMessagesApiController@filter');
 
 		// Quiz Questions
 		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
@@ -181,6 +188,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['user-flashcard-notes']}/{flashcardId}/{userFlashcardNoteId}", 'UserFlashcardNotesApiController@put');
 	});
 
+	Route::get("{$r['roles']}/{id}", 'RolesApiController@get');
+
 	// Certificates
 	Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');
 	Route::get("{$r['certificates']}/participation/{id}", 'CertificatesApiController@getParticipationCertificate');
@@ -291,7 +300,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
 
 	Route::get("{$r['users']}/{userId}/{$r['site-wide-messages']}", 'SiteWideMessagesApiController@getForUser');
-	Route::put("{$r['site-wide-messages']}/{messageId}", 'SiteWideMessagesApiController@put');
+	Route::put("{$r['site-wide-messages']}/{messageId}/read", 'SiteWideMessagesApiController@read');
 
 	// Tasks
 	Route::post("{$r['tasks']}/.filter", 'TasksApiController@filter');

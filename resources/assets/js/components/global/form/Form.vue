@@ -47,6 +47,9 @@
 			hasChanges() {
 				return this.getter('hasChanges')
 			},
+			formData() {
+				return this.getter('getData')
+			}
 		},
 		methods: {
 			action(action, payload = {}) {
@@ -98,7 +101,7 @@
 								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
 							}
 
-							this.$emit('submitSuccess', response, this.getter('getData'))
+							this.$emit('submitSuccess', response, this.formData)
 
 							hasAttachChanged && this.cacheAttach()
 						},
@@ -131,14 +134,6 @@
 			canSave(hasFieldChanges, hasAttachChanges) {
 				return !this.anyErrors && (hasFieldChanges || hasAttachChanges)
 			},
-		},
-		watch: {
-			resourceRoute(val) {
-				this.mutation(
-					types.FORM_UPDATE_URL,
-					getApiUrl(this.resourceRoute)
-				)
-			}
 		},
 		created() {
 			this.mutation(types.FORM_INITIAL_SETUP);
@@ -178,7 +173,18 @@
 
 			this.cacheAttach()
 
-			this.$on('submitForm', this.onSubmitForm)
+			this.$on('submitForm', this.onSubmitForm);
+		},
+		watch: {
+			formData(newVal) {
+				this.$emit('change', {formData: newVal})
+			},
+			resourceRoute(val) {
+				this.mutation(
+					types.FORM_UPDATE_URL,
+					getApiUrl(this.resourceRoute)
+				)
+			}
 		},
 		beforeDestroy() {
 			this.mutation(types.FORM_RESET)

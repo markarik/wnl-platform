@@ -82,9 +82,25 @@ let routes = [
 		component: require('js/admin/components/users/Users.vue'),
 	},
 	{
+		name: 'users-add',
+		path: '/admin/app/users/add',
+		component: require('js/admin/components/users/UserAdd.vue'),
+	},
+	{
 		name: 'user-details',
 		path: '/admin/app/users/:userId',
 		component: require('js/admin/components/users/UserDetails.vue'),
+	},
+	{
+		name: 'dashboard-news',
+		path: '/admin/app/dashboard-news',
+		component: require('js/admin/components/dashboardNews/DashboardNews.vue'),
+	},
+	{
+		name: 'dashboard-news-edit',
+		path: '/admin/app/dashboard-news/:id',
+		component: require('js/admin/components/dashboardNews/DashboardNewsEdit.vue'),
+		props: true,
 	},
 	{
 		name: 'dashboard',

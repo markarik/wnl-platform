@@ -42,6 +42,10 @@
 			<li><router-link :to="{ name: 'flashcards-sets' }">Edycja zestawu pytań</router-link></li>
 			<li><router-link :to="{ name: 'flashcards' }">Edycja pytań</router-link></li>
 		</ul>
+		<p class="menu-label">Newsy</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'dashboard-news' }">Dashboard newsy</router-link></li>
+		</ul>
 	</aside>
 </template>
 

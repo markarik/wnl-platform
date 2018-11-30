@@ -2,13 +2,18 @@ import {set} from 'vue'
 
 import * as types from '../mutations-types'
 import {getApiUrl} from 'js/utils/env'
+import {MESSAGE_TARGETS} from "js/consts/siteWideMessage";
 
 const state = {
 	siteWideMessages: []
 }
 
 const getters = {
-	siteWideMessages: state => state.siteWideMessages
+	siteWideMessages: state => state.siteWideMessages,
+	dashboardNews: state => state.siteWideMessages
+		.filter(message => message.target === MESSAGE_TARGETS.DASHBOARD_NEWS)
+		.sort((a, b) => a.created_at < b.created_at ? 1 : -1)[0],
+	siteWideAlerts: state => state.siteWideMessages.filter(message => message.target === MESSAGE_TARGETS.SITE_WIDE_ALERT),
 }
 
 const mutations = {
@@ -34,7 +39,7 @@ const actions = {
 	},
 	async updateSiteWideMessage({commit}, messageId) {
 		try {
-			await axios.put(getApiUrl(`site_wide_messages/${messageId}`), {
+			await axios.put(getApiUrl(`site_wide_messages/${messageId}/read`), {
 				read_at: new Date()
 			})
 		} catch (e) {

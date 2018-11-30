@@ -21,7 +21,7 @@ export default {
 	},
 	getters: {
 		anyErrors:   (state) => formName => !_.isEmpty(state[formName].errors),
-		getData:     (state) => formName => state[formName].data,
+		getData:     (state) => formName => state[formName] && state[formName].data || INITIAL_STATE.data,
 		getOriginal: (state) => formName => state[formName].original,
 		getErrors:   (state) => formName => name => state[formName].errors[name],
 		getField:    (state) => formName => name => state[formName].data[name],

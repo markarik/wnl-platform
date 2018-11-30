@@ -54,7 +54,8 @@
 			...mapActions(['addAutoDismissableAlert']),
 			async fetchUsers() {
 				try {
-					const {data: {data, ...paginationMeta}} = await axios.post(getApiUrl('users/.filter'), this.getRequestParams())
+					const response = await axios.post(getApiUrl('users/.filter'), this.getRequestParams())
+					const {data: {data, ...paginationMeta}} = response;
 
 					this.paginationMeta = paginationMeta
 					if (paginationMeta.total === 0) {

@@ -5,6 +5,7 @@
 				:populate="isEdit"
 				:method="formMethod"
 				:resourceRoute="formResourceRoute"
+				:suppressEnter="true"
 				@submitSuccess="onSubmitSucess"
 				@change="onChange"
 		>
@@ -17,6 +18,7 @@
 		<h3 class="title is-3">Podgląd</h3>
 		<wnl-dashboard-news-content :message="formData.message" :slug="formData.slug" />
 	</div>
+
 </template>
 
 <style lang="sass" scoped>
@@ -35,7 +37,9 @@
 				datepickerConfig: {
 					altInput: true,
 					enableTime: true,
-					dateFormat: 'U'
+					dateFormat: 'U',
+					altFormat: 'Y-m-d H:i',
+					time_24hr: true,
 				},
 				formData: {}
 			}

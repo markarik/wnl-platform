@@ -42,8 +42,8 @@ export default {
 			set(state[formName], 'original', _.cloneDeep(state[formName].data))
 			set(state[formName], 'hasChanges', false)
 		},
-		[types.FORM_UPDATE_URL] (state, {newUrl, formName}) {
-			set(state[formName], 'resourceUrl', newUrl)
+		[types.FORM_UPDATE_URL] (state, {payload, formName}) {
+			set(state[formName], 'resourceUrl', payload)
 		},
 		[types.FORM_POPULATE] (state, {payload, formName}) {
 			_.each(payload, (value, name) => {

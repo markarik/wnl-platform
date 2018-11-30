@@ -11,7 +11,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="search-settings__field field">
+			<div class="search-settings__field field" v-if="availableFields.length > 1">
 				<input
 						type="checkbox" id="allFields" :checked="!searchFields.length"
 						@change="onSelectAll" class="search-settings__field__input is-checkradio"
@@ -64,7 +64,10 @@
 			 * 	...
 			 * ]
 			 */
-			availableFields: Array,
+			availableFields: {
+				type: Array,
+				default: [],
+			},
 		},
 		data() {
 			return {

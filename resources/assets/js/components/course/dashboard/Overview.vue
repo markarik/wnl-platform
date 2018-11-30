@@ -18,7 +18,7 @@
 		</div>
 		<!-- Next lesson -->
 		<div class="overview-progress box">
-			<wnl-next-lesson/>
+			<wnl-next-lesson @userEvent="trackUserEvent"/>
 			<wnl-your-progress/>
 			<!-- <div class="has-text-centered margin vertical">
 				<a
@@ -102,8 +102,7 @@
 </style>
 
 <script>
-	import emoji from 'node-emoji'
-	import { mapGetters, mapActions } from 'vuex'
+	import {mapActions, mapGetters} from 'vuex'
 
 	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
 	import DashboardNews from 'js/components/course/dashboard/DashboardNews'
@@ -111,9 +110,9 @@
 	import Qna from 'js/components/qna/Qna'
 	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
 	import YourProgress from 'js/components/course/dashboard/YourProgress'
-	import { resource } from 'js/utils/config'
 	import moment from 'moment'
 	import {getUrl} from 'js/utils/env'
+	import context from 'js/consts/events_map/context.json'
 
 	export default {
 		name: 'Overview',
@@ -163,6 +162,12 @@
 		methods: {
 			...mapActions(['changeOverviewView']),
 			...mapActions('qna', ['fetchLatestQuestions']),
+			trackUserEvent(payload) {
+				this.$trackUserEvent({
+					...payload,
+					context: context.dashboard.value,
+				})
+			}
 		},
 		mounted() {
 			this.fetchLatestQuestions()

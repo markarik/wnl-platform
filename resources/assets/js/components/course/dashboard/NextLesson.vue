@@ -7,6 +7,7 @@
 		</div>
 		<div class="cta">
 			<router-link v-if="nextLessonAvailable"
+				@click.native="trackNextLessonClick"
 				class="button is-primary"
 				:class="{'is-outlined': status === 'in-progress'}"
 				:to="to"
@@ -54,12 +55,12 @@
 </style>
 
 <script>
-	import { truncate } from 'lodash'
-	import { mapGetters } from 'vuex'
-
-	import { getUrl } from 'js/utils/env'
-	import { resource } from 'js/utils/config'
-	import { timeFromDate } from 'js/utils/time'
+	import {truncate} from 'lodash'
+	import {mapGetters} from 'vuex'
+	import {resource} from 'js/utils/config'
+	import {timeFromDate} from 'js/utils/time'
+	import context from 'js/consts/events_map/context.json'
+	import emits_events from 'js/mixins/emits-events';
 
 	const STATUS_NONE = 'none'
 	const STATUS_IN_PROGRESS = 'in-progress'
@@ -67,6 +68,7 @@
 
 	export default {
 		name: 'NextLesson',
+		mixins: [emits_events],
 		computed: {
 			...mapGetters('course', [
 				'getGroup',
@@ -123,6 +125,14 @@
 		methods: {
 			getParam(name) {
 				return statusParams[this.status][name]
+			},
+			trackNextLessonClick() {
+				this.$trackUserEvent({
+					feature: context.dashboard.features.next_lesson.value,
+					actions: context.dashboard.features.next_lesson.actions.click_link.value,
+					target: this.nextLesson.id,
+					context: context.dashboard.value,
+				})
 			}
 		},
 	}

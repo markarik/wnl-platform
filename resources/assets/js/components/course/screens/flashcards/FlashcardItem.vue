@@ -206,8 +206,11 @@
 	import WnlTextButton from 'js/components/global/TextButton';
 	import {ANSWERS_MAP} from 'js/consts/flashcard';
 	import { fontColors } from 'js/utils/colors'
+	import features from 'js/consts/events_map/features.json';
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
+		mixins: [emits_events],
 		props: {
 			context: {
 				type: Object,
@@ -278,6 +281,12 @@
 				});
 				this.isLoading = false;
 				this.isNoteEditorOpen = ['hard', 'do_not_know'].includes(answer);
+				this.emitUserEvent({
+					feature_component: features.flashcards.feature_components.single.value,
+					action: features.flashcards.feature_components.single.actions.select_answer.value,
+					target: this.flashcard.id,
+					value: Object.keys(ANSWERS_MAP).indexOf(answer)
+				})
 			},
 			onSubmitSuccess(updatedNote) {
 				this.updateFlashcard({
@@ -285,6 +294,11 @@
 					note: updatedNote
 				});
 				this.isNoteEditorOpen = false;
+				this.emitUserEvent({
+					feature_component: features.flashcards.feature_components.single.value,
+					action: features.flashcards.feature_components.single.actions.add_note.value,
+					target: this.flashcard.id,
+				})
 			},
 			toggleNoteEditor() {
 				this.isNoteEditorOpen = !this.isNoteEditorOpen;

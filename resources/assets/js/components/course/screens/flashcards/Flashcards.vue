@@ -52,6 +52,7 @@
 						:flashcard="flashcard"
 						:index="index + 1"
 						:context="{type: context, id: screenData.id}"
+						@userEvent="trackUserEvent"
 				/>
 			</ol>
 		</div>
@@ -238,6 +239,12 @@
 					answer: 'unsolved'
 				}))
 			},
+			trackUserEvent(payload) {
+				this.emitUserEvent({
+					feature: features.flashcards.value,
+					...payload
+				})
+			}
 		},
 		async mounted() {
 			const resources = get(this.screenData, 'meta.resources', []);
@@ -254,8 +261,7 @@
 			this.applicableSetsIds = resources.map(({id}) => id);
 
 			resources.forEach(({id}) => {
-				this.emitUserEvent({
-					feature: features.flashcards.value,
+				this.trackUserEvent({
 					feature_component: features.flashcards.feature_components.set.value,
 					action: features.flashcards.feature_components.set.actions.open.value,
 					target: id

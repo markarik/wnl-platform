@@ -72,6 +72,7 @@
 	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
 	import { scrollToElement } from 'js/utils/animations'
 	import emits_events from 'js/mixins/emits-events';
+	import feature_components from 'js/consts/events_map/feature_components.json';
 
 	export default {
 		name: 'QuizWidget',
@@ -164,5 +165,14 @@
 				this.allowDoubleclick && this.displayResults && this.nextQuestion()
 			},
 		},
+		watch: {
+			'currentQuestion.id'() {
+				this.currentQuestion.id && this.emitUserEvent({
+					feature_component: feature_components.quiz_question.value,
+					action: feature_components.quiz_question.actions.open.value,
+					target: this.currentQuestion.id
+				})
+			}
+		}
 	}
 </script>

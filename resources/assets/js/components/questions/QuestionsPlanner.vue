@@ -510,6 +510,11 @@
 			}
 		},
 		mounted() {
+			this.$trackUserEvent({
+				feature: features.quiz_planner.value,
+				context: context.questions_bank.value,
+				actions: features.quiz_planner.actions.open.value
+			})
 			this.getPlan().then(plan => {
 				isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters()
 			})

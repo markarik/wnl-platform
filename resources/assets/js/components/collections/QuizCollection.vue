@@ -14,7 +14,7 @@
 				:questions="getQuestionsWithAnswers"
 				:getReaction="getReaction"
 				@changeQuestion="performChangeQuestion"
-				@verify="resolveQuestion"
+				@verify="trackAndResolve"
 				@selectAnswer="onSelectAnswer"
 				@userEvent="onUserEvent"
 			></wnl-quiz-widget>
@@ -45,6 +45,7 @@
 	import Pagination from 'js/components/global/Pagination'
 	import emits_events from 'js/mixins/emits-events'
 	import features from "js/consts/events_map/features.json";
+	import feature_components from 'js/consts/events_map/feature_components.json';
 
 	export default {
 		name: 'QuizCollection',
@@ -56,7 +57,7 @@
 		props: ['categoryName', 'rootCategoryName', 'quizQuestionsIds'],
 		computed: {
 			...mapState('quiz', ['pagination']),
-			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction', 'isComplete', 'getQuestion']),
+			...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction', 'isComplete', 'getQuestion', 'getAnswer']),
 			howManyQuestions() {
 				return this.quizQuestionsIds.length
 			},
@@ -69,13 +70,24 @@
 		},
 		methods: {
 			...mapActions('quiz', ['shuffleAnswers', 'changeQuestion', 'resolveQuestion', 'commitSelectAnswer']),
+			trackAndResolve(id) {
+				const question = this.getQuestion(id)
+				const answer = this.getAnswer(question.quiz_answers[question.selectedAnswer])
+				this.onUserEvent({
+					feature_component: feature_components.quiz_question.value,
+					action: feature_components.quiz_question.actions.check_answer.value,
+					value: Number(answer.is_correct)
+				})
+
+				this.resolveQuestion(id);
+			},
 			performChangeQuestion(index) {
 				this.shuffleAnswers({id: this.getQuestionsWithAnswers[index].id})
 				this.changeQuestion(index)
 			},
 			onSelectAnswer({id, answer}) {
 				answer === this.getQuestion(id).selectedAnswer
-					? this.resolveQuestion(id)
+					? this.trackAndResolve(id)
 					: !this.isComplete && this.commitSelectAnswer({id, answer})
 			},
 			changePage(page) {

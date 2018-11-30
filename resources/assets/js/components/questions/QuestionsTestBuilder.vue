@@ -10,6 +10,7 @@
 			@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 			@endQuiz="$emit('endQuiz')"
 			@userEvent="proxyUserEvent"
+			@testStart="onTestStart"
 		/>
 		<div v-else>
 			<p class="test-builder-title">
@@ -132,6 +133,7 @@
 
 	import {timeBaseOnQuestions} from 'js/services/testBuilder'
 	import emits_events from 'js/mixins/emits-events'
+	import context from 'js/consts/events_map/context.json'
 
 	export default {
 		name: 'QuestionsTestBuilder',
@@ -211,6 +213,11 @@
 			selectAnswer(payload) {
 				this.$emit('selectAnswer', payload)
 			},
+			onTestStart() {
+				this.emitUserEvent({
+					action: context.questions_bank.subcontext.test_yourself.actions.new_test.value
+				})
+			}
 		},
 		mounted() {
 			if (this.presetOptions.hasOwnProperty('testQuestionsCount')) {

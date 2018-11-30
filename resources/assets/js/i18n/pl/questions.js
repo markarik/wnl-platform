@@ -149,7 +149,7 @@ export const questions = {
 		tabs: {
 			current: 'Aktualne pytanie ({current})',
 			list: 'Lista pytań ({count})',
-			test: 'Sprawdź się!',
+			test_yourself: 'Sprawdź się!',
 		},
 		test: {
 			headers: {

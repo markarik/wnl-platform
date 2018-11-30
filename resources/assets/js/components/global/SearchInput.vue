@@ -52,8 +52,18 @@
 				border-radius: 50%
 </style>
 <script>
+	import {isEqual} from 'lodash'
+
 	export default {
 		props: {
+			/**
+			 * Example:
+			 * availableFields: [
+			 * 	{value: 'id', title: 'ID'},
+			 * 	{value: 'email', title: 'Email'},
+			 * 	...
+			 * ]
+			 */
 			availableFields: Array,
 		},
 		data() {

@@ -39,7 +39,7 @@ export var formInput = {
 		mutation(mutation, payload = {}) {
 			return this.$store.commit(`form/${mutation}`, {payload, formName: this.parentName})
 		},
-		onInput(value) {
+		onInput() {
 			if (this.hasErrors) {
 				this.mutation(types.ERRORS_CLEAR_SINGLE, { name: this.name })
 			}

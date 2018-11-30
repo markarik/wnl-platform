@@ -12,8 +12,8 @@ class SiteWideMessage extends Model
 	protected $fillable = ['message', 'read_at', 'start_date', 'end_date', 'user_id', 'slug', 'target'];
 
 	protected $casts = [
-		'start_date' => 'date',
-		'end_date'   => 'date'
+		'start_date' => 'datetime',
+		'end_date'   => 'datetime'
 	];
 
 	public function user()

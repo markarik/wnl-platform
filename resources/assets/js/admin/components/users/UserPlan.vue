@@ -67,7 +67,8 @@
 		async mounted() {
 			this.loading = true
 			try {
-				const { data: {included, ...userLessons}} = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
+				const response = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
+				const { data: {included, ...userLessons}} = response;
 				const userLessonsList = Object.values(userLessons);
 
 				if (!userLessonsList.length) {

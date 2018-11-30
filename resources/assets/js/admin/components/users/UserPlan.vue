@@ -40,7 +40,7 @@
 			</div>
 			<div class="control">
 				<label class="label">Wyszukaj Lekcję</label>
-				<input class="input" placeholder="nazwa aby wyszukać" v-model="lessonInput"/>
+				<input class="input" placeholder="wpisz nazwę aby wyszukać..." v-model="lessonInput"/>
 			</div>
 			<div class="control margin bottom big">
 				<wnl-autocomplete
@@ -139,9 +139,8 @@
 
 				return this.lessons
 					.filter(lesson => !this.userLessons.find(({lesson_id}) => lesson_id === lesson.id) &&
-						(
-							lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase())
-						)
+						lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase()) &&
+						!this.selectedLessons.find(({id}) => id === lesson.id)
 					)
 					.slice(0, 10)
 			}
@@ -149,7 +148,7 @@
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
 			addLesson(lesson) {
-				if (!this.selectedLessons.includes(lesson)) {
+				if (!this.selectedLessons.find(({id}) => id === lesson.id)) {
 					this.selectedLessons.push({
 						...lesson,
 						startDate: new Date()

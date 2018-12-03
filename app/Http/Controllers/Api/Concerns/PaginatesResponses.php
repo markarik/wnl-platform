@@ -49,7 +49,7 @@ trait PaginatesResponses
 	protected function paginatedResponse($model, $limit = null, $page = 1)
 	{
 		$paginator = $model->paginate($limit, ['*'], 'page', $page);
-		$limit = $limit || $this->defaultLimit;
+		$limit = $limit ?? $this->defaultLimit;
 
 		if ($paginator->lastPage() < $page) {
 			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());

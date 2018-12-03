@@ -105,6 +105,10 @@
 		},
 		watch: {
 			currentPage(newVal) {
+				if (newVal > this.lastPage) {
+					this.changePage(this.lastPage);
+				}
+
 				if (this.routerPage !== newVal) {
 					this.$router.push({ query: { ...this.$route.query, page: newVal }})
 				}

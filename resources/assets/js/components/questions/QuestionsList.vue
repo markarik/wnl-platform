@@ -389,7 +389,7 @@
 			},
 			onVerify(questionId) {
 				const question = this.getQuestion(questionId)
-				const answer = question.answers[question.quiz_answers[question.selectedAnswer]]
+				const answer = question.answers[question.selectedAnswer]
 				this.onUserEvent({
 					action: feature_components.quiz_question.actions.check_answer.value,
 					value: Number(answer.is_correct)

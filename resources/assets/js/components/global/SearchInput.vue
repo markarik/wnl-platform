@@ -76,6 +76,17 @@
 				searchFields: [],
 			}
 		},
+		computed: {
+			routerSearchFields() {
+				const fields = this.$route.query.fields;
+
+				if (fields && !Array.isArray(fields)) {
+					return [fields];
+				}
+
+				return fields || [];
+			}
+		},
 		methods: {
 			onSelectAll() {
 				this.searchFields = [];
@@ -97,9 +108,9 @@
 			}
 		},
 		mounted() {
-			if (this.$route.query.q !== this.searchPhrase || !isEqual(this.searchFields, this.$route.query.fields)) {
+			if (this.$route.query.q !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
 				this.searchPhrase = this.$route.query.q;
-				this.searchFields = this.$route.query.fields || [];
+				this.searchFields = this.routerSearchFields;
 				this.emitSearch();
 			}
 		}

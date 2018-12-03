@@ -367,13 +367,14 @@
 				const data = {id: this.question.id, answer: answerIndex}
 				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
 
-				this.$emit(eventName, data)
-				this.emitUserEvent({
+				this.question.selectedAnswer !== answerIndex && this.emitUserEvent({
 					value:  Number(this.answers[answerIndex].is_correct),
 					target: this.question.id,
 					action: feature_components.quiz_question.actions.select_answer.value,
 					feature_component: feature_components.quiz_question.value
 				})
+
+				this.$emit(eventName, data)
 			},
 			trim(text) {
 				return trim(text)

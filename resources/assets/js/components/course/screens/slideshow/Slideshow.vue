@@ -240,6 +240,15 @@
 					this.isFauxFullscreen = !this.isFauxFullscreen
 					this.child.call('toggleFullscreen', this.isFauxFullscreen)
 				}
+				// there is negation before screenfull.isFullscreen because it's returning the opposite value...
+				const fullscreenValue = screenfull.enabled ? !screenfull.isFullscreen : this.isFauxFullscreen
+				this.emitUserEvent({
+					action: features.slideshow.feature_components.slide.actions.toggle_fullscreen.value,
+					feature: features.slideshow.value,
+					feature_component: features.slideshow.feature_components.slide.value,
+					target: this.currentSlideId,
+					value: Number(fullscreenValue)
+				})
 				this.focusSlideshow()
 			},
 			slideNumberFromIndex(index) {

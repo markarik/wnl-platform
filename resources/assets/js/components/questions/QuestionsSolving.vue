@@ -111,7 +111,7 @@
 			</div>
 
 			<!-- Test -->
-			<div v-if="activeView === 'test'">
+			<div v-if="activeView === 'test_yourself'">
 				<wnl-questions-test-builder
 					:getReaction="getReaction"
 					:questions="testQuestions"
@@ -226,7 +226,7 @@
 			icon: 'fa-list'
 		},
 		{
-			name: 'test',
+			name: 'test_yourself',
 			icon: 'fa-clock-o'
 		},
 	]
@@ -370,6 +370,7 @@
 			if (this.presetOptions.hasOwnProperty('activeView')) {
 				this.activeView = this.presetOptions.activeView
 			}
+			this.$emit('activeViewChange', this.activeView)
 		},
 		watch: {
 			activeFilters() {
@@ -379,6 +380,8 @@
 				if (!this.$refs.view) return false
 
 				scrollToElement(this.$refs.view, 200)
+
+				this.$emit('activeViewChange', this.activeView)
 			},
 		}
 	}

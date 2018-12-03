@@ -49,9 +49,13 @@
 	import { mapActions, mapGetters } from 'vuex'
 	import moment from 'moment'
 	import { swalConfig } from 'js/utils/swal'
+	import emits_events from 'js/mixins/emits-events'
+	import context from 'js/consts/events_map/context.json'
+	import features from 'js/consts/events_map/features.json';
 
 	export default {
 		name: 'UserStats',
+		mixins: [emits_events],
 		computed: {
 			...mapGetters(['isMobileProfile', 'currentUserStats']),
 			timeSpent() {
@@ -103,6 +107,11 @@
 					reverseButtons: true
 				}))
 				.then(() => {
+					this.emitUserEvent({
+						subcontext: context.account.subcontext.stats.value,
+						features: features.progress.value,
+						action: features.progress.actions.erase_progress.value
+					})
 					this.toggleOverlay({source: 'userStats', display: true})
 					return this.deleteProgress()
 				})

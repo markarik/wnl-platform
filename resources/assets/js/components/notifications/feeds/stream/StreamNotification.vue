@@ -26,19 +26,19 @@
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
 				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-					<router-link v-if="hasDynamicContext" :to="dynamicRoute">
+					<router-link v-if="hasDynamicContext" :to="dynamicRoute" @click.native="trackNotificationClick">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
 						</span>
 					</router-link>
-					<router-link v-else-if="hasFullContext" :to="routeContext">
+					<router-link v-else-if="hasFullContext" :to="routeContext" @click.native="trackNotificationClick">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
 						</span>
 					</router-link>
-					<a v-else :href="routeContext">
+					<a v-else :href="routeContext" @click.native="trackNotificationClick">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
@@ -189,6 +189,7 @@
 	import { notification } from 'js/components/notifications/notification'
 	import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time'
 	import { sanitizeName } from 'js/store/modules/users'
+	import context from 'js/consts/events_map/context.json'
 
 	export default {
 		name: 'StreamNotification',
@@ -273,6 +274,20 @@
 					this.loading = false
 				}
 			},
+			trackNotificationClick() {
+				const lessonId = _.get(this.routeContext, 'params.lessonId');
+				const payload = {
+					feature: context.dashboard.features.news_feed.value,
+					actions: context.dashboard.features.news_feed.actions.click_link.value,
+					context: context.dashboard.value,
+				}
+
+				if (lessonId) {
+					payload.target = lessonId;
+				}
+
+				this.$trackUserEvent(payload)
+			}
 		},
 	}
 </script>

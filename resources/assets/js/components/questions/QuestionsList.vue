@@ -47,6 +47,7 @@
 						@setQuestion="setQuestion"
 						@verify="onVerify"
 						@userEvent="onUserEvent"
+						@activeViewChange="onActiveViewChange"
 				/>
 				<div v-else class="text-loader">
 					<wnl-text-loader/>
@@ -132,6 +133,7 @@
 	import emits_events from 'js/mixins/emits-events'
 	import features from 'js/consts/events_map/features.json';
 	import context from 'js/consts/events_map/context.json';
+	import feature_components from 'js/consts/events_map/feature_components.json';
 
 	export default {
 		name: 'QuestionsList',
@@ -158,7 +160,6 @@
 		},
 		data() {
 			const currentContext = context.questions_bank
-			const subcontext = currentContext.subcontext.current
 			const currentFeature = features.quiz_questions
 			const featureComponent = currentFeature.feature_components.quiz_question
 
@@ -175,8 +176,8 @@
 				searchPhrase: '',
 				context: currentContext,
 				feature: currentFeature,
-				subcontext,
-				featureComponent
+				featureComponent,
+				activeView: ''
 			}
 		},
 		computed: {
@@ -204,6 +205,7 @@
 				'testQuestions',
 				'testQuestionsUnanswered',
 				'getSafePage',
+				'getAnswer'
 			]),
 			activeFiltersNames() {
 				return this.activeFiltersObjects.map(filter => {
@@ -268,7 +270,7 @@
 				'savePosition',
 				'selectAnswer',
 				'setPage',
-				'fetchActiveFilters'
+				'fetchActiveFilters',
 			]),
 			...mapMutations('questions', {setToken}),
 			buildTest({count}) {
@@ -328,6 +330,7 @@
 			endQuiz() {
 				this.testMode = this.testProcessing = false
 				this.testResults = {}
+				this.trackFinshTest()
 				this.resetTest()
 			},
 			fetchMatchingQuestions() {
@@ -386,8 +389,23 @@
 					: this.selectAnswer(payload)
 			},
 			onVerify(questionId) {
+				const question = this.getQuestion(questionId)
+				const answer = question.answers[question.selectedAnswer]
+				this.onUserEvent({
+					action: feature_components.quiz_question.actions.check_answer.value,
+					value: Number(answer.is_correct)
+				})
 				this.resolveQuestion(questionId)
 				this.saveQuestionsResults({questions: [questionId]})
+			},
+			onActiveViewChange(activeView) {
+				this.activeView = activeView
+				this.$trackUserEvent({
+					subcontext: this.activeView,
+					feature: this.feature.value,
+					action: this.feature.actions.open.value,
+					context: this.context.value
+				})
 			},
 			performCheckQuestions() {
 				scrollToTop()
@@ -397,6 +415,15 @@
 					this.testProcessing      = false
 					this.testMode            = false
 					this.presetOptionsToPass = {}
+				})
+
+				this.trackFinshTest()
+			},
+			trackFinshTest() {
+				this.$trackUserEvent({
+					subcontext: this.context.subcontext.test_yourself.value,
+					context: this.context.value,
+					action: this.context.subcontext.test_yourself.actions.finish_test.value,
 				})
 			},
 			setQuestion({page, index}) {
@@ -419,7 +446,7 @@
 						})
 
 						this.$trackUserEvent({
-							subcontext: this.subcontext.value,
+							subcontext: this.activeView,
 							feature: this.feature.value,
 							feature_component: this.featureComponent.value,
 							action: this.featureComponent.actions.open.value,
@@ -492,7 +519,7 @@
 			},
 			onUserEvent(payload) {
 				this.$trackUserEvent({
-					subcontext: this.subcontext.value,
+					subcontext: this.activeView,
 					feature: this.feature.value,
 					feature_component: this.featureComponent.value,
 					context: this.context.value,
@@ -536,7 +563,7 @@
 					position && this.changeCurrentQuestion(position)
 					this.switchOverlay(false)
 					this.$trackUserEvent({
-						subcontext: this.subcontext.value,
+						subcontext: this.activeView,
 						feature: this.feature.value,
 						feature_component: this.featureComponent.value,
 						action: this.featureComponent.actions.open.value,
@@ -558,7 +585,10 @@
 			if (this.testMode) {
 				this.confirmQuizEnd()
 					.then(() => next(false))
-					.catch(() => next())
+					.catch(() => {
+						this.endQuiz()
+						next()
+					})
 			} else {
 				next()
 			}

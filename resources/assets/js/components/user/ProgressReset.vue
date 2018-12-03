@@ -112,39 +112,43 @@
 				await this.confirmAndExecute(
 					this.$t('user.progressReset.progressHeader'),
 					this.$t('user.progressReset.progressConfirmation'),
-					this.resetAndReloadProgress
+					() => {
+						this.resetAndReloadProgress()
+						this.emitUserEvent({
+							subcontext: context.account.subcontext.progress_eraser.value,
+							features: features.progress.value,
+							action: features.progress.actions.erase_progress.value
+						})
+					}
 				)
-				this.emitUserEvent({
-					subcontext: context.account.subcontext.progress_eraser.value,
-					features: features.progress.value,
-					action: features.progress.actions.erase_progress.value
-				})
 			},
 			async resetQuestions() {
 				await this.confirmAndExecute(
 					this.$t('user.progressReset.questionsHeader'),
 					this.$t('user.progressReset.questionsConfirmation'),
-					this.deleteQuestions
+					() => {
+						this.deleteQuestions()
+						this.emitUserEvent({
+							subcontext: context.account.subcontext.progress_eraser.value,
+							features: features.progress.value,
+							action: features.progress.actions.erase_quiz.value
+						})
+					}
 				)
-
-				this.emitUserEvent({
-					subcontext: context.account.subcontext.progress_eraser.value,
-					features: features.progress.value,
-					action: features.progress.actions.erase_quiz.value
-				})
 			},
 			async resetCollections() {
 				await this.confirmAndExecute(
 					this.$t('user.progressReset.collectionsHeader'),
 					this.$t('user.progressReset.collectionsConfirmation'),
-					this.deleteCollection
+					() => {
+						this.deleteCollection()
+						this.emitUserEvent({
+							subcontext: context.account.subcontext.progress_eraser.value,
+							features: features.progress.value,
+							action: features.progress.actions.erase_collections.value
+						})
+					}
 				)
-
-				this.emitUserEvent({
-					subcontext: context.account.subcontext.progress_eraser.value,
-					features: features.progress.value,
-					action: features.progress.actions.erase_collections.value
-				})
 			}
 		}
 	}

@@ -187,6 +187,10 @@
 						type: 'success',
 						text: 'Dodano'
 					})
+					this.loading = true
+					this.userLessons = await this.getUserLessons()
+					this.selectedLessons = []
+					this.loading = false
 				} catch (e) {
 					this.addAutoDismissableAlert({
 						type: 'error',
@@ -194,17 +198,10 @@
 					})
 					$wnl.logger.capture(e)
 				}
-			}
-		},
-		async mounted() {
-			this.loading = true
-			try {
-				const [userPlanResponse, lessonsResponse] = await Promise.all([
-					axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`)),
-					axios.get(getApiUrl(('lessons/all')))
-				])
+			},
+			async getUserLessons() {
+				const userPlanResponse = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
 				const { data: {included, ...userLessons}} = userPlanResponse
-				this.lessons = lessonsResponse.data
 
 				const userLessonsList = Object.values(userLessons);
 
@@ -212,13 +209,24 @@
 					return
 				}
 
-				this.userLessons = userLessonsList.map(userLesson => {
+				return userLessonsList.map(userLesson => {
 					return {
 						...userLesson,
 						start_date: moment(userLesson.start_date.date).format('ll'),
 						lesson: included.lessons[userLesson.lessons[0]].name
 					}
 				})
+			}
+		},
+		async mounted() {
+			this.loading = true
+			try {
+				const [userLessons, lessonsResponse] = await Promise.all([
+					this.getUserLessons(),
+					axios.get(getApiUrl(('lessons/all')))
+				])
+				this.lessons = lessonsResponse.data
+				this.userLessons = userLessons
 
 				nextTick(() => {
 					this.$refs.filterInput.focus()

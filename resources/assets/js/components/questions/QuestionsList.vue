@@ -330,6 +330,7 @@
 			endQuiz() {
 				this.testMode = this.testProcessing = false
 				this.testResults = {}
+				this.trackFinshTest()
 				this.resetTest()
 			},
 			fetchMatchingQuestions() {
@@ -416,6 +417,9 @@
 					this.presetOptionsToPass = {}
 				})
 
+				this.trackFinshTest()
+			},
+			trackFinshTest() {
 				this.$trackUserEvent({
 					subcontext: this.context.subcontext.test_yourself.value,
 					context: this.context.value,
@@ -581,7 +585,10 @@
 			if (this.testMode) {
 				this.confirmQuizEnd()
 					.then(() => next(false))
-					.catch(() => next())
+					.catch(() => {
+						this.endQuiz()
+						next()
+					})
 			} else {
 				next()
 			}

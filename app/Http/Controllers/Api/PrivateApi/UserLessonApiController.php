@@ -12,6 +12,7 @@ use App\Models\UserLesson;
 use App\Models\Lesson;
 use App\Models\User;
 use DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 class UserLessonApiController extends ApiController
@@ -99,7 +100,7 @@ class UserLessonApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function export(Request $request, $userId)
+	public function exportPlan(Request $request, $userId)
 	{
 		$userId = User::find($userId)->id;
 		if (empty($userId)) {
@@ -108,10 +109,35 @@ class UserLessonApiController extends ApiController
 
 		$userLessons = UserLesson::where('user_id', $userId)->get();
 
-		echo(Lesson::where('id', 1)->get());
+		$csv_data = $userLessons->reduce(
+			function($data, $userLesson) {
+				$data[] = [
+					Lesson::where('id', $userLesson['lesson_id'])->pluck('name')[0],
+					$userLesson->start_date->toDateTimeString()
+				];
+				return $data;
+			},
+			[
+				[
+					trans('Nazwa lekcji'),
+					trans('Data rozpoczęcia'),
+				]
+			]
+		);
 
-		// foreach ($userLessons as $userLesson) {
-		// 	echo(Lesson::where('id', $userLesson['lesson_id'])->);
-		// }
+		return new StreamedResponse(
+			function() use($csv_data) {
+				$buffer = fopen('php://output', 'w');
+				foreach($csv_data as $row) {
+					fputcsv($buffer, $row);
+				}
+				fclose($buffer);
+			},
+			200,
+			[
+				'Content-type'        => 'csv',
+				'Content-Disposition' => 'attachment; filename=planPracy.csv'
+			]
+		);
 	}
 }

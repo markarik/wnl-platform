@@ -94,7 +94,7 @@
 						component: PlannerGuarantee,
 					},
 					{
-						title: 'Pobierz plan pracki',
+						title: 'Pobierz plan pracy',
 						component: DownloadPlan,
 					}
 				]

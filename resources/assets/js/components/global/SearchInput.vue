@@ -92,7 +92,11 @@
 				this.searchFields = [];
 			},
 			emitSearch() {
-				this.$router.push({ query: { ...this.$route.query, q: this.searchPhrase, fields: this.searchFields }})
+				this.$router.push({ query: {
+					...this.$route.query,
+					q: this.searchPhrase !== '' ? this.searchPhrase : undefined,
+					fields: this.searchFields }
+				});
 				this.$emit('search', {
 					phrase: this.searchPhrase,
 					fields: this.searchFields

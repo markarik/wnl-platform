@@ -92,6 +92,17 @@ let routes = [
 		component: require('js/admin/components/users/UserDetails.vue'),
 	},
 	{
+		name: 'dashboard-news',
+		path: '/admin/app/dashboard-news',
+		component: require('js/admin/components/dashboardNews/DashboardNews.vue'),
+	},
+	{
+		name: 'dashboard-news-edit',
+		path: '/admin/app/dashboard-news/:id',
+		component: require('js/admin/components/dashboardNews/DashboardNewsEdit.vue'),
+		props: true,
+	},
+	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},

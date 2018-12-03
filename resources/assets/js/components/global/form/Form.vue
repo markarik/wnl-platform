@@ -18,6 +18,7 @@
 	import Submit from 'js/components/global/form/Submit'
 	import { alerts } from 'js/mixins/alerts'
 	import { getApiUrl } from 'js/utils/env'
+	import { mapActions } from 'vuex'
 	import * as types from 'js/store/mutations-types'
 
 	export default {
@@ -52,6 +53,7 @@
 			}
 		},
 		methods: {
+			...mapActions(['addAutoDismissableAlert']),
 			action(action, payload = {}) {
 				return this.$store.dispatch(`form/${action}`, {payload, formName: this.name})
 			},
@@ -120,7 +122,10 @@
 			},
 			handleError(reason) {
 				if (reason.response.status === 404) {
-					this.errorFading(this.$t('ui.error.notFound'))
+					this.addAutoDismissableAlert({
+						type: 'warning',
+						text: this.$t('ui.error.notFound'),
+					});
 				} else {
 					this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
 				}

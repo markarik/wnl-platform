@@ -164,14 +164,20 @@
 			onAnswerDoubleClick({answer}) {
 				this.allowDoubleclick && this.displayResults && this.nextQuestion()
 			},
-		},
-		watch: {
-			'currentQuestion.id'() {
+			trackQuizQuestionChanged() {
 				this.currentQuestion.id && this.emitUserEvent({
 					feature_component: feature_components.quiz_question.value,
 					action: feature_components.quiz_question.actions.open.value,
 					target: this.currentQuestion.id
 				})
+			}
+		},
+		created() {
+			this.trackQuizQuestionChanged()
+		},
+		watch: {
+			'currentQuestion.id'() {
+				this.trackQuizQuestionChanged()
 			}
 		}
 	}
